@@ -1,66 +1,44 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] x86: olpc: Remove calling of_platform_bus_probe
-Date: Fri, 16 Nov 2018 14:18:20 -0600
-Message-ID: <20181116201820.10065-1-robh@kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: Add Kishon as maintainer of PHY bindings
+Date: Fri, 16 Nov 2018 14:20:45 -0600
+Message-ID: <CAL_JsqJn2EOGJaM9saoYYnbZ+GrEMQWgp_1kSq6W9HX1GnGVWw@mail.gmail.com>
+References: <20181018133105.3720-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181018133105.3720-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 List-Id: devicetree@vger.kernel.org
 
-The DT core will probe the DT by default now, so the OLPC platform code
-calling of_platform_bus_probe is not necessary. The algorithm for what
-nodes are probed is a little different in how compatible is handled, but
-since OLPC uses compatible strings for matching it is not affected by
-this difference.
+On Thu, Oct 18, 2018 at 8:31 AM Rob Herring <robh@kernel.org> wrote:
+>
+> DT bindings normally go in via subsystem maintainers, so add PHY
+> bindings under generic PHY framework.
+>
+> Reported-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Also, only the battery node located at the root level gets a device
-created as the dcon is a PCI device and the RTC device is created in
-olpc-xo1-rtc.c.
+Ping? Kishon, any objection?
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- arch/x86/platform/olpc/olpc_dt.c | 18 ------------------
- 1 file changed, 18 deletions(-)
-
-diff --git a/arch/x86/platform/olpc/olpc_dt.c b/arch/x86/platform/olpc/olpc_dt.c
-index 24d2175a9480..b4ab779f1d47 100644
---- a/arch/x86/platform/olpc/olpc_dt.c
-+++ b/arch/x86/platform/olpc/olpc_dt.c
-@@ -19,7 +19,6 @@
- #include <linux/kernel.h>
- #include <linux/memblock.h>
- #include <linux/of.h>
--#include <linux/of_platform.h>
- #include <linux/of_pdt.h>
- #include <asm/olpc.h>
- #include <asm/olpc_ofw.h>
-@@ -285,20 +284,3 @@ void __init olpc_dt_build_devicetree(void)
- 	pr_info("PROM DT: Built device tree with %u bytes of memory.\n",
- 			prom_early_allocated);
- }
--
--/* A list of DT node/bus matches that we want to expose as platform devices */
--static struct of_device_id __initdata of_ids[] = {
--	{ .compatible = "olpc,xo1-battery" },
--	{ .compatible = "olpc,xo1-dcon" },
--	{ .compatible = "olpc,xo1-rtc" },
--	{},
--};
--
--static int __init olpc_create_platform_devices(void)
--{
--	if (machine_is_olpc())
--		return of_platform_bus_probe(NULL, of_ids, NULL);
--	else
--		return 0;
--}
--device_initcall(olpc_create_platform_devices);
--- 
-2.19.1
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9ad052aeac39..b01e77ae79c4 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6132,6 +6132,7 @@ T:        git git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git
+>  S:     Supported
+>  F:     drivers/phy/
+>  F:     include/linux/phy/
+> +F:     Documentation/devicetree/bindings/phy/
+>
+>  GENERIC PINCTRL I2C DEMULTIPLEXER DRIVER
+>  M:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+> --
+> 2.17.1
+>
