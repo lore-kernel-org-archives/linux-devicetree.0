@@ -1,45 +1,55 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] pinctrl: mediatek: Convert to using %pOFn instead of device_node.name
-Date: Fri, 16 Nov 2018 16:05:40 -0600
-Message-ID: <20181116220540.17222-4-robh@kernel.org>
+Subject: [PATCH] macintosh: windfarm: Another convert to using %pOFn instead of device_node.name
+Date: Fri, 16 Nov 2018 16:05:39 -0600
+Message-ID: <20181116220540.17222-3-robh@kernel.org>
 References: <20181116220540.17222-1-robh@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181116220540.17222-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 In preparation to remove the node name pointer from struct device_node,
 convert printf users to use the %pOFn format specifier.
 
-Cc: Sean Wang <sean.wang@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-mediatek@lists.infradead.org
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
+Convert the open coded iterating thru child nodes to
+for_each_child_of_node() while we're here.
+
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: linuxppc-dev@lists.ozlabs.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pinctrl/mediatek/pinctrl-paris.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/macintosh/windfarm_fcu_controls.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-index d2179028f134..7ff5ffa88198 100644
---- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-@@ -419,8 +419,8 @@ static int mtk_pctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+diff --git a/drivers/macintosh/windfarm_fcu_controls.c b/drivers/macintosh/windfarm_fcu_controls.c
+index fab7a21e9577..2b3ca628a650 100644
+--- a/drivers/macintosh/windfarm_fcu_controls.c
++++ b/drivers/macintosh/windfarm_fcu_controls.c
+@@ -425,18 +425,18 @@ static void wf_fcu_lookup_fans(struct wf_fcu_priv *pv)
+ 		{ "CPU B 2",		"cpu-fan-b-1",		},
+ 		{ "CPU B 3",		"cpu-fan-c-1",		},
+ 	};
+-	struct device_node *np = NULL, *fcu = pv->i2c->dev.of_node;
++	struct device_node *np, *fcu = pv->i2c->dev.of_node;
+ 	int i;
  
- 	pins = of_find_property(node, "pinmux", NULL);
- 	if (!pins) {
--		dev_err(hw->dev, "missing pins property in node %s .\n",
--			node->name);
-+		dev_err(hw->dev, "missing pins property in node %pOFn .\n",
-+			node);
- 		return -EINVAL;
- 	}
+ 	DBG("Looking up FCU controls in device-tree...\n");
  
+-	while ((np = of_get_next_child(fcu, np)) != NULL) {
++	for_each_child_of_node(fcu, np) {
+ 		int id, type = -1;
+ 		const char *loc;
+ 		const char *name;
+ 		const u32 *reg;
+ 
+-		DBG(" control: %s, type: %s\n", np->name, np->type);
++		DBG(" control: %pOFn, type: %s\n", np, of_node_get_device_type(np));
+ 
+ 		/* Detect control type */
+ 		if (!strcmp(np->type, "fan-rpm-control") ||
 -- 
 2.19.1
