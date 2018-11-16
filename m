@@ -1,37 +1,66 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [Letux-kernel] [PATCH RFC] bluetooth: add uart h4 devices via
- serdev/devicetree
-Date: Fri, 16 Nov 2018 20:58:24 +0100
-Message-ID: <09AFE47C-D188-4397-A2CD-C70FFAC3B677@holtmann.org>
-References: <20181110232034.17277-1-andreas@kemnade.info>
- <20181111024648.7rt7rlhaqihtqecv@earth.universe>
- <20181112215812.18ebca35@aktux>
- <2C74C837-A6D3-47C9-BE59-CCA594289B94@goldelico.com>
- <20181112222726.73m2oca7hankvcjs@earth.universe>
- <CABGGisxsdv+BTd5-HMzF8asEcWtL5F4CMzmkrBCwK=NibvqjLQ@mail.gmail.com>
- <20181113170128.0f59ef0e@kemnade.info>
- <86A3A2E6-FC89-42FE-8410-9C8273EC9CF7@holtmann.org>
- <20181116204601.4e1aa0de@kemnade.info>
-Mime-Version: 1.0 (Mac OS X Mail 12.1 \(3445.101.1\))
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] x86: olpc: Remove calling of_platform_bus_probe
+Date: Fri, 16 Nov 2018 14:18:20 -0600
+Message-ID: <20181116201820.10065-1-robh@kernel.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181116204601.4e1aa0de@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: Rob Herring <robh@kernel.org>, sebastian.reichel@collabora.com, hns@goldelico.com, devicetree@vger.kernel.org, Johan Hedberg <johan.hedberg@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-bluetooth@vger.kernel.org, letux-kernel@openphoenux.org
+To: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
+The DT core will probe the DT by default now, so the OLPC platform code
+calling of_platform_bus_probe is not necessary. The algorithm for what
+nodes are probed is a little different in how compatible is handled, but
+since OLPC uses compatible strings for matching it is not affected by
+this difference.
 
->> Btw. I see nothing standing in the way of merging btuart.c driver and then go from there. Either I dig this out and submit or someone else does.
->> 
-> Do you mean this?
-> https://patchwork.kernel.org/patch/10490651/
+Also, only the battery node located at the root level gets a device
+created as the dcon is a PCI device and the RTC device is created in
+olpc-xo1-rtc.c.
 
-yes, that one.
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ arch/x86/platform/olpc/olpc_dt.c | 18 ------------------
+ 1 file changed, 18 deletions(-)
 
-Regards
-
-Marcel
+diff --git a/arch/x86/platform/olpc/olpc_dt.c b/arch/x86/platform/olpc/olpc_dt.c
+index 24d2175a9480..b4ab779f1d47 100644
+--- a/arch/x86/platform/olpc/olpc_dt.c
++++ b/arch/x86/platform/olpc/olpc_dt.c
+@@ -19,7 +19,6 @@
+ #include <linux/kernel.h>
+ #include <linux/memblock.h>
+ #include <linux/of.h>
+-#include <linux/of_platform.h>
+ #include <linux/of_pdt.h>
+ #include <asm/olpc.h>
+ #include <asm/olpc_ofw.h>
+@@ -285,20 +284,3 @@ void __init olpc_dt_build_devicetree(void)
+ 	pr_info("PROM DT: Built device tree with %u bytes of memory.\n",
+ 			prom_early_allocated);
+ }
+-
+-/* A list of DT node/bus matches that we want to expose as platform devices */
+-static struct of_device_id __initdata of_ids[] = {
+-	{ .compatible = "olpc,xo1-battery" },
+-	{ .compatible = "olpc,xo1-dcon" },
+-	{ .compatible = "olpc,xo1-rtc" },
+-	{},
+-};
+-
+-static int __init olpc_create_platform_devices(void)
+-{
+-	if (machine_is_olpc())
+-		return of_platform_bus_probe(NULL, of_ids, NULL);
+-	else
+-		return 0;
+-}
+-device_initcall(olpc_create_platform_devices);
+-- 
+2.19.1
