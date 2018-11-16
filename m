@@ -1,7 +1,7 @@
 From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH 9/9] dt-bindings: fpga: Add binding doc for the afi config driver
-Date: Fri, 16 Nov 2018 15:56:59 -0800
-Message-ID: <1542412619-387-10-git-send-email-jollys@xilinx.com>
+Subject: [PATCH 4/9] dt-bindings: nvmem: Add bindings for ZynqMP nvmem driver
+Date: Fri, 16 Nov 2018 15:56:54 -0800
+Message-ID: <1542412619-387-5-git-send-email-jollys@xilinx.com>
 References: <1542412619-387-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,91 +9,70 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1542412619-387-1-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: michal.simek@xilinx.com, rajanv@xilinx.com, nava.manne@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Cc: michal.simek@xilinx.com, rajanv@xilinx.com, nava.manne@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the binding document for the afi config driver.
+From: Nava kishore Manne <nava.manne@xilinx.com>
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Add documentation to describe Xilinx ZynqMP nvmem driver
+bindings.
+
+Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
 Signed-off-by: Jolly Shah <jollys@xilinx.com>
 ---
- .../devicetree/bindings/fpga/xlnx,afi-fpga.txt     | 67 ++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,afi-fpga.txt
+ .../bindings/nvmem/xlnx,zynqmp-nvmem.txt           | 44 ++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt
 
-diff --git a/Documentation/devicetree/bindings/fpga/xlnx,afi-fpga.txt b/Documentation/devicetree/bindings/fpga/xlnx,afi-fpga.txt
+diff --git a/Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt b/Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt
 new file mode 100644
-index 0000000..9006e72
+index 0000000..090ba08
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/fpga/xlnx,afi-fpga.txt
-@@ -0,0 +1,67 @@
-+Xilinx ZynqMp AFI interface Manager
-+
-+The Zynq UltraScale+ MPSoC Processing System core provides access from PL
-+masters to PS internal peripherals, and memory through AXI FIFO interface
-+(AFI) interfaces.
++++ b/Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt
+@@ -0,0 +1,44 @@
++--------------------------------------------------------------------------
++=  Zynq UltraScale+ MPSoC nvmem firmware driver binding =
++--------------------------------------------------------------------------
++The nvmem_firmware node provides access to the hardware related data
++like soc revision, IDCODE... etc, By using the firmware interface.
 +
 +Required properties:
-+-compatible:		Should contain "xlnx,afi-fpga"
-+-config-afi:		Pairs of  <regid value >
++- compatible: should be "xlnx,zynqmp-nvmem-fw"
 +
-+The possible values of regid and values are
-+ regid:		Regids of the register to be written possible values
-+		0- AFIFM0_RDCTRL
-+		1- AFIFM0_WRCTRL
-+		2- AFIFM1_RDCTRL
-+		3- AFIFM1_WRCTRL
-+		4- AFIFM2_RDCTRL
-+		5- AFIFM2_WRCTRL
-+		6- AFIFM3_RDCTRL
-+		7- AFIFM3_WRCTRL
-+		8- AFIFM4_RDCTRL
-+		9- AFIFM4_WRCTRL
-+		10- AFIFM5_RDCTRL
-+		11- AFIFM5_WRCTRL
-+		12- AFIFM6_RDCTRL
-+		13- AFIFM6_WRCTRL
-+		14- AFIFS
-+		15- AFIFS_SS2
-+- value:	Array of values to be written.
-+		for FM0_RDCTRL(0) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
-+		for FM0_WRCTRL(1) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
-+		for FM1_RDCTRL(2) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
-+		for FM1_WRCTRL(3) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
-+		for FM2_RDCTRL(4) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
-+		for FM2_WRCTRL(5) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
-+		for FM3_RDCTRL(6) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
-+		for FM3_WRCTRL(7) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
-+		for FM4_RDCTRL(8) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
-+		for FM4_WRCTRL(9) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
-+		for FM5_RDCTRL(10) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
-+		for FM5_WRCTRL(11) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
-+		for FM6_RDCTRL(12) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
-+		for FM6_WRCTRL(13) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
-+		for AFI_FA(14)
-+			dw_ss1_sel	bits (11:10)
-+			dw_ss0_sel	bits (9:8)
-+				0x0: 32-bit AXI data width),
-+				0x1: 64-bit AXI data width,
-+				0x2: 128-bit AXI data
-+		All other bits are 0 write ignored.
++= Data cells =
++Are child nodes of silicon id, bindings of which as described in
++bindings/nvmem/nvmem.txt
 +
-+		for AFI_FA(15)  selects for ss2AXI data width valid values
-+					0x000: 32-bit AXI data width),
-+					0x100: 64-bit AXI data width,
-+					0x200: 128-bit AXI data
-+
-+Example:
++-------
++ Example
++-------
 +firmware {
 +	zynqmp_firmware: zynqmp-firmware {
 +		compatible = "xlnx,zynqmp-firmware";
 +		method = "smc";
-+		afi0: afi0 {
-+			compatible = "xlnx,afi-fpga";
-+			config-afi = <0 2>, <1 1>, <2 1>;
++
++		nvmem_firmware {
++			compatible = "xlnx,zynqmp-nvmem-fw";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			/* Data cells */
++			soc_revision: soc_revision {
++				reg = <0x0 0x4>;
++			};
 +		};
 +	};
 +};
++
++= Data consumers =
++Are device nodes which consume nvmem data cells.
++
++For example:
++	pcap {
++		...
++		nvmem-cells = <&soc_revision>;
++		nvmem-cell-names = "soc_revision";
++	};
++
 -- 
 2.7.4
