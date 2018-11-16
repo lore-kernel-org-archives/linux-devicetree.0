@@ -1,118 +1,107 @@
-From: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 00/21] IOMMU: Tegra GART driver clean up and
-	optimization
-Date: Fri, 16 Nov 2018 15:13:31 +0300
-Message-ID: <12b55bb4-1a52-1045-cc99-f8e4eaf2bdf5@gmail.com>
-References: <20180930224833.28809-1-digetx@gmail.com>
+From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: [PATCH v1 2/2] i2c: i2c-stm32f7: SYSCFG Fast Mode Plus support for I2C STM32F7
+Date: Fri, 16 Nov 2018 13:20:22 +0100
+Message-ID: <1542370822-14721-3-git-send-email-pierre-yves.mordret@st.com>
+References: <1542370822-14721-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180930224833.28809-1-digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1542370822-14721-1-git-send-email-pierre-yves.mordret@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Wolfram Sang <wsa@the-dreams.de>, Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01.10.2018 1:48, Dmitry Osipenko wrote:
-> Hello,
-> 
-> This patch-series integrates the GART (IOMMU) driver with the Memory
-> Controller driver, that allows to report the name of a faulty memory
-> client on GART page fault. A major code clean up and performance
-> optimization is performed in this series as well.
-> 
-> Changelog:
-> 
-> v5: Addressed review comments from Thierry Reding to v4. Added WARN_ON() to
->     make sure that active domain isn't getting released, kept include headers
->     where necessary, etc.. All changes are quite minor.
-> 
->     Added new patch "memory: tegra: Use relaxed versions of readl/writel".
-> 
-> v4: In the v3 Rob Herring requested to make device-tree binding changes
->     backwards-compatible with the older kernels, that is achieved by
->     changing the 'compatible' value of the DT node.
-> 
->     The code-refactoring patches got some more (minor) polish.
-> 
->     Added new patch "memory: tegra: Use of_device_get_match_data()".
-> 
-> v3: Memory Controller integration part has been reworked and now GART's
->     device-tree binding is changed. Adding Rob Herring for the device-tree
->     changes reviewing.
-> 
->     GART now disallows more than one active domain at a time.
-> 
->     Fixed "spinlock recursion", "NULL pointer dereference" and "detaching
->     of all devices from inactive domains".
-> 
->     New code-refactoring patches.
-> 
->     The previously standalone patch "memory: tegra: Don't invoke Tegra30+
->     specific memory timing setup on Tegra20" is now included into this
->     series because there is a dependency on that patch and it wasn't applied
->     yet.
-> 
-> v2: Addressed review comments from Robin Murphy to v1 by moving devices
->     iommu_fwspec check to gart_iommu_add_device().
-> 
->     Dropped the "Provide single domain and group for all devices" patch from
->     the series for now because after some more considering it became not
->     exactly apparent whether that is what we need, that was also suggested
->     by Robin Murphy in the review comment. Maybe something like a runtime
->     IOMMU usage for devices would be a better solution, allowing to implement
->     transparent context switching of virtual IOMMU domains.
-> 
->     Some very minor code cleanups, reworded commit messages.
-> 
-> Dmitry Osipenko (21):
->   iommu/tegra: gart: Remove pr_fmt and clean up includes
->   iommu/tegra: gart: Clean up driver probe errors handling
->   iommu/tegra: gart: Ignore devices without IOMMU phandle in DT
->   iommu: Introduce iotlb_sync_map callback
->   iommu/tegra: gart: Optimize mapping / unmapping performance
->   dt-bindings: memory: tegra: Squash tegra20-gart into tegra20-mc
->   ARM: dts: tegra20: Update Memory Controller node to the new binding
->   memory: tegra: Don't invoke Tegra30+ specific memory timing setup on
->     Tegra20
->   memory: tegra: Adapt to Tegra20 device-tree binding changes
->   memory: tegra: Read client ID on GART page fault
->   memory: tegra: Use of_device_get_match_data()
->   memory: tegra: Use relaxed versions of readl/writel
->   iommu/tegra: gart: Integrate with Memory Controller driver
->   iommu/tegra: gart: Fix spinlock recursion
->   iommu/tegra: gart: Fix NULL pointer dereference
->   iommu/tegra: gart: Allow only one active domain at a time
->   iommu/tegra: gart: Don't use managed resources
->   iommu/tegra: gart: Prepend error/debug messages with "gart:"
->   iommu/tegra: gart: Don't detach devices from inactive domains
->   iommu/tegra: gart: Simplify clients-tracking code
->   iommu/tegra: gart: Perform code refactoring
-> 
->  .../bindings/iommu/nvidia,tegra20-gart.txt    |  14 -
->  .../memory-controllers/nvidia,tegra20-mc.txt  |  27 +-
->  arch/arm/boot/dts/tegra20.dtsi                |  15 +-
->  drivers/iommu/Kconfig                         |   1 +
->  drivers/iommu/iommu.c                         |   8 +-
->  drivers/iommu/tegra-gart.c                    | 489 +++++++-----------
->  drivers/memory/tegra/mc.c                     |  93 +++-
->  drivers/memory/tegra/mc.h                     |  10 +-
->  include/linux/iommu.h                         |   1 +
->  include/soc/tegra/mc.h                        |  29 +-
->  10 files changed, 306 insertions(+), 381 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iommu/nvidia,tegra20-gart.txt
-> 
+Read SYSCFG bindings to set Fast Mode Plus bits if Fast Mode Plus
+speed is selected.
 
-Hello Thierry,
+Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+---
+  Version history:
+    v1:
+       * Initial
+---
+---
+ drivers/i2c/busses/i2c-stm32f7.c | 37 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 34 insertions(+), 3 deletions(-)
 
-This patchset should be in a good shape, could you please take a look at the (minor) changes done in v5 and give r-b/ack to the remaining patches? Will be very nice if this series could finally land, especially in the light of upcoming DRM/HOST1x (re-)work.
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index 62d023e..8e381b7 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -21,6 +21,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/iopoll.h>
++#include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+@@ -276,6 +277,7 @@ struct stm32f7_i2c_msg {
+  * slave)
+  * @dma: dma data
+  * @use_dma: boolean to know if dma is used in the current transfer
++ * @regmap: holds SYSCFG phandle for Fast Mode Plus bits
+  */
+ struct stm32f7_i2c_dev {
+ 	struct i2c_adapter adap;
+@@ -296,6 +298,7 @@ struct stm32f7_i2c_dev {
+ 	bool master_mode;
+ 	struct stm32_i2c_dma *dma;
+ 	bool use_dma;
++	struct regmap *regmap;
+ };
+ 
+ /**
+@@ -1763,6 +1766,30 @@ static int stm32f7_i2c_unreg_slave(struct i2c_client *slave)
+ 	return 0;
+ }
+ 
++static int stm32f7_i2c_setup_fm_plus_bits(struct platform_device *pdev,
++					  struct stm32f7_i2c_dev *i2c_dev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	int ret;
++	u32 reg, mask;
++
++	i2c_dev->regmap = syscon_regmap_lookup_by_phandle(np, "st,syscfg-fmp");
++	if (IS_ERR(i2c_dev->regmap)) {
++		/* Optional */
++		return 0;
++	}
++
++	ret = of_property_read_u32_index(np, "st,syscfg-fmp", 1, &reg);
++	if (ret)
++		return ret;
++
++	ret = of_property_read_u32_index(np, "st,syscfg-fmp", 2, &mask);
++	if (ret)
++		return ret;
++
++	return regmap_update_bits(i2c_dev->regmap, reg, mask, mask);
++}
++
+ static u32 stm32f7_i2c_func(struct i2c_adapter *adap)
+ {
+ 	return I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR | I2C_FUNC_SLAVE |
+@@ -1828,12 +1855,16 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ 	i2c_dev->speed = STM32_I2C_SPEED_STANDARD;
+ 	ret = device_property_read_u32(&pdev->dev, "clock-frequency",
+ 				       &clk_rate);
+-	if (!ret && clk_rate >= 1000000)
++	if (!ret && clk_rate >= 1000000) {
+ 		i2c_dev->speed = STM32_I2C_SPEED_FAST_PLUS;
+-	else if (!ret && clk_rate >= 400000)
++		ret = stm32f7_i2c_setup_fm_plus_bits(pdev, i2c_dev);
++		if (ret)
++			goto clk_free;
++	} else if (!ret && clk_rate >= 400000) {
+ 		i2c_dev->speed = STM32_I2C_SPEED_FAST;
+-	else if (!ret && clk_rate >= 100000)
++	} else if (!ret && clk_rate >= 100000) {
+ 		i2c_dev->speed = STM32_I2C_SPEED_STANDARD;
++	}
+ 
+ 	rst = devm_reset_control_get(&pdev->dev, NULL);
+ 	if (IS_ERR(rst)) {
+-- 
+2.7.4
