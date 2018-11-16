@@ -1,91 +1,43 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ASoC: imx-audmux: complete dt-bindings for imx6
-Date: Fri, 16 Nov 2018 22:45:22 +0800
-Message-ID: <20181116144520.GO5829@dragon>
-References: <20181105135802.30486-1-peron.clem@gmail.com>
- <20181116025938.GH5829@dragon>
- <CAJiuCcerEanEobbi8zPb1-eb=zCJsDAbM=p6T64+wtuXjtaMTA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH v3 0/2] Add Synopsys High-Speed USB PHY driver for Qualcomm SoCs
+Date: Fri, 16 Nov 2018 22:55:57 +0800
+Message-ID: <20181116145559.31876-1-shawn.guo@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJiuCcerEanEobbi8zPb1-eb=zCJsDAbM=p6T64+wtuXjtaMTA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: NXP Linux Team <linux-imx@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Colin Didier <colin.didier@devialet.com>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 16, 2018 at 11:25:07AM +0100, Clément Péron wrote:
-> Hi Shawn,
-> 
-> On Fri, 16 Nov 2018 at 03:59, Shawn Guo <shawnguo@kernel.org> wrote:
-> >
-> > On Mon, Nov 05, 2018 at 02:58:02PM +0100, Clément Péron wrote:
-> > > From: Colin Didier <colin.didier@devialet.com>
-> > >
-> > > The MX6 Audmux differs from MX51.
-> > >
-> > > This patch adds the audmux for i.MX6 family.
-> > >
-> > > Signed-off-by: Colin Didier <colin.didier@devialet.com>
-> > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> >
-> > I think you should send it to ASoC maintainer and list for applying.
-> 
-> It's still quite new for me to submit patch, but if this patch should
-> be sent to ASoC maintainer maybe there is a line missing in the
-> MAINTAINERS file no ?
+It's based on a downstream driver from Sriharsha Allenki <sallenki@codeaurora.org>
+that uses USB phy framework, and gets rewrote to adpot generic phy
+framework together with quite some cleanups.
 
-@Mark, comment?
+Changes for v3:
+ - Use SoC specific compatible "qcom,qcs404-usb-hsphy".
+ - Use OF graph instead of extcon bindings to model the link to USB
+   connector.
 
-Shawn
+Changes for v2:
+ - Add a pointer to phy/phy-bindings.txt for property #phy-cells.
+ - Roll back voltage settings in case function
+   qcom_snps_hsphy_config_regulators() fails in the middle.
+ - Add a comment for init-seq tuple which consists of 3 numbers.
+ - Sort include headers alphabetically.
+ - Sort register definitions in order of offset.
 
-> 
-> SOUND
-> M:      Jaroslav Kysela <perex@perex.cz>
-> M:      Takashi Iwai <tiwai@suse.com>
-> L:      alsa-devel@alsa-project.org (moderated for non-subscribers)
-> W:      http://www.alsa-project.org/
-> T:      git git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
-> T:      git git://git.alsa-project.org/alsa-kernel.git
-> Q:      http://patchwork.kernel.org/project/alsa-devel/list/
-> S:      Maintained
-> F:      Documentation/sound/
-> + F:      include/dt-bindings/sound/
-> F:      include/sound/
-> F:      include/uapi/sound/
-> F:      sound/
-> 
-> Regards,
-> Clement
-> 
-> >
-> > Shawn
-> >
-> > > ---
-> > >  include/dt-bindings/sound/fsl-imx-audmux.h | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > >
-> > > diff --git a/include/dt-bindings/sound/fsl-imx-audmux.h b/include/dt-bindings/sound/fsl-imx-audmux.h
-> > > index 15f138bebe16..a1d0741d9ed1 100644
-> > > --- a/include/dt-bindings/sound/fsl-imx-audmux.h
-> > > +++ b/include/dt-bindings/sound/fsl-imx-audmux.h
-> > > @@ -25,6 +25,14 @@
-> > >  #define MX51_AUDMUX_PORT6            5
-> > >  #define MX51_AUDMUX_PORT7            6
-> > >
-> > > +#define MX6_AUDMUX_PORT1_SSI1                0
-> > > +#define MX6_AUDMUX_PORT2_SSI2                1
-> > > +#define MX6_AUDMUX_PORT3             2
-> > > +#define MX6_AUDMUX_PORT4             3
-> > > +#define MX6_AUDMUX_PORT5             4
-> > > +#define MX6_AUDMUX_PORT6             5
-> > > +#define MX6_AUDMUX_PORT7_SSI3                6
-> > > +
-> > >  /*
-> > >   * TFCSEL/RFCSEL (i.MX27) or TFSEL/TCSEL/RFSEL/RCSEL (i.MX31/51/53/6Q)
-> > >   * can be sourced from Rx/Tx.
-> > > --
-> > > 2.19.1
-> > >
+Shawn Guo (1):
+  phy: qualcomm: Add Synopsys High-Speed USB PHY driver
+
+Sriharsha Allenki (1):
+  dt-bindings: phy: Add Qualcomm Synopsys High-Speed USB PHY binding
+
+ .../phy/qcom,snps-28nm-usb-hs-phy.txt         | 108 ++++
+ drivers/phy/qualcomm/Kconfig                  |  10 +
+ drivers/phy/qualcomm/Makefile                 |   1 +
+ .../phy/qualcomm/phy-qcom-usb-hs-snsp-28nm.c  | 513 ++++++++++++++++++
+ 4 files changed, 632 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-usb-hs-snsp-28nm.c
+
+-- 
+2.18.0
