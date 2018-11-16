@@ -1,139 +1,83 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 03/10] ARM64: dts: fsl: Add all CPUs in cooling maps
-Date: Fri, 16 Nov 2018 15:34:26 +0530
-Message-ID: <c92e66ea7e0692b13c8088d0a554acfeacf74cf4.1542362530.git.viresh.kumar@linaro.org>
+Subject: [PATCH 04/10] arm64: dts: hi3660: Add missing cooling device properties for CPUs
+Date: Fri, 16 Nov 2018 15:34:27 +0530
+Message-ID: <042e5e647a7b54f4322024f1b3e286b6b6d69175.1542362530.git.viresh.kumar@linaro.org>
 References: <cover.1542362530.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1542362530.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Wei Xu <xuwei5@hisilicon.com>
 Cc: Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Each CPU can (and does) participate in cooling down the system but the
-DT only captures a handful of them, normally CPU0, in the cooling maps.
-Things work by chance currently as under normal circumstances its the
-first CPU of each cluster which is used by the operating systems to
-probe the cooling devices. But as soon as this CPU ordering changes and
-any other CPU is used to bring up the cooling device, we will start
-seeing failures.
+The cooling device properties, like "#cooling-cells" and
+"dynamic-power-coefficient", should either be present for all the CPUs
+of a cluster or none. If these are present only for a subset of CPUs of
+a cluster then things will start falling apart as soon as the CPUs are
+brought online in a different order. For example, this will happen
+because the operating system looks for such properties in the CPU node
+it is trying to bring up, so that it can register a cooling device.
 
-Also the DT is rather incomplete when we list only one CPU in the
-cooling maps, as the hardware doesn't have any such limitations.
-
-Update cooling maps to include all devices affected by individual trip
-points.
+Add such missing properties.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- .../arm64/boot/dts/freescale/fsl-ls1043a.dtsi |  6 ++--
- .../arm64/boot/dts/freescale/fsl-ls1046a.dtsi |  6 ++--
- .../arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 17 ++++++-----
- .../arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 28 ++++++-------------
- 4 files changed, 24 insertions(+), 33 deletions(-)
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 3fed504b5381..c7224c5bb6cc 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -171,8 +171,10 @@
- 				map0 {
- 					trip = <&cpu_alert>;
- 					cooling-device =
--						<&cpu0 THERMAL_NO_LIMIT
--						THERMAL_NO_LIMIT>;
-+						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
- 				};
- 			};
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index f432b0a88c65..d943a96eedee 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -79,6 +79,7 @@
+ 			capacity-dmips-mhz = <592>;
+ 			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER0>;
+ 			operating-points-v2 = <&cluster0_opp>;
++			#cooling-cells = <2>;
  		};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 51cbd50012d6..8c94d8279b5e 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -140,8 +140,10 @@
- 				map0 {
- 					trip = <&cpu_alert>;
- 					cooling-device =
--						<&cpu0 THERMAL_NO_LIMIT
--						THERMAL_NO_LIMIT>;
-+						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
- 				};
- 			};
+ 
+ 		cpu2: cpu@2 {
+@@ -91,6 +92,7 @@
+ 			capacity-dmips-mhz = <592>;
+ 			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER0>;
+ 			operating-points-v2 = <&cluster0_opp>;
++			#cooling-cells = <2>;
  		};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index a07f612ab56b..7faee0d270d2 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -152,15 +152,14 @@
- 				map0 {
- 					trip = <&cpu_alert>;
- 					cooling-device =
--						<&cpu0 THERMAL_NO_LIMIT
--						THERMAL_NO_LIMIT>;
--				};
--
--				map1 {
--					trip = <&cpu_alert>;
--					cooling-device =
--						<&cpu4 THERMAL_NO_LIMIT
--						THERMAL_NO_LIMIT>;
-+						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
- 				};
- 			};
+ 
+ 		cpu3: cpu@3 {
+@@ -103,6 +105,7 @@
+ 			capacity-dmips-mhz = <592>;
+ 			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER0>;
+ 			operating-points-v2 = <&cluster0_opp>;
++			#cooling-cells = <2>;
  		};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index d188774a36e8..f11187f7465c 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -101,26 +101,14 @@
- 				map0 {
- 					trip = <&cpu_alert>;
- 					cooling-device =
--						<&cpu0 THERMAL_NO_LIMIT
--						THERMAL_NO_LIMIT>;
--				};
--				map1 {
--					trip = <&cpu_alert>;
--					cooling-device =
--						<&cpu2 THERMAL_NO_LIMIT
--						THERMAL_NO_LIMIT>;
--				};
--				map2 {
--					trip = <&cpu_alert>;
--					cooling-device =
--						<&cpu4 THERMAL_NO_LIMIT
--						THERMAL_NO_LIMIT>;
--				};
--				map3 {
--					trip = <&cpu_alert>;
--					cooling-device =
--						<&cpu6 THERMAL_NO_LIMIT
--						THERMAL_NO_LIMIT>;
-+						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
- 				};
- 			};
+ 
+ 		cpu4: cpu@100 {
+@@ -129,6 +132,7 @@
+ 			capacity-dmips-mhz = <1024>;
+ 			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER1>;
+ 			operating-points-v2 = <&cluster1_opp>;
++			#cooling-cells = <2>;
  		};
+ 
+ 		cpu6: cpu@102 {
+@@ -141,6 +145,7 @@
+ 			capacity-dmips-mhz = <1024>;
+ 			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER1>;
+ 			operating-points-v2 = <&cluster1_opp>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu7: cpu@103 {
+@@ -153,6 +158,7 @@
+ 			capacity-dmips-mhz = <1024>;
+ 			clocks = <&stub_clock HI3660_CLK_STUB_CLUSTER1>;
+ 			operating-points-v2 = <&cluster1_opp>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		idle-states {
 -- 
 2.19.1.568.g152ad8e3369a
