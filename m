@@ -1,15 +1,15 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 4/6] ARM: dts: rockchip: Add all CPUs in cooling maps
-Date: Fri, 16 Nov 2018 15:31:13 +0530
-Message-ID: <8e59f97ae89a116b835ee14c63f550b159b000cc.1542362000.git.viresh.kumar@linaro.org>
+Subject: [PATCH 5/6] ARM: dts: sunxi: Add all CPUs in cooling maps
+Date: Fri, 16 Nov 2018 15:31:14 +0530
+Message-ID: <b2524a2db87c97c038990af405bd1cca25e579f8.1542362000.git.viresh.kumar@linaro.org>
 References: <cover.1542362000.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1542362000.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Each CPU can (and does) participate in cooling down the system but the
@@ -28,123 +28,126 @@ points.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- arch/arm/boot/dts/rk322x.dtsi              | 10 +++++++--
- arch/arm/boot/dts/rk3288-veyron-mickey.dts | 24 +++++++++++++---------
- arch/arm/boot/dts/rk3288.dtsi              | 15 +++++++++++---
- 3 files changed, 34 insertions(+), 15 deletions(-)
+ arch/arm/boot/dts/sun6i-a31.dtsi | 11 +++++++----
+ arch/arm/boot/dts/sun7i-a20.dtsi |  5 +++--
+ arch/arm/boot/dts/sun8i-a33.dtsi | 16 +++++++++++-----
+ 3 files changed, 21 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index cd8f2a3b0e91..29f19076dceb 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -493,12 +493,18 @@
- 				map0 {
- 					trip = <&cpu_alert0>;
- 					cooling-device =
--						<&cpu0 THERMAL_NO_LIMIT 6>;
-+						<&cpu0 THERMAL_NO_LIMIT 6>,
-+						<&cpu1 THERMAL_NO_LIMIT 6>,
-+						<&cpu2 THERMAL_NO_LIMIT 6>,
-+						<&cpu3 THERMAL_NO_LIMIT 6>;
- 				};
- 				map1 {
- 					trip = <&cpu_alert1>;
- 					cooling-device =
--						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
- 				};
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/rk3288-veyron-mickey.dts b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-index 1e0158acf895..d889ab3c8235 100644
---- a/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-@@ -81,8 +81,10 @@
- 		 */
- 		cpu_warm_limit_cpu {
- 			trip = <&cpu_alert_warm>;
--			cooling-device =
--				<&cpu0 THERMAL_NO_LIMIT 4>;
-+			cooling-device = <&cpu0 THERMAL_NO_LIMIT 4>,
-+					 <&cpu1 THERMAL_NO_LIMIT 4>,
-+					 <&cpu2 THERMAL_NO_LIMIT 4>,
-+					 <&cpu3 THERMAL_NO_LIMIT 4>;
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index debc0bf22ea3..1eaa60cd3218 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -115,7 +115,7 @@
+ 			#cooling-cells = <2>;
  		};
  
- 		/*
-@@ -103,23 +105,25 @@
- 		 */
- 		cpu_almost_hot_limit_cpu {
- 			trip = <&cpu_alert_almost_hot>;
--			cooling-device =
--				<&cpu0 5 6>;
-+			cooling-device = <&cpu0 5 6>, <&cpu1 5 6>, <&cpu2 5 6>,
-+					 <&cpu3 5 6>;
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <1>;
+@@ -131,7 +131,7 @@
+ 			#cooling-cells = <2>;
  		};
- 		cpu_hot_limit_cpu {
- 			trip = <&cpu_alert_hot>;
--			cooling-device =
--				<&cpu0 7 7>;
-+			cooling-device = <&cpu0 7 7>, <&cpu1 7 7>, <&cpu2 7 7>,
-+					 <&cpu3 7 7>;
+ 
+-		cpu@2 {
++		cpu2: cpu@2 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <2>;
+@@ -147,7 +147,7 @@
+ 			#cooling-cells = <2>;
  		};
- 		cpu_hotter_limit_cpu {
- 			trip = <&cpu_alert_hotter>;
--			cooling-device =
--				<&cpu0 7 8>;
-+			cooling-device = <&cpu0 7 8>, <&cpu1 7 8>, <&cpu2 7 8>,
-+					 <&cpu3 7 8>;
- 		};
- 		cpu_very_hot_limit_cpu {
- 			trip = <&cpu_alert_very_hot>;
--			cooling-device =
--				<&cpu0 8 THERMAL_NO_LIMIT>;
-+			cooling-device = <&cpu0 8 THERMAL_NO_LIMIT>,
-+					 <&cpu1 8 THERMAL_NO_LIMIT>,
-+					 <&cpu2 8 THERMAL_NO_LIMIT>,
-+					 <&cpu3 8 THERMAL_NO_LIMIT>;
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 0840ffb3205c..1da86e82bb57 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -508,12 +508,18 @@
+ 
+-		cpu@3 {
++		cpu3: cpu@3 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <3>;
+@@ -174,7 +174,10 @@
+ 			cooling-maps {
  				map0 {
  					trip = <&cpu_alert0>;
- 					cooling-device =
--						<&cpu0 THERMAL_NO_LIMIT 6>;
-+						<&cpu0 THERMAL_NO_LIMIT 6>,
-+						<&cpu1 THERMAL_NO_LIMIT 6>,
-+						<&cpu2 THERMAL_NO_LIMIT 6>,
-+						<&cpu3 THERMAL_NO_LIMIT 6>;
+-					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 02e40da9f028..b4fd4f5ca66b 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -118,7 +118,7 @@
+ 			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <1>;
+@@ -148,7 +148,8 @@
+ 			cooling-maps {
+ 				map0 {
+ 					trip = <&cpu_alert0>;
+-					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
+index c1cc8f09dd9a..502de6f44a9a 100644
+--- a/arch/arm/boot/dts/sun8i-a33.dtsi
++++ b/arch/arm/boot/dts/sun8i-a33.dtsi
+@@ -131,14 +131,14 @@
+ 			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			clocks = <&ccu CLK_CPUX>;
+ 			clock-names = "cpu";
+ 			operating-points-v2 = <&cpu0_opp_table>;
+ 			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@2 {
++		cpu2: cpu@2 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <2>;
+@@ -148,7 +148,7 @@
+ 			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@3 {
++		cpu3: cpu@3 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <3>;
+@@ -479,11 +479,17 @@
+ 			cooling-maps {
+ 				map0 {
+ 					trip = <&cpu_alert0>;
+-					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
  				};
  				map1 {
  					trip = <&cpu_alert1>;
- 					cooling-device =
--						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+-					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
  				};
- 			};
- 		};
-@@ -541,7 +547,10 @@
- 				map0 {
- 					trip = <&gpu_alert0>;
- 					cooling-device =
--						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
- 				};
- 			};
- 		};
+ 
+ 				map2 {
 -- 
 2.19.1.568.g152ad8e3369a
