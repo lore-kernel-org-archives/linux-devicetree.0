@@ -1,7 +1,7 @@
 From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH 1/9] dt-bindings: power: Add ZynqMP power domain bindings
-Date: Fri, 16 Nov 2018 15:56:51 -0800
-Message-ID: <1542412619-387-2-git-send-email-jollys@xilinx.com>
+Subject: [PATCH 7/9] dt-bindings: phy: Add dt bindings for ZynqMP PHY
+Date: Fri, 16 Nov 2018 15:56:57 -0800
+Message-ID: <1542412619-387-8-git-send-email-jollys@xilinx.com>
 References: <1542412619-387-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,106 +9,153 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1542412619-387-1-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: michal.simek@xilinx.com, rajanv@xilinx.com, nava.manne@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>, Jolly Shah <jollys@xilinx.com>
+Cc: michal.simek@xilinx.com, rajanv@xilinx.com, nava.manne@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>, Anurag Kumar Vulisha <anuragku@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Rajan Vaja <rajan.vaja@xilinx.com>
+This patch adds the document describing dt bindings for ZynqMP
+PHY. ZynqMP SOC has a High Speed Processing System Gigabit
+Transceiver which provides PHY capabilties to USB, SATA,
+PCIE, Display Port and Ehernet SGMII controllers.
 
-Add documentation to describe ZynqMP power domain bindings.
-
-Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+Signed-off-by: Anurag Kumar Vulisha <anuragku@xilinx.com>
 Signed-off-by: Jolly Shah <jollys@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
- .../bindings/power/xlnx,zynqmp-genpd.txt           | 34 +++++++++++++++++++
- include/dt-bindings/power/xlnx-zynqmp-power.h      | 39 ++++++++++++++++++++++
- 2 files changed, 73 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
- create mode 100644 include/dt-bindings/power/xlnx-zynqmp-power.h
+ .../devicetree/bindings/phy/phy-zynqmp.txt         | 126 +++++++++++++++++++++
+ 1 file changed, 126 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-zynqmp.txt
 
-diff --git a/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt b/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
+diff --git a/Documentation/devicetree/bindings/phy/phy-zynqmp.txt b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
 new file mode 100644
-index 0000000..3c7f237
+index 0000000..21cb722
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
-@@ -0,0 +1,34 @@
-+-----------------------------------------------------------
-+Device Tree Bindings for the Xilinx Zynq MPSoC PM domains
-+-----------------------------------------------------------
-+The binding for zynqmp-power-controller follow the common
-+generic PM domain binding[1].
++++ b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+@@ -0,0 +1,126 @@
++Xilinx ZynqMP PHY binding
 +
-+[1] Documentation/devicetree/bindings/power/power_domain.txt
++This binding describes a ZynqMP PHY device that is used to control ZynqMP
++High Speed Gigabit Transceiver(GT). ZynqMP PS GTR provides four lanes
++and are used by USB, SATA, PCIE, Display port and Ethernet SGMMI controllers.
 +
-+== Zynq MPSoC Generic PM Domain Node ==
++Required properties (controller (parent) node):
++- compatible	: Can be "xlnx,zynqmp-psgtr-v1.1" or "xlnx,zynqmp-psgtr"
++		  "xlnx,zynqmp-psgtr-v1.1" has the lpd address mapping removed
 +
-+Required property:
-+ - Below property should be in zynqmp-firmware node.
-+ - #power-domain-cells:	Number of cells in a PM domain specifier. Must be 1.
++- reg           : Address and length of register sets for each device in
++                  "reg-names"
++- reg-names     : The names of the register addresses corresponding to the
++		  registers filled in "reg":
++			- serdes: SERDES block register set
++			- siou: SIOU block register set
++			- lpd: Low power domain peripherals reset control
 +
-+Power domain ID indexes are mentioned in
-+include/dt-bindings/power/xlnx-zynqmp-power.h.
++Required nodes	:  A sub-node is required for each lane the controller
++		   provides.
 +
-+-------
-+Example
-+-------
++Required properties (port (child) nodes):
++lane0:
++- #phy-cells	: Should be 4
++		  Cell after port phandle is device type from:
++			- <PHY_TYPE_PCIE 0 LANE_NUM FREQUENCY>
++			- <PHY_TYPE_SATA 0 LANE_NUM FREQUENCY>
++			- <PHY_TYPE_USB3 0 LANE_NUM FREQUENCY>
++			- <PHY_TYPE_DP 1 LANE_NUM FREQUENCY>
++			- <PHY_TYPE_SGMII 0 LANE_NUM FREQUENCY>
++lane1:
++- #phy-cells	: Should be 4
++		  Cell after port phandle is device type from:
++			- <PHY_TYPE_PCIE 1 LANE_NUM FREQUENCY>
++			- <PHY_TYPE_SATA 1 LANE_NUM FREQUENCY>
++			- <PHY_TYPE_USB3 0 LANE_NUM FREQUENCY>
++			- <PHY_TYPE_DP 0 LANE_NUM FREQUENCY>
++			- <PHY_TYPE_SGMII 1 LANE_NUM FREQUENCY>
++lane2:
++- #phy-cells	: Should be 4
++		  Cell after port phandle is device type from:
++			- <PHY_TYPE_PCIE 2 LANE_NUM FREQUENCY>
++			- <PHY_TYPE_SATA 0 LANE_NUM FREQUENCY>
++			- <PHY_TYPE_USB3 0 LANE_NUM FREQUENCY>
++			- <PHY_TYPE_DP 1 LANE_NUM FREQUENC>
++			- <PHY_TYPE_SGMII 2 LANE_NUM FREQUENCY>
++lane3:
++- #phy-cells	: Should be 4
++		  Cell after port phandle is device type from:
++			- <PHY_TYPE_PCIE 3 LANE_NUM FREQUENCY>
++			- <PHY_TYPE_SATA 1 LANE_NUM FREQUENCY>
++			- <PHY_TYPE_USB3 1 LANE_NUM FREQUENCY >
++			- <PHY_TYPE_DP 0 LANE_NUM FREQUENCY>
++			- <PHY_TYPE_SGMII 3 LANE_NUM FREQUENCY>
 +
++Note:	LANE_NUM : This determines which lane's reference clock is shared by controller.
++	FREQUENCY: This the clock frequency at which controller wants to operate.
++
++
++Example:
 +firmware {
 +	zynqmp_firmware: zynqmp-firmware {
-+		...
-+		#power-domain-cells = <1>;
-+		...
++		compatible = "xlnx,zynqmp-firmware";
++		method = "smc";
++
++		serdes: zynqmp_phy@fd400000 {
++			compatible = "xlnx,zynqmp-psgtr";
++			status = "okay";
++			reg = <0x0 0xfd400000 0x0 0x40000>, <0x0 0xfd3d0000 0x0 0x1000>,
++				<0x0 0xff5e0000 0x0 0x1000>;
++			reg-names = "serdes", "siou", "lpd";
++
++			lane0: lane@0 {
++				#phy-cells = <4>;
++			};
++			lane1: lane@1 {
++				#phy-cells = <4>;
++			};
++			lane2: lane@2 {
++				#phy-cells = <4>;
++			};
++			lane3: lane@3 {
++				#phy-cells = <4>;
++			};
++		};
 +	};
 +};
 +
-+sata {
-+	...
-+	power-domains = <&zynqmp_firmware 2>;
-+	...
-+};
-diff --git a/include/dt-bindings/power/xlnx-zynqmp-power.h b/include/dt-bindings/power/xlnx-zynqmp-power.h
-new file mode 100644
-index 0000000..1bc9636
---- /dev/null
-+++ b/include/dt-bindings/power/xlnx-zynqmp-power.h
-@@ -0,0 +1,39 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ *  Copyright (C) 2018 Xilinx, Inc.
-+ */
++Specifying phy control of devices
++=================================
 +
-+#ifndef _DT_BINDINGS_ZYNQMP_POWER_H
-+#define _DT_BINDINGS_ZYNQMP_POWER_H
++Device nodes should specify the configuration required in their "phys"
++property, containing a phandle to the phy port node and a device type.
 +
-+#define		PD_USB_0	0
-+#define		PD_USB_1	1
-+#define		PD_SATA		2
-+#define		PD_SPI_0	3
-+#define		PD_SPI_1	4
-+#define		PD_UART_0	5
-+#define		PD_UART_1	6
-+#define		PD_ETH_0	7
-+#define		PD_ETH_1	8
-+#define		PD_ETH_2	9
-+#define		PD_ETH_3	10
-+#define		PD_I2C_0	11
-+#define		PD_I2C_1	12
-+#define		PD_DP		13
-+#define		PD_GDMA		14
-+#define		PD_ADMA		15
-+#define		PD_TTC_0	16
-+#define		PD_TTC_1	17
-+#define		PD_TTC_2	18
-+#define		PD_TTC_3	19
-+#define		PD_SD_0		20
-+#define		PD_SD_1		21
-+#define		PD_NAND		22
-+#define		PD_QSPI		23
-+#define		PD_GPIO		24
-+#define		PD_CAN_0	25
-+#define		PD_CAN_1	26
-+#define		PD_PCIE		27
-+#define		PD_GPU		28
++phys = <PHANDLE CONTROLLER_TYPE CONTROLLER_INSTANCE LANE_NUM LANE_FREQ>;
 +
-+#endif
++PHANDLE                 = &lane0 or &lane1 or &lane2 or &lane3
++CONTROLLER_TYPE         = PHY_TYPE_PCIE or PHY_TYPE_SATA or PHY_TYPE_USB
++			  or PHY_TYPE_DP or PHY_TYPE_SGMII
++CONTROLLER_INSTANCE     = Depends on controller type used, can be any of
++				PHY_TYPE_PCIE : 0 or 1 or 2 or 3
++				PHY_TYPE_SATA : 0 or 1
++				PHY_TYPE_USB  : 0 or 1
++				PHY_TYPE_DP   : 0 or 1
++				PHY_TYPE_SGMII: 0 or 1 or 2 or 3
++LANE_NUM                = Depends on which lane clock is used as ref clk, can be
++			  0 or 1 or 2 or 3
++LANE_FREQ               = Frequency that controller can operate, can be any of
++			  19.2Mhz,20Mhz,24Mhz,26Mhz,27Mhz,28.4Mhz,40Mhz,52Mhz,
++			  100Mhz,108Mhz,125Mhz,135Mhz,150Mhz
++
++Example:
++
++#include <dt-bindings/phy/phy.h>
++
++	usb@fe200000 {
++		...
++		phys	  = <&lane2 PHY_TYPE_USB3 0 2 2600000>;
++		...
++	};
++
++	ahci@fd0c0000 {
++		...
++		phys	  = <&lane3 PHY_TYPE_SATA 1 1 125000000>;
++		...
++	};
 -- 
 2.7.4
