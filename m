@@ -1,27 +1,56 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: rng: update bindings for MT7629 SoC
-Date: Fri, 16 Nov 2018 16:31:10 -0600
-Message-ID: <20181116223110.GA19271@bogus>
-References: <0f5fe0d5b6a9c81b3f4395a1007ed0ba2239ae45.1541574485.git.ryder.lee@mediatek.com>
- <20181116061854.ahs6jz7bmztoi3w7@gondor.apana.org.au>
+Subject: Re: [PATCH v4 3/6] arm64: add support for i.MX8M EVK board
+Date: Fri, 16 Nov 2018 16:44:41 -0600
+Message-ID: <20181116224441.GA8002@bogus>
+References: <20181114175242.12468-1-l.stach@pengutronix.de>
+ <20181114175242.12468-3-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20181116061854.ahs6jz7bmztoi3w7@gondor.apana.org.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Ryder Lee <ryder.lee@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-crypto@vger.kernel.org, Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+In-Reply-To: <20181114175242.12468-3-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: "A . s . Dong" <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 16, 2018 at 02:18:54PM +0800, Herbert Xu wrote:
-> On Wed, Nov 07, 2018 at 03:10:16PM +0800, Ryder Lee wrote:
-> > This updates bindings for MT7629 RNG driver.
-> > 
-> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+On Wed, Nov 14, 2018 at 06:52:39PM +0100, Lucas Stach wrote:
+> This is the evaluation kit board for the i.MX8M. The current level of
+> support yields a working console and is able to boot userspace from
+> SD card or Network.
 > 
-> Who is meant to take this patch?
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com> (v1)
+> Tested-by: Tested-by: Baruch Siach <baruch@tkos.co.il> (v1)
+> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+> ---
+> v2:
+> - move to freescale folder
+> - fix indentation
+> - fix typo in Makefile
+> - document compatible
+> - switch to generic pinconf
+> v3:
+> - rebase to v4.19-rc1 and already merged pinctrl driver and pending
+>   clk driver
+> v4:
+> - rebased to 4.10-rc1
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.txt |   4 +
+>  arch/arm64/boot/dts/freescale/Makefile        |   2 +
+>  arch/arm64/boot/dts/freescale/imx8mq-evk.dts  | 290 ++++++++++++++++++
+>  3 files changed, 296 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-evk.dts
 
-I've applied it.
+You missed my R-by on v3.
 
 Rob
