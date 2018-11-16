@@ -1,139 +1,97 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v2 3/4] PCI: imx: Add multi-pd support
-Date: Fri, 16 Nov 2018 12:25:41 +0000
-Message-ID: <20181116122541.GD3228@e107981-ln.cambridge.arm.com>
-References: <cover.1539020938.git.leonard.crestez@nxp.com>
- <ee0c4ecb4b6bd26f548096e7be90a07d181d50ee.1539020938.git.leonard.crestez@nxp.com>
+From: vitor <vitor.soares@synopsys.com>
+Subject: Re: [PATCH v10 0/9] Add the I3C subsystem
+Date: Fri, 16 Nov 2018 12:31:42 +0000
+Message-ID: <5f946406-a205-3802-aefd-ebd8b5a72b0b@synopsys.com>
+References: <20181026144333.12276-1-boris.brezillon@bootlin.com>
+ <76b1d15d-232c-d8ba-5eba-8394e71be725@synopsys.com>
+ <20181115135731.25f60990@bbrezillon> <20181115150137.GB4169@kunai>
+ <20181115162826.42b54776@bbrezillon>
+ <1d64f21a-ad24-94e0-2c17-25729ef59a31@synopsys.com>
+ <20181115200058.1869afdb@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ee0c4ecb4b6bd26f548096e7be90a07d181d50ee.1539020938.git.leonard.crestez@nxp.com>
+In-Reply-To: <20181115200058.1869afdb@bbrezillon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Richard Zhu <hongxing.zhu@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Stefan Agner <stefan@agner.ch>, Marek Vasut <marex@denx.de>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Boris Brezillon <boris.brezillon@bootlin.com>, vitor <vitor.soares@synopsys.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetr>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 08, 2018 at 06:06:21PM +0000, Leonard Crestez wrote:
-> On some chips the PCIE and PCIE_PHY blocks are in separate power domains
-> which can be power-gated independently. The pci driver needs to handle
-> this by keeping both domain active.
-> 
-> This is intended for imx6sx where PCIE is in DISPLAY and PCIE_PHY in
-> it's own domain. Defining the DISPLAY domain requires a way for pcie to
-> keep it active or it will break when displays are off.
-> 
-> The power-domains on imx6sx are meant to look like this:
-> 	power-domains = <&pd_disp>, <&pd_pci>;
-> 	power-domain-names = "pcie", "pcie_phy";
-> 
-> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 48 +++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
+Hi Boris,
 
-I expect Shawn to pick the whole series up and therefore I am dropping
-this series from the PCI tree.
 
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+On 15/11/18 19:00, Boris Brezillon wrote:
+> On Thu, 15 Nov 2018 18:03:47 +0000
+> vitor <vitor.soares@synopsys.com> wrote:
+>
+>> Hi Boris,
+>>
+>>
+>> On 15/11/18 15:28, Boris Brezillon wrote:
+>>> On Thu, 15 Nov 2018 16:01:37 +0100
+>>> Wolfram Sang <wsa@the-dreams.de> wrote:
+>>>   
+>>>> Hi Boris,
+>>>>   
+>>>>> What we could do though, is expose I3C devices that do not have a
+>>>>> driver in kernel space, like spidev does.
+>>>> ...
+>>>>   
+>>>>> Mark, Wolfram, Arnd, Greg, any opinion?
+>>>> Is there a benefit for having drivers in userspace? My gut feeling is to
+>>>> encourage people to write kernel drivers. If this is, for some reason,
+>>>> not possible for some driver, then we have a use case at hand to test
+>>>> the then-to-be-developed userspace interface against. Until then, I
+>>>> personally wouldn't waste effort on designing it without a user in
+>>>> sight.
+>>> I kind of agree with that. Vitor, do you have a use case in mind for
+>>> such userspace drivers? I don't think it's worth designing an API for
+>>> something we don't need (yet).
+>> My use case is a tool for tests, lets say like the i2c tools.
+> What would you like to test exactly?
+>
+>> There is
+>> other subsystems, some of them mentioned on this thread, that have and
+>> ioctl system call or other method to change parameters or send data.
+> I don't think they added the /dev interface before having a real use
+> case for it.
+>
+>>
+>> I rise this topic because I really think it worth to define now how this
+>> should be design (and for me how to do the things right) to avoid future
+>> issues.
+> Actually it should be done the other way around: you should have a real
+> need and the /dev interface should be designed to fulfill this need.
+> Based on this real use case we can discuss other potential usage that
+> might appear in the future and try to design something more
+> future-proof, but clearly, this userspace interface should be driven by
+> a real/well-defined use case.
+>
+> Also, exposing things to userspace is way more risky than adding a new
+> in-kernel subsystem/framework, because it then becomes part of the
+> stable ABI.
+>
+> To make things clearer, I'm not against the idea of exposing I3C
+> devices (or I3C buses) to userspace, but I'd like to understand what you
+> plan to do with that. If this is about testing, what kind of tests
+> you'd like to run. If this is about developing drivers in userspace,
+> why can't these be done in kernel space (license issues?), and what
+> would those drivers be allowed to do?
 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 6171171db1fc..a482f86b02e6 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -25,10 +25,12 @@
->  #include <linux/resource.h>
->  #include <linux/signal.h>
->  #include <linux/types.h>
->  #include <linux/interrupt.h>
->  #include <linux/reset.h>
-> +#include <linux/pm_domain.h>
-> +#include <linux/pm_runtime.h>
->  
->  #include "pcie-designware.h"
->  
->  #define to_imx6_pcie(x)	dev_get_drvdata((x)->dev)
->  
-> @@ -57,10 +59,15 @@ struct imx6_pcie {
->  	u32			tx_deemph_gen2_6db;
->  	u32			tx_swing_full;
->  	u32			tx_swing_low;
->  	int			link_gen;
->  	struct regulator	*vpcie;
-> +
-> +	/* power domain for pcie */
-> +	struct device		*pd_pcie;
-> +	/* power domain for pcie phy */
-> +	struct device		*pd_pcie_phy;
->  };
->  
->  /* Parameters for the waiting for PCIe PHY PLL to lock on i.MX7 */
->  #define PHY_PLL_LOCK_WAIT_MAX_RETRIES	2000
->  #define PHY_PLL_LOCK_WAIT_USLEEP_MIN	50
-> @@ -290,10 +297,47 @@ static int imx6q_pcie_abort_handler(unsigned long addr,
->  	}
->  
->  	return 1;
->  }
->  
-> +static int imx6_pcie_attach_pd(struct device *dev)
-> +{
-> +	struct imx6_pcie *imx6_pcie = dev_get_drvdata(dev);
-> +	struct device_link *link;
-> +
-> +	/* Do nothing when in a single power domain */
-> +	if (dev->pm_domain)
-> +		return 0;
-> +
-> +	imx6_pcie->pd_pcie = dev_pm_domain_attach_by_name(dev, "pcie");
-> +	if (IS_ERR(imx6_pcie->pd_pcie))
-> +		return PTR_ERR(imx6_pcie->pd_pcie);
-> +	link = device_link_add(dev, imx6_pcie->pd_pcie,
-> +			DL_FLAG_STATELESS |
-> +			DL_FLAG_PM_RUNTIME |
-> +			DL_FLAG_RPM_ACTIVE);
-> +	if (IS_ERR(link)) {
-> +		dev_err(dev, "Failed to add device_link to pcie pd: %ld\n", PTR_ERR(link));
-> +		return PTR_ERR(link);
-> +	}
-> +
-> +	imx6_pcie->pd_pcie_phy = dev_pm_domain_attach_by_name(dev, "pcie_phy");
-> +	if (IS_ERR(imx6_pcie->pd_pcie_phy))
-> +		return PTR_ERR(imx6_pcie->pd_pcie_phy);
-> +
-> +	device_link_add(dev, imx6_pcie->pd_pcie_phy,
-> +			DL_FLAG_STATELESS |
-> +			DL_FLAG_PM_RUNTIME |
-> +			DL_FLAG_RPM_ACTIVE);
-> +	if (IS_ERR(link)) {
-> +		dev_err(dev, "Failed to add device_link to pcie_phy pd: %ld\n", PTR_ERR(link));
-> +		return PTR_ERR(link);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
->  {
->  	struct device *dev = imx6_pcie->pci->dev;
->  
->  	switch (imx6_pcie->variant) {
-> @@ -1013,10 +1057,14 @@ static int imx6_pcie_probe(struct platform_device *pdev)
->  		imx6_pcie->vpcie = NULL;
->  	}
->  
->  	platform_set_drvdata(pdev, imx6_pcie);
->  
-> +	ret = imx6_pcie_attach_pd(dev);
-> +	if (ret)
-> +		return ret;
-> +
->  	ret = imx6_add_pcie_port(imx6_pcie, pdev);
->  	if (ret < 0)
->  		return ret;
->  
->  	return 0;
-> -- 
-> 2.17.1
-> 
+
+Basically I need a tool that help me during the development and to avoid 
+me to write a dummy driver for each device that I test.
+
+For instances do some read/write, get/set ccc commands, if something 
+goes wrong during the bus initialization have a to debug etc...
+
+
+For me this is a valid use case and I imagine when people start to 
+develop in i3c this interface will help everyone.
+
+
+Best regards,
+
+Vitor Soares
