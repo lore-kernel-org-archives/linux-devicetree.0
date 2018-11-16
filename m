@@ -1,7 +1,7 @@
 From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH 2/9] dt-bindings: soc: Add ZynqMP PM bindings
-Date: Fri, 16 Nov 2018 15:56:52 -0800
-Message-ID: <1542412619-387-3-git-send-email-jollys@xilinx.com>
+Subject: [PATCH 9/9] dt-bindings: fpga: Add binding doc for the afi config driver
+Date: Fri, 16 Nov 2018 15:56:59 -0800
+Message-ID: <1542412619-387-10-git-send-email-jollys@xilinx.com>
 References: <1542412619-387-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,49 +9,89 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1542412619-387-1-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: michal.simek@xilinx.com, rajanv@xilinx.com, nava.manne@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>, Jolly Shah <jollys@xilinx.com>
+Cc: michal.simek@xilinx.com, rajanv@xilinx.com, nava.manne@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Rajan Vaja <rajan.vaja@xilinx.com>
+Add the binding document for the afi config driver.
 
-Add documentation to describe Xilinx ZynqMP power management
-bindings.
-
-Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 Signed-off-by: Jolly Shah <jollys@xilinx.com>
 ---
- .../bindings/power/reset/xlnx,zynqmp-power.txt     | 25 ++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
+ .../devicetree/bindings/fpga/xlnx,afi-fpga.txt     | 67 ++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,afi-fpga.txt
 
-diff --git a/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt b/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
+diff --git a/Documentation/devicetree/bindings/fpga/xlnx,afi-fpga.txt b/Documentation/devicetree/bindings/fpga/xlnx,afi-fpga.txt
 new file mode 100644
-index 0000000..d366f1e
+index 0000000..9006e72
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
-@@ -0,0 +1,25 @@
-+--------------------------------------------------------------------
-+Device Tree Bindings for the Xilinx Zynq MPSoC Power Management
-+--------------------------------------------------------------------
-+The zynqmp-power node describes the power management configurations.
-+It will control remote suspend/shutdown interfaces.
++++ b/Documentation/devicetree/bindings/fpga/xlnx,afi-fpga.txt
+@@ -0,0 +1,67 @@
++Xilinx ZynqMp AFI interface Manager
++
++The Zynq UltraScale+ MPSoC Processing System core provides access from PL
++masters to PS internal peripherals, and memory through AXI FIFO interface
++(AFI) interfaces.
 +
 +Required properties:
-+ - compatible:		Must contain:	"xlnx,zynqmp-power"
-+ - interrupts:		Interrupt specifier
++-compatible:		Should contain "xlnx,afi-fpga"
++-config-afi:		Pairs of  <regid value >
 +
-+-------
-+Example
-+-------
++The possible values of regid and values are
++ regid:		Regids of the register to be written possible values
++		0- AFIFM0_RDCTRL
++		1- AFIFM0_WRCTRL
++		2- AFIFM1_RDCTRL
++		3- AFIFM1_WRCTRL
++		4- AFIFM2_RDCTRL
++		5- AFIFM2_WRCTRL
++		6- AFIFM3_RDCTRL
++		7- AFIFM3_WRCTRL
++		8- AFIFM4_RDCTRL
++		9- AFIFM4_WRCTRL
++		10- AFIFM5_RDCTRL
++		11- AFIFM5_WRCTRL
++		12- AFIFM6_RDCTRL
++		13- AFIFM6_WRCTRL
++		14- AFIFS
++		15- AFIFS_SS2
++- value:	Array of values to be written.
++		for FM0_RDCTRL(0) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
++		for FM0_WRCTRL(1) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
++		for FM1_RDCTRL(2) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
++		for FM1_WRCTRL(3) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
++		for FM2_RDCTRL(4) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
++		for FM2_WRCTRL(5) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
++		for FM3_RDCTRL(6) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
++		for FM3_WRCTRL(7) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
++		for FM4_RDCTRL(8) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
++		for FM4_WRCTRL(9) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
++		for FM5_RDCTRL(10) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
++		for FM5_WRCTRL(11) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
++		for FM6_RDCTRL(12) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
++		for FM6_WRCTRL(13) the valid values-fabric width   2: 32-bit,1 : 64-bit ,0: 128-bit enabled
++		for AFI_FA(14)
++			dw_ss1_sel	bits (11:10)
++			dw_ss0_sel	bits (9:8)
++				0x0: 32-bit AXI data width),
++				0x1: 64-bit AXI data width,
++				0x2: 128-bit AXI data
++		All other bits are 0 write ignored.
 +
++		for AFI_FA(15)  selects for ss2AXI data width valid values
++					0x000: 32-bit AXI data width),
++					0x100: 64-bit AXI data width,
++					0x200: 128-bit AXI data
++
++Example:
 +firmware {
 +	zynqmp_firmware: zynqmp-firmware {
 +		compatible = "xlnx,zynqmp-firmware";
 +		method = "smc";
-+
-+		zynqmp_power: zynqmp-power {
-+			compatible = "xlnx,zynqmp-power";
-+			interrupts = <0 35 4>;
++		afi0: afi0 {
++			compatible = "xlnx,afi-fpga";
++			config-afi = <0 2>, <1 1>, <2 1>;
 +		};
 +	};
 +};
