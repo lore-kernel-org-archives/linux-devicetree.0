@@ -1,100 +1,186 @@
-From: "jonsmirl@gmail.com" <jonsmirl@gmail.com>
-Subject: Re: [RFC PATCH] dt-bindings: add a jsonschema binding example
-Date: Thu, 15 Nov 2018 20:34:32 -0500
-Message-ID: <CAKON4OwdwVUtX+ZvXUCs-RLo0V=KKKNKzrtRM5GxejaQEL+NRA@mail.gmail.com>
-References: <20180418222905.10414-1-robh@kernel.org> <e7a2f4ca-40c2-05ef-097c-2cecd31fb731@gmail.com>
- <CAL_JsqKVCdk8nFwmtfNt4mMOVYFVxefgafP6JtXThvFhROFB8w@mail.gmail.com>
- <CAKON4OxwAmmPv2+CEtT+eO3Uu8duCKD8OqyWj8+w2Y5SZ4bfOQ@mail.gmail.com> <CAL_JsqJd7F7=yyW5X0P4W0N+0UDA8MLPDGvbBBK+VqMKqajC7Q@mail.gmail.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH v3 06/13] dt-bindings: irqchip: Introduce TISCI Interrupt
+ router bindings
+Date: Fri, 16 Nov 2018 07:36:45 +0530
+Message-ID: <8adf30b7-07a2-fdc3-5993-3de0210638a6@ti.com>
+References: <20181106084105.32483-1-lokeshvutla@ti.com>
+ <20181106084105.32483-7-lokeshvutla@ti.com>
+ <5bea0eb4.1c69fb81.843ed.0186@mx.google.com>
+ <569674da-07a1-107b-020a-4a11534a06b6@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJd7F7=yyW5X0P4W0N+0UDA8MLPDGvbBBK+VqMKqajC7Q@mail.gmail.com>
+In-Reply-To: <569674da-07a1-107b-020a-4a11534a06b6@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, grant.likely@arm.com, Mark Rutland <mark.rutland@arm.com>, geert+renesas@glider.be, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, shawnguo@kernel.org, bjorn.andersson@linaro.org, Arnd Bergmann <arnd@arndb.de>, sboyd@kernel.org, jic23@kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 15, 2018 at 6:42 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Nov 14, 2018 at 1:39 PM jonsmirl@gmail.com <jonsmirl@gmail.com> wrote:
-> >
-> > On Fri, Apr 20, 2018 at 9:36 PM Rob Herring <robh@kernel.org> wrote:
-> > > I share the concern as I doubt most kernel developers don't know
-> > > jsonschema. But then the alternative is us defining and writing our
-> > > own thing which is C like 'cause that's what kernel developers
-> > > understand. My hope is to simplify and restrict things enough that it
-> > > writing a binding doc is straightforward without being jsonschema
-> > > experts. That was the intent of this patch without going into all the
-> > > details behind it.
-> >
-> > When schemas were first discussed long, long ago the idea was to have
-> > a n arbitrator who controls the schema (like Grant/Rob) so there is no
-> > need for general schema design knowledge in random kernel developers.
-> >
-> > First a developer should try and build their device tree using the
-> > existing schema. Then only if they find that impossible to do so
-> > should they propose schema changes. The schema arbitrator would then
-> > look at those changes and work them into the existing schemas as
-> > needed. Doing this via an arbitrator will ensure consistency in the
-> > overall schema design while eliminating redundancy with slight
-> > variations (like we have now).
-> >
-> > Another side effect of schemas is that as they evolve and enforce
-> > commonality among driver implementation it will become possible to
-> > turn those in-common pieces into driver libraries.
->
-> If we replace 'schemas' everywhere above with 'bindings', then this
-> pretty much describes the status quo today. Most device specific
-> bindings are a collection of standard bindings. Occasionally, we have
-> new common bindings. All the bindings get reviewed by me. The only
-> real change here is submitters have to have some level of
-> understanding of json-schema instead of just English (for writing free
-> form text). I think it will continue to largely be following existing
-> examples of other bindings.
+Hi Rob,
 
-What used to happen is that drivers would be written out of tree
-without review of their bindings until mainline submission (if they
-submit them at all).  With schema a driver writer who is working out
-of tree can use the schema to validate their new device tree entries
-before submitting them. That way they will know ahead of time if they
-are making up something non-standard. It will also give them the heads
-up that they can't just make up anything they want in the device tree
-and that they are going to have to defend their design when asking for
-the schema to be changed to support it. An example of where schema
-would have been initially valuable is in the i2c bindings which
-contain significant variation but the function is the same.
+On 11/13/2018 11:43 AM, Lokesh Vutla wrote:
+> Hi Rob,
+> 
+> On 12/11/18 11:30 PM, Rob Herring wrote:
+>> On Tue, Nov 06, 2018 at 02:10:58PM +0530, Lokesh Vutla wrote:
+>>> Add the DT binding documentation for Interrupt router driver.
+>>>
+>>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+>>> ---
+>>> Changes since v2:
+>>> - Dropped interrupt-parent from reqired properties description
+>>> - Updated the interrupt cells to 4.
+>>>
+>>>   .../interrupt-controller/ti,sci-intr.txt      | 84 +++++++++++++++++++
+>>>   MAINTAINERS                                   |  1 +
+>>>   2 files changed, 85 insertions(+)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+>>> b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+>>> new file mode 100644
+>>> index 000000000000..06e69f8c812c
+>>> --- /dev/null
+>>> +++
+>>> b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+>>> @@ -0,0 +1,84 @@
+>>> +Texas Instruments K3 Interrupt Router
+>>> +=====================================
+>>> +
+>>> +The Interrupt Router (INTR) module provides a mechanism to mux M
+>>> +interrupt inputs to N interrupt outputs, where all M inputs are
+>>> selectable
+>>> +to be driven per N output. There is one register per output
+>>> (MUXCNTL_N) that
+>>> +controls the selection.
+>>> +
+>>> +
+>>> +                                 Interrupt Router
+>>> +                             +----------------------+
+>>> +                             |  Inputs     Outputs  |
+>>> +        +-------+            | +------+             |
+>>> +        | GPIO  |----------->| | irq0 |             |       Host IRQ
+>>> +        +-------+            | +------+             |      controller
+>>> +                             |    .        +-----+  |      +-------+
+>>> +        +-------+            |    .        |  0  |  |----->|  IRQ  |
+>>> +        | INTA  |----------->|    .        +-----+  |      +-------+
+>>> +        +-------+            |    .          .      |
+>>> +                             | +------+      .      |
+>>> +                             | | irqM |    +-----+  |
+>>> +                             | +------+    |  N  |  |
+>>> +                             |             +-----+  |
+>>> +                             +----------------------+
+>>> +
+>>> +Configuration of these MUXCNTL_N registers is done by a system
+>>> controller
+>>> +(like the Device Memory and Security Controller on K3 AM654 SoC).
+>>> System
+>>> +controller will keep track of the used and unused registers within
+>>> the Router.
+>>> +Driver should request the system controller to get the range of GIC
+>>> IRQs
+>>> +assigned to the requesting hosts. It is the drivers responsibility
+>>> to keep
+>>> +track of Host IRQs.
+>>> +
+>>> +Communication between the host processor running an OS and the system
+>>> +controller happens through a protocol called TI System Control
+>>> Interface
+>>> +(TISCI protocol). For more details refer:
+>>> +Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+>>> +
+>>> +TISCI Interrupt Router Node:
+>>> +----------------------------
+>>> +- compatible:        Must be "ti,sci-intr".
+>>> +- interrupt-controller:    Identifies the node as an interrupt
+>>> controller
+>>> +- #interrupt-cells:    Specifies the number of cells needed to
+>>> encode an
+>>> +            interrupt source. The value should be 4.
+>>> +            First cell should contain the TISCI device ID of source
+>>> +            Second cell should contain the interrupt source offset
+>>> +            within the device
+>>> +            Third cell specifies the trigger type as defined
+>>> +            in interrupts.txt in this directory.
+>>> +            Fourth cell should be 1 if the irq is coming from
+>>> +            interrupt aggregator else 0.
+>>> +- ti,sci:        Phandle to TI-SCI compatible System controller node.
+>>> +- ti,sci-dst-id:    TISCI device ID of the destination IRQ controller.
+>>> +- ti,sci-rm-range-girq:    TISCI subtype id representing the host
+>>> irqs assigned
+>>> +            to this interrupt router.
+>>
+>> u32 or array?
+> 
+> it is u32.
 
-Maybe we are thinking about schema differently. I had envisioned
-starting from a base generic schema that is capable of validating all
-possible legal Linux device trees. This schema is more strict that
-YAML syntax, but it obviously can't validate in detail.  Someone
-working out of tree would always be able to validate against this
-schema.
+Sorry, I am wrong here. There is one instance where there are more than
+one set of gic irq ranges associated with this IP. Will fix it as an
+array in next version.
 
-As this generic schema validates the device tree it will discover that
-it can utilize more strict schema fragments. So by providing these
-fragments you can validate to any desired level of conformance. The
-end of that process is the json-schema bindings file. But if those
-fragments are missing you can still validate, just not at a detailed
-level.
+Thanks and regards,
+Lokesh
 
-A large set of schemas that work like this are used in ONVIF (security
-cameras). A flavor of SOAP.
-https://www.onvif.org/profiles/specifications/
-These schemas are using XML stylesheets to make them pretty, use view
-source to see the actual schemas.
-
-The ONVIF schemas define points where vendors are allowed to insert
-arbitrary items (ANY elements) and then they will use a vendor
-supplied schema to validate the fragment if one is available. If not
-the generic schema is used to validate the basic structure of the
-vendor fragments.
-
->
-> Rob
-
-
-
--- 
-Jon Smirl
-jonsmirl@gmail.com
+> 
+>>
+>>> +
+>>> +For more details on TISCI IRQ resource management refer:
+>>> +http://downloads.ti.com/tisci/esd/latest/2_tisci_msgs/rm/rm_irq.html
+>>> +
+>>> +Example:
+>>> +--------
+>>> +The following example demonstrates both interrupt router node and
+>>> the consumer
+>>> +node(main gpio) on the AM654 SoC:
+>>> +
+>>> +main_intr: interrupt-controller@1 {
+>>
+>> Unit-address is not valid here without a reg property.
+> 
+> Sure will fix it in next version.
+> 
+> Thanks and regards,
+> Lokesh
+> 
+>>
+>>> +    compatible = "ti,sci-intr";
+>>> +    interrupt-controller;
+>>> +    interrupt-parent = <&gic>;
+>>> +    #interrupt-cells = <4>;
+>>> +    ti,sci = <&dmsc>;
+>>> +    ti,sci-dst-id = <56>;
+>>> +    ti,sci-rm-range-girq = <0x1>;
+>>> +};
+>>> +
+>>> +main_gpio0: gpio@600000 {
+>>> +    ...
+>>> +    interrupt-parent = <&main_intr>;
+>>> +    interrupts = <57 256 IRQ_TYPE_EDGE_RISING 0>,
+>>> +            <57 257 IRQ_TYPE_EDGE_RISING 0>,
+>>> +            <57 258 IRQ_TYPE_EDGE_RISING 0>,
+>>> +            <57 259 IRQ_TYPE_EDGE_RISING 0>,
+>>> +            <57 260 IRQ_TYPE_EDGE_RISING 0>,
+>>> +            <57 261 IRQ_TYPE_EDGE_RISING 0>;
+>>> +    ...
+>>> +};
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index 88b28f6dec45..0e3aa3386287 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -14739,6 +14739,7 @@ F:   
+>>> Documentation/devicetree/bindings/reset/ti,sci-reset.txt
+>>>   F:    Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>>>   F:    drivers/clk/keystone/sci-clk.c
+>>>   F:    drivers/reset/reset-ti-sci.c
+>>> +F:   
+>>> Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+>>>     THANKO'S RAREMONO AM/FM/SW RADIO RECEIVER USB DRIVER
+>>>   M:    Hans Verkuil <hverkuil@xs4all.nl>
+>>> -- 
+>>> 2.19.1
+>>>
+>>
