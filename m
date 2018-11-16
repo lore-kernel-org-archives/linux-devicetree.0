@@ -1,49 +1,45 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4 0/3] Enable ath10k wcn3990 wifi driver support on sdm845
-Date: Fri, 16 Nov 2018 15:29:39 +0200
-Message-ID: <87d0r55ews.fsf@codeaurora.org>
-References: <1541423318-19312-1-git-send-email-govinds@codeaurora.org>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH 0/4] ASoC; davinci-mcasp: Pin handling updates
+Date: Fri, 16 Nov 2018 15:41:37 +0200
+Message-ID: <20181116134141.17396-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1541423318-19312-1-git-send-email-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-        (Govind Singh's message of "Mon, 5 Nov 2018 18:38:35 +0530")
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: alsa-devel@alsa-project.org, misael.lopez@ti.com, jsarha@ti.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+Hi,
 
-> This series enables ath10k wifi driver support for WCN3990 target
-> on sdm845 SOC. This series also updates the missing dt binding documentation
-> and adds optional iommu property.
->
-> Changes since v3:
->     Moved interrupt/reg/reg-name to required property.
->     Removed unused clocks.
->     Corrected interrupt no's.
->
-> Changes since v2:
->     dropped [v2,4/4] dts: arm64/sdm845: Enable iommu for WCN3990 wifi module
->     device node patch from the series as dependent patch is not yet merged.
->     Enabled status flag from sdm845-mtp.dts.
->
-> Changes since v1:
->     Listed no of interrupts/clocks for each set of compatible.
->     Added missing 'wifi' label to sdm845.dtsi.
->
-> Govind Singh (3):
->   dt: bindings: add missing dt properties for WCN3990 wifi node
->   dts: arm64/sdm845: Add WCN3990 WLAN module device node
->   dt: bindings: add bindings for wifi iommu node
->
->  .../bindings/net/wireless/qcom,ath10k.txt          | 62 ++++++++++++++--------
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts            |  8 +++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi               | 26 +++++++++
->  3 files changed, 74 insertions(+), 22 deletions(-)
+The series will improve the McASP pin handling:
+- To avoid non configured clocks leaking out from McASP
+- make sure that the AXR pin (TX) state is correct in all scenarios
+- Allow user configurable DISMOD for the tx pin instead of hardwiring it in the
+  code to low
 
-Via which tree are these patches going? That's not clear for me.
+The DISMOD configuration is needed when the codec requires the TX line to be
+high during inactive slots (mu-law codecs for example).
+
+Regards,
+Peter
+---
+Peter Ujfalusi (4):
+  ASoC: davinci-mcasp: Clear TXSTAT register before activating
+    serializers
+  ASoC: davinci-mcasp: Update PDIR (pin direction) register handling
+  bindings: sound: davinci-mcasp: Document dismod optional property
+  ASoC: davinci-mcasp: Implement configurable dismod handling
+
+ .../bindings/sound/davinci-mcasp-audio.txt    |   5 +
+ include/linux/platform_data/davinci_asp.h     |   1 +
+ sound/soc/davinci/davinci-mcasp.c             | 109 +++++++++++++++---
+ sound/soc/davinci/davinci-mcasp.h             |  30 ++---
+ 4 files changed, 112 insertions(+), 33 deletions(-)
 
 -- 
-Kalle Valo
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
