@@ -1,348 +1,109 @@
-From: Auger Eric <eric.auger@redhat.com>
-Subject: Re: [PATCH v4 6/7] iommu/virtio: Add probe request
-Date: Fri, 16 Nov 2018 09:56:22 +0100
-Message-ID: <aadbcc74-1923-700b-335f-4a85b8011490@redhat.com>
-References: <20181115165234.43990-1-jean-philippe.brucker@arm.com>
- <20181115165234.43990-7-jean-philippe.brucker@arm.com>
+From: Biao Huang <biao.huang@mediatek.com>
+Subject: [v3, PATCH 2/2] dt-binding: mediatek-dwmac: add binding document for MediaTek MT2712 DWMAC
+Date: Fri, 16 Nov 2018 17:18:46 +0800
+Message-ID: <1542359926-28800-2-git-send-email-biao.huang@mediatek.com>
+References: <1542359926-28800-1-git-send-email-biao.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <virtio-dev-return-4976-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
-Sender: <virtio-dev@lists.oasis-open.org>
-List-Post: <mailto:virtio-dev@lists.oasis-open.org>
-List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
-List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
-List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
-In-Reply-To: <20181115165234.43990-7-jean-philippe.brucker@arm.com>
-Content-Language: en-US
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, virtualization@lists.linux-foundation.org, virtio-dev@lists.oasis-open.org, joro@8bytes.org, mst@redhat.com
-Cc: frowand.list@gmail.com, jasowang@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com, bhelgaas@google.com, kvmarm@lists.cs.columbia.edu, tnowicki@caviumnetworks.com, kevin.tian@intel.com, marc.zyngier@arm.com, robin.murphy@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, bharat.bhushan@nxp.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1542359926-28800-1-git-send-email-biao.huang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: davem@davemloft.net, robh+dt@kernel.org
+Cc: honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, biao.huang@mediatek.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, joabreu@synopsys.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean,
+The commit adds the device tree binding documentation for the MediaTek DWMAC
+found on MediaTek MT2712.
 
-On 11/15/18 5:52 PM, Jean-Philippe Brucker wrote:
-> When the device offers the probe feature, send a probe request for each
-> device managed by the IOMMU. Extract RESV_MEM information. When we
-> encounter a MSI doorbell region, set it up as a IOMMU_RESV_MSI region.
-> This will tell other subsystems that there is no need to map the MSI
-> doorbell in the virtio-iommu, because MSIs bypass it.
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Change-Id: I3728666bf65927164bd82fa8dddb90df8270bd44
+Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+---
+ .../devicetree/bindings/net/mediatek-dwmac.txt     |   77 ++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/mediatek-dwmac.txt
 
-Thanks
-
-Eric
-> ---
->  drivers/iommu/virtio-iommu.c      | 156 ++++++++++++++++++++++++++++--
->  include/uapi/linux/virtio_iommu.h |  38 ++++++++
->  2 files changed, 188 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
-> index 2a9cb6285a1e..c547ebd79c43 100644
-> --- a/drivers/iommu/virtio-iommu.c
-> +++ b/drivers/iommu/virtio-iommu.c
-> @@ -46,6 +46,7 @@ struct viommu_dev {
->  	struct iommu_domain_geometry	geometry;
->  	u64				pgsize_bitmap;
->  	u8				domain_bits;
-> +	u32				probe_size;
->  };
->  
->  struct viommu_mapping {
-> @@ -67,8 +68,10 @@ struct viommu_domain {
->  };
->  
->  struct viommu_endpoint {
-> +	struct device			*dev;
->  	struct viommu_dev		*viommu;
->  	struct viommu_domain		*vdomain;
-> +	struct list_head		resv_regions;
->  };
->  
->  struct viommu_request {
-> @@ -119,6 +122,9 @@ static off_t viommu_get_req_offset(struct viommu_dev *viommu,
->  {
->  	size_t tail_size = sizeof(struct virtio_iommu_req_tail);
->  
-> +	if (req->type == VIRTIO_IOMMU_T_PROBE)
-> +		return len - viommu->probe_size - tail_size;
-> +
->  	return len - tail_size;
->  }
->  
-> @@ -394,6 +400,110 @@ static int viommu_replay_mappings(struct viommu_domain *vdomain)
->  	return ret;
->  }
->  
-> +static int viommu_add_resv_mem(struct viommu_endpoint *vdev,
-> +			       struct virtio_iommu_probe_resv_mem *mem,
-> +			       size_t len)
-> +{
-> +	size_t size;
-> +	u64 start64, end64;
-> +	phys_addr_t start, end;
-> +	struct iommu_resv_region *region = NULL;
-> +	unsigned long prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
-> +
-> +	start = start64 = le64_to_cpu(mem->start);
-> +	end = end64 = le64_to_cpu(mem->end);
-> +	size = end64 - start64 + 1;
-> +
-> +	/* Catch any overflow, including the unlikely end64 - start64 + 1 = 0 */
-> +	if (start != start64 || end != end64 || size < end64 - start64)
-> +		return -EOVERFLOW;
-> +
-> +	if (len < sizeof(*mem))
-> +		return -EINVAL;
-> +
-> +	switch (mem->subtype) {
-> +	default:
-> +		dev_warn(vdev->dev, "unknown resv mem subtype 0x%x\n",
-> +			 mem->subtype);
-> +		/* Fall-through */
-> +	case VIRTIO_IOMMU_RESV_MEM_T_RESERVED:
-> +		region = iommu_alloc_resv_region(start, size, 0,
-> +						 IOMMU_RESV_RESERVED);
-> +		break;
-> +	case VIRTIO_IOMMU_RESV_MEM_T_MSI:
-> +		region = iommu_alloc_resv_region(start, size, prot,
-> +						 IOMMU_RESV_MSI);
-> +		break;
-> +	}
-> +	if (!region)
-> +		return -ENOMEM;
-> +
-> +	list_add(&vdev->resv_regions, &region->list);
-> +	return 0;
-> +}
-> +
-> +static int viommu_probe_endpoint(struct viommu_dev *viommu, struct device *dev)
-> +{
-> +	int ret;
-> +	u16 type, len;
-> +	size_t cur = 0;
-> +	size_t probe_len;
-> +	struct virtio_iommu_req_probe *probe;
-> +	struct virtio_iommu_probe_property *prop;
-> +	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
-> +	struct viommu_endpoint *vdev = fwspec->iommu_priv;
-> +
-> +	if (!fwspec->num_ids)
-> +		return -EINVAL;
-> +
-> +	probe_len = sizeof(*probe) + viommu->probe_size +
-> +		    sizeof(struct virtio_iommu_req_tail);
-> +	probe = kzalloc(probe_len, GFP_KERNEL);
-> +	if (!probe)
-> +		return -ENOMEM;
-> +
-> +	probe->head.type = VIRTIO_IOMMU_T_PROBE;
-> +	/*
-> +	 * For now, assume that properties of an endpoint that outputs multiple
-> +	 * IDs are consistent. Only probe the first one.
-> +	 */
-> +	probe->endpoint = cpu_to_le32(fwspec->ids[0]);
-> +
-> +	ret = viommu_send_req_sync(viommu, probe, probe_len);
-> +	if (ret)
-> +		goto out_free;
-> +
-> +	prop = (void *)probe->properties;
-> +	type = le16_to_cpu(prop->type) & VIRTIO_IOMMU_PROBE_T_MASK;
-> +
-> +	while (type != VIRTIO_IOMMU_PROBE_T_NONE &&
-> +	       cur < viommu->probe_size) {
-> +		len = le16_to_cpu(prop->length) + sizeof(*prop);
-> +
-> +		switch (type) {
-> +		case VIRTIO_IOMMU_PROBE_T_RESV_MEM:
-> +			ret = viommu_add_resv_mem(vdev, (void *)prop, len);
-> +			break;
-> +		default:
-> +			dev_err(dev, "unknown viommu prop 0x%x\n", type);
-> +		}
-> +
-> +		if (ret)
-> +			dev_err(dev, "failed to parse viommu prop 0x%x\n", type);
-> +
-> +		cur += len;
-> +		if (cur >= viommu->probe_size)
-> +			break;
-> +
-> +		prop = (void *)probe->properties + cur;
-> +		type = le16_to_cpu(prop->type) & VIRTIO_IOMMU_PROBE_T_MASK;
-> +	}
-> +
-> +out_free:
-> +	kfree(probe);
-> +	return ret;
-> +}
-> +
->  /* IOMMU API */
->  
->  static struct iommu_domain *viommu_domain_alloc(unsigned type)
-> @@ -616,15 +726,33 @@ static void viommu_iotlb_sync(struct iommu_domain *domain)
->  
->  static void viommu_get_resv_regions(struct device *dev, struct list_head *head)
->  {
-> -	struct iommu_resv_region *region;
-> +	struct iommu_resv_region *entry, *new_entry, *msi = NULL;
-> +	struct viommu_endpoint *vdev = dev->iommu_fwspec->iommu_priv;
->  	int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
->  
-> -	region = iommu_alloc_resv_region(MSI_IOVA_BASE, MSI_IOVA_LENGTH, prot,
-> -					 IOMMU_RESV_SW_MSI);
-> -	if (!region)
-> -		return;
-> +	list_for_each_entry(entry, &vdev->resv_regions, list) {
-> +		if (entry->type == IOMMU_RESV_MSI)
-> +			msi = entry;
-> +
-> +		new_entry = kmemdup(entry, sizeof(*entry), GFP_KERNEL);
-> +		if (!new_entry)
-> +			return;
-> +		list_add_tail(&new_entry->list, head);
-> +	}
-> +
-> +	/*
-> +	 * If the device didn't register any bypass MSI window, add a
-> +	 * software-mapped region.
-> +	 */
-> +	if (!msi) {
-> +		msi = iommu_alloc_resv_region(MSI_IOVA_BASE, MSI_IOVA_LENGTH,
-> +					      prot, IOMMU_RESV_SW_MSI);
-> +		if (!msi)
-> +			return;
-> +
-> +		list_add_tail(&msi->list, head);
-> +	}
->  
-> -	list_add_tail(&region->list, head);
->  	iommu_dma_get_resv_regions(dev, head);
->  }
->  
-> @@ -672,9 +800,18 @@ static int viommu_add_device(struct device *dev)
->  	if (!vdev)
->  		return -ENOMEM;
->  
-> +	vdev->dev = dev;
->  	vdev->viommu = viommu;
-> +	INIT_LIST_HEAD(&vdev->resv_regions);
->  	fwspec->iommu_priv = vdev;
->  
-> +	if (viommu->probe_size) {
-> +		/* Get additional information for this endpoint */
-> +		ret = viommu_probe_endpoint(viommu, dev);
-> +		if (ret)
-> +			goto err_free_dev;
-> +	}
-> +
->  	ret = iommu_device_link(&viommu->iommu, dev);
->  	if (ret)
->  		goto err_free_dev;
-> @@ -696,6 +833,7 @@ static int viommu_add_device(struct device *dev)
->  err_unlink_dev:
->  	iommu_device_unlink(&viommu->iommu, dev);
->  err_free_dev:
-> +	viommu_put_resv_regions(dev, &vdev->resv_regions);
->  	kfree(vdev);
->  
->  	return ret;
-> @@ -713,6 +851,7 @@ static void viommu_remove_device(struct device *dev)
->  
->  	iommu_group_remove_device(dev);
->  	iommu_device_unlink(&vdev->viommu->iommu, dev);
-> +	viommu_put_resv_regions(dev, &vdev->resv_regions);
->  	kfree(vdev);
->  }
->  
-> @@ -812,6 +951,10 @@ static int viommu_probe(struct virtio_device *vdev)
->  			     struct virtio_iommu_config, domain_bits,
->  			     &viommu->domain_bits);
->  
-> +	virtio_cread_feature(vdev, VIRTIO_IOMMU_F_PROBE,
-> +			     struct virtio_iommu_config, probe_size,
-> +			     &viommu->probe_size);
-> +
->  	viommu->geometry = (struct iommu_domain_geometry) {
->  		.aperture_start	= input_start,
->  		.aperture_end	= input_end,
-> @@ -893,6 +1036,7 @@ static unsigned int features[] = {
->  	VIRTIO_IOMMU_F_MAP_UNMAP,
->  	VIRTIO_IOMMU_F_DOMAIN_BITS,
->  	VIRTIO_IOMMU_F_INPUT_RANGE,
-> +	VIRTIO_IOMMU_F_PROBE,
->  };
->  
->  static struct virtio_device_id id_table[] = {
-> diff --git a/include/uapi/linux/virtio_iommu.h b/include/uapi/linux/virtio_iommu.h
-> index 2e0bf5792f26..cde2a3409caa 100644
-> --- a/include/uapi/linux/virtio_iommu.h
-> +++ b/include/uapi/linux/virtio_iommu.h
-> @@ -14,6 +14,7 @@
->  #define VIRTIO_IOMMU_F_DOMAIN_BITS		1
->  #define VIRTIO_IOMMU_F_MAP_UNMAP		2
->  #define VIRTIO_IOMMU_F_BYPASS			3
-> +#define VIRTIO_IOMMU_F_PROBE			4
->  
->  struct virtio_iommu_range {
->  	__u64					start;
-> @@ -28,6 +29,8 @@ struct virtio_iommu_config {
->  	/* Max domain ID size */
->  	__u8					domain_bits;
->  	__u8					padding[3];
-> +	/* Probe buffer size */
-> +	__u32					probe_size;
->  };
->  
->  /* Request types */
-> @@ -35,6 +38,7 @@ struct virtio_iommu_config {
->  #define VIRTIO_IOMMU_T_DETACH			0x02
->  #define VIRTIO_IOMMU_T_MAP			0x03
->  #define VIRTIO_IOMMU_T_UNMAP			0x04
-> +#define VIRTIO_IOMMU_T_PROBE			0x05
->  
->  /* Status types */
->  #define VIRTIO_IOMMU_S_OK			0x00
-> @@ -101,4 +105,38 @@ struct virtio_iommu_req_unmap {
->  	struct virtio_iommu_req_tail		tail;
->  };
->  
-> +#define VIRTIO_IOMMU_PROBE_T_NONE		0
-> +#define VIRTIO_IOMMU_PROBE_T_RESV_MEM		1
-> +
-> +#define VIRTIO_IOMMU_PROBE_T_MASK		0xfff
-> +
-> +struct virtio_iommu_probe_property {
-> +	__le16					type;
-> +	__le16					length;
-> +};
-> +
-> +#define VIRTIO_IOMMU_RESV_MEM_T_RESERVED	0
-> +#define VIRTIO_IOMMU_RESV_MEM_T_MSI		1
-> +
-> +struct virtio_iommu_probe_resv_mem {
-> +	struct virtio_iommu_probe_property	head;
-> +	__u8					subtype;
-> +	__u8					reserved[3];
-> +	__le64					start;
-> +	__le64					end;
-> +};
-> +
-> +struct virtio_iommu_req_probe {
-> +	struct virtio_iommu_req_head		head;
-> +	__le32					endpoint;
-> +	__u8					reserved[64];
-> +
-> +	__u8					properties[];
-> +
-> +	/*
-> +	 * Tail follows the variable-length properties array. No padding,
-> +	 * property lengths are all aligned on 8 bytes.
-> +	 */
-> +};
-> +
->  #endif
-> 
+diff --git a/Documentation/devicetree/bindings/net/mediatek-dwmac.txt b/Documentation/devicetree/bindings/net/mediatek-dwmac.txt
+new file mode 100644
+index 0000000..7fd56e0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/mediatek-dwmac.txt
+@@ -0,0 +1,77 @@
++MediaTek DWMAC glue layer controller
++
++This file documents platform glue layer for stmmac.
++Please see stmmac.txt for the other unchanged properties.
++
++The device node has following properties.
++
++Required properties:
++- compatible:  Should be "mediatek,mt2712-gmac" for MT2712 SoC
++- reg:  Address and length of the register set for the device
++- interrupts:  Should contain the MAC interrupts
++- interrupt-names: Should contain a list of interrupt names corresponding to
++	the interrupts in the interrupts property, if available.
++	Should be "macirq" for the main MAC IRQ
++- clocks: Must contain a phandle for each entry in clock-names.
++- clock-names: The name of the clock listed in the clocks property. These are
++	"axi", "apb", "mac_ext", "mac_parent", "ptp_ref", "ptp_parent", "ptp_top"
++	for MT2712 SoC
++- mac-address: See ethernet.txt in the same directory
++- phy-mode: See ethernet.txt in the same directory
++
++Optional properties:
++- tx-delay: TX clock delay macro value. Range is 0~31. Default is 0.
++	It should be defined for rgmii/rgmii-rxid/mii interface.
++- rx-delay: RX clock delay macro value. Range is 0~31. Default is 0.
++	It should be defined for rgmii/rgmii-txid/mii/rmii interface.
++- fine-tune: This property will select coarse-tune delay or fine delay
++	for rgmii interface.
++	If fine-tune delay is enabled, tx-delay/rx-delay is 170+/-50ps
++	per stage.
++	Else coarse-tune delay is enabled, tx-delay/rx-delay is 0.55+/-0.2ns
++	per stage.
++	This property do not apply to non-rgmii PHYs.
++	Only coarse-tune delay is supported for mii/rmii PHYs.
++- rmii-rxc: Reference clock of rmii is from external PHYs,
++	and it can be connected to TXC or RXC pin on MT2712 SoC.
++	If ref_clk <--> TXC, disable it.
++	Else ref_clk <--> RXC, enable it.
++- txc-inverse: Inverse tx clock for mii/rgmii.
++	Inverse tx clock inside MAC relative to reference clock for rmii,
++	and it rarely happen.
++- rxc-inverse: Inverse rx clock for mii/rgmii interfaces.
++	Inverse reference clock for rmii.
++
++Example:
++	eth: ethernet@1101c000 {
++		compatible = "mediatek,mt2712-gmac";
++		reg = <0 0x1101c000 0 0x1300>;
++		interrupts = <GIC_SPI 237 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-names = "macirq";
++		phy-mode ="rgmii-id";
++		mac-address = [00 55 7b b5 7d f7];
++		clock-names = "axi",
++			      "apb",
++			      "mac_ext",
++			      "mac_parent",
++			      "ptp_ref",
++			      "ptp_parent",
++			      "ptp_top";
++		clocks = <&pericfg CLK_PERI_GMAC>,
++			 <&pericfg CLK_PERI_GMAC_PCLK>,
++			 <&topckgen CLK_TOP_ETHER_125M_SEL>,
++			 <&topckgen CLK_TOP_ETHERPLL_125M>,
++			 <&topckgen CLK_TOP_ETHER_50M_SEL>,
++			 <&topckgen CLK_TOP_APLL1_D3>,
++			 <&topckgen CLK_TOP_APLL1>;
++		snps,txpbl = <32>;
++		snps,rxpbl = <32>;
++		snps,reset-gpio = <&pio 87 GPIO_ACTIVE_LOW>;
++		snps,reset-active-low;
++		tx-delay = <9>;
++		rx-delay = <9>;
++		fine-tune;
++		rmii-rxc;
++		txc-inverse;
++		rxc-inverse;
++	};
+-- 
+1.7.9.5
