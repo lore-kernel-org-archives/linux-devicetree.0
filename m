@@ -1,38 +1,24 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: imx51: Fix memory node duplicaton
-Date: Fri, 16 Nov 2018 13:19:35 +0800
-Message-ID: <20181116051933.GK5829@dragon>
-References: <1541452486-26597-1-git-send-email-festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6sll: remove unused property in gpc node
+Date: Fri, 16 Nov 2018 13:21:30 +0800
+Message-ID: <20181116052128.GL5829@dragon>
+References: <1541495675-14706-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1541452486-26597-1-git-send-email-festevam@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, robh@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, devicetree@vger.kernel.org
+In-Reply-To: <1541495675-14706-1-git-send-email-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 05, 2018 at 07:14:45PM -0200, Fabio Estevam wrote:
-> Boards based on imx51 have duplicate memory nodes:
+On Tue, Nov 06, 2018 at 09:19:36AM +0000, Anson Huang wrote:
+> The "fsl,mf-mix-wakeup-irq" is ONLY used as a temporary
+> solution in NXP's internal tree for Mega/Fast Mix off
+> feature after suspend, upstream kernel does NOT need it,
+> remove it.
 > 
-> - One coming from the board dts file: memory@
-> 
-> - One coming from the imx51.dtsi file.
-> 
-> Fix the duplication by removing the memory node from the dtsi file
-> and by adding 'device_type = "memory";' in the board dts.
-> 
-> Reported-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
 Applied both, thanks.
