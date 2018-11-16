@@ -1,162 +1,182 @@
 From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH 0/9] dt-bindings: Firmware node binding for ZynqMP core
-Date: Fri, 16 Nov 2018 15:56:50 -0800
-Message-ID: <1542412619-387-1-git-send-email-jollys@xilinx.com>
+Subject: [PATCH 3/9] dt-bindings: reset: Add bindings for ZynqMP reset driver
+Date: Fri, 16 Nov 2018 15:56:53 -0800
+Message-ID: <1542412619-387-4-git-send-email-jollys@xilinx.com>
+References: <1542412619-387-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1542412619-387-1-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com
 Cc: michal.simek@xilinx.com, rajanv@xilinx.com, nava.manne@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Base firmware node and clock child node binding are part of mainline kernel. This patchset adds documentation to describe rest of the firmware child node bindings. 
-Complete firmware DT node example is shown below for ease of understanding:
+From: Nava kishore Manne <nava.manne@xilinx.com>
 
-firmware {
-	zynqmp_firmware: zynqmp-firmware {
-		compatible = "xlnx,zynqmp-firmware";
-		method = "smc";
-		#power-domain-cells = <1>;
-		#reset-cells = <1>;
+Add documentation to describe Xilinx ZynqMP reset driver
+bindings.
 
-		zynqmp_clk: clock-controller {
-			#clock-cells = <1>;
-			compatible = "xlnx,zynqmp-clk";
-			clocks = <&pss_ref_clk>, <&video_clk>, <&pss_alt_ref_clk>, <&aux_ref_clk>, <&gt_crx_ref_clk>;
-			clock-names = "pss_ref_clk", "video_clk", "pss_alt_ref_clk","aux_ref_clk", "gt_crx_ref_clk";
-		};
-
-		zynqmp_power: zynqmp-power {
-			compatible = "xlnx,zynqmp-power";
-			interrupts = <0 35 4>;
-		};
-
-		nvmem_firmware {
-			compatible = "xlnx,zynqmp-nvmem-fw";
-			#address-cells = <1>;
-			#size-cells = <1>;
-
-			/* Data cells */
-			soc_revision: soc_revision {
-				reg = <0x0 0x4>;
-			};
-		};
-
-		afi0: afi0 {
-			compatible = "xlnx,afi-fpga";
-			config-afi = <0 2>, <1 1>, <2 1>;
-		};
-
-		qspi: spi@ff0f0000 {
-			compatible = "xlnx,zynqmp-qspi-1.0";
-			clock-names = "ref_clk", "pclk";
-			clocks = <&misc_clk &misc_clk>;
-			interrupts = <0 15 4>;
-			interrupt-parent = <&gic>;
-			num-cs = <1>;
-			reg = <0x0 0xff0f0000 0x1000>,<0x0 0xc0000000 0x8000000>;
-		};
-
-		serdes: zynqmp_phy@fd400000 {
-			compatible = "xlnx,zynqmp-psgtr";
-			status = "okay";
-			reg = <0x0 0xfd400000 0x0 0x40000>, <0x0 0xfd3d0000 0x0 0x1000>,
-				<0x0 0xff5e0000 0x0 0x1000>;
-			reg-names = "serdes", "siou", "lpd";
-
-			lane0: lane@0 {
-				#phy-cells = <4>;
-			};
-			lane1: lane@1 {
-				#phy-cells = <4>;
-			};
-			lane2: lane@2 {
-				#phy-cells = <4>;
-			};
-			lane3: lane@3 {
-				#phy-cells = <4>;
-			};
-		};
-
-		pinctrl_uart1_default: uart1-default {
-			mux {
-				groups = "uart0_4_grp";
-				function = "uart0";
-			};
-
-			conf {
-				groups = "uart0_4_grp";
-				slew-rate = <SLEW_RATE_SLOW>;
-				io-standard = <IO_STANDARD_LVCMOS18>;
-			};
-
-			conf-rx {
-				pins = "MIO18";
-				bias-high-impedance;
-			};
-
-			conf-tx {
-				pins = "MIO19";
-				bias-disable;
-				schmitt-cmos = <PIN_INPUT_TYPE_CMOS>;
-			};
-		};
-		zynqmp-r5-remoteproc@0 {
-			compatible = "xlnx,zynqmp-r5-remoteproc-1.0";
-			reg = <0x0 0xFFE00000 0x0 0x10000>,
-				<0x0 0xFFE20000 0x0 0x10000>,
-				<0x0 0xff340000 0x0 0x100>;
-			reg-names = "tcm_a", "tcm_b", "ipi";
-			dma-ranges;
-			core_conf = "split0";
-			memory-region = <&rproc_0_fw_reserved>,
-					<&rproc_0_dma_reserved>;
-			tcm-pnode-id = <0xf>, <0x10>;
-			rpu-pnode-id = <0x7>;
-			interrupt-parent = <&gic>;
-			interrupts = <0 29 4>;
-		};
-	};
-};
-
-Jolly Shah (2):
-  dt-bindings: phy: Add dt bindings for ZynqMP PHY
-  dt-bindings: fpga: Add binding doc for the afi config driver
-
-Nava kishore Manne (2):
-  dt-bindings: reset: Add bindings for ZynqMP reset driver
-  dt-bindings: nvmem: Add bindings for ZynqMP nvmem driver
-
-Rajan Vaja (4):
-  dt-bindings: power: Add ZynqMP power domain bindings
-  dt-bindings: soc: Add ZynqMP PM bindings
-  dt-bindings: pinctrl: Add ZynqMP pin controller bindings
-  dt-bindings: spi: zynqmp: Move SPI node under zynqmp firmware
-
-Wendy Liang (1):
-  dt-bindings: remoteproc: Add Xilinx R5 rproc binding
-
- .../devicetree/bindings/fpga/xlnx,afi-fpga.txt     |  67 +++++
- .../bindings/nvmem/xlnx,zynqmp-nvmem.txt           |  44 ++++
- .../devicetree/bindings/phy/phy-zynqmp.txt         | 126 ++++++++++
- .../bindings/pinctrl/xlnx,zynqmp-pinctrl.txt       | 272 +++++++++++++++++++++
- .../bindings/power/reset/xlnx,zynqmp-power.txt     |  25 ++
- .../bindings/power/xlnx,zynqmp-genpd.txt           |  34 +++
- .../remoteproc/xlnx,zynqmp-r5-remoteproc.txt       |  81 ++++++
- .../bindings/reset/xlnx,zynqmp-reset.txt           | 148 +++++++++++
- .../devicetree/bindings/spi/spi-zynqmp-qspi.txt    |  22 +-
- include/dt-bindings/power/xlnx-zynqmp-power.h      |  39 +++
- 10 files changed, 850 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,afi-fpga.txt
- create mode 100644 Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt
- create mode 100644 Documentation/devicetree/bindings/phy/phy-zynqmp.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
- create mode 100644 Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
- create mode 100644 Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5-remoteproc.txt
+Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+Signed-off-by: Jolly Shah <jollys@xilinx.com>
+---
+ .../bindings/reset/xlnx,zynqmp-reset.txt           | 148 +++++++++++++++++++++
+ 1 file changed, 148 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
- create mode 100644 include/dt-bindings/power/xlnx-zynqmp-power.h
 
+diff --git a/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
+new file mode 100644
+index 0000000..e9c1af8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
+@@ -0,0 +1,148 @@
++--------------------------------------------------------------------------
++ =  Zynq UltraScale+ MPSoC reset driver binding =
++--------------------------------------------------------------------------
++The Zynq UltraScale+ MPSoC has several different resets.
++
++See Chapter 36 of the Zynq UltraScale+ MPSoC TRM (UG) for more information
++about zynqmp resets.
++
++Please also refer to reset.txt in this directory for common reset
++controller binding usage.
++
++Required Properties:
++- #reset-cells:	Specifies the number of cells needed to encode reset
++		line, should be 1
++
++Reset outputs:
++	0   :PCIE config reset.
++	1   :PCIE bridge block level reset (AXI interface).
++	2   :PCIE control block level,reset.
++	3   :Display Port block level reset (includes DPDMA).
++	4   :FPD WDT reset.
++	5   :AF_FM5 block level reset.
++	6   :AF_FM4 block level reset.
++	7   :AF_FM3 block level reset.
++	8   :AF_FM2 block level reset.
++	9   :AF_FM1 block level reset.
++	10  :AF_FM0 block level reset.
++	11  :GDMA block level reset.
++	12  :Pixel Processor (GPU_PP1) block level reset.
++	13  :Pixel Processor (GPU_PP0) block level reset.
++	14  :GPU block level reset.
++	15  :GT block level reset.
++	16  :Sata block level reset.
++	17  :ACPU3 power on reset.
++	18  :ACPU2 power on reset.
++	19  :ACPU1 power on reset.
++	20  :ACPU0 power on reset.
++	21  :APU L2 reset.
++	22  :ACPU3 reset.
++	23  :ACPU2 reset.
++	24  :ACPU1 reset.
++	25  :ACPU0 reset.
++	26  :DDR block level reset inside of the DDR Sub System.
++	27  :APM block level reset inside of the DDR Sub System.
++	28  :soft reset.
++	29  :GEM 0 reset.
++	30  :GEM 1 reset.
++	31  :GEM 2 reset.
++	32  :GEM 3 reset.
++	33  :qspi reset.
++	34  :uart0 reset.
++	35  :uart1 reset.
++	36  :spi0 reset.
++	37  :spi1 reset.
++	38  :sdio0 reset.
++	39  :sdio1 reset.
++	40  :can0 reset.
++	41  :can1 reset.
++	42  :i2c0 reset.
++	43  :i2c1 reset.
++	44  :ttc0 reset.
++	45  :ttc1 reset.
++	46  :ttc2 reset.
++	47  :ttc3 reset.
++	48  :swdt reset.
++	49  :nand reset.
++	50  :adma reset.
++	51  :gpio reset.
++	52  :iou_cc reset.
++	53  :timestamp reset.
++	54  :rpu_r50 reset.
++	55  :rpu r51 reset.
++	56  :rpu_amba reset.
++	57  :ocm reset.
++	58  :rpu_pge reset.
++	59  :usb0_core reset.
++	60  :usb1_core reset.
++	61  :usb0_hiber reset.
++	62  :usb1_hiber reset.
++	63  :usb0_apb reset.
++	64  :usb1_apb reset.
++	65  :ipi reset.
++	66  :apm reset.
++	67  :rtc reset.
++	68  :sysmon reset.
++	69  :afi_fm6 reset.
++	70  :lpd_swdt reset.
++	71  :fpd_reset.
++	72  :rpu_dbg1 reset.
++	73  :rpu_dbg0 reset.
++	74  :dbg_lpd reset.
++	75  :dbg_fpd reset.
++	76  :apll reset.
++	77  :dpll reset.
++	78  :vpll reset.
++	79  :iopll reset.
++	80  :rpll reset.
++	81  :gpio_pl_0 reset.
++	82  :gpio_pl_1 reset.
++	83  :gpio_pl_2 reset.
++	84  :gpio_pl_3 reset.
++	85  :gpio_pl_4 reset.
++	86  :gpio_pl_5 reset.
++	87  :gpio_pl_6 reset.
++	88  :gpio_pl_7 reset.
++	89  :gpio_pl_8 reset.
++	90  :gpio_pl_9 reset.
++	91  :gpio_pl_10 reset.
++	92  :gpio_pl_11 reset.
++	93  :gpio_pl_12 reset.
++	94  :gpio_pl_13 reset.
++	95  :gpio_pl_14 reset.
++	96  :gpio_pl_15 reset.
++	97  :gpio_pl_16 reset.
++	98  :gpio_pl_17 reset.
++	99  :gpio_pl_18 reset.
++	100 :gpio_pl_19 reset.
++	101 :gpio_pl_20 reset.
++	102 :gpio_pl_21 reset.
++	103 :gpio_pl_22 reset.
++	104 :gpio_pl_23 reset.
++	105 :gpio_pl_24 reset.
++	106 :gpio_pl_25 reset.
++	107 :gpio_pl_26 reset.
++	108 :gpio_pl_27 reset.
++	109 :gpio_pl_28 reset.
++	110 :gpio_pl_29 reset.
++	111 :gpio_pl_30 reset.
++	112 :gpio_pl_31 reset.
++	113 :rpu_ls reset.
++	114 :ps_only reset.
++	115 :pl reset.
++	116 :ps_pl0 reset
++	117 :ps_pl1 reset
++	118 :ps_pl2 reset
++	119 :ps_pl3 reset
++
++-------
++Example
++-------
++
++firmware {
++	zynqmp_firmware: zynqmp-firmware {
++		...
++		#reset-cells = <1>;
++		...
++	};
++};
 -- 
 2.7.4
