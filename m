@@ -1,49 +1,79 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 5/9] dt-bindings: spi: Adjust the bindings for the FSL QSPI  driver
-Date: Fri, 16 Nov 2018 16:59:26 -0600
-Message-ID: <5bef4bcf.1c69fb81.39c0b.e18d@mx.google.com>
-References: <1542116782-13118-1-git-send-email-frieder.schrempf@kontron.de> <1542116782-13118-6-git-send-email-frieder.schrempf@kontron.de>
+Subject: Re: [PATCH v5 06/12] drm/mediatek: update dt-bindings
+Date: Fri, 16 Nov 2018 17:06:09 -0600
+Message-ID: <20181116230609.GA9744@bogus>
+References: <20181116125449.23581-1-matthias.bgg@kernel.org>
+ <20181116125449.23581-7-matthias.bgg@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542116782-13118-6-git-send-email-frieder.schrempf@kontron.de>
+Content-Disposition: inline
+In-Reply-To: <20181116125449.23581-7-matthias.bgg@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Schrempf Frieder <frieder.schrempf@kontron.De>
-Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "richard@nod.at" <richard@nod.at>, "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>, "david.wolfe@nxp.com" <david.wolfe@nxp.com>, "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>, "prabhakar.kushwaha@nxp.com" <prabhakar.kushwaha@nxp.com>, "yogeshnarayan.gaur@nxp.com" <yogeshnarayan.gaur@nxp.com>, "han.xu@nxp.com" <han.xu@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: matthias.bgg@kernel.org
+Cc: mark.rutland@arm.com, ck.hu@mediatek.com, p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com, sboyd@codeaurora.org, ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com, matthias.bgg@gmail.com, sean.wang@mediatek.com, sean.wang@kernel.org, rdunlap@infradead.org, wens@csie.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Nov 2018 13:47:37 +0000, Schrempf Frieder wrote:
-> Adjust the documentation of the new SPI memory interface based
-> driver to reflect the new drivers settings.
-> 
-> The "old" driver was using the "fsl,qspi-has-second-chip" property to
-> select one of two dual chip setups (two chips on one bus or two chips
-> on separate buses). And it used the order in which the subnodes are
-> defined in the dt to select the CS, the chip is connected to.
-> 
-> Both methods are wrong and in fact the "reg" property should be used to
-> determine which bus and CS a chip is connected to. This also enables us
-> to use different setups than just single chip, or symmetric dual chip.
-> 
-> So the porting of the driver from the MTD to the SPI framework actually
-> enforces the use of the "reg" properties and makes
-> "fsl,qspi-has-second-chip" superfluous.
-> 
-> As all boards that have "fsl,qspi-has-second-chip" set, also have
-> correct "reg" properties, the removal of this property shouldn't lead to
-> any incompatibilities.
-> 
-> The only compatibility issues I can see are with imx6sx-sdb.dts and
-> imx6sx-sdb-reva.dts, which have their reg properties set incorrectly
-> (see explanation here: [2]), all other boards should stay compatible.
-> 
-> Also the "big-endian" flag was removed, as this setting is now selected
-> by the driver, depending on which SoC is in use.
-> 
-> [2] https://patchwork.ozlabs.org/patch/922817/#1925445
-> 
-> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-> ---
->  .../devicetree/bindings/spi/spi-fsl-qspi.txt      | 18 ++++++++----------
->  1 file changed, 8 insertions(+), 10 deletions(-)
-> 
+On Fri, Nov 16, 2018 at 01:54:43PM +0100, matthias.bgg@kernel.org wrote:
+> From: Matthias Brugger <mbrugger@suse.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The subject is pretty vague...
+
+> 
+> Add mmsys bindings description.
+> 
+> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+> ---
+>  .../display/mediatek/mediatek,disp.txt        | 30 +++++++++++--------
+>  1 file changed, 17 insertions(+), 13 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> index 8469de510001..4b008d992398 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> @@ -27,20 +27,24 @@ Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt.
+>  
+>  Required properties (all function blocks):
+>  - compatible: "mediatek,<chip>-disp-<function>", one of
+> -	"mediatek,<chip>-disp-ovl"   - overlay (4 layers, blending, csc)
+> -	"mediatek,<chip>-disp-rdma"  - read DMA / line buffer
+> -	"mediatek,<chip>-disp-wdma"  - write DMA
+> -	"mediatek,<chip>-disp-color" - color processor
+> -	"mediatek,<chip>-disp-aal"   - adaptive ambient light controller
+> -	"mediatek,<chip>-disp-gamma" - gamma correction
+> -	"mediatek,<chip>-disp-merge" - merge streams from two RDMA sources
+> -	"mediatek,<chip>-disp-split" - split stream to two encoders
+> -	"mediatek,<chip>-disp-ufoe"  - data compression engine
+> -	"mediatek,<chip>-dsi"        - DSI controller, see mediatek,dsi.txt
+> -	"mediatek,<chip>-dpi"        - DPI controller, see mediatek,dpi.txt
+> -	"mediatek,<chip>-disp-mutex" - display mutex
+> -	"mediatek,<chip>-disp-od"    - overdrive
+> +	"mediatek,<chip>-disp-ovl"		- overlay (4 layers, blending, csc)
+> +	"mediatek,<chip>-disp-rdma"		- read DMA / line buffer
+> +	"mediatek,<chip>-disp-wdma"		- write DMA
+> +	"mediatek,<chip>-disp-color"		- color processor
+> +	"mediatek,<chip>-disp-aal"		- adaptive ambient light controller
+> +	"mediatek,<chip>-disp-gamma"		- gamma correction
+> +	"mediatek,<chip>-disp-merge"		- merge streams from two RDMA sources
+> +	"mediatek,<chip>-disp-split"		- split stream to two encoders
+> +	"mediatek,<chip>-disp-ufoe"		- data compression engine
+> +	"mediatek,<chip>-dsi"			- DSI controller, see mediatek,dsi.txt
+> +	"mediatek,<chip>-dpi"			- DPI controller, see mediatek,dpi.txt
+> +	"mediatek,<chip>-disp-mutex"		- display mutex
+> +	"mediatek,<chip>-disp-od"		- overdrive
+> +	"mediatek,<chip>-mmsys", "syscon"	- provide clocks and components management
+
+A lot of reformatting for a 1 line change. It's fine if you want to 
+leave this as one patch, but make the commit msg clear what's really 
+changing here.
+
+>    the supported chips are mt2701, mt2712 and mt8173.
+> +  For mt7623, compatible must be:
+> +	"mediatek,mt7623-<component>" , "mediatek,mt2701-<component>"
+> +
+>  - reg: Physical base address and length of the function block register space
+>  - interrupts: The interrupt signal from the function block (required, except for
+>    merge and split function blocks).
+> -- 
+> 2.19.1
+> 
