@@ -1,15 +1,15 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 2/6] ARM: dts: ls1021a: Add all CPUs in cooling maps
-Date: Fri, 16 Nov 2018 15:31:11 +0530
-Message-ID: <4e3e13854a25a2c59a8202872191be329ae4d5f1.1542362000.git.viresh.kumar@linaro.org>
+Subject: [PATCH 3/6] ARM: dts: mt7623: Add all CPUs in cooling maps
+Date: Fri, 16 Nov 2018 15:31:12 +0530
+Message-ID: <3c44454d70c9c9bafcf86f2c020d17d048f33360.1542362000.git.viresh.kumar@linaro.org>
 References: <cover.1542362000.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1542362000.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Each CPU can (and does) participate in cooling down the system but the
@@ -28,21 +28,42 @@ points.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- arch/arm/boot/dts/ls1021a.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/mt7623.dtsi | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index bdd6e66a79ad..2a411eb1ebb0 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -324,6 +324,8 @@
- 						trip = <&cpu_alert>;
- 						cooling-device =
- 							<&cpu0 THERMAL_NO_LIMIT
-+							THERMAL_NO_LIMIT>,
-+							<&cpu1 THERMAL_NO_LIMIT
- 							THERMAL_NO_LIMIT>;
- 					};
+diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+index d01bdee6f2f3..7cae886f79c9 100644
+--- a/arch/arm/boot/dts/mt7623.dtsi
++++ b/arch/arm/boot/dts/mt7623.dtsi
+@@ -187,17 +187,26 @@
+ 			cooling-maps {
+ 				map0 {
+ 					trip = <&cpu_passive>;
+-					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
  				};
+ 
+ 				map1 {
+ 					trip = <&cpu_active>;
+-					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
+ 
+ 				map2 {
+ 					trip = <&cpu_hot>;
+-					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
+ 			};
+ 		};
 -- 
 2.19.1.568.g152ad8e3369a
