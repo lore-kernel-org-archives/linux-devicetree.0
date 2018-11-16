@@ -1,74 +1,110 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 08/12] dt-bindings: mediatek: Change the binding for
- mmsys clocks
-Date: Fri, 16 Nov 2018 17:15:22 -0600
-Message-ID: <20181116231522.GA18006@bogus>
-References: <20181116125449.23581-1-matthias.bgg@kernel.org>
- <20181116125449.23581-9-matthias.bgg@kernel.org>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: clk: add documentation for the SiFive
+ PRCI driver
+Date: Fri, 16 Nov 2018 15:18:59 -0800 (PST)
+Message-ID: <alpine.DEB.2.21.9999.1811161510590.25712@viisi.sifive.com>
+References: <20181020135024.28573-1-paul.walmsley@sifive.com> <20181020135024.28573-3-paul.walmsley@sifive.com> <20181024184757.GA22367@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20181116125449.23581-9-matthias.bgg@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: matthias.bgg@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sean.wang@kernel.org, airlied@linux.ie, mturquette@baylibre.com, sean.wang@mediatek.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, ulrich.hecht+renesas@gmail.com, wens@csie.org, Matthias Brugger <mbrugger@suse.com>, matthias.bgg@gmail.com, laurent.pinchart@ideasonboard.com, linux-mediatek@lists.infradead.org, rdunlap@infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181024184757.GA22367@bogus>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Megan Wachs <megan@sifive.com>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBOb3YgMTYsIDIwMTggYXQgMDE6NTQ6NDVQTSArMDEwMCwgbWF0dGhpYXMuYmdnQGtl
-cm5lbC5vcmcgd3JvdGU6Cj4gRnJvbTogTWF0dGhpYXMgQnJ1Z2dlciA8bWJydWdnZXJAc3VzZS5j
-b20+Cj4gCj4gT24gU29DcyB3aXRoIG5vIHB1YmxpY2FsIGF2YWlsYWJsZSBIVyBvciBubyB3b3Jr
-aW5nIGdyYXBoaWMgc3RhY2sKPiB3ZSBjaGFuZ2UgdGhlIGRldmljZXRyZWUgYmluZGluZyBmb3Ig
-dGhlIG1tc3lzIGNsb2NrIHBhcnQuIFRoaXMKPiB3YXkgd2UgZG9uJ3QgbmVlZCB0byByZWdpc3Rl
-ciBhIHBsYXRmb3JtIGRldmljZSBleHBsaWNpdGx5IGluIHRoZQo+IGRybSBkcml2ZXIuIEluc3Rl
-YWQgd2UgY2FuIGNyZWF0ZSBhIG1tc3lzIGNoaWxkIHdoaWNoIGludm9rZXMgdGhlCj4gY2xvY2sg
-ZHJpdmVyLgo+IAo+IFNpZ25lZC1vZmYtYnk6IE1hdHRoaWFzIEJydWdnZXIgPG1icnVnZ2VyQHN1
-c2UuY29tPgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLG1tc3lz
-LnR4dCAgfCAyMSArKysrKysrKysrKystLS0tLS0tCj4gIC4uLi9kaXNwbGF5L21lZGlhdGVrL21l
-ZGlhdGVrLGRpc3AudHh0ICAgICAgICB8ICA0ICsrKysKPiAgMiBmaWxlcyBjaGFuZ2VkLCAxOCBp
-bnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL21lZGlhdGVrL21lZGlhdGVrLG1tc3lzLnR4dCBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWss
-bW1zeXMudHh0Cj4gaW5kZXggNDQ2ODM0NWY4YjFhLi5kNGUyMDU5ODEzNjMgMTAwNjQ0Cj4gLS0t
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tZWRpYXRlay9tZWRpYXRl
-ayxtbXN5cy50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJt
-L21lZGlhdGVrL21lZGlhdGVrLG1tc3lzLnR4dAo+IEBAIC0xLDQgKzEsNCBAQAo+IC1NZWRpYXRl
-ayBtbXN5cyBjb250cm9sbGVyCj4gK01lZGlhdGVrIG1tc3lzIGNsb2NrIGNvbnRyb2xsZXIKPiAg
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+ICAKPiAgVGhlIE1lZGlhdGVrIG1tc3lzIGNv
-bnRyb2xsZXIgcHJvdmlkZXMgdmFyaW91cyBjbG9ja3MgdG8gdGhlIHN5c3RlbS4KPiBAQCAtNiwx
-OCArNiwyNSBAQCBUaGUgTWVkaWF0ZWsgbW1zeXMgY29udHJvbGxlciBwcm92aWRlcyB2YXJpb3Vz
-IGNsb2NrcyB0byB0aGUgc3lzdGVtLgo+ICBSZXF1aXJlZCBQcm9wZXJ0aWVzOgo+ICAKPiAgLSBj
-b21wYXRpYmxlOiBTaG91bGQgYmUgb25lIG9mOgo+IC0JLSAibWVkaWF0ZWssbXQyNzEyLW1tc3lz
-IiwgInN5c2NvbiIKPiAtCS0gIm1lZGlhdGVrLG10Njc5Ny1tbXN5cyIsICJzeXNjb24iCj4gKwkt
-ICJtZWRpYXRlayxtdDI3MTItbW1zeXMtY2xrIiwgInN5c2NvbiIKPiArCS0gIm1lZGlhdGVrLG10
-Njc5Ny1tbXN5cy1jbGsiLCAic3lzY29uIgoKRG9lc24ndCBtYXRjaCB0aGUgZXhhbXBsZS4KCj4g
-IC0gI2Nsb2NrLWNlbGxzOiBNdXN0IGJlIDEKPiAgCj4gLVRoZSBtbXN5cyBjb250cm9sbGVyIHVz
-ZXMgdGhlIGNvbW1vbiBjbGsgYmluZGluZyBmcm9tCj4gK1RoZSBtbXN5cyBjbG9jayBjb250cm9s
-bGVyIHVzZXMgdGhlIGNvbW1vbiBjbGsgYmluZGluZyBmcm9tCj4gIERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jbG9jay1iaW5kaW5ncy50eHQKPiAgVGhlIGF2YWlsYWJs
-ZSBjbG9ja3MgYXJlIGRlZmluZWQgaW4gZHQtYmluZGluZ3MvY2xvY2svbXQqLWNsay5oLgo+ICtJ
-dCBpcyBhIGNoaWxkIG9mIHRoZSBtbXN5cyBibG9jaywgc2VlIGJpbmRpbmcgYXQ6Cj4gK0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRp
-c3AudHh0Cj4gIAo+ICBFeGFtcGxlOgo+ICAKPiAtbW1zeXM6IGNsb2NrLWNvbnRyb2xsZXJAMTQw
-MDAwMDAgewo+IC0JY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxNzMtbW1zeXMiLCAic3lzY29u
-IjsKPiArbW1zeXM6IHN5c2NvbkAxNDAwMDAwMCB7Cj4gKwljb21wYXRpYmxlID0gIm1lZGlhdGVr
-LG10MjcxMi1tbXN5cyIsICJzeXNjb24iLCAic2ltcGxlLW1mZCI7Cj4gIAlyZWcgPSA8MCAweDE0
-MDAwMDAwIDAgMHgxMDAwPjsKPiAtCSNjbG9jay1jZWxscyA9IDwxPjsKPiArCj4gKwltbXN5c19j
-bGs6IGNsb2NrLWNvbnRyb2xsZXJAMTQwMDAwMDAgewo+ICsJCWNvbXBhdGlibGUgPSAibWVkaWF0
-ZWssbXQyNzEyLW1tc3lzLWNsayI7Cj4gKwkJI2Nsb2NrLWNlbGxzID0gPDE+OwoKVGhpcyBnb2Vz
-IGFnYWluc3QgdGhlIGdlbmVyYWwgZGlyZWN0aW9uIG9mIG5vdCBkZWZpbmluZyBzZXBhcmF0ZSBu
-b2RlcyAKZm9yIHByb3ZpZGVycyB3aXRoIG5vIHJlc291cmNlcy4KCldoeSBkbyB5b3UgbmVlZCB0
-aGlzIGFuZCB3aGF0IGRvZXMgaXQgYnV5IGlmIHlvdSBoYXZlIHRvIGNvbnRpbnVlIHRvIApzdXBw
-b3J0IHRoZSBleGlzdGluZyBjaGlwcz8KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+On Wed, 24 Oct 2018, Rob Herring wrote:
+
+> On Sat, Oct 20, 2018 at 06:50:23AM -0700, Paul Walmsley wrote:
+>> Add DT binding documentation for the Linux driver for the SiFive
+>> PRCI clock & reset control IP block, as found on the SiFive
+>> FU540 chip.
+>>
+>> Cc: Michael Turquette <mturquette@baylibre.com>
+>> Cc: Stephen Boyd <sboyd@kernel.org>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Palmer Dabbelt <palmer@sifive.com>
+>> Cc: Megan Wachs <megan@sifive.com>
+>> Cc: linux-clk@vger.kernel.org
+>> Cc: devicetree@vger.kernel.org
+>> Cc: linux-riscv@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+>> Signed-off-by: Paul Walmsley <paul@pwsan.com>
+>> ---
+>> v2: remove out-of-date example, add documentation for the compatible
+>>     string and for the required PCB clock nodes
+>>
+>> .../bindings/clock/sifive/fu540-prci.txt      | 43 +++++++++++++++++++
+>>  1 file changed, 43 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/sifive/fu540-prci.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/sifive/fu540-prci.txt b/Documentation/devicetree/bindings/clock/sifive/fu540-prci.txt
+>> new file mode 100644
+>> index 000000000000..d7c1e83fa5ed
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/sifive/fu540-prci.txt
+>> @@ -0,0 +1,43 @@
+>> +SiFive FU540 PRCI bindings
+>> +
+>> +On the FU540 family of SoCs, most system-wide clock and reset integration
+>> +is via the PRCI IP block.
+>> +
+>> +Required properties:
+>> +- compatible: Should be "sifive,<chip>-prci<version>".  As of the time this
+>> +              file was written, only one value is supported:
+>> +	      "sifive,fu540-c000-prci0"
+>
+> What happens with this depends on the discussion on the other bindings.
+
+We'll drop the trailing 0 since the SoC identifier prefix should be 
+sufficiently precise.
+
+> Though here you are inconsistent without a fallback. Of course, I've
+> never seen a clock controller be the same across SoCs.
+
+As you write, the assumption is that chip integration IP blocks like this 
+one are likely to be specific to individual SoCs.
+
+This may not be universally true for SiFive looking into the future, but 
+since we don't yet have a clear sense of the extent of exact reuse (i.e. 
+chip "families"), am not yet comfortable with advocating something like 
+"sifive,prci0" yet, as we do with the sifive-blocks.
+
+>> +- reg: Should describe the PRCI's register target physical address region
+>> +- clocks: Should point to the hfclk device tree node and the rtcclk
+>> +          device tree node.  The RTC clock here is not a time-of-day clock,
+>> +	  but is instead a high-stability clock source for system timers
+>> +	  and cycle counters.
+>> +- #clock-cells: Should be <1>
+>> +
+>> +The clock consumer should specify the desired clock via the clock ID
+>> +macros defined in include/linux/clk/sifive-fu540-prci.h.  These macros
+>> +begin with PRCI_CLK_.
+>> +
+>> +The hfclk and rtcclk nodes are required, and represent physical
+>> +crystals or resonators located on the PCB.
+>> +
+>> +Examples:
+>> +
+>> +hfclk: hfclk {
+>> +	#clock-cells = <0>;
+>> +	compatible = "fixed-clock";
+>> +	clock-frequency = <33333333>;
+>> +	clock-output-names = "hfclk";
+>> +};
+>> +rtcclk: rtcclk {
+>> +	#clock-cells = <0>;
+>> +	compatible = "fixed-clock";
+>> +	clock-frequency = <1000000>;
+>> +	clock-output-names = "rtcclk";
+>> +};
+>> +prci0: prci@10000000 {
+>
+> clock-controller@...
+
+Thanks; fixed.
+
+
+- Paul
