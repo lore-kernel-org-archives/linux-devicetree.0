@@ -1,96 +1,90 @@
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: [PATCH v7 1/2] dt-bindings: nand: meson: add Amlogic NAND controller driver
-Date: Sat, 17 Nov 2018 00:40:37 +0800
-Message-ID: <1542386439-30166-2-git-send-email-jianxin.pan@amlogic.com>
-References: <1542386439-30166-1-git-send-email-jianxin.pan@amlogic.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v2 12/12][DO NOT MERGE] arm64: allwinner: a64:
+ pine64-lts: Enable Feiyang FY07024DI26A30-D DSI panel
+Date: Fri, 16 Nov 2018 22:09:16 +0530
+Message-ID: <20181116163916.29621-13-jagan@amarulasolutions.com>
+References: <20181116163916.29621-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542386439-30166-1-git-send-email-jianxin.pan@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org
-Cc: Liang Yang <liang.yang@amlogic.com>, Yixun Lan <yixun.lan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.k
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBJPGXPPQKGQEPQTIMXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181116163916.29621-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, TL Lim <tllim-F7SikzrIcFYdnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Liang Yang <liang.yang@amlogic.com>
+Feiyang FY07024DI26A30-D MIPI_DSI panel is desiged to attach with
+DSI connector on pine64 boards, enable the same for pine64 LTS.
 
-Add Amlogic NAND controller dt-bindings for Meson SoC,
-Current this driver support GXBB/GXL/AXG platform.
+DSI panel connected via board DSI port with,
+- DC1SW as AVDD supply
+- DLDO2 as DVDD supply
+- DLDO1 as VCC-DSI supply
+- PD24 gpio for reset pin
+- PH10 gpio for backlight enable pin
 
-Signed-off-by: Liang Yang <liang.yang@amlogic.com>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- .../devicetree/bindings/mtd/amlogic,meson-nand.txt | 60 ++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+ .../dts/allwinner/sun50i-a64-pine64-lts.dts   | 37 +++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-new file mode 100644
-index 0000000..3983c11
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-@@ -0,0 +1,60 @@
-+Amlogic NAND Flash Controller (NFC) for GXBB/GXL/AXG family SoCs
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
+index 72d6961dc312..9e230c612799 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
+@@ -5,9 +5,46 @@
+  */
+ 
+ #include "sun50i-a64-sopine-baseboard.dts"
++#include <dt-bindings/pwm/pwm.h>
+ 
+ / {
+ 	model = "Pine64 LTS";
+ 	compatible = "pine64,pine64-lts", "allwinner,sun50i-r18",
+ 		     "allwinner,sun50i-a64";
 +
-+This file documents the properties in addition to those available in
-+the MTD NAND bindings.
-+
-+Required properties:
-+- compatible : contains one of:
-+  - "amlogic,meson-gxl-nfc"
-+  - "amlogic,meson-axg-nfc"
-+- clocks     :
-+	A list of phandle + clock-specifier pairs for the clocks listed
-+	in clock-names.
-+
-+- clock-names: Should contain the following:
-+	"core" - NFC module gate clock
-+	"device" - device clock from eMMC sub clock controller
-+	"rx" - rx clock phase
-+	"tx" - tx clock phase
-+
-+- amlogic,mmc-syscon	: Required for NAND clocks, it's shared with SD/eMMC
-+				controller port C
-+
-+Optional children nodes:
-+Children nodes represent the available nand chips.
-+
-+Other properties:
-+see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
-+
-+Example demonstrate on AXG SoC:
-+
-+	sd_emmc_c_clkc: mmc@7000 {
-+		compatible = "amlogic,meson-axg-mmc-clkc", "syscon";
-+		reg = <0x0 0x7000 0x0 0x800>;
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
++		brightness-levels = <1 2 4 8 16 32 64 128 512>;
++		default-brightness-level = <8>;
++		enable-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PH10 */
 +	};
++};
 +
-+	nand-controller@7800 {
-+		compatible = "amlogic,meson-axg-nfc";
-+		reg = <0x0 0x7800 0x0 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
++&de {
++	status = "okay";
++};
 +
-+		clocks = <&clkc CLKID_SD_EMMC_C>,
-+			<&sd_emmc_c_clkc CLKID_MMC_DIV>,
-+			<&sd_emmc_c_clkc CLKID_MMC_PHASE_RX>,
-+			<&sd_emmc_c_clkc CLKID_MMC_PHASE_TX>;
-+		clock-names = "core", "device", "rx", "tx";
-+		amlogic,mmc-syscon = <&sd_emmc_c_clkc>;
++&dphy {
++	status = "okay";
++};
 +
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&nand_pins>;
++&dsi {
++	vcc-dsi-supply = <&reg_dldo1>;		/* VCC3V3-DSI */
++	status = "okay";
 +
-+		nand@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			nand-on-flash-bbt;
-+		};
++	panel@0 {
++		compatible = "feiyang,fy07024di26a30d";
++		reg = <0>;
++		avdd-supply = <&reg_dc1sw>;	/* VCC-LCD */
++		dvdd-supply = <&reg_dldo2>;	/* VCC-MIPI */
++		reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
++		backlight = <&backlight>;
 +	};
++};
++
++&r_pwm {
++	pinctrl-names = "default";
++	pinctrl-0 = <&r_pwm_pin>;
++	status = "okay";
+ };
 -- 
-1.9.1
+2.18.0.321.gffc6fa0e3
