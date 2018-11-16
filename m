@@ -1,24 +1,30 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCHv2 2/6] ARM: dts: ls1021a: Add the status property disable
- PCIe
-Date: Fri, 16 Nov 2018 10:51:07 +0800
-Message-ID: <20181116025106.GE5829@dragon>
-References: <20181105084653.26597-1-xiaowei.bao@nxp.com>
- <20181105084653.26597-2-xiaowei.bao@nxp.com>
+Subject: Re: [PATCH v2] ARM: dts: imx6ul: ccimx6ulsom: Add support for
+ wireless SOM variant
+Date: Fri, 16 Nov 2018 10:52:31 +0800
+Message-ID: <20181116025230.GF5829@dragon>
+References: <1541414622-18795-1-git-send-email-alex.gonzalez@digi.com>
+ <1541414622-18795-2-git-send-email-alex.gonzalez@digi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181105084653.26597-2-xiaowei.bao@nxp.com>
+In-Reply-To: <1541414622-18795-2-git-send-email-alex.gonzalez@digi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org, cyrille.pitchen@free-electrons.com, pombredanne@nexb.com, shawn.lin@rock-chips.com, niklas.cassel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+To: Alex Gonzalez <alex.gonzalez@digi.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 05, 2018 at 04:46:49PM +0800, Xiaowei Bao wrote:
-> Add the status property disable the PCIe, the property will be enable
-> by bootloader.
+On Mon, Nov 05, 2018 at 11:43:42AM +0100, Alex Gonzalez wrote:
+> The wireless variants of the ConnecCore 6UL SOM include a Qualcomm
+> QCA6564 wireless chip with dual WiFi and Bluetooth.
 > 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Both the ConnectCore 6UL SBC Express and Pro boards fit a wireless SOM.
+> 
+> The Wifi is connected through the SDIO interface on usdhc1 and the
+> Bluetooth is connected via uart1.
+> 
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> Signed-off-by: Alex Gonzalez <alex.gonzalez@digi.com>
 
 Applied, thanks.
