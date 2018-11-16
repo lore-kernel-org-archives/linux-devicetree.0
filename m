@@ -1,7 +1,7 @@
 From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH 8/9] dt-bindings: remoteproc: Add Xilinx R5 rproc binding
-Date: Fri, 16 Nov 2018 15:56:58 -0800
-Message-ID: <1542412619-387-9-git-send-email-jollys@xilinx.com>
+Subject: [PATCH 1/9] dt-bindings: power: Add ZynqMP power domain bindings
+Date: Fri, 16 Nov 2018 15:56:51 -0800
+Message-ID: <1542412619-387-2-git-send-email-jollys@xilinx.com>
 References: <1542412619-387-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,106 +9,106 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1542412619-387-1-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: michal.simek@xilinx.com, rajanv@xilinx.com, nava.manne@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Wendy Liang <wendy.liang@xilinx.com>, Wendy Liang <jliang@xilinx.com>, Jolly Shah <jollys@xilinx.com>
+Cc: michal.simek@xilinx.com, rajanv@xilinx.com, nava.manne@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Wendy Liang <wendy.liang@xilinx.com>
+From: Rajan Vaja <rajan.vaja@xilinx.com>
 
-Add device tree binding for Xilinx Cortex-r5 remoteproc.
+Add documentation to describe ZynqMP power domain bindings.
 
-Signed-off-by: Wendy Liang <jliang@xilinx.com>
+Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
 Signed-off-by: Jolly Shah <jollys@xilinx.com>
 ---
- .../remoteproc/xlnx,zynqmp-r5-remoteproc.txt       | 81 ++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5-remoteproc.txt
+ .../bindings/power/xlnx,zynqmp-genpd.txt           | 34 +++++++++++++++++++
+ include/dt-bindings/power/xlnx-zynqmp-power.h      | 39 ++++++++++++++++++++++
+ 2 files changed, 73 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
+ create mode 100644 include/dt-bindings/power/xlnx-zynqmp-power.h
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5-remoteproc.txt b/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5-remoteproc.txt
+diff --git a/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt b/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
 new file mode 100644
-index 0000000..4831350
+index 0000000..3c7f237
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5-remoteproc.txt
-@@ -0,0 +1,81 @@
-+Xilinx ARM Cortex A53-R5 remoteproc driver
-+==========================================
++++ b/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
+@@ -0,0 +1,34 @@
++-----------------------------------------------------------
++Device Tree Bindings for the Xilinx Zynq MPSoC PM domains
++-----------------------------------------------------------
++The binding for zynqmp-power-controller follow the common
++generic PM domain binding[1].
 +
-+ZynqMP family of devices use two Cortex R5 processors to help with various
-+low power / real time tasks.
++[1] Documentation/devicetree/bindings/power/power_domain.txt
 +
-+This driver requires specific ZynqMP hardware design.
++== Zynq MPSoC Generic PM Domain Node ==
 +
-+ZynqMP R5 RemoteProc Device Node:
-+=================================
-+A zynqmp_r5_remoteproc device node is used to represent a R5 IP instance
-+within ZynqMP SoC.
++Required property:
++ - Below property should be in zynqmp-firmware node.
++ - #power-domain-cells:	Number of cells in a PM domain specifier. Must be 1.
 +
-+Required properties:
-+--------------------
-+ - compatible : Should be "xlnx,zynqmp-r5-remoteproc-1.0"
-+ - reg : Address and length of the register set for the device. It
-+        contains in the same order as described reg-names
-+ - reg-names: Contain the register set names.
-+              "tcm_a" and "tcm_b" for TCM memories.
-+              If the user uses the remoteproc driver with the RPMsg kernel
-+              driver,"ipi" for the IPI register used to communicate with RPU
-+              is also required.
-+              Otherwise, if user only uses the remoteproc driver to boot RPU
-+              firmware, "ipi" is not required.
-+ - tcm-pnode-id: TCM resources power nodes IDs which are used to request TCM
-+                 resources for the remoteproc driver to access.
-+ - rpu-pnode-id : RPU power node id which is used by the remoteproc driver
-+                  to start RPU or shut it down.
++Power domain ID indexes are mentioned in
++include/dt-bindings/power/xlnx-zynqmp-power.h.
 +
-+Optional properties:
-+--------------------
-+ - core_conf : R5 core configuration (valid string - split0 or split1 or
-+               lock-step), default is lock-step.
-+ - memory-region: memories regions for RPU executable and DMA memory.
-+ - interrupts : Interrupt mapping for remoteproc IPI. It is required if the
-+                user uses the remoteproc driver with the RPMsg kernel driver.
-+ - interrupt-parent : Phandle for the interrupt controller. It is required if
-+                      the user uses the remoteproc driver with the RPMsg kernel
-+                      kernel driver.
++-------
++Example
++-------
 +
-+Example:
-+--------
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		rproc_0_fw_reserved: rproc@3ed000000 {
-+			compatible = "rproc-prog-memory";
-+			no-map;
-+			reg = <0x0 0x3ed00000 0x0 0x40000>;
-+		};
-+		rproc_0_dma_reserved: rproc@3ed400000 {
-+			compatible = "shared-dma-pool";
-+			no-map;
-+			reg = <0x0 0x3ed40000 0x0 0x80000>;
-+		};
++firmware {
++	zynqmp_firmware: zynqmp-firmware {
++		...
++		#power-domain-cells = <1>;
++		...
 +	};
++};
 +
-+	firmware {
-+		zynqmp_firmware: zynqmp-firmware {
-+			compatible = "xlnx,zynqmp-firmware";
-+			method = "smc";
++sata {
++	...
++	power-domains = <&zynqmp_firmware 2>;
++	...
++};
+diff --git a/include/dt-bindings/power/xlnx-zynqmp-power.h b/include/dt-bindings/power/xlnx-zynqmp-power.h
+new file mode 100644
+index 0000000..1bc9636
+--- /dev/null
++++ b/include/dt-bindings/power/xlnx-zynqmp-power.h
+@@ -0,0 +1,39 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ *  Copyright (C) 2018 Xilinx, Inc.
++ */
 +
-+			zynqmp-r5-remoteproc@0 {
-+				compatible = "xlnx,zynqmp-r5-remoteproc-1.0";
-+				reg = <0x0 0xFFE00000 0x0 0x10000>,
-+					<0x0 0xFFE20000 0x0 0x10000>,
-+					<0x0 0xff340000 0x0 0x100>;
-+				reg-names = "tcm_a", "tcm_b", "ipi";
-+				dma-ranges;
-+				core_conf = "split0";
-+				memory-region = <&rproc_0_fw_reserved>,
-+						<&rproc_0_dma_reserved>;
-+				tcm-pnode-id = <0xf>, <0x10>;
-+				rpu-pnode-id = <0x7>;
-+				interrupt-parent = <&gic>;
-+				interrupts = <0 29 4>;
-+			} ;
-+		};
-+	};
++#ifndef _DT_BINDINGS_ZYNQMP_POWER_H
++#define _DT_BINDINGS_ZYNQMP_POWER_H
++
++#define		PD_USB_0	0
++#define		PD_USB_1	1
++#define		PD_SATA		2
++#define		PD_SPI_0	3
++#define		PD_SPI_1	4
++#define		PD_UART_0	5
++#define		PD_UART_1	6
++#define		PD_ETH_0	7
++#define		PD_ETH_1	8
++#define		PD_ETH_2	9
++#define		PD_ETH_3	10
++#define		PD_I2C_0	11
++#define		PD_I2C_1	12
++#define		PD_DP		13
++#define		PD_GDMA		14
++#define		PD_ADMA		15
++#define		PD_TTC_0	16
++#define		PD_TTC_1	17
++#define		PD_TTC_2	18
++#define		PD_TTC_3	19
++#define		PD_SD_0		20
++#define		PD_SD_1		21
++#define		PD_NAND		22
++#define		PD_QSPI		23
++#define		PD_GPIO		24
++#define		PD_CAN_0	25
++#define		PD_CAN_1	26
++#define		PD_PCIE		27
++#define		PD_GPU		28
++
++#endif
 -- 
 2.7.4
