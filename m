@@ -1,56 +1,32 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ASoC: imx-audmux: complete dt-bindings for imx6
-Date: Fri, 16 Nov 2018 10:59:39 +0800
-Message-ID: <20181116025938.GH5829@dragon>
-References: <20181105135802.30486-1-peron.clem@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6: RDU2: fix eGalax touchscreen node
+Date: Fri, 16 Nov 2018 11:02:14 +0800
+Message-ID: <20181116030212.GI5829@dragon>
+References: <20181105173156.3519-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20181105135802.30486-1-peron.clem@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Colin Didier <colin.didier@devialet.com>
+In-Reply-To: <20181105173156.3519-1-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, patchwork-lst@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 05, 2018 at 02:58:02PM +0100, Clément Péron wrote:
-> From: Colin Didier <colin.didier@devialet.com>
+On Mon, Nov 05, 2018 at 06:31:56PM +0100, Lucas Stach wrote:
+> Use the correct compatible for the new protocol used by the firmware
+> on the touch controller, the GPIO wakeup isn't used in that case.
+> Also eGalax touch needs axis swapping, just as with the RMI4 touch.
 > 
-> The MX6 Audmux differs from MX51.
-> 
-> This patch adds the audmux for i.MX6 family.
-> 
-> Signed-off-by: Colin Didier <colin.didier@devialet.com>
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 
-I think you should send it to ASoC maintainer and list for applying.
-
-Shawn
-
-> ---
->  include/dt-bindings/sound/fsl-imx-audmux.h | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/include/dt-bindings/sound/fsl-imx-audmux.h b/include/dt-bindings/sound/fsl-imx-audmux.h
-> index 15f138bebe16..a1d0741d9ed1 100644
-> --- a/include/dt-bindings/sound/fsl-imx-audmux.h
-> +++ b/include/dt-bindings/sound/fsl-imx-audmux.h
-> @@ -25,6 +25,14 @@
->  #define MX51_AUDMUX_PORT6		5
->  #define MX51_AUDMUX_PORT7		6
->  
-> +#define MX6_AUDMUX_PORT1_SSI1		0
-> +#define MX6_AUDMUX_PORT2_SSI2		1
-> +#define MX6_AUDMUX_PORT3		2
-> +#define MX6_AUDMUX_PORT4		3
-> +#define MX6_AUDMUX_PORT5		4
-> +#define MX6_AUDMUX_PORT6		5
-> +#define MX6_AUDMUX_PORT7_SSI3		6
-> +
->  /*
->   * TFCSEL/RFCSEL (i.MX27) or TFSEL/TCSEL/RFSEL/RCSEL (i.MX31/51/53/6Q)
->   * can be sourced from Rx/Tx.
-> -- 
-> 2.19.1
-> 
+Applied, thanks.
