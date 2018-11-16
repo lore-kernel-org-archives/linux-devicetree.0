@@ -1,40 +1,93 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 0/2] ARM: dts: meson: add the timer interrupts and clocks
-Date: Fri, 16 Nov 2018 21:42:33 +0100
-Message-ID: <20181116204235.3925-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 2/2] ARM: dts: meson: add the clock inputs for the Meson timer
+Date: Fri, 16 Nov 2018 21:42:35 +0100
+Message-ID: <20181116204235.3925-3-martin.blumenstingl@googlemail.com>
+References: <20181116204235.3925-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181116204235.3925-1-martin.blumenstingl@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-This is a follow-up of my series "meson6_timer: dt-bindings updates"
-from [0].
-We were missing the interrupts for timer B, C and D. This is harmless
-so far because the meson6_timer driver only implements timer A. Timer
-E doesn't have any interrupt.
+The Meson Timer IP block has two clock inputs:
+- clk81 for using the system clock as timebase
+- xtal for a timebase with 1us, 10us, 100us and 1ms resolution
 
-Additionally the timer IP block has two clock inputs. This also adds
-them.
+The clocksource driver does not use these yet, but it's still a good
+idea to add them as this describes how the hardware actually works
+internally.
 
-NOTE: the alias "timer_abcde" was chosen because there's a second
-timer instance (F..I which are similar to A..D and J which is
-similar to E).
-
-
-[0] https://patchwork.kernel.org/cover/10658573/
-
-Martin Blumenstingl (2):
-  ARM: dts: meson: add the TIMER B/C/D interrupts
-  ARM: dts: meson: add the clock inputs for the Meson timer
-
- arch/arm/boot/dts/meson.dtsi   | 7 +++++--
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ arch/arm/boot/dts/meson.dtsi   | 2 +-
  arch/arm/boot/dts/meson6.dtsi  | 5 +++++
  arch/arm/boot/dts/meson8.dtsi  | 5 +++++
  arch/arm/boot/dts/meson8b.dtsi | 5 +++++
- 4 files changed, 20 insertions(+), 2 deletions(-)
+ 4 files changed, 16 insertions(+), 1 deletion(-)
 
+diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
+index f0255450bcb2..0839da07a75c 100644
+--- a/arch/arm/boot/dts/meson.dtsi
++++ b/arch/arm/boot/dts/meson.dtsi
+@@ -197,7 +197,7 @@
+ 				interrupts = <GIC_SPI 0 IRQ_TYPE_EDGE_RISING>;
+ 			};
+ 
+-			timer@9940 {
++			timer_abcde: timer@9940 {
+ 				compatible = "amlogic,meson6-timer";
+ 				reg = <0x9940 0x18>;
+ 				interrupts = <GIC_SPI 10 IRQ_TYPE_EDGE_RISING>,
+diff --git a/arch/arm/boot/dts/meson6.dtsi b/arch/arm/boot/dts/meson6.dtsi
+index 9b463211339f..ca978ab952cd 100644
+--- a/arch/arm/boot/dts/meson6.dtsi
++++ b/arch/arm/boot/dts/meson6.dtsi
+@@ -88,6 +88,11 @@
+ 	status = "disabled";
+ };
+ 
++&timer_abcde {
++	clocks = <&xtal>, <&clk81>;
++	clock-names = "xtal", "pclk";
++};
++
+ &uart_AO {
+ 	clocks = <&xtal>, <&clk81>, <&clk81>;
+ 	clock-names = "xtal", "pclk", "baud";
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index 08c54cf5420a..3be5fbd07997 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -387,6 +387,11 @@
+ 	clocks = <&clkc CLKID_CLK81>;
+ };
+ 
++&timer_abcde {
++	clocks = <&clkc CLKID_XTAL>, <&clkc CLKID_CLK81>;
++	clock-names = "xtal", "pclk";
++};
++
+ &uart_AO {
+ 	compatible = "amlogic,meson8-uart", "amlogic,meson-uart";
+ 	clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_XTAL>, <&clkc CLKID_CLK81>;
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index 46b3564a6536..587a855f872b 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -370,6 +370,11 @@
+ 	clock-names = "core", "clkin";
+ };
+ 
++&timer_abcde {
++	clocks = <&clkc CLKID_XTAL>, <&clkc CLKID_CLK81>;
++	clock-names = "xtal", "pclk";
++};
++
+ &uart_AO {
+ 	compatible = "amlogic,meson8b-uart", "amlogic,meson-uart";
+ 	clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_XTAL>, <&clkc CLKID_CLK81>;
 -- 
 2.19.1
