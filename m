@@ -1,56 +1,107 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [resend PATCH 1/3] pwm: mediatek: drop flag 'has_clks'
-Date: Fri, 16 Nov 2018 07:47:48 +0100
-Message-ID: <20181116064748.6c7shn3am4wejrnj@pengutronix.de>
-References: <4c9044427b1aab373acd6ac76f0c905e2be79784.1542074855.git.ryder.lee@mediatek.com>
- <20181114124752.GI2620@ulmo>
+From: biao huang <biao.huang@mediatek.com>
+Subject: Re: [PATCH 2/2] dt-binding: mediatek-dwmac: add binding document
+ for MediaTek MT2712 DWMAC
+Date: Fri, 16 Nov 2018 14:58:07 +0800
+Message-ID: <1542351487.26982.28.camel@mhfsdcap03>
+References: <1540782294-27721-1-git-send-email-biao.huang@mediatek.com>
+         <1540782294-27721-3-git-send-email-biao.huang@mediatek.com>
+         <20181112162204.GA8910@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181114124752.GI2620@ulmo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Ryder Lee <ryder.lee@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org, Weijie Gao <weijie.gao@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, John Crispin <john@phrozen.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20181112162204.GA8910@bogus>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: davem@davemloft.net, honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, sean.wang@mediatek.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, joabreu@synopsys.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 14, 2018 at 01:47:52PM +0100, Thierry Reding wrote:
-> On Tue, Nov 13, 2018 at 10:08:22AM +0800, Ryder Lee wrote:
-> > The flag 'has_clks' and related checks are superfluous as the CCF
-> > subsystem does this for you.
+Dear Rob,
+
+Thanks for your comments.
+
+On Mon, 2018-11-12 at 10:22 -0600, Rob Herring wrote:
+> On Mon, Oct 29, 2018 at 11:04:54AM +0800, Biao Huang wrote:
+> > The commit adds the device tree binding documentation for the MediaTek DWMAC
+> > found on MediaTek MT2712.
+> > 
+> > Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+> > ---
+> >  .../devicetree/bindings/net/mediatek-dwmac.txt     |   49 ++++++++++++++++++++
+> >  1 file changed, 49 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/net/mediatek-dwmac.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/mediatek-dwmac.txt b/Documentation/devicetree/bindings/net/mediatek-dwmac.txt
+> > new file mode 100644
+> > index 0000000..8baf0e4
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/mediatek-dwmac.txt
+> > @@ -0,0 +1,49 @@
+> > +MediaTek DWMAC glue layer controller
+> > +
+> > +This file documents platform glue layer for stmmac.
+> > +Please see stmmac.txt for the other unchanged properties.
+> > +
+> > +The device node has following properties.
+> > +
+> > +Required properties:
+> > +- compatible:  Should be "mediatek,mt2712-gmac" for MT2712 SoC
+> > +- reg:  Address and length of the register set for the device
+> > +- interrupts:  Should contain the MAC interrupts
+> > +- interrupt-names: Should contain a list of interrupt names corresponding to
+> > +	the interrupts in the interrupts property, if available.
+> > +	Should be "macirq" for the main MAC IRQ
+> > +- clocks: Must contain a phandle for each entry in clock-names.
+> > +- clock-names: the name of the clock listed in the clocks property. These are
+> > +	"axi", "apb", "mac_ext", "mac_parent", "ptp_ref", "ptp_parent", "ptp_top"
+> > +	for MT2712 SoC
 > 
-> Both of these mechanisms aren't equivalent. While CCF can deal with
-> optional clocks, what the has_clks flag actually means is that the
-> device doesn't need a clock (or doesn't have a clock input) on the
-> devices where it is cleared.
+> Clocks should represent the physical clocks connected to a block. Parent 
+> clocks are not in that category.
+There are two categories of physical clocks related to MAC.
+1. axi/apb/ptp_top, these clks are from clk gates, so only on/off is
+needed.
+2. mac_ext/ptp_ref, these clks are from mux. If different source is
+selected, the clk frequecy will be different. So it's necessary to set a
+proper parent for them, i.e. mac_parent/ptp_parent.
+
+How should I handle parent clocks if not defined here? Any examples I
+can refer to?
 > 
-> So I'd actually be in favor of keeping the has_clks property because it
-> serves as an additional sanity check. For example if you run this driver
-> on an SoC that "has clocks" but if you don't list them in DT, then after
-> this patch the driver will happily continue without clocks, even though
-> it may break completely without those clocks. I've seen SoCs respond to
-> disabled clocks for a hardware block in different ways, in many cases an
-> access to any of the registers will completely hang the CPU. In other
-> cases it may just crash in some other way or give you some sort of
-> machine exception. None of those are good, and make the tiny bit of
-> additional code required to support the has_clks flag very attractive.
+> > +- mac-address: See ethernet.txt in the same directory
+> > +- phy-mode: See ethernet.txt in the same directory
+> > +
+> > +Example:
+> > +
+> > +	eth: ethernet@1101c000 {
+> > +		compatible = "mediatek,mt2712-gmac";
+> > +		reg = <0 0x1101c000 0 0x1300>;
+> > +		interrupts = <GIC_SPI 237 IRQ_TYPE_LEVEL_LOW>;
+> > +		interrupt-names = "macirq";
+> > +		phy-mode ="rgmii-id";
+> > +		mac-address = [00 55 7b b5 7d f7];
+> > +		clock-names = "axi",
+> > +			      "apb",
+> > +			      "mac_ext",
+> > +			      "mac_parent",
+> > +			      "ptp_ref",
+> > +			      "ptp_parent",
+> > +			      "ptp_top";
+> > +		clocks = <&pericfg CLK_PERI_GMAC>,
+> > +			 <&pericfg CLK_PERI_GMAC_PCLK>,
+> > +			 <&topckgen CLK_TOP_ETHER_125M_SEL>,
+> > +			 <&topckgen CLK_TOP_ETHERPLL_125M>,
+> > +			 <&topckgen CLK_TOP_ETHER_50M_SEL>,
+> > +			 <&topckgen CLK_TOP_APLL1_D3>,
+> > +			 <&topckgen CLK_TOP_APLL1>;
+> > +		snps,txpbl = <32>;
+> > +		snps,rxpbl = <32>;
+> > +		snps,reset-gpio = <&pio 87 GPIO_ACTIVE_LOW>;
+> > +		snps,reset-active-low;
+> > +	};
+> > -- 
+> > 1.7.9.5
+> > 
 > 
-> But that's just my opinion. If you prefer to throw away that safety
-> barrier, be my guest. But if you do, please move this functionality into
-> the clock framework first and then make the driver use it.
-
-The usual policy is: If the things specified in the dt are
-wrong or incomplete, it's ok to fail however you like. So from a
-correctness POV I think the change is fine.
-
-I don't know about the mips details that John pointed out in a followup
-to this mail though.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Best Regards!
+Biao
