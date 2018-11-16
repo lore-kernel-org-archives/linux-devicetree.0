@@ -1,80 +1,119 @@
-From: Auger Eric <eric.auger@redhat.com>
-Subject: Re: [PATCH v4 0/7] Add virtio-iommu driver
-Date: Fri, 16 Nov 2018 14:00:51 +0100
-Message-ID: <a9545c11-347e-aa07-0609-9a9c0141a438@redhat.com>
-References: <20181115165234.43990-1-jean-philippe.brucker@arm.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v10 0/9] Add the I3C subsystem
+Date: Fri, 16 Nov 2018 14:16:39 +0100
+Message-ID: <20181116141639.31074113@bbrezillon>
+References: <20181026144333.12276-1-boris.brezillon@bootlin.com>
+        <76b1d15d-232c-d8ba-5eba-8394e71be725@synopsys.com>
+        <20181115135731.25f60990@bbrezillon>
+        <20181115150137.GB4169@kunai>
+        <20181115162826.42b54776@bbrezillon>
+        <1d64f21a-ad24-94e0-2c17-25729ef59a31@synopsys.com>
+        <20181115200058.1869afdb@bbrezillon>
+        <5f946406-a205-3802-aefd-ebd8b5a72b0b@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <virtio-dev-return-4977-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
-Sender: <virtio-dev@lists.oasis-open.org>
-List-Post: <mailto:virtio-dev@lists.oasis-open.org>
-List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
-List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
-List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
-In-Reply-To: <20181115165234.43990-1-jean-philippe.brucker@arm.com>
-Content-Language: en-US
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, virtualization@lists.linux-foundation.org, virtio-dev@lists.oasis-open.org, joro@8bytes.org, mst@redhat.com
-Cc: frowand.list@gmail.com, jasowang@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com, bhelgaas@google.com, kvmarm@lists.cs.columbia.edu, tnowicki@caviumnetworks.com, kevin.tian@intel.com, marc.zyngier@arm.com, robin.murphy@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, bharat.bhushan@nxp.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5f946406-a205-3802-aefd-ebd8b5a72b0b@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vitor <vitor.soares@synopsys.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetr>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean,
-On 11/15/18 5:52 PM, Jean-Philippe Brucker wrote:
-> Implement the virtio-iommu driver, following specification v0.8 [1].
-> 
-> Changes since v3 [2]:
-> * Rebase onto v4.20-rc2. Patch 3 now touches drivers/of/base.c instead
->   of drivers/pci/of.c, since the map_rid() function has moved.
-> * Removed the request timeout, that depended on DEBUG.
-> * Other small fixes addressing comments on v3.
-> 
-> You can find Linux driver and kvmtool device on my virtio-iommu/v0.8.1
-> branches [3]. You can also test it with the latest version of Eric's
-> QEMU device [4].
+On Fri, 16 Nov 2018 12:31:42 +0000
+vitor <vitor.soares@synopsys.com> wrote:
 
-Tested-by: Eric Auger <eric.auger@redhat.com>
+> Hi Boris,
+> 
+> 
+> On 15/11/18 19:00, Boris Brezillon wrote:
+> > On Thu, 15 Nov 2018 18:03:47 +0000
+> > vitor <vitor.soares@synopsys.com> wrote:
+> >  
+> >> Hi Boris,
+> >>
+> >>
+> >> On 15/11/18 15:28, Boris Brezillon wrote:  
+> >>> On Thu, 15 Nov 2018 16:01:37 +0100
+> >>> Wolfram Sang <wsa@the-dreams.de> wrote:
+> >>>     
+> >>>> Hi Boris,
+> >>>>     
+> >>>>> What we could do though, is expose I3C devices that do not have a
+> >>>>> driver in kernel space, like spidev does.  
+> >>>> ...
+> >>>>     
+> >>>>> Mark, Wolfram, Arnd, Greg, any opinion?  
+> >>>> Is there a benefit for having drivers in userspace? My gut feeling is to
+> >>>> encourage people to write kernel drivers. If this is, for some reason,
+> >>>> not possible for some driver, then we have a use case at hand to test
+> >>>> the then-to-be-developed userspace interface against. Until then, I
+> >>>> personally wouldn't waste effort on designing it without a user in
+> >>>> sight.  
+> >>> I kind of agree with that. Vitor, do you have a use case in mind for
+> >>> such userspace drivers? I don't think it's worth designing an API for
+> >>> something we don't need (yet).  
+> >> My use case is a tool for tests, lets say like the i2c tools.  
+> > What would you like to test exactly?
+> >  
+> >> There is
+> >> other subsystems, some of them mentioned on this thread, that have and
+> >> ioctl system call or other method to change parameters or send data.  
+> > I don't think they added the /dev interface before having a real use
+> > case for it.
+> >  
+> >>
+> >> I rise this topic because I really think it worth to define now how this
+> >> should be design (and for me how to do the things right) to avoid future
+> >> issues.  
+> > Actually it should be done the other way around: you should have a real
+> > need and the /dev interface should be designed to fulfill this need.
+> > Based on this real use case we can discuss other potential usage that
+> > might appear in the future and try to design something more
+> > future-proof, but clearly, this userspace interface should be driven by
+> > a real/well-defined use case.
+> >
+> > Also, exposing things to userspace is way more risky than adding a new
+> > in-kernel subsystem/framework, because it then becomes part of the
+> > stable ABI.
+> >
+> > To make things clearer, I'm not against the idea of exposing I3C
+> > devices (or I3C buses) to userspace, but I'd like to understand what you
+> > plan to do with that. If this is about testing, what kind of tests
+> > you'd like to run. If this is about developing drivers in userspace,
+> > why can't these be done in kernel space (license issues?), and what
+> > would those drivers be allowed to do?  
+> 
+> 
+> Basically I need a tool that help me during the development and to avoid 
+> me to write a dummy driver for each device that I test.
 
-this was tested with qemu
-(https://github.com/eauger/qemu/tree/v3.1.0-rc1-virtio-iommu-v0.8.1)
+But we want I3C device drivers to be upstreamed, so why not developing a
+real driver everytime you test a new device and submitting it upstream?
 
-Thanks
+> 
+> For instances do some read/write,
 
-Eric
+Doing SDR/DDR transfers is probably acceptable, but I still think we
+should push hard to have kernel drivers when that's possible.
+
+> get/set ccc commands,
+
+Exposing CCC commands is definitely not a good idea, since they're not
+even exposed to kernel drivers.
+
+> if something 
+> goes wrong during the bus initialization have a to debug etc...
+
+Can't we add such a debug infrastructure in the kernel. Maybe we can
+expose debugfs files too if that helps, though if those debugfs files
+are actually used by userspace libs/tools, it's not any better than
+ioctls or sysfs files, since they will anyway become a stable ABI.
+
 > 
-> [1] Virtio-iommu specification v0.8, sources and pdf
->     git://linux-arm.org/virtio-iommu.git virtio-iommu/v0.8
->     http://jpbrucker.net/virtio-iommu/spec/v0.8/virtio-iommu-v0.8.pdf
 > 
-> [2] [PATCH v3 0/7] Add virtio-iommu driver
->     https://www.spinics.net/lists/linux-pci/msg77110.html
-> 
-> [3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.8.1
->     git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.8.1
-> 
-> [4] [RFC v8 00/18] VIRTIO-IOMMU device
->     https://www.mail-archive.com/qemu-devel@nongnu.org/msg572637.html
-> 
-> Jean-Philippe Brucker (7):
->   dt-bindings: virtio-mmio: Add IOMMU description
->   dt-bindings: virtio: Add virtio-pci-iommu node
->   of: Allow the iommu-map property to omit untranslated devices
->   PCI: OF: Initialize dev->fwnode appropriately
->   iommu: Add virtio-iommu driver
->   iommu/virtio: Add probe request
->   iommu/virtio: Add event queue
-> 
->  .../devicetree/bindings/virtio/iommu.txt      |   66 +
->  .../devicetree/bindings/virtio/mmio.txt       |   30 +
->  MAINTAINERS                                   |    7 +
->  drivers/iommu/Kconfig                         |   11 +
->  drivers/iommu/Makefile                        |    1 +
->  drivers/iommu/virtio-iommu.c                  | 1160 +++++++++++++++++
->  drivers/of/base.c                             |   10 +-
->  drivers/pci/of.c                              |    7 +
->  include/uapi/linux/virtio_ids.h               |    1 +
->  include/uapi/linux/virtio_iommu.h             |  161 +++
->  10 files changed, 1451 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
->  create mode 100644 drivers/iommu/virtio-iommu.c
->  create mode 100644 include/uapi/linux/virtio_iommu.h
-> 
+> For me this is a valid use case and I imagine when people start to 
+> develop in i3c this interface will help everyone.
+
+How about you propose an i3cdev driver that allow users to do SDR
+transfers throuh an ioctl?
