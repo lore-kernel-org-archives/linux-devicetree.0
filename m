@@ -1,37 +1,59 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] net: fsl: Use device_type helpers to access the node type
-Date: Fri, 16 Nov 2018 16:11:03 -0600
-Message-ID: <20181116221104.23024-7-robh@kernel.org>
+Subject: [PATCH] ALSA: aoa: Use device_type helpers to access the node type
+Date: Fri, 16 Nov 2018 16:11:04 -0600
+Message-ID: <20181116221104.23024-8-robh@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+To: Takashi Iwai <tiwai@suse.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johannes Berg <johannes@sipsolutions.net>, Jaroslav Kysela <perex@perex.cz>, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
 Remove directly accessing device_node.type pointer and use the accessors
 instead. This will eventually allow removing the type pointer.
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
+Replace the open coded iterating over child nodes with
+for_each_child_of_node() while we're here.
+
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: alsa-devel@alsa-project.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/net/ethernet/freescale/fsl_pq_mdio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/aoa/fabrics/layout.c | 4 ++--
+ sound/aoa/soundbus/core.c  | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/fsl_pq_mdio.c b/drivers/net/ethernet/freescale/fsl_pq_mdio.c
-index 82722d05fedb..88a396fd242f 100644
---- a/drivers/net/ethernet/freescale/fsl_pq_mdio.c
-+++ b/drivers/net/ethernet/freescale/fsl_pq_mdio.c
-@@ -473,7 +473,7 @@ static int fsl_pq_mdio_probe(struct platform_device *pdev)
+diff --git a/sound/aoa/fabrics/layout.c b/sound/aoa/fabrics/layout.c
+index 1eddf8fa188f..3a23fd032611 100644
+--- a/sound/aoa/fabrics/layout.c
++++ b/sound/aoa/fabrics/layout.c
+@@ -1008,8 +1008,8 @@ static int aoa_fabric_layout_probe(struct soundbus_dev *sdev)
+ 		return -ENODEV;
  
- 	if (data->get_tbipa) {
- 		for_each_child_of_node(np, tbi) {
--			if (strcmp(tbi->type, "tbi-phy") == 0) {
-+			if (of_node_is_type(tbi, "tbi-phy")) {
- 				dev_dbg(&pdev->dev, "found TBI PHY node %pOFP\n",
- 					tbi);
- 				break;
+ 	/* by breaking out we keep a reference */
+-	while ((sound = of_get_next_child(sdev->ofdev.dev.of_node, sound))) {
+-		if (sound->type && strcasecmp(sound->type, "soundchip") == 0)
++	for_each_child_of_node(sdev->ofdev.dev.of_node, sound) {
++		if (of_node_is_type(sound, "soundchip"))
+ 			break;
+ 	}
+ 	if (!sound)
+diff --git a/sound/aoa/soundbus/core.c b/sound/aoa/soundbus/core.c
+index 70bcaa7f93dd..f3076a3f7f2f 100644
+--- a/sound/aoa/soundbus/core.c
++++ b/sound/aoa/soundbus/core.c
+@@ -78,7 +78,7 @@ static int soundbus_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 	if (retval)
+ 		return retval;
+ 
+-	retval = add_uevent_var(env, "OF_TYPE=%s", of->dev.of_node->type);
++	retval = add_uevent_var(env, "OF_TYPE=%s", of_node_get_device_type(of->dev.of_node));
+ 	if (retval)
+ 		return retval;
+ 
 -- 
 2.19.1
