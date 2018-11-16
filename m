@@ -1,61 +1,37 @@
-From: Govind Singh <govinds@codeaurora.org>
-Subject: Re: [PATCH v4 0/3] Enable ath10k wcn3990 wifi driver support on
- sdm845
-Date: Fri, 16 Nov 2018 21:36:57 +0530
-Message-ID: <6e831363962be4e28d7551e360ed4d46@codeaurora.org>
-References: <1541423318-19312-1-git-send-email-govinds@codeaurora.org>
- <87d0r55ews.fsf@codeaurora.org>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH v2 0/17] Add support for OLPC XO 1.75 Embedded Controller
+Date: Fri, 16 Nov 2018 17:23:46 +0100
+Message-ID: <20181116162403.49854-1-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87d0r55ews.fsf@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kalle Valo <kvalo@codeaurora.org>
-Cc: briannorris@chromium.org, andy.gross@linaro.org, ath10k@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-wireless@vger.kernel.org, robh+dt@kernel.org, sboyd@kernel.org, dianders@chromium.org, linux-kernel@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Cameron <quozl@laptop.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-11-16 18:59, Kalle Valo wrote:
-> Govind Singh <govinds@codeaurora.org> writes:
-> 
->> This series enables ath10k wifi driver support for WCN3990 target
->> on sdm845 SOC. This series also updates the missing dt binding 
->> documentation
->> and adds optional iommu property.
->> 
->> Changes since v3:
->>     Moved interrupt/reg/reg-name to required property.
->>     Removed unused clocks.
->>     Corrected interrupt no's.
->> 
->> Changes since v2:
->>     dropped [v2,4/4] dts: arm64/sdm845: Enable iommu for WCN3990 wifi 
->> module
->>     device node patch from the series as dependent patch is not yet 
->> merged.
->>     Enabled status flag from sdm845-mtp.dts.
->> 
->> Changes since v1:
->>     Listed no of interrupts/clocks for each set of compatible.
->>     Added missing 'wifi' label to sdm845.dtsi.
->> 
->> Govind Singh (3):
->>   dt: bindings: add missing dt properties for WCN3990 wifi node
->>   dts: arm64/sdm845: Add WCN3990 WLAN module device node
->>   dt: bindings: add bindings for wifi iommu node
->> 
->>  .../bindings/net/wireless/qcom,ath10k.txt          | 62 
->> ++++++++++++++--------
->>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts            |  8 +++
->>  arch/arm64/boot/dts/qcom/sdm845.dtsi               | 26 +++++++++
->>  3 files changed, 74 insertions(+), 22 deletions(-)
-> 
-> Via which tree are these patches going? That's not clear for me.
+Hi everyone!
 
-I guess sdm845 dtsi change should be going to 
-git://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git.
-I need to send v5 to address one comment from Brian.
+This is a second spin of the patch set that adds support for the Embedded
+Controller on an OLPC XO 1.75 machine.
 
-BR,
-Govind
+OLPC XO 1.75 is a MMP2 based ARM laptop. It plugs into the existing OLPC
+platform infrastructure, currently used by the x86 based models.
+The slave mode support for MMP2's SPI controller that the EC is hooked to
+is now in spi.git's for-4.21 branch.
+
+The v1 received a fair number of comments. I've attempted to address all =
+of
+them, either by fixing things or responding to the v1 review.  See the
+change logs in the individual patches for details.
+
+If I've overlooked something then I apologize -- I haven't dealt with
+a patch set as big as this and I'm struggling to incorporate the
+feedback in an organized manner. Advice from the more experienced folks
+around here are welcome.
+
+Tested to work on an OLPC XO 1.75 and also tested not to break x86
+support with an OLPC XO 1 machine. I don't have a XO 1.5, but it's
+unlikely this breaks it when XO 1 works.
+
+Lubo
