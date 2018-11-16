@@ -1,178 +1,83 @@
-From: Thor Thayer <thor.thayer@linux.intel.com>
-Subject: Re: [PATCH net-next 8/8] net: eth: altera: tse: update devicetree
- bindings documentation
-Date: Thu, 15 Nov 2018 17:49:39 -0600
-Message-ID: <5ca8ece3-06d4-1322-ac13-22e72177e37e@linux.intel.com>
-References: <20181115005047.28464-1-dwesterg@gmail.com>
- <20181115005047.28464-9-dwesterg@gmail.com>
-Reply-To: thor.thayer@linux.intel.com
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 0/4 v1] Mezzanine Low Speed connector bus
+Date: Thu, 15 Nov 2018 16:16:29 -0800
+Message-ID: <93d1f00a-2a86-bed0-6bbf-a6f86550b59a@gmail.com>
+References: <20180823103332.32047-1-linus.walleij@linaro.org>
+ <cd3100ee-03a0-9218-b166-14f15d7669f6@gmail.com>
+ <1eaeec41-782d-63fa-b555-f7580ec8812f@gmail.com>
+ <CACRpkdZsJZDFeera-H2dAV_BJP=94L3gmezmLjDb6hSDubZ_Og@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20181115005047.28464-9-dwesterg@gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdZsJZDFeera-H2dAV_BJP=94L3gmezmLjDb6hSDubZ_Og@mail.gmail.com>
 Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Dalon Westergreen <dwesterg@gmail.com>, netdev@vger.kernel.org, dinguyen@kernel.org, robh@kernel.org, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Dalon Westergreen <dalon.westergreen@intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Michal Simek <michal.simek@xilinx.com>, dev <dev@lists.96boards.org>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Andy Shevchenko <andy@infradead.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-+ Rob Herring, Mark Rutland and the Device Tree mailing list.
+On 11/15/18 2:59 PM, Linus Walleij wrote:
+> On Thu, Nov 15, 2018 at 5:27 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>> On 8/23/18 4:06 PM, Frank Rowand wrote:
+>>> On 08/23/18 03:33, Linus Walleij wrote:
+>>>> I have been a bit hesitant to reiterate the series, but this is
+>>>> anyways a v1 of the 96Boards Mezzanine Low Speed connector
+>>>> driver framework.
+>>
+>> < snip >
+>>
+>>> I will read through the rest of the series and revisit my
+>>> previous conclusions, but most likely not for a few days.
+>>>
+>>> -Frank
+>>
+>> < snip >
+>>
+>> My apologies for continuing to not getting to this task.  It
+>> has been in the top grouping of my todo list but has been
+>> pushed aside by a rather busy schedule of conferences and
+>> company internal work.  It remains up at the top of my todo
+>> list, but most likely will still be shunted aside for three
+>> more weeks of other pressing work.
+>>
+>> I will get to it, I definitely have not forgotten it.
+> 
+> It's OK, I might get to rebasing the series even.
+> 
+> We discussed it in a session with Linaro in Vancouver
+> recently (some month ago). What we took away from it
 
-On 11/14/18 6:50 PM, Dalon Westergreen wrote:
-> From: Dalon Westergreen <dalon.westergreen@intel.com>
+It would be helpful for me to look at that.  What was the
+title of the session, or a pointer to the resource page
+for it?
+
+-Frank
+
+> is that there are many precedents of populating devices
+> ad hoc, what really makes this one special is that it takes
+> something device tree and ad hoc populates something
+> on top of it, not defined in the device tree itself.
 > 
-> Update devicetree bindings documentation to include msgdma
-> prefetcher and ptp bindings.
+> On a related note, Heikki Krogerus is making a software
+> FWnode population series. I ran into this when converting
+> board files to use more abstract descriptions. Check it out:
+> https://marc.info/?l=linux-kernel&m=154177331200561&w=2
 > 
-> Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
-> ---
->   .../devicetree/bindings/net/altera_tse.txt    | 98 +++++++++++++++----
->   1 file changed, 79 insertions(+), 19 deletions(-)
+> The idea with the series is to expand FWnode so that it
+> doesn't only populate Linux devices from device tree
+> or ACPI but also by software, where needed, further
+> expanding the fwnode abstraction. I will probably look
+> into using that.
 > 
-> diff --git a/Documentation/devicetree/bindings/net/altera_tse.txt b/Documentation/devicetree/bindings/net/altera_tse.txt
-> index 0e21df94a53f..d35806942a8f 100644
-> --- a/Documentation/devicetree/bindings/net/altera_tse.txt
-> +++ b/Documentation/devicetree/bindings/net/altera_tse.txt
-> @@ -2,50 +2,79 @@
->   
->   Required properties:
->   - compatible: Should be "altr,tse-1.0" for legacy SGDMA based TSE, and should
-> -		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE.
-> +		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE,
-> +		and "altr,tse-msgdma-2.0" for MSGDMA with prefetcher based
-> +		implementations.
->   		ALTR is supported for legacy device trees, but is deprecated.
->   		altr should be used for all new designs.
->   - reg: Address and length of the register set for the device. It contains
->     the information of registers in the same order as described by reg-names
->   - reg-names: Should contain the reg names
-> -  "control_port": MAC configuration space region
-> -  "tx_csr":       xDMA Tx dispatcher control and status space region
-> -  "tx_desc":      MSGDMA Tx dispatcher descriptor space region
-> -  "rx_csr" :      xDMA Rx dispatcher control and status space region
-> -  "rx_desc":      MSGDMA Rx dispatcher descriptor space region
-> -  "rx_resp":      MSGDMA Rx dispatcher response space region
-> -  "s1":		  SGDMA descriptor memory
->   - interrupts: Should contain the TSE interrupts and it's mode.
->   - interrupt-names: Should contain the interrupt names
-> -  "rx_irq":       xDMA Rx dispatcher interrupt
-> -  "tx_irq":       xDMA Tx dispatcher interrupt
-> +  "rx_irq":       DMA Rx dispatcher interrupt
-> +  "tx_irq":       DMA Tx dispatcher interrupt
->   - rx-fifo-depth: MAC receive FIFO buffer depth in bytes
->   - tx-fifo-depth: MAC transmit FIFO buffer depth in bytes
->   - phy-mode: See ethernet.txt in the same directory.
->   - phy-handle: See ethernet.txt in the same directory.
->   - phy-addr: See ethernet.txt in the same directory. A configuration should
->   		include phy-handle or phy-addr.
-> -- altr,has-supplementary-unicast:
-> -		If present, TSE supports additional unicast addresses.
-> -		Otherwise additional unicast addresses are not supported.
-> -- altr,has-hash-multicast-filter:
-> -		If present, TSE supports a hash based multicast filter.
-> -		Otherwise, hash-based multicast filtering is not supported.
-> -
->   - mdio device tree subnode: When the TSE has a phy connected to its local
->   		mdio, there must be device tree subnode with the following
->   		required properties:
-> -
->   	- compatible: Must be "altr,tse-mdio".
->   	- #address-cells: Must be <1>.
->   	- #size-cells: Must be <0>.
->   
->   	For each phy on the mdio bus, there must be a node with the following
->   	fields:
-> -
->   	- reg: phy id used to communicate to phy.
->   	- device_type: Must be "ethernet-phy".
->   
-> +- altr,has-supplementary-unicast:
-> +		If present, TSE supports additional unicast addresses.
-> +		Otherwise additional unicast addresses are not supported.
-> +- altr,has-hash-multicast-filter:
-> +		If present, TSE supports a hash based multicast filter.
-> +		Otherwise, hash-based multicast filtering is not supported.
-> +- altr,has-ptp:
-> +		If present, TSE supports 1588 timestamping.  Currently only
-> +		supported with the msgdma prefetcher.
-> +- altr,tx-poll-cnt:
-> +		Optional cycle count for Tx prefetcher to poll descriptor
-> +		list.  If not present, defaults to 128, which at 125MHz is
-> +		roughly 1usec. Only for "altr,tse-msgdma-2.0".
-> +- altr,rx-poll-cnt:
-> +		Optional cycle count for Tx prefetcher to poll descriptor
-> +		list.  If not present, defaults to 128, which at 125MHz is
-> +		roughly 1usec. Only for "altr,tse-msgdma-2.0".
-> +
-> +Required registers by compatibility string:
-> + - "altr,tse-1.0"
-> +	"control_port": MAC configuration space region
-> +	"tx_csr":       DMA Tx dispatcher control and status space region
-> +	"rx_csr" :      DMA Rx dispatcher control and status space region
-> +	"s1":		DMA descriptor memory
-> +
-> + - "altr,tse-msgdma-1.0"
-> +	"control_port": MAC configuration space region
-> +	"tx_csr":       DMA Tx dispatcher control and status space region
-> +	"tx_desc":      DMA Tx dispatcher descriptor space region
-> +	"rx_csr" :      DMA Rx dispatcher control and status space region
-> +	"rx_desc":      DMA Rx dispatcher descriptor space region
-> +	"rx_resp":      DMA Rx dispatcher response space region
-> +
-> + - "altr,tse-msgdma-2.0"
-> +	"control_port": MAC configuration space region
-> +	"tx_csr":       DMA Tx dispatcher control and status space region
-> +	"tx_pref":      DMA Tx prefetcher configuration space region
-> +	"rx_csr" :      DMA Rx dispatcher control and status space region
-> +	"rx_pref":      DMA Rx prefetcher configuration space region
-> +	"tod_ctrl":     Time of Day Control register only required when
-> +			timestamping support is enabled.  Timestamping is
-> +			only supported with the msgdma-2.0 implementation.
-> +
->   Optional properties:
->   - local-mac-address: See ethernet.txt in the same directory.
->   - max-frame-size: See ethernet.txt in the same directory.
-> @@ -87,6 +116,11 @@ Example:
->   				device_type = "ethernet-phy";
->   			};
->   
-> +			phy2: ethernet-phy@2 {
-> +				reg = <0x2>;
-> +				device_type = "ethernet-phy";
-> +			};
-> +
->   		};
->   	};
->   
-> @@ -112,3 +146,29 @@ Example:
->   		altr,has-hash-multicast-filter;
->   		phy-handle = <&phy1>;
->   	};
-> +
-> +	tse_sub_2_eth_tse_0: ethernet@1,00002000 {
-> +		compatible = "altr,tse-msgdma-2.0";
-> +		reg = 	<0x00000001 0x00002000 0x00000400>,
-> +			<0x00000001 0x00002400 0x00000020>,
-> +			<0x00000001 0x00002420 0x00000020>,
-> +			<0x00000001 0x00002440 0x00000020>,
-> +			<0x00000001 0x00002460 0x00000020>,
-> +			<0x00000001 0x00002480 0x00000040>;
-> +		reg-names = "control_port", "rx_csr", "rx_pref","tx_csr", "tx_pref", "tod_ctrl";
-> +		interrupt-parent = <&hps_0_arm_gic_0>;
-> +		interrupts = <0 45 4>, <0 44 4>;
-> +		interrupt-names = "rx_irq", "tx_irq";
-> +		rx-fifo-depth = <2048>;
-> +		tx-fifo-depth = <2048>;
-> +		address-bits = <48>;
-> +		max-frame-size = <1500>;
-> +		local-mac-address = [ 00 00 00 00 00 00 ];
-> +		phy-mode = "sgmii";
-> +		altr,has-supplementary-unicast;
-> +		altr,has-hash-multicast-filter;
-> +		altr,has-ptp;
-> +		altr,tx-poll-cnt = <128>;
-> +		altr,rx-poll-cnt = <32>;
-> +		phy-handle = <&phy2>;
-> +	};
+> Yours,
+> Linus Walleij
 > 
