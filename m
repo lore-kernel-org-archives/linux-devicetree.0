@@ -1,83 +1,83 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [resend PATCH 1/3] pwm: mediatek: drop flag 'has_clks'
-Date: Fri, 16 Nov 2018 11:22:44 +0100
-Message-ID: <20181116102244.GB14769@ulmo>
-References: <4c9044427b1aab373acd6ac76f0c905e2be79784.1542074855.git.ryder.lee@mediatek.com>
- <20181114124752.GI2620@ulmo>
- <20181116064748.6c7shn3am4wejrnj@pengutronix.de>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH] ASoC: imx-audmux: complete dt-bindings for imx6
+Date: Fri, 16 Nov 2018 11:25:07 +0100
+Message-ID: <CAJiuCcerEanEobbi8zPb1-eb=zCJsDAbM=p6T64+wtuXjtaMTA@mail.gmail.com>
+References: <20181105135802.30486-1-peron.clem@gmail.com> <20181116025938.GH5829@dragon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="s2ZSL+KKDSLx8OML"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181116064748.6c7shn3am4wejrnj@pengutronix.de>
+In-Reply-To: <20181116025938.GH5829@dragon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Ryder Lee <ryder.lee@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org, Weijie Gao <weijie.gao@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, John Crispin <john@phrozen.org>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: NXP Linux Team <linux-imx@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Colin Didier <colin.didier@devialet.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Shawn,
 
---s2ZSL+KKDSLx8OML
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, 16 Nov 2018 at 03:59, Shawn Guo <shawnguo@kernel.org> wrote:
+>
+> On Mon, Nov 05, 2018 at 02:58:02PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Colin Didier <colin.didier@devialet.com>
+> >
+> > The MX6 Audmux differs from MX51.
+> >
+> > This patch adds the audmux for i.MX6 family.
+> >
+> > Signed-off-by: Colin Didier <colin.didier@devialet.com>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+>
+> I think you should send it to ASoC maintainer and list for applying.
 
-On Fri, Nov 16, 2018 at 07:47:48AM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> On Wed, Nov 14, 2018 at 01:47:52PM +0100, Thierry Reding wrote:
-> > On Tue, Nov 13, 2018 at 10:08:22AM +0800, Ryder Lee wrote:
-> > > The flag 'has_clks' and related checks are superfluous as the CCF
-> > > subsystem does this for you.
-> >=20
-> > Both of these mechanisms aren't equivalent. While CCF can deal with
-> > optional clocks, what the has_clks flag actually means is that the
-> > device doesn't need a clock (or doesn't have a clock input) on the
-> > devices where it is cleared.
-> >=20
-> > So I'd actually be in favor of keeping the has_clks property because it
-> > serves as an additional sanity check. For example if you run this driver
-> > on an SoC that "has clocks" but if you don't list them in DT, then after
-> > this patch the driver will happily continue without clocks, even though
-> > it may break completely without those clocks. I've seen SoCs respond to
-> > disabled clocks for a hardware block in different ways, in many cases an
-> > access to any of the registers will completely hang the CPU. In other
-> > cases it may just crash in some other way or give you some sort of
-> > machine exception. None of those are good, and make the tiny bit of
-> > additional code required to support the has_clks flag very attractive.
-> >=20
-> > But that's just my opinion. If you prefer to throw away that safety
-> > barrier, be my guest. But if you do, please move this functionality into
-> > the clock framework first and then make the driver use it.
->=20
-> The usual policy is: If the things specified in the dt are
-> wrong or incomplete, it's ok to fail however you like. So from a
-> correctness POV I think the change is fine.
+It's still quite new for me to submit patch, but if this patch should
+be sent to ASoC maintainer maybe there is a line missing in the
+MAINTAINERS file no ?
 
-Erm... that's pretty much what I said. It doesn't necessarily mean that
-it's the right thing to do, though. If we know that clocks are required
-and we don't find them in DT, it's better to complain and let the user
-know exactly what is wrong rather than just let it crash and have them
-track down the bug without additional information.
+SOUND
+M:      Jaroslav Kysela <perex@perex.cz>
+M:      Takashi Iwai <tiwai@suse.com>
+L:      alsa-devel@alsa-project.org (moderated for non-subscribers)
+W:      http://www.alsa-project.org/
+T:      git git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+T:      git git://git.alsa-project.org/alsa-kernel.git
+Q:      http://patchwork.kernel.org/project/alsa-devel/list/
+S:      Maintained
+F:      Documentation/sound/
++ F:      include/dt-bindings/sound/
+F:      include/sound/
+F:      include/uapi/sound/
+F:      sound/
 
-Thierry
+Regards,
+Clement
 
---s2ZSL+KKDSLx8OML
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlvumnQACgkQ3SOs138+
-s6FeCg/+IGbZAVX4NM9KqGMAlCKbZZHB50ybxRy44LZmoepfGNAyx/aTSRIUqJPJ
-nZpBi4xS+lDw2cDg9yhBkIGbDvcKZciTsR7zq2AEPgg0jeigRlqZk0uTSkzJdYnA
-WcNnv1MW8L3X74MpLlBVU7iqpQb1ihj3VaLgqH7ySdMVp70G+b18SSZYjxoxvsGP
-9PbCroW823NhLfNLLYe6Goc3B2AzHFY3imB0wHhE3qPCewxT5qv9v7VqGRozGR4Y
-Ne2gY738btUEPCiU/1ncMzNQ3zSB16ip3YUSX7abJFf8FGR2W9EZZ0KzNsNPreV/
-hEDF56dJNDDB3HrpxW7t4KBOzct2tbjWLQLKNuDYxshdsOolNIb7IgtOCiddTHi/
-Yo+vA74iquxsAFlL5bjWwkSyem6UeZFztBt6IQHL/WvaiosrvxGzYau061Nf3E6T
-q+13Bv3bUKU3H2Fm8bLi1OnRkENUsbHurzXY+Q9uw8i0k08FIf8lH2LbDYs6E7U7
-lLYfQhAaJlurHPepdctFzCZGXpUStYu/sVj/QDbhqPssXi6/AgiMcYnWLxufWDwN
-/wKfjMAg9AmBpXuZTmDJBQF6KuUzDsAhvhxcbHgpfO/8tAMHC2aDKp6dTmAvC3/W
-VNo/2hmln98pZlhy+cqhjygcqXl77BnSBUKSS/h1UjTuIeBvi+k=
-=oX8L
------END PGP SIGNATURE-----
-
---s2ZSL+KKDSLx8OML--
+>
+> Shawn
+>
+> > ---
+> >  include/dt-bindings/sound/fsl-imx-audmux.h | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/include/dt-bindings/sound/fsl-imx-audmux.h b/include/dt-bi=
+ndings/sound/fsl-imx-audmux.h
+> > index 15f138bebe16..a1d0741d9ed1 100644
+> > --- a/include/dt-bindings/sound/fsl-imx-audmux.h
+> > +++ b/include/dt-bindings/sound/fsl-imx-audmux.h
+> > @@ -25,6 +25,14 @@
+> >  #define MX51_AUDMUX_PORT6            5
+> >  #define MX51_AUDMUX_PORT7            6
+> >
+> > +#define MX6_AUDMUX_PORT1_SSI1                0
+> > +#define MX6_AUDMUX_PORT2_SSI2                1
+> > +#define MX6_AUDMUX_PORT3             2
+> > +#define MX6_AUDMUX_PORT4             3
+> > +#define MX6_AUDMUX_PORT5             4
+> > +#define MX6_AUDMUX_PORT6             5
+> > +#define MX6_AUDMUX_PORT7_SSI3                6
+> > +
+> >  /*
+> >   * TFCSEL/RFCSEL (i.MX27) or TFSEL/TCSEL/RFSEL/RCSEL (i.MX31/51/53/6Q)
+> >   * can be sourced from Rx/Tx.
+> > --
+> > 2.19.1
+> >
