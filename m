@@ -1,120 +1,88 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 17/17] power: supply: olpc_battery: Add OLPC XO 1.75 support
-Date: Fri, 16 Nov 2018 17:24:03 +0100
-Message-ID: <20181116162403.49854-18-lkundrak@v3.sk>
-References: <20181116162403.49854-1-lkundrak@v3.sk>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v2 00/12] drm/sun4i: Allwinner MIPI-DSI Burst
+ mode support
+Date: Fri, 16 Nov 2018 22:09:04 +0530
+Message-ID: <20181116163916.29621-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20181116162403.49854-1-lkundrak@v3.sk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, devel@driverdev.osuosl.org, Eric Miao <eric.y.miao@gmail.com>, James Cameron <quozl@laptop.org>, linux-pm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-spi@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>, Daniel Mack <daniel@zonque.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBS7FXPPQKGQEPP7GRUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, TL Lim <tllim-F7SikzrIcFYdnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The battery and the protocol are essentially the same as OLPC XO 1.5,
-but the responses from the EC are LSB first.
+This series support MIPI-DSI Burst mode on Allwinner platform, which
+is tested in burst supported panel in Pine64-LTS board.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Acked-by: Pavel Machek <pavel@ucw.cz>
+Series fixed few code changes commented in previous version[1] and
+it depends on A64 MIPI-DSI series[2]
 
----
-Changes since v1:
-- s/s16 ecword_to_cpu/u16 ecword_to_cpu/
-- s/u16 ec_byte/u16 ec_word/
+Changes for v2:
+- add separate function for setup_inst_delay computation
+- moved instruction loop seletion below delay compuation
+- add separate function for dsi_get_timings and call for non-burst mode
+- simplify burst mode timings compuatation
+- add new patches, for tcon0 probing during dsi_bind
+- add code to get the tcon0 divider value
+- add multiple functions to get line_num, edge0, edge1
+- squash 'enable burst mode' patch into 'Setup burst mode'
+- fixed commit message of 'Enable burst mode HBP, HSA_HSE'
+  s/enable/disable
+- collect Rob R-b tag on panel dt-bindings patch
+- panel driver changes,
+  - dropped unneeded include files
+  - s/fy07024di26a30d/feiyang function, variable names
+  - use DRM_DEV_ERROR in panel driver
+  - add set_display_on .enable
+  - moved regulator enablement to .prepare
+  - handle erro statements and release them properly during probe
+  - remove panel if mipi_dsi_attach failed
+  - fixed MODULE_LICENSE
+  - update MAINTAINERS file about the panel
+- add comments on dts about exact regulators used in schematics
 
- drivers/power/supply/olpc_battery.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+[1] https://patchwork.kernel.org/cover/10666597/
+[2] https://patchwork.kernel.org/cover/10680247/
 
-diff --git a/drivers/power/supply/olpc_battery.c b/drivers/power/supply/olpc_battery.c
-index ec5dfb8fcb8a..898e8a6128bb 100644
---- a/drivers/power/supply/olpc_battery.c
-+++ b/drivers/power/supply/olpc_battery.c
-@@ -56,6 +56,7 @@ struct olpc_battery_data {
- 	struct power_supply *olpc_bat;
- 	char bat_serial[17];
- 	int new_proto;
-+	int little_endian;
- };
- 
- /*********************************************************************
-@@ -321,6 +322,14 @@ static int olpc_bat_get_voltage_max_design(union power_supply_propval *val)
- 	return ret;
- }
- 
-+static u16 ecword_to_cpu(struct olpc_battery_data *data, u16 ec_word)
-+{
-+	if (data->little_endian)
-+		return le16_to_cpu(ec_word);
-+	else
-+		return be16_to_cpu(ec_word);
-+}
-+
- /*********************************************************************
-  *		Battery properties
-  *********************************************************************/
-@@ -393,7 +402,7 @@ static int olpc_bat_get_property(struct power_supply *psy,
- 		if (ret)
- 			return ret;
- 
--		val->intval = (s16)be16_to_cpu(ec_word) * 9760L / 32;
-+		val->intval = ecword_to_cpu(data, ec_word) * 9760L / 32;
- 		break;
- 	case POWER_SUPPLY_PROP_CURRENT_AVG:
- 	case POWER_SUPPLY_PROP_CURRENT_NOW:
-@@ -401,7 +410,7 @@ static int olpc_bat_get_property(struct power_supply *psy,
- 		if (ret)
- 			return ret;
- 
--		val->intval = (s16)be16_to_cpu(ec_word) * 15625L / 120;
-+		val->intval = ecword_to_cpu(data, ec_word) * 15625L / 120;
- 		break;
- 	case POWER_SUPPLY_PROP_CAPACITY:
- 		ret = olpc_ec_cmd(EC_BAT_SOC, NULL, 0, &ec_byte, 1);
-@@ -432,21 +441,21 @@ static int olpc_bat_get_property(struct power_supply *psy,
- 		if (ret)
- 			return ret;
- 
--		val->intval = (s16)be16_to_cpu(ec_word) * 10 / 256;
-+		val->intval = ecword_to_cpu(data, ec_word) * 10 / 256;
- 		break;
- 	case POWER_SUPPLY_PROP_TEMP_AMBIENT:
- 		ret = olpc_ec_cmd(EC_AMB_TEMP, NULL, 0, (void *)&ec_word, 2);
- 		if (ret)
- 			return ret;
- 
--		val->intval = (int)be16_to_cpu(ec_word) * 10 / 256;
-+		val->intval = (int)ecword_to_cpu(data, ec_word) * 10 / 256;
- 		break;
- 	case POWER_SUPPLY_PROP_CHARGE_COUNTER:
- 		ret = olpc_ec_cmd(EC_BAT_ACR, NULL, 0, (void *)&ec_word, 2);
- 		if (ret)
- 			return ret;
- 
--		val->intval = (s16)be16_to_cpu(ec_word) * 6250 / 15;
-+		val->intval = ecword_to_cpu(data, ec_word) * 6250 / 15;
- 		break;
- 	case POWER_SUPPLY_PROP_SERIAL_NUMBER:
- 		ret = olpc_ec_cmd(EC_BAT_SERIAL, NULL, 0, (void *)&ser_buf, 8);
-@@ -626,6 +635,10 @@ static int olpc_battery_probe(struct platform_device *pdev)
- 	if (ecver > 0x44) {
- 		/* XO 1 or 1.5 with a new EC firmware. */
- 		data->new_proto = 1;
-+	} else if (of_find_compatible_node(NULL, NULL, "olpc,xo1.75-ec")) {
-+		/* XO 1.75 */
-+		data->new_proto = 1;
-+		data->little_endian = 1;
- 	} else if (ecver < 0x44) {
- 		/*
- 		 * We've seen a number of EC protocol changes; this driver
+Any inputs,
+Jagan.
+
+Jagan Teki (12):
+  drm/sun4i: sun6i_mipi_dsi: Compute burst mode loop N1 instruction
+    delay
+  drm/sun4i: sun6i_mipi_dsi: Support instruction loop selection
+  drm/sun4i: sun6i_mipi_dsi: Setup burst mode timings
+  drm/sun4i: sun6i_mipi_dsi: Simplify drq set to support all modes
+  drm/sun4i: tcon: Export get tcon0 routine
+  drm/sun4i: sun6i_mipi_dsi: Probe tcon0 during dsi_bind
+  drm/sun4i: sun6i_mipi_dsi: Setup burst mode
+  drm/sun4i: sun6i_mipi_dsi: Enable 2byte trail for 4-lane burst mode
+  drm/sun4i: sun6i_mipi_dsi: Enable burst mode HBP, HSA_HSE
+  dt-bindings: panel: Add Feiyang FY07024DI26A30-D MIPI-DSI LCD panel
+  drm/panel: Add Feiyang FY07024DI26A30-D MIPI-DSI LCD panel
+  [DO NOT MERGE] arm64: allwinner: a64: pine64-lts: Enable Feiyang FY07024DI26A30-D DSI
+    panel
+
+ .../display/panel/feiyang,fy07024di26a30d.txt |  20 ++
+ MAINTAINERS                                   |   6 +
+ .../dts/allwinner/sun50i-a64-pine64-lts.dts   |  37 +++
+ drivers/gpu/drm/panel/Kconfig                 |   9 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ .../drm/panel/panel-feiyang-fy07024di26a30d.c | 286 ++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun4i_tcon.c            |   3 +-
+ drivers/gpu/drm/sun4i/sun4i_tcon.h            |   1 +
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c        | 264 ++++++++++++----
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h        |   1 +
+ 10 files changed, 567 insertions(+), 61 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
+ create mode 100644 drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
+
 -- 
-2.19.1
+2.18.0.321.gffc6fa0e3
