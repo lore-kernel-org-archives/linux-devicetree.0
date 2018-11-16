@@ -1,52 +1,59 @@
 From: matthias.bgg@kernel.org
-Subject: [PATCH v5 11/12] clk: mediatek: mt2712e: Probe with new compatible
-Date: Fri, 16 Nov 2018 13:54:48 +0100
-Message-ID: <20181116125449.23581-12-matthias.bgg@kernel.org>
+Subject: [PATCH v5 12/12] clk: mediatek: mt6797: Probe with new compatible
+Date: Fri, 16 Nov 2018 13:54:49 +0100
+Message-ID: <20181116125449.23581-13-matthias.bgg@kernel.org>
 References: <20181116125449.23581-1-matthias.bgg@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181116125449.23581-1-matthias.bgg@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com, p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com, sboyd@codeaurora.org, ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com, matthias.bgg@gmail.com
-Cc: devicetree@vger.kernel.org, rdunlap@infradead.org, sean.wang@mediatek.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, sean.wang@kernel.org, wens@csie.org, Matthias Brugger <mbrugger@suse.com>, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: sean.wang@mediatek.com, sean.wang@kernel.org, rdunlap@infradead.org, wens@csie.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogTWF0dGhpYXMgQnJ1Z2dlciA8bWJydWdnZXJAc3VzZS5jb20+CgpUaGUgY2xvY2sgbm9k
-ZSBpcyBub3cgYSBjaGlsZCBvZiB0aGUgbW1zeXMgbm9kZS4KVXBkYXRlIHRoZSBkcml2ZXIgdG8g
-c3VwcG9ydCB0aGlzIGFuZCB0aGVuZXcgY29tcGF0aWJsZQppbiB0aGUgZHJpdmVyLgoKU2lnbmVk
-LW9mZi1ieTogTWF0dGhpYXMgQnJ1Z2dlciA8bWJydWdnZXJAc3VzZS5jb20+Ci0tLQogZHJpdmVy
-cy9jbGsvbWVkaWF0ZWsvY2xrLW10MjcxMi1tbS5jIHwgOSArKysrKy0tLS0KIDEgZmlsZSBjaGFu
-Z2VkLCA1IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9jbGsvbWVkaWF0ZWsvY2xrLW10MjcxMi1tbS5jIGIvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xr
-LW10MjcxMi1tbS5jCmluZGV4IGE4YjRiNmQ0MjQ4OC4uNWY0ZWU4ZjBkZWFhIDEwMDY0NAotLS0g
-YS9kcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQyNzEyLW1tLmMKKysrIGIvZHJpdmVycy9jbGsv
-bWVkaWF0ZWsvY2xrLW10MjcxMi1tbS5jCkBAIC0xMzgsMTQgKzEzOCwxNSBAQCBzdGF0aWMgaW50
-IGNsa19tdDI3MTJfbW1fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKIHsKIAlz
-dHJ1Y3QgY2xrX29uZWNlbGxfZGF0YSAqY2xrX2RhdGE7CiAJaW50IHI7Ci0Jc3RydWN0IGRldmlj
-ZV9ub2RlICpub2RlID0gcGRldi0+ZGV2Lm9mX25vZGU7CisJc3RydWN0IGRldmljZQlwYXJlbnQg
-PSBwZGV2LT5kZXYucGFyZW50OwogCiAJY2xrX2RhdGEgPSBtdGtfYWxsb2NfY2xrX2RhdGEoQ0xL
-X01NX05SX0NMSyk7CiAKLQltdGtfY2xrX3JlZ2lzdGVyX2dhdGVzKG5vZGUsIG1tX2Nsa3MsIEFS
-UkFZX1NJWkUobW1fY2xrcyksCisJbXRrX2Nsa19yZWdpc3Rlcl9nYXRlcyhwYXJlbnQtPm9mX25v
-ZGUsIG1tX2Nsa3MsIEFSUkFZX1NJWkUobW1fY2xrcyksCiAJCQljbGtfZGF0YSk7CiAKLQlyID0g
-b2ZfY2xrX2FkZF9wcm92aWRlcihub2RlLCBvZl9jbGtfc3JjX29uZWNlbGxfZ2V0LCBjbGtfZGF0
-YSk7CisJciA9IG9mX2Nsa19hZGRfcHJvdmlkZXIocGFyZW50LT5vZl9ub2RlLCBvZl9jbGtfc3Jj
-X29uZWNlbGxfZ2V0LAorCQkJY2xrX2RhdGEpOwogCiAJaWYgKHIgIT0gMCkKIAkJcHJfZXJyKCIl
-cygpOiBjb3VsZCBub3QgcmVnaXN0ZXIgY2xvY2sgcHJvdmlkZXI6ICVkXG4iLApAQCAtMTU1LDcg
-KzE1Niw3IEBAIHN0YXRpYyBpbnQgY2xrX210MjcxMl9tbV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1f
-ZGV2aWNlICpwZGV2KQogfQogCiBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBvZl9t
-YXRjaF9jbGtfbXQyNzEyX21tW10gPSB7Ci0JeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3
-MTItbW1zeXMiLCB9LAorCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQyNzEyLW1tc3lzLWNs
-ayIsIH0sCiAJe30KIH07CiAKLS0gCjIuMTkuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVsCg==
+From: Matthias Brugger <mbrugger@suse.com>
+
+The clock node is now a child of the mmsys node.
+Update the driver to support this and thenew compatible
+in the driver.
+
+Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+---
+ drivers/clk/mediatek/clk-mt6797-mm.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/clk/mediatek/clk-mt6797-mm.c b/drivers/clk/mediatek/clk-mt6797-mm.c
+index c57d3eed270d..051bab99d10f 100644
+--- a/drivers/clk/mediatek/clk-mt6797-mm.c
++++ b/drivers/clk/mediatek/clk-mt6797-mm.c
+@@ -101,7 +101,7 @@ static const struct mtk_gate mm_clks[] = {
+ };
+ 
+ static const struct of_device_id of_match_clk_mt6797_mm[] = {
+-	{ .compatible = "mediatek,mt6797-mmsys", },
++	{ .compatible = "mediatek,mt6797-mmsys-clk", },
+ 	{}
+ };
+ 
+@@ -109,14 +109,15 @@ static int clk_mt6797_mm_probe(struct platform_device *pdev)
+ {
+ 	struct clk_onecell_data *clk_data;
+ 	int r;
+-	struct device_node *node = pdev->dev.of_node;
++	struct device *parent = pdev->dev.parent;
+ 
+ 	clk_data = mtk_alloc_clk_data(CLK_MM_NR);
+ 
+-	mtk_clk_register_gates(node, mm_clks, ARRAY_SIZE(mm_clks),
++	mtk_clk_register_gates(parent->of_node, mm_clks, ARRAY_SIZE(mm_clks),
+ 			       clk_data);
+ 
+-	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
++	r = of_clk_add_provider(parent->of_node, of_clk_src_onecell_get,
++			clk_data);
+ 	if (r)
+ 		dev_err(&pdev->dev,
+ 			"could not register clock provider: %s: %d\n",
+-- 
+2.19.1
