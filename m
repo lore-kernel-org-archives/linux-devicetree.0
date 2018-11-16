@@ -1,38 +1,91 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/3] ARM: dts: imx31: Fix memory node duplicaton
-Date: Fri, 16 Nov 2018 22:39:31 +0800
-Message-ID: <20181116143929.GN5829@dragon>
-References: <1541518847-5640-1-git-send-email-festevam@gmail.com>
+Subject: Re: [PATCH] ASoC: imx-audmux: complete dt-bindings for imx6
+Date: Fri, 16 Nov 2018 22:45:22 +0800
+Message-ID: <20181116144520.GO5829@dragon>
+References: <20181105135802.30486-1-peron.clem@gmail.com>
+ <20181116025938.GH5829@dragon>
+ <CAJiuCcerEanEobbi8zPb1-eb=zCJsDAbM=p6T64+wtuXjtaMTA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1541518847-5640-1-git-send-email-festevam@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, robh@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, devicetree@vger.kernel.org
+In-Reply-To: <CAJiuCcerEanEobbi8zPb1-eb=zCJsDAbM=p6T64+wtuXjtaMTA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: NXP Linux Team <linux-imx@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Colin Didier <colin.didier@devialet.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 06, 2018 at 01:40:45PM -0200, Fabio Estevam wrote:
-> Boards based on imx31 have duplicate memory nodes:
+On Fri, Nov 16, 2018 at 11:25:07AM +0100, Clément Péron wrote:
+> Hi Shawn,
 > 
-> - One coming from the board dts file: memory@
+> On Fri, 16 Nov 2018 at 03:59, Shawn Guo <shawnguo@kernel.org> wrote:
+> >
+> > On Mon, Nov 05, 2018 at 02:58:02PM +0100, Clément Péron wrote:
+> > > From: Colin Didier <colin.didier@devialet.com>
+> > >
+> > > The MX6 Audmux differs from MX51.
+> > >
+> > > This patch adds the audmux for i.MX6 family.
+> > >
+> > > Signed-off-by: Colin Didier <colin.didier@devialet.com>
+> > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> >
+> > I think you should send it to ASoC maintainer and list for applying.
 > 
-> - One coming from the imx31.dtsi file.
-> 
-> Fix the duplication by removing the memory node from the dtsi file
-> and by adding 'device_type = "memory";' in the board dts.
-> 
-> Reported-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> It's still quite new for me to submit patch, but if this patch should
+> be sent to ASoC maintainer maybe there is a line missing in the
+> MAINTAINERS file no ?
 
-Applied all, thanks.
+@Mark, comment?
+
+Shawn
+
+> 
+> SOUND
+> M:      Jaroslav Kysela <perex@perex.cz>
+> M:      Takashi Iwai <tiwai@suse.com>
+> L:      alsa-devel@alsa-project.org (moderated for non-subscribers)
+> W:      http://www.alsa-project.org/
+> T:      git git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+> T:      git git://git.alsa-project.org/alsa-kernel.git
+> Q:      http://patchwork.kernel.org/project/alsa-devel/list/
+> S:      Maintained
+> F:      Documentation/sound/
+> + F:      include/dt-bindings/sound/
+> F:      include/sound/
+> F:      include/uapi/sound/
+> F:      sound/
+> 
+> Regards,
+> Clement
+> 
+> >
+> > Shawn
+> >
+> > > ---
+> > >  include/dt-bindings/sound/fsl-imx-audmux.h | 8 ++++++++
+> > >  1 file changed, 8 insertions(+)
+> > >
+> > > diff --git a/include/dt-bindings/sound/fsl-imx-audmux.h b/include/dt-bindings/sound/fsl-imx-audmux.h
+> > > index 15f138bebe16..a1d0741d9ed1 100644
+> > > --- a/include/dt-bindings/sound/fsl-imx-audmux.h
+> > > +++ b/include/dt-bindings/sound/fsl-imx-audmux.h
+> > > @@ -25,6 +25,14 @@
+> > >  #define MX51_AUDMUX_PORT6            5
+> > >  #define MX51_AUDMUX_PORT7            6
+> > >
+> > > +#define MX6_AUDMUX_PORT1_SSI1                0
+> > > +#define MX6_AUDMUX_PORT2_SSI2                1
+> > > +#define MX6_AUDMUX_PORT3             2
+> > > +#define MX6_AUDMUX_PORT4             3
+> > > +#define MX6_AUDMUX_PORT5             4
+> > > +#define MX6_AUDMUX_PORT6             5
+> > > +#define MX6_AUDMUX_PORT7_SSI3                6
+> > > +
+> > >  /*
+> > >   * TFCSEL/RFCSEL (i.MX27) or TFSEL/TCSEL/RFSEL/RCSEL (i.MX31/51/53/6Q)
+> > >   * can be sourced from Rx/Tx.
+> > > --
+> > > 2.19.1
+> > >
