@@ -1,71 +1,112 @@
-Return-Path: <SRS0=dUsd=NW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54111 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728213AbeKLAEc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 11 Nov 2018 19:04:32 -0500
-Received: by mail-wm1-f68.google.com with SMTP id f10-v6so6009199wme.3
-        for <devicetree@vger.kernel.org>; Sun, 11 Nov 2018 06:15:50 -0800 (PST)
-From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Subject: [PATCH v2 2/9] iio: imu: st_lsm6dsx: reload trimming parameter at bootstrap
-Date: Sun, 11 Nov 2018 15:15:29 +0100
-Message-Id: <9b47f1429ddec5144d52605ef0ccf1f15a310db4.1541945612.git.lorenzo.bianconi@redhat.com>
-In-Reply-To: <cover.1541945612.git.lorenzo.bianconi@redhat.com>
-References: <cover.1541945612.git.lorenzo.bianconi@redhat.com>
+Return-Path: <monstr@monstr.eu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+References: <74a9934eab231714e65f74e442ad79cab0475267.1541684144.git.michal.simek@xilinx.com>
+In-Reply-To: <74a9934eab231714e65f74e442ad79cab0475267.1541684144.git.michal.simek@xilinx.com>
+From: Michal Simek <monstr@monstr.eu>
+Date: Fri, 16 Nov 2018 09:13:57 +0100
+Message-ID: <CAHTX3dLaX9W3q2EBLG30Mo+h9vrg_jfdy6VTuOYuUk0Cr52V8g@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: Add missing gpio-controller to ps gpio
+Content-Type: multipart/alternative; boundary="0000000000006606c5057ac3c0ac"
+To: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Rob Herring <robherring2@gmail.com>
+Cc: Olof Johansson <olof@lixom.net>, LKML <linux-kernel@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Will Deacon <will.deacon@arm.com>, Manish Narani <manish.narani@xilinx.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Perform a complete device reset at bootstrap reloading trimming parameter
-after sw reset is completed. Device sw reset/boot is explained here:
-https://www.st.com/resource/en/application_note/dm00517282.pdf,
-section 5.7
+--0000000000006606c5057ac3c0ac
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
----
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+=C4=8Dt 8. 11. 2018 v 14:35 odes=C3=ADlatel Michal Simek <michal.simek@xili=
+nx.com>
+napsal:
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-index c8b993bea757..961ce9d65d82 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -56,6 +56,7 @@
- #define ST_LSM6DSX_REG_WHOAMI_ADDR		0x0f
- #define ST_LSM6DSX_REG_RESET_ADDR		0x12
- #define ST_LSM6DSX_REG_RESET_MASK		BIT(0)
-+#define ST_LSM6DSX_REG_BOOT_MASK		BIT(7)
- #define ST_LSM6DSX_REG_BDU_ADDR			0x12
- #define ST_LSM6DSX_REG_BDU_MASK			BIT(6)
- #define ST_LSM6DSX_REG_INT2_ON_INT1_ADDR	0x13
-@@ -778,12 +779,23 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
- 	u8 drdy_int_reg;
- 	int err;
- 
--	err = regmap_write(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
--			   ST_LSM6DSX_REG_RESET_MASK);
-+	/* device sw reset */
-+	err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
-+				 ST_LSM6DSX_REG_RESET_MASK,
-+				 FIELD_PREP(ST_LSM6DSX_REG_RESET_MASK, 1));
- 	if (err < 0)
- 		return err;
- 
--	msleep(200);
-+	msleep(50);
-+
-+	/* reload trimming parameter */
-+	err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
-+				 ST_LSM6DSX_REG_BOOT_MASK,
-+				 FIELD_PREP(ST_LSM6DSX_REG_BOOT_MASK, 1));
-+	if (err < 0)
-+		return err;
-+
-+	msleep(50);
- 
- 	/* enable Block Data Update */
- 	err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_BDU_ADDR,
--- 
-2.19.1
+> Add missing gpio-controller property to ps gpio.
+> This was found via DT schema validation.
+>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+>
+>  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> index 07f2dd13ab33..ae3c1b929648 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> @@ -410,6 +410,7 @@
+>                         compatible =3D "xlnx,zynqmp-gpio-1.0";
+>                         status =3D "disabled";
+>                         #gpio-cells =3D <0x2>;
+> +                       gpio-controller;
+>                         interrupt-parent =3D <&gic>;
+>                         interrupts =3D <0 16 4>;
+>                         interrupt-controller;
+> --
+> 1.9.1
+>
+>
+Applied but with zynqmp: subsystem.
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+--0000000000006606c5057ac3c0ac
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><br><br><div class=3D"gmail_quote"><div dir=3D"ltr">=C4=8D=
+t 8. 11. 2018 v=C2=A014:35 odes=C3=ADlatel Michal Simek &lt;<a href=3D"mail=
+to:michal.simek@xilinx.com">michal.simek@xilinx.com</a>&gt; napsal:<br></di=
+v><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:=
+1px #ccc solid;padding-left:1ex">Add missing gpio-controller property to ps=
+ gpio.<br>
+This was found via DT schema validation.<br>
+<br>
+Signed-off-by: Michal Simek &lt;<a href=3D"mailto:michal.simek@xilinx.com" =
+target=3D"_blank">michal.simek@xilinx.com</a>&gt;<br>
+---<br>
+<br>
+=C2=A0arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 1 +<br>
+=C2=A01 file changed, 1 insertion(+)<br>
+<br>
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/x=
+ilinx/zynqmp.dtsi<br>
+index 07f2dd13ab33..ae3c1b929648 100644<br>
+--- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi<br>
++++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi<br>
+@@ -410,6 +410,7 @@<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 compatible =3D &quot;xlnx,zynqmp-gpio-1.0&quot;;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 status =3D &quot;disabled&quot;;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 #gpio-cells =3D &lt;0x2&gt;;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0gpio-controller;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 interrupt-parent =3D &lt;&amp;gic&gt;;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 interrupts =3D &lt;0 16 4&gt;;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 interrupt-controller;<br>
+-- <br>
+1.9.1<br>
+<br>
+</blockquote></div><br clear=3D"all"><div>Applied but with zynqmp: subsyste=
+m.</div><div><br></div><div>Thanks,</div><div>Michal<br></div><div><br></di=
+v>-- <br><div dir=3D"ltr" class=3D"gmail_signature" data-smartmail=3D"gmail=
+_signature">Michal Simek, Ing. (M.Eng), OpenPGP -&gt; KeyID: FE3D1F91<br>w:=
+ <a href=3D"http://www.monstr.eu" target=3D"_blank">www.monstr.eu</a> p: +4=
+2-0-721842854<br>Maintainer of Linux kernel - Microblaze cpu - <a href=3D"h=
+ttp://www.monstr.eu/fdt/" target=3D"_blank">http://www.monstr.eu/fdt/</a><b=
+r>Maintainer of Linux kernel - Xilinx Zynq ARM architecture<br>Microblaze U=
+-BOOT custodian and responsible for u-boot arm zynq platform</div></div>
+
+--0000000000006606c5057ac3c0ac--
