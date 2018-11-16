@@ -1,133 +1,50 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] of: Use device_type helpers to access the node type
-Date: Fri, 16 Nov 2018 16:10:57 -0600
-Message-ID: <20181116221104.23024-1-robh@kernel.org>
+Subject: [PATCH] MIPS: Use device_type helpers to access the node type
+Date: Fri, 16 Nov 2018 16:10:58 -0600
+Message-ID: <20181116221104.23024-2-robh@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: James Hogan <jhogan@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
 Remove directly accessing device_node.type pointer and use the accessors
 instead. This will eventually allow removing the type pointer.
 
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@linux-mips.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/of/address.c |  4 ++--
- drivers/of/base.c    | 18 ++++++++++++------
- drivers/of/device.c  |  9 +++++----
- 3 files changed, 19 insertions(+), 12 deletions(-)
+ arch/mips/pci/pci-rt3883.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 7ddbf0a1ab86..ae48e121b6e7 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -110,8 +110,8 @@ static int of_bus_pci_match(struct device_node *np)
- 	 * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
- 	 * "ht" is hypertransport
- 	 */
--	return !strcmp(np->type, "pci") || !strcmp(np->type, "pciex") ||
--		!strcmp(np->type, "vci") || !strcmp(np->type, "ht");
-+	return of_node_is_type(np, "pci") || of_node_is_type(np, "pciex") ||
-+		of_node_is_type(np, "vci") || of_node_is_type(np, "ht");
- }
+diff --git a/arch/mips/pci/pci-rt3883.c b/arch/mips/pci/pci-rt3883.c
+index 958899ffe99c..bafbf69e7dc4 100644
+--- a/arch/mips/pci/pci-rt3883.c
++++ b/arch/mips/pci/pci-rt3883.c
+@@ -445,8 +445,7 @@ static int rt3883_pci_probe(struct platform_device *pdev)
  
- static void of_bus_pci_count_cells(struct device_node *np,
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 09692c9b32a7..57c837140a8b 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -79,6 +79,13 @@ bool of_node_name_prefix(const struct device_node *np, const char *prefix)
- }
- EXPORT_SYMBOL(of_node_name_prefix);
+ 	/* find the PCI host bridge child node */
+ 	for_each_child_of_node(np, child) {
+-		if (child->type &&
+-		    of_node_cmp(child->type, "pci") == 0) {
++		if (of_node_is_type(child, "pci")) {
+ 			rpc->pci_controller.of_node = child;
+ 			break;
+ 		}
+@@ -464,8 +463,7 @@ static int rt3883_pci_probe(struct platform_device *pdev)
+ 	for_each_available_child_of_node(rpc->pci_controller.of_node, child) {
+ 		int devfn;
  
-+static bool __of_node_is_type(const struct device_node *np, const char *type)
-+{
-+	const char *match = __of_get_property(np, "device_type", NULL);
-+
-+	return np && match && type && !strcmp(match, type);
-+}
-+
- int of_n_addr_cells(struct device_node *np)
- {
- 	u32 cells;
-@@ -482,7 +489,7 @@ static int __of_device_is_compatible(const struct device_node *device,
- 
- 	/* Matching type is better than matching name */
- 	if (type && type[0]) {
--		if (!device->type || of_node_cmp(type, device->type))
-+		if (!__of_node_is_type(device, type))
- 			return 0;
- 		score += 2;
- 	}
-@@ -775,7 +782,7 @@ struct device_node *of_get_next_cpu_node(struct device_node *prev)
- 	}
- 	for (; next; next = next->sibling) {
- 		if (!(of_node_name_eq(next, "cpu") ||
--		      (next->type && !of_node_cmp(next->type, "cpu"))))
-+		      __of_node_is_type(next, "cpu")))
+-		if (!child->type ||
+-		    of_node_cmp(child->type, "pci") != 0)
++		if (!of_node_is_type(child, "pci"))
  			continue;
- 		if (of_node_get(next))
- 			break;
-@@ -983,8 +990,7 @@ struct device_node *of_find_node_by_type(struct device_node *from,
  
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
- 	for_each_of_allnodes_from(from, np)
--		if (np->type && (of_node_cmp(np->type, type) == 0)
--		    && of_node_get(np))
-+		if (__of_node_is_type(np, type) && of_node_get(np))
- 			break;
- 	of_node_put(from);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-@@ -2108,9 +2114,9 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
- 	/* OF on pmac has nodes instead of properties named "l2-cache"
- 	 * beneath CPU nodes.
- 	 */
--	if (IS_ENABLED(CONFIG_PPC_PMAC) && !strcmp(np->type, "cpu"))
-+	if (IS_ENABLED(CONFIG_PPC_PMAC) && of_node_is_type(np, "cpu"))
- 		for_each_child_of_node(np, child)
--			if (!strcmp(child->type, "cache"))
-+			if (of_node_is_type(child, "cache"))
- 				return child;
- 
- 	return NULL;
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index 5592437bb3d1..3717f2a20d0d 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -211,7 +211,7 @@ static ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len
- 	/* Name & Type */
- 	/* %p eats all alphanum characters, so %c must be used here */
- 	csize = snprintf(str, len, "of:N%pOFn%c%s", dev->of_node, 'T',
--			 dev->of_node->type);
-+			 of_node_get_device_type(dev->of_node));
- 	tsize = csize;
- 	len -= csize;
- 	if (str)
-@@ -281,7 +281,7 @@ EXPORT_SYMBOL_GPL(of_device_modalias);
-  */
- void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
- {
--	const char *compat;
-+	const char *compat, *type;
- 	struct alias_prop *app;
- 	struct property *p;
- 	int seen = 0;
-@@ -291,8 +291,9 @@ void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
- 
- 	add_uevent_var(env, "OF_NAME=%pOFn", dev->of_node);
- 	add_uevent_var(env, "OF_FULLNAME=%pOF", dev->of_node);
--	if (dev->of_node->type && strcmp("<NULL>", dev->of_node->type) != 0)
--		add_uevent_var(env, "OF_TYPE=%s", dev->of_node->type);
-+	type = of_node_get_device_type(dev->of_node);
-+	if (type)
-+		add_uevent_var(env, "OF_TYPE=%s", type);
- 
- 	/* Since the compatible field can contain pretty much anything
- 	 * it's not really legal to split it out with commas. We split it
+ 		devfn = of_pci_get_devfn(child);
 -- 
 2.19.1
