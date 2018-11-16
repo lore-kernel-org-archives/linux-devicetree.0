@@ -1,44 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: Add Kishon as maintainer of PHY bindings
-Date: Fri, 16 Nov 2018 14:20:45 -0600
-Message-ID: <CAL_JsqJn2EOGJaM9saoYYnbZ+GrEMQWgp_1kSq6W9HX1GnGVWw@mail.gmail.com>
-References: <20181018133105.3720-1-robh@kernel.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/2] ARM: dts: meson: add the timer interrupts and clocks
+Date: Fri, 16 Nov 2018 21:42:33 +0100
+Message-ID: <20181116204235.3925-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181018133105.3720-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 18, 2018 at 8:31 AM Rob Herring <robh@kernel.org> wrote:
->
-> DT bindings normally go in via subsystem maintainers, so add PHY
-> bindings under generic PHY framework.
->
-> Reported-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+This is a follow-up of my series "meson6_timer: dt-bindings updates"
+from [0].
+We were missing the interrupts for timer B, C and D. This is harmless
+so far because the meson6_timer driver only implements timer A. Timer
+E doesn't have any interrupt.
 
-Ping? Kishon, any objection?
+Additionally the timer IP block has two clock inputs. This also adds
+them.
 
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 9ad052aeac39..b01e77ae79c4 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6132,6 +6132,7 @@ T:        git git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git
->  S:     Supported
->  F:     drivers/phy/
->  F:     include/linux/phy/
-> +F:     Documentation/devicetree/bindings/phy/
->
->  GENERIC PINCTRL I2C DEMULTIPLEXER DRIVER
->  M:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-> --
-> 2.17.1
->
+NOTE: the alias "timer_abcde" was chosen because there's a second
+timer instance (F..I which are similar to A..D and J which is
+similar to E).
+
+
+[0] https://patchwork.kernel.org/cover/10658573/
+
+Martin Blumenstingl (2):
+  ARM: dts: meson: add the TIMER B/C/D interrupts
+  ARM: dts: meson: add the clock inputs for the Meson timer
+
+ arch/arm/boot/dts/meson.dtsi   | 7 +++++--
+ arch/arm/boot/dts/meson6.dtsi  | 5 +++++
+ arch/arm/boot/dts/meson8.dtsi  | 5 +++++
+ arch/arm/boot/dts/meson8b.dtsi | 5 +++++
+ 4 files changed, 20 insertions(+), 2 deletions(-)
+
+-- 
+2.19.1
