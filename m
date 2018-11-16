@@ -1,89 +1,95 @@
-From: Przemyslaw Gaj <pgaj@cadence.com>
-Subject: Re: [PATCH v10 0/9] Add the I3C subsystem
-Date: Fri, 16 Nov 2018 12:50:39 +0000
-Message-ID: <8FFB4883-7220-4DC0-B012-5EC89134448E@cadence.com>
-References: <20181026144333.12276-1-boris.brezillon@bootlin.com>
- <76b1d15d-232c-d8ba-5eba-8394e71be725@synopsys.com>
- <20181115135731.25f60990@bbrezillon> <20181115150137.GB4169@kunai>
- <20181115162826.42b54776@bbrezillon>
- <1d64f21a-ad24-94e0-2c17-25729ef59a31@synopsys.com>
- <20181115200058.1869afdb@bbrezillon>
- <5f946406-a205-3802-aefd-ebd8b5a72b0b@synopsys.com>
+From: matthias.bgg@kernel.org
+Subject: [PATCH v5 00/12] arm/arm64: mediatek: Fix mmsys device probing
+Date: Fri, 16 Nov 2018 13:54:37 +0100
+Message-ID: <20181116125449.23581-1-matthias.bgg@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5f946406-a205-3802-aefd-ebd8b5a72b0b@synopsys.com>
-Content-Language: en-US
-Content-ID: <000C5ABA9CA7694F87E9835B9F20078F@namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vitor <vitor.soares@synopsys.com>, Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark
+To: robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com, p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com, sboyd@codeaurora.org, ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com, matthias.bgg@gmail.com
+Cc: sean.wang@mediatek.com, sean.wang@kernel.org, rdunlap@infradead.org, wens@csie.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVml0b3IsDQoNCu+7v09uIDExLzE2LzE4LCAxOjMyIFBNLCAidml0b3IiIDx2aXRvci5zb2Fy
-ZXNAc3lub3BzeXMuY29tPiB3cm90ZToNCg0KICAgIEVYVEVSTkFMIE1BSUwNCiAgICANCiAgICAN
-CiAgICBIaSBCb3JpcywNCiAgICANCiAgICANCiAgICBPbiAxNS8xMS8xOCAxOTowMCwgQm9yaXMg
-QnJlemlsbG9uIHdyb3RlOg0KICAgID4gT24gVGh1LCAxNSBOb3YgMjAxOCAxODowMzo0NyArMDAw
-MA0KICAgID4gdml0b3IgPHZpdG9yLnNvYXJlc0BzeW5vcHN5cy5jb20+IHdyb3RlOg0KICAgID4N
-CiAgICA+PiBIaSBCb3JpcywNCiAgICA+Pg0KICAgID4+DQogICAgPj4gT24gMTUvMTEvMTggMTU6
-MjgsIEJvcmlzIEJyZXppbGxvbiB3cm90ZToNCiAgICA+Pj4gT24gVGh1LCAxNSBOb3YgMjAxOCAx
-NjowMTozNyArMDEwMA0KICAgID4+PiBXb2xmcmFtIFNhbmcgPHdzYUB0aGUtZHJlYW1zLmRlPiB3
-cm90ZToNCiAgICA+Pj4gICANCiAgICA+Pj4+IEhpIEJvcmlzLA0KICAgID4+Pj4gICANCiAgICA+
-Pj4+PiBXaGF0IHdlIGNvdWxkIGRvIHRob3VnaCwgaXMgZXhwb3NlIEkzQyBkZXZpY2VzIHRoYXQg
-ZG8gbm90IGhhdmUgYQ0KICAgID4+Pj4+IGRyaXZlciBpbiBrZXJuZWwgc3BhY2UsIGxpa2Ugc3Bp
-ZGV2IGRvZXMuDQogICAgPj4+PiAuLi4NCiAgICA+Pj4+ICAgDQogICAgPj4+Pj4gTWFyaywgV29s
-ZnJhbSwgQXJuZCwgR3JlZywgYW55IG9waW5pb24/DQogICAgPj4+PiBJcyB0aGVyZSBhIGJlbmVm
-aXQgZm9yIGhhdmluZyBkcml2ZXJzIGluIHVzZXJzcGFjZT8gTXkgZ3V0IGZlZWxpbmcgaXMgdG8N
-CiAgICA+Pj4+IGVuY291cmFnZSBwZW9wbGUgdG8gd3JpdGUga2VybmVsIGRyaXZlcnMuIElmIHRo
-aXMgaXMsIGZvciBzb21lIHJlYXNvbiwNCiAgICA+Pj4+IG5vdCBwb3NzaWJsZSBmb3Igc29tZSBk
-cml2ZXIsIHRoZW4gd2UgaGF2ZSBhIHVzZSBjYXNlIGF0IGhhbmQgdG8gdGVzdA0KICAgID4+Pj4g
-dGhlIHRoZW4tdG8tYmUtZGV2ZWxvcGVkIHVzZXJzcGFjZSBpbnRlcmZhY2UgYWdhaW5zdC4gVW50
-aWwgdGhlbiwgSQ0KICAgID4+Pj4gcGVyc29uYWxseSB3b3VsZG4ndCB3YXN0ZSBlZmZvcnQgb24g
-ZGVzaWduaW5nIGl0IHdpdGhvdXQgYSB1c2VyIGluDQogICAgPj4+PiBzaWdodC4NCiAgICA+Pj4g
-SSBraW5kIG9mIGFncmVlIHdpdGggdGhhdC4gVml0b3IsIGRvIHlvdSBoYXZlIGEgdXNlIGNhc2Ug
-aW4gbWluZCBmb3INCiAgICA+Pj4gc3VjaCB1c2Vyc3BhY2UgZHJpdmVycz8gSSBkb24ndCB0aGlu
-ayBpdCdzIHdvcnRoIGRlc2lnbmluZyBhbiBBUEkgZm9yDQogICAgPj4+IHNvbWV0aGluZyB3ZSBk
-b24ndCBuZWVkICh5ZXQpLg0KICAgID4+IE15IHVzZSBjYXNlIGlzIGEgdG9vbCBmb3IgdGVzdHMs
-IGxldHMgc2F5IGxpa2UgdGhlIGkyYyB0b29scy4NCiAgICA+IFdoYXQgd291bGQgeW91IGxpa2Ug
-dG8gdGVzdCBleGFjdGx5Pw0KICAgID4NCiAgICA+PiBUaGVyZSBpcw0KICAgID4+IG90aGVyIHN1
-YnN5c3RlbXMsIHNvbWUgb2YgdGhlbSBtZW50aW9uZWQgb24gdGhpcyB0aHJlYWQsIHRoYXQgaGF2
-ZSBhbmQNCiAgICA+PiBpb2N0bCBzeXN0ZW0gY2FsbCBvciBvdGhlciBtZXRob2QgdG8gY2hhbmdl
-IHBhcmFtZXRlcnMgb3Igc2VuZCBkYXRhLg0KICAgID4gSSBkb24ndCB0aGluayB0aGV5IGFkZGVk
-IHRoZSAvZGV2IGludGVyZmFjZSBiZWZvcmUgaGF2aW5nIGEgcmVhbCB1c2UNCiAgICA+IGNhc2Ug
-Zm9yIGl0Lg0KICAgID4NCiAgICA+Pg0KICAgID4+IEkgcmlzZSB0aGlzIHRvcGljIGJlY2F1c2Ug
-SSByZWFsbHkgdGhpbmsgaXQgd29ydGggdG8gZGVmaW5lIG5vdyBob3cgdGhpcw0KICAgID4+IHNo
-b3VsZCBiZSBkZXNpZ24gKGFuZCBmb3IgbWUgaG93IHRvIGRvIHRoZSB0aGluZ3MgcmlnaHQpIHRv
-IGF2b2lkIGZ1dHVyZQ0KICAgID4+IGlzc3Vlcy4NCiAgICA+IEFjdHVhbGx5IGl0IHNob3VsZCBi
-ZSBkb25lIHRoZSBvdGhlciB3YXkgYXJvdW5kOiB5b3Ugc2hvdWxkIGhhdmUgYSByZWFsDQogICAg
-PiBuZWVkIGFuZCB0aGUgL2RldiBpbnRlcmZhY2Ugc2hvdWxkIGJlIGRlc2lnbmVkIHRvIGZ1bGZp
-bGwgdGhpcyBuZWVkLg0KICAgID4gQmFzZWQgb24gdGhpcyByZWFsIHVzZSBjYXNlIHdlIGNhbiBk
-aXNjdXNzIG90aGVyIHBvdGVudGlhbCB1c2FnZSB0aGF0DQogICAgPiBtaWdodCBhcHBlYXIgaW4g
-dGhlIGZ1dHVyZSBhbmQgdHJ5IHRvIGRlc2lnbiBzb21ldGhpbmcgbW9yZQ0KICAgID4gZnV0dXJl
-LXByb29mLCBidXQgY2xlYXJseSwgdGhpcyB1c2Vyc3BhY2UgaW50ZXJmYWNlIHNob3VsZCBiZSBk
-cml2ZW4gYnkNCiAgICA+IGEgcmVhbC93ZWxsLWRlZmluZWQgdXNlIGNhc2UuDQogICAgPg0KICAg
-ID4gQWxzbywgZXhwb3NpbmcgdGhpbmdzIHRvIHVzZXJzcGFjZSBpcyB3YXkgbW9yZSByaXNreSB0
-aGFuIGFkZGluZyBhIG5ldw0KICAgID4gaW4ta2VybmVsIHN1YnN5c3RlbS9mcmFtZXdvcmssIGJl
-Y2F1c2UgaXQgdGhlbiBiZWNvbWVzIHBhcnQgb2YgdGhlDQogICAgPiBzdGFibGUgQUJJLg0KICAg
-ID4NCiAgICA+IFRvIG1ha2UgdGhpbmdzIGNsZWFyZXIsIEknbSBub3QgYWdhaW5zdCB0aGUgaWRl
-YSBvZiBleHBvc2luZyBJM0MNCiAgICA+IGRldmljZXMgKG9yIEkzQyBidXNlcykgdG8gdXNlcnNw
-YWNlLCBidXQgSSdkIGxpa2UgdG8gdW5kZXJzdGFuZCB3aGF0IHlvdQ0KICAgID4gcGxhbiB0byBk
-byB3aXRoIHRoYXQuIElmIHRoaXMgaXMgYWJvdXQgdGVzdGluZywgd2hhdCBraW5kIG9mIHRlc3Rz
-DQogICAgPiB5b3UnZCBsaWtlIHRvIHJ1bi4gSWYgdGhpcyBpcyBhYm91dCBkZXZlbG9waW5nIGRy
-aXZlcnMgaW4gdXNlcnNwYWNlLA0KICAgID4gd2h5IGNhbid0IHRoZXNlIGJlIGRvbmUgaW4ga2Vy
-bmVsIHNwYWNlIChsaWNlbnNlIGlzc3Vlcz8pLCBhbmQgd2hhdA0KICAgID4gd291bGQgdGhvc2Ug
-ZHJpdmVycyBiZSBhbGxvd2VkIHRvIGRvPw0KICAgIA0KICAgIA0KICAgIEJhc2ljYWxseSBJIG5l
-ZWQgYSB0b29sIHRoYXQgaGVscCBtZSBkdXJpbmcgdGhlIGRldmVsb3BtZW50IGFuZCB0byBhdm9p
-ZCANCiAgICBtZSB0byB3cml0ZSBhIGR1bW15IGRyaXZlciBmb3IgZWFjaCBkZXZpY2UgdGhhdCBJ
-IHRlc3QuDQoNCkZvciBub3cgd2UgYXJlIGRvaW5nIGl0IHRoYXQgd2F5LiBTZXBhcmF0ZSBkdW1t
-eSBkcml2ZXIgZm9yIGVhY2ggZGV2aWNlLg0KICAgIA0KICAgIEZvciBpbnN0YW5jZXMgZG8gc29t
-ZSByZWFkL3dyaXRlLCBnZXQvc2V0IGNjYyBjb21tYW5kcywgaWYgc29tZXRoaW5nIA0KICAgIGdv
-ZXMgd3JvbmcgZHVyaW5nIHRoZSBidXMgaW5pdGlhbGl6YXRpb24gaGF2ZSBhIHRvIGRlYnVnIGV0
-Yy4uLg0KICAgIA0KVGhhdCBzb3VuZHMgZ29vZCB0byBoYXZlIHBvc3NpYmlsaXR5IHRvIG1ha2Ug
-c2ltcGxlIHJlYWRzL3dyaXRlcyBhbmQgDQpzZW5kIGJhc2ljIGNjYyBjb21tYW5kcy4gQnV0IG9m
-IGNvdXJzZSBrZWVwaW5nIGluIG1pbmQgdGhhdCBJM0MgYnVzIGlzIA0KbW9yZSBjb21wbGljYXRl
-ZCB0aGFuIEkyQywgYXMgQm9yaXMgbWVudGlvbmVkIGJlZm9yZS4NCiAgICANCiAgICBGb3IgbWUg
-dGhpcyBpcyBhIHZhbGlkIHVzZSBjYXNlIGFuZCBJIGltYWdpbmUgd2hlbiBwZW9wbGUgc3RhcnQg
-dG8gDQogICAgZGV2ZWxvcCBpbiBpM2MgdGhpcyBpbnRlcmZhY2Ugd2lsbCBoZWxwIGV2ZXJ5b25l
-Lg0KICAgIA0KICAgIA0KICAgIEJlc3QgcmVnYXJkcywNCiAgICANCiAgICBWaXRvciBTb2FyZXMN
-CiAgICANClJlZ2FyZHMsDQpQcnplbWVrDQogICAgDQoNCg==
+From: Matthias Brugger <mbrugger@suse.com>
+
+This is version four of the series. The biggest change are the last
+four patches which introduce how this should be handled in the future.
+Instead of creating the platform device in the DRM driver the device
+tree has in the mmsys memory range a child node to probe the clock
+part. That breaks backwards compatibility, so I only introduce that for
+SoCs which are not available to the general public (mt2712e) or only
+have the mmsys clock driver part implemented (mt6797).
+
+
+Changes since v4:
+- fix missing regmap accessors in drm diver (patch 1)
+- omit probe deffered warning on all drivers (patch 5)
+- update drm and clk bindings (patch 6 and 7)
+- put mmsys clock part in dts child node of mmsys. Only done
+for HW where no dts backport compatible breakage is expected 
+(either DRM driver not yet implemented or no HW available to
+the public) (patch 9 to 12)
+
+Changes since v3:
+- use platform device to probe clock driver
+- add Acked-by CK Hu for the probe deferred patch
+
+Changes since v2:
+- fix kconfig typo (shame on me)
+- delete __initconst from mm_clocks as converted to a platform driver
+  
+Changes since v1:
+- add binding documentation
+- ddp: use regmap_update_bits
+- ddp: ignore EPROBE_DEFER on clock probing
+- mfd: delete mmsys_private
+- add Reviewed-by and Acked-by tags
+ 
+MMSYS in Mediatek SoCs has some registers to control clock gates (which is 
+used in the clk driver) and some registers to set the routing and enable
+the differnet blocks of the display subsystem.
+
+Up to now both drivers, clock and drm are probed with the same device tree
+compatible. But only the first driver get probed, which in effect breaks
+graphics on mt8173 and mt2701.
+
+This patch uses a platform device registration in the DRM driver, which
+will trigger the probe of the corresponding clock driver. It was tested on the
+bananapi-r2 and the Acer R13 Chromebook.
+
+
+Matthias Brugger (12):
+  drm/mediatek: Use regmap for register access
+  clk: mediatek: mt2701-mmsys: switch to platform device probing
+  clk: mediatek: mt8173: switch mmsys to platform device probing
+  drm/mediatek: Add support for mmsys through a pdev
+  drm: mediatek: Omit warning on probe defers
+  drm/mediatek: update dt-bindings
+  dt-bindings: clock: mediatek: delete mmsys clocks
+  dt-bindings: mediatek: Change the binding for mmsys clocks
+  arm64: dts: mt2712e: Use the new mmsys clock compatible
+  arm64: dts: mt6797: Use the new mmsys clock compatible
+  clk: mediatek: mt2712e: Probe with new compatible
+  clk: mediatek: mt6797: Probe with new compatible
+
+ .../bindings/arm/mediatek/mediatek,mmsys.txt  | 24 +++++----
+ .../display/mediatek/mediatek,disp.txt        | 34 +++++++-----
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi     |  8 ++-
+ arch/arm64/boot/dts/mediatek/mt6797.dtsi      |  8 ++-
+ drivers/clk/mediatek/clk-mt2701-mm.c          | 42 ++++++++++-----
+ drivers/clk/mediatek/clk-mt2712-mm.c          |  9 ++--
+ drivers/clk/mediatek/clk-mt6797-mm.c          |  9 ++--
+ drivers/clk/mediatek/clk-mt8173.c             | 51 +++++++++++++++---
+ drivers/gpu/drm/mediatek/mtk_disp_color.c     |  4 +-
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c       |  4 +-
+ drivers/gpu/drm/mediatek/mtk_disp_rdma.c      |  4 +-
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c       |  4 +-
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c        | 53 ++++++++-----------
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.h        |  4 +-
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c        | 34 +++++++++---
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h        |  4 +-
+ drivers/gpu/drm/mediatek/mtk_dsi.c            |  6 ++-
+ 17 files changed, 200 insertions(+), 102 deletions(-)
+
+-- 
+2.19.1
