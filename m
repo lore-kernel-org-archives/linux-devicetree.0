@@ -1,15 +1,15 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 08/10] ARM64: dts: renesas: Add all CPUs in cooling maps
-Date: Fri, 16 Nov 2018 15:34:31 +0530
-Message-ID: <f2116377ab65e4b3ece39c32f54ac3eec2fb7d8c.1542362530.git.viresh.kumar@linaro.org>
+Subject: [PATCH 09/10] ARM64: dts: rockchip: Add all CPUs in cooling maps
+Date: Fri, 16 Nov 2018 15:34:32 +0530
+Message-ID: <ee0bd5fb56652141e5ce23927b258b1779844af6.1542362530.git.viresh.kumar@linaro.org>
 References: <cover.1542362530.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1542362530.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Heiko Stuebner <heiko@sntech.de>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Each CPU can (and does) participate in cooling down the system but the
@@ -28,78 +28,121 @@ points.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 15 ++++++++++++---
- arch/arm64/boot/dts/renesas/r8a7796.dtsi |  6 +++---
- 2 files changed, 15 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi          |  5 ++++-
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi          | 15 ++++++++++++---
+ arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts |  8 ++++++--
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi          | 12 +++++++++---
+ 4 files changed, 31 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index a79c8d369e0b..3a662df32143 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -2878,7 +2878,10 @@
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+index e1a33dd981e0..ecd7f19c3542 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+@@ -479,7 +479,10 @@
  			cooling-maps {
  				map0 {
- 					trip = <&sensor1_passive>;
--					cooling-device = <&a57_0 4 4>;
-+					cooling-device = <&a57_0 4 4>,
-+							 <&a57_1 4 4>,
-+							 <&a57_2 4 4>,
-+							 <&a57_3 4 4>;
+ 					trip = <&target>;
+-					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 					contribution = <4096>;
+ 				};
+ 			};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+index 9c24de1ba43c..7014d10b954c 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+@@ -426,12 +426,18 @@
+ 				map0 {
+ 					trip = <&cpu_alert0>;
+ 					cooling-device =
+-					<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					<&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					<&cpu_b2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					<&cpu_b3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
+ 				map1 {
+ 					trip = <&cpu_alert1>;
+ 					cooling-device =
+-					<&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					<&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					<&cpu_l1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					<&cpu_l2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					<&cpu_l3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
  				};
  			};
  		};
-@@ -2904,7 +2907,10 @@
- 			cooling-maps {
+@@ -459,7 +465,10 @@
  				map0 {
- 					trip = <&sensor2_passive>;
--					cooling-device = <&a57_0 4 4>;
-+					cooling-device = <&a57_0 4 4>,
-+							 <&a57_1 4 4>,
-+							 <&a57_2 4 4>,
-+							 <&a57_3 4 4>;
+ 					trip = <&gpu_alert0>;
+ 					cooling-device =
+-					<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					<&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					<&cpu_b2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					<&cpu_b3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
  				};
  			};
  		};
-@@ -2930,7 +2936,10 @@
- 			cooling-maps {
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+index 2cc7c47d6a85..81e73103fa78 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+@@ -118,13 +118,17 @@
+ 			map0 {
+ 				trip = <&ppvar_bigcpu_alert>;
+ 				cooling-device =
+-					<&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					<&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					<&cpu_l1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					<&cpu_l2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					<&cpu_l3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				contribution = <4096>;
+ 			};
+ 			map1 {
+ 				trip = <&ppvar_bigcpu_alert>;
+ 				cooling-device =
+-					<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					<&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				contribution = <1024>;
+ 			};
+ 		};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 99e7f65c1779..d4ebffc28953 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -770,13 +770,18 @@
  				map0 {
- 					trip = <&sensor3_passive>;
--					cooling-device = <&a57_0 4 4>;
-+					cooling-device = <&a57_0 4 4>,
-+							 <&a57_1 4 4>,
-+							 <&a57_2 4 4>,
-+							 <&a57_3 4 4>;
+ 					trip = <&cpu_alert0>;
+ 					cooling-device =
+-						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
+ 				map1 {
+ 					trip = <&cpu_alert1>;
+ 					cooling-device =
+ 						<&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++						<&cpu_l1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu_l2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu_l3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
  				};
  			};
  		};
-diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-index 1ec6aaa520c1..dd95e937f87a 100644
---- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-@@ -2526,7 +2526,7 @@
- 			cooling-maps {
+@@ -804,7 +809,8 @@
  				map0 {
- 					trip = <&sensor1_passive>;
--					cooling-device = <&a57_0 5 5>;
-+					cooling-device = <&a57_0 5 5>, <&a57_1 5 5>;
- 				};
- 			};
- 		};
-@@ -2552,7 +2552,7 @@
- 			cooling-maps {
- 				map0 {
- 					trip = <&sensor2_passive>;
--					cooling-device = <&a57_0 5 5>;
-+					cooling-device = <&a57_0 5 5>, <&a57_1 5 5>;
- 				};
- 			};
- 		};
-@@ -2578,7 +2578,7 @@
- 			cooling-maps {
- 				map0 {
- 					trip = <&sensor3_passive>;
--					cooling-device = <&a57_0 5 5>;
-+					cooling-device = <&a57_0 5 5>, <&a57_1 5 5>;
+ 					trip = <&gpu_alert0>;
+ 					cooling-device =
+-						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
  				};
  			};
  		};
