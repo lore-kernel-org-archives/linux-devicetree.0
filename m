@@ -1,294 +1,74 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 2/2] arm64: dts: meson: add libretech aml-s805x-ac board
-Date: Fri, 16 Nov 2018 10:39:38 +0100
-Message-ID: <20181116093938.26373-3-jbrunet@baylibre.com>
-References: <20181116093938.26373-1-jbrunet@baylibre.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 15/15] arm64: dts: allwinner: a64: Add Video
+ Engine and reserved memory node
+Date: Fri, 16 Nov 2018 10:41:02 +0100
+Message-ID: <20181116094102.6j5xhpptvelxtr6h@flea>
+References: <20181115145013.3378-1-paul.kocialkowski@bootlin.com>
+ <20181115145013.3378-16-paul.kocialkowski@bootlin.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181116093938.26373-1-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="zta4mcirelbyep65"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBTNBXLPQKGQE2Q5AVRY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20181115145013.3378-16-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
 
-Add Libretech aml-s805x-ac board (aka 'La Frite') support
+--zta4mcirelbyep65
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/Makefile          |   1 +
- .../amlogic/meson-gxl-s805x-libretech-ac.dts  | 248 ++++++++++++++++++
- 2 files changed, 249 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts
+On Thu, Nov 15, 2018 at 03:50:13PM +0100, Paul Kocialkowski wrote:
+> This adds nodes for the Video Engine and the associated reserved memory
+> for the A64. Up to 96 MiB of memory are dedicated to the CMA pool.
+> 
+> The pool is located at the end of the first 256 MiB of RAM so that the
+> VPU can access it. It is unclear whether this is still a hard
+> requirement for this platform, but it seems safer that way.
+> 
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 25 +++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> index 88b3e9110833..a35a5c9ffbbe 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -185,6 +185,20 @@
+>  			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+>  	};
+>  
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		cma_pool: cma@4a000000 {
+> +			compatible = "shared-dma-pool";
+> +			size = <0x6000000>;
+> +			alloc-ranges = <0x4a000000 0x6000000>;
 
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index c31f29d660de..bc41629c5df4 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -11,6 +11,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-meta.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-telos.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-wetek-hub.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-wetek-play2.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s805x-libretech-ac.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-hwacom-amazetv.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-khadas-vim.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-libretech-cc.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts
-new file mode 100644
-index 000000000000..dc025b6c3199
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts
-@@ -0,0 +1,248 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2018 BayLibre, SAS.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ * Author: Jerome Brunet <jbrunet@baylibre.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
-+
-+#include "meson-gxl-s905x.dtsi"
-+
-+/ {
-+	compatible = "libretech,aml-s805x-ac", "amlogic,s805x",
-+		     "amlogic,meson-gxl";
-+	model = "Libre Computer Board AML-S805X-AC";
-+
-+	aliases {
-+		serial0 = &uart_AO;
-+		ethernet0 = &ethmac;
-+		spi0 = &spifc;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	cvbs-connector {
-+		/*
-+		 * The pads are present but no connector is soldered on
-+		 * 2J2, so keep this off by default.
-+		 */
-+		status = "disabled";
-+		compatible = "composite-video-connector";
-+
-+		port {
-+			cvbs_connector_in: endpoint {
-+				remote-endpoint = <&cvbs_vdac_out>;
-+			};
-+		};
-+	};
-+
-+	dc_5v: regulator-dc_5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "DC_5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	hdmi-connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_tx_tmds_out>;
-+			};
-+		};
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x20000000>;
-+	};
-+
-+	vcck: regulator-vcck {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCCK";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&dc_5v>;
-+
-+		/*
-+		 * This is controlled by GPIOAO_9 we reserve this but
-+		 * claiming it as done bellow reset the board anyway
-+		 * Need to investigate this
-+		 *
-+		 * gpio = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
-+		 * enable-active-high;
-+		 */
-+		regulator-always-on;
-+	};
-+
-+	vcc_3v3: regulator-vcc_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&dc_5v>;
-+		regulator-always-on;
-+	};
-+
-+	vddio_boot: regulator-vddio_boot {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_BOOT";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_3v3>;
-+		regulator-always-on;
-+	};
-+};
-+
-+&cec_AO {
-+	status = "okay";
-+	pinctrl-0 = <&ao_cec_pins>;
-+	pinctrl-names = "default";
-+	hdmi-phandle = <&hdmi_tx>;
-+};
-+
-+&cvbs_vdac_port {
-+	cvbs_vdac_out: endpoint {
-+		remote-endpoint = <&cvbs_connector_in>;
-+	};
-+};
-+
-+&ethmac {
-+	status = "okay";
-+};
-+
-+&internal_phy {
-+	pinctrl-0 = <&eth_link_led_pins>, <&eth_act_led_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&ir {
-+	status = "okay";
-+	pinctrl-0 = <&remote_input_ao_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&hdmi_tx {
-+	status = "okay";
-+	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&hdmi_tx_tmds_port {
-+	hdmi_tx_tmds_out: endpoint {
-+		remote-endpoint = <&hdmi_connector_in>;
-+	};
-+};
-+
-+&gpio_ao {
-+	gpio-line-names = "UART TX",
-+			  "UART RX",
-+			  "7J1 Header Pin31",
-+			  "", "", "", "",
-+			  "IR In",
-+			  "HDMI CEC",
-+			  "5V VCCK Regulator",
-+			  /* GPIO_TEST_N */
-+			  "";
-+};
-+
-+&gpio {
-+	gpio-line-names = /* Bank GPIOZ */
-+			  "", "", "", "", "", "", "",
-+			  "", "", "", "", "", "", "",
-+			  "Eth Link LED", "Eth Activity LED",
-+			  /* Bank GPIOH */
-+			  "HDMI HPD", "HDMI SDA", "HDMI SCL",
-+			  "", "7J1 Header Pin13",
-+			  "7J1 Header Pin15",
-+			  "7J1 Header Pin7",
-+			  "7J1 Header Pin12",
-+			  "7J1 Header Pin16",
-+			  "7J1 Header Pin18",
-+			  /* Bank BOOT */
-+			  "eMMC D0", "eMMC D1", "eMMC D2", "eMMC D3",
-+			  "eMMC D4", "eMMC D5", "eMMC D6", "eMMC D7",
-+			  "eMMC Clk", "eMMC Reset", "eMMC CMD",
-+			  "SPI NOR MOSI", "SPI NOR MISO", "SPI NOR Clk",
-+			  "", "SPI NOR Chip Select",
-+			  /* Bank CARD */
-+			  "", "", "", "", "", "", "",
-+			  /* Bank GPIODV */
-+			  "", "", "", "", "", "", "", "", "", "", "", "",
-+			  "", "", "", "", "", "", "", "", "", "", "", "",
-+			  "7J1 Header Pin27", "7J1 Header Pin28", "",
-+			  "7J1 Header Pin29",
-+			  "VCCK Regulator", "VDDEE Regulator",
-+			  /* Bank GPIOX */
-+			  "7J1 Header Pin22", "7J1 Header Pin26",
-+			  "7J1 Header Pin36", "7J1 Header Pin38",
-+			  "7J1 Header Pin40", "7J1 Header Pin37",
-+			  "7J1 Header Pin33", "7J1 Header Pin35",
-+			  "7J1 Header Pin19", "7J1 Header Pin21",
-+			  "7J1 Header Pin24", "7J1 Header Pin23",
-+			  "7J1 Header Pin8", "7J1 Header Pin10",
-+			  "", "", "7J1 Header Pin32", "", "",
-+			  /* Bank GPIOCLK */
-+			  "", "";
-+};
-+
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vddio_boot>;
-+};
-+
-+/* eMMC */
-+&sd_emmc_c {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+	max-frequency = <200000000>;
-+	disable-wp;
-+
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	vmmc-supply = <&vcc_3v3>;
-+	vqmmc-supply = <&vddio_boot>;
-+};
-+
-+&spifc {
-+	status = "okay";
-+	pinctrl-0 = <&nor_pins>;
-+	pinctrl-names = "default";
-+
-+	w25q32: spi-flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <3000000>;
-+	};
-+};
-+
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+};
+This introduces a DTC warning, since you're using a unit-address, but
+don't have a reg register.
+
+I've fixed it in the other DT by renaming that node to
+default-pool. You can also drop the label, it's not used anywhere.
+
+Maxime
+
 -- 
-2.19.1
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--zta4mcirelbyep65--
