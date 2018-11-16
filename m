@@ -1,59 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] ALSA: aoa: Use device_type helpers to access the node type
-Date: Fri, 16 Nov 2018 16:11:04 -0600
-Message-ID: <20181116221104.23024-8-robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: rng: update bindings for MT7629 SoC
+Date: Fri, 16 Nov 2018 16:31:10 -0600
+Message-ID: <20181116223110.GA19271@bogus>
+References: <0f5fe0d5b6a9c81b3f4395a1007ed0ba2239ae45.1541574485.git.ryder.lee@mediatek.com>
+ <20181116061854.ahs6jz7bmztoi3w7@gondor.apana.org.au>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181116061854.ahs6jz7bmztoi3w7@gondor.apana.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Takashi Iwai <tiwai@suse.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johannes Berg <johannes@sipsolutions.net>, Jaroslav Kysela <perex@perex.cz>, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Ryder Lee <ryder.lee@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-crypto@vger.kernel.org, Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Remove directly accessing device_node.type pointer and use the accessors
-instead. This will eventually allow removing the type pointer.
+On Fri, Nov 16, 2018 at 02:18:54PM +0800, Herbert Xu wrote:
+> On Wed, Nov 07, 2018 at 03:10:16PM +0800, Ryder Lee wrote:
+> > This updates bindings for MT7629 RNG driver.
+> > 
+> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> 
+> Who is meant to take this patch?
 
-Replace the open coded iterating over child nodes with
-for_each_child_of_node() while we're here.
+I've applied it.
 
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: alsa-devel@alsa-project.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- sound/aoa/fabrics/layout.c | 4 ++--
- sound/aoa/soundbus/core.c  | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/sound/aoa/fabrics/layout.c b/sound/aoa/fabrics/layout.c
-index 1eddf8fa188f..3a23fd032611 100644
---- a/sound/aoa/fabrics/layout.c
-+++ b/sound/aoa/fabrics/layout.c
-@@ -1008,8 +1008,8 @@ static int aoa_fabric_layout_probe(struct soundbus_dev *sdev)
- 		return -ENODEV;
- 
- 	/* by breaking out we keep a reference */
--	while ((sound = of_get_next_child(sdev->ofdev.dev.of_node, sound))) {
--		if (sound->type && strcasecmp(sound->type, "soundchip") == 0)
-+	for_each_child_of_node(sdev->ofdev.dev.of_node, sound) {
-+		if (of_node_is_type(sound, "soundchip"))
- 			break;
- 	}
- 	if (!sound)
-diff --git a/sound/aoa/soundbus/core.c b/sound/aoa/soundbus/core.c
-index 70bcaa7f93dd..f3076a3f7f2f 100644
---- a/sound/aoa/soundbus/core.c
-+++ b/sound/aoa/soundbus/core.c
-@@ -78,7 +78,7 @@ static int soundbus_uevent(struct device *dev, struct kobj_uevent_env *env)
- 	if (retval)
- 		return retval;
- 
--	retval = add_uevent_var(env, "OF_TYPE=%s", of->dev.of_node->type);
-+	retval = add_uevent_var(env, "OF_TYPE=%s", of_node_get_device_type(of->dev.of_node));
- 	if (retval)
- 		return retval;
- 
--- 
-2.19.1
+Rob
