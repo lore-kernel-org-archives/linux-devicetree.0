@@ -1,56 +1,68 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 3/6] arm64: add support for i.MX8M EVK board
-Date: Fri, 16 Nov 2018 16:44:41 -0600
-Message-ID: <20181116224441.GA8002@bogus>
-References: <20181114175242.12468-1-l.stach@pengutronix.de>
- <20181114175242.12468-3-l.stach@pengutronix.de>
+Subject: Re: [PATCH v7 1/4] dt-bindings: pps: descriptor-based gpio,
+ capture-clear addition
+Date: Fri, 16 Nov 2018 16:49:19 -0600
+Message-ID: <20181116224919.GA18008@bogus>
+References: <20181114125432.16044-1-tom@aussec.com>
+ <20181114125432.16044-2-tom@aussec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181114175242.12468-3-l.stach@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: "A . s . Dong" <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20181114125432.16044-2-tom@aussec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tom Burkart <tom@aussec.com>
+Cc: Linux kernel mailing list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 14, 2018 at 06:52:39PM +0100, Lucas Stach wrote:
-> This is the evaluation kit board for the i.MX8M. The current level of
-> support yields a working console and is able to boot userspace from
-> SD card or Network.
+On Wed, Nov 14, 2018 at 11:54:29PM +1100, Tom Burkart wrote:
+> This patch changes the devicetree bindings for the pps-gpio driver
+> from the integer based ABI to the descriptor based ABI.
+
+? That has nothing to do with DT.
+
+>  It also adds
+> documentation for the device tree capture-clear option.  The legacy
+> device tree entry for the GPIO pin is supported.
 > 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com> (v1)
-> Tested-by: Tested-by: Baruch Siach <baruch@tkos.co.il> (v1)
-> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+> Signed-off-by: Tom Burkart <tom@aussec.com>
 > ---
-> v2:
-> - move to freescale folder
-> - fix indentation
-> - fix typo in Makefile
-> - document compatible
-> - switch to generic pinconf
-> v3:
-> - rebase to v4.19-rc1 and already merged pinctrl driver and pending
->   clk driver
-> v4:
-> - rebased to 4.10-rc1
-> ---
->  Documentation/devicetree/bindings/arm/fsl.txt |   4 +
->  arch/arm64/boot/dts/freescale/Makefile        |   2 +
->  arch/arm64/boot/dts/freescale/imx8mq-evk.dts  | 290 ++++++++++++++++++
->  3 files changed, 296 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+> index 3683874832ae..6c9fc0998d94 100644
+> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
+> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+> @@ -5,19 +5,23 @@ a GPIO pin.
+>  
+>  Required properties:
+>  - compatible: should be "pps-gpio"
+> -- gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
+> +- pps-gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
+> +Alternatively (DEPRECATED), instead of pps-gpios above, it may have:
+> +- gpios: one PPS GPIO as above
+>  
+>  Optional properties:
+>  - assert-falling-edge: when present, assert is indicated by a falling edge
+>                         (instead of by a rising edge)
+> +- capture-clear: when present, also capture the PPS clear event
 
-You missed my R-by on v3.
+Is this a h/w thing? or driver configuration?
 
-Rob
+>  
+>  Example:
+>  	pps {
+>  		pinctrl-names = "default";
+>  		pinctrl-0 = <&pinctrl_pps>;
+>  
+> -		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
+> +		pps-gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
+>  		assert-falling-edge;
+> +		capture-clear;
+>  
+>  		compatible = "pps-gpio";
+>  	};
+> -- 
+> 2.12.3
+> 
