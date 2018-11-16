@@ -1,83 +1,142 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH 0/4 v1] Mezzanine Low Speed connector bus
-Date: Thu, 15 Nov 2018 16:16:29 -0800
-Message-ID: <93d1f00a-2a86-bed0-6bbf-a6f86550b59a@gmail.com>
-References: <20180823103332.32047-1-linus.walleij@linaro.org>
- <cd3100ee-03a0-9218-b166-14f15d7669f6@gmail.com>
- <1eaeec41-782d-63fa-b555-f7580ec8812f@gmail.com>
- <CACRpkdZsJZDFeera-H2dAV_BJP=94L3gmezmLjDb6hSDubZ_Og@mail.gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
+ driver
+Date: Thu, 15 Nov 2018 16:23:37 -0800
+Message-ID: <20181116002337.GP22824@google.com>
+References: <1539257761-23023-1-git-send-email-tdas@codeaurora.org>
+ <1539257761-23023-3-git-send-email-tdas@codeaurora.org>
+ <153981915373.5275.15971019914218464179@swboyd.mtv.corp.google.com>
+ <0c51a12e-38d3-2df5-4f5f-6a687727e9bf@codeaurora.org>
+ <154130523254.88331.12609105382114756048@swboyd.mtv.corp.google.com>
+ <3aa7b871-9cf9-9626-11fe-b9aa6009b477@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdZsJZDFeera-H2dAV_BJP=94L3gmezmLjDb6hSDubZ_Og@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Michal Simek <michal.simek@xilinx.com>, dev <dev@lists.96boards.org>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Andy Shevchenko <andy@infradead.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3aa7b871-9cf9-9626-11fe-b9aa6009b477@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Taniya Das <tdas@codeaurora.org>
+Cc: Stephen Boyd <swboyd@chromium.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/15/18 2:59 PM, Linus Walleij wrote:
-> On Thu, Nov 15, 2018 at 5:27 PM Frank Rowand <frowand.list@gmail.com> wrote:
->> On 8/23/18 4:06 PM, Frank Rowand wrote:
->>> On 08/23/18 03:33, Linus Walleij wrote:
->>>> I have been a bit hesitant to reiterate the series, but this is
->>>> anyways a v1 of the 96Boards Mezzanine Low Speed connector
->>>> driver framework.
->>
->> < snip >
->>
->>> I will read through the rest of the series and revisit my
->>> previous conclusions, but most likely not for a few days.
->>>
->>> -Frank
->>
->> < snip >
->>
->> My apologies for continuing to not getting to this task.  It
->> has been in the top grouping of my todo list but has been
->> pushed aside by a rather busy schedule of conferences and
->> company internal work.  It remains up at the top of my todo
->> list, but most likely will still be shunted aside for three
->> more weeks of other pressing work.
->>
->> I will get to it, I definitely have not forgotten it.
+On Sun, Nov 11, 2018 at 06:12:29PM +0530, Taniya Das wrote:
+> Hello Stephen,
 > 
-> It's OK, I might get to rebasing the series even.
+> Thanks for your comments.
 > 
-> We discussed it in a session with Linaro in Vancouver
-> recently (some month ago). What we took away from it
+> On 11/4/2018 9:50 AM, Stephen Boyd wrote:
+> > Quoting Taniya Das (2018-11-02 20:06:00)
+> > > Hello Stephen,
+> > > 
+> > > On 10/18/2018 5:02 AM, Stephen Boyd wrote:
+> > > > Quoting Taniya Das (2018-10-11 04:36:01)
+> > > > > --- a/drivers/cpufreq/Kconfig.arm
+> > > > > +++ b/drivers/cpufreq/Kconfig.arm
+> > > > > @@ -121,6 +121,17 @@ config ARM_QCOM_CPUFREQ_KRYO
+> > > > > 
+> > > > >             If in doubt, say N.
+> > > > > 
+> > > > > +config ARM_QCOM_CPUFREQ_HW
+> > > > > +       bool "QCOM CPUFreq HW driver"
+> > > > 
+> > > > Is there any reason this can't be a module?
+> > > > 
+> > > 
+> > > We do not have any use cases where we need to support it as module.
+> > 
+> > Ok, so it could easily be tristate then? Why not allow it?
+> > 
+> 
+> I have checked other vendors CPUfreq drivers and those too support only
+> "bool".
 
-It would be helpful for me to look at that.  What was the
-title of the session, or a pointer to the resource page
-for it?
+That's not entirely correct. Most drivers in Kconfig are 'tristate'
+and about 50% of those in KConfig.arm are. I'd say make it 'tristate'
+unless there are good reasons not to do so.
 
--Frank
+> > > > > diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+> > > > > new file mode 100644
+> > > > > index 0000000..fe1c264
+> > > > > --- /dev/null
+> > > > > +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+> > > > > @@ -0,0 +1,354 @@
+> > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > +/*
+> > > > > + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> > > > > + */
+> > [...]
+> > > > > +
+> > > > > +static const u16 cpufreq_qcom_std_offsets[REG_ARRAY_SIZE] = {
+> > > > 
+> > > > Is this going to change in the future?
+> > > > 
+> > > 
+> > > Yes, they could change and that was the reason to introduce the offsets.
+> > > This was discussed earlier too with Sudeep and was to add them.
+> > > 
+> > > > > +       [REG_ENABLE]            = 0x0,
+> > 
+> > This is only used once? Maybe it could be removed.
+> > 
+> > > > > +       [REG_LUT_TABLE]         = 0x110,
+> > 
+> > And this is only used during probe to figure out the supported
+> > frequencies. So we definitely don't need to store around the registers
+> > after probe in an array of iomem pointers. The only one that we need
+> > after probe is the one below.
+> > 
+> > > > > +       [REG_PERF_STATE]        = 0x920,
+> > > > > +};
+> > > > > +
+> 
+> As these address offsets could change, so I am of the opinion to leave them
+> as it is.
 
-> is that there are many precedents of populating devices
-> ad hoc, what really makes this one special is that it takes
-> something device tree and ad hoc populates something
-> on top of it, not defined in the device tree itself.
+As of now there is only one set of offsets. Let's just keep the code
+simple while this is the case and address different offsets when it is
+actually needed, as suggested by Stephen and Sudeep.
+
+> > > > > +static struct cpufreq_qcom *qcom_freq_domain_map[NR_CPUS];
+> > > > > +
+> > > > > +static int
+> > > > > +qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
+> > > > > +                            unsigned int index)
+> > > > > +{
+> > > > > +       struct cpufreq_qcom *c = policy->driver_data;
+> > > > > +
+> > > > > +       writel_relaxed(index, c->reg_bases[REG_PERF_STATE]);
+> > > > 
+> > > > Why can't we avoid the indirection here and store the perf_state pointer
+> > > > in probe? Then we don't have to indirect through a table to perform the
+> > > > register write.
+> > > > 
+> > > 
+> > > As the offsets could change and that was the reason to add this.
+> > 
+> > With fast switching we can avoid incurring any extra instructions, so
+> > please make another iomem pointer in the cpufreq_qcom struct just for
+> > writing the index or if possible, just pass the iomem pointer that
+> > points to the REG_PERF_STATE as the policy->driver_data variable here.
+> > Then we have the address in hand without any extra load. If my
+> > understanding is correct, we don't need to keep around anything besides
+> > this register address anyway so we should be able to just load it and
+> > write it immediately.
+> > 
 > 
-> On a related note, Heikki Krogerus is making a software
-> FWnode population series. I ran into this when converting
-> board files to use more abstract descriptions. Check it out:
-> https://marc.info/?l=linux-kernel&m=154177331200561&w=2
+> The c->reg_bases[] is just an index to the updated bases addresses. I am not
+> clear as to why it would incur an extra instruction.
 > 
-> The idea with the series is to expand FWnode so that it
-> doesn't only populate Linux devices from device tree
-> or ACPI but also by software, where needed, further
-> expanding the fwnode abstraction. I will probably look
-> into using that.
+> The below code would already take care of it.
 > 
-> Yours,
-> Linus Walleij
-> 
+> +	for (i = REG_ENABLE; i < REG_ARRAY_SIZE; i++)
+> +		c->reg_bases[i] = base + offsets[i];
+> +
+
+>From a performance point of view using a direct iomem pointer
+seems like a micro-optimization that probably doesn't have a
+measurable impact. However I think the code shouldn't be more complex
+than necessary, and at this point the indirection isn't needed.
+
+Cheers
+
+Matthias
