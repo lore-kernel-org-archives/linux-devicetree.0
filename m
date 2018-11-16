@@ -1,15 +1,15 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 01/10] ARM64: dts: amlogic: Add all CPUs in cooling maps
-Date: Fri, 16 Nov 2018 15:34:24 +0530
-Message-ID: <2778d0d4813cc56be851719846afecbab5f2e657.1542362530.git.viresh.kumar@linaro.org>
+Subject: [PATCH 02/10] ARM64: dts: exynos: Add all CPUs in cooling maps
+Date: Fri, 16 Nov 2018 15:34:25 +0530
+Message-ID: <74e23257aece9ceef48b1c1cf6c9bafcce3c6fbd.1542362530.git.viresh.kumar@linaro.org>
 References: <cover.1542362530.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1542362530.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Each CPU can (and does) participate in cooling down the system but the
@@ -28,41 +28,102 @@ points.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- .../dts/amlogic/meson-gxm-khadas-vim2.dts     | 22 ++++++++-----------
- 1 file changed, 9 insertions(+), 13 deletions(-)
+ .../arm64/boot/dts/exynos/exynos5433-tmu.dtsi | 36 ++++++++++++-------
+ 1 file changed, 24 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-index 313f88f8759e..cfc92d06a28f 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-@@ -132,19 +132,15 @@
- 
- 				map1 {
- 					trip = <&cpu_alert1>;
--					cooling-device = <&gpio_fan 2 THERMAL_NO_LIMIT>;
--				};
--
--				map2 {
--					trip = <&cpu_alert1>;
--					cooling-device =
--						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
--				};
--
--				map3 {
--					trip = <&cpu_alert1>;
--					cooling-device =
--						<&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+					cooling-device = <&gpio_fan 2 THERMAL_NO_LIMIT>,
-+							 <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
- 				};
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi
+index fe3a0b14bee6..81b72393dd0d 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi
+@@ -55,37 +55,44 @@ thermal-zones {
+ 			map0 {
+ 				/* Set maximum frequency as 1800MHz  */
+ 				trip = <&atlas0_alert_0>;
+-				cooling-device = <&cpu4 1 2>;
++				cooling-device = <&cpu4 1 2>, <&cpu5 1 2>,
++						 <&cpu6 1 2>, <&cpu7 1 2>;
+ 			};
+ 			map1 {
+ 				/* Set maximum frequency as 1700MHz  */
+ 				trip = <&atlas0_alert_1>;
+-				cooling-device = <&cpu4 2 3>;
++				cooling-device = <&cpu4 2 3>, <&cpu5 2 3>,
++						 <&cpu6 2 3>, <&cpu7 2 3>;
+ 			};
+ 			map2 {
+ 				/* Set maximum frequency as 1600MHz  */
+ 				trip = <&atlas0_alert_2>;
+-				cooling-device = <&cpu4 3 4>;
++				cooling-device = <&cpu4 3 4>, <&cpu5 3 4>,
++						 <&cpu6 3 4>, <&cpu7 3 4>;
+ 			};
+ 			map3 {
+ 				/* Set maximum frequency as 1500MHz  */
+ 				trip = <&atlas0_alert_3>;
+-				cooling-device = <&cpu4 4 5>;
++				cooling-device = <&cpu4 4 5>, <&cpu5 4 5>,
++						 <&cpu6 4 5>, <&cpu7 4 5>;
+ 			};
+ 			map4 {
+ 				/* Set maximum frequency as 1400MHz  */
+ 				trip = <&atlas0_alert_4>;
+-				cooling-device = <&cpu4 5 7>;
++				cooling-device = <&cpu4 5 7>, <&cpu5 5 7>,
++						 <&cpu6 5 7>, <&cpu7 5 7>;
+ 			};
+ 			map5 {
+ 				/* Set maximum frequencyas 1200MHz  */
+ 				trip = <&atlas0_alert_5>;
+-				cooling-device = <&cpu4 7 9>;
++				cooling-device = <&cpu4 7 9>, <&cpu5 7 9>,
++						 <&cpu6 7 9>, <&cpu7 7 9>;
+ 			};
+ 			map6 {
+ 				/* Set maximum frequency as 1000MHz  */
+ 				trip = <&atlas0_alert_6>;
+-				cooling-device = <&cpu4 9 14>;
++				cooling-device = <&cpu4 9 14>, <&cpu5 9 14>,
++						 <&cpu6 9 14>, <&cpu7 9 14>;
  			};
  		};
+ 	};
+@@ -222,27 +229,32 @@ thermal-zones {
+ 			map0 {
+ 				/* Set maximum frequency as 1200MHz  */
+ 				trip = <&apollo_alert_2>;
+-				cooling-device = <&cpu0 1 2>;
++				cooling-device = <&cpu0 1 2>, <&cpu1 1 2>,
++						 <&cpu2 1 2>, <&cpu3 1 2>;
+ 			};
+ 			map1 {
+ 				/* Set maximum frequency as 1100MHz  */
+ 				trip = <&apollo_alert_3>;
+-				cooling-device = <&cpu0 2 3>;
++				cooling-device = <&cpu0 2 3>, <&cpu1 2 3>,
++						 <&cpu2 2 3>, <&cpu3 2 3>;
+ 			};
+ 			map2 {
+ 				/* Set maximum frequency as 1000MHz  */
+ 				trip = <&apollo_alert_4>;
+-				cooling-device = <&cpu0 3 4>;
++				cooling-device = <&cpu0 3 4>, <&cpu1 3 4>,
++						 <&cpu2 3 4>, <&cpu3 3 4>;
+ 			};
+ 			map3 {
+ 				/* Set maximum frequency as 900MHz  */
+ 				trip = <&apollo_alert_5>;
+-				cooling-device = <&cpu0 4 5>;
++				cooling-device = <&cpu0 4 5>, <&cpu1 4 5>,
++						 <&cpu2 4 5>, <&cpu3 4 5>;
+ 			};
+ 			map4 {
+ 				/* Set maximum frequency as 800MHz  */
+ 				trip = <&apollo_alert_6>;
+-				cooling-device = <&cpu0 5 9>;
++				cooling-device = <&cpu0 5 9>, <&cpu1 5 9>,
++						 <&cpu2 5 9>, <&cpu3 5 9>;
+ 			};
+ 		};
+ 	};
 -- 
 2.19.1.568.g152ad8e3369a
