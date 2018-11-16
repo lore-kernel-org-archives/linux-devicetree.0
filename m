@@ -1,378 +1,96 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2 11/12] drm/panel: Add Feiyang
- FY07024DI26A30-D MIPI-DSI LCD panel
-Date: Fri, 16 Nov 2018 22:09:15 +0530
-Message-ID: <20181116163916.29621-12-jagan@amarulasolutions.com>
-References: <20181116163916.29621-1-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Jianxin Pan <jianxin.pan@amlogic.com>
+Subject: [PATCH v7 1/2] dt-bindings: nand: meson: add Amlogic NAND controller driver
+Date: Sat, 17 Nov 2018 00:40:37 +0800
+Message-ID: <1542386439-30166-2-git-send-email-jianxin.pan@amlogic.com>
+References: <1542386439-30166-1-git-send-email-jianxin.pan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBHPGXPPQKGQESJBK56A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181116163916.29621-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, TL Lim <tllim-F7SikzrIcFYdnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
-Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1542386439-30166-1-git-send-email-jianxin.pan@amlogic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org
+Cc: Liang Yang <liang.yang@amlogic.com>, Yixun Lan <yixun.lan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.k
 List-Id: devicetree@vger.kernel.org
 
-Feiyang FY07024DI26A30-D is 1024x600, 4-lane MIPI-DSI LCD panel.
+From: Liang Yang <liang.yang@amlogic.com>
 
-Add panel driver for it.
+Add Amlogic NAND controller dt-bindings for Meson SoC,
+Current this driver support GXBB/GXL/AXG platform.
 
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Liang Yang <liang.yang@amlogic.com>
+Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- MAINTAINERS                                   |   6 +
- drivers/gpu/drm/panel/Kconfig                 |   9 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- .../drm/panel/panel-feiyang-fy07024di26a30d.c | 286 ++++++++++++++++++
- 4 files changed, 302 insertions(+)
- create mode 100644 drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
+ .../devicetree/bindings/mtd/amlogic,meson-nand.txt | 60 ++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3dac08d0b3cb..40c8bfc974f4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4620,6 +4620,12 @@ T:	git git://anongit.freedesktop.org/drm/drm-misc
- S:	Maintained
- F:	drivers/gpu/drm/tve200/
- 
-+DRM DRIVER FOR FEIYANG FY07024DI26A30-D MIPI-DSI LCD PANELS
-+M:	Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-+S:	Maintained
-+F:	drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
-+F:	Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
-+
- DRM DRIVER FOR ILITEK ILI9225 PANELS
- M:	David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
- S:	Maintained
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index d0d4e60f5153..bc70896fe43c 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -47,6 +47,15 @@ config DRM_PANEL_SIMPLE
- 	  that it can be automatically turned off when the panel goes into a
- 	  low power state.
- 
-+config DRM_PANEL_FEIYANG_FY07024DI26A30D
-+	tristate "Feiyang FY07024DI26A30-D MIPI-DSI LCD panel"
-+	depends on OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	help
-+	  Say Y if you want to enable support for panels based on the
-+	  Feiyang FY07024DI26A30-D MIPI-DSI interface.
-+
- config DRM_PANEL_ILITEK_IL9322
- 	tristate "Ilitek ILI9322 320x240 QVGA panels"
- 	depends on OF && SPI
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index 88011f06edb8..e23c017639c7 100644
---- a/drivers/gpu/drm/panel/Makefile
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -3,6 +3,7 @@ obj-$(CONFIG_DRM_PANEL_ARM_VERSATILE) += panel-arm-versatile.o
- obj-$(CONFIG_DRM_PANEL_BANANAPI_S070WV20_ICN6211) += panel-bananapi-s070wv20-icn6211.o
- obj-$(CONFIG_DRM_PANEL_LVDS) += panel-lvds.o
- obj-$(CONFIG_DRM_PANEL_SIMPLE) += panel-simple.o
-+obj-$(CONFIG_DRM_PANEL_FEIYANG_FY07024DI26A30D) += panel-feiyang-fy07024di26a30d.o
- obj-$(CONFIG_DRM_PANEL_ILITEK_IL9322) += panel-ilitek-ili9322.o
- obj-$(CONFIG_DRM_PANEL_ILITEK_ILI9881C) += panel-ilitek-ili9881c.o
- obj-$(CONFIG_DRM_PANEL_INNOLUX_P079ZCA) += panel-innolux-p079zca.o
-diff --git a/drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c b/drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
+diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
 new file mode 100644
-index 000000000000..a4b46bd8fdbe
+index 0000000..3983c11
 --- /dev/null
-+++ b/drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
-@@ -0,0 +1,286 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2018 Amarula Solutions
-+ * Author: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-+ */
-+
-+#include <linux/backlight.h>
-+#include <linux/delay.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <drm/drmP.h>
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_panel.h>
-+
-+struct feiyang {
-+	struct drm_panel	panel;
-+	struct mipi_dsi_device	*dsi;
-+
-+	struct backlight_device	*backlight;
-+	struct regulator	*dvdd;
-+	struct regulator	*avdd;
-+	struct gpio_desc	*reset;
-+};
-+
-+static inline struct feiyang *panel_to_feiyang(struct drm_panel *panel)
-+{
-+	return container_of(panel, struct feiyang, panel);
-+}
-+
-+struct feiyang_init_cmd {
-+	size_t len;
-+	const char *data;
-+};
-+
-+#define FY07024DI26A30D(...) { \
-+	.len = sizeof((char[]){__VA_ARGS__}), \
-+	.data = (char[]){__VA_ARGS__} }
-+
-+static const struct feiyang_init_cmd feiyang_init_cmds[] = {
-+	FY07024DI26A30D(0x80, 0x58),
-+	FY07024DI26A30D(0x81, 0x47),
-+	FY07024DI26A30D(0x82, 0xD4),
-+	FY07024DI26A30D(0x83, 0x88),
-+	FY07024DI26A30D(0x84, 0xA9),
-+	FY07024DI26A30D(0x85, 0xC3),
-+	FY07024DI26A30D(0x86, 0x82),
-+};
-+
-+static int feiyang_prepare(struct drm_panel *panel)
-+{
-+	struct feiyang *ctx = panel_to_feiyang(panel);
-+	struct mipi_dsi_device *dsi = ctx->dsi;
-+	unsigned int i;
-+	int ret;
-+
-+	ret = regulator_enable(ctx->dvdd);
-+	if (ret)
-+		return ret;
-+
-+	msleep(100);
-+
-+	ret = regulator_enable(ctx->avdd);
-+	if (ret)
-+		return ret;
-+
-+	msleep(20);
-+
-+	gpiod_set_value(ctx->reset, 1);
-+	msleep(50);
-+
-+	gpiod_set_value(ctx->reset, 0);
-+	msleep(20);
-+
-+	gpiod_set_value(ctx->reset, 1);
-+	msleep(200);
-+
-+	for (i = 0; i < ARRAY_SIZE(feiyang_init_cmds); i++) {
-+		const struct feiyang_init_cmd *cmd =
-+						&feiyang_init_cmds[i];
-+
-+		ret = mipi_dsi_dcs_write_buffer(dsi, cmd->data, cmd->len);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int feiyang_enable(struct drm_panel *panel)
-+{
-+	struct feiyang *ctx = panel_to_feiyang(panel);
-+
-+	msleep(120);
-+
-+	mipi_dsi_dcs_set_display_on(ctx->dsi);
-+	backlight_enable(ctx->backlight);
-+
-+	return 0;
-+}
-+
-+static int feiyang_disable(struct drm_panel *panel)
-+{
-+	struct feiyang *ctx = panel_to_feiyang(panel);
-+
-+	backlight_disable(ctx->backlight);
-+	return mipi_dsi_dcs_set_display_on(ctx->dsi);
-+}
-+
-+static int feiyang_unprepare(struct drm_panel *panel)
-+{
-+	struct feiyang *ctx = panel_to_feiyang(panel);
-+	int ret;
-+
-+	ret = mipi_dsi_dcs_set_display_off(ctx->dsi);
-+	if (ret < 0)
-+		DRM_DEV_ERROR(panel->dev, "failed to set display off: %d\n",
-+			      ret);
-+
-+	ret = mipi_dsi_dcs_enter_sleep_mode(ctx->dsi);
-+	if (ret < 0)
-+		DRM_DEV_ERROR(panel->dev, "failed to enter sleep mode: %d\n",
-+			      ret);
-+
-+	msleep(100);
-+
-+	regulator_disable(ctx->avdd);
-+
-+	regulator_disable(ctx->dvdd);
-+
-+	gpiod_set_value(ctx->reset, 0);
-+
-+	gpiod_set_value(ctx->reset, 1);
-+
-+	gpiod_set_value(ctx->reset, 0);
-+
-+	return 0;
-+}
-+
-+static const struct drm_display_mode feiyang_default_mode = {
-+	.clock = 55000,
-+	.vrefresh = 60,
-+
-+	.hdisplay = 1024,
-+	.hsync_start = 1024 + 396,
-+	.hsync_end = 1024 + 396 + 20,
-+	.htotal = 1024 + 396 + 20 + 100,
-+
-+	.vdisplay = 600,
-+	.vsync_start = 600 + 12,
-+	.vsync_end = 600 + 12 + 2,
-+	.vtotal = 600 + 12 + 2 + 21,
-+};
-+
-+static int feiyang_get_modes(struct drm_panel *panel)
-+{
-+	struct drm_connector *connector = panel->connector;
-+	struct feiyang *ctx = panel_to_feiyang(panel);
-+	struct drm_display_mode *mode;
-+
-+	mode = drm_mode_duplicate(panel->drm, &feiyang_default_mode);
-+	if (!mode) {
-+		DRM_DEV_ERROR(&ctx->dsi->dev, "failed to add mode %ux%ux@%u\n",
-+			      feiyang_default_mode.hdisplay,
-+			      feiyang_default_mode.vdisplay,
-+			      feiyang_default_mode.vrefresh);
-+		return -ENOMEM;
-+	}
-+
-+	drm_mode_set_name(mode);
-+
-+	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-+	drm_mode_probed_add(connector, mode);
-+
-+	return 1;
-+}
-+
-+static const struct drm_panel_funcs feiyang_funcs = {
-+	.disable = feiyang_disable,
-+	.unprepare = feiyang_unprepare,
-+	.prepare = feiyang_prepare,
-+	.enable = feiyang_enable,
-+	.get_modes = feiyang_get_modes,
-+};
-+
-+static int feiyang_dsi_probe(struct mipi_dsi_device *dsi)
-+{
-+	struct device_node *np;
-+	struct feiyang *ctx;
-+	int ret;
-+
-+	ctx = devm_kzalloc(&dsi->dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+	mipi_dsi_set_drvdata(dsi, ctx);
-+	ctx->dsi = dsi;
-+
-+	drm_panel_init(&ctx->panel);
-+	ctx->panel.dev = &dsi->dev;
-+	ctx->panel.funcs = &feiyang_funcs;
-+
-+	ctx->dvdd = devm_regulator_get(&dsi->dev, "dvdd");
-+	if (IS_ERR(ctx->dvdd)) {
-+		DRM_DEV_ERROR(&dsi->dev, "Couldn't get dvdd regulator\n");
-+		return PTR_ERR(ctx->dvdd);
-+	}
-+
-+	ctx->avdd = devm_regulator_get(&dsi->dev, "avdd");
-+	if (IS_ERR(ctx->avdd)) {
-+		DRM_DEV_ERROR(&dsi->dev, "Couldn't get avdd regulator\n");
-+		return PTR_ERR(ctx->avdd);
-+	}
-+
-+	ctx->reset = devm_gpiod_get(&dsi->dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(ctx->reset)) {
-+		DRM_DEV_ERROR(&dsi->dev, "Couldn't get our reset GPIO\n");
-+		return PTR_ERR(ctx->reset);
-+	}
-+
-+	np = of_parse_phandle(dsi->dev.of_node, "backlight", 0);
-+	if (np) {
-+		ctx->backlight = of_find_backlight_by_node(np);
-+		of_node_put(np);
-+
-+		if (!ctx->backlight)
-+			return -EPROBE_DEFER;
-+	}
-+
-+	ret = drm_panel_add(&ctx->panel);
-+	if (ret < 0)
-+		goto put_backlight;
-+
-+	dsi->mode_flags = MIPI_DSI_MODE_VIDEO_BURST;
-+	dsi->format = MIPI_DSI_FMT_RGB888;
-+	dsi->lanes = 4;
-+
-+	ret = mipi_dsi_attach(dsi);
-+	if (ret < 0)
-+		goto panel_remove;
-+
-+	return ret;
-+
-+panel_remove:
-+	drm_panel_remove(&ctx->panel);
-+put_backlight:
-+	if (ctx->backlight)
-+		put_device(&ctx->backlight->dev);
-+
-+	return ret;
-+}
-+
-+static int feiyang_dsi_remove(struct mipi_dsi_device *dsi)
-+{
-+	struct feiyang *ctx = mipi_dsi_get_drvdata(dsi);
-+
-+	mipi_dsi_detach(dsi);
-+	drm_panel_remove(&ctx->panel);
-+
-+	if (ctx->backlight)
-+		put_device(&ctx->backlight->dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id feiyang_of_match[] = {
-+	{ .compatible = "feiyang,fy07024di26a30d", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, feiyang_of_match);
-+
-+static struct mipi_dsi_driver feiyang_driver = {
-+	.probe = feiyang_dsi_probe,
-+	.remove = feiyang_dsi_remove,
-+	.driver = {
-+		.name = "feiyang-fy07024di26a30d",
-+		.of_match_table = feiyang_of_match,
-+	},
-+};
-+module_mipi_dsi_driver(feiyang_driver);
-+
-+MODULE_AUTHOR("Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>");
-+MODULE_DESCRIPTION("Feiyang FY07024DI26A30-D MIPI-DSI LCD panel");
-+MODULE_LICENSE("GPL");
++++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+@@ -0,0 +1,60 @@
++Amlogic NAND Flash Controller (NFC) for GXBB/GXL/AXG family SoCs
++
++This file documents the properties in addition to those available in
++the MTD NAND bindings.
++
++Required properties:
++- compatible : contains one of:
++  - "amlogic,meson-gxl-nfc"
++  - "amlogic,meson-axg-nfc"
++- clocks     :
++	A list of phandle + clock-specifier pairs for the clocks listed
++	in clock-names.
++
++- clock-names: Should contain the following:
++	"core" - NFC module gate clock
++	"device" - device clock from eMMC sub clock controller
++	"rx" - rx clock phase
++	"tx" - tx clock phase
++
++- amlogic,mmc-syscon	: Required for NAND clocks, it's shared with SD/eMMC
++				controller port C
++
++Optional children nodes:
++Children nodes represent the available nand chips.
++
++Other properties:
++see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
++
++Example demonstrate on AXG SoC:
++
++	sd_emmc_c_clkc: mmc@7000 {
++		compatible = "amlogic,meson-axg-mmc-clkc", "syscon";
++		reg = <0x0 0x7000 0x0 0x800>;
++	};
++
++	nand-controller@7800 {
++		compatible = "amlogic,meson-axg-nfc";
++		reg = <0x0 0x7800 0x0 0x100>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
++
++		clocks = <&clkc CLKID_SD_EMMC_C>,
++			<&sd_emmc_c_clkc CLKID_MMC_DIV>,
++			<&sd_emmc_c_clkc CLKID_MMC_PHASE_RX>,
++			<&sd_emmc_c_clkc CLKID_MMC_PHASE_TX>;
++		clock-names = "core", "device", "rx", "tx";
++		amlogic,mmc-syscon = <&sd_emmc_c_clkc>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&nand_pins>;
++
++		nand@0 {
++			reg = <0>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			nand-on-flash-bbt;
++		};
++	};
 -- 
-2.18.0.321.gffc6fa0e3
+1.9.1
