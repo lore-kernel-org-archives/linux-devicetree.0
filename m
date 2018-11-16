@@ -1,88 +1,96 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2 00/12] drm/sun4i: Allwinner MIPI-DSI Burst
- mode support
-Date: Fri, 16 Nov 2018 22:09:04 +0530
-Message-ID: <20181116163916.29621-1-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 08/15] ARM/arm64: sunxi: Move H3/H5 syscon
+ label over to soc-specific nodes
+Date: Fri, 16 Nov 2018 17:39:35 +0100
+Message-ID: <20181116163935.b4wsf3sfi4arwrtz@flea>
+References: <20181115145013.3378-1-paul.kocialkowski@bootlin.com>
+ <20181115145013.3378-9-paul.kocialkowski@bootlin.com>
+ <20181116093904.4ikn7ldksrm3mp5d@flea>
+ <CAGb2v65EckX0CDbZ5K9VmmayOe3eisOYgUxmPomPgp2_jE5Vww@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBS7FXPPQKGQEPP7GRUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUXFXPPQKGQEAIXJL2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v65EckX0CDbZ5K9VmmayOe3eisOYgUxmPomPgp2_jE5Vww-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, TL Lim <tllim-F7SikzrIcFYdnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
-Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series support MIPI-DSI Burst mode on Allwinner platform, which
-is tested in burst supported panel in Pine64-LTS board.
+Hi,
 
-Series fixed few code changes commented in previous version[1] and
-it depends on A64 MIPI-DSI series[2]
+On Fri, Nov 16, 2018 at 05:47:50PM +0800, Chen-Yu Tsai wrote:
+> On Fri, Nov 16, 2018 at 5:39 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> >
+> > On Thu, Nov 15, 2018 at 03:50:06PM +0100, Paul Kocialkowski wrote:
+> > > Now that we have specific nodes for the H3 and H5 system-controller
+> > > that allow proper access to the EMAC clock configuration register,
+> > > we no longer need a common dummy syscon node.
+> > >
+> > > Switch the syscon label over to each platform's dtsi file.
+> > >
+> > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> > > ---
+> > >  arch/arm/boot/dts/sun8i-h3.dtsi              | 2 +-
+> > >  arch/arm/boot/dts/sunxi-h3-h5.dtsi           | 6 ------
+> > >  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 2 +-
+> > >  3 files changed, 2 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+> > > index 7157d954fb8c..b337a9282783 100644
+> > > --- a/arch/arm/boot/dts/sun8i-h3.dtsi
+> > > +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+> > > @@ -134,7 +134,7 @@
+> > >       };
+> > >
+> > >       soc {
+> > > -             system-control@1c00000 {
+> > > +             syscon: system-control@1c00000 {
+> > >                       compatible = "allwinner,sun8i-h3-system-control";
+> > >                       reg = <0x01c00000 0x1000>;
+> > >                       #address-cells = <1>;
+> > > diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> > > index 4b1530ebe427..9175ff0fb59a 100644
+> > > --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> > > +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> > > @@ -152,12 +152,6 @@
+> > >                       };
+> > >               };
+> > >
+> > > -             syscon: syscon@1c00000 {
+> > > -                     compatible = "allwinner,sun8i-h3-system-controller",
+> > > -                             "syscon";
+> > > -                     reg = <0x01c00000 0x1000>;
+> > > -             };
+> > > -
+> >
+> > You're also dropping the syscon compatible there. But I'm not sure how
+> > it could work with the H3 EMAC driver that would overwrite the
+> > compatible already.
+> 
+> I assume you are referring to the previous patch? The node names are not
+> the same, hence the previous patch is adding another node for the system
+> controller, and this patch removes the old one with the "syscon" compatible.
+> 
+> We already patched the EMAC driver to support the new SRAM controller based
+> regmap, so other than making people unhappy about having to update their
+> DT, I don't think there would be any problems. This also means H3 in -next
+> currently has _two_ syscon nodes.
 
-Changes for v2:
-- add separate function for setup_inst_delay computation
-- moved instruction loop seletion below delay compuation
-- add separate function for dsi_get_timings and call for non-burst mode
-- simplify burst mode timings compuatation
-- add new patches, for tcon0 probing during dsi_bind
-- add code to get the tcon0 divider value
-- add multiple functions to get line_num, edge0, edge1
-- squash 'enable burst mode' patch into 'Setup burst mode'
-- fixed commit message of 'Enable burst mode HBP, HSA_HSE'
-  s/enable/disable
-- collect Rob R-b tag on panel dt-bindings patch
-- panel driver changes,
-  - dropped unneeded include files
-  - s/fy07024di26a30d/feiyang function, variable names
-  - use DRM_DEV_ERROR in panel driver
-  - add set_display_on .enable
-  - moved regulator enablement to .prepare
-  - handle erro statements and release them properly during probe
-  - remove panel if mipi_dsi_attach failed
-  - fixed MODULE_LICENSE
-  - update MAINTAINERS file about the panel
-- add comments on dts about exact regulators used in schematics
+Ah, indeed, I missed that. Pointing that out in the commit log could
+be nice though.
 
-[1] https://patchwork.kernel.org/cover/10666597/
-[2] https://patchwork.kernel.org/cover/10680247/
-
-Any inputs,
-Jagan.
-
-Jagan Teki (12):
-  drm/sun4i: sun6i_mipi_dsi: Compute burst mode loop N1 instruction
-    delay
-  drm/sun4i: sun6i_mipi_dsi: Support instruction loop selection
-  drm/sun4i: sun6i_mipi_dsi: Setup burst mode timings
-  drm/sun4i: sun6i_mipi_dsi: Simplify drq set to support all modes
-  drm/sun4i: tcon: Export get tcon0 routine
-  drm/sun4i: sun6i_mipi_dsi: Probe tcon0 during dsi_bind
-  drm/sun4i: sun6i_mipi_dsi: Setup burst mode
-  drm/sun4i: sun6i_mipi_dsi: Enable 2byte trail for 4-lane burst mode
-  drm/sun4i: sun6i_mipi_dsi: Enable burst mode HBP, HSA_HSE
-  dt-bindings: panel: Add Feiyang FY07024DI26A30-D MIPI-DSI LCD panel
-  drm/panel: Add Feiyang FY07024DI26A30-D MIPI-DSI LCD panel
-  [DO NOT MERGE] arm64: allwinner: a64: pine64-lts: Enable Feiyang FY07024DI26A30-D DSI
-    panel
-
- .../display/panel/feiyang,fy07024di26a30d.txt |  20 ++
- MAINTAINERS                                   |   6 +
- .../dts/allwinner/sun50i-a64-pine64-lts.dts   |  37 +++
- drivers/gpu/drm/panel/Kconfig                 |   9 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- .../drm/panel/panel-feiyang-fy07024di26a30d.c | 286 ++++++++++++++++++
- drivers/gpu/drm/sun4i/sun4i_tcon.c            |   3 +-
- drivers/gpu/drm/sun4i/sun4i_tcon.h            |   1 +
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c        | 264 ++++++++++++----
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h        |   1 +
- 10 files changed, 567 insertions(+), 61 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
- create mode 100644 drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
+Thanks!
+Maxime
 
 -- 
-2.18.0.321.gffc6fa0e3
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
