@@ -1,15 +1,15 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 06/10] ARM64: dts: mediatek: Add all CPUs in cooling maps
-Date: Fri, 16 Nov 2018 15:34:29 +0530
-Message-ID: <3c7c9155ac01a2d745ba5e4434c958820200d088.1542362530.git.viresh.kumar@linaro.org>
+Subject: [PATCH 07/10] ARM64: dts: msm8916: Add all CPUs in cooling maps
+Date: Fri, 16 Nov 2018 15:34:30 +0530
+Message-ID: <01bb903b2febf4b006f28fad33308cc8084ccbaf.1542362530.git.viresh.kumar@linaro.org>
 References: <cover.1542362530.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1542362530.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Each CPU can (and does) participate in cooling down the system but the
@@ -28,58 +28,36 @@ points.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- arch/arm64/boot/dts/mediatek/mt7622.dtsi | 9 ++++++---
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 6 ++++--
- 2 files changed, 10 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index fe0c875f1d95..53e707df98d9 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -170,17 +170,20 @@
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index d302d8d639a1..482e275f0a03 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -202,7 +202,10 @@
  			cooling-maps {
  				map0 {
- 					trip = <&cpu_passive>;
--					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
- 				};
- 
- 				map1 {
- 					trip = <&cpu_active>;
--					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
- 				};
- 
- 				map2 {
- 					trip = <&cpu_hot>;
--					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 					trip = <&cpu_alert0>;
+-					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
  				};
  			};
  		};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index abd2f15a544b..e578f7d18038 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -275,12 +275,14 @@
+@@ -229,7 +232,10 @@
  			cooling-maps {
- 				map@0 {
- 					trip = <&target>;
--					cooling-device = <&cpu0 0 0>;
-+					cooling-device = <&cpu0 0 0>,
-+							 <&cpu1 0 0>;
- 					contribution = <3072>;
- 				};
- 				map@1 {
- 					trip = <&target>;
--					cooling-device = <&cpu2 0 0>;
-+					cooling-device = <&cpu2 0 0>,
-+							 <&cpu3 0 0>;
- 					contribution = <1024>;
+ 				map0 {
+ 					trip = <&cpu_alert1>;
+-					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
  				};
  			};
+ 		};
 -- 
 2.19.1.568.g152ad8e3369a
