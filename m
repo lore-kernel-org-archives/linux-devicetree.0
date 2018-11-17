@@ -1,65 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/2] ASoC: dt-bindings: add bindings for AK4118
- transceiver
-Date: Sat, 17 Nov 2018 09:51:40 -0600
-Message-ID: <20181117155140.GA11554@bogus>
-References: <20181114121642.1404-1-peron.clem@gmail.com>
- <20181114121642.1404-2-peron.clem@gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: amlogic: Add Internal Clock Measurer
+  bindings
+Date: Sat, 17 Nov 2018 09:52:37 -0600
+Message-ID: <20181117155237.GA17417@bogus>
+References: <20181114131627.17766-1-narmstrong@baylibre.com>
+ <20181114131627.17766-2-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181114121642.1404-2-peron.clem@gmail.com>
+In-Reply-To: <20181114131627.17766-2-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: khilman@baylibre.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 14, 2018 at 01:16:42PM +0100, Clément Péron wrote:
-> Document the bindings for AK4118 S/PDIF transceiver
+On Wed, 14 Nov 2018 14:16:25 +0100, Neil Armstrong wrote:
+> The Amlogic Meson GX SoCs embeds a clock measurer IP to measure the internal
+> clock paths frequencies.
 > 
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  .../devicetree/bindings/sound/ak4118.txt      | 22 +++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/ak4118.txt
+>  .../bindings/soc/amlogic/clk-measure.txt          | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/ak4118.txt b/Documentation/devicetree/bindings/sound/ak4118.txt
-> new file mode 100644
-> index 000000000000..6e11a2f7404c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/ak4118.txt
-> @@ -0,0 +1,22 @@
-> +AK4118 S/PDIF transceiver
-> +
-> +This device supports I2C mode.
-> +
-> +Required properties:
-> +
-> +- compatible : "asahi-kasei,ak4118"
-> +- reg : The I2C address of the device for I2C
-> +- reset-gpios: A GPIO specifier for the reset pin
-> +- irq-gpios: A GPIO specifier for the IRQ pin
 
-This should use 'interrupts' instead.
-
-> +
-> +Example:
-> +
-> +&i2c {
-> +	ak4118: ak4118@13 {
-
-spdif@13 ? Node names should be based on the class of device, but 
-there's not really one defined for this.
-
-> +		#sound-dai-cells = <0>;
-> +		compatible = "asahi-kasei,ak4118";
-> +		reg = <0x13>;
-> +		reset-gpios = <&gpio 0 GPIO_ACTIVE_LOW>
-> +		irq-gpios = <&gpio 1 GPIO_ACTIVE_HIGH>;
-> +	};
-> +};
-> -- 
-> 2.19.1
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
