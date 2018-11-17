@@ -1,30 +1,33 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 12/25] of: net: kill of_get_nvmem_mac_address()
-Date: Sat, 17 Nov 2018 09:45:31 -0600
-Message-ID: <20181117154531.GA7306@bogus>
-References: <20181113140133.17385-1-brgl@bgdev.pl>
- <20181113140133.17385-13-brgl@bgdev.pl>
+Subject: Re: [PATCH v2] dt-bindings: media: i2c: Fix external clock frequency
+ for OV5645
+Date: Sat, 17 Nov 2018 09:48:06 -0600
+Message-ID: <20181117154806.GA11193@bogus>
+References: <20181114121338.28026-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181113140133.17385-13-brgl@bgdev.pl>
-Sender: netdev-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Nicolas Ferre <nicolas.ferre@microchip.com>, "David S . Miller" <davem@davemloft.net>, Grygorii Strashko <grygorii.strashko@ti.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org, linux-arm-ke
+In-Reply-To: <20181114121338.28026-1-manivannan.sadhasivam@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: mchehab@kernel.org, robh+dt@kernel.org, todor.tomov@linaro.org, hansverk@cisco.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Nov 2018 15:01:20 +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Wed, 14 Nov 2018 17:43:38 +0530, Manivannan Sadhasivam wrote:
+> Commit "4adb0a0432f4 media: ov5645: Supported external clock is 24MHz"
+> modified the external clock frequency to be 24MHz instead of the
+> 23.88MHz in driver. Hence, modify the frequency value in binding.
 > 
-> We've switched all users to nvmem_get_mac_address(). Remove the now
-> dead code.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  drivers/of/of_net.c    | 39 ---------------------------------------
->  include/linux/of_net.h |  6 ------
->  2 files changed, 45 deletions(-)
+> 
+> Changes in v2:
+> 
+> * Removed the wording about supported frequency since the hardware is
+>   capable of accepting freq range from 6-27MHz.
+> 
+>  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
