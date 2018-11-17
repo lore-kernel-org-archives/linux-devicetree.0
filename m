@@ -1,87 +1,64 @@
-From: tom burkart <tom@aussec.com>
-Subject: Re: [PATCH v7 1/4] dt-bindings: pps: descriptor-based gpio,
- capture-clear addition
-Date: Sat, 17 Nov 2018 21:35:22 +1100
-Message-ID: <20181117213522.12672utznrvpbn56@www.aussec.com>
-References: <20181114125432.16044-1-tom@aussec.com>
- <20181114125432.16044-2-tom@aussec.com> <20181116224919.GA18008@bogus>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v4 0/3] Enable ath10k wcn3990 wifi driver support on sdm845
+Date: Sat, 17 Nov 2018 13:09:30 +0200
+Message-ID: <874lcg55at.fsf@codeaurora.org>
+References: <1541423318-19312-1-git-send-email-govinds@codeaurora.org>
+        <87d0r55ews.fsf@codeaurora.org>
+        <6e831363962be4e28d7551e360ed4d46@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8;
- DelSp="Yes";
- format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181116224919.GA18008@bogus>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Linux kernel mailing list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6e831363962be4e28d7551e360ed4d46-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> (Govind Singh's
+        message of "Fri, 16 Nov 2018 21:36:57 +0530")
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rob Herring <robh@kernel.org>:
+Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
 
-> On Wed, Nov 14, 2018 at 11:54:29PM +1100, Tom Burkart wrote:
->> This patch changes the devicetree bindings for the pps-gpio driver
->> from the integer based ABI to the descriptor based ABI.
-> ? That has nothing to do with DT.
-
-I believe it does, as the change in ABI forces a rename in the DT  
-naming convention.
-This is due to the descriptor based ABI appending "-gpio" or "-gpios" (see
-Documentation/gpio/base.txt.)
-Admittedly, I may have called it by the wrong name due to ignorance,  
-my apologies.
-
->>  It also adds
->> documentation for the device tree capture-clear option.  The legacy
->> device tree entry for the GPIO pin is supported.
+> On 2018-11-16 18:59, Kalle Valo wrote:
+>> Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
 >>
->> Signed-off-by: Tom Burkart <tom@aussec.com>
->> ---
->>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 8 ++++++--
->>  1 file changed, 6 insertions(+), 2 deletions(-)
+>>> This series enables ath10k wifi driver support for WCN3990 target
+>>> on sdm845 SOC. This series also updates the missing dt binding
+>>> documentation
+>>> and adds optional iommu property.
+>>>
+>>> Changes since v3:
+>>>     Moved interrupt/reg/reg-name to required property.
+>>>     Removed unused clocks.
+>>>     Corrected interrupt no's.
+>>>
+>>> Changes since v2:
+>>>     dropped [v2,4/4] dts: arm64/sdm845: Enable iommu for WCN3990
+>>> wifi module
+>>>     device node patch from the series as dependent patch is not yet
+>>> merged.
+>>>     Enabled status flag from sdm845-mtp.dts.
+>>>
+>>> Changes since v1:
+>>>     Listed no of interrupts/clocks for each set of compatible.
+>>>     Added missing 'wifi' label to sdm845.dtsi.
+>>>
+>>> Govind Singh (3):
+>>>   dt: bindings: add missing dt properties for WCN3990 wifi node
+>>>   dts: arm64/sdm845: Add WCN3990 WLAN module device node
+>>>   dt: bindings: add bindings for wifi iommu node
+>>>
+>>>  .../bindings/net/wireless/qcom,ath10k.txt          | 62
+>>> ++++++++++++++--------
+>>>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts            |  8 +++
+>>>  arch/arm64/boot/dts/qcom/sdm845.dtsi               | 26 +++++++++
+>>>  3 files changed, 74 insertions(+), 22 deletions(-)
 >>
->> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt  
->> b/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> index 3683874832ae..6c9fc0998d94 100644
->> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> @@ -5,19 +5,23 @@ a GPIO pin.
->>
->>  Required properties:
->>  - compatible: should be "pps-gpio"
->> -- gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
->> +- pps-gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
->> +Alternatively (DEPRECATED), instead of pps-gpios above, it may have:
->> +- gpios: one PPS GPIO as above
->>
->>  Optional properties:
->>  - assert-falling-edge: when present, assert is indicated by a falling edge
->>                         (instead of by a rising edge)
->> +- capture-clear: when present, also capture the PPS clear event
+>> Via which tree are these patches going? That's not clear for me.
 >
-> Is this a h/w thing? or driver configuration?
+> I guess sdm845 dtsi change should be going to
+> git://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git.
+> I need to send v5 to address one comment from Brian.
 
-Driver configuration.  Most of the code was present in the driver, yet  
-it was not documented, or usable due to a two line (code) omission  
-(the value was not being fetched from DT).
+Ok, I'll then drop these from my queue.
 
->>
->>  Example:
->>  	pps {
->>  		pinctrl-names = "default";
->>  		pinctrl-0 = <&pinctrl_pps>;
->>
->> -		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
->> +		pps-gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
->>  		assert-falling-edge;
->> +		capture-clear;
->>
->>  		compatible = "pps-gpio";
->>  	};
->> --
->> 2.12.3
->>
->
->
+-- 
+Kalle Valo
