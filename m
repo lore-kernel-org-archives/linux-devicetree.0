@@ -1,52 +1,64 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 0/7] IP101GR: devicetree based configuration of SEL_INTR32
-Date: Sat, 17 Nov 2018 19:20:00 +0100
-Message-ID: <20181117182007.14791-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 2/7] dt-bindings: net: phy: add bindings for the IC Plus Corp. IP101A/G PHYs
+Date: Sat, 17 Nov 2018 19:20:02 +0100
+Message-ID: <20181117182007.14791-3-martin.blumenstingl@googlemail.com>
+References: <20181117182007.14791-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181117182007.14791-1-martin.blumenstingl@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: netdev@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, andrew@lunn.ch, mark.rutland@arm.com, robh+dt@kernel.org, davem@davemloft.net
 Cc: linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-The IP101GR is a 32-pin QFN package variant of the IP101G/IP101GA
-Ethernet PHY. Due to it's limited amount of pins the RXER (receive
-error) and INTR32 (interrupt) functions share pin 21.
+The IP101A and IP101G series both have various models. Depending on the
+board implementation we need a special property for the IP101GR (32-pin
+LQFP package) PHY:
+pin 21 ("RXER/INTR_32") outputs the "receive error" signal by default
+(LOW means "normal operation", HIGH means that there's either a decoding
+error of the received signal or that the PHY is receiving LPI). This pin
+can also be switched to INTR32 mode, where the interrupt signal is
+routed to this pin. The other PHYs don't need this special handling
+because they have more pins available so the interrupt function gets a
+dedicated pin.
 
-The goal of this series is:
-- some small cleanups in patches 3, 4 and 5
-- allowing the kernel to detect IRQ floods on boards where the IP101GR
-  is configured in RXER mode but the RXER line is configured on the
-  host SoC as interrupt line (patch 6)
-- configuration of the SEL_INTR32 register so we can use the interrupt
-  function on boards where the RXER/INTR32 pin (pin 21) is routed to
-  one of the host SoC's interrupt inputs (patches 1, 2, 7)
+This adds two properties to either select the "receive error" or
+"interrupt" function of pin 21. Not specifying any function means that
+the default set by the bootloader is used. This is required because the
+IP101GR cannot be differentiated between other IP101 PHYs as the PHY
+identification registers on all of these is 0x02430c54.
 
-A use-case where this is needed is the Endless Mini (EC-100). I have
-tested my changes on that board. This also confirms that Heiner
-Kallweit's recent icplus.c PHY driver changes are working (at least on
-my setup).
-
-This series is based on net-next commit 9c549a6b057386d ("selftests:
-add explicit test for multiple concurrent GRO sockets")
-
-
-Martin Blumenstingl (7):
-  dt-bindings: vendor-prefix: add prefix for IC Plus Corp.
-  dt-bindings: net: phy: add bindings for the IC Plus Corp. IP101A/G
-    PHYs
-  net: phy: icplus: keep all ip101a_g functions together
-  net: phy: icplus: use the BIT macro where possible
-  net: phy: icplus: rename IP101A_G_NO_IRQ to IP101A_G_IRQ_ALL_MASK
-  net: phy: icplus: implement .did_interrupt for IP101A/G
-  net: phy: icplus: allow configuring the interrupt function on IP101GR
-
- .../bindings/net/icplus-ip101ag.txt           |  19 +++
- .../devicetree/bindings/vendor-prefixes.txt   |   1 +
- drivers/net/phy/icplus.c                      | 125 +++++++++++++++---
- 3 files changed, 125 insertions(+), 20 deletions(-)
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ .../bindings/net/icplus-ip101ag.txt           | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/net/icplus-ip101ag.txt
 
+diff --git a/Documentation/devicetree/bindings/net/icplus-ip101ag.txt b/Documentation/devicetree/bindings/net/icplus-ip101ag.txt
+new file mode 100644
+index 000000000000..a784592bbb15
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/icplus-ip101ag.txt
+@@ -0,0 +1,19 @@
++IC Plus Corp. IP101A / IP101G Ethernet PHYs
++
++There are different models of the IP101G Ethernet PHY:
++- IP101GR (32-pin QFN package)
++- IP101G (die only, no package)
++- IP101GA (48-pin LQFP package)
++
++There are different models of the IP101A Ethernet PHY (which is the
++predecessor of the IP101G):
++- IP101A (48-pin LQFP package)
++- IP101AH (48-pin LQFP package)
++
++Optional properties for the IP101GR (32-pin QFN package):
++
++- icplus,select-rx-error:
++  pin 21 ("RXER/INTR_32") will output the receive error status.
++  interrupts are not routed outside the PHY in this mode.
++- icplus,select-interrupt:
++  pin 21 ("RXER/INTR_32") will output the interrupt signal.
 -- 
 2.19.1
