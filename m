@@ -1,49 +1,54 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH] ARM: dts: pxa3xx: Add Raumfeld DTS files
-Date: Sat, 17 Nov 2018 21:14:40 +0100
-Message-ID: <87pnv3ihqn.fsf@belgarion.home>
-References: <20181105194040.25406-1-daniel@zonque.org>
- <87in14lkzp.fsf@belgarion.home>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: amlogic: Add Internal Clock Measurer bindings
+Date: Sat, 17 Nov 2018 21:32:20 +0100
+Message-ID: <CAFBinCAD=muhsHgqGu2pV8T=EyfnEKrocyVWf536nbL0pa5y7A@mail.gmail.com>
+References: <20181114131627.17766-1-narmstrong@baylibre.com> <20181114131627.17766-2-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <87in14lkzp.fsf@belgarion.home> (Robert Jarzmik's message of
- "Sat, 10 Nov 2018 21:45:46 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Daniel Mack <daniel@zonque.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, haojian.zhuang@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181114131627.17766-2-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: khilman@baylibre.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Robert Jarzmik <robert.jarzmik@free.fr> writes:
+Hi Neil,
 
-> Daniel Mack <daniel@zonque.org> writes:
+On Wed, Nov 14, 2018 at 2:16 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
->> This patch adds a set of DTS files that support all PXA3xx based Raumfeld
->> audio hardware devices.
->>
->> Common nodes are factored out into 'common' and 'tuneable-clock' include
->> files to keep the top-level DTS files smaller.
->>
->> Signed-off-by: Daniel Mack <daniel@zonque.org>
-> Hi Daniel,
+> The Amlogic Meson GX SoCs embeds a clock measurer IP to measure the internal
+> clock paths frequencies.
+I would skip the "GX" in that sentence: there's a similar (identical?)
+clock measurer in Meson6, Meson8, Meson8b and Meson8m2 as well
+
 >
-> I will need someone from the devicetree to ack this one, Rob or anybody
-> maintaining the devicetree.
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+with the comment above and below:
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-Rob, Mark, would you be so kind as to have a look at this patch, I have no
-concerns taking it into the pxa/dt tree, but I'd rather be safe with someone
-from the devicetree maintainers reviewing it first.
+> ---
+>  .../bindings/soc/amlogic/clk-measure.txt          | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
+>
+> diff --git a/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt b/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
+> new file mode 100644
+> index 000000000000..ba9183a42032
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
+> @@ -0,0 +1,15 @@
+> +Amlogic Internal Clock Measurer
+> +===============================
+> +
+> +The Amlogic SoCs contains an IP to measure the internal clocks.
+> +The precision is multiple of MHz, useful to debug the clock states.
+> +
+> +Required properties:
+> +- compatible: Shall contain "amlogic,meson-gx-clk-measure"
+can you please add "amlogic,meson8-clk-measure" and
+"amlogic,meson8b-clk-measure" as well?
+(I will provide a patch on top of yours to add Meson8 and Meson8b support)
 
-Cheers.
 
--- 
-Robert
+Regards
+Martin
