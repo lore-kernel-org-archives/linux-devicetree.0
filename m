@@ -1,48 +1,37 @@
-From: abailon@baylibre.com
-Subject: [RFC PATCH 2/2] dt-bindings: interconnect: Document imx7ulp interconnect bindings
-Date: Sat, 17 Nov 2018 12:19:05 +0100
-Message-ID: <20181117111905.29091-3-abailon@baylibre.com>
-References: <20181117111905.29091-1-abailon@baylibre.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH 1/2] dt-bindings: hwmon: add B57891S0103 thermistor from Epcos
+Date: Sat, 17 Nov 2018 12:12:57 +0000
+Message-ID: <20181117121248.32143-1-peda@axentia.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181117111905.29091-1-abailon@baylibre.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: georgi.djakov@linaro.org
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alexandre Bailon <abailon@baylibre.com>
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Peter Rosin <peda@axentia.se>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Alexandre Bailon <abailon@baylibre.com>
+These are Negative Temperature Coefficient thermistors, like the others
+in the list.
 
-This documents the device tree bindings for the interconnects
-present in the imx7ulp SoC.
-
-Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
+Signed-off-by: Peter Rosin <peda@axentia.se>
 ---
- .../bindings/interconnect/imx7ulp.txt           | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interconnect/imx7ulp.txt
+ Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/interconnect/imx7ulp.txt b/Documentation/devicetree/bindings/interconnect/imx7ulp.txt
-new file mode 100644
-index 000000000000..c32b7becdca7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interconnect/imx7ulp.txt
-@@ -0,0 +1,17 @@
-+iMX7ULP interconnect driver binding
-+----------------------------------------------------
-+
-+Required properties :
-+- compatible : should be "fsl,imx7ulp-icc";
-+- #interconnect-cells : should contain 1
-+- clocks : list of phandles and specifiers to all interconnect bus clocks
-+- clock-names : clock names should include both "nic0_div" and "nic1_div"
-+
-+Examples:
-+	icc0: icc {
-+		compatible = "fsl,imx7ulp-icc";
-+		clocks = <&clks IMX7ULP_CLK_NIC0_DIV>,
-+			 <&clks IMX7ULP_CLK_NIC1_DIV>;
-+		clock-names = "nic0_div", "nic1_div";
-+		#interconnect-cells = <1>;
-+	};
--- 
-2.18.1
+diff --git a/Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt b/D=
+ocumentation/devicetree/bindings/hwmon/ntc_thermistor.txt
+index c3b9c4cfe8df..37f18d684f6a 100644
+--- a/Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt
++++ b/Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt
+@@ -4,6 +4,7 @@ NTC Thermistor hwmon sensors
+ Requires node properties:
+ - "compatible" value : one of
+ 	"epcos,b57330v2103"
++	"epcos,b57891s0103"
+ 	"murata,ncp15wb473"
+ 	"murata,ncp18wb473"
+ 	"murata,ncp21wb473"
+--=20
+2.11.0
