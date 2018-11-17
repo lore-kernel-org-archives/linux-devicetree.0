@@ -1,499 +1,123 @@
-From: Sean Wang <sean.wang@kernel.org>
-Subject: Re: [v3, PATCH 1/2] net:stmmac: dwmac-mediatek: add support for mt2712
-Date: Fri, 16 Nov 2018 17:03:25 -0800
-Message-ID: <CAGp9Lzq_4w656HpUYMNDp64e=0mKDGvs46d4fq61wp1GAyzmvA@mail.gmail.com>
-References: <1542359926-28800-1-git-send-email-biao.huang@mediatek.com>
+From: Chen Yu <chenyu56@huawei.com>
+Subject: Re: [PATCH 01/10] dt-bindings: usb: add support for dwc3 controller
+ on HiSilicon SoCs
+Date: Sat, 17 Nov 2018 10:29:32 +0800
+Message-ID: <9fce6a58-d986-25e4-1791-ba375e4f075e@huawei.com>
+References: <20181027095820.40056-1-chenyu56@huawei.com>
+ <20181027095820.40056-2-chenyu56@huawei.com> <20181112160241.GA14074@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1542359926-28800-1-git-send-email-biao.huang@mediatek.com>
-Sender: netdev-owner@vger.kernel.org
-To: biao.huang@mediatek.com
-Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, nelson.chang@mediatek.com, andrew@lunn.ch, netdev@vger.kernel.org, liguo.zhang@mediatek.com, linux-kernel@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, joabreu@synopsys.com, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181112160241.GA14074@bogus>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: wangbinghui@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
- wi
-On Fri, Nov 16, 2018 at 1:19 AM Biao Huang <biao.huang@mediatek.com> wrote:
->
-> Add Ethernet support for MediaTek SoCs from the mt2712 family
->
-> Change-Id: Id3c535627088227793bd36405994edf2dc765e6a
+Hi,
 
-Drop change-Id
+On 2018/11/13 0:02, Rob Herring wrote:
+> On Sat, Oct 27, 2018 at 05:58:11PM +0800, Yu Chen wrote:
+>> This patch adds binding descriptions to support the dwc3 controller
+>> on HiSilicon SoCs and boards like the HiKey960.
+>>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: John Stultz <john.stultz@linaro.org>
+>> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+>> ---
+>>  .../devicetree/bindings/usb/dwc3-hisi.txt          | 53 ++++++++++++++++++++++
+>>  1 file changed, 53 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/dwc3-hisi.txt b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+>> new file mode 100644
+>> index 000000000000..e715e7b1c324
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+>> @@ -0,0 +1,53 @@
+>> +HiSilicon DWC3 USB SoC controller
+>> +
+>> +This file documents the parameters for the dwc3-hisi driver.
+>> +
+>> +Required properties:
+>> +- compatible:	should be "hisilicon,hi3660-dwc3"
+>> +- clocks:	A list of phandle + clock-specifier pairs for the
+>> +		clocks listed in clock-names
+>> +- clock-names:	Specify clock names
+>> +- resets:	list of phandle and reset specifier pairs.
+>> +
+>> +Sub-nodes:
+>> +The dwc3 core should be added as subnode to HiSilicon DWC3 as shown in the
+>> +example below. The DT binding details of dwc3 can be found in:
+>> +Documentation/devicetree/bindings/usb/dwc3.txt
+> 
+> If you only have clocks and resets and no glue registers, then you 
+> don't need a sub-node. Just make the controller one node.
+> 
 
-> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
-> ---
->  drivers/net/ethernet/stmicro/stmmac/Kconfig        |    8 +
->  drivers/net/ethernet/stmicro/stmmac/Makefile       |    1 +
->  .../net/ethernet/stmicro/stmmac/dwmac-mediatek.c   |  383 ++++++++++++++++++++
->  3 files changed, 392 insertions(+)
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
->
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> index edf2036..28a7a28 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> +++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> @@ -75,6 +75,14 @@ config DWMAC_LPC18XX
->         ---help---
->           Support for NXP LPC18xx/43xx DWMAC Ethernet.
->
-> +config DWMAC_MEDIATEK
-> +       tristate "MediaTek MT27xx GMAC support"
-> +       depends on OF && (ARCH_MEDIATEK || COMPILE_TEST)
-> +       help
-> +         Support for MediaTek GMAC Ethernet controller.
-> +
-> +         This selects the MT2712 SoC support for the stmmac driver.
-> +
->  config DWMAC_MESON
->         tristate "Amlogic Meson dwmac support"
->         default ARCH_MESON
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/Makefile b/drivers/net/ethernet/stmicro/stmmac/Makefile
-> index 99967a8..bf09701 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/Makefile
-> +++ b/drivers/net/ethernet/stmicro/stmmac/Makefile
-> @@ -13,6 +13,7 @@ obj-$(CONFIG_STMMAC_PLATFORM) += stmmac-platform.o
->  obj-$(CONFIG_DWMAC_ANARION)    += dwmac-anarion.o
->  obj-$(CONFIG_DWMAC_IPQ806X)    += dwmac-ipq806x.o
->  obj-$(CONFIG_DWMAC_LPC18XX)    += dwmac-lpc18xx.o
-> +obj-$(CONFIG_DWMAC_MEDIATEK)   += dwmac-mediatek.o
->  obj-$(CONFIG_DWMAC_MESON)      += dwmac-meson.o dwmac-meson8b.o
->  obj-$(CONFIG_DWMAC_OXNAS)      += dwmac-oxnas.o
->  obj-$(CONFIG_DWMAC_ROCKCHIP)   += dwmac-rk.o
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-> new file mode 100644
-> index 0000000..a80b3e0
-> --- /dev/null
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-> @@ -0,0 +1,383 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + */
-> +#include <linux/io.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_net.h>
-> +#include <linux/regmap.h>
-> +#include <linux/stmmac.h>
-> +
-> +#include "stmmac.h"
-> +#include "stmmac_platform.h"
-> +
-> +/* Peri Configuration register */
-> +#define PERI_ETH_PHY_INTF_SEL  0x418
-> +#define PHY_INTF_MII_GMII      0
-> +#define PHY_INTF_RGMII         1
-> +#define PHY_INTF_RMII          4
-> +#define RMII_CLK_SRC_RXC       BIT(4)
-> +#define RMII_CLK_SRC_INTERNAL  BIT(5)
-> +
-> +#define PERI_ETH_PHY_DLY       0x428
-> +#define PHY_DLY_GTXC_INV       BIT(6)
-> +#define PHY_DLY_GTXC_ENABLE    BIT(5)
-> +#define PHY_DLY_GTXC_STAGES    GENMASK(4, 0)
-> +#define PHY_DLY_TXC_INV                BIT(20)
-> +#define PHY_DLY_TXC_ENABLE     BIT(19)
-> +#define PHY_DLY_TXC_STAGES     GENMASK(18, 14)
-> +#define PHY_DLY_TXC_SHIFT      14
-> +#define PHY_DLY_RXC_INV                BIT(13)
-> +#define PHY_DLY_RXC_ENABLE     BIT(12)
-> +#define PHY_DLY_RXC_STAGES     GENMASK(11, 7)
-> +#define PHY_DLY_RXC_SHIFT      7
-> +
-> +#define PERI_ETH_DLY_FINE      0x800
-> +#define ETH_RMII_DLY_TX_INV    BIT(2)
-> +#define ETH_FINE_DLY_GTXC      BIT(1)
-> +#define ETH_FINE_DLY_RXC       BIT(0)
-> +
-> +enum dwmac_clks_map {
-> +       DWMAC_CLK_AXI_DRAM,
-> +       DWMAC_CLK_APB_REG,
-> +       DWMAC_CLK_MAC_EXT,
-> +       DWMAC_CLK_MAC_PARENT,
-> +       DWMAC_CLK_PTP_REF,
-> +       DWMAC_CLK_PTP_PARENT,
-> +       DWMAC_CLK_PTP_TOP,
-> +       DWMAC_CLK_MAX
-> +};
-> +
-> +struct mac_delay_struct {
-> +       u32 tx_delay;
-> +       u32 rx_delay;
-> +       u32 tx_inv;
-> +       u32 rx_inv;
-> +};
-> +
-> +struct mediatek_dwmac_plat_data {
-> +       struct device *dev;
-> +       struct regmap *peri_regmap;
-> +       struct clk *clks[DWMAC_CLK_MAX];
-> +       struct device_node *np;
-> +       int phy_mode;
-> +       struct mac_delay_struct mac_delay;
-> +       const struct mediatek_dwmac_variant *variant;
-> +       int fine_tune;
-> +       int rmii_rxc;
-> +};
-> +
-> +struct mediatek_dwmac_variant {
-> +       int (*dwmac_config_dt)(struct mediatek_dwmac_plat_data *plat);
-> +       int (*dwmac_enable_clks)(struct mediatek_dwmac_plat_data *plat);
-> +       void (*dwmac_disable_clks)(struct mediatek_dwmac_plat_data *plat);
+In dwc3 glue driver，the controller driver usually probed by call of_platform_populate
+which will search the child node of glue driver.
+The code of function of_platform_populate is as below:
 
-Each variant usually can reuse the same config_dt, enable/disable_clks function.
+	for_each_child_of_node(root, child) {
+                 rc = of_platform_bus_create(child, matches, lookup, parent, true);
+                 if (rc) {
+                         of_node_put(child);
+                         break;
+                 }
+         }
 
-> +       u32 rx_delay_max;
-> +       u32 tx_delay_max;
-> +};
-> +
-> +static const char * const mediatek_dwmac_clks_name[] = {
-> +       "axi", "apb", "mac_ext", "mac_parent", "ptp_ref", "ptp_parent", "ptp_top"
-> +};
-> +
-> +static int mt2712_set_interface(struct mediatek_dwmac_plat_data *plat)
+So I think the controller node should be a sub-node.
 
-Kconfig indicates it's a mt27xx driver. so it's good if there is a
-more generic prefix.
-
-> +{
-> +       int rmii_rxc = plat->rmii_rxc ? RMII_CLK_SRC_RXC : 0;
-> +       u32 intf_val = 0;
-> +
-> +       /* select phy interface in top control domain */
-> +       switch (plat->phy_mode) {
-> +       case PHY_INTERFACE_MODE_MII:
-> +               intf_val |= PHY_INTF_MII_GMII;
-> +               break;
-> +       case PHY_INTERFACE_MODE_RMII:
-> +               intf_val |= PHY_INTF_RMII;
-> +               intf_val |= rmii_rxc;
-> +               break;
-> +       case PHY_INTERFACE_MODE_RGMII:
-> +       case PHY_INTERFACE_MODE_RGMII_TXID:
-> +       case PHY_INTERFACE_MODE_RGMII_RXID:
-> +       case PHY_INTERFACE_MODE_RGMII_ID:
-> +               intf_val |= PHY_INTF_RGMII;
-> +               break;
-> +       default:
-> +               dev_err(plat->dev, "phy interface not supported\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       regmap_write(plat->peri_regmap, PERI_ETH_PHY_INTF_SEL, intf_val);
-> +
-> +       return 0;
-> +}
-> +
-> +static int mt2712_set_delay(struct mediatek_dwmac_plat_data *plat)
-> +{
-> +       struct mac_delay_struct *mac_delay = &plat->mac_delay;
-> +       u32 delay_val = 0;
-> +       u32 fine_val = 0;
-> +
-> +       switch (plat->phy_mode) {
-> +       case PHY_INTERFACE_MODE_MII:
-> +               delay_val |= mac_delay->tx_delay ? PHY_DLY_TXC_ENABLE : 0;
-> +               delay_val |= (mac_delay->tx_delay << PHY_DLY_TXC_SHIFT) &
-> +                            PHY_DLY_TXC_STAGES;
-> +               delay_val |= mac_delay->tx_inv ? PHY_DLY_TXC_INV : 0;
-> +               delay_val |= mac_delay->rx_delay ? PHY_DLY_RXC_ENABLE : 0;
-> +               delay_val |= (mac_delay->rx_delay << PHY_DLY_RXC_SHIFT) &
-> +                            PHY_DLY_RXC_STAGES;
-> +               delay_val |= mac_delay->rx_inv ? PHY_DLY_RXC_INV : 0;
-> +               break;
-> +       case PHY_INTERFACE_MODE_RMII:
-> +               if (plat->rmii_rxc) {
-> +                       delay_val |= mac_delay->rx_delay ?
-> +                                    PHY_DLY_RXC_ENABLE : 0;
-> +                       delay_val |= (mac_delay->rx_delay <<
-> +                                     PHY_DLY_RXC_SHIFT) & PHY_DLY_RXC_STAGES;
-> +                       delay_val |= mac_delay->rx_inv ? PHY_DLY_RXC_INV : 0;
-> +                       fine_val |= mac_delay->tx_inv ?
-> +                                    ETH_RMII_DLY_TX_INV : 0;
-> +               } else {
-> +                       delay_val |= mac_delay->rx_delay ?
-> +                                    PHY_DLY_TXC_ENABLE : 0;
-> +                       delay_val |= (mac_delay->rx_delay <<
-> +                                    PHY_DLY_TXC_SHIFT) & PHY_DLY_TXC_STAGES;
-> +                       delay_val |= mac_delay->rx_inv ? PHY_DLY_TXC_INV : 0;
-> +                       fine_val |= mac_delay->tx_inv ?
-> +                                    ETH_RMII_DLY_TX_INV : 0;
-> +               }
-> +               break;
-> +       case PHY_INTERFACE_MODE_RGMII:
-> +               fine_val = plat->fine_tune ?
-> +                           (ETH_FINE_DLY_GTXC | ETH_FINE_DLY_RXC) : 0;
-> +               delay_val |= mac_delay->tx_delay ? PHY_DLY_GTXC_ENABLE : 0;
-> +               delay_val |= mac_delay->tx_delay & PHY_DLY_GTXC_STAGES;
-> +               delay_val |= mac_delay->tx_inv ? PHY_DLY_GTXC_INV : 0;
-> +               delay_val |= mac_delay->rx_delay ? PHY_DLY_RXC_ENABLE : 0;
-> +               delay_val |= (mac_delay->rx_delay << PHY_DLY_RXC_SHIFT) &
-> +                            PHY_DLY_RXC_STAGES;
-> +               delay_val |= mac_delay->rx_inv ? PHY_DLY_RXC_INV : 0;
-> +               break;
-> +       case PHY_INTERFACE_MODE_RGMII_TXID:
-> +               fine_val = plat->fine_tune ? ETH_FINE_DLY_RXC : 0;
-> +               delay_val |= mac_delay->rx_delay ? PHY_DLY_RXC_ENABLE : 0;
-> +               delay_val |= (mac_delay->rx_delay << PHY_DLY_RXC_SHIFT) &
-> +                            PHY_DLY_RXC_STAGES;
-> +               delay_val |= mac_delay->rx_inv ? PHY_DLY_RXC_INV : 0;
-> +               break;
-> +       case PHY_INTERFACE_MODE_RGMII_RXID:
-> +               fine_val = plat->fine_tune ? ETH_FINE_DLY_GTXC : 0;
-> +               delay_val |= mac_delay->tx_delay ? PHY_DLY_GTXC_ENABLE : 0;
-> +               delay_val |= mac_delay->tx_delay & PHY_DLY_GTXC_STAGES;
-> +               delay_val |= mac_delay->tx_inv ? PHY_DLY_GTXC_INV : 0;
-> +               break;
-> +       case PHY_INTERFACE_MODE_RGMII_ID:
-> +               break;
-> +       default:
-> +               dev_err(plat->dev, "phy interface not supported\n");
-> +               return -EINVAL;
-> +       }
-> +       regmap_write(plat->peri_regmap, PERI_ETH_PHY_DLY, delay_val);
-> +       regmap_write(plat->peri_regmap, PERI_ETH_DLY_FINE, fine_val);
-> +
-> +       return 0;
-> +}
-> +
-> +static int mt2712_get_clks(struct mediatek_dwmac_plat_data *plat)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < ARRAY_SIZE(plat->clks); i++) {
-> +               plat->clks[i] = devm_clk_get(plat->dev,
-> +                                            mediatek_dwmac_clks_name[i]);
-> +               if (IS_ERR(plat->clks[i]))
-> +                       return PTR_ERR(plat->clks[i]);
-> +       }
-
-can we use devm_clk_bulk_get?
-
-> +
-> +       return 0;
-> +}
-> +
-> +static int mt2712_enable_clks(struct mediatek_dwmac_plat_data *plat)
-> +{
-> +       int clk, ret;
-> +
-> +       for (clk = 0; clk < DWMAC_CLK_MAX ; clk++) {
-> +               ret = clk_prepare_enable(plat->clks[clk]);
-> +               if (ret)
-> +                       goto err_disable_clks;
-> +       }
-
-can we use clk_bulk_enable?
-
-> +
-> +       ret = clk_set_parent(plat->clks[DWMAC_CLK_MAC_EXT], plat->clks[DWMAC_CLK_MAC_PARENT]);
-> +       if (ret)
-> +               goto err_disable_clks;
-> +
-> +       ret = clk_set_parent(plat->clks[DWMAC_CLK_PTP_REF], plat->clks[DWMAC_CLK_PTP_PARENT]);
-> +       if (ret)
-> +               goto err_disable_clks;
-> +
-
-I guess clk_set_parent can be trimmed if we involve assigned-clocks,
-assigned-clock-parents, assigned-clock-rates in the dts
-
-> +       return 0;
-> +
-> +err_disable_clks:
-> +       while (--clk >= 0)
-> +               clk_disable_unprepare(plat->clks[clk]);
-> +
-
-clk_bulk_enable would take care about the failed case
-
-> +       return ret;
-> +}
-> +
-> +static void mt2712_disable_clks(struct mediatek_dwmac_plat_data *plat)
-> +{
-> +       int clk;
-> +
-> +       for (clk = DWMAC_CLK_MAX - 1; clk >= 0; clk--)
-> +               clk_disable_unprepare(plat->clks[clk]);
-> +}
-
-can we use clk_bulk_disable ?
-
-> +
-> +static int mt2712_config_dt(struct mediatek_dwmac_plat_data *plat)
-> +{
-> +       u32 tx_delay, rx_delay;
-> +
-> +       plat->peri_regmap = syscon_regmap_lookup_by_compatible("mediatek,mt2712-pericfg");
-
-the driver would be not generic enough if we assigned a specific
-string into here.
-how about apply syscon_regmap_lookup_by_phandle in here?
-
-> +       if (IS_ERR(plat->peri_regmap)) {
-> +               dev_err(plat->dev, "Failed to get pericfg syscon\n");
-> +               return PTR_ERR(plat->peri_regmap);
-> +       }
-> +
-> +       if (!of_property_read_u32(plat->np, "tx-delay", &tx_delay)) {
-> +               if (tx_delay < plat->variant->tx_delay_max) {
-> +                       plat->mac_delay.tx_delay = tx_delay;
-> +               } else {
-> +                       dev_err(plat->dev, "Invalid TX clock delay: %d\n", tx_delay);
-> +                       return -EINVAL;
-> +               }
-> +       }
-> +
-> +       if (!of_property_read_u32(plat->np, "rx-delay", &rx_delay)) {
-> +               if (rx_delay < plat->variant->rx_delay_max) {
-> +                       plat->mac_delay.rx_delay = rx_delay;
-> +               } else {
-> +                       dev_err(plat->dev, "Invalid RX clock delay: %d\n", rx_delay);
-> +                       return -EINVAL;
-> +               }
-> +       }
-> +
-> +       plat->mac_delay.tx_inv = of_property_read_bool(plat->np, "txc-inverse");
-> +
-can we drop the empty line?
-
-> +       plat->mac_delay.rx_inv = of_property_read_bool(plat->np, "rxc-inverse");
-> +
-can we drop the empty line?
-
-> +       plat->fine_tune = of_property_read_bool(plat->np, "fine-tune");
-> +
-can we drop the empty line?
-
-> +       plat->rmii_rxc = of_property_read_bool(plat->np, "rmii-rxc");
-> +
-> +       mt2712_set_interface(plat);
-> +
-> +       mt2712_set_delay(plat);
-> +
-> +       return mt2712_get_clks(plat);
-> +}
-> +
-> +static const struct mediatek_dwmac_variant mt2712_gmac_variant = {
-> +               .dwmac_config_dt = mt2712_config_dt,
-> +               .dwmac_enable_clks = mt2712_enable_clks,
-> +               .dwmac_disable_clks = mt2712_disable_clks,
-> +               .rx_delay_max = 32,
-> +               .tx_delay_max = 32,
-> +};
-
-I thought we add the variant structure when the SoC variant is really in.
-
-> +
-> +static int mediatek_dwmac_config_dt(struct mediatek_dwmac_plat_data *plat)
-> +{
-> +       const struct mediatek_dwmac_variant *variant = plat->variant;
-> +
-> +       /* Set the DMA mask, 4GB mode enabled */
-> +       dma_set_mask_and_coherent(plat->dev, DMA_BIT_MASK(33));
-> +
-> +       return variant->dwmac_config_dt(plat);
-> +}
-> +
-> +static int mediatek_dwmac_init(struct platform_device *pdev, void *priv)
-> +{
-> +       struct mediatek_dwmac_plat_data *plat = priv;
-> +       const struct mediatek_dwmac_variant *variant = plat->variant;
-> +
-> +       return variant->dwmac_enable_clks(plat);
-> +}
-> +
-> +static void mediatek_dwmac_exit(struct platform_device *pdev, void *priv)
-> +{
-> +       struct mediatek_dwmac_plat_data *plat = priv;
-> +       const struct mediatek_dwmac_variant *variant = plat->variant;
-> +
-> +       variant->dwmac_disable_clks(plat);
-> +}
-> +
-> +static int mediatek_dwmac_probe(struct platform_device *pdev)
-> +{
-> +       int ret = 0;
-> +       struct plat_stmmacenet_data *plat_dat;
-> +       struct stmmac_resources stmmac_res;
-> +       struct mediatek_dwmac_plat_data *priv_plat;
-
-sorting these declarations into reverse Xmas tree seems to be good
-
-> +
-> +       priv_plat = devm_kzalloc(&pdev->dev, sizeof(*priv_plat), GFP_KERNEL);
-> +       if (!priv_plat)
-> +               return -ENOMEM;
-> +
-> +       priv_plat->variant = of_device_get_match_data(&pdev->dev);
-> +       if (!priv_plat->variant) {
-> +               dev_err(&pdev->dev, "Missing dwmac-mediatek variant\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       priv_plat->dev = &pdev->dev;
-> +       priv_plat->np = pdev->dev.of_node;
-> +       priv_plat->phy_mode = of_get_phy_mode(priv_plat->np);
-> +
-> +       ret = mediatek_dwmac_config_dt(priv_plat);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = stmmac_get_platform_resources(pdev, &stmmac_res);
-> +       if (ret)
-> +               return ret;
-> +
-> +       plat_dat = stmmac_probe_config_dt(pdev, &stmmac_res.mac);
-> +       if (IS_ERR(plat_dat))
-> +               return PTR_ERR(plat_dat);
-> +
-> +       plat_dat->interface = priv_plat->phy_mode;
-> +       /* clk_csr_i = 250-300MHz & MDC = clk_csr_i/124 */
-> +       plat_dat->clk_csr = 5;
-> +       plat_dat->has_gmac4 = 1;
-> +       plat_dat->has_gmac = 0;
-> +       plat_dat->pmt = 0;
-> +       plat_dat->maxmtu = ETH_DATA_LEN;
-> +       plat_dat->bsp_priv = priv_plat;
-> +       plat_dat->init = mediatek_dwmac_init;
-> +       plat_dat->exit = mediatek_dwmac_exit;
-> +       mediatek_dwmac_init(pdev, priv_plat);
-> +
-> +       ret = stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
-> +       if (ret) {
-> +               stmmac_remove_config_dt(pdev, plat_dat);
-> +               return ret;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id mediatek_dwmac_match[] = {
-> +       { .compatible = "mediatek,mt2712-gmac",
-> +         .data = &mt2712_gmac_variant },
-> +       { }
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, mediatek_dwmac_match);
-> +
-> +static struct platform_driver mediatek_dwmac_driver = {
-> +       .probe  = mediatek_dwmac_probe,
-> +       .remove = stmmac_pltfr_remove,
-> +       .driver = {
-> +               .name           = "dwmac-mediatek",
-> +               .pm             = &stmmac_pltfr_pm_ops,
-> +               .of_match_table = mediatek_dwmac_match,
-> +       },
-> +};
-> +module_platform_driver(mediatek_dwmac_driver);
-> --
-> 1.7.9.5
->
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+>> +
+>> +Example:
+>> +	usb3: hisi_dwc3 {
+>> +		compatible = "hisilicon,hi3660-dwc3";
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +
+>> +		clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
+>> +			 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+>> +		clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
+>> +		assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+>> +		assigned-clock-rates = <229000000>;
+>> +		resets = <&crg_rst 0x90 8>,
+>> +			 <&crg_rst 0x90 7>,
+>> +			 <&crg_rst 0x90 6>,
+>> +			 <&crg_rst 0x90 5>;
+>> +
+>> +		dwc3: dwc3@ff100000 {
+> 
+> usb@...
+> 
+>> +			compatible = "snps,dwc3";
+>> +			reg = <0x0 0xff100000 0x0 0x100000>;
+>> +			interrupts = <0 159 4>, <0 161 4>;
+>> +			phys = <&usb_phy>;
+>> +			phy-names = "usb3-phy";
+>> +			dr_mode = "otg";
+>> +			maximum-speed = "super-speed";
+>> +			phy_type = "utmi";
+>> +			snps,dis-del-phy-power-chg-quirk;
+>> +			snps,lfps_filter_quirk;
+>> +			snps,dis_u2_susphy_quirk;
+>> +			snps,dis_u3_susphy_quirk;
+>> +			snps,tx_de_emphasis_quirk;
+>> +			snps,tx_de_emphasis = <1>;
+>> +			snps,dis_enblslpm_quirk;
+>> +			snps,gctl-reset-quirk;
+>> +			extcon = <&hisi_hikey_usb>;
+>> +		};
+>> +	};
+>> -- 
+>> 2.15.0-rc2
+>>
+> 
+> 
+> .
+> 
