@@ -1,10 +1,10 @@
 Return-Path: <SRS0=0T4O=N4=gmail.com=chunkeey@kernel.org>
 From: Christian Lamparter <chunkeey@gmail.com>
-Subject: [PATCH v4 2/2] dmaengine: dw-dmac: implement dma protection control setting
-Date: Sat, 17 Nov 2018 17:17:21 +0100
-Message-Id: <1fbad77f755eb010bc780437c5f4a66bbe3df00a.1542471341.git.chunkeey@gmail.com>
-In-Reply-To: <9c621e11148a5971e34409d7024c48b783d75b1a.1542471341.git.chunkeey@gmail.com>
-References: <9c621e11148a5971e34409d7024c48b783d75b1a.1542471341.git.chunkeey@gmail.com>
+Subject: [PATCH v3 2/2] dmaengine: dw-dmac: implement dma protection control setting
+Date: Sat, 17 Nov 2018 15:10:40 +0100
+Message-Id: <1cd0acbc1cd70625060e4c0a406b4e84d16e68f7.1542463411.git.chunkeey@gmail.com>
+In-Reply-To: <3472502295a0b638de7167e48f4b826050196e55.1542463411.git.chunkeey@gmail.com>
+References: <3472502295a0b638de7167e48f4b826050196e55.1542463411.git.chunkeey@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To: dmaengine@vger.kernel.org, devicetree@vger.kernel.org
