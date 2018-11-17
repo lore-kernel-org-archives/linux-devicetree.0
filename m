@@ -1,61 +1,70 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: hwmon: add binding documentation for
- adt7475
-Date: Sat, 17 Nov 2018 09:29:49 -0600
-Message-ID: <20181117152949.GA31247@bogus>
-References: <20181108225607.7521-1-chris.packham@alliedtelesis.co.nz>
- <20181108225607.7521-2-chris.packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH v2 03/11] media: dt-bindings: marvell,mmp2-ccic: Add
+ Marvell MMP2 camera
+Date: Sat, 17 Nov 2018 09:39:54 -0600
+Message-ID: <20181117153954.GA28966@bogus>
+References: <20181112003520.577592-1-lkundrak@v3.sk>
+ <20181112003520.577592-4-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181108225607.7521-2-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20181112003520.577592-4-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: linux@roeck-us.net, jdelvare@suse.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 09, 2018 at 11:56:06AM +1300, Chris Packham wrote:
-> With the addition of the invert-pwm property the adt7475 needs its own
-> binding documentation rather being captured under trivial-devices.txt.
+On Mon, Nov 12, 2018 at 01:35:12AM +0100, Lubomir Rintel wrote:
+> Add Marvell MMP2 camera host interface.
 > 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 > ---
-> Changes in v2:
-> - use pwm-polarity attiribute to indicate normal or inverted polarity.
+>  .../bindings/media/marvell,mmp2-ccic.txt      | 30 +++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
 > 
->  .../devicetree/bindings/hwmon/adt7475.txt     | 24 +++++++++++++++++++
->  .../devicetree/bindings/trivial-devices.txt   |  4 ----
->  2 files changed, 24 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.txt b/Documentation/devicetree/bindings/hwmon/adt7475.txt
+> diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
 > new file mode 100644
-> index 000000000000..d9212b5e9036
+> index 000000000000..a9c536e58dda
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.txt
-> @@ -0,0 +1,24 @@
-> +*ADT7475 hwmon sensor.
+> +++ b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
+> @@ -0,0 +1,30 @@
+> +Marvell MMP2 camera host interface
 > +
 > +Required properties:
-> +- compatible: One of
-> +	"adi,adt7473"
-> +	"adi,adt7475"
-> +	"adi,adt7476"
-> +	"adi,adt7490"
+> + - compatible: Should be "marvell,mmp2-ccic"
+> + - reg: register base and size
+> + - interrupts: the interrupt number
+> + - any required generic properties defined in video-interfaces.txt
 > +
-> +- reg: I2C address
+> +Optional properties:
+> + - clocks: input clock (see clock-bindings.txt)
+> + - clock-output-names: should contain the name of the clock driving the
+> +                       sensor master clock MCLK
+
+Missing #clock-cells and clock-names.
+
+How many ports and endpoints also needs to be documented.
+
 > +
-> +optional properties:
+> +Example:
 > +
-> +- pwm-polarity: This configures the polarity of the PWM. 0
-> +		(PWM_POLARITY_NORMAL) uses logic high for 100% duty cycle. 1
-> +                (PWM_POLARITY_INVERSED) uses logic low for 100% duty cycle.
-
-So we're using part of the PWM binding, but none of the rest of it? What 
-is the PWM connection here?
-
-It sounds like this is common for sensors, so this should be documented 
-somewhere common.
-
-Rob
+> +	camera0: camera@d420a000 {
+> +		compatible = "marvell,mmp2-ccic";
+> +		reg = <0xd420a000 0x800>;
+> +		interrupts = <42>;
+> +		clocks = <&soc_clocks MMP2_CLK_CCIC0>;
+> +		clock-names = "CCICAXICLK";
+> +		#clock-cells = <0>;
+> +		clock-output-names = "mclk";
+> +
+> +		port {
+> +			camera0_0: endpoint {
+> +				remote-endpoint = <&ov7670_0>;
+> +			};
+> +		};
+> +	};
+> -- 
+> 2.19.1
+> 
