@@ -1,54 +1,33 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: amlogic: Add Internal Clock Measurer bindings
-Date: Sat, 17 Nov 2018 21:32:20 +0100
-Message-ID: <CAFBinCAD=muhsHgqGu2pV8T=EyfnEKrocyVWf536nbL0pa5y7A@mail.gmail.com>
-References: <20181114131627.17766-1-narmstrong@baylibre.com> <20181114131627.17766-2-narmstrong@baylibre.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH] dt-bindings: rng: update bindings for MT7629 SoC
+Date: Sun, 18 Nov 2018 07:07:46 +0800
+Message-ID: <20181117230746.r6xsnqqo5nd6fxts@gondor.apana.org.au>
+References: <0f5fe0d5b6a9c81b3f4395a1007ed0ba2239ae45.1541574485.git.ryder.lee@mediatek.com>
+ <20181116061854.ahs6jz7bmztoi3w7@gondor.apana.org.au>
+ <20181116223110.GA19271@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181114131627.17766-2-narmstrong@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <20181116223110.GA19271@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: khilman@baylibre.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Ryder Lee <ryder.lee@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-crypto@vger.kernel.org, Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
+On Fri, Nov 16, 2018 at 04:31:10PM -0600, Rob Herring wrote:
+> On Fri, Nov 16, 2018 at 02:18:54PM +0800, Herbert Xu wrote:
+> > On Wed, Nov 07, 2018 at 03:10:16PM +0800, Ryder Lee wrote:
+> > > This updates bindings for MT7629 RNG driver.
+> > > 
+> > > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > 
+> > Who is meant to take this patch?
+> 
+> I've applied it.
 
-On Wed, Nov 14, 2018 at 2:16 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> The Amlogic Meson GX SoCs embeds a clock measurer IP to measure the internal
-> clock paths frequencies.
-I would skip the "GX" in that sentence: there's a similar (identical?)
-clock measurer in Meson6, Meson8, Meson8b and Meson8m2 as well
-
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-with the comment above and below:
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-
-> ---
->  .../bindings/soc/amlogic/clk-measure.txt          | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
->
-> diff --git a/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt b/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
-> new file mode 100644
-> index 000000000000..ba9183a42032
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
-> @@ -0,0 +1,15 @@
-> +Amlogic Internal Clock Measurer
-> +===============================
-> +
-> +The Amlogic SoCs contains an IP to measure the internal clocks.
-> +The precision is multiple of MHz, useful to debug the clock states.
-> +
-> +Required properties:
-> +- compatible: Shall contain "amlogic,meson-gx-clk-measure"
-can you please add "amlogic,meson8-clk-measure" and
-"amlogic,meson8b-clk-measure" as well?
-(I will provide a patch on top of yours to add Meson8 and Meson8b support)
-
-
-Regards
-Martin
+Thanks Rob!
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
