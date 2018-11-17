@@ -1,80 +1,135 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 1/4] dt-bindings: pps: descriptor-based gpio,
- capture-clear addition
-Date: Sat, 17 Nov 2018 08:22:30 -0600
-Message-ID: <CAL_JsqKZHg5_8ghMmU4qO4CVZibcHOvtVJH669zod_6GLGakRg@mail.gmail.com>
-References: <20181114125432.16044-1-tom@aussec.com> <20181114125432.16044-2-tom@aussec.com>
- <20181116224919.GA18008@bogus> <20181117213522.12672utznrvpbn56@www.aussec.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings/interrupt-controller: rzn1: Add RZ/N1
+ gpio irq mux binding
+Date: Sat, 17 Nov 2018 08:32:53 -0600
+Message-ID: <20181117143253.GA27381@bogus>
+References: <20181113130910.22130-1-phil.edworthy@renesas.com>
+ <20181113130910.22130-2-phil.edworthy@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181117213522.12672utznrvpbn56@www.aussec.com>
+Content-Disposition: inline
+In-Reply-To: <20181113130910.22130-2-phil.edworthy@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tom Burkart <tom@aussec.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 17, 2018 at 4:35 AM tom burkart <tom@aussec.com> wrote:
->
-> Quoting Rob Herring <robh@kernel.org>:
->
-> > On Wed, Nov 14, 2018 at 11:54:29PM +1100, Tom Burkart wrote:
-> >> This patch changes the devicetree bindings for the pps-gpio driver
-> >> from the integer based ABI to the descriptor based ABI.
-> > ? That has nothing to do with DT.
->
-> I believe it does, as the change in ABI forces a rename in the DT
-> naming convention.
-> This is due to the descriptor based ABI appending "-gpio" or "-gpios" (see
-> Documentation/gpio/base.txt.)
-> Admittedly, I may have called it by the wrong name due to ignorance,
-> my apologies.
+On Tue, Nov 13, 2018 at 01:09:09PM +0000, Phil Edworthy wrote:
+> Add device binding documentation for the Renesas RZ/N1 GPIO interrupt
+> multiplexer.
+> 
+> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+> ---
+> v3:
+>  - Use 'interrupt-map' DT property correctly.
+> v2:
+>  - Use interrupt-map to allow the GPIO controller info to be specified
+>    as part of the irq.
+>  - Don't show status in binding examples.
+>  - Don't show the soc/board split in binding doc.
+> ---
+>  .../interrupt-controller/renesas,rzn1-mux.txt | 73 +++++++++++++++++++
+>  1 file changed, 73 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt
 
-If what you say is correct, then you can't change this driver. You'll
-break compatibility with any existing DT.
+A few nits, otherwise:
 
-Changing the binding reasoning should purely be that this is the
-preferred form. Bindings must be independent from changing kernel
-APIs.
+Reviewed-by: Rob Herring <robh@kernel.org>
 
->
-> >>  It also adds
-> >> documentation for the device tree capture-clear option.  The legacy
-> >> device tree entry for the GPIO pin is supported.
-> >>
-> >> Signed-off-by: Tom Burkart <tom@aussec.com>
-> >> ---
-> >>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 8 ++++++--
-> >>  1 file changed, 6 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt
-> >> b/Documentation/devicetree/bindings/pps/pps-gpio.txt
-> >> index 3683874832ae..6c9fc0998d94 100644
-> >> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
-> >> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
-> >> @@ -5,19 +5,23 @@ a GPIO pin.
-> >>
-> >>  Required properties:
-> >>  - compatible: should be "pps-gpio"
-> >> -- gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
-> >> +- pps-gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
-> >> +Alternatively (DEPRECATED), instead of pps-gpios above, it may have:
-> >> +- gpios: one PPS GPIO as above
-> >>
-> >>  Optional properties:
-> >>  - assert-falling-edge: when present, assert is indicated by a falling edge
-> >>                         (instead of by a rising edge)
-> >> +- capture-clear: when present, also capture the PPS clear event
-> >
-> > Is this a h/w thing? or driver configuration?
->
-> Driver configuration.  Most of the code was present in the driver, yet
-> it was not documented, or usable due to a two line (code) omission
-> (the value was not being fetched from DT).
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt
+> new file mode 100644
+> index 000000000000..6515880e25cc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mux.txt
+> @@ -0,0 +1,73 @@
+> +* Renesas RZ/N1 GPIO Interrupt Multiplexer
+> +
+> +On Renesas RZ/N1 devices, there are several GPIO Controllers each with a number
+> +of interrupt outputs. All of the interrupts from the GPIO Controllers are passed
+> +to the GPIO Interrupt Multiplexer, which selects a sub-set of the interrupts to
+> +pass onto the system interrupt controller.
+> +
+> +A single node in the device tree is used to describe the GPIO IRQ Muxer.
+> +
+> +Required properties:
+> +- compatible: SoC-specific compatible string "renesas,<soc-specific>-gpioirqmux"
+> +  followed by "renesas,rzn1-gpioirqmux" as fallback. The SoC-specific compatible
+> +  strings must be one of:
+> +	"renesas,r9a06g032-gpioirqmux" for RZ/N1D
+> +	"renesas,r9a06g033-gpioirqmux" for RZ/N1S
+> +- reg: Base address and size of GPIO IRQ Muxer registers.
+> +- interrupts: List of output interrupts.
+> +- #interrupt-cells: Numder of cells in the input interrupt specifier, must be 1.
+> +- #address-cells: Must be 0.
+> +- interrupt-map-mask: must be 127.
+> +- interrupt-map: Standard property detailing the maps between input irqs and the
+> +  corresponding output irq. This consist of a list of:
+> +	<input-irq-spec phandle-to-interrupt-controller output-irq-spec>
+> +  The input-irq-spec is from 0 to 95, corresponding to the outputs of the GPIO
+> +  Controllers.
+> +
+> +Example:
+> +
+> +	The following is an example for the RZ/N1D SoC.
+> +
+> +	gpioirqmux: gpioirqmux@51000480 {
 
-So what determines how you want to configure this? If the user will
-want to change it, then it should be a sysfs attr and exposed to
-userspace. If it depends on h/w config for a board then it can be in
-DT.
+interrupt-controller@...
 
-Rob
+> +		compatible = "renesas,r9a06g032-gpioirqmux",
+> +				"renesas,rzn1-gpioirqmux";
+> +		reg = <0x51000480 0x20>;
+> +		interrupts =
+> +			<GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
+> +			<GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
+
+This is a bit redundant as the same information is in interrupt-map, but 
+I guess you need it to get the irq resources.
+
+> +
+> +		#interrupt-cells = <1>;
+> +		#address-cells = <0>;
+> +		interrupt-map-mask = <127>;
+
+Use hex for masks.
+
+> +		interrupt-map =
+> +			/* gpio2a 24, pin 146: ETH Port 1 IRQ */
+> +			<88 &gic GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
+> +			/* gpio2a 26, pin 148: TouchSCRN_IRQ */
+> +			<90 &gic GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> +
+> +	gpio2: gpio@5000d000 {
+> +		compatible = "snps,dw-apb-gpio";
+> +		reg = <0x5000d000 0x80>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		clock-names = "bus";
+> +		clocks = <&sysctrl R9A06G032_HCLK_GPIO2>;
+> +
+> +		gpio2a: gpio-controller@0 {
+
+gpio@0
+
+> +			compatible = "snps,dw-apb-gpio-port";
+> +			bank-name = "gpio2a";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			snps,nr-gpios = <32>;
+> +			reg = <0>;
+> +
+> +			interrupt-controller;
+> +			interrupt-parent = <&gpioirqmux>;
+> +			interrupts =  < 64 65 66 67 68 69 70 71
+> +					72 73 74 75 76 77 78 79
+> +					80 81 82 83 84 85 86 87
+> +					88 89 90 91 92 93 94 95 >;
+> +			#interrupt-cells = <2>;
+> +		};
+> +	};
+> -- 
+> 2.17.1
+> 
