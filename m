@@ -1,64 +1,80 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4 0/3] Enable ath10k wcn3990 wifi driver support on sdm845
-Date: Sat, 17 Nov 2018 13:09:30 +0200
-Message-ID: <874lcg55at.fsf@codeaurora.org>
-References: <1541423318-19312-1-git-send-email-govinds@codeaurora.org>
-        <87d0r55ews.fsf@codeaurora.org>
-        <6e831363962be4e28d7551e360ed4d46@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6e831363962be4e28d7551e360ed4d46-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> (Govind Singh's
-        message of "Fri, 16 Nov 2018 21:36:57 +0530")
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: abailon@baylibre.com
+Subject: [RFC PATCH 0/2] iMX7ULP interconnect framework
+Date: Sat, 17 Nov 2018 12:19:03 +0100
+Message-ID: <20181117111905.29091-1-abailon@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: georgi.djakov@linaro.org
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alexandre Bailon <abailon@abailon.com>
 List-Id: devicetree@vger.kernel.org
 
-Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+From: Alexandre Bailon <abailon@abailon.com>
 
-> On 2018-11-16 18:59, Kalle Valo wrote:
->> Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
->>
->>> This series enables ath10k wifi driver support for WCN3990 target
->>> on sdm845 SOC. This series also updates the missing dt binding
->>> documentation
->>> and adds optional iommu property.
->>>
->>> Changes since v3:
->>>     Moved interrupt/reg/reg-name to required property.
->>>     Removed unused clocks.
->>>     Corrected interrupt no's.
->>>
->>> Changes since v2:
->>>     dropped [v2,4/4] dts: arm64/sdm845: Enable iommu for WCN3990
->>> wifi module
->>>     device node patch from the series as dependent patch is not yet
->>> merged.
->>>     Enabled status flag from sdm845-mtp.dts.
->>>
->>> Changes since v1:
->>>     Listed no of interrupts/clocks for each set of compatible.
->>>     Added missing 'wifi' label to sdm845.dtsi.
->>>
->>> Govind Singh (3):
->>>   dt: bindings: add missing dt properties for WCN3990 wifi node
->>>   dts: arm64/sdm845: Add WCN3990 WLAN module device node
->>>   dt: bindings: add bindings for wifi iommu node
->>>
->>>  .../bindings/net/wireless/qcom,ath10k.txt          | 62
->>> ++++++++++++++--------
->>>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts            |  8 +++
->>>  arch/arm64/boot/dts/qcom/sdm845.dtsi               | 26 +++++++++
->>>  3 files changed, 74 insertions(+), 22 deletions(-)
->>
->> Via which tree are these patches going? That's not clear for me.
->
-> I guess sdm845 dtsi change should be going to
-> git://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git.
-> I need to send v5 to address one comment from Brian.
+The goal of this patchset is to use the interconnect framework
+for iMX7ULP SoC.
+This is sent as a RFC because I think the driver could be more generic,
+and, I had some issues with the clocks and I know the way I dealt with
+it is probably not the best one.
+In addition, this patchset has been written and tested on older kernel
+(4.9), and I don't expect it to applies / works on upstream kernel
+(the support of SoC itself is still not there).
 
-Ok, I'll then drop these from my queue.
+There are two interconnects, NIC0 and NIC1:
+
+     //==============================\\
+     || --------------------          ||
+     \\=|m0              s0|=         ||
+       =|m1              s1|===\\     ||
+       =|m2     NIC0     s2|=   ||    ||
+       =|m3                |    ||    ||
+       =|m4                |    ||    ||
+        --------------------    ||    ||
+            //=================//     ||      
+            ||  --------------------  ||
+            \\==|m0              s0|=//
+               =|m1              s1|=
+               =|m2    NIC1      s2|=
+               =|m3              s4|=
+               =|m4              s5|=
+               =|m5                |
+                --------------------
+
+     -------          -------          
+NIC0 | DIV | NIC0 DIV | DIV | NIC1 DIV 
+-----|     |----------|     |---------
+     -------          -------
+
+Although NIC0 and NIC1 are interconnected, some requests could apply to
+only one of them. This could cause some issues with clock.
+Basically, scaling the frequency of NIC0 will also scale the frequency of
+NIC1, so we have to update both of them.
+Simillarly, updating the frequency of NIC1 may also require to change NIC0
+frequency.
+In order to easily deal with it, the driver create only one device for the
+two interconnects, and update clock frequency of both interconnects at same
+time, when the last node is reached.
+
+Ideally, we would have two device, which would make the driver more
+generic, but currently, I'm not sure how to make sure that the clocks are
+always at the expected frequency. Doing that would give us the possiblity to
+use the driver for other iMX SoC (would just require to add the bus topology 
+for that SoC).
+
+Alexandre Bailon (2):
+  Add support of imx7ulp to interconnect framework
+  dt-bindings: interconnect: Document imx7ulp interconnect bindings
+
+ .../bindings/interconnect/imx7ulp.txt         |  17 +
+ drivers/interconnect/Kconfig                  |   1 +
+ drivers/interconnect/Makefile                 |   1 +
+ drivers/interconnect/imx/Kconfig              |   9 +
+ drivers/interconnect/imx/Makefile             |   1 +
+ drivers/interconnect/imx/imx7ulp.c            | 369 ++++++++++++++++++
+ 6 files changed, 398 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/imx7ulp.txt
+ create mode 100644 drivers/interconnect/imx/Kconfig
+ create mode 100644 drivers/interconnect/imx/Makefile
+ create mode 100644 drivers/interconnect/imx/imx7ulp.c
 
 -- 
-Kalle Valo
+2.18.1
