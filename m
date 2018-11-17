@@ -1,57 +1,49 @@
-Return-Path: <SRS0=SU2m=NZ=babblebit.net=cmc@kernel.org>
-From: Chris Coffey <cmc@babblebit.net>
-Subject: [PATCH v2 1/2] dt-bindings: iio: potentiometer: Add Microchip MCP41xxx/42xxx
-Date: Wed, 14 Nov 2018 09:52:40 +0000
-Message-Id: <20181114095241.27037-2-cmc@babblebit.net>
-In-Reply-To: <20181114095241.27037-1-cmc@babblebit.net>
-References: <20181114095241.27037-1-cmc@babblebit.net>
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc: Peter Rosin <peda@axentia.se>, Slawomir Stepien <sst@poczta.fm>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Chris Coffey <cmc@babblebit.net>
+Return-Path: <SRS0=S/n/=N4=linaro.org=loic.poulain@kernel.org>
+From: Loic Poulain <loic.poulain@linaro.org>
+Subject: [PATCH 2/3] dt-bindings: watchdog: Add Qualcomm PM8916 watchdog
+Date: Sat, 17 Nov 2018 09:28:38 +0100
+Message-Id: <1542443319-23369-2-git-send-email-loic.poulain@linaro.org>
+In-Reply-To: <1542443319-23369-1-git-send-email-loic.poulain@linaro.org>
+References: <1542443319-23369-1-git-send-email-loic.poulain@linaro.org>
+To: wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, andy.gross@linaro.org, Loic Poulain <loic.poulain@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds device tree documentation for the Microchip
-MCP41xxx/42xxx family of digital potentiometers.
+Document support for the Watchdog Timer (WDT) Controller in the
+Qualcomm PM8916 PMIC module.
 
-Signed-off-by: Chris Coffey <cmc@babblebit.net>
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
 ---
- .../bindings/iio/potentiometer/mcp41010.txt        | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt
+ .../bindings/watchdog/qcom,pm8916-wdt.txt           | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/qcom,pm8916-wdt.txt
 
-diff --git a/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt b/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt
+diff --git a/Documentation/devicetree/bindings/watchdog/qcom,pm8916-wdt.txt b/Documentation/devicetree/bindings/watchdog/qcom,pm8916-wdt.txt
 new file mode 100644
-index 0000000000..17565acace
+index 0000000..08f4003
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt
-@@ -0,0 +1,29 @@
-+* Microchip MCP41010/41050/41100/42010/42050/42100 Digital Potentiometer
-+  driver
++++ b/Documentation/devicetree/bindings/watchdog/qcom,pm8916-wdt.txt
+@@ -0,0 +1,21 @@
++QCOM PM8916 watchdog timer controller
 +
-+Datasheet publicly available at:
-+http://ww1.microchip.com/downloads/en/devicedoc/11195c.pdf
-+
-+The node for this driver must be a child node of a SPI controller, hence
-+all mandatory properties described in
-+
-+        Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+must be specified.
++This pm8916 watchdog timer controller must be under pm8916-pon node.
 +
 +Required properties:
-+	- compatible:  	Must be one of the following, depending on the
-+			model:
-+			"microchip,mcp41010"
-+			"microchip,mcp41050"
-+			"microchip,mcp41100"
-+			"microchip,mcp42010"
-+			"microchip,mcp42050"
-+			"microchip,mcp42100"
++- compatible: should be "qcom,pm8916-wdt"
 +
-+Example:
-+mcp41010: potentiometer@0 {
-+	compatible = "mcp41010";
-+	reg = <0>;
-+	spi-max-frequency = <500000>;
-+};
++Example
++	pm8916_0: pm8916@0 {
++		compatible = "qcom,pm8916", "qcom,spmi-pmic";
++		reg = <0x0 SPMI_USID>;
++
++		pon@800 {
++			compatible = "qcom,pm8916-pon";
++			reg = <0x800>;
++
++			watchdog {
++				compatible = "qcom,pm8916-wdt";
++			};
++		};
++	};
 -- 
-2.11.0
+2.7.4
