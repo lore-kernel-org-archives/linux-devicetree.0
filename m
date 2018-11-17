@@ -1,47 +1,27 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v5 2/4] dt-bindings: iio: adc: Add common ADCs
- properties to a separate file
-Date: Sat, 17 Nov 2018 16:39:57 +0000
-Message-ID: <20181117163957.475ca71b@archlinux>
-References: <1542108061-3471-1-git-send-email-stefan.popa@analog.com>
-        <20181116225319.GA26554@bogus>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: media: i2c: Fix i2c address for OV5645
+ camera sensor
+Date: Sat, 17 Nov 2018 10:41:05 -0600
+Message-ID: <20181117164105.GA19803@bogus>
+References: <20181109075643.17575-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181116225319.GA26554@bogus>
+Content-Disposition: inline
+In-Reply-To: <20181109075643.17575-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Stefan Popa <stefan.popa@analog.com>, robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mchehab@kernel.org, robh+dt@kernel.org, todor.tomov@linaro.org, hansverk@cisco.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 16 Nov 2018 16:53:19 -0600
-Rob Herring <robh@kernel.org> wrote:
-
-> On Tue, 13 Nov 2018 13:21:01 +0200, Stefan Popa wrote:
-> > There are several ADC drivers that depend on the same device tree
-> > bindings. Rather than continue to duplicate the properties, this patch
-> > adds a common adc binding document that can be referenced. For beginning,
-> > only two properties are documented.
-> > 
-> > Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-> > ---
-> > Changes in v2, v3:
-> > 	- N/A.
-> > Changes in v4:
-> > 	- Added this commit.
-> > Changes in v5:
-> > 	- Nothing changed.
-> > 
-> >  Documentation/devicetree/bindings/iio/adc/adc.txt | 23 +++++++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adc.txt
-> >   
+On Fri,  9 Nov 2018 13:26:43 +0530, Manivannan Sadhasivam wrote:
+> The i2c address for the Omnivision OV5645 camera sensor is 0x3c. It is
+> incorrectly mentioned as 0x78 in binding. Hence fix that.
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+> Fixes: 09c716af36e6 [media] media: i2c/ov5645: add the device tree binding document
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
 
-Thanks,
-
-Jonathan
+Reviewed-by: Rob Herring <robh@kernel.org>
