@@ -1,123 +1,138 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH 01/10] dt-bindings: usb: add support for dwc3 controller
- on HiSilicon SoCs
-Date: Sat, 17 Nov 2018 10:29:32 +0800
-Message-ID: <9fce6a58-d986-25e4-1791-ba375e4f075e@huawei.com>
-References: <20181027095820.40056-1-chenyu56@huawei.com>
- <20181027095820.40056-2-chenyu56@huawei.com> <20181112160241.GA14074@bogus>
+From: Yong Wu <yong.wu@mediatek.com>
+Subject: [PATCH v3 00/15] MT8183 IOMMU SUPPORT
+Date: Sat, 17 Nov 2018 10:35:27 +0800
+Message-ID: <1542422142-30688-1-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181112160241.GA14074@bogus>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: wangbinghui@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>
+To: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, arnd@arndb.de, yingjoe.chen@mediatek.com, yong.wu@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, Arvind Yadav <arvind.yadav.cs@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patchset mainly adds support for mt8183 IOMMU and SMI.
 
-On 2018/11/13 0:02, Rob Herring wrote:
-> On Sat, Oct 27, 2018 at 05:58:11PM +0800, Yu Chen wrote:
->> This patch adds binding descriptions to support the dwc3 controller
->> on HiSilicon SoCs and boards like the HiKey960.
->>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: John Stultz <john.stultz@linaro.org>
->> Signed-off-by: Yu Chen <chenyu56@huawei.com>
->> ---
->>  .../devicetree/bindings/usb/dwc3-hisi.txt          | 53 ++++++++++++++++++++++
->>  1 file changed, 53 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/usb/dwc3-hisi.txt
->>
->> diff --git a/Documentation/devicetree/bindings/usb/dwc3-hisi.txt b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
->> new file mode 100644
->> index 000000000000..e715e7b1c324
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
->> @@ -0,0 +1,53 @@
->> +HiSilicon DWC3 USB SoC controller
->> +
->> +This file documents the parameters for the dwc3-hisi driver.
->> +
->> +Required properties:
->> +- compatible:	should be "hisilicon,hi3660-dwc3"
->> +- clocks:	A list of phandle + clock-specifier pairs for the
->> +		clocks listed in clock-names
->> +- clock-names:	Specify clock names
->> +- resets:	list of phandle and reset specifier pairs.
->> +
->> +Sub-nodes:
->> +The dwc3 core should be added as subnode to HiSilicon DWC3 as shown in the
->> +example below. The DT binding details of dwc3 can be found in:
->> +Documentation/devicetree/bindings/usb/dwc3.txt
-> 
-> If you only have clocks and resets and no glue registers, then you 
-> don't need a sub-node. Just make the controller one node.
-> 
+mt8183 has only one M4U like mt8173 and is also MTK IOMMU gen2 which
+uses ARM Short-Descriptor translation table format.
 
-In dwc3 glue driver，the controller driver usually probed by call of_platform_populate
-which will search the child node of glue driver.
-The code of function of_platform_populate is as below:
+The mt8183 M4U-SMI HW diagram is as below:
 
-	for_each_child_of_node(root, child) {
-                 rc = of_platform_bus_create(child, matches, lookup, parent, true);
-                 if (rc) {
-                         of_node_put(child);
-                         break;
-                 }
-         }
+                          EMI
+                           |
+                          M4U
+                           |
+                       ----------
+                       |        |
+                   gals0-rx   gals1-rx
+                       |        |
+                       |        |
+                   gals0-tx   gals1-tx
+                       |        |
+                      ------------
+                       SMI Common
+                      ------------
+                           |
+  +-----+-----+--------+-----+-----+-------+-------+
+  |     |     |        |     |     |       |       |
+  |     |  gals-rx  gals-rx  |   gals-rx gals-rx gals-rx
+  |     |     |        |     |     |       |       |
+  |     |     |        |     |     |       |       |
+  |     |  gals-tx  gals-tx  |   gals-tx gals-tx gals-tx
+  |     |     |        |     |     |       |       |
+larb0 larb1  IPU0    IPU1  larb4  larb5  larb6    CCU
+disp  vdec   img     cam    venc   img    cam
 
-So I think the controller node should be a sub-node.
+All the connections are HW fixed, SW can NOT adjust it.
 
->> +
->> +Example:
->> +	usb3: hisi_dwc3 {
->> +		compatible = "hisilicon,hi3660-dwc3";
->> +		#address-cells = <2>;
->> +		#size-cells = <2>;
->> +		ranges;
->> +
->> +		clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
->> +			 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
->> +		clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
->> +		assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
->> +		assigned-clock-rates = <229000000>;
->> +		resets = <&crg_rst 0x90 8>,
->> +			 <&crg_rst 0x90 7>,
->> +			 <&crg_rst 0x90 6>,
->> +			 <&crg_rst 0x90 5>;
->> +
->> +		dwc3: dwc3@ff100000 {
-> 
-> usb@...
-> 
->> +			compatible = "snps,dwc3";
->> +			reg = <0x0 0xff100000 0x0 0x100000>;
->> +			interrupts = <0 159 4>, <0 161 4>;
->> +			phys = <&usb_phy>;
->> +			phy-names = "usb3-phy";
->> +			dr_mode = "otg";
->> +			maximum-speed = "super-speed";
->> +			phy_type = "utmi";
->> +			snps,dis-del-phy-power-chg-quirk;
->> +			snps,lfps_filter_quirk;
->> +			snps,dis_u2_susphy_quirk;
->> +			snps,dis_u3_susphy_quirk;
->> +			snps,tx_de_emphasis_quirk;
->> +			snps,tx_de_emphasis = <1>;
->> +			snps,dis_enblslpm_quirk;
->> +			snps,gctl-reset-quirk;
->> +			extcon = <&hisi_hikey_usb>;
->> +		};
->> +	};
->> -- 
->> 2.15.0-rc2
->>
-> 
-> 
-> .
-> 
+Compared with mt8173, we add a GALS(Global Async Local Sync) module
+between SMI-common and M4U, and additional GALS between larb2/3/5/6
+and SMI-common. GALS can help synchronize for the modules in different
+clock frequency, it can be seen as a "asynchronous fifo".
+
+GALS can only help transfer the command/data while it doesn't have
+the configuring register, thus it has the special "smi" clock and it
+doesn't have the "apb" clock. From the diagram above, we add "gals0"
+and "gals1" clocks for smi-common and add a "gals" clock for smi-larb.
+
+>From the diagram above, IPU0/IPU1(Image Processor Unit) and CCU(Camera
+Control Unit) is connected with smi-common directly, we can take them
+as "larb2", "larb3" and "larb7", and their register spaces are
+different with the normal larb.
+
+This is the general purpose of each patch in this patchset:
+the patch 1/2/3/4/5/6 add the iommu/smi support for mt8183;
+the patch 7/8/9/10 add mmu1 support;
+the last patches contain some minor changes:
+   -patch 11 fix a issue.
+   -patch 12 improve the code flow(add shutdown).
+   -patch 13 cleanup some smi codes(delete need_larbid).
+   -patch 14 switch to SPDX license.
+   -patch 15 Constify iommu_ops.
+this patchset don't contain the dtsi part since it need depend on the
+ccf and power-domain nodes which has not been accepted.
+
+Change notes:
+
+v3: 1) rebase on v4.20-rc1.
+    2) In the dt-binding, add a minor string "mt7623" which also use gen1
+       since Matthias added it in v4.20.
+    3) About v7s:
+       a) for paddr_to_pte, change the param from "arm_v7s_io_pgtable" to
+          "arm_pgtable_cfg", according to Robin suggestion.
+       b) Don't use CONFIG_PHYS_ADDR_T_64BIT.
+       c) add a little comment(pgtable address still don't over 4GB) in the
+          commit message of the patch "Extend MediaTek 4GB Mode".
+    4) add "iommu/mediatek: Constify iommu_ops" into this patchset. this may
+       be helpful for review and merge.
+       https://lists.linuxfoundation.org/pipermail/iommu/2018-October/030637.html
+
+v2: https://lists.linuxfoundation.org/pipermail/iommu/2018-September/030164.html
+    1) Fix typo in the commit message of dt-binding.
+    2) Change larb2/larb3 to the special larbs.
+    3) Refactor the larb-id remapped array(larbid_remapped), then we
+    don't need add the new function(mtk_iommu_get_larbid).
+    4) Add a new patch for v7s two helpers(paddr_to_iopte and
+    iopte_to_paddr).
+    5) Change some comment for MTK 4GB mode.
+
+v1: base on v4.19-rc1.
+http://lists.infradead.org/pipermail/linux-mediatek/2018-September/014881.html
+
+Arvind Yadav (1):
+  iommu/mediatek: Constify iommu_ops
+
+Yong Wu (14):
+  dt-bindings: mediatek: Add binding for mt8183 IOMMU and SMI
+  iommu/mediatek: Use a struct as the platform data
+  memory: mtk-smi: Use a general config_port interface
+  iommu/io-pgtable-arm-v7s: Add paddr_to_iopte and iopte_to_paddr
+    helpers
+  iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB Mode
+  iommu/mediatek: Add mt8183 IOMMU support
+  iommu/mediatek: Add mmu1 support
+  memory: mtk-smi: Invoke pm runtime_callback to enable clocks
+  memory: mtk-smi: Use a struct for the platform data for smi-common
+  memory: mtk-smi: Add bus_sel for mt8183
+  iommu/mediatek: Add VLD_PA_RANGE register backup when suspend
+  iommu/mediatek: Add shutdown callback
+  memory: mtk-smi: Get rid of need_larbid
+  iommu/mediatek: Switch to SPDX license identifier
+
+ .../devicetree/bindings/iommu/mediatek,iommu.txt   |  15 +-
+ .../memory-controllers/mediatek,smi-common.txt     |  11 +-
+ .../memory-controllers/mediatek,smi-larb.txt       |   3 +
+ drivers/iommu/io-pgtable-arm-v7s.c                 |  72 ++++--
+ drivers/iommu/io-pgtable.h                         |   7 +-
+ drivers/iommu/mtk_iommu.c                          | 134 +++++++----
+ drivers/iommu/mtk_iommu.h                          |  23 +-
+ drivers/iommu/mtk_iommu_v1.c                       |  14 +-
+ drivers/memory/mtk-smi.c                           | 267 ++++++++++++++-------
+ include/dt-bindings/memory/mt2701-larb-port.h      |  10 +-
+ include/dt-bindings/memory/mt8173-larb-port.h      |  10 +-
+ include/dt-bindings/memory/mt8183-larb-port.h      | 130 ++++++++++
+ include/soc/mediatek/smi.h                         |  10 +-
+ 13 files changed, 491 insertions(+), 215 deletions(-)
+ create mode 100644 include/dt-bindings/memory/mt8183-larb-port.h
+
+-- 
+1.9.1
