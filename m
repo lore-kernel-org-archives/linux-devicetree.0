@@ -1,36 +1,47 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC 1/3] dt-binding: cpu-topology: Move cpu-map to a common
- binding.
-Date: Sat, 17 Nov 2018 10:32:53 -0600
-Message-ID: <20181117163253.GA6713@bogus>
-References: <1541728209-3224-1-git-send-email-atish.patra@wdc.com>
- <1541728209-3224-2-git-send-email-atish.patra@wdc.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v5 2/4] dt-bindings: iio: adc: Add common ADCs
+ properties to a separate file
+Date: Sat, 17 Nov 2018 16:39:57 +0000
+Message-ID: <20181117163957.475ca71b@archlinux>
+References: <1542108061-3471-1-git-send-email-stefan.popa@analog.com>
+        <20181116225319.GA26554@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1541728209-3224-2-git-send-email-atish.patra@wdc.com>
+In-Reply-To: <20181116225319.GA26554@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, anup@brainfault.org, Damien.LeMoal@wdc.com, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, sudeep.holla@arm.com, palmer@sifive.com, devicetree@vger.kernel.org, juri.lelli@arm.com, mick@ics.forth.gr, jeremy.linton@arm.com
+To: Rob Herring <robh@kernel.org>
+Cc: Stefan Popa <stefan.popa@analog.com>, robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 08, 2018 at 05:50:07PM -0800, Atish Patra wrote:
-> cpu-map binding can be used to described cpu topology for both
-> RISC-V & ARM. It makes more sense to move the binding to document
-> to a common place.
-> 
-> The relevant discussion can be found here.
-> https://lkml.org/lkml/2018/11/6/19
-> 
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> ---
->  Documentation/devicetree/bindings/arm/topology.txt | 475 -------------------
->  .../devicetree/bindings/cpu/cpu-topology.txt       | 526 +++++++++++++++++++++
->  2 files changed, 526 insertions(+), 475 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/topology.txt
->  create mode 100644 Documentation/devicetree/bindings/cpu/cpu-topology.txt
+On Fri, 16 Nov 2018 16:53:19 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-Please send this with '-M' option so we just get the real changes.
+> On Tue, 13 Nov 2018 13:21:01 +0200, Stefan Popa wrote:
+> > There are several ADC drivers that depend on the same device tree
+> > bindings. Rather than continue to duplicate the properties, this patch
+> > adds a common adc binding document that can be referenced. For beginning,
+> > only two properties are documented.
+> > 
+> > Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+> > ---
+> > Changes in v2, v3:
+> > 	- N/A.
+> > Changes in v4:
+> > 	- Added this commit.
+> > Changes in v5:
+> > 	- Nothing changed.
+> > 
+> >  Documentation/devicetree/bindings/iio/adc/adc.txt | 23 +++++++++++++++++++++++
+> >  1 file changed, 23 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adc.txt
+> >   
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-Rob
+Thanks,
+
+Jonathan
