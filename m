@@ -1,52 +1,38 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v6 3/3] arm64: dts: allwinner: a64: enable sound on Pinebook
-Date: Sun, 18 Nov 2018 00:02:04 +0800
-Message-ID: <CAGb2v65vDRTUDo894nXvOi8xEkMzeymbU=OQjdyY-Eh38T7F+A@mail.gmail.com>
-References: <20181108063929.29720-1-anarsoul@gmail.com> <20181108063929.29720-4-anarsoul@gmail.com>
- <CAGb2v65zb4rXJJv018AfDC-YQgAAmahmQ=-Bb5CyU3kA6wBAqg@mail.gmail.com> <CA+E=qVegv61NgF4peK=Bz2RDvjCUX+M_njrpC4Ph+Jv+r2KFgg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 02/17] dt-bindings: olpc,xo1.75-ec: Add OLPC XO-1.75
+ EC bindings
+Date: Sat, 17 Nov 2018 10:03:05 -0600
+Message-ID: <20181117160305.GA31494@bogus>
+References: <20181116162403.49854-1-lkundrak@v3.sk>
+ <20181116162403.49854-3-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+E=qVegv61NgF4peK=Bz2RDvjCUX+M_njrpC4Ph+Jv+r2KFgg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20181116162403.49854-3-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Cameron <quozl@laptop.org>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, linux-pm@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 15, 2018 at 1:48 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
->
-> On Wed, Nov 7, 2018 at 11:30 PM Chen-Yu Tsai <wens@csie.org> wrote:
-> > > +
-> > > +       speaker_amp: speaker_amp {
-> > > +               compatible = "simple-audio-amplifier";
-> > > +               enable-gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
-> >
-> > You might want to add a sound-name-prefix property. See
-> >
-> >     Documentation/devicetree/bindings/sound/name-prefix.txt
-> >
-> > Also this should have a reference to its power supply regulator.
->
-> You're right, it should reference its power supply which should be a
-> fixed regulator controlled via GPIO from AXP803.
->
-> Unfortunately there's no AXP803 GPIO support yet and
-> simple-audio-amplifier doesn't have regulator property.
->
-> I have no time (and interest) to work on it in near future, so if
-> anyone wants to pick it up - feel free to do so.
+On Fri, 16 Nov 2018 17:23:48 +0100, Lubomir Rintel wrote:
+> The OLPC XO-1.75 Embedded Controller is a SPI master that uses extra
+> signals for handshaking. It needs to know when is the slave (Linux)
+> side's TX FIFO ready for transfer (the ready-gpio signal on the SPI
+> controller node) and when does it wish to respond with a command (the
+> cmd-gpio property).
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> 
+> ---
+> Changes since v1:
+> - s/cmd-gpio/cmd-gpios/
+> - s/ready-gpio/ready-gpios/ in the documentation paragraph
+> - Remove status = "okay" from the example
+> 
+>  .../bindings/misc/olpc,xo1.75-ec.txt          | 23 +++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/olpc,xo1.75-ec.txt
+> 
 
-Understood. I can try to pick it up when I have some extra time.
-
-On the other hand, I tried this series on my Pine64 and (with
-the necessary device tree changes) on my Bananapi M64. While
-audio played (did not stall), no audio was actually coming out
-of the headphones I had plugged in. I made sure that all needed
-mixer controls were enabled, and the DAPM graph read all green
-from the DAI to the Headphone jack.
-
-Any ideas?
-
-
-Regards
-ChenYu
+Reviewed-by: Rob Herring <robh@kernel.org>
