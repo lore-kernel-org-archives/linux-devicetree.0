@@ -1,28 +1,41 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: pinctrl: k3: Introduce pinmux definitions
-Date: Sat, 17 Nov 2018 13:27:05 +0100
-Message-ID: <CACRpkdYtvD+unm9sCRxJ1DYWM1viC8Pc6ge2TpRHYko4u0Ah3g@mail.gmail.com>
-References: <20181113060111.16374-1-vigneshr@ti.com> <20181113060111.16374-2-vigneshr@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Tom Burkart <tom@aussec.com>
+Subject: [PATCH v8 1/4] dt-bindings: pps: capture-clear addition
+Date: Sun, 18 Nov 2018 00:03:34 +1100
+Message-ID: <20181117130337.5856-2-tom@aussec.com>
+References: <20181117130337.5856-1-tom@aussec.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181113060111.16374-2-vigneshr@ti.com>
+In-Reply-To: <20181117130337.5856-1-tom@aussec.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, ext Nishanth Menon <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, ext Tony Lindgren <tony@atomide.com>
+To: Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Cc: Tom Burkart <tom@aussec.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 13, 2018 at 7:00 AM Vignesh R <vigneshr@ti.com> wrote:
+It adds documentation for the device tree capture-clear option.
 
-> The dt-bindings header for TI K3 AM6 SoCs define a set of macros for
-> defining pinmux configs in human readable form, instead of raw-coded
-> hex values.
->
-> Signed-off-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Tom Burkart <tom@aussec.com>
+---
+ Documentation/devicetree/bindings/pps/pps-gpio.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I guess you want to merge this through ARM SoC along witg the other
-patches so:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+index 3683874832ae..1155d49c2699 100644
+--- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
++++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+@@ -10,6 +10,7 @@ Required properties:
+ Optional properties:
+ - assert-falling-edge: when present, assert is indicated by a falling edge
+                        (instead of by a rising edge)
++- capture-clear: when present, also capture the PPS clear event
+ 
+ Example:
+ 	pps {
+@@ -18,6 +19,7 @@ Example:
+ 
+ 		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
+ 		assert-falling-edge;
++		capture-clear;
+ 
+ 		compatible = "pps-gpio";
+ 	};
+-- 
+2.12.3
