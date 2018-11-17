@@ -1,33 +1,65 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: media: i2c: Fix external clock frequency
- for OV5645
-Date: Sat, 17 Nov 2018 09:48:06 -0600
-Message-ID: <20181117154806.GA11193@bogus>
-References: <20181114121338.28026-1-manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v2 2/2] ASoC: dt-bindings: add bindings for AK4118
+ transceiver
+Date: Sat, 17 Nov 2018 09:51:40 -0600
+Message-ID: <20181117155140.GA11554@bogus>
+References: <20181114121642.1404-1-peron.clem@gmail.com>
+ <20181114121642.1404-2-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181114121338.28026-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20181114121642.1404-2-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: mchehab@kernel.org, robh+dt@kernel.org, todor.tomov@linaro.org, hansverk@cisco.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 14 Nov 2018 17:43:38 +0530, Manivannan Sadhasivam wrote:
-> Commit "4adb0a0432f4 media: ov5645: Supported external clock is 24MHz"
-> modified the external clock frequency to be 24MHz instead of the
-> 23.88MHz in driver. Hence, modify the frequency value in binding.
+On Wed, Nov 14, 2018 at 01:16:42PM +0100, Clément Péron wrote:
+> Document the bindings for AK4118 S/PDIF transceiver
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
 > ---
+>  .../devicetree/bindings/sound/ak4118.txt      | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/ak4118.txt
 > 
-> Changes in v2:
-> 
-> * Removed the wording about supported frequency since the hardware is
->   capable of accepting freq range from 6-27MHz.
-> 
->  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+> diff --git a/Documentation/devicetree/bindings/sound/ak4118.txt b/Documentation/devicetree/bindings/sound/ak4118.txt
+> new file mode 100644
+> index 000000000000..6e11a2f7404c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/ak4118.txt
+> @@ -0,0 +1,22 @@
+> +AK4118 S/PDIF transceiver
+> +
+> +This device supports I2C mode.
+> +
+> +Required properties:
+> +
+> +- compatible : "asahi-kasei,ak4118"
+> +- reg : The I2C address of the device for I2C
+> +- reset-gpios: A GPIO specifier for the reset pin
+> +- irq-gpios: A GPIO specifier for the IRQ pin
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This should use 'interrupts' instead.
+
+> +
+> +Example:
+> +
+> +&i2c {
+> +	ak4118: ak4118@13 {
+
+spdif@13 ? Node names should be based on the class of device, but 
+there's not really one defined for this.
+
+> +		#sound-dai-cells = <0>;
+> +		compatible = "asahi-kasei,ak4118";
+> +		reg = <0x13>;
+> +		reset-gpios = <&gpio 0 GPIO_ACTIVE_LOW>
+> +		irq-gpios = <&gpio 1 GPIO_ACTIVE_HIGH>;
+> +	};
+> +};
+> -- 
+> 2.19.1
+> 
