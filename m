@@ -1,32 +1,25 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 1/2] dt-bindings: i2c-stm32: SYSCFG Fast Mode Plus
- support for I2C STM32F7
-Date: Sat, 17 Nov 2018 10:06:03 -0600
-Message-ID: <20181117160603.GA3681@bogus>
-References: <1542370822-14721-1-git-send-email-pierre-yves.mordret@st.com>
- <1542370822-14721-2-git-send-email-pierre-yves.mordret@st.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: pinctrl: k3: Introduce pinmux
+ definitions
+Date: Sat, 17 Nov 2018 08:08:50 -0800
+Message-ID: <20181117160850.GN53235@atomide.com>
+References: <20181113060111.16374-1-vigneshr@ti.com>
+ <20181113060111.16374-2-vigneshr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1542370822-14721-2-git-send-email-pierre-yves.mordret@st.com>
+In-Reply-To: <20181113060111.16374-2-vigneshr@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Wolfram Sang <wsa@the-dreams.de>, Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 16 Nov 2018 13:20:21 +0100, Pierre-Yves MORDRET wrote:
-> Append optional bindings to update SYSCFG Fast Mode Plus bits if
-> Fast Mode Plus speed is selected.
-> 
-> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-> ---
->   Version history:
->     v1:
->        * Initial
-> ---
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-stm32.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
+* Vignesh R <vigneshr@ti.com> [181113 06:00]:
+> The dt-bindings header for TI K3 AM6 SoCs define a set of macros for
+> defining pinmux configs in human readable form, instead of raw-coded
+> hex values.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Looks good to me now too thanks:
+
+Acked-by: Tony Lindgren <tony@atomide.com>
