@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 2/7] dt-bindings: net: phy: add bindings for the IC Plus Corp. IP101A/G PHYs
-Date: Sat, 17 Nov 2018 19:20:02 +0100
-Message-ID: <20181117182007.14791-3-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 4/7] net: phy: icplus: use the BIT macro where possible
+Date: Sat, 17 Nov 2018 19:20:04 +0100
+Message-ID: <20181117182007.14791-5-martin.blumenstingl@googlemail.com>
 References: <20181117182007.14791-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,53 +12,32 @@ To: netdev@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, an
 Cc: linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-The IP101A and IP101G series both have various models. Depending on the
-board implementation we need a special property for the IP101GR (32-pin
-LQFP package) PHY:
-pin 21 ("RXER/INTR_32") outputs the "receive error" signal by default
-(LOW means "normal operation", HIGH means that there's either a decoding
-error of the received signal or that the PHY is receiving LPI). This pin
-can also be switched to INTR32 mode, where the interrupt signal is
-routed to this pin. The other PHYs don't need this special handling
-because they have more pins available so the interrupt function gets a
-dedicated pin.
-
-This adds two properties to either select the "receive error" or
-"interrupt" function of pin 21. Not specifying any function means that
-the default set by the bootloader is used. This is required because the
-IP101GR cannot be differentiated between other IP101 PHYs as the PHY
-identification registers on all of these is 0x02430c54.
+This makes the code consistent by using the BIT() macro instead of
+manual bit-shifting for some of the fields. No functional changes.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- .../bindings/net/icplus-ip101ag.txt           | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/icplus-ip101ag.txt
+ drivers/net/phy/icplus.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/icplus-ip101ag.txt b/Documentation/devicetree/bindings/net/icplus-ip101ag.txt
-new file mode 100644
-index 000000000000..a784592bbb15
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/icplus-ip101ag.txt
-@@ -0,0 +1,19 @@
-+IC Plus Corp. IP101A / IP101G Ethernet PHYs
-+
-+There are different models of the IP101G Ethernet PHY:
-+- IP101GR (32-pin QFN package)
-+- IP101G (die only, no package)
-+- IP101GA (48-pin LQFP package)
-+
-+There are different models of the IP101A Ethernet PHY (which is the
-+predecessor of the IP101G):
-+- IP101A (48-pin LQFP package)
-+- IP101AH (48-pin LQFP package)
-+
-+Optional properties for the IP101GR (32-pin QFN package):
-+
-+- icplus,select-rx-error:
-+  pin 21 ("RXER/INTR_32") will output the receive error status.
-+  interrupts are not routed outside the PHY in this mode.
-+- icplus,select-interrupt:
-+  pin 21 ("RXER/INTR_32") will output the interrupt signal.
+diff --git a/drivers/net/phy/icplus.c b/drivers/net/phy/icplus.c
+index 3d3e9134c762..3ec470adde3d 100644
+--- a/drivers/net/phy/icplus.c
++++ b/drivers/net/phy/icplus.c
+@@ -36,11 +36,11 @@ MODULE_LICENSE("GPL");
+ 
+ /* IP101A/G - IP1001 */
+ #define IP10XX_SPEC_CTRL_STATUS		16	/* Spec. Control Register */
+-#define IP1001_RXPHASE_SEL		(1<<0)	/* Add delay on RX_CLK */
+-#define IP1001_TXPHASE_SEL		(1<<1)	/* Add delay on TX_CLK */
++#define IP1001_RXPHASE_SEL		BIT(0)	/* Add delay on RX_CLK */
++#define IP1001_TXPHASE_SEL		BIT(1)	/* Add delay on TX_CLK */
+ #define IP1001_SPEC_CTRL_STATUS_2	20	/* IP1001 Spec. Control Reg 2 */
+ #define IP1001_APS_ON			11	/* IP1001 APS Mode  bit */
+-#define IP101A_G_APS_ON			2	/* IP101A/G APS Mode bit */
++#define IP101A_G_APS_ON			BIT(1)	/* IP101A/G APS Mode bit */
+ #define IP101A_G_IRQ_CONF_STATUS	0x11	/* Conf Info IRQ & Status Reg */
+ #define	IP101A_G_IRQ_PIN_USED		BIT(15) /* INTR pin used */
+ #define	IP101A_G_NO_IRQ			BIT(11) /* IRQ's inactive */
 -- 
 2.19.1
