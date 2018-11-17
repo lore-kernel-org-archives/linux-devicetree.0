@@ -1,70 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 03/11] media: dt-bindings: marvell,mmp2-ccic: Add
- Marvell MMP2 camera
-Date: Sat, 17 Nov 2018 09:39:54 -0600
-Message-ID: <20181117153954.GA28966@bogus>
-References: <20181112003520.577592-1-lkundrak@v3.sk>
- <20181112003520.577592-4-lkundrak@v3.sk>
+Subject: Re: [PATCH v2 1/4] dt-bindings: pinctrl: k3: Introduce pinmux
+ definitions
+Date: Sat, 17 Nov 2018 09:43:28 -0600
+Message-ID: <20181117154328.GA4095@bogus>
+References: <20181113060111.16374-1-vigneshr@ti.com>
+ <20181113060111.16374-2-vigneshr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181112003520.577592-4-lkundrak@v3.sk>
+In-Reply-To: <20181113060111.16374-2-vigneshr@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>
+Cc: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Vignesh R <vigneshr@ti.com>, linux-omap@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 12, 2018 at 01:35:12AM +0100, Lubomir Rintel wrote:
-> Add Marvell MMP2 camera host interface.
+On Tue, 13 Nov 2018 11:31:08 +0530, Vignesh R wrote:
+> The dt-bindings header for TI K3 AM6 SoCs define a set of macros for
+> defining pinmux configs in human readable form, instead of raw-coded
+> hex values.
 > 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Signed-off-by: Vignesh R <vigneshr@ti.com>
 > ---
->  .../bindings/media/marvell,mmp2-ccic.txt      | 30 +++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
+>  MAINTAINERS                      |  1 +
+>  include/dt-bindings/pinctrl/k3.h | 35 ++++++++++++++++++++++++++++++++
+>  2 files changed, 36 insertions(+)
+>  create mode 100644 include/dt-bindings/pinctrl/k3.h
 > 
-> diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-> new file mode 100644
-> index 000000000000..a9c536e58dda
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-> @@ -0,0 +1,30 @@
-> +Marvell MMP2 camera host interface
-> +
-> +Required properties:
-> + - compatible: Should be "marvell,mmp2-ccic"
-> + - reg: register base and size
-> + - interrupts: the interrupt number
-> + - any required generic properties defined in video-interfaces.txt
-> +
-> +Optional properties:
-> + - clocks: input clock (see clock-bindings.txt)
-> + - clock-output-names: should contain the name of the clock driving the
-> +                       sensor master clock MCLK
 
-Missing #clock-cells and clock-names.
-
-How many ports and endpoints also needs to be documented.
-
-> +
-> +Example:
-> +
-> +	camera0: camera@d420a000 {
-> +		compatible = "marvell,mmp2-ccic";
-> +		reg = <0xd420a000 0x800>;
-> +		interrupts = <42>;
-> +		clocks = <&soc_clocks MMP2_CLK_CCIC0>;
-> +		clock-names = "CCICAXICLK";
-> +		#clock-cells = <0>;
-> +		clock-output-names = "mclk";
-> +
-> +		port {
-> +			camera0_0: endpoint {
-> +				remote-endpoint = <&ov7670_0>;
-> +			};
-> +		};
-> +	};
-> -- 
-> 2.19.1
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
