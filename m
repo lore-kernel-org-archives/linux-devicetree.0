@@ -1,82 +1,129 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: Documentation for qcom,eud
-Date: Sat, 17 Nov 2018 08:47:05 -0600
-Message-ID: <20181117144705.GA18155@bogus>
-References: <1542310374-18474-1-git-send-email-pheragu@codeaurora.org>
- <1542310374-18474-2-git-send-email-pheragu@codeaurora.org>
+Subject: Re: [v3, PATCH 2/2] dt-binding: mediatek-dwmac: add binding document
+ for MediaTek MT2712 DWMAC
+Date: Sat, 17 Nov 2018 08:56:11 -0600
+Message-ID: <20181117145611.GA26013@bogus>
+References: <1542359926-28800-1-git-send-email-biao.huang@mediatek.com>
+ <1542359926-28800-2-git-send-email-biao.huang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1542310374-18474-2-git-send-email-pheragu@codeaurora.org>
+In-Reply-To: <1542359926-28800-2-git-send-email-biao.huang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ckadabi@codeaurora.org, tsoni@codeaurora.org, bryanh@codeaurora.org, psodagud@codeaurora.org, rnayak@codeaurora.org, Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
+To: Biao Huang <biao.huang@mediatek.com>
+Cc: davem@davemloft.net, honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, joabreu@synopsys.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 15, 2018 at 11:32:53AM -0800, Prakruthi Deepak Heragu wrote:
-> Documentation for Embedded USB Debugger (EUD) device tree bindings.
-
-I asked questions on v2 which were never answered.
-
+On Fri, Nov 16, 2018 at 05:18:46PM +0800, Biao Huang wrote:
+> The commit adds the device tree binding documentation for the MediaTek DWMAC
+> found on MediaTek MT2712.
 > 
-> Signed-off-by: Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
-> Signed-off-by: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
+> Change-Id: I3728666bf65927164bd82fa8dddb90df8270bd44
+> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
 > ---
->  .../devicetree/bindings/soc/qcom/qcom,msm-eud.txt  | 43 ++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
+>  .../devicetree/bindings/net/mediatek-dwmac.txt     |   77 ++++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/mediatek-dwmac.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
+> diff --git a/Documentation/devicetree/bindings/net/mediatek-dwmac.txt b/Documentation/devicetree/bindings/net/mediatek-dwmac.txt
 > new file mode 100644
-> index 0000000..6d339e7
+> index 0000000..7fd56e0
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
-> @@ -0,0 +1,43 @@
-> +* Qualcomm Technologies Inc Embedded USB Debugger (EUD)
+> +++ b/Documentation/devicetree/bindings/net/mediatek-dwmac.txt
+> @@ -0,0 +1,77 @@
+> +MediaTek DWMAC glue layer controller
 > +
-> +The EUD (Embedded USB Debugger) is a mini-USB hub implemented
-> +on chip to support the USB-based debug and trace capabilities.
+> +This file documents platform glue layer for stmmac.
+> +Please see stmmac.txt for the other unchanged properties.
+> +
+> +The device node has following properties.
 > +
 > +Required properties:
+> +- compatible:  Should be "mediatek,mt2712-gmac" for MT2712 SoC
+> +- reg:  Address and length of the register set for the device
+> +- interrupts:  Should contain the MAC interrupts
+
+How many?
+
+> +- interrupt-names: Should contain a list of interrupt names corresponding to
+> +	the interrupts in the interrupts property, if available.
+> +	Should be "macirq" for the main MAC IRQ
+> +- clocks: Must contain a phandle for each entry in clock-names.
+> +- clock-names: The name of the clock listed in the clocks property. These are
+> +	"axi", "apb", "mac_ext", "mac_parent", "ptp_ref", "ptp_parent", "ptp_top"
+> +	for MT2712 SoC
+
+Clocks should represent the physical clocks connected to a block. Parent 
+clocks are not in that category.
+
+> +- mac-address: See ethernet.txt in the same directory
+> +- phy-mode: See ethernet.txt in the same directory
 > +
-> + - compatible:  Should be "qcom,msm-eud"
-> + - interrupts:  Interrupt number
-> + - reg: Should be address and size of EUD register space
+> +Optional properties:
+> +- tx-delay: TX clock delay macro value. Range is 0~31. Default is 0.
+> +	It should be defined for rgmii/rgmii-rxid/mii interface.
+> +- rx-delay: RX clock delay macro value. Range is 0~31. Default is 0.
+> +	It should be defined for rgmii/rgmii-txid/mii/rmii interface.
+> +- fine-tune: This property will select coarse-tune delay or fine delay
+> +	for rgmii interface.
+> +	If fine-tune delay is enabled, tx-delay/rx-delay is 170+/-50ps
+> +	per stage.
+> +	Else coarse-tune delay is enabled, tx-delay/rx-delay is 0.55+/-0.2ns
+> +	per stage.
+> +	This property do not apply to non-rgmii PHYs.
+> +	Only coarse-tune delay is supported for mii/rmii PHYs.
+
+Perhaps the delays should be in ps and the driver can figure out 
+fine-tune or not based on the value.
+
+> +- rmii-rxc: Reference clock of rmii is from external PHYs,
+> +	and it can be connected to TXC or RXC pin on MT2712 SoC.
+> +	If ref_clk <--> TXC, disable it.
+> +	Else ref_clk <--> RXC, enable it.
+> +- txc-inverse: Inverse tx clock for mii/rgmii.
+> +	Inverse tx clock inside MAC relative to reference clock for rmii,
+> +	and it rarely happen.
+> +- rxc-inverse: Inverse rx clock for mii/rgmii interfaces.
+> +	Inverse reference clock for rmii.
+
+These should all have vendor prefixes. 'snps' if these are all standard 
+GMAC controls or 'mediatek' if Mediatek specific.
+
 > +
-> +EUD notifies clients for VBUS attach/detach and charger enable/disable
-> +events. The link between client and EUD is established via a directed
-> +graph. EUD has one endpoint of the graph link mentioning EUD as an
-> +output link and clients of EUD should have the other endpoint of the
-> +graph link as an input link.
-> +
-> +An example for EUD device node:
-> +
-> +	eud: qcom,msm-eud@88e0000 {
-> +		compatible = "qcom,msm-eud";
-> +		interrupts = <GIC_SPI 492 IRQ_TYPE_LEVEL_HIGH>;
-> +		reg = <0x88e0000 0x4000>;
-> +		usb_con: connector {
-> +                compatible = "usb-c-connector";
-> +                label = "USB-C";
-> +                port {
-> +                	    eud_usb_output: endpoint {
-> +                        	    remote-endpoint = <&eud_usb3_input>;
-> +                        };
-> +        	    };
-> +        };
-> +	};
-> +
-> +An example for EUD client:
-> +
-> +	usb3 {
-> +		port {
-> +                eud_usb3_input: endpoint {
-> +                        remote-endpoint = <&eud_usb_output>;
-> +                };
-> +        };
+> +Example:
+> +	eth: ethernet@1101c000 {
+> +		compatible = "mediatek,mt2712-gmac";
+> +		reg = <0 0x1101c000 0 0x1300>;
+> +		interrupts = <GIC_SPI 237 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-names = "macirq";
+> +		phy-mode ="rgmii-id";
+> +		mac-address = [00 55 7b b5 7d f7];
+> +		clock-names = "axi",
+> +			      "apb",
+> +			      "mac_ext",
+> +			      "mac_parent",
+> +			      "ptp_ref",
+> +			      "ptp_parent",
+> +			      "ptp_top";
+> +		clocks = <&pericfg CLK_PERI_GMAC>,
+> +			 <&pericfg CLK_PERI_GMAC_PCLK>,
+> +			 <&topckgen CLK_TOP_ETHER_125M_SEL>,
+> +			 <&topckgen CLK_TOP_ETHERPLL_125M>,
+> +			 <&topckgen CLK_TOP_ETHER_50M_SEL>,
+> +			 <&topckgen CLK_TOP_APLL1_D3>,
+> +			 <&topckgen CLK_TOP_APLL1>;
+> +		snps,txpbl = <32>;
+> +		snps,rxpbl = <32>;
+> +		snps,reset-gpio = <&pio 87 GPIO_ACTIVE_LOW>;
+> +		snps,reset-active-low;
+> +		tx-delay = <9>;
+> +		rx-delay = <9>;
+> +		fine-tune;
+> +		rmii-rxc;
+> +		txc-inverse;
+> +		rxc-inverse;
 > +	};
 > -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> 1.7.9.5
 > 
