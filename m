@@ -1,30 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: pinctrl: k3: Introduce pinmux
- definitions
-Date: Sat, 17 Nov 2018 09:43:28 -0600
-Message-ID: <20181117154328.GA4095@bogus>
-References: <20181113060111.16374-1-vigneshr@ti.com>
- <20181113060111.16374-2-vigneshr@ti.com>
+Subject: Re: [PATCH v2] power: supply: bq24190_charger: add support for
+ bq24196 variant
+Date: Sat, 17 Nov 2018 09:44:12 -0600
+Message-ID: <20181117154412.GA5215@bogus>
+References: <20181113124753.29948-1-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181113060111.16374-2-vigneshr@ti.com>
+In-Reply-To: <20181113124753.29948-1-heiko@sntech.de>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Vignesh R <vigneshr@ti.com>, linux-omap@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Tony Lindgren <tony@atomide.com>
+Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mdf@kernel.org, heiko@sntech.de, Heiko Stuebner <heiko.stuebner@bq.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Nov 2018 11:31:08 +0530, Vignesh R wrote:
-> The dt-bindings header for TI K3 AM6 SoCs define a set of macros for
-> defining pinmux configs in human readable form, instead of raw-coded
-> hex values.
+On Tue, 13 Nov 2018 13:47:53 +0100, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@bq.com>
 > 
-> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> The bq24196 is another variant of the bq24190 charger ic.
+> Its register set is identical to the bq24192 and it even reuses
+> the same part number (0x5).
+> 
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
 > ---
->  MAINTAINERS                      |  1 +
->  include/dt-bindings/pinctrl/k3.h | 35 ++++++++++++++++++++++++++++++++
->  2 files changed, 36 insertions(+)
->  create mode 100644 include/dt-bindings/pinctrl/k3.h
+> This should go on top of the bq24192 support patches from Brian Masney /
+> Jonathan Marek [0]
+> 
+> [0] https://patchwork.kernel.org/patch/10663409/
+> 
+> changes in v2:
+> - add missing compatible to dt-binding
+> 
+>  Documentation/devicetree/bindings/power/supply/bq24190.txt | 1 +
+>  drivers/power/supply/bq24190_charger.c                     | 4 +++-
+>  2 files changed, 4 insertions(+), 1 deletion(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
