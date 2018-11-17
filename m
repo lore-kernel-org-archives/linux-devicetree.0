@@ -1,161 +1,144 @@
-From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH 7/9] dt-bindings: phy: Add dt bindings for ZynqMP PHY
-Date: Fri, 16 Nov 2018 15:56:57 -0800
-Message-ID: <1542412619-387-8-git-send-email-jollys@xilinx.com>
-References: <1542412619-387-1-git-send-email-jollys@xilinx.com>
+From: Sean Wang <sean.wang@kernel.org>
+Subject: Re: [v3, PATCH 2/2] dt-binding: mediatek-dwmac: add binding document
+ for MediaTek MT2712 DWMAC
+Date: Fri, 16 Nov 2018 16:21:15 -0800
+Message-ID: <CAGp9LzrHm-ympV2zAKZKcEfA25aJp8BSS+=01B6G=sP_HiSSdA@mail.gmail.com>
+References: <1542359926-28800-1-git-send-email-biao.huang@mediatek.com> <1542359926-28800-2-git-send-email-biao.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542412619-387-1-git-send-email-jollys@xilinx.com>
+In-Reply-To: <1542359926-28800-2-git-send-email-biao.huang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: michal.simek@xilinx.com, rajanv@xilinx.com, nava.manne@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>, Anurag Kumar Vulisha <anuragku@xilinx.com>
+To: biao.huang@mediatek.com
+Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, nelson.chang@mediatek.com, andrew@lunn.ch, netdev@vger.kernel.org, liguo.zhang@mediatek.com, linux-kernel@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, joabreu@synopsys.com, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the document describing dt bindings for ZynqMP
-PHY. ZynqMP SOC has a High Speed Processing System Gigabit
-Transceiver which provides PHY capabilties to USB, SATA,
-PCIE, Display Port and Ehernet SGMII controllers.
+On Fri, Nov 16, 2018 at 1:19 AM Biao Huang <biao.huang@mediatek.com> wrote:
+>
+> The commit adds the device tree binding documentation for the MediaTek DWMAC
+> found on MediaTek MT2712.
+>
+> Change-Id: I3728666bf65927164bd82fa8dddb90df8270bd44
 
-Signed-off-by: Anurag Kumar Vulisha <anuragku@xilinx.com>
-Signed-off-by: Jolly Shah <jollys@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
- .../devicetree/bindings/phy/phy-zynqmp.txt         | 126 +++++++++++++++++++++
- 1 file changed, 126 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+Drop change-id
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-zynqmp.txt b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
-new file mode 100644
-index 0000000..21cb722
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
-@@ -0,0 +1,126 @@
-+Xilinx ZynqMP PHY binding
-+
-+This binding describes a ZynqMP PHY device that is used to control ZynqMP
-+High Speed Gigabit Transceiver(GT). ZynqMP PS GTR provides four lanes
-+and are used by USB, SATA, PCIE, Display port and Ethernet SGMMI controllers.
-+
-+Required properties (controller (parent) node):
-+- compatible	: Can be "xlnx,zynqmp-psgtr-v1.1" or "xlnx,zynqmp-psgtr"
-+		  "xlnx,zynqmp-psgtr-v1.1" has the lpd address mapping removed
-+
-+- reg           : Address and length of register sets for each device in
-+                  "reg-names"
-+- reg-names     : The names of the register addresses corresponding to the
-+		  registers filled in "reg":
-+			- serdes: SERDES block register set
-+			- siou: SIOU block register set
-+			- lpd: Low power domain peripherals reset control
-+
-+Required nodes	:  A sub-node is required for each lane the controller
-+		   provides.
-+
-+Required properties (port (child) nodes):
-+lane0:
-+- #phy-cells	: Should be 4
-+		  Cell after port phandle is device type from:
-+			- <PHY_TYPE_PCIE 0 LANE_NUM FREQUENCY>
-+			- <PHY_TYPE_SATA 0 LANE_NUM FREQUENCY>
-+			- <PHY_TYPE_USB3 0 LANE_NUM FREQUENCY>
-+			- <PHY_TYPE_DP 1 LANE_NUM FREQUENCY>
-+			- <PHY_TYPE_SGMII 0 LANE_NUM FREQUENCY>
-+lane1:
-+- #phy-cells	: Should be 4
-+		  Cell after port phandle is device type from:
-+			- <PHY_TYPE_PCIE 1 LANE_NUM FREQUENCY>
-+			- <PHY_TYPE_SATA 1 LANE_NUM FREQUENCY>
-+			- <PHY_TYPE_USB3 0 LANE_NUM FREQUENCY>
-+			- <PHY_TYPE_DP 0 LANE_NUM FREQUENCY>
-+			- <PHY_TYPE_SGMII 1 LANE_NUM FREQUENCY>
-+lane2:
-+- #phy-cells	: Should be 4
-+		  Cell after port phandle is device type from:
-+			- <PHY_TYPE_PCIE 2 LANE_NUM FREQUENCY>
-+			- <PHY_TYPE_SATA 0 LANE_NUM FREQUENCY>
-+			- <PHY_TYPE_USB3 0 LANE_NUM FREQUENCY>
-+			- <PHY_TYPE_DP 1 LANE_NUM FREQUENC>
-+			- <PHY_TYPE_SGMII 2 LANE_NUM FREQUENCY>
-+lane3:
-+- #phy-cells	: Should be 4
-+		  Cell after port phandle is device type from:
-+			- <PHY_TYPE_PCIE 3 LANE_NUM FREQUENCY>
-+			- <PHY_TYPE_SATA 1 LANE_NUM FREQUENCY>
-+			- <PHY_TYPE_USB3 1 LANE_NUM FREQUENCY >
-+			- <PHY_TYPE_DP 0 LANE_NUM FREQUENCY>
-+			- <PHY_TYPE_SGMII 3 LANE_NUM FREQUENCY>
-+
-+Note:	LANE_NUM : This determines which lane's reference clock is shared by controller.
-+	FREQUENCY: This the clock frequency at which controller wants to operate.
-+
-+
-+Example:
-+firmware {
-+	zynqmp_firmware: zynqmp-firmware {
-+		compatible = "xlnx,zynqmp-firmware";
-+		method = "smc";
-+
-+		serdes: zynqmp_phy@fd400000 {
-+			compatible = "xlnx,zynqmp-psgtr";
-+			status = "okay";
-+			reg = <0x0 0xfd400000 0x0 0x40000>, <0x0 0xfd3d0000 0x0 0x1000>,
-+				<0x0 0xff5e0000 0x0 0x1000>;
-+			reg-names = "serdes", "siou", "lpd";
-+
-+			lane0: lane@0 {
-+				#phy-cells = <4>;
-+			};
-+			lane1: lane@1 {
-+				#phy-cells = <4>;
-+			};
-+			lane2: lane@2 {
-+				#phy-cells = <4>;
-+			};
-+			lane3: lane@3 {
-+				#phy-cells = <4>;
-+			};
-+		};
-+	};
-+};
-+
-+Specifying phy control of devices
-+=================================
-+
-+Device nodes should specify the configuration required in their "phys"
-+property, containing a phandle to the phy port node and a device type.
-+
-+phys = <PHANDLE CONTROLLER_TYPE CONTROLLER_INSTANCE LANE_NUM LANE_FREQ>;
-+
-+PHANDLE                 = &lane0 or &lane1 or &lane2 or &lane3
-+CONTROLLER_TYPE         = PHY_TYPE_PCIE or PHY_TYPE_SATA or PHY_TYPE_USB
-+			  or PHY_TYPE_DP or PHY_TYPE_SGMII
-+CONTROLLER_INSTANCE     = Depends on controller type used, can be any of
-+				PHY_TYPE_PCIE : 0 or 1 or 2 or 3
-+				PHY_TYPE_SATA : 0 or 1
-+				PHY_TYPE_USB  : 0 or 1
-+				PHY_TYPE_DP   : 0 or 1
-+				PHY_TYPE_SGMII: 0 or 1 or 2 or 3
-+LANE_NUM                = Depends on which lane clock is used as ref clk, can be
-+			  0 or 1 or 2 or 3
-+LANE_FREQ               = Frequency that controller can operate, can be any of
-+			  19.2Mhz,20Mhz,24Mhz,26Mhz,27Mhz,28.4Mhz,40Mhz,52Mhz,
-+			  100Mhz,108Mhz,125Mhz,135Mhz,150Mhz
-+
-+Example:
-+
-+#include <dt-bindings/phy/phy.h>
-+
-+	usb@fe200000 {
-+		...
-+		phys	  = <&lane2 PHY_TYPE_USB3 0 2 2600000>;
-+		...
-+	};
-+
-+	ahci@fd0c0000 {
-+		...
-+		phys	  = <&lane3 PHY_TYPE_SATA 1 1 125000000>;
-+		...
-+	};
--- 
-2.7.4
+> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+> ---
+>  .../devicetree/bindings/net/mediatek-dwmac.txt     |   77 ++++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/mediatek-dwmac.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/mediatek-dwmac.txt b/Documentation/devicetree/bindings/net/mediatek-dwmac.txt
+> new file mode 100644
+> index 0000000..7fd56e0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/mediatek-dwmac.txt
+> @@ -0,0 +1,77 @@
+> +MediaTek DWMAC glue layer controller
+> +
+> +This file documents platform glue layer for stmmac.
+> +Please see stmmac.txt for the other unchanged properties.
+> +
+> +The device node has following properties.
+> +
+> +Required properties:
+> +- compatible:  Should be "mediatek,mt2712-gmac" for MT2712 SoC
+> +- reg:  Address and length of the register set for the device
+> +- interrupts:  Should contain the MAC interrupts
+> +- interrupt-names: Should contain a list of interrupt names corresponding to
+> +       the interrupts in the interrupts property, if available.
+> +       Should be "macirq" for the main MAC IRQ
+> +- clocks: Must contain a phandle for each entry in clock-names.
+> +- clock-names: The name of the clock listed in the clocks property. These are
+> +       "axi", "apb", "mac_ext", "mac_parent", "ptp_ref", "ptp_parent", "ptp_top"
+> +       for MT2712 SoC
+
+About not including these parent clocks to the controller, you can
+refer to assigned-clocks, assigned-clock-parents, assigned-clock-rates
+noted in Documentation/devicetree/bindings/clock/clock-bindings.txt to
+determine what speed these MUXs should be run at and see [1] as the
+example how applied in dts.
+
+[1]
+https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/mt7623.dtsi#L660
+
+> +- mac-address: See ethernet.txt in the same directory
+> +- phy-mode: See ethernet.txt in the same directory
+> +
+> +Optional properties:
+> +- tx-delay: TX clock delay macro value. Range is 0~31. Default is 0.
+> +       It should be defined for rgmii/rgmii-rxid/mii interface.
+> +- rx-delay: RX clock delay macro value. Range is 0~31. Default is 0.
+> +       It should be defined for rgmii/rgmii-txid/mii/rmii interface.
+> +- fine-tune: This property will select coarse-tune delay or fine delay
+> +       for rgmii interface.
+what is the property's type?
+
+> +       If fine-tune delay is enabled, tx-delay/rx-delay is 170+/-50ps
+> +       per stage.
+> +       Else coarse-tune delay is enabled, tx-delay/rx-delay is 0.55+/-0.2ns
+> +       per stage.
+> +       This property do not apply to non-rgmii PHYs.
+> +       Only coarse-tune delay is supported for mii/rmii PHYs.
+> +- rmii-rxc: Reference clock of rmii is from external PHYs,
+what is the property's type?
+
+> +       and it can be connected to TXC or RXC pin on MT2712 SoC.
+> +       If ref_clk <--> TXC, disable it.
+> +       Else ref_clk <--> RXC, enable it.
+> +- txc-inverse: Inverse tx clock for mii/rgmii.
+what is the property's type?
+
+> +       Inverse tx clock inside MAC relative to reference clock for rmii,
+> +       and it rarely happen.
+> +- rxc-inverse: Inverse rx clock for mii/rgmii interfaces.
+what is the property's type?
+
+> +       Inverse reference clock for rmii.
+
+If these optional properties look like generic enough, it would be
+good that place them to stmmac.txt. Otherwise, they should be added
+"mediatek," as the prefix string for these vendor-specific things.
+
+> +
+> +Example:
+> +       eth: ethernet@1101c000 {
+> +               compatible = "mediatek,mt2712-gmac";
+> +               reg = <0 0x1101c000 0 0x1300>;
+> +               interrupts = <GIC_SPI 237 IRQ_TYPE_LEVEL_LOW>;
+> +               interrupt-names = "macirq";
+> +               phy-mode ="rgmii-id";
+> +               mac-address = [00 55 7b b5 7d f7];
+> +               clock-names = "axi",
+> +                             "apb",
+> +                             "mac_ext",
+> +                             "mac_parent",
+> +                             "ptp_ref",
+> +                             "ptp_parent",
+> +                             "ptp_top";
+> +               clocks = <&pericfg CLK_PERI_GMAC>,
+> +                        <&pericfg CLK_PERI_GMAC_PCLK>,
+> +                        <&topckgen CLK_TOP_ETHER_125M_SEL>,
+> +                        <&topckgen CLK_TOP_ETHERPLL_125M>,
+> +                        <&topckgen CLK_TOP_ETHER_50M_SEL>,
+> +                        <&topckgen CLK_TOP_APLL1_D3>,
+> +                        <&topckgen CLK_TOP_APLL1>;
+> +               snps,txpbl = <32>;
+> +               snps,rxpbl = <32>;
+> +               snps,reset-gpio = <&pio 87 GPIO_ACTIVE_LOW>;
+> +               snps,reset-active-low;
+> +               tx-delay = <9>;
+> +               rx-delay = <9>;
+> +               fine-tune;
+> +               rmii-rxc;
+> +               txc-inverse;
+> +               rxc-inverse;
+> +       };
+> --
+> 1.7.9.5
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
