@@ -1,45 +1,63 @@
 From: Matheus Tavares <matheus.bernardino@usp.br>
-Subject: [PATCH v2 0/7] staging:iio:ad2s90: Add dt support and move out of staging
-Date: Sun, 18 Nov 2018 02:25:33 -0200
-Message-ID: <20181118042540.12697-1-matheus.bernardino@usp.br>
+Subject: [PATCH v2 2/7] staging:iio:ad2s90: Remove spi setup that should be done via dt
+Date: Sun, 18 Nov 2018 02:25:35 -0200
+Message-ID: <20181118042540.12697-3-matheus.bernardino@usp.br>
+References: <20181118042540.12697-1-matheus.bernardino@usp.br>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181118042540.12697-1-matheus.bernardino@usp.br>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alexandru Ardelean <alexandru.ardelean@analog.com>, kernel-usp@googlegroups.com, victorcolombo@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This series adds device tree support to ad2s90, adds the respective dt-binding  
-documentation, solves all remaining codestyle problems in the driver code and
-move it out of staging.                                                                 
-                                                                                
-This patch set completes all the remaining itens listed to be done before moving
-the driver out of staging, enumerated in this mail thread:                      
-https://marc.info/?l=linux-iio&m=154028966111330&w=2.
+The ad2s90 driver currently sets some spi settings (max_speed_hz and
+mode) at ad2s90_probe. Since the maximum frequency is a required element
+in DT binding for spi slave devices and because the spi mode for the
+device can be either (0,0) or (1,1), these settings should be handled
+via device tree, not in the driver's code. This patch removes them from
+the probe function.
 
-Alexandru Ardelean (1):
-  staging:iio:ad2s90: Add max frequency check at probe
+Note: The way in which the mentioned spi settings need to be specified
+on the ad2s90's node of a device tree will be documented in the future
+patch "dt-bindings:iio:resolver: Add docs for ad2s90".
 
-Matheus Tavares (5):
-  staging:iio:ad2s90: Add device tree support
-  staging:iio:ad2s90: Remove spi setup that should be done via dt
-  dt-bindings:iio:resolver: Add docs for ad2s90
-  staging:iio:ad2s90: Replace license text w/ SPDX identifier
-  staging:iio:ad2s90: Move out of staging
+Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
+---
+Changes in v2:
+ - Rewritten patch message to better explain why the code snippet in
+ question should be removed.
 
-Victor Colombo (1):
-  staging:iio:ad2s90: Add comment to device state mutex
+ drivers/staging/iio/resolver/ad2s90.c | 11 -----------
+ 1 file changed, 11 deletions(-)
 
- .../bindings/iio/resolver/ad2s90.txt          |  28 ++++
- drivers/iio/resolver/Kconfig                  |  10 ++
- drivers/iio/resolver/Makefile                 |   1 +
- drivers/iio/resolver/ad2s90.c                 | 131 ++++++++++++++++++
- drivers/staging/iio/resolver/Kconfig          |  10 --
- drivers/staging/iio/resolver/Makefile         |   1 -
- drivers/staging/iio/resolver/ad2s90.c         | 127 -----------------
- 7 files changed, 170 insertions(+), 138 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/resolver/ad2s90.txt
- create mode 100644 drivers/iio/resolver/ad2s90.c
- delete mode 100644 drivers/staging/iio/resolver/ad2s90.c
-
+diff --git a/drivers/staging/iio/resolver/ad2s90.c b/drivers/staging/iio/resolver/ad2s90.c
+index 6ffbac66b837..913d6fad2d4d 100644
+--- a/drivers/staging/iio/resolver/ad2s90.c
++++ b/drivers/staging/iio/resolver/ad2s90.c
+@@ -77,7 +77,6 @@ static int ad2s90_probe(struct spi_device *spi)
+ {
+ 	struct iio_dev *indio_dev;
+ 	struct ad2s90_state *st;
+-	int ret;
+ 
+ 	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+ 	if (!indio_dev)
+@@ -94,16 +93,6 @@ static int ad2s90_probe(struct spi_device *spi)
+ 	indio_dev->num_channels = 1;
+ 	indio_dev->name = spi_get_device_id(spi)->name;
+ 
+-	/* need 600ns between CS and the first falling edge of SCLK */
+-	spi->max_speed_hz = 830000;
+-	spi->mode = SPI_MODE_3;
+-	ret = spi_setup(spi);
+-
+-	if (ret < 0) {
+-		dev_err(&spi->dev, "spi_setup failed!\n");
+-		return ret;
+-	}
+-
+ 	return devm_iio_device_register(indio_dev->dev.parent, indio_dev);
+ }
+ 
 -- 
 2.18.0
