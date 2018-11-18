@@ -1,7 +1,7 @@
 From: Pawel Laszczak <pawell@cadence.com>
-Subject: [RFC PATCH v2 05/15] usb:cdns3: Added DRD support
-Date: Sun, 18 Nov 2018 10:09:01 +0000
-Message-ID: <1542535751-16079-6-git-send-email-pawell@cadence.com>
+Subject: [RFC PATCH v2 09/15] usb:cdns3: EpX operations part of the API
+Date: Sun, 18 Nov 2018 10:09:05 +0000
+Message-ID: <1542535751-16079-10-git-send-email-pawell@cadence.com>
 References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,468 +12,537 @@ To: devicetree@vger.kernel.org
 Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, adouglas@cadence.com, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com, Pawel Laszczak <pawell@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-Patch adds supports for detecting Host/Device mode.
-Controller has additional OTG register that allow
-implement even whole OTG functionality.
-At this moment patch adds support only for detecting
-the appropriate mode based on strap pins and ID pin.
+Patch implements callback functions for non-default endpoints
+defined in usb_ep_ops object.
 
 Signed-off-by: Pawel Laszczak <pawell@cadence.com>
 ---
- drivers/usb/cdns3/Makefile |   2 +-
- drivers/usb/cdns3/core.c   |  27 +++--
- drivers/usb/cdns3/drd.c    | 229 +++++++++++++++++++++++++++++++++++++
- drivers/usb/cdns3/drd.h    | 122 ++++++++++++++++++++
- 4 files changed, 372 insertions(+), 8 deletions(-)
- create mode 100644 drivers/usb/cdns3/drd.c
- create mode 100644 drivers/usb/cdns3/drd.h
+ drivers/usb/cdns3/ep0.c    |  18 ++
+ drivers/usb/cdns3/gadget.c | 442 ++++++++++++++++++++++++++++++++++++-
+ drivers/usb/cdns3/gadget.h |   3 +
+ 3 files changed, 461 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/cdns3/Makefile b/drivers/usb/cdns3/Makefile
-index 02d25b23c5d3..e779b2a2f8eb 100644
---- a/drivers/usb/cdns3/Makefile
-+++ b/drivers/usb/cdns3/Makefile
-@@ -1,5 +1,5 @@
- obj-$(CONFIG_USB_CDNS3)			+= cdns3.o
- obj-$(CONFIG_USB_CDNS3_PCI_WRAP)	+= cdns3-pci.o
+diff --git a/drivers/usb/cdns3/ep0.c b/drivers/usb/cdns3/ep0.c
+index c08d02665f9d..ca1795467155 100644
+--- a/drivers/usb/cdns3/ep0.c
++++ b/drivers/usb/cdns3/ep0.c
+@@ -23,6 +23,24 @@ static void cdns3_prepare_setup_packet(struct cdns3_device *priv_dev)
+ 	//TODO: Implements this function
+ }
  
--cdns3-y					:= core.o
-+cdns3-y					:= core.o drd.o
- cdns3-pci-y		 		:= cdns3-pci-wrap.o
-diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
-index f9055d4da67f..dbee4325da7f 100644
---- a/drivers/usb/cdns3/core.c
-+++ b/drivers/usb/cdns3/core.c
-@@ -17,6 +17,7 @@
- 
- #include "gadget.h"
- #include "core.h"
-+#include "drd.h"
- 
- static inline struct cdns3_role_driver *cdns3_get_current_role_driver(struct cdns3 *cdns)
- {
-@@ -57,8 +58,10 @@ static inline void cdns3_role_stop(struct cdns3 *cdns)
- static enum cdns3_roles cdns3_get_role(struct cdns3 *cdns)
- {
- 	if (cdns->roles[CDNS3_ROLE_HOST] && cdns->roles[CDNS3_ROLE_GADGET]) {
--		//TODO: implements selecting device/host mode
--		return CDNS3_ROLE_HOST;
-+		if (cdns3_is_host(cdns))
-+			return CDNS3_ROLE_HOST;
-+		if (cdns3_is_device(cdns))
-+			return CDNS3_ROLE_GADGET;
- 	}
- 	return cdns->roles[CDNS3_ROLE_HOST]
- 		? CDNS3_ROLE_HOST
-@@ -124,6 +127,12 @@ static irqreturn_t cdns3_irq(int irq, void *data)
- 	struct cdns3 *cdns = data;
- 	irqreturn_t ret = IRQ_NONE;
- 
-+	if (cdns->dr_mode == USB_DR_MODE_OTG) {
-+		ret = cdns3_drd_irq(cdns);
-+		if (ret == IRQ_HANDLED)
-+			return ret;
-+	}
-+
- 	/* Handle device/host interrupt */
- 	if (cdns->role != CDNS3_ROLE_END)
- 		ret = cdns3_get_current_role_driver(cdns)->irq(cdns);
-@@ -176,11 +185,8 @@ static void cdns3_role_switch(struct work_struct *work)
- 
- 	cdns = container_of(work, struct cdns3, role_switch_wq);
- 
--	//TODO: implements this functions.
--	//host = cdns3_is_host(cdns);
--	//device = cdns3_is_device(cdns);
--	host = 1;
--	device = 0;
-+	host = cdns3_is_host(cdns);
-+	device = cdns3_is_device(cdns);
- 
- 	if (host)
- 		role = CDNS3_ROLE_HOST;
-@@ -194,6 +200,12 @@ static void cdns3_role_switch(struct work_struct *work)
- 	pm_runtime_get_sync(cdns->dev);
- 	cdns3_role_stop(cdns);
- 
-+	if (cdns->desired_dr_mode != cdns->current_dr_mode) {
-+		cdns3_drd_update_mode(cdns);
-+		host = cdns3_is_host(cdns);
-+		device = cdns3_is_device(cdns);
-+	}
-+
- 	if (host) {
- 		if (cdns->roles[CDNS3_ROLE_HOST])
- 			cdns3_do_role_switch(cdns, CDNS3_ROLE_HOST);
-@@ -287,6 +299,7 @@ static int cdns3_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err2;
- 
-+	ret = cdns3_drd_init(cdns);
- 	if (ret)
- 		goto err2;
- 
-diff --git a/drivers/usb/cdns3/drd.c b/drivers/usb/cdns3/drd.c
-new file mode 100644
-index 000000000000..ac741c80e776
---- /dev/null
-+++ b/drivers/usb/cdns3/drd.c
-@@ -0,0 +1,229 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Cadence USBSS DRD Driver.
++/**
++ * cdns3_gadget_ep_set_wedge Set wedge on selected endpoint
++ * @ep: endpoint object
 + *
-+ * Copyright (C) 2018 Cadence.
-+ *
-+ * Author: Pawel Laszczak <pawell@cadence.com
-+ *
++ * Returns 0
 + */
-+#include <linux/kernel.h>
-+#include <linux/interrupt.h>
-+#include <linux/delay.h>
-+#include <linux/usb/otg.h>
++int cdns3_gadget_ep_set_wedge(struct usb_ep *ep)
++{
++	struct cdns3_endpoint *priv_ep = ep_to_cdns3_ep(ep);
++	struct cdns3_device *priv_dev = priv_ep->cdns3_dev;
 +
-+#include "gadget.h"
-+#include "drd.h"
++	dev_dbg(&priv_dev->dev, "Wedge for %s\n", ep->name);
++	cdns3_gadget_ep_set_halt(ep, 1);
++	priv_ep->flags |= EP_WEDGE;
++
++	return 0;
++}
++
+ /**
+  * cdns3_ep0_config - Configures default endpoint
+  * @priv_dev: extended gadget object
+diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
+index 702a05faa664..1f2a434486dc 100644
+--- a/drivers/usb/cdns3/gadget.c
++++ b/drivers/usb/cdns3/gadget.c
+@@ -58,6 +58,19 @@ void cdns3_set_register_bit(void __iomem *ptr, u32 mask)
+ 	writel(mask, ptr);
+ }
+ 
++/**
++ * cdns3_next_request - returns next request from list
++ * @list: list containing requests
++ *
++ * Returns request or NULL if no requests in list
++ */
++struct usb_request *cdns3_next_request(struct list_head *list)
++{
++	if (list_empty(list))
++		return NULL;
++	return list_first_entry(list, struct usb_request, list);
++}
++
+ /**
+  * select_ep - selects endpoint
+  * @priv_dev:  extended gadget object
+@@ -73,6 +86,53 @@ void cdns3_select_ep(struct cdns3_device *priv_dev, u32 ep)
+ 	writel(ep, &priv_dev->regs->ep_sel);
+ }
+ 
++/**
++ * cdns3_allocate_trb_pool - Allocates TRB's pool for selected endpoint
++ * @priv_ep:  endpoint object
++ *
++ * Function will return 0 on success or -ENOMEM on allocation error
++ */
++static int cdns3_allocate_trb_pool(struct cdns3_endpoint *priv_ep)
++{
++	struct cdns3_device *priv_dev = priv_ep->cdns3_dev;
++	struct cdns3_trb *link_trb;
++
++	if (!priv_ep->trb_pool) {
++		priv_ep->trb_pool = dma_zalloc_coherent(priv_dev->sysdev,
++							TRB_RIGN_SIZE,
++							&priv_ep->trb_pool_dma,
++							GFP_DMA);
++		if (!priv_ep->trb_pool)
++			return -ENOMEM;
++	} else {
++		memset(priv_ep->trb_pool, 0, TRB_RIGN_SIZE);
++	}
++
++	if (!priv_ep->aligned_buff) {
++		priv_ep->aligned_buff = dma_alloc_coherent(priv_dev->sysdev,
++							   CDNS3_UNALIGNED_BUF_SIZE,
++							   &priv_ep->aligned_dma_addr,
++							   GFP_DMA);
++		if (!priv_ep->aligned_buff) {
++			dma_free_coherent(priv_dev->sysdev,
++					  TRB_RIGN_SIZE,
++					  priv_ep->trb_pool,
++					  priv_ep->trb_pool_dma);
++			priv_ep->trb_pool = NULL;
++
++			return -ENOMEM;
++		}
++	}
++
++	/* Initialize the last TRB as Link TRB */
++	link_trb = (priv_ep->trb_pool + TRBS_PER_SEGMENT - 1);
++	link_trb->buffer = TRB_BUFFER(priv_ep->trb_pool_dma);
++	link_trb->control = TRB_CYCLE | TRB_TYPE(TRB_LINK) |
++			    TRB_CHAIN | TRB_TOGGLE;
++
++	return 0;
++}
++
+ static void cdns3_free_trb_pool(struct cdns3_endpoint *priv_ep)
+ {
+ 	struct cdns3_device *priv_dev = priv_ep->cdns3_dev;
+@@ -92,6 +152,73 @@ static void cdns3_free_trb_pool(struct cdns3_endpoint *priv_ep)
+ 	}
+ }
+ 
++/**
++ * cdns3_data_flush - flush data at onchip buffer
++ * @priv_ep: endpoint object
++ *
++ * Endpoint must be selected before call to this function
++ *
++ * Returns zero on success or negative value on failure
++ */
++static int cdns3_data_flush(struct cdns3_endpoint *priv_ep)
++{
++	struct cdns3_device *priv_dev = priv_ep->cdns3_dev;
++
++	writel(EP_CMD_DFLUSH, &priv_dev->regs->ep_cmd);
++
++	/* wait for DFLUSH cleared */
++	return cdns3_handshake(&priv_dev->regs->ep_cmd, EP_CMD_DFLUSH, 0, 100);
++}
 +
 +/**
-+ * cdns3_set_mode - change mode of OTG Core
-+ * @cdns: pointer to context structure
-+ * @mode: selected mode from cdns_role
++ * cdns3_ep_stall_flush - Stalls and flushes selected endpoint
++ * @priv_ep: endpoint object
++ *
++ * Endpoint must be selected before call to this function
 + */
-+void cdns3_set_mode(struct cdns3 *cdns, enum usb_dr_mode mode)
++static void cdns3_ep_stall_flush(struct cdns3_endpoint *priv_ep)
 +{
++	struct cdns3_device *priv_dev = priv_ep->cdns3_dev;
++
++	writel(EP_CMD_DFLUSH | EP_CMD_ERDY | EP_CMD_SSTALL,
++	       &priv_dev->regs->ep_cmd);
++
++	/* wait for DFLUSH cleared */
++	cdns3_handshake(&priv_dev->regs->ep_cmd, EP_CMD_DFLUSH, 0, 100);
++	priv_ep->flags |= EP_STALL;
++}
++
++/**
++ * cdns3_gadget_giveback - call struct usb_request's ->complete callback
++ * @priv_ep: The endpoint to whom the request belongs to
++ * @priv_req: The request we're giving back
++ * @status: completion code for the request
++ *
++ * Must be called with controller's lock held and interrupts disabled. This
++ * function will unmap @req and call its ->complete() callback to notify upper
++ * layers that it has completed.
++ */
++void cdns3_gadget_giveback(struct cdns3_endpoint *priv_ep,
++			   struct cdns3_request *priv_req,
++			   int status)
++{
++	//TODO: Implements this function.
++}
++
++/**
++ * cdns3_ep_run_transfer - start transfer on no-default endpoint hardware
++ * @priv_ep: endpoint object
++ *
++ * Returns zero on success or negative value on failure
++ */
++int cdns3_ep_run_transfer(struct cdns3_endpoint *priv_ep,
++			  struct usb_request *request)
++{
++	//TODO: Implements this function.
++
++	return 0;
++}
++
+ /**
+  * cdns3_irq_handler - irq line interrupt handler
+  * @cdns: cdns3 instance
+@@ -170,6 +297,318 @@ static struct usb_ep *cdns3_gadget_match_ep(struct usb_gadget *gadget,
+ 	return &priv_ep->endpoint;
+ }
+ 
++/**
++ * cdns3_gadget_ep_enable Enable endpoint
++ * @ep: endpoint object
++ * @desc: endpoint descriptor
++ *
++ * Returns 0 on success, error code elsewhere
++ */
++static int cdns3_gadget_ep_enable(struct usb_ep *ep,
++				  const struct usb_endpoint_descriptor *desc)
++{
++	struct cdns3_endpoint *priv_ep;
++	struct cdns3_device *priv_dev;
++	unsigned long flags;
++	int ret;
 +	u32 reg;
 +
-+	cdns->current_dr_mode = mode;
-+	switch (mode) {
-+	case USB_DR_MODE_PERIPHERAL:
-+		dev_info(cdns->dev, "Set controller to Gadget mode\n");
-+		writel(OTGCMD_DEV_BUS_REQ | OTGCMD_OTG_DIS,
-+		       &cdns->otg_regs->cmd);
-+		break;
-+	case USB_DR_MODE_HOST:
-+		dev_info(cdns->dev, "Set controller to Host mode\n");
-+		writel(OTGCMD_HOST_BUS_REQ | OTGCMD_OTG_DIS,
-+		       &cdns->otg_regs->cmd);
-+		break;
-+	case USB_DR_MODE_OTG:
-+		dev_info(cdns->dev, "Set controller to OTG mode\n");
-+		reg = readl(&cdns->otg_regs->ctrl1);
-+		reg |= OTGCTRL1_IDPULLUP;
-+		writel(reg, &cdns->otg_regs->ctrl1);
++	priv_ep = ep_to_cdns3_ep(ep);
++	priv_dev = priv_ep->cdns3_dev;
 +
-+		/* wait until valid ID (ID_VALUE) can be sampled (50ms). */
-+		mdelay(50);
-+		break;
-+	default:
-+		cdns->current_dr_mode = USB_DR_MODE_UNKNOWN;
-+		dev_err(cdns->dev, "Unsupported mode of operation %d\n", mode);
-+		return;
-+	}
-+}
-+
-+static int cdns3_otg_get_id(struct cdns3 *cdns)
-+{
-+	int id;
-+
-+	id = readl(&cdns->otg_regs->sts) & OTGSTS_ID_VALUE;
-+	dev_dbg(cdns->dev, "OTG ID: %d", id);
-+	return id;
-+}
-+
-+int cdns3_is_host(struct cdns3 *cdns)
-+{
-+	if (cdns->current_dr_mode == USB_DR_MODE_HOST)
-+		return 1;
-+	else if (cdns->current_dr_mode == USB_DR_MODE_OTG)
-+		if (!cdns3_otg_get_id(cdns))
-+			return 1;
-+
-+	return 0;
-+}
-+
-+int cdns3_is_device(struct cdns3 *cdns)
-+{
-+	if (cdns->current_dr_mode == USB_DR_MODE_PERIPHERAL)
-+		return 1;
-+	else if (cdns->current_dr_mode == USB_DR_MODE_OTG)
-+		if (cdns3_otg_get_id(cdns))
-+			return 1;
-+
-+	return 0;
-+}
-+
-+/**
-+ * cdns3_otg_disable_irq - Disable all OTG interrupts
-+ * @cdns: Pointer to controller context structure
-+ */
-+static void cdns3_otg_disable_irq(struct cdns3 *cdns)
-+{
-+	writel(0, &cdns->otg_regs->ien);
-+}
-+
-+/**
-+ * cdns3_otg_enable_irq - enable id and sess_valid interrupts
-+ * @cdns: Pointer to controller context structure
-+ */
-+static void cdns3_otg_enable_irq(struct cdns3 *cdns)
-+{
-+	writel(OTGIEN_ID_CHANGE_INT | OTGIEN_VBUSVALID_RISE_INT |
-+	       OTGIEN_VBUSVALID_FALL_INT, &cdns->otg_regs->ien);
-+}
-+
-+/**
-+ * cdns3_init_otg_mode - initialize drd controller
-+ * @cdns: Pointer to controller context structure
-+ *
-+ * Returns 0 on success otherwise negative errno
-+ */
-+static void cdns3_init_otg_mode(struct cdns3 *cdns)
-+{
-+	cdns3_otg_disable_irq(cdns);
-+	/* clear all interrupts */
-+	writel(~0, &cdns->otg_regs->ivect);
-+
-+	cdns3_set_mode(cdns, USB_DR_MODE_OTG);
-+
-+	cdns3_otg_enable_irq(cdns);
-+}
-+
-+/**
-+ * cdns3_drd_update_mode - initialize mode of operation
-+ * @cdns: Pointer to controller context structure
-+ *
-+ * Returns 0 on success otherwise negative errno
-+ */
-+int cdns3_drd_update_mode(struct cdns3 *cdns)
-+{
-+	int ret = 0;
-+
-+	switch (cdns->desired_dr_mode) {
-+	case USB_DR_MODE_PERIPHERAL:
-+		cdns3_set_mode(cdns, USB_DR_MODE_PERIPHERAL);
-+		break;
-+	case USB_DR_MODE_HOST:
-+		cdns3_set_mode(cdns, USB_DR_MODE_HOST);
-+		break;
-+	case USB_DR_MODE_OTG:
-+		cdns3_init_otg_mode(cdns);
-+		break;
-+	default:
-+		dev_err(cdns->dev, "Unsupported mode of operation %d\n",
-+			cdns->dr_mode);
++	if (!ep || !desc || desc->bDescriptorType != USB_DT_ENDPOINT) {
++		dev_err(&priv_dev->dev, "usbss: invalid parameters\n");
 +		return -EINVAL;
 +	}
 +
-+	return ret;
-+}
++	if (!desc->wMaxPacketSize) {
++		dev_err(&priv_dev->dev, "usbss: missing wMaxPacketSize\n");
++		return -EINVAL;
++	}
 +
-+irqreturn_t cdns3_drd_irq(struct cdns3 *cdns)
-+{
-+	irqreturn_t ret = IRQ_NONE;
-+	u32 reg;
++	if (dev_WARN_ONCE(&priv_dev->dev, priv_ep->flags & EP_ENABLED,
++			  "%s is already enabled\n", priv_ep->name))
++		return 0;
 +
-+	if (cdns->dr_mode != USB_DR_MODE_OTG)
++	ret = cdns3_allocate_trb_pool(priv_ep);
++	if (ret)
 +		return ret;
 +
-+	reg = readl(&cdns->otg_regs->ivect);
-+	if (!reg)
-+		return ret;
++	dev_dbg(&priv_dev->dev, "Enabling endpoint: %s\n", ep->name);
++	spin_lock_irqsave(&priv_dev->lock, flags);
++	cdns3_select_ep(priv_dev, desc->bEndpointAddress);
++	writel(EP_CMD_EPRST, &priv_dev->regs->ep_cmd);
 +
-+	if (reg & OTGIEN_ID_CHANGE_INT) {
-+		int id = cdns3_otg_get_id(cdns);
++	ret = cdns3_handshake(&priv_dev->regs->ep_cmd,
++			      EP_CMD_CSTALL | EP_CMD_EPRST, 0, 100);
 +
-+		dev_dbg(cdns->dev, "OTG IRQ: new ID: %d\n",
-+			cdns3_otg_get_id(cdns));
++	cdns3_set_register_bit(&priv_dev->regs->ep_cfg, EP_CFG_ENABLE);
 +
-+		if (id)
-+			cdns->role = CDNS3_ROLE_GADGET;
-+		else
-+			cdns->role = CDNS3_ROLE_HOST;
++	ep->desc = desc;
++	priv_ep->flags &= ~(EP_PENDING_REQUEST | EP_STALL);
++	priv_ep->flags |= EP_ENABLED | EP_UPDATE_EP_TRBADDR;
++	priv_ep->enqueue = 0;
++	priv_ep->dequeue = 0;
++	reg = readl(&priv_dev->regs->ep_sts);
++	priv_ep->pcs = !!EP_STS_CCS(reg);
++	priv_ep->ccs = !!EP_STS_CCS(reg);
++	/* one TRB is reserved for link TRB used in DMULT mode*/
++	priv_ep->free_trbs = TRBS_PER_SEGMENT - 1;
 +
-+		queue_work(system_freezable_wq, &cdns->role_switch_wq);
-+
-+		ret = IRQ_HANDLED;
-+	}
-+
-+	writel(~0, &cdns->otg_regs->ivect);
-+	return IRQ_HANDLED;
++	spin_unlock_irqrestore(&priv_dev->lock, flags);
++	return 0;
 +}
 +
-+int cdns3_drd_init(struct cdns3 *cdns)
-+{
-+	enum usb_dr_mode dr_mode;
-+	int ret = 0;
-+	u32 state;
-+
-+	state = OTGSTS_STRAP(readl(&cdns->otg_regs->sts));
-+
-+	dr_mode = cdns->dr_mode;
-+	if (state == OTGSTS_STRAP_HOST) {
-+		dev_info(cdns->dev, "Controller strapped to HOST\n");
-+		dr_mode = USB_DR_MODE_HOST;
-+		if (cdns->dr_mode != USB_DR_MODE_HOST &&
-+		    cdns->dr_mode != USB_DR_MODE_OTG)
-+			ret = -EINVAL;
-+	} else if (state == OTGSTS_STRAP_GADGET) {
-+		dev_info(cdns->dev, "Controller strapped to PERIPHERAL\n");
-+		dr_mode = USB_DR_MODE_PERIPHERAL;
-+		if (cdns->dr_mode != USB_DR_MODE_PERIPHERAL &&
-+		    cdns->dr_mode != USB_DR_MODE_OTG)
-+			ret = -EINVAL;
-+	}
-+
-+	if (ret) {
-+		dev_err(cdns->dev, "Incorrect DRD configuration\n");
-+		return ret;
-+	}
-+
-+	//Updating DR mode according to strap.
-+	cdns->dr_mode = dr_mode;
-+	cdns->desired_dr_mode = dr_mode;
-+	cdns->current_dr_mode = USB_DR_MODE_UNKNOWN;
-+
-+	dev_info(cdns->dev, "Controller Device ID: %08lx, Revision ID: %08lx\n",
-+		 CDNS_RID(readl(&cdns->otg_regs->rid)),
-+		 CDNS_DID(readl(&cdns->otg_regs->did)));
-+
-+	state = readl(&cdns->otg_regs->sts);
-+	if (OTGSTS_OTG_NRDY(state) != 0) {
-+		dev_err(cdns->dev, "Cadence USB3 OTG device not ready\n");
-+		return -ENODEV;
-+	}
-+
-+	ret = cdns3_drd_update_mode(cdns);
-+
-+	return ret;
-+}
-diff --git a/drivers/usb/cdns3/drd.h b/drivers/usb/cdns3/drd.h
-new file mode 100644
-index 000000000000..0faa7520ecac
---- /dev/null
-+++ b/drivers/usb/cdns3/drd.h
-@@ -0,0 +1,122 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Cadence USB3 DRD part of USBSS driver
++/**
++ * cdns3_gadget_ep_disable Disable endpoint
++ * @ep: endpoint object
 + *
-+ * Copyright (C) 2018 Cadence.
-+ *
-+ * Author: Pawel Laszczak <pawell@cadence.com>
++ * Returns 0 on success, error code elsewhere
 + */
-+#ifndef __LINUX_CDNS3_DRD
-+#define __LINUX_CDNS3_DRD
++static int cdns3_gadget_ep_disable(struct usb_ep *ep)
++{
++	struct cdns3_endpoint *priv_ep;
++	struct cdns3_device *priv_dev;
++	unsigned long flags;
++	int ret = 0;
++	struct usb_request *request;
++	u32 ep_cfg;
 +
-+#include <linux/usb/otg.h>
-+#include <linux/phy/phy.h>
-+#include "core.h"
++	if (!ep) {
++		pr_debug("usbss: invalid parameters\n");
++		return -EINVAL;
++	}
 +
-+/*  DRD register interface. */
-+struct cdns3_otg_regs {
-+	__le32 did;
-+	__le32 rid;
-+	__le32 capabilities;
-+	__le32 reserved1;
-+	__le32 cmd;
-+	__le32 sts;
-+	__le32 state;
-+	__le32 reserved2;
-+	__le32 ien;
-+	__le32 ivect;
-+	__le32 refclk;
-+	__le32 tmr;
-+	__le32 reserved3[4];
-+	__le32 simulate;
-+	__le32 override;
-+	__le32 susp_ctrl;
-+	__le32 reserved4;
-+	__le32 anasts;
-+	__le32 adp_ramp_time;
-+	__le32 ctrl1;
-+	__le32 ctrl2;
++	priv_ep = ep_to_cdns3_ep(ep);
++	priv_dev = priv_ep->cdns3_dev;
++
++	if (dev_WARN_ONCE(&priv_dev->dev, !(priv_ep->flags & EP_ENABLED),
++			  "%s is already disabled\n", priv_ep->name))
++		return 0;
++
++	spin_lock_irqsave(&priv_dev->lock, flags);
++	if (!priv_dev->start_gadget) {
++		dev_dbg(&priv_dev->dev,
++			"Disabling endpoint at disconnection: %s\n", ep->name);
++		spin_unlock_irqrestore(&priv_dev->lock, flags);
++		return 0;
++	}
++
++	dev_dbg(&priv_dev->dev, "Disabling endpoint: %s\n", ep->name);
++
++	cdns3_select_ep(priv_dev, ep->desc->bEndpointAddress);
++	ret = cdns3_data_flush(priv_ep);
++	while (!list_empty(&priv_ep->request_list)) {
++		request = cdns3_next_request(&priv_ep->request_list);
++
++		cdns3_gadget_giveback(priv_ep, to_cdns3_request(request),
++				      -ESHUTDOWN);
++	}
++
++	ep_cfg = readl(&priv_dev->regs->ep_cfg);
++	ep_cfg &= ~EP_CFG_ENABLE;
++	writel(ep_cfg, &priv_dev->regs->ep_cfg);
++	ep->desc = NULL;
++	priv_ep->flags &= ~EP_ENABLED;
++
++	spin_unlock_irqrestore(&priv_dev->lock, flags);
++
++	return ret;
++}
++
++/**
++ * cdns3_gadget_ep_alloc_request Allocates request
++ * @ep: endpoint object associated with request
++ * @gfp_flags: gfp flags
++ *
++ * Returns allocated request address, NULL on allocation error
++ */
++struct usb_request *cdns3_gadget_ep_alloc_request(struct usb_ep *ep,
++						  gfp_t gfp_flags)
++{
++	struct cdns3_endpoint *priv_ep = ep_to_cdns3_ep(ep);
++	struct cdns3_request *priv_req;
++
++	priv_req = kzalloc(sizeof(*priv_req), gfp_flags);
++	if (!priv_req)
++		return NULL;
++
++	priv_req->priv_ep = priv_ep;
++
++	return &priv_req->request;
++}
++
++/**
++ * cdns3_gadget_ep_free_request Free memory occupied by request
++ * @ep: endpoint object associated with request
++ * @request: request to free memory
++ */
++void cdns3_gadget_ep_free_request(struct usb_ep *ep,
++				  struct usb_request *request)
++{
++	struct cdns3_request *priv_req = to_cdns3_request(request);
++
++	kfree(priv_req);
++}
++
++/**
++ * cdns3_gadget_ep_queue Transfer data on endpoint
++ * @ep: endpoint object
++ * @request: request object
++ * @gfp_flags: gfp flags
++ *
++ * Returns 0 on success, error code elsewhere
++ */
++static int __cdns3_gadget_ep_queue(struct usb_ep *ep,
++				   struct usb_request *request,
++				   gfp_t gfp_flags)
++{
++	struct cdns3_endpoint *priv_ep = ep_to_cdns3_ep(ep);
++	struct cdns3_device *priv_dev = priv_ep->cdns3_dev;
++	int ret = 0;
++
++	request->actual = 0;
++	request->status = -EINPROGRESS;
++
++	dev_dbg(&priv_dev->dev, "Queuing to endpoint: %s\n", priv_ep->name);
++
++	ret = usb_gadget_map_request_by_dev(priv_dev->sysdev, request,
++					    usb_endpoint_dir_in(ep->desc));
++
++	if (ret)
++		return ret;
++
++	if (!cdns3_ep_run_transfer(priv_ep, request))
++		list_add_tail(&request->list, &priv_ep->request_list);
++
++	return ret;
++}
++
++static int cdns3_gadget_ep_queue(struct usb_ep *ep, struct usb_request *request,
++				 gfp_t gfp_flags)
++{
++	struct cdns3_endpoint *priv_ep = ep_to_cdns3_ep(ep);
++	struct cdns3_device *priv_dev = priv_ep->cdns3_dev;
++	struct usb_request *zlp_request;
++	unsigned long flags;
++	int ret;
++
++	spin_lock_irqsave(&priv_dev->lock, flags);
++	ret = __cdns3_gadget_ep_queue(ep, request, gfp_flags);
++
++	if (ret == 0 && request->zero && request->length &&
++	    (request->length % ep->maxpacket == 0)) {
++		zlp_request = cdns3_gadget_ep_alloc_request(ep, GFP_ATOMIC);
++		zlp_request->buf = priv_dev->zlp_buf;
++		zlp_request->length = 0;
++
++		dev_dbg(&priv_dev->dev, "Queuing ZLP for endpoint: %s\n",
++			priv_ep->name);
++		ret = __cdns3_gadget_ep_queue(ep, zlp_request, gfp_flags);
++	}
++
++	spin_unlock_irqrestore(&priv_dev->lock, flags);
++	return ret;
++}
++
++/**
++ * cdns3_gadget_ep_dequeue Remove request from transfer queue
++ * @ep: endpoint object associated with request
++ * @request: request object
++ *
++ * Returns 0 on success, error code elsewhere
++ */
++int cdns3_gadget_ep_dequeue(struct usb_ep *ep,
++			    struct usb_request *request)
++{
++	struct cdns3_endpoint *priv_ep = ep_to_cdns3_ep(ep);
++	struct cdns3_device *priv_dev = priv_ep->cdns3_dev;
++	struct usb_request *req, *req_temp;
++	unsigned long flags;
++	int ret = 0;
++
++	if (!ep || !request || !ep->desc)
++		return -EINVAL;
++
++	spin_lock_irqsave(&priv_dev->lock, flags);
++	dev_dbg(&priv_dev->dev, "Dequeue from %s\n", ep->name);
++
++	cdns3_select_ep(priv_dev, ep->desc->bEndpointAddress);
++	if (priv_dev->start_gadget)
++		ret = cdns3_data_flush(priv_ep);
++
++	list_for_each_entry_safe(req, req_temp, &priv_ep->request_list, list) {
++		if (request == req) {
++			cdns3_gadget_giveback(priv_ep,
++					      to_cdns3_request(request),
++					      -ECONNRESET);
++			break;
++		}
++	}
++
++	spin_unlock_irqrestore(&priv_dev->lock, flags);
++	return ret;
++}
++
++/**
++ * cdns3_gadget_ep_set_halt Sets/clears stall on selected endpoint
++ * @ep: endpoint object to set/clear stall on
++ * @value: 1 for set stall, 0 for clear stall
++ *
++ * Returns 0 on success, error code elsewhere
++ */
++int cdns3_gadget_ep_set_halt(struct usb_ep *ep, int value)
++{
++	struct cdns3_endpoint *priv_ep = ep_to_cdns3_ep(ep);
++	struct cdns3_device *priv_dev = priv_ep->cdns3_dev;
++	unsigned long flags;
++	int ret = 0;
++
++	if (!(priv_ep->flags & EP_ENABLED))
++		return -EPERM;
++
++	/* if actual transfer is pending defer setting stall on this endpoint */
++	if ((priv_ep->flags & EP_PENDING_REQUEST) && value) {
++		priv_ep->flags |= EP_STALL;
++		return 0;
++	}
++
++	dev_dbg(&priv_dev->dev, "Halt endpoint %s\n", priv_ep->name);
++
++	spin_lock_irqsave(&priv_dev->lock, flags);
++
++	cdns3_select_ep(priv_dev, ep->desc->bEndpointAddress);
++	if (value) {
++		cdns3_ep_stall_flush(priv_ep);
++	} else {
++		priv_ep->flags &= ~EP_WEDGE;
++		writel(EP_CMD_CSTALL | EP_CMD_EPRST, &priv_dev->regs->ep_cmd);
++
++		/* wait for EPRST cleared */
++		ret = cdns3_handshake(&priv_dev->regs->ep_cmd,
++				      EP_CMD_EPRST, 0, 100);
++		priv_ep->flags &= ~EP_STALL;
++	}
++
++	priv_ep->flags &= ~EP_PENDING_REQUEST;
++	spin_unlock_irqrestore(&priv_dev->lock, flags);
++
++	return ret;
++}
++
++extern const struct usb_ep_ops cdns3_gadget_ep0_ops;
++
++static const struct usb_ep_ops cdns3_gadget_ep_ops = {
++	.enable = cdns3_gadget_ep_enable,
++	.disable = cdns3_gadget_ep_disable,
++	.alloc_request = cdns3_gadget_ep_alloc_request,
++	.free_request = cdns3_gadget_ep_free_request,
++	.queue = cdns3_gadget_ep_queue,
++	.dequeue = cdns3_gadget_ep_dequeue,
++	.set_halt = cdns3_gadget_ep_set_halt,
++	.set_wedge = cdns3_gadget_ep_set_wedge,
 +};
 +
-+/* CDNS_RID - bitmasks */
-+#define CDNS_RID(p)			((p) & GENMASK(15, 0))
+ /**
+  * cdns3_gadget_get_frame Returns number of actual ITP frame
+  * @gadget: gadget object
+@@ -365,8 +804,7 @@ static int cdns3_init_ep(struct cdns3_device *priv_dev)
+ 		usb_ep_set_maxpacket_limit(&priv_ep->endpoint,
+ 					   ENDPOINT_MAX_PACKET_LIMIT);
+ 		priv_ep->endpoint.max_streams = ENDPOINT_MAX_STREAMS;
+-		//TODO: Add implementation of cdns3_gadget_ep_ops
+-		//priv_ep->endpoint.ops = &cdns3_gadget_ep_ops;
++		priv_ep->endpoint.ops = &cdns3_gadget_ep_ops;
+ 		if (ep_dir)
+ 			priv_ep->endpoint.caps.dir_in = 1;
+ 		else
+diff --git a/drivers/usb/cdns3/gadget.h b/drivers/usb/cdns3/gadget.h
+index 3b0d4d2e4831..a4be288b34cb 100644
+--- a/drivers/usb/cdns3/gadget.h
++++ b/drivers/usb/cdns3/gadget.h
+@@ -1072,4 +1072,7 @@ void cdns3_set_register_bit(void __iomem *ptr, u32 mask);
+ int cdns3_init_ep0(struct cdns3_device *priv_dev);
+ void cdns3_ep0_config(struct cdns3_device *priv_dev);
+ void cdns3_select_ep(struct cdns3_device *priv_dev, u32 ep);
++int cdns3_gadget_ep_set_wedge(struct usb_ep *ep);
++int cdns3_gadget_ep_set_halt(struct usb_ep *ep, int value);
 +
-+/* CDNS_VID - bitmasks */
-+#define CDNS_DID(p)			((p) & GENMASK(31, 0))
-+
-+/* OTGCMD - bitmasks */
-+/* "Request the bus for Device mode. */
-+#define OTGCMD_DEV_BUS_REQ	BIT(0)
-+/* Request the bus for Host mode */
-+#define OTGCMD_HOST_BUS_REQ		BIT(1)
-+/* Enable OTG mode. */
-+#define OTGCMD_OTG_EN			BIT(2)
-+/* Disable OTG mode */
-+#define OTGCMD_OTG_DIS			BIT(3)
-+/*"Configure OTG as A-Device. */
-+#define OTGCMD_A_DEV_EN			BIT(4)
-+/*"Configure OTG as A-Device. */
-+#define OTGCMD_A_DEV_DIS		BIT(5)
-+/* Drop the bus for Device mod	e. */
-+#define OTGCMD_DEV_BUS_DROP		BIT(8)
-+/* Drop the bus for Host mode*/
-+#define OTGCMD_HOST_BUS_DROP		BIT(9)
-+/* Power Down USBSS-DEV. */
-+#define OTGCMD_DEV_POWER_OFF		BIT(11)
-+/* Power Down CDNSXHCI. */
-+#define OTGCMD_HOST_POWER_OFF		BIT(12)
-+
-+/* OTGIEN - bitmasks */
-+/* ID change interrupt enable */
-+#define OTGIEN_ID_CHANGE_INT		BIT(0)
-+/* Vbusvalid fall detected interrupt enable.*/
-+#define OTGIEN_VBUSVALID_RISE_INT	BIT(4)
-+/* Vbusvalid fall detected interrupt enable */
-+#define OTGIEN_VBUSVALID_FALL_INT	BIT(5)
-+
-+/* OTGSTS - bitmasks */
-+/*
-+ * Current value of the ID pin. It is only valid when idpullup in
-+ *  OTGCTRL1_TYPE register is set to '1'.
-+ */
-+#define OTGSTS_ID_VALUE			BIT(0)
-+/* Current value of the vbus_valid */
-+#define OTGSTS_VBUS_VALID		BIT(1)
-+/* Current value of the b_sess_vld */
-+#define OTGSTS_SESSION_VALID		BIT(2)
-+/*Device mode is active*/
-+#define OTGSTS_DEV_ACTIVE		BIT(3)
-+/* Host mode is active. */
-+#define OTGSTS_HOST_ACTIVE		BIT(4)
-+/* OTG Controller not ready. */
-+#define OTGSTS_OTG_NRDY_MASK		BIT(11)
-+#define OTGSTS_OTG_NRDY(p)		((p) & OTGSTS_OTG_NRDY_MASK)
-+/*
-+ * Value of the strap pins.
-+ * 000 - no default configuration
-+ * 010 - Controller initiall configured as Host
-+ * 100 - Controller initially configured as Device
-+ */
-+#define OTGSTS_STRAP(p)			(((p) & GENMASK(14, 12)) >> 12)
-+#define OTGSTS_STRAP_NO_DEFAULT_CFG	0x00
-+#define OTGSTS_STRAP_HOST_OTG		0x01
-+#define OTGSTS_STRAP_HOST		0x02
-+#define OTGSTS_STRAP_GADGET		0x04
-+/* Host mode is turned on. */
-+#define OTGSTSE_XHCI_READYF		BIT(26)
-+/* "Device mode is turned on .*/
-+#define OTGSTS_DEV_READY		BIT(27)
-+
-+/* OTGREFCLK - bitmasks */
-+#define OTGREFCLK_STB_CLK_SWITCH_EN	BIT(31)
-+
-+/* OTGCTRL1 - bitmasks */
-+#define OTGCTRL1_IDPULLUP		BIT(24)
-+
-+int cdns3_is_host(struct cdns3 *cdns);
-+int cdns3_is_device(struct cdns3 *cdns);
-+int cdns3_drd_init(struct cdns3 *cdns);
-+int cdns3_drd_update_mode(struct cdns3 *cdns);
-+irqreturn_t cdns3_drd_irq(struct cdns3 *cdns);
-+
-+#endif /* __LINUX_CDNS3_DRD */
+ #endif /* __LINUX_CDNS3_GADGET */
 -- 
 2.17.1
