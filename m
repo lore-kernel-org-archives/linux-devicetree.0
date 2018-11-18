@@ -1,61 +1,67 @@
 From: Matheus Tavares <matheus.bernardino@usp.br>
-Subject: [PATCH v2 1/7] staging:iio:ad2s90: Add device tree support
-Date: Sun, 18 Nov 2018 02:25:34 -0200
-Message-ID: <20181118042540.12697-2-matheus.bernardino@usp.br>
+Subject: [PATCH v2 3/7] staging:iio:ad2s90: Add max frequency check at probe
+Date: Sun, 18 Nov 2018 02:25:36 -0200
+Message-ID: <20181118042540.12697-4-matheus.bernardino@usp.br>
 References: <20181118042540.12697-1-matheus.bernardino@usp.br>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181118042540.12697-1-matheus.bernardino@usp.br>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, Alexandru Ardelean <alexandru.ardelean@analog.com>, victorcolombo@gmail.com
+Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alexandru Ardelean <alexandru.ardelean@analog.com>, kernel-usp@googlegroups.com, victorcolombo@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree support to ad2s90 with standard
-device tree id table.
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
+This patch adds a max frequency check at the beginning of ad2s90_probe
+function so that when it is set to a value above 0.83Mhz, dev_err is
+called with an appropriate message and -EINVAL is returned.
+
+The defined limit is 0.83Mhz instead of 2Mhz, which is the chip's max
+frequency as specified in the datasheet, because, as also specified in
+the datasheet, a 600ns delay is expected between the application of a
+logic LO to CS and the application of SCLK. Since the delay is not
+implemented in the spi code, to satisfy it, SCLK's period should be at
+most 2 * 600ns, so the max frequency should be 1 / (2 * 6e-7), which
+gives roughly 830000Hz.
+
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
 ---
 Changes in v2:
- - none
+ - Correctly credit Alexandru as the patch's author
 
- drivers/staging/iio/resolver/ad2s90.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/staging/iio/resolver/ad2s90.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/drivers/staging/iio/resolver/ad2s90.c b/drivers/staging/iio/resolver/ad2s90.c
-index 3e257ac46f7a..6ffbac66b837 100644
+index 913d6fad2d4d..fe90f2056bff 100644
 --- a/drivers/staging/iio/resolver/ad2s90.c
 +++ b/drivers/staging/iio/resolver/ad2s90.c
-@@ -107,6 +107,12 @@ static int ad2s90_probe(struct spi_device *spi)
- 	return devm_iio_device_register(indio_dev->dev.parent, indio_dev);
- }
+@@ -19,6 +19,12 @@
+ #include <linux/iio/iio.h>
+ #include <linux/iio/sysfs.h>
  
-+static const struct of_device_id ad2s90_of_match[] = {
-+	{ .compatible = "adi,ad2s90", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, ad2s90_of_match);
++/*
++ * Although chip's max frequency is 2Mhz, it needs 600ns between CS and the
++ * first falling edge of SCLK, so frequency should be at most 1 / (2 * 6e-7)
++ */
++#define AD2S90_MAX_SPI_FREQ_HZ  830000
 +
- static const struct spi_device_id ad2s90_id[] = {
- 	{ "ad2s90" },
- 	{}
-@@ -116,6 +122,7 @@ MODULE_DEVICE_TABLE(spi, ad2s90_id);
- static struct spi_driver ad2s90_driver = {
- 	.driver = {
- 		.name = "ad2s90",
-+		.of_match_table = of_match_ptr(ad2s90_of_match),
- 	},
- 	.probe = ad2s90_probe,
- 	.id_table = ad2s90_id,
+ struct ad2s90_state {
+ 	struct mutex lock;
+ 	struct spi_device *sdev;
+@@ -78,6 +84,12 @@ static int ad2s90_probe(struct spi_device *spi)
+ 	struct iio_dev *indio_dev;
+ 	struct ad2s90_state *st;
+ 
++	if (spi->max_speed_hz > AD2S90_MAX_SPI_FREQ_HZ) {
++		dev_err(&spi->dev, "SPI CLK, %d Hz exceeds %d Hz\n",
++			spi->max_speed_hz, AD2S90_MAX_SPI_FREQ_HZ);
++		return -EINVAL;
++	}
++
+ 	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+ 	if (!indio_dev)
+ 		return -ENOMEM;
 -- 
 2.18.0
