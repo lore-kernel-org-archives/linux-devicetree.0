@@ -1,28 +1,58 @@
-From: Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v1 0/1] npcm: fix uninitialized 'val' warning in receive function
-Date: Sun, 18 Nov 2018 14:35:03 +0200
-Message-ID: <20181118123504.83082-1-tmaimon77@gmail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v3 1/3] dt-bindings: amlogic: Add Internal Clock Measurer bindings
+Date: Sun, 18 Nov 2018 14:53:10 +0100
+Message-ID: <20181118135310.31458-1-narmstrong@baylibre.com>
+References: <20181118135024.30720-1-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181118135024.30720-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, yuenn@google.com, venture@google.com, brendanhiggins@google.com, avifishman70@gmail.com, joel@jms.id.au
-Cc: linux-spi@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>
+To: devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Addressed comments from:.
- - kbuild test robot : drivers/spi/spi-npcm-pspi.c:226:17: warning:
-  'val' may be used uninitialized in this function.
-  
-Fix uninitialized 'val' warning receive function.
-Send function has been modify to be aligned with 
-the receive function.
+The Amlogic Meson SoCs embeds a clock measurer IP to measure the internal
+clock paths frequencies.
 
-The NPCM PSPI driver tested on NPCM750 evaluation board.
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+Rob,
 
-Tomer Maimon (1):
-  spi: npcm: fix uninitialized 'val' warning in receive function
+I didn't take your v2 Reviewed-by since I changed the compatible list,
+tell me if i can still keep the tag.
+ 
+Thanks,
+Neil
 
- drivers/spi/spi-npcm-pspi.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ .../bindings/soc/amlogic/clk-measure.txt       | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
 
+diff --git a/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt b/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
+new file mode 100644
+index 000000000000..205a54bcd7c7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
+@@ -0,0 +1,18 @@
++Amlogic Internal Clock Measurer
++===============================
++
++The Amlogic SoCs contains an IP to measure the internal clocks.
++The precision is multiple of MHz, useful to debug the clock states.
++
++Required properties:
++- compatible: Shall contain one of the following :
++			"amlogic,meson-gx-clk-measure" for GX SoCs
++			"amlogic,meson8-clk-measure" for Meson8 SoCs
++			"amlogic,meson8b-clk-measure" for Meson8b SoCs
++- reg: base address and size of the Clock Measurer register space.
++
++Example:
++	clock-measure@8758 {
++		compatible = "amlogic,meson-gx-clk-measure";
++		reg = <0x0 0x8758 0x0 0x10>;
++	};
 -- 
-2.14.1
+2.19.1
