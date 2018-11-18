@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 3/7] net: phy: icplus: keep all ip101a_g functions together
-Date: Sun, 18 Nov 2018 22:23:55 +0100
-Message-ID: <20181118212359.32414-4-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 1/7] dt-bindings: vendor-prefix: add prefix for IC Plus Corp.
+Date: Sun, 18 Nov 2018 22:23:53 +0100
+Message-ID: <20181118212359.32414-2-martin.blumenstingl@googlemail.com>
 References: <20181118212359.32414-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,64 +12,25 @@ To: netdev@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, an
 Cc: linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-This simply moves ip101a_g_config_init right above
-ip101a_g_config_intr so all functions for the ICPlus IP101A/G PHYs are
-grouped together.
-No functional changes.
+IC Plus Corp. has various Ethernet related products such as Ethernet
+transceivers, Ethernet controllers, Ethernet switches, etc.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
- drivers/net/phy/icplus.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/phy/icplus.c b/drivers/net/phy/icplus.c
-index ad87bd3280d7..3d3e9134c762 100644
---- a/drivers/net/phy/icplus.c
-+++ b/drivers/net/phy/icplus.c
-@@ -162,21 +162,6 @@ static int ip1001_config_init(struct phy_device *phydev)
- 	return 0;
- }
- 
--static int ip101a_g_config_init(struct phy_device *phydev)
--{
--	int c;
--
--	c = ip1xx_reset(phydev);
--	if (c < 0)
--		return c;
--
--	/* Enable Auto Power Saving mode */
--	c = phy_read(phydev, IP10XX_SPEC_CTRL_STATUS);
--	c |= IP101A_G_APS_ON;
--
--	return phy_write(phydev, IP10XX_SPEC_CTRL_STATUS, c);
--}
--
- static int ip175c_read_status(struct phy_device *phydev)
- {
- 	if (phydev->mdio.addr == 4) /* WAN port */
-@@ -196,6 +181,21 @@ static int ip175c_config_aneg(struct phy_device *phydev)
- 	return 0;
- }
- 
-+static int ip101a_g_config_init(struct phy_device *phydev)
-+{
-+	int c;
-+
-+	c = ip1xx_reset(phydev);
-+	if (c < 0)
-+		return c;
-+
-+	/* Enable Auto Power Saving mode */
-+	c = phy_read(phydev, IP10XX_SPEC_CTRL_STATUS);
-+	c |= IP101A_G_APS_ON;
-+
-+	return phy_write(phydev, IP10XX_SPEC_CTRL_STATUS, c);
-+}
-+
- static int ip101a_g_config_intr(struct phy_device *phydev)
- {
- 	u16 val;
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 4b1a2a8fcc16..cc6b2c0d3b49 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -170,6 +170,7 @@ holtek	Holtek Semiconductor, Inc.
+ hwacom	HwaCom Systems Inc.
+ i2se	I2SE GmbH
+ ibm	International Business Machines (IBM)
++icplus	IC Plus Corp.
+ idt	Integrated Device Technologies, Inc.
+ ifi	Ingenieurburo Fur Ic-Technologie (I/F/I)
+ ilitek	ILI Technology Corporation (ILITEK)
 -- 
 2.19.1
