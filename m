@@ -1,100 +1,72 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v2 5/9] mtd: nand: atmel: fix OF child-node lookup
-Date: Sun, 18 Nov 2018 11:45:13 +0100
-Message-ID: <20181118114514.78a9e3ee@bbrezillon>
-References: <20180827082153.22537-1-johan@kernel.org>
-        <20180827082153.22537-6-johan@kernel.org>
-        <20180827102820.3abf7291@bbrezillon>
-        <20180827084414.GZ14967@localhost>
-        <20180827104842.26bce912@bbrezillon>
-        <20180827094423.GA14967@localhost>
-        <CAL_Jsq+fiM8E-za-fKufgDuoDqu3DY5a4bgZOuF3Ssvj2=6ayg@mail.gmail.com>
-        <20181023205117.745a8f97@bbrezillon>
-        <20181115142648.GJ19900@localhost>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [RCF PATCH,v2,2/2] pwm: imx: Configure output to GPIO in
+ disabled state
+Date: Sun, 18 Nov 2018 12:30:34 +0100
+Message-ID: <20181118113034.pguv66idde5idinb@pengutronix.de>
+References: <20181108191855.zuon3ecv4yjfbs7g@pengutronix.de>
+ <283cfef3-16d0-8bd4-e306-6e34d44c3a86@ysoft.com>
+ <20181109165555.vqbiwh4hlcnozdna@pengutronix.de>
+ <20181114113449.GB2620@ulmo>
+ <20181114215120.vddykljqyavm64wj@pengutronix.de>
+ <20181115152545.GA8611@ulmo>
+ <20181115203733.qvonika6yhn2bsnb@pengutronix.de>
+ <20181116095124.GA28631@ulmo>
+ <20181116103929.cxfvuc2te7cadhp2@pengutronix.de>
+ <20181116125633.4e110125@ipc1.ka-ro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20181115142648.GJ19900@localhost>
-Sender: stable-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Josh Wu <rainyfeeling@outlook.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181116125633.4e110125@ipc1.ka-ro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>, =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 15 Nov 2018 15:26:48 +0100
-Johan Hovold <johan@kernel.org> wrote:
+Hello Lothar,
 
-> On Tue, Oct 23, 2018 at 08:51:17PM +0200, Boris Brezillon wrote:
-> > On Tue, 23 Oct 2018 13:28:09 -0500
-> > Rob Herring <robh+dt@kernel.org> wrote:
-> >   
-> > > On Mon, Aug 27, 2018 at 4:44 AM Johan Hovold <johan@kernel.org> wrote:  
-> > > >
-> > > > On Mon, Aug 27, 2018 at 10:48:42AM +0200, Boris Brezillon wrote:    
-> > > > > On Mon, 27 Aug 2018 10:44:14 +0200
-> > > > > Johan Hovold <johan@kernel.org> wrote:
-> > > > >    
-> > > > > > On Mon, Aug 27, 2018 at 10:28:20AM +0200, Boris Brezillon wrote:    
-> > > > > > > Hi Johan
-> > > > > > >
-> > > > > > > On Mon, 27 Aug 2018 10:21:49 +0200
-> > > > > > > Johan Hovold <johan@kernel.org> wrote:
-> > > > > > >    
-> > > > > > > > Use the new of_get_compatible_child() helper to lookup the nfc child
-> > > > > > > > node instead of using of_find_compatible_node(), which searches the
-> > > > > > > > entire tree from a given start node and thus can return an unrelated
-> > > > > > > > (i.e. non-child) node.
-> > > > > > > >
-> > > > > > > > This also addresses a potential use-after-free (e.g. after probe
-> > > > > > > > deferral) as the tree-wide helper drops a reference to its first
-> > > > > > > > argument (i.e. the node of the device being probed).
-> > > > > > > >
-> > > > > > > > While at it, also fix a related nfc-node reference leak.
-> > > > > > > >
-> > > > > > > > Fixes: f88fc122cc34 ("mtd: nand: Cleanup/rework the atmel_nand driver")
-> > > > > > > > Cc: stable <stable@vger.kernel.org>     # 4.11
-> > > > > > > > Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> > > > > > > > Cc: Josh Wu <rainyfeeling@outlook.com>
-> > > > > > > > Cc: Boris Brezillon <boris.brezillon@bootlin.com>
-> > > > > > > > Signed-off-by: Johan Hovold <johan@kernel.org>    
-> > > > > > >
-> > > > > > > Acked-by: Boris Brezillon <boris.brezillon@bootlin.com>    
-> > > > > >
-> > > > > > Thanks for the ack.
-> > > > > >    
-> > > > > > > I'll let Miquel queue this patch to the nand/next branch, unless you
-> > > > > > > want it to be merged in 4.19, in which case I'll queue it to the
-> > > > > > > mtd/fixes branch.    
-> > > > > >
-> > > > > > Note that there's a dependency on the first patch of the series which
-> > > > > > adds the new helper.    
-> > > > >
-> > > > > I was not Cc-ed on this patch :P.    
-> > > >
-> > > > Yeah, sorry about that. I made sure everyone was CCed on the
-> > > > cover letter, but guess I could have reused that list for the helper as
-> > > > well.
-> > > >    
-> > > > > > Rob can pick up the entire series if the various
-> > > > > > maintainers agree, otherwise I'll try to get at the least the helper
-> > > > > > into -rc2.    
-> > > > >
-> > > > > If everything goes in 4.19-rc2 through Rob's tree that's fine, but if
-> > > > > it's queued for 4.20 we might need an immutable tag just in case we
-> > > > > queue conflicting changes to the NAND tree.    
-> > > >
-> > > > Ok, thanks.    
-> > > 
-> > > Hi Boris, can you pick this one up. It conflicts with "mtd: rawnand:
-> > > atmel: Fix potential NULL pointer dereference"  
+On Fri, Nov 16, 2018 at 12:56:33PM +0100, Lothar Waßmann wrote:
+> Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote:
+> > On Fri, Nov 16, 2018 at 10:51:24AM +0100, Thierry Reding wrote:
+> > > On Thu, Nov 15, 2018 at 09:37:33PM +0100, Uwe Kleine-König wrote:  
+> > > > On Thu, Nov 15, 2018 at 04:25:45PM +0100, Thierry Reding wrote:  
+> [...]
+> > > But why? The backlight doesn't care about the specific pinmuxing of the
+> > > PWM pin. All it cares about is the PWM signal. That's the level of
+> > > abstraction that the PWM consumer expects, anything lower level belongs
+> > > in the PWM driver.  
 > > 
-> > Sure, I'll queue it for -rc2.  
-> 
-> This one hasn't showed up in -next yet, so sending a reminder.
+> > The backlight driver cares about the PWM pin muxing because if it's
+> > wrongly muxed the backlight doesn't work as intended.
+>
+> With this argumentation you would also have to define the clocks needed
+> for the PWM in the backlight (or whatever pwm consumer) driver, because
+> if the clocks are not set up correctly the backlight won't work as
+> expected...
 
-Applied (thanks for the reminder, I had forgotten :-)). It should show
-up in -rc4.
+The reason why I think it is sensible to put the PWM pin into the
+consumer's pinctrl is that only after the consumer grabbed the PWM it is
+fixed (in software) what the idle level is. So the pwm alone isn't
+complete and it's not clear what to do with this pin. High-Z is probably
+a good choice for most setups, but this relies on a PU or PD into the
+right direction that isn't always present. (I'm currently working with
+such a machine, where such a PD/PU is missing. Not entirely sure this is
+a problem because maybe the display unit has a pull. Didn't take the
+time yet to verify.) Also this needs some care because the PWM might
+already running on purpose (e.g. to show a splash screen) then switching
+to High-Z should be avoided.
 
-Thanks,
+So IMHO it is sensible to delay setting up the pinmux until the boundary
+conditions are fixed. This is also the general idea with the involvement
+of pinctrl stuff, but given that even without handling pinctrl specially
+it already works just fine when the pwm is only muxed as part of the
+consumer.
+ 
+Best regards
+Uwe
 
-Boris
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
