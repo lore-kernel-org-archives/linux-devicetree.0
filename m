@@ -1,98 +1,164 @@
-From: tom burkart <tom@aussec.com>
-Subject: Re: [PATCH v7 1/4] dt-bindings: pps: descriptor-based gpio,
- capture-clear addition
-Date: Sun, 18 Nov 2018 11:35:02 +1100
-Message-ID: <20181118113502.55634v85ybgkt586@www.aussec.com>
-References: <20181114125432.16044-1-tom@aussec.com>
- <20181114125432.16044-2-tom@aussec.com> <20181116224919.GA18008@bogus>
- <20181117213522.12672utznrvpbn56@www.aussec.com>
- <CAL_JsqKZHg5_8ghMmU4qO4CVZibcHOvtVJH669zod_6GLGakRg@mail.gmail.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [RFC v2 5/7] clocksource/drivers/rtl8186: Add RTL8186 timer
+ driver
+Date: Sun, 18 Nov 2018 02:39:31 +0100
+Message-ID: <dd8dbad0-efc3-fab1-e1d8-75819af66879@linaro.org>
+References: <20181001102952.7913-1-yasha.che3@gmail.com>
+ <20181001102952.7913-6-yasha.che3@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8;
- DelSp="Yes";
- format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKZHg5_8ghMmU4qO4CVZibcHOvtVJH669zod_6GLGakRg@mail.gmail.com>
-Content-Disposition: inline
+In-Reply-To: <20181001102952.7913-6-yasha.che3@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Yasha Cherikovsky <yasha.che3@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rob Herring <robh@kernel.org>:
 
-> On Sat, Nov 17, 2018 at 4:35 AM tom burkart <tom@aussec.com> wrote:
->>
->> Quoting Rob Herring <robh@kernel.org>:
->>
->> > On Wed, Nov 14, 2018 at 11:54:29PM +1100, Tom Burkart wrote:
->> >> This patch changes the devicetree bindings for the pps-gpio driver
->> >> from the integer based ABI to the descriptor based ABI.
->> > ? That has nothing to do with DT.
->>
->> I believe it does, as the change in ABI forces a rename in the DT
->> naming convention.
->> This is due to the descriptor based ABI appending "-gpio" or "-gpios" (see
->> Documentation/gpio/base.txt.)
->> Admittedly, I may have called it by the wrong name due to ignorance,
->> my apologies.
->
-> If what you say is correct, then you can't change this driver. You'll
-> break compatibility with any existing DT.
->
-> Changing the binding reasoning should purely be that this is the
-> preferred form. Bindings must be independent from changing kernel
-> APIs.
+Hi Yasha,
 
-See comments from Philip Zabel.  I misread the documentation and this  
-has now been corrected in v8 of the patch.  I hope that eliminates all  
-comments made above.
+except the few details below, the driver looks good to me.
 
->> >>  It also adds
->> >> documentation for the device tree capture-clear option.  The legacy
->> >> device tree entry for the GPIO pin is supported.
->> >>
->> >> Signed-off-by: Tom Burkart <tom@aussec.com>
->> >> ---
->> >>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 8 ++++++--
->> >>  1 file changed, 6 insertions(+), 2 deletions(-)
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> b/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> index 3683874832ae..6c9fc0998d94 100644
->> >> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> @@ -5,19 +5,23 @@ a GPIO pin.
->> >>
->> >>  Required properties:
->> >>  - compatible: should be "pps-gpio"
->> >> -- gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
->> >> +- pps-gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
->> >> +Alternatively (DEPRECATED), instead of pps-gpios above, it may have:
->> >> +- gpios: one PPS GPIO as above
->> >>
->> >>  Optional properties:
->> >>  - assert-falling-edge: when present, assert is indicated by a  
->> falling edge
->> >>                         (instead of by a rising edge)
->> >> +- capture-clear: when present, also capture the PPS clear event
->> >
->> > Is this a h/w thing? or driver configuration?
->>
->> Driver configuration.  Most of the code was present in the driver, yet
->> it was not documented, or usable due to a two line (code) omission
->> (the value was not being fetched from DT).
->
-> So what determines how you want to configure this? If the user will
-> want to change it, then it should be a sysfs attr and exposed to
-> userspace. If it depends on h/w config for a board then it can be in
-> DT.
+On 01/10/2018 12:29, Yasha Cherikovsky wrote:
+> The Realtek RTL8186 SoC is a MIPS based SoC
+> used in some home routers [1][2].
+> 
+> This adds a driver to handle the built-in timers
+> on this SoC.
+> 
+> Timers 0 and 1 are 24bit timers.
+> Timers 2 and 3 are 32bit timers.
+> 
+> Use Timer2 as clocksource and Timer3 for clockevents.
+> Timer2 is also used for sched_clock.
+> 
+> [1] https://www.linux-mips.org/wiki/Realtek_SOC#Realtek_RTL8186
+> [2] https://wikidevi.com/wiki/Realtek_RTL8186
+> 
+> Signed-off-by: Yasha Cherikovsky <yasha.che3@gmail.com>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Paul Burton <paul.burton@mips.com>
+> Cc: James Hogan <jhogan@kernel.org>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-mips@linux-mips.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/clocksource/Kconfig         |   9 ++
+>  drivers/clocksource/Makefile        |   1 +
+>  drivers/clocksource/timer-rtl8186.c | 220 ++++++++++++++++++++++++++++
+>  3 files changed, 230 insertions(+)
+>  create mode 100644 drivers/clocksource/timer-rtl8186.c
+> 
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index dec0dd88ec15..da87f73d0631 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -609,4 +609,13 @@ config ATCPIT100_TIMER
+>  	help
+>  	  This option enables support for the Andestech ATCPIT100 timers.
+>  
+> +config RTL8186_TIMER
+> +	bool "RTL8186 timer driver"
+> +	depends on MACH_RTL8186
+> +	depends on COMMON_CLK
+> +	select TIMER_OF
+> +	select CLKSRC_MMIO
+> +	help
+> +	  Enables support for the RTL8186 timer driver.
+> +
 
-Sorry, I misled you somewhat.  If the PPS pulse active transition from  
-the hardware is on the falling edge, this flag is required to get the  
-OS to use that as the active transition.  This would not change at the  
-user's whim but rather it is dependent on connected hardware.
+Please, convert this entry like the MTK_TIMER or the SPRD_TIMER.
 
-Tom
+>  endmenu
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index 00caf37e52f9..734e8566e1b6 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -78,3 +78,4 @@ obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
+>  obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
+>  obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
+>  obj-$(CONFIG_ATCPIT100_TIMER)		+= timer-atcpit100.o
+> +obj-$(CONFIG_RTL8186_TIMER)		+= timer-rtl8186.o
+> diff --git a/drivers/clocksource/timer-rtl8186.c b/drivers/clocksource/timer-rtl8186.c
+> new file mode 100644
+> index 000000000000..47ef4b09ad27
+> --- /dev/null
+> +++ b/drivers/clocksource/timer-rtl8186.c
+> @@ -0,0 +1,220 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Realtek RTL8186 SoC timer driver.
+> + *
+> + * Timer0 (24bit): Unused
+> + * Timer1 (24bit): Unused
+> + * Timer2 (32bit): Used as clocksource
+> + * Timer3 (32bit): Used as clock event device
+> + *
+> + * Copyright (C) 2018 Yasha Cherikovsky
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/clocksource.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/sched_clock.h>
+> +#include <linux/of_clk.h>
+> +#include <linux/io.h>
+> +
+> +#include <asm/time.h>
+> +#include <asm/idle.h>
+
+Why do you need those 2 includes above ?
+
+> +#include "timer-of.h"
+> +
+> +/* Timer registers */
+> +#define TCCNR			0x0
+> +#define TCIR			0x4
+> +#define TC_DATA(t)		(0x10 + 4 * (t))
+> +#define TC_CNT(t)		(0x20 + 4 * (t))
+> +
+> +/* TCCNR register bits */
+> +#define TCCNR_TC_EN_BIT(t)		BIT((t) * 2)
+> +#define TCCNR_TC_MODE_BIT(t)		BIT((t) * 2 + 1)
+> +#define TCCNR_TC_SRC_BIT(t)		BIT((t) + 8)
+> +
+> +/* TCIR register bits */
+> +#define TCIR_TC_IE_BIT(t)		BIT(t)
+> +#define TCIR_TC_IP_BIT(t)		BIT((t) + 4)
+> +
+> +
+> +/* Forward declaration */
+> +static struct timer_of to;
+> +
+> +static void __iomem *base;
+> +
+> +
+
+nit: extra line
+
+> +#define RTL8186_TIMER_MODE_COUNTER	0
+> +#define RTL8186_TIMER_MODE_TIMER	1
+> +
+
+[ ... ]
+
+Thanks
+
+  -- Daniel
+
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
