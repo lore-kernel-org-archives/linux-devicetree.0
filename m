@@ -1,7 +1,7 @@
 From: Pawel Laszczak <pawell@cadence.com>
-Subject: [RFC PATCH v2 04/15] usb:cdns3: Driver initialization code.
-Date: Sun, 18 Nov 2018 10:09:00 +0000
-Message-ID: <1542535751-16079-5-git-send-email-pawell@cadence.com>
+Subject: [RFC PATCH v2 08/15] usb:cdns3: Implements device operations part of the API
+Date: Sun, 18 Nov 2018 10:09:04 +0000
+Message-ID: <1542535751-16079-9-git-send-email-pawell@cadence.com>
 References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,553 +12,301 @@ To: devicetree@vger.kernel.org
 Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, adouglas@cadence.com, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com, Pawel Laszczak <pawell@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-Patch adds core.c and core.h file that implements initialization
-of platform driver and adds function responsible for selecting,
-switching and running appropriate Device/Host mode.
+Patch adds implementation callback function defined in
+usb_gadget_ops object.
 
 Signed-off-by: Pawel Laszczak <pawell@cadence.com>
 ---
- drivers/usb/cdns3/Makefile |   2 +
- drivers/usb/cdns3/core.c   | 413 +++++++++++++++++++++++++++++++++++++
- drivers/usb/cdns3/core.h   | 100 +++++++++
- 3 files changed, 515 insertions(+)
- create mode 100644 drivers/usb/cdns3/core.c
- create mode 100644 drivers/usb/cdns3/core.h
+ drivers/usb/cdns3/gadget.c | 249 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 247 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/cdns3/Makefile b/drivers/usb/cdns3/Makefile
-index dcdd62003c6a..02d25b23c5d3 100644
---- a/drivers/usb/cdns3/Makefile
-+++ b/drivers/usb/cdns3/Makefile
-@@ -1,3 +1,5 @@
-+obj-$(CONFIG_USB_CDNS3)			+= cdns3.o
- obj-$(CONFIG_USB_CDNS3_PCI_WRAP)	+= cdns3-pci.o
+diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
+index 376b68b13d1b..702a05faa664 100644
+--- a/drivers/usb/cdns3/gadget.c
++++ b/drivers/usb/cdns3/gadget.c
+@@ -17,6 +17,36 @@
+ #include "gadget-export.h"
+ #include "gadget.h"
  
-+cdns3-y					:= core.o
- cdns3-pci-y		 		:= cdns3-pci-wrap.o
-diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
-new file mode 100644
-index 000000000000..f9055d4da67f
---- /dev/null
-+++ b/drivers/usb/cdns3/core.c
-@@ -0,0 +1,413 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Cadence USBSS DRD Driver.
++/**
++ * cdns3_handshake - spin reading  until handshake completes or fails
++ * @ptr: address of device controller register to be read
++ * @mask: bits to look at in result of read
++ * @done: value of those bits when handshake succeeds
++ * @usec: timeout in microseconds
 + *
-+ * Copyright (C) 2018 Cadence.
++ * Returns negative errno, or zero on success
 + *
-+ * Author: Peter Chen <peter.chen@nxp.com>
-+ *         Pawel Laszczak <pawell@cadence.com>
++ * Success happens when the "mask" bits have the specified value (hardware
++ * handshake done). There are two failure modes: "usec" have passed (major
++ * hardware flakeout), or the register reads as all-ones (hardware removed).
 + */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/pm_runtime.h>
-+
-+#include "gadget.h"
-+#include "core.h"
-+
-+static inline struct cdns3_role_driver *cdns3_get_current_role_driver(struct cdns3 *cdns)
++int cdns3_handshake(void __iomem *ptr, u32 mask, u32 done, int usec)
 +{
-+	WARN_ON(cdns->role >= CDNS3_ROLE_END || !cdns->roles[cdns->role]);
-+	return cdns->roles[cdns->role];
++	u32	result;
++
++	do {
++		result = readl(ptr);
++		if (result == ~(u32)0)	/* card removed */
++			return -ENODEV;
++		result &= mask;
++		if (result == done)
++			return 0;
++		udelay(1);
++		usec--;
++	} while (usec > 0);
++	return -ETIMEDOUT;
 +}
 +
-+static inline int cdns3_role_start(struct cdns3 *cdns, enum cdns3_roles role)
+ /**
+  * cdns3_set_register_bit - set bit in given register.
+  * @ptr: address of device controller register to be read and changed
+@@ -43,6 +73,25 @@ void cdns3_select_ep(struct cdns3_device *priv_dev, u32 ep)
+ 	writel(ep, &priv_dev->regs->ep_sel);
+ }
+ 
++static void cdns3_free_trb_pool(struct cdns3_endpoint *priv_ep)
 +{
-+	int ret;
++	struct cdns3_device *priv_dev = priv_ep->cdns3_dev;
 +
-+	if (role >= CDNS3_ROLE_END)
-+		return 0;
-+
-+	if (!cdns->roles[role])
-+		return -ENXIO;
-+
-+	mutex_lock(&cdns->mutex);
-+	cdns->role = role;
-+	ret = cdns->roles[role]->start(cdns);
-+	mutex_unlock(&cdns->mutex);
-+	return ret;
-+}
-+
-+static inline void cdns3_role_stop(struct cdns3 *cdns)
-+{
-+	enum cdns3_roles role = cdns->role;
-+
-+	if (role == CDNS3_ROLE_END)
-+		return;
-+
-+	mutex_lock(&cdns->mutex);
-+	cdns->roles[role]->stop(cdns);
-+	cdns->role = CDNS3_ROLE_END;
-+	mutex_unlock(&cdns->mutex);
-+}
-+
-+static enum cdns3_roles cdns3_get_role(struct cdns3 *cdns)
-+{
-+	if (cdns->roles[CDNS3_ROLE_HOST] && cdns->roles[CDNS3_ROLE_GADGET]) {
-+		//TODO: implements selecting device/host mode
-+		return CDNS3_ROLE_HOST;
++	if (priv_ep->trb_pool) {
++		dma_free_coherent(priv_dev->sysdev,
++				  TRB_RIGN_SIZE,
++				  priv_ep->trb_pool, priv_ep->trb_pool_dma);
++		priv_ep->trb_pool = NULL;
 +	}
-+	return cdns->roles[CDNS3_ROLE_HOST]
-+		? CDNS3_ROLE_HOST
-+		: CDNS3_ROLE_GADGET;
++
++	if (priv_ep->aligned_buff) {
++		dma_free_coherent(priv_dev->sysdev, CDNS3_UNALIGNED_BUF_SIZE,
++				  priv_ep->aligned_buff,
++				  priv_ep->aligned_dma_addr);
++		priv_ep->aligned_buff = NULL;
++	}
++}
++
+ /**
+  * cdns3_irq_handler - irq line interrupt handler
+  * @cdns: cdns3 instance
+@@ -58,6 +107,114 @@ static irqreturn_t cdns3_irq_handler_thread(struct cdns3 *cdns)
+ 	return ret;
+ }
+ 
++/* Find correct direction for HW endpoint according to description */
++static int cdns3_ep_dir_is_correct(struct usb_endpoint_descriptor *desc,
++				   struct cdns3_endpoint *priv_ep)
++{
++	return (priv_ep->endpoint.caps.dir_in && usb_endpoint_dir_in(desc)) ||
++	       (priv_ep->endpoint.caps.dir_out && usb_endpoint_dir_out(desc));
++}
++
++static struct cdns3_endpoint *cdns3_find_available_ss_ep(struct cdns3_device *priv_dev,
++							 struct usb_endpoint_descriptor *desc)
++{
++	struct usb_ep *ep;
++	struct cdns3_endpoint *priv_ep;
++
++	list_for_each_entry(ep, &priv_dev->gadget.ep_list, ep_list) {
++		unsigned long num;
++		int ret;
++		/* ep name pattern likes epXin or epXout */
++		char c[2] = {ep->name[2], '\0'};
++
++		ret = kstrtoul(c, 10, &num);
++		if (ret)
++			return ERR_PTR(ret);
++
++		priv_ep = ep_to_cdns3_ep(ep);
++		if (cdns3_ep_dir_is_correct(desc, priv_ep)) {
++			if (!(priv_ep->flags & EP_USED)) {
++				priv_ep->num  = num;
++				priv_ep->flags |= EP_USED;
++				return priv_ep;
++			}
++		}
++	}
++	return ERR_PTR(-ENOENT);
++}
++
++static struct usb_ep *cdns3_gadget_match_ep(struct usb_gadget *gadget,
++					    struct usb_endpoint_descriptor *desc,
++					    struct usb_ss_ep_comp_descriptor *comp_desc)
++{
++	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
++	struct cdns3_endpoint *priv_ep;
++	unsigned long flags;
++
++	priv_ep = cdns3_find_available_ss_ep(priv_dev, desc);
++	if (IS_ERR(priv_ep)) {
++		dev_err(&priv_dev->dev, "no available ep\n");
++		return NULL;
++	}
++
++	dev_dbg(&priv_dev->dev, "match endpoint: %s\n", priv_ep->name);
++
++	spin_lock_irqsave(&priv_dev->lock, flags);
++	priv_ep->endpoint.desc = desc;
++	priv_ep->dir  = usb_endpoint_dir_in(desc) ? USB_DIR_IN : USB_DIR_OUT;
++	priv_ep->type = usb_endpoint_type(desc);
++
++	list_add_tail(&priv_ep->ep_match_pending_list,
++		      &priv_dev->ep_match_list);
++	spin_unlock_irqrestore(&priv_dev->lock, flags);
++	return &priv_ep->endpoint;
 +}
 +
 +/**
-+ * cdns3_core_init_role - initialize role of operation
-+ * @cdns: Pointer to cdns3 structure
++ * cdns3_gadget_get_frame Returns number of actual ITP frame
++ * @gadget: gadget object
 + *
-+ * Returns 0 on success otherwise negative errno
++ * Returns number of actual ITP frame
 + */
-+static int cdns3_core_init_role(struct cdns3 *cdns)
++static int cdns3_gadget_get_frame(struct usb_gadget *gadget)
 +{
-+	struct device *dev = cdns->dev;
-+	enum usb_dr_mode dr_mode;
++	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
 +
-+	dr_mode = usb_get_dr_mode(dev);
-+	cdns->role = CDNS3_ROLE_END;
++	return readl(&priv_dev->regs->usb_iptn);
++}
 +
-+	/*
-+	 * If driver can't read mode by means of usb_get_dr_mdoe function then
-+	 * chooses mode according with Kernel configuration. This setting
-+	 * can be restricted later depending on strap pin configuration.
-+	 */
-+	if (dr_mode == USB_DR_MODE_UNKNOWN) {
-+		if (IS_ENABLED(CONFIG_USB_CDNS3_HOST) &&
-+		    IS_ENABLED(CONFIG_USB_CDNS3_GADGET))
-+			dr_mode = USB_DR_MODE_OTG;
-+		else if (IS_ENABLED(CONFIG_USB_CDNS3_HOST))
-+			dr_mode = USB_DR_MODE_HOST;
-+		else if (IS_ENABLED(CONFIG_USB_CDNS3_GADGET))
-+			dr_mode = USB_DR_MODE_PERIPHERAL;
-+	}
-+
-+	if (dr_mode == USB_DR_MODE_OTG || dr_mode == USB_DR_MODE_HOST) {
-+		//TODO: implements host initialization
-+	}
-+
-+	if (dr_mode == USB_DR_MODE_OTG || dr_mode == USB_DR_MODE_PERIPHERAL) {
-+		//TODO: implements device initialization
-+	}
-+
-+	if (!cdns->roles[CDNS3_ROLE_HOST] && !cdns->roles[CDNS3_ROLE_GADGET]) {
-+		dev_err(dev, "no supported roles\n");
-+		return -ENODEV;
-+	}
-+
-+	cdns->dr_mode = dr_mode;
++static int cdns3_gadget_wakeup(struct usb_gadget *gadget)
++{
 +	return 0;
 +}
 +
-+/**
-+ * cdns3_irq - interrupt handler for cdns3 core device
-+ *
-+ * @irq: irq number for cdns3 core device
-+ * @data: structure of cdns3
-+ *
-+ * Returns IRQ_HANDLED or IRQ_NONE
-+ */
-+static irqreturn_t cdns3_irq(int irq, void *data)
++static int cdns3_gadget_set_selfpowered(struct usb_gadget *gadget,
++					int is_selfpowered)
 +{
-+	struct cdns3 *cdns = data;
-+	irqreturn_t ret = IRQ_NONE;
++	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
++	unsigned long flags;
 +
-+	/* Handle device/host interrupt */
-+	if (cdns->role != CDNS3_ROLE_END)
-+		ret = cdns3_get_current_role_driver(cdns)->irq(cdns);
-+
-+	return ret;
++	spin_lock_irqsave(&priv_dev->lock, flags);
++	gadget->is_selfpowered = !!is_selfpowered;
++	spin_unlock_irqrestore(&priv_dev->lock, flags);
++	return 0;
 +}
 +
-+static void cdns3_remove_roles(struct cdns3 *cdns)
++static int cdns3_gadget_pullup(struct usb_gadget *gadget, int is_on)
 +{
-+	//TODO: implements this function
-+}
++	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
 +
-+static int cdns3_do_role_switch(struct cdns3 *cdns, enum cdns3_roles role)
-+{
-+	enum cdns3_roles current_role;
-+	int ret = 0;
-+
-+	current_role = cdns->role;
-+
-+	if (role == CDNS3_ROLE_END)
++	if (!priv_dev->start_gadget)
 +		return 0;
 +
-+	dev_dbg(cdns->dev, "Switching role");
-+
-+	ret = cdns3_role_start(cdns, role);
-+	if (ret) {
-+		/* Back to current role */
-+		dev_err(cdns->dev, "set %d has failed, back to %d\n",
-+			role, current_role);
-+		ret = cdns3_role_start(cdns, current_role);
-+	}
-+
-+	return ret;
-+}
-+
-+/**
-+ * cdns3_role_switch - work queue handler for role switch
-+ *
-+ * @work: work queue item structure
-+ *
-+ * Handles below events:
-+ * - Role switch for dual-role devices
-+ * - CDNS3_ROLE_GADGET <--> CDNS3_ROLE_END for peripheral-only devices
-+ */
-+static void cdns3_role_switch(struct work_struct *work)
-+{
-+	enum cdns3_roles role = CDNS3_ROLE_END;
-+	struct cdns3 *cdns;
-+	bool device, host;
-+
-+	cdns = container_of(work, struct cdns3, role_switch_wq);
-+
-+	//TODO: implements this functions.
-+	//host = cdns3_is_host(cdns);
-+	//device = cdns3_is_device(cdns);
-+	host = 1;
-+	device = 0;
-+
-+	if (host)
-+		role = CDNS3_ROLE_HOST;
-+	else if (device)
-+		role = CDNS3_ROLE_GADGET;
-+
-+	if (cdns->desired_dr_mode == cdns->current_dr_mode &&
-+	    cdns->role == role)
-+		return;
-+
-+	pm_runtime_get_sync(cdns->dev);
-+	cdns3_role_stop(cdns);
-+
-+	if (host) {
-+		if (cdns->roles[CDNS3_ROLE_HOST])
-+			cdns3_do_role_switch(cdns, CDNS3_ROLE_HOST);
-+		pm_runtime_put_sync(cdns->dev);
-+		return;
-+	}
-+
-+	if (device)
-+		cdns3_do_role_switch(cdns, CDNS3_ROLE_GADGET);
++	if (is_on)
++		writel(USB_CONF_DEVEN, &priv_dev->regs->usb_conf);
 +	else
-+		cdns3_do_role_switch(cdns, CDNS3_ROLE_END);
++		writel(USB_CONF_DEVDS, &priv_dev->regs->usb_conf);
 +
-+	pm_runtime_put_sync(cdns->dev);
++	return 0;
++}
++
+ static void cdns3_gadget_config(struct cdns3_device *priv_dev)
+ {
+ 	struct cdns3_usb_regs __iomem *regs = priv_dev->regs;
+@@ -74,6 +231,95 @@ static void cdns3_gadget_config(struct cdns3_device *priv_dev)
+ 	writel(USB_CONF_DEVEN, &regs->usb_conf);
+ }
+ 
++/**
++ * cdns3_gadget_udc_start Gadget start
++ * @gadget: gadget object
++ * @driver: driver which operates on this gadget
++ *
++ * Returns 0 on success, error code elsewhere
++ */
++static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
++				  struct usb_gadget_driver *driver)
++{
++	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
++	unsigned long flags;
++
++	if (priv_dev->gadget_driver) {
++		dev_err(&priv_dev->dev, "%s is already bound to %s\n",
++			priv_dev->gadget.name,
++			priv_dev->gadget_driver->driver.name);
++		return -EBUSY;
++	}
++
++	spin_lock_irqsave(&priv_dev->lock, flags);
++	priv_dev->gadget_driver = driver;
++	if (!priv_dev->start_gadget)
++		goto unlock;
++
++	cdns3_gadget_config(priv_dev);
++unlock:
++	spin_unlock_irqrestore(&priv_dev->lock, flags);
++	return 0;
 +}
 +
 +/**
-+ * cdns3_probe - probe for cdns3 core device
-+ * @pdev: Pointer to cdns3 core platform device
++ * cdns3_gadget_udc_stop Stops gadget
++ * @gadget: gadget object
 + *
-+ * Returns 0 on success otherwise negative errno
++ * Returns 0
 + */
-+static int cdns3_probe(struct platform_device *pdev)
++static int cdns3_gadget_udc_stop(struct usb_gadget *gadget)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct resource	*res;
-+	struct cdns3 *cdns;
-+	void __iomem *regs;
-+	int ret;
++	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
++	struct cdns3_endpoint *priv_ep, *temp_ep;
++	u32 bEndpointAddress;
++	struct usb_ep *ep;
++	int ret = 0;
++	int i;
 +
-+	cdns = devm_kzalloc(dev, sizeof(*cdns), GFP_KERNEL);
-+	if (!cdns)
-+		return -ENOMEM;
-+
-+	cdns->dev = dev;
-+
-+	platform_set_drvdata(pdev, cdns);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-+	if (!res) {
-+		dev_err(dev, "missing IRQ\n");
-+		return -ENODEV;
-+	}
-+	cdns->irq = res->start;
-+
-+	/*
-+	 * Request memory region
-+	 * region-0: xHCI
-+	 * region-1: Peripheral
-+	 * region-2: OTG registers
-+	 */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	regs = devm_ioremap_resource(dev, res);
-+
-+	if (IS_ERR(regs))
-+		return PTR_ERR(regs);
-+	cdns->xhci_regs = regs;
-+	cdns->xhci_res = res;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	regs = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(regs))
-+		return PTR_ERR(regs);
-+	cdns->dev_regs	= regs;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
-+	regs = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(regs))
-+		return PTR_ERR(regs);
-+	cdns->otg_regs = regs;
-+
-+	mutex_init(&cdns->mutex);
-+
-+	cdns->phy = devm_phy_get(dev, "cdns3,usbphy");
-+	if (IS_ERR(cdns->phy)) {
-+		dev_info(dev, "no generic phy found\n");
-+		cdns->phy = NULL;
-+		/*
-+		 * fall through here!
-+		 * if no generic phy found, phy init
-+		 * should be done under boot!
-+		 */
-+	} else {
-+		phy_init(cdns->phy);
++	priv_dev->gadget_driver = NULL;
++	list_for_each_entry_safe(priv_ep, temp_ep, &priv_dev->ep_match_list,
++				 ep_match_pending_list) {
++		list_del(&priv_ep->ep_match_pending_list);
++		priv_ep->flags &= ~EP_USED;
 +	}
 +
-+	ret = cdns3_core_init_role(cdns);
-+	if (ret)
-+		goto err1;
++	priv_dev->onchip_mem_allocated_size = 0;
++	priv_dev->out_mem_is_allocated = 0;
++	priv_dev->gadget.speed = USB_SPEED_UNKNOWN;
 +
-+	INIT_WORK(&cdns->role_switch_wq, cdns3_role_switch);
-+	if (ret)
-+		goto err2;
++	for (i = 0; i < priv_dev->ep_nums ; i++)
++		cdns3_free_trb_pool(priv_dev->eps[i]);
 +
-+	if (ret)
-+		goto err2;
++	if (!priv_dev->start_gadget)
++		return 0;
 +
-+	cdns->role = cdns3_get_role(cdns);
-+
-+	ret = devm_request_irq(dev, cdns->irq, cdns3_irq, IRQF_SHARED,
-+			       dev_name(dev), cdns);
-+
-+	if (ret)
-+		goto err2;
-+
-+	ret = cdns3_role_start(cdns, cdns->role);
-+	if (ret) {
-+		dev_err(dev, "can't start %s role\n",
-+			cdns3_get_current_role_driver(cdns)->name);
-+		goto err2;
++	list_for_each_entry(ep, &priv_dev->gadget.ep_list, ep_list) {
++		priv_ep = ep_to_cdns3_ep(ep);
++		bEndpointAddress = priv_ep->num | priv_ep->dir;
++		cdns3_select_ep(priv_dev, bEndpointAddress);
++		writel(EP_CMD_EPRST, &priv_dev->regs->ep_cmd);
++		ret = cdns3_handshake(&priv_dev->regs->ep_cmd,
++				      EP_CMD_EPRST, 0, 100);
 +	}
 +
-+	device_set_wakeup_capable(dev, true);
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
++	/* disable interrupt for device */
++	writel(0, &priv_dev->regs->usb_ien);
++	writel(USB_CONF_DEVDS, &priv_dev->regs->usb_conf);
 +
-+	/*
-+	 * The controller needs less time between bus and controller suspend,
-+	 * and we also needs a small delay to avoid frequently entering low
-+	 * power mode.
-+	 */
-+	pm_runtime_set_autosuspend_delay(dev, 20);
-+	pm_runtime_mark_last_busy(dev);
-+	pm_runtime_use_autosuspend(dev);
-+	dev_dbg(dev, "Cadence USB3 core: probe succeed\n");
-+
-+	return 0;
-+
-+err2:
-+	cdns3_remove_roles(cdns);
-+err1:
 +	return ret;
 +}
 +
-+/**
-+ * cdns3_remove - unbind drd driver and clean up
-+ * @pdev: Pointer to Linux platform device
-+ *
-+ * Returns 0 on success otherwise negative errno
-+ */
-+static int cdns3_remove(struct platform_device *pdev)
-+{
-+	struct cdns3 *cdns = platform_get_drvdata(pdev);
-+
-+	pm_runtime_get_sync(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_put_noidle(&pdev->dev);
-+	cdns3_remove_roles(cdns);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id of_cdns3_match[] = {
-+	{ .compatible = "cdns,usb3" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, of_cdns3_match);
-+#endif
-+
-+#ifdef CONFIG_PM
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int cdns3_suspend(struct device *dev)
-+{
-+	//TODO: implements this function
-+	return 0;
-+}
-+
-+static int cdns3_resume(struct device *dev)
-+{
-+	//TODO: implements this function
-+	return 0;
-+}
-+#endif /* CONFIG_PM_SLEEP */
-+static int cdns3_runtime_suspend(struct device *dev)
-+{	//TODO: implements this function
-+	return 0;
-+}
-+
-+static int cdns3_runtime_resume(struct device *dev)
-+{
-+	//TODO: implements this function
-+	return 0;
-+}
-+#endif /* CONFIG_PM */
-+
-+static const struct dev_pm_ops cdns3_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(cdns3_suspend, cdns3_resume)
-+	SET_RUNTIME_PM_OPS(cdns3_runtime_suspend, cdns3_runtime_resume, NULL)
++static const struct usb_gadget_ops cdns3_gadget_ops = {
++	.get_frame = cdns3_gadget_get_frame,
++	.wakeup = cdns3_gadget_wakeup,
++	.set_selfpowered = cdns3_gadget_set_selfpowered,
++	.pullup = cdns3_gadget_pullup,
++	.udc_start = cdns3_gadget_udc_start,
++	.udc_stop = cdns3_gadget_udc_stop,
++	.match_ep = cdns3_gadget_match_ep,
 +};
 +
-+static struct platform_driver cdns3_driver = {
-+	.probe		= cdns3_probe,
-+	.remove		= cdns3_remove,
-+	.driver		= {
-+		.name	= "cdns-usb3",
-+		.of_match_table	= of_match_ptr(of_cdns3_match),
-+		.pm	= &cdns3_pm_ops,
-+	},
-+};
-+
-+static int __init cdns3_driver_platform_register(void)
-+{
-+	return platform_driver_register(&cdns3_driver);
-+}
-+module_init(cdns3_driver_platform_register);
-+
-+static void __exit cdns3_driver_platform_unregister(void)
-+{
-+	platform_driver_unregister(&cdns3_driver);
-+}
-+module_exit(cdns3_driver_platform_unregister);
-+
-+MODULE_ALIAS("platform:cdns3");
-+MODULE_AUTHOR("Pawel Laszczak <pawell@cadence.com>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Cadence USB3 DRD Controller Driver");
-diff --git a/drivers/usb/cdns3/core.h b/drivers/usb/cdns3/core.h
-new file mode 100644
-index 000000000000..7c8204fe4d3d
---- /dev/null
-+++ b/drivers/usb/cdns3/core.h
-@@ -0,0 +1,100 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Cadence USBSS DRD Driver.
-+ *
-+ * Copyright (C) 2017 NXP
-+ * Copyright (C) 2018 Cadence.
-+ *
-+ * Authors: Peter Chen <peter.chen@nxp.com>
-+ *          Pawel Laszczak <pawell@cadence.com>
-+ */
-+#include <linux/usb/otg.h>
-+
-+#ifndef __LINUX_CDNS3_CORE_H
-+#define __LINUX_CDNS3_CORE_H
-+
-+struct cdns3;
-+enum cdns3_roles {
-+	CDNS3_ROLE_HOST = 0,
-+	CDNS3_ROLE_GADGET,
-+	CDNS3_ROLE_END,
-+};
-+
-+/**
-+ * struct cdns3_role_driver - host/gadget role driver
-+ * @start: start this role
-+ * @stop: stop this role
-+ * @suspend: suspend callback for this role
-+ * @resume: resume callback for this role
-+ * @irq: irq handler for this role
-+ * @name: role name string (host/gadget)
-+ */
-+struct cdns3_role_driver {
-+	int (*start)(struct cdns3 *cdns);
-+	void (*stop)(struct cdns3 *cdns);
-+	int (*suspend)(struct cdns3 *cdns, bool do_wakeup);
-+	int (*resume)(struct cdns3 *cdns, bool hibernated);
-+	irqreturn_t (*irq)(struct cdns3 *cdns);
-+	const char *name;
-+};
-+
-+#define CDNS3_NUM_OF_CLKS	5
-+/**
-+ * struct cdns3 - Representation of Cadence USB3 DRD controller.
-+ * @dev: pointer to Cadence device struct
-+ * @xhci_regs: pointer to base of xhci registers
-+ * @xhci_res: the resource for xhci
-+ * @dev_regs: pointer to base of dev registers
-+ * @otg_regs: pointer to base of otg registers
-+ * @irq: irq number for controller
-+ * @roles: array of supported roles for this controller
-+ * @role: current role
-+ * @host_dev: the child host device pointer for cdns3 core
-+ * @gadget_dev: the child gadget device pointer for cdns3 core
-+ * @usb: phy for this controller
-+ * @role_switch_wq: work queue item for role switch
-+ * @in_lpm: the controller in low power mode
-+ * @wakeup_int: the wakeup interrupt
-+ * @mutex: the mutex for concurrent code at driver
-+ * @dr_mode: supported mode of operation it can be only Host, only Device
-+ *           or OTG mode that allow to switch between Device and Host mode.
-+ *           This field based on hardware configuration and cant't be changed.
-+ * @current_dr_role: current mode of operation when in dual-role mode
-+ * @desired_dr_role: desired mode of operation when in dual-role mode.
-+ *           This value can be changed during runtime.
-+ *           Available options depends on  dr_mode:
-+ *           dr_mode                 |  desired_dr_role and current_dr_role
-+ *           ----------------------------------------------------------------
-+ *           USB_DR_MODE_HOST        | only USB_DR_MODE_HOST
-+ *           USB_DR_MODE_PERIPHERAL  | only USB_DR_MODE_PERIPHERAL
-+ *           USB_DR_MODE_OTG         | only USB_DR_MODE_HOST
-+ *           USB_DR_MODE_OTG         | only USB_DR_MODE_PERIPHERAL
-+ *           USB_DR_MODE_OTG         | USB_DR_MODE_OTG
-+ *
-+ *           Desired_dr_role can be changed by means of debugfs.
-+ * @root: debugfs root folder pointer
-+ */
-+struct cdns3 {
-+	struct device			*dev;
-+	void __iomem			*xhci_regs;
-+	struct resource			*xhci_res;
-+	struct cdns3_usb_regs __iomem	*dev_regs;
-+	struct cdns3_otg_regs		*otg_regs;
-+	int irq;
-+	struct cdns3_role_driver	*roles[CDNS3_ROLE_END];
-+	enum cdns3_roles		role;
-+	struct device			*host_dev;
-+	struct device			*gadget_dev;
-+	struct phy			*phy;
-+	struct work_struct		role_switch_wq;
-+	int				in_lpm:1;
-+	int				wakeup_int:1;
-+	/* mutext used in workqueue*/
-+	struct mutex			mutex;
-+	enum usb_dr_mode		dr_mode;
-+	enum usb_dr_mode		current_dr_mode;
-+	enum usb_dr_mode		desired_dr_mode;
-+	struct dentry			*root;
-+};
-+
-+#endif /* __LINUX_CDNS3_CORE_H */
+ /**
+  * cdns3_init_ep Initializes software endpoints of gadget
+  * @cdns3: extended gadget object
+@@ -184,8 +430,7 @@ static int __cdns3_gadget_init(struct cdns3 *cdns)
+ 	/* fill gadget fields */
+ 	priv_dev->gadget.max_speed = USB_SPEED_SUPER;
+ 	priv_dev->gadget.speed = USB_SPEED_UNKNOWN;
+-	//TODO: Add implementation of cdns3_gadget_ops
+-	//priv_dev->gadget.ops = &cdns3_gadget_ops;
++	priv_dev->gadget.ops = &cdns3_gadget_ops;
+ 	priv_dev->gadget.name = "usb-ss-gadget";
+ 	priv_dev->gadget.sg_supported = 1;
+ 	priv_dev->is_connected = 0;
 -- 
 2.17.1
