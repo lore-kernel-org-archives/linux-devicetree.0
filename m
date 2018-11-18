@@ -1,33 +1,98 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH] dt-bindings: rng: update bindings for MT7629 SoC
-Date: Sun, 18 Nov 2018 07:07:46 +0800
-Message-ID: <20181117230746.r6xsnqqo5nd6fxts@gondor.apana.org.au>
-References: <0f5fe0d5b6a9c81b3f4395a1007ed0ba2239ae45.1541574485.git.ryder.lee@mediatek.com>
- <20181116061854.ahs6jz7bmztoi3w7@gondor.apana.org.au>
- <20181116223110.GA19271@bogus>
+From: tom burkart <tom@aussec.com>
+Subject: Re: [PATCH v7 1/4] dt-bindings: pps: descriptor-based gpio,
+ capture-clear addition
+Date: Sun, 18 Nov 2018 11:35:02 +1100
+Message-ID: <20181118113502.55634v85ybgkt586@www.aussec.com>
+References: <20181114125432.16044-1-tom@aussec.com>
+ <20181114125432.16044-2-tom@aussec.com> <20181116224919.GA18008@bogus>
+ <20181117213522.12672utznrvpbn56@www.aussec.com>
+ <CAL_JsqKZHg5_8ghMmU4qO4CVZibcHOvtVJH669zod_6GLGakRg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain;
+ charset=UTF-8;
+ DelSp="Yes";
+ format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKZHg5_8ghMmU4qO4CVZibcHOvtVJH669zod_6GLGakRg@mail.gmail.com>
 Content-Disposition: inline
-In-Reply-To: <20181116223110.GA19271@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Ryder Lee <ryder.lee@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-crypto@vger.kernel.org, Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 16, 2018 at 04:31:10PM -0600, Rob Herring wrote:
-> On Fri, Nov 16, 2018 at 02:18:54PM +0800, Herbert Xu wrote:
-> > On Wed, Nov 07, 2018 at 03:10:16PM +0800, Ryder Lee wrote:
-> > > This updates bindings for MT7629 RNG driver.
-> > > 
-> > > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > 
-> > Who is meant to take this patch?
-> 
-> I've applied it.
+Quoting Rob Herring <robh@kernel.org>:
 
-Thanks Rob!
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> On Sat, Nov 17, 2018 at 4:35 AM tom burkart <tom@aussec.com> wrote:
+>>
+>> Quoting Rob Herring <robh@kernel.org>:
+>>
+>> > On Wed, Nov 14, 2018 at 11:54:29PM +1100, Tom Burkart wrote:
+>> >> This patch changes the devicetree bindings for the pps-gpio driver
+>> >> from the integer based ABI to the descriptor based ABI.
+>> > ? That has nothing to do with DT.
+>>
+>> I believe it does, as the change in ABI forces a rename in the DT
+>> naming convention.
+>> This is due to the descriptor based ABI appending "-gpio" or "-gpios" (see
+>> Documentation/gpio/base.txt.)
+>> Admittedly, I may have called it by the wrong name due to ignorance,
+>> my apologies.
+>
+> If what you say is correct, then you can't change this driver. You'll
+> break compatibility with any existing DT.
+>
+> Changing the binding reasoning should purely be that this is the
+> preferred form. Bindings must be independent from changing kernel
+> APIs.
+
+See comments from Philip Zabel.  I misread the documentation and this  
+has now been corrected in v8 of the patch.  I hope that eliminates all  
+comments made above.
+
+>> >>  It also adds
+>> >> documentation for the device tree capture-clear option.  The legacy
+>> >> device tree entry for the GPIO pin is supported.
+>> >>
+>> >> Signed-off-by: Tom Burkart <tom@aussec.com>
+>> >> ---
+>> >>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 8 ++++++--
+>> >>  1 file changed, 6 insertions(+), 2 deletions(-)
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> index 3683874832ae..6c9fc0998d94 100644
+>> >> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> @@ -5,19 +5,23 @@ a GPIO pin.
+>> >>
+>> >>  Required properties:
+>> >>  - compatible: should be "pps-gpio"
+>> >> -- gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
+>> >> +- pps-gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
+>> >> +Alternatively (DEPRECATED), instead of pps-gpios above, it may have:
+>> >> +- gpios: one PPS GPIO as above
+>> >>
+>> >>  Optional properties:
+>> >>  - assert-falling-edge: when present, assert is indicated by a  
+>> falling edge
+>> >>                         (instead of by a rising edge)
+>> >> +- capture-clear: when present, also capture the PPS clear event
+>> >
+>> > Is this a h/w thing? or driver configuration?
+>>
+>> Driver configuration.  Most of the code was present in the driver, yet
+>> it was not documented, or usable due to a two line (code) omission
+>> (the value was not being fetched from DT).
+>
+> So what determines how you want to configure this? If the user will
+> want to change it, then it should be a sysfs attr and exposed to
+> userspace. If it depends on h/w config for a board then it can be in
+> DT.
+
+Sorry, I misled you somewhat.  If the PPS pulse active transition from  
+the hardware is on the falling edge, this flag is required to get the  
+OS to use that as the active transition.  This would not change at the  
+user's whim but rather it is dependent on connected hardware.
+
+Tom
