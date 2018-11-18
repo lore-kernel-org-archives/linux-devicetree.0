@@ -1,7 +1,7 @@
 From: Mesih Kilinc <mesihkilinc@gmail.com>
-Subject: [RFC PATCH v2 03/14] ARM: sunxi: add Allwinner ARMv5 SoCs
-Date: Sun, 18 Nov 2018 17:17:02 +0300
-Message-ID: <8f07fac854eaaea63e199fe0e80cf20004dffbdf.1542546735.git.mesihkilinc@gmail.com>
+Subject: [RFC PATCH v2 04/14] dt-bindings: interrupt-controller: Add suniv interrupt-controller
+Date: Sun, 18 Nov 2018 17:17:03 +0300
+Message-ID: <e51824832fac0b981cf886f25efc25056d573da4.1542546735.git.mesihkilinc@gmail.com>
 References: <cover.1542546735.git.mesihkilinc@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1542546735.git.mesihkilinc@gmail.com>
@@ -10,86 +10,29 @@ To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kern
 Cc: Mesih Kilinc <mesihkilinc@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Julian Calaby <julian.calaby@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add option for Allwinner ARMv5 SoCs and SoC F1C100s (which has a die
-used for many new F-series products, including F1C100A, F1C100s, F1C200s,
-F1C500, F1C600).
+Add compatible string for Alwinner suniv F1C100s SoC interrupt
+controller which is stripped version of sun4i
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 Signed-off-by: Mesih Kilinc <mesihkilinc@gmail.com>
 ---
- arch/arm/mach-sunxi/Kconfig    | 14 +++++++++++++-
- arch/arm/mach-sunxi/Makefile   |  1 +
- arch/arm/mach-sunxi/sunxi_v5.c | 22 ++++++++++++++++++++++
- 3 files changed, 36 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/mach-sunxi/sunxi_v5.c
+ .../devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt  | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
-index 5db17ec..066644c 100644
---- a/arch/arm/mach-sunxi/Kconfig
-+++ b/arch/arm/mach-sunxi/Kconfig
-@@ -1,6 +1,6 @@
- menuconfig ARCH_SUNXI
- 	bool "Allwinner SoCs"
--	depends on ARCH_MULTI_V7
-+	depends on ARCH_MULTI_V5 || ARCH_MULTI_V7
- 	select ARCH_HAS_RESET_CONTROLLER
- 	select CLKSRC_MMIO
- 	select GENERIC_IRQ_CHIP
-@@ -64,4 +64,16 @@ config ARCH_SUNXI_MC_SMP
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt
+index b290ca1..e04ddb4 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt
+@@ -2,7 +2,10 @@ Allwinner Sunxi Interrupt Controller
  
- endif
+ Required properties:
  
-+if ARCH_MULTI_V5
-+
-+config ARCH_SUNXI_V5
-+	bool
-+	select SUN4I_TIMER
-+
-+config MACH_SUNIV
-+	bool "Allwinner new F-series (suniv) SoCs support"
-+	select ARCH_SUNXI_V5
-+
-+endif
-+
- endif
-diff --git a/arch/arm/mach-sunxi/Makefile b/arch/arm/mach-sunxi/Makefile
-index c9a83ab..fd17fdd 100644
---- a/arch/arm/mach-sunxi/Makefile
-+++ b/arch/arm/mach-sunxi/Makefile
-@@ -1,5 +1,6 @@
- CFLAGS_mc_smp.o	+= -march=armv7-a
- 
- obj-$(CONFIG_ARCH_SUNXI_V7) += sunxi.o
-+obj-$(CONFIG_ARCH_SUNXI_V5) += sunxi_v5.o
- obj-$(CONFIG_ARCH_SUNXI_MC_SMP) += mc_smp.o headsmp.o
- obj-$(CONFIG_SMP) += platsmp.o
-diff --git a/arch/arm/mach-sunxi/sunxi_v5.c b/arch/arm/mach-sunxi/sunxi_v5.c
-new file mode 100644
-index 0000000..15f2d7a
---- /dev/null
-+++ b/arch/arm/mach-sunxi/sunxi_v5.c
-@@ -0,0 +1,22 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree support for Allwinner F series SoCs
-+ *
-+ * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
-+ * Copyright (C) 2018 Mesih Kilinc <mesihkilinc@gmail.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <asm/mach/arch.h>
-+
-+static const char * const suniv_board_dt_compat[] = {
-+	"allwinner,suniv-f1c100s",
-+	NULL,
-+};
-+
-+DT_MACHINE_START(SUNXI_DT, "Allwinner suniv Family")
-+	.dt_compat	= suniv_board_dt_compat,
-+MACHINE_END
+-- compatible : should be "allwinner,sun4i-a10-ic"
++- compatible: should be "allwinner,<soc-familiy>-<soc-name>-ic" to identify
++	      Allwinner IRQ chip such as:
++              "allwinner,sun4i-a10-ic"
++              "allwinner,suniv-f1c100s-ic"
+ - reg : Specifies base physical address and size of the registers.
+ - interrupt-controller : Identifies the node as an interrupt controller
+ - #interrupt-cells : Specifies the number of cells needed to encode an
 -- 
 2.7.4
