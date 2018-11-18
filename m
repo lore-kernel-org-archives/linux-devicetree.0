@@ -1,49 +1,86 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 7/7] net: phy: icplus: allow configuring the interrupt
- function on IP101GR
-Date: Sun, 18 Nov 2018 18:30:44 +0100
-Message-ID: <CAFBinCBkH3OrtxROpcbqF-1BtRY=6QqS2zkhZTo=W==1FKqZsw@mail.gmail.com>
-References: <20181117182007.14791-1-martin.blumenstingl@googlemail.com>
- <20181117182007.14791-8-martin.blumenstingl@googlemail.com> <20181118171340.GG5591@lunn.ch>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: [PATCH 1/2] arm64: dts: renesas: r8a77965: Add CAN controller nodes
+Date: Sun, 18 Nov 2018 18:33:26 +0100
+Message-ID: <20181118173327.4704-1-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181118171340.GG5591@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andrew@lunn.ch
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, davem@davemloft.net, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-renesas-soc@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Simon Horman <horms+renesas@verge.net.au>, linux-arm-kernel@lists.infradead.org, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
 
-On Sun, Nov 18, 2018 at 6:13 PM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> Hi Martin
->
-> > +static int ip101a_g_probe(struct phy_device *phydev)
-> > +{
-> > +     struct device *dev = &phydev->mdio.dev;
-> > +     struct ip101a_g_phy_priv *priv;
-> > +
-> > +     priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > +     if (!priv)
-> > +             return -ENOMEM;
-> > +
-> > +     if (device_property_read_bool(dev, "icplus,select-rx-error"))
-> > +             priv->sel_intr32 = IP101GR_SEL_INTR32_RXER;
-> > +     else if (device_property_read_bool(dev, "icplus,select-interrupt"))
-> > +             priv->sel_intr32 = IP101GR_SEL_INTR32_INTR;
-> > +     else
-> > +             priv->sel_intr32 = IP101GR_SEL_INTR32_KEEP;
->
-> It would be good to return -EINVAL if both properties are found.
-that makes sense
-I'll wait a few days for more feedback and re-send this series with
-that issue fixed
+This patch adds CAN{0,1} controller nodes for the R8A77965 SoC.
 
-> This looks good otherwise.
-great, thanks for looking into it!
+Based on several similar patches of the R8A7795 device tree
+by Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+and Geert Uytterhoeven <geert+renesas@glider.be>.
 
+Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Simon Horman <horms+renesas@verge.net.au>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+---
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 26 +++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-Regards
-Martin
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+index 3a958fb25245..3485624921bf 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+@@ -907,13 +907,35 @@
+ 		};
+ 
+ 		can0: can@e6c30000 {
++			compatible = "renesas,can-r8a77965",
++				     "renesas,rcar-gen3-can";
+ 			reg = <0 0xe6c30000 0 0x1000>;
+-			/* placeholder */
++			interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 916>,
++			       <&cpg CPG_CORE R8A77965_CLK_CANFD>,
++			       <&can_clk>;
++			clock-names = "clkp1", "clkp2", "can_clk";
++			assigned-clocks = <&cpg CPG_CORE R8A77965_CLK_CANFD>;
++			assigned-clock-rates = <40000000>;
++			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
++			resets = <&cpg 916>;
++			status = "disabled";
+ 		};
+ 
+ 		can1: can@e6c38000 {
++			compatible = "renesas,can-r8a77965",
++				     "renesas,rcar-gen3-can";
+ 			reg = <0 0xe6c38000 0 0x1000>;
+-			/* placeholder */
++			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 915>,
++			       <&cpg CPG_CORE R8A77965_CLK_CANFD>,
++			       <&can_clk>;
++			clock-names = "clkp1", "clkp2", "can_clk";
++			assigned-clocks = <&cpg CPG_CORE R8A77965_CLK_CANFD>;
++			assigned-clock-rates = <40000000>;
++			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
++			resets = <&cpg 915>;
++			status = "disabled";
+ 		};
+ 
+ 		pwm0: pwm@e6e30000 {
+-- 
+2.18.0
