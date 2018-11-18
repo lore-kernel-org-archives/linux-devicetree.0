@@ -1,74 +1,93 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 1/2] dt-bindings: hwmon: add binding documentation for
- adt7475
-Date: Sun, 18 Nov 2018 14:56:56 -0800
-Message-ID: <f3a29bc9-dbfc-bfb8-8707-2b67d96c2e04@roeck-us.net>
-References: <20181108225607.7521-1-chris.packham@alliedtelesis.co.nz>
- <20181108225607.7521-2-chris.packham@alliedtelesis.co.nz>
- <20181117152949.GA31247@bogus>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77965: Add CAN controller
+ nodes
+Date: Mon, 19 Nov 2018 00:02:51 +0100
+Message-ID: <20181118230250.GA2553@kunai>
+References: <20181118173327.4704-1-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181117152949.GA31247@bogus>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: jdelvare@suse.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Content-Type: multipart/mixed; boundary="===============7847511652109674406=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181118173327.4704-1-marek.vasut+renesas@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: devicetree@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh@kernel.org>, linux-renesas-soc@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Simon Horman <horms+renesas@verge.net.au>, linux-arm-kernel@lists.infradead.org, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/17/18 7:29 AM, Rob Herring wrote:
-> On Fri, Nov 09, 2018 at 11:56:06AM +1300, Chris Packham wrote:
->> With the addition of the invert-pwm property the adt7475 needs its own
->> binding documentation rather being captured under trivial-devices.txt.
->>
->> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
->> ---
->> Changes in v2:
->> - use pwm-polarity attiribute to indicate normal or inverted polarity.
->>
->>   .../devicetree/bindings/hwmon/adt7475.txt     | 24 +++++++++++++++++++
->>   .../devicetree/bindings/trivial-devices.txt   |  4 ----
->>   2 files changed, 24 insertions(+), 4 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.txt
->>
->> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.txt b/Documentation/devicetree/bindings/hwmon/adt7475.txt
->> new file mode 100644
->> index 000000000000..d9212b5e9036
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.txt
->> @@ -0,0 +1,24 @@
->> +*ADT7475 hwmon sensor.
->> +
->> +Required properties:
->> +- compatible: One of
->> +	"adi,adt7473"
->> +	"adi,adt7475"
->> +	"adi,adt7476"
->> +	"adi,adt7490"
->> +
->> +- reg: I2C address
->> +
->> +optional properties:
->> +
->> +- pwm-polarity: This configures the polarity of the PWM. 0
->> +		(PWM_POLARITY_NORMAL) uses logic high for 100% duty cycle. 1
->> +                (PWM_POLARITY_INVERSED) uses logic low for 100% duty cycle.
-> 
-> So we're using part of the PWM binding, but none of the rest of it? What
-> is the PWM connection here?
-> The chip has a built-in PWM controller to control fan speeds. PWM frequency
-as well as PWM polarity are configurable. I had suggested to use the terminology
-from Documentation/devicetree/bindings/pwm/pwm.txt. Other than terminology there
-is no connection to a standard pwm controller.
 
-Another option/possibility would be to use a boolean, such as pwm-polarity-inverted.
-We are open to suggestions.
+--===============7847511652109674406==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
+Content-Disposition: inline
 
-> It sounds like this is common for sensors, so this should be documented
-> somewhere common.
-> 
-Sure, no problem. Any suggestion where ?
 
-Thanks,
-Guenter
+--M9NhX3UHpAaciwkO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Nov 18, 2018 at 06:33:26PM +0100, Marek Vasut wrote:
+> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>=20
+> This patch adds CAN{0,1} controller nodes for the R8A77965 SoC.
+>=20
+> Based on several similar patches of the R8A7795 device tree
+> by Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+> and Geert Uytterhoeven <geert+renesas@glider.be>.
+>=20
+> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Simon Horman <horms+renesas@verge.net.au>
+> Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Cc: linux-renesas-soc@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+
+Were you able to do some testing using EXIO connectors? Would be nice to
+know what was tested.
+
+
+--M9NhX3UHpAaciwkO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlvx75YACgkQFA3kzBSg
+Kbb/yA//Yvj3p9t8oLC8/1PJmIlWvLE4aF0y2dbbZiKhUx8OlISS6ui8HRdWoiQn
+VfcFqGAg0L2au/E3oOFm3YPxfs8sGXE6Mvbbe/I4UmZahAdZPc8n/lKNtPMsmWQi
+eizgmnWwVcJhr1y1q2aTTE57P8mvGoxUKBpk0SPWDi/4jSAzI3F10fG5kbjar7Z1
+ZmXtWXOwJwKDOl5O8Jq7ByOcCw6Wok+5Cdh1cDWBu83qOMM5gPfo3pV0ltBHyPEF
+ZZcCc6+3vuTadmVGjin092i/NEyS/ebB4TrgsU7MgcJo4EUON6N3DjZDnWRx2OH7
+orHGcGJBr4XArGA3c6ICQYS0ylX+GjjBSG3rUhbSB1IDi/D+OwJJ1apDkf77ZOxy
+wcfXXEdT7sDqloo8wk4BZSm0WzJbmV7P3/nE/+ASzXwBSmH1C+bC+1C0ym2m4WdB
+An0nivxK7GaiH9mLbkEdo+9BK2Cm+ZqtOmLGo8cBs8TV8ZZAaaEbNl2MblR2itpE
+WNUqxYEdHe4bCembUO3AfxTwSfARxpYpxwxuze26dB8N1c+sv6MIg6MoQU/QUXFO
++lxiCobt/u5hHA9s6NlrSZS/swcqtsnNVQwSSTrYhWtKotvQsuRcgSNRHSJtq9jY
+RwolWXP9AckdSqw1QBjAEhqtKXTqB79OJv+DvpgDxKYo9F3zUEQ=
+=hMQ9
+-----END PGP SIGNATURE-----
+
+--M9NhX3UHpAaciwkO--
+
+
+--===============7847511652109674406==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============7847511652109674406==--
