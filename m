@@ -1,57 +1,89 @@
-Return-Path: <SRS0=byPw=N6=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:39807 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727769AbeKTBBf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 19 Nov 2018 20:01:35 -0500
-Received: by mail-lf1-f67.google.com with SMTP id n18so21479886lfh.6
-        for <devicetree@vger.kernel.org>; Mon, 19 Nov 2018 06:37:46 -0800 (PST)
-MIME-Version: 1.0
-References: <20181118163909.9202-1-geert@linux-m68k.org> <CACRpkdZ58BeYQ112g90HKboesMOGtVFnVBJtnUNeuy0qsfUteg@mail.gmail.com>
- <CAMuHMdVUK-aZBy0iib2Nh87nwWwQWH9RDi6wkRX5xkh9xOc2cw@mail.gmail.com>
-In-Reply-To: <CAMuHMdVUK-aZBy0iib2Nh87nwWwQWH9RDi6wkRX5xkh9xOc2cw@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 19 Nov 2018 15:37:33 +0100
-Message-ID: <CACRpkdYJwObxJfv8QD6CQu_G-yOz20F_vksXnwOc0LeR8QDDKw@mail.gmail.com>
+Return-Path: <SRS0=sbJT=N5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from sauhun.de ([88.99.104.3]:39712 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726322AbeKSHtp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 19 Nov 2018 02:49:45 -0500
+Date: Sun, 18 Nov 2018 22:28:18 +0100
+From: Wolfram Sang <wsa@the-dreams.de>
 Subject: Re: [RFC] C64 DTS
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <20181118212818.GA1013@kunai>
+References: <20181118163909.9202-1-geert@linux-m68k.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="BOKacYhQ+x31HxR3"
+Content-Disposition: inline
+In-Reply-To: <20181118163909.9202-1-geert@linux-m68k.org>
 Sender: devicetree-owner@vger.kernel.org
 To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Matt Porter <mporter@konsulko.com>
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Matt Porter <mporter@konsulko.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Sun, Nov 18, 2018 at 9:15 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-> BTW, how do you describe a separate button connected to an NMI line?
-> Or just omit it completely? Reset buttons are usually not described neither.
+--BOKacYhQ+x31HxR3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Just add it as a stand-alone button connected to the
-NMI line of the interrupt controller. It's what it is after
-all.
+Hi Geert,
 
-The ARM Juno board has an ordinary gpio button marked
-"NMI". I think we should take that (in the input subsystem)
-and configure it as a NMI (in ARM terms an "FIQ") but that
-arch has a distinction where every IRQ line can be switched
-between beeing IRQ or FIQ so it is quite different.
+> 		cpu: cpu {
+> 			device_type =3D "cpu";
+> 			compatible =3D "cbm,6510", "mos,6502";
 
-Anyways: NMI buttons is pretty common on some servers
-I am told, I would look to x86 for an answer.
+I don't think mos,6502 will work. You will lose the data port at $00/$01
+and can't configure memory then.
 
-> The {clock,data}-out lines are driving TTL open-collector buffers.
-> So combined with the {clock,data}-in lines, they're actually emulating
-> open-collector GPIOs.
->
-> So an IEC bus could be implemented using only 3 GPIOs, if two of
-> them can be configured as GPIO_LINE_OPEN_DRAIN.
->
-> Do you intend supporting the emulation of an open-collector GPIO in
-> gpiolib using a pair of GPIOs, so avoid implementing that in every
-> driver that may need it? ;-)
+> 			clock-frequency =3D <985000>;
 
-Somebody already suggested adding GPIOs on top of buffer
-drivers in turn controlled by GPIO. So I think the answer is yes.
-But it depends on this person implementing the code for it.
-I can look up a reference if you're interested!
+Can't this be derived from some other clock?
 
-Yours,
-Linus Walleij
+> 	sid: sound@d400 {
+> 		reg =3D <0xd400 0x400>;
+> 		compatible =3D "cbm,6581", "cbm,sid";
+> 	};
+
+Actually, this file should be a DTSI and VIC, SID, and CIA would need to
+be defined in the DTS file. Different C64 models have different versions
+of these chips.
+
+> 	iec {
+> 		compatible =3D "cbm,c64-iec-bus";
+>=20
+> 		cbm,atn-gpios =3D <&cia2 3 GPIO_ACTIVE_LOW>;
+> 		cbm,clock-out-gpios =3D <&cia2 4 GPIO_ACTIVE_LOW>;
+> 		cbm,data-out-gpios =3D <&cia2 5 GPIO_ACTIVE_LOW>;
+> 		cbm,clock-in-gpios =3D <&cia2 6 GPIO_ACTIVE_LOW>;
+> 		cbm,data-in-gpios =3D <&cia2 7 GPIO_ACTIVE_LOW>;
+> 	};
+
+The user port has lots of GPIOs, too :D And the tape port...
+
+And you found out that CIA2 uses NMI already. I spotted that, too.
+
+Geez, since when do I have too much time ;)
+
+Happy hacking,
+
+   Wolfram
+
+--BOKacYhQ+x31HxR3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlvx2W4ACgkQFA3kzBSg
+Kbbo6A//XAhlXwszLKqT73NSwHremd3Qc5DHzQFSb9EJ+iJIaJPRygkhsJp2bwXC
+9xXuYXrKqYeIc/CKHVWFsyqtGjCxzAS0GAn6LoviO0+lpGhZYCE10YroFpE7Vfl/
+jPD8RJ/oOXiEqtAdcwVeh4hIvF1pQhp9kZIGzdMw+yUf5dFUB5rxdZN1ePhxGo+1
+HauN/DiADDlDnSMonf4BW91J83lpaxMWOoDlC9IUfqbp3W2AW9tUbxZnbaCRfRWF
+0BcKpRk8/a/ftytef77ga8X2qkZ4OcMDKZYemrPHWBMIjVq+fqbyBbXp+4pOm/Ky
+NtV20HyxGg98dFGCA4cDxxVVZRwuMXskcGaVSdzjCI0+92k0Ux0pNgW0EjYHyQsv
+mcKdxmp7Rho0LlRfSOjB66KA8f5zrhcOm4B7R3f1Jn2TA93KFhNkYCoH3PtMF5LF
+Tm4nYBrrUU18+hMNhAttE9KkI4em0uI11nEGDQnkyXUw4BpFgCOyWAq7LtMqKx5i
+jdw1xZXYrDugUy1x5U4Vi6s7Jxnqc13pVYmGhksCT5eSVXYS2vVEiyCxfrqiQv1d
+7J5akAh+MdkmrcXHd9qcaT+oHXHd575SSoJEyd2MnOSDxiKZZNVCHFlV9ODAJu2S
+DZGo+ZRCr5kVI1ubsOgYnDKellaNNBXm6IOwfxmWcFq1fnstJEQ=
+=SL/O
+-----END PGP SIGNATURE-----
+
+--BOKacYhQ+x31HxR3--
