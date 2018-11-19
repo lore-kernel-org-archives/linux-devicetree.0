@@ -1,50 +1,35 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 16/16] MAINTAINERS: Add entry for RDA Micro SoC architecture
-Date: Mon, 19 Nov 2018 22:39:39 +0530
-Message-ID: <20181119170939.19153-17-manivannan.sadhasivam@linaro.org>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 01/16] dt-bindings: Add RDA Micro vendor prefix
+Date: Mon, 19 Nov 2018 18:22:02 +0100
+Message-ID: <e8749128-00e1-551c-8285-fcaef8029484@suse.de>
 References: <20181119170939.19153-1-manivannan.sadhasivam@linaro.org>
+ <20181119170939.19153-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181119170939.19153-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20181119170939.19153-2-manivannan.sadhasivam@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, daniel.lezcano@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, service@rdamicro.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, daniel.lezcano@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, service@rdamicro.com
 List-Id: devicetree@vger.kernel.org
 
-Add MAINTAINERS entry for RDA Micro SoC architecture with myself
-and Andreas Färber as the maintainers.
+Am 19.11.18 um 18:09 schrieb Manivannan Sadhasivam:
+> From: Andreas Färber <afaerber@suse.de>
+> 
+> RDA Microelectronics is a Chinese SoC manufacturer.
+> 
+> Cc: service@rdamicro.com
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+This one is lacking your Signed-off-by, all others that I was CC'ed on
+had it.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6c3fbbb361f8..7a5ae685a638 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1945,6 +1945,20 @@ M:	Lennert Buytenhek <kernel@wantstofly.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- 
-+ARM/RDA MICRO ARCHITECTURE
-+M:	Andreas Färber <afaerber@suse.de>
-+M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	arch/arm/boot/dts/rda8810pl-*
-+F:	drivers/clocksource/timer-rda.c
-+F:	drivers/irqchip/irq-rda-intc.c
-+F:	drivers/tty/serial/rda-uart.c
-+F:	Documentation/devicetree/bindings/arm/rda.txt
-+F:	Documentation/devicetree/bindings/interrupt-controller/rda,8810pl-intc.txt
-+F:	Documentation/devicetree/bindings/serial/rda,8810pl-uart.txt
-+F:	Documentation/devicetree/bindings/timer/rda,8810pl-timer.txt
-+
- ARM/REALTEK ARCHITECTURE
- M:	Andreas Färber <afaerber@suse.de>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+Cheers,
+Andreas
+
 -- 
-2.17.1
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
