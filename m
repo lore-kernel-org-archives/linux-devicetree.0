@@ -1,172 +1,186 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH 06/15] Platform: OLPC: Add XO-1.75 EC driver
-Date: Mon, 19 Nov 2018 14:25:17 +0100
-Message-ID: <26d225cd1ed93faff6e0a0513680fa5385f05f2d.camel@v3.sk>
-References: <20181010172300.317643-1-lkundrak@v3.sk>
-         <20181010172300.317643-7-lkundrak@v3.sk>
-         <CAHp75VcefOJHZ3WdZYrGEJFjqg2s1oJ75Jg9gKmQFre_ScAPZg@mail.gmail.com>
-         <8881f5e48613c9d9d133e3964031fe2ab57f4801.camel@v3.sk>
-         <20181119104046.GC28607@amd>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH V2] ARM: dts: imx7d-sdb: add rev-a board support
+Date: Mon, 19 Nov 2018 21:46:26 +0800
+Message-ID: <20181119134624.GT5829@dragon>
+References: <1541726525-19544-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181119104046.GC28607@amd>
+Content-Disposition: inline
+In-Reply-To: <1541726525-19544-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, quozl@laptop.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Platform Driver <platform-driver-x8>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
-
-I've addressed some of Andy's concerns you're replying to below in a
-follow-up version of the patch. To many points I'm generally
-indifferent and prefer to lean towards making things easy for whoever
-may be likely to deal with the code in past. It's not clear to me who
-that might be, or how important either of you consider your remarks to
-be. I'll be thankful if anyone makes this clearer to me.
-
-(I hoped that you're in the Cc list; thought git send-mail will see
-your address in the Acked-by tags and add you. I failed to notice that
-it's not the case. I apologize. Here's the v2 posting: [1].)
-
-[1] https://lore.kernel.org/lkml/20181116162403.49854-1-lkundrak@v3.sk/
-
-
-On Mon, 2018-11-19 at 11:40 +0100, Pavel Machek wrote:
-> Hi!
+On Fri, Nov 09, 2018 at 01:27:10AM +0000, Anson Huang wrote:
+> Current imx7d-sdb.dts has some incorrect settings about
+> Rev-A and Rev-B boards, some of the settings are based on
+> Rev-A board but some are based on Rev-B board, clean up it
+> by adding i.MX7D SDB Rev-A board support, make default
+> imx7d-sdb.dts for Rev-B board as usual, and introduce
+> imx7d-sdb-reva.dts for Rev-A board. Below are the affected
+> differences of Rev-A and Rev-B board:
 > 
-> > > > +#include <linux/delay.h>
-> > > > +#include <linux/gpio/consumer.h>
-> > > > +#include <linux/spinlock.h>
-> > > > +#include <linux/completion.h>
-> > > > +#include <linux/slab.h>
-> > > > +#include <linux/platform_device.h>
-> > > > +#include <linux/ctype.h>
-> > > > +#include <linux/olpc-ec.h>
-> > > > +#include <linux/spi/spi.h>
-> > > > +#include <linux/reboot.h>
-> > > > +#include <linux/input.h>
-> > > > +#include <linux/kfifo.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/power_supply.h>
-> > > 
-> > > Easy to maintain when it's sorted.
+>                 Rev-A           Rev-B
+> USB_OTG2_PWR:   UART3_CTS_B     GPIO1_IO07
+> ENET_EN_B:      None            GPIO1_IO04
+> TP_INT_B:       EPDC_DATA13     EPDC_BDR1
 > 
-> No / it depends.
-
-I've sorted it in the new files; following a rule of keeping things
-sorted at the very least has an advantage of being unambiguous.
-
-I'm not sorting things where they currently are not in order, since it
-would obscure real changes.
-
-> > > > +       channel = priv->rx_buf[0];
-> > > > +       byte = priv->rx_buf[1];
-> > > 
-> > > Maybe specific structures would fit better?
-> > > 
-> > > Like
-> > > 
-> > > struct olpc_ec_resp_hdr {
-> > >  u8 channel;
-> > >  u8 byte;
-> > > ...
-> > > }
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> change since V1:
+> 	remove "pinctrl-assert-gpios" which is unused in upstream, and use phy-supply
+> to control fec2's enable pin, model the enable pin as GPIO regulator.
+>  arch/arm/boot/dts/Makefile           |  1 +
+>  arch/arm/boot/dts/imx7d-sdb-reva.dts | 39 ++++++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/imx7d-sdb.dts      | 29 +++++++++++++++++++++++++--
+>  3 files changed, 67 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/imx7d-sdb-reva.dts
 > 
-> Structures have padding and other nastyness...
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index ef9ffa4..6d133b9 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -572,6 +572,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
+>  	imx7d-pico-pi.dtb \
+>  	imx7d-sbc-imx7.dtb \
+>  	imx7d-sdb.dtb \
+> +	imx7d-sdb-reva.dtb \
+>  	imx7d-sdb-sht11.dtb \
+>  	imx7s-colibri-eval-v3.dtb \
+>  	imx7s-warp.dtb
+> diff --git a/arch/arm/boot/dts/imx7d-sdb-reva.dts b/arch/arm/boot/dts/imx7d-sdb-reva.dts
+> new file mode 100644
+> index 0000000..7741eaa
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx7d-sdb-reva.dts
+> @@ -0,0 +1,39 @@
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+> +//
+> +// Copyright (C) 2015 Freescale Semiconductor, Inc.
+> +
+> +/dts-v1/;
+> +
+> +#include "imx7d-sdb.dts"
+> +
+> +/ {
+> +	reg_usb_otg2_vbus: regulator-usb-otg2-vbus {
+> +		gpio = <&gpio4 7 GPIO_ACTIVE_HIGH>;
+> +	};
+> +};
+> +
+> +&fec2 {
+> +	/delete-property/phy-supply;
+> +};
+> +
+> +&iomuxc {
+> +	imx7d-sdb {
+> +		pinctrl_tsc2046_pendown: tsc2046_pendown {
+> +			fsl,pins = <
+> +				MX7D_PAD_EPDC_DATA13__GPIO2_IO13	0x59
+> +			>;
+> +		};
+> +
+> +		pinctrl_hog: hoggrp {
+> +			fsl,pins = <
+> +				MX7D_PAD_UART3_CTS_B__GPIO4_IO7		0x14
+> +				MX7D_PAD_ECSPI2_SS0__GPIO4_IO23		0x34  /* bt reg on */
+> +			>;
+> +		};
+> +	};
+> +};
+> +
+> +&iomuxc_lpsr {
+> +	/delete-property/pinctrl-names;
+> +	/delete-property/pinctrl-0;
+> +};
+> diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
+> index f1bafda..8385b9b 100644
+> --- a/arch/arm/boot/dts/imx7d-sdb.dts
+> +++ b/arch/arm/boot/dts/imx7d-sdb.dts
+> @@ -73,7 +73,7 @@
+>  		regulator-name = "usb_otg2_vbus";
+>  		regulator-min-microvolt = <5000000>;
+>  		regulator-max-microvolt = <5000000>;
+> -		gpio = <&gpio4 7 GPIO_ACTIVE_HIGH>;
+> +		gpio = <&gpio1 7 GPIO_ACTIVE_HIGH>;
+>  		enable-active-high;
+>  	};
+>  
+> @@ -114,6 +114,16 @@
+>  		gpio = <&gpio2 14 GPIO_ACTIVE_LOW>;
+>  	};
+>  
+> +	reg_fec2_3v3: regulator-fec2-3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "fec2-3v3";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_enet2_reg>;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&gpio1 4 GPIO_ACTIVE_LOW>;
+> +	};
+> +
+>  	backlight: backlight {
+>  		compatible = "pwm-backlight";
+>  		pwms = <&pwm1 0 5000000 0>;
+> @@ -210,6 +220,7 @@
+>  	assigned-clock-rates = <0>, <100000000>;
+>  	phy-mode = "rgmii";
+>  	phy-handle = <&ethphy1>;
+> +	phy-supply = <&reg_fec2_3v3>;
+>  	fsl,magic-packet;
+>  	status = "okay";
+>  };
+> @@ -491,6 +502,12 @@
+>  			>;
+>  		};
+>  
+> +		pinctrl_enet2_reg: enet2reggrp {
+> +			fsl,pins = <
+> +				MX7D_PAD_LPSR_GPIO1_IO04__GPIO1_IO4	0x14
+> +			>;
+> +		};
+> +
+>  		pinctrl_flexcan2: flexcan2grp {
+>  			fsl,pins = <
+>  				MX7D_PAD_GPIO1_IO14__FLEXCAN2_RX	0x59
+> @@ -513,7 +530,6 @@
+>  
+>  		pinctrl_hog: hoggrp {
+>  			fsl,pins = <
+> -				MX7D_PAD_UART3_CTS_B__GPIO4_IO7		0x14
+>  				MX7D_PAD_ECSPI2_SS0__GPIO4_IO23		0x34  /* bt reg on */
+>  			>;
+>  		};
+> @@ -724,6 +740,9 @@
+>  };
+>  
+>  &iomuxc_lpsr {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hog_2>;
+> +
+>  	pinctrl_wdog: wdoggrp {
+>  		fsl,pins = <
+>  			MX7D_PAD_LPSR_GPIO1_IO00__WDOG1_WDOG_B		0x74
+> @@ -735,4 +754,10 @@
+>  			MX7D_PAD_LPSR_GPIO1_IO01__PWM1_OUT		0x30
+>  		>;
+>  	};
+> +
+> +	pinctrl_hog_2: hoggrp-2 {
+> +		fsl,pins = <
+> +			MX7D_PAD_LPSR_GPIO1_IO07__GPIO1_IO7	  0x14
 
-I've turned them into structs. It perhaps looks a bit better -- the
-structure members serving as a documentation for the protocol.
+Instead of using hog group, this should be defined by pinctrl entry to
+be referred by the fixed regulator that uses this GPIO?
 
-> > > > +                       pm_wakeup_event(priv->pwrbtn-
-> > > > >dev.parent,
-> > > > 1000);
-> > > 
-> > > Magic number.
+Shawn
+
+> +		>;
+> +	};
+>  };
+> -- 
+> 2.7.4
 > 
-> Nothing wrong with magic numbers.
-
-Turned it into a define, but it's not like it's any clearer why that
-particular value works...
-
-I actually have little idea. I've copied this from the vendor's
-original driver.
-
-> > > > +       args[0] = mask & 0xff;
-> > > > +       args[1] = (mask >> 8) & 0xff;
-> > > 
-> > > ...mask >> 0;
-> > > ...mask >> 8;
-> 
-> No, please.
-
-I've done this too, but I don't see much point either. Perhaps those
-within the OCD spectrum may appreciate :)
-
-> > > __maybe_unused  instead of ugly #ifdef?
-> > > 
-> > > > +{
-> > > > +       struct platform_device *pdev = to_platform_device(dev);
-> > > > +       struct olpc_xo175_ec *priv =
-> > > > platform_get_drvdata(pdev);
-> > > 
-> > > dev_get_drvdata() or how is it called?
-> > > 
-> > > > +       unsigned char hintargs[5];
-> > > 
-> > > struct olpc_ec_hint_cmd {
-> > > u8 ...
-> > > u32 ...
-> > > };
-> > > 
-> > > ?
-> 
-> No, unless you want to break the code. Or add __attribute__ packed
-> and
-> deal with endianness.
-> 
-> Just no.
-
-Turned it into a packed struct too for the same reasons as above.
-
-The endianness of the hints argument doesn't actually matter, since the
-EC firmware actually uses this in a debugging printf. It's not even
-cleat what endianness did EC expect initially.
-
-> > > > +       static unsigned int suspend_count;
-> > > 
-> > > u32 I suppose.
-> 
-> You know, there's semantic difference between unsigned int and
-> u32. And this sounds like candidate for unsigned int.
-> 
-> > > > +       /* Enable all EC events while we're awake */
-> > > > +       olpc_xo175_ec_set_event_mask(0xffff);
-> > > 
-> > > #define EC_ALL_EVENTS GENMASK(15, 0)
-> 
-> Actually that's less readable. Just don't.
-
-Done this too, and, like the points above, I am indifferent too. Both
-seem equal to me.
-
-> > > > +static const struct of_device_id olpc_xo175_ec_of_match[] = {
-> > > > +       { .compatible = "olpc,xo1.75-ec" },
-> > > > +       { },
-> > > 
-> > > No comma for terminators.
-> 
-> Comma is fine.
-
-Removed it. Perhaps the lack of a comma could be understood as an
-indication that no further initializers shall follow.
-
-> 	Pavel
-
-Just in case I didn't stress that enough: I'm much more interested in
-things working well than style issues that too often are just matter of
-tast. I happily accept advice on those though.
-
-Take care,
-Lubo
