@@ -1,68 +1,100 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v5 4/5] arm64: dts: qcom: sdm845: Add UFS nodes for sdm845-mtp
-Date: Mon, 19 Nov 2018 11:42:10 -0800
-Message-ID: <154265653027.88331.11231439952253219107@swboyd.mtv.corp.google.com>
-References: <20181026173544.136037-1-evgreen@chromium.org>
- <20181026173544.136037-5-evgreen@chromium.org>
- <154265514855.88331.12521366940818102477@swboyd.mtv.corp.google.com>
- <CAD=FV=WYhM2eJFdcum3aE2YhhhP9s=OzR=oRA2NXU4PFJc7Z5A@mail.gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: PCI: meson: add DT bindings for
+ Amlogic Meson PCIe controller
+Date: Mon, 19 Nov 2018 21:12:26 +0100
+Message-ID: <CAFBinCCChD-phwyb3hSzAjBmy09g35ijQa_chJX5HufuVnPjaw@mail.gmail.com>
+References: <1539049990-30810-1-git-send-email-hanjie.lin@amlogic.com> <1539049990-30810-2-git-send-email-hanjie.lin@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=WYhM2eJFdcum3aE2YhhhP9s=OzR=oRA2NXU4PFJc7Z5A@mail.gmail.com>
+In-Reply-To: <1539049990-30810-2-git-send-email-hanjie.lin@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Evan Green <evgreen@chromium.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>, cang@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+To: hanjie.lin@amlogic.com
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, yixun.lan@amlogic.com, robh@kernel.org, jianxin.pan@amlogic.com, devicetree@vger.kernel.org, khilman@baylibre.com, shawn.lin@rock-chips.com, pombredanne@nexb.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, qiufang.dai@amlogic.com, jian.hu@amlogic.com, liang.yang@amlogic.com, cyrille.pitchen@free-electrons.com, gustavo.pimentel@synopsys.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com, yue.wang@amlogic.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Doug Anderson (2018-11-19 11:25:08)
-> On Mon, Nov 19, 2018 at 11:19 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > Quoting Evan Green (2018-10-26 10:35:43)
-> >
-> > > +};
-> > > +
-> > > +&ufsphy1 {
-> > > +       status =3D "okay";
-> > > +
-> > > +       vdda-phy-supply =3D <&vdda_ufs1_core>;
-> > > +       vdda-pll-supply =3D <&vdda_ufs1_1p2>;
-> >
-> > These two properties can be specified in the SoC dtsi file instead of
-> > each board variant file. This way we don't have to specify the things
-> > that are SoC independent in each board file. The board integrator just
-> > has to attach the labels to the right regulator nodes, in this case
-> > vdda_ufs1_core and vdda_ufs1_1p2, and then the sdm845.dtsi file will be
-> > matched up with the right regulator automatically. It's also nice so
-> > that board integrators don't have to know anything besides what
-> > regulator goes to what pin on the SoC.
-> =
+Hello Hanjie, Hello Yue,
 
-> This is an interesting proposal and it feels like we have to consider
-> the tradeoffs.
-> =
+sorry for being late with my comment
 
-> I agree that it would be nice not to have to specify this in every
-> single board .dts file, but at the same time what if you've got a
-> board that doesn't use UFS?  Such a board would bother adding the
-> labels "vdda_ufs1_core" and "vdda_ufs1_1p2".  This would lead to a
-> compile error in the device tree bindings.  That seems pretty
-> undesirable.
-> =
+On Tue, Oct 9, 2018 at 3:53 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
+>
+> From: Yue Wang <yue.wang@amlogic.com>
+>
+> The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
+> PCI core. This patch adds documentation for the DT bindings in Meson PCIe
+> controller.
+>
+> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
+> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/pci/amlogic,meson-pcie.txt | 70 ++++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+>
+> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> new file mode 100644
+> index 0000000..12b18f8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> @@ -0,0 +1,70 @@
+> +Amlogic Meson AXG DWC PCIE SoC controller
+> +
+> +Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
+> +It shares common functions with the PCIe DesignWare core driver and
+> +inherits common properties defined in
+> +Documentation/devicetree/bindings/pci/designware-pci.txt.
+> +
+> +Additional properties are described here:
+> +
+> +Required properties:
+> +- compatible:
+> +       should contain "amlogic,axg-pcie" to identify the core.
+> +- reg:
+> +       should contain the configuration address space.
+> +- reg-names: Must be
+> +       - "elbi"        External local bus interface registers
+> +       - "cfg"         Meson specific registers
+> +       - "phy"         Meson PCIE PHY registers
+is this only the PCIe PHY registers or is it the registers of the PHY
+which supports USB3.0 and PCIe?
+buildroot_openlinux_kernel_4.9_fbdev_20180706 uses the following
+registers in the pcie_A node for the "phy" registers:
+0x0 0xff646000 0x0 0x2000
+while the usb3_phy_v2 node uses:
+phy-reg = <0xff646000>;
+
+> +       - "config"      PCIe configuration space
+> +- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
+> +- clocks: Must contain an entry for each entry in clock-names.
+> +- clock-names: Must include the following entries:
+> +       - "pclk"       PCIe GEN 100M PLL clock
+> +       - "port"       PCIe_x(A or B) RC clock gate
+> +       - "general"    PCIe Phy clock
+> +       - "mipi"       PCIe_x(A or B) 100M ref clock gate
+> +- resets: phandle to the reset lines.
+> +- reset-names: must contain "phy" "port" and "apb"
+> +       - "phy"         Share PHY reset
+> +       - "port"        Port A or B reset
+> +       - "apb"         Share APB reset
+> +- device_type:
+> +       should be "pci". As specified in designware-pcie.txt
+> +
+> +
+> +Example configuration:
+> +
+> +       pcie: pcie@f9800000 {
+> +                       compatible = "amlogic,axg-pcie", "snps,dw-pcie";
+> +                       reg = <0x0 0xf9800000 0x0 0x400000
+> +                                       0x0 0xff646000 0x0 0x2000
+> +                                       0x0 0xff644000 0x0 0x2000
+> +                                       0x0 0xf9f00000 0x0 0x100000>;
+> +                       reg-names = "elbi", "cfg", "phy", "config";
+is the order of the reg-names correct?
+buildroot_openlinux_kernel_4.9_fbdev_20180706 uses 0xff646000 for the
+PHY (instead of 0xff646000) in mesong12a.dtsi and mesong12b.dtsi
 
 
-A workaround for this somewhat rare case would be to specify
-/delete-property/ on those nodes that aren't used. Unless that can't
-even work because the phandle is parsed before properties are deleted? I
-haven't tried. Or we could try to have dtc ignore broken phandles in
-status =3D "disabled" nodes or omit them entirely from the dtb so this
-isn't a problem.
-
-Either way, I would push for making it easier for the users of the SoC
-to not need to know the SoC internal details too much and rely on the
-SoC dtsi file to get it right. From the user perspective it's just a
-bunch of pins connected to something. We could also have a 0 volt
-"ground" regulator for any grounded/unconnected pins if that helps. It
-could be marked as status =3D "disabled" so that no runtime code is used
-while dtc is still happy to have the disabled node with a label.
+Regards
+Martin
