@@ -1,84 +1,88 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: NAND Flash memory timings when using non-ONFI chips
-Date: Mon, 19 Nov 2018 11:54:52 +0100
-Message-ID: <20181119115452.6134c0fb@bbrezillon>
-References: <CAGkQfmOQZFvOdhFTvL3UtfAzBLR+dWfCpkDMv5KajjwY=KJkog@mail.gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a77990: ebisu: Add and enable
+ CAN,FD device nodes
+Date: Mon, 19 Nov 2018 11:55:08 +0100
+Message-ID: <20181119105508.GC932@kunai>
+References: <20181118173424.4807-1-marek.vasut+renesas@gmail.com>
+ <20181118230313.GB2553@kunai>
+ <63e27a31-d599-4672-87b9-48b0f542313d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <CAGkQfmOQZFvOdhFTvL3UtfAzBLR+dWfCpkDMv5KajjwY=KJkog@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Romain Izard <romain.izard.pro@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-mtd <linux-mtd@lists.infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>
+Content-Type: multipart/mixed; boundary="===============5247331652403139844=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <63e27a31-d599-4672-87b9-48b0f542313d@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh@kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-renesas-soc@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Simon Horman <horms+renesas@verge.net.au>, linux-arm-kernel@lists.infradead.org, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 19 Nov 2018 11:46:15 +0100
-Romain Izard <romain.izard.pro@gmail.com> wrote:
 
-> Hello,
-> 
-> Having used the Microchip SAMA5D2 for some time, I have some devices that
-> work with the legacy device tree bindings for the atmel_nand controller.
-> While updating from 4.14 to 4.19, I am trying to use the updated bindings
-> instead.
-> 
-> However I have encountered a problem with the timings configured in the NAND
-> controller. When using the legacy bindings, the hardware timings that have
-> been written by the bootloader are left alone, but with the new bindings
-> they are recalculated, using the ONFI table.
-> 
-> When using non-ONFI devices (which is very common, as Toshiba, Samsung, etc.
-> don't implement ONFI), the timings are configured to the work with the
-> slowest ONFI class, which is very slow compared to the possible performance
-> of those chips.
-> 
-> For the atmel_nand driver, the root of the difference is that there is no
-> clock available in the "mck" field of the nand_controller structure in the
-> legacy binding, and as a result the setup_data_interface() hook is empty.
-> But this is a problem that could affect any NAND controller that implements
-> the setup_data_interface() hook.
-> 
-> Unfortunately, I have a hard time finding a satisfying solution to this:
-> - Adding a property to the NAND chip's device tree node, directing the NAND
->   driver to preserve the bootloader's timings is quite easy, but this is not
-> a good solution as we are adding software information to the hardware
-> description
-> - Adding a property indicating that the Flash chip is not ONFI is redundant,
->   as detecting whether a chip supports ONFI can be autodetected. But the
-> Reset command, that must be sent to ONFI chips on startup to reliably to
-> detect them, needs to be sent with the slowest ONFI timings to work
-> correctly with chips using the ONFI DDR mode. As a result, auto-detection
-> needs to change the NAND controller's timings to detect ONFI chips.
-> 
-> The 'best' answer I have for now, is to add a 'timings' subnode to the NAND
-> chip's device tree node, that explicitly encodes all the values from the
-> timing table as described in "struct nand_sdr_timings", which is derived
-> from the ONFI specification, and extend it to add the various values that
-> are present in the timing table for Toshiba NAND chips and compatibles.
-> 
-> But I am not very satisfied with this solution, as it adds a lot of code
-> for little gain.
-> 
-> What was the original plan for handling timing requirements for non-ONFI
-> chips when introducing setup_data_interface()?
+--===============5247331652403139844==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="rQ2U398070+RC21q"
+Content-Disposition: inline
 
-There's a ->onfi_default_timing_mode field in struct nand_chip. NAND
-chip drivers (in your case nand_toshiba.c) should update this field
-appropriately at detection time (in their ->init() hook) so that the
-core applies ONFI timing mode X by default.
 
-Hope that helps. Let me know if you have other questions or if my
-suggestion does not work.
+--rQ2U398070+RC21q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+
+> > Same here, what was tested?
+>=20
+> I connected the CN10 to Peak CANFD, brought both interfaces up at
+> 125kBd/250kBd for FD
+> $ ip link set canX up type can bitrate 125000 dbitrate 250000 fd on
+>=20
+> And ran on either side:
+> $ cangen -m canX
+> and
+> $ candump -t d -dex canX
+> This should give a good mix of CAN messages.
+
+Perfect, thanks!
+
+
+--rQ2U398070+RC21q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlvylowACgkQFA3kzBSg
+KbbOCw/5Aci9Eca2FgVDCAhBYBFYYmMvATDf1/2t+CTBrY4UaqOA7PW5CH2hhzHK
+ayqzP5WkKahb4ZGJRvZMWuRx1Dew+g1Hk4+r9v7lnwpmE8/G/+h9eaekGIrB7xd5
+DAvXgrGqEkX/NE9lFWkU4BtihbRF/deuk3i8YFTJK03QLRwSdJjoCh/vY2NeAvH8
+M6Uw/skuVAlSnopmRw1oAykg+ftYcYtxM3Fc51II99QeotQ7nFD/KrGx66wy/NcK
+dNmkgMZf1BSqt2oBPlHlUJorIO7Ksiw3tlBwG1Pv4yPXz7JCwAejl1GJeGEjAvW7
+HA2ACNC7Ttf+k/2Y+QxoLbYkGybHsR2NtkZqIhgjYZqvohRp/ARfBCjxFj8Aawyh
+TptawEwYWaMag6BX/vi3na7xf/JsbvemmR8kkO9vCzMKGfGzckI5JCP+UZvg2/sN
+7TdhT5SaMGvruha13FK+cFfO0aQXHRqzo8JGHQCjXRV/17eWN+E3scVUUAhbZQnX
+/1crOPvTozw4N8tkyP+FB1TBF1rWwrGya72JxVc/eTOkdT84NdzJbH5cOpMWMrL7
+LvhPbWR4drPElYdWwEk5fEb2XLYoqOwXgaOLLV3bY2mnKTQM24m8L35yM8+Q/D9H
+kSH48fYB8fGxrRF6SR1KzllI7YTOiQyqMfGUu+2FLezHHutbBfs=
+=c0SH
+-----END PGP SIGNATURE-----
+
+--rQ2U398070+RC21q--
+
+
+--===============5247331652403139844==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5247331652403139844==--
