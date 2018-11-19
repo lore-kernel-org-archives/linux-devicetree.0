@@ -1,208 +1,105 @@
-Return-Path: <SRS0=sbJT=N5=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from andre.telenet-ops.be ([195.130.132.53]:50230 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727330AbeKSDAG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 18 Nov 2018 22:00:06 -0500
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [RFC] C64 DTS
-Date: Sun, 18 Nov 2018 17:39:09 +0100
-Message-Id: <20181118163909.9202-1-geert@linux-m68k.org>
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, Matt Porter <mporter@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Return-Path: <SRS0=1ZJt=N6=huawei.com=jonathan.cameron@kernel.org>
+Date: Mon, 19 Nov 2018 13:48:40 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: Re: [PATCH v2 2/2] iio: potentiometer: Add driver for Microchip
+ MCP41xxx/42xxx
+Message-ID: <20181119134840.00006108@huawei.com>
+In-Reply-To: <20181117203130.efhp4amahjx3qxwo@deb-660>
+References: <20181114095241.27037-1-cmc@babblebit.net>
+	<20181114095241.27037-3-cmc@babblebit.net>
+	<20181114103015.GB1214@x220.localdomain>
+	<20181116181043.7a8d48dc@archlinux>
+	<20181117203130.efhp4amahjx3qxwo@deb-660>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+To: Chris Coffey <cmc@babblebit.net>
+Cc: Jonathan Cameron <jic23@kernel.org>, Slawomir Stepien <sst@poczta.fm>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-	Hi all,
+On Sat, 17 Nov 2018 20:31:30 +0000
+Chris Coffey <cmc@babblebit.net> wrote:
 
-Sometimes it's just fun to apply modern practices to old hardware.
+> On Fri, Nov 16, 2018 at 06:10:43PM +0000, Jonathan Cameron wrote:
+> > On Wed, 14 Nov 2018 11:30:15 +0100
+> > Slawomir Stepien <sst@poczta.fm> wrote:
+> >   
+> > > On lis 14, 2018 09:52, Chris Coffey wrote:  
+> > > > This patch adds driver support for the Microchip MCP41xxx/42xxx family
+> > > > of digital potentiometers:
+> > > > 
+> > > > DEVICE      Wipers  Positions   Resistance (kOhm)
+> > > > MCP41010    1       256         10
+> > > > MCP41050    1       256         50
+> > > > MCP41100    1       256         100
+> > > > MCP42010    2       256         10
+> > > > MCP42050    2       256         50
+> > > > MCP42100    2       256         100
+> > > > 
+> > > > Datasheet: http://ww1.microchip.com/downloads/en/devicedoc/11195c.pdf    
+> > > 
+> > > Hi
+> > > 
+> > > Some hints inline.  
+> > A few minor comments from me.
+> > 
+> > Thanks,
+> > 
+> > Jonathan
+> >   
+> 
+> Thank you for the review; I have one question below.
+> 
+> Thanks,
+> Chris
+> 
+> [snip]
+> 
+> > > > +static int mcp41010_probe(struct spi_device *spi)
+> > > > +{
+> > > > +	int err;
+> > > > +	struct device *dev = &spi->dev;
+> > > > +	unsigned long devid = spi_get_device_id(spi)->driver_data;    
+> > > 
+> > > I guess the calculation of devid value can now be done only when
+> > > of_device_get_match_data() did not return config.
+> > >   
+> > > > +	struct mcp41010_data *data;
+> > > > +	struct iio_dev *indio_dev;
+> > > > +
+> > > > +	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
+> > > > +	if (!indio_dev)
+> > > > +		return -ENOMEM;
+> > > > +
+> > > > +	data = iio_priv(indio_dev);
+> > > > +	spi_set_drvdata(spi, indio_dev);
+> > > > +	data->spi = spi;
+> > > > +	data->cfg = of_device_get_match_data(&spi->dev);
+> > > > +	if (!data->cfg)
+> > > > +		data->cfg = &mcp41010_cfg[devid];
+> > > > +
+> > > > +	mutex_init(&data->lock);
+> > > > +
+> > > > +	indio_dev->dev.parent = dev;
+> > > > +	indio_dev->info = &mcp41010_info;
+> > > > +	indio_dev->channels = mcp41010_channels;
+> > > > +	indio_dev->num_channels = data->cfg->wipers;
+> > > > +	indio_dev->name = spi_get_device_id(spi)->name;  
+> > 
+> > It is a bit odd to use the of match for the data, but
+> > then get the name always from the spi_device_id table.
+> > We probably need a separate source for the names such
+> > as in the config structure.
+> >   
+> 
+> I see what you mean. Is this something you'd like me to do for v3 (add
+> the names to the config struct), or were you thinking more in the
+> abstract, "this is something we should consider doing in the future"?
+If we are going to explicitly support he of_device_get_match_data
+path then we should do the names as well in v3.
 
-Hence below is an attempt to write a DTS for the Commodore 64.
-DT binding documentation is not yet included.
+Just end up with an odd half measure otherwise!
 
-Thanks for your comments ;-)
-
----8<-------------------------------------------------------------------
-/dts-v1/;
-
-#include <dt-bindings/gpio/gpio.h>
-
-/* FIXME <dt-bindings/6502.h> */
-#define CPU_IRQ		0
-#define CPU_NMI		1
-
-/ {
-	model = "Commodore 64";
-	compatible = "cbm,c64";
-	#address-cells = <1>;
-	#size-cells = <1>;
-	interrupt-parent = <&cpu>;
-
-	color_clock: color_clock {
-		compatible = "fixed-clock";
-		#clock-cells = <0>;
-		clock-frequency = <17734472>;		// PAL
-	};
-
-	dot_clock: dot_clock {
-		compatible = "fixed-factor-clock";
-		#clock-cells = <0>;
-		clock-div = <9>;
-		clock-mul = <4>;
-		clocks = <&color_clock>;
-	};
-
-	phi0: phi0_clock {
-		compatible = "fixed-factor-clock";
-		#clock-cells = <0>;
-		clock-div = <8>;
-		clock-mul = <1>;
-		clocks = <&dot_clock>;
-	};
-
-	phi2: phi2_clock {
-		compatible = "fixed-factor-clock";
-		#clock-cells = <0>;
-		clock-div = <1>;
-		clock-mul = <1>;
-		clocks = <&phi0>;
-	};
-
-	ps_freq: ps_freq {
-		compatible = "fixed-clock";
-		#clock-cells = <0>;
-		clock-frequency = <50>;
-	};
-
-	cpus {
-		#address-cells = <0>;
-		#size-cells = <0>;
-
-		cpu: cpu {
-			device_type = "cpu";
-			compatible = "cbm,6510", "mos,6502";
-			clock-frequency = <985000>;
-			gpio-controller;
-			#gpio-cells = <2>;
-			interrupt-controller;
-			#interrupt-cells = <1>;
-		};
-	};
-
-	// FIXME sub-node with ranges to describe bank switching
-	// cbm,loram-gpios = <&cpu 0 GPIO_ACTIVE_LOW>,
-	// cbm,hiram-gpios = <&cpu 1 GPIO_ACTIVE_LOW>,
-	// cbm,charen-gpios = <&cpu 2 GPIO_ACTIVE_LOW>,
-
-	ram: memory@0 {
-		device_type = "memory";
-		reg = <0 0x10000>;
-	};
-
-	basic_rom: memory@a000 {
-		reg = <0xa000 0x2000>;
-		// FIXME ROM, reserved
-	};
-
-	character_rom: memory@d000 {
-		reg = <0xd000 0x1000>;
-		// FIXME ROM, reserved
-	};
-
-	vic: video-controller@d000 {
-		reg = <0xd000 0x400>;
-		compatible = "cbm,6569", "cbm,vic-ii";	// PAL
-		clocks = <&color_clock>, <&dot_clock>;
-		clock-names = "color", "dot";
-		interrupts = <CPU_IRQ>;
-
-		cbm,vic-bank-gpios = <&cia2 0 GPIO_ACTIVE_HIGH>,
-				     <&cia2 1 GPIO_ACTIVE_HIGH>;
-	};
-
-	sid: sound@d400 {
-		reg = <0xd400 0x400>;
-		compatible = "cbm,6581", "cbm,sid";
-	};
-
-	color_ram: memory@d800 {
-		reg = <0xd800 0x400>;
-		// FIXME Nibble RAM, reserved
-	};
-
-	cia1: system-controller@dc00 {
-		reg = <0xdc00 0x100>;
-		compatible = "cbm,6526", "mos,cia";
-		#clock-cells = <0>;			// CNT
-		gpio-controller;
-		#gpio-cells = <2>;
-		interrupt-controller;
-		#interrupt-cells = <1>;
-		clocks = <&phi2>, <&ps_freq>;
-		clock-names = "phi2", "tod";
-		interrupts = <CPU_IRQ>;
-	};
-
-	cia2: system-controller@dd00 {
-		reg = <0xdd00 0x100>;
-		compatible = "cbm,6526", "mos,cia";
-		#clock-cells = <0>;			// CNT
-		gpio-controller;
-		#gpio-cells = <2>;
-		interrupt-controller;
-		#interrupt-cells = <1>;
-		clocks = <&phi2>, <&ps_freq>;
-		clock-names = "phi2", "tod";
-		interrupts = <CPU_IRQ>;
-	};
-
-	kernal_rom: memory@e000 {
-		reg = <0xe000 0x2000>;
-		// FIXME ROM, reserved
-	};
-
-	keyboard {
-		compatible = "cbm,c64-keyboard", "gpio-matrix-keypad";
-
-		col-gpios = <&cia1 0 GPIO_ACTIVE_HIGH>,
-			    <&cia1 1 GPIO_ACTIVE_HIGH>,
-			    <&cia1 2 GPIO_ACTIVE_HIGH>,
-			    <&cia1 3 GPIO_ACTIVE_HIGH>,
-			    <&cia1 4 GPIO_ACTIVE_HIGH>,
-			    <&cia1 5 GPIO_ACTIVE_HIGH>,
-			    <&cia1 6 GPIO_ACTIVE_HIGH>,
-			    <&cia1 7 GPIO_ACTIVE_HIGH>;
-		row-gpios = <&cia1 8 GPIO_ACTIVE_HIGH>,
-			    <&cia1 9 GPIO_ACTIVE_HIGH>,
-			    <&cia1 10 GPIO_ACTIVE_HIGH>,
-			    <&cia1 11 GPIO_ACTIVE_HIGH>,
-			    <&cia1 12 GPIO_ACTIVE_HIGH>,
-			    <&cia1 13 GPIO_ACTIVE_HIGH>,
-			    <&cia1 14 GPIO_ACTIVE_HIGH>,
-			    <&cia1 15 GPIO_ACTIVE_HIGH>;
-
-		interrupts = <CPU_NMI>;
-		linux,keymap = <0 /* FIXME */>;
-	};
-
-	iec {
-		compatible = "cbm,c64-iec-bus";
-
-		cbm,atn-gpios = <&cia2 3 GPIO_ACTIVE_LOW>;
-		cbm,clock-out-gpios = <&cia2 4 GPIO_ACTIVE_LOW>;
-		cbm,data-out-gpios = <&cia2 5 GPIO_ACTIVE_LOW>;
-		cbm,clock-in-gpios = <&cia2 6 GPIO_ACTIVE_LOW>;
-		cbm,data-in-gpios = <&cia2 7 GPIO_ACTIVE_LOW>;
-	};
-};
-------------------------------------------------------------------->8---
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+Jonathan
+> 
+> [snip]
