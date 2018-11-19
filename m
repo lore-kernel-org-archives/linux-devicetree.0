@@ -1,88 +1,156 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: hwmon: add binding documentation for adt7475
-Date: Mon, 19 Nov 2018 15:40:20 -0600
-Message-ID: <CAL_JsqKgBkR4WN+aTKdHSfCZ8EH39yLCeLwXwmf+nd0_cAy+mw@mail.gmail.com>
-References: <20181108225607.7521-1-chris.packham@alliedtelesis.co.nz>
- <20181108225607.7521-2-chris.packham@alliedtelesis.co.nz> <20181117152949.GA31247@bogus>
- <f3a29bc9-dbfc-bfb8-8707-2b67d96c2e04@roeck-us.net>
+Subject: Re: [PATCH v3 1/2] dt-bindings/interrupt-controller: rzn1: Add RZ/N1
+ gpio irq mux binding
+Date: Mon, 19 Nov 2018 15:50:39 -0600
+Message-ID: <CAL_JsqJca7mXS_9msTbCovnXpFxC0VY81COk98x-c1Ug5a=jQQ@mail.gmail.com>
+References: <20181113130910.22130-1-phil.edworthy@renesas.com>
+ <20181113130910.22130-2-phil.edworthy@renesas.com> <20181117143253.GA27381@bogus>
+ <TY1PR01MB176917D755CB102AB5FD6BEAF5D80@TY1PR01MB1769.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f3a29bc9-dbfc-bfb8-8707-2b67d96c2e04@roeck-us.net>
+In-Reply-To: <TY1PR01MB176917D755CB102AB5FD6BEAF5D80@TY1PR01MB1769.jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, Jean Delvare <jdelvare@suse.com>, Linux HWMON List <linux-hwmon@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 18, 2018 at 4:56 PM Guenter Roeck <linux@roeck-us.net> wrote:
+On Mon, Nov 19, 2018 at 3:39 AM Phil Edworthy <phil.edworthy@renesas.com> wrote:
 >
-> On 11/17/18 7:29 AM, Rob Herring wrote:
-> > On Fri, Nov 09, 2018 at 11:56:06AM +1300, Chris Packham wrote:
-> >> With the addition of the invert-pwm property the adt7475 needs its own
-> >> binding documentation rather being captured under trivial-devices.txt.
-> >>
-> >> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> >> ---
-> >> Changes in v2:
-> >> - use pwm-polarity attiribute to indicate normal or inverted polarity.
-> >>
-> >>   .../devicetree/bindings/hwmon/adt7475.txt     | 24 +++++++++++++++++++
-> >>   .../devicetree/bindings/trivial-devices.txt   |  4 ----
-> >>   2 files changed, 24 insertions(+), 4 deletions(-)
-> >>   create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.txt b/Documentation/devicetree/bindings/hwmon/adt7475.txt
-> >> new file mode 100644
-> >> index 000000000000..d9212b5e9036
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.txt
-> >> @@ -0,0 +1,24 @@
-> >> +*ADT7475 hwmon sensor.
-> >> +
-> >> +Required properties:
-> >> +- compatible: One of
-> >> +    "adi,adt7473"
-> >> +    "adi,adt7475"
-> >> +    "adi,adt7476"
-> >> +    "adi,adt7490"
-> >> +
-> >> +- reg: I2C address
-> >> +
-> >> +optional properties:
-> >> +
-> >> +- pwm-polarity: This configures the polarity of the PWM. 0
-> >> +            (PWM_POLARITY_NORMAL) uses logic high for 100% duty cycle. 1
-> >> +                (PWM_POLARITY_INVERSED) uses logic low for 100% duty cycle.
-> >
-> > So we're using part of the PWM binding, but none of the rest of it? What
-> > is the PWM connection here?
-> > The chip has a built-in PWM controller to control fan speeds. PWM frequency
-> as well as PWM polarity are configurable. I had suggested to use the terminology
-> from Documentation/devicetree/bindings/pwm/pwm.txt. Other than terminology there
-> is no connection to a standard pwm controller.
-
-Ah, a fan controller. Please make that clear.
-
-The fan related bindings need a bit of work IMO. We have the start of
-something somewhat common with aspeed and npcm bindings, but they
-could use a bit more work. We need the fan and controller bindings to
-be somewhat separate where a fan node for a given type of fan doesn't
-depend on the controller node.
-
-AIUI, all fans are not the same, so does this controller only work
-with 1 type of fan and not need any more board level config? Isn't fan
-speed not linear with PWM duty cycle and need some sort of map.
-
-> Another option/possibility would be to use a boolean, such as pwm-polarity-inverted.
-> We are open to suggestions.
+> Hi Rob,
 >
-> > It sounds like this is common for sensors, so this should be documented
-> > somewhere common.
+> On 17 November 2018 14:33 Rob Herring wrote:
+> > On Tue, Nov 13, 2018 at 01:09:09PM +0000, Phil Edworthy wrote:
+> > > Add device binding documentation for the Renesas RZ/N1 GPIO interrupt
+> > > multiplexer.
+> > >
+> > > Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+> > > ---
+> > > v3:
+> > >  - Use 'interrupt-map' DT property correctly.
+> > > v2:
+> > >  - Use interrupt-map to allow the GPIO controller info to be specified
+> > >    as part of the irq.
+> > >  - Don't show status in binding examples.
+> > >  - Don't show the soc/board split in binding doc.
+> > > ---
+> > >  .../interrupt-controller/renesas,rzn1-mux.txt | 73
+> > > +++++++++++++++++++
+> > >  1 file changed, 73 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-mu
+> > > x.txt
 > >
-> Sure, no problem. Any suggestion where ?
+> > A few nits, otherwise:
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> Thanks for the review!
+>
+> > >
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-
+> > > mux.txt
+> > > b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzn1-
+> > > mux.txt
+> > > new file mode 100644
+> > > index 000000000000..6515880e25cc
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,r
+> > > +++ zn1-mux.txt
+> > > @@ -0,0 +1,73 @@
+> > > +* Renesas RZ/N1 GPIO Interrupt Multiplexer
+> > > +
+> > > +On Renesas RZ/N1 devices, there are several GPIO Controllers each
+> > > +with a number of interrupt outputs. All of the interrupts from the
+> > > +GPIO Controllers are passed to the GPIO Interrupt Multiplexer, which
+> > > +selects a sub-set of the interrupts to pass onto the system interrupt
+> > controller.
+> > > +
+> > > +A single node in the device tree is used to describe the GPIO IRQ Muxer.
+> > > +
+> > > +Required properties:
+> > > +- compatible: SoC-specific compatible string "renesas,<soc-specific>-
+> > gpioirqmux"
+> > > +  followed by "renesas,rzn1-gpioirqmux" as fallback. The SoC-specific
+> > > +compatible
+> > > +  strings must be one of:
+> > > +   "renesas,r9a06g032-gpioirqmux" for RZ/N1D
+> > > +   "renesas,r9a06g033-gpioirqmux" for RZ/N1S
+> > > +- reg: Base address and size of GPIO IRQ Muxer registers.
+> > > +- interrupts: List of output interrupts.
+> > > +- #interrupt-cells: Numder of cells in the input interrupt specifier, must be
+> > 1.
+> > > +- #address-cells: Must be 0.
+> > > +- interrupt-map-mask: must be 127.
+> > > +- interrupt-map: Standard property detailing the maps between input
+> > > +irqs and the
+> > > +  corresponding output irq. This consist of a list of:
+> > > +   <input-irq-spec phandle-to-interrupt-controller output-irq-spec>
+> > > +  The input-irq-spec is from 0 to 95, corresponding to the outputs of
+> > > +the GPIO
+> > > +  Controllers.
+> > > +
+> > > +Example:
+> > > +
+> > > +   The following is an example for the RZ/N1D SoC.
+> > > +
+> > > +   gpioirqmux: gpioirqmux@51000480 {
+> >
+> > interrupt-controller@...
+> Sure
+>
+> > > +           compatible = "renesas,r9a06g032-gpioirqmux",
+> > > +                           "renesas,rzn1-gpioirqmux";
+> > > +           reg = <0x51000480 0x20>;
+> > > +           interrupts =
+> > > +                   <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
+> > > +                   <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
+> >
+> > This is a bit redundant as the same information is in interrupt-map, but I
+> > guess you need it to get the irq resources.
+> That's right.
+>
+> > > +
+> > > +           #interrupt-cells = <1>;
+> > > +           #address-cells = <0>;
+> > > +           interrupt-map-mask = <127>;
+> >
+> > Use hex for masks.
+> Ok.
+>
+> > > +           interrupt-map =
+> > > +                   /* gpio2a 24, pin 146: ETH Port 1 IRQ */
+> > > +                   <88 &gic GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
+> > > +                   /* gpio2a 26, pin 148: TouchSCRN_IRQ */
+> > > +                   <90 &gic GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
+> > > +   };
+> > > +
+> > > +   gpio2: gpio@5000d000 {
+> > > +           compatible = "snps,dw-apb-gpio";
+> > > +           reg = <0x5000d000 0x80>;
+> > > +           #address-cells = <1>;
+> > > +           #size-cells = <0>;
+> > > +           clock-names = "bus";
+> > > +           clocks = <&sysctrl R9A06G032_HCLK_GPIO2>;
+> > > +
+> > > +           gpio2a: gpio-controller@0 {
+> >
+> > gpio@0
+> Are you sure about this?
 
-hwmon/fan.txt (that doesn't exist yet.)
+Yes, 'gpio' is what the DT spec says. It is the oddball though and I
+always have to think about it.
 
-Probably all of bindings/hwmon/ should be split up by class of device.
+> The bindings in Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> show an example where the sub-nodes for gpio banks are gpio-controller@.
+> This is also in Documentation/devicetree/bindings/gpio/gpio.txt.
+
+Indeed. Those should be fixed. I would be easily persuaded to just
+change the spec, but 'gpio@' is much more widely used:
+
+$ git grep gpio@ -- arch/ | wc
+   1110    4378   67766
+$ git grep gpio-controller@ -- arch/ | wc
+     60     232    4270
 
 Rob
