@@ -1,118 +1,101 @@
-Return-Path: <robherring2@gmail.com>
-Message-ID: <5bea0ed8.1c69fb81.8715.38b2@mx.google.com>
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: phy: Add Qualcomm Synopsys High-Speed
- USB PHY binding
-References: <20181108070449.23572-1-shawn.guo@linaro.org>
- <20181108070449.23572-2-shawn.guo@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20181108070449.23572-2-shawn.guo@linaro.org>
-Date: Mon, 12 Nov 2018 13:24:51 -0600
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 19 Nov 2018 16:10:02 -0600
+References: <cover.1541174814.git.kblaiech@mellanox.com>
+	<894b09ec9b4a18c91c3573145c59b8ff41c8ea04.1541174814.git.kblaiech@mellanox.com>
+	<5bea0e9e.1c69fb81.dad72.3ca2@mx.google.com>
+	<VI1PR05MB4271E85F07AF47B7D7FA8398A6C30@VI1PR05MB4271.eurprd05.prod.outlook.com>
+In-Reply-To: <VI1PR05MB4271E85F07AF47B7D7FA8398A6C30@VI1PR05MB4271.eurprd05.prod.outlook.com>
+Message-ID: <CAL_Jsq+sDcMLHhk3D=Cptk3kY2zJdeD4ZwzvGhzQMqS7JFjuKg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: i2c: I2C binding for Mellanox BlueField SoC
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Khalil Blaiech <kblaiech@mellanox.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Wolfram Sang <wsa+renesas@sang-engineering.com>, David Woods <dwoods@mellanox.com>, Linux I2C <linux-i2c@vger.kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Nov 08, 2018 at 03:04:48PM +0800, Shawn Guo wrote:
-> From: Sriharsha Allenki <sallenki@codeaurora.org>
-> 
-> It adds bindings for Synopsys 28nm femto phy controller that supports
-> LS/FS/HS usb connectivity on Qualcomm chipsets.
-> 
-> Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
-> Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> ---
->  .../phy/qcom,snps-28nm-usb-hs-phy.txt         | 101 ++++++++++++++++++
->  1 file changed, 101 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt b/Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt
-> new file mode 100644
-> index 000000000000..75e7a09dd558
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt
-> @@ -0,0 +1,101 @@
-> +Qualcomm Synopsys 28nm Femto phy controller
-> +===========================================
-> +
-> +Synopsys 28nm femto phy controller supports LS/FS/HS usb connectivity on
-> +Qualcomm chipsets.
-> +
-> +Required properties:
-> +
-> +- compatible:
-> +    Value type: <string>
-> +    Definition: Should contain "qcom,usb-snps-hsphy".
+On Wed, Nov 14, 2018 at 5:53 PM Khalil Blaiech <kblaiech@mellanox.com> wrote:
+>
+> Rob,
+>
+> Thank you, for having taken the time to review this change and providing
+> feedback.
+>
+> > On Fri, Nov 02, 2018 at 12:53:11PM -0400, Khalil Blaiech wrote:
+> > > Added device tree bindings documentation for Mellanox BlueField I2C
+> > > SMBus controller.
+> > >
+> > > Reviewed-by: David Woods <dwoods@mellanox.com>
+> > > Signed-off-by: Khalil Blaiech <kblaiech@mellanox.com>
+> > > ---
+> > >  .../devicetree/bindings/i2c/mellanox,i2c-mlx.txt   | 58
+> > ++++++++++++++++++++++
+> > >  1 file changed, 58 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/i2c/mellanox,i2c-mlx.txt
+> > >
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlx.txt
+> > > b/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlx.txt
+> > > new file mode 100644
+> > > index 0000000..49c9e2f
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlx.txt
+> > > @@ -0,0 +1,58 @@
+> > > +Device tree configuration for the Mellanox I2C SMBus on BlueField
+> > > +SoCs
+> > > +
+> > > +Required Properties:
+> > > +- reg        : address offset and range of bus device registers
+> >
+> > Need to enumerate the exact list.
+>
+> Okay.
+>
+> >
+> > > +- compatible : should be "mellanox,i2c-mlx"
+> >
+> > Kind of generic.
+>
+> Please note that we do not provide identifier/serial number for our I2C
+> device. I can think of  "mellanox,i2c-mlxbf" instead where "bf" refers to
+> our SoC.  Is this less generic?
+>
+> >
+> > > +- interrupts : interrupt number
+> > > +- bus        : hardware bus identifier. BlueField ARM side has three bus
+> > > +               controllers; thus, values might be 0, 1, or 2
+> >
+> > We don't do bus indexes in DT.
+>
+> Actually, it is critical for us to know what bus we are using and/or exposing
+> to user space; we rely on the bus identifier to match the hardware block.
+> On the other hand, we don't want to put complex logic in the driver because
+> it may require hardcoding memory region addresses. And we don't want to
+> do that, right?
 
-SoC specific compatible?
+'i2cN' alias should work for you. That's what others do.
 
-> +
-> +- reg:
-> +    Value type: <prop-encoded-array>
-> +    Definition: USB PHY base address and length of the register map.
-> +
-> +- #phy-cells:
-> +    Value type: <u32>
-> +    Definition: Should be 0.
-> +
-> +- clocks:
-> +    Value type: <prop-encoded-array>
-> +    Definition: See clock-bindings.txt section "consumers". List of
-> +		three clock specifiers for reference, phy core and
-> +		sleep clocks.
-> +
-> +- clock-names:
-> +    Value type: <string>
-> +    Definition: Names of the clocks in 1-1 correspondence with the "clocks"
-> +		property. Must contain "ref", "phy" and "sleep".
-> +
-> +- resets:
-> +    Value type: <prop-encoded-array>
-> +    Definition: See reset.txt section "consumers". PHY reset specifiers
-> +		for phy core and POR resets.
-> +
-> +- reset-names:
-> +    Value type: <string>
-> +    Definition: Names of the resets in 1-1 correspondence with the "resets"
-> +		property. Must contain "phy" and "por".
-> +
-> +- vdd-supply:
-> +    Value type: <phandle>
-> +    Definition: phandle to the regulator VDD supply node.
-> +
-> +- vdda1p8-supply:
-> +    Value type: <phandle>
-> +    Definition: phandle to the regulator 1.8V supply node.
-> +
-> +- vdda3p3-supply:
-> +    Value type: <phandle>
-> +    Definition: phandle to the regulator 3.3V supply node.
-> +
-> +- qcom,vdd-voltage-level:
-> +    Value type: <prop-array>
-> +    Definition: This is a list of three integer values <no min max> where
-> +		each value corresponding to voltage corner in uV.
-> +
-> +Optional properties:
-> +
-> +- extcon:
-> +    Value type: <prop-encoded-array>
-> +    Definition: Should contain the vbus extcon.
 
-Don't use extcon for new bindings. Use usb-connector binding.
-
-> +
-> +- qcom,init-seq:
-> +    Value type: <u32 array>
-> +    Definition: Should contain a sequence of <offset value delay> tuples to
-> +                program 'value' into phy register at 'offset' with 'delay'
-> +		in us afterwards.
-
-If we wanted this type of thing in DT, we'd have a generic binding (or 
-forth). This should probably be split between SoC specific settings in 
-the driver and board properties in DT.
+> > > +i2c0 {
+> > > +   compatible = "mellanox,i2c-mlx";
+> > > +   reg = <0x02804000 0x800>,       /* Smbus[0]        */
+> > > +              <0x02801200 0x020>,  /* Cause Master[0] */
+> > > +              <0x02801260 0x020>,  /* Cause Slave[0]  */
+> > > +              <0x02801300 0x010>,  /* Cause Coalesce  */
+> >
+> > > +              <0x02802000 0x100>,  /* GPIO 0          */
+> > > +              <0x02800358 0x008>;  /* CorePll         */
+> >
+> > Are these 2 really part of the I2C block?
+>
+> Our hardware design is quite complex, roughly, we have kind of
+> centralized block which contains multiple sub-blocks. These regs
+> are shared among the I2C controllers (i.e., sub-blocks).  These
+> are needed during device initialization.
+> You'll also notice the "Cause Coalesce" above.
+Okay, as long as these addresses don't also appear somewhere else in
+the DT it is fine. It's not something we check currently, but I want
+to and we have to work-around the kernel's resource tracking because
+of that problem.
 
 Rob
