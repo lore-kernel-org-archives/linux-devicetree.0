@@ -1,69 +1,72 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: =?UTF-8?Q?Re=3a_=5bPatch_v3=c2=a0=5d_drm/msm/dpu=3a_Correct_dpu_des?=
- =?UTF-8?Q?troy_and_disable_order?=
-Date: Mon, 19 Nov 2018 14:02:04 +0530
-Message-ID: <9b31405e-a9dd-3571-a969-caf2c27dd792@codeaurora.org>
-References: <1542608738-3315-1-git-send-email-jshekhar@codeaurora.org>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [RCF PATCH,v2,2/2] pwm: imx: Configure output to GPIO in
+ disabled state
+Date: Mon, 19 Nov 2018 09:32:30 +0100
+Message-ID: <20181119083230.re3dtq4alnrojbnd@pengutronix.de>
+References: <20181107093355.e4n3irrnkybqsjvc@pengutronix.de>
+ <eb4e7a42-bd5c-3ae2-ccb7-d1a73d5ae99c@ysoft.com>
+ <20181107150125.7cpd4v5t7yi2254c@pengutronix.de>
+ <4fbb7307-df01-d7bd-f2e2-e05e6d17807d@ysoft.com>
+ <20181108191855.zuon3ecv4yjfbs7g@pengutronix.de>
+ <283cfef3-16d0-8bd4-e306-6e34d44c3a86@ysoft.com>
+ <20181109165555.vqbiwh4hlcnozdna@pengutronix.de>
+ <20181114113449.GB2620@ulmo>
+ <20181114215120.vddykljqyavm64wj@pengutronix.de>
+ <CACRpkdZAew3bUea=iR4t-a7SVSMf=-CTeWfeU215uT_jQ-o81A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542608738-3315-1-git-send-email-jshekhar@codeaurora.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZAew3bUea=iR4t-a7SVSMf=-CTeWfeU215uT_jQ-o81A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jayant Shekhar <jshekhar@codeaurora.org>, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, robdclark@gmail.com, seanpaul@chromium.org, hoegsberg@chromium.org, abhinavk@codeaurora.org, jsanka@codeaurora.org, chandanu@codeaurora.org, nganji@codeaurora.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Michal.Vokac@ysoft.com, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-pwm@vger.kernel.org, l.majewski@majess.pl, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@karo-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
+Hello Linus,
 
-On 11/19/2018 11:55 AM, Jayant Shekhar wrote:
-> In case of msm drm bind failure, pm runtime put sync
-> is called from dsi driver which issues an asynchronous
-> put on mdss device. Subsequently when dpu_mdss_destroy
-> is triggered the change will make sure to put the mdss
-> device in suspend and clearing pending work if not
-> scheduled.
-> 
-> Changes in v2:
->     - Removed double spacings [Jeykumar]
-> 
-> Changes in v3:
->     - Fix clock on issue during bootup [Rajendra]
-> 
-> Signed-off-by: Jayant Shekhar <jshekhar@codeaurora.org>
+On Mon, Nov 19, 2018 at 08:44:38AM +0100, Linus Walleij wrote:
+> There is quite a discussion you folks have going on here. I tried to
+> grasp it but I can't. I can try to answer the above question specifically.
 
-So I no longer see the clock usecount mismatch with this patch now,
-that I had earlier reported with the v2.
+To sumarize: When the pwm driver probes it is not yet clear if the idle
+state of the output pin is high or low. Even when the pinctrl device has
+an "init" and a "default" pinctrl, it is not yet fixed when its
+"default" is configured.
 
-Tested-by: Rajendra Nayak <rnayak@codeaurora.org>
+The way Thierry wants to fix that is by disabling the output driver
+until the pwm is in use und rely on a pull-up or pull-down in hardware.
 
-> ---
->   drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c | 6 ++----
->   1 file changed, 2 insertions(+), 4 deletions(-)
+The way I want to fix this is to only configure the pwm pin as part of
+the consumer. This is late enough that the consumer already requested
+and configured the pwm such that the idle level is known.
+Thierry's and Lothar's claim was that putting the pin setup of the pwm
+pin into the pwm consumer's pinctrl was forbidden. That's why I asked
+you as pinctrl maintainer if there is a requirement that I don't know
+of.
+
+> So compared to things like that (that we still have to support
+> forever) whatever you are doing here you're doing great as long
+> as it is consumer controlled.
 > 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-> index fd9c893..df8127b 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-> @@ -156,18 +156,16 @@ static void dpu_mdss_destroy(struct drm_device *dev)
->   	struct dpu_mdss *dpu_mdss = to_dpu_mdss(priv->mdss);
->   	struct dss_module_power *mp = &dpu_mdss->mp;
->   
-> +	pm_runtime_suspend(dev->dev);
-> +	pm_runtime_disable(dev->dev);
->   	_dpu_mdss_irq_domain_fini(dpu_mdss);
-> -
->   	free_irq(platform_get_irq(pdev, 0), dpu_mdss);
-> -
->   	msm_dss_put_clk(mp->clk_config, mp->num_clk);
->   	devm_kfree(&pdev->dev, mp->clk_config);
->   
->   	if (dpu_mdss->mmio)
->   		devm_iounmap(&pdev->dev, dpu_mdss->mmio);
->   	dpu_mdss->mmio = NULL;
-> -
-> -	pm_runtime_disable(dev->dev);
->   	priv->mdss = NULL;
->   }
->   
-> 
+> Whether that consumer is the previous driver thingie in the
+> daisy-chain of consumers or the final end user consumer of
+> the pin doesn't really matter to pin control, as long as it is a
+> consumer. I would tend to say it is up to the subsystem,
+> and the old IETF motto "rough consensus and running code".
+
+So I understand that from the pinctrl side there is no hard requirement
+that the PWM pin must be muxed as part of the pwm device. And if things
+work better when the pin is only configured as part of its consumer this
+is legitimate.
+
+Thanks for your feedback.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
