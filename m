@@ -1,133 +1,31 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RESEND PATCH v3 1/2] dt-bindings: PCI: Add UniPhier PCIe host
- controller description
-Date: Mon, 19 Nov 2018 11:40:36 +0000
-Message-ID: <20181119114028.GA30042@e107981-ln.cambridge.arm.com>
-References: <1539667641-26024-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1539667641-26024-2-git-send-email-hayashi.kunihiko@socionext.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCHv3 0/4] dts/layerscape-pci: removed unsuitable compatible
+ string
+Date: Mon, 19 Nov 2018 20:01:25 +0800
+Message-ID: <20181119120123.GQ5829@dragon>
+References: <20181107053500.13575-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1539667641-26024-2-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <20181107053500.13575-1-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Leo Li <leoyang.li@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 16, 2018 at 02:27:20PM +0900, Kunihiko Hayashi wrote:
-> Add DT bindings for PCIe controller implemented in UniPhier SoCs when
-> configured in Root Complex (host) mode. This controller is based on
-> the DesignWare PCIe core.
+On Wed, Nov 07, 2018 at 05:35:12AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/pci/uniphier-pcie.txt      | 81 ++++++++++++++++++++++
->  1 file changed, 81 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+> Removed the compatible string "snps,dw-pcie" from FSL layerscape-pci compatible
+> string list.
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/uniphier-pcie.txt b/Documentation/devicetree/bindings/pci/uniphier-pcie.txt
-> new file mode 100644
-> index 0000000..46a2754
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/uniphier-pcie.txt
-> @@ -0,0 +1,81 @@
-> +Socionext UniPhier PCIe host controller bindings
-> +
-> +This describes the devicetree bindings for PCIe host controller implemented
-> +on Socionext UniPhier SoCs.
-> +
-> +UniPhier PCIe host controller is based on the Synopsys DesignWare PCI core.
-> +It shares common functions with the PCIe DesignWare core driver and inherits
-> +common properties defined in
-> +Documentation/devicetree/bindings/pci/designware-pcie.txt.
-> +
-> +Required properties:
-> +- compatible: Should be "socionext,uniphier-pcie".
-> +- reg: Specifies offset and length of the register set for the device.
-> +	According to the reg-names, appropriate register sets are required.
-> +- reg-names: Must include the following entries:
-> +    "dbi"    - controller configuration registers
-> +    "link"   - SoC-specific glue layer registers
-> +    "config" - PCIe configuration space
-> +- clocks: A phandle to the clock gate for PCIe glue layer including
-> +	the host controller.
-> +- resets: A phandle to the reset line for PCIe glue layer including
-> +	the host controller.
-> +- interrupts: A list of interrupt specifiers. According to the
-> +	interrupt-names, appropriate interrupts are required.
-> +- interrupt-names: Must include the following entries:
-> +    "dma" - DMA interrupt
-> +    "msi" - MSI interrupt
-> +
-> +Optional properties:
-> +- phys: A phandle to generic PCIe PHY. According to the phy-names, appropriate
-> +	phys are required.
-> +- phy-names: Must be "pcie-phy".
-> +
-> +Required sub-node:
-> +- legacy-interrupt-controller: Specifies interrupt controller for legacy PCI
-> +	interrupts.
-> +
-> +Required properties for legacy-interrupt-controller:
-> +- interrupt-controller: identifies the node as an interrupt controller.
-> +- #interrupt-cells: specifies the number of cells needed to encode an
-> +	interrupt source. The value must be 1.
-> +- interrupt-parent: Phandle to the parent interrupt controller.
-> +- interrupts: An interrupt specifier for legacy interrupt.
-> +
-> +Example:
-> +
-> +	pcie: pcie@66000000 {
-> +		compatible = "socionext,uniphier-pcie", "snps,dw-pcie";
-> +		status = "disabled";
-> +		reg-names = "dbi", "link", "config";
-> +		reg = <0x66000000 0x1000>, <0x66010000 0x10000>,
-> +		      <0x2fff0000 0x10000>;
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		clocks = <&sys_clk 24>;
-> +		resets = <&sys_rst 24>;
-> +		num-lanes = <1>;
-> +		num-viewport = <1>;
-> +		bus-range = <0x0 0xff>;
-> +		device_type = "pci";
-> +		ranges =
-> +		/* downstream I/O */
-> +			<0x81000000 0 0x00000000  0x2ffe0000  0 0x00010000
-> +		/* non-prefetchable memory */
-> +			 0x82000000 0 0x00000000  0x20000000  0 0x0ffe0000>;
-> +		#interrupt-cells = <1>;
-> +		interrupt-names = "dma", "msi";
-> +		interrupts = <0 224 4>, <0 225 4>;
-> +		interrupt-map-mask = <0 0 0  7>;
-> +		interrupt-map = <0 0 0  1  &pcie_intc 1>,	/* INTA */
-> +				<0 0 0  2  &pcie_intc 2>,	/* INTB */
-> +				<0 0 0  3  &pcie_intc 3>,	/* INTC */
-> +				<0 0 0  4  &pcie_intc 4>;	/* INTD */
+> Hou Zhiqiang (4):
+>   dt-bindings: pci: layerscape-pci: add compatible strings
+>     "fsl,ls1043a-pcie"
+>   dt-bindings: pci: layerscape-pci: removed compatible string
+>     "snps,dw-pcie"
+>   ARM: dts: ls1021a: removed compatible string "snps,dw-pcie"
+>   arm64: dts: layerscape: removed compatible string "snps,dw-pcie"
 
-This is not correct and we must fix this concept for all DWC based host
-bridges bindings. We are mapping INTX to inputs [0,1,2,3] of the host
-bridge interrupt controllers and the binding should reflect that.
-
-This should be the correct mapping:
-
-		interrupt-map = <0 0 0  1  &pcie_intc 0>,	/* INTA */
-				<0 0 0  2  &pcie_intc 1>,	/* INTB */
-				<0 0 0  3  &pcie_intc 2>,	/* INTC */
-				<0 0 0  4  &pcie_intc 3>;	/* INTD */
-
-Lorenzo
-
-> +
-> +		pcie_intc: legacy-interrupt-controller {
-> +			interrupt-controller;
-> +			#interrupt-cells = <1>;
-> +			interrupt-parent = <&gic>;
-> +			interrupts = <0 226 4>;
-> +		};
-> +	};
-> -- 
-> 2.7.4
-> 
+Applied all, thanks.
