@@ -1,74 +1,47 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH 1/2] arm64: dts: qcom: msm8996: Add VFE SMMU node
-Date: Mon, 19 Nov 2018 16:38:10 +0530
-Message-ID: <CAFp+6iG3bRoyFtfd60SO9t=upjcH+fQm1NAOMTvMpYnk5dHjFw@mail.gmail.com>
-References: <1542619537-24038-1-git-send-email-todor.tomov@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH v4 0/2] Add Synopsys High-Speed USB PHY driver for Qualcomm SoCs
+Date: Mon, 19 Nov 2018 19:08:10 +0800
+Message-ID: <20181119110812.15825-1-shawn.guo@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542619537-24038-1-git-send-email-todor.tomov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: todor.tomov@linaro.org
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Todor,
+It's based on a downstream driver from Sriharsha Allenki <sallenki@codeaurora.org>
+that uses USB phy framework, and gets rewrote to adpot generic phy
+framework together with quite some cleanups.
 
-On Mon, Nov 19, 2018 at 2:57 PM Todor Tomov <todor.tomov@linaro.org> wrote:
->
-> Add VFE SMMU node.
->
-> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
-> ---
->
-> This patch depends on patchset:
-> https://lore.kernel.org/patchwork/cover/1013166/
->
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index 13bb964..a4d087e5 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> @@ -950,6 +950,23 @@
->                         };
->                 };
->
-> +               vfe_smmu: arm,smmu@da0000 {
-> +                       compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
-> +                       reg = <0xda0000 0x10000>;
-> +
-> +                       #global-interrupts = <1>;
-> +                       interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH>;
-> +                       power-domains = <&mmcc MMAGIC_CAMSS_GDSC>;
-> +                       clocks = <&mmcc SMMU_VFE_AHB_CLK>,
-> +                                <&mmcc SMMU_VFE_AXI_CLK>;
-> +                       clock-names = "iface",
-> +                                     "bus";
-> +                       #iommu-cells = <1>;
-> +                       status = "ok";
+Changes for v4:
+ - Kill device tree property 'qcom,init-seq' by moving the settings
+   into phy driver as device match data.
 
-No point of adding this status here.
-Rest looks good to me.
+Changes for v3:
+ - Use SoC specific compatible "qcom,qcs404-usb-hsphy".
+ - Use OF graph instead of extcon bindings to model the link to USB
+   connector.
 
-Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+Changes for v2:
+ - Add a pointer to phy/phy-bindings.txt for property #phy-cells.
+ - Roll back voltage settings in case function
+   qcom_snps_hsphy_config_regulators() fails in the middle.
+ - Add a comment for init-seq tuple which consists of 3 numbers.
+ - Sort include headers alphabetically.
+ - Sort register definitions in order of offset.
 
-Best regards
-Vivek
+Shawn Guo (1):
+  phy: qualcomm: Add Synopsys High-Speed USB PHY driver
 
-> +               };
-> +
->                 agnoc@0 {
->                         power-domains = <&gcc AGGRE0_NOC_GDSC>;
->                         compatible = "simple-pm-bus";
-> --
-> 2.7.4
->
+Sriharsha Allenki (1):
+  dt-bindings: phy: Add Qualcomm Synopsys High-Speed USB PHY binding
 
+ .../phy/qcom,snps-28nm-usb-hs-phy.txt         |  87 +++
+ drivers/phy/qualcomm/Kconfig                  |  10 +
+ drivers/phy/qualcomm/Makefile                 |   1 +
+ .../phy/qualcomm/phy-qcom-usb-hs-snsp-28nm.c  | 535 ++++++++++++++++++
+ 4 files changed, 633 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-usb-hs-snsp-28nm.c
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.18.0
