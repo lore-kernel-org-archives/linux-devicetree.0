@@ -1,53 +1,72 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v2 00/25] at24: remove
-Date: Mon, 19 Nov 2018 10:08:25 +0100
-Message-ID: <20181119100825.277b1f97@bbrezillon>
-References: <20181113140133.17385-1-brgl@bgdev.pl>
-        <20181118170329.788778a8@bbrezillon>
-        <CAMRc=MfXWW9siNZNkocxmTU7mnoQO0KpeHQ3JmLcEfNscqCbDQ@mail.gmail.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: phy: Add Qualcomm Synopsys High-Speed
+ USB PHY binding
+Date: Mon, 19 Nov 2018 17:15:27 +0800
+Message-ID: <20181119091523.GC10788@dragon>
+References: <20181108070449.23572-1-shawn.guo@linaro.org>
+ <20181108070449.23572-2-shawn.guo@linaro.org>
+ <5bea0ed8.1c69fb81.8715.38b2@mx.google.com>
+ <20181113034200.GD20049@tiger>
+ <CAL_JsqKu3kf-zrKNtrtZsQEPi0LN_3jqs08i3-8vbSQDVxuRkA@mail.gmail.com>
+ <20181119065503.GB10788@dragon>
+ <CAFp+6iGmsLT8UOk+-4zOKkYxJbkhqy=oDw2ZqrXLDCGbF8uTHA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAMRc=MfXWW9siNZNkocxmTU7mnoQO0KpeHQ3JmLcEfNscqCbDQ@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Nicolas Ferre <nicolas.ferre@microchip.com>, "David S . Miller" <davem@davemloft.net>, Grygorii Strashko <grygorii.strashko@ti.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree <devicetree@vger.kernel.org>, netdev
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAFp+6iGmsLT8UOk+-4zOKkYxJbkhqy=oDw2ZqrXLDCGbF8uTHA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: Rob Herring <robh@kernel.org>, kishon <kishon@ti.com>, sallenki@codeaurora.org, anur@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>, vkoul@kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 19 Nov 2018 09:58:46 +0100
-Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-
-> niedz., 18 lis 2018 o 17:03 Boris Brezillon
-> <boris.brezillon@bootlin.com> napisał(a):
+On Mon, Nov 19, 2018 at 12:40:59PM +0530, Vivek Gautam wrote:
+> On Mon, Nov 19, 2018 at 12:29 PM Shawn Guo <shawn.guo@linaro.org> wrote:
 > >
-> > On Tue, 13 Nov 2018 15:01:08 +0100
-> > Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >  
-> > > As far as merging of this series goes: I'd like to avoid dragging it over
-> > > four releases. The series is logically split into five groups:
+> > On Sat, Nov 17, 2018 at 09:13:38AM -0600, Rob Herring wrote:
+> > <snip>
+> > > > > > +- qcom,init-seq:
+> > > > > > +    Value type: <u32 array>
+> > > > > > +    Definition: Should contain a sequence of <offset value delay> tuples to
+> > > > > > +                program 'value' into phy register at 'offset' with 'delay'
+> > > > > > +           in us afterwards.
+> > > > >
+> > > > > If we wanted this type of thing in DT, we'd have a generic binding (or
+> > > > > forth).
+> > > >
+> > > > Right now, this is a qualcomm usb phy specific bindings - first used in
+> > > > qcom,usb-hs-phy.txt and I extended it a bit for my phy.  As this is not
+> > > > a so good hardware description, I'm a little hesitated to make it
+> > > > generic for other platforms to use in general.  What about we put off it
+> > > > a little bit until we see more platforms need the same thing?
 > > >
-> > > patches 1-2: nvmem and mtd changes
-> > > patches 3-9: davinci arch-specific changes
-> > > patches 10-13: networking changes
-> > > patches 14-24: davinci specific again
-> > > patch 25: final at24 change
-> > >
-> > > With that I believe we can do the following: Greg KH could pick up the
-> > > first two patches into his char-misc tree.  
+> > > I'm not saying I want it generic. Quite the opposite. I don't think we
+> > > should have it either generically or vendor specific. The main thing I
+> > > have a problem with is the timing information because then we're more
+> > > that just data. Without that we're talking about a bunch of properties
+> > > for register fields or just raw register values in DT. That becomes
+> > > more of a judgement call. There's not too much value in making a
+> > > driver translate a bunch of properties just to stuff them into
+> > > registers on init. But then just allowing any raw register value to be
+> > > in DT could be easily abused.
 > >
-> > The char-misc tree? Why not the MTD or NVMEM tree?
-> >  
+> > Rob,
+> >
+> > I agree with your comments.  Honestly, I'm not comfortable with this
+> > 'qcom,init-seq' thing in the first impression.  The similar existence in
+> > mainline qcom,usb-hs-phy.txt makes me think it might be acceptable with
+> > the timing data added.  Okay, I know your position on this now.
+> >
+> > @Sriharsha,
+> >
+> > Seeing that 'qcom,init-seq' is being configured with the exactly same
+> > values for both HS phys in SoC level dts file (qcs404.dtsi), I think
+> > such settings can be moved into driver code as SoC specific data.
+> > Unless you have a different view on this, I will do it with v4.
 > 
-> There is no NVMEM tree - Srinivas sends his patches to Greg to be
-> applied to char-misc.
+> phy-qcom-qmp and phy-qcom-qusb2 have been maintaining such SoC specific
+> init sequences in the drivers if you would like to have pointers from them.
 
-Okay, I didn't know that.
+Thanks for the pointer, Vivek.  That helps.
 
-> 
-> The second patch depends on the first one so in order to avoid more
-> merging problems I suggested that the MTD patch go through char-misc
-> as well. If you see a better solution, please let me know.
-
-No that's fine, as long as I have an immutable tag/branch I can pull if
-needed.
+Shawn
