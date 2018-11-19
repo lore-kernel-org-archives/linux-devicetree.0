@@ -1,93 +1,57 @@
-Return-Path: <SRS0=7Z3r=NS=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 2/3] phy: renesas: rcar-gen3-usb2: Add support for R7S9210
-Date: Wed,  7 Nov 2018 12:35:57 -0500
-Message-Id: <20181107173558.54481-3-chris.brandt@renesas.com>
-In-Reply-To: <20181107173558.54481-1-chris.brandt@renesas.com>
-References: <20181107173558.54481-1-chris.brandt@renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=byPw=N6=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39807 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbeKTBBf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 19 Nov 2018 20:01:35 -0500
+Received: by mail-lf1-f67.google.com with SMTP id n18so21479886lfh.6
+        for <devicetree@vger.kernel.org>; Mon, 19 Nov 2018 06:37:46 -0800 (PST)
+MIME-Version: 1.0
+References: <20181118163909.9202-1-geert@linux-m68k.org> <CACRpkdZ58BeYQ112g90HKboesMOGtVFnVBJtnUNeuy0qsfUteg@mail.gmail.com>
+ <CAMuHMdVUK-aZBy0iib2Nh87nwWwQWH9RDi6wkRX5xkh9xOc2cw@mail.gmail.com>
+In-Reply-To: <CAMuHMdVUK-aZBy0iib2Nh87nwWwQWH9RDi6wkRX5xkh9xOc2cw@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 19 Nov 2018 15:37:33 +0100
+Message-ID: <CACRpkdYJwObxJfv8QD6CQu_G-yOz20F_vksXnwOc0LeR8QDDKw@mail.gmail.com>
+Subject: Re: [RFC] C64 DTS
+Content-Type: text/plain; charset="UTF-8"
+Sender: devicetree-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Matt Porter <mporter@konsulko.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The RZ/A2 has the same USB2 host controller as R-Car Gen3 with only some
-minor differences.
+On Sun, Nov 18, 2018 at 9:15 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- drivers/phy/renesas/Kconfig              |  2 +-
- drivers/phy/renesas/phy-rcar-gen3-usb2.c | 12 ++++++++++++
- 2 files changed, 13 insertions(+), 1 deletion(-)
+> BTW, how do you describe a separate button connected to an NMI line?
+> Or just omit it completely? Reset buttons are usually not described neither.
 
-diff --git a/drivers/phy/renesas/Kconfig b/drivers/phy/renesas/Kconfig
-index e340a925bbb1..beebeba31e84 100644
---- a/drivers/phy/renesas/Kconfig
-+++ b/drivers/phy/renesas/Kconfig
-@@ -19,7 +19,7 @@ config PHY_RCAR_GEN3_PCIE
- config PHY_RCAR_GEN3_USB2
- 	tristate "Renesas R-Car generation 3 USB 2.0 PHY driver"
- 	depends on ARCH_RENESAS
--	depends on EXTCON
-+	depends on EXTCON || ARCH_R7S9210
- 	depends on USB_SUPPORT
- 	select GENERIC_PHY
- 	select USB_COMMON
-diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-index d0f412c25981..96ac75ba40ea 100644
---- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -34,6 +34,7 @@
- #define USB2_VBCTRL		0x60c
- #define USB2_LINECTRL1		0x610
- #define USB2_ADPCTRL		0x630
-+#define USB2_PHYCLK_CTRL	0x644
- 
- /* INT_ENABLE */
- #define USB2_INT_ENABLE_UCOM_INTEN	BIT(3)
-@@ -88,6 +89,7 @@ struct rcar_gen3_chan {
- 	bool extcon_host;
- 	bool is_otg_channel;
- 	bool uses_otg_pins;
-+	bool uses_usb_x1;
- };
- 
- /*
-@@ -326,6 +328,9 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
- 	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
- 	void __iomem *usb2_base = channel->base;
- 
-+	if (channel->uses_usb_x1)
-+		writel(0x00000001, usb2_base + USB2_PHYCLK_CTRL);
-+
- 	/* Initialize USB2 part */
- 	writel(USB2_INT_ENABLE_INIT, usb2_base + USB2_INT_ENABLE);
- 	writel(USB2_SPD_RSM_TIMSET_INIT, usb2_base + USB2_SPD_RSM_TIMSET);
-@@ -334,6 +339,9 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
- 	/* Initialize otg part */
- 	if (channel->is_otg_channel)
- 		rcar_gen3_init_otg(channel);
-+	else
-+		/* No otg, so default to host mode */
-+		writel(0x00000000, usb2_base + USB2_COMMCTRL);
- 
- 	return 0;
- }
-@@ -406,6 +414,7 @@ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
- }
- 
- static const struct of_device_id rcar_gen3_phy_usb2_match_table[] = {
-+	{ .compatible = "renesas,usb2-phy-r7s9210" },
- 	{ .compatible = "renesas,usb2-phy-r8a7795" },
- 	{ .compatible = "renesas,usb2-phy-r8a7796" },
- 	{ .compatible = "renesas,usb2-phy-r8a77965" },
-@@ -471,6 +480,9 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	if (of_property_read_bool(dev->of_node, "renesas,uses_usb_x1"))
-+		channel->uses_usb_x1 = true;
-+
- 	/*
- 	 * devm_phy_create() will call pm_runtime_enable(&phy->dev);
- 	 * And then, phy-core will manage runtime pm for this device.
--- 
-2.16.1
+Just add it as a stand-alone button connected to the
+NMI line of the interrupt controller. It's what it is after
+all.
+
+The ARM Juno board has an ordinary gpio button marked
+"NMI". I think we should take that (in the input subsystem)
+and configure it as a NMI (in ARM terms an "FIQ") but that
+arch has a distinction where every IRQ line can be switched
+between beeing IRQ or FIQ so it is quite different.
+
+Anyways: NMI buttons is pretty common on some servers
+I am told, I would look to x86 for an answer.
+
+> The {clock,data}-out lines are driving TTL open-collector buffers.
+> So combined with the {clock,data}-in lines, they're actually emulating
+> open-collector GPIOs.
+>
+> So an IEC bus could be implemented using only 3 GPIOs, if two of
+> them can be configured as GPIO_LINE_OPEN_DRAIN.
+>
+> Do you intend supporting the emulation of an open-collector GPIO in
+> gpiolib using a pair of GPIOs, so avoid implementing that in every
+> driver that may need it? ;-)
+
+Somebody already suggested adding GPIOs on top of buffer
+drivers in turn controlled by GPIO. So I think the answer is yes.
+But it depends on this person implementing the code for it.
+I can look up a reference if you're interested!
+
+Yours,
+Linus Walleij
