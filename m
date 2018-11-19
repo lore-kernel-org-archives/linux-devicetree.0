@@ -1,98 +1,54 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 08/12] dt-bindings: mediatek: Change the binding for
- mmsys clocks
-Date: Mon, 19 Nov 2018 13:15:16 -0600
-Message-ID: <CAL_JsqKJQwfDJbpmwW+oCxiDkSp5+6mG-uoURmCQVEMP_jFOEg@mail.gmail.com>
-References: <20181116125449.23581-1-matthias.bgg@kernel.org>
- <20181116125449.23581-9-matthias.bgg@kernel.org> <20181116231522.GA18006@bogus>
- <2a23e407-4cd4-2e2b-97a5-4e2bb96846e0@gmail.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v5 4/5] arm64: dts: qcom: sdm845: Add UFS nodes for sdm845-mtp
+Date: Mon, 19 Nov 2018 11:19:08 -0800
+Message-ID: <154265514855.88331.12521366940818102477@swboyd.mtv.corp.google.com>
+References: <20181026173544.136037-1-evgreen@chromium.org>
+ <20181026173544.136037-5-evgreen@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2a23e407-4cd4-2e2b-97a5-4e2bb96846e0@gmail.com>
+In-Reply-To: <20181026173544.136037-5-evgreen@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: matthias.bgg@kernel.org, Mark Rutland <mark.rutland@arm.com>, CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sean Wang <sean.wang@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Chen-Yu Tsai <wens@csie.org>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, linux-clk <linux-clk@vger.kernel.>
+To: Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>
+Cc: Douglas Anderson <dianders@chromium.org>, Can Guo <cang@codeaurora.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 18, 2018 at 11:12 AM Matthias Brugger
-<matthias.bgg@gmail.com> wrote:
->
->
->
-> On 11/17/18 12:15 AM, Rob Herring wrote:
-> > On Fri, Nov 16, 2018 at 01:54:45PM +0100, matthias.bgg@kernel.org wrote:
-> >> From: Matthias Brugger <mbrugger@suse.com>
-> >>
-> >> On SoCs with no publical available HW or no working graphic stack
-> >> we change the devicetree binding for the mmsys clock part. This
-> >> way we don't need to register a platform device explicitly in the
-> >> drm driver. Instead we can create a mmsys child which invokes the
-> >> clock driver.
-> >>
-> >> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-> >> ---
-> >>  .../bindings/arm/mediatek/mediatek,mmsys.txt  | 21 ++++++++++++-------
-> >>  .../display/mediatek/mediatek,disp.txt        |  4 ++++
-> >>  2 files changed, 18 insertions(+), 7 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
-> >> index 4468345f8b1a..d4e205981363 100644
-> >> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
-> >> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
-> >> @@ -1,4 +1,4 @@
-> >> -Mediatek mmsys controller
-> >> +Mediatek mmsys clock controller
-> >>  ============================
-> >>
-> >>  The Mediatek mmsys controller provides various clocks to the system.
-> >> @@ -6,18 +6,25 @@ The Mediatek mmsys controller provides various clocks to the system.
-> >>  Required Properties:
-> >>
-> >>  - compatible: Should be one of:
-> >> -    - "mediatek,mt2712-mmsys", "syscon"
-> >> -    - "mediatek,mt6797-mmsys", "syscon"
-> >> +    - "mediatek,mt2712-mmsys-clk", "syscon"
-> >> +    - "mediatek,mt6797-mmsys-clk", "syscon"
-> >
-> > Doesn't match the example.>
-> >>  - #clock-cells: Must be 1
-> >>
-> >> -The mmsys controller uses the common clk binding from
-> >> +The mmsys clock controller uses the common clk binding from
-> >>  Documentation/devicetree/bindings/clock/clock-bindings.txt
-> >>  The available clocks are defined in dt-bindings/clock/mt*-clk.h.
-> >> +It is a child of the mmsys block, see binding at:
-> >> +Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> >>
-> >>  Example:
-> >>
-> >> -mmsys: clock-controller@14000000 {
-> >> -    compatible = "mediatek,mt8173-mmsys", "syscon";
-> >> +mmsys: syscon@14000000 {
-> >> +    compatible = "mediatek,mt2712-mmsys", "syscon", "simple-mfd";
-> >>      reg = <0 0x14000000 0 0x1000>;
-> >> -    #clock-cells = <1>;
-> >> +
-> >> +    mmsys_clk: clock-controller@14000000 {
-> >> +            compatible = "mediatek,mt2712-mmsys-clk";
-> >> +            #clock-cells = <1>;
-> >
-> > This goes against the general direction of not defining separate nodes
-> > for providers with no resources.
-> >
-> > Why do you need this and what does it buy if you have to continue to
-> > support the existing chips?
-> >
->
-> It would show explicitly that the mmsys block is used to probe two
-> drivers, one for the gpu and one for the clocks. Otherwise that is
-> hidden in the drm driver code. I think it is cleaner to describe that in
-> the device tree.
+Quoting Evan Green (2018-10-26 10:35:43)
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dt=
+s/qcom/sdm845-mtp.dts
+> index eedfaf8922e2..d5fddea71a85 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> @@ -356,6 +356,20 @@
+>         status =3D "okay";
+>  };
+>  =
 
-No, that's maybe cleaner for the driver implementation in the Linux
-kernel. What about other OS's or when Linux drivers and subsystems
-needs change? Cleaner for DT is design bindings that reflect the h/w.
-Hardware is sometimes just messy.
+> +&ufshc1 {
+> +       status =3D "okay";
+> +
+> +       vcc-supply =3D <&vreg_l20a_2p95>;
+> +       vcc-max-microamp =3D <600000>;
 
-Rob
+Is this board dependent? I would guess this is SoC specific and not
+board specific.
+
+> +};
+> +
+> +&ufsphy1 {
+> +       status =3D "okay";
+> +
+> +       vdda-phy-supply =3D <&vdda_ufs1_core>;
+> +       vdda-pll-supply =3D <&vdda_ufs1_1p2>;
+
+These two properties can be specified in the SoC dtsi file instead of
+each board variant file. This way we don't have to specify the things
+that are SoC independent in each board file. The board integrator just
+has to attach the labels to the right regulator nodes, in this case
+vdda_ufs1_core and vdda_ufs1_1p2, and then the sdm845.dtsi file will be
+matched up with the right regulator automatically. It's also nice so
+that board integrators don't have to know anything besides what
+regulator goes to what pin on the SoC.
+
+The status property has to stay of course.
