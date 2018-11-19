@@ -1,77 +1,26 @@
-From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
-Subject: Re: [PATCH fbdev-for-next 2/2] video: ssd1307fb: Add support for the
- reset-active-low property
-Date: Mon, 19 Nov 2018 15:12:46 +0000
-Message-ID: <db9537dc-2ba5-b8fc-ae3c-7d85841b0797@ysoft.com>
-References: <1541170556-75032-1-git-send-email-michal.vokac@ysoft.com>
- <1541170556-75032-2-git-send-email-michal.vokac@ysoft.com>
- <5bea0e9c.1c69fb81.1f3c8.be5a@mx.google.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 03/14] ARM: milbeaut: Add Milbeaut M10V early printk
+Date: Mon, 19 Nov 2018 09:21:24 -0600
+Message-ID: <CAL_JsqKMK7nMUxZLu9eV8tpnCXsAr2F4j=xTO8UL0g8V30kYZg@mail.gmail.com>
+References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com> <1542589274-13878-4-git-send-email-sugaya.taichi@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5bea0e9c.1c69fb81.1f3c8.be5a@mx.google.com>
-Content-Language: en-US
-Content-ID: <ED471B8B9F2C5E41A9A6C3F9A075E83C@eurprd04.prod.outlook.com>
+In-Reply-To: <1542589274-13878-4-git-send-email-sugaya.taichi@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>
+To: sugaya.taichi@socionext.com
+Cc: linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTIuMTEuMjAxOCAxNzo1NSwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIEZyaSwgTm92IDAy
-LCAyMDE4IGF0IDAyOjU2OjM1UE0gKzAwMDAsIFZva8OhxI0gTWljaGFsIHdyb3RlOg0KPj4gVGhl
-IFNTRDEzMHggT0xFRCBkaXNwbGF5IHJlc2V0IHNpZ25hbCBpcyBhY3RpdmUgbG93LiBOb3cgdGhl
-IHJlc2V0DQo+PiBzZXF1ZW5jZSBpcyBpbXBsZW1lbnRlZCBpbiBzdWNoIGEgd2F5IHRoYXQgRFRT
-IGF1dGhvcnMgYXJlIGZvcmNlZCB0bw0KPj4gZGVmaW5lIHRoZSByZXNldC1ncGlvcyBwcm9wZXJ0
-eSB3aXRoIEdQSU9fQUNUSVZFX0hJR0ggdG8gbWFrZSB0aGUgcmVzZXQNCj4+IHdvcmsuDQo+Pg0K
-Pj4gQWRkIHRoZSByZXNldC1hY3RpdmUtbG93IHByb3BlcnR5IHNvIHRoZSBzaWduYWwgaXMgaW52
-ZXJ0ZWQgb25jZSBhZ2Fpbg0KPj4gYW5kIHRoZSBHUElPX0FDVElWRV9MT1cgd29yayBhcyBleHBl
-Y3RlZC4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBNaWNoYWwgVm9rw6HEjSA8bWljaGFsLnZva2Fj
-QHlzb2Z0LmNvbT4NCj4+IC0tLQ0KPj4gICBkcml2ZXJzL3ZpZGVvL2ZiZGV2L3NzZDEzMDdmYi5j
-IHwgNiArKysrLS0NCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgMiBkZWxl
-dGlvbnMoLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy92aWRlby9mYmRldi9zc2QxMzA3
-ZmIuYyBiL2RyaXZlcnMvdmlkZW8vZmJkZXYvc3NkMTMwN2ZiLmMNCj4+IGluZGV4IGU3YWUxMzUu
-Ljc5MGYxYzQgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL3ZpZGVvL2ZiZGV2L3NzZDEzMDdmYi5j
-DQo+PiArKysgYi9kcml2ZXJzL3ZpZGVvL2ZiZGV2L3NzZDEzMDdmYi5jDQo+PiBAQCAtNjA4LDYg
-KzYwOCw3IEBAIHN0YXRpYyBpbnQgc3NkMTMwN2ZiX3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpj
-bGllbnQsDQo+PiAgIAlzdHJ1Y3QgZmJfZGVmZXJyZWRfaW8gKnNzZDEzMDdmYl9kZWZpbzsNCj4+
-ICAgCXUzMiB2bWVtX3NpemU7DQo+PiAgIAlzdHJ1Y3Qgc3NkMTMwN2ZiX3BhciAqcGFyOw0KPj4g
-Kwlib29sIHJlc2V0X2FjdGl2ZV9sb3c7DQo+PiAgIAl1OCAqdm1lbTsNCj4+ICAgCWludCByZXQ7
-DQo+PiAgIA0KPj4gQEAgLTY3MSw2ICs2NzIsNyBAQCBzdGF0aWMgaW50IHNzZDEzMDdmYl9wcm9i
-ZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LA0KPj4gICAJcGFyLT5jb21fc2VxID0gb2ZfcHJv
-cGVydHlfcmVhZF9ib29sKG5vZGUsICJzb2xvbW9uLGNvbS1zZXEiKTsNCj4+ICAgCXBhci0+Y29t
-X2xycmVtYXAgPSBvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wobm9kZSwgInNvbG9tb24sY29tLWxycmVt
-YXAiKTsNCj4+ICAgCXBhci0+Y29tX2ludmRpciA9IG9mX3Byb3BlcnR5X3JlYWRfYm9vbChub2Rl
-LCAic29sb21vbixjb20taW52ZGlyIik7DQo+PiArCXJlc2V0X2FjdGl2ZV9sb3cgPSBvZl9wcm9w
-ZXJ0eV9yZWFkX2Jvb2wobm9kZSwgInJlc2V0LWFjdGl2ZS1sb3ciKTsNCj4+ICAgDQo+PiAgIAlw
-YXItPmNvbnRyYXN0ID0gMTI3Ow0KPj4gICAJcGFyLT52Y29taCA9IHBhci0+ZGV2aWNlX2luZm8t
-PmRlZmF1bHRfdmNvbWg7DQo+PiBAQCAtNzI4LDkgKzczMCw5IEBAIHN0YXRpYyBpbnQgc3NkMTMw
-N2ZiX3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsDQo+PiAgIA0KPj4gICAJaWYgKHBh
-ci0+cmVzZXQpIHsNCj4+ICAgCQkvKiBSZXNldCB0aGUgc2NyZWVuICovDQo+PiAtCQlncGlvZF9z
-ZXRfdmFsdWVfY2Fuc2xlZXAocGFyLT5yZXNldCwgMCk7DQo+PiArCQlncGlvZF9zZXRfdmFsdWVf
-Y2Fuc2xlZXAocGFyLT5yZXNldCwgcmVzZXRfYWN0aXZlX2xvdyk7DQo+PiAgIAkJdWRlbGF5KDQp
-Ow0KPj4gLQkJZ3Bpb2Rfc2V0X3ZhbHVlX2NhbnNsZWVwKHBhci0+cmVzZXQsIDEpOw0KPj4gKwkJ
-Z3Bpb2Rfc2V0X3ZhbHVlX2NhbnNsZWVwKHBhci0+cmVzZXQsICFyZXNldF9hY3RpdmVfbG93KTsN
-Cj4gDQo+IEkgdGhpbmsgeW91IGFuZCB3aG9tZXZlciB3cm90ZSB0aGUgb3JpZ2luYWwgY29kZSBh
-cmUgbWlzaW50ZXJwcmV0dGluZw0KPiBob3cgdGhlIGdwaW9kIEFQSSB3b3Jrcy4gMSBtZWFucyBt
-YWtlIHRoZSBzaWduYWwgYWN0aXZlIGFuZCB0aGlzIGNhc2UNCj4gYWN0aXZlIGlzIGxvdy4NCg0K
-SSB0b3RhbGx5IGFncmVlIGFuZCBJIHRoaW5rIEkgdW5kZXJzdGFuZCB0aGF0IGNvcnJlY3RseS4N
-Cg0KPiBJdCBpcyBzdHJhbmdlLCBidXQgZG9lcyBtZWFuIGEgcmVzZXQgc2VxdWVuY2Ugc2hvdWxk
-IGFsd2F5cyBiZSBzZXQgdG8gYQ0KPiAxIGFuZCB0aGVuIGEgMCBhbmQgaXQgd2lsbCB3b3JrIHdp
-dGggZWl0aGVyIHBvbGFyaXR5IGluIHRoZSBEVC4NCg0KSSBhZ3JlZSB0aGUgcmVzZXQgc2hvdWxk
-IGJlIGRvbmUgYXMgYSAwIC0+IDEgLT4gMCBzZXF1ZW5jZSBhbmQgdGhhdCBzaG91bGQNCmp1c3Qg
-d29yay4gVGhlIHByb2JsZW0gaXMgaXQgaXMgaW1wbGVtZW50ZWQgdmljZSB2ZXJzYSBhbmQgc28g
-aXQgd29ya3Mgb25seQ0KaWYgeW91IGhhdmUgR1BJT19BQ1RJVkVfSElHSCBpbiBEVCBmb3IgYSBz
-aWduYWwgdGhhdCBpcyBhY3R1YWxseSBhY3RpdmUgbG93Lg0KDQpBbmQgd2hhdCBpdCBhY3R1YWxs
-eSBkb2VzIGlzIHRoYXQgaXQgaG9sZHMgdGhlIGNvbnRyb2xsZXIgaW4gcmVzZXQgc2luY2UNCnRo
-ZSBHUElPIGlzIHN1Y2Nlc3NmdWxseSBhY3F1aXJlZCAoYmVjYXVzZSBvZiBHUElPRF9PVVRfTE9X
-IGhlcmUgWzFdKSBhbmQNCmxhdGVyIG9uIGl0IG9ubHkgcmVsZWFzZXMgdGhlIHJlc2V0Lg0KDQpB
-cyBhIERUIGF1dGhvciBJIHdvdWxkIGxpa2UgdG8gc29tZWhvdyBjbGVhcmx5IHN0YXRlIHRoYXQg
-dGhlIE9MRUQgZGlzcGxheQ0KdXNlcyBhY3RpdmUgbG93IHJlc2V0IGluIG15IERULg0KDQpNeSBm
-aXJzdCBhdHRlbXB0IHRvIGZpeCB0aGlzIHdhcyB0byBjaGFuZ2UgdGhlIHJlc2V0IHNlcXVlbmNl
-IFsyXS4NCkl0IHdhcyBhcHBsaWVkIGFuZCB0aGVuIHJldmVydGVkIGFzIGl0IGlzIG5vdCBiYWNr
-d2FyZCBjb21wYXRpYmxlIHdpdGgNCmRlcGxveWVkIERUQiBmaWxlcyBbM10uDQoNClsxXSBodHRw
-czovL2VsaXhpci5ib290bGluLmNvbS9saW51eC92NC4yMC1yYzMvc291cmNlL2RyaXZlcnMvdmlk
-ZW8vZmJkZXYvc3NkMTMwN2ZiLmMjTDU3MA0KWzJdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5v
-cmcvcGF0Y2gvMTA2MTc3MjkvDQpbM10gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRj
-aC8xMDYxNzczMS8NCg0KTWljaGFsDQo=
+On Sun, Nov 18, 2018 at 7:00 PM Sugaya Taichi
+<sugaya.taichi@socionext.com> wrote:
+>
+> Add Milbeaut M10V earlyprintk.
+
+Do you really need earlyprintk? earlycon is preferred instead. It's
+not quite as early, but doesn't require rebuilding the kernel and
+supports more than 1 fixed device. If you crash before earlycon is
+enabled, that pretty much means either a bad dtb memory node or just
+flaky memory.
+
+Rob
