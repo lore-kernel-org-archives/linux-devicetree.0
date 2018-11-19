@@ -1,72 +1,118 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [RCF PATCH,v2,2/2] pwm: imx: Configure output to GPIO in
- disabled state
-Date: Mon, 19 Nov 2018 09:32:30 +0100
-Message-ID: <20181119083230.re3dtq4alnrojbnd@pengutronix.de>
-References: <20181107093355.e4n3irrnkybqsjvc@pengutronix.de>
- <eb4e7a42-bd5c-3ae2-ccb7-d1a73d5ae99c@ysoft.com>
- <20181107150125.7cpd4v5t7yi2254c@pengutronix.de>
- <4fbb7307-df01-d7bd-f2e2-e05e6d17807d@ysoft.com>
- <20181108191855.zuon3ecv4yjfbs7g@pengutronix.de>
- <283cfef3-16d0-8bd4-e306-6e34d44c3a86@ysoft.com>
- <20181109165555.vqbiwh4hlcnozdna@pengutronix.de>
- <20181114113449.GB2620@ulmo>
- <20181114215120.vddykljqyavm64wj@pengutronix.de>
- <CACRpkdZAew3bUea=iR4t-a7SVSMf=-CTeWfeU215uT_jQ-o81A@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 04/12] drm/sun4i: sun6i_mipi_dsi:
+ Simplify drq set to support all modes
+Date: Mon, 19 Nov 2018 09:32:43 +0100
+Message-ID: <20181119083243.4njj2p2sy2xf2zyf@flea>
+References: <20181116163916.29621-1-jagan@amarulasolutions.com>
+ <20181116163916.29621-5-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="xic26kum5qm77vqt"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLHKZHPQKGQEIYVOPGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZAew3bUea=iR4t-a7SVSMf=-CTeWfeU215uT_jQ-o81A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Michal.Vokac@ysoft.com, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-pwm@vger.kernel.org, l.majewski@majess.pl, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@karo-electronics.de>
+In-Reply-To: <20181116163916.29621-5-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, TL Lim <tllim-F7SikzrIcFYdnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Linus,
 
-On Mon, Nov 19, 2018 at 08:44:38AM +0100, Linus Walleij wrote:
-> There is quite a discussion you folks have going on here. I tried to
-> grasp it but I can't. I can try to answer the above question specifically.
+--xic26kum5qm77vqt
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-To sumarize: When the pwm driver probes it is not yet clear if the idle
-state of the output pin is high or low. Even when the pinctrl device has
-an "init" and a "default" pinctrl, it is not yet fixed when its
-"default" is configured.
-
-The way Thierry wants to fix that is by disabling the output driver
-until the pwm is in use und rely on a pull-up or pull-down in hardware.
-
-The way I want to fix this is to only configure the pwm pin as part of
-the consumer. This is late enough that the consumer already requested
-and configured the pwm such that the idle level is known.
-Thierry's and Lothar's claim was that putting the pin setup of the pwm
-pin into the pwm consumer's pinctrl was forbidden. That's why I asked
-you as pinctrl maintainer if there is a requirement that I don't know
-of.
-
-> So compared to things like that (that we still have to support
-> forever) whatever you are doing here you're doing great as long
-> as it is consumer controlled.
+On Fri, Nov 16, 2018 at 10:09:08PM +0530, Jagan Teki wrote:
+> Allwinner MIPI DSI DRQ set value can be varied with respective
+> video modes.
+> - burst mode the set value is always 0
+> - video modes whose front porch greater than 20, the set value
+>   can be computed based front porch and bpp.
+> - video modes whose front porch is not greater than 20, the set value
+>   is simply 0
 > 
-> Whether that consumer is the previous driver thingie in the
-> daisy-chain of consumers or the final end user consumer of
-> the pin doesn't really matter to pin control, as long as it is a
-> consumer. I would tend to say it is up to the subsystem,
-> and the old IETF motto "rough consensus and running code".
+> This patch simplifies existing drq set value code by grouping
+> into sun6i_dsi_get_drq and support all video modes.
+> 
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> ---
+>  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 38 ++++++++++++++++----------
+>  1 file changed, 23 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> index efd08bfd0cb8..d60955880c43 100644
+> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> @@ -363,6 +363,26 @@ static void sun6i_dsi_inst_init(struct sun6i_dsi *dsi,
+>  		     SUN6I_DSI_INST_JUMP_CFG_NUM(1));
+>  };
+>  
+> +static int sun6i_dsi_get_drq(struct sun6i_dsi *dsi,
+> +			      struct drm_display_mode *mode)
+> +{
+> +	struct mipi_dsi_device *device = dsi->device;
+> +	int drq = 0;
 
-So I understand that from the pinctrl side there is no hard requirement
-that the PWM pin must be muxed as part of the pwm device. And if things
-work better when the pin is only configured as part of its consumer this
-is legitimate.
+So, here, you declaring a variable called drq, set to 0.
 
-Thanks for your feedback.
+> +	if (device->mode_flags & MIPI_DSI_MODE_VIDEO_BURST)
+> +		return drq;
 
-Best regards
-Uwe
+That you return here. You could just return 0, to be clearer.
+
+> +	if ((mode->hsync_start - mode->hdisplay) > 20) {
+> +		/* Maaaaaagic */
+> +		u16 drq = (mode->hsync_start - mode->hdisplay) - 20;
+
+You re-declare a variable with the same name here, but a different
+type....
+
+> +		drq *= mipi_dsi_pixel_format_to_bpp(device->format);
+> +		drq /= 32;
+> +	}
+> +
+> +	return drq;
+
+And then return the first one? How is that even working?
+
+> +
+>  static u16 sun6i_dsi_get_timings_vblk(struct sun6i_dsi *dsi,
+>  				      struct drm_display_mode *mode, u16 hblk)
+>  {
+> @@ -478,21 +498,9 @@ static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
+>  static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
+>  				  struct drm_display_mode *mode)
+>  {
+> -	struct mipi_dsi_device *device = dsi->device;
+> -	u32 val = 0;
+> -
+> -	if ((mode->hsync_start - mode->hdisplay) > 20) {
+> -		/* Maaaaaagic */
+> -		u16 drq = (mode->hsync_start - mode->hdisplay) - 20;
+> -
+> -		drq *= mipi_dsi_pixel_format_to_bpp(device->format);
+> -		drq /= 32;
+> -
+> -		val = (SUN6I_DSI_TCON_DRQ_ENABLE_MODE |
+> -		       SUN6I_DSI_TCON_DRQ_SET(drq));
+> -	}
+> -
+> -	regmap_write(dsi->regs, SUN6I_DSI_TCON_DRQ_REG, val);
+> +	regmap_write(dsi->regs, SUN6I_DSI_TCON_DRQ_REG,
+> +		     SUN6I_DSI_TCON_DRQ_ENABLE_MODE |
+> +		     SUN6I_DSI_TCON_DRQ_SET(sun6i_dsi_get_drq(dsi, mode)));
+
+On top of that, you now enable the DRQ stuff all the time, while it
+was conditional before.
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--xic26kum5qm77vqt--
