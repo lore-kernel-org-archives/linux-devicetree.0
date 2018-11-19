@@ -1,35 +1,41 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH] MIPS: Use device_type helpers to access the node type
-Date: Mon, 19 Nov 2018 19:06:43 +0000
-Message-ID: <MWHPR2201MB1277675B043F1E9F2F78479DC1D80@MWHPR2201MB1277.namprd22.prod.outlook.com>
-References: <20181116221104.23024-2-robh@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] pinctrl: mediatek: Convert to using %pOFn instead of device_node.name
+Date: Mon, 19 Nov 2018 13:07:41 -0600
+Message-ID: <CAL_Jsq+r6JrKKcHnmBSncdEaw=7Jhobv_w8PJrH=sbY2qtxOTQ@mail.gmail.com>
+References: <20181116220540.17222-1-robh@kernel.org> <20181116220540.17222-4-robh@kernel.org>
+ <CAGp9LzpgZsj79Tf5Hee45Wt6ag+WHV0SMWd6qvvtj4G3pzAZKQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181116221104.23024-2-robh@kernel.org>
-Content-Language: en-US
+In-Reply-To: <CAGp9LzpgZsj79Tf5Hee45Wt6ag+WHV0SMWd6qvvtj4G3pzAZKQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: James Hogan <jhogan@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <pburton@wavecomp.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>Ralf Baechle <ralf@linux-mips.org>Paul Burton <pburton@wavecomp.com>James Hogan <jhogan@kernel.org>"linux-mips@linux-mips.org" <linux-mips@linux-mips.org>"linux-mips@linux-mips.org" <linux-mips@linux-mips.org>
+To: Sean Wang <sean.wang@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Fri, Nov 16, 2018 at 5:46 PM Sean Wang <sean.wang@kernel.org> wrote:
+>
+> On Fri, Nov 16, 2018 at 2:06 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > In preparation to remove the node name pointer from struct device_node,
+> > convert printf users to use the %pOFn format specifier.
+> >
+> > Cc: Sean Wang <sean.wang@kernel.org>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> > Cc: linux-mediatek@lists.infradead.org
+> > Cc: linux-gpio@vger.kernel.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+>
+> Acked-by: Sean Wang <sean.wang@kernel.org>
 
-Rob Herring wrote:
-> Remove directly accessing device_node.type pointer and use the accessors
-> instead. This will eventually allow removing the type pointer.
->=20
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Paul Burton <paul.burton@mips.com>
-> Cc: James Hogan <jhogan@kernel.org>
-> Cc: linux-mips@linux-mips.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+BTW, messages to you bounce:
 
-Applied to mips-next.
+<sean.wang@mediatek.com> (expanded from <sean.wang@kernel.org>): host
+    mailgw01.mediatek.com[216.200.240.184] said: 550 Relaying mail to
+    sean.wang@mediatek.com is not allowed (in reply to RCPT TO command)
 
-Thanks,
-    Paul
+Perhaps you need your kernel.org account to route somewhere else.
 
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paul.burton@mips.com to report it. ]
+Rob
