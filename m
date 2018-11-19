@@ -1,103 +1,159 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 1/2] hwmon: (adcxx) add devictree bindings
- documentation
-Date: Sun, 18 Nov 2018 17:25:55 -0800
-Message-ID: <20181119012555.GA7856@roeck-us.net>
-References: <20181115135013.30723-1-fe@dev.tdt.de>
- <20181115135013.30723-2-fe@dev.tdt.de>
- <20181117144040.GA8016@bogus>
+From: biao huang <biao.huang@mediatek.com>
+Subject: Re: [v3, PATCH 2/2] dt-binding: mediatek-dwmac: add binding
+ document for MediaTek MT2712 DWMAC
+Date: Mon, 19 Nov 2018 10:12:48 +0800
+Message-ID: <1542593568.24219.5.camel@mhfsdcap03>
+References: <1542359926-28800-1-git-send-email-biao.huang@mediatek.com>
+         <1542359926-28800-2-git-send-email-biao.huang@mediatek.com>
+         <CAGp9LzrHm-ympV2zAKZKcEfA25aJp8BSS+=01B6G=sP_HiSSdA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181117144040.GA8016@bogus>
+In-Reply-To: <CAGp9LzrHm-ympV2zAKZKcEfA25aJp8BSS+=01B6G=sP_HiSSdA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Florian Eckert <fe@dev.tdt.de>, jdelvare@suse.com, mark.rutland@arm.com, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Sean Wang <sean.wang@kernel.org>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nelson Chang =?UTF-8?Q?=28=E5=BC=B5=E5=AE=B6=E7=A5=A5=29?= <nelson.chang@mediatek.com>, "andrew@lunn.ch" <andrew@lunn.ch>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Liguo Zhang =?UTF-8?Q?=28=E5=BC=A0=E7=AB=8B=E5=9B=BD=29?= <Liguo.Zhang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, "joabreu@synopsys.com" <joabreu@synopsys.com>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Honghui Zhang =?UTF-8?Q?=28=E5=BC=A0=E6=B4=AA=E8=BE=89=29?= <Honghui.Zhang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 17, 2018 at 08:40:41AM -0600, Rob Herring wrote:
-> On Thu, Nov 15, 2018 at 02:50:12PM +0100, Florian Eckert wrote:
-> > Document the devicetree bindings for the adcxx.
-> > 
-> > Signed-off-by: Florian Eckert <fe@dev.tdt.de>
+Dear Sean,
+
+	Thanks for your detailed comments~
+
+On Sat, 2018-11-17 at 08:21 +0800, Sean Wang wrote:
+> On Fri, Nov 16, 2018 at 1:19 AM Biao Huang <biao.huang@mediatek.com> wrote:
+> >
+> > The commit adds the device tree binding documentation for the MediaTek DWMAC
+> > found on MediaTek MT2712.
+> >
+> > Change-Id: I3728666bf65927164bd82fa8dddb90df8270bd44
+> 
+> Drop change-id
+sorry, I forgot it. will remove in next version.
+> 
+> > Signed-off-by: Biao Huang <biao.huang@mediatek.com>
 > > ---
-> >  Documentation/devicetree/bindings/hwmon/adcxx.txt | 24 +++++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/hwmon/adcxx.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/hwmon/adcxx.txt b/Documentation/devicetree/bindings/hwmon/adcxx.txt
+> >  .../devicetree/bindings/net/mediatek-dwmac.txt     |   77 ++++++++++++++++++++
+> >  1 file changed, 77 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/net/mediatek-dwmac.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/mediatek-dwmac.txt b/Documentation/devicetree/bindings/net/mediatek-dwmac.txt
 > > new file mode 100644
-> > index 000000000000..a94a5fe21b6d
+> > index 0000000..7fd56e0
 > > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/hwmon/adcxx.txt
-> > @@ -0,0 +1,24 @@
-> > +adcxx properties
-> 
-> Needs a better description of what this h/w is.
-> 
-> ADCs go in iio/adc/
-> 
-FWIW, the hwmon driver for this chip series would be a perfect candidate
-for a conversion to an iio driver. The driver predates the existence of
-iio.
-
-Florian, any interest doing that ? It is quite likely that the chip isn't
-used for hardware monitoring.
-
+> > +++ b/Documentation/devicetree/bindings/net/mediatek-dwmac.txt
+> > @@ -0,0 +1,77 @@
+> > +MediaTek DWMAC glue layer controller
+> > +
+> > +This file documents platform glue layer for stmmac.
+> > +Please see stmmac.txt for the other unchanged properties.
+> > +
+> > +The device node has following properties.
 > > +
 > > +Required properties:
-> > +- compatible: Must be one of the following:
-> > +	- "national,adcxx1s" for adcxx1s
-> > +	- "national,adcxx2s" for adcxx2s
-> > +	- "national,adcxx4s" for adcxx4s
-> > +	- "national,adcxx8s" for adcxx8s
+> > +- compatible:  Should be "mediatek,mt2712-gmac" for MT2712 SoC
+> > +- reg:  Address and length of the register set for the device
+> > +- interrupts:  Should contain the MAC interrupts
+> > +- interrupt-names: Should contain a list of interrupt names corresponding to
+> > +       the interrupts in the interrupts property, if available.
+> > +       Should be "macirq" for the main MAC IRQ
+> > +- clocks: Must contain a phandle for each entry in clock-names.
+> > +- clock-names: The name of the clock listed in the clocks property. These are
+> > +       "axi", "apb", "mac_ext", "mac_parent", "ptp_ref", "ptp_parent", "ptp_top"
+> > +       for MT2712 SoC
 > 
-> Don't use wildcards in compatible strings.
+> About not including these parent clocks to the controller, you can
+> refer to assigned-clocks, assigned-clock-parents, assigned-clock-rates
+> noted in Documentation/devicetree/bindings/clock/clock-bindings.txt to
+> determine what speed these MUXs should be run at and see [1] as the
+> example how applied in dts.
 > 
-Should we list all of them ?
-
-ADC121S021 ADC121S051 ADC121S101
-ADC101S021 ADC101S051 ADC101S101
-ADC081S021 ADC081S051 ADC081S101
-
-ADC121S625 ADC121S655 ADC121S705
-
-ADC122S021 ADC122S051 ADC122S101
-ADC102S021 ADC102S051 ADC102S101
-ADC082S021 ADC082S051 ADC082S101
-
-ADC122S625 ADC122S655 ADC122S706
-
-ADC124S021 ADC124S051 ADC124S101
-ADC104S021 ADC104S051 ADC104S101
-ADC084S021 ADC084S051 ADC084S101
-
-ADC128S022 ADC128S052 ADC128S102
-
-I hope I didn't miss any.
-
-Guenter
-
-> > +- reg: SPI address for chip
+> [1]
+> https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/mt7623.dtsi#L660
+> 
+Got it, I'll remove parent info to dts.
+> > +- mac-address: See ethernet.txt in the same directory
+> > +- phy-mode: See ethernet.txt in the same directory
 > > +
 > > +Optional properties:
-> > +
-> > +- vref-supply
-> > +  The external reference in microvolt for this device is set to this value.
-> > +  If it does not exists the reference will be set to 3300000uV (3.3V).
+> > +- tx-delay: TX clock delay macro value. Range is 0~31. Default is 0.
+> > +       It should be defined for rgmii/rgmii-rxid/mii interface.
+> > +- rx-delay: RX clock delay macro value. Range is 0~31. Default is 0.
+> > +       It should be defined for rgmii/rgmii-txid/mii/rmii interface.
+> > +- fine-tune: This property will select coarse-tune delay or fine delay
+> > +       for rgmii interface.
+> what is the property's type?
+> 
+ok, property type info will be added in next version.
+> > +       If fine-tune delay is enabled, tx-delay/rx-delay is 170+/-50ps
+> > +       per stage.
+> > +       Else coarse-tune delay is enabled, tx-delay/rx-delay is 0.55+/-0.2ns
+> > +       per stage.
+> > +       This property do not apply to non-rgmii PHYs.
+> > +       Only coarse-tune delay is supported for mii/rmii PHYs.
+> > +- rmii-rxc: Reference clock of rmii is from external PHYs,
+> what is the property's type?
+> 
+got it.
+> > +       and it can be connected to TXC or RXC pin on MT2712 SoC.
+> > +       If ref_clk <--> TXC, disable it.
+> > +       Else ref_clk <--> RXC, enable it.
+> > +- txc-inverse: Inverse tx clock for mii/rgmii.
+> what is the property's type?
+> 
+> > +       Inverse tx clock inside MAC relative to reference clock for rmii,
+> > +       and it rarely happen.
+> > +- rxc-inverse: Inverse rx clock for mii/rgmii interfaces.
+> what is the property's type?
+> 
+got it.
+> > +       Inverse reference clock for rmii.
+> 
+> If these optional properties look like generic enough, it would be
+> good that place them to stmmac.txt. Otherwise, they should be added
+> "mediatek," as the prefix string for these vendor-specific things.
+> 
+it's mediatek-specific, and the prefix string will be added in next
+version.
 > > +
 > > +Example:
-> > +
-> > +adc@6 {
-> > +	compatible = "national,adcxx2s";
-> > +	reg = <6 0>;
-> 
-> ? SPI addresses are a single cell.
-> 
-> > +	spi-max-frequency = <1000000>;
-> > +	vref-supply = <&vref>;
-> > +};
-> > -- 
-> > 2.11.0
-> > 
+> > +       eth: ethernet@1101c000 {
+> > +               compatible = "mediatek,mt2712-gmac";
+> > +               reg = <0 0x1101c000 0 0x1300>;
+> > +               interrupts = <GIC_SPI 237 IRQ_TYPE_LEVEL_LOW>;
+> > +               interrupt-names = "macirq";
+> > +               phy-mode ="rgmii-id";
+> > +               mac-address = [00 55 7b b5 7d f7];
+> > +               clock-names = "axi",
+> > +                             "apb",
+> > +                             "mac_ext",
+> > +                             "mac_parent",
+> > +                             "ptp_ref",
+> > +                             "ptp_parent",
+> > +                             "ptp_top";
+> > +               clocks = <&pericfg CLK_PERI_GMAC>,
+> > +                        <&pericfg CLK_PERI_GMAC_PCLK>,
+> > +                        <&topckgen CLK_TOP_ETHER_125M_SEL>,
+> > +                        <&topckgen CLK_TOP_ETHERPLL_125M>,
+> > +                        <&topckgen CLK_TOP_ETHER_50M_SEL>,
+> > +                        <&topckgen CLK_TOP_APLL1_D3>,
+> > +                        <&topckgen CLK_TOP_APLL1>;
+> > +               snps,txpbl = <32>;
+> > +               snps,rxpbl = <32>;
+> > +               snps,reset-gpio = <&pio 87 GPIO_ACTIVE_LOW>;
+> > +               snps,reset-active-low;
+> > +               tx-delay = <9>;
+> > +               rx-delay = <9>;
+> > +               fine-tune;
+> > +               rmii-rxc;
+> > +               txc-inverse;
+> > +               rxc-inverse;
+> > +       };
+> > --
+> > 1.7.9.5
+> >
+> >
+> > _______________________________________________
+> > Linux-mediatek mailing list
+> > Linux-mediatek@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
