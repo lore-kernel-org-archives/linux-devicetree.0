@@ -1,125 +1,123 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH v2 1/2] dt-bindings: hwmon: add binding documentation for
- adt7475
-Date: Mon, 19 Nov 2018 21:55:37 +0000
-Message-ID: <6326b60e84c04339823e816801445120@svr-chch-ex1.atlnz.lc>
-References: <20181108225607.7521-1-chris.packham@alliedtelesis.co.nz>
- <20181108225607.7521-2-chris.packham@alliedtelesis.co.nz>
- <20181117152949.GA31247@bogus>
- <f3a29bc9-dbfc-bfb8-8707-2b67d96c2e04@roeck-us.net>
- <CAL_JsqKgBkR4WN+aTKdHSfCZ8EH39yLCeLwXwmf+nd0_cAy+mw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH fbdev-for-next 2/2] video: ssd1307fb: Add support for the
+ reset-active-low property
+Date: Mon, 19 Nov 2018 16:32:32 -0600
+Message-ID: <CAL_Jsq+KOqWVdudDGZNJSJ1SZSX1FK2GOSu-4VfmRV-KZrYJZA@mail.gmail.com>
+References: <1541170556-75032-1-git-send-email-michal.vokac@ysoft.com>
+ <1541170556-75032-2-git-send-email-michal.vokac@ysoft.com>
+ <5bea0e9c.1c69fb81.1f3c8.be5a@mx.google.com> <db9537dc-2ba5-b8fc-ae3c-7d85841b0797@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <db9537dc-2ba5-b8fc-ae3c-7d85841b0797@ysoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Guenter Roeck <linux@roeck-us.net>
-Cc: Jean Delvare <jdelvare@suse.com>, Linux HWMON List <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <Michal.Vokac@ysoft.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-fbdev@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 20/11/18 10:40 AM, Rob Herring wrote:=0A=
-> On Sun, Nov 18, 2018 at 4:56 PM Guenter Roeck <linux@roeck-us.net> wrote:=
-=0A=
->>=0A=
->> On 11/17/18 7:29 AM, Rob Herring wrote:=0A=
->>> On Fri, Nov 09, 2018 at 11:56:06AM +1300, Chris Packham wrote:=0A=
->>>> With the addition of the invert-pwm property the adt7475 needs its own=
-=0A=
->>>> binding documentation rather being captured under trivial-devices.txt.=
-=0A=
->>>>=0A=
->>>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
->>>> ---=0A=
->>>> Changes in v2:=0A=
->>>> - use pwm-polarity attiribute to indicate normal or inverted polarity.=
-=0A=
->>>>=0A=
->>>>    .../devicetree/bindings/hwmon/adt7475.txt     | 24 ++++++++++++++++=
-+++=0A=
->>>>    .../devicetree/bindings/trivial-devices.txt   |  4 ----=0A=
->>>>    2 files changed, 24 insertions(+), 4 deletions(-)=0A=
->>>>    create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.=
-txt=0A=
->>>>=0A=
->>>> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.txt b/Doc=
-umentation/devicetree/bindings/hwmon/adt7475.txt=0A=
->>>> new file mode 100644=0A=
->>>> index 000000000000..d9212b5e9036=0A=
->>>> --- /dev/null=0A=
->>>> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.txt=0A=
->>>> @@ -0,0 +1,24 @@=0A=
->>>> +*ADT7475 hwmon sensor.=0A=
->>>> +=0A=
->>>> +Required properties:=0A=
->>>> +- compatible: One of=0A=
->>>> +    "adi,adt7473"=0A=
->>>> +    "adi,adt7475"=0A=
->>>> +    "adi,adt7476"=0A=
->>>> +    "adi,adt7490"=0A=
->>>> +=0A=
->>>> +- reg: I2C address=0A=
->>>> +=0A=
->>>> +optional properties:=0A=
->>>> +=0A=
->>>> +- pwm-polarity: This configures the polarity of the PWM. 0=0A=
->>>> +            (PWM_POLARITY_NORMAL) uses logic high for 100% duty cycle=
-. 1=0A=
->>>> +                (PWM_POLARITY_INVERSED) uses logic low for 100% duty =
-cycle.=0A=
->>>=0A=
->>> So we're using part of the PWM binding, but none of the rest of it? Wha=
-t=0A=
->>> is the PWM connection here?=0A=
->>> The chip has a built-in PWM controller to control fan speeds. PWM frequ=
-ency=0A=
->> as well as PWM polarity are configurable. I had suggested to use the ter=
-minology=0A=
->> from Documentation/devicetree/bindings/pwm/pwm.txt. Other than terminolo=
-gy there=0A=
->> is no connection to a standard pwm controller.=0A=
-> =0A=
-> Ah, a fan controller. Please make that clear.=0A=
-> =0A=
-> The fan related bindings need a bit of work IMO. We have the start of=0A=
-> something somewhat common with aspeed and npcm bindings, but they=0A=
-> could use a bit more work. We need the fan and controller bindings to=0A=
-> be somewhat separate where a fan node for a given type of fan doesn't=0A=
-> depend on the controller node.=0A=
-> =0A=
-> AIUI, all fans are not the same, so does this controller only work=0A=
-> with 1 type of fan and not need any more board level config? Isn't fan=0A=
-> speed not linear with PWM duty cycle and need some sort of map.=0A=
-=0A=
-That level of configuration is done in userland via the sysfs API (e.g =0A=
-lm-sensors). I could have added the pwm output inversion via sysfs but I =
-=0A=
-erred on the side of the polarity being an artifact of the hardware =0A=
-design that is fairly static.=0A=
-=0A=
-Things like what thresholds to configure and whether to use automatic =0A=
-pwm control tend to be much more fluid. Then theres pathological cases =0A=
-where other external factors need to be included in the fan control (my =0A=
-particular use case is a network switch acting as a PoE PSE so I not =0A=
-only need to take into account the ambient temperature but how much PoE =0A=
-power is being delivered to connected PDs),=0A=
-=0A=
->> Another option/possibility would be to use a boolean, such as pwm-polari=
-ty-inverted.=0A=
->> We are open to suggestions.=0A=
->>=0A=
->>> It sounds like this is common for sensors, so this should be documented=
-=0A=
->>> somewhere common.=0A=
->>>=0A=
->> Sure, no problem. Any suggestion where ?=0A=
-> =0A=
-> hwmon/fan.txt (that doesn't exist yet.)=0A=
-> =0A=
-> Probably all of bindings/hwmon/ should be split up by class of device.=0A=
-=0A=
-Most of the hwmon chips I've been dealing with lately tend to be multi =0A=
-function (e.g. temperature, voltage, fan tach and fan control). The =0A=
-single function devices tend to land in trivial-devices.txt because =0A=
-there's not much to document other than the compatible string.=0A=
-=0A=
+On Mon, Nov 19, 2018 at 9:12 AM Vok=C3=A1=C4=8D Michal <Michal.Vokac@ysoft.=
+com> wrote:
+>
+> On 12.11.2018 17:55, Rob Herring wrote:
+> > On Fri, Nov 02, 2018 at 02:56:35PM +0000, Vok=C3=A1=C4=8D Michal wrote:
+> >> The SSD130x OLED display reset signal is active low. Now the reset
+> >> sequence is implemented in such a way that DTS authors are forced to
+> >> define the reset-gpios property with GPIO_ACTIVE_HIGH to make the rese=
+t
+> >> work.
+> >>
+> >> Add the reset-active-low property so the signal is inverted once again
+> >> and the GPIO_ACTIVE_LOW work as expected.
+> >>
+> >> Signed-off-by: Michal Vok=C3=A1=C4=8D <michal.vokac@ysoft.com>
+> >> ---
+> >>   drivers/video/fbdev/ssd1307fb.c | 6 ++++--
+> >>   1 file changed, 4 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd=
+1307fb.c
+> >> index e7ae135..790f1c4 100644
+> >> --- a/drivers/video/fbdev/ssd1307fb.c
+> >> +++ b/drivers/video/fbdev/ssd1307fb.c
+> >> @@ -608,6 +608,7 @@ static int ssd1307fb_probe(struct i2c_client *clie=
+nt,
+> >>      struct fb_deferred_io *ssd1307fb_defio;
+> >>      u32 vmem_size;
+> >>      struct ssd1307fb_par *par;
+> >> +    bool reset_active_low;
+> >>      u8 *vmem;
+> >>      int ret;
+> >>
+> >> @@ -671,6 +672,7 @@ static int ssd1307fb_probe(struct i2c_client *clie=
+nt,
+> >>      par->com_seq =3D of_property_read_bool(node, "solomon,com-seq");
+> >>      par->com_lrremap =3D of_property_read_bool(node, "solomon,com-lrr=
+emap");
+> >>      par->com_invdir =3D of_property_read_bool(node, "solomon,com-invd=
+ir");
+> >> +    reset_active_low =3D of_property_read_bool(node, "reset-active-lo=
+w");
+> >>
+> >>      par->contrast =3D 127;
+> >>      par->vcomh =3D par->device_info->default_vcomh;
+> >> @@ -728,9 +730,9 @@ static int ssd1307fb_probe(struct i2c_client *clie=
+nt,
+> >>
+> >>      if (par->reset) {
+> >>              /* Reset the screen */
+> >> -            gpiod_set_value_cansleep(par->reset, 0);
+> >> +            gpiod_set_value_cansleep(par->reset, reset_active_low);
+> >>              udelay(4);
+> >> -            gpiod_set_value_cansleep(par->reset, 1);
+> >> +            gpiod_set_value_cansleep(par->reset, !reset_active_low);
+> >
+> > I think you and whomever wrote the original code are misinterpretting
+> > how the gpiod API works. 1 means make the signal active and this case
+> > active is low.
+>
+> I totally agree and I think I understand that correctly.
+>
+> > It is strange, but does mean a reset sequence should always be set to a
+> > 1 and then a 0 and it will work with either polarity in the DT.
+>
+> I agree the reset should be done as a 0 -> 1 -> 0 sequence and that shoul=
+d
+> just work. The problem is it is implemented vice versa and so it works on=
+ly
+> if you have GPIO_ACTIVE_HIGH in DT for a signal that is actually active l=
+ow.
+>
+> And what it actually does is that it holds the controller in reset since
+> the GPIO is successfully acquired (because of GPIOD_OUT_LOW here [1]) and
+> later on it only releases the reset.
+>
+> As a DT author I would like to somehow clearly state that the OLED displa=
+y
+> uses active low reset in my DT.
+>
+> My first attempt to fix this was to change the reset sequence [2].
+> It was applied and then reverted as it is not backward compatible with
+> deployed DTB files [3].
+>
+> [1] https://elixir.bootlin.com/linux/v4.20-rc3/source/drivers/video/fbdev=
+/ssd1307fb.c#L570
+> [2] https://patchwork.kernel.org/patch/10617729/
+> [3] https://patchwork.kernel.org/patch/10617731/
+
+Okay, now I understand the background. We've hit this somewhere else too.
+
+Rather than have a binding demonstrating what not to do, I'd like to
+fix this in another way. I also don't want to live with this forever
+when there's only 1 board affected (in tree at least) and there's only
+an ABI if someone notices (I'm happy though that the maintainers
+caught this). There's 2 other options. The 1st is add a fixup to the
+DT for this platform to ensure that the GPIO is configured active low
+(the Versatile platform code has an example fixup). With that, apply
+what was originally applied (or revert the revert). The fixup could be
+applied only after someone complains their display broke. The 2nd
+option is just add an of_machine_is_compatible check within this
+driver. In that case, you wouldn't fix dts file for the platform
+(unless you also want to manually check reset-gpios).
+
+Rob
