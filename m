@@ -1,72 +1,168 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: phy: Add Qualcomm Synopsys High-Speed
- USB PHY binding
-Date: Mon, 19 Nov 2018 17:15:27 +0800
-Message-ID: <20181119091523.GC10788@dragon>
-References: <20181108070449.23572-1-shawn.guo@linaro.org>
- <20181108070449.23572-2-shawn.guo@linaro.org>
- <5bea0ed8.1c69fb81.8715.38b2@mx.google.com>
- <20181113034200.GD20049@tiger>
- <CAL_JsqKu3kf-zrKNtrtZsQEPi0LN_3jqs08i3-8vbSQDVxuRkA@mail.gmail.com>
- <20181119065503.GB10788@dragon>
- <CAFp+6iGmsLT8UOk+-4zOKkYxJbkhqy=oDw2ZqrXLDCGbF8uTHA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Todor Tomov <todor.tomov@linaro.org>
+Subject: [PATCH 2/2] arm64: dts: qcom: msm8996: Add CAMSS support
+Date: Mon, 19 Nov 2018 11:25:37 +0200
+Message-ID: <1542619537-24038-2-git-send-email-todor.tomov@linaro.org>
+References: <1542619537-24038-1-git-send-email-todor.tomov@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFp+6iGmsLT8UOk+-4zOKkYxJbkhqy=oDw2ZqrXLDCGbF8uTHA@mail.gmail.com>
+In-Reply-To: <1542619537-24038-1-git-send-email-todor.tomov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>, kishon <kishon@ti.com>, sallenki@codeaurora.org, anur@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>, vkoul@kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, vivek.gautam@codeaurora.org, Todor Tomov <todor.tomov@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 19, 2018 at 12:40:59PM +0530, Vivek Gautam wrote:
-> On Mon, Nov 19, 2018 at 12:29 PM Shawn Guo <shawn.guo@linaro.org> wrote:
-> >
-> > On Sat, Nov 17, 2018 at 09:13:38AM -0600, Rob Herring wrote:
-> > <snip>
-> > > > > > +- qcom,init-seq:
-> > > > > > +    Value type: <u32 array>
-> > > > > > +    Definition: Should contain a sequence of <offset value delay> tuples to
-> > > > > > +                program 'value' into phy register at 'offset' with 'delay'
-> > > > > > +           in us afterwards.
-> > > > >
-> > > > > If we wanted this type of thing in DT, we'd have a generic binding (or
-> > > > > forth).
-> > > >
-> > > > Right now, this is a qualcomm usb phy specific bindings - first used in
-> > > > qcom,usb-hs-phy.txt and I extended it a bit for my phy.  As this is not
-> > > > a so good hardware description, I'm a little hesitated to make it
-> > > > generic for other platforms to use in general.  What about we put off it
-> > > > a little bit until we see more platforms need the same thing?
-> > >
-> > > I'm not saying I want it generic. Quite the opposite. I don't think we
-> > > should have it either generically or vendor specific. The main thing I
-> > > have a problem with is the timing information because then we're more
-> > > that just data. Without that we're talking about a bunch of properties
-> > > for register fields or just raw register values in DT. That becomes
-> > > more of a judgement call. There's not too much value in making a
-> > > driver translate a bunch of properties just to stuff them into
-> > > registers on init. But then just allowing any raw register value to be
-> > > in DT could be easily abused.
-> >
-> > Rob,
-> >
-> > I agree with your comments.  Honestly, I'm not comfortable with this
-> > 'qcom,init-seq' thing in the first impression.  The similar existence in
-> > mainline qcom,usb-hs-phy.txt makes me think it might be acceptable with
-> > the timing data added.  Okay, I know your position on this now.
-> >
-> > @Sriharsha,
-> >
-> > Seeing that 'qcom,init-seq' is being configured with the exactly same
-> > values for both HS phys in SoC level dts file (qcs404.dtsi), I think
-> > such settings can be moved into driver code as SoC specific data.
-> > Unless you have a different view on this, I will do it with v4.
-> 
-> phy-qcom-qmp and phy-qcom-qusb2 have been maintaining such SoC specific
-> init sequences in the drivers if you would like to have pointers from them.
+Add a node for the Camera Subsystem present on the Qualcomm
+MSM8996 SoC.
 
-Thanks for the pointer, Vivek.  That helps.
+Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 135 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 135 insertions(+)
 
-Shawn
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index a4d087e5..8585c61 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -967,6 +967,141 @@
+ 			status = "ok";
+ 		};
+ 
++		camss: camss@a00000 {
++			compatible = "qcom,msm8996-camss";
++			reg = <0xa34000 0x1000>,
++				<0xa00030 0x4>,
++				<0xa35000 0x1000>,
++				<0xa00038 0x4>,
++				<0xa36000 0x1000>,
++				<0xa00040 0x4>,
++				<0xa30000 0x100>,
++				<0xa30400 0x100>,
++				<0xa30800 0x100>,
++				<0xa30c00 0x100>,
++				<0xa31000 0x500>,
++				<0xa00020 0x10>,
++				<0xa10000 0x1000>,
++				<0xa14000 0x1000>;
++			reg-names = "csiphy0",
++				"csiphy0_clk_mux",
++				"csiphy1",
++				"csiphy1_clk_mux",
++				"csiphy2",
++				"csiphy2_clk_mux",
++				"csid0",
++				"csid1",
++				"csid2",
++				"csid3",
++				"ispif",
++				"csi_clk_mux",
++				"vfe0",
++				"vfe1";
++			interrupts = <GIC_SPI 78 0>,
++				<GIC_SPI 79 0>,
++				<GIC_SPI 80 0>,
++				<GIC_SPI 296 0>,
++				<GIC_SPI 297 0>,
++				<GIC_SPI 298 0>,
++				<GIC_SPI 299 0>,
++				<GIC_SPI 309 0>,
++				<GIC_SPI 314 0>,
++				<GIC_SPI 315 0>;
++			interrupt-names = "csiphy0",
++				"csiphy1",
++				"csiphy2",
++				"csid0",
++				"csid1",
++				"csid2",
++				"csid3",
++				"ispif",
++				"vfe0",
++				"vfe1";
++			power-domains = <&mmcc VFE0_GDSC>;
++			clocks = <&mmcc CAMSS_TOP_AHB_CLK>,
++				<&mmcc CAMSS_ISPIF_AHB_CLK>,
++				<&mmcc CAMSS_CSI0PHYTIMER_CLK>,
++				<&mmcc CAMSS_CSI1PHYTIMER_CLK>,
++				<&mmcc CAMSS_CSI2PHYTIMER_CLK>,
++				<&mmcc CAMSS_CSI0_AHB_CLK>,
++				<&mmcc CAMSS_CSI0_CLK>,
++				<&mmcc CAMSS_CSI0PHY_CLK>,
++				<&mmcc CAMSS_CSI0PIX_CLK>,
++				<&mmcc CAMSS_CSI0RDI_CLK>,
++				<&mmcc CAMSS_CSI1_AHB_CLK>,
++				<&mmcc CAMSS_CSI1_CLK>,
++				<&mmcc CAMSS_CSI1PHY_CLK>,
++				<&mmcc CAMSS_CSI1PIX_CLK>,
++				<&mmcc CAMSS_CSI1RDI_CLK>,
++				<&mmcc CAMSS_CSI2_AHB_CLK>,
++				<&mmcc CAMSS_CSI2_CLK>,
++				<&mmcc CAMSS_CSI2PHY_CLK>,
++				<&mmcc CAMSS_CSI2PIX_CLK>,
++				<&mmcc CAMSS_CSI2RDI_CLK>,
++				<&mmcc CAMSS_CSI3_AHB_CLK>,
++				<&mmcc CAMSS_CSI3_CLK>,
++				<&mmcc CAMSS_CSI3PHY_CLK>,
++				<&mmcc CAMSS_CSI3PIX_CLK>,
++				<&mmcc CAMSS_CSI3RDI_CLK>,
++				<&mmcc CAMSS_AHB_CLK>,
++				<&mmcc CAMSS_VFE0_CLK>,
++				<&mmcc CAMSS_CSI_VFE0_CLK>,
++				<&mmcc CAMSS_VFE0_AHB_CLK>,
++				<&mmcc CAMSS_VFE0_STREAM_CLK>,
++				<&mmcc CAMSS_VFE1_CLK>,
++				<&mmcc CAMSS_CSI_VFE1_CLK>,
++				<&mmcc CAMSS_VFE1_AHB_CLK>,
++				<&mmcc CAMSS_VFE1_STREAM_CLK>,
++				<&mmcc CAMSS_VFE_AHB_CLK>,
++				<&mmcc CAMSS_VFE_AXI_CLK>;
++			clock-names = "top_ahb",
++				"ispif_ahb",
++				"csiphy0_timer",
++				"csiphy1_timer",
++				"csiphy2_timer",
++				"csi0_ahb",
++				"csi0",
++				"csi0_phy",
++				"csi0_pix",
++				"csi0_rdi",
++				"csi1_ahb",
++				"csi1",
++				"csi1_phy",
++				"csi1_pix",
++				"csi1_rdi",
++				"csi2_ahb",
++				"csi2",
++				"csi2_phy",
++				"csi2_pix",
++				"csi2_rdi",
++				"csi3_ahb",
++				"csi3",
++				"csi3_phy",
++				"csi3_pix",
++				"csi3_rdi",
++				"ahb",
++				"vfe0",
++				"csi_vfe0",
++				"vfe0_ahb",
++				"vfe0_stream",
++				"vfe1",
++				"csi_vfe1",
++				"vfe1_ahb",
++				"vfe1_stream",
++				"vfe_ahb",
++				"vfe_axi";
++			vdda-supply = <&pm8994_l2>;
++			iommus = <&vfe_smmu 0>,
++				 <&vfe_smmu 1>,
++				 <&vfe_smmu 2>,
++				 <&vfe_smmu 3>;
++			status = "disabled";
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++		};
++
+ 		agnoc@0 {
+ 			power-domains = <&gcc AGGRE0_NOC_GDSC>;
+ 			compatible = "simple-pm-bus";
+-- 
+2.7.4
