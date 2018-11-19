@@ -1,45 +1,30 @@
-From: Sean Wang <sean.wang@kernel.org>
-Subject: Re: [PATCH] pinctrl: mediatek: Convert to using %pOFn instead of device_node.name
-Date: Mon, 19 Nov 2018 11:26:57 -0800
-Message-ID: <CAGp9Lzr7Y97BLDMy8aNvPkct2YphTHBrOfKrPbFeFqwEN3iK-Q@mail.gmail.com>
-References: <20181116220540.17222-1-robh@kernel.org> <20181116220540.17222-4-robh@kernel.org>
- <CAGp9LzpgZsj79Tf5Hee45Wt6ag+WHV0SMWd6qvvtj4G3pzAZKQ@mail.gmail.com> <CAL_Jsq+r6JrKKcHnmBSncdEaw=7Jhobv_w8PJrH=sbY2qtxOTQ@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 04/16] arm: dts: Add devicetree for RDA8810PL SoC
+Date: Mon, 19 Nov 2018 20:37:14 +0100
+Message-ID: <CAK8P3a1ZOTrUFKvBCdMX-1Fj5Pnk__+GJdee7pOieb2oiWkpuQ@mail.gmail.com>
+References: <20181119170939.19153-1-manivannan.sadhasivam@linaro.org> <20181119170939.19153-5-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+r6JrKKcHnmBSncdEaw=7Jhobv_w8PJrH=sbY2qtxOTQ@mail.gmail.com>
+In-Reply-To: <20181119170939.19153-5-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, zhao_steven@263.net, service@rdamicro.com, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 19, 2018 at 11:07 AM Rob Herring <robh@kernel.org> wrote:
+On Mon, Nov 19, 2018 at 6:11 PM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
 >
-> On Fri, Nov 16, 2018 at 5:46 PM Sean Wang <sean.wang@kernel.org> wrote:
-> >
-> > On Fri, Nov 16, 2018 at 2:06 PM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > In preparation to remove the node name pointer from struct device_node,
-> > > convert printf users to use the %pOFn format specifier.
-> > >
-> > > Cc: Sean Wang <sean.wang@kernel.org>
-> > > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > > Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> > > Cc: linux-mediatek@lists.infradead.org
-> > > Cc: linux-gpio@vger.kernel.org
-> > > Cc: linux-arm-kernel@lists.infradead.org
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> >
-> > Acked-by: Sean Wang <sean.wang@kernel.org>
->
-> BTW, messages to you bounce:
->
-> <sean.wang@mediatek.com> (expanded from <sean.wang@kernel.org>): host
->     mailgw01.mediatek.com[216.200.240.184] said: 550 Relaying mail to
->     sean.wang@mediatek.com is not allowed (in reply to RCPT TO command)
->
-> Perhaps you need your kernel.org account to route somewhere else.
->
-> Rob
+> Add initial device tree for RDA8810PL SoC from RDA Microelectronics.
 
-Thanks. I've found the issue. Will fix it soon.
+> +       aliases {
+> +               serial0 = &uart0;
+> +               serial1 = &uart1;
+> +               serial2 = &uart2;
+> +       };
+
+Better move the aliases into the board file, there might be boards
+that only expose one or two of them on physical connectors,
+or that count them in a different order from the SoC.
+
+      Arnd
