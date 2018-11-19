@@ -1,83 +1,89 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 06/16] arm: dts: Add devicetree for OrangePi i96 board
-Date: Mon, 19 Nov 2018 22:39:29 +0530
-Message-ID: <20181119170939.19153-7-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 07/16] dt-bindings: interrupt-controller: Document RDA8810PL intc
+Date: Mon, 19 Nov 2018 22:39:30 +0530
+Message-ID: <20181119170939.19153-8-manivannan.sadhasivam@linaro.org>
 References: <20181119170939.19153-1-manivannan.sadhasivam@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181119170939.19153-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, daniel.lezcano@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, service@rdamicro.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, service@rdamicro.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add initial devicetree for Orange Pi i96 board from Xunlong. It
-is one of the 96Boards IoT Edition board.
+Document interrupt controller in RDA Micro RDA8810PL SoC.
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- arch/arm/boot/dts/Makefile                   |  3 +-
- arch/arm/boot/dts/rda8810pl-orangepi-i96.dts | 35 ++++++++++++++++++++
- 2 files changed, 37 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/rda8810pl-orangepi-i96.dts
+ .../interrupt-controller/rda,8810pl-intc.txt  | 61 +++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/rda,8810pl-intc.txt
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index a0fdad8f10dd..cfb08ea33872 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -807,7 +807,8 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-msm8974-sony-xperia-honami.dtb \
- 	qcom-mdm9615-wp8548-mangoh-green.dtb
- dtb-$(CONFIG_ARCH_RDA) += \
--	rda8810pl-orangepi-2g-iot.dtb
-+	rda8810pl-orangepi-2g-iot.dtb \
-+	rda8810pl-orangepi-i96.dtb
- dtb-$(CONFIG_ARCH_REALVIEW) += \
- 	arm-realview-pb1176.dtb \
- 	arm-realview-pb11mp.dtb \
-diff --git a/arch/arm/boot/dts/rda8810pl-orangepi-i96.dts b/arch/arm/boot/dts/rda8810pl-orangepi-i96.dts
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/rda,8810pl-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/rda,8810pl-intc.txt
 new file mode 100644
-index 000000000000..3e3b8c4575cd
+index 000000000000..ed53ad0574a7
 --- /dev/null
-+++ b/arch/arm/boot/dts/rda8810pl-orangepi-i96.dts
-@@ -0,0 +1,35 @@
-+/*
-+ * Copyright (c) 2017 Andreas Färber
-+ * Copyright (c) 2018 Manivannan Sadhasivam
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+ */
++++ b/Documentation/devicetree/bindings/interrupt-controller/rda,8810pl-intc.txt
+@@ -0,0 +1,61 @@
++RDA Micro RDA8810PL Interrupt Controller
 +
-+/dts-v1/;
++The interrupt controller in RDA8810PL SoC is a custom interrupt controller
++which supports up to 32 interrupts.
 +
-+#include "rda8810pl.dtsi"
++Required properties:
 +
-+/ {
-+	compatible = "xunlong,orangepi-i96", "rda,8810pl";
-+	model = "Orange Pi i96";
++- compatible: Should be "rda,8810pl-intc".
++- reg: Specifies base physical address of the registers set.
++- interrupt-controller: Identifies the node as an interrupt controller.
++- #interrupt-cells: Specifies the number of cells needed to encode an
++  interrupt source. The value shall be 2.
 +
-+	chosen {
-+		stdout-path = "serial2:921600n8";
-+	};
++The interrupt sources are as follows:
 +
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x10000000>;
-+	};
++ID	Name
++------------
++0:	PULSE_DUMMY
++1:	I2C
++2:	NAND_NFSC
++3:	SDMMC1
++4:	SDMMC2
++5:	SDMMC3
++6:	SPI1
++7:	SPI2
++8:	SPI3
++9:	UART1
++10:	UART2
++11:	UART3
++12:	GPIO1
++13:	GPIO2
++14:	GPIO3
++15:	KEYPAD
++16:	TIMER
++17:	TIMEROS
++18:	COMREG0
++19:	COMREG1
++20:	USB
++21:	DMC
++22:	DMA
++23:	CAMERA
++24:	GOUDA
++25:	GPU
++26:	VPU_JPG
++27:	VPU_HOST
++28:	VOC
++29:	AUIFC0
++30:	AUIFC1
++31:	L2CC
 +
-+	uart2_clk: uart2-clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <921600>;
-+		#clock-cells = <0>;
-+	};
-+};
-+
-+&uart2 {
-+	status = "okay";
-+	clocks = <&uart2_clk>;
-+};
++Example:
++		apb@20800000 {
++			compatible = "simple-bus";
++			...
++			intc: interrupt-controller {
++				compatible = "rda,8810pl-intc";
++				reg = <0x0 0x1000>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++			};
++		};
 -- 
 2.17.1
