@@ -1,89 +1,51 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 07/16] dt-bindings: interrupt-controller: Document RDA8810PL intc
-Date: Mon, 19 Nov 2018 22:39:30 +0530
-Message-ID: <20181119170939.19153-8-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 08/16] arm: dts: rda8810pl: Add interrupt controller support
+Date: Mon, 19 Nov 2018 22:39:31 +0530
+Message-ID: <20181119170939.19153-9-manivannan.sadhasivam@linaro.org>
 References: <20181119170939.19153-1-manivannan.sadhasivam@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181119170939.19153-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, daniel.lezcano@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, service@rdamicro.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, service@rdamicro.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-Document interrupt controller in RDA Micro RDA8810PL SoC.
+Add interrupt controller support for RDA Micro RDA8810PL SoC.
 
+Signed-off-by: Andreas Färber <afaerber@suse.de>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- .../interrupt-controller/rda,8810pl-intc.txt  | 61 +++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/rda,8810pl-intc.txt
+ arch/arm/boot/dts/rda8810pl.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/rda,8810pl-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/rda,8810pl-intc.txt
-new file mode 100644
-index 000000000000..ed53ad0574a7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/rda,8810pl-intc.txt
-@@ -0,0 +1,61 @@
-+RDA Micro RDA8810PL Interrupt Controller
+diff --git a/arch/arm/boot/dts/rda8810pl.dtsi b/arch/arm/boot/dts/rda8810pl.dtsi
+index 7f1ff2021eff..093d6980bfbd 100644
+--- a/arch/arm/boot/dts/rda8810pl.dtsi
++++ b/arch/arm/boot/dts/rda8810pl.dtsi
+@@ -9,6 +9,7 @@
+ 
+ / {
+ 	compatible = "rda,8810pl";
++	interrupt-parent = <&intc>;
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+ 
+@@ -49,6 +50,13 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0x0 0x20800000 0x100000>;
 +
-+The interrupt controller in RDA8810PL SoC is a custom interrupt controller
-+which supports up to 32 interrupts.
-+
-+Required properties:
-+
-+- compatible: Should be "rda,8810pl-intc".
-+- reg: Specifies base physical address of the registers set.
-+- interrupt-controller: Identifies the node as an interrupt controller.
-+- #interrupt-cells: Specifies the number of cells needed to encode an
-+  interrupt source. The value shall be 2.
-+
-+The interrupt sources are as follows:
-+
-+ID	Name
-+------------
-+0:	PULSE_DUMMY
-+1:	I2C
-+2:	NAND_NFSC
-+3:	SDMMC1
-+4:	SDMMC2
-+5:	SDMMC3
-+6:	SPI1
-+7:	SPI2
-+8:	SPI3
-+9:	UART1
-+10:	UART2
-+11:	UART3
-+12:	GPIO1
-+13:	GPIO2
-+14:	GPIO3
-+15:	KEYPAD
-+16:	TIMER
-+17:	TIMEROS
-+18:	COMREG0
-+19:	COMREG1
-+20:	USB
-+21:	DMC
-+22:	DMA
-+23:	CAMERA
-+24:	GOUDA
-+25:	GPU
-+26:	VPU_JPG
-+27:	VPU_HOST
-+28:	VOC
-+29:	AUIFC0
-+30:	AUIFC1
-+31:	L2CC
-+
-+Example:
-+		apb@20800000 {
-+			compatible = "simple-bus";
-+			...
 +			intc: interrupt-controller {
 +				compatible = "rda,8810pl-intc";
 +				reg = <0x0 0x1000>;
 +				interrupt-controller;
 +				#interrupt-cells = <2>;
 +			};
-+		};
+ 		};
+ 
+ 		apb@20900000 {
 -- 
 2.17.1
