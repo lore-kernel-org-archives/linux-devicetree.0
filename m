@@ -1,76 +1,40 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Subject: Re: [PATCH v2 2/2] ASoC: dt-bindings: add bindings for AK4118 transceiver
-Date: Mon, 19 Nov 2018 11:55:44 +0100
-Message-ID: <CAJiuCceJTd-h2WDZHtkpeO=-Zqcc2Kf-AY8KV8LrY9NM-BP+jg@mail.gmail.com>
-References: <20181114121642.1404-1-peron.clem@gmail.com> <20181114121642.1404-2-peron.clem@gmail.com>
- <20181117155140.GA11554@bogus>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH v2 01/12] drm/sun4i: sun6i_mipi_dsi: Compute burst mode
+ loop N1 instruction delay
+Date: Mon, 19 Nov 2018 16:28:29 +0530
+Message-ID: <CAMty3ZBDa2wjjCh8NtrbKNYz=mr1xhZKv9JfnmDPDBQRO+CkYw@mail.gmail.com>
+References: <20181116163916.29621-1-jagan@amarulasolutions.com>
+ <20181116163916.29621-2-jagan@amarulasolutions.com> <20181119082707.kbsw2gyntxxbh6no@flea>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181117155140.GA11554@bogus>
+In-Reply-To: <20181119082707.kbsw2gyntxxbh6no@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Michael Trimarchi <michael@amarulasolutions.com>, TL Lim <tllim@pine64.org>, linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Sat, 17 Nov 2018 at 16:51, Rob Herring <robh@kernel.org> wrote:
+On Mon, Nov 19, 2018 at 1:57 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> On Wed, Nov 14, 2018 at 01:16:42PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Document the bindings for AK4118 S/PDIF transceiver
+> On Fri, Nov 16, 2018 at 10:09:05PM +0530, Jagan Teki wrote:
+> > Loop N1 instruction delay for burst mode lcd panel are
+> > computed as per BSP code.
 > >
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  .../devicetree/bindings/sound/ak4118.txt      | 22 +++++++++++++++++++
-> >  1 file changed, 22 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/sound/ak4118.txt
+> > Reference code is available in BSP (from linux-sunxi
+> > drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
 > >
-> > diff --git a/Documentation/devicetree/bindings/sound/ak4118.txt b/Docum=
-entation/devicetree/bindings/sound/ak4118.txt
-> > new file mode 100644
-> > index 000000000000..6e11a2f7404c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/sound/ak4118.txt
-> > @@ -0,0 +1,22 @@
-> > +AK4118 S/PDIF transceiver
-> > +
-> > +This device supports I2C mode.
-> > +
-> > +Required properties:
-> > +
-> > +- compatible : "asahi-kasei,ak4118"
-> > +- reg : The I2C address of the device for I2C
-> > +- reset-gpios: A GPIO specifier for the reset pin
-> > +- irq-gpios: A GPIO specifier for the IRQ pin
->
-> This should use 'interrupts' instead.
-Yes, this will also simplify the driver.
-
->
-> > +
-> > +Example:
-> > +
-> > +&i2c {
-> > +     ak4118: ak4118@13 {
->
-> spdif@13 ? Node names should be based on the class of device, but
-> there's not really one defined for this.
-
-Ok I will use spdif.
-
-Thanks for the comments,
-Clement
-
->
-> > +             #sound-dai-cells =3D <0>;
-> > +             compatible =3D "asahi-kasei,ak4118";
-> > +             reg =3D <0x13>;
-> > +             reset-gpios =3D <&gpio 0 GPIO_ACTIVE_LOW>
-> > +             irq-gpios =3D <&gpio 1 GPIO_ACTIVE_HIGH>;
-> > +     };
-> > +};
-> > --
-> > 2.19.1
+> > dsi_dev[sel]->dsi_inst_loop_num.bits.loop_n1=
+> > (panel->lcd_ht-panel->lcd_x)*(150)/(panel->lcd_dclk_freq*8) - 50;
+> > => (((mode->htotal - mode->hdisplay) * 150) /
+> >      ((mode->clock / 1000) * 8)) - 50;
 > >
+> > So use the similar computation for loop N1 delay.
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+>
+> *why* are you doing this? What is it fixing? on which devices?
+
+You mentioned the separate function to compute the delay for all modes
+[1], ie what I did. did I missing anything?
+
+[1] https://patchwork.kernel.org/patch/10666599/
