@@ -1,53 +1,105 @@
-From: Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH] ARM64: dts: meson-gxbb-wetek: fix hwmon temperature sensor output
-Date: Mon, 19 Nov 2018 08:22:28 +0400
-Message-ID: <1542601348-3469-1-git-send-email-christianshewitt@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: christianshewitt@gmail.com, martin.blumenstingl@googlemail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v5 05/12] drm: mediatek: Omit warning on probe defers
+Date: Mon, 19 Nov 2018 13:38:59 +0800
+Message-ID: <1542605939.32082.12.camel@mtksdaap41>
+References: <20181116125449.23581-1-matthias.bgg@kernel.org>
+ <20181116125449.23581-6-matthias.bgg@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20181116125449.23581-6-matthias.bgg@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: matthias.bgg@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sean.wang@kernel.org, Matthias Brugger <mbrugger@suse.com>, airlied@linux.ie, mturquette@baylibre.com, sean.wang@mediatek.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, matthias.bgg@gmail.com, wens@csie.org, robh+dt@kernel.org, rdunlap@infradead.org, laurent.pinchart@ideasonboard.com, ulrich.hecht+renesas@gmail.com, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add &saradc and supporting vddio_ao18 nodes to fix hwmon temperature
-readings on the WeTek Hub and Play2 devices. Without these nodes the
-temp is reported as 4294967295 degrees C.
-
-Thanks to Martin Blumenstingl for assisting debug and the winning
-guess at what was missing.
-
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-index 70325b2..dd12e02 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-@@ -59,6 +59,13 @@
- 		regulator-max-microvolt = <3300000>;
- 	};
- 
-+	vddio_ao18: regulator-vddio_ao18 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_AO18";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+
- 	vcc_3v3: regulator-vcc_3v3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "VCC_3V3";
-@@ -173,6 +180,11 @@
- 	clock-names = "clkin0";
- };
- 
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vddio_ao18>;
-+};
-+
- /* Wireless SDIO Module */
- &sd_emmc_a {
- 	status = "okay";
--- 
-2.7.4
+SGksIE1hdHRoaWFzOgoKT24gRnJpLCAyMDE4LTExLTE2IGF0IDEzOjU0ICswMTAwLCBtYXR0aGlh
+cy5iZ2dAa2VybmVsLm9yZyB3cm90ZToKPiBGcm9tOiBNYXR0aGlhcyBCcnVnZ2VyIDxtYnJ1Z2dl
+ckBzdXNlLmNvbT4KPiAKPiBJdCBjYW4gaGFwcGVuIHRoYXQgdGhlIG1tc3lzIGNsb2NrIGRyaXZl
+cnMgYXJlbid0IHByb2JlZCBiZWZvcmUgdGhlCj4gcGxhdGZvcm0gZHJpdmVyIGdldHMgaW52b2tl
+ZC4gVGhlIHBsYXRmb3JtIGRyaXZlciB1c2VkIHRvIHByaW50IGEgd2FybmluZwo+IHRoYXQgdGhl
+IGRyaXZlciBmYWlsZWQgdG8gZ2V0IHRoZSBjbG9ja3MuIE9taXQgdGhpcyBlcnJvciBvbgo+IHRo
+ZSBkZWZlcmVkIHByb2JlIHBhdGguCgpUaGlzIHBhdGNoIGxvb2tzIGdvb2QgdG8gbWUsIGJ1dCB5
+b3UgaGF2ZSBub3QgbW9kaWZpZWQgdGhlIHN1YiBkcml2ZXIgaW4KSERNSSBwYXRoLiBXZSBjb3Vs
+ZCBsZXQgSERNSSBwYXRoIHByaW50IHRoZSB3YXJuaW5nIGFuZCBzb21lb25lIHNlbmQKYW5vdGhl
+ciBwYXRjaCBsYXRlciwgb3IgeW91IG1vZGlmeSBmb3IgSERNSSBwYXRoIGluIHRoaXMgcGF0Y2gu
+Cj4gCj4gU2lnbmVkLW9mZi1ieTogTWF0dGhpYXMgQnJ1Z2dlciA8bWJydWdnZXJAc3VzZS5jb20+
+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9jb2xvci5jIHwgNCAr
+KystCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyAgIHwgNCArKyst
+Cj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMgIHwgNCArKystCj4g
+IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jICAgIHwgMyArKy0KPiAgZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYyAgICAgICAgfCA2ICsrKystLQo+ICA1IGZp
+bGVzIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9jb2xvci5jIGIvZHJpdmVy
+cy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX2NvbG9yLmMKPiBpbmRleCBmNjA5YjYyYjhiZTYu
+LjFlYTMxNzhkNGMxOCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
+X2Rpc3BfY29sb3IuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9j
+b2xvci5jCj4gQEAgLTEyNiw3ICsxMjYsOSBAQCBzdGF0aWMgaW50IG10a19kaXNwX2NvbG9yX3By
+b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gIAlyZXQgPSBtdGtfZGRwX2NvbXBf
+aW5pdChkZXYsIGRldi0+b2Zfbm9kZSwgJnByaXYtPmRkcF9jb21wLCBjb21wX2lkLAo+ICAJCQkJ
+Jm10a19kaXNwX2NvbG9yX2Z1bmNzKTsKPiAgCWlmIChyZXQpIHsKPiAtCQlkZXZfZXJyKGRldiwg
+IkZhaWxlZCB0byBpbml0aWFsaXplIGNvbXBvbmVudDogJWRcbiIsIHJldCk7Cj4gKwkJaWYgKHJl
+dCAhPSAtRVBST0JFX0RFRkVSKQo+ICsJCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBpbml0aWFs
+aXplIGNvbXBvbmVudDogJWRcbiIsCj4gKwkJCQkJcmV0KTsKCkkgd291bGQgbGlrZSBvbmUgbW9y
+ZSBibGFuayBsaW5lIGhlcmUuCgo+ICAJCXJldHVybiByZXQ7Cj4gIAl9Cj4gIAo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3Bfb3ZsLmMgYi9kcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3Bfb3ZsLmMKPiBpbmRleCAyOGQxOTExOTI5NDUuLjVlYmJj
+YWE0ZTcwZSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3Bf
+b3ZsLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3Bfb3ZsLmMKPiBA
+QCAtMjkzLDcgKzI5Myw5IEBAIHN0YXRpYyBpbnQgbXRrX2Rpc3Bfb3ZsX3Byb2JlKHN0cnVjdCBw
+bGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gIAlyZXQgPSBtdGtfZGRwX2NvbXBfaW5pdChkZXYsIGRl
+di0+b2Zfbm9kZSwgJnByaXYtPmRkcF9jb21wLCBjb21wX2lkLAo+ICAJCQkJJm10a19kaXNwX292
+bF9mdW5jcyk7Cj4gIAlpZiAocmV0KSB7Cj4gLQkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gaW5p
+dGlhbGl6ZSBjb21wb25lbnQ6ICVkXG4iLCByZXQpOwo+ICsJCWlmIChyZXQgIT0gLUVQUk9CRV9E
+RUZFUikKPiArCQkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gaW5pdGlhbGl6ZSBjb21wb25lbnQ6
+ICVkXG4iLAo+ICsJCQkJCXJldCk7CgpJIHdvdWxkIGxpa2UgdG8gYWxpZ24gdG8gdGhlIHJpZ2h0
+IG9mICcoJy4KClJlZ2FyZHMsCkNLCgo+ICAJCXJldHVybiByZXQ7Cj4gIAl9Cj4gIAo+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jIGIvZHJpdmVy
+cy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX3JkbWEuYwo+IGluZGV4IGIwYTVjZmZlMzQ1YS4u
+NTlhMDhlZDVmZWE1IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
+ZGlzcF9yZG1hLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRt
+YS5jCj4gQEAgLTI5NSw3ICsyOTUsOSBAQCBzdGF0aWMgaW50IG10a19kaXNwX3JkbWFfcHJvYmUo
+c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCXJldCA9IG10a19kZHBfY29tcF9pbml0
+KGRldiwgZGV2LT5vZl9ub2RlLCAmcHJpdi0+ZGRwX2NvbXAsIGNvbXBfaWQsCj4gIAkJCQkmbXRr
+X2Rpc3BfcmRtYV9mdW5jcyk7Cj4gIAlpZiAocmV0KSB7Cj4gLQkJZGV2X2VycihkZXYsICJGYWls
+ZWQgdG8gaW5pdGlhbGl6ZSBjb21wb25lbnQ6ICVkXG4iLCByZXQpOwo+ICsJCWlmIChyZXQgIT0g
+LUVQUk9CRV9ERUZFUikKPiArCQkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gaW5pdGlhbGl6ZSBj
+b21wb25lbnQ6ICVkXG4iLAo+ICsJCQkJCXJldCk7Cj4gIAkJcmV0dXJuIHJldDsKPiAgCX0KPiAg
+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jIGIv
+ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiBpbmRleCBiMDZjZDlkNGI1
+MjUuLmI3NmEyZDA3MWE5NyAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
+bXRrX2RybV9kZHAuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
+cC5jCj4gQEAgLTU2Niw3ICs1NjYsOCBAQCBzdGF0aWMgaW50IG10a19kZHBfcHJvYmUoc3RydWN0
+IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCj4gIAlkZHAtPmNsayA9IGRldm1fY2xrX2dldChk
+ZXYsIE5VTEwpOwo+ICAJaWYgKElTX0VSUihkZHAtPmNsaykpIHsKPiAtCQlkZXZfZXJyKGRldiwg
+IkZhaWxlZCB0byBnZXQgY2xvY2tcbiIpOwo+ICsJCWlmIChQVFJfRVJSKGRkcC0+Y2xrKSAhPSAt
+RVBST0JFX0RFRkVSKQo+ICsJCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBnZXQgY2xvY2tcbiIp
+Owo+ICAJCXJldHVybiBQVFJfRVJSKGRkcC0+Y2xrKTsKPiAgCX0KPiAgCj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvbXRrX2RzaS5jCj4gaW5kZXggOTAxMDlhMGQ2ZmZmLi5jYzZkZTc1NjM2YzMgMTAwNjQ0
+Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYwo+ICsrKyBiL2RyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMKPiBAQCAtMTEwMywxNCArMTEwMywxNiBAQCBz
+dGF0aWMgaW50IG10a19kc2lfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAg
+CWRzaS0+ZW5naW5lX2NsayA9IGRldm1fY2xrX2dldChkZXYsICJlbmdpbmUiKTsKPiAgCWlmIChJ
+U19FUlIoZHNpLT5lbmdpbmVfY2xrKSkgewo+ICAJCXJldCA9IFBUUl9FUlIoZHNpLT5lbmdpbmVf
+Y2xrKTsKPiAtCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBnZXQgZW5naW5lIGNsb2NrOiAlZFxu
+IiwgcmV0KTsKPiArCQlpZiAocmV0ICE9IC1FUFJPQkVfREVGRVIpCj4gKwkJCWRldl9lcnIoZGV2
+LCAiRmFpbGVkIHRvIGdldCBlbmdpbmUgY2xvY2s6ICVkXG4iLCByZXQpOwo+ICAJCXJldHVybiBy
+ZXQ7Cj4gIAl9Cj4gIAo+ICAJZHNpLT5kaWdpdGFsX2NsayA9IGRldm1fY2xrX2dldChkZXYsICJk
+aWdpdGFsIik7Cj4gIAlpZiAoSVNfRVJSKGRzaS0+ZGlnaXRhbF9jbGspKSB7Cj4gIAkJcmV0ID0g
+UFRSX0VSUihkc2ktPmRpZ2l0YWxfY2xrKTsKPiAtCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBn
+ZXQgZGlnaXRhbCBjbG9jazogJWRcbiIsIHJldCk7Cj4gKwkJaWYgKHJldCAhPSAtRVBST0JFX0RF
+RkVSKQo+ICsJCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBnZXQgZGlnaXRhbCBjbG9jazogJWRc
+biIsIHJldCk7Cj4gIAkJcmV0dXJuIHJldDsKPiAgCX0KPiAgCgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
