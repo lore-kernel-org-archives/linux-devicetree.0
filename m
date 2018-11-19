@@ -1,74 +1,93 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH 1/2] dt-bindings: phy: Add Qualcomm Synopsys High-Speed
- USB PHY binding
-Date: Mon, 19 Nov 2018 12:40:59 +0530
-Message-ID: <CAFp+6iGmsLT8UOk+-4zOKkYxJbkhqy=oDw2ZqrXLDCGbF8uTHA@mail.gmail.com>
-References: <20181108070449.23572-1-shawn.guo@linaro.org> <20181108070449.23572-2-shawn.guo@linaro.org>
- <5bea0ed8.1c69fb81.8715.38b2@mx.google.com> <20181113034200.GD20049@tiger>
- <CAL_JsqKu3kf-zrKNtrtZsQEPi0LN_3jqs08i3-8vbSQDVxuRkA@mail.gmail.com> <20181119065503.GB10788@dragon>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 3/5 v7] regulator: fixed/gpio: Update device tree bindings
+Date: Mon, 19 Nov 2018 08:11:24 +0100
+Message-ID: <20181119071126.8889-3-linus.walleij@linaro.org>
+References: <20181119071126.8889-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181119065503.GB10788@dragon>
+In-Reply-To: <20181119071126.8889-1-linus.walleij@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawn.guo@linaro.org
-Cc: Rob Herring <robh@kernel.org>, kishon <kishon@ti.com>, sallenki@codeaurora.org, anur@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>, vkoul@kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 19, 2018 at 12:29 PM Shawn Guo <shawn.guo@linaro.org> wrote:
->
-> On Sat, Nov 17, 2018 at 09:13:38AM -0600, Rob Herring wrote:
-> <snip>
-> > > > > +- qcom,init-seq:
-> > > > > +    Value type: <u32 array>
-> > > > > +    Definition: Should contain a sequence of <offset value delay> tuples to
-> > > > > +                program 'value' into phy register at 'offset' with 'delay'
-> > > > > +           in us afterwards.
-> > > >
-> > > > If we wanted this type of thing in DT, we'd have a generic binding (or
-> > > > forth).
-> > >
-> > > Right now, this is a qualcomm usb phy specific bindings - first used in
-> > > qcom,usb-hs-phy.txt and I extended it a bit for my phy.  As this is not
-> > > a so good hardware description, I'm a little hesitated to make it
-> > > generic for other platforms to use in general.  What about we put off it
-> > > a little bit until we see more platforms need the same thing?
-> >
-> > I'm not saying I want it generic. Quite the opposite. I don't think we
-> > should have it either generically or vendor specific. The main thing I
-> > have a problem with is the timing information because then we're more
-> > that just data. Without that we're talking about a bunch of properties
-> > for register fields or just raw register values in DT. That becomes
-> > more of a judgement call. There's not too much value in making a
-> > driver translate a bunch of properties just to stuff them into
-> > registers on init. But then just allowing any raw register value to be
-> > in DT could be easily abused.
->
-> Rob,
->
-> I agree with your comments.  Honestly, I'm not comfortable with this
-> 'qcom,init-seq' thing in the first impression.  The similar existence in
-> mainline qcom,usb-hs-phy.txt makes me think it might be acceptable with
-> the timing data added.  Okay, I know your position on this now.
->
-> @Sriharsha,
->
-> Seeing that 'qcom,init-seq' is being configured with the exactly same
-> values for both HS phys in SoC level dts file (qcs404.dtsi), I think
-> such settings can be moved into driver code as SoC specific data.
-> Unless you have a different view on this, I will do it with v4.
+Deprecate the open drain binding for fixed regulator and indicate
+that we prefer this to be passed in the GPIO phandle flags.
 
-phy-qcom-qmp and phy-qcom-qusb2 have been maintaining such SoC specific
-init sequences in the drivers if you would like to have pointers from them.
+Clarify that the line inversion semantics for fixed and GPIO
+regulators completely overrides the active low flags in the
+phandle flags.
 
-Thanks
-Vivek
+Unfortunately this can not be changed to prefer that we pass
+the flags in the phandle: the bindings have been specified and
+deployed such that the presence/absence of this flag and only
+that controls the line inversion semantics. The crucial semantic
+is that the absence of the flag means the core will assume
+the line is active low, which in GPIO terms is an exception,
+as GPIO lines are normally assumed to be active high.
 
->
-> Shawn
+This special device tree semantic cannot be changed without
+introducing a whole new compatible string for the fixed and
+GPIO regulators, so we just contain the situation.
 
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v6->v7:
+- Resend with the rest.
+ChangeLog v3->v6:
+- Resending.
+ChangeLog v2->v3:
+- Resending.
+ChangeLog v1->v2:
+- Collect Rob's ACK.
+---
+ .../bindings/regulator/fixed-regulator.txt          | 13 +++++++++++--
+ .../bindings/regulator/gpio-regulator.txt           |  4 ++++
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-
+diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+index 0c2a6c8a1536..a7a1cd0dfa6e 100644
+--- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+@@ -8,10 +8,19 @@ Optional properties:
+ - gpio: gpio to use for enable control
+ - startup-delay-us: startup time in microseconds
+ - enable-active-high: Polarity of GPIO is Active high
+-If this property is missing, the default assumed is Active low.
++  If this property is missing, the default assumed is Active low.
++  If the phandle flags to the GPIO handle also flag the line as active
++  low or high, that will be ignored for fixed regulators and the
++  presence or absence of this flag solely controls the inversion
++  semantics.
++-vin-supply: Input supply name.
++
++Deprecated properties:
+ - gpio-open-drain: GPIO is open drain type.
+   If this property is missing then default assumption is false.
+--vin-supply: Input supply name.
++  Do not use this property in new device trees: instead use the
++  phandle flag to indicate to the GPIO provider that the line
++  should be handled as open drain.
+ 
+ Any property defined as part of the core regulator
+ binding, defined in regulator.txt, can also be used.
+diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+index 1f496159e2bb..8fef3e5358a2 100644
+--- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+@@ -14,6 +14,10 @@ Optional properties:
+ 			  defualt is LOW if nothing is specified.
+ - startup-delay-us	: Startup time in microseconds.
+ - enable-active-high	: Polarity of GPIO is active high (default is low).
++			  If the phandle flags to the GPIO handle also flag the line as
++			  active low or high, that will be ignored for fixed regulators
++			  and the presence or absence of this flag solely controls the
++			  inversion semantics.
+ - regulator-type	: Specifies what is being regulated, must be either
+ 			  "voltage" or "current", defaults to voltage.
+ 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.19.1
