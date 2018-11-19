@@ -1,58 +1,65 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH v2 4/7] dt-bindings:iio:resolver: Add docs for ad2s90
-Date: Mon, 19 Nov 2018 08:22:14 +0000
-Message-ID: <563614e00314ba92b9513645a82fde06504a42d5.camel@analog.com>
-References: <20181118042540.12697-1-matheus.bernardino@usp.br>
-         <20181118042540.12697-5-matheus.bernardino@usp.br>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [Letux-kernel] [PATCH 0/5] gnss: sirf: add support for w2sg0004 + lna
+Date: Mon, 19 Nov 2018 09:22:59 +0100
+Message-ID: <3487514B-E546-4F11-8C0A-F5B4A8114376@goldelico.com>
+References: <20181118215801.12280-1-andreas@kemnade.info>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181118042540.12697-5-matheus.bernardino@usp.br>
-Content-Language: en-US
-Content-ID: <6F27FAEEB594E54AA355D260F1C4BC01@analog.com>
+In-Reply-To: <20181118215801.12280-1-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "lars@metafoo.de" <lars@metafoo.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "jic23@kernel.org" <jic23@kernel.org>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "matheus.bernardino@usp.br" <matheus.bernardino@usp.br>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc: "victorcolombo@gmail.com" <victorcolombo@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCAyMDE4LTExLTE4IGF0IDAyOjI1IC0wMjAwLCBNYXRoZXVzIFRhdmFyZXMgd3JvdGU6
-DQo+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgZGV2aWNlIHRyZWUgYmluZGluZyBkb2N1bWVudGF0aW9u
-IGZvciB0aGUgYWQyczkwDQo+IHJlc29sdmVyLXRvLWRpZ2l0YWwgY29udmVydGVyLg0KPiANCg0K
-T25lIG1pbm9yIGNvbW1lbnQgaW5saW5lLg0KDQo+IFNpZ25lZC1vZmYtYnk6IE1hdGhldXMgVGF2
-YXJlcyA8bWF0aGV1cy5iZXJuYXJkaW5vQHVzcC5icj4NCj4gLS0tDQo+IENoYW5nZXMgaW4gdjI6
-DQo+ICAtIFJld3JpdHRlbiAnc3BpLWNwb2wgYW5kIHNwaS1jcGhhJyBpdGVtIHRvIHNheSB0aGF0
-IHRoZSBkZXZpY2UgY2FuDQo+ICB3b3JrIGluIGVpdGhlciBtb2RlICgwLDApIG9yICgxLDEpIGFu
-ZCBleHBsYWluIGhvdyB0aGV5IHNob3VsZCBiZQ0KPiAgc3BlY2lmaWVkIGluIERULg0KPiANCj4g
-IC4uLi9iaW5kaW5ncy9paW8vcmVzb2x2ZXIvYWQyczkwLnR4dCAgICAgICAgICB8IDI4ICsrKysr
-KysrKysrKysrKysrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCAyOCBpbnNlcnRpb25zKCspDQo+ICBj
-cmVhdGUgbW9kZSAxMDA2NDQNCj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lp
-by9yZXNvbHZlci9hZDJzOTAudHh0DQo+IA0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9yZXNvbHZlci9hZDJzOTAudHh0DQo+IGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9yZXNvbHZlci9hZDJzOTAudHh0DQo+IG5ldyBm
-aWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IDAwMDAwMDAwMDAwMC4uNTk0NDE3NTM5OTM4DQo+IC0t
-LSAvZGV2L251bGwNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lp
-by9yZXNvbHZlci9hZDJzOTAudHh0DQo+IEBAIC0wLDAgKzEsMjggQEANCj4gK0FuYWxvZyBEZXZp
-Y2VzIEFEMlM5MCBSZXNvbHZlci10by1EaWdpdGFsIENvbnZlcnRlcg0KPiArDQo+ICtodHRwczov
-L3d3dy5hbmFsb2cuY29tL2VuL3Byb2R1Y3RzL2FkMnM5MC5odG1sDQo+ICsNCj4gK1JlcXVpcmVk
-IHByb3BlcnRpZXM6DQo+ICsgIC0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJhZGksYWQyczkwIg0K
-PiArICAtIHJlZzogU1BJIGNoaXAgc2VsZWN0IG51bWJlciBmb3IgdGhlIGRldmljZQ0KPiArICAt
-IHNwaS1tYXgtZnJlcXVlbmN5OiBzZXQgbWF4aW11bSBjbG9jayBmcmVxdWVuY3ksIG11c3QgYmUg
-ODMwMDAwDQo+ICsgIC0gc3BpLWNwb2wgYW5kIHNwaS1jcGhhOg0KPiArICAgICAgICBFaXRoZXIg
-U1BJIG1vZGUgKDAsMCkgb3IgKDEsMSkgbXVzdCBiZSB1c2VkLCBzbyBzcGVjaWZ5IG5vbmUgb3IN
-Cj4gYm90aCBvZg0KPiArICAgICAgICBzcGktY3BoYSwgc3BpLWNwb2wuDQpGb3IgU1BJIHByb3Bl
-cnRpZXMgaXQncyBhIGdvb2QgaWRlYSB0byBhbHNvIHJlZmVyZW5jZSB0aGUgZG9jdW1lbnQgZm9y
-IFNQSQ0KYmluZGluZ3MuDQpTb21ldGhpbmcgbGlrZToNCiAgICBTZWUgZm9yIG1vcmUgZGV0YWls
-czoNCiAgICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NwaS9zcGktYnVzLnR4
-dA0KDQo+ICsNCj4gK05vdGUgYWJvdXQgbWF4IGZyZXF1ZW5jeToNCj4gKyAgICBDaGlwJ3MgbWF4
-IGZyZXF1ZW5jeSwgYXMgc3BlY2lmaWVkIGluIGl0cyBkYXRhc2hlZXQsIGlzIDJNaHouIEJ1dCBh
-DQo+IDYwMG5zDQo+ICsgICAgZGVsYXkgaXMgZXhwZWN0ZWQgYmV0d2VlbiB0aGUgYXBwbGljYXRp
-b24gb2YgYSBsb2dpYyBMTyB0byBDUyBhbmQNCj4gdGhlDQo+ICsgICAgYXBwbGljYXRpb24gb2Yg
-U0NMSywgYXMgYWxzbyBzcGVjaWZpZWQuIEFuZCBzaW5jZSB0aGUgZGVsYXkgaXMgbm90DQo+ICsg
-ICAgaW1wbGVtZW50ZWQgaW4gdGhlIHNwaSBjb2RlLCB0byBzYXRpc2Z5IGl0LCBTQ0xLJ3MgcGVy
-aW9kIHNob3VsZCBiZQ0KPiBhdCBtb3N0DQo+ICsgICAgMiAqIDYwMG5zLCBzbyB0aGUgbWF4IGZy
-ZXF1ZW5jeSBzaG91bGQgYmUgMSAvICgyICogNmUtNyksIHdoaWNoDQo+IGdpdmVzDQo+ICsgICAg
-cm91Z2hseSA4MzAwMDBIei4NCj4gKw0KPiArRXhhbXBsZToNCj4gK3Jlc29sdmVyQDAgew0KPiAr
-CWNvbXBhdGlibGUgPSAiYWRpLGFkMnM5MCI7DQo+ICsJcmVnID0gPDA+Ow0KPiArCXNwaS1tYXgt
-ZnJlcXVlbmN5ID0gPDgzMDAwMD47DQo+ICsJc3BpLWNwb2w7DQo+ICsJc3BpLWNwaGE7DQo+ICt9
-Ow0K
+Hi,
+
+> Am 18.11.2018 um 22:57 schrieb Andreas Kemnade <andreas@kemnade.info>:
+>=20
+> Here is another chapter of the story to get gta04 gnss power
+> management into the mainline kernel.
+> There is a w2sg0004 without wakeup line in there, so power state
+> can only be determined indirectly by looking at the serial data lines.
+> Then there as also an lna which needs to be powered for real gps
+> reception. That part needs probably more discussion, since it might
+> be an idea to have it more generalized since it has nothing todo
+> with the chip itself.
+
+On the other hand if we follow the "SoC is the spider in the net"
+way of looking at DTS hierarchy, we have the uart as a child of the
+SoC and the gnss receiver as a serdev child of the UART. The LNA
+is even one step more distantly connected to the gnss. So it makes
+sense to me to have it as a property/reference of the gnss chip's
+DTS record which is a sibling of the compatible records. So the only
+place where it can be reasonably processed is the driver.
+
+> I marked the corresponding patches as RFC. The support for
+> the w2sg0004 without wakeup can imho go in without the lna first
+> because users of that chip without an additional lna power supply
+> can already benefit from it if we should do more discussion first.
+> I just kept them together so that the full picture can be seen.
+>=20
+> Andreas Kemnade (5):
+>  gnss: sirf: write data to gnss only when the gnss device is open
+>  gnss: sirf: power on logic for devices without wakeup signal
+>  dt-bindings: gnss: add w2sg0004 compatible string
+>  gnss: sirf: add a separate supply for a lna
+>  dt-bindings: gnss: add lna-supply property
+>=20
+> .../devicetree/bindings/gnss/sirfstar.txt          |   2 +
+> drivers/gnss/sirf.c                                | 126 =
++++++++++++++++------
+> 2 files changed, 96 insertions(+), 32 deletions(-)
+>=20
+> --=20
+> 2.11.0
+>=20
+> _______________________________________________
+> http://projects.goldelico.com/p/gta04-kernel/
+> Letux-kernel mailing list
+> Letux-kernel@openphoenux.org
+> http://lists.goldelico.com/mailman/listinfo.cgi/letux-kernel
+
+BR,
+Nikolaus
