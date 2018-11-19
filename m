@@ -1,116 +1,74 @@
-From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH v2 2/2] i2c: i2c-stm32f7: SYSCFG Fast Mode Plus support for I2C STM32F7
-Date: Mon, 19 Nov 2018 12:03:32 +0100
-Message-ID: <1542625412-4277-3-git-send-email-pierre-yves.mordret@st.com>
-References: <1542625412-4277-1-git-send-email-pierre-yves.mordret@st.com>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH 1/2] arm64: dts: qcom: msm8996: Add VFE SMMU node
+Date: Mon, 19 Nov 2018 16:38:10 +0530
+Message-ID: <CAFp+6iG3bRoyFtfd60SO9t=upjcH+fQm1NAOMTvMpYnk5dHjFw@mail.gmail.com>
+References: <1542619537-24038-1-git-send-email-todor.tomov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542625412-4277-1-git-send-email-pierre-yves.mordret@st.com>
+In-Reply-To: <1542619537-24038-1-git-send-email-todor.tomov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Wolfram Sang <wsa@the-dreams.de>, Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: todor.tomov@linaro.org
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Read SYSCFG bindings to set Fast Mode Plus bits if Fast Mode Plus
-speed is selected.
+Hi Todor,
 
-Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
----
-  Version history:
-    v2:
-       * Missing header file inclusion
-    v1:
-       * Initial
----
----
- drivers/i2c/busses/i2c-stm32f7.c | 38 +++++++++++++++++++++++++++++++++++---
- 1 file changed, 35 insertions(+), 3 deletions(-)
+On Mon, Nov 19, 2018 at 2:57 PM Todor Tomov <todor.tomov@linaro.org> wrote:
+>
+> Add VFE SMMU node.
+>
+> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+> ---
+>
+> This patch depends on patchset:
+> https://lore.kernel.org/patchwork/cover/1013166/
+>
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> index 13bb964..a4d087e5 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> @@ -950,6 +950,23 @@
+>                         };
+>                 };
+>
+> +               vfe_smmu: arm,smmu@da0000 {
+> +                       compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
+> +                       reg = <0xda0000 0x10000>;
+> +
+> +                       #global-interrupts = <1>;
+> +                       interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
+> +                                    <GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH>,
+> +                                    <GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH>;
+> +                       power-domains = <&mmcc MMAGIC_CAMSS_GDSC>;
+> +                       clocks = <&mmcc SMMU_VFE_AHB_CLK>,
+> +                                <&mmcc SMMU_VFE_AXI_CLK>;
+> +                       clock-names = "iface",
+> +                                     "bus";
+> +                       #iommu-cells = <1>;
+> +                       status = "ok";
 
-diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-index 62d023e..e9f0c0b 100644
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -21,12 +21,14 @@
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/regmap.h>
- #include <linux/reset.h>
- #include <linux/slab.h>
- 
-@@ -276,6 +278,7 @@ struct stm32f7_i2c_msg {
-  * slave)
-  * @dma: dma data
-  * @use_dma: boolean to know if dma is used in the current transfer
-+ * @regmap: holds SYSCFG phandle for Fast Mode Plus bits
-  */
- struct stm32f7_i2c_dev {
- 	struct i2c_adapter adap;
-@@ -296,6 +299,7 @@ struct stm32f7_i2c_dev {
- 	bool master_mode;
- 	struct stm32_i2c_dma *dma;
- 	bool use_dma;
-+	struct regmap *regmap;
- };
- 
- /**
-@@ -1763,6 +1767,30 @@ static int stm32f7_i2c_unreg_slave(struct i2c_client *slave)
- 	return 0;
- }
- 
-+static int stm32f7_i2c_setup_fm_plus_bits(struct platform_device *pdev,
-+					  struct stm32f7_i2c_dev *i2c_dev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	int ret;
-+	u32 reg, mask;
-+
-+	i2c_dev->regmap = syscon_regmap_lookup_by_phandle(np, "st,syscfg-fmp");
-+	if (IS_ERR(i2c_dev->regmap)) {
-+		/* Optional */
-+		return 0;
-+	}
-+
-+	ret = of_property_read_u32_index(np, "st,syscfg-fmp", 1, &reg);
-+	if (ret)
-+		return ret;
-+
-+	ret = of_property_read_u32_index(np, "st,syscfg-fmp", 2, &mask);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_update_bits(i2c_dev->regmap, reg, mask, mask);
-+}
-+
- static u32 stm32f7_i2c_func(struct i2c_adapter *adap)
- {
- 	return I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR | I2C_FUNC_SLAVE |
-@@ -1828,12 +1856,16 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
- 	i2c_dev->speed = STM32_I2C_SPEED_STANDARD;
- 	ret = device_property_read_u32(&pdev->dev, "clock-frequency",
- 				       &clk_rate);
--	if (!ret && clk_rate >= 1000000)
-+	if (!ret && clk_rate >= 1000000) {
- 		i2c_dev->speed = STM32_I2C_SPEED_FAST_PLUS;
--	else if (!ret && clk_rate >= 400000)
-+		ret = stm32f7_i2c_setup_fm_plus_bits(pdev, i2c_dev);
-+		if (ret)
-+			goto clk_free;
-+	} else if (!ret && clk_rate >= 400000) {
- 		i2c_dev->speed = STM32_I2C_SPEED_FAST;
--	else if (!ret && clk_rate >= 100000)
-+	} else if (!ret && clk_rate >= 100000) {
- 		i2c_dev->speed = STM32_I2C_SPEED_STANDARD;
-+	}
- 
- 	rst = devm_reset_control_get(&pdev->dev, NULL);
- 	if (IS_ERR(rst)) {
+No point of adding this status here.
+Rest looks good to me.
+
+Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+
+Best regards
+Vivek
+
+> +               };
+> +
+>                 agnoc@0 {
+>                         power-domains = <&gcc AGGRE0_NOC_GDSC>;
+>                         compatible = "simple-pm-bus";
+> --
+> 2.7.4
+>
+
+
 -- 
-2.7.4
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
