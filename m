@@ -1,51 +1,34 @@
-From: Todor Tomov <todor.tomov@linaro.org>
-Subject: [PATCH 1/2] arm64: dts: qcom: msm8996: Add VFE SMMU node
-Date: Mon, 19 Nov 2018 11:25:36 +0200
-Message-ID: <1542619537-24038-1-git-send-email-todor.tomov@linaro.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 0/4] reset: uniphier: Rename from USB3 reset to glue
+ reset and add AHCI reset support
+Date: Mon, 19 Nov 2018 10:25:53 +0100
+Message-ID: <1542619553.5139.1.camel@pengutronix.de>
+References: <1541727727-10821-1-git-send-email-hayashi.kunihiko@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1541727727-10821-1-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, vivek.gautam@codeaurora.org, Todor Tomov <todor.tomov@linaro.org>
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add VFE SMMU node.
+On Fri, 2018-11-09 at 10:42 +0900, Kunihiko Hayashi wrote:
+> This series renames the reset control of core reset included in USB3 glue
+> layer with in the glue layer for generic peripherals to allow other devices
+> to use it.
+> 
+> And this series adds support for the core reset included in AHCI glue layer.
+> 
+> Kunihiko Hayashi (4):
+>   dt-bindings: reset: uniphier: Replace the expression of USB3 with
+>     generic peripherals
+>   reset: uniphier-usb3: Rename to reset-uniphier-glue
+>   dt-bindings: reset: uniphier: Add AHCI core reset description
+>   reset: uniphier-glue: Add AHCI reset control support in glue layer
 
-Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
----
+Thank you, applied to reset/next.
 
-This patch depends on patchset:
-https://lore.kernel.org/patchwork/cover/1013166/
-
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 13bb964..a4d087e5 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -950,6 +950,23 @@
- 			};
- 		};
- 
-+		vfe_smmu: arm,smmu@da0000 {
-+			compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
-+			reg = <0xda0000 0x10000>;
-+
-+			#global-interrupts = <1>;
-+			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH>;
-+			power-domains = <&mmcc MMAGIC_CAMSS_GDSC>;
-+			clocks = <&mmcc SMMU_VFE_AHB_CLK>,
-+				 <&mmcc SMMU_VFE_AXI_CLK>;
-+			clock-names = "iface",
-+				      "bus";
-+			#iommu-cells = <1>;
-+			status = "ok";
-+		};
-+
- 		agnoc@0 {
- 			power-domains = <&gcc AGGRE0_NOC_GDSC>;
- 			compatible = "simple-pm-bus";
--- 
-2.7.4
+regards
+Philipp
