@@ -1,35 +1,40 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/3] pinctrl: stm32: protect configuration registers with
- a hwspinlock
-Date: Mon, 19 Nov 2018 13:20:46 +0100
-Message-ID: <CACRpkdZD5EurbTRyUg7AWRZqVQ-6rmUQDUmVVCFU3r0Y1bwnVg@mail.gmail.com>
-References: <20181113095142.32015-1-benjamin.gaignard@st.com> <20181113095142.32015-3-benjamin.gaignard@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: [PATCH v2 0/4] thermal: tsens: Add support for QCS404 platform
+Date: Mon, 19 Nov 2018 17:55:18 +0530
+Message-ID: <cover.1542629810.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181113095142.32015-3-benjamin.gaignard@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, vkoul@kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 13, 2018 at 10:51 AM Benjamin Gaignard
-<benjamin.gaignard@linaro.org> wrote:
+Add support for the Qualcomm QCS404 platform that contains v1 of the TSENS
+IP. Introduce a fallback binding to handle "v1" functionality.
 
-> If a hwspinlock if defined in device tree use it to protect
-> configuration registers.
->
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+These patches have been tested on top of 4.20-rc3 + various qcs404-related
+DT patches now in Andy's ci-next branch[1].
 
-Patch applied with Alex' ACK.
+Changes since v1:
+- Change p1 and p2 to be fixed-size arrays
+- Refactor DT entries to be sorted by address, Thanks Vinod
+- Added Acks
 
-Out of curiosity: what is it protecting against?
-I would guess simultaneous access from another CPU
-but the commit doesn't say.
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git/log/?h=ci-next
 
-Simultaneous access from two CPUs makes it extra important
-that all register access is read-modify-write, so I'd have a second
-check over the code to make sure this is the case.
+Amit Kucheria (4):
+  dt: thermal: tsens: Add bindings for qcs404
+  drivers: thermal: tsens: Add generic support for TSENS v1 IP
+  arm64: dts: qcom: qcs404: Add tsens controller
+  arm64: dts: qcom: qcs404: Add thermal zones for each sensor
 
-Yours,
-Linus Walleij
+ .../bindings/thermal/qcom-tsens.txt           |   3 +
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          | 226 ++++++++++++++++++
+ drivers/thermal/qcom/Makefile                 |   2 +-
+ drivers/thermal/qcom/tsens-v1.c               | 196 +++++++++++++++
+ drivers/thermal/qcom/tsens.c                  |   3 +
+ drivers/thermal/qcom/tsens.h                  |   2 +-
+ 6 files changed, 430 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/thermal/qcom/tsens-v1.c
+
+-- 
+2.17.1
