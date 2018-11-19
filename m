@@ -1,703 +1,542 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 12/14] ARM: dts: milbeaut: Add device tree set for the
- Milbeaut M10V board
-Date: Mon, 19 Nov 2018 09:46:02 -0600
-Message-ID: <CAL_JsqJiZnoUK7sgNYGpxzcF+rjpj6cV54jW2z4_7hui-WWenA@mail.gmail.com>
-References: <1542589336-13925-1-git-send-email-sugaya.taichi@socionext.com> <1542589336-13925-3-git-send-email-sugaya.taichi@socionext.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RESEND PATCH v3 2/2] PCI: uniphier: Add UniPhier PCIe host
+ controller support
+Date: Mon, 19 Nov 2018 16:17:20 +0000
+Message-ID: <20181119161653.GA32232@e107981-ln.cambridge.arm.com>
+References: <1539667641-26024-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1539667641-26024-3-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542589336-13925-3-git-send-email-sugaya.taichi@socionext.com>
+Content-Disposition: inline
+In-Reply-To: <1539667641-26024-3-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sugaya.taichi@socionext.com, ARM-SoC Maintainers <arm@kernel.org>
-Cc: linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 18, 2018 at 7:01 PM Sugaya Taichi
-<sugaya.taichi@socionext.com> wrote:
->
-> Add devicetree for Milbeaut M10V SoC and M10V Evaluation board.
->
-> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
+On Tue, Oct 16, 2018 at 02:27:21PM +0900, Kunihiko Hayashi wrote:
+> This introduces specific glue layer for UniPhier platform to support
+> PCIe host controller that is based on the DesignWare PCIe core, and
+> this driver supports Root Complex (host) mode.
+> 
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > ---
->  arch/arm/boot/dts/Makefile               |   1 +
->  arch/arm/boot/dts/milbeaut-m10v-evb.dts  |  35 +++
->  arch/arm/boot/dts/milbeaut-m10v-evb.dtsi |  17 ++
->  arch/arm/boot/dts/milbeaut-m10v.dtsi     | 510 +++++++++++++++++++++++++++++++
+>  drivers/pci/controller/dwc/Kconfig         |   9 +
+>  drivers/pci/controller/dwc/Makefile        |   1 +
+>  drivers/pci/controller/dwc/pcie-uniphier.c | 433 +++++++++++++++++++++++++++++
 
-I'm not seeing why you need this split into 3 files instead of 2.
+The driver needs a MAINTAINERS entry too.
 
->  4 files changed, 563 insertions(+)
->  create mode 100644 arch/arm/boot/dts/milbeaut-m10v-evb.dts
->  create mode 100644 arch/arm/boot/dts/milbeaut-m10v-evb.dtsi
->  create mode 100644 arch/arm/boot/dts/milbeaut-m10v.dtsi
-
-Build your dtb with 'W=12' and fix any warnings.
-
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index b0e966d..ee6220b 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1207,6 +1207,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
->         mt7623n-bananapi-bpi-r2.dtb \
->         mt8127-moose.dtb \
->         mt8135-evbp1.dtb
-> +dtb-$(CONFIG_MACH_M10V_EVB) += milbeaut-m10v-evb.dtb
-
-ARM SoC maintainers,
-
-Can we start at least start putting new SoCs in vendor subdirs? This
-one doesn't appear to share anything.
-
->  dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
->  dtb-$(CONFIG_ARCH_ASPEED) += \
->         aspeed-ast2500-evb.dtb \
-> diff --git a/arch/arm/boot/dts/milbeaut-m10v-evb.dts b/arch/arm/boot/dts/milbeaut-m10v-evb.dts
+>  3 files changed, 443 insertions(+)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-uniphier.c
+> 
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index 91b0194..d8fdb02 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -193,4 +193,13 @@ config PCIE_HISI_STB
+>  	help
+>            Say Y here if you want PCIe controller support on HiSilicon STB SoCs
+>  
+> +config PCIE_UNIPHIER
+> +	bool "Socionext UniPhier PCIe controllers"
+> +	depends on OF && (ARCH_UNIPHIER || COMPILE_TEST)
+> +	depends on PCI_MSI_IRQ_DOMAIN
+> +	select PCIE_DW_HOST
+> +	help
+> +	  Say Y here if you want PCIe controller support on UniPhier SoCs.
+> +	  This driver supports LD20 and PXs3 SoCs.
+> +
+>  endmenu
+> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+> index 5d2ce72..cbde733 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -14,6 +14,7 @@ obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
+>  obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
+>  obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
+>  obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
+> +obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+>  
+>  # The following drivers are for devices that use the generic ACPI
+>  # pci_root.c driver but don't support standard ECAM config access.
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
 > new file mode 100644
-> index 0000000..af8d6e4
+> index 0000000..2689449
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/milbeaut-m10v-evb.dts
-> @@ -0,0 +1,35 @@
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> @@ -0,0 +1,433 @@
 > +// SPDX-License-Identifier: GPL-2.0
-> +/* Socionext Milbeaut M10V Evaluation Board */
-> +/dts-v1/;
-> +#include "milbeaut-m10v-evb.dtsi"
+> +/*
+> + * PCIe host controller driver for UniPhier SoCs
+> + * Copyright 2018 Socionext Inc.
+> + * Author: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> + */
 > +
-> +/ {
-> +       cpus {
-
-cpus is not board specific.
-
-> +               cpu@0 {
-
-Unit-address is wrong. Should be '@f00' to match reg.
-
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a7";
-> +                       reg = <0xf00>;
-> +               };
-> +               cpu@1 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a7";
-> +                       reg = <0xf01>;
-> +               };
+> +#include <linux/bitops.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/module.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/pci.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset.h>
 > +
-> +               cpu@2 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a7";
-> +                       reg = <0xf02>;
-> +               };
-> +               cpu@3 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a7";
-> +                       reg = <0xf03>;
-> +               };
+> +#include "pcie-designware.h"
 > +
-> +       };
-> +       trampoline: trampoline@0x0000F100 {
-
-Also, not board specific.
-
-This should be under a simple-bus node. The unit-address should be '@f100'.
-
-> +               compatible = "socionext,smp-trampoline";
-> +               reg = <0x0000F100 0x100>;
-
-Use lowercase hex.
-
-> +       };
+> +#define PCL_PINCTRL0			0x002c
+> +#define PCL_PERST_PLDN_REGEN		BIT(12)
+> +#define PCL_PERST_NOE_REGEN		BIT(11)
+> +#define PCL_PERST_OUT_REGEN		BIT(8)
+> +#define PCL_PERST_PLDN_REGVAL		BIT(4)
+> +#define PCL_PERST_NOE_REGVAL		BIT(3)
+> +#define PCL_PERST_OUT_REGVAL		BIT(0)
+> +
+> +#define PCL_PIPEMON			0x0044
+> +#define PCL_PCLK_ALIVE			BIT(15)
+> +
+> +#define PCL_APP_READY_CTRL		0x8008
+> +#define PCL_APP_LTSSM_ENABLE		BIT(0)
+> +
+> +#define PCL_APP_PM0			0x8078
+> +#define PCL_SYS_AUX_PWR_DET		BIT(8)
+> +
+> +#define PCL_RCV_INT			0x8108
+> +#define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
+> +#define PCL_CFG_BW_MGT_STATUS		BIT(4)
+> +#define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
+> +#define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
+> +#define PCL_CFG_PME_MSI_STATUS		BIT(1)
+> +
+> +#define PCL_RCV_INTX			0x810c
+> +#define PCL_RCV_INTX_ALL_ENABLE		GENMASK(19, 16)
+> +#define PCL_RCV_INTX_ALL_STATUS		GENMASK(3, 0)
+> +
+> +#define PCL_STATUS_LINK			0x8140
+> +#define PCL_RDLH_LINK_UP		BIT(1)
+> +#define PCL_XMLH_LINK_UP		BIT(0)
+> +
+> +struct uniphier_pcie_priv {
+> +	void __iomem *base;
+> +	struct dw_pcie pci;
+> +	struct clk *clk;
+> +	struct reset_control *rst;
+> +	struct phy *phy;
+> +	struct irq_domain *legacy_irq_domain;
 > +};
-> diff --git a/arch/arm/boot/dts/milbeaut-m10v-evb.dtsi b/arch/arm/boot/dts/milbeaut-m10v-evb.dtsi
-> new file mode 100644
-> index 0000000..fc35c0b
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/milbeaut-m10v-evb.dtsi
-> @@ -0,0 +1,17 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include "milbeaut-m10v.dtsi"
 > +
-> +/ {
-> +       model = "Socionext M10V EVB";
-> +       compatible = "socionext,sc2000a", "socionext,milbeaut-m10v-evb";
+> +#define to_uniphier_pcie(x)	dev_get_drvdata((x)->dev)
+> +
+> +static void uniphier_pcie_ltssm_enable(struct uniphier_pcie_priv *priv)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(priv->base + PCL_APP_READY_CTRL);
+> +	val |= PCL_APP_LTSSM_ENABLE;
+> +	writel(val, priv->base + PCL_APP_READY_CTRL);
+> +}
+> +
+> +static void uniphier_pcie_ltssm_disable(struct uniphier_pcie_priv *priv)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(priv->base + PCL_APP_READY_CTRL);
+> +	val &= ~PCL_APP_LTSSM_ENABLE;
+> +	writel(val, priv->base + PCL_APP_READY_CTRL);
+> +}
 
-Wrong order. And these need to be documented.
+A single function with an "enable" parameter would do.
 
-> +       interrupt-parent = <&gic>;
-> +       chosen {
-> +               bootargs = "consoleblank=0 loglevel=8 init=/sbin/finit root=/dev/mmcblk0p2 rootwait ro console=ttyUSI0,115200n8 console=/dev/tty1 ";
+> +static void uniphier_pcie_init_rc(struct uniphier_pcie_priv *priv)
+> +{
+> +	u32 val;
+> +
+> +	/* use auxiliary power detection */
+> +	val = readl(priv->base + PCL_APP_PM0);
+> +	val |= PCL_SYS_AUX_PWR_DET;
+> +	writel(val, priv->base + PCL_APP_PM0);
+> +
+> +	/* assert PERST# */
+> +	val = readl(priv->base + PCL_PINCTRL0);
+> +	val &= ~(PCL_PERST_NOE_REGVAL | PCL_PERST_OUT_REGVAL
+> +		 | PCL_PERST_PLDN_REGVAL);
+> +	val |= PCL_PERST_NOE_REGEN | PCL_PERST_OUT_REGEN
+> +		| PCL_PERST_PLDN_REGEN;
+> +	writel(val, priv->base + PCL_PINCTRL0);
+> +
+> +	uniphier_pcie_ltssm_disable(priv);
+> +
+> +	usleep_range(100000, 200000);
+> +
+> +	/* deassert PERST# */
+> +	val = readl(priv->base + PCL_PINCTRL0);
+> +	val |= PCL_PERST_OUT_REGVAL | PCL_PERST_OUT_REGEN;
+> +	writel(val, priv->base + PCL_PINCTRL0);
+> +}
+> +
+> +static int uniphier_pcie_wait_rc(struct uniphier_pcie_priv *priv)
+> +{
+> +	u32 status;
+> +	int ret;
+> +
+> +	/* wait PIPE clock */
+> +	ret = readl_poll_timeout(priv->base + PCL_PIPEMON, status,
+> +				 status & PCL_PCLK_ALIVE, 100000, 1000000);
+> +	if (ret) {
+> +		dev_err(priv->pci.dev,
+> +			"Failed to initialize controller in RC mode\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int uniphier_pcie_link_up(struct dw_pcie *pci)
 
-Most of these options look user specific and should be dropped. Use
-'stdout-path' to specify the default console.
+This function returns a bool value, make it return a bool.
 
-> +               linux,initrd-start = <0x4A000000>;
-> +               linux,initrd-end =   <0x4BF00000>;
+> +{
+> +	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+> +	u32 val, mask;
+> +
+> +	val = readl(priv->base + PCL_STATUS_LINK);
+> +	mask = PCL_RDLH_LINK_UP | PCL_XMLH_LINK_UP;
+> +
+> +	return (val & mask) == mask;
+> +}
+> +
+> +static int uniphier_pcie_establish_link(struct dw_pcie *pci)
+> +{
+> +	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+> +	int ret;
+> +
+> +	if (dw_pcie_link_up(pci))
+> +		return 0;
+> +
+> +	uniphier_pcie_ltssm_enable(priv);
+> +
+> +	ret = dw_pcie_wait_for_link(pci);
 
-initrd should be filled in by the bootloader.
+dw_pcie_wait_for_link() already prints an error, I do not see
+what this additional warning is adding.
 
-> +       };
-> +       memory {
+> +	if (ret == -ETIMEDOUT)
+> +		dev_warn(pci->dev, "Link not up\n");
 
-Needs a unit-address.
 
-> +               device_type = "memory";
-> +               reg = <0x40000000  0x80000000>;
-> +       };
+> +
+> +	return ret;
+> +}
+> +
+> +static void uniphier_pcie_stop_link(struct dw_pcie *pci)
+> +{
+> +	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+> +
+> +	uniphier_pcie_ltssm_disable(priv);
+> +}
+> +
+> +static int uniphier_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
+> +				  irq_hw_number_t hwirq)
+> +{
+> +	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
+> +	irq_set_chip_data(irq, domain->host_data);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops uniphier_intx_domain_ops = {
+> +	.map = uniphier_pcie_intx_map,
+> +	.xlate = pci_irqd_intx_xlate,
 > +};
-> diff --git a/arch/arm/boot/dts/milbeaut-m10v.dtsi b/arch/arm/boot/dts/milbeaut-m10v.dtsi
-> new file mode 100644
-> index 0000000..4745dc6
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/milbeaut-m10v.dtsi
-> @@ -0,0 +1,510 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +#include "skeleton.dtsi"
 
-Don't use skeleton.dtsi. It is deprecated.
+- You should define a proper IRQ chip implementation
+- INTX are level interrupts, so handle_level_irq() is the flow handler
+- Using pci_irqd_intx_xlate() is wrong, please update the DT bindings
+  as I explained
 
-> +
-> +/ {
-> +       compatible = "socionext,sc2000a";
-> +       interrupt-parent = <&gic>;
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +       };
+Take a look at pci-ftpci100.c and use that approach to implement INTX
+handling.
 
-Just move this to the other file with the cpu nodes.
+> +static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
+> +{
+> +	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
+> +	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
+> +}
+> +
+> +static void uniphier_pcie_irq_disable(struct uniphier_pcie_priv *priv)
+> +{
+> +	writel(0, priv->base + PCL_RCV_INT);
+> +	writel(0, priv->base + PCL_RCV_INTX);
+> +}
+> +
+> +static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+> +{
+> +	struct pcie_port *pp = irq_desc_get_handler_data(desc);
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	unsigned long reg;
+> +	u32 val, bit, virq;
+> +
+> +	/* INT for debug */
+> +	val = readl(priv->base + PCL_RCV_INT);
+> +
+> +	if (val & PCL_CFG_BW_MGT_STATUS)
+> +		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
+> +	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
+> +		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
+> +	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+> +		dev_dbg(pci->dev, "Root Error\n");
+> +	if (val & PCL_CFG_PME_MSI_STATUS)
+> +		dev_dbg(pci->dev, "PME Interrupt\n");
+> +
+> +	writel(val, priv->base + PCL_RCV_INT);
 
-> +
-> +
-> +       gic: interrupt-controller@1d000000 {
-> +               compatible = "arm,cortex-a7-gic";
-> +               interrupt-controller;
-> +               #interrupt-cells = <3>;
-> +               reg = <0x1d001000 0x1000>, /* Distributer base and size */
-> +                     <0x1d002000 0x1000>; /* CPU I/f base and size */
-> +       };
-> +
-> +       m10v-clk-tree@ {
+What's writing to PCL_RCV_INT needed for ?
 
-unit-address
+> +	/* INTx */
+> +	chained_irq_enter(chip, desc);
+> +
+> +	val = readl(priv->base + PCL_RCV_INTX);
+> +	reg = FIELD_GET(PCL_RCV_INTX_ALL_STATUS, val);
+> +
+> +	for_each_set_bit(bit, &reg, PCI_NUM_INTX) {
+> +		virq = irq_linear_revmap(priv->legacy_irq_domain, bit);
+> +		generic_handle_irq(virq);
+> +	}
+> +
+> +	writel(val, priv->base + PCL_RCV_INTX);
+> +
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static int uniphier_pcie_config_legacy_irq(struct pcie_port *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+> +	struct device_node *np = pci->dev->of_node;
+> +	struct device_node *np_intc;
+> +
+> +	np_intc = of_get_child_by_name(np, "legacy-interrupt-controller");
+> +	if (!np_intc) {
+> +		dev_err(pci->dev, "Failed to get legacy-interrupt-controller node\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	pp->irq = irq_of_parse_and_map(np_intc, 0);
+> +	if (!pp->irq) {
+> +		dev_err(pci->dev, "Failed to get an IRQ entry in legacy-interrupt-controller\n");
+> +		return -EINVAL;
+> +	}
+> +	irq_set_chained_handler_and_data(pp->irq, uniphier_pcie_irq_handler,
+> +					 pp);
+> +
+> +	priv->legacy_irq_domain = irq_domain_add_linear(np_intc, PCI_NUM_INTX,
+> +						&uniphier_intx_domain_ops, pp);
+> +	if (!priv->legacy_irq_domain) {
+> +		dev_err(pci->dev, "Failed to get INTx domain\n");
+> +		return -ENODEV;
+> +	}
 
-> +               compatible = "socionext,milbeaut-m10v-clk-regs";
-> +               reg = <0x1d021000 0x4000>;
-> +
-> +               clocks {
-> +                       #address-cells = <0>;
-> +                       #size-cells = <0>;
-> +
-> +                       uclk40xi: uclk40xi {
-> +                               compatible = "fixed-clock";
-> +                               #clock-cells = <0>;
-> +                               clock-frequency = <40000000>;
-> +                       };
+	priv->legacy_irq_domain = irq_domain_add_linear(np_intc, PCI_NUM_INTX,
+						&uniphier_intx_domain_ops, pp);
+	if (!priv->legacy_irq_domain) {
+		dev_err(pci->dev, "Failed to get INTx domain\n");
+		return -ENODEV;
+	}
 
-Any fixed clocks from oscillators on the board should be at the top
-level and defined as inputs to the clock controller node with a
-'clocks' property.
+First add IRQs to the domain, then
 
-> +
-> +                       aumclki: aumclki {
-> +                               compatible = "fixed-clock";
-> +                               #clock-cells = <0>;
-> +                               clock-frequency = <20000000>;
-> +                       };
-> +
-> +                       rtc32k: rtc32k {
-> +                               compatible = "fixed-clock";
-> +                               #clock-cells = <0>;
-> +                               clock-frequency = <32768>;
-> +                       };
-> +
-> +                       pxrefclk: pxrefclk {
-> +                               compatible = "fixed-clock";
-> +                               #clock-cells = <0>;
-> +                               clock-frequency = <100000000>;
-> +                       };
-> +
-> +                       pcisuppclk: pcisuppclk {
-> +                               compatible = "fixed-factor-clock";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&uclk40xi>;
-> +                               clock-div = <20>;
-> +                               clock-mult = <1>;
-> +                       };
+	irq_set_chained_handler_and_data(pp->irq, uniphier_pcie_irq_handler,
+					 pp);
 
-Please look at any recent example of clock bindings. We don't try to
-describe every divider, mux, gate, etc. in DT, but just clock
-controller blocks with all the output clocks enumerated in clock
-cells.
+set up the cascaded handler.
 
-> +
-> +                       usb2_clk: usb2_clk {
-> +                               compatible = "fixed-factor-clock";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&uclk40xi>;
-> +                               clock-div = <2>;
-> +                               clock-mult = <1>;
-> +                       };
-> +
-> +                       pll1: pll1 {
-> +                               compatible =
-> +                               "socionext,milbeaut-m10v-pll-fixed-factor";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&uclk40xi>;
-> +                               offset = <1>;
-> +                               clock-div = <1>;
-> +                               clock-mult = <40>;
-> +                       };
-> +
-> +                       pll2: pll2 {
-> +                               compatible =
-> +                               "socionext,milbeaut-m10v-pll-fixed-factor";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&uclk40xi>;
-> +                               offset = <2>;
-> +                               clock-div = <1>;
-> +                               clock-mult = <30>;
-> +                       };
-> +
-> +                       pll6: pll6 { /* CLK 6-1 */
-> +                               compatible =
-> +                               "socionext,milbeaut-m10v-pll-fixed-factor";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&uclk40xi>;
-> +                               offset = <7>;
-> +                               clock-div = <1>;
-> +                               clock-mult = <35>;
-> +                       };
-> +
-> +                       pll7: pll7 { /* CLK 7-1 */
-> +                               compatible =
-> +                               "socionext,milbeaut-m10v-pll-fixed-factor";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&uclk40xi>;
-> +                               offset = <8>;
-> +                               clock-div = <1>;
-> +                               clock-mult = <40>;
-> +                       };
-> +
-> +                       pll9: pll9 { /* CA7CLK, ATCLK */
-> +                               compatible = "fixed-factor-clock";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&uclk40xi>;
-> +                               clock-div = <1>;
-> +                               clock-mult = <33>;
-> +                       };
-> +
-> +                       pll10: pll10 {
-> +                               compatible =
-> +                               "socionext,milbeaut-m10v-pll-fixed-factor";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&uclk40xi>;
-> +                               offset = <10>;
-> +                               clock-div = <5>;
-> +                               clock-mult = <108>;
-> +                       };
-> +
-> +                       pll11: pll11 { /* CLK 11-1 */
-> +                               compatible =
-> +                               "socionext,milbeaut-m10v-pll-fixed-factor";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&uclk40xi>;
-> +                               offset = <12>;
-> +                               clock-div = <2>;
-> +                               clock-mult = <75>;
-> +                       };
-> +
-> +                       emmcclk: emmcclk {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll11>;
-> +                               offset = <28>; /* EMMCCLK */
-> +                               mask = <0x3>;
-> +                               ratios = <15 0x7 10 0x6 9 0x5 8 0x4>;
-> +                       };
-> +
-> +                       pll1_div_1_2: pll1_div_1_2 { /* CLK 1-2 */
-> +                               compatible = "fixed-factor-clock";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll1>;
-> +                               clock-div = <2>;
-> +                               clock-mult = <1>;
-> +                       };
-> +
-> +                       pll2_div_1_2: pll2_div_1_2 { /* CLK 2-2 */
-> +                               compatible = "fixed-factor-clock";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll2>;
-> +                               clock-div = <2>;
-> +                               clock-mult = <1>;
-> +                       };
-> +
-> +                       pll6_div_1_2: pll6_div_1_2 { /* CLK 6-2 */
-> +                               compatible = "fixed-factor-clock";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll6>;
-> +                               clock-div = <2>;
-> +                               clock-mult = <1>;
-> +                       };
-> +
-> +                       pll6_div_1_3: pll6_div_1_3 { /* CLK 6-3 */
-> +                               compatible = "fixed-factor-clock";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll6>;
-> +                               clock-div = <3>;
-> +                               clock-mult = <1>;
-> +                       };
-> +
-> +                       pll7_div_1_2: pll7_div_1_2 { /* CLK 7-2 */
-> +                               compatible = "fixed-factor-clock";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll7>;
-> +                               clock-div = <2>;
-> +                               clock-mult = <1>;
-> +                       };
-> +
-> +                       pll7_div_1_5: pll7_div_1_5 { /* CLK 7-5 */
-> +                               compatible = "fixed-factor-clock";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll7>;
-> +                               clock-div = <5>;
-> +                               clock-mult = <1>;
-> +                       };
-> +
-> +                       pll10_div_1_2: pll10_div_1_2 { /* CLK 10-2 */
-> +                               compatible = "fixed-factor-clock";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll10>;
-> +                               clock-div = <2>;
-> +                               clock-mult = <1>;
-> +                       };
-> +
-> +                       spiclk_mux_0: spiclk_mux_0 {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll10_div_1_2>;
-> +                               offset = <227>; /* SPICLK */
-> +                               mask = <0x3>;
-> +                               ratios = <4 0x5 2 0x4>;
-> +                       };
-> +
-> +                       spiclk_mux_1: spiclk_mux_1 {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll7_div_1_2>;
-> +                               offset = <227>; /* SPICLK */
-> +                               mask = <0x3>;
-> +                               ratios = <8 0x6>;
-> +                       };
-> +
-> +                       spiclk: spiclk {
-> +                               compatible = "socionext,milbeaut-m10v-clk-mux";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&spiclk_mux_0>, <&spiclk_mux_1>;
-> +                       };
-> +
-> +                       ca7wdclk: ca7wdclk {
-> +                               compatible = "fixed-factor-clock";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll2_div_1_2>;
-> +                               clock-div = <12>;
-> +                               clock-mult = <1>;
-> +                       };
-> +
-> +                       pll9_div_1_2: pll9_div_1_2 {
-> +                               compatible = "fixed-factor-clock";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll9>;
-> +                               clock-div = <2>;
-> +                               clock-mult = <1>;
-> +                       };
-> +
-> +                       mclk400: mclk400 {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll1_div_1_2>;
-> +                               offset = <295>; /* MCLK400 */
-> +                               mask = <0x3>;
-> +                               ratios = <4 0x7 2 0x5>;
-> +                       };
-> +
-> +                       mclk200: mclk200 {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll1_div_1_2>;
-> +                               offset = <291>; /* MCLK200 */
-> +                               mask = <0x7>;
-> +                               ratios = <8 0xf 4 0xb>;
-> +                       };
-> +
-> +                       aclk400: aclk400 {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll1_div_1_2>;
-> +                               offset = <288>; /* ACLK400 */
-> +                               mask = <0x3>;
-> +                               ratios = <4 0x7 2 0x5>;
-> +                       };
-> +
-> +                       aclk300: aclk300 {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll2_div_1_2>;
-> +                               offset = <352>; /* ACLK300 */
-> +                               mask = <0x1>;
-> +                               ratios = <6 0x3 4 0x2>;
-> +                       };
-> +
-> +                       aclk: aclk {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll1_div_1_2>;
-> +                               offset = <276>; /* ACLK */
-> +                               mask = <0x7>;
-> +                               ratios = <8 0xf 4 0xb>;
-> +                       };
-> +
-> +                       aclkexs: aclkexs {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll1_div_1_2>;
-> +                               offset = <272>; /* ACLKEXS */
-> +                               mask = <0x7>;
-> +                               ratios = <8 0xf 6 0xd 5 0xc 4 0xb>;
-> +                       };
-> +
-> +                       hclk: hclk {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll1_div_1_2>;
-> +                               offset = <263>; /* HCLK */
-> +                               mask = <0xf>;
-> +                               ratios = <16 0x1f 8 0x17>;
-> +                       };
-> +
-> +                       hclkbmh: hclkbmh {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll1_div_1_2>;
-> +                               offset = <268>; /* HCLKBMH */
-> +                               mask = <0x7>;
-> +                               ratios = <8 0xf 4 0xb>;
-> +                       };
-> +
-> +                       pclk: pclk {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll1_div_1_2>;
-> +                               offset = <256>; /* PCLK */
-> +                               mask = <0x3f>;
-> +                               ratios = <32 0x5f 16 0x4f>;
-> +                       };
-> +
-> +                       pclkca7wd: pclkca7wd {
-> +                               compatible = "fixed-factor-clock";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll1_div_1_2>;
-> +                               clock-div = <16>;
-> +                               clock-mult = <1>;
-> +                       };
-> +
-> +                       rclk: rclk {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll10_div_1_2>;
-> +                               offset = <0>; /* RCLK */
-> +                               mask = <0x3>;
-> +                               ratios = <64 0x7 48 0x6 32 0x5 16 0x4>;
-> +                       };
-> +
-> +                       uhs1clk0: uhs1clk0 {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll7>;
-> +                               offset = <3>; /* UHS1CLK0 */
-> +                               mask = <0xf>;
-> +                               ratios = <16 0x14 8 0x13 4 0x12 3 0x11 2 0x10>;
-> +                       };
-> +
-> +                       uhs1clk1_div1: uhs1clk1_div1 {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll7>;
-> +                               offset = <8>; /* UHS1CLK1 */
-> +                               mask = <0xf>;
-> +                               ratios = <16 0x14 8 0x13>;
-> +                       };
-> +
-> +                       uhs1clk1_div2: uhs1clk1_div2 {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll6_div_1_2>;
-> +                               offset = <8>; /* UHS1CLK1 */
-> +                               mask = <0xf>;
-> +                               ratios = <1 0x18>;
-> +                       };
-> +
-> +                       uhs1clk1: uhs1clk1 {
-> +                               compatible = "socionext,milbeaut-m10v-clk-mux";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&uhs1clk1_div1>, <&uhs1clk1_div2>;
-> +                       };
-> +
-> +                       uhs1clk2_div1: uhs1clk2_div1 {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll7>;
-> +                               offset = <13>; /* UHS1CLK2 */
-> +                               mask = <0xf>;
-> +                               ratios = <16 0x14 8 0x13 4 0x12>;
-> +                       };
-> +
-> +                       uhs1clk2_div2: uhs1clk2_div2 {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll6_div_1_2>;
-> +                               offset = <13>; /* UHS1CLK2 */
-> +                               mask = <0xf>;
-> +                               ratios = <1 0x18>;
-> +                       };
-> +
-> +                       uhs1clk2: uhs1clk2 {
-> +                               compatible = "socionext,milbeaut-m10v-clk-mux";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&uhs1clk2_div1>, <&uhs1clk2_div2>;
-> +                       };
-> +
-> +                       uhs2clk: uhs2clk {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll6_div_1_3>;
-> +                               offset = <18>; /* UHS2CLK */
-> +                               mask = <0x7>;
-> +                               ratios = <18 0xf 16 0xe 14 0xd 13 0xc
-> +                                               12 0xb 11 0xa 10 0x9 9 0x8>;
-> +                       };
-> +
-> +                       nfclk_div1: nfclk_div1 {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll7_div_1_2>;
-> +                               offset = <22>; /* NFCLK */
-> +                               mask = <0x1f>;
-> +                               ratios = <40 0x24 16 0x23 13 0x22 10 0x21
-> +                                               8 0x20>;
-> +                       };
-> +
-> +                       nfclk_div2: nfclk_div2 {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll7_div_1_5>;
-> +                               offset = <22>; /* NFCLK */
-> +                               mask = <0x1f>;
-> +                               ratios = <10 0x28>;
-> +                       };
-> +
-> +                       nfclk: nfclk {
-> +                               compatible = "socionext,milbeaut-m10v-clk-mux";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&nfclk_div1>, <&nfclk_div2>;
-> +                       };
-> +
-> +                       clk5: clk5 {
-> +                               compatible = "socionext,milbeaut-m10v-clk-div";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&pll10_div_1_2>;
-> +                               offset = <239>; /* NETAUSEL */
-> +                               mask = <0x3>;
-> +                               ratios = <64 0x7 48 0x6 32 0x5 16 0x4>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       peri-timer@1e000000 { /* 32-bit Reload Timers */
+Lorenzo
 
-timer@1e000050
-
-This and all memory mapped peripherals go under simple-bus nodes(s).
-
-> +               compatible = "socionext,milbeaut-m10v-timer";
-> +               reg = <0x1e000050 0x10>, <0x1e000060 0x10>;
-> +               interrupts = <0 91 4>;
-> +               clocks = <&rclk>;
-> +       };
+> +	return 0;
+> +}
 > +
-> +       timer { /* The Generic Timer */
-> +               compatible = "arm,armv7-timer";
-> +               interrupts = <GIC_PPI 13
-> +                               (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +                       <GIC_PPI 14
-> +                               (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +                       <GIC_PPI 11
-> +                               (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> +                       <GIC_PPI 10
-> +                               (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> +               clock-frequency = <40000000>;//40M
-> +               always-on;
-> +               arm,cpu-registers-not-fw-configured;
-
-This was a work-around for some existing platforms. New platforms
-should fix the firmware/bootloader.
-
-> +       };
+> +static int uniphier_pcie_host_init(struct pcie_port *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+> +	int ret;
 > +
-> +       dummy_clk: dummy_clk {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <50000000>;
-> +       };
+> +	ret = uniphier_pcie_config_legacy_irq(pp);
+> +	if (ret)
+> +		return ret;
 > +
-> +       pinctrl: pinctrl@1d022000 {
-> +               compatible = "socionext,milbeaut-m10v-pinctrl";
-> +               reg = <0x1d022000 0x1000>,
-> +                     <0x1c26f000 0x1000>;
-> +               reg-names = "pinctrl", "exiu";
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +               interrupt-controller;
-> +               #interrupt-cells = <2>;
-> +               clocks = <&dummy_clk>;
-
-Please use a real clock or make clocks optional.
-
-> +               interrupts = <0 54 4>, <0 55 4>, <0 56 4>, <0 57 4>,
-> +                               <0 58 4>, <0 59 4>, <0 60 4>, <0 61 4>,
-> +                               <0 62 4>, <0 63 4>, <0 64 4>, <0 65 4>,
-> +                               <0 66 4>, <0 67 4>, <0 68 4>, <0 69 4>;
-> +               interrupt-names = "pin-48", "pin-49", "pin-50", "pin-51",
-> +                               "pin-52", "pin-53", "pin-54", "pin-55",
-> +                               "pin-56", "pin-57", "pin-58", "pin-59",
-> +                               "pin-60", "pin-61", "pin-62", "pin-63";
+> +	uniphier_pcie_irq_enable(priv);
 > +
-> +               usio1_pins: usio1_pins {
-> +                       pins = "PE4", "PE5", "P87";
-> +                       function = "usio1";
-> +               };
-> +       };
+> +	dw_pcie_setup_rc(pp);
+> +	ret = uniphier_pcie_establish_link(pci);
+> +	if (ret)
+> +		return ret;
 > +
-> +       usio1: usio_uart@1e700010 { /* PE4, PE5 */
-
-serial@...
-
-> +               /* Enable this as ttyUSI0 */
-> +               index = <0>;
-
-Drop this. aliases node is the right way to do this.
-
-> +               compatible = "socionext,milbeaut-m10v-usio-uart";
-> +               reg = <0x1e700010 0x10>;
-> +               interrupts = <0 141 0x4>, <0 149 0x4>;
-> +               interrupt-names = "rx", "tx";
-> +               clocks = <&hclk>;
-> +       };
+> +	if (IS_ENABLED(CONFIG_PCI_MSI))
+> +		dw_pcie_msi_init(pp);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dw_pcie_host_ops uniphier_pcie_host_ops = {
+> +	.host_init = uniphier_pcie_host_init,
 > +};
-> --
-> 1.9.1
->
+> +
+> +static int uniphier_add_pcie_port(struct uniphier_pcie_priv *priv,
+> +				  struct platform_device *pdev)
+> +{
+> +	struct dw_pcie *pci = &priv->pci;
+> +	struct pcie_port *pp = &pci->pp;
+> +	struct device *dev = &pdev->dev;
+> +	int ret;
+> +
+> +	pp->ops = &uniphier_pcie_host_ops;
+> +
+> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> +		pp->msi_irq = platform_get_irq_byname(pdev, "msi");
+> +		if (pp->msi_irq < 0)
+> +			return pp->msi_irq;
+> +	}
+> +
+> +	ret = dw_pcie_host_init(pp);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to initialize host (%d)\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int uniphier_pcie_host_enable(struct uniphier_pcie_priv *priv)
+> +{
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(priv->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = reset_control_deassert(priv->rst);
+> +	if (ret)
+> +		goto out_clk_disable;
+> +
+> +	uniphier_pcie_init_rc(priv);
+> +
+> +	ret = phy_init(priv->phy);
+> +	if (ret)
+> +		goto out_rst_assert;
+> +
+> +	ret = uniphier_pcie_wait_rc(priv);
+> +	if (ret)
+> +		goto out_phy_exit;
+> +
+> +	return 0;
+> +
+> +out_phy_exit:
+> +	phy_exit(priv->phy);
+> +out_rst_assert:
+> +	reset_control_assert(priv->rst);
+> +out_clk_disable:
+> +	clk_disable_unprepare(priv->clk);
+> +
+> +	return ret;
+> +}
+> +
+> +static void uniphier_pcie_host_disable(struct uniphier_pcie_priv *priv)
+> +{
+> +	uniphier_pcie_irq_disable(priv);
+> +	phy_exit(priv->phy);
+> +	reset_control_assert(priv->rst);
+> +	clk_disable_unprepare(priv->clk);
+> +}
+> +
+> +static const struct dw_pcie_ops dw_pcie_ops = {
+> +	.start_link = uniphier_pcie_establish_link,
+> +	.stop_link = uniphier_pcie_stop_link,
+> +	.link_up = uniphier_pcie_link_up,
+> +};
+> +
+> +static int uniphier_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct uniphier_pcie_priv *priv;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->pci.dev = dev;
+> +	priv->pci.ops = &dw_pcie_ops;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> +	priv->pci.dbi_base = devm_pci_remap_cfg_resource(dev, res);
+> +	if (IS_ERR(priv->pci.dbi_base))
+> +		return PTR_ERR(priv->pci.dbi_base);
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
+> +	priv->base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(priv->base))
+> +		return PTR_ERR(priv->base);
+> +
+> +	priv->clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(priv->clk))
+> +		return PTR_ERR(priv->clk);
+> +
+> +	priv->rst = devm_reset_control_get_shared(dev, NULL);
+> +	if (IS_ERR(priv->rst))
+> +		return PTR_ERR(priv->rst);
+> +
+> +	priv->phy = devm_phy_optional_get(dev, "pcie-phy");
+> +	if (IS_ERR(priv->phy))
+> +		return PTR_ERR(priv->phy);
+> +
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	ret = uniphier_pcie_host_enable(priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return uniphier_add_pcie_port(priv, pdev);
+> +}
+> +
+> +static int uniphier_pcie_remove(struct platform_device *pdev)
+> +{
+> +	struct uniphier_pcie_priv *priv = platform_get_drvdata(pdev);
+> +
+> +	uniphier_pcie_host_disable(priv);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id uniphier_pcie_match[] = {
+> +	{ .compatible = "socionext,uniphier-pcie", },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, uniphier_pcie_match);
+> +
+> +static struct platform_driver uniphier_pcie_driver = {
+> +	.probe  = uniphier_pcie_probe,
+> +	.remove = uniphier_pcie_remove,
+> +	.driver = {
+> +		.name = "uniphier-pcie",
+> +		.of_match_table = uniphier_pcie_match,
+> +	},
+> +};
+> +builtin_platform_driver(uniphier_pcie_driver);
+> +
+> +MODULE_AUTHOR("Kunihiko Hayashi <hayashi.kunihiko@socionext.com>");
+> +MODULE_DESCRIPTION("UniPhier PCIe host controller driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.7.4
+> 
