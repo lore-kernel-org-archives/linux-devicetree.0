@@ -1,144 +1,53 @@
-From: biao huang <biao.huang@mediatek.com>
-Subject: Re: [v3, PATCH 2/2] dt-binding: mediatek-dwmac: add binding
- document for MediaTek MT2712 DWMAC
-Date: Mon, 19 Nov 2018 10:51:35 +0800
-Message-ID: <1542595895.24219.28.camel@mhfsdcap03>
-References: <1542359926-28800-1-git-send-email-biao.huang@mediatek.com>
-         <1542359926-28800-2-git-send-email-biao.huang@mediatek.com>
-         <20181117145611.GA26013@bogus>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH] ARM64: dts: meson-gxbb-wetek: fix hwmon temperature sensor output
+Date: Mon, 19 Nov 2018 08:22:28 +0400
+Message-ID: <1542601348-3469-1-git-send-email-christianshewitt@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181117145611.GA26013@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, Honghui Zhang =?UTF-8?Q?=28=E5=BC=A0=E6=B4=AA=E8=BE=89=29?= <Honghui.Zhang@mediatek.com>, YT Shen =?UTF-8?Q?=28=E6=B2=88=E5=B2=B3=E9=9C=86=29?= <Yt.Shen@mediatek.com>, Liguo Zhang =?UTF-8?Q?=28=E5=BC=A0=E7=AB=8B=E5=9B=BD=29?= <Liguo.Zhang@mediatek.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Nelson Chang =?UTF-8?Q?=28=3F=3F=E5=AE=B6=E7=A5=A5=29?= <nelson.chang@mediatek.com>, "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infrade
+Cc: christianshewitt@gmail.com, martin.blumenstingl@googlemail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-	Thanks for your comments.
-On Sat, 2018-11-17 at 22:56 +0800, Rob Herring wrote:
-> On Fri, Nov 16, 2018 at 05:18:46PM +0800, Biao Huang wrote:
-> > The commit adds the device tree binding documentation for the MediaTek DWMAC
-> > found on MediaTek MT2712.
-> > 
-> > Change-Id: I3728666bf65927164bd82fa8dddb90df8270bd44
-> > Signed-off-by: Biao Huang <biao.huang@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/net/mediatek-dwmac.txt     |   77 ++++++++++++++++++++
-> >  1 file changed, 77 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/net/mediatek-dwmac.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/mediatek-dwmac.txt b/Documentation/devicetree/bindings/net/mediatek-dwmac.txt
-> > new file mode 100644
-> > index 0000000..7fd56e0
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/mediatek-dwmac.txt
-> > @@ -0,0 +1,77 @@
-> > +MediaTek DWMAC glue layer controller
-> > +
-> > +This file documents platform glue layer for stmmac.
-> > +Please see stmmac.txt for the other unchanged properties.
-> > +
-> > +The device node has following properties.
-> > +
-> > +Required properties:
-> > +- compatible:  Should be "mediatek,mt2712-gmac" for MT2712 SoC
-> > +- reg:  Address and length of the register set for the device
-> > +- interrupts:  Should contain the MAC interrupts
-> 
-> How many?
-> 
-the common stmmac driver will parse interrupt-name "macirq",
-so even only one interrupt is used in mediatek dwmac design,
-the interrupt-names is still remained in device tree.
-> > +- interrupt-names: Should contain a list of interrupt names corresponding to
-> > +	the interrupts in the interrupts property, if available.
-> > +	Should be "macirq" for the main MAC IRQ
-> > +- clocks: Must contain a phandle for each entry in clock-names.
-> > +- clock-names: The name of the clock listed in the clocks property. These are
-> > +	"axi", "apb", "mac_ext", "mac_parent", "ptp_ref", "ptp_parent", "ptp_top"
-> > +	for MT2712 SoC
-> 
-> Clocks should represent the physical clocks connected to a block. Parent 
-> clocks are not in that category.
-> 
-Got it. assigned-clocks/assigned-clocks-parents properties can handle
-it.
-> > +- mac-address: See ethernet.txt in the same directory
-> > +- phy-mode: See ethernet.txt in the same directory
-> > +
-> > +Optional properties:
-> > +- tx-delay: TX clock delay macro value. Range is 0~31. Default is 0.
-> > +	It should be defined for rgmii/rgmii-rxid/mii interface.
-> > +- rx-delay: RX clock delay macro value. Range is 0~31. Default is 0.
-> > +	It should be defined for rgmii/rgmii-txid/mii/rmii interface.
-> > +- fine-tune: This property will select coarse-tune delay or fine delay
-> > +	for rgmii interface.
-> > +	If fine-tune delay is enabled, tx-delay/rx-delay is 170+/-50ps
-> > +	per stage.
-> > +	Else coarse-tune delay is enabled, tx-delay/rx-delay is 0.55+/-0.2ns
-> > +	per stage.
-> > +	This property do not apply to non-rgmii PHYs.
-> > +	Only coarse-tune delay is supported for mii/rmii PHYs.
-> 
-> Perhaps the delays should be in ps and the driver can figure out 
-> fine-tune or not based on the value.
-> 
-the delay time in mediatek dwmac design is not so accurate, 
-the current mt2712 and the following ICs will not use the same delay
-design, but will use stages to indicate different delay time.
-so, maybe "mediatek,tx-delay" represent the delay stage is a good
-choice.
-> > +- rmii-rxc: Reference clock of rmii is from external PHYs,
-> > +	and it can be connected to TXC or RXC pin on MT2712 SoC.
-> > +	If ref_clk <--> TXC, disable it.
-> > +	Else ref_clk <--> RXC, enable it.
-> > +- txc-inverse: Inverse tx clock for mii/rgmii.
-> > +	Inverse tx clock inside MAC relative to reference clock for rmii,
-> > +	and it rarely happen.
-> > +- rxc-inverse: Inverse rx clock for mii/rgmii interfaces.
-> > +	Inverse reference clock for rmii.
-> 
-> These should all have vendor prefixes. 'snps' if these are all standard 
-> GMAC controls or 'mediatek' if Mediatek specific.
-> 
-Got it, will be modified in next version.
-> > +
-> > +Example:
-> > +	eth: ethernet@1101c000 {
-> > +		compatible = "mediatek,mt2712-gmac";
-> > +		reg = <0 0x1101c000 0 0x1300>;
-> > +		interrupts = <GIC_SPI 237 IRQ_TYPE_LEVEL_LOW>;
-> > +		interrupt-names = "macirq";
-> > +		phy-mode ="rgmii-id";
-> > +		mac-address = [00 55 7b b5 7d f7];
-> > +		clock-names = "axi",
-> > +			      "apb",
-> > +			      "mac_ext",
-> > +			      "mac_parent",
-> > +			      "ptp_ref",
-> > +			      "ptp_parent",
-> > +			      "ptp_top";
-> > +		clocks = <&pericfg CLK_PERI_GMAC>,
-> > +			 <&pericfg CLK_PERI_GMAC_PCLK>,
-> > +			 <&topckgen CLK_TOP_ETHER_125M_SEL>,
-> > +			 <&topckgen CLK_TOP_ETHERPLL_125M>,
-> > +			 <&topckgen CLK_TOP_ETHER_50M_SEL>,
-> > +			 <&topckgen CLK_TOP_APLL1_D3>,
-> > +			 <&topckgen CLK_TOP_APLL1>;
-> > +		snps,txpbl = <32>;
-> > +		snps,rxpbl = <32>;
-> > +		snps,reset-gpio = <&pio 87 GPIO_ACTIVE_LOW>;
-> > +		snps,reset-active-low;
-> > +		tx-delay = <9>;
-> > +		rx-delay = <9>;
-> > +		fine-tune;
-> > +		rmii-rxc;
-> > +		txc-inverse;
-> > +		rxc-inverse;
-> > +	};
-> > -- 
-> > 1.7.9.5
-> > 
+Add &saradc and supporting vddio_ao18 nodes to fix hwmon temperature
+readings on the WeTek Hub and Play2 devices. Without these nodes the
+temp is reported as 4294967295 degrees C.
+
+Thanks to Martin Blumenstingl for assisting debug and the winning
+guess at what was missing.
+
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
+index 70325b2..dd12e02 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
+@@ -59,6 +59,13 @@
+ 		regulator-max-microvolt = <3300000>;
+ 	};
+ 
++	vddio_ao18: regulator-vddio_ao18 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDIO_AO18";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
+ 	vcc_3v3: regulator-vcc_3v3 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "VCC_3V3";
+@@ -173,6 +180,11 @@
+ 	clock-names = "clkin0";
+ };
+ 
++&saradc {
++	status = "okay";
++	vref-supply = <&vddio_ao18>;
++};
++
+ /* Wireless SDIO Module */
+ &sd_emmc_a {
+ 	status = "okay";
+-- 
+2.7.4
