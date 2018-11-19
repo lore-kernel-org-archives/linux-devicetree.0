@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 01/12] drm/sun4i: sun6i_mipi_dsi: Compute
- burst mode loop N1 instruction delay
-Date: Mon, 19 Nov 2018 09:27:07 +0100
-Message-ID: <20181119082707.kbsw2gyntxxbh6no@flea>
+Subject: Re: [PATCH v2 03/12] drm/sun4i: sun6i_mipi_dsi: Setup
+ burst mode timings
+Date: Mon, 19 Nov 2018 09:30:36 +0100
+Message-ID: <20181119083036.riydru5xefao3xte@flea>
 References: <20181116163916.29621-1-jagan@amarulasolutions.com>
- <20181116163916.29621-2-jagan@amarulasolutions.com>
+ <20181116163916.29621-4-jagan@amarulasolutions.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="e76qeq3cbnztemdd"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXPHZHPQKGQEVBR7PIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="gfqb2qxm2uunzzxr"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLPJZHPQKGQEKH5ZZ3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20181116163916.29621-2-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <20181116163916.29621-4-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,27 +24,27 @@ Cc: Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---e76qeq3cbnztemdd
+--gfqb2qxm2uunzzxr
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Fri, Nov 16, 2018 at 10:09:05PM +0530, Jagan Teki wrote:
-> Loop N1 instruction delay for burst mode lcd panel are
-> computed as per BSP code.
+On Fri, Nov 16, 2018 at 10:09:07PM +0530, Jagan Teki wrote:
+> Burst mode display timings are different from convectional
+> video mode so update the horizontal and vertical timings.
 > 
-> Reference code is available in BSP (from linux-sunxi
+> Reference code taken from BSP (from linux-sunxi/
 > drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
 > 
-> dsi_dev[sel]->dsi_inst_loop_num.bits.loop_n1=
-> (panel->lcd_ht-panel->lcd_x)*(150)/(panel->lcd_dclk_freq*8) - 50;
-> => (((mode->htotal - mode->hdisplay) * 150) /
->      ((mode->clock / 1000) * 8)) - 50;
-> 
-> So use the similar computation for loop N1 delay.
+> dsi_hsa  = 0;
+> dsi_hbp  = 0;
+> dsi_hact = x*dsi_pixel_bits[format]/8;
+> dsi_hblk = dsi_hact;
+> dsi_hfp  = 0;
+> dsi_vblk = 0;
 > 
 > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-*why* are you doing this? What is it fixing? on which devices?
+How is that matching the code you have in the rest of your patch?
 
 Maxime
 
@@ -52,4 +52,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---e76qeq3cbnztemdd--
+--gfqb2qxm2uunzzxr--
