@@ -1,238 +1,86 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 09/16] irqchip: Add RDA8810PL interrupt driver
-Date: Mon, 19 Nov 2018 17:36:49 +0000
-Message-ID: <29ddffae-b61b-be92-c235-a79ecdf7512c@arm.com>
-References: <20181119170939.19153-1-manivannan.sadhasivam@linaro.org>
- <20181119170939.19153-10-manivannan.sadhasivam@linaro.org>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [RFC 0/3] Unify CPU topology across ARM64 & RISC-V
+Date: Mon, 19 Nov 2018 09:46:44 -0800
+Message-ID: <40f24d50-eb1b-cef6-81e2-1bc9930bcbf5@wdc.com>
+References: <1541728209-3224-1-git-send-email-atish.patra@wdc.com>
+ <07d92dd4-f943-47ee-e168-46bfaf4ed755@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181119170939.19153-10-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <07d92dd4-f943-47ee-e168-46bfaf4ed755@codeaurora.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, daniel.lezcano@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, service@rdamicro.com, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+To: Jeffrey Hugo <jhugo@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Damien Le Moal <Damien.LeMoal@wdc.com>, "juri.lelli@arm.com" <juri.lelli@arm.com>, "anup@brainfault.org" <anup@brainfault.org>, "palmer@sifive.com" <palmer@sifive.com>, "jeremy.linton@arm.com" <jeremy.linton@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "mick@ics.forth.gr" <mick@ics.forth.gr>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Manivannan,
-
-On 19/11/2018 17:09, Manivannan Sadhasivam wrote:
-> Add interrupt driver for RDA Micro RDA8810PL SoC.
+On 11/15/18 10:31 AM, Jeffrey Hugo wrote:
+> On 11/8/2018 6:50 PM, Atish Patra wrote:
+>> The cpu-map DT entry in ARM64 can describe the CPU topology in
+>> much better way compared to other existing approaches. RISC-V can
+>> easily adopt this binding to represent it's own CPU topology.
+>> Thus, both cpu-map DT binding and topology parsing code can be
+>> moved to a common location so that RISC-V or any other
+>> architecture can leverage that.
+>>
+>> The relevant discussion regarding unifying cpu topology can be
+>> found in [1].
+>>
+>> arch_topology seems to be a perfect place to move the common
+>> code. I have not introduced any functional changes in the moved
+>> to code. The only downside in this approach is that the capacity
+>> code will be executed for RISC-V as well. But, it will exit
+>> immediately after not able to find the appropriate DT node. If
+>> the overhead is considered too much, we can always compile out
+>> capacity related functions under a different config for the
+>> architectures that do not support them.
+>>
+>> The patches have been tested for RISC-V and compile tested for
+>> ARM64.
+>>
+>> The socket changes[2] can be merged on top of this series or vice
+>> versa.
+>>
+>> [1] https://lkml.org/lkml/2018/11/6/19
+>> [2] https://lkml.org/lkml/2018/11/7/918
+>>
+>> Atish Patra (3):
+>>     dt-binding: cpu-topology: Move cpu-map to a common binding.
+>>     cpu-topology: Move cpu topology code to common code.
+>>     RISC-V: Parse cpu topology during boot.
+>>
+>>    Documentation/devicetree/bindings/arm/topology.txt | 475 -------------------
+>>    .../devicetree/bindings/cpu/cpu-topology.txt       | 526 +++++++++++++++++++++
+>>    arch/arm64/include/asm/topology.h                  |  23 +-
+>>    arch/arm64/kernel/topology.c                       | 305 +-----------
+>>    arch/riscv/Kconfig                                 |   1 +
+>>    arch/riscv/kernel/smpboot.c                        |   6 +-
+>>    drivers/base/arch_topology.c                       | 303 ++++++++++++
+>>    include/linux/arch_topology.h                      |  23 +
+>>    include/linux/topology.h                           |   1 +
+>>    9 files changed, 864 insertions(+), 799 deletions(-)
+>>    delete mode 100644 Documentation/devicetree/bindings/arm/topology.txt
+>>    create mode 100644 Documentation/devicetree/bindings/cpu/cpu-topology.txt
+>>
 > 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  arch/arm/mach-rda/Kconfig      |   1 +
->  drivers/irqchip/Kconfig        |   4 ++
->  drivers/irqchip/Makefile       |   1 +
->  drivers/irqchip/irq-rda-intc.c | 116 +++++++++++++++++++++++++++++++++
->  4 files changed, 122 insertions(+)
->  create mode 100644 drivers/irqchip/irq-rda-intc.c
+> I was interested in testing these on QDF2400, an ARM64 platform, since
+> this series touches core ARM64 code and I'd hate to see a regression.
+> However, I can't figure out what baseline to use to apply these.
+> Different patches cause different conflicts of a variety of baselines I
+> attempted.
 > 
-> diff --git a/arch/arm/mach-rda/Kconfig b/arch/arm/mach-rda/Kconfig
-> index dafab78d7aab..29012bc68ca4 100644
-> --- a/arch/arm/mach-rda/Kconfig
-> +++ b/arch/arm/mach-rda/Kconfig
-> @@ -3,5 +3,6 @@ menuconfig ARCH_RDA
->  	depends on ARCH_MULTI_V7
->  	select COMMON_CLK
->  	select GENERIC_IRQ_CHIP
-> +	select RDA_INTC
->  	help
->  	  This enables support for the RDA Micro 8810PL SoC family.
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index 51a5ef0e96ed..9d54645870ad 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -195,6 +195,10 @@ config JCORE_AIC
->  	help
->  	  Support for the J-Core integrated AIC.
->  
-> +config RDA_INTC
-> +	bool
-> +	select IRQ_DOMAIN
-> +
->  config RENESAS_INTC_IRQPIN
->  	bool
->  	select IRQ_DOMAIN
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index 794c13d3ac3d..417108027e40 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -43,6 +43,7 @@ obj-$(CONFIG_IMGPDC_IRQ)		+= irq-imgpdc.o
->  obj-$(CONFIG_IRQ_MIPS_CPU)		+= irq-mips-cpu.o
->  obj-$(CONFIG_SIRF_IRQ)			+= irq-sirfsoc.o
->  obj-$(CONFIG_JCORE_AIC)			+= irq-jcore-aic.o
-> +obj-$(CONFIG_RDA_INTC)			+= irq-rda-intc.o
->  obj-$(CONFIG_RENESAS_INTC_IRQPIN)	+= irq-renesas-intc-irqpin.o
->  obj-$(CONFIG_RENESAS_IRQC)		+= irq-renesas-irqc.o
->  obj-$(CONFIG_VERSATILE_FPGA_IRQ)	+= irq-versatile-fpga.o
-> diff --git a/drivers/irqchip/irq-rda-intc.c b/drivers/irqchip/irq-rda-intc.c
-> new file mode 100644
-> index 000000000000..89be55a11823
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-rda-intc.c
-> @@ -0,0 +1,116 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * RDA8810PL SoC irqchip driver
-> + *
-> + * Copyright RDA Microelectronics Company Limited
-> + * Copyright (c) 2017 Andreas Färber
-> + * Copyright (c) 2018 Manivannan Sadhasivam
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqchip.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/of_address.h>
-> +
-> +#include <asm/irq.h>
-> +#include <asm/exception.h>
-> +
-> +#define RDA_INTC_FINALSTATUS	0x00
-> +#define RDA_INTC_STATUS		0x04
-> +#define RDA_INTC_MASK_SET	0x08
-> +#define RDA_INTC_MASK_CLR	0x0c
-> +#define RDA_INTC_WAKEUP_MASK	0x18
-> +#define RDA_INTC_CPU_SLEEP	0x1c
-> +
-> +#define RDA_IRQ_MASK_ALL	0xFFFFFFFF
-> +
-> +#define RDA_NR_IRQS 32
-> +
-> +void __iomem *base;
-
-Should be static?
-
-> +
-> +static void rda_intc_mask_irq(struct irq_data *d)
-> +{
-> +	void __iomem *base = (void __iomem *)irq_data_get_irq_chip_data(d);
-
-Aliases with the above. Please choose whether you want a global or a
-per-interrupt base.
-
-> +
-> +	writel(BIT(d->hwirq), base + RDA_INTC_MASK_CLR);
-
-writel_relaxed()
-
-> +}
-> +
-> +static void rda_intc_unmask_irq(struct irq_data *d)
-> +{
-> +	void __iomem *base = (void __iomem *)irq_data_get_irq_chip_data(d);
-> +
-> +	writel(BIT(d->hwirq), base + RDA_INTC_MASK_SET);
-
-Same here.
-
-> +}
-> +
-> +static int rda_intc_set_type(struct irq_data *data, unsigned int flow_type)
-> +{
-> +	if (flow_type & (IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING))
-> +		irq_set_handler(data->irq, handle_edge_irq);
-> +	if (flow_type & (IRQF_TRIGGER_HIGH | IRQF_TRIGGER_LOW))
-> +		irq_set_handler(data->irq, handle_level_irq);
-
-So you don't need to set anything in your interrupt controller for this
-to switch between level and edge? That'd be a first...
-
-> +
-> +	return 0;
-> +}
-> +
-> +struct irq_domain *rda_irq_domain;
-
-static?
-
-> +
-> +static void __exception_irq_entry rda_handle_irq(struct pt_regs *regs)
-> +{
-> +	u32 stat = readl(base + RDA_INTC_FINALSTATUS);
-> +	u32 hwirq;
-> +
-> +	while (stat) {
-> +		hwirq = __fls(stat);
-> +		handle_domain_irq(rda_irq_domain, hwirq, regs);
-> +		stat &= ~(1 << hwirq);
-> +	}
-> +}
-> +
-> +static struct irq_chip rda_irq_chip = {
-> +	.name		= "rda-intc",
-> +	.irq_ack	= rda_intc_mask_irq,
-
-You're joking, right? What does it mean to implement both ack as mask
-when you already have mask?
-
-> +	.irq_mask	= rda_intc_mask_irq,
-> +	.irq_unmask	= rda_intc_unmask_irq,
-> +	.irq_set_type	= rda_intc_set_type,
-> +	.irq_disable	= rda_intc_mask_irq,
-
-What is this disable for? Implementing enable/disable only makes sense
-if their different implementation differs from mask/unmask (and that
-they add some real value, such as allocating resource).
-
-> +};
-> +
-> +static int rda_irq_map(struct irq_domain *d,
-> +		       unsigned int virq, irq_hw_number_t hw)
-> +{
-> +	irq_set_status_flags(virq, IRQ_LEVEL);
-> +	irq_set_chip_and_handler(virq, &rda_irq_chip, handle_level_irq);
-
-The set_type callback is specially puzzling when you set everything to
-be level...
-
-> +	irq_set_chip_data(virq, d->host_data);
-> +	irq_set_probe(virq);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops rda_irq_domain_ops = {
-> +	.map = rda_irq_map,
-> +	.xlate = irq_domain_xlate_onecell,
-
-... and don't have any way to express an edge interrupt in DT.
-
-> +};
-> +
-> +static int __init rda8810_intc_init(struct device_node *node,
-> +				    struct device_node *parent)
-> +{
-> +	base = of_io_request_and_map(node, 0, "rda-intc");
-> +	if (!base)
-> +		return -ENXIO;
-> +	/*
-> +	 * Mask, and invalid all interrupt sources
-> +	 */
-> +	writel(RDA_IRQ_MASK_ALL, base + RDA_INTC_MASK_CLR);
-> +
-> +	rda_irq_domain = irq_domain_create_linear(&node->fwnode, RDA_NR_IRQS,
-> +						  &rda_irq_domain_ops, base);
-> +	WARN_ON(!rda_irq_domain);
-
-Just WARN_ON(), and carry on? Please implement some error handling.
-
-> +
-> +	set_handle_irq(rda_handle_irq);
-> +
-> +	return 0;
-> +}
-> +
-> +IRQCHIP_DECLARE(rda_intc, "rda,8810pl-intc", rda8810_intc_init);
+> What are these intended to apply to?
 > 
+I had rebased them on top of 4.20-rc1.
 
-Thanks,
+> Also, you might want to run them through checkpatch next time.  There
+> are several whitespace errors.
+> 
+Sorry I missed couple of them.
+Thanks for trying to test the patches. I will send a next version as Rob 
+suggested. Please test that.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+
+Regards,
+Atish
