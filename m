@@ -1,75 +1,95 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 06/12] drm/sun4i: sun6i_mipi_dsi: Probe
- tcon0 during dsi_bind
-Date: Mon, 19 Nov 2018 09:38:33 +0100
-Message-ID: <20181119083833.d7ysiv3tenabtrdj@flea>
-References: <20181116163916.29621-1-jagan@amarulasolutions.com>
- <20181116163916.29621-7-jagan@amarulasolutions.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kutx34ipl3nfzbct"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBCXNZHPQKGQEJJIGRAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20181116163916.29621-7-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, TL Lim <tllim-F7SikzrIcFYdnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [Letux-kernel] [PATCH RFC 4/5] gnss: sirf: add a separate supply for a lna
+Date: Mon, 19 Nov 2018 09:41:58 +0100
+Message-ID: <1647CDC4-61E5-4673-B092-1124BAFC50D5@goldelico.com>
+References: <20181118215801.12280-1-andreas@kemnade.info> <20181118215801.12280-5-andreas@kemnade.info>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181118215801.12280-5-andreas@kemnade.info>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
 
---kutx34ipl3nfzbct
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Fri, Nov 16, 2018 at 10:09:10PM +0530, Jagan Teki wrote:
-> Probe tcon0 during dsi_bind, so-that the tcon attributes like
-> divider value, clock rate can get whenever it need.
+> Am 18.11.2018 um 22:58 schrieb Andreas Kemnade <andreas@kemnade.info>:
 > 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> Devices might have a separate lna between antenna output of the gps
+> chip and the antenna which might have a separate supply
+> 
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 > ---
->  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 7 +++++++
->  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h | 1 +
->  2 files changed, 8 insertions(+)
+> drivers/gnss/sirf.c | 15 +++++++++++++++
+> 1 file changed, 15 insertions(+)
 > 
-> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> index d60955880c43..66a01061e51d 100644
-> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> @@ -25,6 +25,7 @@
->  #include <drm/drm_panel.h>
->  
->  #include "sun4i_drv.h"
-> +#include "sun4i_tcon.h"
->  #include "sun6i_mipi_dsi.h"
->  
->  #include <video/mipi_display.h>
-> @@ -1007,6 +1008,7 @@ static int sun6i_dsi_bind(struct device *dev, struct device *master,
->  	struct drm_device *drm = data;
->  	struct sun4i_drv *drv = drm->dev_private;
->  	struct sun6i_dsi *dsi = dev_get_drvdata(dev);
-> +	struct sun4i_tcon *tcon0 = sun4i_get_tcon0(drm);
->  	int ret;
->  
->  	if (!dsi->panel)
-> @@ -1014,6 +1016,11 @@ static int sun6i_dsi_bind(struct device *dev, struct device *master,
->  
->  	dsi->drv = drv;
->  
-> +	if (!tcon0)
-> +		return -EPROBE_DEFER;
+> diff --git a/drivers/gnss/sirf.c b/drivers/gnss/sirf.c
+> index 6a0e5c0a2d62..f7573ca2dacd 100644
+> --- a/drivers/gnss/sirf.c
+> +++ b/drivers/gnss/sirf.c
+> @@ -30,6 +30,7 @@ struct sirf_data {
+> 	struct serdev_device *serdev;
+> 	speed_t	speed;
+> 	struct regulator *vcc;
+> +	struct regulator *lna;
+> 	struct gpio_desc *on_off;
+> 	struct gpio_desc *wakeup;
+> 	int irq;
+> @@ -217,6 +218,7 @@ static int sirf_runtime_suspend(struct device *dev)
+> 
+> 	if (!data->on_off)
+> 		return regulator_disable(data->vcc);
+> +	regulator_disable(data->lna);
+> 	ret = sirf_set_active(data, false);
+> 
+> 	if (ret)
+> @@ -245,13 +247,20 @@ static int sirf_runtime_resume(struct device *dev)
+> 		if (ret)
+> 			goto err_close_serdev;
+> 	}
+> +
+> +	ret = regulator_enable(data->lna);
+> +	if (ret)
+> +		goto err_disable_vcc;
+> +
+> 	ret = sirf_set_active(data, true);
+> 
+> 	if (!ret)
+> 		return 0;
+> 
+> +err_disable_vcc:
+> 	if (!data->on_off)
+> 		regulator_disable(data->vcc);
+> +
+> err_close_serdev:
+> 	serdev_device_close(data->serdev);
+> 	return ret;
+> @@ -340,6 +349,12 @@ static int sirf_probe(struct serdev_device *serdev)
+> 		goto err_put_device;
+> 	}
+> 
+> +	data->lna = devm_regulator_get(dev, "lna");
+> +	if (IS_ERR(data->lna)) {
+> +		ret = PTR_ERR(data->lna);
+> +		goto err_put_device;
+> +	}
+> +
+> 	data->on_off = devm_gpiod_get_optional(dev, "sirf,onoff",
+> 			GPIOD_OUT_LOW);
+> 	if (IS_ERR(data->on_off))
+> -- 
+> 2.11.0
+> 
+> _______________________________________________
+> http://projects.goldelico.com/p/gta04-kernel/
+> Letux-kernel mailing list
+> Letux-kernel@openphoenux.org
+> http://lists.goldelico.com/mailman/listinfo.cgi/letux-kernel
 
-You can't fall in that condition. The component framework won't call
-bind unless every components have been probed.
+Looks good and to do what it is designed for.
 
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---kutx34ipl3nfzbct--
+Acked-by: H. Nikolaus Schaller <hns@goldelico.com>
+
+BR and thanks,
+Nikolaus
