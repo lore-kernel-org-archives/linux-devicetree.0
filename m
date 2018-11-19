@@ -1,93 +1,95 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 3/5 v7] regulator: fixed/gpio: Update device tree bindings
-Date: Mon, 19 Nov 2018 08:11:24 +0100
-Message-ID: <20181119071126.8889-3-linus.walleij@linaro.org>
-References: <20181119071126.8889-1-linus.walleij@linaro.org>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: pinctrl: k3: Introduce pinmux
+ definitions
+Date: Mon, 19 Nov 2018 09:19:38 +0200
+Message-ID: <b8c1d975-2b4f-5530-2089-dc04c04f8d86@ti.com>
+References: <20181113060111.16374-1-vigneshr@ti.com>
+ <20181113060111.16374-2-vigneshr@ti.com>
+ <20181117160502.dhlqbx5qnmdp5iog@kahuna>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181119071126.8889-1-linus.walleij@linaro.org>
+In-Reply-To: <20181117160502.dhlqbx5qnmdp5iog@kahuna>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, Vignesh R <vigneshr@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-Deprecate the open drain binding for fixed regulator and indicate
-that we prefer this to be passed in the GPIO phandle flags.
+On 17/11/2018 18:05, Nishanth Menon wrote:
+> On 11:31-20181113, Vignesh R wrote:
+>> The dt-bindings header for TI K3 AM6 SoCs define a set of macros for
+>> defining pinmux configs in human readable form, instead of raw-coded
+>> hex values.
+>>
+>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+>> ---
+>>   MAINTAINERS                      |  1 +
+>>   include/dt-bindings/pinctrl/k3.h | 35 ++++++++++++++++++++++++++++++++
+>>   2 files changed, 36 insertions(+)
+>>   create mode 100644 include/dt-bindings/pinctrl/k3.h
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index fa45ff36fde9..1574ad6d7ead 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -2204,6 +2204,7 @@ S:	Supported
+>>   F:	Documentation/devicetree/bindings/arm/ti/k3.txt
+>>   F:	arch/arm64/boot/dts/ti/Makefile
+>>   F:	arch/arm64/boot/dts/ti/k3-*
+>> +F:	include/dt-bindings/pinctrl/k3.h
+>>   
+>>   ARM/TEXAS INSTRUMENT KEYSTONE ARCHITECTURE
+>>   M:	Santosh Shilimkar <ssantosh@kernel.org>
+>> diff --git a/include/dt-bindings/pinctrl/k3.h b/include/dt-bindings/pinctrl/k3.h
+>> new file mode 100644
+>> index 000000000000..463d845a9b36
+>> --- /dev/null
+>> +++ b/include/dt-bindings/pinctrl/k3.h
+>> @@ -0,0 +1,35 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * This header provides constants for pinctrl bindings for TI's K3 SoC
+>> + * family.
+>> + *
+>> + * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
+>> + */
+>> +#ifndef _DT_BINDINGS_PINCTRL_TI_K3_H
+>> +#define _DT_BINDINGS_PINCTRL_TI_K3_H
+>> +
+>> +#define PULLUDEN_SHIFT		(16)
+>> +#define PULLTYPESEL_SHIFT	(17)
+>> +#define RXACTIVE_SHIFT		(18)
+>> +
+>> +#define PULL_DISABLE		(1 << PULLUDEN_SHIFT)
+>> +#define PULL_ENABLE		(0 << PULLUDEN_SHIFT)
+>> +
+>> +#define PULL_UP			(1 << PULLTYPESEL_SHIFT | PULL_ENABLE)
+>> +#define PULL_DOWN		(0 << PULLTYPESEL_SHIFT | PULL_ENABLE)
+>> +
+>> +#define INPUT_EN		(1 << RXACTIVE_SHIFT)
+>> +#define INPUT_DISABLE		(0 << RXACTIVE_SHIFT)
+>> +
+>> +/* Only these macros are expected be used directly in device tree files */
+>> +#define PIN_OUTPUT		(INPUT_DISABLE | PULL_DISABLE)
+>> +#define PIN_OUTPUT_PULLUP	(INPUT_DISABLE | PULL_UP)
+>> +#define PIN_OUTPUT_PULLDOWN	(INPUT_DISABLE | PULL_DOWN)
+>> +#define PIN_INPUT		(INPUT_EN | PULL_DISABLE)
+>> +#define PIN_INPUT_PULLUP	(INPUT_EN | PULL_UP)
+>> +#define PIN_INPUT_PULLDOWN	(INPUT_EN | PULL_DOWN)
+> 
+> 
+> Thanks for reducing the combinations down to the minimum needed. We can
+> worry about the DS and isolation bits when we have a real user for them.
+> 
+> Acked-by: Nishanth Menon <nm@ti.com>
+> 
+> Tero: v4.21-rc1 perhaps ?
+> 
 
-Clarify that the line inversion semantics for fixed and GPIO
-regulators completely overrides the active low flags in the
-phandle flags.
+Yeah, looks fine, queueing up for 4.21.
 
-Unfortunately this can not be changed to prefer that we pass
-the flags in the phandle: the bindings have been specified and
-deployed such that the presence/absence of this flag and only
-that controls the line inversion semantics. The crucial semantic
-is that the absence of the flag means the core will assume
-the line is active low, which in GPIO terms is an exception,
-as GPIO lines are normally assumed to be active high.
-
-This special device tree semantic cannot be changed without
-introducing a whole new compatible string for the fixed and
-GPIO regulators, so we just contain the situation.
-
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v6->v7:
-- Resend with the rest.
-ChangeLog v3->v6:
-- Resending.
-ChangeLog v2->v3:
-- Resending.
-ChangeLog v1->v2:
-- Collect Rob's ACK.
----
- .../bindings/regulator/fixed-regulator.txt          | 13 +++++++++++--
- .../bindings/regulator/gpio-regulator.txt           |  4 ++++
- 2 files changed, 15 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-index 0c2a6c8a1536..a7a1cd0dfa6e 100644
---- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-@@ -8,10 +8,19 @@ Optional properties:
- - gpio: gpio to use for enable control
- - startup-delay-us: startup time in microseconds
- - enable-active-high: Polarity of GPIO is Active high
--If this property is missing, the default assumed is Active low.
-+  If this property is missing, the default assumed is Active low.
-+  If the phandle flags to the GPIO handle also flag the line as active
-+  low or high, that will be ignored for fixed regulators and the
-+  presence or absence of this flag solely controls the inversion
-+  semantics.
-+-vin-supply: Input supply name.
-+
-+Deprecated properties:
- - gpio-open-drain: GPIO is open drain type.
-   If this property is missing then default assumption is false.
---vin-supply: Input supply name.
-+  Do not use this property in new device trees: instead use the
-+  phandle flag to indicate to the GPIO provider that the line
-+  should be handled as open drain.
- 
- Any property defined as part of the core regulator
- binding, defined in regulator.txt, can also be used.
-diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-index 1f496159e2bb..8fef3e5358a2 100644
---- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-@@ -14,6 +14,10 @@ Optional properties:
- 			  defualt is LOW if nothing is specified.
- - startup-delay-us	: Startup time in microseconds.
- - enable-active-high	: Polarity of GPIO is active high (default is low).
-+			  If the phandle flags to the GPIO handle also flag the line as
-+			  active low or high, that will be ignored for fixed regulators
-+			  and the presence or absence of this flag solely controls the
-+			  inversion semantics.
- - regulator-type	: Specifies what is being regulated, must be either
- 			  "voltage" or "current", defaults to voltage.
- 
--- 
-2.19.1
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
