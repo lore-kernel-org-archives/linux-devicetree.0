@@ -1,68 +1,117 @@
-From: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
-Subject: Re: [PATCH] misc: cxl: Use device_type helpers to access the node
- type
-Date: Mon, 19 Nov 2018 11:27:07 +1100
-Message-ID: <4946be8a-887b-470e-0771-313bf222e777@au1.ibm.com>
-References: <20181116221104.23024-6-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Sugaya Taichi <sugaya.taichi@socionext.com>
+Subject: [PATCH 00/14] Add basic support for Socionext Milbeaut M10V SoCs
+Date: Mon, 19 Nov 2018 10:01:05 +0900
+Message-ID: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181116221104.23024-6-robh@kernel.org>
-Content-Language: en-AU
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
+To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sugaya Taichi <sugaya.taichi@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-On 17/11/18 9:11 am, Rob Herring wrote:
-> Remove directly accessing device_node.type pointer and use the accessors
-> instead. This will eventually allow removing the type pointer.
-> 
+Hi,
 
-This description doesn't quite match what's being fixed - we're not 
-accessing the .type pointer, we're getting the device_type property 
-directly.
+Here is the series of patches the initial support for SC2000(M10V) of
+Milbeaut SoCs. "M10V" is the internal name of SC2000, so commonly used in
+source code.
 
-> Cc: Frederic Barrat <fbarrat@linux.vnet.ibm.com>
-> Cc: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+SC2000 is a SoC of the Milbeaut series. equipped with a DSP optimized for
+computer vision. It also features advanced functionalities such as 360-degree,
+real-time spherical stitching with multi cameras, image stabilization for
+without mechanical gimbals, and rolling shutter correction. More detail is
+below:
+https://www.socionext.com/en/products/assp/milbeaut/SC2000.html
 
-Apart from that:
+Specifications for developers are below:
+ - Quad-core 32bit Cortex-A7 on ARMv7-A architecture
+ - NEON support
+ - DSP
+ - GPU
+ - MAX 3GB DDR3
+ - Cortex-M0 for power control
+ - NAND Flash Interface
+ - SD UHS-I
+ - SD UHS-II
+ - SDIO
+ - USB2.0 HOST / Device
+ - USB3.0 HOST / Device
+ - PCI express Gen2
+ - Ethernet Engine
+ - I2C
+ - UART
+ - SPI
+ - PWM
 
-Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+Support is quite minimal for now, since it only includes timer, clock,
+pictrl and serial controller drivers, so we can only boot to userspace
+through initramfs. Support for the other peripherals  will come eventually.
 
-> ---
->   drivers/misc/cxl/pci.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/misc/cxl/pci.c b/drivers/misc/cxl/pci.c
-> index b66d832d3233..c79ba1c699ad 100644
-> --- a/drivers/misc/cxl/pci.c
-> +++ b/drivers/misc/cxl/pci.c
-> @@ -1718,7 +1718,6 @@ int cxl_slot_is_switched(struct pci_dev *dev)
->   {
->   	struct device_node *np;
->   	int depth = 0;
-> -	const __be32 *prop;
->   
->   	if (!(np = pci_device_to_OF_node(dev))) {
->   		pr_err("cxl: np = NULL\n");
-> @@ -1727,8 +1726,7 @@ int cxl_slot_is_switched(struct pci_dev *dev)
->   	of_node_get(np);
->   	while (np) {
->   		np = of_get_next_parent(np);
-> -		prop = of_get_property(np, "device_type", NULL);
-> -		if (!prop || strcmp((char *)prop, "pciex"))
-> +		if (!of_node_is_type(np, "pciex"))
->   			break;
->   		depth++;
->   	}
-> 
+
+Sugaya Taichi (14):
+  ARM: milbeaut: Add basic support for Milbeaut m10v SoC
+  dt-bindings: soc: milbeaut: Add Milbeaut trampoline description
+  ARM: milbeaut: Add Milbeaut M10V early printk
+  dt-bindings: timer: Add Milbeaut M10V timer description
+  clocksource/drivers/timer-milbeaut: Add Milbeaut M10V timer
+  dt-bindings: clock: milbeaut: add Milbeaut clock description
+  clock: milbeaut: Add Milbeaut M10V clock control
+  dt-bindings: serial: Add Milbeaut M10V serial description
+  serial: Add Milbeaut M10V serial control
+  dt-bindings: pinctrl: milbeaut: Add Milbeaut M10V pinctrl description
+  pinctrl: milbeaut: Add Milbeaut M10V pinctrl
+  ARM: dts: milbeaut: Add device tree set for the Milbeaut M10V board
+  ARM: configs: Add Milbeaut M10V defconfig
+  MAINTAINERS: Add entry to MAINTAINERS for Milbeaut
+
+ .../devicetree/bindings/clock/milbeaut-clock.txt   |  93 +++
+ .../pinctrl/socionext,milbeaut-pinctrl.txt         |  33 +
+ .../devicetree/bindings/serial/milbeaut-uart.txt   |  23 +
+ .../bindings/soc/socionext/socionext,m10v.txt      |  12 +
+ .../bindings/timer/socionext,milbeaut-timer.txt    |  17 +
+ MAINTAINERS                                        |   9 +
+ arch/arm/Kconfig                                   |   2 +
+ arch/arm/Kconfig.debug                             |  12 +-
+ arch/arm/Makefile                                  |   1 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/milbeaut-m10v-evb.dts            |  35 +
+ arch/arm/boot/dts/milbeaut-m10v-evb.dtsi           |  17 +
+ arch/arm/boot/dts/milbeaut-m10v.dtsi               | 510 ++++++++++++++
+ arch/arm/configs/milbeaut_m10v_defconfig           | 364 ++++++++++
+ arch/arm/include/debug/milbeaut.S                  |  25 +
+ arch/arm/mach-milbeaut/Kconfig                     |  28 +
+ arch/arm/mach-milbeaut/Makefile                    |   3 +
+ arch/arm/mach-milbeaut/m10v_evb.c                  |  31 +
+ arch/arm/mach-milbeaut/platsmp.c                   | 157 +++++
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-m10v.c                             | 671 ++++++++++++++++++
+ drivers/clocksource/Kconfig                        |   8 +
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/timer-m10v.c                   | 146 ++++
+ drivers/pinctrl/Kconfig                            |   9 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-m10v.c                     | 765 +++++++++++++++++++++
+ drivers/tty/serial/Kconfig                         |  24 +
+ drivers/tty/serial/Makefile                        |   1 +
+ drivers/tty/serial/m10v_usio.c                     | 605 ++++++++++++++++
+ include/uapi/linux/serial_core.h                   |   3 +
+ 31 files changed, 3606 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/milbeaut-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/socionext,milbeaut-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/milbeaut-uart.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.txt
+ create mode 100644 arch/arm/boot/dts/milbeaut-m10v-evb.dts
+ create mode 100644 arch/arm/boot/dts/milbeaut-m10v-evb.dtsi
+ create mode 100644 arch/arm/boot/dts/milbeaut-m10v.dtsi
+ create mode 100644 arch/arm/configs/milbeaut_m10v_defconfig
+ create mode 100644 arch/arm/include/debug/milbeaut.S
+ create mode 100644 arch/arm/mach-milbeaut/Kconfig
+ create mode 100644 arch/arm/mach-milbeaut/Makefile
+ create mode 100644 arch/arm/mach-milbeaut/m10v_evb.c
+ create mode 100644 arch/arm/mach-milbeaut/platsmp.c
+ create mode 100644 drivers/clk/clk-m10v.c
+ create mode 100644 drivers/clocksource/timer-m10v.c
+ create mode 100644 drivers/pinctrl/pinctrl-m10v.c
+ create mode 100644 drivers/tty/serial/m10v_usio.c
 
 -- 
-Andrew Donnellan              OzLabs, ADL Canberra
-andrew.donnellan@au1.ibm.com  IBM Australia Limited
+1.9.1
