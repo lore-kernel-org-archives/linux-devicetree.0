@@ -1,42 +1,55 @@
-Return-Path: <SRS0=9/dT=NT=synopsys.com=thinh.nguyen@kernel.org>
-Date: Thu, 8 Nov 2018 12:06:57 -0800
-Message-ID: <ead428b935b52df74dbe386185e1b8298b0135b4.1541707248.git.thinhn@synopsys.com>
-In-Reply-To: <cover.1541707248.git.thinhn@synopsys.com>
-References: <cover.1541707248.git.thinhn@synopsys.com>
-From: Thinh Nguyen <thinh.nguyen@synopsys.com>
-Subject: [PATCH v6 2/3] usb: dwc3: Add disabling of start_transfer failure quirk
-MIME-Version: 1.0
-Content-Type: text/plain
-To: Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: John Youn <john.youn@synopsys.com>
+Return-Path: <SRS0=lwod=N6=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH  4/4] ARM: dts: iwg23s-sbc: Enable RTC
+Date: Mon, 19 Nov 2018 11:15:08 +0000
+Message-Id: <1542626108-61344-5-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1542626108-61344-1-git-send-email-biju.das@bp.renesas.com>
+References: <1542626108-61344-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-DWC_usb31 peripheral v1.70a-ea06 and prior needs a SW workaround for
-isoc START TRANSFER command failure. However, some affected versions may
-have RTL patches to fix this without a SW workaround. Add this quirk to
-disable the SW workaround when it is not needed.
+Enable NXP pcf85263 real time clock for the iWave SBC based on RZ/G1C.
 
-Synopsys STAR 9001202023: Wrong microframe number for isochronous IN
-endpoints.
-
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 ---
- Documentation/devicetree/bindings/usb/dwc3.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 636630fb92d7..fc64db0a7a0a 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -37,6 +37,9 @@ Optional properties:
-  - phy-names: from the *Generic PHY* bindings; supported names are "usb2-phy"
- 	or "usb3-phy".
-  - resets: a single pair of phandle and reset specifier
-+ - snps,dis-start-transfer-quirk: when set, disable isoc START TRANSFER command
-+			failure SW work-around for DWC_usb31 version 1.70a-ea06
-+			and prior.
-  - snps,usb3_lpm_capable: determines if platform is USB3 LPM capable
-  - snps,disable_scramble_quirk: true when SW should disable data scrambling.
- 	Only really useful for FPGA builds.
+diff --git a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
+index 40b7f98..77d1824 100644
+--- a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
++++ b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
+@@ -84,12 +84,30 @@
+ 	clock-frequency = <20000000>;
+ };
+ 
++&i2c3 {
++	pinctrl-0 = <&i2c3_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++	clock-frequency = <400000>;
++
++	rtc@51 {
++		compatible = "nxp,pcf85263";
++		reg = <0x51>;
++	};
++};
++
+ &pfc {
+ 	avb_pins: avb {
+ 		groups = "avb_mdio", "avb_gmii_tx_rx";
+ 		function = "avb";
+ 	};
+ 
++	i2c3_pins: i2c3 {
++		groups = "i2c3_c";
++		function = "i2c3";
++	};
++
+ 	mmc_pins_uhs: mmc_uhs {
+ 		groups = "mmc_data8", "mmc_ctrl";
+ 		function = "mmc";
 -- 
-2.11.0
+2.7.4
