@@ -1,7 +1,7 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 05/16] arm: dts: Add devicetree for OrangePi 2G IoT board
-Date: Mon, 19 Nov 2018 22:39:28 +0530
-Message-ID: <20181119170939.19153-6-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 06/16] arm: dts: Add devicetree for OrangePi i96 board
+Date: Mon, 19 Nov 2018 22:39:29 +0530
+Message-ID: <20181119170939.19153-7-manivannan.sadhasivam@linaro.org>
 References: <20181119170939.19153-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,34 +13,36 @@ To: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, tglx@linutronix.de, jason
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, service@rdamicro.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-Add initial devicetree support for OrangePi 2G IoT board from Xunlong.
+Add initial devicetree for Orange Pi i96 board from Xunlong. It
+is one of the 96Boards IoT Edition board.
 
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- arch/arm/boot/dts/Makefile                    |  2 ++
- .../boot/dts/rda8810pl-orangepi-2g-iot.dts    | 35 +++++++++++++++++++
- 2 files changed, 37 insertions(+)
- create mode 100644 arch/arm/boot/dts/rda8810pl-orangepi-2g-iot.dts
+ arch/arm/boot/dts/Makefile                   |  3 +-
+ arch/arm/boot/dts/rda8810pl-orangepi-i96.dts | 35 ++++++++++++++++++++
+ 2 files changed, 37 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/rda8810pl-orangepi-i96.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b0e966d625b9..a0fdad8f10dd 100644
+index a0fdad8f10dd..cfb08ea33872 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -806,6 +806,8 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-msm8974-sony-xperia-castor.dtb \
+@@ -807,7 +807,8 @@ dtb-$(CONFIG_ARCH_QCOM) += \
  	qcom-msm8974-sony-xperia-honami.dtb \
  	qcom-mdm9615-wp8548-mangoh-green.dtb
-+dtb-$(CONFIG_ARCH_RDA) += \
-+	rda8810pl-orangepi-2g-iot.dtb
+ dtb-$(CONFIG_ARCH_RDA) += \
+-	rda8810pl-orangepi-2g-iot.dtb
++	rda8810pl-orangepi-2g-iot.dtb \
++	rda8810pl-orangepi-i96.dtb
  dtb-$(CONFIG_ARCH_REALVIEW) += \
  	arm-realview-pb1176.dtb \
  	arm-realview-pb11mp.dtb \
-diff --git a/arch/arm/boot/dts/rda8810pl-orangepi-2g-iot.dts b/arch/arm/boot/dts/rda8810pl-orangepi-2g-iot.dts
+diff --git a/arch/arm/boot/dts/rda8810pl-orangepi-i96.dts b/arch/arm/boot/dts/rda8810pl-orangepi-i96.dts
 new file mode 100644
-index 000000000000..4b49a7424b6a
+index 000000000000..3e3b8c4575cd
 --- /dev/null
-+++ b/arch/arm/boot/dts/rda8810pl-orangepi-2g-iot.dts
++++ b/arch/arm/boot/dts/rda8810pl-orangepi-i96.dts
 @@ -0,0 +1,35 @@
 +/*
 + * Copyright (c) 2017 Andreas Färber
@@ -54,8 +56,8 @@ index 000000000000..4b49a7424b6a
 +#include "rda8810pl.dtsi"
 +
 +/ {
-+	compatible = "xunlong,orangepi-2g-iot", "rda,8810pl";
-+	model = "Orange Pi 2G-IoT";
++	compatible = "xunlong,orangepi-i96", "rda,8810pl";
++	model = "Orange Pi i96";
 +
 +	chosen {
 +		stdout-path = "serial2:921600n8";
