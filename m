@@ -1,51 +1,62 @@
-From: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: =?utf-8?q?=5BPatch_v3=C2=A0=5D_drm/msm/dpu=3A_Correct?=
- =?utf-8?q?_dpu_destroy_and_disable_order?=
-Date: Mon, 19 Nov 2018 11:55:38 +0530
-Message-ID: <1542608738-3315-1-git-send-email-jshekhar@codeaurora.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: phy: Add Qualcomm Synopsys High-Speed
+ USB PHY binding
+Date: Mon, 19 Nov 2018 14:55:06 +0800
+Message-ID: <20181119065503.GB10788@dragon>
+References: <20181108070449.23572-1-shawn.guo@linaro.org>
+ <20181108070449.23572-2-shawn.guo@linaro.org>
+ <5bea0ed8.1c69fb81.8715.38b2@mx.google.com>
+ <20181113034200.GD20049@tiger>
+ <CAL_JsqKu3kf-zrKNtrtZsQEPi0LN_3jqs08i3-8vbSQDVxuRkA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKu3kf-zrKNtrtZsQEPi0LN_3jqs08i3-8vbSQDVxuRkA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod <vkoul@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SW4gY2FzZSBvZiBtc20gZHJtIGJpbmQgZmFpbHVyZSwgcG0gcnVudGltZSBwdXQgc3luYwppcyBj
-YWxsZWQgZnJvbSBkc2kgZHJpdmVyIHdoaWNoIGlzc3VlcyBhbiBhc3luY2hyb25vdXMKcHV0IG9u
-IG1kc3MgZGV2aWNlLiBTdWJzZXF1ZW50bHkgd2hlbiBkcHVfbWRzc19kZXN0cm95CmlzIHRyaWdn
-ZXJlZCB0aGUgY2hhbmdlIHdpbGwgbWFrZSBzdXJlIHRvIHB1dCB0aGUgbWRzcwpkZXZpY2UgaW4g
-c3VzcGVuZCBhbmQgY2xlYXJpbmcgcGVuZGluZyB3b3JrIGlmIG5vdApzY2hlZHVsZWQuCgpDaGFu
-Z2VzIGluIHYyOgogICAtIFJlbW92ZWQgZG91YmxlIHNwYWNpbmdzIFtKZXlrdW1hcl0KCkNoYW5n
-ZXMgaW4gdjM6CiAgIC0gRml4IGNsb2NrIG9uIGlzc3VlIGR1cmluZyBib290dXAgW1JhamVuZHJh
-XQoKU2lnbmVkLW9mZi1ieTogSmF5YW50IFNoZWtoYXIgPGpzaGVraGFyQGNvZGVhdXJvcmEub3Jn
-PgotLS0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMgfCA2ICsrLS0t
-LQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKCmRpZmYg
-LS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jIGIvZHJpdmVy
-cy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3MuYwppbmRleCBmZDljODkzLi5kZjgxMjdi
-IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jCisr
-KyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMKQEAgLTE1NiwxOCAr
-MTU2LDE2IEBAIHN0YXRpYyB2b2lkIGRwdV9tZHNzX2Rlc3Ryb3koc3RydWN0IGRybV9kZXZpY2Ug
-KmRldikKIAlzdHJ1Y3QgZHB1X21kc3MgKmRwdV9tZHNzID0gdG9fZHB1X21kc3MocHJpdi0+bWRz
-cyk7CiAJc3RydWN0IGRzc19tb2R1bGVfcG93ZXIgKm1wID0gJmRwdV9tZHNzLT5tcDsKIAorCXBt
-X3J1bnRpbWVfc3VzcGVuZChkZXYtPmRldik7CisJcG1fcnVudGltZV9kaXNhYmxlKGRldi0+ZGV2
-KTsKIAlfZHB1X21kc3NfaXJxX2RvbWFpbl9maW5pKGRwdV9tZHNzKTsKLQogCWZyZWVfaXJxKHBs
-YXRmb3JtX2dldF9pcnEocGRldiwgMCksIGRwdV9tZHNzKTsKLQogCW1zbV9kc3NfcHV0X2Nsayht
-cC0+Y2xrX2NvbmZpZywgbXAtPm51bV9jbGspOwogCWRldm1fa2ZyZWUoJnBkZXYtPmRldiwgbXAt
-PmNsa19jb25maWcpOwogCiAJaWYgKGRwdV9tZHNzLT5tbWlvKQogCQlkZXZtX2lvdW5tYXAoJnBk
-ZXYtPmRldiwgZHB1X21kc3MtPm1taW8pOwogCWRwdV9tZHNzLT5tbWlvID0gTlVMTDsKLQotCXBt
-X3J1bnRpbWVfZGlzYWJsZShkZXYtPmRldik7CiAJcHJpdi0+bWRzcyA9IE5VTEw7CiB9CiAKLS0g
-ClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUg
-Q29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2pl
-Y3QKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVk
-cmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+On Sat, Nov 17, 2018 at 09:13:38AM -0600, Rob Herring wrote:
+<snip>
+> > > > +- qcom,init-seq:
+> > > > +    Value type: <u32 array>
+> > > > +    Definition: Should contain a sequence of <offset value delay> tuples to
+> > > > +                program 'value' into phy register at 'offset' with 'delay'
+> > > > +           in us afterwards.
+> > >
+> > > If we wanted this type of thing in DT, we'd have a generic binding (or
+> > > forth).
+> >
+> > Right now, this is a qualcomm usb phy specific bindings - first used in
+> > qcom,usb-hs-phy.txt and I extended it a bit for my phy.  As this is not
+> > a so good hardware description, I'm a little hesitated to make it
+> > generic for other platforms to use in general.  What about we put off it
+> > a little bit until we see more platforms need the same thing?
+> 
+> I'm not saying I want it generic. Quite the opposite. I don't think we
+> should have it either generically or vendor specific. The main thing I
+> have a problem with is the timing information because then we're more
+> that just data. Without that we're talking about a bunch of properties
+> for register fields or just raw register values in DT. That becomes
+> more of a judgement call. There's not too much value in making a
+> driver translate a bunch of properties just to stuff them into
+> registers on init. But then just allowing any raw register value to be
+> in DT could be easily abused.
+
+Rob,
+
+I agree with your comments.  Honestly, I'm not comfortable with this
+'qcom,init-seq' thing in the first impression.  The similar existence in
+mainline qcom,usb-hs-phy.txt makes me think it might be acceptable with
+the timing data added.  Okay, I know your position on this now.
+
+@Sriharsha,
+
+Seeing that 'qcom,init-seq' is being configured with the exactly same
+values for both HS phys in SoC level dts file (qcs404.dtsi), I think
+such settings can be moved into driver code as SoC specific data.
+Unless you have a different view on this, I will do it with v4.
+
+Shawn
