@@ -1,34 +1,47 @@
-Return-Path: <SRS0=JPrT=OB=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 0/7] Add support for iWave G20D-Q7 board based on RZ/G1N
-Date: Thu, 22 Nov 2018 09:14:28 +0000
-Message-Id: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=byPw=N6=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pg1-f179.google.com ([209.85.215.179]:46173 "EHLO
+        mail-pg1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731313AbeKTIjO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 20 Nov 2018 03:39:14 -0500
+Received: by mail-pg1-f179.google.com with SMTP id w7so14419918pgp.13
+        for <devicetree@vger.kernel.org>; Mon, 19 Nov 2018 14:13:30 -0800 (PST)
+Subject: Re: should i be able to "dtx_diff" compare .dts files outside of
+ kernel tree?
+References: <alpine.LFD.2.21.1811171602340.4420@localhost.localdomain>
+From: Frank Rowand <frowand.list@gmail.com>
+Message-ID: <345591be-7bf2-91e0-b85c-6894f6e2c059@gmail.com>
+Date: Mon, 19 Nov 2018 14:13:27 -0800
+MIME-Version: 1.0
+In-Reply-To: <alpine.LFD.2.21.1811171602340.4420@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: "Robert P. J. Day" <rpjday@crashcourse.ca>, Device Tree Mailing List <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch series aims to add support for iWave G20D-Q7 board based on RZ/G1N.
+Hi Robert,
 
-This patch series is tested against renesas-dev
+On 11/17/18 1:04 PM, Robert P. J. Day wrote:
+> 
+>   once upon a time, i asked:
+> 
 
-Biju Das (7):
-  ARM: dts: r8a7744-iwg20m: Add iWave RZ/G1N Qseven SOM
-  ARM: dts: r8a7744: Initial SoC device tree
-  ARM: dts: r8a7744-iwg20d-q7: Add support for iWave G20D-Q7 board based
-    on RZ/G1N
-  ARM: dts: r8a7744: Add SYS-DMAC support
-  ARM: dts: r8a7744: Add GPIO support
-  ARM: dts: r8a7744: Add Ethernet AVB support
-  ARM: dts: r8a7744: Add SMP support
+I'll reply to the year old email, because it includes some more
+context.
 
- arch/arm/boot/dts/Makefile              |   1 +
- arch/arm/boot/dts/r8a7744-iwg20d-q7.dts |  15 +
- arch/arm/boot/dts/r8a7744-iwg20m.dtsi   |  31 ++
- arch/arm/boot/dts/r8a7744.dtsi          | 561 ++++++++++++++++++++++++++++++++
- 4 files changed, 608 insertions(+)
- create mode 100644 arch/arm/boot/dts/r8a7744-iwg20d-q7.dts
- create mode 100644 arch/arm/boot/dts/r8a7744-iwg20m.dtsi
- create mode 100644 arch/arm/boot/dts/r8a7744.dtsi
+> https://www.spinics.net/lists/devicetree/msg200409.html
 
--- 
-2.7.4
+-Frank
+
+> 
+> a quick perusal of the dtx_diff script in the current kernel source
+> tree suggests i should be able to compare two .dts files as long as i
+> specify a source tree with "-s", but as i pointed out in that post,
+> that doesn't work.
+> 
+>   should it? the comments in the script seem to *imply* that that
+> should work. thoughts?
+> 
+> rday
+>
