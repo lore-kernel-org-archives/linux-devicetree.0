@@ -1,75 +1,51 @@
-From: Romain Izard <romain.izard.pro@gmail.com>
-Subject: NAND Flash memory timings when using non-ONFI chips
-Date: Mon, 19 Nov 2018 11:46:15 +0100
-Message-ID: <CAGkQfmOQZFvOdhFTvL3UtfAzBLR+dWfCpkDMv5KajjwY=KJkog@mail.gmail.com>
+From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v2] ASoC: imx-audmux: complete dt-bindings for i.MX6
+Date: Mon, 19 Nov 2018 11:47:18 +0100
+Message-ID: <20181119104718.18716-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: linux-mtd <linux-mtd@lists.infradead.org>, devicetree@vger.kernel.org
-Cc: Boris Brezillon <boris.brezillon@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, NXP Linux Team <linux-imx@nxp.com>
+Cc: linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Colin Didier <colin.didier@devialet.com>, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+From: Colin Didier <colin.didier@devialet.com>
 
-Having used the Microchip SAMA5D2 for some time, I have some devices that
-work with the legacy device tree bindings for the atmel_nand controller.
-While updating from 4.14 to 4.19, I am trying to use the updated bindings
-instead.
+The i.MX6 audmux differs from i.MX51.
 
-However I have encountered a problem with the timings configured in the NAND
-controller. When using the legacy bindings, the hardware timings that have
-been written by the bootloader are left alone, but with the new bindings
-they are recalculated, using the ONFI table.
+This patch adds the audmux for i.MX6 family.
 
-When using non-ONFI devices (which is very common, as Toshiba, Samsung, etc.
-don't implement ONFI), the timings are configured to the work with the
-slowest ONFI class, which is very slow compared to the possible performance
-of those chips.
+Signed-off-by: Colin Didier <colin.didier@devialet.com>
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
 
-For the atmel_nand driver, the root of the difference is that there is no
-clock available in the "mck" field of the nand_controller structure in the
-legacy binding, and as a result the setup_data_interface() hook is empty.
-But this is a problem that could affect any NAND controller that implements
-the setup_data_interface() hook.
+v2:
+	Repost with ASoC maintainer and list
 
-Unfortunately, I have a hard time finding a satisfying solution to this:
-- Adding a property to the NAND chip's device tree node, directing the NAND
-  driver to preserve the bootloader's timings is quite easy, but this is not
-a good solution as we are adding software information to the hardware
-description
-- Adding a property indicating that the Flash chip is not ONFI is redundant,
-  as detecting whether a chip supports ONFI can be autodetected. But the
-Reset command, that must be sent to ONFI chips on startup to reliably to
-detect them, needs to be sent with the slowest ONFI timings to work
-correctly with chips using the ONFI DDR mode. As a result, auto-detection
-needs to change the NAND controller's timings to detect ONFI chips.
+ include/dt-bindings/sound/fsl-imx-audmux.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-The 'best' answer I have for now, is to add a 'timings' subnode to the NAND
-chip's device tree node, that explicitly encodes all the values from the
-timing table as described in "struct nand_sdr_timings", which is derived
-from the ONFI specification, and extend it to add the various values that
-are present in the timing table for Toshiba NAND chips and compatibles.
-
-But I am not very satisfied with this solution, as it adds a lot of code
-for little gain.
-
-What was the original plan for handling timing requirements for non-ONFI
-chips when introducing setup_data_interface()?
-
-Best regards,
+diff --git a/include/dt-bindings/sound/fsl-imx-audmux.h b/include/dt-bindings/sound/fsl-imx-audmux.h
+index 15f138bebe16..a1d0741d9ed1 100644
+--- a/include/dt-bindings/sound/fsl-imx-audmux.h
++++ b/include/dt-bindings/sound/fsl-imx-audmux.h
+@@ -25,6 +25,14 @@
+ #define MX51_AUDMUX_PORT6		5
+ #define MX51_AUDMUX_PORT7		6
+ 
++#define MX6_AUDMUX_PORT1_SSI1		0
++#define MX6_AUDMUX_PORT2_SSI2		1
++#define MX6_AUDMUX_PORT3		2
++#define MX6_AUDMUX_PORT4		3
++#define MX6_AUDMUX_PORT5		4
++#define MX6_AUDMUX_PORT6		5
++#define MX6_AUDMUX_PORT7_SSI3		6
++
+ /*
+  * TFCSEL/RFCSEL (i.MX27) or TFSEL/TCSEL/RFSEL/RCSEL (i.MX31/51/53/6Q)
+  * can be sourced from Rx/Tx.
 -- 
-Romain Izard
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+2.19.1
