@@ -1,98 +1,66 @@
-Return-Path: <SRS0=JUtF=N6=linaro.org=daniel.lezcano@kernel.org>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device nodes
+Return-Path: <SRS0=byPw=N6=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr1410112.outbound.protection.outlook.com ([40.107.141.112]:54880
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727733AbeKSU7R (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 19 Nov 2018 15:59:17 -0500
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device nodes
+Date: Mon, 19 Nov 2018 10:35:58 +0000
+Message-ID: <OSBPR01MB210312547BBCBBC9FC01A616B8D80@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 References: <1540542307-63158-1-git-send-email-biju.das@bp.renesas.com>
  <1be47ef6-1a92-e032-12c1-1deae5b67960@linaro.org>
- <OSBPR01MB210312547BBCBBC9FC01A616B8D80@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <67cf2385-9379-f02a-36fd-b2e07dfd5497@linaro.org>
-Date: Mon, 19 Nov 2018 12:01:07 +0100
-MIME-Version: 1.0
-In-Reply-To: <OSBPR01MB210312547BBCBBC9FC01A616B8D80@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1be47ef6-1a92-e032-12c1-1deae5b67960@linaro.org>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-To: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Thomas Gleixner <tglx@linutronix.de>, John Stultz <john.stultz@linaro.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On 19/11/2018 11:35, Biju Das wrote:
-> Hi Daniel,
-> 
-> Thanks for the feedback.
-> 
->> -----Original Message-----
->> From: Daniel Lezcano <daniel.lezcano@linaro.org>
->> Sent: 19 November 2018 10:26
->> To: Biju Das <biju.das@bp.renesas.com>; Rob Herring
->> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>
->> Cc: Simon Horman <horms@verge.net.au>; Magnus Damm
->> <magnus.damm@gmail.com>; linux-renesas-soc@vger.kernel.org;
->> devicetree@vger.kernel.org; Geert Uytterhoeven
->> <geert+renesas@glider.be>; Chris Paterson
->> <Chris.Paterson2@renesas.com>; Thomas Gleixner <tglx@linutronix.de>;
->> John Stultz <john.stultz@linaro.org>; Fabrizio Castro
->> <fabrizio.castro@bp.renesas.com>
->> Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device nodes
->>
->> On 26/10/2018 10:25, Biju Das wrote:
->>> This patch adds CMT{0|1|2|3} device nodes for r8a7796 SoC.
->>>
->>> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
->>> ---
->>> This patch is tested against renesas-dev
->>>
->>> I have executed on inconsistency-check, nanosleep and
->>> clocksource_switch selftests on this arm64 SoC. The
->>> inconsistency-check and nanosleep tests are working fine.The
->>> clocksource_switch asynchronous test is failing due to inconsistency-check
->> failure on "arch_sys_counter".
->>>
->>> But if i skip the clocksource_switching of "arch_sys_counter", the
->>> asynchronous test is passing for CMT0/1/2/3 timer.
->>>
->>> Has any one noticed this issue?
->>
->> So now that you mention that, I've been through the clocksource_switch on
->> another ARM64 platform (hikey960) and disabled the
->> ARM64_ERRATUM_858921 config option. I can see the same issue.
->>
->> Is this option set on your config ?
-> 
-> No.  As per  " config ARM64_ERRATUM_858921", it is "Workaround for Cortex-A73 erratum 858921"
-> 
-> Our SoC is 2xCA-57 + 4 x CA-53.  Does  it impact CA-57 + CA_53?
-
-Dunno :/
-
-> Any way I will enable this config option and will provide you the results.
-
-Ok, thanks!
-
-> The following errata is set in our kernel config.
-> 
-> CONFIG_ARM64_ERRATUM_826319=y
-> CONFIG_ARM64_ERRATUM_827319=y
-> CONFIG_ARM64_ERRATUM_824069=y
-> CONFIG_ARM64_ERRATUM_819472=y
-> CONFIG_ARM64_ERRATUM_832075=y
-> CONFIG_ARM64_ERRATUM_834220=y
-> CONFIG_ARM64_ERRATUM_845719=y
-> CONFIG_ARM64_ERRATUM_843419=y
-> CONFIG_ARM64_ERRATUM_1024718=y
-> CONFIG_ARM64_ERRATUM_1188873=y
-> 
-> Regards.
-> Biju
-> 
-> 
-> 
-> Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered No. 04586709.
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+SGkgRGFuaWVsLA0KDQpUaGFua3MgZm9yIHRoZSBmZWVkYmFjay4NCg0KPiAtLS0tLU9yaWdpbmFs
+IE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBEYW5pZWwgTGV6Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGlu
+YXJvLm9yZz4NCj4gU2VudDogMTkgTm92ZW1iZXIgMjAxOCAxMDoyNg0KPiBUbzogQmlqdSBEYXMg
+PGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPjsgUm9iIEhlcnJpbmcNCj4gPHJvYmgrZHRAa2VybmVs
+Lm9yZz47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+DQo+IENjOiBTaW1vbiBI
+b3JtYW4gPGhvcm1zQHZlcmdlLm5ldC5hdT47IE1hZ251cyBEYW1tDQo+IDxtYWdudXMuZGFtbUBn
+bWFpbC5jb20+OyBsaW51eC1yZW5lc2FzLXNvY0B2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnOyBHZWVydCBVeXR0ZXJob2V2ZW4NCj4gPGdlZXJ0K3JlbmVzYXNA
+Z2xpZGVyLmJlPjsgQ2hyaXMgUGF0ZXJzb24NCj4gPENocmlzLlBhdGVyc29uMkByZW5lc2FzLmNv
+bT47IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPjsNCj4gSm9obiBTdHVsdHog
+PGpvaG4uc3R1bHR6QGxpbmFyby5vcmc+OyBGYWJyaXppbyBDYXN0cm8NCj4gPGZhYnJpemlvLmNh
+c3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gYXJtNjQ6IGR0czog
+cmVuZXNhczogcjhhNzc5NjogQWRkIENNVCBkZXZpY2Ugbm9kZXMNCj4NCj4gT24gMjYvMTAvMjAx
+OCAxMDoyNSwgQmlqdSBEYXMgd3JvdGU6DQo+ID4gVGhpcyBwYXRjaCBhZGRzIENNVHswfDF8Mnwz
+fSBkZXZpY2Ugbm9kZXMgZm9yIHI4YTc3OTYgU29DLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
+QmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiA+IC0tLQ0KPiA+IFRoaXMgcGF0
+Y2ggaXMgdGVzdGVkIGFnYWluc3QgcmVuZXNhcy1kZXYNCj4gPg0KPiA+IEkgaGF2ZSBleGVjdXRl
+ZCBvbiBpbmNvbnNpc3RlbmN5LWNoZWNrLCBuYW5vc2xlZXAgYW5kDQo+ID4gY2xvY2tzb3VyY2Vf
+c3dpdGNoIHNlbGZ0ZXN0cyBvbiB0aGlzIGFybTY0IFNvQy4gVGhlDQo+ID4gaW5jb25zaXN0ZW5j
+eS1jaGVjayBhbmQgbmFub3NsZWVwIHRlc3RzIGFyZSB3b3JraW5nIGZpbmUuVGhlDQo+ID4gY2xv
+Y2tzb3VyY2Vfc3dpdGNoIGFzeW5jaHJvbm91cyB0ZXN0IGlzIGZhaWxpbmcgZHVlIHRvIGluY29u
+c2lzdGVuY3ktY2hlY2sNCj4gZmFpbHVyZSBvbiAiYXJjaF9zeXNfY291bnRlciIuDQo+ID4NCj4g
+PiBCdXQgaWYgaSBza2lwIHRoZSBjbG9ja3NvdXJjZV9zd2l0Y2hpbmcgb2YgImFyY2hfc3lzX2Nv
+dW50ZXIiLCB0aGUNCj4gPiBhc3luY2hyb25vdXMgdGVzdCBpcyBwYXNzaW5nIGZvciBDTVQwLzEv
+Mi8zIHRpbWVyLg0KPiA+DQo+ID4gSGFzIGFueSBvbmUgbm90aWNlZCB0aGlzIGlzc3VlPw0KPg0K
+PiBTbyBub3cgdGhhdCB5b3UgbWVudGlvbiB0aGF0LCBJJ3ZlIGJlZW4gdGhyb3VnaCB0aGUgY2xv
+Y2tzb3VyY2Vfc3dpdGNoIG9uDQo+IGFub3RoZXIgQVJNNjQgcGxhdGZvcm0gKGhpa2V5OTYwKSBh
+bmQgZGlzYWJsZWQgdGhlDQo+IEFSTTY0X0VSUkFUVU1fODU4OTIxIGNvbmZpZyBvcHRpb24uIEkg
+Y2FuIHNlZSB0aGUgc2FtZSBpc3N1ZS4NCj4NCj4gSXMgdGhpcyBvcHRpb24gc2V0IG9uIHlvdXIg
+Y29uZmlnID8NCg0KTm8uICBBcyBwZXIgICIgY29uZmlnIEFSTTY0X0VSUkFUVU1fODU4OTIxIiwg
+aXQgaXMgIldvcmthcm91bmQgZm9yIENvcnRleC1BNzMgZXJyYXR1bSA4NTg5MjEiDQoNCk91ciBT
+b0MgaXMgMnhDQS01NyArIDQgeCBDQS01My4gIERvZXMgIGl0IGltcGFjdCBDQS01NyArIENBXzUz
+Pw0KDQpBbnkgd2F5IEkgd2lsbCBlbmFibGUgdGhpcyBjb25maWcgb3B0aW9uIGFuZCB3aWxsIHBy
+b3ZpZGUgeW91IHRoZSByZXN1bHRzLg0KDQpUaGUgZm9sbG93aW5nIGVycmF0YSBpcyBzZXQgaW4g
+b3VyIGtlcm5lbCBjb25maWcuDQoNCkNPTkZJR19BUk02NF9FUlJBVFVNXzgyNjMxOT15DQpDT05G
+SUdfQVJNNjRfRVJSQVRVTV84MjczMTk9eQ0KQ09ORklHX0FSTTY0X0VSUkFUVU1fODI0MDY5PXkN
+CkNPTkZJR19BUk02NF9FUlJBVFVNXzgxOTQ3Mj15DQpDT05GSUdfQVJNNjRfRVJSQVRVTV84MzIw
+NzU9eQ0KQ09ORklHX0FSTTY0X0VSUkFUVU1fODM0MjIwPXkNCkNPTkZJR19BUk02NF9FUlJBVFVN
+Xzg0NTcxOT15DQpDT05GSUdfQVJNNjRfRVJSQVRVTV84NDM0MTk9eQ0KQ09ORklHX0FSTTY0X0VS
+UkFUVU1fMTAyNDcxOD15DQpDT05GSUdfQVJNNjRfRVJSQVRVTV8xMTg4ODczPXkNCg0KUmVnYXJk
+cy4NCkJpanUNCg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVh
+ZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZI
+LCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4g
+MDQ1ODY3MDkuDQo=
