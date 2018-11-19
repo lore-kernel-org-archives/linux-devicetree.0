@@ -1,340 +1,159 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 01/14] ARM: milbeaut: Add basic support for Milbeaut m10v SoC
-Date: Mon, 19 Nov 2018 10:24:11 -0600
-Message-ID: <CAL_JsqJotYwwC490XmCtn_=-mrosxG3UUCy0P_SVO3d94yW6VA@mail.gmail.com>
-References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com> <1542589274-13878-2-git-send-email-sugaya.taichi@socionext.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 2/2] hwmon: (ntc_thermistor): add support for B57891S0103
+ from Epcos
+Date: Mon, 19 Nov 2018 09:07:32 -0800
+Message-ID: <20181119170732.GA27435@roeck-us.net>
+References: <20181117121248.32143-1-peda@axentia.se>
+ <20181117121248.32143-2-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542589274-13878-2-git-send-email-sugaya.taichi@socionext.com>
+Content-Disposition: inline
+In-Reply-To: <20181117121248.32143-2-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sugaya.taichi@socionext.com
-Cc: linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 18, 2018 at 7:00 PM Sugaya Taichi
-<sugaya.taichi@socionext.com> wrote:
->
-> This adds the basic M10V SoC support under arch/arm.
-> Since all cores are activated in the custom bootloader before booting
-> linux, it is necessary to wait for sub-cores using the trampoline area.
->
-> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
+On Sat, Nov 17, 2018 at 12:13:00PM +0000, Peter Rosin wrote:
+> More of the same...
+> 
+> Signed-off-by: Peter Rosin <peda@axentia.se>
 > ---
->  arch/arm/Kconfig                  |   2 +
->  arch/arm/Makefile                 |   1 +
->  arch/arm/mach-milbeaut/Kconfig    |  28 +++++++
->  arch/arm/mach-milbeaut/Makefile   |   3 +
->  arch/arm/mach-milbeaut/m10v_evb.c |  31 ++++++++
->  arch/arm/mach-milbeaut/platsmp.c  | 157 ++++++++++++++++++++++++++++++++++++++
->  6 files changed, 222 insertions(+)
->  create mode 100644 arch/arm/mach-milbeaut/Kconfig
->  create mode 100644 arch/arm/mach-milbeaut/Makefile
->  create mode 100644 arch/arm/mach-milbeaut/m10v_evb.c
->  create mode 100644 arch/arm/mach-milbeaut/platsmp.c
->
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 91be74d..0b8a1af 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -767,6 +767,8 @@ source "arch/arm/mach-mediatek/Kconfig"
->
->  source "arch/arm/mach-meson/Kconfig"
->
-> +source "arch/arm/mach-milbeaut/Kconfig"
-> +
->  source "arch/arm/mach-mmp/Kconfig"
->
->  source "arch/arm/mach-moxart/Kconfig"
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index 05a91d8..627853c 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -190,6 +190,7 @@ machine-$(CONFIG_ARCH_MV78XX0)              += mv78xx0
->  machine-$(CONFIG_ARCH_MVEBU)           += mvebu
->  machine-$(CONFIG_ARCH_MXC)             += imx
->  machine-$(CONFIG_ARCH_MEDIATEK)                += mediatek
-> +machine-$(CONFIG_ARCH_MILBEAUT)                += milbeaut
->  machine-$(CONFIG_ARCH_MXS)             += mxs
->  machine-$(CONFIG_ARCH_NETX)            += netx
->  machine-$(CONFIG_ARCH_NOMADIK)         += nomadik
-> diff --git a/arch/arm/mach-milbeaut/Kconfig b/arch/arm/mach-milbeaut/Kconfig
-> new file mode 100644
-> index 0000000..63b6f69
-> --- /dev/null
-> +++ b/arch/arm/mach-milbeaut/Kconfig
-> @@ -0,0 +1,28 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +menuconfig ARCH_MILBEAUT
-> +       bool "Socionext Milbeaut SoCs"
-> +       depends on ARCH_MULTI_V7
-> +       select ARM_GIC
-
-> +       select CLKDEV_LOOKUP
-> +       select GENERIC_CLOCKEVENTS
-> +       select CLKSRC_MMIO
-
-The clock and timer drivers' kconfig entries should select these.
-
-> +       select ZONE_DMA
-
-Why is this needed?
-
-> +       help
-> +               This enables support for Socionext Milbeaut SoCs
-> +
-> +if ARCH_MILBEAUT
-> +
-> +config ARCH_MILBEAUT_M10V
-> +       bool "Milbeaut SC2000/M10V platform"
-> +       select ARM_ARCH_TIMER
-> +       select M10V_TIMER
-> +       select PINCTRL
-> +       select PINCTRL_M10V
-> +       help
-> +         Support for Socionext's MILBEAUT M10V based systems
-> +
-> +config MACH_M10V_EVB
-> +       bool "Support for Milbeaut Evaluation boards"
-
-You shouldn't need a kconfig entry for each board.
-
-> +       default y
-> +
-> +endif
-> diff --git a/arch/arm/mach-milbeaut/Makefile b/arch/arm/mach-milbeaut/Makefile
-> new file mode 100644
-> index 0000000..64f6f52
-> --- /dev/null
-> +++ b/arch/arm/mach-milbeaut/Makefile
-> @@ -0,0 +1,3 @@
-> +obj-$(CONFIG_SMP) += platsmp.o
-> +obj-$(CONFIG_MACH_M10V_EVB) += m10v_evb.o
-> +
-> diff --git a/arch/arm/mach-milbeaut/m10v_evb.c b/arch/arm/mach-milbeaut/m10v_evb.c
-> new file mode 100644
-> index 0000000..a1fa7c3
-> --- /dev/null
-> +++ b/arch/arm/mach-milbeaut/m10v_evb.c
-
-This all looks SoC specific, not board specific.
-
-> @@ -0,0 +1,31 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2018 Socionext Inc.
-> + * Copyright:   (C) 2015 Linaro Ltd.
-> + */
-> +
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-
-Not needed.
-
-> +
-> +#include <asm/mach/arch.h>
-> +#include <asm/mach/map.h>
-> +
-> +static struct map_desc m10v_io_desc[] __initdata = {
+>  drivers/hwmon/Kconfig                        |  3 +-
+>  drivers/hwmon/ntc_thermistor.c               | 57 +++++++++++++++++++++++++++-
+>  include/linux/platform_data/ntc_thermistor.h |  1 +
+>  3 files changed, 58 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index f10840ad465c..5438cecace22 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -1206,7 +1206,8 @@ config SENSORS_NTC_THERMISTOR
+>  
+>  	  Currently, this driver supports
+>  	  NCP15WB473, NCP18WB473, NCP21WB473, NCP03WB473, NCP15WL333,
+> -	  NCP03WF104 and NCP15XH103 from Murata and B57330V2103 from EPCOS.
+> +	  NCP03WF104 and NCP15XH103 from Murata and B57330V2103 and
+> +	  B57891S0103 from EPCOS.
+>  
+>  	  This driver can also be built as a module.  If so, the module
+>  	  will be called ntc-thermistor.
+> diff --git a/drivers/hwmon/ntc_thermistor.c b/drivers/hwmon/ntc_thermistor.c
+> index c52d07c6b49f..e0c6b2f244a6 100644
+> --- a/drivers/hwmon/ntc_thermistor.c
+> +++ b/drivers/hwmon/ntc_thermistor.c
+> @@ -55,6 +55,7 @@ static const struct platform_device_id ntc_thermistor_id[] = {
+>  	{ "b57330v2103", TYPE_B57330V2103},
+>  	{ "ncp03wf104", TYPE_NCPXXWF104 },
+>  	{ "ncp15xh103", TYPE_NCPXXXH103 },
+> +	{ "b57891s0103", TYPE_B57891S0103 },
+>  	{ },
+>  };
+>  
+> @@ -212,8 +213,8 @@ static const struct ntc_compensation ncpXXxh103[] = {
+>  };
+>  
+>  /*
+> - * The following compensation table is from the specification of EPCOS NTC
+> - * Thermistors Datasheet
+> + * The following compensation tables are from the specifications in EPCOS NTC
+> + * Thermistors Datasheets
+>   */
+>  static const struct ntc_compensation b57330v2103[] = {
+>  	{ .temp_c	= -40, .ohm	= 190030 },
+> @@ -252,6 +253,52 @@ static const struct ntc_compensation b57330v2103[] = {
+>  	{ .temp_c	= 125, .ohm	= 531 },
+>  };
+>  
+> +static const struct ntc_compensation b57891s0103[] = {
+> +	{ .temp_c	= -55.0, .ohm	= 878900 },
+> +	{ .temp_c	= -50.0, .ohm	= 617590 },
+> +	{ .temp_c	= -45.0, .ohm	= 439340 },
+> +	{ .temp_c	= -40.0, .ohm	= 316180 },
+> +	{ .temp_c	= -35.0, .ohm	= 230060 },
+> +	{ .temp_c	= -30.0, .ohm	= 169150 },
+> +	{ .temp_c	= -25.0, .ohm	= 125550 },
+> +	{ .temp_c	= -20.0, .ohm	= 94143 },
+> +	{ .temp_c	= -15.0, .ohm	= 71172 },
+> +	{ .temp_c	= -10.0, .ohm	= 54308 },
+> +	{ .temp_c	= -5.0, .ohm	= 41505 },
+> +	{ .temp_c	= 0.0, .ohm	= 32014 },
+> +	{ .temp_c	= 5.0, .ohm	= 25011 },
+> +	{ .temp_c	= 10.0, .ohm	= 19691 },
+> +	{ .temp_c	= 15.0, .ohm	= 15618 },
+> +	{ .temp_c	= 20.0, .ohm	= 12474 },
+> +	{ .temp_c	= 25.0, .ohm	= 10000 },
+> +	{ .temp_c	= 30.0, .ohm	= 8080 },
+> +	{ .temp_c	= 35.0, .ohm	= 6569 },
+> +	{ .temp_c	= 40.0, .ohm	= 5372 },
+> +	{ .temp_c	= 45.0, .ohm	= 4424 },
+> +	{ .temp_c	= 50.0, .ohm	= 3661 },
+> +	{ .temp_c	= 55.0, .ohm	= 3039 },
+> +	{ .temp_c	= 60.0, .ohm	= 2536 },
+> +	{ .temp_c	= 65.0, .ohm	= 2128 },
+> +	{ .temp_c	= 70.0, .ohm	= 1794 },
+> +	{ .temp_c	= 75.0, .ohm	= 1518 },
+> +	{ .temp_c	= 80.0, .ohm	= 1290 },
+> +	{ .temp_c	= 85.0, .ohm	= 1100 },
+> +	{ .temp_c	= 90.0, .ohm	= 942 },
+> +	{ .temp_c	= 95.0, .ohm	= 809 },
+> +	{ .temp_c	= 100.0, .ohm	= 697 },
+> +	{ .temp_c	= 105.0, .ohm	= 604 },
+> +	{ .temp_c	= 110.0, .ohm	= 525 },
+> +	{ .temp_c	= 115.0, .ohm	= 457 },
+> +	{ .temp_c	= 120.0, .ohm	= 400 },
+> +	{ .temp_c	= 125.0, .ohm	= 351 },
+> +	{ .temp_c	= 130.0, .ohm	= 308 },
+> +	{ .temp_c	= 135.0, .ohm	= 272 },
+> +	{ .temp_c	= 140.0, .ohm	= 240 },
+> +	{ .temp_c	= 145.0, .ohm	= 213 },
+> +	{ .temp_c	= 150.0, .ohm	= 189 },
+> +	{ .temp_c	= 155.0, .ohm	= 168 },
 > +};
 > +
-> +void __init m10v_map_io(void)
-> +{
-> +       debug_ll_io_init();
+>  struct ntc_data {
+>  	struct ntc_thermistor_platform_data *pdata;
+>  	const struct ntc_compensation *comp;
+> @@ -296,6 +343,8 @@ static const struct of_device_id ntc_match[] = {
+>  		.data = &ntc_thermistor_id[6] },
+>  	{ .compatible = "murata,ncp15xh103",
+>  		.data = &ntc_thermistor_id[7] },
+> +	{ .compatible = "epcos,b57891s0103",
+> +		.data = &ntc_thermistor_id[8] },
+>  
+>  	/* Usage of vendor name "ntc" is deprecated */
+>  	{ .compatible = "ntc,ncp15wb473",
+> @@ -627,6 +676,10 @@ static int ntc_thermistor_probe(struct platform_device *pdev)
+>  		data->comp = ncpXXxh103;
+>  		data->n_comp = ARRAY_SIZE(ncpXXxh103);
+>  		break;
+> +	case TYPE_B57891S0103:
+> +		data->comp = b57891s0103;
+> +		data->n_comp = ARRAY_SIZE(b57891s0103);
+> +		break;
+>  	default:
+>  		dev_err(dev, "Unknown device type: %lu(%s)\n",
+>  				pdev_id->driver_data, pdev_id->name);
+> diff --git a/include/linux/platform_data/ntc_thermistor.h b/include/linux/platform_data/ntc_thermistor.h
+> index 698d0d59db76..231a27c302ec 100644
+> --- a/include/linux/platform_data/ntc_thermistor.h
+> +++ b/include/linux/platform_data/ntc_thermistor.h
+> @@ -29,6 +29,7 @@ enum ntc_thermistor_type {
+>  	TYPE_B57330V2103,
+>  	TYPE_NCPXXWF104,
+>  	TYPE_NCPXXXH103,
+> +	TYPE_B57891S0103,
 
-If you use earlycon instead, then this isn't needed.
+Guess I deserve the non-alphabetic order as penalty for not enforcing it 
+earlier. I'll accept the patch after DT approval and submit another one
+myself afterwards to restore alphabetic order.
 
-> +       iotable_init(m10v_io_desc, ARRAY_SIZE(m10v_io_desc));
+Guenter
 
-This isn't needed.
-
-> +}
-> +
-> +static const char * const m10v_compat[] = {
-> +       "socionext,milbeaut-m10v-evb",
-> +       NULL,
-> +};
-> +
-> +DT_MACHINE_START(M10V_REB, "Socionext Milbeaut")
-> +       .dt_compat      = m10v_compat,
-> +       .l2c_aux_mask   = 0xffffffff,
-> +       .map_io         = m10v_map_io,
-
-It looks like you can remove this entire file and use the default machine desc.
-
-> +MACHINE_END
-> diff --git a/arch/arm/mach-milbeaut/platsmp.c b/arch/arm/mach-milbeaut/platsmp.c
-> new file mode 100644
-> index 0000000..b706851
-> --- /dev/null
-> +++ b/arch/arm/mach-milbeaut/platsmp.c
-> @@ -0,0 +1,157 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2018 Socionext Inc.
-> + * Copyright:  (C) 2015 Linaro Ltd.
-> + */
-> +
-> +#include <linux/cpu_pm.h>
-> +#include <linux/irqchip/arm-gic.h>
-> +#include <linux/of_device.h>
-
-Not needed.
-
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-
-Not needed.
-
-> +#include <linux/suspend.h>
-> +
-> +#include <asm/cacheflush.h>
-> +#include <asm/cp15.h>
-> +#include <asm/idmap.h>
-> +#include <asm/smp_plat.h>
-> +#include <asm/suspend.h>
-> +
-> +#define M10V_MAX_CPU   4
-> +
-> +#define KERNEL_UNBOOT_FLAG     0x12345678
-> +#define CPU_FINISH_SUSPEND_FLAG 0x56784321
-> +
-> +static void __iomem *trampoline;
-> +
-> +static int m10v_boot_secondary(unsigned int l_cpu, struct task_struct *idle)
-> +{
-> +       unsigned int mpidr, cpu, cluster;
-> +
-> +       mpidr = cpu_logical_map(l_cpu);
-> +       cpu = MPIDR_AFFINITY_LEVEL(mpidr, 0);
-> +       cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
-> +
-> +       if (cpu >= M10V_MAX_CPU)
-> +               return -EINVAL;
-> +
-> +       pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
-> +
-> +       writel(virt_to_phys(secondary_startup), trampoline + cpu * 4);
-> +       arch_send_wakeup_ipi_mask(cpumask_of(l_cpu));
-> +
-> +       return 0;
-> +}
-> +
-> +static void m10v_cpu_die(unsigned int l_cpu)
-> +{
-> +       gic_cpu_if_down(0);
-> +
-> +       v7_exit_coherency_flush(louis);
-> +
-> +       /* Now we are prepared for power-down, do it: */
-> +       wfi();
-> +}
-> +
-> +static int m10v_cpu_kill(unsigned int l_cpu)
-> +{
-> +       unsigned int mpidr, cpu;
-> +
-> +       mpidr = cpu_logical_map(l_cpu);
-> +       cpu = MPIDR_AFFINITY_LEVEL(mpidr, 0);
-> +
-> +       writel(KERNEL_UNBOOT_FLAG, trampoline + cpu * 4);
-> +
-> +       return 1;
-> +}
-> +
-> +static struct smp_operations m10v_smp_ops __initdata = {
-> +       .smp_boot_secondary     = m10v_boot_secondary,
-> +       .cpu_die                = m10v_cpu_die,
-> +       .cpu_kill               = m10v_cpu_kill,
-> +};
-> +
-> +static int __init m10v_smp_init(void)
-> +{
-> +       unsigned int mpidr, cpu, cluster;
-> +       struct device_node *np;
-> +
-> +       np = of_find_compatible_node(NULL, NULL, "socionext,milbeaut-m10v-evb");
-> +       if (!np || !of_device_is_available(np))
-
-Just use of_machine_is_compatible() here.
-
-> +               return -ENODEV;
-> +       of_node_put(np);
-> +
-> +       np = of_find_compatible_node(NULL, NULL, "socionext,smp-trampoline");
-> +       if (!np)
-> +               return -ENODEV;
-> +
-> +       trampoline = of_iomap(np, 0);
-> +       if (!trampoline)
-> +               return -ENODEV;
-> +       of_node_put(np);
-> +
-> +       mpidr = read_cpuid_mpidr();
-> +       cpu = MPIDR_AFFINITY_LEVEL(mpidr, 0);
-> +       cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
-> +
-> +       pr_info("MCPM boot on cpu_%u cluster_%u\n", cpu, cluster);
-> +
-> +       for (cpu = 0; cpu < M10V_MAX_CPU; cpu++)
-> +               writel(KERNEL_UNBOOT_FLAG, trampoline + cpu * 4);
-> +
-> +       smp_set_ops(&m10v_smp_ops);
-> +
-> +       return 0;
-> +}
-> +early_initcall(m10v_smp_init);
-> +
-> +static int m10v_pm_valid(suspend_state_t state)
-> +{
-> +       return (state == PM_SUSPEND_STANDBY) || (state == PM_SUSPEND_MEM);
-> +}
-> +
-> +typedef void (*phys_reset_t)(unsigned long);
-> +static phys_reset_t phys_reset;
-> +
-> +static int m10v_die(unsigned long arg)
-> +{
-> +       setup_mm_for_reboot();
-> +       asm("wfi");
-> +       /* Boot just like a secondary */
-> +       phys_reset = (phys_reset_t)(unsigned long)virt_to_phys(cpu_reset);
-> +       phys_reset(virt_to_phys(cpu_resume));
-> +
-> +       return 0;
-> +}
-> +
-> +static int m10v_pm_enter(suspend_state_t state)
-> +{
-> +       switch (state) {
-> +       case PM_SUSPEND_STANDBY:
-> +               pr_err("STANDBY\n");
-> +               asm("wfi");
-> +               break;
-> +       case PM_SUSPEND_MEM:
-> +               pr_err("SUSPEND\n");
-> +               cpu_pm_enter();
-> +               cpu_suspend(0, m10v_die);
-> +               cpu_pm_exit();
-> +               break;
-> +       }
-> +       return 0;
-> +}
-> +
-> +static const struct platform_suspend_ops m10v_pm_ops = {
-> +       .valid          = m10v_pm_valid,
-> +       .enter          = m10v_pm_enter,
-> +};
-> +
-> +struct clk *m10v_clclk_register(struct device *cpu_dev);
-> +
-> +static int __init m10v_pm_init(void)
-> +{
-> +       suspend_set_ops(&m10v_pm_ops);
-> +
-> +       return 0;
-> +}
-> +late_initcall(m10v_pm_init);
-> --
-> 1.9.1
->
+>  };
+>  
+>  struct ntc_thermistor_platform_data {
+> -- 
+> 2.11.0
+> 
