@@ -1,71 +1,45 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: =?iso-8859-1?B?W1JDRqBQQVRDSCx2Miwy?= =?iso-8859-1?B?LzJd?= pwm:
- imx: Configure output to GPIO in disabled state
-Date: Mon, 19 Nov 2018 09:48:22 +0100
-Message-ID: <20181119084822.qljinfgxpjtumojk@pengutronix.de>
-References: <283cfef3-16d0-8bd4-e306-6e34d44c3a86@ysoft.com>
- <20181109165555.vqbiwh4hlcnozdna@pengutronix.de>
- <20181114113449.GB2620@ulmo>
- <20181114215120.vddykljqyavm64wj@pengutronix.de>
- <20181115152545.GA8611@ulmo>
- <20181115203733.qvonika6yhn2bsnb@pengutronix.de>
- <20181116095124.GA28631@ulmo>
- <20181116103929.cxfvuc2te7cadhp2@pengutronix.de>
- <20181116122445.GA25386@ulmo>
- <20181118200815.a6hkokt3otfm4yl4@pengutronix.de>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v2 00/25] at24: remove
+Date: Mon, 19 Nov 2018 09:58:46 +0100
+Message-ID: <CAMRc=MfXWW9siNZNkocxmTU7mnoQO0KpeHQ3JmLcEfNscqCbDQ@mail.gmail.com>
+References: <20181113140133.17385-1-brgl@bgdev.pl> <20181118170329.788778a8@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181118200815.a6hkokt3otfm4yl4@pengutronix.de>
+In-Reply-To: <20181118170329.788778a8@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@karo-electronics.de>, Linus Walleij <linus.walleij@linaro.org>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Nicolas Ferre <nicolas.ferre@microchip.com>, "David S . Miller" <davem@davemloft.net>, Grygorii Strashko <grygorii.strashko@ti.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree <devicetree@vger.kernel.org>, netdev
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+niedz., 18 lis 2018 o 17:03 Boris Brezillon
+<boris.brezillon@bootlin.com> napisa=C5=82(a):
+>
+> On Tue, 13 Nov 2018 15:01:08 +0100
+> Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> > As far as merging of this series goes: I'd like to avoid dragging it ov=
+er
+> > four releases. The series is logically split into five groups:
+> >
+> > patches 1-2: nvmem and mtd changes
+> > patches 3-9: davinci arch-specific changes
+> > patches 10-13: networking changes
+> > patches 14-24: davinci specific again
+> > patch 25: final at24 change
+> >
+> > With that I believe we can do the following: Greg KH could pick up the
+> > first two patches into his char-misc tree.
+>
+> The char-misc tree? Why not the MTD or NVMEM tree?
+>
 
-On Sun, Nov 18, 2018 at 09:08:15PM +0100, Uwe Kleine-König wrote:
-> On Fri, Nov 16, 2018 at 01:24:45PM +0100, Thierry Reding wrote:
-> > On Fri, Nov 16, 2018 at 11:39:29AM +0100, Uwe Kleine-König wrote:
-> > > Also note that you don't include the poor souls where there is no
-> > > hardware pullup into the right direction.
-> > 
-> > The poor souls should speak up and then we can look into finding a good
-> > solution for them. I'm pretty sure there must be some equivalent that
-> > can be used for other users.
-> 
-> I think one of the boards that I'm working with has an enabled backlight
-> at power on until the bootloader actively drives the related pwm to
-> the right level (either using the pwm or the gpio function of the pin).
-> I will double check that but assuming that is right, just disabling the
-> output won't work here.
+There is no NVMEM tree - Srinivas sends his patches to Greg to be
+applied to char-misc.
 
-I just confirmed this. On the board I have in mind the backlight really
-goes on during powerup. One of the first things the bootloader does is
-to ensure the backlight goes off again by actively driving the
-respective pin.
+The second patch depends on the first one so in order to avoid more
+merging problems I suggested that the MTD patch go through char-misc
+as well. If you see a better solution, please let me know.
 
-I fully agree with you this is unfortunate and the hardware team could
-have made the situation smoother if there were a pull up. I guess asking
-them to go back and fix that won't be accepted[1]. So please whatever
-solution you force through, please consider it should work without a
-sane pull and also with the imx SoCs before i.MX6 which cannot disable
-the output driver via pinmux.
-
-Best regards
-Uwe
-
-[1] Additionally this is a bought display+backlight+touch combo, so the
-    right place to put the pull would be in this unit, because the board
-    designer rightfully says: I won't put a pull up on my board because
-    for the next batch we're maybe switching to the similar display
-    combo that needs an active high signal for the backlight and I won't
-    create another factor 2 for the board variants for stuff that can be
-    fixed in software.
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Bart
