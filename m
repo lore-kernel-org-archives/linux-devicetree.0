@@ -1,61 +1,35 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 0/5] gnss: sirf: add support for w2sg0004 + lna
-Date: Mon, 19 Nov 2018 20:05:23 +0100
-Message-ID: <7506654C-2601-4252-BB30-0DE9AF692309@goldelico.com>
-References: <20181118215801.12280-1-andreas@kemnade.info> <3487514B-E546-4F11-8C0A-F5B4A8114376@goldelico.com> <20181119194414.1c7d6887@aktux>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+From: Paul Burton <paul.burton@mips.com>
+Subject: Re: [PATCH] MIPS: Use device_type helpers to access the node type
+Date: Mon, 19 Nov 2018 19:06:43 +0000
+Message-ID: <MWHPR2201MB1277675B043F1E9F2F78479DC1D80@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <20181116221104.23024-2-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181119194414.1c7d6887@aktux>
+In-Reply-To: <20181116221104.23024-2-robh@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+To: Rob Herring <robh@kernel.org>
+Cc: James Hogan <jhogan@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <pburton@wavecomp.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>Ralf Baechle <ralf@linux-mips.org>Paul Burton <pburton@wavecomp.com>James Hogan <jhogan@kernel.org>"linux-mips@linux-mips.org" <linux-mips@linux-mips.org>"linux-mips@linux-mips.org" <linux-mips@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello,
 
-> Am 19.11.2018 um 19:44 schrieb Andreas Kemnade <andreas@kemnade.info>:
-> 
-> Hi,
-> 
-> On Mon, 19 Nov 2018 09:22:59 +0100
-> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
-> 
->> Hi,
->> 
->>> Am 18.11.2018 um 22:57 schrieb Andreas Kemnade <andreas@kemnade.info>:
->>> 
->>> Here is another chapter of the story to get gta04 gnss power
->>> management into the mainline kernel.
->>> There is a w2sg0004 without wakeup line in there, so power state
->>> can only be determined indirectly by looking at the serial data lines.
->>> Then there as also an lna which needs to be powered for real gps
->>> reception. That part needs probably more discussion, since it might
->>> be an idea to have it more generalized since it has nothing todo
->>> with the chip itself.  
->> 
->> On the other hand if we follow the "SoC is the spider in the net"
->> way of looking at DTS hierarchy, we have the uart as a child of the
->> SoC and the gnss receiver as a serdev child of the UART. The LNA
->> is even one step more distantly connected to the gnss. So it makes
->> sense to me to have it as a property/reference of the gnss chip's
->> DTS record which is a sibling of the compatible records. So the only
->> place where it can be reasonably processed is the driver.
->> 
-> Or the lna is a child of the gnss receiver.
+Rob Herring wrote:
+> Remove directly accessing device_node.type pointer and use the accessors
+> instead. This will eventually allow removing the type pointer.
+>=20
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Paul Burton <paul.burton@mips.com>
+> Cc: James Hogan <jhogan@kernel.org>
+> Cc: linux-mips@linux-mips.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Well, this IMHO would assume the gnss receiver is a bus master...
+Applied to mips-next.
 
-> The whole thing
-> should probably not be overdesigned, but it does not make sense that
-> every gnss chip driver has some lna logic.
-> Maybe the regulator should just be stored in the struct
-> gnss_device and then drivers/gnss/core.c takes care.
+Thanks,
+    Paul
 
-Probably yes, but likely not difficult to refactor and generalize later
-if users of other chips report a similar need. More important is to
-get upstream support for the gta04 with this chip.
-
-BR,
-Nikolaus
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paul.burton@mips.com to report it. ]
