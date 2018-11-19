@@ -1,41 +1,98 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] pinctrl: mediatek: Convert to using %pOFn instead of device_node.name
-Date: Mon, 19 Nov 2018 13:07:41 -0600
-Message-ID: <CAL_Jsq+r6JrKKcHnmBSncdEaw=7Jhobv_w8PJrH=sbY2qtxOTQ@mail.gmail.com>
-References: <20181116220540.17222-1-robh@kernel.org> <20181116220540.17222-4-robh@kernel.org>
- <CAGp9LzpgZsj79Tf5Hee45Wt6ag+WHV0SMWd6qvvtj4G3pzAZKQ@mail.gmail.com>
+Subject: Re: [PATCH v5 08/12] dt-bindings: mediatek: Change the binding for
+ mmsys clocks
+Date: Mon, 19 Nov 2018 13:15:16 -0600
+Message-ID: <CAL_JsqKJQwfDJbpmwW+oCxiDkSp5+6mG-uoURmCQVEMP_jFOEg@mail.gmail.com>
+References: <20181116125449.23581-1-matthias.bgg@kernel.org>
+ <20181116125449.23581-9-matthias.bgg@kernel.org> <20181116231522.GA18006@bogus>
+ <2a23e407-4cd4-2e2b-97a5-4e2bb96846e0@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGp9LzpgZsj79Tf5Hee45Wt6ag+WHV0SMWd6qvvtj4G3pzAZKQ@mail.gmail.com>
+In-Reply-To: <2a23e407-4cd4-2e2b-97a5-4e2bb96846e0@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: matthias.bgg@kernel.org, Mark Rutland <mark.rutland@arm.com>, CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sean Wang <sean.wang@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Chen-Yu Tsai <wens@csie.org>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, linux-clk <linux-clk@vger.kernel.>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 16, 2018 at 5:46 PM Sean Wang <sean.wang@kernel.org> wrote:
+On Sun, Nov 18, 2018 at 11:12 AM Matthias Brugger
+<matthias.bgg@gmail.com> wrote:
 >
-> On Fri, Nov 16, 2018 at 2:06 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > In preparation to remove the node name pointer from struct device_node,
-> > convert printf users to use the %pOFn format specifier.
-> >
-> > Cc: Sean Wang <sean.wang@kernel.org>
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> > Cc: linux-mediatek@lists.infradead.org
-> > Cc: linux-gpio@vger.kernel.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Signed-off-by: Rob Herring <robh@kernel.org>
 >
-> Acked-by: Sean Wang <sean.wang@kernel.org>
+>
+> On 11/17/18 12:15 AM, Rob Herring wrote:
+> > On Fri, Nov 16, 2018 at 01:54:45PM +0100, matthias.bgg@kernel.org wrote:
+> >> From: Matthias Brugger <mbrugger@suse.com>
+> >>
+> >> On SoCs with no publical available HW or no working graphic stack
+> >> we change the devicetree binding for the mmsys clock part. This
+> >> way we don't need to register a platform device explicitly in the
+> >> drm driver. Instead we can create a mmsys child which invokes the
+> >> clock driver.
+> >>
+> >> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+> >> ---
+> >>  .../bindings/arm/mediatek/mediatek,mmsys.txt  | 21 ++++++++++++-------
+> >>  .../display/mediatek/mediatek,disp.txt        |  4 ++++
+> >>  2 files changed, 18 insertions(+), 7 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
+> >> index 4468345f8b1a..d4e205981363 100644
+> >> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
+> >> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
+> >> @@ -1,4 +1,4 @@
+> >> -Mediatek mmsys controller
+> >> +Mediatek mmsys clock controller
+> >>  ============================
+> >>
+> >>  The Mediatek mmsys controller provides various clocks to the system.
+> >> @@ -6,18 +6,25 @@ The Mediatek mmsys controller provides various clocks to the system.
+> >>  Required Properties:
+> >>
+> >>  - compatible: Should be one of:
+> >> -    - "mediatek,mt2712-mmsys", "syscon"
+> >> -    - "mediatek,mt6797-mmsys", "syscon"
+> >> +    - "mediatek,mt2712-mmsys-clk", "syscon"
+> >> +    - "mediatek,mt6797-mmsys-clk", "syscon"
+> >
+> > Doesn't match the example.>
+> >>  - #clock-cells: Must be 1
+> >>
+> >> -The mmsys controller uses the common clk binding from
+> >> +The mmsys clock controller uses the common clk binding from
+> >>  Documentation/devicetree/bindings/clock/clock-bindings.txt
+> >>  The available clocks are defined in dt-bindings/clock/mt*-clk.h.
+> >> +It is a child of the mmsys block, see binding at:
+> >> +Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> >>
+> >>  Example:
+> >>
+> >> -mmsys: clock-controller@14000000 {
+> >> -    compatible = "mediatek,mt8173-mmsys", "syscon";
+> >> +mmsys: syscon@14000000 {
+> >> +    compatible = "mediatek,mt2712-mmsys", "syscon", "simple-mfd";
+> >>      reg = <0 0x14000000 0 0x1000>;
+> >> -    #clock-cells = <1>;
+> >> +
+> >> +    mmsys_clk: clock-controller@14000000 {
+> >> +            compatible = "mediatek,mt2712-mmsys-clk";
+> >> +            #clock-cells = <1>;
+> >
+> > This goes against the general direction of not defining separate nodes
+> > for providers with no resources.
+> >
+> > Why do you need this and what does it buy if you have to continue to
+> > support the existing chips?
+> >
+>
+> It would show explicitly that the mmsys block is used to probe two
+> drivers, one for the gpu and one for the clocks. Otherwise that is
+> hidden in the drm driver code. I think it is cleaner to describe that in
+> the device tree.
 
-BTW, messages to you bounce:
-
-<sean.wang@mediatek.com> (expanded from <sean.wang@kernel.org>): host
-    mailgw01.mediatek.com[216.200.240.184] said: 550 Relaying mail to
-    sean.wang@mediatek.com is not allowed (in reply to RCPT TO command)
-
-Perhaps you need your kernel.org account to route somewhere else.
+No, that's maybe cleaner for the driver implementation in the Linux
+kernel. What about other OS's or when Linux drivers and subsystems
+needs change? Cleaner for DT is design bindings that reflect the h/w.
+Hardware is sometimes just messy.
 
 Rob
