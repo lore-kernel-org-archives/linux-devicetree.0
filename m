@@ -1,151 +1,141 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v3 17/25] dt-bindings: panel: Add Bananapi S070WV20-CT16
- ICN6211 MIPI-DSI to RGB bridge
-Date: Mon, 19 Nov 2018 10:49:39 +0100
-Message-ID: <29a2d527-f1cf-208f-b117-086225ee3cd1@samsung.com>
-References: <20181026144344.27778-1-jagan@amarulasolutions.com>
- <CGME20181029111305epcas5p2ee0ca644470de4e036762e000afbb71b@epcas5p2.samsung.com>
- <20181026144344.27778-18-jagan@amarulasolutions.com>
- <3c4c8a08-8c1e-1ac6-2b53-81389d69c97b@samsung.com>
- <CAGb2v66ENhmNXPz4PfdRJjNUNdpDNZYX2a3SH8AD6SMe9g2zLA@mail.gmail.com>
- <bfe28e8d-3786-d35d-a589-abed9ee8e7d5@samsung.com>
- <CAMty3ZAWkX8YSRzFs_GS2O4+=pf68e4EuSMym+_XpCe3_4-2yw@mail.gmail.com>
- <25c24350-4acd-68b8-ef5d-75a60094f0b6@samsung.com>
- <CAMty3ZDTAiW=Lx2H4WvdsdJRYsVe1CpCJx7D0f7yANx7Lx25PA@mail.gmail.com>
- <eb23f0f8-0270-d4fa-2cac-5b65ee4af42c@samsung.com>
- <CAMty3ZD8wOyKJ32-itxshXmNbPs-_yf-S4_AmKcV4YuVX_gHGQ@mail.gmail.com>
+From: Philippe Schenker <dev@pschenker.ch>
+Subject: [PATCH v2 3/4] iio: adc: add STMPE ADC devicetree bindings
+Date: Mon, 19 Nov 2018 11:25:27 +0100
+Message-ID: <20181119102528.2830-3-dev@pschenker.ch>
+References: <20181119102528.2830-1-dev@pschenker.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAMty3ZD8wOyKJ32-itxshXmNbPs-_yf-S4_AmKcV4YuVX_gHGQ@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, Maxime Ripard <maxime.ripard@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, linux-sunxi@googlegroups.com, Will Deacon <will.deacon@arm.com>, Stephen Boyd <sboyd@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-kernel <linux-kernel@vger.kernel.org>, Vasily Khoruzhick <anarsoul@gmail.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181119102528.2830-1-dev@pschenker.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jic23@kernel.org, marcel.ziswiler@toradex.com, stefan@agner.ch
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-iio@vger.kernel.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Philippe Schenker <philippe.schenker@toradex.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Max Krummenacher <max.krummenacher@toradex.com>, Hartmut Knaack <knaack.h@gmx.de>, Lee Jones <lee.jones@linaro.org>, linux-stm32@st-md-mailman.stormreply.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTguMTEuMjAxOCAxOToyMCwgSmFnYW4gVGVraSB3cm90ZToKPiBPbiBUdWUsIE5vdiAxMywg
-MjAxOCBhdCAxOjI2IFBNIEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+IHdyb3Rl
-Ogo+PiBPbiAxMC4xMS4yMDE4IDA4OjMyLCBKYWdhbiBUZWtpIHdyb3RlOgo+Pj4gT24gV2VkLCBO
-b3YgNywgMjAxOCBhdCAyOjQxIFBNIEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+
-IHdyb3RlOgo+Pj4+IE9uIDA2LjExLjIwMTggMTk6MDgsIEphZ2FuIFRla2kgd3JvdGU6Cj4+Pj4+
-IE9uIFdlZCwgT2N0IDMxLCAyMDE4IGF0IDI6NDUgUE0gQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBz
-YW1zdW5nLmNvbT4gd3JvdGU6Cj4+Pj4+PiBPbiAzMS4xMC4yMDE4IDA5OjU4LCBDaGVuLVl1IFRz
-YWkgd3JvdGU6Cj4+Pj4+Pj4gT24gV2VkLCBPY3QgMzEsIDIwMTggYXQgNDo1MyBQTSBBbmRyemVq
-IEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPiB3cm90ZToKPj4+Pj4+Pj4gT24gMjYuMTAuMjAx
-OCAxNjo0MywgSmFnYW4gVGVraSB3cm90ZToKPj4+Pj4+Pj4+IEJhbmFuYXBpIFMwNzBXVjIwLUNU
-MTYgSUNONjIxMSBpcyA4MDB4NDgwLCA0LWxhbmUgTUlQSS1EU0kgdG8gUkdCCj4+Pj4+Pj4+PiBi
-cmlkZ2UgcGFuZWwsIHdoaWNoIGlzIGF2YWlsYWJsZSBvbiBzYW1lIFBDQiB3aXRoIDI0LWJpdCBS
-R0IgaW50ZXJmYWNlLgo+Pj4+Pj4+Pj4KPj4+Pj4+Pj4+IFNvLCB0aGlzIHBhdGNoIGFkZHMgRFNJ
-IHNwZWNpZmljIGJpbmRpbmcgZGV0YWlscyBvbiBleGlzdGluZwo+Pj4+Pj4+Pj4gZHQtYmluZGlu
-Z3MgZmlsZS4KPj4+Pj4+Pj4+Cj4+Pj4+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBKYWdhbiBUZWtpIDxq
-YWdhbkBhbWFydWxhc29sdXRpb25zLmNvbT4KPj4+Pj4+Pj4+IC0tLQo+Pj4+Pj4+Pj4gQ2hhbmdl
-cyBmb3IgdjM6Cj4+Pj4+Pj4+PiAtIFVzZSBleGlzdGluZyBiaW5kaW5nIGRvYyBhbmQgdXBkYXRl
-IGRzaSBkZXRhaWxzCj4+Pj4+Pj4+PiBDaGFuZ2VzIGZvciB2MjoKPj4+Pj4+Pj4+IC0gbm9uZQo+
-Pj4+Pj4+Pj4KPj4+Pj4+Pj4+ICAuLi4vZGlzcGxheS9wYW5lbC9iYW5hbmFwaSxzMDcwd3YyMC1j
-dDE2LnR4dCAgfCAzMSArKysrKysrKysrKysrKysrKy0tCj4+Pj4+Pj4+PiAgMSBmaWxlIGNoYW5n
-ZWQsIDI5IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4+Pj4+Pj4+Pgo+Pj4+Pj4+Pj4g
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Bh
-bmVsL2JhbmFuYXBpLHMwNzB3djIwLWN0MTYudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYmFuYW5hcGksczA3MHd2MjAtY3QxNi50eHQKPj4+Pj4+
-Pj4+IGluZGV4IDM1YmMwYzgzOWY0OS4uYjc4NTVkYzdjNjZmIDEwMDY0NAo+Pj4+Pj4+Pj4gLS0t
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYmFuYW5h
-cGksczA3MHd2MjAtY3QxNi50eHQKPj4+Pj4+Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2JhbmFuYXBpLHMwNzB3djIwLWN0MTYudHh0Cj4+
-Pj4+Pj4+PiBAQCAtMSwxMiArMSwzOSBAQAo+Pj4+Pj4+Pj4gIEJhbmFuYSBQaSA3IiAoUzA3MFdW
-MjAtQ1QxNikgVEZUIExDRCBQYW5lbAo+Pj4+Pj4+Pj4KPj4+Pj4+Pj4+ICtTMDcwV1YyMC1DVDE2
-IGlzIDciIDgwMHg0ODAgcGFuZWwgY29ubmVjdGVkIHRocm91Z2ggYSAyNC1iaXQgUkdCIGludGVy
-ZmFjZS4KPj4+Pj4+Pj4+ICsKPj4+Pj4+Pj4+ICtEZXBlbmRpbmcgb24gdGhlIHZhcmlhbnQsIHRo
-ZSBQQ0IgYXR0YWNoZWQgdG8gdGhlIHBhbmVsIG1vZHVsZSBlaXRoZXIKPj4+Pj4+Pj4+ICtzdXBw
-b3J0cyBEU0ksIG9yIERTSSArIDI0LWJpdCBSR0IuIERTSSBpcyBjb252ZXJ0ZWQgdG8gMjQtYml0
-IFJHQiB2aWEKPj4+Pj4+Pj4+ICthbiBvbmJvYXJkIElDTjYyMTEgTUlQSSBEU0kgLSBSR0IgYnJp
-ZGdlIGNoaXAsIHRoZW4gZmVkIHRvIHRoZSBwYW5lbAo+Pj4+Pj4+Pj4gK2l0c2VsZgo+Pj4+Pj4+
-PiBBcyBJIHVuZGVyc3RhbmQgdGhpcyBpcyBkaXNwbGF5IGJvYXJkLCB3aGljaCBjb250YWlucyAn
-cHVyZScgUkdCIHBhbmVsCj4+Pj4+Pj4+IFMwNzBXVjIwLUNUMTYgYW5kIG9wdGlvbmFsbHkgSUNO
-NjIxMSBEU0ktPlJHQiBicmlkZ2UuCj4+Pj4+Pj4+IFRoZXNlIGFyZSBzZXBhcmF0ZSBkZXZpY2Vz
-LCBqdXN0IGNvbm5lY3RlZCBieSB2ZW5kb3IgdG8gc2ltcGxpZnkgaXRzCj4+Pj4+Pj4+IGFzc2Vt
-Ymx5LiBXaHkgZG9uJ3QgeW91IGNyZWF0ZSB0aGVuIGJyaWRnZSBkcml2ZXIgZm9yIElDTjYyMTEg
-YW5kIFJHQgo+Pj4+Pj4+PiBwYW5lbCBkcml2ZXIgZm9yIFMwNzBXVjIwLUNUMTYgLSBpdCBsb29r
-cyBtb3JlIGdlbmVyaWMuCj4+Pj4+Pj4+IFRoZW4geW91IGNhbiBkZXNjcmliZSBib3RoIGluIGR0
-cyBhbmQgdm9pbGEuCj4+Pj4+Pj4+IENyZWF0aW5nIGRyaXZlcnMgZm9yIGV2ZXJ5IGNvbWJvIG9m
-IGRldmljZXMgKHBhbmVsICsgYnJpZGdlKSwganVzdAo+Pj4+Pj4+PiBiZWNhdXNlIHNvbWUgdmVu
-ZG9yIHNlbGxzIHRoZW0gdG9nZXRoZXIgc2VlbXMgaW5jb3JyZWN0IC0gd2UgaGF2ZQo+Pj4+Pj4+
-PiBkZXZpY2V0cmVlIGZvciBpdC4KPj4+Pj4+PiBSb2Igc3VnZ2VzdGVkIHRoaXMsIGFuZCBhbHNv
-IHRoZSBvcHBvc2l0ZTogdXNpbmcgdGhlIHNhbWUKPj4+Pj4+PiAiYmFuYW5hcGksczA3MHd2MjAt
-Y3QxNiIKPj4+Pj4+PiBjb21wYXRpYmxlIHN0cmluZyBmb3IgYm90aCB0eXBlcyBvZiBjb25uZWN0
-aW9ucywgYW5kIGhhdmUgdGhlIGRyaXZlciBkZWFsIHdpdGgKPj4+Pj4+PiBkZXRlY3RpbmcgdGhl
-IGJ1cyB0eXBlLgo+Pj4+Pj4+Cj4+Pj4+Pj4gVGhlIHRoaW5nIGFib3V0IHRoZSBicmlkZ2UgY2hp
-cCBpcyB0aGF0IHRoZXJlJ3Mgbm8gYXZhaWxhYmxlIGRhdGFzaGVldCB0aGF0Cj4+Pj4+Pj4gZGVz
-Y3JpYmVzIGFsbCB0aGUgcGFydHMgb2YgdGhlIGluaXQgc2VxdWVuY2UsIGluIGZhY3Qgbm9uZSBh
-dCBhbGwuIEkgbWFuYWdlZAo+Pj4+Pj4+IHRvIHdvcmsgb3V0IHNvbWUgYml0cywgYnV0IHRoZSBv
-dGhlcnMgcmVtYWluIGEgbXlzdGVyeSBhbmQgbXVzdCBiZSBoYXJkLWNvZGVkCj4+Pj4+Pj4gdG8g
-bWF0Y2ggdGhlIHBhbmVsLiBUaGF0IHdvdWxkIHdvcmsgYWdhaW5zdCBoYXZpbmcgYSBnZW5lcmlj
-IGJyaWRnZSBkcml2ZXIuCj4+Pj4+PiBCdXQgaXQgaXMgY29tbW9uIGZvciBtYW55IGNoaXBzIC0g
-MXN0IHZlcnNpb24gb2YgdGhlIGRyaXZlciBpcyBkZXZlbG9wZWQKPj4+Pj4+IG9uIG9uZSBwbGF0
-Zm9ybSBhbmQgaXQgc3VwcG9ydHMgb25seSBvbmUgY29uZmlndXJhdGlvbiwgaWYgbmV4dCBwbGF0
-Zm9ybQo+Pj4+Pj4gd2l0aCB0aGUgc2FtZSBjaGVhcCBhcHBlYXJzIHRoZSBkcml2ZXIgaXMgYXVn
-bWVudGVkIGlmIG5lY2Vzc2FyeS4KPj4+Pj4gQXQtbGVhc3QgZmV3IG9mIHRoZSBjb21tYW5kcyBm
-cm9tIHBhbmVsIGluaXRpYWxpemF0aW9uIGNvZGUsIHRoZQo+Pj4+PiByZXNwZWN0aXZlIG9wY29k
-ZSBkYXRhIHZhbHVlcyBhcmUgYmFzZWQgb24gcGFuZWwgdGltaW5ncyBhbmQgZXZlbgo+Pj4+PiBj
-bG9jayB2YWx1ZSBpcyBkaWZmZXJlbnQgaW4gRFNJLiBJIHRoaW5rIGl0IGxvb2sgaGFyZCB0byB0
-cnkgYnJpZGdlCj4+Pj4+IGRyaXZlciBmb3IgdGhlc2UgcmVzdHJpY3Rpb25zLCBkbyB5b3UgaGF2
-ZSBhbnkgc3VnZ2VzdGlvbnM/Cj4+Pj4gV2hlcmUgZG8geW91IHNlZSBhbiBpc3N1ZT8gU2luY2Ug
-cGFuZWwgaXMgUkdCIGl0IHNob3VsZCBoYXZlIG5vCj4+Pj4gaW5pdGlhbGl6YXRpb24gc2VxdWVu
-Y2UgKGJlc2lkZSByZWd1bGF0b3IvZ3BpbyBwb3dlciBvbi9vZmYpLCBzbyB0aGUKPj4+PiBvbmx5
-IHRoaW5nIHRvIGRvIGlzIHRvIGZpZ3VyZSBvdXQgd2hpY2ggcmVndWxhdG9ycy9ncGlvcyBiZWxv
-bmdzIHRvCj4+Pj4gd2hpY2ggY29tcG9uZW50IC0gd2l0aCBwdWJsaWNseSBhdmFpbGFibGUgc3Bl
-Y3MgaXQgc2hvdWxkIGJlIGRvYWJsZS4KPj4+Pgo+Pj4+IFRoZSB3aG9sZSBpbml0aWFsaXphdGlv
-biBzZXF1ZW5jZSBpcyBmb3IgdGhlIGJyaWRnZSwgc28geW91IHB1dCBpdCBpbnRvCj4+Pj4gYnJp
-ZGdlIGRyaXZlciwgZm9yIHN0YXJ0ZXJzIGl0IGNhbiBiZSBoYXJkY29kZWQuCj4+PiBZZXMsIEkg
-dW5kZXJzdGFuZCB3ZSBjYW4gbW92ZSByZWd1bGF0b3JzL2dwaW8gc2V0dXAgc2VwYXJhdGVseSBh
-bmQKPj4+IHRob3VnaCB3ZSBoYXJkY29kZSB0aGUgaW5pdCBzZXF1ZW5jZSB0aGVyZSBpcyBkaWZm
-ZXJlbmNlICBpbiBjbG9jayBmb3IKPj4+IERTSSh3aGljaCBJIG1lbnRpb25lZCBpbiBwcmV2aW91
-cyBtYWlsKS4gRFNJIHBhbmVsIGNhbid0IHdvcmsgd2l0aAo+Pj4gY2xvY2sgdXNlZCBieSBSR0Ig
-cGFuZWwtc2ltcGxlLgo+Pgo+PiBJZiB5b3UgbWVhbiBwaXhlbCBjbG9jayBmcm9tIHRpbWluZ3Mg
-aW4gbmV4dCBwYXRjaCBpdCBzZWVtcyBpbmNvcnJlY3QuCj4+IFBpeGVsIGNsb2NrIHNob3VsZCBi
-ZSBhbHdheXMKPj4KPj4gaHRvdGFsICogdnRvdGFsICogdnJlZnJlc2gsIGluIGNhc2Ugb2YgZHJt
-X2Rpc3BsYXlfbW9kZSByZXN1bHQgc2hvdWxkIGJlCj4+IGRpdmlkZWQgYnkgMTAwMCAoYXMgLmNs
-b2NrIGlzIGluIGtIeikuCj4+Cj4+IFdpdGggdGltaW5ncyBwcm92aWRlZCB0aGVyZSB5b3UgaGF2
-ZTogOTI4KjUyNSo2MCA9IDI5MjMyMDAwCj4+Cj4+IFNvIHBpeGVsIGNsb2NrIHNob3VsZCBiZSAy
-OTIzMiwgaWYgb3RoZXIgdGltaW5ncyBhcmUgY29ycmVjdC4gRFNJIGNsb2NrCj4+IGlzIGEgZGlm
-ZmVyZW50IHRoaW5nIGFuZCBpdCBpcyBwcml2YXRlIHRoaW5nIG9mIERTSSBicmlkZ2UvcGFuZWwg
-aXQKPj4gc2hvdWxkIG5vdCBiZSBleHBvc2VkIHZpYSBkcm1fZGlzcGxheV9tb2RlLgo+IEkgdW5k
-ZXJzdGFuZCB5b3VyIHBvaW50LCBidXQgaW4gQWxsd2lubmVyIGNhc2UgRFNJIGNsb2NrIHdoaWNo
-IGlzCj4gbmFtZWQgaW4gdGNvbiBibG9jayBjYW4gYmUgY29tcHV0ZWQgdXNpbmcgY2xvY2sgdmFs
-dWUgZnJvbQo+IGRybV9kaXNwbGF5X21vZGUgZnJvbSBwYW5lbCBkcml2ZXIuCgoKT0ssIGl0IHNv
-dW5kcyBsaWtlIG1lIHRlbGxpbmcgeW91IHRoYXQgMisyPTQgYW5kIHlvdSBhbnN3ZXJpbmcgdGhh
-dCB5b3UKdW5kZXJzdGFuZCBteSBwb2ludCBidXQgaW4geW91ciBjYXNlIDIrMj01IGZpdHMgYmV0
-dGVyLgoKVGhpcyBpcyBub3RoaW5nIGFib3V0ICdteSBwb2ludCcsIHRoaXMgaXMgc2ltcGxlIGZh
-Y3QgdGhhdCBpZiB5b3UgaGF2ZQo5MjgqNTI1IHBpeGVscyAoaW5jbHVkaW5nIGhpZGRlbiBvbmVz
-KSB3aXRoIHJlZnJlc2ggcmF0ZSA2MEh6IHBpeGVsY2xvY2sKaXMgMjkyMzJrSHouCgoKPgo+IERF
-IC0+IE1peGVyIC0+IHRjb24tPiBNSVBJIDwtLT4gcGFuZWwKPgo+IFNvLCBmb3IgdGhlIHZhbHVl
-Cj4gLSA1NU1IeiBwYW5lbCBjbG9jayB0aGUgY29tcHV0ZWQgZGl2aWRlciBmb3IgRFNJIGNsb2Nr
-IGluIHRjb24gWzFdIGlzCj4gNiB3aGljaCBpcyBwcm9wZXIgYW5kIHdvcmtpbmcgZGl2aWRlcgo+
-IC0gMzBNSHogcGFuZWwgY2xvY2sgdGhlIGNvbXB1dGVkIGRpdmlkZXIgZm9yIERTSSBjbG9jayBp
-biB0Y29uIFsyXSBpcwo+IDExIHdoaWNoIGNhbid0IHdvcmsgZm9yIHRoaXMgc3BlY2lmaWMgcGFu
-ZWwuCgoKUGxlYXNlIGV4cGxhaW4gd2hhdCBleGFjdGx5IG1lYW5zICJwYW5lbCBjbG9jayIgYW5k
-IHRoZSBkaXZpZGVyIGhlcmUuCgpXaGF0IHJhdGUgcmVwb3J0cyBtb2RldGVzdCAtdiAuLi4/IEZv
-ciB0aGlzIGFuZCBvdGhlciBwYW5lbHMuCgpNYXliZSB3ZSBjYW4gZmlndXJlIG91dCB3aGF0IHNo
-b3VsZCBiZSBmaXhlZC9hZGp1c3RlZC4KCgpSZWdhcmRzCgpBbmRyemVqCgoKPgo+IEkgaGF2ZSB2
-ZXJpZmllZCBvdGhlciBwYW5lbHMsIHRoZSBkaXZpZGVyIHZhbHVlIHdvcmsgc2ltaWxhciB0byB0
-aGlzCj4gY29tcHV0YXRpb24gYW5kIHRob3NlIHBhbmVscyB3b3JrIGFjY29yZGluZ2x5LiAgYnV0
-IHRoaXMgcGFuZWwgY2FzZQo+IHRoZSBkaXZpZGVyIGNvbXB1dGF0aW9uIGxvb2sgd2VpcmQsIHNv
-IHdlIGhhdmUgdXNlZCB3b3JraW5nIGFuZCBrbm93Cj4gY2xvY2suIEknbSB0aGlua2luZyBzaW5j
-ZSB0aGlzIHBhbmVsIGlzIG9mIERTSSB0byBSR0IgYnJpZGdlLCBzbyBpdAo+IG1heSByZXF1aXJl
-IHNvbWUgaGlnaGVyIGZyZXF1ZW5jeSB0byB3b3JrIGJ1dCBJJ3ZlIG5vIGRvY3VtZW50IHRvCj4g
-Y29uZmlybSB0aGUgc2FtZS4KPgo+IEhvcGUgdGhpcyBpbmZvcm1hdGlvbiBoZWxwLCBsZXQgbWUg
-a25vdyBpZiB5b3UgaGF2ZSBhbnkgaW5wdXRzLgo+Cj4gWzFdIGh0dHBzOi8vcGFzdGUudWJ1bnR1
-LmNvbS9wL2RydnpmSEZNdFkvCj4gWzJdIGh0dHBzOi8vcGFzdGUudWJ1bnR1LmNvbS9wL2h6MjlD
-VEpZMkovCj4KPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+From: Stefan Agner <stefan@agner.ch>
+
+This adds the devicetree bindings for the STMPE ADC.
+
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+---
+
+Changes in v2:
+ - Moved the bindings for ADC to the overlying mfd.
+ - Reformatted for better readability
+
+ .../devicetree/bindings/iio/adc/stmpe-adc.txt | 21 ++++++++++++++
+ .../bindings/input/touchscreen/stmpe.txt      | 11 --------
+ .../devicetree/bindings/mfd/stmpe.txt         | 28 ++++++++++++++-----
+ 3 files changed, 42 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/stmpe-adc.txt
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/stmpe-adc.txt b/Documentation/devicetree/bindings/iio/adc/stmpe-adc.txt
+new file mode 100644
+index 000000000000..480e66422625
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/stmpe-adc.txt
+@@ -0,0 +1,21 @@
++STMPE ADC driver
++----------------
++
++Required properties:
++ - compatible: "st,stmpe-adc"
++
++Optional properties:
++Note that the ADC is shared with the STMPE touchscreen. ADC related settings
++have to be done in the mfd.
++- st,norequest-mask: bitmask specifying which ADC channels should _not_ be
++  requestable due to different usage (e.g. touch)
++
++Node name must be stmpe_adc and should be child node of stmpe node to
++which it belongs.
++
++Example:
++
++	stmpe_adc {
++		compatible = "st,stmpe-adc";
++		st,norequest-mask = <0x0F>; /* dont use ADC CH3-0 */
++	};
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
+index 127baa31a77a..71e1359749f2 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
+@@ -5,13 +5,6 @@ Required properties:
+  - compatible: "st,stmpe-ts"
+ 
+ Optional properties:
+-- st,sample-time: ADC converstion time in number of clock.  (0 -> 36 clocks, 1 ->
+-  44 clocks, 2 -> 56 clocks, 3 -> 64 clocks, 4 -> 80 clocks, 5 -> 96 clocks, 6
+-  -> 144 clocks), recommended is 4.
+-- st,mod-12b: ADC Bit mode (0 -> 10bit ADC, 1 -> 12bit ADC)
+-- st,ref-sel: ADC reference source (0 -> internal reference, 1 -> external
+-  reference)
+-- st,adc-freq: ADC Clock speed (0 -> 1.625 MHz, 1 -> 3.25 MHz, 2 || 3 -> 6.5 MHz)
+ - st,ave-ctrl: Sample average control (0 -> 1 sample, 1 -> 2 samples, 2 -> 4
+   samples, 3 -> 8 samples)
+ - st,touch-det-delay: Touch detect interrupt delay (0 -> 10 us, 1 -> 50 us, 2 ->
+@@ -31,10 +24,6 @@ Example:
+ 
+ 	stmpe_touchscreen {
+ 		compatible = "st,stmpe-ts";
+-		st,sample-time = <4>;
+-		st,mod-12b = <1>;
+-		st,ref-sel = <0>;
+-		st,adc-freq = <1>;
+ 		st,ave-ctrl = <1>;
+ 		st,touch-det-delay = <2>;
+ 		st,settling = <2>;
+diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Documentation/devicetree/bindings/mfd/stmpe.txt
+index c797c05cd3c2..bd991514d6c1 100644
+--- a/Documentation/devicetree/bindings/mfd/stmpe.txt
++++ b/Documentation/devicetree/bindings/mfd/stmpe.txt
+@@ -4,15 +4,29 @@ STMPE is an MFD device which may expose the following inbuilt devices: gpio,
+ keypad, touchscreen, adc, pwm, rotator.
+ 
+ Required properties:
+- - compatible                   : "st,stmpe[610|801|811|1600|1601|2401|2403]"
+- - reg                          : I2C/SPI address of the device
++ - compatible			: "st,stmpe[610|801|811|1600|1601|2401|2403]"
++ - reg				: I2C/SPI address of the device
+ 
+ Optional properties:
+- - interrupts                   : The interrupt outputs from the controller
+- - interrupt-controller         : Marks the device node as an interrupt controller
+- - wakeup-source                : Marks the input device as wakable
+- - st,autosleep-timeout         : Valid entries (ms); 4, 16, 32, 64, 128, 256, 512 and 1024
+- - irq-gpio                     : If present, which GPIO to use for event IRQ
++ - interrupts			: The interrupt outputs from the controller
++ - interrupt-controller		: Marks the device node as an interrupt controller
++ - wakeup-source		: Marks the input device as wakable
++ - st,autosleep-timeout		: Valid entries (ms); 4, 16, 32, 64, 128, 256, 512 and 1024
++ - irq-gpio			: If present, which GPIO to use for event IRQ
++
++Optional properties for devices with touch and ADC (STMPE811|STMPE610):
++ - st,sample-time		: ADC conversion time in number of clock.
++					0 -> 36 clocks		4 -> 80 clocks (recommended)
++					1 -> 44 clocks		5 -> 96 clocks
++					2 -> 56 clocks		6 -> 144 clocks
++					3 -> 64 clocks
++ - st,mod-12b			: ADC Bit mode
++					0 -> 10bit ADC		1 -> 12bit ADC
++ - st,ref-sel			: ADC reference source
++					0 -> internal		1 -> external
++ - st,adc-freq			: ADC Clock speed
++					0 -> 1.625 MHz		2 || 3 -> 6.5 MHz
++					1 -> 3.25 MHz
+ 
+ Example:
+ 
+-- 
+2.19.1
