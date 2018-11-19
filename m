@@ -1,88 +1,46 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RCF PATCH,v2,2/2] pwm: imx: Configure output to GPIO in disabled state
-Date: Mon, 19 Nov 2018 08:44:38 +0100
-Message-ID: <CACRpkdZAew3bUea=iR4t-a7SVSMf=-CTeWfeU215uT_jQ-o81A@mail.gmail.com>
-References: <20181012160854.hmgpokxgsrqdzobx@pengutronix.de>
- <e4289ee5-3fc1-2848-1cae-77d29b5ed93c@ysoft.com> <20181107093355.e4n3irrnkybqsjvc@pengutronix.de>
- <eb4e7a42-bd5c-3ae2-ccb7-d1a73d5ae99c@ysoft.com> <20181107150125.7cpd4v5t7yi2254c@pengutronix.de>
- <4fbb7307-df01-d7bd-f2e2-e05e6d17807d@ysoft.com> <20181108191855.zuon3ecv4yjfbs7g@pengutronix.de>
- <283cfef3-16d0-8bd4-e306-6e34d44c3a86@ysoft.com> <20181109165555.vqbiwh4hlcnozdna@pengutronix.de>
- <20181114113449.GB2620@ulmo> <20181114215120.vddykljqyavm64wj@pengutronix.de>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH v2 1/7] staging:iio:ad2s90: Add device tree support
+Date: Mon, 19 Nov 2018 08:09:21 +0000
+Message-ID: <f250fa3a01b51d59979e7a2e3e42cc34d02aa52e.camel@analog.com>
+References: <20181118042540.12697-1-matheus.bernardino@usp.br>
+         <20181118042540.12697-2-matheus.bernardino@usp.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181114215120.vddykljqyavm64wj@pengutronix.de>
+In-Reply-To: <20181118042540.12697-2-matheus.bernardino@usp.br>
+Content-Language: en-US
+Content-ID: <72787C8E45BB364DBADA0C540E2B13A0@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Michal.Vokac@ysoft.com, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-pwm@vger.kernel.org, l.majewski@majess.pl, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, =?UTF-8?Q?Lothar_Wa=C3=9Fmann?= <LW@karo-electronics.de>
+To: "lars@metafoo.de" <lars@metafoo.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "jic23@kernel.org" <jic23@kernel.org>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "matheus.bernardino@usp.br" <matheus.bernardino@usp.br>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc: "victorcolombo@gmail.com" <victorcolombo@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 14, 2018 at 10:51 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
-> On Wed, Nov 14, 2018 at 12:34:49PM +0100, Thierry Reding wrote:
-> > On Fri, Nov 09, 2018 at 05:55:55PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > > On Fri, Nov 09, 2018 at 02:24:42PM +0000, Vok=C3=A1=C4=8D Michal wrot=
-e:
-> > > > On 8.11.2018 20:18, Uwe Kleine-K=C3=B6nig wrote:
-> > > > > Taking your example with the backlight device you specify an "ini=
-t" and
-> > > > > a "default" pinctrl and only "default" contains the muxing for th=
-e PWM
-> > > > > pin everything should be as smooth as necessary: The pwm is only =
-muxed
-> > > > > when the backlight device is successfully bound.
-> > > >
-> > > > Have you tried that Uwe? The bad news is I tested that before and n=
-ow
-> > > > again and it does not work like that. We already discussed that ear=
-lier.
-> > >
-> > > The key is that the pinmux setting for the PWM pin should be part of =
-the
-> > > bl pinctrl, not the pwm pinctrl. Then "default" is only setup when th=
-e
-> > > bl device is successfully bound which is after the bl's .probe callba=
-ck
-> > > called pwm_apply().
-> >
-> > No, that's not at all correct. Pinmux settings should reside with the
-> > consumer of the pin. In this case, the PWM is the consumer of the pin,
-> > whereas the backlight is the consumer of the *PWM*.
->
-> This is news to me. Adding Linus W. to Cc, maybe he can comment?!
->
-> Grepping through the arm device trees it really seems common to put the
-> pinctrl for the pwm pin into the pwm device. I didn't search in depth,
-> but I didn't find a counter example.
->
-> For GPIOs it is common that the pinmuxing is included in the GPIO's
-> consumer pinctrl. Ditto for mdio busses whose pinctrl is included in the
-> ethernet pinctrl.
-
-There is quite a discussion you folks have going on here. I tried to
-grasp it but I can't. I can try to answer the above question specifically.
-
-For pin control it is mainly paramount that the state is associated
-with *a* consumer. The problem we were facing when fleshing out
-the subsystem can be seen in horrific solutions such as in
-Documentation/devicetree/bindings/gpio/gpio-twl4030.txt
-where you see that pull-ups and pull-downs are set on the
-PRODUCER side, which just make everything a complete
-mess.
-
-So compared to things like that (that we still have to support
-forever) whatever you are doing here you're doing great as long
-as it is consumer controlled.
-
-Whether that consumer is the previous driver thingie in the
-daisy-chain of consumers or the final end user consumer of
-the pin doesn't really matter to pin control, as long as it is a
-consumer. I would tend to say it is up to the subsystem,
-and the old IETF motto "rough consensus and running code".
-
-It seems in the current discussion the "rough consensus"
-part is the problem, and I'm afraid I can't fix that.
-
-Yours,
-Linus Walleij
+T24gU3VuLCAyMDE4LTExLTE4IGF0IDAyOjI1IC0wMjAwLCBNYXRoZXVzIFRhdmFyZXMgd3JvdGU6
+DQo+IFRoaXMgcGF0Y2ggYWRkcyBkZXZpY2UgdHJlZSBzdXBwb3J0IHRvIGFkMnM5MCB3aXRoIHN0
+YW5kYXJkDQo+IGRldmljZSB0cmVlIGlkIHRhYmxlLg0KPiANCg0KSGV5LA0KDQpDb21tZW50IGlu
+bGluZQ0KDQo+IFNpZ25lZC1vZmYtYnk6IE1hdGhldXMgVGF2YXJlcyA8bWF0aGV1cy5iZXJuYXJk
+aW5vQHVzcC5icj4NCj4gLS0tDQo+IENoYW5nZXMgaW4gdjI6DQo+ICAtIG5vbmUNCj4gDQo+ICBk
+cml2ZXJzL3N0YWdpbmcvaWlvL3Jlc29sdmVyL2FkMnM5MC5jIHwgNyArKysrKysrDQo+ICAxIGZp
+bGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9z
+dGFnaW5nL2lpby9yZXNvbHZlci9hZDJzOTAuYw0KPiBiL2RyaXZlcnMvc3RhZ2luZy9paW8vcmVz
+b2x2ZXIvYWQyczkwLmMNCj4gaW5kZXggM2UyNTdhYzQ2ZjdhLi42ZmZiYWM2NmI4MzcgMTAwNjQ0
+DQo+IC0tLSBhL2RyaXZlcnMvc3RhZ2luZy9paW8vcmVzb2x2ZXIvYWQyczkwLmMNCj4gKysrIGIv
+ZHJpdmVycy9zdGFnaW5nL2lpby9yZXNvbHZlci9hZDJzOTAuYw0KPiBAQCAtMTA3LDYgKzEwNywx
+MiBAQCBzdGF0aWMgaW50IGFkMnM5MF9wcm9iZShzdHJ1Y3Qgc3BpX2RldmljZSAqc3BpKQ0KPiAg
+CXJldHVybiBkZXZtX2lpb19kZXZpY2VfcmVnaXN0ZXIoaW5kaW9fZGV2LT5kZXYucGFyZW50LCBp
+bmRpb19kZXYpOw0KPiAgfQ0KPiAgDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9p
+ZCBhZDJzOTBfb2ZfbWF0Y2hbXSA9IHsNCj4gKwl7IC5jb21wYXRpYmxlID0gImFkaSxhZDJzOTAi
+LCB9LA0KPiArCXt9DQo+ICt9Ow0KPiArTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgYWQyczkwX29m
+X21hdGNoKTsNCj4gKw0KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBzcGlfZGV2aWNlX2lkIGFkMnM5
+MF9pZFtdID0gew0KPiAgCXsgImFkMnM5MCIgfSwNCj4gIAl7fQ0KPiBAQCAtMTE2LDYgKzEyMiw3
+IEBAIE1PRFVMRV9ERVZJQ0VfVEFCTEUoc3BpLCBhZDJzOTBfaWQpOw0KPiAgc3RhdGljIHN0cnVj
+dCBzcGlfZHJpdmVyIGFkMnM5MF9kcml2ZXIgPSB7DQo+ICAJLmRyaXZlciA9IHsNCj4gIAkJLm5h
+bWUgPSAiYWQyczkwIiwNCj4gKwkJLm9mX21hdGNoX3RhYmxlID0gb2ZfbWF0Y2hfcHRyKGFkMnM5
+MF9vZl9tYXRjaCksDQoNCkkgdGhpbmsgeW91IG5lZWQgdG8gcmVtb3ZlIHRoZSBvZl9tYXRjaF9w
+dHIoKS4NClRoZXJlIHdhcyBhIGNvbW1lbnQgZnJvbSBKb25hdGhhbiBvbiBhbm90aGVyIHRocmVh
+ZCBhYm91dCB0aGlzLg0KU2VlOg0KICAgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRj
+aC8xMDY4Mjk2My8NCg0KU28sIA0KKwkJLm9mX21hdGNoX3RhYmxlID0gb2ZfbWF0Y2hfcHRyKGFk
+MnM5MF9vZl9tYXRjaCksDQoNCmJlY29tZXMNCj4gKwkJLm9mX21hdGNoX3RhYmxlID0gYWQyczkw
+X29mX21hdGNoLA0KDQo+ICAJfSwNCj4gIAkucHJvYmUgPSBhZDJzOTBfcHJvYmUsDQo+ICAJLmlk
+X3RhYmxlID0gYWQyczkwX2lkLA0K
