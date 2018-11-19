@@ -1,168 +1,55 @@
-From: Wendy Liang <wendy.liang@xilinx.com>
-Subject: [PATCH v6 2/2] dt-bindings: mailbox: Add Xilinx IPI Mailbox
-Date: Mon, 19 Nov 2018 13:26:01 -0800
-Message-ID: <1542662761-31158-3-git-send-email-wendy.liang@xilinx.com>
-References: <1542662761-31158-1-git-send-email-wendy.liang@xilinx.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 2/2] hwmon: (ntc_thermistor): add support for B57891S0103
+ from Epcos
+Date: Mon, 19 Nov 2018 13:28:06 -0800
+Message-ID: <20181119212806.GC5795@roeck-us.net>
+References: <20181117121248.32143-1-peda@axentia.se>
+ <20181117121248.32143-2-peda@axentia.se>
+ <20181119170732.GA27435@roeck-us.net>
+ <f1235661-f8f2-9885-1e7f-491f5c234078@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1542662761-31158-1-git-send-email-wendy.liang@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jassisinghbrar@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, Wendy Liang <wendy.liang@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <f1235661-f8f2-9885-1e7f-491f5c234078@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Xilinx ZynqMP IPI(Inter Processor Interrupt) is a hardware block
-in ZynqMP SoC used for the communication between various processor
-systems.
+On Mon, Nov 19, 2018 at 09:16:12PM +0000, Peter Rosin wrote:
+> > 
+> > Guess I deserve the non-alphabetic order as penalty for not enforcing it 
+> > earlier. I'll accept the patch after DT approval and submit another one
+> > myself afterwards to restore alphabetic order.
+> 
+> Right, I'm thinking another good change would be to introduce an enum
+> into the ntc_thermistor_id array, because the hard-coded numbering in
 
-Signed-off-by: Wendy Liang <wendy.liang@xilinx.com>
----
- .../bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt   | 127 +++++++++++++++++++++
- 1 file changed, 127 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
+Yes, sounds like a good idea.
 
-diff --git a/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
-new file mode 100644
-index 0000000..4438432
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
-@@ -0,0 +1,127 @@
-+Xilinx IPI Mailbox Controller
-+========================================
-+
-+The Xilinx IPI(Inter Processor Interrupt) mailbox controller is to manage
-+messaging between two Xilinx Zynq UltraScale+ MPSoC IPI agents. Each IPI
-+agent owns registers used for notification and buffers for message.
-+
-+               +-------------------------------------+
-+               | Xilinx ZynqMP IPI Controller        |
-+               +-------------------------------------+
-+    +--------------------------------------------------+
-+ATF                    |                     |
-+                       |                     |
-+                       |                     |
-+    +--------------------------+             |
-+                       |                     |
-+                       |                     |
-+    +--------------------------------------------------+
-+            +------------------------------------------+
-+            |  +----------------+   +----------------+ |
-+Hardware    |  |  IPI Agent     |   |  IPI Buffers   | |
-+            |  |  Registers     |   |                | |
-+            |  |                |   |                | |
-+            |  +----------------+   +----------------+ |
-+            |                                          |
-+            | Xilinx IPI Agent Block                   |
-+            +------------------------------------------+
-+
-+
-+Controller Device Node:
-+===========================
-+Required properties:
-+--------------------
-+IPI agent node:
-+- compatible:		Shall be: "xlnx,zynqmp-ipi-mailbox"
-+- interrupt-parent:	Phandle for the interrupt controller
-+- interrupts:		Interrupt information corresponding to the
-+			interrupt-names property.
-+- xlnx,ipi-id:		local Xilinx IPI agent ID
-+- #address-cells:	number of address cells of internal IPI mailbox nodes
-+- #size-cells:		number of size cells of internal IPI mailbox nodes
-+
-+Internal IPI mailbox node:
-+- reg:			IPI buffers address ranges
-+- reg-names:		Names of the reg resources. It should have:
-+			* local_request_region
-+			  - IPI request msg buffer written by local and read
-+			    by remote
-+			* local_response_region
-+			  - IPI response msg buffer written by local and read
-+			    by remote
-+			* remote_request_region
-+			  - IPI request msg buffer written by remote and read
-+			    by local
-+			* remote_response_region
-+			  - IPI response msg buffer written by remote and read
-+			    by local
-+- #mbox-cells:		Shall be 1. It contains:
-+			* tx(0) or rx(1) channel
-+- xlnx,ipi-id:		remote Xilinx IPI agent ID of which the mailbox is
-+			connected to.
-+
-+Optional properties:
-+--------------------
-+- method:              The method of accessing the IPI agent registers.
-+                       Permitted values are: "smc" and "hvc". Default is
-+                       "smc".
-+
-+Client Device Node:
-+===========================
-+Required properties:
-+--------------------
-+- mboxes:		Standard property to specify a mailbox
-+			(See ./mailbox.txt)
-+- mbox-names:		List of identifier  strings for each mailbox
-+			channel.
-+
-+Example:
-+===========================
-+	zynqmp_ipi {
-+		compatible = "xlnx,zynqmp-ipi-mailbox";
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 29 4>;
-+		xlnx,ipi-id = <0>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		/* APU<->RPU0 IPI mailbox controller */
-+		ipi_mailbox_rpu0: mailbox@ff90400 {
-+			reg = <0xff990400 0x20>,
-+			      <0xff990420 0x20>,
-+			      <0xff990080 0x20>,
-+			      <0xff9900a0 0x20>;
-+			reg-names = "local_request_region",
-+				    "local_response_region",
-+				    "remote_request_region",
-+				    "remote_response_region";
-+			#mbox-cells = <1>;
-+			xlnx,ipi-id = <1>;
-+		};
-+		/* APU<->RPU1 IPI mailbox controller */
-+		ipi_mailbox_rpu1: mailbox@ff990440 {
-+			reg = <0xff990440 0x20>,
-+			      <0xff990460 0x20>,
-+			      <0xff990280 0x20>,
-+			      <0xff9902a0 0x20>;
-+			reg-names = "local_request_region",
-+				    "local_response_region",
-+				    "remote_request_region",
-+				    "remote_response_region";
-+			#mbox-cells = <1>;
-+			xlnx,ipi-id = <2>;
-+		};
-+	};
-+	rpu0 {
-+		...
-+		mboxes = <&ipi_mailbox_rpu0 0>,
-+			 <&ipi_mailbox_rpu0 1>;
-+		mbox-names = "tx", "rx";
-+	};
-+	rpu1 {
-+		...
-+		mboxes = <&ipi_mailbox_rpu1 0>,
-+			 <&ipi_mailbox_rpu1 1>;
-+		mbox-names = "tx", "rx";
-+	};
--- 
-2.7.4
+> the ntc_match variable is a bit fragile in my taste, and that list would
+> also benefit from being alphabetic. Currently there's simply no way to
+> add things in the middle without causing mayhem. I thought about doing
+> that, but didn't want to waste energy doing it up front without knowing
+> if it would be well received (the driver might have been superseded or
+
+It would.
+
+Guenter
+
+> something). I'm glad that you have volunteered to clean things up.
+> Ha! :-)
+> 
+> Cheers,
+> Peter
+> 
+> > Guenter
+> > 
+> >>  };
+> >>  
+> >>  struct ntc_thermistor_platform_data {
+> >> -- 
+> >> 2.11.0
+> >>
+> 
