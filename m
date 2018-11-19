@@ -1,67 +1,53 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77965: Add CAN controller
- nodes
-Date: Mon, 19 Nov 2018 10:00:02 +0100
-Message-ID: <CAMuHMdUjONJYypV0a5wnxyBx+sUMHzRwZObQ=d7xFG2ZSCM3Ag@mail.gmail.com>
-References: <20181118173327.4704-1-marek.vasut+renesas@gmail.com>
- <20181118230250.GA2553@kunai> <6ffce819-4d8e-e54a-ba82-0845c36a6ec4@gmail.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v2 00/25] at24: remove
+Date: Mon, 19 Nov 2018 10:08:25 +0100
+Message-ID: <20181119100825.277b1f97@bbrezillon>
+References: <20181113140133.17385-1-brgl@bgdev.pl>
+        <20181118170329.788778a8@bbrezillon>
+        <CAMRc=MfXWW9siNZNkocxmTU7mnoQO0KpeHQ3JmLcEfNscqCbDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6ffce819-4d8e-e54a-ba82-0845c36a6ec4@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAMRc=MfXWW9siNZNkocxmTU7mnoQO0KpeHQ3JmLcEfNscqCbDQ@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Nicolas Ferre <nicolas.ferre@microchip.com>, "David S . Miller" <davem@davemloft.net>, Grygorii Strashko <grygorii.strashko@ti.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree <devicetree@vger.kernel.org>, netdev
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+On Mon, 19 Nov 2018 09:58:46 +0100
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-On Mon, Nov 19, 2018 at 12:46 AM Marek Vasut <marek.vasut@gmail.com> wrote:
-> On 11/19/2018 12:02 AM, Wolfram Sang wrote:
-> > On Sun, Nov 18, 2018 at 06:33:26PM +0100, Marek Vasut wrote:
-> >> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> >>
-> >> This patch adds CAN{0,1} controller nodes for the R8A77965 SoC.
-> >>
-> >> Based on several similar patches of the R8A7795 device tree
-> >> by Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-> >> and Geert Uytterhoeven <geert+renesas@glider.be>.
-> >>
-> >> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> >> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> >> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> >> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> >> Cc: Rob Herring <robh@kernel.org>
-> >> Cc: Simon Horman <horms+renesas@verge.net.au>
-> >> Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> >> Cc: linux-renesas-soc@vger.kernel.org
-> >> Cc: linux-arm-kernel@lists.infradead.org
+> niedz., 18 lis 2018 o 17:03 Boris Brezillon
+> <boris.brezillon@bootlin.com> napisał(a):
 > >
-> > Were you able to do some testing using EXIO connectors? Would be nice to
-> > know what was tested.
->
-> Not on the M3N, since I don't see it broken out on the EXIO ; is it
-> really there ? It'd be easy to test on M3NSK with KF, but I don't have
-> either KF or M3NSK.
+> > On Tue, 13 Nov 2018 15:01:08 +0100
+> > Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >  
+> > > As far as merging of this series goes: I'd like to avoid dragging it over
+> > > four releases. The series is logically split into five groups:
+> > >
+> > > patches 1-2: nvmem and mtd changes
+> > > patches 3-9: davinci arch-specific changes
+> > > patches 10-13: networking changes
+> > > patches 14-24: davinci specific again
+> > > patch 25: final at24 change
+> > >
+> > > With that I believe we can do the following: Greg KH could pick up the
+> > > first two patches into his char-misc tree.  
+> >
+> > The char-misc tree? Why not the MTD or NVMEM tree?
+> >  
+> 
+> There is no NVMEM tree - Srinivas sends his patches to Greg to be
+> applied to char-misc.
 
-Please have a look at EXIO Connector D, pins 13/14/15.
+Okay, I didn't know that.
 
-Gr{oetje,eeting}s,
+> 
+> The second patch depends on the first one so in order to avoid more
+> merging problems I suggested that the MTD patch go through char-misc
+> as well. If you see a better solution, please let me know.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+No that's fine, as long as I have an immutable tag/branch I can pull if
+needed.
