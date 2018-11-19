@@ -1,60 +1,77 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 5/6] ARM: dts: sunxi: Add all CPUs in cooling maps
-Date: Mon, 19 Nov 2018 15:39:46 +0100
-Message-ID: <20181119143946.qqipcb2c34imc2td@flea>
-References: <cover.1542362000.git.viresh.kumar@linaro.org>
- <b2524a2db87c97c038990af405bd1cca25e579f8.1542362000.git.viresh.kumar@linaro.org>
+From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
+Subject: Re: [PATCH fbdev-for-next 2/2] video: ssd1307fb: Add support for the
+ reset-active-low property
+Date: Mon, 19 Nov 2018 15:12:46 +0000
+Message-ID: <db9537dc-2ba5-b8fc-ae3c-7d85841b0797@ysoft.com>
+References: <1541170556-75032-1-git-send-email-michal.vokac@ysoft.com>
+ <1541170556-75032-2-git-send-email-michal.vokac@ysoft.com>
+ <5bea0e9c.1c69fb81.1f3c8.be5a@mx.google.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="e65cvqpkt4byjzbm"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b2524a2db87c97c038990af405bd1cca25e579f8.1542362000.git.viresh.kumar@linaro.org>
+In-Reply-To: <5bea0e9c.1c69fb81.1f3c8.be5a@mx.google.com>
+Content-Language: en-US
+Content-ID: <ED471B8B9F2C5E41A9A6C3F9A075E83C@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-
---e65cvqpkt4byjzbm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Nov 16, 2018 at 03:31:14PM +0530, Viresh Kumar wrote:
-> Each CPU can (and does) participate in cooling down the system but the
-> DT only captures a handful of them, normally CPU0, in the cooling maps.
-> Things work by chance currently as under normal circumstances its the
-> first CPU of each cluster which is used by the operating systems to
-> probe the cooling devices. But as soon as this CPU ordering changes and
-> any other CPU is used to bring up the cooling device, we will start
-> seeing failures.
->=20
-> Also the DT is rather incomplete when we list only one CPU in the
-> cooling maps, as the hardware doesn't have any such limitations.
->=20
-> Update cooling maps to include all devices affected by individual trip
-> points.
->=20
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-
-Applied, thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---e65cvqpkt4byjzbm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW/LLMgAKCRDj7w1vZxhR
-xRtJAQDOkaLC6alOxQ7wIVemizO2wVY5u3Qkz+GeMF/6ZrXtRgEA27cm5xkG74Oy
-3/4ibMTbAN4sUM/j6HQjOraKu7e+ogE=
-=p7xv
------END PGP SIGNATURE-----
-
---e65cvqpkt4byjzbm--
+T24gMTIuMTEuMjAxOCAxNzo1NSwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIEZyaSwgTm92IDAy
+LCAyMDE4IGF0IDAyOjU2OjM1UE0gKzAwMDAsIFZva8OhxI0gTWljaGFsIHdyb3RlOg0KPj4gVGhl
+IFNTRDEzMHggT0xFRCBkaXNwbGF5IHJlc2V0IHNpZ25hbCBpcyBhY3RpdmUgbG93LiBOb3cgdGhl
+IHJlc2V0DQo+PiBzZXF1ZW5jZSBpcyBpbXBsZW1lbnRlZCBpbiBzdWNoIGEgd2F5IHRoYXQgRFRT
+IGF1dGhvcnMgYXJlIGZvcmNlZCB0bw0KPj4gZGVmaW5lIHRoZSByZXNldC1ncGlvcyBwcm9wZXJ0
+eSB3aXRoIEdQSU9fQUNUSVZFX0hJR0ggdG8gbWFrZSB0aGUgcmVzZXQNCj4+IHdvcmsuDQo+Pg0K
+Pj4gQWRkIHRoZSByZXNldC1hY3RpdmUtbG93IHByb3BlcnR5IHNvIHRoZSBzaWduYWwgaXMgaW52
+ZXJ0ZWQgb25jZSBhZ2Fpbg0KPj4gYW5kIHRoZSBHUElPX0FDVElWRV9MT1cgd29yayBhcyBleHBl
+Y3RlZC4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBNaWNoYWwgVm9rw6HEjSA8bWljaGFsLnZva2Fj
+QHlzb2Z0LmNvbT4NCj4+IC0tLQ0KPj4gICBkcml2ZXJzL3ZpZGVvL2ZiZGV2L3NzZDEzMDdmYi5j
+IHwgNiArKysrLS0NCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgMiBkZWxl
+dGlvbnMoLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy92aWRlby9mYmRldi9zc2QxMzA3
+ZmIuYyBiL2RyaXZlcnMvdmlkZW8vZmJkZXYvc3NkMTMwN2ZiLmMNCj4+IGluZGV4IGU3YWUxMzUu
+Ljc5MGYxYzQgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL3ZpZGVvL2ZiZGV2L3NzZDEzMDdmYi5j
+DQo+PiArKysgYi9kcml2ZXJzL3ZpZGVvL2ZiZGV2L3NzZDEzMDdmYi5jDQo+PiBAQCAtNjA4LDYg
+KzYwOCw3IEBAIHN0YXRpYyBpbnQgc3NkMTMwN2ZiX3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpj
+bGllbnQsDQo+PiAgIAlzdHJ1Y3QgZmJfZGVmZXJyZWRfaW8gKnNzZDEzMDdmYl9kZWZpbzsNCj4+
+ICAgCXUzMiB2bWVtX3NpemU7DQo+PiAgIAlzdHJ1Y3Qgc3NkMTMwN2ZiX3BhciAqcGFyOw0KPj4g
+Kwlib29sIHJlc2V0X2FjdGl2ZV9sb3c7DQo+PiAgIAl1OCAqdm1lbTsNCj4+ICAgCWludCByZXQ7
+DQo+PiAgIA0KPj4gQEAgLTY3MSw2ICs2NzIsNyBAQCBzdGF0aWMgaW50IHNzZDEzMDdmYl9wcm9i
+ZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LA0KPj4gICAJcGFyLT5jb21fc2VxID0gb2ZfcHJv
+cGVydHlfcmVhZF9ib29sKG5vZGUsICJzb2xvbW9uLGNvbS1zZXEiKTsNCj4+ICAgCXBhci0+Y29t
+X2xycmVtYXAgPSBvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wobm9kZSwgInNvbG9tb24sY29tLWxycmVt
+YXAiKTsNCj4+ICAgCXBhci0+Y29tX2ludmRpciA9IG9mX3Byb3BlcnR5X3JlYWRfYm9vbChub2Rl
+LCAic29sb21vbixjb20taW52ZGlyIik7DQo+PiArCXJlc2V0X2FjdGl2ZV9sb3cgPSBvZl9wcm9w
+ZXJ0eV9yZWFkX2Jvb2wobm9kZSwgInJlc2V0LWFjdGl2ZS1sb3ciKTsNCj4+ICAgDQo+PiAgIAlw
+YXItPmNvbnRyYXN0ID0gMTI3Ow0KPj4gICAJcGFyLT52Y29taCA9IHBhci0+ZGV2aWNlX2luZm8t
+PmRlZmF1bHRfdmNvbWg7DQo+PiBAQCAtNzI4LDkgKzczMCw5IEBAIHN0YXRpYyBpbnQgc3NkMTMw
+N2ZiX3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsDQo+PiAgIA0KPj4gICAJaWYgKHBh
+ci0+cmVzZXQpIHsNCj4+ICAgCQkvKiBSZXNldCB0aGUgc2NyZWVuICovDQo+PiAtCQlncGlvZF9z
+ZXRfdmFsdWVfY2Fuc2xlZXAocGFyLT5yZXNldCwgMCk7DQo+PiArCQlncGlvZF9zZXRfdmFsdWVf
+Y2Fuc2xlZXAocGFyLT5yZXNldCwgcmVzZXRfYWN0aXZlX2xvdyk7DQo+PiAgIAkJdWRlbGF5KDQp
+Ow0KPj4gLQkJZ3Bpb2Rfc2V0X3ZhbHVlX2NhbnNsZWVwKHBhci0+cmVzZXQsIDEpOw0KPj4gKwkJ
+Z3Bpb2Rfc2V0X3ZhbHVlX2NhbnNsZWVwKHBhci0+cmVzZXQsICFyZXNldF9hY3RpdmVfbG93KTsN
+Cj4gDQo+IEkgdGhpbmsgeW91IGFuZCB3aG9tZXZlciB3cm90ZSB0aGUgb3JpZ2luYWwgY29kZSBh
+cmUgbWlzaW50ZXJwcmV0dGluZw0KPiBob3cgdGhlIGdwaW9kIEFQSSB3b3Jrcy4gMSBtZWFucyBt
+YWtlIHRoZSBzaWduYWwgYWN0aXZlIGFuZCB0aGlzIGNhc2UNCj4gYWN0aXZlIGlzIGxvdy4NCg0K
+SSB0b3RhbGx5IGFncmVlIGFuZCBJIHRoaW5rIEkgdW5kZXJzdGFuZCB0aGF0IGNvcnJlY3RseS4N
+Cg0KPiBJdCBpcyBzdHJhbmdlLCBidXQgZG9lcyBtZWFuIGEgcmVzZXQgc2VxdWVuY2Ugc2hvdWxk
+IGFsd2F5cyBiZSBzZXQgdG8gYQ0KPiAxIGFuZCB0aGVuIGEgMCBhbmQgaXQgd2lsbCB3b3JrIHdp
+dGggZWl0aGVyIHBvbGFyaXR5IGluIHRoZSBEVC4NCg0KSSBhZ3JlZSB0aGUgcmVzZXQgc2hvdWxk
+IGJlIGRvbmUgYXMgYSAwIC0+IDEgLT4gMCBzZXF1ZW5jZSBhbmQgdGhhdCBzaG91bGQNCmp1c3Qg
+d29yay4gVGhlIHByb2JsZW0gaXMgaXQgaXMgaW1wbGVtZW50ZWQgdmljZSB2ZXJzYSBhbmQgc28g
+aXQgd29ya3Mgb25seQ0KaWYgeW91IGhhdmUgR1BJT19BQ1RJVkVfSElHSCBpbiBEVCBmb3IgYSBz
+aWduYWwgdGhhdCBpcyBhY3R1YWxseSBhY3RpdmUgbG93Lg0KDQpBbmQgd2hhdCBpdCBhY3R1YWxs
+eSBkb2VzIGlzIHRoYXQgaXQgaG9sZHMgdGhlIGNvbnRyb2xsZXIgaW4gcmVzZXQgc2luY2UNCnRo
+ZSBHUElPIGlzIHN1Y2Nlc3NmdWxseSBhY3F1aXJlZCAoYmVjYXVzZSBvZiBHUElPRF9PVVRfTE9X
+IGhlcmUgWzFdKSBhbmQNCmxhdGVyIG9uIGl0IG9ubHkgcmVsZWFzZXMgdGhlIHJlc2V0Lg0KDQpB
+cyBhIERUIGF1dGhvciBJIHdvdWxkIGxpa2UgdG8gc29tZWhvdyBjbGVhcmx5IHN0YXRlIHRoYXQg
+dGhlIE9MRUQgZGlzcGxheQ0KdXNlcyBhY3RpdmUgbG93IHJlc2V0IGluIG15IERULg0KDQpNeSBm
+aXJzdCBhdHRlbXB0IHRvIGZpeCB0aGlzIHdhcyB0byBjaGFuZ2UgdGhlIHJlc2V0IHNlcXVlbmNl
+IFsyXS4NCkl0IHdhcyBhcHBsaWVkIGFuZCB0aGVuIHJldmVydGVkIGFzIGl0IGlzIG5vdCBiYWNr
+d2FyZCBjb21wYXRpYmxlIHdpdGgNCmRlcGxveWVkIERUQiBmaWxlcyBbM10uDQoNClsxXSBodHRw
+czovL2VsaXhpci5ib290bGluLmNvbS9saW51eC92NC4yMC1yYzMvc291cmNlL2RyaXZlcnMvdmlk
+ZW8vZmJkZXYvc3NkMTMwN2ZiLmMjTDU3MA0KWzJdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5v
+cmcvcGF0Y2gvMTA2MTc3MjkvDQpbM10gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRj
+aC8xMDYxNzczMS8NCg0KTWljaGFsDQo=
