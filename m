@@ -1,58 +1,51 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH] MAINTAINERS: Add Kishon as maintainer of PHY bindings
-Date: Tue, 20 Nov 2018 11:09:25 +0530
-Message-ID: <5b1104bc-7542-124c-2f93-27af10e36178@ti.com>
-References: <20181018133105.3720-1-robh@kernel.org>
- <CAL_JsqJn2EOGJaM9saoYYnbZ+GrEMQWgp_1kSq6W9HX1GnGVWw@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 0/3] arm64: dts: allwinner: h6: orangepi: Enable
+ USB 2.0 and LEDs
+Date: Tue, 20 Nov 2018 14:53:08 +0800
+Message-ID: <20181120065311.30009-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJn2EOGJaM9saoYYnbZ+GrEMQWgp_1kSq6W9HX1GnGVWw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBYG6Z3PQKGQE73BEROY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi,
 
-On 17/11/18 1:50 AM, Rob Herring wrote:
-> On Thu, Oct 18, 2018 at 8:31 AM Rob Herring <robh@kernel.org> wrote:
->>
->> DT bindings normally go in via subsystem maintainers, so add PHY
->> bindings under generic PHY framework.
->>
->> Reported-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> Cc: Kishon Vijay Abraham I <kishon@ti.com>
->> Signed-off-by: Rob Herring <robh@kernel.org>
-> 
-> Ping? Kishon, any objection?
+This small series enables USB 2.0 and LEDs on the Orange Pi Lite 2 and
+Orange Pi One Plus. The two features are unrelated, but included in the
+same series as the patch contexts overlap.
 
-It's queued [1].
+Patch one adds a fixed regulator to represent the board-wide 5V rail.
+While not strictly necessary, this helps define the relationship between
+regulators.
 
-Thanks
-Kishon
+Patch two enables USB 2.0 host and OTG. Note that VBUS on both ports are
+directly tied to the 5V rail, without any power switches or current
+limiters.
 
-[1] -> 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/MAINTAINERS?id=5c7412b139f189e18842d62951f6857e4937ce73
-> 
->> ---
->>   MAINTAINERS | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 9ad052aeac39..b01e77ae79c4 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -6132,6 +6132,7 @@ T:        git git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git
->>   S:     Supported
->>   F:     drivers/phy/
->>   F:     include/linux/phy/
->> +F:     Documentation/devicetree/bindings/phy/
->>
->>   GENERIC PINCTRL I2C DEMULTIPLEXER DRIVER
->>   M:     Wolfram Sang <wsa+renesas@sang-engineering.com>
->> --
->> 2.17.1
->>
+Patch three add device nodes for the two LEDs. These LEDs are driven
+directly by the GPIO pins, without a current limiting resistor. At the
+default drive strength, the LEDs are quite bright.
+
+Please have a look.
+ChenYu
+
+Chen-Yu Tsai (3):
+  arm64: dts: allwinner: h6: orangepi: Add board-wide 5V regulator
+  arm64: dts: allwinner: h6: orangepi: Enable USB 2.0 host and OTG ports
+  arm64: dts: allwinner: h6: orangepi: Add device nodes for LEDs
+
+ .../dts/allwinner/sun50i-h6-orangepi.dtsi     | 60 +++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+
+-- 
+2.19.1
