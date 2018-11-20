@@ -1,113 +1,63 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [RFC PATCH v2 03/14] ARM: sunxi: add Allwinner ARMv5 SoCs
-Date: Tue, 20 Nov 2018 09:42:45 +0100
-Message-ID: <20181120084245.bnjdaf647e6tdlku@flea>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC PATCH v2 04/14] dt-bindings:
+ interrupt-controller: Add suniv interrupt-controller
+Date: Tue, 20 Nov 2018 09:44:00 +0100
+Message-ID: <20181120084400.sn64fdxbpztaw26h@flea>
 References: <cover.1542546735.git.mesihkilinc@gmail.com>
- <8f07fac854eaaea63e199fe0e80cf20004dffbdf.1542546735.git.mesihkilinc@gmail.com>
+ <e51824832fac0b981cf886f25efc25056d573da4.1542546735.git.mesihkilinc@gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="f4q6buea7vbu6n7w"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="agvmzaobxgm2oakk"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBW4SZ7PQKGQEDYJTQFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <8f07fac854eaaea63e199fe0e80cf20004dffbdf.1542546735.git.mesihkilinc@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mesih Kilinc <mesihkilinc@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Julian Calaby <julian.calaby@gmail.com>
+In-Reply-To: <e51824832fac0b981cf886f25efc25056d573da4.1542546735.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---f4q6buea7vbu6n7w
-Content-Type: text/plain; charset=us-ascii
+--agvmzaobxgm2oakk
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Nov 18, 2018 at 05:17:02PM +0300, Mesih Kilinc wrote:
-> Add option for Allwinner ARMv5 SoCs and SoC F1C100s (which has a die
-> used for many new F-series products, including F1C100A, F1C100s, F1C200s,
-> F1C500, F1C600).
->=20
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Mesih Kilinc <mesihkilinc@gmail.com>
+Hi,
+
+On Sun, Nov 18, 2018 at 05:17:03PM +0300, Mesih Kilinc wrote:
+> Add compatible string for Alwinner suniv F1C100s SoC interrupt
+> controller which is stripped version of sun4i
+> 
+> Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  arch/arm/mach-sunxi/Kconfig    | 14 +++++++++++++-
->  arch/arm/mach-sunxi/Makefile   |  1 +
->  arch/arm/mach-sunxi/sunxi_v5.c | 22 ++++++++++++++++++++++
->  3 files changed, 36 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/mach-sunxi/sunxi_v5.c
->=20
-> diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
-> index 5db17ec..066644c 100644
-> --- a/arch/arm/mach-sunxi/Kconfig
-> +++ b/arch/arm/mach-sunxi/Kconfig
-> @@ -1,6 +1,6 @@
->  menuconfig ARCH_SUNXI
->  	bool "Allwinner SoCs"
-> -	depends on ARCH_MULTI_V7
-> +	depends on ARCH_MULTI_V5 || ARCH_MULTI_V7
->  	select ARCH_HAS_RESET_CONTROLLER
->  	select CLKSRC_MMIO
->  	select GENERIC_IRQ_CHIP
-> @@ -64,4 +64,16 @@ config ARCH_SUNXI_MC_SMP
-> =20
->  endif
-> =20
-> +if ARCH_MULTI_V5
-> +
-> +config ARCH_SUNXI_V5
-> +	bool
-> +	select SUN4I_TIMER
+>  .../devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt  | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt
+> index b290ca1..e04ddb4 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt
+> @@ -2,7 +2,10 @@ Allwinner Sunxi Interrupt Controller
+>  
+>  Required properties:
+>  
+> -- compatible : should be "allwinner,sun4i-a10-ic"
+> +- compatible: should be "allwinner,<soc-familiy>-<soc-name>-ic" to identify
 
-If SUN4I_TIMER is needed both by the armv5 and armv7 cores, why did we
-need to move it out of ARCH_SUNXI?
-
-> +config MACH_SUNIV
-> +	bool "Allwinner new F-series (suniv) SoCs support"
-
-I would drop the "new" here.
-
-> +++ b/arch/arm/mach-sunxi/sunxi_v5.c
-> @@ -0,0 +1,22 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree support for Allwinner F series SoCs
-> + *
-> + * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
-> + * Copyright (C) 2018 Mesih Kilinc <mesihkilinc@gmail.com>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#include <asm/mach/arch.h>
-> +
-> +static const char * const suniv_board_dt_compat[] =3D {
-> +	"allwinner,suniv-f1c100s",
-> +	NULL,
-> +};
-> +
-> +DT_MACHINE_START(SUNXI_DT, "Allwinner suniv Family")
-> +	.dt_compat	=3D suniv_board_dt_compat,
-> +MACHINE_END
-
-Do we really need a separate file for that?
+There's no need to define the pattern, just list the compatibles
+supported. Otherwise, you give the idea that all the combinations are
+supported, and they aren't.
 
 Maxime
 
---=20
+-- 
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
-
---f4q6buea7vbu6n7w
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW/PJBQAKCRDj7w1vZxhR
-xYLpAP9rCPbc1QsZM0YP5XXJlABPGK4Zg27MF0Ul2TZafIW9FwEArf/W5NzApR+d
-G/uBrwKajJEKBB5Jh2P4rZBA1CZ0gA0=
-=HggK
------END PGP SIGNATURE-----
-
---f4q6buea7vbu6n7w--
+--agvmzaobxgm2oakk--
