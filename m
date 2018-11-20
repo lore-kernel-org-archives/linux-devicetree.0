@@ -1,111 +1,89 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [RFC PATCH v2 03/14] ARM: sunxi: add Allwinner
- ARMv5 SoCs
-Date: Wed, 21 Nov 2018 07:36:38 +0800
-Message-ID: <464C921F-1AA7-4475-9085-25D03D21AFE2@aosc.io>
-References: <cover.1542546735.git.mesihkilinc@gmail.com> <8f07fac854eaaea63e199fe0e80cf20004dffbdf.1542546735.git.mesihkilinc@gmail.com> <20181120084245.bnjdaf647e6tdlku@flea>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Matheus Tavares Bernardino <matheus.bernardino@usp.br>
+Subject: Re: [PATCH v2 1/7] staging:iio:ad2s90: Add device tree support
+Date: Tue, 20 Nov 2018 21:59:19 -0200
+Message-ID: <CAHd-oW4mq1HnTqr_XZt7cktTgy_ytH=ARg+d3ac+Q5bSdbciUQ@mail.gmail.com>
+References: <20181118042540.12697-1-matheus.bernardino@usp.br>
+ <20181118042540.12697-2-matheus.bernardino@usp.br> <f250fa3a01b51d59979e7a2e3e42cc34d02aa52e.camel@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBGVV2LPQKGQEHBO6Z3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181120084245.bnjdaf647e6tdlku@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f250fa3a01b51d59979e7a2e3e42cc34d02aa52e.camel@analog.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandru Ardelean <alexandru.Ardelean@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Jonathan Cameron <jic23@kernel.org>, Michael Hennerich <Michael.Hennerich@analog.com>, Mark Rutland <mark.rutland@arm.com>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Victor Colombo <victorcolombo@gmail.com>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, kernel-usp@googlegroups.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Nov 19, 2018 at 6:09 AM Ardelean, Alexandru
+<alexandru.Ardelean@analog.com> wrote:
+>
+> On Sun, 2018-11-18 at 02:25 -0200, Matheus Tavares wrote:
+> > This patch adds device tree support to ad2s90 with standard
+> > device tree id table.
+> >
+>
+> Hey,
+>
+> Comment inline
+>
+> > Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
+> > ---
+> > Changes in v2:
+> >  - none
+> >
+> >  drivers/staging/iio/resolver/ad2s90.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/drivers/staging/iio/resolver/ad2s90.c
+> > b/drivers/staging/iio/resolver/ad2s90.c
+> > index 3e257ac46f7a..6ffbac66b837 100644
+> > --- a/drivers/staging/iio/resolver/ad2s90.c
+> > +++ b/drivers/staging/iio/resolver/ad2s90.c
+> > @@ -107,6 +107,12 @@ static int ad2s90_probe(struct spi_device *spi)
+> >       return devm_iio_device_register(indio_dev->dev.parent, indio_dev);
+> >  }
+> >
+> > +static const struct of_device_id ad2s90_of_match[] = {
+> > +     { .compatible = "adi,ad2s90", },
+> > +     {}
+> > +};
+> > +MODULE_DEVICE_TABLE(of, ad2s90_of_match);
+> > +
+> >  static const struct spi_device_id ad2s90_id[] = {
+> >       { "ad2s90" },
+> >       {}
+> > @@ -116,6 +122,7 @@ MODULE_DEVICE_TABLE(spi, ad2s90_id);
+> >  static struct spi_driver ad2s90_driver = {
+> >       .driver = {
+> >               .name = "ad2s90",
+> > +             .of_match_table = of_match_ptr(ad2s90_of_match),
+>
+> I think you need to remove the of_match_ptr().
+> There was a comment from Jonathan on another thread about this.
+> See:
+>    https://patchwork.kernel.org/patch/10682963/
+>
 
+Hm, got it, thanks!
 
-=E4=BA=8E 2018=E5=B9=B411=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=884=
-:42:45, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
->On Sun, Nov 18, 2018 at 05:17:02PM +0300, Mesih Kilinc wrote:
->> Add option for Allwinner ARMv5 SoCs and SoC F1C100s (which has a die
->> used for many new F-series products, including F1C100A, F1C100s,
->F1C200s,
->> F1C500, F1C600).
->>=20
->> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  arch/arm/mach-sunxi/Kconfig    | 14 +++++++++++++-
->>  arch/arm/mach-sunxi/Makefile   |  1 +
->>  arch/arm/mach-sunxi/sunxi_v5.c | 22 ++++++++++++++++++++++
->>  3 files changed, 36 insertions(+), 1 deletion(-)
->>  create mode 100644 arch/arm/mach-sunxi/sunxi_v5.c
->>=20
->> diff --git a/arch/arm/mach-sunxi/Kconfig
->b/arch/arm/mach-sunxi/Kconfig
->> index 5db17ec..066644c 100644
->> --- a/arch/arm/mach-sunxi/Kconfig
->> +++ b/arch/arm/mach-sunxi/Kconfig
->> @@ -1,6 +1,6 @@
->>  menuconfig ARCH_SUNXI
->>  	bool "Allwinner SoCs"
->> -	depends on ARCH_MULTI_V7
->> +	depends on ARCH_MULTI_V5 || ARCH_MULTI_V7
->>  	select ARCH_HAS_RESET_CONTROLLER
->>  	select CLKSRC_MMIO
->>  	select GENERIC_IRQ_CHIP
->> @@ -64,4 +64,16 @@ config ARCH_SUNXI_MC_SMP
->> =20
->>  endif
->> =20
->> +if ARCH_MULTI_V5
->> +
->> +config ARCH_SUNXI_V5
->> +	bool
->> +	select SUN4I_TIMER
->
->If SUN4I_TIMER is needed both by the armv5 and armv7 cores, why did we
->need to move it out of ARCH_SUNXI?
->
->> +config MACH_SUNIV
->> +	bool "Allwinner new F-series (suniv) SoCs support"
->
->I would drop the "new" here.
+I don't understand much about ACPI yet, and I had understood the
+"of_match_ptr" as a guard. Could someone point me in which cases it
+should be used? Or is it obsolete?
 
-Sorry, but old F-series SoCs are not suniv. They are sunii or sun3i.
+Matheus
 
+> So,
+> +               .of_match_table = of_match_ptr(ad2s90_of_match),
 >
->> +++ b/arch/arm/mach-sunxi/sunxi_v5.c
->> @@ -0,0 +1,22 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Device Tree support for Allwinner F series SoCs
->> + *
->> + * Copyright (C) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> + * Copyright (C) 2018 Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> + *
->> + * This file is licensed under the terms of the GNU General Public
->> + * License version 2.  This program is licensed "as is" without any
->> + * warranty of any kind, whether express or implied.
->> + */
->> +
->> +#include <asm/mach/arch.h>
->> +
->> +static const char * const suniv_board_dt_compat[] =3D {
->> +	"allwinner,suniv-f1c100s",
->> +	NULL,
->> +};
->> +
->> +DT_MACHINE_START(SUNXI_DT, "Allwinner suniv Family")
->> +	.dt_compat	=3D suniv_board_dt_compat,
->> +MACHINE_END
+> becomes
+> > +             .of_match_table = ad2s90_of_match,
 >
->Do we really need a separate file for that?
+> >       },
+> >       .probe = ad2s90_probe,
+> >       .id_table = ad2s90_id,
 >
->Maxime
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> --
+> You received this message because you are subscribed to the Google Groups "Kernel USP" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-usp+unsubscribe@googlegroups.com.
+> To post to this group, send email to kernel-usp@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kernel-usp/f250fa3a01b51d59979e7a2e3e42cc34d02aa52e.camel%40analog.com.
+> For more options, visit https://groups.google.com/d/optout.
