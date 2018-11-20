@@ -1,7 +1,8 @@
 From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv2 11/25] PCI: mobiveil: only fix up the Class Code field
-Date: Tue, 20 Nov 2018 09:26:44 +0000
-Message-ID: <20181120092615.11680-12-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv2 12/25] PCI: mobiveil: move out the link up waiting from
+ mobiveil_host_init
+Date: Tue, 20 Nov 2018 09:26:50 +0000
+Message-ID: <20181120092615.11680-13-Zhiqiang.Hou@nxp.com>
 References: <20181120092615.11680-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -16,48 +17,62 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-Fix up the Class Code to PCI bridge, do not change the Revision ID.
-And move the fixup to mobiveil_host_init function.
+Host initial sequence does not depend on PCIe link up, so move it
+to the place just before the enumeration.
 
-Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge
-IP driver")
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 ---
 V2:
- - Added fixes entry.
+ - no change
 
- drivers/pci/controller/pcie-mobiveil.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controlle=
 r/pcie-mobiveil.c
-index 78e575e71f4d..8eee1ab7ee24 100644
+index 8eee1ab7ee24..c2848c22b466 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -653,6 +653,12 @@ static int mobiveil_host_init(struct mobiveil_pcie *pc=
-ie)
- 				   type, resource_size(win->res));
- 	}
+@@ -582,15 +582,8 @@ static void mobiveil_pcie_enable_msi(struct mobiveil_p=
+cie *pcie)
+ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ {
+ 	u32 value, pab_ctrl, type;
+-	int err;
+ 	struct resource_entry *win;
 =20
-+	/* fixup for PCIe class register */
-+	value =3D csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
-+	value &=3D 0xff;
-+	value |=3D (PCI_CLASS_BRIDGE_PCI << 16);
-+	csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
-+
+-	err =3D mobiveil_bringup_link(pcie);
+-	if (err) {
+-		dev_info(&pcie->pdev->dev, "link bring-up failed\n");
+-		return err;
+-	}
+-
+ 	/*
+ 	 * program Bus Master Enable Bit in Command Register in PAB Config
+ 	 * Space
+@@ -662,7 +655,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pci=
+e)
  	/* setup MSI hardware registers */
  	mobiveil_pcie_enable_msi(pcie);
 =20
-@@ -896,9 +902,6 @@ static int mobiveil_pcie_probe(struct platform_device *=
-pdev)
- 		goto error;
- 	}
+-	return err;
++	return 0;
+ }
 =20
--	/* fixup for PCIe class register */
--	csr_writel(pcie, 0x060402ab, PAB_INTP_AXI_PIO_CLASS);
--
- 	/* initialize the IRQ domains */
- 	ret =3D mobiveil_pcie_init_irq_domain(pcie);
- 	if (ret) {
+ static void mobiveil_mask_intx_irq(struct irq_data *data)
+@@ -922,6 +915,12 @@ static int mobiveil_pcie_probe(struct platform_device =
+*pdev)
+ 	bridge->map_irq =3D of_irq_parse_and_map_pci;
+ 	bridge->swizzle_irq =3D pci_common_swizzle;
+=20
++	ret =3D mobiveil_bringup_link(pcie);
++	if (ret) {
++		dev_info(dev, "link bring-up failed\n");
++		goto error;
++	}
++
+ 	/* setup the kernel resources for the newly added PCIe root bus */
+ 	ret =3D pci_scan_root_bus_bridge(bridge);
+ 	if (ret)
 --=20
 2.17.1
