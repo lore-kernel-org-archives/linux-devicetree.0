@@ -1,33 +1,59 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [v4, PATCH 2/2] dt-binding: mediatek-dwmac: add binding document
- for MediaTek MT2712 DWMAC
-Date: Tue, 20 Nov 2018 15:49:05 +0100
-Message-ID: <20181120144905.GD18335@lunn.ch>
-References: <1542705696-18507-1-git-send-email-biao.huang@mediatek.com>
- <1542705696-18507-3-git-send-email-biao.huang@mediatek.com>
+From: Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: Re: [RFC 0/3] Unify CPU topology across ARM64 & RISC-V
+Date: Tue, 20 Nov 2018 08:28:18 -0700
+Message-ID: <35b92f83-dbbf-fad2-561f-49b0933ffe19@codeaurora.org>
+References: <1541728209-3224-1-git-send-email-atish.patra@wdc.com>
+ <07d92dd4-f943-47ee-e168-46bfaf4ed755@codeaurora.org>
+ <20181120111146.GA6497@e107155-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1542705696-18507-3-git-send-email-biao.huang@mediatek.com>
+In-Reply-To: <20181120111146.GA6497@e107155-lin>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Biao Huang <biao.huang@mediatek.com>
-Cc: davem@davemloft.net, robh+dt@kernel.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, joabreu@synopsys.com
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Damien.LeMoal@wdc.com, juri.lelli@arm.com, anup@brainfault.org, palmer@sifive.com, jeremy.linton@arm.com, robh+dt@kernel.org, mick@ics.forth.gr, linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> +Optional properties:
-> +- mediatek,tx-delay: TX clock delay macro value. Range is 0~31. Default is 0.
-> +	It should be defined for rgmii/rgmii-rxid/mii interface.
-> +- mediatek,rx-delay: RX clock delay macro value. Range is 0~31. Default is 0.
-> +	It should be defined for rgmii/rgmii-txid/mii/rmii interface.
-> +- mediatek,fine-tune: boolean property, if present indicates that fine delay
-> +	is selected for rgmii interface.
-> +	If present, tx-delay/rx-delay is 170+/-50ps per stage.
-> +	Else tx-delay/rx-delay of coarse delay macro is 0.55+/-0.2ns per stage.
-> +	This property do not apply to non-rgmii PHYs.
-> +	Only coarse-tune delay is supported for mii/rmii PHYs.
+On 11/20/2018 4:11 AM, Sudeep Holla wrote:
+> On Thu, Nov 15, 2018 at 11:31:33AM -0700, Jeffrey Hugo wrote:
+> 
+> [...]
+> 
+>>
+>> I was interested in testing these on QDF2400, an ARM64 platform, since this
+>> series touches core ARM64 code and I'd hate to see a regression. However, I
+>> can't figure out what baseline to use to apply these. Different patches
+>> cause different conflicts of a variety of baselines I attempted.
+>>
+> 
+> Good to know that we can test DT configuration on QDF2400. I always assumed
+> it's ACPI only.
 
-Didn't Rob say to express the delay in pS, and have the driver convert
-that to values to put into registers. That is what i would prefer.
+It is ACPI only in the production configuration.  I suppose we could 
+hack things up to do basic DT sanity, but I expect it would be nasty and 
+non-trivial.
 
-     Andrew
+> 
+>> What are these intended to apply to?
+>>
+> 
+> The series alone may not get the package/socket ids correct on QDF2400.
+> I have not yet added support for the same as I wanted to get the initial
+> feedback on DT bindings. The movement of DT binding and corresponding
+> code should not regress and you should be able to validate only that
+> part.
+> 
+
+On a cursory glance, it looks like some of the reorganized code would 
+also be used in the ACPI path (things that are common between DT and 
+ACPI).  I do not expect problems, but I still feel its prudent to do a 
+sanity check on actual hardware.
+
+-- 
+Jeffrey Hugo
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
