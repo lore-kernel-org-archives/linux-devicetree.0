@@ -1,20 +1,20 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 03/12] drm/sun4i: sun6i_mipi_dsi: Setup
- burst mode timings
-Date: Tue, 20 Nov 2018 16:45:32 +0100
-Message-ID: <20181120154532.mykbbrc3homwf2fi@flea>
-References: <20181116163916.29621-1-jagan@amarulasolutions.com>
- <20181116163916.29621-4-jagan@amarulasolutions.com>
- <20181119083036.riydru5xefao3xte@flea>
- <CAMty3ZBDBDqtH5_m4g-kkKKx+JqcC-r9mc-H+_WWgkLubMWPew@mail.gmail.com>
+Subject: Re: [PATCH v4 08/26] drm/sun4i: sun6i_mipi_dsi: Fix VBP
+ size calculation
+Date: Tue, 20 Nov 2018 16:57:15 +0100
+Message-ID: <20181120155715.andrjp5kg6ugcv72@flea>
+References: <20181113111633.20189-1-jagan@amarulasolutions.com>
+ <20181113111633.20189-9-jagan@amarulasolutions.com>
+ <20181115095551.uctdkfmuwlnzhjnn@flea>
+ <CAMty3ZAEHiovm6OF6JvJVQR4aqpG1Q3ML5YqxJkF2ntwRkUO=A@mail.gmail.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="xfrsutrsshbzfw5b"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBHWY2DPQKGQEM5WT7KA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="rozt26x7vcumdji5"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXG52DPQKGQE2GO424Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <CAMty3ZBDBDqtH5_m4g-kkKKx+JqcC-r9mc-H+_WWgkLubMWPew-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAMty3ZAEHiovm6OF6JvJVQR4aqpG1Q3ML5YqxJkF2ntwRkUO=A@mail.gmail.com>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -22,45 +22,76 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, TL Lim <tllim-F7SikzrIcFYdnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---xfrsutrsshbzfw5b
+--rozt26x7vcumdji5
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Mon, Nov 19, 2018 at 04:30:37PM +0530, Jagan Teki wrote:
-> On Mon, Nov 19, 2018 at 2:00 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+On Thu, Nov 15, 2018 at 11:19:53PM +0530, Jagan Teki wrote:
+> On Thu, Nov 15, 2018 at 3:26 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
 > >
-> > On Fri, Nov 16, 2018 at 10:09:07PM +0530, Jagan Teki wrote:
-> > > Burst mode display timings are different from convectional
-> > > video mode so update the horizontal and vertical timings.
+> > Hi,
+> >
+> > On Tue, Nov 13, 2018 at 04:46:15PM +0530, Jagan Teki wrote:
+> > > The horizontal and vertical back porch calculation in BSP
+> > > code is simply following the Linux drm comment diagram, in
+> > > include/drm/drm_modes.h which is
 > > >
-> > > Reference code taken from BSP (from linux-sunxi/
-> > > drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
+> > > [hv]back porch = [hv]total - [hv]sync_end
 > > >
-> > > dsi_hsa  = 0;
-> > > dsi_hbp  = 0;
-> > > dsi_hact = x*dsi_pixel_bits[format]/8;
-> > > dsi_hblk = dsi_hact;
-> > > dsi_hfp  = 0;
-> > > dsi_vblk = 0;
+> > > BSP code form BPI-M64-bsp is calculating vertical back porch as
+> > > (from linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c)
+> > >
+> > > timmings->ver_sync_time= panel_info->lcd_vspw;
+> > > timmings->ver_back_porch= panel_info->lcd_vbp-panel_info->lcd_vspw;
+> > >
+> > > vbp = panel->lcd_vbp;
+> > > vspw = panel->lcd_vspw;
+> > > dsi_dev[sel]->dsi_basic_size0.bits.vbp = vbp-vspw;
+> > > dsi_dev[sel]->dsi_basic_size0.bits.vbp = panel->lcd_vbp - panel->lcd_vspw;
+> > > =>  timmings->ver_back_porch + panel_info->lcd_vspw - panel_info->lcd_vspw
+> > > =>  timmings->ver_back_porch
+> > > =>  mode->vtotal - mode->end
+> > >
+> > > Which evatually same as mode->vtotal - mode->vsync_end so update the
+> > > same in SUN6I_DSI_BASIC_SIZE0_VBP
+> > >
+> > > On the information note, existing SUN6I_DSI_BASIC_SIZE0_VSA is proper
+> > > value.
 > > >
 > > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 > >
-> > How is that matching the code you have in the rest of your patch?
+> > I've tested your changes on my A33 board, and this commit will break
+> > it.
+> >
+> > It creates vblank timeouts, and visual artifacts at the bottom of the
+> > display.
 > 
-> +       if (device->mode_flags & MIPI_DSI_MODE_VIDEO_BURST)
-> +               timings.hblk = (mode->hdisplay * Bpp);
-> +       else
-> +               sun6i_dsi_get_timings(dsi, mode, &timings);
+> Strange, VBP is earlier gives front porch which is anyway wrong.
 > 
-> It's again your request to "keep the couple of function to make more
-> readable"
+> >
+> > Later commits seem to fix the issue, but will create some blanking on
+> > the upper third of the display.
+> >
+> > Since the documentation is quite sparse, and a MIPI-DSI analyzer is
+> > way too expensive, I'd really like to have at least what each of these
+> > commits are actually fixing, and what symptoms each of these were
+> > causing, and not just "the BSP does it".
+> 
+> W/o this 2-lane panel is breaking, same vblank timeout and visual
+> artifacts at the bottom of the panel. though the commits may reference
+> BSP, I have at-least tested on 3 different panels for us to prove its
+> working.
+> 
+> > Having some datasheet for the panels you had working would help too.
+> 
+> Unfortunately datasheet doesn't have any required information what we
+> actually looking for.
 
-That function in particular doesn't make it much more readable, but
-more importantly, your commit log doesn't match what you code does.
+Not even the timings? How did you get that information then?
 
 Maxime
 
@@ -68,4 +99,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---xfrsutrsshbzfw5b--
+--rozt26x7vcumdji5--
