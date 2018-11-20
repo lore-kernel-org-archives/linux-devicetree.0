@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v3 03/14] media: ov7670: hook s_power onto v4l2 core
-Date: Tue, 20 Nov 2018 11:03:08 +0100
-Message-ID: <20181120100318.367987-4-lkundrak@v3.sk>
+Subject: [PATCH v3 02/14] media: ov7670: split register setting from set_framerate() logic
+Date: Tue, 20 Nov 2018 11:03:07 +0100
+Message-ID: <20181120100318.367987-3-lkundrak@v3.sk>
 References: <20181120100318.367987-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -12,137 +12,85 @@ To: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-The commit 71862f63f351 ("media: ov7670: Add the ov7670_s_power function"=
-)
-added a power control routing. However, it was not good enough to use as
-a s_power() callback: it merely flipped on the power GPIOs without
-restoring the register settings.
-
-Fix this now and register an actual power callback.
+This will allow us to restore the last set frame rate after the device
+returns from a power off.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
 ---
 Changes since v2:
-- Restore the controls, format and frame rate on power on
+- This patch was added to the series
 
- drivers/media/i2c/ov7670.c | 50 +++++++++++++++++++++++++++++++++-----
- 1 file changed, 44 insertions(+), 6 deletions(-)
+ drivers/media/i2c/ov7670.c | 30 ++++++++++++++----------------
+ 1 file changed, 14 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
-index ead0c360df33..cbaab60aaaac 100644
+index ee2302fbdeee..ead0c360df33 100644
 --- a/drivers/media/i2c/ov7670.c
 +++ b/drivers/media/i2c/ov7670.c
-@@ -242,6 +242,7 @@ struct ov7670_info {
- 	struct ov7670_format_struct *fmt;  /* Current format */
- 	struct ov7670_win_size *wsize;
- 	struct clk *clk;
-+	int on;
- 	struct gpio_desc *resetb_gpio;
- 	struct gpio_desc *pwdn_gpio;
- 	unsigned int mbus_config;	/* Media bus configuration flags */
-@@ -1615,19 +1616,54 @@ static int ov7670_s_register(struct v4l2_subdev *=
-sd, const struct v4l2_dbg_regis
+@@ -810,13 +810,24 @@ static void ov7675_get_framerate(struct v4l2_subdev=
+ *sd,
+ 			(4 * clkrc);
  }
- #endif
 =20
--static int ov7670_s_power(struct v4l2_subdev *sd, int on)
-+static void ov7670_power_on(struct v4l2_subdev *sd)
++static int ov7675_apply_framerate(struct v4l2_subdev *sd)
++{
++	struct ov7670_info *info =3D to_state(sd);
++	int ret;
++
++	ret =3D ov7670_write(sd, REG_CLKRC, info->clkrc);
++	if (ret < 0)
++		return ret;
++
++	return ov7670_write(sd, REG_DBLV, info->pll_bypass ? DBLV_BYPASS : DBLV=
+_X4);
++}
++
+ static int ov7675_set_framerate(struct v4l2_subdev *sd,
+ 				 struct v4l2_fract *tpf)
  {
  	struct ov7670_info *info =3D to_state(sd);
+ 	u32 clkrc;
+ 	int pll_factor;
+-	int ret;
 =20
-+	if (info->on)
-+		return;
-+
- 	if (info->pwdn_gpio)
--		gpiod_set_value(info->pwdn_gpio, !on);
--	if (on && info->resetb_gpio) {
-+		gpiod_set_value(info->pwdn_gpio, 0);
-+	if (info->resetb_gpio) {
- 		gpiod_set_value(info->resetb_gpio, 1);
- 		usleep_range(500, 1000);
- 		gpiod_set_value(info->resetb_gpio, 0);
- 		usleep_range(3000, 5000);
- 	}
+ 	/*
+ 	 * The formula is fps =3D 5/4*pixclk for YUV/RGB and
+@@ -825,19 +836,10 @@ static int ov7675_set_framerate(struct v4l2_subdev =
+*sd,
+ 	 * pixclk =3D clock_speed / (clkrc + 1) * PLLfactor
+ 	 *
+ 	 */
+-	if (info->pll_bypass) {
+-		pll_factor =3D 1;
+-		ret =3D ov7670_write(sd, REG_DBLV, DBLV_BYPASS);
+-	} else {
+-		pll_factor =3D PLL_FACTOR;
+-		ret =3D ov7670_write(sd, REG_DBLV, DBLV_X4);
+-	}
+-	if (ret < 0)
+-		return ret;
+-
+ 	if (tpf->numerator =3D=3D 0 || tpf->denominator =3D=3D 0) {
+ 		clkrc =3D 0;
+ 	} else {
++		pll_factor =3D info->pll_bypass ? 1 : PLL_FACTOR;
+ 		clkrc =3D (5 * pll_factor * info->clock_speed * tpf->numerator) /
+ 			(4 * tpf->denominator);
+ 		if (info->fmt->mbus_code =3D=3D MEDIA_BUS_FMT_SBGGR8_1X8)
+@@ -859,11 +861,7 @@ static int ov7675_set_framerate(struct v4l2_subdev *=
+sd,
+ 	/* Recalculate frame rate */
+ 	ov7675_get_framerate(sd, tpf);
 =20
-+	info->on =3D true;
-+}
-+
-+static void ov7670_power_off(struct v4l2_subdev *sd)
-+{
-+	struct ov7670_info *info =3D to_state(sd);
-+
-+	if (!info->on)
-+		return;
-+
-+	if (info->pwdn_gpio)
-+		gpiod_set_value(info->pwdn_gpio, 1);
-+
-+	info->on =3D false;
-+}
-+
-+static int ov7670_s_power(struct v4l2_subdev *sd, int on)
-+{
-+	struct ov7670_info *info =3D to_state(sd);
-+
-+	if (info->on =3D=3D on)
-+		return 0;
-+
-+	if (on) {
-+		ov7670_power_on (sd);
-+		ov7670_apply_fmt(sd);
-+		ov7675_apply_framerate(sd);
-+		v4l2_ctrl_handler_setup(&info->hdl);
-+	} else {
-+		ov7670_power_off (sd);
-+	}
-+
- 	return 0;
+-	ret =3D ov7670_write(sd, REG_CLKRC, info->clkrc);
+-	if (ret < 0)
+-		return ret;
+-
+-	return ov7670_write(sd, REG_DBLV, DBLV_X4);
++	return ov7675_apply_framerate(sd);
  }
 =20
-@@ -1660,6 +1696,7 @@ static int ov7670_open(struct v4l2_subdev *sd, stru=
-ct v4l2_subdev_fh *fh)
- static const struct v4l2_subdev_core_ops ov7670_core_ops =3D {
- 	.reset =3D ov7670_reset,
- 	.init =3D ov7670_init,
-+	.s_power =3D ov7670_s_power,
- #ifdef CONFIG_VIDEO_ADV_DEBUG
- 	.g_register =3D ov7670_g_register,
- 	.s_register =3D ov7670_s_register,
-@@ -1825,6 +1862,7 @@ static int ov7670_probe(struct i2c_client *client,
- 		else
- 			return ret;
- 	}
-+
- 	if (info->clk) {
- 		ret =3D clk_prepare_enable(info->clk);
- 		if (ret)
-@@ -1841,7 +1879,7 @@ static int ov7670_probe(struct i2c_client *client,
- 	if (ret)
- 		goto clk_disable;
-=20
--	ov7670_s_power(sd, 1);
-+	ov7670_power_on(sd);
-=20
- 	/* Make sure it's an ov7670 */
- 	ret =3D ov7670_detect(sd);
-@@ -1929,7 +1967,7 @@ static int ov7670_probe(struct i2c_client *client,
- hdl_free:
- 	v4l2_ctrl_handler_free(&info->hdl);
- power_off:
--	ov7670_s_power(sd, 0);
-+	ov7670_power_off(sd);
- clk_disable:
- 	clk_disable_unprepare(info->clk);
- 	return ret;
-@@ -1945,7 +1983,7 @@ static int ov7670_remove(struct i2c_client *client)
- 	v4l2_ctrl_handler_free(&info->hdl);
- 	clk_disable_unprepare(info->clk);
- 	media_entity_cleanup(&info->sd.entity);
--	ov7670_s_power(sd, 0);
-+	ov7670_power_off(sd);
- 	return 0;
- }
-=20
+ static void ov7670_get_framerate_legacy(struct v4l2_subdev *sd,
 --=20
 2.19.1
