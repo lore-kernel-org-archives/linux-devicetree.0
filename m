@@ -1,7 +1,7 @@
 From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: [PATCH v5 5/8] regulator: lochnagar: Add initial binding documentation
-Date: Tue, 20 Nov 2018 14:16:28 +0000
-Message-ID: <20181120141631.18949-5-ckeepax@opensource.cirrus.com>
+Subject: [PATCH v5 3/8] clk: lochnagar: Add initial binding documentation
+Date: Tue, 20 Nov 2018 14:16:26 +0000
+Message-ID: <20181120141631.18949-3-ckeepax@opensource.cirrus.com>
 References: <20181120141631.18949-1-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -21,16 +21,16 @@ controller chip on the Lochnagar board.
 
 Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
- .../bindings/regulator/cirrus,lochnagar.txt        | 82 ++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt
+ .../devicetree/bindings/clock/cirrus,lochnagar.txt | 89 ++++++++++++++++++++++
+ 1 file changed, 89 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
 
-diff --git a/Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt
+diff --git a/Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
 new file mode 100644
-index 000000000000..91974e6ee251
+index 000000000000..c1b5478d5432
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt
-@@ -0,0 +1,82 @@
++++ b/Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
+@@ -0,0 +1,89 @@
 +Cirrus Logic Lochnagar Audio Development Board
 +
 +Lochnagar is an evaluation and development board for Cirrus Logic
@@ -41,77 +41,84 @@ index 000000000000..91974e6ee251
 +controlled through the Lochnagar, allowing the device under test
 +to be used in a variety of possible use cases.
 +
-+This binding document describes the binding for the regulator portion
-+of the driver.
++This binding document describes the binding for the clock portion of
++the driver.
 +
 +Also see these documents for generic binding information:
-+  [1] Regulator: ../regulator/regulator.txt
++  [1] Clock : ../clock/clock-bindings.txt
++
++And these for relevant defines:
++  [2] include/dt-bindings/clock/lochnagar.h
 +
 +This binding must be part of the Lochnagar MFD binding:
-+  [2] ../mfd/cirrus,lochnagar.txt
++  [3] ../mfd/cirrus,lochnagar.txt
++
++Required properties:
++
++  - compatible : One of the following strings:
++                 "cirrus,lochnagar1-clk"
++                 "cirrus,lochnagar2-clk"
++
++  - #clock-cells : Must be 1. The first cell indicates the clock
++    number, see [2] for available clocks and [1].
++
++Optional properties:
++
++  - clocks : Must contain an entry for each clock in clock-names.
++  - clock-names : May contain entries for each of the following
++    clocks:
++     - ln-cdc-clkout : Output clock from CODEC card.
++     - ln-dsp-clkout : Output clock from DSP card.
++     - ln-gf-mclk1,ln-gf-mclk2,ln-gf-mclk3,ln-gf-mclk4 : Optional
++       input audio clocks from host system.
++     - ln-psia1-mclk, ln-psia2-mclk : Optional input audio clocks from
++       external connector.
++     - ln-spdif-clkout : Optional input audio clock from SPDIF.
++     - ln-adat-clkout : Optional input audio clock from ADAT.
++     - ln-pmic-32k : On board fixed regulator.
++     - ln-clk-12m : On board fixed regulator.
++     - ln-clk-11m : On board fixed regulator.
++     - ln-clk-24m : On board fixed regulator.
++     - ln-clk-22m : On board fixed regulator.
++     - ln-usb-clk-24m : On board fixed regulator.
++     - ln-usb-clk-12m : On board fixed regulator.
++
++  - assigned-clocks : A list of Lochnagar clocks to be reparented, see
++    [2] for available clocks.
++  - assigned-clock-parents : Parents to be assigned to the clocks
++    listed in "assigned-clocks".
 +
 +Optional sub-nodes:
 +
-+  - VDDCORE : Initialisation data for the VDDCORE regulator, which
-+    supplies the CODECs digital core if it has no build regulator for that
-+    purpose.
-+      Required Properties:
-+      - compatible : One of the following strings:
-+                     "cirrus,lochnagar2-vddcore"
-+      - SYSVDD-supply: Primary power supply for the Lochnagar.
-+
-+  - MICVDD : Initialisation data for the MICVDD regulator, which
-+    supplies the CODECs MICVDD.
-+      Required Properties:
-+      - compatible : One of the following strings:
-+                     "cirrus,lochnagar2-micvdd"
-+      - SYSVDD-supply: Primary power supply for the Lochnagar.
-+
-+  - MIC1VDD, MIC2VDD : Initialisation data for the MICxVDD supplies.
-+      Required Properties:
-+      - compatible : One of the following strings:
-+                     "cirrus,lochnagar2-mic1vdd", "cirrus,lochnagar2-mic2vdd"
-+      Optional Properties:
-+      - cirrus,micbias-input : A property selecting which of the CODEC
-+        minicard micbias outputs should be used, valid values are 1 - 4.
-+      - MICBIAS1-supply, MICBIAS2-supply: Regulator supplies for the
-+        MICxVDD outputs, supplying the digital microphones, normally
-+        supplied from the attached CODEC.
-+
-+  - VDD1V8 : Recommended fixed regulator for the VDD1V8 regulator, which supplies the
-+    CODECs analog and 1.8V digital supplies.
-+      Required Properties:
-+      - compatible : Should be set to "regulator-fixed"
-+      - regulator-min-microvolt : Should be set to 1.8V
-+      - regulator-max-microvolt : Should be set to 1.8V
-+      - regulator-boot-on
-+      - regulator-always-on
-+      - vin-supply : Should be set to same supply as SYSVDD
++  - fixed-clock nodes may be registered for the following on board clocks:
++     - ln-pmic-32k : 32768 kHz
++     - ln-clk-12m : 12288000 kHz
++     - ln-clk-11m : 11298600 kHz
++     - ln-clk-24m : 24576000 kHz
++     - ln-clk-22m : 22579200 kHz
++     - ln-usb-clk-24m : 24576000 kHz
++     - ln-usb-clk-12m : 12288000 kHz
 +
 +Example:
 +
-+lochnagar {
-+	lochnagar-micvdd: MICVDD {
-+		compatible = "cirrus,lochnagar2-micvdd";
++lochnagar-clk {
++	compatible = "cirrus,lochnagar2-clk";
 +
-+		SYSVDD-supply = <&wallvdd>;
++	#clock-cells = <1>;
 +
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
++	clocks = <&clk-audio>, <&clk_pmic>;
++	clock-names = "ln-gf-mclk2", "ln-pmic-32k";
 +
-+	lochnagar-vdd1v8: VDD1V8 {
-+		compatible = "regulator-fixed";
++	assigned-clocks = <&lochnagar-clk LOCHNAGAR_CDC_MCLK1>,
++			  <&lochnagar-clk LOCHNAGAR_CDC_MCLK2>;
++	assigned-clock-parents = <&clk-audio>,
++				 <&clk-pmic>;
 +
-+		regulator-name = "VDD1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+
-+		vin-supply = <&wallvdd>;
++	clk-pmic: clk-pmic {
++		compatible = "fixed-clock";
++		clock-cells = <0>;
++		clock-frequency = <32768>;
 +	};
 +};
-+
 -- 
 2.11.0
