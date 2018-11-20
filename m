@@ -1,63 +1,40 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 3/3] arm64: dts: allwinner: h6: orangepi: Add
- device nodes for LEDs
-Date: Tue, 20 Nov 2018 14:53:11 +0800
-Message-ID: <20181120065311.30009-4-wens@csie.org>
-References: <20181120065311.30009-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Florian Eckert <fe@dev.tdt.de>
+Subject: Re: [PATCH v3 1/2] hwmon: (adcxx) add devictree bindings
+ documentation
+Date: Tue, 20 Nov 2018 08:16:28 +0100
+Message-ID: <b6ee9998a565333f5105be46426b289c@dev.tdt.de>
+References: <20181115135013.30723-1-fe@dev.tdt.de>
+ <20181115135013.30723-2-fe@dev.tdt.de> <20181117144040.GA8016@bogus>
+ <20181119012555.GA7856@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBYW6Z3PQKGQEE34TQHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181120065311.30009-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181119012555.GA7856@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Rob Herring <robh@kernel.org>, jdelvare@suse.com, mark.rutland@arm.com, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Guenter Roeck <groeck7@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The Orange Pi Lite 2 and Orange Pi One Plus both have two LEDs, one red
-and one green. These are driven directly by GPIO lines in an active high
-arrangement. The red LED is labeled "power", so it is set to be on by
-default.
+Hello Guenter,
 
-Note that the default drive current for the GPIO lines makes the LEDs
-very bright.
+>> 
+>> Needs a better description of what this h/w is.
+>> 
+>> ADCs go in iio/adc/
+>> 
+> FWIW, the hwmon driver for this chip series would be a perfect 
+> candidate
+> for a conversion to an iio driver. The driver predates the existence of
+> iio.
+> 
+> Florian, any interest doing that ? It is quite likely that the chip 
+> isn't
+> used for hardware monitoring.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- .../boot/dts/allwinner/sun50i-h6-orangepi.dtsi    | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+I will have a look on the next week about your suggestion to port this 
+device
+to iio/adc.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-index f16b7ffbe797..b2526dac2fcf 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-@@ -22,6 +22,21 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		power {
-+			label = "orangepi:red:power";
-+			gpios = <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 */
-+			default-state = "on";
-+		};
-+
-+		status {
-+			label = "orangepi:green:status";
-+			gpios = <&r_pio 0 7 GPIO_ACTIVE_HIGH>; /* PL7 */
-+		};
-+	};
-+
- 	reg_vcc5v: vcc5v {
- 		/* board wide 5V supply directly from the DC jack */
- 		compatible = "regulator-fixed";
--- 
-2.19.1
+   - Florian
