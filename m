@@ -1,86 +1,102 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 06/12] drm/sun4i: sun6i_mipi_dsi: Probe
- tcon0 during dsi_bind
-Date: Tue, 20 Nov 2018 16:44:29 +0100
-Message-ID: <20181120154429.e4jcn2xxkbh3fits@flea>
-References: <20181116163916.29621-1-jagan@amarulasolutions.com>
- <20181116163916.29621-7-jagan@amarulasolutions.com>
- <20181119083833.d7ysiv3tenabtrdj@flea>
- <CAMty3ZCsEYFJOQAFTf3FspQWMzD-tiW_njuyCJ950RZ=Y6apEw@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Stefan Popa <stefan.popa@analog.com>
+Subject: [PATCH v2 2/2] dt-bindings: iio: adc: Add docs for AD7606 ADC
+Date: Tue, 20 Nov 2018 17:44:37 +0200
+Message-ID: <1542728677-25899-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="l2eillhuo5shhqfk"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBX6X2DPQKGQEYBB5KMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZCsEYFJOQAFTf3FspQWMzD-tiW_njuyCJ950RZ=Y6apEw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, TL Lim <tllim-F7SikzrIcFYdnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
 List-Id: devicetree@vger.kernel.org
 
+Document support for AD7606 Analog to Digital Converter.
 
---l2eillhuo5shhqfk
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+---
+Changes in v2:
+	- fixed indentation issues.
+	- used gpios instead of gpio.
+	- added vendor prefix for conversion-start-gpios, first-data-gpios,
+	and range-gpios.
 
-On Mon, Nov 19, 2018 at 05:06:32PM +0530, Jagan Teki wrote:
-> On Mon, Nov 19, 2018 at 2:08 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> >
-> > On Fri, Nov 16, 2018 at 10:09:10PM +0530, Jagan Teki wrote:
-> > > Probe tcon0 during dsi_bind, so-that the tcon attributes like
-> > > divider value, clock rate can get whenever it need.
-> > >
-> > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > > ---
-> > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 7 +++++++
-> > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h | 1 +
-> > >  2 files changed, 8 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > index d60955880c43..66a01061e51d 100644
-> > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > @@ -25,6 +25,7 @@
-> > >  #include <drm/drm_panel.h>
-> > >
-> > >  #include "sun4i_drv.h"
-> > > +#include "sun4i_tcon.h"
-> > >  #include "sun6i_mipi_dsi.h"
-> > >
-> > >  #include <video/mipi_display.h>
-> > > @@ -1007,6 +1008,7 @@ static int sun6i_dsi_bind(struct device *dev, struct device *master,
-> > >       struct drm_device *drm = data;
-> > >       struct sun4i_drv *drv = drm->dev_private;
-> > >       struct sun6i_dsi *dsi = dev_get_drvdata(dev);
-> > > +     struct sun4i_tcon *tcon0 = sun4i_get_tcon0(drm);
-> > >       int ret;
-> > >
-> > >       if (!dsi->panel)
-> > > @@ -1014,6 +1016,11 @@ static int sun6i_dsi_bind(struct device *dev, struct device *master,
-> > >
-> > >       dsi->drv = drv;
-> > >
-> > > +     if (!tcon0)
-> > > +             return -EPROBE_DEFER;
-> >
-> > You can't fall in that condition. The component framework won't call
-> > bind unless every components have been probed.
-> 
-> Since tcon0 is already probed is it? if so I can return -EINVAL is it ok?
+ .../devicetree/bindings/iio/adc/adi,ad7606.txt     | 54 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
 
-Sounds good yes.
-
-Maxime
-
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+new file mode 100644
+index 0000000..02fae23
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+@@ -0,0 +1,54 @@
++Analog Devices AD7606 Simultaneous Sampling ADC
++
++Required properties for the AD7606:
++
++- compatible: Must be one of
++	* "adi,ad7605-4"
++	* "adi,ad7606-8"
++	* "adi,ad7606-6"
++	* "adi,ad7606-4"
++- reg: SPI chip select number for the device
++- spi-max-frequency: Max SPI frequency to use
++	see: Documentation/devicetree/bindings/spi/spi-bus.txt
++- spi-cpha: See Documentation/devicetree/bindings/spi/spi-bus.txt
++- avcc-supply: phandle to the Avcc power supply
++- interrupts: IRQ line for the ADC
++	see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++- adi,conversion-start-gpios: must be the device tree identifier of the CONVST pin.
++		  This logic input is used to initiate conversions on the analog
++		  input channels.
++
++Optional properties:
++
++- reset-gpios: must be the device tree identifier of the RESET pin. If specified,
++	       it will be asserted during driver probe.
++- standby-gpios: must be the device tree identifier of the STBY pin. This pin is used
++		to place the AD7606 into one of two power-down modes, Standby mode or
++		Shutdown mode.
++- adi,first-data-gpios: must be the device tree identifier of the FRSTDATA pin.
++		    The FRSTDATA output indicates when the first channel, V1, is
++		    being read back on either the parallel, byte or serial interface.
++- adi,range-gpios: must be the device tree identifier of the RANGE pin. The polarity on
++	      this pin determines the input range of the analog input channels. If
++	      this pin is tied to a logic high, the analog input range is ±10V for
++	      all channels. If this pin is tied to a logic low, the analog input range
++	      is ±5V for all channels.
++
++Example:
++
++	adc@0 {
++		compatible = "adi,ad7606-8";
++		reg = <0>;
++		spi-max-frequency = <1000000>;
++		spi-cpol;
++
++		avcc-supply = <&adc_vref>;
++
++		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
++		interrupt-parent = <&gpio>;
++
++		adi,conversion-start-gpios = <&gpio 17 0>;
++		reset-gpios = <&gpio 27 0>;
++		adi,first-data-gpios = <&gpio 22 0>;
++		standby-gpios = <&gpio 24 0>;
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 843545d..6d63db4 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -845,6 +845,7 @@ L:	linux-iio@vger.kernel.org
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+ F:	drivers/iio/adc/ad7606.c
++F:	Documentation/devicetree/bindings/iio/adc/ad7606.txt
+ 
+ ANALOG DEVICES INC AD9389B DRIVER
+ M:	Hans Verkuil <hans.verkuil@cisco.com>
 -- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---l2eillhuo5shhqfk--
+2.7.4
