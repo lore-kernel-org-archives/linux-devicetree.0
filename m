@@ -1,57 +1,36 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: pinctrl: k3: Introduce pinmux
- definitions
-Date: Tue, 20 Nov 2018 16:14:41 +0530
-Message-ID: <a411e291-d02d-064e-d08c-9ab7a1b1409e@ti.com>
-References: <20181113060111.16374-1-vigneshr@ti.com>
- <20181113060111.16374-2-vigneshr@ti.com>
- <20181117160502.dhlqbx5qnmdp5iog@kahuna>
- <b8c1d975-2b4f-5530-2089-dc04c04f8d86@ti.com>
- <12c1d6e2-aba4-be0d-bfc5-1fb5d3ab45f8@ti.com>
- <9f87eb33-45b4-905a-2afd-5bbb450fc6c6@ti.com>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH 3/3] PCI: imx: Add support for i.MX8MQ
+Date: Tue, 20 Nov 2018 10:48:59 +0000
+Message-ID: <ce2ac1a880ce2a7a39f0e42b5059676daa748e52.camel@nxp.com>
+References: <20181117181225.10737-1-andrew.smirnov@gmail.com>
+         <20181117181225.10737-4-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9f87eb33-45b4-905a-2afd-5bbb450fc6c6@ti.com>
+In-Reply-To: <20181117181225.10737-4-andrew.smirnov@gmail.com>
 Content-Language: en-US
+Content-ID: <0A2AC41B31FD1147A77BC27AE8F297AF@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Tony Lindgren <tony@atomide.com>
+To: "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "cphealy@gmail.com" <cphealy@gmail.com>, Aisheng DONG <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20/11/18 4:07 PM, Tero Kristo wrote:
-> On 20/11/2018 12:09, Vignesh R wrote:
->> On 19/11/18 12:49 PM, Tero Kristo wrote:
->>> On 17/11/2018 18:05, Nishanth Menon wrote:
->>>> On 11:31-20181113, Vignesh R wrote:
->>>>> The dt-bindings header for TI K3 AM6 SoCs define a set of macros for
->>>>
->> [...]
->>>>
->>>> Thanks for reducing the combinations down to the minimum needed. We can
->>>> worry about the DS and isolation bits when we have a real user for
->>>> them.
->>>>
->>>> Acked-by: Nishanth Menon <nm@ti.com>
->>>>
->>>> Tero: v4.21-rc1 perhaps ?
->>>>
->>>
->>> Yeah, looks fine, queueing up for 4.21.
->>>
->>
->> Thank you all for the review!
->>
->> Tero,
->>
->> Is there a branch with these patches that I can use as base for my next
->> set of DT patches?
-> 
-> Don't have a branch for these atm, but I can create one if you need it.
-
-Yes, that would be great. Thanks!
-
--- 
-Regards
-Vignesh
+T24gU2F0LCAyMDE4LTExLTE3IGF0IDEwOjEyIC0wODAwLCBBbmRyZXkgU21pcm5vdiB3cm90ZToN
+Cj4gQEAgLTkyMSw3ICsxMDA0LDI4IEBAIHN0YXRpYyBpbnQgaW14Nl9wY2llX3Byb2JlKHN0cnVj
+dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+IC0JY2FzZSBJTVg3RDoNCj4gKwljYXNlIElNWDhN
+UToNCj4gKwkJaWYgKG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5vZGUsICJmc2wsaW9tdXgtZ3ByMXgi
+LA0KPiArCQkJCQkgJmlteDZfcGNpZS0+Z3ByMXgpKSB7DQo+ICsJCQlkZXZfZXJyKGRldiwgIkZh
+aWxlZCB0byBnZXQgR1BSMXggYWRkcmVzc1xuIik7DQo+ICsJCQlyZXR1cm4gLUVJTlZBTDsNCj4g
+KwkJfQ0KDQpUaGlzIGlzIGZvciBkaXN0aW5ndWlzaGluZyBtdWx0aXBsZSBjb250cm9sbGVycyBv
+biB0aGUgU09DIGJ1dCBvdGhlcg0KcmVnaXN0ZXJzIGFuZCBiaXRzIG1pZ2h0IGRpZmZlci4gSXNu
+J3QgaXQgcHJlZmVyYWJsZSB0byBoYXZlIGEgcHJvcGVydHkNCmZvciBjb250cm9sbGVyIGlkIGlu
+c3RlYWQgb2YgYWRkaW5nIG1hbnkgcmVnaXN0ZXJzIHRvIERUPw0KDQo+ICsNCj4gKwkJaWYgKG9m
+X3Byb3BlcnR5X3JlYWRfdTMyX2FycmF5KA0KPiArCQkJICAgIG5vZGUsICJmc2wsZ3ByMTItZGV2
+aWNlLXR5cGUiLA0KPiArCQkJICAgIGlteDZfcGNpZS0+ZGV2aWNlX3R5cGUsDQo+ICsJCQkgICAg
+QVJSQVlfU0laRShpbXg2X3BjaWUtPmRldmljZV90eXBlKSkpIHsNCj4gKwkJCWRldl9lcnIoZGV2
+LCAiRmFpbGVkIHRvIGdldCBkZXZpY2UgdHlwZQ0KPiBtYXNrL3ZhbHVlXG4iKTsNCj4gKwkJCXJl
+dHVybiAtRUlOVkFMOw0KPiArCQl9DQoNClRoZSBkZXZpY2UgdHlwZSBjYW4gYmUgc2V0IG9uIG11
+bHRpcGxlIFNPQ3MsIHdoeSBhcmUgeW91IGFkZGluZyBhDQptYW5kYXRvcnkgcHJvcGVydHkgb25s
+eSBmb3IgOG0/DQoNClRoZXJlIHNob3VsZCBwcm9iYWJseSBiZSBhIHNlcGFyYXRlIHBhdGNoIHdp
+dGggZG9jdW1lbnRlZCBEVCBiaW5kaW5ncy4NCg0KLS0NClJlZ2FyZHMsDQpMZW9uYXJkDQo=
