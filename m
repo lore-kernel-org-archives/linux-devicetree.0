@@ -1,106 +1,133 @@
-From: Andrea Merello <andrea.merello@gmail.com>
-Subject: [PATCH v6 5/7] dmaengine: xilinx_dma: autodetect whether the HW supports scatter-gather
-Date: Tue, 20 Nov 2018 16:31:49 +0100
-Message-ID: <20181120153151.18024-5-andrea.merello@gmail.com>
-References: <20181120153151.18024-1-andrea.merello@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181120153151.18024-1-andrea.merello@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vkoul@kernel.org, dan.j.williams@intel.com, michal.simek@xilinx.com, appana.durga.rao@xilinx.com, dmaengine@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, radhey.shyam.pandey@xilinx.com, Andrea Merello <andrea.merello@gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 01/10] mailbox: Support blocking transfers in atomic
+ context
+Date: Tue, 20 Nov 2018 16:29:07 +0100
+Message-ID: <20181120152907.GA28796@ulmo>
+References: <20181112151853.29289-1-thierry.reding@gmail.com>
+ <20181112151853.29289-2-thierry.reding@gmail.com>
+ <CABb+yY3HwvG6sSKnweiDpyg85Fk8Q9hOVaF-s7gv4RDzEoaGqA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============3901182344694834560=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABb+yY3HwvG6sSKnweiDpyg85Fk8Q9hOVaF-s7gv4RDzEoaGqA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Devicetree List <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, mliljeberg@nvidia.com, Mikko Perttunen <mperttunen@nvidia.com>, talho@nvidia.com, linux-serial@vger.kernel.org, jslaby@suse.com, linux-tegra@vger.kernel.org, ppessi@nvidia.com, Jon Hunter <jonathanh@nvidia.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The AXIDMA and CDMA HW can be either direct-access or scatter-gather
-version. These are SW incompatible.
 
-The driver can handle both versions: a DT property was used to
-tell the driver whether to assume the HW is in scatter-gather mode.
+--===============3901182344694834560==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
+Content-Disposition: inline
 
-This patch makes the driver to autodetect this information. The DT
-property is not required anymore.
 
-No changes for VDMA.
+--envbJBWh7q8WU6mo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Cc: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
-Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
----
-Changes in v2:
-	- autodetect only in !VDMA case
-Changes in v3:
-	- cc DT maintainers/ML
-Changes in v4:
-	- fix typos in commit message
-Changes in v5:
-	None
-Changes in v6:
-	None
----
- drivers/dma/xilinx/xilinx_dma.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+On Sat, Nov 17, 2018 at 11:27:17AM -0600, Jassi Brar wrote:
+> On Mon, Nov 12, 2018 at 9:18 AM Thierry Reding <thierry.reding@gmail.com> wrote:
+> >
+> > From: Thierry Reding <treding@nvidia.com>
+> >
+> > The mailbox framework supports blocking transfers via completions for
+> > clients that can sleep. In order to support blocking transfers in cases
+> > where the transmission is not permitted to sleep, add a new ->flush()
+> > callback that controller drivers can implement to busy loop until the
+> > transmission has been completed. This will automatically be called when
+> > available and interrupts are disabled for clients that request blocking
+> > transfers.
+> >
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > ---
+> >  drivers/mailbox/mailbox.c          | 8 ++++++++
+> >  include/linux/mailbox_controller.h | 4 ++++
+> >  2 files changed, 12 insertions(+)
+> >
+> > diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
+> > index 674b35f402f5..0eaf21259874 100644
+> > --- a/drivers/mailbox/mailbox.c
+> > +++ b/drivers/mailbox/mailbox.c
+> > @@ -267,6 +267,14 @@ int mbox_send_message(struct mbox_chan *chan, void *mssg)
+> >                 unsigned long wait;
+> >                 int ret;
+> >
+> > +               if (irqs_disabled() && chan->mbox->ops->flush) {
+> > +                       ret = chan->mbox->ops->flush(chan, chan->cl->tx_tout);
+> > +                       if (ret < 0)
+> > +                               tx_tick(chan, ret);
+> > +
+> > +                       return ret;
+> > +               }
+> > +
+> This is hacky. I think we can do without busy waiting in atomic
+> context. You could queue locally while in atomic context and then
+> transfer in blocking mode. I don't think we should worry about the
+> 'throughput' as there already is no h/w rate control even with
+> busy-waiting.
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 0716db61f1d0..41bd8caca09e 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -86,6 +86,7 @@
- #define XILINX_DMA_DMASR_DMA_DEC_ERR		BIT(6)
- #define XILINX_DMA_DMASR_DMA_SLAVE_ERR		BIT(5)
- #define XILINX_DMA_DMASR_DMA_INT_ERR		BIT(4)
-+#define XILINX_DMA_DMASR_SG_MASK		BIT(3)
- #define XILINX_DMA_DMASR_IDLE			BIT(1)
- #define XILINX_DMA_DMASR_HALTED		BIT(0)
- #define XILINX_DMA_DMASR_DELAY_MASK		GENMASK(31, 24)
-@@ -412,7 +413,6 @@ struct xilinx_dma_config {
-  * @dev: Device Structure
-  * @common: DMA device structure
-  * @chan: Driver specific DMA channel
-- * @has_sg: Specifies whether Scatter-Gather is present or not
-  * @mcdma: Specifies whether Multi-Channel is present or not
-  * @flush_on_fsync: Flush on frame sync
-  * @ext_addr: Indicates 64 bit addressing is supported by dma device
-@@ -432,7 +432,6 @@ struct xilinx_dma_device {
- 	struct device *dev;
- 	struct dma_device common;
- 	struct xilinx_dma_chan *chan[XILINX_DMA_MAX_CHANS_PER_DEVICE];
--	bool has_sg;
- 	bool mcdma;
- 	u32 flush_on_fsync;
- 	bool ext_addr;
-@@ -2417,7 +2416,6 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
- 
- 	chan->dev = xdev->dev;
- 	chan->xdev = xdev;
--	chan->has_sg = xdev->has_sg;
- 	chan->desc_pendingcount = 0x0;
- 	chan->ext_addr = xdev->ext_addr;
- 	/* This variable ensures that descriptors are not
-@@ -2517,6 +2515,15 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
- 		chan->stop_transfer = xilinx_dma_stop_transfer;
- 	}
- 
-+	/* check if SG is enabled (only for AXIDMA and CDMA) */
-+	if (xdev->dma_config->dmatype != XDMA_TYPE_VDMA) {
-+		if (dma_ctrl_read(chan, XILINX_DMA_REG_DMASR) &
-+		    XILINX_DMA_DMASR_SG_MASK)
-+			chan->has_sg = true;
-+		dev_dbg(chan->dev, "ch %d: SG %s\n", chan->id,
-+			chan->has_sg ? "enabled" : "disabled");
-+	}
-+
- 	/* Initialize the tasklet */
- 	tasklet_init(&chan->tasklet, xilinx_dma_do_tasklet,
- 			(unsigned long)chan);
-@@ -2655,7 +2662,6 @@ static int xilinx_dma_probe(struct platform_device *pdev)
- 		return PTR_ERR(xdev->regs);
- 
- 	/* Retrieve the DMA engine properties from the device tree */
--	xdev->has_sg = of_property_read_bool(node, "xlnx,include-sg");
- 	xdev->max_buffer_len = GENMASK(XILINX_DMA_MAX_TRANS_LEN_MAX - 1, 0);
- 
- 	if (xdev->dma_config->dmatype == XDMA_TYPE_AXIDMA) {
--- 
-2.17.1
+I actually tried to do that before I added this flushing mechanism. The
+problem is, like you said, one of rate control. As mentioned in the
+cover letter, the shared mailboxes implemented in tegra-hsp are used as
+RX and TX channels for the TCU, which is like a virtual UART. The TTY
+driver included as part of this series will use one of the mailboxes to
+transmit data that is written to the console. The problem is that if
+these transmissions are not rate-limited on the TTY driver side, the
+console will just keep writing data and eventually overflow the buffer
+that we have in the mailbox subsystem.
+
+The problem is that data comes in at a much higher rate than what we can
+output. This is especially true at boot when the TCU console takes over
+and the whole log buffer is dumped on it.
+
+So the only way to rate-limit is to either make mbox_send_message()
+block, but that can only be done in non-atomic context. The console,
+however, will always run in atomic context, so the only way to do rate-
+limiting is by busy looping.
+
+Thierry
+
+--envbJBWh7q8WU6mo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlv0KEAACgkQ3SOs138+
+s6E93w//XhzNtaPg4I6695pMUdnzMFUHZ6s0L2MkqsOBMZK1aEyNVe9Bx2HI8TUn
+F7RjY9XKClvPc/+Jwd9nvXBdP2AuTLSKzWRs+Y5mIX27l7qbzCTBKeX/jn9Uq2YO
+Cp0wf+IJ5IswPjuwh93VCiTPVTfaNiWCadCMThwjlVFd0oq2ktAhBR2X0ND9e3Bm
+BPP78LhfR5g8E4SUaRM9z0vugPUuldeiOPJpw0QMHZBsnsTc7enbdhTRbSM4vD6W
+mpsqHx93UjtMA3O4oMM3DWyg1Dz4jcZGXT62BjHJE+4Sqi95Ouf3529loX2L+k5/
+kmXO7pf0iAkfIg6xtm0dEYOxSzX3Q7C0xqlRwjVR6l27hSn6GluQ/SIwXg5XW5tc
+Lw7PKNWupHbitJadyux67EGPvrS7UyYdYgOXP/0xjVXDf1Y6+wVYKXok0469OnFD
+DoSp9holxv3ETx7SXL0nb0/bItnljAFRB4+64EyiM6k/yusK++bwdSA3vPaZUHDV
+yIewQRDQfnz6+9gOylbqF9dpRpdN+o635RpKpjcCdbBbt44oe1EqiMyTWhEEBG0w
+zMJzSaqORdqNBW/2yK43h1nrqotiJZqnJI6puLQfYDMfBGY5SxjgqKCFR8XOMJzy
+mSpuSODHPeIpBIALixRHnd4CVrUgRHsoVMRSxegHKpp58CZVEIA=
+=fUQD
+-----END PGP SIGNATURE-----
+
+--envbJBWh7q8WU6mo--
+
+
+--===============3901182344694834560==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3901182344694834560==--
