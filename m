@@ -1,146 +1,61 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 3/4] ARM: dts: imx6sx: Fix memory node duplicaton
-Date: Tue, 20 Nov 2018 13:59:44 -0200
-Message-ID: <1542729585-9330-3-git-send-email-festevam@gmail.com>
-References: <1542729585-9330-1-git-send-email-festevam@gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH] ARM: dts: at91: sama5d2: use the divided clock for SMC
+Date: Tue, 20 Nov 2018 18:16:12 +0100
+Message-ID: <20181120171612.GF8367@piout.net>
+References: <20181120165737.4998-1-romain.izard.pro@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1542729585-9330-1-git-send-email-festevam@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181120165737.4998-1-romain.izard.pro@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Romain Izard <romain.izard.pro@gmail.com>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Boards based on imx6sx have duplicate memory nodes:
+Hello Romain,
 
-- One coming from the board dts file: memory@
+On 20/11/2018 17:57:37+0100, Romain Izard wrote:
+> The SAMA5D2 is different from SAMA5D3 and SAMA5D4, as there are two
+> different clocks for the peripherals in the SoC. The Static Memory
+> controller is connected to the divided master clock.
+> 
+> Unfortunately, the device tree does not correctly show this and uses the
+> master clock directly. This clock is then used by the code for the NAND
+> controller to calculate the timings for the controller, and we end up with
+> slow NAND Flash access.
+> 
+> Fix the device tree, and the performance of Flash access is improved.
+> 
+> Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
+> ---
+>  arch/arm/boot/dts/sama5d2.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+> index 61f68e5c48e9..b405992eb601 100644
+> --- a/arch/arm/boot/dts/sama5d2.dtsi
+> +++ b/arch/arm/boot/dts/sama5d2.dtsi
+> @@ -308,7 +308,7 @@
+>  				  0x1 0x0 0x60000000 0x10000000
+>  				  0x2 0x0 0x70000000 0x10000000
+>  				  0x3 0x0 0x80000000 0x10000000>;
+> -			clocks = <&mck>;
+> +			clocks = <&h32ck>;
 
-- One coming from the imx6sx.dtsi file.
+You will have to rebase on top of at91-dt. And if I'm not mistaken, this
+line should be:
 
-Fix the duplication by removing the memory node from the dtsi file
-and by adding 'device_type = "memory";' in the board dts.
++			clocks = <&pmc PMC_TYPE_CORE PMC_MCK2>;
 
-Reported-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
- arch/arm/boot/dts/imx6sx-nitrogen6sx.dts         | 1 +
- arch/arm/boot/dts/imx6sx-sabreauto.dts           | 1 +
- arch/arm/boot/dts/imx6sx-sdb.dtsi                | 1 +
- arch/arm/boot/dts/imx6sx-softing-vining-2000.dts | 1 +
- arch/arm/boot/dts/imx6sx-udoo-neo-basic.dts      | 1 +
- arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts   | 1 +
- arch/arm/boot/dts/imx6sx-udoo-neo-full.dts       | 1 +
- arch/arm/boot/dts/imx6sx.dtsi                    | 2 --
- 8 files changed, 7 insertions(+), 2 deletions(-)
+>  			status = "disabled";
+>  
+>  			nand_controller: nand-controller {
+> -- 
+> 2.17.1
+> 
 
-diff --git a/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts b/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
-index adb5cc7..832b5c5 100644
---- a/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
-+++ b/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
-@@ -12,6 +12,7 @@
- 	compatible = "boundary,imx6sx-nitrogen6sx", "fsl,imx6sx";
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x40000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-index 841a27f..48aede5 100644
---- a/arch/arm/boot/dts/imx6sx-sabreauto.dts
-+++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-@@ -11,6 +11,7 @@
- 	compatible = "fsl,imx6sx-sabreauto", "fsl,imx6sx";
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x80000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-sdb.dtsi
-index 7d7d679..a6ec816 100644
---- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
-+++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
-@@ -21,6 +21,7 @@
- 	};
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x40000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx6sx-softing-vining-2000.dts b/arch/arm/boot/dts/imx6sx-softing-vining-2000.dts
-index 252175b..2bc5162 100644
---- a/arch/arm/boot/dts/imx6sx-softing-vining-2000.dts
-+++ b/arch/arm/boot/dts/imx6sx-softing-vining-2000.dts
-@@ -21,6 +21,7 @@
- 	};
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x40000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo-basic.dts b/arch/arm/boot/dts/imx6sx-udoo-neo-basic.dts
-index 40ccdf4..db0feb9 100644
---- a/arch/arm/boot/dts/imx6sx-udoo-neo-basic.dts
-+++ b/arch/arm/boot/dts/imx6sx-udoo-neo-basic.dts
-@@ -49,6 +49,7 @@
- 	compatible = "udoo,neobasic", "fsl,imx6sx";
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x20000000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts b/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts
-index 42bfc8f..5c7a2bb 100644
---- a/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts
-+++ b/arch/arm/boot/dts/imx6sx-udoo-neo-extended.dts
-@@ -49,6 +49,7 @@
- 	compatible = "udoo,neoextended", "fsl,imx6sx";
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x40000000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts b/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts
-index c84c877..13dfe2a 100644
---- a/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts
-+++ b/arch/arm/boot/dts/imx6sx-udoo-neo-full.dts
-@@ -49,6 +49,7 @@
- 	compatible = "udoo,neofull", "fsl,imx6sx";
- 
- 	memory@80000000 {
-+		device_type = "memory";
- 		reg = <0x80000000 0x40000000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index b79b6c4..2cdcf3e 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -15,10 +15,8 @@
- 	 * The decompressor and also some bootloaders rely on a
- 	 * pre-existing /chosen node to be available to insert the
- 	 * command line and merge other ATAGS info.
--	 * Also for U-Boot there must be a pre-existing /memory node.
- 	 */
- 	chosen {};
--	memory { device_type = "memory"; };
- 
- 	aliases {
- 		can0 = &flexcan1;
 -- 
-2.7.4
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
