@@ -1,139 +1,59 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v5 05/12] drm: mediatek: Omit warning on probe defers
-Date: Tue, 20 Nov 2018 12:09:42 +0800
-Message-ID: <1542686982.26483.1.camel@mtksdaap41>
-References: <20181116125449.23581-1-matthias.bgg@kernel.org>
- <20181116125449.23581-6-matthias.bgg@kernel.org>
- <1542605939.32082.12.camel@mtksdaap41>
- <0a02edf9-78da-dde9-4b69-38c4719b711b@gmail.com>
- <1542686700.9073.15.camel@mtksdaap41>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [RFC PATCH] dt-bindings: opp: Extend qcom-opp bindings with
+ properties needed for CPR
+Date: Tue, 20 Nov 2018 09:42:05 +0530
+Message-ID: <eab94dd1-1d8f-4306-cced-1e34171ef1e7@codeaurora.org>
+References: <20180627045234.27403-3-rnayak@codeaurora.org>
+ <20181015124749.27276-1-niklas.cassel@linaro.org>
+ <20181105231745.GA25883@bogus> <20181109163917.GA6673@centauri.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1542686700.9073.15.camel@mtksdaap41>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sean.wang@kernel.org, Matthias Brugger <mbrugger@suse.com>, airlied@linux.ie, mturquette@baylibre.com, sean.wang@mediatek.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, wens@csie.org, robh+dt@kernel.org, rdunlap@infradead.org, laurent.pinchart@ideasonboard.com, matthias.bgg@kernel.org, ulrich.hecht+renesas@gmail.com, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181109163917.GA6673@centauri.lan>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh@kernel.org>
+Cc: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBUdWUsIDIwMTgtMTEtMjAgYXQgMTI6MDUgKzA4MDAsIENLIEh1IHdyb3RlOgo+IEhp
-LCBNYXR0aGlhczoKPiAKPiBPbiBNb24sIDIwMTgtMTEtMTkgYXQgMTA6MjYgKzAxMDAsIE1hdHRo
-aWFzIEJydWdnZXIgd3JvdGU6Cj4gPiAKPiA+IE9uIDE5LzExLzIwMTggMDY6MzgsIENLIEh1IHdy
-b3RlOgo+ID4gPiBIaSwgTWF0dGhpYXM6Cj4gPiA+IAo+ID4gPiBPbiBGcmksIDIwMTgtMTEtMTYg
-YXQgMTM6NTQgKzAxMDAsIG1hdHRoaWFzLmJnZ0BrZXJuZWwub3JnIHdyb3RlOgo+ID4gPj4gRnJv
-bTogTWF0dGhpYXMgQnJ1Z2dlciA8bWJydWdnZXJAc3VzZS5jb20+Cj4gPiA+Pgo+ID4gPj4gSXQg
-Y2FuIGhhcHBlbiB0aGF0IHRoZSBtbXN5cyBjbG9jayBkcml2ZXJzIGFyZW4ndCBwcm9iZWQgYmVm
-b3JlIHRoZQo+ID4gPj4gcGxhdGZvcm0gZHJpdmVyIGdldHMgaW52b2tlZC4gVGhlIHBsYXRmb3Jt
-IGRyaXZlciB1c2VkIHRvIHByaW50IGEgd2FybmluZwo+ID4gPj4gdGhhdCB0aGUgZHJpdmVyIGZh
-aWxlZCB0byBnZXQgdGhlIGNsb2Nrcy4gT21pdCB0aGlzIGVycm9yIG9uCj4gPiA+PiB0aGUgZGVm
-ZXJlZCBwcm9iZSBwYXRoLgo+ID4gPiAKPiA+ID4gVGhpcyBwYXRjaCBsb29rcyBnb29kIHRvIG1l
-LCBidXQgeW91IGhhdmUgbm90IG1vZGlmaWVkIHRoZSBzdWIgZHJpdmVyIGluCj4gPiA+IEhETUkg
-cGF0aC4gV2UgY291bGQgbGV0IEhETUkgcGF0aCBwcmludCB0aGUgd2FybmluZyBhbmQgc29tZW9u
-ZSBzZW5kCj4gPiA+IGFub3RoZXIgcGF0Y2ggbGF0ZXIsIG9yIHlvdSBtb2RpZnkgZm9yIEhETUkg
-cGF0aCBpbiB0aGlzIHBhdGNoLgo+ID4gCj4gPiBTdXJlLCBJJ2xsIGFkZCB0aGlzIGluIHY2LiBB
-ZnRlciBpbnNwZWN0aW5nIHRoZSBjb2RlLCBJIHRoaW5rIHdlIHdpbGwgbmVlZCB0bwo+ID4gYWxz
-byBjaGVjayBmb3Igbm90IGluaXRpYWxpemVkIGNsb2NrcyBpbiBtdGtfbWRwX2NvbXBfaW5pdCwg
-YXMgdGhlIGRyaXZlciBmb3IKPiA+IG5vdyBkb2VzIG5vdCBldmVuIGNoZWNrIGlmIHRoZSBjbG9j
-a3MgYXJlIHByZXNlbnQuIFdoYXQgZG8geW91IHRoaW5rPwo+IAo+IFllcywgd2UgZG8gcmVhbGx5
-IG5lZWQgdG8gY29uc2lkZXIgbWRwIGRyaXZlciBiZWNhdXNlIG1tc3lzIGNsb2NrCj4gaW5jbHVk
-ZSBtZHAgY2xvY2suIFlvdSByZW1pbmQgbWUgdGhhdCBtbXN5cyBjb250cm9sIDQgbWFqb3IgZnVu
-Y3Rpb246Cj4gZHJtIHJvdXRpbmcsIGRybSBjbG9jaywgbWRwIHJvdXRpbmcsIGFuZCBtZHAgY2xv
-Y2suIFlvdXIgZGVzaWduIGxldCB0aGUKPiBtbXN5cyBkZXZpY2UgYXMgZHJtIGRldmljZSAoY29u
-dHJvbCBkcm0gcm91dGluZykgYW5kIGNyZWF0ZSBhIHN1YiBkZXZpY2UKPiBhcyBjbG9jayBkZXZp
-Y2UgKGNvbnRyb2wgZHJtIGNsb2NrLCBtZHAgY2xvY2spLiBJZiBvbmUgZGF5IG1kcCBkZXZpY2UK
-PiAobWF5IG5lZWQgY29udHJvbCBkcm0gcm91dGluZykgbmVlZCB0byBjb250cm9sIHRoZSByZWdp
-c3RlciBvZiBtZHAKClNvcnJ5IGZvciB0eXBvOiAnbWRwIGRldmljZSAobWF5IG5lZWQgY29udHJv
-bCBtZHAgcm91dGluZyknCgpSZWdhcmRzLApDSwoKPiByb3V0aW5nLCB3b3VsZCBtZHAgZGV2aWNl
-IGJlIGEgc3ViIGRldmljZT8gT3Igd2UgbmVlZCBub3QgdG8gY29uc2lkZXIKPiB0aGlzIGJlY2F1
-c2UgaXQgbmVlZCBub3QgdG8gYWNjZXNzIG1tc3lzIHJlZ2lzdGVyIG5vdz8KPiAKPiBSZWdhcmRz
-LAo+IENLCj4gCj4gPiAKPiA+IEknbGwgYWRkcmVzcyB0aGUgY29kaW5nIHN0eWxlIGlzc3VlIHlv
-dSBtZXRpb25lZCBiZWxvdyBhcyB3ZWxsLgo+ID4gCj4gPiBSZWdhcmRzLAo+ID4gTWF0dGhpYXMK
-PiA+IAo+ID4gPj4KPiA+ID4+IFNpZ25lZC1vZmYtYnk6IE1hdHRoaWFzIEJydWdnZXIgPG1icnVn
-Z2VyQHN1c2UuY29tPgo+ID4gPj4gLS0tCj4gPiA+PiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
-L210a19kaXNwX2NvbG9yLmMgfCA0ICsrKy0KPiA+ID4+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0
-ZWsvbXRrX2Rpc3Bfb3ZsLmMgICB8IDQgKysrLQo+ID4gPj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRp
-YXRlay9tdGtfZGlzcF9yZG1hLmMgIHwgNCArKystCj4gPiA+PiAgZHJpdmVycy9ncHUvZHJtL21l
-ZGlhdGVrL210a19kcm1fZGRwLmMgICAgfCAzICsrLQo+ID4gPj4gIGRyaXZlcnMvZ3B1L2RybS9t
-ZWRpYXRlay9tdGtfZHNpLmMgICAgICAgIHwgNiArKysrLS0KPiA+ID4+ICA1IGZpbGVzIGNoYW5n
-ZWQsIDE1IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCj4gPiA+Pgo+ID4gPj4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9jb2xvci5jIGIvZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX2NvbG9yLmMKPiA+ID4+IGluZGV4IGY2MDliNjJi
-OGJlNi4uMWVhMzE3OGQ0YzE4IDEwMDY0NAo+ID4gPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21l
-ZGlhdGVrL210a19kaXNwX2NvbG9yLmMKPiA+ID4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRp
-YXRlay9tdGtfZGlzcF9jb2xvci5jCj4gPiA+PiBAQCAtMTI2LDcgKzEyNiw5IEBAIHN0YXRpYyBp
-bnQgbXRrX2Rpc3BfY29sb3JfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiA+
-ID4+ICAJcmV0ID0gbXRrX2RkcF9jb21wX2luaXQoZGV2LCBkZXYtPm9mX25vZGUsICZwcml2LT5k
-ZHBfY29tcCwgY29tcF9pZCwKPiA+ID4+ICAJCQkJJm10a19kaXNwX2NvbG9yX2Z1bmNzKTsKPiA+
-ID4+ICAJaWYgKHJldCkgewo+ID4gPj4gLQkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gaW5pdGlh
-bGl6ZSBjb21wb25lbnQ6ICVkXG4iLCByZXQpOwo+ID4gPj4gKwkJaWYgKHJldCAhPSAtRVBST0JF
-X0RFRkVSKQo+ID4gPj4gKwkJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGluaXRpYWxpemUgY29t
-cG9uZW50OiAlZFxuIiwKPiA+ID4+ICsJCQkJCXJldCk7Cj4gPiA+IAo+ID4gPiBJIHdvdWxkIGxp
-a2Ugb25lIG1vcmUgYmxhbmsgbGluZSBoZXJlLgo+ID4gPiAKPiA+ID4+ICAJCXJldHVybiByZXQ7
-Cj4gPiA+PiAgCX0KPiA+ID4+ICAKPiA+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
-bWVkaWF0ZWsvbXRrX2Rpc3Bfb3ZsLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rp
-c3Bfb3ZsLmMKPiA+ID4+IGluZGV4IDI4ZDE5MTE5Mjk0NS4uNWViYmNhYTRlNzBlIDEwMDY0NAo+
-ID4gPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX292bC5jCj4gPiA+
-PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3Bfb3ZsLmMKPiA+ID4+IEBA
-IC0yOTMsNyArMjkzLDkgQEAgc3RhdGljIGludCBtdGtfZGlzcF9vdmxfcHJvYmUoc3RydWN0IHBs
-YXRmb3JtX2RldmljZSAqcGRldikKPiA+ID4+ICAJcmV0ID0gbXRrX2RkcF9jb21wX2luaXQoZGV2
-LCBkZXYtPm9mX25vZGUsICZwcml2LT5kZHBfY29tcCwgY29tcF9pZCwKPiA+ID4+ICAJCQkJJm10
-a19kaXNwX292bF9mdW5jcyk7Cj4gPiA+PiAgCWlmIChyZXQpIHsKPiA+ID4+IC0JCWRldl9lcnIo
-ZGV2LCAiRmFpbGVkIHRvIGluaXRpYWxpemUgY29tcG9uZW50OiAlZFxuIiwgcmV0KTsKPiA+ID4+
-ICsJCWlmIChyZXQgIT0gLUVQUk9CRV9ERUZFUikKPiA+ID4+ICsJCQlkZXZfZXJyKGRldiwgIkZh
-aWxlZCB0byBpbml0aWFsaXplIGNvbXBvbmVudDogJWRcbiIsCj4gPiA+PiArCQkJCQlyZXQpOwo+
-ID4gPiAKPiA+ID4gSSB3b3VsZCBsaWtlIHRvIGFsaWduIHRvIHRoZSByaWdodCBvZiAnKCcuCj4g
-PiA+IAo+ID4gPiBSZWdhcmRzLAo+ID4gPiBDSwo+ID4gPiAKPiA+ID4+ICAJCXJldHVybiByZXQ7
-Cj4gPiA+PiAgCX0KPiA+ID4+ICAKPiA+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
-bWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
-aXNwX3JkbWEuYwo+ID4gPj4gaW5kZXggYjBhNWNmZmUzNDVhLi41OWEwOGVkNWZlYTUgMTAwNjQ0
-Cj4gPiA+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jCj4g
-PiA+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jCj4gPiA+
-PiBAQCAtMjk1LDcgKzI5NSw5IEBAIHN0YXRpYyBpbnQgbXRrX2Rpc3BfcmRtYV9wcm9iZShzdHJ1
-Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4gPj4gIAlyZXQgPSBtdGtfZGRwX2NvbXBfaW5p
-dChkZXYsIGRldi0+b2Zfbm9kZSwgJnByaXYtPmRkcF9jb21wLCBjb21wX2lkLAo+ID4gPj4gIAkJ
-CQkmbXRrX2Rpc3BfcmRtYV9mdW5jcyk7Cj4gPiA+PiAgCWlmIChyZXQpIHsKPiA+ID4+IC0JCWRl
-dl9lcnIoZGV2LCAiRmFpbGVkIHRvIGluaXRpYWxpemUgY29tcG9uZW50OiAlZFxuIiwgcmV0KTsK
-PiA+ID4+ICsJCWlmIChyZXQgIT0gLUVQUk9CRV9ERUZFUikKPiA+ID4+ICsJCQlkZXZfZXJyKGRl
-diwgIkZhaWxlZCB0byBpbml0aWFsaXplIGNvbXBvbmVudDogJWRcbiIsCj4gPiA+PiArCQkJCQly
-ZXQpOwo+ID4gPj4gIAkJcmV0dXJuIHJldDsKPiA+ID4+ICAJfQo+ID4gPj4gIAo+ID4gPj4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jIGIvZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiA+ID4+IGluZGV4IGIwNmNkOWQ0YjUy
-NS4uYjc2YTJkMDcxYTk3IDEwMDY0NAo+ID4gPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlh
-dGVrL210a19kcm1fZGRwLmMKPiA+ID4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
-dGtfZHJtX2RkcC5jCj4gPiA+PiBAQCAtNTY2LDcgKzU2Niw4IEBAIHN0YXRpYyBpbnQgbXRrX2Rk
-cF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4gPj4gIAo+ID4gPj4gIAlk
-ZHAtPmNsayA9IGRldm1fY2xrX2dldChkZXYsIE5VTEwpOwo+ID4gPj4gIAlpZiAoSVNfRVJSKGRk
-cC0+Y2xrKSkgewo+ID4gPj4gLQkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gZ2V0IGNsb2NrXG4i
-KTsKPiA+ID4+ICsJCWlmIChQVFJfRVJSKGRkcC0+Y2xrKSAhPSAtRVBST0JFX0RFRkVSKQo+ID4g
-Pj4gKwkJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGdldCBjbG9ja1xuIik7Cj4gPiA+PiAgCQly
-ZXR1cm4gUFRSX0VSUihkZHAtPmNsayk7Cj4gPiA+PiAgCX0KPiA+ID4+ICAKPiA+ID4+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jIGIvZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrL210a19kc2kuYwo+ID4gPj4gaW5kZXggOTAxMDlhMGQ2ZmZmLi5jYzZkZTc1
-NjM2YzMgMTAwNjQ0Cj4gPiA+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rz
-aS5jCj4gPiA+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jCj4gPiA+
-PiBAQCAtMTEwMywxNCArMTEwMywxNiBAQCBzdGF0aWMgaW50IG10a19kc2lfcHJvYmUoc3RydWN0
-IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiA+ID4+ICAJZHNpLT5lbmdpbmVfY2xrID0gZGV2bV9j
-bGtfZ2V0KGRldiwgImVuZ2luZSIpOwo+ID4gPj4gIAlpZiAoSVNfRVJSKGRzaS0+ZW5naW5lX2Ns
-aykpIHsKPiA+ID4+ICAJCXJldCA9IFBUUl9FUlIoZHNpLT5lbmdpbmVfY2xrKTsKPiA+ID4+IC0J
-CWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGdldCBlbmdpbmUgY2xvY2s6ICVkXG4iLCByZXQpOwo+
-ID4gPj4gKwkJaWYgKHJldCAhPSAtRVBST0JFX0RFRkVSKQo+ID4gPj4gKwkJCWRldl9lcnIoZGV2
-LCAiRmFpbGVkIHRvIGdldCBlbmdpbmUgY2xvY2s6ICVkXG4iLCByZXQpOwo+ID4gPj4gIAkJcmV0
-dXJuIHJldDsKPiA+ID4+ICAJfQo+ID4gPj4gIAo+ID4gPj4gIAlkc2ktPmRpZ2l0YWxfY2xrID0g
-ZGV2bV9jbGtfZ2V0KGRldiwgImRpZ2l0YWwiKTsKPiA+ID4+ICAJaWYgKElTX0VSUihkc2ktPmRp
-Z2l0YWxfY2xrKSkgewo+ID4gPj4gIAkJcmV0ID0gUFRSX0VSUihkc2ktPmRpZ2l0YWxfY2xrKTsK
-PiA+ID4+IC0JCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGdldCBkaWdpdGFsIGNsb2NrOiAlZFxu
-IiwgcmV0KTsKPiA+ID4+ICsJCWlmIChyZXQgIT0gLUVQUk9CRV9ERUZFUikKPiA+ID4+ICsJCQlk
-ZXZfZXJyKGRldiwgIkZhaWxlZCB0byBnZXQgZGlnaXRhbCBjbG9jazogJWRcbiIsIHJldCk7Cj4g
-PiA+PiAgCQlyZXR1cm4gcmV0Owo+ID4gPj4gIAl9Cj4gPiA+PiAgCj4gPiA+IAo+ID4gPiAKPiAK
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+
+On 11/9/2018 10:09 PM, Niklas Cassel wrote:
+> On Mon, Nov 05, 2018 at 05:17:45PM -0600, Rob Herring wrote:
+>> On Mon, Oct 15, 2018 at 02:47:49PM +0200, Niklas Cassel wrote:
+>>> Extend qcom-opp bindings with properties needed for Core Power Reduction
+>>> (CPR).
+>>>
+>>> CPR is included in a great variety of Qualcomm SoC, e.g. msm8916 and
+>>> msm8996, and was first introduced in msm8974.
+>>>
+>>> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+>>> ---
+>>> Hello Rob, Rajendra,
+>>>
+>>> Sorry for not replying sooner.
+>>> Since Rob wanted the binding to be complete before merging,
+>>> this is my proposal to extend the OPP binding with properties
+>>> needed to support CPR (both for msm8916 and msm8996).
+>>> I've discussed the proposal with Viresh, and this proposal
+>>> seems better than what I previously suggested here:
+>>> https://lore.kernel.org/lkml/20181005204424.GA29500@centauri.lan/
+>>>
+>>>   .../devicetree/bindings/opp/qcom-opp.txt      | 19 +++++++++++++++++++
+>>>   1 file changed, 19 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/opp/qcom-opp.txt b/Documentation/devicetree/bindings/opp/qcom-opp.txt
+>>> index db4d970c7ec7..3ab5dd84de86 100644
+>>> --- a/Documentation/devicetree/bindings/opp/qcom-opp.txt
+>>> +++ b/Documentation/devicetree/bindings/opp/qcom-opp.txt
+>>> @@ -23,3 +23,22 @@ Required properties:
+>>>   representing a corner/level that's communicated with a remote microprocessor
+>>>   (usually called the RPM) which then translates it into a certain voltage on
+>>>   a voltage rail.
+>>
+>> I've lost the context here. Please send this all together.
+> 
+> Will do, as soon as I've gotten your feedback on this mail.
+
+Niklas, are you still waiting for feedback on this mail from Rob?
