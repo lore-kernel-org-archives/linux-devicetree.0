@@ -1,92 +1,68 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: Aw: Re: Re: [PATCH v5 05/12] drm: mediatek
-Date: Tue, 20 Nov 2018 12:39:44 +0100
-Message-ID: <4745c3ab-e6af-309e-d1c4-f07d937fb9af@gmail.com>
-References: <20181116125449.23581-1-matthias.bgg@kernel.org>
- <20181116125449.23581-6-matthias.bgg@kernel.org>
- <1542605939.32082.12.camel@mtksdaap41>
- <0a02edf9-78da-dde9-4b69-38c4719b711b@gmail.com>
- <1542686700.9073.15.camel@mtksdaap41> <1542686982.26483.1.camel@mtksdaap41>
- <trinity-8f0fde8e-5ef3-4272-b009-49e180c934eb-1542702383860@3c-app-gmx-bs39>
- <1192d203-fcd1-47b0-00bc-9d513e5ffc3e@gmail.com>
- <trinity-cbebb6c8-0084-49a7-b07a-8ea3dbd13e6e-1542710054258@3c-app-gmx-bs39>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v4 03/26] clk: sunxi-ng: Add check for
+ maximum rate to NKM PLLs
+Date: Tue, 20 Nov 2018 17:37:11 +0530
+Message-ID: <CAMty3ZAbF8rPsmvXdLPQJfHL7bzeQyL0Psii9gyDiHaZW-UaMg@mail.gmail.com>
+References: <20181113111633.20189-1-jagan@amarulasolutions.com>
+ <20181113111633.20189-4-jagan@amarulasolutions.com> <20181113132658.niwy6bqdqzaeqpv2@flea>
+ <CAMty3ZBTaeMBFYwyJ+8HqHBDAfEOPEYBt01jho1H4c3SBKbvEw@mail.gmail.com> <20181120105557.3mysirc3ga2h2334@flea>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <trinity-cbebb6c8-0084-49a7-b07a-8ea3dbd13e6e-1542710054258@3c-app-gmx-bs39>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wunderlich <frank-w@public-files.de>
-Cc: CK Hu <ck.hu@mediatek.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, sean.wang@kernel.org, Matthias Brugger <mbrugger@suse.com>, airlied@linux.ie, mturquette@baylibre.com, sean.wang@mediatek.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, wens@csie.org, robh+dt@kernel.org, rdunlap@infradead.org, laurent.pinchart@ideasonboard.com, p.zabel@pengutronix.de, matthias.bgg@kernel.org, ulrich.hecht+renesas@gmail.com, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB7HRZ7PQKGQEXFRHRWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181120105557.3mysirc3ga2h2334@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Nov 20, 2018 at 4:26 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+>
+> On Thu, Nov 15, 2018 at 08:51:04PM +0530, Jagan Teki wrote:
+> > > >  drivers/clk/sunxi-ng/ccu_nkm.c | 3 +++
+> > > >  drivers/clk/sunxi-ng/ccu_nkm.h | 1 +
+> > > >  2 files changed, 4 insertions(+)
+> > > >
+> > > > diff --git a/drivers/clk/sunxi-ng/ccu_nkm.c b/drivers/clk/sunxi-ng/ccu_nkm.c
+> > > > index 6b5ad990f802..b8b66cdd30bf 100644
+> > > > --- a/drivers/clk/sunxi-ng/ccu_nkm.c
+> > > > +++ b/drivers/clk/sunxi-ng/ccu_nkm.c
+> > > > @@ -128,6 +128,9 @@ static unsigned long ccu_nkm_round_rate(struct ccu_mux_internal *mux,
+> > > >       if (rate < nkm->min_rate)
+> > > >               return nkm->min_rate;
+> > > >
+> > > > +     if (nkm->max_rate && rate > nkm->max_rate)
+> > > > +             return nkm->max_rate;
+> > > > +
+> > >
+> > > I would expect the test to be the same for the minimum and maximum cases.
+> >
+> > I don't have proper use-case for max rate test, I do verify by using
+> > higher the rate on dclock, but nor sure.  May be I can skip the
+> > max_rate patch?
+>
+> So you're sending more patches that you haven't really tested?
 
+I didn't understand this question.
 
-On 20/11/2018 11:34, Frank Wunderlich wrote:
-> right this branch based on rc1 with some other commits, but v5-patches are applied on Oct 3rd (listed in Oct 5th)
-> 
-> frank@frank-N56VZ:/media/data_ext/bpi-r2-kernel/github
-> [11:29:10]$ git checkout 4.19-hdmiv5
-> Already on '4.19-hdmiv5'
-> Your branch is up to date with 'origin/4.19-hdmiv5'.
-> frank@frank-N56VZ:/media/data_ext/bpi-r2-kernel/github
-> [11:29:13]$ make kernelversion
-> 4.19.0-rc1
-> frank@frank-N56VZ:/media/data_ext/bpi-r2-kernel/github
-> [11:29:19]$ git log --oneline
-> ...
-> fc14b8c515de drm/mediatek: add a error return value when clock driver has been prepared
-> 0dc856306aaf drm/mediatek: implement connection from BLS to DPI0
-> 3d0a6749bfe3 drm/mediatek: add hdmi driver for MT2701 and MT7623
-> b03e1b353b28 drm/mediatek: add support for SPDIF audio in HDMI
-> c5564966272e drm/mediatek: separate hdmi phy to different file
-> dee3954828db drm/mediatek: add dpi driver for mt2701 and mt7623
-> a838ae8b415c drm/mediatek: convert dpi driver to use drm_of_find_panel_or_bridge
-> f7f9f7c080ae drm/mediatek: add clock factor for different IC
-> be1a5447330f drm/mediatek: adjust EDGE to match clock and data
-> fec4504ea318 drm/mediatek: move hardware register to node data
-> db992e429b9c drm/mediatek: add refcount for DPI power on/off
-> ...
+> Why are you sending them then?
 
-This patches are not part of this patch series.
+I think I've mentioned in the first version patch itself, since it's
+common code and many other callers might have used for rate
+alternative I did it how other ccu dividers does. I have not added
+just as simple.
+>
+> > Apart from this, any idea about this issue where SUN4I_TCON0_DCLK_REG
+> > will only work with div upto 6 on A64 DSI panels[1], did you find the
+> > same issue on A33?
+>
+> IIRC my panel was falling into the case where the divider was 4, so
+> I've not fallen into that case.
 
-> 
-> compared with 4.19.0-release there is merge https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/gpu/drm/mediatek?id=53b3b6bbfde6aae8d1ededc86ad4e0e1e00eb5f8 which seems to break v5-patches
-> 
->> Gesendet: Dienstag, 20. November 2018 um 11:14 Uhr
->> Von: "Matthias Brugger" <matthias.bgg@gmail.com>
->> An: "Frank Wunderlich" <frank-w@public-files.de>, "CK Hu" <ck.hu@mediatek.com>
->> Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sean.wang@kernel.org, "Matthias Brugger" <mbrugger@suse.com>, airlied@linux.ie, mturquette@baylibre.com, sean.wang@mediatek.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, wens@csie.org, robh+dt@kernel.org, rdunlap@infradead.org, laurent.pinchart@ideasonboard.com, p.zabel@pengutronix.de, matthias.bgg@kernel.org, ulrich.hecht+renesas@gmail.com, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
->> Betreff: Re: Aw: Re: [PATCH v5 05/12] drm: mediatek
->>
->>
->>
->> On 20/11/2018 09:26, Frank Wunderlich wrote:
->>> Hi,
->>>
->>> i got v5-patches working on bpi-r2 (mt7623) with a Patch from Ryder.lee and 2 from Bibby Hsieh on 4.19-rc1
->>>
->>> https://github.com/frank-w/BPI-R2-4.14/commits/4.19-hdmiv5
->>>
->>
->> I don't see the patches applied to this tree. Apart from that this tree has a
->> lot of other patches applied. It differs greatly from mainline, so nothing we
->> should discuss on this mailinglist.
->>
->> Regards,
->> Matthias
->>
->>> but after i tried to include them on 4.19.2, i got a strange behaviour (stretched and pink font instead of white/grey)
->>>
->>> see here for detailed info:
->>>
->>> http://forum.banana-pi.org/t/kernel-4-19-rc1-for-testers/6618/75
->>>
->>> there are some patches between rc1 and final which i tried to revert, but no luck till now (cannot revert, no effect on the issue or no output). Had informed Bibby Hsieh...
->>>
->>> is there any idea, why this happen?
->>>
->>> regards Frank
->>>
->>
+OK, thanks.
