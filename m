@@ -1,31 +1,40 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 0/2] add SAMA5D2 PIOBU GPIO driver
-Date: Tue, 20 Nov 2018 11:02:03 +0100
-Message-ID: <CACRpkdZj4g9Ht-4sHjFMCmaeZnwmM3AcMaN2rQ65O1Ykgp2eWg@mail.gmail.com>
-References: <1542701330-23466-1-git-send-email-andrei.stefanescu@microchip.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH v3 0/14] media: make Marvell camera work on DT-based OLPC XO-1.75
+Date: Tue, 20 Nov 2018 11:03:05 +0100
+Message-ID: <20181120100318.367987-1-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542701330-23466-1-git-send-email-andrei.stefanescu@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrei.Stefanescu@microchip.com
-Cc: Greg KH <gregkh@linuxfoundation.org>, Nicolas Ferre <Nicolas.Ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ludovic Desroches <Ludovic.Desroches@microchip.com>, Cristian.Birsan@microchip.com, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrei,
+Hi,
 
-On Tue, Nov 20, 2018 at 9:08 AM <Andrei.Stefanescu@microchip.com> wrote:
+this is the third spin of a patchset that modernizes the Marvel MMP2 CCIC
+driver. Notably, it ports it from the platform data (which seems unused a=
+s
+the board support code never made it) to devicetree.
 
-> On SAMA5D2 SoC the PIOBU pins do not lose their
-> voltage during Backup/Self-refresh mode. This can
-> be useful, for example, when the voltage must remain
-> positive for a peripheral during Backup/Self-refresh
-> mode (suspend-to ram is the Linux equivalent state).
->
-> v2:
+At the core of the rework is the move to asynchronous sensor discovery
+and clock management with the standard clock framework. There are also
+some straightforward fixes for the bitrotten parts.
 
-This version looks good to me, I'm just waiting for a DT
-binding review.
+There's probably still room for improvement, but as it is, it seems to
+work well on OLPC XO-1.75 and doesn't break OLPC XO-1 (I've tested on
+both platforms).
 
-Yours,
-Linus Walleij
+Changes since v2:
+- All documented in individual patches.
+
+Changes since v1:
+- "marvell-ccic: drop ctlr_reset()" patch was replaced with a
+  straightforward revert of the commit that added ctlr_reset() along with=
+ an
+  explanation in commit message.
+- Added collected Acks
+- Other changes are noted in individial patches
+
+Thanks,
+Lubo
