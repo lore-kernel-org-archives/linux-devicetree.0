@@ -1,131 +1,67 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [RESEND PATCH v3 1/2] dt-bindings: PCI: Add UniPhier PCIe host controller description
-Date: Tue, 20 Nov 2018 21:15:53 +0900
-Message-ID: <20181120211553.3608.4A936039@socionext.com>
-References: <1539667641-26024-2-git-send-email-hayashi.kunihiko@socionext.com> <20181119114028.GA30042@e107981-ln.cambridge.arm.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [RFC PATCH] Documentation: DT: arm: add support for sockets
+ defining package boundaries
+Date: Tue, 20 Nov 2018 12:24:58 +0000
+Message-ID: <20181120122458.GA13255@e107155-lin>
+References: <20181107171344.983-1-sudeep.holla@arm.com>
+ <5bea0ecf.1c69fb81.7820a.2052@mx.google.com>
+ <e599eaf5-381b-e2e0-067a-4225bb348b80@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181119114028.GA30042@e107981-ln.cambridge.arm.com>
+Content-Disposition: inline
+In-Reply-To: <e599eaf5-381b-e2e0-067a-4225bb348b80@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+To: Atish Patra <atish.patra@wdc.com>
+Cc: Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "palmer@sifive.com" <palmer@sifive.com>, "anup@brainfault.org" <anup@brainfault.org>, Damien Le Moal <Damien.LeMoal@wdc.com>, "mick@ics.forth.gr" <mick@ics.forth.gr>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "zong@andestech.com" <zong@andestech.com>, "alankao@andestech.com" <alankao@andestech.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
-
-On Mon, 19 Nov 2018 11:40:36 +0000 <lorenzo.pieralisi@arm.com> wrote:
-
-> On Tue, Oct 16, 2018 at 02:27:20PM +0900, Kunihiko Hayashi wrote:
-> > Add DT bindings for PCIe controller implemented in UniPhier SoCs when
-> > configured in Root Complex (host) mode. This controller is based on
-> > the DesignWare PCIe core.
+On Mon, Nov 19, 2018 at 05:18:42PM -0800, Atish Patra wrote:
+> On 11/12/18 3:37 PM, Rob Herring wrote:
+> > On Wed, Nov 07, 2018 at 05:13:44PM +0000, Sudeep Holla wrote:
+> > > The current ARM DT topology description provides the operating system
+> > > with a topological view of the system that is based on leaf nodes
+> > > representing either cores or threads (in an SMT system) and a
+> > > hierarchical set of cluster nodes that creates a hierarchical topology
+> > > view of how those cores and threads are grouped.
+> > > 
+> > > However this hierarchical representation of clusters does not allow to
+> > > describe what topology level actually represents the physical package or
+> > > the socket boundary, which is a key piece of information to be used by
+> > > an operating system to optimize resource allocation and scheduling.
+> > > 
+> > > Lets add a new "socket" node type in the cpu-map node to describe the
+> > > same.
+> > > 
+> > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > > ---
+> > >   .../devicetree/bindings/arm/topology.txt      | 52 ++++++++++++++-----
+> > >   1 file changed, 39 insertions(+), 13 deletions(-)
+> > > 
+> > > (Note patch generated with -b option to avoid 60+ of whitespace changes)
+> > > 
+> > > Hi Rob,
+> > > 
+> > > You had expressed your interest to generalise the CPU topology bindings
+> > > accross multiple architectures. Do you want to move to the generic
+> > > bindings before adding this $subject socket support or is it OK to
+> > > finalise on this and then move the majority(based on the agreement)
+> > > to generic binding.
 > > 
-> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  .../devicetree/bindings/pci/uniphier-pcie.txt      | 81 ++++++++++++++++++++++
-> >  1 file changed, 81 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+> > Doesn't really matter to me as long as Risc-V folks are in agreement.
 > > 
-> > diff --git a/Documentation/devicetree/bindings/pci/uniphier-pcie.txt b/Documentation/devicetree/bindings/pci/uniphier-pcie.txt
-> > new file mode 100644
-> > index 0000000..46a2754
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/uniphier-pcie.txt
-> > @@ -0,0 +1,81 @@
-> > +Socionext UniPhier PCIe host controller bindings
-> > +
-> > +This describes the devicetree bindings for PCIe host controller implemented
-> > +on Socionext UniPhier SoCs.
-> > +
-> > +UniPhier PCIe host controller is based on the Synopsys DesignWare PCI core.
-> > +It shares common functions with the PCIe DesignWare core driver and inherits
-> > +common properties defined in
-> > +Documentation/devicetree/bindings/pci/designware-pcie.txt.
-> > +
-> > +Required properties:
-> > +- compatible: Should be "socionext,uniphier-pcie".
-> > +- reg: Specifies offset and length of the register set for the device.
-> > +	According to the reg-names, appropriate register sets are required.
-> > +- reg-names: Must include the following entries:
-> > +    "dbi"    - controller configuration registers
-> > +    "link"   - SoC-specific glue layer registers
-> > +    "config" - PCIe configuration space
-> > +- clocks: A phandle to the clock gate for PCIe glue layer including
-> > +	the host controller.
-> > +- resets: A phandle to the reset line for PCIe glue layer including
-> > +	the host controller.
-> > +- interrupts: A list of interrupt specifiers. According to the
-> > +	interrupt-names, appropriate interrupts are required.
-> > +- interrupt-names: Must include the following entries:
-> > +    "dma" - DMA interrupt
-> > +    "msi" - MSI interrupt
-> > +
-> > +Optional properties:
-> > +- phys: A phandle to generic PCIe PHY. According to the phy-names, appropriate
-> > +	phys are required.
-> > +- phy-names: Must be "pcie-phy".
-> > +
-> > +Required sub-node:
-> > +- legacy-interrupt-controller: Specifies interrupt controller for legacy PCI
-> > +	interrupts.
-> > +
-> > +Required properties for legacy-interrupt-controller:
-> > +- interrupt-controller: identifies the node as an interrupt controller.
-> > +- #interrupt-cells: specifies the number of cells needed to encode an
-> > +	interrupt source. The value must be 1.
-> > +- interrupt-parent: Phandle to the parent interrupt controller.
-> > +- interrupts: An interrupt specifier for legacy interrupt.
-> > +
-> > +Example:
-> > +
-> > +	pcie: pcie@66000000 {
-> > +		compatible = "socionext,uniphier-pcie", "snps,dw-pcie";
-> > +		status = "disabled";
-> > +		reg-names = "dbi", "link", "config";
-> > +		reg = <0x66000000 0x1000>, <0x66010000 0x10000>,
-> > +		      <0x2fff0000 0x10000>;
-> > +		#address-cells = <3>;
-> > +		#size-cells = <2>;
-> > +		clocks = <&sys_clk 24>;
-> > +		resets = <&sys_rst 24>;
-> > +		num-lanes = <1>;
-> > +		num-viewport = <1>;
-> > +		bus-range = <0x0 0xff>;
-> > +		device_type = "pci";
-> > +		ranges =
-> > +		/* downstream I/O */
-> > +			<0x81000000 0 0x00000000  0x2ffe0000  0 0x00010000
-> > +		/* non-prefetchable memory */
-> > +			 0x82000000 0 0x00000000  0x20000000  0 0x0ffe0000>;
-> > +		#interrupt-cells = <1>;
-> > +		interrupt-names = "dma", "msi";
-> > +		interrupts = <0 224 4>, <0 225 4>;
-> > +		interrupt-map-mask = <0 0 0  7>;
-> > +		interrupt-map = <0 0 0  1  &pcie_intc 1>,	/* INTA */
-> > +				<0 0 0  2  &pcie_intc 2>,	/* INTB */
-> > +				<0 0 0  3  &pcie_intc 3>,	/* INTC */
-> > +				<0 0 0  4  &pcie_intc 4>;	/* INTD */
-> 
-> This is not correct and we must fix this concept for all DWC based host
-> bridges bindings. We are mapping INTX to inputs [0,1,2,3] of the host
-> bridge interrupt controllers and the binding should reflect that.
-> 
-> This should be the correct mapping:
-> 
-> 		interrupt-map = <0 0 0  1  &pcie_intc 0>,	/* INTA */
-> 				<0 0 0  2  &pcie_intc 1>,	/* INTB */
-> 				<0 0 0  3  &pcie_intc 2>,	/* INTC */
-> 				<0 0 0  4  &pcie_intc 3>;	/* INTD */
+> > Otherwise, this looks fine to me.
+> > 
+> > Rob
+> > 
+> > 
+> I can apply this patch in my unify topology series and resend everything
+> together as one series.
 
-I see. Although this numbering has been affected by pci_irqd_intx_xlate(),
-I understand it's wrong for DWC based host.
-I'll fix the numbering next.
+Thanks for that. You can drop RFC when reposting. Remember to use -b
+for ignoring space changes on this patch along with -M for renames in
+your original patch series.
 
-Thank you,
-
----
-Best Regards,
-Kunihiko Hayashi
+--
+Regards,
+Sudeep
