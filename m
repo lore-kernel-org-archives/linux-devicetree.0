@@ -1,175 +1,122 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V3] ARM: dts: imx7d-sdb: add rev-a board support
-Date: Tue, 20 Nov 2018 01:35:34 +0000
-Message-ID: <1542677411-27825-1-git-send-email-Anson.Huang@nxp.com>
+Subject: RE: [PATCH V2] ARM: dts: imx7d-sdb: add rev-a board support
+Date: Tue, 20 Nov 2018 01:37:01 +0000
+Message-ID: <DB3PR0402MB3916DCD69EE46A6F1341F95EF5D90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1541726525-19544-1-git-send-email-Anson.Huang@nxp.com>
+ <20181119134624.GT5829@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181119134624.GT5829@dragon>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Current imx7d-sdb.dts has some incorrect settings about
-Rev-A and Rev-B boards, some of the settings are based on
-Rev-A board but some are based on Rev-B board, clean up it
-by adding i.MX7D SDB Rev-A board support, make default
-imx7d-sdb.dts for Rev-B board as usual, and introduce
-imx7d-sdb-reva.dts for Rev-A board. Below are the affected
-differences of Rev-A and Rev-B board:
-
-                Rev-A           Rev-B
-USB_OTG2_PWR:   UART3_CTS_B     GPIO1_IO07
-ENET_EN_B:      None            GPIO1_IO04
-TP_INT_B:       EPDC_DATA13     EPDC_BDR1
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-changes since V2:
-	use USB OTG2 VBUS fix regulator to reference GPIO pinctrl entry instead of=
- hog group.
- arch/arm/boot/dts/Makefile           |  1 +
- arch/arm/boot/dts/imx7d-sdb-reva.dts | 40 ++++++++++++++++++++++++++++++++=
-++++
- arch/arm/boot/dts/imx7d-sdb.dts      | 28 +++++++++++++++++++++++--
- 3 files changed, 67 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm/boot/dts/imx7d-sdb-reva.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index ef9ffa4..6d133b9 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -572,6 +572,7 @@ dtb-$(CONFIG_SOC_IMX7D) +=3D \
- 	imx7d-pico-pi.dtb \
- 	imx7d-sbc-imx7.dtb \
- 	imx7d-sdb.dtb \
-+	imx7d-sdb-reva.dtb \
- 	imx7d-sdb-sht11.dtb \
- 	imx7s-colibri-eval-v3.dtb \
- 	imx7s-warp.dtb
-diff --git a/arch/arm/boot/dts/imx7d-sdb-reva.dts b/arch/arm/boot/dts/imx7d=
--sdb-reva.dts
-new file mode 100644
-index 0000000..7ce9d8c
---- /dev/null
-+++ b/arch/arm/boot/dts/imx7d-sdb-reva.dts
-@@ -0,0 +1,40 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR MIT
-+//
-+// Copyright (C) 2015 Freescale Semiconductor, Inc.
-+
-+/dts-v1/;
-+
-+#include "imx7d-sdb.dts"
-+
-+/ {
-+	reg_usb_otg2_vbus: regulator-usb-otg2-vbus {
-+		pinctrl-0 =3D <&pinctrl_usb_otg2_vbus_reg_reva>;
-+		gpio =3D <&gpio4 7 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&fec2 {
-+	/delete-property/phy-supply;
-+};
-+
-+&iomuxc {
-+	imx7d-sdb {
-+		pinctrl_tsc2046_pendown: tsc2046_pendown {
-+			fsl,pins =3D <
-+				MX7D_PAD_EPDC_DATA13__GPIO2_IO13	0x59
-+			>;
-+		};
-+
-+		pinctrl_hog: hoggrp {
-+			fsl,pins =3D <
-+				MX7D_PAD_ECSPI2_SS0__GPIO4_IO23		0x34  /* bt reg on */
-+			>;
-+		};
-+
-+		pinctrl_usb_otg2_vbus_reg_reva: usbotg2vbusregrevagrp {
-+			fsl,pins =3D <
-+				MX7D_PAD_UART3_CTS_B__GPIO4_IO7		0x14
-+			>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.=
-dts
-index b1b613b..202922e 100644
---- a/arch/arm/boot/dts/imx7d-sdb.dts
-+++ b/arch/arm/boot/dts/imx7d-sdb.dts
-@@ -72,9 +72,11 @@
- 	reg_usb_otg2_vbus: regulator-usb-otg2-vbus {
- 		compatible =3D "regulator-fixed";
- 		regulator-name =3D "usb_otg2_vbus";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_usb_otg2_vbus_reg>;
- 		regulator-min-microvolt =3D <5000000>;
- 		regulator-max-microvolt =3D <5000000>;
--		gpio =3D <&gpio4 7 GPIO_ACTIVE_HIGH>;
-+		gpio =3D <&gpio1 7 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 	};
-=20
-@@ -115,6 +117,16 @@
- 		gpio =3D <&gpio2 14 GPIO_ACTIVE_LOW>;
- 	};
-=20
-+	reg_fec2_3v3: regulator-fec2-3v3 {
-+		compatible =3D "regulator-fixed";
-+		regulator-name =3D "fec2-3v3";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_enet2_reg>;
-+		regulator-min-microvolt =3D <3300000>;
-+		regulator-max-microvolt =3D <3300000>;
-+		gpio =3D <&gpio1 4 GPIO_ACTIVE_LOW>;
-+	};
-+
- 	backlight: backlight {
- 		compatible =3D "pwm-backlight";
- 		pwms =3D <&pwm1 0 5000000 0>;
-@@ -211,6 +223,7 @@
- 	assigned-clock-rates =3D <0>, <100000000>;
- 	phy-mode =3D "rgmii";
- 	phy-handle =3D <&ethphy1>;
-+	phy-supply =3D <&reg_fec2_3v3>;
- 	fsl,magic-packet;
- 	status =3D "okay";
- };
-@@ -492,6 +505,12 @@
- 			>;
- 		};
-=20
-+		pinctrl_enet2_reg: enet2reggrp {
-+			fsl,pins =3D <
-+				MX7D_PAD_LPSR_GPIO1_IO04__GPIO1_IO4	0x14
-+			>;
-+		};
-+
- 		pinctrl_flexcan2: flexcan2grp {
- 			fsl,pins =3D <
- 				MX7D_PAD_GPIO1_IO14__FLEXCAN2_RX	0x59
-@@ -514,7 +533,6 @@
-=20
- 		pinctrl_hog: hoggrp {
- 			fsl,pins =3D <
--				MX7D_PAD_UART3_CTS_B__GPIO4_IO7		0x14
- 				MX7D_PAD_ECSPI2_SS0__GPIO4_IO23		0x34  /* bt reg on */
- 			>;
- 		};
-@@ -736,4 +754,10 @@
- 			MX7D_PAD_LPSR_GPIO1_IO01__PWM1_OUT		0x30
- 		>;
- 	};
-+
-+	pinctrl_usb_otg2_vbus_reg: usbotg2vbusreggrp {
-+		fsl,pins =3D <
-+			MX7D_PAD_LPSR_GPIO1_IO07__GPIO1_IO7	  0x14
-+		>;
-+	};
- };
---=20
-2.7.4
+SGksIFNoYXduDQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5h
+bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIFttYWlsdG86c2hhd25ndW9Aa2VybmVs
+Lm9yZ10NCj4gU2VudDogMjAxOMTqMTHUwjE5yNUgMjE6NDYNCj4gVG86IEFuc29uIEh1YW5nIDxh
+bnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxh
+bmRAYXJtLmNvbTsgcy5oYXVlckBwZW5ndXRyb25peC5kZTsNCj4ga2VybmVsQHBlbmd1dHJvbml4
+LmRlOyBGYWJpbyBFc3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+Ow0KPiBkZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBu
+eHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFYyXSBBUk06IGR0czogaW14N2Qtc2RiOiBh
+ZGQgcmV2LWEgYm9hcmQgc3VwcG9ydA0KPiANCj4gT24gRnJpLCBOb3YgMDksIDIwMTggYXQgMDE6
+Mjc6MTBBTSArMDAwMCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gQ3VycmVudCBpbXg3ZC1zZGIu
+ZHRzIGhhcyBzb21lIGluY29ycmVjdCBzZXR0aW5ncyBhYm91dCBSZXYtQSBhbmQNCj4gPiBSZXYt
+QiBib2FyZHMsIHNvbWUgb2YgdGhlIHNldHRpbmdzIGFyZSBiYXNlZCBvbiBSZXYtQSBib2FyZCBi
+dXQgc29tZQ0KPiA+IGFyZSBiYXNlZCBvbiBSZXYtQiBib2FyZCwgY2xlYW4gdXAgaXQgYnkgYWRk
+aW5nIGkuTVg3RCBTREIgUmV2LUEgYm9hcmQNCj4gPiBzdXBwb3J0LCBtYWtlIGRlZmF1bHQgaW14
+N2Qtc2RiLmR0cyBmb3IgUmV2LUIgYm9hcmQgYXMgdXN1YWwsIGFuZA0KPiA+IGludHJvZHVjZSBp
+bXg3ZC1zZGItcmV2YS5kdHMgZm9yIFJldi1BIGJvYXJkLiBCZWxvdyBhcmUgdGhlIGFmZmVjdGVk
+DQo+ID4gZGlmZmVyZW5jZXMgb2YgUmV2LUEgYW5kIFJldi1CIGJvYXJkOg0KPiA+DQo+ID4gICAg
+ICAgICAgICAgICAgIFJldi1BICAgICAgICAgICBSZXYtQg0KPiA+IFVTQl9PVEcyX1BXUjogICBV
+QVJUM19DVFNfQiAgICAgR1BJTzFfSU8wNw0KPiA+IEVORVRfRU5fQjogICAgICBOb25lICAgICAg
+ICAgICAgR1BJTzFfSU8wNA0KPiA+IFRQX0lOVF9COiAgICAgICBFUERDX0RBVEExMyAgICAgRVBE
+Q19CRFIxDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdA
+bnhwLmNvbT4NCj4gPiAtLS0NCj4gPiBjaGFuZ2Ugc2luY2UgVjE6DQo+ID4gCXJlbW92ZSAicGlu
+Y3RybC1hc3NlcnQtZ3Bpb3MiIHdoaWNoIGlzIHVudXNlZCBpbiB1cHN0cmVhbSwgYW5kIHVzZQ0K
+PiA+IHBoeS1zdXBwbHkgdG8gY29udHJvbCBmZWMyJ3MgZW5hYmxlIHBpbiwgbW9kZWwgdGhlIGVu
+YWJsZSBwaW4gYXMgR1BJTw0KPiByZWd1bGF0b3IuDQo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL01h
+a2VmaWxlICAgICAgICAgICB8ICAxICsNCj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14N2Qtc2Ri
+LXJldmEuZHRzIHwgMzkNCj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+
+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDdkLXNkYi5kdHMgICAgICB8IDI5DQo+ICsrKysrKysr
+KysrKysrKysrKysrKysrKystLQ0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDY3IGluc2VydGlvbnMo
+KyksIDIgZGVsZXRpb25zKC0pICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiBhcmNoL2FybS9ib290
+L2R0cy9pbXg3ZC1zZGItcmV2YS5kdHMNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9i
+b290L2R0cy9NYWtlZmlsZSBiL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlDQo+ID4gaW5kZXgg
+ZWY5ZmZhNC4uNmQxMzNiOSAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9NYWtl
+ZmlsZQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlDQo+ID4gQEAgLTU3Miw2
+ICs1NzIsNyBAQCBkdGItJChDT05GSUdfU09DX0lNWDdEKSArPSBcDQo+ID4gIAlpbXg3ZC1waWNv
+LXBpLmR0YiBcDQo+ID4gIAlpbXg3ZC1zYmMtaW14Ny5kdGIgXA0KPiA+ICAJaW14N2Qtc2RiLmR0
+YiBcDQo+ID4gKwlpbXg3ZC1zZGItcmV2YS5kdGIgXA0KPiA+ICAJaW14N2Qtc2RiLXNodDExLmR0
+YiBcDQo+ID4gIAlpbXg3cy1jb2xpYnJpLWV2YWwtdjMuZHRiIFwNCj4gPiAgCWlteDdzLXdhcnAu
+ZHRiDQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDdkLXNkYi1yZXZhLmR0
+cw0KPiA+IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14N2Qtc2RiLXJldmEuZHRzDQo+ID4gbmV3IGZp
+bGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi43NzQxZWFhDQo+ID4gLS0tIC9kZXYv
+bnVsbA0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDdkLXNkYi1yZXZhLmR0cw0KPiA+
+IEBAIC0wLDAgKzEsMzkgQEANCj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0y
+LjArIE9SIE1JVCAvLyAvLyBDb3B5cmlnaHQgKEMpIDIwMTUNCj4gPiArRnJlZXNjYWxlIFNlbWlj
+b25kdWN0b3IsIEluYy4NCj4gPiArDQo+ID4gKy9kdHMtdjEvOw0KPiA+ICsNCj4gPiArI2luY2x1
+ZGUgImlteDdkLXNkYi5kdHMiDQo+ID4gKw0KPiA+ICsvIHsNCj4gPiArCXJlZ191c2Jfb3RnMl92
+YnVzOiByZWd1bGF0b3ItdXNiLW90ZzItdmJ1cyB7DQo+ID4gKwkJZ3BpbyA9IDwmZ3BpbzQgNyBH
+UElPX0FDVElWRV9ISUdIPjsNCj4gPiArCX07DQo+ID4gK307DQo+ID4gKw0KPiA+ICsmZmVjMiB7
+DQo+ID4gKwkvZGVsZXRlLXByb3BlcnR5L3BoeS1zdXBwbHk7DQo+ID4gK307DQo+ID4gKw0KPiA+
+ICsmaW9tdXhjIHsNCj4gPiArCWlteDdkLXNkYiB7DQo+ID4gKwkJcGluY3RybF90c2MyMDQ2X3Bl
+bmRvd246IHRzYzIwNDZfcGVuZG93biB7DQo+ID4gKwkJCWZzbCxwaW5zID0gPA0KPiA+ICsJCQkJ
+TVg3RF9QQURfRVBEQ19EQVRBMTNfX0dQSU8yX0lPMTMJMHg1OQ0KPiA+ICsJCQk+Ow0KPiA+ICsJ
+CX07DQo+ID4gKw0KPiA+ICsJCXBpbmN0cmxfaG9nOiBob2dncnAgew0KPiA+ICsJCQlmc2wscGlu
+cyA9IDwNCj4gPiArCQkJCU1YN0RfUEFEX1VBUlQzX0NUU19CX19HUElPNF9JTzcJCTB4MTQNCj4g
+PiArCQkJCU1YN0RfUEFEX0VDU1BJMl9TUzBfX0dQSU80X0lPMjMJCTB4MzQgIC8qIGJ0DQo+IHJl
+ZyBvbiAqLw0KPiA+ICsJCQk+Ow0KPiA+ICsJCX07DQo+ID4gKwl9Ow0KPiA+ICt9Ow0KPiA+ICsN
+Cj4gPiArJmlvbXV4Y19scHNyIHsNCj4gPiArCS9kZWxldGUtcHJvcGVydHkvcGluY3RybC1uYW1l
+czsNCj4gPiArCS9kZWxldGUtcHJvcGVydHkvcGluY3RybC0wOw0KPiA+ICt9Ow0KPiA+IGRpZmYg
+LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg3ZC1zZGIuZHRzDQo+ID4gYi9hcmNoL2FybS9i
+b290L2R0cy9pbXg3ZC1zZGIuZHRzIGluZGV4IGYxYmFmZGEuLjgzODViOWIgMTAwNjQ0DQo+ID4g
+LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14N2Qtc2RiLmR0cw0KPiA+ICsrKyBiL2FyY2gvYXJt
+L2Jvb3QvZHRzL2lteDdkLXNkYi5kdHMNCj4gPiBAQCAtNzMsNyArNzMsNyBAQA0KPiA+ICAJCXJl
+Z3VsYXRvci1uYW1lID0gInVzYl9vdGcyX3ZidXMiOw0KPiA+ICAJCXJlZ3VsYXRvci1taW4tbWlj
+cm92b2x0ID0gPDUwMDAwMDA+Ow0KPiA+ICAJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDUw
+MDAwMDA+Ow0KPiA+IC0JCWdwaW8gPSA8JmdwaW80IDcgR1BJT19BQ1RJVkVfSElHSD47DQo+ID4g
+KwkJZ3BpbyA9IDwmZ3BpbzEgNyBHUElPX0FDVElWRV9ISUdIPjsNCj4gPiAgCQllbmFibGUtYWN0
+aXZlLWhpZ2g7DQo+ID4gIAl9Ow0KPiA+DQo+ID4gQEAgLTExNCw2ICsxMTQsMTYgQEANCj4gPiAg
+CQlncGlvID0gPCZncGlvMiAxNCBHUElPX0FDVElWRV9MT1c+Ow0KPiA+ICAJfTsNCj4gPg0KPiA+
+ICsJcmVnX2ZlYzJfM3YzOiByZWd1bGF0b3ItZmVjMi0zdjMgew0KPiA+ICsJCWNvbXBhdGlibGUg
+PSAicmVndWxhdG9yLWZpeGVkIjsNCj4gPiArCQlyZWd1bGF0b3ItbmFtZSA9ICJmZWMyLTN2MyI7
+DQo+ID4gKwkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiArCQlwaW5jdHJsLTAgPSA8
+JnBpbmN0cmxfZW5ldDJfcmVnPjsNCj4gPiArCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwz
+MzAwMDAwPjsNCj4gPiArCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwzMzAwMDAwPjsNCj4g
+PiArCQlncGlvID0gPCZncGlvMSA0IEdQSU9fQUNUSVZFX0xPVz47DQo+ID4gKwl9Ow0KPiA+ICsN
+Cj4gPiAgCWJhY2tsaWdodDogYmFja2xpZ2h0IHsNCj4gPiAgCQljb21wYXRpYmxlID0gInB3bS1i
+YWNrbGlnaHQiOw0KPiA+ICAJCXB3bXMgPSA8JnB3bTEgMCA1MDAwMDAwIDA+Ow0KPiA+IEBAIC0y
+MTAsNiArMjIwLDcgQEANCj4gPiAgCWFzc2lnbmVkLWNsb2NrLXJhdGVzID0gPDA+LCA8MTAwMDAw
+MDAwPjsNCj4gPiAgCXBoeS1tb2RlID0gInJnbWlpIjsNCj4gPiAgCXBoeS1oYW5kbGUgPSA8JmV0
+aHBoeTE+Ow0KPiA+ICsJcGh5LXN1cHBseSA9IDwmcmVnX2ZlYzJfM3YzPjsNCj4gPiAgCWZzbCxt
+YWdpYy1wYWNrZXQ7DQo+ID4gIAlzdGF0dXMgPSAib2theSI7DQo+ID4gIH07DQo+ID4gQEAgLTQ5
+MSw2ICs1MDIsMTIgQEANCj4gPiAgCQkJPjsNCj4gPiAgCQl9Ow0KPiA+DQo+ID4gKwkJcGluY3Ry
+bF9lbmV0Ml9yZWc6IGVuZXQycmVnZ3JwIHsNCj4gPiArCQkJZnNsLHBpbnMgPSA8DQo+ID4gKwkJ
+CQlNWDdEX1BBRF9MUFNSX0dQSU8xX0lPMDRfX0dQSU8xX0lPNAkweDE0DQo+ID4gKwkJCT47DQo+
+ID4gKwkJfTsNCj4gPiArDQo+ID4gIAkJcGluY3RybF9mbGV4Y2FuMjogZmxleGNhbjJncnAgew0K
+PiA+ICAJCQlmc2wscGlucyA9IDwNCj4gPiAgCQkJCU1YN0RfUEFEX0dQSU8xX0lPMTRfX0ZMRVhD
+QU4yX1JYCTB4NTkNCj4gPiBAQCAtNTEzLDcgKzUzMCw2IEBADQo+ID4NCj4gPiAgCQlwaW5jdHJs
+X2hvZzogaG9nZ3JwIHsNCj4gPiAgCQkJZnNsLHBpbnMgPSA8DQo+ID4gLQkJCQlNWDdEX1BBRF9V
+QVJUM19DVFNfQl9fR1BJTzRfSU83CQkweDE0DQo+ID4gIAkJCQlNWDdEX1BBRF9FQ1NQSTJfU1Mw
+X19HUElPNF9JTzIzCQkweDM0ICAvKiBidA0KPiByZWcgb24gKi8NCj4gPiAgCQkJPjsNCj4gPiAg
+CQl9Ow0KPiA+IEBAIC03MjQsNiArNzQwLDkgQEANCj4gPiAgfTsNCj4gPg0KPiA+ICAmaW9tdXhj
+X2xwc3Igew0KPiA+ICsJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiArCXBpbmN0cmwt
+MCA9IDwmcGluY3RybF9ob2dfMj47DQo+ID4gKw0KPiA+ICAJcGluY3RybF93ZG9nOiB3ZG9nZ3Jw
+IHsNCj4gPiAgCQlmc2wscGlucyA9IDwNCj4gPiAgCQkJTVg3RF9QQURfTFBTUl9HUElPMV9JTzAw
+X19XRE9HMV9XRE9HX0IJCTB4NzQNCj4gPiBAQCAtNzM1LDQgKzc1NCwxMCBAQA0KPiA+ICAJCQlN
+WDdEX1BBRF9MUFNSX0dQSU8xX0lPMDFfX1BXTTFfT1VUCQkweDMwDQo+ID4gIAkJPjsNCj4gPiAg
+CX07DQo+ID4gKw0KPiA+ICsJcGluY3RybF9ob2dfMjogaG9nZ3JwLTIgew0KPiA+ICsJCWZzbCxw
+aW5zID0gPA0KPiA+ICsJCQlNWDdEX1BBRF9MUFNSX0dQSU8xX0lPMDdfX0dQSU8xX0lPNwkgIDB4
+MTQNCj4gDQo+IEluc3RlYWQgb2YgdXNpbmcgaG9nIGdyb3VwLCB0aGlzIHNob3VsZCBiZSBkZWZp
+bmVkIGJ5IHBpbmN0cmwgZW50cnkgdG8gYmUNCj4gcmVmZXJyZWQgYnkgdGhlIGZpeGVkIHJlZ3Vs
+YXRvciB0aGF0IHVzZXMgdGhpcyBHUElPPw0KDQpBZ3JlZWQsIEkgcmVtb3ZlIHRoZSBob2dfMiBh
+bmQgYWRkIHVzYl9vdGcyX3ZidXNfcmVnIHBpbmN0cmwgZW50cnkgZm9yIHJlZ3VsYXRvcg0KdG8g
+cmVmZXJlbmNlLCBwbGVhc2UgaGVscCByZXZpZXcgVjMgcGF0Y2gsIHRoYW5rcy4NCg0KQW5zb24u
+DQoNCj4gDQo+IFNoYXduDQo+IA0KPiA+ICsJCT47DQo+ID4gKwl9Ow0KPiA+ICB9Ow0KPiA+IC0t
+DQo+ID4gMi43LjQNCj4gPg0K
