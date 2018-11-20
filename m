@@ -1,40 +1,57 @@
-From: Florian Eckert <fe@dev.tdt.de>
-Subject: Re: [PATCH v3 1/2] hwmon: (adcxx) add devictree bindings
- documentation
-Date: Tue, 20 Nov 2018 08:16:28 +0100
-Message-ID: <b6ee9998a565333f5105be46426b289c@dev.tdt.de>
-References: <20181115135013.30723-1-fe@dev.tdt.de>
- <20181115135013.30723-2-fe@dev.tdt.de> <20181117144040.GA8016@bogus>
- <20181119012555.GA7856@roeck-us.net>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/3] arm64: dts: allwinner: h6: orangepi:
+ Enable USB 2.0 and LEDs
+Date: Tue, 20 Nov 2018 08:58:03 +0100
+Message-ID: <20181120075803.6735awl2zd5ak2fo@flea>
+References: <20181120065311.30009-1-wens@csie.org>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181119012555.GA7856@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Rob Herring <robh@kernel.org>, jdelvare@suse.com, mark.rutland@arm.com, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Guenter Roeck <groeck7@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="qndgcgymmap35tri"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBFX5Z3PQKGQEF2FBCTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20181120065311.30009-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Guenter,
 
->> 
->> Needs a better description of what this h/w is.
->> 
->> ADCs go in iio/adc/
->> 
-> FWIW, the hwmon driver for this chip series would be a perfect 
-> candidate
-> for a conversion to an iio driver. The driver predates the existence of
-> iio.
+--qndgcgymmap35tri
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Tue, Nov 20, 2018 at 02:53:08PM +0800, Chen-Yu Tsai wrote:
+> Hi,
 > 
-> Florian, any interest doing that ? It is quite likely that the chip 
-> isn't
-> used for hardware monitoring.
+> This small series enables USB 2.0 and LEDs on the Orange Pi Lite 2 and
+> Orange Pi One Plus. The two features are unrelated, but included in the
+> same series as the patch contexts overlap.
+> 
+> Patch one adds a fixed regulator to represent the board-wide 5V rail.
+> While not strictly necessary, this helps define the relationship between
+> regulators.
+> 
+> Patch two enables USB 2.0 host and OTG. Note that VBUS on both ports are
+> directly tied to the 5V rail, without any power switches or current
+> limiters.
+> 
+> Patch three add device nodes for the two LEDs. These LEDs are driven
+> directly by the GPIO pins, without a current limiting resistor. At the
+> default drive strength, the LEDs are quite bright.
 
-I will have a look on the next week about your suggestion to port this 
-device
-to iio/adc.
+Applied all three patches, thanks!
 
-   - Florian
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--qndgcgymmap35tri--
