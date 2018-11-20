@@ -1,69 +1,147 @@
-From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
-Subject: =?utf-8?B?UmU6IFtSQ0bCoFBBVENILHYyLDIvMl0gcHdtOiBpbXg6IENvbmZpZ3VyZSBv?=
- =?utf-8?Q?utput_to_GPIO_in_disabled_state?=
-Date: Tue, 20 Nov 2018 13:14:33 +0000
-Message-ID: <6e81d63b-61a1-36fe-0c24-3ff27438cbc0@ysoft.com>
-References: <eb4e7a42-bd5c-3ae2-ccb7-d1a73d5ae99c@ysoft.com>
- <20181107150125.7cpd4v5t7yi2254c@pengutronix.de>
- <4fbb7307-df01-d7bd-f2e2-e05e6d17807d@ysoft.com>
- <20181108191855.zuon3ecv4yjfbs7g@pengutronix.de>
- <283cfef3-16d0-8bd4-e306-6e34d44c3a86@ysoft.com>
- <20181109165555.vqbiwh4hlcnozdna@pengutronix.de> <20181114113449.GB2620@ulmo>
- <20181114215120.vddykljqyavm64wj@pengutronix.de> <20181115152545.GA8611@ulmo>
- <20181115203733.qvonika6yhn2bsnb@pengutronix.de>
- <20181116095124.GA28631@ulmo>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [linux-sunxi] [PATCH v12 2/2] media: V3s: Add support for
+ Allwinner CSI.
+Date: Tue, 20 Nov 2018 14:18:16 +0100
+Message-ID: <20181120131816.sqwiiics7sannl7f@flea>
+References: <1540887490-28316-1-git-send-email-yong.deng@magewell.com>
+ <CAMty3ZAprBAxAm+=1kpFsbhV3XGvmQ8XEW+6mOcsV5iaR3xNyQ@mail.gmail.com>
+ <CAMty3ZBa3XwQ-0CDYb69qny2MiaCfx1RiQZvQ+WhkoSonU5CbA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yxjswbi473wgfxs7"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181116095124.GA28631@ulmo>
-Content-Language: en-US
-Content-ID: <285866F6156CF546AA539A63334774A3@eurprd04.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZBa3XwQ-0CDYb69qny2MiaCfx1RiQZvQ+WhkoSonU5CbA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, =?utf-8?B?TG90aGFyIFdhw59tYW5u?= <LW@karo-electronics.de>, Linus Walleij <linus.walleij@linaro.org>, viresh kumar <viresh.kumar@linaro.org>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, davem@davemloft.net, akpm@linux-foundation.org, Arnd Bergmann <arnd@arndb.de>, Hans Verkuil <hans.verkuil@cisco.com>, laurent.pinchart@ideasonboard.com, geert@linux-m68k.org, Neil Armstrong <narmstrong@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, jacopo+renesas@jmondi.org, tglx@linutronix.de, todor.tomov@linaro.org, linux-media <linux-media@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi@goog
 List-Id: devicetree@vger.kernel.org
 
-SGksDQpzb3JyeSBmb3IgdGhlIGRlbGF5LCBJIHdhcyBvdXQgb2Ygb2ZmaWNlIGxhc3Qgd2Vlay4N
-Ck15IGNvbW1lbnRzIGJlbG93IGFyZSBqdXN0IHRvIGNsYXJpZnkgbXkgYXR0aXR1ZGUgdG8gdGhl
-IHRvcGljIGFzIG15DQpuYW1lIHdhcyBtZW50aW9uZWQgZmV3IHRpbWVzIHdoaWxlIEkgd2FzIG9m
-ZmxpbmUuDQoNCk9uIDE2LjExLjIwMTggMTA6NTEsIFRoaWVycnkgUmVkaW5nIHdyb3RlOg0KPiBP
-biBUaHUsIE5vdiAxNSwgMjAxOCBhdCAwOTozNzozM1BNICswMTAwLCBVd2UgS2xlaW5lLUvDtm5p
-ZyB3cm90ZToNCj4+IE9uIFRodSwgTm92IDE1LCAyMDE4IGF0IDA0OjI1OjQ1UE0gKzAxMDAsIFRo
-aWVycnkgUmVkaW5nIHdyb3RlOg0KPj4+IE9uIFdlZCwgTm92IDE0LCAyMDE4IGF0IDEwOjUxOjIw
-UE0gKzAxMDAsIFV3ZSBLbGVpbmUtS8O2bmlnIHdyb3RlOg0KPj4+PiBPbiBXZWQsIE5vdiAxNCwg
-MjAxOCBhdCAxMjozNDo0OVBNICswMTAwLCBUaGllcnJ5IFJlZGluZyB3cm90ZToNCg0KPj4gTWF5
-YmUgaXQgd2FzIGEgYmFkIGlkZWEgdG8gYnJvYWRlbiB0aGUgZGlzY3Vzc2lvbiB0byB0YWxrIGFi
-b3V0IGdwaW9zDQo+PiBhbmQgZXRoZXJuZXQgc3R1ZmYgaGVyZS4gSSdkIHN0aWxsIGNvbnNpZGVy
-IGl0IGEgdmFsaWQgY29uc3RydWN0IHRvIHB1dA0KPj4gdGhlIHB3bSBwaW4gaW50byB0aGUgYmFj
-a2xpZ2h0J3MgcGluY3RybCB1bmxlc3MgTGludXggVy4gZGlzYWdyZWVzLg0KPiANCj4gQnV0IHdo
-eT8gVGhlIGJhY2tsaWdodCBkb2Vzbid0IGNhcmUgYWJvdXQgdGhlIHNwZWNpZmljIHBpbm11eGlu
-ZyBvZiB0aGUNCj4gUFdNIHBpbi4gQWxsIGl0IGNhcmVzIGFib3V0IGlzIHRoZSBQV00gc2lnbmFs
-LiBUaGF0J3MgdGhlIGxldmVsIG9mDQo+IGFic3RyYWN0aW9uIHRoYXQgdGhlIFBXTSBjb25zdW1l
-ciBleHBlY3RzLCBhbnl0aGluZyBsb3dlciBsZXZlbCBiZWxvbmdzDQo+IGluIHRoZSBQV00gZHJp
-dmVyLg0KDQpJIGFsc28gZG8gbm90IGxpa2UgdGhlIGlkZWEgb2YgcHV0dGluZyB0aGUgcGlubXV4
-aW5nIG9mIHRoZSBQV00gcGluIGludG8NCnRoZSBQV00gY29uc3VtZXIuIFRoYXQgaXMgd2h5IGl0
-IG5ldmVyIGNhbWUgdG8gbXkgbWluZCB0byBkbyBpdCB3aGVuDQpJIHRlc3RlZCB3aGF0IFV3ZSB3
-YXMgc3VnZ2VzdGluZy4NCg0KPj4+PiBPdGhlciB0aGFuIHRoYXQgbXkgYXBwcm9hY2ggbG9va3Mg
-bW9yZSBlbGVnYW50IHRvIG1lICh3aGljaCBvYnZpb3VzbHkgaXMNCj4+Pj4gc3ViamVjdGl2ZSku
-IEl0IHdvcmtzIGluIGFsbCBjYXNlcyBhcGFydCBmcm9tIHN5c2ZzICh3aGljaCBpcyBzcGVjaWFs
-DQo+Pj4+IGJlY2F1c2UgaXQncyBub3QgaW50ZWdyYXRlZCBpbnRvIHRoZSBkZXZpY2UgbW9kZWwp
-IGFuZCB0aGVyZSBpcyBubyBuZWVkDQo+Pj4+IHRvIHRlYWNoIHRoZSBwd20gZnJhbWV3b3JrIGFi
-b3V0IHBpbm11eGluZyBhbmQgaW52ZW50IG5ldyBwaW5jdHJsIG1vZGVzDQo+Pj4+IGZvciBpdC4N
-Cj4+Pg0KPj4+IEVsZWdhbmNlIGlzIHVzZWxlc3MgaWYgd2hhdCB5b3UgaGF2ZSBkb2Vzbid0IHdv
-cmsgY29uc2lzdGVudGx5IGFuZA0KPj4+IHJlbGlhYmx5Lg0KPj4+DQo+Pj4gSSBkb24ndCB1bmRl
-cnN0YW5kIHlvdXIgcmVzaXN0YW5jZSB0byB0aGUgcGluY3RybCB3b3JrLiBJdCdzIG5vdCByb2Nr
-ZXQNCj4+PiBzY2llbmNlLiBNaWNoYWwgYWxyZWFkeSBwb3N0ZWQgcGF0Y2hlcyBzaG93aW5nIGhv
-dyBpdCBjYW4gYmUgZG9uZSBhbmQNCj4+PiB0aGV5J3JlIG5vdCB2ZXJ5IGNvbXBsaWNhdGVkLiBB
-bHNvIHdlJ3JlIG5vdCBkb2luZyBhbnl0aGluZyBvdXQgb2YgdGhlDQo+Pj4gb3JkaW5hcnkgaGVy
-ZS4gVGhpcyBpcyBleGFjdGx5IHRoZSBwdXJwb3NlIG9mIHRoZSBwaW5jdHJsIGZyYW1ld29yaywg
-c28NCj4+PiBsZXQncyB1c2UgdGhlIGJlc3QgdG9vbCBhdCBoYW5kLg0KPj4NCj4+IEluIG15IGxh
-c3QgZXhjaGFuZ2Ugd2l0aCBNaWNoYWwgSSBoYWQgdGhlIGltcHJlc3Npb24gdGhhdCBoZSBsaWtl
-ZA0KPj4gbXkgYXBwcm9hY2gsIHRvby4NCj4gDQo+IE15IGltcHJlc3Npb24gd2FzIHRoYXQgaGUg
-d2FzIHRyeWluZyB0byBmaW5kIGNvbmNlbnN1cy4gQnV0IHRoZSB3YXkgSQ0KPiByZWFkIGl0IGhl
-IHdhcyBzdGlsbCBhcmd1aW5nIHRoYXQgdGhlIHBpbmN0cmwgc29sdXRpb24gd2FzIHN0aWxsIHRo
-ZQ0KPiBtb3N0IGNvbXBsZXRlLCBhbmQgd291bGQgdGhlcmVmb3JlIHN0aWxsIHByZWZlciBpdC4N
-Cg0KSXQgaXMgbGlrZSB5b3Ugc2FpZCBUaGllcnJ5LiBJIGFtIG9ubHkgdHJ5aW5nIHRvIHJlbWFp
-biBvcGVuIHRvIHRlc3QNClV3ZSdzIGlkZWFzLiBBZnRlciB3aGF0IEkgaGF2ZSB0ZXN0ZWQgc28g
-ZmFyIEkgc3RpbGwgcHJlZmVyIGEgaW14LXNwZWNpZmljDQpwaW5jdHJsIHNvbHV0aW9uLg0KDQpN
-aWNoYWwNCg==
+
+--yxjswbi473wgfxs7
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Nov 20, 2018 at 06:27:48PM +0530, Jagan Teki wrote:
+> On Mon, Nov 19, 2018 at 5:38 PM Jagan Teki <jagan@amarulasolutions.com> w=
+rote:
+> >
+> > On Tue, Oct 30, 2018 at 1:49 PM Yong Deng <yong.deng@magewell.com> wrot=
+e:
+> > >
+> > > Allwinner V3s SoC features a CSI module with parallel interface.
+> > >
+> > > This patch implement a v4l2 framework driver for it.
+> > >
+> > > Reviewed-by: Hans Verkuil <hans.verkuil@cisco.com>
+> > > Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > > Tested-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > > Signed-off-by: Yong Deng <yong.deng@magewell.com>
+> > > ---
+> > >  MAINTAINERS                                        |   8 +
+> > >  drivers/media/platform/Kconfig                     |   1 +
+> > >  drivers/media/platform/Makefile                    |   2 +
+> > >  drivers/media/platform/sunxi/sun6i-csi/Kconfig     |   9 +
+> > >  drivers/media/platform/sunxi/sun6i-csi/Makefile    |   3 +
+> > >  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 915 +++++++++++=
+++++++++++
+> > >  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h | 135 +++
+> > >  .../media/platform/sunxi/sun6i-csi/sun6i_csi_reg.h | 196 +++++
+> > >  .../media/platform/sunxi/sun6i-csi/sun6i_video.c   | 678 +++++++++++=
+++++
+> > >  .../media/platform/sunxi/sun6i-csi/sun6i_video.h   |  38 +
+> > >  10 files changed, 1985 insertions(+)
+> > >  create mode 100644 drivers/media/platform/sunxi/sun6i-csi/Kconfig
+> > >  create mode 100644 drivers/media/platform/sunxi/sun6i-csi/Makefile
+> > >  create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > >  create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
+> > >  create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_csi_=
+reg.h
+> > >  create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_vide=
+o.c
+> > >  create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_vide=
+o.h
+> > >
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 23021e0df5d7..42d73b35ed3e 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -3900,6 +3900,14 @@ M:       Jaya Kumar <jayakumar.alsa@gmail.com>
+> > >  S:     Maintained
+> > >  F:     sound/pci/cs5535audio/
+> > >
+> > > +CSI DRIVERS FOR ALLWINNER V3s
+> > > +M:     Yong Deng <yong.deng@magewell.com>
+> > > +L:     linux-media@vger.kernel.org
+> > > +T:     git git://linuxtv.org/media_tree.git
+> > > +S:     Maintained
+> > > +F:     drivers/media/platform/sunxi/sun6i-csi/
+> > > +F:     Documentation/devicetree/bindings/media/sun6i-csi.txt
+> > > +
+> > >  CW1200 WLAN driver
+> > >  M:     Solomon Peachy <pizza@shaftnet.org>
+> > >  S:     Maintained
+> > > diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/=
+Kconfig
+> > > index 0edacfb01f3a..be6626ed0ec8 100644
+> > > --- a/drivers/media/platform/Kconfig
+> > > +++ b/drivers/media/platform/Kconfig
+> > > @@ -138,6 +138,7 @@ source "drivers/media/platform/am437x/Kconfig"
+> > >  source "drivers/media/platform/xilinx/Kconfig"
+> > >  source "drivers/media/platform/rcar-vin/Kconfig"
+> > >  source "drivers/media/platform/atmel/Kconfig"
+> > > +source "drivers/media/platform/sunxi/sun6i-csi/Kconfig"
+> >
+> > [snip]
+> >
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static int sun6i_subdev_notify_complete(struct v4l2_async_notifier *=
+notifier)
+> > > +{
+> > > +       struct sun6i_csi *csi =3D container_of(notifier, struct sun6i=
+_csi,
+> > > +                                            notifier);
+> > > +       struct v4l2_device *v4l2_dev =3D &csi->v4l2_dev;
+> > > +       struct v4l2_subdev *sd;
+> > > +       int ret;
+> > > +
+> > > +       dev_dbg(csi->dev, "notify complete, all subdevs registered\n"=
+);
+> > > +
+> > > +       if (notifier->num_subdevs !=3D 1)
+> >
+> > drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c: In function
+> > =E2=80=98sun6i_subdev_notify_complete=E2=80=99:
+> > drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c:646:14: error:
+> > =E2=80=98struct v4l2_async_notifier=E2=80=99 has no member named =E2=80=
+=98num_subdevs=E2=80=99
+>=20
+> This build issues on linux-next, let me know you have next version
+> changes for this, thanks.
+
+This driver has been merged now, and you have a fix on the thread
+starting from the cover letter of that very same version.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--yxjswbi473wgfxs7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW/QJmAAKCRDj7w1vZxhR
+xXPxAP0XOPSudKmyDUATuzZ0EwbJ7icI2KvTyGc4AoEF4X+//gD+IkJH37A5tu2v
+fPAYHkrJ+U51Qfhijjtv5f3LI/M4jgs=
+=nIVd
+-----END PGP SIGNATURE-----
+
+--yxjswbi473wgfxs7--
