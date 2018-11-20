@@ -1,69 +1,100 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77965: Add CAN controller
- nodes
-Date: Wed, 21 Nov 2018 00:30:47 +0100
-Message-ID: <8808d836-2454-4166-fbe0-02849e52792b@gmail.com>
-References: <20181118173327.4704-1-marek.vasut+renesas@gmail.com>
- <20181118230250.GA2553@kunai>
- <6ffce819-4d8e-e54a-ba82-0845c36a6ec4@gmail.com>
- <CAMuHMdUjONJYypV0a5wnxyBx+sUMHzRwZObQ=d7xFG2ZSCM3Ag@mail.gmail.com>
+From: Matheus Tavares Bernardino <matheus.bernardino@usp.br>
+Subject: Re: [PATCH v2 4/7] dt-bindings:iio:resolver: Add docs for ad2s90
+Date: Tue, 20 Nov 2018 21:34:38 -0200
+Message-ID: <CAHd-oW7vvk+gvk787OS29XP+O=Gf93raczuxiYJ9XSuWDJEu7A@mail.gmail.com>
+References: <20181118042540.12697-1-matheus.bernardino@usp.br>
+ <20181118042540.12697-5-matheus.bernardino@usp.br> <563614e00314ba92b9513645a82fde06504a42d5.camel@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAMuHMdUjONJYypV0a5wnxyBx+sUMHzRwZObQ=d7xFG2ZSCM3Ag@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <563614e00314ba92b9513645a82fde06504a42d5.camel@analog.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandru Ardelean <alexandru.Ardelean@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Jonathan Cameron <jic23@kernel.org>, Michael Hennerich <Michael.Hennerich@analog.com>, Mark Rutland <mark.rutland@arm.com>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Victor Colombo <victorcolombo@gmail.com>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, kernel-usp@googlegroups.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/19/2018 10:00 AM, Geert Uytterhoeven wrote:
-> Hi Marek,
+On Mon, Nov 19, 2018 at 6:22 AM Ardelean, Alexandru
+<alexandru.Ardelean@analog.com> wrote:
+>
+> On Sun, 2018-11-18 at 02:25 -0200, Matheus Tavares wrote:
+> > This patch adds the device tree binding documentation for the ad2s90
+> > resolver-to-digital converter.
+> >
+>
+> One minor comment inline.
+>
+> > Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
+> > ---
+> > Changes in v2:
+> >  - Rewritten 'spi-cpol and spi-cpha' item to say that the device can
+> >  work in either mode (0,0) or (1,1) and explain how they should be
+> >  specified in DT.
+> >
+> >  .../bindings/iio/resolver/ad2s90.txt          | 28 +++++++++++++++++++
+> >  1 file changed, 28 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/iio/resolver/ad2s90.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/resolver/ad2s90.txt
+> > b/Documentation/devicetree/bindings/iio/resolver/ad2s90.txt
+> > new file mode 100644
+> > index 000000000000..594417539938
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/resolver/ad2s90.txt
+> > @@ -0,0 +1,28 @@
+> > +Analog Devices AD2S90 Resolver-to-Digital Converter
+> > +
+> > +https://www.analog.com/en/products/ad2s90.html
+> > +
+> > +Required properties:
+> > +  - compatible: should be "adi,ad2s90"
+> > +  - reg: SPI chip select number for the device
+> > +  - spi-max-frequency: set maximum clock frequency, must be 830000
+> > +  - spi-cpol and spi-cpha:
+> > +        Either SPI mode (0,0) or (1,1) must be used, so specify none or
+> > both of
+> > +        spi-cpha, spi-cpol.
+> For SPI properties it's a good idea to also reference the document for SPI
+> bindings.
+> Something like:
+>     See for more details:
+>      Documentation/devicetree/bindings/spi/spi-bus.txt
+>
 
-Hi,
+Thanks, Alex! I'll add that for v3.
 
-> On Mon, Nov 19, 2018 at 12:46 AM Marek Vasut <marek.vasut@gmail.com> wrote:
->> On 11/19/2018 12:02 AM, Wolfram Sang wrote:
->>> On Sun, Nov 18, 2018 at 06:33:26PM +0100, Marek Vasut wrote:
->>>> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
->>>>
->>>> This patch adds CAN{0,1} controller nodes for the R8A77965 SoC.
->>>>
->>>> Based on several similar patches of the R8A7795 device tree
->>>> by Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
->>>> and Geert Uytterhoeven <geert+renesas@glider.be>.
->>>>
->>>> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
->>>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
->>>> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
->>>> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
->>>> Cc: Rob Herring <robh@kernel.org>
->>>> Cc: Simon Horman <horms+renesas@verge.net.au>
->>>> Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
->>>> Cc: linux-renesas-soc@vger.kernel.org
->>>> Cc: linux-arm-kernel@lists.infradead.org
->>>
->>> Were you able to do some testing using EXIO connectors? Would be nice to
->>> know what was tested.
->>
->> Not on the M3N, since I don't see it broken out on the EXIO ; is it
->> really there ? It'd be easy to test on M3NSK with KF, but I don't have
->> either KF or M3NSK.
-> 
-> Please have a look at EXIO Connector D, pins 13/14/15.
+Also, can you confirm AD2S90 works in both spi mode 0 and 3? It's not
+explicitly stated in the datasheet, but that's what it seemed to me
+and some colleagues.
 
-That's LBSC WE1n/WE0n/CS0n on S-XS . Is there something I obviously
-don't see ?
+Thanks,
+Matheus
 
--- 
-Best regards,
-Marek Vasut
+> > +
+> > +Note about max frequency:
+> > +    Chip's max frequency, as specified in its datasheet, is 2Mhz. But a
+> > 600ns
+> > +    delay is expected between the application of a logic LO to CS and
+> > the
+> > +    application of SCLK, as also specified. And since the delay is not
+> > +    implemented in the spi code, to satisfy it, SCLK's period should be
+> > at most
+> > +    2 * 600ns, so the max frequency should be 1 / (2 * 6e-7), which
+> > gives
+> > +    roughly 830000Hz.
+> > +
+> > +Example:
+> > +resolver@0 {
+> > +     compatible = "adi,ad2s90";
+> > +     reg = <0>;
+> > +     spi-max-frequency = <830000>;
+> > +     spi-cpol;
+> > +     spi-cpha;
+> > +};
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Kernel USP" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-usp+unsubscribe@googlegroups.com.
+> To post to this group, send email to kernel-usp@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kernel-usp/563614e00314ba92b9513645a82fde06504a42d5.camel%40analog.com.
+> For more options, visit https://groups.google.com/d/optout.
