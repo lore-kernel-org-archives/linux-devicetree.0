@@ -1,72 +1,43 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH] ARM: dts: at91: sama5d2: use the divided clock for SMC
-Date: Tue, 20 Nov 2018 21:40:49 +0100
-Message-ID: <20181120204049.GG8367@piout.net>
-References: <20181120165737.4998-1-romain.izard.pro@gmail.com>
- <20181120171612.GF8367@piout.net>
- <CAGkQfmPHRKqMvm6bNDf8S5qM7uE5T-izij=jm2nob0zrOgOM-w@mail.gmail.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH 1/2] dt-bindings: remoteproc: qcom: Add shutdown-ack irq for Q6v5
+Date: Wed, 21 Nov 2018 02:32:07 +0530
+Message-ID: <20181120210209.9029-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGkQfmPHRKqMvm6bNDf8S5qM7uE5T-izij=jm2nob0zrOgOM-w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Romain Izard <romain.izard.pro@gmail.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, ohad@wizery.com, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20/11/2018 19:01:32+0100, Romain Izard wrote:
-> Le mar. 20 nov. 2018 à 18:16, Alexandre Belloni
-> <alexandre.belloni@bootlin.com> a écrit :
-> >
-> > Hello Romain,
-> >
-> > On 20/11/2018 17:57:37+0100, Romain Izard wrote:
-> > > The SAMA5D2 is different from SAMA5D3 and SAMA5D4, as there are two
-> > > different clocks for the peripherals in the SoC. The Static Memory
-> > > controller is connected to the divided master clock.
-> > >
-> > > Unfortunately, the device tree does not correctly show this and uses the
-> > > master clock directly. This clock is then used by the code for the NAND
-> > > controller to calculate the timings for the controller, and we end up with
-> > > slow NAND Flash access.
-> > >
-> > > Fix the device tree, and the performance of Flash access is improved.
-> > >
-> > > Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
-> > > ---
-> > >  arch/arm/boot/dts/sama5d2.dtsi | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-> > > index 61f68e5c48e9..b405992eb601 100644
-> > > --- a/arch/arm/boot/dts/sama5d2.dtsi
-> > > +++ b/arch/arm/boot/dts/sama5d2.dtsi
-> > > @@ -308,7 +308,7 @@
-> > >                                 0x1 0x0 0x60000000 0x10000000
-> > >                                 0x2 0x0 0x70000000 0x10000000
-> > >                                 0x3 0x0 0x80000000 0x10000000>;
-> > > -                     clocks = <&mck>;
-> > > +                     clocks = <&h32ck>;
-> >
-> > You will have to rebase on top of at91-dt. And if I'm not mistaken, this
-> > line should be:
-> >
-> > +                       clocks = <&pmc PMC_TYPE_CORE PMC_MCK2>;
-> >
-> > >                       status = "disabled";
-> > >
-> > >                       nand_controller: nand-controller {
-> 
-> I guess you're right but this will only reach mainline in 4.21. I get slow
-> flash access with 4.19 as well...
->
+Add optional shutdown-irq binding required for sysmon shutdown on
+SDM845/MSM8996/QCS404 SoCs.
 
-Ok, this is super annoying, I'll try to get that as fixes on v4.20 and
-I'll rebase at91-dt on top of that...
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+index 9ff5b0309417..14947562bc67 100644
+--- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
++++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+@@ -29,12 +29,13 @@ on the Qualcomm Hexagon core.
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+ 	Definition: must list the watchdog, fatal IRQs ready, handover and
+-		    stop-ack IRQs
++		    stop-ack IRQs and may optionally list shutdown-ack IRQ
+ 
+ - interrupt-names:
+ 	Usage: required
+ 	Value type: <stringlist>
+-	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
++	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack",
++		    "shutdown-ack"
+ 
+ - clocks:
+ 	Usage: required
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
