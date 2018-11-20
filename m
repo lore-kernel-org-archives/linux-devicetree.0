@@ -1,55 +1,69 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v1 1/1] spi: npcm: fix uninitialized 'val' warning in
- receive function
-Date: Tue, 20 Nov 2018 13:02:10 +0000
-Message-ID: <20181120130210.GA3894@sirena.org.uk>
-References: <20181118123504.83082-1-tmaimon77@gmail.com>
- <20181118123504.83082-2-tmaimon77@gmail.com>
- <CAOesGMjUJ1+qmbPWcVFm1F_F0fcdg-54YY6o4iK=PYWoAuEczA@mail.gmail.com>
- <CAP6Zq1j46ch8UUxJkO7SnrHWyP3Y7g58Fodejr98WN-TW8jhEw@mail.gmail.com>
+From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
+Subject: =?utf-8?B?UmU6IFtSQ0bCoFBBVENILHYyLDIvMl0gcHdtOiBpbXg6IENvbmZpZ3VyZSBv?=
+ =?utf-8?Q?utput_to_GPIO_in_disabled_state?=
+Date: Tue, 20 Nov 2018 13:14:33 +0000
+Message-ID: <6e81d63b-61a1-36fe-0c24-3ff27438cbc0@ysoft.com>
+References: <eb4e7a42-bd5c-3ae2-ccb7-d1a73d5ae99c@ysoft.com>
+ <20181107150125.7cpd4v5t7yi2254c@pengutronix.de>
+ <4fbb7307-df01-d7bd-f2e2-e05e6d17807d@ysoft.com>
+ <20181108191855.zuon3ecv4yjfbs7g@pengutronix.de>
+ <283cfef3-16d0-8bd4-e306-6e34d44c3a86@ysoft.com>
+ <20181109165555.vqbiwh4hlcnozdna@pengutronix.de> <20181114113449.GB2620@ulmo>
+ <20181114215120.vddykljqyavm64wj@pengutronix.de> <20181115152545.GA8611@ulmo>
+ <20181115203733.qvonika6yhn2bsnb@pengutronix.de>
+ <20181116095124.GA28631@ulmo>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAP6Zq1j46ch8UUxJkO7SnrHWyP3Y7g58Fodejr98WN-TW8jhEw@mail.gmail.com>
+In-Reply-To: <20181116095124.GA28631@ulmo>
+Content-Language: en-US
+Content-ID: <285866F6156CF546AA539A63334774A3@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: olof@lixom.net, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nancy Yuen <yuenn@google.com>, Patrick Venture <venture@google.com>, Brendan Higgins <brendanhiggins@google.com>, Avi Fishman <avifishman70@gmail.com>, Joel Stanley <joel@jms.id.au>, linux-spi@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+To: Thierry Reding <thierry.reding@gmail.com>, =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, =?utf-8?B?TG90aGFyIFdhw59tYW5u?= <LW@karo-electronics.de>, Linus Walleij <linus.walleij@linaro.org>, viresh kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-
---T4sUOijqQbZv57TR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Nov 20, 2018 at 12:51:19PM +0200, Tomer Maimon wrote:
-
-> We just tried to reduce the number of lines to minimum, so we have debug it
-> quite a lot (with all the numbers that can
-> get from priv->tx_bytes) and the only numbers that minimum function return
-> are 0, 1 or 2.
-
-> But in the end of the day,  we don't have an issue with your solution as
-> long it will be done also in the transfer function.
-
-In general it's better to have the code be obviously correct than to try
-to push down the line count - it saves people the effort of figuring out
-if things are safe every time they look at it.
-
---T4sUOijqQbZv57TR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlv0BdAACgkQJNaLcl1U
-h9ASIQf/cI3kpprBTkLEFxruAQbRVP4iqcAlySu6P7KxALXVKRtjn5bSW6zo68KR
-pdQQSaIy69W6iehi7+9YacuKmtJcDiqfRItJLuj5FK4PM0Wfv5SjLEs5oS5SahGi
-+CZsjlLWD7IKm/eiBfgpujOh1SuuAhJd0VuuEFkWE9ICbZWqaXYNTa4+5UVjwKPJ
-FQqUz1BO7UYUZ9rsECcO0IpJBThxcdSrSl3UV5CAivmve0HEo3FTD6Os9wO8wAx1
-e5+3m35TBPjUatI3kdyB9PrQNSroqgGe5Ou3atz7GXwXPR5eA0Zt391/0I53kPsx
-vc11Ia8qPkKFJBlJQKYJRNzdRMdBXw==
-=b+mA
------END PGP SIGNATURE-----
-
---T4sUOijqQbZv57TR--
+SGksDQpzb3JyeSBmb3IgdGhlIGRlbGF5LCBJIHdhcyBvdXQgb2Ygb2ZmaWNlIGxhc3Qgd2Vlay4N
+Ck15IGNvbW1lbnRzIGJlbG93IGFyZSBqdXN0IHRvIGNsYXJpZnkgbXkgYXR0aXR1ZGUgdG8gdGhl
+IHRvcGljIGFzIG15DQpuYW1lIHdhcyBtZW50aW9uZWQgZmV3IHRpbWVzIHdoaWxlIEkgd2FzIG9m
+ZmxpbmUuDQoNCk9uIDE2LjExLjIwMTggMTA6NTEsIFRoaWVycnkgUmVkaW5nIHdyb3RlOg0KPiBP
+biBUaHUsIE5vdiAxNSwgMjAxOCBhdCAwOTozNzozM1BNICswMTAwLCBVd2UgS2xlaW5lLUvDtm5p
+ZyB3cm90ZToNCj4+IE9uIFRodSwgTm92IDE1LCAyMDE4IGF0IDA0OjI1OjQ1UE0gKzAxMDAsIFRo
+aWVycnkgUmVkaW5nIHdyb3RlOg0KPj4+IE9uIFdlZCwgTm92IDE0LCAyMDE4IGF0IDEwOjUxOjIw
+UE0gKzAxMDAsIFV3ZSBLbGVpbmUtS8O2bmlnIHdyb3RlOg0KPj4+PiBPbiBXZWQsIE5vdiAxNCwg
+MjAxOCBhdCAxMjozNDo0OVBNICswMTAwLCBUaGllcnJ5IFJlZGluZyB3cm90ZToNCg0KPj4gTWF5
+YmUgaXQgd2FzIGEgYmFkIGlkZWEgdG8gYnJvYWRlbiB0aGUgZGlzY3Vzc2lvbiB0byB0YWxrIGFi
+b3V0IGdwaW9zDQo+PiBhbmQgZXRoZXJuZXQgc3R1ZmYgaGVyZS4gSSdkIHN0aWxsIGNvbnNpZGVy
+IGl0IGEgdmFsaWQgY29uc3RydWN0IHRvIHB1dA0KPj4gdGhlIHB3bSBwaW4gaW50byB0aGUgYmFj
+a2xpZ2h0J3MgcGluY3RybCB1bmxlc3MgTGludXggVy4gZGlzYWdyZWVzLg0KPiANCj4gQnV0IHdo
+eT8gVGhlIGJhY2tsaWdodCBkb2Vzbid0IGNhcmUgYWJvdXQgdGhlIHNwZWNpZmljIHBpbm11eGlu
+ZyBvZiB0aGUNCj4gUFdNIHBpbi4gQWxsIGl0IGNhcmVzIGFib3V0IGlzIHRoZSBQV00gc2lnbmFs
+LiBUaGF0J3MgdGhlIGxldmVsIG9mDQo+IGFic3RyYWN0aW9uIHRoYXQgdGhlIFBXTSBjb25zdW1l
+ciBleHBlY3RzLCBhbnl0aGluZyBsb3dlciBsZXZlbCBiZWxvbmdzDQo+IGluIHRoZSBQV00gZHJp
+dmVyLg0KDQpJIGFsc28gZG8gbm90IGxpa2UgdGhlIGlkZWEgb2YgcHV0dGluZyB0aGUgcGlubXV4
+aW5nIG9mIHRoZSBQV00gcGluIGludG8NCnRoZSBQV00gY29uc3VtZXIuIFRoYXQgaXMgd2h5IGl0
+IG5ldmVyIGNhbWUgdG8gbXkgbWluZCB0byBkbyBpdCB3aGVuDQpJIHRlc3RlZCB3aGF0IFV3ZSB3
+YXMgc3VnZ2VzdGluZy4NCg0KPj4+PiBPdGhlciB0aGFuIHRoYXQgbXkgYXBwcm9hY2ggbG9va3Mg
+bW9yZSBlbGVnYW50IHRvIG1lICh3aGljaCBvYnZpb3VzbHkgaXMNCj4+Pj4gc3ViamVjdGl2ZSku
+IEl0IHdvcmtzIGluIGFsbCBjYXNlcyBhcGFydCBmcm9tIHN5c2ZzICh3aGljaCBpcyBzcGVjaWFs
+DQo+Pj4+IGJlY2F1c2UgaXQncyBub3QgaW50ZWdyYXRlZCBpbnRvIHRoZSBkZXZpY2UgbW9kZWwp
+IGFuZCB0aGVyZSBpcyBubyBuZWVkDQo+Pj4+IHRvIHRlYWNoIHRoZSBwd20gZnJhbWV3b3JrIGFi
+b3V0IHBpbm11eGluZyBhbmQgaW52ZW50IG5ldyBwaW5jdHJsIG1vZGVzDQo+Pj4+IGZvciBpdC4N
+Cj4+Pg0KPj4+IEVsZWdhbmNlIGlzIHVzZWxlc3MgaWYgd2hhdCB5b3UgaGF2ZSBkb2Vzbid0IHdv
+cmsgY29uc2lzdGVudGx5IGFuZA0KPj4+IHJlbGlhYmx5Lg0KPj4+DQo+Pj4gSSBkb24ndCB1bmRl
+cnN0YW5kIHlvdXIgcmVzaXN0YW5jZSB0byB0aGUgcGluY3RybCB3b3JrLiBJdCdzIG5vdCByb2Nr
+ZXQNCj4+PiBzY2llbmNlLiBNaWNoYWwgYWxyZWFkeSBwb3N0ZWQgcGF0Y2hlcyBzaG93aW5nIGhv
+dyBpdCBjYW4gYmUgZG9uZSBhbmQNCj4+PiB0aGV5J3JlIG5vdCB2ZXJ5IGNvbXBsaWNhdGVkLiBB
+bHNvIHdlJ3JlIG5vdCBkb2luZyBhbnl0aGluZyBvdXQgb2YgdGhlDQo+Pj4gb3JkaW5hcnkgaGVy
+ZS4gVGhpcyBpcyBleGFjdGx5IHRoZSBwdXJwb3NlIG9mIHRoZSBwaW5jdHJsIGZyYW1ld29yaywg
+c28NCj4+PiBsZXQncyB1c2UgdGhlIGJlc3QgdG9vbCBhdCBoYW5kLg0KPj4NCj4+IEluIG15IGxh
+c3QgZXhjaGFuZ2Ugd2l0aCBNaWNoYWwgSSBoYWQgdGhlIGltcHJlc3Npb24gdGhhdCBoZSBsaWtl
+ZA0KPj4gbXkgYXBwcm9hY2gsIHRvby4NCj4gDQo+IE15IGltcHJlc3Npb24gd2FzIHRoYXQgaGUg
+d2FzIHRyeWluZyB0byBmaW5kIGNvbmNlbnN1cy4gQnV0IHRoZSB3YXkgSQ0KPiByZWFkIGl0IGhl
+IHdhcyBzdGlsbCBhcmd1aW5nIHRoYXQgdGhlIHBpbmN0cmwgc29sdXRpb24gd2FzIHN0aWxsIHRo
+ZQ0KPiBtb3N0IGNvbXBsZXRlLCBhbmQgd291bGQgdGhlcmVmb3JlIHN0aWxsIHByZWZlciBpdC4N
+Cg0KSXQgaXMgbGlrZSB5b3Ugc2FpZCBUaGllcnJ5LiBJIGFtIG9ubHkgdHJ5aW5nIHRvIHJlbWFp
+biBvcGVuIHRvIHRlc3QNClV3ZSdzIGlkZWFzLiBBZnRlciB3aGF0IEkgaGF2ZSB0ZXN0ZWQgc28g
+ZmFyIEkgc3RpbGwgcHJlZmVyIGEgaW14LXNwZWNpZmljDQpwaW5jdHJsIHNvbHV0aW9uLg0KDQpN
+aWNoYWwNCg==
