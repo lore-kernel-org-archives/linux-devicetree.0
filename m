@@ -1,42 +1,77 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFC 0/3] Unify CPU topology across ARM64 & RISC-V
-Date: Tue, 20 Nov 2018 11:11:46 +0000
-Message-ID: <20181120111146.GA6497@e107155-lin>
-References: <1541728209-3224-1-git-send-email-atish.patra@wdc.com>
- <07d92dd4-f943-47ee-e168-46bfaf4ed755@codeaurora.org>
+From: "M.h. Lian" <minghuan.lian@nxp.com>
+Subject: RE: [PATCHv2 13/25] PCI: mobiveil: move irq chained handler setup out
+ of DT parse
+Date: Tue, 20 Nov 2018 11:12:44 +0000
+Message-ID: <HE1PR0401MB22357E7A16AD7261C5C6A14AE8D90@HE1PR0401MB2235.eurprd04.prod.outlook.com>
+References: <20181120092615.11680-1-Zhiqiang.Hou@nxp.com>
+ <20181120092615.11680-14-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <07d92dd4-f943-47ee-e168-46bfaf4ed755@codeaurora.org>
+In-Reply-To: <20181120092615.11680-14-Zhiqiang.Hou@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Damien.LeMoal@wdc.com, juri.lelli@arm.com, anup@brainfault.org, palmer@sifive.com, jeremy.linton@arm.com, robh+dt@kernel.org, mick@ics.forth.gr, linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>
+Cc: Mingkai Hu <mingkai.hu@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 15, 2018 at 11:31:33AM -0700, Jeffrey Hugo wrote:
+reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 
-[...]
-
->
-> I was interested in testing these on QDF2400, an ARM64 platform, since this
-> series touches core ARM64 code and I'd hate to see a regression. However, I
-> can't figure out what baseline to use to apply these. Different patches
-> cause different conflicts of a variety of baselines I attempted.
->
-
-Good to know that we can test DT configuration on QDF2400. I always assumed
-it's ACPI only.
-
-> What are these intended to apply to?
->
-
-The series alone may not get the package/socket ids correct on QDF2400.
-I have not yet added support for the same as I wanted to get the initial
-feedback on DT bindings. The movement of DT binding and corresponding
-code should not regress and you should be able to validate only that
-part.
-
---
-Regards,
-Sudeep
+> -----Original Message-----
+> From: Z.q. Hou
+> Sent: Tuesday, November 20, 2018 5:27 PM
+> To: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+> l.subrahmanya@mobiveil.co.in; shawnguo@kernel.org; Leo Li
+> <leoyang.li@nxp.com>; lorenzo.pieralisi@arm.com;
+> catalin.marinas@arm.com; will.deacon@arm.com
+> Cc: Mingkai Hu <mingkai.hu@nxp.com>; M.h. Lian
+> <minghuan.lian@nxp.com>; Xiaowei Bao <xiaowei.bao@nxp.com>; Z.q. Hou
+> <zhiqiang.hou@nxp.com>
+> Subject: [PATCHv2 13/25] PCI: mobiveil: move irq chained handler setup ou=
+t
+> of DT parse
+>=20
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>=20
+> Move irq_set_chained_handler_and_data() out of DT parse function.
+>=20
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+> V2:
+>  - no change
+>=20
+>  drivers/pci/controller/pcie-mobiveil.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/pcie-mobiveil.c
+> b/drivers/pci/controller/pcie-mobiveil.c
+> index c2848c22b466..db7ecb021c63 100644
+> --- a/drivers/pci/controller/pcie-mobiveil.c
+> +++ b/drivers/pci/controller/pcie-mobiveil.c
+> @@ -460,8 +460,6 @@ static int mobiveil_pcie_parse_dt(struct
+> mobiveil_pcie *pcie)
+>  		return -ENODEV;
+>  	}
+>=20
+> -	irq_set_chained_handler_and_data(pcie->irq, mobiveil_pcie_isr,
+> pcie);
+> -
+>  	return 0;
+>  }
+>=20
+> @@ -902,6 +900,8 @@ static int mobiveil_pcie_probe(struct platform_device
+> *pdev)
+>  		goto error;
+>  	}
+>=20
+> +	irq_set_chained_handler_and_data(pcie->irq, mobiveil_pcie_isr,
+> pcie);
+> +
+>  	ret =3D devm_request_pci_bus_resources(dev, &pcie->resources);
+>  	if (ret)
+>  		goto error;
+> --
+> 2.17.1
