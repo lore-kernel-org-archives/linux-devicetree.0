@@ -1,96 +1,41 @@
 From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 2/2] drm/msm/dsi: Get PHY ref clock from the DT
-Date: Tue, 20 Nov 2018 14:41:03 -0800
-Message-ID: <CAD=FV=XD7g8gZsTNTLGCN3ZC7zOuFX1LxMWVnE+=1k68tuQVpg@mail.gmail.com>
-References: <20181102214534.184593-1-mka@chromium.org>
- <20181102214534.184593-2-mka@chromium.org>
- <CAD=FV=Vyv5sRhJNgpP6Gnn3+6zRjGsT8RozCY6xx51Tr_hRoeg@mail.gmail.com>
- <20181114235630.GO22824@google.com>
+Subject: Re: [PATCH 1/2] ARM: dts: qcom: Add SoC-specific string for
+ sdhci-msm-v4 nodes
+Date: Tue, 20 Nov 2018 15:12:14 -0800
+Message-ID: <CAD=FV=V7RM2AEM857VJMZmFcBOTSL+Aa03=wiricMV9DZ=NCRg@mail.gmail.com>
+References: <20181105210921.253707-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20181114235630.GO22824@google.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rajesh Yadav <ryadav@codeaurora.org>, David Airlie <airlied@linux.ie>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Stephen Boyd <swboyd@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, freedreno <freedreno@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181105210921.253707-1-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBXZWQsIE5vdiAxNCwgMjAxOCBhdCAzOjU2IFBNIE1hdHRoaWFzIEthZWhsY2tlIDxt
-a2FAY2hyb21pdW0ub3JnPiB3cm90ZToKPgo+IE9uIFRodSwgTm92IDA4LCAyMDE4IGF0IDAyOjA0
-OjMxUE0gLTA4MDAsIERvdWcgQW5kZXJzb24gd3JvdGU6Cj4gPiBIaSwKPiA+Cj4gPiBPbiBGcmks
-IE5vdiAyLCAyMDE4IGF0IDI6NDUgUE0gTWF0dGhpYXMgS2FlaGxja2UgPG1rYUBjaHJvbWl1bS5v
-cmc+IHdyb3RlOgo+ID4gPgo+ID4gPiBHZXQgdGhlIFBIWSByZWYgY2xvY2sgZnJvbSB0aGUgZGV2
-aWNlIHRyZWUgaW5zdGVhZCBvZiBoYXJkY29kaW5nCj4gPiA+IGl0cyBuYW1lIGFuZCByYXRlLgo+
-ID4gPgo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aGlhcyBLYWVobGNrZSA8bWthQGNocm9taXVt
-Lm9yZz4KPiA+ID4gLS0tCj4gPiA+ICBkcml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9wbGwvZHNpX3Bs
-bF8xMG5tLmMgfCAxMSArKysrKysrKysrLQo+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDEwIGluc2Vy
-dGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiA+ID4KPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS9tc20vZHNpL3BsbC9kc2lfcGxsXzEwbm0uYyBiL2RyaXZlcnMvZ3B1L2RybS9tc20v
-ZHNpL3BsbC9kc2lfcGxsXzEwbm0uYwo+ID4gPiBpbmRleCA0YzAzZjBiNzM0M2VkLi4xMDE2ZWI1
-MGRmOGY1IDEwMDY0NAo+ID4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9wbGwvZHNp
-X3BsbF8xMG5tLmMKPiA+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvcGxsL2RzaV9w
-bGxfMTBubS5jCj4gPiA+IEBAIC05MSw2ICs5MSw4IEBAIHN0cnVjdCBkc2lfcGxsXzEwbm0gewo+
-ID4gPiAgICAgICAgIHZvaWQgX19pb21lbSAqcGh5X2Ntbl9tbWlvOwo+ID4gPiAgICAgICAgIHZv
-aWQgX19pb21lbSAqbW1pbzsKPiA+ID4KPiA+ID4gKyAgICAgICBzdHJ1Y3QgY2xrICp2Y29fcmVm
-X2NsazsKPiA+ID4gKwo+ID4gPiAgICAgICAgIHU2NCB2Y29fcmVmX2Nsa19yYXRlOwo+ID4gPiAg
-ICAgICAgIHU2NCB2Y29fY3VycmVudF9yYXRlOwo+ID4gPgo+ID4gPiBAQCAtNjMwLDcgKzYzMiw4
-IEBAIHN0YXRpYyBpbnQgcGxsXzEwbm1fcmVnaXN0ZXIoc3RydWN0IGRzaV9wbGxfMTBubSAqcGxs
-XzEwbm0pCj4gPiA+ICAgICAgICAgY2hhciBjbGtfbmFtZVszMl0sIHBhcmVudFszMl0sIHZjb19u
-YW1lWzMyXTsKPiA+ID4gICAgICAgICBjaGFyIHBhcmVudDJbMzJdLCBwYXJlbnQzWzMyXSwgcGFy
-ZW50NFszMl07Cj4gPiA+ICAgICAgICAgc3RydWN0IGNsa19pbml0X2RhdGEgdmNvX2luaXQgPSB7
-Cj4gPiA+IC0gICAgICAgICAgICAgICAucGFyZW50X25hbWVzID0gKGNvbnN0IGNoYXIgKltdKXsg
-InhvIiB9LAo+ID4gPiArICAgICAgICAgICAgICAgLnBhcmVudF9uYW1lcyA9IChjb25zdCBjaGFy
-ICpbXSl7Cj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIF9fY2xrX2dldF9uYW1lKHBsbF8x
-MG5tLT52Y29fcmVmX2NsaykgfSwKPiA+ID4gICAgICAgICAgICAgICAgIC5udW1fcGFyZW50cyA9
-IDEsCj4gPiA+ICAgICAgICAgICAgICAgICAubmFtZSA9IHZjb19uYW1lLAo+ID4gPiAgICAgICAg
-ICAgICAgICAgLmZsYWdzID0gQ0xLX0lHTk9SRV9VTlVTRUQsCj4gPiA+IEBAIC03ODYsNiArNzg5
-LDEyIEBAIHN0cnVjdCBtc21fZHNpX3BsbCAqbXNtX2RzaV9wbGxfMTBubV9pbml0KHN0cnVjdCBw
-bGF0Zm9ybV9kZXZpY2UgKnBkZXYsIGludCBpZCkKPiA+ID4gICAgICAgICBwbGxfMTBubS0+aWQg
-PSBpZDsKPiA+ID4gICAgICAgICBwbGxfMTBubV9saXN0W2lkXSA9IHBsbF8xMG5tOwo+ID4gPgo+
-ID4gPiArICAgICAgIHBsbF8xMG5tLT52Y29fcmVmX2NsayA9IGRldm1fY2xrX2dldCgmcGRldi0+
-ZGV2LCAicmVmIik7Cj4gPiA+ICsgICAgICAgaWYgKElTX0VSUihwbGxfMTBubS0+dmNvX3JlZl9j
-bGspKSB7Cj4gPiA+ICsgICAgICAgICAgICAgICBkZXZfZXJyKCZwZGV2LT5kZXYsICJjb3VsZG4n
-dCBnZXQgJ3JlZicgY2xvY2tcbiIpOwo+ID4gPiArICAgICAgICAgICAgICAgcmV0dXJuICh2b2lk
-ICopcGxsXzEwbm0tPnZjb19yZWZfY2xrOwo+ID4gPiArICAgICAgIH0KPiA+Cj4gPiBTbywgdW1t
-bW0uICBDYW4geW91IGZvbGxvdyB0aGUgc2FtZSBwYXR0ZXJuIGZvciBhbGwgdGhlIG90aGVyIGNs
-b2Nrcwo+ID4gaW4gdGhpcyBmaWxlIHRvbz8gIEFsbCBwYXJlbnRzIHNob3VsZCBnZXQgdGhlaXIg
-bmFtZSBiYXNlZCBvbgo+ID4gcmVmZXJlbmNlcyBpbiB0aGUgZGV2aWNlIHRyZWUuCj4gPgo+ID4g
-SXQgdHVybnMgb3V0IHRoYXQgcmlnaHQgbm93IHdlIGhhdmUgYSBtaXNtYXRjaCBiZWNhdXNlCj4g
-PiAiZHJpdmVycy9jbGsvcWNvbS9kaXNwY2Mtc2RtODQ1LmMiIGNhbGxzICJkc2kwcGxsYnl0ZSIK
-PiA+ICJkc2kwX3BoeV9wbGxfb3V0X2J5dGVjbGsiIGFuZCBjYWxscyAiZHNpMHBsbCIKPiA+ICJk
-c2kwX3BoeV9wbGxfb3V0X2RzaWNsayIuICBXZSBtaWdodCB3YW50IHRvIGNoYW5nZSB0aGUgbmFt
-ZXMgaW4KPiA+IGRpc3BjYy1zZG04NDUuYywgYnV0IGl0IHdvdWxkbid0IG1hdHRlciBpZiB3ZSBz
-aW1wbHkgZGlkbid0IGhhcmRjb2RlCj4gPiB0aGVtIGhlcmUuCj4KPiBIbSwgSSB1bmRlcnN0YW5k
-IHRoZSBwcm9ibGVtLCBidXQgbm90IHF1aXRlIHdoYXQgeW91IG1lYW4gd2l0aCAnZm9sbG93Cj4g
-dGhlIHNhbWUgcGF0dGVybicuIFRoZSBWQ08gcmVmIGNsb2NrIGlzIGFuICdleHRlcm5hbCcvZXhp
-c3RpbmcgY2xvY2ssCj4gaGVuY2UgaXQgY2FuIGJlIHNwZWNpZmljZWQgaW4gdGhlIERUIGFuZCBv
-YnRhaW5lZCB3aXRoCj4gX2Nsa19nZXQoKS4gSG93ZXZlciB0aGUgY2xvY2tzIHlvdSBtZW50aW9u
-IGFib3ZlIGFyZSAnY3JlYXRlZCcgYnkgdGhlCj4gUEhZIGRyaXZlciwgc28gd2UgY291bGQgb25s
-eSBzcGVjaWZ5IHRoZWlyIG5hbWVzIGluIHRoZSBEVCwgbm90IHN1cmUKPiBpZiB0aGF0J3Mgd2hh
-dCB5b3UgYXJlIHN1Z2dlc3RpbmcuIEkgZ3Vlc3MgJ2Nsb2NrLW91dHB1dC1uYW1lcycgY291bGQK
-PiBiZSB1c2VkLCB0aG91Z2ggaXQgaXNuJ3QgcmVhbGx5IHVzZWZ1bCB0byBkZXNjcmliZSB0aGUg
-bmFtZXMgaW4gYQo+IGNsb2NrIHRyZWUuIElmIHlvdSBzdGlsbCB0aGluayB0aGlzIHNob3VsZCBi
-ZSBkb25lIHBsZWFzZSBzaGFyZSBob3cKPiB5b3UgZW52aXNpb24gdGhlIERUIGVudHJpZXMgdG8g
-bG9vay4KCkFoLiAgUmlnaHQuICBUaGlzIGlzIG1lIGJlaW5nIGR1bWIuICBBcyB5b3Ugc2FpZCB0
-aGUKImRzaTBfcGh5X3BsbF9vdXRfYnl0ZWNsayIgYW5kICJkc2kwX3BoeV9wbGxfb3V0X2RzaWNs
-ayIgY2xvY2tzIGFyZQpiYWNrd2FyZHMgb2YgdGhlIG9uZSB5b3UncmUgZGVhbGluZyB3aXRoIGhl
-cmUuICBObyBubyBjaGFuZ2UgbmVlZGVkIGluCnlvdXIgcGF0Y2ggZm9yIHRoaXMuCgpJbiB0aGVv
-cnkgd2UgY291bGQgZG8gYSBmb2xsb3ctdXAgcGF0Y2ggd2hlcmUgdGhlIGRpc3BjYy1zZG04NDUK
-YmluZGluZ3MgdGFrZSBwaGFuZGxlIHJlZmVyZW5jZXMgdG8gdGhlIFBIWSBjbG9jayBmb3IgdGhl
-IGNsb2NrcyBpdApjb25zdW1lcy4gIFRoYXQgd291bGQgZnV0dXJlIHByb29mIHRoZSBiaW5kaW5n
-cyBidXQgSSBiZWxpZXZlIGl0CndvdWxkbid0IHJlYWxseSBiZSBwb3NzaWJsZSB0byB1c2UgdGhl
-bSByaWdodCBub3cgaW4gY29kZSBzaW5jZSB0aGUKY2xvY2sgZnJhbWV3b3JrIGRvZXNuJ3QgcmVh
-bGx5IGhhbmRsZSBjYXNlcyB3aGVyZSB0d28gZHJpdmVycyBtdXR1YWxseQpwcm9kdWNlIC8gY29u
-c3VtZSBjbG9ja3MgZnJvbSBlYWNoIG90aGVyLgoKCi1Eb3VnCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Andy,
+
+On Mon, Nov 5, 2018 at 1:09 PM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> As per upstream discussion [1], we should have an SoC-specific
+> compatible string for Qualcomm's SDHCI nodes.  Let's add it.
+>
+> [1] https://lkml.kernel.org/r/20181105203657.GA32282@bogus
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+>  arch/arm/boot/dts/qcom-apq8084.dtsi | 4 ++--
+>  arch/arm/boot/dts/qcom-msm8974.dtsi | 6 +++---
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+
+This patch and the 2nd patch in this series are ready to land.  The
+bindings change related to this has been Acked by Rob and can now be
+found in Ulf's "next" branch.  See:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git/commit/?h=next&id=c1f921e9b691d0110f46c55fdeb8762b85994fba
+
+...everything here should be fully backward compatible so it can be
+landed without concern for any dependencies.
+
+-Doug
