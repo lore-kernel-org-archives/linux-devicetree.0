@@ -1,56 +1,42 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 12/16] clocksource: Add clock driver for RDA8810PL SoC
-Date: Tue, 20 Nov 2018 11:05:41 +0000
-Message-ID: <e732ad15-b778-1c84-ad47-5770ee66688b@arm.com>
-References: <20181119170939.19153-1-manivannan.sadhasivam@linaro.org>
- <20181119170939.19153-13-manivannan.sadhasivam@linaro.org>
- <e9b208ff-327e-860a-6ef0-15bf797dc6b2@arm.com>
- <20181120050650.GC5885@Mani-XPS-13-9360> <86pnv0rwna.wl-marc.zyngier@arm.com>
- <CACRpkdan96Vj58s=g9jiAoyLBpZqPCKcjqD82mgDj5WqRP7vDQ@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [RFC 0/3] Unify CPU topology across ARM64 & RISC-V
+Date: Tue, 20 Nov 2018 11:11:46 +0000
+Message-ID: <20181120111146.GA6497@e107155-lin>
+References: <1541728209-3224-1-git-send-email-atish.patra@wdc.com>
+ <07d92dd4-f943-47ee-e168-46bfaf4ed755@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdan96Vj58s=g9jiAoyLBpZqPCKcjqD82mgDj5WqRP7vDQ@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <07d92dd4-f943-47ee-e168-46bfaf4ed755@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, zhao_steven@263.net, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+To: Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Damien.LeMoal@wdc.com, juri.lelli@arm.com, anup@brainfault.org, palmer@sifive.com, jeremy.linton@arm.com, robh+dt@kernel.org, mick@ics.forth.gr, linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/11/2018 08:56, Linus Walleij wrote:
-> On Tue, Nov 20, 2018 at 9:17 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
-> 
->> How does this change anything with the fact that the above code is
->> broken? 56 or 64 bit, you cannot read this counter with a single
->> access, or two. The canonical way of reading such a counter is
->> something like this:
->>
->>         do {
->>                 lo = readl_relaxed(LO);
->>                 hi = readl_relaxed(HI);
->>         } while (hi != read_relaxed(HI));
-> 
-> To be fair, I have seen hardware that employ a logic latch
-> such that when a read access is done to the LO register,
-> the value of the whole counter is latched, also for the HI
-> register, so when you read the HI register in the second
-> step, it is never subject to wrapping. (Conversely reading
-> the HI before the LO will always give you insane values
-> :D)
+On Thu, Nov 15, 2018 at 11:31:33AM -0700, Jeffrey Hugo wrote:
 
-I've seen such HW indeed, and I've also seen it being broken... ;-)
+[...]
 
-It this timer is built around such a (non-broken) logic, I'd really like
-to see it spelled out. It will otherwise be a real pain to debug...
+>
+> I was interested in testing these on QDF2400, an ARM64 platform, since this
+> series touches core ARM64 code and I'd hate to see a regression. However, I
+> can't figure out what baseline to use to apply these. Different patches
+> cause different conflicts of a variety of baselines I attempted.
+>
 
-> However the above code should be fine unless you know
-> for sure the hardware was constructed with a clever latch.
+Good to know that we can test DT configuration on QDF2400. I always assumed
+it's ACPI only.
 
-Let's find out!
+> What are these intended to apply to?
+>
 
-Thanks,
+The series alone may not get the package/socket ids correct on QDF2400.
+I have not yet added support for the same as I wanted to get the initial
+feedback on DT bindings. The movement of DT binding and corresponding
+code should not regress and you should be able to validate only that
+part.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+--
+Regards,
+Sudeep
