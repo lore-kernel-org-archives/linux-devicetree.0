@@ -1,40 +1,68 @@
-From: Oskari Lemmela <oskari@lemmela.net>
-Subject: [PATCH v6 2/8] ARM: dts: axp81x: add AC power supply subnode
-Date: Tue, 20 Nov 2018 19:52:05 +0200
-Message-ID: <20181120175211.3913-3-oskari@lemmela.net>
-References: <20181120175211.3913-1-oskari@lemmela.net>
+From: Romain Izard <romain.izard.pro@gmail.com>
+Subject: Re: [PATCH] ARM: dts: at91: sama5d2: use the divided clock for SMC
+Date: Tue, 20 Nov 2018 19:01:32 +0100
+Message-ID: <CAGkQfmPHRKqMvm6bNDf8S5qM7uE5T-izij=jm2nob0zrOgOM-w@mail.gmail.com>
+References: <20181120165737.4998-1-romain.izard.pro@gmail.com> <20181120171612.GF8367@piout.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181120175211.3913-1-oskari@lemmela.net>
+In-Reply-To: <20181120171612.GF8367@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Quentin Schulz <quentin.schulz@bootlin.com>, Vasily Khoruzhick <anarsoul@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Oskari Lemmela <oskari@lemmela.net>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add AC power supply subnode for AXP81X PMIC.
+Le mar. 20 nov. 2018 =C3=A0 18:16, Alexandre Belloni
+<alexandre.belloni@bootlin.com> a =C3=A9crit :
+>
+> Hello Romain,
+>
+> On 20/11/2018 17:57:37+0100, Romain Izard wrote:
+> > The SAMA5D2 is different from SAMA5D3 and SAMA5D4, as there are two
+> > different clocks for the peripherals in the SoC. The Static Memory
+> > controller is connected to the divided master clock.
+> >
+> > Unfortunately, the device tree does not correctly show this and uses th=
+e
+> > master clock directly. This clock is then used by the code for the NAND
+> > controller to calculate the timings for the controller, and we end up w=
+ith
+> > slow NAND Flash access.
+> >
+> > Fix the device tree, and the performance of Flash access is improved.
+> >
+> > Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
+> > ---
+> >  arch/arm/boot/dts/sama5d2.dtsi | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2=
+.dtsi
+> > index 61f68e5c48e9..b405992eb601 100644
+> > --- a/arch/arm/boot/dts/sama5d2.dtsi
+> > +++ b/arch/arm/boot/dts/sama5d2.dtsi
+> > @@ -308,7 +308,7 @@
+> >                                 0x1 0x0 0x60000000 0x10000000
+> >                                 0x2 0x0 0x70000000 0x10000000
+> >                                 0x3 0x0 0x80000000 0x10000000>;
+> > -                     clocks =3D <&mck>;
+> > +                     clocks =3D <&h32ck>;
+>
+> You will have to rebase on top of at91-dt. And if I'm not mistaken, this
+> line should be:
+>
+> +                       clocks =3D <&pmc PMC_TYPE_CORE PMC_MCK2>;
+>
+> >                       status =3D "disabled";
+> >
+> >                       nand_controller: nand-controller {
 
-Signed-off-by: Oskari Lemmela <oskari@lemmela.net>
-Reviewed-by: Quentin Schulz <quentin.schulz@bootlin.com>
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-Tested-by: Vasily Khoruzhick <anarsoul@gmail.com>
----
- arch/arm/boot/dts/axp81x.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+I guess you're right but this will only reach mainline in 4.21. I get slow
+flash access with 4.19 as well...
 
-diff --git a/arch/arm/boot/dts/axp81x.dtsi b/arch/arm/boot/dts/axp81x.dtsi
-index 043c717dcef1..bd83962d3627 100644
---- a/arch/arm/boot/dts/axp81x.dtsi
-+++ b/arch/arm/boot/dts/axp81x.dtsi
-@@ -48,6 +48,11 @@
- 	interrupt-controller;
- 	#interrupt-cells = <1>;
- 
-+	ac_power_supply: ac-power-supply {
-+		compatible = "x-powers,axp813-ac-power-supply";
-+		status = "disabled";
-+	};
-+
- 	axp_adc: adc {
- 		compatible = "x-powers,axp813-adc";
- 		#io-channel-cells = <1>;
--- 
-2.17.1
+After a second look, it looks like the SAMA5D4 is affected too.
+
+Best regards,
+--=20
+Romain Izard
