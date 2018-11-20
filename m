@@ -1,56 +1,86 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH] arm64: dts: qcom: pm8998: Use ADC temperature to
- temp-alarm node
-Date: Tue, 20 Nov 2018 10:21:33 -0800
-Message-ID: <20181120182133.GR22824@google.com>
-References: <20180927212253.177200-1-mka@chromium.org>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCHv2] ARM: dts: exynos: update the usbdrd_phy suspend clk
+Date: Tue, 20 Nov 2018 18:55:36 +0000
+Message-ID: <20181120185536.1159-1-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180927212253.177200-1-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2018 at 02:22:53PM -0700, Matthias Kaehlcke wrote:
-> The temperature information from the temp-alarm block itself is very
-> coarse ("temperature is above/below trip points"). Provide the driver
-> with the die temperature channel of the ADC on the PMIC for more precise
-> readings.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> - based on agross/for-next (7a002fe0179c "Merge branch
->   'defconfig-for-4.20' into all-for-4.20-redo"))
-> - depends on e13d757279bb ("iio: adc: Add QCOM SPMI PMIC5 ADC driver")
->   from IIO pull request:
->   git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git tags/iio-for-4.20a
-> - to work properly https://patchwork.kernel.org/patch/10594491/ is
->   needed
-> ---
->  arch/arm64/boot/dts/qcom/pm8998.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/pm8998.dtsi b/arch/arm64/boot/dts/qcom/pm8998.dtsi
-> index 048f19fa0150..fab5a826fb01 100644
-> --- a/arch/arm64/boot/dts/qcom/pm8998.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/pm8998.dtsi
-> @@ -58,6 +58,8 @@
->  			compatible = "qcom,spmi-temp-alarm";
->  			reg = <0x2400>;
->  			interrupts = <0x0 0x24 0x0 IRQ_TYPE_EDGE_RISING>;
-> +			io-channels = <&pm8998_adc ADC5_DIE_TEMP>;
-> +			io-channel-names = "thermal";
->  			#thermal-sensor-cells = <0>;
->  		};
->  
+As per FSYS usbdrd_phy clk setting CLK_SCLK_USBD300/1 binds
+to SUSPEND_CLK so correct update the suspend clk.
 
-I think this should be ready to land in for-next now that "arm64: dts:
-qcom: pm8998: Add die temperature channel node to the ADC"
-(a789fd0bab57) has been added.
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+[0] https://lkml.org/lkml/2017/10/6/12
+changes from previous patch
+fix the order of clk and update the commit message
 
-Cheers
+FSYS block show in user manual
 
-Matthias
+CLKMUX_USBDRD300/1----CLKDIV_USBDRD300/1----SCLK_USBDRD300/1-----SUSPEND_CLK
+                   |
+                   |--CLKDIV_USBPHY300/1----SCLK_USBPHY300/1-----USBDRD30_PHY_0/1
+---
+ arch/arm/boot/dts/exynos5410.dtsi | 4 ++--
+ arch/arm/boot/dts/exynos5420.dtsi | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
+index 57fc9c949e54..a92c765a7a84 100644
+--- a/arch/arm/boot/dts/exynos5410.dtsi
++++ b/arch/arm/boot/dts/exynos5410.dtsi
+@@ -395,7 +395,7 @@
+ };
+ 
+ &usbdrd_phy0 {
+-	clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBPHY300>;
++	clocks = <&clock CLK_SCLK_USBD300>, <&clock CLK_SCLK_USBPHY300>;
+ 	clock-names = "phy", "ref";
+ 	samsung,pmu-syscon = <&pmu_system_controller>;
+ };
+@@ -410,7 +410,7 @@
+ };
+ 
+ &usbdrd_phy1 {
+-	clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBPHY301>;
++	clocks = <&clock CLK_SCLK_USBD301>, <&clock CLK_SCLK_USBPHY301>;
+ 	clock-names = "phy", "ref";
+ 	samsung,pmu-syscon = <&pmu_system_controller>;
+ };
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index aaff15880761..b84b44556efc 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -1509,7 +1509,7 @@
+ };
+ 
+ &usbdrd_phy0 {
+-	clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBPHY300>;
++	clocks = <&clock CLK_SCLK_USBD300>, <&clock CLK_SCLK_USBPHY300>;
+ 	clock-names = "phy", "ref";
+ 	samsung,pmu-syscon = <&pmu_system_controller>;
+ };
+@@ -1524,7 +1524,7 @@
+ };
+ 
+ &usbdrd_phy1 {
+-	clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBPHY301>;
++	clocks = <&clock CLK_SCLK_USBD301>, <&clock CLK_SCLK_USBPHY301>;
+ 	clock-names = "phy", "ref";
+ 	samsung,pmu-syscon = <&pmu_system_controller>;
+ };
+-- 
+2.17.1
