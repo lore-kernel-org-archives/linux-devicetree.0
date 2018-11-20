@@ -1,177 +1,175 @@
-From: Cheng-yi Chiang <cychiang@chromium.org>
-Subject: Re: [PATCH 2/2] ASoC: max98927: Add reset-gpio support
-Date: Tue, 20 Nov 2018 09:19:29 +0800
-Message-ID: <CAFv8Nw+swSyCjPQXv4g80bZ6H_r--Q-PT=DA1NT4P=56_755Fg@mail.gmail.com>
-References: <20180912121955.33048-1-cychiang@chromium.org> <20180912121955.33048-2-cychiang@chromium.org>
- <20180920161905.GM2471@sirena.org.uk> <CAFv8NwLpS9r=jD2wyBsVgJJofkS1xJNo6YssgYXuVHDmGDLogg@mail.gmail.com>
- <1539338716.6204.2.camel@pengutronix.de> <20181012134620.fhhkyvvdgoq4sxqi@flea>
- <1539795757.4729.15.camel@pengutronix.de>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V3] ARM: dts: imx7d-sdb: add rev-a board support
+Date: Tue, 20 Nov 2018 01:35:34 +0000
+Message-ID: <1542677411-27825-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539795757.4729.15.camel@pengutronix.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: p.zabel@pengutronix.de
-Cc: maxime.ripard@bootlin.com, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ryan Lee <ryans.lee@maximintegrated.com>, alsa-devel@alsa-project.org, Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+Current imx7d-sdb.dts has some incorrect settings about
+Rev-A and Rev-B boards, some of the settings are based on
+Rev-A board but some are based on Rev-B board, clean up it
+by adding i.MX7D SDB Rev-A board support, make default
+imx7d-sdb.dts for Rev-B board as usual, and introduce
+imx7d-sdb-reva.dts for Rev-A board. Below are the affected
+differences of Rev-A and Rev-B board:
 
-On Thu, Oct 18, 2018 at 1:02 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
->
-> Hi Maxime,
->
-> On Fri, 2018-10-12 at 15:46 +0200, Maxime Ripard wrote:
-> > On Fri, Oct 12, 2018 at 12:05:16PM +0200, Philipp Zabel wrote:
-> [...]
-> > > What I would like better would be to let the consumers keep their reset-
-> > > gpios bindings, but add an optional hold time override in the DT:
-> > >
-> > >     c1 {
-> > >             reset-gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
-> > >             reset-delays-us = <10000>;
-> > >     };
-> > >
-> > >     c2 {
-> > >             reset-gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
-> > >             reset-delays-us = <10000>;
-> > >     };
-> > >
-> > > The reset framework could create a reset_control backed by a gpio
-> > > instead of a rcdev. I have an unfinished patch for this, but without the
-> > > sharing requirement adding the reset framework abstraction between gpiod
-> > > and drivers never seemed really worth it.
-> >
-> > I don't remember the exact details of our past discussion, but I
-> > (still) don't really think that this would work well.
->
-> It has been a while :) Thanks for jumping back in.
->
-> > I see two main shortcomings with that approach:
-> >
-> >   - I guess that the main reason you want to do that would be to have
-> >     easy DT backward compatibility.
->
-> Yes, that is true. The other reason is that I'd like devices to have a
-> single binding, regardless of whether somebody decided to put them onto
-> a board with shared reset lines.
->
-> I'd find it hard to advocate for changing the thankfully common case
-> of device-exclusive reset gpios from:
->
->         some-device {
->                 reset-gpios = <&gpiox y>;
->         };
->
-> to:
->
->         rstc: reset-controller {
->                 compatible = "gpio-reset";
->                 reset-gpios <&gpiox y>;
->         };
->
->         some-device {
->                 resets = <&rstc 0>;
->         };
->
-> even for new bindings.
->
-> If the reset framework only supports the latter, and not the former,
-> drivers for devices which already have reset-gpios would have to handle
-> both reset_control and gpiod functionality, which I think should not be
-> necessary.
->
-> Note that this is not really an argument against a "gpio-reset"
-> controller driver, but an argument for reset-gpios support integrated
-> into the reset framework.
-> My argument against a "gpio-reset" device node in the DT is only that it
-> is basically a virtual device that would only be used to work around
-> missing reset-gpios support in the reset framework. Physically, this
-> "device" consists of no more than a few PCB traces.
->
-> >     Yet, the addition of the
-> >     reset-delay-us would break that compatibility, since drivers that
-> >     would have been converted now need to have it somehow, but older
-> >     DTs wouldn't have it
->
-> That is why such a property would have to be optional, and the drivers
-> would have to keep providing the reset delay themselves, as they
-> currently do when handling GPIOs directly.
-> It would only serve to override the driver default in case of additional
-> delay requirements due to board specifics (such as delay elements, or
-> shared resets).
->
-> >   - There's so many variations of the reset-gpios property name that
-> >     you wouldn't be able to cover all the cases anyhow, at least
-> >     without breaking the compatibility (again).
->
-> This is true, and I do not have a solution for this. Especially for
-> those cases that don't use gpiod yet.
->
->         of_get_named_gpio(node, "reset-gpio")
->
-> is still quite common, but I'd really like on gpiolib for polarity
-> support.
->
-> > But I also see your point, and you're right that converting everyone
-> > to a gpio-reset node will not happen (even though I'd still really
-> > like to have that binding).
->
-> See above. I'd be a lot less reluctant to support this binding if
-> somebody could demonstrate a real gpio controlled reset controller
-> device of some kind. And even then I would not want to have to use
-> this device just to connect a single GPIO with a single reset input.
->
-> > What about having a function that would be called by the consumer to
-> > instantiate that reset controller from a GPIO for us, instead of
-> > trying to do it automatically? That function could take the property
-> > name that holds the GPIO, which would cover the second drawback, and
-> > the delay, which would cover the first.
->
-> I like this idea.
->
-> I'd like to avoid having to fall back from gpiod to of_get_named_gpio if
-> possible, so maybe we'd have to extend gpiolib-of.c with an
-> of_find_reset_gpio function, as is done for SPI and regulators already.
->
-> We probably would have to support delay ranges. I see a lot of
-> usleep_range calls between reset GPIO toggles in the drivers.
->
+                Rev-A           Rev-B
+USB_OTG2_PWR:   UART3_CTS_B     GPIO1_IO07
+ENET_EN_B:      None            GPIO1_IO04
+TP_INT_B:       EPDC_DATA13     EPDC_BDR1
 
-This looks great.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+changes since V2:
+	use USB OTG2 VBUS fix regulator to reference GPIO pinctrl entry instead of=
+ hog group.
+ arch/arm/boot/dts/Makefile           |  1 +
+ arch/arm/boot/dts/imx7d-sdb-reva.dts | 40 ++++++++++++++++++++++++++++++++=
+++++
+ arch/arm/boot/dts/imx7d-sdb.dts      | 28 +++++++++++++++++++++++--
+ 3 files changed, 67 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx7d-sdb-reva.dts
 
-I am not sure what is the plan proceeding from here.
-Are you going to implement this feature with the unfinished patch you
-mentioned to create reset_control backed by a GPIO?
-I am willing to help.
-If you have patch I can help testing it.
-It will be easier to test the shared reset line on my side since the
-board I am working now has this use case.
-
-If you don't have time for this, I can work on it based on your WIP patch.
-In that case could you please post the patch ?
-I just want to make sure I am on the right direction solving this
-without making duplicate efforts..
-
-> > And in order to cover shared GPIO reset lines, we could just look at
-> > the one already created by other drivers, and if one has been created,
-> > we just give the reference to that one instead of creating it.
-> >
-> > Does that make sense?
->
-> I'm not quite sure how to match an already requested reset control from
-> the list given of_node and gpio property name at the moment - this might
-> involve exporting gpiod_find from gpiolib, but API wise I think this is
-> a sane proposal.
->
-> I would not want to add reset controller devices for each of these GPIO
-> reset controls, but rather store the gpio_desc reference in the
-> reset_control instead of the rcdev reference.
-
-This plan to support shared reset line makes sense.
-
-Thanks a lot!
-
->
-> regards
-> Philipp
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index ef9ffa4..6d133b9 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -572,6 +572,7 @@ dtb-$(CONFIG_SOC_IMX7D) +=3D \
+ 	imx7d-pico-pi.dtb \
+ 	imx7d-sbc-imx7.dtb \
+ 	imx7d-sdb.dtb \
++	imx7d-sdb-reva.dtb \
+ 	imx7d-sdb-sht11.dtb \
+ 	imx7s-colibri-eval-v3.dtb \
+ 	imx7s-warp.dtb
+diff --git a/arch/arm/boot/dts/imx7d-sdb-reva.dts b/arch/arm/boot/dts/imx7d=
+-sdb-reva.dts
+new file mode 100644
+index 0000000..7ce9d8c
+--- /dev/null
++++ b/arch/arm/boot/dts/imx7d-sdb-reva.dts
+@@ -0,0 +1,40 @@
++// SPDX-License-Identifier: GPL-2.0+ OR MIT
++//
++// Copyright (C) 2015 Freescale Semiconductor, Inc.
++
++/dts-v1/;
++
++#include "imx7d-sdb.dts"
++
++/ {
++	reg_usb_otg2_vbus: regulator-usb-otg2-vbus {
++		pinctrl-0 =3D <&pinctrl_usb_otg2_vbus_reg_reva>;
++		gpio =3D <&gpio4 7 GPIO_ACTIVE_HIGH>;
++	};
++};
++
++&fec2 {
++	/delete-property/phy-supply;
++};
++
++&iomuxc {
++	imx7d-sdb {
++		pinctrl_tsc2046_pendown: tsc2046_pendown {
++			fsl,pins =3D <
++				MX7D_PAD_EPDC_DATA13__GPIO2_IO13	0x59
++			>;
++		};
++
++		pinctrl_hog: hoggrp {
++			fsl,pins =3D <
++				MX7D_PAD_ECSPI2_SS0__GPIO4_IO23		0x34  /* bt reg on */
++			>;
++		};
++
++		pinctrl_usb_otg2_vbus_reg_reva: usbotg2vbusregrevagrp {
++			fsl,pins =3D <
++				MX7D_PAD_UART3_CTS_B__GPIO4_IO7		0x14
++			>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.=
+dts
+index b1b613b..202922e 100644
+--- a/arch/arm/boot/dts/imx7d-sdb.dts
++++ b/arch/arm/boot/dts/imx7d-sdb.dts
+@@ -72,9 +72,11 @@
+ 	reg_usb_otg2_vbus: regulator-usb-otg2-vbus {
+ 		compatible =3D "regulator-fixed";
+ 		regulator-name =3D "usb_otg2_vbus";
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_usb_otg2_vbus_reg>;
+ 		regulator-min-microvolt =3D <5000000>;
+ 		regulator-max-microvolt =3D <5000000>;
+-		gpio =3D <&gpio4 7 GPIO_ACTIVE_HIGH>;
++		gpio =3D <&gpio1 7 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
+ 	};
+=20
+@@ -115,6 +117,16 @@
+ 		gpio =3D <&gpio2 14 GPIO_ACTIVE_LOW>;
+ 	};
+=20
++	reg_fec2_3v3: regulator-fec2-3v3 {
++		compatible =3D "regulator-fixed";
++		regulator-name =3D "fec2-3v3";
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_enet2_reg>;
++		regulator-min-microvolt =3D <3300000>;
++		regulator-max-microvolt =3D <3300000>;
++		gpio =3D <&gpio1 4 GPIO_ACTIVE_LOW>;
++	};
++
+ 	backlight: backlight {
+ 		compatible =3D "pwm-backlight";
+ 		pwms =3D <&pwm1 0 5000000 0>;
+@@ -211,6 +223,7 @@
+ 	assigned-clock-rates =3D <0>, <100000000>;
+ 	phy-mode =3D "rgmii";
+ 	phy-handle =3D <&ethphy1>;
++	phy-supply =3D <&reg_fec2_3v3>;
+ 	fsl,magic-packet;
+ 	status =3D "okay";
+ };
+@@ -492,6 +505,12 @@
+ 			>;
+ 		};
+=20
++		pinctrl_enet2_reg: enet2reggrp {
++			fsl,pins =3D <
++				MX7D_PAD_LPSR_GPIO1_IO04__GPIO1_IO4	0x14
++			>;
++		};
++
+ 		pinctrl_flexcan2: flexcan2grp {
+ 			fsl,pins =3D <
+ 				MX7D_PAD_GPIO1_IO14__FLEXCAN2_RX	0x59
+@@ -514,7 +533,6 @@
+=20
+ 		pinctrl_hog: hoggrp {
+ 			fsl,pins =3D <
+-				MX7D_PAD_UART3_CTS_B__GPIO4_IO7		0x14
+ 				MX7D_PAD_ECSPI2_SS0__GPIO4_IO23		0x34  /* bt reg on */
+ 			>;
+ 		};
+@@ -736,4 +754,10 @@
+ 			MX7D_PAD_LPSR_GPIO1_IO01__PWM1_OUT		0x30
+ 		>;
+ 	};
++
++	pinctrl_usb_otg2_vbus_reg: usbotg2vbusreggrp {
++		fsl,pins =3D <
++			MX7D_PAD_LPSR_GPIO1_IO07__GPIO1_IO7	  0x14
++		>;
++	};
+ };
+--=20
+2.7.4
