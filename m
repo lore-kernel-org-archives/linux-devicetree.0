@@ -1,38 +1,107 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCHv4 0/3] dts: Add the property of IB and OB
-Date: Tue, 20 Nov 2018 17:30:34 +0000
-Message-ID: <20181120173021.GA29331@e107981-ln.cambridge.arm.com>
-References: <20171110034847.17891-1-xiaowei.bao@nxp.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: Re: [PATCH v4 5/7] iommu: Add virtio-iommu driver
+Date: Tue, 20 Nov 2018 17:30:45 +0000
+Message-ID: <6d003fde-9574-0ff9-0bf8-7901d1a4aa5c@arm.com>
+References: <20181115165234.43990-1-jean-philippe.brucker@arm.com>
+ <20181115165234.43990-6-jean-philippe.brucker@arm.com>
+ <64abfb83-c555-c518-1030-cb73846517fc@redhat.com>
+ <41460260-417b-762f-f007-ccfd5ac1e8a5@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171110034847.17891-1-xiaowei.bao@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bao Xiaowei <xiaowei.bao@nxp.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, bhelgaas@google.com, shawnguo@kernel.org, madalin.bucur@nxp.com, sumit.garg@nxp.com, yangbo.lu@nxp.com, hongtao.jia@nxp.com, Yuantian.Tang@nxp.com, leoyang.li@nxp.com, kishon@ti.com, jingoohan1@gmail.com, pbrobinson@gmail.com, songxiaowei@hisilicon.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Zhiqiang.Hou@nxp.com, mingkai.hu@nxp.com, Minghuan.Lian@nxp.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <virtio-dev-return-4979-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
+Sender: <virtio-dev@lists.oasis-open.org>
+List-Post: <mailto:virtio-dev@lists.oasis-open.org>
+List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
+List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
+List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
+In-Reply-To: <41460260-417b-762f-f007-ccfd5ac1e8a5@arm.com>
+Content-Language: en-US
+To: Auger Eric <eric.auger@redhat.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, "virtio-dev@lists.oasis-open.org" <virtio-dev@lists.oasis-open.org>, "joro@8bytes.org" <joro@8bytes.org>, "mst@redhat.com" <mst@redhat.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "tnowicki@caviumnetworks.com" <tnowicki@caviumnetworks.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Robin Murphy <Robin.Murphy@arm.com>, Will Deacon <Will.Deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 10, 2017 at 11:48:44AM +0800, Bao Xiaowei wrote:
-> Depend on http://patchwork.ozlabs.org/patch/815382/
+On 16/11/2018 18:46, Jean-Philippe Brucker wrote:
+>>> +/*
+>>> + * __viommu_sync_req - Complete all in-flight requests
+>>> + *
+>>> + * Wait for all added requests to complete. When this function returns, all
+>>> + * requests that were in-flight at the time of the call have completed.
+>>> + */
+>>> +static int __viommu_sync_req(struct viommu_dev *viommu)
+>>> +{
+>>> +	int ret = 0;
+>>> +	unsigned int len;
+>>> +	size_t write_len;
+>>> +	struct viommu_request *req;
+>>> +	struct virtqueue *vq = viommu->vqs[VIOMMU_REQUEST_VQ];
+>>> +
+>>> +	assert_spin_locked(&viommu->request_lock);
+>>> +
+>>> +	virtqueue_kick(vq);
+>>> +
+>>> +	while (!list_empty(&viommu->requests)) {
+>>> +		len = 0;
+>>> +		req = virtqueue_get_buf(vq, &len);
+>>> +		if (!req)
+>>> +			continue;
+>>> +
+>>> +		if (!len)
+>>> +			viommu_set_req_status(req->buf, req->len,
+>>> +					      VIRTIO_IOMMU_S_IOERR);
+>>> +
+>>> +		write_len = req->len - req->write_offset;
+>>> +		if (req->writeback && len >= write_len)
+>> I don't get "len >= write_len". Is it valid for the device to write more
+>> than write_len? If it writes less than write_len, the status is not set,
+>> is it?
+
+Actually, len could well be three bytes smaller than write_len. The spec
+doesn't require the device to write the three padding bytes in
+virtio_iommu_req_tail, after the status byte.
+
+Here the driver just assumes that the device wrote the reserved field.
+The QEMU device seems to write uninitialized data in there...
+
+Any objection to changing the spec to require the device to initialize
+those bytes to zero? I think it makes things nicer overall and shouldn't
+have any performance impact.
+
+[...]
+>>> +static struct iommu_domain *viommu_domain_alloc(unsigned type)
+>>> +{
+>>> +	struct viommu_domain *vdomain;
+>>> +
+>>> +	if (type != IOMMU_DOMAIN_UNMANAGED && type != IOMMU_DOMAIN_DMA)
+>> smmu drivers also support the IDENTITY type. Don't we want to support it
+>> as well?
 > 
-> Bao Xiaowei (3):
->   ARMv8: dts: ls1046a: add the property of IB and OB
->   ARMv8: layerscape: add the pcie ep function support
->   ARMv8: pcie: make the DWC EP driver support for layerscape
+> Eventually yes. The IDENTITY domain is useful when an IOMMU has been
+> forced upon you and gets in the way of performance, in which case you
+> get rid of it with CONFIG_IOMMU_DEFAULT_PASSTHROUGH=y or
+> iommu.passthrough=y. For virtio-iommu though, you could simply not
+> instantiate the device.
 > 
->  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |   6 ++
->  drivers/pci/dwc/Kconfig                        |   1 +
->  drivers/pci/dwc/pci-layerscape.c               | 121 +++++++++++++++++++++++--
->  3 files changed, 121 insertions(+), 7 deletions(-)
+> I don't think it's difficult to add: if the device supports
+> VIRTIO_IOMMU_F_BYPASS, then we simply don't send an ATTACH request.
+> Otherwise after ATTACH we send a MAP for the whole input range. If the
+> change isn't bigger than this, I'll add it to v5.
 
-Can I drop this series from the linux-pci patch queue ? I reckon
-it is superseded by:
+Not as straightforward as I hoped, when the device doesn't support
+VIRTIO_IOMMU_F_BYPASS:
 
-https://patchwork.ozlabs.org/patch/992928/
+* We can't simply create an ID map for the whole input range, we need to
+carve out the resv_mem regions.
 
-but I wanted to make sure that's the case, I really can't follow
-the version numbering so I am asking.
+* For a VFIO device, the host has no way of forwarding the identity
+mapping. For example the guest will attempt to map [0; 0xffffffffffff]
+-> [0; 0xffffffffffff], but VFIO only allows to map RAM and cannot take
+such request. One solution is to only create ID mapping for RAM, and
+register a notifier for memory hotplug, like intel-iommu does for IOMMUs
+that don't support HW pass-through.
+
+Since it's not completely trivial and - I think - not urgent, I'll leave
+this for later.
 
 Thanks,
-Lorenzo
+Jean
