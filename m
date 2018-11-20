@@ -1,42 +1,60 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 04/16] arm: dts: Add devicetree for RDA8810PL SoC
-Date: Wed, 21 Nov 2018 01:02:45 +0530
-Message-ID: <20181120193245.GC16122@Mani-XPS-13-9360>
-References: <20181119170939.19153-1-manivannan.sadhasivam@linaro.org>
- <20181119170939.19153-5-manivannan.sadhasivam@linaro.org>
- <CAK8P3a1ZOTrUFKvBCdMX-1Fj5Pnk__+GJdee7pOieb2oiWkpuQ@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] arm64: dts: qcom: pm8998: Use ADC temperature to
+ temp-alarm node
+Date: Tue, 20 Nov 2018 11:36:09 -0800
+Message-ID: <CAD=FV=XgnzYBgFb7PJCn4Exr2Y9zkfWJHSAVqskgPAtQtCfgLg@mail.gmail.com>
+References: <20180927212253.177200-1-mka@chromium.org> <20181120182133.GR22824@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1ZOTrUFKvBCdMX-1Fj5Pnk__+GJdee7pOieb2oiWkpuQ@mail.gmail.com>
+In-Reply-To: <20181120182133.GR22824@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, zhao_steven@263.net, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi,
 
-On Mon, Nov 19, 2018 at 08:37:14PM +0100, Arnd Bergmann wrote:
-> On Mon, Nov 19, 2018 at 6:11 PM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
+On Tue, Nov 20, 2018 at 10:21 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> On Thu, Sep 27, 2018 at 02:22:53PM -0700, Matthias Kaehlcke wrote:
+> > The temperature information from the temp-alarm block itself is very
+> > coarse ("temperature is above/below trip points"). Provide the driver
+> > with the die temperature channel of the ADC on the PMIC for more precise
+> > readings.
 > >
-> > Add initial device tree for RDA8810PL SoC from RDA Microelectronics.
-> 
-> > +       aliases {
-> > +               serial0 = &uart0;
-> > +               serial1 = &uart1;
-> > +               serial2 = &uart2;
-> > +       };
-> 
-> Better move the aliases into the board file, there might be boards
-> that only expose one or two of them on physical connectors,
-> or that count them in a different order from the SoC.
-> 
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> > - based on agross/for-next (7a002fe0179c "Merge branch
+> >   'defconfig-for-4.20' into all-for-4.20-redo"))
+> > - depends on e13d757279bb ("iio: adc: Add QCOM SPMI PMIC5 ADC driver")
+> >   from IIO pull request:
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git tags/iio-for-4.20a
+> > - to work properly https://patchwork.kernel.org/patch/10594491/ is
+> >   needed
+> > ---
+> >  arch/arm64/boot/dts/qcom/pm8998.dtsi | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/pm8998.dtsi b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> > index 048f19fa0150..fab5a826fb01 100644
+> > --- a/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> > @@ -58,6 +58,8 @@
+> >                       compatible = "qcom,spmi-temp-alarm";
+> >                       reg = <0x2400>;
+> >                       interrupts = <0x0 0x24 0x0 IRQ_TYPE_EDGE_RISING>;
+> > +                     io-channels = <&pm8998_adc ADC5_DIE_TEMP>;
+> > +                     io-channel-names = "thermal";
+> >                       #thermal-sensor-cells = <0>;
+> >               };
+> >
+>
+> I think this should be ready to land in for-next now that "arm64: dts:
+> qcom: pm8998: Add die temperature channel node to the ADC"
+> (a789fd0bab57) has been added.
 
-Sure, will move the aliases node to board DTS files.
+Agreed and this matches my understanding of how things are supposed to
+work.  FWIW:
 
-Thanks,
-Mani
-
->       Arnd
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
