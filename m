@@ -1,120 +1,87 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: RE: [PATCH v3 1/2] dt-bindings/interrupt-controller: rzn1: Add RZ/N1
- gpio irq mux binding
-Date: Tue, 20 Nov 2018 10:30:58 +0000
-Message-ID: <TY1PR01MB1769AD7F2D11DB06E1B0CC0DF5D90@TY1PR01MB1769.jpnprd01.prod.outlook.com>
-References: <20181113130910.22130-1-phil.edworthy@renesas.com>
- <20181113130910.22130-2-phil.edworthy@renesas.com>
- <20181117143253.GA27381@bogus>
- <TY1PR01MB176917D755CB102AB5FD6BEAF5D80@TY1PR01MB1769.jpnprd01.prod.outlook.com>
- <CAL_JsqJca7mXS_9msTbCovnXpFxC0VY81COk98x-c1Ug5a=jQQ@mail.gmail.com>
+From: "M.h. Lian" <minghuan.lian@nxp.com>
+Subject: RE: [PATCHv2 03/25] PCI: mobiveil: correct the returned error number
+Date: Tue, 20 Nov 2018 10:31:53 +0000
+Message-ID: <HE1PR0401MB223513976E17780C1A19EFEDE8D90@HE1PR0401MB2235.eurprd04.prod.outlook.com>
+References: <20181120092615.11680-1-Zhiqiang.Hou@nxp.com>
+ <20181120092615.11680-4-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJca7mXS_9msTbCovnXpFxC0VY81COk98x-c1Ug5a=jQQ@mail.gmail.com>
+In-Reply-To: <20181120092615.11680-4-Zhiqiang.Hou@nxp.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>
+Cc: Mingkai Hu <mingkai.hu@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpPbiAxOSBOb3ZlbWJlciAyMDE4IDIxOjUxLCBSb2IgSGVycmluZyB3cm90ZToN
-Cj4gT24gTW9uLCBOb3YgMTksIDIwMTggYXQgMzozOSBBTSBQaGlsIEVkd29ydGh5DQo+IDxwaGls
-LmVkd29ydGh5QHJlbmVzYXMuY29tPiB3cm90ZToNCj4gPg0KPiA+IEhpIFJvYiwNCj4gPg0KPiA+
-IE9uIDE3IE5vdmVtYmVyIDIwMTggMTQ6MzMgUm9iIEhlcnJpbmcgd3JvdGU6DQo+ID4gPiBPbiBU
-dWUsIE5vdiAxMywgMjAxOCBhdCAwMTowOTowOVBNICswMDAwLCBQaGlsIEVkd29ydGh5IHdyb3Rl
-Og0KPiA+ID4gPiBBZGQgZGV2aWNlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIFJlbmVz
-YXMgUlovTjEgR1BJTw0KPiA+ID4gPiBpbnRlcnJ1cHQgbXVsdGlwbGV4ZXIuDQo+ID4gPiA+DQo+
-ID4gPiA+IFNpZ25lZC1vZmYtYnk6IFBoaWwgRWR3b3J0aHkgPHBoaWwuZWR3b3J0aHlAcmVuZXNh
-cy5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiB2MzoNCj4gPiA+ID4gIC0gVXNlICdpbnRlcnJ1
-cHQtbWFwJyBEVCBwcm9wZXJ0eSBjb3JyZWN0bHkuDQo+ID4gPiA+IHYyOg0KPiA+ID4gPiAgLSBV
-c2UgaW50ZXJydXB0LW1hcCB0byBhbGxvdyB0aGUgR1BJTyBjb250cm9sbGVyIGluZm8gdG8gYmUg
-c3BlY2lmaWVkDQo+ID4gPiA+ICAgIGFzIHBhcnQgb2YgdGhlIGlycS4NCj4gPiA+ID4gIC0gRG9u
-J3Qgc2hvdyBzdGF0dXMgaW4gYmluZGluZyBleGFtcGxlcy4NCj4gPiA+ID4gIC0gRG9uJ3Qgc2hv
-dyB0aGUgc29jL2JvYXJkIHNwbGl0IGluIGJpbmRpbmcgZG9jLg0KPiA+ID4gPiAtLS0NCj4gPiA+
-ID4gIC4uLi9pbnRlcnJ1cHQtY29udHJvbGxlci9yZW5lc2FzLHJ6bjEtbXV4LnR4dCB8IDczDQo+
-ID4gPiA+ICsrKysrKysrKysrKysrKysrKysNCj4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA3MyBp
-bnNlcnRpb25zKCspDQo+ID4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiA+ID4gRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL3JlbmVzYXMs
-cnpuDQo+ID4gPiA+IDEtbXUNCj4gPiA+ID4geC50eHQNCj4gPiA+DQo+ID4gPiBBIGZldyBuaXRz
-LCBvdGhlcndpc2U6DQo+ID4gPg0KPiA+ID4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2Jo
-QGtlcm5lbC5vcmc+DQo+ID4gVGhhbmtzIGZvciB0aGUgcmV2aWV3IQ0KPiA+DQo+ID4gPiA+DQo+
-ID4gPiA+IGRpZmYgLS1naXQNCj4gPiA+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvcmVuZXNhcyxyDQo+ID4gPiA+IHpuMS0NCj4gPiA+
-ID4gbXV4LnR4dA0KPiA+ID4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9p
-bnRlcnJ1cHQtY29udHJvbGxlci9yZW5lc2FzLHINCj4gPiA+ID4gem4xLQ0KPiA+ID4gPiBtdXgu
-dHh0DQo+ID4gPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gPiA+IGluZGV4IDAwMDAwMDAw
-MDAwMC4uNjUxNTg4MGUyNWNjDQo+ID4gPiA+IC0tLSAvZGV2L251bGwNCj4gPiA+ID4gKysrIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL3Jl
-bmVzDQo+ID4gPiA+ICsrKyBhcyxyDQo+ID4gPiA+ICsrKyB6bjEtbXV4LnR4dA0KPiA+ID4gPiBA
-QCAtMCwwICsxLDczIEBADQo+ID4gPiA+ICsqIFJlbmVzYXMgUlovTjEgR1BJTyBJbnRlcnJ1cHQg
-TXVsdGlwbGV4ZXINCj4gPiA+ID4gKw0KPiA+ID4gPiArT24gUmVuZXNhcyBSWi9OMSBkZXZpY2Vz
-LCB0aGVyZSBhcmUgc2V2ZXJhbCBHUElPIENvbnRyb2xsZXJzIGVhY2gNCj4gPiA+ID4gK3dpdGgg
-YSBudW1iZXIgb2YgaW50ZXJydXB0IG91dHB1dHMuIEFsbCBvZiB0aGUgaW50ZXJydXB0cyBmcm9t
-DQo+ID4gPiA+ICt0aGUgR1BJTyBDb250cm9sbGVycyBhcmUgcGFzc2VkIHRvIHRoZSBHUElPIElu
-dGVycnVwdA0KPiA+ID4gPiArTXVsdGlwbGV4ZXIsIHdoaWNoIHNlbGVjdHMgYSBzdWItc2V0IG9m
-IHRoZSBpbnRlcnJ1cHRzIHRvIHBhc3MNCj4gPiA+ID4gK29udG8gdGhlIHN5c3RlbSBpbnRlcnJ1
-cHQNCj4gPiA+IGNvbnRyb2xsZXIuDQo+ID4gPiA+ICsNCj4gPiA+ID4gK0Egc2luZ2xlIG5vZGUg
-aW4gdGhlIGRldmljZSB0cmVlIGlzIHVzZWQgdG8gZGVzY3JpYmUgdGhlIEdQSU8gSVJRDQo+IE11
-eGVyLg0KPiA+ID4gPiArDQo+ID4gPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ID4gPiAr
-LSBjb21wYXRpYmxlOiBTb0Mtc3BlY2lmaWMgY29tcGF0aWJsZSBzdHJpbmcNCj4gPiA+ID4gKyJy
-ZW5lc2FzLDxzb2Mtc3BlY2lmaWM+LQ0KPiA+ID4gZ3Bpb2lycW11eCINCj4gPiA+ID4gKyAgZm9s
-bG93ZWQgYnkgInJlbmVzYXMscnpuMS1ncGlvaXJxbXV4IiBhcyBmYWxsYmFjay4gVGhlDQo+ID4g
-PiA+ICtTb0Mtc3BlY2lmaWMgY29tcGF0aWJsZQ0KPiA+ID4gPiArICBzdHJpbmdzIG11c3QgYmUg
-b25lIG9mOg0KPiA+ID4gPiArICAgInJlbmVzYXMscjlhMDZnMDMyLWdwaW9pcnFtdXgiIGZvciBS
-Wi9OMUQNCj4gPiA+ID4gKyAgICJyZW5lc2FzLHI5YTA2ZzAzMy1ncGlvaXJxbXV4IiBmb3IgUlov
-TjFTDQo+ID4gPiA+ICstIHJlZzogQmFzZSBhZGRyZXNzIGFuZCBzaXplIG9mIEdQSU8gSVJRIE11
-eGVyIHJlZ2lzdGVycy4NCj4gPiA+ID4gKy0gaW50ZXJydXB0czogTGlzdCBvZiBvdXRwdXQgaW50
-ZXJydXB0cy4NCj4gPiA+ID4gKy0gI2ludGVycnVwdC1jZWxsczogTnVtZGVyIG9mIGNlbGxzIGlu
-IHRoZSBpbnB1dCBpbnRlcnJ1cHQNCj4gPiA+ID4gK3NwZWNpZmllciwgbXVzdCBiZQ0KPiA+ID4g
-MS4NCj4gPiA+ID4gKy0gI2FkZHJlc3MtY2VsbHM6IE11c3QgYmUgMC4NCj4gPiA+ID4gKy0gaW50
-ZXJydXB0LW1hcC1tYXNrOiBtdXN0IGJlIDEyNy4NCj4gPiA+ID4gKy0gaW50ZXJydXB0LW1hcDog
-U3RhbmRhcmQgcHJvcGVydHkgZGV0YWlsaW5nIHRoZSBtYXBzIGJldHdlZW4NCj4gPiA+ID4gK2lu
-cHV0IGlycXMgYW5kIHRoZQ0KPiA+ID4gPiArICBjb3JyZXNwb25kaW5nIG91dHB1dCBpcnEuIFRo
-aXMgY29uc2lzdCBvZiBhIGxpc3Qgb2Y6DQo+ID4gPiA+ICsgICA8aW5wdXQtaXJxLXNwZWMgcGhh
-bmRsZS10by1pbnRlcnJ1cHQtY29udHJvbGxlcg0KPiA+ID4gPiArb3V0cHV0LWlycS1zcGVjPg0K
-PiA+ID4gPiArICBUaGUgaW5wdXQtaXJxLXNwZWMgaXMgZnJvbSAwIHRvIDk1LCBjb3JyZXNwb25k
-aW5nIHRvIHRoZQ0KPiA+ID4gPiArb3V0cHV0cyBvZiB0aGUgR1BJTw0KPiA+ID4gPiArICBDb250
-cm9sbGVycy4NCj4gPiA+ID4gKw0KPiA+ID4gPiArRXhhbXBsZToNCj4gPiA+ID4gKw0KPiA+ID4g
-PiArICAgVGhlIGZvbGxvd2luZyBpcyBhbiBleGFtcGxlIGZvciB0aGUgUlovTjFEIFNvQy4NCj4g
-PiA+ID4gKw0KPiA+ID4gPiArICAgZ3Bpb2lycW11eDogZ3Bpb2lycW11eEA1MTAwMDQ4MCB7DQo+
-ID4gPg0KPiA+ID4gaW50ZXJydXB0LWNvbnRyb2xsZXJALi4uDQo+ID4gU3VyZQ0KPiA+DQo+ID4g
-PiA+ICsgICAgICAgICAgIGNvbXBhdGlibGUgPSAicmVuZXNhcyxyOWEwNmcwMzItZ3Bpb2lycW11
-eCIsDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAicmVuZXNhcyxyem4xLWdw
-aW9pcnFtdXgiOw0KPiA+ID4gPiArICAgICAgICAgICByZWcgPSA8MHg1MTAwMDQ4MCAweDIwPjsN
-Cj4gPiA+ID4gKyAgICAgICAgICAgaW50ZXJydXB0cyA9DQo+ID4gPiA+ICsgICAgICAgICAgICAg
-ICAgICAgPEdJQ19TUEkgMTAzIElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KPiA+ID4gPiArICAgICAg
-ICAgICAgICAgICAgIDxHSUNfU1BJIDEwNCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiA+DQo+
-ID4gPiBUaGlzIGlzIGEgYml0IHJlZHVuZGFudCBhcyB0aGUgc2FtZSBpbmZvcm1hdGlvbiBpcyBp
-biBpbnRlcnJ1cHQtbWFwLA0KPiA+ID4gYnV0IEkgZ3Vlc3MgeW91IG5lZWQgaXQgdG8gZ2V0IHRo
-ZSBpcnEgcmVzb3VyY2VzLg0KPiA+IFRoYXQncyByaWdodC4NCj4gPg0KPiA+ID4gPiArDQo+ID4g
-PiA+ICsgICAgICAgICAgICNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47DQo+ID4gPiA+ICsgICAgICAg
-ICAgICNhZGRyZXNzLWNlbGxzID0gPDA+Ow0KPiA+ID4gPiArICAgICAgICAgICBpbnRlcnJ1cHQt
-bWFwLW1hc2sgPSA8MTI3PjsNCj4gPiA+DQo+ID4gPiBVc2UgaGV4IGZvciBtYXNrcy4NCj4gPiBP
-ay4NCj4gPg0KPiA+ID4gPiArICAgICAgICAgICBpbnRlcnJ1cHQtbWFwID0NCj4gPiA+ID4gKyAg
-ICAgICAgICAgICAgICAgICAvKiBncGlvMmEgMjQsIHBpbiAxNDY6IEVUSCBQb3J0IDEgSVJRICov
-DQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgPDg4ICZnaWMgR0lDX1NQSSAxMDMgSVJRX1RZ
-UEVfTEVWRUxfSElHSD4sDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgLyogZ3BpbzJhIDI2
-LCBwaW4gMTQ4OiBUb3VjaFNDUk5fSVJRICovDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAg
-PDkwICZnaWMgR0lDX1NQSSAxMDQgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gPiA+ICsgICB9
-Ow0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICBncGlvMjogZ3Bpb0A1MDAwZDAwMCB7DQo+ID4gPiA+
-ICsgICAgICAgICAgIGNvbXBhdGlibGUgPSAic25wcyxkdy1hcGItZ3BpbyI7DQo+ID4gPiA+ICsg
-ICAgICAgICAgIHJlZyA9IDwweDUwMDBkMDAwIDB4ODA+Ow0KPiA+ID4gPiArICAgICAgICAgICAj
-YWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiA+ID4gKyAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8
-MD47DQo+ID4gPiA+ICsgICAgICAgICAgIGNsb2NrLW5hbWVzID0gImJ1cyI7DQo+ID4gPiA+ICsg
-ICAgICAgICAgIGNsb2NrcyA9IDwmc3lzY3RybCBSOUEwNkcwMzJfSENMS19HUElPMj47DQo+ID4g
-PiA+ICsNCj4gPiA+ID4gKyAgICAgICAgICAgZ3BpbzJhOiBncGlvLWNvbnRyb2xsZXJAMCB7DQo+
-ID4gPg0KPiA+ID4gZ3Bpb0AwDQo+ID4gQXJlIHlvdSBzdXJlIGFib3V0IHRoaXM/DQo+IA0KPiBZ
-ZXMsICdncGlvJyBpcyB3aGF0IHRoZSBEVCBzcGVjIHNheXMuIEl0IGlzIHRoZSBvZGRiYWxsIHRo
-b3VnaCBhbmQgSSBhbHdheXMgaGF2ZQ0KPiB0byB0aGluayBhYm91dCBpdC4NCk9LLCBnb3QgaXQu
-DQoNCj4gPiBUaGUgYmluZGluZ3MgaW4NCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZ3Bpby9zbnBzLWR3YXBiLWdwaW8udHh0DQo+ID4gc2hvdyBhbiBleGFtcGxlIHdoZXJl
-IHRoZSBzdWItbm9kZXMgZm9yIGdwaW8gYmFua3MgYXJlIGdwaW8tDQo+IGNvbnRyb2xsZXJALg0K
-PiA+IFRoaXMgaXMgYWxzbyBpbiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3Bp
-by9ncGlvLnR4dC4NCj4gDQo+IEluZGVlZC4gVGhvc2Ugc2hvdWxkIGJlIGZpeGVkLiBJIHdvdWxk
-IGJlIGVhc2lseSBwZXJzdWFkZWQgdG8ganVzdCBjaGFuZ2UNCj4gdGhlIHNwZWMsIGJ1dCAnZ3Bp
-b0AnIGlzIG11Y2ggbW9yZSB3aWRlbHkgdXNlZDoNCj4gDQo+ICQgZ2l0IGdyZXAgZ3Bpb0AgLS0g
-YXJjaC8gfCB3Yw0KPiAgICAxMTEwICAgIDQzNzggICA2Nzc2Ng0KPiAkIGdpdCBncmVwIGdwaW8t
-Y29udHJvbGxlckAgLS0gYXJjaC8gfCB3Yw0KPiAgICAgIDYwICAgICAyMzIgICAgNDI3MA0KPiAN
-ClllcywgaW5kZWVkLg0KDQpUaGFua3MNClBoaWwNCg==
+reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+
+> -----Original Message-----
+> From: Z.q. Hou
+> Sent: Tuesday, November 20, 2018 5:26 PM
+> To: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+> l.subrahmanya@mobiveil.co.in; shawnguo@kernel.org; Leo Li
+> <leoyang.li@nxp.com>; lorenzo.pieralisi@arm.com;
+> catalin.marinas@arm.com; will.deacon@arm.com
+> Cc: Mingkai Hu <mingkai.hu@nxp.com>; M.h. Lian
+> <minghuan.lian@nxp.com>; Xiaowei Bao <xiaowei.bao@nxp.com>; Z.q. Hou
+> <zhiqiang.hou@nxp.com>
+> Subject: [PATCHv2 03/25] PCI: mobiveil: correct the returned error number
+>=20
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>=20
+> This patch corrected the returned error number by convention, and removed
+> a unnecessary error check.
+>=20
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+> V2:
+>  - no change
+>=20
+>  drivers/pci/controller/pcie-mobiveil.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/pcie-mobiveil.c
+> b/drivers/pci/controller/pcie-mobiveil.c
+> index b87471f08a40..563210e731d3 100644
+> --- a/drivers/pci/controller/pcie-mobiveil.c
+> +++ b/drivers/pci/controller/pcie-mobiveil.c
+> @@ -819,7 +819,7 @@ static int mobiveil_pcie_init_irq_domain(struct
+> mobiveil_pcie *pcie)
+>=20
+>  	if (!pcie->intx_domain) {
+>  		dev_err(dev, "Failed to get a INTx IRQ domain\n");
+> -		return -ENODEV;
+> +		return -ENOMEM;
+>  	}
+>=20
+>  	raw_spin_lock_init(&pcie->intx_mask_lock);
+> @@ -845,11 +845,9 @@ static int mobiveil_pcie_probe(struct
+> platform_device *pdev)
+>  	/* allocate the PCIe port */
+>  	bridge =3D devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+>  	if (!bridge)
+> -		return -ENODEV;
+> +		return -ENOMEM;
+>=20
+>  	pcie =3D pci_host_bridge_priv(bridge);
+> -	if (!pcie)
+> -		return -ENOMEM;
+>=20
+>  	pcie->pdev =3D pdev;
+>=20
+> @@ -866,7 +864,7 @@ static int mobiveil_pcie_probe(struct platform_device
+> *pdev)
+>  						    &pcie->resources, &iobase);
+>  	if (ret) {
+>  		dev_err(dev, "Getting bridge resources failed\n");
+> -		return -ENOMEM;
+> +		return ret;
+>  	}
+>=20
+>  	/*
+> --
+> 2.17.1
