@@ -1,55 +1,41 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: =?iso-8859-1?B?W1JDRqBQQVRDSCx2Miwy?= =?iso-8859-1?B?LzJd?= pwm:
- imx: Configure output to GPIO in disabled state
-Date: Tue, 20 Nov 2018 17:54:57 +0100
-Message-ID: <20181120165457.x7svxgzaae5at32x@pengutronix.de>
-References: <4fbb7307-df01-d7bd-f2e2-e05e6d17807d@ysoft.com>
- <20181108191855.zuon3ecv4yjfbs7g@pengutronix.de>
- <283cfef3-16d0-8bd4-e306-6e34d44c3a86@ysoft.com>
- <20181109165555.vqbiwh4hlcnozdna@pengutronix.de>
- <20181114113449.GB2620@ulmo>
- <20181114215120.vddykljqyavm64wj@pengutronix.de>
- <20181115152545.GA8611@ulmo>
- <20181115203733.qvonika6yhn2bsnb@pengutronix.de>
- <20181116095124.GA28631@ulmo>
- <6e81d63b-61a1-36fe-0c24-3ff27438cbc0@ysoft.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Romain Izard <romain.izard.pro@gmail.com>
+Subject: [PATCH] ARM: dts: at91: sama5d2: use the divided clock for SMC
+Date: Tue, 20 Nov 2018 17:57:37 +0100
+Message-ID: <20181120165737.4998-1-romain.izard.pro@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6e81d63b-61a1-36fe-0c24-3ff27438cbc0@ysoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@karo-electronics.de>, Linus Walleij <linus.walleij@linaro.org>, viresh kumar <viresh.kumar@linaro.org>
+To: Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Romain Izard <romain.izard.pro@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Michal,
+The SAMA5D2 is different from SAMA5D3 and SAMA5D4, as there are two
+different clocks for the peripherals in the SoC. The Static Memory
+controller is connected to the divided master clock.
 
-On Tue, Nov 20, 2018 at 01:14:33PM +0000, Vokáč Michal wrote:
-> On 16.11.2018 10:51, Thierry Reding wrote:
-> > On Thu, Nov 15, 2018 at 09:37:33PM +0100, Uwe Kleine-König wrote:
-> >> On Thu, Nov 15, 2018 at 04:25:45PM +0100, Thierry Reding wrote:
-> > My impression was that he was trying to find concensus. But the way I
-> > read it he was still arguing that the pinctrl solution was still the
-> > most complete, and would therefore still prefer it.
-> 
-> It is like you said Thierry. I am only trying to remain open to test
-> Uwe's ideas. After what I have tested so far I still prefer a imx-specific
-> pinctrl solution.
+Unfortunately, the device tree does not correctly show this and uses the
+master clock directly. This clock is then used by the code for the NAND
+controller to calculate the timings for the controller, and we end up with
+slow NAND Flash access.
 
-Is that because you consider it right to be imx-specific or because
-that's what you already have? Is there a flaw in my explanation that
-the problem isn't imx-specific per se and so the solution shouldn't be
-that either?
+Fix the device tree, and the performance of Flash access is improved.
 
-Is the problem with the "tests so far" that it doesn't work yet, or is
-there something conceptually wrong in your eyes?
+Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
+---
+ arch/arm/boot/dts/sama5d2.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best regards
-Uwe
-
+diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+index 61f68e5c48e9..b405992eb601 100644
+--- a/arch/arm/boot/dts/sama5d2.dtsi
++++ b/arch/arm/boot/dts/sama5d2.dtsi
+@@ -308,7 +308,7 @@
+ 				  0x1 0x0 0x60000000 0x10000000
+ 				  0x2 0x0 0x70000000 0x10000000
+ 				  0x3 0x0 0x80000000 0x10000000>;
+-			clocks = <&mck>;
++			clocks = <&h32ck>;
+ 			status = "disabled";
+ 
+ 			nand_controller: nand-controller {
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.17.1
