@@ -1,358 +1,58 @@
-From: "'Kishon Vijay Abraham I' via linux-sunxi" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: [PATCH v4 08/10] phy: allwinner: add phy driver for
- USB3 PHY on Allwinner H6 SoC
-Date: Tue, 20 Nov 2018 10:41:30 +0530
-Message-ID: <86b842fc-6331-5e4d-04de-dc9f037f4fa5@ti.com>
-References: <20181004122855.22981-1-icenowy@aosc.io>
- <20181004122855.22981-9-icenowy@aosc.io>
- <03265185c6a2b9bd95d8cf5c3183eb06c73d9b12.camel@aosc.io>
-Reply-To: kishon-l0cyMroinI0@public.gmane.org
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH] MAINTAINERS: Add Kishon as maintainer of PHY bindings
+Date: Tue, 20 Nov 2018 11:09:25 +0530
+Message-ID: <5b1104bc-7542-124c-2f93-27af10e36178@ti.com>
+References: <20181018133105.3720-1-robh@kernel.org>
+ <CAL_JsqJn2EOGJaM9saoYYnbZ+GrEMQWgp_1kSq6W9HX1GnGVWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCOOP4VF5IDRBEFPZ3PQKGQE4TKTV5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <03265185c6a2b9bd95d8cf5c3183eb06c73d9b12.camel-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJn2EOGJaM9saoYYnbZ+GrEMQWgp_1kSq6W9HX1GnGVWw@mail.gmail.com>
 Content-Language: en-US
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Rob,
 
-On 14/11/18 10:27 AM, Icenowy Zheng wrote:
-> =E5=9C=A8 2018-10-04=E5=9B=9B=E7=9A=84 20:28 +0800=EF=BC=8CIcenowy Zheng=
-=E5=86=99=E9=81=93=EF=BC=9A
->> Allwinner H6 SoC contains a USB3 PHY (with USB2 DP/DM lines also
->> controlled).
+On 17/11/18 1:50 AM, Rob Herring wrote:
+> On Thu, Oct 18, 2018 at 8:31 AM Rob Herring <robh@kernel.org> wrote:
 >>
->> Add a driver for it.
+>> DT bindings normally go in via subsystem maintainers, so add PHY
+>> bindings under generic PHY framework.
 >>
->> The register operations in this driver is mainly extracted from the
->> BSP
->> USB3 driver.
->>
->> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->=20
-> Kishon, I see this patch is picked to linux-next, however this patch is
-> not in the stage that can be picked, because for the Vbus of USB3 PHY
-> Rob Herring still have some problems.
->=20
-> Could you remove PATCH 7 and 8 in this patchset now?
+>> Reported-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+>> Signed-off-by: Rob Herring <robh@kernel.org>
+> 
+> Ping? Kishon, any objection?
 
-I've updated my tree now.
+It's queued [1].
 
 Thanks
 Kishon
->=20
-> Thanks!
->=20
->> ---
->> Changes in v4:
->> - Added support for vbus-supply property.
->>
->> Changes in v3:
->> - Dropped USB_SUPPORT dependency.
->> - Added Chen-Yu's Review tag.
->>
->> No changes in v2, v1.
->>
->>   drivers/phy/allwinner/Kconfig           |  12 ++
->>   drivers/phy/allwinner/Makefile          |   1 +
->>   drivers/phy/allwinner/phy-sun50i-usb3.c | 239
->> ++++++++++++++++++++++++
->>   3 files changed, 252 insertions(+)
->>   create mode 100644 drivers/phy/allwinner/phy-sun50i-usb3.c
->>
->> diff --git a/drivers/phy/allwinner/Kconfig
->> b/drivers/phy/allwinner/Kconfig
->> index cdc1e745ba47..064096e6a4e5 100644
->> --- a/drivers/phy/allwinner/Kconfig
->> +++ b/drivers/phy/allwinner/Kconfig
->> @@ -29,3 +29,15 @@ config PHY_SUN9I_USB
->>   	  sun9i SoCs.
->>  =20
->>   	  This driver controls each individual USB 2 host PHY.
->> +
->> +config PHY_SUN50I_USB3
->> +	tristate "Allwinner sun50i SoC USB3 PHY driver"
->> +	depends on ARCH_SUNXI && HAS_IOMEM && OF
->> +	depends on RESET_CONTROLLER
->> +	select USB_COMMON
->> +	select GENERIC_PHY
->> +	help
->> +	  Enable this to support the USB3.0-capable transceiver that is
->> +	  part of some Allwinner sun50i SoCs.
->> +
->> +	  This driver controls each individual USB 2+3 host PHY combo.
->> diff --git a/drivers/phy/allwinner/Makefile
->> b/drivers/phy/allwinner/Makefile
->> index 8605529c01a1..a8d01e9073c2 100644
->> --- a/drivers/phy/allwinner/Makefile
->> +++ b/drivers/phy/allwinner/Makefile
->> @@ -1,2 +1,3 @@
->>   obj-$(CONFIG_PHY_SUN4I_USB)		+=3D phy-sun4i-usb.o
->>   obj-$(CONFIG_PHY_SUN9I_USB)		+=3D phy-sun9i-usb.o
->> +obj-$(CONFIG_PHY_SUN50I_USB3)		+=3D phy-sun50i-usb3.o
->> diff --git a/drivers/phy/allwinner/phy-sun50i-usb3.c
->> b/drivers/phy/allwinner/phy-sun50i-usb3.c
->> new file mode 100644
->> index 000000000000..70c299c01c3e
->> --- /dev/null
->> +++ b/drivers/phy/allwinner/phy-sun50i-usb3.c
->> @@ -0,0 +1,239 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * Allwinner sun50i(H6) USB 3.0 phy driver
->> + *
->> + * Copyright (C) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> + *
->> + * Based on phy-sun9i-usb.c, which is:
->> + *
->> + * Copyright (C) 2014-2015 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> + *
->> + * Based on code from Allwinner BSP, which is:
->> + *
->> + * Copyright (c) 2010-2015 Allwinner Technology Co., Ltd.
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/err.h>
->> +#include <linux/io.h>
->> +#include <linux/module.h>
->> +#include <linux/phy/phy.h>
->> +#include <linux/usb/of.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regulator/consumer.h>
->> +#include <linux/reset.h>
->> +
->> +/* Interface Status and Control Registers */
->> +#define SUNXI_ISCR			0x00
->> +#define SUNXI_PIPE_CLOCK_CONTROL	0x14
->> +#define SUNXI_PHY_TUNE_LOW		0x18
->> +#define SUNXI_PHY_TUNE_HIGH		0x1c
->> +#define SUNXI_PHY_EXTERNAL_CONTROL	0x20
->> +
->> +/* USB2.0 Interface Status and Control Register */
->> +#define SUNXI_ISCR_FORCE_VBUS		(3 << 12)
->> +
->> +/* PIPE Clock Control Register */
->> +#define SUNXI_PCC_PIPE_CLK_OPEN		(1 << 6)
->> +
->> +/* PHY External Control Register */
->> +#define SUNXI_PEC_EXTERN_VBUS		(3 << 1)
->> +#define SUNXI_PEC_SSC_EN		(1 << 24)
->> +#define SUNXI_PEC_REF_SSP_EN		(1 << 26)
->> +
->> +/* PHY Tune High Register */
->> +#define SUNXI_TX_DEEMPH_3P5DB(n)	((n) << 19)
->> +#define SUNXI_TX_DEEMPH_3P5DB_MASK	GENMASK(24, 19)
->> +#define SUNXI_TX_DEEMPH_6DB(n)		((n) << 13)
->> +#define SUNXI_TX_DEEMPH_6GB_MASK	GENMASK(18, 13)
->> +#define SUNXI_TX_SWING_FULL(n)		((n) << 6)
->> +#define SUNXI_TX_SWING_FULL_MASK	GENMASK(12, 6)
->> +#define SUNXI_LOS_BIAS(n)		((n) << 3)
->> +#define SUNXI_LOS_BIAS_MASK		GENMASK(5, 3)
->> +#define SUNXI_TXVBOOSTLVL(n)		((n) << 0)
->> +#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(0, 2)
->> +
->> +struct sun50i_usb3_phy {
->> +	struct phy *phy;
->> +	void __iomem *regs;
->> +	struct reset_control *reset;
->> +	struct clk *clk;
->> +	bool regulator_on;
->> +	struct regulator *vbus;
->> +};
->> +
->> +static void sun50i_usb3_phy_open(struct sun50i_usb3_phy *phy)
->> +{
->> +	u32 val;
->> +
->> +	val =3D readl(phy->regs + SUNXI_PHY_EXTERNAL_CONTROL);
->> +	val |=3D SUNXI_PEC_EXTERN_VBUS;
->> +	val |=3D SUNXI_PEC_SSC_EN | SUNXI_PEC_REF_SSP_EN;
->> +	writel(val, phy->regs + SUNXI_PHY_EXTERNAL_CONTROL);
->> +
->> +	val =3D readl(phy->regs + SUNXI_PIPE_CLOCK_CONTROL);
->> +	val |=3D SUNXI_PCC_PIPE_CLK_OPEN;
->> +	writel(val, phy->regs + SUNXI_PIPE_CLOCK_CONTROL);
->> +
->> +	val =3D readl(phy->regs + SUNXI_ISCR);
->> +	val |=3D SUNXI_ISCR_FORCE_VBUS;
->> +	writel(val, phy->regs + SUNXI_ISCR);
->> +
->> +	/*
->> +	 * All the magic numbers written to the PHY_TUNE_{LOW_HIGH}
->> +	 * registers are directly taken from the BSP USB3 driver from
->> +	 * Allwiner.
->> +	 */
->> +	writel(0x0047fc87, phy->regs + SUNXI_PHY_TUNE_LOW);
->> +
->> +	val =3D readl(phy->regs + SUNXI_PHY_TUNE_HIGH);
->> +	val &=3D ~(SUNXI_TXVBOOSTLVL_MASK | SUNXI_LOS_BIAS_MASK |
->> +		 SUNXI_TX_SWING_FULL_MASK | SUNXI_TX_DEEMPH_6GB_MASK |
->> +		 SUNXI_TX_DEEMPH_3P5DB_MASK);
->> +	val |=3D SUNXI_TXVBOOSTLVL(0x7);
->> +	val |=3D SUNXI_LOS_BIAS(0x7);
->> +	val |=3D SUNXI_TX_SWING_FULL(0x55);
->> +	val |=3D SUNXI_TX_DEEMPH_6DB(0x20);
->> +	val |=3D SUNXI_TX_DEEMPH_3P5DB(0x15);
->> +	writel(val, phy->regs + SUNXI_PHY_TUNE_HIGH);
->> +}
->> +
->> +static int sun50i_usb3_phy_init(struct phy *_phy)
->> +{
->> +	struct sun50i_usb3_phy *phy =3D phy_get_drvdata(_phy);
->> +	int ret;
->> +
->> +	ret =3D clk_prepare_enable(phy->clk);
->> +	if (ret)
->> +		goto err_clk;
->> +
->> +	ret =3D reset_control_deassert(phy->reset);
->> +	if (ret)
->> +		goto err_reset;
->> +
->> +	sun50i_usb3_phy_open(phy);
->> +	return 0;
->> +
->> +err_reset:
->> +	clk_disable_unprepare(phy->clk);
->> +
->> +err_clk:
->> +	return ret;
->> +}
->> +
->> +static int sun50i_usb3_phy_exit(struct phy *_phy)
->> +{
->> +	struct sun50i_usb3_phy *phy =3D phy_get_drvdata(_phy);
->> +
->> +	reset_control_assert(phy->reset);
->> +	clk_disable_unprepare(phy->clk);
->> +
->> +	return 0;
->> +}
->> +
->> +static int sun50i_usb3_phy_power_on(struct phy *_phy)
->> +{
->> +	struct sun50i_usb3_phy *phy =3D phy_get_drvdata(_phy);
->> +	int ret;
->> +
->> +	if (!phy->vbus || phy->regulator_on)
->> +		return 0;
->> +
->> +	ret =3D regulator_enable(phy->vbus);
->> +	if (ret)
->> +		return ret;
->> +
->> +	phy->regulator_on =3D true;
->> +
->> +	return 0;
->> +}
->> +
->> +static int sun50i_usb3_phy_power_off(struct phy *_phy)
->> +{
->> +	struct sun50i_usb3_phy *phy =3D phy_get_drvdata(_phy);
->> +
->> +	if (!phy->vbus || !phy->regulator_on)
->> +		return 0;
->> +
->> +	regulator_disable(phy->vbus);
->> +	phy->regulator_on =3D false;
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct phy_ops sun50i_usb3_phy_ops =3D {
->> +	.init		=3D sun50i_usb3_phy_init,
->> +	.exit		=3D sun50i_usb3_phy_exit,
->> +	.power_on	=3D sun50i_usb3_phy_power_on,
->> +	.power_off	=3D sun50i_usb3_phy_power_off,
->> +	.owner		=3D THIS_MODULE,
->> +};
->> +
->> +static int sun50i_usb3_phy_probe(struct platform_device *pdev)
->> +{
->> +	struct sun50i_usb3_phy *phy;
->> +	struct device *dev =3D &pdev->dev;
->> +	struct phy_provider *phy_provider;
->> +	struct resource *res;
->> +
->> +	phy =3D devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
->> +	if (!phy)
->> +		return -ENOMEM;
->> +
->> +	phy->clk =3D devm_clk_get(dev, NULL);
->> +	if (IS_ERR(phy->clk)) {
->> +		dev_err(dev, "failed to get phy clock\n");
->> +		return PTR_ERR(phy->clk);
->> +	}
->> +
->> +	phy->reset =3D devm_reset_control_get(dev, NULL);
->> +	if (IS_ERR(phy->reset)) {
->> +		dev_err(dev, "failed to get reset control\n");
->> +		return PTR_ERR(phy->reset);
->> +	}
->> +
->> +	phy->vbus =3D devm_regulator_get_optional(dev, "vbus");
->> +	if (IS_ERR(phy->vbus)) {
->> +		if (PTR_ERR(phy->vbus) =3D=3D -EPROBE_DEFER) {
->> +			dev_err(dev, "Couldn't get vbus regulator...
->> Deferring probe\n");
->> +			return -EPROBE_DEFER;
->> +		}
->> +
->> +		phy->vbus =3D NULL;
->> +	}
->> +
->> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	phy->regs =3D devm_ioremap_resource(dev, res);
->> +	if (IS_ERR(phy->regs))
->> +		return PTR_ERR(phy->regs);
->> +
->> +	phy->phy =3D devm_phy_create(dev, NULL, &sun50i_usb3_phy_ops);
->> +	if (IS_ERR(phy->phy)) {
->> +		dev_err(dev, "failed to create PHY\n");
->> +		return PTR_ERR(phy->phy);
->> +	}
->> +
->> +	phy_set_drvdata(phy->phy, phy);
->> +	phy_provider =3D devm_of_phy_provider_register(dev,
->> of_phy_simple_xlate);
->> +
->> +	return PTR_ERR_OR_ZERO(phy_provider);
->> +}
->> +
->> +static const struct of_device_id sun50i_usb3_phy_of_match[] =3D {
->> +	{ .compatible =3D "allwinner,sun50i-h6-usb3-phy" },
->> +	{ },
->> +};
->> +MODULE_DEVICE_TABLE(of, sun50i_usb3_phy_of_match);
->> +
->> +static struct platform_driver sun50i_usb3_phy_driver =3D {
->> +	.probe	=3D sun50i_usb3_phy_probe,
->> +	.driver =3D {
->> +		.of_match_table	=3D sun50i_usb3_phy_of_match,
->> +		.name  =3D "sun50i-usb3-phy",
->> +	}
->> +};
->> +module_platform_driver(sun50i_usb3_phy_driver);
->> +
->> +MODULE_DESCRIPTION("Allwinner sun50i USB 3.0 phy driver");
->> +MODULE_AUTHOR("Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>");
->> +MODULE_LICENSE("GPL");
->=20
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+[1] -> 
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/MAINTAINERS?id=5c7412b139f189e18842d62951f6857e4937ce73
+> 
+>> ---
+>>   MAINTAINERS | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 9ad052aeac39..b01e77ae79c4 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -6132,6 +6132,7 @@ T:        git git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git
+>>   S:     Supported
+>>   F:     drivers/phy/
+>>   F:     include/linux/phy/
+>> +F:     Documentation/devicetree/bindings/phy/
+>>
+>>   GENERIC PINCTRL I2C DEMULTIPLEXER DRIVER
+>>   M:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+>> --
+>> 2.17.1
+>>
