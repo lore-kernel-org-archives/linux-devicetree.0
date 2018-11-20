@@ -1,123 +1,247 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH fbdev-for-next 2/2] video: ssd1307fb: Add support for the
- reset-active-low property
-Date: Mon, 19 Nov 2018 16:32:32 -0600
-Message-ID: <CAL_Jsq+KOqWVdudDGZNJSJ1SZSX1FK2GOSu-4VfmRV-KZrYJZA@mail.gmail.com>
-References: <1541170556-75032-1-git-send-email-michal.vokac@ysoft.com>
- <1541170556-75032-2-git-send-email-michal.vokac@ysoft.com>
- <5bea0e9c.1c69fb81.1f3c8.be5a@mx.google.com> <db9537dc-2ba5-b8fc-ae3c-7d85841b0797@ysoft.com>
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: [PATCH v4 3/4] media: i2c: Add MAX9286 driver
+Date: Mon, 19 Nov 2018 16:32:30 -0800
+Message-ID: <417f5bc8-533d-2c2f-2325-3e728d53329b@ideasonboard.com>
+References: <20181102154723.23662-1-kieran.bingham@ideasonboard.com>
+ <20181102154723.23662-4-kieran.bingham@ideasonboard.com>
+ <5238fa80-7678-97a8-47ee-6a26970d862d@lucaceresoli.net>
+ <07ee8a2c-81a8-ca32-96cf-67d6a883e3f5@ideasonboard.com>
+ <e6143de9-f253-1a89-21e0-d1e2c0444e7b@lucaceresoli.net>
+Reply-To: kieran.bingham@ideasonboard.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <db9537dc-2ba5-b8fc-ae3c-7d85841b0797@ysoft.com>
+In-Reply-To: <e6143de9-f253-1a89-21e0-d1e2c0444e7b@lucaceresoli.net>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <Michal.Vokac@ysoft.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-fbdev@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>
+To: Luca Ceresoli <luca@lucaceresoli.net>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@iki.fi
+Cc: =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, linux-kernel@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 19, 2018 at 9:12 AM Vok=C3=A1=C4=8D Michal <Michal.Vokac@ysoft.=
-com> wrote:
->
-> On 12.11.2018 17:55, Rob Herring wrote:
-> > On Fri, Nov 02, 2018 at 02:56:35PM +0000, Vok=C3=A1=C4=8D Michal wrote:
-> >> The SSD130x OLED display reset signal is active low. Now the reset
-> >> sequence is implemented in such a way that DTS authors are forced to
-> >> define the reset-gpios property with GPIO_ACTIVE_HIGH to make the rese=
-t
-> >> work.
-> >>
-> >> Add the reset-active-low property so the signal is inverted once again
-> >> and the GPIO_ACTIVE_LOW work as expected.
-> >>
-> >> Signed-off-by: Michal Vok=C3=A1=C4=8D <michal.vokac@ysoft.com>
-> >> ---
-> >>   drivers/video/fbdev/ssd1307fb.c | 6 ++++--
-> >>   1 file changed, 4 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd=
-1307fb.c
-> >> index e7ae135..790f1c4 100644
-> >> --- a/drivers/video/fbdev/ssd1307fb.c
-> >> +++ b/drivers/video/fbdev/ssd1307fb.c
-> >> @@ -608,6 +608,7 @@ static int ssd1307fb_probe(struct i2c_client *clie=
-nt,
-> >>      struct fb_deferred_io *ssd1307fb_defio;
-> >>      u32 vmem_size;
-> >>      struct ssd1307fb_par *par;
-> >> +    bool reset_active_low;
-> >>      u8 *vmem;
-> >>      int ret;
-> >>
-> >> @@ -671,6 +672,7 @@ static int ssd1307fb_probe(struct i2c_client *clie=
-nt,
-> >>      par->com_seq =3D of_property_read_bool(node, "solomon,com-seq");
-> >>      par->com_lrremap =3D of_property_read_bool(node, "solomon,com-lrr=
-emap");
-> >>      par->com_invdir =3D of_property_read_bool(node, "solomon,com-invd=
-ir");
-> >> +    reset_active_low =3D of_property_read_bool(node, "reset-active-lo=
-w");
-> >>
-> >>      par->contrast =3D 127;
-> >>      par->vcomh =3D par->device_info->default_vcomh;
-> >> @@ -728,9 +730,9 @@ static int ssd1307fb_probe(struct i2c_client *clie=
-nt,
-> >>
-> >>      if (par->reset) {
-> >>              /* Reset the screen */
-> >> -            gpiod_set_value_cansleep(par->reset, 0);
-> >> +            gpiod_set_value_cansleep(par->reset, reset_active_low);
-> >>              udelay(4);
-> >> -            gpiod_set_value_cansleep(par->reset, 1);
-> >> +            gpiod_set_value_cansleep(par->reset, !reset_active_low);
-> >
-> > I think you and whomever wrote the original code are misinterpretting
-> > how the gpiod API works. 1 means make the signal active and this case
-> > active is low.
->
-> I totally agree and I think I understand that correctly.
->
-> > It is strange, but does mean a reset sequence should always be set to a
-> > 1 and then a 0 and it will work with either polarity in the DT.
->
-> I agree the reset should be done as a 0 -> 1 -> 0 sequence and that shoul=
-d
-> just work. The problem is it is implemented vice versa and so it works on=
-ly
-> if you have GPIO_ACTIVE_HIGH in DT for a signal that is actually active l=
-ow.
->
-> And what it actually does is that it holds the controller in reset since
-> the GPIO is successfully acquired (because of GPIOD_OUT_LOW here [1]) and
-> later on it only releases the reset.
->
-> As a DT author I would like to somehow clearly state that the OLED displa=
-y
-> uses active low reset in my DT.
->
-> My first attempt to fix this was to change the reset sequence [2].
-> It was applied and then reverted as it is not backward compatible with
-> deployed DTB files [3].
->
-> [1] https://elixir.bootlin.com/linux/v4.20-rc3/source/drivers/video/fbdev=
-/ssd1307fb.c#L570
-> [2] https://patchwork.kernel.org/patch/10617729/
-> [3] https://patchwork.kernel.org/patch/10617731/
+Hi Luca,
 
-Okay, now I understand the background. We've hit this somewhere else too.
+My apologies for my travel induced delay in responding here,
 
-Rather than have a binding demonstrating what not to do, I'd like to
-fix this in another way. I also don't want to live with this forever
-when there's only 1 board affected (in tree at least) and there's only
-an ABI if someone notices (I'm happy though that the maintainers
-caught this). There's 2 other options. The 1st is add a fixup to the
-DT for this platform to ensure that the GPIO is configured active low
-(the Versatile platform code has an example fixup). With that, apply
-what was originally applied (or revert the revert). The fixup could be
-applied only after someone complains their display broke. The 2nd
-option is just add an of_machine_is_compatible check within this
-driver. In that case, you wouldn't fix dts file for the platform
-(unless you also want to manually check reset-gpios).
 
-Rob
+
+On 14/11/2018 02:04, Luca Ceresoli wrote:
+> Hi Kieran,
+> 
+> On 14/11/18 01:46, Kieran Bingham wrote:
+>> Hi Luca,
+>>
+>> Thank you for your review,
+>>
+>> On 13/11/2018 14:49, Luca Ceresoli wrote:
+>>> Hi Kieran, All,
+>>>
+>>> below a few minor questions, and a big one at the bottom.
+>>>
+>>> On 02/11/18 16:47, Kieran Bingham wrote:
+>>>> From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>>>>
+>>>> The MAX9286 is a 4-channel GMSL deserializer with coax or STP input and
+>>>> CSI-2 output. The device supports multicamera streaming applications,
+>>>> and features the ability to synchronise the attached cameras.
+>>>>
+>>>> CSI-2 output can be configured with 1 to 4 lanes, and a control channel
+>>>> is supported over I2C, which implements an I2C mux to facilitate
+>>>> communications with connected cameras across the reverse control
+>>>> channel.
+>>>>
+>>>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>>>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>>>> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+>>>> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+>>>
+>>> [...]
+>>>
+>>>> +struct max9286_device {
+>>>> +	struct i2c_client *client;
+>>>> +	struct v4l2_subdev sd;
+>>>> +	struct media_pad pads[MAX9286_N_PADS];
+>>>> +	struct regulator *regulator;
+>>>> +	bool poc_enabled;
+>>>> +	int streaming;
+>>>> +
+>>>> +	struct i2c_mux_core *mux;
+>>>> +	unsigned int mux_channel;
+>>>> +
+>>>> +	struct v4l2_ctrl_handler ctrls;
+>>>> +
+>>>> +	struct v4l2_mbus_framefmt fmt[MAX9286_N_SINKS];
+>>>
+>>> 5 pads, 4 formats. Why does the source node have no fmt?
+>>
+>> The source pad is a CSI2 link - so a 'frame format' would be inappropriate.
+> 
+> Ok, thanks for the clarification.
+> 
+>>>> +static int max9286_probe(struct i2c_client *client,
+>>>> +			 const struct i2c_device_id *did)
+>>>> +{
+>>>> +	struct max9286_device *dev;
+>>>> +	unsigned int i;
+>>>> +	int ret;
+>>>> +
+>>>> +	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+>>>> +	if (!dev)
+>>>> +		return -ENOMEM;
+>>>> +
+>>>> +	dev->client = client;
+>>>> +	i2c_set_clientdata(client, dev);
+>>>> +
+>>>> +	for (i = 0; i < MAX9286_N_SINKS; i++)
+>>>> +		max9286_init_format(&dev->fmt[i]);
+>>>> +
+>>>> +	ret = max9286_parse_dt(dev);
+>>>> +	if (ret)
+>>>> +		return ret;
+>>>> +
+>>>> +	dev->regulator = regulator_get(&client->dev, "poc");
+>>>> +	if (IS_ERR(dev->regulator)) {
+>>>> +		if (PTR_ERR(dev->regulator) != -EPROBE_DEFER)
+>>>> +			dev_err(&client->dev,
+>>>> +				"Unable to get PoC regulator (%ld)\n",
+>>>> +				PTR_ERR(dev->regulator));
+>>>> +		ret = PTR_ERR(dev->regulator);
+>>>> +		goto err_free;
+>>>> +	}
+>>>> +
+>>>> +	/*
+>>>> +	 * We can have multiple MAX9286 instances on the same physical I2C
+>>>> +	 * bus, and I2C children behind ports of separate MAX9286 instances
+>>>> +	 * having the same I2C address. As the MAX9286 starts by default with
+>>>> +	 * all ports enabled, we need to disable all ports on all MAX9286
+>>>> +	 * instances before proceeding to further initialize the devices and
+>>>> +	 * instantiate children.
+>>>> +	 *
+>>>> +	 * Start by just disabling all channels on the current device. Then,
+>>>> +	 * if all other MAX9286 on the parent bus have been probed, proceed
+>>>> +	 * to initialize them all, including the current one.
+>>>> +	 */
+>>>> +	max9286_i2c_mux_close(dev);
+>>>> +
+>>>> +	/*
+>>>> +	 * The MAX9286 initialises with auto-acknowledge enabled by default.
+>>>> +	 * This means that if multiple MAX9286 devices are connected to an I2C
+>>>> +	 * bus, another MAX9286 could ack I2C transfers meant for a device on
+>>>> +	 * the other side of the GMSL links for this MAX9286 (such as a
+>>>> +	 * MAX9271). To prevent that disable auto-acknowledge early on; it
+>>>> +	 * will be enabled later as needed.
+>>>> +	 */
+>>>> +	max9286_configure_i2c(dev, false);
+>>>> +
+>>>> +	ret = device_for_each_child(client->dev.parent, &client->dev,
+>>>> +				    max9286_is_bound);
+>>>> +	if (ret)
+>>>> +		return 0;
+>>>> +
+>>>> +	dev_dbg(&client->dev,
+>>>> +		"All max9286 probed: start initialization sequence\n");
+>>>> +	ret = device_for_each_child(client->dev.parent, NULL,
+>>>> +				    max9286_init);
+>>>
+>>> I can't manage to like this initialization sequence, sorry. If at all
+>>> possible, each max9286 should initialize itself independently from each
+>>> other, like any normal driver.
+>>
+>> Yes, I think we're in agreement here, but unfortunately this section is
+>> a workaround for the fact that our devices share a common address space.
+>>
+>> We (currently) *must* disable both devices before we start the
+>> initialisation process for either on our platform currently...
+> 
+> The model I proposed in my review to patch 1/4 (split remote physical
+> address from local address pool) allows to avoid this workaround.
+
+
+Having just talked this through with Jacopo I think I see that we have
+two topics getting intertwined here too.
+
+ - Address translation so that we can separate the camera addressing
+
+ - our 'device_is_bound/device_for_each_child()' workaround which lets
+   us make sure the buses are closed before we power on any camera
+   device.
+
+
+For the upstream process of this driver - I will remove the
+'device_is_bound()/device_for_each_child()' workarounds.
+
+
+It is /ugly/ and needs more consideration, but I believe we do still
+need it (or something similar) for our platform currently.
+
+
+
+The other side of that is the address translation. I think I was wrong
+earlier and may have said we have address translation on both sides.
+
+
+I think I now see that we only have some minimal translation for two
+addresses on the remote (max9271) side, not the local (max9286) side.
+
+We have the ability to reprogram addresses through, and that's what we
+are using.
+
+
+There's a lot more local discussion going on here that I may have missed
+so I hope Jacopo, Niklas, or Laurent may add more here if relevant :)
+
+
+
+
+>> That said - I think this section needs to be removed from the upstream
+>> part at least for now. I think we should probably carry this
+>> 'workaround' separately.
+>>
+>> This part is the core issue that I talked about in my presentation at
+>> ALS-Japan [0]
+>>
+>>  [0] https://sched.co/EaXa
+> 
+> Oh, interesting, I hadn't noticed that you gave this talk -- at the same
+> conference as Vladimir's talk! No video recording apparently, but are
+> slides available at least?
+
+Hrm ... I was sure I uploaded to the conference so that they should have
+been available on that URL - but they are not showing.
+
+They are available here:
+
+	https://www.slideshare.net/KieranBingham/gmsl-in-linux
+
+(Please excuse the incorrect date on the first slide :D)
+
+I had put a proposal in to give this talk again at ELCE but
+unfortunately it didn't get accepted.
+
+Seems it really would have been useful to have a slot. Lets hope next
+ELCE is too late and we work out a good system by then :)
+
+
+>>> First, it requires that each chip on the remote side can configure its
+>>> own slave address. Not all chips do.
+>>>
+>>> Second, using a static i2c address map does not scale well and limits
+>>> hotplugging, as I discussed in my reply to patch 1/4. The problem should
+>>> be solvable cleanly if the MAX9286 supports address translation like the
+>>> TI chips.
+>>
+>> I don't think we can treat GMSL as hot-pluggable currently ... But as we
+>> discussed - I see that we should think about this for FPD-Link
+> 
+> I've been mixing hotplug and DT overlays and that generated confusion,
+> sorry. My point exists even with no hotplug, see the reply to patch 1/4.
+
+
+Ok - I understand how you were using the terminology / analogy's now.
+Lets move back to patch 1/4 :)
+
+
+-- 
+Regards
+--
+Kieran
