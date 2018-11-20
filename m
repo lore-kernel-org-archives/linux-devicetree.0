@@ -1,86 +1,78 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCHv2] ARM: dts: exynos: update the usbdrd_phy suspend clk
-Date: Tue, 20 Nov 2018 18:55:36 +0000
-Message-ID: <20181120185536.1159-1-linux.amoon@gmail.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 08/16] arm: dts: rda8810pl: Add interrupt controller
+ support
+Date: Wed, 21 Nov 2018 00:58:42 +0530
+Message-ID: <20181120192842.GA16122@Mani-XPS-13-9360>
+References: <20181119170939.19153-1-manivannan.sadhasivam@linaro.org>
+ <20181119170939.19153-9-manivannan.sadhasivam@linaro.org>
+ <CAL_JsqL3B3y3hYv-yf3wzXiUsvnM9pCYE7u_Y0i4zT7wFti5GA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqL3B3y3hYv-yf3wzXiUsvnM9pCYE7u_Y0i4zT7wFti5GA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Amit Kucheria <amit.kucheria@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, zhao_steven@263.net, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-As per FSYS usbdrd_phy clk setting CLK_SCLK_USBD300/1 binds
-to SUSPEND_CLK so correct update the suspend clk.
+Hi Rob,
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-[0] https://lkml.org/lkml/2017/10/6/12
-changes from previous patch
-fix the order of clk and update the commit message
+On Mon, Nov 19, 2018 at 12:29:07PM -0600, Rob Herring wrote:
+> On Mon, Nov 19, 2018 at 11:11 AM Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> >
+> > Add interrupt controller support for RDA Micro RDA8810PL SoC.
+> 
+> There's no point in splitting this to a separate patch. Without it,
+> the DT is not functional.
+> 
 
-FSYS block show in user manual
+Okay. Will merge this patch with SoC DT patch.
 
-CLKMUX_USBDRD300/1----CLKDIV_USBDRD300/1----SCLK_USBDRD300/1-----SUSPEND_CLK
-                   |
-                   |--CLKDIV_USBPHY300/1----SCLK_USBPHY300/1-----USBDRD30_PHY_0/1
----
- arch/arm/boot/dts/exynos5410.dtsi | 4 ++--
- arch/arm/boot/dts/exynos5420.dtsi | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+> > Signed-off-by: Andreas Färber <afaerber@suse.de>
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  arch/arm/boot/dts/rda8810pl.dtsi | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/rda8810pl.dtsi b/arch/arm/boot/dts/rda8810pl.dtsi
+> > index 7f1ff2021eff..093d6980bfbd 100644
+> > --- a/arch/arm/boot/dts/rda8810pl.dtsi
+> > +++ b/arch/arm/boot/dts/rda8810pl.dtsi
+> > @@ -9,6 +9,7 @@
+> >
+> >  / {
+> >         compatible = "rda,8810pl";
+> > +       interrupt-parent = <&intc>;
+> >         #address-cells = <1>;
+> >         #size-cells = <1>;
+> >
+> > @@ -49,6 +50,13 @@
+> >                         #address-cells = <1>;
+> >                         #size-cells = <1>;
+> >                         ranges = <0x0 0x20800000 0x100000>;
+> > +
+> > +                       intc: interrupt-controller {
+> 
+> 
+> unit-address?
+> 
 
-diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-index 57fc9c949e54..a92c765a7a84 100644
---- a/arch/arm/boot/dts/exynos5410.dtsi
-+++ b/arch/arm/boot/dts/exynos5410.dtsi
-@@ -395,7 +395,7 @@
- };
- 
- &usbdrd_phy0 {
--	clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBPHY300>;
-+	clocks = <&clock CLK_SCLK_USBD300>, <&clock CLK_SCLK_USBPHY300>;
- 	clock-names = "phy", "ref";
- 	samsung,pmu-syscon = <&pmu_system_controller>;
- };
-@@ -410,7 +410,7 @@
- };
- 
- &usbdrd_phy1 {
--	clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBPHY301>;
-+	clocks = <&clock CLK_SCLK_USBD301>, <&clock CLK_SCLK_USBPHY301>;
- 	clock-names = "phy", "ref";
- 	samsung,pmu-syscon = <&pmu_system_controller>;
- };
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index aaff15880761..b84b44556efc 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -1509,7 +1509,7 @@
- };
- 
- &usbdrd_phy0 {
--	clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBPHY300>;
-+	clocks = <&clock CLK_SCLK_USBD300>, <&clock CLK_SCLK_USBPHY300>;
- 	clock-names = "phy", "ref";
- 	samsung,pmu-syscon = <&pmu_system_controller>;
- };
-@@ -1524,7 +1524,7 @@
- };
- 
- &usbdrd_phy1 {
--	clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBPHY301>;
-+	clocks = <&clock CLK_SCLK_USBD301>, <&clock CLK_SCLK_USBPHY301>;
- 	clock-names = "phy", "ref";
- 	samsung,pmu-syscon = <&pmu_system_controller>;
- };
--- 
-2.17.1
+Will add it.
+
+Thanks,
+Mani
+
+> > +                               compatible = "rda,8810pl-intc";
+> > +                               reg = <0x0 0x1000>;
+> > +                               interrupt-controller;
+> > +                               #interrupt-cells = <2>;
+> > +                       };
+> >                 };
+> >
+> >                 apb@20900000 {
+> > --
+> > 2.17.1
+> >
