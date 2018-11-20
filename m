@@ -1,8 +1,7 @@
 From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv2 22/25] dt-bindings: pci: Add NXP Layerscape SoCs PCIe Gen4
- controller
-Date: Tue, 20 Nov 2018 09:27:51 +0000
-Message-ID: <20181120092615.11680-23-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv2 24/25] arm64: dts: freescale: lx2160a: add pcie DT nodes
+Date: Tue, 20 Nov 2018 09:28:03 +0000
+Message-ID: <20181120092615.11680-25-Zhiqiang.Hou@nxp.com>
 References: <20181120092615.11680-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -17,118 +16,201 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-Add PCIe Gen4 controller DT bindings of NXP Layerscape SoCs.
+The LX2160A integrated 6 PCIe Gen4 controllers.
 
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 ---
 V2:
- - Change to use the layerscape-pci.txt for PCIe Gen4 controller
-   dt-bindings
+ - Change the default status of PCIe DT nodes to disabled.
 
- .../bindings/pci/layerscape-pci.txt           | 57 +++++++++++++++++++
- MAINTAINERS                                   |  8 +++
- 2 files changed, 65 insertions(+)
+ .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 163 ++++++++++++++++++
+ 1 file changed, 163 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Doc=
-umentation/devicetree/bindings/pci/layerscape-pci.txt
-index 66df1e81e0b8..3ef8836b6e97 100644
---- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-@@ -1,4 +1,6 @@
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
- Freescale Layerscape PCIe controller
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=20
- This PCIe host controller is based on the Synopsys DesignWare PCIe IP
- and thus inherits all the common properties defined in designware-pcie.txt=
-.
-@@ -58,3 +60,58 @@ Example:
- 				<0000 0 0 3 &gic GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
- 				<0000 0 0 4 &gic GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/bo=
+ot/dts/freescale/fsl-lx2160a.dtsi
+index a79f5c1ea56d..3a098c462a25 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -762,5 +762,168 @@
+ 				     <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
+ 			dma-coherent;
+ 		};
++
++		pcie@3400000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03400000 0x0 0x00100000   /* controller registers */
++			       0x80 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>=
+,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++			status =3D "disabled";
++		};
++
++		pcie@3500000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03500000 0x0 0x00100000   /* controller registers */
++			       0x88 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0x88 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>=
+,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++			status =3D "disabled";
++		};
++
++		pcie@3600000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03600000 0x0 0x00100000   /* controller registers */
++			       0x90 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0x90 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>=
+,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
++			status =3D "disabled";
++		};
++
++		pcie@3700000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03700000 0x0 0x00100000   /* controller registers */
++			       0x98 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0x98 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>=
+,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
++			status =3D "disabled";
++		};
++
++		pcie@3800000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03800000 0x0 0x00100000   /* controller registers */
++			       0xa0 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0xa0 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>=
+,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>;
++			status =3D "disabled";
++		};
++
++		pcie@3900000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03900000 0x0 0x00100000   /* controller registers */
++			       0xa8 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0xa8 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>=
+,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
++			status =3D "disabled";
++		};
++
  	};
-+
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+NXP Layerscape PCIe Gen4 controller
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+This PCIe controller is based on the Mobiveil PCIe IP and thus inherits al=
-l
-+the common properties defined in mobiveil-pcie.txt.
-+
-+Required properties:
-+- compatible: should contain the platform identifier such as:
-+  "fsl,lx2160a-pcie"
-+- reg: base addresses and lengths of the PCIe controller register blocks.
-+  "config_axi_slave": PCIe controller registers
-+  "csr_axi_slave": Bridge config registers
-+- interrupts: A list of interrupt outputs of the controller. Must contain =
-an
-+  entry for each entry in the interrupt-names property.
-+- interrupt-names: It could include the following entries:
-+  "intr": The interrupt that is asserted for controller interrupts
-+  "aer": Asserted for aer interrupt when chip support the aer interrupt wi=
-th
-+	 none MSI/MSI-X/INTx mode,but there is interrupt line for aer.
-+  "pme": Asserted for pme interrupt when chip support the pme interrupt wi=
-th
-+	 none MSI/MSI-X/INTx mode,but there is interrupt line for pme.
-+- dma-coherent: Indicates that the hardware IP block can ensure the cohere=
-ncy
-+  of the data transferred from/to the IP block. This can avoid the softwar=
-e
-+  cache flush/invalid actions, and improve the performance significantly.
-+- msi-parent : See the generic MSI binding described in
-+  Documentation/devicetree/bindings/interrupt-controller/msi.txt.
-+
-+Example:
-+
-+	pcie@3400000 {
-+		compatible =3D "fsl,lx2160a-pcie";
-+		reg =3D <0x00 0x03400000 0x0 0x00100000   /* controller registers */
-+		       0x80 0x00000000 0x0 0x00001000>; /* configuration space */
-+		reg-names =3D "csr_axi_slave", "config_axi_slave";
-+		interrupts =3D <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
-+			     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-+			     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
-+		interrupt-names =3D "aer", "pme", "intr";
-+		#address-cells =3D <3>;
-+		#size-cells =3D <2>;
-+		device_type =3D "pci";
-+		apio-wins =3D <8>;
-+		ppio-wins =3D <8>;
-+		dma-coherent;
-+		bus-range =3D <0x0 0xff>;
-+		msi-parent =3D <&its>;
-+		ranges =3D <0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>;
-+		#interrupt-cells =3D <1>;
-+		interrupt-map-mask =3D <0 0 0 7>;
-+		interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
-+				<0000 0 0 2 &gic 0 0 GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
-+				<0000 0 0 3 &gic 0 0 GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
-+				<0000 0 0 4 &gic 0 0 GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 084d225583e0..b59763e23392 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11405,6 +11405,14 @@ L:	linux-arm-kernel@lists.infradead.org
- S:	Maintained
- F:	drivers/pci/controller/dwc/*layerscape*
-=20
-+PCI DRIVER FOR NXP LAYERSCAPE GEN4 CONTROLLER
-+M:	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-+L:	linux-pci@vger.kernel.org
-+L:	linux-arm-kernel@lists.infradead.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/pci/layerscape-pci.txt
-+F:	drivers/pci/controller/mobibeil/pci-layerscape-gen4.c
-+
- PCI DRIVER FOR GENERIC OF HOSTS
- M:	Will Deacon <will.deacon@arm.com>
- L:	linux-pci@vger.kernel.org
+ };
 --=20
 2.17.1
