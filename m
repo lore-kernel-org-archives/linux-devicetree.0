@@ -1,63 +1,46 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v2 0/4] ARM: dts: imx6sx: Add DISPLAY power domain support
-Date: Tue, 20 Nov 2018 12:34:58 +0000
-Message-ID: <20181120123458.GA22597@e107981-ln.cambridge.arm.com>
-References: <cover.1539020938.git.leonard.crestez@nxp.com>
+Subject: Re: [PATCH 0/4] dts/layerscape-pci: removed unsuitable compatible
+ string
+Date: Tue, 20 Nov 2018 12:53:14 +0000
+Message-ID: <20181120125314.GA23472@e107981-ln.cambridge.arm.com>
+References: <20181008031428.25293-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1539020938.git.leonard.crestez@nxp.com>
+In-Reply-To: <20181008031428.25293-1-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Richard Zhu <hongxing.zhu@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Stefan Agner <stefan@agner.ch>, Marek Vasut <marex@denx.de>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Zhiqiang Hou <Zhiqiang.Hou@nxp.com>, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, shawnguo@kernel.org, mark.rutland@arm.com, bhelgaas@google.com, Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 08, 2018 at 06:06:18PM +0000, Leonard Crestez wrote:
-> Now that mxsfb has functional runtime_pm support we can enable power
-> gating for the DISPLAY power domain on imx6sx.
+On Mon, Oct 08, 2018 at 11:14:24AM +0800, Zhiqiang Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> Since pci-imx doesn't support runtime power gating this is still
-> always-on unless PCI is disabled/unused. But it's reasonable for an imx
-> board to not have PCI.
+> Removed the compatible string "snps,dw-pcie" from FSL layerscape-pci compatible
+> string list.
 > 
-> The current pd_pcie is actually only for PCIE_PHY, the PCIE ip block is
-> actually inside the DISPLAY domain. This is handled by adding the pcie
-> node in both power domains, using multi-pd support.
+> Hou Zhiqiang (4):
+>   doc/layerscape-pci: update the PCIe compatible strings
+>   doc/layerscape-pci: removed unsuitable compatible string
+>   dts/arm/ls1021a: Clean PCIe controller compatible strings
+>   dts/arm64/layerscape: Clean PCIe controller compatible strings
 > 
-> Series is against linux-next. The last patch needs runtime PM in all
-> drivers or it will cause hangs. This means Shawn should hold back on it
-> until the PCI and mxsfb dependencies get merged (both might take a long
-> time). So you can just review that patch and I will resend it later,
-> perhaps in another cycle.
-> 
-> ---
-> 
-> Changes since v1:
-> * Document multi-pd in imx6q-pcie bindings and add DT list
-> * Don't refer to "DISPLAY" as "DISPMIX" because the Reference Manual
-> doesn't do that.
-> * Link to v1: https://lore.kernel.org/patchwork/cover/994092/
-> 
-> This is independent of other imx6-pci PM patches such as this one:
-> * https://lore.kernel.org/patchwork/patch/996806/
-> Device links are quite nice!
-> 
-> Link to mxsfb thread: https://lkml.org/lkml/2018/9/26/1185
-> 
-> Leonard Crestez (4):
->   soc: imx: gpc: Increase GPC_CLK_MAX to 7
->   dt-bindings: imx6q-pcie: Add multi-pd bindings for imx6sx
->   PCI: imx: Add multi-pd support
->   ARM: dts: imx6sx: Add DISPLAY power domain support
-> 
->  .../bindings/pci/fsl,imx6q-pcie.txt           |  4 +-
->  arch/arm/boot/dts/imx6sx.dtsi                 | 19 +++++++-
->  drivers/pci/controller/dwc/pci-imx6.c         | 48 +++++++++++++++++++
->  drivers/soc/imx/gpc.c                         |  2 +-
->  4 files changed, 70 insertions(+), 3 deletions(-)
+>  .../devicetree/bindings/pci/layerscape-pci.txt       |  7 ++++---
+>  arch/arm/boot/dts/ls1021a.dtsi                       |  4 ++--
+>  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi       |  2 +-
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi       |  6 +++---
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi       |  6 +++---
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi       |  6 +++---
+>  arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi       |  8 ++++----
+>  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi       | 12 ++++--------
+>  8 files changed, 24 insertions(+), 27 deletions(-)
 
-As agreed with Shawn, I have applied patches 2-3 to pci/dwc for v4.21,
-thanks.
+Hi Rob,
 
+I assume the dts changes in this series are OK so I am going to
+pull them in the PCI tree, please let me know if you see any
+problem with that.
+
+Thanks,
 Lorenzo
