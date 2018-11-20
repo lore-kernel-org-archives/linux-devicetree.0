@@ -1,40 +1,168 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v3 0/14] media: make Marvell camera work on DT-based OLPC XO-1.75
-Date: Tue, 20 Nov 2018 11:03:05 +0100
-Message-ID: <20181120100318.367987-1-lkundrak@v3.sk>
+Subject: [PATCH v3 01/14] media: ov7670: split register setting from set_fmt() logic
+Date: Tue, 20 Nov 2018 11:03:06 +0100
+Message-ID: <20181120100318.367987-2-lkundrak@v3.sk>
+References: <20181120100318.367987-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181120100318.367987-1-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-this is the third spin of a patchset that modernizes the Marvel MMP2 CCIC
-driver. Notably, it ports it from the platform data (which seems unused a=
+This will allow us to restore the last set format after the device return=
 s
-the board support code never made it) to devicetree.
+from a power off.
 
-At the core of the rework is the move to asynchronous sensor discovery
-and clock management with the standard clock framework. There are also
-some straightforward fixes for the bitrotten parts.
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-There's probably still room for improvement, but as it is, it seems to
-work well on OLPC XO-1.75 and doesn't break OLPC XO-1 (I've tested on
-both platforms).
-
+---
 Changes since v2:
-- All documented in individual patches.
+- This patch was added to the series
 
-Changes since v1:
-- "marvell-ccic: drop ctlr_reset()" patch was replaced with a
-  straightforward revert of the commit that added ctlr_reset() along with=
- an
-  explanation in commit message.
-- Added collected Acks
-- Other changes are noted in individial patches
+ drivers/media/i2c/ov7670.c | 80 ++++++++++++++++++++++----------------
+ 1 file changed, 46 insertions(+), 34 deletions(-)
 
-Thanks,
-Lubo
+diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
+index bc68a3a5b4ec..ee2302fbdeee 100644
+--- a/drivers/media/i2c/ov7670.c
++++ b/drivers/media/i2c/ov7670.c
+@@ -240,6 +240,7 @@ struct ov7670_info {
+ 	};
+ 	struct v4l2_mbus_framefmt format;
+ 	struct ov7670_format_struct *fmt;  /* Current format */
++	struct ov7670_win_size *wsize;
+ 	struct clk *clk;
+ 	struct gpio_desc *resetb_gpio;
+ 	struct gpio_desc *pwdn_gpio;
+@@ -1003,48 +1004,20 @@ static int ov7670_try_fmt_internal(struct v4l2_su=
+bdev *sd,
+ 	return 0;
+ }
+=20
+-/*
+- * Set a format.
+- */
+-static int ov7670_set_fmt(struct v4l2_subdev *sd,
+-		struct v4l2_subdev_pad_config *cfg,
+-		struct v4l2_subdev_format *format)
++static int ov7670_apply_fmt(struct v4l2_subdev *sd)
+ {
+-	struct ov7670_format_struct *ovfmt;
+-	struct ov7670_win_size *wsize;
+ 	struct ov7670_info *info =3D to_state(sd);
+-#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
+-	struct v4l2_mbus_framefmt *mbus_fmt;
+-#endif
++	struct ov7670_win_size *wsize =3D info->wsize;
+ 	unsigned char com7, com10 =3D 0;
+ 	int ret;
+=20
+-	if (format->pad)
+-		return -EINVAL;
+-
+-	if (format->which =3D=3D V4L2_SUBDEV_FORMAT_TRY) {
+-		ret =3D ov7670_try_fmt_internal(sd, &format->format, NULL, NULL);
+-		if (ret)
+-			return ret;
+-#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
+-		mbus_fmt =3D v4l2_subdev_get_try_format(sd, cfg, format->pad);
+-		*mbus_fmt =3D format->format;
+-		return 0;
+-#else
+-		return -ENOTTY;
+-#endif
+-	}
+-
+-	ret =3D ov7670_try_fmt_internal(sd, &format->format, &ovfmt, &wsize);
+-	if (ret)
+-		return ret;
+ 	/*
+ 	 * COM7 is a pain in the ass, it doesn't like to be read then
+ 	 * quickly written afterward.  But we have everything we need
+ 	 * to set it absolutely here, as long as the format-specific
+ 	 * register sets list it first.
+ 	 */
+-	com7 =3D ovfmt->regs[0].value;
++	com7 =3D info->fmt->regs[0].value;
+ 	com7 |=3D wsize->com7_bit;
+ 	ret =3D ov7670_write(sd, REG_COM7, com7);
+ 	if (ret)
+@@ -1066,7 +1039,7 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
+ 	/*
+ 	 * Now write the rest of the array.  Also store start/stops
+ 	 */
+-	ret =3D ov7670_write_array(sd, ovfmt->regs + 1);
++	ret =3D ov7670_write_array(sd, info->fmt->regs + 1);
+ 	if (ret)
+ 		return ret;
+=20
+@@ -1081,8 +1054,6 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
+ 			return ret;
+ 	}
+=20
+-	info->fmt =3D ovfmt;
+-
+ 	/*
+ 	 * If we're running RGB565, we must rewrite clkrc after setting
+ 	 * the other parameters or the image looks poor.  If we're *not*
+@@ -1100,6 +1071,46 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
+ 	return 0;
+ }
+=20
++/*
++ * Set a format.
++ */
++static int ov7670_set_fmt(struct v4l2_subdev *sd,
++		struct v4l2_subdev_pad_config *cfg,
++		struct v4l2_subdev_format *format)
++{
++	struct ov7670_info *info =3D to_state(sd);
++#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
++	struct v4l2_mbus_framefmt *mbus_fmt;
++#endif
++	int ret;
++
++	if (format->pad)
++		return -EINVAL;
++
++	if (format->which =3D=3D V4L2_SUBDEV_FORMAT_TRY) {
++		ret =3D ov7670_try_fmt_internal(sd, &format->format, NULL, NULL);
++		if (ret)
++			return ret;
++#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
++		mbus_fmt =3D v4l2_subdev_get_try_format(sd, cfg, format->pad);
++		*mbus_fmt =3D format->format;
++		return 0;
++#else
++		return -ENOTTY;
++#endif
++	}
++
++	ret =3D ov7670_try_fmt_internal(sd, &format->format, &info->fmt, &info-=
+>wsize);
++	if (ret)
++		return ret;
++
++	ret =3D ov7670_apply_fmt(sd);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
+ static int ov7670_get_fmt(struct v4l2_subdev *sd,
+ 			  struct v4l2_subdev_pad_config *cfg,
+ 			  struct v4l2_subdev_format *format)
+@@ -1847,6 +1858,7 @@ static int ov7670_probe(struct i2c_client *client,
+=20
+ 	info->devtype =3D &ov7670_devdata[id->driver_data];
+ 	info->fmt =3D &ov7670_formats[0];
++	info->wsize =3D &info->devtype->win_sizes[0];
+=20
+ 	ov7670_get_default_format(sd, &info->format);
+=20
+--=20
+2.19.1
