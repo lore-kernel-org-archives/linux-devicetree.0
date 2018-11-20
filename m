@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC PATCH v2 05/14] irqchip/sun4i: add support for
- suniv interrupt controller
-Date: Tue, 20 Nov 2018 09:48:15 +0100
-Message-ID: <20181120084815.rvh63cvvhxj6sbs2@flea>
+Subject: Re: [RFC PATCH v2 08/14] clocksource/drivers/sun4i:
+ register as sched_clock on suniv
+Date: Tue, 20 Nov 2018 09:49:03 +0100
+Message-ID: <20181120084903.v6v2m2sdiwdo34bd@flea>
 References: <cover.1542546735.git.mesihkilinc@gmail.com>
- <d693414b1693a9018956bcc589a9048e88fbc8f6.1542546735.git.mesihkilinc@gmail.com>
+ <6f4773bdef8979bff71e958c9ca2c832c68ada0d.1542546735.git.mesihkilinc@gmail.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="7nbopu3lgekzonta"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBWUUZ7PQKGQEGRXZZHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="6ccq6ihtnj6zd225"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBCUVZ7PQKGQEKPVCZ2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <d693414b1693a9018956bcc589a9048e88fbc8f6.1542546735.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <6f4773bdef8979bff71e958c9ca2c832c68ada0d.1542546735.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,48 +24,20 @@ Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreC
 List-Id: devicetree@vger.kernel.org
 
 
---7nbopu3lgekzonta
+--6ccq6ihtnj6zd225
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-Hi,
-
-On Sun, Nov 18, 2018 at 05:17:04PM +0300, Mesih Kilinc wrote:
-> The new F-series SoCs (suniv) from Allwinner use an stripped version of
-> the interrupt controller in A10/A13.
+On Sun, Nov 18, 2018 at 05:17:07PM +0300, Mesih Kilinc wrote:
+> The suniv chip (newer F-series Allwinner SoCs) is based on ARM926EJ-S
+> CPU, thus it has no architecture timer.
 > 
-> Add support for it in irq-sun4i driver.
+> Register sun4i_timer as sched_clock on it.
 > 
 > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 > Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/irqchip/irq-sun4i.c | 47 ++++++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 42 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-sun4i.c b/drivers/irqchip/irq-sun4i.c
-> index e3e5b91..2abf662 100644
-> --- a/drivers/irqchip/irq-sun4i.c
-> +++ b/drivers/irqchip/irq-sun4i.c
-> @@ -23,13 +23,26 @@
->  
->  #include <asm/exception.h>
->  
-> +enum sun4i_irq_type {
-> +	sun4i_ic,
-> +	suniv_ic
-> +};
-> +
-> +static enum sun4i_irq_type sun4i_irq_type;
 
-You don't really need that type. It's completely redundant with the
-compatible.
-
-> +static int sun4i_irq_enable_reg_offset;
-> +static int sun4i_irq_mask_reg_offset;
-
-Ideally, this should be a structure so that we can easily extend it
-without adding more and more global variables. And the type shouldn't
-be signed.
+This one should be squashed in the previous patch.
 
 Maxime
 
@@ -73,4 +45,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---7nbopu3lgekzonta--
+--6ccq6ihtnj6zd225--
