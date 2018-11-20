@@ -1,68 +1,56 @@
-From: Romain Izard <romain.izard.pro@gmail.com>
-Subject: Re: [PATCH] ARM: dts: at91: sama5d2: use the divided clock for SMC
-Date: Tue, 20 Nov 2018 19:01:32 +0100
-Message-ID: <CAGkQfmPHRKqMvm6bNDf8S5qM7uE5T-izij=jm2nob0zrOgOM-w@mail.gmail.com>
-References: <20181120165737.4998-1-romain.izard.pro@gmail.com> <20181120171612.GF8367@piout.net>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH] arm64: dts: qcom: pm8998: Use ADC temperature to
+ temp-alarm node
+Date: Tue, 20 Nov 2018 10:21:33 -0800
+Message-ID: <20181120182133.GR22824@google.com>
+References: <20180927212253.177200-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181120171612.GF8367@piout.net>
+Content-Disposition: inline
+In-Reply-To: <20180927212253.177200-1-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Le mar. 20 nov. 2018 =C3=A0 18:16, Alexandre Belloni
-<alexandre.belloni@bootlin.com> a =C3=A9crit :
->
-> Hello Romain,
->
-> On 20/11/2018 17:57:37+0100, Romain Izard wrote:
-> > The SAMA5D2 is different from SAMA5D3 and SAMA5D4, as there are two
-> > different clocks for the peripherals in the SoC. The Static Memory
-> > controller is connected to the divided master clock.
-> >
-> > Unfortunately, the device tree does not correctly show this and uses th=
-e
-> > master clock directly. This clock is then used by the code for the NAND
-> > controller to calculate the timings for the controller, and we end up w=
-ith
-> > slow NAND Flash access.
-> >
-> > Fix the device tree, and the performance of Flash access is improved.
-> >
-> > Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
-> > ---
-> >  arch/arm/boot/dts/sama5d2.dtsi | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2=
-.dtsi
-> > index 61f68e5c48e9..b405992eb601 100644
-> > --- a/arch/arm/boot/dts/sama5d2.dtsi
-> > +++ b/arch/arm/boot/dts/sama5d2.dtsi
-> > @@ -308,7 +308,7 @@
-> >                                 0x1 0x0 0x60000000 0x10000000
-> >                                 0x2 0x0 0x70000000 0x10000000
-> >                                 0x3 0x0 0x80000000 0x10000000>;
-> > -                     clocks =3D <&mck>;
-> > +                     clocks =3D <&h32ck>;
->
-> You will have to rebase on top of at91-dt. And if I'm not mistaken, this
-> line should be:
->
-> +                       clocks =3D <&pmc PMC_TYPE_CORE PMC_MCK2>;
->
-> >                       status =3D "disabled";
-> >
-> >                       nand_controller: nand-controller {
+On Thu, Sep 27, 2018 at 02:22:53PM -0700, Matthias Kaehlcke wrote:
+> The temperature information from the temp-alarm block itself is very
+> coarse ("temperature is above/below trip points"). Provide the driver
+> with the die temperature channel of the ADC on the PMIC for more precise
+> readings.
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> - based on agross/for-next (7a002fe0179c "Merge branch
+>   'defconfig-for-4.20' into all-for-4.20-redo"))
+> - depends on e13d757279bb ("iio: adc: Add QCOM SPMI PMIC5 ADC driver")
+>   from IIO pull request:
+>   git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git tags/iio-for-4.20a
+> - to work properly https://patchwork.kernel.org/patch/10594491/ is
+>   needed
+> ---
+>  arch/arm64/boot/dts/qcom/pm8998.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/pm8998.dtsi b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> index 048f19fa0150..fab5a826fb01 100644
+> --- a/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> @@ -58,6 +58,8 @@
+>  			compatible = "qcom,spmi-temp-alarm";
+>  			reg = <0x2400>;
+>  			interrupts = <0x0 0x24 0x0 IRQ_TYPE_EDGE_RISING>;
+> +			io-channels = <&pm8998_adc ADC5_DIE_TEMP>;
+> +			io-channel-names = "thermal";
+>  			#thermal-sensor-cells = <0>;
+>  		};
+>  
 
-I guess you're right but this will only reach mainline in 4.21. I get slow
-flash access with 4.19 as well...
+I think this should be ready to land in for-next now that "arm64: dts:
+qcom: pm8998: Add die temperature channel node to the ADC"
+(a789fd0bab57) has been added.
 
-After a second look, it looks like the SAMA5D4 is affected too.
+Cheers
 
-Best regards,
---=20
-Romain Izard
+Matthias
