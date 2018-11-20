@@ -1,107 +1,101 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: Re: [PATCH v4 5/7] iommu: Add virtio-iommu driver
-Date: Tue, 20 Nov 2018 17:30:45 +0000
-Message-ID: <6d003fde-9574-0ff9-0bf8-7901d1a4aa5c@arm.com>
-References: <20181115165234.43990-1-jean-philippe.brucker@arm.com>
- <20181115165234.43990-6-jean-philippe.brucker@arm.com>
- <64abfb83-c555-c518-1030-cb73846517fc@redhat.com>
- <41460260-417b-762f-f007-ccfd5ac1e8a5@arm.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH V3] arm64: dts: r8a77990: ebisu: Add and enable SDHI
+ device nodes
+Date: Tue, 20 Nov 2018 11:16:00 +0100
+Message-ID: <CAMuHMdWQYt4nrjBeQnWcZ+OOT+UX=9KTu3Lki7aS=n3n8FczZg@mail.gmail.com>
+References: <20181106204647.18051-1-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <virtio-dev-return-4979-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
-Sender: <virtio-dev@lists.oasis-open.org>
-List-Post: <mailto:virtio-dev@lists.oasis-open.org>
-List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
-List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
-List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
-In-Reply-To: <41460260-417b-762f-f007-ccfd5ac1e8a5@arm.com>
-Content-Language: en-US
-To: Auger Eric <eric.auger@redhat.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, "virtio-dev@lists.oasis-open.org" <virtio-dev@lists.oasis-open.org>, "joro@8bytes.org" <joro@8bytes.org>, "mst@redhat.com" <mst@redhat.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "tnowicki@caviumnetworks.com" <tnowicki@caviumnetworks.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Robin Murphy <Robin.Murphy@arm.com>, Will Deacon <Will.Deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181106204647.18051-1-marek.vasut+renesas@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 16/11/2018 18:46, Jean-Philippe Brucker wrote:
->>> +/*
->>> + * __viommu_sync_req - Complete all in-flight requests
->>> + *
->>> + * Wait for all added requests to complete. When this function returns, all
->>> + * requests that were in-flight at the time of the call have completed.
->>> + */
->>> +static int __viommu_sync_req(struct viommu_dev *viommu)
->>> +{
->>> +	int ret = 0;
->>> +	unsigned int len;
->>> +	size_t write_len;
->>> +	struct viommu_request *req;
->>> +	struct virtqueue *vq = viommu->vqs[VIOMMU_REQUEST_VQ];
->>> +
->>> +	assert_spin_locked(&viommu->request_lock);
->>> +
->>> +	virtqueue_kick(vq);
->>> +
->>> +	while (!list_empty(&viommu->requests)) {
->>> +		len = 0;
->>> +		req = virtqueue_get_buf(vq, &len);
->>> +		if (!req)
->>> +			continue;
->>> +
->>> +		if (!len)
->>> +			viommu_set_req_status(req->buf, req->len,
->>> +					      VIRTIO_IOMMU_S_IOERR);
->>> +
->>> +		write_len = req->len - req->write_offset;
->>> +		if (req->writeback && len >= write_len)
->> I don't get "len >= write_len". Is it valid for the device to write more
->> than write_len? If it writes less than write_len, the status is not set,
->> is it?
+Hi Marek,
 
-Actually, len could well be three bytes smaller than write_len. The spec
-doesn't require the device to write the three padding bytes in
-virtio_iommu_req_tail, after the status byte.
+On Tue, Nov 6, 2018 at 9:46 PM Marek Vasut <marek.vasut@gmail.com> wrote:
+> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>
+> This patch adds SDHI{0,1,3} device nodes for the r8a77990 SoC
+> and enables SD card slot connected to SDHI0, micro SD card slot
+> connected to SDHI1 and eMMC connected to SDHI3 on the Ebisu board
+> using the R8A77990 SoC.
+>
+> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 
-Here the driver just assumes that the device wrote the reserved field.
-The QEMU device seems to write uninitialized data in there...
+> --- a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+> +++ b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+> @@ -129,6 +129,15 @@
+>                 };
+>         };
+>
+> +       reg_1p8v: regulator0 {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "fixed-1.8V";
+> +               regulator-min-microvolt = <1800000>;
+> +               regulator-max-microvolt = <1800000>;
+> +               regulator-boot-on;
+> +               regulator-always-on;
+> +       };
+> +
+>         reg_3p3v: regulator1 {
+>                 compatible = "regulator-fixed";
+>                 regulator-name = "fixed-3.3V";
+> @@ -180,6 +189,54 @@
+>                 #clock-cells = <0>;
+>                 clock-frequency = <74250000>;
+>         };
+> +
+> +       vcc_sdhi0: regulator-vcc-sdhi0 {
+> +               compatible = "regulator-fixed";
+> +
+> +               regulator-name = "SDHI0 Vcc";
+> +               regulator-min-microvolt = <3300000>;
+> +               regulator-max-microvolt = <3300000>;
+> +
+> +               gpio = <&gpio5 17 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +       };
+> +
+> +       vccq_sdhi0: regulator-vccq-sdhi0 {
+> +               compatible = "regulator-gpio";
+> +
+> +               regulator-name = "SDHI0 VccQ";
+> +               regulator-min-microvolt = <1800000>;
+> +               regulator-max-microvolt = <3300000>;
+> +
+> +               gpios = <&gpio5 18 GPIO_ACTIVE_HIGH>;
+> +               gpios-states = <1>;
+> +               states = <3300000 1
+> +                         1800000 0>;
 
-Any objection to changing the spec to require the device to initialize
-those bytes to zero? I think it makes things nicer overall and shouldn't
-have any performance impact.
+I know this is how it's done in the example in
+Documentation/devicetree/bindings/regulator/gpio-regulator.txt,
+but usually brackets are used to group tuples, like:
 
-[...]
->>> +static struct iommu_domain *viommu_domain_alloc(unsigned type)
->>> +{
->>> +	struct viommu_domain *vdomain;
->>> +
->>> +	if (type != IOMMU_DOMAIN_UNMANAGED && type != IOMMU_DOMAIN_DMA)
->> smmu drivers also support the IDENTITY type. Don't we want to support it
->> as well?
-> 
-> Eventually yes. The IDENTITY domain is useful when an IOMMU has been
-> forced upon you and gets in the way of performance, in which case you
-> get rid of it with CONFIG_IOMMU_DEFAULT_PASSTHROUGH=y or
-> iommu.passthrough=y. For virtio-iommu though, you could simply not
-> instantiate the device.
-> 
-> I don't think it's difficult to add: if the device supports
-> VIRTIO_IOMMU_F_BYPASS, then we simply don't send an ATTACH request.
-> Otherwise after ATTACH we send a MAP for the whole input range. If the
-> change isn't bigger than this, I'll add it to v5.
+    states = <3300000 1>, <1800000 0>;
 
-Not as straightforward as I hoped, when the device doesn't support
-VIRTIO_IOMMU_F_BYPASS:
+Perhaps the example should be changed?
 
-* We can't simply create an ID map for the whole input range, we need to
-carve out the resv_mem regions.
+Gr{oetje,eeting}s,
 
-* For a VFIO device, the host has no way of forwarding the identity
-mapping. For example the guest will attempt to map [0; 0xffffffffffff]
--> [0; 0xffffffffffff], but VFIO only allows to map RAM and cannot take
-such request. One solution is to only create ID mapping for RAM, and
-register a notifier for memory hotplug, like intel-iommu does for IOMMUs
-that don't support HW pass-through.
+                        Geert
 
-Since it's not completely trivial and - I think - not urgent, I'll leave
-this for later.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Thanks,
-Jean
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
