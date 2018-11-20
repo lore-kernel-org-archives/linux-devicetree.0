@@ -1,86 +1,68 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v4 03/26] clk: sunxi-ng: Add check for maximum rate to
- NKM PLLs
-Date: Tue, 20 Nov 2018 11:55:57 +0100
-Message-ID: <20181120105557.3mysirc3ga2h2334@flea>
-References: <20181113111633.20189-1-jagan@amarulasolutions.com>
- <20181113111633.20189-4-jagan@amarulasolutions.com>
- <20181113132658.niwy6bqdqzaeqpv2@flea>
- <CAMty3ZBTaeMBFYwyJ+8HqHBDAfEOPEYBt01jho1H4c3SBKbvEw@mail.gmail.com>
+From: "M.h. Lian" <minghuan.lian@nxp.com>
+Subject: RE: [PATCHv2 08/25] PCI: mobiveil: use the 1st inbound window for MEM
+ inbound transactions
+Date: Tue, 20 Nov 2018 10:59:52 +0000
+Message-ID: <HE1PR0401MB223585D8755A5B5DF6EBC22AE8D90@HE1PR0401MB2235.eurprd04.prod.outlook.com>
+References: <20181120092615.11680-1-Zhiqiang.Hou@nxp.com>
+ <20181120092615.11680-9-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="a27mgq4savd3egd2"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZBTaeMBFYwyJ+8HqHBDAfEOPEYBt01jho1H4c3SBKbvEw@mail.gmail.com>
+In-Reply-To: <20181120092615.11680-9-Zhiqiang.Hou@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>
+Cc: Mingkai Hu <mingkai.hu@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 
---a27mgq4savd3egd2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Nov 15, 2018 at 08:51:04PM +0530, Jagan Teki wrote:
-> > >  drivers/clk/sunxi-ng/ccu_nkm.c | 3 +++
-> > >  drivers/clk/sunxi-ng/ccu_nkm.h | 1 +
-> > >  2 files changed, 4 insertions(+)
-> > >
-> > > diff --git a/drivers/clk/sunxi-ng/ccu_nkm.c b/drivers/clk/sunxi-ng/cc=
-u_nkm.c
-> > > index 6b5ad990f802..b8b66cdd30bf 100644
-> > > --- a/drivers/clk/sunxi-ng/ccu_nkm.c
-> > > +++ b/drivers/clk/sunxi-ng/ccu_nkm.c
-> > > @@ -128,6 +128,9 @@ static unsigned long ccu_nkm_round_rate(struct cc=
-u_mux_internal *mux,
-> > >       if (rate < nkm->min_rate)
-> > >               return nkm->min_rate;
-> > >
-> > > +     if (nkm->max_rate && rate > nkm->max_rate)
-> > > +             return nkm->max_rate;
-> > > +
-> >
-> > I would expect the test to be the same for the minimum and maximum case=
-s.
+> -----Original Message-----
+> From: Z.q. Hou
+> Sent: Tuesday, November 20, 2018 5:26 PM
+> To: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+> l.subrahmanya@mobiveil.co.in; shawnguo@kernel.org; Leo Li
+> <leoyang.li@nxp.com>; lorenzo.pieralisi@arm.com;
+> catalin.marinas@arm.com; will.deacon@arm.com
+> Cc: Mingkai Hu <mingkai.hu@nxp.com>; M.h. Lian
+> <minghuan.lian@nxp.com>; Xiaowei Bao <xiaowei.bao@nxp.com>; Z.q. Hou
+> <zhiqiang.hou@nxp.com>
+> Subject: [PATCHv2 08/25] PCI: mobiveil: use the 1st inbound window for
+> MEM inbound transactions
 >=20
-> I don't have proper use-case for max rate test, I do verify by using
-> higher the rate on dclock, but nor sure.  May be I can skip the
-> max_rate patch?
-
-So you're sending more patches that you haven't really tested?
-Why are you sending them then?
-
-> Apart from this, any idea about this issue where SUN4I_TCON0_DCLK_REG
-> will only work with div upto 6 on A64 DSI panels[1], did you find the
-> same issue on A33?
-
-IIRC my panel was falling into the case where the divider was 4, so
-I've not fallen into that case.
-
-> With parent rate 330MHz, the resulting tcon divider for 30MHz [2]
-> clock is 11 and for the same for 55MHz [3] clock is 6.
-
-I'm not sure what the question is?
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---a27mgq4savd3egd2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW/PoPQAKCRDj7w1vZxhR
-xSLGAP9Qr44NyVb197rOJlOKTTntni3+46QV9pevbQM76nN3TgEAgaYjL5W+4KIG
-hTGncT/uJU90x586s+G6e7AB/3s8/A4=
-=07n9
------END PGP SIGNATURE-----
-
---a27mgq4savd3egd2--
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>=20
+> The inbound windows have different register set with outbound windows.
+> This patch change the MEM inbound window to the first one.
+>=20
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+> V2:
+>  - no change
+>=20
+>  drivers/pci/controller/pcie-mobiveil.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pci/controller/pcie-mobiveil.c
+> b/drivers/pci/controller/pcie-mobiveil.c
+> index df71c11b4810..e88afc792a5c 100644
+> --- a/drivers/pci/controller/pcie-mobiveil.c
+> +++ b/drivers/pci/controller/pcie-mobiveil.c
+> @@ -616,7 +616,7 @@ static int mobiveil_host_init(struct mobiveil_pcie
+> *pcie)
+>  			   CFG_WINDOW_TYPE, resource_size(pcie-
+> >ob_io_res));
+>=20
+>  	/* memory inbound translation window */
+> -	program_ib_windows(pcie, WIN_NUM_1, 0, MEM_WINDOW_TYPE,
+> IB_WIN_SIZE);
+> +	program_ib_windows(pcie, WIN_NUM_0, 0, MEM_WINDOW_TYPE,
+> IB_WIN_SIZE);
+>=20
+>  	/* Get the I/O and memory ranges from DT */
+>  	resource_list_for_each_entry(win, &pcie->resources) {
+> --
+> 2.17.1
