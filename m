@@ -1,61 +1,38 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH] ARM: dts: at91: sama5d2: use the divided clock for SMC
-Date: Tue, 20 Nov 2018 18:16:12 +0100
-Message-ID: <20181120171612.GF8367@piout.net>
-References: <20181120165737.4998-1-romain.izard.pro@gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCHv4 0/3] dts: Add the property of IB and OB
+Date: Tue, 20 Nov 2018 17:30:34 +0000
+Message-ID: <20181120173021.GA29331@e107981-ln.cambridge.arm.com>
+References: <20171110034847.17891-1-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181120165737.4998-1-romain.izard.pro@gmail.com>
+In-Reply-To: <20171110034847.17891-1-xiaowei.bao@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Romain Izard <romain.izard.pro@gmail.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Tudor Ambarus <Tudor.Ambarus@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bao Xiaowei <xiaowei.bao@nxp.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, bhelgaas@google.com, shawnguo@kernel.org, madalin.bucur@nxp.com, sumit.garg@nxp.com, yangbo.lu@nxp.com, hongtao.jia@nxp.com, Yuantian.Tang@nxp.com, leoyang.li@nxp.com, kishon@ti.com, jingoohan1@gmail.com, pbrobinson@gmail.com, songxiaowei@hisilicon.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Zhiqiang.Hou@nxp.com, mingkai.hu@nxp.com, Minghuan.Lian@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Romain,
-
-On 20/11/2018 17:57:37+0100, Romain Izard wrote:
-> The SAMA5D2 is different from SAMA5D3 and SAMA5D4, as there are two
-> different clocks for the peripherals in the SoC. The Static Memory
-> controller is connected to the divided master clock.
+On Fri, Nov 10, 2017 at 11:48:44AM +0800, Bao Xiaowei wrote:
+> Depend on http://patchwork.ozlabs.org/patch/815382/
 > 
-> Unfortunately, the device tree does not correctly show this and uses the
-> master clock directly. This clock is then used by the code for the NAND
-> controller to calculate the timings for the controller, and we end up with
-> slow NAND Flash access.
+> Bao Xiaowei (3):
+>   ARMv8: dts: ls1046a: add the property of IB and OB
+>   ARMv8: layerscape: add the pcie ep function support
+>   ARMv8: pcie: make the DWC EP driver support for layerscape
 > 
-> Fix the device tree, and the performance of Flash access is improved.
-> 
-> Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
-> ---
->  arch/arm/boot/dts/sama5d2.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-> index 61f68e5c48e9..b405992eb601 100644
-> --- a/arch/arm/boot/dts/sama5d2.dtsi
-> +++ b/arch/arm/boot/dts/sama5d2.dtsi
-> @@ -308,7 +308,7 @@
->  				  0x1 0x0 0x60000000 0x10000000
->  				  0x2 0x0 0x70000000 0x10000000
->  				  0x3 0x0 0x80000000 0x10000000>;
-> -			clocks = <&mck>;
-> +			clocks = <&h32ck>;
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |   6 ++
+>  drivers/pci/dwc/Kconfig                        |   1 +
+>  drivers/pci/dwc/pci-layerscape.c               | 121 +++++++++++++++++++++++--
+>  3 files changed, 121 insertions(+), 7 deletions(-)
 
-You will have to rebase on top of at91-dt. And if I'm not mistaken, this
-line should be:
+Can I drop this series from the linux-pci patch queue ? I reckon
+it is superseded by:
 
-+			clocks = <&pmc PMC_TYPE_CORE PMC_MCK2>;
+https://patchwork.ozlabs.org/patch/992928/
 
->  			status = "disabled";
->  
->  			nand_controller: nand-controller {
-> -- 
-> 2.17.1
-> 
+but I wanted to make sure that's the case, I really can't follow
+the version numbering so I am asking.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks,
+Lorenzo
