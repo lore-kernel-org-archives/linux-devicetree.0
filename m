@@ -1,95 +1,56 @@
-From: "M.h. Lian" <minghuan.lian@nxp.com>
-Subject: RE: [PATCHv2 12/25] PCI: mobiveil: move out the link up waiting from
- mobiveil_host_init
-Date: Tue, 20 Nov 2018 11:01:49 +0000
-Message-ID: <HE1PR0401MB2235E159D0F9F922F36B1517E8D90@HE1PR0401MB2235.eurprd04.prod.outlook.com>
-References: <20181120092615.11680-1-Zhiqiang.Hou@nxp.com>
- <20181120092615.11680-13-Zhiqiang.Hou@nxp.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 12/16] clocksource: Add clock driver for RDA8810PL SoC
+Date: Tue, 20 Nov 2018 11:05:41 +0000
+Message-ID: <e732ad15-b778-1c84-ad47-5770ee66688b@arm.com>
+References: <20181119170939.19153-1-manivannan.sadhasivam@linaro.org>
+ <20181119170939.19153-13-manivannan.sadhasivam@linaro.org>
+ <e9b208ff-327e-860a-6ef0-15bf797dc6b2@arm.com>
+ <20181120050650.GC5885@Mani-XPS-13-9360> <86pnv0rwna.wl-marc.zyngier@arm.com>
+ <CACRpkdan96Vj58s=g9jiAoyLBpZqPCKcjqD82mgDj5WqRP7vDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181120092615.11680-13-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <CACRpkdan96Vj58s=g9jiAoyLBpZqPCKcjqD82mgDj5WqRP7vDQ@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>
-Cc: Mingkai Hu <mingkai.hu@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, zhao_steven@263.net, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+On 20/11/2018 08:56, Linus Walleij wrote:
+> On Tue, Nov 20, 2018 at 9:17 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
+> 
+>> How does this change anything with the fact that the above code is
+>> broken? 56 or 64 bit, you cannot read this counter with a single
+>> access, or two. The canonical way of reading such a counter is
+>> something like this:
+>>
+>>         do {
+>>                 lo = readl_relaxed(LO);
+>>                 hi = readl_relaxed(HI);
+>>         } while (hi != read_relaxed(HI));
+> 
+> To be fair, I have seen hardware that employ a logic latch
+> such that when a read access is done to the LO register,
+> the value of the whole counter is latched, also for the HI
+> register, so when you read the HI register in the second
+> step, it is never subject to wrapping. (Conversely reading
+> the HI before the LO will always give you insane values
+> :D)
 
-> -----Original Message-----
-> From: Z.q. Hou
-> Sent: Tuesday, November 20, 2018 5:27 PM
-> To: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
-> l.subrahmanya@mobiveil.co.in; shawnguo@kernel.org; Leo Li
-> <leoyang.li@nxp.com>; lorenzo.pieralisi@arm.com;
-> catalin.marinas@arm.com; will.deacon@arm.com
-> Cc: Mingkai Hu <mingkai.hu@nxp.com>; M.h. Lian
-> <minghuan.lian@nxp.com>; Xiaowei Bao <xiaowei.bao@nxp.com>; Z.q. Hou
-> <zhiqiang.hou@nxp.com>
-> Subject: [PATCHv2 12/25] PCI: mobiveil: move out the link up waiting from
-> mobiveil_host_init
->=20
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
->=20
-> Host initial sequence does not depend on PCIe link up, so move it to the
-> place just before the enumeration.
->=20
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> ---
-> V2:
->  - no change
->=20
->  drivers/pci/controller/pcie-mobiveil.c | 15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c
-> b/drivers/pci/controller/pcie-mobiveil.c
-> index 8eee1ab7ee24..c2848c22b466 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -582,15 +582,8 @@ static void mobiveil_pcie_enable_msi(struct
-> mobiveil_pcie *pcie)  static int mobiveil_host_init(struct mobiveil_pcie =
-*pcie)
-> {
->  	u32 value, pab_ctrl, type;
-> -	int err;
->  	struct resource_entry *win;
->=20
-> -	err =3D mobiveil_bringup_link(pcie);
-> -	if (err) {
-> -		dev_info(&pcie->pdev->dev, "link bring-up failed\n");
-> -		return err;
-> -	}
-> -
->  	/*
->  	 * program Bus Master Enable Bit in Command Register in PAB Config
->  	 * Space
-> @@ -662,7 +655,7 @@ static int mobiveil_host_init(struct mobiveil_pcie
-> *pcie)
->  	/* setup MSI hardware registers */
->  	mobiveil_pcie_enable_msi(pcie);
->=20
-> -	return err;
-> +	return 0;
->  }
->=20
->  static void mobiveil_mask_intx_irq(struct irq_data *data) @@ -922,6
-> +915,12 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
->  	bridge->map_irq =3D of_irq_parse_and_map_pci;
->  	bridge->swizzle_irq =3D pci_common_swizzle;
->=20
-> +	ret =3D mobiveil_bringup_link(pcie);
-> +	if (ret) {
-> +		dev_info(dev, "link bring-up failed\n");
-> +		goto error;
-> +	}
-> +
->  	/* setup the kernel resources for the newly added PCIe root bus */
->  	ret =3D pci_scan_root_bus_bridge(bridge);
->  	if (ret)
-> --
-> 2.17.1
+I've seen such HW indeed, and I've also seen it being broken... ;-)
+
+It this timer is built around such a (non-broken) logic, I'd really like
+to see it spelled out. It will otherwise be a real pain to debug...
+
+> However the above code should be fine unless you know
+> for sure the hardware was constructed with a clever latch.
+
+Let's find out!
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
