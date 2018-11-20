@@ -1,17 +1,16 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 08/16] arm: dts: rda8810pl: Add interrupt controller
- support
-Date: Wed, 21 Nov 2018 00:58:42 +0530
-Message-ID: <20181120192842.GA16122@Mani-XPS-13-9360>
+Subject: Re: [PATCH 04/16] arm: dts: Add devicetree for RDA8810PL SoC
+Date: Wed, 21 Nov 2018 01:01:37 +0530
+Message-ID: <20181120193137.GB16122@Mani-XPS-13-9360>
 References: <20181119170939.19153-1-manivannan.sadhasivam@linaro.org>
- <20181119170939.19153-9-manivannan.sadhasivam@linaro.org>
- <CAL_JsqL3B3y3hYv-yf3wzXiUsvnM9pCYE7u_Y0i4zT7wFti5GA@mail.gmail.com>
+ <20181119170939.19153-5-manivannan.sadhasivam@linaro.org>
+ <CAL_JsqLf_9ryCUtUkkE6P4GS8tC7nQ0pLHwLCQzy_HLJNTNMrw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqL3B3y3hYv-yf3wzXiUsvnM9pCYE7u_Y0i4zT7wFti5GA@mail.gmail.com>
+In-Reply-To: <CAL_JsqLf_9ryCUtUkkE6P4GS8tC7nQ0pLHwLCQzy_HLJNTNMrw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>
 Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Amit Kucheria <amit.kucheria@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, zhao_steven@263.net, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
@@ -19,60 +18,152 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Rob,
 
-On Mon, Nov 19, 2018 at 12:29:07PM -0600, Rob Herring wrote:
+On Mon, Nov 19, 2018 at 12:25:58PM -0600, Rob Herring wrote:
 > On Mon, Nov 19, 2018 at 11:11 AM Manivannan Sadhasivam
 > <manivannan.sadhasivam@linaro.org> wrote:
 > >
-> > Add interrupt controller support for RDA Micro RDA8810PL SoC.
-> 
-> There's no point in splitting this to a separate patch. Without it,
-> the DT is not functional.
-> 
-
-Okay. Will merge this patch with SoC DT patch.
-
+> > Add initial device tree for RDA8810PL SoC from RDA Microelectronics.
+> >
 > > Signed-off-by: Andreas Färber <afaerber@suse.de>
 > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > > ---
-> >  arch/arm/boot/dts/rda8810pl.dtsi | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
+> >  arch/arm/boot/dts/rda8810pl.dtsi | 95 ++++++++++++++++++++++++++++++++
+> >  1 file changed, 95 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/rda8810pl.dtsi
 > >
 > > diff --git a/arch/arm/boot/dts/rda8810pl.dtsi b/arch/arm/boot/dts/rda8810pl.dtsi
-> > index 7f1ff2021eff..093d6980bfbd 100644
-> > --- a/arch/arm/boot/dts/rda8810pl.dtsi
+> > new file mode 100644
+> > index 000000000000..7f1ff2021eff
+> > --- /dev/null
 > > +++ b/arch/arm/boot/dts/rda8810pl.dtsi
-> > @@ -9,6 +9,7 @@
-> >
-> >  / {
-> >         compatible = "rda,8810pl";
-> > +       interrupt-parent = <&intc>;
-> >         #address-cells = <1>;
-> >         #size-cells = <1>;
-> >
-> > @@ -49,6 +50,13 @@
-> >                         #address-cells = <1>;
-> >                         #size-cells = <1>;
-> >                         ranges = <0x0 0x20800000 0x100000>;
-> > +
-> > +                       intc: interrupt-controller {
+> > @@ -0,0 +1,95 @@
+> > +/*
+> > + * RDA8810PL SoC
+> > + *
+> > + * Copyright (c) 2017 Andreas Färber
+> > + * Copyright (c) 2018 Manivannan Sadhasivam
+> > + *
+> > + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 > 
-> 
-> unit-address?
+> Goes on 1st line. checkpatch.pl will tell you this.
 > 
 
-Will add it.
+Ack.
+
+> > + */
+> > +
+> > +/ {
+> > +       compatible = "rda,8810pl";
+> > +       #address-cells = <1>;
+> > +       #size-cells = <1>;
+> > +
+> > +       aliases {
+> > +               serial0 = &uart0;
+> > +               serial1 = &uart1;
+> > +               serial2 = &uart2;
+> > +       };
+> > +
+> > +       cpus {
+> > +               #address-cells = <1>;
+> > +               #size-cells = <0>;
+> > +
+> > +               cpu@0 {
+> > +                       device_type = "cpu";
+> > +                       compatible = "arm,cortex-a5";
+> > +                       reg = <0x0>;
+> > +               };
+> > +       };
+> > +
+> > +       soc {
+> 
+> soc@0
+> 
+
+Ack.
+
+> > +               compatible = "simple-bus";
+> > +               #address-cells = <1>;
+> > +               #size-cells = <1>;
+> > +               ranges = <0x0 0x0 0x80000000>;
+> > +
+> > +               sram@100000 {
+> > +                       compatible = "mmio-sram";
+> > +                       reg = <0x100000 0x10000>;
+> 
+> Based on the address of this and everything else, perhaps you should
+> move this to the top-level (or another bus node) and then either get
+> rid of the soc node level or make it start at 0x20000000. Kind of
+> depends on what the rest of the memory map looks like.
+>
+
+Okay. Will move sram node to top level and make soc reg address start
+from 0x20000000.
+
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <1>;
+> > +                       ranges;
+> > +               };
+> > +
+> > +               apb@20800000 {
+> > +                       compatible = "simple-bus";
+> > +                       reg = <0x20800000 0x100000>;
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <1>;
+> > +                       ranges = <0x0 0x20800000 0x100000>;
+> > +               };
+> > +
+> > +               apb@20900000 {
+> > +                       compatible = "simple-bus";
+> > +                       reg = <0x20900000 0x100000>;
+> 
+> By definition of a simple-bus, it should not have any registers. Or
+> you should also have a specific compatible.
+> 
+
+Okay, will remove the reg property.
 
 Thanks,
 Mani
 
-> > +                               compatible = "rda,8810pl-intc";
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <1>;
+> > +                       ranges = <0x0 0x20900000 0x100000>;
+> > +               };
+> > +
+> > +               apb@20a00000 {
+> > +                       compatible = "simple-bus";
+> > +                       reg = <0x20a00000 0x100000>;
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <1>;
+> > +                       ranges = <0x0 0x20a00000 0x100000>;
+> > +
+> > +                       uart0: serial@0 {
+> > +                               compatible = "rda,8810pl-uart";
 > > +                               reg = <0x0 0x1000>;
-> > +                               interrupt-controller;
-> > +                               #interrupt-cells = <2>;
+> > +                               status = "disabled";
 > > +                       };
-> >                 };
-> >
-> >                 apb@20900000 {
+> > +
+> > +                       uart1: serial@10000 {
+> > +                               compatible = "rda,8810pl-uart";
+> > +                               reg = <0x10000 0x1000>;
+> > +                               status = "disabled";
+> > +                       };
+> > +
+> > +                       uart2: serial@90000 {
+> > +                               compatible = "rda,8810pl-uart";
+> > +                               reg = <0x90000 0x1000>;
+> > +                               status = "disabled";
+> > +                       };
+> > +               };
+> > +
+> > +               l2: cache-controller@21100000 {
+> > +                       compatible = "arm,pl310-cache";
+> > +                       reg = <0x21100000 0x1000>;
+> > +                       cache-unified;
+> > +                       cache-level = <2>;
+> > +               };
+> > +       };
+> > +};
 > > --
 > > 2.17.1
 > >
