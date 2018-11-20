@@ -1,122 +1,92 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V2] ARM: dts: imx7d-sdb: add rev-a board support
-Date: Tue, 20 Nov 2018 01:37:01 +0000
-Message-ID: <DB3PR0402MB3916DCD69EE46A6F1341F95EF5D90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1541726525-19544-1-git-send-email-Anson.Huang@nxp.com>
- <20181119134624.GT5829@dragon>
+From: "dbasehore ." <dbasehore@chromium.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: rk3399: Add xin32k clk
+Date: Mon, 19 Nov 2018 18:05:52 -0800
+Message-ID: <CAGAzgsrWCo97un9WT2DvkHV5ga7rpg05sxd5PsbEN8_w2Dh3rQ@mail.gmail.com>
+References: <20181116051719.23376-1-dbasehore@chromium.org>
+ <CAGAzgsq7uF=E3dzhyCjK4gq09_UV_aZhQbyaTnz7yDY_ErQYKQ@mail.gmail.com>
+ <CAD=FV=XVDAjLt+VtxedHEma1FRrG0LuFZ2c7L5-MsdCZkgEcsw@mail.gmail.com> <11718017.ngvMPIPJQJ@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181119134624.GT5829@dragon>
-Content-Language: en-US
+In-Reply-To: <11718017.ngvMPIPJQJ@diego>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: Doug Anderson <dianders@chromium.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, =?UTF-8?B?6LCi5L+u6ZGr?= <tony.xie@rock-chips.com>, Chris Zhong <zyw@rock-chips.com>, ayaka@soulik.info, "nickey.yang" <nickey.yang@rock-chips.com>, Shunqian Zheng <zhengsq@rock-chips.com>, klaus.goger@theobroma-systems.com, Brian Norris <briannorris@chromium.org>, enric.balletbo@collabora.com, Mark Rutland <mark.rutland@arm.com>, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFNoYXduDQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5h
-bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIFttYWlsdG86c2hhd25ndW9Aa2VybmVs
-Lm9yZ10NCj4gU2VudDogMjAxOMTqMTHUwjE5yNUgMjE6NDYNCj4gVG86IEFuc29uIEh1YW5nIDxh
-bnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxh
-bmRAYXJtLmNvbTsgcy5oYXVlckBwZW5ndXRyb25peC5kZTsNCj4ga2VybmVsQHBlbmd1dHJvbml4
-LmRlOyBGYWJpbyBFc3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+Ow0KPiBkZXZpY2V0cmVl
-QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBu
-eHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFYyXSBBUk06IGR0czogaW14N2Qtc2RiOiBh
-ZGQgcmV2LWEgYm9hcmQgc3VwcG9ydA0KPiANCj4gT24gRnJpLCBOb3YgMDksIDIwMTggYXQgMDE6
-Mjc6MTBBTSArMDAwMCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gQ3VycmVudCBpbXg3ZC1zZGIu
-ZHRzIGhhcyBzb21lIGluY29ycmVjdCBzZXR0aW5ncyBhYm91dCBSZXYtQSBhbmQNCj4gPiBSZXYt
-QiBib2FyZHMsIHNvbWUgb2YgdGhlIHNldHRpbmdzIGFyZSBiYXNlZCBvbiBSZXYtQSBib2FyZCBi
-dXQgc29tZQ0KPiA+IGFyZSBiYXNlZCBvbiBSZXYtQiBib2FyZCwgY2xlYW4gdXAgaXQgYnkgYWRk
-aW5nIGkuTVg3RCBTREIgUmV2LUEgYm9hcmQNCj4gPiBzdXBwb3J0LCBtYWtlIGRlZmF1bHQgaW14
-N2Qtc2RiLmR0cyBmb3IgUmV2LUIgYm9hcmQgYXMgdXN1YWwsIGFuZA0KPiA+IGludHJvZHVjZSBp
-bXg3ZC1zZGItcmV2YS5kdHMgZm9yIFJldi1BIGJvYXJkLiBCZWxvdyBhcmUgdGhlIGFmZmVjdGVk
-DQo+ID4gZGlmZmVyZW5jZXMgb2YgUmV2LUEgYW5kIFJldi1CIGJvYXJkOg0KPiA+DQo+ID4gICAg
-ICAgICAgICAgICAgIFJldi1BICAgICAgICAgICBSZXYtQg0KPiA+IFVTQl9PVEcyX1BXUjogICBV
-QVJUM19DVFNfQiAgICAgR1BJTzFfSU8wNw0KPiA+IEVORVRfRU5fQjogICAgICBOb25lICAgICAg
-ICAgICAgR1BJTzFfSU8wNA0KPiA+IFRQX0lOVF9COiAgICAgICBFUERDX0RBVEExMyAgICAgRVBE
-Q19CRFIxDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdA
-bnhwLmNvbT4NCj4gPiAtLS0NCj4gPiBjaGFuZ2Ugc2luY2UgVjE6DQo+ID4gCXJlbW92ZSAicGlu
-Y3RybC1hc3NlcnQtZ3Bpb3MiIHdoaWNoIGlzIHVudXNlZCBpbiB1cHN0cmVhbSwgYW5kIHVzZQ0K
-PiA+IHBoeS1zdXBwbHkgdG8gY29udHJvbCBmZWMyJ3MgZW5hYmxlIHBpbiwgbW9kZWwgdGhlIGVu
-YWJsZSBwaW4gYXMgR1BJTw0KPiByZWd1bGF0b3IuDQo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL01h
-a2VmaWxlICAgICAgICAgICB8ICAxICsNCj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14N2Qtc2Ri
-LXJldmEuZHRzIHwgMzkNCj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+
-ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDdkLXNkYi5kdHMgICAgICB8IDI5DQo+ICsrKysrKysr
-KysrKysrKysrKysrKysrKystLQ0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDY3IGluc2VydGlvbnMo
-KyksIDIgZGVsZXRpb25zKC0pICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiBhcmNoL2FybS9ib290
-L2R0cy9pbXg3ZC1zZGItcmV2YS5kdHMNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9i
-b290L2R0cy9NYWtlZmlsZSBiL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlDQo+ID4gaW5kZXgg
-ZWY5ZmZhNC4uNmQxMzNiOSAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9NYWtl
-ZmlsZQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlDQo+ID4gQEAgLTU3Miw2
-ICs1NzIsNyBAQCBkdGItJChDT05GSUdfU09DX0lNWDdEKSArPSBcDQo+ID4gIAlpbXg3ZC1waWNv
-LXBpLmR0YiBcDQo+ID4gIAlpbXg3ZC1zYmMtaW14Ny5kdGIgXA0KPiA+ICAJaW14N2Qtc2RiLmR0
-YiBcDQo+ID4gKwlpbXg3ZC1zZGItcmV2YS5kdGIgXA0KPiA+ICAJaW14N2Qtc2RiLXNodDExLmR0
-YiBcDQo+ID4gIAlpbXg3cy1jb2xpYnJpLWV2YWwtdjMuZHRiIFwNCj4gPiAgCWlteDdzLXdhcnAu
-ZHRiDQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDdkLXNkYi1yZXZhLmR0
-cw0KPiA+IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14N2Qtc2RiLXJldmEuZHRzDQo+ID4gbmV3IGZp
-bGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi43NzQxZWFhDQo+ID4gLS0tIC9kZXYv
-bnVsbA0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDdkLXNkYi1yZXZhLmR0cw0KPiA+
-IEBAIC0wLDAgKzEsMzkgQEANCj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0y
-LjArIE9SIE1JVCAvLyAvLyBDb3B5cmlnaHQgKEMpIDIwMTUNCj4gPiArRnJlZXNjYWxlIFNlbWlj
-b25kdWN0b3IsIEluYy4NCj4gPiArDQo+ID4gKy9kdHMtdjEvOw0KPiA+ICsNCj4gPiArI2luY2x1
-ZGUgImlteDdkLXNkYi5kdHMiDQo+ID4gKw0KPiA+ICsvIHsNCj4gPiArCXJlZ191c2Jfb3RnMl92
-YnVzOiByZWd1bGF0b3ItdXNiLW90ZzItdmJ1cyB7DQo+ID4gKwkJZ3BpbyA9IDwmZ3BpbzQgNyBH
-UElPX0FDVElWRV9ISUdIPjsNCj4gPiArCX07DQo+ID4gK307DQo+ID4gKw0KPiA+ICsmZmVjMiB7
-DQo+ID4gKwkvZGVsZXRlLXByb3BlcnR5L3BoeS1zdXBwbHk7DQo+ID4gK307DQo+ID4gKw0KPiA+
-ICsmaW9tdXhjIHsNCj4gPiArCWlteDdkLXNkYiB7DQo+ID4gKwkJcGluY3RybF90c2MyMDQ2X3Bl
-bmRvd246IHRzYzIwNDZfcGVuZG93biB7DQo+ID4gKwkJCWZzbCxwaW5zID0gPA0KPiA+ICsJCQkJ
-TVg3RF9QQURfRVBEQ19EQVRBMTNfX0dQSU8yX0lPMTMJMHg1OQ0KPiA+ICsJCQk+Ow0KPiA+ICsJ
-CX07DQo+ID4gKw0KPiA+ICsJCXBpbmN0cmxfaG9nOiBob2dncnAgew0KPiA+ICsJCQlmc2wscGlu
-cyA9IDwNCj4gPiArCQkJCU1YN0RfUEFEX1VBUlQzX0NUU19CX19HUElPNF9JTzcJCTB4MTQNCj4g
-PiArCQkJCU1YN0RfUEFEX0VDU1BJMl9TUzBfX0dQSU80X0lPMjMJCTB4MzQgIC8qIGJ0DQo+IHJl
-ZyBvbiAqLw0KPiA+ICsJCQk+Ow0KPiA+ICsJCX07DQo+ID4gKwl9Ow0KPiA+ICt9Ow0KPiA+ICsN
-Cj4gPiArJmlvbXV4Y19scHNyIHsNCj4gPiArCS9kZWxldGUtcHJvcGVydHkvcGluY3RybC1uYW1l
-czsNCj4gPiArCS9kZWxldGUtcHJvcGVydHkvcGluY3RybC0wOw0KPiA+ICt9Ow0KPiA+IGRpZmYg
-LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg3ZC1zZGIuZHRzDQo+ID4gYi9hcmNoL2FybS9i
-b290L2R0cy9pbXg3ZC1zZGIuZHRzIGluZGV4IGYxYmFmZGEuLjgzODViOWIgMTAwNjQ0DQo+ID4g
-LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14N2Qtc2RiLmR0cw0KPiA+ICsrKyBiL2FyY2gvYXJt
-L2Jvb3QvZHRzL2lteDdkLXNkYi5kdHMNCj4gPiBAQCAtNzMsNyArNzMsNyBAQA0KPiA+ICAJCXJl
-Z3VsYXRvci1uYW1lID0gInVzYl9vdGcyX3ZidXMiOw0KPiA+ICAJCXJlZ3VsYXRvci1taW4tbWlj
-cm92b2x0ID0gPDUwMDAwMDA+Ow0KPiA+ICAJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDUw
-MDAwMDA+Ow0KPiA+IC0JCWdwaW8gPSA8JmdwaW80IDcgR1BJT19BQ1RJVkVfSElHSD47DQo+ID4g
-KwkJZ3BpbyA9IDwmZ3BpbzEgNyBHUElPX0FDVElWRV9ISUdIPjsNCj4gPiAgCQllbmFibGUtYWN0
-aXZlLWhpZ2g7DQo+ID4gIAl9Ow0KPiA+DQo+ID4gQEAgLTExNCw2ICsxMTQsMTYgQEANCj4gPiAg
-CQlncGlvID0gPCZncGlvMiAxNCBHUElPX0FDVElWRV9MT1c+Ow0KPiA+ICAJfTsNCj4gPg0KPiA+
-ICsJcmVnX2ZlYzJfM3YzOiByZWd1bGF0b3ItZmVjMi0zdjMgew0KPiA+ICsJCWNvbXBhdGlibGUg
-PSAicmVndWxhdG9yLWZpeGVkIjsNCj4gPiArCQlyZWd1bGF0b3ItbmFtZSA9ICJmZWMyLTN2MyI7
-DQo+ID4gKwkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiArCQlwaW5jdHJsLTAgPSA8
-JnBpbmN0cmxfZW5ldDJfcmVnPjsNCj4gPiArCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwz
-MzAwMDAwPjsNCj4gPiArCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwzMzAwMDAwPjsNCj4g
-PiArCQlncGlvID0gPCZncGlvMSA0IEdQSU9fQUNUSVZFX0xPVz47DQo+ID4gKwl9Ow0KPiA+ICsN
-Cj4gPiAgCWJhY2tsaWdodDogYmFja2xpZ2h0IHsNCj4gPiAgCQljb21wYXRpYmxlID0gInB3bS1i
-YWNrbGlnaHQiOw0KPiA+ICAJCXB3bXMgPSA8JnB3bTEgMCA1MDAwMDAwIDA+Ow0KPiA+IEBAIC0y
-MTAsNiArMjIwLDcgQEANCj4gPiAgCWFzc2lnbmVkLWNsb2NrLXJhdGVzID0gPDA+LCA8MTAwMDAw
-MDAwPjsNCj4gPiAgCXBoeS1tb2RlID0gInJnbWlpIjsNCj4gPiAgCXBoeS1oYW5kbGUgPSA8JmV0
-aHBoeTE+Ow0KPiA+ICsJcGh5LXN1cHBseSA9IDwmcmVnX2ZlYzJfM3YzPjsNCj4gPiAgCWZzbCxt
-YWdpYy1wYWNrZXQ7DQo+ID4gIAlzdGF0dXMgPSAib2theSI7DQo+ID4gIH07DQo+ID4gQEAgLTQ5
-MSw2ICs1MDIsMTIgQEANCj4gPiAgCQkJPjsNCj4gPiAgCQl9Ow0KPiA+DQo+ID4gKwkJcGluY3Ry
-bF9lbmV0Ml9yZWc6IGVuZXQycmVnZ3JwIHsNCj4gPiArCQkJZnNsLHBpbnMgPSA8DQo+ID4gKwkJ
-CQlNWDdEX1BBRF9MUFNSX0dQSU8xX0lPMDRfX0dQSU8xX0lPNAkweDE0DQo+ID4gKwkJCT47DQo+
-ID4gKwkJfTsNCj4gPiArDQo+ID4gIAkJcGluY3RybF9mbGV4Y2FuMjogZmxleGNhbjJncnAgew0K
-PiA+ICAJCQlmc2wscGlucyA9IDwNCj4gPiAgCQkJCU1YN0RfUEFEX0dQSU8xX0lPMTRfX0ZMRVhD
-QU4yX1JYCTB4NTkNCj4gPiBAQCAtNTEzLDcgKzUzMCw2IEBADQo+ID4NCj4gPiAgCQlwaW5jdHJs
-X2hvZzogaG9nZ3JwIHsNCj4gPiAgCQkJZnNsLHBpbnMgPSA8DQo+ID4gLQkJCQlNWDdEX1BBRF9V
-QVJUM19DVFNfQl9fR1BJTzRfSU83CQkweDE0DQo+ID4gIAkJCQlNWDdEX1BBRF9FQ1NQSTJfU1Mw
-X19HUElPNF9JTzIzCQkweDM0ICAvKiBidA0KPiByZWcgb24gKi8NCj4gPiAgCQkJPjsNCj4gPiAg
-CQl9Ow0KPiA+IEBAIC03MjQsNiArNzQwLDkgQEANCj4gPiAgfTsNCj4gPg0KPiA+ICAmaW9tdXhj
-X2xwc3Igew0KPiA+ICsJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiArCXBpbmN0cmwt
-MCA9IDwmcGluY3RybF9ob2dfMj47DQo+ID4gKw0KPiA+ICAJcGluY3RybF93ZG9nOiB3ZG9nZ3Jw
-IHsNCj4gPiAgCQlmc2wscGlucyA9IDwNCj4gPiAgCQkJTVg3RF9QQURfTFBTUl9HUElPMV9JTzAw
-X19XRE9HMV9XRE9HX0IJCTB4NzQNCj4gPiBAQCAtNzM1LDQgKzc1NCwxMCBAQA0KPiA+ICAJCQlN
-WDdEX1BBRF9MUFNSX0dQSU8xX0lPMDFfX1BXTTFfT1VUCQkweDMwDQo+ID4gIAkJPjsNCj4gPiAg
-CX07DQo+ID4gKw0KPiA+ICsJcGluY3RybF9ob2dfMjogaG9nZ3JwLTIgew0KPiA+ICsJCWZzbCxw
-aW5zID0gPA0KPiA+ICsJCQlNWDdEX1BBRF9MUFNSX0dQSU8xX0lPMDdfX0dQSU8xX0lPNwkgIDB4
-MTQNCj4gDQo+IEluc3RlYWQgb2YgdXNpbmcgaG9nIGdyb3VwLCB0aGlzIHNob3VsZCBiZSBkZWZp
-bmVkIGJ5IHBpbmN0cmwgZW50cnkgdG8gYmUNCj4gcmVmZXJyZWQgYnkgdGhlIGZpeGVkIHJlZ3Vs
-YXRvciB0aGF0IHVzZXMgdGhpcyBHUElPPw0KDQpBZ3JlZWQsIEkgcmVtb3ZlIHRoZSBob2dfMiBh
-bmQgYWRkIHVzYl9vdGcyX3ZidXNfcmVnIHBpbmN0cmwgZW50cnkgZm9yIHJlZ3VsYXRvcg0KdG8g
-cmVmZXJlbmNlLCBwbGVhc2UgaGVscCByZXZpZXcgVjMgcGF0Y2gsIHRoYW5rcy4NCg0KQW5zb24u
-DQoNCj4gDQo+IFNoYXduDQo+IA0KPiA+ICsJCT47DQo+ID4gKwl9Ow0KPiA+ICB9Ow0KPiA+IC0t
-DQo+ID4gMi43LjQNCj4gPg0K
+On Mon, Nov 19, 2018 at 1:41 AM Heiko St=C3=BCbner <heiko@sntech.de> wrote:
+>
+> Am Freitag, 16. November 2018, 19:23:59 CET schrieb Doug Anderson:
+> > Hi,
+> >
+> > On Fri, Nov 16, 2018 at 9:39 AM dbasehore . <dbasehore@chromium.org> wr=
+ote:
+> > > On Fri, Nov 16, 2018 at 8:01 AM Doug Anderson <dianders@chromium.org>
+> wrote:
+> > > > Hi,
+> > > >
+> > > > On Thu, Nov 15, 2018 at 9:17 PM Derek Basehore <dbasehore@chromium.=
+org>
+> wrote:
+> > > > > This adds the xin32k clock to the RK3399 CPU. Even though it's no=
+t
+> > > > > directly used, muxes will end up traversing the entire clk tree o=
+n
+> > > > > calls to determine_rate if it doesn't exist.
+> > > > >
+> > > > > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> > > > > ---
+> > > > >
+> > > > >  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 7 +++++++
+> > > > >  1 file changed, 7 insertions(+)
+> > > >
+> > > > nit: I would have expected ${SUBJECT} to have v2 in it somewhere.
+> > > >
+> > > > > diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> > > > > b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index
+> > > > > 99e7f65c1779..3d09472978f8 100644
+> > > > > --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> > > >
+> > > > Aww crud.  I was at the airport yesterday and so I didn't notice th=
+at
+> > > > you were touching rk3399, not rk3399-gru.  This belongs in the gru
+> > > > device tree file, not in the top level rk3399.  As you have written
+> > >
+> > > > this it will break rk3399 boards that have an rk808 on them, AKA:
+> > > Should this be moved to the rk3399.dtsi file? The RK3399 assumes that
+> > > this clk exists (same as the 24MHz clk which is in rk3399.dtsi). Whil=
+e
+> > > it can function without it defined, it really shouldn't. We can just
+> > > assign the existing labels in the dts files you pointed out.
+> >
+> > No, it should be in the board files.  Each board may produce the 32k
+> > clock through a different component.  On gru-based devices we produce
+> > the 32k clock through a silego part.
+>
+> That would also be a great part of the commit message, like
+> "...on Gru boards the 32kHz clock gets produced by a Silego oscillator"
+> or so when you move it over to rk3399-gru.dtsi .
+>
+>
+> > Technically you could say that we don't _truly_ need to model this
+> > clock and we could have just inserted a dummy/fixed 32k clock in the
+> > clk-rk3399.c file.  ...but we did model it so that means we should
+> > probably model it semi-properly.
+> >
+> > If a given board forgets to provide a 32k clock then that's a bug for
+> > them like it was for us.
+>
+> Yep and as I said in my other mail, on these pmic generated clocks
+> the clock generation often even is configurable (rate, on/off), so it
+> should really be a real clock not some hack ;-) .
+>
+
+Ok, I'll make that change in about a week after I get back from
+vacation in about a week.
+
+>
+> Heiko
+>
+>
