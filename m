@@ -1,284 +1,131 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 09/16] irqchip: Add RDA8810PL interrupt driver
-Date: Tue, 20 Nov 2018 08:49:58 +0530
-Message-ID: <20181120031958.GB5885@Mani-XPS-13-9360>
-References: <20181119170939.19153-1-manivannan.sadhasivam@linaro.org>
- <20181119170939.19153-10-manivannan.sadhasivam@linaro.org>
- <29ddffae-b61b-be92-c235-a79ecdf7512c@arm.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v5 05/12] drm: mediatek: Omit warning on probe defers
+Date: Tue, 20 Nov 2018 12:05:00 +0800
+Message-ID: <1542686700.9073.15.camel@mtksdaap41>
+References: <20181116125449.23581-1-matthias.bgg@kernel.org>
+ <20181116125449.23581-6-matthias.bgg@kernel.org>
+ <1542605939.32082.12.camel@mtksdaap41>
+ <0a02edf9-78da-dde9-4b69-38c4719b711b@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <29ddffae-b61b-be92-c235-a79ecdf7512c@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, daniel.lezcano@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, service@rdamicro.com, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <0a02edf9-78da-dde9-4b69-38c4719b711b@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sean.wang@kernel.org, Matthias Brugger <mbrugger@suse.com>, airlied@linux.ie, mturquette@baylibre.com, sean.wang@mediatek.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, wens@csie.org, robh+dt@kernel.org, rdunlap@infradead.org, laurent.pinchart@ideasonboard.com, matthias.bgg@kernel.org, ulrich.hecht+renesas@gmail.com, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
-
-Thanks for the quick review!
-
-On Mon, Nov 19, 2018 at 05:36:49PM +0000, Marc Zyngier wrote:
-> Manivannan,
-> 
-> On 19/11/2018 17:09, Manivannan Sadhasivam wrote:
-> > Add interrupt driver for RDA Micro RDA8810PL SoC.
-> > 
-> > Signed-off-by: Andreas Färber <afaerber@suse.de>
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  arch/arm/mach-rda/Kconfig      |   1 +
-> >  drivers/irqchip/Kconfig        |   4 ++
-> >  drivers/irqchip/Makefile       |   1 +
-> >  drivers/irqchip/irq-rda-intc.c | 116 +++++++++++++++++++++++++++++++++
-> >  4 files changed, 122 insertions(+)
-> >  create mode 100644 drivers/irqchip/irq-rda-intc.c
-> > 
-> > diff --git a/arch/arm/mach-rda/Kconfig b/arch/arm/mach-rda/Kconfig
-> > index dafab78d7aab..29012bc68ca4 100644
-> > --- a/arch/arm/mach-rda/Kconfig
-> > +++ b/arch/arm/mach-rda/Kconfig
-> > @@ -3,5 +3,6 @@ menuconfig ARCH_RDA
-> >  	depends on ARCH_MULTI_V7
-> >  	select COMMON_CLK
-> >  	select GENERIC_IRQ_CHIP
-> > +	select RDA_INTC
-> >  	help
-> >  	  This enables support for the RDA Micro 8810PL SoC family.
-> > diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> > index 51a5ef0e96ed..9d54645870ad 100644
-> > --- a/drivers/irqchip/Kconfig
-> > +++ b/drivers/irqchip/Kconfig
-> > @@ -195,6 +195,10 @@ config JCORE_AIC
-> >  	help
-> >  	  Support for the J-Core integrated AIC.
-> >  
-> > +config RDA_INTC
-> > +	bool
-> > +	select IRQ_DOMAIN
-> > +
-> >  config RENESAS_INTC_IRQPIN
-> >  	bool
-> >  	select IRQ_DOMAIN
-> > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> > index 794c13d3ac3d..417108027e40 100644
-> > --- a/drivers/irqchip/Makefile
-> > +++ b/drivers/irqchip/Makefile
-> > @@ -43,6 +43,7 @@ obj-$(CONFIG_IMGPDC_IRQ)		+= irq-imgpdc.o
-> >  obj-$(CONFIG_IRQ_MIPS_CPU)		+= irq-mips-cpu.o
-> >  obj-$(CONFIG_SIRF_IRQ)			+= irq-sirfsoc.o
-> >  obj-$(CONFIG_JCORE_AIC)			+= irq-jcore-aic.o
-> > +obj-$(CONFIG_RDA_INTC)			+= irq-rda-intc.o
-> >  obj-$(CONFIG_RENESAS_INTC_IRQPIN)	+= irq-renesas-intc-irqpin.o
-> >  obj-$(CONFIG_RENESAS_IRQC)		+= irq-renesas-irqc.o
-> >  obj-$(CONFIG_VERSATILE_FPGA_IRQ)	+= irq-versatile-fpga.o
-> > diff --git a/drivers/irqchip/irq-rda-intc.c b/drivers/irqchip/irq-rda-intc.c
-> > new file mode 100644
-> > index 000000000000..89be55a11823
-> > --- /dev/null
-> > +++ b/drivers/irqchip/irq-rda-intc.c
-> > @@ -0,0 +1,116 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * RDA8810PL SoC irqchip driver
-> > + *
-> > + * Copyright RDA Microelectronics Company Limited
-> > + * Copyright (c) 2017 Andreas Färber
-> > + * Copyright (c) 2018 Manivannan Sadhasivam
-> > + */
-> > +
-> > +#include <linux/init.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/irq.h>
-> > +#include <linux/irqchip.h>
-> > +#include <linux/irqdomain.h>
-> > +#include <linux/of_address.h>
-> > +
-> > +#include <asm/irq.h>
-> > +#include <asm/exception.h>
-> > +
-> > +#define RDA_INTC_FINALSTATUS	0x00
-> > +#define RDA_INTC_STATUS		0x04
-> > +#define RDA_INTC_MASK_SET	0x08
-> > +#define RDA_INTC_MASK_CLR	0x0c
-> > +#define RDA_INTC_WAKEUP_MASK	0x18
-> > +#define RDA_INTC_CPU_SLEEP	0x1c
-> > +
-> > +#define RDA_IRQ_MASK_ALL	0xFFFFFFFF
-> > +
-> > +#define RDA_NR_IRQS 32
-> > +
-> > +void __iomem *base;
-> 
-> Should be static?
-> 
-
-Ack.
-
-> > +
-> > +static void rda_intc_mask_irq(struct irq_data *d)
-> > +{
-> > +	void __iomem *base = (void __iomem *)irq_data_get_irq_chip_data(d);
-> 
-> Aliases with the above. Please choose whether you want a global or a
-> per-interrupt base.
-> 
-
-My bad. I wanted to have a global interrupt base for rda_handle_irq.
-Will remove the per interrupt base.
-
-> > +
-> > +	writel(BIT(d->hwirq), base + RDA_INTC_MASK_CLR);
-> 
-> writel_relaxed()
-> 
-
-Ack.
-
-> > +}
-> > +
-> > +static void rda_intc_unmask_irq(struct irq_data *d)
-> > +{
-> > +	void __iomem *base = (void __iomem *)irq_data_get_irq_chip_data(d);
-> > +
-> > +	writel(BIT(d->hwirq), base + RDA_INTC_MASK_SET);
-> 
-> Same here.
-
-Ack.
-
-> 
-> > +}
-> > +
-> > +static int rda_intc_set_type(struct irq_data *data, unsigned int flow_type)
-> > +{
-> > +	if (flow_type & (IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING))
-> > +		irq_set_handler(data->irq, handle_edge_irq);
-> > +	if (flow_type & (IRQF_TRIGGER_HIGH | IRQF_TRIGGER_LOW))
-> > +		irq_set_handler(data->irq, handle_level_irq);
-> 
-> So you don't need to set anything in your interrupt controller for this
-> to switch between level and edge? That'd be a first...
->
-
-Interrupt controller can only handle level triggered interrupts. Should
-I just remove irq_set_type callback itself?
-
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +struct irq_domain *rda_irq_domain;
-> 
-> static?
-> 
-
-Ack.
-
-> > +
-> > +static void __exception_irq_entry rda_handle_irq(struct pt_regs *regs)
-> > +{
-> > +	u32 stat = readl(base + RDA_INTC_FINALSTATUS);
-> > +	u32 hwirq;
-> > +
-> > +	while (stat) {
-> > +		hwirq = __fls(stat);
-> > +		handle_domain_irq(rda_irq_domain, hwirq, regs);
-> > +		stat &= ~(1 << hwirq);
-> > +	}
-> > +}
-> > +
-> > +static struct irq_chip rda_irq_chip = {
-> > +	.name		= "rda-intc",
-> > +	.irq_ack	= rda_intc_mask_irq,
-> 
-> You're joking, right? What does it mean to implement both ack as mask
-> when you already have mask?
-> 
-
-Right, but I just followed what other drivers were doing (irq-sa11x0). Will
-remove it.
-
-> > +	.irq_mask	= rda_intc_mask_irq,
-> > +	.irq_unmask	= rda_intc_unmask_irq,
-> > +	.irq_set_type	= rda_intc_set_type,
-> > +	.irq_disable	= rda_intc_mask_irq,
-> 
-> What is this disable for? Implementing enable/disable only makes sense
-> if their different implementation differs from mask/unmask (and that
-> they add some real value, such as allocating resource).
-> 
-
-Okay. Will remove this callback also.
-
-> > +};
-> > +
-> > +static int rda_irq_map(struct irq_domain *d,
-> > +		       unsigned int virq, irq_hw_number_t hw)
-> > +{
-> > +	irq_set_status_flags(virq, IRQ_LEVEL);
-> > +	irq_set_chip_and_handler(virq, &rda_irq_chip, handle_level_irq);
-> 
-> The set_type callback is specially puzzling when you set everything to
-> be level...
-> 
-
-As said above, set_type callback will be removed since the hardware
-can't handle any other interrupt types.
-
-> > +	irq_set_chip_data(virq, d->host_data);
-> > +	irq_set_probe(virq);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct irq_domain_ops rda_irq_domain_ops = {
-> > +	.map = rda_irq_map,
-> > +	.xlate = irq_domain_xlate_onecell,
-> 
-> ... and don't have any way to express an edge interrupt in DT.
-> 
-
-Above comment applies here.
-
-> > +};
-> > +
-> > +static int __init rda8810_intc_init(struct device_node *node,
-> > +				    struct device_node *parent)
-> > +{
-> > +	base = of_io_request_and_map(node, 0, "rda-intc");
-> > +	if (!base)
-> > +		return -ENXIO;
-> > +	/*
-> > +	 * Mask, and invalid all interrupt sources
-> > +	 */
-> > +	writel(RDA_IRQ_MASK_ALL, base + RDA_INTC_MASK_CLR);
-> > +
-> > +	rda_irq_domain = irq_domain_create_linear(&node->fwnode, RDA_NR_IRQS,
-> > +						  &rda_irq_domain_ops, base);
-> > +	WARN_ON(!rda_irq_domain);
-> 
-> Just WARN_ON(), and carry on? Please implement some error handling.
-> 
-
-Sure. Which one would you recommend? Panic or returning -ENXIO?
-
-Thanks,
-Mani
-
-> > +
-> > +	set_handle_irq(rda_handle_irq);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +IRQCHIP_DECLARE(rda_intc, "rda,8810pl-intc", rda8810_intc_init);
-> > 
-> 
-> Thanks,
-> 
-> 	M.
-> -- 
-> Jazz is not dead. It just smells funny...
+SGksIE1hdHRoaWFzOgoKT24gTW9uLCAyMDE4LTExLTE5IGF0IDEwOjI2ICswMTAwLCBNYXR0aGlh
+cyBCcnVnZ2VyIHdyb3RlOgo+IAo+IE9uIDE5LzExLzIwMTggMDY6MzgsIENLIEh1IHdyb3RlOgo+
+ID4gSGksIE1hdHRoaWFzOgo+ID4gCj4gPiBPbiBGcmksIDIwMTgtMTEtMTYgYXQgMTM6NTQgKzAx
+MDAsIG1hdHRoaWFzLmJnZ0BrZXJuZWwub3JnIHdyb3RlOgo+ID4+IEZyb206IE1hdHRoaWFzIEJy
+dWdnZXIgPG1icnVnZ2VyQHN1c2UuY29tPgo+ID4+Cj4gPj4gSXQgY2FuIGhhcHBlbiB0aGF0IHRo
+ZSBtbXN5cyBjbG9jayBkcml2ZXJzIGFyZW4ndCBwcm9iZWQgYmVmb3JlIHRoZQo+ID4+IHBsYXRm
+b3JtIGRyaXZlciBnZXRzIGludm9rZWQuIFRoZSBwbGF0Zm9ybSBkcml2ZXIgdXNlZCB0byBwcmlu
+dCBhIHdhcm5pbmcKPiA+PiB0aGF0IHRoZSBkcml2ZXIgZmFpbGVkIHRvIGdldCB0aGUgY2xvY2tz
+LiBPbWl0IHRoaXMgZXJyb3Igb24KPiA+PiB0aGUgZGVmZXJlZCBwcm9iZSBwYXRoLgo+ID4gCj4g
+PiBUaGlzIHBhdGNoIGxvb2tzIGdvb2QgdG8gbWUsIGJ1dCB5b3UgaGF2ZSBub3QgbW9kaWZpZWQg
+dGhlIHN1YiBkcml2ZXIgaW4KPiA+IEhETUkgcGF0aC4gV2UgY291bGQgbGV0IEhETUkgcGF0aCBw
+cmludCB0aGUgd2FybmluZyBhbmQgc29tZW9uZSBzZW5kCj4gPiBhbm90aGVyIHBhdGNoIGxhdGVy
+LCBvciB5b3UgbW9kaWZ5IGZvciBIRE1JIHBhdGggaW4gdGhpcyBwYXRjaC4KPiAKPiBTdXJlLCBJ
+J2xsIGFkZCB0aGlzIGluIHY2LiBBZnRlciBpbnNwZWN0aW5nIHRoZSBjb2RlLCBJIHRoaW5rIHdl
+IHdpbGwgbmVlZCB0bwo+IGFsc28gY2hlY2sgZm9yIG5vdCBpbml0aWFsaXplZCBjbG9ja3MgaW4g
+bXRrX21kcF9jb21wX2luaXQsIGFzIHRoZSBkcml2ZXIgZm9yCj4gbm93IGRvZXMgbm90IGV2ZW4g
+Y2hlY2sgaWYgdGhlIGNsb2NrcyBhcmUgcHJlc2VudC4gV2hhdCBkbyB5b3UgdGhpbms/CgpZZXMs
+IHdlIGRvIHJlYWxseSBuZWVkIHRvIGNvbnNpZGVyIG1kcCBkcml2ZXIgYmVjYXVzZSBtbXN5cyBj
+bG9jawppbmNsdWRlIG1kcCBjbG9jay4gWW91IHJlbWluZCBtZSB0aGF0IG1tc3lzIGNvbnRyb2wg
+NCBtYWpvciBmdW5jdGlvbjoKZHJtIHJvdXRpbmcsIGRybSBjbG9jaywgbWRwIHJvdXRpbmcsIGFu
+ZCBtZHAgY2xvY2suIFlvdXIgZGVzaWduIGxldCB0aGUKbW1zeXMgZGV2aWNlIGFzIGRybSBkZXZp
+Y2UgKGNvbnRyb2wgZHJtIHJvdXRpbmcpIGFuZCBjcmVhdGUgYSBzdWIgZGV2aWNlCmFzIGNsb2Nr
+IGRldmljZSAoY29udHJvbCBkcm0gY2xvY2ssIG1kcCBjbG9jaykuIElmIG9uZSBkYXkgbWRwIGRl
+dmljZQoobWF5IG5lZWQgY29udHJvbCBkcm0gcm91dGluZykgbmVlZCB0byBjb250cm9sIHRoZSBy
+ZWdpc3RlciBvZiBtZHAKcm91dGluZywgd291bGQgbWRwIGRldmljZSBiZSBhIHN1YiBkZXZpY2U/
+IE9yIHdlIG5lZWQgbm90IHRvIGNvbnNpZGVyCnRoaXMgYmVjYXVzZSBpdCBuZWVkIG5vdCB0byBh
+Y2Nlc3MgbW1zeXMgcmVnaXN0ZXIgbm93PwoKUmVnYXJkcywKQ0sKCj4gCj4gSSdsbCBhZGRyZXNz
+IHRoZSBjb2Rpbmcgc3R5bGUgaXNzdWUgeW91IG1ldGlvbmVkIGJlbG93IGFzIHdlbGwuCj4gCj4g
+UmVnYXJkcywKPiBNYXR0aGlhcwo+IAo+ID4+Cj4gPj4gU2lnbmVkLW9mZi1ieTogTWF0dGhpYXMg
+QnJ1Z2dlciA8bWJydWdnZXJAc3VzZS5jb20+Cj4gPj4gLS0tCj4gPj4gIGRyaXZlcnMvZ3B1L2Ry
+bS9tZWRpYXRlay9tdGtfZGlzcF9jb2xvci5jIHwgNCArKystCj4gPj4gIGRyaXZlcnMvZ3B1L2Ry
+bS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyAgIHwgNCArKystCj4gPj4gIGRyaXZlcnMvZ3B1L2Ry
+bS9tZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMgIHwgNCArKystCj4gPj4gIGRyaXZlcnMvZ3B1L2Ry
+bS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jICAgIHwgMyArKy0KPiA+PiAgZHJpdmVycy9ncHUvZHJt
+L21lZGlhdGVrL210a19kc2kuYyAgICAgICAgfCA2ICsrKystLQo+ID4+ICA1IGZpbGVzIGNoYW5n
+ZWQsIDE1IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCj4gPj4KPiA+PiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX2NvbG9yLmMgYi9kcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfY29sb3IuYwo+ID4+IGluZGV4IGY2MDliNjJiOGJlNi4u
+MWVhMzE3OGQ0YzE4IDEwMDY0NAo+ID4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZGlzcF9jb2xvci5jCj4gPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
+aXNwX2NvbG9yLmMKPiA+PiBAQCAtMTI2LDcgKzEyNiw5IEBAIHN0YXRpYyBpbnQgbXRrX2Rpc3Bf
+Y29sb3JfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiA+PiAgCXJldCA9IG10
+a19kZHBfY29tcF9pbml0KGRldiwgZGV2LT5vZl9ub2RlLCAmcHJpdi0+ZGRwX2NvbXAsIGNvbXBf
+aWQsCj4gPj4gIAkJCQkmbXRrX2Rpc3BfY29sb3JfZnVuY3MpOwo+ID4+ICAJaWYgKHJldCkgewo+
+ID4+IC0JCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGluaXRpYWxpemUgY29tcG9uZW50OiAlZFxu
+IiwgcmV0KTsKPiA+PiArCQlpZiAocmV0ICE9IC1FUFJPQkVfREVGRVIpCj4gPj4gKwkJCWRldl9l
+cnIoZGV2LCAiRmFpbGVkIHRvIGluaXRpYWxpemUgY29tcG9uZW50OiAlZFxuIiwKPiA+PiArCQkJ
+CQlyZXQpOwo+ID4gCj4gPiBJIHdvdWxkIGxpa2Ugb25lIG1vcmUgYmxhbmsgbGluZSBoZXJlLgo+
+ID4gCj4gPj4gIAkJcmV0dXJuIHJldDsKPiA+PiAgCX0KPiA+PiAgCj4gPj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyBiL2RyaXZlcnMvZ3B1L2Ry
+bS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYwo+ID4+IGluZGV4IDI4ZDE5MTE5Mjk0NS4uNWViYmNh
+YTRlNzBlIDEwMDY0NAo+ID4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlz
+cF9vdmwuYwo+ID4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwu
+Ywo+ID4+IEBAIC0yOTMsNyArMjkzLDkgQEAgc3RhdGljIGludCBtdGtfZGlzcF9vdmxfcHJvYmUo
+c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiA+PiAgCXJldCA9IG10a19kZHBfY29tcF9p
+bml0KGRldiwgZGV2LT5vZl9ub2RlLCAmcHJpdi0+ZGRwX2NvbXAsIGNvbXBfaWQsCj4gPj4gIAkJ
+CQkmbXRrX2Rpc3Bfb3ZsX2Z1bmNzKTsKPiA+PiAgCWlmIChyZXQpIHsKPiA+PiAtCQlkZXZfZXJy
+KGRldiwgIkZhaWxlZCB0byBpbml0aWFsaXplIGNvbXBvbmVudDogJWRcbiIsIHJldCk7Cj4gPj4g
+KwkJaWYgKHJldCAhPSAtRVBST0JFX0RFRkVSKQo+ID4+ICsJCQlkZXZfZXJyKGRldiwgIkZhaWxl
+ZCB0byBpbml0aWFsaXplIGNvbXBvbmVudDogJWRcbiIsCj4gPj4gKwkJCQkJcmV0KTsKPiA+IAo+
+ID4gSSB3b3VsZCBsaWtlIHRvIGFsaWduIHRvIHRoZSByaWdodCBvZiAnKCcuCj4gPiAKPiA+IFJl
+Z2FyZHMsCj4gPiBDSwo+ID4gCj4gPj4gIAkJcmV0dXJuIHJldDsKPiA+PiAgCX0KPiA+PiAgCj4g
+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMg
+Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jCj4gPj4gaW5kZXggYjBh
+NWNmZmUzNDVhLi41OWEwOGVkNWZlYTUgMTAwNjQ0Cj4gPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJt
+L21lZGlhdGVrL210a19kaXNwX3JkbWEuYwo+ID4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRp
+YXRlay9tdGtfZGlzcF9yZG1hLmMKPiA+PiBAQCAtMjk1LDcgKzI5NSw5IEBAIHN0YXRpYyBpbnQg
+bXRrX2Rpc3BfcmRtYV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4+ICAJ
+cmV0ID0gbXRrX2RkcF9jb21wX2luaXQoZGV2LCBkZXYtPm9mX25vZGUsICZwcml2LT5kZHBfY29t
+cCwgY29tcF9pZCwKPiA+PiAgCQkJCSZtdGtfZGlzcF9yZG1hX2Z1bmNzKTsKPiA+PiAgCWlmIChy
+ZXQpIHsKPiA+PiAtCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBpbml0aWFsaXplIGNvbXBvbmVu
+dDogJWRcbiIsIHJldCk7Cj4gPj4gKwkJaWYgKHJldCAhPSAtRVBST0JFX0RFRkVSKQo+ID4+ICsJ
+CQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBpbml0aWFsaXplIGNvbXBvbmVudDogJWRcbiIsCj4g
+Pj4gKwkJCQkJcmV0KTsKPiA+PiAgCQlyZXR1cm4gcmV0Owo+ID4+ICAJfQo+ID4+ICAKPiA+PiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgYi9kcml2
+ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwo+ID4+IGluZGV4IGIwNmNkOWQ0YjUy
+NS4uYjc2YTJkMDcxYTk3IDEwMDY0NAo+ID4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZHJtX2RkcC5jCj4gPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
+cm1fZGRwLmMKPiA+PiBAQCAtNTY2LDcgKzU2Niw4IEBAIHN0YXRpYyBpbnQgbXRrX2RkcF9wcm9i
+ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4+ICAKPiA+PiAgCWRkcC0+Y2xrID0g
+ZGV2bV9jbGtfZ2V0KGRldiwgTlVMTCk7Cj4gPj4gIAlpZiAoSVNfRVJSKGRkcC0+Y2xrKSkgewo+
+ID4+IC0JCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGdldCBjbG9ja1xuIik7Cj4gPj4gKwkJaWYg
+KFBUUl9FUlIoZGRwLT5jbGspICE9IC1FUFJPQkVfREVGRVIpCj4gPj4gKwkJCWRldl9lcnIoZGV2
+LCAiRmFpbGVkIHRvIGdldCBjbG9ja1xuIik7Cj4gPj4gIAkJcmV0dXJuIFBUUl9FUlIoZGRwLT5j
+bGspOwo+ID4+ICAJfQo+ID4+ICAKPiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21l
+ZGlhdGVrL210a19kc2kuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMKPiA+
+PiBpbmRleCA5MDEwOWEwZDZmZmYuLmNjNmRlNzU2MzZjMyAxMDA2NDQKPiA+PiAtLS0gYS9kcml2
+ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jCj4gPj4gKysrIGIvZHJpdmVycy9ncHUvZHJt
+L21lZGlhdGVrL210a19kc2kuYwo+ID4+IEBAIC0xMTAzLDE0ICsxMTAzLDE2IEBAIHN0YXRpYyBp
+bnQgbXRrX2RzaV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4+ICAJZHNp
+LT5lbmdpbmVfY2xrID0gZGV2bV9jbGtfZ2V0KGRldiwgImVuZ2luZSIpOwo+ID4+ICAJaWYgKElT
+X0VSUihkc2ktPmVuZ2luZV9jbGspKSB7Cj4gPj4gIAkJcmV0ID0gUFRSX0VSUihkc2ktPmVuZ2lu
+ZV9jbGspOwo+ID4+IC0JCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGdldCBlbmdpbmUgY2xvY2s6
+ICVkXG4iLCByZXQpOwo+ID4+ICsJCWlmIChyZXQgIT0gLUVQUk9CRV9ERUZFUikKPiA+PiArCQkJ
+ZGV2X2VycihkZXYsICJGYWlsZWQgdG8gZ2V0IGVuZ2luZSBjbG9jazogJWRcbiIsIHJldCk7Cj4g
+Pj4gIAkJcmV0dXJuIHJldDsKPiA+PiAgCX0KPiA+PiAgCj4gPj4gIAlkc2ktPmRpZ2l0YWxfY2xr
+ID0gZGV2bV9jbGtfZ2V0KGRldiwgImRpZ2l0YWwiKTsKPiA+PiAgCWlmIChJU19FUlIoZHNpLT5k
+aWdpdGFsX2NsaykpIHsKPiA+PiAgCQlyZXQgPSBQVFJfRVJSKGRzaS0+ZGlnaXRhbF9jbGspOwo+
+ID4+IC0JCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGdldCBkaWdpdGFsIGNsb2NrOiAlZFxuIiwg
+cmV0KTsKPiA+PiArCQlpZiAocmV0ICE9IC1FUFJPQkVfREVGRVIpCj4gPj4gKwkJCWRldl9lcnIo
+ZGV2LCAiRmFpbGVkIHRvIGdldCBkaWdpdGFsIGNsb2NrOiAlZFxuIiwgcmV0KTsKPiA+PiAgCQly
+ZXR1cm4gcmV0Owo+ID4+ICAJfQo+ID4+ICAKPiA+IAo+ID4gCgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
