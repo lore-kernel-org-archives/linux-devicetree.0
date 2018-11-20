@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC PATCH v2 04/14] dt-bindings:
- interrupt-controller: Add suniv interrupt-controller
-Date: Tue, 20 Nov 2018 09:44:00 +0100
-Message-ID: <20181120084400.sn64fdxbpztaw26h@flea>
+Subject: Re: [RFC PATCH v2 05/14] irqchip/sun4i: add support for
+ suniv interrupt controller
+Date: Tue, 20 Nov 2018 09:48:15 +0100
+Message-ID: <20181120084815.rvh63cvvhxj6sbs2@flea>
 References: <cover.1542546735.git.mesihkilinc@gmail.com>
- <e51824832fac0b981cf886f25efc25056d573da4.1542546735.git.mesihkilinc@gmail.com>
+ <d693414b1693a9018956bcc589a9048e88fbc8f6.1542546735.git.mesihkilinc@gmail.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="agvmzaobxgm2oakk"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBW4SZ7PQKGQEDYJTQFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="7nbopu3lgekzonta"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBWUUZ7PQKGQEGRXZZHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <e51824832fac0b981cf886f25efc25056d573da4.1542546735.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <d693414b1693a9018956bcc589a9048e88fbc8f6.1542546735.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,35 +24,48 @@ Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreC
 List-Id: devicetree@vger.kernel.org
 
 
---agvmzaobxgm2oakk
+--7nbopu3lgekzonta
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
 Hi,
 
-On Sun, Nov 18, 2018 at 05:17:03PM +0300, Mesih Kilinc wrote:
-> Add compatible string for Alwinner suniv F1C100s SoC interrupt
-> controller which is stripped version of sun4i
+On Sun, Nov 18, 2018 at 05:17:04PM +0300, Mesih Kilinc wrote:
+> The new F-series SoCs (suniv) from Allwinner use an stripped version of
+> the interrupt controller in A10/A13.
 > 
+> Add support for it in irq-sun4i driver.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 > Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  .../devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt  | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  drivers/irqchip/irq-sun4i.c | 47 ++++++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 42 insertions(+), 5 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt
-> index b290ca1..e04ddb4 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt
-> @@ -2,7 +2,10 @@ Allwinner Sunxi Interrupt Controller
+> diff --git a/drivers/irqchip/irq-sun4i.c b/drivers/irqchip/irq-sun4i.c
+> index e3e5b91..2abf662 100644
+> --- a/drivers/irqchip/irq-sun4i.c
+> +++ b/drivers/irqchip/irq-sun4i.c
+> @@ -23,13 +23,26 @@
 >  
->  Required properties:
+>  #include <asm/exception.h>
 >  
-> -- compatible : should be "allwinner,sun4i-a10-ic"
-> +- compatible: should be "allwinner,<soc-familiy>-<soc-name>-ic" to identify
+> +enum sun4i_irq_type {
+> +	sun4i_ic,
+> +	suniv_ic
+> +};
+> +
+> +static enum sun4i_irq_type sun4i_irq_type;
 
-There's no need to define the pattern, just list the compatibles
-supported. Otherwise, you give the idea that all the combinations are
-supported, and they aren't.
+You don't really need that type. It's completely redundant with the
+compatible.
+
+> +static int sun4i_irq_enable_reg_offset;
+> +static int sun4i_irq_mask_reg_offset;
+
+Ideally, this should be a structure so that we can easily extend it
+without adding more and more global variables. And the type shouldn't
+be signed.
 
 Maxime
 
@@ -60,4 +73,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---agvmzaobxgm2oakk--
+--7nbopu3lgekzonta--
