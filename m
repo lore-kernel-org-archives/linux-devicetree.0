@@ -1,7 +1,7 @@
 From: Mesih Kilinc <mesihkilinc@gmail.com>
-Subject: [RFC PATCH v3 12/17] dt-bindings: sram: Add Allwinner suniv F1C100s
-Date: Wed, 21 Nov 2018 21:30:45 +0300
-Message-ID: <37d6119252ea024bdfd19f9c8061bcd16fec8b58.1542824904.git.mesihkilinc@gmail.com>
+Subject: [RFC PATCH v3 13/17] SoC: sunxi: Add support for Allwinner ARMv5 F1C100s sram
+Date: Wed, 21 Nov 2018 21:30:46 +0300
+Message-ID: <89f6179c17a98f160301fdeef27df35b359847e3.1542824904.git.mesihkilinc@gmail.com>
 References: <cover.1542824904.git.mesihkilinc@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1542824904.git.mesihkilinc@gmail.com>
@@ -10,35 +10,39 @@ To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kern
 Cc: Mesih Kilinc <mesihkilinc@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Julian Calaby <julian.calaby@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The suniv ARMv5 F1C100s chip has similar sram controller to sun4i A10.
-Add compatible string for it.
+Allwinner ARMv5 F1C100s has similar sram controller to sun4i A10
+Add compatible strings for it.
 
 Signed-off-by: Mesih Kilinc <mesihkilinc@gmail.com>
 ---
- Documentation/devicetree/bindings/sram/sunxi-sram.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/soc/sunxi/sunxi_sram.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sram/sunxi-sram.txt b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-index 62dd074..acee82d 100644
---- a/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-+++ b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-@@ -19,6 +19,7 @@ Required properties:
-     - "allwinner,sun50i-a64-sram-controller" (deprecated)
-     - "allwinner,sun50i-a64-system-control"
-     - "allwinner,sun50i-h6-system-control", "allwinner,sun50i-a64-system-control"
-+    - "allwinner,suniv-f1c100s-system-control"
- - reg : sram controller register offset + length
+diff --git a/drivers/soc/sunxi/sunxi_sram.c b/drivers/soc/sunxi/sunxi_sram.c
+index b4b0f34..27f0607 100644
+--- a/drivers/soc/sunxi/sunxi_sram.c
++++ b/drivers/soc/sunxi/sunxi_sram.c
+@@ -99,6 +99,10 @@ static const struct of_device_id sunxi_sram_dt_ids[] = {
+ 		.compatible	= "allwinner,sun50i-a64-sram-c",
+ 		.data		= &sun50i_a64_sram_c.data,
+ 	},
++	{
++		.compatible	= "allwinner,suniv-f1c100s-sram-d",
++		.data		= &sun4i_a10_sram_d.data,
++	},
+ 	{}
+ };
  
- SRAM nodes
-@@ -58,6 +59,9 @@ The valid sections compatible for A64 are:
- The valid sections compatible for H6 are:
-     - allwinner,sun50i-h6-sram-c, allwinner,sun50i-a64-sram-c
- 
-+The valid sections compatible for F1C100s are:
-+    - allwinner,suniv-f1c100s-sram-d
-+
- Devices using SRAM sections
- ---------------------------
- 
+@@ -389,6 +393,10 @@ static const struct of_device_id sunxi_sram_dt_match[] = {
+ 		.compatible = "allwinner,sun50i-a64-system-control",
+ 		.data = &sun50i_a64_sramc_variant,
+ 	},
++	{
++		.compatible = "allwinner,suniv-f1c100s-system-control",
++		.data = &sun4i_a10_sramc_variant,
++	},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, sunxi_sram_dt_match);
 -- 
 2.7.4
