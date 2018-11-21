@@ -1,83 +1,62 @@
-From: Matthias Brugger <mbrugger@suse.com>
-Subject: Re: [PATCH v5 08/12] dt-bindings: mediatek: Change the binding for
- mmsys clocks
-Date: Wed, 21 Nov 2018 18:09:52 +0100
-Message-ID: <458178ac-c0fc-9671-7fc8-ed2d6f61424c@suse.com>
-References: <20181116125449.23581-1-matthias.bgg@kernel.org>
- <20181116125449.23581-9-matthias.bgg@kernel.org>
- <20181116231522.GA18006@bogus>
- <2a23e407-4cd4-2e2b-97a5-4e2bb96846e0@gmail.com>
- <CAL_JsqKJQwfDJbpmwW+oCxiDkSp5+6mG-uoURmCQVEMP_jFOEg@mail.gmail.com>
- <154281878765.88331.10581984256202566195@swboyd.mtv.corp.google.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RESEND PATCH v17 2/5] iommu/arm-smmu: Invoke
+ pm_runtime during probe, add/remove device
+Date: Wed, 21 Nov 2018 17:37:57 +0000
+Message-ID: <20181121173757.GA9801@arm.com>
+References: <20181116112430.31248-1-vivek.gautam@codeaurora.org>
+ <20181116112430.31248-3-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154281878765.88331.10581984256202566195@swboyd.mtv.corp.google.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>
-Cc: matthias.bgg@kernel.org, Mark Rutland <mark.rutland@arm.com>, CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sean Wang <sean.wang@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Chen-Yu Tsai <wens@csie.org>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, linux-clk <linux-clk@vger.kernel.>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20181116112430.31248-3-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 21/11/2018 17:46, Stephen Boyd wrote:
-> Quoting Rob Herring (2018-11-19 11:15:16)
->> On Sun, Nov 18, 2018 at 11:12 AM Matthias Brugger
->> <matthias.bgg@gmail.com> wrote:
->>> On 11/17/18 12:15 AM, Rob Herring wrote:
->>>> On Fri, Nov 16, 2018 at 01:54:45PM +0100, matthias.bgg@kernel.org wrote:
->>>>> -    #clock-cells = <1>;
->>>>> +
->>>>> +    mmsys_clk: clock-controller@14000000 {
->>>>> +            compatible = "mediatek,mt2712-mmsys-clk";
->>>>> +            #clock-cells = <1>;
->>>>
->>>> This goes against the general direction of not defining separate nodes
->>>> for providers with no resources.
->>>>
->>>> Why do you need this and what does it buy if you have to continue to
->>>> support the existing chips?
->>>>
->>>
->>> It would show explicitly that the mmsys block is used to probe two
->>> drivers, one for the gpu and one for the clocks. Otherwise that is
->>> hidden in the drm driver code. I think it is cleaner to describe that in
->>> the device tree.
->>
->> No, that's maybe cleaner for the driver implementation in the Linux
->> kernel. What about other OS's or when Linux drivers and subsystems
->> needs change? Cleaner for DT is design bindings that reflect the h/w.
->> Hardware is sometimes just messy.
->>
-> 
-> I agree. I fail to see what this patch series is doing besides changing
-> driver probe and device creation methods and making a backwards
-> incompatible change to DT. Is there any other benefit here?
-> 
-
-You are referring whole series?
-Citing the cover letter:
-"MMSYS in Mediatek SoCs has some registers to control clock gates (which is
-used in the clk driver) and some registers to set the routing and enable
-the differnet (sic!) blocks of the display subsystem.
-
-Up to now both drivers, clock and drm are probed with the same device tree
-compatible. But only the first driver get probed, which in effect breaks
-graphics on mt8173 and mt2701.
-
-This patch uses a platform device registration in the DRM driver, which
-will trigger the probe of the corresponding clock driver. It was tested on the
-bananapi-r2 and the Acer R13 Chromebook."
-
-DT is broken right now, because two drivers rely on the same node, which gets
-consumed just once. The new DT introduced does not break anything because it is
-only used for boards that: "[..] are not available to the general public
-(mt2712e) or only have the mmsys clock driver part implemented (mt6797)."
-
-Anyway, I'll send a new version which uses the platform device in the DRM driver
-for all SoCs.
-
-Regards,
-Matthias
+T24gRnJpLCBOb3YgMTYsIDIwMTggYXQgMDQ6NTQ6MjdQTSArMDUzMCwgVml2ZWsgR2F1dGFtIHdy
+b3RlOgo+IEZyb206IFNyaWNoYXJhbiBSIDxzcmljaGFyYW5AY29kZWF1cm9yYS5vcmc+Cj4gCj4g
+VGhlIHNtbXUgZGV2aWNlIHByb2JlL3JlbW92ZSBhbmQgYWRkL3JlbW92ZSBtYXN0ZXIgZGV2aWNl
+IGNhbGxiYWNrcwo+IGdldHMgY2FsbGVkIHdoZW4gdGhlIHNtbXUgaXMgbm90IGxpbmtlZCB0byBp
+dHMgbWFzdGVyLCB0aGF0IGlzIHdpdGhvdXQKPiB0aGUgY29udGV4dCBvZiB0aGUgbWFzdGVyIGRl
+dmljZS4gU28gY2FsbGluZyBydW50aW1lIGFwaXMgaW4gdGhvc2UgcGxhY2VzCj4gc2VwYXJhdGVs
+eS4KPiBHbG9iYWwgbG9ja3MgYXJlIGFsc28gaW5pdGlhbGl6ZWQgYmVmb3JlIGVuYWJsaW5nIHJ1
+bnRpbWUgcG0gYXMgdGhlCj4gcnVudGltZV9yZXN1bWUoKSBjYWxscyBkZXZpY2VfcmVzZXQoKSB3
+aGljaCBkb2VzIHRsYl9zeW5jX2dsb2JhbCgpCj4gdGhhdCB1bHRpbWF0ZWx5IHJlcXVpcmVzIGxv
+Y2tzIHRvIGJlIGluaXRpYWxpemVkLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFNyaWNoYXJhbiBSIDxz
+cmljaGFyYW5AY29kZWF1cm9yYS5vcmc+Cj4gW3ZpdmVrOiBDbGVhbnVwIHBtIHJ1bnRpbWUgY2Fs
+bHNdCj4gU2lnbmVkLW9mZi1ieTogVml2ZWsgR2F1dGFtIDx2aXZlay5nYXV0YW1AY29kZWF1cm9y
+YS5vcmc+Cj4gUmV2aWV3ZWQtYnk6IFRvbWFzeiBGaWdhIDx0ZmlnYUBjaHJvbWl1bS5vcmc+Cj4g
+VGVzdGVkLWJ5OiBTcmluaXZhcyBLYW5kYWdhdGxhIDxzcmluaXZhcy5rYW5kYWdhdGxhQGxpbmFy
+by5vcmc+Cj4gUmV2aWV3ZWQtYnk6IFJvYmluIE11cnBoeSA8cm9iaW4ubXVycGh5QGFybS5jb20+
+Cj4gLS0tCj4gIGRyaXZlcnMvaW9tbXUvYXJtLXNtbXUuYyB8IDEwMSArKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgOTEgaW5z
+ZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pCgpHaXZlbiB0aGF0IHlvdSdyZSBkb2luZyB0aGUg
+Z2V0L3B1dCBpbiB0aGUgVExCSSBvcHMgdW5jb25kaXRpb25hbGx5OgoKPiAgc3RhdGljIHZvaWQg
+YXJtX3NtbXVfZmx1c2hfaW90bGJfYWxsKHN0cnVjdCBpb21tdV9kb21haW4gKmRvbWFpbikKPiAg
+ewo+ICAJc3RydWN0IGFybV9zbW11X2RvbWFpbiAqc21tdV9kb21haW4gPSB0b19zbW11X2RvbWFp
+bihkb21haW4pOwo+ICsJc3RydWN0IGFybV9zbW11X2RldmljZSAqc21tdSA9IHNtbXVfZG9tYWlu
+LT5zbW11Owo+ICAKPiAtCWlmIChzbW11X2RvbWFpbi0+dGxiX29wcykKPiArCWlmIChzbW11X2Rv
+bWFpbi0+dGxiX29wcykgewo+ICsJCWFybV9zbW11X3JwbV9nZXQoc21tdSk7Cj4gIAkJc21tdV9k
+b21haW4tPnRsYl9vcHMtPnRsYl9mbHVzaF9hbGwoc21tdV9kb21haW4pOwo+ICsJCWFybV9zbW11
+X3JwbV9wdXQoc21tdSk7Cj4gKwl9Cj4gIH0KPiAgCj4gIHN0YXRpYyB2b2lkIGFybV9zbW11X2lv
+dGxiX3N5bmMoc3RydWN0IGlvbW11X2RvbWFpbiAqZG9tYWluKQo+ICB7Cj4gIAlzdHJ1Y3QgYXJt
+X3NtbXVfZG9tYWluICpzbW11X2RvbWFpbiA9IHRvX3NtbXVfZG9tYWluKGRvbWFpbik7Cj4gKwlz
+dHJ1Y3QgYXJtX3NtbXVfZGV2aWNlICpzbW11ID0gc21tdV9kb21haW4tPnNtbXU7Cj4gIAo+IC0J
+aWYgKHNtbXVfZG9tYWluLT50bGJfb3BzKQo+ICsJaWYgKHNtbXVfZG9tYWluLT50bGJfb3BzKSB7
+Cj4gKwkJYXJtX3NtbXVfcnBtX2dldChzbW11KTsKPiAgCQlzbW11X2RvbWFpbi0+dGxiX29wcy0+
+dGxiX3N5bmMoc21tdV9kb21haW4pOwo+ICsJCWFybV9zbW11X3JwbV9wdXQoc21tdSk7Cj4gKwl9
+CgpXaHkgZG8geW91IG5lZWQgdGhlbSBhcm91bmQgdGhlIG1hcC91bm1hcCBjYWxscyBhcyB3ZWxs
+PwoKV2lsbApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpG
+cmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
