@@ -1,7 +1,7 @@
 From: Mesih Kilinc <mesihkilinc@gmail.com>
-Subject: [RFC PATCH v3 07/17] clocksource: sun4i: add a compatible for suniv
-Date: Wed, 21 Nov 2018 21:30:40 +0300
-Message-ID: <60bc70fc43743f664de76abf3ab0a01cd7924458.1542824904.git.mesihkilinc@gmail.com>
+Subject: [RFC PATCH v3 10/17] dt-bindings: clock: Add Allwinner suniv F1C100s CCU
+Date: Wed, 21 Nov 2018 21:30:43 +0300
+Message-ID: <88a177299386b610d429d4c1eb2566727aef7b17.1542824904.git.mesihkilinc@gmail.com>
 References: <cover.1542824904.git.mesihkilinc@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1542824904.git.mesihkilinc@gmail.com>
@@ -10,40 +10,147 @@ To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kern
 Cc: Mesih Kilinc <mesihkilinc@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Julian Calaby <julian.calaby@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The suniv (new F-series) chip has a timer with less functionality than
-the A10 timer, e.g. it has only 3 channels.
-
-Add a new compatible for it. As we didn't use the extra channels on A10
-either now, the code needn't to be changed.
-
-The suniv chip is based on ARM926EJ-S CPU, thus it has no architecture timer.
-
-Register sun4i_timer as sched_clock on it.
+Add compatiple string for Allwinner suniv F1C100s CCU.
+Add clock and reset definitions.
 
 Signed-off-by: Mesih Kilinc <mesihkilinc@gmail.com>
 ---
- drivers/clocksource/sun4i_timer.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/clock/sunxi-ccu.txt        |  1 +
+ include/dt-bindings/clock/suniv-ccu-f1c100s.h      | 69 ++++++++++++++++++++++
+ include/dt-bindings/reset/suniv-ccu-f1c100s.h      | 37 ++++++++++++
+ 3 files changed, 107 insertions(+)
+ create mode 100644 include/dt-bindings/clock/suniv-ccu-f1c100s.h
+ create mode 100644 include/dt-bindings/reset/suniv-ccu-f1c100s.h
 
-diff --git a/drivers/clocksource/sun4i_timer.c b/drivers/clocksource/sun4i_timer.c
-index 6e0180a..65f38f6 100644
---- a/drivers/clocksource/sun4i_timer.c
-+++ b/drivers/clocksource/sun4i_timer.c
-@@ -186,7 +186,8 @@ static int __init sun4i_timer_init(struct device_node *node)
- 	 */
- 	if (of_machine_is_compatible("allwinner,sun4i-a10") ||
- 	    of_machine_is_compatible("allwinner,sun5i-a13") ||
--	    of_machine_is_compatible("allwinner,sun5i-a10s"))
-+	    of_machine_is_compatible("allwinner,sun5i-a10s") ||
-+	    of_machine_is_compatible("allwinner,suniv-f1c100s"))
- 		sched_clock_register(sun4i_timer_sched_read, 32,
- 				     timer_of_rate(&to));
+diff --git a/Documentation/devicetree/bindings/clock/sunxi-ccu.txt b/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
+index 47d2e90..e3bd88a 100644
+--- a/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
++++ b/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
+@@ -22,6 +22,7 @@ Required properties :
+ 		- "allwinner,sun50i-h5-ccu"
+ 		- "allwinner,sun50i-h6-ccu"
+ 		- "allwinner,sun50i-h6-r-ccu"
++		- "allwinner,suniv-f1c100s-ccu"
+ 		- "nextthing,gr8-ccu"
  
-@@ -218,3 +219,5 @@ static int __init sun4i_timer_init(struct device_node *node)
- }
- TIMER_OF_DECLARE(sun4i, "allwinner,sun4i-a10-timer",
- 		       sun4i_timer_init);
-+TIMER_OF_DECLARE(suniv, "allwinner,suniv-f1c100s-timer",
-+		       sun4i_timer_init);
+ - reg: Must contain the registers base address and length
+diff --git a/include/dt-bindings/clock/suniv-ccu-f1c100s.h b/include/dt-bindings/clock/suniv-ccu-f1c100s.h
+new file mode 100644
+index 0000000..56f6d0d
+--- /dev/null
++++ b/include/dt-bindings/clock/suniv-ccu-f1c100s.h
+@@ -0,0 +1,69 @@
++/*
++ * Copyright (c) 2018 Icenowy Zheng <icenowy@aosc.xyz>
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++#ifndef _DT_BINDINGS_CLK_SUNIV_F1C100S_H_
++#define _DT_BINDINGS_CLK_SUNIV_F1C100S_H_
++
++#define CLK_CPU			11
++
++#define CLK_BUS_MMC0		14
++#define CLK_BUS_MMC1		15
++#define CLK_BUS_DRAM		16
++#define CLK_BUS_SPI0		17
++#define CLK_BUS_SPI1		18
++#define CLK_BUS_OTG		19
++#define CLK_BUS_VE		20
++#define CLK_BUS_LCD		21
++#define CLK_BUS_DEINTERLACE	22
++#define CLK_BUS_CSI		23
++#define CLK_BUS_TVD		24
++#define CLK_BUS_TVE		25
++#define CLK_BUS_DE_BE		26
++#define CLK_BUS_DE_FE		27
++#define CLK_BUS_CODEC		28
++#define CLK_BUS_SPDIF		29
++#define CLK_BUS_IR		30
++#define CLK_BUS_RSB		31
++#define CLK_BUS_I2S0		32
++#define CLK_BUS_I2C0		33
++#define CLK_BUS_I2C1		34
++#define CLK_BUS_I2C2		35
++#define CLK_BUS_PIO		36
++#define CLK_BUS_UART0		37
++#define CLK_BUS_UART1		38
++#define CLK_BUS_UART2		39
++
++#define CLK_MMC0		40
++#define CLK_MMC0_SAMPLE		41
++#define CLK_MMC0_OUTPUT		42
++#define CLK_MMC1		43
++#define CLK_MMC1_SAMPLE		44
++#define CLK_MMC1_OUTPUT		45
++#define CLK_I2S			46
++#define CLK_SPDIF		47
++
++#define CLK_USB_PHY0		48
++
++#define CLK_DRAM_VE		49
++#define CLK_DRAM_CSI		50
++#define CLK_DRAM_DEINTERLACE	51
++#define CLK_DRAM_TVD		52
++#define CLK_DRAM_DE_FE		53
++#define CLK_DRAM_DE_BE		54
++
++#define CLK_DE_BE		55
++#define CLK_DE_FE		56
++#define CLK_TCON		57
++#define CLK_DEINTERLACE		58
++#define CLK_TVE2_CLK		59
++#define CLK_TVE1_CLK		60
++#define CLK_TVD			61
++#define CLK_CSI			62
++#define CLK_VE			63
++#define CLK_CODEC		64
++#define CLK_AVS			65
++
++#endif
+diff --git a/include/dt-bindings/reset/suniv-ccu-f1c100s.h b/include/dt-bindings/reset/suniv-ccu-f1c100s.h
+new file mode 100644
+index 0000000..95f1ed0
+--- /dev/null
++++ b/include/dt-bindings/reset/suniv-ccu-f1c100s.h
+@@ -0,0 +1,37 @@
++/*
++ * Copyright (C) 2018 Icenowy Zheng <icenowy@aosc.xyz>
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++#ifndef _DT_BINDINGS_RST_SUNIV_F1C100S_H_
++#define _DT_BINDINGS_RST_SUNIV_F1C100S_H_
++
++#define RST_USB_PHY0		0
++#define RST_BUS_MMC0		1
++#define RST_BUS_MMC1		2
++#define RST_BUS_DRAM		3
++#define RST_BUS_SPI0		4
++#define RST_BUS_SPI1		5
++#define RST_BUS_OTG		6
++#define RST_BUS_VE		7
++#define RST_BUS_LCD		8
++#define RST_BUS_DEINTERLACE		9
++#define RST_BUS_CSI		10
++#define RST_BUS_TVD		11
++#define RST_BUS_TVE		12
++#define RST_BUS_DE_BE		13
++#define RST_BUS_DE_FE		14
++#define RST_BUS_CODEC		15
++#define RST_BUS_SPDIF		16
++#define RST_BUS_IR		17
++#define RST_BUS_RSB		18
++#define RST_BUS_I2S0		19
++#define RST_BUS_I2C0		20
++#define RST_BUS_I2C1		21
++#define RST_BUS_I2C2		22
++#define RST_BUS_UART0		23
++#define RST_BUS_UART1		24
++#define RST_BUS_UART2		25
++
++#endif /* _DT_BINDINGS_RST_SUNIV_F1C100S_H_ */
 -- 
 2.7.4
