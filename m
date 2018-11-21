@@ -1,17 +1,15 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [RFC PATCH 0/6] Armada 38x comphy driver to support 2.5Gbps
- networking
-Date: Wed, 21 Nov 2018 15:11:00 +0530
-Message-ID: <2d473b33-4b49-c208-51b0-2c6b5cb35d79@ti.com>
-References: <20181112122933.GD30658@n2100.armlinux.org.uk>
- <f0e71064-6919-6f7f-d605-671a1c662a33@ti.com>
- <20181114105606.GR30658@n2100.armlinux.org.uk>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH V2] arm64: dts: renesas: r8a77965: Add CAN and CANFD
+ controller nodes
+Date: Wed, 21 Nov 2018 11:00:22 +0100
+Message-ID: <20181121100022.s2jvqw6fc4ixve7l@verge.net.au>
+References: <20181120233252.1612-1-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181114105606.GR30658@n2100.armlinux.org.uk>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181120233252.1612-1-marek.vasut+renesas@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,50 +19,30 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: devicetree@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh@kernel.org>, linux-renesas-soc@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>, Marc Kleine-Budde <mkl@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
-
-On 14/11/18 4:26 PM, Russell King - ARM Linux wrote:
-> On Wed, Nov 14, 2018 at 01:39:29PM +0530, Kishon Vijay Abraham I wrote:
->> Hi,
->>
->> On 12/11/18 5:59 PM, Russell King - ARM Linux wrote:
->>> Hi,
->>>
->>> This series adds support for dynamically switching between 1Gbps
->>> and 2.5Gbps networking for the Marvell Armada 38x SoCs, tested on
->>> Armada 388 on the Clearfog platform.
->>>
->>> This is necessary to be able to connect (eg) a Clearfog platform
->>> with a Macchiatobin platform via the SFP sockets, as Clearfog
->>> currently only supports 1Gbps networking via the SFP socket and
->>> Macchiatobin defaults to 2.5Gbps when using Fiberchannel SFPs.
->>>
->>> In order to allow dynamic switching, we need to implement a common
->>> phy driver to switch the ethernet serdes lane speed - 2.5Gbps is
->>> just 1Gbps up-clocked by 2.5x.  We implement a simple comphy
->>> driver to achieve this, which only supports networking.
->>>
->>> With this, we are able to support both Fiberchannel SFPs operating
->>> at 2.5Gbps or 1Gbps, and 1G ethernet SFPs plugged into the Clearfog
->>> platform, dynamically selecting according to the SFPs abilities.
->>>
->>> I'm aware of the proposed changes to the PHY layer, changing
->>> phy_set_mode() to take the ethernet phy interface type, hence why
->>> this is RFC - there's also the question about how this will be
->>> merged.  This series is currently based on 4.20-rc1, but will
->>> likely need to be rebased when the PHY layer changes hit.
->>
->> For this case, I'd prefer the phy_set_mode series and the phy and net changes
->> here (after rebasing) go via linux-phy tree.
+On Wed, Nov 21, 2018 at 12:32:52AM +0100, Marek Vasut wrote:
+> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
 > 
-> Please let me know when they've hit, thanks.
-
-I've merged the phy_set_mode series to linux-phy -next.
-
-Thanks
-Kishon
+> This patch adds CAN{0,1} and CANFD controller nodes for the R8A77965 SoC.
 > 
+> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Simon Horman <horms+renesas@verge.net.au>
+> Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Cc: linux-renesas-soc@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> ---
+> V2: Squash the CAN and CANFD addition patches together.
+> ---
+>  arch/arm64/boot/dts/renesas/r8a77965.dtsi | 51 ++++++++++++++++++++++-
+>  1 file changed, 49 insertions(+), 2 deletions(-)
+
+Thanks Marek,
+
+applied for v4.21.
