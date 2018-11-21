@@ -1,47 +1,62 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH 2/2] hwmon: (ntc_thermistor): add support for B57891S0103
- from Epcos
-Date: Wed, 21 Nov 2018 06:06:41 +0000
-Message-ID: <f15d3e1c-1b53-f390-78e2-6a88c77aed05@axentia.se>
-References: <20181117121248.32143-1-peda@axentia.se>
- <20181117121248.32143-2-peda@axentia.se>
- <20181119170732.GA27435@roeck-us.net>
- <f1235661-f8f2-9885-1e7f-491f5c234078@axentia.se>
- <20181119212806.GC5795@roeck-us.net>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH] ARM: dts: imx6sll-evk: add debug LED support
+Date: Wed, 21 Nov 2018 07:03:44 +0000
+Message-ID: <1542783500-19546-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181119212806.GC5795@roeck-us.net>
 Content-Language: en-US
-Content-ID: <A4B519E5F340654C947F9DC427B2B62A@eurprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0xMS0xOSAyMjoyOCwgR3VlbnRlciBSb2VjayB3cm90ZToNCj4gT24gTW9uLCBOb3Yg
-MTksIDIwMTggYXQgMDk6MTY6MTJQTSArMDAwMCwgUGV0ZXIgUm9zaW4gd3JvdGU6DQo+Pj4NCj4+
-PiBHdWVzcyBJIGRlc2VydmUgdGhlIG5vbi1hbHBoYWJldGljIG9yZGVyIGFzIHBlbmFsdHkgZm9y
-IG5vdCBlbmZvcmNpbmcgaXQgDQo+Pj4gZWFybGllci4gSSdsbCBhY2NlcHQgdGhlIHBhdGNoIGFm
-dGVyIERUIGFwcHJvdmFsIGFuZCBzdWJtaXQgYW5vdGhlciBvbmUNCj4+PiBteXNlbGYgYWZ0ZXJ3
-YXJkcyB0byByZXN0b3JlIGFscGhhYmV0aWMgb3JkZXIuDQo+Pg0KPj4gUmlnaHQsIEknbSB0aGlu
-a2luZyBhbm90aGVyIGdvb2QgY2hhbmdlIHdvdWxkIGJlIHRvIGludHJvZHVjZSBhbiBlbnVtDQo+
-PiBpbnRvIHRoZSBudGNfdGhlcm1pc3Rvcl9pZCBhcnJheSwgYmVjYXVzZSB0aGUgaGFyZC1jb2Rl
-ZCBudW1iZXJpbmcgaW4NCj4gDQo+IFllcywgc291bmRzIGxpa2UgYSBnb29kIGlkZWEuDQo+IA0K
-Pj4gdGhlIG50Y19tYXRjaCB2YXJpYWJsZSBpcyBhIGJpdCBmcmFnaWxlIGluIG15IHRhc3RlLCBh
-bmQgdGhhdCBsaXN0IHdvdWxkDQo+PiBhbHNvIGJlbmVmaXQgZnJvbSBiZWluZyBhbHBoYWJldGlj
-LiBDdXJyZW50bHkgdGhlcmUncyBzaW1wbHkgbm8gd2F5IHRvDQo+PiBhZGQgdGhpbmdzIGluIHRo
-ZSBtaWRkbGUgd2l0aG91dCBjYXVzaW5nIG1heWhlbS4gSSB0aG91Z2h0IGFib3V0IGRvaW5nDQo+
-PiB0aGF0LCBidXQgZGlkbid0IHdhbnQgdG8gd2FzdGUgZW5lcmd5IGRvaW5nIGl0IHVwIGZyb250
-IHdpdGhvdXQga25vd2luZw0KPj4gaWYgaXQgd291bGQgYmUgd2VsbCByZWNlaXZlZCAodGhlIGRy
-aXZlciBtaWdodCBoYXZlIGJlZW4gc3VwZXJzZWRlZCBvcg0KPiANCj4gSXQgd291bGQuDQoNClJp
-Z2h0LCBzbyBJIGhhdmUgc29tZSBwYXRjaGVzIHNvcnRpbmcgdGhpbmdzIG91dC4uLiBIb3dldmVy
-LCBvbmUgcXVlc3Rpb24NCmJlZm9yZSBJIHNlbmQgdGhlbTogSXMgaXQgb2sgdG8gc29ydCB0aGUg
-ZW51bSBudGNfdGhlcm1pc3Rvcl90eXBlIGluIHRoZQ0KaW5jbHVkZS9saW51eC9wbGF0Zm9ybV9k
-YXRhL250Y190aGVybWlzdG9yLmggaGVhZGVyIG9yIHdpbGwgdGhhdCBicmVhaw0Kc3R1ZmY/DQoN
-CkNoZWVycywNClBldGVyDQoNCj4gR3VlbnRlcg0KPiANCj4+IHNvbWV0aGluZykuIEknbSBnbGFk
-IHRoYXQgeW91IGhhdmUgdm9sdW50ZWVyZWQgdG8gY2xlYW4gdGhpbmdzIHVwLg0KPj4gSGEhIDot
-KQ0KPj4NCj4+IENoZWVycywNCj4+IFBldGVyDQo+Pg0KPj4+IEd1ZW50ZXINCj4+Pg0KPj4+PiAg
-fTsNCj4+Pj4gIA0KPj4+PiAgc3RydWN0IG50Y190aGVybWlzdG9yX3BsYXRmb3JtX2RhdGEgew0K
-Pj4+PiAtLSANCj4+Pj4gMi4xMS4wDQo+Pj4+DQo+Pg0KDQo=
+On i.MX6SLL EVK board, there is a debug LED controlled
+by MX6SLL_PAD_EPDC_VCOM1__GPIO2_IO04 pin, add support
+for it.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6sll-evk.dts | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-=
+evk.dts
+index c8e1155..9c90cbd 100644
+--- a/arch/arm/boot/dts/imx6sll-evk.dts
++++ b/arch/arm/boot/dts/imx6sll-evk.dts
+@@ -31,6 +31,18 @@
+ 		status =3D "okay";
+ 	};
+=20
++	leds {
++		compatible =3D "gpio-leds";
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_led>;
++
++		user {
++			label =3D "debug";
++			gpios =3D <&gpio2 4 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger =3D "heartbeat";
++		};
++	};
++
+ 	reg_usb_otg1_vbus: regulator-otg1-vbus {
+ 		compatible =3D "regulator-fixed";
+ 		pinctrl-names =3D "default";
+@@ -455,6 +467,12 @@
+ 		>;
+ 	};
+=20
++	pinctrl_led: ledgrp {
++		fsl,pins =3D <
++			MX6SLL_PAD_EPDC_VCOM1__GPIO2_IO04	0x17059
++		>;
++	};
++
+ 	pinctrl_pwm1: pmw1grp {
+ 		fsl,pins =3D <
+ 			MX6SLL_PAD_PWM1__PWM1_OUT   0x110b0
+--=20
+2.7.4
