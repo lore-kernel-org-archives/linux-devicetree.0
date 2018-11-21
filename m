@@ -1,147 +1,181 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH v8 6/7] arm64: dts: allwinner: a64: enable
-	sound on Pine64 and SoPine
-Date: Tue, 20 Nov 2018 21:17:51 -0800
-Message-ID: <20181121051752.18387-7-anarsoul@gmail.com>
-References: <20181121051752.18387-1-anarsoul@gmail.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH v2] PCI: mediatek: Use
+ devm_of_pci_get_host_bridge_resources() to parse DT
+Date: Wed, 21 Nov 2018 13:47:51 +0800
+Message-ID: <1542779271.2401.0.camel@mtkswgap22>
+References: <1541645815-30340-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181121051752.18387-1-anarsoul@gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Vasily Khoruzhick <anarsoul@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1541645815-30340-1-git-send-email-honghui.zhang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: honghui.zhang@mediatek.com
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, youlin.pei@mediatek.com, jianjun.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-This commit enables I2S, digital and analog parts of audiocodec on
-Pine64 and SoPine boards.
+On Thu, 2018-11-08 at 10:56 +0800, honghui.zhang@mediatek.com wrote:
+> From: Honghui Zhang <honghui.zhang@mediatek.com>
+> 
+> Use the devm_of_pci_get_host_bridge_resources() API in place of the PCI OF
+> DT parser.
+> 
+> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+> ---
+>  drivers/pci/controller/pcie-mediatek.c | 98 +++++++++-------------------------
+>  1 file changed, 24 insertions(+), 74 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index 2a1f97c..0590a93 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -197,11 +197,7 @@ struct mtk_pcie_port {
+>   * @dev: pointer to PCIe device
+>   * @base: IO mapped register base
+>   * @free_ck: free-run reference clock
+> - * @io: IO resource
+> - * @pio: PIO resource
+>   * @mem: non-prefetchable memory resource
+> - * @busn: bus range
+> - * @offset: IO / Memory offset
+>   * @ports: pointer to PCIe port information
+>   * @soc: pointer to SoC-dependent operations
+>   */
+> @@ -210,14 +206,7 @@ struct mtk_pcie {
+>  	void __iomem *base;
+>  	struct clk *free_ck;
+>  
+> -	struct resource io;
+> -	struct resource pio;
+>  	struct resource mem;
+> -	struct resource busn;
+> -	struct {
+> -		resource_size_t mem;
+> -		resource_size_t io;
+> -	} offset;
+>  	struct list_head ports;
+>  	const struct mtk_pcie_soc *soc;
+>  };
+> @@ -1045,55 +1034,43 @@ static int mtk_pcie_setup(struct mtk_pcie *pcie)
+>  {
+>  	struct device *dev = pcie->dev;
+>  	struct device_node *node = dev->of_node, *child;
+> -	struct of_pci_range_parser parser;
+> -	struct of_pci_range range;
+> -	struct resource res;
+>  	struct mtk_pcie_port *port, *tmp;
+> +	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
+> +	struct list_head *windows = &host->windows;
+> +	struct resource_entry *win, *tmp_win;
+> +	resource_size_t io_base;
+>  	int err;
+>  
+> -	if (of_pci_range_parser_init(&parser, node)) {
+> -		dev_err(dev, "missing \"ranges\" property\n");
+> -		return -EINVAL;
+> -	}
+> +	err = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
+> +						    windows, &io_base);
+> +	if (err)
+> +		return err;
+>  
+> -	for_each_of_pci_range(&parser, &range) {
+> -		err = of_pci_range_to_resource(&range, node, &res);
+> -		if (err < 0)
+> -			return err;
+> +	err = devm_request_pci_bus_resources(dev, windows);
+> +	if (err < 0)
+> +		return err;
+>  
+> -		switch (res.flags & IORESOURCE_TYPE_BITS) {
+> +	/* Get the I/O and memory ranges from DT */
+> +	resource_list_for_each_entry_safe(win, tmp_win, windows) {
+> +		switch (resource_type(win->res)) {
+>  		case IORESOURCE_IO:
+> -			pcie->offset.io = res.start - range.pci_addr;
+> -
+> -			memcpy(&pcie->pio, &res, sizeof(res));
+> -			pcie->pio.name = node->full_name;
+> -
+> -			pcie->io.start = range.cpu_addr;
+> -			pcie->io.end = range.cpu_addr + range.size - 1;
+> -			pcie->io.flags = IORESOURCE_MEM;
+> -			pcie->io.name = "I/O";
+> -
+> -			memcpy(&res, &pcie->io, sizeof(res));
+> +			err = devm_pci_remap_iospace(dev, win->res, io_base);
+> +			if (err) {
+> +				dev_warn(dev, "error %d: failed to map resource %pR\n",
+> +					 err, win->res);
+> +				resource_list_destroy_entry(win);
+> +			}
+>  			break;
+> -
+>  		case IORESOURCE_MEM:
+> -			pcie->offset.mem = res.start - range.pci_addr;
+> -
+> -			memcpy(&pcie->mem, &res, sizeof(res));
+> +			memcpy(&pcie->mem, win->res, sizeof(*win->res));
+>  			pcie->mem.name = "non-prefetchable";
+>  			break;
+> +		case IORESOURCE_BUS:
+> +			host->busnr = win->res->start;
+> +			break;
+>  		}
+>  	}
+>  
+> -	err = of_pci_parse_bus_range(node, &pcie->busn);
+> -	if (err < 0) {
+> -		dev_err(dev, "failed to parse bus ranges property: %d\n", err);
+> -		pcie->busn.name = node->name;
+> -		pcie->busn.start = 0;
+> -		pcie->busn.end = 0xff;
+> -		pcie->busn.flags = IORESOURCE_BUS;
+> -	}
+> -
+>  	for_each_available_child_of_node(node, child) {
+>  		int slot;
+>  
+> @@ -1125,28 +1102,6 @@ static int mtk_pcie_setup(struct mtk_pcie *pcie)
+>  	return 0;
+>  }
+>  
+> -static int mtk_pcie_request_resources(struct mtk_pcie *pcie)
+> -{
+> -	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
+> -	struct list_head *windows = &host->windows;
+> -	struct device *dev = pcie->dev;
+> -	int err;
+> -
+> -	pci_add_resource_offset(windows, &pcie->pio, pcie->offset.io);
+> -	pci_add_resource_offset(windows, &pcie->mem, pcie->offset.mem);
+> -	pci_add_resource(windows, &pcie->busn);
+> -
+> -	err = devm_request_pci_bus_resources(dev, windows);
+> -	if (err < 0)
+> -		return err;
+> -
+> -	err = devm_pci_remap_iospace(dev, &pcie->pio, pcie->io.start);
+> -	if (err < 0)
+> -		return err;
+> -
+> -	return 0;
+> -}
+> -
+>  static int mtk_pcie_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -1169,11 +1124,6 @@ static int mtk_pcie_probe(struct platform_device *pdev)
+>  	if (err)
+>  		return err;
+>  
+> -	err = mtk_pcie_request_resources(pcie);
+> -	if (err)
+> -		goto put_resources;
+> -
+> -	host->busnr = pcie->busn.start;
+>  	host->dev.parent = pcie->dev;
+>  	host->ops = pcie->soc->ops;
+>  	host->map_irq = of_irq_parse_and_map_pci;
 
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
----
- .../boot/dts/allwinner/sun50i-a64-pine64.dts  | 35 +++++++++++++++++++
- .../allwinner/sun50i-a64-sopine-baseboard.dts | 35 +++++++++++++++++++
- 2 files changed, 70 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index c077b6c1f458..30d0743d0d79 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -73,6 +73,24 @@
- 			};
- 		};
- 	};
-+
-+	headphone_amp: headphone_amp {
-+		compatible = "simple-audio-amplifier";
-+		VCC-supply = <&reg_eldo1>;
-+		sound-name-prefix = "HP";
-+	};
-+};
-+
-+&codec {
-+	status = "okay";
-+};
-+
-+&codec_analog {
-+	status = "okay";
-+};
-+
-+&dai {
-+	status = "okay";
- };
- 
- &de {
-@@ -259,6 +277,23 @@
- 	vcc-hdmi-supply = <&reg_dldo1>;
- };
- 
-+&sound {
-+	simple-audio-card,aux-devs = <&codec_analog>, <&headphone_amp>;
-+	simple-audio-card,widgets = "Microphone", "Microphone Jack",
-+				    "Headphone", "Headphone Jack";
-+	simple-audio-card,routing =
-+			"Left DAC", "AIF1 Slot 0 Left",
-+			"Right DAC", "AIF1 Slot 0 Right",
-+			"HP INL", "HP",
-+			"HP INR", "HP",
-+			"Headphone Jack", "HP OUTL",
-+			"Headphone Jack", "HP OUTR",
-+			"AIF1 Slot 0 Left ADC", "Left ADC",
-+			"AIF1 Slot 0 Right ADC", "Right ADC",
-+			"MIC2", "Microphone Jack";
-+	status = "okay";
-+};
-+
- /* On Euler connector */
- &spdif {
- 	status = "disabled";
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index 53fcc9098df3..81d85ad127a2 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -72,6 +72,12 @@
- 		};
- 	};
- 
-+	headphone_amp: headphone_amp {
-+		compatible = "simple-audio-amplifier";
-+		VCC-supply = <&reg_eldo1>;
-+		sound-name-prefix = "HP";
-+	};
-+
- 	reg_vcc1v8: vcc1v8 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc1v8";
-@@ -80,6 +86,18 @@
- 	};
- };
- 
-+&codec {
-+	status = "okay";
-+};
-+
-+&codec_analog {
-+	status = "okay";
-+};
-+
-+&dai {
-+	status = "okay";
-+};
-+
- &de {
- 	status = "okay";
- };
-@@ -164,6 +182,23 @@
- 	vcc-hdmi-supply = <&reg_dldo1>;
- };
- 
-+&sound {
-+	simple-audio-card,aux-devs = <&codec_analog>, <&headphone_amp>;
-+	simple-audio-card,widgets = "Microphone", "Microphone Jack",
-+				    "Headphone", "Headphone Jack";
-+	simple-audio-card,routing =
-+			"Left DAC", "AIF1 Slot 0 Left",
-+			"Right DAC", "AIF1 Slot 0 Right",
-+			"HP INL", "HP",
-+			"HP INR", "HP",
-+			"Headphone Jack", "HP OUTL",
-+			"Headphone Jack", "HP OUTR",
-+			"AIF1 Slot 0 Left ADC", "Left ADC",
-+			"AIF1 Slot 0 Right ADC", "Right ADC",
-+			"MIC2", "Microphone Jack";
-+	status = "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
--- 
-2.19.1
+Acked-by: Ryder Lee <ryder.lee@mediatek.com>
