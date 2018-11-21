@@ -1,7 +1,7 @@
 From: thesven73@gmail.com
-Subject: [PATCH anybus v4 7/7] fieldbus_dev: support HMS Profinet IRT industrial controller
-Date: Wed, 21 Nov 2018 10:07:09 -0500
-Message-ID: <20181121150709.6030-8-TheSven73@googlemail.com>
+Subject: [PATCH anybus v4 6/7] dt-bindings: anybuss-host: document devicetree binding
+Date: Wed, 21 Nov 2018 10:07:08 -0500
+Message-ID: <20181121150709.6030-7-TheSven73@googlemail.com>
 References: <20181121150709.6030-1-TheSven73@googlemail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181121150709.6030-1-TheSven73@googlemail.com>
@@ -10,293 +10,86 @@ To: svendev@arcx.com, robh+dt@kernel.org, linus.walleij@linaro.org
 Cc: lee.jones@linaro.org, mark.rutland@arm.com, afaerber@suse.de, treding@nvidia.com, david@lechnology.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, stuyoder@gmail.com, maxime.ripard@bootlin.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Anybus-S PROFINET IRT communication module provides instant integration
-to any Ethernet based LAN via SMTP, FTP, HTTP as well as PROFINET and
-Modbus-TCP. Additional protocols can be implemented on top of TCP/IP
-or UDP using the transparent socket interface.
-
-Official documentation:
-https://www.anybus.com/docs/librariesprovider7/default-document-library
-/manuals-design-guides/hms-hmsi-168-52.pdf
-
-This implementation is an Anybus-S client driver, designed to be
-instantiated by the Anybus-S bus driver when it discovers the Profinet
-card.
-
-If loaded successfully, the driver registers itself as a fieldbus_dev,
-and userspace can access it through the fieldbus_dev interface.
+This patch adds devicetree binding documentation for the
+Arcx Anybus-S host.
 
 Signed-off-by: Sven Van Asbroeck <svendev@arcx.com>
 ---
- drivers/fieldbus/Kconfig        |  17 +++
- drivers/fieldbus/Makefile       |   1 +
- drivers/fieldbus/hms-profinet.c | 223 ++++++++++++++++++++++++++++++++
- 3 files changed, 241 insertions(+)
- create mode 100644 drivers/fieldbus/hms-profinet.c
+ .../bindings/fieldbus/arcx,anybuss-host.txt   | 66 +++++++++++++++++++
+ 1 file changed, 66 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fieldbus/arcx,anybuss-host.txt
 
-diff --git a/drivers/fieldbus/Kconfig b/drivers/fieldbus/Kconfig
-index 00a163a2cbe6..12b0fef591fb 100644
---- a/drivers/fieldbus/Kconfig
-+++ b/drivers/fieldbus/Kconfig
-@@ -36,4 +36,21 @@ config HMS_ANYBUSS_HOST
- 	  typically provide fieldbus and industrial ethernet
- 	  functionality.
- 
-+config HMS_PROFINET
-+	tristate "HMS Profinet IRT Controller (Anybus-S)"
-+	depends on FIELDBUS_DEV
-+	select HMS_ANYBUSS_HOST
-+	help
-+	 If you say yes here you get support for the HMS Industrial
-+	 Networks Profinet IRT Controller.
-+
-+	 It will be registered with the kernel as a fieldbus_dev,
-+	 so userspace can interact with it via the fieldbus_dev userspace
-+	 interface(s).
-+
-+	 This driver can also be built as a module. If so, the module
-+	 will be called hms-profinet.
-+
-+	 If unsure, say N.
-+
- endif
-diff --git a/drivers/fieldbus/Makefile b/drivers/fieldbus/Makefile
-index c47a4bd416f6..c3161c5ce0f1 100644
---- a/drivers/fieldbus/Makefile
-+++ b/drivers/fieldbus/Makefile
-@@ -9,3 +9,4 @@ fieldbus_dev_core-y		:= dev_core.o
- # Devices
- obj-$(CONFIG_ARCX_ANYBUS_BRIDGE) += anybus-bridge.o
- obj-$(CONFIG_HMS_ANYBUSS_HOST)	+= anybuss-host.o
-+obj-$(CONFIG_HMS_PROFINET)	+= hms-profinet.o
-diff --git a/drivers/fieldbus/hms-profinet.c b/drivers/fieldbus/hms-profinet.c
+diff --git a/Documentation/devicetree/bindings/fieldbus/arcx,anybuss-host.txt b/Documentation/devicetree/bindings/fieldbus/arcx,anybuss-host.txt
 new file mode 100644
-index 000000000000..434437829339
+index 000000000000..456587f288c1
 --- /dev/null
-+++ b/drivers/fieldbus/hms-profinet.c
-@@ -0,0 +1,223 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * HMS Profinet Client Driver
-+ *
-+ * Copyright (C) 2018 Arcx Inc
-+ */
++++ b/Documentation/devicetree/bindings/fieldbus/arcx,anybuss-host.txt
+@@ -0,0 +1,66 @@
++* Arcx Anybus-S host
 +
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/slab.h>
-+#include <linux/fieldbus_dev.h>
-+#include <linux/anybuss-client.h>
++This host communicates with the SoC over a parallel bus. It is
++expected that its Device Tree node is specified as the child of a node
++corresponding to the parallel bus used for communication.
 +
-+#define PROFI_DPRAM_SIZE	512
++Required properties:
++--------------------
 +
-+/*
-+ * ---------------------------------------------------------------
-+ * Anybus Profinet mailbox messages - definitions
-+ * ---------------------------------------------------------------
-+ * note that we're depending on the layout of these structures being
-+ * exactly as advertised.
-+ */
++  - compatible : The following string:
++        "arcx,anybuss-host"
 +
-+struct msgMacAddr {
-+	u8 addr[6];
-+};
++  - reg : bus memory area where the Anybus-S host dpram is located.
 +
-+struct profi_priv {
-+	struct fieldbus_dev fbdev;
-+	struct anybuss_client *client;
-+	struct mutex enable_lock;
-+	bool power_on;
-+};
++  - interrupts : interrupt connected to the Anybus-S host interrupt line.
++	Generic interrupt client node bindings are described in
++		interrupt-controller/interrupts.txt
 +
-+static ssize_t
-+profi_read_area(struct fieldbus_dev *fbdev, char __user *buf, size_t size,
-+			loff_t *offset)
-+{
-+	struct profi_priv *priv = container_of(fbdev, struct profi_priv, fbdev);
++  - resets : the reset line associated with the Anybus-S host.
 +
-+	return anybuss_read_output(priv->client, buf, size, offset);
-+}
++Optional: use of subnodes
++-------------------------
 +
-+static ssize_t
-+profi_write_area(struct fieldbus_dev *fbdev, const char __user *buf,
-+			size_t size, loff_t *offset)
-+{
-+	struct profi_priv *priv = container_of(fbdev, struct profi_priv, fbdev);
++The card connected to a host may need additional properties. These can be
++specified in subnodes to the host node.
 +
-+	return anybuss_write_input(priv->client, buf, size, offset);
-+}
++The subnodes are identified by the standard 'reg' property. Which information
++exactly can be specified depends on the bindings for the function driver
++for the subnode.
 +
-+static int profi_id_get(struct fieldbus_dev *fbdev, char *buf,
-+				size_t max_size)
-+{
-+	struct profi_priv *priv = container_of(fbdev, struct profi_priv, fbdev);
-+	struct msgMacAddr response;
-+	int ret;
++Required host node properties when using subnodes:
++- #address-cells: should be one.
++- #size-cells: should be zero.
 +
-+	ret = anybuss_recv_msg(priv->client, 0x0010, &response,
-+						sizeof(response));
-+	if (ret < 0)
-+		return ret;
-+	return snprintf(buf, max_size, "%02X:%02X:%02X:%02X:%02X:%02X\n",
-+		response.addr[0], response.addr[1],
-+		response.addr[2], response.addr[3],
-+		response.addr[4], response.addr[5]);
-+}
++Required subnode properties:
++- reg: Must contain the fieldbus type of the card this subnode describes.
 +
-+static bool profi_enable_get(struct fieldbus_dev *fbdev)
-+{
-+	struct profi_priv *priv = container_of(fbdev, struct profi_priv, fbdev);
-+	bool power_on;
++Example of usage:
++-----------------
 +
-+	mutex_lock(&priv->enable_lock);
-+	power_on = priv->power_on;
-+	mutex_unlock(&priv->enable_lock);
++This example places the Anybus-S host on top of the i.MX WEIM parallel bus, see:
++Documentation/devicetree/bindings/bus/imx-weim.txt
 +
-+	return power_on;
-+}
-+
-+static int __profi_enable(struct profi_priv *priv)
-+{
-+	int ret;
-+	struct anybuss_client *client = priv->client;
-+	/* Initialization Sequence, Generic Anybus Mode */
-+	const struct anybuss_memcfg mem_cfg = {
-+		.input_io = 220,
-+		.input_dpram = PROFI_DPRAM_SIZE,
-+		.input_total = PROFI_DPRAM_SIZE,
-+		.output_io = 220,
-+		.output_dpram = PROFI_DPRAM_SIZE,
-+		.output_total = PROFI_DPRAM_SIZE,
-+		.offl_mode = AB_OFFL_MODE_CLEAR,
++&weim {
++	anybus-host@0 {
++		compatible = "arcx,anybuss-host";
++		reg = <0 0x400000 0x800>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <1 IRQ_TYPE_LEVEL_LOW>;
++		resets = <&anybus_bridge 0>;
++		/* fsl,weim-cs-timing is a i.MX WEIM bus specific property */
++		fsl,weim-cs-timing = <0x024400b1 0x00001010 0x20081100
++				0x00000000 0xa0000240 0x00000000>;
++		/*
++		 * optional subnode for a profinet card
++		 * (fieldbus type = 0x0089)
++		 */
++		#address-cells = <1>;
++		#size-cells = <0>;
++		profinet@0 {
++			reg = <0x0089>;
++			/* profinet specific properties go here */
++		};
 +	};
 +
-+	/*
-+	 * switch anybus off then on, this ensures we can do a complete
-+	 * configuration cycle in case anybus was already on.
-+	 */
-+	anybuss_set_power(client, false);
-+	ret = anybuss_set_power(client, true);
-+	if (ret)
-+		goto err;
-+	ret = anybuss_start_init(client, &mem_cfg);
-+	if (ret)
-+		goto err;
-+	ret = anybuss_finish_init(client);
-+	if (ret)
-+		goto err;
-+	priv->power_on = true;
-+	return 0;
-+
-+err:
-+	anybuss_set_power(client, false);
-+	priv->power_on = false;
-+	return ret;
-+}
-+
-+static int __profi_disable(struct profi_priv *priv)
-+{
-+	struct anybuss_client *client = priv->client;
-+
-+	anybuss_set_power(client, false);
-+	priv->power_on = false;
-+	return 0;
-+}
-+
-+static int profi_simple_enable(struct fieldbus_dev *fbdev, bool enable)
-+{
-+	int ret;
-+	struct profi_priv *priv = container_of(fbdev, struct profi_priv, fbdev);
-+
-+	mutex_lock(&priv->enable_lock);
-+	if (enable)
-+		ret = __profi_enable(priv);
-+	else
-+		ret = __profi_disable(priv);
-+	mutex_unlock(&priv->enable_lock);
-+
-+	return ret;
-+}
-+
-+static void profi_on_area_updated(struct anybuss_client *client)
-+{
-+	struct profi_priv *priv = anybuss_get_drvdata(client);
-+
-+	fieldbus_dev_area_updated(&priv->fbdev);
-+}
-+
-+static void profi_on_online_changed(struct anybuss_client *client, bool online)
-+{
-+	struct profi_priv *priv = anybuss_get_drvdata(client);
-+
-+	fieldbus_dev_online_changed(&priv->fbdev, online);
-+}
-+
-+static int profinet_probe(struct anybuss_client *client)
-+{
-+	struct profi_priv *priv;
-+	struct device *dev = &client->dev;
-+	int err;
-+
-+	client->on_area_updated = profi_on_area_updated;
-+	client->on_online_changed = profi_on_online_changed;
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+	mutex_init(&priv->enable_lock);
-+	priv->client = client;
-+	priv->fbdev.read_area_sz = priv->fbdev.write_area_sz = PROFI_DPRAM_SIZE;
-+	priv->fbdev.card_name = "HMS Profinet IRT (Anybus-S)";
-+	priv->fbdev.fieldbus_type = FIELDBUS_DEV_TYPE_PROFINET;
-+	priv->fbdev.read_area = profi_read_area;
-+	priv->fbdev.write_area = profi_write_area;
-+	priv->fbdev.fieldbus_id_get = profi_id_get;
-+	priv->fbdev.enable_get = profi_enable_get;
-+	priv->fbdev.simple_enable_set = profi_simple_enable;
-+	priv->fbdev.parent = dev;
-+	err = fieldbus_dev_register(&priv->fbdev);
-+	if (err < 0)
-+		return err;
-+	dev_info(dev, "card detected, registered as %s",
-+				dev_name(priv->fbdev.dev));
-+	anybuss_set_drvdata(client, priv);
-+
-+	return 0;
-+}
-+
-+static int profinet_remove(struct anybuss_client *client)
-+{
-+	struct profi_priv *priv = anybuss_get_drvdata(client);
-+
-+	fieldbus_dev_unregister(&priv->fbdev);
-+	return 0;
-+}
-+
-+static struct anybuss_client_driver profinet_driver = {
-+	.probe = profinet_probe,
-+	.remove = profinet_remove,
-+	.driver		= {
-+		.name   = "hms-profinet",
-+		.owner	= THIS_MODULE,
-+	},
-+	.fieldbus_type = 0x0089,
 +};
-+
-+static int __init profinet_init(void)
-+{
-+	return anybuss_client_driver_register(&profinet_driver);
-+}
-+module_init(profinet_init);
-+
-+static void __exit profinet_exit(void)
-+{
-+	return anybuss_client_driver_unregister(&profinet_driver);
-+}
-+module_exit(profinet_exit);
-+
-+MODULE_AUTHOR("Sven Van Asbroeck <svendev@arcx.com>");
-+MODULE_DESCRIPTION("HMS Profinet IRT Driver (Anybus-S)");
-+MODULE_LICENSE("GPL v2");
 -- 
 2.17.1
