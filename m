@@ -1,354 +1,276 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 3/3] spi: at91-usart: add DMA support
-Date: Wed, 21 Nov 2018 17:38:04 +0000
-Message-ID: <fe367c1a-700d-c6e3-6b09-ded1a47f2475@arm.com>
-References: <20181121112732.15690-1-radu_nicolae.pirea@upb.ro>
- <20181121112732.15690-4-radu_nicolae.pirea@upb.ro>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v2 08/15] irqchip: Add RDA8810PL interrupt driver
+Date: Wed, 21 Nov 2018 23:11:02 +0530
+Message-ID: <20181121174017.GA4411@Mani-XPS-13-9360>
+References: <20181121033652.12247-1-manivannan.sadhasivam@linaro.org>
+ <20181121033652.12247-9-manivannan.sadhasivam@linaro.org>
+ <83f70f64-79f1-c6e5-0328-09cc567f2686@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181121112732.15690-4-radu_nicolae.pirea@upb.ro>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <83f70f64-79f1-c6e5-0328-09cc567f2686@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Radu Pirea <radu_nicolae.pirea@upb.ro>, richard.genoud@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, ludovic.desroches@microchip.co, broonie@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, daniel.lezcano@linaro.org, gregkh@linuxfoundation.org, jslaby@suse.com, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, overseas.sales@unisoc.com
 List-Id: devicetree@vger.kernel.org
 
-On 21/11/2018 11:27, Radu Pirea wrote:
-> This patch adds support for DMA. Transfers are done with dma only if
-> they are longer than 16 bytes in order to achieve a better performance.
-> DMA setup introduces a little overhead and for transfers shorter than 16
-> bytes there is no performance improvement.
+Hi Marc,
+
+On Wed, Nov 21, 2018 at 08:41:25AM +0000, Marc Zyngier wrote:
+> On 21/11/2018 03:36, Manivannan Sadhasivam wrote:
+> > Add interrupt driver for RDA Micro RDA8810PL SoC.
+> > 
+> > Signed-off-by: Andreas Färber <afaerber@suse.de>
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  arch/arm/mach-rda/Kconfig      |   1 +
+> >  drivers/irqchip/Kconfig        |   4 ++
+> >  drivers/irqchip/Makefile       |   1 +
+> >  drivers/irqchip/irq-rda-intc.c | 113 +++++++++++++++++++++++++++++++++
+> >  4 files changed, 119 insertions(+)
+> >  create mode 100644 drivers/irqchip/irq-rda-intc.c
+> > 
+> > diff --git a/arch/arm/mach-rda/Kconfig b/arch/arm/mach-rda/Kconfig
+> > index dafab78d7aab..29012bc68ca4 100644
+> > --- a/arch/arm/mach-rda/Kconfig
+> > +++ b/arch/arm/mach-rda/Kconfig
+> > @@ -3,5 +3,6 @@ menuconfig ARCH_RDA
+> >  	depends on ARCH_MULTI_V7
+> >  	select COMMON_CLK
+> >  	select GENERIC_IRQ_CHIP
+> > +	select RDA_INTC
+> >  	help
+> >  	  This enables support for the RDA Micro 8810PL SoC family.
+> > diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> > index 51a5ef0e96ed..9d54645870ad 100644
+> > --- a/drivers/irqchip/Kconfig
+> > +++ b/drivers/irqchip/Kconfig
+> > @@ -195,6 +195,10 @@ config JCORE_AIC
+> >  	help
+> >  	  Support for the J-Core integrated AIC.
+> >  
+> > +config RDA_INTC
+> > +	bool
+> > +	select IRQ_DOMAIN
+> > +
+> >  config RENESAS_INTC_IRQPIN
+> >  	bool
+> >  	select IRQ_DOMAIN
+> > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> > index 794c13d3ac3d..417108027e40 100644
+> > --- a/drivers/irqchip/Makefile
+> > +++ b/drivers/irqchip/Makefile
+> > @@ -43,6 +43,7 @@ obj-$(CONFIG_IMGPDC_IRQ)		+= irq-imgpdc.o
+> >  obj-$(CONFIG_IRQ_MIPS_CPU)		+= irq-mips-cpu.o
+> >  obj-$(CONFIG_SIRF_IRQ)			+= irq-sirfsoc.o
+> >  obj-$(CONFIG_JCORE_AIC)			+= irq-jcore-aic.o
+> > +obj-$(CONFIG_RDA_INTC)			+= irq-rda-intc.o
+> >  obj-$(CONFIG_RENESAS_INTC_IRQPIN)	+= irq-renesas-intc-irqpin.o
+> >  obj-$(CONFIG_RENESAS_IRQC)		+= irq-renesas-irqc.o
+> >  obj-$(CONFIG_VERSATILE_FPGA_IRQ)	+= irq-versatile-fpga.o
+> > diff --git a/drivers/irqchip/irq-rda-intc.c b/drivers/irqchip/irq-rda-intc.c
+> > new file mode 100644
+> > index 000000000000..1b372bdb23bc
+> > --- /dev/null
+> > +++ b/drivers/irqchip/irq-rda-intc.c
+> > @@ -0,0 +1,113 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * RDA8810PL SoC irqchip driver
+> > + *
+> > + * Copyright RDA Microelectronics Company Limited
+> > + * Copyright (c) 2017 Andreas Färber
+> > + * Copyright (c) 2018 Manivannan Sadhasivam
+> > + */
+> > +
+> > +#include <linux/init.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/irq.h>
+> > +#include <linux/irqchip.h>
+> > +#include <linux/irqdomain.h>
+> > +#include <linux/of_address.h>
+> > +
+> > +#include <asm/irq.h>
 > 
-> Signed-off-by: Radu Pirea <radu_nicolae.pirea@upb.ro>
-> ---
->   drivers/spi/spi-at91-usart.c | 223 ++++++++++++++++++++++++++++++++++-
->   1 file changed, 221 insertions(+), 2 deletions(-)
+> You shouldn't need to include this.
 > 
-> diff --git a/drivers/spi/spi-at91-usart.c b/drivers/spi/spi-at91-usart.c
-> index 0b07c746453d..4d908afeaec9 100644
-> --- a/drivers/spi/spi-at91-usart.c
-> +++ b/drivers/spi/spi-at91-usart.c
-> @@ -8,9 +8,12 @@
->   
->   #include <linux/clk.h>
->   #include <linux/delay.h>
-> +#include <linux/dmaengine.h>
-> +#include <linux/dma-direction.h>
 
-It looks rather odd to include this from a driver that isn't otherwise 
-touching anything from linux/dma-mapping.h.
+Ack.
 
->   #include <linux/interrupt.h>
->   #include <linux/kernel.h>
->   #include <linux/module.h>
-> +#include <linux/of_platform.h>
->   #include <linux/of_gpio.h>
->   #include <linux/platform_device.h>
->   #include <linux/pm_runtime.h>
-> @@ -58,6 +61,8 @@
->   
->   #define US_INIT \
->   	(US_MR_SPI_MASTER | US_MR_CHRL | US_MR_CLKO | US_MR_WRDBT)
-> +#define US_DMA_MIN_BYTES       16
-> +#define US_DMA_TIMEOUT         (msecs_to_jiffies(1000))
->   
->   /* Register access macros */
->   #define at91_usart_spi_readl(port, reg) \
-> @@ -71,14 +76,19 @@
->   	writeb_relaxed((value), (port)->regs + US_##reg)
->   
->   struct at91_usart_spi {
-> +	struct platform_device  *mpdev;
->   	struct spi_transfer	*current_transfer;
->   	void __iomem		*regs;
->   	struct device		*dev;
->   	struct clk		*clk;
->   
-> +	struct completion	xfer_completion;
-> +
->   	/*used in interrupt to protect data reading*/
->   	spinlock_t		lock;
->   
-> +	phys_addr_t		phybase;
-> +
->   	int			irq;
->   	unsigned int		current_tx_remaining_bytes;
->   	unsigned int		current_rx_remaining_bytes;
-> @@ -87,8 +97,184 @@ struct at91_usart_spi {
->   	u32			status;
->   
->   	bool			xfer_failed;
-> +	bool			use_dma;
->   };
->   
-> +static void dma_callback(void *data)
-> +{
-> +	struct spi_controller   *ctlr = data;
-> +	struct at91_usart_spi   *aus = spi_master_get_devdata(ctlr);
-> +
-> +	at91_usart_spi_writel(aus, IER, US_IR_RXRDY);
-> +	aus->current_rx_remaining_bytes = 0;
-> +	complete(&aus->xfer_completion);
-> +}
-> +
-> +static bool at91_usart_spi_can_dma(struct spi_controller *ctrl,
-> +				   struct spi_device *spi,
-> +				   struct spi_transfer *xfer)
-> +{
-> +	struct at91_usart_spi *aus = spi_master_get_devdata(ctrl);
-> +
-> +	return aus->use_dma && xfer->len >= US_DMA_MIN_BYTES;
-> +}
-> +
-> +static int at91_usart_spi_configure_dma(struct spi_controller *ctlr,
-> +					struct at91_usart_spi *aus)
-> +{
-> +	struct dma_slave_config slave_config;
-> +	struct device *dev = &aus->mpdev->dev;
-> +	phys_addr_t phybase = aus->phybase;
-> +	dma_cap_mask_t mask;
-> +	int err = 0;
-> +
-> +	dma_cap_zero(mask);
-> +	dma_cap_set(DMA_SLAVE, mask);
-> +
-> +	ctlr->dma_tx = dma_request_slave_channel_reason(dev, "tx");
-> +	if (IS_ERR_OR_NULL(ctlr->dma_tx)) {
-> +		if (IS_ERR(ctlr->dma_tx)) {
-> +			err = PTR_ERR(ctlr->dma_tx);
-> +			goto at91_usart_spi_error_clear;
-> +		}
-> +
-> +		dev_dbg(dev,
-> +			"DMA TX channel not available, SPI unable to use DMA\n");
-> +		err = -EBUSY;
-> +		goto at91_usart_spi_error_clear;
-> +	}
-> +
-> +	ctlr->dma_rx = dma_request_slave_channel_reason(dev, "rx");
-> +	if (IS_ERR_OR_NULL(ctlr->dma_rx)) {
-> +		if (IS_ERR(ctlr->dma_rx)) {
-> +			err = PTR_ERR(ctlr->dma_rx);
-> +			goto at91_usart_spi_error;
-> +		}
-> +
-> +		dev_dbg(dev,
-> +			"DMA RX channel not available, SPI unable to use DMA\n");
-> +		err = -EBUSY;
-> +		goto at91_usart_spi_error;
-> +	}
-> +
-> +	slave_config.dst_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-> +	slave_config.src_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-> +	slave_config.dst_addr = (dma_addr_t)phybase + US_THR;
-> +	slave_config.src_addr = (dma_addr_t)phybase + US_RHR;
-> +	slave_config.src_maxburst = 1;
-> +	slave_config.dst_maxburst = 1;
-> +	slave_config.device_fc = false;
-> +
-> +	slave_config.direction = DMA_DEV_TO_MEM;
-> +	if (dmaengine_slave_config(ctlr->dma_rx, &slave_config)) {
-> +		dev_err(&ctlr->dev,
-> +			"failed to configure rx dma channel\n");
-> +		err = -EINVAL;
-> +		goto at91_usart_spi_error;
-> +	}
-> +
-> +	slave_config.direction = DMA_MEM_TO_DEV;
-> +	if (dmaengine_slave_config(ctlr->dma_tx, &slave_config)) {
-> +		dev_err(&ctlr->dev,
-> +			"failed to configure tx dma channel\n");
-> +		err = -EINVAL;
-> +		goto at91_usart_spi_error;
-> +	}
-> +
-> +	aus->use_dma = true;
-> +	return 0;
-> +
-> +at91_usart_spi_error:
-> +	if (!IS_ERR_OR_NULL(ctlr->dma_tx))
-> +		dma_release_channel(ctlr->dma_tx);
-> +	if (!IS_ERR_OR_NULL(ctlr->dma_rx))
-> +		dma_release_channel(ctlr->dma_rx);
-> +	ctlr->dma_tx = NULL;
-> +	ctlr->dma_rx = NULL;
-> +
-> +at91_usart_spi_error_clear:
-> +	return err;
-> +}
-> +
-> +static void at91_usart_spi_release_dma(struct spi_controller *ctlr)
-> +{
-> +	if (ctlr->dma_rx)
-> +		dma_release_channel(ctlr->dma_rx);
-> +	if (ctlr->dma_tx)
-> +		dma_release_channel(ctlr->dma_tx);
-> +}
-> +
-> +static void at91_usart_spi_stop_dma(struct spi_controller *ctlr)
-> +{
-> +	if (ctlr->dma_rx)
-> +		dmaengine_terminate_all(ctlr->dma_rx);
-> +	if (ctlr->dma_tx)
-> +		dmaengine_terminate_all(ctlr->dma_tx);
-> +}
-> +
-> +static int at91_usart_spi_dma_transfer(struct spi_controller *ctlr,
-> +				       struct spi_transfer *xfer)
-> +{
-> +	struct at91_usart_spi *aus = spi_master_get_devdata(ctlr);
-> +	struct dma_chan	 *rxchan = ctlr->dma_rx;
-> +	struct dma_chan *txchan = ctlr->dma_tx;
-> +	struct dma_async_tx_descriptor *rxdesc;
-> +	struct dma_async_tx_descriptor *txdesc;
-> +	dma_cookie_t cookie;
-> +
-> +	rxdesc = dmaengine_prep_slave_sg(rxchan,
-> +					 xfer->rx_sg.sgl,
-> +					 xfer->rx_sg.nents,
-> +					 DMA_FROM_DEVICE,
-
-Ah, this argument should be a dma_transfer_direction, not a 
-dma_data_direction (confusing I know, but they belong to different 
-APIs). I assume you mean DMA_DEV_TO_MEM here...
-
-> +					 DMA_PREP_INTERRUPT |
-> +					 DMA_CTRL_ACK);
-> +	if (!rxdesc)
-> +		goto at91_usart_spi_err_dma;
-> +
-> +	txdesc = dmaengine_prep_slave_sg(txchan,
-> +					 xfer->tx_sg.sgl,
-> +					 xfer->tx_sg.nents,
-> +					 DMA_TO_DEVICE,
-
-...and DMA_MEM_TO_DEV here.
-
-Robin.
-
-> +					 DMA_PREP_INTERRUPT |
-> +					 DMA_CTRL_ACK);
-> +	if (!txdesc)
-> +		goto at91_usart_spi_err_dma;
-> +
-> +	/* Disable RX interrupt */
-> +	at91_usart_spi_writel(aus, IDR, US_IR_RXRDY);
-> +
-> +	rxdesc->callback = dma_callback;
-> +	rxdesc->callback_param = ctlr;
-> +
-> +	cookie = rxdesc->tx_submit(rxdesc);
-> +	if (dma_submit_error(cookie))
-> +		goto at91_usart_spi_err_dma;
-> +
-> +	cookie = txdesc->tx_submit(txdesc);
-> +	if (dma_submit_error(cookie))
-> +		goto at91_usart_spi_err_dma;
-> +
-> +	rxchan->device->device_issue_pending(rxchan);
-> +	txchan->device->device_issue_pending(txchan);
-> +
-> +	return 0;
-> +
-> +at91_usart_spi_err_dma:
-> +	/* Enable RX interrupt if submission of any of descriptors fails
-> +	 * and fallback to PIO
-> +	 */
-> +	at91_usart_spi_writel(aus, IER, US_IR_RXRDY);
-> +	at91_usart_spi_stop_dma(ctlr);
-> +
-> +	return -ENOMEM;
-> +}
-> +
-> +static unsigned long at91_usart_spi_dma_timeout(struct at91_usart_spi *aus)
-> +{
-> +	return wait_for_completion_timeout(&aus->xfer_completion,
-> +					   US_DMA_TIMEOUT);
-> +}
-> +
->   static inline u32 at91_usart_spi_tx_ready(struct at91_usart_spi *aus)
->   {
->   	return aus->status & US_IR_TXRDY;
-> @@ -221,6 +407,8 @@ static int at91_usart_spi_transfer_one(struct spi_controller *ctlr,
->   				       struct spi_transfer *xfer)
->   {
->   	struct at91_usart_spi *aus = spi_master_get_devdata(ctlr);
-> +	unsigned long dma_timeout = 0;
-> +	int ret = 0;
->   
->   	at91_usart_spi_set_xfer_speed(aus, xfer);
->   	aus->xfer_failed = false;
-> @@ -230,8 +418,25 @@ static int at91_usart_spi_transfer_one(struct spi_controller *ctlr,
->   
->   	while ((aus->current_tx_remaining_bytes ||
->   		aus->current_rx_remaining_bytes) && !aus->xfer_failed) {
-> -		at91_usart_spi_read_status(aus);
-> -		at91_usart_spi_tx(aus);
-> +		reinit_completion(&aus->xfer_completion);
-> +		if (at91_usart_spi_can_dma(ctlr, spi, xfer) &&
-> +		    !ret) {
-> +			ret = at91_usart_spi_dma_transfer(ctlr, xfer);
-> +			if (ret)
-> +				continue;
-> +
-> +			dma_timeout = at91_usart_spi_dma_timeout(aus);
-> +
-> +			if (WARN_ON(dma_timeout == 0)) {
-> +				dev_err(&spi->dev, "DMA transfer timeout\n");
-> +				return -EIO;
-> +			}
-> +			aus->current_tx_remaining_bytes = 0;
-> +		} else {
-> +			at91_usart_spi_read_status(aus);
-> +			at91_usart_spi_tx(aus);
-> +		}
-> +
->   		cpu_relax();
->   	}
->   
-> @@ -350,6 +555,7 @@ static int at91_usart_spi_probe(struct platform_device *pdev)
->   	controller->transfer_one = at91_usart_spi_transfer_one;
->   	controller->prepare_message = at91_usart_spi_prepare_message;
->   	controller->unprepare_message = at91_usart_spi_unprepare_message;
-> +	controller->can_dma = at91_usart_spi_can_dma;
->   	controller->cleanup = at91_usart_spi_cleanup;
->   	controller->max_speed_hz = DIV_ROUND_UP(clk_get_rate(clk),
->   						US_MIN_CLK_DIV);
-> @@ -381,7 +587,17 @@ static int at91_usart_spi_probe(struct platform_device *pdev)
->   	aus->spi_clk = clk_get_rate(clk);
->   	at91_usart_spi_init(aus);
->   
-> +	aus->phybase = regs->start;
-> +
-> +	aus->mpdev = to_platform_device(pdev->dev.parent);
-> +
-> +	ret = at91_usart_spi_configure_dma(controller, aus);
-> +	if (ret)
-> +		goto at91_usart_fail_dma;
-> +
->   	spin_lock_init(&aus->lock);
-> +	init_completion(&aus->xfer_completion);
-> +
->   	ret = devm_spi_register_master(&pdev->dev, controller);
->   	if (ret)
->   		goto at91_usart_fail_register_master;
-> @@ -394,6 +610,8 @@ static int at91_usart_spi_probe(struct platform_device *pdev)
->   	return 0;
->   
->   at91_usart_fail_register_master:
-> +	at91_usart_spi_release_dma(controller);
-> +at91_usart_fail_dma:
->   	clk_disable_unprepare(clk);
->   at91_usart_spi_probe_fail:
->   	spi_master_put(controller);
-> @@ -458,6 +676,7 @@ static int at91_usart_spi_remove(struct platform_device *pdev)
->   	struct spi_controller *ctlr = platform_get_drvdata(pdev);
->   	struct at91_usart_spi *aus = spi_master_get_devdata(ctlr);
->   
-> +	at91_usart_spi_release_dma(ctlr);
->   	clk_disable_unprepare(aus->clk);
->   
->   	return 0;
+> > +#include <asm/exception.h>
+> > +
+> > +#define RDA_INTC_FINALSTATUS	0x00
+> > +#define RDA_INTC_STATUS		0x04
+> > +#define RDA_INTC_MASK_SET	0x08
+> > +#define RDA_INTC_MASK_CLR	0x0c
+> > +#define RDA_INTC_WAKEUP_MASK	0x18
+> > +#define RDA_INTC_CPU_SLEEP	0x1c
 > 
+> Half of these constants are unused. Do we really need them?
+> 
+
+Usually I tend to define all registers to provide overall reg map. But
+I have no issues to remove the not used ones.
+
+> > +
+> > +#define RDA_IRQ_MASK_ALL	0xFFFFFFFF
+> > +
+> > +#define RDA_NR_IRQS 32
+> 
+> Surely the mask can be derived from the number of interrupts?
+> 
+
+Why not? Since each bit corresponds to a single interrupt, 0xFFFFFFFF
+can cover all 32 bits which is equal to the total number of interrupts
+supported by the controller. Am I missing anything here?
+
+> > +
+> > +static void __iomem *base;
+> 
+> Everything in this driver is prefixed with rda_. It would seem valuable
+> to  do the same here, as "base" is a bit too generic.
+> 
+
+Ack.
+
+> > +
+> > +static void rda_intc_mask_irq(struct irq_data *d)
+> > +{
+> > +	writel_relaxed(BIT(d->hwirq), base + RDA_INTC_MASK_CLR);
+> > +}
+> > +
+> > +static void rda_intc_unmask_irq(struct irq_data *d)
+> > +{
+> > +	writel_relaxed(BIT(d->hwirq), base + RDA_INTC_MASK_SET);
+> 
+> Are the names MASK_CLR and MASK_SET from the datasheet? They seem to be
+> backward (you set the mask to unmask...), and seem to behave like an
+> enable instead. That's not a big issue, just curious.
+> 
+
+Yes, this naming convention comes from the datasheet and it is a bit
+wierd as you said ;-)
+
+> > +}
+> > +
+> > +static int rda_intc_set_type(struct irq_data *data, unsigned int flow_type)
+> > +{
+> > +	/* Hardware supports only level triggered interrupts */
+> > +	if (flow_type & (IRQF_TRIGGER_HIGH | IRQF_TRIGGER_LOW))
+> > +		irq_set_handler(data->irq, handle_level_irq);
+> 
+> Why do you need to do this? You've already configured it at map time,
+> and it is not changing under your feet. This should be written as:
+> 
+> if ((flow_type & (IRQF_TRIGGER_HIGH | IRQF_TRIGGER_LOW)) == flow_type)
+> 	return 0;
+> 
+> return -EINVAL;
+> 
+
+Okay.
+
+> > +	else
+> > +		return -EINVAL;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct irq_domain *rda_irq_domain;
+> 
+> Please move this to the top of the file, next to "base".
+> 
+
+Ack.
+
+> > +
+> > +static void __exception_irq_entry rda_handle_irq(struct pt_regs *regs)
+> > +{
+> > +	u32 stat = readl_relaxed(base + RDA_INTC_FINALSTATUS);
+> > +	u32 hwirq;
+> > +
+> > +	while (stat) {
+> > +		hwirq = __fls(stat);
+> > +		handle_domain_irq(rda_irq_domain, hwirq, regs);
+> > +		stat &= ~(1 << hwirq);
+> > +	}
+> > +}
+> > +
+> > +static struct irq_chip rda_irq_chip = {
+> > +	.name		= "rda-intc",
+> > +	.irq_mask	= rda_intc_mask_irq,
+> > +	.irq_unmask	= rda_intc_unmask_irq,
+> > +	.irq_set_type	= rda_intc_set_type,
+> > +};
+> > +
+> > +static int rda_irq_map(struct irq_domain *d,
+> > +		       unsigned int virq, irq_hw_number_t hw)
+> > +{
+> > +	irq_set_status_flags(virq, IRQ_LEVEL);
+> > +	irq_set_chip_and_handler(virq, &rda_irq_chip, handle_level_irq);
+> > +	irq_set_chip_data(virq, d->host_data);
+> > +	irq_set_probe(virq);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct irq_domain_ops rda_irq_domain_ops = {
+> > +	.map = rda_irq_map,
+> > +	.xlate = irq_domain_xlate_onecell,
+> > +};
+> > +
+> > +static int __init rda8810_intc_init(struct device_node *node,
+> > +				    struct device_node *parent)
+> > +{
+> > +	base = of_io_request_and_map(node, 0, "rda-intc");
+> > +	if (!base)
+> > +		return -ENXIO;
+> > +
+> > +	/* Mask, and invalidate all interrupt sources */
+> 
+> What does "invalidate" mean here?
+> 
+
+Mean to say "disable" but yeah not appropriate. Will remove it.
+
+> > +	writel_relaxed(RDA_IRQ_MASK_ALL, base + RDA_INTC_MASK_CLR);
+> > +
+> > +	rda_irq_domain = irq_domain_create_linear(&node->fwnode, RDA_NR_IRQS,
+> > +						  &rda_irq_domain_ops, base);
+> > +	if (WARN_ON(!rda_irq_domain)) {
+> > +		iounmap(base);
+> > +		return -ENODEV;
+> 
+> Why ENODEV? ENOMEM seems more appropriate. The WARN_ON is a bit
+> superfluous, as the failing probe should be noisy enough.
+> 
+
+Ack. ENOMEM comes from your suggestion in previous review.
+
+> > +	}
+> > +
+> > +	set_handle_irq(rda_handle_irq);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +IRQCHIP_DECLARE(rda_intc, "rda,8810pl-intc", rda8810_intc_init);
+> > 
+> 
+> You've already posted two versions in 3 days, please allow for a week
+> between versions.
+> 
+
+Sorry for that. I thought the other way, allowing too much delay would
+hinder the review process. Will post the next revision after few more days.
+
+Thanks,
+Mani
+
+> Thanks,
+> 
+> 	M.
+> -- 
+> Jazz is not dead. It just smells funny...
