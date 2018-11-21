@@ -1,161 +1,141 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 01/10] mailbox: Support blocking transfers in atomic
- context
-Date: Wed, 21 Nov 2018 15:27:40 +0100
-Message-ID: <20181121142740.GA29704@ulmo>
-References: <20181112151853.29289-1-thierry.reding@gmail.com>
- <20181112151853.29289-2-thierry.reding@gmail.com>
- <CABb+yY3HwvG6sSKnweiDpyg85Fk8Q9hOVaF-s7gv4RDzEoaGqA@mail.gmail.com>
- <20181120152907.GA28796@ulmo>
+From: thesven73@gmail.com
+Subject: [PATCH anybus v4 0/7] Add Fieldbus subsystem + support HMS Profinet card
+Date: Wed, 21 Nov 2018 10:07:02 -0500
+Message-ID: <20181121150709.6030-1-TheSven73@googlemail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5090347075083841764=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181120152907.GA28796@ulmo>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, mliljeberg@nvidia.com, Mikko Perttunen <mperttunen@nvidia.com>, talho@nvidia.com, linux-serial@vger.kernel.org, jslaby@suse.com, linux-tegra@vger.kernel.org, ppessi@nvidia.com, Jon Hunter <jonathanh@nvidia.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: svendev@arcx.com, robh+dt@kernel.org, linus.walleij@linaro.org
+Cc: lee.jones@linaro.org, mark.rutland@arm.com, afaerber@suse.de, treding@nvidia.com, david@lechnology.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, stuyoder@gmail.com, maxime.ripard@bootlin.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This patch:
+  1. adds a Fieldbus subsystem
+  2. adds support for the HMS Industrial Networks AB Profinet card.
 
---===============5090347075083841764==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
-Content-Disposition: inline
+1. Fieldbus subsystem
+---------------------
 
+Fieldbus device (client) adapters allow data exchange with a PLC aka.
+"Fieldbus Controller" over a fieldbus (Profinet, FLNet, etc.)
+They are typically used when a Linux device wants to expose itself
+as an actuator, motor, console light, switch, etc. over the fieldbus.
+The framework is designed to provide a generic interface to Fieldbus
+Devices from both the Linux Kernel and the userspace.
 
---bp/iNruPH9dso1Pn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+2. Add support for HMS Profinet Card
+------------------------------------
 
-On Tue, Nov 20, 2018 at 04:29:07PM +0100, Thierry Reding wrote:
-> On Sat, Nov 17, 2018 at 11:27:17AM -0600, Jassi Brar wrote:
-> > On Mon, Nov 12, 2018 at 9:18 AM Thierry Reding <thierry.reding@gmail.co=
-m> wrote:
-> > >
-> > > From: Thierry Reding <treding@nvidia.com>
-> > >
-> > > The mailbox framework supports blocking transfers via completions for
-> > > clients that can sleep. In order to support blocking transfers in cas=
-es
-> > > where the transmission is not permitted to sleep, add a new ->flush()
-> > > callback that controller drivers can implement to busy loop until the
-> > > transmission has been completed. This will automatically be called wh=
-en
-> > > available and interrupts are disabled for clients that request blocki=
-ng
-> > > transfers.
-> > >
-> > > Signed-off-by: Thierry Reding <treding@nvidia.com>
-> > > ---
-> > >  drivers/mailbox/mailbox.c          | 8 ++++++++
-> > >  include/linux/mailbox_controller.h | 4 ++++
-> > >  2 files changed, 12 insertions(+)
-> > >
-> > > diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-> > > index 674b35f402f5..0eaf21259874 100644
-> > > --- a/drivers/mailbox/mailbox.c
-> > > +++ b/drivers/mailbox/mailbox.c
-> > > @@ -267,6 +267,14 @@ int mbox_send_message(struct mbox_chan *chan, vo=
-id *mssg)
-> > >                 unsigned long wait;
-> > >                 int ret;
-> > >
-> > > +               if (irqs_disabled() && chan->mbox->ops->flush) {
-> > > +                       ret =3D chan->mbox->ops->flush(chan, chan->cl=
-->tx_tout);
-> > > +                       if (ret < 0)
-> > > +                               tx_tick(chan, ret);
-> > > +
-> > > +                       return ret;
-> > > +               }
-> > > +
-> > This is hacky. I think we can do without busy waiting in atomic
-> > context. You could queue locally while in atomic context and then
-> > transfer in blocking mode. I don't think we should worry about the
-> > 'throughput' as there already is no h/w rate control even with
-> > busy-waiting.
->=20
-> I actually tried to do that before I added this flushing mechanism. The
-> problem is, like you said, one of rate control. As mentioned in the
-> cover letter, the shared mailboxes implemented in tegra-hsp are used as
-> RX and TX channels for the TCU, which is like a virtual UART. The TTY
-> driver included as part of this series will use one of the mailboxes to
-> transmit data that is written to the console. The problem is that if
-> these transmissions are not rate-limited on the TTY driver side, the
-> console will just keep writing data and eventually overflow the buffer
-> that we have in the mailbox subsystem.
->=20
-> The problem is that data comes in at a much higher rate than what we can
-> output. This is especially true at boot when the TCU console takes over
-> and the whole log buffer is dumped on it.
->=20
-> So the only way to rate-limit is to either make mbox_send_message()
-> block, but that can only be done in non-atomic context. The console,
-> however, will always run in atomic context, so the only way to do rate-
-> limiting is by busy looping.
+Profinet is an industry technical standard for data communication over
+Industrial Ethernet, designed for collecting data from, and controlling,
+equipment in industrial systems, with a particular strength in delivering data
+under tight time constraints (on the order of 1ms or less).
 
-What I also tried before was to implement busy looping within the
-->send_data() callback of the driver so that we didn't have to put this
-into the core. Unfortunately, however, the ->send_data() callback is
-called under chan->lock, which means that from mbox_send_message() we
-don't have a way to mark the transfer as done. In order to do that we'd
-have to call mbox_chan_txdone(), but that ends up calling tx_tick() and
-that in turn also attempts to take the chan->lock, which would cause a
-deadlock.
+The profinet card itself is connected to the system via an industrial bus
+called 'anybus'.
 
-The explicit flushing is the best alternative that I could come up with.
-I think it's not all that hacky, because it's very explicit about what's
-going on and it has the nice side-effect that it will allow the mailbox
-to work in interrupt driven mode if possible and only resorting to the
-busy loop in atomic context.
+I have followed the bus driver/client driver pattern, and created an anybus
+bus driver, plus a client driver for the profinet card.
 
-At this point I think I have explored all other options and I frankly
-can't find a more proper way to achieve what we need here. Perhaps you
-can think of additional ways to accomplish this?
+In case this patch set gets (eventually) accepted, drivers for other anybus
+client cards may follow: flnet, cc-link, ...
 
-Thierry
+The anybus slot on the host is located on an 'anybus bridge', which is
+custom h/w designed by arcx. Its driver is modeled as a misc device, which
+exposes a dual reset controller, plus a power readout unrelated to the anybus.
 
---bp/iNruPH9dso1Pn
-Content-Type: application/pgp-signature; name="signature.asc"
+v4:
+	general
+		create fieldbus_dev subsystem, with standardized 'simple'
+			userspace interface (sysfs + cdev)
+		remove redundant __packed keywords
+		use __be16/32 types wherever values are explicitly big-endian
+	hms-profinet:
+		remove configuration code, and uapi headers: not supported (yet)
+			when registering as a fieldbus_dev.
+	anybuss-host:
+		use struct kref to reference-count tasks
+		replace busy loops with usleep_range() loop after 10 tries
+		use threaded irq so time_before_eq(jiffies, timeout) will
+			continue to work
+		allow client devices to be assigned a devicetree node,
+			in the same way as pci/mmc/...
 
------BEGIN PGP SIGNATURE-----
+v3:
+	devicetree-bindings
+		adding the vendor prefix is now a separate commit
+	anybus-bridge:
+		moved misc driver to drivers/bus/
+		converted of_gpio_* to gpiod_* abstractions
+		can power readout is now a fixed-voltage regulator
+	anybuss-host:
+		converted refcounts from atomic_t to refcount_t
+		fixed potential use-after-free
+	hms-profinet:
+		applied minor kernel build robot suggestion
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlv1a1kACgkQ3SOs138+
-s6GExg/9FnPibOvLkQ2iF2HFskxFcFmtsZqvSkH6MW/O6X1GxXJT3y3hQIAHHRH8
-hrZv29c44ZowWaSkNAsElKDYs8i1hh6FT7gknLIAAYjdXHwNW/1S6W9Rjgd+uR9F
-PjtKX/4LNkyldTSszw7Nn42dVhK4EnCi4rMYhT8UUgG80kegiUYVn7dnm56C0W3A
-sRFOSEKhStXuMFCo0h5G4qamZa2hzTJUl/CMaVAOmWLhM2qjoOaUmUjWQSqooWlq
-569DPijvBTk9wS4tIT8ZpOkjejgQ8n5SspWaGu1hdkZZemniBjuMtc1gdTEAkbcj
-x86iiHS6/KwM3or9MqFsxsETRwjpz7wKP55tSMJ90v2x0JcaKXpnarbbhIfgwpaQ
-GhaUldu2TfjvsQyf1JQQgzHgaS4+iw3sp6y2DfP9rkkpqr1sZhBaKtklO6oen3s7
-rDWu4hg2Cw3hyXZi09200keIVOdmaVFNCO/AVz75vSUJ8yi7zYovdIr4LxX5pXi0
-iqcTXAThEXqTe+2/KqTsxRS29WGTG+L/aoeZewzfZ4bkDB3uD55sRnvs6tySlVFv
-M63pew9SOKDJRT0CvTDkek5sANTkv2b44Sl9AGtJcSPFokt8SH+Q7dpNbJHuUTzN
-m7ehmW9YZnqXb9PLQcDwjDfxTctakVL7l1MKnhu9JnP/ApaOvRs=
-=aN9X
------END PGP SIGNATURE-----
+v2:
+	added architecture overview comments to host driver
+	completely reworked anybus-bridge driver, it becomes a reset controller
+	anybuss-host driver now needs devicetree entry, link to reset controller
+	I will hold off on kernel-doc until the overall architecture gets
+		more validation / approval
+	fixed Kconfig, comment-style, document ioctl magic numbers
+	removed redundant pwm dependency
+	renamed enable-gpios to reset-gpios
+	stop driving reset-gpio after unloading driver
+	use interrupt-parent / interrupts method to describe interrupts
+		in the devicetree
+	convert references 'i.MX WEIM parallel bus' to 'parallel bus'
+	replace devicetree functions with more generic platform_get_resource()
+							platform_get_irq()
+	added device unique data to add_device_randomness()
 
---bp/iNruPH9dso1Pn--
+v1:
+	first shot
 
 
---===============5090347075083841764==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Sven Van Asbroeck (7):
+  fieldbus_dev: add Fieldbus Device subsystem.
+  fieldbus: support the Arcx anybus bridge
+  dt-bindings: Add vendor prefix for arcx / Archronix
+  dt-bindings: anybus-bridge: document devicetree binding
+  fieldbus: support HMS Anybus-S bus
+  dt-bindings: anybuss-host: document devicetree binding
+  fieldbus_dev: support HMS Profinet IRT industrial controller
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+ Documentation/ABI/testing/fieldbus-dev-cdev   |   31 +
+ .../ABI/testing/sysfs-class-fieldbus-dev      |   63 +
+ .../bindings/fieldbus/arcx,anybus-bridge.txt  |   34 +
+ .../bindings/fieldbus/arcx,anybuss-host.txt   |   66 +
+ .../devicetree/bindings/vendor-prefixes.txt   |    1 +
+ Documentation/fieldbus_dev/fieldbus_dev.txt   |   66 +
+ drivers/Kconfig                               |    2 +
+ drivers/Makefile                              |    1 +
+ drivers/fieldbus/Kconfig                      |   56 +
+ drivers/fieldbus/Makefile                     |   12 +
+ drivers/fieldbus/anybus-bridge.c              |  321 ++++
+ drivers/fieldbus/anybuss-host.c               | 1497 +++++++++++++++++
+ drivers/fieldbus/dev_core.c                   |  355 ++++
+ drivers/fieldbus/hms-profinet.c               |  223 +++
+ include/linux/anybuss-client.h                |  104 ++
+ include/linux/fieldbus_dev.h                  |  106 ++
+ 16 files changed, 2938 insertions(+)
+ create mode 100644 Documentation/ABI/testing/fieldbus-dev-cdev
+ create mode 100644 Documentation/ABI/testing/sysfs-class-fieldbus-dev
+ create mode 100644 Documentation/devicetree/bindings/fieldbus/arcx,anybus-bridge.txt
+ create mode 100644 Documentation/devicetree/bindings/fieldbus/arcx,anybuss-host.txt
+ create mode 100644 Documentation/fieldbus_dev/fieldbus_dev.txt
+ create mode 100644 drivers/fieldbus/Kconfig
+ create mode 100644 drivers/fieldbus/Makefile
+ create mode 100644 drivers/fieldbus/anybus-bridge.c
+ create mode 100644 drivers/fieldbus/anybuss-host.c
+ create mode 100644 drivers/fieldbus/dev_core.c
+ create mode 100644 drivers/fieldbus/hms-profinet.c
+ create mode 100644 include/linux/anybuss-client.h
+ create mode 100644 include/linux/fieldbus_dev.h
 
---===============5090347075083841764==--
+-- 
+2.17.1
