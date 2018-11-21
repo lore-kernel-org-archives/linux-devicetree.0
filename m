@@ -1,77 +1,79 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77965: Add CAN controller
- nodes
-Date: Wed, 21 Nov 2018 08:37:06 +0100
-Message-ID: <CAMuHMdWrNjmCmAuKjp=J2bUhXtXCNbNE2QHyT0df3AYF8ua9JA@mail.gmail.com>
-References: <20181118173327.4704-1-marek.vasut+renesas@gmail.com>
- <20181118230250.GA2553@kunai> <6ffce819-4d8e-e54a-ba82-0845c36a6ec4@gmail.com>
- <CAMuHMdUjONJYypV0a5wnxyBx+sUMHzRwZObQ=d7xFG2ZSCM3Ag@mail.gmail.com>
- <8808d836-2454-4166-fbe0-02849e52792b@gmail.com>
+From: <miles.chen@mediatek.com>
+Subject: [RFC PATCH] of: make MAX_RESERVED_REGIONS configurable
+Date: Wed, 21 Nov 2018 16:11:13 +0800
+Message-ID: <1542787873-8429-1-git-send-email-miles.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <8808d836-2454-4166-fbe0-02849e52792b@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com, Miles Chen <miles.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+From: Miles Chen <miles.chen@mediatek.com>
 
-On Wed, Nov 21, 2018 at 12:33 AM Marek Vasut <marek.vasut@gmail.com> wrote:
-> On 11/19/2018 10:00 AM, Geert Uytterhoeven wrote:
-> > On Mon, Nov 19, 2018 at 12:46 AM Marek Vasut <marek.vasut@gmail.com> wrote:
-> >> On 11/19/2018 12:02 AM, Wolfram Sang wrote:
-> >>> On Sun, Nov 18, 2018 at 06:33:26PM +0100, Marek Vasut wrote:
-> >>>> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> >>>>
-> >>>> This patch adds CAN{0,1} controller nodes for the R8A77965 SoC.
-> >>>>
-> >>>> Based on several similar patches of the R8A7795 device tree
-> >>>> by Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-> >>>> and Geert Uytterhoeven <geert+renesas@glider.be>.
-> >>>>
-> >>>> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> >>>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> >>>> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> >>>> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> >>>> Cc: Rob Herring <robh@kernel.org>
-> >>>> Cc: Simon Horman <horms+renesas@verge.net.au>
-> >>>> Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> >>>> Cc: linux-renesas-soc@vger.kernel.org
-> >>>> Cc: linux-arm-kernel@lists.infradead.org
-> >>>
-> >>> Were you able to do some testing using EXIO connectors? Would be nice to
-> >>> know what was tested.
-> >>
-> >> Not on the M3N, since I don't see it broken out on the EXIO ; is it
-> >> really there ? It'd be easy to test on M3NSK with KF, but I don't have
-> >> either KF or M3NSK.
-> >
-> > Please have a look at EXIO Connector D, pins 13/14/15.
->
-> That's LBSC WE1n/WE0n/CS0n on S-XS . Is there something I obviously
-> don't see ?
+When we use more than 32 entries in /resered-memory,
+there will be an error message: "not enough space all defined regions.".
+We can increase MAX_RESERVED_REGIONS to fix this.
 
-Unless you connect an expansion card to the Ex Memory Connector,
-these signals are free to use, and can be pinmuxed to a CAN function.
+commit 22f8cc6e3373 ("drivers: of: increase MAX_RESERVED_REGIONS to 32")
+increased MAX_RESERVED_REGIONS to 32 but I'm not sure if increasing
+MAX_RESERVED_REGIONS to 64 is suitable for everyone.
 
-Gr{oetje,eeting}s,
+In this RFC patch, CONFIG_MAX_OF_RESERVED_REGIONS is added and used as
+MAX_RESERVED_REGIONS. Add a sanity test to make sure that
+MAX_RESERVED_REGIONS is less than INIT_MEMBLOCK_REGIONS.
+Users can configure CONFIG_MAX_OF_RESERVED_REGIONS according to their
+need.
 
-                        Geert
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+---
+ drivers/of/Kconfig           | 9 +++++++++
+ drivers/of/of_reserved_mem.c | 5 ++++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index ad3fcad..63fff2e 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -86,6 +86,15 @@ config OF_RESERVED_MEM
+ 	help
+ 	  Helpers to allow for reservation of memory regions
+ 
++config MAX_OF_RESERVED_REGIONS
++	int "the max number of devicetree reserved memory regions"
++	depends on OF_RESERVED_MEM
++	default 32
++	help
++	  Setup the max number of devicetree reserved memory regions
++	  If unsure, leave the default value "32".
++
++
+ config OF_RESOLVE
+ 	bool
+ 
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 1977ee0..18a7729 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -22,7 +22,7 @@
+ #include <linux/slab.h>
+ #include <linux/memblock.h>
+ 
+-#define MAX_RESERVED_REGIONS	32
++#define MAX_RESERVED_REGIONS	CONFIG_MAX_OF_RESERVED_REGIONS
+ static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
+ static int reserved_mem_count;
+ 
+@@ -246,6 +246,9 @@ void __init fdt_init_reserved_mem(void)
+ {
+ 	int i;
+ 
++	/* MAX_RESERVED_REGIONS should be bounded by INIT_MEMBLOCK_REGIONS */
++	BUILD_BUG_ON(MAX_RESERVED_REGIONS > INIT_MEMBLOCK_REGIONS);
++
+ 	/* check for overlapping reserved regions */
+ 	__rmem_check_for_overlap();
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+1.9.1
