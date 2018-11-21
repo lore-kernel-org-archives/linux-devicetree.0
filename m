@@ -1,62 +1,77 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH] ARM: dts: imx6sll-evk: add debug LED support
-Date: Wed, 21 Nov 2018 07:03:44 +0000
-Message-ID: <1542783500-19546-1-git-send-email-Anson.Huang@nxp.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77965: Add CAN controller
+ nodes
+Date: Wed, 21 Nov 2018 08:37:06 +0100
+Message-ID: <CAMuHMdWrNjmCmAuKjp=J2bUhXtXCNbNE2QHyT0df3AYF8ua9JA@mail.gmail.com>
+References: <20181118173327.4704-1-marek.vasut+renesas@gmail.com>
+ <20181118230250.GA2553@kunai> <6ffce819-4d8e-e54a-ba82-0845c36a6ec4@gmail.com>
+ <CAMuHMdUjONJYypV0a5wnxyBx+sUMHzRwZObQ=d7xFG2ZSCM3Ag@mail.gmail.com>
+ <8808d836-2454-4166-fbe0-02849e52792b@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <8808d836-2454-4166-fbe0-02849e52792b@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On i.MX6SLL EVK board, there is a debug LED controlled
-by MX6SLL_PAD_EPDC_VCOM1__GPIO2_IO04 pin, add support
-for it.
+Hi Marek,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6sll-evk.dts | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+On Wed, Nov 21, 2018 at 12:33 AM Marek Vasut <marek.vasut@gmail.com> wrote:
+> On 11/19/2018 10:00 AM, Geert Uytterhoeven wrote:
+> > On Mon, Nov 19, 2018 at 12:46 AM Marek Vasut <marek.vasut@gmail.com> wrote:
+> >> On 11/19/2018 12:02 AM, Wolfram Sang wrote:
+> >>> On Sun, Nov 18, 2018 at 06:33:26PM +0100, Marek Vasut wrote:
+> >>>> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> >>>>
+> >>>> This patch adds CAN{0,1} controller nodes for the R8A77965 SoC.
+> >>>>
+> >>>> Based on several similar patches of the R8A7795 device tree
+> >>>> by Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+> >>>> and Geert Uytterhoeven <geert+renesas@glider.be>.
+> >>>>
+> >>>> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> >>>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> >>>> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> >>>> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+> >>>> Cc: Rob Herring <robh@kernel.org>
+> >>>> Cc: Simon Horman <horms+renesas@verge.net.au>
+> >>>> Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> >>>> Cc: linux-renesas-soc@vger.kernel.org
+> >>>> Cc: linux-arm-kernel@lists.infradead.org
+> >>>
+> >>> Were you able to do some testing using EXIO connectors? Would be nice to
+> >>> know what was tested.
+> >>
+> >> Not on the M3N, since I don't see it broken out on the EXIO ; is it
+> >> really there ? It'd be easy to test on M3NSK with KF, but I don't have
+> >> either KF or M3NSK.
+> >
+> > Please have a look at EXIO Connector D, pins 13/14/15.
+>
+> That's LBSC WE1n/WE0n/CS0n on S-XS . Is there something I obviously
+> don't see ?
 
-diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-=
-evk.dts
-index c8e1155..9c90cbd 100644
---- a/arch/arm/boot/dts/imx6sll-evk.dts
-+++ b/arch/arm/boot/dts/imx6sll-evk.dts
-@@ -31,6 +31,18 @@
- 		status =3D "okay";
- 	};
-=20
-+	leds {
-+		compatible =3D "gpio-leds";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_led>;
-+
-+		user {
-+			label =3D "debug";
-+			gpios =3D <&gpio2 4 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger =3D "heartbeat";
-+		};
-+	};
-+
- 	reg_usb_otg1_vbus: regulator-otg1-vbus {
- 		compatible =3D "regulator-fixed";
- 		pinctrl-names =3D "default";
-@@ -455,6 +467,12 @@
- 		>;
- 	};
-=20
-+	pinctrl_led: ledgrp {
-+		fsl,pins =3D <
-+			MX6SLL_PAD_EPDC_VCOM1__GPIO2_IO04	0x17059
-+		>;
-+	};
-+
- 	pinctrl_pwm1: pmw1grp {
- 		fsl,pins =3D <
- 			MX6SLL_PAD_PWM1__PWM1_OUT   0x110b0
---=20
-2.7.4
+Unless you connect an expansion card to the Ex Memory Connector,
+these signals are free to use, and can be pinmuxed to a CAN function.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
