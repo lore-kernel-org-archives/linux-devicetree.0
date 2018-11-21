@@ -1,27 +1,39 @@
-Return-Path: <bunk@kernel.org>
-From: Adrian Bunk <bunk@kernel.org>
-Subject: [PATCH v4 1/2] dt-bindings: eeprom: at24: add "atmel,24c2048"
-Date: Thu, 29 Nov 2018 21:58:57 +0200
-Message-Id: <20181129195858.32367-1-bunk@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>, linux-i2c <linux-i2c@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Return-Path: <SRS0=hvIv=OA=linaro.org=loic.poulain@kernel.org>
+From: Loic Poulain <loic.poulain@linaro.org>
+Subject: [PATCH v2 3/3] arm64: dts: qcom: pm8916: Add PON watchdog node
+Date: Wed, 21 Nov 2018 18:27:44 +0100
+Message-Id: <1542821264-9200-3-git-send-email-loic.poulain@linaro.org>
+In-Reply-To: <1542821264-9200-1-git-send-email-loic.poulain@linaro.org>
+References: <1542821264-9200-1-git-send-email-loic.poulain@linaro.org>
+To: wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, andy.gross@linaro.org, Loic Poulain <loic.poulain@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Adrian Bunk <bunk@kernel.org>
----
- Documentation/devicetree/bindings/eeprom/at24.txt | 1 +
- 1 file changed, 1 insertion(+)
+Add watchdog child node to the PM8916 PON device.
 
-diff --git a/Documentation/devicetree/bindings/eeprom/at24.txt b/Documentation/devicetree/bindings/eeprom/at24.txt
-index aededdbc262b..f9a7c984274c 100644
---- a/Documentation/devicetree/bindings/eeprom/at24.txt
-+++ b/Documentation/devicetree/bindings/eeprom/at24.txt
-@@ -27,6 +27,7 @@ Required properties:
-                 "atmel,24c256",
-                 "atmel,24c512",
-                 "atmel,24c1024",
-+                "atmel,24c2048",
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+---
+ v2: add timeout and interrupts
+
+ arch/arm64/boot/dts/qcom/pm8916.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/pm8916.dtsi b/arch/arm64/boot/dts/qcom/pm8916.dtsi
+index a05ebaf..3230b88 100644
+--- a/arch/arm64/boot/dts/qcom/pm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8916.dtsi
+@@ -32,6 +32,12 @@
+ 				bias-pull-up;
+ 				linux,code = <KEY_POWER>;
+ 			};
++
++			watchdog {
++				compatible = "qcom,pm8916-wdt";
++				interrupts = <0x0 0x8 6 IRQ_TYPE_EDGE_RISING>;
++				timeout-sec = <60>;
++			};
+ 		};
  
-                 If <manufacturer> is not "atmel", then a fallback must be used
-                 with the same <model> and "atmel" as manufacturer.
+ 		pm8916_gpios: gpios@c000 {
 -- 
-2.11.0
+2.7.4
