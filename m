@@ -1,111 +1,96 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 1/7] staging:iio:ad2s90: Add device tree support
-Date: Wed, 21 Nov 2018 19:12:39 +0000
-Message-ID: <20181121191239.5aa312ea@archlinux>
-References: <20181118042540.12697-1-matheus.bernardino@usp.br>
-        <20181118042540.12697-2-matheus.bernardino@usp.br>
-        <f250fa3a01b51d59979e7a2e3e42cc34d02aa52e.camel@analog.com>
-        <CAHd-oW4mq1HnTqr_XZt7cktTgy_ytH=ARg+d3ac+Q5bSdbciUQ@mail.gmail.com>
+From: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v10 0/4] Add Rockchip VPU JPEG encoder
+Date: Wed, 21 Nov 2018 16:16:48 -0300
+Message-ID: <20181121191652.22814-1-ezequiel@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHd-oW4mq1HnTqr_XZt7cktTgy_ytH=ARg+d3ac+Q5bSdbciUQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matheus Tavares Bernardino <matheus.bernardino@usp.br>
-Cc: Alexandru Ardelean <alexandru.Ardelean@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Mark Rutland <mark.rutland@arm.com>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Victor Colombo <victorcolombo@gmail.com>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, kernel-usp@googlegroups.com, devicetree@vger.kernel.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 Nov 2018 21:59:19 -0200
-Matheus Tavares Bernardino <matheus.bernardino@usp.br> wrote:
+This series is based on Mauro's master branch,
+with the following patch applied:
 
-> On Mon, Nov 19, 2018 at 6:09 AM Ardelean, Alexandru
-> <alexandru.Ardelean@analog.com> wrote:
-> >
-> > On Sun, 2018-11-18 at 02:25 -0200, Matheus Tavares wrote:  
-> > > This patch adds device tree support to ad2s90 with standard
-> > > device tree id table.
-> > >  
-> >
-> > Hey,
-> >
-> > Comment inline
-> >  
-> > > Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
-> > > ---
-> > > Changes in v2:
-> > >  - none
-> > >
-> > >  drivers/staging/iio/resolver/ad2s90.c | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> > >
-> > > diff --git a/drivers/staging/iio/resolver/ad2s90.c
-> > > b/drivers/staging/iio/resolver/ad2s90.c
-> > > index 3e257ac46f7a..6ffbac66b837 100644
-> > > --- a/drivers/staging/iio/resolver/ad2s90.c
-> > > +++ b/drivers/staging/iio/resolver/ad2s90.c
-> > > @@ -107,6 +107,12 @@ static int ad2s90_probe(struct spi_device *spi)
-> > >       return devm_iio_device_register(indio_dev->dev.parent, indio_dev);
-> > >  }
-> > >
-> > > +static const struct of_device_id ad2s90_of_match[] = {
-> > > +     { .compatible = "adi,ad2s90", },
-> > > +     {}
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, ad2s90_of_match);
-> > > +
-> > >  static const struct spi_device_id ad2s90_id[] = {
-> > >       { "ad2s90" },
-> > >       {}
-> > > @@ -116,6 +122,7 @@ MODULE_DEVICE_TABLE(spi, ad2s90_id);
-> > >  static struct spi_driver ad2s90_driver = {
-> > >       .driver = {
-> > >               .name = "ad2s90",
-> > > +             .of_match_table = of_match_ptr(ad2s90_of_match),  
-> >
-> > I think you need to remove the of_match_ptr().
-> > There was a comment from Jonathan on another thread about this.
-> > See:
-> >    https://patchwork.kernel.org/patch/10682963/
-> >  
-> 
-> Hm, got it, thanks!
-> 
-> I don't understand much about ACPI yet, and I had understood the
-> "of_match_ptr" as a guard. Could someone point me in which cases it
-> should be used? Or is it obsolete?
->
-It's an odd one.  The ACPI route allows you to basically provide
-a temporary (these are really just for debugging purposes)
+https://patchwork.kernel.org/patch/10676149/
 
-https://lwn.net/Articles/612062/
-https://www.kernel.org/doc/Documentation/acpi/enumeration.txt
-search for prp0001
+Hans,
 
-So of_match_ptr is sort of obsolete, but conversely for some
-types of driver it might never make sense to use the prp0001
-route.  For the stuff I play with in my day job for example
-we can just change the firmware to do it right whenever we
-need to and have appropriate ACPI ids to be able to issue
-unique ones.
+If you think the driver is now ready, I'd like to merge
+only patches 1/4 and 4/4 (the driver per-se) via the media tree.
 
-Jonathan
+The devicetree changes could go via Heiko's tree.
 
-> Matheus
-> 
-> > So,
-> > +               .of_match_table = of_match_ptr(ad2s90_of_match),
-> >
-> > becomes  
-> > > +             .of_match_table = ad2s90_of_match,  
-> >  
-> > >       },
-> > >       .probe = ad2s90_probe,
-> > >       .id_table = ad2s90_id,  
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "Kernel USP" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to kernel-usp+unsubscribe@googlegroups.com.
-> > To post to this group, send email to kernel-usp@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/kernel-usp/f250fa3a01b51d59979e7a2e3e42cc34d02aa52e.camel%40analog.com.
-> > For more options, visit https://groups.google.com/d/optout.  
+v10:
+ * Fix SPDX syntax
+ * Add missing patch with binding documentation
+ * Remove white line in Kconfig
+
+v9:
+ * Address some style comments from Hans.
+ * Fix TODO file
+
+v8:
+ * Drop new JPEG_RAW format.
+ * Drop quantization table user controls.
+ * Add JPEG headers to produce JPEG frames.
+
+Ezequiel Garcia (4):
+  media: dt-bindings: Document the Rockchip VPU bindings
+  ARM: dts: rockchip: add VPU device node for RK3288
+  arm64: dts: rockchip: add VPU device node for RK3399
+  media: add Rockchip VPU JPEG encoder driver
+
+ .../bindings/media/rockchip-vpu.txt           |  29 +
+ MAINTAINERS                                   |   7 +
+ arch/arm/boot/dts/rk3288.dtsi                 |  14 +-
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi      |  14 +-
+ drivers/staging/media/Kconfig                 |   2 +
+ drivers/staging/media/Makefile                |   1 +
+ drivers/staging/media/rockchip/vpu/Kconfig    |  13 +
+ drivers/staging/media/rockchip/vpu/Makefile   |  10 +
+ drivers/staging/media/rockchip/vpu/TODO       |   6 +
+ .../media/rockchip/vpu/rk3288_vpu_hw.c        | 118 +++
+ .../rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c     | 133 ++++
+ .../media/rockchip/vpu/rk3288_vpu_regs.h      | 442 +++++++++++
+ .../media/rockchip/vpu/rk3399_vpu_hw.c        | 118 +++
+ .../rockchip/vpu/rk3399_vpu_hw_jpeg_enc.c     | 160 ++++
+ .../media/rockchip/vpu/rk3399_vpu_regs.h      | 600 +++++++++++++++
+ .../staging/media/rockchip/vpu/rockchip_vpu.h | 237 ++++++
+ .../media/rockchip/vpu/rockchip_vpu_common.h  |  29 +
+ .../media/rockchip/vpu/rockchip_vpu_drv.c     | 535 +++++++++++++
+ .../media/rockchip/vpu/rockchip_vpu_enc.c     | 702 ++++++++++++++++++
+ .../media/rockchip/vpu/rockchip_vpu_hw.h      |  58 ++
+ .../media/rockchip/vpu/rockchip_vpu_jpeg.c    | 290 ++++++++
+ .../media/rockchip/vpu/rockchip_vpu_jpeg.h    |  14 +
+ 22 files changed, 3530 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.txt
+ create mode 100644 drivers/staging/media/rockchip/vpu/Kconfig
+ create mode 100644 drivers/staging/media/rockchip/vpu/Makefile
+ create mode 100644 drivers/staging/media/rockchip/vpu/TODO
+ create mode 100644 drivers/staging/media/rockchip/vpu/rk3288_vpu_hw.c
+ create mode 100644 drivers/staging/media/rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c
+ create mode 100644 drivers/staging/media/rockchip/vpu/rk3288_vpu_regs.h
+ create mode 100644 drivers/staging/media/rockchip/vpu/rk3399_vpu_hw.c
+ create mode 100644 drivers/staging/media/rockchip/vpu/rk3399_vpu_hw_jpeg_enc.c
+ create mode 100644 drivers/staging/media/rockchip/vpu/rk3399_vpu_regs.h
+ create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu.h
+ create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_common.h
+ create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c
+ create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c
+ create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_hw.h
+ create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_jpeg.c
+ create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_jpeg.h
+
+-- 
+2.19.1
