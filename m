@@ -1,108 +1,75 @@
-Return-Path: <SRS0=gcol=OB=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr1410099.outbound.protection.outlook.com ([40.107.141.99]:61404
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+Return-Path: <SRS0=YZ5O=OA=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr1400128.outbound.protection.outlook.com ([40.107.140.128]:13088
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389990AbeKVUZa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 22 Nov 2018 15:25:30 -0500
+        id S1726001AbeKUVBm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 21 Nov 2018 16:01:42 -0500
 From: Biju Das <biju.das@bp.renesas.com>
 Subject: RE: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device nodes
-Date: Thu, 22 Nov 2018 09:46:41 +0000
-Message-ID: <OSBPR01MB21030159FAA26E6C8FE492FFB8DB0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+Date: Wed, 21 Nov 2018 10:27:41 +0000
+Message-ID: <OSBPR01MB2103BCCCF78DA986B112C8A8B8DA0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 References: <1540542307-63158-1-git-send-email-biju.das@bp.renesas.com>
- <1be47ef6-1a92-e032-12c1-1deae5b67960@linaro.org>
- <OSBPR01MB210312547BBCBBC9FC01A616B8D80@OSBPR01MB2103.jpnprd01.prod.outlook.com>
- <67cf2385-9379-f02a-36fd-b2e07dfd5497@linaro.org>
- <TYAPR01MB2111A4092907D265493DDF3FB8D80@TYAPR01MB2111.jpnprd01.prod.outlook.com>
- <dbc5f62d-aff0-8c6a-e957-e7dea15cc002@linaro.org>
-In-Reply-To: <dbc5f62d-aff0-8c6a-e957-e7dea15cc002@linaro.org>
+ <20181121102421.yxndb3dyfxput25f@verge.net.au>
+In-Reply-To: <20181121102421.yxndb3dyfxput25f@verge.net.au>
 Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Thomas Gleixner <tglx@linutronix.de>, John Stultz <john.stultz@linaro.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, John Stultz <john.stultz@linaro.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGVsbG8gRGFuaWVsLA0KDQpUaGFua3MgZm9yIHRoZSBmZWVkYmFjay4NCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBEYW5pZWwgTGV6Y2FubyA8ZGFuaWVsLmxlemNhbm9A
-bGluYXJvLm9yZz4NCj4gU2VudDogMTkgTm92ZW1iZXIgMjAxOCAxNzoxNQ0KPiBUbzogQmlqdSBE
-YXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPjsgUm9iIEhlcnJpbmcNCj4gPHJvYmgrZHRAa2Vy
-bmVsLm9yZz47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+DQo+IENjOiBTaW1v
-biBIb3JtYW4gPGhvcm1zQHZlcmdlLm5ldC5hdT47IE1hZ251cyBEYW1tDQo+IDxtYWdudXMuZGFt
-bUBnbWFpbC5jb20+OyBsaW51eC1yZW5lc2FzLXNvY0B2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmlj
-ZXRyZWVAdmdlci5rZXJuZWwub3JnOyBHZWVydCBVeXR0ZXJob2V2ZW4NCj4gPGdlZXJ0K3JlbmVz
-YXNAZ2xpZGVyLmJlPjsgQ2hyaXMgUGF0ZXJzb24NCj4gPENocmlzLlBhdGVyc29uMkByZW5lc2Fz
-LmNvbT47IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPjsNCj4gSm9obiBTdHVs
-dHogPGpvaG4uc3R1bHR6QGxpbmFyby5vcmc+OyBGYWJyaXppbyBDYXN0cm8NCj4gPGZhYnJpemlv
-LmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gYXJtNjQ6IGR0
-czogcmVuZXNhczogcjhhNzc5NjogQWRkIENNVCBkZXZpY2Ugbm9kZXMNCj4NCj4gT24gMTkvMTEv
-MjAxOCAxNjo1MCwgQmlqdSBEYXMgd3JvdGU6DQo+ID4gSGkgRGFuaWVsLA0KPiA+DQo+ID4gVGhh
-bmtzIGZvciB0aGUgZmVlZGJhY2suDQo+ID4NCj4gPj4+PiBTdWJqZWN0OiBSZTogW1BBVENIXSBh
-cm02NDogZHRzOiByZW5lc2FzOiByOGE3Nzk2OiBBZGQgQ01UIGRldmljZQ0KPiA+Pj4+IG5vZGVz
-DQo+ID4+Pj4NCj4gPj4+PiBPbiAyNi8xMC8yMDE4IDEwOjI1LCBCaWp1IERhcyB3cm90ZToNCj4g
-Pj4+Pj4gVGhpcyBwYXRjaCBhZGRzIENNVHswfDF8MnwzfSBkZXZpY2Ugbm9kZXMgZm9yIHI4YTc3
-OTYgU29DLg0KPiA+Pj4+Pg0KPiA+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBCaWp1IERhcyA8YmlqdS5k
-YXNAYnAucmVuZXNhcy5jb20+DQo+ID4+Pj4+IC0tLQ0KPiA+Pj4+PiBUaGlzIHBhdGNoIGlzIHRl
-c3RlZCBhZ2FpbnN0IHJlbmVzYXMtZGV2DQo+ID4+Pj4+DQo+ID4+Pj4+IEkgaGF2ZSBleGVjdXRl
-ZCBvbiBpbmNvbnNpc3RlbmN5LWNoZWNrLCBuYW5vc2xlZXAgYW5kDQo+ID4+Pj4+IGNsb2Nrc291
-cmNlX3N3aXRjaCBzZWxmdGVzdHMgb24gdGhpcyBhcm02NCBTb0MuIFRoZQ0KPiA+Pj4+PiBpbmNv
-bnNpc3RlbmN5LWNoZWNrIGFuZCBuYW5vc2xlZXAgdGVzdHMgYXJlIHdvcmtpbmcgZmluZS5UaGUN
-Cj4gPj4+Pj4gY2xvY2tzb3VyY2Vfc3dpdGNoIGFzeW5jaHJvbm91cyB0ZXN0IGlzIGZhaWxpbmcg
-ZHVlIHRvDQo+ID4+Pj4+IGluY29uc2lzdGVuY3ktY2hlY2sNCj4gPj4+PiBmYWlsdXJlIG9uICJh
-cmNoX3N5c19jb3VudGVyIi4NCj4gPj4+Pj4NCj4gPj4+Pj4gQnV0IGlmIGkgc2tpcCB0aGUgY2xv
-Y2tzb3VyY2Vfc3dpdGNoaW5nIG9mICJhcmNoX3N5c19jb3VudGVyIiwgdGhlDQo+ID4+Pj4+IGFz
-eW5jaHJvbm91cyB0ZXN0IGlzIHBhc3NpbmcgZm9yIENNVDAvMS8yLzMgdGltZXIuDQo+ID4+Pj4+
-DQo+ID4+Pj4+IEhhcyBhbnkgb25lIG5vdGljZWQgdGhpcyBpc3N1ZT8NCj4gPj4+Pg0KPiA+Pj4+
-IFNvIG5vdyB0aGF0IHlvdSBtZW50aW9uIHRoYXQsIEkndmUgYmVlbiB0aHJvdWdoIHRoZQ0KPiA+
-Pj4+IGNsb2Nrc291cmNlX3N3aXRjaCBvbiBhbm90aGVyIEFSTTY0IHBsYXRmb3JtIChoaWtleTk2
-MCkgYW5kDQo+ID4+Pj4gZGlzYWJsZWQgdGhlDQo+ID4+Pj4gQVJNNjRfRVJSQVRVTV84NTg5MjEg
-Y29uZmlnIG9wdGlvbi4gSSBjYW4gc2VlIHRoZSBzYW1lIGlzc3VlLg0KPiA+Pj4+DQo+ID4+Pj4g
-SXMgdGhpcyBvcHRpb24gc2V0IG9uIHlvdXIgY29uZmlnID8NCj4gPj4+DQo+ID4+PiBOby4gIEFz
-IHBlciAgIiBjb25maWcgQVJNNjRfRVJSQVRVTV84NTg5MjEiLCBpdCBpcyAiV29ya2Fyb3VuZCBm
-b3INCj4gPj4gQ29ydGV4LUE3MyBlcnJhdHVtIDg1ODkyMSINCj4gPj4+DQo+ID4+PiBPdXIgU29D
-IGlzIDJ4Q0EtNTcgKyA0IHggQ0EtNTMuICBEb2VzICBpdCBpbXBhY3QgQ0EtNTcgKyBDQV81Mz8N
-Cj4gPj4NCj4gPj4gRHVubm8gOi8NCj4gPj4NCj4gPj4+IEFueSB3YXkgSSB3aWxsIGVuYWJsZSB0
-aGlzIGNvbmZpZyBvcHRpb24gYW5kIHdpbGwgcHJvdmlkZSB5b3UgdGhlIHJlc3VsdHMuDQo+ID4+
-DQo+ID4+IE9rLCB0aGFua3MhDQo+ID4NCj4gPiBUaGUgZm9sbG93aW5nIGNvbmZpZyBpcyBlbmFi
-bGVkIGJ5IGRlZmF1bHQgb24gdXBzdHJlYW0NCj4gPiBrZXJuZWwoNC4yMC1yYzMpIENPTkZJR19B
-Uk1fQVJDSF9USU1FUl9FVlRTVFJFQU09eQ0KPiA+IENPTkZJR19BUk1fQVJDSF9USU1FUl9PT0xf
-V09SS0FST1VORD15DQo+ID4gQ09ORklHX0ZTTF9FUlJBVFVNX0EwMDg1ODU9eQ0KPiA+IENPTkZJ
-R19ISVNJTElDT05fRVJSQVRVTV8xNjEwMTAxMDE9eQ0KPiA+IENPTkZJR19BUk02NF9FUlJBVFVN
-Xzg1ODkyMT15DQo+ID4NCj4gPiBGb3IgYSBxdWljayB0ZXN0aW5nLCAgSSBoYXZlIGFjdGl2YXRl
-ZCB0aGUgZXJyYXR1bSB1c2luZyB0aGUgcHJvcGVydHkNCj4gImZzbCxlcnJhdHVtLWEwMDg1ODUi
-IG9uIGRldmljZSB0cmVlLg0KPiA+IFdpdGggdGhpcyBJIGNvbmZpcm0gdGhlIGlzc3VlIGlzIGZp
-eGVkLg0KPiA+DQo+ID4gSSBoYXZlICBzb21lIHF1ZXN0aW9ucyBvbiB0aGlzLg0KPiA+IDEpIEJh
-c2VkICBvbiB0aGUgdGVzdCByZXN1bHQgLGRvIHlvdSB0aGluayByZW5lc2FzIHNvYyBhbHNvICBp
-bXBhY3RlZCBieSB0aGUNCj4gQVJNNjRfRVJSQVRVTV84NTg5MjE/DQo+ID4gMikgSXMgdGhlcmUg
-YW55IHdheSB0byBmaW5kLCBpcyB0aGlzIEVycmF0dW0gYWN0dWFsbHkgY2F1c2luZyB0aGUNCj4g
-YXN5bmNocm9ub3VzIHRlc3QgdG8gZmFpbD8NCj4NCj4gSSBndWVzcywgeW91IGNhbiBoYWNrIHRo
-ZSBfX2ZzbF9hMDA4NTg1X3JlYWRfcmVnIG1hY3JvIGFuZCBjaGVjayBpZiB0aGUNCj4gaW52YWxp
-ZCBjb25kaXRpb24gaXMgcmVhY2hlZC4NCj4NCj4gVGhpcyB0aHJlYWQgaHR0cHM6Ly9sa21sLm9y
-Zy9sa21sLzIwMTgvNS8xMC83NzMgd2lsbCBnaXZlIHlvdSBhbGwgdGhlIGFuc3dlcnMNCj4geW91
-IGFyZSBsb29raW5nIGZvciAod2VsbCB2ZXJ5IGxpa2VseSkuDQo+DQo+IExldCBtZSBrbm93IGlm
-IGl0IGhlbHBlZC4NCg0KSW4gb3VyIGNhc2UgLCBEZWx0YTogMTc0NzYwIG5zDQoNCjE1MzA1NTMz
-NTE6MjA1NzYyMjg0DQoxNTMwNTUzMzUxOjIwNTc2MjQwNA0KLS0tLS0tLS0tLS0tLS0tLS0tLS0N
-CjE1MzA1NTMzNTE6MjA1OTUxMjI2DQoxNTMwNTUzMzUxOjIwNTc3NjQ2Ng0KLS0tLS0tLS0tLS0t
-LS0tLS0tLS0NCg0KSSBoYXZlIHRyaWVkIHRoZSB3b3JrYXJvdW5kIGZvciBBUk02NF9FUlJBVFVN
-Xzg1ODkyMSwgdGhhdCBhbHNvIGZpeGVzIHRoZSBpc3N1ZS4NCg0KQnV0IGFsbCB0aGUgd29ya2Fy
-b3VuZCBkaXNhYmxlcyBBUk02NCBWRFNPLiBIb3cgZG8gd2UgY29uY2x1ZGUgdGhhdCBpcyBpdCBW
-RFNPIGlzc3VlIG9yIEFSTTY0X0VSUkFUVU0gaXNzdWU/DQoNClBsZWFzZSBzaGFyZSB5b3VyIGlk
-ZWFzLg0KDQpSZWdhcmRzLA0KQmlqdQ0KDQo+ID4gdGltZXIgew0KPiA+ICAgICAgICAgICAgICAg
-ICBjb21wYXRpYmxlID0gImFybSxhcm12OC10aW1lciI7DQo+ID4gICAgICAgICAgICAgICAgIGlu
-dGVycnVwdHMtZXh0ZW5kZWQgPSA8JmdpYyBHSUNfUFBJIDEzDQo+IChHSUNfQ1BVX01BU0tfU0lN
-UExFKDYpIHwgSVJRX1RZUEVfTEVWRUxfTE9XKT4sDQo+ID4gICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICA8JmdpYyBHSUNfUFBJIDE0IChHSUNfQ1BVX01BU0tfU0lNUExFKDYp
-IHwNCj4gSVJRX1RZUEVfTEVWRUxfTE9XKT4sDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICA8JmdpYyBHSUNfUFBJIDExIChHSUNfQ1BVX01BU0tfU0lNUExFKDYpIHwN
-Cj4gSVJRX1RZUEVfTEVWRUxfTE9XKT4sDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICA8JmdpYyBHSUNfUFBJIDEwDQo+ID4gKEdJQ19DUFVfTUFTS19TSU1QTEUoNikg
-fCBJUlFfVFlQRV9MRVZFTF9MT1cpPjsNCj4gPiArICAgICAgICAgICAgICAgIGZzbCxlcnJhdHVt
-LWEwMDg1ODU7DQo+ID4gfQ0KPg0KPg0KPg0KPg0KPiAtLQ0KPiAgPGh0dHA6Ly93d3cubGluYXJv
-Lm9yZy8+IExpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29Dcw0K
-Pg0KPiBGb2xsb3cgTGluYXJvOiAgPGh0dHA6Ly93d3cuZmFjZWJvb2suY29tL3BhZ2VzL0xpbmFy
-bz4gRmFjZWJvb2sgfA0KPiA8aHR0cDovL3R3aXR0ZXIuY29tLyMhL2xpbmFyb29yZz4gVHdpdHRl
-ciB8IDxodHRwOi8vd3d3LmxpbmFyby5vcmcvbGluYXJvLQ0KPiBibG9nLz4gQmxvZw0KDQoNCg0K
-DQpSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBMdGQsIER1a2VzIE1lYWRvdywgTWlsbGJvYXJk
-IFJvYWQsIEJvdXJuZSBFbmQsIEJ1Y2tpbmdoYW1zaGlyZSwgU0w4IDVGSCwgVUsuIFJlZ2lzdGVy
-ZWQgaW4gRW5nbGFuZCAmIFdhbGVzIHVuZGVyIFJlZ2lzdGVyZWQgTm8uIDA0NTg2NzA5Lg0K
+Hi Simon,
+
+Thanks for the feedback.
+
+> -----Original Message-----
+> From: Simon Horman <horms@verge.net.au>
+> Sent: 21 November 2018 10:24
+> To: Biju Das <biju.das@bp.renesas.com>
+> Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
+> linux-renesas-soc@vger.kernel.org; devicetree@vger.kernel.org; Geert
+> Uytterhoeven <geert+renesas@glider.be>; Chris Paterson
+> <Chris.Paterson2@renesas.com>; Daniel Lezcano
+> <daniel.lezcano@linaro.org>; Thomas Gleixner <tglx@linutronix.de>; John
+> Stultz <john.stultz@linaro.org>; Fabrizio Castro
+> <fabrizio.castro@bp.renesas.com>
+> Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device nodes
+>
+> On Fri, Oct 26, 2018 at 09:25:07AM +0100, Biju Das wrote:
+> > This patch adds CMT{0|1|2|3} device nodes for r8a7796 SoC.
+> >
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > ---
+> > This patch is tested against renesas-dev
+> >
+> > I have executed on inconsistency-check, nanosleep and
+> > clocksource_switch selftests on this arm64 SoC. The
+> > inconsistency-check and nanosleep tests are working fine.The
+> > clocksource_switch asynchronous test is failing due to inconsistency-ch=
+eck
+> failure on "arch_sys_counter".
+> >
+> > But if i skip the clocksource_switching of "arch_sys_counter", the
+> > asynchronous test is passing for CMT0/1/2/3 timer.
+> >
+> > Has any one noticed this issue?
+>
+> I am reluctant to apply this patch until there is a better understanding =
+of the
+> issue above.
+
+If I understand correctly this patch has no issue at all. The problem is re=
+lated to ARM architecture  timer.
+Please correct me if you think otherwise.
+
+Regards,
+Biju
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
