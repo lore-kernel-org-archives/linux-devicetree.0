@@ -1,41 +1,83 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 2/3] dt-bindings: mfd: atmel-usart: add DMA bindings for
- SPI mode
-Date: Wed, 21 Nov 2018 17:48:20 +0100
-Message-ID: <20181121164820.GC12656@piout.net>
-References: <20181121112732.15690-1-radu_nicolae.pirea@upb.ro>
- <20181121112732.15690-3-radu_nicolae.pirea@upb.ro>
- <CAL_JsqLNURZTWCb5WOyJvN-trUP9r-ueftwUOGWPnrEaQPBKSw@mail.gmail.com>
+From: Matthias Brugger <mbrugger@suse.com>
+Subject: Re: [PATCH v5 08/12] dt-bindings: mediatek: Change the binding for
+ mmsys clocks
+Date: Wed, 21 Nov 2018 18:09:52 +0100
+Message-ID: <458178ac-c0fc-9671-7fc8-ed2d6f61424c@suse.com>
+References: <20181116125449.23581-1-matthias.bgg@kernel.org>
+ <20181116125449.23581-9-matthias.bgg@kernel.org>
+ <20181116231522.GA18006@bogus>
+ <2a23e407-4cd4-2e2b-97a5-4e2bb96846e0@gmail.com>
+ <CAL_JsqKJQwfDJbpmwW+oCxiDkSp5+6mG-uoURmCQVEMP_jFOEg@mail.gmail.com>
+ <154281878765.88331.10581984256202566195@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLNURZTWCb5WOyJvN-trUP9r-ueftwUOGWPnrEaQPBKSw@mail.gmail.com>
+In-Reply-To: <154281878765.88331.10581984256202566195@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: radu_nicolae.pirea@upb.ro, Richard Genoud <richard.genoud@gmail.com>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Ludovic Desroches <ludovic.desroches@microchip.co>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-spi <linux-spi@vger.kernel.org>
+To: Stephen Boyd <sboyd@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>
+Cc: matthias.bgg@kernel.org, Mark Rutland <mark.rutland@arm.com>, CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sean Wang <sean.wang@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Chen-Yu Tsai <wens@csie.org>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, linux-clk <linux-clk@vger.kernel.>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On 21/11/2018 10:41:01-0600, Rob Herring wrote:
-> > +Optional properties in serial and SPI mode:
-> > +- dma bindings for dma transfer:
-> > +       - dmas: DMA specifier, consisting of a phandle to DMA controller node,
-> > +               memory peripheral interface and USART DMA channel ID, FIFO configuration.
-> > +               Refer to dma.txt and atmel-dma.txt for details.
-> > +       - dma-names: "rx" for RX channel, "tx" for TX channel.
+
+On 21/11/2018 17:46, Stephen Boyd wrote:
+> Quoting Rob Herring (2018-11-19 11:15:16)
+>> On Sun, Nov 18, 2018 at 11:12 AM Matthias Brugger
+>> <matthias.bgg@gmail.com> wrote:
+>>> On 11/17/18 12:15 AM, Rob Herring wrote:
+>>>> On Fri, Nov 16, 2018 at 01:54:45PM +0100, matthias.bgg@kernel.org wrote:
+>>>>> -    #clock-cells = <1>;
+>>>>> +
+>>>>> +    mmsys_clk: clock-controller@14000000 {
+>>>>> +            compatible = "mediatek,mt2712-mmsys-clk";
+>>>>> +            #clock-cells = <1>;
+>>>>
+>>>> This goes against the general direction of not defining separate nodes
+>>>> for providers with no resources.
+>>>>
+>>>> Why do you need this and what does it buy if you have to continue to
+>>>> support the existing chips?
+>>>>
+>>>
+>>> It would show explicitly that the mmsys block is used to probe two
+>>> drivers, one for the gpu and one for the clocks. Otherwise that is
+>>> hidden in the drm driver code. I think it is cleaner to describe that in
+>>> the device tree.
+>>
+>> No, that's maybe cleaner for the driver implementation in the Linux
+>> kernel. What about other OS's or when Linux drivers and subsystems
+>> needs change? Cleaner for DT is design bindings that reflect the h/w.
+>> Hardware is sometimes just messy.
+>>
 > 
-> > +               dma-names = "tx", "rx";
+> I agree. I fail to see what this patch series is doing besides changing
+> driver probe and device creation methods and making a backwards
+> incompatible change to DT. Is there any other benefit here?
 > 
-> The dma-names should have a defined order.
-> 
 
-Why is that? Isn't the purpose of names to get rid of any particular
-ordering?
+You are referring whole series?
+Citing the cover letter:
+"MMSYS in Mediatek SoCs has some registers to control clock gates (which is
+used in the clk driver) and some registers to set the routing and enable
+the differnet (sic!) blocks of the display subsystem.
 
+Up to now both drivers, clock and drm are probed with the same device tree
+compatible. But only the first driver get probed, which in effect breaks
+graphics on mt8173 and mt2701.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+This patch uses a platform device registration in the DRM driver, which
+will trigger the probe of the corresponding clock driver. It was tested on the
+bananapi-r2 and the Acer R13 Chromebook."
+
+DT is broken right now, because two drivers rely on the same node, which gets
+consumed just once. The new DT introduced does not break anything because it is
+only used for boards that: "[..] are not available to the general public
+(mt2712e) or only have the mmsys clock driver part implemented (mt6797)."
+
+Anyway, I'll send a new version which uses the platform device in the DRM driver
+for all SoCs.
+
+Regards,
+Matthias
