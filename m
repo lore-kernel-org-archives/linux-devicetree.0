@@ -1,181 +1,71 @@
 From: Mesih Kilinc <mesihkilinc@gmail.com>
-Subject: [RFC PATCH v3 16/17] ARM: dts: suniv: add initial DTSI file for F1C100s
-Date: Wed, 21 Nov 2018 21:30:49 +0300
-Message-ID: <05dab577154c72117678c2f49ae85a9663a630e2.1542824904.git.mesihkilinc@gmail.com>
+Subject: [RFC PATCH v3 17/17] ARM: suniv: f1c100s: add device tree for Lichee Pi Nano
+Date: Wed, 21 Nov 2018 21:30:50 +0300
+Message-ID: <055b2e09b14ff1699f2ed8fc879a6e9cfa9c5270.1542824904.git.mesihkilinc@gmail.com>
 References: <cover.1542824904.git.mesihkilinc@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1542824904.git.mesihkilinc@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
-Cc: Mesih Kilinc <mesihkilinc@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Julian Calaby <julian.calaby@gmail.com>, Mesih Kilinc <mesihkilnc@gmail.com>
+Cc: Mesih Kilinc <mesihkilinc@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Julian Calaby <julian.calaby@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-F1C100s is one product with the suniv die, which has a 32MiB co-packaged
-DDR1 DRAM chip. As we have the support for suniv pin controller and CCU now, add a
-initial DTSI for it.
+Lichee Pi Nano is a F1C100s board by Lichee Pi.
 
-Signed-off-by: Mesih Kilinc <mesihkilnc@gmail.com>
+Add initial device tree for it.
+
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Mesih Kilinc <mesihkilinc@gmail.com>
 ---
- arch/arm/boot/dts/suniv-f1c100s.dtsi | 151 +++++++++++++++++++++++++++++++++++
- 1 file changed, 151 insertions(+)
- create mode 100644 arch/arm/boot/dts/suniv-f1c100s.dtsi
+ arch/arm/boot/dts/Makefile                        |  2 ++
+ arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts | 26 +++++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
+ create mode 100644 arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts
 
-diff --git a/arch/arm/boot/dts/suniv-f1c100s.dtsi b/arch/arm/boot/dts/suniv-f1c100s.dtsi
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b0e966d..2b96a5b 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1066,6 +1066,8 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ dtb-$(CONFIG_MACH_SUN9I) += \
+ 	sun9i-a80-optimus.dtb \
+ 	sun9i-a80-cubieboard4.dtb
++dtb-$(CONFIG_MACH_SUNIV) += \
++	suniv-f1c100s-licheepi-nano.dtb
+ dtb-$(CONFIG_ARCH_TANGO) += \
+ 	tango4-vantage-1172.dtb
+ dtb-$(CONFIG_ARCH_TEGRA_2x_SOC) += \
+diff --git a/arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts b/arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts
 new file mode 100644
-index 0000000..3ad64ee
+index 0000000..6ae5ccc
 --- /dev/null
-+++ b/arch/arm/boot/dts/suniv-f1c100s.dtsi
-@@ -0,0 +1,151 @@
++++ b/arch/arm/boot/dts/suniv-f1c100s-licheepi-nano.dts
+@@ -0,0 +1,26 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR X11)
 +/*
 + * Copyright 2018 Icenowy Zheng <icenowy@aosc.io>
-+ * Copyright 2018 Mesih Kilinc <mesihkilinc@gmail.com>
 + */
 +
-+#include <dt-bindings/clock/suniv-ccu-f1c100s.h>
-+#include <dt-bindings/reset/suniv-ccu-f1c100s.h>
++/dts-v1/;
++#include "suniv-f1c100s.dtsi"
 +
 +/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	interrupt-parent = <&intc>;
++	model = "Lichee Pi Nano";
++	compatible = "licheepi,licheepi-nano", "allwinner,suniv-f1c100s";
 +
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		osc24M: clk-24M {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <24000000>;
-+			clock-output-names = "osc24M";
-+		};
-+
-+		osc32k: clk-32k {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <32768>;
-+			clock-output-names = "osc32k";
-+		};
++	aliases {
++		serial0 = &uart0;
 +	};
 +
-+	cpus {
-+		#address-cells = <0>;
-+		#size-cells = <0>;
-+
-+		cpu {
-+			compatible = "arm,arm926ej-s";
-+			device_type = "cpu";
-+		};
++	chosen {
++		stdout-path = "serial0:115200n8";
 +	};
++};
 +
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		sram-controller@1c00000 {
-+			compatible = "allwinner,suniv-f1c100s-system-control";
-+			reg = <0x01c00000 0x30>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			sram_d: sram@10000 {
-+				compatible = "mmio-sram";
-+				reg = <0x00010000 0x1000>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0 0x00010000 0x1000>;
-+
-+				otg_sram: sram-section@0 {
-+					compatible = "allwinner,suniv-f1c100s-sram-d";
-+					reg = <0x0000 0x1000>;
-+					status = "disabled";
-+				};
-+			};
-+		};
-+
-+		ccu: clock@1c20000 {
-+			compatible = "allwinner,suniv-f1c100s-ccu";
-+			reg = <0x01c20000 0x400>;
-+			clocks = <&osc24M>, <&osc32k>;
-+			clock-names = "hosc", "losc";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+		};
-+
-+		intc: interrupt-controller@1c20400 {
-+			compatible = "allwinner,suniv-f1c100s-ic";
-+			reg = <0x01c20400 0x400>;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+		};
-+
-+		pio: pinctrl@1c20800 {
-+			compatible = "allwinner,suniv-f1c100s-pinctrl";
-+			reg = <0x01c20800 0x400>;
-+			interrupts = <38>, <39>, <40>;
-+			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&osc32k>;
-+			clock-names = "apb", "hosc", "losc";
-+			gpio-controller;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			#gpio-cells = <3>;
-+
-+			uart0_pins_a: uart-pins-pe {
-+				pins = "PE0", "PE1";
-+				function = "uart0";
-+			};
-+		};
-+
-+		timer@1c20c00 {
-+			compatible = "allwinner,suniv-f1c100s-timer";
-+			reg = <0x01c20c00 0x90>;
-+			interrupts = <13>;
-+			clocks = <&osc24M>;
-+		};
-+
-+		wdt: watchdog@1c20ca0 {
-+			compatible = "allwinner,suniv-f1c100s-wdt";
-+			reg = <0x01c20ca0 0x20>;
-+		};
-+
-+		uart0: serial@1c25000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x01c25000 0x400>;
-+			interrupts = <1>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&ccu CLK_BUS_UART0>;
-+			resets = <&ccu RST_BUS_UART0>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@1c25400 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x01c25400 0x400>;
-+			interrupts = <2>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&ccu CLK_BUS_UART1>;
-+			resets = <&ccu RST_BUS_UART1>;
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@1c25800 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x01c25800 0x400>;
-+			interrupts = <3>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&ccu CLK_BUS_UART2>;
-+			resets = <&ccu RST_BUS_UART2>;
-+			status = "disabled";
-+		};
-+	};
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
 +};
 -- 
 2.7.4
