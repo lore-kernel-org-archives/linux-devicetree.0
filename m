@@ -1,42 +1,43 @@
-From: <Eugen.Hristev@microchip.com>
-Subject: [PATCH 1/3] dt-bindings: add vendor prefix for PDA Precision Design
- Associates, Inc.
-Date: Wed, 21 Nov 2018 08:47:57 +0000
-Message-ID: <1542789804-4584-2-git-send-email-eugen.hristev@microchip.com>
-References: <1542789804-4584-1-git-send-email-eugen.hristev@microchip.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 06/15] arm: dts: Add devicetree for OrangePi 2G IoT board
+Date: Wed, 21 Nov 2018 09:55:18 +0100
+Message-ID: <CAK8P3a0OqD=mxJmc2hPTp2s1-i1MPZWsjDF37hjSDKrFpzGxWg@mail.gmail.com>
+References: <20181121033652.12247-1-manivannan.sadhasivam@linaro.org> <20181121033652.12247-7-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542789804-4584-1-git-send-email-eugen.hristev@microchip.com>
-Content-Language: en-US
+In-Reply-To: <20181121033652.12247-7-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, thierry.reding@gmail.com, airlied@linux.ie, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas.Ferre@microchip.com
-Cc: Cristian.Birsan@microchip.com, Eugen.Hristev@microchip.com
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, gregkh <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-serial@vger.kernel.org, Amit Kucheria <amit.kucheria@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, zhao_steven@263.net, overseas.sales@unisoc.com
 List-Id: devicetree@vger.kernel.org
 
-Precision Design Associates, Inc. (PDA) manufactures standard and custom
-capacitive touch screens, LCD's embedded controllers and custom embedded
-software. They specialize in industrial, rugged and outdoor applications.
-Website: http://www.pdaatl.com/
+On Wed, Nov 21, 2018 at 4:38 AM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+> +       aliases {
+> +               serial0 = &uart0;
+> +               serial1 = &uart1;
+> +               serial2 = &uart2;
+> +       };
+>
++
+> +&uart2 {
+> +       status = "okay";
+> +       clocks = <&uart2_clk>;
+> +};
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+This is clearly mismatched here: you mark only one uart as 'enabled, but
+list three of them as aliases. Having 'serial0' point to a disabled uart
+may easily break applications that expect the first one to be the
+console.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Docume=
-ntation/devicetree/bindings/vendor-prefixes.txt
-index a2f4451..4e0a81c 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -295,6 +295,7 @@ ovti	OmniVision Technologies
- oxsemi	Oxford Semiconductor, Ltd.
- panasonic	Panasonic Corporation
- parade	Parade Technologies Inc.
-+pda	Precision Design Associates, Inc.
- pericom	Pericom Technology Inc.
- pervasive	Pervasive Displays, Inc.
- phytec	PHYTEC Messtechnik GmbH
---=20
-2.7.4
+Best make that
+
+       serial0 = &uart2;
+
+and drop the other ones if only one of them is exposed on the
+board. If all three are usable, you should enable them all here,
+and make sure that the numbering of the aliases matches the
+labels on the board or its documentation.
+
+        Arnd
