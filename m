@@ -1,11 +1,13 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v8 00/12] media: staging/imx7: add i.MX7 media driver
-Date: Wed, 21 Nov 2018 11:15:46 +0000
-Message-ID: <20181121111558.10838-1-rui.silva@linaro.org>
+Subject: [PATCH v8 03/12] media: staging/imx7: add imx7 CSI subdev driver
+Date: Wed, 21 Nov 2018 11:15:49 +0000
+Message-ID: <20181121111558.10838-4-rui.silva@linaro.org>
+References: <20181121111558.10838-1-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20181121111558.10838-1-rui.silva@linaro.org>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -19,748 +21,1410 @@ To: sakari.ailus@linux.intel.com, Philipp Zabel <p.zabel@pengutronix.de>
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-This series introduces the Media driver to work with the i.MX7 SoC. it uses the
-already existing imx media core drivers but since the i.MX7, contrary to
-i.MX5/6, do not have an IPU and because of that some changes in the imx media
-core are made along this series to make it support that case.
-
-This patches adds CSI and MIPI-CSI2 drivers for i.MX7, along with several
-configurations changes for this to work as a capture subsystem. Some bugs are
-also fixed along the line. And necessary documentation.
-
-For a more detailed view of the capture paths, pads links in the i.MX7 please
-take a look at the documentation in PATCH 14.
-
-The system used to test and develop this was the Warp7 board with an OV2680
-sensor, which output format is 10-bit bayer. So, only MIPI interface was
-tested, a scenario with an parallel input would nice to have.
-
-
-Bellow goes an example of the output of the pads and links and the output of
-v4l2-compliance testing.
-
-The v4l-utils version used is:
-v4l2-compliance SHA   : 044d5ab7b0d02683070d01a369c73d462d7a0cee from Nov 19th
-
-The Media Driver fail some tests but this failures are coming from code out of
-scope of this series (imx-capture), and some from the sensor OV2680
-but that I think not related with the sensor driver but with the testing and
-core.
-
-The csi and mipi-csi entities pass all compliance tests.
-
-Cheers,
-    Rui
-
-v7->v8:
-Myself:
- - rebase to latest linux-next (s/V4L2_MBUS_CSI2/V4L2_MBUS_CSI2_DPHY/)
- - Rebuild and test with latest v4l2-compliance
- - add Sakari reviewed-by tag to dt-bindings
-
-v6->v7:
-Myself:
- - Clock patches removed from this version since they were already merged
- - Rebuild and test with the latest v4l2-compliance
- - Add patch to video-mux regarding bayer formats
- - remove reference to dependent patch serie (was already merged)
-
-Sakari Ailus:
- - add port and endpoint explanantions
- - fix some wording should -> shall
-
-v5->v6:
-Rob Herring:
- - rename power-domain node name from: pgc-power-domain to power-domain
- - change mux-control-cells to 0
- - remove bus-width from mipi bindings and dts
- - remove err... regarding clock names line
- - remove clk-settle from example
- - split mipi-csi2 and csi bindings per file
- - add OF graph description to CSI
-
-Philipp Zabel:
- - rework group IDs and rename them with an _IPU_ prefix, this allowed to remove
-   the ipu_present flag need.
-
-v4->v5:
-Sakari Ailus:
- - fix remove of the capture entries in dts bindings in the right patch
-
-Stephen Boyd:
- - Send all series to clk list
-
-v3->v4:
-Philipp Zabel:
- - refactor initialization code from media device probe to be possible to used
-   from other modules
- - Remove index of csi from all accurrencs (dts, code, documentation)
- - Remove need for capture node for imx7
- - fix pinctrl for ov2680
- - add reviewed tag to add multiplexer controls patch
-
-Fabio Estevam:
- - remove always on from new regulator
-
-Randy Dunlap:
- - several text editing fixes in documentation
-
-Myself:
- - rebase on top of v4 of Steve series
- - change CSI probe to initialize imx media device
- - remove csi mux parallel endpoint from mux to avoid warning message
-
-v2->v3:
-Philipp Zabel:
- - use of_match_device in imx-media-dev instead of of_device_match
- - fix number of data lanes from 4 to 2
- - change the clock definitions and use of mipi
- - move hs-settle from endpoint
-
-Rob Herring:
- - fix phy-supply description
- - add vendor properties
- - fix examples indentations
-
-Stephen Boyd: patch 3/14
- - fix double sign-off
- - add fixes tag
-
-Dong Aisheng: patch 3/14
- - fix double sign-off
- - add Acked-by tag
-
-Shawn Guo:
-patch 4/14
- - remove line breakage in parent redifiniton
- - added Acked-by tag
-
- - dropped CMA area increase and add more verbose information in case of
-   dma allocation failure
-patch 9/14
- - remove extra line between cells and reg masks
-
-Myself:
- - rework on frame end in csi
- - add rxcount in csi driver
- - add power supplies to ov2680 node and fix gpio polarity
-
-v1->v2:
-Dan Carpenter:
- - fix return paths and codes;
- - fix clk_frequency validation and return code;
- - handle the csi remove (release resources that was missing)
- - revert the logic arround the ipu_present flag
-
-Philipp Zabel:
- - drop patch that changed the rgb formats and address the pixel/bus format in
-   mipi_csis code.
-
-MySelf:
- - add patch that add ov2680 node to the warp7 dts, so the all data path is
-   complete.
- - add linux-clk mailing list to the clock patches cc:
-
-v4l2-compliance SHA: 044d5ab7b0d02683070d01a369c73d462d7a0cee, 32 bits
-
-Compliance test for device /dev/media0:
-
-Media Driver Info:
-        Driver name      : imx7-csi
-        Model            : imx-media
-        Serial           : 
-        Bus info         : 
-        Media version    : 4.20.0
-        Hardware revision: 0x00000000 (0)
-        Driver version   : 4.20.0
-
-Required ioctls:
-        test MEDIA_IOC_DEVICE_INFO: OK
-
-Allow for multiple opens:
-        test second /dev/media0 open: OK
-        test MEDIA_IOC_DEVICE_INFO: OK
-        test for unlimited opens: OK
-
-Media Controller ioctls:
-        test MEDIA_IOC_G_TOPOLOGY: OK
-        Entities: 5 Interfaces: 5 Pads: 9 Links: 9
-        test MEDIA_IOC_ENUM_ENTITIES/LINKS: OK
-        test MEDIA_IOC_SETUP_LINK: OK
-
---------------------------------------------------------------------------------
-Compliance test for device /dev/video0:
-
-Driver Info:
-        Driver name      : imx-media-captu
-        Card type        : imx-media-capture
-        Bus info         : platform:csi
-        Driver version   : 4.20.0
-        Capabilities     : 0x84200001
-                Video Capture
-                Streaming
-                Extended Pix Format
-                Device Capabilities
-        Device Caps      : 0x04200001
-                Video Capture
-                Streaming
-                Extended Pix Format
-Media Driver Info:
-        Driver name      : imx7-csi
-        Model            : imx-media
-        Serial           : 
-        Bus info         : 
-        Media version    : 4.20.0
-        Hardware revision: 0x00000000 (0)
-        Driver version   : 4.20.0
-Interface Info:
-        ID               : 0x03000005
-        Type             : V4L Video
-Entity Info:
-        ID               : 0x00000004 (4)
-        Name             : csi capture
-        Function         : V4L2 I/O
-        Pad 0x01000007   : 0: Sink
-          Link 0x02000008: from remote pad 0x1000003 of entity 'csi': Data, Enabled
-
-Required ioctls:
-        test MC information (see 'Media Driver Info' above): OK
-        test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-        test second /dev/video0 open: OK
-        test VIDIOC_QUERYCAP: OK
-        test VIDIOC_G/S_PRIORITY: OK
-        test for unlimited opens: OK
-
-Debug ioctls:
-        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-        test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-                fail: ../../../../../../../../../../v4l-utils/utils/v4l2-compliance/v4l2-test-input-output.cpp(420): G_INPUT not supported for a capture dev
-ice
-        test VIDIOC_G/S/ENUMINPUT: FAIL
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-        Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-        test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-        test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-        test VIDIOC_QUERYCTRL: OK
-        test VIDIOC_G/S_CTRL: OK
-        test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-                fail: ../../../../../../../../../../v4l-utils/utils/v4l2-compliance/v4l2-test-controls.cpp(816): subscribe event for control 'User Controls'
- failed
-        test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
-        test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-        Standard Controls: 10 Private Controls: 0
-
-Format ioctls:
-        test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-        test VIDIOC_G/S_PARM: OK (Not Supported)
-        test VIDIOC_G_FBUF: OK (Not Supported)
-        test VIDIOC_G_FMT: OK
-        test VIDIOC_TRY_FMT: OK
-        test VIDIOC_S_FMT: OK
-        test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-        test Cropping: OK (Not Supported)
-        test Composing: OK (Not Supported)
-        test Scaling: OK (Not Supported)
-
-Codec ioctls:
-        test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-        test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-        test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-        test VIDIOC_EXPBUF: OK
-
---------------------------------------------------------------------------------
-Compliance test for device /dev/v4l-subdev0:
-
-Media Driver Info:
-        Driver name      : imx7-csi
-        Model            : imx-media
-        Serial           : 
-        Bus info         : 
-        Media version    : 4.20.0
-        Hardware revision: 0x00000000 (0)
-        Driver version   : 4.20.0
-Interface Info:
-        ID               : 0x03000019
-        Type             : V4L Sub-Device
-Entity Info:
-        ID               : 0x00000001 (1)
-        Name             : csi
-        Function         : Video Interface Bridge
-        Pad 0x01000002   : 0: Sink
-          Link 0x02000015: from remote pad 0x100000d of entity 'csi_mux': Data, Enabled
-        Pad 0x01000003   : 1: Source
-          Link 0x02000008: to remote pad 0x1000007 of entity 'csi capture': Data, Enabled
-
-Required ioctls:
-        test MC information (see 'Media Driver Info' above): OK
-
-Allow for multiple opens:
-        test second /dev/v4l-subdev0 open: OK
-        test for unlimited opens: OK
-
-Debug ioctls:
-        test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-        Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-        test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Sub-Device ioctls (Sink Pad 0):
-        test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
-        test Try VIDIOC_SUBDEV_G/S_FMT: OK
-        test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-        test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
-        test Active VIDIOC_SUBDEV_G/S_FMT: OK
-        test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-        test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 1):
-        test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
-        test Try VIDIOC_SUBDEV_G/S_FMT: OK
-        test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-        test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
-        test Active VIDIOC_SUBDEV_G/S_FMT: OK
-        test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-        test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Control ioctls:
-        test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-        test VIDIOC_QUERYCTRL: OK
-        test VIDIOC_G/S_CTRL: OK
-        test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-        test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-        test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-        Standard Controls: 0 Private Controls: 0
-
-Format ioctls:
-        test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK (Not Supported)
-        test VIDIOC_G/S_PARM: OK (Not Supported)
-        test VIDIOC_G_FBUF: OK (Not Supported)
-        test VIDIOC_G_FMT: OK (Not Supported)
-        test VIDIOC_TRY_FMT: OK (Not Supported)
-        test VIDIOC_S_FMT: OK (Not Supported)
-        test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-        test Cropping: OK (Not Supported)
-        test Composing: OK (Not Supported)
-        test Scaling: OK (Not Supported)
-
-Codec ioctls:
-        test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-        test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-        test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK (Not Supported)
-        test VIDIOC_EXPBUF: OK (Not Supported)
-
---------------------------------------------------------------------------------
-Compliance test for device /dev/v4l-subdev1:
-
-Media Driver Info:
-        Driver name      : imx7-csi
-        Model            : imx-media
-        Serial           : 
-        Bus info         : 
-        Media version    : 4.20.0
-        Hardware revision: 0x00000000 (0)
-        Driver version   : 4.20.0
-Interface Info:
-        ID               : 0x0300001b
-        Type             : V4L Sub-Device
-Entity Info:
-        ID               : 0x0000000a (10)
-        Name             : csi_mux
-        Function         : Video Muxer
-        Pad 0x0100000b   : 0: Sink
-        Pad 0x0100000c   : 1: Sink
-          Link 0x02000013: from remote pad 0x1000010 of entity 'imx7-mipi-csis.0': Data, Enabled
-        Pad 0x0100000d   : 2: Source
-          Link 0x02000015: to remote pad 0x1000002 of entity 'csi': Data, Enabled
-
-Required ioctls:
-        test MC information (see 'Media Driver Info' above): OK
-
-Allow for multiple opens:
-        test second /dev/v4l-subdev1 open: OK
-        test for unlimited opens: OK
-
-Debug ioctls:
-        test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-        Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-        test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Sub-Device ioctls (Sink Pad 0):
-        test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-        test Try VIDIOC_SUBDEV_G/S_FMT: OK
-        test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-        test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-        test Active VIDIOC_SUBDEV_G/S_FMT: OK
-        test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-        test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Sink Pad 1):
-        test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-        test Try VIDIOC_SUBDEV_G/S_FMT: OK
-        test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-        test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-        test Active VIDIOC_SUBDEV_G/S_FMT: OK
-        test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-        test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 2):
-        test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-                fail: ../../../../../../../../../../v4l-utils/utils/v4l2-compliance/v4l2-test-subdevs.cpp(370): s_fmt.format.width != fmt.format.width
-        test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
-        test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-        test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-        test Active VIDIOC_SUBDEV_G/S_FMT: OK
-        test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-        test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Control ioctls:
-        test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-        test VIDIOC_QUERYCTRL: OK (Not Supported)
-        test VIDIOC_G/S_CTRL: OK (Not Supported)
-        test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-        test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-        test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-        Standard Controls: 0 Private Controls: 0
-
-Format ioctls:
-        test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK (Not Supported)
-        test VIDIOC_G/S_PARM: OK (Not Supported)
-        test VIDIOC_G_FBUF: OK (Not Supported)
-        test VIDIOC_G_FMT: OK (Not Supported)
-        test VIDIOC_TRY_FMT: OK (Not Supported)
-        test VIDIOC_S_FMT: OK (Not Supported)
-        test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-        test Cropping: OK (Not Supported)
-        test Composing: OK (Not Supported)
-        test Scaling: OK (Not Supported)
-
-Codec ioctls:
-        test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-        test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-        test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK (Not Supported)
-        test VIDIOC_EXPBUF: OK (Not Supported)
-
---------------------------------------------------------------------------------
-Compliance test for device /dev/v4l-subdev2:
-
-Media Driver Info:
-        Driver name      : imx7-csi
-        Model            : imx-media
-        Serial           : 
-        Bus info         : 
-        Media version    : 4.20.0
-        Hardware revision: 0x00000000 (0)
-        Driver version   : 4.20.0
-Interface Info:
-        ID               : 0x0300001d
-        Type             : V4L Sub-Device
-Entity Info:
-        ID               : 0x0000000e (14)
-        Name             : imx7-mipi-csis.0
-        Function         : Video Interface Bridge
-        Pad 0x0100000f   : 0: Sink
-          Link 0x02000017: from remote pad 0x1000012 of entity 'ov2680 1-0036': Data, Enabled
-        Pad 0x01000010   : 1: Source
-          Link 0x02000013: to remote pad 0x100000c of entity 'csi_mux': Data, Enabled
-
-Required ioctls:
-        test MC information (see 'Media Driver Info' above): OK
-
-Allow for multiple opens:
-        test second /dev/v4l-subdev2 open: OK
-        test for unlimited opens: OK
-
-Debug ioctls:
-        test VIDIOC_LOG_STATUS: OK
-
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-        Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-        test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Sub-Device ioctls (Sink Pad 0):
-        test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-        test Try VIDIOC_SUBDEV_G/S_FMT: OK
-        test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-        test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-        test Active VIDIOC_SUBDEV_G/S_FMT: OK
-        test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-        test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 1):
-        test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-        test Try VIDIOC_SUBDEV_G/S_FMT: OK
-        test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-        test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-        test Active VIDIOC_SUBDEV_G/S_FMT: OK
-        test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-        test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Control ioctls:
-        test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-        test VIDIOC_QUERYCTRL: OK (Not Supported)
-        test VIDIOC_G/S_CTRL: OK (Not Supported)
-        test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-        test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-        test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-        Standard Controls: 0 Private Controls: 0
-
-Format ioctls:
-        test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK (Not Supported)
-        test VIDIOC_G/S_PARM: OK (Not Supported)
-        test VIDIOC_G_FBUF: OK (Not Supported)
-        test VIDIOC_G_FMT: OK (Not Supported)
-        test VIDIOC_TRY_FMT: OK (Not Supported)
-        test VIDIOC_S_FMT: OK (Not Supported)
-        test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-        test Cropping: OK (Not Supported)
-        test Composing: OK (Not Supported)
-        test Scaling: OK (Not Supported)
-
-Codec ioctls:
-        test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-        test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-        test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK (Not Supported)
-        test VIDIOC_EXPBUF: OK (Not Supported)
-
---------------------------------------------------------------------------------
-Compliance test for device /dev/v4l-subdev3:
-
-Media Driver Info:
-        Driver name      : imx7-csi
-        Model            : imx-media
-        Serial           : 
-        Bus info         : 
-        Media version    : 4.20.0
-        Hardware revision: 0x00000000 (0)
-        Driver version   : 4.20.0
-Interface Info:
-        ID               : 0x0300001f
-        Type             : V4L Sub-Device
-Entity Info:
-        ID               : 0x00000011 (17)
-        Name             : ov2680 1-0036
-        Function         : Camera Sensor
-        Pad 0x01000012   : 0: Source
-          Link 0x02000017: to remote pad 0x100000f of entity 'imx7-mipi-csis.0': Data, Enabled
-
-Required ioctls:
-        test MC information (see 'Media Driver Info' above): OK
-
-Allow for multiple opens:
-        test second /dev/v4l-subdev3 open: OK
-        test for unlimited opens: OK
-
-Debug ioctls:
-        test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-        Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-        test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 0):
-                fail: ../../../../../../../../../../v4l-utils/utils/v4l2-compliance/v4l2-test-subdevs.cpp(57): node->enum_frame_interval_pad >= 0
-                fail: ../../../../../../../../../../v4l-utils/utils/v4l2-compliance/v4l2-test-subdevs.cpp(183): ret && ret != ENOTTY
-                fail: ../../../../../../../../../../v4l-utils/utils/v4l2-compliance/v4l2-test-subdevs.cpp(248): ret && ret != ENOTTY
-        test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: FAIL
-                fail: ../../../../../../../../../../v4l-utils/utils/v4l2-compliance/v4l2-test-subdevs.cpp(311): fmt.width == 0 || fmt.width > 65536
-                fail: ../../../../../../../../../../v4l-utils/utils/v4l2-compliance/v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
-        test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
-        test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-        test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
-        test Active VIDIOC_SUBDEV_G/S_FMT: OK
-        test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-        test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK
-
-Control ioctls:
-        test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-        test VIDIOC_QUERYCTRL: OK
-        test VIDIOC_G/S_CTRL: OK
-        test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-                fail: ../../../../../../../../../../v4l-utils/utils/v4l2-compliance/v4l2-test-controls.cpp(816): subscribe event for control 'User Controls'
- failed
-        test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
-        test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-        Standard Controls: 10 Private Controls: 0
-
-Format ioctls:
-        test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK (Not Supported)
-        test VIDIOC_G/S_PARM: OK (Not Supported)
-        test VIDIOC_G_FBUF: OK (Not Supported)
-        test VIDIOC_G_FMT: OK (Not Supported)
-        test VIDIOC_TRY_FMT: OK (Not Supported)
-        test VIDIOC_S_FMT: OK (Not Supported)
-        test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-        test Cropping: OK (Not Supported)
-        test Composing: OK (Not Supported)
-        test Scaling: OK (Not Supported)
-
-Codec ioctls:
-        test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-        test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-        test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK (Not Supported)
-        test VIDIOC_EXPBUF: OK (Not Supported)
-
-Total: 267, Succeeded: 261, Failed: 6, Warnings: 0
-
-
-Rui Miguel Silva (12):
-  media: staging/imx: refactor imx media device probe
-  media: staging/imx: rearrange group id to take in account IPU
-  media: staging/imx7: add imx7 CSI subdev driver
-  media: staging/imx7: add MIPI CSI-2 receiver subdev for i.MX7
-  media: dt-bindings: add bindings for i.MX7 media driver
-  ARM: dts: imx7s: add mipi phy power domain
-  ARM: dts: imx7s: add multiplexer controls
-  ARM: dts: imx7: Add video mux, csi and mipi_csi and connections
-  ARM: dts: imx7s-warp: add ov2680 sensor node
-  media: imx7.rst: add documentation for i.MX7 media driver
-  media: staging/imx: add i.MX7 entries to TODO file
-  media: video-mux: add bayer formats
-
- .../devicetree/bindings/media/imx7-csi.txt    |   45 +
- .../bindings/media/imx7-mipi-csi2.txt         |   90 ++
- Documentation/media/v4l-drivers/imx7.rst      |  157 ++
- Documentation/media/v4l-drivers/index.rst     |    1 +
- arch/arm/boot/dts/imx7s-warp.dts              |   95 ++
- arch/arm/boot/dts/imx7s.dtsi                  |   43 +-
- drivers/media/platform/video-mux.c            |   20 +
- drivers/staging/media/imx/Kconfig             |    9 +-
- drivers/staging/media/imx/Makefile            |    4 +
- drivers/staging/media/imx/TODO                |    9 +
- drivers/staging/media/imx/imx-ic-common.c     |    6 +-
- drivers/staging/media/imx/imx-ic-prp.c        |   14 +-
- drivers/staging/media/imx/imx-media-csi.c     |    6 +-
- drivers/staging/media/imx/imx-media-dev.c     |  110 +-
- .../staging/media/imx/imx-media-internal-sd.c |   20 +-
- drivers/staging/media/imx/imx-media-of.c      |    6 +-
- drivers/staging/media/imx/imx-media-utils.c   |   12 +-
- drivers/staging/media/imx/imx-media.h         |   38 +-
- drivers/staging/media/imx/imx7-media-csi.c    | 1352 +++++++++++++++++
- drivers/staging/media/imx/imx7-mipi-csis.c    | 1134 ++++++++++++++
- 20 files changed, 3048 insertions(+), 123 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/imx7-csi.txt
- create mode 100644 Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
- create mode 100644 Documentation/media/v4l-drivers/imx7.rst
+This add the media entity subdevice and control driver for the i.MX7
+CMOS Sensor Interface.
+
+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+---
+ drivers/staging/media/imx/Kconfig          |    9 +-
+ drivers/staging/media/imx/Makefile         |    2 +
+ drivers/staging/media/imx/imx7-media-csi.c | 1352 ++++++++++++++++++++
+ 3 files changed, 1362 insertions(+), 1 deletion(-)
  create mode 100644 drivers/staging/media/imx/imx7-media-csi.c
- create mode 100644 drivers/staging/media/imx/imx7-mipi-csis.c
 
+diff --git a/drivers/staging/media/imx/Kconfig b/drivers/staging/media/imx/Kconfig
+index bfc17de56b17..40a11f988fc6 100644
+--- a/drivers/staging/media/imx/Kconfig
++++ b/drivers/staging/media/imx/Kconfig
+@@ -11,7 +11,7 @@ config VIDEO_IMX_MEDIA
+ 	  driver for the i.MX5/6 SOC.
+ 
+ if VIDEO_IMX_MEDIA
+-menu "i.MX5/6 Media Sub devices"
++menu "i.MX5/6/7 Media Sub devices"
+ 
+ config VIDEO_IMX_CSI
+ 	tristate "i.MX5/6 Camera Sensor Interface driver"
+@@ -20,5 +20,12 @@ config VIDEO_IMX_CSI
+ 	---help---
+ 	  A video4linux camera sensor interface driver for i.MX5/6.
+ 
++config VIDEO_IMX7_CSI
++	tristate "i.MX7 Camera Sensor Interface driver"
++	depends on VIDEO_IMX_MEDIA && VIDEO_DEV && I2C
++	default y
++	---help---
++	  A video4linux camera sensor interface driver for i.MX7.
++
+ endmenu
+ endif
+diff --git a/drivers/staging/media/imx/Makefile b/drivers/staging/media/imx/Makefile
+index a30b3033f9a3..074f016d3519 100644
+--- a/drivers/staging/media/imx/Makefile
++++ b/drivers/staging/media/imx/Makefile
+@@ -12,3 +12,5 @@ obj-$(CONFIG_VIDEO_IMX_MEDIA) += imx-media-ic.o
+ 
+ obj-$(CONFIG_VIDEO_IMX_CSI) += imx-media-csi.o
+ obj-$(CONFIG_VIDEO_IMX_CSI) += imx6-mipi-csi2.o
++
++obj-$(CONFIG_VIDEO_IMX7_CSI) += imx7-media-csi.o
+diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
+new file mode 100644
+index 000000000000..ec5a20880bb6
+--- /dev/null
++++ b/drivers/staging/media/imx/imx7-media-csi.c
+@@ -0,0 +1,1352 @@
++// SPDX-License-Identifier: GPL
++/*
++ * V4L2 Capture CSI Subdev for Freescale i.MX7 SOC
++ *
++ * Copyright (c) 2018 Linaro Ltd
++ *
++ */
++
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/gcd.h>
++#include <linux/interrupt.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of_graph.h>
++#include <linux/pinctrl/consumer.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/types.h>
++
++#include <media/v4l2-ctrls.h>
++#include <media/v4l2-device.h>
++#include <media/v4l2-event.h>
++#include <media/v4l2-fwnode.h>
++#include <media/v4l2-mc.h>
++#include <media/v4l2-subdev.h>
++#include <media/videobuf2-dma-contig.h>
++
++#include <media/imx.h>
++#include "imx-media.h"
++
++#define IMX7_CSI_PAD_SINK	0
++#define IMX7_CSI_PAD_SRC	1
++#define IMX7_CSI_PADS_NUM	2
++
++/* reset values */
++#define CSICR1_RESET_VAL	0x40000800
++#define CSICR2_RESET_VAL	0x0
++#define CSICR3_RESET_VAL	0x0
++
++/* csi control reg 1 */
++#define BIT_SWAP16_EN		BIT(31)
++#define BIT_EXT_VSYNC		BIT(30)
++#define BIT_EOF_INT_EN		BIT(29)
++#define BIT_PRP_IF_EN		BIT(28)
++#define BIT_CCIR_MODE		BIT(27)
++#define BIT_COF_INT_EN		BIT(26)
++#define BIT_SF_OR_INTEN		BIT(25)
++#define BIT_RF_OR_INTEN		BIT(24)
++#define BIT_SFF_DMA_DONE_INTEN  BIT(22)
++#define BIT_STATFF_INTEN	BIT(21)
++#define BIT_FB2_DMA_DONE_INTEN  BIT(20)
++#define BIT_FB1_DMA_DONE_INTEN  BIT(19)
++#define BIT_RXFF_INTEN		BIT(18)
++#define BIT_SOF_POL		BIT(17)
++#define BIT_SOF_INTEN		BIT(16)
++#define BIT_MCLKDIV		(0xF << 12)
++#define BIT_HSYNC_POL		BIT(11)
++#define BIT_CCIR_EN		BIT(10)
++#define BIT_MCLKEN		BIT(9)
++#define BIT_FCC			BIT(8)
++#define BIT_PACK_DIR		BIT(7)
++#define BIT_CLR_STATFIFO	BIT(6)
++#define BIT_CLR_RXFIFO		BIT(5)
++#define BIT_GCLK_MODE		BIT(4)
++#define BIT_INV_DATA		BIT(3)
++#define BIT_INV_PCLK		BIT(2)
++#define BIT_REDGE		BIT(1)
++#define BIT_PIXEL_BIT		BIT(0)
++
++#define SHIFT_MCLKDIV		12
++
++/* control reg 3 */
++#define BIT_FRMCNT		(0xFFFF << 16)
++#define BIT_FRMCNT_RST		BIT(15)
++#define BIT_DMA_REFLASH_RFF	BIT(14)
++#define BIT_DMA_REFLASH_SFF	BIT(13)
++#define BIT_DMA_REQ_EN_RFF	BIT(12)
++#define BIT_DMA_REQ_EN_SFF	BIT(11)
++#define BIT_STATFF_LEVEL	(0x7 << 8)
++#define BIT_HRESP_ERR_EN	BIT(7)
++#define BIT_RXFF_LEVEL		(0x7 << 4)
++#define BIT_TWO_8BIT_SENSOR	BIT(3)
++#define BIT_ZERO_PACK_EN	BIT(2)
++#define BIT_ECC_INT_EN		BIT(1)
++#define BIT_ECC_AUTO_EN		BIT(0)
++
++#define SHIFT_FRMCNT		16
++#define SHIFT_RXFIFO_LEVEL	4
++
++/* csi status reg */
++#define BIT_ADDR_CH_ERR_INT	BIT(28)
++#define BIT_FIELD0_INT		BIT(27)
++#define BIT_FIELD1_INT		BIT(26)
++#define BIT_SFF_OR_INT		BIT(25)
++#define BIT_RFF_OR_INT		BIT(24)
++#define BIT_DMA_TSF_DONE_SFF	BIT(22)
++#define BIT_STATFF_INT		BIT(21)
++#define BIT_DMA_TSF_DONE_FB2	BIT(20)
++#define BIT_DMA_TSF_DONE_FB1	BIT(19)
++#define BIT_RXFF_INT		BIT(18)
++#define BIT_EOF_INT		BIT(17)
++#define BIT_SOF_INT		BIT(16)
++#define BIT_F2_INT		BIT(15)
++#define BIT_F1_INT		BIT(14)
++#define BIT_COF_INT		BIT(13)
++#define BIT_HRESP_ERR_INT	BIT(7)
++#define BIT_ECC_INT		BIT(1)
++#define BIT_DRDY		BIT(0)
++
++/* csi control reg 18 */
++#define BIT_CSI_HW_ENABLE		BIT(31)
++#define BIT_MIPI_DATA_FORMAT_RAW8	(0x2a << 25)
++#define BIT_MIPI_DATA_FORMAT_RAW10	(0x2b << 25)
++#define BIT_MIPI_DATA_FORMAT_RAW12	(0x2c << 25)
++#define BIT_MIPI_DATA_FORMAT_RAW14	(0x2d << 25)
++#define BIT_MIPI_DATA_FORMAT_YUV422_8B	(0x1e << 25)
++#define BIT_MIPI_DATA_FORMAT_MASK	(0x3F << 25)
++#define BIT_MIPI_DATA_FORMAT_OFFSET	25
++#define BIT_DATA_FROM_MIPI		BIT(22)
++#define BIT_MIPI_YU_SWAP		BIT(21)
++#define BIT_MIPI_DOUBLE_CMPNT		BIT(20)
++#define BIT_BASEADDR_CHG_ERR_EN		BIT(9)
++#define BIT_BASEADDR_SWITCH_SEL		BIT(5)
++#define BIT_BASEADDR_SWITCH_EN		BIT(4)
++#define BIT_PARALLEL24_EN		BIT(3)
++#define BIT_DEINTERLACE_EN		BIT(2)
++#define BIT_TVDECODER_IN_EN		BIT(1)
++#define BIT_NTSC_EN			BIT(0)
++
++#define CSI_MCLK_VF		1
++#define CSI_MCLK_ENC		2
++#define CSI_MCLK_RAW		4
++#define CSI_MCLK_I2C		8
++
++#define CSI_CSICR1		0x0
++#define CSI_CSICR2		0x4
++#define CSI_CSICR3		0x8
++#define CSI_STATFIFO		0xC
++#define CSI_CSIRXFIFO		0x10
++#define CSI_CSIRXCNT		0x14
++#define CSI_CSISR		0x18
++
++#define CSI_CSIDBG		0x1C
++#define CSI_CSIDMASA_STATFIFO	0x20
++#define CSI_CSIDMATS_STATFIFO	0x24
++#define CSI_CSIDMASA_FB1	0x28
++#define CSI_CSIDMASA_FB2	0x2C
++#define CSI_CSIFBUF_PARA	0x30
++#define CSI_CSIIMAG_PARA	0x34
++
++#define CSI_CSICR18		0x48
++#define CSI_CSICR19		0x4c
++
++struct imx7_csi {
++	struct device *dev;
++	struct imx_media_dev *md;
++	struct v4l2_subdev sd;
++	struct imx_media_video_dev *vdev;
++	struct imx_media_dev *imxmd;
++	struct media_pad pad[IMX7_CSI_PADS_NUM];
++
++	struct mutex lock;
++	spinlock_t irqlock;
++
++	struct v4l2_subdev *src_sd;
++
++	struct media_entity *sink;
++
++	struct v4l2_fwnode_endpoint upstream_ep;
++
++	struct v4l2_mbus_framefmt format_mbus[IMX7_CSI_PADS_NUM];
++	const struct imx_media_pixfmt *cc[IMX7_CSI_PADS_NUM];
++	struct v4l2_fract frame_interval[IMX7_CSI_PADS_NUM];
++
++	struct v4l2_ctrl_handler ctrl_hdlr;
++
++	void __iomem *regbase;
++	int irq;
++
++	struct clk *clk_disp_axi;
++	struct clk *clk_disp_dcic;
++	struct clk *clk_csi_mclk;
++
++	/* active vb2 buffers to send to video dev sink */
++	struct imx_media_buffer *active_vb2_buf[2];
++	struct imx_media_dma_buf underrun_buf;
++
++	int buf_num;
++	u32 frame_sequence;
++
++	bool last_eof;
++	bool is_init;
++	bool is_streaming;
++	bool is_csi2;
++
++	struct completion last_eof_completion;
++};
++
++#define imx7_csi_reg_read(_csi, _offset) __raw_readl(_csi->regbase + _offset)
++#define imx7_csi_reg_write(_csi, _val, _offset) \
++	__raw_writel(_val, _csi->regbase + _offset)
++
++static void imx7_csi_clk_enable(struct imx7_csi *csi)
++{
++	clk_prepare_enable(csi->clk_disp_axi);
++	clk_prepare_enable(csi->clk_disp_dcic);
++	clk_prepare_enable(csi->clk_csi_mclk);
++}
++
++static void imx7_csi_clk_disable(struct imx7_csi *csi)
++{
++	clk_disable_unprepare(csi->clk_csi_mclk);
++	clk_disable_unprepare(csi->clk_disp_dcic);
++	clk_disable_unprepare(csi->clk_disp_axi);
++}
++
++static void imx7_csi_hw_reset(struct imx7_csi *csi)
++{
++	imx7_csi_reg_write(csi,
++			   imx7_csi_reg_read(csi, CSI_CSICR3) | BIT_FRMCNT_RST,
++			   CSI_CSICR3);
++
++	imx7_csi_reg_write(csi, CSICR1_RESET_VAL, CSI_CSICR1);
++	imx7_csi_reg_write(csi, CSICR2_RESET_VAL, CSI_CSICR2);
++	imx7_csi_reg_write(csi, CSICR3_RESET_VAL, CSI_CSICR3);
++}
++
++static unsigned long imx7_csi_irq_clear(struct imx7_csi *csi)
++{
++	unsigned long isr;
++
++	isr = imx7_csi_reg_read(csi, CSI_CSISR);
++	imx7_csi_reg_write(csi, isr, CSI_CSISR);
++
++	return isr;
++}
++
++static void imx7_csi_init_interface(struct imx7_csi *csi)
++{
++	unsigned int val = 0;
++	unsigned int imag_para;
++
++	val = BIT_SOF_POL | BIT_REDGE | BIT_GCLK_MODE | BIT_HSYNC_POL |
++		BIT_FCC | 1 << SHIFT_MCLKDIV | BIT_MCLKEN;
++	imx7_csi_reg_write(csi, val, CSI_CSICR1);
++
++	imag_para = (800 << 16) | 600;
++	imx7_csi_reg_write(csi, imag_para, CSI_CSIIMAG_PARA);
++
++	val = BIT_DMA_REFLASH_RFF;
++	imx7_csi_reg_write(csi, val, CSI_CSICR3);
++}
++
++static void imx7_csi_hw_enable_irq(struct imx7_csi *csi)
++{
++	unsigned long cr1 = imx7_csi_reg_read(csi, CSI_CSICR1);
++
++	cr1 |= BIT_SOF_INTEN;
++	cr1 |= BIT_RFF_OR_INT;
++
++	/* still capture needs DMA interrupt */
++	cr1 |= BIT_FB1_DMA_DONE_INTEN;
++	cr1 |= BIT_FB2_DMA_DONE_INTEN;
++
++	cr1 |= BIT_EOF_INT_EN;
++
++	imx7_csi_reg_write(csi, cr1, CSI_CSICR1);
++}
++
++static void imx7_csi_hw_disable_irq(struct imx7_csi *csi)
++{
++	unsigned long cr1 = imx7_csi_reg_read(csi, CSI_CSICR1);
++
++	cr1 &= ~BIT_SOF_INTEN;
++	cr1 &= ~BIT_RFF_OR_INT;
++	cr1 &= ~BIT_FB1_DMA_DONE_INTEN;
++	cr1 &= ~BIT_FB2_DMA_DONE_INTEN;
++	cr1 &= ~BIT_EOF_INT_EN;
++
++	imx7_csi_reg_write(csi, cr1, CSI_CSICR1);
++}
++
++static void imx7_csi_hw_enable(struct imx7_csi *csi)
++{
++	unsigned long cr = imx7_csi_reg_read(csi, CSI_CSICR18);
++
++	cr |= BIT_CSI_HW_ENABLE;
++
++	imx7_csi_reg_write(csi, cr, CSI_CSICR18);
++}
++
++static void imx7_csi_hw_disable(struct imx7_csi *csi)
++{
++	unsigned long cr = imx7_csi_reg_read(csi, CSI_CSICR18);
++
++	cr &= ~BIT_CSI_HW_ENABLE;
++
++	imx7_csi_reg_write(csi, cr, CSI_CSICR18);
++}
++
++static void imx7_csi_dma_reflash(struct imx7_csi *csi)
++{
++	unsigned long cr3 = imx7_csi_reg_read(csi, CSI_CSICR18);
++
++	cr3 = imx7_csi_reg_read(csi, CSI_CSICR3);
++	cr3 |= BIT_DMA_REFLASH_RFF;
++	imx7_csi_reg_write(csi, cr3, CSI_CSICR3);
++}
++
++static void imx7_csi_rx_fifo_clear(struct imx7_csi *csi)
++{
++	unsigned long cr1;
++
++	cr1 = imx7_csi_reg_read(csi, CSI_CSICR1);
++	imx7_csi_reg_write(csi, cr1 & ~BIT_FCC, CSI_CSICR1);
++	cr1 = imx7_csi_reg_read(csi, CSI_CSICR1);
++	imx7_csi_reg_write(csi, cr1 | BIT_CLR_RXFIFO, CSI_CSICR1);
++
++	cr1 = imx7_csi_reg_read(csi, CSI_CSICR1);
++	imx7_csi_reg_write(csi, cr1 | BIT_FCC, CSI_CSICR1);
++}
++
++static void imx7_csi_buf_stride_set(struct imx7_csi *csi, u32 stride)
++{
++	imx7_csi_reg_write(csi, stride, CSI_CSIFBUF_PARA);
++}
++
++static void imx7_csi_deinterlace_enable(struct imx7_csi *csi, bool enable)
++{
++	unsigned long cr18 = imx7_csi_reg_read(csi, CSI_CSICR18);
++
++	if (enable)
++		cr18 |= BIT_DEINTERLACE_EN;
++	else
++		cr18 &= ~BIT_DEINTERLACE_EN;
++
++	imx7_csi_reg_write(csi, cr18, CSI_CSICR18);
++}
++
++static void imx7_csi_dmareq_rff_enable(struct imx7_csi *csi)
++{
++	unsigned long cr3 = imx7_csi_reg_read(csi, CSI_CSICR3);
++	unsigned long cr2 = imx7_csi_reg_read(csi, CSI_CSICR2);
++
++	/* Burst Type of DMA Transfer from RxFIFO. INCR16 */
++	cr2 |= 0xC0000000;
++
++	cr3 |= BIT_DMA_REQ_EN_RFF;
++	cr3 |= BIT_HRESP_ERR_EN;
++	cr3 &= ~BIT_RXFF_LEVEL;
++	cr3 |= 0x2 << 4;
++
++	imx7_csi_reg_write(csi, cr3, CSI_CSICR3);
++	imx7_csi_reg_write(csi, cr2, CSI_CSICR2);
++}
++
++static void imx7_csi_dmareq_rff_disable(struct imx7_csi *csi)
++{
++	unsigned long cr3 = imx7_csi_reg_read(csi, CSI_CSICR3);
++
++	cr3 &= ~BIT_DMA_REQ_EN_RFF;
++	cr3 &= ~BIT_HRESP_ERR_EN;
++	imx7_csi_reg_write(csi, cr3, CSI_CSICR3);
++}
++
++static void imx7_csi_set_imagpara(struct imx7_csi *csi, int width, int height)
++{
++	int imag_para;
++	int rx_count;
++
++	rx_count = (width * height) >> 2;
++	imx7_csi_reg_write(csi, rx_count, CSI_CSIRXCNT);
++
++	imag_para = (width << 16) | height;
++	imx7_csi_reg_write(csi, imag_para, CSI_CSIIMAG_PARA);
++
++	/* reflash the embedded DMA controller */
++	imx7_csi_dma_reflash(csi);
++}
++
++static void imx7_csi_sw_reset(struct imx7_csi *csi)
++{
++	imx7_csi_hw_disable(csi);
++
++	imx7_csi_rx_fifo_clear(csi);
++
++	imx7_csi_dma_reflash(csi);
++
++	usleep_range(2000, 3000);
++
++	imx7_csi_irq_clear(csi);
++
++	imx7_csi_hw_enable(csi);
++}
++
++static void imx7_csi_error_recovery(struct imx7_csi *csi)
++{
++	imx7_csi_hw_disable(csi);
++
++	imx7_csi_rx_fifo_clear(csi);
++
++	imx7_csi_dma_reflash(csi);
++
++	imx7_csi_hw_enable(csi);
++}
++
++static void imx7_csi_init(struct imx7_csi *csi)
++{
++	if (csi->is_init)
++		return;
++
++	imx7_csi_clk_enable(csi);
++	imx7_csi_hw_reset(csi);
++	imx7_csi_init_interface(csi);
++	imx7_csi_dmareq_rff_enable(csi);
++
++	csi->is_init = true;
++}
++
++static void imx7_csi_deinit(struct imx7_csi *csi)
++{
++	if (!csi->is_init)
++		return;
++
++	imx7_csi_hw_reset(csi);
++	imx7_csi_init_interface(csi);
++	imx7_csi_dmareq_rff_disable(csi);
++	imx7_csi_clk_disable(csi);
++
++	csi->is_init = false;
++}
++
++static int imx7_csi_get_upstream_endpoint(struct imx7_csi *csi,
++					  struct v4l2_fwnode_endpoint *ep,
++					  bool skip_mux)
++{
++	struct device_node *endpoint, *port;
++	struct media_entity *src;
++	struct v4l2_subdev *sd;
++	struct media_pad *pad;
++
++	if (!csi->src_sd)
++		return -EPIPE;
++
++	src = &csi->src_sd->entity;
++
++skip_video_mux:
++	/* get source pad of entity directly upstream from src */
++	pad = imx_media_find_upstream_pad(csi->md, src, 0);
++	if (IS_ERR(pad))
++		return PTR_ERR(pad);
++
++	sd = media_entity_to_v4l2_subdev(pad->entity);
++
++	/* To get bus type we may need to skip video mux */
++	if (skip_mux && src->function == MEDIA_ENT_F_VID_MUX) {
++		src = &sd->entity;
++		goto skip_video_mux;
++	}
++
++	/*
++	 * NOTE: this assumes an OF-graph port id is the same as a
++	 * media pad index.
++	 */
++	port = of_graph_get_port_by_id(sd->dev->of_node, pad->index);
++	if (!port)
++		return -ENODEV;
++
++	endpoint = of_get_next_child(port, NULL);
++	of_node_put(port);
++	if (!endpoint)
++		return -ENODEV;
++
++	v4l2_fwnode_endpoint_parse(of_fwnode_handle(endpoint), ep);
++	of_node_put(endpoint);
++
++	return 0;
++}
++
++static int imx7_csi_link_setup(struct media_entity *entity,
++			       const struct media_pad *local,
++			       const struct media_pad *remote, u32 flags)
++{
++	struct v4l2_subdev *sd = media_entity_to_v4l2_subdev(entity);
++	struct imx7_csi *csi = v4l2_get_subdevdata(sd);
++	struct v4l2_subdev *remote_sd;
++	int ret = 0;
++
++	dev_dbg(csi->dev, "link setup %s -> %s\n", remote->entity->name,
++		local->entity->name);
++
++	mutex_lock(&csi->lock);
++
++	if (local->flags & MEDIA_PAD_FL_SINK) {
++		if (!is_media_entity_v4l2_subdev(remote->entity)) {
++			ret = -EINVAL;
++			goto unlock;
++		}
++
++		remote_sd = media_entity_to_v4l2_subdev(remote->entity);
++
++		if (flags & MEDIA_LNK_FL_ENABLED) {
++			if (csi->src_sd) {
++				ret = -EBUSY;
++				goto unlock;
++			}
++			csi->src_sd = remote_sd;
++		} else {
++			csi->src_sd = NULL;
++		}
++
++		goto init;
++	}
++
++	/* source pad */
++	if (flags & MEDIA_LNK_FL_ENABLED) {
++		if (csi->sink) {
++			ret = -EBUSY;
++			goto unlock;
++		}
++		csi->sink = remote->entity;
++	} else {
++		v4l2_ctrl_handler_free(&csi->ctrl_hdlr);
++		v4l2_ctrl_handler_init(&csi->ctrl_hdlr, 0);
++		csi->sink = NULL;
++	}
++
++init:
++	if (csi->sink || csi->src_sd)
++		imx7_csi_init(csi);
++	else
++		imx7_csi_deinit(csi);
++
++unlock:
++	mutex_unlock(&csi->lock);
++
++	return ret;
++}
++
++static int imx7_csi_pad_link_validate(struct v4l2_subdev *sd,
++				      struct media_link *link,
++				      struct v4l2_subdev_format *source_fmt,
++				      struct v4l2_subdev_format *sink_fmt)
++{
++	struct imx7_csi *csi = v4l2_get_subdevdata(sd);
++	struct v4l2_fwnode_endpoint upstream_ep;
++	int ret;
++
++	ret = v4l2_subdev_link_validate_default(sd, link, source_fmt, sink_fmt);
++	if (ret)
++		return ret;
++
++	ret = imx7_csi_get_upstream_endpoint(csi, &upstream_ep, true);
++	if (ret) {
++		v4l2_err(&csi->sd, "failed to find upstream endpoint\n");
++		return ret;
++	}
++
++	mutex_lock(&csi->lock);
++
++	csi->upstream_ep = upstream_ep;
++	csi->is_csi2 = (upstream_ep.bus_type == V4L2_MBUS_CSI2_DPHY);
++
++	mutex_unlock(&csi->lock);
++
++	return 0;
++}
++
++static void imx7_csi_update_buf(struct imx7_csi *csi, dma_addr_t phys,
++				int buf_num)
++{
++	if (buf_num == 1)
++		imx7_csi_reg_write(csi, phys, CSI_CSIDMASA_FB2);
++	else
++		imx7_csi_reg_write(csi, phys, CSI_CSIDMASA_FB1);
++}
++
++static void imx7_csi_setup_vb2_buf(struct imx7_csi *csi)
++{
++	struct imx_media_video_dev *vdev = csi->vdev;
++	struct imx_media_buffer *buf;
++	struct vb2_buffer *vb2_buf;
++	dma_addr_t phys[2];
++	int i;
++
++	for (i = 0; i < 2; i++) {
++		buf = imx_media_capture_device_next_buf(vdev);
++		if (buf) {
++			csi->active_vb2_buf[i] = buf;
++			vb2_buf = &buf->vbuf.vb2_buf;
++			phys[i] = vb2_dma_contig_plane_dma_addr(vb2_buf, 0);
++		} else {
++			csi->active_vb2_buf[i] = NULL;
++			phys[i] = csi->underrun_buf.phys;
++		}
++
++		imx7_csi_update_buf(csi, phys[i], i);
++	}
++}
++
++static void imx7_csi_dma_unsetup_vb2_buf(struct imx7_csi *csi,
++					 enum vb2_buffer_state return_status)
++{
++	struct imx_media_buffer *buf;
++	int i;
++
++	/* return any remaining active frames with return_status */
++	for (i = 0; i < 2; i++) {
++		buf = csi->active_vb2_buf[i];
++		if (buf) {
++			struct vb2_buffer *vb = &buf->vbuf.vb2_buf;
++
++			vb->timestamp = ktime_get_ns();
++			vb2_buffer_done(vb, return_status);
++		}
++	}
++}
++
++static void imx7_csi_vb2_buf_done(struct imx7_csi *csi)
++{
++	struct imx_media_video_dev *vdev = csi->vdev;
++	struct imx_media_buffer *done, *next;
++	struct vb2_buffer *vb;
++	dma_addr_t phys;
++
++	done = csi->active_vb2_buf[csi->buf_num];
++	if (done) {
++		done->vbuf.field = vdev->fmt.fmt.pix.field;
++		done->vbuf.sequence = csi->frame_sequence;
++		vb = &done->vbuf.vb2_buf;
++		vb->timestamp = ktime_get_ns();
++		vb2_buffer_done(vb, VB2_BUF_STATE_DONE);
++	}
++	csi->frame_sequence++;
++
++	/* get next queued buffer */
++	next = imx_media_capture_device_next_buf(vdev);
++	if (next) {
++		phys = vb2_dma_contig_plane_dma_addr(&next->vbuf.vb2_buf, 0);
++		csi->active_vb2_buf[csi->buf_num] = next;
++	} else {
++		phys = csi->underrun_buf.phys;
++		csi->active_vb2_buf[csi->buf_num] = NULL;
++	}
++
++	imx7_csi_update_buf(csi, phys, csi->buf_num);
++}
++
++static irqreturn_t imx7_csi_irq_handler(int irq, void *data)
++{
++	struct imx7_csi *csi =  data;
++	unsigned long status;
++
++	spin_lock(&csi->irqlock);
++
++	status = imx7_csi_irq_clear(csi);
++
++	if (status & BIT_RFF_OR_INT) {
++		dev_warn(csi->dev, "Rx fifo overflow\n");
++		imx7_csi_error_recovery(csi);
++	}
++
++	if (status & BIT_HRESP_ERR_INT) {
++		dev_warn(csi->dev, "Hresponse error detected\n");
++		imx7_csi_error_recovery(csi);
++	}
++
++	if (status & BIT_ADDR_CH_ERR_INT) {
++		imx7_csi_hw_disable(csi);
++
++		imx7_csi_dma_reflash(csi);
++
++		imx7_csi_hw_enable(csi);
++	}
++
++	if ((status & BIT_DMA_TSF_DONE_FB1) &&
++	    (status & BIT_DMA_TSF_DONE_FB2)) {
++		/*
++		 * For both FB1 and FB2 interrupter bits set case,
++		 * CSI DMA is work in one of FB1 and FB2 buffer,
++		 * but software can not know the state.
++		 * Skip it to avoid base address updated
++		 * when csi work in field0 and field1 will write to
++		 * new base address.
++		 */
++	} else if (status & BIT_DMA_TSF_DONE_FB1) {
++		csi->buf_num = 0;
++	} else if (status & BIT_DMA_TSF_DONE_FB2) {
++		csi->buf_num = 1;
++	}
++
++	if ((status & BIT_DMA_TSF_DONE_FB1) ||
++	    (status & BIT_DMA_TSF_DONE_FB2)) {
++		imx7_csi_vb2_buf_done(csi);
++
++		if (csi->last_eof) {
++			complete(&csi->last_eof_completion);
++			csi->last_eof = false;
++		}
++	}
++
++
++	spin_unlock(&csi->irqlock);
++
++	return IRQ_HANDLED;
++}
++
++static int imx7_csi_dma_start(struct imx7_csi *csi)
++{
++	struct imx_media_video_dev *vdev = csi->vdev;
++	struct v4l2_pix_format *out_pix = &vdev->fmt.fmt.pix;
++	int ret;
++
++	ret = imx_media_alloc_dma_buf(csi->md, &csi->underrun_buf,
++				      out_pix->sizeimage);
++	if (ret < 0) {
++		v4l2_warn(&csi->sd, "consider increasing the CMA area\n");
++		return ret;
++	}
++
++	csi->frame_sequence = 0;
++	csi->last_eof = false;
++	init_completion(&csi->last_eof_completion);
++
++	imx7_csi_setup_vb2_buf(csi);
++
++	return 0;
++}
++
++static void imx7_csi_dma_stop(struct imx7_csi *csi)
++{
++	unsigned long flags;
++	int ret;
++
++	/* mark next EOF interrupt as the last before stream off */
++	spin_lock_irqsave(&csi->irqlock, flags);
++	csi->last_eof = true;
++	spin_unlock_irqrestore(&csi->irqlock, flags);
++
++	/*
++	 * and then wait for interrupt handler to mark completion.
++	 */
++	ret = wait_for_completion_timeout(&csi->last_eof_completion,
++				msecs_to_jiffies(IMX_MEDIA_EOF_TIMEOUT));
++	if (ret == 0)
++		v4l2_warn(&csi->sd, "wait last EOF timeout\n");
++
++	imx7_csi_hw_disable_irq(csi);
++
++	imx7_csi_dma_unsetup_vb2_buf(csi, VB2_BUF_STATE_ERROR);
++
++	imx_media_free_dma_buf(csi->md, &csi->underrun_buf);
++}
++
++static int imx7_csi_configure(struct imx7_csi *csi)
++{
++	struct imx_media_video_dev *vdev = csi->vdev;
++	struct v4l2_pix_format *out_pix = &vdev->fmt.fmt.pix;
++	__u32 in_code = csi->format_mbus[IMX7_CSI_PAD_SINK].code;
++	u32 cr1, cr18;
++
++	if (out_pix->field == V4L2_FIELD_INTERLACED) {
++		imx7_csi_deinterlace_enable(csi, true);
++		imx7_csi_buf_stride_set(csi, out_pix->width);
++	} else {
++		imx7_csi_deinterlace_enable(csi, false);
++		imx7_csi_buf_stride_set(csi, 0);
++	}
++
++	imx7_csi_set_imagpara(csi, out_pix->width, out_pix->height);
++
++	if (!csi->is_csi2)
++		return 0;
++
++	cr1 = imx7_csi_reg_read(csi, CSI_CSICR1);
++	cr1 &= ~BIT_GCLK_MODE;
++
++	cr18 = imx7_csi_reg_read(csi, CSI_CSICR18);
++	cr18 &= BIT_MIPI_DATA_FORMAT_MASK;
++	cr18 |= BIT_DATA_FROM_MIPI;
++
++	switch (out_pix->pixelformat) {
++	case V4L2_PIX_FMT_UYVY:
++	case V4L2_PIX_FMT_YUYV:
++		cr18 |= BIT_MIPI_DATA_FORMAT_YUV422_8B;
++		break;
++	case V4L2_PIX_FMT_SBGGR8:
++		cr18 |= BIT_MIPI_DATA_FORMAT_RAW8;
++		break;
++	case V4L2_PIX_FMT_SBGGR16:
++		if (in_code == MEDIA_BUS_FMT_SBGGR10_1X10)
++			cr18 |= BIT_MIPI_DATA_FORMAT_RAW10;
++		else if (in_code == MEDIA_BUS_FMT_SBGGR12_1X12)
++			cr18 |= BIT_MIPI_DATA_FORMAT_RAW12;
++		else if (in_code == MEDIA_BUS_FMT_SBGGR14_1X14)
++			cr18 |= BIT_MIPI_DATA_FORMAT_RAW14;
++		cr1 |= BIT_PIXEL_BIT;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	imx7_csi_reg_write(csi, cr1, CSI_CSICR1);
++	imx7_csi_reg_write(csi, cr18, CSI_CSICR18);
++
++	return 0;
++}
++
++static int imx7_csi_enable(struct imx7_csi *csi)
++{
++	imx7_csi_sw_reset(csi);
++
++	if (csi->is_csi2) {
++		imx7_csi_dmareq_rff_enable(csi);
++		imx7_csi_hw_enable_irq(csi);
++		imx7_csi_hw_enable(csi);
++		return 0;
++	}
++
++	return 0;
++}
++
++static void imx7_csi_disable(struct imx7_csi *csi)
++{
++	imx7_csi_dmareq_rff_disable(csi);
++
++	imx7_csi_hw_disable_irq(csi);
++
++	imx7_csi_buf_stride_set(csi, 0);
++
++	imx7_csi_hw_disable(csi);
++}
++
++static int imx7_csi_streaming_start(struct imx7_csi *csi)
++{
++	int ret;
++
++	ret = imx7_csi_dma_start(csi);
++	if (ret < 0)
++		return ret;
++
++	ret = imx7_csi_configure(csi);
++	if (ret < 0)
++		goto dma_stop;
++
++	imx7_csi_enable(csi);
++
++	return 0;
++
++dma_stop:
++	imx7_csi_dma_stop(csi);
++
++	return ret;
++}
++
++static int imx7_csi_streaming_stop(struct imx7_csi *csi)
++{
++	imx7_csi_dma_stop(csi);
++
++	imx7_csi_disable(csi);
++
++	return 0;
++}
++
++static int imx7_csi_s_stream(struct v4l2_subdev *sd, int enable)
++{
++	struct imx7_csi *csi = v4l2_get_subdevdata(sd);
++	int ret = 0;
++
++	mutex_lock(&csi->lock);
++
++	if (!csi->src_sd || !csi->sink) {
++		ret = -EPIPE;
++		goto out_unlock;
++	}
++
++	if (csi->is_streaming == !!enable)
++		goto out_unlock;
++
++	if (enable) {
++		ret = v4l2_subdev_call(csi->src_sd, video, s_stream, 1);
++		if (ret < 0)
++			goto out_unlock;
++
++		ret = imx7_csi_streaming_start(csi);
++		if (ret < 0) {
++			v4l2_subdev_call(csi->src_sd, video, s_stream, 0);
++			goto out_unlock;
++		}
++	} else {
++		imx7_csi_streaming_stop(csi);
++
++		v4l2_subdev_call(csi->src_sd, video, s_stream, 0);
++	}
++
++	csi->is_streaming = !!enable;
++
++out_unlock:
++	mutex_unlock(&csi->lock);
++
++	return ret;
++}
++
++static struct v4l2_mbus_framefmt *imx7_csi_get_format(struct imx7_csi *csi,
++					struct v4l2_subdev_pad_config *cfg,
++					unsigned int pad,
++					enum v4l2_subdev_format_whence which)
++{
++	if (which == V4L2_SUBDEV_FORMAT_TRY)
++		return v4l2_subdev_get_try_format(&csi->sd, cfg, pad);
++
++	return &csi->format_mbus[pad];
++}
++
++static int imx7_csi_enum_mbus_code(struct v4l2_subdev *sd,
++				   struct v4l2_subdev_pad_config *cfg,
++				   struct v4l2_subdev_mbus_code_enum *code)
++{
++	struct imx7_csi *csi = v4l2_get_subdevdata(sd);
++	const struct imx_media_pixfmt *in_cc;
++	struct v4l2_mbus_framefmt *in_fmt;
++	int ret = 0;
++
++	mutex_lock(&csi->lock);
++
++	in_fmt = imx7_csi_get_format(csi, cfg, IMX7_CSI_PAD_SINK, code->which);
++
++	in_cc = imx_media_find_mbus_format(in_fmt->code, CS_SEL_ANY, true);
++
++	switch (code->pad) {
++	case IMX7_CSI_PAD_SINK:
++		ret = imx_media_enum_mbus_format(&code->code, code->index,
++						 CS_SEL_ANY, true);
++		break;
++	case IMX7_CSI_PAD_SRC:
++		if (code->index != 0) {
++			ret = -EINVAL;
++			goto out_unlock;
++		}
++
++		code->code = in_fmt->code;
++		break;
++	default:
++		ret = -EINVAL;
++	}
++
++out_unlock:
++	mutex_unlock(&csi->lock);
++
++	return ret;
++}
++
++static int imx7_csi_get_fmt(struct v4l2_subdev *sd,
++			    struct v4l2_subdev_pad_config *cfg,
++			    struct v4l2_subdev_format *sdformat)
++{
++	struct imx7_csi *csi = v4l2_get_subdevdata(sd);
++	struct v4l2_mbus_framefmt *fmt;
++	int ret = 0;
++
++	if (sdformat->pad >= IMX7_CSI_PADS_NUM)
++		return -EINVAL;
++
++	mutex_lock(&csi->lock);
++
++	fmt = imx7_csi_get_format(csi, cfg, sdformat->pad, sdformat->which);
++	if (!fmt) {
++		ret = -EINVAL;
++		goto out_unlock;
++	}
++
++	sdformat->format = *fmt;
++
++out_unlock:
++	mutex_unlock(&csi->lock);
++
++	return ret;
++}
++
++static void imx7_csi_try_fmt(struct imx7_csi *csi,
++			     struct v4l2_subdev_pad_config *cfg,
++			     struct v4l2_subdev_format *sdformat,
++			     const struct imx_media_pixfmt **cc)
++{
++	const struct imx_media_pixfmt *in_cc;
++	struct v4l2_mbus_framefmt *in_fmt;
++	u32 code;
++
++	in_fmt = imx7_csi_get_format(csi, cfg, IMX7_CSI_PAD_SINK,
++				     sdformat->which);
++	if (!in_fmt)
++		return;
++
++	switch (sdformat->pad) {
++	case IMX7_CSI_PAD_SRC:
++		in_cc = imx_media_find_mbus_format(in_fmt->code, CS_SEL_ANY,
++						   true);
++
++		sdformat->format.width = in_fmt->width;
++		sdformat->format.height = in_fmt->height;
++		sdformat->format.code = in_fmt->code;
++		*cc = in_cc;
++
++		sdformat->format.colorspace = in_fmt->colorspace;
++		sdformat->format.xfer_func = in_fmt->xfer_func;
++		sdformat->format.quantization = in_fmt->quantization;
++		sdformat->format.ycbcr_enc = in_fmt->ycbcr_enc;
++		break;
++	case IMX7_CSI_PAD_SINK:
++		*cc = imx_media_find_mbus_format(sdformat->format.code,
++						 CS_SEL_ANY, true);
++		if (!*cc) {
++			imx_media_enum_mbus_format(&code, 0, CS_SEL_ANY, false);
++			*cc = imx_media_find_mbus_format(code, CS_SEL_ANY,
++							 false);
++			sdformat->format.code = (*cc)->codes[0];
++		}
++
++		imx_media_fill_default_mbus_fields(&sdformat->format, in_fmt,
++						   false);
++		break;
++	default:
++		break;
++	}
++}
++
++static int imx7_csi_set_fmt(struct v4l2_subdev *sd,
++			    struct v4l2_subdev_pad_config *cfg,
++			    struct v4l2_subdev_format *sdformat)
++{
++	struct imx7_csi *csi = v4l2_get_subdevdata(sd);
++	struct imx_media_video_dev *vdev = csi->vdev;
++	const struct imx_media_pixfmt *outcc;
++	struct v4l2_mbus_framefmt *outfmt;
++	struct v4l2_pix_format vdev_fmt;
++	const struct imx_media_pixfmt *cc;
++	struct v4l2_mbus_framefmt *fmt;
++	struct v4l2_subdev_format format;
++	int ret = 0;
++
++	if (sdformat->pad >= IMX7_CSI_PADS_NUM)
++		return -EINVAL;
++
++	mutex_lock(&csi->lock);
++
++	if (csi->is_streaming) {
++		ret = -EBUSY;
++		goto out_unlock;
++	}
++
++	imx7_csi_try_fmt(csi, cfg, sdformat, &cc);
++
++	fmt = imx7_csi_get_format(csi, cfg, sdformat->pad, sdformat->which);
++	if (!fmt) {
++		ret = -EINVAL;
++		goto out_unlock;
++	}
++
++	*fmt = sdformat->format;
++
++	if (sdformat->pad == IMX7_CSI_PAD_SINK) {
++		/* propagate format to source pads */
++		format.pad = IMX7_CSI_PAD_SRC;
++		format.which = sdformat->which;
++		format.format = sdformat->format;
++		imx7_csi_try_fmt(csi, cfg, &format, &outcc);
++
++		outfmt = imx7_csi_get_format(csi, cfg, IMX7_CSI_PAD_SRC,
++					     sdformat->which);
++		*outfmt = format.format;
++
++		if (sdformat->which == V4L2_SUBDEV_FORMAT_ACTIVE)
++			csi->cc[IMX7_CSI_PAD_SRC] = outcc;
++	}
++
++	if (sdformat->which == V4L2_SUBDEV_FORMAT_TRY)
++		goto out_unlock;
++
++	csi->cc[sdformat->pad] = cc;
++
++	/* propagate output pad format to capture device */
++	imx_media_mbus_fmt_to_pix_fmt(&vdev_fmt,
++				      &csi->format_mbus[IMX7_CSI_PAD_SRC],
++				      csi->cc[IMX7_CSI_PAD_SRC]);
++	mutex_unlock(&csi->lock);
++	imx_media_capture_device_set_format(vdev, &vdev_fmt);
++
++	return 0;
++
++out_unlock:
++	mutex_unlock(&csi->lock);
++
++	return ret;
++}
++
++static int imx7_csi_registered(struct v4l2_subdev *sd)
++{
++	struct imx7_csi *csi = v4l2_get_subdevdata(sd);
++	int ret;
++	int i;
++
++	csi->md = dev_get_drvdata(sd->v4l2_dev->dev);
++
++	for (i = 0; i < IMX7_CSI_PADS_NUM; i++) {
++		csi->pad[i].flags = (i == IMX7_CSI_PAD_SINK) ?
++			MEDIA_PAD_FL_SINK : MEDIA_PAD_FL_SOURCE;
++
++		/* set a default mbus format  */
++		ret = imx_media_init_mbus_fmt(&csi->format_mbus[i],
++					      800, 600, 0, V4L2_FIELD_NONE,
++					      &csi->cc[i]);
++		if (ret < 0)
++			return ret;
++
++		/* init default frame interval */
++		csi->frame_interval[i].numerator = 1;
++		csi->frame_interval[i].denominator = 30;
++	}
++
++	ret = media_entity_pads_init(&sd->entity, IMX7_CSI_PADS_NUM, csi->pad);
++	if (ret < 0)
++		return ret;
++
++	ret = imx_media_capture_device_register(csi->vdev);
++	if (ret < 0)
++		return ret;
++
++	ret = imx_media_add_video_device(csi->md, csi->vdev);
++	if (ret < 0) {
++		imx_media_capture_device_unregister(csi->vdev);
++		return ret;
++	}
++
++	return 0;
++}
++
++static void imx7_csi_unregistered(struct v4l2_subdev *sd)
++{
++	struct imx7_csi *csi = v4l2_get_subdevdata(sd);
++
++	imx_media_capture_device_unregister(csi->vdev);
++}
++
++static int imx7_csi_init_cfg(struct v4l2_subdev *sd,
++			     struct v4l2_subdev_pad_config *cfg)
++{
++	struct imx7_csi *csi = v4l2_get_subdevdata(sd);
++	struct v4l2_mbus_framefmt *mf;
++	int ret;
++	int i;
++
++	for (i = 0; i < IMX7_CSI_PADS_NUM; i++) {
++		mf = v4l2_subdev_get_try_format(sd, cfg, i);
++
++		ret = imx_media_init_mbus_fmt(mf, 800, 600, 0, V4L2_FIELD_NONE,
++					      &csi->cc[i]);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
++static const struct media_entity_operations imx7_csi_entity_ops = {
++	.link_setup	= imx7_csi_link_setup,
++	.link_validate	= v4l2_subdev_link_validate,
++};
++
++static const struct v4l2_subdev_video_ops imx7_csi_video_ops = {
++	.s_stream		= imx7_csi_s_stream,
++};
++
++static const struct v4l2_subdev_pad_ops imx7_csi_pad_ops = {
++	.init_cfg =		imx7_csi_init_cfg,
++	.enum_mbus_code =	imx7_csi_enum_mbus_code,
++	.get_fmt =		imx7_csi_get_fmt,
++	.set_fmt =		imx7_csi_set_fmt,
++	.link_validate =	imx7_csi_pad_link_validate,
++};
++
++static const struct v4l2_subdev_ops imx7_csi_subdev_ops = {
++	.video =	&imx7_csi_video_ops,
++	.pad =		&imx7_csi_pad_ops,
++};
++
++static const struct v4l2_subdev_internal_ops imx7_csi_internal_ops = {
++	.registered	= imx7_csi_registered,
++	.unregistered	= imx7_csi_unregistered,
++};
++
++static int imx7_csi_parse_endpoint(struct device *dev,
++				   struct v4l2_fwnode_endpoint *vep,
++				   struct v4l2_async_subdev *asd)
++{
++	return fwnode_device_is_available(asd->match.fwnode) ? 0 : -EINVAL;
++}
++
++static int imx7_csi_parse_dt(struct imx7_csi *csi)
++{
++	struct device *dev = csi->dev;
++
++	csi->clk_disp_axi = devm_clk_get(dev, "axi");
++	if (IS_ERR(csi->clk_disp_axi)) {
++		dev_err(dev, "Could not get csi axi clock\n");
++		return -ENODEV;
++	}
++
++	csi->clk_disp_dcic = devm_clk_get(dev, "dcic");
++	if (IS_ERR(csi->clk_disp_dcic)) {
++		dev_err(dev, "Could not get disp dcic clock\n");
++		return -ENODEV;
++	}
++
++	csi->clk_csi_mclk = devm_clk_get(dev, "mclk");
++	if (IS_ERR(csi->clk_csi_mclk)) {
++		dev_err(dev, "Could not get csi mclk clock\n");
++		return -ENODEV;
++	}
++
++	return 0;
++}
++
++static int imx7_csi_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *node = dev->of_node;
++	struct imx7_csi *csi;
++	struct resource *res;
++	int ret;
++
++	csi = devm_kzalloc(&pdev->dev, sizeof(*csi), GFP_KERNEL);
++	if (!csi)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, &csi->sd);
++	csi->dev = dev;
++
++	ret = imx7_csi_parse_dt(csi);
++	if (ret < 0)
++		return -ENODEV;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	csi->irq = platform_get_irq(pdev, 0);
++	if (!res || csi->irq < 0) {
++		dev_err(dev, "Missing platform resources data\n");
++		return -ENODEV;
++	}
++
++	csi->regbase = devm_ioremap_resource(dev, res);
++	if (IS_ERR(csi->regbase)) {
++		dev_err(dev, "Failed platform resources map\n");
++		return -ENODEV;
++	}
++
++	spin_lock_init(&csi->irqlock);
++	mutex_init(&csi->lock);
++
++	/* install interrupt handler */
++	ret = devm_request_irq(dev, csi->irq, imx7_csi_irq_handler, 0, "csi",
++			       (void *)csi);
++	if (ret < 0) {
++		dev_err(dev, "Request CSI IRQ failed.\n");
++		return -ENODEV;
++	}
++
++	/* add media device */
++	csi->imxmd = imx_media_dev_init(dev);
++	if (IS_ERR(csi->imxmd))
++		return PTR_ERR(csi->imxmd);
++
++	ret = imx_media_of_add_csi(csi->imxmd, node);
++	if (ret < 0)
++		goto media_cleanup;
++
++	ret = imx_media_dev_notifier_register(csi->imxmd);
++	if (ret < 0)
++		goto media_cleanup;
++
++	v4l2_subdev_init(&csi->sd, &imx7_csi_subdev_ops);
++	v4l2_set_subdevdata(&csi->sd, csi);
++	csi->sd.internal_ops = &imx7_csi_internal_ops;
++	csi->sd.entity.ops = &imx7_csi_entity_ops;
++	csi->sd.entity.function = MEDIA_ENT_F_VID_IF_BRIDGE;
++	csi->sd.dev = &pdev->dev;
++	csi->sd.owner = THIS_MODULE;
++	csi->sd.flags = V4L2_SUBDEV_FL_HAS_DEVNODE;
++	csi->sd.grp_id = IMX_MEDIA_GRP_ID_CSI;
++	snprintf(csi->sd.name, sizeof(csi->sd.name), "csi");
++
++	csi->vdev = imx_media_capture_device_init(&csi->sd, IMX7_CSI_PAD_SRC);
++	if (IS_ERR(csi->vdev))
++		return PTR_ERR(csi->vdev);
++
++	v4l2_ctrl_handler_init(&csi->ctrl_hdlr, 0);
++	csi->sd.ctrl_handler = &csi->ctrl_hdlr;
++
++	ret = v4l2_async_register_fwnode_subdev(&csi->sd,
++					sizeof(struct v4l2_async_subdev),
++					NULL, 0, imx7_csi_parse_endpoint);
++	if (ret)
++		goto free;
++
++	return 0;
++
++free:
++	v4l2_ctrl_handler_free(&csi->ctrl_hdlr);
++	mutex_destroy(&csi->lock);
++	imx_media_capture_device_remove(csi->vdev);
++
++media_cleanup:
++	imx_media_dev_cleanup(csi->imxmd);
++
++	return ret;
++}
++
++static int imx7_csi_remove(struct platform_device *pdev)
++{
++	struct v4l2_subdev *sd = platform_get_drvdata(pdev);
++	struct imx7_csi *csi = v4l2_get_subdevdata(sd);
++
++	v4l2_ctrl_handler_free(&csi->ctrl_hdlr);
++	mutex_destroy(&csi->lock);
++	imx_media_capture_device_remove(csi->vdev);
++	imx_media_dev_notifier_unregister(csi->imxmd);
++	imx_media_dev_cleanup(csi->imxmd);
++	media_entity_cleanup(&sd->entity);
++	v4l2_async_unregister_subdev(sd);
++
++	return 0;
++}
++
++static const struct of_device_id imx7_csi_of_match[] = {
++	{ .compatible = "fsl,imx7-csi" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, imx7_csi_of_match);
++
++static struct platform_driver imx7_csi_driver = {
++	.probe = imx7_csi_probe,
++	.remove = imx7_csi_remove,
++	.driver = {
++		.of_match_table = imx7_csi_of_match,
++		.name = "imx7-csi",
++	},
++};
++module_platform_driver(imx7_csi_driver);
++
++MODULE_DESCRIPTION("i.MX7 CSI subdev driver");
++MODULE_AUTHOR("Rui Miguel Silva <rui.silva@linaro.org>");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:imx7-csi");
 -- 
 2.19.1
