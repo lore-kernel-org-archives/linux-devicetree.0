@@ -1,89 +1,48 @@
-From: Matheus Tavares Bernardino <matheus.bernardino@usp.br>
-Subject: Re: [PATCH v2 1/7] staging:iio:ad2s90: Add device tree support
-Date: Tue, 20 Nov 2018 21:59:19 -0200
-Message-ID: <CAHd-oW4mq1HnTqr_XZt7cktTgy_ytH=ARg+d3ac+Q5bSdbciUQ@mail.gmail.com>
-References: <20181118042540.12697-1-matheus.bernardino@usp.br>
- <20181118042540.12697-2-matheus.bernardino@usp.br> <f250fa3a01b51d59979e7a2e3e42cc34d02aa52e.camel@analog.com>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: [RFC v3 0/3] qcom: GPIO IRQ wakeup using PDC irqchip
+Date: Tue, 20 Nov 2018 17:06:45 -0700
+Message-ID: <20181121000648.29262-1-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f250fa3a01b51d59979e7a2e3e42cc34d02aa52e.camel@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandru Ardelean <alexandru.Ardelean@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Jonathan Cameron <jic23@kernel.org>, Michael Hennerich <Michael.Hennerich@analog.com>, Mark Rutland <mark.rutland@arm.com>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Victor Colombo <victorcolombo@gmail.com>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, kernel-usp@googlegroups.com, devicetree@vger.kernel.org
+To: sboyd@kernel.org, evgreen@chromium.org, marc.zyngier@arm.com
+Cc: linux-kernel@vger.kernel.org, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, thierry.reding@gmail.com, Lina Iyer <ilina@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 19, 2018 at 6:09 AM Ardelean, Alexandru
-<alexandru.Ardelean@analog.com> wrote:
->
-> On Sun, 2018-11-18 at 02:25 -0200, Matheus Tavares wrote:
-> > This patch adds device tree support to ad2s90 with standard
-> > device tree id table.
-> >
->
-> Hey,
->
-> Comment inline
->
-> > Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
-> > ---
-> > Changes in v2:
-> >  - none
-> >
-> >  drivers/staging/iio/resolver/ad2s90.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >
-> > diff --git a/drivers/staging/iio/resolver/ad2s90.c
-> > b/drivers/staging/iio/resolver/ad2s90.c
-> > index 3e257ac46f7a..6ffbac66b837 100644
-> > --- a/drivers/staging/iio/resolver/ad2s90.c
-> > +++ b/drivers/staging/iio/resolver/ad2s90.c
-> > @@ -107,6 +107,12 @@ static int ad2s90_probe(struct spi_device *spi)
-> >       return devm_iio_device_register(indio_dev->dev.parent, indio_dev);
-> >  }
-> >
-> > +static const struct of_device_id ad2s90_of_match[] = {
-> > +     { .compatible = "adi,ad2s90", },
-> > +     {}
-> > +};
-> > +MODULE_DEVICE_TABLE(of, ad2s90_of_match);
-> > +
-> >  static const struct spi_device_id ad2s90_id[] = {
-> >       { "ad2s90" },
-> >       {}
-> > @@ -116,6 +122,7 @@ MODULE_DEVICE_TABLE(spi, ad2s90_id);
-> >  static struct spi_driver ad2s90_driver = {
-> >       .driver = {
-> >               .name = "ad2s90",
-> > +             .of_match_table = of_match_ptr(ad2s90_of_match),
->
-> I think you need to remove the of_match_ptr().
-> There was a comment from Jonathan on another thread about this.
-> See:
->    https://patchwork.kernel.org/patch/10682963/
->
+Hi,
 
-Hm, got it, thanks!
+This is an attempt at using GPIO as wake up sources. Based on discussions with
+Stephen and Marc [1], the idea that is used here is to make PDC interrupt
+controller the parent of TLMM irqchip. Wakeup capable GPIO IRQs have
+corresponding parent interrupt in PDC and therefore the GIC. The TLMM irqchip
+has a summary line into the GIC for all regular non-wakeup interrupt. 
 
-I don't understand much about ACPI yet, and I had understood the
-"of_match_ptr" as a guard. Could someone point me in which cases it
-should be used? Or is it obsolete?
+This idea uses Thierry's hierarchical GPIO [2] and is dependent on [3]. Also
+PDC device bindings published in [4] is needed.
 
-Matheus
+Kindly review the series.
 
-> So,
-> +               .of_match_table = of_match_ptr(ad2s90_of_match),
->
-> becomes
-> > +             .of_match_table = ad2s90_of_match,
->
-> >       },
-> >       .probe = ad2s90_probe,
-> >       .id_table = ad2s90_id,
->
-> --
-> You received this message because you are subscribed to the Google Groups "Kernel USP" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-usp+unsubscribe@googlegroups.com.
-> To post to this group, send email to kernel-usp@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kernel-usp/f250fa3a01b51d59979e7a2e3e42cc34d02aa52e.camel%40analog.com.
-> For more options, visit https://groups.google.com/d/optout.
+Thanks,
+Lina
+
+[1]. https://lore.kernel.org/patchwork/patch/998238/
+[2]. https://lkml.org/lkml/2018/9/21/471
+[3]. https://lkml.org/lkml/2018/9/21/474
+[4]. https://lore.kernel.org/patchwork/patch/1008046/
+
+
+Lina Iyer (3):
+  drivers: pinctrl: msm: setup gpio irqchip in hierarchy with pdc
+    irqchip
+  dt-bindings: sdm845-pinctrl: add wakeup interrupt parent for GPIO
+  arm64: dts: msm: add PDC wake irq maps for GPIOs for SDM845
+
+ .../bindings/pinctrl/qcom,sdm845-pinctrl.txt  |  31 ++++-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  18 +++
+ drivers/pinctrl/qcom/pinctrl-msm.c            | 125 +++++++++++++++++-
+ 3 files changed, 169 insertions(+), 5 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
