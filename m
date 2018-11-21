@@ -1,90 +1,234 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH V3] arm64: dts: r8a77990: ebisu: Add and enable SDHI
- device nodes
-Date: Wed, 21 Nov 2018 09:39:15 +0100
-Message-ID: <CAMuHMdWXYLkUqBdaYT0f0=OYKi7q5tTFgTRXp28zAiMV_7qFcg@mail.gmail.com>
-References: <20181106204647.18051-1-marek.vasut+renesas@gmail.com>
- <CAMuHMdWQYt4nrjBeQnWcZ+OOT+UX=9KTu3Lki7aS=n3n8FczZg@mail.gmail.com>
- <94869436-7841-537a-4760-8f117b06200f@gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v2 08/15] irqchip: Add RDA8810PL interrupt driver
+Date: Wed, 21 Nov 2018 08:41:25 +0000
+Message-ID: <83f70f64-79f1-c6e5-0328-09cc567f2686@arm.com>
+References: <20181121033652.12247-1-manivannan.sadhasivam@linaro.org>
+ <20181121033652.12247-9-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <94869436-7841-537a-4760-8f117b06200f@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Liam Girdwood <lgirdwood@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181121033652.12247-9-manivannan.sadhasivam@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, daniel.lezcano@linaro.org, gregkh@linuxfoundation.org, jslaby@suse.com
+Cc: afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, overseas.sales@unisoc.com
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBOb3YgMjEsIDIwMTggYXQgMTI6MzMgQU0gTWFyZWsgVmFzdXQgPG1hcmVrLnZhc3V0
-QGdtYWlsLmNvbT4gd3JvdGU6Cj4gT24gMTEvMjAvMjAxOCAxMToxNiBBTSwgR2VlcnQgVXl0dGVy
-aG9ldmVuIHdyb3RlOgo+ID4gT24gVHVlLCBOb3YgNiwgMjAxOCBhdCA5OjQ2IFBNIE1hcmVrIFZh
-c3V0IDxtYXJlay52YXN1dEBnbWFpbC5jb20+IHdyb3RlOgo+ID4+IEZyb206IFRha2VzaGkgS2lo
-YXJhIDx0YWtlc2hpLmtpaGFyYS5kZkByZW5lc2FzLmNvbT4KPiA+Pgo+ID4+IFRoaXMgcGF0Y2gg
-YWRkcyBTREhJezAsMSwzfSBkZXZpY2Ugbm9kZXMgZm9yIHRoZSByOGE3Nzk5MCBTb0MKPiA+PiBh
-bmQgZW5hYmxlcyBTRCBjYXJkIHNsb3QgY29ubmVjdGVkIHRvIFNESEkwLCBtaWNybyBTRCBjYXJk
-IHNsb3QKPiA+PiBjb25uZWN0ZWQgdG8gU0RISTEgYW5kIGVNTUMgY29ubmVjdGVkIHRvIFNESEkz
-IG9uIHRoZSBFYmlzdSBib2FyZAo+ID4+IHVzaW5nIHRoZSBSOEE3Nzk5MCBTb0MuCj4gPj4KPiA+
-PiBTaWduZWQtb2ZmLWJ5OiBUYWtlc2hpIEtpaGFyYSA8dGFrZXNoaS5raWhhcmEuZGZAcmVuZXNh
-cy5jb20+Cj4gPj4gU2lnbmVkLW9mZi1ieTogTWFyZWsgVmFzdXQgPG1hcmVrLnZhc3V0K3JlbmVz
-YXNAZ21haWwuY29tPgo+ID4KPiA+PiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMv
-cjhhNzc5OTAtZWJpc3UuZHRzCj4gPj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2Fz
-L3I4YTc3OTkwLWViaXN1LmR0cwo+ID4+IEBAIC0xMjksNiArMTI5LDE1IEBACj4gPj4gICAgICAg
-ICAgICAgICAgIH07Cj4gPj4gICAgICAgICB9Owo+ID4+Cj4gPj4gKyAgICAgICByZWdfMXA4djog
-cmVndWxhdG9yMCB7Cj4gPj4gKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicmVndWxhdG9y
-LWZpeGVkIjsKPiA+PiArICAgICAgICAgICAgICAgcmVndWxhdG9yLW5hbWUgPSAiZml4ZWQtMS44
-ViI7Cj4gPj4gKyAgICAgICAgICAgICAgIHJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDE4MDAw
-MDA+Owo+ID4+ICsgICAgICAgICAgICAgICByZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxODAw
-MDAwPjsKPiA+PiArICAgICAgICAgICAgICAgcmVndWxhdG9yLWJvb3Qtb247Cj4gPj4gKyAgICAg
-ICAgICAgICAgIHJlZ3VsYXRvci1hbHdheXMtb247Cj4gPj4gKyAgICAgICB9Owo+ID4+ICsKPiA+
-PiAgICAgICAgIHJlZ18zcDN2OiByZWd1bGF0b3IxIHsKPiA+PiAgICAgICAgICAgICAgICAgY29t
-cGF0aWJsZSA9ICJyZWd1bGF0b3ItZml4ZWQiOwo+ID4+ICAgICAgICAgICAgICAgICByZWd1bGF0
-b3ItbmFtZSA9ICJmaXhlZC0zLjNWIjsKPiA+PiBAQCAtMTgwLDYgKzE4OSw1NCBAQAo+ID4+ICAg
-ICAgICAgICAgICAgICAjY2xvY2stY2VsbHMgPSA8MD47Cj4gPj4gICAgICAgICAgICAgICAgIGNs
-b2NrLWZyZXF1ZW5jeSA9IDw3NDI1MDAwMD47Cj4gPj4gICAgICAgICB9Owo+ID4+ICsKPiA+PiAr
-ICAgICAgIHZjY19zZGhpMDogcmVndWxhdG9yLXZjYy1zZGhpMCB7Cj4gPj4gKyAgICAgICAgICAg
-ICAgIGNvbXBhdGlibGUgPSAicmVndWxhdG9yLWZpeGVkIjsKPiA+PiArCj4gPj4gKyAgICAgICAg
-ICAgICAgIHJlZ3VsYXRvci1uYW1lID0gIlNESEkwIFZjYyI7Cj4gPj4gKyAgICAgICAgICAgICAg
-IHJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMzMDAwMDA+Owo+ID4+ICsgICAgICAgICAgICAg
-ICByZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwzMzAwMDAwPjsKPiA+PiArCj4gPj4gKyAgICAg
-ICAgICAgICAgIGdwaW8gPSA8JmdwaW81IDE3IEdQSU9fQUNUSVZFX0hJR0g+Owo+ID4+ICsgICAg
-ICAgICAgICAgICBlbmFibGUtYWN0aXZlLWhpZ2g7Cj4gPj4gKyAgICAgICB9Owo+ID4+ICsKPiA+
-PiArICAgICAgIHZjY3Ffc2RoaTA6IHJlZ3VsYXRvci12Y2NxLXNkaGkwIHsKPiA+PiArICAgICAg
-ICAgICAgICAgY29tcGF0aWJsZSA9ICJyZWd1bGF0b3ItZ3BpbyI7Cj4gPj4gKwo+ID4+ICsgICAg
-ICAgICAgICAgICByZWd1bGF0b3ItbmFtZSA9ICJTREhJMCBWY2NRIjsKPiA+PiArICAgICAgICAg
-ICAgICAgcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MTgwMDAwMD47Cj4gPj4gKyAgICAgICAg
-ICAgICAgIHJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMzMDAwMDA+Owo+ID4+ICsKPiA+PiAr
-ICAgICAgICAgICAgICAgZ3Bpb3MgPSA8JmdwaW81IDE4IEdQSU9fQUNUSVZFX0hJR0g+Owo+ID4+
-ICsgICAgICAgICAgICAgICBncGlvcy1zdGF0ZXMgPSA8MT47Cj4gPj4gKyAgICAgICAgICAgICAg
-IHN0YXRlcyA9IDwzMzAwMDAwIDEKPiA+PiArICAgICAgICAgICAgICAgICAgICAgICAgIDE4MDAw
-MDAgMD47Cj4gPgo+ID4gSSBrbm93IHRoaXMgaXMgaG93IGl0J3MgZG9uZSBpbiB0aGUgZXhhbXBs
-ZSBpbgo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9ncGlv
-LXJlZ3VsYXRvci50eHQsCj4gPiBidXQgdXN1YWxseSBicmFja2V0cyBhcmUgdXNlZCB0byBncm91
-cCB0dXBsZXMsIGxpa2U6Cj4gPgo+ID4gICAgIHN0YXRlcyA9IDwzMzAwMDAwIDE+LCA8MTgwMDAw
-MCAwPjsKPiA+Cj4gPiBQZXJoYXBzIHRoZSBleGFtcGxlIHNob3VsZCBiZSBjaGFuZ2VkPwo+Cj4g
-V2VsbCwgbG9va2luZyB0aHJvdWdoIHRoZSBEVFMsIEkgZG9uJ3Qgc2VlIGFueW9uZSB1c2luZyB0
-dXBsZXMgZm9yIHRoZQo+IEdQSU8gcmVndWxhdG9yIHN0YXRlcy4gVGhlbiBhZ2FpbiwgaXQgY291
-bGQgYmUgdXBkYXRlZC4KClByb2JhYmx5IGEgZ29vZCBpZGVhIGdpdmVuIHRoZSBjdXJyZW50IHdv
-cmsgb24gc2NoZW1hIHZhbGlkYXRpb246CgogICAgRFQgWUFNTCBFbmNvZGluZwogICAgLi4uCiAg
-ICBkdHMg4oCYPCA+4oCZIGFyZSBtYWludGFpbmVkCiAgICAgIOKXiyBXaWxsIG5lZWQgdG8gYmUg
-c3RyaWN0ZXIgYWJvdXQgdGhlc2UKICAgICAg4peLIFNhbWUgZm9yIGR0Yiwgbm90IGZvciB2YWxp
-ZGF0aW9uOgogICAgICAgICAg4pagIHByb3AgPSA8MSAyIDMgND47CiAgICAgICAgICDilqAgcHJv
-cCA9IDwxPiwgPDI+LCA8Mz4sIDw0PjsKCmh0dHBzOi8vd3d3LmVsaW51eC5vcmcvaW1hZ2VzLzYv
-NmIvTFBDMjAxOF9qc29uLXNjaGVtYV9mb3JfRGV2aWNldHJlZS5wZGYKCkdye29ldGplLGVldGlu
-Z31zLAoKICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQKCi0tIApHZWVydCBVeXR0ZXJob2V2
-ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02
-OGsub3JnCgpJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwg
-SSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0CndoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlz
-dHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4KICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcwoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On 21/11/2018 03:36, Manivannan Sadhasivam wrote:
+> Add interrupt driver for RDA Micro RDA8810PL SoC.
+> 
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  arch/arm/mach-rda/Kconfig      |   1 +
+>  drivers/irqchip/Kconfig        |   4 ++
+>  drivers/irqchip/Makefile       |   1 +
+>  drivers/irqchip/irq-rda-intc.c | 113 +++++++++++++++++++++++++++++++++
+>  4 files changed, 119 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-rda-intc.c
+> 
+> diff --git a/arch/arm/mach-rda/Kconfig b/arch/arm/mach-rda/Kconfig
+> index dafab78d7aab..29012bc68ca4 100644
+> --- a/arch/arm/mach-rda/Kconfig
+> +++ b/arch/arm/mach-rda/Kconfig
+> @@ -3,5 +3,6 @@ menuconfig ARCH_RDA
+>  	depends on ARCH_MULTI_V7
+>  	select COMMON_CLK
+>  	select GENERIC_IRQ_CHIP
+> +	select RDA_INTC
+>  	help
+>  	  This enables support for the RDA Micro 8810PL SoC family.
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index 51a5ef0e96ed..9d54645870ad 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -195,6 +195,10 @@ config JCORE_AIC
+>  	help
+>  	  Support for the J-Core integrated AIC.
+>  
+> +config RDA_INTC
+> +	bool
+> +	select IRQ_DOMAIN
+> +
+>  config RENESAS_INTC_IRQPIN
+>  	bool
+>  	select IRQ_DOMAIN
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index 794c13d3ac3d..417108027e40 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -43,6 +43,7 @@ obj-$(CONFIG_IMGPDC_IRQ)		+= irq-imgpdc.o
+>  obj-$(CONFIG_IRQ_MIPS_CPU)		+= irq-mips-cpu.o
+>  obj-$(CONFIG_SIRF_IRQ)			+= irq-sirfsoc.o
+>  obj-$(CONFIG_JCORE_AIC)			+= irq-jcore-aic.o
+> +obj-$(CONFIG_RDA_INTC)			+= irq-rda-intc.o
+>  obj-$(CONFIG_RENESAS_INTC_IRQPIN)	+= irq-renesas-intc-irqpin.o
+>  obj-$(CONFIG_RENESAS_IRQC)		+= irq-renesas-irqc.o
+>  obj-$(CONFIG_VERSATILE_FPGA_IRQ)	+= irq-versatile-fpga.o
+> diff --git a/drivers/irqchip/irq-rda-intc.c b/drivers/irqchip/irq-rda-intc.c
+> new file mode 100644
+> index 000000000000..1b372bdb23bc
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-rda-intc.c
+> @@ -0,0 +1,113 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * RDA8810PL SoC irqchip driver
+> + *
+> + * Copyright RDA Microelectronics Company Limited
+> + * Copyright (c) 2017 Andreas Färber
+> + * Copyright (c) 2018 Manivannan Sadhasivam
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/of_address.h>
+> +
+> +#include <asm/irq.h>
+
+You shouldn't need to include this.
+
+> +#include <asm/exception.h>
+> +
+> +#define RDA_INTC_FINALSTATUS	0x00
+> +#define RDA_INTC_STATUS		0x04
+> +#define RDA_INTC_MASK_SET	0x08
+> +#define RDA_INTC_MASK_CLR	0x0c
+> +#define RDA_INTC_WAKEUP_MASK	0x18
+> +#define RDA_INTC_CPU_SLEEP	0x1c
+
+Half of these constants are unused. Do we really need them?
+
+> +
+> +#define RDA_IRQ_MASK_ALL	0xFFFFFFFF
+> +
+> +#define RDA_NR_IRQS 32
+
+Surely the mask can be derived from the number of interrupts?
+
+> +
+> +static void __iomem *base;
+
+Everything in this driver is prefixed with rda_. It would seem valuable
+to  do the same here, as "base" is a bit too generic.
+
+> +
+> +static void rda_intc_mask_irq(struct irq_data *d)
+> +{
+> +	writel_relaxed(BIT(d->hwirq), base + RDA_INTC_MASK_CLR);
+> +}
+> +
+> +static void rda_intc_unmask_irq(struct irq_data *d)
+> +{
+> +	writel_relaxed(BIT(d->hwirq), base + RDA_INTC_MASK_SET);
+
+Are the names MASK_CLR and MASK_SET from the datasheet? They seem to be
+backward (you set the mask to unmask...), and seem to behave like an
+enable instead. That's not a big issue, just curious.
+
+> +}
+> +
+> +static int rda_intc_set_type(struct irq_data *data, unsigned int flow_type)
+> +{
+> +	/* Hardware supports only level triggered interrupts */
+> +	if (flow_type & (IRQF_TRIGGER_HIGH | IRQF_TRIGGER_LOW))
+> +		irq_set_handler(data->irq, handle_level_irq);
+
+Why do you need to do this? You've already configured it at map time,
+and it is not changing under your feet. This should be written as:
+
+if ((flow_type & (IRQF_TRIGGER_HIGH | IRQF_TRIGGER_LOW)) == flow_type)
+	return 0;
+
+return -EINVAL;
+
+> +	else
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct irq_domain *rda_irq_domain;
+
+Please move this to the top of the file, next to "base".
+
+> +
+> +static void __exception_irq_entry rda_handle_irq(struct pt_regs *regs)
+> +{
+> +	u32 stat = readl_relaxed(base + RDA_INTC_FINALSTATUS);
+> +	u32 hwirq;
+> +
+> +	while (stat) {
+> +		hwirq = __fls(stat);
+> +		handle_domain_irq(rda_irq_domain, hwirq, regs);
+> +		stat &= ~(1 << hwirq);
+> +	}
+> +}
+> +
+> +static struct irq_chip rda_irq_chip = {
+> +	.name		= "rda-intc",
+> +	.irq_mask	= rda_intc_mask_irq,
+> +	.irq_unmask	= rda_intc_unmask_irq,
+> +	.irq_set_type	= rda_intc_set_type,
+> +};
+> +
+> +static int rda_irq_map(struct irq_domain *d,
+> +		       unsigned int virq, irq_hw_number_t hw)
+> +{
+> +	irq_set_status_flags(virq, IRQ_LEVEL);
+> +	irq_set_chip_and_handler(virq, &rda_irq_chip, handle_level_irq);
+> +	irq_set_chip_data(virq, d->host_data);
+> +	irq_set_probe(virq);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops rda_irq_domain_ops = {
+> +	.map = rda_irq_map,
+> +	.xlate = irq_domain_xlate_onecell,
+> +};
+> +
+> +static int __init rda8810_intc_init(struct device_node *node,
+> +				    struct device_node *parent)
+> +{
+> +	base = of_io_request_and_map(node, 0, "rda-intc");
+> +	if (!base)
+> +		return -ENXIO;
+> +
+> +	/* Mask, and invalidate all interrupt sources */
+
+What does "invalidate" mean here?
+
+> +	writel_relaxed(RDA_IRQ_MASK_ALL, base + RDA_INTC_MASK_CLR);
+> +
+> +	rda_irq_domain = irq_domain_create_linear(&node->fwnode, RDA_NR_IRQS,
+> +						  &rda_irq_domain_ops, base);
+> +	if (WARN_ON(!rda_irq_domain)) {
+> +		iounmap(base);
+> +		return -ENODEV;
+
+Why ENODEV? ENOMEM seems more appropriate. The WARN_ON is a bit
+superfluous, as the failing probe should be noisy enough.
+
+> +	}
+> +
+> +	set_handle_irq(rda_handle_irq);
+> +
+> +	return 0;
+> +}
+> +
+> +IRQCHIP_DECLARE(rda_intc, "rda,8810pl-intc", rda8810_intc_init);
+> 
+
+You've already posted two versions in 3 days, please allow for a week
+between versions.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
