@@ -1,134 +1,111 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v9 2/2] clk: qcom: Add lpass clock controller driver for SDM845
-Date: Wed, 21 Nov 2018 11:07:36 -0800
-Message-ID: <154282725690.88331.797718066164707366@swboyd.mtv.corp.google.com>
-References: <1541814256-23254-1-git-send-email-tdas@codeaurora.org>
- <1541814256-23254-3-git-send-email-tdas@codeaurora.org>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 1/7] staging:iio:ad2s90: Add device tree support
+Date: Wed, 21 Nov 2018 19:12:39 +0000
+Message-ID: <20181121191239.5aa312ea@archlinux>
+References: <20181118042540.12697-1-matheus.bernardino@usp.br>
+        <20181118042540.12697-2-matheus.bernardino@usp.br>
+        <f250fa3a01b51d59979e7a2e3e42cc34d02aa52e.camel@analog.com>
+        <CAHd-oW4mq1HnTqr_XZt7cktTgy_ytH=ARg+d3ac+Q5bSdbciUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541814256-23254-3-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <CAHd-oW4mq1HnTqr_XZt7cktTgy_ytH=ARg+d3ac+Q5bSdbciUQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, Taniya Das <tdas@codeaurora.org>
+To: Matheus Tavares Bernardino <matheus.bernardino@usp.br>
+Cc: Alexandru Ardelean <alexandru.Ardelean@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Mark Rutland <mark.rutland@arm.com>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Victor Colombo <victorcolombo@gmail.com>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, kernel-usp@googlegroups.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Taniya Das (2018-11-09 17:44:16)
-> diff --git a/drivers/clk/qcom/gcc-sdm845.c b/drivers/clk/qcom/gcc-sdm845.c
-> index f133b7f..ba8ff99 100644
-> --- a/drivers/clk/qcom/gcc-sdm845.c
-> +++ b/drivers/clk/qcom/gcc-sdm845.c
-> @@ -3153,6 +3153,34 @@ enum {
->         },
->  };
-> =
+On Tue, 20 Nov 2018 21:59:19 -0200
+Matheus Tavares Bernardino <matheus.bernardino@usp.br> wrote:
 
-> +static struct clk_branch gcc_lpass_q6_axi_clk =3D {
-> +       .halt_reg =3D 0x47000,
-> +       .halt_check =3D BRANCH_HALT,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x47000,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_lpass_q6_axi_clk",
-> +                       .flags =3D CLK_IS_CRITICAL,
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
-> +static struct clk_branch gcc_lpass_sway_clk =3D {
-> +       .halt_reg =3D 0x47008,
-> +       .halt_check =3D BRANCH_HALT,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x47008,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_lpass_sway_clk",
-> +                       .flags =3D CLK_IS_CRITICAL,
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
->  static struct gdsc pcie_0_gdsc =3D {
->         .gdscr =3D 0x6b004,
->         .pd =3D {
-> @@ -3453,6 +3481,8 @@ enum {
->         [GCC_QSPI_CORE_CLK_SRC] =3D &gcc_qspi_core_clk_src.clkr,
->         [GCC_QSPI_CORE_CLK] =3D &gcc_qspi_core_clk.clkr,
->         [GCC_QSPI_CNOC_PERIPH_AHB_CLK] =3D &gcc_qspi_cnoc_periph_ahb_clk.=
-clkr,
-> +       [GCC_LPASS_Q6_AXI_CLK] =3D &gcc_lpass_q6_axi_clk.clkr,
-> +       [GCC_LPASS_SWAY_CLK] =3D &gcc_lpass_sway_clk.clkr,
+> On Mon, Nov 19, 2018 at 6:09 AM Ardelean, Alexandru
+> <alexandru.Ardelean@analog.com> wrote:
+> >
+> > On Sun, 2018-11-18 at 02:25 -0200, Matheus Tavares wrote:  
+> > > This patch adds device tree support to ad2s90 with standard
+> > > device tree id table.
+> > >  
+> >
+> > Hey,
+> >
+> > Comment inline
+> >  
+> > > Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
+> > > ---
+> > > Changes in v2:
+> > >  - none
+> > >
+> > >  drivers/staging/iio/resolver/ad2s90.c | 7 +++++++
+> > >  1 file changed, 7 insertions(+)
+> > >
+> > > diff --git a/drivers/staging/iio/resolver/ad2s90.c
+> > > b/drivers/staging/iio/resolver/ad2s90.c
+> > > index 3e257ac46f7a..6ffbac66b837 100644
+> > > --- a/drivers/staging/iio/resolver/ad2s90.c
+> > > +++ b/drivers/staging/iio/resolver/ad2s90.c
+> > > @@ -107,6 +107,12 @@ static int ad2s90_probe(struct spi_device *spi)
+> > >       return devm_iio_device_register(indio_dev->dev.parent, indio_dev);
+> > >  }
+> > >
+> > > +static const struct of_device_id ad2s90_of_match[] = {
+> > > +     { .compatible = "adi,ad2s90", },
+> > > +     {}
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, ad2s90_of_match);
+> > > +
+> > >  static const struct spi_device_id ad2s90_id[] = {
+> > >       { "ad2s90" },
+> > >       {}
+> > > @@ -116,6 +122,7 @@ MODULE_DEVICE_TABLE(spi, ad2s90_id);
+> > >  static struct spi_driver ad2s90_driver = {
+> > >       .driver = {
+> > >               .name = "ad2s90",
+> > > +             .of_match_table = of_match_ptr(ad2s90_of_match),  
+> >
+> > I think you need to remove the of_match_ptr().
+> > There was a comment from Jonathan on another thread about this.
+> > See:
+> >    https://patchwork.kernel.org/patch/10682963/
+> >  
+> 
+> Hm, got it, thanks!
+> 
+> I don't understand much about ACPI yet, and I had understood the
+> "of_match_ptr" as a guard. Could someone point me in which cases it
+> should be used? Or is it obsolete?
+>
+It's an odd one.  The ACPI route allows you to basically provide
+a temporary (these are really just for debugging purposes)
 
-Sigh, more coordination with sdm845 mtp problems here due to the
-clks being protected by firmware. I guess I can just merge this and the
-mtp dts bits will land in Andy's tree during the same merge window? Or I
-may need to take the dts bits for this into clk tree so that the broken
-time is only between two commits.
+https://lwn.net/Articles/612062/
+https://www.kernel.org/doc/Documentation/acpi/enumeration.txt
+search for prp0001
 
->  };
-> =
+So of_match_ptr is sort of obsolete, but conversely for some
+types of driver it might never make sense to use the prp0001
+route.  For the stuff I play with in my day job for example
+we can just change the firmware to do it right whenever we
+need to and have appropriate ACPI ids to be able to issue
+unique ones.
 
->  static const struct qcom_reset_map gcc_sdm845_resets[] =3D {
-> diff --git a/drivers/clk/qcom/lpasscc-sdm845.c b/drivers/clk/qcom/lpasscc=
--sdm845.c
-> new file mode 100644
-> index 0000000..2ef7f2a
-> --- /dev/null
-> +++ b/drivers/clk/qcom/lpasscc-sdm845.c
-> @@ -0,0 +1,192 @@
-[...]
-> +
-> +static const struct of_device_id lpass_cc_sdm845_match_table[] =3D {
-> +       { .compatible =3D "qcom,sdm845-lpasscc" },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(of, lpass_cc_sdm845_match_table);
+Jonathan
 
-Move this down to the before the driver structure please.
-
-> +
-> +static int lpass_cc_sdm845_probe(struct platform_device *pdev)
-> +{
-> +       const struct qcom_cc_desc *desc;
-> +       int ret;
-> +
-> +       lpass_regmap_config.name =3D "cc";
-> +       desc =3D &lpass_cc_sdm845_desc;
-> +
-> +       ret =3D lpass_clocks_sdm845_probe(pdev, 0, desc);
-> +       if (ret)
-> +               return ret;
-> +
-> +       lpass_regmap_config.name =3D "qdsp6ss";
-> +       desc =3D &lpass_qdsp6ss_sdm845_desc;
-> +
-> +       return lpass_clocks_sdm845_probe(pdev, 1, desc);
-> +}
-> +
-> +static struct platform_driver lpass_cc_sdm845_driver =3D {
-> +       .probe          =3D lpass_cc_sdm845_probe,
-> +       .driver         =3D {
-> +               .name   =3D "sdm845-lpasscc",
-> +               .of_match_table =3D lpass_cc_sdm845_match_table,
-> +       },
-> +};
-> +
-> +static int __init lpass_cc_sdm845_init(void)
-> +{
-> +       return platform_driver_register(&lpass_cc_sdm845_driver);
-> +}
-> +subsys_initcall(lpass_cc_sdm845_init);
-> +
-> +static void __exit lpass_cc_sdm845_exit(void)
-> +{
-> +       platform_driver_unregister(&lpass_cc_sdm845_driver);
-> +}
-> +module_exit(lpass_cc_sdm845_exit);
-> +
-> +MODULE_LICENSE("GPL v2");
-
-MODULE_DESCRIPTION?
+> Matheus
+> 
+> > So,
+> > +               .of_match_table = of_match_ptr(ad2s90_of_match),
+> >
+> > becomes  
+> > > +             .of_match_table = ad2s90_of_match,  
+> >  
+> > >       },
+> > >       .probe = ad2s90_probe,
+> > >       .id_table = ad2s90_id,  
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "Kernel USP" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to kernel-usp+unsubscribe@googlegroups.com.
+> > To post to this group, send email to kernel-usp@googlegroups.com.
+> > To view this discussion on the web visit https://groups.google.com/d/msgid/kernel-usp/f250fa3a01b51d59979e7a2e3e42cc34d02aa52e.camel%40analog.com.
+> > For more options, visit https://groups.google.com/d/optout.  
