@@ -1,47 +1,30 @@
-Return-Path: <SRS0=lwod=N6=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH] dt-bindings: timer: renesas, cmt: Document r8a774a1 CMT support
-Date: Mon, 19 Nov 2018 16:14:13 +0000
-Message-Id: <1542644054-34660-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=tAzC=OA=partner.samsung.com=k.konieczny@kernel.org>
+From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Subject: [PATCH 0/4] Add imem clock for Exynos 5433
+Date: Wed, 21 Nov 2018 13:05:05 +0100
+Message-Id: <20181121120509.18892-1-k.konieczny@partner.samsung.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+References: <CGME20181121120522eucas1p2ecd03f848bc4ea3be3d517b40b78b084@eucas1p2.samsung.com>
+To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
+Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document SoC specific bindings for RZ/G2M (r8a774a1) SoC.
+Add imem clock for Exynos 5433. This will allow to use SSS and SlimSSS
+(Security SubSystem) with crypto functions.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- Documentation/devicetree/bindings/timer/renesas,cmt.txt | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+Kamil Konieczny (4):
+  clk: samsung: exynos5433: fix name typos
+  arm64: dts: bindings: document imem clock
+  arm64: dts: exynos: add imem clock
+  clk: samsung: exynos5433: add imem clock
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-index eb602c5..862a80f 100644
---- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-@@ -30,6 +30,8 @@ Required Properties:
-     - "renesas,r8a7745-cmt1" for the 48-bit CMT1 device included in r8a7745.
-     - "renesas,r8a77470-cmt0" for the 32-bit CMT0 device included in r8a77470.
-     - "renesas,r8a77470-cmt1" for the 48-bit CMT1 device included in r8a77470.
-+    - "renesas,r8a774a1-cmt0" for the 32-bit CMT0 device included in r8a774a1.
-+    - "renesas,r8a774a1-cmt1" for the 48-bit CMT1 device included in r8a774a1.
-     - "renesas,r8a7790-cmt0" for the 32-bit CMT0 device included in r8a7790.
-     - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8a7790.
-     - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8a7791.
-@@ -51,9 +53,12 @@ Required Properties:
- 		and RZ/G1.
- 		These are fallbacks for r8a73a4, R-Car Gen2 and RZ/G1 entries
- 		listed above.
--    - "renesas,rcar-gen3-cmt0" for 32-bit CMT0 devices included in R-Car Gen3.
--    - "renesas,rcar-gen3-cmt1" for 48-bit CMT1 devices included in R-Car Gen3.
--		These are fallbacks for R-Car Gen3 entries listed above.
-+    - "renesas,rcar-gen3-cmt0" for 32-bit CMT0 devices included in R-Car Gen3
-+		and RZ/G2.
-+    - "renesas,rcar-gen3-cmt1" for 48-bit CMT1 devices included in R-Car Gen3
-+		and RZ/G2.
-+		These are fallbacks for R-Car Gen3 and RZ/G2 entries listed
-+		above.
- 
-   - reg: base address and length of the registers block for the timer module.
-   - interrupts: interrupt-specifier for the timer, one per channel.
+ .../bindings/clock/exynos5433-clock.txt       |  23 ++++
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi    |  15 ++
+ drivers/clk/samsung/clk-exynos5433.c          | 129 +++++++++++++++++-
+ include/dt-bindings/clock/exynos5433.h        |  57 +++++++-
+ 4 files changed, 220 insertions(+), 4 deletions(-)
+
 -- 
-2.7.4
+2.19.1
