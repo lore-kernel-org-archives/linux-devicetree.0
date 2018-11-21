@@ -1,36 +1,35 @@
-From: Hao Zhang <hao5781286@gmail.com>
-Subject: [PATCH v1 2/2] Documentation: ARM: sunxi: Add Allwinner SoC T3.
-Date: Wed, 21 Nov 2018 23:44:47 +0800
-Message-ID: <20181121154447.GA4384@arx-s1>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v4 0/2] Enable smmu support on sdm845
+Date: Wed, 21 Nov 2018 15:52:49 +0000
+Message-ID: <20181121155249.GA24883@arm.com>
+References: <20181011094930.17010-1-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
+In-Reply-To: <20181011094930.17010-1-vivek.gautam@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, maxime.ripard@free-electrons.com, wens@csie.org, icenowy@aosc.io
-Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com, hao5781286@gmail.com
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: joro@8bytes.org, robh+dt@kernel.org, andy.gross@linaro.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, mark.rutland@arm.com, david.brown@linaro.org, linux-kernel@vger.kernel.org, robin.murphy@arm.com, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Add Allwinner SoC T3 document and fix format.
+Hi Vivek,
 
-Signed-off-by: Hao Zhang <hao5781286@gmail.com>
----
- Documentation/devicetree/bindings/arm/sunxi.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Thu, Oct 11, 2018 at 03:19:28PM +0530, Vivek Gautam wrote:
+> This series enables apps-smmu, the "arm,mmu-500" instance
+> on sdm845.
+> Series tested on SDM845 MTP device with related smmu patch series [1],
+> and necessary config change, besides one hack to keep LDO14 in LPM mode
+> to boot things up (see the commit in the test branch).
+> The tested branch is available at [2].
 
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
-index e4beec3..94b9c12 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.txt
-+++ b/Documentation/devicetree/bindings/arm/sunxi.txt
-@@ -14,7 +14,8 @@ using one of the following compatible strings:
-   allwinner,sun8i-a83t
-   allwinner,sun8i-h2-plus
-   allwinner,sun8i-h3
--  allwinner-sun8i-r40
-+  allwinner,sun8i-r40
-+  allwinner,sun8i-t3
-   allwinner,sun8i-v3s
-   allwinner,sun9i-a80
-   allwinner,sun50i-a64
--- 
-2.7.4
+[...]
+
+>  .../devicetree/bindings/iommu/arm,smmu.txt         |  4 ++
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi               | 72 ++++++++++++++++++++++
+>  2 files changed, 76 insertions(+)
+
+Given that this doesn't touch any of the driver code, please take this via
+the Andy and arm-soc.
+
+Will
