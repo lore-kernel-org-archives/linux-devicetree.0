@@ -1,88 +1,158 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH V2] arm64: dts: renesas: r8a77965: Add CAN and CANFD
- controller nodes
-Date: Wed, 21 Nov 2018 13:50:13 +0100
-Message-ID: <20181121125013.GA847@kunai>
-References: <20181120233252.1612-1-marek.vasut+renesas@gmail.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v9 3/3] media: add Rockchip VPU JPEG encoder driver
+Date: Wed, 21 Nov 2018 14:10:07 +0100
+Message-ID: <df04e23d-35f8-0fdf-9e14-892e716b1434@xs4all.nl>
+References: <20181120212059.29244-1-ezequiel@collabora.com>
+ <20181120212059.29244-4-ezequiel@collabora.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2216277671609700887=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181120233252.1612-1-marek.vasut+renesas@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: devicetree@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh@kernel.org>, linux-renesas-soc@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Simon Horman <horms+renesas@verge.net.au>, linux-arm-kernel@lists.infradead.org, Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20181120212059.29244-4-ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 11/20/2018 10:20 PM, Ezequiel Garcia wrote:
+> Add a mem2mem driver for the VPU available on Rockchip SoCs.
+> Currently only JPEG encoding is supported, for RK3399 and RK3288
+> platforms.
+> 
+> Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> ---
+>  MAINTAINERS                                   |   7 +
+>  drivers/staging/media/Kconfig                 |   2 +
+>  drivers/staging/media/Makefile                |   1 +
+>  drivers/staging/media/rockchip/vpu/Kconfig    |  14 +
+>  drivers/staging/media/rockchip/vpu/Makefile   |  10 +
+>  drivers/staging/media/rockchip/vpu/TODO       |   6 +
+>  .../media/rockchip/vpu/rk3288_vpu_hw.c        | 118 +++
+>  .../rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c     | 133 ++++
+>  .../media/rockchip/vpu/rk3288_vpu_regs.h      | 442 +++++++++++
+>  .../media/rockchip/vpu/rk3399_vpu_hw.c        | 118 +++
+>  .../rockchip/vpu/rk3399_vpu_hw_jpeg_enc.c     | 160 ++++
+>  .../media/rockchip/vpu/rk3399_vpu_regs.h      | 600 +++++++++++++++
+>  .../staging/media/rockchip/vpu/rockchip_vpu.h | 237 ++++++
+>  .../media/rockchip/vpu/rockchip_vpu_common.h  |  29 +
+>  .../media/rockchip/vpu/rockchip_vpu_drv.c     | 535 +++++++++++++
+>  .../media/rockchip/vpu/rockchip_vpu_enc.c     | 702 ++++++++++++++++++
+>  .../media/rockchip/vpu/rockchip_vpu_hw.h      |  58 ++
+>  .../media/rockchip/vpu/rockchip_vpu_jpeg.c    | 289 +++++++
+>  .../media/rockchip/vpu/rockchip_vpu_jpeg.h    |  12 +
+>  19 files changed, 3473 insertions(+)
+>  create mode 100644 drivers/staging/media/rockchip/vpu/Kconfig
+>  create mode 100644 drivers/staging/media/rockchip/vpu/Makefile
+>  create mode 100644 drivers/staging/media/rockchip/vpu/TODO
+>  create mode 100644 drivers/staging/media/rockchip/vpu/rk3288_vpu_hw.c
+>  create mode 100644 drivers/staging/media/rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c
+>  create mode 100644 drivers/staging/media/rockchip/vpu/rk3288_vpu_regs.h
+>  create mode 100644 drivers/staging/media/rockchip/vpu/rk3399_vpu_hw.c
+>  create mode 100644 drivers/staging/media/rockchip/vpu/rk3399_vpu_hw_jpeg_enc.c
+>  create mode 100644 drivers/staging/media/rockchip/vpu/rk3399_vpu_regs.h
+>  create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu.h
+>  create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_common.h
+>  create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c
+>  create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c
+>  create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_hw.h
+>  create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_jpeg.c
+>  create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_jpeg.h
+> 
 
---===============2216277671609700887==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
-Content-Disposition: inline
+<snip>
 
+> diff --git a/drivers/staging/media/rockchip/vpu/Kconfig b/drivers/staging/media/rockchip/vpu/Kconfig
+> new file mode 100644
+> index 000000000000..fa65c03d65bf
+> --- /dev/null
+> +++ b/drivers/staging/media/rockchip/vpu/Kconfig
+> @@ -0,0 +1,14 @@
+> +config VIDEO_ROCKCHIP_VPU
+> +	tristate "Rockchip VPU driver"
+> +	depends on ARCH_ROCKCHIP || COMPILE_TEST
+> +	depends on VIDEO_DEV && VIDEO_V4L2 && MEDIA_CONTROLLER
+> +	select VIDEOBUF2_DMA_CONTIG
+> +	select VIDEOBUF2_VMALLOC
+> +	select V4L2_MEM2MEM_DEV
+> +	default n
+> +	help
+> +	  Support for the Video Processing Unit present on Rockchip SoC,
+> +	  which accelerates video and image encoding and decoding.
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called rockchip-vpu.
+> +
 
---jI8keyz6grp/JLjh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+checkpatch warns about empty line at the end of the Kconfig
 
-On Wed, Nov 21, 2018 at 12:32:52AM +0100, Marek Vasut wrote:
-> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
->=20
-> This patch adds CAN{0,1} and CANFD controller nodes for the R8A77965 SoC.
->=20
-> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Simon Horman <horms+renesas@verge.net.au>
-> Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Cc: linux-renesas-soc@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
+<snip>
 
-Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> diff --git a/drivers/staging/media/rockchip/vpu/rk3288_vpu_regs.h b/drivers/staging/media/rockchip/vpu/rk3288_vpu_regs.h
+> new file mode 100644
+> index 000000000000..d6cf9c682e7d
+> --- /dev/null
+> +++ b/drivers/staging/media/rockchip/vpu/rk3288_vpu_regs.h
+> @@ -0,0 +1,442 @@
+> +// SPDX-License-Identifier: GPL-2.0
 
+Headers must use /* */ for the SPDX license. Sorry, I didn't make up these rules.
 
---jI8keyz6grp/JLjh
-Content-Type: application/pgp-signature; name="signature.asc"
+In any case, checkpatch.pl --strict complains about it.
 
------BEGIN PGP SIGNATURE-----
+<snip>
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlv1VIEACgkQFA3kzBSg
-KbZGQQ/7BveeGpTX8y+y8jF9EkW/an42TF483E8v3ejZxwijMRX7ssvrT23foJ+1
-Y5OO8QaiIGflTmj6Asjpprqgjz1EyBRwNym0s3kySE4E8ruB+Igc/W6AHSFU/wjQ
-vaWCTjIo5AI9L1Mv0L8W8H7rze6xIAiHQ+qILTncewTSuwdRTYydELUn3svWqjgD
-dsf4/eVvmzZt6nN9GZg4edasiEDZLG9D1eaUgexESKMLMVptQY9H+z2nOACl6WPS
-QZ3W+1fzff8fG39A+DeRnW5vP5dzPc5rrw2tHh1730U66q3kUWhSLizGiMrgX3by
-410SgjIkZ0gyOjMUqRnACumuK32PNPh0k6WFAKLsvRRnxxtGTrwlB0aWEzCSBYS+
-2PYo+YgzpxVWMjb7flmH7apSrhMO15yn+eazyh8uCqv5VM4sHiWY7+nS88t6NNUZ
-vYlwSz2sEKv3m3a+UMapDgYQl/fzCCOsvKbvoHikCkn0ZCjV9wCt+JsmOAKwzy5y
-ebfmDdnfaKH3r/l/BVlkmxFxu5tjy8EwArPG+HsuFnerPceyh8UPi4dgjgc6xOew
-ImgtrE7fHQVnB8KMSSSBTJFfXCVSiKVoIUJHOzF5jnNmdZIPOndoEuT8sW+dF1S7
-llHY0RGSPaqrRNM8THt5OYa8BlpCGhegxBOZ+Nfl3YepvXLZHYA=
-=/LbZ
------END PGP SIGNATURE-----
+> diff --git a/drivers/staging/media/rockchip/vpu/rockchip_vpu_jpeg.c b/drivers/staging/media/rockchip/vpu/rockchip_vpu_jpeg.c
+> new file mode 100644
+> index 000000000000..678d53f3c2c2
+> --- /dev/null
+> +++ b/drivers/staging/media/rockchip/vpu/rockchip_vpu_jpeg.c
+> @@ -0,0 +1,289 @@
 
---jI8keyz6grp/JLjh--
+Missing SPDX license!
 
+> +/*
+> + * Copyright (C) Collabora, Ltd.
+> + *
+> + * Based on GSPCA and CODA drivers:
+> + * Copyright (C) Jean-Francois Moine (http://moinejf.free.fr)
+> + * Copyright (C) 2014 Philipp Zabel, Pengutronix
+> + */
 
---===============2216277671609700887==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+<snip>
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> diff --git a/drivers/staging/media/rockchip/vpu/rockchip_vpu_jpeg.h b/drivers/staging/media/rockchip/vpu/rockchip_vpu_jpeg.h
+> new file mode 100644
+> index 000000000000..a616d85359e8
+> --- /dev/null
+> +++ b/drivers/staging/media/rockchip/vpu/rockchip_vpu_jpeg.h
+> @@ -0,0 +1,12 @@
 
---===============2216277671609700887==--
+Missing SPDX license!
+
+> +#define JPEG_HEADER_SIZE	601
+> +
+> +struct rockchip_vpu_jpeg_ctx {
+> +	int width;
+> +	int height;
+> +	int quality;
+> +	unsigned char *buffer;
+> +};
+> +
+> +unsigned char *
+> +rockchip_vpu_jpeg_get_qtable(struct rockchip_vpu_jpeg_ctx *ctx, int index);
+> +void rockchip_vpu_jpeg_render(struct rockchip_vpu_jpeg_ctx *ctx);
+> 
+
+So close...
+
+Regards,
+
+	Hans
