@@ -1,7 +1,7 @@
 From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 3/5] ARM: dts: bcm2835-rpi: Enable OTP access for Raspberry Pi
-Date: Wed, 21 Nov 2018 14:11:42 +0100
-Message-ID: <1542805904-6446-4-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH 1/5] dt-bindings: nvmem: add binding for Raspberry Pi OTP
+Date: Wed, 21 Nov 2018 14:11:40 +0100
+Message-ID: <1542805904-6446-2-git-send-email-stefan.wahren@i2se.com>
 References: <1542805904-6446-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,27 +21,42 @@ To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@k
 Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables OTP access for all Raspberry Pi variants.
+This patch adds the devicetree binding for Raspberry Pi customer OTP
+driver.
 
 Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 ---
- arch/arm/boot/dts/bcm2835-rpi.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../nvmem/raspberrypi,bcm2835-customer-otp.txt     | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/raspberrypi,bcm2835-customer-otp.txt
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-index cb2d6d7..0fcd9da 100644
---- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-+++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-@@ -22,6 +22,10 @@
- 			#address-cells = <0>;
- 			#size-cells = <0>;
- 			mboxes = <&mailbox>;
+diff --git a/Documentation/devicetree/bindings/nvmem/raspberrypi,bcm2835-customer-otp.txt b/Documentation/devicetree/bindings/nvmem/raspberrypi,bcm2835-customer-otp.txt
+new file mode 100644
+index 0000000..041ff17
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/raspberrypi,bcm2835-customer-otp.txt
+@@ -0,0 +1,22 @@
++Customer OTP Memory for Raspberry Pi
 +
-+			customer_otp: otp {
-+				compatible = "raspberrypi,bcm2835-customer-otp";
-+			};
- 		};
- 
- 		power: power {
++The VC4 firmware exposes a mailbox interface that allows the ARM core
++to access the customer part of the OTP memory.
++
++The OTP node must be a child node of the Raspberry Pi firmware node.
++
++Required properties :
++- compatible     : Should be "raspberrypi,bcm2835-customer-otp"
++
++See nvmem.txt for more information.
++
++Example:
++
++firmware: firmware-rpi {
++	compatible = "raspberrypi,bcm2835-firmware";
++	mboxes = <&mailbox>;
++
++	customer_otp: otp {
++		compatible = "raspberrypi,bcm2835-customer-otp";
++	};
++};
 -- 
 2.7.4
