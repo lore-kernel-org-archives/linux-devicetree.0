@@ -1,13 +1,11 @@
 From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 4/5] ARM: bcm2835_defconfig: Enable Raspberry Pi OTP driver
-Date: Wed, 21 Nov 2018 14:11:43 +0100
-Message-ID: <1542805904-6446-5-git-send-email-stefan.wahren@i2se.com>
-References: <1542805904-6446-1-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH 0/5] nvmem: Enable OTP access for Raspberry Pi
+Date: Wed, 21 Nov 2018 14:11:39 +0100
+Message-ID: <1542805904-6446-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1542805904-6446-1-git-send-email-stefan.wahren@i2se.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,26 +19,44 @@ To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@k
 Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Enable the Raspberry Pi OTP driver, which could be helpful for
-custom Compute Module designs.
+The VC4 firmware exposes a mailbox interface that allows the ARM core
+to access only the customer part (8 cells * 32 bits) of the OTP memory.
+This version brings read-only support, but could also be extended to
+write support. Beside the kernelspace support this is also a limited userspace
+alternative to the vendor specific "vcgencmd otp_dump".
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- arch/arm/configs/bcm2835_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+I think this driver could be helpful for vendors, which integrate the
+Raspberry Pi Compute Module in their products need to store unique data
+like a serial or additional MAC address in the OTP.
 
-diff --git a/arch/arm/configs/bcm2835_defconfig b/arch/arm/configs/bcm2835_defconfig
-index bb6a35f..4c1405e 100644
---- a/arch/arm/configs/bcm2835_defconfig
-+++ b/arch/arm/configs/bcm2835_defconfig
-@@ -136,6 +136,8 @@ CONFIG_RASPBERRYPI_POWER=y
- CONFIG_PWM=y
- CONFIG_PWM_BCM2835=y
- CONFIG_RASPBERRYPI_FIRMWARE=y
-+CONFIG_NVMEM=y
-+CONFIG_NVMEM_RASPBERRYPI_OTP=y
- CONFIG_EXT2_FS=y
- CONFIG_EXT2_FS_XATTR=y
- CONFIG_EXT2_FS_POSIX_ACL=y
+Note for testers: This series needs "firmware: raspberrypi: Fix firmware calls
+with large buffers" from James Hughes to work properly.
+
+Changes since RFC:
+- implement improvements suggested by Rob Herring and Eric Anholt
+- extend Kconfig description
+- define nvmem type and read only
+- make MODULE_LICENSE match license text
+- add patches to enable driver in bcm2835 and multi_v7 defconfig
+- rebased on current srini/nvmem.git/for-next
+
+Stefan Wahren (5):
+  dt-bindings: nvmem: add binding for Raspberry Pi OTP
+  nvmem: add driver for Raspberry Pi OTP
+  ARM: dts: bcm2835-rpi: Enable OTP access for Raspberry Pi
+  ARM: bcm2835_defconfig: Enable Raspberry Pi OTP driver
+  ARM: multi_v7_defconfig: Enable Raspberry Pi OTP driver
+
+ .../nvmem/raspberrypi,bcm2835-customer-otp.txt     |  22 ++++
+ arch/arm/boot/dts/bcm2835-rpi.dtsi                 |   4 +
+ arch/arm/configs/bcm2835_defconfig                 |   2 +
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ drivers/nvmem/Kconfig                              |  10 ++
+ drivers/nvmem/Makefile                             |   2 +
+ drivers/nvmem/raspberrypi-otp.c                    | 113 +++++++++++++++++++++
+ 7 files changed, 154 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/raspberrypi,bcm2835-customer-otp.txt
+ create mode 100644 drivers/nvmem/raspberrypi-otp.c
+
 -- 
 2.7.4
