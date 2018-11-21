@@ -1,214 +1,233 @@
-From: <sugaya.taichi@socionext.com>
-Subject: RE: [PATCH 01/14] ARM: milbeaut: Add basic support for Milbeaut m10v
- SoC
-Date: Wed, 21 Nov 2018 09:33:29 +0000
-Message-ID: <37936bec442a4325bdda03a0fe2e90f8@SOC-EX02V.e01.socionext.com>
-References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
- <1542589274-13878-2-git-send-email-sugaya.taichi@socionext.com>
- <CAL_JsqJotYwwC490XmCtn_=-mrosxG3UUCy0P_SVO3d94yW6VA@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [RFC PATCH 5/6] net: marvell: neta: add support for 2500base-X
+Date: Wed, 21 Nov 2018 15:08:41 +0530
+Message-ID: <98d978ec-a92c-7731-bbec-af8c79641e3c@ti.com>
+References: <20181112122933.GD30658@n2100.armlinux.org.uk>
+ <E1gMBMx-0008A9-Jb@rmk-PC.armlinux.org.uk>
+ <acc97e5e-efa9-a44c-ea87-09135c6c12b6@ti.com>
+ <20181114111104.GS30658@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJotYwwC490XmCtn_=-mrosxG3UUCy0P_SVO3d94yW6VA@mail.gmail.com>
-Content-Language: ja-JP
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, daniel.lezcano@linaro.org, tglx@linutronix.de, linux@armlinux.org.uk, jslaby@suse.com, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181114111104.GS30658@n2100.armlinux.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iDQoNClRoYW5rIHlvdSBmb3IgeW91ciBjb21tZW50cy4NCg0KPiAtLS0tLU9yaWdpbmFs
-IE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2IgSGVycmluZyBbbWFpbHRvOnJvYmgrZHRAa2VybmVs
-Lm9yZ10NCj4gU2VudDogVHVlc2RheSwgTm92ZW1iZXIgMjAsIDIwMTggMToyNCBBTQ0KPiBUbzog
-U3VnYXlhLCBUYWljaGkNCj4gQ2M6IGxpbnV4LWNsazsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7IG1vZGVyYXRlZCBsaXN0OkFSTS9GUkVFU0NBTEUNCj4gSU1YIC8gTVhDIEFSTSBBUkNISVRF
-Q1RVUkU7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IG9wZW4gbGlzdDpTRVJJQUwNCj4g
-RFJJVkVSUzsgTWljaGFlbCBUdXJxdWV0dGU7IFN0ZXBoZW4gQm95ZDsgTWFyayBSdXRsYW5kOyBH
-cmVnIEtyb2FoLUhhcnRtYW47DQo+IERhbmllbCBMZXpjYW5vOyBUaG9tYXMgR2xlaXhuZXI7IFJ1
-c3NlbGwgS2luZzsgSmlyaSBTbGFieTsgTWFzYW1pIEhpcmFtYXRzdTsNCj4gSmFzc2kgQnJhcg0K
-PiBTdWJqZWN0OiBSZTogW1BBVENIIDAxLzE0XSBBUk06IG1pbGJlYXV0OiBBZGQgYmFzaWMgc3Vw
-cG9ydCBmb3IgTWlsYmVhdXQNCj4gbTEwdiBTb0MNCj4gDQo+IE9uIFN1biwgTm92IDE4LCAyMDE4
-IGF0IDc6MDAgUE0gU3VnYXlhIFRhaWNoaQ0KPiA8c3VnYXlhLnRhaWNoaUBzb2Npb25leHQuY29t
-PiB3cm90ZToNCj4gPg0KPiA+IFRoaXMgYWRkcyB0aGUgYmFzaWMgTTEwViBTb0Mgc3VwcG9ydCB1
-bmRlciBhcmNoL2FybS4NCj4gPiBTaW5jZSBhbGwgY29yZXMgYXJlIGFjdGl2YXRlZCBpbiB0aGUg
-Y3VzdG9tIGJvb3Rsb2FkZXIgYmVmb3JlIGJvb3RpbmcNCj4gPiBsaW51eCwgaXQgaXMgbmVjZXNz
-YXJ5IHRvIHdhaXQgZm9yIHN1Yi1jb3JlcyB1c2luZyB0aGUgdHJhbXBvbGluZSBhcmVhLg0KPiA+
-DQo+ID4gU2lnbmVkLW9mZi1ieTogU3VnYXlhIFRhaWNoaSA8c3VnYXlhLnRhaWNoaUBzb2Npb25l
-eHQuY29tPg0KPiA+IC0tLQ0KPiA+ICBhcmNoL2FybS9LY29uZmlnICAgICAgICAgICAgICAgICAg
-fCAgIDIgKw0KPiA+ICBhcmNoL2FybS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgfCAgIDEgKw0K
-PiA+ICBhcmNoL2FybS9tYWNoLW1pbGJlYXV0L0tjb25maWcgICAgfCAgMjggKysrKysrKw0KPiA+
-ICBhcmNoL2FybS9tYWNoLW1pbGJlYXV0L01ha2VmaWxlICAgfCAgIDMgKw0KPiA+ICBhcmNoL2Fy
-bS9tYWNoLW1pbGJlYXV0L20xMHZfZXZiLmMgfCAgMzEgKysrKysrKysNCj4gPiAgYXJjaC9hcm0v
-bWFjaC1taWxiZWF1dC9wbGF0c21wLmMgIHwgMTU3DQo+ICsrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrDQo+ID4gIDYgZmlsZXMgY2hhbmdlZCwgMjIyIGluc2VydGlvbnMoKykN
-Cj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL21hY2gtbWlsYmVhdXQvS2NvbmZpZw0K
-PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vbWFjaC1taWxiZWF1dC9NYWtlZmlsZQ0K
-PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vbWFjaC1taWxiZWF1dC9tMTB2X2V2Yi5j
-DQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9tYWNoLW1pbGJlYXV0L3BsYXRzbXAu
-Yw0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL0tjb25maWcgYi9hcmNoL2FybS9LY29u
-ZmlnDQo+ID4gaW5kZXggOTFiZTc0ZC4uMGI4YTFhZiAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2Fy
-bS9LY29uZmlnDQo+ID4gKysrIGIvYXJjaC9hcm0vS2NvbmZpZw0KPiA+IEBAIC03NjcsNiArNzY3
-LDggQEAgc291cmNlICJhcmNoL2FybS9tYWNoLW1lZGlhdGVrL0tjb25maWciDQo+ID4NCj4gPiAg
-c291cmNlICJhcmNoL2FybS9tYWNoLW1lc29uL0tjb25maWciDQo+ID4NCj4gPiArc291cmNlICJh
-cmNoL2FybS9tYWNoLW1pbGJlYXV0L0tjb25maWciDQo+ID4gKw0KPiA+ICBzb3VyY2UgImFyY2gv
-YXJtL21hY2gtbW1wL0tjb25maWciDQo+ID4NCj4gPiAgc291cmNlICJhcmNoL2FybS9tYWNoLW1v
-eGFydC9LY29uZmlnIg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9NYWtlZmlsZSBiL2FyY2gv
-YXJtL01ha2VmaWxlDQo+ID4gaW5kZXggMDVhOTFkOC4uNjI3ODUzYyAxMDA2NDQNCj4gPiAtLS0g
-YS9hcmNoL2FybS9NYWtlZmlsZQ0KPiA+ICsrKyBiL2FyY2gvYXJtL01ha2VmaWxlDQo+ID4gQEAg
-LTE5MCw2ICsxOTAsNyBAQCBtYWNoaW5lLSQoQ09ORklHX0FSQ0hfTVY3OFhYMCkgICAgICAgICAg
-ICAgICs9DQo+IG12Nzh4eDANCj4gPiAgbWFjaGluZS0kKENPTkZJR19BUkNIX01WRUJVKSAgICAg
-ICAgICAgKz0gbXZlYnUNCj4gPiAgbWFjaGluZS0kKENPTkZJR19BUkNIX01YQykgICAgICAgICAg
-ICAgKz0gaW14DQo+ID4gIG1hY2hpbmUtJChDT05GSUdfQVJDSF9NRURJQVRFSykgICAgICAgICAg
-ICAgICAgKz0gbWVkaWF0ZWsNCj4gPiArbWFjaGluZS0kKENPTkZJR19BUkNIX01JTEJFQVVUKSAg
-ICAgICAgICAgICAgICArPSBtaWxiZWF1dA0KPiA+ICBtYWNoaW5lLSQoQ09ORklHX0FSQ0hfTVhT
-KSAgICAgICAgICAgICArPSBteHMNCj4gPiAgbWFjaGluZS0kKENPTkZJR19BUkNIX05FVFgpICAg
-ICAgICAgICAgKz0gbmV0eA0KPiA+ICBtYWNoaW5lLSQoQ09ORklHX0FSQ0hfTk9NQURJSykgICAg
-ICAgICArPSBub21hZGlrDQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtbWlsYmVhdXQv
-S2NvbmZpZw0KPiBiL2FyY2gvYXJtL21hY2gtbWlsYmVhdXQvS2NvbmZpZw0KPiA+IG5ldyBmaWxl
-IG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4uNjNiNmY2OQ0KPiA+IC0tLSAvZGV2L251
-bGwNCj4gPiArKysgYi9hcmNoL2FybS9tYWNoLW1pbGJlYXV0L0tjb25maWcNCj4gPiBAQCAtMCww
-ICsxLDI4IEBADQo+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4gPiAr
-bWVudWNvbmZpZyBBUkNIX01JTEJFQVVUDQo+ID4gKyAgICAgICBib29sICJTb2Npb25leHQgTWls
-YmVhdXQgU29DcyINCj4gPiArICAgICAgIGRlcGVuZHMgb24gQVJDSF9NVUxUSV9WNw0KPiA+ICsg
-ICAgICAgc2VsZWN0IEFSTV9HSUMNCj4gDQo+ID4gKyAgICAgICBzZWxlY3QgQ0xLREVWX0xPT0tV
-UA0KPiA+ICsgICAgICAgc2VsZWN0IEdFTkVSSUNfQ0xPQ0tFVkVOVFMNCj4gPiArICAgICAgIHNl
-bGVjdCBDTEtTUkNfTU1JTw0KPiANCj4gVGhlIGNsb2NrIGFuZCB0aW1lciBkcml2ZXJzJyBrY29u
-ZmlnIGVudHJpZXMgc2hvdWxkIHNlbGVjdCB0aGVzZS4NCk9LLiBtb3ZlIHRoZXNlIHRvIHRoZSBj
-b3JyZWN0IGtjb25maWcuDQoNCj4gDQo+ID4gKyAgICAgICBzZWxlY3QgWk9ORV9ETUENCj4gDQo+
-IFdoeSBpcyB0aGlzIG5lZWRlZD8NCkFoLCBpdCBtYXkgbm90IGJlIG5lZWRlZCB5ZXQuIGNvbmZp
-cm0gaXQuDQoNCj4gDQo+ID4gKyAgICAgICBoZWxwDQo+ID4gKyAgICAgICAgICAgICAgIFRoaXMg
-ZW5hYmxlcyBzdXBwb3J0IGZvciBTb2Npb25leHQgTWlsYmVhdXQgU29Dcw0KPiA+ICsNCj4gPiAr
-aWYgQVJDSF9NSUxCRUFVVA0KPiA+ICsNCj4gPiArY29uZmlnIEFSQ0hfTUlMQkVBVVRfTTEwVg0K
-PiA+ICsgICAgICAgYm9vbCAiTWlsYmVhdXQgU0MyMDAwL00xMFYgcGxhdGZvcm0iDQo+ID4gKyAg
-ICAgICBzZWxlY3QgQVJNX0FSQ0hfVElNRVINCj4gPiArICAgICAgIHNlbGVjdCBNMTBWX1RJTUVS
-DQo+ID4gKyAgICAgICBzZWxlY3QgUElOQ1RSTA0KPiA+ICsgICAgICAgc2VsZWN0IFBJTkNUUkxf
-TTEwVg0KPiA+ICsgICAgICAgaGVscA0KPiA+ICsgICAgICAgICBTdXBwb3J0IGZvciBTb2Npb25l
-eHQncyBNSUxCRUFVVCBNMTBWIGJhc2VkIHN5c3RlbXMNCj4gPiArDQo+ID4gK2NvbmZpZyBNQUNI
-X00xMFZfRVZCDQo+ID4gKyAgICAgICBib29sICJTdXBwb3J0IGZvciBNaWxiZWF1dCBFdmFsdWF0
-aW9uIGJvYXJkcyINCj4gDQo+IFlvdSBzaG91bGRuJ3QgbmVlZCBhIGtjb25maWcgZW50cnkgZm9y
-IGVhY2ggYm9hcmQuDQpJIHNlZS4gDQoNCj4gDQo+ID4gKyAgICAgICBkZWZhdWx0IHkNCj4gPiAr
-DQo+ID4gK2VuZGlmDQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtbWlsYmVhdXQvTWFr
-ZWZpbGUNCj4gYi9hcmNoL2FybS9tYWNoLW1pbGJlYXV0L01ha2VmaWxlDQo+ID4gbmV3IGZpbGUg
-bW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi42NGY2ZjUyDQo+ID4gLS0tIC9kZXYvbnVs
-bA0KPiA+ICsrKyBiL2FyY2gvYXJtL21hY2gtbWlsYmVhdXQvTWFrZWZpbGUNCj4gPiBAQCAtMCww
-ICsxLDMgQEANCj4gPiArb2JqLSQoQ09ORklHX1NNUCkgKz0gcGxhdHNtcC5vDQo+ID4gK29iai0k
-KENPTkZJR19NQUNIX00xMFZfRVZCKSArPSBtMTB2X2V2Yi5vDQo+ID4gKw0KPiA+IGRpZmYgLS1n
-aXQgYS9hcmNoL2FybS9tYWNoLW1pbGJlYXV0L20xMHZfZXZiLmMNCj4gYi9hcmNoL2FybS9tYWNo
-LW1pbGJlYXV0L20xMHZfZXZiLmMNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4
-IDAwMDAwMDAuLmExZmE3YzMNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvYXJjaC9hcm0v
-bWFjaC1taWxiZWF1dC9tMTB2X2V2Yi5jDQo+IA0KPiBUaGlzIGFsbCBsb29rcyBTb0Mgc3BlY2lm
-aWMsIG5vdCBib2FyZCBzcGVjaWZpYy4NClVtIHRoYXQgaXMgcmlnaHQuLg0KDQo+IA0KPiA+IEBA
-IC0wLDAgKzEsMzEgQEANCj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAN
-Cj4gPiArLyoNCj4gPiArICogQ29weXJpZ2h0IChDKSAyMDE4IFNvY2lvbmV4dCBJbmMuDQo+ID4g
-KyAqIENvcHlyaWdodDogICAoQykgMjAxNSBMaW5hcm8gTHRkLg0KPiA+ICsgKi8NCj4gPiArDQo+
-ID4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1f
-ZGV2aWNlLmg+DQo+IA0KPiBOb3QgbmVlZGVkLg0KT0suDQoNCj4gDQo+ID4gKw0KPiA+ICsjaW5j
-bHVkZSA8YXNtL21hY2gvYXJjaC5oPg0KPiA+ICsjaW5jbHVkZSA8YXNtL21hY2gvbWFwLmg+DQo+
-ID4gKw0KPiA+ICtzdGF0aWMgc3RydWN0IG1hcF9kZXNjIG0xMHZfaW9fZGVzY1tdIF9faW5pdGRh
-dGEgPSB7DQo+ID4gK307DQo+ID4gKw0KPiA+ICt2b2lkIF9faW5pdCBtMTB2X21hcF9pbyh2b2lk
-KQ0KPiA+ICt7DQo+ID4gKyAgICAgICBkZWJ1Z19sbF9pb19pbml0KCk7DQo+IA0KPiBJZiB5b3Ug
-dXNlIGVhcmx5Y29uIGluc3RlYWQsIHRoZW4gdGhpcyBpc24ndCBuZWVkZWQuDQo+IA0KPiA+ICsg
-ICAgICAgaW90YWJsZV9pbml0KG0xMHZfaW9fZGVzYywgQVJSQVlfU0laRShtMTB2X2lvX2Rlc2Mp
-KTsNCj4gDQo+IFRoaXMgaXNuJ3QgbmVlZGVkLg0KT0suDQoNCj4gDQo+ID4gK30NCj4gPiArDQo+
-ID4gK3N0YXRpYyBjb25zdCBjaGFyICogY29uc3QgbTEwdl9jb21wYXRbXSA9IHsNCj4gPiArICAg
-ICAgICJzb2Npb25leHQsbWlsYmVhdXQtbTEwdi1ldmIiLA0KPiA+ICsgICAgICAgTlVMTCwNCj4g
-PiArfTsNCj4gPiArDQo+ID4gK0RUX01BQ0hJTkVfU1RBUlQoTTEwVl9SRUIsICJTb2Npb25leHQg
-TWlsYmVhdXQiKQ0KPiA+ICsgICAgICAgLmR0X2NvbXBhdCAgICAgID0gbTEwdl9jb21wYXQsDQo+
-ID4gKyAgICAgICAubDJjX2F1eF9tYXNrICAgPSAweGZmZmZmZmZmLA0KPiA+ICsgICAgICAgLm1h
-cF9pbyAgICAgICAgID0gbTEwdl9tYXBfaW8sDQo+IA0KPiBJdCBsb29rcyBsaWtlIHlvdSBjYW4g
-cmVtb3ZlIHRoaXMgZW50aXJlIGZpbGUgYW5kIHVzZSB0aGUgZGVmYXVsdCBtYWNoaW5lDQo+IGRl
-c2MuDQpPSywgdHJ5IHRvIHVzZSB0aGUgZGVmYXVsdCBtYWNoaW5lIGRlc2NyaXB0b3IgaW5zdGVh
-ZC4NCg0KPiANCj4gPiArTUFDSElORV9FTkQNCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFj
-aC1taWxiZWF1dC9wbGF0c21wLmMNCj4gYi9hcmNoL2FybS9tYWNoLW1pbGJlYXV0L3BsYXRzbXAu
-Yw0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4uYjcwNjg1MQ0K
-PiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9hcmNoL2FybS9tYWNoLW1pbGJlYXV0L3BsYXRz
-bXAuYw0KPiA+IEBAIC0wLDAgKzEsMTU3IEBADQo+ID4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlm
-aWVyOiBHUEwtMi4wDQo+ID4gKy8qDQo+ID4gKyAqIENvcHlyaWdodCAoQykgMjAxOCBTb2Npb25l
-eHQgSW5jLg0KPiA+ICsgKiBDb3B5cmlnaHQ6ICAoQykgMjAxNSBMaW5hcm8gTHRkLg0KPiA+ICsg
-Ki8NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9jcHVfcG0uaD4NCj4gPiArI2luY2x1ZGUg
-PGxpbnV4L2lycWNoaXAvYXJtLWdpYy5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvb2ZfZGV2aWNl
-Lmg+DQo+IA0KPiBOb3QgbmVlZGVkLg0KT2theS4NCg0KPiANCj4gPiArI2luY2x1ZGUgPGxpbnV4
-L29mX2FkZHJlc3MuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0K
-PiANCj4gTm90IG5lZWRlZC4NCk9rYXkuDQoNCj4gDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9zdXNw
-ZW5kLmg+DQo+ID4gKw0KPiA+ICsjaW5jbHVkZSA8YXNtL2NhY2hlZmx1c2guaD4NCj4gPiArI2lu
-Y2x1ZGUgPGFzbS9jcDE1Lmg+DQo+ID4gKyNpbmNsdWRlIDxhc20vaWRtYXAuaD4NCj4gPiArI2lu
-Y2x1ZGUgPGFzbS9zbXBfcGxhdC5oPg0KPiA+ICsjaW5jbHVkZSA8YXNtL3N1c3BlbmQuaD4NCj4g
-PiArDQo+ID4gKyNkZWZpbmUgTTEwVl9NQVhfQ1BVICAgNA0KPiA+ICsNCj4gPiArI2RlZmluZSBL
-RVJORUxfVU5CT09UX0ZMQUcgICAgIDB4MTIzNDU2NzgNCj4gPiArI2RlZmluZSBDUFVfRklOSVNI
-X1NVU1BFTkRfRkxBRyAweDU2Nzg0MzIxDQo+ID4gKw0KPiA+ICtzdGF0aWMgdm9pZCBfX2lvbWVt
-ICp0cmFtcG9saW5lOw0KPiA+ICsNCj4gPiArc3RhdGljIGludCBtMTB2X2Jvb3Rfc2Vjb25kYXJ5
-KHVuc2lnbmVkIGludCBsX2NwdSwgc3RydWN0IHRhc2tfc3RydWN0DQo+ICppZGxlKQ0KPiA+ICt7
-DQo+ID4gKyAgICAgICB1bnNpZ25lZCBpbnQgbXBpZHIsIGNwdSwgY2x1c3RlcjsNCj4gPiArDQo+
-ID4gKyAgICAgICBtcGlkciA9IGNwdV9sb2dpY2FsX21hcChsX2NwdSk7DQo+ID4gKyAgICAgICBj
-cHUgPSBNUElEUl9BRkZJTklUWV9MRVZFTChtcGlkciwgMCk7DQo+ID4gKyAgICAgICBjbHVzdGVy
-ID0gTVBJRFJfQUZGSU5JVFlfTEVWRUwobXBpZHIsIDEpOw0KPiA+ICsNCj4gPiArICAgICAgIGlm
-IChjcHUgPj0gTTEwVl9NQVhfQ1BVKQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZB
-TDsNCj4gPiArDQo+ID4gKyAgICAgICBwcl9kZWJ1ZygiJXM6IGNwdSAldSBjbHVzdGVyICV1XG4i
-LCBfX2Z1bmNfXywgY3B1LCBjbHVzdGVyKTsNCj4gPiArDQo+ID4gKyAgICAgICB3cml0ZWwodmly
-dF90b19waHlzKHNlY29uZGFyeV9zdGFydHVwKSwgdHJhbXBvbGluZSArIGNwdSAqIDQpOw0KPiA+
-ICsgICAgICAgYXJjaF9zZW5kX3dha2V1cF9pcGlfbWFzayhjcHVtYXNrX29mKGxfY3B1KSk7DQo+
-ID4gKw0KPiA+ICsgICAgICAgcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyB2
-b2lkIG0xMHZfY3B1X2RpZSh1bnNpZ25lZCBpbnQgbF9jcHUpDQo+ID4gK3sNCj4gPiArICAgICAg
-IGdpY19jcHVfaWZfZG93bigwKTsNCj4gPiArDQo+ID4gKyAgICAgICB2N19leGl0X2NvaGVyZW5j
-eV9mbHVzaChsb3Vpcyk7DQo+ID4gKw0KPiA+ICsgICAgICAgLyogTm93IHdlIGFyZSBwcmVwYXJl
-ZCBmb3IgcG93ZXItZG93biwgZG8gaXQ6ICovDQo+ID4gKyAgICAgICB3ZmkoKTsNCj4gPiArfQ0K
-PiA+ICsNCj4gPiArc3RhdGljIGludCBtMTB2X2NwdV9raWxsKHVuc2lnbmVkIGludCBsX2NwdSkN
-Cj4gPiArew0KPiA+ICsgICAgICAgdW5zaWduZWQgaW50IG1waWRyLCBjcHU7DQo+ID4gKw0KPiA+
-ICsgICAgICAgbXBpZHIgPSBjcHVfbG9naWNhbF9tYXAobF9jcHUpOw0KPiA+ICsgICAgICAgY3B1
-ID0gTVBJRFJfQUZGSU5JVFlfTEVWRUwobXBpZHIsIDApOw0KPiA+ICsNCj4gPiArICAgICAgIHdy
-aXRlbChLRVJORUxfVU5CT09UX0ZMQUcsIHRyYW1wb2xpbmUgKyBjcHUgKiA0KTsNCj4gPiArDQo+
-ID4gKyAgICAgICByZXR1cm4gMTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIHN0cnVjdCBz
-bXBfb3BlcmF0aW9ucyBtMTB2X3NtcF9vcHMgX19pbml0ZGF0YSA9IHsNCj4gPiArICAgICAgIC5z
-bXBfYm9vdF9zZWNvbmRhcnkgICAgID0gbTEwdl9ib290X3NlY29uZGFyeSwNCj4gPiArICAgICAg
-IC5jcHVfZGllICAgICAgICAgICAgICAgID0gbTEwdl9jcHVfZGllLA0KPiA+ICsgICAgICAgLmNw
-dV9raWxsICAgICAgICAgICAgICAgPSBtMTB2X2NwdV9raWxsLA0KPiA+ICt9Ow0KPiA+ICsNCj4g
-PiArc3RhdGljIGludCBfX2luaXQgbTEwdl9zbXBfaW5pdCh2b2lkKQ0KPiA+ICt7DQo+ID4gKyAg
-ICAgICB1bnNpZ25lZCBpbnQgbXBpZHIsIGNwdSwgY2x1c3RlcjsNCj4gPiArICAgICAgIHN0cnVj
-dCBkZXZpY2Vfbm9kZSAqbnA7DQo+ID4gKw0KPiA+ICsgICAgICAgbnAgPSBvZl9maW5kX2NvbXBh
-dGlibGVfbm9kZShOVUxMLCBOVUxMLA0KPiAic29jaW9uZXh0LG1pbGJlYXV0LW0xMHYtZXZiIik7
-DQo+ID4gKyAgICAgICBpZiAoIW5wIHx8ICFvZl9kZXZpY2VfaXNfYXZhaWxhYmxlKG5wKSkNCj4g
-DQo+IEp1c3QgdXNlIG9mX21hY2hpbmVfaXNfY29tcGF0aWJsZSgpIGhlcmUuDQpJIGdvdCBpdCwg
-dXNlIHRoZSBmdW5jdGlvbiBpbnN0ZWFkLg0KDQpUaGFua3MNClN1Z2F5YSBUYWljaGkNCg0KPiAN
-Cj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9ERVY7DQo+ID4gKyAgICAgICBvZl9ub2Rl
-X3B1dChucCk7DQo+ID4gKw0KPiA+ICsgICAgICAgbnAgPSBvZl9maW5kX2NvbXBhdGlibGVfbm9k
-ZShOVUxMLCBOVUxMLA0KPiAic29jaW9uZXh0LHNtcC10cmFtcG9saW5lIik7DQo+ID4gKyAgICAg
-ICBpZiAoIW5wKQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOT0RFVjsNCj4gPiArDQo+
-ID4gKyAgICAgICB0cmFtcG9saW5lID0gb2ZfaW9tYXAobnAsIDApOw0KPiA+ICsgICAgICAgaWYg
-KCF0cmFtcG9saW5lKQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOT0RFVjsNCj4gPiAr
-ICAgICAgIG9mX25vZGVfcHV0KG5wKTsNCj4gPiArDQo+ID4gKyAgICAgICBtcGlkciA9IHJlYWRf
-Y3B1aWRfbXBpZHIoKTsNCj4gPiArICAgICAgIGNwdSA9IE1QSURSX0FGRklOSVRZX0xFVkVMKG1w
-aWRyLCAwKTsNCj4gPiArICAgICAgIGNsdXN0ZXIgPSBNUElEUl9BRkZJTklUWV9MRVZFTChtcGlk
-ciwgMSk7DQo+ID4gKw0KPiA+ICsgICAgICAgcHJfaW5mbygiTUNQTSBib290IG9uIGNwdV8ldSBj
-bHVzdGVyXyV1XG4iLCBjcHUsIGNsdXN0ZXIpOw0KPiA+ICsNCj4gPiArICAgICAgIGZvciAoY3B1
-ID0gMDsgY3B1IDwgTTEwVl9NQVhfQ1BVOyBjcHUrKykNCj4gPiArICAgICAgICAgICAgICAgd3Jp
-dGVsKEtFUk5FTF9VTkJPT1RfRkxBRywgdHJhbXBvbGluZSArIGNwdSAqIDQpOw0KPiA+ICsNCj4g
-PiArICAgICAgIHNtcF9zZXRfb3BzKCZtMTB2X3NtcF9vcHMpOw0KPiA+ICsNCj4gPiArICAgICAg
-IHJldHVybiAwOw0KPiA+ICt9DQo+ID4gK2Vhcmx5X2luaXRjYWxsKG0xMHZfc21wX2luaXQpOw0K
-PiA+ICsNCj4gPiArc3RhdGljIGludCBtMTB2X3BtX3ZhbGlkKHN1c3BlbmRfc3RhdGVfdCBzdGF0
-ZSkNCj4gPiArew0KPiA+ICsgICAgICAgcmV0dXJuIChzdGF0ZSA9PSBQTV9TVVNQRU5EX1NUQU5E
-QlkpIHx8IChzdGF0ZSA9PQ0KPiBQTV9TVVNQRU5EX01FTSk7DQo+ID4gK30NCj4gPiArDQo+ID4g
-K3R5cGVkZWYgdm9pZCAoKnBoeXNfcmVzZXRfdCkodW5zaWduZWQgbG9uZyk7DQo+ID4gK3N0YXRp
-YyBwaHlzX3Jlc2V0X3QgcGh5c19yZXNldDsNCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgbTEwdl9k
-aWUodW5zaWduZWQgbG9uZyBhcmcpDQo+ID4gK3sNCj4gPiArICAgICAgIHNldHVwX21tX2Zvcl9y
-ZWJvb3QoKTsNCj4gPiArICAgICAgIGFzbSgid2ZpIik7DQo+ID4gKyAgICAgICAvKiBCb290IGp1
-c3QgbGlrZSBhIHNlY29uZGFyeSAqLw0KPiA+ICsgICAgICAgcGh5c19yZXNldCA9IChwaHlzX3Jl
-c2V0X3QpKHVuc2lnbmVkDQo+IGxvbmcpdmlydF90b19waHlzKGNwdV9yZXNldCk7DQo+ID4gKyAg
-ICAgICBwaHlzX3Jlc2V0KHZpcnRfdG9fcGh5cyhjcHVfcmVzdW1lKSk7DQo+ID4gKw0KPiA+ICsg
-ICAgICAgcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgbTEwdl9wbV9l
-bnRlcihzdXNwZW5kX3N0YXRlX3Qgc3RhdGUpDQo+ID4gK3sNCj4gPiArICAgICAgIHN3aXRjaCAo
-c3RhdGUpIHsNCj4gPiArICAgICAgIGNhc2UgUE1fU1VTUEVORF9TVEFOREJZOg0KPiA+ICsgICAg
-ICAgICAgICAgICBwcl9lcnIoIlNUQU5EQllcbiIpOw0KPiA+ICsgICAgICAgICAgICAgICBhc20o
-IndmaSIpOw0KPiA+ICsgICAgICAgICAgICAgICBicmVhazsNCj4gPiArICAgICAgIGNhc2UgUE1f
-U1VTUEVORF9NRU06DQo+ID4gKyAgICAgICAgICAgICAgIHByX2VycigiU1VTUEVORFxuIik7DQo+
-ID4gKyAgICAgICAgICAgICAgIGNwdV9wbV9lbnRlcigpOw0KPiA+ICsgICAgICAgICAgICAgICBj
-cHVfc3VzcGVuZCgwLCBtMTB2X2RpZSk7DQo+ID4gKyAgICAgICAgICAgICAgIGNwdV9wbV9leGl0
-KCk7DQo+ID4gKyAgICAgICAgICAgICAgIGJyZWFrOw0KPiA+ICsgICAgICAgfQ0KPiA+ICsgICAg
-ICAgcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcGxh
-dGZvcm1fc3VzcGVuZF9vcHMgbTEwdl9wbV9vcHMgPSB7DQo+ID4gKyAgICAgICAudmFsaWQgICAg
-ICAgICAgPSBtMTB2X3BtX3ZhbGlkLA0KPiA+ICsgICAgICAgLmVudGVyICAgICAgICAgID0gbTEw
-dl9wbV9lbnRlciwNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0cnVjdCBjbGsgKm0xMHZfY2xjbGtf
-cmVnaXN0ZXIoc3RydWN0IGRldmljZSAqY3B1X2Rldik7DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50
-IF9faW5pdCBtMTB2X3BtX2luaXQodm9pZCkNCj4gPiArew0KPiA+ICsgICAgICAgc3VzcGVuZF9z
-ZXRfb3BzKCZtMTB2X3BtX29wcyk7DQo+ID4gKw0KPiA+ICsgICAgICAgcmV0dXJuIDA7DQo+ID4g
-K30NCj4gPiArbGF0ZV9pbml0Y2FsbChtMTB2X3BtX2luaXQpOw0KPiA+IC0tDQo+ID4gMS45LjEN
-Cj4gPg0K
+Hi,
+
+On 14/11/18 4:41 PM, Russell King - ARM Linux wrote:
+> On Wed, Nov 14, 2018 at 02:18:14PM +0530, Kishon Vijay Abraham I wrote:
+>> Hi,
+>>
+>> On 12/11/18 6:01 PM, Russell King wrote:
+>>> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+>>> ---
+>>>  drivers/net/ethernet/marvell/mvneta.c | 58 ++++++++++++++++++++++++++++++-----
+>>>  1 file changed, 51 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+>>> index 5bfd349bf41a..7305d4cc0630 100644
+>>> --- a/drivers/net/ethernet/marvell/mvneta.c
+>>> +++ b/drivers/net/ethernet/marvell/mvneta.c
+>>> @@ -27,6 +27,7 @@
+>>>  #include <linux/of_irq.h>
+>>>  #include <linux/of_mdio.h>
+>>>  #include <linux/of_net.h>
+>>> +#include <linux/phy/phy.h>
+>>>  #include <linux/phy.h>
+>>>  #include <linux/phylink.h>
+>>>  #include <linux/platform_device.h>
+>>> @@ -437,6 +438,7 @@ struct mvneta_port {
+>>>  	struct device_node *dn;
+>>>  	unsigned int tx_csum_limit;
+>>>  	struct phylink *phylink;
+>>> +	struct phy *comphy;
+>>>  
+>>>  	struct mvneta_bm *bm_priv;
+>>>  	struct mvneta_bm_pool *pool_long;
+>>> @@ -3150,6 +3152,8 @@ static void mvneta_start_dev(struct mvneta_port *pp)
+>>>  {
+>>>  	int cpu;
+>>>  
+>>> +	WARN_ON(phy_power_on(pp->comphy));
+>>> +
+>>>  	mvneta_max_rx_size_set(pp, pp->pkt_size);
+>>>  	mvneta_txq_max_tx_size_set(pp, pp->pkt_size);
+>>>  
+>>> @@ -3212,6 +3216,8 @@ static void mvneta_stop_dev(struct mvneta_port *pp)
+>>>  
+>>>  	mvneta_tx_reset(pp);
+>>>  	mvneta_rx_reset(pp);
+>>> +
+>>> +	WARN_ON(phy_power_off(pp->comphy));
+>>>  }
+>>>  
+>>>  static void mvneta_percpu_enable(void *arg)
+>>> @@ -3337,6 +3343,7 @@ static int mvneta_set_mac_addr(struct net_device *dev, void *addr)
+>>>  static void mvneta_validate(struct net_device *ndev, unsigned long *supported,
+>>>  			    struct phylink_link_state *state)
+>>>  {
+>>> +	struct mvneta_port *pp = netdev_priv(ndev);
+>>>  	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
+>>>  
+>>>  	/* We only support QSGMII, SGMII, 802.3z and RGMII modes */
+>>> @@ -3357,14 +3364,14 @@ static void mvneta_validate(struct net_device *ndev, unsigned long *supported,
+>>>  	/* Asymmetric pause is unsupported */
+>>>  	phylink_set(mask, Pause);
+>>>  
+>>> -	/* We cannot use 1Gbps when using the 2.5G interface. */
+>>> -	if (state->interface == PHY_INTERFACE_MODE_2500BASEX) {
+>>> -		phylink_set(mask, 2500baseT_Full);
+>>> -		phylink_set(mask, 2500baseX_Full);
+>>> -	} else {
+>>> +	/* Half-duplex at speeds higher than 100Mbit is unsupported */
+>>> +	if (pp->comphy || state->interface != PHY_INTERFACE_MODE_2500BASEX) {
+>>>  		phylink_set(mask, 1000baseT_Full);
+>>>  		phylink_set(mask, 1000baseX_Full);
+>>>  	}
+>>> +	if (pp->comphy || state->interface == PHY_INTERFACE_MODE_2500BASEX) {
+>>> +		phylink_set(mask, 2500baseX_Full);
+>>> +	}
+>>>  
+>>>  	if (!phy_interface_mode_is_8023z(state->interface)) {
+>>>  		/* 10M and 100M are only supported in non-802.3z mode */
+>>> @@ -3378,6 +3385,11 @@ static void mvneta_validate(struct net_device *ndev, unsigned long *supported,
+>>>  		   __ETHTOOL_LINK_MODE_MASK_NBITS);
+>>>  	bitmap_and(state->advertising, state->advertising, mask,
+>>>  		   __ETHTOOL_LINK_MODE_MASK_NBITS);
+>>> +
+>>> +	/* We can only operate at 2500BaseX or 1000BaseX.  If requested
+>>> +	 * to advertise both, only report advertising at 2500BaseX.
+>>> +	 */
+>>> +	phylink_helper_basex_speed(state);
+>>>  }
+>>>  
+>>>  static int mvneta_mac_link_state(struct net_device *ndev,
+>>> @@ -3389,7 +3401,9 @@ static int mvneta_mac_link_state(struct net_device *ndev,
+>>>  	gmac_stat = mvreg_read(pp, MVNETA_GMAC_STATUS);
+>>>  
+>>>  	if (gmac_stat & MVNETA_GMAC_SPEED_1000)
+>>> -		state->speed = SPEED_1000;
+>>> +		state->speed =
+>>> +			state->interface == PHY_INTERFACE_MODE_2500BASEX ?
+>>> +			SPEED_2500 : SPEED_1000;
+>>>  	else if (gmac_stat & MVNETA_GMAC_SPEED_100)
+>>>  		state->speed = SPEED_100;
+>>>  	else
+>>> @@ -3504,12 +3518,32 @@ static void mvneta_mac_config(struct net_device *ndev, unsigned int mode,
+>>>  			    MVNETA_GMAC_FORCE_LINK_DOWN);
+>>>  	}
+>>>  
+>>> +
+>>>  	/* When at 2.5G, the link partner can send frames with shortened
+>>>  	 * preambles.
+>>>  	 */
+>>>  	if (state->speed == SPEED_2500)
+>>>  		new_ctrl4 |= MVNETA_GMAC4_SHORT_PREAMBLE_ENABLE;
+>>>  
+>>> +	if (pp->comphy) {
+>>> +		enum phy_mode mode = PHY_MODE_INVALID;
+>>> +
+>>> +		switch (state->interface) {
+>>> +		case PHY_INTERFACE_MODE_SGMII:
+>>> +		case PHY_INTERFACE_MODE_1000BASEX:
+>>> +			mode = PHY_MODE_SGMII;
+>>> +			break;
+>>> +		case PHY_INTERFACE_MODE_2500BASEX:
+>>> +			mode = PHY_MODE_2500SGMII;
+>>> +			break;
+>>> +		default:
+>>> +			break;
+>>> +		}
+>>> +
+>>> +		if (mode != PHY_MODE_INVALID)
+>>> +			WARN_ON(phy_set_mode(pp->comphy, mode));
+>>> +	}
+>>> +
+>>>  	if (new_ctrl0 != gmac_ctrl0)
+>>>  		mvreg_write(pp, MVNETA_GMAC_CTRL_0, new_ctrl0);
+>>>  	if (new_ctrl2 != gmac_ctrl2)
+>>> @@ -4411,7 +4445,7 @@ static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
+>>>  	if (phy_mode == PHY_INTERFACE_MODE_QSGMII)
+>>>  		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_QSGMII_SERDES_PROTO);
+>>>  	else if (phy_mode == PHY_INTERFACE_MODE_SGMII ||
+>>> -		 phy_mode == PHY_INTERFACE_MODE_1000BASEX)
+>>> +		 phy_interface_mode_is_8023z(phy_mode))
+>>>  		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_SGMII_SERDES_PROTO);
+>>>  	else if (!phy_interface_mode_is_rgmii(phy_mode))
+>>>  		return -EINVAL;
+>>> @@ -4428,6 +4462,7 @@ static int mvneta_probe(struct platform_device *pdev)
+>>>  	struct mvneta_port *pp;
+>>>  	struct net_device *dev;
+>>>  	struct phylink *phylink;
+>>> +	struct phy *comphy;
+>>>  	const char *dt_mac_addr;
+>>>  	char hw_mac_addr[ETH_ALEN];
+>>>  	const char *mac_from;
+>>> @@ -4453,6 +4488,14 @@ static int mvneta_probe(struct platform_device *pdev)
+>>>  		goto err_free_irq;
+>>>  	}
+>>>  
+>>> +	comphy = devm_of_phy_get(&pdev->dev, dn, NULL);
+>>> +	if (comphy == ERR_PTR(-EPROBE_DEFER)) {
+>>> +		err = -EPROBE_DEFER;
+>>> +		goto err_free_irq;
+>>> +	} else if (IS_ERR(comphy)) {
+>>> +		comphy = NULL;
+>>> +	}
+>>
+>> devm_phy_optional_get can be used here instead.
+> 
+> I don't think that will work with a NULL string.
+
+That's correct.
+> 
+> devm_phy_optional_get() ultimately ends up calling phy_get(), which
+> in this case would receive a NULL string.  It will pass that NULL
+> string to of_property_match_string().
+
+There is a check for (string == NULL), even before of_property_match_string is
+invoked in phy_get()
+> 
+> of_property_match_string() will try to find the "phy-names" property,
+> which will not exist, and hence will return -EINVAL.
+> 
+> phy_get() doesn't check for error conditions, but passes this directly
+> to _of_phy_get() as the index.  _of_phy_get() passes that on to
+> of_parse_phandle_with_args(), which will fail to find an entry with
+> cur_index == -EINVAL (since it counts up from zero.)  Hence,
+> _of_phy_get() will return -ENODEV, thereby causing
+> devm_phy_optional_get() to return NULL, even if there's a phys=
+> property present.
+> 
+> of_phy_get() and phy_get() have different behaviours when a NULL string
+> is passed in - the of_phy_get() family will get the first PHY specified
+> in the DT phys= property, whereas the phy_get() family of functions
+> will fail.
+
+Agreed. I'll fix this so that we have similar behavior with of_phy_get() and
+phy_get().
+> 
+> Since there is no devm_of_phy_optional_get(), that leads people down
+> the path of coding that functionality at the callsites, such as in
+> drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c.
+
+Okay.
+
+Thanks
+Kishon
+
+
+> 
