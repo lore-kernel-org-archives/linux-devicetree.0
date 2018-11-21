@@ -1,55 +1,51 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 2/3] dt-bindings: mfd: atmel-usart: add DMA bindings for
- SPI mode
-Date: Wed, 21 Nov 2018 22:21:57 +0100
-Message-ID: <20181121212157.GD12656@piout.net>
-References: <20181121112732.15690-1-radu_nicolae.pirea@upb.ro>
- <20181121112732.15690-3-radu_nicolae.pirea@upb.ro>
- <CAL_JsqLNURZTWCb5WOyJvN-trUP9r-ueftwUOGWPnrEaQPBKSw@mail.gmail.com>
- <20181121164820.GC12656@piout.net>
- <CAL_JsqLO_L+rTZh70nrpBMU1+CYKct7HhNY0gLGUnU7=JVRuQw@mail.gmail.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [RFC v3 2/3] dt-bindings: sdm845-pinctrl: add wakeup interrupt parent
+ for GPIO
+Date: Wed, 21 Nov 2018 13:36:21 -0800
+Message-ID: <154283618199.88331.10217252750356423959@swboyd.mtv.corp.google.com>
+References: <20181121000648.29262-1-ilina@codeaurora.org>
+ <20181121000648.29262-3-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLO_L+rTZh70nrpBMU1+CYKct7HhNY0gLGUnU7=JVRuQw@mail.gmail.com>
+In-Reply-To: <20181121000648.29262-3-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: radu_nicolae.pirea@upb.ro, Richard Genoud <richard.genoud@gmail.com>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Ludovic Desroches <ludovic.desroches@microchip.co>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-spi <linux-spi@vger.kernel.org>
+To: evgreen@chromium.org, marc.zyngier@arm.com
+Cc: linux-kernel@vger.kernel.org, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, thierry.reding@gmail.com, Lina Iyer <ilina@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21/11/2018 14:52:29-0600, Rob Herring wrote:
-> On Wed, Nov 21, 2018 at 10:48 AM Alexandre Belloni
-> <alexandre.belloni@bootlin.com> wrote:
-> >
-> > Hi Rob,
-> >
-> > On 21/11/2018 10:41:01-0600, Rob Herring wrote:
-> > > > +Optional properties in serial and SPI mode:
-> > > > +- dma bindings for dma transfer:
-> > > > +       - dmas: DMA specifier, consisting of a phandle to DMA controller node,
-> > > > +               memory peripheral interface and USART DMA channel ID, FIFO configuration.
-> > > > +               Refer to dma.txt and atmel-dma.txt for details.
-> > > > +       - dma-names: "rx" for RX channel, "tx" for TX channel.
-> > >
-> > > > +               dma-names = "tx", "rx";
-> > >
-> > > The dma-names should have a defined order.
-> > >
-> >
-> > Why is that? Isn't the purpose of names to get rid of any particular
-> > ordering?
-> 
-> Because a fundamental rule of DT is the order is defined and
-> important. The purpose was to allow for cases that had a variable
-> number of entries, but even a variable number still have a defined
-> order.
-> 
+Quoting Lina Iyer (2018-11-20 16:06:47)
+> SDM845 SoC has an always-on interrupt controller (PDC) with select GPIO
+> routed to the PDC as interrupts that can be used to wake the system up
+> from deep low power modes and suspend.
+> =
 
-Thank you for the clarification!
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> ---
+>  .../bindings/pinctrl/qcom,sdm845-pinctrl.txt  | 31 ++++++++++++++++++-
+>  1 file changed, 30 insertions(+), 1 deletion(-)
+> =
 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctr=
+l.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+> index 665aadb5ea28..bedfa0b57fa6 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+> @@ -29,6 +29,17 @@ SDM845 platform.
+>         Definition: must be 2. Specifying the pin number and flags, as de=
+fined
+>                     in <dt-bindings/interrupt-controller/irq.h>
+>  =
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> +- wakeup-parent:
+> +       Usage: optional
+> +       Value type: <phandle>
+> +       Definition: A phandle to the wakeup interrupt controller for the =
+SoC.
+> +
+> +- wakeup-irq:
+
+This shouldn't be needed. TLMM driver can probe for the possibility of
+wakeup capable irqs from irq allocation step. The only place we should
+need to know what TLMM pins map to what PDC lines is in the PDC driver.
