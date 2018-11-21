@@ -1,23 +1,90 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Subject: Re: [PATCHv2 1/2] can: xilinx: add can 2.0 support
-Date: Wed, 21 Nov 2018 13:52:38 +0530
-Message-ID: <CAKfKVtG46UrfbdsO9poxGUx9sK6NbrEbjcCauLw5ZK0w7rcSvA@mail.gmail.com>
-References: <1539318309-13715-1-git-send-email-shubhrajyoti.datta@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH V3] arm64: dts: r8a77990: ebisu: Add and enable SDHI
+ device nodes
+Date: Wed, 21 Nov 2018 09:39:15 +0100
+Message-ID: <CAMuHMdWXYLkUqBdaYT0f0=OYKi7q5tTFgTRXp28zAiMV_7qFcg@mail.gmail.com>
+References: <20181106204647.18051-1-marek.vasut+renesas@gmail.com>
+ <CAMuHMdWQYt4nrjBeQnWcZ+OOT+UX=9KTu3Lki7aS=n3n8FczZg@mail.gmail.com>
+ <94869436-7841-537a-4760-8f117b06200f@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1539318309-13715-1-git-send-email-shubhrajyoti.datta@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: linux-can@vger.kernel.org, netdev@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>, David Miller <davem@davemloft.net>, mkl@pengutronix.de, wg@grandegger.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <94869436-7841-537a-4760-8f117b06200f@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Liam Girdwood <lgirdwood@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 12, 2018 at 10:06 AM <shubhrajyoti.datta@gmail.com> wrote:
->
-> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
->
-> Add support for can 2.0.
->
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> ---
-ping
+T24gV2VkLCBOb3YgMjEsIDIwMTggYXQgMTI6MzMgQU0gTWFyZWsgVmFzdXQgPG1hcmVrLnZhc3V0
+QGdtYWlsLmNvbT4gd3JvdGU6Cj4gT24gMTEvMjAvMjAxOCAxMToxNiBBTSwgR2VlcnQgVXl0dGVy
+aG9ldmVuIHdyb3RlOgo+ID4gT24gVHVlLCBOb3YgNiwgMjAxOCBhdCA5OjQ2IFBNIE1hcmVrIFZh
+c3V0IDxtYXJlay52YXN1dEBnbWFpbC5jb20+IHdyb3RlOgo+ID4+IEZyb206IFRha2VzaGkgS2lo
+YXJhIDx0YWtlc2hpLmtpaGFyYS5kZkByZW5lc2FzLmNvbT4KPiA+Pgo+ID4+IFRoaXMgcGF0Y2gg
+YWRkcyBTREhJezAsMSwzfSBkZXZpY2Ugbm9kZXMgZm9yIHRoZSByOGE3Nzk5MCBTb0MKPiA+PiBh
+bmQgZW5hYmxlcyBTRCBjYXJkIHNsb3QgY29ubmVjdGVkIHRvIFNESEkwLCBtaWNybyBTRCBjYXJk
+IHNsb3QKPiA+PiBjb25uZWN0ZWQgdG8gU0RISTEgYW5kIGVNTUMgY29ubmVjdGVkIHRvIFNESEkz
+IG9uIHRoZSBFYmlzdSBib2FyZAo+ID4+IHVzaW5nIHRoZSBSOEE3Nzk5MCBTb0MuCj4gPj4KPiA+
+PiBTaWduZWQtb2ZmLWJ5OiBUYWtlc2hpIEtpaGFyYSA8dGFrZXNoaS5raWhhcmEuZGZAcmVuZXNh
+cy5jb20+Cj4gPj4gU2lnbmVkLW9mZi1ieTogTWFyZWsgVmFzdXQgPG1hcmVrLnZhc3V0K3JlbmVz
+YXNAZ21haWwuY29tPgo+ID4KPiA+PiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMv
+cjhhNzc5OTAtZWJpc3UuZHRzCj4gPj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2Fz
+L3I4YTc3OTkwLWViaXN1LmR0cwo+ID4+IEBAIC0xMjksNiArMTI5LDE1IEBACj4gPj4gICAgICAg
+ICAgICAgICAgIH07Cj4gPj4gICAgICAgICB9Owo+ID4+Cj4gPj4gKyAgICAgICByZWdfMXA4djog
+cmVndWxhdG9yMCB7Cj4gPj4gKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicmVndWxhdG9y
+LWZpeGVkIjsKPiA+PiArICAgICAgICAgICAgICAgcmVndWxhdG9yLW5hbWUgPSAiZml4ZWQtMS44
+ViI7Cj4gPj4gKyAgICAgICAgICAgICAgIHJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDE4MDAw
+MDA+Owo+ID4+ICsgICAgICAgICAgICAgICByZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxODAw
+MDAwPjsKPiA+PiArICAgICAgICAgICAgICAgcmVndWxhdG9yLWJvb3Qtb247Cj4gPj4gKyAgICAg
+ICAgICAgICAgIHJlZ3VsYXRvci1hbHdheXMtb247Cj4gPj4gKyAgICAgICB9Owo+ID4+ICsKPiA+
+PiAgICAgICAgIHJlZ18zcDN2OiByZWd1bGF0b3IxIHsKPiA+PiAgICAgICAgICAgICAgICAgY29t
+cGF0aWJsZSA9ICJyZWd1bGF0b3ItZml4ZWQiOwo+ID4+ICAgICAgICAgICAgICAgICByZWd1bGF0
+b3ItbmFtZSA9ICJmaXhlZC0zLjNWIjsKPiA+PiBAQCAtMTgwLDYgKzE4OSw1NCBAQAo+ID4+ICAg
+ICAgICAgICAgICAgICAjY2xvY2stY2VsbHMgPSA8MD47Cj4gPj4gICAgICAgICAgICAgICAgIGNs
+b2NrLWZyZXF1ZW5jeSA9IDw3NDI1MDAwMD47Cj4gPj4gICAgICAgICB9Owo+ID4+ICsKPiA+PiAr
+ICAgICAgIHZjY19zZGhpMDogcmVndWxhdG9yLXZjYy1zZGhpMCB7Cj4gPj4gKyAgICAgICAgICAg
+ICAgIGNvbXBhdGlibGUgPSAicmVndWxhdG9yLWZpeGVkIjsKPiA+PiArCj4gPj4gKyAgICAgICAg
+ICAgICAgIHJlZ3VsYXRvci1uYW1lID0gIlNESEkwIFZjYyI7Cj4gPj4gKyAgICAgICAgICAgICAg
+IHJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMzMDAwMDA+Owo+ID4+ICsgICAgICAgICAgICAg
+ICByZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwzMzAwMDAwPjsKPiA+PiArCj4gPj4gKyAgICAg
+ICAgICAgICAgIGdwaW8gPSA8JmdwaW81IDE3IEdQSU9fQUNUSVZFX0hJR0g+Owo+ID4+ICsgICAg
+ICAgICAgICAgICBlbmFibGUtYWN0aXZlLWhpZ2g7Cj4gPj4gKyAgICAgICB9Owo+ID4+ICsKPiA+
+PiArICAgICAgIHZjY3Ffc2RoaTA6IHJlZ3VsYXRvci12Y2NxLXNkaGkwIHsKPiA+PiArICAgICAg
+ICAgICAgICAgY29tcGF0aWJsZSA9ICJyZWd1bGF0b3ItZ3BpbyI7Cj4gPj4gKwo+ID4+ICsgICAg
+ICAgICAgICAgICByZWd1bGF0b3ItbmFtZSA9ICJTREhJMCBWY2NRIjsKPiA+PiArICAgICAgICAg
+ICAgICAgcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MTgwMDAwMD47Cj4gPj4gKyAgICAgICAg
+ICAgICAgIHJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMzMDAwMDA+Owo+ID4+ICsKPiA+PiAr
+ICAgICAgICAgICAgICAgZ3Bpb3MgPSA8JmdwaW81IDE4IEdQSU9fQUNUSVZFX0hJR0g+Owo+ID4+
+ICsgICAgICAgICAgICAgICBncGlvcy1zdGF0ZXMgPSA8MT47Cj4gPj4gKyAgICAgICAgICAgICAg
+IHN0YXRlcyA9IDwzMzAwMDAwIDEKPiA+PiArICAgICAgICAgICAgICAgICAgICAgICAgIDE4MDAw
+MDAgMD47Cj4gPgo+ID4gSSBrbm93IHRoaXMgaXMgaG93IGl0J3MgZG9uZSBpbiB0aGUgZXhhbXBs
+ZSBpbgo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9ncGlv
+LXJlZ3VsYXRvci50eHQsCj4gPiBidXQgdXN1YWxseSBicmFja2V0cyBhcmUgdXNlZCB0byBncm91
+cCB0dXBsZXMsIGxpa2U6Cj4gPgo+ID4gICAgIHN0YXRlcyA9IDwzMzAwMDAwIDE+LCA8MTgwMDAw
+MCAwPjsKPiA+Cj4gPiBQZXJoYXBzIHRoZSBleGFtcGxlIHNob3VsZCBiZSBjaGFuZ2VkPwo+Cj4g
+V2VsbCwgbG9va2luZyB0aHJvdWdoIHRoZSBEVFMsIEkgZG9uJ3Qgc2VlIGFueW9uZSB1c2luZyB0
+dXBsZXMgZm9yIHRoZQo+IEdQSU8gcmVndWxhdG9yIHN0YXRlcy4gVGhlbiBhZ2FpbiwgaXQgY291
+bGQgYmUgdXBkYXRlZC4KClByb2JhYmx5IGEgZ29vZCBpZGVhIGdpdmVuIHRoZSBjdXJyZW50IHdv
+cmsgb24gc2NoZW1hIHZhbGlkYXRpb246CgogICAgRFQgWUFNTCBFbmNvZGluZwogICAgLi4uCiAg
+ICBkdHMg4oCYPCA+4oCZIGFyZSBtYWludGFpbmVkCiAgICAgIOKXiyBXaWxsIG5lZWQgdG8gYmUg
+c3RyaWN0ZXIgYWJvdXQgdGhlc2UKICAgICAg4peLIFNhbWUgZm9yIGR0Yiwgbm90IGZvciB2YWxp
+ZGF0aW9uOgogICAgICAgICAg4pagIHByb3AgPSA8MSAyIDMgND47CiAgICAgICAgICDilqAgcHJv
+cCA9IDwxPiwgPDI+LCA8Mz4sIDw0PjsKCmh0dHBzOi8vd3d3LmVsaW51eC5vcmcvaW1hZ2VzLzYv
+NmIvTFBDMjAxOF9qc29uLXNjaGVtYV9mb3JfRGV2aWNldHJlZS5wZGYKCkdye29ldGplLGVldGlu
+Z31zLAoKICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQKCi0tIApHZWVydCBVeXR0ZXJob2V2
+ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02
+OGsub3JnCgpJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwg
+SSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0CndoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlz
+dHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4KICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcwoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
+aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
