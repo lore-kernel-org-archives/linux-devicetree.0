@@ -1,39 +1,64 @@
-From: <sugaya.taichi@socionext.com>
-Subject: RE: [PATCH 03/14] ARM: milbeaut: Add Milbeaut M10V early printk
-Date: Wed, 21 Nov 2018 04:07:19 +0000
-Message-ID: <7f32b467a1d84987b9d80cdd540e035b@SOC-EX02V.e01.socionext.com>
-References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
- <1542589274-13878-4-git-send-email-sugaya.taichi@socionext.com>
- <CAL_JsqKMK7nMUxZLu9eV8tpnCXsAr2F4j=xTO8UL0g8V30kYZg@mail.gmail.com>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: [PATCH v8 0/7] Add support for audiocodec in Allwinner
+	A64
+Date: Tue, 20 Nov 2018 21:17:45 -0800
+Message-ID: <20181121051752.18387-1-anarsoul@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKMK7nMUxZLu9eV8tpnCXsAr2F4j=xTO8UL0g8V30kYZg@mail.gmail.com>
-Content-Language: ja-JP
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, daniel.lezcano@linaro.org, tglx@linutronix.de, linux@armlinux.org.uk, jslaby@suse.com, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Vasily Khoruzhick <anarsoul@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iDQoNClRoYW5rIHlvdSBmb3IgeW91ciBjb21tZW50Lg0KDQo+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9iaCtkdEBrZXJuZWwu
-b3JnXQ0KPiBTZW50OiBUdWVzZGF5LCBOb3ZlbWJlciAyMCwgMjAxOCAxMjoyMSBBTQ0KPiBUbzog
-U3VnYXlhLCBUYWljaGkv6I+F6LC3IOWkquS4gA0KPiBDYzogbGludXgtY2xrOyBkZXZpY2V0cmVl
-QHZnZXIua2VybmVsLm9yZzsgbW9kZXJhdGVkIGxpc3Q6QVJNL0ZSRUVTQ0FMRQ0KPiBJTVggLyBN
-WEMgQVJNIEFSQ0hJVEVDVFVSRTsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgb3BlbiBs
-aXN0OlNFUklBTA0KPiBEUklWRVJTOyBNaWNoYWVsIFR1cnF1ZXR0ZTsgU3RlcGhlbiBCb3lkOyBN
-YXJrIFJ1dGxhbmQ7IEdyZWcgS3JvYWgtSGFydG1hbjsNCj4gRGFuaWVsIExlemNhbm87IFRob21h
-cyBHbGVpeG5lcjsgUnVzc2VsbCBLaW5nOyBKaXJpIFNsYWJ5OyBNYXNhbWkgSGlyYW1hdHN1Ow0K
-PiBKYXNzaSBCcmFyDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMDMvMTRdIEFSTTogbWlsYmVhdXQ6
-IEFkZCBNaWxiZWF1dCBNMTBWIGVhcmx5IHByaW50aw0KPiANCj4gT24gU3VuLCBOb3YgMTgsIDIw
-MTggYXQgNzowMCBQTSBTdWdheWEgVGFpY2hpDQo+IDxzdWdheWEudGFpY2hpQHNvY2lvbmV4dC5j
-b20+IHdyb3RlOg0KPiA+DQo+ID4gQWRkIE1pbGJlYXV0IE0xMFYgZWFybHlwcmludGsuDQo+IA0K
-PiBEbyB5b3UgcmVhbGx5IG5lZWQgZWFybHlwcmludGs/IGVhcmx5Y29uIGlzIHByZWZlcnJlZCBp
-bnN0ZWFkLiBJdCdzDQo+IG5vdCBxdWl0ZSBhcyBlYXJseSwgYnV0IGRvZXNuJ3QgcmVxdWlyZSBy
-ZWJ1aWxkaW5nIHRoZSBrZXJuZWwgYW5kDQo+IHN1cHBvcnRzIG1vcmUgdGhhbiAxIGZpeGVkIGRl
-dmljZS4gSWYgeW91IGNyYXNoIGJlZm9yZSBlYXJseWNvbiBpcw0KPiBlbmFibGVkLCB0aGF0IHBy
-ZXR0eSBtdWNoIG1lYW5zIGVpdGhlciBhIGJhZCBkdGIgbWVtb3J5IG5vZGUgb3IganVzdA0KPiBm
-bGFreSBtZW1vcnkuDQpPSy4gSSB1c2UgZWFybHljb24gc2luY2Ugd291bGQgbGlrZSB0byB1c2Ug
-ZmxleGlibGUgZnVuY3Rpb25zLg0KDQpUaGFua3MNClN1Z2F5YSBUYWljaGkNCg0KPiANCj4gUm9i
-DQo=
+v2: - Use simple-amplifier for speaker amp on Pinebook
+    - Rename sun50i-a64-i2s to sun50i-a64-codec-i2s to preserve compatible
+      string for other 3 I2S modules in A64 in case if there's any
+      incompatibility with H3
+v3: - renamed sunxi-adda-pr-regmap to sun8i-adda-pr-regmap
+    - use ilog2() to calculate reg value for LRCK div instead of using a
+      table
+v4: - dts: don't use 'Mic' and 'Headset Mic' widgets from sun8i-codec,
+      define our board-level widgets instead.
+v5: - collect all the tags
+v6: - driver patches has been merged through ASoC tree
+    - rebase onto 4.20-rc1
+    - Drop 'Speaker' from routes on sopine and pine64, they don't have
+      speaker.
+v7: - drop 'Mic' and 'Headset Mic' from dtsi
+    - move AIF1 Slot 0 ADC to ADC route to sun8i-codec
+    - drop BIAS routes for Pine64 and SoPine
+v8  - drop merged patches
+    - add regulator property for simple amplifier, make enable-gpio
+      optional
+    - add regulator to speaker amp, introduce headphone amp
+
+
+Vasily Khoruzhick (7):
+  ASoC: dt-bindings: add regulator property to simple amplifier
+  ASoC: simple-amplifier: add VCC regulator widget
+  ASoC: dt-bindings: make enable-gpio optional for simple amplifier
+  ASoC: simple-amplifier: make enable-gpio optional
+  arm64: dts: allwinner: a64: add nodes necessary for analog sound
+    support
+  arm64: dts: allwinner: a64: enable sound on Pine64 and SoPine
+  arm64: dts: allwinner: a64: enable sound on Pinebook
+
+ .../bindings/sound/simple-amplifier.txt       |  5 ++
+ .../boot/dts/allwinner/sun50i-a64-pine64.dts  | 35 ++++++++++++
+ .../dts/allwinner/sun50i-a64-pinebook.dts     | 53 ++++++++++++++++++
+ .../allwinner/sun50i-a64-sopine-baseboard.dts | 35 ++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 54 +++++++++++++++++++
+ sound/soc/codecs/simple-amplifier.c           |  7 ++-
+ 6 files changed, 188 insertions(+), 1 deletion(-)
+
+-- 
+2.19.1
