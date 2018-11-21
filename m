@@ -1,49 +1,34 @@
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v8 11/12] media: staging/imx: add i.MX7 entries to TODO file
-Date: Wed, 21 Nov 2018 11:15:57 +0000
-Message-ID: <20181121111558.10838-12-rui.silva@linaro.org>
-References: <20181121111558.10838-1-rui.silva@linaro.org>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH] ARM: dts: at91: nattis: initialize the BLON pin as
+ output-low early
+Date: Wed, 21 Nov 2018 12:25:21 +0100
+Message-ID: <20181121112521.GL8367@piout.net>
+References: <20181120212036.22497-1-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20181121111558.10838-1-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: sakari.ailus@linux.intel.com, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181120212036.22497-1-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add some i.MX7 related entries to TODO file.
+On 20/11/2018 21:20:43+0000, Peter Rosin wrote:
+> The pwm-backlight driver initializes BLON (the enable gpio) to
+> output-high if the gpio is input on probe. Initializing the gpio
+> to output-low before the driver probes prevents this action by
+> the pwm-backlight driver and gets rid of a nasty blink of full
+> backlight with an uninitialized panel.
+> 
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
+>  arch/arm/boot/dts/at91-nattis-2-natte-2.dts | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+Applied, thanks.
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
----
- drivers/staging/media/imx/TODO | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/staging/media/imx/TODO b/drivers/staging/media/imx/TODO
-index aeeb15494a49..6f29b5ca5324 100644
---- a/drivers/staging/media/imx/TODO
-+++ b/drivers/staging/media/imx/TODO
-@@ -45,3 +45,12 @@
- 
-      Which means a port must not contain mixed-use endpoints, they
-      must all refer to media links between V4L2 subdevices.
-+
-+- i.MX7: all of the above, since it uses the imx media core
-+
-+- i.MX7: use Frame Interval Monitor
-+
-+- i.MX7: runtime testing with parallel sensor, links setup and streaming
-+
-+- i.MX7: runtime testing with different formats, for the time only 10-bit bayer
-+  is tested
 -- 
-2.19.1
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
