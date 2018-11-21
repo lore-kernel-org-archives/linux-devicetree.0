@@ -1,14 +1,16 @@
-From: Aisheng DONG <aisheng.dong@nxp.com>
-Subject: [PATCH V8 5/7] dt-bindings: clock: add imx8qxp lpcg clock binding
-Date: Wed, 21 Nov 2018 14:12:34 +0000
-Message-ID: <1542809234-539-6-git-send-email-aisheng.dong@nxp.com>
-References: <1542809234-539-1-git-send-email-aisheng.dong@nxp.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 01/10] mailbox: Support blocking transfers in atomic
+ context
+Date: Wed, 21 Nov 2018 15:27:40 +0100
+Message-ID: <20181121142740.GA29704@ulmo>
+References: <20181112151853.29289-1-thierry.reding@gmail.com>
+ <20181112151853.29289-2-thierry.reding@gmail.com>
+ <CABb+yY3HwvG6sSKnweiDpyg85Fk8Q9hOVaF-s7gv4RDzEoaGqA@mail.gmail.com>
+ <20181120152907.GA28796@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============5090347075083841764=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1542809234-539-1-git-send-email-aisheng.dong@nxp.com>
-Content-Language: en-US
+In-Reply-To: <20181120152907.GA28796@ulmo>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,252 +20,142 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Cc: Aisheng DONG <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Devicetree List <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, mliljeberg@nvidia.com, Mikko Perttunen <mperttunen@nvidia.com>, talho@nvidia.com, linux-serial@vger.kernel.org, jslaby@suse.com, linux-tegra@vger.kernel.org, ppessi@nvidia.com, Jon Hunter <jonathanh@nvidia.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Low-Power Clock Gate (LPCG) modules contain a local programming
-model to control the clock gates for the peripherals. An LPCG module
-is used to locally gate the clocks for the associated peripheral.
 
-Note:
-This level of clock gating is provided after the clocks are generated
-by the SCU resources and clock controls. Thus even if the clock is
-enabled by these control bits, it might still not be running based
-on the base resource.
+--===============5090347075083841764==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
+Content-Disposition: inline
 
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
----
-v6->v8: no changes
----
- .../devicetree/bindings/clock/imx8qxp-lpcg.txt     |  51 +++++++
- include/dt-bindings/clock/imx8qxp-clock.h          | 153 +++++++++++++++++++++
- 2 files changed, 204 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
 
-diff --git a/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt b/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
-new file mode 100644
-index 0000000..965cfa4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
-@@ -0,0 +1,51 @@
-+* NXP i.MX8QXP LPCG (Low-Power Clock Gating) Clock bindings
-+
-+The Low-Power Clock Gate (LPCG) modules contain a local programming
-+model to control the clock gates for the peripherals. An LPCG module
-+is used to locally gate the clocks for the associated peripheral.
-+
-+Note:
-+This level of clock gating is provided after the clocks are generated
-+by the SCU resources and clock controls. Thus even if the clock is
-+enabled by these control bits, it might still not be running based
-+on the base resource.
-+
-+Required properties:
-+- compatible:	Should be one of:
-+		  "fsl,imx8qxp-lpcg-adma",
-+		  "fsl,imx8qxp-lpcg-conn",
-+		  "fsl,imx8qxp-lpcg-dc",
-+		  "fsl,imx8qxp-lpcg-dsp",
-+		  "fsl,imx8qxp-lpcg-gpu",
-+		  "fsl,imx8qxp-lpcg-hsio",
-+		  "fsl,imx8qxp-lpcg-img",
-+		  "fsl,imx8qxp-lpcg-lsio",
-+		  "fsl,imx8qxp-lpcg-vpu"
-+- reg:		Address and length of the register set
-+- #clock-cells:	Should be <1>
-+
-+The clock consumer should specify the desired clock by having the clock
-+ID in its "clocks" phandle cell.
-+See the full list of clock IDs from:
-+include/dt-bindings/clock/imx8qxp-clock.h
-+
-+Examples:
-+
-+#include <dt-bindings/clock/imx8qxp-clock.h>
-+
-+conn_lpcg: clock-controller@5b200000 {
-+	compatible = "fsl,imx8qxp-lpcg-conn";
-+	reg = <0x5b200000 0xb0000>;
-+	#clock-cells = <1>;
-+};
-+
-+usdhc1: mmc@5b010000 {
-+	compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
-+	interrupt-parent = <&gic>;
-+	interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
-+	reg = <0x5b010000 0x10000>;
-+	clocks = <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_IPG_CLK>,
-+		 <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_PER_CLK>,
-+		 <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_HCLK>;
-+	clock-names = "ipg", "per", "ahb";
-+};
-diff --git a/include/dt-bindings/clock/imx8qxp-clock.h b/include/dt-bindings/clock/imx8qxp-clock.h
-index d72a39c..6fec368 100644
---- a/include/dt-bindings/clock/imx8qxp-clock.h
-+++ b/include/dt-bindings/clock/imx8qxp-clock.h
-@@ -133,4 +133,157 @@
- 
- #define IMX8QXP_SCU_CLK_END				190
- 
-+/* LPCG clocks */
-+
-+/* LSIO SS LPCG */
-+#define IMX8QXP_LSIO_LPCG_PWM0_IPG_CLK			0
-+#define IMX8QXP_LSIO_LPCG_PWM0_IPG_S_CLK		1
-+#define IMX8QXP_LSIO_LPCG_PWM0_IPG_HF_CLK		2
-+#define IMX8QXP_LSIO_LPCG_PWM0_IPG_SLV_CLK		3
-+#define IMX8QXP_LSIO_LPCG_PWM0_IPG_MSTR_CLK		4
-+#define IMX8QXP_LSIO_LPCG_PWM1_IPG_CLK			5
-+#define IMX8QXP_LSIO_LPCG_PWM1_IPG_S_CLK		6
-+#define IMX8QXP_LSIO_LPCG_PWM1_IPG_HF_CLK		7
-+#define IMX8QXP_LSIO_LPCG_PWM1_IPG_SLV_CLK		8
-+#define IMX8QXP_LSIO_LPCG_PWM1_IPG_MSTR_CLK		9
-+#define IMX8QXP_LSIO_LPCG_PWM2_IPG_CLK			10
-+#define IMX8QXP_LSIO_LPCG_PWM2_IPG_S_CLK		11
-+#define IMX8QXP_LSIO_LPCG_PWM2_IPG_HF_CLK		12
-+#define IMX8QXP_LSIO_LPCG_PWM2_IPG_SLV_CLK		13
-+#define IMX8QXP_LSIO_LPCG_PWM2_IPG_MSTR_CLK		14
-+#define IMX8QXP_LSIO_LPCG_PWM3_IPG_CLK			15
-+#define IMX8QXP_LSIO_LPCG_PWM3_IPG_S_CLK		16
-+#define IMX8QXP_LSIO_LPCG_PWM3_IPG_HF_CLK		17
-+#define IMX8QXP_LSIO_LPCG_PWM3_IPG_SLV_CLK		18
-+#define IMX8QXP_LSIO_LPCG_PWM3_IPG_MSTR_CLK		19
-+#define IMX8QXP_LSIO_LPCG_PWM4_IPG_CLK			20
-+#define IMX8QXP_LSIO_LPCG_PWM4_IPG_S_CLK		21
-+#define IMX8QXP_LSIO_LPCG_PWM4_IPG_HF_CLK		22
-+#define IMX8QXP_LSIO_LPCG_PWM4_IPG_SLV_CLK		23
-+#define IMX8QXP_LSIO_LPCG_PWM4_IPG_MSTR_CLK		24
-+#define IMX8QXP_LSIO_LPCG_PWM5_IPG_CLK			25
-+#define IMX8QXP_LSIO_LPCG_PWM5_IPG_S_CLK		26
-+#define IMX8QXP_LSIO_LPCG_PWM5_IPG_HF_CLK		27
-+#define IMX8QXP_LSIO_LPCG_PWM5_IPG_SLV_CLK		28
-+#define IMX8QXP_LSIO_LPCG_PWM5_IPG_MSTR_CLK		29
-+#define IMX8QXP_LSIO_LPCG_PWM6_IPG_CLK			30
-+#define IMX8QXP_LSIO_LPCG_PWM6_IPG_S_CLK		31
-+#define IMX8QXP_LSIO_LPCG_PWM6_IPG_HF_CLK		32
-+#define IMX8QXP_LSIO_LPCG_PWM6_IPG_SLV_CLK		33
-+#define IMX8QXP_LSIO_LPCG_PWM6_IPG_MSTR_CLK		34
-+#define IMX8QXP_LSIO_LPCG_PWM7_IPG_CLK			35
-+#define IMX8QXP_LSIO_LPCG_PWM7_IPG_S_CLK		36
-+#define IMX8QXP_LSIO_LPCG_PWM7_IPG_HF_CLK		37
-+#define IMX8QXP_LSIO_LPCG_PWM7_IPG_SLV_CLK		38
-+#define IMX8QXP_LSIO_LPCG_PWM7_IPG_MSTR_CLK		39
-+#define IMX8QXP_LSIO_LPCG_GPT0_IPG_CLK			40
-+#define IMX8QXP_LSIO_LPCG_GPT0_IPG_S_CLK		41
-+#define IMX8QXP_LSIO_LPCG_GPT0_IPG_HF_CLK		42
-+#define IMX8QXP_LSIO_LPCG_GPT0_IPG_SLV_CLK		43
-+#define IMX8QXP_LSIO_LPCG_GPT0_IPG_MSTR_CLK		44
-+#define IMX8QXP_LSIO_LPCG_GPT1_IPG_CLK			45
-+#define IMX8QXP_LSIO_LPCG_GPT1_IPG_S_CLK		46
-+#define IMX8QXP_LSIO_LPCG_GPT1_IPG_HF_CLK		47
-+#define IMX8QXP_LSIO_LPCG_GPT1_IPG_SLV_CLK		48
-+#define IMX8QXP_LSIO_LPCG_GPT1_IPG_MSTR_CLK		49
-+#define IMX8QXP_LSIO_LPCG_GPT2_IPG_CLK			50
-+#define IMX8QXP_LSIO_LPCG_GPT2_IPG_S_CLK		51
-+#define IMX8QXP_LSIO_LPCG_GPT2_IPG_HF_CLK		52
-+#define IMX8QXP_LSIO_LPCG_GPT2_IPG_SLV_CLK		53
-+#define IMX8QXP_LSIO_LPCG_GPT2_IPG_MSTR_CLK		54
-+#define IMX8QXP_LSIO_LPCG_GPT3_IPG_CLK			55
-+#define IMX8QXP_LSIO_LPCG_GPT3_IPG_S_CLK		56
-+#define IMX8QXP_LSIO_LPCG_GPT3_IPG_HF_CLK		57
-+#define IMX8QXP_LSIO_LPCG_GPT3_IPG_SLV_CLK		58
-+#define IMX8QXP_LSIO_LPCG_GPT3_IPG_MSTR_CLK		59
-+#define IMX8QXP_LSIO_LPCG_GPT4_IPG_CLK			60
-+#define IMX8QXP_LSIO_LPCG_GPT4_IPG_S_CLK		61
-+#define IMX8QXP_LSIO_LPCG_GPT4_IPG_HF_CLK		62
-+#define IMX8QXP_LSIO_LPCG_GPT4_IPG_SLV_CLK		63
-+#define IMX8QXP_LSIO_LPCG_GPT4_IPG_MSTR_CLK		64
-+#define IMX8QXP_LSIO_LPCG_FSPI0_HCLK			65
-+#define IMX8QXP_LSIO_LPCG_FSPI0_IPG_CLK			66
-+#define IMX8QXP_LSIO_LPCG_FSPI0_IPG_S_CLK		67
-+#define IMX8QXP_LSIO_LPCG_FSPI0_IPG_SFCK		68
-+#define IMX8QXP_LSIO_LPCG_FSPI1_HCLK			69
-+#define IMX8QXP_LSIO_LPCG_FSPI1_IPG_CLK			70
-+#define IMX8QXP_LSIO_LPCG_FSPI1_IPG_S_CLK		71
-+#define IMX8QXP_LSIO_LPCG_FSPI1_IPG_SFCK		72
-+
-+#define IMX8QXP_LSIO_LPCG_CLK_END			73
-+
-+/* Connectivity SS LPCG */
-+#define IMX8QXP_CONN_LPCG_SDHC0_IPG_CLK			0
-+#define IMX8QXP_CONN_LPCG_SDHC0_PER_CLK			1
-+#define IMX8QXP_CONN_LPCG_SDHC0_HCLK			2
-+#define IMX8QXP_CONN_LPCG_SDHC1_IPG_CLK			3
-+#define IMX8QXP_CONN_LPCG_SDHC1_PER_CLK			4
-+#define IMX8QXP_CONN_LPCG_SDHC1_HCLK			5
-+#define IMX8QXP_CONN_LPCG_SDHC2_IPG_CLK			6
-+#define IMX8QXP_CONN_LPCG_SDHC2_PER_CLK			7
-+#define IMX8QXP_CONN_LPCG_SDHC2_HCLK			8
-+#define IMX8QXP_CONN_LPCG_GPMI_APB_CLK			9
-+#define IMX8QXP_CONN_LPCG_GPMI_BCH_APB_CLK		10
-+#define IMX8QXP_CONN_LPCG_GPMI_BCH_IO_CLK		11
-+#define IMX8QXP_CONN_LPCG_GPMI_BCH_CLK			12
-+#define IMX8QXP_CONN_LPCG_APBHDMA_CLK			13
-+#define IMX8QXP_CONN_LPCG_ENET0_ROOT_CLK		14
-+#define IMX8QXP_CONN_LPCG_ENET0_TX_CLK			15
-+#define IMX8QXP_CONN_LPCG_ENET0_AHB_CLK			16
-+#define IMX8QXP_CONN_LPCG_ENET0_IPG_S_CLK		17
-+#define IMX8QXP_CONN_LPCG_ENET0_IPG_CLK			18
-+
-+#define IMX8QXP_CONN_LPCG_ENET1_ROOT_CLK		19
-+#define IMX8QXP_CONN_LPCG_ENET1_TX_CLK			20
-+#define IMX8QXP_CONN_LPCG_ENET1_AHB_CLK			21
-+#define IMX8QXP_CONN_LPCG_ENET1_IPG_S_CLK		22
-+#define IMX8QXP_CONN_LPCG_ENET1_IPG_CLK			23
-+
-+#define IMX8QXP_CONN_LPCG_CLK_END			24
-+
-+/* ADMA SS LPCG */
-+#define IMX8QXP_ADMA_LPCG_UART0_IPG_CLK			0
-+#define IMX8QXP_ADMA_LPCG_UART0_BAUD_CLK		1
-+#define IMX8QXP_ADMA_LPCG_UART1_IPG_CLK			2
-+#define IMX8QXP_ADMA_LPCG_UART1_BAUD_CLK		3
-+#define IMX8QXP_ADMA_LPCG_UART2_IPG_CLK			4
-+#define IMX8QXP_ADMA_LPCG_UART2_BAUD_CLK		5
-+#define IMX8QXP_ADMA_LPCG_UART3_IPG_CLK			6
-+#define IMX8QXP_ADMA_LPCG_UART3_BAUD_CLK		7
-+#define IMX8QXP_ADMA_LPCG_SPI0_IPG_CLK			8
-+#define IMX8QXP_ADMA_LPCG_SPI1_IPG_CLK			9
-+#define IMX8QXP_ADMA_LPCG_SPI2_IPG_CLK			10
-+#define IMX8QXP_ADMA_LPCG_SPI3_IPG_CLK			11
-+#define IMX8QXP_ADMA_LPCG_SPI0_CLK			12
-+#define IMX8QXP_ADMA_LPCG_SPI1_CLK			13
-+#define IMX8QXP_ADMA_LPCG_SPI2_CLK			14
-+#define IMX8QXP_ADMA_LPCG_SPI3_CLK			15
-+#define IMX8QXP_ADMA_LPCG_CAN0_IPG_CLK			16
-+#define IMX8QXP_ADMA_LPCG_CAN0_IPG_PE_CLK		17
-+#define IMX8QXP_ADMA_LPCG_CAN0_IPG_CHI_CLK		18
-+#define IMX8QXP_ADMA_LPCG_CAN1_IPG_CLK			19
-+#define IMX8QXP_ADMA_LPCG_CAN1_IPG_PE_CLK		20
-+#define IMX8QXP_ADMA_LPCG_CAN1_IPG_CHI_CLK		21
-+#define IMX8QXP_ADMA_LPCG_CAN2_IPG_CLK			22
-+#define IMX8QXP_ADMA_LPCG_CAN2_IPG_PE_CLK		23
-+#define IMX8QXP_ADMA_LPCG_CAN2_IPG_CHI_CLK		24
-+#define IMX8QXP_ADMA_LPCG_I2C0_CLK			25
-+#define IMX8QXP_ADMA_LPCG_I2C1_CLK			26
-+#define IMX8QXP_ADMA_LPCG_I2C2_CLK			27
-+#define IMX8QXP_ADMA_LPCG_I2C3_CLK			28
-+#define IMX8QXP_ADMA_LPCG_I2C0_IPG_CLK			29
-+#define IMX8QXP_ADMA_LPCG_I2C1_IPG_CLK			30
-+#define IMX8QXP_ADMA_LPCG_I2C2_IPG_CLK			31
-+#define IMX8QXP_ADMA_LPCG_I2C3_IPG_CLK			32
-+#define IMX8QXP_ADMA_LPCG_FTM0_CLK			33
-+#define IMX8QXP_ADMA_LPCG_FTM1_CLK			34
-+#define IMX8QXP_ADMA_LPCG_FTM0_IPG_CLK			35
-+#define IMX8QXP_ADMA_LPCG_FTM1_IPG_CLK			36
-+#define IMX8QXP_ADMA_LPCG_PWM_HI_CLK			37
-+#define IMX8QXP_ADMA_LPCG_PWM_IPG_CLK			38
-+#define IMX8QXP_ADMA_LPCG_LCD_PIX_CLK			39
-+#define IMX8QXP_ADMA_LPCG_LCD_APB_CLK			40
-+
-+#define IMX8QXP_ADMA_LPCG_CLK_END			41
-+
- #endif /* __DT_BINDINGS_CLOCK_IMX8QXP_H */
--- 
-2.7.4
+--bp/iNruPH9dso1Pn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Nov 20, 2018 at 04:29:07PM +0100, Thierry Reding wrote:
+> On Sat, Nov 17, 2018 at 11:27:17AM -0600, Jassi Brar wrote:
+> > On Mon, Nov 12, 2018 at 9:18 AM Thierry Reding <thierry.reding@gmail.co=
+m> wrote:
+> > >
+> > > From: Thierry Reding <treding@nvidia.com>
+> > >
+> > > The mailbox framework supports blocking transfers via completions for
+> > > clients that can sleep. In order to support blocking transfers in cas=
+es
+> > > where the transmission is not permitted to sleep, add a new ->flush()
+> > > callback that controller drivers can implement to busy loop until the
+> > > transmission has been completed. This will automatically be called wh=
+en
+> > > available and interrupts are disabled for clients that request blocki=
+ng
+> > > transfers.
+> > >
+> > > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > > ---
+> > >  drivers/mailbox/mailbox.c          | 8 ++++++++
+> > >  include/linux/mailbox_controller.h | 4 ++++
+> > >  2 files changed, 12 insertions(+)
+> > >
+> > > diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
+> > > index 674b35f402f5..0eaf21259874 100644
+> > > --- a/drivers/mailbox/mailbox.c
+> > > +++ b/drivers/mailbox/mailbox.c
+> > > @@ -267,6 +267,14 @@ int mbox_send_message(struct mbox_chan *chan, vo=
+id *mssg)
+> > >                 unsigned long wait;
+> > >                 int ret;
+> > >
+> > > +               if (irqs_disabled() && chan->mbox->ops->flush) {
+> > > +                       ret =3D chan->mbox->ops->flush(chan, chan->cl=
+->tx_tout);
+> > > +                       if (ret < 0)
+> > > +                               tx_tick(chan, ret);
+> > > +
+> > > +                       return ret;
+> > > +               }
+> > > +
+> > This is hacky. I think we can do without busy waiting in atomic
+> > context. You could queue locally while in atomic context and then
+> > transfer in blocking mode. I don't think we should worry about the
+> > 'throughput' as there already is no h/w rate control even with
+> > busy-waiting.
+>=20
+> I actually tried to do that before I added this flushing mechanism. The
+> problem is, like you said, one of rate control. As mentioned in the
+> cover letter, the shared mailboxes implemented in tegra-hsp are used as
+> RX and TX channels for the TCU, which is like a virtual UART. The TTY
+> driver included as part of this series will use one of the mailboxes to
+> transmit data that is written to the console. The problem is that if
+> these transmissions are not rate-limited on the TTY driver side, the
+> console will just keep writing data and eventually overflow the buffer
+> that we have in the mailbox subsystem.
+>=20
+> The problem is that data comes in at a much higher rate than what we can
+> output. This is especially true at boot when the TCU console takes over
+> and the whole log buffer is dumped on it.
+>=20
+> So the only way to rate-limit is to either make mbox_send_message()
+> block, but that can only be done in non-atomic context. The console,
+> however, will always run in atomic context, so the only way to do rate-
+> limiting is by busy looping.
+
+What I also tried before was to implement busy looping within the
+->send_data() callback of the driver so that we didn't have to put this
+into the core. Unfortunately, however, the ->send_data() callback is
+called under chan->lock, which means that from mbox_send_message() we
+don't have a way to mark the transfer as done. In order to do that we'd
+have to call mbox_chan_txdone(), but that ends up calling tx_tick() and
+that in turn also attempts to take the chan->lock, which would cause a
+deadlock.
+
+The explicit flushing is the best alternative that I could come up with.
+I think it's not all that hacky, because it's very explicit about what's
+going on and it has the nice side-effect that it will allow the mailbox
+to work in interrupt driven mode if possible and only resorting to the
+busy loop in atomic context.
+
+At this point I think I have explored all other options and I frankly
+can't find a more proper way to achieve what we need here. Perhaps you
+can think of additional ways to accomplish this?
+
+Thierry
+
+--bp/iNruPH9dso1Pn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlv1a1kACgkQ3SOs138+
+s6GExg/9FnPibOvLkQ2iF2HFskxFcFmtsZqvSkH6MW/O6X1GxXJT3y3hQIAHHRH8
+hrZv29c44ZowWaSkNAsElKDYs8i1hh6FT7gknLIAAYjdXHwNW/1S6W9Rjgd+uR9F
+PjtKX/4LNkyldTSszw7Nn42dVhK4EnCi4rMYhT8UUgG80kegiUYVn7dnm56C0W3A
+sRFOSEKhStXuMFCo0h5G4qamZa2hzTJUl/CMaVAOmWLhM2qjoOaUmUjWQSqooWlq
+569DPijvBTk9wS4tIT8ZpOkjejgQ8n5SspWaGu1hdkZZemniBjuMtc1gdTEAkbcj
+x86iiHS6/KwM3or9MqFsxsETRwjpz7wKP55tSMJ90v2x0JcaKXpnarbbhIfgwpaQ
+GhaUldu2TfjvsQyf1JQQgzHgaS4+iw3sp6y2DfP9rkkpqr1sZhBaKtklO6oen3s7
+rDWu4hg2Cw3hyXZi09200keIVOdmaVFNCO/AVz75vSUJ8yi7zYovdIr4LxX5pXi0
+iqcTXAThEXqTe+2/KqTsxRS29WGTG+L/aoeZewzfZ4bkDB3uD55sRnvs6tySlVFv
+M63pew9SOKDJRT0CvTDkek5sANTkv2b44Sl9AGtJcSPFokt8SH+Q7dpNbJHuUTzN
+m7ehmW9YZnqXb9PLQcDwjDfxTctakVL7l1MKnhu9JnP/ApaOvRs=
+=aN9X
+-----END PGP SIGNATURE-----
+
+--bp/iNruPH9dso1Pn--
+
+
+--===============5090347075083841764==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5090347075083841764==--
