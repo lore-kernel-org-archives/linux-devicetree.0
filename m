@@ -1,7 +1,7 @@
 From: Stephen Boyd <sboyd@kernel.org>
 Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Mark protected gcc clocks
-Date: Wed, 21 Nov 2018 01:01:34 -0800
-Message-ID: <154279089454.88331.1059903104788594574@swboyd.mtv.corp.google.com>
+Date: Wed, 21 Nov 2018 01:07:38 -0800
+Message-ID: <154279125838.88331.18392289591312243428@swboyd.mtv.corp.google.com>
 References: <20181106055013.11271-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -25,9 +25,7 @@ Quoting Bjorn Andersson (2018-11-05 21:50:13)
 > ---
 > =
 
-> This depends on the acceptance of
-> https://lore.kernel.org/lkml/20181105194011.43770-1-swboyd@chromium.org/
 
-Do you need me to merge this into clk-fixes so that Andy can send this
-up for v4.20 final? I thought you may have other boot blocking issues so
-this wouldn't be a critical fix.
+Sorry, I meant to say do you want me to send in the protected clk
+patches into clk-fixes so it can be merged for v4.20 final. I expected
+Andy to pick up these dts patches.
