@@ -1,34 +1,33 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH 2/2] clk: qcom: Support 'protected-clocks' property
-Date: Wed, 21 Nov 2018 01:00:23 -0800
-Message-ID: <154279082358.88331.12065362627893713159@swboyd.mtv.corp.google.com>
-References: <20181105194011.43770-1-swboyd@chromium.org>
- <20181105194011.43770-3-swboyd@chromium.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Mark protected gcc clocks
+Date: Wed, 21 Nov 2018 01:01:34 -0800
+Message-ID: <154279089454.88331.1059903104788594574@swboyd.mtv.corp.google.com>
+References: <20181106055013.11271-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181105194011.43770-3-swboyd@chromium.org>
+In-Reply-To: <20181106055013.11271-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Taniya Das <tdas@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+To: Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Stephen Boyd (2018-11-05 11:40:11)
-> Certain firmware configurations "protect" clks and cause the entire
-> system to reboot when a non-secure OS such as Linux tries to read or
-> write protected clk registers. But other firmware configurations allow
-> reading or writing the same registers, and they may actually require
-> that the OS use the otherwise locked down clks. Support the
-> 'protected-clocks' property by never registering these protected clks
-> with the common clk framework. This way, when firmware is protecting
-> these clks we won't have the chance to ever read or write these
-> registers and take down the entire system.
+Quoting Bjorn Andersson (2018-11-05 21:50:13)
+> As of v4.20-rc1 probing the GCC driver on a SDM845 device with the
+> standard security implementation causes an access violation and an
+> immediate system restart. Use the protected-clocks property to mark the
+> offending clocks protected for the MTP, in order to allow it to boot.
 > =
 
-> Cc: Taniya Das <tdas@codeaurora.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
+> =
 
-Applied to clk-next
+> This depends on the acceptance of
+> https://lore.kernel.org/lkml/20181105194011.43770-1-swboyd@chromium.org/
+
+Do you need me to merge this into clk-fixes so that Andy can send this
+up for v4.20 final? I thought you may have other boot blocking issues so
+this wouldn't be a critical fix.
