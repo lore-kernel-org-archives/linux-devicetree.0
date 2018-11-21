@@ -1,205 +1,200 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v10 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq
- HW driver
-Date: Wed, 21 Nov 2018 14:06:14 -0800
-Message-ID: <20181121220614.GU22824@google.com>
-References: <1542796967-5949-1-git-send-email-tdas@codeaurora.org>
- <1542796967-5949-3-git-send-email-tdas@codeaurora.org>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v8 05/12] media: dt-bindings: add bindings for i.MX7
+ media driver
+Date: Thu, 22 Nov 2018 00:16:14 +0200
+Message-ID: <20181121221613.qg66c5fxm5i7vip2@mara.localdomain>
+References: <20181121111558.10838-1-rui.silva@linaro.org>
+ <20181121111558.10838-6-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <1542796967-5949-3-git-send-email-tdas@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
+In-Reply-To: <20181121111558.10838-6-rui.silva@linaro.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 21, 2018 at 04:12:47PM +0530, Taniya Das wrote:
-> The CPUfreq HW present in some QCOM chipsets offloads the steps necessary
-> for changing the frequency of CPUs. The driver implements the cpufreq
-> driver interface for this hardware engine.
+Hi Rui,
+
+On Wed, Nov 21, 2018 at 11:15:51AM +0000, Rui Miguel Silva wrote:
+> Add bindings documentation for i.MX7 media drivers.
+> The imx7 MIPI CSI2 and imx7 CMOS Sensor Interface.
 > 
-> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 > ---
->  drivers/cpufreq/Kconfig.arm       |  11 ++
->  drivers/cpufreq/Makefile          |   1 +
->  drivers/cpufreq/qcom-cpufreq-hw.c | 346 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 358 insertions(+)
->  create mode 100644 drivers/cpufreq/qcom-cpufreq-hw.c
+>  .../devicetree/bindings/media/imx7-csi.txt    | 45 ++++++++++
+>  .../bindings/media/imx7-mipi-csi2.txt         | 90 +++++++++++++++++++
+>  2 files changed, 135 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/imx7-csi.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
 > 
-> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-> index 4e1131e..688f102 100644
-> --- a/drivers/cpufreq/Kconfig.arm
-> +++ b/drivers/cpufreq/Kconfig.arm
-> @@ -114,6 +114,17 @@ config ARM_QCOM_CPUFREQ_KRYO
-> 
->  	  If in doubt, say N.
-> 
-> +config ARM_QCOM_CPUFREQ_HW
-> +	tristate "QCOM CPUFreq HW driver"
-> +	depends on ARCH_QCOM || COMPILE_TEST
-> +	help
-> +	  Support for the CPUFreq HW driver.
-> +	  Some QCOM chipsets have a HW engine to offload the steps
-> +	  necessary for changing the frequency of the CPUs. Firmware loaded
-> +	  in this engine exposes a programming interface to the OS.
-> +	  The driver implements the cpufreq interface for this HW engine.
-> +	  Say Y if you want to support CPUFreq HW.
-> +
->  config ARM_S3C_CPUFREQ
->  	bool
->  	help
-> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-> index d5ee456..789b2e0 100644
-> --- a/drivers/cpufreq/Makefile
-> +++ b/drivers/cpufreq/Makefile
-> @@ -62,6 +62,7 @@ obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)	+= omap-cpufreq.o
->  obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
->  obj-$(CONFIG_PXA3xx)			+= pxa3xx-cpufreq.o
->  obj-$(CONFIG_ARM_QCOM_CPUFREQ_KRYO)	+= qcom-cpufreq-kryo.o
-> +obj-$(CONFIG_ARM_QCOM_CPUFREQ_HW)	+= qcom-cpufreq-hw.o
->  obj-$(CONFIG_ARM_S3C2410_CPUFREQ)	+= s3c2410-cpufreq.o
->  obj-$(CONFIG_ARM_S3C2412_CPUFREQ)	+= s3c2412-cpufreq.o
->  obj-$(CONFIG_ARM_S3C2416_CPUFREQ)	+= s3c2416-cpufreq.o
-> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+> diff --git a/Documentation/devicetree/bindings/media/imx7-csi.txt b/Documentation/devicetree/bindings/media/imx7-csi.txt
 > new file mode 100644
-> index 0000000..6390e85
+> index 000000000000..171b089ee91f
 > --- /dev/null
-> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-> @@ -0,0 +1,346 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> + */
+> +++ b/Documentation/devicetree/bindings/media/imx7-csi.txt
+> @@ -0,0 +1,45 @@
+> +Freescale i.MX7 CMOS Sensor Interface
+> +=====================================
 > +
-> +#include <linux/cpufreq.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_platform.h>
+> +csi node
+> +--------
 > +
-> +#define LUT_MAX_ENTRIES			40U
-> +#define CORE_COUNT_VAL(val)		(((val) & (GENMASK(18, 16))) >> 16)
-> +#define LUT_ROW_SIZE			32
-> +#define CLK_HW_DIV			2
+> +This is device node for the CMOS Sensor Interface (CSI) which enables the chip
+> +to connect directly to external CMOS image sensors.
 > +
-> +/* Register offsets */
-> +#define REG_ENABLE			0x0
-> +#define REG_LUT_TABLE			0x110
-> +#define REG_PERF_STATE			0x920
+> +Required properties:
 > +
-> +struct cpufreq_qcom {
-> +	struct cpufreq_frequency_table *table;
-> +	void __iomem *perf_base;
-> +	cpumask_t related_cpus;
-> +	unsigned int max_cores;
-> +	unsigned long xo_rate;
-> +	unsigned long cpu_hw_rate;
-> +};
+> +- compatible    : "fsl,imx7-csi";
+> +- reg           : base address and length of the register set for the device;
+> +- interrupts    : should contain CSI interrupt;
+> +- clocks        : list of clock specifiers, see
+> +        Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
+> +- clock-names   : must contain "axi", "mclk" and "dcic" entries, matching
+> +                 entries in the clock property;
 > +
-> +static struct cpufreq_qcom *qcom_freq_domain_map[NR_CPUS];
+> +The device node shall contain one 'port' child node with one child 'endpoint'
+> +node, according to the bindings defined in:
+> + Documentation/devicetree/bindings/media/video-interfaces.txt.
+> + 
+> +In the following example a remote endpoint is a video multiplexer.
 > +
-> +static int
-> +qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
-> +			     unsigned int index)
-> +{
-> +	struct cpufreq_qcom *c = policy->driver_data;
+> +example:
 > +
-> +	writel_relaxed(index, c->perf_base);
+> +                csi: csi@30710000 {
+> +                        #address-cells = <1>;
+> +                        #size-cells = <0>;
 > +
-> +	return 0;
-> +}
+> +                        compatible = "fsl,imx7-csi";
+> +                        reg = <0x30710000 0x10000>;
+> +                        interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +                        clocks = <&clks IMX7D_CLK_DUMMY>,
+> +                                        <&clks IMX7D_CSI_MCLK_ROOT_CLK>,
+> +                                        <&clks IMX7D_CLK_DUMMY>;
+> +                        clock-names = "axi", "mclk", "dcic";
 > +
-> +static unsigned int qcom_cpufreq_hw_get(unsigned int cpu)
-> +{
-> +	struct cpufreq_qcom *c;
-> +	struct cpufreq_policy *policy;
-> +	unsigned int index;
+> +                        port {
+> +                                csi_from_csi_mux: endpoint {
+> +                                        remote-endpoint = <&csi_mux_to_csi>;
+> +                                };
+> +                        };
+> +                };
+> diff --git a/Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt b/Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
+> new file mode 100644
+> index 000000000000..71fd74ed3ec8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
+> @@ -0,0 +1,90 @@
+> +Freescale i.MX7 Mipi CSI2
+> +=========================
 > +
-> +	policy = cpufreq_cpu_get_raw(cpu);
-> +	if (!policy)
-> +		return 0;
+> +mipi_csi2 node
+> +--------------
 > +
-> +	c = policy->driver_data;
+> +This is the device node for the MIPI CSI-2 receiver core in i.MX7 SoC. It is
+> +compatible with previous version of Samsung D-phy.
 > +
-> +	index = readl_relaxed(c->perf_base);
-> +	index = min(index, LUT_MAX_ENTRIES - 1);
+> +Required properties:
 > +
-> +	return policy->freq_table[index].frequency;
-> +}
+> +- compatible    : "fsl,imx7-mipi-csi2";
+> +- reg           : base address and length of the register set for the device;
+> +- interrupts    : should contain MIPI CSIS interrupt;
+> +- clocks        : list of clock specifiers, see
+> +        Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
+> +- clock-names   : must contain "pclk", "wrap" and "phy" entries, matching
+> +                  entries in the clock property;
+> +- power-domains : a phandle to the power domain, see
+> +          Documentation/devicetree/bindings/power/power_domain.txt for details.
+> +- reset-names   : should include following entry "mrst";
+> +- resets        : a list of phandle, should contain reset entry of
+> +                  reset-names;
+> +- phy-supply    : from the generic phy bindings, a phandle to a regulator that
+> +	          provides power to MIPI CSIS core;
 > +
-> +static unsigned int
-> +qcom_cpufreq_hw_fast_switch(struct cpufreq_policy *policy,
-> +			    unsigned int target_freq)
-> +{
-> +	struct cpufreq_qcom *c = policy->driver_data;
-> +	int index;
+> +Optional properties:
 > +
-> +	index = policy->cached_resolved_idx;
-> +	if (index < 0)
-> +		return 0;
+> +- clock-frequency : The IP's main (system bus) clock frequency in Hz, default
+> +		    value when this property is not specified is 166 MHz;
+> +- fsl,csis-hs-settle : differential receiver (HS-RX) settle time;
 > +
-> +	writel_relaxed(index, c->perf_base);
-> +
-> +	return policy->freq_table[index].frequency;
-> +}
-> +
-> +static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
-> +{
-> +	struct cpufreq_qcom *c;
-> +
-> +	c = qcom_freq_domain_map[policy->cpu];
-> +	if (!c) {
-> +		pr_err("No scaling support for CPU%d\n", policy->cpu);
-> +		return -ENODEV;
-> +	}
-> +
-> +	cpumask_copy(policy->cpus, &c->related_cpus);
-> +
-> +	policy->fast_switch_possible = true;
-> +	policy->freq_table = c->table;
-> +	policy->driver_data = c;
-> +
-> +	return 0;
-> +}
-> +
-> +static struct freq_attr *qcom_cpufreq_hw_attr[] = {
-> +	&cpufreq_freq_attr_scaling_available_freqs,
-> +	&cpufreq_freq_attr_scaling_boost_freqs,
-> +	NULL
-> +};
-> +
-> +static struct cpufreq_driver cpufreq_qcom_hw_driver = {
-> +	.flags		= CPUFREQ_STICKY | CPUFREQ_NEED_INITIAL_FREQ_CHECK |
-> +			  CPUFREQ_HAVE_GOVERNOR_PER_POLICY,
-> +	.verify		= cpufreq_generic_frequency_table_verify,
-> +	.target_index	= qcom_cpufreq_hw_target_index,
-> +	.get		= qcom_cpufreq_hw_get,
-> +	.init		= qcom_cpufreq_hw_cpu_init,
-> +	.fast_switch    = qcom_cpufreq_hw_fast_switch,
-> +	.name		= "qcom-cpufreq-hw",
-> +	.attr		= qcom_cpufreq_hw_attr,
-> +	.boost_enabled	= true,
+> +The device node should contain two 'port' child nodes with one child 'endpoint'
+> +node, according to the bindings defined in:
+> + Documentation/devicetree/bindings/ media/video-interfaces.txt.
 
-I have no real expertise with cpufreq boost, but after reading a bit
-through cpufreq code this seems wrong. Boost is enabled statically,
-however the driver has neither a ->set_boost function nor does it call
-cpufreq_enable_boost_support() which would use a default
-implementation for ->set_boost. As a result boost support is
-effectively disabled:
+Extra space. The two lines are also prefixed by a space; is that intended?
 
-static bool cpufreq_boost_supported(void)
-{
-        return likely(cpufreq_driver) && cpufreq_driver->set_boost;
-}
+> + The following are properties specific to those nodes.
+> +
+> +port node
+> +---------
+> +
+> +- reg		  : (required) can take the values 0 or 1, where 0 shall be
+> +                     related to the sink port and port 1 shall be the source
+> +                     one;
+> +
+> +endpoint node
+> +-------------
+> +
+> +- data-lanes    : (required) an array specifying active physical MIPI-CSI2
+> +		    data input lanes and their mapping to logical lanes; this
+> +                    shall only be applied to port 0 (sink port), the array's
+> +                    content is unused only its length is meaningful,
+> +                    in this case the maximum length supported is 2;
 
-The driver should probably do the same as cpufreq-dt.c and call
-cpufreq_enable_boost_support() if boost frequencies are available,
-instead of 'enabling' boost statically.
+How about the port 1? Is there anything to configure there (I'm not saying
+there is, just wondering)?
 
-Thanks
+> +
+> +example:
+> +
+> +        mipi_csi: mipi-csi@30750000 {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                compatible = "fsl,imx7-mipi-csi2";
+> +                reg = <0x30750000 0x10000>;
+> +                interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+> +                clocks = <&clks IMX7D_IPG_ROOT_CLK>,
+> +                                <&clks IMX7D_MIPI_CSI_ROOT_CLK>,
+> +                                <&clks IMX7D_MIPI_DPHY_ROOT_CLK>;
+> +                clock-names = "pclk", "wrap", "phy";
+> +                clock-frequency = <166000000>;
+> +                power-domains = <&pgc_mipi_phy>;
+> +                phy-supply = <&reg_1p0d>;
+> +                resets = <&src IMX7_RESET_MIPI_PHY_MRST>;
+> +                reset-names = "mrst";
+> +                fsl,csis-hs-settle = <3>;
+> +
+> +                port@0 {
+> +                        reg = <0>;
+> +
+> +                        mipi_from_sensor: endpoint {
+> +                                remote-endpoint = <&ov2680_to_mipi>;
+> +                                data-lanes = <1>;
+> +                        };
+> +                };
+> +
+> +                port@1 {
+> +                        reg = <1>;
+> +
+> +                        mipi_vc0_to_csi_mux: endpoint {
+> +                                remote-endpoint = <&csi_mux_from_mipi_vc0>;
+> +                        };
+> +                };
+> +        };
 
-Matthias
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
