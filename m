@@ -1,98 +1,88 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCHv2] ARM: dts: exynos: update the usbdrd_phy suspend clk
-Date: Thu, 22 Nov 2018 08:54:18 +0100
-Message-ID: <CAJKOXPcphirR=+25evzVxHGv1g_4xNfPv3gazXWOes1G6iBt5g@mail.gmail.com>
-References: <20181120185536.1159-1-linux.amoon@gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v1 1/2] ARM: dts: sun8i: Add board dts file for
+ t3-cqa3t-bv3.
+Date: Thu, 22 Nov 2018 09:19:09 +0100
+Message-ID: <20181122081909.2u3kt3ih5ma2dl2y@flea>
+References: <20181121154356.GA4359@arx-s1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181120185536.1159-1-linux.amoon@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux.amoon@gmail.com
-Cc: devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="twq3molfx3dmoi2t"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181121154356.GA4359@arx-s1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hao Zhang <hao5781286@gmail.com>
+Cc: robh+dt@kernel.org, wens@csie.org, icenowy@aosc.io, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 Nov 2018 at 19:55, Anand Moon <linux.amoon@gmail.com> wrote:
->
-> As per FSYS usbdrd_phy clk setting CLK_SCLK_USBD300/1 binds
-> to SUSPEND_CLK so correct update the suspend clk.
->
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> [0] https://lkml.org/lkml/2017/10/6/12
-> changes from previous patch
-> fix the order of clk and update the commit message
->
-> FSYS block show in user manual
->
-> CLKMUX_USBDRD300/1----CLKDIV_USBDRD300/1----SCLK_USBDRD300/1-----SUSPEND_CLK
->                    |
->                    |--CLKDIV_USBPHY300/1----SCLK_USBPHY300/1-----USBDRD30_PHY_0/1
 
-Your new clock - SCLK_USBD301 - is not mentioned here. I don't get the
-reason behind this change.
+--twq3molfx3dmoi2t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+On Wed, Nov 21, 2018 at 11:43:57PM +0800, Hao Zhang wrote:
+> The T3/R40/V40 using the same sdk and config file in allwinner
+> sdk, it seem they are the same SOC just with different name, so
+> compatible with R40.
+>=20
+> The t3-cqa3t-bv3 based on Allwinner T3 SoC, it has various connectors,
+> leds, buttons, and sell on:
+> https://item.taobao.com/item.htm?spm=3D2013.1.w4023-4203040713.25.62704cc=
+e7UCgLS&id=3D557154455330
+>=20
+> It features:
+>  - X-Powers AXP221s PMIC connected to i2c0
+>  - 1/2 GB DDR3 DRAM
+>  - 8 GB eMMC
+>  - 2x USB 2.0 hosts
+>  - 1x USB 2.0 OTG
+>  - 2 LVDS connectors
+>  - 24 bit RGB LCD connector
+>  - HDMI output
+>  - DVP camera interface (support 500w cmos camera)
+>  - GPIO connectors
+>  - 5 TTL uarts and 2 RS232 uarts
+>  - 1 RS485 connector
+>  - support i2c capacitive tp and usb infrared tp
+>  - boot control, reset and user buttons
+>  - 3.5mm headphone and 3.5mm mic jack
+>  - 100M RJ45
+>  - micro SD card slot
+>  - DC power jack
+>  - RCT power slot
+>  - 1 CVBS TVIN
+>  - 1 CVBS TVOUT
+>  - 2 customer leds
+>  - 1 buzzer
+>  - 1 minipcie
+>  - I2C output
+>  - SPI output
+>  - PCM output
+>  - wifi and bt connector reserved.
+>=20
+> Board info can find here:
+> https://github.com/Axl-zhang/Allwinner-V40-T3-R40-manual
+>=20
+> Signed-off-by: Hao Zhang <hao5781286@gmail.com>
 
-> ---
->  arch/arm/boot/dts/exynos5410.dtsi | 4 ++--
->  arch/arm/boot/dts/exynos5420.dtsi | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-> index 57fc9c949e54..a92c765a7a84 100644
-> --- a/arch/arm/boot/dts/exynos5410.dtsi
-> +++ b/arch/arm/boot/dts/exynos5410.dtsi
-> @@ -395,7 +395,7 @@
->  };
->
->  &usbdrd_phy0 {
-> -       clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBPHY300>;
-> +       clocks = <&clock CLK_SCLK_USBD300>, <&clock CLK_SCLK_USBPHY300>;
->         clock-names = "phy", "ref";
->         samsung,pmu-syscon = <&pmu_system_controller>;
->  };
-> @@ -410,7 +410,7 @@
->  };
->
->  &usbdrd_phy1 {
-> -       clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBPHY301>;
-> +       clocks = <&clock CLK_SCLK_USBD301>, <&clock CLK_SCLK_USBPHY301>;
->         clock-names = "phy", "ref";
->         samsung,pmu-syscon = <&pmu_system_controller>;
->  };
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index aaff15880761..b84b44556efc 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -1509,7 +1509,7 @@
->  };
->
->  &usbdrd_phy0 {
-> -       clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBPHY300>;
-> +       clocks = <&clock CLK_SCLK_USBD300>, <&clock CLK_SCLK_USBPHY300>;
->         clock-names = "phy", "ref";
->         samsung,pmu-syscon = <&pmu_system_controller>;
->  };
-> @@ -1524,7 +1524,7 @@
->  };
->
->  &usbdrd_phy1 {
-> -       clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBPHY301>;
-> +       clocks = <&clock CLK_SCLK_USBD301>, <&clock CLK_SCLK_USBPHY301>;
->         clock-names = "phy", "ref";
->         samsung,pmu-syscon = <&pmu_system_controller>;
->  };
-> --
-> 2.17.1
->
+Applied both patches, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--twq3molfx3dmoi2t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW/ZmfQAKCRDj7w1vZxhR
+xa6DAP4sp8sY/XXSN4qWLdHs41eBFO/p3gmW3bsc8NYx/ruhVAD+NUtOtxWkL4D/
+hwyorMZuxpCFUm/1eC7+RbngPPNzzg4=
+=4bRA
+-----END PGP SIGNATURE-----
+
+--twq3molfx3dmoi2t--
