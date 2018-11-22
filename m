@@ -1,78 +1,100 @@
-From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
-Subject: =?utf-8?B?UmU6IFtSQ0bCoFBBVENILHYyLDIvMl0gcHdtOiBpbXg6IENvbmZpZ3VyZSBv?=
- =?utf-8?Q?utput_to_GPIO_in_disabled_state?=
-Date: Thu, 22 Nov 2018 14:23:22 +0000
-Message-ID: <7c1dedaf-9a00-5dc2-e0dc-f94b637380bb@ysoft.com>
-References: <4fbb7307-df01-d7bd-f2e2-e05e6d17807d@ysoft.com>
- <20181108191855.zuon3ecv4yjfbs7g@pengutronix.de>
- <283cfef3-16d0-8bd4-e306-6e34d44c3a86@ysoft.com>
- <20181109165555.vqbiwh4hlcnozdna@pengutronix.de> <20181114113449.GB2620@ulmo>
- <20181114215120.vddykljqyavm64wj@pengutronix.de> <20181115152545.GA8611@ulmo>
- <20181115203733.qvonika6yhn2bsnb@pengutronix.de>
- <20181116095124.GA28631@ulmo>
- <6e81d63b-61a1-36fe-0c24-3ff27438cbc0@ysoft.com>
- <20181120165457.x7svxgzaae5at32x@pengutronix.de>
+From: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH v3 05/17] irqchip/sun4i: add support for
+ suniv interrupt controller
+Date: Thu, 22 Nov 2018 18:02:00 +0300
+Message-ID: <20181122150200.p6e22sp3v4npb42w@ThinkPad>
+References: <cover.1542824904.git.mesihkilinc@gmail.com>
+ <08b40429e46626f4caf8e4d2287b5c4d354e3b7f.1542824904.git.mesihkilinc@gmail.com>
+ <20181122083547.srnopylueqx6p2qj@flea>
+Reply-To: mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181120165457.x7svxgzaae5at32x@pengutronix.de>
-Content-Language: en-US
-Content-ID: <7C39776F290355408DE6D906C2A018ED@eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, =?utf-8?B?TG90aGFyIFdhw59tYW5u?= <LW@karo-electronics.de>, Linus Walleij <linus.walleij@linaro.org>, viresh kumar <viresh.kumar@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDI4VHO5SYLBB24J3PPQKGQE72KJ3AI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20181122083547.srnopylueqx6p2qj@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QWhvaiBVd2UsDQoNCk9uIDIwLjExLjIwMTggMTc6NTQsIFV3ZSBLbGVpbmUtS8O2bmlnIHdyb3Rl
-Og0KPiBPbiBUdWUsIE5vdiAyMCwgMjAxOCBhdCAwMToxNDozM1BNICswMDAwLCBWb2vDocSNIE1p
-Y2hhbCB3cm90ZToNCj4+IE9uIDE2LjExLjIwMTggMTA6NTEsIFRoaWVycnkgUmVkaW5nIHdyb3Rl
-Og0KPj4+IE9uIFRodSwgTm92IDE1LCAyMDE4IGF0IDA5OjM3OjMzUE0gKzAxMDAsIFV3ZSBLbGVp
-bmUtS8O2bmlnIHdyb3RlOg0KPj4+PiBPbiBUaHUsIE5vdiAxNSwgMjAxOCBhdCAwNDoyNTo0NVBN
-ICswMTAwLCBUaGllcnJ5IFJlZGluZyB3cm90ZToNCj4+PiBNeSBpbXByZXNzaW9uIHdhcyB0aGF0
-IGhlIHdhcyB0cnlpbmcgdG8gZmluZCBjb25jZW5zdXMuIEJ1dCB0aGUgd2F5IEkNCj4+PiByZWFk
-IGl0IGhlIHdhcyBzdGlsbCBhcmd1aW5nIHRoYXQgdGhlIHBpbmN0cmwgc29sdXRpb24gd2FzIHN0
-aWxsIHRoZQ0KPj4+IG1vc3QgY29tcGxldGUsIGFuZCB3b3VsZCB0aGVyZWZvcmUgc3RpbGwgcHJl
-ZmVyIGl0Lg0KPj4NCj4+IEl0IGlzIGxpa2UgeW91IHNhaWQgVGhpZXJyeS4gSSBhbSBvbmx5IHRy
-eWluZyB0byByZW1haW4gb3BlbiB0byB0ZXN0DQo+PiBVd2UncyBpZGVhcy4gQWZ0ZXIgd2hhdCBJ
-IGhhdmUgdGVzdGVkIHNvIGZhciBJIHN0aWxsIHByZWZlciBhIGlteC1zcGVjaWZpYw0KPj4gcGlu
-Y3RybCBzb2x1dGlvbi4NCj4gDQo+IElzIHRoYXQgYmVjYXVzZSB5b3UgY29uc2lkZXIgaXQgcmln
-aHQgdG8gYmUgaW14LXNwZWNpZmljIG9yIGJlY2F1c2UNCj4gdGhhdCdzIHdoYXQgeW91IGFscmVh
-ZHkgaGF2ZT8gSXMgdGhlcmUgYSBmbGF3IGluIG15IGV4cGxhbmF0aW9uIHRoYXQNCj4gdGhlIHBy
-b2JsZW0gaXNuJ3QgaW14LXNwZWNpZmljIHBlciBzZSBhbmQgc28gdGhlIHNvbHV0aW9uIHNob3Vs
-ZG4ndCBiZQ0KPiB0aGF0IGVpdGhlcj8NCg0KSSBjb25zaWRlciBpdCByaWdodCB0byBiZSBpbXgt
-c3BlY2lmaWMgYmVjYXVzZSBvZiB0aGUgY3VycmVudCBzdGF0ZSBvZg0KYXdhcmVuZXNzIGFuZCBp
-bnRlcmVzdCBpbiB0aGlzIHByb2JsZW0gZnJvbSBvdGhlciBTb0MncyBjb21tdW5pdGllcy4NCkkg
-c3BlbnQgcXVpdGUgc29tZSB0aW1lIGxvb2tpbmcgZm9yIGEgc29sdXRpb24gYW5kIG15IGltcHJl
-c3Npb24gaXMgdGhhdA0Kb25seSBpbXggdXNlcnMgcGVyY2VpdmUgdGhpcyBwcm9ibGVtIGFuZCBh
-cmUgdGhlIG9ubHkgb25lIHRoYXQgYWxyZWFkeQ0KZGlkIHNvbWUgYXR0ZW1wdHMgdG8gc29sdmUg
-aXQuDQoNCkkgdGhpbmsgdGhpcyBpcyBpbiBsaW5lIHdpdGggd2hhdCBUaGllcnJ5IHNhaWQgLSBp
-ZiBvdGhlciB1c2VycyBoYXZlDQp0aGUgc2FtZSBwcm9ibGVtLCB0aGV5IHNob3VsZCBzcGVhay11
-cC4gSW4gbXkgZXllcyBhcyBoZSBpcyB0aGUgcHdtDQpzdWJzeXN0ZW0gbWFpbnRhaW5lciBoZSBr
-bm93cyB0aGUgYmVzdCBpZiBvdGhlcnMgaGF2ZSB0aGUgc2FtZSBwcm9ibGVtDQpvciBub3QuIE15
-IHVuZGVyc3RhbmRpbmcgb2YgaGlzIGFyZ3VtZW50cyBpcyBzdWNoIHRoYXQgdGhleSBkbyBub3Qu
-DQoNCkkgdW5kZXJzdGFuZCB0aGF0IGhhdmluZyBhIG1vcmUgZ2VuZXJpYyBzb2x1dGlvbiBtYXkg
-YmUgYmV0dGVyLiBJIGFtIG5vdA0KcmVhbGx5IHN1cmUgaWYgaXQgaXMgdmFsaWQgaW4gdGhpcyBj
-YXNlLg0KDQo+IElzIHRoZSBwcm9ibGVtIHdpdGggdGhlICJ0ZXN0cyBzbyBmYXIiIHRoYXQgaXQg
-ZG9lc24ndCB3b3JrIHlldCwgb3IgaXMNCj4gdGhlcmUgc29tZXRoaW5nIGNvbmNlcHR1YWxseSB3
-cm9uZyBpbiB5b3VyIGV5ZXM/DQoNCkl0IGRvZXMgbm90IHdvcmsgeWV0LiBBbmQgaXQgd291bGQg
-bm90IHNvbHZlIGFsbCB0aGUgY2FzZXMuIE5hbWVseSB0aGUNCnN5c2ZzIHVzZS1jYXNlLiBBbmQg
-VGhpZXJyeSBjb25maXJtZWQgc3lzZnMgaXMgYSBzdXBwb3J0ZWQgaW50ZXJmYWNlLg0KDQpJIGRv
-IG5vdCBkYXJlIHRvIHNwZWN1bGF0ZSB3aGV0aGVyIHlvdXIgaWRlYSBpcyBjb25jZXB0dWFsbHkg
-d3Jvbmcgb3INCm5vdC4gSSBvbmx5IGNhbiBzYXkgdGhhdCBwdXR0aW5nIHRoZSBwaW5jdHJsIG9m
-IHRoZSBQV00gcGluIGludG8gdGhlDQpQV00gY29uc3VtZXIgc2VlbXMgdmVyeSB1bm5hdHVyYWwg
-dG8gbWUuIEkgaGF2ZSBub3Qgc2VlbiBhbnkgZXhhbXBsZQ0Kb2Ygc3VjaCB1c2FnZSB5ZXQuIFRo
-YXQgZG9lcyBub3QgbWVhbiBpdCBpcyB3cm9uZyBvZiBjb3Vyc2UuDQoNCk9uIHRoZSBvdGhlciBo
-YW5kLCB5b3Ugc2FpZCB0aGF0IHdlIGFyZSBpbnZlbnRpbmcgbmV3IHBpbmN0cmwgbmFtZXMuDQpC
-dXQgSSBzZWUgcXVpdGUgYSBsb3Qgb2YgdXNhZ2VzIG9mIG5vbi1bImluaXQiLCAiZGVmYXVsdCIs
-ICJzbGVlcCJdDQpwaW5jdHJsIG5hbWVzIGluIHRoZSBEVFMgZmlsZXMuIE1vc3Qgb2YgdGhlbSBh
-cmUgYWN0dWFsbHkgaW14IHVzZXJzLg0KDQpTdGlsbCwgdGhlIG1haW4gcHJvYmxlbSBpcyBpdCBp
-cyBub3QgcG9zc2libGUgdG8gdHVybi1vZmYgdGhlIGJhY2tsaWdodA0Kb3IgY29vbGluZyBmYW4g
-b3Igd2hvZXZlciBpcyB0aGUgUFdNIGNvbnN1bWVyIGlmIGludmVydGVkIFBXTSBpcyB1c2VkLg0K
-Tm90IHRoYXQgaXQgaXMgbm90IHBvc3NpYmxlIHRvIGtlZXAgaXQgdHVybmVkLW9mZiB1bnRpbCBp
-dCBpcyB0dXJuZWQtb24NCmJ5IHRoZSB1c2VyLiBTbyBmb3IgbWUsIGFueSBzb2x1dGlvbiB0aGF0
-IGF0IGxlYXN0IGFsbG93cyB0aGF0IGlzIGJldHRlcg0KdGhhbiB0aGUgY3VycmVudCBzdGF0ZS4g
-VGhlIHBpbmN0cmwgc29sdXRpb24ganVzdCBzb2x2ZXMgYWxsIGF0IG9uY2UuDQoNCkkgZnVsbHkg
-YWdyZWUgdGhlIHBpbmN0cmwgc29sdXRpb24gaGFzIGRyYXdiYWNrcy4gSXQgbmVlZHMgdG8gYmUg
-d2VsbA0KZG9jdW1lbnRlZCBhbmQgRFQgYXV0aG9ycyBuZWVkIHRvIGtub3cgaG93IHRvIHVzZSBp
-dCBhbmQgaW4gd2hhdCBjYXNlcy4NCg0KQmVzdCByZWdhcmRzLA0KTWljaGFsDQoNCg==
+On 18/11/22 09:35, Maxime Ripard wrote:
+> Hi Mesih,
+> 
+Hi!
+> On Wed, Nov 21, 2018 at 09:30:38PM +0300, Mesih Kilinc wrote:
+> > The new F-series SoCs (suniv) from Allwinner use an stripped version of
+> > the interrupt controller in A10/A13
+> > 
+> > Add support for it in irq-sun4i driver.
+> > 
+> > Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  drivers/irqchip/irq-sun4i.c | 104 +++++++++++++++++++++++++++++++-------------
+> >  1 file changed, 74 insertions(+), 30 deletions(-)
+> > 
+> > diff --git a/drivers/irqchip/irq-sun4i.c b/drivers/irqchip/irq-sun4i.c
+> > index e3e5b91..7ca4a4d 100644
+> > --- a/drivers/irqchip/irq-sun4i.c
+> > +++ b/drivers/irqchip/irq-sun4i.c
+> > @@ -28,11 +28,21 @@
+> >  #define SUN4I_IRQ_NMI_CTRL_REG		0x0c
+> >  #define SUN4I_IRQ_PENDING_REG(x)	(0x10 + 0x4 * x)
+> >  #define SUN4I_IRQ_FIQ_PENDING_REG(x)	(0x20 + 0x4 * x)
+> > -#define SUN4I_IRQ_ENABLE_REG(x)		(0x40 + 0x4 * x)
+> > -#define SUN4I_IRQ_MASK_REG(x)		(0x50 + 0x4 * x)
+> > +#define SUN4I_IRQ_ENABLE_REG(x)		(irq_ic_data->enable_req_offset + 0x4 * x)
+> > +#define SUN4I_IRQ_MASK_REG(x)		(irq_ic_data->mask_req_offset + 0x4 * x)
+> 
+> You shouldn't have all the values you use passed as argument, so
+> irq_ic_data should be one of them here.
+> 
+Could you elaborate it a little bit?
+> > +#define SUN4I_IRQ_ENABLE_REG_OFFSET	0x40
+> > +#define SUN4I_IRQ_MASK_REG_OFFSET	0x50
+> > +#define SUNIV_IRQ_ENABLE_REG_OFFSET	0x20
+> > +#define SUNIV_IRQ_MASK_REG_OFFSET	0x30
+> > +
+> > +struct sunxi_irq_chip_data{
+>                              ^ a space here
+> 
+> > +	void __iomem *irq_base;
+> > +	struct irq_domain *irq_domain;
+> > +	u32 enable_req_offset;
+> > +	u32 mask_req_offset;
+> 
+> s/req/reg/ ?
+> 
+Oops sorry
+
+...
+> > +
+> > +static int __init suniv_ic_of_init(struct device_node *node,
+> > +				   struct device_node *parent)
+> > +{
+> > +	irq_ic_data = kzalloc(sizeof(struct sunxi_irq_chip_data), GFP_KERNEL);
+> > +	if (!irq_ic_data) {
+> > +		pr_err("kzalloc failed!\n");
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	irq_ic_data->enable_req_offset = SUNIV_IRQ_ENABLE_REG_OFFSET;
+> > +	irq_ic_data->mask_req_offset = SUNIV_IRQ_MASK_REG_OFFSET;
+> > +
+> > +	return sun4i_of_init(node, parent);
+> > +}
+> > +
+> > +IRQCHIP_DECLARE(allwinner_sunvi_ic, "allwinner,suniv-f1c100s-ic", suniv_ic_of_init);
+> 
+> You can even split that addition to a new patch as well.
+
+OK. I will do 3 patches. First one will add a struct that holds only
+base and domain. Second one will add register offsets to that struct. 
+Third one will add f1c100s support. Is that ok?
+
+Mesih
