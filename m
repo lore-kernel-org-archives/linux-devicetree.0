@@ -1,67 +1,79 @@
-From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
-Subject: Re: [RCF PATCH,v2,2/2] pwm: imx: Configure output to GPIO in disabled
- state
-Date: Thu, 22 Nov 2018 15:42:14 +0000
-Message-ID: <91640f9b-d219-553e-043a-c6151f2f68d7@ysoft.com>
-References: <20181107150125.7cpd4v5t7yi2254c@pengutronix.de>
- <4fbb7307-df01-d7bd-f2e2-e05e6d17807d@ysoft.com>
- <20181108191855.zuon3ecv4yjfbs7g@pengutronix.de>
- <283cfef3-16d0-8bd4-e306-6e34d44c3a86@ysoft.com>
- <20181109165555.vqbiwh4hlcnozdna@pengutronix.de> <20181114113449.GB2620@ulmo>
- <20181114215120.vddykljqyavm64wj@pengutronix.de> <20181115152545.GA8611@ulmo>
- <20181115203733.qvonika6yhn2bsnb@pengutronix.de>
- <20181116083430.7f1d8452@ipc1.ka-ro>
- <20181116082557.l2ljgu3hsu7tvdci@pengutronix.de>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v9 1/8] ASoC: dt-bindings:
+ sun50i-codec-analog: Add headphone amp regulator supply
+Date: Thu, 22 Nov 2018 16:48:19 +0100
+Message-ID: <20181122154819.powgbwwqpljqvjty@flea>
+References: <20181122102325.29495-1-wens@csie.org>
+ <20181122102325.29495-2-wens@csie.org>
+ <20181122153241.lzrwhkewg5q4hy2c@flea>
+ <CAGb2v64-Wszg9m8+jCPWzYYRQduwpod2P0UdrFdhTLvAe3paPA@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181116082557.l2ljgu3hsu7tvdci@pengutronix.de>
-Content-Language: en-US
-Content-ID: <56D2D7D36DFD5A41A8A8480CEEFC4355@eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, =?utf-8?B?TG90aGFyIFdhw59tYW5u?= <LW@KARO-electronics.de>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Linus Walleij <linus.walleij@linaro.org>, viresh kumar <viresh.kumar@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5hmfxjc2ebpbwox7"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBTU73PPQKGQERID6K2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64-Wszg9m8+jCPWzYYRQduwpod2P0UdrFdhTLvAe3paPA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTYuMTEuMjAxOCAwOToyNSwgVXdlIEtsZWluZS1Lw7ZuaWcgd3JvdGU6DQo+IE9uIEZyaSwg
-Tm92IDE2LCAyMDE4IGF0IDA4OjM0OjMwQU0gKzAxMDAsIExvdGhhciBXYcOfbWFubiB3cm90ZToN
-Cj4+IFV3ZSBLbGVpbmUtS8O2bmlnIDx1LmtsZWluZS1rb2VuaWdAcGVuZ3V0cm9uaXguZGU+IHdy
-b3RlOg0KPj4+IE9uIFRodSwgTm92IDE1LCAyMDE4IGF0IDA0OjI1OjQ1UE0gKzAxMDAsIFRoaWVy
-cnkgUmVkaW5nIHdyb3RlOg0KPj4+PiBPbiBXZWQsIE5vdiAxNCwgMjAxOCBhdCAxMDo1MToyMFBN
-ICswMTAwLCBVd2UgS2xlaW5lLUvDtm5pZyB3cm90ZToNCj4+Pj4+IE9uIFdlZCwgTm92IDE0LCAy
-MDE4IGF0IDEyOjM0OjQ5UE0gKzAxMDAsIFRoaWVycnkgUmVkaW5nIHdyb3RlOg0KPj4gWy4uLl0N
-Cj4+Pj4+IEFsc28gZHRzIHdyaXRlcyBkb24ndCBuZWVkIHRvIGxvb2t1cCB0aGUgbmVlZGVkIEdQ
-SU8gbnVtYmVycyBhbmQgcGluY3RybC4NCj4+Pj4NCj4+Pj4gSnVzdCB0byBjbGFyaWZ5OiBJIGRv
-bid0IHRoaW5rIHRoYXQgd2UgbmVlZCB0byBnZXQgdGhlIEdQSU8gbnVtYmVyDQo+Pj4+IGludm9s
-dmVkIGluIHRoaXMgY2FzZSwgYmVjYXVzZSB3ZSBkb24ndCBoYXZlIHRvIHJlY29uZmlndXJlIHRo
-ZSBwaW4gYXMNCj4+Pj4gR1BJTyB0byBtYWtlIHRoaXMgd29yay4gVGhlIG9ubHkgcmVhc29uIHRo
-YXQgTWljaGFsJ3MgcHJvcG9zYWwgZGlkIHRoYXQNCj4+Pj4gaXMgYmVjYXVzZSB0aGF0IHdhcyBi
-ZWxpZXZlZCB0byBiZSBuZWNlc3NhcnkuIEJ1dCBpZiB0aGUgcGluIGNhbiBqdXN0IGJlDQo+Pj4+
-IGNvbmZpZ3VyZWQgd2l0aCBhIDEwMGsgcHVsbC11cCwgdGhhdCdzIGVub3VnaCB0byBwdWxsIHRo
-ZSBwaW4gaGlnaCB3aGVuDQo+Pj4+IHdlIG5lZWQgaXQuDQoNClRoaWVycnksIEkgaGF2ZSB0byBk
-aXNhZ3JlZSBoZXJlLiBJIGRvIG5vdCByZWFsbHkga25vdyBob3cgdG8gYWN0aXZhdGUNCnRoZSBp
-bnRlcm5hbCBwdWxsLXVwIHdpdGhvdXQgcmVxdWVzdGluZyB0aGUgR1BJTyBhbmQgY29uZmlndXJp
-bmcgdGhlIHBpbg0KYXMgKmlucHV0Ki4gQW5kIHRvIGRvIGl0IHRoZSBHUElPIG51bWJlciBuZWVk
-cyB0byBiZSBzcGVjaWZpZWQgaW4gRFQuDQoNCj4+PiBVbmxlc3MgdGhlIGdwaW8gaGFwcGVucyB0
-byBiZSBjb25maWd1cmVkIGFzIG91dHB1dCBhdCB0aGUgd3JvbmcgdmFsdWUuDQo+Pj4gRnVydGhl
-ciBJJ20gbm90IHN1cmUgaWYgdGhlIHB3bSBpbiBkaXNhYmxlZCBzdGF0ZSBhY3RpdmVseSBwdWxs
-cyB0byAwDQo+Pj4gYW5kIGlmIGluIHRoaXMgc3RhdGUgdGhlIFBVIG9mIHRoZSBwaW4gaXMgZ29v
-ZCBlbm91Z2ggdG8gZW5zdXJlIGEgb25lDQo+Pj4gaGVyZS4gVGhhdCB3b3VsZCBuZWVkIHZlcmlm
-aWNhdGlvbiBmaXJzdC4NCj4+DQo+PiBOby4gWW91IGNhbiBkaXNhYmxlIHRoZSBvdXRwdXQgZHJp
-dmVyIHZpYSBwaW5jdHJsLCBzbyB0aGF0IG9ubHkgdGhlDQo+PiBzZWxlY3RlZCBwdWxsLXVwL2Rv
-d24gaXMgcmVsZXZhbnQuIFRoZSBwaW4gZnVuY3Rpb24gYW5kIEdQSU8gcmVnaXN0ZXINCj4+IHNl
-dHRpbmdzIGRvbid0IG1hdHRlciBhdCBhbGwgaW4gdGhpcyBjYXNlLg0KDQpMb3RoYXIsIHBsZWFz
-ZSBjYW4geW91IGJlIG1vcmUgc3BlY2lmaWMgaG93IHdvdWxkIHlvdSBkbyB0aGF0PyBJRkFJSyB0
-aGUNCnB1bGwtdXAvZG93biBpbnRlcm5hbCByZXNpc3RvcnMgaGF2ZSBlZmZlY3Qgb25seSBpZiB0
-aGUgcGluIGlzIGNvbmZpZ3VyZWQNCmFzIEdQSU8gKmlucHV0KiAob24gaS5NWDYgYXQgbGVhc3Qp
-LiBTZWUgdGhlIFRSTSwgMjkuNC4yLjIgT3V0cHV0IGRyaXZlcjoNCg0KICAiSW50ZXJuYWwgcHVs
-bC11cCwgcHVsbC1kb3duIHJlc2lzdG9ycywgYW5kIHBhZCBrZWVwZXIgYXJlIGRpc2FibGVkIGlu
-DQogICBvdXRwdXQgbW9kZS4iDQoNCj4gSXMgdGhpcyBhYm91dCBEU0U9SEktWiBpbiB0aGUgcGFk
-IGNvbnRyb2wgcmVnaXN0ZXI/IEkgZGlkbid0IGtub3cgYWJvdXQNCj4gdGhpcy4gSSBzZWUgdGhp
-cyBleGlzdHMgb24gaS5NWDYgYnV0IG5vdCBvbiBpLk1YMjUuIEFsc28gaS5NWDUxIGRvZXNuJ3QN
-Cj4gc2VlbSB0byBoYXZlIHRoaXMgZmVhdHVyZS4NCg0KVXdlLCBJIGFsc28gZGlkIG5vdCBmaW5k
-IHRoZSBEU0Ugb3B0aW9uIG9uIG90aGVyIFNvQ3MgaW4gdGhlaXIgcmVzcGVjdGl2ZQ0KbWFudWFs
-cyBhbmQgc291cmNlIGNvZGUuIEJ1dCBldmVuIGlmIGl0IHdvdWxkIGJlIGF2YWlsYWJsZSBvbiBh
-bGwgU29Dcw0KSSBzdGlsbCB0aGluayBpdCBpcyBub3QgZW5vdWdoLg0KDQpCZXN0IHJlZ2FyZHMs
-DQpNaWNoYWwNCg==
+
+--5hmfxjc2ebpbwox7
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Thu, Nov 22, 2018 at 11:41:57PM +0800, Chen-Yu Tsai wrote:
+> On Thu, Nov 22, 2018 at 11:33 PM Maxime Ripard
+> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> >
+> > On Thu, Nov 22, 2018 at 06:23:18PM +0800, Chen-Yu Tsai wrote:
+> > > On the Allwinner A64 SoC, the audio codec has a built-in headphone
+> > > amplifier. This amplifier has a power supply separate from the rest of
+> > > the analog audio circuitry.
+> > >
+> > > Add a regulator supply property to handle this.
+> > >
+> > > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/sound/sun50i-codec-analog.txt | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/sound/sun50i-codec-analog.txt b/Documentation/devicetree/bindings/sound/sun50i-codec-analog.txt
+> > > index 4f8ad0e04d20..056a098495cc 100644
+> > > --- a/Documentation/devicetree/bindings/sound/sun50i-codec-analog.txt
+> > > +++ b/Documentation/devicetree/bindings/sound/sun50i-codec-analog.txt
+> > > @@ -4,9 +4,11 @@ Required properties:
+> > >  - compatible: must be one of the following compatibles:
+> > >               - "allwinner,sun50i-a64-codec-analog"
+> > >  - reg: must contain the registers location and length
+> > > +- cpvdd-supply: Regulator supply for the headphone amplifier
+> >
+> > I guess we should make this optional, since even if it's missing, it's
+> > going to create a dummy regulator. and that allows to have backward
+> > compatibility.
+> >
+> > For the rest of the series,
+> > Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> 
+> This one (not sun8i-codec-analog) is new for the next release, so there's
+> no backward compatibility to consider. Plus none of the device tree changes
+> for A64 have been merged.
+
+Ok, that works for me then.
+
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--5hmfxjc2ebpbwox7--
