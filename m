@@ -1,51 +1,40 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 0/6] Add Armada 3700 COMPHY support
-Date: Thu, 22 Nov 2018 22:04:14 +0100
-Message-ID: <20181122210420.14861-1-miquel.raynal@bootlin.com>
+Subject: [PATCH 4/6] MAINTAINERS: phy: add entry for Armada 3700 COMPHY driver
+Date: Thu, 22 Nov 2018 22:04:18 +0100
+Message-ID: <20181122210420.14861-5-miquel.raynal@bootlin.com>
+References: <20181122210420.14861-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181122210420.14861-1-miquel.raynal@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add myself as Armada 3700 COMPHY driver/bindings maintainer.
 
-This series adds a new driver to support Armada 3700 COMPHY IP.
-The series has been tested on an ESPRESSObin with SATA, PCIe
-and USB3 host. For this purpose, patch 1 enumerates the SATA PHY
-mode. The SGMII PHY mode that is supported by the IP has been written
-(uses SMC calls anyway) but could not be tested on this platform.
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Three series will follow to add PHY support (or at least a PHY nodes
-in the A3700/ESPRESSObin device trees) to the MVEBU AHCI driver, the
-Aardvark PCI controller driver and the MVEBU xHCI driver. All this is
-needed in order to achieve suspend to RAM on this platform.
-
-Thanks,
-Miquèl
-
-
-Miquel Raynal (6):
-  phy: enumerate SATA PHY mode
-  phy: add A3700 COMPHY support
-  dt-bindings: phy: mvebu-comphy: extend the file to describe a3700
-    bindings
-  MAINTAINERS: phy: add entry for Armada 3700 COMPHY driver
-  ARM64: dts: marvell: armada-37xx: fix SATA node scope
-  ARM64: dts: marvell: armada-37xx: declare the COMPHY node
-
- .../bindings/phy/phy-mvebu-comphy.txt         |  65 ++++-
- MAINTAINERS                                   |   6 +
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |  31 +-
- drivers/phy/marvell/Kconfig                   |  10 +
- drivers/phy/marvell/Makefile                  |   1 +
- drivers/phy/marvell/phy-mvebu-a3700-comphy.c  | 276 ++++++++++++++++++
- include/linux/phy/phy.h                       |   1 +
- 7 files changed, 377 insertions(+), 13 deletions(-)
- create mode 100644 drivers/phy/marvell/phy-mvebu-a3700-comphy.c
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f4855974f325..a1d6457cccb5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8864,6 +8864,12 @@ F:	drivers/gpu/drm/armada/
+ F:	include/uapi/drm/armada_drm.h
+ F:	Documentation/devicetree/bindings/display/armada/
+ 
++MARVELL ARMADA 3700 COMPHY DRIVER
++M:	Miquel Raynal <miquel.raynal@bootlin.com>
++S:	Maintained
++F:	drivers/phy/marvell/phy-mvebu-a3700-comphy.c
++F:	Documentation/devicetree/bindings/phy/phy-mvebu-comphy.txt
++
+ MARVELL CRYPTO DRIVER
+ M:	Boris Brezillon <boris.brezillon@bootlin.com>
+ M:	Arnaud Ebalard <arno@natisbad.org>
 -- 
 2.19.1
