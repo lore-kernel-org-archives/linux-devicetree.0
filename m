@@ -1,299 +1,98 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v10 3/3] clk: qcom: Add lpass clock controller driver for SDM845
-Date: Thu, 22 Nov 2018 13:23:41 +0530
-Message-ID: <1542873221-13693-4-git-send-email-tdas@codeaurora.org>
-References: <1542873221-13693-1-git-send-email-tdas@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542873221-13693-1-git-send-email-tdas@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, Taniya Das <tdas@codeaurora.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCHv2] ARM: dts: exynos: update the usbdrd_phy suspend clk
+Date: Thu, 22 Nov 2018 08:54:18 +0100
+Message-ID: <CAJKOXPcphirR=+25evzVxHGv1g_4xNfPv3gazXWOes1G6iBt5g@mail.gmail.com>
+References: <20181120185536.1159-1-linux.amoon@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181120185536.1159-1-linux.amoon@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux.amoon@gmail.com
+Cc: devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the lpass clock controller found on SDM845 based devices.
-This would allow lpass peripheral loader drivers to control the clocks to
-bring the subsystem out of reset.
-LPASS clocks present on the global clock controller would be registered
-with the clock framework based on the protected-clock flag. Also do not
-gate these clocks if they are left unused, as the lpass clocks require
-the global clock controller lpass clocks to be enabled before they are
-accessed. Mark the GCC lpass clocks as CRITICAL, for the LPASS clock
-access.
+On Tue, 20 Nov 2018 at 19:55, Anand Moon <linux.amoon@gmail.com> wrote:
+>
+> As per FSYS usbdrd_phy clk setting CLK_SCLK_USBD300/1 binds
+> to SUSPEND_CLK so correct update the suspend clk.
+>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+> [0] https://lkml.org/lkml/2017/10/6/12
+> changes from previous patch
+> fix the order of clk and update the commit message
+>
+> FSYS block show in user manual
+>
+> CLKMUX_USBDRD300/1----CLKDIV_USBDRD300/1----SCLK_USBDRD300/1-----SUSPEND_CLK
+>                    |
+>                    |--CLKDIV_USBPHY300/1----SCLK_USBPHY300/1-----USBDRD30_PHY_0/1
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- drivers/clk/qcom/Kconfig          |   9 ++
- drivers/clk/qcom/Makefile         |   1 +
- drivers/clk/qcom/gcc-sdm845.c     |  30 +++++++
- drivers/clk/qcom/lpasscc-sdm845.c | 179 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 219 insertions(+)
- create mode 100644 drivers/clk/qcom/lpasscc-sdm845.c
+Your new clock - SCLK_USBD301 - is not mentioned here. I don't get the
+reason behind this change.
 
-diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index a611531..23adc4c 100644
---- a/drivers/clk/qcom/Kconfig
-+++ b/drivers/clk/qcom/Kconfig
-@@ -293,6 +293,15 @@ config SDM_DISPCC_845
- 	  Say Y if you want to support display devices and functionality such as
- 	  splash screen.
+Best regards,
+Krzysztof
 
-+config SDM_LPASSCC_845
-+	tristate "SDM845 Low Power Audio Subsystem (LPAAS) Clock Controller"
-+	depends on COMMON_CLK_QCOM
-+	select SDM_GCC_845
-+	help
-+	  Support for the LPASS clock controller on SDM845 devices.
-+	  Say Y if you want to use the LPASS branch clocks of the LPASS clock
-+	  controller to reset the LPASS subsystem.
-+
- config SPMI_PMIC_CLKDIV
- 	tristate "SPMI PMIC clkdiv Support"
- 	depends on (COMMON_CLK_QCOM && SPMI) || COMPILE_TEST
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index 981882e..3d530b1 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -46,6 +46,7 @@ obj-$(CONFIG_SDM_CAMCC_845) += camcc-sdm845.o
- obj-$(CONFIG_SDM_DISPCC_845) += dispcc-sdm845.o
- obj-$(CONFIG_SDM_GCC_660) += gcc-sdm660.o
- obj-$(CONFIG_SDM_GCC_845) += gcc-sdm845.o
-+obj-$(CONFIG_SDM_LPASSCC_845) += lpasscc-sdm845.o
- obj-$(CONFIG_SDM_VIDEOCC_845) += videocc-sdm845.o
- obj-$(CONFIG_SPMI_PMIC_CLKDIV) += clk-spmi-pmic-div.o
- obj-$(CONFIG_KPSS_XCC) += kpss-xcc.o
-diff --git a/drivers/clk/qcom/gcc-sdm845.c b/drivers/clk/qcom/gcc-sdm845.c
-index f133b7f..ba8ff99 100644
---- a/drivers/clk/qcom/gcc-sdm845.c
-+++ b/drivers/clk/qcom/gcc-sdm845.c
-@@ -3153,6 +3153,34 @@ enum {
- 	},
- };
-
-+static struct clk_branch gcc_lpass_q6_axi_clk = {
-+	.halt_reg = 0x47000,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x47000,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_lpass_q6_axi_clk",
-+			.flags = CLK_IS_CRITICAL,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_lpass_sway_clk = {
-+	.halt_reg = 0x47008,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x47008,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_lpass_sway_clk",
-+			.flags = CLK_IS_CRITICAL,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct gdsc pcie_0_gdsc = {
- 	.gdscr = 0x6b004,
- 	.pd = {
-@@ -3453,6 +3481,8 @@ enum {
- 	[GCC_QSPI_CORE_CLK_SRC] = &gcc_qspi_core_clk_src.clkr,
- 	[GCC_QSPI_CORE_CLK] = &gcc_qspi_core_clk.clkr,
- 	[GCC_QSPI_CNOC_PERIPH_AHB_CLK] = &gcc_qspi_cnoc_periph_ahb_clk.clkr,
-+	[GCC_LPASS_Q6_AXI_CLK] = &gcc_lpass_q6_axi_clk.clkr,
-+	[GCC_LPASS_SWAY_CLK] = &gcc_lpass_sway_clk.clkr,
- };
-
- static const struct qcom_reset_map gcc_sdm845_resets[] = {
-diff --git a/drivers/clk/qcom/lpasscc-sdm845.c b/drivers/clk/qcom/lpasscc-sdm845.c
-new file mode 100644
-index 0000000..9c63542
---- /dev/null
-+++ b/drivers/clk/qcom/lpasscc-sdm845.c
-@@ -0,0 +1,179 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ */
-+
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/regmap.h>
-+
-+#include <dt-bindings/clock/qcom,lpass-sdm845.h>
-+
-+#include "clk-regmap.h"
-+#include "clk-branch.h"
-+#include "common.h"
-+
-+static struct clk_branch lpass_q6ss_ahbm_aon_clk = {
-+	.halt_reg = 0x12000,
-+	.halt_check = BRANCH_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x12000,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "lpass_q6ss_ahbm_aon_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch lpass_q6ss_ahbs_aon_clk = {
-+	.halt_reg = 0x1f000,
-+	.halt_check = BRANCH_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x1f000,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "lpass_q6ss_ahbs_aon_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch lpass_qdsp6ss_core_clk = {
-+	.halt_reg = 0x20,
-+	/* CLK_OFF would not toggle until LPASS is not out of reset */
-+	.halt_check = BRANCH_HALT_SKIP,
-+	.clkr = {
-+		.enable_reg = 0x20,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "lpass_qdsp6ss_core_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch lpass_qdsp6ss_xo_clk = {
-+	.halt_reg = 0x38,
-+	/* CLK_OFF would not toggle until LPASS is not out of reset */
-+	.halt_check = BRANCH_HALT_SKIP,
-+	.clkr = {
-+		.enable_reg = 0x38,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "lpass_qdsp6ss_xo_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch lpass_qdsp6ss_sleep_clk = {
-+	.halt_reg = 0x3c,
-+	/* CLK_OFF would not toggle until LPASS is not out of reset */
-+	.halt_check = BRANCH_HALT_SKIP,
-+	.clkr = {
-+		.enable_reg = 0x3c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "lpass_qdsp6ss_sleep_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct regmap_config lpass_regmap_config = {
-+	.reg_bits	= 32,
-+	.reg_stride	= 4,
-+	.val_bits	= 32,
-+	.fast_io	= true,
-+};
-+
-+static struct clk_regmap *lpass_cc_sdm845_clocks[] = {
-+	[LPASS_Q6SS_AHBM_AON_CLK] = &lpass_q6ss_ahbm_aon_clk.clkr,
-+	[LPASS_Q6SS_AHBS_AON_CLK] = &lpass_q6ss_ahbs_aon_clk.clkr,
-+};
-+
-+static const struct qcom_cc_desc lpass_cc_sdm845_desc = {
-+	.config = &lpass_regmap_config,
-+	.clks = lpass_cc_sdm845_clocks,
-+	.num_clks = ARRAY_SIZE(lpass_cc_sdm845_clocks),
-+};
-+
-+static struct clk_regmap *lpass_qdsp6ss_sdm845_clocks[] = {
-+	[LPASS_QDSP6SS_XO_CLK] = &lpass_qdsp6ss_xo_clk.clkr,
-+	[LPASS_QDSP6SS_SLEEP_CLK] = &lpass_qdsp6ss_sleep_clk.clkr,
-+	[LPASS_QDSP6SS_CORE_CLK] = &lpass_qdsp6ss_core_clk.clkr,
-+};
-+
-+static const struct qcom_cc_desc lpass_qdsp6ss_sdm845_desc = {
-+	.config = &lpass_regmap_config,
-+	.clks = lpass_qdsp6ss_sdm845_clocks,
-+	.num_clks = ARRAY_SIZE(lpass_qdsp6ss_sdm845_clocks),
-+};
-+
-+static int lpass_clocks_sdm845_probe(struct platform_device *pdev, int index,
-+				     const struct qcom_cc_desc *desc)
-+{
-+	struct regmap *regmap;
-+	struct resource *res;
-+	void __iomem *base;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, index);
-+	base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	regmap = devm_regmap_init_mmio(&pdev->dev, base, desc->config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	return qcom_cc_really_probe(pdev, desc, regmap);
-+}
-+
-+static int lpass_cc_sdm845_probe(struct platform_device *pdev)
-+{
-+	const struct qcom_cc_desc *desc;
-+	int ret;
-+
-+	lpass_regmap_config.name = "cc";
-+	desc = &lpass_cc_sdm845_desc;
-+
-+	ret = lpass_clocks_sdm845_probe(pdev, 0, desc);
-+	if (ret)
-+		return ret;
-+
-+	lpass_regmap_config.name = "qdsp6ss";
-+	desc = &lpass_qdsp6ss_sdm845_desc;
-+
-+	return lpass_clocks_sdm845_probe(pdev, 1, desc);
-+}
-+
-+static const struct of_device_id lpass_cc_sdm845_match_table[] = {
-+	{ .compatible = "qcom,sdm845-lpasscc" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, lpass_cc_sdm845_match_table);
-+
-+static struct platform_driver lpass_cc_sdm845_driver = {
-+	.probe		= lpass_cc_sdm845_probe,
-+	.driver		= {
-+		.name	= "sdm845-lpasscc",
-+		.of_match_table = lpass_cc_sdm845_match_table,
-+	},
-+};
-+
-+static int __init lpass_cc_sdm845_init(void)
-+{
-+	return platform_driver_register(&lpass_cc_sdm845_driver);
-+}
-+subsys_initcall(lpass_cc_sdm845_init);
-+
-+static void __exit lpass_cc_sdm845_exit(void)
-+{
-+	platform_driver_unregister(&lpass_cc_sdm845_driver);
-+}
-+module_exit(lpass_cc_sdm845_exit);
-+
-+MODULE_DESCRIPTION("QTI LPASS_CC SDM845 Driver");
-+MODULE_LICENSE("GPL v2");
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+> ---
+>  arch/arm/boot/dts/exynos5410.dtsi | 4 ++--
+>  arch/arm/boot/dts/exynos5420.dtsi | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
+> index 57fc9c949e54..a92c765a7a84 100644
+> --- a/arch/arm/boot/dts/exynos5410.dtsi
+> +++ b/arch/arm/boot/dts/exynos5410.dtsi
+> @@ -395,7 +395,7 @@
+>  };
+>
+>  &usbdrd_phy0 {
+> -       clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBPHY300>;
+> +       clocks = <&clock CLK_SCLK_USBD300>, <&clock CLK_SCLK_USBPHY300>;
+>         clock-names = "phy", "ref";
+>         samsung,pmu-syscon = <&pmu_system_controller>;
+>  };
+> @@ -410,7 +410,7 @@
+>  };
+>
+>  &usbdrd_phy1 {
+> -       clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBPHY301>;
+> +       clocks = <&clock CLK_SCLK_USBD301>, <&clock CLK_SCLK_USBPHY301>;
+>         clock-names = "phy", "ref";
+>         samsung,pmu-syscon = <&pmu_system_controller>;
+>  };
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index aaff15880761..b84b44556efc 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -1509,7 +1509,7 @@
+>  };
+>
+>  &usbdrd_phy0 {
+> -       clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBPHY300>;
+> +       clocks = <&clock CLK_SCLK_USBD300>, <&clock CLK_SCLK_USBPHY300>;
+>         clock-names = "phy", "ref";
+>         samsung,pmu-syscon = <&pmu_system_controller>;
+>  };
+> @@ -1524,7 +1524,7 @@
+>  };
+>
+>  &usbdrd_phy1 {
+> -       clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBPHY301>;
+> +       clocks = <&clock CLK_SCLK_USBD301>, <&clock CLK_SCLK_USBPHY301>;
+>         clock-names = "phy", "ref";
+>         samsung,pmu-syscon = <&pmu_system_controller>;
+>  };
+> --
+> 2.17.1
+>
