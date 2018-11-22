@@ -1,135 +1,93 @@
-From: PETER CHEN <peter.chen@nxp.com>
-Subject: RE: [PATCH] ARM: dts: imx: Add dummy PHYs for HSIC-only USB
- controllers
-Date: Thu, 22 Nov 2018 06:48:09 +0000
-Message-ID: <VI1PR04MB5327E5CE977E59E03B1B6C4C8BDB0@VI1PR04MB5327.eurprd04.prod.outlook.com>
-References: <1539848729-27646-1-git-send-email-frieder.schrempf@kontron.de>
- <20181031073112.GL10386@tiger>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v5 4/5] arm64: dts: qcom: sdm845: Add UFS nodes for
+ sdm845-mtp
+Date: Wed, 21 Nov 2018 23:04:12 -0800
+Message-ID: <20181122070412.GJ2225@minitux>
+References: <20181026173544.136037-1-evgreen@chromium.org>
+ <20181026173544.136037-5-evgreen@chromium.org>
+ <154265514855.88331.12521366940818102477@swboyd.mtv.corp.google.com>
+ <CAD=FV=WYhM2eJFdcum3aE2YhhhP9s=OzR=oRA2NXU4PFJc7Z5A@mail.gmail.com>
+ <154265653027.88331.11231439952253219107@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181031073112.GL10386@tiger>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <154265653027.88331.11231439952253219107@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Frieder Schrempf <frieder.schrempf@kontron.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Doug Anderson <dianders@chromium.org>, Andy Gross <andy.gross@linaro.org>, Evan Green <evgreen@chromium.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>, cang@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-=20
->=20
-> On Thu, Oct 18, 2018 at 09:45:04AM +0200, Frieder Schrempf wrote:
-> > Some SOCs in the i.MX6 family have a USB host controller that is only
-> > capable of the HSIC interface and has no on-board PHY.
-> >
-> > To be able to use these controllers, we need to add "usb-nop-xceiv"
-> > dummy PHYs.
-> >
-> > Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
->=20
-> @Peter, looks good to you?
->=20
-> Shawn
->=20
-> > ---
-> >  arch/arm/boot/dts/imx6qdl.dtsi | 14 ++++++++++++++
-> > arch/arm/boot/dts/imx6sl.dtsi  |  7 +++++++
-> > arch/arm/boot/dts/imx6sx.dtsi  |  6 ++++++
-> >  3 files changed, 27 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/imx6qdl.dtsi
-> > b/arch/arm/boot/dts/imx6qdl.dtsi index 61d2d26..d3404d1 100644
-> > --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> > +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> > @@ -139,6 +139,16 @@
-> >  		interrupts =3D <0 94 IRQ_TYPE_LEVEL_HIGH>;
-> >  	};
-> >
-> > +	usbphynop1: usbphynop1 {
-> > +		compatible =3D "usb-nop-xceiv";
-> > +		#phy-cells =3D <0>;
-> > +	};
-> > +
+On Mon 19 Nov 11:42 PST 2018, Stephen Boyd wrote:
 
-Why #phy-cells property is needed? Others are ok for me.
+> Quoting Doug Anderson (2018-11-19 11:25:08)
+> > On Mon, Nov 19, 2018 at 11:19 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > >
+> > > Quoting Evan Green (2018-10-26 10:35:43)
+> > >
+> > > > +};
+> > > > +
+> > > > +&ufsphy1 {
+> > > > +       status = "okay";
+> > > > +
+> > > > +       vdda-phy-supply = <&vdda_ufs1_core>;
+> > > > +       vdda-pll-supply = <&vdda_ufs1_1p2>;
+> > >
+> > > These two properties can be specified in the SoC dtsi file instead of
+> > > each board variant file. This way we don't have to specify the things
+> > > that are SoC independent in each board file. The board integrator just
+> > > has to attach the labels to the right regulator nodes, in this case
+> > > vdda_ufs1_core and vdda_ufs1_1p2, and then the sdm845.dtsi file will be
+> > > matched up with the right regulator automatically. It's also nice so
+> > > that board integrators don't have to know anything besides what
+> > > regulator goes to what pin on the SoC.
+> > 
+> > This is an interesting proposal and it feels like we have to consider
+> > the tradeoffs.
+> > 
+> > I agree that it would be nice not to have to specify this in every
+> > single board .dts file, but at the same time what if you've got a
+> > board that doesn't use UFS?  Such a board would bother adding the
+> > labels "vdda_ufs1_core" and "vdda_ufs1_1p2".  This would lead to a
+> > compile error in the device tree bindings.  That seems pretty
+> > undesirable.
+> > 
+> 
+> A workaround for this somewhat rare case would be to specify
+> /delete-property/ on those nodes that aren't used. Unless that can't
+> even work because the phandle is parsed before properties are deleted? I
+> haven't tried. Or we could try to have dtc ignore broken phandles in
+> status = "disabled" nodes or omit them entirely from the dtb so this
+> isn't a problem.
+> 
+> Either way, I would push for making it easier for the users of the SoC
+> to not need to know the SoC internal details too much and rely on the
+> SoC dtsi file to get it right. From the user perspective it's just a
+> bunch of pins connected to something. We could also have a 0 volt
+> "ground" regulator for any grounded/unconnected pins if that helps. It
+> could be marked as status = "disabled" so that no runtime code is used
+> while dtc is still happy to have the disabled node with a label.
+> 
 
-Peter
+I dislike the use of the labels "vdda_ufs1_core" as that doesn't tell me
+which regulator this is actually wired to, without having to jump around
+in the board dts file. It's annoying, but it's pretty much write-once so
+it's not a big issue.
 
-> > +	usbphynop2: usbphynop2 {
-> > +		compatible =3D "usb-nop-xceiv";
-> > +		#phy-cells =3D <0>;
-> > +	};
-> > +
-> >  	soc {
-> >  		#address-cells =3D <1>;
-> >  		#size-cells =3D <1>;
-> > @@ -981,6 +991,8 @@
-> >  				reg =3D <0x02184400 0x200>;
-> >  				interrupts =3D <0 41 IRQ_TYPE_LEVEL_HIGH>;
-> >  				clocks =3D <&clks IMX6QDL_CLK_USBOH3>;
-> > +				fsl,usbphy =3D <&usbphynop1>;
-> > +				phy_type =3D "hsic";
-> >  				fsl,usbmisc =3D <&usbmisc 2>;
-> >  				dr_mode =3D "host";
-> >  				ahb-burst-config =3D <0x0>;
-> > @@ -994,6 +1006,8 @@
-> >  				reg =3D <0x02184600 0x200>;
-> >  				interrupts =3D <0 42 IRQ_TYPE_LEVEL_HIGH>;
-> >  				clocks =3D <&clks IMX6QDL_CLK_USBOH3>;
-> > +				fsl,usbphy =3D <&usbphynop2>;
-> > +				phy_type =3D "hsic";
-> >  				fsl,usbmisc =3D <&usbmisc 3>;
-> >  				dr_mode =3D "host";
-> >  				ahb-burst-config =3D <0x0>;
-> > diff --git a/arch/arm/boot/dts/imx6sl.dtsi
-> > b/arch/arm/boot/dts/imx6sl.dtsi index 7a4f5da..81edcdc 100644
-> > --- a/arch/arm/boot/dts/imx6sl.dtsi
-> > +++ b/arch/arm/boot/dts/imx6sl.dtsi
-> > @@ -110,6 +110,11 @@
-> >  		interrupts =3D <0 94 IRQ_TYPE_LEVEL_HIGH>;
-> >  	};
-> >
-> > +	usbphynop1: usbphynop1 {
-> > +		compatible =3D "usb-nop-xceiv";
-> > +		#phy-cells =3D <0>;
-> > +	};
-> > +
-> >  	soc {
-> >  		#address-cells =3D <1>;
-> >  		#size-cells =3D <1>;
-> > @@ -815,6 +820,8 @@
-> >  				reg =3D <0x02184400 0x200>;
-> >  				interrupts =3D <0 40 IRQ_TYPE_LEVEL_HIGH>;
-> >  				clocks =3D <&clks IMX6SL_CLK_USBOH3>;
-> > +				fsl,usbphy =3D <&usbphynop1>;
-> > +				phy_type =3D "hsic";
-> >  				fsl,usbmisc =3D <&usbmisc 2>;
-> >  				dr_mode =3D "host";
-> >  				ahb-burst-config =3D <0x0>;
-> > diff --git a/arch/arm/boot/dts/imx6sx.dtsi
-> > b/arch/arm/boot/dts/imx6sx.dtsi index 844caa3..07ed417 100644
-> > --- a/arch/arm/boot/dts/imx6sx.dtsi
-> > +++ b/arch/arm/boot/dts/imx6sx.dtsi
-> > @@ -159,6 +159,11 @@
-> >  		interrupts =3D <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-> >  	};
-> >
-> > +	usbphynop1: usbphynop1 {
-> > +		compatible =3D "usb-nop-xceiv";
-> > +		#phy-cells =3D <0>;
-> > +	};
-> > +
-> >  	soc {
-> >  		#address-cells =3D <1>;
-> >  		#size-cells =3D <1>;
-> > @@ -877,6 +882,7 @@
-> >  				reg =3D <0x02184400 0x200>;
-> >  				interrupts =3D <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-> >  				clocks =3D <&clks IMX6SX_CLK_USBOH3>;
-> > +				fsl,usbphy =3D <&usbphynop1>;
-> >  				fsl,usbmisc =3D <&usbmisc 2>;
-> >  				phy_type =3D "hsic";
-> >  				fsl,anatop =3D <&anatop>;
-> > --
-> > 2.7.4
-> >
+But I really don't like the idea of having sdm845.dtsi depend on labels
+specified in the board dtsi. This just means that in order to add a new
+board I need to figure out the information and the way to specify it is
+to change a label in the board file.
+
+
+The static configuration here is that vdda-phy-supply is connected to
+the vdda_ufs1_core pin on the SoC, which is connected to some board
+specific regulator.  If anything I think we should model that
+intermediate entity, in which case we could move the link between the
+phy and the pin to the platform dtsi.
+
+
+But I'm fine with us just merging Evan's patch as is.
+
+Regards,
+Bjorn
