@@ -1,80 +1,78 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 3/5] media: sunxi: Add A10 CSI driver
-Date: Thu, 22 Nov 2018 14:58:53 +0100
-Message-ID: <20181122135853.4rpxb32d6ios5zac@flea>
-References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
- <c53e1cdc3b139382b00ee06bf3980d3fd1742ec0.1542097288.git-series.maxime.ripard@bootlin.com>
- <f34c79f5-66d6-2c2f-5616-020ad2b96400@xs4all.nl>
- <20181115205106.thbkojnzdwmaeui3@flea>
- <20181121220102.6nn7uwu2c67zs6pz@mara.localdomain>
+From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
+Subject: =?utf-8?B?UmU6IFtSQ0bCoFBBVENILHYyLDIvMl0gcHdtOiBpbXg6IENvbmZpZ3VyZSBv?=
+ =?utf-8?Q?utput_to_GPIO_in_disabled_state?=
+Date: Thu, 22 Nov 2018 14:23:22 +0000
+Message-ID: <7c1dedaf-9a00-5dc2-e0dc-f94b637380bb@ysoft.com>
+References: <4fbb7307-df01-d7bd-f2e2-e05e6d17807d@ysoft.com>
+ <20181108191855.zuon3ecv4yjfbs7g@pengutronix.de>
+ <283cfef3-16d0-8bd4-e306-6e34d44c3a86@ysoft.com>
+ <20181109165555.vqbiwh4hlcnozdna@pengutronix.de> <20181114113449.GB2620@ulmo>
+ <20181114215120.vddykljqyavm64wj@pengutronix.de> <20181115152545.GA8611@ulmo>
+ <20181115203733.qvonika6yhn2bsnb@pengutronix.de>
+ <20181116095124.GA28631@ulmo>
+ <6e81d63b-61a1-36fe-0c24-3ff27438cbc0@ysoft.com>
+ <20181120165457.x7svxgzaae5at32x@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3quxuh5gpkv3x7ke"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181121220102.6nn7uwu2c67zs6pz@mara.localdomain>
+In-Reply-To: <20181120165457.x7svxgzaae5at32x@pengutronix.de>
+Content-Language: en-US
+Content-ID: <7C39776F290355408DE6D906C2A018ED@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+To: =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, =?utf-8?B?TG90aGFyIFdhw59tYW5u?= <LW@karo-electronics.de>, Linus Walleij <linus.walleij@linaro.org>, viresh kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-
---3quxuh5gpkv3x7ke
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Sakari,
-
-On Thu, Nov 22, 2018 at 12:01:03AM +0200, Sakari Ailus wrote:
-> On Thu, Nov 15, 2018 at 09:51:06PM +0100, Maxime Ripard wrote:
-> > Hi Hans,
-> >=20
-> > Thanks for your review! I'll address the other comments you made.
-> >=20
-> > On Tue, Nov 13, 2018 at 01:24:47PM +0100, Hans Verkuil wrote:
-> > > > +static int csi_probe(struct platform_device *pdev)
-> > > > +{
-> > > > +	struct sun4i_csi *csi;
-> > > > +	struct resource *res;
-> > > > +	int ret;
-> > > > +	int irq;
-> > > > +
-> > > > +	csi =3D devm_kzalloc(&pdev->dev, sizeof(*csi), GFP_KERNEL);
-> > >=20
-> > > devm_kzalloc is not recommended: all devm_ memory is freed when the d=
-river
-> > > is unbound, but a filehandle might still have a reference open.
-> >=20
-> > How would a !devm variant with a kfree in the remove help? We would
-> > still fall in the same case, right?
->=20
-> Not quite. For video nodes this is handled: the release callback gets cal=
-led
-> once there are no file handles open to the device. That may well be much
-> later than the device has been unbound from the driver.
-
-I might be missing something, but how the release callback will be
-able to get the reference to the structure we allocated here so that
-it can free it?
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---3quxuh5gpkv3x7ke
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW/a2HQAKCRDj7w1vZxhR
-xeYmAP9yPJlEhJ3rYDcEmTa7fnMkqikKNh6ty85vrrlg+FCEBgD/Xvwbv+mZKRbm
-TOU2UTA8aEpKmFShx9jEqRewxE1iDQw=
-=+FLC
------END PGP SIGNATURE-----
-
---3quxuh5gpkv3x7ke--
+QWhvaiBVd2UsDQoNCk9uIDIwLjExLjIwMTggMTc6NTQsIFV3ZSBLbGVpbmUtS8O2bmlnIHdyb3Rl
+Og0KPiBPbiBUdWUsIE5vdiAyMCwgMjAxOCBhdCAwMToxNDozM1BNICswMDAwLCBWb2vDocSNIE1p
+Y2hhbCB3cm90ZToNCj4+IE9uIDE2LjExLjIwMTggMTA6NTEsIFRoaWVycnkgUmVkaW5nIHdyb3Rl
+Og0KPj4+IE9uIFRodSwgTm92IDE1LCAyMDE4IGF0IDA5OjM3OjMzUE0gKzAxMDAsIFV3ZSBLbGVp
+bmUtS8O2bmlnIHdyb3RlOg0KPj4+PiBPbiBUaHUsIE5vdiAxNSwgMjAxOCBhdCAwNDoyNTo0NVBN
+ICswMTAwLCBUaGllcnJ5IFJlZGluZyB3cm90ZToNCj4+PiBNeSBpbXByZXNzaW9uIHdhcyB0aGF0
+IGhlIHdhcyB0cnlpbmcgdG8gZmluZCBjb25jZW5zdXMuIEJ1dCB0aGUgd2F5IEkNCj4+PiByZWFk
+IGl0IGhlIHdhcyBzdGlsbCBhcmd1aW5nIHRoYXQgdGhlIHBpbmN0cmwgc29sdXRpb24gd2FzIHN0
+aWxsIHRoZQ0KPj4+IG1vc3QgY29tcGxldGUsIGFuZCB3b3VsZCB0aGVyZWZvcmUgc3RpbGwgcHJl
+ZmVyIGl0Lg0KPj4NCj4+IEl0IGlzIGxpa2UgeW91IHNhaWQgVGhpZXJyeS4gSSBhbSBvbmx5IHRy
+eWluZyB0byByZW1haW4gb3BlbiB0byB0ZXN0DQo+PiBVd2UncyBpZGVhcy4gQWZ0ZXIgd2hhdCBJ
+IGhhdmUgdGVzdGVkIHNvIGZhciBJIHN0aWxsIHByZWZlciBhIGlteC1zcGVjaWZpYw0KPj4gcGlu
+Y3RybCBzb2x1dGlvbi4NCj4gDQo+IElzIHRoYXQgYmVjYXVzZSB5b3UgY29uc2lkZXIgaXQgcmln
+aHQgdG8gYmUgaW14LXNwZWNpZmljIG9yIGJlY2F1c2UNCj4gdGhhdCdzIHdoYXQgeW91IGFscmVh
+ZHkgaGF2ZT8gSXMgdGhlcmUgYSBmbGF3IGluIG15IGV4cGxhbmF0aW9uIHRoYXQNCj4gdGhlIHBy
+b2JsZW0gaXNuJ3QgaW14LXNwZWNpZmljIHBlciBzZSBhbmQgc28gdGhlIHNvbHV0aW9uIHNob3Vs
+ZG4ndCBiZQ0KPiB0aGF0IGVpdGhlcj8NCg0KSSBjb25zaWRlciBpdCByaWdodCB0byBiZSBpbXgt
+c3BlY2lmaWMgYmVjYXVzZSBvZiB0aGUgY3VycmVudCBzdGF0ZSBvZg0KYXdhcmVuZXNzIGFuZCBp
+bnRlcmVzdCBpbiB0aGlzIHByb2JsZW0gZnJvbSBvdGhlciBTb0MncyBjb21tdW5pdGllcy4NCkkg
+c3BlbnQgcXVpdGUgc29tZSB0aW1lIGxvb2tpbmcgZm9yIGEgc29sdXRpb24gYW5kIG15IGltcHJl
+c3Npb24gaXMgdGhhdA0Kb25seSBpbXggdXNlcnMgcGVyY2VpdmUgdGhpcyBwcm9ibGVtIGFuZCBh
+cmUgdGhlIG9ubHkgb25lIHRoYXQgYWxyZWFkeQ0KZGlkIHNvbWUgYXR0ZW1wdHMgdG8gc29sdmUg
+aXQuDQoNCkkgdGhpbmsgdGhpcyBpcyBpbiBsaW5lIHdpdGggd2hhdCBUaGllcnJ5IHNhaWQgLSBp
+ZiBvdGhlciB1c2VycyBoYXZlDQp0aGUgc2FtZSBwcm9ibGVtLCB0aGV5IHNob3VsZCBzcGVhay11
+cC4gSW4gbXkgZXllcyBhcyBoZSBpcyB0aGUgcHdtDQpzdWJzeXN0ZW0gbWFpbnRhaW5lciBoZSBr
+bm93cyB0aGUgYmVzdCBpZiBvdGhlcnMgaGF2ZSB0aGUgc2FtZSBwcm9ibGVtDQpvciBub3QuIE15
+IHVuZGVyc3RhbmRpbmcgb2YgaGlzIGFyZ3VtZW50cyBpcyBzdWNoIHRoYXQgdGhleSBkbyBub3Qu
+DQoNCkkgdW5kZXJzdGFuZCB0aGF0IGhhdmluZyBhIG1vcmUgZ2VuZXJpYyBzb2x1dGlvbiBtYXkg
+YmUgYmV0dGVyLiBJIGFtIG5vdA0KcmVhbGx5IHN1cmUgaWYgaXQgaXMgdmFsaWQgaW4gdGhpcyBj
+YXNlLg0KDQo+IElzIHRoZSBwcm9ibGVtIHdpdGggdGhlICJ0ZXN0cyBzbyBmYXIiIHRoYXQgaXQg
+ZG9lc24ndCB3b3JrIHlldCwgb3IgaXMNCj4gdGhlcmUgc29tZXRoaW5nIGNvbmNlcHR1YWxseSB3
+cm9uZyBpbiB5b3VyIGV5ZXM/DQoNCkl0IGRvZXMgbm90IHdvcmsgeWV0LiBBbmQgaXQgd291bGQg
+bm90IHNvbHZlIGFsbCB0aGUgY2FzZXMuIE5hbWVseSB0aGUNCnN5c2ZzIHVzZS1jYXNlLiBBbmQg
+VGhpZXJyeSBjb25maXJtZWQgc3lzZnMgaXMgYSBzdXBwb3J0ZWQgaW50ZXJmYWNlLg0KDQpJIGRv
+IG5vdCBkYXJlIHRvIHNwZWN1bGF0ZSB3aGV0aGVyIHlvdXIgaWRlYSBpcyBjb25jZXB0dWFsbHkg
+d3Jvbmcgb3INCm5vdC4gSSBvbmx5IGNhbiBzYXkgdGhhdCBwdXR0aW5nIHRoZSBwaW5jdHJsIG9m
+IHRoZSBQV00gcGluIGludG8gdGhlDQpQV00gY29uc3VtZXIgc2VlbXMgdmVyeSB1bm5hdHVyYWwg
+dG8gbWUuIEkgaGF2ZSBub3Qgc2VlbiBhbnkgZXhhbXBsZQ0Kb2Ygc3VjaCB1c2FnZSB5ZXQuIFRo
+YXQgZG9lcyBub3QgbWVhbiBpdCBpcyB3cm9uZyBvZiBjb3Vyc2UuDQoNCk9uIHRoZSBvdGhlciBo
+YW5kLCB5b3Ugc2FpZCB0aGF0IHdlIGFyZSBpbnZlbnRpbmcgbmV3IHBpbmN0cmwgbmFtZXMuDQpC
+dXQgSSBzZWUgcXVpdGUgYSBsb3Qgb2YgdXNhZ2VzIG9mIG5vbi1bImluaXQiLCAiZGVmYXVsdCIs
+ICJzbGVlcCJdDQpwaW5jdHJsIG5hbWVzIGluIHRoZSBEVFMgZmlsZXMuIE1vc3Qgb2YgdGhlbSBh
+cmUgYWN0dWFsbHkgaW14IHVzZXJzLg0KDQpTdGlsbCwgdGhlIG1haW4gcHJvYmxlbSBpcyBpdCBp
+cyBub3QgcG9zc2libGUgdG8gdHVybi1vZmYgdGhlIGJhY2tsaWdodA0Kb3IgY29vbGluZyBmYW4g
+b3Igd2hvZXZlciBpcyB0aGUgUFdNIGNvbnN1bWVyIGlmIGludmVydGVkIFBXTSBpcyB1c2VkLg0K
+Tm90IHRoYXQgaXQgaXMgbm90IHBvc3NpYmxlIHRvIGtlZXAgaXQgdHVybmVkLW9mZiB1bnRpbCBp
+dCBpcyB0dXJuZWQtb24NCmJ5IHRoZSB1c2VyLiBTbyBmb3IgbWUsIGFueSBzb2x1dGlvbiB0aGF0
+IGF0IGxlYXN0IGFsbG93cyB0aGF0IGlzIGJldHRlcg0KdGhhbiB0aGUgY3VycmVudCBzdGF0ZS4g
+VGhlIHBpbmN0cmwgc29sdXRpb24ganVzdCBzb2x2ZXMgYWxsIGF0IG9uY2UuDQoNCkkgZnVsbHkg
+YWdyZWUgdGhlIHBpbmN0cmwgc29sdXRpb24gaGFzIGRyYXdiYWNrcy4gSXQgbmVlZHMgdG8gYmUg
+d2VsbA0KZG9jdW1lbnRlZCBhbmQgRFQgYXV0aG9ycyBuZWVkIHRvIGtub3cgaG93IHRvIHVzZSBp
+dCBhbmQgaW4gd2hhdCBjYXNlcy4NCg0KQmVzdCByZWdhcmRzLA0KTWljaGFsDQoNCg==
