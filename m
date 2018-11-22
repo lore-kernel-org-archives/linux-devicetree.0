@@ -1,211 +1,45 @@
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v9 10/13] media: imx7.rst: add documentation for i.MX7 media
- driver
-Date: Thu, 22 Nov 2018 15:18:31 +0000
-Message-ID: <20181122151834.6194-11-rui.silva@linaro.org>
-References: <20181122151834.6194-1-rui.silva@linaro.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [v5, PATCH 2/2] dt-binding: mediatek-dwmac: add binding document
+ for MediaTek MT2712 DWMAC
+Date: Thu, 22 Nov 2018 16:19:32 +0100
+Message-ID: <20181122151932.GD15403@lunn.ch>
+References: <1542882521-18874-1-git-send-email-biao.huang@mediatek.com>
+ <1542882521-18874-3-git-send-email-biao.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20181122151834.6194-1-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1542882521-18874-3-git-send-email-biao.huang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Biao Huang <biao.huang@mediatek.com>
+Cc: davem@davemloft.net, robh+dt@kernel.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, joabreu@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-Add rst document to describe the i.MX7 media driver and also a working
-example from the Warp7 board usage with a OV2680 sensor.
+On Thu, Nov 22, 2018 at 06:28:41PM +0800, Biao Huang wrote:
+> The commit adds the device tree binding documentation for the MediaTek DWMAC
+> found on MediaTek MT2712.
+> 
+> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
----
- Documentation/media/v4l-drivers/imx7.rst  | 157 ++++++++++++++++++++++
- Documentation/media/v4l-drivers/index.rst |   1 +
- 2 files changed, 158 insertions(+)
- create mode 100644 Documentation/media/v4l-drivers/imx7.rst
+> +Optional properties:
+> +- mediatek,tx-delay: TX clock delay macro value. Range is 0~31. Default is 0.
+> +	It should be defined for rgmii/rgmii-rxid/mii interface.
+> +- mediatek,rx-delay: RX clock delay macro value. Range is 0~31. Default is 0.
+> +	It should be defined for rgmii/rgmii-txid/mii/rmii interface.
 
-diff --git a/Documentation/media/v4l-drivers/imx7.rst b/Documentation/media/v4l-drivers/imx7.rst
-new file mode 100644
-index 000000000000..cd1195d391c5
---- /dev/null
-+++ b/Documentation/media/v4l-drivers/imx7.rst
-@@ -0,0 +1,157 @@
-+i.MX7 Video Capture Driver
-+==========================
-+
-+Introduction
-+------------
-+
-+The i.MX7 contrary to the i.MX5/6 family does not contain an Image Processing
-+Unit (IPU); because of that the capabilities to perform operations or
-+manipulation of the capture frames are less feature rich.
-+
-+For image capture the i.MX7 has three units:
-+- CMOS Sensor Interface (CSI)
-+- Video Multiplexer
-+- MIPI CSI-2 Receiver
-+
-+::
-+                                           |\
-+   MIPI Camera Input ---> MIPI CSI-2 --- > | \
-+                                           |  \
-+                                           | M |
-+                                           | U | ------>  CSI ---> Capture
-+                                           | X |
-+                                           |  /
-+   Parallel Camera Input ----------------> | /
-+                                           |/
-+
-+For additional information, please refer to the latest versions of the i.MX7
-+reference manual [#f1]_.
-+
-+Entities
-+--------
-+
-+imx7-mipi-csi2
-+--------------
-+
-+This is the MIPI CSI-2 receiver entity. It has one sink pad to receive the pixel
-+data from MIPI CSI-2 camera sensor. It has one source pad, corresponding to the
-+virtual channel 0. This module is compliant to previous version of Samsung
-+D-phy, and supports two D-PHY Rx Data lanes.
-+
-+csi_mux
-+-------
-+
-+This is the video multiplexer. It has two sink pads to select from either camera
-+sensor with a parallel interface or from MIPI CSI-2 virtual channel 0.  It has
-+a single source pad that routes to the CSI.
-+
-+csi
-+---
-+
-+The CSI enables the chip to connect directly to external CMOS image sensor. CSI
-+can interface directly with Parallel and MIPI CSI-2 buses. It has 256 x 64 FIFO
-+to store received image pixel data and embedded DMA controllers to transfer data
-+from the FIFO through AHB bus.
-+
-+This entity has one sink pad that receives from the csi_mux entity and a single
-+source pad that routes video frames directly to memory buffers. This pad is
-+routed to a capture device node.
-+
-+Usage Notes
-+-----------
-+
-+To aid in configuration and for backward compatibility with V4L2 applications
-+that access controls only from video device nodes, the capture device interfaces
-+inherit controls from the active entities in the current pipeline, so controls
-+can be accessed either directly from the subdev or from the active capture
-+device interface. For example, the sensor controls are available either from the
-+sensor subdevs or from the active capture device.
-+
-+Warp7 with OV2680
-+-----------------
-+
-+On this platform an OV2680 MIPI CSI-2 module is connected to the internal MIPI
-+CSI-2 receiver. The following example configures a video capture pipeline with
-+an output of 800x600, and BGGR 10 bit bayer format:
-+
-+.. code-block:: none
-+   # Setup links
-+   media-ctl -l "'ov2680 1-0036':0 -> 'imx7-mipi-csis.0':0[1]"
-+   media-ctl -l "'imx7-mipi-csis.0':1 -> 'csi_mux':1[1]"
-+   media-ctl -l "'csi_mux':2 -> 'csi':0[1]"
-+   media-ctl -l "'csi':1 -> 'csi capture':0[1]"
-+
-+   # Configure pads for pipeline
-+   media-ctl -V "'ov2680 1-0036':0 [fmt:SBGGR10_1X10/800x600 field:none]"
-+   media-ctl -V "'csi_mux':1 [fmt:SBGGR10_1X10/800x600 field:none]"
-+   media-ctl -V "'csi_mux':2 [fmt:SBGGR10_1X10/800x600 field:none]"
-+   media-ctl -V "'imx7-mipi-csis.0':0 [fmt:SBGGR10_1X10/800x600 field:none]"
-+   media-ctl -V "'csi':0 [fmt:SBGGR10_1X10/800x600 field:none]"
-+
-+After this streaming can start. The v4l2-ctl tool can be used to select any of
-+the resolutions supported by the sensor.
-+
-+.. code-block:: none
-+    root@imx7s-warp:~# media-ctl -p
-+    Media controller API version 4.17.0
-+
-+    Media device information
-+    ------------------------
-+    driver          imx-media
-+    model           imx-media
-+    serial
-+    bus info
-+    hw revision     0x0
-+    driver version  4.17.0
-+
-+    Device topology
-+    - entity 1: csi (2 pads, 2 links)
-+		type V4L2 subdev subtype Unknown flags 0
-+		device node name /dev/v4l-subdev0
-+	    pad0: Sink
-+		    [fmt:SBGGR10_1X10/800x600 field:none]
-+		    <- "csi_mux":2 [ENABLED]
-+	    pad1: Source
-+		    [fmt:SBGGR10_1X10/800x600 field:none]
-+		    -> "csi capture":0 [ENABLED]
-+
-+    - entity 4: csi capture (1 pad, 1 link)
-+		type Node subtype V4L flags 0
-+		device node name /dev/video0
-+	    pad0: Sink
-+		    <- "csi":1 [ENABLED]
-+
-+    - entity 10: csi_mux (3 pads, 2 links)
-+		type V4L2 subdev subtype Unknown flags 0
-+		device node name /dev/v4l-subdev1
-+	    pad0: Sink
-+		    [fmt:unknown/0x0]
-+	    pad1: Sink
-+		    [fmt:unknown/800x600 field:none]
-+		    <- "imx7-mipi-csis.0":1 [ENABLED]
-+	    pad2: Source
-+		    [fmt:unknown/800x600 field:none]
-+		    -> "csi":0 [ENABLED]
-+
-+    - entity 14: imx7-mipi-csis.0 (2 pads, 2 links)
-+		type V4L2 subdev subtype Unknown flags 0
-+		device node name /dev/v4l-subdev2
-+	    pad0: Sink
-+		    [fmt:SBGGR10_1X10/800x600 field:none]
-+		    <- "ov2680 1-0036":0 [ENABLED]
-+	    pad1: Source
-+		    [fmt:SBGGR10_1X10/800x600 field:none]
-+		    -> "csi_mux":1 [ENABLED]
-+
-+    - entity 17: ov2680 1-0036 (1 pad, 1 link)
-+		type V4L2 subdev subtype Sensor flags 0
-+		device node name /dev/v4l-subdev3
-+	    pad0: Source
-+		    [fmt:SBGGR10_1X10/800x600 field:none]
-+		    -> "imx7-mipi-csis.0":0 [ENABLED]
-+
-+
-+References
-+----------
-+
-+.. [#f1] https://www.nxp.com/docs/en/reference-manual/IMX7SRM.pdf
-diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
-index 679238e786a7..693295bbc53f 100644
---- a/Documentation/media/v4l-drivers/index.rst
-+++ b/Documentation/media/v4l-drivers/index.rst
-@@ -44,6 +44,7 @@ For more details see the file COPYING in the source distribution of Linux.
- 	davinci-vpbe
- 	fimc
- 	imx
-+	imx7
- 	ivtv
- 	max2175
- 	meye
--- 
-2.19.1
+You have received the same feedback at least twice now, from two
+different maintainers, that the delay should be specified in pS, and
+the driver should figure out what values to place into registers.
+
+You should not ignore feedback like that. If you don't understand the
+feedback, please ask us to explain it. If you don't agree with the
+feedback, you need to argue why you think it is wrong, or why what you
+are doing is better, etc.
+
+We are here to help, but just ignoring us won't get you anywhere.
+
+For the moment:
+
+NACK
+
+	Andrew
