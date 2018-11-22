@@ -1,85 +1,66 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH] x86: fix -Wmissing-prototypes warning
-Date: Thu, 22 Nov 2018 12:14:58 +0100
-Message-ID: <20181122111458.GA107823@gmail.com>
-References: <20181122084815.GA84118@gmail.com>
- <201811221904598072830@zte.com.cn>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 2/4] doc/layerscape-pci: removed unsuitable compatible
+ string
+Date: Thu, 22 Nov 2018 11:28:09 +0000
+Message-ID: <20181122112809.GA11952@e107981-ln.cambridge.arm.com>
+References: <20181008031428.25293-1-Zhiqiang.Hou@nxp.com>
+ <20181008031428.25293-3-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <jailhouse-dev+bncBD7LZ45K3ECBBOE73LPQKGQEFPLYRQQ@googlegroups.com>
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201811221904598072830@zte.com.cn>
-List-Post: <https://groups.google.com/group/jailhouse-dev/post>, <mailto:jailhouse-dev@googlegroups.com>
-List-Help: <https://groups.google.com/support/>, <mailto:jailhouse-dev+help@googlegroups.com>
-List-Archive: <https://groups.google.com/group/jailhouse-dev
-List-Subscribe: <https://groups.google.com/group/jailhouse-dev/subscribe>, <mailto:jailhouse-dev+subscribe@googlegroups.com>
-List-Unsubscribe: <mailto:googlegroups-manage+175645748590+unsubscribe@googlegroups.com>,
- <https://groups.google.com/group/jailhouse-dev/subscribe>
-To: wang.yi59@zte.com.cn
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org, ard.biesheuvel@linaro.org, linux-efi@vger.kernel.org, pbonzini@redhat.com, rkrcmar@redhat.com, kvm@vger.kernel.org, jgross@suse.com, akataria@vmware.com, virtualization@lists.linux-foundation.org, m.mizuma@jp.fujitsu.com, peterz@infradead.org, prarit@redhat.com, douly.fnst@cn.fujitsu.com, dwmw@amazon.co.uk, luto@kernel.org, pasha.tatashin@oracle.com, rajvi.jingar@intel.com, zhe.he@windriver.com, akpm@linux-foundation.org, dyoung@redhat.com, takahiro.akashi@linaro.org, ebiederm@xmission.com, bhe@redhat.com, ivan.gorinov@intel.com, robh@kernel.org, andy.shevchenko@gmail.com, frank.rowand@sony.com, jan.kiszka@siemens.com, jailhouse-dev@googlegroups.com, konrad.wilk@oracle.com, thomas.lendacky@amd.com, pravin.shedge4linux@gmail.com, namit@vmware.com, jroedel@sus
+In-Reply-To: <20181008031428.25293-3-Zhiqiang.Hou@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, leoyang.li@nxp.com, shawnguo@kernel.org, mark.rutland@arm.com, bhelgaas@google.com, Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Oct 08, 2018 at 11:14:26AM +0800, Zhiqiang Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> Removed the compatible string "snps,dw-pcie", it is for the reference
+> platform driver for PCI RC IP Protoyping Kits based on the ARC SDP,
+> so it is not suitable for all platform with designware PCIe controller,
+> and platform vendors have themselves' drivers.
+> 
+> The compatible string "snsp,dw-pcie" was added by mistake and it's not
+> matched that time, but it is matched because pcie drivers has been
+> collected recently.
 
-* wang.yi59@zte.com.cn <wang.yi59@zte.com.cn> wrote:
+I do not understand what you mean, please explain it to me and I will
+update the commit log accordingly before merging it.
 
-> Hi Ingo,
->=20
-> > * Yi Wang <wang.yi59@zte.com.cn> wrote:
-> >
-> > > We may get -Wmissing-prototypes warnings when building
-> > > kernel with W=3D1, it's better to fix them as global function
-> > > signature can be changed and caller who use the old unchanged
-> > > prototypes will be hosed.
-> > >
-> > > This patch fixes most of -Wmissing-prototypes warnings which
-> > > are in the root directory of arch/x86/kernel, not including
-> > > the subdirectories.
-> > >
-> > > These are the warnings fixed in this patch:
-> > > arch/x86/kernel/signal.c:865:17: warning: no previous prototype for =
-=E2=80=98sys32_x32_rt_sigreturn=E2=80=99 [-Wmissing-prototypes]
->=20
-> ......
->=20
-> > >  include/linux/ftrace.h             | 3 +++
-> > >  include/linux/kexec.h              | 1 +
-> > >  include/linux/of_fdt.h             | 1 +
-> > >  include/linux/ptrace.h             | 1 +
-> > >  24 files changed, 55 insertions(+), 3 deletions(-)
-> >
-> > Breaks 32-bit compilation:
-> >
-> > ../arch/x86/include/asm/setup.h: Assembler messages:
-> > ../arch/x86/include/asm/setup.h:30: Error: no such instruction: `unsign=
-ed long __startup_64(unsigned long physaddr,struct boot_params *bp)'
-> >
-> > I'll skip the setup.h bits - let's hope that's the only bug.
->=20
-> Sorry for the inconvenience, though I have checked carefully :-)
->=20
-> How do you produce this error? I tested this way but did not reproduce
-> that error:
-> # make allmodconfig
-> # make -j8
->=20
-> Thanks for your time again!
+Lorenzo
 
-I don't remember the exact config, but you could try the 32-bit=20
-allnoconfig and defconfig.
-
-Note that the commands you used above will use the 64-bit kernel, not the=
-=20
-32-bit kernel.
-
-Thanks,
-
-	Ingo
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-Jailhouse" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to jailhouse-dev+unsubscribe@googlegroups.com.
-For more options, visit https://groups.google.com/d/optout.
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/pci/layerscape-pci.txt | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> index 5eb1c202932f..9b2b8d66d1f4 100644
+> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> @@ -13,8 +13,8 @@ information.
+>  
+>  Required properties:
+>  - compatible: should contain the platform identifier such as:
+> -        "fsl,ls1021a-pcie", "snps,dw-pcie"
+> -        "fsl,ls2080a-pcie", "fsl,ls2085a-pcie", "snps,dw-pcie"
+> +        "fsl,ls1021a-pcie"
+> +        "fsl,ls2080a-pcie", "fsl,ls2085a-pcie"
+>          "fsl,ls2088a-pcie"
+>          "fsl,ls1088a-pcie"
+>          "fsl,ls1046a-pcie"
+> @@ -36,7 +36,7 @@ Required properties:
+>  Example:
+>  
+>  	pcie@3400000 {
+> -		compatible = "fsl,ls1021a-pcie", "snps,dw-pcie";
+> +		compatible = "fsl,ls1021a-pcie";
+>  		reg = <0x00 0x03400000 0x0 0x00010000   /* controller registers */
+>  		       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
+>  		reg-names = "regs", "config";
+> -- 
+> 2.17.1
+> 
