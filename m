@@ -1,279 +1,59 @@
-From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH 05/14] clocksource/drivers/timer-milbeaut: Add Milbeaut
- M10V timer
-Date: Thu, 22 Nov 2018 11:23:54 +0900
-Message-ID: <07d26609-e10c-70f1-1360-63ed0e214d7e@socionext.com>
-References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
- <1542589274-13878-6-git-send-email-sugaya.taichi@socionext.com>
- <c6b7ddb0-064a-8f09-bbb4-9754f3d63ecb@linaro.org>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCHv4 0/3] dts: Add the property of IB and OB
+Date: Thu, 22 Nov 2018 02:33:29 +0000
+Message-ID: <HE1PR04MB14978C967CFAE17815FF1CC8F5DB0@HE1PR04MB1497.eurprd04.prod.outlook.com>
+References: <20171110034847.17891-1-xiaowei.bao@nxp.com>
+ <20181120173021.GA29331@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c6b7ddb0-064a-8f09-bbb4-9754f3d63ecb@linaro.org>
+In-Reply-To: <20181120173021.GA29331@e107981-ln.cambridge.arm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, "sumit.garg@nxp.com" <sumit.garg@nxp.com>, "Y.B. LU" <yangbo.lu@nxp.com>, "hongtao.jia@nxp.com" <hongtao.jia@nxp.com>, Andy Tang <andy.tang@nxp.com>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "pbrobinson@gmail.com" <pbrobinson@gmail.com>, "songxiaowei@hisilicon.com" <songxiaowei@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@li
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel
-
-Thank you for your comments.
-
-On 2018/11/21 19:08, Daniel Lezcano wrote:
-> Hi Sugaya,
->
->
-> On 19/11/2018 02:01, Sugaya Taichi wrote:
->> Add Milbeaut M10V timer using 32bit timer in peripheral.
-> Give a better description of the timer as it is new timer introduced.
-
-I got it. Add more description.
-
-
->> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
->> ---
->>   drivers/clocksource/Kconfig      |   8 +++
->>   drivers/clocksource/Makefile     |   1 +
->>   drivers/clocksource/timer-m10v.c | 146 +++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 155 insertions(+)
->>   create mode 100644 drivers/clocksource/timer-m10v.c
->>
->> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
->> index 55c77e4..a278d72 100644
->> --- a/drivers/clocksource/Kconfig
->> +++ b/drivers/clocksource/Kconfig
->> @@ -638,4 +638,12 @@ config GX6605S_TIMER
->>   	help
->>   	  This option enables support for gx6605s SOC's timer.
->>   
->> +config M10V_TIMER
->> +	bool "Milbeaut M10V timer driver" if COMPILE_TEST
->> +	depends on OF
->> +	depends on ARM
->> +	select TIMER_OF
->> +	help
->> +	  Enables the support for Milbeaut M10V timer driver.
->> +
->>   endmenu
->> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
->> index dd91381..8e908b4 100644
->> --- a/drivers/clocksource/Makefile
->> +++ b/drivers/clocksource/Makefile
->> @@ -55,6 +55,7 @@ obj-$(CONFIG_CLKSRC_TI_32K)	+= timer-ti-32k.o
->>   obj-$(CONFIG_CLKSRC_NPS)	+= timer-nps.o
->>   obj-$(CONFIG_OXNAS_RPS_TIMER)	+= timer-oxnas-rps.o
->>   obj-$(CONFIG_OWL_TIMER)		+= timer-owl.o
->> +obj-$(CONFIG_M10V_TIMER)	+= timer-m10v.o
->>   obj-$(CONFIG_SPRD_TIMER)	+= timer-sprd.o
->>   obj-$(CONFIG_NPCM7XX_TIMER)	+= timer-npcm7xx.o
->>   
->> diff --git a/drivers/clocksource/timer-m10v.c b/drivers/clocksource/timer-m10v.c
->> new file mode 100644
->> index 0000000..ff97c23
->> --- /dev/null
->> +++ b/drivers/clocksource/timer-m10v.c
->> @@ -0,0 +1,146 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (C) 2018 Socionext Inc.
->> + */
->> +
->> +#include <linux/clk.h>
-> ------->
->
->> +#include <linux/clockchips.h>
-> It is included from timer-of.h
->
-> <-------
-
-OK. Remove it.
-
-
->
->> +#include <linux/interrupt.h>
->> +#include <linux/irq.h>
->> +#include <linux/irqreturn.h>
-> ------->
->
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/slab.h>
-> Those are not needed IMO.
->
-> <---------
-
-OK, remove these.
-
-
->
->
->> +#include "timer-of.h"
->> +
->> +#define FSL_TMR_TMCSR_OFS	0x0
->> +#define FSL_TMR_TMR_OFS		0x4
->> +#define FSL_TMR_TMRLR1_OFS	0x8
->> +#define FSL_TMR_TMRLR2_OFS	0xc
->> +#define FSL_RMT_REGSZPCH	0x10
->> +
->> +#define FSL_TMR_TMCSR_OUTL	BIT(5)
->> +#define FSL_TMR_TMCSR_RELD	BIT(4)
->> +#define FSL_TMR_TMCSR_INTE	BIT(3)
->> +#define FSL_TMR_TMCSR_UF	BIT(2)
->> +#define FSL_TMR_TMCSR_CNTE	BIT(1)
->> +#define FSL_TMR_TMCSR_TRG	BIT(0)
->> +
->> +#define FSL_TMR_TMCSR_CSL_DIV2	0
->> +#define FSL_TMR_TMCSR_CSL	BIT(10)
->> +
->> +#define M10V_TIMER_RATING	500
->> +
->> +static irqreturn_t m10v_timer_interrupt(int irq, void *dev_id)
->> +{
->> +	struct clock_event_device *clk = dev_id;
->> +	struct timer_of *to = to_timer_of(clk);
->> +	u32 val;
->> +
->> +	val = readl_relaxed(timer_of_base(to) + FSL_TMR_TMCSR_OFS);
->> +	val &= ~FSL_TMR_TMCSR_UF;
->> +	writel_relaxed(val, timer_of_base(to) + FSL_TMR_TMCSR_OFS);
->> +
->> +	clk->event_handler(clk);
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static int m10v_set_state_periodic(struct clock_event_device *clk)
->> +{
->> +	struct timer_of *to = to_timer_of(clk);
->> +	u32 val = (FSL_TMR_TMCSR_CSL_DIV2 * FSL_TMR_TMCSR_CSL);
-> 	FSL_TMR_TMCSR_CSL_DIV2 is zero, so val is always zero.
-Ah, yes.
-The FSL_TMR_TMCSR is the 10th bit field of the register, so it would be 
-better
-to bit-shift.
-I will use it as simply 0.
-
-> 	
->> +	writel_relaxed(val, timer_of_base(to) + FSL_TMR_TMCSR_OFS);
->> +
->> +	writel_relaxed(to->of_clk.period, timer_of_base(to) +
->> +				FSL_TMR_TMRLR1_OFS);
->> +	val |= FSL_TMR_TMCSR_RELD | FSL_TMR_TMCSR_CNTE |
->> +		FSL_TMR_TMCSR_TRG | FSL_TMR_TMCSR_INTE;
->> +	writel_relaxed(val, timer_of_base(to) + FSL_TMR_TMCSR_OFS);
->> +	return 0;
->> +}
->> +
->> +static int m10v_set_state_oneshot(struct clock_event_device *clk)
->> +{
->> +	struct timer_of *to = to_timer_of(clk);
->> +	u32 val = (FSL_TMR_TMCSR_CSL_DIV2 * FSL_TMR_TMCSR_CSL);
->> +
->> +	writel_relaxed(val, timer_of_base(to) + FSL_TMR_TMCSR_OFS);
->> +	return 0;
->> +}
->> +
->> +static int m10v_clkevt_next_event(unsigned long event,
->> +				   struct clock_event_device *clk)
->> +{
->> +	struct timer_of *to = to_timer_of(clk);
->> +
->> +	writel_relaxed(event, timer_of_base(to) + FSL_TMR_TMRLR1_OFS);
->> +	writel_relaxed((FSL_TMR_TMCSR_CSL_DIV2 * FSL_TMR_TMCSR_CSL) |
-> Same comment here.
-
-I got it.
-
-
->> +			FSL_TMR_TMCSR_CNTE | FSL_TMR_TMCSR_INTE |
->> +			FSL_TMR_TMCSR_TRG, timer_of_base(to) +
->> +			FSL_TMR_TMCSR_OFS);
->> +	return 0;
->> +}
->> +
->> +static int m10v_config_clock_source(struct timer_of *to)
->> +{
->> +	writel_relaxed(0, timer_of_base(to) + FSL_TMR_TMCSR_OFS);
->> +	writel_relaxed(~0, timer_of_base(to) + FSL_TMR_TMR_OFS);
->> +	writel_relaxed(~0, timer_of_base(to) + FSL_TMR_TMRLR1_OFS);
->> +	writel_relaxed(~0, timer_of_base(to) + FSL_TMR_TMRLR2_OFS);
->> +	writel_relaxed(BIT(4) | BIT(1) | BIT(0), timer_of_base(to) +
->> +		FSL_TMR_TMCSR_OFS);
->> +	return 0;
->> +}
->> +
->> +static int m10v_config_clock_event(struct timer_of *to)
->> +{
->> +	writel_relaxed(0, timer_of_base(to) + FSL_TMR_TMCSR_OFS);
->> +	return 0;
->> +}
->> +
->> +static struct timer_of to = {
->> +	.flags = TIMER_OF_IRQ | TIMER_OF_BASE | TIMER_OF_CLOCK,
->> +
->> +	.clkevt = {
->> +		.name = "m10v-clkevt",
->> +		.rating = M10V_TIMER_RATING,
->> +		.cpumask = cpu_possible_mask,
->> +	},
->> +
->> +	.of_irq = {
->> +		.flags = IRQF_TIMER | IRQF_IRQPOLL,
->> +	},
->> +};
->> +
->> +static int __init m10v_timer_init(struct device_node *node)
->> +{
->> +	int ret;
->> +
->> +	to.clkevt.features = CLOCK_EVT_FEAT_DYNIRQ | CLOCK_EVT_FEAT_ONESHOT;
->> +	to.clkevt.set_state_oneshot = m10v_set_state_oneshot;
->> +	to.clkevt.set_state_periodic = m10v_set_state_periodic;
->> +	to.clkevt.set_next_event = m10v_clkevt_next_event;
->> +	to.of_irq.handler = m10v_timer_interrupt;
-> Move the initialization in the timer_of structure above.
-
-Okay.
-
-
->
->> +	ret = timer_of_init(node, &to);
->> +	if (ret)
->> +		goto err;
-> You should return directly, rollback is done in the timer_of_init().
-
-OK.
-
-
->
->> +
->> +	m10v_config_clock_source(&to);
->> +	clocksource_mmio_init(timer_of_base(&to) + FSL_TMR_TMR_OFS,
->> +		node->name, timer_of_rate(&to), M10V_TIMER_RATING, 32,
->> +		clocksource_mmio_readl_down);
-> May be you can add the sched_clock also ?
-
-OK. Add it and confirm.
-
-
-Thanks
-Sugaya Taichi
-
-
->
->> +	m10v_config_clock_event(&to);
->> +	clockevents_config_and_register(&to.clkevt, timer_of_rate(&to),
->> +				15, 0xffffffff);
->> +
->> +	return 0;
->> +err:
->> +	timer_of_cleanup(&to);
->> +	return ret;
->> +}
->> +TIMER_OF_DECLARE(m10v_peritimer, "socionext,milbeaut-m10v-timer",
->> +		m10v_timer_init);
->>
->
+SGkgTG9yZW56bywNCg0KWWVzLCB0aGVzZSBzZXJpZXMgcGF0Y2hlcyBjYW4gZHJvcCwgdGhhbmtz
+IGEgbG90LiANCg0KQmVzdCByZWdhcmRzDQpYaWFvd2VpDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2Fn
+ZS0tLS0tDQpGcm9tOiBMb3JlbnpvIFBpZXJhbGlzaSA8bG9yZW56by5waWVyYWxpc2lAYXJtLmNv
+bT4gDQpTZW50OiAyMDE4xOoxMdTCMjHI1SAxOjMxDQpUbzogWGlhb3dlaSBCYW8gPHhpYW93ZWku
+YmFvQG54cC5jb20+DQpDYzogcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNv
+bTsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGwuZGVhY29uQGFybS5jb207IGJoZWxnYWFz
+QGdvb2dsZS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7IE1hZGFsaW4tY3Jpc3RpYW4gQnVjdXIg
+PG1hZGFsaW4uYnVjdXJAbnhwLmNvbT47IHN1bWl0LmdhcmdAbnhwLmNvbTsgWS5CLiBMVSA8eWFu
+Z2JvLmx1QG54cC5jb20+OyBob25ndGFvLmppYUBueHAuY29tOyBBbmR5IFRhbmcgPGFuZHkudGFu
+Z0BueHAuY29tPjsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNob25AdGkuY29tOyBq
+aW5nb29oYW4xQGdtYWlsLmNvbTsgcGJyb2JpbnNvbkBnbWFpbC5jb207IHNvbmd4aWFvd2VpQGhp
+c2lsaWNvbi5jb207IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
+LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBaLnEu
+IEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5j
+b20+OyBNLmguIExpYW4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT4NClN1YmplY3Q6IFJlOiBbUEFU
+Q0h2NCAwLzNdIGR0czogQWRkIHRoZSBwcm9wZXJ0eSBvZiBJQiBhbmQgT0INCg0KT24gRnJpLCBO
+b3YgMTAsIDIwMTcgYXQgMTE6NDg6NDRBTSArMDgwMCwgQmFvIFhpYW93ZWkgd3JvdGU6DQo+IERl
+cGVuZCBvbiANCj4gaHR0cHM6Ly9lbWVhMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5j
+b20vP3VybD1odHRwJTNBJTJGJTJGcGF0Yw0KPiBod29yay5vemxhYnMub3JnJTJGcGF0Y2glMkY4
+MTUzODIlMkYmYW1wO2RhdGE9MDIlN0MwMSU3Q3hpYW93ZWkuYmFvJTQwDQo+IG54cC5jb20lN0M2
+NzUxODg1OTQ1Njc0MThjY2Y2YTA4ZDY0ZjBkZTlmNSU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5
+YzUNCj4gYzMwMTYzNSU3QzAlN0MwJTdDNjM2NzgzMzE4NTE3MTkyOTcxJmFtcDtzZGF0YT1IaWxM
+VCUyQjVUJTJCJTJCdWJweHJhOA0KPiBsNTRaVmlFRk43U0JDZjR2REI4ekRNV1VkNCUzRCZhbXA7
+cmVzZXJ2ZWQ9MA0KPiANCj4gQmFvIFhpYW93ZWkgKDMpOg0KPiAgIEFSTXY4OiBkdHM6IGxzMTA0
+NmE6IGFkZCB0aGUgcHJvcGVydHkgb2YgSUIgYW5kIE9CDQo+ICAgQVJNdjg6IGxheWVyc2NhcGU6
+IGFkZCB0aGUgcGNpZSBlcCBmdW5jdGlvbiBzdXBwb3J0DQo+ICAgQVJNdjg6IHBjaWU6IG1ha2Ug
+dGhlIERXQyBFUCBkcml2ZXIgc3VwcG9ydCBmb3IgbGF5ZXJzY2FwZQ0KPiANCj4gIGFyY2gvYXJt
+NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLmR0c2kgfCAgIDYgKysNCj4gIGRyaXZl
+cnMvcGNpL2R3Yy9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KPiAgZHJp
+dmVycy9wY2kvZHdjL3BjaS1sYXllcnNjYXBlLmMgICAgICAgICAgICAgICB8IDEyMSArKysrKysr
+KysrKysrKysrKysrKysrKy0tDQo+ICAzIGZpbGVzIGNoYW5nZWQsIDEyMSBpbnNlcnRpb25zKCsp
+LCA3IGRlbGV0aW9ucygtKQ0KDQpDYW4gSSBkcm9wIHRoaXMgc2VyaWVzIGZyb20gdGhlIGxpbnV4
+LXBjaSBwYXRjaCBxdWV1ZSA/IEkgcmVja29uIGl0IGlzIHN1cGVyc2VkZWQgYnk6DQoNCmh0dHBz
+Oi8vZW1lYTAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0El
+MkYlMkZwYXRjaHdvcmsub3psYWJzLm9yZyUyRnBhdGNoJTJGOTkyOTI4JTJGJmFtcDtkYXRhPTAy
+JTdDMDElN0N4aWFvd2VpLmJhbyU0MG54cC5jb20lN0M2NzUxODg1OTQ1Njc0MThjY2Y2YTA4ZDY0
+ZjBkZTlmNSU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzAlN0M2MzY3
+ODMzMTg1MTcxOTI5NzEmYW1wO3NkYXRhPWkzVSUyRjd1VCUyRm5vJTJGU0dWYzZWRDFnZzdZYm4w
+elYlMkYlMkI4QTk2OThRSGZ1b1RvJTNEJmFtcDtyZXNlcnZlZD0wDQoNCmJ1dCBJIHdhbnRlZCB0
+byBtYWtlIHN1cmUgdGhhdCdzIHRoZSBjYXNlLCBJIHJlYWxseSBjYW4ndCBmb2xsb3cgdGhlIHZl
+cnNpb24gbnVtYmVyaW5nIHNvIEkgYW0gYXNraW5nLg0KDQpUaGFua3MsDQpMb3JlbnpvDQo=
