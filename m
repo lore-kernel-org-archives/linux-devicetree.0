@@ -1,43 +1,66 @@
-From: Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH v3 00/15] MT8183 IOMMU SUPPORT
-Date: Thu, 22 Nov 2018 13:59:31 +0100
-Message-ID: <20181122125931.GC1586@8bytes.org>
-References: <1542422142-30688-1-git-send-email-yong.wu@mediatek.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [RFC PATCH v3 07/17] clocksource: sun4i: add a compatible for
+ suniv
+Date: Thu, 22 Nov 2018 14:23:41 +0100
+Message-ID: <a732f908-c70e-ce30-ad18-ddbb6879995f@linaro.org>
+References: <cover.1542824904.git.mesihkilinc@gmail.com>
+ <60bc70fc43743f664de76abf3ab0a01cd7924458.1542824904.git.mesihkilinc@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1542422142-30688-1-git-send-email-yong.wu@mediatek.com>
+In-Reply-To: <60bc70fc43743f664de76abf3ab0a01cd7924458.1542824904.git.mesihkilinc@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, arnd@arndb.de, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, Arvind Yadav <arvind.yadav.cs@gmail.com>
+To: Mesih Kilinc <mesihkilinc@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Julian Calaby <julian.calaby@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 21/11/2018 19:30, Mesih Kilinc wrote:
+> The suniv (new F-series) chip has a timer with less functionality than
+> the A10 timer, e.g. it has only 3 channels.
+> 
+> Add a new compatible for it. As we didn't use the extra channels on A10
+> either now, the code needn't to be changed.
+> 
+> The suniv chip is based on ARM926EJ-S CPU, thus it has no architecture timer.
+> 
+> Register sun4i_timer as sched_clock on it.
+> 
+> Signed-off-by: Mesih Kilinc <mesihkilinc@gmail.com>
 
-On Sat, Nov 17, 2018 at 10:35:27AM +0800, Yong Wu wrote:
-> Yong Wu (14):
->   dt-bindings: mediatek: Add binding for mt8183 IOMMU and SMI
->   iommu/mediatek: Use a struct as the platform data
->   memory: mtk-smi: Use a general config_port interface
->   iommu/io-pgtable-arm-v7s: Add paddr_to_iopte and iopte_to_paddr
->     helpers
->   iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB Mode
->   iommu/mediatek: Add mt8183 IOMMU support
->   iommu/mediatek: Add mmu1 support
->   memory: mtk-smi: Invoke pm runtime_callback to enable clocks
->   memory: mtk-smi: Use a struct for the platform data for smi-common
->   memory: mtk-smi: Add bus_sel for mt8183
->   iommu/mediatek: Add VLD_PA_RANGE register backup when suspend
->   iommu/mediatek: Add shutdown callback
->   memory: mtk-smi: Get rid of need_larbid
->   iommu/mediatek: Switch to SPDX license identifier
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-This should probably go through the IOMMU tree. For that I'd like to
-have Acks (reviews are even better) for the io-pgtable parts from Robin
-and for the memory parts from Matthias first.
+> ---
+>  drivers/clocksource/sun4i_timer.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clocksource/sun4i_timer.c b/drivers/clocksource/sun4i_timer.c
+> index 6e0180a..65f38f6 100644
+> --- a/drivers/clocksource/sun4i_timer.c
+> +++ b/drivers/clocksource/sun4i_timer.c
+> @@ -186,7 +186,8 @@ static int __init sun4i_timer_init(struct device_node *node)
+>  	 */
+>  	if (of_machine_is_compatible("allwinner,sun4i-a10") ||
+>  	    of_machine_is_compatible("allwinner,sun5i-a13") ||
+> -	    of_machine_is_compatible("allwinner,sun5i-a10s"))
+> +	    of_machine_is_compatible("allwinner,sun5i-a10s") ||
+> +	    of_machine_is_compatible("allwinner,suniv-f1c100s"))
+>  		sched_clock_register(sun4i_timer_sched_read, 32,
+>  				     timer_of_rate(&to));
+>  
+> @@ -218,3 +219,5 @@ static int __init sun4i_timer_init(struct device_node *node)
+>  }
+>  TIMER_OF_DECLARE(sun4i, "allwinner,sun4i-a10-timer",
+>  		       sun4i_timer_init);
+> +TIMER_OF_DECLARE(suniv, "allwinner,suniv-f1c100s-timer",
+> +		       sun4i_timer_init);
+> 
 
 
-Regards,
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-	Joerg
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
