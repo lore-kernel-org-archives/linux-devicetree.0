@@ -1,75 +1,164 @@
-From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v10 3/4] arm64: dts: rockchip: add VPU device node for
- RK3399
-Date: Thu, 22 Nov 2018 19:29:52 +0900
-Message-ID: <CAAFQd5AtFb0icwOr5h06XL3KyU1YJnh9nHnQ8gHLJhXi=StNgg@mail.gmail.com>
-References: <20181121195846.23676-1-ezequiel@collabora.com>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH 2/6] devfreq: refactor set_target frequency function
+Date: Thu, 22 Nov 2018 11:40:09 +0100
+Message-ID: <9eef3348-e86f-1113-3691-39ba3a620fb8@partner.samsung.com>
+References: <1542823301-23563-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20181121180202eucas1p27d3aa58411abeae03181c38b91fc67de@eucas1p2.samsung.com>
+        <1542823301-23563-3-git-send-email-l.luba@partner.samsung.com>
+        <5BF619EE.8090006@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20181121195846.23676-1-ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5BF619EE.8090006@samsung.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 22, 2018 at 4:58 AM Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
->
-> Add the Video Processing Unit node for the RK3399 SoC.
->
-> Also, fix the VPU IOMMU node, which was disabled and lacking
-> its power domain property.
->
-> Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index 99e7f65c1779..040d3080565f 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -1226,6 +1226,18 @@
->                 status = "disabled";
->         };
->
-> +       vpu: video-codec@ff650000 {
-> +               compatible = "rockchip,rk3399-vpu";
-> +               reg = <0x0 0xff650000 0x0 0x800>;
-> +               interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH 0>,
-> +                            <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH 0>;
-> +               interrupt-names = "vepu", "vdpu";
-> +               clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
-> +               clock-names = "aclk", "hclk";
-> +               power-domains = <&power RK3399_PD_VCODEC>;
-> +               iommus = <&vpu_mmu>;
-> +       };
-> +
->         vpu_mmu: iommu@ff650800 {
->                 compatible = "rockchip,iommu";
->                 reg = <0x0 0xff650800 0x0 0x40>;
-> @@ -1233,8 +1245,8 @@
->                 interrupt-names = "vpu_mmu";
->                 clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
->                 clock-names = "aclk", "iface";
-> +               power-domains = <&power RK3399_PD_VCODEC>;
->                 #iommu-cells = <0>;
-> -               status = "disabled";
->         };
->
->         vdec_mmu: iommu@ff660480 {
+Hi Chanwoo Choi
 
+On 11/22/18 3:52 AM, Chanwoo Choi wrote:
+> On 2018년 11월 22일 03:01, Lukasz Luba wrote:
+>> The refactoring is needed for the new client in devfreq: suspend.
+>> To avoid code duplication, move it to the new local function
+>> devfreq_set_target.
+>>
+>> The patch draws on Tobias Jakobi's work posted ~2 years ago, who tried to
+>> solve issue with devfreq device's frequency during suspend/resume.
+>> During the discussion on LKML some corner cases and comments appeared
+>> related to the design. This patch address them keeping in mind suggestions
+>> from Chanwoo Choi.
+> 
+> As I commented on patch1, please remove it.
+OK
+> 
+>>
+>> Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+>> Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   drivers/devfreq/devfreq.c | 62 ++++++++++++++++++++++++++++-------------------
+>>   1 file changed, 37 insertions(+), 25 deletions(-)
+>>
+>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>> index e20e7e4..cf9c643 100644
+>> --- a/drivers/devfreq/devfreq.c
+>> +++ b/drivers/devfreq/devfreq.c
+>> @@ -285,6 +285,42 @@ static int devfreq_notify_transition(struct devfreq *devfreq,
+>>   	return 0;
+>>   }
+>>   
+>> +static int devfreq_set_target(struct devfreq *devfreq, unsigned long new_freq,
+>> +			      unsigned long *prev_freq, u32 flags)
+> 
+> Please remove the unused space in front of 'unsigned long *prev_freq'.
+> Use tab only for indentation.
+OK
+> 
+>> +{
+>> +	struct devfreq_freqs freqs;
+>> +	unsigned long cur_freq;
+>> +	int err = 0;
+>> +
+>> +	if (devfreq->profile->get_cur_freq)
+>> +		devfreq->profile->get_cur_freq(devfreq->dev.parent, &cur_freq);
+>> +	else
+>> +		cur_freq = devfreq->previous_freq;
+>> +
+>> +	freqs.old = cur_freq;
+>> +	freqs.new = new_freq;
+>> +	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_PRECHANGE);
+>> +
+>> +	err = devfreq->profile->target(devfreq->dev.parent, &new_freq, flags);
+>> +	if (err) {
+>> +		freqs.new = cur_freq;
+>> +		devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+>> +		return err;
+>> +	}
+>> +
+>> +	freqs.new = new_freq;
+>> +	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+>> +
+>> +	if (devfreq_update_status(devfreq, new_freq))
+>> +		dev_err(&devfreq->dev,
+>> +			"Couldn't update frequency transition information.\n");
+>> +
+>> +	devfreq->previous_freq = new_freq;
+>> +	*prev_freq = cur_freq;
+>> +
+>> +	return err;
+>> +}
+>> +
+>>   /* Load monitoring helper functions for governors use */
+>>   
+>>   /**
+>> @@ -296,7 +332,6 @@ static int devfreq_notify_transition(struct devfreq *devfreq,
+>>    */
+>>   int update_devfreq(struct devfreq *devfreq)
+>>   {
+>> -	struct devfreq_freqs freqs;
+>>   	unsigned long freq, cur_freq, min_freq, max_freq;
+> 
+> 
+> cur_freq is not used after modification. Remove it.
+> 
+>>   	int err = 0;
+>>   	u32 flags = 0;
+>> @@ -333,31 +368,8 @@ int update_devfreq(struct devfreq *devfreq)
+>>   		flags |= DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use LUB */
+>>   	}
+>>   
+>> -	if (devfreq->profile->get_cur_freq)
+>> -		devfreq->profile->get_cur_freq(devfreq->dev.parent, &cur_freq);
+>> -	else
+>> -		cur_freq = devfreq->previous_freq;
+>> -
+>> -	freqs.old = cur_freq;
+>> -	freqs.new = freq;
+>> -	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_PRECHANGE);
+>> +	return devfreq_set_target(devfreq, freq, &cur_freq, flags);
+> 
+> You get the 'cur_freq' from devfreq_set_taget() for devfreq_suspend_device() on patch3.
+> But, update_devfreq() and devfreq_resume_device() don't use the 'cur_freq' value
+> from devfreq_set_target().
+> 
+> Instead, getting 'cur_freq' for 'devfreq->resume_freq' in the devfreq_set_target().
+> Please remove the 'cur_freq' parameter from devfreq_set_target.
 
-Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+I can remove the 3rd parameter from devfreq_set_target(),
+but it implies that patch 1 and 3 cannot be merged. The function 
+devfreq_set_target will use 'devfreq->resume_freq' so it must be in 
+devfreq struct.
+So, in v2 version there will be still 6 patches, with the 1st patch 
+defining needed fields in devfreq struct.
+Do you agree for that?
 
-Best regards,
-Tomasz
+> 
+>>   
+>> -	err = devfreq->profile->target(devfreq->dev.parent, &freq, flags);
+>> -	if (err) {
+>> -		freqs.new = cur_freq;
+>> -		devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+>> -		return err;
+>> -	}
+>> -
+>> -	freqs.new = freq;
+>> -	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+>> -
+>> -	if (devfreq_update_status(devfreq, freq))
+>> -		dev_err(&devfreq->dev,
+>> -			"Couldn't update frequency transition information.\n");
+>> -
+>> -	devfreq->previous_freq = freq;
+>> -	return err;
+>>   }
+>>   EXPORT_SYMBOL(update_devfreq);
+>>   
+>>
+> 
+> 
+
+Regards,
+Lukasz Luba
