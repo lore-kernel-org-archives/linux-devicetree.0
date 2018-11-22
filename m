@@ -1,39 +1,34 @@
-Return-Path: <SRS0=lwod=N6=bp.renesas.com=biju.das@kernel.org>
+Return-Path: <SRS0=JPrT=OB=bp.renesas.com=biju.das@kernel.org>
 From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH  0/4] Add NXP pcf85263 real-time clock support
-Date: Mon, 19 Nov 2018 11:15:04 +0000
-Message-Id: <1542626108-61344-1-git-send-email-biju.das@bp.renesas.com>
-To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Subject: [PATCH 0/7] Add support for iWave G20D-Q7 board based on RZ/G1N
+Date: Thu, 22 Nov 2018 09:14:28 +0000
+Message-Id: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch set aims to add support for NXP pcf85263 real-time clock. 
-pcf85263 rtc is compatible with pcf85363 rtc except that pcf85363 has
-64 bytes additional RAM. 
+This patch series aims to add support for iWave G20D-Q7 board based on RZ/G1N.
 
-1 byte of nvmem is supported in pcf85263 and is exposed through sysfs.
+This patch series is tested against renesas-dev
 
-The details of pcf85363 and pcf85263 can be found in the below
-data sheets.
+Biju Das (7):
+  ARM: dts: r8a7744-iwg20m: Add iWave RZ/G1N Qseven SOM
+  ARM: dts: r8a7744: Initial SoC device tree
+  ARM: dts: r8a7744-iwg20d-q7: Add support for iWave G20D-Q7 board based
+    on RZ/G1N
+  ARM: dts: r8a7744: Add SYS-DMAC support
+  ARM: dts: r8a7744: Add GPIO support
+  ARM: dts: r8a7744: Add Ethernet AVB support
+  ARM: dts: r8a7744: Add SMP support
 
-https://www.nxp.com/docs/en/data-sheet/PCF85363A.pdf
-
-https://www.nxp.com/docs/en/data-sheet/PCF85263A.pdf
-
-
-This patch is tested against linux-next and renesas-dev.
-
-Biju Das (4):
-  dt-bindings: rtc: pcf85363: Document pcf85263 real-time clock
-  rtc: pcf85363: Add support for NXP pcf85263 rtc
-  ARM: shmobile: Enable NXP pcf85363 rtc in shmobile_defconfig
-  ARM: dts: iwg23s-sbc: Enable RTC
-
- Documentation/devicetree/bindings/rtc/pcf85363.txt |  4 +-
- arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts          | 18 +++++++++
- arch/arm/configs/shmobile_defconfig                |  1 +
- drivers/rtc/rtc-pcf85363.c                         | 44 +++++++++++++++++++---
- 4 files changed, 60 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/Makefile              |   1 +
+ arch/arm/boot/dts/r8a7744-iwg20d-q7.dts |  15 +
+ arch/arm/boot/dts/r8a7744-iwg20m.dtsi   |  31 ++
+ arch/arm/boot/dts/r8a7744.dtsi          | 561 ++++++++++++++++++++++++++++++++
+ 4 files changed, 608 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a7744-iwg20d-q7.dts
+ create mode 100644 arch/arm/boot/dts/r8a7744-iwg20m.dtsi
+ create mode 100644 arch/arm/boot/dts/r8a7744.dtsi
 
 -- 
 2.7.4
