@@ -1,70 +1,72 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [RCF PATCH,v2,2/2] pwm: imx: Configure output to GPIO in
- disabled state
-Date: Thu, 22 Nov 2018 20:03:21 +0100
-Message-ID: <20181122190321.ktqegs7kpvhcemvi@pengutronix.de>
-References: <20181109165555.vqbiwh4hlcnozdna@pengutronix.de>
- <20181114113449.GB2620@ulmo>
- <20181114215120.vddykljqyavm64wj@pengutronix.de>
- <20181115152545.GA8611@ulmo>
- <20181115203733.qvonika6yhn2bsnb@pengutronix.de>
- <20181116083430.7f1d8452@ipc1.ka-ro>
- <20181116082557.l2ljgu3hsu7tvdci@pengutronix.de>
- <91640f9b-d219-553e-043a-c6151f2f68d7@ysoft.com>
- <20181122162359.ufngpgxkenlmgqni@pengutronix.de>
- <b332b319-cbb3-547f-c8b7-1dd275c1596d@ysoft.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: [PATCH v5 0/7] Add virtio-iommu driver
+Date: Thu, 22 Nov 2018 19:37:54 +0000
+Message-ID: <20181122193801.50510-1-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b332b319-cbb3-547f-c8b7-1dd275c1596d@ysoft.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
-Cc: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>, Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Linus Walleij <linus.walleij@linaro.org>, viresh kumar <viresh.kumar@linaro.org>
+Return-path: <virtio-dev-return-5014-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
+Sender: <virtio-dev@lists.oasis-open.org>
+List-Post: <mailto:virtio-dev@lists.oasis-open.org>
+List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
+List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
+List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
+To: iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, virtualization@lists.linux-foundation.org, virtio-dev@lists.oasis-open.org, joro@8bytes.org, mst@redhat.com
+Cc: jasowang@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com, bhelgaas@google.com, frowand.list@gmail.com, kvmarm@lists.cs.columbia.edu, eric.auger@redhat.com, tnowicki@caviumnetworks.com, kevin.tian@intel.com, marc.zyngier@arm.com, robin.murphy@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, bharat.bhushan@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Michal,
+Implement the virtio-iommu driver, following specification v0.9 [1].
 
-On Thu, Nov 22, 2018 at 04:46:39PM +0000, Vokáč Michal wrote:
-> On 22.11.2018 17:23, Uwe Kleine-König wrote:
-> > On Thu, Nov 22, 2018 at 03:42:14PM +0000, Vokáč Michal wrote:
-> >> On 16.11.2018 09:25, Uwe Kleine-König wrote:
-> >>> On Fri, Nov 16, 2018 at 08:34:30AM +0100, Lothar Waßmann wrote:
-> >>>> No. You can disable the output driver via pinctrl, so that only the
-> >>>> selected pull-up/down is relevant. The pin function and GPIO register
-> >>>> settings don't matter at all in this case.
-> >>
-> >> Lothar, please can you be more specific how would you do that? IFAIK the
-> >> pull-up/down internal resistors have effect only if the pin is configured
-> >> as GPIO *input* (on i.MX6 at least). See the TRM, 29.4.2.2 Output driver:
-> >>
-> >>    "Internal pull-up, pull-down resistors, and pad keeper are disabled in
-> >>     output mode."
+Since v4 [2] I fixed the issues reported by Eric, and added Reviewed-by
+from Eric and Rob. Thanks!
 
-This would mean you'd have to rely on an external pull up for your use
-case. I wouldn't be surprised however if DSE=0 wouldn't count as "output
-mode". Given the reliability of NXP documentation I wouldn't bet neither
-on one nor the other possibility.
+I changed the specification to fix one inconsistency discussed in v4.
+That the device fills the probe buffer with zeroes is now a "SHOULD"
+instead of a "MAY", since it's the only way for the driver to know if
+the device wrote the status. Existing devices already do this. In
+addition the device now needs to fill the three padding bytes at the
+tail with zeroes.
 
-> > So I'd expect this to really work on i.MX6 but not the earlier SoCs
-> > without a gpio specifier.
-> 
-> Maybe you would expect it to work but I already tested and measured
-> that weeks ago ;) It did not work.
+You can find Linux driver and kvmtool device on branches
+virtio-iommu/v0.9 [3]. I also lightly tested with Eric's latest QEMU
+device [4].
 
-Which pin/gpio do we talk about? Which i.MX6 variant did you test this
-on? (Assuming i.MX6D or i.MX6Q and PAD_DISP0_DATA09, did you try setting
+[1] Virtio-iommu specification v0.9, sources, pdf and diff from v0.8
+    git://linux-arm.org/virtio-iommu.git virtio-iommu/v0.9
+    http://jpbrucker.net/virtio-iommu/spec/v0.9/virtio-iommu-v0.9.pdf
+    http://jpbrucker.net/virtio-iommu/spec/diffs/virtio-iommu-pdf-diff-v0.8-v0.9.pdf
 
-	IOMUXC_SW_MUX_CTL_PAD_DISP0_DATA09 (0x020E0194) = 0x00000005
-	IOMUXC_SW_PAD_CTL_PAD_DISP0_DATA09 (0x020E04A8) = 0x0000b080
+[2] [PATCH v4 0/7] Add virtio-iommu driver
+    https://lists.linuxfoundation.org/pipermail/iommu/2018-November/031074.html
 
-and then play with GPIO 4.30 direction and output value?)
+[3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.9
+    git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.9
 
-Best regards
-Uwe
+[4] [RFC v9 00/17] VIRTIO-IOMMU device
+    https://www.mail-archive.com/qemu-devel@nongnu.org/msg575578.html
+
+Jean-Philippe Brucker (7):
+  dt-bindings: virtio-mmio: Add IOMMU description
+  dt-bindings: virtio: Add virtio-pci-iommu node
+  of: Allow the iommu-map property to omit untranslated devices
+  PCI: OF: Initialize dev->fwnode appropriately
+  iommu: Add virtio-iommu driver
+  iommu/virtio: Add probe request
+  iommu/virtio: Add event queue
+
+ .../devicetree/bindings/virtio/iommu.txt      |   66 +
+ .../devicetree/bindings/virtio/mmio.txt       |   30 +
+ MAINTAINERS                                   |    7 +
+ drivers/iommu/Kconfig                         |   11 +
+ drivers/iommu/Makefile                        |    1 +
+ drivers/iommu/virtio-iommu.c                  | 1157 +++++++++++++++++
+ drivers/of/base.c                             |   10 +-
+ drivers/pci/of.c                              |    7 +
+ include/uapi/linux/virtio_ids.h               |    1 +
+ include/uapi/linux/virtio_iommu.h             |  161 +++
+ 10 files changed, 1448 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
+ create mode 100644 drivers/iommu/virtio-iommu.c
+ create mode 100644 include/uapi/linux/virtio_iommu.h
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.19.1
