@@ -1,61 +1,100 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v10 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq
- HW driver
-Date: Thu, 22 Nov 2018 10:37:08 +0530
-Message-ID: <20181122050708.zictqzfne6odsywu@vireshk-i7>
-References: <1542796967-5949-1-git-send-email-tdas@codeaurora.org>
- <1542796967-5949-3-git-send-email-tdas@codeaurora.org>
- <20181121220614.GU22824@google.com>
+From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: [PATCH v4 1/7] spi: add support for octo mode I/O data transfer
+Date: Thu, 22 Nov 2018 05:14:31 +0000
+Message-ID: <1542863544-21257-2-git-send-email-yogeshnarayan.gaur@nxp.com>
+References: <1542863544-21257-1-git-send-email-yogeshnarayan.gaur@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181121220614.GU22824@google.com>
+In-Reply-To: <1542863544-21257-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Taniya Das <tdas@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
+To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "broonie@kernel.org" <broonie@kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 21-11-18, 14:06, Matthias Kaehlcke wrote:
-> On Wed, Nov 21, 2018 at 04:12:47PM +0530, Taniya Das wrote:
-> > +	.boost_enabled	= true,
-> 
-> I have no real expertise with cpufreq boost, but after reading a bit
-> through cpufreq code this seems wrong. Boost is enabled statically,
-> however the driver has neither a ->set_boost function nor does it call
-> cpufreq_enable_boost_support() which would use a default
-> implementation for ->set_boost. As a result boost support is
-> effectively disabled:
-> 
-> static bool cpufreq_boost_supported(void)
-> {
->         return likely(cpufreq_driver) && cpufreq_driver->set_boost;
-> }
-> 
-> The driver should probably do the same as cpufreq-dt.c and call
-> cpufreq_enable_boost_support() if boost frequencies are available,
-> instead of 'enabling' boost statically.
+Add flags for Octo mode I/O data transfer
+Required for the SPI controller which can do the data transfer (TX/RX)
+on 8 data lines e.g. NXP FlexSPI controller.
+ SPI_TX_OCTO: transmit with 8 wires
+ SPI_RX_OCTO: receive with 8 wires
 
-Feels like I have written the boost support in cpufreq core few decades back as
-I don't remember any of it :)
+Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
+---
+Changes for v4:
+- Rebase on top of v4.20-rc2
+Changes for v3:
+- Modified string 'octal' with 'octo'.
+- Add octo mode support in spi_setup().
+Changes for v2:
+- Incorporated review comments of Boris.
+---
+ drivers/spi/spi.c       | 12 ++++++++++--
+ include/linux/spi/spi.h |  4 +++-
+ 2 files changed, 13 insertions(+), 3 deletions(-)
 
-But reading through the code this is what I understood.
-
-There are two parts of boosting.
-
-- Sysfs file available or not to enable/disable boost frequencies on the go.
-  This file gets created only when cpufreq_enable_boost_support() gets called.
-
-- Will cpufreq core consider boost frequencies or not while checking target
-  frequency again, this is governed by cpufreq_driver->boost field, which can be
-  set from driver or using the sysfs file mentioned above.
-
-In this driver, all we have done is to set the cpufreq_driver->boost field to
-true, which would allow cpufreq core to use boost frequencies as well. But that
-isn't any better than making them all normal frequencies and getting rid of
-boost stuff. The boosting stuff will be useful only if you want to disable some
-of them at runtime, based on heating, etc. And that is possible only after you
-create a sysfs file.
-
--- 
-viresh
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 6ca5940..af4e4c6 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1617,6 +1617,9 @@ static int of_spi_parse_dt(struct spi_controller *ctl=
+r, struct spi_device *spi,
+ 		case 4:
+ 			spi->mode |=3D SPI_TX_QUAD;
+ 			break;
++		case 8:
++			spi->mode |=3D SPI_TX_OCTO;
++			break;
+ 		default:
+ 			dev_warn(&ctlr->dev,
+ 				"spi-tx-bus-width %d not supported\n",
+@@ -1635,6 +1638,9 @@ static int of_spi_parse_dt(struct spi_controller *ctl=
+r, struct spi_device *spi,
+ 		case 4:
+ 			spi->mode |=3D SPI_RX_QUAD;
+ 			break;
++		case 8:
++			spi->mode |=3D SPI_RX_OCTO;
++			break;
+ 		default:
+ 			dev_warn(&ctlr->dev,
+ 				"spi-rx-bus-width %d not supported\n",
+@@ -2823,7 +2829,8 @@ int spi_setup(struct spi_device *spi)
+ 	/* if it is SPI_3WIRE mode, DUAL and QUAD should be forbidden
+ 	 */
+ 	if ((spi->mode & SPI_3WIRE) && (spi->mode &
+-		(SPI_TX_DUAL | SPI_TX_QUAD | SPI_RX_DUAL | SPI_RX_QUAD)))
++		(SPI_TX_DUAL | SPI_TX_QUAD | SPI_TX_OCTO |
++		 SPI_RX_DUAL | SPI_RX_QUAD | SPI_RX_OCTO)))
+ 		return -EINVAL;
+ 	/* help drivers fail *cleanly* when they need options
+ 	 * that aren't supported with their current controller
+@@ -2832,7 +2839,8 @@ int spi_setup(struct spi_device *spi)
+ 	 */
+ 	bad_bits =3D spi->mode & ~(spi->controller->mode_bits | SPI_CS_WORD);
+ 	ugly_bits =3D bad_bits &
+-		    (SPI_TX_DUAL | SPI_TX_QUAD | SPI_RX_DUAL | SPI_RX_QUAD);
++		    (SPI_TX_DUAL | SPI_TX_QUAD | SPI_TX_OCTO |
++		     SPI_RX_DUAL | SPI_RX_QUAD | SPI_RX_OCTO);
+ 	if (ugly_bits) {
+ 		dev_warn(&spi->dev,
+ 			 "setup: ignoring unsupported mode bits %x\n",
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index 6be77fa..e2d69eb 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -154,7 +154,9 @@ struct spi_device {
+ #define	SPI_TX_QUAD	0x200			/* transmit with 4 wires */
+ #define	SPI_RX_DUAL	0x400			/* receive with 2 wires */
+ #define	SPI_RX_QUAD	0x800			/* receive with 4 wires */
+-#define SPI_CS_WORD	0x1000			/* toggle cs after each word */
++#define	SPI_CS_WORD	0x1000			/* toggle cs after each word */
++#define	SPI_TX_OCTO	0x2000			/* transmit with 8 wires */
++#define	SPI_RX_OCTO	0x4000			/* receive with 8 wires */
+ 	int			irq;
+ 	void			*controller_state;
+ 	void			*controller_data;
+--=20
+2.7.4
