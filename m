@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC PATCH v3 01/17] ARM: add CONFIG_ARCH_SUNXI_V7
- for differentiate ARMv5/v7 Allwinner SoCs
-Date: Thu, 22 Nov 2018 09:26:35 +0100
-Message-ID: <20181122082635.br5n33owxxpenv62@flea>
+Subject: Re: [RFC PATCH v3 02/17] dt-bindings: arm: Add new
+ Allwinner ARMv5 F1C100s SoC
+Date: Thu, 22 Nov 2018 09:26:54 +0100
+Message-ID: <20181122082654.btbvzup4p3buqhz2@flea>
 References: <cover.1542824904.git.mesihkilinc@gmail.com>
- <267ffcf3b91930a82f20d93e1fad1fceaf8b9b0e.1542824904.git.mesihkilinc@gmail.com>
+ <4c5ee3bf877ba0de233ec400ca27f3a91014a737.1542824904.git.mesihkilinc@gmail.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dqncgdyevxvgsbfd"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBRWQ3HPQKGQEZF7XTWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="zjtmukjeo43cenj6"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBWOQ3HPQKGQEW5IB25Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <267ffcf3b91930a82f20d93e1fad1fceaf8b9b0e.1542824904.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <4c5ee3bf877ba0de233ec400ca27f3a91014a737.1542824904.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,57 +24,16 @@ Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreC
 List-Id: devicetree@vger.kernel.org
 
 
---dqncgdyevxvgsbfd
+--zjtmukjeo43cenj6
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Wed, Nov 21, 2018 at 09:30:34PM +0300, Mesih Kilinc wrote:
-> Allwinner also has some ARMv5 SoCs.
-> 
-> In order to add support for them, add a CONFIG_ARCH_SUNXI_V7 bool config
-> which is selected when a ARMv7 soc is selected, and make CONFIG_ARCH_SUNXI
-> a common option which is selected by both V7 and V5 sunxi option.
+On Wed, Nov 21, 2018 at 09:30:35PM +0300, Mesih Kilinc wrote:
+> Add new Allwinner ARMv5 F1C100s SoC's compatible string
 > 
 > Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/mach-sunxi/Kconfig | 23 ++++++++++++++++-------
->  1 file changed, 16 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
-> index d9c8ecf..7e5f173 100644
-> --- a/arch/arm/mach-sunxi/Kconfig
-> +++ b/arch/arm/mach-sunxi/Kconfig
-> @@ -6,31 +6,38 @@ menuconfig ARCH_SUNXI
->  	select GENERIC_IRQ_CHIP
->  	select GPIOLIB
->  	select PINCTRL
-> -	select PM_OPP
->  	select SUN4I_TIMER
->  	select RESET_CONTROLLER
-> +	help
-> +	  Support for Allwinner ARM-based family of processors
->  
->  if ARCH_SUNXI
->  
-> +if ARCH_MULTI_V7
-> +
-> +config ARCH_SUNXI_V7
-> +	bool
-> +	select PM_OPP
-> +
 
-Actually, thinking more about this, I don't see why the PM_OPP config
-option should be made specific to the ARMv7 sunxi SoCs, you will have
-things cpufreq enabled at some point as well on the armv5 support.
-
->  config MACH_SUN4I
->  	bool "Allwinner A10 (sun4i) SoCs support"
-> -	default ARCH_SUNXI
-> +	select ARCH_SUNXI_V7
-
-The option is still changed from being on by default to being off by
-default. This breaks all the defconfig, and we really shouldn't change
-that.
+Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
 Maxime
 
@@ -82,4 +41,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---dqncgdyevxvgsbfd--
+--zjtmukjeo43cenj6--
