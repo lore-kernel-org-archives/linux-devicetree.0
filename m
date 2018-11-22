@@ -1,8 +1,8 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v9 08/13] ARM: dts: imx7: Add video mux,
- csi and mipi_csi and connections
-Date: Thu, 22 Nov 2018 15:18:29 +0000
-Message-ID: <20181122151834.6194-9-rui.silva@linaro.org>
+Subject: [PATCH v9 13/13] media: MAINTAINERS: add entry for Freescale i.MX7
+ media driver
+Date: Thu, 22 Nov 2018 15:18:34 +0000
+Message-ID: <20181122151834.6194-14-rui.silva@linaro.org>
 References: <20181122151834.6194-1-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,129 +22,35 @@ To: sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Hans
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree nodes for csi, video multiplexer and
-mipi-csi besides the graph connecting the necessary endpoints to make
-the media capture entities to work in imx7 Warp board.
+Add maintainer entry for the imx7 media csi, mipi csis driver,
+dt-bindings and documentation.
 
 Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
- arch/arm/boot/dts/imx7s-warp.dts | 51 ++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx7s.dtsi     | 27 +++++++++++++++++
- 2 files changed, 78 insertions(+)
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
-index f7ba2c0a24ad..757856a3964b 100644
---- a/arch/arm/boot/dts/imx7s-warp.dts
-+++ b/arch/arm/boot/dts/imx7s-warp.dts
-@@ -276,6 +276,57 @@
- 	status = "okay";
- };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0abecc528dac..afa2ad3c5600 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9134,6 +9134,17 @@ T:	git git://linuxtv.org/media_tree.git
+ S:	Maintained
+ F:	drivers/media/platform/imx-pxp.[ch]
  
-+&gpr {
-+	csi_mux {
-+		compatible = "video-mux";
-+		mux-controls = <&mux 0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++MEDIA DRIVERS FOR FREESCALE IMX7
++M:	Rui Miguel Silva <rmfrfs@gmail.com>
++L:	linux-media@vger.kernel.org
++T:	git git://linuxtv.org/media_tree.git
++S:	Maintained
++F:	Documentation/devicetree/bindings/media/imx7-csi.txt
++F:	Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
++F:	Documentation/media/v4l-drivers/imx7.rst
++F:	drivers/staging/media/imx/imx7-media-csi.c
++F:	drivers/staging/media/imx/imx7-mipi-csis.c
 +
-+		port@1 {
-+			reg = <1>;
-+
-+			csi_mux_from_mipi_vc0: endpoint {
-+				remote-endpoint = <&mipi_vc0_to_csi_mux>;
-+			};
-+		};
-+
-+		port@2 {
-+			reg = <2>;
-+
-+			csi_mux_to_csi: endpoint {
-+				remote-endpoint = <&csi_from_csi_mux>;
-+			};
-+		};
-+	};
-+};
-+
-+&csi {
-+	status = "okay";
-+
-+	port {
-+		csi_from_csi_mux: endpoint {
-+			remote-endpoint = <&csi_mux_to_csi>;
-+		};
-+	};
-+};
-+
-+&mipi_csi {
-+	clock-frequency = <166000000>;
-+	status = "okay";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	fsl,csis-hs-settle = <3>;
-+
-+	port@1 {
-+		reg = <1>;
-+
-+		mipi_vc0_to_csi_mux: endpoint {
-+			remote-endpoint = <&csi_mux_from_mipi_vc0>;
-+		};
-+	};
-+};
-+
- &wdog1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_wdog>;
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 174635a73fb6..0c495082e2bf 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/reset/imx7-reset.h>
- #include "imx7d-pinfunc.h"
- 
- / {
-@@ -711,6 +712,17 @@
- 				status = "disabled";
- 			};
- 
-+			csi: csi@30710000 {
-+				compatible = "fsl,imx7-csi";
-+				reg = <0x30710000 0x10000>;
-+				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_CLK_DUMMY>,
-+						<&clks IMX7D_CSI_MCLK_ROOT_CLK>,
-+						<&clks IMX7D_CLK_DUMMY>;
-+				clock-names = "axi", "mclk", "dcic";
-+				status = "disabled";
-+			};
-+
- 			lcdif: lcdif@30730000 {
- 				compatible = "fsl,imx7d-lcdif", "fsl,imx28-lcdif";
- 				reg = <0x30730000 0x10000>;
-@@ -720,6 +732,21 @@
- 				clock-names = "pix", "axi";
- 				status = "disabled";
- 			};
-+
-+			mipi_csi: mipi-csi@30750000 {
-+				compatible = "fsl,imx7-mipi-csi2";
-+				reg = <0x30750000 0x10000>;
-+				interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks IMX7D_IPG_ROOT_CLK>,
-+					<&clks IMX7D_MIPI_CSI_ROOT_CLK>,
-+					<&clks IMX7D_MIPI_DPHY_ROOT_CLK>;
-+				clock-names = "pclk", "wrap", "phy";
-+				power-domains = <&pgc_mipi_phy>;
-+				phy-supply = <&reg_1p0d>;
-+				resets = <&src IMX7_RESET_MIPI_PHY_MRST>;
-+				reset-names = "mrst";
-+				status = "disabled";
-+			};
- 		};
- 
- 		aips3: aips-bus@30800000 {
+ MEDIA DRIVERS FOR HELENE
+ M:	Abylay Ospan <aospan@netup.ru>
+ L:	linux-media@vger.kernel.org
 -- 
 2.19.1
