@@ -1,59 +1,82 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCHv4 0/3] dts: Add the property of IB and OB
-Date: Thu, 22 Nov 2018 02:33:29 +0000
-Message-ID: <HE1PR04MB14978C967CFAE17815FF1CC8F5DB0@HE1PR04MB1497.eurprd04.prod.outlook.com>
-References: <20171110034847.17891-1-xiaowei.bao@nxp.com>
- <20181120173021.GA29331@e107981-ln.cambridge.arm.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 1/6] devfreq: add basic fileds supporting suspend
+ functionality
+Date: Thu, 22 Nov 2018 11:37:29 +0900
+Message-ID: <5BF61669.9030800@samsung.com>
+References: <1542823301-23563-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20181121180201eucas1p1f1f96941c3d16a96722e65d5c21bfe80@eucas1p1.samsung.com>
+        <1542823301-23563-2-git-send-email-l.luba@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181120173021.GA29331@e107981-ln.cambridge.arm.com>
-Content-Language: en-US
+In-reply-to: <1542823301-23563-2-git-send-email-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, "sumit.garg@nxp.com" <sumit.garg@nxp.com>, "Y.B. LU" <yangbo.lu@nxp.com>, "hongtao.jia@nxp.com" <hongtao.jia@nxp.com>, Andy Tang <andy.tang@nxp.com>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "pbrobinson@gmail.com" <pbrobinson@gmail.com>, "songxiaowei@hisilicon.com" <songxiaowei@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@li
+To: Lukasz Luba <l.luba@partner.samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgTG9yZW56bywNCg0KWWVzLCB0aGVzZSBzZXJpZXMgcGF0Y2hlcyBjYW4gZHJvcCwgdGhhbmtz
-IGEgbG90LiANCg0KQmVzdCByZWdhcmRzDQpYaWFvd2VpDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2Fn
-ZS0tLS0tDQpGcm9tOiBMb3JlbnpvIFBpZXJhbGlzaSA8bG9yZW56by5waWVyYWxpc2lAYXJtLmNv
-bT4gDQpTZW50OiAyMDE4xOoxMdTCMjHI1SAxOjMxDQpUbzogWGlhb3dlaSBCYW8gPHhpYW93ZWku
-YmFvQG54cC5jb20+DQpDYzogcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNv
-bTsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGwuZGVhY29uQGFybS5jb207IGJoZWxnYWFz
-QGdvb2dsZS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7IE1hZGFsaW4tY3Jpc3RpYW4gQnVjdXIg
-PG1hZGFsaW4uYnVjdXJAbnhwLmNvbT47IHN1bWl0LmdhcmdAbnhwLmNvbTsgWS5CLiBMVSA8eWFu
-Z2JvLmx1QG54cC5jb20+OyBob25ndGFvLmppYUBueHAuY29tOyBBbmR5IFRhbmcgPGFuZHkudGFu
-Z0BueHAuY29tPjsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNob25AdGkuY29tOyBq
-aW5nb29oYW4xQGdtYWlsLmNvbTsgcGJyb2JpbnNvbkBnbWFpbC5jb207IHNvbmd4aWFvd2VpQGhp
-c2lsaWNvbi5jb207IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
-LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBaLnEu
-IEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5j
-b20+OyBNLmguIExpYW4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT4NClN1YmplY3Q6IFJlOiBbUEFU
-Q0h2NCAwLzNdIGR0czogQWRkIHRoZSBwcm9wZXJ0eSBvZiBJQiBhbmQgT0INCg0KT24gRnJpLCBO
-b3YgMTAsIDIwMTcgYXQgMTE6NDg6NDRBTSArMDgwMCwgQmFvIFhpYW93ZWkgd3JvdGU6DQo+IERl
-cGVuZCBvbiANCj4gaHR0cHM6Ly9lbWVhMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5j
-b20vP3VybD1odHRwJTNBJTJGJTJGcGF0Yw0KPiBod29yay5vemxhYnMub3JnJTJGcGF0Y2glMkY4
-MTUzODIlMkYmYW1wO2RhdGE9MDIlN0MwMSU3Q3hpYW93ZWkuYmFvJTQwDQo+IG54cC5jb20lN0M2
-NzUxODg1OTQ1Njc0MThjY2Y2YTA4ZDY0ZjBkZTlmNSU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5
-YzUNCj4gYzMwMTYzNSU3QzAlN0MwJTdDNjM2NzgzMzE4NTE3MTkyOTcxJmFtcDtzZGF0YT1IaWxM
-VCUyQjVUJTJCJTJCdWJweHJhOA0KPiBsNTRaVmlFRk43U0JDZjR2REI4ekRNV1VkNCUzRCZhbXA7
-cmVzZXJ2ZWQ9MA0KPiANCj4gQmFvIFhpYW93ZWkgKDMpOg0KPiAgIEFSTXY4OiBkdHM6IGxzMTA0
-NmE6IGFkZCB0aGUgcHJvcGVydHkgb2YgSUIgYW5kIE9CDQo+ICAgQVJNdjg6IGxheWVyc2NhcGU6
-IGFkZCB0aGUgcGNpZSBlcCBmdW5jdGlvbiBzdXBwb3J0DQo+ICAgQVJNdjg6IHBjaWU6IG1ha2Ug
-dGhlIERXQyBFUCBkcml2ZXIgc3VwcG9ydCBmb3IgbGF5ZXJzY2FwZQ0KPiANCj4gIGFyY2gvYXJt
-NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLmR0c2kgfCAgIDYgKysNCj4gIGRyaXZl
-cnMvcGNpL2R3Yy9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KPiAgZHJp
-dmVycy9wY2kvZHdjL3BjaS1sYXllcnNjYXBlLmMgICAgICAgICAgICAgICB8IDEyMSArKysrKysr
-KysrKysrKysrKysrKysrKy0tDQo+ICAzIGZpbGVzIGNoYW5nZWQsIDEyMSBpbnNlcnRpb25zKCsp
-LCA3IGRlbGV0aW9ucygtKQ0KDQpDYW4gSSBkcm9wIHRoaXMgc2VyaWVzIGZyb20gdGhlIGxpbnV4
-LXBjaSBwYXRjaCBxdWV1ZSA/IEkgcmVja29uIGl0IGlzIHN1cGVyc2VkZWQgYnk6DQoNCmh0dHBz
-Oi8vZW1lYTAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0El
-MkYlMkZwYXRjaHdvcmsub3psYWJzLm9yZyUyRnBhdGNoJTJGOTkyOTI4JTJGJmFtcDtkYXRhPTAy
-JTdDMDElN0N4aWFvd2VpLmJhbyU0MG54cC5jb20lN0M2NzUxODg1OTQ1Njc0MThjY2Y2YTA4ZDY0
-ZjBkZTlmNSU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzAlN0M2MzY3
-ODMzMTg1MTcxOTI5NzEmYW1wO3NkYXRhPWkzVSUyRjd1VCUyRm5vJTJGU0dWYzZWRDFnZzdZYm4w
-elYlMkYlMkI4QTk2OThRSGZ1b1RvJTNEJmFtcDtyZXNlcnZlZD0wDQoNCmJ1dCBJIHdhbnRlZCB0
-byBtYWtlIHN1cmUgdGhhdCdzIHRoZSBjYXNlLCBJIHJlYWxseSBjYW4ndCBmb2xsb3cgdGhlIHZl
-cnNpb24gbnVtYmVyaW5nIHNvIEkgYW0gYXNraW5nLg0KDQpUaGFua3MsDQpMb3JlbnpvDQo=
+Hi,
+
+On 2018년 11월 22일 03:01, Lukasz Luba wrote:
+> The patch prepares devfreq device for handling suspend/resume functionality.
+> The new fields will store needed information during this process.
+> Devfreq framework handles opp-suspend DT entry and there is no need of
+> modyfications in the drivers code.
+> 
+> The patch draws on Tobias Jakobi's work posted ~2 years ago, who tried to
+> solve issue with devfreq device's frequency during suspend/resume.
+> During the discussion on LKML some corner cases and comments appeared
+> related to the design. This patch address them keeping in mind suggestions
+> from Chanwoo Choi.
+
+You already explain the patch history on cover letter. It is enough.
+Please remove the duplicate history description from all patches except for cover letter.
+
+> 
+> Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+> Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  drivers/devfreq/devfreq.c | 3 +++
+>  include/linux/devfreq.h   | 4 ++++
+>  2 files changed, 7 insertions(+)
+> 
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index 1414130..e20e7e4 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -657,6 +657,9 @@ struct devfreq *devfreq_add_device(struct device *dev,
+>  	}
+>  	devfreq->max_freq = devfreq->scaling_max_freq;
+>  
+> +	devfreq->suspend_freq = dev_pm_opp_get_suspend_opp_freq(dev);
+> +	atomic_set(&devfreq->suspend_count, 0);
+> +
+>  	dev_set_name(&devfreq->dev, "devfreq%d",
+>  				atomic_inc_return(&devfreq_no));
+>  	err = device_register(&devfreq->dev);
+> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
+> index e4963b0..7fe96f9 100644
+> --- a/include/linux/devfreq.h
+> +++ b/include/linux/devfreq.h
+> @@ -167,6 +167,10 @@ struct devfreq {
+>  	unsigned long scaling_max_freq;
+>  	bool stop_polling;
+>  
+> +	unsigned long suspend_freq;
+> +	unsigned long resume_freq;
+> +	atomic_t suspend_count;
+> +
+>  	/* information for device frequency transition */
+>  	unsigned int total_trans;
+>  	unsigned int *trans_table;
+> 
+
+You don't need to make the separate patch for this. You can squash patch1
+into patch3 because the newly added variables are used on patch3.
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
