@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC PATCH v3 12/17] dt-bindings: sram: Add
- Allwinner suniv F1C100s
-Date: Thu, 22 Nov 2018 09:39:12 +0100
-Message-ID: <20181122083912.h62op6gle5yv4frp@flea>
+Subject: Re: [RFC PATCH v3 13/17] SoC: sunxi: Add support for
+ Allwinner ARMv5 F1C100s sram
+Date: Thu, 22 Nov 2018 09:39:29 +0100
+Message-ID: <20181122083929.rauqn2tckn2tegpc@flea>
 References: <cover.1542824904.git.mesihkilinc@gmail.com>
- <37d6119252ea024bdfd19f9c8061bcd16fec8b58.1542824904.git.mesihkilinc@gmail.com>
+ <89f6179c17a98f160301fdeef27df35b359847e3.1542824904.git.mesihkilinc@gmail.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="bj6xh7farzrxsrcf"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBSOW3HPQKGQEDBENZTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="3rzw5xqqthqxr4a2"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBTGW3HPQKGQELYIKFYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <37d6119252ea024bdfd19f9c8061bcd16fec8b58.1542824904.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <89f6179c17a98f160301fdeef27df35b359847e3.1542824904.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,13 +24,13 @@ Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreC
 List-Id: devicetree@vger.kernel.org
 
 
---bj6xh7farzrxsrcf
+--3rzw5xqqthqxr4a2
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Wed, Nov 21, 2018 at 09:30:45PM +0300, Mesih Kilinc wrote:
-> The suniv ARMv5 F1C100s chip has similar sram controller to sun4i A10.
-> Add compatible string for it.
+On Wed, Nov 21, 2018 at 09:30:46PM +0300, Mesih Kilinc wrote:
+> Allwinner ARMv5 F1C100s has similar sram controller to sun4i A10
+> Add compatible strings for it.
 > 
 > Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
@@ -42,4 +42,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---bj6xh7farzrxsrcf--
+--3rzw5xqqthqxr4a2--
