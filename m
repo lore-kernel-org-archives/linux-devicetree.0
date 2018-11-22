@@ -1,137 +1,187 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v3 05/14] media: dt-bindings: marvell,mmp2-ccic: Add
- Marvell MMP2 camera
-Date: Thu, 22 Nov 2018 21:08:08 +0100
-Message-ID: <20181122200341.GA8279@w540>
-References: <20181120100318.367987-1-lkundrak@v3.sk>
- <20181120100318.367987-6-lkundrak@v3.sk>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 2/6] devfreq: refactor set_target frequency function
+Date: Fri, 23 Nov 2018 08:45:45 +0900
+Message-ID: <5BF73FA9.7010402@samsung.com>
+References: <1542823301-23563-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20181121180202eucas1p27d3aa58411abeae03181c38b91fc67de@eucas1p2.samsung.com>
+        <1542823301-23563-3-git-send-email-l.luba@partner.samsung.com>
+        <5BF619EE.8090006@samsung.com>
+        <9eef3348-e86f-1113-3691-39ba3a620fb8@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="WYTEVAkct0FjGQmd"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181120100318.367987-6-lkundrak@v3.sk>
+In-reply-to: <9eef3348-e86f-1113-3691-39ba3a620fb8@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>
+To: Lukasz Luba <l.luba@partner.samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Lukasz,
 
---WYTEVAkct0FjGQmd
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+On 2018년 11월 22일 19:40, Lukasz Luba wrote:
+> Hi Chanwoo Choi
+> 
+> On 11/22/18 3:52 AM, Chanwoo Choi wrote:
+>> On 2018년 11월 22일 03:01, Lukasz Luba wrote:
+>>> The refactoring is needed for the new client in devfreq: suspend.
+>>> To avoid code duplication, move it to the new local function
+>>> devfreq_set_target.
+>>>
+>>> The patch draws on Tobias Jakobi's work posted ~2 years ago, who tried to
+>>> solve issue with devfreq device's frequency during suspend/resume.
+>>> During the discussion on LKML some corner cases and comments appeared
+>>> related to the design. This patch address them keeping in mind suggestions
+>>> from Chanwoo Choi.
+>>
+>> As I commented on patch1, please remove it.
+> OK
+>>
+>>>
+>>> Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+>>> Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>>> ---
+>>>   drivers/devfreq/devfreq.c | 62 ++++++++++++++++++++++++++++-------------------
+>>>   1 file changed, 37 insertions(+), 25 deletions(-)
+>>>
+>>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>>> index e20e7e4..cf9c643 100644
+>>> --- a/drivers/devfreq/devfreq.c
+>>> +++ b/drivers/devfreq/devfreq.c
+>>> @@ -285,6 +285,42 @@ static int devfreq_notify_transition(struct devfreq *devfreq,
+>>>   	return 0;
+>>>   }
+>>>   
+>>> +static int devfreq_set_target(struct devfreq *devfreq, unsigned long new_freq,
+>>> +			      unsigned long *prev_freq, u32 flags)
+>>
+>> Please remove the unused space in front of 'unsigned long *prev_freq'.
+>> Use tab only for indentation.
+> OK
+>>
+>>> +{
+>>> +	struct devfreq_freqs freqs;
+>>> +	unsigned long cur_freq;
+>>> +	int err = 0;
+>>> +
+>>> +	if (devfreq->profile->get_cur_freq)
+>>> +		devfreq->profile->get_cur_freq(devfreq->dev.parent, &cur_freq);
+>>> +	else
+>>> +		cur_freq = devfreq->previous_freq;
+>>> +
+>>> +	freqs.old = cur_freq;
+>>> +	freqs.new = new_freq;
+>>> +	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_PRECHANGE);
+>>> +
+>>> +	err = devfreq->profile->target(devfreq->dev.parent, &new_freq, flags);
+>>> +	if (err) {
+>>> +		freqs.new = cur_freq;
+>>> +		devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+>>> +		return err;
+>>> +	}
+>>> +
+>>> +	freqs.new = new_freq;
+>>> +	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+>>> +
+>>> +	if (devfreq_update_status(devfreq, new_freq))
+>>> +		dev_err(&devfreq->dev,
+>>> +			"Couldn't update frequency transition information.\n");
+>>> +
+>>> +	devfreq->previous_freq = new_freq;
+>>> +	*prev_freq = cur_freq;
+>>> +
+>>> +	return err;
+>>> +}
+>>> +
+>>>   /* Load monitoring helper functions for governors use */
+>>>   
+>>>   /**
+>>> @@ -296,7 +332,6 @@ static int devfreq_notify_transition(struct devfreq *devfreq,
+>>>    */
+>>>   int update_devfreq(struct devfreq *devfreq)
+>>>   {
+>>> -	struct devfreq_freqs freqs;
+>>>   	unsigned long freq, cur_freq, min_freq, max_freq;
+>>
+>>
+>> cur_freq is not used after modification. Remove it.
+>>
+>>>   	int err = 0;
+>>>   	u32 flags = 0;
+>>> @@ -333,31 +368,8 @@ int update_devfreq(struct devfreq *devfreq)
+>>>   		flags |= DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use LUB */
+>>>   	}
+>>>   
+>>> -	if (devfreq->profile->get_cur_freq)
+>>> -		devfreq->profile->get_cur_freq(devfreq->dev.parent, &cur_freq);
+>>> -	else
+>>> -		cur_freq = devfreq->previous_freq;
+>>> -
+>>> -	freqs.old = cur_freq;
+>>> -	freqs.new = freq;
+>>> -	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_PRECHANGE);
+>>> +	return devfreq_set_target(devfreq, freq, &cur_freq, flags);
+>>
+>> You get the 'cur_freq' from devfreq_set_taget() for devfreq_suspend_device() on patch3.
+>> But, update_devfreq() and devfreq_resume_device() don't use the 'cur_freq' value
+>> from devfreq_set_target().
+>>
+>> Instead, getting 'cur_freq' for 'devfreq->resume_freq' in the devfreq_set_target().
+>> Please remove the 'cur_freq' parameter from devfreq_set_target.
+> 
+> I can remove the 3rd parameter from devfreq_set_target(),
+> but it implies that patch 1 and 3 cannot be merged. The function 
+> devfreq_set_target will use 'devfreq->resume_freq' so it must be in 
+> devfreq struct.
+> So, in v2 version there will be still 6 patches, with the 1st patch 
+> defining needed fields in devfreq struct.
+> Do you agree for that?
 
-Hi Lubomir,
+So, I replied again as following on my other reply[1] of patch2: 
+[1] https://lkml.org/lkml/2018/11/22/507
 
-On Tue, Nov 20, 2018 at 11:03:10AM +0100, Lubomir Rintel wrote:
-> Add Marvell MMP2 camera host interface.
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
->
-> ---
-> Changes since v2:
-> - Added #clock-cells, clock-names, port
->
->  .../bindings/media/marvell,mmp2-ccic.txt      | 37 +++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
->
-> diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-> new file mode 100644
-> index 000000000000..e5e8ca90e7f7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-> @@ -0,0 +1,37 @@
-> +Marvell MMP2 camera host interface
-> +
-> +Required properties:
-> + - compatible: Should be "marvell,mmp2-ccic"
-> + - reg: register base and size
-> + - interrupts: the interrupt number
-> + - #clock-cells: must be 0
-> + - any required generic properties defined in video-interfaces.txt
+But, you have to add following new code on patch3 instead of patch2.
+patch2 doesn't contain the following codes and then
+patch3 adds 'resume_freq' variable and adds the following code on patch3.
 
-I don't think video-interfaces applies here. It described bindings to
-be used for endpoint and port nodes.
++
++       if (devfreq->suspend_freq)
++               devfreq->resume_freq = cur_freq;
 
-> +
-> +Optional properties:
-> + - clocks: input clock (see clock-bindings.txt)
-
-What do you think of:
-"reference to the input clock as specified by clock-bindings.txt"
-
-> + - clock-names: names of the clocks used, may include "axi", "func" and
-> +                "phy"
-
-"may include" is abit vague. Which clock should the interface be
-powered from, and in which case?
-
-> + - clock-output-names: should contain the name of the clock driving the
-> +                       sensor master clock MCLK
-
-This is a property for the clock provider part, and I will just list
-the only clock this interfaces provides here:
-
-    - clock-output-names: Optional clock source for sensors. Shall be "mclk".
-
-See a comment on patch 14 on the use of the clock provider part.
-
-> +
-> +Required subnodes:
-> + - port: the parallel bus interface port with a single endpoint linked to
-> +         the sensor's endpoint as described in video-interfaces.txt
-> +
-> +Example:
-> +
-> +	camera0: camera@d420a000 {
-> +		compatible = "marvell,mmp2-ccic";
-> +		reg = <0xd420a000 0x800>;
-> +		interrupts = <42>;
-> +		clocks = <&soc_clocks MMP2_CLK_CCIC0>;
-> +		clock-names = "axi";
-> +		#clock-cells = <0>;
-> +		clock-output-names = "mclk";
-> +
-> +		port {
-> +			camera0_0: endpoint {
-> +				remote-endpoint = <&ov7670_0>;
-
-I'm debated, your sensor does not support configuring the parallel bus,
-that's fine, but as "bindings describe hardware" shouldn't you list
-here the bus configurations the HW interface supports and list their default
-values? Or there are none for real in this platform?
-
-Thanks
-  j
+> 
+>>
+>>>   
+>>> -	err = devfreq->profile->target(devfreq->dev.parent, &freq, flags);
+>>> -	if (err) {
+>>> -		freqs.new = cur_freq;
+>>> -		devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+>>> -		return err;
+>>> -	}
+>>> -
+>>> -	freqs.new = freq;
+>>> -	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+>>> -
+>>> -	if (devfreq_update_status(devfreq, freq))
+>>> -		dev_err(&devfreq->dev,
+>>> -			"Couldn't update frequency transition information.\n");
+>>> -
+>>> -	devfreq->previous_freq = freq;
+>>> -	return err;
+>>>   }
+>>>   EXPORT_SYMBOL(update_devfreq);
+>>>   
+>>>
+>>
+>>
+> 
+> Regards,
+> Lukasz Luba
+> 
+> 
 
 
-> +			};
-> +		};
-> +	};
-> --
-> 2.19.1
->
-
---WYTEVAkct0FjGQmd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJb9wyoAAoJEHI0Bo8WoVY8kNsQAMWdo1PGvEDT/0hXiQpdwfVn
-ZRcLhIGbHMEWIhOO0brNQ01jGKgK2rthDmEL71J/GNraq9bKWE1HKMovALc1n7Il
-QxHrjF82R4bB8zxc8LyMgTVd0Ak/YJ9MiGtqdkPK0Rsl/XorGdtIe690aEbghJ3e
-4IFn7viugujDOsUFNoT5d61nkFe2mRtdgk+qMaZ+dWYQsRZtUKiqAkuZsJyeYgwD
-L9MPwc9iVKHhS3cPMucQJtlcKKZ3VfCPm7QSPuZiOe5cEQ2VkUU8oejJ/mN4RBtM
-WziB1B9OMVkd2d1JcyiLWMoTEqxyWSLO1xgKHwNvyumwQwDDQGIvi1Am2Uf7ni2r
-1ooeECUrRGiKpSzAZ4zRfvYH52LYdJGy4sxy7VCtWkOL5ClvCzF0+rvYTGSgv/FA
-+sRsDOwarGJAbDWzUNCHwIAhbE9vlO/xypO5wANdQgFil39K6pUmRhrCiytW5vlT
-uR2l3E7Jp78B3/OuDdqM3HwMH8BNYnXvYCNFw5sTdom3OmkKadWmFXIEeRm5EKIY
-TkAzIQ9NT7bGcxzGLC0ixts54SviFBI6+ULaQGd6YM9S1HuZ5GhNJYFgnU+5/y8O
-dOE8JP+N8Mbkfida18JqXlbLLQBjgvR1uScqoIAndHiOc94YvZQNI/sDyaHtjy86
-kSr2PJZTjspEOFreYT0s
-=7rOK
------END PGP SIGNATURE-----
-
---WYTEVAkct0FjGQmd--
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
