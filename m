@@ -1,45 +1,156 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [v5, PATCH 2/2] dt-binding: mediatek-dwmac: add binding document
- for MediaTek MT2712 DWMAC
-Date: Thu, 22 Nov 2018 16:19:32 +0100
-Message-ID: <20181122151932.GD15403@lunn.ch>
-References: <1542882521-18874-1-git-send-email-biao.huang@mediatek.com>
- <1542882521-18874-3-git-send-email-biao.huang@mediatek.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device nodes
+Date: Thu, 22 Nov 2018 16:30:33 +0100
+Message-ID: <84b6bc0e-486d-e9f4-7579-0d6b513c15ba@linaro.org>
+References: <1540542307-63158-1-git-send-email-biju.das@bp.renesas.com>
+ <1be47ef6-1a92-e032-12c1-1deae5b67960@linaro.org>
+ <OSBPR01MB210312547BBCBBC9FC01A616B8D80@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <67cf2385-9379-f02a-36fd-b2e07dfd5497@linaro.org>
+ <TYAPR01MB2111A4092907D265493DDF3FB8D80@TYAPR01MB2111.jpnprd01.prod.outlook.com>
+ <dbc5f62d-aff0-8c6a-e957-e7dea15cc002@linaro.org>
+ <OSBPR01MB21030159FAA26E6C8FE492FFB8DB0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <a82d3315-7608-3ff8-eaa1-e2a2c05c0694@linaro.org>
+ <OSBPR01MB21034E0B1AE2304A9A17DE50B8DB0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1542882521-18874-3-git-send-email-biao.huang@mediatek.com>
+In-Reply-To: <OSBPR01MB21034E0B1AE2304A9A17DE50B8DB0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Biao Huang <biao.huang@mediatek.com>
-Cc: davem@davemloft.net, robh+dt@kernel.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, joabreu@synopsys.com
+To: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Thomas Gleixner <tglx@linutronix.de>, John Stultz <john.stultz@linaro.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 22, 2018 at 06:28:41PM +0800, Biao Huang wrote:
-> The commit adds the device tree binding documentation for the MediaTek DWMAC
-> found on MediaTek MT2712.
+
+Added Marc Zyngier in Cc.
+
+On 22/11/2018 16:16, Biju Das wrote:
+> Hello Daniel,
 > 
-> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+> Thanks for the feedback.
+> 
+>>>> Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device
+>>>> nodes
+>>>>
+>>>> On 19/11/2018 16:50, Biju Das wrote:
+>>>>> Hi Daniel,
+>>>>>
+>>>>> Thanks for the feedback.
+>>>>>
+>>>>>>>> Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device
+>>>>>>>> nodes
+>>>>>>>>
+>>>>>>>> On 26/10/2018 10:25, Biju Das wrote:
+>>>>>>>>> This patch adds CMT{0|1|2|3} device nodes for r8a7796 SoC.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+>>>>>>>>> ---
+>>>>>>>>> This patch is tested against renesas-dev
+>>>>>>>>>
+>>>>>>>>> I have executed on inconsistency-check, nanosleep and
+>>>>>>>>> clocksource_switch selftests on this arm64 SoC. The
+>>>>>>>>> inconsistency-check and nanosleep tests are working fine.The
+>>>>>>>>> clocksource_switch asynchronous test is failing due to
+>>>>>>>>> inconsistency-check
+>>>>>>>> failure on "arch_sys_counter".
+>>>>>>>>>
+>>>>>>>>> But if i skip the clocksource_switching of "arch_sys_counter",
+>>>>>>>>> the asynchronous test is passing for CMT0/1/2/3 timer.
+>>>>>>>>>
+>>>>>>>>> Has any one noticed this issue?
+>>>>>>>>
+>>>>>>>> So now that you mention that, I've been through the
+>>>>>>>> clocksource_switch on another ARM64 platform (hikey960) and
+>>>>>>>> disabled the
+>>>>>>>> ARM64_ERRATUM_858921 config option. I can see the same issue.
+>>>>>>>>
+>>>>>>>> Is this option set on your config ?
+>>>>>>>
+>>>>>>> No.  As per  " config ARM64_ERRATUM_858921", it is "Workaround for
+>>>>>> Cortex-A73 erratum 858921"
+>>>>>>>
+>>>>>>> Our SoC is 2xCA-57 + 4 x CA-53.  Does  it impact CA-57 + CA_53?
+>>>>>>
+>>>>>> Dunno :/
+>>>>>>
+>>>>>>> Any way I will enable this config option and will provide you the
+>> results.
+>>>>>>
+>>>>>> Ok, thanks!
+>>>>>
+>>>>> The following config is enabled by default on upstream
+>>>>> kernel(4.20-rc3) CONFIG_ARM_ARCH_TIMER_EVTSTREAM=y
+>>>>> CONFIG_ARM_ARCH_TIMER_OOL_WORKAROUND=y
+>>>>> CONFIG_FSL_ERRATUM_A008585=y
+>>>>> CONFIG_HISILICON_ERRATUM_161010101=y
+>>>>> CONFIG_ARM64_ERRATUM_858921=y
+>>>>>
+>>>>> For a quick testing,  I have activated the erratum using the
+>>>>> property
+>>>> "fsl,erratum-a008585" on device tree.
+>>>>> With this I confirm the issue is fixed.
+>>>>>
+>>>>> I have  some questions on this.
+>>>>> 1) Based  on the test result ,do you think renesas soc also
+>>>>> impacted by the
+>>>> ARM64_ERRATUM_858921?
+>>>>> 2) Is there any way to find, is this Erratum actually causing the
+>>>> asynchronous test to fail?
+>>>>
+>>>> I guess, you can hack the __fsl_a008585_read_reg macro and check if
+>>>> the invalid condition is reached.
+>>>>
+>>>> This thread https://lkml.org/lkml/2018/5/10/773 will give you all the
+>>>> answers you are looking for (well very likely).
+>>>>
+>>>> Let me know if it helped.
+>>>
+>>> In our case , Delta: 174760 ns
+>>>
+>>> 1530553351:205762284
+>>> 1530553351:205762404
+>>> --------------------
+>>> 1530553351:205951226
+>>> 1530553351:205776466
+>>> --------------------
+>>>
+>>> I have tried the workaround for ARM64_ERRATUM_858921, that also fixes
+>> the issue.
+>>>
+>>> But all the workaround disables ARM64 VDSO. How do we conclude that is
+>> it VDSO issue or ARM64_ERRATUM issue?
+>>
+>> May be disable all errata and set vdso_default to false?
+>>
+>> [ ... ]
+>>
+>> -static bool vdso_default = true;
+>> +static bool vdso_default = false;
+>>
+>> [ ... ]
+> 
+> I have disabled the  activation of errata from device tree and set vdso_default=false.
+> With this also it works fine. So looks like arm64 vdso is the issue in our case.
+> 
+> Do you agree with the conclusion?
 
-> +Optional properties:
-> +- mediatek,tx-delay: TX clock delay macro value. Range is 0~31. Default is 0.
-> +	It should be defined for rgmii/rgmii-rxid/mii interface.
-> +- mediatek,rx-delay: RX clock delay macro value. Range is 0~31. Default is 0.
-> +	It should be defined for rgmii/rgmii-txid/mii/rmii interface.
+I agree we have an element to investigate the issue. That is very
+specific to this timer and a good knowledge of the internals is required.
 
-You have received the same feedback at least twice now, from two
-different maintainers, that the delay should be specified in pS, and
-the driver should figure out what values to place into registers.
+Certainly Marc Zyngier or Mark Rutland can help here.
 
-You should not ignore feedback like that. If you don't understand the
-feedback, please ask us to explain it. If you don't agree with the
-feedback, you need to argue why you think it is wrong, or why what you
-are doing is better, etc.
+> [    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=6
+> [    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+> [    0.000000] arch_timer: cp15 timer(s) running at 8.32MHz (virt).
+> [    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x1eb398c07, max_idle_ns: 440795202503 ns
+> [    0.000004] sched_clock: 56 bits at 8MHz, resolution 120ns, wraps every 2199023255503ns
 
-We are here to help, but just ignoring us won't get you anywhere.
 
-For the moment:
 
-NACK
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-	Andrew
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
