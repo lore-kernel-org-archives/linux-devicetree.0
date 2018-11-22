@@ -1,47 +1,68 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 1/6] phy: enumerate SATA PHY mode
-Date: Thu, 22 Nov 2018 22:04:15 +0100
-Message-ID: <20181122210420.14861-2-miquel.raynal@bootlin.com>
+Subject: [PATCH 6/6] ARM64: dts: marvell: armada-37xx: declare the COMPHY node
+Date: Thu, 22 Nov 2018 22:04:20 +0100
+Message-ID: <20181122210420.14861-7-miquel.raynal@bootlin.com>
 References: <20181122210420.14861-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181122210420.14861-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Add SATA mode to the PHY framework in preparation of upcoming PHYs
-that will handle it. For instance, SATA mode will be used by the
-Armada3700 COMPHY driver, which supports configuring SERDES lanes to
-be used by various controllers: Ethernet, USB3, SATA and PCIe.
+Describe the A3700 COMPHY node. It has three PHYs that can be
+configured as follow:
+* PCIe or GbE
+* USB3 or GbE
+* SATA or USB3
+Each of them has its own memory area.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- include/linux/phy/phy.h | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 29 ++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 03b319f89a34..553d8520e37f 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -42,6 +42,7 @@ enum phy_mode {
- 	PHY_MODE_UFS_HS_A,
- 	PHY_MODE_UFS_HS_B,
- 	PHY_MODE_PCIE,
-+	PHY_MODE_SATA,
- };
+diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+index e7405931f381..036d6fd6c9ef 100644
+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+@@ -242,6 +242,35 @@
+ 				reg = <0x14000 0x60>;
+ 			};
  
- /**
++			comphy: phy@18300 {
++				compatible = "marvell,comphy-a3700";
++				reg = <0x18300 0x300>,
++				      <0x1F000 0x400>,
++				      <0x5C000 0x400>,
++				      <0xe0178 0x8>;
++				reg-names = "comphy",
++					    "lane1_pcie_gbe",
++					    "lane0_usb3_gbe",
++					    "lane2_sata_usb3";
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				comphy0: phy@0 {
++					reg = <0>;
++					#phy-cells = <1>;
++				};
++
++				comphy1: phy@1 {
++					reg = <1>;
++					#phy-cells = <1>;
++				};
++
++				comphy2: phy@2 {
++					reg = <2>;
++					#phy-cells = <1>;
++				};
++			};
++
+ 			pinctrl_sb: pinctrl@18800 {
+ 				compatible = "marvell,armada3710-sb-pinctrl",
+ 					     "syscon", "simple-mfd";
 -- 
 2.19.1
