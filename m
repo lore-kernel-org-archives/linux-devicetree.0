@@ -1,58 +1,72 @@
-Return-Path: <SRS0=vcRE=OH=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 2/5] ARM: dts: r8a7744: Add VSP support
-Date: Wed, 28 Nov 2018 16:38:28 +0000
-Message-Id: <1543423111-19745-3-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543423111-19745-1-git-send-email-biju.das@bp.renesas.com>
-References: <1543423111-19745-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=KnJS=OB=gmail.com=groeck7@kernel.org>
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Thu, 22 Nov 2018 07:51:36 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 2/3] dt-bindings: watchdog: Add Qualcomm PM8916
+ watchdog
+Message-ID: <20181122155136.GA27764@roeck-us.net>
+References: <1542821264-9200-1-git-send-email-loic.poulain@linaro.org>
+ <1542821264-9200-2-git-send-email-loic.poulain@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1542821264-9200-2-git-send-email-loic.poulain@linaro.org>
+To: Loic Poulain <loic.poulain@linaro.org>
+Cc: wim@linux-watchdog.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, andy.gross@linaro.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add VSP support to SoC DT.
+On Wed, Nov 21, 2018 at 06:27:43PM +0100, Loic Poulain wrote:
+> Document support for the Watchdog Timer (WDT) Controller in the
+> Qualcomm PM8916 PMIC module.
+> 
+> Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+> ---
+>  v2: Add interrupts and timeout-sec props
+> 
+>  .../bindings/watchdog/qcom,pm8916-wdt.txt          | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/qcom,pm8916-wdt.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/qcom,pm8916-wdt.txt b/Documentation/devicetree/bindings/watchdog/qcom,pm8916-wdt.txt
+> new file mode 100644
+> index 0000000..8a0d304
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/qcom,pm8916-wdt.txt
+> @@ -0,0 +1,29 @@
+> +QCOM PM8916 watchdog timer controller
+> +
+> +This pm8916 watchdog timer controller must be under pm8916-pon node.
+> +
+> +Required properties:
+> +- compatible: should be "qcom,pm8916-wdt"
+> +
+> +Optional properties :
+> +- interrupts : interrupt for pre-timeout (bark)
+> +- timeout-sec : shall contain the default watchdog timeout in seconds,
+> +                if unset, the default timeout is 30 seconds
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm/boot/dts/r8a7744.dtsi | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Nitpick: For whatever reason, the driver selects a default timeout of
+32 seconds. However, I don't think the default timeout value should be
+mentioned here in the first place.
 
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index 3b8aa3b..0937349 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -1493,6 +1493,33 @@
- 			status = "disabled";
- 		};
- 
-+		vsp@fe928000 {
-+			compatible = "renesas,vsp1";
-+			reg = <0 0xfe928000 0 0x8000>;
-+			interrupts = <GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 131>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 131>;
-+		};
-+
-+		vsp@fe930000 {
-+			compatible = "renesas,vsp1";
-+			reg = <0 0xfe930000 0 0x8000>;
-+			interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 128>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 128>;
-+		};
-+
-+		vsp@fe938000 {
-+			compatible = "renesas,vsp1";
-+			reg = <0 0xfe938000 0 0x8000>;
-+			interrupts = <GIC_SPI 247 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 127>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 127>;
-+		};
-+
- 		du: display@feb00000 {
- 			compatible = "renesas,du-r8a7744";
- 			reg = <0 0xfeb00000 0 0x40000>,
--- 
-2.7.4
+> +
+> +Example:
+> +
+> +	pm8916_0: pm8916@0 {
+> +		compatible = "qcom,pm8916", "qcom,spmi-pmic";
+> +		reg = <0x0 SPMI_USID>;
+> +
+> +		pon@800 {
+> +			compatible = "qcom,pm8916-pon";
+> +			reg = <0x800>;
+> +
+> +			watchdog {
+> +				compatible = "qcom,pm8916-wdt";
+> +				interrupts = <0x0 0x8 6 IRQ_TYPE_EDGE_RISING>;
+> +				timeout-sec = <10>;
+> +			};
+> +		};
+> +	};
+> -- 
+> 2.7.4
+> 
