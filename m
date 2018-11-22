@@ -1,106 +1,58 @@
-From: Hanjie Lin <hanjie.lin@amlogic.com>
-Subject: [PATCH v6 1/2] dt-bindings: PCI: meson: add DT bindings for Amlogic Meson PCIe controller
-Date: Thu, 22 Nov 2018 16:53:53 +0800
-Message-ID: <1542876836-191355-2-git-send-email-hanjie.lin@amlogic.com>
-References: <1542876836-191355-1-git-send-email-hanjie.lin@amlogic.com>
+From: Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v3 0/3] Use interconnect API in MDSS on SDM845
+Date: Thu, 22 Nov 2018 14:36:50 +0530
+Message-ID: <20181122090653.3523-1-skolluku@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542876836-191355-1-git-send-email-hanjie.lin@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Yue Wang <yue.wang@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh@kernel.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Shawn Lin <shawn.lin@rock-chips.com>, Philippe Ombredanne <pombredanne@nexb.com>, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Yue Wang <yue.wang@amlogic.com>
-
-The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
-PCI core. This patch adds documentation for the DT bindings in Meson PCIe
-controller.
-
-Signed-off-by: Yue Wang <yue.wang@amlogic.com>
-Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/pci/amlogic,meson-pcie.txt | 70 ++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-
-diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-new file mode 100644
-index 0000000..12b18f8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-@@ -0,0 +1,70 @@
-+Amlogic Meson AXG DWC PCIE SoC controller
-+
-+Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
-+It shares common functions with the PCIe DesignWare core driver and
-+inherits common properties defined in
-+Documentation/devicetree/bindings/pci/designware-pci.txt.
-+
-+Additional properties are described here:
-+
-+Required properties:
-+- compatible:
-+	should contain "amlogic,axg-pcie" to identify the core.
-+- reg:
-+	should contain the configuration address space.
-+- reg-names: Must be
-+	- "elbi"	External local bus interface registers
-+	- "cfg"		Meson specific registers
-+	- "phy"		Meson PCIE PHY registers
-+	- "config"	PCIe configuration space
-+- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
-+- clocks: Must contain an entry for each entry in clock-names.
-+- clock-names: Must include the following entries:
-+	- "pclk"       PCIe GEN 100M PLL clock
-+	- "port"       PCIe_x(A or B) RC clock gate
-+	- "general"    PCIe Phy clock
-+	- "mipi"       PCIe_x(A or B) 100M ref clock gate
-+- resets: phandle to the reset lines.
-+- reset-names: must contain "phy" "port" and "apb"
-+       - "phy"         Share PHY reset
-+       - "port"        Port A or B reset
-+       - "apb"         Share APB reset
-+- device_type:
-+	should be "pci". As specified in designware-pcie.txt
-+
-+
-+Example configuration:
-+
-+	pcie: pcie@f9800000 {
-+			compatible = "amlogic,axg-pcie", "snps,dw-pcie";
-+			reg = <0x0 0xf9800000 0x0 0x400000
-+					0x0 0xff646000 0x0 0x2000
-+					0x0 0xff644000 0x0 0x2000
-+					0x0 0xf9f00000 0x0 0x100000>;
-+			reg-names = "elbi", "cfg", "phy", "config";
-+			reset-gpios = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>;
-+			interrupts = <GIC_SPI 177 IRQ_TYPE_EDGE_RISING>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0>;
-+			interrupt-map = <0 0 0 0 &gic GIC_SPI 179 IRQ_TYPE_EDGE_RISING>;
-+			bus-range = <0x0 0xff>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			device_type = "pci";
-+			ranges = <0x82000000 0 0 0x0 0xf9c00000 0 0x00300000>;
-+
-+			clocks = <&clkc CLKID_USB
-+					&clkc CLKID_MIPI_ENABLE
-+					&clkc CLKID_PCIE_A
-+					&clkc CLKID_PCIE_CML_EN0>;
-+			clock-names = "general",
-+					"mipi",
-+					"pclk",
-+					"port";
-+			resets = <&reset RESET_PCIE_PHY>,
-+				<&reset RESET_PCIE_A>,
-+				<&reset RESET_PCIE_APB>;
-+			reset-names = "phy",
-+					"port",
-+					"apb";
-+	};
--- 
-2.7.4
+VGhlIGludGVyY29ubmVjdCBBUEkgcHJvdmlkZXMgYW4gaW50ZXJmYWNlIGZvciBjb25zdW1lciBk
+cml2ZXJzIHRvIGV4cHJlc3MKdGhlaXIgYmFuZHdpZHRoIG5lZWRzIGluIHRoZSBTb0MuIFRoaXMg
+ZGF0YSBpcyBhZ2dyZWdhdGVkIGFuZCB0aGUgb24tY2hpcAppbnRlcmNvbm5lY3QgaGFyZHdhcmUg
+aXMgY29uZmlndXJlZCB0byB0aGUgYXBwcm9wcmlhdGUgcG93ZXIvcGVyZm9ybWFuY2UKcHJvZmls
+ZS4KCk1EU1MgaXMgb25lIG9mIHRoZSBpbnRlcmNvbm5lY3QgY29uc3VtZXJzIHdoaWNoIHVzZXMg
+dGhlIGludGVyY29ubmVjdCBBUElzCnRvIGdldCB0aGUgcGF0aCBiZXR3ZWVuIGVuZHBvaW50cyBh
+bmQgc2V0IGl0cyBiYW5kd2lkdGggcmVxdWlyZW1lbnRzCmZvciB0aGUgZ2l2ZW4gaW50ZXJjb25u
+ZWN0ZWQgcGF0aC4KClN1YnNlcXVlbnRseSwgdGhlcmUgaXMgYSBjbGVhbiB1cCBwYXRjaCB0byBy
+ZW1vdmUgYWxsIHRoZSByZWZlcmVuY2VzCm9mIHRoZSBEUFUgY3VzdG9tIGJ1cyBzY2FsaW5nLgoK
+VGhlcmUgaXMgY29ycmVzcG9uZGluZyBEVCBwYXRjaCB3aXRoIHRoZSBzb3VyY2UgYW5kIGRlc3Rp
+bmF0aW9uIHBvcnRzCmRlZmluZWQgZm9yIGRpc3BsYXkgZHJpdmVyIHdoaWNoIHdpbGwgYmUgc2Vu
+dCBzZXBhcmF0ZWx5LgoKQ2hhbmdlcyBpbiB2MjogCgktIFJlbW92ZSBlcnJvciBsb2cgYW5kIHVu
+bmVjZXNzYXJ5IGNoZWNrIChKb3JkYW4gQ3JvdXNlKQoJLSBGaXhlZCBidWlsZCBlcnJvciBkdWUg
+dG8gcGFydGlhbCBjbGVhbiB1cAoKQ2hhbmdlcyBpbiB2MzoKCS0gUmVtb3ZlIGNvbW1vbiBwcm9w
+ZXJ0eSBkZWZpbml0aW9ucyAoUm9iIEhlcnJpbmcpCgktIENvZGUgY2xlYW4gdXAgaW52b2x2aW5n
+IHZhcmlhYmxlIG5hbWUgY2hhbmdlLCByZW1vdmFsCgkgIG9mIGV4dHJhIHBhcmFudGhlc2lzIGFu
+ZCB2YXJpYWJsZXMgKE1hdHRoaWFzIEthZWhsY2tlKQoJLSBDb25kZW5zZSBtdWx0aXBsZSBsaW5l
+cyBpbnRvIGEgc2luZ2xlIGxpbmUgKFNlYW4gUGF1bCkKClNyYXZhbnRoaSBLb2xsdWt1ZHVydSAo
+Myk6CiAgZHJtL21zbS9kcHU6IGNsZWFuIHVwIHJlZmVyZW5jZXMgb2YgRFBVIGN1c3RvbSBidXMg
+c2NhbGluZwogIGRybS9tc20vZHB1OiBJbnRlZ3JhdGUgaW50ZXJjb25uZWN0IEFQSSBpbiBNRFNT
+CiAgZHQtYmluZGluZ3M6IG1zbS9kaXNwOiBJbnRyb2R1Y2UgaW50ZXJjb25uZWN0IGJpbmRpbmdz
+IGZvciBNRFNTIG9uCiAgICBTRE04NDUKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L21zbS9kcHUudHh0ICAgICAgICB8ICAgOSArKwogZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2Rw
+dTEvZHB1X2NvcmVfcGVyZi5jICAgICAgfCAxNzQgKysrKysrKystLS0tLS0tLS0tLS0tCiBkcml2
+ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfY29yZV9wZXJmLmggICAgICB8ICAgNCArLQog
+ZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2NydGMuYyAgICAgICAgICAgfCAgMTMg
+Ky0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNzLmMgICAgICAgICAgIHwg
+IDQ5ICsrKysrLQogZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X3Bvd2VyX2hhbmRs
+ZS5jICAgfCAgNDcgKystLS0tCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfcG93
+ZXJfaGFuZGxlLmggICB8ICA2OCAtLS0tLS0tLQogZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2Rw
+dTEvZHB1X3RyYWNlLmggICAgICAgICAgfCAgMjIgKy0tCiA4IGZpbGVzIGNoYW5nZWQsIDE0MiBp
+bnNlcnRpb25zKCspLCAyNDQgZGVsZXRpb25zKC0pCgotLSAKVGhlIFF1YWxjb21tIElubm92YXRp
+b24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKYSBM
+aW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdAoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVl
+ZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
