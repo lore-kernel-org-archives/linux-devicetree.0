@@ -1,71 +1,138 @@
-Return-Path: <SRS0=kniP=OI=nxp.com=anson.huang@kernel.org>
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V4 1/4] dt-bindings: fsl: scu: add thermal binding
-Date: Thu, 29 Nov 2018 02:37:24 +0000
-Message-ID: <1543458696-4741-2-git-send-email-Anson.Huang@nxp.com>
-References: <1543458696-4741-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1543458696-4741-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=gcol=OB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46631 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403960AbeKWBkf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 22 Nov 2018 20:40:35 -0500
+Received: by mail-pf1-f196.google.com with SMTP id c73so2045107pfe.13
+        for <devicetree@vger.kernel.org>; Thu, 22 Nov 2018 07:00:51 -0800 (PST)
 MIME-Version: 1.0
-To: "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "arnd@arndb.de" <arnd@arndb.de>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+References: <20181122035229.3630-1-matt.ranostay@konsulko.com>
+ <20181122035229.3630-3-matt.ranostay@konsulko.com> <4e408e8a-414b-a6cd-37c6-ce3a378c6e25@xs4all.nl>
+In-Reply-To: <4e408e8a-414b-a6cd-37c6-ce3a378c6e25@xs4all.nl>
+From: Matt Ranostay <matt.ranostay@konsulko.com>
+Date: Thu, 22 Nov 2018 07:00:40 -0800
+Message-ID: <CAJCx=g=AjDZatGHDVFKbcE3VCmWSuyrmS3Ob-X5+r5R=6WRJqA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] media: video-i2c: add Melexis MLX90640 thermal
+ camera support
+Content-Type: text/plain; charset="UTF-8"
+Sender: devicetree-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-system controller, the system controller is in charge of system
-power, clock and thermal sensors etc. management, Linux kernel
-has to communicate with system controller via MU (message unit)
-IPC to get temperature from thermal sensors, this patch adds
-binding doc for i.MX system controller thermal driver.
+On Thu, Nov 22, 2018 at 12:57 AM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>
+> On 11/22/2018 04:52 AM, Matt Ranostay wrote:
+> > Add initial support for MLX90640 thermal cameras which output an 32x24
+> > greyscale pixel image along with 2 rows of coefficent data.
+> >
+> > Because of this the data outputed is really 32x26 and needs the two rows
+> > removed after using the coefficent information to generate processed
+> > images in userspace.
+> >
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
+> > ---
+> >  .../bindings/media/i2c/melexis,mlx90640.txt   |  20 ++++
+> >  drivers/media/i2c/Kconfig                     |   1 +
+> >  drivers/media/i2c/video-i2c.c                 | 110 +++++++++++++++++-
+> >  3 files changed, 130 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/melexis,mlx90640.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/melexis,mlx90640.txt b/Documentation/devicetree/bindings/media/i2c/melexis,mlx90640.txt
+> > new file mode 100644
+> > index 000000000000..060d2b7a5893
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/i2c/melexis,mlx90640.txt
+> > @@ -0,0 +1,20 @@
+> > +* Melexis MLX90640 FIR Sensor
+> > +
+> > +Melexis MLX90640 FIR sensor support which allows recording of thermal data
+> > +with 32x24 resolution excluding 2 lines of coefficient data that is used by
+> > +userspace to render processed frames.
+>
+> So this means that the image doesn't conform to V4L2_PIX_FMT_Y12!
+>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-ChangeLog:
-V3->V4:
-  *move binding doc to SCU since it is belonging to SCU;
-  *change compatile string to start with "fsl" instead of "nxp" to align wi=
-th other nodes in dtb.
----
- .../devicetree/bindings/arm/freescale/fsl,scu.txt        | 16 ++++++++++++=
-++++
- 1 file changed, 16 insertions(+)
+The data for this sensor is V4L2_PIX_FMT_Y16BE not Y12
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/=
-Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-index 3f3d697..b77ec29 100644
---- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -112,6 +112,16 @@ RTC bindings based on SCU Message Protocol
- Required properties:
- - compatible: should be "fsl,imx8qxp-sc-rtc";
-=20
-+Thermal bindings based on SCU Message Protocol
-+------------------------------------------------------------
-+
-+Required properties:
-+- compatible : Must be "fsl,imx8qxp-sc-thermal";
-+- tsens-num : Total number of thermal sensors supported;
-+- #thermal-sensor-cells : Should be 1. See
-+			  Documentation/devicetree/bindings/thermal/thermal.txt
-+			  for a description.
-+
- Example (imx8qxp):
- -------------
- lsio_mu1: mailbox@5d1c0000 {
-@@ -158,6 +168,12 @@ firmware {
- 		rtc: rtc {
- 			compatible =3D "fsl,imx8qxp-sc-rtc";
- 		};
-+
-+		tsens: thermal-sensor {
-+			compatible =3D "fsl,imx8qxp-sc-thermal";
-+			tsens-num =3D <1>;
-+			#thermal-sensor-cells =3D <1>;
-+		};
- 	};
- };
-=20
---=20
-2.7.4
+> I missed that the first time around.
+>
+> You have three options here:
+>
+> 1) Create a new V4L2_PIX_FMT define + documentation describing the format that
+>    this device produces.
+>
+> 2) Split off the image from the meta data and create a new META_CAPTURE device
+>    node. For the META device node you would again have to document the format
+>
+> 3) Split off the image from the meta data and store the meta data in a V4L2
+>    control, which again has to be documented.
+>
+> I'm leaning towards 1 since that's easiest to implement. But the key is that
+> you should document those two lines. The datasheet is publicly available,
+> so you can refer to it for details.
+>
+
+1 is mostly what I have now, excluding the documentation and new pixel format.
+
+Although I have to say the META_CAPTURE options seems a bit more
+clean, but doesn't seem
+to be documented well.  So would it basically mux the pixel data, and
+metadata with the same
+timestamp?  Originally I looked at the VBI/closed caption to show the
+metadata/frame-only data but that
+was a way too low of a bandwidth (43-bytes a second IIRC).
+
+> Those extra two lines return addresses 0x700-0x73f, right? Is it even sufficient
+> to calculate the relevant data from just those lines?
+
+Yep that is the last 2 lines so 32x26 of reported data, but only 32x24
+is pixel data.
+
+> Looking at 11.2.2 there
+> is a whole calculation that should be done that is also dependent on the eeprom
+> values, which are not exported.
+>
+
+You must have missed the nvmem part of the patchset.. :) The
+respective eeprom values are exported to userspace using that.
+
+> I wonder if it isn't the job of the driver to do all the calculations. It has
+> all the information it needs and looking at the datasheet it seems all the
+> calculations are integer based, so it shouldn't be too difficult. This would
+> be a fourth option.
+
+Well it isn't really all integer based.. sure the value from the frame
+and eeprom are integers but the
+coefficients you generate ( frame value divided by eeprom value )
+usually produces a floating point value.
+
+>
+> BTW, did we document somewhere what the panasonic device returns? It returns
+> Y12 data, but what does that data mean? In order to use this in userspace you
+> need to be able to convert it to temperatures, so how is that done?
+
+It is a signed 12-bit value with 0.25C resolution per LSB but doesn't
+need any processing.
+
+>
+> Regards,
+>
+>         Hans
+>
+> > +
+> > +Required Properties:
+> > + - compatible : Must be "melexis,mlx90640"
+> > + - reg : i2c address of the device
+> > +
+> > +Example:
+> > +
+> > +     i2c0@1c22000 {
+> > +             ...
+> > +             mlx90640@33 {
+> > +                     compatible = "melexis,mlx90640";
+> > +                     reg = <0x33>;
+> > +             };
+> > +             ...
+> > +     };
