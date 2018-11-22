@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC PATCH v3 07/17] clocksource: sun4i: add a
- compatible for suniv
-Date: Thu, 22 Nov 2018 09:36:15 +0100
-Message-ID: <20181122083615.2ksgpvmfllbqnfiu@flea>
+Subject: Re: [RFC PATCH v3 08/17] dt-bindings: pinctrl: Add
+ Allwinner suniv F1C100s pinctrl
+Date: Thu, 22 Nov 2018 09:36:29 +0100
+Message-ID: <20181122083629.dyjidbak4prwsj3l@flea>
 References: <cover.1542824904.git.mesihkilinc@gmail.com>
- <60bc70fc43743f664de76abf3ab0a01cd7924458.1542824904.git.mesihkilinc@gmail.com>
+ <70ac024bf3b6623dc41021ac4893c37adb85a97d.1542824904.git.mesihkilinc@gmail.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="7qqjbx4ddugpjz3t"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBG6V3HPQKGQE4JZXPHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="hzi7oo4tcysagbcb"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBNWV3HPQKGQENB4HDRA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <60bc70fc43743f664de76abf3ab0a01cd7924458.1542824904.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <70ac024bf3b6623dc41021ac4893c37adb85a97d.1542824904.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,20 +24,12 @@ Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreC
 List-Id: devicetree@vger.kernel.org
 
 
---7qqjbx4ddugpjz3t
+--hzi7oo4tcysagbcb
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Wed, Nov 21, 2018 at 09:30:40PM +0300, Mesih Kilinc wrote:
-> The suniv (new F-series) chip has a timer with less functionality than
-> the A10 timer, e.g. it has only 3 channels.
-> 
-> Add a new compatible for it. As we didn't use the extra channels on A10
-> either now, the code needn't to be changed.
-> 
-> The suniv chip is based on ARM926EJ-S CPU, thus it has no architecture timer.
-> 
-> Register sun4i_timer as sched_clock on it.
+On Wed, Nov 21, 2018 at 09:30:41PM +0300, Mesih Kilinc wrote:
+> Add compatible string for Allwinner suniv F1C100s SoC's pinctrl.
 > 
 > Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
@@ -49,4 +41,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---7qqjbx4ddugpjz3t--
+--hzi7oo4tcysagbcb--
