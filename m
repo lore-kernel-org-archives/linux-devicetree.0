@@ -1,179 +1,88 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device nodes
-Date: Thu, 22 Nov 2018 15:55:54 +0000
-Message-ID: <814448ed-f3dd-4e71-9e78-c08d2a9b01a7@arm.com>
-References: <1540542307-63158-1-git-send-email-biju.das@bp.renesas.com>
- <1be47ef6-1a92-e032-12c1-1deae5b67960@linaro.org>
- <OSBPR01MB210312547BBCBBC9FC01A616B8D80@OSBPR01MB2103.jpnprd01.prod.outlook.com>
- <67cf2385-9379-f02a-36fd-b2e07dfd5497@linaro.org>
- <TYAPR01MB2111A4092907D265493DDF3FB8D80@TYAPR01MB2111.jpnprd01.prod.outlook.com>
- <dbc5f62d-aff0-8c6a-e957-e7dea15cc002@linaro.org>
- <OSBPR01MB21030159FAA26E6C8FE492FFB8DB0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
- <a82d3315-7608-3ff8-eaa1-e2a2c05c0694@linaro.org>
- <OSBPR01MB21034E0B1AE2304A9A17DE50B8DB0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
- <84b6bc0e-486d-e9f4-7579-0d6b513c15ba@linaro.org>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC PATCH v3 01/17] ARM: add CONFIG_ARCH_SUNXI_V7
+ for differentiate ARMv5/v7 Allwinner SoCs
+Date: Thu, 22 Nov 2018 16:57:03 +0100
+Message-ID: <20181122155703.wsziwzybqwcmn25w@flea>
+References: <cover.1542824904.git.mesihkilinc@gmail.com>
+ <267ffcf3b91930a82f20d93e1fad1fceaf8b9b0e.1542824904.git.mesihkilinc@gmail.com>
+ <20181122082635.br5n33owxxpenv62@flea>
+ <20181122150751.n26pvywmvnuglly5@ThinkPad>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <84b6bc0e-486d-e9f4-7579-0d6b513c15ba@linaro.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Thomas Gleixner <tglx@linutronix.de>, John Stultz <john.stultz@linaro.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="flmo5uucax4cgdii"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBWVD3PPQKGQEUYL3O3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20181122150751.n26pvywmvnuglly5@ThinkPad>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22/11/2018 15:30, Daniel Lezcano wrote:
-> 
-> Added Marc Zyngier in Cc.
 
-Thanks for looping me in.
+--flmo5uucax4cgdii
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-> 
-> On 22/11/2018 16:16, Biju Das wrote:
->> Hello Daniel,
->>
->> Thanks for the feedback.
->>
->>>>> Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device
->>>>> nodes
->>>>>
->>>>> On 19/11/2018 16:50, Biju Das wrote:
->>>>>> Hi Daniel,
->>>>>>
->>>>>> Thanks for the feedback.
->>>>>>
->>>>>>>>> Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device
->>>>>>>>> nodes
->>>>>>>>>
->>>>>>>>> On 26/10/2018 10:25, Biju Das wrote:
->>>>>>>>>> This patch adds CMT{0|1|2|3} device nodes for r8a7796 SoC.
->>>>>>>>>>
->>>>>>>>>> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
->>>>>>>>>> ---
->>>>>>>>>> This patch is tested against renesas-dev
->>>>>>>>>>
->>>>>>>>>> I have executed on inconsistency-check, nanosleep and
->>>>>>>>>> clocksource_switch selftests on this arm64 SoC. The
->>>>>>>>>> inconsistency-check and nanosleep tests are working fine.The
->>>>>>>>>> clocksource_switch asynchronous test is failing due to
->>>>>>>>>> inconsistency-check
->>>>>>>>> failure on "arch_sys_counter".
->>>>>>>>>>
->>>>>>>>>> But if i skip the clocksource_switching of "arch_sys_counter",
->>>>>>>>>> the asynchronous test is passing for CMT0/1/2/3 timer.
->>>>>>>>>>
->>>>>>>>>> Has any one noticed this issue?
->>>>>>>>>
->>>>>>>>> So now that you mention that, I've been through the
->>>>>>>>> clocksource_switch on another ARM64 platform (hikey960) and
->>>>>>>>> disabled the
->>>>>>>>> ARM64_ERRATUM_858921 config option. I can see the same issue.
->>>>>>>>>
->>>>>>>>> Is this option set on your config ?
->>>>>>>>
->>>>>>>> No.  As per  " config ARM64_ERRATUM_858921", it is "Workaround for
->>>>>>> Cortex-A73 erratum 858921"
->>>>>>>>
->>>>>>>> Our SoC is 2xCA-57 + 4 x CA-53.  Does  it impact CA-57 + CA_53?
+On Thu, Nov 22, 2018 at 06:07:51PM +0300, Mesih Kilinc wrote:
+> On 18/11/22 09:26, Maxime Ripard wrote:
+> > On Wed, Nov 21, 2018 at 09:30:34PM +0300, Mesih Kilinc wrote:
+> > > Allwinner also has some ARMv5 SoCs.
+> > > 
+> > > In order to add support for them, add a CONFIG_ARCH_SUNXI_V7 bool config
+> > > which is selected when a ARMv7 soc is selected, and make CONFIG_ARCH_SUNXI
+> > > a common option which is selected by both V7 and V5 sunxi option.
+> > > 
+> > > Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > ---
+> > >  arch/arm/mach-sunxi/Kconfig | 23 ++++++++++++++++-------
+> > >  1 file changed, 16 insertions(+), 7 deletions(-)
+> > > 
+> > > diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
+> > > index d9c8ecf..7e5f173 100644
+> > > --- a/arch/arm/mach-sunxi/Kconfig
+> > > +++ b/arch/arm/mach-sunxi/Kconfig
+> > > @@ -6,31 +6,38 @@ menuconfig ARCH_SUNXI
+> > >  	select GENERIC_IRQ_CHIP
+> > >  	select GPIOLIB
+> > >  	select PINCTRL
+> > > -	select PM_OPP
+> > >  	select SUN4I_TIMER
+> > >  	select RESET_CONTROLLER
+> > > +	help
+> > > +	  Support for Allwinner ARM-based family of processors
+> > >  
+> > >  if ARCH_SUNXI
+> > >  
+> > > +if ARCH_MULTI_V7
+> > > +
+> > > +config ARCH_SUNXI_V7
+> > > +	bool
+> > > +	select PM_OPP
+> > > +
+> > 
+> > Actually, thinking more about this, I don't see why the PM_OPP config
+> > option should be made specific to the ARMv7 sunxi SoCs, you will have
+> > things cpufreq enabled at some point as well on the armv5 support.
+> > 
+> OK. I was basing this code to the first patch series. 
+> So there will be no need for ARCH_SUNXI_VX configs. Should I drop them
+> and differantiate IC's by only ARCH_MULTI_VX?
 
-Erratum 858921 is strictly an A73 thing, and neither A57 nor A53 suffer
-from this issue. If you're seeing something that looks similar, that's
-probably because the integration of the global counter is less than
-perfect (insert massive understatement here), similar to the way it is
-broken with FSL's A008585 erratum.
+Yeah, that's probably enough for now, and we can always merge some
+patch along those lines if we ever need it later.
 
->>>>>>>
->>>>>>> Dunno :/
->>>>>>>
->>>>>>>> Any way I will enable this config option and will provide you the
->>> results.
->>>>>>>
->>>>>>> Ok, thanks!
->>>>>>
->>>>>> The following config is enabled by default on upstream
->>>>>> kernel(4.20-rc3) CONFIG_ARM_ARCH_TIMER_EVTSTREAM=y
->>>>>> CONFIG_ARM_ARCH_TIMER_OOL_WORKAROUND=y
->>>>>> CONFIG_FSL_ERRATUM_A008585=y
->>>>>> CONFIG_HISILICON_ERRATUM_161010101=y
->>>>>> CONFIG_ARM64_ERRATUM_858921=y
->>>>>>
->>>>>> For a quick testing,  I have activated the erratum using the
->>>>>> property
->>>>> "fsl,erratum-a008585" on device tree.
->>>>>> With this I confirm the issue is fixed.
->>>>>>
->>>>>> I have  some questions on this.
->>>>>> 1) Based  on the test result ,do you think renesas soc also
->>>>>> impacted by the
->>>>> ARM64_ERRATUM_858921?
->>>>>> 2) Is there any way to find, is this Erratum actually causing the
->>>>> asynchronous test to fail?
->>>>>
->>>>> I guess, you can hack the __fsl_a008585_read_reg macro and check if
->>>>> the invalid condition is reached.
->>>>>
->>>>> This thread https://lkml.org/lkml/2018/5/10/773 will give you all the
->>>>> answers you are looking for (well very likely).
->>>>>
->>>>> Let me know if it helped.
->>>>
->>>> In our case , Delta: 174760 ns
->>>>
->>>> 1530553351:205762284
->>>> 1530553351:205762404
->>>> --------------------
->>>> 1530553351:205951226
->>>> 1530553351:205776466
->>>> --------------------
->>>>
->>>> I have tried the workaround for ARM64_ERRATUM_858921, that also fixes
->>> the issue.
->>>>
->>>> But all the workaround disables ARM64 VDSO. How do we conclude that is
->>> it VDSO issue or ARM64_ERRATUM issue?
+Thanks!
+Maxime
 
-The VDSO is just a userspace proxy for the counter, and nothing else. If
-the counter is broken, we have no choice but to disable the VDSO and get
-everyone on the slow path.
-
->>>
->>> May be disable all errata and set vdso_default to false?
->>>
->>> [ ... ]
->>>
->>> -static bool vdso_default = true;
->>> +static bool vdso_default = false;
->>>
->>> [ ... ]
->>
->> I have disabled the  activation of errata from device tree and set vdso_default=false.
->> With this also it works fine. So looks like arm64 vdso is the issue in our case.
-
-That doesn't make much sense, as all it means is that you take an extra
-trap to access the exact same data.
-
->>
->> Do you agree with the conclusion?
-> 
-> I agree we have an element to investigate the issue. That is very
-> specific to this timer and a good knowledge of the internals is required.
-> 
-> Certainly Marc Zyngier or Mark Rutland can help here.
-> 
->> [    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=6
->> [    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
->> [    0.000000] arch_timer: cp15 timer(s) running at 8.32MHz (virt).
->> [    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x1eb398c07, max_idle_ns: 440795202503 ns
->> [    0.000004] sched_clock: 56 bits at 8MHz, resolution 120ns, wraps every 2199023255503ns
-
-Now that is a bit more interesting: How is this kernel booted? The fact
-that is uses the virtual timer and not the physical one makes me think
-that it is booted at EL1 instead of EL2. The £100 question is whether
-CNTVOFF_EL2 is consistently set to the same value across CPUs.
-
-Thanks,
-
-	M.
 -- 
-Jazz is not dead. It just smells funny...
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--flmo5uucax4cgdii--
