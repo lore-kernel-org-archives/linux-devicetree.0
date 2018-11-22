@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC PATCH v3 03/17] ARM: sunxi: add Allwinner
- ARMv5 SoCs
-Date: Thu, 22 Nov 2018 09:27:23 +0100
-Message-ID: <20181122082723.qi74rtamzjy5v2ci@flea>
+Subject: Re: [RFC PATCH v3 04/17] dt-bindings:
+ interrupt-controller: Add suniv interrupt-controller
+Date: Thu, 22 Nov 2018 09:27:41 +0100
+Message-ID: <20181122082741.5ojpeettl2vxowhh@flea>
 References: <cover.1542824904.git.mesihkilinc@gmail.com>
- <731846a31ad2c602ca4fcf1c417deace60c625b8.1542824904.git.mesihkilinc@gmail.com>
+ <d0942fe5b1bb83646af0fa1f475ac0b468e1612e.1542824904.git.mesihkilinc@gmail.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kllp6ig6zl5ugmrx"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB5WQ3HPQKGQEMPUHJWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="n2fjzipcvy4aohld"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBEGR3HPQKGQENMUUW5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <731846a31ad2c602ca4fcf1c417deace60c625b8.1542824904.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <d0942fe5b1bb83646af0fa1f475ac0b468e1612e.1542824904.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,23 +24,22 @@ Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreC
 List-Id: devicetree@vger.kernel.org
 
 
---kllp6ig6zl5ugmrx
+--n2fjzipcvy4aohld
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Wed, Nov 21, 2018 at 09:30:36PM +0300, Mesih Kilinc wrote:
-> Add option for Allwinner ARMv5 SoCs and SoC F1C100s (which has a die
-> used for many new F-series products, including F1C100A, F1C100s, F1C200s,
-> F1C500, F1C600).
+On Wed, Nov 21, 2018 at 09:30:37PM +0300, Mesih Kilinc wrote:
+> Add compatible string for Alwinner suniv F1C100s SoC interrupt
+> controller which is stripped version of sun4i
 > 
 > Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
 Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
-maxime
+Maxime
 
 -- 
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---kllp6ig6zl5ugmrx--
+--n2fjzipcvy4aohld--
