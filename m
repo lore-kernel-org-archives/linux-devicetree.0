@@ -1,99 +1,94 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 4/5] drm: rcar-du: Add R8A7744 support
-Date: Thu, 22 Nov 2018 15:59:32 +0000
-Message-ID: <TY1PR01MB17707049DE6A8FD71E032157C0DB0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1537553311-8831-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1537553311-8831-5-git-send-email-fabrizio.castro@bp.renesas.com>
- <5135719.5JoeYGyzrK@avalon>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC PATCH v3 05/17] irqchip/sun4i: add support for
+ suniv interrupt controller
+Date: Thu, 22 Nov 2018 16:59:44 +0100
+Message-ID: <20181122155944.vkx2u4iwwedheor2@flea>
+References: <cover.1542824904.git.mesihkilinc@gmail.com>
+ <08b40429e46626f4caf8e4d2287b5c4d354e3b7f.1542824904.git.mesihkilinc@gmail.com>
+ <20181122083547.srnopylueqx6p2qj@flea>
+ <20181122150200.p6e22sp3v4npb42w@ThinkPad>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5135719.5JoeYGyzrK@avalon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, David Airlie <airlied@linux.ie>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="h2z3qr6y2agvh63m"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB65E3PPQKGQEH2CFWZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20181122150200.p6e22sp3v4npb42w@ThinkPad>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Laurent,
 
-> From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Sent: 15 October 2018 23:25
-> Subject: Re: [PATCH 4/5] drm: rcar-du: Add R8A7744 support
->
-> Hi Fabrizio,
->
-> Thank you for the patch.
->
-> On Friday, 21 September 2018 21:08:30 EEST Fabrizio Castro wrote:
-> > From: Biju Das <biju.das@bp.renesas.com>
+--h2z3qr6y2agvh63m
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Thu, Nov 22, 2018 at 06:02:00PM +0300, Mesih Kilinc wrote:
+> > > diff --git a/drivers/irqchip/irq-sun4i.c b/drivers/irqchip/irq-sun4i.c
+> > > index e3e5b91..7ca4a4d 100644
+> > > --- a/drivers/irqchip/irq-sun4i.c
+> > > +++ b/drivers/irqchip/irq-sun4i.c
+> > > @@ -28,11 +28,21 @@
+> > >  #define SUN4I_IRQ_NMI_CTRL_REG		0x0c
+> > >  #define SUN4I_IRQ_PENDING_REG(x)	(0x10 + 0x4 * x)
+> > >  #define SUN4I_IRQ_FIQ_PENDING_REG(x)	(0x20 + 0x4 * x)
+> > > -#define SUN4I_IRQ_ENABLE_REG(x)		(0x40 + 0x4 * x)
+> > > -#define SUN4I_IRQ_MASK_REG(x)		(0x50 + 0x4 * x)
+> > > +#define SUN4I_IRQ_ENABLE_REG(x)		(irq_ic_data->enable_req_offset + 0x4 * x)
+> > > +#define SUN4I_IRQ_MASK_REG(x)		(irq_ic_data->mask_req_offset + 0x4 * x)
+> > 
+> > You shouldn't have all the values you use passed as argument, so
+> > irq_ic_data should be one of them here.
 > >
-> > Add support for the R8A7744 DU (which is very similar to the R8A7743 DU);
-> > it has 1 DPAD (RGB) output and 1 LVDS output.
-> >
-> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> > Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > ---
-> >  drivers/gpu/drm/rcar-du/rcar_du_drv.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> > b/drivers/gpu/drm/rcar-du/rcar_du_drv.c index c07d3f1..2c3d0e5 100644
-> > --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> > @@ -321,6 +321,7 @@ static const struct rcar_du_device_info
-> > rcar_du_r8a77970_info = {
-> >
-> >  static const struct of_device_id rcar_du_of_table[] = {
-> >  { .compatible = "renesas,du-r8a7743", .data = &rzg1_du_r8a7743_info },
-> > +{ .compatible = "renesas,du-r8a7744", .data = &rzg1_du_r8a7743_info },
-> >  { .compatible = "renesas,du-r8a7745", .data = &rzg1_du_r8a7745_info },
-> >  { .compatible = "renesas,du-r8a77470", .data = &rzg1_du_r8a77470_info },
-> >  { .compatible = "renesas,du-r8a7779", .data = &rcar_du_r8a7779_info },
 >
-> This looks good to me. I would also apply this change:
->
-> @@ -41,7 +41,7 @@ static const struct rcar_du_device_info rzg1_du_r8a7743_info
-> = {
->         .channels_mask = BIT(1) | BIT(0),
->         .routes = {
->                 /*
-> -                * R8A7743 has one RGB output and one LVDS output
-> +                * R8A774[34] has one RGB output and one LVDS output
->                  */
->                 [RCAR_DU_OUTPUT_DPAD0] = {
->                         .possible_crtcs = BIT(1) | BIT(0),
->
-> With this,
->
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->
-> There's no need to resubmit, I've applied the patch to my tree with the above
-> change.
+> Could you elaborate it a little bit?
 
-I was expecting to see this patch at least on linux-next by now but it looks like it's not in there, could you please double check what happened to it?
+You should change your macro to something like:
 
-Thanks,
-Fab
+SUN4I_IRQ_ENABLE_REG(data, x) ((data)->enable_req_offset + 0x4 * x)
 
->
-> --
-> Regards,
->
-> Laurent Pinchart
->
->
+That way, you are transparent about the parameters that the macro
+expects, and don't rely on some unwritten rule about the variable
+name.
 
+> > > +
+> > > +static int __init suniv_ic_of_init(struct device_node *node,
+> > > +				   struct device_node *parent)
+> > > +{
+> > > +	irq_ic_data = kzalloc(sizeof(struct sunxi_irq_chip_data), GFP_KERNEL);
+> > > +	if (!irq_ic_data) {
+> > > +		pr_err("kzalloc failed!\n");
+> > > +		return -ENOMEM;
+> > > +	}
+> > > +
+> > > +	irq_ic_data->enable_req_offset = SUNIV_IRQ_ENABLE_REG_OFFSET;
+> > > +	irq_ic_data->mask_req_offset = SUNIV_IRQ_MASK_REG_OFFSET;
+> > > +
+> > > +	return sun4i_of_init(node, parent);
+> > > +}
+> > > +
+> > > +IRQCHIP_DECLARE(allwinner_sunvi_ic, "allwinner,suniv-f1c100s-ic", suniv_ic_of_init);
+> > 
+> > You can even split that addition to a new patch as well.
+> 
+> OK. I will do 3 patches. First one will add a struct that holds only
+> base and domain. Second one will add register offsets to that struct. 
+> Third one will add f1c100s support. Is that ok?
 
+Sounds perfect :)
 
+Thanks!
+Maxime
 
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered No. 04586709.
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--h2z3qr6y2agvh63m--
