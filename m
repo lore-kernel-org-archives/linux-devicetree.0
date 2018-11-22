@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC PATCH v3 09/17] pinctrl: sunxi: add support
- for suniv F1C100s (newer F-series SoCs)
-Date: Thu, 22 Nov 2018 09:36:59 +0100
-Message-ID: <20181122083659.qajcd4w3azcdpn5y@flea>
+Subject: Re: [RFC PATCH v3 10/17] dt-bindings: clock: Add
+ Allwinner suniv F1C100s CCU
+Date: Thu, 22 Nov 2018 09:37:13 +0100
+Message-ID: <20181122083713.4ydi67wceer7rxvy@flea>
 References: <cover.1542824904.git.mesihkilinc@gmail.com>
- <fc20d96f5531d7d1eb5ce3d5cf920c8bf59cad58.1542824904.git.mesihkilinc@gmail.com>
+ <88a177299386b610d429d4c1eb2566727aef7b17.1542824904.git.mesihkilinc@gmail.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hpm4q25bdgcwew2c"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBSWV3HPQKGQEZGPAVHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="znerzhs2fc44yqkm"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBZGV3HPQKGQEIB7QLRY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <fc20d96f5531d7d1eb5ce3d5cf920c8bf59cad58.1542824904.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <88a177299386b610d429d4c1eb2566727aef7b17.1542824904.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,16 +24,13 @@ Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreC
 List-Id: devicetree@vger.kernel.org
 
 
---hpm4q25bdgcwew2c
+--znerzhs2fc44yqkm
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Wed, Nov 21, 2018 at 09:30:42PM +0300, Mesih Kilinc wrote:
-> The suniv F1C100s chip (several new F-series SoCs) of Allwinner has a
-> pin
-> controller like other SoCs from Allwinner.
-> 
-> Add support for it.
+On Wed, Nov 21, 2018 at 09:30:43PM +0300, Mesih Kilinc wrote:
+> Add compatiple string for Allwinner suniv F1C100s CCU.
+> Add clock and reset definitions.
 > 
 > Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
@@ -45,4 +42,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---hpm4q25bdgcwew2c--
+--znerzhs2fc44yqkm--
