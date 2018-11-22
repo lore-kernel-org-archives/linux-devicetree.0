@@ -1,212 +1,70 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v3 01/14] media: ov7670: split register setting from
- set_fmt() logic
-Date: Thu, 22 Nov 2018 19:37:30 +0100
-Message-ID: <20181122183730.GE3808@w540>
-References: <20181120100318.367987-1-lkundrak@v3.sk>
- <20181120100318.367987-2-lkundrak@v3.sk>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [RCF PATCH,v2,2/2] pwm: imx: Configure output to GPIO in
+ disabled state
+Date: Thu, 22 Nov 2018 20:03:21 +0100
+Message-ID: <20181122190321.ktqegs7kpvhcemvi@pengutronix.de>
+References: <20181109165555.vqbiwh4hlcnozdna@pengutronix.de>
+ <20181114113449.GB2620@ulmo>
+ <20181114215120.vddykljqyavm64wj@pengutronix.de>
+ <20181115152545.GA8611@ulmo>
+ <20181115203733.qvonika6yhn2bsnb@pengutronix.de>
+ <20181116083430.7f1d8452@ipc1.ka-ro>
+ <20181116082557.l2ljgu3hsu7tvdci@pengutronix.de>
+ <91640f9b-d219-553e-043a-c6151f2f68d7@ysoft.com>
+ <20181122162359.ufngpgxkenlmgqni@pengutronix.de>
+ <b332b319-cbb3-547f-c8b7-1dd275c1596d@ysoft.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pY3vCvL1qV+PayAL"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181120100318.367987-2-lkundrak@v3.sk>
+In-Reply-To: <b332b319-cbb3-547f-c8b7-1dd275c1596d@ysoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>
+To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
+Cc: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>, Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Linus Walleij <linus.walleij@linaro.org>, viresh kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Michal,
 
---pY3vCvL1qV+PayAL
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+On Thu, Nov 22, 2018 at 04:46:39PM +0000, Vokáč Michal wrote:
+> On 22.11.2018 17:23, Uwe Kleine-König wrote:
+> > On Thu, Nov 22, 2018 at 03:42:14PM +0000, Vokáč Michal wrote:
+> >> On 16.11.2018 09:25, Uwe Kleine-König wrote:
+> >>> On Fri, Nov 16, 2018 at 08:34:30AM +0100, Lothar Waßmann wrote:
+> >>>> No. You can disable the output driver via pinctrl, so that only the
+> >>>> selected pull-up/down is relevant. The pin function and GPIO register
+> >>>> settings don't matter at all in this case.
+> >>
+> >> Lothar, please can you be more specific how would you do that? IFAIK the
+> >> pull-up/down internal resistors have effect only if the pin is configured
+> >> as GPIO *input* (on i.MX6 at least). See the TRM, 29.4.2.2 Output driver:
+> >>
+> >>    "Internal pull-up, pull-down resistors, and pad keeper are disabled in
+> >>     output mode."
 
-Hi Lubomir,
+This would mean you'd have to rely on an external pull up for your use
+case. I wouldn't be surprised however if DSE=0 wouldn't count as "output
+mode". Given the reliability of NXP documentation I wouldn't bet neither
+on one nor the other possibility.
 
-On Tue, Nov 20, 2018 at 11:03:06AM +0100, Lubomir Rintel wrote:
-> This will allow us to restore the last set format after the device returns
-> from a power off.
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
->
-> ---
-> Changes since v2:
-> - This patch was added to the series
->
->  drivers/media/i2c/ov7670.c | 80 ++++++++++++++++++++++----------------
->  1 file changed, 46 insertions(+), 34 deletions(-)
->
-> diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
-> index bc68a3a5b4ec..ee2302fbdeee 100644
-> --- a/drivers/media/i2c/ov7670.c
-> +++ b/drivers/media/i2c/ov7670.c
-> @@ -240,6 +240,7 @@ struct ov7670_info {
->  	};
->  	struct v4l2_mbus_framefmt format;
->  	struct ov7670_format_struct *fmt;  /* Current format */
-> +	struct ov7670_win_size *wsize;
->  	struct clk *clk;
->  	struct gpio_desc *resetb_gpio;
->  	struct gpio_desc *pwdn_gpio;
-> @@ -1003,48 +1004,20 @@ static int ov7670_try_fmt_internal(struct v4l2_subdev *sd,
->  	return 0;
->  }
->
-> -/*
-> - * Set a format.
-> - */
-> -static int ov7670_set_fmt(struct v4l2_subdev *sd,
-> -		struct v4l2_subdev_pad_config *cfg,
-> -		struct v4l2_subdev_format *format)
-> +static int ov7670_apply_fmt(struct v4l2_subdev *sd)
->  {
-> -	struct ov7670_format_struct *ovfmt;
-> -	struct ov7670_win_size *wsize;
->  	struct ov7670_info *info = to_state(sd);
-> -#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
-> -	struct v4l2_mbus_framefmt *mbus_fmt;
-> -#endif
-> +	struct ov7670_win_size *wsize = info->wsize;
->  	unsigned char com7, com10 = 0;
->  	int ret;
->
-> -	if (format->pad)
-> -		return -EINVAL;
-> -
-> -	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
-> -		ret = ov7670_try_fmt_internal(sd, &format->format, NULL, NULL);
-> -		if (ret)
-> -			return ret;
-> -#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
-> -		mbus_fmt = v4l2_subdev_get_try_format(sd, cfg, format->pad);
-> -		*mbus_fmt = format->format;
-> -		return 0;
-> -#else
-> -		return -ENOTTY;
-> -#endif
-> -	}
-> -
-> -	ret = ov7670_try_fmt_internal(sd, &format->format, &ovfmt, &wsize);
-> -	if (ret)
-> -		return ret;
->  	/*
->  	 * COM7 is a pain in the ass, it doesn't like to be read then
->  	 * quickly written afterward.  But we have everything we need
->  	 * to set it absolutely here, as long as the format-specific
->  	 * register sets list it first.
->  	 */
-> -	com7 = ovfmt->regs[0].value;
-> +	com7 = info->fmt->regs[0].value;
->  	com7 |= wsize->com7_bit;
->  	ret = ov7670_write(sd, REG_COM7, com7);
->  	if (ret)
-> @@ -1066,7 +1039,7 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
->  	/*
->  	 * Now write the rest of the array.  Also store start/stops
->  	 */
-> -	ret = ov7670_write_array(sd, ovfmt->regs + 1);
-> +	ret = ov7670_write_array(sd, info->fmt->regs + 1);
->  	if (ret)
->  		return ret;
->
-> @@ -1081,8 +1054,6 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
->  			return ret;
->  	}
->
-> -	info->fmt = ovfmt;
-> -
->  	/*
->  	 * If we're running RGB565, we must rewrite clkrc after setting
->  	 * the other parameters or the image looks poor.  If we're *not*
-> @@ -1100,6 +1071,46 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
->  	return 0;
->  }
->
-> +/*
-> + * Set a format.
-> + */
-> +static int ov7670_set_fmt(struct v4l2_subdev *sd,
-> +		struct v4l2_subdev_pad_config *cfg,
-> +		struct v4l2_subdev_format *format)
-> +{
-> +	struct ov7670_info *info = to_state(sd);
-> +#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
-> +	struct v4l2_mbus_framefmt *mbus_fmt;
-> +#endif
-> +	int ret;
-> +
-> +	if (format->pad)
-> +		return -EINVAL;
-> +
-> +	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
-> +		ret = ov7670_try_fmt_internal(sd, &format->format, NULL, NULL);
-> +		if (ret)
-> +			return ret;
-> +#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
-> +		mbus_fmt = v4l2_subdev_get_try_format(sd, cfg, format->pad);
+> > So I'd expect this to really work on i.MX6 but not the earlier SoCs
+> > without a gpio specifier.
+> 
+> Maybe you would expect it to work but I already tested and measured
+> that weeks ago ;) It did not work.
 
-This #ifdef CONFIG_VIDEO_V4L2_SUBDEV_API seems to be quite in some
-drivers... Maybe stubs should be defined in v4l2-subdev.h.
+Which pin/gpio do we talk about? Which i.MX6 variant did you test this
+on? (Assuming i.MX6D or i.MX6Q and PAD_DISP0_DATA09, did you try setting
 
-Anway, that's unrealted, the patch seems fine to me:
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+	IOMUXC_SW_MUX_CTL_PAD_DISP0_DATA09 (0x020E0194) = 0x00000005
+	IOMUXC_SW_PAD_CTL_PAD_DISP0_DATA09 (0x020E04A8) = 0x0000b080
 
-Thanks
-  j
+and then play with GPIO 4.30 direction and output value?)
 
+Best regards
+Uwe
 
-> +		*mbus_fmt = format->format;
-> +		return 0;
-> +#else
-> +		return -ENOTTY;
-> +#endif
-> +	}
-> +
-> +	ret = ov7670_try_fmt_internal(sd, &format->format, &info->fmt, &info->wsize);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ov7670_apply_fmt(sd);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
->  static int ov7670_get_fmt(struct v4l2_subdev *sd,
->  			  struct v4l2_subdev_pad_config *cfg,
->  			  struct v4l2_subdev_format *format)
-> @@ -1847,6 +1858,7 @@ static int ov7670_probe(struct i2c_client *client,
->
->  	info->devtype = &ov7670_devdata[id->driver_data];
->  	info->fmt = &ov7670_formats[0];
-> +	info->wsize = &info->devtype->win_sizes[0];
->
->  	ov7670_get_default_format(sd, &info->format);
->
-> --
-> 2.19.1
->
-
---pY3vCvL1qV+PayAL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJb9vdqAAoJEHI0Bo8WoVY8HesP/RYmxydVq8sxBz/PBKcGfn2A
-b6u8wRoG6ZmZk0eAch04lWcRqA0XNqoVoTKzlf3B9ab2oaY9lxz/lVCxuLTQooq0
-TZD+qIKB23hs+59aNRWhSQWzNvxCUHyBKQS8gnb4RmKFh9QfmhhGrqJ7RS3ABITY
-cAFRaJPX6VpS+MlXMWRjUfee/HR5vX4FDVVURM75wBL/jwXRn1qrd9TJSsW+IgaN
-XhZtjOjROI4TRdG7z8adIsYitrXW1Amwjt5+KgSNSHp9sryv9cYQ4JxCDJBaKBzJ
-uJ7O+Ha+IOMkl+L5M33tVtzoNa90Rdc6hNG5KXov4ZkaN/h7NZ+hRDeMlAwu64t2
-UHz3bq3bJV+WuD475Yawl5KPDoeuY3lUgFt6MmWnzHYWSaxSVkqxRuOSL9Arz1Pq
-bi7FaMUiJOUp1cCGz3YeydqBvSCbxc4PYqgJdFSqW857F6wgIeqJH71KAzC8Movb
-LA9MIjw9JnijHyx9o6JOhiAR7aPTXSHrI/5oy5NruphUi4rBmKYvDcqcCagwsfAF
-d71PFlu+MfJ4Qd+tw5k92E6IX6pntbT5w1Sf5RH9mOwF+pHrnIkyl3j5lpTdtU8d
-/hXdwkV+q+eNQccvU4dt+t6jOeVRCVvh+I+ufZ2hhmn7cqG1+zF+Vemz6VF4MpqJ
-UkOh8EBrUPd0tYeO/G+P
-=4D55
------END PGP SIGNATURE-----
-
---pY3vCvL1qV+PayAL--
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
