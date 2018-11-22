@@ -1,177 +1,112 @@
-Return-Path: <SRS0=7Z3r=NS=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v3 2/2] dt-bindings: pinctrl: Add RZ/A2 pinctrl and GPIO
-Date: Wed,  7 Nov 2018 13:20:09 -0500
-Message-Id: <20181107182009.61718-3-chris.brandt@renesas.com>
-In-Reply-To: <20181107182009.61718-1-chris.brandt@renesas.com>
-References: <20181107182009.61718-1-chris.brandt@renesas.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: jacopo mondi <jacopo@jmondi.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=gcol=OB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr1410092.outbound.protection.outlook.com ([40.107.141.92]:17376
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387669AbeKVUKg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 22 Nov 2018 15:10:36 -0500
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH  1/4] dt-bindings: rtc: pcf85363: Document pcf85263
+ real-time clock
+Date: Thu, 22 Nov 2018 09:31:51 +0000
+Message-ID: <OSBPR01MB2103DCC6527012134BC86784B8DB0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1542626108-61344-1-git-send-email-biju.das@bp.renesas.com>
+ <1542626108-61344-2-git-send-email-biju.das@bp.renesas.com>
+ <20181121100452.f4vyzuol2r6bozza@verge.net.au>
+ <20181121100937.7savcuxtlxzjm6ld@verge.net.au>
+In-Reply-To: <20181121100937.7savcuxtlxzjm6ld@verge.net.au>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree binding documentation and header file for Renesas R7S9210
-(RZ/A2) SoCs.
+Hello Simon,
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
-v2:
- * Moved gpio-controller to required
- * Wrote a better description of what the sub-nodes are for
- * Added pinmux property description
- * Changed macro RZA2_PIN_ID to RZA2_PIN
----
- .../bindings/pinctrl/renesas,rza2-pinctrl.txt      | 88 ++++++++++++++++++++++
- include/dt-bindings/pinctrl/r7s9210-pinctrl.h      | 47 ++++++++++++
- 2 files changed, 135 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
- create mode 100644 include/dt-bindings/pinctrl/r7s9210-pinctrl.h
+Thanks for the feedback.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
-new file mode 100644
-index 000000000000..622d37a7225b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
-@@ -0,0 +1,88 @@
-+Renesas RZ/A2 combined Pin and GPIO controller
-+
-+The Renesas SoCs of the RZ/A2 series feature a combined Pin and GPIO controller.
-+Pin multiplexing and GPIO configuration is performed on a per-pin basis.
-+Each port features up to 8 pins, each of them configurable for GPIO
-+function (port mode) or in alternate function mode.
-+Up to 8 different alternate function modes exist for each single pin.
-+
-+Pin controller node
-+-------------------
-+
-+Required properties:
-+  - compatible: should be:
-+    - "renesas,r7s9210-pinctrl": for RZ/A2M
-+  - reg
-+    Address base and length of the memory area where the pin controller
-+    hardware is mapped to.
-+  - gpio-controller
-+    This pin controller also controls pins as GPIO
-+  - #gpio-cells
-+    Must be 2
-+  - gpio-ranges
-+    Expresses the total number GPIO ports/pins in this SoC
-+
-+
-+Example: Pin controller node for RZ/A2M SoC (r7s9210)
-+
-+	pinctrl: pin-controller@fcffe000 {
-+		compatible = "renesas,r7s9210-pinctrl";
-+		reg = <0xfcffe000 0x9D1>;
-+
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		gpio-ranges = <&pinctrl 0 0 176>;
-+	};
-+
-+Sub-nodes
-+---------
-+
-+The child nodes of the pin controller designate pins to be used for
-+specific peripheral functions or as GPIO.
-+
-+- Pin multiplexing sub-nodes:
-+  A pin multiplexing sub-node describes how to configure a set of
-+  (or a single) pin in some desired alternate function mode.
-+  The values for the pinmux properties are a combination of port name, pin
-+  number and the desired function index. Use the RZA2_PINMUX macro located
-+  in include/dt-bindings/pinctrl/r7s9210-pinctrl.h to easily define these.
-+  For assigning GPIO pins, use the macro RZA2_PIN_ID also in r7s9210-pinctrl.h
-+  to express the desired port pin.
-+
-+  Required properties:
-+    - pinmux:
-+      integer array representing pin number and pin multiplexing configuration.
-+      When a pin has to be configured in alternate function mode, use this
-+      property to identify the pin by its global index, and provide its
-+      alternate function configuration number along with it.
-+      When multiple pins are required to be configured as part of the same
-+      alternate function they shall be specified as members of the same
-+      argument list of a single "pinmux" property.
-+      Helper macros to ease assembling the pin index from its position
-+      (port where it sits on and pin number) and alternate function identifier
-+      are provided by the pin controller header file at:
-+      <include/dt-bindings/pinctrl/r7s9210-pinctrl.h>
-+      Integers values in "pinmux" argument list are assembled as:
-+      ((PORT * 8 + PIN) | MUX_FUNC << 16)
-+
-+  Example: Board specific pins configuration
-+
-+	&pinctrl {
-+		/* Serial Console */
-+		scif4_pins: serial4 {
-+			pinmux = <RZA2_PINMUX(P9, 0, 4)>,	/* TxD4 */
-+				 <RZA2_PINMUX(P9, 1, 4)>;	/* RxD4 */
-+		};
-+	};
-+
-+  Example: Assigning a GPIO:
-+
-+	leds {
-+		status = "okay";
-+		compatible = "gpio-leds";
-+
-+		led0 {
-+			/* P6_0 */
-+			gpios = <&pinctrl RZA2_PIN(P6, 0) GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-diff --git a/include/dt-bindings/pinctrl/r7s9210-pinctrl.h b/include/dt-bindings/pinctrl/r7s9210-pinctrl.h
-new file mode 100644
-index 000000000000..1e2671b61c0a
---- /dev/null
-+++ b/include/dt-bindings/pinctrl/r7s9210-pinctrl.h
-@@ -0,0 +1,47 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Defines macros and constants for Renesas RZ/A2 pin controller pin
-+ * muxing functions.
-+ */
-+#ifndef __DT_BINDINGS_PINCTRL_RENESAS_RZA2_H
-+#define __DT_BINDINGS_PINCTRL_RENESAS_RZA2_H
-+
-+#define RZA2_PINS_PER_PORT	8
-+
-+/* Port names as labeled in the Hardware Manual */
-+#define P0 0
-+#define P1 1
-+#define P2 2
-+#define P3 3
-+#define P4 4
-+#define P5 5
-+#define P6 6
-+#define P7 7
-+#define P8 8
-+#define P9 9
-+#define PA 10
-+#define PB 11
-+#define PC 12
-+#define PD 13
-+#define PE 14
-+#define PF 15
-+#define PG 16
-+#define PH 17
-+/* No I */
-+#define PJ 18
-+#define PK 19
-+#define PL 20
-+#define PM 21
-+
-+/*
-+ * Create the pin index from its bank and position numbers and store in
-+ * the upper 8 bits the alternate function identifier
-+ */
-+#define RZA2_PINMUX(b, p, f)	((b) * RZA2_PINS_PER_PORT + (p) | (f << 16))
-+
-+/*
-+ * Convert a port and pin label to its global pin index
-+ */
-+ #define RZA2_PIN(port, pin)	((port) * RZA2_PINS_PER_PORT + (pin))
-+
-+#endif /* __DT_BINDINGS_PINCTRL_RENESAS_RZA2_H */
--- 
-2.16.1
+> -----Original Message-----
+> From: Simon Horman <horms@verge.net.au>
+> Sent: 21 November 2018 10:10
+> To: Biju Das <biju.das@bp.renesas.com>
+> Cc: Alessandro Zummo <a.zummo@towertech.it>; Alexandre Belloni
+> <alexandre.belloni@bootlin.com>; Rob Herring <robh+dt@kernel.org>;
+> Mark Rutland <mark.rutland@arm.com>; linux-rtc@vger.kernel.org;
+> devicetree@vger.kernel.org; Geert Uytterhoeven
+> <geert+renesas@glider.be>; Chris Paterson
+> <Chris.Paterson2@renesas.com>; Fabrizio Castro
+> <fabrizio.castro@bp.renesas.com>; linux-renesas-soc@vger.kernel.org
+> Subject: Re: [PATCH 1/4] dt-bindings: rtc: pcf85363: Document pcf85263 re=
+al-
+> time clock
+>
+> On Wed, Nov 21, 2018 at 11:04:52AM +0100, Simon Horman wrote:
+> > On Mon, Nov 19, 2018 at 11:15:05AM +0000, Biju Das wrote:
+> > > This patch adds binding for NXP pcf85263 real-time clock. pcf85263
+> > > rtc is compatible with pcf85363 rtc except that pcf85363 has 64
+> > > bytes additional RAM.
+> >
+> > How about this:
+> >
+> > This patch adds binding for the NXP pcf85263 real-time clock.
+> >
+> > The pcf85263 RTC is compatible with the pcf85363 RTC. The difference
+> > between the parts is except that the pcf85363 has 64 bytes more RAM.
+>
+> The pcf85263 anRTC is compatible with the pcf85363 RTC.
+>
+> The difference between the pcf85263 and pcf85363 RTS is that the latter h=
+as
+> 64 bytes more RAM. This renders them incompatible from a DT point of view=
+.
+
+Will send V2 with the below changes.
+
+This patch adds binding for the NXP pcf85263 real-time clock.
+
+The pcf85263 RTC is compatible with the pcf85363 RTC. The difference
+between the parts is except that the pcf85363 has 64 bytes more RAM.
+
+The pcf85263 RTC is compatible with the pcf85363 RTC.
+
+The difference between the pcf85263 and pcf85363 RTC is that the latter has
+64 bytes more RAM. This renders them incompatible from a DT point of view.
+
+
+Regards,
+Biju
+> >
+> > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/rtc/pcf85363.txt | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > > b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > > index 76fdabc..94adc1c 100644
+> > > --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > > +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > > @@ -1,8 +1,8 @@
+> > > -NXP PCF85363 Real Time Clock
+> > > +NXP PCF85263/PCF85363 Real Time Clock
+> > >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+> > >
+> > >  Required properties:
+> > > -- compatible: Should contain "nxp,pcf85363".
+> > > +- compatible: Should contain "nxp,pcf85263" or "nxp,pcf85363".
+> > >  - reg: I2C address for chip.
+> > >
+> > >  Optional properties:
+> > > --
+> > > 2.7.4
+> > >
+> >
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
