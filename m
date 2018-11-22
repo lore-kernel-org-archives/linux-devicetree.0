@@ -1,76 +1,148 @@
-From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v10 2/4] ARM: dts: rockchip: add VPU device node for RK3288
-Date: Thu, 22 Nov 2018 19:29:13 +0900
-Message-ID: <CAAFQd5AsAsLbbJXN3+9urbZipcXn3WSpQp8G5r+Nj04wKpiy5w@mail.gmail.com>
-References: <20181121191652.22814-1-ezequiel@collabora.com>
- <20181121191652.22814-3-ezequiel@collabora.com>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH 3/6] devfreq: add support for suspend/resume of a
+ devfreq device
+Date: Thu, 22 Nov 2018 12:00:45 +0100
+Message-ID: <cce4f194-b574-a12c-e876-f11a6f245940@partner.samsung.com>
+References: <1542823301-23563-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20181121180204eucas1p1c5891d498aa59c0e10dd3ba4727a4382@eucas1p1.samsung.com>
+        <1542823301-23563-4-git-send-email-l.luba@partner.samsung.com>
+        <5BF61B3A.9050402@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20181121191652.22814-3-ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5BF61B3A.9050402@samsung.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Ezequiel,
 
-On Thu, Nov 22, 2018 at 4:17 AM Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
->
-> Add the Video Processing Unit node for RK3288 SoC.
->
-> Fix the VPU IOMMU node, which was disabled and lacking
-> its power domain property.
->
-> Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/rk3288.dtsi | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index 0840ffb3205c..40d203cdca09 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -1223,6 +1223,18 @@
->                 };
->         };
->
-> +       vpu: video-codec@ff9a0000 {
-> +               compatible = "rockchip,rk3288-vpu";
-> +               reg = <0x0 0xff9a0000 0x0 0x800>;
-> +               interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-> +                            <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-> +               interrupt-names = "vepu", "vdpu";
-> +               clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
-> +               clock-names = "aclk", "hclk";
-> +               power-domains = <&power RK3288_PD_VIDEO>;
-> +               iommus = <&vpu_mmu>;
-> +       };
-> +
->         vpu_mmu: iommu@ff9a0800 {
->                 compatible = "rockchip,iommu";
->                 reg = <0x0 0xff9a0800 0x0 0x100>;
-> @@ -1230,8 +1242,8 @@
->                 interrupt-names = "vpu_mmu";
->                 clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
->                 clock-names = "aclk", "iface";
-> +               power-domains = <&power RK3288_PD_VIDEO>;
->                 #iommu-cells = <0>;
-> -               status = "disabled";
->         };
->
->         hevc_mmu: iommu@ff9c0440 {
 
-Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+On 11/22/18 3:58 AM, Chanwoo Choi wrote:
+> On 2018년 11월 22일 03:01, Lukasz Luba wrote:
+>> The patch adds support for handling suspend/resume process.
+>> It uses atomic variables to make sure no race condition
+>> affects the process.
+>>
+>> The patch draws on Tobias Jakobi's work posted ~2 years ago, who tried to
+>> solve issue with devfreq device's frequency during suspend/resume.
+>> During the discussion on LKML some corner cases and comments appeared
+>> related to the design. This patch address them keeping in mind suggestions
+>> from Chanwoo Choi.
+> 
+> Please remove the duplicate information about patch history.
+> 
+>>
+>> Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+>> Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   drivers/devfreq/devfreq.c | 45 +++++++++++++++++++++++++++++++++++++++------
+>>   1 file changed, 39 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>> index cf9c643..7e09de8 100644
+>> --- a/drivers/devfreq/devfreq.c
+>> +++ b/drivers/devfreq/devfreq.c
+>> @@ -872,14 +872,33 @@ EXPORT_SYMBOL(devm_devfreq_remove_device);
+>>    */
+>>   int devfreq_suspend_device(struct devfreq *devfreq)
+>>   {
+>> -	if (!devfreq)
+>> -		return -EINVAL;
+>> +        int ret;
+> 
+> Move 'ret' definition under 'if (devfreq->suspend_freq) {'
+> because 'ret' is used if suspend_freq isn't zero.
+Not only there, 6 lines above 'ret' is used for 
+devfreq->governor->event_handler().
+> 
+>> +        unsigned long prev_freq;
+>> +        u32 flags = 0;
+>> +
+>> +        if (!devfreq)
+>> +                return -EINVAL;
+>> +
+>> +        if (devfreq->governor) {
+>> +		ret = devfreq->governor->event_handler(devfreq,
+>> +					DEVFREQ_GOV_SUSPEND, NULL);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>>   
+>> -	if (!devfreq->governor)
+>> -		return 0;
+>> +	if (devfreq->suspend_freq) {
+>> +		if (atomic_inc_return(&devfreq->suspend_count) > 1)
+>> +			return 0;
+>>   
+>> -	return devfreq->governor->event_handler(devfreq,
+>> -				DEVFREQ_GOV_SUSPEND, NULL);
+>> +		ret = devfreq_set_target(devfreq, devfreq->suspend_freq,
+>> +					 &prev_freq, flags);
+> 
+> Remove the 'prev_freq' parameter.
+OK
+> 
+>> +		if (ret)
+>> +			return ret;
+>> +
+>> +		devfreq->resume_freq = prev_freq;
+> 
+> As I commented on patch2, if devfreq_set_taget save the current frequency
+> to 'devfreq->resume_freq', this line is not needed.
+OK
+> 
+> 
+>> +	}
+>> +
+>> +        return 0;
+>>   }
+>>   EXPORT_SYMBOL(devfreq_suspend_device);
+>>   
+>> @@ -893,9 +912,23 @@ EXPORT_SYMBOL(devfreq_suspend_device);
+>>    */
+>>   int devfreq_resume_device(struct devfreq *devfreq)
+>>   {
+>> +        int ret;
+> 
+> Move 'ret' definition under 'if (devfreq->suspend_freq) {'
+> because 'ret' is used if suspend_freq isn't zero.
+OK
+> 
+>> +        unsigned long prev_freq;
+> 
+> Remove prev_freq variable which is not used on this function.
+> After calling devfreq_set_target, prev_freq is not used.
+OK
+> 
+>> +        u32 flags = 0;
+>> +
+>>   	if (!devfreq)
+>>   		return -EINVAL;
+>>   
+>> +	if (devfreq->suspend_freq) {
+>> +		if (atomic_dec_return(&devfreq->suspend_count) >= 1)
+>> +			return 0;
+>> +
+>> +		ret = devfreq_set_target(devfreq, devfreq->resume_freq,
+>> +					 &prev_freq, flags);
+> 
+> Remove the 'prev_freq' parameter.
+OK
+> 
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +
+>>   	if (!devfreq->governor)
+>>   		return 0;
+>>   
+>>
+> 
+> 
 
-Best regards,
-Tomasz
+Regards,
+Lukasz Luba
