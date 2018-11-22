@@ -1,58 +1,47 @@
-From: Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v3 3/3] dt-bindings: msm/disp: Introduce
- interconnect bindings for MDSS on SDM845
-Date: Thu, 22 Nov 2018 14:36:53 +0530
-Message-ID: <20181122090653.3523-4-skolluku@codeaurora.org>
-References: <20181122090653.3523-1-skolluku@codeaurora.org>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: Re: [PATCH v8 00/12] media: staging/imx7: add i.MX7 media driver
+Date: Thu, 22 Nov 2018 09:38:51 +0000
+Message-ID: <m34lc9moyc.fsf@linaro.org>
+References: <20181121111558.10838-1-rui.silva@linaro.org>
+ <18c5ad5c-e800-c317-4246-a8a207f3dff4@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181122090653.3523-1-skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-reply-to: <18c5ad5c-e800-c317-4246-a8a207f3dff4@xs4all.nl>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGludGVyY29ubmVjdCBwcm9wZXJ0aWVzIHN1Y2ggYXMgaW50ZXJjb25uZWN0IHByb3ZpZGVy
-IHNwZWNpZmllcgosIHRoZSBlZGdlIHNvdXJjZSBhbmQgZGVzdGluYXRpb24gcG9ydHMgd2hpY2gg
-YXJlIHJlcXVpcmVkIGJ5IHRoZQppbnRlcmNvbm5lY3QgQVBJIHRvIGNvbmZpZ3VyZSBpbnRlcmNv
-bm5lY3QgcGF0aCBmb3IgTURTUy4KCkNoYW5nZXMgaW4gdjI6CgktIG5vbmUKCkNoYW5nZXMgaW4g
-djM6CgktIFJlbW92ZSBjb21tb24gcHJvcGVydHkgZGVmaW5pdGlvbnMgKFJvYiBIZXJyaW5nKQoK
-U2lnbmVkLW9mZi1ieTogU3JhdmFudGhpIEtvbGx1a3VkdXJ1IDxza29sbHVrdUBjb2RlYXVyb3Jh
-Lm9yZz4KLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20v
-ZHB1LnR4dCB8IDkgKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspCgpk
-aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNt
-L2RwdS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20v
-ZHB1LnR4dAppbmRleCBhZDJlODgzMDMyNGUuLmQ3NWI0MzYwYTRiZSAxMDA2NDQKLS0tIGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RwdS50eHQKKysrIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RwdS50eHQKQEAg
-LTI4LDYgKzI4LDExIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6CiAtICNhZGRyZXNzLWNlbGxzOiBu
-dW1iZXIgb2YgYWRkcmVzcyBjZWxscyBmb3IgdGhlIE1EU1MgY2hpbGRyZW4uIFNob3VsZCBiZSAx
-LgogLSAjc2l6ZS1jZWxsczogU2hvdWxkIGJlIDEuCiAtIHJhbmdlczogcGFyZW50IGJ1cyBhZGRy
-ZXNzIHNwYWNlIGlzIHRoZSBzYW1lIGFzIHRoZSBjaGlsZCBidXMgYWRkcmVzcyBzcGFjZS4KKy0g
-aW50ZXJjb25uZWN0cyA6IGludGVyY29ubmVjdCBwYXRoIHNwZWNpZmllciBmb3IgTURTUyBhY2Nv
-cmRpbmcgdG8KKyAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVyY29ubmVj
-dC9pbnRlcmNvbm5lY3QudHh0LiBTaG91bGQgYmUKKyAgMiBwYXRocyBjb3JyZXNwb25kaW5nIHRv
-IDIgQVhJIHBvcnRzLgorLSBpbnRlcmNvbm5lY3QtbmFtZXMgOiBNRFNTIHdpbGwgaGF2ZSAyIHBv
-cnQgbmFtZXMgdG8gZGlmZmVyZW50aWF0ZSBiZXR3ZWVuIHRoZQorICAyIGludGVyY29ubmVjdCBw
-YXRocyBkZWZpbmVkIHdpdGggaW50ZXJjb25uZWN0IHNwZWNpZmllci4KIAogT3B0aW9uYWwgcHJv
-cGVydGllczoKIC0gYXNzaWduZWQtY2xvY2tzOiBsaXN0IG9mIGNsb2NrIHNwZWNpZmllcnMgZm9y
-IGNsb2NrcyBuZWVkaW5nIHJhdGUgYXNzaWdubWVudApAQCAtODYsNiArOTEsMTAgQEAgRXhhbXBs
-ZToKIAkJaW50ZXJydXB0LWNvbnRyb2xsZXI7CiAJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47CiAK
-KwkJaW50ZXJjb25uZWN0cyA9IDwmcW5vYyAzOCAmcW5vYyA1MTI+LAorCQkJCTwmcW5vYyAzOSAm
-cW5vYyA1MTI+OworCQlpbnRlcmNvbm5lY3QtbmFtZXMgPSAicG9ydDAiLCAicG9ydDEiOworCiAJ
-CWlvbW11cyA9IDwmYXBwc19pb21tdSAwPjsKIAogCQkjYWRkcmVzcy1jZWxscyA9IDwyPjsKLS0g
-ClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUg
-Q29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2pl
-Y3QKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVk
-cmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+Hi Hans,
+On Wed 21 Nov 2018 at 11:53, Hans Verkuil wrote:
+> On 11/21/2018 12:15 PM, Rui Miguel Silva wrote:
+>> Hi,
+>> This series introduces the Media driver to work with the i.MX7 
+>> SoC. it uses the
+>> already existing imx media core drivers but since the i.MX7, 
+>> contrary to
+>> i.MX5/6, do not have an IPU and because of that some changes in 
+>> the imx media
+>> core are made along this series to make it support that case.
+>
+> Can you run scripts/checkpatch.pl --strict over these patches? I 
+> get too
+> many messages from it. Most should be easy to fix.
+
+Yeah, I will fix as much as I think is sane, some I will leave it 
+to
+make code more readable.
+
+---
+Cheers,
+	Rui
