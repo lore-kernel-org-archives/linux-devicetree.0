@@ -1,26 +1,58 @@
-Return-Path: <SRS0=Z+zc=OI=verge.net.au=horms@kernel.org>
-Date: Thu, 29 Nov 2018 13:50:16 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/7] ARM: dts: r8a7744-iwg20m: Add iWave RZ/G1N Qseven SOM
-Message-ID: <20181129125016.vgz66rzhmsncqjbu@verge.net.au>
+Return-Path: <SRS0=JPrT=OB=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 1/7] ARM: dts: r8a7744-iwg20m: Add iWave RZ/G1N Qseven SOM
+Date: Thu, 22 Nov 2018 09:14:29 +0000
+Message-Id: <1542878075-61314-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com>
 References: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com>
- <1542878075-61314-2-git-send-email-biju.das@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1542878075-61314-2-git-send-email-biju.das@bp.renesas.com>
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Nov 22, 2018 at 09:14:29AM +0000, Biju Das wrote:
-> Add support for iWave RZ/G1N Qseven System On Module.
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Add support for iWave RZ/G1N Qseven System On Module.
 
-Thanks,
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+---
+ arch/arm/boot/dts/r8a7744-iwg20m.dtsi | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a7744-iwg20m.dtsi
 
-This looks fine to me but I will wait to see if there are other reviews
-before applying.
-
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+diff --git a/arch/arm/boot/dts/r8a7744-iwg20m.dtsi b/arch/arm/boot/dts/r8a7744-iwg20m.dtsi
+new file mode 100644
+index 0000000..6166ae0
+--- /dev/null
++++ b/arch/arm/boot/dts/r8a7744-iwg20m.dtsi
+@@ -0,0 +1,31 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the iWave RZ/G1N Qseven SOM
++ *
++ * Copyright (C) 2018 Renesas Electronics Corp.
++ */
++
++#include "r8a7744.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	compatible = "iwave,g20m", "renesas,r8a7744";
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0 0x40000000 0 0x40000000>;
++	};
++
++	reg_3p3v: 3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++};
++
++&extal_clk {
++	clock-frequency = <20000000>;
++};
+-- 
+2.7.4
