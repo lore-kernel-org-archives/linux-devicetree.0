@@ -1,8 +1,7 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v9 13/13] media: MAINTAINERS: add entry for Freescale i.MX7
- media driver
-Date: Thu, 22 Nov 2018 15:18:34 +0000
-Message-ID: <20181122151834.6194-14-rui.silva@linaro.org>
+Subject: [PATCH v9 12/13] media: video-mux: add bayer formats
+Date: Thu, 22 Nov 2018 15:18:33 +0000
+Message-ID: <20181122151834.6194-13-rui.silva@linaro.org>
 References: <20181122151834.6194-1-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,35 +21,43 @@ To: sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Hans
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add maintainer entry for the imx7 media csi, mipi csis driver,
-dt-bindings and documentation.
+Add non vendor bayer formats to the  allowed format array.
 
 Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/media/platform/video-mux.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0abecc528dac..afa2ad3c5600 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9134,6 +9134,17 @@ T:	git git://linuxtv.org/media_tree.git
- S:	Maintained
- F:	drivers/media/platform/imx-pxp.[ch]
- 
-+MEDIA DRIVERS FOR FREESCALE IMX7
-+M:	Rui Miguel Silva <rmfrfs@gmail.com>
-+L:	linux-media@vger.kernel.org
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/media/imx7-csi.txt
-+F:	Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
-+F:	Documentation/media/v4l-drivers/imx7.rst
-+F:	drivers/staging/media/imx/imx7-media-csi.c
-+F:	drivers/staging/media/imx/imx7-mipi-csis.c
-+
- MEDIA DRIVERS FOR HELENE
- M:	Abylay Ospan <aospan@netup.ru>
- L:	linux-media@vger.kernel.org
+diff --git a/drivers/media/platform/video-mux.c b/drivers/media/platform/video-mux.c
+index c33900e3c23e..0ba30756e1e4 100644
+--- a/drivers/media/platform/video-mux.c
++++ b/drivers/media/platform/video-mux.c
+@@ -263,6 +263,26 @@ static int video_mux_set_format(struct v4l2_subdev *sd,
+ 	case MEDIA_BUS_FMT_UYYVYY16_0_5X48:
+ 	case MEDIA_BUS_FMT_JPEG_1X8:
+ 	case MEDIA_BUS_FMT_AHSV8888_1X32:
++	case MEDIA_BUS_FMT_SBGGR8_1X8:
++	case MEDIA_BUS_FMT_SGBRG8_1X8:
++	case MEDIA_BUS_FMT_SGRBG8_1X8:
++	case MEDIA_BUS_FMT_SRGGB8_1X8:
++	case MEDIA_BUS_FMT_SBGGR10_1X10:
++	case MEDIA_BUS_FMT_SGBRG10_1X10:
++	case MEDIA_BUS_FMT_SGRBG10_1X10:
++	case MEDIA_BUS_FMT_SRGGB10_1X10:
++	case MEDIA_BUS_FMT_SBGGR12_1X12:
++	case MEDIA_BUS_FMT_SGBRG12_1X12:
++	case MEDIA_BUS_FMT_SGRBG12_1X12:
++	case MEDIA_BUS_FMT_SRGGB12_1X12:
++	case MEDIA_BUS_FMT_SBGGR14_1X14:
++	case MEDIA_BUS_FMT_SGBRG14_1X14:
++	case MEDIA_BUS_FMT_SGRBG14_1X14:
++	case MEDIA_BUS_FMT_SRGGB14_1X14:
++	case MEDIA_BUS_FMT_SBGGR16_1X16:
++	case MEDIA_BUS_FMT_SGBRG16_1X16:
++	case MEDIA_BUS_FMT_SGRBG16_1X16:
++	case MEDIA_BUS_FMT_SRGGB16_1X16:
+ 		break;
+ 	default:
+ 		sdformat->format.code = MEDIA_BUS_FMT_Y8_1X8;
 -- 
 2.19.1
