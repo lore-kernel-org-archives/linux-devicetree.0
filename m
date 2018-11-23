@@ -1,83 +1,97 @@
-From: Auger Eric <eric.auger@redhat.com>
-Subject: Re: [PATCH v5 0/7] Add virtio-iommu driver
-Date: Fri, 23 Nov 2018 09:28:51 +0100
-Message-ID: <250a38a9-e6b1-35ae-9261-eb8aab123f43@redhat.com>
-References: <20181122193801.50510-1-jean-philippe.brucker@arm.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 2/6] phy: add A3700 COMPHY support
+Date: Fri, 23 Nov 2018 09:30:38 +0100
+Message-ID: <20181123093038.20278133@xps13>
+References: <20181122210420.14861-1-miquel.raynal@bootlin.com>
+        <20181122210420.14861-3-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <virtio-dev-return-5023-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
-Sender: <virtio-dev@lists.oasis-open.org>
-List-Post: <mailto:virtio-dev@lists.oasis-open.org>
-List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
-List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
-List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
-In-Reply-To: <20181122193801.50510-1-jean-philippe.brucker@arm.com>
-Content-Language: en-US
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, virtualization@lists.linux-foundation.org, virtio-dev@lists.oasis-open.org, joro@8bytes.org, mst@redhat.com
-Cc: jasowang@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com, bhelgaas@google.com, frowand.list@gmail.com, kvmarm@lists.cs.columbia.edu, tnowicki@caviumnetworks.com, kevin.tian@intel.com, marc.zyngier@arm.com, robin.murphy@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, bharat.bhushan@nxp.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181122210420.14861-3-miquel.raynal@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Evan Wang <xswang@marvell.com>, "Nadav Haklai (Marvell)" <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean,
+Hello,
 
-On 11/22/18 8:37 PM, Jean-Philippe Brucker wrote:
-> Implement the virtio-iommu driver, following specification v0.9 [1].
-> 
-> Since v4 [2] I fixed the issues reported by Eric, and added Reviewed-by
-> from Eric and Rob. Thanks!
-> 
-> I changed the specification to fix one inconsistency discussed in v4.
-> That the device fills the probe buffer with zeroes is now a "SHOULD"
-> instead of a "MAY", since it's the only way for the driver to know if
-> the device wrote the status. Existing devices already do this. In
-> addition the device now needs to fill the three padding bytes at the
-> tail with zeroes.
-> 
-> You can find Linux driver and kvmtool device on branches
-> virtio-iommu/v0.9 [3]. I also lightly tested with Eric's latest QEMU
-> device [4].
-> 
-> [1] Virtio-iommu specification v0.9, sources, pdf and diff from v0.8
->     git://linux-arm.org/virtio-iommu.git virtio-iommu/v0.9
->     http://jpbrucker.net/virtio-iommu/spec/v0.9/virtio-iommu-v0.9.pdf
->     http://jpbrucker.net/virtio-iommu/spec/diffs/virtio-iommu-pdf-diff-v0.8-v0.9.pdf
-> 
-> [2] [PATCH v4 0/7] Add virtio-iommu driver
->     https://lists.linuxfoundation.org/pipermail/iommu/2018-November/031074.html
-> 
-> [3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.9
->     git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.9
-> 
-> [4] [RFC v9 00/17] VIRTIO-IOMMU device
->     https://www.mail-archive.com/qemu-devel@nongnu.org/msg575578.html
-> 
-> Jean-Philippe Brucker (7):
->   dt-bindings: virtio-mmio: Add IOMMU description
->   dt-bindings: virtio: Add virtio-pci-iommu node
->   of: Allow the iommu-map property to omit untranslated devices
->   PCI: OF: Initialize dev->fwnode appropriately
->   iommu: Add virtio-iommu driver
->   iommu/virtio: Add probe request
->   iommu/virtio: Add event queue
-> 
->  .../devicetree/bindings/virtio/iommu.txt      |   66 +
->  .../devicetree/bindings/virtio/mmio.txt       |   30 +
->  MAINTAINERS                                   |    7 +
->  drivers/iommu/Kconfig                         |   11 +
->  drivers/iommu/Makefile                        |    1 +
->  drivers/iommu/virtio-iommu.c                  | 1157 +++++++++++++++++
->  drivers/of/base.c                             |   10 +-
->  drivers/pci/of.c                              |    7 +
->  include/uapi/linux/virtio_ids.h               |    1 +
->  include/uapi/linux/virtio_iommu.h             |  161 +++
->  10 files changed, 1448 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
->  create mode 100644 drivers/iommu/virtio-iommu.c
->  create mode 100644 include/uapi/linux/virtio_iommu.h
-> 
-for the whole series
-Tested-by: Eric Auger <eric.auger@redhat.com>
++ Adding people concerned by this driver that I forgot when initially
+  sending the driver, will update the Cc: list if there is a v2.
 
-Thanks
+One question below.
 
-Eric
+Miquel Raynal <miquel.raynal@bootlin.com> wrote on Thu, 22 Nov 2018
+22:04:16 +0100:
+
+> Add a driver to support COMPHY, a hardware block providing shared
+> serdes PHYs on Marvell Armada 3700. This driver uses SMC calls and
+> rely on having an up-to-date firmware.
+> 
+> SATA, PCie and USB3 host mode have been tested successfully with an
+> ESPRESSObin. SGMII mode cannot be tested with this platform.
+> 
+> Co-Developed-by: Evan Wang <xswang@marvell.com>
+> Signed-off-by: Evan Wang <xswang@marvell.com>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  drivers/phy/marvell/Kconfig                  |  10 +
+>  drivers/phy/marvell/Makefile                 |   1 +
+>  drivers/phy/marvell/phy-mvebu-a3700-comphy.c | 276 +++++++++++++++++++
+>  3 files changed, 287 insertions(+)
+>  create mode 100644 drivers/phy/marvell/phy-mvebu-a3700-comphy.c
+
+[...]
+
+> +
+> +static int mvebu_a3700_comphy_power_on(struct phy *phy)
+> +{
+> +	struct mvebu_a3700_comphy_lane *lane = phy_get_drvdata(phy);
+> +	u32 fw_param;
+> +	int fw_mode;
+> +
+> +	fw_mode = mvebu_a3700_comphy_get_fw_mode(lane->id, lane->port,
+> +						 lane->mode);
+> +	if (fw_mode < 0) {
+> +		dev_err(lane->dev, "invalid COMPHY mode\n");
+> +		return fw_mode;
+> +	}
+> +
+> +	switch (lane->mode) {
+> +	case PHY_MODE_USB_HOST_SS:
+> +		dev_dbg(lane->dev, "set lane %d to USB3 host mode\n", lane->id);
+> +		fw_param = COMPHY_FW_MODE(fw_mode);
+> +		break;
+> +	case PHY_MODE_SATA:
+> +		dev_dbg(lane->dev, "set lane %d to SATA mode\n", lane->id);
+> +		fw_param = COMPHY_FW_MODE(fw_mode);
+> +		break;
+> +	case PHY_MODE_SGMII:
+> +		dev_dbg(lane->dev, "set lane %d to SGMII mode\n", lane->id);
+> +		fw_param = COMPHY_FW_NET(fw_mode, lane->port,
+> +					 COMPHY_FW_SPEED_1_25G);
+> +		break;
+> +	case PHY_MODE_PCIE:
+> +		dev_dbg(lane->dev, "set lane %d to PCIe mode\n", lane->id);
+> +		fw_param = COMPHY_FW_PCIE(fw_mode, lane->port,
+> +					  COMPHY_FW_SPEED_5G,
+> +					  phy->attrs.bus_width);
+> +		break;
+> +	default:
+> +		dev_err(lane->dev, "unsupported PHY mode (%d)\n", lane->mode);
+> +		return -ENOTSUPP;
+> +	}
+> +
+> +	return mvebu_a3700_comphy_smc(COMPHY_SIP_POWER_ON, lane->id, fw_param);
+
+This call might fail because the firmware is not up-to-date. In this
+case, I wonder what is the appropriate behavior. Here I just return the
+error; this means drivers may fail to probe when enabling their PHY.
+
+Shall I ignore a "not supported by the firmware" code and return 0 to
+the caller (with a printed warning) so it will continue probing? Doing
+so is lying as the PHY might not be configured as expected and S2RAM
+will always fail in this case. 
+
+Thanks,
+Miquèl
