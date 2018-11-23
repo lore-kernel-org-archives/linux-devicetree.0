@@ -1,37 +1,35 @@
-From: Aisheng DONG <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V6 0/2] can: flexcan: add can self wakeup support
-Date: Fri, 23 Nov 2018 08:56:26 +0000
-Message-ID: <AM0PR04MB42115E03F6ABAAE1B1C1631480D40@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20181123083304.3232-1-qiangqing.zhang@nxp.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH 11/17] soc: ti: pruss: add pruss_get()/put() API
+Date: Fri, 23 Nov 2018 10:58:58 +0200
+Message-ID: <5863d95e-fec2-71f9-03c6-544d23369bef@ti.com>
+References: <1542886753-17625-1-git-send-email-rogerq@ti.com>
+ <1542886753-17625-12-git-send-email-rogerq@ti.com>
+ <CAK8P3a0Nvdtq-TjK+1CGaOB+voyr-eky+h01n5i0z=8rB9PaHw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181123083304.3232-1-qiangqing.zhang@nxp.com>
+In-Reply-To: <CAK8P3a0Nvdtq-TjK+1CGaOB+voyr-eky+h01n5i0z=8rB9PaHw@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joakim Zhang <qiangqing.zhang@nxp.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "mkl@pengutronix.de" <mkl@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "wg@grandegger.com" <wg@grandegger.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Arnd Bergmann <arnd@arndb.de>, Roger Quadros <rogerq@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Beno??t Cousson <bcousson@baylibre.com>, Santosh Shilimkar <ssantosh@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Suman Anna <s-anna@ti.com>, Sekhar Nori <nsekhar@ti.com>, nsaulnier@ti.com, jreeder@ti.com, Murali Karicheri <m-karicheri2@ti.com>, woods.technical@gmail.com, linux-omap <linux-omap@vger.kernel.org>, linux-remoteproc@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Joakim Zhang
-> Sent: Friday, November 23, 2018 4:35 PM
-> To: linux-can@vger.kernel.org; mkl@pengutronix.de; robh+dt@kernel.org
-> Cc: wg@grandegger.com; mark.rutland@arm.com; devicetree@vger.kernel.org;
-> linux-kernel@vger.kernel.org; dl-linux-imx <linux-imx@nxp.com>; Joakim
-> Zhang <qiangqing.zhang@nxp.com>
-> Subject: [PATCH V6 0/2] can: flexcan: add can self wakeup support
->=20
-> This patch series intends to add CAN self wakeup support. The CAN control=
-ler
-> can parse "fsl,stop-mode" property from device tree to enable self wakeup
-> feature.
->=20
+On 23/11/2018 10:20, Arnd Bergmann wrote:
+> On Thu, Nov 22, 2018 at 12:41 PM Roger Quadros <rogerq@ti.com> wrote:
+> 
+>> +
+>> +       if (IS_ERR_OR_NULL(rproc))
+>> +               return ERR_PTR(-EINVAL);
+> 
+> 
+> Any usage of  IS_ERR_OR_NULL() tends to be an indication of a badly
+> designed API. Please change this to allow only one of the two to be passed
+> around.
 
-As I'm already authored, this is just to tell this version looks good to me=
-.
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Should this be deprecated then?
 
-Regards
-Dong Aisheng
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
