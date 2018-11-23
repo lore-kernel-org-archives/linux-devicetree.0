@@ -1,66 +1,49 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH] ARM: dts: imx50: Fix memory node duplicaton
-Date: Fri, 23 Nov 2018 11:25:19 -0200
-Message-ID: <1542979519-31747-1-git-send-email-festevam@gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v9 1/8] ASoC: dt-bindings:
+ sun50i-codec-analog: Add headphone amp regulator supply
+Date: Fri, 23 Nov 2018 13:31:26 +0000
+Message-ID: <20181123133126.GF2089@sirena.org.uk>
+References: <20181122102325.29495-1-wens@csie.org>
+ <20181122102325.29495-2-wens@csie.org>
+ <20181122153241.lzrwhkewg5q4hy2c@flea>
+Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="tWc6BTYdre847SEs"
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBBNUC4DPQKGQE3W34SKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20181122153241.lzrwhkewg5q4hy2c@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-imx50-evk has duplicate memory nodes:
 
-- One coming from the board dts file: memory@
+--tWc6BTYdre847SEs
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-- One coming from the imx50.dtsi file.
+On Thu, Nov 22, 2018 at 04:32:41PM +0100, Maxime Ripard wrote:
+> On Thu, Nov 22, 2018 at 06:23:18PM +0800, Chen-Yu Tsai wrote:
 
-Fix the duplication by removing the memory node from the dtsi file
-and by adding 'device_type = "memory";' in the board dts.
+> > +- cpvdd-supply: Regulator supply for the headphone amplifier
 
-Reported-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
- arch/arm/boot/dts/imx50-evk.dts | 1 +
- arch/arm/boot/dts/imx50.dtsi    | 2 --
- 2 files changed, 1 insertion(+), 2 deletions(-)
+> I guess we should make this optional, since even if it's missing, it's
+> going to create a dummy regulator. and that allows to have backward
+> compatibility.
 
-diff --git a/arch/arm/boot/dts/imx50-evk.dts b/arch/arm/boot/dts/imx50-evk.dts
-index 682a997..a25da41 100644
---- a/arch/arm/boot/dts/imx50-evk.dts
-+++ b/arch/arm/boot/dts/imx50-evk.dts
-@@ -12,6 +12,7 @@
- 	compatible = "fsl,imx50-evk", "fsl,imx50";
- 
- 	memory@70000000 {
-+		device_type = "memory";
- 		reg = <0x70000000 0x80000000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx50.dtsi b/arch/arm/boot/dts/imx50.dtsi
-index 95b7fba..8be4ff4 100644
---- a/arch/arm/boot/dts/imx50.dtsi
-+++ b/arch/arm/boot/dts/imx50.dtsi
-@@ -22,10 +22,8 @@
- 	 * The decompressor and also some bootloaders rely on a
- 	 * pre-existing /chosen node to be available to insert the
- 	 * command line and merge other ATAGS info.
--	 * Also for U-Boot there must be a pre-existing /memory node.
- 	 */
- 	chosen {};
--	memory { device_type = "memory"; };
- 
- 	aliases {
- 		ethernet0 = &fec;
--- 
-2.7.4
+Regulators should never be marked as optional unless they can be
+physically absent.  It is true that Linux has code to handle partially
+defined device trees but we shouldn't rely on other OSs having similar
+code and it's better practice to have board device trees be fully
+specified, it means that if we need the regulator information for some
+future thing it's more likely to be there and it's less likely that bugs
+which do things like cause the regulator to be powered off incorrectly
+will be introduced in future.
+--tWc6BTYdre847SEs--
