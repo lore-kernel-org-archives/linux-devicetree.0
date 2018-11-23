@@ -1,99 +1,61 @@
-From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
-Subject: Re: [RCF PATCH,v2,2/2] pwm: imx: Configure output to GPIO in disabled
- state
-Date: Fri, 23 Nov 2018 15:15:11 +0000
-Message-ID: <9da8c6d9-d97c-200c-d8e4-2eb9f73eedc5@ysoft.com>
-References: <20181109165555.vqbiwh4hlcnozdna@pengutronix.de>
- <20181114113449.GB2620@ulmo> <20181114215120.vddykljqyavm64wj@pengutronix.de>
- <20181115152545.GA8611@ulmo> <20181115203733.qvonika6yhn2bsnb@pengutronix.de>
- <20181116083430.7f1d8452@ipc1.ka-ro>
- <20181116082557.l2ljgu3hsu7tvdci@pengutronix.de>
- <91640f9b-d219-553e-043a-c6151f2f68d7@ysoft.com>
- <20181122162359.ufngpgxkenlmgqni@pengutronix.de>
- <b332b319-cbb3-547f-c8b7-1dd275c1596d@ysoft.com>
- <20181122190321.ktqegs7kpvhcemvi@pengutronix.de>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 1/7] ata: libahci_platform: comply to PHY framework
+Date: Fri, 23 Nov 2018 16:18:06 +0100
+Message-ID: <20181123151806.GC30913@lunn.ch>
+References: <20181123101556.29888-1-miquel.raynal@bootlin.com>
+ <20181123101556.29888-2-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181122190321.ktqegs7kpvhcemvi@pengutronix.de>
-Content-Language: en-US
-Content-ID: <5589E540D28C4D4E9600DF710858549B@eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
-Cc: =?utf-8?B?TG90aGFyIFdhw59tYW5u?= <LW@KARO-electronics.de>, Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Linus Walleij <linus.walleij@linaro.org>, viresh kumar <viresh.kumar@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20181123101556.29888-2-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jens Axboe <axboe@kernel.dk>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, linux-pm@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-ide@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjIuMTEuMjAxOCAyMDowMywgVXdlIEtsZWluZS1Lw7ZuaWcgd3JvdGU6DQo+IE9uIFRodSwg
-Tm92IDIyLCAyMDE4IGF0IDA0OjQ2OjM5UE0gKzAwMDAsIFZva8OhxI0gTWljaGFsIHdyb3RlOg0K
-Pj4gT24gMjIuMTEuMjAxOCAxNzoyMywgVXdlIEtsZWluZS1Lw7ZuaWcgd3JvdGU6DQo+Pj4gT24g
-VGh1LCBOb3YgMjIsIDIwMTggYXQgMDM6NDI6MTRQTSArMDAwMCwgVm9rw6HEjSBNaWNoYWwgd3Jv
-dGU6DQo+Pj4+IE9uIDE2LjExLjIwMTggMDk6MjUsIFV3ZSBLbGVpbmUtS8O2bmlnIHdyb3RlOg0K
-Pj4+Pj4gT24gRnJpLCBOb3YgMTYsIDIwMTggYXQgMDg6MzQ6MzBBTSArMDEwMCwgTG90aGFyIFdh
-w59tYW5uIHdyb3RlOg0KPj4+Pj4+IE5vLiBZb3UgY2FuIGRpc2FibGUgdGhlIG91dHB1dCBkcml2
-ZXIgdmlhIHBpbmN0cmwsIHNvIHRoYXQgb25seSB0aGUNCj4+Pj4+PiBzZWxlY3RlZCBwdWxsLXVw
-L2Rvd24gaXMgcmVsZXZhbnQuIFRoZSBwaW4gZnVuY3Rpb24gYW5kIEdQSU8gcmVnaXN0ZXINCj4+
-Pj4+PiBzZXR0aW5ncyBkb24ndCBtYXR0ZXIgYXQgYWxsIGluIHRoaXMgY2FzZS4NCj4+Pj4NCj4+
-Pj4gTG90aGFyLCBwbGVhc2UgY2FuIHlvdSBiZSBtb3JlIHNwZWNpZmljIGhvdyB3b3VsZCB5b3Ug
-ZG8gdGhhdD8gSUZBSUsgdGhlDQo+Pj4+IHB1bGwtdXAvZG93biBpbnRlcm5hbCByZXNpc3RvcnMg
-aGF2ZSBlZmZlY3Qgb25seSBpZiB0aGUgcGluIGlzIGNvbmZpZ3VyZWQNCj4+Pj4gYXMgR1BJTyAq
-aW5wdXQqIChvbiBpLk1YNiBhdCBsZWFzdCkuIFNlZSB0aGUgVFJNLCAyOS40LjIuMiBPdXRwdXQg
-ZHJpdmVyOg0KPj4+Pg0KPj4+PiAgICAgIkludGVybmFsIHB1bGwtdXAsIHB1bGwtZG93biByZXNp
-c3RvcnMsIGFuZCBwYWQga2VlcGVyIGFyZSBkaXNhYmxlZCBpbg0KPj4+PiAgICAgIG91dHB1dCBt
-b2RlLiINCj4gDQo+IFRoaXMgd291bGQgbWVhbiB5b3UnZCBoYXZlIHRvIHJlbHkgb24gYW4gZXh0
-ZXJuYWwgcHVsbCB1cCBmb3IgeW91ciB1c2UNCj4gY2FzZS4gSSB3b3VsZG4ndCBiZSBzdXJwcmlz
-ZWQgaG93ZXZlciBpZiBEU0U9MCB3b3VsZG4ndCBjb3VudCBhcyAib3V0cHV0DQo+IG1vZGUiLiBH
-aXZlbiB0aGUgcmVsaWFiaWxpdHkgb2YgTlhQIGRvY3VtZW50YXRpb24gSSB3b3VsZG4ndCBiZXQg
-bmVpdGhlcg0KPiBvbiBvbmUgbm9yIHRoZSBvdGhlciBwb3NzaWJpbGl0eS4NCg0KWWVhaCwgdGhl
-IE5YUCBkb2N1bWVudGF0aW9uIHNvbWV0aW1lcyBkb2VzIG5vdCByZWFsbHkgbWF0Y2ggcmVhbGl0
-eS4NCk15IHVzZSBjYXNlIGlzIGJhc2VkIG9uIHRoZSBmYWN0IHRoYXQgSSBjb25maWd1cmUgdGhl
-IHBpbiBhcyBpbnB1dCBpbg0KdGhlIGRyaXZlci4gVGhlbiBpdCB3b3JrcyBqdXN0IGZpbmUuDQoN
-Cj4+PiBTbyBJJ2QgZXhwZWN0IHRoaXMgdG8gcmVhbGx5IHdvcmsgb24gaS5NWDYgYnV0IG5vdCB0
-aGUgZWFybGllciBTb0NzDQo+Pj4gd2l0aG91dCBhIGdwaW8gc3BlY2lmaWVyLg0KPj4NCj4+IE1h
-eWJlIHlvdSB3b3VsZCBleHBlY3QgaXQgdG8gd29yayBidXQgSSBhbHJlYWR5IHRlc3RlZCBhbmQg
-bWVhc3VyZWQNCj4+IHRoYXQgd2Vla3MgYWdvIDspIEl0IGRpZCBub3Qgd29yay4NCj4gDQo+IFdo
-aWNoIHBpbi9ncGlvIGRvIHdlIHRhbGsgYWJvdXQ/IFdoaWNoIGkuTVg2IHZhcmlhbnQgZGlkIHlv
-dSB0ZXN0IHRoaXMNCj4gb24/IChBc3N1bWluZyBpLk1YNkQgb3IgaS5NWDZRIGFuZCBQQURfRElT
-UDBfREFUQTA5LCBkaWQgeW91IHRyeSBzZXR0aW5nDQo+IA0KPiAJSU9NVVhDX1NXX01VWF9DVExf
-UEFEX0RJU1AwX0RBVEEwOSAoMHgwMjBFMDE5NCkgPSAweDAwMDAwMDA1DQo+IAlJT01VWENfU1df
-UEFEX0NUTF9QQURfRElTUDBfREFUQTA5ICgweDAyMEUwNEE4KSA9IDB4MDAwMGIwODANCj4gDQo+
-IGFuZCB0aGVuIHBsYXkgd2l0aCBHUElPIDQuMzAgZGlyZWN0aW9uIGFuZCBvdXRwdXQgdmFsdWU/
-KQ0KDQpNeSB0ZXN0IHNldHVwIGlzIGFzIGZvbGxvd3M6DQotIFNvQyBpcyBpLk1YNkRMIG9yIGku
-TVg2UyAtIEkgaGF2ZSB0aHJlZSBib2FyZCB2YXJpYW50cyBpbiB0b3RhbC4NCi0gUGluIHVzZWQg
-Zm9yIFBXTS9HUElPIGlzIFBBRF9HUElPOS4NCi0gVGhlIHBpbiBpcyBub3QgY29ubmVjdGVkIHRv
-IGFueSBjaXJjdWl0LiBKdXN0IGEgdGVzdCBwb2ludC4NCi0gcGluY3RybCBzZXR1cCBpbiBEVDoN
-CiAgIC0gZm9yICJwd20iOg0KICAgICAtIGZzbCxwaW5zID0gPE1YNlFETF9QQURfR1BJT185X19Q
-V00xX09VVCAweDg+DQogICAgIC0gSU9NVVhDX1NXX01VWF9DVExfUEFEX0dQSU8wOSA9IDB4MDAw
-MDAwMDQNCiAgICAgLSBJT01VWENfU1dfUEFEX0NUTF9QQURfR1BJTzA5ID0gMHgwMDAwMDAwOA0K
-DQogICAtIGZvciAiZ3BpbyI6DQogICAgLSBmc2wscGlucyA9IDxNWDZRRExfUEFEX0dQSU9fOV9f
-R1BJTzFfSU8wOSAweGIwMDA+DQogICAgLSBJT01VWENfU1dfTVVYX0NUTF9QQURfR1BJTzA5ID0g
-MHgwMDAwMDAwNQ0KICAgIC0gSU9NVVhDX1NXX1BBRF9DVExfUEFEX0dQSU8wOSA9IDB4MDAwMGIw
-MDANCg0KVGVzdCBzY2VuYXJpbzoNCg0KLSBJbiBib290bG9hZGVyIGNvbmZpZ3VyZSB0aGUgcGlu
-IGFzIEdQSU8gb3V0cHV0LCBzZXQgaXQgTE9XICgwVikuDQogICBJIHNldCBpdCBMT1cgdG8gc3Rh
-cnQgaW4gdGhlIG9wb3NpdGUgc3RhdGUgdGhhbiBJIHdhbnQgdG8gZW5kIHVwIGluLg0KLSBCb290
-IExpbnV4DQotIFVzZSBzeXNmcyB0byBjb25maWd1cmUgdGhlIFBXTSB0byBwcm9kdWNlIHNvbWUg
-c2lnbmFsLg0KLSBJbiB0aGUgUFdNIGRyaXZlciBzZWxlY3QgdGhlICJwd20iIHBpbmN0cmwgc3Rh
-dGUuDQotIE1lYXN1cmUgdGhlIG91dHB1dCAtIGV4cGVjdGVkIHdhdmVmb3JtIG9uIHRoZSBzY29w
-ZS4NCi0gVXNlIHN5c2ZzIHRvIHN0b3AgdGhlIFBXTSAiZWNobyAwID4gL3N5cy9jbGFzcy9wd20v
-cHdtY2hpcDAvcHdtMC9lbmFibGXCsA0KLSBJbiB0aGUgUFdNIGRyaXZlciBzZWxlY3QgdGhlICJn
-cGlvIiBwaW5jdHJsIHN0YXRlLg0KLSBUaGVuIGluIHRoZSBQV00gZHJpdmVyOg0KDQphKSBub24t
-d29ya2luZyB2YXJpYW50DQotIERvIG5vdCByZXF1ZXN0IHRoZSBHUElPIC0gc28gZG8gbm90IHRv
-dWNoIGl0cyBwYWQgY29udHJvbCByZWcuDQogICBJdCBpcyBzZXQgYXMgb3V0cHV0IGZyb20gdGhl
-IGJvb3Rsb2FkZXIsIGRhdGEgcmVnaXN0ZXIgPSAwLg0KLSBNZWFzdXJlIHZvbHRhZ2Ugb24gdGhl
-IG91dHB1dA0KICAgLSBhZ2FpbnN0IEdORCA9IDBWDQogICAtIGFnYWluc3QgVkNDID0gMFYNCi0g
-TWVhc3VyZSByZXNpc3RhbmNlIGFnYWluc3QgVkNDOiBIaS1aDQoNClRoZSBwaW4gaXMgaW4gSGkt
-WiBtb2RlLiBUaGF0IGlzIGZpbmUgYnV0IHRoYXQgZG9lcyBub3Qgc2F0aXNmeSBhbnkNCmxvZ2lj
-IGxldmVsLg0KDQpiKSB3b3JraW5nIHZhcmlhbnQNCi0gUmVxdWVzdCB0aGUgR1BJTywgY29uZmln
-dXJlIGl0IGFzIGlucHV0Lg0KLSBNZWFzdXJlIHZvbHRhZ2Ugb24gdGhlIG91dHB1dA0KICAgLSBh
-Z2FpbnN0IEdORCA9IFZDQyAoMy4zVikNCiAgIC0gYWdhaW5zdCBWQ0MgPSAwVg0KLSBNZWFzdXJl
-IHJlc2lzdGFuY2UgYWdhaW5zdCBWQ0MgPSA5MS4xa09obQ0KDQpUaGUgcHVsbC11cCBpcyBhY3Rp
-dmUuDQoNCkkgY2FuIHJlcGVhdCB0aGUgcmVzdWx0cyBvbiBib3RoIGkuTVg2REwgYW5kIGkuTVg2
-UyBvbiBwd20xIGFuZCBwd200Lg0KQWxsIHB1bGwtdXAgYW5kIHB1bGwtZG93biBjb21iaW5hdGlv
-bnMgZ2F2ZSBtZSB0aGUgZXhwZWN0ZWQgcmVzdWx0cw0Kb25seSBpZiB0aGUgcGluIGlzIGNvbmZp
-Z3VyZWQgYXMgaW5wdXQuIFNvIGlmIEkgcmVwZWF0IHRoZSB0ZXN0IGFuZA0KZG8gbm90IHRvdWNo
-IHRoZSBwaW4gaW4gYm9vdGxvYWRlciBhdCBhbGwsIGl0IHdvcmtzIGFzIHdlbGwgZXZlbiBpZg0K
-SSBkbyBub3QgcmVxdWVzdC9jb25maWd1cmUgdGhlIEdQSU8gaW4gdGhlIFBXTSBkcml2ZXIuDQoN
-CkJ1dCB3ZSBjYW4gbm90IHJlbHkgb24gdGhlIGZhY3QgdGhhdCB0aGUgcGluIGlzIGNvcnJlY3Rs
-eSBjb25maWd1cmVkDQpmcm9tIGJvb3Rsb2FkZXIgb3IgdGhhdCBpdCBpcyBpbiB0aGUgYWZ0ZXIt
-cmVzZXQgc3RhdGUuIEl0IHNob3VsZA0KanVzdCB3b3JrIHJlZ2FyZGxlc3Mgb2Ygd2hhdCBzdGF0
-ZSBpdCB3YXMgbGVmdCBpbi4NCg0KQmVzdCByZWdhcmRzLA0KTWljaGFsDQo=
+On Fri, Nov 23, 2018 at 11:15:50AM +0100, Miquel Raynal wrote:
+> Current implementation of the libahci does not take into account the
+> new PHY framework. Correct the situation by adding a call to
+> phy_set_mode() before phy_power_on() and by adding calls to
+> ahci_platform_enable/disable_phys() at suspend/resume_host() time.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  drivers/ata/libahci_platform.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
+> index 4b900fc659f7..9f33f72b674b 100644
+> --- a/drivers/ata/libahci_platform.c
+> +++ b/drivers/ata/libahci_platform.c
+> @@ -56,6 +56,12 @@ static int ahci_platform_enable_phys(struct ahci_host_priv *hpriv)
+>  		if (rc)
+>  			goto disable_phys;
+>  
+> +		rc = phy_set_mode(hpriv->phys[i], PHY_MODE_SATA);
+> +		if (rc) {
+> +			phy_exit(hpriv->phys[i]);
+> +			goto disable_phys;
+> +		}
+
+Hi Miquel
+
+Russell King wrote a comphy driver for the Armada 3XX family. It only
+supports network PHYs. Did you check it does the right thing when
+passed PHY_MODE_SATA? This is slightly different to Hans's comment, in
+that i expect phy_set_mode() is implemented for the comphy driver, but
+it might not understand PHY_MODE_SATA and return an error?
+
+Maybe you should look at rc and keep going if EOPNOTSUPP is returned?
+
+      Andrew
