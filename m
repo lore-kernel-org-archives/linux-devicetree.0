@@ -1,107 +1,71 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 01/10] mailbox: Support blocking transfers in atomic
- context
-Date: Fri, 23 Nov 2018 12:56:17 +0100
-Message-ID: <20181123115617.GB31881@ulmo>
-References: <20181112151853.29289-1-thierry.reding@gmail.com>
- <20181112151853.29289-2-thierry.reding@gmail.com>
- <CABb+yY3HwvG6sSKnweiDpyg85Fk8Q9hOVaF-s7gv4RDzEoaGqA@mail.gmail.com>
- <20181120152907.GA28796@ulmo> <20181121142740.GA29704@ulmo>
- <CABb+yY0nH3Su6a11TZLJf=CCpD+gTpqUkLnRhpy4MUwNJk5prw@mail.gmail.com>
- <20181122084712.GA5741@ulmo> <20181123111700.GA31881@ulmo>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 4/5] drm: rcar-du: Add R8A7744 support
+Date: Fri, 23 Nov 2018 14:05:23 +0200
+Message-ID: <2739044.1unFEStFin@avalon>
+References: <1537553311-8831-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <5135719.5JoeYGyzrK@avalon>
+ <TY1PR01MB17707049DE6A8FD71E032157C0DB0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7688473310539915483=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181123111700.GA31881@ulmo>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, mliljeberg@nvidia.com, Mikko Perttunen <mperttunen@nvidia.com>, talho@nvidia.com, linux-serial@vger.kernel.org, jslaby@suse.com, linux-tegra@vger.kernel.org, ppessi@nvidia.com, Jon Hunter <jonathanh@nvidia.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <TY1PR01MB17707049DE6A8FD71E032157C0DB0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, David Airlie <airlied@linux.ie>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============7688473310539915483==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="H1spWtNR+x+ondvy"
-Content-Disposition: inline
-
-
---H1spWtNR+x+ondvy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Nov 23, 2018 at 12:17:00PM +0100, Thierry Reding wrote:
-> On Thu, Nov 22, 2018 at 09:47:12AM +0100, Thierry Reding wrote:
-> [...]
-> > Perhaps you'd be less concerned about such a change if it was perhaps
-> > more explicit? Just throwing ideas around, I think something that could
-> > also work is if we explicitly add a mbox_flush() function that would
-> > basically be calling ->flush(). That way users of the mailbox can make
-> > their requirement very explicit. I haven't actually tested that, but I
-> > think it would work. Does that sound more acceptable to you?
->=20
-> I tried implementing the explicit flushing on top of this series and it
-> would look roughly like the below. What do you think?
->=20
-> Thierry
->=20
-> --->8---
-> diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-[...]
-> @@ -184,9 +185,6 @@ static int tegra_tcu_probe(struct platform_device *pd=
-ev)
->  		return -ENOMEM;
-> =20
->  	tcu->tx_client.dev =3D &pdev->dev;
-> -	tcu->tx_client.tx_block =3D true;
-> -	tcu->tx_client.tx_tout =3D 10000;
-> -	tcu->rx_client.dev =3D &pdev->dev;
-
-Somehow this line ended up being removed in the diff, but it's actually
-required. Only tx_block and tx_tout should be removed in this hunk.
-
-Thierry
-
---H1spWtNR+x+ondvy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlv36t8ACgkQ3SOs138+
-s6E8ow/8Cap/d4F5/GkXfvoUcXHP0iD8f4o+DHQrCG4JD1giLjiwel5cPEsknocp
-3cO9j2ZsqcwzZiQzEjxRUC2N1q+1hZNMnzWKqAFmrryqtaggS1fP9Nkn8JIfGfgk
-GsJPzBdIzBuNuvhWKqx5t4Lr0LWgGNAjs4A67ICLeKIHe4Xm3QubfrNNRhFlV7pt
-Ui/7DpZSvruq3EkQ1ZB41ltksRPyPpRf0sQlKol6PN1u78ptIpd3IDI6rGnO3B8s
-oWFkiuArBtuOP6i6V+pduUP9g9sD0PpV/lm76jdSGzk4iEfK/tmtNcZfn3N0R1cD
-yTPXw1uAs4vhM9GwD0YBWJ/jhsBgb86YdC/IOjzn0evv/Vwoh5jtQIcyIwa5IHUu
-rF8p/ttWoLySc+rTEhBYg8YgRJTyj1iIPiahCe4HpiF/yVqBp5HL1ffIFQinxz+B
-7GAy1P/hOt2OksjaP/kOM/N9aX0XYKzlS2VrfM9bUks69ZcjC2cce2mG0XEWhHeR
-gRFOyxIhRzreXrsdCO/UoxB+0ntp5NihZTXxRaEVYLTQZATyRPsV1jDPA2pAynnB
-/DNHEcwfoZUyeCq0UMLifWstLSVyoJfIIaOvan0vN1JKlXNkMtXvj+bS+LoXhMsH
-pdmcSaIBFgYDI50mDCzKe+0tP+Q93Qe1gqhCu6yG1Lu7Tu+hvKw=
-=zANt
------END PGP SIGNATURE-----
-
---H1spWtNR+x+ondvy--
-
-
---===============7688473310539915483==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7688473310539915483==--
+SGkgRmFicml6aW8sCgpPbiBUaHVyc2RheSwgMjIgTm92ZW1iZXIgMjAxOCAxNzo1OTozMiBFRVQg
+RmFicml6aW8gQ2FzdHJvIHdyb3RlOgo+IE9uIDE1IE9jdG9iZXIgMjAxOCAyMzoyNSBMYXVyZW50
+IFBpbmNoYXJ0IHdyb3RlOgo+ID4gT24gRnJpZGF5LCAyMSBTZXB0ZW1iZXIgMjAxOCAyMTowODoz
+MCBFRVNUIEZhYnJpemlvIENhc3RybyB3cm90ZToKPiA+PiBGcm9tOiBCaWp1IERhcyA8YmlqdS5k
+YXNAYnAucmVuZXNhcy5jb20+Cj4gPj4gCj4gPj4gQWRkIHN1cHBvcnQgZm9yIHRoZSBSOEE3NzQ0
+IERVICh3aGljaCBpcyB2ZXJ5IHNpbWlsYXIgdG8gdGhlIFI4QTc3NDMKPiA+PiBEVSk7Cj4gPj4g
+aXQgaGFzIDEgRFBBRCAoUkdCKSBvdXRwdXQgYW5kIDEgTFZEUyBvdXRwdXQuCj4gPj4gCj4gPj4g
+U2lnbmVkLW9mZi1ieTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPgo+ID4+IFJl
+dmlld2VkLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNv
+bT4KPiA+PiAtLS0KPiA+PiAKPiA+PiAgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9k
+cnYuYyB8IDEgKwo+ID4+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPiA+PiAKPiA+
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9kcnYuYwo+ID4+
+IGIvZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9kcnYuYyBpbmRleCBjMDdkM2YxLi4y
+YzNkMGU1IDEwMDY0NAo+ID4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVf
+ZHJ2LmMKPiA+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2Rydi5jCj4g
+Pj4gQEAgLTMyMSw2ICszMjEsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHJjYXJfZHVfZGV2aWNl
+X2luZm8KPiA+PiByY2FyX2R1X3I4YTc3OTcwX2luZm8gPSB7Cj4gPj4gIHN0YXRpYyBjb25zdCBz
+dHJ1Y3Qgb2ZfZGV2aWNlX2lkIHJjYXJfZHVfb2ZfdGFibGVbXSA9IHsKPiA+PiAgeyAuY29tcGF0
+aWJsZSA9ICJyZW5lc2FzLGR1LXI4YTc3NDMiLCAuZGF0YSA9ICZyemcxX2R1X3I4YTc3NDNfaW5m
+byB9LAo+ID4+ICt7IC5jb21wYXRpYmxlID0gInJlbmVzYXMsZHUtcjhhNzc0NCIsIC5kYXRhID0g
+JnJ6ZzFfZHVfcjhhNzc0M19pbmZvIH0sCj4gPj4gIHsgLmNvbXBhdGlibGUgPSAicmVuZXNhcyxk
+dS1yOGE3NzQ1IiwgLmRhdGEgPSAmcnpnMV9kdV9yOGE3NzQ1X2luZm8gfSwKPiA+PiAgeyAuY29t
+cGF0aWJsZSA9ICJyZW5lc2FzLGR1LXI4YTc3NDcwIiwgLmRhdGEgPSAmcnpnMV9kdV9yOGE3NzQ3
+MF9pbmZvCj4gPj4gIH0sCj4gPj4gIHsgLmNvbXBhdGlibGUgPSAicmVuZXNhcyxkdS1yOGE3Nzc5
+IiwgLmRhdGEgPSAmcmNhcl9kdV9yOGE3Nzc5X2luZm8gfSwKPiA+IAo+ID4gVGhpcyBsb29rcyBn
+b29kIHRvIG1lLiBJIHdvdWxkIGFsc28gYXBwbHkgdGhpcyBjaGFuZ2U6Cj4gPiAKPiA+IEBAIC00
+MSw3ICs0MSw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcmNhcl9kdV9kZXZpY2VfaW5mbwo+ID4g
+cnpnMV9kdV9yOGE3NzQzX2luZm8gPSB7Cj4gPiAgICAgICAgIC5jaGFubmVsc19tYXNrID0gQklU
+KDEpIHwgQklUKDApLAo+ID4gICAgICAgICAucm91dGVzID0gewo+ID4gICAgICAgICAgICAgICAg
+IC8qCj4gPiAtICAgICAgICAgICAgICAgICogUjhBNzc0MyBoYXMgb25lIFJHQiBvdXRwdXQgYW5k
+IG9uZSBMVkRTIG91dHB1dAo+ID4gKyAgICAgICAgICAgICAgICAqIFI4QTc3NFszNF0gaGFzIG9u
+ZSBSR0Igb3V0cHV0IGFuZCBvbmUgTFZEUyBvdXRwdXQKPiA+ICAgICAgICAgICAgICAgICAgKi8K
+PiA+ICAgICAgICAgICAgICAgICBbUkNBUl9EVV9PVVRQVVRfRFBBRDBdID0gewo+ID4gICAgICAg
+ICAgICAgICAgICAgICAgICAgLnBvc3NpYmxlX2NydGNzID0gQklUKDEpIHwgQklUKDApLAo+ID4g
+Cj4gPiBXaXRoIHRoaXMsCj4gPiAKPiA+IFJldmlld2VkLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxs
+YXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+Cj4gPiAKPiA+IFRoZXJlJ3Mgbm8gbmVl
+ZCB0byByZXN1Ym1pdCwgSSd2ZSBhcHBsaWVkIHRoZSBwYXRjaCB0byBteSB0cmVlIHdpdGggdGhl
+Cj4gPiBhYm92ZSBjaGFuZ2UuCj4gCj4gSSB3YXMgZXhwZWN0aW5nIHRvIHNlZSB0aGlzIHBhdGNo
+IGF0IGxlYXN0IG9uIGxpbnV4LW5leHQgYnkgbm93IGJ1dCBpdCBsb29rcwo+IGxpa2UgaXQncyBu
+b3QgaW4gdGhlcmUsIGNvdWxkIHlvdSBwbGVhc2UgZG91YmxlIGNoZWNrIHdoYXQgaGFwcGVuZWQg
+dG8gaXQ/CgpJJ3ZlIHNlbnQgdGhlIFItQ2FyIERVIHY0LjIxIHB1bGwgcmVxdWVzdCB0b2RheSwg
+aXQgc2hvdWxkIGVuZCB1cCBpbiBsaW51eC0KbmV4dCBpbiB0aGUgbmVhciBmdXR1cmUuCgotLSAK
+UmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVsCg==
