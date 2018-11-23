@@ -1,451 +1,189 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [RFC PATCH v2 06/15] usb:cdns3: Adds Host support
-Date: Fri, 23 Nov 2018 16:23:00 +0200
-Message-ID: <5BF80D44.2050600@ti.com>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
- <1542535751-16079-7-git-send-email-pawell@cadence.com>
+From: Philippe Schenker <dev@pschenker.ch>
+Subject: [PATCH v3 3/4] iio: adc: add STMPE ADC devicetree bindings
+Date: Fri, 23 Nov 2018 15:24:10 +0100
+Message-ID: <20181123142411.8921-3-dev@pschenker.ch>
+References: <20181123142411.8921-1-dev@pschenker.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542535751-16079-7-git-send-email-pawell@cadence.com>
+In-Reply-To: <20181123142411.8921-1-dev@pschenker.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, adouglas@cadence.com, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
+To: jic23@kernel.org, marcel.ziswiler@toradex.com, stefan@agner.ch
+Cc: Max Krummenacher <max.krummenacher@toradex.com>, Philippe Schenker <philippe.schenker@toradex.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Alexandre Torgue <alexandre.torgue@st.com>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, Lars-Peter Clausen <lars@metafoo.de>
 List-Id: devicetree@vger.kernel.org
 
-On 18/11/18 12:09, Pawel Laszczak wrote:
-> Patch adds host-export.h and host.c file and mplements functions that
-> allow to initialize, start and stop XHCI host driver.
-> 
-> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
-> ---
->  drivers/usb/cdns3/Kconfig       |  10 ++
->  drivers/usb/cdns3/Makefile      |   1 +
->  drivers/usb/cdns3/core.c        |   7 +-
->  drivers/usb/cdns3/host-export.h |  30 ++++
->  drivers/usb/cdns3/host.c        | 256 ++++++++++++++++++++++++++++++++
->  5 files changed, 302 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/usb/cdns3/host-export.h
->  create mode 100644 drivers/usb/cdns3/host.c
-> 
-> diff --git a/drivers/usb/cdns3/Kconfig b/drivers/usb/cdns3/Kconfig
-> index eb22a8692991..d92bc3d68eb0 100644
-> --- a/drivers/usb/cdns3/Kconfig
-> +++ b/drivers/usb/cdns3/Kconfig
-> @@ -10,6 +10,16 @@ config USB_CDNS3
->  
->  if USB_CDNS3
->  
-> +config USB_CDNS3_HOST
-> +        bool "Cadence USB3 host controller"
-> +        depends on USB_XHCI_HCD
-> +        help
-> +          Say Y here to enable host controller functionality of the
-> +          cadence driver.
-> +
-> +          Host controller is compliance with XHCI so it will use
-> +          standard XHCI driver.
-> +
->  config USB_CDNS3_PCI_WRAP
->  	tristate "PCIe-based Platforms"
->  	depends on USB_PCI && ACPI
-> diff --git a/drivers/usb/cdns3/Makefile b/drivers/usb/cdns3/Makefile
-> index e779b2a2f8eb..976117ba67ff 100644
-> --- a/drivers/usb/cdns3/Makefile
-> +++ b/drivers/usb/cdns3/Makefile
-> @@ -2,4 +2,5 @@ obj-$(CONFIG_USB_CDNS3)			+= cdns3.o
->  obj-$(CONFIG_USB_CDNS3_PCI_WRAP)	+= cdns3-pci.o
->  
->  cdns3-y					:= core.o drd.o
-> +cdns3-$(CONFIG_USB_CDNS3_HOST)          += host.o
->  cdns3-pci-y		 		:= cdns3-pci-wrap.o
-> diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
-> index dbee4325da7f..4cb820be9ff3 100644
-> --- a/drivers/usb/cdns3/core.c
-> +++ b/drivers/usb/cdns3/core.c
-> @@ -17,6 +17,7 @@
->  
->  #include "gadget.h"
->  #include "core.h"
-> +#include "host-export.h"
->  #include "drd.h"
->  
->  static inline struct cdns3_role_driver *cdns3_get_current_role_driver(struct cdns3 *cdns)
-> @@ -98,7 +99,8 @@ static int cdns3_core_init_role(struct cdns3 *cdns)
->  	}
->  
->  	if (dr_mode == USB_DR_MODE_OTG || dr_mode == USB_DR_MODE_HOST) {
-> -		//TODO: implements host initialization
-> +		if (cdns3_host_init(cdns))
-> +			dev_info(dev, "doesn't support host\n");
+From: Stefan Agner <stefan@agner.ch>
 
-dev_err()
+This adds the devicetree bindings for the STMPE ADC.
 
-And you need to error out with error code.
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+---
 
->  	}
->  
->  	if (dr_mode == USB_DR_MODE_OTG || dr_mode == USB_DR_MODE_PERIPHERAL) {
-> @@ -142,7 +144,7 @@ static irqreturn_t cdns3_irq(int irq, void *data)
->  
->  static void cdns3_remove_roles(struct cdns3 *cdns)
->  {
-> -	//TODO: implements this function
+Changes in v3:
+ - Reformatted documentation for touchscreen to use tabs and have a better
+   overview of the settings.
+ - Added note which adc-settings will take precedence.
+ - changed typo in sample-time setting from 144 clocks to 124 clocks, as stated
+   in the datasheet.
 
-if (dr_mode == USB_DR_MODE_OTG || dr_mode == USB_DR_MODE_HOST)
+Changes in v2:
+ - Moved the bindings for ADC to the overlying mfd.
+ - Reformatted for better readability
 
-> +	cdns3_host_remove(cdns);
+ .../devicetree/bindings/iio/adc/stmpe-adc.txt | 21 +++++++
+ .../bindings/input/touchscreen/stmpe.txt      | 60 ++++++++++++-------
+ .../devicetree/bindings/mfd/stmpe.txt         | 28 ++++++---
+ 3 files changed, 80 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/stmpe-adc.txt
 
-How about calling it cdns3_host_exit() to complement cdns3_host_init().
-
->  }
->  
->  static int cdns3_do_role_switch(struct cdns3 *cdns, enum cdns3_roles role)
-> @@ -410,6 +412,7 @@ static struct platform_driver cdns3_driver = {
->  
->  static int __init cdns3_driver_platform_register(void)
->  {
-> +	cdns3_host_driver_init();
->  	return platform_driver_register(&cdns3_driver);
->  }
->  module_init(cdns3_driver_platform_register);
-> diff --git a/drivers/usb/cdns3/host-export.h b/drivers/usb/cdns3/host-export.h
-> new file mode 100644
-> index 000000000000..f8f3b230b472
-> --- /dev/null
-> +++ b/drivers/usb/cdns3/host-export.h
-> @@ -0,0 +1,30 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Cadence USBSS DRD Driver -Host Export APIs
-> + *
-> + * Copyright (C) 2017 NXP
-> + *
-> + * Authors: Peter Chen <peter.chen@nxp.com>
-> + */
-> +#ifndef __LINUX_CDNS3_HOST_EXPORT
-> +#define __LINUX_CDNS3_HOST_EXPORT
-> +
-> +#ifdef CONFIG_USB_CDNS3_HOST
-> +
-> +int cdns3_host_init(struct cdns3 *cdns);
-> +void cdns3_host_remove(struct cdns3 *cdns);
-> +void cdns3_host_driver_init(void);
-> +
-> +#else
-> +
-> +static inline int cdns3_host_init(struct cdns3 *cdns)
-> +{
-> +	return -ENXIO;
-> +}
-> +
-> +static inline void cdns3_host_remove(struct cdns3 *cdns) { }
-> +static inline void cdns3_host_driver_init(void) {}
-> +
-> +#endif /* CONFIG_USB_CDNS3_HOST */
-> +
-> +#endif /* __LINUX_CDNS3_HOST_EXPORT */
-> diff --git a/drivers/usb/cdns3/host.c b/drivers/usb/cdns3/host.c
-> new file mode 100644
-> index 000000000000..0dd47976cb28
-> --- /dev/null
-> +++ b/drivers/usb/cdns3/host.c
-> @@ -0,0 +1,256 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Cadence USBSS DRD Driver - host side
-> + *
-> + * Copyright (C) 2018 Cadence Design Systems.
-> + * Copyright (C) 2018 NXP
-> + *
-> + * Authors: Peter Chen <peter.chen@nxp.com>
-> + *	    Pawel Laszczak <pawell@cadence.com>
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/device.h>
-> +#include <linux/io.h>
-> +#include <linux/slab.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/usb.h>
-> +#include <linux/usb/hcd.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/usb/of.h>
-> +
-> +#include "../host/xhci.h"
-> +#include "core.h"
-> +#include "host-export.h"
-> +
-> +static struct hc_driver __read_mostly xhci_cdns3_hc_driver;
-> +
-> +static void xhci_cdns3_quirks(struct device *dev, struct xhci_hcd *xhci)
-> +{
-> +	/*
-> +	 * As of now platform drivers don't provide MSI support so we ensure
-> +	 * here that the generic code does not try to make a pci_dev from our
-> +	 * dev struct in order to setup MSI
-> +	 */
-> +	xhci->quirks |= XHCI_PLAT;
-> +}
-> +
-> +static int xhci_cdns3_setup(struct usb_hcd *hcd)
-> +{
-> +	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
-> +	u32 command;
-> +	int ret;
-> +
-> +	ret = xhci_gen_setup(hcd, xhci_cdns3_quirks);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* set usbcmd.EU3S */
-> +	command = readl(&xhci->op_regs->command);
-> +	command |= CMD_PM_INDEX;
-> +	writel(command, &xhci->op_regs->command);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct xhci_driver_overrides xhci_cdns3_overrides __initconst = {
-> +	.extra_priv_size = sizeof(struct xhci_hcd),
-> +	.reset = xhci_cdns3_setup,
-> +};
-> +
-> +struct cdns3_host {
-> +	struct device dev;
-> +	struct usb_hcd *hcd;
-> +};
-> +
-> +static irqreturn_t cdns3_host_irq(struct cdns3 *cdns)
-> +{
-> +	struct device *dev = cdns->host_dev;
-> +	struct usb_hcd	*hcd;
-> +
-> +	if (dev)
-> +		hcd = dev_get_drvdata(dev);
-> +	else
-> +		return IRQ_NONE;
-> +
-> +	if (hcd)
-> +		return usb_hcd_irq(cdns->irq, hcd);
-> +	else
-> +		return IRQ_NONE;
-
-Why can't you just reuse the xhci-platform driver and let it manage the IRQ?
-Since it is a shared IRQ, different drivers can request the same IRQ and return IRQ_NONE
-if the IRQ wasn't from their device.
-
-> +}
-> +
-> +static void cdns3_host_release(struct device *dev)
-> +{
-> +	struct cdns3_host *host = container_of(dev, struct cdns3_host, dev);
-> +
-> +	kfree(host);
-> +}
-> +
-> +static int cdns3_host_start(struct cdns3 *cdns)
-> +{
-> +	struct cdns3_host *host;
-> +	struct device *dev;
-> +	struct device *sysdev;
-> +	struct xhci_hcd	*xhci;
-> +	int ret;
-> +
-> +	host = kzalloc(sizeof(*host), GFP_KERNEL);
-> +	if (!host)
-> +		return -ENOMEM;
-> +
-> +	dev = &host->dev;
-> +	dev->release = cdns3_host_release;
-> +	dev->parent = cdns->dev;
-> +	dev_set_name(dev, "xhci-cdns3");
-> +	cdns->host_dev = dev;
-> +	ret = device_register(dev);
-> +	if (ret)
-> +		goto err1;
-> +
-> +	sysdev = cdns->dev;
-> +	/* Try to set 64-bit DMA first */
-> +	if (WARN_ON(!sysdev->dma_mask))
-> +		/* Platform did not initialize dma_mask */
-> +		ret = dma_coerce_mask_and_coherent(sysdev,
-> +						   DMA_BIT_MASK(64));
-> +	else
-> +		ret = dma_set_mask_and_coherent(sysdev, DMA_BIT_MASK(64));
-> +
-> +	/* If setting 64-bit DMA mask fails, fall back to 32-bit DMA mask */
-> +	if (ret) {
-> +		ret = dma_set_mask_and_coherent(sysdev, DMA_BIT_MASK(32));
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	pm_runtime_set_active(dev);
-> +	pm_runtime_no_callbacks(dev);
-> +	pm_runtime_enable(dev);
-> +	host->hcd = __usb_create_hcd(&xhci_cdns3_hc_driver, sysdev, dev,
-> +				     dev_name(dev), NULL);
-> +	if (!host->hcd) {
-> +		ret = -ENOMEM;
-> +		goto err2;
-> +	}
-> +
-> +	host->hcd->regs = cdns->xhci_regs;
-> +	host->hcd->rsrc_start = cdns->xhci_res->start;
-> +	host->hcd->rsrc_len = resource_size(cdns->xhci_res);
-> +
-> +	device_wakeup_enable(host->hcd->self.controller);
-> +	xhci = hcd_to_xhci(host->hcd);
-> +
-> +	xhci->main_hcd = host->hcd;
-> +	xhci->shared_hcd = __usb_create_hcd(&xhci_cdns3_hc_driver, sysdev, dev,
-> +					    dev_name(dev), host->hcd);
-> +	if (!xhci->shared_hcd) {
-> +		ret = -ENOMEM;
-> +		goto err3;
-> +	}
-> +
-> +	host->hcd->tpl_support = of_usb_host_tpl_support(sysdev->of_node);
-> +	xhci->shared_hcd->tpl_support = host->hcd->tpl_support;
-> +	ret = usb_add_hcd(host->hcd, 0, IRQF_SHARED);
-> +	if (ret)
-> +		goto err4;
-> +
-> +	ret = usb_add_hcd(xhci->shared_hcd, 0, IRQF_SHARED);
-> +	if (ret)
-> +		goto err5;
-> +
-> +	device_set_wakeup_capable(dev, true);
-
-All this is being done by the xhci-plat.c
-
-You can make use of it by just creating a xhci-hcd platform device.
-
-e.g.
-platform_device_alloc("xhci-hcd", PLATFORM_DEVID_AUTO);
-platform_device_add_resources() to add IRQ and memory resource.
-platform_device_add_properties() to add any quirks.
-platform_device_add()
-
-
-> +
-> +	return 0;
-> +
-> +err5:
-> +	usb_remove_hcd(host->hcd);
-> +err4:
-> +	usb_put_hcd(xhci->shared_hcd);
-> +err3:
-> +	usb_put_hcd(host->hcd);
-> +err2:
-> +	device_del(dev);
-> +err1:
-> +	put_device(dev);
-> +	cdns->host_dev = NULL;
-> +	return ret;
-> +}
-> +
-> +static void cdns3_host_stop(struct cdns3 *cdns)
-> +{
-> +	struct device *dev = cdns->host_dev;
-> +	struct xhci_hcd	*xhci;
-> +	struct usb_hcd	*hcd;
-> +
-> +	if (dev) {
-> +		hcd = dev_get_drvdata(dev);
-> +		xhci = hcd_to_xhci(hcd);
-> +		usb_remove_hcd(xhci->shared_hcd);
-> +		usb_remove_hcd(hcd);
-> +		synchronize_irq(cdns->irq);
-> +		usb_put_hcd(xhci->shared_hcd);
-> +		usb_put_hcd(hcd);
-> +		cdns->host_dev = NULL;
-> +		pm_runtime_set_suspended(dev);
-> +		pm_runtime_disable(dev);
-> +		device_del(dev);
-> +		put_device(dev);
-> +	}
-
-You can replace this with just
-	platform_device_unregister(xhci_dev);
-
-> +}
-> +
-> +#if CONFIG_PM
-> +static int cdns3_host_suspend(struct cdns3 *cdns, bool do_wakeup)
-> +{
-> +	struct device *dev = cdns->host_dev;
-> +	struct xhci_hcd	*xhci;
-> +
-> +	if (!dev)
-> +		return 0;
-> +
-> +	xhci = hcd_to_xhci(dev_get_drvdata(dev));
-> +	return xhci_suspend(xhci, do_wakeup);
-> +}
-> +
-> +static int cdns3_host_resume(struct cdns3 *cdns, bool hibernated)
-> +{
-> +	struct device *dev = cdns->host_dev;
-> +	struct xhci_hcd	*xhci;
-> +
-> +	if (!dev)
-> +		return 0;
-> +
-> +	xhci = hcd_to_xhci(dev_get_drvdata(dev));
-> +	return xhci_resume(xhci, hibernated);
-> +}
-
-These won't be required any more as xhci-plat is doing this.
-
-> +#endif /* CONFIG_PM */
-> +
-> +int cdns3_host_init(struct cdns3 *cdns)
-> +{
-> +	struct cdns3_role_driver *rdrv;
-> +
-> +	rdrv = devm_kzalloc(cdns->dev, sizeof(*rdrv), GFP_KERNEL);
-> +	if (!rdrv)
-> +		return -ENOMEM;
-> +
-> +	rdrv->start	= cdns3_host_start;
-> +	rdrv->stop	= cdns3_host_stop;
-> +	rdrv->irq	= cdns3_host_irq;
-> +#if CONFIG_PM
-> +	rdrv->suspend	= cdns3_host_suspend;
-> +	rdrv->resume	= cdns3_host_resume;
-> +#endif /* CONFIG_PM */
-> +	rdrv->name	= "host";
-> +	cdns->roles[CDNS3_ROLE_HOST] = rdrv;
-> +
-> +	return 0;
-> +}
-> +
-> +void cdns3_host_remove(struct cdns3 *cdns)
-> +{
-> +	cdns3_host_stop(cdns);
-
-calling cdns3_host_stop() here can lead to problems as Controller might be in
-peripheral mode at this point. The core driver needs to ensure that relevant role
-is stopped before calling cdns3_host_remove().
-
-Here you need to unregister the role driver though.
-
-cdns->roles[CDNS3_ROLE_HOST] = NULL;
-
-> +}
-> +
-> +void __init cdns3_host_driver_init(void)
-> +{
-> +	xhci_init_driver(&xhci_cdns3_hc_driver, &xhci_cdns3_overrides);
-> +}
-> 
-
-cheers,
--roger
-
+diff --git a/Documentation/devicetree/bindings/iio/adc/stmpe-adc.txt b/Documentation/devicetree/bindings/iio/adc/stmpe-adc.txt
+new file mode 100644
+index 000000000000..480e66422625
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/stmpe-adc.txt
+@@ -0,0 +1,21 @@
++STMPE ADC driver
++----------------
++
++Required properties:
++ - compatible: "st,stmpe-adc"
++
++Optional properties:
++Note that the ADC is shared with the STMPE touchscreen. ADC related settings
++have to be done in the mfd.
++- st,norequest-mask: bitmask specifying which ADC channels should _not_ be
++  requestable due to different usage (e.g. touch)
++
++Node name must be stmpe_adc and should be child node of stmpe node to
++which it belongs.
++
++Example:
++
++	stmpe_adc {
++		compatible = "st,stmpe-adc";
++		st,norequest-mask = <0x0F>; /* dont use ADC CH3-0 */
++	};
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
+index 127baa31a77a..414586513a02 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
+@@ -5,36 +5,52 @@ Required properties:
+  - compatible: "st,stmpe-ts"
+ 
+ Optional properties:
+-- st,sample-time: ADC converstion time in number of clock.  (0 -> 36 clocks, 1 ->
+-  44 clocks, 2 -> 56 clocks, 3 -> 64 clocks, 4 -> 80 clocks, 5 -> 96 clocks, 6
+-  -> 144 clocks), recommended is 4.
+-- st,mod-12b: ADC Bit mode (0 -> 10bit ADC, 1 -> 12bit ADC)
+-- st,ref-sel: ADC reference source (0 -> internal reference, 1 -> external
+-  reference)
+-- st,adc-freq: ADC Clock speed (0 -> 1.625 MHz, 1 -> 3.25 MHz, 2 || 3 -> 6.5 MHz)
+-- st,ave-ctrl: Sample average control (0 -> 1 sample, 1 -> 2 samples, 2 -> 4
+-  samples, 3 -> 8 samples)
+-- st,touch-det-delay: Touch detect interrupt delay (0 -> 10 us, 1 -> 50 us, 2 ->
+-  100 us, 3 -> 500 us, 4-> 1 ms, 5 -> 5 ms, 6 -> 10 ms, 7 -> 50 ms) recommended
+-  is 3
+-- st,settling: Panel driver settling time (0 -> 10 us, 1 -> 100 us, 2 -> 500 us, 3
+-  -> 1 ms, 4 -> 5 ms, 5 -> 10 ms, 6 for 50 ms, 7 -> 100 ms) recommended is 2
+-- st,fraction-z: Length of the fractional part in z (fraction-z ([0..7]) = Count of
+-  the fractional part) recommended is 7
+-- st,i-drive: current limit value of the touchscreen drivers (0 -> 20 mA typical 35
+-  mA max, 1 -> 50 mA typical 80 mA max)
++- st,ave-ctrl		: Sample average control
++				0 -> 1 sample
++				1 -> 2 samples
++				2 -> 4 samples
++				3 -> 8 samples
++- st,touch-det-delay	: Touch detect interrupt delay (recommended is 3)
++				0 -> 10 us		5 -> 5 ms
++				1 -> 50 us		6 -> 10 ms
++				2 -> 100 us		7 -> 50 ms
++				3 -> 500 us
++				4-> 1 ms
++- st,settling		: Panel driver settling time (recommended is 2)
++				0 -> 10 us		5 -> 10 ms
++				1 -> 100 us		6 for 50 ms
++				2 -> 500 us		7 -> 100 ms
++				3 -> 1 ms
++				4 -> 5 ms
++- st,fraction-z		: Length of the fractional part in z (recommended is 7)
++			  (fraction-z ([0..7]) = Count of the fractional part)
++- st,i-drive		: current limit value of the touchscreen drivers
++				0 -> 20 mA (typical 35mA max)
++				1 -> 50 mA (typical 80 mA max)
++
++Optional properties common with MFD (deprecated):
++ - st,sample-time	: ADC conversion time in number of clock.
++				0 -> 36 clocks		4 -> 80 clocks (recommended)
++				1 -> 44 clocks		5 -> 96 clocks
++				2 -> 56 clocks		6 -> 124 clocks
++				3 -> 64 clocks
++ - st,mod-12b		: ADC Bit mode
++				0 -> 10bit ADC		1 -> 12bit ADC
++ - st,ref-sel		: ADC reference source
++				0 -> internal		1 -> external
++ - st,adc-freq		: ADC Clock speed
++				0 -> 1.625 MHz		2 || 3 -> 6.5 MHz
++				1 -> 3.25 MHz
+ 
+ Node name must be stmpe_touchscreen and should be child node of stmpe node to
+ which it belongs.
+ 
++Note that common ADC settings of stmpe_touchscreen will take precedence.
++
+ Example:
+ 
+ 	stmpe_touchscreen {
+ 		compatible = "st,stmpe-ts";
+-		st,sample-time = <4>;
+-		st,mod-12b = <1>;
+-		st,ref-sel = <0>;
+-		st,adc-freq = <1>;
+ 		st,ave-ctrl = <1>;
+ 		st,touch-det-delay = <2>;
+ 		st,settling = <2>;
+diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Documentation/devicetree/bindings/mfd/stmpe.txt
+index c797c05cd3c2..d4408a417193 100644
+--- a/Documentation/devicetree/bindings/mfd/stmpe.txt
++++ b/Documentation/devicetree/bindings/mfd/stmpe.txt
+@@ -4,15 +4,29 @@ STMPE is an MFD device which may expose the following inbuilt devices: gpio,
+ keypad, touchscreen, adc, pwm, rotator.
+ 
+ Required properties:
+- - compatible                   : "st,stmpe[610|801|811|1600|1601|2401|2403]"
+- - reg                          : I2C/SPI address of the device
++ - compatible			: "st,stmpe[610|801|811|1600|1601|2401|2403]"
++ - reg				: I2C/SPI address of the device
+ 
+ Optional properties:
+- - interrupts                   : The interrupt outputs from the controller
+- - interrupt-controller         : Marks the device node as an interrupt controller
+- - wakeup-source                : Marks the input device as wakable
+- - st,autosleep-timeout         : Valid entries (ms); 4, 16, 32, 64, 128, 256, 512 and 1024
+- - irq-gpio                     : If present, which GPIO to use for event IRQ
++ - interrupts			: The interrupt outputs from the controller
++ - interrupt-controller		: Marks the device node as an interrupt controller
++ - wakeup-source		: Marks the input device as wakable
++ - st,autosleep-timeout		: Valid entries (ms); 4, 16, 32, 64, 128, 256, 512 and 1024
++ - irq-gpio			: If present, which GPIO to use for event IRQ
++
++Optional properties for devices with touch and ADC (STMPE811|STMPE610):
++ - st,sample-time		: ADC conversion time in number of clock.
++					0 -> 36 clocks		4 -> 80 clocks (recommended)
++					1 -> 44 clocks		5 -> 96 clocks
++					2 -> 56 clocks		6 -> 124 clocks
++					3 -> 64 clocks
++ - st,mod-12b			: ADC Bit mode
++					0 -> 10bit ADC		1 -> 12bit ADC
++ - st,ref-sel			: ADC reference source
++					0 -> internal		1 -> external
++ - st,adc-freq			: ADC Clock speed
++					0 -> 1.625 MHz		2 || 3 -> 6.5 MHz
++					1 -> 3.25 MHz
+ 
+ Example:
+ 
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.19.1
