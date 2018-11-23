@@ -1,132 +1,114 @@
-From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 10/15] memory: mtk-smi: Add bus_sel for mt8183
-Date: Fri, 23 Nov 2018 10:59:53 +0800
-Message-ID: <1542941993.15759.11.camel@mhfsdcap03>
-References: <1542422142-30688-1-git-send-email-yong.wu@mediatek.com>
-	<1542422142-30688-11-git-send-email-yong.wu@mediatek.com>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH v9 8/8] arm64: dts: allwinner: a64: enable
+	sound on Pinebook
+Date: Thu, 22 Nov 2018 20:15:02 -0800
+Message-ID: <4447541.czlqnMh8c9@anarsoul-thinkpad>
+References: <20181122102325.29495-1-wens@csie.org>
+ <20181122102325.29495-9-wens@csie.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1542422142-30688-11-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20181122102325.29495-9-wens@csie.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Maxime Ripard <maxime.ripard@bootlin.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2018-11-17 at 10:35 +0800, Yong Wu wrote:
-> There are 2 mmu cells in a M4U HW. we could adjust some larbs entering
-> mmu0 or mmu1 to balance the bandwidth via the smi-common register
-> SMI_BUS_SEL(0x220)(Each larb occupy 2 bits).
+On Thursday, November 22, 2018 2:23:25 AM PST Chen-Yu Tsai wrote:
+> From: Vasily Khoruzhick <anarsoul@gmail.com>
 > 
-> In mt8183, For better performance, we switch larb1/2/3/7 to enter
-> mmu1 while the others still keep enter mmu0.
-
-The larb listed here don't match with the code below. I will fix it.
-
+> The Pinebook has a headphone jack tied to the HP headphone output of
+> the SoC, and internal speakers connected to the LINEOUT of the SoC,
+> through a standalone amplifier.
 > 
-> In mt8173 and mt2712, we don't get the performance issue,
-> Keep its default value(0x0), that means all the larbs enter mmu0.
+> This commit enables I2S, digital and analog parts of audio codec on
+> Pinebook, along with a device node for the external amplifier.
 > 
-> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> [wens@csie.org: dropped headphone_amp; added headphone amp regulator supply;
+> fixed speaker_amp node name and sound-name-prefix name]
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 > ---
->  drivers/memory/mtk-smi.c | 29 ++++++++++++++++++++++++++---
->  1 file changed, 26 insertions(+), 3 deletions(-)
+>  .../dts/allwinner/sun50i-a64-pinebook.dts     | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
 > 
-> diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
-> index 3e6e0a8..e4daabb 100644
-> --- a/drivers/memory/mtk-smi.c
-> +++ b/drivers/memory/mtk-smi.c
-> @@ -49,6 +49,12 @@
->  #define SMI_LARB_NONSEC_CON(id)	(0x380 + ((id) * 4))
->  #define F_MMU_EN		BIT(0)
->  
-> +/* SMI COMMON */
-> +#define SMI_BUS_SEL			0x220
-> +#define SMI_BUS_LARB_SHIFT(larbid)	((larbid) << 1)
-> +/* All are MMU0 defaultly. Only specialize mmu1 here. */
-> +#define F_MMU1_LARB(larbid)		(0x1 << SMI_BUS_LARB_SHIFT(larbid))
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts index
+> ec537c529726..b6d0b926a2ff 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> @@ -74,6 +74,32 @@
+>  		compatible = "mmc-pwrseq-simple";
+>  		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
+>  	};
 > +
->  enum mtk_smi_gen {
->  	MTK_SMI_GEN1,
->  	MTK_SMI_GEN2
-> @@ -56,6 +62,8 @@ enum mtk_smi_gen {
->  
->  struct mtk_smi_common_plat {
->  	enum mtk_smi_gen gen;
+> +	speaker_amp: audio-amplifier {
+> +		compatible = "simple-audio-amplifier";
+> +		/*
+> +		 * TODO This is actually a fixed regulator controlled by
+> +		 * the GPIO line on the PMIC. This should be corrected
+> +		 * once GPIO support is added for this PMIC.
+> +		 */
+> +		VCC-supply = <&reg_ldo_io0>;
+> +		enable-gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
+> +		sound-name-prefix = "Speaker Amp";
+> +	};
 > +
-> +	u32 bus_sel; /* Balance some larbs to enter mmu0 or mmu1 */
->  };
->  
->  struct mtk_smi_larb_gen {
-> @@ -70,8 +78,8 @@ struct mtk_smi {
->  	struct clk			*clk_apb, *clk_smi;
->  	struct clk			*clk_gals0, *clk_gals1;
->  	struct clk			*clk_async; /*only needed by mt2701*/
-> -	void __iomem			*smi_ao_base;
-> -
-> +	void __iomem			*smi_ao_base; /* only for gen1 */
-> +	void __iomem			*base;	      /* only for gen2 */
->  	const struct mtk_smi_common_plat *plat;
->  };
->  
-> @@ -401,6 +409,12 @@ static int __maybe_unused mtk_smi_larb_suspend(struct device *dev)
->  	.gen = MTK_SMI_GEN2,
->  };
->  
-> +static const struct mtk_smi_common_plat mtk_smi_common_mt8183 = {
-> +	.gen = MTK_SMI_GEN2,
-> +	.bus_sel = F_MMU1_LARB(1) | F_MMU1_LARB(3) | F_MMU1_LARB(4) |
-> +		   F_MMU1_LARB(7),
 > +};
 > +
->  static const struct of_device_id mtk_smi_common_of_ids[] = {
->  	{
->  		.compatible = "mediatek,mt8173-smi-common",
-> @@ -416,7 +430,7 @@ static int __maybe_unused mtk_smi_larb_suspend(struct device *dev)
->  	},
->  	{
->  		.compatible = "mediatek,mt8183-smi-common",
-> -		.data = &mtk_smi_common_gen2,
-> +		.data = &mtk_smi_common_mt8183,
->  	},
->  	{}
->  };
-> @@ -473,6 +487,11 @@ static int mtk_smi_common_probe(struct platform_device *pdev)
->  		ret = clk_prepare_enable(common->clk_async);
->  		if (ret)
->  			return ret;
-> +	} else {
-> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +		common->base = devm_ioremap_resource(dev, res);
-> +		if (IS_ERR(common->base))
-> +			return PTR_ERR(common->base);
->  	}
->  	pm_runtime_enable(dev);
->  	platform_set_drvdata(pdev, common);
-> @@ -488,6 +507,7 @@ static int mtk_smi_common_remove(struct platform_device *pdev)
->  static int __maybe_unused mtk_smi_common_resume(struct device *dev)
->  {
->  	struct mtk_smi *common = dev_get_drvdata(dev);
-> +	u32 bus_sel = common->plat->bus_sel;
->  	int ret;
->  
->  	ret = mtk_smi_clk_enable(common);
-> @@ -495,6 +515,9 @@ static int __maybe_unused mtk_smi_common_resume(struct device *dev)
->  		dev_err(common->dev, "Failed to enable clock(%d).\n", ret);
->  		return ret;
->  	}
+> +&codec {
+> +	hpvcc-supply = <&reg_eldo1>;
+
+It should be a property of codec_analog, not codec
+
+> +	status = "okay";
+> +};
 > +
-> +	if (common->plat->gen == MTK_SMI_GEN2 && bus_sel)
-> +		writel(bus_sel, common->base + SMI_BUS_SEL);
->  	return 0;
->  }
->  
+> +&codec_analog {
+> +	status = "okay";
+> +};
+> +
+> +&dai {
+> +	status = "okay";
+>  };
+> 
+>  &ehci0 {
+> @@ -277,6 +303,29 @@
+>  	vcc-hdmi-supply = <&reg_dldo1>;
+>  };
+> 
+> +&sound {
+> +	status = "okay";
+> +	simple-audio-card,aux-devs = <&codec_analog>, <&speaker_amp>;
+> +	simple-audio-card,widgets = "Microphone", "Internal Microphone Left",
+> +				    "Microphone", "Internal Microphone Right",
+> +				    "Headphone", "Headphone Jack",
+> +				    "Speaker", "Internal Speaker";
+> +	simple-audio-card,routing =
+> +			"Left DAC", "AIF1 Slot 0 Left",
+> +			"Right DAC", "AIF1 Slot 0 Right",
+> +			"Speaker Amp INL", "LINEOUT",
+> +			"Speaker Amp INR", "LINEOUT",
+> +			"Internal Speaker", "Speaker Amp OUTL",
+> +			"Internal Speaker", "Speaker Amp OUTR",
+> +			"Headphone Jack", "HP",
+> +			"AIF1 Slot 0 Left ADC", "Left ADC",
+> +			"AIF1 Slot 0 Right ADC", "Right ADC",
+> +			"Internal Microphone Left", "MBIAS",
+> +			"MIC1", "Internal Microphone Left",
+> +			"Internal Microphone Right", "HBIAS",
+> +			"MIC2", "Internal Microphone Right";
+> +};
+> +
+>  &uart0 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&uart0_pb_pins>;
