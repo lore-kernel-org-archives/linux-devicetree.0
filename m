@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 08/12] dt-bindings: PCI: aardvark: describe the PHY property
-Date: Fri, 23 Nov 2018 15:18:27 +0100
-Message-ID: <20181123141831.8214-9-miquel.raynal@bootlin.com>
+Subject: [PATCH 10/12] ARM64: dts: marvell: armada-3720-espressobin: declare PCIe reset GPIO
+Date: Fri, 23 Nov 2018 15:18:29 +0100
+Message-ID: <20181123141831.8214-11-miquel.raynal@bootlin.com>
 References: <20181123141831.8214-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,32 +12,26 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Document the possibility to reference a PHY.
+Add a reset-gpios property to the PCIe node.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- Documentation/devicetree/bindings/pci/aardvark-pci.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/aardvark-pci.txt b/Documentation/devicetree/bindings/pci/aardvark-pci.txt
-index c275c3e39cde..b41c69968e38 100644
---- a/Documentation/devicetree/bindings/pci/aardvark-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/aardvark-pci.txt
-@@ -24,6 +24,7 @@ contain the following properties:
- The following are optional properties:
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+index 094994a9c68e..76a508da80b9 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+@@ -46,6 +46,9 @@
+ /* J9 */
+ &pcie0 {
+ 	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie_pins>;
++	reset-gpios = <&gpiosb 3 GPIO_ACTIVE_HIGH>;
+ };
  
-  - reset-gpios: GPIO to reset the device
-+ - phys: the PCIe PHY handle
- 
- In addition, the Device Tree describing an Aardvark PCIe controller
- must include a sub-node that describes the legacy interrupt controller
-@@ -55,6 +56,7 @@ Example:
- 				<0 0 0 3 &pcie_intc 2>,
- 				<0 0 0 4 &pcie_intc 3>;
- 		reset-gpios = <&gpiosb 3 GPIO_ACTIVE_HIGH>;
-+		phys = <&comphy1 0>;
- 		pcie_intc: interrupt-controller {
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
+ /* J6 */
 -- 
 2.19.1
