@@ -1,256 +1,385 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 1/6] thermal: armada: add overheat interrupt support
-Date: Fri, 23 Nov 2018 17:17:25 +0100
-Message-ID: <20181123161730.11289-2-miquel.raynal@bootlin.com>
-References: <20181123161730.11289-1-miquel.raynal@bootlin.com>
+From: Radu Nicolae Pirea <radu_nicolae.pirea@upb.ro>
+Subject: Re: [PATCH 3/3] spi: at91-usart: add DMA support
+Date: Fri, 23 Nov 2018 18:19:05 +0200
+Message-ID: <0ae5847b34b070ed51eca2b55c4b473b4e47da73.camel@upb.ro>
+References: <20181121112732.15690-1-radu_nicolae.pirea@upb.ro>
+         <20181121112732.15690-4-radu_nicolae.pirea@upb.ro>
+         <fe367c1a-700d-c6e3-6b09-ded1a47f2475@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181123161730.11289-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Marc Zyngier <marc.zyngier@arm.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <fe367c1a-700d-c6e3-6b09-ded1a47f2475@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>, richard.genoud@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, ludovic.desroches@microchip.co, broonie@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIElQIGNhbiBtYW5hZ2UgdG8gdHJpZ2dlciBpbnRlcnJ1cHRzIG9uIG92ZXJoZWF0IHNpdHVh
-dGlvbiBmcm9tIGFsbAp0aGUgc2Vuc29ycy4KCkhvd2V2ZXIsIHRoZSBpbnRlcnJ1cHQgc291cmNl
-IGNoYW5nZXMgYWxvbmcgd2l0aCB0aGUgbGFzdCBzZWxlY3RlZApzb3VyY2UgKGllLiB0aGUgbGFz
-dCByZWFkIHNlbnNvciksIHdoaWNoIGlzIGFuIGluY29uc2lzdGVudCBiZWhhdmlvci4KQXZvaWQg
-cG9zc2libGUgZ2xpdGNoZXMgYnkgYWx3YXlzIHNlbGVjdGluZyBiYWNrIG9ubHkgb25lIGNoYW5u
-ZWwgd2hpY2gKd2lsbCB0aGVuIGJlIHJlZmVyZW5jZWQgYXMgdGhlICJvdmVyaGVhdF9zZW5zb3Ii
-IChhcmJpdHJhcmlseTogdGhlIGZpcnN0CmluIHRoZSBEVCB3aGljaCBoYXMgYSBjcml0aWNhbCB0
-cmlwIHBvaW50IGZpbGxlZCBpbikuCgpJdCBpcyBwb3NzaWJsZSB0aGF0IHRoZSBzY2FuIG9mIGFs
-bCB0aGVybWFsIHpvbmUgbm9kZXMgZGlkIG5vdCBicmluZyBhCmNyaXRpY2FsIHRyaXAgcG9pbnQg
-ZnJvbSB3aGljaCB0aGUgb3ZlcmhlYXQgaW50ZXJydXB0IGNvdWxkIGJlCmNvbmZpZ3VyZWQuIElu
-IHRoaXMgY2FzZSBqdXN0IGNvbXBsYWluIGJ1dCBkbyBub3QgZmFpbCB0aGUgcHJvYmUuCgpBbHNv
-IGRpc2FibGUgc2Vuc29yIHN3aXRjaCBkdXJpbmcgb3ZlcmhlYXQgc2l0dWF0aW9ucyBiZWNhdXNl
-IGNoYW5naW5nCnRoZSBjaGFubmVsIHdoaWxlIHRoZSBzeXN0ZW0gaXMgdG9vIGhvdCBjb3VsZCBj
-bGVhciB0aGUgb3ZlcmhlYXQgc3RhdGUKYnkgY2hhbmdpbmcgdGhlIHNvdXJjZSB3aGlsZSB0aGUg
-dGVtcGVyYXR1cmUgaXMgc3RpbGwgdmVyeSBoaWdoLgoKRXZlbiBpZiB0aGUgb3ZlcmhlYXQgc3Rh
-dGUgaXMgbm90IGRlY2xhcmVkLCBvdmVyaGVhdCBpbnRlcnJ1cHQgbXVzdCBiZQpjbGVhcmVkIGJ5
-IHJlYWRpbmcgdGhlIERGWCBpbnRlcnJ1cHQgY2F1c2UgX2FmdGVyXyB0aGUgdGVtcGVyYXR1cmUg
-aGFzCmZhbGxlbiBkb3duIHRvIHRoZSBsb3cgdGhyZXNob2xkLCBvdGhlcndpc2UgZnV0dXJlIHBv
-c3NpYmxlIGludGVycnVwdHMKd291bGQgbm90IGJlIHNlcnZlZC4gQSB3b3JrIHBvbGxzIHRoZSBj
-b3JyZXNwb25kaW5nIHJlZ2lzdGVyIHVudGlsIHRoZQpvdmVyaGVhdCBmbGFnIGdldHMgY2xlYXJl
-ZCBpbiB0aGlzIGNhc2UuCgpTdWdnZXN0ZWQtYnk6IERhdmlkIFNuaWF0a2l3aWN6IDxkYXZpZHNu
-QG1hcnZlbGwuY29tPgpTaWduZWQtb2ZmLWJ5OiBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFs
-QGJvb3RsaW4uY29tPgotLS0KIGRyaXZlcnMvdGhlcm1hbC9hcm1hZGFfdGhlcm1hbC5jIHwgMjcw
-ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0KIDEgZmlsZSBjaGFuZ2VkLCAyNjkgaW5z
-ZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvdGhlcm1hbC9h
-cm1hZGFfdGhlcm1hbC5jIGIvZHJpdmVycy90aGVybWFsL2FybWFkYV90aGVybWFsLmMKaW5kZXgg
-OTJmNjdkNDBmMmU5Li41NWNmYWVlMGRhNzcgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvdGhlcm1hbC9h
-cm1hZGFfdGhlcm1hbC5jCisrKyBiL2RyaXZlcnMvdGhlcm1hbC9hcm1hZGFfdGhlcm1hbC5jCkBA
-IC0yNiw2ICsyNiwxMSBAQAogI2luY2x1ZGUgPGxpbnV4L2lvcG9sbC5oPgogI2luY2x1ZGUgPGxp
-bnV4L21mZC9zeXNjb24uaD4KICNpbmNsdWRlIDxsaW51eC9yZWdtYXAuaD4KKyNpbmNsdWRlIDxs
-aW51eC9pbnRlcnJ1cHQuaD4KKworI2luY2x1ZGUgInRoZXJtYWxfY29yZS5oIgorCisjZGVmaW5l
-IFRPX01DRUxTSVVTKGMpCQkJKChjKSAqIDEwMDApCiAKIC8qIFRoZXJtYWwgTWFuYWdlciBDb250
-cm9sIGFuZCBTdGF0dXMgUmVnaXN0ZXIgKi8KICNkZWZpbmUgUE1VX1REQzBfU1dfUlNUX01BU0sJ
-CSgweDEgPDwgMSkKQEAgLTYxLDkgKzY2LDEzIEBACiAjZGVmaW5lIENPTlRST0wxX1RTRU5fQVZH
-X01BU0sJCTB4NwogI2RlZmluZSBDT05UUk9MMV9FWFRfVFNFTl9TV19SRVNFVAlCSVQoNykKICNk
-ZWZpbmUgQ09OVFJPTDFfRVhUX1RTRU5fSFdfUkVTRVRuCUJJVCg4KQorI2RlZmluZSBDT05UUk9M
-MV9UU0VOX0lOVF9FTgkJQklUKDI1KQorI2RlZmluZSBDT05UUk9MMV9UU0VOX1NFTEVDVF9PRkYJ
-MjEKKyNkZWZpbmUgQ09OVFJPTDFfVFNFTl9TRUxFQ1RfTUFTSwkweDMKIAogI2RlZmluZSBTVEFU
-VVNfUE9MTF9QRVJJT0RfVVMJCTEwMDAKICNkZWZpbmUgU1RBVFVTX1BPTExfVElNRU9VVF9VUwkJ
-MTAwMDAwCisjZGVmaW5lIE9WRVJIRUFUX0lOVF9QT0xMX0RFTEFZX01TCTEwMDAKIAogc3RydWN0
-IGFybWFkYV90aGVybWFsX2RhdGE7CiAKQEAgLTc1LDcgKzg0LDExIEBAIHN0cnVjdCBhcm1hZGFf
-dGhlcm1hbF9wcml2IHsKIAkvKiBzZXJpYWxpemUgdGVtcGVyYXR1cmUgcmVhZHMvdXBkYXRlcyAq
-LwogCXN0cnVjdCBtdXRleCB1cGRhdGVfbG9jazsKIAlzdHJ1Y3QgYXJtYWRhX3RoZXJtYWxfZGF0
-YSAqZGF0YTsKKwlzdHJ1Y3QgdGhlcm1hbF96b25lX2RldmljZSAqb3ZlcmhlYXRfc2Vuc29yOwor
-CWludCBpbnRlcnJ1cHRfc291cmNlOwogCWludCBjdXJyZW50X2NoYW5uZWw7CisJbG9uZyBjdXJy
-ZW50X3RocmVzaG9sZDsKKwlsb25nIGN1cnJlbnRfaHlzdGVyZXNpczsKIH07CiAKIHN0cnVjdCBh
-cm1hZGFfdGhlcm1hbF9kYXRhIHsKQEAgLTkzLDEyICsxMDYsMjAgQEAgc3RydWN0IGFybWFkYV90
-aGVybWFsX2RhdGEgewogCS8qIFJlZ2lzdGVyIHNoaWZ0IGFuZCBtYXNrIHRvIGFjY2VzcyB0aGUg
-c2Vuc29yIHRlbXBlcmF0dXJlICovCiAJdW5zaWduZWQgaW50IHRlbXBfc2hpZnQ7CiAJdW5zaWdu
-ZWQgaW50IHRlbXBfbWFzazsKKwl1bnNpZ25lZCBpbnQgdGhyZXNoX3NoaWZ0OworCXVuc2lnbmVk
-IGludCBoeXN0X3NoaWZ0OworCXVuc2lnbmVkIGludCBoeXN0X21hc2s7CiAJdTMyIGlzX3ZhbGlk
-X2JpdDsKIAogCS8qIFN5c2NvbiBhY2Nlc3MgKi8KIAl1bnNpZ25lZCBpbnQgc3lzY29uX2NvbnRy
-b2wwX29mZjsKIAl1bnNpZ25lZCBpbnQgc3lzY29uX2NvbnRyb2wxX29mZjsKIAl1bnNpZ25lZCBp
-bnQgc3lzY29uX3N0YXR1c19vZmY7CisJdW5zaWduZWQgaW50IGRmeF9pcnFfY2F1c2Vfb2ZmOwor
-CXVuc2lnbmVkIGludCBkZnhfaXJxX21hc2tfb2ZmOworCXVuc2lnbmVkIGludCBkZnhfb3Zlcmhl
-YXRfaXJxOworCXVuc2lnbmVkIGludCBkZnhfc2VydmVyX2lycV9tYXNrX29mZjsKKwl1bnNpZ25l
-ZCBpbnQgZGZ4X3NlcnZlcl9pcnFfZW47CiAKIAkvKiBPbmUgc2Vuc29yIGlzIGluIHRoZSB0aGVy
-bWFsIElDLCB0aGUgb3RoZXJzIGFyZSBpbiB0aGUgQ1BVcyBpZiBhbnkgKi8KIAl1bnNpZ25lZCBp
-bnQgY3B1X25yOwpAQCAtMjcyLDYgKzI5Myw0MSBAQCBzdGF0aWMgYm9vbCBhcm1hZGFfaXNfdmFs
-aWQoc3RydWN0IGFybWFkYV90aGVybWFsX3ByaXYgKnByaXYpCiAJcmV0dXJuIHJlZyAmIHByaXYt
-PmRhdGEtPmlzX3ZhbGlkX2JpdDsKIH0KIAorc3RhdGljIHZvaWQgYXJtYWRhX2VuYWJsZV9vdmVy
-aGVhdF9pbnRlcnJ1cHQoc3RydWN0IGFybWFkYV90aGVybWFsX3ByaXYgKnByaXYpCit7CisJc3Ry
-dWN0IGFybWFkYV90aGVybWFsX2RhdGEgKmRhdGEgPSBwcml2LT5kYXRhOworCXUzMiByZWc7CisK
-KwkvKiBDbGVhciBERlggdGVtcGVyYXR1cmUgSVJRIGNhdXNlICovCisJcmVnbWFwX3JlYWQocHJp
-di0+c3lzY29uLCBkYXRhLT5kZnhfaXJxX2NhdXNlX29mZiwgJnJlZyk7CisKKwkvKiBFbmFibGUg
-REZYIFRlbXBlcmF0dXJlIElSUSAqLworCXJlZ21hcF9yZWFkKHByaXYtPnN5c2NvbiwgZGF0YS0+
-ZGZ4X2lycV9tYXNrX29mZiwgJnJlZyk7CisJcmVnIHw9IGRhdGEtPmRmeF9vdmVyaGVhdF9pcnE7
-CisJcmVnbWFwX3dyaXRlKHByaXYtPnN5c2NvbiwgZGF0YS0+ZGZ4X2lycV9tYXNrX29mZiwgcmVn
-KTsKKworCS8qIEVuYWJsZSBERlggc2VydmVyIElSUSAqLworCXJlZ21hcF9yZWFkKHByaXYtPnN5
-c2NvbiwgZGF0YS0+ZGZ4X3NlcnZlcl9pcnFfbWFza19vZmYsICZyZWcpOworCXJlZyB8PSBkYXRh
-LT5kZnhfc2VydmVyX2lycV9lbjsKKwlyZWdtYXBfd3JpdGUocHJpdi0+c3lzY29uLCBkYXRhLT5k
-Znhfc2VydmVyX2lycV9tYXNrX29mZiwgcmVnKTsKKworCS8qIEVuYWJsZSBvdmVyaGVhdCBpbnRl
-cnJ1cHQgKi8KKwlyZWdtYXBfcmVhZChwcml2LT5zeXNjb24sIGRhdGEtPnN5c2Nvbl9jb250cm9s
-MV9vZmYsICZyZWcpOworCXJlZyB8PSBDT05UUk9MMV9UU0VOX0lOVF9FTjsKKwlyZWdtYXBfd3Jp
-dGUocHJpdi0+c3lzY29uLCBkYXRhLT5zeXNjb25fY29udHJvbDFfb2ZmLCByZWcpOworfQorCitz
-dGF0aWMgdm9pZCBfX21heWJlX3VudXNlZAorYXJtYWRhX2Rpc2FibGVfb3ZlcmhlYXRfaW50ZXJy
-dXB0KHN0cnVjdCBhcm1hZGFfdGhlcm1hbF9wcml2ICpwcml2KQoreworCXN0cnVjdCBhcm1hZGFf
-dGhlcm1hbF9kYXRhICpkYXRhID0gcHJpdi0+ZGF0YTsKKwl1MzIgcmVnOworCisJcmVnbWFwX3Jl
-YWQocHJpdi0+c3lzY29uLCBkYXRhLT5zeXNjb25fY29udHJvbDFfb2ZmLCAmcmVnKTsKKwlyZWcg
-Jj0gfkNPTlRST0wxX1RTRU5fSU5UX0VOOworCXJlZ21hcF93cml0ZShwcml2LT5zeXNjb24sIGRh
-dGEtPnN5c2Nvbl9jb250cm9sMV9vZmYsIHJlZyk7Cit9CisKIC8qIFRoZXJlIGlzIGN1cnJlbnRs
-eSBubyBib2FyZCB3aXRoIG1vcmUgdGhhbiBvbmUgc2Vuc29yIHBlciBjaGFubmVsICovCiBzdGF0
-aWMgaW50IGFybWFkYV9zZWxlY3RfY2hhbm5lbChzdHJ1Y3QgYXJtYWRhX3RoZXJtYWxfcHJpdiAq
-cHJpdiwgaW50IGNoYW5uZWwpCiB7CkBAIC0zODgsNiArNDQ0LDE2IEBAIHN0YXRpYyBpbnQgYXJt
-YWRhX2dldF90ZW1wKHZvaWQgKl9zZW5zb3IsIGludCAqdGVtcCkKIAogCS8qIERvIHRoZSBhY3R1
-YWwgcmVhZGluZyAqLwogCXJldCA9IGFybWFkYV9yZWFkX3NlbnNvcihwcml2LCB0ZW1wKTsKKwlp
-ZiAocmV0KQorCQlnb3RvIHVubG9ja19tdXRleDsKKworCS8qCisJICogU2VsZWN0IGJhY2sgdGhl
-IGludGVycnVwdCBzb3VyY2UgY2hhbm5lbCBmcm9tIHdoaWNoIGEgcG90ZW50aWFsCisJICogY3Jp
-dGljYWwgdHJpcCBwb2ludCBoYXMgYmVlbiBzZXQuCisJICovCisJcmV0ID0gYXJtYWRhX3NlbGVj
-dF9jaGFubmVsKHByaXYsIHByaXYtPmludGVycnVwdF9zb3VyY2UpOworCWlmIChyZXQpCisJCWdv
-dG8gdW5sb2NrX211dGV4OwogCiB1bmxvY2tfbXV0ZXg6CiAJbXV0ZXhfdW5sb2NrKCZwcml2LT51
-cGRhdGVfbG9jayk7CkBAIC0zOTksNiArNDY1LDEyMSBAQCBzdGF0aWMgc3RydWN0IHRoZXJtYWxf
-em9uZV9vZl9kZXZpY2Vfb3BzIG9mX29wcyA9IHsKIAkuZ2V0X3RlbXAgPSBhcm1hZGFfZ2V0X3Rl
-bXAsCiB9OwogCitzdGF0aWMgdW5zaWduZWQgaW50IGFybWFkYV9tY190b19yZWdfdGVtcChzdHJ1
-Y3QgYXJtYWRhX3RoZXJtYWxfZGF0YSAqZGF0YSwKKwkJCQkJICB1bnNpZ25lZCBpbnQgdGVtcF9t
-YykKK3sKKwlzNjQgYiA9IGRhdGEtPmNvZWZfYjsKKwlzNjQgbSA9IGRhdGEtPmNvZWZfbTsKKwlz
-NjQgZGl2ID0gZGF0YS0+Y29lZl9kaXY7CisJdW5zaWduZWQgaW50IHNhbXBsZTsKKworCWlmIChk
-YXRhLT5pbnZlcnRlZCkKKwkJc2FtcGxlID0gZGl2X3M2NCgoKHRlbXBfbWMgKiBkaXYpICsgYiks
-IG0pOworCWVsc2UKKwkJc2FtcGxlID0gZGl2X3M2NCgoYiAtICh0ZW1wX21jICogZGl2KSksIG0p
-OworCisJcmV0dXJuIHNhbXBsZSAmIGRhdGEtPnRlbXBfbWFzazsKK30KKworc3RhdGljIHVuc2ln
-bmVkIGludCBhcm1hZGFfbWNfdG9fcmVnX2h5c3Qoc3RydWN0IGFybWFkYV90aGVybWFsX2RhdGEg
-KmRhdGEsCisJCQkJCSAgdW5zaWduZWQgaW50IGh5c3RfbWMpCit7CisJLyoKKwkgKiBUaGUgZG9j
-dW1lbnRhdGlvbiBzdGF0ZXM6CisJICogaGlnaC9sb3cgd2F0ZXJtYXJrID0gdGhyZXNob2xkICsv
-LSAwLjQ3NjEgKiAyXihoeXN0ZXJlc2lzICsgMikKKwkgKiB3aGljaCBpcyB0aGUgbWF0aGVtYXRp
-Y2FsIGRlcml2YXRpb24gZm9yOgorCSAqIDB4MCA8PT4gMS45wrBDLCAweDEgPD0+IDMuOMKwQywg
-MHgyIDw9PiA3LjbCsEMsIDB4MyA8PT4gMTUuMgorCSAqLworCXVuc2lnbmVkIGludCBoeXN0X2xl
-dmVsc19tY1tdID0gezE5MDAsIDM4MDAsIDc2MDAsIDE1MjAwfTsKKwlpbnQgaTsKKworCS8qCisJ
-ICogV2Ugd2lsbCBhbHdheXMgdGFrZSB0aGUgc21hbGxlc3QgcG9zc2libGUgaHlzdGVyZXNpcyB0
-byBhdm9pZCByaXNraW5nCisJICogdGhlIGhhcmR3YXJlIGludGVncml0eSBieSBlbmxhcmdpbmcg
-dGhlIHRocmVzaG9sZCBieSArOMKwQyBpbiB0aGUKKwkgKiB3b3JzdCBjYXNlLgorCSAqLworCWZv
-ciAoaSA9IEFSUkFZX1NJWkUoaHlzdF9sZXZlbHNfbWMpIC0gMTsgaSA+IDA7IGktLSkKKwkJaWYg
-KGh5c3RfbWMgPj0gaHlzdF9sZXZlbHNfbWNbaV0pCisJCQlicmVhazsKKworCXJldHVybiBpICYg
-ZGF0YS0+aHlzdF9tYXNrOworfQorCitzdGF0aWMgdm9pZCBhcm1hZGFfc2V0X292ZXJoZWF0X3Ro
-cmVzaG9sZHMoc3RydWN0IGFybWFkYV90aGVybWFsX3ByaXYgKnByaXYsCisJCQkJCSAgIGludCB0
-aHJlc2hfbWMsIGludCBoeXN0X21jKQoreworCXN0cnVjdCBhcm1hZGFfdGhlcm1hbF9kYXRhICpk
-YXRhID0gcHJpdi0+ZGF0YTsKKwl1bnNpZ25lZCBpbnQgdGhyZXNob2xkID0gYXJtYWRhX21jX3Rv
-X3JlZ190ZW1wKGRhdGEsIHRocmVzaF9tYyk7CisJdW5zaWduZWQgaW50IGh5c3RlcmVzaXMgPSBh
-cm1hZGFfbWNfdG9fcmVnX2h5c3QoZGF0YSwgaHlzdF9tYyk7CisJdTMyIGN0cmwxOworCisJcmVn
-bWFwX3JlYWQocHJpdi0+c3lzY29uLCBkYXRhLT5zeXNjb25fY29udHJvbDFfb2ZmLCAmY3RybDEp
-OworCisJLyogU2V0IFRocmVzaG9sZCAqLworCWlmICh0aHJlc2hfbWMgPj0gMCkgeworCQljdHJs
-MSAmPSB+KGRhdGEtPnRlbXBfbWFzayA8PCBkYXRhLT50aHJlc2hfc2hpZnQpOworCQljdHJsMSB8
-PSB0aHJlc2hvbGQgPDwgZGF0YS0+dGhyZXNoX3NoaWZ0OworCQlwcml2LT5jdXJyZW50X3RocmVz
-aG9sZCA9IHRocmVzaF9tYzsKKwl9CisKKwkvKiBTZXQgSHlzdGVyZXNpcyAqLworCWlmIChoeXN0
-X21jID49IDApIHsKKwkJY3RybDEgJj0gfihkYXRhLT5oeXN0X21hc2sgPDwgZGF0YS0+aHlzdF9z
-aGlmdCk7CisJCWN0cmwxIHw9IGh5c3RlcmVzaXMgPDwgZGF0YS0+aHlzdF9zaGlmdDsKKwkJcHJp
-di0+Y3VycmVudF9oeXN0ZXJlc2lzID0gaHlzdF9tYzsKKwl9CisKKwlyZWdtYXBfd3JpdGUocHJp
-di0+c3lzY29uLCBkYXRhLT5zeXNjb25fY29udHJvbDFfb2ZmLCBjdHJsMSk7Cit9CisKK3N0YXRp
-YyBpcnFyZXR1cm5fdCBhcm1hZGFfb3ZlcmhlYXRfaXNyKGludCBpcnEsIHZvaWQgKmJsb2IpCit7
-CisJLyoKKwkgKiBEaXNhYmxlIHRoZSBJUlEgYW5kIGNvbnRpbnVlIGluIHRocmVhZCBjb250ZXh0
-ICh0aGVybWFsIGNvcmUKKwkgKiBub3RpZmljYXRpb24gYW5kIHRlbXBlcmF0dXJlIG1vbml0b3Jp
-bmcpLgorCSAqLworCWRpc2FibGVfaXJxX25vc3luYyhpcnEpOworCisJcmV0dXJuIElSUV9XQUtF
-X1RIUkVBRDsKK30KKworc3RhdGljIGlycXJldHVybl90IGFybWFkYV9vdmVyaGVhdF9pc3JfdGhy
-ZWFkKGludCBpcnEsIHZvaWQgKmJsb2IpCit7CisJc3RydWN0IGFybWFkYV90aGVybWFsX3ByaXYg
-KnByaXYgPSAoc3RydWN0IGFybWFkYV90aGVybWFsX3ByaXYgKilibG9iOworCWludCBsb3dfdGhy
-ZXNob2xkID0gcHJpdi0+Y3VycmVudF90aHJlc2hvbGQgLSBwcml2LT5jdXJyZW50X2h5c3RlcmVz
-aXM7CisJaW50IHRlbXBlcmF0dXJlOworCXUzMiBkdW1teTsKKwlpbnQgcmV0OworCisJLyogTm90
-aWZ5IHRoZSBjb3JlIGluIHRocmVhZCBjb250ZXh0ICovCisJdGhlcm1hbF96b25lX2RldmljZV91
-cGRhdGUocHJpdi0+b3ZlcmhlYXRfc2Vuc29yLAorCQkJCSAgIFRIRVJNQUxfRVZFTlRfVU5TUEVD
-SUZJRUQpOworCisJLyoKKwkgKiBUaGUgb3ZlcmhlYXQgaW50ZXJydXB0IG11c3QgYmUgY2xlYXJl
-ZCBieSByZWFkaW5nIHRoZSBERlggaW50ZXJydXB0CisJICogY2F1c2UgX2FmdGVyXyB0aGUgdGVt
-cGVyYXR1cmUgaGFzIGZhbGxlbiBkb3duIHRvIHRoZSBsb3cgdGhyZXNob2xkLgorCSAqIE90aGVy
-d2lzZSBmdXR1cmUgaW50ZXJydXB0cyBtaWdodCBub3QgYmUgc2VydmVkLgorCSAqLworCWRvIHsK
-KwkJbXNsZWVwKE9WRVJIRUFUX0lOVF9QT0xMX0RFTEFZX01TKTsKKwkJbXV0ZXhfbG9jaygmcHJp
-di0+dXBkYXRlX2xvY2spOworCQlyZXQgPSBhcm1hZGFfcmVhZF9zZW5zb3IocHJpdiwgJnRlbXBl
-cmF0dXJlKTsKKwkJbXV0ZXhfdW5sb2NrKCZwcml2LT51cGRhdGVfbG9jayk7CisJCWlmIChyZXQp
-CisJCQlyZXR1cm4gcmV0OworCX0gd2hpbGUgKHRlbXBlcmF0dXJlID49IGxvd190aHJlc2hvbGQp
-OworCisJcmVnbWFwX3JlYWQocHJpdi0+c3lzY29uLCBwcml2LT5kYXRhLT5kZnhfaXJxX2NhdXNl
-X29mZiwgJmR1bW15KTsKKworCS8qIE5vdGlmeSB0aGUgdGhlcm1hbCBjb3JlIHRoYXQgdGhlIHRl
-bXBlcmF0dXJlIGlzIGFjY2VwdGFibGUgYWdhaW4gKi8KKwl0aGVybWFsX3pvbmVfZGV2aWNlX3Vw
-ZGF0ZShwcml2LT5vdmVyaGVhdF9zZW5zb3IsCisJCQkJICAgVEhFUk1BTF9FVkVOVF9VTlNQRUNJ
-RklFRCk7CisKKwllbmFibGVfaXJxKGlycSk7CisKKwlyZXR1cm4gSVJRX0hBTkRMRUQ7Cit9CisK
-IHN0YXRpYyBjb25zdCBzdHJ1Y3QgYXJtYWRhX3RoZXJtYWxfZGF0YSBhcm1hZGF4cF9kYXRhID0g
-ewogCS5pbml0ID0gYXJtYWRheHBfaW5pdCwKIAkudGVtcF9zaGlmdCA9IDEwLApAQCAtNDU0LDYg
-KzYzNSw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgYXJtYWRhX3RoZXJtYWxfZGF0YSBhcm1hZGFf
-YXA4MDZfZGF0YSA9IHsKIAkuaXNfdmFsaWRfYml0ID0gQklUKDE2KSwKIAkudGVtcF9zaGlmdCA9
-IDAsCiAJLnRlbXBfbWFzayA9IDB4M2ZmLAorCS50aHJlc2hfc2hpZnQgPSAzLAorCS5oeXN0X3No
-aWZ0ID0gMTksCisJLmh5c3RfbWFzayA9IDB4MywKIAkuY29lZl9iID0gLTE1MDAwMExMLAogCS5j
-b2VmX20gPSA0MjNVTEwsCiAJLmNvZWZfZGl2ID0gMSwKQEAgLTQ2Miw2ICs2NDYsMTEgQEAgc3Rh
-dGljIGNvbnN0IHN0cnVjdCBhcm1hZGFfdGhlcm1hbF9kYXRhIGFybWFkYV9hcDgwNl9kYXRhID0g
-ewogCS5zeXNjb25fY29udHJvbDBfb2ZmID0gMHg4NCwKIAkuc3lzY29uX2NvbnRyb2wxX29mZiA9
-IDB4ODgsCiAJLnN5c2Nvbl9zdGF0dXNfb2ZmID0gMHg4QywKKwkuZGZ4X2lycV9jYXVzZV9vZmYg
-PSAweDEwOCwKKwkuZGZ4X2lycV9tYXNrX29mZiA9IDB4MTBDLAorCS5kZnhfb3ZlcmhlYXRfaXJx
-ID0gQklUKDIyKSwKKwkuZGZ4X3NlcnZlcl9pcnFfbWFza19vZmYgPSAweDEwNCwKKwkuZGZ4X3Nl
-cnZlcl9pcnFfZW4gPSBCSVQoMSksCiAJLmNwdV9uciA9IDQsCiB9OwogCkBAIC00NzAsNiArNjU5
-LDkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBhcm1hZGFfdGhlcm1hbF9kYXRhIGFybWFkYV9jcDEx
-MF9kYXRhID0gewogCS5pc192YWxpZF9iaXQgPSBCSVQoMTApLAogCS50ZW1wX3NoaWZ0ID0gMCwK
-IAkudGVtcF9tYXNrID0gMHgzZmYsCisJLnRocmVzaF9zaGlmdCA9IDE2LAorCS5oeXN0X3NoaWZ0
-ID0gMjYsCisJLmh5c3RfbWFzayA9IDB4MywKIAkuY29lZl9iID0gMTE3MjQ5OTEwMFVMTCwKIAku
-Y29lZl9tID0gMjAwMDA5NlVMTCwKIAkuY29lZl9kaXYgPSA0MjAxLApAQCAtNDc3LDYgKzY2OSwx
-MSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGFybWFkYV90aGVybWFsX2RhdGEgYXJtYWRhX2NwMTEw
-X2RhdGEgPSB7CiAJLnN5c2Nvbl9jb250cm9sMF9vZmYgPSAweDcwLAogCS5zeXNjb25fY29udHJv
-bDFfb2ZmID0gMHg3NCwKIAkuc3lzY29uX3N0YXR1c19vZmYgPSAweDc4LAorCS5kZnhfaXJxX2Nh
-dXNlX29mZiA9IDB4MTA4LAorCS5kZnhfaXJxX21hc2tfb2ZmID0gMHgxMEMsCisJLmRmeF9vdmVy
-aGVhdF9pcnEgPSBCSVQoMjApLAorCS5kZnhfc2VydmVyX2lycV9tYXNrX29mZiA9IDB4MTA0LAor
-CS5kZnhfc2VydmVyX2lycV9lbiA9IEJJVCgxKSwKIH07CiAKIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-b2ZfZGV2aWNlX2lkIGFybWFkYV90aGVybWFsX2lkX3RhYmxlW10gPSB7CkBAIC01OTIsNiArNzg5
-LDQ4IEBAIHN0YXRpYyB2b2lkIGFybWFkYV9zZXRfc2FuZV9uYW1lKHN0cnVjdCBwbGF0Zm9ybV9k
-ZXZpY2UgKnBkZXYsCiAJfSB3aGlsZSAoaW5zYW5lX2NoYXIpOwogfQogCisvKgorICogVGhlIElQ
-IGNhbiBtYW5hZ2UgdG8gdHJpZ2dlciBpbnRlcnJ1cHRzIG9uIG92ZXJoZWF0IHNpdHVhdGlvbiBm
-cm9tIGFsbCB0aGUKKyAqIHNlbnNvcnMuIEhvd2V2ZXIsIHRoZSBpbnRlcnJ1cHQgc291cmNlIGNo
-YW5nZXMgYWxvbmcgd2l0aCB0aGUgbGFzdCBzZWxlY3RlZAorICogc291cmNlIChpZS4gdGhlIGxh
-c3QgcmVhZCBzZW5zb3IpLCB3aGljaCBpcyBhbiBpbmNvbnNpc3RlbnQgYmVoYXZpb3IuIEF2b2lk
-CisgKiBwb3NzaWJsZSBnbGl0Y2hlcyBieSBhbHdheXMgc2VsZWN0aW5nIGJhY2sgb25seSBvbmUg
-Y2hhbm5lbCAoYXJiaXRyYXJpbHk6IHRoZQorICogZmlyc3QgaW4gdGhlIERUIHdoaWNoIGhhcyBh
-IGNyaXRpY2FsIHRyaXAgcG9pbnQpLiBXZSBhbHNvIGRpc2FibGUgc2Vuc29yCisgKiBzd2l0Y2gg
-ZHVyaW5nIG92ZXJoZWF0IHNpdHVhdGlvbnMuCisgKi8KK3N0YXRpYyBpbnQgYXJtYWRhX2NvbmZp
-Z3VyZV9vdmVyaGVhdF9pbnQoc3RydWN0IGFybWFkYV90aGVybWFsX3ByaXYgKnByaXYsCisJCQkJ
-CSBzdHJ1Y3QgdGhlcm1hbF96b25lX2RldmljZSAqdHosCisJCQkJCSBpbnQgc2Vuc29yX2lkKQor
-eworCS8qIFJldHJpZXZlIHRoZSBjcml0aWNhbCB0cmlwIHBvaW50IHRvIGVuYWJsZSB0aGUgb3Zl
-cmhlYXQgaW50ZXJydXB0ICovCisJY29uc3Qgc3RydWN0IHRoZXJtYWxfdHJpcCAqdHJpcHMgPSBv
-Zl90aGVybWFsX2dldF90cmlwX3BvaW50cyh0eik7CisJaW50IHJldDsKKwlpbnQgaTsKKworCWlm
-ICghdHJpcHMpCisJCXJldHVybiAtRUlOVkFMOworCisJZm9yIChpID0gMDsgaSA8IG9mX3RoZXJt
-YWxfZ2V0X250cmlwcyh0eik7IGkrKykKKwkJaWYgKHRyaXBzW2ldLnR5cGUgPT0gVEhFUk1BTF9U
-UklQX0NSSVRJQ0FMKQorCQkJYnJlYWs7CisKKwlpZiAoaSA9PSBvZl90aGVybWFsX2dldF9udHJp
-cHModHopKQorCQlyZXR1cm4gLUVJTlZBTDsKKworCXJldCA9IGFybWFkYV9zZWxlY3RfY2hhbm5l
-bChwcml2LCBzZW5zb3JfaWQpOworCWlmIChyZXQpCisJCXJldHVybiByZXQ7CisKKwlhcm1hZGFf
-c2V0X292ZXJoZWF0X3RocmVzaG9sZHMocHJpdiwKKwkJCQkgICAgICAgdHJpcHNbaV0udGVtcGVy
-YXR1cmUsCisJCQkJICAgICAgIHRyaXBzW2ldLmh5c3RlcmVzaXMpOworCXByaXYtPm92ZXJoZWF0
-X3NlbnNvciA9IHR6OworCXByaXYtPmludGVycnVwdF9zb3VyY2UgPSBzZW5zb3JfaWQ7CisKKwlh
-cm1hZGFfZW5hYmxlX292ZXJoZWF0X2ludGVycnVwdChwcml2KTsKKworCXJldHVybiAwOworfQor
-CiBzdGF0aWMgaW50IGFybWFkYV90aGVybWFsX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2Ug
-KnBkZXYpCiB7CiAJc3RydWN0IHRoZXJtYWxfem9uZV9kZXZpY2UgKnR6OwpAQCAtNTk5LDcgKzgz
-OCw3IEBAIHN0YXRpYyBpbnQgYXJtYWRhX3RoZXJtYWxfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rl
-dmljZSAqcGRldikKIAlzdHJ1Y3QgYXJtYWRhX2RydmRhdGEgKmRydmRhdGE7CiAJY29uc3Qgc3Ry
-dWN0IG9mX2RldmljZV9pZCAqbWF0Y2g7CiAJc3RydWN0IGFybWFkYV90aGVybWFsX3ByaXYgKnBy
-aXY7Ci0JaW50IHNlbnNvcl9pZDsKKwlpbnQgc2Vuc29yX2lkLCBpcnE7CiAJaW50IHJldDsKIAog
-CW1hdGNoID0gb2ZfbWF0Y2hfZGV2aWNlKGFybWFkYV90aGVybWFsX2lkX3RhYmxlLCAmcGRldi0+
-ZGV2KTsKQEAgLTY2OSw2ICs5MDgsMjMgQEAgc3RhdGljIGludCBhcm1hZGFfdGhlcm1hbF9wcm9i
-ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQogCWRydmRhdGEtPmRhdGEucHJpdiA9IHBy
-aXY7CiAJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgZHJ2ZGF0YSk7CiAKKwlpcnEgPSBwbGF0
-Zm9ybV9nZXRfaXJxKHBkZXYsIDApOworCWlmIChpcnEgPT0gLUVQUk9CRV9ERUZFUikKKwkJcmV0
-dXJuIGlycTsKKworCS8qIFRoZSBvdmVyaGVhdCBpbnRlcnJ1cHQgZmVhdHVyZSBpcyBub3QgbWFu
-ZGF0b3J5ICovCisJaWYgKGlycSA+PSAwKSB7CisJCXJldCA9IGRldm1fcmVxdWVzdF90aHJlYWRl
-ZF9pcnEoJnBkZXYtPmRldiwgaXJxLAorCQkJCQkJYXJtYWRhX292ZXJoZWF0X2lzciwKKwkJCQkJ
-CWFybWFkYV9vdmVyaGVhdF9pc3JfdGhyZWFkLAorCQkJCQkJMCwgTlVMTCwgcHJpdik7CisJCWlm
-IChyZXQpIHsKKwkJCWRldl9lcnIoJnBkZXYtPmRldiwgIkNhbm5vdCByZXF1ZXN0IHRocmVhZGVk
-IElSUSAlZFxuIiwKKwkJCQlpcnEpOworCQkJcmV0dXJuIHJldDsKKwkJfQorCX0KKwogCS8qCiAJ
-ICogVGhlcmUgaXMgb25lIGNoYW5uZWwgZm9yIHRoZSBJQyBhbmQgb25lIHBlciBDUFUgKGlmIGFu
-eSksIGVhY2gKIAkgKiBjaGFubmVsIGhhcyBvbmUgc2Vuc29yLgpAQCAtNjkyLDggKzk0OCwyMCBA
-QCBzdGF0aWMgaW50IGFybWFkYV90aGVybWFsX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2Ug
-KnBkZXYpCiAJCQlkZXZtX2tmcmVlKCZwZGV2LT5kZXYsIHNlbnNvcik7CiAJCQljb250aW51ZTsK
-IAkJfQorCisJCS8qCisJCSAqIFRoZSBmaXJzdCBjaGFubmVsIHRoYXQgaGFzIGEgY3JpdGljYWwg
-dHJpcCBwb2ludCByZWdpc3RlcmVkCisJCSAqIGluIHRoZSBEVCB3aWxsIHNlcnZlIGFzIGludGVy
-cnVwdCBzb3VyY2UuIE90aGVycyBwb3NzaWJsZQorCQkgKiBjcml0aWNhbCB0cmlwIHBvaW50cyB3
-aWxsIHNpbXBseSBiZSBpZ25vcmVkIGJ5IHRoZSBkcml2ZXIuCisJCSAqLworCQlpZiAoaXJxID49
-IDAgJiYgIXByaXYtPm92ZXJoZWF0X3NlbnNvcikKKwkJCWFybWFkYV9jb25maWd1cmVfb3Zlcmhl
-YXRfaW50KHByaXYsIHR6LCBzZW5zb3ItPmlkKTsKIAl9CiAKKwkvKiBKdXN0IGNvbXBsYWluIGlm
-IG5vIG92ZXJoZWF0IGludGVycnVwdCB3YXMgc2V0IHVwICovCisJaWYgKCFwcml2LT5vdmVyaGVh
-dF9zZW5zb3IpCisJCWRldl93YXJuKCZwZGV2LT5kZXYsICJPdmVyaGVhdCBpbnRlcnJ1cHQgbm90
-IGF2YWlsYWJsZVxuIik7CisKIAlyZXR1cm4gMDsKIH0KIAotLSAKMi4xOS4xCgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
-YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Wed, 2018-11-21 at 17:38 +0000, Robin Murphy wrote:
+> On 21/11/2018 11:27, Radu Pirea wrote:
+> > This patch adds support for DMA. Transfers are done with dma only
+> > if
+> > they are longer than 16 bytes in order to achieve a better
+> > performance.
+> > DMA setup introduces a little overhead and for transfers shorter
+> > than 16
+> > bytes there is no performance improvement.
+> > 
+> > Signed-off-by: Radu Pirea <radu_nicolae.pirea@upb.ro>
+> > ---
+> >   drivers/spi/spi-at91-usart.c | 223
+> > ++++++++++++++++++++++++++++++++++-
+> >   1 file changed, 221 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/spi/spi-at91-usart.c b/drivers/spi/spi-at91-
+> > usart.c
+> > index 0b07c746453d..4d908afeaec9 100644
+> > --- a/drivers/spi/spi-at91-usart.c
+> > +++ b/drivers/spi/spi-at91-usart.c
+> > @@ -8,9 +8,12 @@
+> >   
+> >   #include <linux/clk.h>
+> >   #include <linux/delay.h>
+> > +#include <linux/dmaengine.h>
+> > +#include <linux/dma-direction.h>
+> 
+> It looks rather odd to include this from a driver that isn't
+> otherwise 
+> touching anything from linux/dma-mapping.h.
+> 
+> >   #include <linux/interrupt.h>
+> >   #include <linux/kernel.h>
+> >   #include <linux/module.h>
+> > +#include <linux/of_platform.h>
+> >   #include <linux/of_gpio.h>
+> >   #include <linux/platform_device.h>
+> >   #include <linux/pm_runtime.h>
+> > @@ -58,6 +61,8 @@
+> >   
+> >   #define US_INIT \
+> >   	(US_MR_SPI_MASTER | US_MR_CHRL | US_MR_CLKO | US_MR_WRDBT)
+> > +#define US_DMA_MIN_BYTES       16
+> > +#define US_DMA_TIMEOUT         (msecs_to_jiffies(1000))
+> >   
+> >   /* Register access macros */
+> >   #define at91_usart_spi_readl(port, reg) \
+> > @@ -71,14 +76,19 @@
+> >   	writeb_relaxed((value), (port)->regs + US_##reg)
+> >   
+> >   struct at91_usart_spi {
+> > +	struct platform_device  *mpdev;
+> >   	struct spi_transfer	*current_transfer;
+> >   	void __iomem		*regs;
+> >   	struct device		*dev;
+> >   	struct clk		*clk;
+> >   
+> > +	struct completion	xfer_completion;
+> > +
+> >   	/*used in interrupt to protect data reading*/
+> >   	spinlock_t		lock;
+> >   
+> > +	phys_addr_t		phybase;
+> > +
+> >   	int			irq;
+> >   	unsigned int		current_tx_remaining_bytes;
+> >   	unsigned int		current_rx_remaining_bytes;
+> > @@ -87,8 +97,184 @@ struct at91_usart_spi {
+> >   	u32			status;
+> >   
+> >   	bool			xfer_failed;
+> > +	bool			use_dma;
+> >   };
+> >   
+> > +static void dma_callback(void *data)
+> > +{
+> > +	struct spi_controller   *ctlr = data;
+> > +	struct at91_usart_spi   *aus = spi_master_get_devdata(ctlr);
+> > +
+> > +	at91_usart_spi_writel(aus, IER, US_IR_RXRDY);
+> > +	aus->current_rx_remaining_bytes = 0;
+> > +	complete(&aus->xfer_completion);
+> > +}
+> > +
+> > +static bool at91_usart_spi_can_dma(struct spi_controller *ctrl,
+> > +				   struct spi_device *spi,
+> > +				   struct spi_transfer *xfer)
+> > +{
+> > +	struct at91_usart_spi *aus = spi_master_get_devdata(ctrl);
+> > +
+> > +	return aus->use_dma && xfer->len >= US_DMA_MIN_BYTES;
+> > +}
+> > +
+> > +static int at91_usart_spi_configure_dma(struct spi_controller
+> > *ctlr,
+> > +					struct at91_usart_spi *aus)
+> > +{
+> > +	struct dma_slave_config slave_config;
+> > +	struct device *dev = &aus->mpdev->dev;
+> > +	phys_addr_t phybase = aus->phybase;
+> > +	dma_cap_mask_t mask;
+> > +	int err = 0;
+> > +
+> > +	dma_cap_zero(mask);
+> > +	dma_cap_set(DMA_SLAVE, mask);
+> > +
+> > +	ctlr->dma_tx = dma_request_slave_channel_reason(dev, "tx");
+> > +	if (IS_ERR_OR_NULL(ctlr->dma_tx)) {
+> > +		if (IS_ERR(ctlr->dma_tx)) {
+> > +			err = PTR_ERR(ctlr->dma_tx);
+> > +			goto at91_usart_spi_error_clear;
+> > +		}
+> > +
+> > +		dev_dbg(dev,
+> > +			"DMA TX channel not available, SPI unable to
+> > use DMA\n");
+> > +		err = -EBUSY;
+> > +		goto at91_usart_spi_error_clear;
+> > +	}
+> > +
+> > +	ctlr->dma_rx = dma_request_slave_channel_reason(dev, "rx");
+> > +	if (IS_ERR_OR_NULL(ctlr->dma_rx)) {
+> > +		if (IS_ERR(ctlr->dma_rx)) {
+> > +			err = PTR_ERR(ctlr->dma_rx);
+> > +			goto at91_usart_spi_error;
+> > +		}
+> > +
+> > +		dev_dbg(dev,
+> > +			"DMA RX channel not available, SPI unable to
+> > use DMA\n");
+> > +		err = -EBUSY;
+> > +		goto at91_usart_spi_error;
+> > +	}
+> > +
+> > +	slave_config.dst_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
+> > +	slave_config.src_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
+> > +	slave_config.dst_addr = (dma_addr_t)phybase + US_THR;
+> > +	slave_config.src_addr = (dma_addr_t)phybase + US_RHR;
+> > +	slave_config.src_maxburst = 1;
+> > +	slave_config.dst_maxburst = 1;
+> > +	slave_config.device_fc = false;
+> > +
+> > +	slave_config.direction = DMA_DEV_TO_MEM;
+> > +	if (dmaengine_slave_config(ctlr->dma_rx, &slave_config)) {
+> > +		dev_err(&ctlr->dev,
+> > +			"failed to configure rx dma channel\n");
+> > +		err = -EINVAL;
+> > +		goto at91_usart_spi_error;
+> > +	}
+> > +
+> > +	slave_config.direction = DMA_MEM_TO_DEV;
+> > +	if (dmaengine_slave_config(ctlr->dma_tx, &slave_config)) {
+> > +		dev_err(&ctlr->dev,
+> > +			"failed to configure tx dma channel\n");
+> > +		err = -EINVAL;
+> > +		goto at91_usart_spi_error;
+> > +	}
+> > +
+> > +	aus->use_dma = true;
+> > +	return 0;
+> > +
+> > +at91_usart_spi_error:
+> > +	if (!IS_ERR_OR_NULL(ctlr->dma_tx))
+> > +		dma_release_channel(ctlr->dma_tx);
+> > +	if (!IS_ERR_OR_NULL(ctlr->dma_rx))
+> > +		dma_release_channel(ctlr->dma_rx);
+> > +	ctlr->dma_tx = NULL;
+> > +	ctlr->dma_rx = NULL;
+> > +
+> > +at91_usart_spi_error_clear:
+> > +	return err;
+> > +}
+> > +
+> > +static void at91_usart_spi_release_dma(struct spi_controller
+> > *ctlr)
+> > +{
+> > +	if (ctlr->dma_rx)
+> > +		dma_release_channel(ctlr->dma_rx);
+> > +	if (ctlr->dma_tx)
+> > +		dma_release_channel(ctlr->dma_tx);
+> > +}
+> > +
+> > +static void at91_usart_spi_stop_dma(struct spi_controller *ctlr)
+> > +{
+> > +	if (ctlr->dma_rx)
+> > +		dmaengine_terminate_all(ctlr->dma_rx);
+> > +	if (ctlr->dma_tx)
+> > +		dmaengine_terminate_all(ctlr->dma_tx);
+> > +}
+> > +
+> > +static int at91_usart_spi_dma_transfer(struct spi_controller
+> > *ctlr,
+> > +				       struct spi_transfer *xfer)
+> > +{
+> > +	struct at91_usart_spi *aus = spi_master_get_devdata(ctlr);
+> > +	struct dma_chan	 *rxchan = ctlr->dma_rx;
+> > +	struct dma_chan *txchan = ctlr->dma_tx;
+> > +	struct dma_async_tx_descriptor *rxdesc;
+> > +	struct dma_async_tx_descriptor *txdesc;
+> > +	dma_cookie_t cookie;
+> > +
+> > +	rxdesc = dmaengine_prep_slave_sg(rxchan,
+> > +					 xfer->rx_sg.sgl,
+> > +					 xfer->rx_sg.nents,
+> > +					 DMA_FROM_DEVICE,
+> 
+> Ah, this argument should be a dma_transfer_direction, not a 
+> dma_data_direction (confusing I know, but they belong to different 
+> APIs). I assume you mean DMA_DEV_TO_MEM here...
+
+Hi Robin,
+
+I hoped I used the correct values here, but it seems not.
+
+Thanks. I will fix.
+
+> 
+> > +					 DMA_PREP_INTERRUPT |
+> > +					 DMA_CTRL_ACK);
+> > +	if (!rxdesc)
+> > +		goto at91_usart_spi_err_dma;
+> > +
+> > +	txdesc = dmaengine_prep_slave_sg(txchan,
+> > +					 xfer->tx_sg.sgl,
+> > +					 xfer->tx_sg.nents,
+> > +					 DMA_TO_DEVICE,
+> 
+> ...and DMA_MEM_TO_DEV here.
+> 
+> Robin.
+> 
+> > +					 DMA_PREP_INTERRUPT |
+> > +					 DMA_CTRL_ACK);
+> > +	if (!txdesc)
+> > +		goto at91_usart_spi_err_dma;
+> > +
+> > +	/* Disable RX interrupt */
+> > +	at91_usart_spi_writel(aus, IDR, US_IR_RXRDY);
+> > +
+> > +	rxdesc->callback = dma_callback;
+> > +	rxdesc->callback_param = ctlr;
+> > +
+> > +	cookie = rxdesc->tx_submit(rxdesc);
+> > +	if (dma_submit_error(cookie))
+> > +		goto at91_usart_spi_err_dma;
+> > +
+> > +	cookie = txdesc->tx_submit(txdesc);
+> > +	if (dma_submit_error(cookie))
+> > +		goto at91_usart_spi_err_dma;
+> > +
+> > +	rxchan->device->device_issue_pending(rxchan);
+> > +	txchan->device->device_issue_pending(txchan);
+> > +
+> > +	return 0;
+> > +
+> > +at91_usart_spi_err_dma:
+> > +	/* Enable RX interrupt if submission of any of descriptors
+> > fails
+> > +	 * and fallback to PIO
+> > +	 */
+> > +	at91_usart_spi_writel(aus, IER, US_IR_RXRDY);
+> > +	at91_usart_spi_stop_dma(ctlr);
+> > +
+> > +	return -ENOMEM;
+> > +}
+> > +
+> > +static unsigned long at91_usart_spi_dma_timeout(struct
+> > at91_usart_spi *aus)
+> > +{
+> > +	return wait_for_completion_timeout(&aus->xfer_completion,
+> > +					   US_DMA_TIMEOUT);
+> > +}
+> > +
+> >   static inline u32 at91_usart_spi_tx_ready(struct at91_usart_spi
+> > *aus)
+> >   {
+> >   	return aus->status & US_IR_TXRDY;
+> > @@ -221,6 +407,8 @@ static int at91_usart_spi_transfer_one(struct
+> > spi_controller *ctlr,
+> >   				       struct spi_transfer *xfer)
+> >   {
+> >   	struct at91_usart_spi *aus = spi_master_get_devdata(ctlr);
+> > +	unsigned long dma_timeout = 0;
+> > +	int ret = 0;
+> >   
+> >   	at91_usart_spi_set_xfer_speed(aus, xfer);
+> >   	aus->xfer_failed = false;
+> > @@ -230,8 +418,25 @@ static int at91_usart_spi_transfer_one(struct
+> > spi_controller *ctlr,
+> >   
+> >   	while ((aus->current_tx_remaining_bytes ||
+> >   		aus->current_rx_remaining_bytes) && !aus->xfer_failed)
+> > {
+> > -		at91_usart_spi_read_status(aus);
+> > -		at91_usart_spi_tx(aus);
+> > +		reinit_completion(&aus->xfer_completion);
+> > +		if (at91_usart_spi_can_dma(ctlr, spi, xfer) &&
+> > +		    !ret) {
+> > +			ret = at91_usart_spi_dma_transfer(ctlr, xfer);
+> > +			if (ret)
+> > +				continue;
+> > +
+> > +			dma_timeout = at91_usart_spi_dma_timeout(aus);
+> > +
+> > +			if (WARN_ON(dma_timeout == 0)) {
+> > +				dev_err(&spi->dev, "DMA transfer
+> > timeout\n");
+> > +				return -EIO;
+> > +			}
+> > +			aus->current_tx_remaining_bytes = 0;
+> > +		} else {
+> > +			at91_usart_spi_read_status(aus);
+> > +			at91_usart_spi_tx(aus);
+> > +		}
+> > +
+> >   		cpu_relax();
+> >   	}
+> >   
+> > @@ -350,6 +555,7 @@ static int at91_usart_spi_probe(struct
+> > platform_device *pdev)
+> >   	controller->transfer_one = at91_usart_spi_transfer_one;
+> >   	controller->prepare_message = at91_usart_spi_prepare_message;
+> >   	controller->unprepare_message =
+> > at91_usart_spi_unprepare_message;
+> > +	controller->can_dma = at91_usart_spi_can_dma;
+> >   	controller->cleanup = at91_usart_spi_cleanup;
+> >   	controller->max_speed_hz = DIV_ROUND_UP(clk_get_rate(clk),
+> >   						US_MIN_CLK_DIV);
+> > @@ -381,7 +587,17 @@ static int at91_usart_spi_probe(struct
+> > platform_device *pdev)
+> >   	aus->spi_clk = clk_get_rate(clk);
+> >   	at91_usart_spi_init(aus);
+> >   
+> > +	aus->phybase = regs->start;
+> > +
+> > +	aus->mpdev = to_platform_device(pdev->dev.parent);
+> > +
+> > +	ret = at91_usart_spi_configure_dma(controller, aus);
+> > +	if (ret)
+> > +		goto at91_usart_fail_dma;
+> > +
+> >   	spin_lock_init(&aus->lock);
+> > +	init_completion(&aus->xfer_completion);
+> > +
+> >   	ret = devm_spi_register_master(&pdev->dev, controller);
+> >   	if (ret)
+> >   		goto at91_usart_fail_register_master;
+> > @@ -394,6 +610,8 @@ static int at91_usart_spi_probe(struct
+> > platform_device *pdev)
+> >   	return 0;
+> >   
+> >   at91_usart_fail_register_master:
+> > +	at91_usart_spi_release_dma(controller);
+> > +at91_usart_fail_dma:
+> >   	clk_disable_unprepare(clk);
+> >   at91_usart_spi_probe_fail:
+> >   	spi_master_put(controller);
+> > @@ -458,6 +676,7 @@ static int at91_usart_spi_remove(struct
+> > platform_device *pdev)
+> >   	struct spi_controller *ctlr = platform_get_drvdata(pdev);
+> >   	struct at91_usart_spi *aus = spi_master_get_devdata(ctlr);
+> >   
+> > +	at91_usart_spi_release_dma(ctlr);
+> >   	clk_disable_unprepare(aus->clk);
+> >   
+> >   	return 0;
+> > 
