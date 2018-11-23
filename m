@@ -1,105 +1,133 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 4/5] drm: rcar-du: Add R8A7744 support
-Date: Fri, 23 Nov 2018 12:32:09 +0000
-Message-ID: <TY1PR01MB17703AC2B9D5D9E86D172769C0D40@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1537553311-8831-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <5135719.5JoeYGyzrK@avalon>
- <TY1PR01MB17707049DE6A8FD71E032157C0DB0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <2739044.1unFEStFin@avalon>
+From: vitor <vitor.soares@synopsys.com>
+Subject: Re: [PATCH] i3c: master: dw: split dw-i3c-master.c into master and
+ bus specific parts
+Date: Fri, 23 Nov 2018 12:39:31 +0000
+Message-ID: <6d513e04-3a57-1989-429c-64631101c5a2@synopsys.com>
+References: <ade2c1a8d1eb48681b01ccdc9bed22caf5e96c4b.1542904564.git.soares@synopsys.com>
+ <20181122210202.6af50fcc@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2739044.1unFEStFin@avalon>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181122210202.6af50fcc@bbrezillon>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, David Airlie <airlied@linux.ie>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, Vitor Soares <vitor.soares@synopsys.com>
+Cc: wsa@the-dreams.de, linux-i2c@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de, psroka@cadence.com, agolec@cadence.com, adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com, alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com, rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, linus.walleij@linaro.org, Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org, nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se, mshettel@codeaurora.org, swboyd@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Thank you Laurent.
-
-Cheers,
-Fab
-
-> From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Sent: 23 November 2018 12:05
-> Subject: Re: [PATCH 4/5] drm: rcar-du: Add R8A7744 support
->
-> Hi Fabrizio,
->
-> On Thursday, 22 November 2018 17:59:32 EET Fabrizio Castro wrote:
-> > On 15 October 2018 23:25 Laurent Pinchart wrote:
-> > > On Friday, 21 September 2018 21:08:30 EEST Fabrizio Castro wrote:
-> > >> From: Biju Das <biju.das@bp.renesas.com>
-> > >>
-> > >> Add support for the R8A7744 DU (which is very similar to the R8A7743
-> > >> DU);
-> > >> it has 1 DPAD (RGB) output and 1 LVDS output.
-> > >>
-> > >> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> > >> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > >> ---
-> > >>
-> > >>  drivers/gpu/drm/rcar-du/rcar_du_drv.c | 1 +
-> > >>  1 file changed, 1 insertion(+)
-> > >>
-> > >> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> > >> b/drivers/gpu/drm/rcar-du/rcar_du_drv.c index c07d3f1..2c3d0e5 100644
-> > >> --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> > >> +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> > >> @@ -321,6 +321,7 @@ static const struct rcar_du_device_info
-> > >> rcar_du_r8a77970_info = {
-> > >>  static const struct of_device_id rcar_du_of_table[] = {
-> > >>  { .compatible = "renesas,du-r8a7743", .data = &rzg1_du_r8a7743_info },
-> > >> +{ .compatible = "renesas,du-r8a7744", .data = &rzg1_du_r8a7743_info },
-> > >>  { .compatible = "renesas,du-r8a7745", .data = &rzg1_du_r8a7745_info },
-> > >>  { .compatible = "renesas,du-r8a77470", .data = &rzg1_du_r8a77470_info
-> > >>  },
-> > >>  { .compatible = "renesas,du-r8a7779", .data = &rcar_du_r8a7779_info },
-> > >
-> > > This looks good to me. I would also apply this change:
-> > >
-> > > @@ -41,7 +41,7 @@ static const struct rcar_du_device_info
-> > > rzg1_du_r8a7743_info = {
-> > >         .channels_mask = BIT(1) | BIT(0),
-> > >         .routes = {
-> > >                 /*
-> > > -                * R8A7743 has one RGB output and one LVDS output
-> > > +                * R8A774[34] has one RGB output and one LVDS output
-> > >                  */
-> > >                 [RCAR_DU_OUTPUT_DPAD0] = {
-> > >                         .possible_crtcs = BIT(1) | BIT(0),
-> > >
-> > > With this,
-> > >
-> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > >
-> > > There's no need to resubmit, I've applied the patch to my tree with the
-> > > above change.
-> >
-> > I was expecting to see this patch at least on linux-next by now but it looks
-> > like it's not in there, could you please double check what happened to it?
->
-> I've sent the R-Car DU v4.21 pull request today, it should end up in linux-
-> next in the near future.
->
-> --
-> Regards,
->
-> Laurent Pinchart
->
->
+Hi Boris,
 
 
+On 22/11/18 20:02, Boris Brezillon wrote:
+> On Thu, 22 Nov 2018 17:54:54 +0000
+> Vitor Soares <vitor.soares@synopsys.com> wrote:
+>
+>> From: Vitor Soares <soares@synopsys.com>
+>>
+>> This patch slipts dw-i3c-master.c into three pieces:
+>> 	dw-i3c-master.c - contains the code that interacts directly with the
+>> 	core in master mode.
+>>
+>> 	dw-i3c-platdrv.c - contains the code specific to the platform driver.
+>>
+>> 	dw-i3c-core.h - contains the definitions and declarations shared by
+>> 	dw-i3c-master and dw-i3c-platdrv
+>>
+>> This patch will allow SOC integrators to add their code specific to
+>> DesignWare I3C IP.
+> Isn't it too early to do this change? Can't we wait until we have a SoC
+> that actually embeds this IP?
 
 
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered No. 04586709.
+I'm trying to turn it more flexible so the other can reuse the code.
+
+
+>
+>> Signed-off-by: Vitor Soares <soares@synopsys.com>
+>> ---
+>>   drivers/i3c/master/Kconfig          |   9 +-
+>>   drivers/i3c/master/Makefile         |   5 +-
+>>   drivers/i3c/master/dw-i3c-core.h    | 214 ++++++++++++++++++++++++++
+>>   drivers/i3c/master/dw-i3c-master.c  | 299 ++----------------------------------
+>>   drivers/i3c/master/dw-i3c-platdrv.c | 112 ++++++++++++++
+> I'd prefer to have a dw/ subdir where you'd place all dw files.
+
+
+Sure. I will change to this:
+
+../dwc
+    |-core.h
+    |-master.c
+    |-platdrv.c
+
+
+so the user doesn't need to write dw-i3c.. several times. The folder 
+name is the same as for other subsystem (e.g. PCI).
+
+What do you think?
+
+>
+>>   5 files changed, 349 insertions(+), 290 deletions(-)
+>>   create mode 100644 drivers/i3c/master/dw-i3c-core.h
+>>   create mode 100644 drivers/i3c/master/dw-i3c-platdrv.c
+>>
+>> diff --git a/drivers/i3c/master/Kconfig b/drivers/i3c/master/Kconfig
+>> index 8ee1ce6..fdc6e46 100644
+>> --- a/drivers/i3c/master/Kconfig
+>> +++ b/drivers/i3c/master/Kconfig
+>> @@ -5,9 +5,14 @@ config CDNS_I3C_MASTER
+>>   	help
+>>   	  Enable this driver if you want to support Cadence I3C master block.
+>>   
+>> -config DW_I3C_MASTER
+>> -	tristate "Synospsys DesignWare I3C master driver"
+>> +config DW_I3C_CORE
+>> +	tristate
+>> +
+>> +config DW_I3C_PLATFORM
+>> +	tristate "Synospsys DesignWare I3C Platform driver"
+>> +	select DW_I3C_CORE
+>>   	depends on I3C
+>> +	depends on HAS_IOMEM
+>>   	depends on !(ALPHA || PARISC)
+>>   	# ALPHA and PARISC needs {read,write}sl()
+>>   	help
+>> diff --git a/drivers/i3c/master/Makefile b/drivers/i3c/master/Makefile
+>> index fc53939..004ad1c 100644
+>> --- a/drivers/i3c/master/Makefile
+>> +++ b/drivers/i3c/master/Makefile
+>> @@ -1,2 +1,5 @@
+>>   obj-$(CONFIG_CDNS_I3C_MASTER)		+= i3c-master-cdns.o
+>> -obj-$(CONFIG_DW_I3C_MASTER)		+= dw-i3c-master.o
+>> +obj-$(CONFIG_DW_I3C_CORE)		+= dw-i3c-core.o
+>> +dw-i3c-core-objs			:= dw-i3c-master.o
+>> +obj-$(CONFIG_DW_I3C_PLATFORM)		+= dw-i3c-platform.o
+>> +dw-i3c-platform-objs			:= dw-i3c-platdrv.o
+> Do we really have to create one module for the core and one per SoC?
+> Can't we have everything in the same .ko?
+
+
+This will help the introduction of new modules. The design in my mind is 
+to have:
+
+-core.h
+
+-common.c
+
+-master.c
+
+-slave.c
+
+...
+
+I'm not sure if make sense to change core.h to common.h.
+
+
+
+Thaks for your feedback.
+
+
+Best regards,
+
+Vitor Soares
