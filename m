@@ -1,40 +1,44 @@
-Return-Path: <SRS0=cesA=OC=linaro.org=loic.poulain@kernel.org>
-From: Loic Poulain <loic.poulain@linaro.org>
-Subject: [PATCH v3 3/3] arm64: dts: qcom: pm8916: Add PON watchdog node
-Date: Fri, 23 Nov 2018 09:44:38 +0100
-Message-Id: <1542962678-13697-3-git-send-email-loic.poulain@linaro.org>
-In-Reply-To: <1542962678-13697-1-git-send-email-loic.poulain@linaro.org>
-References: <1542962678-13697-1-git-send-email-loic.poulain@linaro.org>
-To: wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, andy.gross@linaro.org, Loic Poulain <loic.poulain@linaro.org>
+Return-Path: <SRS0=DtIy=OC=bootlin.com=miquel.raynal@kernel.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 3/4] dt-bindings: clk: armada3700: fix typo in SoC name
+Date: Fri, 23 Nov 2018 10:44:42 +0100
+Message-Id: <20181123094444.27956-4-miquel.raynal@bootlin.com>
+In-Reply-To: <20181123094444.27956-1-miquel.raynal@bootlin.com>
+References: <20181123094444.27956-1-miquel.raynal@bootlin.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add watchdog child node to the PM8916 PON device.
+This documentation is about Armada 3700 SoCs.
 
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- v2: Add interrupts and timeout-sec props
- v3: no change
+ .../devicetree/bindings/clock/armada3700-periph-clock.txt     | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- arch/arm64/boot/dts/qcom/pm8916.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/pm8916.dtsi b/arch/arm64/boot/dts/qcom/pm8916.dtsi
-index a05ebaf..3230b88 100644
---- a/arch/arm64/boot/dts/qcom/pm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8916.dtsi
-@@ -32,6 +32,12 @@
- 				bias-pull-up;
- 				linux,code = <KEY_POWER>;
- 			};
-+
-+			watchdog {
-+				compatible = "qcom,pm8916-wdt";
-+				interrupts = <0x0 0x8 6 IRQ_TYPE_EDGE_RISING>;
-+				timeout-sec = <60>;
-+			};
- 		};
+diff --git a/Documentation/devicetree/bindings/clock/armada3700-periph-clock.txt b/Documentation/devicetree/bindings/clock/armada3700-periph-clock.txt
+index 1e3370ba189f..85972715e593 100644
+--- a/Documentation/devicetree/bindings/clock/armada3700-periph-clock.txt
++++ b/Documentation/devicetree/bindings/clock/armada3700-periph-clock.txt
+@@ -9,7 +9,7 @@ bridge.
+ The peripheral clock consumer should specify the desired clock by
+ having the clock ID in its "clocks" phandle cell.
  
- 		pm8916_gpios: gpios@c000 {
+-The following is a list of provided IDs for Armada 370 North bridge clocks:
++The following is a list of provided IDs for Armada 3700 North bridge clocks:
+ ID	Clock name	Description
+ -----------------------------------
+ 0	mmc		MMC controller
+@@ -30,7 +30,7 @@ ID	Clock name	Description
+ 15	eip97		EIP 97
+ 16	cpu		CPU
+ 
+-The following is a list of provided IDs for Armada 370 South bridge clocks:
++The following is a list of provided IDs for Armada 3700 South bridge clocks:
+ ID	Clock name	Description
+ -----------------------------------
+ 0	gbe-50		50 MHz parent clock for Gigabit Ethernet
 -- 
-2.7.4
+2.19.1
