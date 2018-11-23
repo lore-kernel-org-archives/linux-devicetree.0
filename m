@@ -1,59 +1,60 @@
-Return-Path: <SRS0=qRW3=N5=gmail.com=marek.vasut@kernel.org>
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: [PATCH 2/2] dt-bindings: can: rcar_canfd: document r8a77990 support
-Date: Sun, 18 Nov 2018 18:32:01 +0100
-Message-Id: <20181118173201.4645-2-marek.vasut+renesas@gmail.com>
-In-Reply-To: <20181118173201.4645-1-marek.vasut+renesas@gmail.com>
-References: <20181118173201.4645-1-marek.vasut+renesas@gmail.com>
-To: devicetree@vger.kernel.org
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>, Eugeniu Rosca <erosca@de.adit-jv.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh@kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=32CY=OC=verge.net.au=horms@kernel.org>
+Date: Fri, 23 Nov 2018 13:37:03 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device nodes
+Message-ID: <20181123123703.t6dsjwrdk2oirkar@verge.net.au>
+References: <1540542307-63158-1-git-send-email-biju.das@bp.renesas.com>
+ <20181121102421.yxndb3dyfxput25f@verge.net.au>
+ <OSBPR01MB2103BCCCF78DA986B112C8A8B8DA0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OSBPR01MB2103BCCCF78DA986B112C8A8B8DA0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, John Stultz <john.stultz@linaro.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document the support for rcar_canfd on R8A77990 SoC devices.
+On Wed, Nov 21, 2018 at 10:27:41AM +0000, Biju Das wrote:
+> Hi Simon,
+> 
+> Thanks for the feedback.
+> 
+> > -----Original Message-----
+> > From: Simon Horman <horms@verge.net.au>
+> > Sent: 21 November 2018 10:24
+> > To: Biju Das <biju.das@bp.renesas.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> > <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
+> > linux-renesas-soc@vger.kernel.org; devicetree@vger.kernel.org; Geert
+> > Uytterhoeven <geert+renesas@glider.be>; Chris Paterson
+> > <Chris.Paterson2@renesas.com>; Daniel Lezcano
+> > <daniel.lezcano@linaro.org>; Thomas Gleixner <tglx@linutronix.de>; John
+> > Stultz <john.stultz@linaro.org>; Fabrizio Castro
+> > <fabrizio.castro@bp.renesas.com>
+> > Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device nodes
+> >
+> > On Fri, Oct 26, 2018 at 09:25:07AM +0100, Biju Das wrote:
+> > > This patch adds CMT{0|1|2|3} device nodes for r8a7796 SoC.
+> > >
+> > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > > ---
+> > > This patch is tested against renesas-dev
+> > >
+> > > I have executed on inconsistency-check, nanosleep and
+> > > clocksource_switch selftests on this arm64 SoC. The
+> > > inconsistency-check and nanosleep tests are working fine.The
+> > > clocksource_switch asynchronous test is failing due to inconsistency-check
+> > failure on "arch_sys_counter".
+> > >
+> > > But if i skip the clocksource_switching of "arch_sys_counter", the
+> > > asynchronous test is passing for CMT0/1/2/3 timer.
+> > >
+> > > Has any one noticed this issue?
+> >
+> > I am reluctant to apply this patch until there is a better understanding of the
+> > issue above.
+> 
+> If I understand correctly this patch has no issue at all. The problem is related to ARM architecture  timer.
+> Please correct me if you think otherwise.
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Simon Horman <horms+renesas@verge.net.au>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-renesas-soc@vger.kernel.org
-To: devicetree@vger.kernel.org
----
- .../devicetree/bindings/net/can/rcar_canfd.txt      | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-index 4720e916fbdd..41049fed5872 100644
---- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-+++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-@@ -9,6 +9,7 @@ Required properties:
-   - "renesas,r8a77965-canfd" for R8A77965 (R-Car M3-N) compatible controller.
-   - "renesas,r8a77970-canfd" for R8A77970 (R-Car V3M) compatible controller.
-   - "renesas,r8a77980-canfd" for R8A77980 (R-Car V3H) compatible controller.
-+  - "renesas,r8a77990-canfd" for R8A77990 (R-Car E3) compatible controller.
- 
-   When compatible with the generic version, nodes must list the
-   SoC-specific version corresponding to the platform first, followed by the
-@@ -27,12 +28,12 @@ The name of the child nodes are "channel0" and "channel1" respectively. Each
- child node supports the "status" property only, which is used to
- enable/disable the respective channel.
- 
--Required properties for "renesas,r8a7795-canfd", "renesas,r8a7796-canfd" and
--"renesas,r8a77965-canfd" compatible:
--In R8A7795, R8A7796 and R8A77965 SoCs, canfd clock is a div6 clock and can
--be used by both CAN and CAN FD controller at the same time. It needs to be
--scaled to maximum frequency if any of these controllers use it. This is done
--using the below properties:
-+Required properties for "renesas,r8a7795-canfd", "renesas,r8a7796-canfd",
-+"renesas,r8a77965-canfd" and "renesas,r8a77990-canfd" compatible:
-+In R8A7795, R8A7796, R8A77965 and R8A77990 SoCs, canfd clock is a div6 clock
-+and can be used by both CAN and CAN FD controller at the same time. It needs
-+to be scaled to maximum frequency if any of these controllers use it. This is
-+done using the below properties:
- 
- - assigned-clocks: phandle of canfd clock.
- - assigned-clock-rates: maximum frequency of this clock.
--- 
-2.18.0
+Thanks for the clarification, I have applied this patch for v4.21.
