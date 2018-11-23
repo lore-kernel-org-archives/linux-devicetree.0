@@ -1,228 +1,50 @@
-From: Philippe Schenker <dev@pschenker.ch>
-Subject: [PATCH v3 4/4] ARM: dts: Add stmpe-adc driver to relevant devicetrees
-Date: Fri, 23 Nov 2018 15:24:11 +0100
-Message-ID: <20181123142411.8921-4-dev@pschenker.ch>
-References: <20181123142411.8921-1-dev@pschenker.ch>
+From: Carlo Caione <ccaione@baylibre.com>
+Subject: [PATCH v2] arm64: dts: meson-axg: Enable watchdog on Meson AXG SoCs
+Date: Fri, 23 Nov 2018 14:45:41 +0000
+Message-ID: <20181123144541.15114-1-ccaione@baylibre.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181123142411.8921-1-dev@pschenker.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, marcel.ziswiler@toradex.com, stefan@agner.ch
-Cc: Philippe Schenker <philippe.schenker@toradex.com>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, Pengutronix Kernel Team <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, NXP Linux Team <linux-imx@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, jbrunet@baylibre.com
+Cc: Carlo Caione <ccaione@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Philippe Schenker <philippe.schenker@toradex.com>
+Add the watchdog node also on the AXG platforms.
 
-Activate the stmpe-adc driver as found on Apalis/Colibri iMX6/T30 modules
-
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+Signed-off-by: Carlo Caione <ccaione@baylibre.com>
 ---
+V2:
+ - Remove amlogic,meson-axg-wdt compatible
+---
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Changes in v3:
- - None
-
-Changes in v2:
- - Put common ADC settings in mfd
-
- arch/arm/boot/dts/imx6qdl-apalis.dtsi  | 22 ++++++++++++++--------
- arch/arm/boot/dts/imx6qdl-colibri.dtsi | 23 +++++++++++++++--------
- arch/arm/boot/dts/tegra30-apalis.dtsi  | 22 ++++++++++++++--------
- arch/arm/boot/dts/tegra30-colibri.dtsi | 22 ++++++++++++++--------
- 4 files changed, 57 insertions(+), 32 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-index 3dc99dd8dde1..8db476d8978d 100644
---- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-@@ -331,11 +331,18 @@
- 		id = <0>;
- 		blocks = <0x5>;
- 		irq-trigger = <0x1>;
-+		/* 3.25 MHz ADC clock speed */
-+		st,adc-freq = <1>;
-+		/* 12-bit ADC */
-+		st,mod-12b = <1>;
-+		/* internal ADC reference */
-+		st,ref-sel = <0>;
-+		/* ADC converstion time: 80 clocks */
-+		st,sample-time = <4>;
-+		/* forbid to use ADC channels 3-0 (touch) */
- 
- 		stmpe_touchscreen {
- 			compatible = "st,stmpe-ts";
--			/* 3.25 MHz ADC clock speed */
--			st,adc-freq = <1>;
- 			/* 8 sample average control */
- 			st,ave-ctrl = <3>;
- 			/* 7 length fractional part in z */
-@@ -345,17 +352,16 @@
- 			 * current limit value
- 			 */
- 			st,i-drive = <1>;
--			/* 12-bit ADC */
--			st,mod-12b = <1>;
--			/* internal ADC reference */
--			st,ref-sel = <0>;
--			/* ADC converstion time: 80 clocks */
--			st,sample-time = <4>;
- 			/* 1 ms panel driver settling time */
- 			st,settling = <3>;
- 			/* 5 ms touch detect interrupt delay */
- 			st,touch-det-delay = <5>;
- 		};
-+
-+		stmpe_adc {
-+			compatible = "st,stmpe-adc";
-+			st,norequest-mask = <0x0F>;
-+		};
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-index 87e15e7cb32b..2e303d79c7f8 100644
---- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-@@ -262,11 +262,18 @@
- 		id = <0>;
- 		blocks = <0x5>;
- 		irq-trigger = <0x1>;
-+		/* 3.25 MHz ADC clock speed */
-+		st,adc-freq = <1>;
-+		/* 12-bit ADC */
-+		st,mod-12b = <1>;
-+		/* internal ADC reference */
-+		st,ref-sel = <0>;
-+		/* ADC converstion time: 80 clocks */
-+		st,sample-time = <4>;
-+		/* forbid to use ADC channels 3-0 (touch) */
- 
- 		stmpe_touchscreen {
- 			compatible = "st,stmpe-ts";
--			/* 3.25 MHz ADC clock speed */
--			st,adc-freq = <1>;
- 			/* 8 sample average control */
- 			st,ave-ctrl = <3>;
- 			/* 7 length fractional part in z */
-@@ -276,17 +283,17 @@
- 			 * current limit value
- 			 */
- 			st,i-drive = <1>;
--			/* 12-bit ADC */
--			st,mod-12b = <1>;
--			/* internal ADC reference */
--			st,ref-sel = <0>;
--			/* ADC converstion time: 80 clocks */
--			st,sample-time = <4>;
- 			/* 1 ms panel driver settling time */
- 			st,settling = <3>;
- 			/* 5 ms touch detect interrupt delay */
- 			st,touch-det-delay = <5>;
- 		};
-+
-+		stmpe_adc {
-+			compatible = "st,stmpe-adc";
-+			/* 3.25 MHz ADC clock speed */
-+			st,norequest-mask = <0x0F>;
-+		};
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
-index 7f112f192fe9..850b0d13549a 100644
---- a/arch/arm/boot/dts/tegra30-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
-@@ -976,11 +976,18 @@
- 			id = <0>;
- 			blocks = <0x5>;
- 			irq-trigger = <0x1>;
-+			/* 3.25 MHz ADC clock speed */
-+			st,adc-freq = <1>;
-+			/* 12-bit ADC */
-+			st,mod-12b = <1>;
-+			/* internal ADC reference */
-+			st,ref-sel = <0>;
-+			/* ADC converstion time: 80 clocks */
-+			st,sample-time = <4>;
-+			/* forbid to use ADC channels 3-0 (touch) */
- 
- 			stmpe_touchscreen {
- 				compatible = "st,stmpe-ts";
--				/* 3.25 MHz ADC clock speed */
--				st,adc-freq = <1>;
- 				/* 8 sample average control */
- 				st,ave-ctrl = <3>;
- 				/* 7 length fractional part in z */
-@@ -990,17 +997,16 @@
- 				 * current limit value
- 				 */
- 				st,i-drive = <1>;
--				/* 12-bit ADC */
--				st,mod-12b = <1>;
--				/* internal ADC reference */
--				st,ref-sel = <0>;
--				/* ADC converstion time: 80 clocks */
--				st,sample-time = <4>;
- 				/* 1 ms panel driver settling time */
- 				st,settling = <3>;
- 				/* 5 ms touch detect interrupt delay */
- 				st,touch-det-delay = <5>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index df017dbd2e57..27d73d831a13 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -1422,6 +1422,12 @@
+ 				status = "disabled";
  			};
-+
-+			stmpe_adc {
-+				compatible = "st,stmpe-adc";
-+				st,norequest-mask = <0x0F>;
+ 
++			watchdog@f0d0 {
++				compatible = "amlogic,meson-gxbb-wdt";
++				reg = <0x0 0xf0d0 0x0 0x10>;
++				clocks = <&xtal>;
 +			};
- 		};
- 
- 		/*
-diff --git a/arch/arm/boot/dts/tegra30-colibri.dtsi b/arch/arm/boot/dts/tegra30-colibri.dtsi
-index 35af03ca9e90..1f9198bb24ff 100644
---- a/arch/arm/boot/dts/tegra30-colibri.dtsi
-+++ b/arch/arm/boot/dts/tegra30-colibri.dtsi
-@@ -845,11 +845,18 @@
- 			id = <0>;
- 			blocks = <0x5>;
- 			irq-trigger = <0x1>;
-+			/* 3.25 MHz ADC clock speed */
-+			st,adc-freq = <1>;
-+			/* 12-bit ADC */
-+			st,mod-12b = <1>;
-+			/* internal ADC reference */
-+			st,ref-sel = <0>;
-+			/* ADC converstion time: 80 clocks */
-+			st,sample-time = <4>;
-+			/* forbid to use ADC channels 3-0 (touch) */
- 
- 			stmpe_touchscreen {
- 				compatible = "st,stmpe-ts";
--				/* 3.25 MHz ADC clock speed */
--				st,adc-freq = <1>;
- 				/* 8 sample average control */
- 				st,ave-ctrl = <3>;
- 				/* 7 length fractional part in z */
-@@ -859,17 +866,16 @@
- 				 * current limit value
- 				 */
- 				st,i-drive = <1>;
--				/* 12-bit ADC */
--				st,mod-12b = <1>;
--				/* internal ADC reference */
--				st,ref-sel = <0>;
--				/* ADC converstion time: 80 clocks */
--				st,sample-time = <4>;
- 				/* 1 ms panel driver settling time */
- 				st,settling = <3>;
- 				/* 5 ms touch detect interrupt delay */
- 				st,touch-det-delay = <5>;
- 			};
 +
-+			stmpe_adc {
-+				compatible = "st,stmpe-adc";
-+				st,norequest-mask = <0x0F>;
-+			};
- 		};
- 
- 		/*
+ 			pwm_ab: pwm@1b000 {
+ 				compatible = "amlogic,meson-axg-ee-pwm";
+ 				reg = <0x0 0x1b000 0x0 0x20>;
 -- 
 2.19.1
