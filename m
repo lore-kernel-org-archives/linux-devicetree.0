@@ -1,71 +1,36 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 4/5] drm: rcar-du: Add R8A7744 support
-Date: Fri, 23 Nov 2018 14:05:23 +0200
-Message-ID: <2739044.1unFEStFin@avalon>
-References: <1537553311-8831-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <5135719.5JoeYGyzrK@avalon>
- <TY1PR01MB17707049DE6A8FD71E032157C0DB0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH] dt-bindings: hwmon: lm90: Document ti,tmp451 compatible string
+Date: Fri, 23 Nov 2018 13:08:46 +0100
+Message-ID: <20181123120846.16999-1-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <TY1PR01MB17707049DE6A8FD71E032157C0DB0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, David Airlie <airlied@linux.ie>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRmFicml6aW8sCgpPbiBUaHVyc2RheSwgMjIgTm92ZW1iZXIgMjAxOCAxNzo1OTozMiBFRVQg
-RmFicml6aW8gQ2FzdHJvIHdyb3RlOgo+IE9uIDE1IE9jdG9iZXIgMjAxOCAyMzoyNSBMYXVyZW50
-IFBpbmNoYXJ0IHdyb3RlOgo+ID4gT24gRnJpZGF5LCAyMSBTZXB0ZW1iZXIgMjAxOCAyMTowODoz
-MCBFRVNUIEZhYnJpemlvIENhc3RybyB3cm90ZToKPiA+PiBGcm9tOiBCaWp1IERhcyA8YmlqdS5k
-YXNAYnAucmVuZXNhcy5jb20+Cj4gPj4gCj4gPj4gQWRkIHN1cHBvcnQgZm9yIHRoZSBSOEE3NzQ0
-IERVICh3aGljaCBpcyB2ZXJ5IHNpbWlsYXIgdG8gdGhlIFI4QTc3NDMKPiA+PiBEVSk7Cj4gPj4g
-aXQgaGFzIDEgRFBBRCAoUkdCKSBvdXRwdXQgYW5kIDEgTFZEUyBvdXRwdXQuCj4gPj4gCj4gPj4g
-U2lnbmVkLW9mZi1ieTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPgo+ID4+IFJl
-dmlld2VkLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNv
-bT4KPiA+PiAtLS0KPiA+PiAKPiA+PiAgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9k
-cnYuYyB8IDEgKwo+ID4+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPiA+PiAKPiA+
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9kcnYuYwo+ID4+
-IGIvZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9kcnYuYyBpbmRleCBjMDdkM2YxLi4y
-YzNkMGU1IDEwMDY0NAo+ID4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVf
-ZHJ2LmMKPiA+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2Rydi5jCj4g
-Pj4gQEAgLTMyMSw2ICszMjEsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHJjYXJfZHVfZGV2aWNl
-X2luZm8KPiA+PiByY2FyX2R1X3I4YTc3OTcwX2luZm8gPSB7Cj4gPj4gIHN0YXRpYyBjb25zdCBz
-dHJ1Y3Qgb2ZfZGV2aWNlX2lkIHJjYXJfZHVfb2ZfdGFibGVbXSA9IHsKPiA+PiAgeyAuY29tcGF0
-aWJsZSA9ICJyZW5lc2FzLGR1LXI4YTc3NDMiLCAuZGF0YSA9ICZyemcxX2R1X3I4YTc3NDNfaW5m
-byB9LAo+ID4+ICt7IC5jb21wYXRpYmxlID0gInJlbmVzYXMsZHUtcjhhNzc0NCIsIC5kYXRhID0g
-JnJ6ZzFfZHVfcjhhNzc0M19pbmZvIH0sCj4gPj4gIHsgLmNvbXBhdGlibGUgPSAicmVuZXNhcyxk
-dS1yOGE3NzQ1IiwgLmRhdGEgPSAmcnpnMV9kdV9yOGE3NzQ1X2luZm8gfSwKPiA+PiAgeyAuY29t
-cGF0aWJsZSA9ICJyZW5lc2FzLGR1LXI4YTc3NDcwIiwgLmRhdGEgPSAmcnpnMV9kdV9yOGE3NzQ3
-MF9pbmZvCj4gPj4gIH0sCj4gPj4gIHsgLmNvbXBhdGlibGUgPSAicmVuZXNhcyxkdS1yOGE3Nzc5
-IiwgLmRhdGEgPSAmcmNhcl9kdV9yOGE3Nzc5X2luZm8gfSwKPiA+IAo+ID4gVGhpcyBsb29rcyBn
-b29kIHRvIG1lLiBJIHdvdWxkIGFsc28gYXBwbHkgdGhpcyBjaGFuZ2U6Cj4gPiAKPiA+IEBAIC00
-MSw3ICs0MSw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcmNhcl9kdV9kZXZpY2VfaW5mbwo+ID4g
-cnpnMV9kdV9yOGE3NzQzX2luZm8gPSB7Cj4gPiAgICAgICAgIC5jaGFubmVsc19tYXNrID0gQklU
-KDEpIHwgQklUKDApLAo+ID4gICAgICAgICAucm91dGVzID0gewo+ID4gICAgICAgICAgICAgICAg
-IC8qCj4gPiAtICAgICAgICAgICAgICAgICogUjhBNzc0MyBoYXMgb25lIFJHQiBvdXRwdXQgYW5k
-IG9uZSBMVkRTIG91dHB1dAo+ID4gKyAgICAgICAgICAgICAgICAqIFI4QTc3NFszNF0gaGFzIG9u
-ZSBSR0Igb3V0cHV0IGFuZCBvbmUgTFZEUyBvdXRwdXQKPiA+ICAgICAgICAgICAgICAgICAgKi8K
-PiA+ICAgICAgICAgICAgICAgICBbUkNBUl9EVV9PVVRQVVRfRFBBRDBdID0gewo+ID4gICAgICAg
-ICAgICAgICAgICAgICAgICAgLnBvc3NpYmxlX2NydGNzID0gQklUKDEpIHwgQklUKDApLAo+ID4g
-Cj4gPiBXaXRoIHRoaXMsCj4gPiAKPiA+IFJldmlld2VkLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxs
-YXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+Cj4gPiAKPiA+IFRoZXJlJ3Mgbm8gbmVl
-ZCB0byByZXN1Ym1pdCwgSSd2ZSBhcHBsaWVkIHRoZSBwYXRjaCB0byBteSB0cmVlIHdpdGggdGhl
-Cj4gPiBhYm92ZSBjaGFuZ2UuCj4gCj4gSSB3YXMgZXhwZWN0aW5nIHRvIHNlZSB0aGlzIHBhdGNo
-IGF0IGxlYXN0IG9uIGxpbnV4LW5leHQgYnkgbm93IGJ1dCBpdCBsb29rcwo+IGxpa2UgaXQncyBu
-b3QgaW4gdGhlcmUsIGNvdWxkIHlvdSBwbGVhc2UgZG91YmxlIGNoZWNrIHdoYXQgaGFwcGVuZWQg
-dG8gaXQ/CgpJJ3ZlIHNlbnQgdGhlIFItQ2FyIERVIHY0LjIxIHB1bGwgcmVxdWVzdCB0b2RheSwg
-aXQgc2hvdWxkIGVuZCB1cCBpbiBsaW51eC0KbmV4dCBpbiB0aGUgbmVhciBmdXR1cmUuCgotLSAK
-UmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVsCg==
+From: Thierry Reding <treding@nvidia.com>
+
+The TI TMP451 temperature sensors are compatible with the National LM90
+temperature sensors.
+
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ Documentation/devicetree/bindings/hwmon/lm90.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/hwmon/lm90.txt b/Documentation/devicetree/bindings/hwmon/lm90.txt
+index 97581266e329..c76a7ac47c34 100644
+--- a/Documentation/devicetree/bindings/hwmon/lm90.txt
++++ b/Documentation/devicetree/bindings/hwmon/lm90.txt
+@@ -23,6 +23,7 @@ Required node properties:
+ 		"onnn,nct1008"
+ 		"winbond,w83l771"
+ 		"nxp,sa56004"
++		"ti,tmp451"
+ 
+ - reg: I2C bus address of the device
+ 
+-- 
+2.19.1
