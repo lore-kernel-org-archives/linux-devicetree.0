@@ -1,537 +1,399 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [RFC PATCH v2 05/15] usb:cdns3: Added DRD support
-Date: Fri, 23 Nov 2018 16:51:56 +0200
-Message-ID: <5BF8140C.7000605@ti.com>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
- <1542535751-16079-6-git-send-email-pawell@cadence.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH V6 2/2] can: flexcan: add self wakeup support
+Date: Fri, 23 Nov 2018 16:03:53 +0100
+Message-ID: <1be643fb-e966-fc2d-d19f-2a1e45b58641@pengutronix.de>
+References: <20181123083304.3232-1-qiangqing.zhang@nxp.com>
+ <20181123083304.3232-3-qiangqing.zhang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="trC1QlQ0mUvy5WJC6BtKgYZWIOhHsXJ07"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542535751-16079-6-git-send-email-pawell@cadence.com>
+In-Reply-To: <20181123083304.3232-3-qiangqing.zhang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, adouglas@cadence.com, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
+To: Joakim Zhang <qiangqing.zhang@nxp.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "wg@grandegger.com" <wg@grandegger.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng DONG <aisheng.dong@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 18/11/18 12:09, Pawel Laszczak wrote:
-> Patch adds supports for detecting Host/Device mode.
-> Controller has additional OTG register that allow
-> implement even whole OTG functionality.
-> At this moment patch adds support only for detecting
-> the appropriate mode based on strap pins and ID pin.
-> 
-> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--trC1QlQ0mUvy5WJC6BtKgYZWIOhHsXJ07
+Content-Type: multipart/mixed; boundary="5ecR1lUw7oiKwKbiJSwsPr7HPuwBbTq2U";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Joakim Zhang <qiangqing.zhang@nxp.com>,
+ "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+ "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "wg@grandegger.com" <wg@grandegger.com>,
+ "mark.rutland@arm.com" <mark.rutland@arm.com>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ dl-linux-imx <linux-imx@nxp.com>, Aisheng DONG <aisheng.dong@nxp.com>
+Message-ID: <1be643fb-e966-fc2d-d19f-2a1e45b58641@pengutronix.de>
+Subject: Re: [PATCH V6 2/2] can: flexcan: add self wakeup support
+References: <20181123083304.3232-1-qiangqing.zhang@nxp.com>
+ <20181123083304.3232-3-qiangqing.zhang@nxp.com>
+In-Reply-To: <20181123083304.3232-3-qiangqing.zhang@nxp.com>
+
+--5ecR1lUw7oiKwKbiJSwsPr7HPuwBbTq2U
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
+
+On 11/23/18 9:35 AM, Joakim Zhang wrote:
+> From: Aisheng Dong <aisheng.dong@nxp.com>
+>=20
+> If wakeup is enabled, enter stop mode, else enter disabled mode. Self w=
+ake
+> can only work on stop mode.
+>=20
+> Starting from IMX6, the flexcan stop mode control bits is SoC specific,=
+
+> move it out of IP driver and parse it from devicetree.
+>=20
+> Signed-off-by: Aisheng Dong <aisheng.dong@nxp.com>
+> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
 > ---
->  drivers/usb/cdns3/Makefile |   2 +-
->  drivers/usb/cdns3/core.c   |  27 +++--
->  drivers/usb/cdns3/drd.c    | 229 +++++++++++++++++++++++++++++++++++++
->  drivers/usb/cdns3/drd.h    | 122 ++++++++++++++++++++
->  4 files changed, 372 insertions(+), 8 deletions(-)
->  create mode 100644 drivers/usb/cdns3/drd.c
->  create mode 100644 drivers/usb/cdns3/drd.h
-> 
-> diff --git a/drivers/usb/cdns3/Makefile b/drivers/usb/cdns3/Makefile
-> index 02d25b23c5d3..e779b2a2f8eb 100644
-> --- a/drivers/usb/cdns3/Makefile
-> +++ b/drivers/usb/cdns3/Makefile
-> @@ -1,5 +1,5 @@
->  obj-$(CONFIG_USB_CDNS3)			+= cdns3.o
->  obj-$(CONFIG_USB_CDNS3_PCI_WRAP)	+= cdns3-pci.o
->  
-> -cdns3-y					:= core.o
-> +cdns3-y					:= core.o drd.o
->  cdns3-pci-y		 		:= cdns3-pci-wrap.o
-> diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
-> index f9055d4da67f..dbee4325da7f 100644
-> --- a/drivers/usb/cdns3/core.c
-> +++ b/drivers/usb/cdns3/core.c
-> @@ -17,6 +17,7 @@
->  
->  #include "gadget.h"
->  #include "core.h"
-> +#include "drd.h"
->  
->  static inline struct cdns3_role_driver *cdns3_get_current_role_driver(struct cdns3 *cdns)
->  {
-> @@ -57,8 +58,10 @@ static inline void cdns3_role_stop(struct cdns3 *cdns)
->  static enum cdns3_roles cdns3_get_role(struct cdns3 *cdns)
->  {
->  	if (cdns->roles[CDNS3_ROLE_HOST] && cdns->roles[CDNS3_ROLE_GADGET]) {
-> -		//TODO: implements selecting device/host mode
-> -		return CDNS3_ROLE_HOST;
-> +		if (cdns3_is_host(cdns))
-> +			return CDNS3_ROLE_HOST;
-> +		if (cdns3_is_device(cdns))
-> +			return CDNS3_ROLE_GADGET;
->  	}
->  	return cdns->roles[CDNS3_ROLE_HOST]
->  		? CDNS3_ROLE_HOST
-> @@ -124,6 +127,12 @@ static irqreturn_t cdns3_irq(int irq, void *data)
->  	struct cdns3 *cdns = data;
->  	irqreturn_t ret = IRQ_NONE;
->  
-> +	if (cdns->dr_mode == USB_DR_MODE_OTG) {
-> +		ret = cdns3_drd_irq(cdns);
-> +		if (ret == IRQ_HANDLED)
-> +			return ret;
-> +	}
+> ChangeLog:
+> V1->V2:
+> 	*add a vendor prefix in property (stop-mode -> fsl,stop-mode).
+> V2->V3:
+> 	*add FLEXCAN_QUIRK_SETUP_STOP_MODE quirk.
+> 	*rename function.
+> 	*fix system can't be wakeuped during suspend.
+> V3->V4:
+> 	*normalize the code following Aisheng Dong's comments.
+> V4->V5:
+> 	*move enable/disable self wakeup feature into
+> 	 enter/exit_stop_mode() function.
+> V5->V6:
+> 	*exchange the order of flexcan_enable_wakeup_irq(priv, false)
+> 	 and disable_irq_wake(dev->irq).
+> ---
+>  drivers/net/can/flexcan.c | 172 ++++++++++++++++++++++++++++++++++++--=
 
-The kernel's shared IRQ model takes care of sharing the same interrupt
-between different devices and their drivers. You don't need to manually
-handle it here. Just let all 3 drivers do a request_irq() and have
-handlers check if the IRQ was theirs or not and return IRQ_HANDLED or
-IRQ_NONE accordingly.
+>  1 file changed, 163 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c
+> index 8e972ef08637..da08a8c113d2 100644
+> --- a/drivers/net/can/flexcan.c
+> +++ b/drivers/net/can/flexcan.c
+> @@ -19,11 +19,14 @@
+>  #include <linux/delay.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/regmap.h>
+> =20
+>  #define DRV_NAME			"flexcan"
+> =20
+> @@ -131,7 +134,8 @@
+>  	(FLEXCAN_ESR_ERR_BUS | FLEXCAN_ESR_ERR_STATE)
+>  #define FLEXCAN_ESR_ALL_INT \
+>  	(FLEXCAN_ESR_TWRN_INT | FLEXCAN_ESR_RWRN_INT | \
+> -	 FLEXCAN_ESR_BOFF_INT | FLEXCAN_ESR_ERR_INT)
+> +	FLEXCAN_ESR_BOFF_INT | FLEXCAN_ESR_ERR_INT | \
+> +	FLEXCAN_ESR_WAK_INT)
 
-Looks like you can do away with irq member of the role driver struct.
+I've fixed the indention while applying the patch.
 
-> +
->  	/* Handle device/host interrupt */
->  	if (cdns->role != CDNS3_ROLE_END)
->  		ret = cdns3_get_current_role_driver(cdns)->irq(cdns);
-> @@ -176,11 +185,8 @@ static void cdns3_role_switch(struct work_struct *work)
->  
->  	cdns = container_of(work, struct cdns3, role_switch_wq);
->  
-> -	//TODO: implements this functions.
-> -	//host = cdns3_is_host(cdns);
-> -	//device = cdns3_is_device(cdns);
-> -	host = 1;
-> -	device = 0;
-> +	host = cdns3_is_host(cdns);
-> +	device = cdns3_is_device(cdns);
-
-What if there is a ID transition between the 2 functions so that
-and both host and device become true?
-Since you are checking the ID level separately in both the functions.
-
-How about instead having cdns3_get_id() and using
-it to start/stop relevant roles if we are in OTG mode.
-
-Is this going to be used for a role switch even if we're not in OTG mode?
-If not then it is a BUG if we get here.
-
->  
->  	if (host)
->  		role = CDNS3_ROLE_HOST;
-> @@ -194,6 +200,12 @@ static void cdns3_role_switch(struct work_struct *work)
->  	pm_runtime_get_sync(cdns->dev);
->  	cdns3_role_stop(cdns);
->  
-> +	if (cdns->desired_dr_mode != cdns->current_dr_mode) {
-
-This is about roles, why are we checking dr_mode here?
-
-> +		cdns3_drd_update_mode(cdns);
-> +		host = cdns3_is_host(cdns);
-> +		device = cdns3_is_device(cdns);
-> +	}
-> +
->  	if (host) {
->  		if (cdns->roles[CDNS3_ROLE_HOST])
->  			cdns3_do_role_switch(cdns, CDNS3_ROLE_HOST);
-> @@ -287,6 +299,7 @@ static int cdns3_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto err2;
->  
-> +	ret = cdns3_drd_init(cdns);
->  	if (ret)
->  		goto err2;
->  
-> diff --git a/drivers/usb/cdns3/drd.c b/drivers/usb/cdns3/drd.c
-> new file mode 100644
-> index 000000000000..ac741c80e776
-> --- /dev/null
-> +++ b/drivers/usb/cdns3/drd.c
-> @@ -0,0 +1,229 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Cadence USBSS DRD Driver.
-> + *
-> + * Copyright (C) 2018 Cadence.
-> + *
-> + * Author: Pawel Laszczak <pawell@cadence.com
-> + *
-> + */
-> +#include <linux/kernel.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/delay.h>
-> +#include <linux/usb/otg.h>
-> +
-> +#include "gadget.h"
-> +#include "drd.h"
-> +
-> +/**
-> + * cdns3_set_mode - change mode of OTG Core
-> + * @cdns: pointer to context structure
-> + * @mode: selected mode from cdns_role
-> + */
-> +void cdns3_set_mode(struct cdns3 *cdns, enum usb_dr_mode mode)
-> +{
-> +	u32 reg;
-> +
-> +	cdns->current_dr_mode = mode;
-> +	switch (mode) {
-> +	case USB_DR_MODE_PERIPHERAL:
-> +		dev_info(cdns->dev, "Set controller to Gadget mode\n");
-> +		writel(OTGCMD_DEV_BUS_REQ | OTGCMD_OTG_DIS,
-> +		       &cdns->otg_regs->cmd);
-> +		break;
-> +	case USB_DR_MODE_HOST:
-> +		dev_info(cdns->dev, "Set controller to Host mode\n");
-> +		writel(OTGCMD_HOST_BUS_REQ | OTGCMD_OTG_DIS,
-> +		       &cdns->otg_regs->cmd);
-> +		break;
-> +	case USB_DR_MODE_OTG:
-> +		dev_info(cdns->dev, "Set controller to OTG mode\n");
-> +		reg = readl(&cdns->otg_regs->ctrl1);
-> +		reg |= OTGCTRL1_IDPULLUP;
-> +		writel(reg, &cdns->otg_regs->ctrl1);
-> +
-> +		/* wait until valid ID (ID_VALUE) can be sampled (50ms). */
-> +		mdelay(50);
-> +		break;
-> +	default:
-> +		cdns->current_dr_mode = USB_DR_MODE_UNKNOWN;
-> +		dev_err(cdns->dev, "Unsupported mode of operation %d\n", mode);
-> +		return;
-> +	}
-> +}
-> +
-> +static int cdns3_otg_get_id(struct cdns3 *cdns)
-> +{
-> +	int id;
-> +
-> +	id = readl(&cdns->otg_regs->sts) & OTGSTS_ID_VALUE;
-> +	dev_dbg(cdns->dev, "OTG ID: %d", id);
-> +	return id;
-> +}
-> +
-> +int cdns3_is_host(struct cdns3 *cdns)
-> +{
-> +	if (cdns->current_dr_mode == USB_DR_MODE_HOST)
-> +		return 1;
-
-Why do you need this?
-
-> +	else if (cdns->current_dr_mode == USB_DR_MODE_OTG)
-> +		if (!cdns3_otg_get_id(cdns))
-> +			return 1;
-> +
-> +	return 0;
-> +}
-> +
-> +int cdns3_is_device(struct cdns3 *cdns)
-> +{
-> +	if (cdns->current_dr_mode == USB_DR_MODE_PERIPHERAL)
-> +		return 1;
-> +	else if (cdns->current_dr_mode == USB_DR_MODE_OTG)
-> +		if (cdns3_otg_get_id(cdns))
-> +			return 1;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * cdns3_otg_disable_irq - Disable all OTG interrupts
-> + * @cdns: Pointer to controller context structure
-> + */
-> +static void cdns3_otg_disable_irq(struct cdns3 *cdns)
-> +{
-> +	writel(0, &cdns->otg_regs->ien);
-> +}
-> +
-> +/**
-> + * cdns3_otg_enable_irq - enable id and sess_valid interrupts
-> + * @cdns: Pointer to controller context structure
-> + */
-> +static void cdns3_otg_enable_irq(struct cdns3 *cdns)
-> +{
-> +	writel(OTGIEN_ID_CHANGE_INT | OTGIEN_VBUSVALID_RISE_INT |
-> +	       OTGIEN_VBUSVALID_FALL_INT, &cdns->otg_regs->ien);
-> +}
-> +
-> +/**
-> + * cdns3_init_otg_mode - initialize drd controller
-> + * @cdns: Pointer to controller context structure
-> + *
-> + * Returns 0 on success otherwise negative errno
-> + */
-> +static void cdns3_init_otg_mode(struct cdns3 *cdns)
-> +{
-> +	cdns3_otg_disable_irq(cdns);
-> +	/* clear all interrupts */
-> +	writel(~0, &cdns->otg_regs->ivect);
-> +
-> +	cdns3_set_mode(cdns, USB_DR_MODE_OTG);
-> +
-> +	cdns3_otg_enable_irq(cdns);
-> +}
-> +
-> +/**
-> + * cdns3_drd_update_mode - initialize mode of operation
-
-Looks like this will be called only once. How about calling it
-
-cdns3_drd_init_mode()?
-
-> + * @cdns: Pointer to controller context structure
-> + *
-> + * Returns 0 on success otherwise negative errno
-> + */
-> +int cdns3_drd_update_mode(struct cdns3 *cdns)
-> +{
-> +	int ret = 0;
-> +
-> +	switch (cdns->desired_dr_mode) {
-
-I think we can get rid of desired_dr_mode member in struct cdns.
-Just pass the mode as an argument to cdns3_drd_init_mode()
-
-And we already have cdns->dr_mode.
-
-> +	case USB_DR_MODE_PERIPHERAL:
-> +		cdns3_set_mode(cdns, USB_DR_MODE_PERIPHERAL);
-> +		break;
-> +	case USB_DR_MODE_HOST:
-> +		cdns3_set_mode(cdns, USB_DR_MODE_HOST);
-> +		break;
-> +	case USB_DR_MODE_OTG:
-> +		cdns3_init_otg_mode(cdns);
-> +		break;
-> +	default:
-> +		dev_err(cdns->dev, "Unsupported mode of operation %d\n",
-> +			cdns->dr_mode);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +irqreturn_t cdns3_drd_irq(struct cdns3 *cdns)
-> +{
-> +	irqreturn_t ret = IRQ_NONE;
-> +	u32 reg;
-> +
-> +	if (cdns->dr_mode != USB_DR_MODE_OTG)
-> +		return ret;
-> +
-> +	reg = readl(&cdns->otg_regs->ivect);
-> +	if (!reg)
-> +		return ret;
-> +
-> +	if (reg & OTGIEN_ID_CHANGE_INT) {
-> +		int id = cdns3_otg_get_id(cdns);
-> +
-> +		dev_dbg(cdns->dev, "OTG IRQ: new ID: %d\n",
-> +			cdns3_otg_get_id(cdns));
-> +
-> +		if (id)
-> +			cdns->role = CDNS3_ROLE_GADGET;
-> +		else
-> +			cdns->role = CDNS3_ROLE_HOST;
-
-Why check ID and set role here? It might change by the time
-the role_switch_wq starts up. Why not check the ID status there?
-
-Also directly changing role here doesn't make sense as
-there will be a mismatch between currently active role and cdns->role.
-
-> +
-> +		queue_work(system_freezable_wq, &cdns->role_switch_wq);
-> +
-> +		ret = IRQ_HANDLED;
-> +	}
-> +
-> +	writel(~0, &cdns->otg_regs->ivect);
-> +	return IRQ_HANDLED;
-
-return ret;
-
-> +}
-> +
-> +int cdns3_drd_init(struct cdns3 *cdns)
-> +{
-> +	enum usb_dr_mode dr_mode;
-> +	int ret = 0;
-> +	u32 state;
-> +
-> +	state = OTGSTS_STRAP(readl(&cdns->otg_regs->sts));
-> +
-> +	dr_mode = cdns->dr_mode;
-> +	if (state == OTGSTS_STRAP_HOST) {
-> +		dev_info(cdns->dev, "Controller strapped to HOST\n");
-> +		dr_mode = USB_DR_MODE_HOST;
-> +		if (cdns->dr_mode != USB_DR_MODE_HOST &&
-> +		    cdns->dr_mode != USB_DR_MODE_OTG)
-> +			ret = -EINVAL;
-> +	} else if (state == OTGSTS_STRAP_GADGET) {
-> +		dev_info(cdns->dev, "Controller strapped to PERIPHERAL\n");
-> +		dr_mode = USB_DR_MODE_PERIPHERAL;
-> +		if (cdns->dr_mode != USB_DR_MODE_PERIPHERAL &&
-> +		    cdns->dr_mode != USB_DR_MODE_OTG)
-> +			ret = -EINVAL;
-> +	}
-> +
-> +	if (ret) {
-> +		dev_err(cdns->dev, "Incorrect DRD configuration\n");
-> +		return ret;
-> +	}
-> +
-> +	//Updating DR mode according to strap.
-> +	cdns->dr_mode = dr_mode;
-> +	cdns->desired_dr_mode = dr_mode;
-> +	cdns->current_dr_mode = USB_DR_MODE_UNKNOWN;
-> +
-> +	dev_info(cdns->dev, "Controller Device ID: %08lx, Revision ID: %08lx\n",
-> +		 CDNS_RID(readl(&cdns->otg_regs->rid)),
-> +		 CDNS_DID(readl(&cdns->otg_regs->did)));
-
-dev_info should be moved at the end if cdns3_drd_update_mode() if it succeeded.
-
-> +
-> +	state = readl(&cdns->otg_regs->sts);
-> +	if (OTGSTS_OTG_NRDY(state) != 0) {
-> +		dev_err(cdns->dev, "Cadence USB3 OTG device not ready\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = cdns3_drd_update_mode(cdns);
-> +
-> +	return ret;
-> +}
-> diff --git a/drivers/usb/cdns3/drd.h b/drivers/usb/cdns3/drd.h
-> new file mode 100644
-> index 000000000000..0faa7520ecac
-> --- /dev/null
-> +++ b/drivers/usb/cdns3/drd.h
-> @@ -0,0 +1,122 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Cadence USB3 DRD part of USBSS driver
-> + *
-> + * Copyright (C) 2018 Cadence.
-> + *
-> + * Author: Pawel Laszczak <pawell@cadence.com>
-> + */
-> +#ifndef __LINUX_CDNS3_DRD
-> +#define __LINUX_CDNS3_DRD
-> +
-> +#include <linux/usb/otg.h>
-> +#include <linux/phy/phy.h>
-> +#include "core.h"
-> +
-> +/*  DRD register interface. */
-> +struct cdns3_otg_regs {
-> +	__le32 did;
-> +	__le32 rid;
-> +	__le32 capabilities;
-> +	__le32 reserved1;
-> +	__le32 cmd;
-> +	__le32 sts;
-> +	__le32 state;
-> +	__le32 reserved2;
-> +	__le32 ien;
-> +	__le32 ivect;
-> +	__le32 refclk;
-> +	__le32 tmr;
-> +	__le32 reserved3[4];
-> +	__le32 simulate;
-> +	__le32 override;
-> +	__le32 susp_ctrl;
-> +	__le32 reserved4;
-> +	__le32 anasts;
-> +	__le32 adp_ramp_time;
-> +	__le32 ctrl1;
-> +	__le32 ctrl2;
+> =20
+>  /* FLEXCAN interrupt flag register (IFLAG) bits */
+>  /* Errata ERR005829 step7: Reserve first valid MB */
+> @@ -190,6 +194,7 @@
+>  #define FLEXCAN_QUIRK_USE_OFF_TIMESTAMP	BIT(5) /* Use timestamp based =
+offloading */
+>  #define FLEXCAN_QUIRK_BROKEN_PERR_STATE	BIT(6) /* No interrupt for err=
+or passive */
+>  #define FLEXCAN_QUIRK_DEFAULT_BIG_ENDIAN	BIT(7) /* default to BE regis=
+ter access */
+> +#define FLEXCAN_QUIRK_SETUP_STOP_MODE		BIT(8) /* Setup stop mode to su=
+pport wakeup */
+> =20
+>  /* Structure of the message buffer */
+>  struct flexcan_mb {
+> @@ -254,6 +259,14 @@ struct flexcan_devtype_data {
+>  	u32 quirks;		/* quirks needed for different IP cores */
+>  };
+> =20
+> +struct flexcan_stop_mode {
+> +	struct regmap *gpr;
+> +	u8 req_gpr;
+> +	u8 req_bit;
+> +	u8 ack_gpr;
+> +	u8 ack_bit;
 > +};
 > +
-> +/* CDNS_RID - bitmasks */
-> +#define CDNS_RID(p)			((p) & GENMASK(15, 0))
+>  struct flexcan_priv {
+>  	struct can_priv can;
+>  	struct can_rx_offload offload;
+> @@ -270,6 +283,7 @@ struct flexcan_priv {
+>  	struct clk *clk_per;
+>  	const struct flexcan_devtype_data *devtype_data;
+>  	struct regulator *reg_xceiver;
+> +	struct flexcan_stop_mode stm;
+> =20
+>  	/* Read and Write APIs */
+>  	u32 (*read)(void __iomem *addr);
+> @@ -293,7 +307,8 @@ static const struct flexcan_devtype_data fsl_imx28_=
+devtype_data =3D {
+> =20
+>  static const struct flexcan_devtype_data fsl_imx6q_devtype_data =3D {
+>  	.quirks =3D FLEXCAN_QUIRK_DISABLE_RXFG | FLEXCAN_QUIRK_ENABLE_EACEN_R=
+RS |
+> -		FLEXCAN_QUIRK_USE_OFF_TIMESTAMP | FLEXCAN_QUIRK_BROKEN_PERR_STATE,
+> +		FLEXCAN_QUIRK_USE_OFF_TIMESTAMP | FLEXCAN_QUIRK_BROKEN_PERR_STATE |
+> +		FLEXCAN_QUIRK_SETUP_STOP_MODE,
+>  };
+> =20
+>  static const struct flexcan_devtype_data fsl_vf610_devtype_data =3D {
+> @@ -353,6 +368,49 @@ static inline void flexcan_write_le(u32 val, void =
+__iomem *addr)
+>  	iowrite32(val, addr);
+>  }
+> =20
+> +static void flexcan_enable_wakeup_irq(struct flexcan_priv *priv, bool =
+enable)
+> +{
+> +	struct flexcan_regs __iomem *regs =3D priv->regs;
+> +	u32 reg_mcr;
 > +
-> +/* CDNS_VID - bitmasks */
-> +#define CDNS_DID(p)			((p) & GENMASK(31, 0))
+> +	reg_mcr =3D priv->read(&regs->mcr);
 > +
-> +/* OTGCMD - bitmasks */
-> +/* "Request the bus for Device mode. */
-> +#define OTGCMD_DEV_BUS_REQ	BIT(0)
-> +/* Request the bus for Host mode */
-> +#define OTGCMD_HOST_BUS_REQ		BIT(1)
-> +/* Enable OTG mode. */
-> +#define OTGCMD_OTG_EN			BIT(2)
-> +/* Disable OTG mode */
-> +#define OTGCMD_OTG_DIS			BIT(3)
-> +/*"Configure OTG as A-Device. */
-> +#define OTGCMD_A_DEV_EN			BIT(4)
-> +/*"Configure OTG as A-Device. */
-> +#define OTGCMD_A_DEV_DIS		BIT(5)
-> +/* Drop the bus for Device mod	e. */
-> +#define OTGCMD_DEV_BUS_DROP		BIT(8)
-> +/* Drop the bus for Host mode*/
-> +#define OTGCMD_HOST_BUS_DROP		BIT(9)
-> +/* Power Down USBSS-DEV. */
-> +#define OTGCMD_DEV_POWER_OFF		BIT(11)
-> +/* Power Down CDNSXHCI. */
-> +#define OTGCMD_HOST_POWER_OFF		BIT(12)
+> +	if (enable)
+> +		reg_mcr |=3D FLEXCAN_MCR_WAK_MSK;
+> +	else
+> +		reg_mcr &=3D ~FLEXCAN_MCR_WAK_MSK;
 > +
-> +/* OTGIEN - bitmasks */
-> +/* ID change interrupt enable */
-> +#define OTGIEN_ID_CHANGE_INT		BIT(0)
-> +/* Vbusvalid fall detected interrupt enable.*/
-> +#define OTGIEN_VBUSVALID_RISE_INT	BIT(4)
-> +/* Vbusvalid fall detected interrupt enable */
-> +#define OTGIEN_VBUSVALID_FALL_INT	BIT(5)
+> +	priv->write(reg_mcr, &regs->mcr);
+> +}
 > +
-> +/* OTGSTS - bitmasks */
-> +/*
-> + * Current value of the ID pin. It is only valid when idpullup in
-> + *  OTGCTRL1_TYPE register is set to '1'.
-> + */
-> +#define OTGSTS_ID_VALUE			BIT(0)
-> +/* Current value of the vbus_valid */
-> +#define OTGSTS_VBUS_VALID		BIT(1)
-> +/* Current value of the b_sess_vld */
-> +#define OTGSTS_SESSION_VALID		BIT(2)
-> +/*Device mode is active*/
-> +#define OTGSTS_DEV_ACTIVE		BIT(3)
-> +/* Host mode is active. */
-> +#define OTGSTS_HOST_ACTIVE		BIT(4)
-> +/* OTG Controller not ready. */
-> +#define OTGSTS_OTG_NRDY_MASK		BIT(11)
-> +#define OTGSTS_OTG_NRDY(p)		((p) & OTGSTS_OTG_NRDY_MASK)
-> +/*
-> + * Value of the strap pins.
-> + * 000 - no default configuration
-> + * 010 - Controller initiall configured as Host
-> + * 100 - Controller initially configured as Device
-> + */
-> +#define OTGSTS_STRAP(p)			(((p) & GENMASK(14, 12)) >> 12)
-> +#define OTGSTS_STRAP_NO_DEFAULT_CFG	0x00
-> +#define OTGSTS_STRAP_HOST_OTG		0x01
-> +#define OTGSTS_STRAP_HOST		0x02
-> +#define OTGSTS_STRAP_GADGET		0x04
-> +/* Host mode is turned on. */
-> +#define OTGSTSE_XHCI_READYF		BIT(26)
-> +/* "Device mode is turned on .*/
-> +#define OTGSTS_DEV_READY		BIT(27)
+> +static inline void flexcan_enter_stop_mode(struct flexcan_priv *priv)
+> +{
+> +	struct flexcan_regs __iomem *regs =3D priv->regs;
+> +	u32 reg_mcr;
 > +
-> +/* OTGREFCLK - bitmasks */
-> +#define OTGREFCLK_STB_CLK_SWITCH_EN	BIT(31)
+> +	reg_mcr =3D priv->read(&regs->mcr);
+> +	reg_mcr |=3D FLEXCAN_MCR_SLF_WAK;
+> +	priv->write(reg_mcr, &regs->mcr);
 > +
-> +/* OTGCTRL1 - bitmasks */
-> +#define OTGCTRL1_IDPULLUP		BIT(24)
+> +	/* enable stop request */
+> +	regmap_update_bits(priv->stm.gpr, priv->stm.req_gpr,
+> +			   1 << priv->stm.req_bit, 1 << priv->stm.req_bit);
+> +}
 > +
-> +int cdns3_is_host(struct cdns3 *cdns);
-> +int cdns3_is_device(struct cdns3 *cdns);
-> +int cdns3_drd_init(struct cdns3 *cdns);
-> +int cdns3_drd_update_mode(struct cdns3 *cdns);
-> +irqreturn_t cdns3_drd_irq(struct cdns3 *cdns);
+> +static inline void flexcan_exit_stop_mode(struct flexcan_priv *priv)
+> +{
+> +	struct flexcan_regs __iomem *regs =3D priv->regs;
+> +	u32 reg_mcr;
 > +
-> +#endif /* __LINUX_CDNS3_DRD */
-> 
+> +	/* remove stop request */
+> +	regmap_update_bits(priv->stm.gpr, priv->stm.req_gpr,
+> +			   1 << priv->stm.req_bit, 0);
+> +
+> +	reg_mcr =3D priv->read(&regs->mcr);
+> +	reg_mcr &=3D ~FLEXCAN_MCR_SLF_WAK;
+> +	priv->write(reg_mcr, &regs->mcr);
+> +}
+> +
+>  static inline void flexcan_error_irq_enable(const struct flexcan_priv =
+*priv)
+>  {
+>  	struct flexcan_regs __iomem *regs =3D priv->regs;
+> @@ -1244,6 +1302,57 @@ static void unregister_flexcandev(struct net_dev=
+ice *dev)
+>  	unregister_candev(dev);
+>  }
+> =20
+> +static int flexcan_setup_stop_mode(struct platform_device *pdev)
+> +{
+> +	struct net_device *dev =3D platform_get_drvdata(pdev);
+> +	struct device_node *np =3D pdev->dev.of_node;
+> +	struct device_node *gpr_np;
+> +	struct flexcan_priv *priv;
+> +	phandle phandle;
+> +	u32 out_val[5];
+> +	int ret;
+> +
+> +	if (!np)
+> +		return -EINVAL;
+> +
+> +	/* stop mode property format is:
+> +	 * <&gpr req_gpr req_bit ack_gpr ack_bit>.
+> +	 */
+> +	ret =3D of_property_read_u32_array(np, "fsl,stop-mode", out_val, 5);
 
-cheers,
--roger
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+I've changed the 5 to ARRAY_SIZE() while applying the patch + rewrap to
+80 cols.
+
+> +	if (ret) {
+> +		dev_dbg(&pdev->dev, "no stop-mode property\n");
+> +		return ret;
+> +	}
+> +	phandle =3D *out_val;
+> +
+> +	gpr_np =3D of_find_node_by_phandle(phandle);
+> +	if (!gpr_np) {
+> +		dev_dbg(&pdev->dev, "could not find gpr node by phandle\n");
+> +		return PTR_ERR(gpr_np);
+> +	}
+> +
+> +	priv =3D netdev_priv(dev);
+> +	priv->stm.gpr =3D syscon_node_to_regmap(gpr_np);
+> +	of_node_put(gpr_np);
+> +	if (IS_ERR(priv->stm.gpr)) {
+> +		dev_dbg(&pdev->dev, "could not find gpr regmap\n");
+> +		return PTR_ERR(priv->stm.gpr);
+> +	}
+> +
+> +	priv->stm.req_gpr =3D out_val[1];
+> +	priv->stm.req_bit =3D out_val[2];
+> +	priv->stm.ack_gpr =3D out_val[3];
+> +	priv->stm.ack_bit =3D out_val[4];
+> +
+> +	dev_dbg(&pdev->dev, "gpr %s req_gpr 0x%x req_bit %u ack_gpr 0x%x ack_=
+bit %u\n",
+> +		gpr_np->full_name, priv->stm.req_gpr, priv->stm.req_bit, priv->stm.a=
+ck_gpr,
+> +		priv->stm.ack_bit);
+
+For the hex values I've changed to 0x%x to 0x%02x + rewarp to 80 cols.
+
+> +
+> +	device_set_wakeup_capable(&pdev->dev, true);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct of_device_id flexcan_of_match[] =3D {
+>  	{ .compatible =3D "fsl,imx6q-flexcan", .data =3D &fsl_imx6q_devtype_d=
+ata, },
+>  	{ .compatible =3D "fsl,imx28-flexcan", .data =3D &fsl_imx28_devtype_d=
+ata, },
+> @@ -1396,6 +1505,12 @@ static int flexcan_probe(struct platform_device =
+*pdev)
+> =20
+>  	devm_can_led_init(dev);
+> =20
+> +	if (priv->devtype_data->quirks & FLEXCAN_QUIRK_SETUP_STOP_MODE) {
+> +		err =3D flexcan_setup_stop_mode(pdev);
+> +		if (err)
+> +			dev_dbg(&pdev->dev, "failed to setup stop-mode\n");
+> +	}
+> +
+>  	dev_info(&pdev->dev, "device registered (reg_base=3D%p, irq=3D%d)\n",=
+
+>  		 priv->regs, dev->irq);
+> =20
+> @@ -1426,9 +1541,17 @@ static int __maybe_unused flexcan_suspend(struct=
+ device *device)
+>  	int err;
+> =20
+>  	if (netif_running(dev)) {
+> -		err =3D flexcan_chip_disable(priv);
+> -		if (err)
+> -			return err;
+> +		/* if wakeup is enabled, enter stop mode
+> +		 * else enter disabled mode.
+> +		 */
+> +		if (device_may_wakeup(device)) {
+> +			enable_irq_wake(dev->irq);
+> +			flexcan_enter_stop_mode(priv);
+> +		} else {
+> +			err =3D flexcan_chip_disable(priv);
+> +			if (err)
+> +				return err;
+> +		}
+>  		netif_stop_queue(dev);
+>  		netif_device_detach(dev);
+>  	}
+> @@ -1447,14 +1570,45 @@ static int __maybe_unused flexcan_resume(struct=
+ device *device)
+>  	if (netif_running(dev)) {
+>  		netif_device_attach(dev);
+>  		netif_start_queue(dev);
+> -		err =3D flexcan_chip_enable(priv);
+> -		if (err)
+> -			return err;
+> +		if (device_may_wakeup(device)) {
+> +			disable_irq_wake(dev->irq);
+> +		} else {
+> +			err =3D flexcan_chip_enable(priv);
+> +			if (err)
+> +				return err;
+> +		}
+>  	}
+>  	return 0;
+>  }
+> =20
+> -static SIMPLE_DEV_PM_OPS(flexcan_pm_ops, flexcan_suspend, flexcan_resu=
+me);
+> +static int __maybe_unused flexcan_noirq_suspend(struct device *device)=
+
+> +{
+> +	struct net_device *dev =3D dev_get_drvdata(device);
+> +	struct flexcan_priv *priv =3D netdev_priv(dev);
+> +
+> +	if (netif_running(dev) && device_may_wakeup(device))
+> +		flexcan_enable_wakeup_irq(priv, true);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused flexcan_noirq_resume(struct device *device)
+> +{
+> +	struct net_device *dev =3D dev_get_drvdata(device);
+> +	struct flexcan_priv *priv =3D netdev_priv(dev);
+> +
+> +	if (netif_running(dev) && device_may_wakeup(device)) {
+> +		flexcan_enable_wakeup_irq(priv, false);
+> +		flexcan_exit_stop_mode(priv);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dev_pm_ops flexcan_pm_ops =3D {
+> +	SET_SYSTEM_SLEEP_PM_OPS(flexcan_suspend, flexcan_resume)
+> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(flexcan_noirq_suspend, flexcan_noirq_re=
+sume)
+> +};
+> =20
+>  static struct platform_driver flexcan_driver =3D {
+>  	.driver =3D {
+>=20
+
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--5ecR1lUw7oiKwKbiJSwsPr7HPuwBbTq2U--
+
+--trC1QlQ0mUvy5WJC6BtKgYZWIOhHsXJ07
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEENrCndlB/VnAEWuH5k9IU1zQoZfEFAlv4FtkACgkQk9IU1zQo
+ZfFCKAf/Y+KL119RjC9tHBCaTEjf9yhxWSA/HYA2Rr6Ie8XAhD3OebpAtAAZ0zhi
+vxKJMfeoDmfcXoOXHsbXgY32/fsjZYCk2rSOi7U1D/mYbSrohBbjXPVabwennkFU
+mSVMwVQxKwXmiGpc1lNdv8LQHaaO2UJRaommUzKI3MaUqmQh5jZy40xOWtyfhsAj
+XgunPWyCFPkqh/XJELkOy0czQH6NOWMI8rjE0NAcEhzj1MIe+hCGHaK9a/UEf1/s
+RRSB4G5zjUZedgHufTOJxOkitLAIWd02tVk6ZqFj3ZdISDgh38ZBzxg8mBlmdjC+
+fAQteB3RyuWiHya5VRPl/aa2aqnrsg==
+=yQhJ
+-----END PGP SIGNATURE-----
+
+--trC1QlQ0mUvy5WJC6BtKgYZWIOhHsXJ07--
