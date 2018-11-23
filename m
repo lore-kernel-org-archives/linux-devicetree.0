@@ -1,74 +1,43 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCHv2 1/2] can: xilinx: add can 2.0 support
-Date: Fri, 23 Nov 2018 16:31:29 +0100
-Message-ID: <5cd40d18-e2a4-4b6c-e62c-3e2db3c27802@pengutronix.de>
-References: <1539318309-13715-1-git-send-email-shubhrajyoti.datta@gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 1/7] ata: libahci_platform: comply to PHY framework
+Date: Fri, 23 Nov 2018 16:36:56 +0100
+Message-ID: <20181123153656.GD30913@lunn.ch>
+References: <20181123101556.29888-1-miquel.raynal@bootlin.com>
+ <20181123101556.29888-2-miquel.raynal@bootlin.com>
+ <20181123151806.GC30913@lunn.ch>
+ <20181123152730.GU30658@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="RyeBBaHNOavMJsBmNNjiytfp2AAm0qerM"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1539318309-13715-1-git-send-email-shubhrajyoti.datta@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: shubhrajyoti.datta@gmail.com, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: robh+dt@kernel.org, michal.simek@xilinx.com, davem@davemloft.net, wg@grandegger.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20181123152730.GU30658@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jens Axboe <axboe@kernel.dk>, Hans de Goede <hdegoede@redhat.com>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, linux-pm@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---RyeBBaHNOavMJsBmNNjiytfp2AAm0qerM
-Content-Type: multipart/mixed; boundary="rt9OehxIxrbTTOUVZ5yDtp2AcN0LAYfOQ";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: shubhrajyoti.datta@gmail.com, linux-can@vger.kernel.org,
- netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: robh+dt@kernel.org, michal.simek@xilinx.com, davem@davemloft.net,
- wg@grandegger.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Message-ID: <5cd40d18-e2a4-4b6c-e62c-3e2db3c27802@pengutronix.de>
-Subject: Re: [PATCHv2 1/2] can: xilinx: add can 2.0 support
-References: <1539318309-13715-1-git-send-email-shubhrajyoti.datta@gmail.com>
-In-Reply-To: <1539318309-13715-1-git-send-email-shubhrajyoti.datta@gmail.com>
+On Fri, Nov 23, 2018 at 03:27:30PM +0000, Russell King - ARM Linux wrote:
+> On Fri, Nov 23, 2018 at 04:18:06PM +0100, Andrew Lunn wrote:
+> > Russell King wrote a comphy driver for the Armada 3XX family. It only
+> > supports network PHYs. Did you check it does the right thing when
+> > passed PHY_MODE_SATA? This is slightly different to Hans's comment, in
+> > that i expect phy_set_mode() is implemented for the comphy driver, but
+> > it might not understand PHY_MODE_SATA and return an error?
+> 
+> It makes no difference until the comphy is wired up to the SATA
+> device in the appropriate DT files.  Until then, there's no way
+> that the comphy will ever see PHY_MODE_SATA.
 
---rt9OehxIxrbTTOUVZ5yDtp2AcN0LAYfOQ
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
+O.K, great.
 
-On 10/12/18 6:25 AM, shubhrajyoti.datta@gmail.com wrote:
-> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
->=20
-> Add support for can 2.0.
->=20
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-
-Added to linux-can-next.
-
-Tnx,
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---rt9OehxIxrbTTOUVZ5yDtp2AcN0LAYfOQ--
-
---RyeBBaHNOavMJsBmNNjiytfp2AAm0qerM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEENrCndlB/VnAEWuH5k9IU1zQoZfEFAlv4HVEACgkQk9IU1zQo
-ZfFZOAf/d8gweHPzr9FfFh0gNRX9HecrFBiqf6cA8/9Pm1n+PRRRkTXjIVHdM2dA
-ukDxZn0YFndbs2ENjGF7d8Lf61qFg3qOB+vx5JlpUd/aiBG6wHbJMhR7prhZ76Gu
-RMRhW6alrOM3rWGpTTIiUjAwSsCXk4+4CUvk12QyJxDyAP8IzUq3tPhfk5odkhsm
-ZUjBZyKLSjtNTsHI8BbJF2knYs5VSqOn/3tjB+8OP6//ccYW33HNXNwHAO7P+3XX
-+rcACKtTLn47tbdWaNUS/LPv8BQdKsCe1LkeUCs3UoN8dxC+aSkvz4MOf3M6JXIR
-1fOWFKhMf+ZPVdTP1hrtuiO2GXyKHg==
-=Fdyl
------END PGP SIGNATURE-----
-
---RyeBBaHNOavMJsBmNNjiytfp2AAm0qerM--
+Thanks
+	Andrew
