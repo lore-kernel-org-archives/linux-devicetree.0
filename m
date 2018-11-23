@@ -1,416 +1,192 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4 2/2] phy: qualcomm: Add Synopsys High-Speed USB PHY
- driver
-Date: Fri, 23 Nov 2018 15:25:33 +0530
-Message-ID: <52433bdc-bc05-2ca0-0822-c9fb702b3231@ti.com>
-References: <20181119110812.15825-1-shawn.guo@linaro.org>
- <20181119110812.15825-3-shawn.guo@linaro.org>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH 2/6] devfreq: refactor set_target frequency function
+Date: Fri, 23 Nov 2018 10:58:35 +0100
+Message-ID: <1c3a4aad-99cb-9295-3a5e-ff7a3c5245a3@partner.samsung.com>
+References: <1542823301-23563-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20181121180202eucas1p27d3aa58411abeae03181c38b91fc67de@eucas1p2.samsung.com>
+        <1542823301-23563-3-git-send-email-l.luba@partner.samsung.com>
+        <5BF619EE.8090006@samsung.com>
+        <9eef3348-e86f-1113-3691-39ba3a620fb8@partner.samsung.com>
+        <5BF73FA9.7010402@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181119110812.15825-3-shawn.guo@linaro.org>
+In-Reply-To: <5BF73FA9.7010402@samsung.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Chanwoo Choi,
 
-On 19/11/18 4:38 PM, Shawn Guo wrote:
-> It adds Synopsys 28nm Femto High-Speed USB PHY driver support, which
-> is usually paired with Synopsys DWC3 USB controllers on Qualcomm SoCs.
+On 11/23/18 12:45 AM, Chanwoo Choi wrote:
+> Hi Lukasz,
 > 
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> ---
->  drivers/phy/qualcomm/Kconfig                  |  10 +
->  drivers/phy/qualcomm/Makefile                 |   1 +
->  .../phy/qualcomm/phy-qcom-usb-hs-snsp-28nm.c  | 535 ++++++++++++++++++
->  3 files changed, 546 insertions(+)
->  create mode 100644 drivers/phy/qualcomm/phy-qcom-usb-hs-snsp-28nm.c
+> On 2018년 11월 22일 19:40, Lukasz Luba wrote:
+>> Hi Chanwoo Choi
+>>
+>> On 11/22/18 3:52 AM, Chanwoo Choi wrote:
+>>> On 2018년 11월 22일 03:01, Lukasz Luba wrote:
+>>>> The refactoring is needed for the new client in devfreq: suspend.
+>>>> To avoid code duplication, move it to the new local function
+>>>> devfreq_set_target.
+>>>>
+>>>> The patch draws on Tobias Jakobi's work posted ~2 years ago, who tried to
+>>>> solve issue with devfreq device's frequency during suspend/resume.
+>>>> During the discussion on LKML some corner cases and comments appeared
+>>>> related to the design. This patch address them keeping in mind suggestions
+>>>> from Chanwoo Choi.
+>>>
+>>> As I commented on patch1, please remove it.
+>> OK
+>>>
+>>>>
+>>>> Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+>>>> Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>>>> ---
+>>>>    drivers/devfreq/devfreq.c | 62 ++++++++++++++++++++++++++++-------------------
+>>>>    1 file changed, 37 insertions(+), 25 deletions(-)
+>>>>
+>>>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>>>> index e20e7e4..cf9c643 100644
+>>>> --- a/drivers/devfreq/devfreq.c
+>>>> +++ b/drivers/devfreq/devfreq.c
+>>>> @@ -285,6 +285,42 @@ static int devfreq_notify_transition(struct devfreq *devfreq,
+>>>>    	return 0;
+>>>>    }
+>>>>    
+>>>> +static int devfreq_set_target(struct devfreq *devfreq, unsigned long new_freq,
+>>>> +			      unsigned long *prev_freq, u32 flags)
+>>>
+>>> Please remove the unused space in front of 'unsigned long *prev_freq'.
+>>> Use tab only for indentation.
+>> OK
+>>>
+>>>> +{
+>>>> +	struct devfreq_freqs freqs;
+>>>> +	unsigned long cur_freq;
+>>>> +	int err = 0;
+>>>> +
+>>>> +	if (devfreq->profile->get_cur_freq)
+>>>> +		devfreq->profile->get_cur_freq(devfreq->dev.parent, &cur_freq);
+>>>> +	else
+>>>> +		cur_freq = devfreq->previous_freq;
+>>>> +
+>>>> +	freqs.old = cur_freq;
+>>>> +	freqs.new = new_freq;
+>>>> +	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_PRECHANGE);
+>>>> +
+>>>> +	err = devfreq->profile->target(devfreq->dev.parent, &new_freq, flags);
+>>>> +	if (err) {
+>>>> +		freqs.new = cur_freq;
+>>>> +		devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+>>>> +		return err;
+>>>> +	}
+>>>> +
+>>>> +	freqs.new = new_freq;
+>>>> +	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+>>>> +
+>>>> +	if (devfreq_update_status(devfreq, new_freq))
+>>>> +		dev_err(&devfreq->dev,
+>>>> +			"Couldn't update frequency transition information.\n");
+>>>> +
+>>>> +	devfreq->previous_freq = new_freq;
+>>>> +	*prev_freq = cur_freq;
+>>>> +
+>>>> +	return err;
+>>>> +}
+>>>> +
+>>>>    /* Load monitoring helper functions for governors use */
+>>>>    
+>>>>    /**
+>>>> @@ -296,7 +332,6 @@ static int devfreq_notify_transition(struct devfreq *devfreq,
+>>>>     */
+>>>>    int update_devfreq(struct devfreq *devfreq)
+>>>>    {
+>>>> -	struct devfreq_freqs freqs;
+>>>>    	unsigned long freq, cur_freq, min_freq, max_freq;
+>>>
+>>>
+>>> cur_freq is not used after modification. Remove it.
+>>>
+>>>>    	int err = 0;
+>>>>    	u32 flags = 0;
+>>>> @@ -333,31 +368,8 @@ int update_devfreq(struct devfreq *devfreq)
+>>>>    		flags |= DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use LUB */
+>>>>    	}
+>>>>    
+>>>> -	if (devfreq->profile->get_cur_freq)
+>>>> -		devfreq->profile->get_cur_freq(devfreq->dev.parent, &cur_freq);
+>>>> -	else
+>>>> -		cur_freq = devfreq->previous_freq;
+>>>> -
+>>>> -	freqs.old = cur_freq;
+>>>> -	freqs.new = freq;
+>>>> -	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_PRECHANGE);
+>>>> +	return devfreq_set_target(devfreq, freq, &cur_freq, flags);
+>>>
+>>> You get the 'cur_freq' from devfreq_set_taget() for devfreq_suspend_device() on patch3.
+>>> But, update_devfreq() and devfreq_resume_device() don't use the 'cur_freq' value
+>>> from devfreq_set_target().
+>>>
+>>> Instead, getting 'cur_freq' for 'devfreq->resume_freq' in the devfreq_set_target().
+>>> Please remove the 'cur_freq' parameter from devfreq_set_target.
+>>
+>> I can remove the 3rd parameter from devfreq_set_target(),
+>> but it implies that patch 1 and 3 cannot be merged. The function
+>> devfreq_set_target will use 'devfreq->resume_freq' so it must be in
+>> devfreq struct.
+>> So, in v2 version there will be still 6 patches, with the 1st patch
+>> defining needed fields in devfreq struct.
+>> Do you agree for that?
 > 
-> diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
-> index 32f7d34eb784..c7b5ee82895d 100644
-> --- a/drivers/phy/qualcomm/Kconfig
-> +++ b/drivers/phy/qualcomm/Kconfig
-> @@ -82,3 +82,13 @@ config PHY_QCOM_USB_HSIC
->  	select GENERIC_PHY
->  	help
->  	  Support for the USB HSIC ULPI compliant PHY on QCOM chipsets.
+> So, I replied again as following on my other reply[1] of patch2:
+> [1] https://lkml.org/lkml/2018/11/22/507
+> 
+> But, you have to add following new code on patch3 instead of patch2.
+> patch2 doesn't contain the following codes and then
+> patch3 adds 'resume_freq' variable and adds the following code on patch3.
+> 
 > +
-> +config PHY_QCOM_USB_HS_SNPS_28NM
-> +	tristate "Qualcomm Synopsys 28nm USB HS PHY driver"
-> +	depends on ARCH_QCOM || COMPILE_TEST
-> +	depends on EXTCON || !EXTCON # if EXTCON=m, this cannot be built-in
-> +	select GENERIC_PHY
-> +	help
-> +	  Enable this to support the Synopsys 28nm Femto USB PHY on Qualcomm
-> +	  chips. This driver supports the high-speed PHY which is usually
-> +	  paired with either the ChipIdea or Synopsys DWC3 USB IPs on MSM SOCs.
-> diff --git a/drivers/phy/qualcomm/Makefile b/drivers/phy/qualcomm/Makefile
-> index c56efd3af205..dc238d95b18c 100644
-> --- a/drivers/phy/qualcomm/Makefile
-> +++ b/drivers/phy/qualcomm/Makefile
-> @@ -9,3 +9,4 @@ obj-$(CONFIG_PHY_QCOM_UFS_14NM)		+= phy-qcom-ufs-qmp-14nm.o
->  obj-$(CONFIG_PHY_QCOM_UFS_20NM)		+= phy-qcom-ufs-qmp-20nm.o
->  obj-$(CONFIG_PHY_QCOM_USB_HS) 		+= phy-qcom-usb-hs.o
->  obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
-> +obj-$(CONFIG_PHY_QCOM_USB_HS_SNPS_28NM)	+= phy-qcom-usb-hs-snsp-28nm.o
-> diff --git a/drivers/phy/qualcomm/phy-qcom-usb-hs-snsp-28nm.c b/drivers/phy/qualcomm/phy-qcom-usb-hs-snsp-28nm.c
-> new file mode 100644
-> index 000000000000..ee52bb6df6da
-> --- /dev/null
-> +++ b/drivers/phy/qualcomm/phy-qcom-usb-hs-snsp-28nm.c
-> @@ -0,0 +1,535 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2009-2018, Linux Foundation. All rights reserved.
-> + * Copyright (c) 2018, Linaro Limited
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/extcon.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/notifier.h>
-> +#include <linux/of.h>
-> +#include <linux/of_graph.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/reset.h>
-> +#include <linux/slab.h>
-> +
-> +/* PHY register and bit definitions */
-> +#define PHY_CTRL_COMMON0		0x078
-> +#define SIDDQ				BIT(2)
-> +#define PHY_IRQ_CMD			0x0d0
-> +#define PHY_INTR_MASK0			0x0d4
-> +#define PHY_INTR_CLEAR0			0x0dc
-> +#define DPDM_MASK			0x1e
-> +#define DP_1_0				BIT(4)
-> +#define DP_0_1				BIT(3)
-> +#define DM_1_0				BIT(2)
-> +#define DM_0_1				BIT(1)
-> +
-> +enum hsphy_voltage {
-> +	VOL_NONE,
-> +	VOL_MIN,
-> +	VOL_MAX,
-> +	VOL_NUM,
-> +};
-> +
-> +enum hsphy_vreg {
-> +	VDD,
-> +	VDDA_1P8,
-> +	VDDA_3P3,
-> +	VREG_NUM,
-> +};
-> +
-> +struct hsphy_init_seq {
-> +	int offset;
-> +	int val;
-> +	int delay;
-> +};
-> +
-> +struct hsphy_data {
-> +	const struct hsphy_init_seq *init_seq;
-> +	unsigned int init_seq_num;
-> +};
-> +
-> +struct hsphy_priv {
-> +	void __iomem *base;
-> +	struct clk_bulk_data *clks;
-> +	int num_clks;
-> +	struct reset_control *phy_reset;
-> +	struct reset_control *por_reset;
-> +	struct regulator_bulk_data vregs[VREG_NUM];
-> +	unsigned int voltages[VREG_NUM][VOL_NUM];
-> +	const struct hsphy_data *data;
-> +	bool cable_connected;
-> +	struct extcon_dev *vbus_edev;
-> +	struct notifier_block vbus_notify;
-> +	enum phy_mode mode;
-> +};
-> +
-> +static int qcom_snps_hsphy_config_regulators(struct hsphy_priv *priv, int high)
-> +{
-> +	int old_uV[VREG_NUM];
-> +	int min, ret, i;
-> +
-> +	min = high ? 1 : 0; /* low or none? */
-> +
-> +	for (i = 0; i < VREG_NUM; i++) {
-> +		old_uV[i] = regulator_get_voltage(priv->vregs[i].consumer);
-> +		ret = regulator_set_voltage(priv->vregs[i].consumer,
-> +					    priv->voltages[i][min],
-> +					    priv->voltages[i][VOL_MAX]);
-> +		if (ret)
-> +			goto roll_back;
-> +	}
-> +
-> +	return 0;
-> +
-> +roll_back:
-> +	for (; i >= 0; i--)
-> +		regulator_set_voltage(priv->vregs[i].consumer,
-> +				      old_uV[i], old_uV[i]);
-> +	return ret;
-> +}
-> +
-> +static int qcom_snps_hsphy_enable_regulators(struct hsphy_priv *priv)
-> +{
-> +	int ret;
-> +
-> +	ret = qcom_snps_hsphy_config_regulators(priv, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regulator_set_load(priv->vregs[VDDA_1P8].consumer, 19000);
-> +	if (ret < 0)
-> +		goto unconfig_regulators;
-> +
-> +	ret = regulator_set_load(priv->vregs[VDDA_3P3].consumer, 16000);
-> +	if (ret < 0)
-> +		goto unset_1p8_load;
-> +
-> +	ret = regulator_bulk_enable(VREG_NUM, priv->vregs);
-> +	if (ret)
-> +		goto unset_3p3_load;
-> +
-> +	return 0;
-> +
-> +unset_3p3_load:
-> +	regulator_set_load(priv->vregs[VDDA_3P3].consumer, 0);
-> +unset_1p8_load:
-> +	regulator_set_load(priv->vregs[VDDA_1P8].consumer, 0);
-> +unconfig_regulators:
-> +	qcom_snps_hsphy_config_regulators(priv, 0);
-> +	return ret;
-> +}
-> +
-> +static void qcom_snps_hsphy_disable_regulators(struct hsphy_priv *priv)
-> +{
-> +	regulator_bulk_disable(VREG_NUM, priv->vregs);
-> +	regulator_set_load(priv->vregs[VDDA_1P8].consumer, 0);
-> +	regulator_set_load(priv->vregs[VDDA_3P3].consumer, 0);
-> +	qcom_snps_hsphy_config_regulators(priv, 0);
-> +}
-> +
-> +static int qcom_snps_hsphy_set_mode(struct phy *phy, enum phy_mode mode)
-> +{
-> +	struct hsphy_priv *priv = phy_get_drvdata(phy);
-> +
-> +	priv->mode = mode;
-> +
-> +	return 0;
-> +}
-> +
-> +static void qcom_snps_hsphy_enable_hv_interrupts(struct hsphy_priv *priv)
-> +{
-> +	u32 val;
-> +
-> +	/* Clear any existing interrupts before enabling the interrupts */
-> +	val = readb(priv->base + PHY_INTR_CLEAR0);
-> +	val |= DPDM_MASK;
-> +	writeb(val, priv->base + PHY_INTR_CLEAR0);
-> +
-> +	writeb(0x0, priv->base + PHY_IRQ_CMD);
-> +	usleep_range(200, 220);
-> +	writeb(0x1, priv->base + PHY_IRQ_CMD);
-> +
-> +	/* Make sure the interrupts are cleared */
-> +	usleep_range(200, 220);
-> +
-> +	val = readb(priv->base + PHY_INTR_MASK0);
-> +	switch (priv->mode) {
-> +	case PHY_MODE_USB_HOST_HS:
-> +	case PHY_MODE_USB_HOST_FS:
-> +	case PHY_MODE_USB_DEVICE_HS:
-> +	case PHY_MODE_USB_DEVICE_FS:
-> +		val |= DP_1_0 | DM_0_1;
-> +		break;
-> +	case PHY_MODE_USB_HOST_LS:
-> +	case PHY_MODE_USB_DEVICE_LS:
-> +		val |= DP_0_1 | DM_1_0;
-> +		break;
-> +	default:
-> +		/* No device connected */
-> +		val |= DP_0_1 | DM_0_1;
-> +		break;
-> +	}
-> +	writeb(val, priv->base + PHY_INTR_MASK0);
-> +}
-> +
-> +static void qcom_snps_hsphy_disable_hv_interrupts(struct hsphy_priv *priv)
-> +{
-> +	u32 val;
-> +
-> +	val = readb(priv->base + PHY_INTR_MASK0);
-> +	val &= ~DPDM_MASK;
-> +	writeb(val, priv->base + PHY_INTR_MASK0);
-> +
-> +	/* Clear any pending interrupts */
-> +	val = readb(priv->base + PHY_INTR_CLEAR0);
-> +	val |= DPDM_MASK;
-> +	writeb(val, priv->base + PHY_INTR_CLEAR0);
-> +
-> +	writeb(0x0, priv->base + PHY_IRQ_CMD);
-> +	usleep_range(200, 220);
-> +
-> +	writeb(0x1, priv->base + PHY_IRQ_CMD);
-> +	usleep_range(200, 220);
-> +}
-> +
-> +static void qcom_snps_hsphy_enter_retention(struct hsphy_priv *priv)
-> +{
-> +	u32 val;
-> +
-> +	val = readb(priv->base + PHY_CTRL_COMMON0);
-> +	val |= SIDDQ;
-> +	writeb(val, priv->base + PHY_CTRL_COMMON0);
-> +}
-> +
-> +static void qcom_snps_hsphy_exit_retention(struct hsphy_priv *priv)
-> +{
-> +	u32 val;
-> +
-> +	val = readb(priv->base + PHY_CTRL_COMMON0);
-> +	val &= ~SIDDQ;
-> +	writeb(val, priv->base + PHY_CTRL_COMMON0);
-> +}
-> +
-> +static int qcom_snps_hsphy_vbus_notifier(struct notifier_block *nb,
-> +					 unsigned long event, void *ptr)
-> +{
-> +	struct hsphy_priv *priv = container_of(nb, struct hsphy_priv,
-> +						    vbus_notify);
-> +	priv->cable_connected = !!event;
-> +	return 0;
-> +}
-> +
-> +static int qcom_snps_hsphy_power_on(struct phy *phy)
-> +{
-> +	struct hsphy_priv *priv = phy_get_drvdata(phy);
-> +	int ret;
-> +
-> +	if (priv->cable_connected) {
-> +		ret = clk_bulk_prepare_enable(priv->num_clks, priv->clks);
-> +		if (ret)
-> +			return ret;
-> +		qcom_snps_hsphy_disable_hv_interrupts(priv);
-> +	} else {
-> +		ret = qcom_snps_hsphy_enable_regulators(priv);
-> +		if (ret)
-> +			return ret;
-> +		ret = clk_bulk_prepare_enable(priv->num_clks, priv->clks);
-> +		if (ret)
-> +			return ret;
-> +		qcom_snps_hsphy_exit_retention(priv);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int qcom_snps_hsphy_power_off(struct phy *phy)
-> +{
-> +	struct hsphy_priv *priv = phy_get_drvdata(phy);
-> +
-> +	if (priv->cable_connected) {
-> +		qcom_snps_hsphy_enable_hv_interrupts(priv);
-> +		clk_bulk_disable_unprepare(priv->num_clks, priv->clks);
-> +	} else {
-> +		qcom_snps_hsphy_enter_retention(priv);
-> +		clk_bulk_disable_unprepare(priv->num_clks, priv->clks);
-> +		qcom_snps_hsphy_disable_regulators(priv);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int qcom_snps_hsphy_reset(struct hsphy_priv *priv)
-> +{
-> +	int ret;
-> +
-> +	ret = reset_control_assert(priv->phy_reset);
-> +	if (ret)
-> +		return ret;
-> +
-> +	usleep_range(10, 15);
-> +
-> +	ret = reset_control_deassert(priv->phy_reset);
-> +	if (ret)
-> +		return ret;
-> +
-> +	usleep_range(80, 100);
-> +
-> +	return 0;
-> +}
-> +
-> +static void qcom_snps_hsphy_init_sequence(struct hsphy_priv *priv)
-> +{
-> +	const struct hsphy_data *data = priv->data;
-> +	const struct hsphy_init_seq *seq;
-> +	int i;
-> +
-> +	/* Device match data is optional. */
-> +	if (!data)
-> +		return;
-> +
-> +	seq = data->init_seq;
-> +
-> +	for (i = 0; i < data->init_seq_num; i++, seq++) {
-> +		writeb(seq->val, priv->base + seq->offset);
-> +		if (seq->delay)
-> +			usleep_range(seq->delay, seq->delay + 10);
-> +	}
-> +
-> +	/* Ensure that the above parameter overrides is successful. */
-> +	mb();
-> +}
-> +
-> +static int qcom_snps_hsphy_por_reset(struct hsphy_priv *priv)
-> +{
-> +	int ret;
-> +
-> +	ret = reset_control_assert(priv->por_reset);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * The Femto PHY is POR reset in the following scenarios.
-> +	 *
-> +	 * 1. After overriding the parameter registers.
-> +	 * 2. Low power mode exit from PHY retention.
-> +	 *
-> +	 * Ensure that SIDDQ is cleared before bringing the PHY
-> +	 * out of reset.
-> +	 */
-> +	qcom_snps_hsphy_exit_retention(priv);
-> +
-> +	/*
-> +	 * As per databook, 10 usec delay is required between
-> +	 * PHY POR assert and de-assert.
-> +	 */
-> +	usleep_range(10, 20);
-> +	ret = reset_control_deassert(priv->por_reset);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * As per databook, it takes 75 usec for PHY to stabilize
-> +	 * after the reset.
-> +	 */
-> +	usleep_range(80, 100);
-> +
-> +	/* Ensure that RESET operation is completed. */
-> +	mb();
+> +       if (devfreq->suspend_freq)
+> +               devfreq->resume_freq = cur_freq;
+> 
+OK, I will add that change to patch 3.
 
-How will you ensure the reset operation is complete with a memory barrier? mb
-usage here looks incorrect to me.
-
-Thanks
-Kishon
+Regards,
+Lukasz
+>>
+>>>
+>>>>    
+>>>> -	err = devfreq->profile->target(devfreq->dev.parent, &freq, flags);
+>>>> -	if (err) {
+>>>> -		freqs.new = cur_freq;
+>>>> -		devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+>>>> -		return err;
+>>>> -	}
+>>>> -
+>>>> -	freqs.new = freq;
+>>>> -	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+>>>> -
+>>>> -	if (devfreq_update_status(devfreq, freq))
+>>>> -		dev_err(&devfreq->dev,
+>>>> -			"Couldn't update frequency transition information.\n");
+>>>> -
+>>>> -	devfreq->previous_freq = freq;
+>>>> -	return err;
+>>>>    }
+>>>>    EXPORT_SYMBOL(update_devfreq);
+>>>>    
+>>>>
+>>>
+>>>
+>>
+>> Regards,
+>> Lukasz Luba
+>>
+>>
+> 
+> 
