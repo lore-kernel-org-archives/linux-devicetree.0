@@ -1,109 +1,280 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 1/7] ata: libahci_platform: comply to PHY framework
-Date: Fri, 23 Nov 2018 11:33:15 +0100
-Message-ID: <f14c6e8e-73a9-0b62-0dbc-87d390789c0c@redhat.com>
-References: <20181123101556.29888-1-miquel.raynal@bootlin.com>
- <20181123101556.29888-2-miquel.raynal@bootlin.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [RFC PATCH v2 01/15] usb:cdns3: add pci to platform driver
+ wrapper.
+Date: Fri, 23 Nov 2018 12:44:16 +0200
+Message-ID: <5BF7DA00.7070002@ti.com>
+References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
+ <1542535751-16079-2-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181123101556.29888-2-miquel.raynal@bootlin.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jens Axboe <axboe@kernel.dk>
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1542535751-16079-2-git-send-email-pawell@cadence.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pawel Laszczak <pawell@cadence.com>, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, adouglas@cadence.com, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
+Hi Pawel,
 
-On 23-11-18 11:15, Miquel Raynal wrote:
-> Current implementation of the libahci does not take into account the
-> new PHY framework. Correct the situation by adding a call to
-> phy_set_mode() before phy_power_on() and by adding calls to
-> ahci_platform_enable/disable_phys() at suspend/resume_host() time.
+On 18/11/18 12:08, Pawel Laszczak wrote:
+> Patch adds PCI specific glue driver that creates and registers in-system
+> cdns-usb3 platform device. Thanks to that we will be able to use
+> the cdns-usb3 platform driver for USBSS-DEV controller
+> build on PCI board
 > 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
 > ---
->   drivers/ata/libahci_platform.c | 11 +++++++++++
->   1 file changed, 11 insertions(+)
+>  drivers/usb/Kconfig                |   2 +
+>  drivers/usb/Makefile               |   2 +
+>  drivers/usb/cdns3/Kconfig          |  24 +++++
+>  drivers/usb/cdns3/Makefile         |   3 +
+>  drivers/usb/cdns3/cdns3-pci-wrap.c | 157 +++++++++++++++++++++++++++++
+>  5 files changed, 188 insertions(+)
+>  create mode 100644 drivers/usb/cdns3/Kconfig
+>  create mode 100644 drivers/usb/cdns3/Makefile
+>  create mode 100644 drivers/usb/cdns3/cdns3-pci-wrap.c
 > 
-> diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
-> index 4b900fc659f7..9f33f72b674b 100644
-> --- a/drivers/ata/libahci_platform.c
-> +++ b/drivers/ata/libahci_platform.c
-> @@ -56,6 +56,12 @@ static int ahci_platform_enable_phys(struct ahci_host_priv *hpriv)
->   		if (rc)
->   			goto disable_phys;
->   
-> +		rc = phy_set_mode(hpriv->phys[i], PHY_MODE_SATA);
-> +		if (rc) {
-> +			phy_exit(hpriv->phys[i]);
-> +			goto disable_phys;
-> +		}
+> diff --git a/drivers/usb/Kconfig b/drivers/usb/Kconfig
+> index 987fc5ba6321..5f9334019d04 100644
+> --- a/drivers/usb/Kconfig
+> +++ b/drivers/usb/Kconfig
+> @@ -112,6 +112,8 @@ source "drivers/usb/usbip/Kconfig"
+>  
+>  endif
+>  
+> +source "drivers/usb/cdns3/Kconfig"
 > +
-
-I see that phy_set_mode returns 0 for drivers which do not implement it,
-so this should be fine.
-
-
->   		rc = phy_power_on(hpriv->phys[i]);
->   		if (rc) {
->   			phy_exit(hpriv->phys[i]);
-> @@ -738,6 +744,8 @@ int ahci_platform_suspend_host(struct device *dev)
->   	writel(ctl, mmio + HOST_CTL);
->   	readl(mmio + HOST_CTL); /* flush */
->   
-> +	ahci_platform_disable_phys(hpriv);
+>  source "drivers/usb/mtu3/Kconfig"
+>  
+>  source "drivers/usb/musb/Kconfig"
+> diff --git a/drivers/usb/Makefile b/drivers/usb/Makefile
+> index 7d1b8c82b208..82093a60ea2c 100644
+> --- a/drivers/usb/Makefile
+> +++ b/drivers/usb/Makefile
+> @@ -8,6 +8,8 @@
+>  obj-$(CONFIG_USB)		+= core/
+>  obj-$(CONFIG_USB_SUPPORT)	+= phy/
+>  
+> +obj-$(CONFIG_USB_CDNS3)		+= cdns3/
 > +
->   	return ata_host_suspend(host, PMSG_SUSPEND);
->   }
->   EXPORT_SYMBOL_GPL(ahci_platform_suspend_host);
-
-I'm afraid that this and the matching change in ahci_platform_suspend_host
-needs to be guarded by a flag, there are quite a few sata drivers
-using the libahci_platform functions as well as quite a few sata drivers
-combining this with using phy drivers.
-
-I'm worried that doing this unconditionally on drivers which have
-not been tested with this change my break things.
-
-I think it might be cleanest to extend the existing flags passed
-to ahci_platform_get_resources with a flag for this and storing them
-somewhere in ahci_host_priv so that the suspend/resume functions can
-get to them.
-
-Regards,
-
-Hans
-
-
-
-
-
-> @@ -756,6 +764,7 @@ EXPORT_SYMBOL_GPL(ahci_platform_suspend_host);
->   int ahci_platform_resume_host(struct device *dev)
->   {
->   	struct ata_host *host = dev_get_drvdata(dev);
-> +	struct ahci_host_priv *hpriv = host->private_data;
->   	int rc;
->   
->   	if (dev->power.power_state.event == PM_EVENT_SUSPEND) {
-> @@ -766,6 +775,8 @@ int ahci_platform_resume_host(struct device *dev)
->   		ahci_init_controller(host);
->   	}
->   
-> +	ahci_platform_enable_phys(hpriv);
+>  obj-$(CONFIG_USB_DWC3)		+= dwc3/
+>  obj-$(CONFIG_USB_DWC2)		+= dwc2/
+>  obj-$(CONFIG_USB_ISP1760)	+= isp1760/
+> diff --git a/drivers/usb/cdns3/Kconfig b/drivers/usb/cdns3/Kconfig
+> new file mode 100644
+> index 000000000000..eb22a8692991
+> --- /dev/null
+> +++ b/drivers/usb/cdns3/Kconfig
+> @@ -0,0 +1,24 @@
+> +config USB_CDNS3
+> +	tristate "Cadence USB3 Dual-Role Controller"
+> +	depends on USB_SUPPORT && (USB || USB_GADGET) && HAS_DMA
+> +	help
+> +	  Say Y here if your system has a cadence USB3 dual-role controller.
+> +	  It supports: dual-role switch, Host-only, and Peripheral-only.
 > +
->   	ata_host_resume(host);
->   
->   	return 0;
+> +	  If you choose to build this driver is a dynamically linked
+> +	  module, the module will be called cdns3.ko.
+> +
+> +if USB_CDNS3
+> +
+> +config USB_CDNS3_PCI_WRAP
+> +	tristate "PCIe-based Platforms"
+
+"Cadence USB3 support on PCIe-based platforms"?
+
+> +	depends on USB_PCI && ACPI
+> +	default USB_CDNS3
+> +	help
+> +	  If you're using the USBSS Core IP with a PCIe, please say
+> +	  'Y' or 'M' here.
+> +
+> +	  If you choose to build this driver as module it will
+> +	  be dynamically linked and module will be called cdns3-pci.ko
+> +
+> +endif
+> diff --git a/drivers/usb/cdns3/Makefile b/drivers/usb/cdns3/Makefile
+> new file mode 100644
+> index 000000000000..dcdd62003c6a
+> --- /dev/null
+> +++ b/drivers/usb/cdns3/Makefile
+> @@ -0,0 +1,3 @@
+> +obj-$(CONFIG_USB_CDNS3_PCI_WRAP)	+= cdns3-pci.o
+> +
+> +cdns3-pci-y		 		:= cdns3-pci-wrap.o
+> diff --git a/drivers/usb/cdns3/cdns3-pci-wrap.c b/drivers/usb/cdns3/cdns3-pci-wrap.c
+> new file mode 100644
+> index 000000000000..d0a15cc0b738
+> --- /dev/null
+> +++ b/drivers/usb/cdns3/cdns3-pci-wrap.c
+> @@ -0,0 +1,157 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Cadence USBSS PCI Glue driver
+> + *
+> + * Copyright (C) 2018 Cadence.
+> + *
+> + * Author: Pawel Laszczak <pawell@cadence.com>
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/slab.h>
+> +
+> +struct cdns3_wrap {
+> +	struct platform_device *plat_dev;
+> +	struct pci_dev *hg_dev;
+> +	struct resource dev_res[4];
+> +};
+> +
+> +struct cdns3_wrap wrap;
+> +
+> +#define RES_IRQ_ID		0
+> +#define RES_HOST_ID		1
+> +#define RES_DEV_ID		2
+> +#define RES_DRD_ID		3
+> +
+> +#define PCI_BAR_HOST		0
+> +#define PCI_BAR_DEV		2
+> +#define PCI_BAR_OTG		4
+> +
+> +#define PCI_DEV_FN_HOST_DEVICE	0
+> +#define PCI_DEV_FN_OTG		1
+> +
+> +#define PCI_DRIVER_NAME		"cdns3-pci-usbss"
+> +#define PLAT_DRIVER_NAME	"cdns-usb3"
+> +
+> +#define CDNS_VENDOR_ID 0x17cd
+> +#define CDNS_DEVICE_ID 0x0100
+> +
+> +/**
+> + * cdns3_pci_probe - Probe function for Cadence USB wrapper driver
+> + * @pdev: platform device object
+> + * @id: pci device id
+> + *
+> + * Returns 0 on success otherwise negative errno
+> + */
+> +static int cdns3_pci_probe(struct pci_dev *pdev,
+> +			   const struct pci_device_id *id)
+> +{
+> +	struct platform_device_info plat_info;
+> +	struct cdns3_wrap *wrap;
+> +	struct resource *res;
+> +	int err;
+> +
+> +	/*
+> +	 * for GADGET/HOST PCI (devfn) function number is 0,
+> +	 * for OTG PCI (devfn) function number is 1
+> +	 */
+> +	if (!id || pdev->devfn != PCI_DEV_FN_HOST_DEVICE)
+> +		return -EINVAL;
+> +
+> +	err = pcim_enable_device(pdev);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "Enabling PCI device has failed %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	pci_set_master(pdev);
+> +	wrap = devm_kzalloc(&pdev->dev, sizeof(*wrap), GFP_KERNEL);
+> +	if (!wrap) {
+> +		dev_err(&pdev->dev, "Failed to load PCI module\n");
+
+"Failed to allocate memory" ?
+
+Rest of patch looks good to me.
+
+> +		return -ENOMEM;
+> +	}
+> +
+> +	/* function 0: host(BAR_0) + device(BAR_1) + otg(BAR_2)). */
+> +	memset(wrap->dev_res, 0x00,
+> +	       sizeof(struct resource) * ARRAY_SIZE(wrap->dev_res));
+> +	dev_dbg(&pdev->dev, "Initialize Device resources\n");
+> +	res = wrap->dev_res;
+> +
+> +	res[RES_DEV_ID].start = pci_resource_start(pdev, PCI_BAR_DEV);
+> +	res[RES_DEV_ID].end =   pci_resource_end(pdev, PCI_BAR_DEV);
+> +	res[RES_DEV_ID].name = "cdns3-dev-regs";
+> +	res[RES_DEV_ID].flags = IORESOURCE_MEM;
+> +	dev_dbg(&pdev->dev, "USBSS-DEV physical base addr: %pa\n",
+> +		&res[RES_DEV_ID].start);
+> +
+> +	res[RES_HOST_ID].start = pci_resource_start(pdev, PCI_BAR_HOST);
+> +	res[RES_HOST_ID].end = pci_resource_end(pdev, PCI_BAR_HOST);
+> +	res[RES_HOST_ID].name = "cdns3-xhci-regs";
+> +	res[RES_HOST_ID].flags = IORESOURCE_MEM;
+> +	dev_dbg(&pdev->dev, "USBSS-XHCI physical base addr: %pa\n",
+> +		&res[RES_HOST_ID].start);
+> +
+> +	res[RES_DRD_ID].start = pci_resource_start(pdev, PCI_BAR_OTG);
+> +	res[RES_DRD_ID].end =   pci_resource_end(pdev, PCI_BAR_OTG);
+> +	res[RES_DRD_ID].name = "cdns3-otg";
+> +	res[RES_DRD_ID].flags = IORESOURCE_MEM;
+> +	dev_dbg(&pdev->dev, "USBSS-DRD physical base addr: %pa\n",
+> +		&res[RES_DRD_ID].start);
+> +
+> +	/* Interrupt common for both device and XHCI */
+> +	wrap->dev_res[RES_IRQ_ID].start = pdev->irq;
+> +	wrap->dev_res[RES_IRQ_ID].name = "cdns3-irq";
+> +	wrap->dev_res[RES_IRQ_ID].flags = IORESOURCE_IRQ;
+> +
+> +	/* set up platform device info */
+> +	memset(&plat_info, 0, sizeof(plat_info));
+> +	plat_info.parent = &pdev->dev;
+> +	plat_info.fwnode = pdev->dev.fwnode;
+> +	plat_info.name = PLAT_DRIVER_NAME;
+> +	plat_info.id = pdev->devfn;
+> +	plat_info.res = wrap->dev_res;
+> +	plat_info.num_res = ARRAY_SIZE(wrap->dev_res);
+> +	plat_info.dma_mask = pdev->dma_mask;
+> +
+> +	/* register platform device */
+> +	wrap->plat_dev = platform_device_register_full(&plat_info);
+> +	if (IS_ERR(wrap->plat_dev)) {
+> +		err = PTR_ERR(wrap->plat_dev);
+> +		return err;
+> +	}
+> +
+> +	pci_set_drvdata(pdev, wrap);
+> +
+> +	return err;
+> +}
+> +
+> +void cdns3_pci_remove(struct pci_dev *pdev)
+> +{
+> +	struct cdns3_wrap *wrap = (struct cdns3_wrap *)pci_get_drvdata(pdev);
+> +
+> +	platform_device_unregister(wrap->plat_dev);
+> +}
+> +
+> +static const struct pci_device_id cdns3_pci_ids[] = {
+> +	{ PCI_DEVICE(CDNS_VENDOR_ID, CDNS_DEVICE_ID), },
+> +	{ 0, }
+> +};
+> +
+> +static struct pci_driver cdns3_pci_driver = {
+> +	.name = PCI_DRIVER_NAME,
+> +	.id_table = cdns3_pci_ids,
+> +	.probe = cdns3_pci_probe,
+> +	.remove = cdns3_pci_remove,
+> +};
+> +
+> +module_pci_driver(cdns3_pci_driver);
+> +MODULE_DEVICE_TABLE(pci, cdns3_pci_ids);
+> +
+> +MODULE_AUTHOR("Pawel Laszczak <pawell@cadence.com>");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("Cadence USBSS PCI wrapperr");
+> +
 > 
+
+cheers,
+-roger
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
