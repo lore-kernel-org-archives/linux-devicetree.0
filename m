@@ -1,71 +1,73 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v9 0/8] Add support for audiocodec in
- Allwinner A64
-Date: Fri, 23 Nov 2018 12:37:53 +0800
-Message-ID: <CAGb2v67J6ptnr_uPW0+H=WvCdAVzZ1Sw1wTUQrr6KrNsc_mXKQ@mail.gmail.com>
-References: <20181122102325.29495-1-wens@csie.org> <2007258.VzpTJLJblp@anarsoul-thinkpad>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCH 2/4] doc/layerscape-pci: removed unsuitable compatible
+ string
+Date: Fri, 23 Nov 2018 06:22:06 +0000
+Message-ID: <AM6PR04MB5781C1086B4EFF1BF73F72B284D40@AM6PR04MB5781.eurprd04.prod.outlook.com>
+References: <20181008031428.25293-1-Zhiqiang.Hou@nxp.com>
+ <20181008031428.25293-3-Zhiqiang.Hou@nxp.com>
+ <20181122112809.GA11952@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBL4I33PQKGQERB64YQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <2007258.VzpTJLJblp@anarsoul-thinkpad>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181122112809.GA11952@e107981-ln.cambridge.arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 23, 2018 at 12:26 PM Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
-> On Thursday, November 22, 2018 2:23:17 AM PST Chen-Yu Tsai wrote:
-> > Hi everyone,
-> >
-> > This is v9 of the A64 audio codec series, originally started by Vasily.
-> > These are the last changes to make the A64 audio codec work correctly,
-> > and be accurately represented in the device tree and in software.
-> >
-> > Notably, the new driver changes cover regulator supplies for the simple
-> > audio amplifier, which is used in the Pinebook for the internal
-> > speakers, and the audio codec's internal headphone amp. There's also an
-> > extra patch that enables SDM fractional clock support for the audio PLL
-> > on the A64, which gives us accurate audio playback.
-> >
-> > Patch 1 & 2 add the cpvdd regulator supply to the sun50i-codec-analog
-> > dt bindings & driver.
-> >
-> > Patch 3 & 4 add a regulator supply to the simple-audio-amplifier dt
-> > bindings & driver.
-> >
-> > Patch 5 adds SDM fractional clock support for the audio PLL on the A64.
-> >
-> > Patch 6 ~ 8 add the device tree bits and enables audio on several
-> > boards.
-> >
-> > I have one extra patch for the Bananapi M64 that's not included here,
-> > as I'm waiting for an accessory to test the microphone bias. I'll send
-> > that one out once it's tested.
-> >
-> > As always, we'll take the clock and dts patches after Mark has merged
-> > the ASoC ones.
-> >
-> > And a big thanks to Vasily for having worked on this for so long.
->
-> Thank you for picking it up!
->
-> Just a minor note: hpvcc-supply should be a property of codec_analog in
-> sun50i-a64-pinebook.dts
-
-Thanks. I'll fix that up when applying.
-
-> Otherwise looks fine, tested on Pinebook and Pine64-LTS.
->
-> Tested-by: Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Great!
-
-ChenYu
+SGkgTG9yZW56bywNCg0KVGhhbmtzIGEgbG90IGZvciB5b3VyIGNvbW1lbnRzIQ0KDQo+IC0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExvcmVuem8gUGllcmFsaXNpIFttYWlsdG86
+bG9yZW56by5waWVyYWxpc2lAYXJtLmNvbV0NCj4gU2VudDogMjAxOMTqMTHUwjIyyNUgMTk6MjgN
+Cj4gVG86IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LWFybS1r
+ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsN
+Cj4gbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
+IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBzaGF3
+bmd1b0BrZXJuZWwub3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgYmhlbGdhYXNAZ29vZ2xl
+LmNvbTsgTWluZ2thaSBIdQ0KPiA8bWluZ2thaS5odUBueHAuY29tPjsgTS5oLiBMaWFuIDxtaW5n
+aHVhbi5saWFuQG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMi80XSBkb2MvbGF5ZXJz
+Y2FwZS1wY2k6IHJlbW92ZWQgdW5zdWl0YWJsZSBjb21wYXRpYmxlDQo+IHN0cmluZw0KPiANCj4g
+T24gTW9uLCBPY3QgMDgsIDIwMTggYXQgMTE6MTQ6MjZBTSArMDgwMCwgWmhpcWlhbmcgSG91IHdy
+b3RlOg0KPiA+IEZyb206IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+ID4N
+Cj4gPiBSZW1vdmVkIHRoZSBjb21wYXRpYmxlIHN0cmluZyAic25wcyxkdy1wY2llIiwgaXQgaXMg
+Zm9yIHRoZSByZWZlcmVuY2UNCj4gPiBwbGF0Zm9ybSBkcml2ZXIgZm9yIFBDSSBSQyBJUCBQcm90
+b3lwaW5nIEtpdHMgYmFzZWQgb24gdGhlIEFSQyBTRFAsIHNvDQo+ID4gaXQgaXMgbm90IHN1aXRh
+YmxlIGZvciBhbGwgcGxhdGZvcm0gd2l0aCBkZXNpZ253YXJlIFBDSWUgY29udHJvbGxlciwNCj4g
+PiBhbmQgcGxhdGZvcm0gdmVuZG9ycyBoYXZlIHRoZW1zZWx2ZXMnIGRyaXZlcnMuDQo+ID4NCj4g
+PiBUaGUgY29tcGF0aWJsZSBzdHJpbmcgInNuc3AsZHctcGNpZSIgd2FzIGFkZGVkIGJ5IG1pc3Rh
+a2UgYW5kIGl0J3Mgbm90DQo+ID4gbWF0Y2hlZCB0aGF0IHRpbWUsIGJ1dCBpdCBpcyBtYXRjaGVk
+IGJlY2F1c2UgcGNpZSBkcml2ZXJzIGhhcyBiZWVuDQo+ID4gY29sbGVjdGVkIHJlY2VudGx5Lg0K
+PiANCj4gSSBkbyBub3QgdW5kZXJzdGFuZCB3aGF0IHlvdSBtZWFuLCBwbGVhc2UgZXhwbGFpbiBp
+dCB0byBtZSBhbmQgSSB3aWxsIHVwZGF0ZQ0KPiB0aGUgY29tbWl0IGxvZyBhY2NvcmRpbmdseSBi
+ZWZvcmUgbWVyZ2luZyBpdC4NCg0KQmVmb3JlIG1vdmluZyBQQ0llIGNvbnRyb2xsZXIgZHJpdmVy
+cyB0byBkaXJlY3RvcnkgZHJpdmVycy9wY2kvY29udHJvbGxlcnMvLCBwY2ktbGF5ZXJzY2FwZS5j
+IGNhbiBiZSBtYXRjaGVkIGNvcnJlY3RseSwgYnV0IGFmdGVyIHRoYXQgdGhlIHBjaWUtZGVzaWdu
+d2FyZS1wbGF0LmMgaXMgbWF0Y2hlZCBpbnN0ZWFkIG9mIHRoZSBwY2ktbGF5ZXJzY2FwZS5jLiBT
+byB0aGlzIHBhdGNoIGlzIHRvIGF2b2lkIG1hdGNoaW5nIHBjaWUtZGVzaWdud2FyZS1wbGF0LmMg
+YnkgcmVtb3ZpbmcgdGhlICJzbnBzLGR3LXBjaWUiLg0KDQpUaGFua3MsDQpaaGlxaWFuZw0KDQo+
+IExvcmVuem8NCj4gDQo+ID4gU2lnbmVkLW9mZi1ieTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5I
+b3VAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3BjaS9sYXllcnNjYXBlLXBjaS50eHQgfCA2ICsrKy0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdl
+ZCwgMyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0
+DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUt
+cGNpLnR4dA0KPiA+IGluZGV4IDVlYjFjMjAyOTMyZi4uOWIyYjhkNjZkMWY0IDEwMDY0NA0KPiA+
+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1w
+Y2kudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9s
+YXllcnNjYXBlLXBjaS50eHQNCj4gPiBAQCAtMTMsOCArMTMsOCBAQCBpbmZvcm1hdGlvbi4NCj4g
+Pg0KPiA+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAtIGNvbXBhdGlibGU6IHNob3VsZCBj
+b250YWluIHRoZSBwbGF0Zm9ybSBpZGVudGlmaWVyIHN1Y2ggYXM6DQo+ID4gLSAgICAgICAgImZz
+bCxsczEwMjFhLXBjaWUiLCAic25wcyxkdy1wY2llIg0KPiA+IC0gICAgICAgICJmc2wsbHMyMDgw
+YS1wY2llIiwgImZzbCxsczIwODVhLXBjaWUiLCAic25wcyxkdy1wY2llIg0KPiA+ICsgICAgICAg
+ICJmc2wsbHMxMDIxYS1wY2llIg0KPiA+ICsgICAgICAgICJmc2wsbHMyMDgwYS1wY2llIiwgImZz
+bCxsczIwODVhLXBjaWUiDQo+ID4gICAgICAgICAgImZzbCxsczIwODhhLXBjaWUiDQo+ID4gICAg
+ICAgICAgImZzbCxsczEwODhhLXBjaWUiDQo+ID4gICAgICAgICAgImZzbCxsczEwNDZhLXBjaWUi
+DQo+ID4gQEAgLTM2LDcgKzM2LDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAgRXhhbXBs
+ZToNCj4gPg0KPiA+ICAJcGNpZUAzNDAwMDAwIHsNCj4gPiAtCQljb21wYXRpYmxlID0gImZzbCxs
+czEwMjFhLXBjaWUiLCAic25wcyxkdy1wY2llIjsNCj4gPiArCQljb21wYXRpYmxlID0gImZzbCxs
+czEwMjFhLXBjaWUiOw0KPiA+ICAJCXJlZyA9IDwweDAwIDB4MDM0MDAwMDAgMHgwIDB4MDAwMTAw
+MDAgICAvKiBjb250cm9sbGVyIHJlZ2lzdGVycw0KPiAqLw0KPiA+ICAJCSAgICAgICAweDQwIDB4
+MDAwMDAwMDAgMHgwIDB4MDAwMDIwMDA+OyAvKiBjb25maWd1cmF0aW9uIHNwYWNlDQo+ICovDQo+
+ID4gIAkJcmVnLW5hbWVzID0gInJlZ3MiLCAiY29uZmlnIjsNCj4gPiAtLQ0KPiA+IDIuMTcuMQ0K
+PiA+DQo=
