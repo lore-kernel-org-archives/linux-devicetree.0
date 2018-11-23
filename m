@@ -1,11 +1,13 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 0/3] Bring suspend to RAM support to xHCI MVEBU driver
-Date: Fri, 23 Nov 2018 12:22:14 +0100
-Message-ID: <20181123112217.4878-1-miquel.raynal@bootlin.com>
+Subject: [PATCH 1/3] usb: core: comply to PHY framework
+Date: Fri, 23 Nov 2018 12:22:15 +0100
+Message-ID: <20181123112217.4878-2-miquel.raynal@bootlin.com>
+References: <20181123112217.4878-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181123112217.4878-1-miquel.raynal@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,40 +21,84 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, linux-usb@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sCgpBcyBwYXJ0IG9mIGFuIGVmZm9ydCB0byBicmluZyBzdXNwZW5kIHRvIFJBTSBzdXBw
-b3J0IHRvIEFybWFkYSAzNzAwClNvQ3MgKG1haW4gdGFyZ2V0OiBFU1BSRVNTT2JpbiksIHRoaXMg
-c2VyaWVzIGhhbmRsZXMgdGhlIHdvcmsgYXJvdW5kCnRoZSBVU0IzIGhvc3QgSVAuCgpGaXJzdCwg
-YSBjaGFuZ2UgaW4gdGhlIGNvcmUgYWRkcyBzdXBwb3J0IGZvciB0aGUgbmV3IFBIWSBmcmFtZXdv
-cmsgYnkKZm9sbG93aW5nIHRoZSBwaHlfc2V0X21vZGUoKS9waHlfcG93ZXJfb24oKSBzZXF1ZW5j
-ZSAocGF0Y2ggMSkuIFRoZQpzZWNvbmQgY2hhbmdlIG5lZWRlZCBpcyB0byB1cGRhdGUgdGhlIHhI
-Q0kgTVZFQlUgZHJpdmVyIChwYXRjaCAyKSB3aXRoCnRoZSBYSENJX1JFU0VUX09OX1JFU1VNRSBx
-dWlyayB0aGF0IHdpbGwgZG8gbW9zdCBvZiB0aGUKcmVjb25maWd1cmF0aW9uIHdvcmsgd2hlbiBy
-ZXN1bWluZy4KClRoZW4sIGJlY2F1c2Ugb2YgdGhlIGFzeW5jaHJvbm91cyBzdXNwZW5kIGZlYXR1
-cmUgaW1wbGVtZW50ZWQgbGF0ZWx5CnRoZSBkcml2ZXIgd2FzIGJsb2NraW5nIGR1cmluZyB0aGUg
-UzJSQU0gb3BlcmF0aW9uLCBwcm9iYWJseSBkdWUgdG8gYQpyZWdpc3RlciBhY2Nlc3Mgd2hpbGUg
-dGhlIGNsb2NrIHdhcyBub3QgZW5hYmxlZC4gQSBmaXJzdCBwYXRjaCBoYXMKYmVlbiB3cml0dGVu
-IGZvciB0aGF0LCBhZGRpbmcgYSBuZXcgcXVpcmsgdG8gaWdub3JlIHRoZSBhc3luY2hyb25vdXMK
-c2V0dGluZyBbMV0gd2hpY2ggaGFzIGJlY29tZSB1c2VsZXNzIG9uY2UgY2xvY2sgbGlua3Mgd2l0
-aCBjb25zdW1lcgpoYXZlIGJlZW4gY29udHJpYnV0ZWQgWzJdIChzZXJpZXMgbm90IG1lcmdlZCB5
-ZXQpLgoKRmluYWxseSwgdGhlIEVTUFJFU1NPYmluIGRldmljZSB0cmVlIGlzIHVwZGF0ZWQgKHBh
-dGNoIDMpIHRvIHJlZmVyZW5jZQp0aGUgUEhZLiB4SENJIGJpbmRpbmdzIGFscmVhZHkgZG9jdW1l
-bnQgdGhlIFBIWSBzbyBubyB1cGRhdGUgaXMgbmVlZGVkCm9uIHRoaXMgcmVnYXJkLgoKWzFdIGh0
-dHA6Ly9jb2RlLmJ1bGl4Lm9yZy9zMmNjZDQtNTExMTk4ClsyXSBodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9waXBlcm1haWwvbGludXgtYXJtLWtlcm5lbC8yMDE4LU5vdmVtYmVyLzYxNDUyNy5o
-dG1sCgpUaGFua3MsCk1pcXXDqGwKCgpNaXF1ZWwgUmF5bmFsICgyKToKICB1c2I6IGNvcmU6IGNv
-bXBseSB0byBQSFkgZnJhbWV3b3JrCiAgQVJNNjQ6IGR0czogbWFydmVsbDogYXJtYWRhLTM3MjAt
-ZXNwcmVzc29iaW46IGRlY2xhcmUgVVNCMyBQSFkKCk9mZXIgSGVpZmV0eiAoMSk6CiAgdXNiOiBo
-b3N0OiB4aGNpOiBtdmVidTogYWRkIHJlc2V0IG9uIHJlc3VtZSBxdWlyawoKIC4uLi9kdHMvbWFy
-dmVsbC9hcm1hZGEtMzcyMC1lc3ByZXNzb2Jpbi5kdHMgICB8ICAxICsKIGRyaXZlcnMvdXNiL2Nv
-cmUvaGNkLmMgICAgICAgICAgICAgICAgICAgICAgICB8ICA1ICsrKysKIGRyaXZlcnMvdXNiL2Nv
-cmUvcGh5LmMgICAgICAgICAgICAgICAgICAgICAgICB8IDI4ICsrKysrKysrKysrKysrKysrKysK
-IGRyaXZlcnMvdXNiL2NvcmUvcGh5LmggICAgICAgICAgICAgICAgICAgICAgICB8ICAyICsrCiBk
-cml2ZXJzL3VzYi9ob3N0L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgfCAgMiArLQogZHJp
-dmVycy91c2IvaG9zdC94aGNpLW12ZWJ1LmMgICAgICAgICAgICAgICAgIHwgMTEgKysrKysrKysK
-IGRyaXZlcnMvdXNiL2hvc3QveGhjaS1tdmVidS5oICAgICAgICAgICAgICAgICB8ICA2ICsrKysK
-IGRyaXZlcnMvdXNiL2hvc3QveGhjaS1wbGF0LmMgICAgICAgICAgICAgICAgICB8ICA3ICsrKysr
-CiA4IGZpbGVzIGNoYW5nZWQsIDYxIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCi0tIAoy
-LjE5LjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
-aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
-eC1hcm0ta2VybmVsCg==
+Current implementation of the USB core does not take into account the
+new PHY framework. Correct the situation by adding a call to
+phy_set_mode() before phy_power_on().
+
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/usb/core/hcd.c |  5 +++++
+ drivers/usb/core/phy.c | 28 ++++++++++++++++++++++++++++
+ drivers/usb/core/phy.h |  2 ++
+ 3 files changed, 35 insertions(+)
+
+diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+index 487025d31d44..bfb90b17c7a6 100644
+--- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -2738,6 +2738,11 @@ int usb_add_hcd(struct usb_hcd *hcd,
+ 		if (retval)
+ 			return retval;
+ 
++		retval = usb_phy_roothub_set_mode(hcd->phy_roothub,
++						  PHY_MODE_USB_HOST_SS);
++		if (retval)
++			goto err_usb_phy_roothub_power_on;
++
+ 		retval = usb_phy_roothub_power_on(hcd->phy_roothub);
+ 		if (retval)
+ 			goto err_usb_phy_roothub_power_on;
+diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
+index 38b2c776c4b4..7580493b867a 100644
+--- a/drivers/usb/core/phy.c
++++ b/drivers/usb/core/phy.c
+@@ -123,6 +123,34 @@ int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub)
+ }
+ EXPORT_SYMBOL_GPL(usb_phy_roothub_exit);
+ 
++int usb_phy_roothub_set_mode(struct usb_phy_roothub *phy_roothub,
++			     enum phy_mode mode)
++{
++	struct usb_phy_roothub *roothub_entry;
++	struct list_head *head;
++	int err;
++
++	if (!phy_roothub)
++		return 0;
++
++	head = &phy_roothub->list;
++
++	list_for_each_entry(roothub_entry, head, list) {
++		err = phy_set_mode(roothub_entry->phy, mode);
++		if (err)
++			goto err_out;
++	}
++
++	return 0;
++
++err_out:
++	list_for_each_entry_continue_reverse(roothub_entry, head, list)
++		phy_power_off(roothub_entry->phy);
++
++	return err;
++}
++EXPORT_SYMBOL_GPL(usb_phy_roothub_set_mode);
++
+ int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub)
+ {
+ 	struct usb_phy_roothub *roothub_entry;
+diff --git a/drivers/usb/core/phy.h b/drivers/usb/core/phy.h
+index 88a3c037e9df..dad564e2d2d4 100644
+--- a/drivers/usb/core/phy.h
++++ b/drivers/usb/core/phy.h
+@@ -16,6 +16,8 @@ struct usb_phy_roothub *usb_phy_roothub_alloc(struct device *dev);
+ int usb_phy_roothub_init(struct usb_phy_roothub *phy_roothub);
+ int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub);
+ 
++int usb_phy_roothub_set_mode(struct usb_phy_roothub *phy_roothub,
++			     enum phy_mode mode);
+ int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub);
+ void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub);
+ 
+-- 
+2.19.1
