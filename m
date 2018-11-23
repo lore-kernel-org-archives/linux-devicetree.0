@@ -1,129 +1,32 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH 3/3] arm64: tegra: p2972: Enable the CPU, GPU and AUX thermal zones
-Date: Fri, 23 Nov 2018 13:18:39 +0100
-Message-ID: <20181123121839.18573-3-thierry.reding@gmail.com>
-References: <20181123121839.18573-1-thierry.reding@gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] ARM: dts: r9a06g032: Correct the GIC DT node name
+Date: Fri, 23 Nov 2018 13:20:46 +0100
+Message-ID: <20181123122046.xqxq7kxdkp7swxf4@verge.net.au>
+References: <20181121100844.25825-1-phil.edworthy@renesas.com>
+ <CAMuHMdUH74QA5oSuOe9LgoS08-CEHiGSz_FzPQs6S9BzCijDag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181123121839.18573-1-thierry.reding@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUH74QA5oSuOe9LgoS08-CEHiGSz_FzPQs6S9BzCijDag@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jon Hunter <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>, Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Phil Edworthy <phil.edworthy@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+On Fri, Nov 23, 2018 at 10:24:06AM +0100, Geert Uytterhoeven wrote:
+> On Wed, Nov 21, 2018 at 11:10 AM Phil Edworthy
+> <phil.edworthy@renesas.com> wrote:
+> > Harmless mistake, but it's incorrect. The DT spec provides recommendations
+> > for the node names:
+> > "The name of a node should be somewhat generic, reflecting the function
+> > of the device and not its precise programming model. If appropriate, the
+> > name should be one of the following choices:
+> > ...
+> > interrupt-controller"
+> >
+> > Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Enable these thermal zones to be able to monitor their temperatures and
-control the fan to cool down the system if necessary.
-
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- .../boot/dts/nvidia/tegra194-p2972-0000.dts   | 91 ++++++++++++++++++-
- 1 file changed, 90 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-index cbae8e8b1281..e29f8f6117c8 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-@@ -43,8 +43,97 @@
- 		};
- 	};
- 
--	fan {
-+	fan: fan {
- 		compatible = "pwm-fan";
- 		pwms = <&pwm4 0 45334>;
-+
-+		cooling-levels = <0 64 128 255>;
-+		cooling-min-state = <0>;
-+		cooling-max-state = <3>;
-+		#cooling-cells = <2>;
-+	};
-+
-+	thermal-zones {
-+		cpu {
-+			polling-delay = <0>;
-+			polling-delay-passive = <500>;
-+			status = "okay";
-+
-+			trips {
-+				cpu_trip_critical: critical {
-+					temperature = <96500>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+
-+				cpu_trip_hot: hot {
-+					temperature = <70000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+
-+				cpu_trip_active: active {
-+					temperature = <50000>;
-+					hysteresis = <2000>;
-+					type = "active";
-+				};
-+
-+				cpu_trip_passive: passive {
-+					temperature = <30000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+			};
-+
-+			cooling-maps {
-+				cpu-critical {
-+					cooling-device = <&fan 3 3>;
-+					trip = <&cpu_trip_critical>;
-+				};
-+
-+				cpu-hot {
-+					cooling-device = <&fan 2 2>;
-+					trip = <&cpu_trip_hot>;
-+				};
-+
-+				cpu-active {
-+					cooling-device = <&fan 1 1>;
-+					trip = <&cpu_trip_active>;
-+				};
-+
-+				cpu-passive {
-+					cooling-device = <&fan 0 0>;
-+					trip = <&cpu_trip_passive>;
-+				};
-+			};
-+		};
-+
-+		gpu {
-+			polling-delay = <0>;
-+			polling-delay-passive = <500>;
-+			status = "okay";
-+
-+			trips {
-+				gpu_alert0: critical {
-+					temperature = <99000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		aux {
-+			polling-delay = <0>;
-+			polling-delay-passive = <500>;
-+			status = "okay";
-+
-+			trips {
-+				aux_alert0: critical {
-+					temperature = <90000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+			};
-+		};
- 	};
- };
--- 
-2.19.1
+Thanks, applied for v4.21.
