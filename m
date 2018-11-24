@@ -1,58 +1,32 @@
-Return-Path: <SRS0=pBn+=OG=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v3 1/6] media: mt9m111: add s_stream callback
-Date: Tue, 27 Nov 2018 11:02:48 +0100
-Message-Id: <20181127100253.30845-2-m.felsch@pengutronix.de>
-In-Reply-To: <20181127100253.30845-1-m.felsch@pengutronix.de>
-References: <20181127100253.30845-1-m.felsch@pengutronix.de>
+Return-Path: <vkoul@kernel.org>
+Date: Sat, 24 Nov 2018 20:08:03 +0530
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: dmaengine: dw-dmac: add protection
+ control property
+Message-ID: <20181124143802.GM3175@vkoul-mobl.Dlink>
+References: <9c621e11148a5971e34409d7024c48b783d75b1a.1542471341.git.chunkeey@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: enrico.scholz@sigma-chemnitz.de, devicetree@vger.kernel.org, akinobu.mita@gmail.com, linux-media@vger.kernel.org, graphics@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9c621e11148a5971e34409d7024c48b783d75b1a.1542471341.git.chunkeey@gmail.com>
+To: Christian Lamparter <chunkeey@gmail.com>
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Viresh Kumar <vireshk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add callback to check if we are already streaming. Now other callbacks
-can check the state and return -EBUSY if we already streaming.
+On 17-11-18, 17:17, Christian Lamparter wrote:
+> This patch for the DesignWare AHB Central
+> Direct Memory Access Controller adds the dma
+> protection control property:
+> 	"snps,dma-protection-control"
+> 
+> as well as the properties specific values defines into
+> a new include file: include/dt-bindings/dma/dw-dmac.h
+> 
+> Note: The protection control signals are one-to-one
+> mapped to the AHB HPROT[1:3] signals for this controller.
+> The HPROT0 (Data Access) is always hardwired to 1.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/media/i2c/mt9m111.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Applied this series, thanks.
 
-diff --git a/drivers/media/i2c/mt9m111.c b/drivers/media/i2c/mt9m111.c
-index 58d134dcdf44..03559669de9f 100644
---- a/drivers/media/i2c/mt9m111.c
-+++ b/drivers/media/i2c/mt9m111.c
-@@ -220,6 +220,7 @@ struct mt9m111 {
- 	int power_count;
- 	const struct mt9m111_datafmt *fmt;
- 	int lastpage;	/* PageMap cache value */
-+	bool is_streaming;
- #ifdef CONFIG_MEDIA_CONTROLLER
- 	struct media_pad pad;
- #endif
-@@ -910,6 +911,14 @@ static int mt9m111_enum_mbus_code(struct v4l2_subdev *sd,
- 	return 0;
- }
- 
-+static int mt9m111_s_stream(struct v4l2_subdev *sd, int enable)
-+{
-+	struct mt9m111 *mt9m111 = container_of(sd, struct mt9m111, subdev);
-+
-+	mt9m111->is_streaming = !!enable;
-+	return 0;
-+}
-+
- static int mt9m111_g_mbus_config(struct v4l2_subdev *sd,
- 				struct v4l2_mbus_config *cfg)
- {
-@@ -923,6 +932,7 @@ static int mt9m111_g_mbus_config(struct v4l2_subdev *sd,
- 
- static const struct v4l2_subdev_video_ops mt9m111_subdev_video_ops = {
- 	.g_mbus_config	= mt9m111_g_mbus_config,
-+	.s_stream	= mt9m111_s_stream,
- };
- 
- static const struct v4l2_subdev_pad_ops mt9m111_subdev_pad_ops = {
 -- 
-2.19.1
+~Vinod
