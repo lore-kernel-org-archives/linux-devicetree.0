@@ -1,28 +1,41 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v3 4/4] ARM: dts: Add stmpe-adc driver to relevant
- devicetrees
-Date: Sat, 24 Nov 2018 14:20:58 +0300
-Message-ID: <2c7d4caa-4a6e-cea1-d394-51790227d968@gmail.com>
-References: <20181123142411.8921-1-dev@pschenker.ch>
- <20181123142411.8921-4-dev@pschenker.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Tom Burkart <tom@aussec.com>
+Subject: [PATCH v10 1/4] dt-bindings: pps: capture-clear addition
+Date: Sat, 24 Nov 2018 22:38:09 +1100
+Message-ID: <20181124113812.31700-2-tom@aussec.com>
+References: <20181124113812.31700-1-tom@aussec.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181123142411.8921-4-dev@pschenker.ch>
-Content-Language: en-US
+In-Reply-To: <20181124113812.31700-1-tom@aussec.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Schenker <dev@pschenker.ch>, jic23@kernel.org, marcel.ziswiler@toradex.com, stefan@agner.ch
-Cc: Philippe Schenker <philippe.schenker@toradex.com>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, Pengutronix Kernel Team <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, NXP Linux Team <linux-imx@nxp.com>
+To: Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Cc: Tom Burkart <tom@aussec.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 23.11.2018 17:24, Philippe Schenker wrote:
-> From: Philippe Schenker <philippe.schenker@toradex.com>
-> 
-> Activate the stmpe-adc driver as found on Apalis/Colibri iMX6/T30 modules
-> 
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+It adds documentation for the device tree capture-clear option.
 
-Hello Philippe,
+Signed-off-by: Tom Burkart <tom@aussec.com>
+---
+ Documentation/devicetree/bindings/pps/pps-gpio.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Just a very minor comment.. device trees are not for drivers, but for HW description. It will be better to s/driver/DT node/ in both commit name and description.
+diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+index 3683874832ae..1155d49c2699 100644
+--- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
++++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+@@ -10,6 +10,7 @@ Required properties:
+ Optional properties:
+ - assert-falling-edge: when present, assert is indicated by a falling edge
+                        (instead of by a rising edge)
++- capture-clear: when present, also capture the PPS clear event
+ 
+ Example:
+ 	pps {
+@@ -18,6 +19,7 @@ Example:
+ 
+ 		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
+ 		assert-falling-edge;
++		capture-clear;
+ 
+ 		compatible = "pps-gpio";
+ 	};
+-- 
+2.12.3
