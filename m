@@ -1,80 +1,40 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC PATCH] of: make MAX_RESERVED_REGIONS configurable
-Date: Sat, 24 Nov 2018 14:56:13 -0600
-Message-ID: <CAL_Jsq+O1YDP1yiHZpcxUaFG1LYDqi74D_kEnErP+cwGDppVWQ@mail.gmail.com>
-References: <1542787873-8429-1-git-send-email-miles.chen@mediatek.com>
- <CAL_JsqLGvUYQmCGXLgSO+6kFj2i87dpaTbMGbyu5oMt=eeu35A@mail.gmail.com> <1542855088.15789.6.camel@mtkswgap22>
+From: Tomasz Duszynski <tduszyns@gmail.com>
+Subject: [PATCH 0/3] add support for Sensirion SPS30 PM sensor
+Date: Sat, 24 Nov 2018 23:14:12 +0100
+Message-ID: <20181124221415.10081-1-tduszyns@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542855088.15789.6.camel@mtkswgap22>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Miles Chen <miles.chen@mediatek.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
+To: linux-iio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Duszynski <tduszyns@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 21, 2018 at 8:51 PM Miles Chen <miles.chen@mediatek.com> wrote:
->
-> On Wed, 2018-11-21 at 10:39 -0600, Rob Herring wrote:
-> > On Wed, Nov 21, 2018 at 2:11 AM <miles.chen@mediatek.com> wrote:
-> > >
-> > > From: Miles Chen <miles.chen@mediatek.com>
-> > >
-> > > When we use more than 32 entries in /resered-memory,
-> > > there will be an error message: "not enough space all defined regions.".
-> > > We can increase MAX_RESERVED_REGIONS to fix this.
-> > >
-> > > commit 22f8cc6e3373 ("drivers: of: increase MAX_RESERVED_REGIONS to 32")
-> > > increased MAX_RESERVED_REGIONS to 32 but I'm not sure if increasing
-> > > MAX_RESERVED_REGIONS to 64 is suitable for everyone.
-> > >
-> > > In this RFC patch, CONFIG_MAX_OF_RESERVED_REGIONS is added and used as
-> > > MAX_RESERVED_REGIONS. Add a sanity test to make sure that
-> > > MAX_RESERVED_REGIONS is less than INIT_MEMBLOCK_REGIONS.
-> > > Users can configure CONFIG_MAX_OF_RESERVED_REGIONS according to their
-> > > need.
-> >
-> > I don't want a kconfig option for this. I think it should be dynamic instead.
-> >
-> > The current flow is like this:
-> >
-> > for each reserved node:
-> >   - call memblock_reserve
-> >   - Add info to reserved_mem array
-> >
-> > I think we should change it to:
-> >
-> > for each reserved node:
-> >   - call memblock_reserve
-> >   - count number of nodes
-> >
-> > Alloc array using memblock_alloc
-> >
-> > for each reserved node:
-> >    - Add info to reserved_mem array
-> >
->
-> thanks for your comment.
->
-> I reviewed the flow and it might be easier to count the
-> nodes and setup array first:
->
-> for each reserved node:
->     - count number of nodes
->
-> Alloc array using memblock_alloc
->
->
-> for each reserved node:
->    - call memblock_reserve
+This patch series adds support for Sensirion SPS30 particulate matter
+sensor. Along with a driver itself, new channel type and
+two modifiers for distinguishing between coarse and fine particles
+measurements are introduced.
 
-The order here is wrong. It is important that you reserve the memory
-blocks before doing any allocations.
+Sensor datasheet can be downloaded from
 
->    - Add info to reserved_mem array
->
-> What do you think?
->
-> > Rob
->
->
+https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/0_Datasheets/Particulate_Matter/Sensirion_PM_Sensors_SPS30_Datasheet.pdf
+
+Tomasz Duszynski (3):
+  iio: add IIO_MASSCONCENTRATION channel type
+  iio: chemical: add support for Sensirion SPS30 sensor
+  iio: chemical: sps30: add device tree support
+
+ Documentation/ABI/testing/sysfs-bus-iio       |  11 +-
+ .../bindings/iio/chemical/sensirion,sps30.txt |  12 +
+ drivers/iio/chemical/Kconfig                  |  11 +
+ drivers/iio/chemical/Makefile                 |   1 +
+ drivers/iio/chemical/sps30.c                  | 359 ++++++++++++++++++
+ drivers/iio/industrialio-core.c               |   3 +
+ include/uapi/linux/iio/types.h                |   3 +
+ tools/iio/iio_event_monitor.c                 |   6 +
+ 8 files changed, 405 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
+ create mode 100644 drivers/iio/chemical/sps30.c
+
+--
+2.19.2
