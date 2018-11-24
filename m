@@ -1,81 +1,80 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH 2/2] drm/panel: simple: add lg,acx467akm-7 panel
-Date: Sat, 24 Nov 2018 15:06:28 -0500
-Message-ID: <20181124200628.24393-2-masneyb@onstation.org>
-References: <20181124200628.24393-1-masneyb@onstation.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC PATCH] of: make MAX_RESERVED_REGIONS configurable
+Date: Sat, 24 Nov 2018 14:56:13 -0600
+Message-ID: <CAL_Jsq+O1YDP1yiHZpcxUaFG1LYDqi74D_kEnErP+cwGDppVWQ@mail.gmail.com>
+References: <1542787873-8429-1-git-send-email-miles.chen@mediatek.com>
+ <CAL_JsqLGvUYQmCGXLgSO+6kFj2i87dpaTbMGbyu5oMt=eeu35A@mail.gmail.com> <1542855088.15789.6.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181124200628.24393-1-masneyb@onstation.org>
+In-Reply-To: <1542855088.15789.6.camel@mtkswgap22>
 Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jonathan@marek.ca
+To: Miles Chen <miles.chen@mediatek.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-From: Jonathan Marek <jonathan@marek.ca>
+On Wed, Nov 21, 2018 at 8:51 PM Miles Chen <miles.chen@mediatek.com> wrote:
+>
+> On Wed, 2018-11-21 at 10:39 -0600, Rob Herring wrote:
+> > On Wed, Nov 21, 2018 at 2:11 AM <miles.chen@mediatek.com> wrote:
+> > >
+> > > From: Miles Chen <miles.chen@mediatek.com>
+> > >
+> > > When we use more than 32 entries in /resered-memory,
+> > > there will be an error message: "not enough space all defined regions.".
+> > > We can increase MAX_RESERVED_REGIONS to fix this.
+> > >
+> > > commit 22f8cc6e3373 ("drivers: of: increase MAX_RESERVED_REGIONS to 32")
+> > > increased MAX_RESERVED_REGIONS to 32 but I'm not sure if increasing
+> > > MAX_RESERVED_REGIONS to 64 is suitable for everyone.
+> > >
+> > > In this RFC patch, CONFIG_MAX_OF_RESERVED_REGIONS is added and used as
+> > > MAX_RESERVED_REGIONS. Add a sanity test to make sure that
+> > > MAX_RESERVED_REGIONS is less than INIT_MEMBLOCK_REGIONS.
+> > > Users can configure CONFIG_MAX_OF_RESERVED_REGIONS according to their
+> > > need.
+> >
+> > I don't want a kconfig option for this. I think it should be dynamic instead.
+> >
+> > The current flow is like this:
+> >
+> > for each reserved node:
+> >   - call memblock_reserve
+> >   - Add info to reserved_mem array
+> >
+> > I think we should change it to:
+> >
+> > for each reserved node:
+> >   - call memblock_reserve
+> >   - count number of nodes
+> >
+> > Alloc array using memblock_alloc
+> >
+> > for each reserved node:
+> >    - Add info to reserved_mem array
+> >
+>
+> thanks for your comment.
+>
+> I reviewed the flow and it might be easier to count the
+> nodes and setup array first:
+>
+> for each reserved node:
+>     - count number of nodes
+>
+> Alloc array using memblock_alloc
+>
+>
+> for each reserved node:
+>    - call memblock_reserve
 
-Add ACX467AKM-7 4.95" 1080×1920 LCD panel that is found on the LG Nexus
-5 (hammerhead) phone.
+The order here is wrong. It is important that you reserve the memory
+blocks before doing any allocations.
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-[masneyb@onstation.org: checkpatch fixes; rename jdi,1080p-hammerhead
-binding to lg,acx467akm-7.]
-Signed-off-by: Brian Masney <masneyb@onstation.org>
----
-See patch 1 in this series for why I went with the LG model number.
-
- drivers/gpu/drm/panel/panel-simple.c | 31 ++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
-
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 97964f7f2ace..a772a8cc1eae 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2761,6 +2761,34 @@ static const struct panel_desc_dsi panasonic_vvx10f004b00 = {
- 	.lanes = 4,
- };
- 
-+static const struct drm_display_mode lg_acx467akm_7_mode = {
-+	.clock = 150000,
-+	.hdisplay = 1080,
-+	.hsync_start = 1080 + 2,
-+	.hsync_end = 1080 + 2 + 2,
-+	.htotal = 1080 + 2 + 2 + 2,
-+	.vdisplay = 1920,
-+	.vsync_start = 1920 + 2,
-+	.vsync_end = 1920 + 2 + 2,
-+	.vtotal = 1920 + 2 + 2 + 2,
-+	.vrefresh = 60,
-+};
-+
-+static const struct panel_desc_dsi lg_acx467akm_7 = {
-+	.desc = {
-+		.modes = &lg_acx467akm_7_mode,
-+		.num_modes = 1,
-+		.bpc = 8,
-+		.size = {
-+			.width = 62,
-+			.height = 110,
-+		},
-+	},
-+	.flags = 0,
-+	.format = MIPI_DSI_FMT_RGB888,
-+	.lanes = 4,
-+};
-+
- static const struct of_device_id dsi_of_match[] = {
- 	{
- 		.compatible = "auo,b080uan01",
-@@ -2777,6 +2805,9 @@ static const struct of_device_id dsi_of_match[] = {
- 	}, {
- 		.compatible = "panasonic,vvx10f004b00",
- 		.data = &panasonic_vvx10f004b00
-+	}, {
-+		.compatible = "lg,acx467akm-7",
-+		.data = &lg_acx467akm_7
- 	}, {
- 		/* sentinel */
- 	}
--- 
-2.17.2
+>    - Add info to reserved_mem array
+>
+> What do you think?
+>
+> > Rob
+>
+>
