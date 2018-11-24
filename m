@@ -1,53 +1,78 @@
 From: Matheus Tavares <matheus.bernardino@usp.br>
-Subject: [PATCH v3 1/7] staging:iio:ad2s90: Add device tree support
-Date: Fri, 23 Nov 2018 22:23:06 -0200
-Message-ID: <20181124002312.6923-2-matheus.bernardino@usp.br>
+Subject: [PATCH v3 2/7] staging:iio:ad2s90: Remove spi setup that should be
+ done via dt
+Date: Fri, 23 Nov 2018 22:23:07 -0200
+Message-ID: <20181124002312.6923-3-matheus.bernardino@usp.br>
 References: <20181124002312.6923-1-matheus.bernardino@usp.br>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 In-Reply-To: <20181124002312.6923-1-matheus.bernardino@usp.br>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
 To: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alexandru Ardelean <alexandru.ardelean@analog.com>, kernel-usp@googlegroups.com, victorcolombo@gmail.com
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, Alexandru Ardelean <alexandru.ardelean@analog.com>, victorcolombo@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree support to ad2s90 with standard
-device tree id table.
+The ad2s90 driver currently sets some spi settings (max_speed_hz and
+mode) at ad2s90_probe. Since the maximum frequency is a required element
+in DT binding for spi slave devices and because the spi mode for the
+device can be either (0,0) or (1,1), these settings should be handled
+via device tree, not in the driver's code. This patch removes them from
+the probe function.
+
+Note: The way in which the mentioned spi settings need to be specified
+on the ad2s90's node of a device tree will be documented in the future
+patch "dt-bindings:iio:resolver: Add docs for ad2s90".
 
 Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
 ---
 Changes in v3:
- - Removed of_patch_ptr from of_match_table assignment
-
-Changes in v2:
  - none
 
- drivers/staging/iio/resolver/ad2s90.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Changes in v2:
+ - Rewritten patch message to better explain why the code snippet in
+ question should be removed.
+
+ drivers/staging/iio/resolver/ad2s90.c | 11 -----------
+ 1 file changed, 11 deletions(-)
 
 diff --git a/drivers/staging/iio/resolver/ad2s90.c b/drivers/staging/iio/resolver/ad2s90.c
-index 3e257ac46f7a..fdae067ed866 100644
+index fdae067ed866..abb9b9147ee6 100644
 --- a/drivers/staging/iio/resolver/ad2s90.c
 +++ b/drivers/staging/iio/resolver/ad2s90.c
-@@ -107,6 +107,12 @@ static int ad2s90_probe(struct spi_device *spi)
+@@ -77,7 +77,6 @@ static int ad2s90_probe(struct spi_device *spi)
+ {
+ 	struct iio_dev *indio_dev;
+ 	struct ad2s90_state *st;
+-	int ret;
+ 
+ 	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+ 	if (!indio_dev)
+@@ -94,16 +93,6 @@ static int ad2s90_probe(struct spi_device *spi)
+ 	indio_dev->num_channels = 1;
+ 	indio_dev->name = spi_get_device_id(spi)->name;
+ 
+-	/* need 600ns between CS and the first falling edge of SCLK */
+-	spi->max_speed_hz = 830000;
+-	spi->mode = SPI_MODE_3;
+-	ret = spi_setup(spi);
+-
+-	if (ret < 0) {
+-		dev_err(&spi->dev, "spi_setup failed!\n");
+-		return ret;
+-	}
+-
  	return devm_iio_device_register(indio_dev->dev.parent, indio_dev);
  }
  
-+static const struct of_device_id ad2s90_of_match[] = {
-+	{ .compatible = "adi,ad2s90", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, ad2s90_of_match);
-+
- static const struct spi_device_id ad2s90_id[] = {
- 	{ "ad2s90" },
- 	{}
-@@ -116,6 +122,7 @@ MODULE_DEVICE_TABLE(spi, ad2s90_id);
- static struct spi_driver ad2s90_driver = {
- 	.driver = {
- 		.name = "ad2s90",
-+		.of_match_table = ad2s90_of_match,
- 	},
- 	.probe = ad2s90_probe,
- 	.id_table = ad2s90_id,
 -- 
 2.18.0
