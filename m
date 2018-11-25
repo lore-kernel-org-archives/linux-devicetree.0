@@ -1,56 +1,238 @@
-From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Subject: Re: [PATCH 3/3] iio: chemical: sps30: add device tree support
-Date: Sun, 25 Nov 2018 08:59:39 +0000
-Message-ID: <20181125085939.421523d6@archlinux>
-References: <20181124221415.10081-1-tduszyns@gmail.com>
-        <20181124221415.10081-4-tduszyns@gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 7/7] staging:iio:ad2s90: Move out of staging
+Date: Sun, 25 Nov 2018 09:56:38 +0000
+Message-ID: <20181125095638.68e5205a@archlinux>
+References: <20181124002312.6923-1-matheus.bernardino@usp.br>
+ <20181124002312.6923-8-matheus.bernardino@usp.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181124221415.10081-4-tduszyns@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Duszynski <tduszyns@gmail.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20181124002312.6923-8-matheus.bernardino@usp.br>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Matheus Tavares <matheus.bernardino@usp.br>
+Cc: Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Alexandru Ardelean <alexandru.ardelean@analog.com>, victorcolombo@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 24 Nov 2018 23:14:15 +0100
-Tomasz Duszynski <tduszyns@gmail.com> wrote:
+On Fri, 23 Nov 2018 22:23:12 -0200
+Matheus Tavares <matheus.bernardino@usp.br> wrote:
 
-> Add device tree support for Sensirion SPS30 particulate
-> matter sensor.
+> Move ad2s90 resolver driver out of staging to the main tree.
 > 
-> Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
-one comment inine, around the fact we are trying to move
-to generic names in DT where ever possible.  Now we don't
-have a suitable one (IIRC) yet so time to make one up ;)
+> Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
+> Signed-off-by: Victor Colombo <victorcolombo@gmail.com>
+Hi.
 
-+CC Rob for his input on that.
+One totally trivial comment inline, but if you want to clean
+that up, do it after we have moved this out of staging
+(unless respinning for some other reason).
+
+However, I would like to let this sit on the mailing list for
+a little longer to let others comment and perhaps to pick up
+a review of the DT binding doc (which looks fine to me, but
+I am forever missing issues in those!)
+
+Good work and I'll probably pick this up later in the week.
+
+Thanks,
+
+Jonathan
 > ---
->  .../bindings/iio/chemical/sensirion,sps30.txt        | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
+> Changes in v3:
+>  - none
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt b/Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
+> Changes in v2:
+>  - Disabled git move detection, to see the whole code, as Jonathan
+>  suggested
+> 
+>  drivers/iio/resolver/Kconfig          |  10 ++
+>  drivers/iio/resolver/Makefile         |   1 +
+>  drivers/iio/resolver/ad2s90.c         | 131 ++++++++++++++++++++++++++
+>  drivers/staging/iio/resolver/Kconfig  |  10 --
+>  drivers/staging/iio/resolver/Makefile |   1 -
+>  drivers/staging/iio/resolver/ad2s90.c | 131 --------------------------
+>  6 files changed, 142 insertions(+), 142 deletions(-)
+>  create mode 100644 drivers/iio/resolver/ad2s90.c
+>  delete mode 100644 drivers/staging/iio/resolver/ad2s90.c
+> 
+> diff --git a/drivers/iio/resolver/Kconfig b/drivers/iio/resolver/Kconfig
+> index 2ced9f22aa70..786801be54f6 100644
+> --- a/drivers/iio/resolver/Kconfig
+> +++ b/drivers/iio/resolver/Kconfig
+> @@ -3,6 +3,16 @@
+>  #
+>  menu "Resolver to digital converters"
+>  
+> +config AD2S90
+> +	tristate "Analog Devices ad2s90 driver"
+> +	depends on SPI
+> +	help
+> +	  Say yes here to build support for Analog Devices spi resolver
+> +	  to digital converters, ad2s90, provides direct access via sysfs.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called ad2s90.
+> +
+>  config AD2S1200
+>  	tristate "Analog Devices ad2s1200/ad2s1205 driver"
+>  	depends on SPI
+> diff --git a/drivers/iio/resolver/Makefile b/drivers/iio/resolver/Makefile
+> index 4e1dccae07e7..398d82d50028 100644
+> --- a/drivers/iio/resolver/Makefile
+> +++ b/drivers/iio/resolver/Makefile
+> @@ -2,4 +2,5 @@
+>  # Makefile for Resolver/Synchro drivers
+>  #
+>  
+> +obj-$(CONFIG_AD2S90) += ad2s90.o
+>  obj-$(CONFIG_AD2S1200) += ad2s1200.o
+> diff --git a/drivers/iio/resolver/ad2s90.c b/drivers/iio/resolver/ad2s90.c
 > new file mode 100644
-> index 000000000000..6eee2709b5b6
+> index 000000000000..a41f5cb10da5
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
-> @@ -0,0 +1,12 @@
-> +* Sensirion SPS30 particulate matter sensor
-> +
-> +Required properties:
-> +- compatible: must be "sensirion,sps30"
-> +- reg: the I2C address of the sensor
-> +
-> +Example:
-> +
-> +sps30@69 {
-We should define a generic type.  Rob, what would work for this
-one?
+> +++ b/drivers/iio/resolver/ad2s90.c
+> @@ -0,0 +1,131 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * ad2s90.c simple support for the ADI Resolver to Digital Converters: AD2S90
+> + *
+> + * Copyright (c) 2010-2010 Analog Devices Inc.
+> + */
+> +#include <linux/types.h>
+> +#include <linux/mutex.h>
+> +#include <linux/device.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/slab.h>
+> +#include <linux/sysfs.h>
+> +#include <linux/module.h>
 
-particlesensor@69?
+We are into the truely trivial realms now - alphabetical order preferred
+for includes.
 
-> +	compatible = "sensirion,sps30";
-> +	reg = <0x69>;
+> +
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +
+> +/*
+> + * Although chip's max frequency is 2Mhz, it needs 600ns between CS and the
+> + * first falling edge of SCLK, so frequency should be at most 1 / (2 * 6e-7)
+> + */
+> +#define AD2S90_MAX_SPI_FREQ_HZ  830000
+> +
+> +struct ad2s90_state {
+> +	struct mutex lock; /* lock to protect rx buffer */
+> +	struct spi_device *sdev;
+> +	u8 rx[2] ____cacheline_aligned;
 > +};
+> +
+> +static int ad2s90_read_raw(struct iio_dev *indio_dev,
+> +			   struct iio_chan_spec const *chan,
+> +			   int *val,
+> +			   int *val2,
+> +			   long m)
+> +{
+> +	int ret;
+> +	struct ad2s90_state *st = iio_priv(indio_dev);
+> +
+> +	if (chan->type != IIO_ANGL)
+> +		return -EINVAL;
+> +
+> +	switch (m) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		/* 2 * Pi / 2^12 */
+> +		*val = 6283; /* mV */
+> +		*val2 = 12;
+> +		return IIO_VAL_FRACTIONAL_LOG2;
+> +	case IIO_CHAN_INFO_RAW:
+> +		mutex_lock(&st->lock);
+> +		ret = spi_read(st->sdev, st->rx, 2);
+> +		if (ret < 0) {
+> +			mutex_unlock(&st->lock);
+> +			return ret;
+> +		}
+> +		*val = (((u16)(st->rx[0])) << 4) | ((st->rx[1] & 0xF0) >> 4);
+> +
+> +		mutex_unlock(&st->lock);
+> +
+> +		return IIO_VAL_INT;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static const struct iio_info ad2s90_info = {
+> +	.read_raw = ad2s90_read_raw,
+> +};
+> +
+> +static const struct iio_chan_spec ad2s90_chan = {
+> +	.type = IIO_ANGL,
+> +	.indexed = 1,
+> +	.channel = 0,
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
+> +};
+> +
+> +static int ad2s90_probe(struct spi_device *spi)
+> +{
+> +	struct iio_dev *indio_dev;
+> +	struct ad2s90_state *st;
+> +
+> +	if (spi->max_speed_hz > AD2S90_MAX_SPI_FREQ_HZ) {
+> +		dev_err(&spi->dev, "SPI CLK, %d Hz exceeds %d Hz\n",
+> +			spi->max_speed_hz, AD2S90_MAX_SPI_FREQ_HZ);
+> +		return -EINVAL;
+> +	}
+> +
+> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +	st = iio_priv(indio_dev);
+> +	spi_set_drvdata(spi, indio_dev);
+> +
+> +	mutex_init(&st->lock);
+> +	st->sdev = spi;
+> +	indio_dev->dev.parent = &spi->dev;
+> +	indio_dev->info = &ad2s90_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->channels = &ad2s90_chan;
+> +	indio_dev->num_channels = 1;
+> +	indio_dev->name = spi_get_device_id(spi)->name;
+> +
+> +	return devm_iio_device_register(indio_dev->dev.parent, indio_dev);
+> +}
+> +
+> +static const struct of_device_id ad2s90_of_match[] = {
+> +	{ .compatible = "adi,ad2s90", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, ad2s90_of_match);
+> +
+> +static const struct spi_device_id ad2s90_id[] = {
+> +	{ "ad2s90" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(spi, ad2s90_id);
+> +
+> +static struct spi_driver ad2s90_driver = {
+> +	.driver = {
+> +		.name = "ad2s90",
+> +		.of_match_table = ad2s90_of_match,
+> +	},
+> +	.probe = ad2s90_probe,
+> +	.id_table = ad2s90_id,
+> +};
+> +module_spi_driver(ad2s90_driver);
+> +
+> +MODULE_AUTHOR("Graff Yang <graff.yang@gmail.com>");
+> +MODULE_DESCRIPTION("Analog Devices AD2S90 Resolver to Digital SPI driver");
+> +MODULE_LICENSE("GPL v2");
+...
