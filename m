@@ -1,238 +1,209 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 7/7] staging:iio:ad2s90: Move out of staging
-Date: Sun, 25 Nov 2018 09:56:38 +0000
-Message-ID: <20181125095638.68e5205a@archlinux>
-References: <20181124002312.6923-1-matheus.bernardino@usp.br>
- <20181124002312.6923-8-matheus.bernardino@usp.br>
+Subject: Re: [PATCH v3 3/4] iio: adc: add STMPE ADC devicetree bindings
+Date: Sun, 25 Nov 2018 10:04:13 +0000
+Message-ID: <20181125100413.73bc729f@archlinux>
+References: <20181123142411.8921-1-dev@pschenker.ch>
+        <20181123142411.8921-3-dev@pschenker.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20181124002312.6923-8-matheus.bernardino@usp.br>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Matheus Tavares <matheus.bernardino@usp.br>
-Cc: Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Alexandru Ardelean <alexandru.ardelean@analog.com>, victorcolombo@gmail.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181123142411.8921-3-dev@pschenker.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philippe Schenker <dev@pschenker.ch>
+Cc: marcel.ziswiler@toradex.com, stefan@agner.ch, Max Krummenacher <max.krummenacher@toradex.com>, Philippe Schenker <philippe.schenker@toradex.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Alexandre Torgue <alexandre.torgue@st.com>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, Lars-Peter Clausen <lars@metafoo.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 23 Nov 2018 22:23:12 -0200
-Matheus Tavares <matheus.bernardino@usp.br> wrote:
+On Fri, 23 Nov 2018 15:24:10 +0100
+Philippe Schenker <dev@pschenker.ch> wrote:
 
-> Move ad2s90 resolver driver out of staging to the main tree.
+> From: Stefan Agner <stefan@agner.ch>
 > 
-> Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
-> Signed-off-by: Victor Colombo <victorcolombo@gmail.com>
-Hi.
+> This adds the devicetree bindings for the STMPE ADC.
+> 
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+Clearly this will need review from input and mfd.
 
-One totally trivial comment inline, but if you want to clean
-that up, do it after we have moved this out of staging
-(unless respinning for some other reason).
+I've suggested inline that you split the realignment out to a
+separate patch for reviewability reasons.
 
-However, I would like to let this sit on the mailing list for
-a little longer to let others comment and perhaps to pick up
-a review of the DT binding doc (which looks fine to me, but
-I am forever missing issues in those!)
-
-Good work and I'll probably pick this up later in the week.
-
-Thanks,
-
-Jonathan
 > ---
+> 
 > Changes in v3:
->  - none
+>  - Reformatted documentation for touchscreen to use tabs and have a better
+>    overview of the settings.
+>  - Added note which adc-settings will take precedence.
+>  - changed typo in sample-time setting from 144 clocks to 124 clocks, as stated
+>    in the datasheet.
 > 
 > Changes in v2:
->  - Disabled git move detection, to see the whole code, as Jonathan
->  suggested
+>  - Moved the bindings for ADC to the overlying mfd.
+>  - Reformatted for better readability
 > 
->  drivers/iio/resolver/Kconfig          |  10 ++
->  drivers/iio/resolver/Makefile         |   1 +
->  drivers/iio/resolver/ad2s90.c         | 131 ++++++++++++++++++++++++++
->  drivers/staging/iio/resolver/Kconfig  |  10 --
->  drivers/staging/iio/resolver/Makefile |   1 -
->  drivers/staging/iio/resolver/ad2s90.c | 131 --------------------------
->  6 files changed, 142 insertions(+), 142 deletions(-)
->  create mode 100644 drivers/iio/resolver/ad2s90.c
->  delete mode 100644 drivers/staging/iio/resolver/ad2s90.c
+>  .../devicetree/bindings/iio/adc/stmpe-adc.txt | 21 +++++++
+>  .../bindings/input/touchscreen/stmpe.txt      | 60 ++++++++++++-------
+>  .../devicetree/bindings/mfd/stmpe.txt         | 28 ++++++---
+>  3 files changed, 80 insertions(+), 29 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/stmpe-adc.txt
 > 
-> diff --git a/drivers/iio/resolver/Kconfig b/drivers/iio/resolver/Kconfig
-> index 2ced9f22aa70..786801be54f6 100644
-> --- a/drivers/iio/resolver/Kconfig
-> +++ b/drivers/iio/resolver/Kconfig
-> @@ -3,6 +3,16 @@
->  #
->  menu "Resolver to digital converters"
->  
-> +config AD2S90
-> +	tristate "Analog Devices ad2s90 driver"
-> +	depends on SPI
-> +	help
-> +	  Say yes here to build support for Analog Devices spi resolver
-> +	  to digital converters, ad2s90, provides direct access via sysfs.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called ad2s90.
-> +
->  config AD2S1200
->  	tristate "Analog Devices ad2s1200/ad2s1205 driver"
->  	depends on SPI
-> diff --git a/drivers/iio/resolver/Makefile b/drivers/iio/resolver/Makefile
-> index 4e1dccae07e7..398d82d50028 100644
-> --- a/drivers/iio/resolver/Makefile
-> +++ b/drivers/iio/resolver/Makefile
-> @@ -2,4 +2,5 @@
->  # Makefile for Resolver/Synchro drivers
->  #
->  
-> +obj-$(CONFIG_AD2S90) += ad2s90.o
->  obj-$(CONFIG_AD2S1200) += ad2s1200.o
-> diff --git a/drivers/iio/resolver/ad2s90.c b/drivers/iio/resolver/ad2s90.c
+> diff --git a/Documentation/devicetree/bindings/iio/adc/stmpe-adc.txt b/Documentation/devicetree/bindings/iio/adc/stmpe-adc.txt
 > new file mode 100644
-> index 000000000000..a41f5cb10da5
+> index 000000000000..480e66422625
 > --- /dev/null
-> +++ b/drivers/iio/resolver/ad2s90.c
-> @@ -0,0 +1,131 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * ad2s90.c simple support for the ADI Resolver to Digital Converters: AD2S90
-> + *
-> + * Copyright (c) 2010-2010 Analog Devices Inc.
-> + */
-> +#include <linux/types.h>
-> +#include <linux/mutex.h>
-> +#include <linux/device.h>
-> +#include <linux/spi/spi.h>
-> +#include <linux/slab.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/module.h>
+> +++ b/Documentation/devicetree/bindings/iio/adc/stmpe-adc.txt
+> @@ -0,0 +1,21 @@
+> +STMPE ADC driver
+> +----------------
+> +
+> +Required properties:
+> + - compatible: "st,stmpe-adc"
+> +
+> +Optional properties:
+> +Note that the ADC is shared with the STMPE touchscreen. ADC related settings
+> +have to be done in the mfd.
+> +- st,norequest-mask: bitmask specifying which ADC channels should _not_ be
+> +  requestable due to different usage (e.g. touch)
+> +
+> +Node name must be stmpe_adc and should be child node of stmpe node to
+> +which it belongs.
+> +
+> +Example:
+> +
+> +	stmpe_adc {
 
-We are into the truely trivial realms now - alphabetical order preferred
-for includes.
+Can we use adc { here to match standard naming?
 
+> +		compatible = "st,stmpe-adc";
+> +		st,norequest-mask = <0x0F>; /* dont use ADC CH3-0 */
+> +	};
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
+> index 127baa31a77a..414586513a02 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
+> @@ -5,36 +5,52 @@ Required properties:
+>   - compatible: "st,stmpe-ts"
+>  
+>  Optional properties:
+> -- st,sample-time: ADC converstion time in number of clock.  (0 -> 36 clocks, 1 ->
+> -  44 clocks, 2 -> 56 clocks, 3 -> 64 clocks, 4 -> 80 clocks, 5 -> 96 clocks, 6
+> -  -> 144 clocks), recommended is 4.  
+> -- st,mod-12b: ADC Bit mode (0 -> 10bit ADC, 1 -> 12bit ADC)
+> -- st,ref-sel: ADC reference source (0 -> internal reference, 1 -> external
+> -  reference)
+> -- st,adc-freq: ADC Clock speed (0 -> 1.625 MHz, 1 -> 3.25 MHz, 2 || 3 -> 6.5 MHz)
+> -- st,ave-ctrl: Sample average control (0 -> 1 sample, 1 -> 2 samples, 2 -> 4
+> -  samples, 3 -> 8 samples)
+> -- st,touch-det-delay: Touch detect interrupt delay (0 -> 10 us, 1 -> 50 us, 2 ->
+> -  100 us, 3 -> 500 us, 4-> 1 ms, 5 -> 5 ms, 6 -> 10 ms, 7 -> 50 ms) recommended
+> -  is 3
+> -- st,settling: Panel driver settling time (0 -> 10 us, 1 -> 100 us, 2 -> 500 us, 3
+> -  -> 1 ms, 4 -> 5 ms, 5 -> 10 ms, 6 for 50 ms, 7 -> 100 ms) recommended is 2  
+> -- st,fraction-z: Length of the fractional part in z (fraction-z ([0..7]) = Count of
+> -  the fractional part) recommended is 7
+> -- st,i-drive: current limit value of the touchscreen drivers (0 -> 20 mA typical 35
+> -  mA max, 1 -> 50 mA typical 80 mA max)
+> +- st,ave-ctrl		: Sample average control
+> +				0 -> 1 sample
+> +				1 -> 2 samples
+> +				2 -> 4 samples
+> +				3 -> 8 samples
+> +- st,touch-det-delay	: Touch detect interrupt delay (recommended is 3)
+> +				0 -> 10 us		5 -> 5 ms
+> +				1 -> 50 us		6 -> 10 ms
+> +				2 -> 100 us		7 -> 50 ms
+> +				3 -> 500 us
+> +				4-> 1 ms
+> +- st,settling		: Panel driver settling time (recommended is 2)
+> +				0 -> 10 us		5 -> 10 ms
+> +				1 -> 100 us		6 for 50 ms
+> +				2 -> 500 us		7 -> 100 ms
+> +				3 -> 1 ms
+> +				4 -> 5 ms
+> +- st,fraction-z		: Length of the fractional part in z (recommended is 7)
+> +			  (fraction-z ([0..7]) = Count of the fractional part)
+> +- st,i-drive		: current limit value of the touchscreen drivers
+> +				0 -> 20 mA (typical 35mA max)
+> +				1 -> 50 mA (typical 80 mA max)
 > +
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
+> +Optional properties common with MFD (deprecated):
+> + - st,sample-time	: ADC conversion time in number of clock.
+> +				0 -> 36 clocks		4 -> 80 clocks (recommended)
+> +				1 -> 44 clocks		5 -> 96 clocks
+> +				2 -> 56 clocks		6 -> 124 clocks
+> +				3 -> 64 clocks
+> + - st,mod-12b		: ADC Bit mode
+> +				0 -> 10bit ADC		1 -> 12bit ADC
+> + - st,ref-sel		: ADC reference source
+> +				0 -> internal		1 -> external
+> + - st,adc-freq		: ADC Clock speed
+> +				0 -> 1.625 MHz		2 || 3 -> 6.5 MHz
+> +				1 -> 3.25 MHz
+>  
+>  Node name must be stmpe_touchscreen and should be child node of stmpe node to
+>  which it belongs.
+>  
+> +Note that common ADC settings of stmpe_touchscreen will take precedence.
 > +
-> +/*
-> + * Although chip's max frequency is 2Mhz, it needs 600ns between CS and the
-> + * first falling edge of SCLK, so frequency should be at most 1 / (2 * 6e-7)
-> + */
-> +#define AD2S90_MAX_SPI_FREQ_HZ  830000
+>  Example:
+>  
+>  	stmpe_touchscreen {
+>  		compatible = "st,stmpe-ts";
+> -		st,sample-time = <4>;
+> -		st,mod-12b = <1>;
+> -		st,ref-sel = <0>;
+> -		st,adc-freq = <1>;
+>  		st,ave-ctrl = <1>;
+>  		st,touch-det-delay = <2>;
+>  		st,settling = <2>;
+> diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Documentation/devicetree/bindings/mfd/stmpe.txt
+> index c797c05cd3c2..d4408a417193 100644
+> --- a/Documentation/devicetree/bindings/mfd/stmpe.txt
+> +++ b/Documentation/devicetree/bindings/mfd/stmpe.txt
+> @@ -4,15 +4,29 @@ STMPE is an MFD device which may expose the following inbuilt devices: gpio,
+>  keypad, touchscreen, adc, pwm, rotator.
+>  
+>  Required properties:
+> - - compatible                   : "st,stmpe[610|801|811|1600|1601|2401|2403]"
+> - - reg                          : I2C/SPI address of the device
+> + - compatible			: "st,stmpe[610|801|811|1600|1601|2401|2403]"
+> + - reg				: I2C/SPI address of the device
+
+Nothing wrong with correcting alignment, but it shouldn't be in the same patch
+as a fundamental change lie this.  Just adds noise.
+
+If that means you first have to introduce the new block missaligned, then
+fix up the alignment in a follow up patch, then do that as we can then
+effectively ignore the realignment as obviously correct and focus on
+the real changes.
+
+>  
+>  Optional properties:
+> - - interrupts                   : The interrupt outputs from the controller
+> - - interrupt-controller         : Marks the device node as an interrupt controller
+> - - wakeup-source                : Marks the input device as wakable
+> - - st,autosleep-timeout         : Valid entries (ms); 4, 16, 32, 64, 128, 256, 512 and 1024
+> - - irq-gpio                     : If present, which GPIO to use for event IRQ
+> + - interrupts			: The interrupt outputs from the controller
+> + - interrupt-controller		: Marks the device node as an interrupt controller
+> + - wakeup-source		: Marks the input device as wakable
+> + - st,autosleep-timeout		: Valid entries (ms); 4, 16, 32, 64, 128, 256, 512 and 1024
+> + - irq-gpio			: If present, which GPIO to use for event IRQ
 > +
-> +struct ad2s90_state {
-> +	struct mutex lock; /* lock to protect rx buffer */
-> +	struct spi_device *sdev;
-> +	u8 rx[2] ____cacheline_aligned;
-> +};
-> +
-> +static int ad2s90_read_raw(struct iio_dev *indio_dev,
-> +			   struct iio_chan_spec const *chan,
-> +			   int *val,
-> +			   int *val2,
-> +			   long m)
-> +{
-> +	int ret;
-> +	struct ad2s90_state *st = iio_priv(indio_dev);
-> +
-> +	if (chan->type != IIO_ANGL)
-> +		return -EINVAL;
-> +
-> +	switch (m) {
-> +	case IIO_CHAN_INFO_SCALE:
-> +		/* 2 * Pi / 2^12 */
-> +		*val = 6283; /* mV */
-> +		*val2 = 12;
-> +		return IIO_VAL_FRACTIONAL_LOG2;
-> +	case IIO_CHAN_INFO_RAW:
-> +		mutex_lock(&st->lock);
-> +		ret = spi_read(st->sdev, st->rx, 2);
-> +		if (ret < 0) {
-> +			mutex_unlock(&st->lock);
-> +			return ret;
-> +		}
-> +		*val = (((u16)(st->rx[0])) << 4) | ((st->rx[1] & 0xF0) >> 4);
-> +
-> +		mutex_unlock(&st->lock);
-> +
-> +		return IIO_VAL_INT;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static const struct iio_info ad2s90_info = {
-> +	.read_raw = ad2s90_read_raw,
-> +};
-> +
-> +static const struct iio_chan_spec ad2s90_chan = {
-> +	.type = IIO_ANGL,
-> +	.indexed = 1,
-> +	.channel = 0,
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
-> +};
-> +
-> +static int ad2s90_probe(struct spi_device *spi)
-> +{
-> +	struct iio_dev *indio_dev;
-> +	struct ad2s90_state *st;
-> +
-> +	if (spi->max_speed_hz > AD2S90_MAX_SPI_FREQ_HZ) {
-> +		dev_err(&spi->dev, "SPI CLK, %d Hz exceeds %d Hz\n",
-> +			spi->max_speed_hz, AD2S90_MAX_SPI_FREQ_HZ);
-> +		return -EINVAL;
-> +	}
-> +
-> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +	st = iio_priv(indio_dev);
-> +	spi_set_drvdata(spi, indio_dev);
-> +
-> +	mutex_init(&st->lock);
-> +	st->sdev = spi;
-> +	indio_dev->dev.parent = &spi->dev;
-> +	indio_dev->info = &ad2s90_info;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +	indio_dev->channels = &ad2s90_chan;
-> +	indio_dev->num_channels = 1;
-> +	indio_dev->name = spi_get_device_id(spi)->name;
-> +
-> +	return devm_iio_device_register(indio_dev->dev.parent, indio_dev);
-> +}
-> +
-> +static const struct of_device_id ad2s90_of_match[] = {
-> +	{ .compatible = "adi,ad2s90", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, ad2s90_of_match);
-> +
-> +static const struct spi_device_id ad2s90_id[] = {
-> +	{ "ad2s90" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(spi, ad2s90_id);
-> +
-> +static struct spi_driver ad2s90_driver = {
-> +	.driver = {
-> +		.name = "ad2s90",
-> +		.of_match_table = ad2s90_of_match,
-> +	},
-> +	.probe = ad2s90_probe,
-> +	.id_table = ad2s90_id,
-> +};
-> +module_spi_driver(ad2s90_driver);
-> +
-> +MODULE_AUTHOR("Graff Yang <graff.yang@gmail.com>");
-> +MODULE_DESCRIPTION("Analog Devices AD2S90 Resolver to Digital SPI driver");
-> +MODULE_LICENSE("GPL v2");
-...
+> +Optional properties for devices with touch and ADC (STMPE811|STMPE610):
+> + - st,sample-time		: ADC conversion time in number of clock.
+> +					0 -> 36 clocks		4 -> 80 clocks (recommended)
+> +					1 -> 44 clocks		5 -> 96 clocks
+> +					2 -> 56 clocks		6 -> 124 clocks
+> +					3 -> 64 clocks
+> + - st,mod-12b			: ADC Bit mode
+> +					0 -> 10bit ADC		1 -> 12bit ADC
+> + - st,ref-sel			: ADC reference source
+> +					0 -> internal		1 -> external
+> + - st,adc-freq			: ADC Clock speed
+> +					0 -> 1.625 MHz		2 || 3 -> 6.5 MHz
+> +					1 -> 3.25 MHz
+>  
+>  Example:
+>  
