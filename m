@@ -1,185 +1,82 @@
-From: Tomasz Duszynski <tduszyns@gmail.com>
-Subject: Re: [PATCH 1/3] iio: add IIO_MASSCONCENTRATION channel type
-Date: Sun, 25 Nov 2018 16:44:23 +0100
-Message-ID: <20181125154423.GC5053@arch>
-References: <20181124221415.10081-1-tduszyns@gmail.com>
- <20181124221415.10081-2-tduszyns@gmail.com>
- <CAJCx=g=H6Zp4AtWPpC-KdZmyOxTymtdgf+Hx8VvThLFg0bjYVQ@mail.gmail.com>
- <20181125140316.59d9872b@archlinux>
- <CAJCx=g=oUmcfCA2octwfaoWr6aC=ZF7LUkMsraNe8buHc9mjPg@mail.gmail.com>
+From: Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/6] PWM support for allwinner sun8i
+ R40/T3/V40 SOCs.
+Date: Mon, 26 Nov 2018 00:18:02 +0800
+Message-ID: <20181125161534.GA4481@arx-s1>
+Reply-To: hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDKITZOARQMBBQ4W5PPQKGQEWY5WB5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <CAJCx=g=oUmcfCA2octwfaoWr6aC=ZF7LUkMsraNe8buHc9mjPg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Ranostay <matt.ranostay@konsulko.com>
-Cc: jic23@jic23.retrosnub.co.uk, Tomasz Duszynski <tduszyns@gmail.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 25, 2018 at 06:14:44AM -0800, Matt Ranostay wrote:
-> On Sun, Nov 25, 2018 at 6:03 AM Jonathan Cameron
-> <jic23@jic23.retrosnub.co.uk> wrote:
-> >
-> > On Sun, 25 Nov 2018 05:51:32 -0800
-> > Matt Ranostay <matt.ranostay@konsulko.com> wrote:
-> >
-> > > On Sat, Nov 24, 2018 at 2:14 PM Tomasz Duszynski <tduszyns@gmail.com> wrote:
-> > > >
-> > > > Measuring particulate matter in ug / m3 (micro-grams per cubic meter)
-> > > > is de facto standard. Existing air quality sensors usually follow
-> > > > this convention and are capable of returning measurements using
-> > > > this unit.
-> > > >
-> > > > IIO currently does not offer suitable channel type for this
-> > > > type of measurements hence this patch adds this.
-> > > >
-> > > > In addition, two modifiers are introduced used for distinguishing
-> > > > between coarse (PM10) and fine particles (PM2p5) measurements, i.e
-> > > > IIO_MOD_PM10 and IIO_MOD_PM2p5.
-> > > >
-> > > > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
-> > > > ---
-> > > >  Documentation/ABI/testing/sysfs-bus-iio | 11 ++++++++++-
-> > > >  drivers/iio/industrialio-core.c         |  3 +++
-> > > >  include/uapi/linux/iio/types.h          |  3 +++
-> > > >  tools/iio/iio_event_monitor.c           |  6 ++++++
-> > > >  4 files changed, 22 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> > > > index 8127a08e366d..ce0ed140660d 100644
-> > > > --- a/Documentation/ABI/testing/sysfs-bus-iio
-> > > > +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> > > > @@ -1684,4 +1684,13 @@ KernelVersion:   4.18
-> > > >  Contact:       linux-iio@vger.kernel.org
-> > > >  Description:
-> > > >                 Raw (unscaled) phase difference reading from channel Y
-> > > > -               that can be processed to radians.
-> > > > \ No newline at end of file
-> > > > +               that can be processed to radians.
-> > > > +
-> > > > +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentration_pm2p5_input
-> > > > +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentrationY_pm2p5_input
-> > > > +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentration_pm10_input
-> > > > +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentrationY_pm10_input
-> > > > +KernelVersion: 4.21
-> > > > +Contact:       linux-iio@vger.kernel.org
-> > > > +Description:
-> > > > +               Mass concentration reading of particulate matter in ug / m3.
-> > > > diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> > > > index a062cfddc5af..2a9ef600c1fb 100644
-> > > > --- a/drivers/iio/industrialio-core.c
-> > > > +++ b/drivers/iio/industrialio-core.c
-> > > > @@ -87,6 +87,7 @@ static const char * const iio_chan_type_name_spec[] = {
-> > > >         [IIO_GRAVITY]  = "gravity",
-> > > >         [IIO_POSITIONRELATIVE]  = "positionrelative",
-> > > >         [IIO_PHASE] = "phase",
-> > > > +       [IIO_MASSCONCENTRATION] = "massconcentration",
-> > > >  };
-> > > >
-> > > >  static const char * const iio_modifier_names[] = {
-> > > > @@ -127,6 +128,8 @@ static const char * const iio_modifier_names[] = {
-> > > >         [IIO_MOD_Q] = "q",
-> > > >         [IIO_MOD_CO2] = "co2",
-> > > >         [IIO_MOD_VOC] = "voc",
-> > > > +       [IIO_MOD_PM2p5] = "pm2p5",
-> > > > +       [IIO_MOD_PM10] = "pm10",
-> > > >  };
-> > > >
-> > > >  /* relies on pairs of these shared then separate */
-> > > > diff --git a/include/uapi/linux/iio/types.h b/include/uapi/linux/iio/types.h
-> > > > index 92baabc103ac..465044b42af5 100644
-> > > > --- a/include/uapi/linux/iio/types.h
-> > > > +++ b/include/uapi/linux/iio/types.h
-> > > > @@ -46,6 +46,7 @@ enum iio_chan_type {
-> > > >         IIO_GRAVITY,
-> > > >         IIO_POSITIONRELATIVE,
-> > > >         IIO_PHASE,
-> > > > +       IIO_MASSCONCENTRATION,
-> > >
-> > > So I'm guessing IIO_CONCENTRATION can't be scaled to the micro-grams
-> > > per cubic meter?
-> >
-> > Currently concentration is defined as a percentage reading of a substance
-> > (which does make me wonder if it is meant to be percentage of the volume or
-> > percentage of the mass?)  Either way, if can't convert to a density measurement
-> > as it's a unit free ratio (I think).
->
-> Seems like it can be both..  guessing all the atmosphere ( CO2, VOC,
-> etc) ones are mass/density because on how they work.
+PWM support for allwinner sun8i R40/T3/V40 SOCs.
 
-Hmm, but still percentage was picked up for IIO_CONCENTRATION which does
-really match PM expectations. Perhaps if units were sticked to modifiers
-it whould be easier to reuse that.
+The sun8i R40/T3/V40 PWM has 8 PWM channals and divides to 4 PWM pairs,
+each PWM pair built-in 1 clock module, 2 timer logic module and 1
+programmable dead-time generator, it also support waveform capture.
+It has 2 clock sources OSC24M and APB1, it is different with the
+sun4i-pwm driver, Therefore add a new driver for it.
 
-> But the electro-conductivity sensor that is using IIO_CONCENTRATION
-> channels is likely from percentage of volume.
->
-> - Matt
->
-> >
-> > >
-> > > >  };
-> > > >
-> > > >  enum iio_modifier {
-> > > > @@ -87,6 +88,8 @@ enum iio_modifier {
-> > > >         IIO_MOD_VOC,
-> > > >         IIO_MOD_LIGHT_UV,
-> > > >         IIO_MOD_LIGHT_DUV,
-> > > > +       IIO_MOD_PM2p5,
-> > >
-> > > I know this is unit of measure but the lowercase p in IIO_MOD_PM2p5 is
-> > > a bit non-standard for iio defines/enum.
-> > It is a bit odd and will get us scripted reports so maybe best to
-> > just go upper case and not worry about it.
-> >
-> > Jonathan
-> > >
-> > > - Matt
-> > >
-> > > > +       IIO_MOD_PM10,
-> > > >  };
-> > > >
-> > > >  enum iio_event_type {
-> > > > diff --git a/tools/iio/iio_event_monitor.c b/tools/iio/iio_event_monitor.c
-> > > > index ac2de6b7e89f..f0fcfeddba2b 100644
-> > > > --- a/tools/iio/iio_event_monitor.c
-> > > > +++ b/tools/iio/iio_event_monitor.c
-> > > > @@ -60,6 +60,7 @@ static const char * const iio_chan_type_name_spec[] = {
-> > > >         [IIO_GRAVITY] = "gravity",
-> > > >         [IIO_POSITIONRELATIVE] = "positionrelative",
-> > > >         [IIO_PHASE] = "phase",
-> > > > +       [IIO_MASSCONCENTRATION] = "massconcentration",
-> > > >  };
-> > > >
-> > > >  static const char * const iio_ev_type_text[] = {
-> > > > @@ -115,6 +116,8 @@ static const char * const iio_modifier_names[] = {
-> > > >         [IIO_MOD_Q] = "q",
-> > > >         [IIO_MOD_CO2] = "co2",
-> > > >         [IIO_MOD_VOC] = "voc",
-> > > > +       [IIO_MOD_PM2p5] = "pm2p5",
-> > > > +       [IIO_MOD_PM10] = "pm10",
-> > > >  };
-> > > >
-> > > >  static bool event_is_known(struct iio_event_data *event)
-> > > > @@ -156,6 +159,7 @@ static bool event_is_known(struct iio_event_data *event)
-> > > >         case IIO_GRAVITY:
-> > > >         case IIO_POSITIONRELATIVE:
-> > > >         case IIO_PHASE:
-> > > > +       case IIO_MASSCONCENTRATION:
-> > > >                 break;
-> > > >         default:
-> > > >                 return false;
-> > > > @@ -200,6 +204,8 @@ static bool event_is_known(struct iio_event_data *event)
-> > > >         case IIO_MOD_Q:
-> > > >         case IIO_MOD_CO2:
-> > > >         case IIO_MOD_VOC:
-> > > > +       case IIO_MOD_PM2p5:
-> > > > +       case IIO_MOD_PM10:
-> > > >                 break;
-> > > >         default:
-> > > >                 return false;
-> > > > --
-> > > > 2.19.2
-> > > >
-> >
+Some test method:
+cd /sys/class/pwm/pwmchip0
+echo 0 > export
+cd pwm0
+echo 1000 > period
+echo 500 > duty_cycle
+echo 1 > enable
+then check the PB2 pin with oscilloscope.
+
+v3 Changes:
+1. fix coding format.
+2. use 2/ilog2 instead of divide table
+3. remove spinlock.
+4. remove sun8i_pwm_data structure and use DT to parse pwm-channals  
+5. remove inline because complier knows it better.
+6. don't hardcode clock source and parse two clock source from dt "mux-0"
+   and "mux-1"
+7. remove bypass method.
+8. add a method to change clock source when mux-0 is not support the
+   input period it can change to mux-1.
+9. add cycle range check.
+10. add some variable to make it more readability.
+11. add clk_disable_unprepare when some false accur.
+
+v2 Changes:
+1. change sun8i-r40 symbol to sun8i.
+2. change pwm0_pin, pwm0-pin to pwm_ch0_pin, pwm-ch0-pin.
+3. remove clk_disable_unprepare(), check !match and IS_ERR(pwm->regmap).
+
+Hao Zhang (6):
+  Documentation: ARM: sunxi: pwm: add Allwinner sun8i.
+  ARM: dtsi: add pwm node for sun8i R40.
+  ARM: dts: add PWM for Bananapi M2 Ultrar board.
+  DEV: CLK: add function to check the using clock name of driver.
+  DEV: CLK: sunxi ccu: export clk_apb1 for sun8i-r40 soc pwm.
+  ARM: PWM: add allwinner sun8i R40/T3/V40 PWM support.
+
+ .../devicetree/bindings/pwm/pwm-sun8i.txt          |  24 ++
+ arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts  |   6 +
+ arch/arm/boot/dts/sun8i-r40.dtsi                   |  17 +
+ drivers/clk/clk.c                                  |   6 +
+ drivers/clk/sunxi-ng/ccu-sun8i-r40.h               |   4 +-
+ drivers/pwm/Kconfig                                |  12 +-
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-sun8i.c                            | 418 +++++++++++++++++++++
+ include/dt-bindings/clock/sun8i-r40-ccu.h          |   2 +
+ include/linux/clk-provider.h                       |   1 +
+ 10 files changed, 489 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sun8i.txt
+ create mode 100644 drivers/pwm/pwm-sun8i.c
+
+-- 
+2.7.4
