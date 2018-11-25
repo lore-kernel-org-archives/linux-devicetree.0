@@ -1,15 +1,15 @@
 From: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC PATCH v4 01/17] ARM: add CONFIG_ARCH_SUNXI_V7 for
+Subject: [RFC PATCH v4 01/17] ARM: Check ARCH_MULTI_V7 to
  differentiate ARMv5/v7 Allwinner SoCs
-Date: Sun, 25 Nov 2018 10:43:03 +0300
-Message-ID: <e83e1b25069f3fa4925e5e5f6b9eca3190532b98.1543125196.git.mesihkilinc@gmail.com>
-References: <cover.1543125196.git.mesihkilinc@gmail.com>
+Date: Sun, 25 Nov 2018 10:43:04 +0300
+Message-ID: <ff497d650f6a5d5d85b981c28695380172298701.1543131714.git.mesihkilinc@gmail.com>
+References: <cover.1543131714.git.mesihkilinc@gmail.com>
 Reply-To: mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDI4VHO5SYLBBMVF5HPQKGQEP3PLLJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDI4VHO5SYLBBM5F5HPQKGQEKJ6YUOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <cover.1543125196.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <cover.1543131714.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -23,7 +23,7 @@ List-Id: devicetree@vger.kernel.org
 Allwinner also has some ARMv5 SoCs.
 
 In order to add support for them, check ARM_MULTI_V7 before enabling
-ARMv7 SoC's.
+ARMv7 SoC's. Add help text for ARCH_SUNXI menuconfig.
 
 Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
