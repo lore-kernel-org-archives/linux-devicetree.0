@@ -1,43 +1,64 @@
-Return-Path: <SRS0=V+0x=N2=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH resend] dmaengine: rcar-dmac: Document R8A774A1 bindings
-Date: Thu, 15 Nov 2018 11:58:29 +0000
-Message-Id: <1542283109-8322-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=/b2w=OE=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-it1-f194.google.com ([209.85.166.194]:50548 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727497AbeKYUEA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 25 Nov 2018 15:04:00 -0500
+Received: by mail-it1-f194.google.com with SMTP id z7so6374581iti.0
+        for <devicetree@vger.kernel.org>; Sun, 25 Nov 2018 01:13:23 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1541945612.git.lorenzo.bianconi@redhat.com>
+ <97543627e6e0a26d7ea6b4daa160f10813c05335.1541945612.git.lorenzo.bianconi@redhat.com>
+ <20181117153754.GA23006@bogus> <20181117162648.37f51749@archlinux>
+ <CAJ0CqmWPYsm=hx0p+O3NuozW1YDUeGbQ5ffrPNDjFSsPEEJM8A@mail.gmail.com> <20181121185709.0e5b924b@archlinux>
+In-Reply-To: <20181121185709.0e5b924b@archlinux>
+From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Date: Sun, 25 Nov 2018 10:13:13 +0100
+Message-ID: <CAJ0CqmW961JJ9fUBZj_kKhB_LUEn7q5M4gpvjURkS3Jt5=6mDw@mail.gmail.com>
+Subject: Re: [PATCH v2 9/9] dt-bindings: iio: imu: st_lsm6dsx: add support to
+ i2c pullup resistors
+Content-Type: text/plain; charset="UTF-8"
+Sender: devicetree-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: robh@kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Renesas' RZ/G2M (R8A774A1) SoC has DMA controllers compatible
-with this driver, therefore document RZ/G2M specific bindings.
+>
+> On Sat, 17 Nov 2018 18:24:03 +0100
+> Lorenzo Bianconi <lorenzo.bianconi@redhat.com> wrote:
+>
+> > > On Sat, 17 Nov 2018 09:37:54 -0600
+> > > Rob Herring <robh@kernel.org> wrote:
+> > >
+> >
+> > [...]
+> >
+> > > > >  Optional properties:
+> > > > >  - st,drdy-int-pin: the pin on the package that will be used to signal
+> > > > >    "data ready" (valid values: 1 or 2).
+> > > > > +- st,pullups : enable/disable internal i2c controller pullup resistors.
+> > > >
+> > > > bias-pull-up is the standard property for this.
+> > >
+> > > The problem here is 'of what?'.  Perhaps it wasn't clear in the current
+> > > binding either, but we are talking the pull ups on the auxilliary i2c bus
+> > > (which doesn't really have a direct representation in DT at all).
+> > > If we just go with bias-pull-up my instinct would be that it was applying
+> > > to the drdy pin for example.
+> > >
+> > > Lorenzo, could you send a follow up patch fixing this once we
+> > > have it pinned down?
+> > >
+> >
+> > Sure, it sounds good. IIUC we should use 'bias-pull-up' here, without
+> > vendor info, right?
+> Yes, though my concern about it being on it's own without any reference
+> points.  Makes it unobvious what we are applying the pull up on.
+>
+> Jonathan
+>
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
----
+@Rob: do you agree to use 'bias-pull-up' also in this particular case?
+If so I will send a follow-up patch to fix it
 
- Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-index a5a7c3f..cdf32b2 100644
---- a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-+++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-@@ -1,6 +1,6 @@
- * Renesas R-Car (RZ/G) DMA Controller Device Tree bindings
- 
--Renesas R-Car Generation 2 SoCs have multiple multi-channel DMA
-+Renesas R-Car (Gen 2/3) and RZ/G SoCs have multiple multi-channel DMA
- controller instances named DMAC capable of serving multiple clients. Channels
- can be dedicated to specific clients or shared between a large number of
- clients.
-@@ -20,6 +20,7 @@ Required Properties:
- 		- "renesas,dmac-r8a7744" (RZ/G1N)
- 		- "renesas,dmac-r8a7745" (RZ/G1E)
- 		- "renesas,dmac-r8a77470" (RZ/G1C)
-+		- "renesas,dmac-r8a774a1" (RZ/G2M)
- 		- "renesas,dmac-r8a7790" (R-Car H2)
- 		- "renesas,dmac-r8a7791" (R-Car M2-W)
- 		- "renesas,dmac-r8a7792" (R-Car V2H)
--- 
-2.7.4
+Regards,
+Lorenzo
