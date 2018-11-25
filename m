@@ -1,38 +1,57 @@
-From: Otavio Salvador <otavio@ossystems.com.br>
-Subject: [PATCH 13/13] ARM: dts: rv1108: Pass the 'clock-latency' property
-Date: Sun, 25 Nov 2018 19:19:07 -0200
-Message-ID: <20181125211907.9895-13-otavio@ossystems.com.br>
-References: <20181125211907.9895-1-otavio@ossystems.com.br>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 3/5] power: supply: sc27xx: Add fuel gauge low voltage
+ alarm
+Date: Sun, 25 Nov 2018 22:45:01 +0100
+Message-ID: <20181125214501.GA9913@amd>
+References: <cover.1542185618.git.baolin.wang@linaro.org>
+ <ee1dd39f126bd03fb88381de9663d32df994d341.1542185618.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181125211907.9895-1-otavio@ossystems.com.br>
+Content-Disposition: inline
+In-Reply-To: <ee1dd39f126bd03fb88381de9663d32df994d341.1542185618.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Cc: Otavio Salvador <otavio@ossystems.com.br>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Like it is done on cpu nodes of other Rockchip SoCs, pass the
-'clock-latency' property to the CPU node, so that cpufreq driver
-can take the latency into account when switching frequencies.
 
-Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
----
+--PNTmBPCT7hxwcZjr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- arch/arm/boot/dts/rv1108.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+On Wed 2018-11-14 17:07:06, Baolin Wang wrote:
+> From: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
+>=20
+> Add low voltage alarm support to make sure the battery capacity
+> more accurate in lower voltage stage.
+>=20
+> Signed-off-by: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 
-diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
-index d96c58728b28..4e1ca13a1636 100644
---- a/arch/arm/boot/dts/rv1108.dtsi
-+++ b/arch/arm/boot/dts/rv1108.dtsi
-@@ -36,6 +36,7 @@
- 			#cooling-cells = <2>; /* min followed by max */
- 			dynamic-power-coefficient = <75>;
- 			operating-points-v2 = <&cpu_opp_table>;
-+			clock-latency = <40000>;
- 		};
- 	};
- 
--- 
-2.19.1
+Should we also shut down the system when that happens, as battery is
+empty?
+
+Or is there any lower threshold when we should do the shutdown?
+								Pavel
+							=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--PNTmBPCT7hxwcZjr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlv7F90ACgkQMOfwapXb+vJtRgCfS3fRJIeEdzw59EOEwnN8MoZ/
+U7UAoJYHWQoh0LNWkvHLGSpc0IDzq2QH
+=teVP
+-----END PGP SIGNATURE-----
+
+--PNTmBPCT7hxwcZjr--
