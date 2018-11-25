@@ -1,423 +1,87 @@
-From: Tomasz Duszynski <tduszyns@gmail.com>
-Subject: [PATCH 2/3] iio: chemical: add support for Sensirion SPS30 sensor
-Date: Sat, 24 Nov 2018 23:14:14 +0100
-Message-ID: <20181124221415.10081-3-tduszyns@gmail.com>
-References: <20181124221415.10081-1-tduszyns@gmail.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v4 0/2] Add QCOM graphics clock controller driver for SDM845
+Date: Sun, 25 Nov 2018 10:06:06 +0530
+Message-ID: <1543120569-14444-1-git-send-email-tdas@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181124221415.10081-1-tduszyns@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-iio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Duszynski <tduszyns@gmail.com>
+To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Sensirion SPS30 particulate matter sensor.
+Changes in v4:
+* Cleanup the GPUCC code to keep only the clocks which would be requested
+  from the GPU client SW.
+* Clean up of code as well as header file clock IDs.
+* Due to the above cleanup the patches to enable/disable clocks for GPU GDSC
+  requirement is not supported : https://patchwork.kernel.org/patch/10563889/
+* The GPU_GX RCG support is also removed from the main driver, so the corresponding
+  RCG ops are removed : https://patchwork.kernel.org/patch/10563891/
 
-Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
----
- drivers/iio/chemical/Kconfig  |  11 ++
- drivers/iio/chemical/Makefile |   1 +
- drivers/iio/chemical/sps30.c  | 359 ++++++++++++++++++++++++++++++++++
- 3 files changed, 371 insertions(+)
- create mode 100644 drivers/iio/chemical/sps30.c
+Changes in v3:
+* Modified the determine_rate() op to use the min/max rate range
+  to round the requested rate within the set_rate range. With this,
+  requested set rate will always stay within the limits.
 
-diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
-index b8e005be4f87..40057ecf8130 100644
---- a/drivers/iio/chemical/Kconfig
-+++ b/drivers/iio/chemical/Kconfig
-@@ -61,6 +61,17 @@ config IAQCORE
- 	  iAQ-Core Continuous/Pulsed VOC (Volatile Organic Compounds)
- 	  sensors
- 
-+config SPS30
-+	tristate "SPS30 Particulate Matter sensor"
-+	depends on I2C
-+	select CRC8
-+	help
-+	  Say Y here to build support for the Sensirion SPS30 Particulate
-+	  Matter sensor.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called sps30.
-+
- config VZ89X
- 	tristate "SGX Sensortech MiCS VZ89X VOC sensor"
- 	depends on I2C
-diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Makefile
-index 2f4c4ba4d781..9f42f4252151 100644
---- a/drivers/iio/chemical/Makefile
-+++ b/drivers/iio/chemical/Makefile
-@@ -9,4 +9,5 @@ obj-$(CONFIG_BME680_I2C) += bme680_i2c.o
- obj-$(CONFIG_BME680_SPI) += bme680_spi.o
- obj-$(CONFIG_CCS811)		+= ccs811.o
- obj-$(CONFIG_IAQCORE)		+= ams-iaq-core.o
-+obj-$(CONFIG_SPS30) += sps30.o
- obj-$(CONFIG_VZ89X)		+= vz89x.o
-diff --git a/drivers/iio/chemical/sps30.c b/drivers/iio/chemical/sps30.c
-new file mode 100644
-index 000000000000..bf802621ae7f
---- /dev/null
-+++ b/drivers/iio/chemical/sps30.c
-@@ -0,0 +1,359 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Sensirion SPS30 Particulate Matter sensor driver
-+ *
-+ * Copyright (c) Tomasz Duszynski <tduszyns@gmail.com>
-+ *
-+ * I2C slave address: 0x69
-+ *
-+ * TODO:
-+ *  - support for turning on fan cleaning
-+ *  - support for reading/setting auto cleaning interval
-+ */
-+
-+#define pr_fmt(fmt) "sps30: " fmt
-+
-+#include <linux/crc8.h>
-+#include <linux/delay.h>
-+#include <linux/i2c.h>
-+#include <linux/iio/buffer.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/iio/trigger_consumer.h>
-+#include <linux/iio/triggered_buffer.h>
-+#include <linux/module.h>
-+
-+#define SPS30_CRC8_POLYNOMIAL 0x31
-+
-+/* SPS30 commands */
-+#define SPS30_START_MEAS 0x0010
-+#define SPS30_STOP_MEAS 0x0104
-+#define SPS30_RESET 0xd304
-+#define SPS30_READ_DATA_READY_FLAG 0x0202
-+#define SPS30_READ_DATA 0x0300
-+#define SPS30_READ_SERIAL 0xD033
-+
-+#define SPS30_CHAN(_index, _mod) { \
-+	.type = IIO_MASSCONCENTRATION, \
-+	.modified = 1, \
-+	.channel2 = IIO_MOD_ ## _mod, \
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED), \
-+	.scan_index = _index, \
-+	.scan_type = { \
-+		.sign = 'u', \
-+		.realbits = 12, \
-+		.storagebits = 32, \
-+		.endianness = IIO_CPU, \
-+	}, \
-+}
-+
-+enum {
-+	PM1p0, /* just a placeholder */
-+	PM2p5,
-+	PM4p0, /* just a placeholder */
-+	PM10,
-+};
-+
-+struct sps30_state {
-+	struct i2c_client *client;
-+	/* guards against concurrent access to sensor registers */
-+	struct mutex lock;
-+};
-+
-+DECLARE_CRC8_TABLE(sps30_crc8_table);
-+
-+static int sps30_write_then_read(struct sps30_state *state, u8 *buf,
-+				 int buf_size, u8 *data, int data_size)
-+{
-+	/* every two received data bytes are checksummed */
-+	u8 tmp[data_size + data_size / 2];
-+	int ret, i;
-+
-+	/*
-+	 * Sensor does not support repeated start so instead of
-+	 * sending two i2c messages in a row we just send one by one.
-+	 */
-+	ret = i2c_master_send(state->client, buf, buf_size);
-+	if (ret != buf_size)
-+		return ret < 0 ? ret : -EIO;
-+
-+	if (!data)
-+		return 0;
-+
-+	ret = i2c_master_recv(state->client, tmp, sizeof(tmp));
-+	if (ret != sizeof(tmp))
-+		return ret < 0 ? ret : -EIO;
-+
-+	for (i = 0; i < sizeof(tmp); i += 3) {
-+		u8 crc = crc8(sps30_crc8_table, &tmp[i], 2, CRC8_INIT_VALUE);
-+
-+		if (crc != tmp[i + 2]) {
-+			dev_err(&state->client->dev,
-+				"data integrity check failed\n");
-+			return -EIO;
-+		}
-+
-+		*data++ = tmp[i];
-+		*data++ = tmp[i + 1];
-+	}
-+
-+	return 0;
-+}
-+
-+static int sps30_do_cmd(struct sps30_state *state, u16 cmd, u8 *data, int size)
-+{
-+	/* depending on the command up to 3 bytes may be needed for argument */
-+	u8 buf[sizeof(cmd) + 3] = { cmd >> 8, cmd };
-+
-+	switch (cmd) {
-+	case SPS30_START_MEAS:
-+		buf[2] = 0x03;
-+		buf[3] = 0x00;
-+		buf[4] = 0xac; /* precomputed crc */
-+		return sps30_write_then_read(state, buf, 5, NULL, 0);
-+	case SPS30_STOP_MEAS:
-+	case SPS30_RESET:
-+		return sps30_write_then_read(state, buf, 2, NULL, 0);
-+	case SPS30_READ_DATA_READY_FLAG:
-+	case SPS30_READ_DATA:
-+	case SPS30_READ_SERIAL:
-+		return sps30_write_then_read(state, buf, 2, data, size);
-+	default:
-+		return -EINVAL;
-+	};
-+}
-+
-+static int sps30_ieee754_to_int(const u8 *data)
-+{
-+	u32 val = ((u32)data[0] << 24) | ((u32)data[1] << 16) |
-+		  ((u32)data[2] << 8) | (u32)data[3],
-+	    mantissa = (val << 9) >> 9;
-+	int exp = (val >> 23) - 127;
-+
-+	if (!exp && !mantissa)
-+		return 0;
-+
-+	if (exp < 0)
-+		return 0;
-+
-+	return (1 << exp) + (mantissa >> (23 - exp));
-+}
-+
-+static int sps30_do_meas(struct sps30_state *state, int *pm2p5, int *pm10)
-+{
-+	/*
-+	 * Internally sensor stores measurements in a following manner:
-+	 *
-+	 * PM1p0: upper two bytes, crc8, lower two bytes, crc8
-+	 * PM2p5: upper two bytes, crc8, lower two bytes, crc8
-+	 * PM4p0: upper two bytes, crc8, lower two bytes, crc8
-+	 * PM10:  upper two bytes, crc8, lower two bytes, crc8
-+	 *
-+	 * What follows next are number concentration measurements and
-+	 * typical particle size measurement.
-+	 *
-+	 * Once data is read from sensor crc bytes are stripped off
-+	 * hence we need 16 bytes of buffer space.
-+	 */
-+	int ret, tries = 5;
-+	u8 buf[16];
-+
-+	while (tries--) {
-+		ret = sps30_do_cmd(state, SPS30_READ_DATA_READY_FLAG, buf, 2);
-+		if (ret)
-+			return -EIO;
-+
-+		/* new measurements ready to be read */
-+		if (buf[1] == 1)
-+			break;
-+
-+		usleep_range(300000, 400000);
-+	}
-+
-+	if (!tries)
-+		return -ETIMEDOUT;
-+
-+	ret = sps30_do_cmd(state, SPS30_READ_DATA, buf, sizeof(buf));
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * All measurements come in IEEE754 single precision floating point
-+	 * format but sensor itself is not precise enough (-+ 10% error)
-+	 * to take full advantage of it. Hence converting result to int
-+	 * to keep things simple.
-+	 */
-+	*pm2p5 = sps30_ieee754_to_int(&buf[PM2p5 * 4]);
-+	*pm10 = sps30_ieee754_to_int(&buf[PM10 * 4]);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t sps30_trigger_handler(int irq, void *p)
-+{
-+	struct iio_poll_func *pf = p;
-+	struct iio_dev *indio_dev = pf->indio_dev;
-+	struct sps30_state *state = iio_priv(indio_dev);
-+	u32 buf[4]; /* PM2p5, PM10, timestamp */
-+	int ret;
-+
-+	mutex_lock(&state->lock);
-+	ret = sps30_do_meas(state, &buf[0], &buf[1]);
-+	mutex_unlock(&state->lock);
-+	if (ret < 0)
-+		goto err;
-+
-+	iio_push_to_buffers_with_timestamp(indio_dev, buf,
-+					   iio_get_time_ns(indio_dev));
-+err:
-+	iio_trigger_notify_done(indio_dev->trig);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int sps30_read_raw(struct iio_dev *indio_dev,
-+			  struct iio_chan_spec const *chan,
-+			  int *val, int *val2, long mask)
-+{
-+	struct sps30_state *state = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_PROCESSED:
-+		switch (chan->type) {
-+		case IIO_MASSCONCENTRATION:
-+			mutex_lock(&state->lock);
-+			switch (chan->channel2) {
-+			case IIO_MOD_PM2p5:
-+				ret = sps30_do_meas(state, val, val2);
-+				break;
-+			case IIO_MOD_PM10:
-+				ret = sps30_do_meas(state, val2, val);
-+				break;
-+			default:
-+				break;
-+			}
-+			mutex_unlock(&state->lock);
-+			if (ret)
-+				return ret;
-+
-+			return IIO_VAL_INT;
-+		default:
-+			return -EINVAL;
-+		}
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info sps30_info = {
-+	.read_raw = sps30_read_raw,
-+};
-+
-+static const struct iio_chan_spec sps30_channels[] = {
-+	SPS30_CHAN(0, PM2p5),
-+	SPS30_CHAN(1, PM10),
-+	IIO_CHAN_SOFT_TIMESTAMP(2),
-+};
-+
-+static const unsigned long sps30_scan_masks[] = { 0x03, 0x00 };
-+
-+static int sps30_probe(struct i2c_client *client)
-+{
-+	struct iio_dev *indio_dev;
-+	struct sps30_state *state;
-+	u8 buf[32] = { };
-+	int ret;
-+
-+	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
-+		return -EOPNOTSUPP;
-+
-+	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*state));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	state = iio_priv(indio_dev);
-+	i2c_set_clientdata(client, indio_dev);
-+	state->client = client;
-+	indio_dev->dev.parent = &client->dev;
-+	indio_dev->info = &sps30_info;
-+	indio_dev->name = client->name;
-+	indio_dev->channels = sps30_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(sps30_channels);
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->available_scan_masks = sps30_scan_masks;
-+
-+	mutex_init(&state->lock);
-+	crc8_populate_msb(sps30_crc8_table, SPS30_CRC8_POLYNOMIAL);
-+
-+	/*
-+	 * Power-on-reset causes sensor to produce some glitch on i2c bus
-+	 * and some controllers end up in error state. Recover simply
-+	 * by placing something on the bus.
-+	 */
-+	ret = sps30_do_cmd(state, SPS30_RESET, NULL, 0);
-+	if (ret) {
-+		dev_err(&client->dev, "failed to reset device\n");
-+		return ret;
-+	}
-+	usleep_range(2500000, 3500000);
-+	sps30_do_cmd(state, SPS30_STOP_MEAS, NULL, 0);
-+
-+	ret = sps30_do_cmd(state, SPS30_READ_SERIAL, buf, sizeof(buf));
-+	if (ret) {
-+		dev_err(&client->dev, "failed to read serial number\n");
-+		return ret;
-+	}
-+	dev_info(&client->dev, "serial number: %s\n", buf);
-+
-+	ret = sps30_do_cmd(state, SPS30_START_MEAS, NULL, 0);
-+	if (ret) {
-+		dev_err(&client->dev, "failed to start measurement\n");
-+		return ret;
-+	}
-+
-+	ret = devm_iio_triggered_buffer_setup(&client->dev, indio_dev, NULL,
-+					      sps30_trigger_handler, NULL);
-+	if (ret)
-+		return ret;
-+
-+	return devm_iio_device_register(&client->dev, indio_dev);
-+}
-+
-+static int sps30_remove(struct i2c_client *client)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-+	struct sps30_state *state = iio_priv(indio_dev);
-+
-+	sps30_do_cmd(state, SPS30_STOP_MEAS, NULL, 0);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id sps30_id[] = {
-+	{ "sps30" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, sps30_id);
-+
-+static const struct of_device_id sps30_of_match[] = {
-+	{ .compatible = "sensirion,sps30" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, sps30_of_match);
-+
-+static struct i2c_driver sps30_driver = {
-+	.driver = {
-+		.name = "sps30",
-+		.of_match_table = sps30_of_match,
-+	},
-+	.id_table = sps30_id,
-+	.probe_new = sps30_probe,
-+	.remove = sps30_remove,
-+};
-+module_i2c_driver(sps30_driver);
-+
-+MODULE_AUTHOR("Tomasz Duszynski <tduszyns@gmail.com>");
-+MODULE_DESCRIPTION("Sensirion SPS30 particulate matter sensor driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.19.2
+Changes in v2:
+Addressed review comments given by Stephen: https://lkml.org/lkml/2018/6/6/294
+* Introduce clk_rcg2_gfx3d_determine_rate ops to return the best parent
+  as 'gpucc_pll0_even' and best parent rate as twice of the requested rate
+  always. This will eliminate the need of frequency table as source and
+  div-2 are fixed for gfx3d_clk_src.
+  Also modified the clk_rcg2_set_rate ops to configure the fixed source and
+  div.
+* Add support to check if requested rate falls within allowed set_rate range.
+  This will not let the source gpucc_pll0 to go out of the supported range
+  and also client can request the rate within the range.
+* Fixed comment text in probe function and added module description for GPUCC
+  driver.
+
+The graphics clock driver depends upon the below change.
+	https://lkml.org/lkml/2018/6/23/108
+
+Changes in v1:
+This patch series adds support for graphics clock controller for SDM845.
+Below is the brief description for each change:
+
+1. For some of the GDSCs, there is requirement to enable/disable the
+   few clocks before turning on/off the gdsc power domain. This patch
+   will add support to enable/disable the clock associated with the
+   gdsc along with power domain on/off callbacks.
+
+2. To turn on the gpu_gx_gdsc, there is a hardware requirement to
+   turn on the root clock (GFX3D RCG) first which would be the turn
+   on signal for the gdsc along with the SW_COLLAPSE. As per the
+   current implementation of clk_rcg2_shared_ops, it clears the
+   root_enable bit in the enable() clock ops. But due to the above
+   said requirement for GFX3D shared RCG, root_enable bit would be
+   already set by gdsc driver and rcg2_shared_ops should not clear
+   the root unless the disable() is called.
+
+   This patch add support for the same by reusing the existing
+   clk_rcg2_shared_ops and deriving "clk_rcg2_gfx3d_ops" clk_ops
+   for GFX3D clock to take care of the root set/clear requirement.
+
+3. Add device tree bindings for graphics clock controller for SDM845.
+
+4. Add graphics clock controller (GPUCC) driver for SDM845.
+
+[v1] : https://lore.kernel.org/patchwork/project/lkml/list/?series=348697
+[v2] : https://lore.kernel.org/patchwork/project/lkml/list/?series=359012
+
+Amit Nischal (2):
+  dt-bindings: clock: Introduce QCOM Graphics clock bindings
+  clk: qcom: Add graphics clock controller driver for SDM845
+
+ .../devicetree/bindings/clock/qcom,gpucc.txt       |  18 ++
+ drivers/clk/qcom/Kconfig                           |   9 +
+ drivers/clk/qcom/Makefile                          |   1 +
+ drivers/clk/qcom/gpucc-sdm845.c                    | 231 +++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gpucc-sdm845.h      |  24 +++
+ 5 files changed, 283 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,gpucc.txt
+ create mode 100644 drivers/clk/qcom/gpucc-sdm845.c
+ create mode 100644 include/dt-bindings/clock/qcom,gpucc-sdm845.h
+
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
