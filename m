@@ -1,13 +1,13 @@
 From: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC PATCH v4 12/17] dt-bindings: clock: Add Allwinner
- suniv F1C100s CCU
-Date: Sun, 25 Nov 2018 10:43:15 +0300
-Message-ID: <c2e6e3f510d5663ecf25262126dcff1df112af15.1543131714.git.mesihkilinc@gmail.com>
+Subject: [RFC PATCH v4 14/17] dt-bindings: sram: Add Allwinner
+ suniv F1C100s
+Date: Sun, 25 Nov 2018 10:43:17 +0300
+Message-ID: <f80ca2de497c44c9415b02ac9aba93721d723730.1543131714.git.mesihkilinc@gmail.com>
 References: <cover.1543131714.git.mesihkilinc@gmail.com>
 Reply-To: mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDI4VHO5SYLBBSFF5HPQKGQEZSTE4JA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDI4VHO5SYLBBTFF5HPQKGQEENOB3FQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <cover.1543131714.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,148 +20,35 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreC
 Cc: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add compatiple string for Allwinner suniv F1C100s CCU.
-Add clock and reset definitions.
+The suniv ARMv5 F1C100s chip has similar sram controller to sun4i A10.
+Add compatible string for it.
 
 Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 ---
- .../devicetree/bindings/clock/sunxi-ccu.txt        |  1 +
- include/dt-bindings/clock/suniv-ccu-f1c100s.h      | 69 ++++++++++++++++++++++
- include/dt-bindings/reset/suniv-ccu-f1c100s.h      | 37 ++++++++++++
- 3 files changed, 107 insertions(+)
- create mode 100644 include/dt-bindings/clock/suniv-ccu-f1c100s.h
- create mode 100644 include/dt-bindings/reset/suniv-ccu-f1c100s.h
+ Documentation/devicetree/bindings/sram/sunxi-sram.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/sunxi-ccu.txt b/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
-index 47d2e90..e3bd88a 100644
---- a/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
-+++ b/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
-@@ -22,6 +22,7 @@ Required properties :
- 		- "allwinner,sun50i-h5-ccu"
- 		- "allwinner,sun50i-h6-ccu"
- 		- "allwinner,sun50i-h6-r-ccu"
-+		- "allwinner,suniv-f1c100s-ccu"
- 		- "nextthing,gr8-ccu"
+diff --git a/Documentation/devicetree/bindings/sram/sunxi-sram.txt b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
+index 62dd074..5c84850 100644
+--- a/Documentation/devicetree/bindings/sram/sunxi-sram.txt
++++ b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
+@@ -19,6 +19,7 @@ Required properties:
+     - "allwinner,sun50i-a64-sram-controller" (deprecated)
+     - "allwinner,sun50i-a64-system-control"
+     - "allwinner,sun50i-h6-system-control", "allwinner,sun50i-a64-system-control"
++    - "allwinner,suniv-f1c100s-system-control", "allwinner,sun4i-a10-system-control"
+ - reg : sram controller register offset + length
  
- - reg: Must contain the registers base address and length
-diff --git a/include/dt-bindings/clock/suniv-ccu-f1c100s.h b/include/dt-bindings/clock/suniv-ccu-f1c100s.h
-new file mode 100644
-index 0000000..56f6d0d
---- /dev/null
-+++ b/include/dt-bindings/clock/suniv-ccu-f1c100s.h
-@@ -0,0 +1,69 @@
-+/*
-+ * Copyright (c) 2018 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+ */
+ SRAM nodes
+@@ -58,6 +59,9 @@ The valid sections compatible for A64 are:
+ The valid sections compatible for H6 are:
+     - allwinner,sun50i-h6-sram-c, allwinner,sun50i-a64-sram-c
+ 
++The valid sections compatible for F1C100s are:
++    - allwinner,suniv-f1c100s-sram-d, allwinner,sun4i-a10-sram-d
 +
-+#ifndef _DT_BINDINGS_CLK_SUNIV_F1C100S_H_
-+#define _DT_BINDINGS_CLK_SUNIV_F1C100S_H_
-+
-+#define CLK_CPU			11
-+
-+#define CLK_BUS_MMC0		14
-+#define CLK_BUS_MMC1		15
-+#define CLK_BUS_DRAM		16
-+#define CLK_BUS_SPI0		17
-+#define CLK_BUS_SPI1		18
-+#define CLK_BUS_OTG		19
-+#define CLK_BUS_VE		20
-+#define CLK_BUS_LCD		21
-+#define CLK_BUS_DEINTERLACE	22
-+#define CLK_BUS_CSI		23
-+#define CLK_BUS_TVD		24
-+#define CLK_BUS_TVE		25
-+#define CLK_BUS_DE_BE		26
-+#define CLK_BUS_DE_FE		27
-+#define CLK_BUS_CODEC		28
-+#define CLK_BUS_SPDIF		29
-+#define CLK_BUS_IR		30
-+#define CLK_BUS_RSB		31
-+#define CLK_BUS_I2S0		32
-+#define CLK_BUS_I2C0		33
-+#define CLK_BUS_I2C1		34
-+#define CLK_BUS_I2C2		35
-+#define CLK_BUS_PIO		36
-+#define CLK_BUS_UART0		37
-+#define CLK_BUS_UART1		38
-+#define CLK_BUS_UART2		39
-+
-+#define CLK_MMC0		40
-+#define CLK_MMC0_SAMPLE		41
-+#define CLK_MMC0_OUTPUT		42
-+#define CLK_MMC1		43
-+#define CLK_MMC1_SAMPLE		44
-+#define CLK_MMC1_OUTPUT		45
-+#define CLK_I2S			46
-+#define CLK_SPDIF		47
-+
-+#define CLK_USB_PHY0		48
-+
-+#define CLK_DRAM_VE		49
-+#define CLK_DRAM_CSI		50
-+#define CLK_DRAM_DEINTERLACE	51
-+#define CLK_DRAM_TVD		52
-+#define CLK_DRAM_DE_FE		53
-+#define CLK_DRAM_DE_BE		54
-+
-+#define CLK_DE_BE		55
-+#define CLK_DE_FE		56
-+#define CLK_TCON		57
-+#define CLK_DEINTERLACE		58
-+#define CLK_TVE2_CLK		59
-+#define CLK_TVE1_CLK		60
-+#define CLK_TVD			61
-+#define CLK_CSI			62
-+#define CLK_VE			63
-+#define CLK_CODEC		64
-+#define CLK_AVS			65
-+
-+#endif
-diff --git a/include/dt-bindings/reset/suniv-ccu-f1c100s.h b/include/dt-bindings/reset/suniv-ccu-f1c100s.h
-new file mode 100644
-index 0000000..95f1ed0
---- /dev/null
-+++ b/include/dt-bindings/reset/suniv-ccu-f1c100s.h
-@@ -0,0 +1,37 @@
-+/*
-+ * Copyright (C) 2018 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+ */
-+
-+#ifndef _DT_BINDINGS_RST_SUNIV_F1C100S_H_
-+#define _DT_BINDINGS_RST_SUNIV_F1C100S_H_
-+
-+#define RST_USB_PHY0		0
-+#define RST_BUS_MMC0		1
-+#define RST_BUS_MMC1		2
-+#define RST_BUS_DRAM		3
-+#define RST_BUS_SPI0		4
-+#define RST_BUS_SPI1		5
-+#define RST_BUS_OTG		6
-+#define RST_BUS_VE		7
-+#define RST_BUS_LCD		8
-+#define RST_BUS_DEINTERLACE		9
-+#define RST_BUS_CSI		10
-+#define RST_BUS_TVD		11
-+#define RST_BUS_TVE		12
-+#define RST_BUS_DE_BE		13
-+#define RST_BUS_DE_FE		14
-+#define RST_BUS_CODEC		15
-+#define RST_BUS_SPDIF		16
-+#define RST_BUS_IR		17
-+#define RST_BUS_RSB		18
-+#define RST_BUS_I2S0		19
-+#define RST_BUS_I2C0		20
-+#define RST_BUS_I2C1		21
-+#define RST_BUS_I2C2		22
-+#define RST_BUS_UART0		23
-+#define RST_BUS_UART1		24
-+#define RST_BUS_UART2		25
-+
-+#endif /* _DT_BINDINGS_RST_SUNIV_F1C100S_H_ */
+ Devices using SRAM sections
+ ---------------------------
+ 
 -- 
 2.7.4
