@@ -1,149 +1,59 @@
-From: Matt Ranostay <matt.ranostay@konsulko.com>
-Subject: Re: [PATCH 1/3] iio: add IIO_MASSCONCENTRATION channel type
-Date: Sun, 25 Nov 2018 05:51:32 -0800
-Message-ID: <CAJCx=g=H6Zp4AtWPpC-KdZmyOxTymtdgf+Hx8VvThLFg0bjYVQ@mail.gmail.com>
-References: <20181124221415.10081-1-tduszyns@gmail.com> <20181124221415.10081-2-tduszyns@gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v4 0/2] dmaengine: add UniPhier MIO DMAC driver
+Date: Sun, 25 Nov 2018 22:53:59 +0900
+Message-ID: <CAK7LNAR8Tk9iXPLnv4XDM0E=kTWwv2+UGz+xmtA-eJyjRFjFRw@mail.gmail.com>
+References: <1539276063-5103-1-git-send-email-yamada.masahiro@socionext.com> <20181124141616.GH3175@vkoul-mobl.Dlink>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181124221415.10081-2-tduszyns@gmail.com>
+In-Reply-To: <20181124141616.GH3175@vkoul-mobl.Dlink>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Duszynski <tduszyns@gmail.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Vinod Koul <vkoul@kernel.org>
+Cc: "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 24, 2018 at 2:14 PM Tomasz Duszynski <tduszyns@gmail.com> wrote:
+On Sat, Nov 24, 2018 at 11:16 PM Vinod Koul <vkoul@kernel.org> wrote:
 >
-> Measuring particulate matter in ug / m3 (micro-grams per cubic meter)
-> is de facto standard. Existing air quality sensors usually follow
-> this convention and are capable of returning measurements using
-> this unit.
+> On 12-10-18, 01:41, Masahiro Yamada wrote:
+> > 1/2: DT-binding
+> > 2/2: driver
 >
-> IIO currently does not offer suitable channel type for this
-> type of measurements hence this patch adds this.
->
-> In addition, two modifiers are introduced used for distinguishing
-> between coarse (PM10) and fine particles (PM2p5) measurements, i.e
-> IIO_MOD_PM10 and IIO_MOD_PM2p5.
->
-> Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-iio | 11 ++++++++++-
->  drivers/iio/industrialio-core.c         |  3 +++
->  include/uapi/linux/iio/types.h          |  3 +++
->  tools/iio/iio_event_monitor.c           |  6 ++++++
->  4 files changed, 22 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> index 8127a08e366d..ce0ed140660d 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-iio
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> @@ -1684,4 +1684,13 @@ KernelVersion:   4.18
->  Contact:       linux-iio@vger.kernel.org
->  Description:
->                 Raw (unscaled) phase difference reading from channel Y
-> -               that can be processed to radians.
-> \ No newline at end of file
-> +               that can be processed to radians.
-> +
-> +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentration_pm2p5_input
-> +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentrationY_pm2p5_input
-> +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentration_pm10_input
-> +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentrationY_pm10_input
-> +KernelVersion: 4.21
-> +Contact:       linux-iio@vger.kernel.org
-> +Description:
-> +               Mass concentration reading of particulate matter in ug / m3.
-> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> index a062cfddc5af..2a9ef600c1fb 100644
-> --- a/drivers/iio/industrialio-core.c
-> +++ b/drivers/iio/industrialio-core.c
-> @@ -87,6 +87,7 @@ static const char * const iio_chan_type_name_spec[] = {
->         [IIO_GRAVITY]  = "gravity",
->         [IIO_POSITIONRELATIVE]  = "positionrelative",
->         [IIO_PHASE] = "phase",
-> +       [IIO_MASSCONCENTRATION] = "massconcentration",
->  };
->
->  static const char * const iio_modifier_names[] = {
-> @@ -127,6 +128,8 @@ static const char * const iio_modifier_names[] = {
->         [IIO_MOD_Q] = "q",
->         [IIO_MOD_CO2] = "co2",
->         [IIO_MOD_VOC] = "voc",
-> +       [IIO_MOD_PM2p5] = "pm2p5",
-> +       [IIO_MOD_PM10] = "pm10",
->  };
->
->  /* relies on pairs of these shared then separate */
-> diff --git a/include/uapi/linux/iio/types.h b/include/uapi/linux/iio/types.h
-> index 92baabc103ac..465044b42af5 100644
-> --- a/include/uapi/linux/iio/types.h
-> +++ b/include/uapi/linux/iio/types.h
-> @@ -46,6 +46,7 @@ enum iio_chan_type {
->         IIO_GRAVITY,
->         IIO_POSITIONRELATIVE,
->         IIO_PHASE,
-> +       IIO_MASSCONCENTRATION,
+> Applied this series, thanks
 
-So I'm guessing IIO_CONCENTRATION can't be scaled to the micro-grams
-per cubic meter?
 
->  };
->
->  enum iio_modifier {
-> @@ -87,6 +88,8 @@ enum iio_modifier {
->         IIO_MOD_VOC,
->         IIO_MOD_LIGHT_UV,
->         IIO_MOD_LIGHT_DUV,
-> +       IIO_MOD_PM2p5,
+Thanks.
 
-I know this is unit of measure but the lowercase p in IIO_MOD_PM2p5 is
-a bit non-standard for iio defines/enum.
 
-- Matt
+> While building I noticed that we get few warns when compiling with
+> C=1, I would prefer you fix them. Please send fixes on top of the
+> applied patches.
 
-> +       IIO_MOD_PM10,
->  };
->
->  enum iio_event_type {
-> diff --git a/tools/iio/iio_event_monitor.c b/tools/iio/iio_event_monitor.c
-> index ac2de6b7e89f..f0fcfeddba2b 100644
-> --- a/tools/iio/iio_event_monitor.c
-> +++ b/tools/iio/iio_event_monitor.c
-> @@ -60,6 +60,7 @@ static const char * const iio_chan_type_name_spec[] = {
->         [IIO_GRAVITY] = "gravity",
->         [IIO_POSITIONRELATIVE] = "positionrelative",
->         [IIO_PHASE] = "phase",
-> +       [IIO_MASSCONCENTRATION] = "massconcentration",
->  };
->
->  static const char * const iio_ev_type_text[] = {
-> @@ -115,6 +116,8 @@ static const char * const iio_modifier_names[] = {
->         [IIO_MOD_Q] = "q",
->         [IIO_MOD_CO2] = "co2",
->         [IIO_MOD_VOC] = "voc",
-> +       [IIO_MOD_PM2p5] = "pm2p5",
-> +       [IIO_MOD_PM10] = "pm10",
->  };
->
->  static bool event_is_known(struct iio_event_data *event)
-> @@ -156,6 +159,7 @@ static bool event_is_known(struct iio_event_data *event)
->         case IIO_GRAVITY:
->         case IIO_POSITIONRELATIVE:
->         case IIO_PHASE:
-> +       case IIO_MASSCONCENTRATION:
->                 break;
->         default:
->                 return false;
-> @@ -200,6 +204,8 @@ static bool event_is_known(struct iio_event_data *event)
->         case IIO_MOD_Q:
->         case IIO_MOD_CO2:
->         case IIO_MOD_VOC:
-> +       case IIO_MOD_PM2p5:
-> +       case IIO_MOD_PM10:
->                 break;
->         default:
->                 return false;
+My code is fine.
+
+If you are talking about the following, your sparse is too old.
+Upgrade your sparse.
+
+./include/linux/overflow.h:285:13: error: undefined identifier
+'__builtin_mul_overflow'
+./include/linux/overflow.h:285:13: error: incorrect type in conditional
+./include/linux/overflow.h:285:13:    got void
+./include/linux/overflow.h:287:13: error: undefined identifier
+'__builtin_add_overflow'
+./include/linux/overflow.h:287:13: error: incorrect type in conditional
+./include/linux/overflow.h:287:13:    got void
+./include/linux/overflow.h:285:13: warning: call with no type!
+./include/linux/overflow.h:287:13: warning: call with no type!
+
+
+
+
+
+> Thanks
 > --
-> 2.19.2
->
+> ~Vinod
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
