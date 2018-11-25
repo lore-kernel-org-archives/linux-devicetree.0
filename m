@@ -1,209 +1,264 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 3/4] iio: adc: add STMPE ADC devicetree bindings
-Date: Sun, 25 Nov 2018 10:04:13 +0000
-Message-ID: <20181125100413.73bc729f@archlinux>
-References: <20181123142411.8921-1-dev@pschenker.ch>
-        <20181123142411.8921-3-dev@pschenker.ch>
+From: Himanshu Jha <himanshujha199640@gmail.com>
+Subject: Re: [PATCH 2/3] iio: chemical: add support for Sensirion SPS30 sensor
+Date: Sun, 25 Nov 2018 16:14:34 +0530
+Message-ID: <20181125104434.GA19309@himanshu-Vostro-3559>
+References: <20181124221415.10081-1-tduszyns@gmail.com>
+ <20181124221415.10081-3-tduszyns@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181123142411.8921-3-dev@pschenker.ch>
+Content-Disposition: inline
+In-Reply-To: <20181124221415.10081-3-tduszyns@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Schenker <dev@pschenker.ch>
-Cc: marcel.ziswiler@toradex.com, stefan@agner.ch, Max Krummenacher <max.krummenacher@toradex.com>, Philippe Schenker <philippe.schenker@toradex.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Alexandre Torgue <alexandre.torgue@st.com>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, Lars-Peter Clausen <lars@metafoo.de>
+To: Tomasz Duszynski <tduszyns@gmail.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 23 Nov 2018 15:24:10 +0100
-Philippe Schenker <dev@pschenker.ch> wrote:
-
-> From: Stefan Agner <stefan@agner.ch>
+On Sat, Nov 24, 2018 at 11:14:14PM +0100, Tomasz Duszynski wrote:
+> Add support for Sensirion SPS30 particulate matter sensor.
 > 
-> This adds the devicetree bindings for the STMPE ADC.
-> 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-Clearly this will need review from input and mfd.
-
-I've suggested inline that you split the realignment out to a
-separate patch for reviewability reasons.
-
+> Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
 > ---
-> 
-> Changes in v3:
->  - Reformatted documentation for touchscreen to use tabs and have a better
->    overview of the settings.
->  - Added note which adc-settings will take precedence.
->  - changed typo in sample-time setting from 144 clocks to 124 clocks, as stated
->    in the datasheet.
-> 
-> Changes in v2:
->  - Moved the bindings for ADC to the overlying mfd.
->  - Reformatted for better readability
-> 
->  .../devicetree/bindings/iio/adc/stmpe-adc.txt | 21 +++++++
->  .../bindings/input/touchscreen/stmpe.txt      | 60 ++++++++++++-------
->  .../devicetree/bindings/mfd/stmpe.txt         | 28 ++++++---
->  3 files changed, 80 insertions(+), 29 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/stmpe-adc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/stmpe-adc.txt b/Documentation/devicetree/bindings/iio/adc/stmpe-adc.txt
-> new file mode 100644
-> index 000000000000..480e66422625
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/stmpe-adc.txt
-> @@ -0,0 +1,21 @@
-> +STMPE ADC driver
-> +----------------
-> +
-> +Required properties:
-> + - compatible: "st,stmpe-adc"
-> +
-> +Optional properties:
-> +Note that the ADC is shared with the STMPE touchscreen. ADC related settings
-> +have to be done in the mfd.
-> +- st,norequest-mask: bitmask specifying which ADC channels should _not_ be
-> +  requestable due to different usage (e.g. touch)
-> +
-> +Node name must be stmpe_adc and should be child node of stmpe node to
-> +which it belongs.
-> +
-> +Example:
-> +
-> +	stmpe_adc {
+>  drivers/iio/chemical/Kconfig  |  11 ++
+>  drivers/iio/chemical/Makefile |   1 +
+>  drivers/iio/chemical/sps30.c  | 359 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 371 insertions(+)
+>  create mode 100644 drivers/iio/chemical/sps30.c
 
-Can we use adc { here to match standard naming?
+[]
 
-> +		compatible = "st,stmpe-adc";
-> +		st,norequest-mask = <0x0F>; /* dont use ADC CH3-0 */
+> +#define pr_fmt(fmt) "sps30: " fmt
+
+I don't see its usage ?
+
+> +#include <linux/crc8.h>
+> +#include <linux/delay.h>
+> +#include <linux/i2c.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +#include <linux/module.h>
+> +
+> +#define SPS30_CRC8_POLYNOMIAL 0x31
+> +
+> +/* SPS30 commands */
+> +#define SPS30_START_MEAS 0x0010
+> +#define SPS30_STOP_MEAS 0x0104
+> +#define SPS30_RESET 0xd304
+> +#define SPS30_READ_DATA_READY_FLAG 0x0202
+> +#define SPS30_READ_DATA 0x0300
+> +#define SPS30_READ_SERIAL 0xD033
+
+Could you please put a tab and align these macros.
+
+  #define SPS30_START_MEAS		0x0010
+  #define SPS30_STOP_MEAS		0x0104
+
+
+> +static int sps30_write_then_read(struct sps30_state *state, u8 *buf,
+> +				 int buf_size, u8 *data, int data_size)
+> +{
+> +	/* every two received data bytes are checksummed */
+> +	u8 tmp[data_size + data_size / 2];
+
+No VLAs!
+
+https://lore.kernel.org/lkml/CA+55aFzCG-zNmZwX4A2FQpadafLfEzK6CC=qPXydAacU1RqZWA@mail.gmail.com/
+
+> +	int ret, i;
+> +
+> +	/*
+> +	 * Sensor does not support repeated start so instead of
+> +	 * sending two i2c messages in a row we just send one by one.
+> +	 */
+> +	ret = i2c_master_send(state->client, buf, buf_size);
+> +	if (ret != buf_size)
+> +		return ret < 0 ? ret : -EIO;
+> +
+> +	if (!data)
+> +		return 0;
+> +
+> +	ret = i2c_master_recv(state->client, tmp, sizeof(tmp));
+> +	if (ret != sizeof(tmp))
+> +		return ret < 0 ? ret : -EIO;
+> +
+> +	for (i = 0; i < sizeof(tmp); i += 3) {
+> +		u8 crc = crc8(sps30_crc8_table, &tmp[i], 2, CRC8_INIT_VALUE);
+> +
+> +		if (crc != tmp[i + 2]) {
+> +			dev_err(&state->client->dev,
+> +				"data integrity check failed\n");
+> +			return -EIO;
+> +		}
+> +
+> +		*data++ = tmp[i];
+> +		*data++ = tmp[i + 1];
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int sps30_do_cmd(struct sps30_state *state, u16 cmd, u8 *data, int size)
+> +{
+> +	/* depending on the command up to 3 bytes may be needed for argument */
+> +	u8 buf[sizeof(cmd) + 3] = { cmd >> 8, cmd };
+
+This is fine, since sizeof returns constant integer expression.
+
+> +	switch (cmd) {
+> +	case SPS30_START_MEAS:
+> +		buf[2] = 0x03;
+> +		buf[3] = 0x00;
+> +		buf[4] = 0xac; /* precomputed crc */
+> +		return sps30_write_then_read(state, buf, 5, NULL, 0);
+> +	case SPS30_STOP_MEAS:
+> +	case SPS30_RESET:
+> +		return sps30_write_then_read(state, buf, 2, NULL, 0);
+> +	case SPS30_READ_DATA_READY_FLAG:
+> +	case SPS30_READ_DATA:
+> +	case SPS30_READ_SERIAL:
+> +		return sps30_write_then_read(state, buf, 2, data, size);
+> +	default:
+> +		return -EINVAL;
 > +	};
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-> index 127baa31a77a..414586513a02 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-> @@ -5,36 +5,52 @@ Required properties:
->   - compatible: "st,stmpe-ts"
->  
->  Optional properties:
-> -- st,sample-time: ADC converstion time in number of clock.  (0 -> 36 clocks, 1 ->
-> -  44 clocks, 2 -> 56 clocks, 3 -> 64 clocks, 4 -> 80 clocks, 5 -> 96 clocks, 6
-> -  -> 144 clocks), recommended is 4.  
-> -- st,mod-12b: ADC Bit mode (0 -> 10bit ADC, 1 -> 12bit ADC)
-> -- st,ref-sel: ADC reference source (0 -> internal reference, 1 -> external
-> -  reference)
-> -- st,adc-freq: ADC Clock speed (0 -> 1.625 MHz, 1 -> 3.25 MHz, 2 || 3 -> 6.5 MHz)
-> -- st,ave-ctrl: Sample average control (0 -> 1 sample, 1 -> 2 samples, 2 -> 4
-> -  samples, 3 -> 8 samples)
-> -- st,touch-det-delay: Touch detect interrupt delay (0 -> 10 us, 1 -> 50 us, 2 ->
-> -  100 us, 3 -> 500 us, 4-> 1 ms, 5 -> 5 ms, 6 -> 10 ms, 7 -> 50 ms) recommended
-> -  is 3
-> -- st,settling: Panel driver settling time (0 -> 10 us, 1 -> 100 us, 2 -> 500 us, 3
-> -  -> 1 ms, 4 -> 5 ms, 5 -> 10 ms, 6 for 50 ms, 7 -> 100 ms) recommended is 2  
-> -- st,fraction-z: Length of the fractional part in z (fraction-z ([0..7]) = Count of
-> -  the fractional part) recommended is 7
-> -- st,i-drive: current limit value of the touchscreen drivers (0 -> 20 mA typical 35
-> -  mA max, 1 -> 50 mA typical 80 mA max)
-> +- st,ave-ctrl		: Sample average control
-> +				0 -> 1 sample
-> +				1 -> 2 samples
-> +				2 -> 4 samples
-> +				3 -> 8 samples
-> +- st,touch-det-delay	: Touch detect interrupt delay (recommended is 3)
-> +				0 -> 10 us		5 -> 5 ms
-> +				1 -> 50 us		6 -> 10 ms
-> +				2 -> 100 us		7 -> 50 ms
-> +				3 -> 500 us
-> +				4-> 1 ms
-> +- st,settling		: Panel driver settling time (recommended is 2)
-> +				0 -> 10 us		5 -> 10 ms
-> +				1 -> 100 us		6 for 50 ms
-> +				2 -> 500 us		7 -> 100 ms
-> +				3 -> 1 ms
-> +				4 -> 5 ms
-> +- st,fraction-z		: Length of the fractional part in z (recommended is 7)
-> +			  (fraction-z ([0..7]) = Count of the fractional part)
-> +- st,i-drive		: current limit value of the touchscreen drivers
-> +				0 -> 20 mA (typical 35mA max)
-> +				1 -> 50 mA (typical 80 mA max)
-> +
-> +Optional properties common with MFD (deprecated):
-> + - st,sample-time	: ADC conversion time in number of clock.
-> +				0 -> 36 clocks		4 -> 80 clocks (recommended)
-> +				1 -> 44 clocks		5 -> 96 clocks
-> +				2 -> 56 clocks		6 -> 124 clocks
-> +				3 -> 64 clocks
-> + - st,mod-12b		: ADC Bit mode
-> +				0 -> 10bit ADC		1 -> 12bit ADC
-> + - st,ref-sel		: ADC reference source
-> +				0 -> internal		1 -> external
-> + - st,adc-freq		: ADC Clock speed
-> +				0 -> 1.625 MHz		2 || 3 -> 6.5 MHz
-> +				1 -> 3.25 MHz
->  
->  Node name must be stmpe_touchscreen and should be child node of stmpe node to
->  which it belongs.
->  
-> +Note that common ADC settings of stmpe_touchscreen will take precedence.
-> +
->  Example:
->  
->  	stmpe_touchscreen {
->  		compatible = "st,stmpe-ts";
-> -		st,sample-time = <4>;
-> -		st,mod-12b = <1>;
-> -		st,ref-sel = <0>;
-> -		st,adc-freq = <1>;
->  		st,ave-ctrl = <1>;
->  		st,touch-det-delay = <2>;
->  		st,settling = <2>;
-> diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Documentation/devicetree/bindings/mfd/stmpe.txt
-> index c797c05cd3c2..d4408a417193 100644
-> --- a/Documentation/devicetree/bindings/mfd/stmpe.txt
-> +++ b/Documentation/devicetree/bindings/mfd/stmpe.txt
-> @@ -4,15 +4,29 @@ STMPE is an MFD device which may expose the following inbuilt devices: gpio,
->  keypad, touchscreen, adc, pwm, rotator.
->  
->  Required properties:
-> - - compatible                   : "st,stmpe[610|801|811|1600|1601|2401|2403]"
-> - - reg                          : I2C/SPI address of the device
-> + - compatible			: "st,stmpe[610|801|811|1600|1601|2401|2403]"
-> + - reg				: I2C/SPI address of the device
+> +}
 
-Nothing wrong with correcting alignment, but it shouldn't be in the same patch
-as a fundamental change lie this.  Just adds noise.
 
-If that means you first have to introduce the new block missaligned, then
-fix up the alignment in a follow up patch, then do that as we can then
-effectively ignore the realignment as obviously correct and focus on
-the real changes.
-
->  
->  Optional properties:
-> - - interrupts                   : The interrupt outputs from the controller
-> - - interrupt-controller         : Marks the device node as an interrupt controller
-> - - wakeup-source                : Marks the input device as wakable
-> - - st,autosleep-timeout         : Valid entries (ms); 4, 16, 32, 64, 128, 256, 512 and 1024
-> - - irq-gpio                     : If present, which GPIO to use for event IRQ
-> + - interrupts			: The interrupt outputs from the controller
-> + - interrupt-controller		: Marks the device node as an interrupt controller
-> + - wakeup-source		: Marks the input device as wakable
-> + - st,autosleep-timeout		: Valid entries (ms); 4, 16, 32, 64, 128, 256, 512 and 1024
-> + - irq-gpio			: If present, which GPIO to use for event IRQ
+> +static int sps30_read_raw(struct iio_dev *indio_dev,
+> +			  struct iio_chan_spec const *chan,
+> +			  int *val, int *val2, long mask)
+> +{
+> +	struct sps30_state *state = iio_priv(indio_dev);
+> +	int ret;
 > +
-> +Optional properties for devices with touch and ADC (STMPE811|STMPE610):
-> + - st,sample-time		: ADC conversion time in number of clock.
-> +					0 -> 36 clocks		4 -> 80 clocks (recommended)
-> +					1 -> 44 clocks		5 -> 96 clocks
-> +					2 -> 56 clocks		6 -> 124 clocks
-> +					3 -> 64 clocks
-> + - st,mod-12b			: ADC Bit mode
-> +					0 -> 10bit ADC		1 -> 12bit ADC
-> + - st,ref-sel			: ADC reference source
-> +					0 -> internal		1 -> external
-> + - st,adc-freq			: ADC Clock speed
-> +					0 -> 1.625 MHz		2 || 3 -> 6.5 MHz
-> +					1 -> 3.25 MHz
->  
->  Example:
->  
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_PROCESSED:
+> +		switch (chan->type) {
+> +		case IIO_MASSCONCENTRATION:
+> +			mutex_lock(&state->lock);
+> +			switch (chan->channel2) {
+> +			case IIO_MOD_PM2p5:
+
+I think lock should be placed here
+
+> +				ret = sps30_do_meas(state, val, val2);
+
+... and unlock here.
+
+> +				break;
+> +			case IIO_MOD_PM10:
+> +				ret = sps30_do_meas(state, val2, val);
+> +				break;
+> +			default:
+> +				break;
+> +			}
+> +			mutex_unlock(&state->lock);
+> +			if (ret)
+> +				return ret;
+> +
+> +			return IIO_VAL_INT;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+
+[]
+
+> +static int sps30_probe(struct i2c_client *client)
+> +{
+> +	struct iio_dev *indio_dev;
+> +	struct sps30_state *state;
+> +	u8 buf[32] = { };
+
+This is not valid in ISO-C but only in C++.
+
+Instead,
+
+	u8 buf[32] = {0};
+
+> +	int ret;
+> +
+> +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
+> +		return -EOPNOTSUPP;
+> +
+> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*state));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	state = iio_priv(indio_dev);
+> +	i2c_set_clientdata(client, indio_dev);
+> +	state->client = client;
+> +	indio_dev->dev.parent = &client->dev;
+> +	indio_dev->info = &sps30_info;
+> +	indio_dev->name = client->name;
+> +	indio_dev->channels = sps30_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(sps30_channels);
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->available_scan_masks = sps30_scan_masks;
+> +
+> +	mutex_init(&state->lock);
+> +	crc8_populate_msb(sps30_crc8_table, SPS30_CRC8_POLYNOMIAL);
+> +
+> +	/*
+> +	 * Power-on-reset causes sensor to produce some glitch on i2c bus
+> +	 * and some controllers end up in error state. Recover simply
+> +	 * by placing something on the bus.
+> +	 */
+> +	ret = sps30_do_cmd(state, SPS30_RESET, NULL, 0);
+> +	if (ret) {
+> +		dev_err(&client->dev, "failed to reset device\n");
+> +		return ret;
+> +	}
+> +	usleep_range(2500000, 3500000);
+
+Isn't that range too high ?
+msleep_interruptible ?
+
+> +	sps30_do_cmd(state, SPS30_STOP_MEAS, NULL, 0);
+> +
+> +	ret = sps30_do_cmd(state, SPS30_READ_SERIAL, buf, sizeof(buf));
+> +	if (ret) {
+> +		dev_err(&client->dev, "failed to read serial number\n");
+> +		return ret;
+> +	}
+> +	dev_info(&client->dev, "serial number: %s\n", buf);
+> +
+> +	ret = sps30_do_cmd(state, SPS30_START_MEAS, NULL, 0);
+> +	if (ret) {
+> +		dev_err(&client->dev, "failed to start measurement\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_iio_triggered_buffer_setup(&client->dev, indio_dev, NULL,
+> +					      sps30_trigger_handler, NULL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return devm_iio_device_register(&client->dev, indio_dev);
+> +}
+> +
+> +static int sps30_remove(struct i2c_client *client)
+
+Perfect candidate for `devm_add_action_or_reset()` ?
+
+> +{
+> +	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+> +	struct sps30_state *state = iio_priv(indio_dev);
+> +
+> +	sps30_do_cmd(state, SPS30_STOP_MEAS, NULL, 0);
+> +
+> +	return 0;
+> +}
+
+
+-- 
+Himanshu Jha
+Undergraduate Student
+Department of Electronics & Communication
+Guru Tegh Bahadur Institute of Technology
