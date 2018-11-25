@@ -1,264 +1,126 @@
-From: Himanshu Jha <himanshujha199640@gmail.com>
-Subject: Re: [PATCH 2/3] iio: chemical: add support for Sensirion SPS30 sensor
-Date: Sun, 25 Nov 2018 16:14:34 +0530
-Message-ID: <20181125104434.GA19309@himanshu-Vostro-3559>
-References: <20181124221415.10081-1-tduszyns@gmail.com>
- <20181124221415.10081-3-tduszyns@gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: iio: adc: Add docs for AD7606 ADC
+Date: Sun, 25 Nov 2018 11:42:17 +0000
+Message-ID: <20181125114217.2bf39cd1@archlinux>
+References: <1542728677-25899-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181124221415.10081-3-tduszyns@gmail.com>
+In-Reply-To: <1542728677-25899-1-git-send-email-stefan.popa@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Duszynski <tduszyns@gmail.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Stefan Popa <stefan.popa@analog.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 24, 2018 at 11:14:14PM +0100, Tomasz Duszynski wrote:
-> Add support for Sensirion SPS30 particulate matter sensor.
-> 
-> Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
+On Tue, 20 Nov 2018 17:44:37 +0200
+Stefan Popa <stefan.popa@analog.com> wrote:
+
+> Document support for AD7606 Analog to Digital Converter.
+>=20
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+This looks good to me, but given my recent inability to pick up on the
+subtle (and not so subtle) issues in DT patches, I'd like a review
+from the DT side if possible. The first patch needs some additional
+changes, but they probably don't effect the bindings.
+
+Thanks,
+
+Jonathan
+
 > ---
->  drivers/iio/chemical/Kconfig  |  11 ++
->  drivers/iio/chemical/Makefile |   1 +
->  drivers/iio/chemical/sps30.c  | 359 ++++++++++++++++++++++++++++++++++
->  3 files changed, 371 insertions(+)
->  create mode 100644 drivers/iio/chemical/sps30.c
-
-[]
-
-> +#define pr_fmt(fmt) "sps30: " fmt
-
-I don't see its usage ?
-
-> +#include <linux/crc8.h>
-> +#include <linux/delay.h>
-> +#include <linux/i2c.h>
-> +#include <linux/iio/buffer.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/iio/trigger_consumer.h>
-> +#include <linux/iio/triggered_buffer.h>
-> +#include <linux/module.h>
+> Changes in v2:
+> 	- fixed indentation issues.
+> 	- used gpios instead of gpio.
+> 	- added vendor prefix for conversion-start-gpios, first-data-gpios,
+> 	and range-gpios.
+>=20
+>  .../devicetree/bindings/iio/adc/adi,ad7606.txt     | 54 ++++++++++++++++=
+++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7606.=
+txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt b/D=
+ocumentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+> new file mode 100644
+> index 0000000..02fae23
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+> @@ -0,0 +1,54 @@
+> +Analog Devices AD7606 Simultaneous Sampling ADC
 > +
-> +#define SPS30_CRC8_POLYNOMIAL 0x31
+> +Required properties for the AD7606:
 > +
-> +/* SPS30 commands */
-> +#define SPS30_START_MEAS 0x0010
-> +#define SPS30_STOP_MEAS 0x0104
-> +#define SPS30_RESET 0xd304
-> +#define SPS30_READ_DATA_READY_FLAG 0x0202
-> +#define SPS30_READ_DATA 0x0300
-> +#define SPS30_READ_SERIAL 0xD033
-
-Could you please put a tab and align these macros.
-
-  #define SPS30_START_MEAS		0x0010
-  #define SPS30_STOP_MEAS		0x0104
-
-
-> +static int sps30_write_then_read(struct sps30_state *state, u8 *buf,
-> +				 int buf_size, u8 *data, int data_size)
-> +{
-> +	/* every two received data bytes are checksummed */
-> +	u8 tmp[data_size + data_size / 2];
-
-No VLAs!
-
-https://lore.kernel.org/lkml/CA+55aFzCG-zNmZwX4A2FQpadafLfEzK6CC=qPXydAacU1RqZWA@mail.gmail.com/
-
-> +	int ret, i;
+> +- compatible: Must be one of
+> +	* "adi,ad7605-4"
+> +	* "adi,ad7606-8"
+> +	* "adi,ad7606-6"
+> +	* "adi,ad7606-4"
+> +- reg: SPI chip select number for the device
+> +- spi-max-frequency: Max SPI frequency to use
+> +	see: Documentation/devicetree/bindings/spi/spi-bus.txt
+> +- spi-cpha: See Documentation/devicetree/bindings/spi/spi-bus.txt
+> +- avcc-supply: phandle to the Avcc power supply
+> +- interrupts: IRQ line for the ADC
+> +	see: Documentation/devicetree/bindings/interrupt-controller/interrupts.=
+txt
+> +- adi,conversion-start-gpios: must be the device tree identifier of the =
+CONVST pin.
+> +		  This logic input is used to initiate conversions on the analog
+> +		  input channels.
 > +
-> +	/*
-> +	 * Sensor does not support repeated start so instead of
-> +	 * sending two i2c messages in a row we just send one by one.
-> +	 */
-> +	ret = i2c_master_send(state->client, buf, buf_size);
-> +	if (ret != buf_size)
-> +		return ret < 0 ? ret : -EIO;
+> +Optional properties:
 > +
-> +	if (!data)
-> +		return 0;
+> +- reset-gpios: must be the device tree identifier of the RESET pin. If s=
+pecified,
+> +	       it will be asserted during driver probe.
+> +- standby-gpios: must be the device tree identifier of the STBY pin. Thi=
+s pin is used
+> +		to place the AD7606 into one of two power-down modes, Standby mode or
+> +		Shutdown mode.
+> +- adi,first-data-gpios: must be the device tree identifier of the FRSTDA=
+TA pin.
+> +		    The FRSTDATA output indicates when the first channel, V1, is
+> +		    being read back on either the parallel, byte or serial interface.
+> +- adi,range-gpios: must be the device tree identifier of the RANGE pin. =
+The polarity on
+> +	      this pin determines the input range of the analog input channels.=
+ If
+> +	      this pin is tied to a logic high, the analog input range is =C2=
+=B110V for
+> +	      all channels. If this pin is tied to a logic low, the analog inpu=
+t range
+> +	      is =C2=B15V for all channels.
 > +
-> +	ret = i2c_master_recv(state->client, tmp, sizeof(tmp));
-> +	if (ret != sizeof(tmp))
-> +		return ret < 0 ? ret : -EIO;
+> +Example:
 > +
-> +	for (i = 0; i < sizeof(tmp); i += 3) {
-> +		u8 crc = crc8(sps30_crc8_table, &tmp[i], 2, CRC8_INIT_VALUE);
+> +	adc@0 {
+> +		compatible =3D "adi,ad7606-8";
+> +		reg =3D <0>;
+> +		spi-max-frequency =3D <1000000>;
+> +		spi-cpol;
 > +
-> +		if (crc != tmp[i + 2]) {
-> +			dev_err(&state->client->dev,
-> +				"data integrity check failed\n");
-> +			return -EIO;
-> +		}
+> +		avcc-supply =3D <&adc_vref>;
 > +
-> +		*data++ = tmp[i];
-> +		*data++ = tmp[i + 1];
-> +	}
+> +		interrupts =3D <25 IRQ_TYPE_EDGE_FALLING>;
+> +		interrupt-parent =3D <&gpio>;
 > +
-> +	return 0;
-> +}
-> +
-> +static int sps30_do_cmd(struct sps30_state *state, u16 cmd, u8 *data, int size)
-> +{
-> +	/* depending on the command up to 3 bytes may be needed for argument */
-> +	u8 buf[sizeof(cmd) + 3] = { cmd >> 8, cmd };
-
-This is fine, since sizeof returns constant integer expression.
-
-> +	switch (cmd) {
-> +	case SPS30_START_MEAS:
-> +		buf[2] = 0x03;
-> +		buf[3] = 0x00;
-> +		buf[4] = 0xac; /* precomputed crc */
-> +		return sps30_write_then_read(state, buf, 5, NULL, 0);
-> +	case SPS30_STOP_MEAS:
-> +	case SPS30_RESET:
-> +		return sps30_write_then_read(state, buf, 2, NULL, 0);
-> +	case SPS30_READ_DATA_READY_FLAG:
-> +	case SPS30_READ_DATA:
-> +	case SPS30_READ_SERIAL:
-> +		return sps30_write_then_read(state, buf, 2, data, size);
-> +	default:
-> +		return -EINVAL;
+> +		adi,conversion-start-gpios =3D <&gpio 17 0>;
+> +		reset-gpios =3D <&gpio 27 0>;
+> +		adi,first-data-gpios =3D <&gpio 22 0>;
+> +		standby-gpios =3D <&gpio 24 0>;
 > +	};
-> +}
-
-
-> +static int sps30_read_raw(struct iio_dev *indio_dev,
-> +			  struct iio_chan_spec const *chan,
-> +			  int *val, int *val2, long mask)
-> +{
-> +	struct sps30_state *state = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_PROCESSED:
-> +		switch (chan->type) {
-> +		case IIO_MASSCONCENTRATION:
-> +			mutex_lock(&state->lock);
-> +			switch (chan->channel2) {
-> +			case IIO_MOD_PM2p5:
-
-I think lock should be placed here
-
-> +				ret = sps30_do_meas(state, val, val2);
-
-... and unlock here.
-
-> +				break;
-> +			case IIO_MOD_PM10:
-> +				ret = sps30_do_meas(state, val2, val);
-> +				break;
-> +			default:
-> +				break;
-> +			}
-> +			mutex_unlock(&state->lock);
-> +			if (ret)
-> +				return ret;
-> +
-> +			return IIO_VAL_INT;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-
-[]
-
-> +static int sps30_probe(struct i2c_client *client)
-> +{
-> +	struct iio_dev *indio_dev;
-> +	struct sps30_state *state;
-> +	u8 buf[32] = { };
-
-This is not valid in ISO-C but only in C++.
-
-Instead,
-
-	u8 buf[32] = {0};
-
-> +	int ret;
-> +
-> +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
-> +		return -EOPNOTSUPP;
-> +
-> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*state));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	state = iio_priv(indio_dev);
-> +	i2c_set_clientdata(client, indio_dev);
-> +	state->client = client;
-> +	indio_dev->dev.parent = &client->dev;
-> +	indio_dev->info = &sps30_info;
-> +	indio_dev->name = client->name;
-> +	indio_dev->channels = sps30_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(sps30_channels);
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +	indio_dev->available_scan_masks = sps30_scan_masks;
-> +
-> +	mutex_init(&state->lock);
-> +	crc8_populate_msb(sps30_crc8_table, SPS30_CRC8_POLYNOMIAL);
-> +
-> +	/*
-> +	 * Power-on-reset causes sensor to produce some glitch on i2c bus
-> +	 * and some controllers end up in error state. Recover simply
-> +	 * by placing something on the bus.
-> +	 */
-> +	ret = sps30_do_cmd(state, SPS30_RESET, NULL, 0);
-> +	if (ret) {
-> +		dev_err(&client->dev, "failed to reset device\n");
-> +		return ret;
-> +	}
-> +	usleep_range(2500000, 3500000);
-
-Isn't that range too high ?
-msleep_interruptible ?
-
-> +	sps30_do_cmd(state, SPS30_STOP_MEAS, NULL, 0);
-> +
-> +	ret = sps30_do_cmd(state, SPS30_READ_SERIAL, buf, sizeof(buf));
-> +	if (ret) {
-> +		dev_err(&client->dev, "failed to read serial number\n");
-> +		return ret;
-> +	}
-> +	dev_info(&client->dev, "serial number: %s\n", buf);
-> +
-> +	ret = sps30_do_cmd(state, SPS30_START_MEAS, NULL, 0);
-> +	if (ret) {
-> +		dev_err(&client->dev, "failed to start measurement\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = devm_iio_triggered_buffer_setup(&client->dev, indio_dev, NULL,
-> +					      sps30_trigger_handler, NULL);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_iio_device_register(&client->dev, indio_dev);
-> +}
-> +
-> +static int sps30_remove(struct i2c_client *client)
-
-Perfect candidate for `devm_add_action_or_reset()` ?
-
-> +{
-> +	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-> +	struct sps30_state *state = iio_priv(indio_dev);
-> +
-> +	sps30_do_cmd(state, SPS30_STOP_MEAS, NULL, 0);
-> +
-> +	return 0;
-> +}
-
-
--- 
-Himanshu Jha
-Undergraduate Student
-Department of Electronics & Communication
-Guru Tegh Bahadur Institute of Technology
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 843545d..6d63db4 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -845,6 +845,7 @@ L:	linux-iio@vger.kernel.org
+>  W:	http://ez.analog.com/community/linux-device-drivers
+>  S:	Supported
+>  F:	drivers/iio/adc/ad7606.c
+> +F:	Documentation/devicetree/bindings/iio/adc/ad7606.txt
+> =20
+>  ANALOG DEVICES INC AD9389B DRIVER
+>  M:	Hans Verkuil <hans.verkuil@cisco.com>
