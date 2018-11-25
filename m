@@ -1,88 +1,75 @@
-Return-Path: <SRS0=H+Z2=NU=pengutronix.de=mfe@kernel.org>
-Date: Fri, 9 Nov 2018 14:46:24 +0100
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH v3 0/9] TVP5150 fixes and new features
-Message-ID: <20181109134624.2fxin2erjun57lrh@pengutronix.de>
-References: <20180918131453.21031-1-m.felsch@pengutronix.de>
- <20181029184113.5tfdjdlj75m2wd6m@pengutronix.de>
+Return-Path: <jic23@kernel.org>
+Date: Sun, 25 Nov 2018 12:28:57 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: iio: potentiometer: Add Microchip
+ MCP41xxx/42xxx
+Message-ID: <20181125122857.129b91b2@archlinux>
+In-Reply-To: <20181120141713.9963-2-cmc@babblebit.net>
+References: <20181120141713.9963-1-cmc@babblebit.net>
+	<20181120141713.9963-2-cmc@babblebit.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20181029184113.5tfdjdlj75m2wd6m@pengutronix.de>
-To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, afshin.nasser@gmail.com, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Chris Coffey <cmc@babblebit.net>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Peter Rosin <peda@axentia.se>, Slawomir Stepien <sst@poczta.fm>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Mauro,
+On Tue, 20 Nov 2018 14:17:12 +0000
+Chris Coffey <cmc@babblebit.net> wrote:
 
-I don't want to spam you. Can you give me some feedback? I know the
-merge window is a busy time, so maybe you have some time now.
+> This patch adds device tree documentation for the Microchip
+> MCP41xxx/42xxx family of digital potentiometers.
+> 
+> Signed-off-by: Chris Coffey <cmc@babblebit.net>
+> ---
+>  .../bindings/iio/potentiometer/mcp41010.txt        | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt b/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt
+> new file mode 100644
+> index 0000000000..7dcf2071b7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt
+> @@ -0,0 +1,29 @@
+> +* Microchip MCP41010/41050/41100/42010/42050/42100 Digital Potentiometer
+> +  driver
+I'll channel my inner Rob ;)  Bindings are for devices, not drivers
+(basically don't mention driver anywhere)
 
-Regards,
-Marco
+It's trivial (and common) so I just tidied it up whilst applying.
 
-On 18-10-29 19:41, Marco Felsch wrote:
-> Hi Mauro,
-> 
-> just a reminder, Rob already added his ack/rev-by tags.
-> 
-> Thanks,
-> Marco
-> 
-> On 18-09-18 15:14, Marco Felsch wrote:
-> > Hi,
-> > 
-> > this is my v3 with the integrated reviews from my v2 [1]. This serie
-> > applies to Mauro's experimental.git [2].
-> > 
-> > @Mauro:
-> > Patch ("media: tvp5150: fix irq_request error path during probe") is new
-> > in this series. Maybe you can squash them with ("media: tvp5150: Add sync lock
-> > interrupt handling"), thanks.
-> > 
-> > I've tested this series on a customer dt-based board. Unfortunately I
-> > haven't a device which use the em28xx driver. So other tester a welcome :)
-> > 
-> > [1] https://www.spinics.net/lists/devicetree/msg244129.html
-> > [2] https://git.linuxtv.org/mchehab/experimental.git/log/?h=tvp5150-4
-> > 
-> > Javier Martinez Canillas (1):
-> >   partial revert of "[media] tvp5150: add HW input connectors support"
-> > 
-> > Marco Felsch (7):
-> >   media: tvp5150: fix irq_request error path during probe
-> >   media: tvp5150: add input source selection of_graph support
-> >   media: dt-bindings: tvp5150: Add input port connectors DT bindings
-> >   media: v4l2-subdev: add stubs for v4l2_subdev_get_try_*
-> >   media: v4l2-subdev: fix v4l2_subdev_get_try_* dependency
-> >   media: tvp5150: add FORMAT_TRY support for get/set selection handlers
-> >   media: tvp5150: add s_power callback
-> > 
-> > Michael Tretter (1):
-> >   media: tvp5150: initialize subdev before parsing device tree
-> > 
-> >  .../devicetree/bindings/media/i2c/tvp5150.txt |  92 ++-
-> >  drivers/media/i2c/tvp5150.c                   | 657 +++++++++++++-----
-> >  include/dt-bindings/media/tvp5150.h           |   2 -
-> >  include/media/v4l2-subdev.h                   |  15 +-
-> >  4 files changed, 584 insertions(+), 182 deletions(-)
-> > 
-> > -- 
-> > 2.19.0
-> > 
-> > 
-> > 
-> 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> 
-> 
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thanks,
+
+Jonathan
+
+> +
+> +Datasheet publicly available at:
+> +http://ww1.microchip.com/downloads/en/devicedoc/11195c.pdf
+> +
+> +The node for this driver must be a child node of a SPI controller, hence
+> +all mandatory properties described in
+> +
+> +        Documentation/devicetree/bindings/spi/spi-bus.txt
+> +
+> +must be specified.
+> +
+> +Required properties:
+> +	- compatible:  	Must be one of the following, depending on the
+> +			model:
+> +			"microchip,mcp41010"
+> +			"microchip,mcp41050"
+> +			"microchip,mcp41100"
+> +			"microchip,mcp42010"
+> +			"microchip,mcp42050"
+> +			"microchip,mcp42100"
+> +
+> +Example:
+> +potentiometer@0 {
+> +	compatible = "microchip,mcp41010";
+> +	reg = <0>;
+> +	spi-max-frequency = <500000>;
+> +};
