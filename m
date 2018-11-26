@@ -1,150 +1,196 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH] i3c: master: dw: split dw-i3c-master.c into master and
- bus specific parts
-Date: Mon, 26 Nov 2018 22:33:34 +0100
-Message-ID: <20181126223334.08105d89@bbrezillon>
-References: <ade2c1a8d1eb48681b01ccdc9bed22caf5e96c4b.1542904564.git.soares@synopsys.com>
-        <20181122210202.6af50fcc@bbrezillon>
-        <6d513e04-3a57-1989-429c-64631101c5a2@synopsys.com>
-        <20181123135004.7fd1cd58@bbrezillon>
-        <83115f47-1326-cb33-a7dc-4bc8ff95befa@synopsys.com>
-        <20181126133550.51469816@bbrezillon>
-        <4e9c0461-02a3-80b2-c9b7-2e9ea9b38f8b@synopsys.com>
-        <20181126195618.352eafb1@bbrezillon>
-        <4c743a9a-d636-d34c-b7e3-913f18e6c754@synopsys.com>
+From: Jolly Shah <JOLLYS@xilinx.com>
+Subject: RE: [PATCH 0/9] dt-bindings: Firmware node binding for ZynqMP core
+Date: Mon, 26 Nov 2018 21:39:58 +0000
+Message-ID: <DM5PR0201MB35255E725459B3CE05A7402DB8D70@DM5PR0201MB3525.namprd02.prod.outlook.com>
+References: <1542412619-387-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4c743a9a-d636-d34c-b7e3-913f18e6c754@synopsys.com>
+In-Reply-To: <1542412619-387-1-git-send-email-jollys@xilinx.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: vitor <vitor.soares@synopsys.com>
-Cc: wsa@the-dreams.de, linux-i2c@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de, psroka@cadence.com, agolec@cadence.com, adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com, alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com, rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, linus.walleij@linaro.org, Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org, nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se, mshettel@codeaurora.org, swboyd@chromium.org
+To: Jolly Shah <JOLLYS@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: Michal Simek <michals@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>, Nava kishore Manne <navam@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 26 Nov 2018 20:11:39 +0000
-vitor <vitor.soares@synopsys.com> wrote:
+Ping for comments
 
-> >>> I prefer that we keep the driver as is until we actually need to split
-> >>> things up.  
-> >> This is already done and will benefit everyone:
-> >>
-> >>       - for me is better do it now than the secondary master and slave
-> >> development.  
-> > Sorry, I don't get that one.  
-> 
-> 
-> I already share my plan with you. See the structure above.
-
-My point is, I don't get the relationship between your patch and
-secondary-master/slave-mode support.
-
-> >>>> This topic rise another one related with the master folder. I understand
-> >>>> that now the subsystem doesn't have slave support but the name is
-> >>>> limited. Isn't better to have something like controller or busses? What
-> >>>> do you have in mind for the slave?  
-> >>> drivers/i3c/slave/... for slave drivers and drivers/i3c/slave.c for the
-> >>> framework, just like we have drivers/i3c/master/ for master controller
-> >>> drivers and drivers/i3c/master.c.  
-> >> I have to disagree here. I don't see any place on the kernel with
-> >> .../master/ and ../slave/ folders and it is very likely that both rules
-> >> will have some common code.  
-> > I see at least one that uses this model: the USB framework
-> > (drivers/usb/gadget/ for device controllers and drivers/usb/host/ for
-> > host controllers). Given that I3C is closer to USB than I2C I initially
-> > decided to keep this separation. Maybe I'm wrong, but I'd like to
-> > understand why you think it's not appropriate.  
-> 
-> 
-> You can say there some features from USB in I3C but cannot compare USB 
-> vs I3C since they are in different championships.
-
-I maintain that functionally, I3C is closer to USB than I2C. That does
-not mean that it's competing with USB performance-wise, it just means
-that the SW stack is likely to resemble the USB one (probably a bit
-simpler, at least at the beginning). 
-
-> 
-> The aim of I3C is to fill the gaps discovery on I2C over the years but 
-> still keeping its simplicity not to go to the complexity of USB.
-
-Look at the bus discovery mechanism, the notion of DCR (close to the
-concept of USB class), or the fact that each dev has a unique
-manufacturer+PID pair (which resemble the product/vendor ID concept)
-that allows us to easily bind a dev to a driver without requiring a
-static description.
-
-> 
-> 
-> I'm not sure but I think that a controller cannot change between gadget 
-> to host in USB in runtime.
-
-That's called USB OTG. Okay, to be fair, it's not exactly the same, and
-the mastership handover in I3C is probably more complex than what we
-have with USB OTG (I'm not a USB expert, so I might be wrong here).
-
-> Even so, this kind of behavior is more likely 
-> to have in an I3C bus.
-
-Maybe.
-
-> 
-> 
-> >  
-> >> With this structure the user will have the code spread in /master and
-> >> /slave folders...  
-> > Not sure who you call "user" here, but yes, master controller and slave
-> > controller drivers would be placed in different dirs.
-> >  
-> >>
-> >> I would like you consider to change the folder name and the names rules
-> >> to something like in i2c.  
-> > Why? And more importantly, why is this coming up now? You've been
-> > reviewing the framework since the beginning, and never complained about
-> > the subdirs/files organization so far.  
-> 
-> 
-> Sorry for that and don't take me wrong... maybe I should rise this 
-> question early but this only came up now when I started splitting and 
-> thinking where to put what is for master for slave, what is common and 
-> the thing of putting everything of controller in a folder.
-
-So you have such a dual-role controller? I mean, Cadence IP has a dummy
-GPIO mode in its Master IP when is operating in slave mode (secondary
-master, or main master after it's released the bus), but I'm not sure
-this was designed for anything else but testing.
-
-What I call a slave controller would be something that lets you reply to
-SDR/DDR transactions or fill a generic regmap that would be exposed to
-other masters on the bus. This way we could implement generic slave
-drivers in Linux (the same way we have gadget drivers). Anything else
-is likely to be to specific to be exposed as a generic framework.
-
-> 
-> 
-> Taking the USB as exemple do you prefer a dwc folder on i3c root?
-
-Hm, not sure I like this idea either. So I see 2 options:
-
-1/ put all controller drivers (both master and slave ones) in a common
-   directory (drivers/i3c/controllers) as you suggest, and prefix them
-   correctly (i3c-master-<ip>.c, i3c-slave-<ip>.c and i3c-dual-<ip>.c)
-2/ place them in separate directories: drivers/i3c/{master,slave,dual}
-
-I'm fine either way.
-
-> 
-> 
-> >
-> > I'm okay changing it, but I want to understand why the proposed
-> > separation is not good.  
-> 
-> 
-> I already tell you my use case and as I said maybe someone can advise :)
-> 
-
-I think I understand your concerns now, but only because you started to
-mention a few things that were not clearly stated before (at least, I
-didn't understand it this way), like the fact that your controller (and
-probably others too) supports dual-role, or the fact that you plan to
-expose your IP through the PCI bus.
+> -----Original Message-----
+> From: Jolly Shah [mailto:jolly.shah@xilinx.com]
+> Sent: Friday, November 16, 2018 3:57 PM
+> To: robh+dt@kernel.org; mark.rutland@arm.com
+> Cc: Michal Simek <michals@xilinx.com>; Rajan Vaja <RAJANV@xilinx.com>;
+> Nava kishore Manne <navam@xilinx.com>; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org; Jolly Shah <JOLLYS@xilinx.com>
+> Subject: [PATCH 0/9] dt-bindings: Firmware node binding for ZynqMP core
+>=20
+> Base firmware node and clock child node binding are part of mainline kern=
+el.
+> This patchset adds documentation to describe rest of the firmware child n=
+ode
+> bindings.
+> Complete firmware DT node example is shown below for ease of understandin=
+g:
+>=20
+> firmware {
+> 	zynqmp_firmware: zynqmp-firmware {
+> 		compatible =3D "xlnx,zynqmp-firmware";
+> 		method =3D "smc";
+> 		#power-domain-cells =3D <1>;
+> 		#reset-cells =3D <1>;
+>=20
+> 		zynqmp_clk: clock-controller {
+> 			#clock-cells =3D <1>;
+> 			compatible =3D "xlnx,zynqmp-clk";
+> 			clocks =3D <&pss_ref_clk>, <&video_clk>,
+> <&pss_alt_ref_clk>, <&aux_ref_clk>, <&gt_crx_ref_clk>;
+> 			clock-names =3D "pss_ref_clk", "video_clk",
+> "pss_alt_ref_clk","aux_ref_clk", "gt_crx_ref_clk";
+> 		};
+>=20
+> 		zynqmp_power: zynqmp-power {
+> 			compatible =3D "xlnx,zynqmp-power";
+> 			interrupts =3D <0 35 4>;
+> 		};
+>=20
+> 		nvmem_firmware {
+> 			compatible =3D "xlnx,zynqmp-nvmem-fw";
+> 			#address-cells =3D <1>;
+> 			#size-cells =3D <1>;
+>=20
+> 			/* Data cells */
+> 			soc_revision: soc_revision {
+> 				reg =3D <0x0 0x4>;
+> 			};
+> 		};
+>=20
+> 		afi0: afi0 {
+> 			compatible =3D "xlnx,afi-fpga";
+> 			config-afi =3D <0 2>, <1 1>, <2 1>;
+> 		};
+>=20
+> 		qspi: spi@ff0f0000 {
+> 			compatible =3D "xlnx,zynqmp-qspi-1.0";
+> 			clock-names =3D "ref_clk", "pclk";
+> 			clocks =3D <&misc_clk &misc_clk>;
+> 			interrupts =3D <0 15 4>;
+> 			interrupt-parent =3D <&gic>;
+> 			num-cs =3D <1>;
+> 			reg =3D <0x0 0xff0f0000 0x1000>,<0x0 0xc0000000
+> 0x8000000>;
+> 		};
+>=20
+> 		serdes: zynqmp_phy@fd400000 {
+> 			compatible =3D "xlnx,zynqmp-psgtr";
+> 			status =3D "okay";
+> 			reg =3D <0x0 0xfd400000 0x0 0x40000>, <0x0 0xfd3d0000
+> 0x0 0x1000>,
+> 				<0x0 0xff5e0000 0x0 0x1000>;
+> 			reg-names =3D "serdes", "siou", "lpd";
+>=20
+> 			lane0: lane@0 {
+> 				#phy-cells =3D <4>;
+> 			};
+> 			lane1: lane@1 {
+> 				#phy-cells =3D <4>;
+> 			};
+> 			lane2: lane@2 {
+> 				#phy-cells =3D <4>;
+> 			};
+> 			lane3: lane@3 {
+> 				#phy-cells =3D <4>;
+> 			};
+> 		};
+>=20
+> 		pinctrl_uart1_default: uart1-default {
+> 			mux {
+> 				groups =3D "uart0_4_grp";
+> 				function =3D "uart0";
+> 			};
+>=20
+> 			conf {
+> 				groups =3D "uart0_4_grp";
+> 				slew-rate =3D <SLEW_RATE_SLOW>;
+> 				io-standard =3D <IO_STANDARD_LVCMOS18>;
+> 			};
+>=20
+> 			conf-rx {
+> 				pins =3D "MIO18";
+> 				bias-high-impedance;
+> 			};
+>=20
+> 			conf-tx {
+> 				pins =3D "MIO19";
+> 				bias-disable;
+> 				schmitt-cmos =3D <PIN_INPUT_TYPE_CMOS>;
+> 			};
+> 		};
+> 		zynqmp-r5-remoteproc@0 {
+> 			compatible =3D "xlnx,zynqmp-r5-remoteproc-1.0";
+> 			reg =3D <0x0 0xFFE00000 0x0 0x10000>,
+> 				<0x0 0xFFE20000 0x0 0x10000>,
+> 				<0x0 0xff340000 0x0 0x100>;
+> 			reg-names =3D "tcm_a", "tcm_b", "ipi";
+> 			dma-ranges;
+> 			core_conf =3D "split0";
+> 			memory-region =3D <&rproc_0_fw_reserved>,
+> 					<&rproc_0_dma_reserved>;
+> 			tcm-pnode-id =3D <0xf>, <0x10>;
+> 			rpu-pnode-id =3D <0x7>;
+> 			interrupt-parent =3D <&gic>;
+> 			interrupts =3D <0 29 4>;
+> 		};
+> 	};
+> };
+>=20
+> Jolly Shah (2):
+>   dt-bindings: phy: Add dt bindings for ZynqMP PHY
+>   dt-bindings: fpga: Add binding doc for the afi config driver
+>=20
+> Nava kishore Manne (2):
+>   dt-bindings: reset: Add bindings for ZynqMP reset driver
+>   dt-bindings: nvmem: Add bindings for ZynqMP nvmem driver
+>=20
+> Rajan Vaja (4):
+>   dt-bindings: power: Add ZynqMP power domain bindings
+>   dt-bindings: soc: Add ZynqMP PM bindings
+>   dt-bindings: pinctrl: Add ZynqMP pin controller bindings
+>   dt-bindings: spi: zynqmp: Move SPI node under zynqmp firmware
+>=20
+> Wendy Liang (1):
+>   dt-bindings: remoteproc: Add Xilinx R5 rproc binding
+>=20
+>  .../devicetree/bindings/fpga/xlnx,afi-fpga.txt     |  67 +++++
+>  .../bindings/nvmem/xlnx,zynqmp-nvmem.txt           |  44 ++++
+>  .../devicetree/bindings/phy/phy-zynqmp.txt         | 126 ++++++++++
+>  .../bindings/pinctrl/xlnx,zynqmp-pinctrl.txt       | 272 +++++++++++++++=
+++++++
+>  .../bindings/power/reset/xlnx,zynqmp-power.txt     |  25 ++
+>  .../bindings/power/xlnx,zynqmp-genpd.txt           |  34 +++
+>  .../remoteproc/xlnx,zynqmp-r5-remoteproc.txt       |  81 ++++++
+>  .../bindings/reset/xlnx,zynqmp-reset.txt           | 148 +++++++++++
+>  .../devicetree/bindings/spi/spi-zynqmp-qspi.txt    |  22 +-
+>  include/dt-bindings/power/xlnx-zynqmp-power.h      |  39 +++
+>  10 files changed, 850 insertions(+), 8 deletions(-)  create mode 100644
+> Documentation/devicetree/bindings/fpga/xlnx,afi-fpga.txt
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-
+> nvmem.txt
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp=
+-
+> pinctrl.txt
+>  create mode 100644
+> Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
+>  create mode 100644 Documentation/devicetree/bindings/power/xlnx,zynqmp-
+> genpd.txt
+>  create mode 100644
+> Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5-
+> remoteproc.txt
+>  create mode 100644 Documentation/devicetree/bindings/reset/xlnx,zynqmp-
+> reset.txt
+>  create mode 100644 include/dt-bindings/power/xlnx-zynqmp-power.h
+>=20
+> --
+> 2.7.4
