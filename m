@@ -1,39 +1,68 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v2 1/7] dt-bindings: msm/dsi: Add ref clock for PHYs
-Date: Mon, 26 Nov 2018 15:11:53 -0800
-Message-ID: <20181126231159.122298-2-mka@chromium.org>
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2 2/7] drm/msm/dsi: 14nm PHY: Get ref clock
+ from the DT
+Date: Mon, 26 Nov 2018 15:11:54 -0800
+Message-ID: <20181126231159.122298-3-mka@chromium.org>
 References: <20181126231159.122298-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181126231159.122298-1-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: Archit Taneja <architt@codeaurora.org>, Sean Paul <seanpaul@chromium.org>, Rajesh Yadav <ryadav@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Jeykumar Sankaran <jsanka@codeaurora.org>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20181126231159.122298-1-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Allow the PHY drivers to get the ref clock from the DT.
-
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-Changes in v2:
-- add the ref clock for all PHYs, not only the 10nm one
-- updated commit message
----
- Documentation/devicetree/bindings/display/msm/dsi.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
-index dfc743219bd88..b0485559a719c 100644
---- a/Documentation/devicetree/bindings/display/msm/dsi.txt
-+++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
-@@ -106,6 +106,7 @@ Required properties:
- - clocks: Phandles to device clocks. See [1] for details on clock bindings.
- - clock-names: the following clocks are required:
-   * "iface"
-+  * "ref"
-   For 28nm HPM/LP, 28nm 8960 PHYs:
- - vddio-supply: phandle to vdd-io regulator device node
-   For 20nm PHY:
--- 
-2.20.0.rc0.387.gc7a69e6b6c-goog
+R2V0IHRoZSByZWYgY2xvY2sgb2YgdGhlIFBIWSBmcm9tIHRoZSBkZXZpY2UgdHJlZSBpbnN0ZWFk
+IG9mCmhhcmRjb2RpbmcgaXRzIG5hbWUgYW5kIHJhdGUuCgpTaWduZWQtb2ZmLWJ5OiBNYXR0aGlh
+cyBLYWVobGNrZSA8bWthQGNocm9taXVtLm9yZz4KLS0tCkNoYW5nZXMgaW4gdjI6Ci0gcGF0Y2gg
+YWRkZWQgdG8gdGhlIHNlcmllcwotLS0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZHNpL3BsbC9kc2lf
+cGxsXzE0bm0uYyB8IDE2ICsrKysrKysrKysrKystLS0KIDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNl
+cnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9t
+c20vZHNpL3BsbC9kc2lfcGxsXzE0bm0uYyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZHNpL3BsbC9k
+c2lfcGxsXzE0bm0uYwppbmRleCA3MWZlNjBlNWYwMWYxLi5mNTgyOThiZDZjNDIzIDEwMDY0NAot
+LS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9wbGwvZHNpX3BsbF8xNG5tLmMKKysrIGIvZHJp
+dmVycy9ncHUvZHJtL21zbS9kc2kvcGxsL2RzaV9wbGxfMTRubS5jCkBAIC00MCw3ICs0MCw2IEBA
+CiAKICNkZWZpbmUgTlVNX1BST1ZJREVEX0NMS1MJCTIKIAotI2RlZmluZSBWQ09fUkVGX0NMS19S
+QVRFCQkxOTIwMDAwMAogI2RlZmluZSBWQ09fTUlOX1JBVEUJCQkxMzAwMDAwMDAwVUwKICNkZWZp
+bmUgVkNPX01BWF9SQVRFCQkJMjYwMDAwMDAwMFVMCiAKQEAgLTEzOSw2ICsxMzgsNyBAQCBzdHJ1
+Y3QgZHNpX3BsbF8xNG5tIHsKIAkvKiBwcm90ZWN0cyBSRUdfRFNJXzE0bm1fUEhZX0NNTl9DTEtf
+Q0ZHMCByZWdpc3RlciAqLwogCXNwaW5sb2NrX3QgcG9zdGRpdl9sb2NrOwogCisJc3RydWN0IGNs
+ayAqdmNvX3JlZl9jbGs7CiAJdTY0IHZjb19jdXJyZW50X3JhdGU7CiAJdTY0IHZjb19yZWZfY2xr
+X3JhdGU7CiAKQEAgLTU5MSw3ICs1OTEsNyBAQCBzdGF0aWMgaW50IGRzaV9wbGxfMTRubV92Y29f
+c2V0X3JhdGUoc3RydWN0IGNsa19odyAqaHcsIHVuc2lnbmVkIGxvbmcgcmF0ZSwKIAkgICAgcGFy
+ZW50X3JhdGUpOwogCiAJcGxsXzE0bm0tPnZjb19jdXJyZW50X3JhdGUgPSByYXRlOwotCXBsbF8x
+NG5tLT52Y29fcmVmX2Nsa19yYXRlID0gVkNPX1JFRl9DTEtfUkFURTsKKwlwbGxfMTRubS0+dmNv
+X3JlZl9jbGtfcmF0ZSA9IHBhcmVudF9yYXRlOwogCiAJZHNpX3BsbF8xNG5tX2lucHV0X2luaXQo
+cGxsXzE0bm0pOwogCkBAIC05NTAsOCArOTUwLDkgQEAgc3RhdGljIHN0cnVjdCBjbGtfaHcgKnBs
+bF8xNG5tX3Bvc3RkaXZfcmVnaXN0ZXIoc3RydWN0IGRzaV9wbGxfMTRubSAqcGxsXzE0bm0sCiBz
+dGF0aWMgaW50IHBsbF8xNG5tX3JlZ2lzdGVyKHN0cnVjdCBkc2lfcGxsXzE0bm0gKnBsbF8xNG5t
+KQogewogCWNoYXIgY2xrX25hbWVbMzJdLCBwYXJlbnRbMzJdLCB2Y29fbmFtZVszMl07CisJY29u
+c3QgY2hhciAqcmVmX2Nsa19uYW1lID0gX19jbGtfZ2V0X25hbWUocGxsXzE0bm0tPnZjb19yZWZf
+Y2xrKTsKIAlzdHJ1Y3QgY2xrX2luaXRfZGF0YSB2Y29faW5pdCA9IHsKLQkJLnBhcmVudF9uYW1l
+cyA9IChjb25zdCBjaGFyICpbXSl7ICJ4byIgfSwKKwkJLnBhcmVudF9uYW1lcyA9ICZyZWZfY2xr
+X25hbWUsCiAJCS5udW1fcGFyZW50cyA9IDEsCiAJCS5uYW1lID0gdmNvX25hbWUsCiAJCS5mbGFn
+cyA9IENMS19JR05PUkVfVU5VU0VELApAQCAtMTA2NSw2ICsxMDY2LDE1IEBAIHN0cnVjdCBtc21f
+ZHNpX3BsbCAqbXNtX2RzaV9wbGxfMTRubV9pbml0KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
+ZXYsIGludCBpZCkKIAlwbGxfMTRubS0+aWQgPSBpZDsKIAlwbGxfMTRubV9saXN0W2lkXSA9IHBs
+bF8xNG5tOwogCisJcGxsXzE0bm0tPnZjb19yZWZfY2xrID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5k
+ZXYsICJyZWYiKTsKKwlpZiAoSVNfRVJSKHBsbF8xNG5tLT52Y29fcmVmX2NsaykpIHsKKwkJcmV0
+ID0gUFRSX0VSUihwbGxfMTRubS0+dmNvX3JlZl9jbGspOworCQlpZiAocmV0ICE9IEVQUk9CRV9E
+RUZFUikKKwkJCWRldl9lcnIoJnBkZXYtPmRldiwgImNvdWxkbid0IGdldCAncmVmJyBjbG9jazog
+JWRcbiIsCisJCQkJcmV0KTsKKwkJcmV0dXJuIEVSUl9QVFIocmV0KTsKKwl9CisKIAlwbGxfMTRu
+bS0+cGh5X2Ntbl9tbWlvID0gbXNtX2lvcmVtYXAocGRldiwgImRzaV9waHkiLCAiRFNJX1BIWSIp
+OwogCWlmIChJU19FUlJfT1JfTlVMTChwbGxfMTRubS0+cGh5X2Ntbl9tbWlvKSkgewogCQlkZXZf
+ZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gbWFwIENNTiBQSFkgYmFzZVxuIik7Ci0tIAoyLjIw
+LjAucmMwLjM4Ny5nYzdhNjllNmI2Yy1nb29nCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9mcmVlZHJlbm8K
