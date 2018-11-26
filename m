@@ -1,28 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 2/2] dt-bindings: mailbox: Add Xilinx IPI Mailbox
-Date: Mon, 26 Nov 2018 14:05:49 -0600
-Message-ID: <20181126200549.GA611@bogus>
-References: <1542662761-31158-1-git-send-email-wendy.liang@xilinx.com>
- <1542662761-31158-3-git-send-email-wendy.liang@xilinx.com>
+Subject: Re: [PATCH V6 1/2] Documentation: can: flexcan: add stop mode
+ property to  device tree
+Date: Mon, 26 Nov 2018 14:06:19 -0600
+Message-ID: <20181126200619.GA1595@bogus>
+References: <20181123083304.3232-1-qiangqing.zhang@nxp.com>
+ <20181123083304.3232-2-qiangqing.zhang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1542662761-31158-3-git-send-email-wendy.liang@xilinx.com>
+In-Reply-To: <20181123083304.3232-2-qiangqing.zhang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: jassisinghbrar@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Wendy Liang <wendy.liang@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "mkl@pengutronix.de" <mkl@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "wg@grandegger.com" <wg@grandegger.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng DONG <aisheng.dong@nxp.com>, Joakim Zhang <qiangqing.zhang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 19 Nov 2018 13:26:01 -0800, Wendy Liang wrote:
-> Xilinx ZynqMP IPI(Inter Processor Interrupt) is a hardware block
-> in ZynqMP SoC used for the communication between various processor
-> systems.
+On Fri, 23 Nov 2018 08:35:29 +0000, Joakim Zhang wrote:
+> From: Aisheng Dong <aisheng.dong@nxp.com>
 > 
-> Signed-off-by: Wendy Liang <wendy.liang@xilinx.com>
+> The FlexCAN controller can parse the stop mode property to enable CAN
+> self wakeup feature.
+> 
+> Signed-off-by: Aisheng Dong <aisheng.dong@nxp.com>
+> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
 > ---
->  .../bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt   | 127 +++++++++++++++++++++
->  1 file changed, 127 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
+> ChangeLog:
+> V1->V2:
+> 	*add a vendor prefix in property (stop-mode -> fsl,stop-mode).
+> V2->V6:
+> 	*no change.
+> ---
+>  Documentation/devicetree/bindings/net/can/fsl-flexcan.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
