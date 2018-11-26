@@ -1,55 +1,31 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [RFC v3 2/3] dt-bindings: sdm845-pinctrl: add wakeup interrupt
- parent for GPIO
-Date: Mon, 26 Nov 2018 09:14:55 -0700
-Message-ID: <20181126161455.GA28236@codeaurora.org>
-References: <20181121000648.29262-1-ilina@codeaurora.org>
- <20181121000648.29262-3-ilina@codeaurora.org>
- <154283618199.88331.10217252750356423959@swboyd.mtv.corp.google.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH 17/17] ARM: dts: am335x-*: Enable PRU-ICSS nodes
+Date: Mon, 26 Nov 2018 10:45:17 -0600
+Message-ID: <05cbdb2a-d561-0691-d5c3-ee787bb6d02e@lechnology.com>
+References: <1542886753-17625-1-git-send-email-rogerq@ti.com>
+ <1542886753-17625-18-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <154283618199.88331.10217252750356423959@swboyd.mtv.corp.google.com>
+In-Reply-To: <1542886753-17625-18-git-send-email-rogerq@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: evgreen@chromium.org, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, thierry.reding@gmail.com
+To: Roger Quadros <rogerq@ti.com>, tony@atomide.com
+Cc: robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 21 2018 at 14:36 -0700, Stephen Boyd wrote:
->Quoting Lina Iyer (2018-11-20 16:06:47)
->> SDM845 SoC has an always-on interrupt controller (PDC) with select GPIO
->> routed to the PDC as interrupts that can be used to wake the system up
->> from deep low power modes and suspend.
->>
->> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->> ---
->>  .../bindings/pinctrl/qcom,sdm845-pinctrl.txt  | 31 ++++++++++++++++++-
->>  1 file changed, 30 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
->> index 665aadb5ea28..bedfa0b57fa6 100644
->> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
->> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
->> @@ -29,6 +29,17 @@ SDM845 platform.
->>         Definition: must be 2. Specifying the pin number and flags, as defined
->>                     in <dt-bindings/interrupt-controller/irq.h>
->>
->> +- wakeup-parent:
->> +       Usage: optional
->> +       Value type: <phandle>
->> +       Definition: A phandle to the wakeup interrupt controller for the SoC.
->> +
->> +- wakeup-irq:
->
->This shouldn't be needed. TLMM driver can probe for the possibility of
->wakeup capable irqs from irq allocation step. The only place we should
->need to know what TLMM pins map to what PDC lines is in the PDC driver.
->
-Why? Every driver seems to translate the hardware IRQ and pass it to
-it's parent. Why should this be any different ? The PDC is an interrupt
-controller that just knows an interrupt port and maps it to the GIC. Not
-sure, I understand the reasoning for this. It seems to add more
-confusing relationship with the PDC interrupt controller, that way.
+On 11/22/18 5:39 AM, Roger Quadros wrote:
+> From: Suman Anna <s-anna@ti.com>
+> 
+> The PRU-ICSS processor bus node and subsystem nodes were left in
+> disabled state in the base am33xx.dtsi file. PRU-ICSS is supported
+> on these AM335x boards so enable the PRUSS node.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
 
--- Lina
+This does not apply cleanly to next-20181126. It looks like you
+could be missing "ARM: dts: am33xx: convert to use new clkctrl
+layout" from your development branch.
