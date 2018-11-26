@@ -1,90 +1,37 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [RESEND PATCH v17 2/5] iommu/arm-smmu: Invoke
- pm_runtime during probe, add/remove device
-Date: Mon, 26 Nov 2018 16:56:42 +0530
-Message-ID: <d66c5dbf-2e44-a915-14a0-1968c8ede832@codeaurora.org>
-References: <20181116112430.31248-1-vivek.gautam@codeaurora.org>
- <20181116112430.31248-3-vivek.gautam@codeaurora.org>
- <20181121173757.GA9801@arm.com>
- <CAFp+6iEH7_XEcZNsbZfn6iBF5_o-ZKBj=DpturH7N85LU289qg@mail.gmail.com>
- <20181123183555.GE21183@arm.com>
- <9064c01e-cef0-9306-078a-8d303cd6614b@codeaurora.org>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH V6 2/2] can: flexcan: add self wakeup support
+Date: Mon, 26 Nov 2018 12:34:10 +0100
+Message-ID: <7b1215df-f1ea-c366-17ff-bc5265e58ffa@pengutronix.de>
+References: <20181123083304.3232-1-qiangqing.zhang@nxp.com>
+ <20181123083304.3232-3-qiangqing.zhang@nxp.com>
+ <1be643fb-e966-fc2d-d19f-2a1e45b58641@pengutronix.de>
+ <DB7PR04MB46180404F4201A8FAA52400FE6D70@DB7PR04MB4618.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <9064c01e-cef0-9306-078a-8d303cd6614b-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <DB7PR04MB46180404F4201A8FAA52400FE6D70@DB7PR04MB4618.eurprd04.prod.outlook.com>
+Content-Language: de-DE
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joakim Zhang <qiangqing.zhang@nxp.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "wg@grandegger.com" <wg@grandegger.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng DONG <aisheng.dong@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAxMS8yNi8yMDE4IDExOjMzIEFNLCBWaXZlayBHYXV0YW0gd3JvdGU6Cj4KPgo+IE9uIDEx
-LzI0LzIwMTggMTI6MDYgQU0sIFdpbGwgRGVhY29uIHdyb3RlOgo+PiBPbiBUaHUsIE5vdiAyMiwg
-MjAxOCBhdCAwNTozMjoyNFBNICswNTMwLCBWaXZlayBHYXV0YW0gd3JvdGU6Cj4+PiBIaSBXaWxs
-LAo+Pj4KPj4+IE9uIFdlZCwgTm92IDIxLCAyMDE4IGF0IDExOjA5IFBNIFdpbGwgRGVhY29uIDx3
-aWxsLmRlYWNvbkBhcm0uY29tPiAKPj4+IHdyb3RlOgo+Pj4+IE9uIEZyaSwgTm92IDE2LCAyMDE4
-IGF0IDA0OjU0OjI3UE0gKzA1MzAsIFZpdmVrIEdhdXRhbSB3cm90ZToKPj4+Pj4gRnJvbTogU3Jp
-Y2hhcmFuIFIgPHNyaWNoYXJhbkBjb2RlYXVyb3JhLm9yZz4KPj4+Pj4KPj4+Pj4gVGhlIHNtbXUg
-ZGV2aWNlIHByb2JlL3JlbW92ZSBhbmQgYWRkL3JlbW92ZSBtYXN0ZXIgZGV2aWNlIGNhbGxiYWNr
-cwo+Pj4+PiBnZXRzIGNhbGxlZCB3aGVuIHRoZSBzbW11IGlzIG5vdCBsaW5rZWQgdG8gaXRzIG1h
-c3RlciwgdGhhdCBpcyAKPj4+Pj4gd2l0aG91dAo+Pj4+PiB0aGUgY29udGV4dCBvZiB0aGUgbWFz
-dGVyIGRldmljZS4gU28gY2FsbGluZyBydW50aW1lIGFwaXMgaW4gdGhvc2UgCj4+Pj4+IHBsYWNl
-cwo+Pj4+PiBzZXBhcmF0ZWx5Lgo+Pj4+PiBHbG9iYWwgbG9ja3MgYXJlIGFsc28gaW5pdGlhbGl6
-ZWQgYmVmb3JlIGVuYWJsaW5nIHJ1bnRpbWUgcG0gYXMgdGhlCj4+Pj4+IHJ1bnRpbWVfcmVzdW1l
-KCkgY2FsbHMgZGV2aWNlX3Jlc2V0KCkgd2hpY2ggZG9lcyB0bGJfc3luY19nbG9iYWwoKQo+Pj4+
-PiB0aGF0IHVsdGltYXRlbHkgcmVxdWlyZXMgbG9ja3MgdG8gYmUgaW5pdGlhbGl6ZWQuCj4+Pj4+
-Cj4+Pj4+IFNpZ25lZC1vZmYtYnk6IFNyaWNoYXJhbiBSIDxzcmljaGFyYW5AY29kZWF1cm9yYS5v
-cmc+Cj4+Pj4+IFt2aXZlazogQ2xlYW51cCBwbSBydW50aW1lIGNhbGxzXQo+Pj4+PiBTaWduZWQt
-b2ZmLWJ5OiBWaXZlayBHYXV0YW0gPHZpdmVrLmdhdXRhbUBjb2RlYXVyb3JhLm9yZz4KPj4+Pj4g
-UmV2aWV3ZWQtYnk6IFRvbWFzeiBGaWdhIDx0ZmlnYUBjaHJvbWl1bS5vcmc+Cj4+Pj4+IFRlc3Rl
-ZC1ieTogU3Jpbml2YXMgS2FuZGFnYXRsYSA8c3Jpbml2YXMua2FuZGFnYXRsYUBsaW5hcm8ub3Jn
-Pgo+Pj4+PiBSZXZpZXdlZC1ieTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4K
-Pj4+Pj4gLS0tCj4+Pj4+IMKgIGRyaXZlcnMvaW9tbXUvYXJtLXNtbXUuYyB8IDEwMSAKPj4+Pj4g
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0KPj4+Pj4gwqAg
-MSBmaWxlIGNoYW5nZWQsIDkxIGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygtKQo+Pj4+IEdp
-dmVuIHRoYXQgeW91J3JlIGRvaW5nIHRoZSBnZXQvcHV0IGluIHRoZSBUTEJJIG9wcyB1bmNvbmRp
-dGlvbmFsbHk6Cj4+Pj4KPj4+Pj4gwqAgc3RhdGljIHZvaWQgYXJtX3NtbXVfZmx1c2hfaW90bGJf
-YWxsKHN0cnVjdCBpb21tdV9kb21haW4gKmRvbWFpbikKPj4+Pj4gwqAgewo+Pj4+PiDCoMKgwqDC
-oMKgwqAgc3RydWN0IGFybV9zbW11X2RvbWFpbiAqc21tdV9kb21haW4gPSB0b19zbW11X2RvbWFp
-bihkb21haW4pOwo+Pj4+PiArwqDCoMKgwqAgc3RydWN0IGFybV9zbW11X2RldmljZSAqc21tdSA9
-IHNtbXVfZG9tYWluLT5zbW11Owo+Pj4+Pgo+Pj4+PiAtwqDCoMKgwqAgaWYgKHNtbXVfZG9tYWlu
-LT50bGJfb3BzKQo+Pj4+PiArwqDCoMKgwqAgaWYgKHNtbXVfZG9tYWluLT50bGJfb3BzKSB7Cj4+
-Pj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYXJtX3NtbXVfcnBtX2dldChzbW11KTsKPj4+
-Pj4gc21tdV9kb21haW4tPnRsYl9vcHMtPnRsYl9mbHVzaF9hbGwoc21tdV9kb21haW4pOwo+Pj4+
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGFybV9zbW11X3JwbV9wdXQoc21tdSk7Cj4+Pj4+
-ICvCoMKgwqDCoCB9Cj4+Pj4+IMKgIH0KPj4+Pj4KPj4+Pj4gwqAgc3RhdGljIHZvaWQgYXJtX3Nt
-bXVfaW90bGJfc3luYyhzdHJ1Y3QgaW9tbXVfZG9tYWluICpkb21haW4pCj4+Pj4+IMKgIHsKPj4+
-Pj4gwqDCoMKgwqDCoMKgIHN0cnVjdCBhcm1fc21tdV9kb21haW4gKnNtbXVfZG9tYWluID0gdG9f
-c21tdV9kb21haW4oZG9tYWluKTsKPj4+Pj4gK8KgwqDCoMKgIHN0cnVjdCBhcm1fc21tdV9kZXZp
-Y2UgKnNtbXUgPSBzbW11X2RvbWFpbi0+c21tdTsKPj4+Pj4KPj4+Pj4gLcKgwqDCoMKgIGlmIChz
-bW11X2RvbWFpbi0+dGxiX29wcykKPj4+Pj4gK8KgwqDCoMKgIGlmIChzbW11X2RvbWFpbi0+dGxi
-X29wcykgewo+Pj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGFybV9zbW11X3JwbV9nZXQo
-c21tdSk7Cj4+Pj4+IHNtbXVfZG9tYWluLT50bGJfb3BzLT50bGJfc3luYyhzbW11X2RvbWFpbik7
-Cj4+Pj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYXJtX3NtbXVfcnBtX3B1dChzbW11KTsK
-Pj4+Pj4gK8KgwqDCoMKgIH0KPj4+PiBXaHkgZG8geW91IG5lZWQgdGhlbSBhcm91bmQgdGhlIG1h
-cC91bm1hcCBjYWxscyBhcyB3ZWxsPwo+Pj4gV2Ugc3RpbGwgaGF2ZSAudGxiX2FkZF9mbHVzaCBw
-YXRoPwo+PiBPaywgc28gd2UgY291bGQgYWRkIHRoZSBvcHMgYXJvdW5kIHRoYXQgYXMgd2VsbC4g
-UmlnaHQgbm93LCB3ZSd2ZSBnb3QKPj4gdGhlIHJ1bnRpbWUgcG0gaG9va3MgY3Jvc3NpbmcgdHdv
-IHBhcnRzIG9mIHRoZSBBUEkuCj4KPiBTdXJlLCB3aWxsIGRvIHRoYXQgdGhlbiwgYW5kIHJlbW92
-ZSB0aGUgcnVudGltZSBwbSBob29rcyBmcm9tIG1hcC91bm1hcC4KCkkgbWlzc2VkIHRoaXMgZWFy
-bGllciAtCldlIGFyZSBhZGRpbmcgcnVudGltZSBwbSBob29rcyBpbiB0aGUgJ2lvbW11X29wcycg
-Y2FsbGJhY2tzIGFuZCBub3QgCnJlYWxseSB0bwondGxiX29wcycuIFNvIGhvdyB0aGUgcnVudGlt
-ZSBwbSBob29rcyBjcm9zc2luZyB0aGUgcGF0aHM/CicubWFwLy51bm1hcCcgaW9tbXVfb3BzIGRv
-bid0IGNhbGwgJy5mbHVzaF9pb3RsYl9hbGwnIG9yICcuaW90bGJfc3luYycgCmlvbW11X29wcwph
-bnl3aGVyZS4KCkUuZy4sIG9ubHkgY2FsbGVycyB0byBkb21haW4tPm9wcy0+Zmx1c2hfaW90bGJf
-YWxsKCkgYXJlOgppb21tdV9kbWFfZmx1c2hfaW90bGJfYWxsKCksIG9yIGlvbW11X2ZsdXNoX3Rs
-Yl9hbGwoKSB3aGljaCBhcmUgbm90IGluIAptYXAvdW5tYXAgcGF0aHMuCgpSZWdhcmRzClZpdmVr
-Cgo+Cj4gVGhhbmtzCj4gVml2ZWsKPj4KPj4gV2lsbAo+CgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVu
-b0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+On 11/26/18 2:12 AM, Joakim Zhang wrote:
+> Firstly, thanks for reviewing the patch. Then, I am confused to do
+> upstream on "linux-can" or "linux-can-next" due to I find "linux-can"
+> is more updated than "linux-can-next".
+linux-can is for fixes aginat the current net/master.
+linux-can-next is for new features against net-next/master.
+
+I just updates both branches and pushed linux-can-next/testing, too,
+which is going the be the next pull request.
+
+regards,
+Marc
+
+-- 
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
