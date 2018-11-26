@@ -1,44 +1,487 @@
-From: MyungJoo Ham <myungjoo.ham@samsung.com>
-Subject: RE: [PATCH 1/6] devfreq: add basic fileds supporting suspend
- functionality
-Date: Mon, 26 Nov 2018 17:14:27 +0900
-Message-ID: <20181126081427epcms1p8801d251017da40b59d7e8391ee247fdb@epcms1p8>
-References: <1542823301-23563-2-git-send-email-l.luba@partner.samsung.com>
-        <1542823301-23563-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20181121180201eucas1p1f1f96941c3d16a96722e65d5c21bfe80@epcms1p8>
-Reply-To: myungjoo.ham@samsung.com
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [RFC PATCH v2 06/15] usb:cdns3: Adds Host support
+Date: Mon, 26 Nov 2018 08:24:00 +0000
+Message-ID: <BYAPR07MB4709593D0B03399E9D35E07BDDD70@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
+ <1542535751-16079-7-git-send-email-pawell@cadence.com>
+ <5BF80D44.2050600@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542823301-23563-2-git-send-email-l.luba@partner.samsung.com>
+In-Reply-To: <5BF80D44.2050600@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "tjakobi@math.uni-bielefeld.de" <tjakobi@math.uni-bielefeld.de>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "len.brown@intel.com" <len.brown@intel.com>, "pavel@ucw.cz" <pavel@ucw.cz>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "keescook@chromium.org" <keescook@chromium.org>, "anton@enomsg.org" <anton@enomsg.org>, "ccross@android.com" <ccross@android.com>, "tony.luck@intel.com" <tony.luck@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kgene@kernel.org" <kgene@kernel.org>, "krzk@kernel.org" <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: Roger Quadros <rogerq@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
->The patch prepares devfreq device for handling suspend/resume functionality.
->The new fields will store needed information during this process.
->Devfreq framework handles opp-suspend DT entry and there is no need of
->modyfications in the drivers code.
+>EXTERNAL MAIL
 >
->The patch draws on Tobias Jakobi's work posted ~2 years ago, who tried to
->solve issue with devfreq device's frequency during suspend/resume.
->During the discussion on LKML some corner cases and comments appeared
->related to the design. This patch address them keeping in mind suggestions
->from Chanwoo Choi.
 >
->Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
->Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
->Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>On 18/11/18 12:09, Pawel Laszczak wrote:
+>> Patch adds host-export.h and host.c file and mplements functions that
+>> allow to initialize, start and stop XHCI host driver.
+>>
+>> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+>> ---
+>>  drivers/usb/cdns3/Kconfig       |  10 ++
+>>  drivers/usb/cdns3/Makefile      |   1 +
+>>  drivers/usb/cdns3/core.c        |   7 +-
+>>  drivers/usb/cdns3/host-export.h |  30 ++++
+>>  drivers/usb/cdns3/host.c        | 256 ++++++++++++++++++++++++++++++++
+>>  5 files changed, 302 insertions(+), 2 deletions(-)
+>>  create mode 100644 drivers/usb/cdns3/host-export.h
+>>  create mode 100644 drivers/usb/cdns3/host.c
+>>
+>> diff --git a/drivers/usb/cdns3/Kconfig b/drivers/usb/cdns3/Kconfig
+>> index eb22a8692991..d92bc3d68eb0 100644
+>> --- a/drivers/usb/cdns3/Kconfig
+>> +++ b/drivers/usb/cdns3/Kconfig
+>> @@ -10,6 +10,16 @@ config USB_CDNS3
+>>
+>>  if USB_CDNS3
+>>
+>> +config USB_CDNS3_HOST
+>> +        bool "Cadence USB3 host controller"
+>> +        depends on USB_XHCI_HCD
+>> +        help
+>> +          Say Y here to enable host controller functionality of the
+>> +          cadence driver.
+>> +
+>> +          Host controller is compliance with XHCI so it will use
+>> +          standard XHCI driver.
+>> +
+>>  config USB_CDNS3_PCI_WRAP
+>>  	tristate "PCIe-based Platforms"
+>>  	depends on USB_PCI && ACPI
+>> diff --git a/drivers/usb/cdns3/Makefile b/drivers/usb/cdns3/Makefile
+>> index e779b2a2f8eb..976117ba67ff 100644
+>> --- a/drivers/usb/cdns3/Makefile
+>> +++ b/drivers/usb/cdns3/Makefile
+>> @@ -2,4 +2,5 @@ obj-$(CONFIG_USB_CDNS3)			+=3D cdns3.o
+>>  obj-$(CONFIG_USB_CDNS3_PCI_WRAP)	+=3D cdns3-pci.o
+>>
+>>  cdns3-y					:=3D core.o drd.o
+>> +cdns3-$(CONFIG_USB_CDNS3_HOST)          +=3D host.o
+>>  cdns3-pci-y		 		:=3D cdns3-pci-wrap.o
+>> diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
+>> index dbee4325da7f..4cb820be9ff3 100644
+>> --- a/drivers/usb/cdns3/core.c
+>> +++ b/drivers/usb/cdns3/core.c
+>> @@ -17,6 +17,7 @@
+>>
+>>  #include "gadget.h"
+>>  #include "core.h"
+>> +#include "host-export.h"
+>>  #include "drd.h"
+>>
+>>  static inline struct cdns3_role_driver *cdns3_get_current_role_driver(s=
+truct cdns3 *cdns)
+>> @@ -98,7 +99,8 @@ static int cdns3_core_init_role(struct cdns3 *cdns)
+>>  	}
+>>
+>>  	if (dr_mode =3D=3D USB_DR_MODE_OTG || dr_mode =3D=3D USB_DR_MODE_HOST)=
+ {
+>> -		//TODO: implements host initialization
+>> +		if (cdns3_host_init(cdns))
+>> +			dev_info(dev, "doesn't support host\n");
+>
+>dev_err()
+>
+>And you need to error out with error code.
 
-When you add new elements in a common struct (i.e., struct devfreq),
-please describe kindly in the doxygen entries so that developers
-may understand before reading all places where the new elements are
-used.
+ok, but I assume that even if host returns error then we can use=20
+only device role. Only when both functions return errors, then it's  a crit=
+ical error=20
+and function return error code.=20
+>
+>>  	}
+>>
+>>  	if (dr_mode =3D=3D USB_DR_MODE_OTG || dr_mode =3D=3D USB_DR_MODE_PERIP=
+HERAL) {
+>> @@ -142,7 +144,7 @@ static irqreturn_t cdns3_irq(int irq, void *data)
+>>
+>>  static void cdns3_remove_roles(struct cdns3 *cdns)
+>>  {
+>> -	//TODO: implements this function
+>
+>if (dr_mode =3D=3D USB_DR_MODE_OTG || dr_mode =3D=3D USB_DR_MODE_HOST)
+>
+>> +	cdns3_host_remove(cdns);
+>
+>How about calling it cdns3_host_exit() to complement cdns3_host_init().
+>
+>>  }
+>>
+>>  static int cdns3_do_role_switch(struct cdns3 *cdns, enum cdns3_roles ro=
+le)
+>> @@ -410,6 +412,7 @@ static struct platform_driver cdns3_driver =3D {
+>>
+>>  static int __init cdns3_driver_platform_register(void)
+>>  {
+>> +	cdns3_host_driver_init();
+>>  	return platform_driver_register(&cdns3_driver);
+>>  }
+>>  module_init(cdns3_driver_platform_register);
+>> diff --git a/drivers/usb/cdns3/host-export.h b/drivers/usb/cdns3/host-ex=
+port.h
+>> new file mode 100644
+>> index 000000000000..f8f3b230b472
+>> --- /dev/null
+>> +++ b/drivers/usb/cdns3/host-export.h
+>> @@ -0,0 +1,30 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * Cadence USBSS DRD Driver -Host Export APIs
+>> + *
+>> + * Copyright (C) 2017 NXP
+>> + *
+>> + * Authors: Peter Chen <peter.chen@nxp.com>
+>> + */
+>> +#ifndef __LINUX_CDNS3_HOST_EXPORT
+>> +#define __LINUX_CDNS3_HOST_EXPORT
+>> +
+>> +#ifdef CONFIG_USB_CDNS3_HOST
+>> +
+>> +int cdns3_host_init(struct cdns3 *cdns);
+>> +void cdns3_host_remove(struct cdns3 *cdns);
+>> +void cdns3_host_driver_init(void);
+>> +
+>> +#else
+>> +
+>> +static inline int cdns3_host_init(struct cdns3 *cdns)
+>> +{
+>> +	return -ENXIO;
+>> +}
+>> +
+>> +static inline void cdns3_host_remove(struct cdns3 *cdns) { }
+>> +static inline void cdns3_host_driver_init(void) {}
+>> +
+>> +#endif /* CONFIG_USB_CDNS3_HOST */
+>> +
+>> +#endif /* __LINUX_CDNS3_HOST_EXPORT */
+>> diff --git a/drivers/usb/cdns3/host.c b/drivers/usb/cdns3/host.c
+>> new file mode 100644
+>> index 000000000000..0dd47976cb28
+>> --- /dev/null
+>> +++ b/drivers/usb/cdns3/host.c
+>> @@ -0,0 +1,256 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Cadence USBSS DRD Driver - host side
+>> + *
+>> + * Copyright (C) 2018 Cadence Design Systems.
+>> + * Copyright (C) 2018 NXP
+>> + *
+>> + * Authors: Peter Chen <peter.chen@nxp.com>
+>> + *	    Pawel Laszczak <pawell@cadence.com>
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/device.h>
+>> +#include <linux/io.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/dma-mapping.h>
+>> +#include <linux/usb.h>
+>> +#include <linux/usb/hcd.h>
+>> +#include <linux/pm_runtime.h>
+>> +#include <linux/usb/of.h>
+>> +
+>> +#include "../host/xhci.h"
+>> +#include "core.h"
+>> +#include "host-export.h"
+>> +
+>> +static struct hc_driver __read_mostly xhci_cdns3_hc_driver;
+>> +
+>> +static void xhci_cdns3_quirks(struct device *dev, struct xhci_hcd *xhci=
+)
+>> +{
+>> +	/*
+>> +	 * As of now platform drivers don't provide MSI support so we ensure
+>> +	 * here that the generic code does not try to make a pci_dev from our
+>> +	 * dev struct in order to setup MSI
+>> +	 */
+>> +	xhci->quirks |=3D XHCI_PLAT;
+>> +}
+>> +
+>> +static int xhci_cdns3_setup(struct usb_hcd *hcd)
+>> +{
+>> +	struct xhci_hcd	*xhci =3D hcd_to_xhci(hcd);
+>> +	u32 command;
+>> +	int ret;
+>> +
+>> +	ret =3D xhci_gen_setup(hcd, xhci_cdns3_quirks);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/* set usbcmd.EU3S */
+>> +	command =3D readl(&xhci->op_regs->command);
+>> +	command |=3D CMD_PM_INDEX;
+>> +	writel(command, &xhci->op_regs->command);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct xhci_driver_overrides xhci_cdns3_overrides __initco=
+nst =3D {
+>> +	.extra_priv_size =3D sizeof(struct xhci_hcd),
+>> +	.reset =3D xhci_cdns3_setup,
+>> +};
+>> +
+>> +struct cdns3_host {
+>> +	struct device dev;
+>> +	struct usb_hcd *hcd;
+>> +};
+>> +
+>> +static irqreturn_t cdns3_host_irq(struct cdns3 *cdns)
+>> +{
+>> +	struct device *dev =3D cdns->host_dev;
+>> +	struct usb_hcd	*hcd;
+>> +
+>> +	if (dev)
+>> +		hcd =3D dev_get_drvdata(dev);
+>> +	else
+>> +		return IRQ_NONE;
+>> +
+>> +	if (hcd)
+>> +		return usb_hcd_irq(cdns->irq, hcd);
+>> +	else
+>> +		return IRQ_NONE;
+>
+>Why can't you just reuse the xhci-platform driver and let it manage the IR=
+Q?
+>Since it is a shared IRQ, different drivers can request the same IRQ and r=
+eturn IRQ_NONE
+>if the IRQ wasn't from their device.
 
-You have added three new elements and there is no explanations on them.
+In device role the host part of controller is kept in reset, so driver can'=
+t read the host register.=20
+Such solution allows driver to control access to host register.=20
+So if driver has shared separate interrupt for host role then it has to che=
+ck if controller work in=20
+Host role. =20
 
+>> +}
+>> +
+>> +static void cdns3_host_release(struct device *dev)
+>> +{
+>> +	struct cdns3_host *host =3D container_of(dev, struct cdns3_host, dev);
+>> +
+>> +	kfree(host);
+>> +}
+>> +
+>> +static int cdns3_host_start(struct cdns3 *cdns)
+>> +{
+>> +	struct cdns3_host *host;
+>> +	struct device *dev;
+>> +	struct device *sysdev;
+>> +	struct xhci_hcd	*xhci;
+>> +	int ret;
+>> +
+>> +	host =3D kzalloc(sizeof(*host), GFP_KERNEL);
+>> +	if (!host)
+>> +		return -ENOMEM;
+>> +
+>> +	dev =3D &host->dev;
+>> +	dev->release =3D cdns3_host_release;
+>> +	dev->parent =3D cdns->dev;
+>> +	dev_set_name(dev, "xhci-cdns3");
+>> +	cdns->host_dev =3D dev;
+>> +	ret =3D device_register(dev);
+>> +	if (ret)
+>> +		goto err1;
+>> +
+>> +	sysdev =3D cdns->dev;
+>> +	/* Try to set 64-bit DMA first */
+>> +	if (WARN_ON(!sysdev->dma_mask))
+>> +		/* Platform did not initialize dma_mask */
+>> +		ret =3D dma_coerce_mask_and_coherent(sysdev,
+>> +						   DMA_BIT_MASK(64));
+>> +	else
+>> +		ret =3D dma_set_mask_and_coherent(sysdev, DMA_BIT_MASK(64));
+>> +
+>> +	/* If setting 64-bit DMA mask fails, fall back to 32-bit DMA mask */
+>> +	if (ret) {
+>> +		ret =3D dma_set_mask_and_coherent(sysdev, DMA_BIT_MASK(32));
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +
+>> +	pm_runtime_set_active(dev);
+>> +	pm_runtime_no_callbacks(dev);
+>> +	pm_runtime_enable(dev);
+>> +	host->hcd =3D __usb_create_hcd(&xhci_cdns3_hc_driver, sysdev, dev,
+>> +				     dev_name(dev), NULL);
+>> +	if (!host->hcd) {
+>> +		ret =3D -ENOMEM;
+>> +		goto err2;
+>> +	}
+>> +
+>> +	host->hcd->regs =3D cdns->xhci_regs;
+>> +	host->hcd->rsrc_start =3D cdns->xhci_res->start;
+>> +	host->hcd->rsrc_len =3D resource_size(cdns->xhci_res);
+>> +
+>> +	device_wakeup_enable(host->hcd->self.controller);
+>> +	xhci =3D hcd_to_xhci(host->hcd);
+>> +
+>> +	xhci->main_hcd =3D host->hcd;
+>> +	xhci->shared_hcd =3D __usb_create_hcd(&xhci_cdns3_hc_driver, sysdev, d=
+ev,
+>> +					    dev_name(dev), host->hcd);
+>> +	if (!xhci->shared_hcd) {
+>> +		ret =3D -ENOMEM;
+>> +		goto err3;
+>> +	}
+>> +
+>> +	host->hcd->tpl_support =3D of_usb_host_tpl_support(sysdev->of_node);
+>> +	xhci->shared_hcd->tpl_support =3D host->hcd->tpl_support;
+>> +	ret =3D usb_add_hcd(host->hcd, 0, IRQF_SHARED);
+>> +	if (ret)
+>> +		goto err4;
+>> +
+>> +	ret =3D usb_add_hcd(xhci->shared_hcd, 0, IRQF_SHARED);
+>> +	if (ret)
+>> +		goto err5;
+>> +
+>> +	device_set_wakeup_capable(dev, true);
+>
+>All this is being done by the xhci-plat.c
+>
+>You can make use of it by just creating a xhci-hcd platform device.
+>
+>e.g.
+>platform_device_alloc("xhci-hcd", PLATFORM_DEVID_AUTO);
+>platform_device_add_resources() to add IRQ and memory resource.
+>platform_device_add_properties() to add any quirks.
+>platform_device_add()
+>
 
-Cheers,
-MyungJoo
+If we do this in this way driver will not control the interrupt.=20
+This code  has written by Peter Chan and I am convinced=20
+that this concept is only correct one.
+
+>> +
+>> +	return 0;
+>> +
+>> +err5:
+>> +	usb_remove_hcd(host->hcd);
+>> +err4:
+>> +	usb_put_hcd(xhci->shared_hcd);
+>> +err3:
+>> +	usb_put_hcd(host->hcd);
+>> +err2:
+>> +	device_del(dev);
+>> +err1:
+>> +	put_device(dev);
+>> +	cdns->host_dev =3D NULL;
+>> +	return ret;
+>> +}
+>> +
+>> +static void cdns3_host_stop(struct cdns3 *cdns)
+>> +{
+>> +	struct device *dev =3D cdns->host_dev;
+>> +	struct xhci_hcd	*xhci;
+>> +	struct usb_hcd	*hcd;
+>> +
+>> +	if (dev) {
+>> +		hcd =3D dev_get_drvdata(dev);
+>> +		xhci =3D hcd_to_xhci(hcd);
+>> +		usb_remove_hcd(xhci->shared_hcd);
+>> +		usb_remove_hcd(hcd);
+>> +		synchronize_irq(cdns->irq);
+>> +		usb_put_hcd(xhci->shared_hcd);
+>> +		usb_put_hcd(hcd);
+>> +		cdns->host_dev =3D NULL;
+>> +		pm_runtime_set_suspended(dev);
+>> +		pm_runtime_disable(dev);
+>> +		device_del(dev);
+>> +		put_device(dev);
+>> +	}
+>
+>You can replace this with just
+>	platform_device_unregister(xhci_dev);
+>
+>> +}
+>> +
+>> +#if CONFIG_PM
+>> +static int cdns3_host_suspend(struct cdns3 *cdns, bool do_wakeup)
+>> +{
+>> +	struct device *dev =3D cdns->host_dev;
+>> +	struct xhci_hcd	*xhci;
+>> +
+>> +	if (!dev)
+>> +		return 0;
+>> +
+>> +	xhci =3D hcd_to_xhci(dev_get_drvdata(dev));
+>> +	return xhci_suspend(xhci, do_wakeup);
+>> +}
+>> +
+>> +static int cdns3_host_resume(struct cdns3 *cdns, bool hibernated)
+>> +{
+>> +	struct device *dev =3D cdns->host_dev;
+>> +	struct xhci_hcd	*xhci;
+>> +
+>> +	if (!dev)
+>> +		return 0;
+>> +
+>> +	xhci =3D hcd_to_xhci(dev_get_drvdata(dev));
+>> +	return xhci_resume(xhci, hibernated);
+>> +}
+>
+>These won't be required any more as xhci-plat is doing this.
+>
+>> +#endif /* CONFIG_PM */
+>> +
+>> +int cdns3_host_init(struct cdns3 *cdns)
+>> +{
+>> +	struct cdns3_role_driver *rdrv;
+>> +
+>> +	rdrv =3D devm_kzalloc(cdns->dev, sizeof(*rdrv), GFP_KERNEL);
+>> +	if (!rdrv)
+>> +		return -ENOMEM;
+>> +
+>> +	rdrv->start	=3D cdns3_host_start;
+>> +	rdrv->stop	=3D cdns3_host_stop;
+>> +	rdrv->irq	=3D cdns3_host_irq;
+>> +#if CONFIG_PM
+>> +	rdrv->suspend	=3D cdns3_host_suspend;
+>> +	rdrv->resume	=3D cdns3_host_resume;
+>> +#endif /* CONFIG_PM */
+>> +	rdrv->name	=3D "host";
+>> +	cdns->roles[CDNS3_ROLE_HOST] =3D rdrv;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +void cdns3_host_remove(struct cdns3 *cdns)
+>> +{
+>> +	cdns3_host_stop(cdns);
+>
+>calling cdns3_host_stop() here can lead to problems as Controller might be=
+ in
+>peripheral mode at this point. The core driver needs to ensure that releva=
+nt role
+>is stopped before calling cdns3_host_remove().
+>
+>Here you need to unregister the role driver though.
+>
+>cdns->roles[CDNS3_ROLE_HOST] =3D NULL;
+>
+This function can be called only in host mode/role. It operate on host regi=
+sters.=20
+This checking is provided in core.c file.=20
+>> +}
+>> +
+>> +void __init cdns3_host_driver_init(void)
+>> +{
+>> +	xhci_init_driver(&xhci_cdns3_hc_driver, &xhci_cdns3_overrides);
+>> +}
+>>
+>
+>cheers,
+>-roger
+>
+>--
+>Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
