@@ -1,53 +1,62 @@
-Return-Path: <SRS0=lXjp=OG=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 00/22] Add more support to RZ/G1N
-Date: Tue, 27 Nov 2018 11:56:13 +0000
-Message-Id: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=EY9Q=OF=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:46464 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbeK0BUG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 26 Nov 2018 20:20:06 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20181126142548euoutp0193c24153f69a67a242fdc8937f58662f~qsr07jJMT3092430924euoutp01N
+        for <devicetree@vger.kernel.org>; Mon, 26 Nov 2018 14:25:48 +0000 (GMT)
+Subject: Re: [PATCH 1/4] clk: samsung: exynos5433: fix name typos
+From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Message-ID: <e5be6b20-b855-81b1-9b46-1d6e7a9c4eb3@partner.samsung.com>
+Date: Mon, 26 Nov 2018 15:25:45 +0100
+MIME-Version: 1.0
+In-Reply-To: <CAJKOXPc4O7D_bptcM1hhDN6Xdahv9xaVST-9WgqWNyC9U_QOfg@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+References: <CGME20181121120523eucas1p1e69848a515c713315499e6e21f099cc2@eucas1p1.samsung.com>
+        <20181121120509.18892-1-k.konieczny@partner.samsung.com>
+        <20181121120509.18892-2-k.konieczny@partner.samsung.com>
+        <CAJKOXPc4O7D_bptcM1hhDN6Xdahv9xaVST-9WgqWNyC9U_QOfg@mail.gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, s.nawrocki@samsung.com, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch series aims to add support for some more interfaces to
-RZ/G1N SoC (SCIF/HSCIF, I2C, IIC, SDHI, MMC, USBHost, USB Function,
- rwdt, Audio, Display, CAN and CMT ....).
 
-This patch series tested against renesas-dev.
-it depends on the the below patch series.
 
-https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=46273
+On 21.11.2018 14:13, Krzysztof Kozlowski wrote:
+> On Wed, 21 Nov 2018 at 13:05, Kamil Konieczny
+> <k.konieczny@partner.samsung.com> wrote:
+>>
+>> Fix typo in imem sssx name and typo 200 switched with 266.
+> 
+> These should be two separate patches. Then the one changing parent
+> could go to stable. [...]
 
-Biju Das (22):
-  ARM: dts: r8a7744: Add [H]SCIF{A|B} support
-  ARM: dts: r8a7744: Add I2C and IIC support
-  ARM: dts: r8a7744: Add SDHI nodes
-  ARM: dts: r8a7744: Add MMC node
-  ARM: dts: r8a7744-iwg20m: Add eMMC support
-  ARM: dts: r8a7744-iwg20m: Enable SDHI10 controller
-  ARM: dts: r8a7744: USB 2.0 host support
-  ARM: dts: r8a7744: Add USB-DMAC and HSUSB device nodes
-  ARM: dts: r8a7744: Add RWDT node
-  ARM: dts: r8a7744: Add audio support
-  ARM: dts: r8a7744: Add DU support
-  ARM: dts: r8a7744-iwg20d-q7-dbcm-ca: Add device tree for camera DB
-  ARM: dts: r8a7744: Add CAN support
-  ARM: dts: r8a7744: Add IRQC support
-  ARM: dts: r8a7744: Add thermal device to DT
-  ARM: dts: r8a7744: Add CMT SoC specific support
-  ARM: dts: iwg20d-q7-common: Move cmt/rwdt node out of RZ/G1M SOM
-  ARM: dts: r8a7744: Add QSPI support
-  ARM: dts: r8a7744-iwg20m: Add SPI NOR support
-  ARM: dts: r8a7744: Add MSIOF[012] support
-  ARM: dts: r8a7744: Add xhci support
-  ARM: dts: r8a7744: Add PCIe Controller device node
+Thank you, I will split it as you suggested.
 
- arch/arm/boot/dts/Makefile                      |    1 +
- arch/arm/boot/dts/iwg20d-q7-common.dtsi         |    9 +
- arch/arm/boot/dts/r8a7743-iwg20m.dtsi           |    9 -
- arch/arm/boot/dts/r8a7744-iwg20d-q7-dbcm-ca.dts |   17 +
- arch/arm/boot/dts/r8a7744-iwg20m.dtsi           |   59 ++
- arch/arm/boot/dts/r8a7744.dtsi                  | 1052 ++++++++++++++++++++++-
- 6 files changed, 1114 insertions(+), 33 deletions(-)
- create mode 100644 arch/arm/boot/dts/r8a7744-iwg20d-q7-dbcm-ca.dts
+>> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+>> ---
+>>  drivers/clk/samsung/clk-exynos5433.c   | 6 +++---
+>>  include/dt-bindings/clock/exynos5433.h | 2 +-
+>>  2 files changed, 4 insertions(+), 4 deletions(-)
+>> [...]
+>> @@ -568,10 +568,10 @@ static const struct samsung_gate_clock top_gate_clks[] __initconst = {
+>>         GATE(CLK_ACLK_BUS1_400, "aclk_bus1_400", "div_aclk_bus1_400",
+>>                         ENABLE_ACLK_TOP, 25,
+>>                         CLK_IS_CRITICAL | CLK_SET_RATE_PARENT, 0),
+>> -       GATE(CLK_ACLK_IMEM_200, "aclk_imem_200", "div_aclk_imem_266",
+>> +       GATE(CLK_ACLK_IMEM_200, "aclk_imem_200", "div_aclk_imem_200",
+>>                         ENABLE_ACLK_TOP, 24,
+>>                         CLK_IS_CRITICAL | CLK_SET_RATE_PARENT, 0),
+>> -       GATE(CLK_ACLK_IMEM_266, "aclk_imem_266", "div_aclk_imem_200",
+>> +       GATE(CLK_ACLK_IMEM_266, "aclk_imem_266", "div_aclk_imem_266",
+>>                         ENABLE_ACLK_TOP, 23,
+>> [...]
 
 -- 
-2.7.4
+Best regards,
+Kamil Konieczny
+Samsung R&D Institute Poland
