@@ -1,78 +1,38 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v10 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq
- HW driver
-Date: Mon, 26 Nov 2018 15:30:15 -0800
-Message-ID: <20181126233015.GX22824@google.com>
-References: <1542796967-5949-1-git-send-email-tdas@codeaurora.org>
- <1542796967-5949-3-git-send-email-tdas@codeaurora.org>
- <20181121220614.GU22824@google.com>
- <20181122050708.zictqzfne6odsywu@vireshk-i7>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 01/17] dt-bindings: remoteproc: Add TI PRUSS bindings
+Date: Mon, 26 Nov 2018 15:41:16 -0800
+Message-ID: <20181126234116.GQ53235@atomide.com>
+References: <1542886753-17625-1-git-send-email-rogerq@ti.com>
+ <1542886753-17625-2-git-send-email-rogerq@ti.com>
+ <a4fe952b-9065-d91b-4c07-984ec3f5b276@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181122050708.zictqzfne6odsywu@vireshk-i7>
+In-Reply-To: <a4fe952b-9065-d91b-4c07-984ec3f5b276@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Taniya Das <tdas@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
+To: David Lechner <david@lechnology.com>
+Cc: Roger Quadros <rogerq@ti.com>, robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 22, 2018 at 10:37:08AM +0530, Viresh Kumar wrote:
-> On 21-11-18, 14:06, Matthias Kaehlcke wrote:
-> > On Wed, Nov 21, 2018 at 04:12:47PM +0530, Taniya Das wrote:
-> > > +	.boost_enabled	= true,
-> > 
-> > I have no real expertise with cpufreq boost, but after reading a bit
-> > through cpufreq code this seems wrong. Boost is enabled statically,
-> > however the driver has neither a ->set_boost function nor does it call
-> > cpufreq_enable_boost_support() which would use a default
-> > implementation for ->set_boost. As a result boost support is
-> > effectively disabled:
-> > 
-> > static bool cpufreq_boost_supported(void)
-> > {
-> >         return likely(cpufreq_driver) && cpufreq_driver->set_boost;
-> > }
-> > 
-> > The driver should probably do the same as cpufreq-dt.c and call
-> > cpufreq_enable_boost_support() if boost frequencies are available,
-> > instead of 'enabling' boost statically.
-> 
-> Feels like I have written the boost support in cpufreq core few decades back as
-> I don't remember any of it :)
-> 
-> But reading through the code this is what I understood.
+* David Lechner <david@lechnology.com> [181126 21:14]:
+> I haven't looked into Tony's suggestion of using ti-sysc yet, so this may be a
+> moot point, but how will this work with AM18xx that does not have a PRUSS CFG
+> register? It seems to me that reg here should be the address and size of the
+> entire PRUSS IP block and the CFG register should be a syscon node or something
+> like that.
 
-Thanks for digging into it!
+The SoC specific wrapper IP is probably different on am18xx compared
+to omaps, it might be TIPB like on omap1?
 
-> There are two parts of boosting.
-> 
-> - Sysfs file available or not to enable/disable boost frequencies on the go.
->   This file gets created only when cpufreq_enable_boost_support() gets called.
-> 
-> - Will cpufreq core consider boost frequencies or not while checking target
->   frequency again, this is governed by cpufreq_driver->boost field, which can be
->   set from driver or using the sysfs file mentioned above.
-> 
-> In this driver, all we have done is to set the cpufreq_driver->boost field to
-> true, which would allow cpufreq core to use boost frequencies as well. But that
-> isn't any better than making them all normal frequencies and getting rid of
-> boost stuff. The boosting stuff will be useful only if you want to disable some
-> of them at runtime, based on heating, etc. And that is possible only after you
-> create a sysfs file.
+If am18xx has something simlar to omaps, there would be revision,
+sysconfig and sysstatus registers typically at offsets 0x00, 0x10
+and 0x14.
 
-That matches what Amit reported (and I confirmed) about the CPU
-frequency "being stuck" at the boost frequency
-(https://lore.kernel.org/patchwork/patch/998335/#1186701) on a loaded
-system.
+The wrapper IP code should be independent of the PRU code and just
+provide services to the PRU. For a minimal wrapper IP driver example
+that might work for am18xx see for drivers/usb/musb/musb_am335x.c.
 
-Taniya: I wonder if it would make sense to drop boost support for now
-in order to land a first working version of the driver soon, instead
-of keeping respinning this series. Boost support could be added as a
-separate feature, just like cooling devices. If you have a working
-quick fix now that's also fine, otherwise I'd suggest the iterative
-approach, I'm sure you also want to see this landing ;-)
+Regards,
 
-Cheers
-
-Matthias
+Tony
