@@ -1,76 +1,80 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 02/16] remoteproc: Add a rproc_set_firmware() API
-Date: Mon, 26 Nov 2018 15:41:54 -0600
-Message-ID: <ee68d58b-24ff-f7b2-aa62-f1e73e078516@lechnology.com>
-References: <1543218769-5507-1-git-send-email-rogerq@ti.com>
- <1543218769-5507-3-git-send-email-rogerq@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [v5, PATCH 2/2] dt-binding: mediatek-dwmac: add binding document
+ for MediaTek MT2712 DWMAC
+Date: Mon, 26 Nov 2018 15:46:26 -0600
+Message-ID: <20181126214626.GA13830@bogus>
+References: <1542882521-18874-1-git-send-email-biao.huang@mediatek.com>
+ <1542882521-18874-3-git-send-email-biao.huang@mediatek.com>
+ <20181122151932.GD15403@lunn.ch>
+ <1542936676.24219.66.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543218769-5507-3-git-send-email-rogerq@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1542936676.24219.66.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, ohad@wizery.com, bjorn.andersson@linaro.org
-Cc: tony@atomide.com, robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: biao huang <biao.huang@mediatek.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, davem@davemloft.net, honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, joabreu@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/26/18 1:52 AM, Roger Quadros wrote:
-> From: Suman Anna <s-anna@ti.com>
+On Fri, Nov 23, 2018 at 09:31:16AM +0800, biao huang wrote:
+> Dear Andrew,
 > 
-> A new API, rproc_set_firmware() is added to allow the remoteproc platform
-> drivers and remoteproc client drivers to be able to configure a custom
-> firmware name that is different from the default name used during
-> remoteproc registration. This function is being introduced to provide
-> a kernel-level equivalent of the current sysfs interface to remoteproc
-> client drivers. This allows some remoteproc drivers to choose different
-> firmwares at runtime when the remote processor is not running based on
-> the functional feature it is providing using that remote processor.
-> The TI PRU Ethernet driver will be an example of such usage as it
-> requires to use different firmwares for different supported protocols.
+> 	Thanks for you remind.
 > 
-> Also, update the firmware_store() function used by the sysfs interface
-> to reuse this function to avoid code duplication.
+> 	Sincerely, I respect any comment from any reviewer. If I didn't reply
+> for any comment, really sorry for that.
 > 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> ---
->   drivers/remoteproc/remoteproc_core.c  | 61 +++++++++++++++++++++++++++++++++++
->   drivers/remoteproc/remoteproc_sysfs.c | 33 ++-----------------
->   include/linux/remoteproc.h            |  1 +
->   3 files changed, 64 insertions(+), 31 deletions(-)
+> 	As to this "tx-delay" issue, the following reply in v3 maybe ignored.
+> 	https://lkml.org/lkml/2018/11/19/158
 > 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 39458a7..581e6e8 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -2151,6 +2151,67 @@ void rproc_report_crash(struct rproc *rproc, enum rproc_crash_type type)
+> 	"the delay time in mediatek dwmac design is not so accurate,
+> 	the current mt2712 and the following ICs will not use the
+> 	same delay design, but will use stages to indicate different
+> 	delay time.
+> 	so maybe "mediatek.tx-delay" represent the delay stage is a
+> 	good choice"
+> 
+> 	And to make it clearer here.
+> 
+> 	In mt2712, there are two delay macro circuit: named fine-tune and
+> coarse-tune.
+> 	a. fine-tune, 170+/-50ps per stage, total 32 stages
+> 	b. coarse-tune, 0.55+/-0.2ns per stage, total 32 stages
+> 	If we only consider mt2712, delay in fine-tune select a integer
+> multiple of 170ps, delay in coarse-tune select a integer multiple of
+> 550ps, for stage 0~31, the delay in fine-tune will not have the same
+> value with that in coarse-tune.
+> 	OK, It seems the property "fine-tune" can be eliminated .
+> 
+> 	But the following ic will not have the same accuracy as mt2712,
+> and maybe will not have two delay macro circuit to be selected.
 
-...
+New IC will have new compatible string then. If it is different, then 
+likely these properties would have to change or have different meaning 
+unless you use time.
 
-> +int rproc_set_firmware(struct rproc *rproc, const char *fw_name)
-> +{
-> +	struct device *dev = rproc->dev.parent;
-> +	int ret, len;
-> +	char *p;
-> +
-> +	if (!rproc || !fw_name)
-> +		return -EINVAL;
-> +
-> +	ret = mutex_lock_interruptible(&rproc->lock);
-> +	if (ret) {
-> +		dev_err(dev, "can't lock rproc %s: %d\n", rproc->name, ret);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (rproc->state != RPROC_OFFLINE) {
-> +		dev_err(dev, "can't change firmware while running\n");
-> +		ret = -EBUSY;
-> +		goto out;
-> +	}
-> +
-> +	len = strcspn(fw_name, "\n");
-> +	if (!len) {
-> +		dev_err(dev, "can't provide a NULL firmware\n");
+> 	1. assume two delay macro circuit in the following ic,
+> 	fine-tune, 100ps per stage, coarse-tune, 0.55ns per stage,
+> 	if we want delay 2.2ns, fine-tune will get a 22, and coarse-tune get a
+> 4. We can't distinguish which delay macro we are choosing.
 
-I realize this was just copied, but technically, this would be an
-empty string rather than NULL.
+Why wouldn't you just choose fine-tune for anything less than the max 
+range (3200ps in this example) and course for greater than 3100ps.
+
+> 	2. assume only one delay macro circuit is used, a similar case as 1
+> will also increase the complexity of driver.
+> 	Then, we need define more flag property to know which delay macro we
+> are handling.
+> 
+> 	The common things for all delay macro circuit in MediaTek mac design is
+> the stages, not the accuracy. so if we maintain stage info in "mediatek,
+> tx-delay", we only need care which stage we should choose.
+> And for each IC, we will recommend a best stage as a candidate.
+
+What if you had a 3rd delay circuit?
+
+> 	Above is my personal opinion, may be my understanding is wrong,
+> welcome for further discussion.
+> 
+> 	Thanks a lot.
