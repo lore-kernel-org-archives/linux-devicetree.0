@@ -1,162 +1,152 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [RFC PATCH v2 05/15] usb:cdns3: Added DRD support
-Date: Mon, 26 Nov 2018 12:15:20 +0200
-Message-ID: <5BFBC7B8.5020004@ti.com>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
- <1542535751-16079-6-git-send-email-pawell@cadence.com>
- <5BF8140C.7000605@ti.com>
- <BYAPR07MB470991EB0AE200B6481AEE35DDD70@BYAPR07MB4709.namprd07.prod.outlook.com>
- <5BFBA9BC.20306@ti.com>
- <BYAPR07MB47092F6F92A344AA76C093C9DDD70@BYAPR07MB4709.namprd07.prod.outlook.com>
- <5BFBBF65.7090204@ti.com>
- <BYAPR07MB4709DFA347BC883F7F276332DDD70@BYAPR07MB4709.namprd07.prod.outlook.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v1 3/3] arm64: dts: mt7622: Drop the general purpose timer
+ node
+Date: Mon, 26 Nov 2018 11:15:35 +0100
+Message-ID: <5a8ad8dd-c768-3abe-9ea3-537cdb9b304c@gmail.com>
+References: <30f4a4110190a175307ac4dfebc98ffe96c44b90.1541643419.git.ryder.lee@mediatek.com>
+ <17fde639c7d37f9cfabab230379913e652cf869a.1541643419.git.ryder.lee@mediatek.com>
+ <be2b45e1-f639-e14c-1c40-9cd94b006309@gmail.com>
+ <1543204176.26011.4.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR07MB4709DFA347BC883F7F276332DDD70@BYAPR07MB4709.namprd07.prod.outlook.com>
+In-Reply-To: <1543204176.26011.4.camel@mtkswgap22>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: Ryder Lee <ryder.lee@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Weijie Gao <weijie.gao@mediatek.com>, linux-kernel@vger.kernel.org, stable@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/11/18 12:09, Pawel Laszczak wrote:
->>>>
->>>> Pawel,
->>>>
->>>> On 26/11/18 09:23, Pawel Laszczak wrote:
->>>>> Hi Roger,
->>>>>
->>>>>> On 18/11/18 12:09, Pawel Laszczak wrote:
->>>>>>> Patch adds supports for detecting Host/Device mode.
->>>>>>> Controller has additional OTG register that allow
->>>>>>> implement even whole OTG functionality.
->>>>>>> At this moment patch adds support only for detecting
->>>>>>> the appropriate mode based on strap pins and ID pin.
->>>>>>>
->>>>>>> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
->>>>>>> ---
->>>>>>>  drivers/usb/cdns3/Makefile |   2 +-
->>>>>>>  drivers/usb/cdns3/core.c   |  27 +++--
->>>>>>>  drivers/usb/cdns3/drd.c    | 229 +++++++++++++++++++++++++++++++++++++
->>>>>>>  drivers/usb/cdns3/drd.h    | 122 ++++++++++++++++++++
->>>>>>>  4 files changed, 372 insertions(+), 8 deletions(-)
->>>>>>>  create mode 100644 drivers/usb/cdns3/drd.c
->>>>>>>  create mode 100644 drivers/usb/cdns3/drd.h
->>>>>>>
->>>>>>> diff --git a/drivers/usb/cdns3/Makefile b/drivers/usb/cdns3/Makefile
->>>>>>> index 02d25b23c5d3..e779b2a2f8eb 100644
->>>>>>> --- a/drivers/usb/cdns3/Makefile
->>>>>>> +++ b/drivers/usb/cdns3/Makefile
->>>>>>> @@ -1,5 +1,5 @@
->>>>>>>  obj-$(CONFIG_USB_CDNS3)			+= cdns3.o
->>>>>>>  obj-$(CONFIG_USB_CDNS3_PCI_WRAP)	+= cdns3-pci.o
->>>>>>>
->>>>>>> -cdns3-y					:= core.o
->>>>>>> +cdns3-y					:= core.o drd.o
->>>>>>>  cdns3-pci-y		 		:= cdns3-pci-wrap.o
->>>>>>> diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
->>>>>>> index f9055d4da67f..dbee4325da7f 100644
->>>>>>> --- a/drivers/usb/cdns3/core.c
->>>>>>> +++ b/drivers/usb/cdns3/core.c
->>>>>>> @@ -17,6 +17,7 @@
->>>>>>>
->>>>>>>  #include "gadget.h"
->>>>>>>  #include "core.h"
->>>>>>> +#include "drd.h"
->>>>>>>
->>>>>>>  static inline struct cdns3_role_driver *cdns3_get_current_role_driver(struct cdns3 *cdns)
->>>>>>>  {
->>>>>>> @@ -57,8 +58,10 @@ static inline void cdns3_role_stop(struct cdns3 *cdns)
->>>>>>>  static enum cdns3_roles cdns3_get_role(struct cdns3 *cdns)
->>>>>>>  {
->>>>>>>  	if (cdns->roles[CDNS3_ROLE_HOST] && cdns->roles[CDNS3_ROLE_GADGET]) {
->>>>>>> -		//TODO: implements selecting device/host mode
->>>>>>> -		return CDNS3_ROLE_HOST;
->>>>>>> +		if (cdns3_is_host(cdns))
->>>>>>> +			return CDNS3_ROLE_HOST;
->>>>>>> +		if (cdns3_is_device(cdns))
->>>>>>> +			return CDNS3_ROLE_GADGET;
->>>>>>>  	}
->>>>>>>  	return cdns->roles[CDNS3_ROLE_HOST]
->>>>>>>  		? CDNS3_ROLE_HOST
->>>>>>> @@ -124,6 +127,12 @@ static irqreturn_t cdns3_irq(int irq, void *data)
->>>>>>>  	struct cdns3 *cdns = data;
->>>>>>>  	irqreturn_t ret = IRQ_NONE;
->>>>>>>
->>>>>>> +	if (cdns->dr_mode == USB_DR_MODE_OTG) {
->>>>>>> +		ret = cdns3_drd_irq(cdns);
->>>>>>> +		if (ret == IRQ_HANDLED)
->>>>>>> +			return ret;
->>>>>>> +	}
->>>>>>
->>>>>> The kernel's shared IRQ model takes care of sharing the same interrupt
->>>>>> between different devices and their drivers. You don't need to manually
->>>>>> handle it here. Just let all 3 drivers do a request_irq() and have
->>>>>> handlers check if the IRQ was theirs or not and return IRQ_HANDLED or
->>>>>> IRQ_NONE accordingly.
->>>>>>
->>>>>> Looks like you can do away with irq member of the role driver struct.
->>>>>
->>>>> Ok, I will split it into 3 separate part, but in this case, I additionally have to check the current
->>>>> role in ISR function. Driver can't read host side registers when controller works in device role
->>>>> and vice versa. One part of controller is kept in reset. Only DRD registers are common and are all accessible.
->>>>>
->>>>
->>>> In which ISR do you need to check current role?
->>>>
->>>> I'm not sure if we are on the same page.
->>>> Core (drd) driver shouldn't read host/device side registers. All 3 drivers,
->>>> i.e. DRD(core), Host (xhci) and device (cdns3) should do a request_irq()
->>>> and process their respective IRQ events.
->>>
->>> Yes, I understand.
->>> I need to check this in cdns3_irq_handler_thread and cdns3_host_irq.
->>>
->>> Core (drd) has register that are always accessible.
->>> Core (device)  - registers are available also in device mode
->>> Core (host)  - registers  are available only in host mode
->>>
->>> So we can use separate request_irq  for drd, device and host side, but
->>> we need ensure that in host side driver will not touch the device register.
+
+
+On 26/11/2018 04:49, Ryder Lee wrote:
+> On Fri, 2018-11-23 at 18:07 +0100, Matthias Brugger wrote:
 >>
->> That should never happen as host side doesn't have visibility to device registers.
+>> On 12/11/2018 02:28, Ryder Lee wrote:
+>>> The crash http://termbin.com/zitb is caused by the timer register
+>>> into system in early pahse during kernel boot, but the clock
+>>> sources didn't get ready at that time.
+>>>
+>>> A better way is to switch to use CLK_OF_DECLARE() in driver for things
+>>> that need them early, but this node is actually useless in MT7622.
+>>> So we drop it.
+>>
+>> I suppose the root cause is, that the driver doesn't check the error
+>> timer_of_init returned.
+>>
+>> Would you mind to test the following patch to see if this fixes the problem?
+>>
+>> --->8
+>> From be91e56ed527261137335af340845eb3dd3dd33a Mon Sep 17 00:00:00 2001
+>> From: Matthias Brugger <matthias.bgg@gmail.com>
+>> Date: Fri, 23 Nov 2018 17:04:08 +0100
+>> Subject: [PATCH] clocksource/drivers/timer-mediatek: error out on probe defer
+>>
+>> If the clocks are not yet present, because they are loaded after
+>> the timer is initialized, we are unable to boot.
+>> Check if the return value of timer_of_init and return on EPROBE_DEFER.
+>>
+>> Error seen is:
+>> [    0.008337] Failed to get clock for /timer@10004000
+>> [    0.013435] WARNING: CPU: 0 PID: 0 at ../drivers/clk/clk.c:3615
+>> __clk_put+0xf0/0x120
+>> [    0.021453] Modules linked in:
+>> [    0.024614] CPU: 0 PID: 0 Comm: swapper/0 Not tainted
+>> 4.20.0-rc1-00063-g2859d9abd7e8 #2
+>> [    0.032902] Hardware name: MediaTek MT7622 RFB1 board (DT)
+>> [    0.038580] pstate: 20000085 (nzCv daIf -PAN -UAO)
+>> [    0.043538] pc : __clk_put+0xf0/0x120
+>> [    0.047328] lr : clk_put+0xc/0x18
+>> [    0.050753] sp : ffff000009163ed0
+>> [    0.054178] x29: ffff000009163ed0 x28: 0000000041010018
+>> [    0.059676] x27: 0000000000000000 x26: 0000000000000000
+>> [    0.065174] x25: ffff0000090cb008 x24: ffff80001dfd7800
+>> [    0.070672] x23: ffff000008f934b8 x22: ffff80001dfdeae0
+>> [    0.076169] x21: ffff80001dfdeae0 x20: fffffffffffffdfb
+>> [    0.081668] x19: ffff00000929ac40 x18: ffffffffffffffff
+>> [    0.087166] x17: 0000000000000000 x16: 0000000000000000
+>> [    0.092664] x15: ffff0000091696c8 x14: ffff0000892cd70f
+>> [    0.098162] x13: ffff0000092cd71d x12: ffff000009181348
+>> [    0.103661] x11: ffff000009181000 x10: 0000000005f5e0ff
+>> [    0.109159] x9 : 0000000000000040 x8 : ffff000009181400
+>> [    0.114657] x7 : ffff80001c800270 x6 : 0000000000000000
+>> [    0.120155] x5 : ffff80001c800248 x4 : 0000000000000000
+>> [    0.125653] x3 : 0000000000000000 x2 : 0000000000000000
+>> [    0.131151] x1 : 0000000000000000 x0 : fffffffffffffdfb
+>> [    0.136649] Call trace:
+>> [    0.139175]  __clk_put+0xf0/0x120
+>> [    0.142605]  timer_of_cleanup+0x60/0x7c
+>> [    0.146572]  mtk_gpt_init+0x18c/0x1a0
+>> [    0.150359]  timer_probe+0x74/0x10c
+>> [    0.153969]  time_init+0x14/0x44
+>> [    0.157307]  start_kernel+0x29c/0x414
+>> [    0.161098] ---[ end trace c3137b005300b618 ]---
+>>
+>> Fixes: a0858f937960 ("clocksource/drivers/timer-mediatek: Convert the driver to
+>> timer-of")
+>> Fixes: e3af677607d9 ("clocksource/drivers/timer-mediatek: Add support for system
+>> timer")
+>> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+>> ---
+>>  drivers/clocksource/timer-mediatek.c | 12 ++++++++++--
+>>  1 file changed, 10 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/clocksource/timer-mediatek.c
+>> b/drivers/clocksource/timer-mediatek.c
+>> index eb10321f8517..d40c77a65b08 100644
+>> --- a/drivers/clocksource/timer-mediatek.c
+>> +++ b/drivers/clocksource/timer-mediatek.c
+>> @@ -276,8 +276,12 @@ static int __init mtk_syst_init(struct device_node *node)
+>>  	to.of_irq.handler = mtk_syst_handler;
+>>
+>>  	ret = timer_of_init(node, &to);
+>> -	if (ret)
+>> +	if (ret) {
+>> +		if (ret == -EPROBE_DEFER)
+>> +			return ret;
+>> +
+>>  		goto err;
+>> +	}
+>>
+>>  	clockevents_config_and_register(&to.clkevt, timer_of_rate(&to),
+>>  					TIMER_SYNC_TICKS, 0xffffffff);
+>> @@ -301,8 +305,12 @@ static int __init mtk_gpt_init(struct device_node *node)
+>>  	to.of_irq.handler = mtk_gpt_interrupt;
+>>
+>>  	ret = timer_of_init(node, &to);
+>> -	if (ret)
+>> +	if (ret) {
+>> +		if (ret == -EPROBE_DEFER)
+>> +			return ret;
+>> +
+>>  		goto err;
+>> +	}
+>>
+>>  	/* Configure clock source */
+>>  	mtk_gpt_setup(&to, TIMER_CLK_SRC, GPT_CTRL_OP_FREERUN);
 > 
-> I meant the following scenario:
-> Assume that controller work in Device role and it raise interrupt for Device part. 
-> Now host is kept in reset. 
-> 1. System receive interrupt 
-> 2.  Kernel call drd_irq but this function return IRQ_NONE
-> 3.  Kernel call cdns3_host_irq and driver has to read some interrupt register to check if 
->      this event is addressed to him. In this moment we can have unknown behavior. 
-
-This is the problem. If device is not able to figure out its interrupt event then
-it must unregister the ISR.
-
-> 4.  Kernel call cdns3_irq_handler  (device). This point probably will not happen because 
->     It could have stuck at point 3. 
+> I tried this patch, but it didn't work. I think *_OF_DECLARE() is not
+> compatible with EPROBE_DEFER.
 > 
-> Ok, I think I understood. After changing role, the driver unregisters the interrupt function
-> used by previous role so point 3 never happen. 
-> 
-> I will try to check how it works.  
+> I also found the similar discussion about this issue:
+> https://patchwork.kernel.org/patch/10580345/
 > 
 
-Cool! Thanks.
+Got it. So from my research we would need to use CLK_OF_DECLARE_DRIVER for:
+    mainpll (pll)
 
->>>
->>> We doesn't know the order in which  the system will call interrupts function related to
->>>  the shared interrupt line.
->>
->> Order shouldn't matter. Each user will check its own events return IRQ_NONE if they
->> didn't cause the IRQ.
->>>
->>
->> <snip>
->>
+    syspll4_d16 (div)
 
-cheers,
--roger
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+    f10m_ref_sel (mux)
+
+    infra_apxgpt_pd (gate)
+
+Anyway, as a quick fix we can delete the device node. I'll reword you commit
+message and I'll also reword commit message for 1/3
+
+In the future please try to not put links into the commit message but explain
+what is happening.
+
+Regards,
+Matthias
