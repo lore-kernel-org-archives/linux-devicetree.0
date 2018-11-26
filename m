@@ -1,42 +1,34 @@
-From: Otavio Salvador <otavio.salvador@ossystems.com.br>
-Subject: Re: [PATCH 08/13] ARM: dts: rv1108: Fix the PMU interrupt number
-Date: Mon, 26 Nov 2018 11:36:01 -0200
-Message-ID: <CAP9ODKrX__KXo-XEdoaL=qwALFAxyzKV4-xu_t5baMqN1kQH4g@mail.gmail.com>
-References: <20181125211907.9895-1-otavio@ossystems.com.br>
- <20181125211907.9895-8-otavio@ossystems.com.br> <3361921.c4PKPBIJKP@phil>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v3 3/3] of/property: Add of_fwnode_name()
+Date: Mon, 26 Nov 2018 15:40:26 +0200
+Message-ID: <20181126134026.GA26964@kuha.fi.intel.com>
+References: <20181126114752.69597-1-heikki.krogerus@linux.intel.com>
+ <20181126114752.69597-4-heikki.krogerus@linux.intel.com>
+ <20181126130532.GH10650@smile.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3361921.c4PKPBIJKP@phil>
+Content-Disposition: inline
+In-Reply-To: <20181126130532.GH10650@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Otavio Salvador <otavio@ossystems.com.br>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Fabio Berton <fabio.berton@ossystems.com.br>, Kernel development list <linux-kernel@vger.kernel.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Heiko,
+On Mon, Nov 26, 2018 at 03:05:32PM +0200, Andy Shevchenko wrote:
+> On Mon, Nov 26, 2018 at 02:47:52PM +0300, Heikki Krogerus wrote:
+> > This implements get_name fwnode op for DT.
+> 
+> > +static int of_fwnode_get_name(const struct fwnode_handle *fwnode, char *buf,
+> > +			      size_t len)
+> > +{
+> > +	snprintf(buf, len, "%pOFn", to_of_node(fwnode));
+> 
+> Same concerns.
 
-On Mon, Nov 26, 2018 at 3:59 AM Heiko Stuebner <heiko@sntech.de> wrote:
-> Am Sonntag, 25. November 2018, 22:19:02 CET schrieb Otavio Salvador:
-> > According to the Rockchip vendor tree the PMU interrupt number is
-> > 76, so fix it accordingly.
-> >
-> > Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
-> > Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
->
-> looks ok, especially as the TRM I have doesn't list neither irqs :-)
-> But please explain the second Signed-off by Fabio?
->
-> If Fabio is the original author, the patch From should reflect that
-> and the Signed-off-by lines should be swapped. As it is now
-> I would expect Fabio being the one sending the patches.
-> Or is it supposed to be a "Co-developed-by:"?
-> See Documentation/process/5.Posting.rst.
+OK, I'll fix all of these.
 
-He works with me and he applied and tested it in our internal tree for
-our customer. He reviewed and tested this with me, so I'd like to
-provide him credit as well.
+thanks,
 
 -- 
-Otavio Salvador                             O.S. Systems
-http://www.ossystems.com.br        http://code.ossystems.com.br
-Mobile: +55 (53) 9 9981-7854          Mobile: +1 (347) 903-9750
+heikki
