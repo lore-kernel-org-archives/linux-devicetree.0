@@ -1,31 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH linux-next 09/10] dt-bindings: net: ti: deprecate
- cpsw-phy-sel bindings
-Date: Mon, 26 Nov 2018 13:58:38 -0600
-Message-ID: <20181126195838.GA19167@bogus>
-References: <20181126001531.12974-1-grygorii.strashko@ti.com>
- <20181126001531.12974-10-grygorii.strashko@ti.com>
+Subject: Re: [PATCH v6 2/2] dt-bindings: mailbox: Add Xilinx IPI Mailbox
+Date: Mon, 26 Nov 2018 14:05:49 -0600
+Message-ID: <20181126200549.GA611@bogus>
+References: <1542662761-31158-1-git-send-email-wendy.liang@xilinx.com>
+ <1542662761-31158-3-git-send-email-wendy.liang@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181126001531.12974-10-grygorii.strashko@ti.com>
+In-Reply-To: <1542662761-31158-3-git-send-email-wendy.liang@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Tony Lindgren <tony@atomide.com>, Kishon Vijay Abraham I <kishon@ti.com>, netdev@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: jassisinghbrar@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Wendy Liang <wendy.liang@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 25, 2018 at 06:15:30PM -0600, Grygorii Strashko wrote:
-> The cpsw-phy-sel driver was replaced with new PHY driver phy-gmii-sel, so
-> deprecate cpsw-phy-sel bindings.
+On Mon, 19 Nov 2018 13:26:01 -0800, Wendy Liang wrote:
+> Xilinx ZynqMP IPI(Inter Processor Interrupt) is a hardware block
+> in ZynqMP SoC used for the communication between various processor
+> systems.
 > 
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: Tony Lindgren <tony@atomide.com>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> Signed-off-by: Wendy Liang <wendy.liang@xilinx.com>
 > ---
->  Documentation/devicetree/bindings/net/cpsw-phy-sel.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt   | 127 +++++++++++++++++++++
+>  1 file changed, 127 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
+> 
 
-Please add acks/reviewed-bys when posting new versions.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
