@@ -1,214 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v10 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ
- Firmware bindings
-Date: Mon, 26 Nov 2018 12:58:08 -0600
-Message-ID: <20181126185808.GA32621@bogus>
-References: <1542796967-5949-1-git-send-email-tdas@codeaurora.org>
- <1542796967-5949-2-git-send-email-tdas@codeaurora.org>
- <20181121180236.GS22824@google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Parthiban Nallathambi <pn@denx.de>
+Subject: [PATCH v2 0/4] Add Actions Semi Owl family S700 I2C support
+Date: Mon, 26 Nov 2018 19:58:17 +0100
+Message-ID: <20181126185821.2480449-1-pn@denx.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181121180236.GS22824@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Taniya Das <tdas@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
+To: afaerber@suse.de, manivannan.sadhasivam@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de
+Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux@cubietech.com, thomas.liau@actions-semi.com, Parthiban Nallathambi <pn@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 21, 2018 at 10:02:36AM -0800, Matthias Kaehlcke wrote:
-> On Wed, Nov 21, 2018 at 04:12:46PM +0530, Taniya Das wrote:
-> > Add QCOM cpufreq firmware device bindings for Qualcomm Technology Inc's
-> > SoCs. This is required for managing the cpu frequency transitions which are
-> > controlled by the hardware engine.
-> > 
-> > Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> > ---
-> >  .../bindings/cpufreq/cpufreq-qcom-hw.txt           | 172 +++++++++++++++++++++
-> >  1 file changed, 172 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
-> > new file mode 100644
-> > index 0000000..90e396b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
-> > @@ -0,0 +1,172 @@
-> > +Qualcomm Technologies, Inc. CPUFREQ Bindings
-> > +
-> > +CPUFREQ HW is a hardware engine used by some Qualcomm Technologies, Inc. (QTI)
-> > +SoCs to manage frequency in hardware. It is capable of controlling frequency
-> > +for multiple clusters.
-> > +
-> > +Properties:
-> > +- compatible
-> > +	Usage:		required
-> > +	Value type:	<string>
-> > +	Definition:	must be "qcom,cpufreq-hw".
-> > +
-> > +- clocks
-> > +	Usage:		required
-> > +	Value type:	<phandle> From common clock binding.
-> > +	Definition:	clock handle for XO clock and GPLL0 clock.
-> > +
-> > +- clock-names
-> > +	Usage:		required
-> > +	Value type:	<string> From common clock binding.
-> > +	Definition:	must be "xo", "cpu_clk".
-> > +
-> > +- reg
-> > +	Usage:		required
-> > +	Value type:	<prop-encoded-array>
-> > +	Definition:	Addresses and sizes for the memory of the HW bases in
-> > +			each frequency domain.
-> > +- reg-names
-> > +	Usage:		Optional
-> > +	Value type:	<string>
-> > +	Definition:	Frequency domain name i.e.
-> > +			"freq-domain0", "freq-domain1".
-> > +
-> > +- freq-domain-cells:
-> > +	Usage:		required.
-> > +	Definition:	Number of cells in a freqency domain specifier.
-> > +
-> > +* Property qcom,freq-domain
-> > +Devices supporting freq-domain must set their "qcom,freq-domain" property with
-> > +phandle to a cpufreq_hw followed by the Domain ID(0/1) in the CPU DT node.
-> > +
-> > +
-> > +Example:
-> > +
-> > +Example 1: Dual-cluster, Quad-core per cluster. CPUs within a cluster switch
-> > +DCVS state together.
-> > +
-> > +/ {
-> > +	cpus {
-> > +		#address-cells = <2>;
-> > +		#size-cells = <0>;
-> > +
-> > +		CPU0: cpu@0 {
-> > +			device_type = "cpu";
-> > +			compatible = "qcom,kryo385";
-> > +			reg = <0x0 0x0>;
-> > +			enable-method = "psci";
-> > +			next-level-cache = <&L2_0>;
-> > +			qcom,freq-domain = <&cpufreq_hw 0>;
-> > +			L2_0: l2-cache {
-> > +				compatible = "cache";
-> > +				next-level-cache = <&L3_0>;
-> > +				L3_0: l3-cache {
-> > +				      compatible = "cache";
-> > +				};
-> > +			};
-> > +		};
-> > +
-> > +		CPU1: cpu@100 {
-> > +			device_type = "cpu";
-> > +			compatible = "qcom,kryo385";
-> > +			reg = <0x0 0x100>;
-> > +			enable-method = "psci";
-> > +			next-level-cache = <&L2_100>;
-> > +			qcom,freq-domain = <&cpufreq_hw 0>;
-> > +			L2_100: l2-cache {
-> > +				compatible = "cache";
-> > +				next-level-cache = <&L3_0>;
-> > +			};
-> > +		};
-> > +
-> > +		CPU2: cpu@200 {
-> > +			device_type = "cpu";
-> > +			compatible = "qcom,kryo385";
-> > +			reg = <0x0 0x200>;
-> > +			enable-method = "psci";
-> > +			next-level-cache = <&L2_200>;
-> > +			qcom,freq-domain = <&cpufreq_hw 0>;
-> > +			L2_200: l2-cache {
-> > +				compatible = "cache";
-> > +				next-level-cache = <&L3_0>;
-> > +			};
-> > +		};
-> > +
-> > +		CPU3: cpu@300 {
-> > +			device_type = "cpu";
-> > +			compatible = "qcom,kryo385";
-> > +			reg = <0x0 0x300>;
-> > +			enable-method = "psci";
-> > +			next-level-cache = <&L2_300>;
-> > +			qcom,freq-domain = <&cpufreq_hw 0>;
-> > +			L2_300: l2-cache {
-> > +				compatible = "cache";
-> > +				next-level-cache = <&L3_0>;
-> > +			};
-> > +		};
-> > +
-> > +		CPU4: cpu@400 {
-> > +			device_type = "cpu";
-> > +			compatible = "qcom,kryo385";
-> > +			reg = <0x0 0x400>;
-> > +			enable-method = "psci";
-> > +			next-level-cache = <&L2_400>;
-> > +			qcom,freq-domain = <&cpufreq_hw 1>;
-> > +			L2_400: l2-cache {
-> > +				compatible = "cache";
-> > +				next-level-cache = <&L3_0>;
-> > +			};
-> > +		};
-> > +
-> > +		CPU5: cpu@500 {
-> > +			device_type = "cpu";
-> > +			compatible = "qcom,kryo385";
-> > +			reg = <0x0 0x500>;
-> > +			enable-method = "psci";
-> > +			next-level-cache = <&L2_500>;
-> > +			qcom,freq-domain = <&cpufreq_hw 1>;
-> > +			L2_500: l2-cache {
-> > +				compatible = "cache";
-> > +				next-level-cache = <&L3_0>;
-> > +			};
-> > +		};
-> > +
-> > +		CPU6: cpu@600 {
-> > +			device_type = "cpu";
-> > +			compatible = "qcom,kryo385";
-> > +			reg = <0x0 0x600>;
-> > +			enable-method = "psci";
-> > +			next-level-cache = <&L2_600>;
-> > +			qcom,freq-domain = <&cpufreq_hw 1>;
-> > +			L2_600: l2-cache {
-> > +				compatible = "cache";
-> > +				next-level-cache = <&L3_0>;
-> > +			};
-> > +		};
-> > +
-> > +		CPU7: cpu@700 {
-> > +			device_type = "cpu";
-> > +			compatible = "qcom,kryo385";
-> > +			reg = <0x0 0x700>;
-> > +			enable-method = "psci";
-> > +			next-level-cache = <&L2_700>;
-> > +			qcom,freq-domain = <&cpufreq_hw 1>;
-> > +			L2_700: l2-cache {
-> > +				compatible = "cache";
-> > +				next-level-cache = <&L3_0>;
-> > +			};
-> > +		};
-> > +	};
-> > +
-> > + soc {
-> > +	cpufreq_hw: cpufreq@17d43000 {
-> > +		compatible = "qcom,cpufreq-hw";
-> > +		reg = <0x17d43000 0x1400>, <0x17d45800 0x1400>;
-> > +		reg-names = "freq-domain0", "freq-domain1";
-> > +
-> > +		clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
-> > +		clock-names = "xo", "gcc_cpuss_gpll0_clk_src";
-> 
-> I don't have/find the document with the clock configuration of this
-> IP block, but the 'clock-names' sound more like aliases for the actual
-> clocks specified in the 'clocks' property (especially
-> 'gcc_cpuss_gpll0_clk_src') than input signals from the IP POV, which
-> I'd expect to have more generic names.
+This patch series adds support for Actions Semi Owl SoC family S700
+I2C controller. S700 provides 4 I2C masters and with cubieboard7
+2 (I2C0 and I2C1) are exposed.
 
-Also, this doesn't match the documented value above.
+Added pinctrl definition for I2C controllers in cubieboard7. This patch
+depends on s700 pinctrl driver support (yet to be merged),
+https://lkml.org/lkml/2018/11/19/514
+https://lore.kernel.org/patchwork/patch/1012859/
 
-Rob
+Changelog in v2:
+- Initial version https://lore.kernel.org/patchwork/patch/1011911/ only
+added the I2C nodes using s900 compatible property. Now, new s700
+compatiable string is added and used for S700
+- Device tree bindings added with s700 compatible string
+- pinctrl definition for cubieboard7
+
+Parthiban Nallathambi (4):
+  dt-bindings: i2c: Add S700 support for Actions Semi Soc's
+  i2c: Add Actions Semiconductor Owl family S700 I2C support
+  arm64: dts: actions: s700: Add I2C controller nodes
+  arm64: dts: actions: s700-cubieboard7: Enable I2C0 and I2C1
+
+ .../devicetree/bindings/i2c/i2c-owl.txt       |  2 +-
+ .../boot/dts/actions/s700-cubieboard7.dts     | 53 +++++++++++++++++++
+ arch/arm64/boot/dts/actions/s700.dtsi         | 40 ++++++++++++++
+ drivers/i2c/busses/i2c-owl.c                  |  1 +
+ 4 files changed, 95 insertions(+), 1 deletion(-)
+
+-- 
+2.17.2
