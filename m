@@ -1,101 +1,274 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [RCF PATCH,v2,2/2] pwm: imx: Configure output to GPIO in
- disabled state
-Date: Mon, 26 Nov 2018 13:23:16 +0100
-Message-ID: <20181126132316.541a4131@ipc1.ka-ro>
-References: <20181114215120.vddykljqyavm64wj@pengutronix.de>
-        <20181115152545.GA8611@ulmo>
-        <20181115203733.qvonika6yhn2bsnb@pengutronix.de>
-        <20181116083430.7f1d8452@ipc1.ka-ro>
-        <20181116082557.l2ljgu3hsu7tvdci@pengutronix.de>
-        <91640f9b-d219-553e-043a-c6151f2f68d7@ysoft.com>
-        <20181122162359.ufngpgxkenlmgqni@pengutronix.de>
-        <b332b319-cbb3-547f-c8b7-1dd275c1596d@ysoft.com>
-        <20181122190321.ktqegs7kpvhcemvi@pengutronix.de>
-        <9da8c6d9-d97c-200c-d8e4-2eb9f73eedc5@ysoft.com>
-        <20181126115123.GA15164@ulmo>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH 2/2] ARM: dts: imx28: Fix memory node duplicaton
+Date: Mon, 26 Nov 2018 10:08:56 -0200
+Message-ID: <1543234136-6824-2-git-send-email-festevam@gmail.com>
+References: <1543234136-6824-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181126115123.GA15164@ulmo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: =?UTF-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Linus Walleij <linus.walleij@linaro.org>, viresh kumar <viresh.kumar@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1543234136-6824-1-git-send-email-festevam@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Thierry Reding <thierry.reding@gmail.com> wrote:
+Boards based on imx28 have duplicate memory nodes:
 
-> On Fri, Nov 23, 2018 at 03:15:11PM +0000, Vokáč Michal wrote:
-> > On 22.11.2018 20:03, Uwe Kleine-König wrote:  
-> > > On Thu, Nov 22, 2018 at 04:46:39PM +0000, Vokáč Michal wrote:  
-> > >> On 22.11.2018 17:23, Uwe Kleine-König wrote:  
-> > >>> On Thu, Nov 22, 2018 at 03:42:14PM +0000, Vokáč Michal wrote:  
-> > >>>> On 16.11.2018 09:25, Uwe Kleine-König wrote:  
-> > >>>>> On Fri, Nov 16, 2018 at 08:34:30AM +0100, Lothar Waßmann wrote:  
-> > >>>>>> No. You can disable the output driver via pinctrl, so that only the
-> > >>>>>> selected pull-up/down is relevant. The pin function and GPIO register
-> > >>>>>> settings don't matter at all in this case.  
-> > >>>>
-> > >>>> Lothar, please can you be more specific how would you do that? IFAIK the
-> > >>>> pull-up/down internal resistors have effect only if the pin is configured
-> > >>>> as GPIO *input* (on i.MX6 at least). See the TRM, 29.4.2.2 Output driver:
-> > >>>>
-> > >>>>     "Internal pull-up, pull-down resistors, and pad keeper are disabled in
-> > >>>>      output mode."  
-> > > 
-> > > This would mean you'd have to rely on an external pull up for your use
-> > > case. I wouldn't be surprised however if DSE=0 wouldn't count as "output
-> > > mode". Given the reliability of NXP documentation I wouldn't bet neither
-> > > on one nor the other possibility.  
-> > 
-> > Yeah, the NXP documentation sometimes does not really match reality.
-> > My use case is based on the fact that I configure the pin as input in
-> > the driver. Then it works just fine.
-> >   
-> > >>> So I'd expect this to really work on i.MX6 but not the earlier SoCs
-> > >>> without a gpio specifier.  
-> > >>
-> > >> Maybe you would expect it to work but I already tested and measured
-> > >> that weeks ago ;) It did not work.  
-> > > 
-> > > Which pin/gpio do we talk about? Which i.MX6 variant did you test this
-> > > on? (Assuming i.MX6D or i.MX6Q and PAD_DISP0_DATA09, did you try setting
-> > > 
-> > > 	IOMUXC_SW_MUX_CTL_PAD_DISP0_DATA09 (0x020E0194) = 0x00000005
-> > > 	IOMUXC_SW_PAD_CTL_PAD_DISP0_DATA09 (0x020E04A8) = 0x0000b080
-> > > 
-> > > and then play with GPIO 4.30 direction and output value?)  
-> > 
-> > My test setup is as follows:
-> > - SoC is i.MX6DL or i.MX6S - I have three board variants in total.
-> > - Pin used for PWM/GPIO is PAD_GPIO9.
-> > - The pin is not connected to any circuit. Just a test point.
-> > - pinctrl setup in DT:
-> >    - for "pwm":
-> >      - fsl,pins = <MX6QDL_PAD_GPIO_9__PWM1_OUT 0x8>
-> >      - IOMUXC_SW_MUX_CTL_PAD_GPIO09 = 0x00000004
-> >      - IOMUXC_SW_PAD_CTL_PAD_GPIO09 = 0x00000008
-> > 
-> >    - for "gpio":
-> >     - fsl,pins = <MX6QDL_PAD_GPIO_9__GPIO1_IO09 0xb000>
-> >     - IOMUXC_SW_MUX_CTL_PAD_GPIO09 = 0x00000005
-> >     - IOMUXC_SW_PAD_CTL_PAD_GPIO09 = 0x0000b000  
-> 
-> Does it help if you additionally set the ODE bit (bit 11) here?
-> 
-That only helps to NOT actively pulling the pin HIGH, but the opposite
-is what is needed here.
+- One coming from the board dts file: memory@
 
+- One coming from the imx28.dtsi file.
 
-Lothar Waßmann
+Fix the duplication by removing the memory node from the dtsi file
+and by adding 'device_type = "memory";' in the board dts.
+
+Reported-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+---
+ arch/arm/boot/dts/imx28-apf28.dts              | 1 +
+ arch/arm/boot/dts/imx28-apx4devkit.dts         | 1 +
+ arch/arm/boot/dts/imx28-cfa10036.dts           | 1 +
+ arch/arm/boot/dts/imx28-duckbill-2-485.dts     | 1 +
+ arch/arm/boot/dts/imx28-duckbill-2-enocean.dts | 1 +
+ arch/arm/boot/dts/imx28-duckbill-2-spi.dts     | 1 +
+ arch/arm/boot/dts/imx28-duckbill-2.dts         | 1 +
+ arch/arm/boot/dts/imx28-duckbill.dts           | 1 +
+ arch/arm/boot/dts/imx28-eukrea-mbmx283lc.dts   | 1 +
+ arch/arm/boot/dts/imx28-eukrea-mbmx287lc.dts   | 1 +
+ arch/arm/boot/dts/imx28-evk.dts                | 1 +
+ arch/arm/boot/dts/imx28-m28.dtsi               | 1 +
+ arch/arm/boot/dts/imx28-m28cu3.dts             | 1 +
+ arch/arm/boot/dts/imx28-m28evk.dts             | 1 +
+ arch/arm/boot/dts/imx28-sps1.dts               | 1 +
+ arch/arm/boot/dts/imx28-ts4600.dts             | 1 +
+ arch/arm/boot/dts/imx28-tx28.dts               | 1 +
+ arch/arm/boot/dts/imx28.dtsi                   | 2 --
+ 18 files changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx28-apf28.dts b/arch/arm/boot/dts/imx28-apf28.dts
+index bab7834..b6976fb 100644
+--- a/arch/arm/boot/dts/imx28-apf28.dts
++++ b/arch/arm/boot/dts/imx28-apf28.dts
+@@ -17,6 +17,7 @@
+ 	compatible = "armadeus,imx28-apf28", "fsl,imx28";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x08000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx28-apx4devkit.dts b/arch/arm/boot/dts/imx28-apx4devkit.dts
+index 6c9b498..3a184d1 100644
+--- a/arch/arm/boot/dts/imx28-apx4devkit.dts
++++ b/arch/arm/boot/dts/imx28-apx4devkit.dts
+@@ -7,6 +7,7 @@
+ 	compatible = "bluegiga,apx4devkit", "fsl,imx28";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x04000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx28-cfa10036.dts b/arch/arm/boot/dts/imx28-cfa10036.dts
+index 8337ca2..d3e3622 100644
+--- a/arch/arm/boot/dts/imx28-cfa10036.dts
++++ b/arch/arm/boot/dts/imx28-cfa10036.dts
+@@ -17,6 +17,7 @@
+ 	compatible = "crystalfontz,cfa10036", "fsl,imx28";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x08000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx28-duckbill-2-485.dts b/arch/arm/boot/dts/imx28-duckbill-2-485.dts
+index f4f2b3d..19957c2 100644
+--- a/arch/arm/boot/dts/imx28-duckbill-2-485.dts
++++ b/arch/arm/boot/dts/imx28-duckbill-2-485.dts
+@@ -20,6 +20,7 @@
+ 	compatible = "i2se,duckbill-2-485", "i2se,duckbill-2", "fsl,imx28";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x08000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx28-duckbill-2-enocean.dts b/arch/arm/boot/dts/imx28-duckbill-2-enocean.dts
+index 71d0fcb..4982131 100644
+--- a/arch/arm/boot/dts/imx28-duckbill-2-enocean.dts
++++ b/arch/arm/boot/dts/imx28-duckbill-2-enocean.dts
+@@ -21,6 +21,7 @@
+ 	compatible = "i2se,duckbill-2-enocean", "i2se,duckbill-2", "fsl,imx28";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x08000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx28-duckbill-2-spi.dts b/arch/arm/boot/dts/imx28-duckbill-2-spi.dts
+index 6580ec6..d38d35b 100644
+--- a/arch/arm/boot/dts/imx28-duckbill-2-spi.dts
++++ b/arch/arm/boot/dts/imx28-duckbill-2-spi.dts
+@@ -24,6 +24,7 @@
+ 	};
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x08000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx28-duckbill-2.dts b/arch/arm/boot/dts/imx28-duckbill-2.dts
+index 693634e..38160fb 100644
+--- a/arch/arm/boot/dts/imx28-duckbill-2.dts
++++ b/arch/arm/boot/dts/imx28-duckbill-2.dts
+@@ -20,6 +20,7 @@
+ 	compatible = "i2se,duckbill-2", "fsl,imx28";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x08000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx28-duckbill.dts b/arch/arm/boot/dts/imx28-duckbill.dts
+index 16f5244..7139c07 100644
+--- a/arch/arm/boot/dts/imx28-duckbill.dts
++++ b/arch/arm/boot/dts/imx28-duckbill.dts
+@@ -19,6 +19,7 @@
+ 	compatible = "i2se,duckbill", "fsl,imx28";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x08000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx28-eukrea-mbmx283lc.dts b/arch/arm/boot/dts/imx28-eukrea-mbmx283lc.dts
+index b70f334..28dab6d 100644
+--- a/arch/arm/boot/dts/imx28-eukrea-mbmx283lc.dts
++++ b/arch/arm/boot/dts/imx28-eukrea-mbmx283lc.dts
+@@ -24,6 +24,7 @@
+ 	compatible = "eukrea,mbmx283lc", "eukrea,mbmx28lc", "fsl,imx28";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x04000000>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx28-eukrea-mbmx287lc.dts b/arch/arm/boot/dts/imx28-eukrea-mbmx287lc.dts
+index 65efb78..7c3d552 100644
+--- a/arch/arm/boot/dts/imx28-eukrea-mbmx287lc.dts
++++ b/arch/arm/boot/dts/imx28-eukrea-mbmx287lc.dts
+@@ -23,6 +23,7 @@
+ 	compatible = "eukrea,mbmx287lc", "eukrea,mbmx283lc", "eukrea,mbmx28lc", "fsl,imx28";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x08000000>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx28-evk.dts b/arch/arm/boot/dts/imx28-evk.dts
+index 5778300..96c1d10 100644
+--- a/arch/arm/boot/dts/imx28-evk.dts
++++ b/arch/arm/boot/dts/imx28-evk.dts
+@@ -10,6 +10,7 @@
+ 	compatible = "fsl,imx28-evk", "fsl,imx28";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x08000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx28-m28.dtsi b/arch/arm/boot/dts/imx28-m28.dtsi
+index 0ec415e..298ad28 100644
+--- a/arch/arm/boot/dts/imx28-m28.dtsi
++++ b/arch/arm/boot/dts/imx28-m28.dtsi
+@@ -16,6 +16,7 @@
+ 	compatible = "aries,m28", "denx,m28", "fsl,imx28";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x08000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx28-m28cu3.dts b/arch/arm/boot/dts/imx28-m28cu3.dts
+index 8883d36..ece3310 100644
+--- a/arch/arm/boot/dts/imx28-m28cu3.dts
++++ b/arch/arm/boot/dts/imx28-m28cu3.dts
+@@ -17,6 +17,7 @@
+ 	compatible = "msr,m28cu3", "fsl,imx28";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x08000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx28-m28evk.dts b/arch/arm/boot/dts/imx28-m28evk.dts
+index 893886d..7d64301 100644
+--- a/arch/arm/boot/dts/imx28-m28evk.dts
++++ b/arch/arm/boot/dts/imx28-m28evk.dts
+@@ -1,4 +1,5 @@
+ /*
++
+  * Copyright (C) 2012 Marek Vasut <marex@denx.de>
+  *
+  * The code contained herein is licensed under the GNU General Public
+diff --git a/arch/arm/boot/dts/imx28-sps1.dts b/arch/arm/boot/dts/imx28-sps1.dts
+index ea9212f..42c88a6 100644
+--- a/arch/arm/boot/dts/imx28-sps1.dts
++++ b/arch/arm/boot/dts/imx28-sps1.dts
+@@ -17,6 +17,7 @@
+ 	compatible = "schulercontrol,imx28-sps1", "fsl,imx28";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x08000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx28-ts4600.dts b/arch/arm/boot/dts/imx28-ts4600.dts
+index dccdd6b..e3fd411 100644
+--- a/arch/arm/boot/dts/imx28-ts4600.dts
++++ b/arch/arm/boot/dts/imx28-ts4600.dts
+@@ -20,6 +20,7 @@
+ 	compatible = "technologic,imx28-ts4600", "fsl,imx28";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x10000000>;   /* 256MB */
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx28-tx28.dts b/arch/arm/boot/dts/imx28-tx28.dts
+index b8f4643..164254c 100644
+--- a/arch/arm/boot/dts/imx28-tx28.dts
++++ b/arch/arm/boot/dts/imx28-tx28.dts
+@@ -66,6 +66,7 @@
+ 	};
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0>; /* will be filled in by U-Boot */
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+index 2b7efb6..e14d8ef 100644
+--- a/arch/arm/boot/dts/imx28.dtsi
++++ b/arch/arm/boot/dts/imx28.dtsi
+@@ -14,10 +14,8 @@
+ 	 * The decompressor and also some bootloaders rely on a
+ 	 * pre-existing /chosen node to be available to insert the
+ 	 * command line and merge other ATAGS info.
+-	 * Also for U-Boot there must be a pre-existing /memory node.
+ 	 */
+ 	chosen {};
+-	memory { device_type = "memory"; };
+ 
+ 	aliases {
+ 		ethernet0 = &mac0;
 -- 
-___________________________________________________________
-
-Ka-Ro electronics GmbH | Pascalstraße 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Geschäftsführer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
-
-www.karo-electronics.de | info@karo-electronics.de
-___________________________________________________________
+2.7.4
