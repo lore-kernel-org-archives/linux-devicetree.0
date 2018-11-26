@@ -1,218 +1,579 @@
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: RE: [PATCH V6 2/2] can: flexcan: add self wakeup support
-Date: Mon, 26 Nov 2018 01:12:02 +0000
-Message-ID: <DB7PR04MB46180404F4201A8FAA52400FE6D70@DB7PR04MB4618.eurprd04.prod.outlook.com>
-References: <20181123083304.3232-1-qiangqing.zhang@nxp.com>
- <20181123083304.3232-3-qiangqing.zhang@nxp.com>
- <1be643fb-e966-fc2d-d19f-2a1e45b58641@pengutronix.de>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [PATCH 1/2 v3] powerpc/fsl: Use new clockgen binding
+Date: Sun, 25 Nov 2018 19:19:00 -0600
+Message-ID: <09ee2f91765add47e628e0ab03776d468cec0914.camel@buserror.net>
+References: <20181031065736.32719-1-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1be643fb-e966-fc2d-d19f-2a1e45b58641@pengutronix.de>
-Content-Language: en-US
+In-Reply-To: <20181031065736.32719-1-andy.tang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "wg@grandegger.com" <wg@grandegger.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng DONG <aisheng.dong@nxp.com>
+To: Yuantian Tang <andy.tang@nxp.com>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-DQpIaSBNYXJjLA0KDQpGaXJzdGx5LCB0aGFua3MgZm9yIHJldmlld2luZyB0aGUgcGF0Y2guIFRo
-ZW4sIEkgYW0gY29uZnVzZWQgdG8gZG8gdXBzdHJlYW0gb24gImxpbnV4LWNhbiIgb3IgImxpbnV4
-LWNhbi1uZXh0IiBkdWUgdG8gSSBmaW5kICJsaW51eC1jYW4iIGlzIG1vcmUgdXBkYXRlZCB0aGFu
-ICJsaW51eC1jYW4tbmV4dCIuDQoNCkJlc3QgUmVnYXJkcywNCkpvYWtpbSBaaGFuZw0KDQo+IC0t
-LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1hcmMgS2xlaW5lLUJ1ZGRlIDxta2xA
-cGVuZ3V0cm9uaXguZGU+DQo+IFNlbnQ6IDIwMTjlubQxMeaciDIz5pelIDIzOjA0DQo+IFRvOiBK
-b2FraW0gWmhhbmcgPHFpYW5ncWluZy56aGFuZ0BueHAuY29tPjsgbGludXgtY2FuQHZnZXIua2Vy
-bmVsLm9yZzsNCj4gcm9iaCtkdEBrZXJuZWwub3JnDQo+IENjOiB3Z0BncmFuZGVnZ2VyLmNvbTsg
-bWFyay5ydXRsYW5kQGFybS5jb207DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51
-eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXgNCj4gPGxpbnV4LWlteEBueHAu
-Y29tPjsgQWlzaGVuZyBET05HIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6
-IFtQQVRDSCBWNiAyLzJdIGNhbjogZmxleGNhbjogYWRkIHNlbGYgd2FrZXVwIHN1cHBvcnQNCj4g
-DQo+IE9uIDExLzIzLzE4IDk6MzUgQU0sIEpvYWtpbSBaaGFuZyB3cm90ZToNCj4gPiBGcm9tOiBB
-aXNoZW5nIERvbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KPiA+DQo+ID4gSWYgd2FrZXVwIGlz
-IGVuYWJsZWQsIGVudGVyIHN0b3AgbW9kZSwgZWxzZSBlbnRlciBkaXNhYmxlZCBtb2RlLiBTZWxm
-DQo+ID4gd2FrZSBjYW4gb25seSB3b3JrIG9uIHN0b3AgbW9kZS4NCj4gPg0KPiA+IFN0YXJ0aW5n
-IGZyb20gSU1YNiwgdGhlIGZsZXhjYW4gc3RvcCBtb2RlIGNvbnRyb2wgYml0cyBpcyBTb0MNCj4g
-PiBzcGVjaWZpYywgbW92ZSBpdCBvdXQgb2YgSVAgZHJpdmVyIGFuZCBwYXJzZSBpdCBmcm9tIGRl
-dmljZXRyZWUuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBaXNoZW5nIERvbmcgPGFpc2hlbmcu
-ZG9uZ0BueHAuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEpvYWtpbSBaaGFuZyA8cWlhbmdxaW5n
-LnpoYW5nQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlTG9nOg0KPiA+IFYxLT5WMjoNCj4g
-PiAJKmFkZCBhIHZlbmRvciBwcmVmaXggaW4gcHJvcGVydHkgKHN0b3AtbW9kZSAtPiBmc2wsc3Rv
-cC1tb2RlKS4NCj4gPiBWMi0+VjM6DQo+ID4gCSphZGQgRkxFWENBTl9RVUlSS19TRVRVUF9TVE9Q
-X01PREUgcXVpcmsuDQo+ID4gCSpyZW5hbWUgZnVuY3Rpb24uDQo+ID4gCSpmaXggc3lzdGVtIGNh
-bid0IGJlIHdha2V1cGVkIGR1cmluZyBzdXNwZW5kLg0KPiA+IFYzLT5WNDoNCj4gPiAJKm5vcm1h
-bGl6ZSB0aGUgY29kZSBmb2xsb3dpbmcgQWlzaGVuZyBEb25nJ3MgY29tbWVudHMuDQo+ID4gVjQt
-PlY1Og0KPiA+IAkqbW92ZSBlbmFibGUvZGlzYWJsZSBzZWxmIHdha2V1cCBmZWF0dXJlIGludG8N
-Cj4gPiAJIGVudGVyL2V4aXRfc3RvcF9tb2RlKCkgZnVuY3Rpb24uDQo+ID4gVjUtPlY2Og0KPiA+
-IAkqZXhjaGFuZ2UgdGhlIG9yZGVyIG9mIGZsZXhjYW5fZW5hYmxlX3dha2V1cF9pcnEocHJpdiwg
-ZmFsc2UpDQo+ID4gCSBhbmQgZGlzYWJsZV9pcnFfd2FrZShkZXYtPmlycSkuDQo+ID4gLS0tDQo+
-ID4gIGRyaXZlcnMvbmV0L2Nhbi9mbGV4Y2FuLmMgfCAxNzINCj4gPiArKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKystLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTYzIGluc2VydGlv
-bnMoKyksIDkgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQv
-Y2FuL2ZsZXhjYW4uYyBiL2RyaXZlcnMvbmV0L2Nhbi9mbGV4Y2FuLmMNCj4gPiBpbmRleCA4ZTk3
-MmVmMDg2MzcuLmRhMDhhOGMxMTNkMiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL25ldC9jYW4v
-ZmxleGNhbi5jDQo+ID4gKysrIGIvZHJpdmVycy9uZXQvY2FuL2ZsZXhjYW4uYw0KPiA+IEBAIC0x
-OSwxMSArMTksMTQgQEANCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+DQo+ID4gICNpbmNs
-dWRlIDxsaW51eC9pbnRlcnJ1cHQuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2lvLmg+DQo+ID4g
-KyNpbmNsdWRlIDxsaW51eC9tZmQvc3lzY29uLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9tZmQv
-c3lzY29uL2lteDZxLWlvbXV4Yy1ncHIuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5o
-Pg0KPiA+ICAjaW5jbHVkZSA8bGludXgvb2YuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L29mX2Rl
-dmljZS5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQo+ID4gICNp
-bmNsdWRlIDxsaW51eC9yZWd1bGF0b3IvY29uc3VtZXIuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4
-L3JlZ21hcC5oPg0KPiA+DQo+ID4gICNkZWZpbmUgRFJWX05BTUUJCQkiZmxleGNhbiINCj4gPg0K
-PiA+IEBAIC0xMzEsNyArMTM0LDggQEANCj4gPiAgCShGTEVYQ0FOX0VTUl9FUlJfQlVTIHwgRkxF
-WENBTl9FU1JfRVJSX1NUQVRFKSAgI2RlZmluZQ0KPiA+IEZMRVhDQU5fRVNSX0FMTF9JTlQgXA0K
-PiA+ICAJKEZMRVhDQU5fRVNSX1RXUk5fSU5UIHwgRkxFWENBTl9FU1JfUldSTl9JTlQgfCBcDQo+
-ID4gLQkgRkxFWENBTl9FU1JfQk9GRl9JTlQgfCBGTEVYQ0FOX0VTUl9FUlJfSU5UKQ0KPiA+ICsJ
-RkxFWENBTl9FU1JfQk9GRl9JTlQgfCBGTEVYQ0FOX0VTUl9FUlJfSU5UIHwgXA0KPiA+ICsJRkxF
-WENBTl9FU1JfV0FLX0lOVCkNCj4gDQo+IEkndmUgZml4ZWQgdGhlIGluZGVudGlvbiB3aGlsZSBh
-cHBseWluZyB0aGUgcGF0Y2guDQo+IA0KPiA+DQo+ID4gIC8qIEZMRVhDQU4gaW50ZXJydXB0IGZs
-YWcgcmVnaXN0ZXIgKElGTEFHKSBiaXRzICovDQo+ID4gIC8qIEVycmF0YSBFUlIwMDU4Mjkgc3Rl
-cDc6IFJlc2VydmUgZmlyc3QgdmFsaWQgTUIgKi8gQEAgLTE5MCw2ICsxOTQsNw0KPiA+IEBADQo+
-ID4gICNkZWZpbmUgRkxFWENBTl9RVUlSS19VU0VfT0ZGX1RJTUVTVEFNUAlCSVQoNSkgLyogVXNl
-IHRpbWVzdGFtcA0KPiBiYXNlZCBvZmZsb2FkaW5nICovDQo+ID4gICNkZWZpbmUgRkxFWENBTl9R
-VUlSS19CUk9LRU5fUEVSUl9TVEFURQlCSVQoNikgLyogTm8gaW50ZXJydXB0DQo+IGZvciBlcnJv
-ciBwYXNzaXZlICovDQo+ID4gICNkZWZpbmUgRkxFWENBTl9RVUlSS19ERUZBVUxUX0JJR19FTkRJ
-QU4JQklUKDcpIC8qIGRlZmF1bHQgdG8gQkUNCj4gcmVnaXN0ZXIgYWNjZXNzICovDQo+ID4gKyNk
-ZWZpbmUgRkxFWENBTl9RVUlSS19TRVRVUF9TVE9QX01PREUJCUJJVCg4KSAvKiBTZXR1cCBzdG9w
-DQo+IG1vZGUgdG8gc3VwcG9ydCB3YWtldXAgKi8NCj4gPg0KPiA+ICAvKiBTdHJ1Y3R1cmUgb2Yg
-dGhlIG1lc3NhZ2UgYnVmZmVyICovICBzdHJ1Y3QgZmxleGNhbl9tYiB7IEBAIC0yNTQsNg0KPiA+
-ICsyNTksMTQgQEAgc3RydWN0IGZsZXhjYW5fZGV2dHlwZV9kYXRhIHsNCj4gPiAgCXUzMiBxdWly
-a3M7CQkvKiBxdWlya3MgbmVlZGVkIGZvciBkaWZmZXJlbnQgSVAgY29yZXMgKi8NCj4gPiAgfTsN
-Cj4gPg0KPiA+ICtzdHJ1Y3QgZmxleGNhbl9zdG9wX21vZGUgew0KPiA+ICsJc3RydWN0IHJlZ21h
-cCAqZ3ByOw0KPiA+ICsJdTggcmVxX2dwcjsNCj4gPiArCXU4IHJlcV9iaXQ7DQo+ID4gKwl1OCBh
-Y2tfZ3ByOw0KPiA+ICsJdTggYWNrX2JpdDsNCj4gPiArfTsNCj4gPiArDQo+ID4gIHN0cnVjdCBm
-bGV4Y2FuX3ByaXYgew0KPiA+ICAJc3RydWN0IGNhbl9wcml2IGNhbjsNCj4gPiAgCXN0cnVjdCBj
-YW5fcnhfb2ZmbG9hZCBvZmZsb2FkOw0KPiA+IEBAIC0yNzAsNiArMjgzLDcgQEAgc3RydWN0IGZs
-ZXhjYW5fcHJpdiB7DQo+ID4gIAlzdHJ1Y3QgY2xrICpjbGtfcGVyOw0KPiA+ICAJY29uc3Qgc3Ry
-dWN0IGZsZXhjYW5fZGV2dHlwZV9kYXRhICpkZXZ0eXBlX2RhdGE7DQo+ID4gIAlzdHJ1Y3QgcmVn
-dWxhdG9yICpyZWdfeGNlaXZlcjsNCj4gPiArCXN0cnVjdCBmbGV4Y2FuX3N0b3BfbW9kZSBzdG07
-DQo+ID4NCj4gPiAgCS8qIFJlYWQgYW5kIFdyaXRlIEFQSXMgKi8NCj4gPiAgCXUzMiAoKnJlYWQp
-KHZvaWQgX19pb21lbSAqYWRkcik7DQo+ID4gQEAgLTI5Myw3ICszMDcsOCBAQCBzdGF0aWMgY29u
-c3Qgc3RydWN0IGZsZXhjYW5fZGV2dHlwZV9kYXRhDQo+ID4gZnNsX2lteDI4X2RldnR5cGVfZGF0
-YSA9IHsNCj4gPg0KPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IGZsZXhjYW5fZGV2dHlwZV9kYXRh
-IGZzbF9pbXg2cV9kZXZ0eXBlX2RhdGEgPSB7DQo+ID4gIAkucXVpcmtzID0gRkxFWENBTl9RVUlS
-S19ESVNBQkxFX1JYRkcgfA0KPiBGTEVYQ0FOX1FVSVJLX0VOQUJMRV9FQUNFTl9SUlMgfA0KPiA+
-IC0JCUZMRVhDQU5fUVVJUktfVVNFX09GRl9USU1FU1RBTVAgfA0KPiBGTEVYQ0FOX1FVSVJLX0JS
-T0tFTl9QRVJSX1NUQVRFLA0KPiA+ICsJCUZMRVhDQU5fUVVJUktfVVNFX09GRl9USU1FU1RBTVAg
-fA0KPiBGTEVYQ0FOX1FVSVJLX0JST0tFTl9QRVJSX1NUQVRFIHwNCj4gPiArCQlGTEVYQ0FOX1FV
-SVJLX1NFVFVQX1NUT1BfTU9ERSwNCj4gPiAgfTsNCj4gPg0KPiA+ICBzdGF0aWMgY29uc3Qgc3Ry
-dWN0IGZsZXhjYW5fZGV2dHlwZV9kYXRhIGZzbF92ZjYxMF9kZXZ0eXBlX2RhdGEgPSB7DQo+ID4g
-QEAgLTM1Myw2ICszNjgsNDkgQEAgc3RhdGljIGlubGluZSB2b2lkIGZsZXhjYW5fd3JpdGVfbGUo
-dTMyIHZhbCwgdm9pZA0KPiBfX2lvbWVtICphZGRyKQ0KPiA+ICAJaW93cml0ZTMyKHZhbCwgYWRk
-cik7DQo+ID4gIH0NCj4gPg0KPiA+ICtzdGF0aWMgdm9pZCBmbGV4Y2FuX2VuYWJsZV93YWtldXBf
-aXJxKHN0cnVjdCBmbGV4Y2FuX3ByaXYgKnByaXYsIGJvb2wNCj4gPiArZW5hYmxlKSB7DQo+ID4g
-KwlzdHJ1Y3QgZmxleGNhbl9yZWdzIF9faW9tZW0gKnJlZ3MgPSBwcml2LT5yZWdzOw0KPiA+ICsJ
-dTMyIHJlZ19tY3I7DQo+ID4gKw0KPiA+ICsJcmVnX21jciA9IHByaXYtPnJlYWQoJnJlZ3MtPm1j
-cik7DQo+ID4gKw0KPiA+ICsJaWYgKGVuYWJsZSkNCj4gPiArCQlyZWdfbWNyIHw9IEZMRVhDQU5f
-TUNSX1dBS19NU0s7DQo+ID4gKwllbHNlDQo+ID4gKwkJcmVnX21jciAmPSB+RkxFWENBTl9NQ1Jf
-V0FLX01TSzsNCj4gPiArDQo+ID4gKwlwcml2LT53cml0ZShyZWdfbWNyLCAmcmVncy0+bWNyKTsN
-Cj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGlubGluZSB2b2lkIGZsZXhjYW5fZW50ZXJfc3Rv
-cF9tb2RlKHN0cnVjdCBmbGV4Y2FuX3ByaXYgKnByaXYpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBm
-bGV4Y2FuX3JlZ3MgX19pb21lbSAqcmVncyA9IHByaXYtPnJlZ3M7DQo+ID4gKwl1MzIgcmVnX21j
-cjsNCj4gPiArDQo+ID4gKwlyZWdfbWNyID0gcHJpdi0+cmVhZCgmcmVncy0+bWNyKTsNCj4gPiAr
-CXJlZ19tY3IgfD0gRkxFWENBTl9NQ1JfU0xGX1dBSzsNCj4gPiArCXByaXYtPndyaXRlKHJlZ19t
-Y3IsICZyZWdzLT5tY3IpOw0KPiA+ICsNCj4gPiArCS8qIGVuYWJsZSBzdG9wIHJlcXVlc3QgKi8N
-Cj4gPiArCXJlZ21hcF91cGRhdGVfYml0cyhwcml2LT5zdG0uZ3ByLCBwcml2LT5zdG0ucmVxX2dw
-ciwNCj4gPiArCQkJICAgMSA8PCBwcml2LT5zdG0ucmVxX2JpdCwgMSA8PCBwcml2LT5zdG0ucmVx
-X2JpdCk7IH0NCj4gPiArDQo+ID4gK3N0YXRpYyBpbmxpbmUgdm9pZCBmbGV4Y2FuX2V4aXRfc3Rv
-cF9tb2RlKHN0cnVjdCBmbGV4Y2FuX3ByaXYgKnByaXYpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBm
-bGV4Y2FuX3JlZ3MgX19pb21lbSAqcmVncyA9IHByaXYtPnJlZ3M7DQo+ID4gKwl1MzIgcmVnX21j
-cjsNCj4gPiArDQo+ID4gKwkvKiByZW1vdmUgc3RvcCByZXF1ZXN0ICovDQo+ID4gKwlyZWdtYXBf
-dXBkYXRlX2JpdHMocHJpdi0+c3RtLmdwciwgcHJpdi0+c3RtLnJlcV9ncHIsDQo+ID4gKwkJCSAg
-IDEgPDwgcHJpdi0+c3RtLnJlcV9iaXQsIDApOw0KPiA+ICsNCj4gPiArCXJlZ19tY3IgPSBwcml2
-LT5yZWFkKCZyZWdzLT5tY3IpOw0KPiA+ICsJcmVnX21jciAmPSB+RkxFWENBTl9NQ1JfU0xGX1dB
-SzsNCj4gPiArCXByaXYtPndyaXRlKHJlZ19tY3IsICZyZWdzLT5tY3IpOw0KPiA+ICt9DQo+ID4g
-Kw0KPiA+ICBzdGF0aWMgaW5saW5lIHZvaWQgZmxleGNhbl9lcnJvcl9pcnFfZW5hYmxlKGNvbnN0
-IHN0cnVjdCBmbGV4Y2FuX3ByaXYNCj4gPiAqcHJpdikgIHsNCj4gPiAgCXN0cnVjdCBmbGV4Y2Fu
-X3JlZ3MgX19pb21lbSAqcmVncyA9IHByaXYtPnJlZ3M7IEBAIC0xMjQ0LDYgKzEzMDIsNTcNCj4g
-PiBAQCBzdGF0aWMgdm9pZCB1bnJlZ2lzdGVyX2ZsZXhjYW5kZXYoc3RydWN0IG5ldF9kZXZpY2Ug
-KmRldikNCj4gPiAgCXVucmVnaXN0ZXJfY2FuZGV2KGRldik7DQo+ID4gIH0NCj4gPg0KPiA+ICtz
-dGF0aWMgaW50IGZsZXhjYW5fc2V0dXBfc3RvcF9tb2RlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2Ug
-KnBkZXYpIHsNCj4gPiArCXN0cnVjdCBuZXRfZGV2aWNlICpkZXYgPSBwbGF0Zm9ybV9nZXRfZHJ2
-ZGF0YShwZGV2KTsNCj4gPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBwZGV2LT5kZXYub2Zf
-bm9kZTsNCj4gPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqZ3ByX25wOw0KPiA+ICsJc3RydWN0IGZs
-ZXhjYW5fcHJpdiAqcHJpdjsNCj4gPiArCXBoYW5kbGUgcGhhbmRsZTsNCj4gPiArCXUzMiBvdXRf
-dmFsWzVdOw0KPiA+ICsJaW50IHJldDsNCj4gPiArDQo+ID4gKwlpZiAoIW5wKQ0KPiA+ICsJCXJl
-dHVybiAtRUlOVkFMOw0KPiA+ICsNCj4gPiArCS8qIHN0b3AgbW9kZSBwcm9wZXJ0eSBmb3JtYXQg
-aXM6DQo+ID4gKwkgKiA8JmdwciByZXFfZ3ByIHJlcV9iaXQgYWNrX2dwciBhY2tfYml0Pi4NCj4g
-PiArCSAqLw0KPiA+ICsJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzJfYXJyYXkobnAsICJmc2ws
-c3RvcC1tb2RlIiwgb3V0X3ZhbCwgNSk7DQo+IA0KPiBJJ3ZlIGNoYW5nZWQgdGhlIDUgdG8gQVJS
-QVlfU0laRSgpIHdoaWxlIGFwcGx5aW5nIHRoZSBwYXRjaCArIHJld3JhcCB0bw0KPiA4MCBjb2xz
-Lg0KPiANCj4gPiArCWlmIChyZXQpIHsNCj4gPiArCQlkZXZfZGJnKCZwZGV2LT5kZXYsICJubyBz
-dG9wLW1vZGUgcHJvcGVydHlcbiIpOw0KPiA+ICsJCXJldHVybiByZXQ7DQo+ID4gKwl9DQo+ID4g
-KwlwaGFuZGxlID0gKm91dF92YWw7DQo+ID4gKw0KPiA+ICsJZ3ByX25wID0gb2ZfZmluZF9ub2Rl
-X2J5X3BoYW5kbGUocGhhbmRsZSk7DQo+ID4gKwlpZiAoIWdwcl9ucCkgew0KPiA+ICsJCWRldl9k
-YmcoJnBkZXYtPmRldiwgImNvdWxkIG5vdCBmaW5kIGdwciBub2RlIGJ5IHBoYW5kbGVcbiIpOw0K
-PiA+ICsJCXJldHVybiBQVFJfRVJSKGdwcl9ucCk7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJcHJp
-diA9IG5ldGRldl9wcml2KGRldik7DQo+ID4gKwlwcml2LT5zdG0uZ3ByID0gc3lzY29uX25vZGVf
-dG9fcmVnbWFwKGdwcl9ucCk7DQo+ID4gKwlvZl9ub2RlX3B1dChncHJfbnApOw0KPiA+ICsJaWYg
-KElTX0VSUihwcml2LT5zdG0uZ3ByKSkgew0KPiA+ICsJCWRldl9kYmcoJnBkZXYtPmRldiwgImNv
-dWxkIG5vdCBmaW5kIGdwciByZWdtYXBcbiIpOw0KPiA+ICsJCXJldHVybiBQVFJfRVJSKHByaXYt
-PnN0bS5ncHIpOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCXByaXYtPnN0bS5yZXFfZ3ByID0gb3V0
-X3ZhbFsxXTsNCj4gPiArCXByaXYtPnN0bS5yZXFfYml0ID0gb3V0X3ZhbFsyXTsNCj4gPiArCXBy
-aXYtPnN0bS5hY2tfZ3ByID0gb3V0X3ZhbFszXTsNCj4gPiArCXByaXYtPnN0bS5hY2tfYml0ID0g
-b3V0X3ZhbFs0XTsNCj4gPiArDQo+ID4gKwlkZXZfZGJnKCZwZGV2LT5kZXYsICJncHIgJXMgcmVx
-X2dwciAweCV4IHJlcV9iaXQgJXUgYWNrX2dwciAweCV4DQo+IGFja19iaXQgJXVcbiIsDQo+ID4g
-KwkJZ3ByX25wLT5mdWxsX25hbWUsIHByaXYtPnN0bS5yZXFfZ3ByLCBwcml2LT5zdG0ucmVxX2Jp
-dCwNCj4gcHJpdi0+c3RtLmFja19ncHIsDQo+ID4gKwkJcHJpdi0+c3RtLmFja19iaXQpOw0KPiAN
-Cj4gRm9yIHRoZSBoZXggdmFsdWVzIEkndmUgY2hhbmdlZCB0byAweCV4IHRvIDB4JTAyeCArIHJl
-d2FycCB0byA4MCBjb2xzLg0KPiANCj4gPiArDQo+ID4gKwlkZXZpY2Vfc2V0X3dha2V1cF9jYXBh
-YmxlKCZwZGV2LT5kZXYsIHRydWUpOw0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+ICt9DQo+
-ID4gKw0KPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBmbGV4Y2FuX29mX21h
-dGNoW10gPSB7DQo+ID4gIAl7IC5jb21wYXRpYmxlID0gImZzbCxpbXg2cS1mbGV4Y2FuIiwgLmRh
-dGEgPSAmZnNsX2lteDZxX2RldnR5cGVfZGF0YSwgfSwNCj4gPiAgCXsgLmNvbXBhdGlibGUgPSAi
-ZnNsLGlteDI4LWZsZXhjYW4iLCAuZGF0YSA9DQo+ID4gJmZzbF9pbXgyOF9kZXZ0eXBlX2RhdGEs
-IH0sIEBAIC0xMzk2LDYgKzE1MDUsMTIgQEAgc3RhdGljIGludA0KPiA+IGZsZXhjYW5fcHJvYmUo
-c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPg0KPiA+ICAJZGV2bV9jYW5fbGVkX2lu
-aXQoZGV2KTsNCj4gPg0KPiA+ICsJaWYgKHByaXYtPmRldnR5cGVfZGF0YS0+cXVpcmtzICYgRkxF
-WENBTl9RVUlSS19TRVRVUF9TVE9QX01PREUpIHsNCj4gPiArCQllcnIgPSBmbGV4Y2FuX3NldHVw
-X3N0b3BfbW9kZShwZGV2KTsNCj4gPiArCQlpZiAoZXJyKQ0KPiA+ICsJCQlkZXZfZGJnKCZwZGV2
-LT5kZXYsICJmYWlsZWQgdG8gc2V0dXAgc3RvcC1tb2RlXG4iKTsNCj4gPiArCX0NCj4gPiArDQo+
-ID4gIAlkZXZfaW5mbygmcGRldi0+ZGV2LCAiZGV2aWNlIHJlZ2lzdGVyZWQgKHJlZ19iYXNlPSVw
-LCBpcnE9JWQpXG4iLA0KPiA+ICAJCSBwcml2LT5yZWdzLCBkZXYtPmlycSk7DQo+ID4NCj4gPiBA
-QCAtMTQyNiw5ICsxNTQxLDE3IEBAIHN0YXRpYyBpbnQgX19tYXliZV91bnVzZWQNCj4gZmxleGNh
-bl9zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldmljZSkNCj4gPiAgCWludCBlcnI7DQo+ID4NCj4g
-PiAgCWlmIChuZXRpZl9ydW5uaW5nKGRldikpIHsNCj4gPiAtCQllcnIgPSBmbGV4Y2FuX2NoaXBf
-ZGlzYWJsZShwcml2KTsNCj4gPiAtCQlpZiAoZXJyKQ0KPiA+IC0JCQlyZXR1cm4gZXJyOw0KPiA+
-ICsJCS8qIGlmIHdha2V1cCBpcyBlbmFibGVkLCBlbnRlciBzdG9wIG1vZGUNCj4gPiArCQkgKiBl
-bHNlIGVudGVyIGRpc2FibGVkIG1vZGUuDQo+ID4gKwkJICovDQo+ID4gKwkJaWYgKGRldmljZV9t
-YXlfd2FrZXVwKGRldmljZSkpIHsNCj4gPiArCQkJZW5hYmxlX2lycV93YWtlKGRldi0+aXJxKTsN
-Cj4gPiArCQkJZmxleGNhbl9lbnRlcl9zdG9wX21vZGUocHJpdik7DQo+ID4gKwkJfSBlbHNlIHsN
-Cj4gPiArCQkJZXJyID0gZmxleGNhbl9jaGlwX2Rpc2FibGUocHJpdik7DQo+ID4gKwkJCWlmIChl
-cnIpDQo+ID4gKwkJCQlyZXR1cm4gZXJyOw0KPiA+ICsJCX0NCj4gPiAgCQluZXRpZl9zdG9wX3F1
-ZXVlKGRldik7DQo+ID4gIAkJbmV0aWZfZGV2aWNlX2RldGFjaChkZXYpOw0KPiA+ICAJfQ0KPiA+
-IEBAIC0xNDQ3LDE0ICsxNTcwLDQ1IEBAIHN0YXRpYyBpbnQgX19tYXliZV91bnVzZWQNCj4gZmxl
-eGNhbl9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2aWNlKQ0KPiA+ICAJaWYgKG5ldGlmX3J1bm5p
-bmcoZGV2KSkgew0KPiA+ICAJCW5ldGlmX2RldmljZV9hdHRhY2goZGV2KTsNCj4gPiAgCQluZXRp
-Zl9zdGFydF9xdWV1ZShkZXYpOw0KPiA+IC0JCWVyciA9IGZsZXhjYW5fY2hpcF9lbmFibGUocHJp
-dik7DQo+ID4gLQkJaWYgKGVycikNCj4gPiAtCQkJcmV0dXJuIGVycjsNCj4gPiArCQlpZiAoZGV2
-aWNlX21heV93YWtldXAoZGV2aWNlKSkgew0KPiA+ICsJCQlkaXNhYmxlX2lycV93YWtlKGRldi0+
-aXJxKTsNCj4gPiArCQl9IGVsc2Ugew0KPiA+ICsJCQllcnIgPSBmbGV4Y2FuX2NoaXBfZW5hYmxl
-KHByaXYpOw0KPiA+ICsJCQlpZiAoZXJyKQ0KPiA+ICsJCQkJcmV0dXJuIGVycjsNCj4gPiArCQl9
-DQo+ID4gIAl9DQo+ID4gIAlyZXR1cm4gMDsNCj4gPiAgfQ0KPiA+DQo+ID4gLXN0YXRpYyBTSU1Q
-TEVfREVWX1BNX09QUyhmbGV4Y2FuX3BtX29wcywgZmxleGNhbl9zdXNwZW5kLA0KPiA+IGZsZXhj
-YW5fcmVzdW1lKTsNCj4gPiArc3RhdGljIGludCBfX21heWJlX3VudXNlZCBmbGV4Y2FuX25vaXJx
-X3N1c3BlbmQoc3RydWN0IGRldmljZQ0KPiA+ICsqZGV2aWNlKSB7DQo+ID4gKwlzdHJ1Y3QgbmV0
-X2RldmljZSAqZGV2ID0gZGV2X2dldF9kcnZkYXRhKGRldmljZSk7DQo+ID4gKwlzdHJ1Y3QgZmxl
-eGNhbl9wcml2ICpwcml2ID0gbmV0ZGV2X3ByaXYoZGV2KTsNCj4gPiArDQo+ID4gKwlpZiAobmV0
-aWZfcnVubmluZyhkZXYpICYmIGRldmljZV9tYXlfd2FrZXVwKGRldmljZSkpDQo+ID4gKwkJZmxl
-eGNhbl9lbmFibGVfd2FrZXVwX2lycShwcml2LCB0cnVlKTsNCj4gPiArDQo+ID4gKwlyZXR1cm4g
-MDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGludCBfX21heWJlX3VudXNlZCBmbGV4Y2Fu
-X25vaXJxX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXZpY2UpDQo+ID4gK3sNCj4gPiArCXN0cnVj
-dCBuZXRfZGV2aWNlICpkZXYgPSBkZXZfZ2V0X2RydmRhdGEoZGV2aWNlKTsNCj4gPiArCXN0cnVj
-dCBmbGV4Y2FuX3ByaXYgKnByaXYgPSBuZXRkZXZfcHJpdihkZXYpOw0KPiA+ICsNCj4gPiArCWlm
-IChuZXRpZl9ydW5uaW5nKGRldikgJiYgZGV2aWNlX21heV93YWtldXAoZGV2aWNlKSkgew0KPiA+
-ICsJCWZsZXhjYW5fZW5hYmxlX3dha2V1cF9pcnEocHJpdiwgZmFsc2UpOw0KPiA+ICsJCWZsZXhj
-YW5fZXhpdF9zdG9wX21vZGUocHJpdik7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7
-DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZGV2X3BtX29wcyBmbGV4
-Y2FuX3BtX29wcyA9IHsNCj4gPiArCVNFVF9TWVNURU1fU0xFRVBfUE1fT1BTKGZsZXhjYW5fc3Vz
-cGVuZCwgZmxleGNhbl9yZXN1bWUpDQo+ID4gKwlTRVRfTk9JUlFfU1lTVEVNX1NMRUVQX1BNX09Q
-UyhmbGV4Y2FuX25vaXJxX3N1c3BlbmQsDQo+ID4gK2ZsZXhjYW5fbm9pcnFfcmVzdW1lKSB9Ow0K
-PiA+DQo+ID4gIHN0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIGZsZXhjYW5fZHJpdmVyID0g
-ew0KPiA+ICAJLmRyaXZlciA9IHsNCj4gPg0KPiANCj4gTWFyYw0KPiANCj4gLS0NCj4gUGVuZ3V0
-cm9uaXggZS5LLiAgICAgICAgICAgICAgICAgIHwgTWFyYyBLbGVpbmUtQnVkZGUgICAgICAgICAg
-IHwNCj4gSW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAgIHwgUGhvbmU6ICs0OS0yMzEt
-MjgyNi05MjQgICAgIHwNCj4gVmVydHJldHVuZyBXZXN0L0RvcnRtdW5kICAgICAgICAgIHwgRmF4
-OiAgICs0OS01MTIxLTIwNjkxNy01NTU1IHwNCj4gQW10c2dlcmljaHQgSGlsZGVzaGVpbSwgSFJB
-IDI2ODYgIHwgaHR0cDovL3d3dy5wZW5ndXRyb25peC5kZSAgIHwNCg0K
+On Wed, 2018-10-31 at 14:57 +0800, Yuantian Tang wrote:
+> From: Scott Wood <oss@buserror.net>
+> 
+> The driver retains compatibility with old device trees, but we don't
+> want the old nodes lying around to be copied, or used as a reference
+> (some of the mux options are incorrect), or even just being clutter.
+> 
+> Signed-off-by: Scott Wood <oss@buserror.net>
+> Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
+> ---
+> v3:
+>   - update the commit message
+>   - split the dts and driver to different patchset
+> 
+>  arch/powerpc/boot/dts/fsl/b4420si-pre.dtsi     |    4 +-
+>  arch/powerpc/boot/dts/fsl/b4860si-pre.dtsi     |    8 ++--
+>  arch/powerpc/boot/dts/fsl/b4si-post.dtsi       |   15 -----
+>  arch/powerpc/boot/dts/fsl/p2041si-post.dtsi    |   18 ------
+>  arch/powerpc/boot/dts/fsl/p2041si-pre.dtsi     |    8 ++--
+>  arch/powerpc/boot/dts/fsl/p3041si-post.dtsi    |   18 ------
+>  arch/powerpc/boot/dts/fsl/p3041si-pre.dtsi     |    8 ++--
+>  arch/powerpc/boot/dts/fsl/p4080si-post.dtsi    |   70 -------------------
+> -----
+>  arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi     |   16 +++---
+>  arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi     |    4 +-
+>  arch/powerpc/boot/dts/fsl/p5040si-post.dtsi    |   18 ------
+>  arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi     |    8 ++--
+>  arch/powerpc/boot/dts/fsl/qoriq-clockgen1.dtsi |   55 +++----------------
+>  arch/powerpc/boot/dts/fsl/qoriq-clockgen2.dtsi |   38 +++----------
+>  arch/powerpc/boot/dts/fsl/t1023si-post.dtsi    |   16 ------
+>  arch/powerpc/boot/dts/fsl/t102xsi-pre.dtsi     |    4 +-
+>  arch/powerpc/boot/dts/fsl/t1040si-post.dtsi    |   44 ---------------
+>  arch/powerpc/boot/dts/fsl/t104xsi-pre.dtsi     |    8 ++--
+>  arch/powerpc/boot/dts/fsl/t2081si-post.dtsi    |   22 --------
+>  arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi     |    8 ++--
+>  arch/powerpc/boot/dts/fsl/t4240si-post.dtsi    |   61 ---------------------
+>  arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi     |   24 ++++----
+>  22 files changed, 66 insertions(+), 409 deletions(-)
+> 
+> diff --git a/arch/powerpc/boot/dts/fsl/b4420si-pre.dtsi
+> b/arch/powerpc/boot/dts/fsl/b4420si-pre.dtsi
+> index 88d8423..bb7b9b9 100644
+> --- a/arch/powerpc/boot/dts/fsl/b4420si-pre.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/b4420si-pre.dtsi
+> @@ -70,14 +70,14 @@
+>  		cpu0: PowerPC,e6500@0 {
+>  			device_type = "cpu";
+>  			reg = <0 1>;
+> -			clocks = <&mux0>;
+> +			clocks = <&clockgen 1 0>;
+>  			next-level-cache = <&L2_1>;
+>  			fsl,portid-mapping = <0x80000000>;
+>  		};
+>  		cpu1: PowerPC,e6500@2 {
+>  			device_type = "cpu";
+>  			reg = <2 3>;
+> -			clocks = <&mux0>;
+> +			clocks = <&clockgen 1 0>;
+>  			next-level-cache = <&L2_1>;
+>  			fsl,portid-mapping = <0x80000000>;
+>  		};
+> diff --git a/arch/powerpc/boot/dts/fsl/b4860si-pre.dtsi
+> b/arch/powerpc/boot/dts/fsl/b4860si-pre.dtsi
+> index f3f968c..388ba1b 100644
+> --- a/arch/powerpc/boot/dts/fsl/b4860si-pre.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/b4860si-pre.dtsi
+> @@ -75,28 +75,28 @@
+>  		cpu0: PowerPC,e6500@0 {
+>  			device_type = "cpu";
+>  			reg = <0 1>;
+> -			clocks = <&mux0>;
+> +			clocks = <&clockgen 1 0>;
+>  			next-level-cache = <&L2_1>;
+>  			fsl,portid-mapping = <0x80000000>;
+>  		};
+>  		cpu1: PowerPC,e6500@2 {
+>  			device_type = "cpu";
+>  			reg = <2 3>;
+> -			clocks = <&mux0>;
+> +			clocks = <&clockgen 1 0>;
+>  			next-level-cache = <&L2_1>;
+>  			fsl,portid-mapping = <0x80000000>;
+>  		};
+>  		cpu2: PowerPC,e6500@4 {
+>  			device_type = "cpu";
+>  			reg = <4 5>;
+> -			clocks = <&mux0>;
+> +			clocks = <&clockgen 1 0>;
+>  			next-level-cache = <&L2_1>;
+>  			fsl,portid-mapping = <0x80000000>;
+>  		};
+>  		cpu3: PowerPC,e6500@6 {
+>  			device_type = "cpu";
+>  			reg = <6 7>;
+> -			clocks = <&mux0>;
+> +			clocks = <&clockgen 1 0>;
+>  			next-level-cache = <&L2_1>;
+>  			fsl,portid-mapping = <0x80000000>;
+>  		};
+> diff --git a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
+> b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
+> index 1b33f51..4f044b4 100644
+> --- a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
+> @@ -398,21 +398,6 @@
+>  	};
+>  
+>  /include/ "qoriq-clockgen2.dtsi"
+> -	clockgen: global-utilities@e1000 {
+> -		compatible = "fsl,b4-clockgen", "fsl,qoriq-clockgen-2.0";
+> -		reg = <0xe1000 0x1000>;
+> -
+> -		mux0: mux0@0 {
+> -			#clock-cells = <0>;
+> -			reg = <0x0 0x4>;
+> -			compatible = "fsl,qoriq-core-mux-2.0";
+> -			clocks = <&pll0 0>, <&pll0 1>, <&pll0 2>,
+> -				<&pll1 0>, <&pll1 1>, <&pll1 2>;
+> -			clock-names = "pll0", "pll0-div2", "pll0-div4",
+> -				"pll1", "pll1-div2", "pll1-div4";
+> -			clock-output-names = "cmux0";
+> -		};
+> -	};
+>  
+>  	rcpm: global-utilities@e2000 {
+>  		compatible = "fsl,b4-rcpm", "fsl,qoriq-rcpm-2.0";
+> diff --git a/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
+> b/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
+> index 51e975d..872e448 100644
+> --- a/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
+> @@ -327,24 +327,6 @@
+>  /include/ "qoriq-clockgen1.dtsi"
+>  	global-utilities@e1000 {
+>  		compatible = "fsl,p2041-clockgen", "fsl,qoriq-clockgen-1.0";
+> -
+> -		mux2: mux2@40 {
+> -			#clock-cells = <0>;
+> -			reg = <0x40 0x4>;
+> -			compatible = "fsl,qoriq-core-mux-1.0";
+> -			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
+> -			clock-names = "pll0", "pll0-div2", "pll1", "pll1-
+> div2";
+> -			clock-output-names = "cmux2";
+> -		};
+> -
+> -		mux3: mux3@60 {
+> -			#clock-cells = <0>;
+> -			reg = <0x60 0x4>;
+> -			compatible = "fsl,qoriq-core-mux-1.0";
+> -			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
+> -			clock-names = "pll0", "pll0-div2", "pll1", "pll1-
+> div2";
+> -			clock-output-names = "cmux3";
+> -		};
+>  	};
+>  
+>  	rcpm: global-utilities@e2000 {
+> diff --git a/arch/powerpc/boot/dts/fsl/p2041si-pre.dtsi
+> b/arch/powerpc/boot/dts/fsl/p2041si-pre.dtsi
+> index 941274c..6318962 100644
+> --- a/arch/powerpc/boot/dts/fsl/p2041si-pre.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/p2041si-pre.dtsi
+> @@ -89,7 +89,7 @@
+>  		cpu0: PowerPC,e500mc@0 {
+>  			device_type = "cpu";
+>  			reg = <0>;
+> -			clocks = <&mux0>;
+> +			clocks = <&clockgen 1 0>;
+>  			next-level-cache = <&L2_0>;
+>  			fsl,portid-mapping = <0x80000000>;
+>  			L2_0: l2-cache {
+> @@ -99,7 +99,7 @@
+>  		cpu1: PowerPC,e500mc@1 {
+>  			device_type = "cpu";
+>  			reg = <1>;
+> -			clocks = <&mux1>;
+> +			clocks = <&clockgen 1 1>;
+>  			next-level-cache = <&L2_1>;
+>  			fsl,portid-mapping = <0x40000000>;
+>  			L2_1: l2-cache {
+> @@ -109,7 +109,7 @@
+>  		cpu2: PowerPC,e500mc@2 {
+>  			device_type = "cpu";
+>  			reg = <2>;
+> -			clocks = <&mux2>;
+> +			clocks = <&clockgen 1 2>;
+>  			next-level-cache = <&L2_2>;
+>  			fsl,portid-mapping = <0x20000000>;
+>  			L2_2: l2-cache {
+> @@ -119,7 +119,7 @@
+>  		cpu3: PowerPC,e500mc@3 {
+>  			device_type = "cpu";
+>  			reg = <3>;
+> -			clocks = <&mux3>;
+> +			clocks = <&clockgen 1 3>;
+>  			next-level-cache = <&L2_3>;
+>  			fsl,portid-mapping = <0x10000000>;
+>  			L2_3: l2-cache {
+> diff --git a/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
+> b/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
+> index 187676f..81bc75a 100644
+> --- a/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
+> @@ -354,24 +354,6 @@
+>  /include/ "qoriq-clockgen1.dtsi"
+>  	global-utilities@e1000 {
+>  		compatible = "fsl,p3041-clockgen", "fsl,qoriq-clockgen-1.0";
+> -
+> -		mux2: mux2@40 {
+> -			#clock-cells = <0>;
+> -			reg = <0x40 0x4>;
+> -			compatible = "fsl,qoriq-core-mux-1.0";
+> -			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
+> -			clock-names = "pll0", "pll0-div2", "pll1", "pll1-
+> div2";
+> -			clock-output-names = "cmux2";
+> -		};
+> -
+> -		mux3: mux3@60 {
+> -			#clock-cells = <0>;
+> -			reg = <0x60 0x4>;
+> -			compatible = "fsl,qoriq-core-mux-1.0";
+> -			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
+> -			clock-names = "pll0", "pll0-div2", "pll1", "pll1-
+> div2";
+> -			clock-output-names = "cmux3";
+> -		};
+>  	};
+>  
+>  	rcpm: global-utilities@e2000 {
+> diff --git a/arch/powerpc/boot/dts/fsl/p3041si-pre.dtsi
+> b/arch/powerpc/boot/dts/fsl/p3041si-pre.dtsi
+> index 50b73e8..db92f11 100644
+> --- a/arch/powerpc/boot/dts/fsl/p3041si-pre.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/p3041si-pre.dtsi
+> @@ -90,7 +90,7 @@
+>  		cpu0: PowerPC,e500mc@0 {
+>  			device_type = "cpu";
+>  			reg = <0>;
+> -			clocks = <&mux0>;
+> +			clocks = <&clockgen 1 0>;
+>  			next-level-cache = <&L2_0>;
+>  			fsl,portid-mapping = <0x80000000>;
+>  			L2_0: l2-cache {
+> @@ -100,7 +100,7 @@
+>  		cpu1: PowerPC,e500mc@1 {
+>  			device_type = "cpu";
+>  			reg = <1>;
+> -			clocks = <&mux1>;
+> +			clocks = <&clockgen 1 1>;
+>  			next-level-cache = <&L2_1>;
+>  			fsl,portid-mapping = <0x40000000>;
+>  			L2_1: l2-cache {
+> @@ -110,7 +110,7 @@
+>  		cpu2: PowerPC,e500mc@2 {
+>  			device_type = "cpu";
+>  			reg = <2>;
+> -			clocks = <&mux2>;
+> +			clocks = <&clockgen 1 2>;
+>  			next-level-cache = <&L2_2>;
+>  			fsl,portid-mapping = <0x20000000>;
+>  			L2_2: l2-cache {
+> @@ -120,7 +120,7 @@
+>  		cpu3: PowerPC,e500mc@3 {
+>  			device_type = "cpu";
+>  			reg = <3>;
+> -			clocks = <&mux3>;
+> +			clocks = <&clockgen 1 3>;
+>  			next-level-cache = <&L2_3>;
+>  			fsl,portid-mapping = <0x10000000>;
+>  			L2_3: l2-cache {
+> diff --git a/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi
+> b/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi
+> index a025208..4da49b6 100644
+> --- a/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi
+> @@ -374,76 +374,6 @@
+>  /include/ "qoriq-clockgen1.dtsi"
+>  	global-utilities@e1000 {
+>  		compatible = "fsl,p4080-clockgen", "fsl,qoriq-clockgen-1.0";
+> -
+> -		pll2: pll2@840 {
+> -			#clock-cells = <1>;
+> -			reg = <0x840 0x4>;
+> -			compatible = "fsl,qoriq-core-pll-1.0";
+> -			clocks = <&sysclk>;
+> -			clock-output-names = "pll2", "pll2-div2";
+> -		};
+> -
+> -		pll3: pll3@860 {
+> -			#clock-cells = <1>;
+> -			reg = <0x860 0x4>;
+> -			compatible = "fsl,qoriq-core-pll-1.0";
+> -			clocks = <&sysclk>;
+> -			clock-output-names = "pll3", "pll3-div2";
+> -		};
+> -
+> -		mux2: mux2@40 {
+> -			#clock-cells = <0>;
+> -			reg = <0x40 0x4>;
+> -			compatible = "fsl,qoriq-core-mux-1.0";
+> -			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
+> -			clock-names = "pll0", "pll0-div2", "pll1", "pll1-
+> div2";
+> -			clock-output-names = "cmux2";
+> -		};
+> -
+> -		mux3: mux3@60 {
+> -			#clock-cells = <0>;
+> -			reg = <0x60 0x4>;
+> -			compatible = "fsl,qoriq-core-mux-1.0";
+> -			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
+> -			clock-names = "pll0", "pll0-div2", "pll1", "pll1-
+> div2";
+> -			clock-output-names = "cmux3";
+> -		};
+> -
+> -		mux4: mux4@80 {
+> -			#clock-cells = <0>;
+> -			reg = <0x80 0x4>;
+> -			compatible = "fsl,qoriq-core-mux-1.0";
+> -			clocks = <&pll2 0>, <&pll2 1>, <&pll3 0>, <&pll3 1>;
+> -			clock-names = "pll2", "pll2-div2", "pll3", "pll3-
+> div2";
+> -			clock-output-names = "cmux4";
+> -		};
+> -
+> -		mux5: mux5@a0 {
+> -			#clock-cells = <0>;
+> -			reg = <0xa0 0x4>;
+> -			compatible = "fsl,qoriq-core-mux-1.0";
+> -			clocks = <&pll2 0>, <&pll2 1>, <&pll3 0>, <&pll3 1>;
+> -			clock-names = "pll2", "pll2-div2", "pll3", "pll3-
+> div2";
+> -			clock-output-names = "cmux5";
+> -		};
+> -
+> -		mux6: mux6@c0 {
+> -			#clock-cells = <0>;
+> -			reg = <0xc0 0x4>;
+> -			compatible = "fsl,qoriq-core-mux-1.0";
+> -			clocks = <&pll2 0>, <&pll2 1>, <&pll3 0>, <&pll3 1>;
+> -			clock-names = "pll2", "pll2-div2", "pll3", "pll3-
+> div2";
+> -			clock-output-names = "cmux6";
+> -		};
+> -
+> -		mux7: mux7@e0 {
+> -			#clock-cells = <0>;
+> -			reg = <0xe0 0x4>;
+> -			compatible = "fsl,qoriq-core-mux-1.0";
+> -			clocks = <&pll2 0>, <&pll2 1>, <&pll3 0>, <&pll3 1>;
+> -			clock-names = "pll2", "pll2-div2", "pll3", "pll3-
+> div2";
+> -			clock-output-names = "cmux7";
+> -		};
+>  	};
+>  
+>  	rcpm: global-utilities@e2000 {
+> diff --git a/arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi
+> b/arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi
+> index d56a546..0a7c65a 100644
+> --- a/arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi
+> @@ -94,7 +94,7 @@
+>  		cpu0: PowerPC,e500mc@0 {
+>  			device_type = "cpu";
+>  			reg = <0>;
+> -			clocks = <&mux0>;
+> +			clocks = <&clockgen 1 0>;
+>  			next-level-cache = <&L2_0>;
+>  			fsl,portid-mapping = <0x80000000>;
+>  			L2_0: l2-cache {
+> @@ -104,7 +104,7 @@
+>  		cpu1: PowerPC,e500mc@1 {
+>  			device_type = "cpu";
+>  			reg = <1>;
+> -			clocks = <&mux1>;
+> +			clocks = <&clockgen 1 1>;
+>  			next-level-cache = <&L2_1>;
+>  			fsl,portid-mapping = <0x40000000>;
+>  			L2_1: l2-cache {
+> @@ -114,7 +114,7 @@
+>  		cpu2: PowerPC,e500mc@2 {
+>  			device_type = "cpu";
+>  			reg = <2>;
+> -			clocks = <&mux2>;
+> +			clocks = <&clockgen 1 2>;
+>  			next-level-cache = <&L2_2>;
+>  			fsl,portid-mapping = <0x20000000>;
+>  			L2_2: l2-cache {
+> @@ -124,7 +124,7 @@
+>  		cpu3: PowerPC,e500mc@3 {
+>  			device_type = "cpu";
+>  			reg = <3>;
+> -			clocks = <&mux3>;
+> +			clocks = <&clockgen 1 3>;
+>  			next-level-cache = <&L2_3>;
+>  			fsl,portid-mapping = <0x10000000>;
+>  			L2_3: l2-cache {
+> @@ -134,7 +134,7 @@
+>  		cpu4: PowerPC,e500mc@4 {
+>  			device_type = "cpu";
+>  			reg = <4>;
+> -			clocks = <&mux4>;
+> +			clocks = <&clockgen 1 4>;
+>  			next-level-cache = <&L2_4>;
+>  			fsl,portid-mapping = <0x08000000>;
+>  			L2_4: l2-cache {
+> @@ -144,7 +144,7 @@
+>  		cpu5: PowerPC,e500mc@5 {
+>  			device_type = "cpu";
+>  			reg = <5>;
+> -			clocks = <&mux5>;
+> +			clocks = <&clockgen 1 5>;
+>  			next-level-cache = <&L2_5>;
+>  			fsl,portid-mapping = <0x04000000>;
+>  			L2_5: l2-cache {
+> @@ -154,7 +154,7 @@
+>  		cpu6: PowerPC,e500mc@6 {
+>  			device_type = "cpu";
+>  			reg = <6>;
+> -			clocks = <&mux6>;
+> +			clocks = <&clockgen 1 6>;
+>  			next-level-cache = <&L2_6>;
+>  			fsl,portid-mapping = <0x02000000>;
+>  			L2_6: l2-cache {
+> @@ -164,7 +164,7 @@
+>  		cpu7: PowerPC,e500mc@7 {
+>  			device_type = "cpu";
+>  			reg = <7>;
+> -			clocks = <&mux7>;
+> +			clocks = <&clockgen 1 7>;
+>  			next-level-cache = <&L2_7>;
+>  			fsl,portid-mapping = <0x01000000>;
+>  			L2_7: l2-cache {
+> diff --git a/arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi
+> b/arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi
+> index bfba0b4..2d74ea8 100644
+> --- a/arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi
+> @@ -96,7 +96,7 @@
+>  		cpu0: PowerPC,e5500@0 {
+>  			device_type = "cpu";
+>  			reg = <0>;
+> -			clocks = <&mux0>;
+> +			clocks = <&clockgen 1 0>;
+>  			next-level-cache = <&L2_0>;
+>  			fsl,portid-mapping = <0x80000000>;
+>  			L2_0: l2-cache {
+> @@ -106,7 +106,7 @@
+>  		cpu1: PowerPC,e5500@1 {
+>  			device_type = "cpu";
+>  			reg = <1>;
+> -			clocks = <&mux1>;
+> +			clocks = <&clockgen 1 1>;
+>  			next-level-cache = <&L2_1>;
+>  			fsl,portid-mapping = <0x40000000>;
+>  			L2_1: l2-cache {
+> diff --git a/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
+> b/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
+> index e2bd931..16b454b 100644
+> --- a/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
+> @@ -319,24 +319,6 @@
+>  /include/ "qoriq-clockgen1.dtsi"
+>  	global-utilities@e1000 {
+>  		compatible = "fsl,p5040-clockgen", "fsl,qoriq-clockgen-1.0";
+> -
+> -		mux2: mux2@40 {
+> -			#clock-cells = <0>;
+> -			reg = <0x40 0x4>;
+> -			compatible = "fsl,qoriq-core-mux-1.0";
+> -			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
+> -			clock-names = "pll0", "pll0-div2", "pll1", "pll1-
+> div2";
+> -			clock-output-names = "cmux2";
+> -		};
+> -
+> -		mux3: mux3@60 {
+> -			#clock-cells = <0>;
+> -			reg = <0x60 0x4>;
+> -			compatible = "fsl,qoriq-core-mux-1.0";
+> -			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
+> -			clock-names = "pll0", "pll0-div2", "pll1", "pll1-
+> div2";
+> -			clock-output-names = "cmux3";
+> -		};
+>  	};
+>  
+>  	rcpm: global-utilities@e2000 {
+> diff --git a/arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi
+> b/arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi
+> index dbd5775..ed89dbb 100644
+> --- a/arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi
+> @@ -102,7 +102,7 @@
+>  		cpu0: PowerPC,e5500@0 {
+>  			device_type = "cpu";
+>  			reg = <0>;
+> -			clocks = <&mux0>;
+> +			clocks = <&clockgen 1 0>;
+>  			next-level-cache = <&L2_0>;
+>  			fsl,portid-mapping = <0x80000000>;
+>  			L2_0: l2-cache {
+> @@ -112,7 +112,7 @@
+>  		cpu1: PowerPC,e5500@1 {
+>  			device_type = "cpu";
+>  			reg = <1>;
+> -			clocks = <&mux1>;
+> +			clocks = <&clockgen 1 1>;
+>  			next-level-cache = <&L2_1>;
+>  			fsl,portid-mapping = <0x40000000>;
+>  			L2_1: l2-cache {
+> @@ -122,7 +122,7 @@
+>  		cpu2: PowerPC,e5500@2 {
+>  			device_type = "cpu";
+>  			reg = <2>;
+> -			clocks = <&mux2>;
+> +			clocks = <&clockgen 1 2>;
+>  			next-level-cache = <&L2_2>;
+>  			fsl,portid-mapping = <0x20000000>;
+>  			L2_2: l2-cache {
+> @@ -132,7 +132,7 @@
+>  		cpu3: PowerPC,e5500@3 {
+>  			device_type = "cpu";
+>  			reg = <3>;
+> -			clocks = <&mux3>;
+> +			clocks = <&clockgen 1 3>;
+>  			next-level-cache = <&L2_3>;
+>  			fsl,portid-mapping = <0x10000000>;
+>  			L2_3: l2-cache {
+> diff --git a/arch/powerpc/boot/dts/fsl/qoriq-clockgen1.dtsi
+> b/arch/powerpc/boot/dts/fsl/qoriq-clockgen1.dtsi
+> index 88cd70d..5c89cfa 100644
+> --- a/arch/powerpc/boot/dts/fsl/qoriq-clockgen1.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/qoriq-clockgen1.dtsi
+> @@ -32,55 +32,16 @@
+>   * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+>   */
+>  
+> +sysclk: sysclk {
+> +	compatible = "fixed-clock";
+> +	#clock-cells = <0>;
+> +	clock-frequency = <100000000>;
+> +	clock-output-names = "sysclk";
+> +};
+> +
+>  clockgen: global-utilities@e1000 {
+
+The U-Boot fixup won't work with this.  U-Boot patches the frequency directly
+into the clockgen node (BTW, this is another reason to preserve the generic
+1.0/2.0 compatible string).  The new binding does not require an input clock
+node when it is provided as clock-frequency directly in the clockgen node --
+and the sysclk node was not in my original patch (nor did you note that you
+made changes from that original).  Why did you add it?
+
+I would just remove it when applying, but I'm concerned that this indicates a
+lack of testing (and I don't have the hardware access to test it myself,
+except on t4240) -- unless the 100 MHz sysclk just happened to be correct on
+the machines you tested (which would also be a test coverage problem)?
+
+-Scott
