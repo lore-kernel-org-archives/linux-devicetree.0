@@ -1,72 +1,45 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v8 1/7] ASoC: dt-bindings: add regulator
- property to simple amplifier
-Date: Mon, 26 Nov 2018 14:53:42 +0000
-Message-ID: <20181126145342.GE9715@sirena.org.uk>
-References: <20181121051752.18387-1-anarsoul@gmail.com>
- <20181121051752.18387-2-anarsoul@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH V4 2/2] base/drivers/arch_topology: Default dmips-mhz if
+ they are not set in DT
+Date: Mon, 26 Nov 2018 16:06:01 +0100
+Message-ID: <20181126150601.GD4637@kroah.com>
+References: <1543234847-21611-1-git-send-email-daniel.lezcano@linaro.org>
+ <1543234847-21611-2-git-send-email-daniel.lezcano@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3126214752291789202=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181121051752.18387-2-anarsoul@gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Maxime Ripard <maxime.ripard@bootlin.com>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1543234847-21611-2-git-send-email-daniel.lezcano@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: rjw@rjwysocki.net, linux-kernel@vger.kernel.org, viresh.kumar@linaro.org, Chris Redpath <chris.redpath@linaro.org>, Quentin Perret <quentin.perret@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Li Yang <leoyang.li@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============3126214752291789202==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="imjhCm/Pyz7Rq5F2"
-Content-Disposition: inline
-
-
---imjhCm/Pyz7Rq5F2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Nov 20, 2018 at 09:17:46PM -0800, Vasily Khoruzhick wrote:
-
-> +Optional properties:
-> +- VCC-supply   : power supply for the device, as covered
-> +                 in Documentation/devicetree/bindings/regulator/regulator.txt
+On Mon, Nov 26, 2018 at 01:20:43PM +0100, Daniel Lezcano wrote:
+> --- a/drivers/base/arch_topology.c
+> +++ b/drivers/base/arch_topology.c
+> @@ -243,9 +243,20 @@ static int __init register_cpufreq_notifier(void)
+>  	 * until we have the necessary code to parse the cpu capacity, so
+>  	 * skip registering cpufreq notifier.
+>  	 */
+> -	if (!acpi_disabled || !raw_capacity)
+> +	if (!acpi_disabled)
+>  		return -EINVAL;
+>  
+> +	if (!raw_capacity) {
 > +
+> +		pr_info("cpu_capacity: No capacity defined in DT, set default "
+> +		       "values to %ld\n", SCHED_CAPACITY_SCALE);
 
-As ever supplies shouldn't be marked as optional unless they can be
-missing even though they can safely be omitted on Linux.  This one's a
-bit odd in that the name is going to depend on which amp is connected
-but still it's probably best that we do that for consistency.
+Why the extra blank line?
 
---imjhCm/Pyz7Rq5F2
-Content-Type: application/pgp-signature; name="signature.asc"
+And what is userspace going to do with this noise?  Is this an error?
+Just normal operation?  A device should never be saying anything to the
+log for normal boot functionality.  When is this called?
 
------BEGIN PGP SIGNATURE-----
+And no need for the "cpu_capacity:" right?  Shouldn't the pr_info() line
+handle the prefix for you?
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlv8CPUACgkQJNaLcl1U
-h9CSnQf/ei8XI3hU6rX3a1kvgmThJ2WU1W/wq5DxE3Kp9FNn6A5Fy/4vycHKekXU
-z4BgLsGYz0c/6jsbXiHpv0FbkcbJNlRS+zOfAlwIGRSdSBIySF/KVZPE8ArQRqKG
-/aaP4XWbuu0uFxioBnmv88h9xVl8turpeeHcRtfffeLeIKMeXRS6fBu1Dd7N0TL1
-iHyJGqhPylmwmrZ/6nXsWTlQDhn1Wv9tCdpff8ctpLOgFu47GNsPxR3fcsFQDOxw
-l1zjAmP8AfykE553WWLlStl/iimIXMbrGb38cnoDDfHspDcIvhArKvjto5fnDp4s
-W36SLi7mrVQJDOBOxOJv1KFalM+ruA==
-=YGSA
------END PGP SIGNATURE-----
+thanks,
 
---imjhCm/Pyz7Rq5F2--
-
---===============3126214752291789202==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3126214752291789202==--
+greg k-h
