@@ -1,37 +1,38 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH V6 2/2] can: flexcan: add self wakeup support
-Date: Mon, 26 Nov 2018 12:34:10 +0100
-Message-ID: <7b1215df-f1ea-c366-17ff-bc5265e58ffa@pengutronix.de>
-References: <20181123083304.3232-1-qiangqing.zhang@nxp.com>
- <20181123083304.3232-3-qiangqing.zhang@nxp.com>
- <1be643fb-e966-fc2d-d19f-2a1e45b58641@pengutronix.de>
- <DB7PR04MB46180404F4201A8FAA52400FE6D70@DB7PR04MB4618.eurprd04.prod.outlook.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH v3 0/3] device property: Add fwnode_get_name() helper
+Date: Mon, 26 Nov 2018 14:47:49 +0300
+Message-ID: <20181126114752.69597-1-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB7PR04MB46180404F4201A8FAA52400FE6D70@DB7PR04MB4618.eurprd04.prod.outlook.com>
-Content-Language: de-DE
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joakim Zhang <qiangqing.zhang@nxp.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "wg@grandegger.com" <wg@grandegger.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng DONG <aisheng.dong@nxp.com>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/26/18 2:12 AM, Joakim Zhang wrote:
-> Firstly, thanks for reviewing the patch. Then, I am confused to do
-> upstream on "linux-can" or "linux-can-next" due to I find "linux-can"
-> is more updated than "linux-can-next".
-linux-can is for fixes aginat the current net/master.
-linux-can-next is for new features against net-next/master.
+Hi,
 
-I just updates both branches and pushed linux-can-next/testing, too,
-which is going the be the next pull request.
+This is the third version of my proposal for this helper. The
+second version can be checked here:
+https://lkml.org/lkml/2018/11/8/1005
 
-regards,
-Marc
+I'm now passing the length as proposed by both Rob and Andy. I'm also
+leaving the .get_named_child_node fwnode op untouched.
+
+--
+heikki
+
+Heikki Krogerus (3):
+  device property: Introduce fwnode_get_name()
+  ACPI: property: Add acpi_fwnode_name()
+  of/property: Add of_fwnode_name()
+
+ drivers/acpi/property.c  | 24 ++++++++++++++++++++++++
+ drivers/base/property.c  | 26 ++++++++++++++++++++++++++
+ drivers/of/property.c    |  8 ++++++++
+ include/linux/fwnode.h   |  3 +++
+ include/linux/property.h |  2 ++
+ 5 files changed, 63 insertions(+)
 
 -- 
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+2.19.1
