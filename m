@@ -1,76 +1,120 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH V4 2/2] base/drivers/arch_topology: Default dmips-mhz if
- they are not set in DT
-Date: Mon, 26 Nov 2018 13:49:43 +0100
-Message-ID: <d284936d-6dc9-8421-46fd-6397d25d4a38@linaro.org>
-References: <1543234847-21611-1-git-send-email-daniel.lezcano@linaro.org>
- <1543234847-21611-2-git-send-email-daniel.lezcano@linaro.org>
- <20181126124821.hcagb4ai7z6qldr3@queper01-lin>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH 2/3] ARM: dts: imx27: Fix memory node duplicaton
+Date: Mon, 26 Nov 2018 10:40:53 -0200
+Message-ID: <1543236054-10450-2-git-send-email-festevam@gmail.com>
+References: <1543236054-10450-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181126124821.hcagb4ai7z6qldr3@queper01-lin>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Perret <quentin.perret@arm.com>
-Cc: rjw@rjwysocki.net, linux-kernel@vger.kernel.org, viresh.kumar@linaro.org, Chris Redpath <chris.redpath@linaro.org>, Quentin Perret <quentin.perret@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Li Yang <leoyang.li@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1543236054-10450-1-git-send-email-festevam@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/11/2018 13:48, Quentin Perret wrote:
-> On Monday 26 Nov 2018 at 13:20:43 (+0100), Daniel Lezcano wrote:
->> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
->> index fd5325b..e0c5b60 100644
->> --- a/drivers/base/arch_topology.c
->> +++ b/drivers/base/arch_topology.c
->> @@ -243,9 +243,20 @@ static int __init register_cpufreq_notifier(void)
->>  	 * until we have the necessary code to parse the cpu capacity, so
->>  	 * skip registering cpufreq notifier.
->>  	 */
->> -	if (!acpi_disabled || !raw_capacity)
->> +	if (!acpi_disabled)
->>  		return -EINVAL;
->>  
->> +	if (!raw_capacity) {
->> +
->> +		pr_info("cpu_capacity: No capacity defined in DT, set default "
->> +		       "values to %ld\n", SCHED_CAPACITY_SCALE);
->> +
->> +		raw_capacity = kmalloc_array(num_possible_cpus(),
->> +					     sizeof(*raw_capacity), GFP_KERNEL);
->> +		if (!raw_capacity)
->> +			return -ENOMEM;
->> +	}
->> +
->>  	if (!alloc_cpumask_var(&cpus_to_visit, GFP_KERNEL)) {
->>  		pr_err("cpu_capacity: failed to allocate memory for cpus_to_visit\n");
->>  		return -ENOMEM;
-> 
-> I just tried on my Juno by removing the capacity-dmips-mhz values from
-> the DT and got the following:
-> 
->   $ cat /sys/devices/system/cpu/cpufreq/policy*/scaling_available_frequencies
->   450000 575000 700000 775000 850000
->   450000 625000 800000 950000 1100000
->   $ cat /sys/devices/system/cpu/cpu*/cpu_capacity
->   791
->   1024
->   1024
->   791
->   791
->   791
-> 
-> Same thing with a partially-filled DT (which is the expected behaviour
-> now). So feel free to add:
-> 
-> Tested-by: Quentin Perret <quentin.perret@arm.com>
+Boards based on imx27 have duplicate memory nodes:
 
-Thanks for testing!
+- One coming from the board dts file: memory@
 
+- One coming from the imx27.dtsi file.
 
+Fix the duplication by removing the memory node from the dtsi file
+and by adding 'device_type = "memory";' in the board dts.
+
+Reported-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+---
+ arch/arm/boot/dts/imx27-apf27.dts                 | 1 +
+ arch/arm/boot/dts/imx27-eukrea-cpuimx27.dtsi      | 1 +
+ arch/arm/boot/dts/imx27-pdk.dts                   | 1 +
+ arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi | 1 +
+ arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi   | 1 +
+ arch/arm/boot/dts/imx27.dtsi                      | 2 --
+ 6 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx27-apf27.dts b/arch/arm/boot/dts/imx27-apf27.dts
+index 3eddd80..f635d5c 100644
+--- a/arch/arm/boot/dts/imx27-apf27.dts
++++ b/arch/arm/boot/dts/imx27-apf27.dts
+@@ -20,6 +20,7 @@
+ 	compatible = "armadeus,imx27-apf27", "fsl,imx27";
+ 
+ 	memory@a0000000 {
++		device_type = "memory";
+ 		reg = <0xa0000000 0x04000000>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx27-eukrea-cpuimx27.dtsi b/arch/arm/boot/dts/imx27-eukrea-cpuimx27.dtsi
+index 9c455dc..c85f9d0 100644
+--- a/arch/arm/boot/dts/imx27-eukrea-cpuimx27.dtsi
++++ b/arch/arm/boot/dts/imx27-eukrea-cpuimx27.dtsi
+@@ -17,6 +17,7 @@
+ 	compatible = "eukrea,cpuimx27", "fsl,imx27";
+ 
+ 	memory@a0000000 {
++		device_type = "memory";
+ 		reg = <0xa0000000 0x04000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx27-pdk.dts b/arch/arm/boot/dts/imx27-pdk.dts
+index f9a882d..35123b7 100644
+--- a/arch/arm/boot/dts/imx27-pdk.dts
++++ b/arch/arm/boot/dts/imx27-pdk.dts
+@@ -10,6 +10,7 @@
+ 	compatible = "fsl,imx27-pdk", "fsl,imx27";
+ 
+ 	memory@a0000000 {
++		device_type = "memory";
+ 		reg = <0xa0000000 0x08000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi
+index cbad7c8..b0b4f7c 100644
+--- a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi
++++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dtsi
+@@ -18,6 +18,7 @@
+ 	compatible = "phytec,imx27-pca100", "fsl,imx27";
+ 
+ 	memory@a0000000 {
++		device_type = "memory";
+ 		reg = <0xa0000000 0x08000000>; /* 128MB */
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi b/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
+index ec466b4..0935e14 100644
+--- a/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
++++ b/arch/arm/boot/dts/imx27-phytec-phycore-som.dtsi
+@@ -17,6 +17,7 @@
+ 	compatible = "phytec,imx27-pcm038", "fsl,imx27";
+ 
+ 	memory@a0000000 {
++		device_type = "memory";
+ 		reg = <0xa0000000 0x08000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
+index 151b0eb..26ff5d4 100644
+--- a/arch/arm/boot/dts/imx27.dtsi
++++ b/arch/arm/boot/dts/imx27.dtsi
+@@ -16,10 +16,8 @@
+ 	 * The decompressor and also some bootloaders rely on a
+ 	 * pre-existing /chosen node to be available to insert the
+ 	 * command line and merge other ATAGS info.
+-	 * Also for U-Boot there must be a pre-existing /memory node.
+ 	 */
+ 	chosen {};
+-	memory { device_type = "memory"; };
+ 
+ 	aliases {
+ 		ethernet0 = &fec;
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.7.4
