@@ -1,61 +1,58 @@
-From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 7/7] drm/msm/dsi: 10nm PHY: Get ref clock
- from the DT
-Date: Mon, 26 Nov 2018 15:11:59 -0800
-Message-ID: <20181126231159.122298-8-mka@chromium.org>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH v2 6/7] arm64: dts: sdm845: Set 'bi_tcxo' as ref clock of the DSI PHYs
+Date: Mon, 26 Nov 2018 15:11:58 -0800
+Message-ID: <20181126231159.122298-7-mka@chromium.org>
 References: <20181126231159.122298-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181126231159.122298-1-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181126231159.122298-1-mka@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Archit Taneja <architt@codeaurora.org>, Sean Paul <seanpaul@chromium.org>, Rajesh Yadav <ryadav@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Jeykumar Sankaran <jsanka@codeaurora.org>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-R2V0IHRoZSByZWYgY2xvY2sgb2YgdGhlIFBIWSBmcm9tIHRoZSBkZXZpY2UgdHJlZSBpbnN0ZWFk
-IG9mCmhhcmRjb2RpbmcgaXRzIG5hbWUgYW5kIHJhdGUuCgpTaWduZWQtb2ZmLWJ5OiBNYXR0aGlh
-cyBLYWVobGNrZSA8bWthQGNocm9taXVtLm9yZz4KLS0tCkNoYW5nZXMgaW4gdjI6Ci0gcmVtb3Zl
-IGFub255bW91cyBhcnJheSBpbiBjbGtfaW5pdF9kYXRhIGFzc2lnbm1lbnQKLSBsb2cgZXJyb3Ig
-Y29kZSBpZiBkZXZtX2Nsa19nZXQoKSBmYWlscwotIGRvbid0IGxvZyBkZXZtX2Nsa19nZXQoKSBm
-YWlsdXJlcyBmb3IgLUVQUk9CRV9ERUZFUgotIHVwZGF0ZWQgY29tbWl0IG1lc3NhZ2UKLS0tCiBk
-cml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9wbGwvZHNpX3BsbF8xMG5tLmMgfCAxMyArKysrKysrKysr
-KystCiAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZHNpL3BsbC9kc2lfcGxsXzEwbm0uYyBiL2Ry
-aXZlcnMvZ3B1L2RybS9tc20vZHNpL3BsbC9kc2lfcGxsXzEwbm0uYwppbmRleCA0YzAzZjBiNzM0
-M2VkLi4zMmUzMTU3NGUxNDMyIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9w
-bGwvZHNpX3BsbF8xMG5tLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvcGxsL2RzaV9w
-bGxfMTBubS5jCkBAIC05MSw2ICs5MSw3IEBAIHN0cnVjdCBkc2lfcGxsXzEwbm0gewogCXZvaWQg
-X19pb21lbSAqcGh5X2Ntbl9tbWlvOwogCXZvaWQgX19pb21lbSAqbW1pbzsKIAorCXN0cnVjdCBj
-bGsgKnZjb19yZWZfY2xrOwogCXU2NCB2Y29fcmVmX2Nsa19yYXRlOwogCXU2NCB2Y29fY3VycmVu
-dF9yYXRlOwogCkBAIC02MjksOCArNjMwLDkgQEAgc3RhdGljIGludCBwbGxfMTBubV9yZWdpc3Rl
-cihzdHJ1Y3QgZHNpX3BsbF8xMG5tICpwbGxfMTBubSkKIHsKIAljaGFyIGNsa19uYW1lWzMyXSwg
-cGFyZW50WzMyXSwgdmNvX25hbWVbMzJdOwogCWNoYXIgcGFyZW50MlszMl0sIHBhcmVudDNbMzJd
-LCBwYXJlbnQ0WzMyXTsKKwljb25zdCBjaGFyICpyZWZfY2xrX25hbWUgPSBfX2Nsa19nZXRfbmFt
-ZShwbGxfMTBubS0+dmNvX3JlZl9jbGspOwogCXN0cnVjdCBjbGtfaW5pdF9kYXRhIHZjb19pbml0
-ID0gewotCQkucGFyZW50X25hbWVzID0gKGNvbnN0IGNoYXIgKltdKXsgInhvIiB9LAorCQkucGFy
-ZW50X25hbWVzID0gJnJlZl9jbGtfbmFtZSwKIAkJLm51bV9wYXJlbnRzID0gMSwKIAkJLm5hbWUg
-PSB2Y29fbmFtZSwKIAkJLmZsYWdzID0gQ0xLX0lHTk9SRV9VTlVTRUQsCkBAIC03ODYsNiArNzg4
-LDE1IEBAIHN0cnVjdCBtc21fZHNpX3BsbCAqbXNtX2RzaV9wbGxfMTBubV9pbml0KHN0cnVjdCBw
-bGF0Zm9ybV9kZXZpY2UgKnBkZXYsIGludCBpZCkKIAlwbGxfMTBubS0+aWQgPSBpZDsKIAlwbGxf
-MTBubV9saXN0W2lkXSA9IHBsbF8xMG5tOwogCisJcGxsXzEwbm0tPnZjb19yZWZfY2xrID0gZGV2
-bV9jbGtfZ2V0KCZwZGV2LT5kZXYsICJyZWYiKTsKKwlpZiAoSVNfRVJSKHBsbF8xMG5tLT52Y29f
-cmVmX2NsaykpIHsKKwkJcmV0ID0gUFRSX0VSUihwbGxfMTBubS0+dmNvX3JlZl9jbGspOworCQlp
-ZiAocmV0ICE9IEVQUk9CRV9ERUZFUikKKwkJCWRldl9lcnIoJnBkZXYtPmRldiwgImNvdWxkbid0
-IGdldCAncmVmJyBjbG9jazogJWRcbiIsCisJCQkJcmV0KTsKKwkJcmV0dXJuIEVSUl9QVFIocmV0
-KTsKKwl9CisKIAlwbGxfMTBubS0+cGh5X2Ntbl9tbWlvID0gbXNtX2lvcmVtYXAocGRldiwgImRz
-aV9waHkiLCAiRFNJX1BIWSIpOwogCWlmIChJU19FUlJfT1JfTlVMTChwbGxfMTBubS0+cGh5X2Nt
-bl9tbWlvKSkgewogCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gbWFwIENNTiBQSFkg
-YmFzZVxuIik7Ci0tIAoyLjIwLjAucmMwLjM4Ny5nYzdhNjllNmI2Yy1nb29nCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBs
-aXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+Add 'bi_tcxo' as ref clock for the DSI PHYs, it was previously
+hardcoded in the PLL 'driver' for the 10nm PHY.
+
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+based on "[v4,1/3] arm64: dts: qcom: sdm845: Add dpu to sdm845 dts file"
+  (https://patchwork.kernel.org/patch/10666253/)
+
+Changes in v2:
+- patch added to the series
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 5728b4cfae269..cdb5a9bb23e69 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1372,8 +1372,9 @@
+ 				#clock-cells = <1>;
+ 				#phy-cells = <0>;
+ 
+-				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>;
+-				clock-names = "iface";
++				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
++					 <&rpmhcc RPMH_CXO_CLK>;
++				clock-names = "iface", "ref";
+ 			};
+ 
+ 			dsi1: dsi@ae96000 {
+@@ -1434,8 +1435,9 @@
+ 				#clock-cells = <1>;
+ 				#phy-cells = <0>;
+ 
+-				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>;
+-				clock-names = "iface";
++				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
++					 <&rpmhcc RPMH_CXO_CLK>;
++				clock-names = "iface", "ref";
+ 			};
+ 		};
+ 
+-- 
+2.20.0.rc0.387.gc7a69e6b6c-goog
