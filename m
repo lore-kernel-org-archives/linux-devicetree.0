@@ -1,84 +1,32 @@
-From: Parthiban Nallathambi <pn@denx.de>
-Subject: [PATCH v2 4/4] arm64: dts: actions: s700-cubieboard7: Enable I2C0 and I2C1
-Date: Mon, 26 Nov 2018 19:58:21 +0100
-Message-ID: <20181126185821.2480449-5-pn@denx.de>
-References: <20181126185821.2480449-1-pn@denx.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v10 2/3] dt-bindings: clock: Introduce QCOM LPASS clock
+ bindings
+Date: Mon, 26 Nov 2018 12:59:17 -0600
+Message-ID: <20181126185917.GA5802@bogus>
+References: <1542873221-13693-1-git-send-email-tdas@codeaurora.org>
+ <1542873221-13693-3-git-send-email-tdas@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181126185821.2480449-1-pn@denx.de>
+Content-Disposition: inline
+In-Reply-To: <1542873221-13693-3-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: afaerber@suse.de, manivannan.sadhasivam@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de
-Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux@cubietech.com, thomas.liau@actions-semi.com, Parthiban Nallathambi <pn@denx.de>
+Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add pinctrl definitions for Actions Semiconductor S700 I2C controllers.
-Pinctrl definitions are only available for I2C0, I2C1 and I2C2.
-Enable I2C0 (PMIC), I2C1 (gyro, touchscreen) in cubieboard7.
+On Thu, 22 Nov 2018 13:23:40 +0530, Taniya Das wrote:
+> Add device tree bindings for Low Power Audio subsystem clock controller for
+> Qualcomm Technology Inc's SDM845 SoCs.
+> 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,gcc.txt         |  4 +++-
+>  .../devicetree/bindings/clock/qcom,lpasscc.txt     | 26 ++++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,gcc-sdm845.h        |  2 ++
+>  include/dt-bindings/clock/qcom,lpass-sdm845.h      | 15 +++++++++++++
+>  4 files changed, 46 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,lpasscc.txt
+>  create mode 100644 include/dt-bindings/clock/qcom,lpass-sdm845.h
+> 
 
-Signed-off-by: Parthiban Nallathambi <pn@denx.de>
----
- .../boot/dts/actions/s700-cubieboard7.dts     | 53 +++++++++++++++++++
- 1 file changed, 53 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-index 28f3f4a0f7f0..6a75fdd7ab42 100644
---- a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-+++ b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-@@ -37,3 +37,56 @@
- &uart3 {
- 	status = "okay";
- };
-+
-+&i2c0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_default>;
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_default>;
-+};
-+
-+&i2c2 {
-+	status = "disabled";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_default>;
-+};
-+
-+&pinctrl {
-+	i2c0_default: i2c0_default {
-+		pinmux {
-+			groups = "i2c0_mfp";
-+			function = "i2c0";
-+		};
-+		pinconf {
-+			pins = "i2c0_sclk", "i2c0_sdata";
-+			bias-pull-up;
-+		};
-+	};
-+
-+	i2c1_default: i2c1_default {
-+		pinmux {
-+			groups = "i2c1_dummy";
-+			function = "i2c1";
-+		};
-+		pinconf {
-+			pins = "i2c1_sclk", "i2c1_sdata";
-+			bias-pull-up;
-+		};
-+	};
-+
-+	i2c2_default: i2c2_default {
-+		pinmux {
-+			groups = "i2c2_dummy";
-+			function = "i2c2";
-+		};
-+		pinconf {
-+			pins = "i2c2_sclk", "i2c2_sdata";
-+			bias-pull-up;
-+		};
-+	};
-+};
--- 
-2.17.2
+Reviewed-by: Rob Herring <robh@kernel.org>
