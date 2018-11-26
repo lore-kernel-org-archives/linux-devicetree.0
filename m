@@ -1,32 +1,38 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v3 3/3] of/property: Add of_fwnode_name()
-Date: Mon, 26 Nov 2018 15:05:32 +0200
-Message-ID: <20181126130532.GH10650@smile.fi.intel.com>
-References: <20181126114752.69597-1-heikki.krogerus@linux.intel.com>
- <20181126114752.69597-4-heikki.krogerus@linux.intel.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 09/10] ARM64: dts: rockchip: Add all CPUs in cooling maps
+Date: Mon, 26 Nov 2018 14:16:23 +0100
+Message-ID: <3451054.D49JNUWnuL@phil>
+References: <cover.1542362530.git.viresh.kumar@linaro.org> <ee0bd5fb56652141e5ce23927b258b1779844af6.1542362530.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181126114752.69597-4-heikki.krogerus@linux.intel.com>
+In-Reply-To: <ee0bd5fb56652141e5ce23927b258b1779844af6.1542362530.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 26, 2018 at 02:47:52PM +0300, Heikki Krogerus wrote:
-> This implements get_name fwnode op for DT.
+Am Freitag, 16. November 2018, 11:04:32 CET schrieb Viresh Kumar:
+> Each CPU can (and does) participate in cooling down the system but the
+> DT only captures a handful of them, normally CPU0, in the cooling maps.
+> Things work by chance currently as under normal circumstances its the
+> first CPU of each cluster which is used by the operating systems to
+> probe the cooling devices. But as soon as this CPU ordering changes and
+> any other CPU is used to bring up the cooling device, we will start
+> seeing failures.
+> 
+> Also the DT is rather incomplete when we list only one CPU in the
+> cooling maps, as the hardware doesn't have any such limitations.
+> 
+> Update cooling maps to include all devices affected by individual trip
+> points.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-> +static int of_fwnode_get_name(const struct fwnode_handle *fwnode, char *buf,
-> +			      size_t len)
-> +{
-> +	snprintf(buf, len, "%pOFn", to_of_node(fwnode));
+looks like I forgot to respond ... applied like 7 days ago
+and already part of my pull-request for 4.21
 
-Same concerns.
 
-> +	return 0;
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks
+Heiko
