@@ -1,55 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v9 3/4] dt-bindings: pps: pps-gpio PPS ECHO implementation
-Date: Mon, 26 Nov 2018 13:42:20 -0600
-Message-ID: <CAL_JsqJ6fM3+pcC3b-eXEex=j_ft6Z=vukhLK9wULfWJqOTN-A@mail.gmail.com>
-References: <20181122094602.5156-1-tom@aussec.com> <20181122094602.5156-2-tom@aussec.com>
- <20181122094602.5156-3-tom@aussec.com> <20181122094602.5156-4-tom@aussec.com>
+Subject: Re: [PATCH linux-next 09/10] dt-bindings: net: ti: deprecate
+ cpsw-phy-sel bindings
+Date: Mon, 26 Nov 2018 13:58:38 -0600
+Message-ID: <20181126195838.GA19167@bogus>
+References: <20181126001531.12974-1-grygorii.strashko@ti.com>
+ <20181126001531.12974-10-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181122094602.5156-4-tom@aussec.com>
+Content-Disposition: inline
+In-Reply-To: <20181126001531.12974-10-grygorii.strashko@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tom Burkart <tom@aussec.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, lukas@fridolin.com
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Tony Lindgren <tony@atomide.com>, Kishon Vijay Abraham I <kishon@ti.com>, netdev@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 22, 2018 at 3:49 AM Tom Burkart <tom@aussec.com> wrote:
->
-> This patch implements the device tree changes required for the pps
-> echo functionality for pps-gpio, that sysfs claims is available
-> already.
->
-> This patch was originally written by Lukas Senger as part of a masters
-> thesis project and modified for inclusion into the linux kernel by Tom
-> Burkart.
->
-> Signed-off-by: Lukas Senger <lukas@fridolin.com>
-> Signed-off-by: Tom Burkart <tom@aussec.com>
+On Sun, Nov 25, 2018 at 06:15:30PM -0600, Grygorii Strashko wrote:
+> The cpsw-phy-sel driver was replaced with new PHY driver phy-gmii-sel, so
+> deprecate cpsw-phy-sel bindings.
+> 
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 > ---
->  Documentation/devicetree/bindings/pps/pps-gpio.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt b/Documentation/devicetree/bindings/pps/pps-gpio.txt
-> index 1155d49c2699..e09f6f2405c5 100644
-> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
-> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
-> @@ -7,10 +7,15 @@ Required properties:
->  - compatible: should be "pps-gpio"
->  - gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
->
-> +Additional required properties for the PPS ECHO functionality:
-> +- echo-gpios: one PPS ECHO GPIO in the format described by ../gpio/gpio.txt
-> +- echo-active-ms: duration in ms of the active portion of the echo pulse
-> +
->  Optional properties:
->  - assert-falling-edge: when present, assert is indicated by a falling edge
->                         (instead of by a rising edge)
->  - capture-clear: when present, also capture the PPS clear event
-> +- invert-pps-echo: when present, invert the PPS ECHO pulse
+>  Documentation/devicetree/bindings/net/cpsw-phy-sel.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Why do you need this? Can't you just make the echo gpio GPIO_ACTIVE_LOW?
-
-BTW, using the flag probably should have been done for
-'assert-falling-edge' as well.
+Please add acks/reviewed-bys when posting new versions.
 
 Rob
