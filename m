@@ -1,100 +1,195 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH linux-next 07/10] ARM: dts: am4372: switch to use phy-gmii-sel
-Date: Sun, 25 Nov 2018 18:15:28 -0600
-Message-ID: <20181126001531.12974-8-grygorii.strashko@ti.com>
-References: <20181126001531.12974-1-grygorii.strashko@ti.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 3/6] devfreq: add support for suspend/resume of a
+ devfreq device
+Date: Mon, 26 Nov 2018 09:19:35 +0900
+Message-ID: <5BFB3C17.40502@samsung.com>
+References: <1542823301-23563-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20181121180204eucas1p1c5891d498aa59c0e10dd3ba4727a4382@eucas1p1.samsung.com>
+        <1542823301-23563-4-git-send-email-l.luba@partner.samsung.com>
+        <5BF61B3A.9050402@samsung.com>
+        <cce4f194-b574-a12c-e876-f11a6f245940@partner.samsung.com>
+        <5BF7419E.90006@samsung.com>
+        <734d0941-c885-4d36-274b-23843d6626c1@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181126001531.12974-1-grygorii.strashko@ti.com>
+In-reply-to: <734d0941-c885-4d36-274b-23843d6626c1@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>, Tony Lindgren <tony@atomide.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
-Cc: netdev@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>
+To: Lukasz Luba <l.luba@partner.samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Switch to use phy-gmii-sel PHY instead of cpsw-phy-sel.
+Hi Lukasz,
 
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- arch/arm/boot/dts/am437x-l4.dtsi     | 17 +++++++++--------
- arch/arm/boot/dts/am43x-epos-evm.dts |  5 +----
- 2 files changed, 10 insertions(+), 12 deletions(-)
+I add the one more comment for devfreq_resume_device()
 
-diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
-index ff2c11e..121a71d 100644
---- a/arch/arm/boot/dts/am437x-l4.dtsi
-+++ b/arch/arm/boot/dts/am437x-l4.dtsi
-@@ -280,12 +280,6 @@
- 				#size-cells = <1>;
- 				ranges = <0 0 0x4000>;
- 
--				phy_sel: cpsw-phy-sel@650 {
--					compatible = "ti,am43xx-cpsw-phy-sel";
--					reg= <0x650 0x4>;
--					reg-names = "gmii-sel";
--				};
--
- 				am43xx_pinmux: pinmux@800 {
- 					compatible = "ti,am437-padconf",
- 						     "pinctrl-single";
-@@ -300,11 +294,17 @@
- 				};
- 
- 				scm_conf: scm_conf@0 {
--					compatible = "syscon";
-+					compatible = "syscon", "simple-bus";
- 					reg = <0x0 0x800>;
- 					#address-cells = <1>;
- 					#size-cells = <1>;
- 
-+					phy_gmii_sel: phy-gmii-sel {
-+						compatible = "ti,am43xx-phy-gmii-sel";
-+						reg = <0x650 0x4>;
-+						#phy-cells = <2>;
-+					};
-+
- 					scm_clocks: clocks {
- 						#address-cells = <1>;
- 						#size-cells = <0>;
-@@ -555,7 +555,6 @@
- 				cpts_clock_shift = <29>;
- 				ranges = <0 0 0x8000>;
- 				syscon = <&scm_conf>;
--				cpsw-phy-sel = <&phy_sel>;
- 
- 				davinci_mdio: mdio@1000 {
- 					compatible = "ti,am4372-mdio","ti,cpsw-mdio","ti,davinci_mdio";
-@@ -572,11 +571,13 @@
- 				cpsw_emac0: slave@200 {
- 					/* Filled in by U-Boot */
- 					mac-address = [ 00 00 00 00 00 00 ];
-+					phys = <&phy_gmii_sel 1 0>;
- 				};
- 
- 				cpsw_emac1: slave@300 {
- 					/* Filled in by U-Boot */
- 					mac-address = [ 00 00 00 00 00 00 ];
-+					phys = <&phy_gmii_sel 2 0>;
- 				};
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index 4ea753b..9dfd80e 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -584,10 +584,7 @@
- &cpsw_emac0 {
- 	phy-handle = <&ethphy0>;
- 	phy-mode = "rmii";
--};
--
--&phy_sel {
--	rmii-clock-ext;
-+	phys = <&phy_gmii_sel 1 1>;
- };
- 
- &i2c0 {
+On 2018년 11월 23일 19:01, Lukasz Luba wrote:
+> Hi Chanwoo Choi,
+> 
+> On 11/23/18 12:54 AM, Chanwoo Choi wrote:
+>> Hi Lukasz,
+>>
+>> I add one more comment about devfreq_resume_device().
+>>
+>> On 2018년 11월 22일 20:00, Lukasz Luba wrote:
+>>>
+>>>
+>>> On 11/22/18 3:58 AM, Chanwoo Choi wrote:
+>>>> On 2018년 11월 22일 03:01, Lukasz Luba wrote:
+>>>>> The patch adds support for handling suspend/resume process.
+>>>>> It uses atomic variables to make sure no race condition
+>>>>> affects the process.
+>>>>>
+>>>>> The patch draws on Tobias Jakobi's work posted ~2 years ago, who tried to
+>>>>> solve issue with devfreq device's frequency during suspend/resume.
+>>>>> During the discussion on LKML some corner cases and comments appeared
+>>>>> related to the design. This patch address them keeping in mind suggestions
+>>>>> from Chanwoo Choi.
+>>>>
+>>>> Please remove the duplicate information about patch history.
+>>>>
+>>>>>
+>>>>> Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+>>>>> Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>>>>> ---
+>>>>>    drivers/devfreq/devfreq.c | 45 +++++++++++++++++++++++++++++++++++++++------
+>>>>>    1 file changed, 39 insertions(+), 6 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>>>>> index cf9c643..7e09de8 100644
+>>>>> --- a/drivers/devfreq/devfreq.c
+>>>>> +++ b/drivers/devfreq/devfreq.c
+>>>>> @@ -872,14 +872,33 @@ EXPORT_SYMBOL(devm_devfreq_remove_device);
+>>>>>     */
+>>>>>    int devfreq_suspend_device(struct devfreq *devfreq)
+>>>>>    {
+>>>>> -	if (!devfreq)
+>>>>> -		return -EINVAL;
+>>>>> +        int ret;
+>>>>
+>>>> Move 'ret' definition under 'if (devfreq->suspend_freq) {'
+>>>> because 'ret' is used if suspend_freq isn't zero.
+>>> Not only there, 6 lines above 'ret' is used for
+>>> devfreq->governor->event_handler().
+>>
+>> OK.
+>>
+>>>>
+>>>>> +        unsigned long prev_freq;
+>>>>> +        u32 flags = 0;
+>>>>> +
+>>>>> +        if (!devfreq)
+>>>>> +                return -EINVAL;
+>>>>> +
+>>>>> +        if (devfreq->governor) {
+>>>>> +		ret = devfreq->governor->event_handler(devfreq,
+>>>>> +					DEVFREQ_GOV_SUSPEND, NULL);
+>>>>> +		if (ret)
+>>>>> +			return ret;
+>>>>> +	}
+>>>>>    
+>>>>> -	if (!devfreq->governor)
+>>>>> -		return 0;
+>>>>> +	if (devfreq->suspend_freq) {
+>>>>> +		if (atomic_inc_return(&devfreq->suspend_count) > 1)
+>>>>> +			return 0;
+>>>>>    
+>>>>> -	return devfreq->governor->event_handler(devfreq,
+>>>>> -				DEVFREQ_GOV_SUSPEND, NULL);
+>>>>> +		ret = devfreq_set_target(devfreq, devfreq->suspend_freq,
+>>>>> +					 &prev_freq, flags);
+>>>>
+>>>> Remove the 'prev_freq' parameter.
+>>> OK
+>>>>
+>>>>> +		if (ret)
+>>>>> +			return ret;
+>>>>> +
+>>>>> +		devfreq->resume_freq = prev_freq;
+>>>>
+>>>> As I commented on patch2, if devfreq_set_taget save the current frequency
+>>>> to 'devfreq->resume_freq', this line is not needed.
+>>> OK
+>>>>
+>>>>
+>>>>> +	}
+>>>>> +
+>>>>> +        return 0;
+>>>>>    }
+>>>>>    EXPORT_SYMBOL(devfreq_suspend_device);
+>>>>>    
+>>>>> @@ -893,9 +912,23 @@ EXPORT_SYMBOL(devfreq_suspend_device);
+>>>>>     */
+>>>>>    int devfreq_resume_device(struct devfreq *devfreq)
+>>>>>    {
+>>>>> +        int ret;
+>>>>
+>>>> Move 'ret' definition under 'if (devfreq->suspend_freq) {'
+>>>> because 'ret' is used if suspend_freq isn't zero.
+>>> OK
+>>
+>> If you change the devfreq_resume_device() according to my new comment,
+>> please ignore it.
+>>
+>>>>
+>>>>> +        unsigned long prev_freq;
+>>>>
+>>>> Remove prev_freq variable which is not used on this function.
+>>>> After calling devfreq_set_target, prev_freq is not used.
+>>> OK
+>>>>
+>>>>> +        u32 flags = 0;
+>>>>> +
+>>>>>    	if (!devfreq)
+>>>>>    		return -EINVAL;
+>>>>>    
+>>>>> +	if (devfreq->suspend_freq) {
+
+In devfreq_resume_device(), it should check the 'devfreq->resume_freq'
+instead of 'devfreq->suspend_freq'.
+
+
+>>>>> +		if (atomic_dec_return(&devfreq->suspend_count) >= 1)
+>>>>> +			return 0;
+>>>>> +
+>>>>> +		ret = devfreq_set_target(devfreq, devfreq->resume_freq,
+>>>>> +					 &prev_freq, flags);
+>>>>
+>>>> Remove the 'prev_freq' parameter.
+>>> OK
+>>>>
+>>>>> +		if (ret)
+>>>>> +			return ret;
+>>>>> +	}
+>>>>> +
+>>>>>    	if (!devfreq->governor)
+>>>>>    		return 0;
+>>
+>> Please change the code as following because you uses the following type
+>> in the devfreq_suspend_device(). If there is any special issue, please
+>> keep the same format in order to improve the readability.
+>>
+>> 	if (devfreq->governor) {
+>> 		ret = devfreq->governor->event_handler(devfreq,
+>> 				DEVFREQ_GOV_RESUME, NULL);
+>> 		if (ret)
+>> 			return ret;
+>> 	}
+>>
+>>
+> OK, I will change the code to keep the same format.
+> Thank you for the review.
+> 
+> Regards,
+> Lukasz
+> 
+> 
+> 
+
+
 -- 
-2.10.5
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
