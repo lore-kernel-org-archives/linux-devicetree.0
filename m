@@ -1,117 +1,39 @@
-From: Palmer Dabbelt <palmer@sifive.com>
-Subject: Re: [PATCH] dt-bindings: sifive: describe sifive-blocks versioning
-Date: Mon, 26 Nov 2018 11:02:50 -0800 (PST)
-Message-ID: <mhng-9dfdf5d7-fe41-4418-ba3d-d03ed9b2265c@palmer-si-x1c4>
-References: <eda63b4a-4371-7d34-38a0-d7136dfc417f@wdc.com>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH] i3c: master: dw: split dw-i3c-master.c into master and
+ bus specific parts
+Date: Mon, 26 Nov 2018 20:08:55 +0100
+Message-ID: <20181126200855.0caa45b0@bbrezillon>
+References: <ade2c1a8d1eb48681b01ccdc9bed22caf5e96c4b.1542904564.git.soares@synopsys.com>
+        <20181122210202.6af50fcc@bbrezillon>
+        <6d513e04-3a57-1989-429c-64631101c5a2@synopsys.com>
+        <20181123135004.7fd1cd58@bbrezillon>
+        <83115f47-1326-cb33-a7dc-4bc8ff95befa@synopsys.com>
+        <20181126133550.51469816@bbrezillon>
+        <4e9c0461-02a3-80b2-c9b7-2e9ea9b38f8b@synopsys.com>
+        <20181126195618.352eafb1@bbrezillon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <eda63b4a-4371-7d34-38a0-d7136dfc417f@wdc.com>
+In-Reply-To: <20181126195618.352eafb1@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: atish.patra@wdc.com
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, paul@pwsan.com, Megan Wachs <megan@sifive.com>, linux-kernel@vger.kernel.org, Wesley Terpstra <wesley@sifive.com>, linux-riscv@lists.infradead.org
+To: vitor <vitor.soares@synopsys.com>
+Cc: wsa@the-dreams.de, linux-i2c@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de, psroka@cadence.com, agolec@cadence.com, adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com, alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com, rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, linus.walleij@linaro.org, Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org, nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se, mshettel@codeaurora.org, swboyd@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 Nov 2018 17:33:02 PST (-0800), atish.patra@wdc.com wrote:
-> On 11/21/18 5:07 PM, Paul Walmsley wrote:
->>
->> For IP blocks that are generated from the public, open-source
->> sifive-blocks repository, describe the version numbering policy
->> that its maintainers intend to use, upon request from Rob
->> Herring <robh@kernel.org>.
->>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Palmer Dabbelt <palmer@sifive.com>
->> Cc: Megan Wachs <megan@sifive.com>
->> Cc: Wesley Terpstra <wesley@sifive.com>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: devicetree@vger.kernel.org
->> Cc: linux-riscv@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
->> Signed-off-by: Paul Walmsley <paul@pwsan.com>
->> ---
->>
->> Hi Rob, please let me know if this document works with your
->> requirements, or if some changes are needed.  - Paul
->>
->>   .../sifive/sifive-blocks-ip-versioning.txt    | 38 +++++++++++++++++++
->>   1 file changed, 38 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
->>
->> diff --git a/Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt b/Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
->> new file mode 100644
->> index 000000000000..b899e5c6e00c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
->
-> It should be be under
-> Documentation/devicetree/bindings/riscv/sifive/sifive-blocks-ip-versioning.txt
-> ?
->
->> @@ -0,0 +1,38 @@
->> +DT compatible string versioning for SiFive open-source IP blocks
->> +
->> +This document describes the version specification for DT "compatible"
->> +strings for open-source SiFive IP blocks.  HDL for these IP blocks
->> +can be found in this public repository:
->> +
->> +https://github.com/sifive/sifive-blocks
->> +
->> +IP block-specific DT compatible strings are contained within the HDL,
->> +in the form "sifive,<ip-block-name><integer version number>".
->> +
->> +An example is "sifive,uart0" from:
->> +
->> +https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/devices/uart/UART.scala#L43
->> +
->> +Until these IP blocks (or IP integration) support version
->> +autodiscovery, the maintainers of these IP blocks intend to increment
->
-> /s/autodiscovery/auto discovery
->
->> +the suffixed number in the compatible string whenever the software
->> +interface to these IP blocks changes, or when the functionality of the
->> +underlying IP blocks changes in a way that software should be aware of.
->> +
->> +Driver developers can use compatible string "match" values such as
->> +"sifive,uart0" to indicate that their driver is compatible with the
->> +register interface and functionality associated with the relevant
->> +upstream sifive-blocks commits.  It is expected that most drivers will
->> +match on these IP block-specific compatible strings.
->> +
->> +DT data authors, when writing data for a particular SoC, should
->> +continue to specify an SoC-specific compatible string value, such as
->> +"sifive,fu540-c000-uart".  This way, if SoC-specific
->> +integration-specific bug fixes or workarounds are needed, the kernel
->> +or other system software can match on this string to apply them.  The
->> +IP block-specific compatible string (such as "sifive,uart0") should
->> +then be specified as a subsequent value.
->> +
->> +An example of this style:
->> +
->> +    compatible = "sifive,fu540-c000-uart", "sifive,uart0";
->>
->
-> Just for the sake of completion, should this document also specify what
-> should be the style of any possible closed IP as well?
+On Mon, 26 Nov 2018 19:56:18 +0100
+Boris Brezillon <boris.brezillon@bootlin.com> wrote:
+ 
+> > 
+> >      - for the others it will easy the SoC integration avoiding 
+> > duplicated work and doing things from scratch.  
+> 
+> What would be duplicated? You want to support a new SoC, just add a new
+> entry in the of_match_table and you're done. When you need to add
+> SoC/integration specific stuff, create a struct and attach a different
+> instance per-compatible so that each SoC can have its own configuration
+> (or even init sequence if needed). That's how we do for pretty much all
+> IPs out there, why should designware ones be different?
 
-Let's restrict ourselves to the open-source IP for now, as versioning the 
-closed source stuff is a bit of a different problem -- when everyone can see 
-the source it's easier because we can all agree on exactly what a version 
-string means.
-
-For the closed source stuff we currently have just the chip-specific strings, 
-as all that stuff is very chip specific (all sorts of special clocking 
-constraints).  Essentially you'll have to just trust us as to what's compatible 
-with what -- FWIW, since this is mostly driven by the chip process we really 
-just have to trust the hardware designers, so we're kind of in the same boat 
-(though we can at least peek under the covers if we want to).  Any versioning 
-scheme here is doubly complicated because it's closed source and it's chip 
-specific, so trying to match this up with the open source stuff seems like too 
-much work.
-
-For now we can at least get everyone on the same page as to how we're 
-versioning the open-source blocks, which is more important because anyone can 
-build a chip with those so we need a well defined scheme.
+To be more specific, I'd like a real example that shows why the
+separation is needed.
