@@ -1,77 +1,35 @@
-From: Leo Li <leoyang.li@nxp.com>
-Subject: RE: [PATCH v3 2/2] arm64: dts: Add support for NXP LS1028A SoC
-Date: Mon, 26 Nov 2018 22:35:23 +0000
-Message-ID: <AM6PR04MB586352129DF2A1DF6056BC048FD70@AM6PR04MB5863.eurprd04.prod.outlook.com>
-References: <1542156591-3224-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
- <1542156591-3224-2-git-send-email-Bhaskar.Upadhaya@nxp.com>
- <20181126144208.GC31334@dragon>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH 05/16] remoteproc/pru: Add pru-specific debugfs support
+Date: Mon, 26 Nov 2018 16:37:45 -0600
+Message-ID: <d0e227e3-39dc-dfc8-b94c-3d9d072f6562@lechnology.com>
+References: <1543218769-5507-1-git-send-email-rogerq@ti.com>
+ <1543218769-5507-6-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181126144208.GC31334@dragon>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1543218769-5507-6-git-send-email-rogerq@ti.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudhanshu Gupta <sudhanshu.gupta@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Harninder Rai <harninder.rai@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, ohad@wizery.com, bjorn.andersson@linaro.org
+Cc: tony@atomide.com, robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Shawn Guo <shawnguo@kernel.org>
-> Sent: Monday, November 26, 2018 8:42 AM
-> To: Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>
-> Cc: devicetree@vger.kernel.org; Harninder Rai <harninder.rai@nxp.com>;
-> Sudhanshu Gupta <sudhanshu.gupta@nxp.com>; linux-arm-
-> kernel@lists.infradead.org; Leo Li <leoyang.li@nxp.com>
-> Subject: Re: [PATCH v3 2/2] arm64: dts: Add support for NXP LS1028A SoC
+On 11/26/18 1:52 AM, Roger Quadros wrote:
+> From: Suman Anna <s-anna@ti.com>
 > 
-> On Wed, Nov 14, 2018 at 05:30:52AM +0000, Bhaskar Upadhaya wrote:
-> > LS1028A contains two ARM v8 CortexA72 processor cores with 32 KB L1-D
-> > cache and 48 KB L1-I cache
-> >
-> > Features summary
-> >  Two 32-bit / 64-bit ARM v8 Cortex-A72 CPUs
-> >   - Arranged as single clusters of two cores sharing a 1 MB L2 cache
-> >   - Speed Up to 1.3 GHz
-> >   - Support for cluster power-gating.
-> >  Cache coherent interconnect (CCI-400)
-> >   - Hardware-managed data coherency
-> >   - Up to 400 MHz
-> >  32-bit DDR4 SDRAM memory controller with ECC  Two PCIe 3.0
-> > controllers  One serial ATA (SATA 3.0) controller  Two high-speed USB
-> > 3.0 controllers with integrated PHY
-> >
-> >  Following levels of DTSI/DTS files have been created for the LS1028A
-> >   SoC family:
-> >
-> >          - fsl-ls1028a.dtsi:
-> >                  DTS-Include file for NXP LS1028A SoC.
-> >
-> >          - fsl-ls1028a-qds.dts:
-> >                  DTS file for NXP LS1028A QDS board.
-> >
-> >          - fsl-ls1028a-rdb.dts:
-> >                  DTS file for NXP LS1028A RDB board
-> >
-> > Signed-off-by: Sudhanshu Gupta <sudhanshu.gupta@nxp.com>
-> > Signed-off-by: Rai Harninder <harninder.rai@nxp.com>
-> > Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
+> The remoteproc core creates certain standard debugfs entries,
+> that does not give a whole lot of useful information for the
+> PRUs. The PRU remoteproc driver is enhanced to add additional
+> debugfs entries for PRU. These will be auto-cleaned up when
+> the parent rproc debug directory is removed.
 > 
-> @Leo, looks good to you?
+> The enhanced debugfs support adds two new entries: 'regs' and
+> 'single_step'. The 'regs' dumps out the useful CTRL sub-module
+> registers as well as each of the 32 GPREGs and CT_REGs registers.
+> The GPREGs and CT_REGs though are printed only when the PRU is
+> halted and accessible as per the IP design.
+> 
 
-Yes.
-
-Acked-by: Li Yang <leoyang.li@nxp.com>
-
-Regards,
-Leo
+If the driver used regmap to access the CTRL I/O memory, then
+'regs' wouldn't be needed since regmap already does debugfs.
