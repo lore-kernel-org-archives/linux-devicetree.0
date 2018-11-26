@@ -1,176 +1,95 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 3/3] ARM: dts: Add g3d bus nodes using VDD_INT for
- Exynos542x SoC
-Date: Mon, 26 Nov 2018 16:37:53 +0900
-Message-ID: <5BFBA2D1.8090409@samsung.com>
-References: <20181123094413.1108-1-linux.amoon@gmail.com>
-        <CGME20181123094508epcas5p4b7958b812bf0f64ca47006ced9fda279@epcas5p4.samsung.com>
-        <20181123094413.1108-3-linux.amoon@gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 01/17] dt-bindings: remoteproc: Add TI PRUSS bindings
+Date: Mon, 26 Nov 2018 09:47:49 +0200
+Message-ID: <5BFBA525.3060806@ti.com>
+References: <1542886753-17625-1-git-send-email-rogerq@ti.com>
+ <1542886753-17625-2-git-send-email-rogerq@ti.com>
+ <20181123162417.GZ53235@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20181123094413.1108-3-linux.amoon@gmail.com>
+In-Reply-To: <20181123162417.GZ53235@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>
+To: Tony Lindgren <tony@atomide.com>
+Cc: robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anand,
+Hi,
 
-CLK_DOUT_ACLK_G3D is the clock for GPU h/w and it requires the buck4_reg("vdd_g3d").
-
-bus_wcore uses the buck3_reg("vdd_int"). bus_wcore and bus_g3d don't share the 
-same voltage line. It is wrong to make 'bus_g3d' as the child of 'bus_wcore'
-because of using the different regulator.
-
-CLK_DOUT_ACLK_G3D and buck4_reg should be controlled from MALI driver 
-with DEVFREQ framework. Unfortunately, MALI driver is not posted to mainline.
-
-
-On 2018년 11월 23일 18:44, Anand Moon wrote:
-> Add missing Netwwork on chip for g3d bus node using VDD_INI
-> for Exynos542x SoC.
+On 23/11/18 18:24, Tony Lindgren wrote:
+> Hi,
 > 
-> - CLK_DOUT_ACLK_G3D for G3D's AXI
+> * Roger Quadros <rogerq@ti.com> [181122 11:39]:
+>> From: Suman Anna <s-anna@ti.com>
+>> +Example:
+>> +========
+>> +1.	/* AM33xx PRU-ICSS */
+>> +	pruss_soc_bus: pruss_soc_bus@4a326004 {
+>> +		compatible = "ti,am3356-pruss-soc-bus";
+>> +		ti,hwmods = "pruss";
+>> +		reg = <0x4a326004 0x4>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges;
 > 
-> Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi             | 57 +++++++++++++++++--
->  arch/arm/boot/dts/exynos5422-odroid-core.dtsi |  5 ++
->  2 files changed, 56 insertions(+), 6 deletions(-)
+> The top level interconnect target module driver should be just ti-sysc
+> as documented in Documentation/devicetree/bindings/bus/ti-sysc.txt.
+> AFAIK there is nothing PRU specific there. So let's not add yet
+> another custom interconnect target module handling code to deal with.
 > 
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index aaff15880761..bc7203bb1282 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -1047,6 +1047,14 @@
->  			status = "disabled";
->  		};
->  
-> +		bus_g3d: bus_g3d {
-> +			compatible = "samsung,exynos-bus";
-> +			clocks = <&clock CLK_DOUT_ACLK_G3D>;
-> +			clock-names = "bus";
-> +			operating-points-v2 = <&bus_g3d_opp_table>;
-> +			status = "disabled";
-> +		};
-> +
->  		bus_jpeg: bus_jpeg {
->  			compatible = "samsung,exynos-bus";
->  			clocks = <&clock CLK_DOUT_ACLK300_JPEG>;
-> @@ -1245,7 +1253,44 @@
->  			};
->  		};
->  
-> -		bus_jpeg_opp_table: opp_table11 {
-> +		bus_g3d_opp_table: opp_table11 {
-> +			compatible = "operating-points-v2";
-> +
-> +			opp@600000000 {
-> +				opp-hz = /bits/ 64 <600000000>;
-> +				opp-microvolt = <1025000>;
-> +			};
-> +			opp@543000000 {
-> +				opp-hz = /bits/ 64 <543000000>;
-> +				opp-microvolt = <987500>;
-> +			};
-> +			opp@480000000 {
-> +				opp-hz = /bits/ 64 <480000000>;
-> +				opp-microvolt = <950000>;
-> +			};
-> +			opp@420000000 {
-> +				opp-hz = /bits/ 64 <420000000>;
-> +				opp-microvolt = <937500>;
-> +			};
-> +			opp@350000000 {
-> +				opp-hz = /bits/ 64 <350000000>;
-> +				opp-microvolt = <900000>;
-> +			};
-> +			opp@266000000 {
-> +				opp-hz = /bits/ 64 <266000000>;
-> +				opp-microvolt = <862500>;
-> +			};
-> +			opp@177000000 {
-> +				opp-hz = /bits/ 64 <177000000>;
-> +				opp-microvolt = <862500>;
-> +			};
-> +			opp@100000000 {
-> +				opp-hz = /bits/ 64 <100000000>;
-> +				opp-microvolt = <862500>;
-> +			};
-> +		};
-> +
-> +		bus_jpeg_opp_table: opp_table12 {
->  			compatible = "operating-points-v2";
->  
->  			opp00 {
-> @@ -1262,7 +1307,7 @@
->  			};
->  		};
->  
-> -		bus_jpeg_apb_opp_table: opp_table12 {
-> +		bus_jpeg_apb_opp_table: opp_table13 {
->  			compatible = "operating-points-v2";
->  
->  			opp00 {
-> @@ -1279,7 +1324,7 @@
->  			};
->  		};
->  
-> -		bus_disp1_fimd_opp_table: opp_table13 {
-> +		bus_disp1_fimd_opp_table: opp_table14 {
->  			compatible = "operating-points-v2";
->  
->  			opp00 {
-> @@ -1290,7 +1335,7 @@
->  			};
->  		};
->  
-> -		bus_disp1_opp_table: opp_table14 {
-> +		bus_disp1_opp_table: opp_table15 {
->  			compatible = "operating-points-v2";
->  
->  			opp00 {
-> @@ -1304,7 +1349,7 @@
->  			};
->  		};
->  
-> -		bus_gscl_opp_table: opp_table15 {
-> +		bus_gscl_opp_table: opp_table16 {
->  			compatible = "operating-points-v2";
->  
->  			opp00 {
-> @@ -1318,7 +1363,7 @@
->  			};
->  		};
->  
-> -		bus_mscl_opp_table: opp_table16 {
-> +		bus_mscl_opp_table: opp_table17 {
->  			compatible = "operating-points-v2";
->  
->  			opp00 {
-> diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> index 2fac4baf1eb4..6e39e4594502 100644
-> --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> @@ -89,6 +89,11 @@
->  	status = "okay";
->  };
->  
-> +&bus_g3d {
-> +	devfreq = <&bus_wcore>;
-> +	status = "okay";
-> +};
-> +
->  &bus_jpeg {
->  	devfreq = <&bus_wcore>;
->  	status = "okay";
+> I also posted a patch a while back for using reset-simple with
+> ti-sysc as "[PATCHv2] reset: ti-rstctrl: use the reset-simple driver".
 > 
 
+Cool. I will try that out.
+
+>> +			pruss_cfg: cfg@4a326000 {
+>> +				compatible = "syscon";
+>> +				reg = <0x4a326000 0x2000>;
+>> +			};
+>> +
+>> +			pruss_iep: iep@4a32e000 {
+>> +				compatible = "syscon";
+>> +				reg = <0x4a32e000 0x31c>;
+>> +			};
+>> +
+>> +			pruss_mii_rt: mii_rt@4a332000 {
+>> +				compatible = "syscon";
+>> +				reg = <0x4a332000 0x58>;
+>> +			};
+> 
+> Hmm what are these syscon register actually doing? Sseems like
+> they should be just handled by a phy driver nowadays?
+
+Not the PHY driver but the Ethernet driver. The PHY driver will be
+a davinci-MDIO device node (not yet in this series). I should probably
+add merge that with this series.
+
+The Ethernet device tree node will reference to these syscon nodes.
+e.g.
+        pruss2_eth {
+                compatible = "ti,am57-prueth";
+                prus = <&pru2_0>, <&pru2_1>;
+                firmware-name = "ti-pruss/am57xx-pru0-prueth-fw.elf",
+                                "ti-pruss/am57xx-pru1-prueth-fw.elf";
+                sram = <&ocmcram1>;
+                interrupt-parent = <&pruss2_intc>;
+-->             mii-rt = <&pruss2_mii_rt>;
+-->             iep = <&pruss2_iep>;
+	}
+
+Do you see any issues with that?
+
+> 
+> Other than that the binding looks OK to me. Good to finally
+> see some activity in getting the PRU support merged :)
+
+Thanks :)
+
+cheers,
+-roger
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
