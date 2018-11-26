@@ -1,88 +1,68 @@
-From: Miles Chen <miles.chen@mediatek.com>
-Subject: Re: [RFC PATCH] of: make MAX_RESERVED_REGIONS configurable
-Date: Mon, 26 Nov 2018 09:33:24 +0800
-Message-ID: <1543196004.21289.1.camel@mtkswgap22>
-References: <1542787873-8429-1-git-send-email-miles.chen@mediatek.com>
-         <CAL_JsqLGvUYQmCGXLgSO+6kFj2i87dpaTbMGbyu5oMt=eeu35A@mail.gmail.com>
-         <1542855088.15789.6.camel@mtkswgap22>
-         <CAL_Jsq+O1YDP1yiHZpcxUaFG1LYDqi74D_kEnErP+cwGDppVWQ@mail.gmail.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v4 2/2] phy: qualcomm: Add Synopsys High-Speed USB PHY
+ driver
+Date: Mon, 26 Nov 2018 10:30:23 +0800
+Message-ID: <20181126023021.GC20417@dragon>
+References: <20181119110812.15825-1-shawn.guo@linaro.org>
+ <20181119110812.15825-3-shawn.guo@linaro.org>
+ <52433bdc-bc05-2ca0-0822-c9fb702b3231@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+O1YDP1yiHZpcxUaFG1LYDqi74D_kEnErP+cwGDppVWQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <52433bdc-bc05-2ca0-0822-c9fb702b3231@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2018-11-24 at 14:56 -0600, Rob Herring wrote:
-> On Wed, Nov 21, 2018 at 8:51 PM Miles Chen <miles.chen@mediatek.com> wrote:
-> >
-> > On Wed, 2018-11-21 at 10:39 -0600, Rob Herring wrote:
-> > > On Wed, Nov 21, 2018 at 2:11 AM <miles.chen@mediatek.com> wrote:
-> > > >
-> > > > From: Miles Chen <miles.chen@mediatek.com>
-> > > >
-> > > > When we use more than 32 entries in /resered-memory,
-> > > > there will be an error message: "not enough space all defined regions.".
-> > > > We can increase MAX_RESERVED_REGIONS to fix this.
-> > > >
-> > > > commit 22f8cc6e3373 ("drivers: of: increase MAX_RESERVED_REGIONS to 32")
-> > > > increased MAX_RESERVED_REGIONS to 32 but I'm not sure if increasing
-> > > > MAX_RESERVED_REGIONS to 64 is suitable for everyone.
-> > > >
-> > > > In this RFC patch, CONFIG_MAX_OF_RESERVED_REGIONS is added and used as
-> > > > MAX_RESERVED_REGIONS. Add a sanity test to make sure that
-> > > > MAX_RESERVED_REGIONS is less than INIT_MEMBLOCK_REGIONS.
-> > > > Users can configure CONFIG_MAX_OF_RESERVED_REGIONS according to their
-> > > > need.
-> > >
-> > > I don't want a kconfig option for this. I think it should be dynamic instead.
-> > >
-> > > The current flow is like this:
-> > >
-> > > for each reserved node:
-> > >   - call memblock_reserve
-> > >   - Add info to reserved_mem array
-> > >
-> > > I think we should change it to:
-> > >
-> > > for each reserved node:
-> > >   - call memblock_reserve
-> > >   - count number of nodes
-> > >
-> > > Alloc array using memblock_alloc
-> > >
-> > > for each reserved node:
-> > >    - Add info to reserved_mem array
-> > >
-> >
-> > thanks for your comment.
-> >
-> > I reviewed the flow and it might be easier to count the
-> > nodes and setup array first:
-> >
-> > for each reserved node:
-> >     - count number of nodes
-> >
-> > Alloc array using memblock_alloc
-> >
-> >
-> > for each reserved node:
-> >    - call memblock_reserve
+On Fri, Nov 23, 2018 at 03:25:33PM +0530, Kishon Vijay Abraham I wrote:
+> > +static int qcom_snps_hsphy_por_reset(struct hsphy_priv *priv)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = reset_control_assert(priv->por_reset);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/*
+> > +	 * The Femto PHY is POR reset in the following scenarios.
+> > +	 *
+> > +	 * 1. After overriding the parameter registers.
+> > +	 * 2. Low power mode exit from PHY retention.
+> > +	 *
+> > +	 * Ensure that SIDDQ is cleared before bringing the PHY
+> > +	 * out of reset.
+> > +	 */
+> > +	qcom_snps_hsphy_exit_retention(priv);
+> > +
+> > +	/*
+> > +	 * As per databook, 10 usec delay is required between
+> > +	 * PHY POR assert and de-assert.
+> > +	 */
+> > +	usleep_range(10, 20);
+> > +	ret = reset_control_deassert(priv->por_reset);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/*
+> > +	 * As per databook, it takes 75 usec for PHY to stabilize
+> > +	 * after the reset.
+> > +	 */
+> > +	usleep_range(80, 100);
+> > +
+> > +	/* Ensure that RESET operation is completed. */
+> > +	mb();
 > 
-> The order here is wrong. It is important that you reserve the memory
-> blocks before doing any allocations.
+> How will you ensure the reset operation is complete with a memory barrier? mb
+> usage here looks incorrect to me.
 
-thanks for pointing that out. You are right. I'll follow your
-suggestion.
+I agree with you, Kishon.  I think memory barrier only ensures the
+register write happens rather than that RESET operation completes.
+Since the IO accessors already handle memory barrier, I will just drop
+the mb() from here and function qcom_snps_hsphy_init_sequence() as well.
 
-> 
-> >    - Add info to reserved_mem array
-> >
-> > What do you think?
-> >
-> > > Rob
-> >
-> >
+@Sriharsha, let us know if you have a story or reason for these memory
+barriers.
+
+Shawn
