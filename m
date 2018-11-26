@@ -1,525 +1,84 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [RFC PATCH v2 06/15] usb:cdns3: Adds Host support
-Date: Mon, 26 Nov 2018 10:17:38 +0000
-Message-ID: <BYAPR07MB4709383C4876E97253942A6ADDD70@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
- <1542535751-16079-7-git-send-email-pawell@cadence.com>
- <5BF80D44.2050600@ti.com>
- <BYAPR07MB4709593D0B03399E9D35E07BDDD70@BYAPR07MB4709.namprd07.prod.outlook.com>
- <5BFBC201.4000000@ti.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [RESEND PATCH v17 5/5] iommu/arm-smmu: Add support
+ for qcom, smmu-v2 variant
+Date: Mon, 26 Nov 2018 16:25:35 +0530
+Message-ID: <30fd45b5-50f0-7f2f-aab3-adc4528d21a8@codeaurora.org>
+References: <20181116112430.31248-1-vivek.gautam@codeaurora.org>
+ <20181116112430.31248-6-vivek.gautam@codeaurora.org>
+ <20181121173803.GB9801@arm.com>
+ <CAFp+6iELH7Mw3Ue2ksEyV+Ac8hG8--Ki69xrPCA4F-AcireRow@mail.gmail.com>
+ <CAAFQd5B-bZR8dmjARb8L4oqgET2YAjXhexAO0GKAvU4JoVU=7g@mail.gmail.com>
+ <CAFp+6iFhBRJWGY4Hj30tWedGpEUcnkBJrOvffmbpD2m9QMZB3A@mail.gmail.com>
+ <20181123183428.GD21183@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5BFBC201.4000000@ti.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20181123183428.GD21183-5wv7dgnIgG8@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
->
->Hi,
->
->On 26/11/18 10:24, Pawel Laszczak wrote:
->>> EXTERNAL MAIL
->>>
->>>
->>> On 18/11/18 12:09, Pawel Laszczak wrote:
->>>> Patch adds host-export.h and host.c file and mplements functions that
->>>> allow to initialize, start and stop XHCI host driver.
->>>>
->>>> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
->>>> ---
->>>>  drivers/usb/cdns3/Kconfig       |  10 ++
->>>>  drivers/usb/cdns3/Makefile      |   1 +
->>>>  drivers/usb/cdns3/core.c        |   7 +-
->>>>  drivers/usb/cdns3/host-export.h |  30 ++++
->>>>  drivers/usb/cdns3/host.c        | 256 +++++++++++++++++++++++++++++++=
-+
->>>>  5 files changed, 302 insertions(+), 2 deletions(-)
->>>>  create mode 100644 drivers/usb/cdns3/host-export.h
->>>>  create mode 100644 drivers/usb/cdns3/host.c
->>>>
->>>> diff --git a/drivers/usb/cdns3/Kconfig b/drivers/usb/cdns3/Kconfig
->>>> index eb22a8692991..d92bc3d68eb0 100644
->>>> --- a/drivers/usb/cdns3/Kconfig
->>>> +++ b/drivers/usb/cdns3/Kconfig
->>>> @@ -10,6 +10,16 @@ config USB_CDNS3
->>>>
->>>>  if USB_CDNS3
->>>>
->>>> +config USB_CDNS3_HOST
->>>> +        bool "Cadence USB3 host controller"
->>>> +        depends on USB_XHCI_HCD
->>>> +        help
->>>> +          Say Y here to enable host controller functionality of the
->>>> +          cadence driver.
->>>> +
->>>> +          Host controller is compliance with XHCI so it will use
->>>> +          standard XHCI driver.
->>>> +
->>>>  config USB_CDNS3_PCI_WRAP
->>>>  	tristate "PCIe-based Platforms"
->>>>  	depends on USB_PCI && ACPI
->>>> diff --git a/drivers/usb/cdns3/Makefile b/drivers/usb/cdns3/Makefile
->>>> index e779b2a2f8eb..976117ba67ff 100644
->>>> --- a/drivers/usb/cdns3/Makefile
->>>> +++ b/drivers/usb/cdns3/Makefile
->>>> @@ -2,4 +2,5 @@ obj-$(CONFIG_USB_CDNS3)			+=3D cdns3.o
->>>>  obj-$(CONFIG_USB_CDNS3_PCI_WRAP)	+=3D cdns3-pci.o
->>>>
->>>>  cdns3-y					:=3D core.o drd.o
->>>> +cdns3-$(CONFIG_USB_CDNS3_HOST)          +=3D host.o
->>>>  cdns3-pci-y		 		:=3D cdns3-pci-wrap.o
->>>> diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
->>>> index dbee4325da7f..4cb820be9ff3 100644
->>>> --- a/drivers/usb/cdns3/core.c
->>>> +++ b/drivers/usb/cdns3/core.c
->>>> @@ -17,6 +17,7 @@
->>>>
->>>>  #include "gadget.h"
->>>>  #include "core.h"
->>>> +#include "host-export.h"
->>>>  #include "drd.h"
->>>>
->>>>  static inline struct cdns3_role_driver *cdns3_get_current_role_driver=
-(struct cdns3 *cdns)
->>>> @@ -98,7 +99,8 @@ static int cdns3_core_init_role(struct cdns3 *cdns)
->>>>  	}
->>>>
->>>>  	if (dr_mode =3D=3D USB_DR_MODE_OTG || dr_mode =3D=3D USB_DR_MODE_HOS=
-T) {
->>>> -		//TODO: implements host initialization
->>>> +		if (cdns3_host_init(cdns))
->>>> +			dev_info(dev, "doesn't support host\n");
->>>
->>> dev_err()
->>>
->>> And you need to error out with error code.
->>
->> ok, but I assume that even if host returns error then we can use
->> only device role. Only when both functions return errors, then it's  a c=
-ritical error
->> and function return error code.
->
->But at this point we are in OTG or HOST dr_mode and without host functiona=
-l
->both will not function correctly. So we must error out so user can debug.
-
-Ok,
-
->
->>>
->>>>  	}
->>>>
->>>>  	if (dr_mode =3D=3D USB_DR_MODE_OTG || dr_mode =3D=3D USB_DR_MODE_PER=
-IPHERAL) {
->>>> @@ -142,7 +144,7 @@ static irqreturn_t cdns3_irq(int irq, void *data)
->>>>
->>>>  static void cdns3_remove_roles(struct cdns3 *cdns)
->>>>  {
->>>> -	//TODO: implements this function
->>>
->>> if (dr_mode =3D=3D USB_DR_MODE_OTG || dr_mode =3D=3D USB_DR_MODE_HOST)
->>>
->>>> +	cdns3_host_remove(cdns);
->>>
->>> How about calling it cdns3_host_exit() to complement cdns3_host_init().
->>>
->>>>  }
->>>>
->>>>  static int cdns3_do_role_switch(struct cdns3 *cdns, enum cdns3_roles =
-role)
->>>> @@ -410,6 +412,7 @@ static struct platform_driver cdns3_driver =3D {
->>>>
->>>>  static int __init cdns3_driver_platform_register(void)
->>>>  {
->>>> +	cdns3_host_driver_init();
->>>>  	return platform_driver_register(&cdns3_driver);
->>>>  }
->>>>  module_init(cdns3_driver_platform_register);
->>>> diff --git a/drivers/usb/cdns3/host-export.h b/drivers/usb/cdns3/host-=
-export.h
->>>> new file mode 100644
->>>> index 000000000000..f8f3b230b472
->>>> --- /dev/null
->>>> +++ b/drivers/usb/cdns3/host-export.h
->>>> @@ -0,0 +1,30 @@
->>>> +/* SPDX-License-Identifier: GPL-2.0 */
->>>> +/*
->>>> + * Cadence USBSS DRD Driver -Host Export APIs
->>>> + *
->>>> + * Copyright (C) 2017 NXP
->>>> + *
->>>> + * Authors: Peter Chen <peter.chen@nxp.com>
->>>> + */
->>>> +#ifndef __LINUX_CDNS3_HOST_EXPORT
->>>> +#define __LINUX_CDNS3_HOST_EXPORT
->>>> +
->>>> +#ifdef CONFIG_USB_CDNS3_HOST
->>>> +
->>>> +int cdns3_host_init(struct cdns3 *cdns);
->>>> +void cdns3_host_remove(struct cdns3 *cdns);
->>>> +void cdns3_host_driver_init(void);
->>>> +
->>>> +#else
->>>> +
->>>> +static inline int cdns3_host_init(struct cdns3 *cdns)
->>>> +{
->>>> +	return -ENXIO;
->>>> +}
->>>> +
->>>> +static inline void cdns3_host_remove(struct cdns3 *cdns) { }
->>>> +static inline void cdns3_host_driver_init(void) {}
->>>> +
->>>> +#endif /* CONFIG_USB_CDNS3_HOST */
->>>> +
->>>> +#endif /* __LINUX_CDNS3_HOST_EXPORT */
->>>> diff --git a/drivers/usb/cdns3/host.c b/drivers/usb/cdns3/host.c
->>>> new file mode 100644
->>>> index 000000000000..0dd47976cb28
->>>> --- /dev/null
->>>> +++ b/drivers/usb/cdns3/host.c
->>>> @@ -0,0 +1,256 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +/*
->>>> + * Cadence USBSS DRD Driver - host side
->>>> + *
->>>> + * Copyright (C) 2018 Cadence Design Systems.
->>>> + * Copyright (C) 2018 NXP
->>>> + *
->>>> + * Authors: Peter Chen <peter.chen@nxp.com>
->>>> + *	    Pawel Laszczak <pawell@cadence.com>
->>>> + */
->>>> +
->>>> +#include <linux/kernel.h>
->>>> +#include <linux/device.h>
->>>> +#include <linux/io.h>
->>>> +#include <linux/slab.h>
->>>> +#include <linux/dma-mapping.h>
->>>> +#include <linux/usb.h>
->>>> +#include <linux/usb/hcd.h>
->>>> +#include <linux/pm_runtime.h>
->>>> +#include <linux/usb/of.h>
->>>> +
->>>> +#include "../host/xhci.h"
->>>> +#include "core.h"
->>>> +#include "host-export.h"
->>>> +
->>>> +static struct hc_driver __read_mostly xhci_cdns3_hc_driver;
->>>> +
->>>> +static void xhci_cdns3_quirks(struct device *dev, struct xhci_hcd *xh=
-ci)
->>>> +{
->>>> +	/*
->>>> +	 * As of now platform drivers don't provide MSI support so we ensure
->>>> +	 * here that the generic code does not try to make a pci_dev from ou=
-r
->>>> +	 * dev struct in order to setup MSI
->>>> +	 */
->>>> +	xhci->quirks |=3D XHCI_PLAT;
->>>> +}
->>>> +
->>>> +static int xhci_cdns3_setup(struct usb_hcd *hcd)
->>>> +{
->>>> +	struct xhci_hcd	*xhci =3D hcd_to_xhci(hcd);
->>>> +	u32 command;
->>>> +	int ret;
->>>> +
->>>> +	ret =3D xhci_gen_setup(hcd, xhci_cdns3_quirks);
->>>> +	if (ret)
->>>> +		return ret;
->>>> +
->>>> +	/* set usbcmd.EU3S */
->>>> +	command =3D readl(&xhci->op_regs->command);
->>>> +	command |=3D CMD_PM_INDEX;
->>>> +	writel(command, &xhci->op_regs->command);
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static const struct xhci_driver_overrides xhci_cdns3_overrides __init=
-const =3D {
->>>> +	.extra_priv_size =3D sizeof(struct xhci_hcd),
->>>> +	.reset =3D xhci_cdns3_setup,
->>>> +};
->>>> +
->>>> +struct cdns3_host {
->>>> +	struct device dev;
->>>> +	struct usb_hcd *hcd;
->>>> +};
->>>> +
->>>> +static irqreturn_t cdns3_host_irq(struct cdns3 *cdns)
->>>> +{
->>>> +	struct device *dev =3D cdns->host_dev;
->>>> +	struct usb_hcd	*hcd;
->>>> +
->>>> +	if (dev)
->>>> +		hcd =3D dev_get_drvdata(dev);
->>>> +	else
->>>> +		return IRQ_NONE;
->>>> +
->>>> +	if (hcd)
->>>> +		return usb_hcd_irq(cdns->irq, hcd);
->>>> +	else
->>>> +		return IRQ_NONE;
->>>
->>> Why can't you just reuse the xhci-platform driver and let it manage the=
- IRQ?
->>> Since it is a shared IRQ, different drivers can request the same IRQ an=
-d return IRQ_NONE
->>> if the IRQ wasn't from their device.
->>
->> In device role the host part of controller is kept in reset, so driver c=
-an't read the host register.
->> Such solution allows driver to control access to host register.
->> So if driver has shared separate interrupt for host role then it has to =
-check if controller work in
->> Host role.
->
->I understand what you mean. I think the issue here is that you are having =
-the host ISR active
->even when host role is stopped. This is the root cause of the problem.
->
->When you stop host role, the host driver *must* unregister the ISR
->and then place the host in reset.
->
->This will happen correctly if you use platform_unregister_device() to unre=
-gister the
->XHCI device in cdns3_host_stop().
-
-Ok, now I understood you concept. I will test it.=20
->>
->>>> +}
->>>> +
->>>> +static void cdns3_host_release(struct device *dev)
->>>> +{
->>>> +	struct cdns3_host *host =3D container_of(dev, struct cdns3_host, dev=
-);
->>>> +
->>>> +	kfree(host);
->>>> +}
->>>> +
->>>> +static int cdns3_host_start(struct cdns3 *cdns)
->>>> +{
->>>> +	struct cdns3_host *host;
->>>> +	struct device *dev;
->>>> +	struct device *sysdev;
->>>> +	struct xhci_hcd	*xhci;
->>>> +	int ret;
->>>> +
->>>> +	host =3D kzalloc(sizeof(*host), GFP_KERNEL);
->>>> +	if (!host)
->>>> +		return -ENOMEM;
->>>> +
->>>> +	dev =3D &host->dev;
->>>> +	dev->release =3D cdns3_host_release;
->>>> +	dev->parent =3D cdns->dev;
->>>> +	dev_set_name(dev, "xhci-cdns3");
->>>> +	cdns->host_dev =3D dev;
->>>> +	ret =3D device_register(dev);
->>>> +	if (ret)
->>>> +		goto err1;
->>>> +
->>>> +	sysdev =3D cdns->dev;
->>>> +	/* Try to set 64-bit DMA first */
->>>> +	if (WARN_ON(!sysdev->dma_mask))
->>>> +		/* Platform did not initialize dma_mask */
->>>> +		ret =3D dma_coerce_mask_and_coherent(sysdev,
->>>> +						   DMA_BIT_MASK(64));
->>>> +	else
->>>> +		ret =3D dma_set_mask_and_coherent(sysdev, DMA_BIT_MASK(64));
->>>> +
->>>> +	/* If setting 64-bit DMA mask fails, fall back to 32-bit DMA mask */
->>>> +	if (ret) {
->>>> +		ret =3D dma_set_mask_and_coherent(sysdev, DMA_BIT_MASK(32));
->>>> +		if (ret)
->>>> +			return ret;
->>>> +	}
->>>> +
->>>> +	pm_runtime_set_active(dev);
->>>> +	pm_runtime_no_callbacks(dev);
->>>> +	pm_runtime_enable(dev);
->>>> +	host->hcd =3D __usb_create_hcd(&xhci_cdns3_hc_driver, sysdev, dev,
->>>> +				     dev_name(dev), NULL);
->>>> +	if (!host->hcd) {
->>>> +		ret =3D -ENOMEM;
->>>> +		goto err2;
->>>> +	}
->>>> +
->>>> +	host->hcd->regs =3D cdns->xhci_regs;
->>>> +	host->hcd->rsrc_start =3D cdns->xhci_res->start;
->>>> +	host->hcd->rsrc_len =3D resource_size(cdns->xhci_res);
->>>> +
->>>> +	device_wakeup_enable(host->hcd->self.controller);
->>>> +	xhci =3D hcd_to_xhci(host->hcd);
->>>> +
->>>> +	xhci->main_hcd =3D host->hcd;
->>>> +	xhci->shared_hcd =3D __usb_create_hcd(&xhci_cdns3_hc_driver, sysdev,=
- dev,
->>>> +					    dev_name(dev), host->hcd);
->>>> +	if (!xhci->shared_hcd) {
->>>> +		ret =3D -ENOMEM;
->>>> +		goto err3;
->>>> +	}
->>>> +
->>>> +	host->hcd->tpl_support =3D of_usb_host_tpl_support(sysdev->of_node);
->>>> +	xhci->shared_hcd->tpl_support =3D host->hcd->tpl_support;
->>>> +	ret =3D usb_add_hcd(host->hcd, 0, IRQF_SHARED);
->>>> +	if (ret)
->>>> +		goto err4;
->>>> +
->>>> +	ret =3D usb_add_hcd(xhci->shared_hcd, 0, IRQF_SHARED);
->>>> +	if (ret)
->>>> +		goto err5;
->>>> +
->>>> +	device_set_wakeup_capable(dev, true);
->>>
->>> All this is being done by the xhci-plat.c
->>>
->>> You can make use of it by just creating a xhci-hcd platform device.
->>>
->>> e.g.
->>> platform_device_alloc("xhci-hcd", PLATFORM_DEVID_AUTO);
->>> platform_device_add_resources() to add IRQ and memory resource.
->>> platform_device_add_properties() to add any quirks.
->>> platform_device_add()
->>>
->>
->> If we do this in this way driver will not control the interrupt.
->
->Why should this driver control host interrupt when it doesn't
->have access to HOST registers.
->
-
-You you are right. I doesn't have to.=20
-
->> This code  has written by Peter Chan and I am convinced
->> that this concept is only correct one.
->>
->>>> +
->>>> +	return 0;
->>>> +
->>>> +err5:
->>>> +	usb_remove_hcd(host->hcd);
->>>> +err4:
->>>> +	usb_put_hcd(xhci->shared_hcd);
->>>> +err3:
->>>> +	usb_put_hcd(host->hcd);
->>>> +err2:
->>>> +	device_del(dev);
->>>> +err1:
->>>> +	put_device(dev);
->>>> +	cdns->host_dev =3D NULL;
->>>> +	return ret;
->>>> +}
->>>> +
->>>> +static void cdns3_host_stop(struct cdns3 *cdns)
->>>> +{
->>>> +	struct device *dev =3D cdns->host_dev;
->>>> +	struct xhci_hcd	*xhci;
->>>> +	struct usb_hcd	*hcd;
->>>> +
->>>> +	if (dev) {
->>>> +		hcd =3D dev_get_drvdata(dev);
->>>> +		xhci =3D hcd_to_xhci(hcd);
->>>> +		usb_remove_hcd(xhci->shared_hcd);
->>>> +		usb_remove_hcd(hcd);
->>>> +		synchronize_irq(cdns->irq);
->>>> +		usb_put_hcd(xhci->shared_hcd);
->>>> +		usb_put_hcd(hcd);
->>>> +		cdns->host_dev =3D NULL;
->>>> +		pm_runtime_set_suspended(dev);
->>>> +		pm_runtime_disable(dev);
->>>> +		device_del(dev);
->>>> +		put_device(dev);
->>>> +	}
->>>
->>> You can replace this with just
->>> 	platform_device_unregister(xhci_dev);
->>>
->>>> +}
->>>> +
->>>> +#if CONFIG_PM
->>>> +static int cdns3_host_suspend(struct cdns3 *cdns, bool do_wakeup)
->>>> +{
->>>> +	struct device *dev =3D cdns->host_dev;
->>>> +	struct xhci_hcd	*xhci;
->>>> +
->>>> +	if (!dev)
->>>> +		return 0;
->>>> +
->>>> +	xhci =3D hcd_to_xhci(dev_get_drvdata(dev));
->>>> +	return xhci_suspend(xhci, do_wakeup);
->>>> +}
->>>> +
->>>> +static int cdns3_host_resume(struct cdns3 *cdns, bool hibernated)
->>>> +{
->>>> +	struct device *dev =3D cdns->host_dev;
->>>> +	struct xhci_hcd	*xhci;
->>>> +
->>>> +	if (!dev)
->>>> +		return 0;
->>>> +
->>>> +	xhci =3D hcd_to_xhci(dev_get_drvdata(dev));
->>>> +	return xhci_resume(xhci, hibernated);
->>>> +}
->>>
->>> These won't be required any more as xhci-plat is doing this.
->>>
->>>> +#endif /* CONFIG_PM */
->>>> +
->>>> +int cdns3_host_init(struct cdns3 *cdns)
->>>> +{
->>>> +	struct cdns3_role_driver *rdrv;
->>>> +
->>>> +	rdrv =3D devm_kzalloc(cdns->dev, sizeof(*rdrv), GFP_KERNEL);
->>>> +	if (!rdrv)
->>>> +		return -ENOMEM;
->>>> +
->>>> +	rdrv->start	=3D cdns3_host_start;
->>>> +	rdrv->stop	=3D cdns3_host_stop;
->>>> +	rdrv->irq	=3D cdns3_host_irq;
->>>> +#if CONFIG_PM
->>>> +	rdrv->suspend	=3D cdns3_host_suspend;
->>>> +	rdrv->resume	=3D cdns3_host_resume;
->>>> +#endif /* CONFIG_PM */
->>>> +	rdrv->name	=3D "host";
->>>> +	cdns->roles[CDNS3_ROLE_HOST] =3D rdrv;
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +void cdns3_host_remove(struct cdns3 *cdns)
->>>> +{
->>>> +	cdns3_host_stop(cdns);
->>>
->>> calling cdns3_host_stop() here can lead to problems as Controller might=
- be in
->>> peripheral mode at this point. The core driver needs to ensure that rel=
-evant role
->>> is stopped before calling cdns3_host_remove().
->>>
->>> Here you need to unregister the role driver though.
->>>
->>> cdns->roles[CDNS3_ROLE_HOST] =3D NULL;
->>>
->> This function can be called only in host mode/role. It operate on host r=
-egisters.
->> This checking is provided in core.c file.
->>>> +}
->>>> +
->>>> +void __init cdns3_host_driver_init(void)
->>>> +{
->>>> +	xhci_init_driver(&xhci_cdns3_hc_driver, &xhci_cdns3_overrides);
->>>> +}
->>>>
->>>
->
->cheers,
->-roger
->
->--
->Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Ck9uIDExLzI0LzIwMTggMTI6MDQgQU0sIFdpbGwgRGVhY29uIHdyb3RlOgo+IE9uIEZyaSwgTm92
+IDIzLCAyMDE4IGF0IDAzOjA2OjI5UE0gKzA1MzAsIFZpdmVrIEdhdXRhbSB3cm90ZToKPj4gT24g
+RnJpLCBOb3YgMjMsIDIwMTggYXQgMjo1MiBQTSBUb21hc3ogRmlnYSA8dGZpZ2FAY2hyb21pdW0u
+b3JnPiB3cm90ZToKPj4+IE9uIEZyaSwgTm92IDIzLCAyMDE4IGF0IDY6MTMgUE0gVml2ZWsgR2F1
+dGFtCj4+PiA8dml2ZWsuZ2F1dGFtQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPj4+PiBPbiBXZWQs
+IE5vdiAyMSwgMjAxOCBhdCAxMTowOSBQTSBXaWxsIERlYWNvbiA8d2lsbC5kZWFjb25AYXJtLmNv
+bT4gd3JvdGU6Cj4+Pj4+IE9uIEZyaSwgTm92IDE2LCAyMDE4IGF0IDA0OjU0OjMwUE0gKzA1MzAs
+IFZpdmVrIEdhdXRhbSB3cm90ZToKPj4+Pj4+IEBAIC0yMDI2LDYgKzIwMjcsMTcgQEAgQVJNX1NN
+TVVfTUFUQ0hfREFUQShhcm1fbW11NDAxLCBBUk1fU01NVV9WMV82NEssIEdFTkVSSUNfU01NVSk7
+Cj4+Pj4+PiAgIEFSTV9TTU1VX01BVENIX0RBVEEoYXJtX21tdTUwMCwgQVJNX1NNTVVfVjIsIEFS
+TV9NTVU1MDApOwo+Pj4+Pj4gICBBUk1fU01NVV9NQVRDSF9EQVRBKGNhdml1bV9zbW11djIsIEFS
+TV9TTU1VX1YyLCBDQVZJVU1fU01NVVYyKTsKPj4+Pj4+Cj4+Pj4+PiArc3RhdGljIGNvbnN0IGNo
+YXIgKiBjb25zdCBxY29tX3NtbXV2Ml9jbGtzW10gPSB7Cj4+Pj4+PiArICAgICAiYnVzIiwgImlm
+YWNlIiwKPj4+Pj4+ICt9Owo+Pj4+Pj4gKwo+Pj4+Pj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgYXJt
+X3NtbXVfbWF0Y2hfZGF0YSBxY29tX3NtbXV2MiA9IHsKPj4+Pj4+ICsgICAgIC52ZXJzaW9uID0g
+QVJNX1NNTVVfVjIsCj4+Pj4+PiArICAgICAubW9kZWwgPSBRQ09NX1NNTVVWMiwKPj4+Pj4+ICsg
+ICAgIC5jbGtzID0gcWNvbV9zbW11djJfY2xrcywKPj4+Pj4+ICsgICAgIC5udW1fY2xrcyA9IEFS
+UkFZX1NJWkUocWNvbV9zbW11djJfY2xrcyksCj4+Pj4+PiArfTsKPj4+Pj4gVGhlc2Ugc2VlbXMg
+cmVkdW5kYW50IGlmIHdlIGdvIGRvd24gdGhlIHJvdXRlIHByb3Bvc2VkIGJ5IFRob3IsIHdoZXJl
+IHdlCj4+Pj4+IGp1c3QgcHVsbCBhbGwgb2YgdGhlIGNsb2NrcyBvdXQgb2YgdGhlIGRldmljZS10
+cmVlLiBJbiB3aGljaCBjYXNlLCB3aHkKPj4+Pj4gZG8gd2UgbmVlZCB0aGlzIG1hdGNoX2RhdGEg
+YXQgYWxsPwo+Pj4+IFdoaWNoIGlzIGJldHRlcj8gRHJpdmVyIHJlbHlpbmcgc29sZWx5IG9uIHRo
+ZSBkZXZpY2UgdHJlZSB0byB0ZWxsCj4+Pj4gd2hpY2ggYWxsIGNsb2Nrcwo+Pj4+IGFyZSByZXF1
+aXJlZCB0byBiZSBlbmFibGVkLAo+Pj4+IG9yLCB0aGUgZHJpdmVyIGRlY2lkaW5nIGl0c2VsZiBi
+YXNlZCBvbiB0aGUgcGxhdGZvcm0ncyBtYXRjaCBkYXRhLAo+Pj4+IHRoYXQgaXQgc2hvdWxkCj4+
+Pj4gaGF2ZSBYLCBZLCAmIFogY2xvY2tzIHRoYXQgc2hvdWxkIGJlIHN1cHBsaWVkIGZyb20gdGhl
+IGRldmljZSB0cmVlLgo+Pj4gVGhlIGZvcm1lciB3b3VsZCBzaW1wbGlmeSB0aGUgZHJpdmVyLCBi
+dXQgd291bGQgYWxzbyBtYWtlIGl0Cj4+PiBpbXBvc3NpYmxlIHRvIHNwb3QgbWlzdGFrZXMgaW4g
+RFQsIHdoaWNoIHdvdWxkIHVsdGltYXRlbHkgc3VyZmFjZSBvdXQKPj4+IGFzIHZlcnkgaGFyZCB0
+byBkZWJ1ZyBidWdzIChsaWtlbHkgY29tcGxldGUgc3lzdGVtIGxvY2t1cHMpLgo+PiBUaGFua3Mu
+Cj4+IFllYSwgdGhpcyBpcyBob3cgSSB1bmRlcnN0YW5kIHRoaW5ncyBwcmVzZW50bHkuIFJlbHlp
+bmcgb24gZGV2aWNlIHRyZWUKPj4gcHV0cyB0aGUgdGhpbmdzIG91dCBvZiBkcml2ZXIncyBjb250
+cm9sLgo+IEJ1dCBpdCBhbHNvIGhhcyB0aGUgdW5kZXNpcmFibGUgZWZmZWN0IG9mIGhhdmluZyB0
+byB1cGRhdGUgdGhlIGRyaXZlcgo+IGNvZGUgd2hlbmV2ZXIgd2Ugd2FudCB0byBhZGQgc3VwcG9y
+dCBmb3IgYSBuZXcgU01NVSBpbXBsZW1lbnRhdGlvbi4gSWYKPiB3ZSBkbyB0aGlzIGFsbCBpbiB0
+aGUgRFQsIGFzIFRob3IgaXMgdHJ5aW5nIHRvIGRvLCB0aGVuIG9sZGVyIGtlcm5lbHMKPiB3aWxs
+IHdvcmsgd2VsbCB3aXRoIG5ldyBoYXJkd2FyZS4KPgo+PiBIaSBXaWxsLAo+PiBBbSBJIHVuYWJs
+ZSB0byB1bmRlcnN0YW5kIHRoZSBpbnRlbnRpb25zIGhlcmUgZm9yIFRob3IncyBjbG9jay1mZXRj
+aAo+PiBkZXNpZ24gY2hhbmdlPwo+IEknbSBoYXZpbmcgdHJvdWJsZSBwYXJzaW5nIHlvdXIgcXVl
+c3Rpb24sIHNvcnJ5LiBQbGVhc2Ugd29yayB3aXRoIFRob3IKPiBzbyB0aGF0IHdlIGhhdmUgYSBz
+aW5nbGUgd2F5IHRvIGdldCB0aGUgY2xvY2sgaW5mb3JtYXRpb24uIE15IHByZWZlcmVuY2UKPiBp
+cyB0byB0YWtlIGl0IGZyb20gdGhlIGZpcm13YXJlLCBmb3IgdGhlIHJlYXNvbiBJIHN0YXRlZCBh
+Ym92ZS4KSGkgV2lsbCwKClN1cmUsIHRoYW5rcy4gSSB3aWxsIHdvcmsgd2l0aCBUaG9yIHRvIGdl
+dCB0aGlzIGdvaW5nLgoKSGkgVGhvciwKRG9lcyBpdCBzb3VuZCBva2F5IHRvIHlvdSB0byBzcXVh
+c2ggeW91ciBwYXRjaCBbMV0gaW50byBteSBwYXRjaCBbMl0gd2l0aAp5b3VyICdTaWduZWQtb2Zm
+LWJ5JyB0YWc/Ckkgd2lsbCB1cGRhdGUgdGhlIGNvbW1pdCBsb2cgdG8gaW5jbHVkZSB0aGUgaW5m
+b3JtYXRpb24gYWJvdXQgZ2V0dGluZwpjbG9jayBkZXRhaWxzIGZyb20gZGV2aWNlIHRyZWUuCgpb
+MV0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDYyODcyNS8KWzJdIGh0dHBz
+Oi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA2ODYwNjEvCgpCZXN0IHJlZ2FyZHMKVml2
+ZWsKPgo+IFdpbGwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVu
+bwo=
