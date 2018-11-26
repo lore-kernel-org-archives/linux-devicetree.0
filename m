@@ -1,36 +1,41 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add WCN3990 WLAN module device
- node
-Date: Mon, 26 Nov 2018 22:55:12 +0530
-Message-ID: <20181126172512.GW3175@vkoul-mobl.Dlink>
-References: <20181126142133.16966-1-govinds@codeaurora.org>
- <20181126144422.GU3175@vkoul-mobl.Dlink>
- <bcda9f6ffc58c8457e8822226b751132@codeaurora.org>
+From: Otavio Salvador <otavio@ossystems.com.br>
+Subject: [PATCH v2 1/4] ARM: dts: rockchip: Fix the PMU interrupt number for rv1108
+Date: Mon, 26 Nov 2018 15:35:03 -0200
+Message-ID: <20181126173506.24068-1-otavio@ossystems.com.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <bcda9f6ffc58c8457e8822226b751132@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Govind Singh <govinds@codeaurora.org>
-Cc: andy.gross@linaro.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>
+Cc: Otavio Salvador <otavio@ossystems.com.br>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Govind,
+According to the Rockchip vendor tree the PMU interrupt number is
+76, so fix it accordingly.
 
-On 26-11-18, 22:28, Govind Singh wrote:
-> On 2018-11-26 20:14, Vinod Koul wrote:
-> > On 26-11-18, 19:51, Govind Singh wrote:
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+Tested-by: Fabio Berton <fabio.berton@ossystems.com.br>
+---
 
-> > Lastly, I am not sure, but should the wifi node be always enabled?
-> > Should it not be enabled in the board dts file? Bjorn..?
-> > 
-> 
-> yes, i some how missed this.
-> I will mark the status disabled by default and enable from qcs404 evb dts.
+Changes in v2:
+- fixup commit signed-off-by
+- fixup commit log
 
-No issues, also we have two DTS EVB-1000 and EVB-4000, please choose
-accordingly and if common please use qcs404-evb.dtsi
+ arch/arm/boot/dts/rv1108.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
+index 11ab86d6c4a5..611f2fe8e56c 100644
+--- a/arch/arm/boot/dts/rv1108.dtsi
++++ b/arch/arm/boot/dts/rv1108.dtsi
+@@ -67,7 +67,7 @@
+ 
+ 	arm-pmu {
+ 		compatible = "arm,cortex-a7-pmu";
+-		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
++		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+ 	};
+ 
+ 	timer {
 -- 
-~Vinod
+2.19.2
