@@ -1,47 +1,55 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 3/7] dt-bindings: dmaengine: xilinx_dma: add optional
- xlnx,sg-length-width property
-Date: Mon, 26 Nov 2018 10:12:42 -0600
-Message-ID: <20181126161242.GA19168@bogus>
-References: <20181120153151.18024-1-andrea.merello@gmail.com>
- <20181120153151.18024-3-andrea.merello@gmail.com>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [RFC v3 2/3] dt-bindings: sdm845-pinctrl: add wakeup interrupt
+ parent for GPIO
+Date: Mon, 26 Nov 2018 09:14:55 -0700
+Message-ID: <20181126161455.GA28236@codeaurora.org>
+References: <20181121000648.29262-1-ilina@codeaurora.org>
+ <20181121000648.29262-3-ilina@codeaurora.org>
+ <154283618199.88331.10217252750356423959@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181120153151.18024-3-andrea.merello@gmail.com>
+In-Reply-To: <154283618199.88331.10217252750356423959@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrea Merello <andrea.merello@gmail.com>
-Cc: vkoul@kernel.org, dan.j.williams@intel.com, michal.simek@xilinx.com, appana.durga.rao@xilinx.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, radhey.shyam.pandey@xilinx.com
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: evgreen@chromium.org, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, thierry.reding@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 20, 2018 at 04:31:47PM +0100, Andrea Merello wrote:
-> The width of the "length register" cannot be autodetected, and it is now
-> specified with a DT property. Add documentation for it.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
-> Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> ---
-> Changes in v2:
-> 	- change property name
-> 	- property is now optional
-> 	- cc DT maintainer
-> Changes in v3:
-> 	- reword
-> 	- cc DT maintainerS and ML
-> Changes in v4:
-> 	- specify the unit, the valid range and the default value
-> Changes in v5:
-> 	- commit message trivial fix
-> 	- fix spaces before tab
-> Changes in v6:
-> 	None
-> ---
->  Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+On Wed, Nov 21 2018 at 14:36 -0700, Stephen Boyd wrote:
+>Quoting Lina Iyer (2018-11-20 16:06:47)
+>> SDM845 SoC has an always-on interrupt controller (PDC) with select GPIO
+>> routed to the PDC as interrupts that can be used to wake the system up
+>> from deep low power modes and suspend.
+>>
+>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>> ---
+>>  .../bindings/pinctrl/qcom,sdm845-pinctrl.txt  | 31 ++++++++++++++++++-
+>>  1 file changed, 30 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+>> index 665aadb5ea28..bedfa0b57fa6 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+>> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+>> @@ -29,6 +29,17 @@ SDM845 platform.
+>>         Definition: must be 2. Specifying the pin number and flags, as defined
+>>                     in <dt-bindings/interrupt-controller/irq.h>
+>>
+>> +- wakeup-parent:
+>> +       Usage: optional
+>> +       Value type: <phandle>
+>> +       Definition: A phandle to the wakeup interrupt controller for the SoC.
+>> +
+>> +- wakeup-irq:
+>
+>This shouldn't be needed. TLMM driver can probe for the possibility of
+>wakeup capable irqs from irq allocation step. The only place we should
+>need to know what TLMM pins map to what PDC lines is in the PDC driver.
+>
+Why? Every driver seems to translate the hardware IRQ and pass it to
+it's parent. Why should this be any different ? The PDC is an interrupt
+controller that just knows an interrupt port and maps it to the GIC. Not
+sure, I understand the reasoning for this. It seems to add more
+confusing relationship with the PDC interrupt controller, that way.
 
-Please add acks/reviewed-bys when posting new versions.
+-- Lina
