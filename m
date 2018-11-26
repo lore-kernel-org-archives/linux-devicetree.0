@@ -1,95 +1,76 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 01/17] dt-bindings: remoteproc: Add TI PRUSS bindings
-Date: Mon, 26 Nov 2018 09:47:49 +0200
-Message-ID: <5BFBA525.3060806@ti.com>
-References: <1542886753-17625-1-git-send-email-rogerq@ti.com>
- <1542886753-17625-2-git-send-email-rogerq@ti.com>
- <20181123162417.GZ53235@atomide.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 1/3] clk: samsung: exynos5420: add VPLL rate table for
+ g3d clock
+Date: Mon, 26 Nov 2018 16:48:32 +0900
+Message-ID: <5BFBA550.4020401@samsung.com>
+References: <CGME20181123094453epcas4p16be0412e0195fe4bf06680111805352a@epcas4p1.samsung.com>
+        <20181123094413.1108-1-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181123162417.GZ53235@atomide.com>
+In-reply-to: <20181123094413.1108-1-linux.amoon@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, Marian Mihailescu <mihailescu2m@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 23/11/18 18:24, Tony Lindgren wrote:
-> Hi,
+On 2018년 11월 23일 18:44, Anand Moon wrote:
+> From: Marian Mihailescu <mihailescu2m@gmail.com>
 > 
-> * Roger Quadros <rogerq@ti.com> [181122 11:39]:
->> From: Suman Anna <s-anna@ti.com>
->> +Example:
->> +========
->> +1.	/* AM33xx PRU-ICSS */
->> +	pruss_soc_bus: pruss_soc_bus@4a326004 {
->> +		compatible = "ti,am3356-pruss-soc-bus";
->> +		ti,hwmods = "pruss";
->> +		reg = <0x4a326004 0x4>;
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		ranges;
+> A specific clock rate table is added for VPLL so it is possible
+> to set frequency of the VPLL output clock that used by the g3d clock.
 > 
-> The top level interconnect target module driver should be just ti-sysc
-> as documented in Documentation/devicetree/bindings/bus/ti-sysc.txt.
-> AFAIK there is nothing PRU specific there. So let's not add yet
-> another custom interconnect target module handling code to deal with.
+> Cc: Andrzej Hajda <a.hajda@samsung.com>
+> Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+>  drivers/clk/samsung/clk-exynos5420.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> I also posted a patch a while back for using reset-simple with
-> ti-sysc as "[PATCHv2] reset: ti-rstctrl: use the reset-simple driver".
+> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+> index 34cce3c5898f..34156bdfd0d2 100644
+> --- a/drivers/clk/samsung/clk-exynos5420.c
+> +++ b/drivers/clk/samsung/clk-exynos5420.c
+> @@ -1303,6 +1303,18 @@ static const struct samsung_pll_rate_table exynos5420_epll_24mhz_tbl[] = {
+>  	PLL_36XX_RATE(24 * MHZ,  32768001U, 131, 3, 5, 4719),
+>  };
+>  
+> +static const struct samsung_pll_rate_table exynos5420_vpll_24mhz_tbl[] __initconst = {
+> +	PLL_35XX_RATE(24 * MHZ, 600000000U, 200, 2, 2),
+> +	PLL_35XX_RATE(24 * MHZ, 543000000U, 181, 2, 2),
+> +	PLL_35XX_RATE(24 * MHZ, 533000000U, 533, 6, 2),
+> +	PLL_35XX_RATE(24 * MHZ, 480000000U, 320, 4, 2),
+> +	PLL_35XX_RATE(24 * MHZ, 420000000U, 140, 2, 2),
+> +	PLL_35XX_RATE(24 * MHZ, 350000000U, 175, 3, 2),
+> +	PLL_35XX_RATE(24 * MHZ, 266000000U, 266, 3, 3),
+> +	PLL_35XX_RATE(24 * MHZ, 177000000U, 118, 2, 3),
+> +	PLL_35XX_RATE(24 * MHZ, 100000000U, 200, 3, 4),
+> +};
+
+VPLL has the same PMS table with apll/kpll/bpll. You don't need to add new
+'exynos5420_vpll_24mhz_tbl' table. Just adding the missing frequency entries
+to 'exynos5420_pll2550x_24mhz_tbl' table.
+
+> +
+>  static struct samsung_pll_clock exynos5x_plls[nr_plls] __initdata = {
+>  	[apll] = PLL(pll_2550, CLK_FOUT_APLL, "fout_apll", "fin_pll", APLL_LOCK,
+>  		APLL_CON0, NULL),
+> @@ -1428,6 +1440,7 @@ static void __init exynos5x_clk_init(struct device_node *np,
+>  		exynos5x_plls[epll].rate_table = exynos5420_epll_24mhz_tbl;
+>  		exynos5x_plls[kpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
+>  		exynos5x_plls[bpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
+> +		exynos5x_plls[vpll].rate_table = exynos5420_vpll_24mhz_tbl;
+>  	}
+>  
+>  	samsung_clk_register_pll(ctx, exynos5x_plls, ARRAY_SIZE(exynos5x_plls),
 > 
 
-Cool. I will try that out.
-
->> +			pruss_cfg: cfg@4a326000 {
->> +				compatible = "syscon";
->> +				reg = <0x4a326000 0x2000>;
->> +			};
->> +
->> +			pruss_iep: iep@4a32e000 {
->> +				compatible = "syscon";
->> +				reg = <0x4a32e000 0x31c>;
->> +			};
->> +
->> +			pruss_mii_rt: mii_rt@4a332000 {
->> +				compatible = "syscon";
->> +				reg = <0x4a332000 0x58>;
->> +			};
-> 
-> Hmm what are these syscon register actually doing? Sseems like
-> they should be just handled by a phy driver nowadays?
-
-Not the PHY driver but the Ethernet driver. The PHY driver will be
-a davinci-MDIO device node (not yet in this series). I should probably
-add merge that with this series.
-
-The Ethernet device tree node will reference to these syscon nodes.
-e.g.
-        pruss2_eth {
-                compatible = "ti,am57-prueth";
-                prus = <&pru2_0>, <&pru2_1>;
-                firmware-name = "ti-pruss/am57xx-pru0-prueth-fw.elf",
-                                "ti-pruss/am57xx-pru1-prueth-fw.elf";
-                sram = <&ocmcram1>;
-                interrupt-parent = <&pruss2_intc>;
--->             mii-rt = <&pruss2_mii_rt>;
--->             iep = <&pruss2_iep>;
-	}
-
-Do you see any issues with that?
-
-> 
-> Other than that the binding looks OK to me. Good to finally
-> see some activity in getting the PRU support merged :)
-
-Thanks :)
-
-cheers,
--roger
 
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
