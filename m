@@ -1,55 +1,20 @@
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH] arm64: dts: qcom: qcs404: Add WCN3990 WLAN module device node
-Date: Mon, 26 Nov 2018 19:51:33 +0530
-Message-ID: <20181126142133.16966-1-govinds@codeaurora.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add WCN3990 WLAN module device node
+Date: Mon, 26 Nov 2018 12:31:40 -0200
+Message-ID: <CAOMZO5Dne5utQ6i+n_Ab1=9AG7WYcZRhq7GY72rqyEdyau0swA@mail.gmail.com>
+References: <20181126142133.16966-1-govinds@codeaurora.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181126142133.16966-1-govinds@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
+To: govinds@codeaurora.org
+Cc: Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add device node for the ath10k SNOC platform driver probe
-and add resources required for WCN3990 on qcs404 soc.
-Optional clock and regulator controls are not yet available in
-upstream, hence add them once available.
+On Mon, Nov 26, 2018 at 12:22 PM Govind Singh <govinds@codeaurora.org> wrote:
 
-Signed-off-by: Govind Singh <govinds@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+> +
+> +               wifi: wifi@0A000000 {
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index 9ca4f061ecc5..1a401a32d4a1 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -958,6 +958,25 @@
- 				status = "disabled";
- 			};
- 		};
-+
-+		wifi: wifi@0A000000 {
-+			compatible = "qcom,wcn3990-wifi";
-+			reg = <0x0A000000 0x800000>;
-+			reg-names = "membase";
-+			memory-region = <&wlan_msa_mem>;
-+			interrupts = <GIC_SPI 277 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 278 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 279 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 280 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 284 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
- 
- 	timer {
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Please remove the leading zero. Building with W=1 would warn you about that.
