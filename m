@@ -1,85 +1,57 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 4/6] DEV: CLK: add function to check the
- using clock name of driver.
-Date: Mon, 26 Nov 2018 16:26:37 +0100
-Message-ID: <20181126152637.GB19710@ulmo>
-References: <20181125162118.GA5358@arx-s1>
-Reply-To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Priit Laes <plaes@plaes.org>
+Subject: [PATCH 00/14] regulator: axp20x: Stop AXP209 from crashing when enabling LDO3
+Date: Mon, 26 Nov 2018 17:27:41 +0200
+Message-ID: <cover.156212c9c5df493e098556cad9793a07dcab5e32.1543245984.git-series.plaes@plaes.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="7iMSBzlTiPOCCT2k"
-Return-path: <linux-sunxi+bncBDTKFPPJUEHRBMFB6DPQKGQEXWYIPOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20181125162118.GA5358@arx-s1>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Sebastian Reichel <sre@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc: Priit Laes <plaes@plaes.org>
 List-Id: devicetree@vger.kernel.org
 
+This series implements voltage ramping for AXP209 DCDC2 and LDO3
+regulators and software based soft-start for AXP209 LDO3 regulator.
 
---7iMSBzlTiPOCCT2k
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Both features are needed to work around a PMIC shutdown when
+toggling LDO3 on certain boards with high capacitance on the
+LDO3 output.
 
-On Mon, Nov 26, 2018 at 12:21:18AM +0800, Hao Zhang wrote:
-> In some situation we want to check clock whether is we want
-> and after the driver been probed use to change different clock source.
-> 
-> Signed-off-by: Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/clk/clk.c            | 6 ++++++
->  include/linux/clk-provider.h | 1 +
->  2 files changed, 7 insertions(+)
+Similar features (or workarounds) have been also implemented
+on u-boot side [1].
 
-This doesn't seem right. If you're going to change to to a different
-clock source anyway, why would you even want to know what it was set
-before that? Isn't that completely irrelevant?
+Also included in this series are various magic constant cleanups
+and also fix for core regulator framework, where 'always-enabled'
+constraint overrides the 'soft-start' and 'ramp-delay' features.
 
-But if you really need this, perhaps a combination of clk_get() and
-clk_is_match() would be a better approach? Perhaps best to let Mike
-and Stephen share their feelings about this kind of API.
+[1] https://lists.denx.de/pipermail/u-boot/2018-November/348612.html
 
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index d31055a..3d2c2cd 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -3466,6 +3466,12 @@ static int devm_clk_hw_match(struct device *dev, void *res, void *data)
->  	return hw == data;
->  }
->  
-> +bool devm_clk_name_match(struct clk *clk, const char *string)
-> +{
-> +	return match_string(&clk->con_id, 1, string) == 0;
-> +}
-> +EXPORT_SYMBOL_GPL(devm_clk_name_match);
+Olliver Schinagl (14):
+  regulator: axp20x: use defines for masks
+  regulator: axp20x: name voltage ramping define properly
+  regulator: core: enable power when setting up constraints
+  regulator: axp20x: add support for set_ramp_delay for AXP209
+  dt-bindings: mfd: axp20x: add support for regulator-ramp-delay for AXP209
+  regulator: axp20x: add software based soft_start for AXP209 LDO3
+  dt-bindings: mfd: axp20x: Add software based soft_start for AXP209 LDO3
+  regulator: dts: enable soft-start and ramp delay for the OLinuXino Lime2
+  regulator: dts: add full voltage range to LDO4 on the Lime2
+  regulator: dts: set proper lradc vref on OLinuXino Lime2
+  mfd: axp20x: Clean up included headers
+  mfd: axp20x: use explicit bit defines
+  power: supply: axp20x: add missing include bitops.h
+  power: supply: axp288: use the BIT() macro
 
-Also, there's nothing about this that would be device-managed, so the
-devm_ prefix on the function name is misleading.
+ Documentation/devicetree/bindings/mfd/axp20x.txt |   8 +-
+ arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts  |  13 +-
+ drivers/mfd/axp20x.c                             |  13 +-
+ drivers/power/supply/axp20x_usb_power.c          |   1 +-
+ drivers/power/supply/axp288_charger.c            |  35 +-
+ drivers/regulator/axp20x-regulator.c             | 875 ++++++++++++----
+ drivers/regulator/core.c                         |  22 +-
+ include/linux/mfd/axp20x.h                       |   4 +-
+ 8 files changed, 753 insertions(+), 218 deletions(-)
 
->  /**
->   * devm_clk_unregister - resource managed clk_unregister()
->   * @clk: clock to unregister
-> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-> index 08b1aa7..5cd2eed 100644
-> --- a/include/linux/clk-provider.h
-> +++ b/include/linux/clk-provider.h
-> @@ -764,6 +764,7 @@ struct clk *devm_clk_register(struct device *dev, struct clk_hw *hw);
->  int __must_check clk_hw_register(struct device *dev, struct clk_hw *hw);
->  int __must_check devm_clk_hw_register(struct device *dev, struct clk_hw *hw);
->  
-> +bool devm_clk_name_match(struct clk *clk, const char *string);
->  void clk_unregister(struct clk *clk);
->  void devm_clk_unregister(struct device *dev, struct clk *clk);
-
-You use this from clock consumers, so clk-provider.h is not the right
-place for it. Also, you'll want to add a dummy implementation for the
-case where CONFIG_COMMON_CLK is not set.
-
-Thierry
---7iMSBzlTiPOCCT2k--
+base-commit: 2e6e902d185027f8e3cb8b7305238f7e35d6a436
+-- 
+git-series 0.9.1
