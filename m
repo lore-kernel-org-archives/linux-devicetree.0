@@ -1,42 +1,61 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v2 4/7] arm64: dts: qcom: msm8916: Set 'xo_board' as ref clock
- of the DSI PHY
-Date: Mon, 26 Nov 2018 15:11:56 -0800
-Message-ID: <20181126231159.122298-5-mka@chromium.org>
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2 7/7] drm/msm/dsi: 10nm PHY: Get ref clock
+ from the DT
+Date: Mon, 26 Nov 2018 15:11:59 -0800
+Message-ID: <20181126231159.122298-8-mka@chromium.org>
 References: <20181126231159.122298-1-mka@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20181126231159.122298-1-mka@chromium.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: devicetree@vger.kernel.org, Rajesh Yadav <ryadav@codeaurora.org>, linux-arm-msm@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, Stephen Boyd <swboyd@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, Sean Paul <seanpaul@chromium.org>, freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20181126231159.122298-1-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkICd4b19ib2FyZCcgYXMgcmVmIGNsb2NrIGZvciB0aGUgRFNJIFBIWXMsIGl0IHdhcyBwcmV2
-aW91c2x5CmhhcmRjb2RlZCBpbiB0aGUgUExMICdkcml2ZXInIGZvciB0aGUgMjhubSBQSFkuCgpT
-aWduZWQtb2ZmLWJ5OiBNYXR0aGlhcyBLYWVobGNrZSA8bWthQGNocm9taXVtLm9yZz4KLS0tCkNo
-YW5nZXMgaW4gdjI6Ci0gcGF0Y2ggYWRkZWQgdG8gdGhlIHNlcmllcwotLS0KIGFyY2gvYXJtNjQv
-Ym9vdC9kdHMvcWNvbS9tc204OTE2LmR0c2kgfCA1ICsrKy0tCiAxIGZpbGUgY2hhbmdlZCwgMyBp
-bnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvcWNvbS9tc204OTE2LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vbXNtODkx
-Ni5kdHNpCmluZGV4IGQzMDJkOGQ2MzlhMTIuLjg5ZjMwZjM0ZmY4OTYgMTAwNjQ0Ci0tLSBhL2Fy
-Y2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9tc204OTE2LmR0c2kKKysrIGIvYXJjaC9hcm02NC9ib290
-L2R0cy9xY29tL21zbTg5MTYuZHRzaQpAQCAtOTU5LDggKzk1OSw5IEBACiAJCQkJI2Nsb2NrLWNl
-bGxzID0gPDE+OwogCQkJCSNwaHktY2VsbHMgPSA8MD47CiAKLQkJCQljbG9ja3MgPSA8JmdjYyBH
-Q0NfTURTU19BSEJfQ0xLPjsKLQkJCQljbG9jay1uYW1lcyA9ICJpZmFjZSI7CisJCQkJY2xvY2tz
-ID0gPCZnY2MgR0NDX01EU1NfQUhCX0NMSz4sCisJCQkJCSA8JnhvX2JvYXJkPjsKKwkJCQljbG9j
-ay1uYW1lcyA9ICJpZmFjZSIsICJyZWYiOwogCQkJfTsKIAkJfTsKIAotLSAKMi4yMC4wLnJjMC4z
-ODcuZ2M3YTY5ZTZiNmMtZ29vZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVsCg==
+R2V0IHRoZSByZWYgY2xvY2sgb2YgdGhlIFBIWSBmcm9tIHRoZSBkZXZpY2UgdHJlZSBpbnN0ZWFk
+IG9mCmhhcmRjb2RpbmcgaXRzIG5hbWUgYW5kIHJhdGUuCgpTaWduZWQtb2ZmLWJ5OiBNYXR0aGlh
+cyBLYWVobGNrZSA8bWthQGNocm9taXVtLm9yZz4KLS0tCkNoYW5nZXMgaW4gdjI6Ci0gcmVtb3Zl
+IGFub255bW91cyBhcnJheSBpbiBjbGtfaW5pdF9kYXRhIGFzc2lnbm1lbnQKLSBsb2cgZXJyb3Ig
+Y29kZSBpZiBkZXZtX2Nsa19nZXQoKSBmYWlscwotIGRvbid0IGxvZyBkZXZtX2Nsa19nZXQoKSBm
+YWlsdXJlcyBmb3IgLUVQUk9CRV9ERUZFUgotIHVwZGF0ZWQgY29tbWl0IG1lc3NhZ2UKLS0tCiBk
+cml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9wbGwvZHNpX3BsbF8xMG5tLmMgfCAxMyArKysrKysrKysr
+KystCiAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZHNpL3BsbC9kc2lfcGxsXzEwbm0uYyBiL2Ry
+aXZlcnMvZ3B1L2RybS9tc20vZHNpL3BsbC9kc2lfcGxsXzEwbm0uYwppbmRleCA0YzAzZjBiNzM0
+M2VkLi4zMmUzMTU3NGUxNDMyIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9w
+bGwvZHNpX3BsbF8xMG5tLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvcGxsL2RzaV9w
+bGxfMTBubS5jCkBAIC05MSw2ICs5MSw3IEBAIHN0cnVjdCBkc2lfcGxsXzEwbm0gewogCXZvaWQg
+X19pb21lbSAqcGh5X2Ntbl9tbWlvOwogCXZvaWQgX19pb21lbSAqbW1pbzsKIAorCXN0cnVjdCBj
+bGsgKnZjb19yZWZfY2xrOwogCXU2NCB2Y29fcmVmX2Nsa19yYXRlOwogCXU2NCB2Y29fY3VycmVu
+dF9yYXRlOwogCkBAIC02MjksOCArNjMwLDkgQEAgc3RhdGljIGludCBwbGxfMTBubV9yZWdpc3Rl
+cihzdHJ1Y3QgZHNpX3BsbF8xMG5tICpwbGxfMTBubSkKIHsKIAljaGFyIGNsa19uYW1lWzMyXSwg
+cGFyZW50WzMyXSwgdmNvX25hbWVbMzJdOwogCWNoYXIgcGFyZW50MlszMl0sIHBhcmVudDNbMzJd
+LCBwYXJlbnQ0WzMyXTsKKwljb25zdCBjaGFyICpyZWZfY2xrX25hbWUgPSBfX2Nsa19nZXRfbmFt
+ZShwbGxfMTBubS0+dmNvX3JlZl9jbGspOwogCXN0cnVjdCBjbGtfaW5pdF9kYXRhIHZjb19pbml0
+ID0gewotCQkucGFyZW50X25hbWVzID0gKGNvbnN0IGNoYXIgKltdKXsgInhvIiB9LAorCQkucGFy
+ZW50X25hbWVzID0gJnJlZl9jbGtfbmFtZSwKIAkJLm51bV9wYXJlbnRzID0gMSwKIAkJLm5hbWUg
+PSB2Y29fbmFtZSwKIAkJLmZsYWdzID0gQ0xLX0lHTk9SRV9VTlVTRUQsCkBAIC03ODYsNiArNzg4
+LDE1IEBAIHN0cnVjdCBtc21fZHNpX3BsbCAqbXNtX2RzaV9wbGxfMTBubV9pbml0KHN0cnVjdCBw
+bGF0Zm9ybV9kZXZpY2UgKnBkZXYsIGludCBpZCkKIAlwbGxfMTBubS0+aWQgPSBpZDsKIAlwbGxf
+MTBubV9saXN0W2lkXSA9IHBsbF8xMG5tOwogCisJcGxsXzEwbm0tPnZjb19yZWZfY2xrID0gZGV2
+bV9jbGtfZ2V0KCZwZGV2LT5kZXYsICJyZWYiKTsKKwlpZiAoSVNfRVJSKHBsbF8xMG5tLT52Y29f
+cmVmX2NsaykpIHsKKwkJcmV0ID0gUFRSX0VSUihwbGxfMTBubS0+dmNvX3JlZl9jbGspOworCQlp
+ZiAocmV0ICE9IEVQUk9CRV9ERUZFUikKKwkJCWRldl9lcnIoJnBkZXYtPmRldiwgImNvdWxkbid0
+IGdldCAncmVmJyBjbG9jazogJWRcbiIsCisJCQkJcmV0KTsKKwkJcmV0dXJuIEVSUl9QVFIocmV0
+KTsKKwl9CisKIAlwbGxfMTBubS0+cGh5X2Ntbl9tbWlvID0gbXNtX2lvcmVtYXAocGRldiwgImRz
+aV9waHkiLCAiRFNJX1BIWSIpOwogCWlmIChJU19FUlJfT1JfTlVMTChwbGxfMTBubS0+cGh5X2Nt
+bl9tbWlvKSkgewogCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gbWFwIENNTiBQSFkg
+YmFzZVxuIik7Ci0tIAoyLjIwLjAucmMwLjM4Ny5nYzdhNjllNmI2Yy1nb29nCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBs
+aXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
