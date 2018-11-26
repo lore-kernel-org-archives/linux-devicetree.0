@@ -1,131 +1,78 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 12/16] dt-bindings: remoteproc: ti-pruss: Document
- application node bindings
-Date: Mon, 26 Nov 2018 17:27:57 -0600
-Message-ID: <6a945433-00b2-e0e5-2dc8-2a4d2bf0db6f@lechnology.com>
-References: <1543218769-5507-1-git-send-email-rogerq@ti.com>
- <1543218769-5507-13-git-send-email-rogerq@ti.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v10 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq
+ HW driver
+Date: Mon, 26 Nov 2018 15:30:15 -0800
+Message-ID: <20181126233015.GX22824@google.com>
+References: <1542796967-5949-1-git-send-email-tdas@codeaurora.org>
+ <1542796967-5949-3-git-send-email-tdas@codeaurora.org>
+ <20181121220614.GU22824@google.com>
+ <20181122050708.zictqzfne6odsywu@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543218769-5507-13-git-send-email-rogerq@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181122050708.zictqzfne6odsywu@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, ohad@wizery.com, bjorn.andersson@linaro.org
-Cc: tony@atomide.com, robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Taniya Das <tdas@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/26/18 1:52 AM, Roger Quadros wrote:
-> From: Tero Kristo <t-kristo@ti.com>
+On Thu, Nov 22, 2018 at 10:37:08AM +0530, Viresh Kumar wrote:
+> On 21-11-18, 14:06, Matthias Kaehlcke wrote:
+> > On Wed, Nov 21, 2018 at 04:12:47PM +0530, Taniya Das wrote:
+> > > +	.boost_enabled	= true,
+> > 
+> > I have no real expertise with cpufreq boost, but after reading a bit
+> > through cpufreq code this seems wrong. Boost is enabled statically,
+> > however the driver has neither a ->set_boost function nor does it call
+> > cpufreq_enable_boost_support() which would use a default
+> > implementation for ->set_boost. As a result boost support is
+> > effectively disabled:
+> > 
+> > static bool cpufreq_boost_supported(void)
+> > {
+> >         return likely(cpufreq_driver) && cpufreq_driver->set_boost;
+> > }
+> > 
+> > The driver should probably do the same as cpufreq-dt.c and call
+> > cpufreq_enable_boost_support() if boost frequencies are available,
+> > instead of 'enabling' boost statically.
 > 
-> Add documentation for the Texas Instruments PRU application nodes.
-> These are used to configure specific user applications for PRU instances.
-
-Could this be made into a generic remoteproc producer/consumer binding? Or
-are there really things that are specific to the TI PRU that need to be
-handled?
-
+> Feels like I have written the boost support in cpufreq core few decades back as
+> I don't remember any of it :)
 > 
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> [s-anna@ti.com: some binding updates]
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->   .../devicetree/bindings/soc/ti/ti,pruss.txt        | 43 ++++++++++++++++++++++
->   1 file changed, 43 insertions(+)
+> But reading through the code this is what I understood.
+
+Thanks for digging into it!
+
+> There are two parts of boosting.
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt b/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
-> index 3e5f32f..94c91ee 100644
-> --- a/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
-> +++ b/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
-> @@ -210,6 +210,38 @@ used in TI Davinci SoCs. Please refer to the corresponding binding document,
->   Documentation/devicetree/bindings/net/davinci-mdio.txt for details.
->   
->   
-> +Application/User Nodes
-> +=======================
-
-Are these supposed to be stand-alone platform devices?
-
-> +A PRU application/user node typically uses one or more PRU device nodes to
-> +implement a PRU application/functionality. Each application/client node would
-> +need a reference to at least a PRU node, and optionally pass some configuration
-> +parameters.
-
-I thought device tree is not supposed to be used for configuration.
-
-> +
-> +Required Properties:
-> +--------------------
-> +- prus                 : phandles to the PRU nodes used
-> +
-> +Optional Properties:
-> +--------------------
-> +- firmware-name        : firmwares for the PRU cores, the default firmware
-> +                         for the core from the PRU node will be used if not
-> +                         provided. The firmware names should correspond to
-> +                         the PRU cores listed in the 'prus' property
-
-Perhaps this should be a "compatible" property instead of "firmware-name"? The
-driver that matches the compatible string can then set the firmware names.
-
-> +- ti,pruss-gp-mux-sel  : array of values for the GP_MUX_SEL under PRUSS_GPCFG
-> +                         register for a PRU. This selects the internal muxing
-> +                         scheme for the PRU instance. If not provided, the
-> +                         default out-of-reset value (0) for the PRU core is
-> +                         used. Values should correspond to the PRU cores listed
-> +                         in the 'prus' property
-
-Is this supposed to be a pinmux? So maybe we should be using pinmux bindings?
-
-> +- ti,pru-interrupt-map : PRU interrupt mappings, containing an array of entries
-> +                         with each entry consisting of 4 cell-values. First one
-> +                         is an index towards the "prus" property to identify the
-> +                         PRU core for the interrupt map, second is the PRU
-> +                         System Event id, third is the PRU interrupt channel id
-> +                         and fourth is the PRU host interrupt id. If provided,
-> +                         this map will supercede any other configuration
-> +                         provided through firmware
-
-Could this mapping just be cells of the interrupt consumer nodes instead of an
-extra property? As I mentioned in a reply to another patch, unless there is a
-compelling reason to do otherwise, the channel to host mapping can be required
-to be 1:1 as recommended in the TRMs, so that cell can be omitted. Also, since
-the interrupt controller is independent of the PRU cores, the cell specifying the
-index of the PRU core is not needed in this case. The #interrupt-cells already
-includes a cell for the system event number, so this just leaves one cell, the
-host channel, to be added to the #interrupt-cells.
-
-So, instead of:
-
-	ti,pru-interrupt-map = <0 16 2 7 >, <1 19 1 3>;
-
-we could have:
-
-	interrupt-parent = <&pruss_intc>;
-	interrupts = <16 7>, <19 3>;
-
-There are also already alternate interrupt bindings that allow for the case
-where there is more than one interrupt-parent.
-
-> +
->   Example:
->   ========
->   1.	/* AM33xx PRU-ICSS */
-> @@ -397,3 +429,14 @@ Example:
->   			...
->   		};
->   	};
-> +
-> +3:	/* PRU application node example */
-> +	app_node: app_node {
-> +		prus = <&pru1_0>, <&pru1_1>;
-> +		firmware-name = "pruss-app-fw", "pruss-app-fw-2";
-> +		ti,pruss-gp-mux-sel = <2>, <1>;
-> +		/* setup interrupts for prus:
-> +		   prus[0] => pru1_0: ev=16, chnl=2, host-irq=7,
-> +		   prus[1] => pru1_1: ev=19, chnl=1, host-irq=3 */
-> +		ti,pru-interrupt-map = <0 16 2 7 >, <1 19 1 3>;
-> +	}
+> - Sysfs file available or not to enable/disable boost frequencies on the go.
+>   This file gets created only when cpufreq_enable_boost_support() gets called.
 > 
+> - Will cpufreq core consider boost frequencies or not while checking target
+>   frequency again, this is governed by cpufreq_driver->boost field, which can be
+>   set from driver or using the sysfs file mentioned above.
+> 
+> In this driver, all we have done is to set the cpufreq_driver->boost field to
+> true, which would allow cpufreq core to use boost frequencies as well. But that
+> isn't any better than making them all normal frequencies and getting rid of
+> boost stuff. The boosting stuff will be useful only if you want to disable some
+> of them at runtime, based on heating, etc. And that is possible only after you
+> create a sysfs file.
+
+That matches what Amit reported (and I confirmed) about the CPU
+frequency "being stuck" at the boost frequency
+(https://lore.kernel.org/patchwork/patch/998335/#1186701) on a loaded
+system.
+
+Taniya: I wonder if it would make sense to drop boost support for now
+in order to land a first working version of the driver soon, instead
+of keeping respinning this series. Boost support could be added as a
+separate feature, just like cooling devices. If you have a working
+quick fix now that's also fine, otherwise I'd suggest the iterative
+approach, I'm sure you also want to see this landing ;-)
+
+Cheers
+
+Matthias
