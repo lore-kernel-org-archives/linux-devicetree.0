@@ -1,102 +1,118 @@
-From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Subject: Re: Re: [PATCH v4 08/26] drm/sun4i: sun6i_mipi_dsi: Fix
- VBP size calculation
-Date: Mon, 26 Nov 2018 17:37:09 +0530
-Message-ID: <55900bf3-efb5-5f78-5252-b3f6d4f775fb@openedev.com>
-References: <20181113111633.20189-1-jagan@amarulasolutions.com>
- <20181113111633.20189-9-jagan@amarulasolutions.com>
- <20181115095551.uctdkfmuwlnzhjnn@flea>
- <CAMty3ZAEHiovm6OF6JvJVQR4aqpG1Q3ML5YqxJkF2ntwRkUO=A@mail.gmail.com>
- <20181120155715.andrjp5kg6ugcv72@flea>
- <CAMty3ZCUOJmvekupOwh281g5HaazTpBbukWQY2Pv2OYypAwciw@mail.gmail.com>
-Reply-To: jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org
+From: Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH 1/2] ARM: dts: imx23: Fix memory node duplicaton
+Date: Mon, 26 Nov 2018 10:08:55 -0200
+Message-ID: <1543234136-6824-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Return-path: <linux-sunxi+bncBDH5TZWAZAFBBD6E57PQKGQECQ6SPMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAMty3ZCUOJmvekupOwh281g5HaazTpBbukWQY2Pv2OYypAwciw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/11/18 9:55 PM, Jagan Teki wrote:
-> On Tue, Nov 20, 2018 at 9:27 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->>
->> On Thu, Nov 15, 2018 at 11:19:53PM +0530, Jagan Teki wrote:
->>> On Thu, Nov 15, 2018 at 3:26 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->>>>
->>>> Hi,
->>>>
->>>> On Tue, Nov 13, 2018 at 04:46:15PM +0530, Jagan Teki wrote:
->>>>> The horizontal and vertical back porch calculation in BSP
->>>>> code is simply following the Linux drm comment diagram, in
->>>>> include/drm/drm_modes.h which is
->>>>>
->>>>> [hv]back porch = [hv]total - [hv]sync_end
->>>>>
->>>>> BSP code form BPI-M64-bsp is calculating vertical back porch as
->>>>> (from linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c)
->>>>>
->>>>> timmings->ver_sync_time= panel_info->lcd_vspw;
->>>>> timmings->ver_back_porch= panel_info->lcd_vbp-panel_info->lcd_vspw;
->>>>>
->>>>> vbp = panel->lcd_vbp;
->>>>> vspw = panel->lcd_vspw;
->>>>> dsi_dev[sel]->dsi_basic_size0.bits.vbp = vbp-vspw;
->>>>> dsi_dev[sel]->dsi_basic_size0.bits.vbp = panel->lcd_vbp - panel->lcd_vspw;
->>>>> =>  timmings->ver_back_porch + panel_info->lcd_vspw - panel_info->lcd_vspw
->>>>> =>  timmings->ver_back_porch
->>>>> =>  mode->vtotal - mode->end
->>>>>
->>>>> Which evatually same as mode->vtotal - mode->vsync_end so update the
->>>>> same in SUN6I_DSI_BASIC_SIZE0_VBP
->>>>>
->>>>> On the information note, existing SUN6I_DSI_BASIC_SIZE0_VSA is proper
->>>>> value.
->>>>>
->>>>> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->>>>
->>>> I've tested your changes on my A33 board, and this commit will break
->>>> it.
->>>>
->>>> It creates vblank timeouts, and visual artifacts at the bottom of the
->>>> display.
->>>
->>> Strange, VBP is earlier gives front porch which is anyway wrong.
->>>
->>>>
->>>> Later commits seem to fix the issue, but will create some blanking on
->>>> the upper third of the display.
->>>>
->>>> Since the documentation is quite sparse, and a MIPI-DSI analyzer is
->>>> way too expensive, I'd really like to have at least what each of these
->>>> commits are actually fixing, and what symptoms each of these were
->>>> causing, and not just "the BSP does it".
->>>
->>> W/o this 2-lane panel is breaking, same vblank timeout and visual
->>> artifacts at the bottom of the panel. though the commits may reference
->>> BSP, I have at-least tested on 3 different panels for us to prove its
->>> working.
->>>
->>>> Having some datasheet for the panels you had working would help too.
->>>
->>> Unfortunately datasheet doesn't have any required information what we
->>> actually looking for.
->>
->> Not even the timings? How did you get that information then?
-> 
-> datasheet has timing values, but this changes need controller
-> information about VBP register that I don't have. But again existing
-> VBP is not back porch for real, it's front porch.
-> 
+Boards based on imx23 have duplicate memory nodes:
 
-I'm about to send next version by combining with burst mode changes in
-one series. Do you have any further inputs on this. I didn't not see
-any breakage with 4-lane devices, but has issue with 2-lane w/o this change.
+- One coming from the board dts file: memory@
+
+- One coming from the imx23.dtsi file.
+
+Fix the duplication by removing the memory node from the dtsi file
+and by adding 'device_type = "memory";' in the board dts.
+
+Reported-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+---
+ arch/arm/boot/dts/imx23-evk.dts           | 1 +
+ arch/arm/boot/dts/imx23-olinuxino.dts     | 1 +
+ arch/arm/boot/dts/imx23-sansa.dts         | 1 +
+ arch/arm/boot/dts/imx23-stmp378x_devb.dts | 1 +
+ arch/arm/boot/dts/imx23-xfi3.dts          | 1 +
+ arch/arm/boot/dts/imx23.dtsi              | 2 --
+ 6 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx23-evk.dts b/arch/arm/boot/dts/imx23-evk.dts
+index 98efe1a..0b2701c 100644
+--- a/arch/arm/boot/dts/imx23-evk.dts
++++ b/arch/arm/boot/dts/imx23-evk.dts
+@@ -10,6 +10,7 @@
+ 	compatible = "fsl,imx23-evk", "fsl,imx23";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x08000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx23-olinuxino.dts b/arch/arm/boot/dts/imx23-olinuxino.dts
+index 31b1e35..e2bac4d 100644
+--- a/arch/arm/boot/dts/imx23-olinuxino.dts
++++ b/arch/arm/boot/dts/imx23-olinuxino.dts
+@@ -20,6 +20,7 @@
+ 	compatible = "olimex,imx23-olinuxino", "fsl,imx23";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x04000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx23-sansa.dts b/arch/arm/boot/dts/imx23-sansa.dts
+index faf701b..46057d9 100644
+--- a/arch/arm/boot/dts/imx23-sansa.dts
++++ b/arch/arm/boot/dts/imx23-sansa.dts
+@@ -50,6 +50,7 @@
+ 	compatible = "sandisk,sansa_fuze_plus", "fsl,imx23";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x04000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx23-stmp378x_devb.dts b/arch/arm/boot/dts/imx23-stmp378x_devb.dts
+index 2ff6cdf..df2a9e6 100644
+--- a/arch/arm/boot/dts/imx23-stmp378x_devb.dts
++++ b/arch/arm/boot/dts/imx23-stmp378x_devb.dts
+@@ -17,6 +17,7 @@
+ 	compatible = "fsl,stmp378x-devb", "fsl,imx23";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x04000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx23-xfi3.dts b/arch/arm/boot/dts/imx23-xfi3.dts
+index db53089..a6213c5 100644
+--- a/arch/arm/boot/dts/imx23-xfi3.dts
++++ b/arch/arm/boot/dts/imx23-xfi3.dts
+@@ -49,6 +49,7 @@
+ 	compatible = "creative,x-fi3", "fsl,imx23";
+ 
+ 	memory@40000000 {
++		device_type = "memory";
+ 		reg = <0x40000000 0x04000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx23.dtsi b/arch/arm/boot/dts/imx23.dtsi
+index ea25992..8257630 100644
+--- a/arch/arm/boot/dts/imx23.dtsi
++++ b/arch/arm/boot/dts/imx23.dtsi
+@@ -13,10 +13,8 @@
+ 	 * The decompressor and also some bootloaders rely on a
+ 	 * pre-existing /chosen node to be available to insert the
+ 	 * command line and merge other ATAGS info.
+-	 * Also for U-Boot there must be a pre-existing /memory node.
+ 	 */
+ 	chosen {};
+-	memory { device_type = "memory"; };
+ 
+ 	aliases {
+ 		gpio0 = &gpio0;
+-- 
+2.7.4
