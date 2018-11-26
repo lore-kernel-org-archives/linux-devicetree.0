@@ -1,74 +1,32 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add WCN3990 WLAN module device
- node
-Date: Mon, 26 Nov 2018 20:14:22 +0530
-Message-ID: <20181126144422.GU3175@vkoul-mobl.Dlink>
-References: <20181126142133.16966-1-govinds@codeaurora.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: phy: Add Qualcomm Synopsys High-Speed
+ USB PHY binding
+Date: Mon, 26 Nov 2018 08:46:54 -0600
+Message-ID: <CAL_JsqLyQAvbPVyHNtGFYrW2BYOGwj7uuRehd=c-3gyAcMKWRA@mail.gmail.com>
+References: <20181119110812.15825-1-shawn.guo@linaro.org> <20181119110812.15825-2-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181126142133.16966-1-govinds@codeaurora.org>
+In-Reply-To: <20181119110812.15825-2-shawn.guo@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Govind Singh <govinds@codeaurora.org>
-Cc: andy.gross@linaro.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod <vkoul@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Govind,
-
-On 26-11-18, 19:51, Govind Singh wrote:
-> Add device node for the ath10k SNOC platform driver probe
-> and add resources required for WCN3990 on qcs404 soc.
-> Optional clock and regulator controls are not yet available in
-> upstream, hence add them once available.
-> 
-> Signed-off-by: Govind Singh <govinds@codeaurora.org>
+On Mon, Nov 19, 2018 at 5:08 AM Shawn Guo <shawn.guo@linaro.org> wrote:
+>
+> From: Sriharsha Allenki <sallenki@codeaurora.org>
+>
+> It adds bindings for Synopsys 28nm femto phy controller that supports
+> LS/FS/HS usb connectivity on Qualcomm chipsets.
+>
+> Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
+> Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
 > ---
->  arch/arm64/boot/dts/qcom/qcs404.dtsi | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> index 9ca4f061ecc5..1a401a32d4a1 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> @@ -958,6 +958,25 @@
->  				status = "disabled";
->  			};
->  		};
-> +
-> +		wifi: wifi@0A000000 {
+>  .../phy/qcom,snps-28nm-usb-hs-phy.txt         | 87 +++++++++++++++++++
+>  1 file changed, 87 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,snps-28nm-usb-hs-phy.txt
 
-Please remove leading 0 from node
-
-> +			compatible = "qcom,wcn3990-wifi";
-> +			reg = <0x0A000000 0x800000>;
-> +			reg-names = "membase";
-> +			memory-region = <&wlan_msa_mem>;
-> +			interrupts = <GIC_SPI 277 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 278 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 279 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 280 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 284 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
->  	};
->  
->  	timer {
-
-This file is sorted alphabetically and reg values. So this should be
-between blsp1_uart2 and intc node, can you please change that
-
-Also please compile this with W=12
-
-Lastly, I am not sure, but should the wifi node be always enabled?
-Should it not be enabled in the board dts file? Bjorn..?
-
-Thanks
--- 
-~Vinod
+Reviewed-by: Rob Herring <robh@kernel.org>
