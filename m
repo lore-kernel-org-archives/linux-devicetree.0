@@ -1,79 +1,66 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 1/3] ARM: dts: imx1: Fix memory node duplicaton
-Date: Mon, 26 Nov 2018 10:40:52 -0200
-Message-ID: <1543236054-10450-1-git-send-email-festevam@gmail.com>
+From: Quentin Perret <quentin.perret@arm.com>
+Subject: Re: [PATCH V4 2/2] base/drivers/arch_topology: Default dmips-mhz if
+ they are not set in DT
+Date: Mon, 26 Nov 2018 12:48:23 +0000
+Message-ID: <20181126124821.hcagb4ai7z6qldr3@queper01-lin>
+References: <1543234847-21611-1-git-send-email-daniel.lezcano@linaro.org>
+ <1543234847-21611-2-git-send-email-daniel.lezcano@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1543234847-21611-2-git-send-email-daniel.lezcano@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: rjw@rjwysocki.net, linux-kernel@vger.kernel.org, viresh.kumar@linaro.org, Chris Redpath <chris.redpath@linaro.org>, Quentin Perret <quentin.perret@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Li Yang <leoyang.li@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Boards based on imx1 have duplicate memory nodes:
+On Monday 26 Nov 2018 at 13:20:43 (+0100), Daniel Lezcano wrote:
+> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+> index fd5325b..e0c5b60 100644
+> --- a/drivers/base/arch_topology.c
+> +++ b/drivers/base/arch_topology.c
+> @@ -243,9 +243,20 @@ static int __init register_cpufreq_notifier(void)
+>  	 * until we have the necessary code to parse the cpu capacity, so
+>  	 * skip registering cpufreq notifier.
+>  	 */
+> -	if (!acpi_disabled || !raw_capacity)
+> +	if (!acpi_disabled)
+>  		return -EINVAL;
+>  
+> +	if (!raw_capacity) {
+> +
+> +		pr_info("cpu_capacity: No capacity defined in DT, set default "
+> +		       "values to %ld\n", SCHED_CAPACITY_SCALE);
+> +
+> +		raw_capacity = kmalloc_array(num_possible_cpus(),
+> +					     sizeof(*raw_capacity), GFP_KERNEL);
+> +		if (!raw_capacity)
+> +			return -ENOMEM;
+> +	}
+> +
+>  	if (!alloc_cpumask_var(&cpus_to_visit, GFP_KERNEL)) {
+>  		pr_err("cpu_capacity: failed to allocate memory for cpus_to_visit\n");
+>  		return -ENOMEM;
 
-- One coming from the board dts file: memory@
+I just tried on my Juno by removing the capacity-dmips-mhz values from
+the DT and got the following:
 
-- One coming from the imx1.dtsi file.
+  $ cat /sys/devices/system/cpu/cpufreq/policy*/scaling_available_frequencies
+  450000 575000 700000 775000 850000
+  450000 625000 800000 950000 1100000
+  $ cat /sys/devices/system/cpu/cpu*/cpu_capacity
+  791
+  1024
+  1024
+  791
+  791
+  791
 
-Fix the duplication by removing the memory node from the dtsi file
-and by adding 'device_type = "memory";' in the board dts.
+Same thing with a partially-filled DT (which is the expected behaviour
+now). So feel free to add:
 
-Reported-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
- arch/arm/boot/dts/imx1-ads.dts     | 1 +
- arch/arm/boot/dts/imx1-apf9328.dts | 1 +
- arch/arm/boot/dts/imx1.dtsi        | 2 --
- 3 files changed, 2 insertions(+), 2 deletions(-)
+Tested-by: Quentin Perret <quentin.perret@arm.com>
 
-diff --git a/arch/arm/boot/dts/imx1-ads.dts b/arch/arm/boot/dts/imx1-ads.dts
-index a1d81ba..3459a58 100644
---- a/arch/arm/boot/dts/imx1-ads.dts
-+++ b/arch/arm/boot/dts/imx1-ads.dts
-@@ -21,6 +21,7 @@
- 	};
- 
- 	memory@8000000 {
-+		 device_type = "memory";
- 		reg = <0x08000000 0x04000000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx1-apf9328.dts b/arch/arm/boot/dts/imx1-apf9328.dts
-index 11515c0..ee4b1b1 100644
---- a/arch/arm/boot/dts/imx1-apf9328.dts
-+++ b/arch/arm/boot/dts/imx1-apf9328.dts
-@@ -21,6 +21,7 @@
- 	};
- 
- 	memory@8000000 {
-+		device_type = "memory";
- 		reg = <0x08000000 0x00800000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx1.dtsi b/arch/arm/boot/dts/imx1.dtsi
-index b00ece1..b30448c 100644
---- a/arch/arm/boot/dts/imx1.dtsi
-+++ b/arch/arm/boot/dts/imx1.dtsi
-@@ -15,10 +15,8 @@
- 	 * The decompressor and also some bootloaders rely on a
- 	 * pre-existing /chosen node to be available to insert the
- 	 * command line and merge other ATAGS info.
--	 * Also for U-Boot there must be a pre-existing /memory node.
- 	 */
- 	chosen {};
--	memory { device_type = "memory"; };
- 
- 	aliases {
- 		gpio0 = &gpio1;
--- 
-2.7.4
+Thanks,
+Quentin
