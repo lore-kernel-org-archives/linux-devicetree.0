@@ -1,82 +1,35 @@
-From: frowand.list@gmail.com
-Subject: [PATCH] of: add dtc annotations functionality to dtx_diff
-Date: Mon, 26 Nov 2018 04:01:09 -0800
-Message-ID: <1543233669-8696-1-git-send-email-frowand.list@gmail.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2] ARM: dts: rv1108: enable eMMC support
+Date: Mon, 26 Nov 2018 13:01:35 +0100
+Message-ID: <64323039.5I5JKdABON@phil>
+References: <20181125211427.4926-1-otavio@ossystems.com.br> <2374110.cSv9E7W1qs@phil> <CAP9ODKoVG0ceSdRdpMz705=a9Wh0vubE6=ja=bwSF35ORzVOwA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAP9ODKoVG0ceSdRdpMz705=a9Wh0vubE6=ja=bwSF35ORzVOwA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>
+To: Otavio Salvador <otavio.salvador@ossystems.com.br>
+Cc: Otavio Salvador <otavio@ossystems.com.br>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kernel development list <linux-kernel@vger.kernel.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+Am Montag, 26. November 2018, 12:58:49 CET schrieb Otavio Salvador:
+> On Mon, Nov 26, 2018 at 7:03 AM Heiko Stuebner <heiko@sntech.de> wrote:
+> > Am Sonntag, 25. November 2018, 22:14:27 CET schrieb Otavio Salvador:
+> > > Enable eMMC support for rv1108.dtsi as it can be used across multiple
+> > > boards.
+> > >
+> > > Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+> >
+> > applied for 4.21 after reordering the emmc pinctrl nodes a bit
+> > and modifying the suject + commit message to be a bit more specific
+> > in that we only add the common pin settings.
+> 
+> Which tree is it applied? I'd like to rebase the patches on top of it.
 
-Add -T and --annotations command line arguments to dtx_diff.  These
-arguments will be passed through to dtc.  dtc will then add source
-location annotations to its output.
+https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git/
 
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
----
+and now also pushed to there.
 
-This feature depends upon commit 5667e7ef9a9a ("annotations: add the
-annotation functionality") in the dtc git repository.  To use the
-new flags before the new version of dtc is imported to the linux
-kernel, download the dtc repository, compile dtc with the make command,
-then add the path of the dtc repository to the shell PATH variable.
 
- scripts/dtc/dtx_diff | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/scripts/dtc/dtx_diff b/scripts/dtc/dtx_diff
-index 8c4fbad2055e..0d8572008729 100755
---- a/scripts/dtc/dtx_diff
-+++ b/scripts/dtc/dtx_diff
-@@ -21,6 +21,7 @@ Usage:
-         diff DTx_1 and DTx_2
- 
- 
-+      --annotate    synonym for -T
-        -f           print full dts in diff (--unified=99999)
-        -h           synonym for --help
-        -help        synonym for --help
-@@ -28,6 +29,7 @@ Usage:
-        -s SRCTREE   linux kernel source tree is at path SRCTREE
-                         (default is current directory)
-        -S           linux kernel source tree is at root of current git repo
-+       -T           Annotate output .dts with input source file and line (-T -T for more details)
-        -u           unsorted, do not sort DTx
- 
- 
-@@ -174,6 +176,7 @@ compile_to_dts() {
- 
- # -----  start of script
- 
-+annotate=""
- cmd_diff=0
- diff_flags="-u"
- dtx_file_1=""
-@@ -208,6 +211,14 @@ while [ $# -gt 0 ] ; do
- 		shift
- 		;;
- 
-+	-T | --annotate )
-+		if [ "${annotate}"  = "" ] ; then
-+			annotate="-T"
-+		elif [ "${annotate}"  = "-T" ] ; then
-+			annotate="-T -T"
-+		fi
-+		shift
-+		;;
- 	-u )
- 		dtc_sort=""
- 		shift
-@@ -327,7 +338,7 @@ cpp_flags="\
- DTC="\
- 	${DTC}                                     \
- 	-i ${srctree}/scripts/dtc/include-prefixes \
--	-O dts -qq -f ${dtc_sort} -o -"
-+	-O dts -qq -f ${dtc_sort} ${annotate} -o -"
- 
- 
- # -----  do the diff or decompile
--- 
-Frank Rowand <frank.rowand@sony.com>
+Heiko
