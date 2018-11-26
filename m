@@ -1,44 +1,98 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 01/17] dt-bindings: remoteproc: Add TI PRUSS bindings
-Date: Mon, 26 Nov 2018 11:35:46 -0800
-Message-ID: <20181126193546.GP53235@atomide.com>
-References: <1542886753-17625-1-git-send-email-rogerq@ti.com>
- <1542886753-17625-2-git-send-email-rogerq@ti.com>
- <20181123162417.GZ53235@atomide.com>
- <5BFBA525.3060806@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v7 1/4] dt-bindings: pps: descriptor-based gpio,
+ capture-clear addition
+Date: Mon, 26 Nov 2018 13:39:12 -0600
+Message-ID: <CAL_Jsq+_Fb8mRDf_g=qDVsw-KPnrdZunLksYrgBFvhehzVNX+g@mail.gmail.com>
+References: <20181114125432.16044-1-tom@aussec.com> <20181114125432.16044-2-tom@aussec.com>
+ <20181116224919.GA18008@bogus> <20181117213522.12672utznrvpbn56@www.aussec.com>
+ <CAL_JsqKZHg5_8ghMmU4qO4CVZibcHOvtVJH669zod_6GLGakRg@mail.gmail.com> <20181118113502.55634v85ybgkt586@www.aussec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5BFBA525.3060806@ti.com>
+In-Reply-To: <20181118113502.55634v85ybgkt586@www.aussec.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>
+To: Tom Burkart <tom@aussec.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [181126 07:48]:
-> Not the PHY driver but the Ethernet driver. The PHY driver will be
-> a davinci-MDIO device node (not yet in this series). I should probably
-> add merge that with this series.
-> 
-> The Ethernet device tree node will reference to these syscon nodes.
-> e.g.
->         pruss2_eth {
->                 compatible = "ti,am57-prueth";
->                 prus = <&pru2_0>, <&pru2_1>;
->                 firmware-name = "ti-pruss/am57xx-pru0-prueth-fw.elf",
->                                 "ti-pruss/am57xx-pru1-prueth-fw.elf";
->                 sram = <&ocmcram1>;
->                 interrupt-parent = <&pruss2_intc>;
-> -->             mii-rt = <&pruss2_mii_rt>;
-> -->             iep = <&pruss2_iep>;
-> 	}
-> 
-> Do you see any issues with that?
+On Sat, Nov 17, 2018 at 6:35 PM tom burkart <tom@aussec.com> wrote:
+>
+> Quoting Rob Herring <robh@kernel.org>:
+>
+> > On Sat, Nov 17, 2018 at 4:35 AM tom burkart <tom@aussec.com> wrote:
+> >>
+> >> Quoting Rob Herring <robh@kernel.org>:
+> >>
+> >> > On Wed, Nov 14, 2018 at 11:54:29PM +1100, Tom Burkart wrote:
+> >> >> This patch changes the devicetree bindings for the pps-gpio driver
+> >> >> from the integer based ABI to the descriptor based ABI.
+> >> > ? That has nothing to do with DT.
+> >>
+> >> I believe it does, as the change in ABI forces a rename in the DT
+> >> naming convention.
+> >> This is due to the descriptor based ABI appending "-gpio" or "-gpios" (see
+> >> Documentation/gpio/base.txt.)
+> >> Admittedly, I may have called it by the wrong name due to ignorance,
+> >> my apologies.
+> >
+> > If what you say is correct, then you can't change this driver. You'll
+> > break compatibility with any existing DT.
+> >
+> > Changing the binding reasoning should purely be that this is the
+> > preferred form. Bindings must be independent from changing kernel
+> > APIs.
+>
+> See comments from Philip Zabel.  I misread the documentation and this
+> has now been corrected in v8 of the patch.  I hope that eliminates all
+> comments made above.
+>
+> >> >>  It also adds
+> >> >> documentation for the device tree capture-clear option.  The legacy
+> >> >> device tree entry for the GPIO pin is supported.
+> >> >>
+> >> >> Signed-off-by: Tom Burkart <tom@aussec.com>
+> >> >> ---
+> >> >>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 8 ++++++--
+> >> >>  1 file changed, 6 insertions(+), 2 deletions(-)
+> >> >>
+> >> >> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt
+> >> >> b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+> >> >> index 3683874832ae..6c9fc0998d94 100644
+> >> >> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
+> >> >> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+> >> >> @@ -5,19 +5,23 @@ a GPIO pin.
+> >> >>
+> >> >>  Required properties:
+> >> >>  - compatible: should be "pps-gpio"
+> >> >> -- gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
+> >> >> +- pps-gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
+> >> >> +Alternatively (DEPRECATED), instead of pps-gpios above, it may have:
+> >> >> +- gpios: one PPS GPIO as above
+> >> >>
+> >> >>  Optional properties:
+> >> >>  - assert-falling-edge: when present, assert is indicated by a
+> >> falling edge
+> >> >>                         (instead of by a rising edge)
+> >> >> +- capture-clear: when present, also capture the PPS clear event
+> >> >
+> >> > Is this a h/w thing? or driver configuration?
+> >>
+> >> Driver configuration.  Most of the code was present in the driver, yet
+> >> it was not documented, or usable due to a two line (code) omission
+> >> (the value was not being fetched from DT).
+> >
+> > So what determines how you want to configure this? If the user will
+> > want to change it, then it should be a sysfs attr and exposed to
+> > userspace. If it depends on h/w config for a board then it can be in
+> > DT.
+>
+> Sorry, I misled you somewhat.  If the PPS pulse active transition from
+> the hardware is on the falling edge, this flag is required to get the
+> OS to use that as the active transition.  This would not change at the
+> user's whim but rather it is dependent on connected hardware.
 
-Well maybe take a look at Grygorii's series adding proper
-PHY driver for CPSW and see if it affects this too.
+This description sounds more like 'assert-falling-edge' than 'capture-clear'.
 
-Regards,
+I'm still not clear on what 'capture-clear' is.
 
-Tony
+Rob
