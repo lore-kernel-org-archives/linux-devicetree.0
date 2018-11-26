@@ -1,60 +1,60 @@
-From: Otavio Salvador <otavio@ossystems.com.br>
-Subject: [PATCH v2 4/4] ARM: dts: rockchip: Add internal timer support for rv1108
-Date: Mon, 26 Nov 2018 15:35:06 -0200
-Message-ID: <20181126173506.24068-4-otavio@ossystems.com.br>
-References: <20181126173506.24068-1-otavio@ossystems.com.br>
+From: Parthiban Nallathambi <pn@denx.de>
+Subject: Re: [PATCH v3 4/4] arm64: dts: actions: s700-cubieboard7: Enable SIRQ
+Date: Mon, 26 Nov 2018 18:37:25 +0100
+Message-ID: <24b1d0a6-851d-af9a-f639-74954289abbb@denx.de>
+References: <20181126100940.2944780-1-pn@denx.de>
+ <201811270010.jiasM1Ez%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181126173506.24068-1-otavio@ossystems.com.br>
+In-Reply-To: <201811270010.jiasM1Ez%fengguang.wu@intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>
-Cc: Otavio Salvador <otavio@ossystems.com.br>, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
+To: kbuild test robot <lkp@intel.com>
+Cc: pn@denx.de, kbuild-all@01.org, marc.zyngier@arm.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, catalin.marinas@arm.com, will.deacon@arm.com, manivannan.sadhasivam@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, thomas.liau@actions-semi.com, mp-cs@actions-semi.com, linux@cubietech.com, edgar.righi@lsitec.org.br, laisa.costa@lsitec.org.br, guilherme.simoes@lsitec.org.br, mkzuffo@lsi.usp.br
 List-Id: devicetree@vger.kernel.org
 
-Add support for the internal timer peripheral on RV1108.
 
-Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
----
 
-Changes in v2:
-- add binding to doc
-- fixup commit log
+On 11/26/18 5:59 PM, kbuild test robot wrote:
+> Hi Parthiban,
+> 
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on tip/irq/core]
+> [also build test ERROR on v4.20-rc4 next-20181126]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Parthiban-Nallathambi/Add-Actions-Semi-Owl-family-sirq-support/20181126-181439
+> config: arm64-allmodconfig (attached as .config)
+> compiler: aarch64-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
+> reproduce:
+>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>          chmod +x ~/bin/make.cross
+>          # save the attached .config to linux build tree
+>          GCC_VERSION=7.2.0 make.cross ARCH=arm64
+> 
+> All errors (new ones prefixed by >>):
+> 
+>>> Error: arch/arm64/boot/dts/actions/s700-cubieboard7.dts:46.1-9 Label or path pinctrl not found
+>>> FATAL ERROR: Syntax error parsing input tree
 
- .../devicetree/bindings/timer/rockchip,rk-timer.txt       | 1 +
- arch/arm/boot/dts/rv1108.dtsi                             | 8 ++++++++
- 2 files changed, 9 insertions(+)
+For the reference, this patch depends on pinctrl for s700, which is yet
+to be merged.
 
-diff --git a/Documentation/devicetree/bindings/timer/rockchip,rk-timer.txt b/Documentation/devicetree/bindings/timer/rockchip,rk-timer.txt
-index 16a5f4577a61..d65fdce7c7f0 100644
---- a/Documentation/devicetree/bindings/timer/rockchip,rk-timer.txt
-+++ b/Documentation/devicetree/bindings/timer/rockchip,rk-timer.txt
-@@ -2,6 +2,7 @@ Rockchip rk timer
- 
- Required properties:
- - compatible: should be:
-+  "rockchip,rv1108-timer", "rockchip,rk3288-timer": for Rockchip RV1108
-   "rockchip,rk3036-timer", "rockchip,rk3288-timer": for Rockchip RK3036
-   "rockchip,rk3066-timer", "rockchip,rk3288-timer": for Rockchip RK3066
-   "rockchip,rk3188-timer", "rockchip,rk3288-timer": for Rockchip RK3188
-diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
-index 23ac4b10d690..9683f3b00d9d 100644
---- a/arch/arm/boot/dts/rv1108.dtsi
-+++ b/arch/arm/boot/dts/rv1108.dtsi
-@@ -293,6 +293,14 @@
- 		};
- 	};
- 
-+	timer: timer@10350000 {
-+		compatible = "rockchip,rv1108-timer", "rockchip,rk3288-timer";
-+		reg = <0x10350000 0x20>;
-+		interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&xin24m>, <&cru PCLK_TIMER>;
-+		clock-names = "timer", "pclk";
-+	};
-+
- 	watchdog: wdt@10360000 {
- 		compatible = "snps,dw-wdt";
- 		reg = <0x10360000 0x100>;
+https://lore.kernel.org/patchwork/patch/1012859/
+
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> 
+
 -- 
-2.19.2
+Thanks,
+Parthiban N
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-22 Fax: (+49)-8142-66989-80 Email: pn@denx.de
