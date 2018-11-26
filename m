@@ -1,274 +1,117 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 2/2] ARM: dts: imx28: Fix memory node duplicaton
-Date: Mon, 26 Nov 2018 10:08:56 -0200
-Message-ID: <1543234136-6824-2-git-send-email-festevam@gmail.com>
-References: <1543234136-6824-1-git-send-email-festevam@gmail.com>
+From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
+Subject: Re: [PATCH fbdev-for-next 2/2] video: ssd1307fb: Add support for the
+ reset-active-low property
+Date: Mon, 26 Nov 2018 12:25:14 +0000
+Message-ID: <f0389ca6-076b-b450-ffd5-d496627d1c58@ysoft.com>
+References: <1541170556-75032-1-git-send-email-michal.vokac@ysoft.com>
+ <1541170556-75032-2-git-send-email-michal.vokac@ysoft.com>
+ <5bea0e9c.1c69fb81.1f3c8.be5a@mx.google.com>
+ <db9537dc-2ba5-b8fc-ae3c-7d85841b0797@ysoft.com>
+ <CAL_Jsq+KOqWVdudDGZNJSJ1SZSX1FK2GOSu-4VfmRV-KZrYJZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1543234136-6824-1-git-send-email-festevam@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+KOqWVdudDGZNJSJ1SZSX1FK2GOSu-4VfmRV-KZrYJZA@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <0F2392637A1DEE4EAC212417A4264009@eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Boards based on imx28 have duplicate memory nodes:
-
-- One coming from the board dts file: memory@
-
-- One coming from the imx28.dtsi file.
-
-Fix the duplication by removing the memory node from the dtsi file
-and by adding 'device_type = "memory";' in the board dts.
-
-Reported-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
- arch/arm/boot/dts/imx28-apf28.dts              | 1 +
- arch/arm/boot/dts/imx28-apx4devkit.dts         | 1 +
- arch/arm/boot/dts/imx28-cfa10036.dts           | 1 +
- arch/arm/boot/dts/imx28-duckbill-2-485.dts     | 1 +
- arch/arm/boot/dts/imx28-duckbill-2-enocean.dts | 1 +
- arch/arm/boot/dts/imx28-duckbill-2-spi.dts     | 1 +
- arch/arm/boot/dts/imx28-duckbill-2.dts         | 1 +
- arch/arm/boot/dts/imx28-duckbill.dts           | 1 +
- arch/arm/boot/dts/imx28-eukrea-mbmx283lc.dts   | 1 +
- arch/arm/boot/dts/imx28-eukrea-mbmx287lc.dts   | 1 +
- arch/arm/boot/dts/imx28-evk.dts                | 1 +
- arch/arm/boot/dts/imx28-m28.dtsi               | 1 +
- arch/arm/boot/dts/imx28-m28cu3.dts             | 1 +
- arch/arm/boot/dts/imx28-m28evk.dts             | 1 +
- arch/arm/boot/dts/imx28-sps1.dts               | 1 +
- arch/arm/boot/dts/imx28-ts4600.dts             | 1 +
- arch/arm/boot/dts/imx28-tx28.dts               | 1 +
- arch/arm/boot/dts/imx28.dtsi                   | 2 --
- 18 files changed, 17 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx28-apf28.dts b/arch/arm/boot/dts/imx28-apf28.dts
-index bab7834..b6976fb 100644
---- a/arch/arm/boot/dts/imx28-apf28.dts
-+++ b/arch/arm/boot/dts/imx28-apf28.dts
-@@ -17,6 +17,7 @@
- 	compatible = "armadeus,imx28-apf28", "fsl,imx28";
- 
- 	memory@40000000 {
-+		device_type = "memory";
- 		reg = <0x40000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx28-apx4devkit.dts b/arch/arm/boot/dts/imx28-apx4devkit.dts
-index 6c9b498..3a184d1 100644
---- a/arch/arm/boot/dts/imx28-apx4devkit.dts
-+++ b/arch/arm/boot/dts/imx28-apx4devkit.dts
-@@ -7,6 +7,7 @@
- 	compatible = "bluegiga,apx4devkit", "fsl,imx28";
- 
- 	memory@40000000 {
-+		device_type = "memory";
- 		reg = <0x40000000 0x04000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx28-cfa10036.dts b/arch/arm/boot/dts/imx28-cfa10036.dts
-index 8337ca2..d3e3622 100644
---- a/arch/arm/boot/dts/imx28-cfa10036.dts
-+++ b/arch/arm/boot/dts/imx28-cfa10036.dts
-@@ -17,6 +17,7 @@
- 	compatible = "crystalfontz,cfa10036", "fsl,imx28";
- 
- 	memory@40000000 {
-+		device_type = "memory";
- 		reg = <0x40000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx28-duckbill-2-485.dts b/arch/arm/boot/dts/imx28-duckbill-2-485.dts
-index f4f2b3d..19957c2 100644
---- a/arch/arm/boot/dts/imx28-duckbill-2-485.dts
-+++ b/arch/arm/boot/dts/imx28-duckbill-2-485.dts
-@@ -20,6 +20,7 @@
- 	compatible = "i2se,duckbill-2-485", "i2se,duckbill-2", "fsl,imx28";
- 
- 	memory@40000000 {
-+		device_type = "memory";
- 		reg = <0x40000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx28-duckbill-2-enocean.dts b/arch/arm/boot/dts/imx28-duckbill-2-enocean.dts
-index 71d0fcb..4982131 100644
---- a/arch/arm/boot/dts/imx28-duckbill-2-enocean.dts
-+++ b/arch/arm/boot/dts/imx28-duckbill-2-enocean.dts
-@@ -21,6 +21,7 @@
- 	compatible = "i2se,duckbill-2-enocean", "i2se,duckbill-2", "fsl,imx28";
- 
- 	memory@40000000 {
-+		device_type = "memory";
- 		reg = <0x40000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx28-duckbill-2-spi.dts b/arch/arm/boot/dts/imx28-duckbill-2-spi.dts
-index 6580ec6..d38d35b 100644
---- a/arch/arm/boot/dts/imx28-duckbill-2-spi.dts
-+++ b/arch/arm/boot/dts/imx28-duckbill-2-spi.dts
-@@ -24,6 +24,7 @@
- 	};
- 
- 	memory@40000000 {
-+		device_type = "memory";
- 		reg = <0x40000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx28-duckbill-2.dts b/arch/arm/boot/dts/imx28-duckbill-2.dts
-index 693634e..38160fb 100644
---- a/arch/arm/boot/dts/imx28-duckbill-2.dts
-+++ b/arch/arm/boot/dts/imx28-duckbill-2.dts
-@@ -20,6 +20,7 @@
- 	compatible = "i2se,duckbill-2", "fsl,imx28";
- 
- 	memory@40000000 {
-+		device_type = "memory";
- 		reg = <0x40000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx28-duckbill.dts b/arch/arm/boot/dts/imx28-duckbill.dts
-index 16f5244..7139c07 100644
---- a/arch/arm/boot/dts/imx28-duckbill.dts
-+++ b/arch/arm/boot/dts/imx28-duckbill.dts
-@@ -19,6 +19,7 @@
- 	compatible = "i2se,duckbill", "fsl,imx28";
- 
- 	memory@40000000 {
-+		device_type = "memory";
- 		reg = <0x40000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx28-eukrea-mbmx283lc.dts b/arch/arm/boot/dts/imx28-eukrea-mbmx283lc.dts
-index b70f334..28dab6d 100644
---- a/arch/arm/boot/dts/imx28-eukrea-mbmx283lc.dts
-+++ b/arch/arm/boot/dts/imx28-eukrea-mbmx283lc.dts
-@@ -24,6 +24,7 @@
- 	compatible = "eukrea,mbmx283lc", "eukrea,mbmx28lc", "fsl,imx28";
- 
- 	memory@40000000 {
-+		device_type = "memory";
- 		reg = <0x40000000 0x04000000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx28-eukrea-mbmx287lc.dts b/arch/arm/boot/dts/imx28-eukrea-mbmx287lc.dts
-index 65efb78..7c3d552 100644
---- a/arch/arm/boot/dts/imx28-eukrea-mbmx287lc.dts
-+++ b/arch/arm/boot/dts/imx28-eukrea-mbmx287lc.dts
-@@ -23,6 +23,7 @@
- 	compatible = "eukrea,mbmx287lc", "eukrea,mbmx283lc", "eukrea,mbmx28lc", "fsl,imx28";
- 
- 	memory@40000000 {
-+		device_type = "memory";
- 		reg = <0x40000000 0x08000000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx28-evk.dts b/arch/arm/boot/dts/imx28-evk.dts
-index 5778300..96c1d10 100644
---- a/arch/arm/boot/dts/imx28-evk.dts
-+++ b/arch/arm/boot/dts/imx28-evk.dts
-@@ -10,6 +10,7 @@
- 	compatible = "fsl,imx28-evk", "fsl,imx28";
- 
- 	memory@40000000 {
-+		device_type = "memory";
- 		reg = <0x40000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx28-m28.dtsi b/arch/arm/boot/dts/imx28-m28.dtsi
-index 0ec415e..298ad28 100644
---- a/arch/arm/boot/dts/imx28-m28.dtsi
-+++ b/arch/arm/boot/dts/imx28-m28.dtsi
-@@ -16,6 +16,7 @@
- 	compatible = "aries,m28", "denx,m28", "fsl,imx28";
- 
- 	memory@40000000 {
-+		device_type = "memory";
- 		reg = <0x40000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx28-m28cu3.dts b/arch/arm/boot/dts/imx28-m28cu3.dts
-index 8883d36..ece3310 100644
---- a/arch/arm/boot/dts/imx28-m28cu3.dts
-+++ b/arch/arm/boot/dts/imx28-m28cu3.dts
-@@ -17,6 +17,7 @@
- 	compatible = "msr,m28cu3", "fsl,imx28";
- 
- 	memory@40000000 {
-+		device_type = "memory";
- 		reg = <0x40000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx28-m28evk.dts b/arch/arm/boot/dts/imx28-m28evk.dts
-index 893886d..7d64301 100644
---- a/arch/arm/boot/dts/imx28-m28evk.dts
-+++ b/arch/arm/boot/dts/imx28-m28evk.dts
-@@ -1,4 +1,5 @@
- /*
-+
-  * Copyright (C) 2012 Marek Vasut <marex@denx.de>
-  *
-  * The code contained herein is licensed under the GNU General Public
-diff --git a/arch/arm/boot/dts/imx28-sps1.dts b/arch/arm/boot/dts/imx28-sps1.dts
-index ea9212f..42c88a6 100644
---- a/arch/arm/boot/dts/imx28-sps1.dts
-+++ b/arch/arm/boot/dts/imx28-sps1.dts
-@@ -17,6 +17,7 @@
- 	compatible = "schulercontrol,imx28-sps1", "fsl,imx28";
- 
- 	memory@40000000 {
-+		device_type = "memory";
- 		reg = <0x40000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx28-ts4600.dts b/arch/arm/boot/dts/imx28-ts4600.dts
-index dccdd6b..e3fd411 100644
---- a/arch/arm/boot/dts/imx28-ts4600.dts
-+++ b/arch/arm/boot/dts/imx28-ts4600.dts
-@@ -20,6 +20,7 @@
- 	compatible = "technologic,imx28-ts4600", "fsl,imx28";
- 
- 	memory@40000000 {
-+		device_type = "memory";
- 		reg = <0x40000000 0x10000000>;   /* 256MB */
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx28-tx28.dts b/arch/arm/boot/dts/imx28-tx28.dts
-index b8f4643..164254c 100644
---- a/arch/arm/boot/dts/imx28-tx28.dts
-+++ b/arch/arm/boot/dts/imx28-tx28.dts
-@@ -66,6 +66,7 @@
- 	};
- 
- 	memory@40000000 {
-+		device_type = "memory";
- 		reg = <0x40000000 0>; /* will be filled in by U-Boot */
- 	};
- 
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index 2b7efb6..e14d8ef 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -14,10 +14,8 @@
- 	 * The decompressor and also some bootloaders rely on a
- 	 * pre-existing /chosen node to be available to insert the
- 	 * command line and merge other ATAGS info.
--	 * Also for U-Boot there must be a pre-existing /memory node.
- 	 */
- 	chosen {};
--	memory { device_type = "memory"; };
- 
- 	aliases {
- 		ethernet0 = &mac0;
--- 
-2.7.4
+T24gMTkuMTEuMjAxOCAyMzozMiwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIE1vbiwgTm92IDE5
+LCAyMDE4IGF0IDk6MTIgQU0gVm9rw6HEjSBNaWNoYWwgPE1pY2hhbC5Wb2thY0B5c29mdC5jb20+
+IHdyb3RlOg0KPj4gT24gMTIuMTEuMjAxOCAxNzo1NSwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+Pj4g
+T24gRnJpLCBOb3YgMDIsIDIwMTggYXQgMDI6NTY6MzVQTSArMDAwMCwgVm9rw6HEjSBNaWNoYWwg
+d3JvdGU6DQo+Pj4+IFRoZSBTU0QxMzB4IE9MRUQgZGlzcGxheSByZXNldCBzaWduYWwgaXMgYWN0
+aXZlIGxvdy4gTm93IHRoZSByZXNldA0KPj4+PiBzZXF1ZW5jZSBpcyBpbXBsZW1lbnRlZCBpbiBz
+dWNoIGEgd2F5IHRoYXQgRFRTIGF1dGhvcnMgYXJlIGZvcmNlZCB0bw0KPj4+PiBkZWZpbmUgdGhl
+IHJlc2V0LWdwaW9zIHByb3BlcnR5IHdpdGggR1BJT19BQ1RJVkVfSElHSCB0byBtYWtlIHRoZSBy
+ZXNldA0KPj4+PiB3b3JrLg0KPj4+Pg0KPj4+PiBBZGQgdGhlIHJlc2V0LWFjdGl2ZS1sb3cgcHJv
+cGVydHkgc28gdGhlIHNpZ25hbCBpcyBpbnZlcnRlZCBvbmNlIGFnYWluDQo+Pj4+IGFuZCB0aGUg
+R1BJT19BQ1RJVkVfTE9XIHdvcmsgYXMgZXhwZWN0ZWQuDQo+Pj4+DQo+Pj4+IFNpZ25lZC1vZmYt
+Ynk6IE1pY2hhbCBWb2vDocSNIDxtaWNoYWwudm9rYWNAeXNvZnQuY29tPg0KPj4+PiAtLS0NCj4+
+Pj4gICAgZHJpdmVycy92aWRlby9mYmRldi9zc2QxMzA3ZmIuYyB8IDYgKysrKy0tDQo+Pj4+ICAg
+IDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+Pj4+DQo+
+Pj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3ZpZGVvL2ZiZGV2L3NzZDEzMDdmYi5jIGIvZHJpdmVy
+cy92aWRlby9mYmRldi9zc2QxMzA3ZmIuYw0KPj4+PiBpbmRleCBlN2FlMTM1Li43OTBmMWM0IDEw
+MDY0NA0KPj4+PiAtLS0gYS9kcml2ZXJzL3ZpZGVvL2ZiZGV2L3NzZDEzMDdmYi5jDQo+Pj4+ICsr
+KyBiL2RyaXZlcnMvdmlkZW8vZmJkZXYvc3NkMTMwN2ZiLmMNCj4+Pj4gQEAgLTYwOCw2ICs2MDgs
+NyBAQCBzdGF0aWMgaW50IHNzZDEzMDdmYl9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50
+LA0KPj4+PiAgICAgICBzdHJ1Y3QgZmJfZGVmZXJyZWRfaW8gKnNzZDEzMDdmYl9kZWZpbzsNCj4+
+Pj4gICAgICAgdTMyIHZtZW1fc2l6ZTsNCj4+Pj4gICAgICAgc3RydWN0IHNzZDEzMDdmYl9wYXIg
+KnBhcjsNCj4+Pj4gKyAgICBib29sIHJlc2V0X2FjdGl2ZV9sb3c7DQo+Pj4+ICAgICAgIHU4ICp2
+bWVtOw0KPj4+PiAgICAgICBpbnQgcmV0Ow0KPj4+Pg0KPj4+PiBAQCAtNjcxLDYgKzY3Miw3IEBA
+IHN0YXRpYyBpbnQgc3NkMTMwN2ZiX3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsDQo+
+Pj4+ICAgICAgIHBhci0+Y29tX3NlcSA9IG9mX3Byb3BlcnR5X3JlYWRfYm9vbChub2RlLCAic29s
+b21vbixjb20tc2VxIik7DQo+Pj4+ICAgICAgIHBhci0+Y29tX2xycmVtYXAgPSBvZl9wcm9wZXJ0
+eV9yZWFkX2Jvb2wobm9kZSwgInNvbG9tb24sY29tLWxycmVtYXAiKTsNCj4+Pj4gICAgICAgcGFy
+LT5jb21faW52ZGlyID0gb2ZfcHJvcGVydHlfcmVhZF9ib29sKG5vZGUsICJzb2xvbW9uLGNvbS1p
+bnZkaXIiKTsNCj4+Pj4gKyAgICByZXNldF9hY3RpdmVfbG93ID0gb2ZfcHJvcGVydHlfcmVhZF9i
+b29sKG5vZGUsICJyZXNldC1hY3RpdmUtbG93Iik7DQo+Pj4+DQo+Pj4+ICAgICAgIHBhci0+Y29u
+dHJhc3QgPSAxMjc7DQo+Pj4+ICAgICAgIHBhci0+dmNvbWggPSBwYXItPmRldmljZV9pbmZvLT5k
+ZWZhdWx0X3Zjb21oOw0KPj4+PiBAQCAtNzI4LDkgKzczMCw5IEBAIHN0YXRpYyBpbnQgc3NkMTMw
+N2ZiX3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsDQo+Pj4+DQo+Pj4+ICAgICAgIGlm
+IChwYXItPnJlc2V0KSB7DQo+Pj4+ICAgICAgICAgICAgICAgLyogUmVzZXQgdGhlIHNjcmVlbiAq
+Lw0KPj4+PiAtICAgICAgICAgICAgZ3Bpb2Rfc2V0X3ZhbHVlX2NhbnNsZWVwKHBhci0+cmVzZXQs
+IDApOw0KPj4+PiArICAgICAgICAgICAgZ3Bpb2Rfc2V0X3ZhbHVlX2NhbnNsZWVwKHBhci0+cmVz
+ZXQsIHJlc2V0X2FjdGl2ZV9sb3cpOw0KPj4+PiAgICAgICAgICAgICAgIHVkZWxheSg0KTsNCj4+
+Pj4gLSAgICAgICAgICAgIGdwaW9kX3NldF92YWx1ZV9jYW5zbGVlcChwYXItPnJlc2V0LCAxKTsN
+Cj4+Pj4gKyAgICAgICAgICAgIGdwaW9kX3NldF92YWx1ZV9jYW5zbGVlcChwYXItPnJlc2V0LCAh
+cmVzZXRfYWN0aXZlX2xvdyk7DQo+Pj4NCj4+PiBJIHRoaW5rIHlvdSBhbmQgd2hvbWV2ZXIgd3Jv
+dGUgdGhlIG9yaWdpbmFsIGNvZGUgYXJlIG1pc2ludGVycHJldHRpbmcNCj4+PiBob3cgdGhlIGdw
+aW9kIEFQSSB3b3Jrcy4gMSBtZWFucyBtYWtlIHRoZSBzaWduYWwgYWN0aXZlIGFuZCB0aGlzIGNh
+c2UNCj4+PiBhY3RpdmUgaXMgbG93Lg0KPj4NCj4+IEkgdG90YWxseSBhZ3JlZSBhbmQgSSB0aGlu
+ayBJIHVuZGVyc3RhbmQgdGhhdCBjb3JyZWN0bHkuDQo+Pg0KPj4+IEl0IGlzIHN0cmFuZ2UsIGJ1
+dCBkb2VzIG1lYW4gYSByZXNldCBzZXF1ZW5jZSBzaG91bGQgYWx3YXlzIGJlIHNldCB0byBhDQo+
+Pj4gMSBhbmQgdGhlbiBhIDAgYW5kIGl0IHdpbGwgd29yayB3aXRoIGVpdGhlciBwb2xhcml0eSBp
+biB0aGUgRFQuDQo+Pg0KPj4gSSBhZ3JlZSB0aGUgcmVzZXQgc2hvdWxkIGJlIGRvbmUgYXMgYSAw
+IC0+IDEgLT4gMCBzZXF1ZW5jZSBhbmQgdGhhdCBzaG91bGQNCj4+IGp1c3Qgd29yay4gVGhlIHBy
+b2JsZW0gaXMgaXQgaXMgaW1wbGVtZW50ZWQgdmljZSB2ZXJzYSBhbmQgc28gaXQgd29ya3Mgb25s
+eQ0KPj4gaWYgeW91IGhhdmUgR1BJT19BQ1RJVkVfSElHSCBpbiBEVCBmb3IgYSBzaWduYWwgdGhh
+dCBpcyBhY3R1YWxseSBhY3RpdmUgbG93Lg0KPj4NCj4+IEFuZCB3aGF0IGl0IGFjdHVhbGx5IGRv
+ZXMgaXMgdGhhdCBpdCBob2xkcyB0aGUgY29udHJvbGxlciBpbiByZXNldCBzaW5jZQ0KPj4gdGhl
+IEdQSU8gaXMgc3VjY2Vzc2Z1bGx5IGFjcXVpcmVkIChiZWNhdXNlIG9mIEdQSU9EX09VVF9MT1cg
+aGVyZSBbMV0pIGFuZA0KPj4gbGF0ZXIgb24gaXQgb25seSByZWxlYXNlcyB0aGUgcmVzZXQuDQo+
+Pg0KPj4gQXMgYSBEVCBhdXRob3IgSSB3b3VsZCBsaWtlIHRvIHNvbWVob3cgY2xlYXJseSBzdGF0
+ZSB0aGF0IHRoZSBPTEVEIGRpc3BsYXkNCj4+IHVzZXMgYWN0aXZlIGxvdyByZXNldCBpbiBteSBE
+VC4NCj4+DQo+PiBNeSBmaXJzdCBhdHRlbXB0IHRvIGZpeCB0aGlzIHdhcyB0byBjaGFuZ2UgdGhl
+IHJlc2V0IHNlcXVlbmNlIFsyXS4NCj4+IEl0IHdhcyBhcHBsaWVkIGFuZCB0aGVuIHJldmVydGVk
+IGFzIGl0IGlzIG5vdCBiYWNrd2FyZCBjb21wYXRpYmxlIHdpdGgNCj4+IGRlcGxveWVkIERUQiBm
+aWxlcyBbM10uDQo+Pg0KPj4gWzFdIGh0dHBzOi8vZWxpeGlyLmJvb3RsaW4uY29tL2xpbnV4L3Y0
+LjIwLXJjMy9zb3VyY2UvZHJpdmVycy92aWRlby9mYmRldi9zc2QxMzA3ZmIuYyNMNTcwDQo+PiBb
+Ml0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDYxNzcyOS8NCj4+IFszXSBo
+dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwNjE3NzMxLw0KPiANCj4gT2theSwg
+bm93IEkgdW5kZXJzdGFuZCB0aGUgYmFja2dyb3VuZC4gV2UndmUgaGl0IHRoaXMgc29tZXdoZXJl
+IGVsc2UgdG9vLg0KPiANCj4gUmF0aGVyIHRoYW4gaGF2ZSBhIGJpbmRpbmcgZGVtb25zdHJhdGlu
+ZyB3aGF0IG5vdCB0byBkbywgSSdkIGxpa2UgdG8NCj4gZml4IHRoaXMgaW4gYW5vdGhlciB3YXku
+IEkgYWxzbyBkb24ndCB3YW50IHRvIGxpdmUgd2l0aCB0aGlzIGZvcmV2ZXINCj4gd2hlbiB0aGVy
+ZSdzIG9ubHkgMSBib2FyZCBhZmZlY3RlZCAoaW4gdHJlZSBhdCBsZWFzdCkgYW5kIHRoZXJlJ3Mg
+b25seQ0KPiBhbiBBQkkgaWYgc29tZW9uZSBub3RpY2VzIChJJ20gaGFwcHkgdGhvdWdoIHRoYXQg
+dGhlIG1haW50YWluZXJzDQo+IGNhdWdodCB0aGlzKS4gVGhlcmUncyAyIG90aGVyIG9wdGlvbnMu
+IFRoZSAxc3QgaXMgYWRkIGEgZml4dXAgdG8gdGhlDQo+IERUIGZvciB0aGlzIHBsYXRmb3JtIHRv
+IGVuc3VyZSB0aGF0IHRoZSBHUElPIGlzIGNvbmZpZ3VyZWQgYWN0aXZlIGxvdw0KPiAodGhlIFZl
+cnNhdGlsZSBwbGF0Zm9ybSBjb2RlIGhhcyBhbiBleGFtcGxlIGZpeHVwKS4gV2l0aCB0aGF0LCBh
+cHBseQ0KPiB3aGF0IHdhcyBvcmlnaW5hbGx5IGFwcGxpZWQgKG9yIHJldmVydCB0aGUgcmV2ZXJ0
+KS4gVGhlIGZpeHVwIGNvdWxkIGJlDQo+IGFwcGxpZWQgb25seSBhZnRlciBzb21lb25lIGNvbXBs
+YWlucyB0aGVpciBkaXNwbGF5IGJyb2tlLiBUaGUgMm5kDQo+IG9wdGlvbiBpcyBqdXN0IGFkZCBh
+biBvZl9tYWNoaW5lX2lzX2NvbXBhdGlibGUgY2hlY2sgd2l0aGluIHRoaXMNCj4gZHJpdmVyLiBJ
+biB0aGF0IGNhc2UsIHlvdSB3b3VsZG4ndCBmaXggZHRzIGZpbGUgZm9yIHRoZSBwbGF0Zm9ybQ0K
+PiAodW5sZXNzIHlvdSBhbHNvIHdhbnQgdG8gbWFudWFsbHkgY2hlY2sgcmVzZXQtZ3Bpb3MpLg0K
+DQpIaSBSb2IsDQoNCkkgYW0gc3RpbGwgdHJ5aW5nIHRvIGZpZ3VyZSBvdXQgd2hhdCBleGFjdGx5
+IHlvdSBtZWFudCBieSB0aGUgMXN0IGFuZA0KMm5kIG9wdGlvbi4gQm90aCBjb25jZXB0cyBhcmUg
+bmV3IHRvIG1lLg0KDQpSZWdhcmRpbmcgdGhlIDFzdCBvcHRpb24sIHdoYXQgeW91IG1lYW50IGJ5
+ICJ0aGlzIHBsYXRmb3JtIiBoZXJlOg0KPiBBZGQgYSBmaXh1cCB0byB0aGUgRFQgZm9yIHRoaXMg
+cGxhdGZvcm0NClRoZSBvbmx5IGJvYXJkIGluIHRyZWUgdGhhdCB1c2VzIHRoZSBPTEVEIChpbXgy
+OC1jZmExMDAzNikgYW5kIGl0cw0KZHRzIGZpbGU/DQoNCkkgYW0gYWxzbyBub3Qgc3VyZSB3aGVy
+ZSB0byBsb29rIGZvciB0aGUgZXhhbXBsZS4gV2hlbiB5b3Ugc2F5DQpWZXJzYXRpbGUgcGxhdGZv
+cm0gY29kZSBJIHRlbmQgdG8gbG9vayBpbnRvIHBsYXQtdmVyc2F0aWxlIG9yDQptYWNoLXZlcnNh
+dGlsZS4gSSBjb3VsZCBub3QgZmluZCBhbnl0aGluZyBJIGNvdWxkIHVzZSBhcyBhbiBleGFtcGxl
+DQppbiB0aGVyZS4gSSB0aGluayB0aGF0IGlzIG5vdCB3aGF0IHlvdSBtZWFudC4NCg0KUmVnYXJk
+aW5nIHRoZSAybmQgb3B0aW9uLCB5b3Ugc3VnZ2VzdCB0byB1c2Ugb2ZfbWFjaGluZV9pc19jb21w
+YXRpYmxlDQp0byBkZWNpZGUgd2hhdCByZXNldCBzZXF1ZW5jZSB0byB1c2U/IEluIGNhc2Ugb2Yg
+aW14MjgtY2ZhMTAwMzYgdXNlDQp0aGUgb2xkIDAgLT4gMSwgaW4gYWxsIG90aGVyIGNhc2VzIHVz
+ZSBhIG5ldyBjb3JyZWN0IHNlcXVlbmNlIDEgLT4gMD8NClRoYXQgYWxzbyBkb2VzIG5vdCBzZWVt
+IHJpZ2h0Lg0KDQpJIHdpbGwgYXBwcmVjaWF0ZSBtb3JlIGRldGFpbHMgaG93IHRvIHByb2NlZWQu
+IFRoYW5rIHlvdSwNCk1pY2hhbA0K
