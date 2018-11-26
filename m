@@ -1,83 +1,28 @@
-Return-Path: <SRS0=JPrT=OB=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 7/7] ARM: dts: r8a7744: Add SMP support
-Date: Thu, 22 Nov 2018 09:14:35 +0000
-Message-Id: <1542878075-61314-8-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com>
-References: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=1nz3=OF=linaro.org=linus.walleij@kernel.org>
+MIME-Version: 1.0
+References: <20181120054522.18698-1-shawn.guo@linaro.org>
+In-Reply-To: <20181120054522.18698-1-shawn.guo@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 26 Nov 2018 09:12:43 +0100
+Message-ID: <CACRpkdbwsJra4OYQXJtEY6KuXebe8YBJHUi64-i4+1uPxHK+Uw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: fix qcom-pmic-gpio for pms405
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, vkoul@kernel.org, linux-arm-msm@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add DT node for the Advanced Power Management Unit (APMU), add the
-second CPU core, and use "renesas,apmu" as "enable-method".
+On Tue, Nov 20, 2018 at 6:45 AM Shawn Guo <shawn.guo@linaro.org> wrote:
 
-Also add cpu1 phandle node to the PMU interrupt-affinity property.
+> Rather than gpio1-gpio11 for pms405, there are 12 GPIOs for pms405.
+> But gpio1, gpio9 and gpio10 are not available.  Fix the bindings doc
+> to make it correct for pms405.
+>
+> Fixes: ed80f6eb799a ("dt-bindings: pinctrl: qcom-pmic-gpio: Add pms405 su=
+pport")
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm/boot/dts/r8a7744.dtsi | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+Patch applied (unless Bj=C3=B6rn has objections).
 
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index 046ed94..79e75e7 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -49,6 +49,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "renesas,apmu";
- 
- 		cpu0: cpu@0 {
- 			device_type = "cpu";
-@@ -69,6 +70,25 @@
- 					   < 375000 1000000>;
- 		};
- 
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a15";
-+			reg = <1>;
-+			clock-frequency = <1500000000>;
-+			clocks = <&cpg CPG_CORE R8A7744_CLK_Z>;
-+			clock-latency = <300000>; /* 300 us */
-+			power-domains = <&sysc R8A7744_PD_CA15_CPU1>;
-+			next-level-cache = <&L2_CA15>;
-+
-+			/* kHz - uV - OPPs unknown yet */
-+			operating-points = <1500000 1000000>,
-+					   <1312500 1000000>,
-+					   <1125000 1000000>,
-+					   < 937500 1000000>,
-+					   < 750000 1000000>,
-+					   < 375000 1000000>;
-+		};
-+
- 		L2_CA15: cache-controller-0 {
- 			compatible = "cache";
- 			cache-unified;
-@@ -96,7 +116,7 @@
- 		compatible = "arm,cortex-a15-pmu";
- 		interrupts-extended = <&gic GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
- 				      <&gic GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-affinity = <&cpu0>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>;
- 	};
- 
- 	/* External SCIF clock */
-@@ -250,6 +270,12 @@
- 			#reset-cells = <1>;
- 		};
- 
-+		apmu@e6152000 {
-+			compatible = "renesas,r8a7744-apmu", "renesas,apmu";
-+			reg = <0 0xe6152000 0 0x188>;
-+			cpus = <&cpu0 &cpu1>;
-+		};
-+
- 		rst: reset-controller@e6160000 {
- 			compatible = "renesas,r8a7744-rst";
- 			reg = <0 0xe6160000 0 0x100>;
--- 
-2.7.4
+Yours,
+Linus Walleij
