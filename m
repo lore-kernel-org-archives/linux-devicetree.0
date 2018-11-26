@@ -1,78 +1,40 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [RESEND PATCH v17 2/5] iommu/arm-smmu: Invoke
- pm_runtime during probe, add/remove device
-Date: Mon, 26 Nov 2018 11:33:15 +0530
-Message-ID: <9064c01e-cef0-9306-078a-8d303cd6614b@codeaurora.org>
-References: <20181116112430.31248-1-vivek.gautam@codeaurora.org>
- <20181116112430.31248-3-vivek.gautam@codeaurora.org>
- <20181121173757.GA9801@arm.com>
- <CAFp+6iEH7_XEcZNsbZfn6iBF5_o-ZKBj=DpturH7N85LU289qg@mail.gmail.com>
- <20181123183555.GE21183@arm.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 3/5] power: supply: sc27xx: Add fuel gauge low voltage alarm
+Date: Mon, 26 Nov 2018 14:15:28 +0800
+Message-ID: <CAMz4kuLtsDRcYBqPa5ryNuMMQJkJ0OAn7JZgZj5g5nx33puaqw@mail.gmail.com>
+References: <cover.1542185618.git.baolin.wang@linaro.org> <ee1dd39f126bd03fb88381de9663d32df994d341.1542185618.git.baolin.wang@linaro.org>
+ <20181125214501.GA9913@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181123183555.GE21183-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181125214501.GA9913@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAxMS8yNC8yMDE4IDEyOjA2IEFNLCBXaWxsIERlYWNvbiB3cm90ZToKPiBPbiBUaHUsIE5v
-diAyMiwgMjAxOCBhdCAwNTozMjoyNFBNICswNTMwLCBWaXZlayBHYXV0YW0gd3JvdGU6Cj4+IEhp
-IFdpbGwsCj4+Cj4+IE9uIFdlZCwgTm92IDIxLCAyMDE4IGF0IDExOjA5IFBNIFdpbGwgRGVhY29u
-IDx3aWxsLmRlYWNvbkBhcm0uY29tPiB3cm90ZToKPj4+IE9uIEZyaSwgTm92IDE2LCAyMDE4IGF0
-IDA0OjU0OjI3UE0gKzA1MzAsIFZpdmVrIEdhdXRhbSB3cm90ZToKPj4+PiBGcm9tOiBTcmljaGFy
-YW4gUiA8c3JpY2hhcmFuQGNvZGVhdXJvcmEub3JnPgo+Pj4+Cj4+Pj4gVGhlIHNtbXUgZGV2aWNl
-IHByb2JlL3JlbW92ZSBhbmQgYWRkL3JlbW92ZSBtYXN0ZXIgZGV2aWNlIGNhbGxiYWNrcwo+Pj4+
-IGdldHMgY2FsbGVkIHdoZW4gdGhlIHNtbXUgaXMgbm90IGxpbmtlZCB0byBpdHMgbWFzdGVyLCB0
-aGF0IGlzIHdpdGhvdXQKPj4+PiB0aGUgY29udGV4dCBvZiB0aGUgbWFzdGVyIGRldmljZS4gU28g
-Y2FsbGluZyBydW50aW1lIGFwaXMgaW4gdGhvc2UgcGxhY2VzCj4+Pj4gc2VwYXJhdGVseS4KPj4+
-PiBHbG9iYWwgbG9ja3MgYXJlIGFsc28gaW5pdGlhbGl6ZWQgYmVmb3JlIGVuYWJsaW5nIHJ1bnRp
-bWUgcG0gYXMgdGhlCj4+Pj4gcnVudGltZV9yZXN1bWUoKSBjYWxscyBkZXZpY2VfcmVzZXQoKSB3
-aGljaCBkb2VzIHRsYl9zeW5jX2dsb2JhbCgpCj4+Pj4gdGhhdCB1bHRpbWF0ZWx5IHJlcXVpcmVz
-IGxvY2tzIHRvIGJlIGluaXRpYWxpemVkLgo+Pj4+Cj4+Pj4gU2lnbmVkLW9mZi1ieTogU3JpY2hh
-cmFuIFIgPHNyaWNoYXJhbkBjb2RlYXVyb3JhLm9yZz4KPj4+PiBbdml2ZWs6IENsZWFudXAgcG0g
-cnVudGltZSBjYWxsc10KPj4+PiBTaWduZWQtb2ZmLWJ5OiBWaXZlayBHYXV0YW0gPHZpdmVrLmdh
-dXRhbUBjb2RlYXVyb3JhLm9yZz4KPj4+PiBSZXZpZXdlZC1ieTogVG9tYXN6IEZpZ2EgPHRmaWdh
-QGNocm9taXVtLm9yZz4KPj4+PiBUZXN0ZWQtYnk6IFNyaW5pdmFzIEthbmRhZ2F0bGEgPHNyaW5p
-dmFzLmthbmRhZ2F0bGFAbGluYXJvLm9yZz4KPj4+PiBSZXZpZXdlZC1ieTogUm9iaW4gTXVycGh5
-IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4KPj4+PiAtLS0KPj4+PiAgIGRyaXZlcnMvaW9tbXUvYXJt
-LXNtbXUuYyB8IDEwMSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKyst
-LS0tLQo+Pj4+ICAgMSBmaWxlIGNoYW5nZWQsIDkxIGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9u
-cygtKQo+Pj4gR2l2ZW4gdGhhdCB5b3UncmUgZG9pbmcgdGhlIGdldC9wdXQgaW4gdGhlIFRMQkkg
-b3BzIHVuY29uZGl0aW9uYWxseToKPj4+Cj4+Pj4gICBzdGF0aWMgdm9pZCBhcm1fc21tdV9mbHVz
-aF9pb3RsYl9hbGwoc3RydWN0IGlvbW11X2RvbWFpbiAqZG9tYWluKQo+Pj4+ICAgewo+Pj4+ICAg
-ICAgICBzdHJ1Y3QgYXJtX3NtbXVfZG9tYWluICpzbW11X2RvbWFpbiA9IHRvX3NtbXVfZG9tYWlu
-KGRvbWFpbik7Cj4+Pj4gKyAgICAgc3RydWN0IGFybV9zbW11X2RldmljZSAqc21tdSA9IHNtbXVf
-ZG9tYWluLT5zbW11Owo+Pj4+Cj4+Pj4gLSAgICAgaWYgKHNtbXVfZG9tYWluLT50bGJfb3BzKQo+
-Pj4+ICsgICAgIGlmIChzbW11X2RvbWFpbi0+dGxiX29wcykgewo+Pj4+ICsgICAgICAgICAgICAg
-YXJtX3NtbXVfcnBtX2dldChzbW11KTsKPj4+PiAgICAgICAgICAgICAgICBzbW11X2RvbWFpbi0+
-dGxiX29wcy0+dGxiX2ZsdXNoX2FsbChzbW11X2RvbWFpbik7Cj4+Pj4gKyAgICAgICAgICAgICBh
-cm1fc21tdV9ycG1fcHV0KHNtbXUpOwo+Pj4+ICsgICAgIH0KPj4+PiAgIH0KPj4+Pgo+Pj4+ICAg
-c3RhdGljIHZvaWQgYXJtX3NtbXVfaW90bGJfc3luYyhzdHJ1Y3QgaW9tbXVfZG9tYWluICpkb21h
-aW4pCj4+Pj4gICB7Cj4+Pj4gICAgICAgIHN0cnVjdCBhcm1fc21tdV9kb21haW4gKnNtbXVfZG9t
-YWluID0gdG9fc21tdV9kb21haW4oZG9tYWluKTsKPj4+PiArICAgICBzdHJ1Y3QgYXJtX3NtbXVf
-ZGV2aWNlICpzbW11ID0gc21tdV9kb21haW4tPnNtbXU7Cj4+Pj4KPj4+PiAtICAgICBpZiAoc21t
-dV9kb21haW4tPnRsYl9vcHMpCj4+Pj4gKyAgICAgaWYgKHNtbXVfZG9tYWluLT50bGJfb3BzKSB7
-Cj4+Pj4gKyAgICAgICAgICAgICBhcm1fc21tdV9ycG1fZ2V0KHNtbXUpOwo+Pj4+ICAgICAgICAg
-ICAgICAgIHNtbXVfZG9tYWluLT50bGJfb3BzLT50bGJfc3luYyhzbW11X2RvbWFpbik7Cj4+Pj4g
-KyAgICAgICAgICAgICBhcm1fc21tdV9ycG1fcHV0KHNtbXUpOwo+Pj4+ICsgICAgIH0KPj4+IFdo
-eSBkbyB5b3UgbmVlZCB0aGVtIGFyb3VuZCB0aGUgbWFwL3VubWFwIGNhbGxzIGFzIHdlbGw/Cj4+
-IFdlIHN0aWxsIGhhdmUgLnRsYl9hZGRfZmx1c2ggcGF0aD8KPiBPaywgc28gd2UgY291bGQgYWRk
-IHRoZSBvcHMgYXJvdW5kIHRoYXQgYXMgd2VsbC4gUmlnaHQgbm93LCB3ZSd2ZSBnb3QKPiB0aGUg
-cnVudGltZSBwbSBob29rcyBjcm9zc2luZyB0d28gcGFydHMgb2YgdGhlIEFQSS4KClN1cmUsIHdp
-bGwgZG8gdGhhdCB0aGVuLCBhbmQgcmVtb3ZlIHRoZSBydW50aW1lIHBtIGhvb2tzIGZyb20gbWFw
-L3VubWFwLgoKVGhhbmtzClZpdmVrCj4KPiBXaWxsCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0Bs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9mcmVlZHJlbm8K
+Hi Pavel,
+On Mon, 26 Nov 2018 at 05:45, Pavel Machek <pavel@ucw.cz> wrote:
+>
+> On Wed 2018-11-14 17:07:06, Baolin Wang wrote:
+> > From: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
+> >
+> > Add low voltage alarm support to make sure the battery capacity
+> > more accurate in lower voltage stage.
+> >
+> > Signed-off-by: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
+> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>
+> Should we also shut down the system when that happens, as battery is
+> empty?
+>
+> Or is there any lower threshold when we should do the shutdown?
+
+We do not shutdown the system when battery is empty in fuel gauge
+driver, instead we should do that in charger manager service or other
+upper layers. In fuel gauge driver, we should just supply the accurate
+battery capacity for upper layer.
+
+-- 
+Baolin Wang
+Best Regards
