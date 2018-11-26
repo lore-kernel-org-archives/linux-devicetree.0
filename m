@@ -1,55 +1,40 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2] arm64: dts: meson-axg: Enable watchdog on Meson AXG
- SoCs
-Date: Mon, 26 Nov 2018 16:14:19 +0100
-Message-ID: <289f3009-528a-f4d6-5d33-69728d5b214d@baylibre.com>
-References: <20181123144541.15114-1-ccaione@baylibre.com>
+From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Subject: Re: [PATCH 4/4] clk: samsung: exynos5433: add imem clock
+Date: Mon, 26 Nov 2018 16:16:37 +0100
+Message-ID: <d4dd53a5-fb87-34db-e3b6-2d8d05feb261@partner.samsung.com>
+References: <20181121120509.18892-1-k.konieczny@partner.samsung.com>
+        <CGME20181121120524eucas1p166a26857df78947c9e08f0fb8dbf75e4@eucas1p1.samsung.com>
+        <20181121120509.18892-5-k.konieczny@partner.samsung.com>
+        <5BF5520A.5050500@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181123144541.15114-1-ccaione@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5BF5520A.5050500@samsung.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Carlo Caione <ccaione@baylibre.com>, robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, jbrunet@baylibre.com
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/11/2018 15:45, Carlo Caione wrote:
-> Add the watchdog node also on the AXG platforms.
-> 
-> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
-> ---
-> V2:
->  - Remove amlogic,meson-axg-wdt compatible
-> ---
->  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> index df017dbd2e57..27d73d831a13 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> @@ -1422,6 +1422,12 @@
->  				status = "disabled";
->  			};
->  
-> +			watchdog@f0d0 {
-> +				compatible = "amlogic,meson-gxbb-wdt";
-> +				reg = <0x0 0xf0d0 0x0 0x10>;
-> +				clocks = <&xtal>;
-> +			};
-> +
->  			pwm_ab: pwm@1b000 {
->  				compatible = "amlogic,meson-axg-ee-pwm";
->  				reg = <0x0 0x1b000 0x0 0x20>;
-> 
+Hi,
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> On 2018년 11월 21일 21:05, Kamil Konieczny wrote:
+>> Add imem clock for exynos5433.
+> 
+> It is diffcult to understand the meaning of 'imem' without the description.
+> Please add more detailed description as the patch2 description.
+> [...]
+
+Thank you for review, will this be enough for description:
+
+Add imem clock for exynos5433. This will enable to use crypto Security
+SubSystem (in short SSS) and SlimSSS IP blocks.
+
+In documentation there is no description of "imem" name origin. I can guess
+"mem" stand for "memory", and 'i' ? internal ?
+
+-- 
+Best regards,
+Kamil Konieczny
+Samsung R&D Institute Poland
