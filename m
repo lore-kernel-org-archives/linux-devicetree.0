@@ -1,61 +1,74 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3 2/2] arm64: dts: Add support for NXP LS1028A SoC
-Date: Mon, 26 Nov 2018 22:42:10 +0800
-Message-ID: <20181126144208.GC31334@dragon>
-References: <1542156591-3224-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
- <1542156591-3224-2-git-send-email-Bhaskar.Upadhaya@nxp.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add WCN3990 WLAN module device
+ node
+Date: Mon, 26 Nov 2018 20:14:22 +0530
+Message-ID: <20181126144422.GU3175@vkoul-mobl.Dlink>
+References: <20181126142133.16966-1-govinds@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1542156591-3224-2-git-send-email-Bhaskar.Upadhaya@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudhanshu Gupta <sudhanshu.gupta@nxp.com>, Leo Li <leoyang.li@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Harninder Rai <harninder.rai@nxp.com>
+In-Reply-To: <20181126142133.16966-1-govinds@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Govind Singh <govinds@codeaurora.org>
+Cc: andy.gross@linaro.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 14, 2018 at 05:30:52AM +0000, Bhaskar Upadhaya wrote:
-> LS1028A contains two ARM v8 CortexA72 processor cores
-> with 32 KB L1-D cache and 48 KB L1-I cache
-> 
-> Features summary
->  Two 32-bit / 64-bit ARM v8 Cortex-A72 CPUs
->   - Arranged as single clusters of two cores sharing a 1 MB L2 cache
->   - Speed Up to 1.3 GHz
->   - Support for cluster power-gating.
->  Cache coherent interconnect (CCI-400)
->   - Hardware-managed data coherency
->   - Up to 400 MHz
->  32-bit DDR4 SDRAM memory controller with ECC
->  Two PCIe 3.0 controllers
->  One serial ATA (SATA 3.0) controller
->  Two high-speed USB 3.0 controllers with integrated PHY
-> 
->  Following levels of DTSI/DTS files have been created for the LS1028A
->   SoC family:
-> 
->          - fsl-ls1028a.dtsi:
->                  DTS-Include file for NXP LS1028A SoC.
-> 
->          - fsl-ls1028a-qds.dts:
->                  DTS file for NXP LS1028A QDS board.
-> 
->          - fsl-ls1028a-rdb.dts:
->                  DTS file for NXP LS1028A RDB board
-> 
-> Signed-off-by: Sudhanshu Gupta <sudhanshu.gupta@nxp.com>
-> Signed-off-by: Rai Harninder <harninder.rai@nxp.com>
-> Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
+Hi Govind,
 
-@Leo, looks good to you?
+On 26-11-18, 19:51, Govind Singh wrote:
+> Add device node for the ath10k SNOC platform driver probe
+> and add resources required for WCN3990 on qcs404 soc.
+> Optional clock and regulator controls are not yet available in
+> upstream, hence add them once available.
+> 
+> Signed-off-by: Govind Singh <govinds@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs404.dtsi | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> index 9ca4f061ecc5..1a401a32d4a1 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> @@ -958,6 +958,25 @@
+>  				status = "disabled";
+>  			};
+>  		};
+> +
+> +		wifi: wifi@0A000000 {
 
-Shawn
+Please remove leading 0 from node
+
+> +			compatible = "qcom,wcn3990-wifi";
+> +			reg = <0x0A000000 0x800000>;
+> +			reg-names = "membase";
+> +			memory-region = <&wlan_msa_mem>;
+> +			interrupts = <GIC_SPI 277 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 278 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 279 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 280 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 284 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+>  	};
+>  
+>  	timer {
+
+This file is sorted alphabetically and reg values. So this should be
+between blsp1_uart2 and intc node, can you please change that
+
+Also please compile this with W=12
+
+Lastly, I am not sure, but should the wifi node be always enabled?
+Should it not be enabled in the board dts file? Bjorn..?
+
+Thanks
+-- 
+~Vinod
