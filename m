@@ -1,41 +1,99 @@
-From: vitor <vitor.soares@synopsys.com>
-Subject: Re: [PATCH] i3c: master: dw: split dw-i3c-master.c into master and
- bus specific parts
-Date: Mon, 26 Nov 2018 19:28:02 +0000
-Message-ID: <b7f59793-aaaa-95ff-fe7d-943e558f65b5@synopsys.com>
-References: <ade2c1a8d1eb48681b01ccdc9bed22caf5e96c4b.1542904564.git.soares@synopsys.com>
- <20181122210202.6af50fcc@bbrezillon>
- <6d513e04-3a57-1989-429c-64631101c5a2@synopsys.com>
- <20181123135004.7fd1cd58@bbrezillon>
- <83115f47-1326-cb33-a7dc-4bc8ff95befa@synopsys.com>
- <20181126133550.51469816@bbrezillon>
- <4e9c0461-02a3-80b2-c9b7-2e9ea9b38f8b@synopsys.com>
- <20181126195618.352eafb1@bbrezillon> <20181126200855.0caa45b0@bbrezillon>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RESEND PATCH v17 2/5] iommu/arm-smmu: Invoke
+ pm_runtime during probe, add/remove device
+Date: Mon, 26 Nov 2018 19:31:52 +0000
+Message-ID: <20181126193151.GC534@arm.com>
+References: <20181116112430.31248-1-vivek.gautam@codeaurora.org>
+ <20181116112430.31248-3-vivek.gautam@codeaurora.org>
+ <20181121173757.GA9801@arm.com>
+ <CAFp+6iEH7_XEcZNsbZfn6iBF5_o-ZKBj=DpturH7N85LU289qg@mail.gmail.com>
+ <20181123183555.GE21183@arm.com>
+ <9064c01e-cef0-9306-078a-8d303cd6614b@codeaurora.org>
+ <d66c5dbf-2e44-a915-14a0-1968c8ede832@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181126200855.0caa45b0@bbrezillon>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, vitor <vitor.soares@synopsys.com>
-Cc: wsa@the-dreams.de, linux-i2c@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de, psroka@cadence.com, agolec@cadence.com, adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com, alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com, rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, linus.walleij@linaro.org, Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org, nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se, mshettel@codeaurora.org, swboyd@chromium.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <d66c5dbf-2e44-a915-14a0-1968c8ede832-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 26/11/18 19:08, Boris Brezillon wrote:
-> On Mon, 26 Nov 2018 19:56:18 +0100
-> Boris Brezillon <boris.brezillon@bootlin.com> wrote:
->   
->>>       - for the others it will easy the SoC integration avoiding
->>> duplicated work and doing things from scratch.
->> What would be duplicated? You want to support a new SoC, just add a new
->> entry in the of_match_table and you're done. When you need to add
->> SoC/integration specific stuff, create a struct and attach a different
->> instance per-compatible so that each SoC can have its own configuration
->> (or even init sequence if needed). That's how we do for pretty much all
->> IPs out there, why should designware ones be different?
-> To be more specific, I'd like a real example that shows why the
-> separation is needed.
-
-Ok no problem. We can delay this for PCI and other rules support.
+T24gTW9uLCBOb3YgMjYsIDIwMTggYXQgMDQ6NTY6NDJQTSArMDUzMCwgVml2ZWsgR2F1dGFtIHdy
+b3RlOgo+IE9uIDExLzI2LzIwMTggMTE6MzMgQU0sIFZpdmVrIEdhdXRhbSB3cm90ZToKPiA+T24g
+MTEvMjQvMjAxOCAxMjowNiBBTSwgV2lsbCBEZWFjb24gd3JvdGU6Cj4gPj5PbiBUaHUsIE5vdiAy
+MiwgMjAxOCBhdCAwNTozMjoyNFBNICswNTMwLCBWaXZlayBHYXV0YW0gd3JvdGU6Cj4gPj4+T24g
+V2VkLCBOb3YgMjEsIDIwMTggYXQgMTE6MDkgUE0gV2lsbCBEZWFjb24gPHdpbGwuZGVhY29uQGFy
+bS5jb20+Cj4gPj4+d3JvdGU6Cj4gPj4+Pk9uIEZyaSwgTm92IDE2LCAyMDE4IGF0IDA0OjU0OjI3
+UE0gKzA1MzAsIFZpdmVrIEdhdXRhbSB3cm90ZToKPiA+Pj4+PkZyb206IFNyaWNoYXJhbiBSIDxz
+cmljaGFyYW5AY29kZWF1cm9yYS5vcmc+Cj4gPj4+Pj4KPiA+Pj4+PlRoZSBzbW11IGRldmljZSBw
+cm9iZS9yZW1vdmUgYW5kIGFkZC9yZW1vdmUgbWFzdGVyIGRldmljZSBjYWxsYmFja3MKPiA+Pj4+
+PmdldHMgY2FsbGVkIHdoZW4gdGhlIHNtbXUgaXMgbm90IGxpbmtlZCB0byBpdHMgbWFzdGVyLCB0
+aGF0IGlzCj4gPj4+Pj53aXRob3V0Cj4gPj4+Pj50aGUgY29udGV4dCBvZiB0aGUgbWFzdGVyIGRl
+dmljZS4gU28gY2FsbGluZyBydW50aW1lIGFwaXMgaW4gdGhvc2UKPiA+Pj4+PnBsYWNlcwo+ID4+
+Pj4+c2VwYXJhdGVseS4KPiA+Pj4+Pkdsb2JhbCBsb2NrcyBhcmUgYWxzbyBpbml0aWFsaXplZCBi
+ZWZvcmUgZW5hYmxpbmcgcnVudGltZSBwbSBhcyB0aGUKPiA+Pj4+PnJ1bnRpbWVfcmVzdW1lKCkg
+Y2FsbHMgZGV2aWNlX3Jlc2V0KCkgd2hpY2ggZG9lcyB0bGJfc3luY19nbG9iYWwoKQo+ID4+Pj4+
+dGhhdCB1bHRpbWF0ZWx5IHJlcXVpcmVzIGxvY2tzIHRvIGJlIGluaXRpYWxpemVkLgo+ID4+Pj4+
+Cj4gPj4+Pj5TaWduZWQtb2ZmLWJ5OiBTcmljaGFyYW4gUiA8c3JpY2hhcmFuQGNvZGVhdXJvcmEu
+b3JnPgo+ID4+Pj4+W3ZpdmVrOiBDbGVhbnVwIHBtIHJ1bnRpbWUgY2FsbHNdCj4gPj4+Pj5TaWdu
+ZWQtb2ZmLWJ5OiBWaXZlayBHYXV0YW0gPHZpdmVrLmdhdXRhbUBjb2RlYXVyb3JhLm9yZz4KPiA+
+Pj4+PlJldmlld2VkLWJ5OiBUb21hc3ogRmlnYSA8dGZpZ2FAY2hyb21pdW0ub3JnPgo+ID4+Pj4+
+VGVzdGVkLWJ5OiBTcmluaXZhcyBLYW5kYWdhdGxhIDxzcmluaXZhcy5rYW5kYWdhdGxhQGxpbmFy
+by5vcmc+Cj4gPj4+Pj5SZXZpZXdlZC1ieTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJt
+LmNvbT4KPiA+Pj4+Pi0tLQo+ID4+Pj4+wqAgZHJpdmVycy9pb21tdS9hcm0tc21tdS5jIHwgMTAx
+Cj4gPj4+Pj4rKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLQo+
+ID4+Pj4+wqAgMSBmaWxlIGNoYW5nZWQsIDkxIGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygt
+KQo+ID4+Pj5HaXZlbiB0aGF0IHlvdSdyZSBkb2luZyB0aGUgZ2V0L3B1dCBpbiB0aGUgVExCSSBv
+cHMgdW5jb25kaXRpb25hbGx5Ogo+ID4+Pj4KPiA+Pj4+PsKgIHN0YXRpYyB2b2lkIGFybV9zbW11
+X2ZsdXNoX2lvdGxiX2FsbChzdHJ1Y3QgaW9tbXVfZG9tYWluICpkb21haW4pCj4gPj4+Pj7CoCB7
+Cj4gPj4+Pj7CoMKgwqDCoMKgwqAgc3RydWN0IGFybV9zbW11X2RvbWFpbiAqc21tdV9kb21haW4g
+PSB0b19zbW11X2RvbWFpbihkb21haW4pOwo+ID4+Pj4+K8KgwqDCoMKgIHN0cnVjdCBhcm1fc21t
+dV9kZXZpY2UgKnNtbXUgPSBzbW11X2RvbWFpbi0+c21tdTsKPiA+Pj4+Pgo+ID4+Pj4+LcKgwqDC
+oMKgIGlmIChzbW11X2RvbWFpbi0+dGxiX29wcykKPiA+Pj4+PivCoMKgwqDCoCBpZiAoc21tdV9k
+b21haW4tPnRsYl9vcHMpIHsKPiA+Pj4+PivCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYXJtX3Nt
+bXVfcnBtX2dldChzbW11KTsKPiA+Pj4+PnNtbXVfZG9tYWluLT50bGJfb3BzLT50bGJfZmx1c2hf
+YWxsKHNtbXVfZG9tYWluKTsKPiA+Pj4+PivCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYXJtX3Nt
+bXVfcnBtX3B1dChzbW11KTsKPiA+Pj4+PivCoMKgwqDCoCB9Cj4gPj4+Pj7CoCB9Cj4gPj4+Pj4K
+PiA+Pj4+PsKgIHN0YXRpYyB2b2lkIGFybV9zbW11X2lvdGxiX3N5bmMoc3RydWN0IGlvbW11X2Rv
+bWFpbiAqZG9tYWluKQo+ID4+Pj4+wqAgewo+ID4+Pj4+wqDCoMKgwqDCoMKgIHN0cnVjdCBhcm1f
+c21tdV9kb21haW4gKnNtbXVfZG9tYWluID0gdG9fc21tdV9kb21haW4oZG9tYWluKTsKPiA+Pj4+
+PivCoMKgwqDCoCBzdHJ1Y3QgYXJtX3NtbXVfZGV2aWNlICpzbW11ID0gc21tdV9kb21haW4tPnNt
+bXU7Cj4gPj4+Pj4KPiA+Pj4+Pi3CoMKgwqDCoCBpZiAoc21tdV9kb21haW4tPnRsYl9vcHMpCj4g
+Pj4+Pj4rwqDCoMKgwqAgaWYgKHNtbXVfZG9tYWluLT50bGJfb3BzKSB7Cj4gPj4+Pj4rwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIGFybV9zbW11X3JwbV9nZXQoc21tdSk7Cj4gPj4+Pj5zbW11X2Rv
+bWFpbi0+dGxiX29wcy0+dGxiX3N5bmMoc21tdV9kb21haW4pOwo+ID4+Pj4+K8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCBhcm1fc21tdV9ycG1fcHV0KHNtbXUpOwo+ID4+Pj4+K8KgwqDCoMKgIH0K
+PiA+Pj4+V2h5IGRvIHlvdSBuZWVkIHRoZW0gYXJvdW5kIHRoZSBtYXAvdW5tYXAgY2FsbHMgYXMg
+d2VsbD8KPiA+Pj5XZSBzdGlsbCBoYXZlIC50bGJfYWRkX2ZsdXNoIHBhdGg/Cj4gPj5Paywgc28g
+d2UgY291bGQgYWRkIHRoZSBvcHMgYXJvdW5kIHRoYXQgYXMgd2VsbC4gUmlnaHQgbm93LCB3ZSd2
+ZSBnb3QKPiA+PnRoZSBydW50aW1lIHBtIGhvb2tzIGNyb3NzaW5nIHR3byBwYXJ0cyBvZiB0aGUg
+QVBJLgo+ID4KPiA+U3VyZSwgd2lsbCBkbyB0aGF0IHRoZW4sIGFuZCByZW1vdmUgdGhlIHJ1bnRp
+bWUgcG0gaG9va3MgZnJvbSBtYXAvdW5tYXAuCj4gCj4gSSBtaXNzZWQgdGhpcyBlYXJsaWVyIC0K
+PiBXZSBhcmUgYWRkaW5nIHJ1bnRpbWUgcG0gaG9va3MgaW4gdGhlICdpb21tdV9vcHMnIGNhbGxi
+YWNrcyBhbmQgbm90IHJlYWxseQo+IHRvCj4gJ3RsYl9vcHMnLiBTbyBob3cgdGhlIHJ1bnRpbWUg
+cG0gaG9va3MgY3Jvc3NpbmcgdGhlIHBhdGhzPwo+ICcubWFwLy51bm1hcCcgaW9tbXVfb3BzIGRv
+bid0IGNhbGwgJy5mbHVzaF9pb3RsYl9hbGwnIG9yICcuaW90bGJfc3luYycKPiBpb21tdV9vcHMK
+PiBhbnl3aGVyZS4KPiAKPiBFLmcuLCBvbmx5IGNhbGxlcnMgdG8gZG9tYWluLT5vcHMtPmZsdXNo
+X2lvdGxiX2FsbCgpIGFyZToKPiBpb21tdV9kbWFfZmx1c2hfaW90bGJfYWxsKCksIG9yIGlvbW11
+X2ZsdXNoX3RsYl9hbGwoKSB3aGljaCBhcmUgbm90IGluCj4gbWFwL3VubWFwIHBhdGhzLgoKWWVz
+LCBzb3JyeSwgSSBnb3QgY29uZnVzZWQgaGVyZSBhbmQgY29tcGxldGVseSBtaXNsZWQgeW91LiBJ
+biB3aGljaCBjYXNlLAp5b3VyIG9yaWdpbmFsIHBhdGNoIGlzIG9rIGJlY2F1c2UgaXQgaW50ZXJj
+ZXB0cyB0aGUgY29yZSBJT01NVSBBUEkgdmlhCmlvbW11X29wcy4gQXBvbG9naWVzLgoKQXQgdGhh
+dCBsZXZlbCwgc2hvdWxkIHdlIGFsc28gYW5ub3RhdGUgYXJtX3NtbXVfaW92YV90b19waHlzX2hh
+cmQoKQpmb3IgdGhlIGlvdmFfdG9fcGh5cygpIGltcGxlbWVudGF0aW9uPwoKV2l0aCB0aGF0IGRl
+dGFpbCBhbmQgY2xvY2sgYml0cyBzb3J0ZWQgb3V0LCB3ZSBzaG91bGQgYmUgYWJsZSB0byBnZXQg
+dGhpcwpxdWV1ZWQgYXQgbGFzdC4KCldpbGwKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZnJlZWRyZW5vCg==
