@@ -1,34 +1,34 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v3 3/3] of/property: Add of_fwnode_name()
-Date: Mon, 26 Nov 2018 15:40:26 +0200
-Message-ID: <20181126134026.GA26964@kuha.fi.intel.com>
-References: <20181126114752.69597-1-heikki.krogerus@linux.intel.com>
- <20181126114752.69597-4-heikki.krogerus@linux.intel.com>
- <20181126130532.GH10650@smile.fi.intel.com>
+From: Otavio Salvador <otavio.salvador@ossystems.com.br>
+Subject: Re: [PATCH 07/13] ARM: dts: rv1108: Fix the timer mask
+Date: Mon, 26 Nov 2018 11:45:16 -0200
+Message-ID: <CAP9ODKoFaUP3JyY=x-6H-b_SZnN3BTtS5dMVsqE2-n96AWp2dQ@mail.gmail.com>
+References: <20181125211907.9895-1-otavio@ossystems.com.br>
+ <20181125211907.9895-7-otavio@ossystems.com.br> <4443441.F7S2jYBxxL@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181126130532.GH10650@smile.fi.intel.com>
+In-Reply-To: <4443441.F7S2jYBxxL@phil>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Otavio Salvador <otavio@ossystems.com.br>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Fabio Berton <fabio.berton@ossystems.com.br>, Kernel development list <linux-kernel@vger.kernel.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 26, 2018 at 03:05:32PM +0200, Andy Shevchenko wrote:
-> On Mon, Nov 26, 2018 at 02:47:52PM +0300, Heikki Krogerus wrote:
-> > This implements get_name fwnode op for DT.
-> 
-> > +static int of_fwnode_get_name(const struct fwnode_handle *fwnode, char *buf,
-> > +			      size_t len)
-> > +{
-> > +	snprintf(buf, len, "%pOFn", to_of_node(fwnode));
-> 
-> Same concerns.
+On Mon, Nov 26, 2018 at 3:27 AM Heiko Stuebner <heiko@sntech.de> wrote:
+> Am Sonntag, 25. November 2018, 22:19:01 CET schrieb Otavio Salvador:
+> > As done in the Rockchip vendor tree and also on other
+> > "arm,armv7-timer" instances, the correct GIC_CPU_MASK_SIMPLE mask
+> > is 4 instead of 1.
+>
+> Nope. That value represents the number of cores in the system.
+> As the rv1108 only has one core, that should likely stay as it is.
 
-OK, I'll fix all of these.
+I see, I will drop it for v2.
 
-thanks,
+> Also, it seems I only got patches 6-13 what happened to 1-5?
+
+It went to other mailing lists, I think. I will add you on Cc to all for v2.
 
 -- 
-heikki
+Otavio Salvador                             O.S. Systems
+http://www.ossystems.com.br        http://code.ossystems.com.br
+Mobile: +55 (53) 9 9981-7854          Mobile: +1 (347) 903-9750
