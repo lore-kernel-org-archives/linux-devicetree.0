@@ -1,19 +1,19 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 09/10] ARM64: dts: rockchip: Add all CPUs in cooling maps
-Date: Mon, 26 Nov 2018 14:16:23 +0100
-Message-ID: <3451054.D49JNUWnuL@phil>
-References: <cover.1542362530.git.viresh.kumar@linaro.org> <ee0bd5fb56652141e5ce23927b258b1779844af6.1542362530.git.viresh.kumar@linaro.org>
+Subject: Re: [PATCH 4/6] ARM: dts: rockchip: Add all CPUs in cooling maps
+Date: Mon, 26 Nov 2018 14:16:49 +0100
+Message-ID: <3908885.3xsdfg7bED@phil>
+References: <cover.1542362000.git.viresh.kumar@linaro.org> <8e59f97ae89a116b835ee14c63f550b159b000cc.1542362000.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ee0bd5fb56652141e5ce23927b258b1779844af6.1542362530.git.viresh.kumar@linaro.org>
+In-Reply-To: <8e59f97ae89a116b835ee14c63f550b159b000cc.1542362000.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 16. November 2018, 11:04:32 CET schrieb Viresh Kumar:
+Am Freitag, 16. November 2018, 11:01:13 CET schrieb Viresh Kumar:
 > Each CPU can (and does) participate in cooling down the system but the
 > DT only captures a handful of them, normally CPU0, in the cooling maps.
 > Things work by chance currently as under normal circumstances its the
