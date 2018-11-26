@@ -1,405 +1,176 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH v3 7/7] staging:iio:ad2s90: Move out of staging
-Date: Mon, 26 Nov 2018 07:34:35 +0000
-Message-ID: <a1b8b1fe23cd707e5988d42aa3d76e6daae5bd5e.camel@analog.com>
-References: <20181124002312.6923-1-matheus.bernardino@usp.br>
- <20181124002312.6923-8-matheus.bernardino@usp.br>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 3/3] ARM: dts: Add g3d bus nodes using VDD_INT for
+ Exynos542x SoC
+Date: Mon, 26 Nov 2018 16:37:53 +0900
+Message-ID: <5BFBA2D1.8090409@samsung.com>
+References: <20181123094413.1108-1-linux.amoon@gmail.com>
+        <CGME20181123094508epcas5p4b7958b812bf0f64ca47006ced9fda279@epcas5p4.samsung.com>
+        <20181123094413.1108-3-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20181124002312.6923-8-matheus.bernardino@usp.br>
-Content-Language: en-US
-Content-ID: <2C51D0682488B44EB5E20DD31B329A58@analog.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: "lars@metafoo.de" <lars@metafoo.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "jic23@kernel.org" <jic23@kernel.org>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "matheus.bernardino@usp.br" <matheus.bernardino@usp.br>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc: "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>, "victorcolombo@gmail.com" <victorcolombo@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20181123094413.1108-3-linux.amoon@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-11-23 at 22:23 -0200, Matheus Tavares wrote:
-> Move ad2s90 resolver driver out of staging to the main tree.
+Hi Anand,
+
+CLK_DOUT_ACLK_G3D is the clock for GPU h/w and it requires the buck4_reg("vdd_g3d").
+
+bus_wcore uses the buck3_reg("vdd_int"). bus_wcore and bus_g3d don't share the 
+same voltage line. It is wrong to make 'bus_g3d' as the child of 'bus_wcore'
+because of using the different regulator.
+
+CLK_DOUT_ACLK_G3D and buck4_reg should be controlled from MALI driver 
+with DEVFREQ framework. Unfortunately, MALI driver is not posted to mainline.
+
+
+On 2018년 11월 23일 18:44, Anand Moon wrote:
+> Add missing Netwwork on chip for g3d bus node using VDD_INI
+> for Exynos542x SoC.
 > 
-
-Acked-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-
-> Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
-> Signed-off-by: Victor Colombo <victorcolombo@gmail.com>
+> - CLK_DOUT_ACLK_G3D for G3D's AXI
+> 
+> Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 > ---
-> Changes in v3:
->  - none
+>  arch/arm/boot/dts/exynos5420.dtsi             | 57 +++++++++++++++++--
+>  arch/arm/boot/dts/exynos5422-odroid-core.dtsi |  5 ++
+>  2 files changed, 56 insertions(+), 6 deletions(-)
 > 
-> Changes in v2:
->  - Disabled git move detection, to see the whole code, as Jonathan
->  suggested
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index aaff15880761..bc7203bb1282 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -1047,6 +1047,14 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		bus_g3d: bus_g3d {
+> +			compatible = "samsung,exynos-bus";
+> +			clocks = <&clock CLK_DOUT_ACLK_G3D>;
+> +			clock-names = "bus";
+> +			operating-points-v2 = <&bus_g3d_opp_table>;
+> +			status = "disabled";
+> +		};
+> +
+>  		bus_jpeg: bus_jpeg {
+>  			compatible = "samsung,exynos-bus";
+>  			clocks = <&clock CLK_DOUT_ACLK300_JPEG>;
+> @@ -1245,7 +1253,44 @@
+>  			};
+>  		};
+>  
+> -		bus_jpeg_opp_table: opp_table11 {
+> +		bus_g3d_opp_table: opp_table11 {
+> +			compatible = "operating-points-v2";
+> +
+> +			opp@600000000 {
+> +				opp-hz = /bits/ 64 <600000000>;
+> +				opp-microvolt = <1025000>;
+> +			};
+> +			opp@543000000 {
+> +				opp-hz = /bits/ 64 <543000000>;
+> +				opp-microvolt = <987500>;
+> +			};
+> +			opp@480000000 {
+> +				opp-hz = /bits/ 64 <480000000>;
+> +				opp-microvolt = <950000>;
+> +			};
+> +			opp@420000000 {
+> +				opp-hz = /bits/ 64 <420000000>;
+> +				opp-microvolt = <937500>;
+> +			};
+> +			opp@350000000 {
+> +				opp-hz = /bits/ 64 <350000000>;
+> +				opp-microvolt = <900000>;
+> +			};
+> +			opp@266000000 {
+> +				opp-hz = /bits/ 64 <266000000>;
+> +				opp-microvolt = <862500>;
+> +			};
+> +			opp@177000000 {
+> +				opp-hz = /bits/ 64 <177000000>;
+> +				opp-microvolt = <862500>;
+> +			};
+> +			opp@100000000 {
+> +				opp-hz = /bits/ 64 <100000000>;
+> +				opp-microvolt = <862500>;
+> +			};
+> +		};
+> +
+> +		bus_jpeg_opp_table: opp_table12 {
+>  			compatible = "operating-points-v2";
+>  
+>  			opp00 {
+> @@ -1262,7 +1307,7 @@
+>  			};
+>  		};
+>  
+> -		bus_jpeg_apb_opp_table: opp_table12 {
+> +		bus_jpeg_apb_opp_table: opp_table13 {
+>  			compatible = "operating-points-v2";
+>  
+>  			opp00 {
+> @@ -1279,7 +1324,7 @@
+>  			};
+>  		};
+>  
+> -		bus_disp1_fimd_opp_table: opp_table13 {
+> +		bus_disp1_fimd_opp_table: opp_table14 {
+>  			compatible = "operating-points-v2";
+>  
+>  			opp00 {
+> @@ -1290,7 +1335,7 @@
+>  			};
+>  		};
+>  
+> -		bus_disp1_opp_table: opp_table14 {
+> +		bus_disp1_opp_table: opp_table15 {
+>  			compatible = "operating-points-v2";
+>  
+>  			opp00 {
+> @@ -1304,7 +1349,7 @@
+>  			};
+>  		};
+>  
+> -		bus_gscl_opp_table: opp_table15 {
+> +		bus_gscl_opp_table: opp_table16 {
+>  			compatible = "operating-points-v2";
+>  
+>  			opp00 {
+> @@ -1318,7 +1363,7 @@
+>  			};
+>  		};
+>  
+> -		bus_mscl_opp_table: opp_table16 {
+> +		bus_mscl_opp_table: opp_table17 {
+>  			compatible = "operating-points-v2";
+>  
+>  			opp00 {
+> diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> index 2fac4baf1eb4..6e39e4594502 100644
+> --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> @@ -89,6 +89,11 @@
+>  	status = "okay";
+>  };
+>  
+> +&bus_g3d {
+> +	devfreq = <&bus_wcore>;
+> +	status = "okay";
+> +};
+> +
+>  &bus_jpeg {
+>  	devfreq = <&bus_wcore>;
+>  	status = "okay";
 > 
->  drivers/iio/resolver/Kconfig          |  10 ++
->  drivers/iio/resolver/Makefile         |   1 +
->  drivers/iio/resolver/ad2s90.c         | 131 ++++++++++++++++++++++++++
->  drivers/staging/iio/resolver/Kconfig  |  10 --
->  drivers/staging/iio/resolver/Makefile |   1 -
->  drivers/staging/iio/resolver/ad2s90.c | 131 --------------------------
->  6 files changed, 142 insertions(+), 142 deletions(-)
->  create mode 100644 drivers/iio/resolver/ad2s90.c
->  delete mode 100644 drivers/staging/iio/resolver/ad2s90.c
-> 
-> diff --git a/drivers/iio/resolver/Kconfig b/drivers/iio/resolver/Kconfig
-> index 2ced9f22aa70..786801be54f6 100644
-> --- a/drivers/iio/resolver/Kconfig
-> +++ b/drivers/iio/resolver/Kconfig
-> @@ -3,6 +3,16 @@
->  #
->  menu "Resolver to digital converters"
->  
-> +config AD2S90
-> +	tristate "Analog Devices ad2s90 driver"
-> +	depends on SPI
-> +	help
-> +	  Say yes here to build support for Analog Devices spi resolver
-> +	  to digital converters, ad2s90, provides direct access via sysfs.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called ad2s90.
-> +
->  config AD2S1200
->  	tristate "Analog Devices ad2s1200/ad2s1205 driver"
->  	depends on SPI
-> diff --git a/drivers/iio/resolver/Makefile
-> b/drivers/iio/resolver/Makefile
-> index 4e1dccae07e7..398d82d50028 100644
-> --- a/drivers/iio/resolver/Makefile
-> +++ b/drivers/iio/resolver/Makefile
-> @@ -2,4 +2,5 @@
->  # Makefile for Resolver/Synchro drivers
->  #
->  
-> +obj-$(CONFIG_AD2S90) += ad2s90.o
->  obj-$(CONFIG_AD2S1200) += ad2s1200.o
-> diff --git a/drivers/iio/resolver/ad2s90.c
-> b/drivers/iio/resolver/ad2s90.c
-> new file mode 100644
-> index 000000000000..a41f5cb10da5
-> --- /dev/null
-> +++ b/drivers/iio/resolver/ad2s90.c
-> @@ -0,0 +1,131 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * ad2s90.c simple support for the ADI Resolver to Digital Converters:
-> AD2S90
-> + *
-> + * Copyright (c) 2010-2010 Analog Devices Inc.
-> + */
-> +#include <linux/types.h>
-> +#include <linux/mutex.h>
-> +#include <linux/device.h>
-> +#include <linux/spi/spi.h>
-> +#include <linux/slab.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/module.h>
-> +
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +
-> +/*
-> + * Although chip's max frequency is 2Mhz, it needs 600ns between CS and
-> the
-> + * first falling edge of SCLK, so frequency should be at most 1 / (2 *
-> 6e-7)
-> + */
-> +#define AD2S90_MAX_SPI_FREQ_HZ  830000
-> +
-> +struct ad2s90_state {
-> +	struct mutex lock; /* lock to protect rx buffer */
-> +	struct spi_device *sdev;
-> +	u8 rx[2] ____cacheline_aligned;
-> +};
-> +
-> +static int ad2s90_read_raw(struct iio_dev *indio_dev,
-> +			   struct iio_chan_spec const *chan,
-> +			   int *val,
-> +			   int *val2,
-> +			   long m)
-> +{
-> +	int ret;
-> +	struct ad2s90_state *st = iio_priv(indio_dev);
-> +
-> +	if (chan->type != IIO_ANGL)
-> +		return -EINVAL;
-> +
-> +	switch (m) {
-> +	case IIO_CHAN_INFO_SCALE:
-> +		/* 2 * Pi / 2^12 */
-> +		*val = 6283; /* mV */
-> +		*val2 = 12;
-> +		return IIO_VAL_FRACTIONAL_LOG2;
-> +	case IIO_CHAN_INFO_RAW:
-> +		mutex_lock(&st->lock);
-> +		ret = spi_read(st->sdev, st->rx, 2);
-> +		if (ret < 0) {
-> +			mutex_unlock(&st->lock);
-> +			return ret;
-> +		}
-> +		*val = (((u16)(st->rx[0])) << 4) | ((st->rx[1] & 0xF0) >>
-> 4);
-> +
-> +		mutex_unlock(&st->lock);
-> +
-> +		return IIO_VAL_INT;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static const struct iio_info ad2s90_info = {
-> +	.read_raw = ad2s90_read_raw,
-> +};
-> +
-> +static const struct iio_chan_spec ad2s90_chan = {
-> +	.type = IIO_ANGL,
-> +	.indexed = 1,
-> +	.channel = 0,
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-> BIT(IIO_CHAN_INFO_SCALE),
-> +};
-> +
-> +static int ad2s90_probe(struct spi_device *spi)
-> +{
-> +	struct iio_dev *indio_dev;
-> +	struct ad2s90_state *st;
-> +
-> +	if (spi->max_speed_hz > AD2S90_MAX_SPI_FREQ_HZ) {
-> +		dev_err(&spi->dev, "SPI CLK, %d Hz exceeds %d Hz\n",
-> +			spi->max_speed_hz, AD2S90_MAX_SPI_FREQ_HZ);
-> +		return -EINVAL;
-> +	}
-> +
-> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +	st = iio_priv(indio_dev);
-> +	spi_set_drvdata(spi, indio_dev);
-> +
-> +	mutex_init(&st->lock);
-> +	st->sdev = spi;
-> +	indio_dev->dev.parent = &spi->dev;
-> +	indio_dev->info = &ad2s90_info;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +	indio_dev->channels = &ad2s90_chan;
-> +	indio_dev->num_channels = 1;
-> +	indio_dev->name = spi_get_device_id(spi)->name;
-> +
-> +	return devm_iio_device_register(indio_dev->dev.parent, indio_dev);
-> +}
-> +
-> +static const struct of_device_id ad2s90_of_match[] = {
-> +	{ .compatible = "adi,ad2s90", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, ad2s90_of_match);
-> +
-> +static const struct spi_device_id ad2s90_id[] = {
-> +	{ "ad2s90" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(spi, ad2s90_id);
-> +
-> +static struct spi_driver ad2s90_driver = {
-> +	.driver = {
-> +		.name = "ad2s90",
-> +		.of_match_table = ad2s90_of_match,
-> +	},
-> +	.probe = ad2s90_probe,
-> +	.id_table = ad2s90_id,
-> +};
-> +module_spi_driver(ad2s90_driver);
-> +
-> +MODULE_AUTHOR("Graff Yang <graff.yang@gmail.com>");
-> +MODULE_DESCRIPTION("Analog Devices AD2S90 Resolver to Digital SPI
-> driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/staging/iio/resolver/Kconfig
-> b/drivers/staging/iio/resolver/Kconfig
-> index 6a469ee6101f..4a727c17bb8f 100644
-> --- a/drivers/staging/iio/resolver/Kconfig
-> +++ b/drivers/staging/iio/resolver/Kconfig
-> @@ -3,16 +3,6 @@
->  #
->  menu "Resolver to digital converters"
->  
-> -config AD2S90
-> -	tristate "Analog Devices ad2s90 driver"
-> -	depends on SPI
-> -	help
-> -	  Say yes here to build support for Analog Devices spi resolver
-> -	  to digital converters, ad2s90, provides direct access via sysfs.
-> -
-> -	  To compile this driver as a module, choose M here: the
-> -	  module will be called ad2s90.
-> -
->  config AD2S1210
->  	tristate "Analog Devices ad2s1210 driver"
->  	depends on SPI
-> diff --git a/drivers/staging/iio/resolver/Makefile
-> b/drivers/staging/iio/resolver/Makefile
-> index 8d901dc7500b..b2049f2ce36e 100644
-> --- a/drivers/staging/iio/resolver/Makefile
-> +++ b/drivers/staging/iio/resolver/Makefile
-> @@ -2,5 +2,4 @@
->  # Makefile for Resolver/Synchro drivers
->  #
->  
-> -obj-$(CONFIG_AD2S90) += ad2s90.o
->  obj-$(CONFIG_AD2S1210) += ad2s1210.o
-> diff --git a/drivers/staging/iio/resolver/ad2s90.c
-> b/drivers/staging/iio/resolver/ad2s90.c
-> deleted file mode 100644
-> index a41f5cb10da5..000000000000
-> --- a/drivers/staging/iio/resolver/ad2s90.c
-> +++ /dev/null
-> @@ -1,131 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -/*
-> - * ad2s90.c simple support for the ADI Resolver to Digital Converters:
-> AD2S90
-> - *
-> - * Copyright (c) 2010-2010 Analog Devices Inc.
-> - */
-> -#include <linux/types.h>
-> -#include <linux/mutex.h>
-> -#include <linux/device.h>
-> -#include <linux/spi/spi.h>
-> -#include <linux/slab.h>
-> -#include <linux/sysfs.h>
-> -#include <linux/module.h>
-> -
-> -#include <linux/iio/iio.h>
-> -#include <linux/iio/sysfs.h>
-> -
-> -/*
-> - * Although chip's max frequency is 2Mhz, it needs 600ns between CS and
-> the
-> - * first falling edge of SCLK, so frequency should be at most 1 / (2 *
-> 6e-7)
-> - */
-> -#define AD2S90_MAX_SPI_FREQ_HZ  830000
-> -
-> -struct ad2s90_state {
-> -	struct mutex lock; /* lock to protect rx buffer */
-> -	struct spi_device *sdev;
-> -	u8 rx[2] ____cacheline_aligned;
-> -};
-> -
-> -static int ad2s90_read_raw(struct iio_dev *indio_dev,
-> -			   struct iio_chan_spec const *chan,
-> -			   int *val,
-> -			   int *val2,
-> -			   long m)
-> -{
-> -	int ret;
-> -	struct ad2s90_state *st = iio_priv(indio_dev);
-> -
-> -	if (chan->type != IIO_ANGL)
-> -		return -EINVAL;
-> -
-> -	switch (m) {
-> -	case IIO_CHAN_INFO_SCALE:
-> -		/* 2 * Pi / 2^12 */
-> -		*val = 6283; /* mV */
-> -		*val2 = 12;
-> -		return IIO_VAL_FRACTIONAL_LOG2;
-> -	case IIO_CHAN_INFO_RAW:
-> -		mutex_lock(&st->lock);
-> -		ret = spi_read(st->sdev, st->rx, 2);
-> -		if (ret < 0) {
-> -			mutex_unlock(&st->lock);
-> -			return ret;
-> -		}
-> -		*val = (((u16)(st->rx[0])) << 4) | ((st->rx[1] & 0xF0) >>
-> 4);
-> -
-> -		mutex_unlock(&st->lock);
-> -
-> -		return IIO_VAL_INT;
-> -	default:
-> -		break;
-> -	}
-> -
-> -	return -EINVAL;
-> -}
-> -
-> -static const struct iio_info ad2s90_info = {
-> -	.read_raw = ad2s90_read_raw,
-> -};
-> -
-> -static const struct iio_chan_spec ad2s90_chan = {
-> -	.type = IIO_ANGL,
-> -	.indexed = 1,
-> -	.channel = 0,
-> -	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-> BIT(IIO_CHAN_INFO_SCALE),
-> -};
-> -
-> -static int ad2s90_probe(struct spi_device *spi)
-> -{
-> -	struct iio_dev *indio_dev;
-> -	struct ad2s90_state *st;
-> -
-> -	if (spi->max_speed_hz > AD2S90_MAX_SPI_FREQ_HZ) {
-> -		dev_err(&spi->dev, "SPI CLK, %d Hz exceeds %d Hz\n",
-> -			spi->max_speed_hz, AD2S90_MAX_SPI_FREQ_HZ);
-> -		return -EINVAL;
-> -	}
-> -
-> -	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-> -	if (!indio_dev)
-> -		return -ENOMEM;
-> -	st = iio_priv(indio_dev);
-> -	spi_set_drvdata(spi, indio_dev);
-> -
-> -	mutex_init(&st->lock);
-> -	st->sdev = spi;
-> -	indio_dev->dev.parent = &spi->dev;
-> -	indio_dev->info = &ad2s90_info;
-> -	indio_dev->modes = INDIO_DIRECT_MODE;
-> -	indio_dev->channels = &ad2s90_chan;
-> -	indio_dev->num_channels = 1;
-> -	indio_dev->name = spi_get_device_id(spi)->name;
-> -
-> -	return devm_iio_device_register(indio_dev->dev.parent, indio_dev);
-> -}
-> -
-> -static const struct of_device_id ad2s90_of_match[] = {
-> -	{ .compatible = "adi,ad2s90", },
-> -	{}
-> -};
-> -MODULE_DEVICE_TABLE(of, ad2s90_of_match);
-> -
-> -static const struct spi_device_id ad2s90_id[] = {
-> -	{ "ad2s90" },
-> -	{}
-> -};
-> -MODULE_DEVICE_TABLE(spi, ad2s90_id);
-> -
-> -static struct spi_driver ad2s90_driver = {
-> -	.driver = {
-> -		.name = "ad2s90",
-> -		.of_match_table = ad2s90_of_match,
-> -	},
-> -	.probe = ad2s90_probe,
-> -	.id_table = ad2s90_id,
-> -};
-> -module_spi_driver(ad2s90_driver);
-> -
-> -MODULE_AUTHOR("Graff Yang <graff.yang@gmail.com>");
-> -MODULE_DESCRIPTION("Analog Devices AD2S90 Resolver to Digital SPI
-> driver");
-> -MODULE_LICENSE("GPL v2");
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
