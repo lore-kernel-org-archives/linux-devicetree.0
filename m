@@ -1,47 +1,39 @@
-From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 0/7] drm/msm/dsi: Get PHY ref clocks from the
- DT
-Date: Mon, 26 Nov 2018 15:11:52 -0800
-Message-ID: <20181126231159.122298-1-mka@chromium.org>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH v2 1/7] dt-bindings: msm/dsi: Add ref clock for PHYs
+Date: Mon, 26 Nov 2018 15:11:53 -0800
+Message-ID: <20181126231159.122298-2-mka@chromium.org>
+References: <20181126231159.122298-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181126231159.122298-1-mka@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Archit Taneja <architt@codeaurora.org>, Sean Paul <seanpaul@chromium.org>, Rajesh Yadav <ryadav@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Jeykumar Sankaran <jsanka@codeaurora.org>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIE1TTSBEU0kgUEhZIGRyaXZlcnMgY3VycmVudGx5IGhhcmRjb2RlIHRoZSBuYW1lIGFuZCB0
-aGUgcmF0ZSBvZgp0aGUgUEhZIHJlZiBjbG9jay4gR2V0IHRoZSByZWYgY2xvY2sgZnJvbSB0aGUg
-ZGV2aWNlIHRyZWUgaW5zdGVhZC4KCk5vdGU6IHRlc3Rpbmcgb2YgdGhpcyBzZXJpZXMgd2FzIGxp
-bWl0ZWQgdG8gU0RNODQ1IGFuZCB0aGUgMTBubSBQSFkKCk1ham9yIGNoYW5nZXMgaW4gdjI6Ci0g
-YXBwbHkgdG8gYWxsIE1TTSBEU0kgUEhZIGRyaXZlcnMsIG5vdCBvbmx5IDEwbm0KCk1hdHRoaWFz
-IEthZWhsY2tlICg3KToKICBkdC1iaW5kaW5nczogbXNtL2RzaTogQWRkIHJlZiBjbG9jayBmb3Ig
-UEhZcwogIGRybS9tc20vZHNpOiAxNG5tIFBIWTogR2V0IHJlZiBjbG9jayBmcm9tIHRoZSBEVAog
-IGRybS9tc20vZHNpOiAyOG5tIDg5NjAgUEhZOiBHZXQgcmVmIGNsb2NrIGZyb20gdGhlIERUCiAg
-YXJtNjQ6IGR0czogcWNvbTogbXNtODkxNjogU2V0ICd4b19ib2FyZCcgYXMgcmVmIGNsb2NrIG9m
-IHRoZSBEU0kgUEhZCiAgZHJtL21zbS9kc2k6IDI4bm0gUEhZOiBHZXQgcmVmIGNsb2NrIGZyb20g
-dGhlIERUCiAgYXJtNjQ6IGR0czogc2RtODQ1OiBTZXQgJ2JpX3RjeG8nIGFzIHJlZiBjbG9jayBv
-ZiB0aGUgRFNJIFBIWXMKICBkcm0vbXNtL2RzaTogMTBubSBQSFk6IEdldCByZWYgY2xvY2sgZnJv
-bSB0aGUgRFQKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0ICAg
-fCAgMSArCiBhcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vbXNtODkxNi5kdHNpICAgICAgICAgfCAg
-NSArKy0tCiBhcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kgICAgICAgICAgfCAx
-MCArKysrLS0tCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9wbGwvZHNpX3BsbF8xMG5tLmMgICAg
-fCAxMyArKysrKysrKy0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZHNpL3BsbC9kc2lfcGxsXzE0bm0u
-YyAgICB8IDE2ICsrKysrKysrLS0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZHNpL3BsbC9kc2lfcGxs
-XzI4bm0uYyAgICB8IDI5ICsrKysrKysrKysrKystLS0tLS0KIC4uLi9ncHUvZHJtL21zbS9kc2kv
-cGxsL2RzaV9wbGxfMjhubV84OTYwLmMgICB8IDE3ICsrKysrKysrKy0tCiA3IGZpbGVzIGNoYW5n
-ZWQsIDY5IGluc2VydGlvbnMoKyksIDIyIGRlbGV0aW9ucygtKQoKLS0gCjIuMjAuMC5yYzAuMzg3
-LmdjN2E2OWU2YjZjLWdvb2cKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Zy
-ZWVkcmVubwo=
+Allow the PHY drivers to get the ref clock from the DT.
+
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+Changes in v2:
+- add the ref clock for all PHYs, not only the 10nm one
+- updated commit message
+---
+ Documentation/devicetree/bindings/display/msm/dsi.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
+index dfc743219bd88..b0485559a719c 100644
+--- a/Documentation/devicetree/bindings/display/msm/dsi.txt
++++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
+@@ -106,6 +106,7 @@ Required properties:
+ - clocks: Phandles to device clocks. See [1] for details on clock bindings.
+ - clock-names: the following clocks are required:
+   * "iface"
++  * "ref"
+   For 28nm HPM/LP, 28nm 8960 PHYs:
+ - vddio-supply: phandle to vdd-io regulator device node
+   For 20nm PHY:
+-- 
+2.20.0.rc0.387.gc7a69e6b6c-goog
