@@ -1,84 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 0/6] arm64: Get rid of __early_init_dt_declare_initrd()
-Date: Mon, 26 Nov 2018 15:56:04 -0600
-Message-ID: <20181126215604.GA12509@bogus>
-References: <20181105225431.24485-1-f.fainelli@gmail.com>
- <20181106140642.GA19280@rapoport-lnx>
- <68b32163-85ff-45f7-8887-60273da7c6e2@gmail.com>
- <20181113002216.GA26854@bogus>
+Subject: Re: [PATCH V4 1/5] dt-bindings: Add Broadcom STB USB support
+Date: Mon, 26 Nov 2018 15:57:18 -0600
+Message-ID: <20181126215718.GA22870@bogus>
+References: <1541772120-40394-1-git-send-email-alcooperx@gmail.com>
+ <1541772120-40394-2-git-send-email-alcooperx@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181113002216.GA26854@bogus>
+In-Reply-To: <1541772120-40394-2-git-send-email-alcooperx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>, linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Marc Zyngier <marc.zyngier@arm.com>, Russell King <rmk+kernel@armlinux.org.uk>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Andrey Konovalov <andreyknvl@google.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stefan Agner <stefan@agner.ch>, Johannes Weiner <hannes@cmpxchg.org>, Greg Hackmann <ghackmann@android.com>, Kristina Martsenko <kristina.martsenko@arm.com>, CHANDAN VN <chandan.vn@samsung.com>, moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)
+Cc: linux-kernel@vger.kernel.org, Al Cooper <alcooperx@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, Alban Bedel <albeu@free.fr>, Alex Elder <elder@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Avi Fishman <avifishman70@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Bjorn Andersson <bjorn.andersson@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Hans de Goede <hdegoede@redhat.com>, James Hogan <jhogan@kernel.org>, Johan Hovold <johan@kernel.org>, Kees Cook <keescook@chromium.org>, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 12, 2018 at 06:22:16PM -0600, Rob Herring wrote:
-> On Mon, Nov 12, 2018 at 12:32:50PM -0800, Florian Fainelli wrote:
-> > On 11/6/18 6:06 AM, Mike Rapoport wrote:
-> > > On Mon, Nov 05, 2018 at 02:54:25PM -0800, Florian Fainelli wrote:
-> > >> Hi all,
-> > >>
-> > >> Changes in v4:
-> > >>
-> > >> - dropped initrd_below_start_ok assignment in ARM64, not necessary at
-> > >>   all (Ard)
-> > >> - replace #ifdef CONFIG_BLK_DEV_INITRD with if
-> > >>   (IS_ENABLED(CONFIG_BLK_DEV_INITRD) for consistency with other parts
-> > >>   of arm64_memblock_init() (Rob)
-> > >>
-> > >> Changes in v3:
-> > >>
-> > >> - use C conditionals in drivers/of/fdt.c
-> > >> - added check on phys_initrd_size in arch/arm64/mm/init.c to determine
-> > >>   whether initrd_start must be populated
-> > >> - fixed a build warning with ARC that was just missing an (unsigned
-> > >>   long) cast
-> > >>
-> > >> Changes in v2:
-> > >>
-> > >> - get rid of ARCH_HAS_PHYS_INITRD and instead define
-> > >>   phys_initrd_start/phys_initrd_size in init/do_mounts_initrd.c
-> > >>
-> > >> - make __early_init_dt_declare_initrd() account for ARM64 specific
-> > >>   behavior with __va() when having CONFIG_DEBUG_VM enabled
-> > >>
-> > >> - consolidate early_initrd() command line parsing into
-> > >>   init/do_mounts_initrd.c
-> > >>
-> > >> Because phys_initrd_start/phys_initrd_size are now compiled in
-> > >> ini/do_mounts_initrd.c which is only built with CONFIG_BLK_DEV_INITRD=y,
-> > >> we need to be a bit careful about the uses throughout architecture
-> > >> specific code.
-> > >>
-> > >> Previous discussions/submissions list here:
-> > >>
-> > >> v3:
-> > >> https://www.spinics.net/lists/arm-kernel/msg683566.html
-> > >> v2:
-> > >> https://lkml.org/lkml/2018/10/25/4
-> > >>
-> > >> Florian Fainelli (6):
-> > >>   nds32: Remove phys_initrd_start and phys_initrd_size
-> > >>   arch: Make phys_initrd_start and phys_initrd_size global variables
-> > >>   of/fdt: Populate phys_initrd_start/phys_initrd_size from FDT
-> > >>   arm64: Utilize phys_initrd_start/phys_initrd_size
-> > >>   of/fdt: Remove custom __early_init_dt_declare_initrd() implementation
-> > >>   arch: Move initrd= parsing into do_mounts_initrd.c
-> > > 
-> > > For the series:
-> > > 
-> > > Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-> > 
-> > Thanks Mike, Rob, do you want to merge that series through the OF tree?
+On Fri,  9 Nov 2018 09:01:56 -0500, Al Cooper wrote:
+> Add DT bindings for Broadcom STB USB EHCI and XHCI drivers.
+> Add "phy-supplies-usb-clock" property description to usb-hcd.txt
 > 
-> Sure, some arch maintainer acks would be nice.
+> NOTE: The OHCI driver is not included because it uses the generic
+>       platform driver.
+> 
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> ---
+>  .../devicetree/bindings/usb/brcm,bcm7445-ehci.txt  | 24 ++++++++++++++++++++++
+>  Documentation/devicetree/bindings/usb/usb-hcd.txt  |  3 +++
+>  Documentation/devicetree/bindings/usb/usb-xhci.txt |  1 +
+>  3 files changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.txt
+> 
 
-I've now applied the series.
-
-Thanks,
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
