@@ -1,113 +1,102 @@
-From: vitor <vitor.soares@synopsys.com>
-Subject: Re: [PATCH] i3c: master: dw: split dw-i3c-master.c into master and
- bus specific parts
-Date: Mon, 26 Nov 2018 12:06:24 +0000
-Message-ID: <83115f47-1326-cb33-a7dc-4bc8ff95befa@synopsys.com>
-References: <ade2c1a8d1eb48681b01ccdc9bed22caf5e96c4b.1542904564.git.soares@synopsys.com>
- <20181122210202.6af50fcc@bbrezillon>
- <6d513e04-3a57-1989-429c-64631101c5a2@synopsys.com>
- <20181123135004.7fd1cd58@bbrezillon>
+From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Subject: Re: Re: [PATCH v4 08/26] drm/sun4i: sun6i_mipi_dsi: Fix
+ VBP size calculation
+Date: Mon, 26 Nov 2018 17:37:09 +0530
+Message-ID: <55900bf3-efb5-5f78-5252-b3f6d4f775fb@openedev.com>
+References: <20181113111633.20189-1-jagan@amarulasolutions.com>
+ <20181113111633.20189-9-jagan@amarulasolutions.com>
+ <20181115095551.uctdkfmuwlnzhjnn@flea>
+ <CAMty3ZAEHiovm6OF6JvJVQR4aqpG1Q3ML5YqxJkF2ntwRkUO=A@mail.gmail.com>
+ <20181120155715.andrjp5kg6ugcv72@flea>
+ <CAMty3ZCUOJmvekupOwh281g5HaazTpBbukWQY2Pv2OYypAwciw@mail.gmail.com>
+Reply-To: jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181123135004.7fd1cd58@bbrezillon>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Return-path: <linux-sunxi+bncBDH5TZWAZAFBBD6E57PQKGQECQ6SPMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAMty3ZCUOJmvekupOwh281g5HaazTpBbukWQY2Pv2OYypAwciw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, vitor <vitor.soares@synopsys.com>
-Cc: wsa@the-dreams.de, linux-i2c@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de, psroka@cadence.com, agolec@cadence.com, adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com, alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com, rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, linus.walleij@linaro.org, Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org, nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se, mshettel@codeaurora.org, swboyd@chromium.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
-
-
-On 23/11/18 12:50, Boris Brezillon wrote:
-> On Fri, 23 Nov 2018 12:39:31 +0000
-> vitor <vitor.soares@synopsys.com> wrote:
->
->> Hi Boris,
+On 20/11/18 9:55 PM, Jagan Teki wrote:
+> On Tue, Nov 20, 2018 at 9:27 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
 >>
+>> On Thu, Nov 15, 2018 at 11:19:53PM +0530, Jagan Teki wrote:
+>>> On Thu, Nov 15, 2018 at 3:26 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+>>>>
+>>>> Hi,
+>>>>
+>>>> On Tue, Nov 13, 2018 at 04:46:15PM +0530, Jagan Teki wrote:
+>>>>> The horizontal and vertical back porch calculation in BSP
+>>>>> code is simply following the Linux drm comment diagram, in
+>>>>> include/drm/drm_modes.h which is
+>>>>>
+>>>>> [hv]back porch = [hv]total - [hv]sync_end
+>>>>>
+>>>>> BSP code form BPI-M64-bsp is calculating vertical back porch as
+>>>>> (from linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c)
+>>>>>
+>>>>> timmings->ver_sync_time= panel_info->lcd_vspw;
+>>>>> timmings->ver_back_porch= panel_info->lcd_vbp-panel_info->lcd_vspw;
+>>>>>
+>>>>> vbp = panel->lcd_vbp;
+>>>>> vspw = panel->lcd_vspw;
+>>>>> dsi_dev[sel]->dsi_basic_size0.bits.vbp = vbp-vspw;
+>>>>> dsi_dev[sel]->dsi_basic_size0.bits.vbp = panel->lcd_vbp - panel->lcd_vspw;
+>>>>> =>  timmings->ver_back_porch + panel_info->lcd_vspw - panel_info->lcd_vspw
+>>>>> =>  timmings->ver_back_porch
+>>>>> =>  mode->vtotal - mode->end
+>>>>>
+>>>>> Which evatually same as mode->vtotal - mode->vsync_end so update the
+>>>>> same in SUN6I_DSI_BASIC_SIZE0_VBP
+>>>>>
+>>>>> On the information note, existing SUN6I_DSI_BASIC_SIZE0_VSA is proper
+>>>>> value.
+>>>>>
+>>>>> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>>>>
+>>>> I've tested your changes on my A33 board, and this commit will break
+>>>> it.
+>>>>
+>>>> It creates vblank timeouts, and visual artifacts at the bottom of the
+>>>> display.
+>>>
+>>> Strange, VBP is earlier gives front porch which is anyway wrong.
+>>>
+>>>>
+>>>> Later commits seem to fix the issue, but will create some blanking on
+>>>> the upper third of the display.
+>>>>
+>>>> Since the documentation is quite sparse, and a MIPI-DSI analyzer is
+>>>> way too expensive, I'd really like to have at least what each of these
+>>>> commits are actually fixing, and what symptoms each of these were
+>>>> causing, and not just "the BSP does it".
+>>>
+>>> W/o this 2-lane panel is breaking, same vblank timeout and visual
+>>> artifacts at the bottom of the panel. though the commits may reference
+>>> BSP, I have at-least tested on 3 different panels for us to prove its
+>>> working.
+>>>
+>>>> Having some datasheet for the panels you had working would help too.
+>>>
+>>> Unfortunately datasheet doesn't have any required information what we
+>>> actually looking for.
 >>
->> On 22/11/18 20:02, Boris Brezillon wrote:
->>> On Thu, 22 Nov 2018 17:54:54 +0000
->>> Vitor Soares <vitor.soares@synopsys.com> wrote:
->>>   
->>>> From: Vitor Soares <soares@synopsys.com>
->>>>
->>>> This patch slipts dw-i3c-master.c into three pieces:
->>>> 	dw-i3c-master.c - contains the code that interacts directly with the
->>>> 	core in master mode.
->>>>
->>>> 	dw-i3c-platdrv.c - contains the code specific to the platform driver.
->>>>
->>>> 	dw-i3c-core.h - contains the definitions and declarations shared by
->>>> 	dw-i3c-master and dw-i3c-platdrv
->>>>
->>>> This patch will allow SOC integrators to add their code specific to
->>>> DesignWare I3C IP.
->>> Isn't it too early to do this change? Can't we wait until we have a SoC
->>> that actually embeds this IP?
->>
->> I'm trying to turn it more flexible so the other can reuse the code.
-> Looking at the separation you've done here, I don't see why you need
-> it. All the resources you request are generic, so why not just adding a
-> new compat in the of_match_table?
+>> Not even the timings? How did you get that information then?
+> 
+> datasheet has timing values, but this changes need controller
+> information about VBP register that I don't have. But again existing
+> VBP is not back porch for real, it's front porch.
+> 
 
-I understand your point.
-
-
-I'm just following what it's done in others Synopsys drivers and what I 
-expect is that in the future we will have the same for the I3C.
-
-Some of the current generic functions might be override according with 
-SoC requirements (e.g i2c-designware, pcie-designware).
-
-
-for now what do you prefer?
-
->>
->>>   
->>>> Signed-off-by: Vitor Soares <soares@synopsys.com>
->>>> ---
->>>>    drivers/i3c/master/Kconfig          |   9 +-
->>>>    drivers/i3c/master/Makefile         |   5 +-
->>>>    drivers/i3c/master/dw-i3c-core.h    | 214 ++++++++++++++++++++++++++
->>>>    drivers/i3c/master/dw-i3c-master.c  | 299 ++----------------------------------
->>>>    drivers/i3c/master/dw-i3c-platdrv.c | 112 ++++++++++++++
-> Just realized the driver is named dw-i3c-master, while the cadence
-> driver is named i3c-master-cdns.c. I'll send a patch to make that
-> consistent and follow the initial naming scheme: i3c-master-<ipname>.c.
-
-As I shared with you in previous email, the structure that I have in 
-mind is this one:
-
-- core.h (or common.h, any though?)
-
-- common.c
-
-- master.c
-
-- slave.c
-
-
-so for me doesn't make sense to have for instance: i3c-master-dw-slave.c
-
-But seeing what is already in the kernel I wasn't coherent and it should 
-be named to i3c-designware-master.c
-
-
-or
-
-
-follow this https://lkml.org/lkml/2017/7/12/430
-
-
-This topic rise another one related with the master folder. I understand 
-that now the subsystem doesn't have slave support but the name is 
-limited. Isn't better to have something like controller or busses? What 
-do you have in mind for the slave?
-
-
-Best regards,
-
-Vitor Soares
+I'm about to send next version by combining with burst mode changes in
+one series. Do you have any further inputs on this. I didn't not see
+any breakage with 4-lane devices, but has issue with 2-lane w/o this change.
