@@ -1,35 +1,27 @@
-From: Parthiban Nallathambi <pn@denx.de>
-Subject: [PATCH v2 2/4] i2c: Add Actions Semiconductor Owl family S700 I2C support
-Date: Mon, 26 Nov 2018 19:58:19 +0100
-Message-ID: <20181126185821.2480449-3-pn@denx.de>
-References: <20181126185821.2480449-1-pn@denx.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v10 1/3] dt-bindings: clock: Update GCC bindings for
+ protected-clocks
+Date: Mon, 26 Nov 2018 12:58:48 -0600
+Message-ID: <20181126185848.GA4853@bogus>
+References: <1542873221-13693-1-git-send-email-tdas@codeaurora.org>
+ <1542873221-13693-2-git-send-email-tdas@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181126185821.2480449-1-pn@denx.de>
+Content-Disposition: inline
+In-Reply-To: <1542873221-13693-2-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: afaerber@suse.de, manivannan.sadhasivam@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de
-Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux@cubietech.com, thomas.liau@actions-semi.com, Parthiban Nallathambi <pn@denx.de>
+Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add S700 to the list of devices supported by Owl I2C driver.
+On Thu, 22 Nov 2018 13:23:39 +0530, Taniya Das wrote:
+> Add protected-clocks list which could used to specify the clocks to be
+> bypassed on certain devices.
+> 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/clock/qcom,gcc.txt | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
 
-Add Actions Semiconductor Owl family S900 I2C driver.
-
-Signed-off-by: Parthiban Nallathambi <pn@denx.de>
----
- drivers/i2c/busses/i2c-owl.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/i2c/busses/i2c-owl.c b/drivers/i2c/busses/i2c-owl.c
-index 96b4572e6d9c..b6b5a495118b 100644
---- a/drivers/i2c/busses/i2c-owl.c
-+++ b/drivers/i2c/busses/i2c-owl.c
-@@ -475,6 +475,7 @@ static int owl_i2c_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id owl_i2c_of_match[] = {
-+	{ .compatible = "actions,s700-i2c" },
- 	{ .compatible = "actions,s900-i2c" },
- 	{ /* sentinel */ }
- };
--- 
-2.17.2
+Reviewed-by: Rob Herring <robh@kernel.org>
