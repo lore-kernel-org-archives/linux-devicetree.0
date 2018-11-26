@@ -1,35 +1,47 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v4 04/17] dt-bindings:
- interrupt-controller: Add suniv interrupt-controller
-Date: Mon, 26 Nov 2018 16:49:19 -0600
-Message-ID: <20181126224919.GA11610@bogus>
-References: <cover.1543131714.git.mesihkilinc@gmail.com>
- <ea00e2cc4dadb4a661e694dd022d8ca06470d3e8.1543131714.git.mesihkilinc@gmail.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2 0/7] drm/msm/dsi: Get PHY ref clocks from the
+ DT
+Date: Mon, 26 Nov 2018 15:11:52 -0800
+Message-ID: <20181126231159.122298-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERB4PQ6HPQKGQE67HV6UI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <ea00e2cc4dadb4a661e694dd022d8ca06470d3e8.1543131714.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 25 Nov 2018 10:43:07 +0300, Mesih Kilinc wrote:
-> Add compatible string for Alwinner suniv F1C100s SoC interrupt
-> controller which is stripped version of sun4i
-> 
-> Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt   | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+VGhlIE1TTSBEU0kgUEhZIGRyaXZlcnMgY3VycmVudGx5IGhhcmRjb2RlIHRoZSBuYW1lIGFuZCB0
+aGUgcmF0ZSBvZgp0aGUgUEhZIHJlZiBjbG9jay4gR2V0IHRoZSByZWYgY2xvY2sgZnJvbSB0aGUg
+ZGV2aWNlIHRyZWUgaW5zdGVhZC4KCk5vdGU6IHRlc3Rpbmcgb2YgdGhpcyBzZXJpZXMgd2FzIGxp
+bWl0ZWQgdG8gU0RNODQ1IGFuZCB0aGUgMTBubSBQSFkKCk1ham9yIGNoYW5nZXMgaW4gdjI6Ci0g
+YXBwbHkgdG8gYWxsIE1TTSBEU0kgUEhZIGRyaXZlcnMsIG5vdCBvbmx5IDEwbm0KCk1hdHRoaWFz
+IEthZWhsY2tlICg3KToKICBkdC1iaW5kaW5nczogbXNtL2RzaTogQWRkIHJlZiBjbG9jayBmb3Ig
+UEhZcwogIGRybS9tc20vZHNpOiAxNG5tIFBIWTogR2V0IHJlZiBjbG9jayBmcm9tIHRoZSBEVAog
+IGRybS9tc20vZHNpOiAyOG5tIDg5NjAgUEhZOiBHZXQgcmVmIGNsb2NrIGZyb20gdGhlIERUCiAg
+YXJtNjQ6IGR0czogcWNvbTogbXNtODkxNjogU2V0ICd4b19ib2FyZCcgYXMgcmVmIGNsb2NrIG9m
+IHRoZSBEU0kgUEhZCiAgZHJtL21zbS9kc2k6IDI4bm0gUEhZOiBHZXQgcmVmIGNsb2NrIGZyb20g
+dGhlIERUCiAgYXJtNjQ6IGR0czogc2RtODQ1OiBTZXQgJ2JpX3RjeG8nIGFzIHJlZiBjbG9jayBv
+ZiB0aGUgRFNJIFBIWXMKICBkcm0vbXNtL2RzaTogMTBubSBQSFk6IEdldCByZWYgY2xvY2sgZnJv
+bSB0aGUgRFQKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0ICAg
+fCAgMSArCiBhcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vbXNtODkxNi5kdHNpICAgICAgICAgfCAg
+NSArKy0tCiBhcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kgICAgICAgICAgfCAx
+MCArKysrLS0tCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9wbGwvZHNpX3BsbF8xMG5tLmMgICAg
+fCAxMyArKysrKysrKy0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZHNpL3BsbC9kc2lfcGxsXzE0bm0u
+YyAgICB8IDE2ICsrKysrKysrLS0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZHNpL3BsbC9kc2lfcGxs
+XzI4bm0uYyAgICB8IDI5ICsrKysrKysrKysrKystLS0tLS0KIC4uLi9ncHUvZHJtL21zbS9kc2kv
+cGxsL2RzaV9wbGxfMjhubV84OTYwLmMgICB8IDE3ICsrKysrKysrKy0tCiA3IGZpbGVzIGNoYW5n
+ZWQsIDY5IGluc2VydGlvbnMoKyksIDIyIGRlbGV0aW9ucygtKQoKLS0gCjIuMjAuMC5yYzAuMzg3
+LmdjN2E2OWU2YjZjLWdvb2cKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Zy
+ZWVkcmVubwo=
