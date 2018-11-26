@@ -1,38 +1,59 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 4/6] ARM: dts: rockchip: Add all CPUs in cooling maps
-Date: Mon, 26 Nov 2018 14:16:49 +0100
-Message-ID: <3908885.3xsdfg7bED@phil>
-References: <cover.1542362000.git.viresh.kumar@linaro.org> <8e59f97ae89a116b835ee14c63f550b159b000cc.1542362000.git.viresh.kumar@linaro.org>
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: Re: [PATCH 1/3] ARM: dts: imx1: Fix memory node duplicaton
+Date: Mon, 26 Nov 2018 15:13:24 +0200
+Message-ID: <7a0bd2b6-a624-85f0-6b63-ae2f80907685@mentor.com>
+References: <1543236054-10450-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8e59f97ae89a116b835ee14c63f550b159b000cc.1542362000.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1543236054-10450-1-git-send-email-festevam@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>, shawnguo@kernel.org
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 16. November 2018, 11:01:13 CET schrieb Viresh Kumar:
-> Each CPU can (and does) participate in cooling down the system but the
-> DT only captures a handful of them, normally CPU0, in the cooling maps.
-> Things work by chance currently as under normal circumstances its the
-> first CPU of each cluster which is used by the operating systems to
-> probe the cooling devices. But as soon as this CPU ordering changes and
-> any other CPU is used to bring up the cooling device, we will start
-> seeing failures.
-> 
-> Also the DT is rather incomplete when we list only one CPU in the
-> cooling maps, as the hardware doesn't have any such limitations.
-> 
-> Update cooling maps to include all devices affected by individual trip
-> points.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Hi Fabio,
 
-looks like I forgot to respond ... applied like 7 days ago
-and already part of my pull-request for 4.21
+On 11/26/2018 02:40 PM, Fabio Estevam wrote:
+> Boards based on imx1 have duplicate memory nodes:
+> 
+> - One coming from the board dts file: memory@
+> 
+> - One coming from the imx1.dtsi file.
+> 
+> Fix the duplication by removing the memory node from the dtsi file
+> and by adding 'device_type = "memory";' in the board dts.
+> 
+> Reported-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> ---
+>  arch/arm/boot/dts/imx1-ads.dts     | 1 +
+>  arch/arm/boot/dts/imx1-apf9328.dts | 1 +
+>  arch/arm/boot/dts/imx1.dtsi        | 2 --
+>  3 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx1-ads.dts b/arch/arm/boot/dts/imx1-ads.dts
+> index a1d81ba..3459a58 100644
+> --- a/arch/arm/boot/dts/imx1-ads.dts
+> +++ b/arch/arm/boot/dts/imx1-ads.dts
+> @@ -21,6 +21,7 @@
+>  	};
+>  
+>  	memory@8000000 {
+> +		 device_type = "memory";
+>  		reg = <0x08000000 0x04000000>;
 
+there is an unwanted space symbol before 'device_type'.
 
-Thanks
-Heiko
+--
+Best wishes,
+Vladimir
