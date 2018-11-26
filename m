@@ -1,48 +1,91 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 07/14] dt-bindings: mfd: axp20x: Add software based
- soft_start for AXP209 LDO3
-Date: Mon, 26 Nov 2018 16:58:22 +0000
-Message-ID: <20181126165822.GJ9715@sirena.org.uk>
-References: <cover.156212c9c5df493e098556cad9793a07dcab5e32.1543245984.git-series.plaes@plaes.org>
- <2cd75ee27982f3be0d86104d80eaa13efeb2c65d.1543245984.git-series.plaes@plaes.org>
+From: Govind Singh <govinds@codeaurora.org>
+Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add WCN3990 WLAN module device
+ node
+Date: Mon, 26 Nov 2018 22:28:57 +0530
+Message-ID: <bcda9f6ffc58c8457e8822226b751132@codeaurora.org>
+References: <20181126142133.16966-1-govinds@codeaurora.org>
+ <20181126144422.GU3175@vkoul-mobl.Dlink>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sT9gWZPUZYhvPS56"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2cd75ee27982f3be0d86104d80eaa13efeb2c65d.1543245984.git-series.plaes@plaes.org>
+In-Reply-To: <20181126144422.GU3175@vkoul-mobl.Dlink>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Priit Laes <plaes@plaes.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Sebastian Reichel <sre@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Olliver Schinagl <oliver@schinagl.nl>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: andy.gross@linaro.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Vinod,
 
---sT9gWZPUZYhvPS56
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks for the review.
 
-On Mon, Nov 26, 2018 at 05:27:48PM +0200, Priit Laes wrote:
+On 2018-11-26 20:14, Vinod Koul wrote:
+> Hi Govind,
+> 
+> On 26-11-18, 19:51, Govind Singh wrote:
+>> Add device node for the ath10k SNOC platform driver probe
+>> and add resources required for WCN3990 on qcs404 soc.
+>> Optional clock and regulator controls are not yet available in
+>> upstream, hence add them once available.
+>> 
+>> Signed-off-by: Govind Singh <govinds@codeaurora.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/qcs404.dtsi | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi 
+>> b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+>> index 9ca4f061ecc5..1a401a32d4a1 100644
+>> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+>> @@ -958,6 +958,25 @@
+>>  				status = "disabled";
+>>  			};
+>>  		};
+>> +
+>> +		wifi: wifi@0A000000 {
+> 
+> Please remove leading 0 from node
+> 
 
-> +- regulator-soft-start:	enable the output at the lowest possible voltage and
-> +			only then set the desired voltage
-> +			AXP20x/LDO3
+Sure, i will change in v2.
 
-This is a generic property, there is no need to document it in each
-device binding.
+>> +			compatible = "qcom,wcn3990-wifi";
+>> +			reg = <0x0A000000 0x800000>;
+>> +			reg-names = "membase";
+>> +			memory-region = <&wlan_msa_mem>;
+>> +			interrupts = <GIC_SPI 277 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 278 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 279 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 280 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 284 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>;
+>> +		};
+>>  	};
+>> 
+>>  	timer {
+> 
+> This file is sorted alphabetically and reg values. So this should be
+> between blsp1_uart2 and intc node, can you please change that
+> 
+> Also please compile this with W=12
+> 
 
---sT9gWZPUZYhvPS56
-Content-Type: application/pgp-signature; name="signature.asc"
+Sure, i will change in v2.
 
------BEGIN PGP SIGNATURE-----
+> Lastly, I am not sure, but should the wifi node be always enabled?
+> Should it not be enabled in the board dts file? Bjorn..?
+> 
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlv8Ji0ACgkQJNaLcl1U
-h9DqpQf9FKk4EThhuaS+THyVIZabmB4UD5ThkwDPpdFPWnjv6ojusIg73Aqj0lnu
-orthck0CTz+PCMPEXpdguWKQ7G9RjfgT9m+alt6294RpLM42RUVWfFPkzQjPFChb
-CfTd2inKqv/5lzN3yS5EDZXT4CxLzGnn6QYFQ4DCeTYriqVjRq/LzZZ2ut6KiaH2
-RfB22HvE8+Lp6qSwUc8yYyZ/Ri5HfjhKuDFSkzLXXSG2c35kZTY4k20V2dwfPLp/
-J6RuZMpIW7qzbtg1SNqXN98AKvSmrBXuKvAbZV+6nRe1RBkpQiQeZOBMbfMFImtX
-6nHUGaVsTpsiIxyE2J/jjlEJb0eIpg==
-=gYOf
------END PGP SIGNATURE-----
+yes, i some how missed this.
+I will mark the status disabled by default and enable from qcs404 evb 
+dts.
 
---sT9gWZPUZYhvPS56--
+> Thanks
