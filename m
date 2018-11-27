@@ -1,49 +1,52 @@
 From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: trivial: add ti,lm3630a binding
-Date: Tue, 27 Nov 2018 10:56:42 +0000
-Message-ID: <20181127105642.uu56phxjfl7bjl2p@holly.lan>
+Subject: Re: [PATCH 2/2] backlight: lm3630a: add backlight driver match_table
+Date: Tue, 27 Nov 2018 10:57:33 +0000
+Message-ID: <20181127105733.5t275fixa3utnkaz@holly.lan>
 References: <20181124141703.29232-1-masneyb@onstation.org>
+ <20181124141703.29232-2-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20181124141703.29232-1-masneyb@onstation.org>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <20181124141703.29232-2-masneyb@onstation.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Brian Masney <masneyb@onstation.org>
-Cc: lee.jones@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, jonathan@marek.ca, ctatlor97@gmail.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, ctatlor97@gmail.com, jonathan@marek.ca, b.zolnierkie@samsung.com, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 24, 2018 at 09:17:02AM -0500, Brian Masney wrote:
-> Add a trivial binding for the Texas Instruments LM3630A Backlight Chip.
-
-It's quite unusual for a backlight device to have a trivial binding.
-
-The driver supports fairly extensive parametrization via struct
-lm3530a_platform_data. It is really the case that none of these
-properties should ever be set via DT?
-
-
-Daniel.
-
-
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  Documentation/devicetree/bindings/trivial-devices.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
-> index 6ab001fa1ed4..86486368dc35 100644
-> --- a/Documentation/devicetree/bindings/trivial-devices.txt
-> +++ b/Documentation/devicetree/bindings/trivial-devices.txt
-> @@ -182,6 +182,7 @@ taos,tsl2550		Ambient Light Sensor with SMBUS/Two Wire Serial Interface
->  ti,ads7828		8-Channels, 12-bit ADC
->  ti,ads7830		8-Channels, 8-bit ADC
->  ti,amc6821		Temperature Monitoring and Fan Control
-> +ti,lm3630a		Texas Instruments LM3630A Backlight Chip
->  ti,tsc2003		I2C Touch-Screen Controller
->  ti,tmp102		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
->  ti,tmp103		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
-> -- 
-> 2.17.2
-> 
+T24gU2F0LCBOb3YgMjQsIDIwMTggYXQgMDk6MTc6MDNBTSAtMDUwMCwgQnJpYW4gTWFzbmV5IHdy
+b3RlOgo+IEZyb206IEpvbmF0aGFuIE1hcmVrIDxqb25hdGhhbkBtYXJlay5jYT4KPiAKPiBBZGQg
+ZGV2aWNlIHRyZWUgc3VwcG9ydCB0byB0aGUgbG0zNjMwYSBkcml2ZXIuCj4gCj4gU2lnbmVkLW9m
+Zi1ieTogSm9uYXRoYW4gTWFyZWsgPGpvbmF0aGFuQG1hcmVrLmNhPgo+IFttYXNuZXliQG9uc3Rh
+dGlvbi5vcmc6IGNoZWNrcGF0Y2ggZml4ZXM7IGFkZCAnYScgdG8gY29tcGF0aWJsZSBzdHJpbmdd
+Cj4gU2lnbmVkLW9mZi1ieTogQnJpYW4gTWFzbmV5IDxtYXNuZXliQG9uc3RhdGlvbi5vcmc+Cj4g
+LS0tCj4gVGhpcyBpcyBwYXJ0IG9mIHVwc3RyZWFtaW5nIHZhcmlvdXMgY29tcG9uZW50cyBvZiB0
+aGUgTEcgTmV4dXMgNQo+IChoYW1tZXJoZWFkKSBwaG9uZS4KPiAKPiAgZHJpdmVycy92aWRlby9i
+YWNrbGlnaHQvbG0zNjMwYV9ibC5jIHwgNyArKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA3IGlu
+c2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvbG0z
+NjMwYV9ibC5jIGIvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvbG0zNjMwYV9ibC5jCj4gaW5kZXgg
+MjAzMGE2Yjc3YTA5Li4xNTlkNDAxM2Q5YzIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy92aWRlby9i
+YWNrbGlnaHQvbG0zNjMwYV9ibC5jCj4gKysrIGIvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvbG0z
+NjMwYV9ibC5jCj4gQEAgLTQ3MCwxMSArNDcwLDE4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgaTJj
+X2RldmljZV9pZCBsbTM2MzBhX2lkW10gPSB7Cj4gIAl7fQo+ICB9OwoKU2ltaWxhciB0byBteSBy
+ZXBseSB0byB0aGUgRFQgYmluZGluZ3M6IEkgd291bGQgaGF2ZSBleHBlY3RlZCB0aGVyZQp0byBi
+ZSBjb2RlIHRvIGhhbmRsZSBEVCBwcm9wZXJ0aWVzIGhlcmUuCgoKRGFuaWVsLgoKCgo+ICAKPiAr
+c3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbG0zNjMwYV9tYXRjaF90YWJsZVtdID0g
+ewo+ICsJeyAuY29tcGF0aWJsZSA9ICJ0aSxsbTM2MzBhIiwgfSwKPiArCXsgfSwKPiArfTsKPiAr
+Cj4gKwo+ICBNT0RVTEVfREVWSUNFX1RBQkxFKGkyYywgbG0zNjMwYV9pZCk7Cj4gIAo+ICBzdGF0
+aWMgc3RydWN0IGkyY19kcml2ZXIgbG0zNjMwYV9pMmNfZHJpdmVyID0gewo+ICAJLmRyaXZlciA9
+IHsKPiAgCQkgICAubmFtZSA9IExNMzYzMEFfTkFNRSwKPiArCQkgICAub2ZfbWF0Y2hfdGFibGUg
+PSBsbTM2MzBhX21hdGNoX3RhYmxlLAo+ICAJCSAgIH0sCj4gIAkucHJvYmUgPSBsbTM2MzBhX3By
+b2JlLAo+ICAJLnJlbW92ZSA9IGxtMzYzMGFfcmVtb3ZlLAo+IC0tIAo+IDIuMTcuMgo+IApfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
