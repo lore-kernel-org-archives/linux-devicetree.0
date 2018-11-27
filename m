@@ -1,119 +1,111 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v10 1/7] interconnect: Add generic on-chip interconnect
- API
-Date: Tue, 27 Nov 2018 10:35:15 -0800
-Message-ID: <5d16a4a57ed5529299d7b73e13a249add00b1afe.camel@perches.com>
-References: <20181127180349.29997-1-georgi.djakov@linaro.org>
-         <20181127180349.29997-2-georgi.djakov@linaro.org>
+From: "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH v5 5/7] iommu: Add virtio-iommu driver
+Date: Tue, 27 Nov 2018 13:53:17 -0500
+Message-ID: <20181127131455-mutt-send-email-mst@kernel.org>
+References: <20181122193801.50510-1-jean-philippe.brucker@arm.com>
+ <20181122193801.50510-6-jean-philippe.brucker@arm.com>
+ <20181123165742-mutt-send-email-mst@kernel.org>
+ <fd221210-7e12-1d15-0c80-52a761f6893d@arm.com>
+ <20181127125424-mutt-send-email-mst@kernel.org>
+ <ef97313f-4795-9537-e0b8-8bf6751db6a6@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181127180349.29997-2-georgi.djakov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>, linux-pm@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, rjw@rjwysocki.net, robh+dt@kernel.org, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, arnd@arndb.de, thierry.reding@gmail.com, ksitaraman@nvidia.com, sanjayc@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <virtio-dev-return-5060-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
+Sender: <virtio-dev@lists.oasis-open.org>
+List-Post: <mailto:virtio-dev@lists.oasis-open.org>
+List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
+List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
+List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
+Content-Disposition: inline
+In-Reply-To: <ef97313f-4795-9537-e0b8-8bf6751db6a6@arm.com>
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc: mark.rutland@arm.com, virtio-dev@lists.oasis-open.org, lorenzo.pieralisi@arm.com, tnowicki@caviumnetworks.com, devicetree@vger.kernel.org, marc.zyngier@arm.com, linux-pci@vger.kernel.org, joro@8bytes.org, will.deacon@arm.com, virtualization@lists.linux-foundation.org, eric.auger@redhat.com, iommu@lists.linux-foundation.org, robh+dt@kernel.org, bhelgaas@google.com, robin.murphy@arm.com, kvmarm@lists.cs.columbia.edu
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-11-27 at 20:03 +0200, Georgi Djakov wrote:
-> This patch introduces a new API to get requirements and configure the
-> interconnect buses across the entire chipset to fit with the current
-> demand.
+On Tue, Nov 27, 2018 at 06:10:46PM +0000, Jean-Philippe Brucker wrote:
+> On 27/11/2018 18:04, Michael S. Tsirkin wrote:
+> > On Tue, Nov 27, 2018 at 05:50:50PM +0000, Jean-Philippe Brucker wrote:
+> >> On 23/11/2018 22:02, Michael S. Tsirkin wrote:
+> >>>> +/*
+> >>>> + * __viommu_sync_req - Complete all in-flight requests
+> >>>> + *
+> >>>> + * Wait for all added requests to complete. When this function returns, all
+> >>>> + * requests that were in-flight at the time of the call have completed.
+> >>>> + */
+> >>>> +static int __viommu_sync_req(struct viommu_dev *viommu)
+> >>>> +{
+> >>>> +	int ret = 0;
+> >>>> +	unsigned int len;
+> >>>> +	size_t write_len;
+> >>>> +	struct viommu_request *req;
+> >>>> +	struct virtqueue *vq = viommu->vqs[VIOMMU_REQUEST_VQ];
+> >>>> +
+> >>>> +	assert_spin_locked(&viommu->request_lock);
+> >>>> +
+> >>>> +	virtqueue_kick(vq);
+> >>>> +
+> >>>> +	while (!list_empty(&viommu->requests)) {
+> >>>> +		len = 0;
+> >>>> +		req = virtqueue_get_buf(vq, &len);
+> >>>> +		if (!req)
+> >>>> +			continue;
+> >>>> +
+> >>>> +		if (!len)
+> >>>> +			viommu_set_req_status(req->buf, req->len,
+> >>>> +					      VIRTIO_IOMMU_S_IOERR);
+> >>>> +
+> >>>> +		write_len = req->len - req->write_offset;
+> >>>> +		if (req->writeback && len == write_len)
+> >>>> +			memcpy(req->writeback, req->buf + req->write_offset,
+> >>>> +			       write_len);
+> >>>> +
+> >>>> +		list_del(&req->list);
+> >>>> +		kfree(req);
+> >>>> +	}
+> >>>
+> >>> I didn't notice this in the past but it seems this will spin
+> >>> with interrupts disabled until host handles the request.
+> >>> Please do not do this - host execution can be another
+> >>> task that needs the same host CPU. This will then disable
+> >>> interrupts for a very very long time.
+> >>
+> >> In the guest yes, but that doesn't prevent the host from running another
+> >> task right?
+> > 
+> > Doesn't prevent it but it will delay it significantly
+> > until scheduler decides to kick the VCPU task out.
+> > 
+> >> My tests run fine when QEMU is bound to a single CPU, even
+> >> though vcpu and viommu run in different threads
+> >>
+> >>> What to do then? Queue in software and wake up task.
+> >>
+> >> Unfortunately I can't do anything here, because IOMMU drivers can't
+> >> sleep in the iommu_map() or iommu_unmap() path.
+> >>
+> >> The problem is the same
+> >> for all IOMMU drivers. That's because the DMA API allows drivers to call
+> >> some functions with interrupts disabled. For example
+> >> Documentation/DMA-API-HOWTO.txt allows dma_alloc_coherent() and
+> >> dma_unmap_single() to be called in interrupt context.
+> > 
+> > In fact I don't really understand how it's supposed to
+> > work at all: you only sync when ring is full.
+> > So host may not have seen your map request if ring
+> > is not full.
+> > Why is it safe to use the address with a device then?
+> 
+> viommu_map() calls viommu_send_req_sync(), which does the sync
+> immediately after adding the MAP request.
+> 
+> Thanks,
+> Jean
 
-trivial notes:
+I see. So it happens on every request. Maybe you should clear
+event index then. This way if exits are disabled you know that
+host is processing the ring. Event index is good for when
+you don't care when it will be processed, you just want
+to reduce number of exits as much as possible.
 
-> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-[]
-> +static int apply_constraints(struct icc_path *path)
-> +{
-> +	struct icc_node *next, *prev = NULL;
-> +	int ret = -EINVAL;
-> +	int i;
-> +
-> +	for (i = 0; i < path->num_nodes; i++, prev = next) {
-> +		struct icc_provider *p;
-> +
-> +		next = path->reqs[i].node;
-> +		/*
-> +		 * Both endpoints should be valid master-slave pairs of the
-> +		 * same interconnect provider that will be configured.
-> +		 */
-> +		if (!prev || next->provider != prev->provider)
-> +			continue;
-> +
-> +		p = next->provider;
-> +
-> +		/* set the constraints */
-> +		ret = p->set(prev, next);
-> +		if (ret)
-> +			goto out;
-> +	}
-> +out:
-> +	return ret;
-> +}
-
-The use of ", prev = next" appears somewhat tricky code.
-Perhaps move the assignment of prev to the bottom of the loop.
-Perhaps the temporary p assignment isn't useful either.
-
-> +int icc_set(struct icc_path *path, u32 avg_bw, u32 peak_bw)
-> +{
-[]
-> +	ret = apply_constraints(path);
-> +	if (ret)
-> +		pr_debug("interconnect: error applying constraints (%d)", ret);
-
-Ideally all pr_<foo> formats should end in '\n'
-
-> +static struct icc_node *icc_node_create_nolock(int id)
-> +{
-> +	struct icc_node *node;
-> +
-> +	/* check if node already exists */
-> +	node = node_find(id);
-> +	if (node)
-> +		goto out;
-> +
-> +	node = kzalloc(sizeof(*node), GFP_KERNEL);
-> +	if (!node) {
-> +		node = ERR_PTR(-ENOMEM);
-> +		goto out;
-
-Generally, this code appears to overly rely on goto when
-direct returns could be more readable.
-
-> +	}
-> +
-> +	id = idr_alloc(&icc_idr, node, id, id + 1, GFP_KERNEL);
-> +	if (WARN(id < 0, "couldn't get idr")) {
-
-This seems to unnecessarily hide the id < 0 test in a WARN
-
-Why is this a WARN and not a simpler
-	if (id < 0) {
-		[ pr_err(...); or WARN(1, ...); ]
-
-> +		kfree(node);
-> +		node = ERR_PTR(id);
-> +		goto out;
-> +	}
-> +
-> +	node->id = id;
-> +
-> +out:
-> +	return node;
-> +}
-[]
-> diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
-[]
-> +/* macros for converting to icc units */
-> +#define bps_to_icc(x)	(1)
-> +#define kBps_to_icc(x)	(x)
-[]
-> +#define MBps_to_icc(x)	(x * 1000)
-> +#define GBps_to_icc(x)	(x * 1000 * 1000)
-> +#define kbps_to_icc(x)	(x / 8 + ((x) % 8 ? 1 : 0))
-> +#define Mbps_to_icc(x)	(x * 1000 / 8 )
-> +#define Gbps_to_icc(x)	(x * 1000 * 1000 / 8)
-
-The last 5 macros should parenthesize x
+-- 
+MST
