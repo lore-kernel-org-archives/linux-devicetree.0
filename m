@@ -1,72 +1,80 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v9 2/8] dt-bindings: Introduce interconnect binding
-Date: Tue, 27 Nov 2018 20:05:39 +0200
-Message-ID: <bfed1f52-1544-8491-9f0f-b46c2787b45e@linaro.org>
-References: <20180831140151.13972-1-georgi.djakov@linaro.org>
- <20180831140151.13972-3-georgi.djakov@linaro.org>
- <20180925180215.GA12435@bogus>
- <b67253fb-d86d-2ddd-6c30-0833d6ed62ad@linaro.org>
+From: "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH v5 5/7] iommu: Add virtio-iommu driver
+Date: Tue, 27 Nov 2018 13:10:10 -0500
+Message-ID: <20181127130527-mutt-send-email-mst@kernel.org>
+References: <20181122193801.50510-1-jean-philippe.brucker@arm.com>
+ <20181122193801.50510-6-jean-philippe.brucker@arm.com>
+ <20181123165206-mutt-send-email-mst@kernel.org>
+ <e76a51ba-7a0f-3fca-a1ae-640131f9dfe1@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b67253fb-d86d-2ddd-6c30-0833d6ed62ad@linaro.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, rjw@rjwysocki.net, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Krishna Sitaraman <ksitaraman@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <virtio-dev-return-5056-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
+Sender: <virtio-dev@lists.oasis-open.org>
+List-Post: <mailto:virtio-dev@lists.oasis-open.org>
+List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
+List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
+List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
+Content-Disposition: inline
+In-Reply-To: <e76a51ba-7a0f-3fca-a1ae-640131f9dfe1@arm.com>
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc: mark.rutland@arm.com, virtio-dev@lists.oasis-open.org, lorenzo.pieralisi@arm.com, tnowicki@caviumnetworks.com, devicetree@vger.kernel.org, marc.zyngier@arm.com, linux-pci@vger.kernel.org, joro@8bytes.org, will.deacon@arm.com, virtualization@lists.linux-foundation.org, eric.auger@redhat.com, iommu@lists.linux-foundation.org, robh+dt@kernel.org, bhelgaas@google.com, robin.murphy@arm.com, kvmarm@lists.cs.columbia.edu
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 9/26/18 17:42, Georgi Djakov wrote:
-> Hi Rob,
+On Tue, Nov 27, 2018 at 05:55:20PM +0000, Jean-Philippe Brucker wrote:
+> On 23/11/2018 21:56, Michael S. Tsirkin wrote:
+> >> +config VIRTIO_IOMMU
+> >> +	bool "Virtio IOMMU driver"
+> >> +	depends on VIRTIO=y
+> >> +	select IOMMU_API
+> >> +	select INTERVAL_TREE
+> >> +	select ARM_DMA_USE_IOMMU if ARM
+> >> +	help
+> >> +	  Para-virtualised IOMMU driver with virtio.
+> >> +
+> >> +	  Say Y here if you intend to run this kernel as a guest.
+> >> +
+> > 
+> > Given it is arm specific right now, shouldn't this depend on ARM?
+> > E.g. there's a hack for x86 right now.
 > 
-> Thanks for the comments!
+> Sure, I'll make it depend on ARM64 for now
 > 
-> On 09/25/2018 09:02 PM, Rob Herring wrote:
->> On Fri, Aug 31, 2018 at 05:01:45PM +0300, Georgi Djakov wrote:
->>> This binding is intended to represent the relations between the interconnect
->>> controllers (providers) and consumer device nodes. It will allow creating links
->>> between consumers and interconnect paths (exposed by interconnect providers).
->>
->> As I mentioned in person, I want to see other SoC families using this
->> before accepting. They don't have to be ready for upstream, but WIP
->> patches or even just a "yes, this works for us and we're going to use
->> this binding on X".
-
-Patches for the iMX7ULP platform are already available [1]. Thanks 
-Alexandre Bailon!
-
-The interconnect API seems to be also a good fit for Nvidia SoCs. There 
-is an ongoing discussion about implementing an interconnect provider 
-driver for Tegra [2]. Thanks Thierry and Krishna!
-
-In addition of the above, i also checked privately with a few other SoC 
-maintainers and made them aware of these patches. Some are not ready for 
-upstream yet, but the feedback was positive and i expect more SoCs to 
-make use of this in the future.
-
-BR,
-Georgi
-
-[1] https://lkml.org/lkml/2018/11/17/368
-[2] https://marc.info/?t=154056181900001&r=1&w=2
-
-
-> Other than the 3 Qualcomm SoCs (msm8916, msm8996, sdm845) that are
-> currently using this binding, there is ongoing work from at least two
-> other vendors that would be using this same binding. I will check on
-> what is their progress so far.
+> [..]
+> >> +static int viommu_probe(struct virtio_device *vdev)
+> >> +{
+> >> +	struct device *parent_dev = vdev->dev.parent;
+> >> +	struct viommu_dev *viommu = NULL;
+> >> +	struct device *dev = &vdev->dev;
+> >> +	u64 input_start = 0;
+> >> +	u64 input_end = -1UL;
+> >> +	int ret;
+> >> +
+> >> +	if (!virtio_has_feature(vdev, VIRTIO_F_VERSION_1) ||
+> >> +	    !virtio_has_feature(vdev, VIRTIO_IOMMU_F_MAP_UNMAP))
+> > 
+> > Why bother with a feature bit for this then btw?
 > 
->> Also, I think the QCom GPU use of this should be fully sorted out. Or
->> more generically how this fits into OPP binding which seems to be never
->> ending extended...
+> We'll need a new feature bit for sharing page tables with the hardware,
+> because they require different requests (attach_table/invalidate instead
+> of map/unmap.) A future device supporting page table sharing won't
+> necessarily need to support map/unmap.
 > 
-> I see this as a further step. It could be OPP binding which include
-> bandwidth values or some separate DT property. Jordan has already
-> proposed something, do you have any initial comments on that?
-> 
-> BR,
-> Georgi
-> 
+> Thanks,
+> Jean
+
+I don't see virtio iommu being extended to support ARM specific
+requests. This just won't scale, too many different
+descriptor formats out there.
+
+If you want to go that way down the road, you should avoid
+virtio iommu, instead emulate and share code with the ARM SMMU (probably
+with a different vendor id so you can implement the
+report on map for devices without PRI).
+
+Others on the TC might feel differently.
+
+If someone's looking into adding virtio iommu support in hardware,
+that's a different matter. Which is it?
+
+-- 
+MST
