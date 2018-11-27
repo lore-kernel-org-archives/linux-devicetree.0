@@ -1,47 +1,69 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: bananapi-m64:
- Enable audio codec
-Date: Tue, 27 Nov 2018 09:22:41 +0100
-Message-ID: <20181127082241.jx3vzapy5mlgfabc@flea>
-References: <20181126055946.20344-1-wens@csie.org>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH V4 2/2] base/drivers/arch_topology: Default dmips-mhz if
+ they are not set in DT
+Date: Tue, 27 Nov 2018 09:31:49 +0100
+Message-ID: <0a9dc628-bae0-9d31-7a7a-3ecd788ed511@linaro.org>
+References: <1543234847-21611-1-git-send-email-daniel.lezcano@linaro.org>
+ <1543234847-21611-2-git-send-email-daniel.lezcano@linaro.org>
+ <20181127035735.keqirmzjfbw4cq64@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lylwgf2dl5bmdjvu"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXH56PPQKGQECG2423Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20181126055946.20344-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181127035735.keqirmzjfbw4cq64@vireshk-i7>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: rjw@rjwysocki.net, linux-kernel@vger.kernel.org, Chris Redpath <chris.redpath@linaro.org>, Quentin Perret <quentin.perret@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Li Yang <leoyang.li@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---lylwgf2dl5bmdjvu
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Mon, Nov 26, 2018 at 01:59:46PM +0800, Chen-Yu Tsai wrote:
-> This patch enables audio via the SoC's internal audio codec. All
-> relevant device nodes are enabled, and the routing is set to match
-> the board design. MIC1 is routed to an onboard microphone, with MBIAS
-> providing power. MIC2 and HP are routed to the 3.5mm headset TRRS jack.
-> No phantom power is provided to the headset microphone.
+On 27/11/2018 04:57, Viresh Kumar wrote:
+> On 26-11-18, 13:20, Daniel Lezcano wrote:
+>> diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+>> index 84262cd..f53a3c9 100644
+>> --- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+>> +++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+>> @@ -54,6 +54,12 @@ fall back to the default capacity value for every CPU. If cpufreq is not
+>>  available, final capacities are calculated by directly using capacity-dmips-
+>>  mhz values (normalized w.r.t. the highest value found while parsing the DT).
+>>  
+>> +If capacity-dmips-mhz is not specified or if the parsing fails, the
+>> +default capacity value will be computed against the highest frequency.
+>> +When all CPUs have the same OPP, they will have the same capacity
+>> +value otherwise the capacity will be scaled down for CPUs having lower
+>> +frequencies.
 > 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> I know you added this based on Quentin's feedback, but I wonder if this is
+> really required and if it is improving anything at all. This is what the
+> documentation says currently without this patch:
+> 
+> "
+> capacity-dmips-mhz is an optional cpu node [1] property: u32 value
+> representing CPU capacity expressed in normalized DMIPS/MHz. At boot time, the
+> maximum frequency available to the cpu is then used to calculate the capacity
+> value internally used by the kernel.
+> 
+> capacity-dmips-mhz property is all-or-nothing: if it is specified for a cpu
+> node, it has to be specified for every other cpu nodes, or the system will
+> fall back to the default capacity value for every CPU. If cpufreq is not
+> available, final capacities are calculated by directly using capacity-dmips-
+> mhz values (normalized w.r.t. the highest value found while parsing the DT).
+> "
+> 
+> So it already clearly says two things:
+> - If all CPUs don't have this property, we fallback to default capacity for
+>   every CPU.
+> - And the OS may also normalize the capacity based on the maximum frequency.
+> 
+> What more do we want to add here ?
 
-Applied, thanks!
-
-Maxime
+I think what is new is the silver-gold platform. I agree the description
+above gives us the information but in a condensed way. With this extra
+paragraph we elaborate a bit and make it more clear for SMP/AMP systems.
 
 -- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---lylwgf2dl5bmdjvu--
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
