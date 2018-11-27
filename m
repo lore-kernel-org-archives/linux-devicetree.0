@@ -1,124 +1,42 @@
-Return-Path: <SRS0=2X+C=OH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:41164 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728111AbeK1Uze (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 28 Nov 2018 15:55:34 -0500
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH v3 03/12] dt-bindings: tegra186-hsp: Add shared mailboxes
-Date: Wed, 28 Nov 2018 10:54:12 +0100
-Message-Id: <20181128095421.20573-4-thierry.reding@gmail.com>
-In-Reply-To: <20181128095421.20573-1-thierry.reding@gmail.com>
-References: <20181128095421.20573-1-thierry.reding@gmail.com>
+Return-Path: <SRS0=pBn+=OG=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v3 0/6] media: mt9m111 features
+Date: Tue, 27 Nov 2018 11:02:47 +0100
+Message-Id: <20181127100253.30845-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mikko Perttunen <mperttunen@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, Pekka Pessi <ppessi@nvidia.com>, Mika Liljeberg <mliljeberg@nvidia.com>, linux-tegra@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: enrico.scholz@sigma-chemnitz.de, devicetree@vger.kernel.org, akinobu.mita@gmail.com, linux-media@vger.kernel.org, graphics@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-From: Mikko Perttunen <mperttunen@nvidia.com>
+Hi,
 
-Shared mailboxes are a mechanism to transport data from one processor in
-the system to another. They are bidirectional links with both a producer
-and a consumer. Interrupts are used to let the consumer know when data
-was written to the mailbox by the producer, and to let the producer know
-when the consumer has read the data from the mailbox. These interrupts
-are mapped to one or more "shared interrupts". Typically each processor
-in the system owns one of these shared interrupts.
+this v3 integrate the review  of my v2 [1]. I reordered the series as
+mentioned by Sakari.
 
-Add documentation to the device tree bindings about how clients can use
-mailbox specifiers to request a specific shared mailbox and select which
-direction they drive. Also document how to specify the shared interrupts
-in addition to the existing doorbell interrupt.
+The patches are rebased on top of the actual media-tree/master.
 
-Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
-Changes in v2:
-- describe in more detail how the mailbox specifiers are constructed
-- encode mailbox direction in the device tree mailbox specifier
----
- .../bindings/mailbox/nvidia,tegra186-hsp.txt  | 30 +++++++++++++++----
- include/dt-bindings/mailbox/tegra186-hsp.h    | 11 +++++++
- 2 files changed, 36 insertions(+), 5 deletions(-)
+[1] https://www.mail-archive.com/linux-media@vger.kernel.org/msg135932.html
 
-diff --git a/Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt b/Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt
-index b99d25fc2f26..ff3eafc5a882 100644
---- a/Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt
-+++ b/Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.txt
-@@ -15,12 +15,15 @@ Required properties:
-     Array of strings.
-     one of:
-     - "nvidia,tegra186-hsp"
-+    - "nvidia,tegra194-hsp", "nvidia,tegra186-hsp"
- - reg : Offset and length of the register set for the device.
- - interrupt-names
-     Array of strings.
-     Contains a list of names for the interrupts described by the interrupt
-     property. May contain the following entries, in any order:
-     - "doorbell"
-+    - "sharedN", where 'N' is a number from zero up to the number of
-+      external interrupts supported by the HSP instance minus one.
-     Users of this binding MUST look up entries in the interrupt property
-     by name, using this interrupt-names property to do so.
- - interrupts
-@@ -29,12 +32,29 @@ Required properties:
-     in a matching order.
- - #mbox-cells : Should be 2.
- 
--The mbox specifier of the "mboxes" property in the client node should
--contain two data. The first one should be the HSP type and the second
--one should be the ID that the client is going to use. Those information
--can be found in the following file.
-+The mbox specifier of the "mboxes" property in the client node should contain
-+two cells. The first cell determines the HSP type and the second cell is used
-+to identify the mailbox that the client is going to use.
- 
--- <dt-bindings/mailbox/tegra186-hsp.h>.
-+For doorbells, the second cell specifies the index of the doorbell to use.
-+
-+For shared mailboxes, the second cell is composed of two fields:
-+- bits 31..24:
-+    A bit mask of flags that further specify how the shared mailbox will be
-+    used. Valid flags are:
-+    - bit 31:
-+        Defines the direction of the mailbox. If set, the mailbox will be used
-+        as a producer (i.e. used to send data). If cleared, the mailbox is the
-+        consumer of data sent by a producer.
-+
-+- bits 23.. 0:
-+    The index of the shared mailbox to use. The number of available mailboxes
-+    may vary by instance of the HSP block and SoC generation.
-+
-+The following file contains definitions that can be used to construct mailbox
-+specifiers:
-+
-+    <dt-bindings/mailbox/tegra186-hsp.h>
- 
- Example:
- 
-diff --git a/include/dt-bindings/mailbox/tegra186-hsp.h b/include/dt-bindings/mailbox/tegra186-hsp.h
-index bcab5b7ca785..3bdec7a84d35 100644
---- a/include/dt-bindings/mailbox/tegra186-hsp.h
-+++ b/include/dt-bindings/mailbox/tegra186-hsp.h
-@@ -22,4 +22,15 @@
- #define TEGRA_HSP_DB_MASTER_CCPLEX 17
- #define TEGRA_HSP_DB_MASTER_BPMP 19
- 
-+/*
-+ * Shared mailboxes are unidirectional, so the direction needs to be specified
-+ * in the device tree.
-+ */
-+#define TEGRA_HSP_SM_MASK 0x00ffffff
-+#define TEGRA_HSP_SM_FLAG_RX (0 << 31)
-+#define TEGRA_HSP_SM_FLAG_TX (1 << 31)
-+
-+#define TEGRA_HSP_SM_RX(x) (TEGRA_HSP_SM_FLAG_RX | ((x) & TEGRA_HSP_SM_MASK))
-+#define TEGRA_HSP_SM_TX(x) (TEGRA_HSP_SM_FLAG_TX | ((x) & TEGRA_HSP_SM_MASK))
-+
- #endif
+Regards,
+Marco
+
+
+Enrico Scholz (1):
+  media: mt9m111: allow to setup pixclk polarity
+
+Marco Felsch (3):
+  media: mt9m111: add s_stream callback
+  dt-bindings: media: mt9m111: adapt documentation to be more clear
+  dt-bindings: media: mt9m111: add pclk-sample property
+
+Michael Grzeschik (2):
+  media: mt9m111: add streaming check to set_fmt
+  media: mt9m111: add support to select formats and fps for {Q,SXGA}
+
+ .../devicetree/bindings/media/i2c/mt9m111.txt |  13 +-
+ drivers/media/i2c/mt9m111.c                   | 224 +++++++++++++++++-
+ 2 files changed, 232 insertions(+), 5 deletions(-)
+
 -- 
 2.19.1
