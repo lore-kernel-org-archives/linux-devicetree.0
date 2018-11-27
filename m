@@ -1,157 +1,64 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH 5/5] DO NOT MERGE: ARM: dts: bananapi: Add Camera support
-Date: Tue, 27 Nov 2018 12:26:09 +0530
-Message-ID: <CAMty3ZBO6B=vgduv5u28zC8P1DOm1TYGFAVjDtJOpU8dozrk=A@mail.gmail.com>
-References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
- <12093630fdd7d8b43ebcb0340691e0f2200e26c6.1542097288.git-series.maxime.ripard@bootlin.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add videocc node
+Date: Mon, 26 Nov 2018 22:57:48 -0800
+Message-ID: <154330186815.88331.12720647562079303842@swboyd.mtv.corp.google.com>
+References: <1541414117-27864-1-git-send-email-tdas@codeaurora.org>
+ <CAD=FV=X3C=oKep1kPWjasLDZdFKfhCs0JMWTOensgYDj=apvuQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <12093630fdd7d8b43ebcb0340691e0f2200e26c6.1542097288.git-series.maxime.ripard@bootlin.com>
+In-Reply-To: <CAD=FV=X3C=oKep1kPWjasLDZdFKfhCs0JMWTOensgYDj=apvuQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, laurent.pinchart@ideasonboard.com, linux-media <linux-media@vger.kernel.org>, a.hajda@samsung.com, Chen-Yu Tsai <wens@csie.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, frowand.list@gmail.com
+To: Andy Gross <andy.gross@linaro.org>, Doug Anderson <dianders@chromium.org>, Taniya Das <tdas@codeaurora.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 13, 2018 at 1:54 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  arch/arm/boot/dts/sun7i-a20-bananapi.dts | 98 +++++++++++++++++++++++++-
->  1 file changed, 98 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-> index 70dfc4ac0bb5..18dbff9f1ce9 100644
-> --- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-> @@ -54,6 +54,9 @@
->         compatible = "lemaker,bananapi", "allwinner,sun7i-a20";
->
->         aliases {
-> +               i2c0 = &i2c0;
-> +               i2c1 = &i2c1;
-> +               i2c2 = &i2c2;
->                 serial0 = &uart0;
->                 serial1 = &uart3;
->                 serial2 = &uart7;
-> @@ -63,6 +66,41 @@
->                 stdout-path = "serial0:115200n8";
->         };
->
-> +       reg_cam: cam {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "cam";
-> +               regulator-min-microvolt = <5000000>;
-> +               regulator-max-microvolt = <5000000>;
-> +               vin-supply = <&reg_vcc5v0>;
-> +               gpio = <&pio 7 16 GPIO_ACTIVE_HIGH>;
-> +               enable-active-high;
-> +               regulator-always-on;
-> +       };
-> +
-> +        reg_cam_avdd: cam-avdd {
-> +                compatible = "regulator-fixed";
-> +                regulator-name = "cam500b-avdd";
-> +                regulator-min-microvolt = <2800000>;
-> +                regulator-max-microvolt = <2800000>;
-> +                vin-supply = <&reg_cam>;
-> +        };
-> +
-> +        reg_cam_dovdd: cam-dovdd {
-> +                compatible = "regulator-fixed";
-> +                regulator-name = "cam500b-dovdd";
-> +                regulator-min-microvolt = <1800000>;
-> +                regulator-max-microvolt = <1800000>;
-> +                vin-supply = <&reg_cam>;
-> +        };
-> +
-> +        reg_cam_dvdd: cam-dvdd {
-> +                compatible = "regulator-fixed";
-> +                regulator-name = "cam500b-dvdd";
-> +                regulator-min-microvolt = <1500000>;
-> +                regulator-max-microvolt = <1500000>;
-> +                vin-supply = <&reg_cam>;
-> +        };
-> +
->         hdmi-connector {
->                 compatible = "hdmi-connector";
->                 type = "a";
-> @@ -120,6 +158,27 @@
->                 >;
->  };
->
-> +&csi0 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&csi0_pins_a>;
-> +       status = "okay";
-> +
-> +       port {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               csi_from_ov5640: endpoint {
-> +                        remote-endpoint = <&ov5640_to_csi>;
-> +                        bus-width = <8>;
-> +                        data-shift = <2>;
-> +                        hsync-active = <1>; /* Active high */
-> +                        vsync-active = <0>; /* Active low */
-> +                        data-active = <1>;  /* Active high */
-> +                        pclk-sample = <1>;  /* Rising */
-> +                };
-> +       };
-> +};
-> +
->  &de {
->         status = "okay";
->  };
-> @@ -167,6 +226,39 @@
->         };
->  };
->
-> +&i2c1 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&i2c1_pins_a>;
-> +       status = "okay";
-> +
-> +       camera: camera@21 {
-> +               compatible = "ovti,ov5640";
-> +               reg = <0x21>;
-> +                clocks = <&ccu CLK_CSI0>;
-> +                clock-names = "xclk";
-> +               assigned-clocks = <&ccu CLK_CSI0>;
-> +               assigned-clock-rates = <24000000>;
-> +
-> +                reset-gpios = <&pio 7 14 GPIO_ACTIVE_LOW>;
-> +                powerdown-gpios = <&pio 7 19 GPIO_ACTIVE_HIGH>;
-> +                AVDD-supply = <&reg_cam_avdd>;
-> +                DOVDD-supply = <&reg_cam_dovdd>;
-> +                DVDD-supply = <&reg_cam_dvdd>;
-> +
-> +                port {
-> +                        ov5640_to_csi: endpoint {
-> +                                remote-endpoint = <&csi_from_ov5640>;
-> +                                bus-width = <8>;
-> +                                data-shift = <2>;
-> +                                hsync-active = <1>; /* Active high */
-> +                                vsync-active = <0>; /* Active low */
-> +                                data-active = <1>;  /* Active high */
-> +                                pclk-sample = <1>;  /* Rising */
-> +                        };
-> +                };
-> +       };
+Quoting Doug Anderson (2018-11-26 16:35:50)
+> Hi,
+> =
 
-Does ov5640 need any further patches, wrt linux-next? I'm trying to
-test this on top of linux-next but the slave id seems not detecting.
+> On Mon, Nov 5, 2018 at 2:35 AM Taniya Das <tdas@codeaurora.org> wrote:
+> >
+> > This adds the video clock controller node to sdm845 based on the exampl=
+es
+> > in the bindings.
+> >
+> > Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts=
+/qcom/sdm845.dtsi
+> > index b72bdb0..91a281b 100644
+> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > @@ -8,6 +8,7 @@
+> >  #include <dt-bindings/clock/qcom,dispcc-sdm845.h>
+> >  #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+> >  #include <dt-bindings/clock/qcom,rpmh.h>
+> > +#include <dt-bindings/clock/qcom,videocc-sdm845.h>
+> >  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> >  #include <dt-bindings/phy/phy-qcom-qusb2.h>
+> >  #include <dt-bindings/reset/qcom,sdm845-aoss.h>
+> > @@ -1256,6 +1257,13 @@
+> >                         #power-domain-cells =3D <1>;
+> >                 };
+> >
+> > +               videocc: clock-controller@ab00000 {
+> > +                       compatible =3D "qcom,sdm845-videocc";
+> > +                       reg =3D <0xab00000 0x10000>;
+> > +                       #clock-cells =3D <1>;
+> > +                       #power-domain-cells =3D <1>;
+> =
 
-[    2.304711] ov5640 1-0021: Linked as a consumer to regulator.5
-[    2.310639] ov5640 1-0021: Linked as a consumer to regulator.6
-[    2.316592] ov5640 1-0021: Linked as a consumer to regulator.4
-[    2.351540] ov5640 1-0021: ov5640_init_slave_id: failed with -6
-[    2.357543] ov5640 1-0021: Dropping the link to regulator.5
-[    2.363224] ov5640 1-0021: Dropping the link to regulator.6
-[    2.368829] ov5640 1-0021: Dropping the link to regulator.4
+> Any reason not to include "#reset-cells =3D <1>;" here?  The bindings
+> list it as optional but I see no reason why we should leave it off.
+> The file "include/dt-bindings/clock/qcom,videocc-sdm845.h" seems to
+> include some #defines for resets.  Even though the driver doesn't seem
+> like it supports it yet, it still should be fine to list it here.
 
-Here is the full log [1], please let me know if I miss anything, I
-even tried to remove MCLK pin
-
-[1] https://paste.ubuntu.com/p/yfy5cvs32x/
+We should update the binding to make it a required property. It doesn't
+make any sense why that property would be optional given that the
+hardware either has support for resets or it doesn't.
