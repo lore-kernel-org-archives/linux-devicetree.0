@@ -1,108 +1,37 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V4 2/2] base/drivers/arch_topology: Default dmips-mhz if
- they are not set in DT
-Date: Mon, 26 Nov 2018 19:42:47 -0600
-Message-ID: <20181127014247.GA26233@bogus>
-References: <1543234847-21611-1-git-send-email-daniel.lezcano@linaro.org>
- <1543234847-21611-2-git-send-email-daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v3 4/7] dt-bindings:iio:resolver: Add docs for ad2s90
+Date: Mon, 26 Nov 2018 19:52:27 -0600
+Message-ID: <20181127015227.GA11401@bogus>
+References: <20181124002312.6923-1-matheus.bernardino@usp.br>
+ <20181124002312.6923-5-matheus.bernardino@usp.br>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1543234847-21611-2-git-send-email-daniel.lezcano@linaro.org>
+In-Reply-To: <20181124002312.6923-5-matheus.bernardino@usp.br>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: rjw@rjwysocki.net, linux-kernel@vger.kernel.org, viresh.kumar@linaro.org, Chris Redpath <chris.redpath@linaro.org>, Quentin Perret <quentin.perret@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Li Yang <leoyang.li@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Matheus Tavares <matheus.bernardino@usp.br>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alexandru Ardelean <alexandru.ardelean@analog.com>, kernel-usp@googlegroups.com, victorcolombo@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 26, 2018 at 01:20:43PM +0100, Daniel Lezcano wrote:
-> In the case of asymmetric SoC with the same micro-architecture, we
-> have a group of CPUs with smaller OPPs than the other group. One
-> example is the 96boards dragonboard 820c. There is no dmips/MHz
-> difference between both groups, so no need to specify the values in
-> the DT. Unfortunately, without these defined, there is no scaling
-> capacity computation triggered, so we need to write
-> 'capacity-dmips-mhz' for each CPU with the same value in order to
-> force the scaled capacity computation.
+On Fri, 23 Nov 2018 22:23:09 -0200, Matheus Tavares wrote:
+> This patch adds the device tree binding documentation for the ad2s90
+> resolver-to-digital converter.
 > 
-> In order to fix this situation, allocate 'raw_capacity' so the pointer
-> is set and the init_cpu_capacity_callback() function can be called.
-> 
-> This was tested on db820c:
->  - specified values in the DT (correct results)
->  - partial values defined in the DT (error + fallback to defaults)
->  - no specified values in the DT (correct results)
-> 
-> correct results are:
->   cat /sys/devices/system/cpu/cpu*/cpu_capacity
->    758
->    758
->   1024
->   1024
-> 
->   ... respectively for CPU0, CPU1, CPU2 and CPU3.
-> 
-> That reflects the capacity for the max frequencies 1593600 and 2150400.
-> 
-> Cc: Chris Redpath <chris.redpath@linaro.org>
-> Cc: Quentin Perret <quentin.perret@linaro.org>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: Amit Kucheria <amit.kucheria@linaro.org>
-> Cc: Nicolas Dechesne <nicolas.dechesne@linaro.org>
-> Cc: Niklas Cassel <niklas.cassel@linaro.org>
-> Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
 > ---
->  Documentation/devicetree/bindings/arm/cpu-capacity.txt |  6 ++++++
-
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/base/arch_topology.c                           | 13 ++++++++++++-
->  2 files changed, 18 insertions(+), 1 deletion(-)
+> Changes in v3:
+>  - Added reference to spi-bus documentation after spi properties, as
+>  suggested by Alexandru Ardelean.
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> index 84262cd..f53a3c9 100644
-> --- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> @@ -54,6 +54,12 @@ fall back to the default capacity value for every CPU. If cpufreq is not
->  available, final capacities are calculated by directly using capacity-dmips-
->  mhz values (normalized w.r.t. the highest value found while parsing the DT).
->  
-> +If capacity-dmips-mhz is not specified or if the parsing fails, the
-> +default capacity value will be computed against the highest frequency.
-> +When all CPUs have the same OPP, they will have the same capacity
-> +value otherwise the capacity will be scaled down for CPUs having lower
-> +frequencies.
-> +
->  ===========================================
->  4 - Examples
->  ===========================================
-> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> index fd5325b..e0c5b60 100644
-> --- a/drivers/base/arch_topology.c
-> +++ b/drivers/base/arch_topology.c
-> @@ -243,9 +243,20 @@ static int __init register_cpufreq_notifier(void)
->  	 * until we have the necessary code to parse the cpu capacity, so
->  	 * skip registering cpufreq notifier.
->  	 */
-> -	if (!acpi_disabled || !raw_capacity)
-> +	if (!acpi_disabled)
->  		return -EINVAL;
->  
-> +	if (!raw_capacity) {
-> +
-> +		pr_info("cpu_capacity: No capacity defined in DT, set default "
-> +		       "values to %ld\n", SCHED_CAPACITY_SCALE);
-> +
-> +		raw_capacity = kmalloc_array(num_possible_cpus(),
-> +					     sizeof(*raw_capacity), GFP_KERNEL);
-> +		if (!raw_capacity)
-> +			return -ENOMEM;
-> +	}
-> +
->  	if (!alloc_cpumask_var(&cpus_to_visit, GFP_KERNEL)) {
->  		pr_err("cpu_capacity: failed to allocate memory for cpus_to_visit\n");
->  		return -ENOMEM;
-> -- 
-> 2.7.4
+> Changes in v2:
+>  - Rewritten 'spi-cpol and spi-cpha' item to say that the device can
+>  work in either mode (0,0) or (1,1) and explain how they should be
+>  specified in DT.
 > 
+>  .../bindings/iio/resolver/ad2s90.txt          | 31 +++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/resolver/ad2s90.txt
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
