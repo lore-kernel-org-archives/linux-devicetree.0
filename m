@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC PATCH v4 06/17] irqchip/sun4i: Move IC
- specific register offsets to struct
-Date: Tue, 27 Nov 2018 10:49:06 +0100
-Message-ID: <20181127094906.l7mebisuoikrivf2@flea>
+Subject: Re: [RFC PATCH v4 07/17] irqchip/sun4i: Add support for
+ Allwinner ARMv5 F1C100s
+Date: Tue, 27 Nov 2018 10:49:46 +0100
+Message-ID: <20181127094946.zm4rzbscqc5okupl@flea>
 References: <cover.1543131714.git.mesihkilinc@gmail.com>
- <0242923026be282e26fe9e50d9bb0ec3d5ae355f.1543131714.git.mesihkilinc@gmail.com>
+ <1f3cce09623052eaa90093f13ea9d13047a2b250.1543131714.git.mesihkilinc@gmail.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rdqrcqhrj4mj4mce"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBHNG6TPQKGQEXFJW5XI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="gsrcfvey53yqwqsi"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBRNG6TPQKGQEYXCYECI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <0242923026be282e26fe9e50d9bb0ec3d5ae355f.1543131714.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1f3cce09623052eaa90093f13ea9d13047a2b250.1543131714.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,13 +24,14 @@ Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreC
 List-Id: devicetree@vger.kernel.org
 
 
---rdqrcqhrj4mj4mce
+--gsrcfvey53yqwqsi
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Sun, Nov 25, 2018 at 10:43:09AM +0300, Mesih Kilinc wrote:
-> This patch moves IC specific register offsets to sun4i_irq_chip_data
-> struct in order to support different chips.
+65;5402;1c
+On Sun, Nov 25, 2018 at 10:43:10AM +0300, Mesih Kilinc wrote:
+> This patch adds support for suniv Allwinner ARMv5 F1C100s SoC which has
+> stripped version of interrupt controller that found in A10/A13.
 > 
 > Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
@@ -42,4 +43,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---rdqrcqhrj4mj4mce--
+--gsrcfvey53yqwqsi--
