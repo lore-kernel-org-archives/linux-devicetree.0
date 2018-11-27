@@ -1,66 +1,60 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH 3/3] PCI: imx: Add support for i.MX8MQ
-Date: Tue, 27 Nov 2018 13:14:54 -0800
-Message-ID: <CAHQ1cqEGABcH3EG9yGo7Ns2fPR1s_u1YPtFoKRjUh50=aa=J2Q@mail.gmail.com>
-References: <20181117181225.10737-1-andrew.smirnov@gmail.com>
- <20181117181225.10737-4-andrew.smirnov@gmail.com> <ce2ac1a880ce2a7a39f0e42b5059676daa748e52.camel@nxp.com>
- <CAHQ1cqH6LT4GsxUchrmVG1m3fqawgyUjxdHvh=SzxhBiQOd8eg@mail.gmail.com>
- <1543313169.2507.39.camel@pengutronix.de> <VI1PR04MB5533DE497786CD80D4FE0941EED00@VI1PR04MB5533.eurprd04.prod.outlook.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 2/4] dt-bindings: rtc: add binding doc for i.MX system
+ controller RTC driver
+Date: Tue, 27 Nov 2018 22:26:12 +0100
+Message-ID: <20181127212612.GA7569@piout.net>
+References: <1543311334-8807-1-git-send-email-Anson.Huang@nxp.com>
+ <1543311334-8807-3-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB5533DE497786CD80D4FE0941EED00@VI1PR04MB5533.eurprd04.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <1543311334-8807-3-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>, Lucas Stach <l.stach@pengutronix.de>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com, Chris Healy <cphealy@gmail.com>, Dong Aisheng <aisheng.dong@nxp.com>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "a.zummo@towertech.it" <a.zummo@towertech.it>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "shawnguo@kernel.org" <shawnguo@kernel.org>, linux-rtc@vger.kernel.
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 27, 2018 at 2:46 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
->
-> On 11/27/18 12:06 PM, Lucas Stach wrote:
-> > Hi Andrey,
-> >
-> > Am Montag, den 26.11.2018, 10:24 -0800 schrieb Andrey Smirnov:
-> >> On Tue, Nov 20, 2018 at 2:49 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
-> >>>
-> >>> On Sat, 2018-11-17 at 10:12 -0800, Andrey Smirnov wrote:
-> >>>> @@ -921,7 +1004,28 @@ static int imx6_pcie_probe(struct platform_device *pdev)
-> >>>> -     case IMX7D:
-> >>>> +     case IMX8MQ:
-> >>>> +             if (of_property_read_u32(node, "fsl,iomux-gpr1x",
-> >>>> +                                      &imx6_pcie->gpr1x)) {
-> >>>> +                     dev_err(dev, "Failed to get GPR1x address\n");
-> >>>> +                     return -EINVAL;
-> >>>> +             }
-> >>>
-> >>> This is for distinguishing multiple controllers on the SOC but other
-> >>> registers and bits might differ. Isn't it preferable to have a property
-> >>> for controller id instead of adding many registers to DT?
-> >>
-> >> I liked encoding necessary info in DT directly slightly better than
-> >> encoding abstract ID and then decoding it further in the driver code.
-> >> OTOH, I am not really attached to that path. Lucas, can you comment on
-> >> this please?
-> >
-> > Yes, after rereading the patch with this in mind I agree that having
-> > the GPR offset on DT directly is IMO the better approach than an
-> > abstract ID.
->
-> But it's not a single offset, for example the device_type (EP/RC) has
-> bits for the two controllers side-by-side in GPR12.
->
+Hello,
 
-Playing devil's advocate for a bit:
+On 27/11/2018 09:41:29+0000, Anson Huang wrote:
+> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+> system controller, the system controller is in charge of system
+> power, clock and secure RTC etc. management, Linux kernel
+> has to communicate with system controller via MU (message unit)
+> IPC to do RTC operation, this patch adds binding doc for i.MX
+> system controller RTC driver.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
+> 
 
-More specifically, currently the following per-controller bits need to
-be configured:
+This patch should come first to silence checkpatch.
 
-- Location of the "device type" field within GPR12
-- GPR register to use to control PCIn_CLKREQ_B_OVERRIDE_EN and
-PCIn_CLKREQ_B_OVERRIDE_EN (GPR14 vs GPR16)
-- Now that Philip spoke against PCIE_CTRL_APPS_CLK_REQ being exposed
-via reset controller driver, we need to know which SRC register to use
-to control that bit (SRC_PCIEPHY_RCR vs. SRC_PCIE2_RCR)
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt b/Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
+> new file mode 100644
+> index 0000000..d6e2353
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
+> @@ -0,0 +1,10 @@
+> +* NXP i.MX System Controller Real Time Clock
+> +
+> +Required properties:
+> +- compatible: should be "nxp,imx8qxp-sc-rtc";
+> +
+> +Example:
+> +
+> +rtc: rtc {
+> +	compatible = "nxp,imx8qxp-sc-rtc";
+> +};
+> -- 
+> 2.7.4
+> 
 
-Thanks,
-Andrey Smirnov
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
