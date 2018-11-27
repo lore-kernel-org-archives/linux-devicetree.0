@@ -1,30 +1,79 @@
-Return-Path: <SRS0=qqZh=OJ=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com> <1543319795-48325-21-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543319795-48325-21-git-send-email-biju.das@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 30 Nov 2018 10:02:49 +0100
-Message-ID: <CAMuHMdU4puVT82eL9RXYY4rFEqcxvXdG_uSwX0xQDSmVrgsLMw@mail.gmail.com>
-Subject: Re: [PATCH 20/22] ARM: dts: r8a7744: Add MSIOF[012] support
-Content-Type: text/plain; charset="UTF-8"
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=lXjp=OG=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 20/22] ARM: dts: r8a7744: Add MSIOF[012] support
+Date: Tue, 27 Nov 2018 11:56:33 +0000
+Message-Id: <1543319795-48325-21-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
+References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Nov 27, 2018 at 1:05 PM Biju Das <biju.das@bp.renesas.com> wrote:
-> Add the DT nodes needed by MSIOF[012] interfaces to the SoC dtsi.
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Add the DT nodes needed by MSIOF[012] interfaces to the SoC dtsi.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+---
+ arch/arm/boot/dts/r8a7744.dtsi | 48 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
+index abe0ee3..c9e9678 100644
+--- a/arch/arm/boot/dts/r8a7744.dtsi
++++ b/arch/arm/boot/dts/r8a7744.dtsi
+@@ -944,6 +944,54 @@
+ 			status = "disabled";
+ 		};
+ 
++		msiof0: spi@e6e20000 {
++			compatible = "renesas,msiof-r8a7744",
++				     "renesas,rcar-gen2-msiof";
++			reg = <0 0xe6e20000 0 0x0064>;
++			interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 000>;
++			dmas = <&dmac0 0x51>, <&dmac0 0x52>,
++			       <&dmac1 0x51>, <&dmac1 0x52>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			resets = <&cpg 000>;
++			status = "disabled";
++		};
++
++		msiof1: spi@e6e10000 {
++			compatible = "renesas,msiof-r8a7744",
++				     "renesas,rcar-gen2-msiof";
++			reg = <0 0xe6e10000 0 0x0064>;
++			interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 208>;
++			dmas = <&dmac0 0x55>, <&dmac0 0x56>,
++			       <&dmac1 0x55>, <&dmac1 0x56>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			resets = <&cpg 208>;
++			status = "disabled";
++		};
++
++		msiof2: spi@e6e00000 {
++			compatible = "renesas,msiof-r8a7744",
++				     "renesas,rcar-gen2-msiof";
++			reg = <0 0xe6e00000 0 0x0064>;
++			interrupts = <GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 205>;
++			dmas = <&dmac0 0x41>, <&dmac0 0x42>,
++			       <&dmac1 0x41>, <&dmac1 0x42>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			resets = <&cpg 205>;
++			status = "disabled";
++		};
++
+ 		can0: can@e6e80000 {
+ 			compatible = "renesas,can-r8a7744",
+ 				     "renesas,rcar-gen2-can";
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.7.4
