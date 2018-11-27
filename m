@@ -1,58 +1,125 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V4 2/2] base/drivers/arch_topology: Default dmips-mhz if
- they are not set in DT
-Date: Tue, 27 Nov 2018 09:27:35 +0530
-Message-ID: <20181127035735.keqirmzjfbw4cq64@vireshk-i7>
-References: <1543234847-21611-1-git-send-email-daniel.lezcano@linaro.org>
- <1543234847-21611-2-git-send-email-daniel.lezcano@linaro.org>
+From: tom burkart <tom@aussec.com>
+Subject: Re: [PATCH v7 1/4] dt-bindings: pps: descriptor-based gpio,
+ capture-clear addition
+Date: Tue, 27 Nov 2018 14:57:29 +1100
+Message-ID: <20181127145729.128452ujmj4uhb55@aussec.com>
+References: <20181114125432.16044-1-tom@aussec.com>
+ <20181114125432.16044-2-tom@aussec.com> <20181116224919.GA18008@bogus>
+ <20181117213522.12672utznrvpbn56@www.aussec.com>
+ <CAL_JsqKZHg5_8ghMmU4qO4CVZibcHOvtVJH669zod_6GLGakRg@mail.gmail.com>
+ <20181118113502.55634v85ybgkt586@www.aussec.com>
+ <CAL_Jsq+_Fb8mRDf_g=qDVsw-KPnrdZunLksYrgBFvhehzVNX+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain;
+ charset=UTF-8;
+ DelSp="Yes";
+ format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+_Fb8mRDf_g=qDVsw-KPnrdZunLksYrgBFvhehzVNX+g@mail.gmail.com>
 Content-Disposition: inline
-In-Reply-To: <1543234847-21611-2-git-send-email-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: rjw@rjwysocki.net, linux-kernel@vger.kernel.org, Chris Redpath <chris.redpath@linaro.org>, Quentin Perret <quentin.perret@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Li Yang <leoyang.li@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 26-11-18, 13:20, Daniel Lezcano wrote:
-> diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> index 84262cd..f53a3c9 100644
-> --- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> @@ -54,6 +54,12 @@ fall back to the default capacity value for every CPU. If cpufreq is not
->  available, final capacities are calculated by directly using capacity-dmips-
->  mhz values (normalized w.r.t. the highest value found while parsing the DT).
->  
-> +If capacity-dmips-mhz is not specified or if the parsing fails, the
-> +default capacity value will be computed against the highest frequency.
-> +When all CPUs have the same OPP, they will have the same capacity
-> +value otherwise the capacity will be scaled down for CPUs having lower
-> +frequencies.
+Hi Rob,
 
-I know you added this based on Quentin's feedback, but I wonder if this is
-really required and if it is improving anything at all. This is what the
-documentation says currently without this patch:
+Quoting Rob Herring <robh@kernel.org>:
 
-"
-capacity-dmips-mhz is an optional cpu node [1] property: u32 value
-representing CPU capacity expressed in normalized DMIPS/MHz. At boot time, the
-maximum frequency available to the cpu is then used to calculate the capacity
-value internally used by the kernel.
+> On Sat, Nov 17, 2018 at 6:35 PM tom burkart <tom@aussec.com> wrote:
+>>
+>> Quoting Rob Herring <robh@kernel.org>:
+>>
+>> > On Sat, Nov 17, 2018 at 4:35 AM tom burkart <tom@aussec.com> wrote:
+>> >>
+>> >> Quoting Rob Herring <robh@kernel.org>:
+>> >>
+>> >> > On Wed, Nov 14, 2018 at 11:54:29PM +1100, Tom Burkart wrote:
+>> >> >> This patch changes the devicetree bindings for the pps-gpio driver
+>> >> >> from the integer based ABI to the descriptor based ABI.
+>> >> > ? That has nothing to do with DT.
+>> >>
+>> >> I believe it does, as the change in ABI forces a rename in the DT
+>> >> naming convention.
+>> >> This is due to the descriptor based ABI appending "-gpio" or  
+>> "-gpios" (see
+>> >> Documentation/gpio/base.txt.)
+>> >> Admittedly, I may have called it by the wrong name due to ignorance,
+>> >> my apologies.
+>> >
+>> > If what you say is correct, then you can't change this driver. You'll
+>> > break compatibility with any existing DT.
+>> >
+>> > Changing the binding reasoning should purely be that this is the
+>> > preferred form. Bindings must be independent from changing kernel
+>> > APIs.
+>>
+>> See comments from Philip Zabel.  I misread the documentation and this
+>> has now been corrected in v8 of the patch.  I hope that eliminates all
+>> comments made above.
+>>
+>> >> >>  It also adds
+>> >> >> documentation for the device tree capture-clear option.  The legacy
+>> >> >> device tree entry for the GPIO pin is supported.
+>> >> >>
+>> >> >> Signed-off-by: Tom Burkart <tom@aussec.com>
+>> >> >> ---
+>> >> >>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 8 ++++++--
+>> >> >>  1 file changed, 6 insertions(+), 2 deletions(-)
+>> >> >>
+>> >> >> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> >> b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> >> index 3683874832ae..6c9fc0998d94 100644
+>> >> >> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> >> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> >> @@ -5,19 +5,23 @@ a GPIO pin.
+>> >> >>
+>> >> >>  Required properties:
+>> >> >>  - compatible: should be "pps-gpio"
+>> >> >> -- gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
+>> >> >> +- pps-gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
+>> >> >> +Alternatively (DEPRECATED), instead of pps-gpios above, it may have:
+>> >> >> +- gpios: one PPS GPIO as above
+>> >> >>
+>> >> >>  Optional properties:
+>> >> >>  - assert-falling-edge: when present, assert is indicated by a
+>> >> falling edge
+>> >> >>                         (instead of by a rising edge)
+>> >> >> +- capture-clear: when present, also capture the PPS clear event
+>> >> >
+>> >> > Is this a h/w thing? or driver configuration?
+>> >>
+>> >> Driver configuration.  Most of the code was present in the driver, yet
+>> >> it was not documented, or usable due to a two line (code) omission
+>> >> (the value was not being fetched from DT).
+>> >
+>> > So what determines how you want to configure this? If the user will
+>> > want to change it, then it should be a sysfs attr and exposed to
+>> > userspace. If it depends on h/w config for a board then it can be in
+>> > DT.
+>>
+>> Sorry, I misled you somewhat.  If the PPS pulse active transition from
+>> the hardware is on the falling edge, this flag is required to get the
+>> OS to use that as the active transition.  This would not change at the
+>> user's whim but rather it is dependent on connected hardware.
+>
+> This description sounds more like 'assert-falling-edge' than 'capture-clear'.
+>
+> I'm still not clear on what 'capture-clear' is.
 
-capacity-dmips-mhz property is all-or-nothing: if it is specified for a cpu
-node, it has to be specified for every other cpu nodes, or the system will
-fall back to the default capacity value for every CPU. If cpufreq is not
-available, final capacities are calculated by directly using capacity-dmips-
-mhz values (normalized w.r.t. the highest value found while parsing the DT).
-"
+Ignoring my patch for a minute, the pps_gpio_irq_handler will only  
+report a pps PPS_CAPTURECLEAR event if 'capture-clear' is set.  As the  
+current pps-gpio driver is not able to set this flag, it cannot ever  
+report a PPS_CAPTURECLEAR event.
 
-So it already clearly says two things:
-- If all CPUs don't have this property, we fallback to default capacity for
-  every CPU.
-- And the OS may also normalize the capacity based on the maximum frequency.
+My patch adds the ability to set this flag and adds the documentation  
+to go with it.
+Admittedly, I do not require this functionality for what I want, but  
+working with the code, I noticed the omission and decided to add it  
+for someone else to use it, if they need it.
 
-What more do we want to add here ?
+I am happy to remove this out of my patch, if you feel this to be the  
+best way forward.
 
--- 
-viresh
+Tom
