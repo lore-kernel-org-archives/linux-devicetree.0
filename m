@@ -1,55 +1,40 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH 0/4] Add i.MX system controller RTC driver
-Date: Tue, 27 Nov 2018 09:41:11 +0000
-Message-ID: <1543311334-8807-1-git-send-email-Anson.Huang__40401.3374857188$1543311570$gmane$org@nxp.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 10/14] regulator: dts: set proper lradc vref on OLinuXino Lime2
+Date: Tue, 27 Nov 2018 17:41:10 +0800
+Message-ID: <CAGb2v66odUU9OOwon4URR-+P_jFw2rV+8PLVzrnLmFpKtqT8gA@mail.gmail.com>
+References: <cover.156212c9c5df493e098556cad9793a07dcab5e32.1543245984.git-series.plaes@plaes.org>
+ <b27515a1cfe3512253a3fbcda04a3367818520b9.1543245984.git-series.plaes@plaes.org>
+ <20181127093735.amfqfcsxzreajte4@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, devicetree@vger
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181127093735.amfqfcsxzreajte4@flea>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Priit Laes <plaes@plaes.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, Oliver Schinagl <oliver@schinagl.nl>
 List-Id: devicetree@vger.kernel.org
 
-NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-system controller, the system controller is in charge of system
-power, clock and secure RTC etc. management, Linux kernel
-has to communicate with system controller via MU (message unit)
-IPC to do RTC operation.
+On Tue, Nov 27, 2018 at 5:37 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Mon, Nov 26, 2018 at 05:27:51PM +0200, Priit Laes wrote:
+> > From: Olliver Schinagl <oliver@schinagl.nl>
+> >
+> > The lradc's analog reference voltage is set to 3.0 volt in the
+> > hardware. This is more or less set in copper for at least lradc0. Set the
+> > property in the dts to ensure the lradc is referenced properly.
+> >
+> > Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
+> > Signed-off-by: Priit Laes <plaes@plaes.org>
+>
+> I'm not sure why that patch is part of this series, but I applied
+> it. Thanks!
 
-Since the RTC set time MUST to be done in secure EL3 mode (required
-by system controller firmware) and ALARM functions needs to be done
-with general MU IRQ handle, these are NOT ready NOW, so this patch
-ONLY supports RTC read time for now.
+Please help fix up the subject. Should read
 
-Note that this patch set is based on [V4,5/5] defconfig: arm64: add imx8qxp support,
-https://patchwork.kernel.org/patch/10677315/
+"ARM: dts: sun7i: set proper lradc vref on OLinuXino Lime2"
 
-Anson Huang (4):
-  rtc: add i.MX system controller RTC support
-  dt-bindings: rtc: add binding doc for i.MX system controller RTC
-    driver
-  defconfig: arm64: add i.MX system controller RTC support
-  ARM64: dts: imx: add i.MX8QXP system controller RTC support
+or
 
- .../devicetree/bindings/rtc/rtc-imx-sc.txt         |  10 ++
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   4 +
- arch/arm64/configs/defconfig                       |   1 +
- drivers/rtc/Kconfig                                |   6 ++
- drivers/rtc/Makefile                               |   1 +
- drivers/rtc/rtc-imx-sc.c                           | 104 +++++++++++++++++++++
- 6 files changed, 126 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
- create mode 100644 drivers/rtc/rtc-imx-sc.c
+"ARM: dts: sun7i: olinoxino-lime2: set proper lradc vref"
 
--- 
-2.7.4
+ChenYu
