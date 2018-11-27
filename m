@@ -1,35 +1,38 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 2/2] misc: hx8837: add a HiMax HX8837 display controller
- driver
-Date: Tue, 27 Nov 2018 08:41:40 +0100
-Message-ID: <20181127074140.GB13965@kroah.com>
-References: <20181112023929.650002-1-lkundrak@v3.sk>
- <20181112023929.650002-2-lkundrak@v3.sk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH 1/2] dt-bindings: gpu: add bus clock for Mali Midgard GPUs
+Date: Tue, 27 Nov 2018 15:42:48 +0800
+Message-ID: <20181127074249.15204-1-icenowy@aosc.io>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181112023929.650002-2-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jernej Skrabec <jernej.skrabec@siol.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 12, 2018 at 03:39:29AM +0100, Lubomir Rintel wrote:
-> HiMax HX8837 is a display controller used on OLPC platforms. It controls
-> backlight and is able to capture and freeze a frame when the LCD controller
-> (and the rest of the plaform) is powered off.
-> 
-> This driver is based on the same code as drivers/staging/olpc_dcon.
-> I modernized it to use managed GPIO, device-tree bindings, sysfs attribtue
-> groups, essentially fixing the staging driver's TODO.
+Some SoCs adds a bus clock gate to the Mali Midgard GPU.
 
-You are creating custom sysfs files, with no Documentation/ABI/ update
-for us to know what those files are or how they are used :(
+Add the binding for the bus clock.
 
-Why do you need custom sysfs files in the first place?  Isn't there
-already an api for this type of device in the kernel?
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+---
+ Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-thanks,
-
-greg k-h
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+index 18a2cde2e5f3..02f870cd60e6 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+@@ -31,6 +31,12 @@ Optional properties:
+ 
+ - clocks : Phandle to clock for the Mali Midgard device.
+ 
++- clock-names : Specify the names of the clocks specified in clocks
++  when multiple clocks are present.
++    * bus: bus clock for the GPU
++    * core: clock driving the GPU itself (When only one clock is present,
++      assume it's this clock.)
++
+ - mali-supply : Phandle to regulator for the Mali device. Refer to
+   Documentation/devicetree/bindings/regulator/regulator.txt for details.
+ 
+-- 
+2.18.1
