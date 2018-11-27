@@ -1,8 +1,8 @@
 From: Greg KH <gregkh@linuxfoundation.org>
 Subject: Re: [PATCH anybus v4 1/7] fieldbus_dev: add Fieldbus Device
  subsystem.
-Date: Tue, 27 Nov 2018 08:47:02 +0100
-Message-ID: <20181127074702.GE13965@kroah.com>
+Date: Tue, 27 Nov 2018 08:47:34 +0100
+Message-ID: <20181127074734.GF13965@kroah.com>
 References: <20181121150709.6030-1-TheSven73@googlemail.com>
  <20181121150709.6030-2-TheSven73@googlemail.com>
 Mime-Version: 1.0
@@ -27,19 +27,10 @@ On Wed, Nov 21, 2018 at 10:07:03AM -0500, thesven73@gmail.com wrote:
 > 
 > Signed-off-by: Sven Van Asbroeck <svendev@arcx.com>
 
-License nit:
+Your "From:" line does not match this address or name at all, which
+means no one can apply this :(
 
-> --- /dev/null
-> +++ b/drivers/fieldbus/dev_core.c
-> @@ -0,0 +1,355 @@
-> +// SPDX-License-Identifier: GPL-2.0
-
-That's great, but then you write:
-
-> +MODULE_LICENSE("GPL");
-
-Which means "GPLv2+".  So this MODULE_LICENSE() should be "GPL v2",
-right?
+Please fix for your next round of patches.
 
 thanks,
 
