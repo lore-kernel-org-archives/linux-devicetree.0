@@ -1,50 +1,96 @@
-From: "David R. Piegdon" <lkml@p23q.org>
-Subject: [RFC PATCH 0/2] USB: DTS: allow suggesting busnumber for platform
- USB bus via DTS alias
-Date: Tue, 27 Nov 2018 16:57:05 +0000
-Message-ID: <20181127165705.GA13460@lagavulin.indurad.x>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [PATCH v5 5/7] iommu: Add virtio-iommu driver
+Date: Tue, 27 Nov 2018 17:50:50 +0000
+Message-ID: <fd221210-7e12-1d15-0c80-52a761f6893d@arm.com>
+References: <20181122193801.50510-1-jean-philippe.brucker@arm.com>
+ <20181122193801.50510-6-jean-philippe.brucker@arm.com>
+ <20181123165742-mutt-send-email-mst@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Alan Stern <stern@rowland.harvard.edu>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Johan Hovold <johan@kernel.org>, Kay Sievers <kay@vrfy.org>, Mark Rutland <mark.rutland@arm.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Roger Quadros <rogerq@ti.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, systemd-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <virtio-dev-return-5051-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
+Sender: <virtio-dev@lists.oasis-open.org>
+List-Post: <mailto:virtio-dev@lists.oasis-open.org>
+List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
+List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
+List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
+In-Reply-To: <20181123165742-mutt-send-email-mst@kernel.org>
+Content-Language: en-US
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: mark.rutland@arm.com, virtio-dev@lists.oasis-open.org, lorenzo.pieralisi@arm.com, tnowicki@caviumnetworks.com, devicetree@vger.kernel.org, marc.zyngier@arm.com, linux-pci@vger.kernel.org, joro@8bytes.org, will.deacon@arm.com, virtualization@lists.linux-foundation.org, eric.auger@redhat.com, iommu@lists.linux-foundation.org, robh+dt@kernel.org, bhelgaas@google.com, robin.murphy@arm.com, kvmarm@lists.cs.columbia.edu
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 23/11/2018 22:02, Michael S. Tsirkin wrote:
+>> +/*
+>> + * __viommu_sync_req - Complete all in-flight requests
+>> + *
+>> + * Wait for all added requests to complete. When this function returns, all
+>> + * requests that were in-flight at the time of the call have completed.
+>> + */
+>> +static int __viommu_sync_req(struct viommu_dev *viommu)
+>> +{
+>> +	int ret = 0;
+>> +	unsigned int len;
+>> +	size_t write_len;
+>> +	struct viommu_request *req;
+>> +	struct virtqueue *vq = viommu->vqs[VIOMMU_REQUEST_VQ];
+>> +
+>> +	assert_spin_locked(&viommu->request_lock);
+>> +
+>> +	virtqueue_kick(vq);
+>> +
+>> +	while (!list_empty(&viommu->requests)) {
+>> +		len = 0;
+>> +		req = virtqueue_get_buf(vq, &len);
+>> +		if (!req)
+>> +			continue;
+>> +
+>> +		if (!len)
+>> +			viommu_set_req_status(req->buf, req->len,
+>> +					      VIRTIO_IOMMU_S_IOERR);
+>> +
+>> +		write_len = req->len - req->write_offset;
+>> +		if (req->writeback && len == write_len)
+>> +			memcpy(req->writeback, req->buf + req->write_offset,
+>> +			       write_len);
+>> +
+>> +		list_del(&req->list);
+>> +		kfree(req);
+>> +	}
+> 
+> I didn't notice this in the past but it seems this will spin
+> with interrupts disabled until host handles the request.
+> Please do not do this - host execution can be another
+> task that needs the same host CPU. This will then disable
+> interrupts for a very very long time.
 
-on our embedded systems we rely on systemd's persistent netdev names.
-Those currently do not work for USB netdevs that are connected to a
-platform USB bus.
+In the guest yes, but that doesn't prevent the host from running another
+task right? My tests run fine when QEMU is bound to a single CPU, even
+though vcpu and viommu run in different threads
 
-In https://github.com/systemd/systemd/pull/7273 a systemd patch was
-suggested that would allow exactly this, but it was (rightfully) said
-that numbering of theses busses is not guaranteed. Internally we used
-the patch for a while now, but exactly that has happened with one of our
-platforms across different kernel revisions.
+> What to do then? Queue in software and wake up task.
 
-The following kernel patches allow suggesting a USB busnumber for each
-USB platform bus via a DTS alias, as can be done similarly for many
-other devices.
-In combination with above systemd patch, these changes allow use of
-persistent netdev names also on platform USB busses.
+Unfortunately I can't do anything here, because IOMMU drivers can't
+sleep in the iommu_map() or iommu_unmap() path. The problem is the same
+for all IOMMU drivers. That's because the DMA API allows drivers to call
+some functions with interrupts disabled. For example
+Documentation/DMA-API-HOWTO.txt allows dma_alloc_coherent() and
+dma_unmap_single() to be called in interrupt context.
 
-NOTE: this patch might change ordering of busses on devices that use
-platform-busses, if aliases for these busses have already been defined!
-In the current master there are a few platforms that contain such
-aliases, e.g. am33xx, dm814x or imx6qdl
+> As kick is vm exit, kick under interrupts disabled is discouraged too:
+> better to prepare for kick enable interrupts then kick.
 
-Yours,
+That was on my list of things to look at, because it could relax
+things for device drivers that don't call us with interrupts disabled. I
+just tried it and I can see some performance improvement (7% and 4% on
+tcp_stream and tcp_maerts respectively, +/-2.5%).
 
-David
+Since it's an optimization I'll leave it for later (ACPI and module
+support is higher on my list). The resulting change is complicated
+because we now need to deal with threads adding new requests while
+sync() is running. With my current prototype one thread could end up
+staying in sync() while other threads add new async requests, so I need
+to find a way to bound it.
 
-David R. Piegdon (2):
-  usb core: dts: allow suggesting usb bus number for platform busses
-  dt-bindings: allow suggesting usb bus number for usb platform busses
-
- Documentation/devicetree/bindings/usb/usb-hcd.txt |  9 +++++++
- drivers/usb/core/hcd.c                            | 30 ++++++++++++++++++-----
- 2 files changed, 33 insertions(+), 6 deletions(-)
-
--- 
-2.11.0
+Thanks,
+Jean
