@@ -1,41 +1,49 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v3 1/6] Documentation: ARM: sunxi: pwm: add Allwinner
- sun8i.
-Date: Tue, 27 Nov 2018 09:35:23 +0100
-Message-ID: <20181127083523.pciie2gyaplrwiey@pengutronix.de>
-References: <20181125161859.GA5277@arx-s1>
- <20181127075226.qo3mv3o6etqdjaop@flea>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 2/8] mfd: stpmic1: add stpmic1 driver
+Date: Tue, 27 Nov 2018 08:57:42 +0000
+Message-ID: <20181127085742.GG4272@dell>
+References: <1540830122-2577-1-git-send-email-p.paillet@st.com>
+ <1540830122-2577-3-git-send-email-p.paillet@st.com>
+ <20181113074037.GC29388@dell>
+ <5BFC2B69.1050204@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181127075226.qo3mv3o6etqdjaop@flea>
+In-Reply-To: <5BFC2B69.1050204@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Hao Zhang <hao5781286@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, mturquette@baylibre.com, sboyd@kernel.org, thierry.reding@gmail.com, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-sunxi@googlegroups.com
+To: Pascal PAILLET-LME <p.paillet@st.com>
+Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Mon, 26 Nov 2018, Pascal PAILLET-LME wrote:
+> Hi Lee,
+> I have just one question regarding i2c_device_id.
 
-On Tue, Nov 27, 2018 at 08:52:26AM +0100, Maxime Ripard wrote:
-> On Mon, Nov 26, 2018 at 12:18:59AM +0800, Hao Zhang wrote:
-> > +  - clocks: From common clock binding, handle to the parent clock.
-> > +  - clock-names: Must contain the clock names described just above.
+Don't forget to trim your responses.
+
+Lots of unrequired quotes here.
+
+[...]
+
+> >> +static const struct i2c_device_id stpmic1_id[] = {
+> >> +	{ "stpmic1"},
+> >> +	{}
+> >> +};
+> > I don't think this is required any more.
+> should I replace with the following ?
 > 
-> [...]
-> 
-> You seem to have used mux-0 and mux-1 for the clock names. I guess we
-> don't have to use a name there, we can simply use the position to find
-> out (as long as it's documented in the binding)
+> static const struct of_device_id stpmic1_of_match[] = {
+>      { .compatible = "st,stpmic1", },
+>      {},
+> };
+> MODULE_DEVICE_TABLE(of, stpmic1_of_match);
 
-I also wondered if the driver relies on the fact that the second clock
-is the faster running one. Is this sensible?
-
-Best regards
-Uwe
+I think it should have had that already.  So yes, please.
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-K�nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
