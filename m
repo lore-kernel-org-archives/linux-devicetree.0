@@ -1,50 +1,134 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH 3/3] PCI: imx: Add support for i.MX8MQ
-Date: Tue, 27 Nov 2018 10:16:10 +0000
-Message-ID: <VI1PR04MB553359EA5E0F88701A92A3AEEED00@VI1PR04MB5533.eurprd04.prod.outlook.com>
-References: <20181117181225.10737-1-andrew.smirnov@gmail.com>
- <20181117181225.10737-4-andrew.smirnov@gmail.com>
- <ce2ac1a880ce2a7a39f0e42b5059676daa748e52.camel@nxp.com>
- <CAHQ1cqH6LT4GsxUchrmVG1m3fqawgyUjxdHvh=SzxhBiQOd8eg@mail.gmail.com>
+From: Schrempf Frieder <frieder.schrempf@kontron.de>
+Subject: [PATCH v6 2/9] arm64: dts: Reflect change of FSL QSPI driver and
+ remove unused properties
+Date: Tue, 27 Nov 2018 10:24:21 +0000
+Message-ID: <1543314174-28580-3-git-send-email-frieder.schrempf@kontron.de>
+References: <1543314174-28580-1-git-send-email-frieder.schrempf@kontron.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1543314174-28580-1-git-send-email-frieder.schrempf@kontron.de>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Richard Zhu <hongxing.zhu@nxp.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, Chris Healy <cphealy@gmail.com>, Aisheng DONG <aisheng.dong@nxp.com>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>
+Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "richard@nod.at" <richard@nod.at>, "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>, "broonie@kernel.org" <broonie@kernel.org>, "david.wolfe@nxp.com" <david.wolfe@nxp.com>, "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>, "prabhakar.kushwaha@nxp.com" <prabhakar.kushwaha@nxp.com>, "yogeshnarayan.gaur@nxp.com" <yogeshnarayan.gaur@nxp.com>, "han.xu@nxp.com" <han.xu@nxp.com>, Schrempf Frieder <frieder.schrempf@kontron.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/26/18 8:24 PM, Andrey Smirnov wrote:=0A=
-> On Tue, Nov 20, 2018 at 2:49 AM Leonard Crestez <leonard.crestez@nxp.com>=
- wrote:=0A=
->> On Sat, 2018-11-17 at 10:12 -0800, Andrey Smirnov wrote:=0A=
-=0A=
->>> +             if (of_property_read_u32_array(=0A=
->>> +                         node, "fsl,gpr12-device-type",=0A=
->>> +                         imx6_pcie->device_type,=0A=
->>> +                         ARRAY_SIZE(imx6_pcie->device_type))) {=0A=
->>> +                     dev_err(dev, "Failed to get device type=0A=
->>> mask/value\n");=0A=
->>> +                     return -EINVAL;=0A=
->>> +             }=0A=
->>=0A=
->> The device type can be set on multiple SOCs, why are you adding a=0A=
->> mandatory property only for 8m?=0A=
-> =0A=
-> My thinking was that other SoCs don't really have two controllers, so=0A=
-> they don't really need to have that property, but, more importantly,=0A=
-> not forcing them to have this property should preserve backwards=0A=
-> compatibility with old DTBs.=0A=
-=0A=
-The "device_type" registers determine Root Complex versus End Point =0A=
-mode. This is not yet supported on imx in upstream but it can be done on =
-=0A=
-many soc versions.=0A=
-=0A=
-Looking at other pcie controllers (and dwc core) this is normally done =0A=
-with a different compatible string with an "-ep" suffix. It feels wrong =0A=
-to expose bitmasks and values directly in DT instead.=0A=
-=0A=
-For this patch you should probably just hardcode RC mode.=0A=
+The FSL QSPI driver will be moved to the SPI framework and it then
+acts as a SPI controller. Therefore the subnodes need to set
+spi-[rx/tx]-bus-width = <4>, so quad mode is used just as before.
+
+Also the properties 'num-cs' and 'bus-num' were never read by the
+driver and can be removed.
+
+The property 'fsl,qspi-has-second-chip' is not needed anymore
+and will be removed after the old driver was disabled to avoid
+breaking fsl-ls1046a-rdb.dts.
+
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts  | 3 ++-
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts  | 4 ++--
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts  | 6 ++++--
+ arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi | 4 ++++
+ 4 files changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+index dff3d64..8a50094 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+@@ -135,7 +135,6 @@
+ };
+ 
+ &qspi {
+-	bus-num = <0>;
+ 	status = "okay";
+ 
+ 	qflash0: s25fl128s@0 {
+@@ -143,6 +142,8 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		spi-max-frequency = <20000000>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
+ 		reg = <0>;
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+index e58a8ca..2f220ec 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+@@ -163,8 +163,6 @@
+ };
+ 
+ &qspi {
+-	num-cs = <2>;
+-	bus-num = <0>;
+ 	status = "okay";
+ 
+ 	qflash0: s25fl128s@0 {
+@@ -172,6 +170,8 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		spi-max-frequency = <20000000>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
+ 		reg = <0>;
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+index a59b482..07c665c 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+@@ -99,8 +99,6 @@
+ };
+ 
+ &qspi {
+-	num-cs = <2>;
+-	bus-num = <0>;
+ 	status = "okay";
+ 
+ 	qflash0: s25fs512s@0 {
+@@ -108,6 +106,8 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		spi-max-frequency = <20000000>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
+ 		reg = <0>;
+ 	};
+ 
+@@ -116,6 +116,8 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		spi-max-frequency = <20000000>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
+ 		reg = <1>;
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi
+index c11f52e..10d2fe0 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi
+@@ -134,6 +134,8 @@
+ 		#size-cells = <1>;
+ 		compatible = "st,m25p80";
+ 		spi-max-frequency = <20000000>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
+ 		reg = <0>;
+ 	};
+ 	flash2: s25fl256s1@2 {
+@@ -141,6 +143,8 @@
+ 		#size-cells = <1>;
+ 		compatible = "st,m25p80";
+ 		spi-max-frequency = <20000000>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
+ 		reg = <2>;
+ 	};
+ };
+-- 
+2.7.4
