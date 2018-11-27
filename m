@@ -1,60 +1,96 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/6] Documentation: ARM: sunxi: pwm: add
- Allwinner sun8i.
-Date: Tue, 27 Nov 2018 08:52:26 +0100
-Message-ID: <20181127075226.qo3mv3o6etqdjaop@flea>
-References: <20181125161859.GA5277@arx-s1>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH anybus v4 1/7] fieldbus_dev: add Fieldbus Device
+ subsystem.
+Date: Tue, 27 Nov 2018 08:54:31 +0100
+Message-ID: <20181127075431.GG13965@kroah.com>
+References: <20181121150709.6030-1-TheSven73@googlemail.com>
+ <20181121150709.6030-2-TheSven73@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBT7P6PPQKGQEFX23PAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181125161859.GA5277@arx-s1>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181121150709.6030-2-TheSven73@googlemail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: thesven73@gmail.com
+Cc: svendev@arcx.com, robh+dt@kernel.org, linus.walleij@linaro.org, lee.jones@linaro.org, mark.rutland@arm.com, afaerber@suse.de, treding@nvidia.com, david@lechnology.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, stuyoder@gmail.com, maxime.ripard@bootlin.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 26, 2018 at 12:18:59AM +0800, Hao Zhang wrote:
-> This patch adds Allwinner sun8i pwm binding document.
-> 
-> Signed-off-by: Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/pwm/pwm-sun8i.txt          | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sun8i.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sun8i.txt b/Documentation/devicetree/bindings/pwm/pwm-sun8i.txt
-> new file mode 100644
-> index 0000000..7531d85
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-sun8i.txt
-> @@ -0,0 +1,24 @@
-> +Allwinner sun8i R40/V40/T3 SoC PWM controller
+On Wed, Nov 21, 2018 at 10:07:03AM -0500, thesven73@gmail.com wrote:
+> +static struct attribute *fieldbus_attrs[] = {
+> +	&dev_attr_enabled.attr,
+> +	&dev_attr_card_name.attr,
+> +	&dev_attr_fieldbus_id.attr,
+> +	&dev_attr_read_area_size.attr,
+> +	&dev_attr_write_area_size.attr,
+> +	&dev_attr_online.attr,
+> +	&dev_attr_fieldbus_type.attr,
+> +	NULL,
+> +};
 > +
-> +Required properties:
-> +  - compatible: Should be one of:
-> +    - "allwinner,sun8i-r40-pwm"
-> +  - reg: Physical base address and length of the controller's registers
-> +  - interrupts: Should contain interrupt.
-> +  - clocks: From common clock binding, handle to the parent clock.
-> +  - clock-names: Must contain the clock names described just above.
+> +static umode_t fieldbus_is_visible(struct kobject *kobj, struct attribute *attr,
+> +				int n)
+> +{
+> +	struct device *dev = container_of(kobj, struct device, kobj);
+> +	struct fieldbus_dev *fb = dev_get_drvdata(dev);
+> +	umode_t mode = attr->mode;
+> +
+> +	if (attr == &dev_attr_enabled.attr) {
+> +		mode = 0;
+> +		if (fb->enable_get)
+> +			mode |= 0444;
+> +		if (fb->simple_enable_set)
+> +			mode |= 0200;
+> +	}
+> +
+> +	return mode;
+> +}
+> +
+> +static const struct attribute_group fieldbus_group = {
+> +	.attrs = fieldbus_attrs,
+> +	.is_visible = fieldbus_is_visible,
+> +};
+> +__ATTRIBUTE_GROUPS(fieldbus);
 
-You didn't describe those names in that document.
+Why not just use ATTRIBUTE_GROUPS()?
 
-You seem to have used mux-0 and mux-1 for the clock names. I guess we
-don't have to use a name there, we can simply use the position to find
-out (as long as it's documented in the binding)
+> +static int __fieldbus_dev_register(struct fieldbus_dev *fb)
+> +{
+> +	dev_t devno;
+> +	int err;
+> +
+> +	if (!fb)
+> +		return -EINVAL;
+> +	if (!fb->read_area || !fb->write_area || !fb->fieldbus_id_get)
+> +		return -EINVAL;
+> +	fb->id = ida_simple_get(&fieldbus_ida, 0, MAX_FIELDBUSES, GFP_KERNEL);
+> +	if (fb->id < 0)
+> +		return fb->id;
+> +	devno = MKDEV(MAJOR(fieldbus_devt), fb->id);
+> +	init_waitqueue_head(&fb->dc_wq);
+> +	cdev_init(&fb->cdev, &fieldbus_fops);
+> +	err = cdev_add(&fb->cdev, devno, 1);
+> +	if (err) {
+> +		pr_err("fieldbus_dev%d unable to add device %d:%d\n",
+> +			fb->id, MAJOR(fieldbus_devt), fb->id);
+> +		goto err_cdev;
+> +	}
 
-Maxime
+Why do you have a static cdev?
 
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> +	fb->dev = device_create(&fieldbus_class, fb->parent, devno, fb,
+> +				"fieldbus_dev%d", fb->id);
+> +	if (IS_ERR(fb->dev)) {
+> +		err = PTR_ERR(fb->dev);
+> +		goto err_dev_create;
+> +	}
+> +	fb->online_sd = sysfs_get_dirent(fb->dev->kobj.sd, "online");
+
+Ick, what?  Why?  Why are you messing around with a raw sysfs attribute?
+
+Also, you are creating sysfs files and you are not documenting any of
+them in Documentation/ABI/ which is not allowed.  Please add that to
+this patch for the next round.
+
+thanks,
+
+greg k-h
