@@ -1,77 +1,83 @@
-From: tom burkart <tom@aussec.com>
-Subject: Re: [PATCH v9 3/4] dt-bindings: pps: pps-gpio PPS ECHO
- implementation
-Date: Tue, 27 Nov 2018 15:06:29 +1100
-Message-ID: <20181127150629.10795h1esqtc53ut@aussec.com>
-References: <20181122094602.5156-1-tom@aussec.com>
- <20181122094602.5156-2-tom@aussec.com>
- <20181122094602.5156-3-tom@aussec.com>
- <20181122094602.5156-4-tom@aussec.com>
- <CAL_JsqJ6fM3+pcC3b-eXEex=j_ft6Z=vukhLK9wULfWJqOTN-A@mail.gmail.com>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [RFC PATCH] dt-bindings: opp: Extend qcom-opp bindings with
+ properties needed for CPR
+Date: Tue, 27 Nov 2018 10:34:16 +0530
+Message-ID: <6f827942-6a3c-1855-77c9-3ee076ac8010@codeaurora.org>
+References: <20180627045234.27403-3-rnayak@codeaurora.org>
+ <20181015124749.27276-1-niklas.cassel@linaro.org>
+ <20181105231745.GA25883@bogus> <20181109163917.GA6673@centauri.lan>
+ <eab94dd1-1d8f-4306-cced-1e34171ef1e7@codeaurora.org>
+ <20181120161457.GA12783@centauri.lan>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8;
- DelSp="Yes";
- format="flowed"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ6fM3+pcC3b-eXEex=j_ft6Z=vukhLK9wULfWJqOTN-A@mail.gmail.com>
-Content-Disposition: inline
+In-Reply-To: <20181120161457.GA12783@centauri.lan>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, lukas@fridolin.com
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-Quoting Rob Herring <robh@kernel.org>:
+On 11/20/2018 9:44 PM, Niklas Cassel wrote:
+> On Tue, Nov 20, 2018 at 09:42:05AM +0530, Rajendra Nayak wrote:
+>>
+>>
+>> On 11/9/2018 10:09 PM, Niklas Cassel wrote:
+>>> On Mon, Nov 05, 2018 at 05:17:45PM -0600, Rob Herring wrote:
+>>>> On Mon, Oct 15, 2018 at 02:47:49PM +0200, Niklas Cassel wrote:
+>>>>> Extend qcom-opp bindings with properties needed for Core Power Reduction
+>>>>> (CPR).
+>>>>>
+>>>>> CPR is included in a great variety of Qualcomm SoC, e.g. msm8916 and
+>>>>> msm8996, and was first introduced in msm8974.
+>>>>>
+>>>>> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+>>>>> ---
+>>>>> Hello Rob, Rajendra,
+>>>>>
+>>>>> Sorry for not replying sooner.
+>>>>> Since Rob wanted the binding to be complete before merging,
+>>>>> this is my proposal to extend the OPP binding with properties
+>>>>> needed to support CPR (both for msm8916 and msm8996).
+>>>>> I've discussed the proposal with Viresh, and this proposal
+>>>>> seems better than what I previously suggested here:
+>>>>> https://lore.kernel.org/lkml/20181005204424.GA29500@centauri.lan/
+>>>>>
+>>>>>    .../devicetree/bindings/opp/qcom-opp.txt      | 19 +++++++++++++++++++
+>>>>>    1 file changed, 19 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/opp/qcom-opp.txt b/Documentation/devicetree/bindings/opp/qcom-opp.txt
+>>>>> index db4d970c7ec7..3ab5dd84de86 100644
+>>>>> --- a/Documentation/devicetree/bindings/opp/qcom-opp.txt
+>>>>> +++ b/Documentation/devicetree/bindings/opp/qcom-opp.txt
+>>>>> @@ -23,3 +23,22 @@ Required properties:
+>>>>>    representing a corner/level that's communicated with a remote microprocessor
+>>>>>    (usually called the RPM) which then translates it into a certain voltage on
+>>>>>    a voltage rail.
+>>>>
+>>>> I've lost the context here. Please send this all together.
+>>>
+>>> Will do, as soon as I've gotten your feedback on this mail.
+>>
+>> Niklas, are you still waiting for feedback on this mail from Rob?
+> 
+> Yes.
 
-> On Thu, Nov 22, 2018 at 3:49 AM Tom Burkart <tom@aussec.com> wrote:
->>
->> This patch implements the device tree changes required for the pps
->> echo functionality for pps-gpio, that sysfs claims is available
->> already.
->>
->> This patch was originally written by Lukas Senger as part of a masters
->> thesis project and modified for inclusion into the linux kernel by Tom
->> Burkart.
->>
->> Signed-off-by: Lukas Senger <lukas@fridolin.com>
->> Signed-off-by: Tom Burkart <tom@aussec.com>
->> ---
->>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 9 +++++++++
->>  1 file changed, 9 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt  
->> b/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> index 1155d49c2699..e09f6f2405c5 100644
->> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> @@ -7,10 +7,15 @@ Required properties:
->>  - compatible: should be "pps-gpio"
->>  - gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
->>
->> +Additional required properties for the PPS ECHO functionality:
->> +- echo-gpios: one PPS ECHO GPIO in the format described by ../gpio/gpio.txt
->> +- echo-active-ms: duration in ms of the active portion of the echo pulse
->> +
->>  Optional properties:
->>  - assert-falling-edge: when present, assert is indicated by a falling edge
->>                         (instead of by a rising edge)
->>  - capture-clear: when present, also capture the PPS clear event
->> +- invert-pps-echo: when present, invert the PPS ECHO pulse
->
-> Why do you need this? Can't you just make the echo gpio GPIO_ACTIVE_LOW?
->
-> BTW, using the flag probably should have been done for
-> 'assert-falling-edge' as well.
+Rob, did you have any further feedback for Niklas based on his binding proposal?
 
-The hardware I use expects a positive-going echo pulse, however, it  
-was really easy to give users the option to have it inverted in case  
-they use different hardware that expects a negative-going edge.
+> 
+> Rajendra, I realize that your patches have been ready for merging for
+> a long time, and this fuse-level is quite complex, so the discussion
+> has been taken longer than expected. Sorry for that.
+> 
+> Hopefully Rob will reply soon, or perhaps he could agree to merge your
+> binding as is, and I could extend it later, when we have reached a
+> consensus.
 
-I may well be needing this option myself if I find that the GPS I am  
-using produces better results for negative-going edges than  
-positive-going edges.
-
-Tom
+Or should we merge the qcom,level binding for now (since I though we agreed
+'reg' is probably not the right fit for it) and then discuss further on how to
+describe the legacy platforms which require more details like fuse bindings?
+Note that the current platform (sdm845) only needs the qcom,level binding.
+What Niklas is proposing is for describing the older SoCs.
