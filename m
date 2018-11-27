@@ -1,40 +1,77 @@
-From: "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH v5 5/7] iommu: Add virtio-iommu driver
-Date: Tue, 27 Nov 2018 13:13:24 -0500
-Message-ID: <20181127131116-mutt-send-email-mst@kernel.org>
-References: <20181122193801.50510-1-jean-philippe.brucker@arm.com>
- <20181122193801.50510-6-jean-philippe.brucker@arm.com>
- <20181123165742-mutt-send-email-mst@kernel.org>
- <fd221210-7e12-1d15-0c80-52a761f6893d@arm.com>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [RFC v3 2/3] dt-bindings: sdm845-pinctrl: add wakeup interrupt
+ parent for GPIO
+Date: Tue, 27 Nov 2018 11:21:23 -0700
+Message-ID: <20181127182123.GC28236@codeaurora.org>
+References: <20181121000648.29262-1-ilina@codeaurora.org>
+ <20181121000648.29262-3-ilina@codeaurora.org>
+ <154283618199.88331.10217252750356423959@swboyd.mtv.corp.google.com>
+ <20181126161455.GA28236@codeaurora.org>
+ <154330994255.88331.11409511159882116164@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <virtio-dev-return-5059-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
-Sender: <virtio-dev@lists.oasis-open.org>
-List-Post: <mailto:virtio-dev@lists.oasis-open.org>
-List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
-List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
-List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <fd221210-7e12-1d15-0c80-52a761f6893d@arm.com>
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: mark.rutland@arm.com, virtio-dev@lists.oasis-open.org, lorenzo.pieralisi@arm.com, tnowicki@caviumnetworks.com, devicetree@vger.kernel.org, marc.zyngier@arm.com, linux-pci@vger.kernel.org, joro@8bytes.org, will.deacon@arm.com, virtualization@lists.linux-foundation.org, eric.auger@redhat.com, iommu@lists.linux-foundation.org, robh+dt@kernel.org, bhelgaas@google.com, robin.murphy@arm.com, kvmarm@lists.cs.columbia.edu
+In-Reply-To: <154330994255.88331.11409511159882116164@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: evgreen@chromium.org, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, thierry.reding@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 27, 2018 at 05:50:50PM +0000, Jean-Philippe Brucker wrote:
-> > I didn't notice this in the past but it seems this will spin
-> > with interrupts disabled until host handles the request.
-> > Please do not do this - host execution can be another
-> > task that needs the same host CPU. This will then disable
-> > interrupts for a very very long time.
-> 
-> In the guest yes, but that doesn't prevent the host from running another
-> task right? My tests run fine when QEMU is bound to a single CPU, even
-> though vcpu and viommu run in different threads
+On Tue, Nov 27 2018 at 02:12 -0700, Stephen Boyd wrote:
+>Quoting Lina Iyer (2018-11-26 08:14:55)
+>> On Wed, Nov 21 2018 at 14:36 -0700, Stephen Boyd wrote:
+>> >Quoting Lina Iyer (2018-11-20 16:06:47)
+>> >> SDM845 SoC has an always-on interrupt controller (PDC) with select GPIO
+>> >> routed to the PDC as interrupts that can be used to wake the system up
+>> >> from deep low power modes and suspend.
+>> >>
+>> >> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>> >> ---
+>> >>  .../bindings/pinctrl/qcom,sdm845-pinctrl.txt  | 31 ++++++++++++++++++-
+>> >>  1 file changed, 30 insertions(+), 1 deletion(-)
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+>> >> index 665aadb5ea28..bedfa0b57fa6 100644
+>> >> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+>> >> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+>> >> @@ -29,6 +29,17 @@ SDM845 platform.
+>> >>         Definition: must be 2. Specifying the pin number and flags, as defined
+>> >>                     in <dt-bindings/interrupt-controller/irq.h>
+>> >>
+>> >> +- wakeup-parent:
+>> >> +       Usage: optional
+>> >> +       Value type: <phandle>
+>> >> +       Definition: A phandle to the wakeup interrupt controller for the SoC.
+>> >> +
+>> >> +- wakeup-irq:
+>> >
+>> >This shouldn't be needed. TLMM driver can probe for the possibility of
+>> >wakeup capable irqs from irq allocation step. The only place we should
+>> >need to know what TLMM pins map to what PDC lines is in the PDC driver.
+>> >
+>> Why? Every driver seems to translate the hardware IRQ and pass it to
+>> it's parent. Why should this be any different ? The PDC is an interrupt
+>> controller that just knows an interrupt port and maps it to the GIC. Not
+>> sure, I understand the reasoning for this. It seems to add more
+>> confusing relationship with the PDC interrupt controller, that way.
+>>
+>
+>Two reasons. First, simplicity. The TLMM driver just needs to pass the
+>gpio number up to the PDC gpio domain and then that domain can figure
+>out what hwirq it maps to within the PDC hw irq space. I don't see any
+>reason why we have to know the hwirq of PDC within the TLMM driver
+>besides "let's not be different".
+>
+>And second, it makes it easier for us to implement the MPM case in the
+>TLMM driver by letting the TLMM code just ask "should I mask the irq
+>here or not?" by passing that with a wrapper struct around the fwspec
+>and a dedicated domain in the PDC/MPM driver. Keeping less things in the
+>TLMM driver and not driving the decision from DT but from tables in the
+>PDC driver also keeps things simple and reduces DT parsing code/time.
+>
+Couldn't this be simply achieved by matching the compatible flags for
+PDC/MPM bindings for the wakeup-parent in the TLMM driver? 
 
-So a kind of a solution is to add a config space field for sync.
-That at least can give host a hint that yes, vcpu
-is stopped now and it should do something else.
-Not ideal but better than polling VQ forever.
-
--- 
-MST
+Thanks,
+Lina
