@@ -1,40 +1,185 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 10/14] regulator: dts: set proper lradc vref on OLinuXino Lime2
-Date: Tue, 27 Nov 2018 17:41:10 +0800
-Message-ID: <CAGb2v66odUU9OOwon4URR-+P_jFw2rV+8PLVzrnLmFpKtqT8gA@mail.gmail.com>
-References: <cover.156212c9c5df493e098556cad9793a07dcab5e32.1543245984.git-series.plaes@plaes.org>
- <b27515a1cfe3512253a3fbcda04a3367818520b9.1543245984.git-series.plaes@plaes.org>
- <20181127093735.amfqfcsxzreajte4@flea>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH 1/4] rtc: add i.MX system controller RTC support
+Date: Tue, 27 Nov 2018 09:41:20 +0000
+Message-ID: <1543311334-8807-2-git-send-email-Anson.Huang__44566.712799906$1543311587$gmane$org@nxp.com>
+References: <1543311334-8807-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181127093735.amfqfcsxzreajte4@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Priit Laes <plaes@plaes.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, Oliver Schinagl <oliver@schinagl.nl>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1543311334-8807-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, devicetree@vger
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 27, 2018 at 5:37 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Mon, Nov 26, 2018 at 05:27:51PM +0200, Priit Laes wrote:
-> > From: Olliver Schinagl <oliver@schinagl.nl>
-> >
-> > The lradc's analog reference voltage is set to 3.0 volt in the
-> > hardware. This is more or less set in copper for at least lradc0. Set the
-> > property in the dts to ensure the lradc is referenced properly.
-> >
-> > Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
-> > Signed-off-by: Priit Laes <plaes@plaes.org>
->
-> I'm not sure why that patch is part of this series, but I applied
-> it. Thanks!
+i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
+inside, the system controller is in charge of controlling power,
+clock and secure rtc etc..
 
-Please help fix up the subject. Should read
+This patch adds i.MX system controller RTC driver support,
+Linux kernel has to communicate with system controller via MU
+(message unit) IPC to set/get RTC time and other alarm functions,
+since the RTC set time needs to be done in secure EL3 mode (required
+by system controller firmware) and alarm functions needs to be done
+with general MU IRQ handle, these depend on other components which
+are NOT ready, so this patch ONLY enables the RTC time read.
 
-"ARM: dts: sun7i: set proper lradc vref on OLinuXino Lime2"
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/rtc/Kconfig      |   6 +++
+ drivers/rtc/Makefile     |   1 +
+ drivers/rtc/rtc-imx-sc.c | 104 +++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 111 insertions(+)
+ create mode 100644 drivers/rtc/rtc-imx-sc.c
 
-or
-
-"ARM: dts: sun7i: olinoxino-lime2: set proper lradc vref"
-
-ChenYu
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index a819ef0..3b9642e 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -1677,6 +1677,12 @@ config RTC_DRV_SNVS
+ 	   This driver can also be built as a module, if so, the module
+ 	   will be called "rtc-snvs".
+ 
++config RTC_DRV_IMX_SC
++	tristate "NXP i.MX System Controller RTC support"
++	help
++	   If you say yes here you get support for the NXP i.MX System
++	   Controller RTC module.
++
+ config RTC_DRV_SIRFSOC
+ 	tristate "SiRFSOC RTC"
+ 	depends on ARCH_SIRF
+diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+index 290c173..965725f 100644
+--- a/drivers/rtc/Makefile
++++ b/drivers/rtc/Makefile
+@@ -151,6 +151,7 @@ obj-$(CONFIG_RTC_DRV_SC27XX)	+= rtc-sc27xx.o
+ obj-$(CONFIG_RTC_DRV_SH)	+= rtc-sh.o
+ obj-$(CONFIG_RTC_DRV_SIRFSOC)	+= rtc-sirfsoc.o
+ obj-$(CONFIG_RTC_DRV_SNVS)	+= rtc-snvs.o
++obj-$(CONFIG_RTC_DRV_IMX_SC)	+= rtc-imx-sc.o
+ obj-$(CONFIG_RTC_DRV_SPEAR)	+= rtc-spear.o
+ obj-$(CONFIG_RTC_DRV_STARFIRE)	+= rtc-starfire.o
+ obj-$(CONFIG_RTC_DRV_STK17TA8)	+= rtc-stk17ta8.o
+diff --git a/drivers/rtc/rtc-imx-sc.c b/drivers/rtc/rtc-imx-sc.c
+new file mode 100644
+index 0000000..2466b55
+--- /dev/null
++++ b/drivers/rtc/rtc-imx-sc.c
+@@ -0,0 +1,104 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright 2018 NXP.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
++
++#include <linux/init.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/firmware/imx/sci.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/rtc.h>
++
++#define IMX_SC_TIMER_FUNC_GET_RTC_SEC1970	9
++#define IMX_SC_TIMER_FUNC_SET_RTC_TIME		6
++
++struct imx_sc_ipc *rtc_ipc_handle;
++struct rtc_device *rtc;
++
++struct imx_sc_msg_req_timer_get_rtc_time {
++	struct imx_sc_rpc_msg hdr;
++} __packed;
++
++struct imx_sc_msg_resp_timer_get_rtc_time {
++	struct imx_sc_rpc_msg hdr;
++	u32 time;
++} __packed;
++
++static int imx_sc_rtc_read_time(struct device *dev, struct rtc_time *tm)
++{
++	struct imx_sc_msg_resp_timer_get_rtc_time *resp;
++	struct imx_sc_msg_req_timer_get_rtc_time msg;
++	struct imx_sc_rpc_msg *hdr = &msg.hdr;
++	int ret;
++
++	hdr->ver = IMX_SC_RPC_VERSION;
++	hdr->svc = IMX_SC_RPC_SVC_TIMER;
++	hdr->func = IMX_SC_TIMER_FUNC_GET_RTC_SEC1970;
++	hdr->size = 1;
++
++	ret = imx_scu_call_rpc(rtc_ipc_handle, &msg, true);
++	if (ret) {
++		pr_err("read rtc time failed, ret %d\n", ret);
++		return ret;
++	}
++
++	resp = (struct imx_sc_msg_resp_timer_get_rtc_time *)&msg;
++	rtc_time_to_tm(resp->time, tm);
++
++	return 0;
++}
++
++static const struct rtc_class_ops imx_sc_rtc_ops = {
++	.read_time = imx_sc_rtc_read_time,
++};
++
++static int imx_sc_rtc_probe(struct platform_device *pdev)
++{
++	int ret;
++
++	ret = imx_scu_get_handle(&rtc_ipc_handle);
++	if (ret) {
++		if (ret == -EPROBE_DEFER)
++			return ret;
++
++		dev_err(&pdev->dev, "failed to get ipc handle: %d!\n", ret);
++		return ret;
++	}
++
++	rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
++					&imx_sc_rtc_ops, THIS_MODULE);
++	if (IS_ERR(rtc)) {
++		ret = PTR_ERR(rtc);
++		dev_err(&pdev->dev, "failed to register rtc: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static const struct of_device_id imx_sc_dt_ids[] = {
++	{ .compatible = "nxp,imx8qxp-sc-rtc", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, imx_sc_dt_ids);
++
++static struct platform_driver imx_sc_rtc_driver = {
++	.driver = {
++		.name	= "imx-sc-rtc",
++		.of_match_table = imx_sc_dt_ids,
++	},
++	.probe		= imx_sc_rtc_probe,
++};
++module_platform_driver(imx_sc_rtc_driver);
++
++MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
++MODULE_DESCRIPTION("NXP i.MX System Controller RTC Driver");
++MODULE_LICENSE("GPL");
+-- 
+2.7.4
