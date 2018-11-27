@@ -1,76 +1,158 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH v5 3/8] clk: lochnagar: Add initial binding documentation
-Date: Tue, 27 Nov 2018 09:34:24 +0000
-Message-ID: <20181127093424.GR16508@imbe.wolfsonmicro.main>
-References: <20181120141631.18949-1-ckeepax@opensource.cirrus.com>
- <20181120141631.18949-3-ckeepax@opensource.cirrus.com>
- <20181126201645.GA2094@bogus>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 06/14] regulator: axp20x: add software based soft_start
+ for AXP209 LDO3
+Date: Tue, 27 Nov 2018 10:36:19 +0100
+Message-ID: <20181127093619.72ensythkx2mhdf5@flea>
+References: <cover.156212c9c5df493e098556cad9793a07dcab5e32.1543245984.git-series.plaes@plaes.org>
+ <41cb1b4dac3a15595c89fa962b78d3f68f370021.1543245984.git-series.plaes@plaes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xycxlit5uzxdvqgf"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181126201645.GA2094@bogus>
+In-Reply-To: <41cb1b4dac3a15595c89fa962b78d3f68f370021.1543245984.git-series.plaes@plaes.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: lee.jones@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, broonie@kernel.org, linus.walleij@linaro.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+To: Priit Laes <plaes@plaes.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Sebastian Reichel <sre@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Olliver Schinagl <oliver@schinagl.nl>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 26, 2018 at 02:16:45PM -0600, Rob Herring wrote:
-> On Tue, Nov 20, 2018 at 02:16:26PM +0000, Charles Keepax wrote:
-> > Lochnagar is an evaluation and development board for Cirrus
-> > Logic Smart CODEC and Amp devices. It allows the connection of
-> > most Cirrus Logic devices on mini-cards, as well as allowing
-> > connection of various application processor systems to provide a
-> > full evaluation platform. This driver supports the board
-> > controller chip on the Lochnagar board.
-> > 
-> > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> > ---
-> > +  - compatible : One of the following strings:
-> > +                 "cirrus,lochnagar1-clk"
-> > +                 "cirrus,lochnagar2-clk"
-> 
-> What's the 1 vs. 2?
-> 
 
-There are two versions of the device, we need to be able to
-differenciate between them in the driver.
+--xycxlit5uzxdvqgf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > +     - ln-pmic-32k : On board fixed regulator.
-> 
-> regulator?
+On Mon, Nov 26, 2018 at 05:27:47PM +0200, Priit Laes wrote:
+> From: Olliver Schinagl <oliver@schinagl.nl>
+>=20
+> In the past, there have been words on various lists that if LDO3 is
+> disabled in u-boot, but enabled in the DTS, the axp209 driver would
+> fail to continue/hang. Several enable/disable patches have been
+> issues to devicetree's in both the kernel and u-boot to address
+> this issue.
+>=20
+> What really happened however, was that the AXP209 shuts down without
+> a notice and without setting an interrupt. This is caused when LDO3
+> gets overloaded, for example with large capacitors on the LDO3 output.
+>=20
+> Normally, we would expect that AXP209 would source 200 mA as per
+> datasheet and set and trigger an interrupt when being overloaded.
+> For some reason however, this does not happen.
+>=20
+> As a work-around, we use the soft-start constraint of the regulator
+> node to first bring up the LDO3 to the lowest possible voltage and
+> then enable the LDO. After that, we can set the requested voltage
+> as usual.
+>=20
+> Combining this setting with the regulator-ramp-delay allows LDO3 to
+> enable voltage slowly and staggered, potentially reducing overall
+> inrush current.
+>=20
+> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
+> Signed-off-by: Priit Laes <plaes@plaes.org>
+> ---
+>  drivers/regulator/axp20x-regulator.c | 57 ++++++++++++++++++++++++++++-
+>  1 file changed, 56 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp=
+20x-regulator.c
+> index 1d9fa62..e8a895b 100644
+> --- a/drivers/regulator/axp20x-regulator.c
+> +++ b/drivers/regulator/axp20x-regulator.c
+> @@ -14,6 +14,7 @@
+>   */
+> =20
+>  #include <linux/bitops.h>
+> +#include <linux/delay.h>
+>  #include <linux/err.h>
+>  #include <linux/init.h>
+>  #include <linux/mfd/axp20x.h>
+> @@ -23,6 +24,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+>  #include <linux/regulator/driver.h>
+> +#include <linux/regulator/machine.h>
+>  #include <linux/regulator/of_regulator.h>
+> =20
+>  #define AXP20X_GPIO0_FUNC_MASK		GENMASK(3, 0)
+> @@ -430,6 +432,59 @@ static int axp20x_set_ramp_delay(struct regulator_de=
+v *rdev, int ramp)
+>  	return regmap_update_bits(axp20x->regmap, reg, mask, cfg);
+>  }
+> =20
+> +static int axp20x_regulator_enable_regmap(struct regulator_dev *rdev)
+> +{
+> +	struct axp20x_dev *axp20x =3D rdev_get_drvdata(rdev);
+> +	const struct regulator_desc *desc =3D rdev->desc;
+> +
+> +	if (!rdev)
+> +		return -EINVAL;
+> +
+> +	switch (axp20x->variant) {
+> +	case AXP209_ID:
+> +		if ((desc->id =3D=3D AXP20X_LDO3) &&
+> +		    rdev->constraints && rdev->constraints->soft_start) {
+> +			int v_out;
+> +			int ret;
+> +
+> +			/*
+> +			 * On some boards, the LDO3 can be overloaded when
+> +			 * turning on, causing the entire PMIC to shutdown
+> +			 * without warning. Turning it on at the minimal voltage
+> +			 * and then setting the voltage to the requested value
+> +			 * works reliably.
+> +			 */
+> +			if (regulator_is_enabled_regmap(rdev))
+> +				break;
+> +
+> +			v_out =3D regulator_get_voltage_sel_regmap(rdev);
+> +			if (v_out < 0)
+> +				return v_out;
+> +
+> +			if (v_out =3D=3D 0)
+> +				break;
+> +
+> +			ret =3D regulator_set_voltage_sel_regmap(rdev, 0x00);
+> +			/*
+> +			 * A small pause is needed between
+> +			 * setting the voltage and enabling the LDO to give the
+> +			 * internal state machine time to process the request.
+> +			 */
+> +			usleep_range(1000, 5000);
+> +			ret |=3D regulator_enable_regmap(rdev);
+> +			ret |=3D regulator_set_voltage_sel_regmap(rdev, v_out);
+> +
+> +			return ret;
+> +		}
+> +		break;
+> +	default:
+> +		/* No quirks */
+> +		break;
+> +	}
+> +
+> +	return regulator_enable_regmap(rdev);
+> +};
+> +
 
-Well that is a spectacular copy and paste oversight sorry about
-that will get it fixed up.
+This is some pretty generic code, and could be useful to some other
+users. I guess a generic function would be better for this.
 
-> 
-> > +     - ln-clk-12m : On board fixed regulator.
-> > +     - ln-clk-11m : On board fixed regulator.
-> > +     - ln-clk-24m : On board fixed regulator.
-> > +     - ln-clk-22m : On board fixed regulator.
-> > +     - ln-usb-clk-24m : On board fixed regulator.
-> > +     - ln-usb-clk-12m : On board fixed regulator.
+Maxime
 
-> > +lochnagar-clk {
-> > +	compatible = "cirrus,lochnagar2-clk";
-> > +
-> > +	#clock-cells = <1>;
-> > +
-> > +	clocks = <&clk-audio>, <&clk_pmic>;
-> > +	clock-names = "ln-gf-mclk2", "ln-pmic-32k";
-> > +
-> > +	assigned-clocks = <&lochnagar-clk LOCHNAGAR_CDC_MCLK1>,
-> > +			  <&lochnagar-clk LOCHNAGAR_CDC_MCLK2>;
-> > +	assigned-clock-parents = <&clk-audio>,
-> > +				 <&clk-pmic>;
-> > +
-> > +	clk-pmic: clk-pmic {
-> 
-> This isn't really any relationship to the parent and I think shouldn't 
-> be a sub-node.
-> 
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Yeah sorry that is a good point will move it out.
+--xycxlit5uzxdvqgf
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Charles
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW/0QEwAKCRDj7w1vZxhR
+xfK7AQChUMMNT4uSC1kZ02rxEKq7jj7Aj5OReZePaYE4dhhT3AEAxCb3fgaVByKb
+fqP//z/kqitXwJZsC7CqrIwUGFrtUQ0=
+=YAe9
+-----END PGP SIGNATURE-----
+
+--xycxlit5uzxdvqgf--
