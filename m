@@ -1,90 +1,38 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH v10 2/7] dt-bindings: Introduce interconnect binding
-Date: Tue, 27 Nov 2018 20:03:44 +0200
-Message-ID: <20181127180349.29997-3-georgi.djakov@linaro.org>
-References: <20181127180349.29997-1-georgi.djakov@linaro.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH RFC 4/5] gnss: sirf: add a separate supply for a lna
+Date: Tue, 27 Nov 2018 19:03:57 +0100
+Message-ID: <20181127180356.GA32751@localhost>
+References: <20181118215801.12280-1-andreas@kemnade.info>
+ <20181118215801.12280-5-andreas@kemnade.info>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181127180349.29997-1-georgi.djakov@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20181118215801.12280-5-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, rjw@rjwysocki.net, robh+dt@kernel.org, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, arnd@arndb.de, thierry.reding@gmail.com, ksitaraman@nvidia.com, sanjayc@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org, georgi.djakov@linaro.org
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: johan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-This binding is intended to represent the relations between the interconnect
-controllers (providers) and consumer device nodes. It will allow creating links
-between consumers and interconnect paths (exposed by interconnect providers).
+Hi!
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- .../bindings/interconnect/interconnect.txt    | 60 +++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interconnect/interconnect.txt
+> Devices might have a separate lna between antenna output of the gps
+> chip and the antenna which might have a separate supply
 
-diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-new file mode 100644
-index 000000000000..6775c07e1574
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-@@ -0,0 +1,60 @@
-+Interconnect Provider Device Tree Bindings
-+=========================================
-+
-+The purpose of this document is to define a common set of generic interconnect
-+providers/consumers properties.
-+
-+
-+= interconnect providers =
-+
-+The interconnect provider binding is intended to represent the interconnect
-+controllers in the system. Each provider registers a set of interconnect
-+nodes, which expose the interconnect related capabilities of the interconnect
-+to consumer drivers. These capabilities can be throughput, latency, priority
-+etc. The consumer drivers set constraints on interconnect path (or endpoints)
-+depending on the use case. Interconnect providers can also be interconnect
-+consumers, such as in the case where two network-on-chip fabrics interface
-+directly.
-+
-+Required properties:
-+- compatible : contains the interconnect provider compatible string
-+- #interconnect-cells : number of cells in a interconnect specifier needed to
-+			encode the interconnect node id
-+
-+Example:
-+
-+		snoc: interconnect@580000 {
-+			compatible = "qcom,msm8916-snoc";
-+			#interconnect-cells = <1>;
-+			reg = <0x580000 0x14000>;
-+			clock-names = "bus_clk", "bus_a_clk";
-+			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
-+				 <&rpmcc RPM_SMD_SNOC_A_CLK>;
-+		};
-+
-+
-+= interconnect consumers =
-+
-+The interconnect consumers are device nodes which dynamically express their
-+bandwidth requirements along interconnect paths they are connected to. There
-+can be multiple interconnect providers on a SoC and the consumer may consume
-+multiple paths from different providers depending on use case and the
-+components it has to interact with.
-+
-+Required properties:
-+interconnects : Pairs of phandles and interconnect provider specifier to denote
-+	        the edge source and destination ports of the interconnect path.
-+
-+Optional properties:
-+interconnect-names : List of interconnect path name strings sorted in the same
-+		     order as the interconnects property. Consumers drivers will use
-+		     interconnect-names to match interconnect paths with interconnect
-+		     specifier pairs.
-+
-+Example:
-+
-+	sdhci@7864000 {
-+		...
-+		interconnects = <&pnoc MASTER_SDCC_1 &bimc SLAVE_EBI_CH0>;
-+		interconnect-names = "sdhc-ddr";
-+	};
+Might have.
+
+> @@ -340,6 +349,12 @@ static int sirf_probe(struct serdev_device *serdev)
+>  		goto err_put_device;
+>  	}
+>  
+> +	data->lna = devm_regulator_get(dev, "lna");
+> +	if (IS_ERR(data->lna)) {
+> +		ret = PTR_ERR(data->lna);
+> +		goto err_put_device;
+> +	}
+> +
+
+But it is not optional in the code. Probably should be?
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
