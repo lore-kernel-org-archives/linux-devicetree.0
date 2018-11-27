@@ -1,152 +1,63 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 4/4] ARM: dts: am335x: Move l4 child devices to probe
- them with ti-sysc
-Date: Tue, 27 Nov 2018 08:16:25 -0800
-Message-ID: <20181127161625.GR53235@atomide.com>
-References: <20180925000545.22931-1-tony@atomide.com>
- <20180925000545.22931-5-tony@atomide.com>
- <612b09a4-5007-39bf-becb-66fdca9d6d41@ti.com>
+From: <Andrei.Stefanescu@microchip.com>
+Subject: [PATCH v2 0/3] add support for MCP16502 PMIC
+Date: Tue, 27 Nov 2018 16:25:37 +0000
+Message-ID: <1543335937-12689-1-git-send-email-andrei.stefanescu@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <612b09a4-5007-39bf-becb-66fdca9d6d41@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>, Tero Kristo <t-kristo@ti.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, Nicolas.Ferre@microchip.com, Cristian.Birsan@microchip.com, Claudiu.Beznea@microchip.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrei.Stefanescu@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [181127 13:01]:
-> Reverting this patch in linux-next makes audio working again on am335x
-> (bb white + audio cape) :o
-> 
-> Without revert the McASP FIFO would constantly underflow.
+MCP16502 is a Power Management IC from Microchip.
+It has 4 Buck outputs and 2 LDOs. The buck regulators
+can be used in two modes: normal(FPWM) and low-power(Auto PFM).
 
-Thanks for testing. Hmm the dts change looks right. And
-am3_l3s_clkctrl_regs[] has CLKF_SW_SUP for the mcasp fcks.
-And there are no opt clocks to enable according to the TRM.
+This patch series adds support for the MCP16502 PMIC.
 
-> Memcpy test via dmatest works with EDMA
+v2:
+- use lpm-gpios instead of lpm-gpio in devicetree bindings documentation
+- describe the regulators present on the PMIC in the devicetree bindings
+  documentation
+- add SPDX license inside a C++ comment
+- prefix macro
+- remove mcp16502_update_regulator and mcp16502_read
+- replace ?: with if-else
+- change some if-else with switch statements for legibility
+- use regmap helpers for regultor settings during runtime
+- make mcp16502_get_status read the status from the PMIC STS registers
+- use module_i2c_driver
+- use the PMIC's Hibernate registers for suspend-to-mem, the PMIC's
+  Low-power registers for standby and the PMIC's Active registers for
+  normal runtime
 
-OK. Can you please test if the following partial revert
-also works or is there maybe a dependency to some other
-device?
+Note about mcp16502_suspend:
+- mcp16502_gpio_set_mode(mcp, MCP16502_OPMODE_HIB) has now been changed to
+  mcp16502_gpio_set_mode(mcp, MCP16502_OPMODE_LPM) for legibility.
 
-Regards,
+Note that the function call only sets the LPM pin of the PMIC to high.
+This puts the PMIC in Low-power operating mode. Hibernate operating mode
+is reached when the MPU sets the PWRHLD line to zero (typically when
+entering suspend-to-ram).
 
-Tony
+Andrei Stefanescu (3):
+  regulator: dt-bindings: add MCP16502 regulator bindings
+  MAINTAINERS: add maintainer for MCP16502 PMIC driver
+  regulator: mcp16502: add regulator driver for MCP16502
 
-8< ------------------
->From tony Mon Sep 17 00:00:00 2001
-From: Tony Lindgren <tony@atomide.com>
-Date: Tue, 27 Nov 2018 08:11:48 -0800
-Subject: [PATCH] ARM: dts: Revert am335x mcasp ti-sysc changes
+ .../bindings/regulator/mcp16502-regulator.txt      | 143 ++++++
+ MAINTAINERS                                        |   7 +
+ drivers/regulator/Kconfig                          |   9 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/mcp16502.c                       | 542 +++++++++++++++++=
+++++
+ 5 files changed, 702 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mcp16502-re=
+gulator.txt
+ create mode 100644 drivers/regulator/mcp16502.c
 
-Without this McASP FIFO would constantly underflow. EDMA
-test via dmatest works though.
-
-Let's revert the change for now until we know the root cause.
-
-Reported-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/am33xx-l4.dtsi | 28 ++--------------------------
- arch/arm/boot/dts/am33xx.dtsi    | 29 +++++++++++++++++++++++++++++
- 2 files changed, 31 insertions(+), 26 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
---- a/arch/arm/boot/dts/am33xx-l4.dtsi
-+++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-@@ -1056,19 +1056,7 @@
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x0 0x38000 0x2000>;
--
--			mcasp0: mcasp@0 {
--				compatible = "ti,am33xx-mcasp-audio";
--				reg = <0x0 0x2000>,
--				      <0x46000000 0x400000>;
--				reg-names = "mpu", "dat";
--				interrupts = <80>, <81>;
--				interrupt-names = "tx", "rx";
--				status = "disabled";
--				dmas = <&edma 8 2>,
--					<&edma 9 2>;
--				dma-names = "tx", "rx";
--			};
-+			status = "disabled";
- 		};
- 
- 		target-module@3c000 {			/* 0x4803c000, ap 20 32.0 */
-@@ -1086,19 +1074,7 @@
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x0 0x3c000 0x2000>;
--
--			mcasp1: mcasp@0 {
--				compatible = "ti,am33xx-mcasp-audio";
--				reg = <0x0 0x2000>,
--				      <0x46400000 0x400000>;
--				reg-names = "mpu", "dat";
--				interrupts = <82>, <83>;
--				interrupt-names = "tx", "rx";
--				status = "disabled";
--				dmas = <&edma 10 2>,
--					<&edma 11 2>;
--				dma-names = "tx", "rx";
--			};
-+			status = "disabled";
- 		};
- 
- 		target-module@40000 {			/* 0x48040000, ap 22 1e.0 */
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -440,7 +440,36 @@
- 			       <&edma 5 0>;
- 			dma-names = "tx", "rx";
- 		};
-+
-+		mcasp0: mcasp@48038000 {
-+			compatible = "ti,am33xx-mcasp-audio";
-+			ti,hwmods = "mcasp0";
-+			reg = <0x48038000 0x2000>,
-+			      <0x46000000 0x400000>;
-+			reg-names = "mpu", "dat";
-+			interrupts = <80>, <81>;
-+			interrupt-names = "tx", "rx";
-+			status = "disabled";
-+			dmas = <&edma 8 2>,
-+				<&edma 9 2>;
-+			dma-names = "tx", "rx";
-+		};
-+
-+		mcasp1: mcasp@4803c000 {
-+			compatible = "ti,am33xx-mcasp-audio";
-+			ti,hwmods = "mcasp1";
-+			reg = <0x4803C000 0x2000>,
-+			      <0x46400000 0x400000>;
-+			reg-names = "mpu", "dat";
-+			interrupts = <82>, <83>;
-+			interrupt-names = "tx", "rx";
-+			status = "disabled";
-+			dmas = <&edma 10 2>,
-+				<&edma 11 2>;
-+			dma-names = "tx", "rx";
-+		};
- 	};
-+
- };
- 
- #include "am33xx-l4.dtsi"
--- 
-2.19.1
+--=20
+2.7.4
