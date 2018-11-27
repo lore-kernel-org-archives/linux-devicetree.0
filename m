@@ -1,179 +1,113 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 06/17] soc: ti: pruss: Add a platform driver for PRUSS in
- TI SoCs
-Date: Tue, 27 Nov 2018 17:17:17 +0200
-Message-ID: <5BFD5FFD.9010807@ti.com>
-References: <1542886753-17625-1-git-send-email-rogerq@ti.com>
- <1542886753-17625-7-git-send-email-rogerq@ti.com>
- <1608af03-35b5-79ce-4995-84e85e740687@lechnology.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 5/5] DO NOT MERGE: ARM: dts: bananapi: Add Camera support
+Date: Tue, 27 Nov 2018 16:19:48 +0100
+Message-ID: <20181127151948.gaqodlnkiuh3vkud@flea>
+References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
+ <12093630fdd7d8b43ebcb0340691e0f2200e26c6.1542097288.git-series.maxime.ripard@bootlin.com>
+ <CAMty3ZBO6B=vgduv5u28zC8P1DOm1TYGFAVjDtJOpU8dozrk=A@mail.gmail.com>
+ <20181127103106.vykudp36vkyy5vme@flea>
+ <CAMty3ZAhGAN2nEJkiRLHqFHz9Oi1WboiyqLL4ox+-0z7NhbG8w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7kvhaimtko2tapu3"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1608af03-35b5-79ce-4995-84e85e740687@lechnology.com>
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZAhGAN2nEJkiRLHqFHz9Oi1WboiyqLL4ox+-0z7NhbG8w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, tony@atomide.com
-Cc: robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, laurent.pinchart@ideasonboard.com, linux-media <linux-media@vger.kernel.org>, a.hajda@samsung.com, Chen-Yu Tsai <wens@csie.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 26/11/18 23:15, David Lechner wrote:
-> On 11/22/18 5:39 AM, Roger Quadros wrote:
->> From: Suman Anna <s-anna@ti.com>
->>
->> The PRUSS platform driver deals with the overall PRUSS and is
->> used for managing the subsystem level resources like various
->> memories. It is responsible for the creation and deletion of
->> the platform devices for the child PRU devices and other child
->> devices (Interrupt Controller or MDIO node or some syscon nodes)
->> so that they can be managed by specific platform drivers.
->>
->> This design provides flexibility in representing the different
->> modules of PRUSS accordingly, and at the same time allowing the
->> PRUSS driver to add some instance specific configuration within
->> an SoC.
->>
->> The driver currently supports the AM335x SoC.
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->>   drivers/soc/ti/Makefile |   2 +-
->>   drivers/soc/ti/pruss.c  | 116 ++++++++++++++++++++++++++++++++++++++++++++++++
->>   drivers/soc/ti/pruss.h  |  44 ++++++++++++++++++
->>   3 files changed, 161 insertions(+), 1 deletion(-)
->>   create mode 100644 drivers/soc/ti/pruss.c
->>   create mode 100644 drivers/soc/ti/pruss.h
->>
-> 
-> ...
-> 
->> diff --git a/drivers/soc/ti/pruss.c b/drivers/soc/ti/pruss.c
->> new file mode 100644
->> index 0000000..0840b59
->> --- /dev/null
->> +++ b/drivers/soc/ti/pruss.c
->> @@ -0,0 +1,116 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * PRU-ICSS platform driver for various TI SoCs
->> + *
->> + * Copyright (C) 2014-2018 Texas Instruments Incorporated - http://www.ti.com/
->> + *    Suman Anna <s-anna@ti.com>
->> + *    Andrew F. Davis <afd@ti.com>
->> + */
->> +
->> +#include <linux/dma-mapping.h>
->> +#include <linux/module.h>
-> 
-> alphabetical order?
 
-ok.
+--7kvhaimtko2tapu3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
->> +#include <linux/io.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_device.h>
->> +
->> +#include "pruss.h"
->> +
->> +static int pruss_probe(struct platform_device *pdev)
->> +{
->> +    struct device *dev = &pdev->dev;
->> +    struct device_node *node = dev->of_node;
->> +    struct device_node *np;
->> +    struct pruss *pruss;
->> +    struct resource res;
->> +    int ret, i, index;
->> +    const char *mem_names[PRUSS_MEM_MAX] = { "dram0", "dram1", "shrdram2" };
->> +
->> +    if (!node) {
->> +        dev_err(dev, "Non-DT platform device not supported\n");
->> +        return -ENODEV;
->> +    }
->> +
->> +    ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
->> +    if (ret) {
->> +        dev_err(dev, "dma_set_coherent_mask: %d\n", ret);
->> +        return ret;
->> +    }
->> +
->> +    pruss = devm_kzalloc(dev, sizeof(*pruss), GFP_KERNEL);
->> +    if (!pruss)
->> +        return -ENOMEM;
->> +
->> +    pruss->dev = dev;
->> +
->> +    np = of_get_child_by_name(node, "memories");
->> +    if (!np)
-> 
-> error message?
+On Tue, Nov 27, 2018 at 04:30:55PM +0530, Jagan Teki wrote:
+> > > > +&i2c1 {
+> > > > +       pinctrl-names =3D "default";
+> > > > +       pinctrl-0 =3D <&i2c1_pins_a>;
+> > > > +       status =3D "okay";
+> > > > +
+> > > > +       camera: camera@21 {
+> > > > +               compatible =3D "ovti,ov5640";
+> > > > +               reg =3D <0x21>;
+> > > > +                clocks =3D <&ccu CLK_CSI0>;
+> > > > +                clock-names =3D "xclk";
+> > > > +               assigned-clocks =3D <&ccu CLK_CSI0>;
+> > > > +               assigned-clock-rates =3D <24000000>;
+> > > > +
+> > > > +                reset-gpios =3D <&pio 7 14 GPIO_ACTIVE_LOW>;
+> > > > +                powerdown-gpios =3D <&pio 7 19 GPIO_ACTIVE_HIGH>;
+> > > > +                AVDD-supply =3D <&reg_cam_avdd>;
+> > > > +                DOVDD-supply =3D <&reg_cam_dovdd>;
+> > > > +                DVDD-supply =3D <&reg_cam_dvdd>;
+> > > > +
+> > > > +                port {
+> > > > +                        ov5640_to_csi: endpoint {
+> > > > +                                remote-endpoint =3D <&csi_from_ov5=
+640>;
+> > > > +                                bus-width =3D <8>;
+> > > > +                                data-shift =3D <2>;
+> > > > +                                hsync-active =3D <1>; /* Active hi=
+gh */
+> > > > +                                vsync-active =3D <0>; /* Active lo=
+w */
+> > > > +                                data-active =3D <1>;  /* Active hi=
+gh */
+> > > > +                                pclk-sample =3D <1>;  /* Rising */
+> > > > +                        };
+> > > > +                };
+> > > > +       };
+> > >
+> > > Does ov5640 need any further patches, wrt linux-next? I'm trying to
+> > > test this on top of linux-next but the slave id seems not detecting.
+> > >
+> > > [    2.304711] ov5640 1-0021: Linked as a consumer to regulator.5
+> > > [    2.310639] ov5640 1-0021: Linked as a consumer to regulator.6
+> > > [    2.316592] ov5640 1-0021: Linked as a consumer to regulator.4
+> > > [    2.351540] ov5640 1-0021: ov5640_init_slave_id: failed with -6
+> > > [    2.357543] ov5640 1-0021: Dropping the link to regulator.5
+> > > [    2.363224] ov5640 1-0021: Dropping the link to regulator.6
+> > > [    2.368829] ov5640 1-0021: Dropping the link to regulator.4
+> > >
+> > > Here is the full log [1], please let me know if I miss anything, I
+> > > even tried to remove MCLK pin
+> >
+> > You seem to have made local modifications to your tree, what are they?
+> > This indicates that the communication over i2c doesn't work, what is
+> > your setup?
+>=20
+> I just used your commits on linux-next [2], with the setup similar in
+> Page 5 on datasheet[3]. The only difference is csi build issue, I have
+> updated similar fix you mentioned on sun6i_csi [4]
+>=20
+> [2] https://github.com/amarula/linux-amarula/commits/CSI-A20
+> [3] https://www.tme.eu/gb/Document/187887186b98a8f78b47da2774a34f4c/BPI-C=
+AMERA.pdf
+> [4] https://github.com/amarula/linux-amarula/commit/a6762ecd38f000e2bd02d=
+d255f6fd0c1ae755429#diff-0809a7f97ca58771c1cda186e73ec657
 
-Yes.
-> 
->> +        return -ENODEV;
->> +
->> +    for (i = 0; i < ARRAY_SIZE(mem_names); i++) {
->> +        index = of_property_match_string(np, "reg-names", mem_names[i]);
->> +        if (index < 0) {
->> +            of_node_put(np);
->> +            return index;
->> +        }
->> +
->> +        if (of_address_to_resource(np, index, &res)) {
->> +            of_node_put(np);
->> +            return -EINVAL;
->> +        }
->> +
->> +        pruss->mem_regions[i].va = devm_ioremap(dev, res.start,
->> +                            resource_size(&res));
->> +        if (!pruss->mem_regions[i].va) {
->> +            dev_err(dev, "failed to parse and map memory resource %d %s\n",
->> +                i, mem_names[i]);
->> +            of_node_put(np);
->> +            return -ENOMEM;
->> +        }
->> +        pruss->mem_regions[i].pa = res.start;
->> +        pruss->mem_regions[i].size = resource_size(&res);
->> +
->> +        dev_dbg(dev, "memory %8s: pa %pa size 0x%zx va %p\n",
->> +            mem_names[i], &pruss->mem_regions[i].pa,
->> +            pruss->mem_regions[i].size, pruss->mem_regions[i].va);
->> +    }
->> +    of_node_put(np);
->> +
->> +    platform_set_drvdata(pdev, pruss);
->> +
->> +    dev_info(&pdev->dev, "creating PRU cores and other child platform devices\n");
-> 
-> Is this really needed? Or dev_dbg instead?
-> 
->> +    ret = of_platform_populate(node, NULL, NULL, &pdev->dev);
->> +    if (ret)
->> +        dev_err(dev, "of_platform_populate failed\n");
->> +
->> +    return ret;
->> +}
->> +
->> +static int pruss_remove(struct platform_device *pdev)
->> +{
->> +    struct device *dev = &pdev->dev;
->> +
->> +    dev_info(dev, "remove PRU cores and other child platform devices\n");
-> 
-> same here... looks like debug message
+That branch doesn't have any commit with the same ID that you have in
+your boot log.
 
-Yes for both.
-> 
->> +    of_platform_depopulate(dev);
->> +
->> +    return 0;
->> +}
->> +
+Maxime
 
-cheers,
--roger
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+--7kvhaimtko2tapu3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW/1glAAKCRDj7w1vZxhR
+xQPFAQCORfq8rEIh8lqEKA8obv0BQ2hSg0qXBI81KifgMKGiqgEAoIT3nDy7NRaQ
+Cj/6IxkSTP4ZdQEtr4bfvhcqdn7aeAw=
+=3CHx
+-----END PGP SIGNATURE-----
+
+--7kvhaimtko2tapu3--
