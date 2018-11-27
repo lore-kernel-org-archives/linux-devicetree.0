@@ -1,103 +1,68 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: Re: [PATCH v4 08/26] drm/sun4i: sun6i_mipi_dsi: Fix
- VBP size calculation
-Date: Tue, 27 Nov 2018 16:34:35 +0530
-Message-ID: <CAMty3ZDTvn4VF_oOvEi2jCw9Rw5WPd1LQT3SZ5X1K0fJAFg2cQ@mail.gmail.com>
-References: <20181113111633.20189-1-jagan@amarulasolutions.com>
- <20181113111633.20189-9-jagan@amarulasolutions.com> <20181115095551.uctdkfmuwlnzhjnn@flea>
- <CAMty3ZAEHiovm6OF6JvJVQR4aqpG1Q3ML5YqxJkF2ntwRkUO=A@mail.gmail.com>
- <20181120155715.andrjp5kg6ugcv72@flea> <CAMty3ZCUOJmvekupOwh281g5HaazTpBbukWQY2Pv2OYypAwciw@mail.gmail.com>
- <20181127102450.b65jzhrdpxn5rxmk@flea>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [RFC PATCH v2 05/15] usb:cdns3: Added DRD support
+Date: Tue, 27 Nov 2018 11:29:45 +0000
+Message-ID: <BYAPR07MB470901107F1435424D8B0727DDD00@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
+ <1542535751-16079-6-git-send-email-pawell@cadence.com>
+ <5BF8140C.7000605@ti.com>
+ <BYAPR07MB470991EB0AE200B6481AEE35DDD70@BYAPR07MB4709.namprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBUOJ6TPQKGQEJH7AQLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181127102450.b65jzhrdpxn5rxmk@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <BYAPR07MB470991EB0AE200B6481AEE35DDD70@BYAPR07MB4709.namprd07.prod.outlook.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 27, 2018 at 3:55 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> On Tue, Nov 20, 2018 at 09:55:42PM +0530, Jagan Teki wrote:
-> > On Tue, Nov 20, 2018 at 9:27 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > >
-> > > On Thu, Nov 15, 2018 at 11:19:53PM +0530, Jagan Teki wrote:
-> > > > On Thu, Nov 15, 2018 at 3:26 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > On Tue, Nov 13, 2018 at 04:46:15PM +0530, Jagan Teki wrote:
-> > > > > > The horizontal and vertical back porch calculation in BSP
-> > > > > > code is simply following the Linux drm comment diagram, in
-> > > > > > include/drm/drm_modes.h which is
-> > > > > >
-> > > > > > [hv]back porch = [hv]total - [hv]sync_end
-> > > > > >
-> > > > > > BSP code form BPI-M64-bsp is calculating vertical back porch as
-> > > > > > (from linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c)
-> > > > > >
-> > > > > > timmings->ver_sync_time= panel_info->lcd_vspw;
-> > > > > > timmings->ver_back_porch= panel_info->lcd_vbp-panel_info->lcd_vspw;
-> > > > > >
-> > > > > > vbp = panel->lcd_vbp;
-> > > > > > vspw = panel->lcd_vspw;
-> > > > > > dsi_dev[sel]->dsi_basic_size0.bits.vbp = vbp-vspw;
-> > > > > > dsi_dev[sel]->dsi_basic_size0.bits.vbp = panel->lcd_vbp - panel->lcd_vspw;
-> > > > > > =>  timmings->ver_back_porch + panel_info->lcd_vspw - panel_info->lcd_vspw
-> > > > > > =>  timmings->ver_back_porch
-> > > > > > =>  mode->vtotal - mode->end
-> > > > > >
-> > > > > > Which evatually same as mode->vtotal - mode->vsync_end so update the
-> > > > > > same in SUN6I_DSI_BASIC_SIZE0_VBP
-> > > > > >
-> > > > > > On the information note, existing SUN6I_DSI_BASIC_SIZE0_VSA is proper
-> > > > > > value.
-> > > > > >
-> > > > > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > > > >
-> > > > > I've tested your changes on my A33 board, and this commit will break
-> > > > > it.
-> > > > >
-> > > > > It creates vblank timeouts, and visual artifacts at the bottom of the
-> > > > > display.
-> > > >
-> > > > Strange, VBP is earlier gives front porch which is anyway wrong.
-> > > >
-> > > > >
-> > > > > Later commits seem to fix the issue, but will create some blanking on
-> > > > > the upper third of the display.
-> > > > >
-> > > > > Since the documentation is quite sparse, and a MIPI-DSI analyzer is
-> > > > > way too expensive, I'd really like to have at least what each of these
-> > > > > commits are actually fixing, and what symptoms each of these were
-> > > > > causing, and not just "the BSP does it".
-> > > >
-> > > > W/o this 2-lane panel is breaking, same vblank timeout and visual
-> > > > artifacts at the bottom of the panel. though the commits may reference
-> > > > BSP, I have at-least tested on 3 different panels for us to prove its
-> > > > working.
-> > > >
-> > > > > Having some datasheet for the panels you had working would help too.
-> > > >
-> > > > Unfortunately datasheet doesn't have any required information what we
-> > > > actually looking for.
-> > >
-> > > Not even the timings? How did you get that information then?
-> >
-> > datasheet has timing values, but this changes need controller
-> > information about VBP register that I don't have. But again existing
-> > VBP is not back porch for real, it's front porch.
->
-> Yet, this breaks the existing setup. So again:
+Hi Roger
 
-Was it with 4-lane or 2-lane panel? can you test it with 2-lane panel?
-I can see the issue on 2-lane but the 4-lane working fine with this
-patch even.
+>>> Patch adds supports for detecting Host/Device mode.
+>>> +
+>>> +static int cdns3_otg_get_id(struct cdns3 *cdns)
+>>> +{
+>>> +	int id;
+>>> +
+>>> +	id =3D readl(&cdns->otg_regs->sts) & OTGSTS_ID_VALUE;
+>>> +	dev_dbg(cdns->dev, "OTG ID: %d", id);
+>>> +	return id;
+>>> +}
+>>> +
+>>> +int cdns3_is_host(struct cdns3 *cdns)
+>>> +{
+>>> +	if (cdns->current_dr_mode =3D=3D USB_DR_MODE_HOST)
+>>> +		return 1;
+>>
+>>Why do you need this?
+>
+>I assumed that some SoC could have cut DRD /OTG and Device or Host part.
+>In such case the driver cannot be based on ID pin.
+>For only HOST it's not a problem because
+>the standard XHCI driver will be used.  Probably I will remove this fragme=
+nt.
+
+I've removed this condition but it is necessary and I've  restored it again=
+.=20
+When driver works in only HOST mode then ID is always 0.=20
+For current_dr_mode =3D=3D USB_DR_MODE_HOST driver has to just simple=20
+returns 1. =20
+current_dr_mode  can be changed from user space depending on dr_mode field.=
+=20
+
+I have the additional question. Because I have many changes in source code =
+if I should=20
+post the next RFC PATCH v3 or should I wait for comments for rest patches ?
+
+>>
+>>> +	else if (cdns->current_dr_mode =3D=3D USB_DR_MODE_OTG)
+>>> +		if (!cdns3_otg_get_id(cdns))
+>>> +			return 1;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+Thanks,
+Cheers,
+Pawel
