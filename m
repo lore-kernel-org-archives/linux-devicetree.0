@@ -1,50 +1,192 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Re: [PATCH v4 08/26] drm/sun4i: sun6i_mipi_dsi: Fix
- VBP size calculation
-Date: Tue, 27 Nov 2018 11:25:32 +0100
-Message-ID: <20181127102532.6wuwrhvk256g7kbm@flea>
-References: <20181113111633.20189-1-jagan@amarulasolutions.com>
- <20181113111633.20189-9-jagan@amarulasolutions.com>
- <20181115095551.uctdkfmuwlnzhjnn@flea>
- <CAMty3ZAEHiovm6OF6JvJVQR4aqpG1Q3ML5YqxJkF2ntwRkUO=A@mail.gmail.com>
- <20181120155715.andrjp5kg6ugcv72@flea>
- <CAMty3ZCUOJmvekupOwh281g5HaazTpBbukWQY2Pv2OYypAwciw@mail.gmail.com>
- <55900bf3-efb5-5f78-5252-b3f6d4f775fb@openedev.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 5/5] DO NOT MERGE: ARM: dts: bananapi: Add Camera support
+Date: Tue, 27 Nov 2018 11:31:06 +0100
+Message-ID: <20181127103106.vykudp36vkyy5vme@flea>
+References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
+ <12093630fdd7d8b43ebcb0340691e0f2200e26c6.1542097288.git-series.maxime.ripard@bootlin.com>
+ <CAMty3ZBO6B=vgduv5u28zC8P1DOm1TYGFAVjDtJOpU8dozrk=A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="xxfqqmg4s6arnez2"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLVX6TPQKGQE64DFJ4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+        protocol="application/pgp-signature"; boundary="mwaf2j32zrljcsge"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <55900bf3-efb5-5f78-5252-b3f6d4f775fb-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Cc: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+In-Reply-To: <CAMty3ZBO6B=vgduv5u28zC8P1DOm1TYGFAVjDtJOpU8dozrk=A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, laurent.pinchart@ideasonboard.com, linux-media <linux-media@vger.kernel.org>, a.hajda@samsung.com, Chen-Yu Tsai <wens@csie.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 
---xxfqqmg4s6arnez2
-Content-Type: text/plain; charset="UTF-8"
+--mwaf2j32zrljcsge
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 26, 2018 at 05:37:09PM +0530, Jagan Teki wrote:
-> I'm about to send next version by combining with burst mode changes in
-> one series. Do you have any further inputs on this. I didn't not see
-> any breakage with 4-lane devices, but has issue with 2-lane w/o this change.
+On Tue, Nov 27, 2018 at 12:26:09PM +0530, Jagan Teki wrote:
+> On Tue, Nov 13, 2018 at 1:54 PM Maxime Ripard <maxime.ripard@bootlin.com>=
+ wrote:
+> >
+> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > ---
+> >  arch/arm/boot/dts/sun7i-a20-bananapi.dts | 98 ++++++++++++++++++++++++=
++-
+> >  1 file changed, 98 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/d=
+ts/sun7i-a20-bananapi.dts
+> > index 70dfc4ac0bb5..18dbff9f1ce9 100644
+> > --- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> > +++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> > @@ -54,6 +54,9 @@
+> >         compatible =3D "lemaker,bananapi", "allwinner,sun7i-a20";
+> >
+> >         aliases {
+> > +               i2c0 =3D &i2c0;
+> > +               i2c1 =3D &i2c1;
+> > +               i2c2 =3D &i2c2;
+> >                 serial0 =3D &uart0;
+> >                 serial1 =3D &uart3;
+> >                 serial2 =3D &uart7;
+> > @@ -63,6 +66,41 @@
+> >                 stdout-path =3D "serial0:115200n8";
+> >         };
+> >
+> > +       reg_cam: cam {
+> > +               compatible =3D "regulator-fixed";
+> > +               regulator-name =3D "cam";
+> > +               regulator-min-microvolt =3D <5000000>;
+> > +               regulator-max-microvolt =3D <5000000>;
+> > +               vin-supply =3D <&reg_vcc5v0>;
+> > +               gpio =3D <&pio 7 16 GPIO_ACTIVE_HIGH>;
+> > +               enable-active-high;
+> > +               regulator-always-on;
+> > +       };
+> > +
+> > +        reg_cam_avdd: cam-avdd {
+> > +                compatible =3D "regulator-fixed";
+> > +                regulator-name =3D "cam500b-avdd";
+> > +                regulator-min-microvolt =3D <2800000>;
+> > +                regulator-max-microvolt =3D <2800000>;
+> > +                vin-supply =3D <&reg_cam>;
+> > +        };
+> > +
+> > +        reg_cam_dovdd: cam-dovdd {
+> > +                compatible =3D "regulator-fixed";
+> > +                regulator-name =3D "cam500b-dovdd";
+> > +                regulator-min-microvolt =3D <1800000>;
+> > +                regulator-max-microvolt =3D <1800000>;
+> > +                vin-supply =3D <&reg_cam>;
+> > +        };
+> > +
+> > +        reg_cam_dvdd: cam-dvdd {
+> > +                compatible =3D "regulator-fixed";
+> > +                regulator-name =3D "cam500b-dvdd";
+> > +                regulator-min-microvolt =3D <1500000>;
+> > +                regulator-max-microvolt =3D <1500000>;
+> > +                vin-supply =3D <&reg_cam>;
+> > +        };
+> > +
+> >         hdmi-connector {
+> >                 compatible =3D "hdmi-connector";
+> >                 type =3D "a";
+> > @@ -120,6 +158,27 @@
+> >                 >;
+> >  };
+> >
+> > +&csi0 {
+> > +       pinctrl-names =3D "default";
+> > +       pinctrl-0 =3D <&csi0_pins_a>;
+> > +       status =3D "okay";
+> > +
+> > +       port {
+> > +               #address-cells =3D <1>;
+> > +               #size-cells =3D <0>;
+> > +
+> > +               csi_from_ov5640: endpoint {
+> > +                        remote-endpoint =3D <&ov5640_to_csi>;
+> > +                        bus-width =3D <8>;
+> > +                        data-shift =3D <2>;
+> > +                        hsync-active =3D <1>; /* Active high */
+> > +                        vsync-active =3D <0>; /* Active low */
+> > +                        data-active =3D <1>;  /* Active high */
+> > +                        pclk-sample =3D <1>;  /* Rising */
+> > +                };
+> > +       };
+> > +};
+> > +
+> >  &de {
+> >         status =3D "okay";
+> >  };
+> > @@ -167,6 +226,39 @@
+> >         };
+> >  };
+> >
+> > +&i2c1 {
+> > +       pinctrl-names =3D "default";
+> > +       pinctrl-0 =3D <&i2c1_pins_a>;
+> > +       status =3D "okay";
+> > +
+> > +       camera: camera@21 {
+> > +               compatible =3D "ovti,ov5640";
+> > +               reg =3D <0x21>;
+> > +                clocks =3D <&ccu CLK_CSI0>;
+> > +                clock-names =3D "xclk";
+> > +               assigned-clocks =3D <&ccu CLK_CSI0>;
+> > +               assigned-clock-rates =3D <24000000>;
+> > +
+> > +                reset-gpios =3D <&pio 7 14 GPIO_ACTIVE_LOW>;
+> > +                powerdown-gpios =3D <&pio 7 19 GPIO_ACTIVE_HIGH>;
+> > +                AVDD-supply =3D <&reg_cam_avdd>;
+> > +                DOVDD-supply =3D <&reg_cam_dovdd>;
+> > +                DVDD-supply =3D <&reg_cam_dvdd>;
+> > +
+> > +                port {
+> > +                        ov5640_to_csi: endpoint {
+> > +                                remote-endpoint =3D <&csi_from_ov5640>;
+> > +                                bus-width =3D <8>;
+> > +                                data-shift =3D <2>;
+> > +                                hsync-active =3D <1>; /* Active high */
+> > +                                vsync-active =3D <0>; /* Active low */
+> > +                                data-active =3D <1>;  /* Active high */
+> > +                                pclk-sample =3D <1>;  /* Rising */
+> > +                        };
+> > +                };
+> > +       };
+>=20
+> Does ov5640 need any further patches, wrt linux-next? I'm trying to
+> test this on top of linux-next but the slave id seems not detecting.
+>=20
+> [    2.304711] ov5640 1-0021: Linked as a consumer to regulator.5
+> [    2.310639] ov5640 1-0021: Linked as a consumer to regulator.6
+> [    2.316592] ov5640 1-0021: Linked as a consumer to regulator.4
+> [    2.351540] ov5640 1-0021: ov5640_init_slave_id: failed with -6
+> [    2.357543] ov5640 1-0021: Dropping the link to regulator.5
+> [    2.363224] ov5640 1-0021: Dropping the link to regulator.6
+> [    2.368829] ov5640 1-0021: Dropping the link to regulator.4
+>=20
+> Here is the full log [1], please let me know if I miss anything, I
+> even tried to remove MCLK pin
 
-I'd rather focus on one thing for now. When your A64 DSI series will
-be in, then you can focus on the burst mode.
+You seem to have made local modifications to your tree, what are they?
+This indicates that the communication over i2c doesn't work, what is
+your setup?
 
 Maxime
 
--- 
+--=20
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---xxfqqmg4s6arnez2--
+
+--mwaf2j32zrljcsge
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW/0c6gAKCRDj7w1vZxhR
+xdPkAP47Cz7G1Yps9F1YMfXGn1UocnEmP7KZe3329Fq28MwkbAD+NiXMTD4QZhCx
+WPSXMTCFC6XcTEEPINbZJkVed+M1sgU=
+=G4H5
+-----END PGP SIGNATURE-----
+
+--mwaf2j32zrljcsge--
