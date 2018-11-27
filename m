@@ -1,8 +1,8 @@
 From: <Claudiu.Beznea@microchip.com>
-Subject: [PATCH v2 4/5] ARM: dts: at91: sama5d2_xplained: Add proper regulator
- states for suspend-to-mem
-Date: Tue, 27 Nov 2018 11:57:21 +0000
-Message-ID: <1543319801-19100-5-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH v2 5/5] regulator: add documentation for regulator modes and
+ suspend states
+Date: Tue, 27 Nov 2018 11:57:25 +0000
+Message-ID: <1543319801-19100-6-git-send-email-claudiu.beznea@microchip.com>
 References: <1543319801-19100-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -12,140 +12,93 @@ In-Reply-To: <1543319801-19100-1-git-send-email-claudiu.beznea@microchip.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, boris.brezillon@bootlin.com, Claudiu.Beznea@microchip.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Claudiu.Beznea@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@bootlin.com>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-When entering suspend-to-mem, all PMIC outputs are disabled except
-VDDIODDR which is put in power saving mode, and whose voltage is
-increased (probably to counter the poor accuracy of power saving mode).
+Add documentation for regulator modes and suspend states.
 
-Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-[claudiu.beznea@microchip.com: use regulator-changeable-in-suspend,
- regulator-suspend-max-microvolt, regulator-suspend-max-microvolt,
- use macros for regulators' states, add regulator-inital-state]
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 54 +++++++++++++++++++++++++=
+ .../bindings/regulator/act8945a-regulator.txt      | 34 ++++++++++++++++++=
 ++++
- 1 file changed, 54 insertions(+)
+ 1 file changed, 34 insertions(+)
 
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dt=
-s/at91-sama5d2_xplained.dts
-index 518e2b095ccf..438e6576cf7c 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -47,6 +47,7 @@
- #include "sama5d2-pinfunc.h"
- #include <dt-bindings/mfd/atmel-flexcom.h>
- #include <dt-bindings/gpio/gpio.h>
+diff --git a/Documentation/devicetree/bindings/regulator/act8945a-regulator=
+.txt b/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
+index ac955dea00d1..4017527619ab 100644
+--- a/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
+@@ -15,11 +15,17 @@ Optional input supply properties:
+   - inl67-supply: The input supply for REG_LDO3 and REG_LDO4
+=20
+ Any standard regulator properties can be used to configure the single regu=
+lator.
++regulator-initial-mode, regulator-allowed-modes and regulator-mode could b=
+e
++specified using mode values from dt-bindings/regulator/active-semi,8945a-r=
+egulator.h
++file.
+=20
+ The valid names for regulators are:
+ 	REG_DCDC1, REG_DCDC2, REG_DCDC3, REG_LDO1, REG_LDO2, REG_LDO3, REG_LDO4.
+=20
+ Example:
++
 +#include <dt-bindings/regulator/active-semi,8945a-regulator.h>
-=20
- / {
- 	model =3D "Atmel SAMA5D2 Xplained";
-@@ -181,49 +182,102 @@
- 							regulator-name =3D "VDD_1V35";
- 							regulator-min-microvolt =3D <1350000>;
- 							regulator-max-microvolt =3D <1350000>;
-+							regulator-allowed-modes =3D <ACT8945A_REGULATOR_MODE_FIXED>,
-+										  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+							regulator-initial-mode =3D <ACT8945A_REGULATOR_MODE_FIXED>;
- 							regulator-always-on;
 +
-+							regulator-state-mem {
-+								regulator-on-in-suspend;
-+								regulator-suspend-min-microvolt=3D<1400000>;
-+								regulator-suspend-max-microvolt=3D<1400000>;
-+								regulator-changeable-in-suspend;
-+								regulator-mode=3D<ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+							};
- 						};
-=20
- 						vdd_1v2_reg: REG_DCDC2 {
- 							regulator-name =3D "VDD_1V2";
- 							regulator-min-microvolt =3D <1100000>;
- 							regulator-max-microvolt =3D <1300000>;
-+							regulator-allowed-modes =3D <ACT8945A_REGULATOR_MODE_FIXED>,
-+										  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+							regulator-initial-mode =3D <ACT8945A_REGULATOR_MODE_FIXED>;
- 							regulator-always-on;
+ 	pmic@5b {
+ 		compatible =3D "active-semi,act8945a";
+ 		reg =3D <0x5b>;
+@@ -32,6 +38,18 @@ Example:
+ 				regulator-min-microvolt =3D <1350000>;
+ 				regulator-max-microvolt =3D <1350000>;
+ 				regulator-always-on;
 +
-+							regulator-state-mem {
-+								regulator-off-in-suspend;
-+							};
- 						};
-=20
- 						vdd_3v3_reg: REG_DCDC3 {
- 							regulator-name =3D "VDD_3V3";
- 							regulator-min-microvolt =3D <3300000>;
- 							regulator-max-microvolt =3D <3300000>;
-+							regulator-allowed-modes =3D <ACT8945A_REGULATOR_MODE_FIXED>,
-+										  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+							regulator-initial-mode =3D <ACT8945A_REGULATOR_MODE_FIXED>;
- 							regulator-always-on;
++				regulator-allowed-modes =3D <ACT8945A_REGULATOR_MODE_FIXED>,
++							  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
++				regulator-initial-mode =3D <ACT8945A_REGULATOR_MODE_FIXED>;
 +
-+							regulator-state-mem {
-+								regulator-off-in-suspend;
-+							};
- 						};
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-min-microvolt=3D<1400000>;
++					regulator-suspend-max-microvolt=3D<1400000>;
++					regulator-changeable-in-suspend;
++					regulator-mode=3D<ACT8945A_REGULATOR_MODE_LOWPOWER>;
++				};
+ 			};
 =20
- 						vdd_fuse_reg: REG_LDO1 {
- 							regulator-name =3D "VDD_FUSE";
- 							regulator-min-microvolt =3D <2500000>;
- 							regulator-max-microvolt =3D <2500000>;
-+							regulator-allowed-modes =3D <ACT8945A_REGULATOR_MODE_NORMAL>,
-+										  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+							regulator-initial-mode =3D <ACT8945A_REGULATOR_MODE_NORMAL>;
- 							regulator-always-on;
+ 			vdd_1v2_reg: REG_DCDC2 {
+@@ -39,6 +57,14 @@ Example:
+ 				regulator-min-microvolt =3D <1100000>;
+ 				regulator-max-microvolt =3D <1300000>;
+ 				regulator-always-on;
 +
-+							regulator-state-mem {
-+								regulator-off-in-suspend;
-+							};
- 						};
-=20
- 						vdd_3v3_lp_reg: REG_LDO2 {
- 							regulator-name =3D "VDD_3V3_LP";
- 							regulator-min-microvolt =3D <3300000>;
- 							regulator-max-microvolt =3D <3300000>;
-+							regulator-allowed-modes =3D <ACT8945A_REGULATOR_MODE_NORMAL>,
-+										  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+							regulator-initial-mode =3D <ACT8945A_REGULATOR_MODE_NORMAL>;
- 							regulator-always-on;
++				regulator-allowed-modes =3D <ACT8945A_REGULATOR_MODE_FIXED>,
++							  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
++				regulator-initial-mode =3D <ACT8945A_REGULATOR_MODE_FIXED>;
 +
-+							regulator-state-mem {
-+								regulator-off-in-suspend;
-+							};
- 						};
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
 =20
- 						vdd_led_reg: REG_LDO3 {
- 							regulator-name =3D "VDD_LED";
- 							regulator-min-microvolt =3D <3300000>;
- 							regulator-max-microvolt =3D <3300000>;
-+							regulator-allowed-modes =3D <ACT8945A_REGULATOR_MODE_NORMAL>,
-+										  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+							regulator-initial-mode =3D <ACT8945A_REGULATOR_MODE_NORMAL>;
- 							regulator-always-on;
+ 			vdd_3v3_reg: REG_DCDC3 {
+@@ -53,6 +79,14 @@ Example:
+ 				regulator-min-microvolt =3D <2500000>;
+ 				regulator-max-microvolt =3D <2500000>;
+ 				regulator-always-on;
 +
-+							regulator-state-mem {
-+								regulator-off-in-suspend;
-+							};
- 						};
-=20
- 						vdd_sdhc_1v8_reg: REG_LDO4 {
- 							regulator-name =3D "VDD_SDHC_1V8";
- 							regulator-min-microvolt =3D <1800000>;
- 							regulator-max-microvolt =3D <1800000>;
-+							regulator-allowed-modes =3D <ACT8945A_REGULATOR_MODE_NORMAL>,
-+										  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+							regulator-initial-mode =3D <ACT8945A_REGULATOR_MODE_NORMAL>;
- 							regulator-always-on;
++				regulator-allowed-modes =3D <ACT8945A_REGULATOR_MODE_NORMAL>,
++							  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
++				regulator-initial-mode =3D <ACT8945A_REGULATOR_MODE_NORMAL>;
 +
-+							regulator-state-mem {
-+								regulator-off-in-suspend;
-+							};
- 						};
- 					};
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
+ 			};
 =20
+ 			vdd_3v3_lp_reg: REG_LDO2 {
 --=20
 2.7.4
