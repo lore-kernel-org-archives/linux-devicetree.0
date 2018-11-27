@@ -1,85 +1,139 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH 5/5] DO NOT MERGE: ARM: dts: bananapi: Add Camera support
-Date: Tue, 27 Nov 2018 21:04:25 +0530
-Message-ID: <CAMty3ZC4LtAAb-09em8Cm8HTUtiK3oHvL8mynn8bhJr3Sgdvsg@mail.gmail.com>
-References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
- <12093630fdd7d8b43ebcb0340691e0f2200e26c6.1542097288.git-series.maxime.ripard@bootlin.com>
- <CAMty3ZBO6B=vgduv5u28zC8P1DOm1TYGFAVjDtJOpU8dozrk=A@mail.gmail.com>
- <20181127103106.vykudp36vkyy5vme@flea> <CAMty3ZAhGAN2nEJkiRLHqFHz9Oi1WboiyqLL4ox+-0z7NhbG8w@mail.gmail.com>
- <20181127151948.gaqodlnkiuh3vkud@flea>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 08/17] soc: ti: pruss: Add a PRUSS irqchip driver for
+ PRUSS interrupts
+Date: Tue, 27 Nov 2018 17:39:08 +0200
+Message-ID: <5BFD651C.7020903@ti.com>
+References: <1542886753-17625-1-git-send-email-rogerq@ti.com>
+ <1542886753-17625-9-git-send-email-rogerq@ti.com>
+ <af2f8ce3-923b-aa27-59b2-2ebb848c28c9@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181127151948.gaqodlnkiuh3vkud@flea>
+In-Reply-To: <af2f8ce3-923b-aa27-59b2-2ebb848c28c9@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, laurent.pinchart@ideasonboard.com, linux-media <linux-media@vger.kernel.org>, a.hajda@samsung.com, Chen-Yu Tsai <wens@csie.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+To: David Lechner <david@lechnology.com>, tony@atomide.com
+Cc: robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 27, 2018 at 8:49 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Tue, Nov 27, 2018 at 04:30:55PM +0530, Jagan Teki wrote:
-> > > > > +&i2c1 {
-> > > > > +       pinctrl-names = "default";
-> > > > > +       pinctrl-0 = <&i2c1_pins_a>;
-> > > > > +       status = "okay";
-> > > > > +
-> > > > > +       camera: camera@21 {
-> > > > > +               compatible = "ovti,ov5640";
-> > > > > +               reg = <0x21>;
-> > > > > +                clocks = <&ccu CLK_CSI0>;
-> > > > > +                clock-names = "xclk";
-> > > > > +               assigned-clocks = <&ccu CLK_CSI0>;
-> > > > > +               assigned-clock-rates = <24000000>;
-> > > > > +
-> > > > > +                reset-gpios = <&pio 7 14 GPIO_ACTIVE_LOW>;
-> > > > > +                powerdown-gpios = <&pio 7 19 GPIO_ACTIVE_HIGH>;
-> > > > > +                AVDD-supply = <&reg_cam_avdd>;
-> > > > > +                DOVDD-supply = <&reg_cam_dovdd>;
-> > > > > +                DVDD-supply = <&reg_cam_dvdd>;
-> > > > > +
-> > > > > +                port {
-> > > > > +                        ov5640_to_csi: endpoint {
-> > > > > +                                remote-endpoint = <&csi_from_ov5640>;
-> > > > > +                                bus-width = <8>;
-> > > > > +                                data-shift = <2>;
-> > > > > +                                hsync-active = <1>; /* Active high */
-> > > > > +                                vsync-active = <0>; /* Active low */
-> > > > > +                                data-active = <1>;  /* Active high */
-> > > > > +                                pclk-sample = <1>;  /* Rising */
-> > > > > +                        };
-> > > > > +                };
-> > > > > +       };
-> > > >
-> > > > Does ov5640 need any further patches, wrt linux-next? I'm trying to
-> > > > test this on top of linux-next but the slave id seems not detecting.
-> > > >
-> > > > [    2.304711] ov5640 1-0021: Linked as a consumer to regulator.5
-> > > > [    2.310639] ov5640 1-0021: Linked as a consumer to regulator.6
-> > > > [    2.316592] ov5640 1-0021: Linked as a consumer to regulator.4
-> > > > [    2.351540] ov5640 1-0021: ov5640_init_slave_id: failed with -6
-> > > > [    2.357543] ov5640 1-0021: Dropping the link to regulator.5
-> > > > [    2.363224] ov5640 1-0021: Dropping the link to regulator.6
-> > > > [    2.368829] ov5640 1-0021: Dropping the link to regulator.4
-> > > >
-> > > > Here is the full log [1], please let me know if I miss anything, I
-> > > > even tried to remove MCLK pin
-> > >
-> > > You seem to have made local modifications to your tree, what are they?
-> > > This indicates that the communication over i2c doesn't work, what is
-> > > your setup?
-> >
-> > I just used your commits on linux-next [2], with the setup similar in
-> > Page 5 on datasheet[3]. The only difference is csi build issue, I have
-> > updated similar fix you mentioned on sun6i_csi [4]
-> >
-> > [2] https://github.com/amarula/linux-amarula/commits/CSI-A20
-> > [3] https://www.tme.eu/gb/Document/187887186b98a8f78b47da2774a34f4c/BPI-CAMERA.pdf
-> > [4] https://github.com/amarula/linux-amarula/commit/a6762ecd38f000e2bd02dd255f6fd0c1ae755429#diff-0809a7f97ca58771c1cda186e73ec657
->
-> That branch doesn't have any commit with the same ID that you have in
-> your boot log.
 
-I have created this branch for your reference, here is the clean log on this [5]
+On 26/11/18 23:17, David Lechner wrote:
+> On 11/22/18 5:39 AM, Roger Quadros wrote:
+>> From: Suman Anna <s-anna@ti.com>
+>>
+>> The Programmable Real-Time Unit Subsystem (PRUSS) contains an
+>> interrupt controller (INTC) that can handle various system input
+>> events and post interrupts back to the device-level initiators.
+>> The INTC can support upto 64 input events with individual control
+>> configuration and hardware prioritization. These events are mapped
+>> onto 10 interrupt signals through two levels of many-to-one mapping
+>> support. Different interrupt signals are routed to the individual
+>> PRU cores or to the host CPU.
+>>
+>> The PRUSS INTC platform driver manages this PRUSS interrupt
+>> controller and implements an irqchip driver to provide a Linux
+>> standard way for the PRU client users to enable/disable/ack/
+>> re-trigger a PRUSS system event. The system events to interrupt
+>> channels and host interrupts relies on the mapping configuration
+>> provided through a firmware resource table for now. This will be
+>> revisited and enhanced in the future for a better interface. The
+>> mappings will currently be programmed during the boot/shutdown
+>> of the PRU.
+> 
+> Does this mapping table take up space in the PRU IRAM or DRAM? If
+> so, that can be a problem on the AM18xx because it has such limited
+> resources - every byte counts.
 
-[5] https://paste.ubuntu.com/p/4bkFs5WG6c/
+Currently the entire resource table is being placed in DRAM.
+But that is only because the current rpmsg vdev implementation depends on the
+rpmsg channel information and vring buffers to be in DRAM.
+
+I think the right way is to split up the 2 things.
+i.e. separate out rpmgs channel DRAM allocation from resource table
+and don't copy the resource table to DRAM.
+
+This way if there is no rpmsg channel in the resource table we won't eat
+any DRAM.
+
+I'm not sure if there are any bottlenecks. I will only know when I work on it.
+
+> 
+> Perhaps one way to simplify the mapping is to take out one of the
+> two levels of mapping. All of the TRMs say that it is highly
+> recommended to have a 1:1 mapping from channels to host interrupts.
+> This part of the mapping could just be hard-coded in this driver.
+> Then the mapping tables would just effectively mapping PRU system
+> events to host interrupts.
+
+We don't have to go this route if INTC map is not loaded in DRAM.
+
+> 
+>>
+>> The PRUSS INTC module is reference counted during the interrupt
+>> setup phase through the irqchip's irq_request_resources() and
+>> irq_release_resources() ops. This restricts the module from being
+>> removed as long as there are active interrupt users.
+>>
+>> The driver currently supports the AM335x SoC.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> Signed-off-by: Andrew F. Davis <afd@ti.com>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>>   drivers/soc/ti/Makefile     |   2 +-
+>>   drivers/soc/ti/pruss.h      |  29 +++
+>>   drivers/soc/ti/pruss_intc.c | 572 ++++++++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 602 insertions(+), 1 deletion(-)
+>>   create mode 100644 drivers/soc/ti/pruss_intc.c
+>>
+> 
+> ...
+> 
+>> diff --git a/drivers/soc/ti/pruss_intc.c b/drivers/soc/ti/pruss_intc.c
+>> new file mode 100644
+>> index 0000000..dde054b
+>> --- /dev/null
+>> +++ b/drivers/soc/ti/pruss_intc.c
+>> @@ -0,0 +1,572 @@
+> 
+> ...
+> 
+>> +int pruss_intc_configure(struct pruss *pruss,
+>> +             struct pruss_intc_config *intc_config)
+>> +{
+>> +    struct device *dev = pruss->dev;
+>> +    struct pruss_intc *intc = to_pruss_intc(pruss);
+>> +    int i, idx, ret;
+>> +    s8 ch, host;
+>> +    u64 sysevt_mask = 0;
+>> +    u32 ch_mask = 0;
+>> +    u32 host_mask = 0;
+>> +    u32 val;
+>> +
+>> +    if (!intc)
+>> +        return -EINVAL;
+>> +
+>> +    mutex_lock(&intc->lock);
+>> +
+>> +    /*
+>> +     * configure channel map registers - each register holds map info
+>> +     * for 4 events, with each event occupying the lower nibble in
+>> +     * a register byte address in little-endian fashion
+>> +     */
+>> +    for (i = 0; i < ARRAY_SIZE(intc_config->sysev_to_ch); i++) {
+>> +        ch = intc_config->sysev_to_ch[i];
+>> +        if (ch < 0)
+>> +            continue;
+>> +
+>> +        /* check if sysevent already assigned */
+>> +        if (intc->config_map.sysev_to_ch[i] != -1) {
+> 
+> Perhaps define a macro for -1 so we know what it means?
+
+sure.
+
+cheers,
+-roger
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
