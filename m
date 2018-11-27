@@ -1,11 +1,11 @@
 From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: [PATCH] ARM: dts: OX820: Correct the GIC DT node name
-Date: Tue, 27 Nov 2018 14:54:42 +0000
-Message-ID: <20181127145442.7169-1-phil.edworthy@renesas.com>
+Subject: [PATCH] ARM: dts: alpine: Correct the GIC DT node name
+Date: Tue, 27 Nov 2018 14:57:21 +0000
+Message-ID: <20181127145721.7237-1-phil.edworthy@renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-oxnas@groups.io, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Phil Edworthy <phil.edworthy@renesas.com>
+To: Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Phil Edworthy <phil.edworthy@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
 Harmless mistake, but it's incorrect. The DT spec provides recommendations
@@ -18,21 +18,21 @@ interrupt-controller"
 
 Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
 ---
- arch/arm/boot/dts/ox820.dtsi | 2 +-
+ arch/arm/boot/dts/alpine.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/ox820.dtsi b/arch/arm/boot/dts/ox820.dtsi
-index 085bbd33eadc..3a17ab4e7c2f 100644
---- a/arch/arm/boot/dts/ox820.dtsi
-+++ b/arch/arm/boot/dts/ox820.dtsi
-@@ -286,7 +286,7 @@
- 				clocks = <&armclk>;
- 			};
+diff --git a/arch/arm/boot/dts/alpine.dtsi b/arch/arm/boot/dts/alpine.dtsi
+index 731df7a8c4e6..533c876497ff 100644
+--- a/arch/arm/boot/dts/alpine.dtsi
++++ b/arch/arm/boot/dts/alpine.dtsi
+@@ -85,7 +85,7 @@
+ 		};
  
--			gic: gic@1000 {
-+			gic: interrupt-controller@1000 {
- 				compatible = "arm,arm11mp-gic";
- 				interrupt-controller;
- 				#interrupt-cells = <3>;
+ 		/* Interrupt Controller */
+-		gic: gic@fb001000 {
++		gic: interrupt-controller@fb001000 {
+ 			compatible = "arm,cortex-a15-gic";
+ 			#interrupt-cells = <3>;
+ 			#size-cells = <0>;
 -- 
 2.17.1
