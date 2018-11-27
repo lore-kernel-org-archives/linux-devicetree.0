@@ -1,52 +1,171 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH 2/2] backlight: lm3630a: add backlight driver match_table
-Date: Tue, 27 Nov 2018 10:57:33 +0000
-Message-ID: <20181127105733.5t275fixa3utnkaz@holly.lan>
-References: <20181124141703.29232-1-masneyb@onstation.org>
- <20181124141703.29232-2-masneyb@onstation.org>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH 5/5] DO NOT MERGE: ARM: dts: bananapi: Add Camera support
+Date: Tue, 27 Nov 2018 16:30:55 +0530
+Message-ID: <CAMty3ZAhGAN2nEJkiRLHqFHz9Oi1WboiyqLL4ox+-0z7NhbG8w@mail.gmail.com>
+References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
+ <12093630fdd7d8b43ebcb0340691e0f2200e26c6.1542097288.git-series.maxime.ripard@bootlin.com>
+ <CAMty3ZBO6B=vgduv5u28zC8P1DOm1TYGFAVjDtJOpU8dozrk=A@mail.gmail.com> <20181127103106.vykudp36vkyy5vme@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20181124141703.29232-2-masneyb@onstation.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brian Masney <masneyb@onstation.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, ctatlor97@gmail.com, jonathan@marek.ca, b.zolnierkie@samsung.com, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, lee.jones@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181127103106.vykudp36vkyy5vme@flea>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, laurent.pinchart@ideasonboard.com, linux-media <linux-media@vger.kernel.org>, a.hajda@samsung.com, Chen-Yu Tsai <wens@csie.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBOb3YgMjQsIDIwMTggYXQgMDk6MTc6MDNBTSAtMDUwMCwgQnJpYW4gTWFzbmV5IHdy
-b3RlOgo+IEZyb206IEpvbmF0aGFuIE1hcmVrIDxqb25hdGhhbkBtYXJlay5jYT4KPiAKPiBBZGQg
-ZGV2aWNlIHRyZWUgc3VwcG9ydCB0byB0aGUgbG0zNjMwYSBkcml2ZXIuCj4gCj4gU2lnbmVkLW9m
-Zi1ieTogSm9uYXRoYW4gTWFyZWsgPGpvbmF0aGFuQG1hcmVrLmNhPgo+IFttYXNuZXliQG9uc3Rh
-dGlvbi5vcmc6IGNoZWNrcGF0Y2ggZml4ZXM7IGFkZCAnYScgdG8gY29tcGF0aWJsZSBzdHJpbmdd
-Cj4gU2lnbmVkLW9mZi1ieTogQnJpYW4gTWFzbmV5IDxtYXNuZXliQG9uc3RhdGlvbi5vcmc+Cj4g
-LS0tCj4gVGhpcyBpcyBwYXJ0IG9mIHVwc3RyZWFtaW5nIHZhcmlvdXMgY29tcG9uZW50cyBvZiB0
-aGUgTEcgTmV4dXMgNQo+IChoYW1tZXJoZWFkKSBwaG9uZS4KPiAKPiAgZHJpdmVycy92aWRlby9i
-YWNrbGlnaHQvbG0zNjMwYV9ibC5jIHwgNyArKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA3IGlu
-c2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvbG0z
-NjMwYV9ibC5jIGIvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvbG0zNjMwYV9ibC5jCj4gaW5kZXgg
-MjAzMGE2Yjc3YTA5Li4xNTlkNDAxM2Q5YzIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy92aWRlby9i
-YWNrbGlnaHQvbG0zNjMwYV9ibC5jCj4gKysrIGIvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvbG0z
-NjMwYV9ibC5jCj4gQEAgLTQ3MCwxMSArNDcwLDE4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgaTJj
-X2RldmljZV9pZCBsbTM2MzBhX2lkW10gPSB7Cj4gIAl7fQo+ICB9OwoKU2ltaWxhciB0byBteSBy
-ZXBseSB0byB0aGUgRFQgYmluZGluZ3M6IEkgd291bGQgaGF2ZSBleHBlY3RlZCB0aGVyZQp0byBi
-ZSBjb2RlIHRvIGhhbmRsZSBEVCBwcm9wZXJ0aWVzIGhlcmUuCgoKRGFuaWVsLgoKCgo+ICAKPiAr
-c3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbG0zNjMwYV9tYXRjaF90YWJsZVtdID0g
-ewo+ICsJeyAuY29tcGF0aWJsZSA9ICJ0aSxsbTM2MzBhIiwgfSwKPiArCXsgfSwKPiArfTsKPiAr
-Cj4gKwo+ICBNT0RVTEVfREVWSUNFX1RBQkxFKGkyYywgbG0zNjMwYV9pZCk7Cj4gIAo+ICBzdGF0
-aWMgc3RydWN0IGkyY19kcml2ZXIgbG0zNjMwYV9pMmNfZHJpdmVyID0gewo+ICAJLmRyaXZlciA9
-IHsKPiAgCQkgICAubmFtZSA9IExNMzYzMEFfTkFNRSwKPiArCQkgICAub2ZfbWF0Y2hfdGFibGUg
-PSBsbTM2MzBhX21hdGNoX3RhYmxlLAo+ICAJCSAgIH0sCj4gIAkucHJvYmUgPSBsbTM2MzBhX3By
-b2JlLAo+ICAJLnJlbW92ZSA9IGxtMzYzMGFfcmVtb3ZlLAo+IC0tIAo+IDIuMTcuMgo+IApfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Tue, Nov 27, 2018 at 4:01 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Tue, Nov 27, 2018 at 12:26:09PM +0530, Jagan Teki wrote:
+> > On Tue, Nov 13, 2018 at 1:54 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > > ---
+> > >  arch/arm/boot/dts/sun7i-a20-bananapi.dts | 98 +++++++++++++++++++++++++-
+> > >  1 file changed, 98 insertions(+)
+> > >
+> > > diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> > > index 70dfc4ac0bb5..18dbff9f1ce9 100644
+> > > --- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> > > +++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> > > @@ -54,6 +54,9 @@
+> > >         compatible = "lemaker,bananapi", "allwinner,sun7i-a20";
+> > >
+> > >         aliases {
+> > > +               i2c0 = &i2c0;
+> > > +               i2c1 = &i2c1;
+> > > +               i2c2 = &i2c2;
+> > >                 serial0 = &uart0;
+> > >                 serial1 = &uart3;
+> > >                 serial2 = &uart7;
+> > > @@ -63,6 +66,41 @@
+> > >                 stdout-path = "serial0:115200n8";
+> > >         };
+> > >
+> > > +       reg_cam: cam {
+> > > +               compatible = "regulator-fixed";
+> > > +               regulator-name = "cam";
+> > > +               regulator-min-microvolt = <5000000>;
+> > > +               regulator-max-microvolt = <5000000>;
+> > > +               vin-supply = <&reg_vcc5v0>;
+> > > +               gpio = <&pio 7 16 GPIO_ACTIVE_HIGH>;
+> > > +               enable-active-high;
+> > > +               regulator-always-on;
+> > > +       };
+> > > +
+> > > +        reg_cam_avdd: cam-avdd {
+> > > +                compatible = "regulator-fixed";
+> > > +                regulator-name = "cam500b-avdd";
+> > > +                regulator-min-microvolt = <2800000>;
+> > > +                regulator-max-microvolt = <2800000>;
+> > > +                vin-supply = <&reg_cam>;
+> > > +        };
+> > > +
+> > > +        reg_cam_dovdd: cam-dovdd {
+> > > +                compatible = "regulator-fixed";
+> > > +                regulator-name = "cam500b-dovdd";
+> > > +                regulator-min-microvolt = <1800000>;
+> > > +                regulator-max-microvolt = <1800000>;
+> > > +                vin-supply = <&reg_cam>;
+> > > +        };
+> > > +
+> > > +        reg_cam_dvdd: cam-dvdd {
+> > > +                compatible = "regulator-fixed";
+> > > +                regulator-name = "cam500b-dvdd";
+> > > +                regulator-min-microvolt = <1500000>;
+> > > +                regulator-max-microvolt = <1500000>;
+> > > +                vin-supply = <&reg_cam>;
+> > > +        };
+> > > +
+> > >         hdmi-connector {
+> > >                 compatible = "hdmi-connector";
+> > >                 type = "a";
+> > > @@ -120,6 +158,27 @@
+> > >                 >;
+> > >  };
+> > >
+> > > +&csi0 {
+> > > +       pinctrl-names = "default";
+> > > +       pinctrl-0 = <&csi0_pins_a>;
+> > > +       status = "okay";
+> > > +
+> > > +       port {
+> > > +               #address-cells = <1>;
+> > > +               #size-cells = <0>;
+> > > +
+> > > +               csi_from_ov5640: endpoint {
+> > > +                        remote-endpoint = <&ov5640_to_csi>;
+> > > +                        bus-width = <8>;
+> > > +                        data-shift = <2>;
+> > > +                        hsync-active = <1>; /* Active high */
+> > > +                        vsync-active = <0>; /* Active low */
+> > > +                        data-active = <1>;  /* Active high */
+> > > +                        pclk-sample = <1>;  /* Rising */
+> > > +                };
+> > > +       };
+> > > +};
+> > > +
+> > >  &de {
+> > >         status = "okay";
+> > >  };
+> > > @@ -167,6 +226,39 @@
+> > >         };
+> > >  };
+> > >
+> > > +&i2c1 {
+> > > +       pinctrl-names = "default";
+> > > +       pinctrl-0 = <&i2c1_pins_a>;
+> > > +       status = "okay";
+> > > +
+> > > +       camera: camera@21 {
+> > > +               compatible = "ovti,ov5640";
+> > > +               reg = <0x21>;
+> > > +                clocks = <&ccu CLK_CSI0>;
+> > > +                clock-names = "xclk";
+> > > +               assigned-clocks = <&ccu CLK_CSI0>;
+> > > +               assigned-clock-rates = <24000000>;
+> > > +
+> > > +                reset-gpios = <&pio 7 14 GPIO_ACTIVE_LOW>;
+> > > +                powerdown-gpios = <&pio 7 19 GPIO_ACTIVE_HIGH>;
+> > > +                AVDD-supply = <&reg_cam_avdd>;
+> > > +                DOVDD-supply = <&reg_cam_dovdd>;
+> > > +                DVDD-supply = <&reg_cam_dvdd>;
+> > > +
+> > > +                port {
+> > > +                        ov5640_to_csi: endpoint {
+> > > +                                remote-endpoint = <&csi_from_ov5640>;
+> > > +                                bus-width = <8>;
+> > > +                                data-shift = <2>;
+> > > +                                hsync-active = <1>; /* Active high */
+> > > +                                vsync-active = <0>; /* Active low */
+> > > +                                data-active = <1>;  /* Active high */
+> > > +                                pclk-sample = <1>;  /* Rising */
+> > > +                        };
+> > > +                };
+> > > +       };
+> >
+> > Does ov5640 need any further patches, wrt linux-next? I'm trying to
+> > test this on top of linux-next but the slave id seems not detecting.
+> >
+> > [    2.304711] ov5640 1-0021: Linked as a consumer to regulator.5
+> > [    2.310639] ov5640 1-0021: Linked as a consumer to regulator.6
+> > [    2.316592] ov5640 1-0021: Linked as a consumer to regulator.4
+> > [    2.351540] ov5640 1-0021: ov5640_init_slave_id: failed with -6
+> > [    2.357543] ov5640 1-0021: Dropping the link to regulator.5
+> > [    2.363224] ov5640 1-0021: Dropping the link to regulator.6
+> > [    2.368829] ov5640 1-0021: Dropping the link to regulator.4
+> >
+> > Here is the full log [1], please let me know if I miss anything, I
+> > even tried to remove MCLK pin
+>
+> You seem to have made local modifications to your tree, what are they?
+> This indicates that the communication over i2c doesn't work, what is
+> your setup?
+
+I just used your commits on linux-next [2], with the setup similar in
+Page 5 on datasheet[3]. The only difference is csi build issue, I have
+updated similar fix you mentioned on sun6i_csi [4]
+
+[2] https://github.com/amarula/linux-amarula/commits/CSI-A20
+[3] https://www.tme.eu/gb/Document/187887186b98a8f78b47da2774a34f4c/BPI-CAMERA.pdf
+[4] https://github.com/amarula/linux-amarula/commit/a6762ecd38f000e2bd02dd255f6fd0c1ae755429#diff-0809a7f97ca58771c1cda186e73ec657
