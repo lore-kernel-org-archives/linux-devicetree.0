@@ -1,42 +1,67 @@
-Return-Path: <SRS0=lXjp=OG=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 09/22] ARM: dts: r8a7744: Add RWDT node
-Date: Tue, 27 Nov 2018 11:56:22 +0000
-Message-Id: <1543319795-48325-10-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
-References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=JTqt=OG=kontron.de=frieder.schrempf@kernel.org>
+From: Schrempf Frieder <frieder.schrempf@kontron.de>
+Subject: Re: [PATCH v3 1/4] usb: chipidea: add flag for imx hsic
+ implementation
+Date: Tue, 27 Nov 2018 13:40:56 +0000
+Message-ID: <046bbc94-f27c-ae00-bdde-031ea2c319a4@kontron.de>
+References: <20181127092824.22756-1-peter.chen@nxp.com>
+ <20181127092824.22756-2-peter.chen@nxp.com>
+In-Reply-To: <20181127092824.22756-2-peter.chen@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <59A78DA528DF3844A00D6E2A089EC2FA@snt-world.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: PETER CHEN <peter.chen@nxp.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add a device node for the Watchdog Timer (RWDT) controller on the Renesas
-RZ/G1N (r8a7744) SoC.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm/boot/dts/r8a7744.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index 118a596..4613a54 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -293,6 +293,16 @@
- 			reg = <0 0xe6160000 0 0x100>;
- 		};
- 
-+		rwdt: watchdog@e6020000 {
-+			compatible = "renesas,r8a7744-wdt",
-+				     "renesas,rcar-gen2-wdt";
-+			reg = <0 0xe6020000 0 0x0c>;
-+			clocks = <&cpg CPG_MOD 402>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 402>;
-+			status = "disabled";
-+		};
-+
- 		sysc: system-controller@e6180000 {
- 			compatible = "renesas,r8a7744-sysc";
- 			reg = <0 0xe6180000 0 0x200>;
--- 
-2.7.4
+T24gMjcuMTEuMTggMTA6MzAsIFBFVEVSIENIRU4gd3JvdGU6DQo+IE5YUCAoRnJlZWNhbGUpIGlt
+eCBIU0lDIGRlc2lnbiBoYXMgc29tZSBzcGVjaWFsIHJlcXVpcmVtZW50cywgYWRkDQo+IHNvbWUg
+ZmxhZ3MgYXQgaG9zdCBjb2RlIHRvIGhhbmRsZSB0aGVtLg0KPiANCj4gU2lnbmVkLW9mZi1ieTog
+UGV0ZXIgQ2hlbiA8cGV0ZXIuY2hlbkBueHAuY29tPg0KDQpUZXN0ZWQgb24gaS5NWDZTIHdpdGgg
+TWljcm9jaGlwIExBTjk3MzAgVVNCIEhTSUMgRXRoZXJuZXQgQ29udHJvbGxlci4NCg0KUmV2aWV3
+ZWQtYnk6IEZyaWVkZXIgU2NocmVtcGYgPGZyaWVkZXIuc2NocmVtcGZAa29udHJvbi5kZT4NClRl
+c3RlZC1ieTogRnJpZWRlciBTY2hyZW1wZiA8ZnJpZWRlci5zY2hyZW1wZkBrb250cm9uLmRlPg0K
+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvdXNiL2NoaXBpZGVhL2hvc3QuYyAgfCAxNyArKysrKysrKysr
+KysrKysrKw0KPiAgIGluY2x1ZGUvbGludXgvdXNiL2NoaXBpZGVhLmggfCAgMyArKysNCj4gICAy
+IGZpbGVzIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL3VzYi9jaGlwaWRlYS9ob3N0LmMgYi9kcml2ZXJzL3VzYi9jaGlwaWRlYS9ob3N0LmMNCj4g
+aW5kZXggZDg1OGE4MmM0ZjQ0Li4wMjhhMzU3NDI2NmEgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMv
+dXNiL2NoaXBpZGVhL2hvc3QuYw0KPiArKysgYi9kcml2ZXJzL3VzYi9jaGlwaWRlYS9ob3N0LmMN
+Cj4gQEAgLTE3MCw2ICsxNzAsMTEgQEAgc3RhdGljIGludCBob3N0X3N0YXJ0KHN0cnVjdCBjaV9o
+ZHJjICpjaSkNCj4gICAJCQlvdGctPmhvc3QgPSAmaGNkLT5zZWxmOw0KPiAgIAkJCWhjZC0+c2Vs
+Zi5vdGdfcG9ydCA9IDE7DQo+ICAgCQl9DQo+ICsNCj4gKwkJaWYgKGNpLT5wbGF0ZGF0YS0+bm90
+aWZ5X2V2ZW50ICYmDQo+ICsJCQkoY2ktPnBsYXRkYXRhLT5mbGFncyAmIENJX0hEUkNfSU1YX0lT
+X0hTSUMpKQ0KPiArCQkJY2ktPnBsYXRkYXRhLT5ub3RpZnlfZXZlbnQNCj4gKwkJCQkoY2ksIENJ
+X0hEUkNfSU1YX0hTSUNfQUNUSVZFX0VWRU5UKTsNCj4gICAJfQ0KPiAgIA0KPiAgIAlyZXR1cm4g
+cmV0Ow0KPiBAQCAtMjE4LDYgKzIyMyw4IEBAIHZvaWQgY2lfaGRyY19ob3N0X2Rlc3Ryb3koc3Ry
+dWN0IGNpX2hkcmMgKmNpKQ0KPiAgIHN0YXRpYyBpbnQgY2lfZWhjaV9idXNfc3VzcGVuZChzdHJ1
+Y3QgdXNiX2hjZCAqaGNkKQ0KPiAgIHsNCj4gICAJc3RydWN0IGVoY2lfaGNkICplaGNpID0gaGNk
+X3RvX2VoY2koaGNkKTsNCj4gKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSBoY2QtPnNlbGYuY29udHJv
+bGxlcjsNCj4gKwlzdHJ1Y3QgY2lfaGRyYyAqY2kgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCj4g
+ICAJaW50IHBvcnQ7DQo+ICAgCXUzMiB0bXA7DQo+ICAgDQo+IEBAIC0yNDksNiArMjU2LDE2IEBA
+IHN0YXRpYyBpbnQgY2lfZWhjaV9idXNfc3VzcGVuZChzdHJ1Y3QgdXNiX2hjZCAqaGNkKQ0KPiAg
+IAkJCSAqIEl0IG5lZWRzIGEgc2hvcnQgZGVsYXkgYmV0d2VlbiBzZXQgUlMgYml0IGFuZCBQSENE
+Lg0KPiAgIAkJCSAqLw0KPiAgIAkJCXVzbGVlcF9yYW5nZSgxNTAsIDIwMCk7DQo+ICsJCQkvKg0K
+PiArCQkJICogTmVlZCB0byBjbGVhciBXS0NOIGFuZCBXS09DIGZvciBpbXggSFNJQywNCj4gKwkJ
+CSAqIG90aGVyd2lzZSwgdGhlcmUgd2lsbCBiZSB3YWtldXAgZXZlbnQuDQo+ICsJCQkgKi8NCj4g
+KwkJCWlmIChjaS0+cGxhdGRhdGEtPmZsYWdzICYgQ0lfSERSQ19JTVhfSVNfSFNJQykgew0KPiAr
+CQkJCXRtcCA9IGVoY2lfcmVhZGwoZWhjaSwgcmVnKTsNCj4gKwkJCQl0bXAgJj0gfihQT1JUX1dL
+RElTQ19FIHwgUE9SVF9XS0NPTk5fRSk7DQo+ICsJCQkJZWhjaV93cml0ZWwoZWhjaSwgdG1wLCBy
+ZWcpOw0KPiArCQkJfQ0KPiArDQo+ICAgCQkJYnJlYWs7DQo+ICAgCQl9DQo+ICAgCX0NCj4gZGlm
+ZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvdXNiL2NoaXBpZGVhLmggYi9pbmNsdWRlL2xpbnV4L3Vz
+Yi9jaGlwaWRlYS5oDQo+IGluZGV4IDYzNzU4YzM5OWU0ZS4uOTExZTA1YWY2NzFlIDEwMDY0NA0K
+PiAtLS0gYS9pbmNsdWRlL2xpbnV4L3VzYi9jaGlwaWRlYS5oDQo+ICsrKyBiL2luY2x1ZGUvbGlu
+dXgvdXNiL2NoaXBpZGVhLmgNCj4gQEAgLTYwLDkgKzYwLDEyIEBAIHN0cnVjdCBjaV9oZHJjX3Bs
+YXRmb3JtX2RhdGEgew0KPiAgICNkZWZpbmUgQ0lfSERSQ19PVkVSUklERV9SWF9CVVJTVAlCSVQo
+MTEpDQo+ICAgI2RlZmluZSBDSV9IRFJDX09WRVJSSURFX1BIWV9DT05UUk9MCUJJVCgxMikgLyog
+R2x1ZSBsYXllciBtYW5hZ2VzIHBoeSAqLw0KPiAgICNkZWZpbmUgQ0lfSERSQ19SRVFVSVJFU19B
+TElHTkVEX0RNQQlCSVQoMTMpDQo+ICsjZGVmaW5lIENJX0hEUkNfSU1YX0lTX0hTSUMJCUJJVCgx
+NCkNCj4gICAJZW51bSB1c2JfZHJfbW9kZQlkcl9tb2RlOw0KPiAgICNkZWZpbmUgQ0lfSERSQ19D
+T05UUk9MTEVSX1JFU0VUX0VWRU5UCQkwDQo+ICAgI2RlZmluZSBDSV9IRFJDX0NPTlRST0xMRVJf
+U1RPUFBFRF9FVkVOVAkxDQo+ICsjZGVmaW5lIENJX0hEUkNfSU1YX0hTSUNfQUNUSVZFX0VWRU5U
+CQkyDQo+ICsjZGVmaW5lIENJX0hEUkNfSU1YX0hTSUNfU1VTUEVORF9FVkVOVAkJMw0KPiAgIAlp
+bnQJKCpub3RpZnlfZXZlbnQpIChzdHJ1Y3QgY2lfaGRyYyAqY2ksIHVuc2lnbmVkIGV2ZW50KTsN
+Cj4gICAJc3RydWN0IHJlZ3VsYXRvcgkqcmVnX3ZidXM7DQo+ICAgCXN0cnVjdCB1c2Jfb3RnX2Nh
+cHMJY2lfb3RnX2NhcHM7DQo+IA==
