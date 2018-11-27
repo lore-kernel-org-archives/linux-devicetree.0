@@ -1,14 +1,13 @@
 From: tom burkart <tom@aussec.com>
-Subject: Re: [PATCH v7 1/4] dt-bindings: pps: descriptor-based gpio,
- capture-clear addition
-Date: Tue, 27 Nov 2018 14:57:29 +1100
-Message-ID: <20181127145729.128452ujmj4uhb55@aussec.com>
-References: <20181114125432.16044-1-tom@aussec.com>
- <20181114125432.16044-2-tom@aussec.com> <20181116224919.GA18008@bogus>
- <20181117213522.12672utznrvpbn56@www.aussec.com>
- <CAL_JsqKZHg5_8ghMmU4qO4CVZibcHOvtVJH669zod_6GLGakRg@mail.gmail.com>
- <20181118113502.55634v85ybgkt586@www.aussec.com>
- <CAL_Jsq+_Fb8mRDf_g=qDVsw-KPnrdZunLksYrgBFvhehzVNX+g@mail.gmail.com>
+Subject: Re: [PATCH v9 3/4] dt-bindings: pps: pps-gpio PPS ECHO
+ implementation
+Date: Tue, 27 Nov 2018 15:06:29 +1100
+Message-ID: <20181127150629.10795h1esqtc53ut@aussec.com>
+References: <20181122094602.5156-1-tom@aussec.com>
+ <20181122094602.5156-2-tom@aussec.com>
+ <20181122094602.5156-3-tom@aussec.com>
+ <20181122094602.5156-4-tom@aussec.com>
+ <CAL_JsqJ6fM3+pcC3b-eXEex=j_ft6Z=vukhLK9wULfWJqOTN-A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain;
  charset=UTF-8;
@@ -16,110 +15,63 @@ Content-Type: text/plain;
  format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+_Fb8mRDf_g=qDVsw-KPnrdZunLksYrgBFvhehzVNX+g@mail.gmail.com>
+In-Reply-To: <CAL_JsqJ6fM3+pcC3b-eXEex=j_ft6Z=vukhLK9wULfWJqOTN-A@mail.gmail.com>
 Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, lukas@fridolin.com
 List-Id: devicetree@vger.kernel.org
 
 Hi Rob,
 
 Quoting Rob Herring <robh@kernel.org>:
 
-> On Sat, Nov 17, 2018 at 6:35 PM tom burkart <tom@aussec.com> wrote:
+> On Thu, Nov 22, 2018 at 3:49 AM Tom Burkart <tom@aussec.com> wrote:
 >>
->> Quoting Rob Herring <robh@kernel.org>:
+>> This patch implements the device tree changes required for the pps
+>> echo functionality for pps-gpio, that sysfs claims is available
+>> already.
 >>
->> > On Sat, Nov 17, 2018 at 4:35 AM tom burkart <tom@aussec.com> wrote:
->> >>
->> >> Quoting Rob Herring <robh@kernel.org>:
->> >>
->> >> > On Wed, Nov 14, 2018 at 11:54:29PM +1100, Tom Burkart wrote:
->> >> >> This patch changes the devicetree bindings for the pps-gpio driver
->> >> >> from the integer based ABI to the descriptor based ABI.
->> >> > ? That has nothing to do with DT.
->> >>
->> >> I believe it does, as the change in ABI forces a rename in the DT
->> >> naming convention.
->> >> This is due to the descriptor based ABI appending "-gpio" or  
->> "-gpios" (see
->> >> Documentation/gpio/base.txt.)
->> >> Admittedly, I may have called it by the wrong name due to ignorance,
->> >> my apologies.
->> >
->> > If what you say is correct, then you can't change this driver. You'll
->> > break compatibility with any existing DT.
->> >
->> > Changing the binding reasoning should purely be that this is the
->> > preferred form. Bindings must be independent from changing kernel
->> > APIs.
+>> This patch was originally written by Lukas Senger as part of a masters
+>> thesis project and modified for inclusion into the linux kernel by Tom
+>> Burkart.
 >>
->> See comments from Philip Zabel.  I misread the documentation and this
->> has now been corrected in v8 of the patch.  I hope that eliminates all
->> comments made above.
+>> Signed-off-by: Lukas Senger <lukas@fridolin.com>
+>> Signed-off-by: Tom Burkart <tom@aussec.com>
+>> ---
+>>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 9 +++++++++
+>>  1 file changed, 9 insertions(+)
 >>
->> >> >>  It also adds
->> >> >> documentation for the device tree capture-clear option.  The legacy
->> >> >> device tree entry for the GPIO pin is supported.
->> >> >>
->> >> >> Signed-off-by: Tom Burkart <tom@aussec.com>
->> >> >> ---
->> >> >>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 8 ++++++--
->> >> >>  1 file changed, 6 insertions(+), 2 deletions(-)
->> >> >>
->> >> >> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> >> b/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> >> index 3683874832ae..6c9fc0998d94 100644
->> >> >> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> >> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> >> @@ -5,19 +5,23 @@ a GPIO pin.
->> >> >>
->> >> >>  Required properties:
->> >> >>  - compatible: should be "pps-gpio"
->> >> >> -- gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
->> >> >> +- pps-gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
->> >> >> +Alternatively (DEPRECATED), instead of pps-gpios above, it may have:
->> >> >> +- gpios: one PPS GPIO as above
->> >> >>
->> >> >>  Optional properties:
->> >> >>  - assert-falling-edge: when present, assert is indicated by a
->> >> falling edge
->> >> >>                         (instead of by a rising edge)
->> >> >> +- capture-clear: when present, also capture the PPS clear event
->> >> >
->> >> > Is this a h/w thing? or driver configuration?
->> >>
->> >> Driver configuration.  Most of the code was present in the driver, yet
->> >> it was not documented, or usable due to a two line (code) omission
->> >> (the value was not being fetched from DT).
->> >
->> > So what determines how you want to configure this? If the user will
->> > want to change it, then it should be a sysfs attr and exposed to
->> > userspace. If it depends on h/w config for a board then it can be in
->> > DT.
+>> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt  
+>> b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> index 1155d49c2699..e09f6f2405c5 100644
+>> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> @@ -7,10 +7,15 @@ Required properties:
+>>  - compatible: should be "pps-gpio"
+>>  - gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
 >>
->> Sorry, I misled you somewhat.  If the PPS pulse active transition from
->> the hardware is on the falling edge, this flag is required to get the
->> OS to use that as the active transition.  This would not change at the
->> user's whim but rather it is dependent on connected hardware.
+>> +Additional required properties for the PPS ECHO functionality:
+>> +- echo-gpios: one PPS ECHO GPIO in the format described by ../gpio/gpio.txt
+>> +- echo-active-ms: duration in ms of the active portion of the echo pulse
+>> +
+>>  Optional properties:
+>>  - assert-falling-edge: when present, assert is indicated by a falling edge
+>>                         (instead of by a rising edge)
+>>  - capture-clear: when present, also capture the PPS clear event
+>> +- invert-pps-echo: when present, invert the PPS ECHO pulse
 >
-> This description sounds more like 'assert-falling-edge' than 'capture-clear'.
+> Why do you need this? Can't you just make the echo gpio GPIO_ACTIVE_LOW?
 >
-> I'm still not clear on what 'capture-clear' is.
+> BTW, using the flag probably should have been done for
+> 'assert-falling-edge' as well.
 
-Ignoring my patch for a minute, the pps_gpio_irq_handler will only  
-report a pps PPS_CAPTURECLEAR event if 'capture-clear' is set.  As the  
-current pps-gpio driver is not able to set this flag, it cannot ever  
-report a PPS_CAPTURECLEAR event.
+The hardware I use expects a positive-going echo pulse, however, it  
+was really easy to give users the option to have it inverted in case  
+they use different hardware that expects a negative-going edge.
 
-My patch adds the ability to set this flag and adds the documentation  
-to go with it.
-Admittedly, I do not require this functionality for what I want, but  
-working with the code, I noticed the omission and decided to add it  
-for someone else to use it, if they need it.
-
-I am happy to remove this out of my patch, if you feel this to be the  
-best way forward.
+I may well be needing this option myself if I find that the GPS I am  
+using produces better results for negative-going edges than  
+positive-going edges.
 
 Tom
