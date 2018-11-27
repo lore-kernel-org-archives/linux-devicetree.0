@@ -1,67 +1,91 @@
-Return-Path: <SRS0=JTqt=OG=kontron.de=frieder.schrempf@kernel.org>
-From: Schrempf Frieder <frieder.schrempf@kontron.de>
-Subject: Re: [PATCH v3 1/4] usb: chipidea: add flag for imx hsic
- implementation
-Date: Tue, 27 Nov 2018 13:40:56 +0000
-Message-ID: <046bbc94-f27c-ae00-bdde-031ea2c319a4@kontron.de>
+Return-Path: <SRS0=g9Sy=OG=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr60054.outbound.protection.outlook.com ([40.107.6.54]:26834
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728512AbeK0U2Q (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 27 Nov 2018 15:28:16 -0500
+From: PETER CHEN <peter.chen@nxp.com>
+Subject: [PATCH v3 1/4] usb: chipidea: add flag for imx hsic implementation
+Date: Tue, 27 Nov 2018 09:30:53 +0000
+Message-ID: <20181127092824.22756-2-peter.chen@nxp.com>
 References: <20181127092824.22756-1-peter.chen@nxp.com>
- <20181127092824.22756-2-peter.chen@nxp.com>
-In-Reply-To: <20181127092824.22756-2-peter.chen@nxp.com>
+In-Reply-To: <20181127092824.22756-1-peter.chen@nxp.com>
 Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <59A78DA528DF3844A00D6E2A089EC2FA@snt-world.com>
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-To: PETER CHEN <peter.chen@nxp.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>, PETER CHEN <peter.chen@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-T24gMjcuMTEuMTggMTA6MzAsIFBFVEVSIENIRU4gd3JvdGU6DQo+IE5YUCAoRnJlZWNhbGUpIGlt
-eCBIU0lDIGRlc2lnbiBoYXMgc29tZSBzcGVjaWFsIHJlcXVpcmVtZW50cywgYWRkDQo+IHNvbWUg
-ZmxhZ3MgYXQgaG9zdCBjb2RlIHRvIGhhbmRsZSB0aGVtLg0KPiANCj4gU2lnbmVkLW9mZi1ieTog
-UGV0ZXIgQ2hlbiA8cGV0ZXIuY2hlbkBueHAuY29tPg0KDQpUZXN0ZWQgb24gaS5NWDZTIHdpdGgg
-TWljcm9jaGlwIExBTjk3MzAgVVNCIEhTSUMgRXRoZXJuZXQgQ29udHJvbGxlci4NCg0KUmV2aWV3
-ZWQtYnk6IEZyaWVkZXIgU2NocmVtcGYgPGZyaWVkZXIuc2NocmVtcGZAa29udHJvbi5kZT4NClRl
-c3RlZC1ieTogRnJpZWRlciBTY2hyZW1wZiA8ZnJpZWRlci5zY2hyZW1wZkBrb250cm9uLmRlPg0K
-DQo+IC0tLQ0KPiAgIGRyaXZlcnMvdXNiL2NoaXBpZGVhL2hvc3QuYyAgfCAxNyArKysrKysrKysr
-KysrKysrKw0KPiAgIGluY2x1ZGUvbGludXgvdXNiL2NoaXBpZGVhLmggfCAgMyArKysNCj4gICAy
-IGZpbGVzIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL3VzYi9jaGlwaWRlYS9ob3N0LmMgYi9kcml2ZXJzL3VzYi9jaGlwaWRlYS9ob3N0LmMNCj4g
-aW5kZXggZDg1OGE4MmM0ZjQ0Li4wMjhhMzU3NDI2NmEgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMv
-dXNiL2NoaXBpZGVhL2hvc3QuYw0KPiArKysgYi9kcml2ZXJzL3VzYi9jaGlwaWRlYS9ob3N0LmMN
-Cj4gQEAgLTE3MCw2ICsxNzAsMTEgQEAgc3RhdGljIGludCBob3N0X3N0YXJ0KHN0cnVjdCBjaV9o
-ZHJjICpjaSkNCj4gICAJCQlvdGctPmhvc3QgPSAmaGNkLT5zZWxmOw0KPiAgIAkJCWhjZC0+c2Vs
-Zi5vdGdfcG9ydCA9IDE7DQo+ICAgCQl9DQo+ICsNCj4gKwkJaWYgKGNpLT5wbGF0ZGF0YS0+bm90
-aWZ5X2V2ZW50ICYmDQo+ICsJCQkoY2ktPnBsYXRkYXRhLT5mbGFncyAmIENJX0hEUkNfSU1YX0lT
-X0hTSUMpKQ0KPiArCQkJY2ktPnBsYXRkYXRhLT5ub3RpZnlfZXZlbnQNCj4gKwkJCQkoY2ksIENJ
-X0hEUkNfSU1YX0hTSUNfQUNUSVZFX0VWRU5UKTsNCj4gICAJfQ0KPiAgIA0KPiAgIAlyZXR1cm4g
-cmV0Ow0KPiBAQCAtMjE4LDYgKzIyMyw4IEBAIHZvaWQgY2lfaGRyY19ob3N0X2Rlc3Ryb3koc3Ry
-dWN0IGNpX2hkcmMgKmNpKQ0KPiAgIHN0YXRpYyBpbnQgY2lfZWhjaV9idXNfc3VzcGVuZChzdHJ1
-Y3QgdXNiX2hjZCAqaGNkKQ0KPiAgIHsNCj4gICAJc3RydWN0IGVoY2lfaGNkICplaGNpID0gaGNk
-X3RvX2VoY2koaGNkKTsNCj4gKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSBoY2QtPnNlbGYuY29udHJv
-bGxlcjsNCj4gKwlzdHJ1Y3QgY2lfaGRyYyAqY2kgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCj4g
-ICAJaW50IHBvcnQ7DQo+ICAgCXUzMiB0bXA7DQo+ICAgDQo+IEBAIC0yNDksNiArMjU2LDE2IEBA
-IHN0YXRpYyBpbnQgY2lfZWhjaV9idXNfc3VzcGVuZChzdHJ1Y3QgdXNiX2hjZCAqaGNkKQ0KPiAg
-IAkJCSAqIEl0IG5lZWRzIGEgc2hvcnQgZGVsYXkgYmV0d2VlbiBzZXQgUlMgYml0IGFuZCBQSENE
-Lg0KPiAgIAkJCSAqLw0KPiAgIAkJCXVzbGVlcF9yYW5nZSgxNTAsIDIwMCk7DQo+ICsJCQkvKg0K
-PiArCQkJICogTmVlZCB0byBjbGVhciBXS0NOIGFuZCBXS09DIGZvciBpbXggSFNJQywNCj4gKwkJ
-CSAqIG90aGVyd2lzZSwgdGhlcmUgd2lsbCBiZSB3YWtldXAgZXZlbnQuDQo+ICsJCQkgKi8NCj4g
-KwkJCWlmIChjaS0+cGxhdGRhdGEtPmZsYWdzICYgQ0lfSERSQ19JTVhfSVNfSFNJQykgew0KPiAr
-CQkJCXRtcCA9IGVoY2lfcmVhZGwoZWhjaSwgcmVnKTsNCj4gKwkJCQl0bXAgJj0gfihQT1JUX1dL
-RElTQ19FIHwgUE9SVF9XS0NPTk5fRSk7DQo+ICsJCQkJZWhjaV93cml0ZWwoZWhjaSwgdG1wLCBy
-ZWcpOw0KPiArCQkJfQ0KPiArDQo+ICAgCQkJYnJlYWs7DQo+ICAgCQl9DQo+ICAgCX0NCj4gZGlm
-ZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvdXNiL2NoaXBpZGVhLmggYi9pbmNsdWRlL2xpbnV4L3Vz
-Yi9jaGlwaWRlYS5oDQo+IGluZGV4IDYzNzU4YzM5OWU0ZS4uOTExZTA1YWY2NzFlIDEwMDY0NA0K
-PiAtLS0gYS9pbmNsdWRlL2xpbnV4L3VzYi9jaGlwaWRlYS5oDQo+ICsrKyBiL2luY2x1ZGUvbGlu
-dXgvdXNiL2NoaXBpZGVhLmgNCj4gQEAgLTYwLDkgKzYwLDEyIEBAIHN0cnVjdCBjaV9oZHJjX3Bs
-YXRmb3JtX2RhdGEgew0KPiAgICNkZWZpbmUgQ0lfSERSQ19PVkVSUklERV9SWF9CVVJTVAlCSVQo
-MTEpDQo+ICAgI2RlZmluZSBDSV9IRFJDX09WRVJSSURFX1BIWV9DT05UUk9MCUJJVCgxMikgLyog
-R2x1ZSBsYXllciBtYW5hZ2VzIHBoeSAqLw0KPiAgICNkZWZpbmUgQ0lfSERSQ19SRVFVSVJFU19B
-TElHTkVEX0RNQQlCSVQoMTMpDQo+ICsjZGVmaW5lIENJX0hEUkNfSU1YX0lTX0hTSUMJCUJJVCgx
-NCkNCj4gICAJZW51bSB1c2JfZHJfbW9kZQlkcl9tb2RlOw0KPiAgICNkZWZpbmUgQ0lfSERSQ19D
-T05UUk9MTEVSX1JFU0VUX0VWRU5UCQkwDQo+ICAgI2RlZmluZSBDSV9IRFJDX0NPTlRST0xMRVJf
-U1RPUFBFRF9FVkVOVAkxDQo+ICsjZGVmaW5lIENJX0hEUkNfSU1YX0hTSUNfQUNUSVZFX0VWRU5U
-CQkyDQo+ICsjZGVmaW5lIENJX0hEUkNfSU1YX0hTSUNfU1VTUEVORF9FVkVOVAkJMw0KPiAgIAlp
-bnQJKCpub3RpZnlfZXZlbnQpIChzdHJ1Y3QgY2lfaGRyYyAqY2ksIHVuc2lnbmVkIGV2ZW50KTsN
-Cj4gICAJc3RydWN0IHJlZ3VsYXRvcgkqcmVnX3ZidXM7DQo+ICAgCXN0cnVjdCB1c2Jfb3RnX2Nh
-cHMJY2lfb3RnX2NhcHM7DQo+IA==
+NXP (Freecale) imx HSIC design has some special requirements, add
+some flags at host code to handle them.
+
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+---
+ drivers/usb/chipidea/host.c  | 17 +++++++++++++++++
+ include/linux/usb/chipidea.h |  3 +++
+ 2 files changed, 20 insertions(+)
+
+diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+index d858a82c4f44..028a3574266a 100644
+--- a/drivers/usb/chipidea/host.c
++++ b/drivers/usb/chipidea/host.c
+@@ -170,6 +170,11 @@ static int host_start(struct ci_hdrc *ci)
+ 			otg->host =3D &hcd->self;
+ 			hcd->self.otg_port =3D 1;
+ 		}
++
++		if (ci->platdata->notify_event &&
++			(ci->platdata->flags & CI_HDRC_IMX_IS_HSIC))
++			ci->platdata->notify_event
++				(ci, CI_HDRC_IMX_HSIC_ACTIVE_EVENT);
+ 	}
+=20
+ 	return ret;
+@@ -218,6 +223,8 @@ void ci_hdrc_host_destroy(struct ci_hdrc *ci)
+ static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
+ {
+ 	struct ehci_hcd *ehci =3D hcd_to_ehci(hcd);
++	struct device *dev =3D hcd->self.controller;
++	struct ci_hdrc *ci =3D dev_get_drvdata(dev);
+ 	int port;
+ 	u32 tmp;
+=20
+@@ -249,6 +256,16 @@ static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
+ 			 * It needs a short delay between set RS bit and PHCD.
+ 			 */
+ 			usleep_range(150, 200);
++			/*
++			 * Need to clear WKCN and WKOC for imx HSIC,
++			 * otherwise, there will be wakeup event.
++			 */
++			if (ci->platdata->flags & CI_HDRC_IMX_IS_HSIC) {
++				tmp =3D ehci_readl(ehci, reg);
++				tmp &=3D ~(PORT_WKDISC_E | PORT_WKCONN_E);
++				ehci_writel(ehci, tmp, reg);
++			}
++
+ 			break;
+ 		}
+ 	}
+diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+index 63758c399e4e..911e05af671e 100644
+--- a/include/linux/usb/chipidea.h
++++ b/include/linux/usb/chipidea.h
+@@ -60,9 +60,12 @@ struct ci_hdrc_platform_data {
+ #define CI_HDRC_OVERRIDE_RX_BURST	BIT(11)
+ #define CI_HDRC_OVERRIDE_PHY_CONTROL	BIT(12) /* Glue layer manages phy */
+ #define CI_HDRC_REQUIRES_ALIGNED_DMA	BIT(13)
++#define CI_HDRC_IMX_IS_HSIC		BIT(14)
+ 	enum usb_dr_mode	dr_mode;
+ #define CI_HDRC_CONTROLLER_RESET_EVENT		0
+ #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
++#define CI_HDRC_IMX_HSIC_ACTIVE_EVENT		2
++#define CI_HDRC_IMX_HSIC_SUSPEND_EVENT		3
+ 	int	(*notify_event) (struct ci_hdrc *ci, unsigned event);
+ 	struct regulator	*reg_vbus;
+ 	struct usb_otg_caps	ci_otg_caps;
+--=20
+2.14.1
