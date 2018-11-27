@@ -1,30 +1,47 @@
-Return-Path: <SRS0=qqZh=OJ=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com> <1543319795-48325-19-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543319795-48325-19-git-send-email-biju.das@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 30 Nov 2018 10:02:16 +0100
-Message-ID: <CAMuHMdWDAvTubKLp1_z9sJuakBYkU3DH7-xN+2P4s0d5H7WL2A@mail.gmail.com>
-Subject: Re: [PATCH 18/22] ARM: dts: r8a7744: Add QSPI support
-Content-Type: text/plain; charset="UTF-8"
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=lXjp=OG=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 18/22] ARM: dts: r8a7744: Add QSPI support
+Date: Tue, 27 Nov 2018 11:56:31 +0000
+Message-Id: <1543319795-48325-19-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
+References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Nov 27, 2018 at 1:05 PM Biju Das <biju.das@bp.renesas.com> wrote:
-> Add the DT node for the QSPI interface to the SoC dtsi.
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Add the DT node for the QSPI interface to the SoC dtsi.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+---
+ arch/arm/boot/dts/r8a7744.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
+index 39f309c..abe0ee3 100644
+--- a/arch/arm/boot/dts/r8a7744.dtsi
++++ b/arch/arm/boot/dts/r8a7744.dtsi
+@@ -649,6 +649,22 @@
+ 			status = "disabled";
+ 		};
+ 
++		qspi: spi@e6b10000 {
++			compatible = "renesas,qspi-r8a7744", "renesas,qspi";
++			reg = <0 0xe6b10000 0 0x2c>;
++			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 917>;
++			dmas = <&dmac0 0x17>, <&dmac0 0x18>,
++			       <&dmac1 0x17>, <&dmac1 0x18>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			num-cs = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			resets = <&cpg 917>;
++			status = "disabled";
++		};
++
+ 		scifa0: serial@e6c40000 {
+ 			compatible = "renesas,scifa-r8a7744",
+ 				     "renesas,rcar-gen2-scifa", "renesas,scifa";
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.7.4
