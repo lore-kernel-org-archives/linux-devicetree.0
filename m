@@ -1,69 +1,41 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH V4 2/2] base/drivers/arch_topology: Default dmips-mhz if
- they are not set in DT
-Date: Tue, 27 Nov 2018 09:31:49 +0100
-Message-ID: <0a9dc628-bae0-9d31-7a7a-3ecd788ed511@linaro.org>
-References: <1543234847-21611-1-git-send-email-daniel.lezcano@linaro.org>
- <1543234847-21611-2-git-send-email-daniel.lezcano@linaro.org>
- <20181127035735.keqirmzjfbw4cq64@vireshk-i7>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v3 1/6] Documentation: ARM: sunxi: pwm: add Allwinner
+ sun8i.
+Date: Tue, 27 Nov 2018 09:35:23 +0100
+Message-ID: <20181127083523.pciie2gyaplrwiey@pengutronix.de>
+References: <20181125161859.GA5277@arx-s1>
+ <20181127075226.qo3mv3o6etqdjaop@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181127035735.keqirmzjfbw4cq64@vireshk-i7>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181127075226.qo3mv3o6etqdjaop@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: rjw@rjwysocki.net, linux-kernel@vger.kernel.org, Chris Redpath <chris.redpath@linaro.org>, Quentin Perret <quentin.perret@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Li Yang <leoyang.li@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Hao Zhang <hao5781286@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, mturquette@baylibre.com, sboyd@kernel.org, thierry.reding@gmail.com, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On 27/11/2018 04:57, Viresh Kumar wrote:
-> On 26-11-18, 13:20, Daniel Lezcano wrote:
->> diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
->> index 84262cd..f53a3c9 100644
->> --- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
->> +++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
->> @@ -54,6 +54,12 @@ fall back to the default capacity value for every CPU. If cpufreq is not
->>  available, final capacities are calculated by directly using capacity-dmips-
->>  mhz values (normalized w.r.t. the highest value found while parsing the DT).
->>  
->> +If capacity-dmips-mhz is not specified or if the parsing fails, the
->> +default capacity value will be computed against the highest frequency.
->> +When all CPUs have the same OPP, they will have the same capacity
->> +value otherwise the capacity will be scaled down for CPUs having lower
->> +frequencies.
-> 
-> I know you added this based on Quentin's feedback, but I wonder if this is
-> really required and if it is improving anything at all. This is what the
-> documentation says currently without this patch:
-> 
-> "
-> capacity-dmips-mhz is an optional cpu node [1] property: u32 value
-> representing CPU capacity expressed in normalized DMIPS/MHz. At boot time, the
-> maximum frequency available to the cpu is then used to calculate the capacity
-> value internally used by the kernel.
-> 
-> capacity-dmips-mhz property is all-or-nothing: if it is specified for a cpu
-> node, it has to be specified for every other cpu nodes, or the system will
-> fall back to the default capacity value for every CPU. If cpufreq is not
-> available, final capacities are calculated by directly using capacity-dmips-
-> mhz values (normalized w.r.t. the highest value found while parsing the DT).
-> "
-> 
-> So it already clearly says two things:
-> - If all CPUs don't have this property, we fallback to default capacity for
->   every CPU.
-> - And the OS may also normalize the capacity based on the maximum frequency.
-> 
-> What more do we want to add here ?
+Hello,
 
-I think what is new is the silver-gold platform. I agree the description
-above gives us the information but in a condensed way. With this extra
-paragraph we elaborate a bit and make it more clear for SMP/AMP systems.
+On Tue, Nov 27, 2018 at 08:52:26AM +0100, Maxime Ripard wrote:
+> On Mon, Nov 26, 2018 at 12:18:59AM +0800, Hao Zhang wrote:
+> > +  - clocks: From common clock binding, handle to the parent clock.
+> > +  - clock-names: Must contain the clock names described just above.
+> 
+> [...]
+> 
+> You seem to have used mux-0 and mux-1 for the clock names. I guess we
+> don't have to use a name there, we can simply use the position to find
+> out (as long as it's documented in the binding)
+
+I also wondered if the driver relies on the fact that the second clock
+is the faster running one. Is this sensible?
+
+Best regards
+Uwe
 
 -- 
- <http://www.linaro.org/> Linaro.org â”‚ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
