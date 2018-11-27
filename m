@@ -1,8 +1,7 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH 2/4] dt-bindings: rtc: add binding doc for i.MX system
- controller RTC driver
-Date: Tue, 27 Nov 2018 09:41:29 +0000
-Message-ID: <1543311334-8807-3-git-send-email-Anson.Huang__12665.0001424879$1543311603$gmane$org@nxp.com>
+Subject: [PATCH 3/4] defconfig: arm64: add i.MX system controller RTC support
+Date: Tue, 27 Nov 2018 09:41:37 +0000
+Message-ID: <1543311334-8807-4-git-send-email-Anson.Huang__31811.8974952542$1543311640$gmane$org@nxp.com>
 References: <1543311334-8807-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,34 +22,24 @@ To: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.co
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-system controller, the system controller is in charge of system
-power, clock and secure RTC etc. management, Linux kernel
-has to communicate with system controller via MU (message unit)
-IPC to do RTC operation, this patch adds binding doc for i.MX
-system controller RTC driver.
+This patch enables CONFIG_RTC_DRV_IMX_SC by default.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt | 10 ++++++++++
- 1 file changed, 10 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt b/Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
-new file mode 100644
-index 0000000..d6e2353
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
-@@ -0,0 +1,10 @@
-+* NXP i.MX System Controller Real Time Clock
-+
-+Required properties:
-+- compatible: should be "nxp,imx8qxp-sc-rtc";
-+
-+Example:
-+
-+rtc: rtc {
-+	compatible = "nxp,imx8qxp-sc-rtc";
-+};
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 6d224f7..6fdf2d0 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -573,6 +573,7 @@ CONFIG_RTC_DRV_PL031=y
+ CONFIG_RTC_DRV_SUN6I=y
+ CONFIG_RTC_DRV_ARMADA38X=y
+ CONFIG_RTC_DRV_TEGRA=y
++CONFIG_RTC_DRV_IMX_SC=y
+ CONFIG_RTC_DRV_XGENE=y
+ CONFIG_DMADEVICES=y
+ CONFIG_DMA_BCM2835=m
 -- 
 2.7.4
