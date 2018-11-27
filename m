@@ -1,53 +1,47 @@
-From: Brian Dodge <bdodge09@gmail.com>
-Subject: Re: [PATCH 2/3] backlight/arcxcnn fix vendor prefix
-Date: Mon, 26 Nov 2018 19:44:14 -0500
-Message-ID: <e372391c-1fd5-41ec-b766-7669fffb928d@gmail.com>
-References: <1541592640-18478-1-git-send-email-bdodge09@gmail.com>
- <1541592640-18478-3-git-send-email-bdodge09@gmail.com>
- <20181111113053.GF27666@amd>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: bananapi-m64:
+ Enable audio codec
+Date: Tue, 27 Nov 2018 09:22:41 +0100
+Message-ID: <20181127082241.jx3vzapy5mlgfabc@flea>
+References: <20181126055946.20344-1-wens@csie.org>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20181111113053.GF27666@amd>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Pavel Machek <pavel@ucw.cz>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, Peter Bacon <pbacon@psemi.com>, lee.jones@linaro.org, linux-leds@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lylwgf2dl5bmdjvu"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXH56PPQKGQECG2423Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20181126055946.20344-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhhbmsgeW91IFBhdmVsLCB0aGF0IGlzIGEgZ29vZCBwb2ludC4KClRoZSBjaGlwIHZlbmRvciBo
-YXMgaW5kaWNhdGVkIHRoYXQgdGhlcmUgaXMgbm8gcmVhc29uIHRvIG1haW50YWluIHRoZSAKb2xk
-L2ltcHJvcGVyIHByZWZpeCBhbmQgd2lzaGVzIHRvIGdvIGZvcndhcmQgKG9ubHkpIHdpdGggdGhl
-ICJhcmN0aWMiIApwcmVmaXggYW5kIGFueSBleGlzdGluZyBkdHMgZmlsZXMgYXJlIG9yIHdpbGwg
-YmUgdXBkYXRlZC4KCk9uIDExLzExLzE4IDY6MzAgQU0sIFBhdmVsIE1hY2hlayB3cm90ZToKPiBI
-aSEKPgo+PiBUaGUgdmVuZG9yLXByZWZpeGVzLnR4dCBmaWxlIHByb3Blcmx5IHJlZmVycyB0byBB
-cmN0aWNTYW5kCj4+IGFzIGFyY3RpYyBidXQgdGhlIGRyaXZlciBpbXByb3Blcmx5IGFiYnJldmlh
-dGVkIHRoZSBwcmVmaXgKPj4gdG8gYXJjLiBUaGlzIHdhcyBhIG1pc3Rha2UgaW4gdGhlIG9yaWdp
-bmFsIHBhdGNoCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEJyaWFuIERvZGdlIDxiZG9kZ2UwOUBnbWFp
-bC5jb20+Cj4+IC0tLQo+PiAgIGRyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L2FyY3hjbm5fYmwuYyB8
-IDIyICsrKysrKysrKysrLS0tLS0tLS0tLS0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMTEgaW5zZXJ0
-aW9ucygrKSwgMTEgZGVsZXRpb25zKC0pCj4+Cj4+ICAgICoKPj4gLSAqIENvcHlyaWdodCAyMDE2
-IEFyY3RpY1NhbmQsIEluYy4KPj4gLSAqIEF1dGhvciA6IEJyaWFuIERvZGdlIDxiZG9kZ2VAYXJj
-dGljc2FuZC5jb20+Cj4+ICsgKiBDb3B5cmlnaHQgMjAxOCBwU2VtaSwgSW5jLgo+PiArICogQXV0
-aG9yIDogQnJpYW4gRG9kZ2UgPGJkb2RnZUBwc2VtaS5jb20+Cj4gVW1tbS4gQ29weXJpZ2h0IDIw
-MTYtMjAxOD8KPgo+PiBAQCAtMjAyLDI3ICsyMDIsMjcgQEAgc3RhdGljIHZvaWQgYXJjeGNubl9w
-YXJzZV9kdChzdHJ1Y3QgYXJjeGNubiAqbHApCj4+ICAgCWlmIChyZXQgPT0gMCkKPj4gICAJCWxw
-LT5wZGF0YS0+aW5pdGlhbF9icmlnaHRuZXNzID0gcHJvZ192YWw7Cj4+Cj4+IC0JcmV0ID0gb2Zf
-cHJvcGVydHlfcmVhZF91MzIobm9kZSwgImFyYyxsZWQtY29uZmlnLTAiLCAmcHJvZ192YWwpOwo+
-PiArCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5vZGUsICJhcmN0aWMsbGVkLWNvbmZpZy0w
-IiwgJnByb2dfdmFsKTsKPj4gICAJaWYgKHJldCA9PSAwKQo+PiAgIAkJbHAtPnBkYXRhLT5sZWRf
-Y29uZmlnXzAgPSAodTgpcHJvZ192YWw7Cj4+Cj4gSWYgdGhlcmUncyBhIGR0cyB1c2luZyB0aGlz
-LCB5b3Ugd2FudCB0byB1cGRhdGUgaXQgYXQgdGhlIHNhbWUKPiB0aW1lLiBZb3UgbWF5IHdhbnQg
-dG8gc3VwcG9ydCBib3RoIG5hbWVzIGdvaW5nIGZvcndhcmQuCj4gCQkJCQkJCQkJUGF2ZWwKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--lylwgf2dl5bmdjvu
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Mon, Nov 26, 2018 at 01:59:46PM +0800, Chen-Yu Tsai wrote:
+> This patch enables audio via the SoC's internal audio codec. All
+> relevant device nodes are enabled, and the routing is set to match
+> the board design. MIC1 is routed to an onboard microphone, with MBIAS
+> providing power. MIC2 and HP are routed to the 3.5mm headset TRRS jack.
+> No phantom power is provided to the headset microphone.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+
+Applied, thanks!
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--lylwgf2dl5bmdjvu--
