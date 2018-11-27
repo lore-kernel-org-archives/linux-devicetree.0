@@ -1,34 +1,108 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v4 15/17] dt-bindings: watchdog: Add
- Allwinner ARMv5 F1C100s wdt
-Date: Mon, 26 Nov 2018 19:40:13 -0600
-Message-ID: <20181127014013.GA25898@bogus>
-References: <cover.1543131714.git.mesihkilinc@gmail.com>
- <29723ab4d09399185b8807a3f20bb2551b940f2f.1543131714.git.mesihkilinc@gmail.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V4 2/2] base/drivers/arch_topology: Default dmips-mhz if
+ they are not set in DT
+Date: Mon, 26 Nov 2018 19:42:47 -0600
+Message-ID: <20181127014247.GA26233@bogus>
+References: <1543234847-21611-1-git-send-email-daniel.lezcano@linaro.org>
+ <1543234847-21611-2-git-send-email-daniel.lezcano@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBAGB6LPQKGQESG4LQSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <29723ab4d09399185b8807a3f20bb2551b940f2f.1543131714.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1543234847-21611-2-git-send-email-daniel.lezcano@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: rjw@rjwysocki.net, linux-kernel@vger.kernel.org, viresh.kumar@linaro.org, Chris Redpath <chris.redpath@linaro.org>, Quentin Perret <quentin.perret@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Li Yang <leoyang.li@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 25 Nov 2018 10:43:18 +0300, Mesih Kilinc wrote:
-> Allwinner ARMv5 F1C100s has similar watchdog timer to sun6i A31.
-> Add definition for it.
+On Mon, Nov 26, 2018 at 01:20:43PM +0100, Daniel Lezcano wrote:
+> In the case of asymmetric SoC with the same micro-architecture, we
+> have a group of CPUs with smaller OPPs than the other group. One
+> example is the 96boards dragonboard 820c. There is no dmips/MHz
+> difference between both groups, so no need to specify the values in
+> the DT. Unfortunately, without these defined, there is no scaling
+> capacity computation triggered, so we need to write
+> 'capacity-dmips-mhz' for each CPU with the same value in order to
+> force the scaled capacity computation.
 > 
-> Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> In order to fix this situation, allocate 'raw_capacity' so the pointer
+> is set and the init_cpu_capacity_callback() function can be called.
+> 
+> This was tested on db820c:
+>  - specified values in the DT (correct results)
+>  - partial values defined in the DT (error + fallback to defaults)
+>  - no specified values in the DT (correct results)
+> 
+> correct results are:
+>   cat /sys/devices/system/cpu/cpu*/cpu_capacity
+>    758
+>    758
+>   1024
+>   1024
+> 
+>   ... respectively for CPU0, CPU1, CPU2 and CPU3.
+> 
+> That reflects the capacity for the max frequencies 1593600 and 2150400.
+> 
+> Cc: Chris Redpath <chris.redpath@linaro.org>
+> Cc: Quentin Perret <quentin.perret@linaro.org>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: Amit Kucheria <amit.kucheria@linaro.org>
+> Cc: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+> Cc: Niklas Cassel <niklas.cassel@linaro.org>
+> Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 > ---
->  Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+>  Documentation/devicetree/bindings/arm/cpu-capacity.txt |  6 ++++++
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/base/arch_topology.c                           | 13 ++++++++++++-
+>  2 files changed, 18 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> index 84262cd..f53a3c9 100644
+> --- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> @@ -54,6 +54,12 @@ fall back to the default capacity value for every CPU. If cpufreq is not
+>  available, final capacities are calculated by directly using capacity-dmips-
+>  mhz values (normalized w.r.t. the highest value found while parsing the DT).
+>  
+> +If capacity-dmips-mhz is not specified or if the parsing fails, the
+> +default capacity value will be computed against the highest frequency.
+> +When all CPUs have the same OPP, they will have the same capacity
+> +value otherwise the capacity will be scaled down for CPUs having lower
+> +frequencies.
+> +
+>  ===========================================
+>  4 - Examples
+>  ===========================================
+> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+> index fd5325b..e0c5b60 100644
+> --- a/drivers/base/arch_topology.c
+> +++ b/drivers/base/arch_topology.c
+> @@ -243,9 +243,20 @@ static int __init register_cpufreq_notifier(void)
+>  	 * until we have the necessary code to parse the cpu capacity, so
+>  	 * skip registering cpufreq notifier.
+>  	 */
+> -	if (!acpi_disabled || !raw_capacity)
+> +	if (!acpi_disabled)
+>  		return -EINVAL;
+>  
+> +	if (!raw_capacity) {
+> +
+> +		pr_info("cpu_capacity: No capacity defined in DT, set default "
+> +		       "values to %ld\n", SCHED_CAPACITY_SCALE);
+> +
+> +		raw_capacity = kmalloc_array(num_possible_cpus(),
+> +					     sizeof(*raw_capacity), GFP_KERNEL);
+> +		if (!raw_capacity)
+> +			return -ENOMEM;
+> +	}
+> +
+>  	if (!alloc_cpumask_var(&cpus_to_visit, GFP_KERNEL)) {
+>  		pr_err("cpu_capacity: failed to allocate memory for cpus_to_visit\n");
+>  		return -ENOMEM;
+> -- 
+> 2.7.4
+> 
