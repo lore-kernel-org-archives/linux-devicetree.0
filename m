@@ -1,104 +1,55 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: [PATCH v2 5/5] regulator: add documentation for regulator modes and
- suspend states
-Date: Tue, 27 Nov 2018 11:57:25 +0000
-Message-ID: <1543319801-19100-6-git-send-email-claudiu.beznea@microchip.com>
-References: <1543319801-19100-1-git-send-email-claudiu.beznea@microchip.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v2 1/2] dt-bindings: i2c-stm32: SYSCFG Fast Mode Plus
+ support for I2C STM32F7
+Date: Tue, 27 Nov 2018 13:09:49 +0100
+Message-ID: <20181127120948.GI1107@kunai>
+References: <1542625412-4277-1-git-send-email-pierre-yves.mordret@st.com>
+ <1542625412-4277-2-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cVp8NMj01v+Em8Se"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543319801-19100-1-git-send-email-claudiu.beznea@microchip.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1542625412-4277-2-git-send-email-pierre-yves.mordret@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Claudiu.Beznea@microchip.com
+To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-Add documentation for regulator modes and suspend states.
+--cVp8NMj01v+Em8Se
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- .../bindings/regulator/act8945a-regulator.txt      | 34 ++++++++++++++++++=
-++++
- 1 file changed, 34 insertions(+)
+On Mon, Nov 19, 2018 at 12:03:31PM +0100, Pierre-Yves MORDRET wrote:
+> Append optional bindings to update SYSCFG Fast Mode Plus bits if
+> Fast Mode Plus speed is selected.
+>=20
+> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-diff --git a/Documentation/devicetree/bindings/regulator/act8945a-regulator=
-.txt b/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
-index ac955dea00d1..4017527619ab 100644
---- a/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
-@@ -15,11 +15,17 @@ Optional input supply properties:
-   - inl67-supply: The input supply for REG_LDO3 and REG_LDO4
-=20
- Any standard regulator properties can be used to configure the single regu=
-lator.
-+regulator-initial-mode, regulator-allowed-modes and regulator-mode could b=
-e
-+specified using mode values from dt-bindings/regulator/active-semi,8945a-r=
-egulator.h
-+file.
-=20
- The valid names for regulators are:
- 	REG_DCDC1, REG_DCDC2, REG_DCDC3, REG_LDO1, REG_LDO2, REG_LDO3, REG_LDO4.
-=20
- Example:
-+
-+#include <dt-bindings/regulator/active-semi,8945a-regulator.h>
-+
- 	pmic@5b {
- 		compatible =3D "active-semi,act8945a";
- 		reg =3D <0x5b>;
-@@ -32,6 +38,18 @@ Example:
- 				regulator-min-microvolt =3D <1350000>;
- 				regulator-max-microvolt =3D <1350000>;
- 				regulator-always-on;
-+
-+				regulator-allowed-modes =3D <ACT8945A_REGULATOR_MODE_FIXED>,
-+							  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+				regulator-initial-mode =3D <ACT8945A_REGULATOR_MODE_FIXED>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-min-microvolt=3D<1400000>;
-+					regulator-suspend-max-microvolt=3D<1400000>;
-+					regulator-changeable-in-suspend;
-+					regulator-mode=3D<ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+				};
- 			};
-=20
- 			vdd_1v2_reg: REG_DCDC2 {
-@@ -39,6 +57,14 @@ Example:
- 				regulator-min-microvolt =3D <1100000>;
- 				regulator-max-microvolt =3D <1300000>;
- 				regulator-always-on;
-+
-+				regulator-allowed-modes =3D <ACT8945A_REGULATOR_MODE_FIXED>,
-+							  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+				regulator-initial-mode =3D <ACT8945A_REGULATOR_MODE_FIXED>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
-=20
- 			vdd_3v3_reg: REG_DCDC3 {
-@@ -53,6 +79,14 @@ Example:
- 				regulator-min-microvolt =3D <2500000>;
- 				regulator-max-microvolt =3D <2500000>;
- 				regulator-always-on;
-+
-+				regulator-allowed-modes =3D <ACT8945A_REGULATOR_MODE_NORMAL>,
-+							  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+				regulator-initial-mode =3D <ACT8945A_REGULATOR_MODE_NORMAL>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
-=20
- 			vdd_3v3_lp_reg: REG_LDO2 {
---=20
-2.7.4
+Applied to for-next, thanks!
+
+
+--cVp8NMj01v+Em8Se
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlv9NAwACgkQFA3kzBSg
+KbaI0RAAhR22svFThcEuMHzYsNCSbh4IozjSTjeGKvYYfHXoXhUJLVvPxmuWrpCI
+Exk3W44q4iFqEAtzwDgHJ4qutpBFkSUvpJ5WeqXWPJfy4fWIH3ZD4UrelyqMi9eG
+9c1Cw1QAAG3NENWUNL9nSfftaSM2yPKV/CEv6Rf8wbatrzT6964lJX7kjyEo90i1
+lCcGGCflgPSmT0gEegyUM5t0nHaUhQpkzjdt+jLh+wDOYxsvMMtZIBJ4RH8DjGLU
+kyGa+G1pyXTpAUzl98yPQKhKUAWtZKbmHRdFKr+8/UGZd43PYxEZY6KyO71C4yDy
+C7IB+65x+iEOdsOQrcza4FjcR8N9CDE4TIW5fhdH+kppOfIpYrvBEbwsuBDcnwEj
+CKvAP1LXcZfBVnZo97Oow+L4JrSU3Bn21NuuWW/PG2hi2uGrpz42by2SrFYo30rs
+zsiS5Ft9GfhVjKqSm9/4zO9N/b6dN8Ir5IVU0FwV09xGzpIC5PcMBiDzWHYwUQOc
+dYkmb7b3WU0bHnrPHJJXgED97kJsXsctSJSFg0YZwTnoZP5edUBmlD8WNqotI17C
+EfoJTybMbCZmSySeEltcWTsVhx1OTeKdwFkCkiQ06Y+btHkQKjP6dDsFuMA/1c95
+D/uGDzOwnQWV9Byv3Lc0UueHXM810rzsS6CwwnfPztcU99vVC0I=
+=hOL8
+-----END PGP SIGNATURE-----
+
+--cVp8NMj01v+Em8Se--
