@@ -1,81 +1,93 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [RFC PATCH v2 05/15] usb:cdns3: Added DRD support
-Date: Tue, 27 Nov 2018 14:10:36 +0200
-Message-ID: <5BFD343C.3010407@ti.com>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
- <1542535751-16079-6-git-send-email-pawell@cadence.com>
- <5BF8140C.7000605@ti.com>
- <BYAPR07MB470991EB0AE200B6481AEE35DDD70@BYAPR07MB4709.namprd07.prod.outlook.com>
- <BYAPR07MB470901107F1435424D8B0727DDD00@BYAPR07MB4709.namprd07.prod.outlook.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH/RFC] net: phy: device: Don't deassert the reset when register
+ and probe
+Date: Tue, 27 Nov 2018 12:18:20 +0000
+Message-ID: <1543320947-32763-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR07MB470901107F1435424D8B0727DDD00@BYAPR07MB4709.namprd07.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: "andrew@lunn.ch" <andrew@lunn.ch>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "davem@davemloft.net" <davem@davemloft.net>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Pawel,
+Some PHY device needs edge signal of the reset, but the previous code
+is impossible to achieve it like following:
 
-On 27/11/18 13:29, Pawel Laszczak wrote:
-> Hi Roger
-> 
->>>> Patch adds supports for detecting Host/Device mode.
->>>> +
->>>> +static int cdns3_otg_get_id(struct cdns3 *cdns)
->>>> +{
->>>> +	int id;
->>>> +
->>>> +	id = readl(&cdns->otg_regs->sts) & OTGSTS_ID_VALUE;
->>>> +	dev_dbg(cdns->dev, "OTG ID: %d", id);
->>>> +	return id;
->>>> +}
->>>> +
->>>> +int cdns3_is_host(struct cdns3 *cdns)
->>>> +{
->>>> +	if (cdns->current_dr_mode == USB_DR_MODE_HOST)
->>>> +		return 1;
->>>
->>> Why do you need this?
->>
->> I assumed that some SoC could have cut DRD /OTG and Device or Host part.
->> In such case the driver cannot be based on ID pin.
->> For only HOST it's not a problem because
->> the standard XHCI driver will be used.  Probably I will remove this fragment.
-> 
-> I've removed this condition but it is necessary and I've  restored it again. 
-> When driver works in only HOST mode then ID is always 0. 
-> For current_dr_mode == USB_DR_MODE_HOST driver has to just simple 
-> returns 1.  
-> current_dr_mode  can be changed from user space depending on dr_mode field. 
+ 1) Kernel boots by using initramfs.
+ --> No open the nic, so the provious code deasserts the reset by
+     phy_device_register() and phy_probe().
+ 2) Kernel enters the suspend.
+ --> So, keep the reset signal as deassert.
+ --> On R-Car Salvator-XS board, unfortunately, the board power is
+     turned off.
+ 3) Kernel returns from suspend.
+ 4) ifconfig eth0 up
+ --> Then, since edge signal of the reset doesn't happen,
+     it cannot link up.
+ 5) ifconfig eth0 down
+ 6) ifconfig eth0 up
+ --> In this case, it can link up.
 
-OK.
+This patch is possible to break if ->probe() in a phy driver will
+access the PHY. But, I believe ->config_init() only initializes
+the PHY. However, I think this patch should be RFC at first.
 
-> 
-> I have the additional question. Because I have many changes in source code if I should 
-> post the next RFC PATCH v3 or should I wait for comments for rest patches ?
+Reported-by: Hiromitsu Yamasaki <hiromitsu.yamasaki.ym@renesas.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ drivers/net/phy/phy_device.c | 22 +---------------------
+ 1 file changed, 1 insertion(+), 21 deletions(-)
 
-I will need a day to review the remaining patches. So maybe it is better to wait?
-
-> 
->>>
->>>> +	else if (cdns->current_dr_mode == USB_DR_MODE_OTG)
->>>> +		if (!cdns3_otg_get_id(cdns))
->>>> +			return 1;
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
-> Thanks,
-> Cheers,
-> Pawel
-> 
-
-cheers,
--roger
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index e06613f..e01a752 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -802,16 +802,6 @@ int phy_device_register(struct phy_device *phydev)
+ 	if (err)
+ 		return err;
+=20
+-	/* Deassert the reset signal */
+-	phy_device_reset(phydev, 0);
+-
+-	/* Run all of the fixups for this PHY */
+-	err =3D phy_scan_fixups(phydev);
+-	if (err) {
+-		pr_err("PHY %d failed to initialize\n", phydev->mdio.addr);
+-		goto out;
+-	}
+-
+ 	err =3D device_add(&phydev->mdio.dev);
+ 	if (err) {
+ 		pr_err("PHY %d failed to add\n", phydev->mdio.addr);
+@@ -821,8 +811,6 @@ int phy_device_register(struct phy_device *phydev)
+ 	return 0;
+=20
+  out:
+-	/* Assert the reset signal */
+-	phy_device_reset(phydev, 1);
+=20
+ 	mdiobus_unregister_device(&phydev->mdio);
+ 	return err;
+@@ -2202,16 +2190,8 @@ static int phy_probe(struct device *dev)
+ 	/* Set the state to READY by default */
+ 	phydev->state =3D PHY_READY;
+=20
+-	if (phydev->drv->probe) {
+-		/* Deassert the reset signal */
+-		phy_device_reset(phydev, 0);
+-
++	if (phydev->drv->probe)
+ 		err =3D phydev->drv->probe(phydev);
+-		if (err) {
+-			/* Assert the reset signal */
+-			phy_device_reset(phydev, 1);
+-		}
+-	}
+=20
+ 	mutex_unlock(&phydev->lock);
+=20
+--=20
+1.9.1
