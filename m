@@ -1,46 +1,40 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v2] arm64: dts: qcom: qcs404: Add WCN3990 WLAN module
- device node
-Date: Tue, 27 Nov 2018 22:09:28 +0530
-Message-ID: <20181127163928.GF3175@vkoul-mobl.Dlink>
-References: <20181127151716.31992-1-govinds@codeaurora.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH/RFC] net: phy: device: Don't deassert the reset when
+ register and probe
+Date: Tue, 27 Nov 2018 17:44:11 +0100
+Message-ID: <20181127164411.GB19601@lunn.ch>
+References: <1543320947-32763-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181127151716.31992-1-govinds@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Govind Singh <govinds@codeaurora.org>
-Cc: andy.gross@linaro.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <1543320947-32763-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27-11-18, 20:47, Govind Singh wrote:
-> Add device node for the ath10k SNOC platform driver probe
-> and add resources required for WCN3990 on qcs404 soc.
-> Optional clock and regulator controls are not yet available in
-> upstream, hence add them once available.
+On Tue, Nov 27, 2018 at 12:18:20PM +0000, Yoshihiro Shimoda wrote:
+> Some PHY device needs edge signal of the reset, but the previous code
+> is impossible to achieve it like following:
 > 
-> Signed-off-by: Govind Singh <govinds@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/qcs404-evb.dtsi |  4 ++++
->  arch/arm64/boot/dts/qcom/qcs404.dtsi     | 20 ++++++++++++++++++++
->  2 files changed, 24 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-> index 0767389c68c1..36905524b0ff 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-> @@ -310,6 +310,10 @@
->  	status = "okay";
->  };
->  
-> +&wifi {
-> +	status = "okay";
-> +};
+>  1) Kernel boots by using initramfs.
+>  --> No open the nic, so the provious code deasserts the reset by
+>      phy_device_register() and phy_probe().
+>  2) Kernel enters the suspend.
+>  --> So, keep the reset signal as deassert.
+>  --> On R-Car Salvator-XS board, unfortunately, the board power is
+>      turned off.
+>  3) Kernel returns from suspend.
+>  4) ifconfig eth0 up
+>  --> Then, since edge signal of the reset doesn't happen,
+>      it cannot link up.
 
-I am assuming this is common to both evb variants, so:
+Hi Yoshihiro
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
+It sounds like you should be adding code to the suspend/resume
+handling of phylib, so that it toggle the reset on resume. You cannot
+just delete code like you proposed, it is going to break devices. But
+adding code should be O.K.
 
--- 
-~Vinod
+       Andrew
