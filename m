@@ -1,54 +1,81 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v2 2/2] i2c: i2c-stm32f7: SYSCFG Fast Mode Plus support
- for I2C STM32F7
-Date: Tue, 27 Nov 2018 13:09:53 +0100
-Message-ID: <20181127120953.GJ1107@kunai>
-References: <1542625412-4277-1-git-send-email-pierre-yves.mordret@st.com>
- <1542625412-4277-3-git-send-email-pierre-yves.mordret@st.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [RFC PATCH v2 05/15] usb:cdns3: Added DRD support
+Date: Tue, 27 Nov 2018 14:10:36 +0200
+Message-ID: <5BFD343C.3010407@ti.com>
+References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
+ <1542535751-16079-6-git-send-email-pawell@cadence.com>
+ <5BF8140C.7000605@ti.com>
+ <BYAPR07MB470991EB0AE200B6481AEE35DDD70@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <BYAPR07MB470901107F1435424D8B0727DDD00@BYAPR07MB4709.namprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Xssso5lpTBgMxDfe"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1542625412-4277-3-git-send-email-pierre-yves.mordret@st.com>
+In-Reply-To: <BYAPR07MB470901107F1435424D8B0727DDD00@BYAPR07MB4709.namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
+Pawel,
 
---Xssso5lpTBgMxDfe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 27/11/18 13:29, Pawel Laszczak wrote:
+> Hi Roger
+> 
+>>>> Patch adds supports for detecting Host/Device mode.
+>>>> +
+>>>> +static int cdns3_otg_get_id(struct cdns3 *cdns)
+>>>> +{
+>>>> +	int id;
+>>>> +
+>>>> +	id = readl(&cdns->otg_regs->sts) & OTGSTS_ID_VALUE;
+>>>> +	dev_dbg(cdns->dev, "OTG ID: %d", id);
+>>>> +	return id;
+>>>> +}
+>>>> +
+>>>> +int cdns3_is_host(struct cdns3 *cdns)
+>>>> +{
+>>>> +	if (cdns->current_dr_mode == USB_DR_MODE_HOST)
+>>>> +		return 1;
+>>>
+>>> Why do you need this?
+>>
+>> I assumed that some SoC could have cut DRD /OTG and Device or Host part.
+>> In such case the driver cannot be based on ID pin.
+>> For only HOST it's not a problem because
+>> the standard XHCI driver will be used.  Probably I will remove this fragment.
+> 
+> I've removed this condition but it is necessary and I've  restored it again. 
+> When driver works in only HOST mode then ID is always 0. 
+> For current_dr_mode == USB_DR_MODE_HOST driver has to just simple 
+> returns 1.  
+> current_dr_mode  can be changed from user space depending on dr_mode field. 
 
-On Mon, Nov 19, 2018 at 12:03:32PM +0100, Pierre-Yves MORDRET wrote:
-> Read SYSCFG bindings to set Fast Mode Plus bits if Fast Mode Plus
-> speed is selected.
->=20
-> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+OK.
 
-Applied to for-next, thanks!
+> 
+> I have the additional question. Because I have many changes in source code if I should 
+> post the next RFC PATCH v3 or should I wait for comments for rest patches ?
 
+I will need a day to review the remaining patches. So maybe it is better to wait?
 
---Xssso5lpTBgMxDfe
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+>>>
+>>>> +	else if (cdns->current_dr_mode == USB_DR_MODE_OTG)
+>>>> +		if (!cdns3_otg_get_id(cdns))
+>>>> +			return 1;
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+> Thanks,
+> Cheers,
+> Pawel
+> 
 
------BEGIN PGP SIGNATURE-----
+cheers,
+-roger
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlv9NBEACgkQFA3kzBSg
-KbZiOw/+Jee9JoP7bjjU4zVwuoVhGhxaFggTJpIU8FDFAcWBj5Ulbkp/5WyzTyHM
-g45KbRjdB+/Swh0qqFCbzCWscjnbbCoYo039Tu+UlrihPlh7jlmFwkW8Vh1kqZfq
-BSKTYtZxXckJI4/qMNu0kEeFpZ9fCaWOeoMraEXj3ZF7GDY927KE1nXh+V8sjye4
-Exb/+ko+BkoyADqOF9d9Yoe5ye8uX911HLT5D0IED1kG0ubIp9s8wIg6/J7ZKesN
-2VT80R6w8PzKzxKBjqGfsV96jis3jRGGvJCFqv5WT8kEMKy0mkROI0ztbBBNwpUs
-gpng4WboKMKvrPNXTpj+6OyVYFu2GrAeMfX8JA9vhrvJiom/UK+6g5lB5GoVUWL5
-v6J5rBVBrLboD4rOAR7h2YIXFWx2JIyZR42Csi6vOS8igGJiaiKbu9xndqudks+w
-mcVG5d3QU4jWUxWH2WLSS2Q7Zf3mO8jZGTlS+hozdJnWeAun4Sa/T7T6Z6h5SFMt
-zLGWBgz9DF4SousaVfg4jxefcg+o6wAocYw5NJEf9ltxmu+nOd2cfwi6GcbEp2JE
-Ks7E01rFZ1fIHQFbjGtDDyLwO38XrYBt+PK9IE+4Qt70Oxn80CF/WJGztqjCeSlM
-2XDvGYx9k1Gtz+Kcmltqk434KhcwZAVWyiWQMaAshTqQELyQVr8=
-=e3Kh
------END PGP SIGNATURE-----
-
---Xssso5lpTBgMxDfe--
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
