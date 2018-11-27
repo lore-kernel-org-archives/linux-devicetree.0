@@ -1,152 +1,41 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 1/5] dt-bindings: media: Add Allwinner A10 CSI binding
-Date: Tue, 27 Nov 2018 16:04:19 +0100
-Message-ID: <20181127150419.wmlqhhixb5pg7mkr@flea>
-References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
- <60494dd4245ab01473d074dc5cd46198a2181614.1542097288.git-series.maxime.ripard@bootlin.com>
- <20181113083855.s5jxrb32ru3myu3t@kekkonen.localdomain>
- <20181115190424.gpuekifrjli5mu77@flea>
- <20181121215650.urefxctd245os6t5@mara.localdomain>
+From: Jan Tuerk <jan.tuerk@emtrion.com>
+Subject: [PATCH v8 1/4] ARM: dts: imx: Add an cpu0 label for imx6dl devices.
+Date: Tue, 27 Nov 2018 16:04:01 +0100
+Message-ID: <20181127150407.15098-1-jan.tuerk@emtrion.com>
+References: <20180829100811.55836-1-jan.tuerk@emtrion.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yv57llofassyfdse"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181121215650.urefxctd245os6t5@mara.localdomain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180829100811.55836-1-jan.tuerk@emtrion.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Russell King <linux@armlinux.org.uk>, "GitAuthor: Jan Tuerk" <jan.tuerk@emtrion.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---yv57llofassyfdse
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Wed, Nov 21, 2018 at 11:56:50PM +0200, Sakari Ailus wrote:
-> On Thu, Nov 15, 2018 at 08:04:24PM +0100, Maxime Ripard wrote:
-> > On Tue, Nov 13, 2018 at 10:38:55AM +0200, Sakari Ailus wrote:
-> > > > +  - allwinner,has-isp: Whether the CSI controller has an ISP
-> > > > +                       associated to it or not
-> > >=20
-> > > Is the ISP a part of the same device? It sounds like that this is act=
-ually
-> > > a different device if it contains an ISP as well, and that should be
-> > > apparent from the compatible string. What do you think?
-> >=20
-> > I guess we can see it as both. It seems to be the exact same register
-> > set, except for the fact that the first instance has that ISP in
-> > addition, and several channels, as you pointed out in your other mail.
->=20
-> I'm simply referring to existing practices as far as I know them. If it's=
- a
-> different device, it should have a different compatible string, not a
-> vendor-specific property to tell it's somehow different.
-
-The line is blurrier than that. Different devices are indeed
-represented using different compatibles, but different features set
-can be represented using properties.
-
-> Many SoCs also separate the DMA and the CSI-2 receivers, and thus they ha=
-ve
-> separate drivers. I don't know about your case, but the ISP requiring a
-> different clock is a hint.
-
-In this particular case, the datasheet represents the ISP as part of
-the DMA, so it looks like a feature. And since we don't have any
-source code for this, we can only do guesswork.
-
-> > What these channels are is not exactly clear. It looks like it's
-> > related to the BT656 interface where you could interleave channel
-> > bytes over the bus. I haven't really looked into it, and it doesn't
-> > look like we have any code (or hardware) able to do that though.
-> >=20
-> > > > +
-> > > > +If allwinner,has-isp is set, an additional "isp" clock is needed,
-> > > > +being a phandle to the clock driving the ISP.
-> > > > +
-> > > > +The CSI node should contain one 'port' child node with one child
-> > > > +'endpoint' node, according to the bindings defined in
-> > > > +Documentation/devicetree/bindings/media/video-interfaces.txt. The
-> > > > +endpoint's bus type must be parallel or BT656.
-> > > > +
-> > > > +Endpoint node properties for CSI
-> > > > +---------------------------------
-> > > > +
-> > > > +- remote-endpoint	: (required) a phandle to the bus receiver's end=
-point
-> > > > +			   node
-> > >=20
-> > > Rob's opinion has been (AFAIU) that this is not needed as it's alread=
-y a
-> > > part of the graph bindings. Unless you want to say that it's required=
-, that
-> > > is --- the graph bindings document it as optional.
-> >=20
-> > Ok, I'll remove it.
-> >=20
-> > > > +- bus-width:		: (required) must be 8
-> > >=20
-> > > If this is the only value the hardware supports, I don't see why you =
-should
-> > > specify it here.
-> >=20
-> > Ditto :)
-> >=20
-> > > > +- pclk-sample		: (optional) (default: sample on falling edge)
-> > > > +- hsync-active		: (only required for parallel)
-> > > > +- vsync-active		: (only required for parallel)
-> > > > +
-> > > > +Example:
-> > > > +
-> > > > +csi0: csi@1c09000 {
-> > > > +	compatible =3D "allwinner,sun7i-a20-csi",
-> > > > +		     "allwinner,sun4i-a10-csi";
-> > > > +	reg =3D <0x01c09000 0x1000>;
-> > > > +	interrupts =3D <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> > > > +	clocks =3D <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI0>,
-> > > > +		 <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
-> > > > +	clock-names =3D "ahb", "mod", "isp", "ram";
-> > > > +	resets =3D <&ccu RST_CSI0>;
-> > > > +	allwinner,csi-channels =3D <4>;
-> > > > +	allwinner,has-isp;
-> > > > +=09
-> > > > +	port {
-> > > > +		csi_from_ov5640: endpoint {
-> > > > +                        remote-endpoint =3D <&ov5640_to_csi>;
-> > > > +                        bus-width =3D <8>;
-> > > > +                        data-shift =3D <2>;
-> > >=20
-> > > data-shift needs to be documented above if it's relevant for the devi=
-ce.
-> >=20
-> > It's not really related to the CSI device in that case but the sensor,
-> > so I'll just leave it out.
->=20
-> Hmm. data-shift should only be relevant for the receiver, shoudn't it?
-
-Sorry, I mispoke. We're not using it anywhere in either drivers, so
-it's totally useless.
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---yv57llofassyfdse
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW/1c8wAKCRDj7w1vZxhR
-xeFUAQDoNrYNTYuKW2LxDjXbck0L8ZtFCpeDjUEIV1DD17iiBQEA/c54jPVLSpeF
-KfglcnCThL6gXzqesTYg5UoodftYNAs=
-=bisM
------END PGP SIGNATURE-----
-
---yv57llofassyfdse--
+QWRkaW5nIHRoZSBsYWJlbCBjcHUwIGFsbG93cyB0aGUgYWRqdXN0bWVudCBvZiBjcHUtcGFyYW1l
+dGVycwpieSByZWZlcmVuY2UgaW4gb3ZlcmxheWluZyBkdHNpIGZpbGVzIGluIHRoZSBzYW1lIHdh
+eSBhcyBpdAppcyBwb3NzaWJsZSBmb3IgaW14NnEgZGV2aWNlcy4KClNpZ25lZC1vZmYtYnk6IEph
+biBUdWVyayA8amFuLnR1ZXJrQGVtdHJpb24uY29tPgpSZXZpZXdlZC1ieTogQW5kcmVhcyBGw6Ry
+YmVyIDxhZmFlcmJlckBzdXNlLmRlPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZkbC5kdHNp
+IHwgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCgpV
+bmNoYW5nZWQgc2luY2UgdjEgKHJlYmFzZWQpCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9k
+dHMvaW14NmRsLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2ZGwuZHRzaQppbmRleCBmMDYw
+N2ViNDFkZjQuLjJlZDEwMzEwYTdiNyAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14
+NmRsLmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRsLmR0c2kKQEAgLTE1LDcgKzE1
+LDcgQEAKIAkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CiAJCSNzaXplLWNlbGxzID0gPDA+OwogCi0J
+CWNwdUAwIHsKKwkJY3B1MDogY3B1QDAgewogCQkJY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE5
+IjsKIAkJCWRldmljZV90eXBlID0gImNwdSI7CiAJCQlyZWcgPSA8MD47Ci0tIAplbXRyaW9uIEdt
+YkgKQWx0ZXIgU2NobGFjaHRob2YgNDUKNzYxMzEgS2FybHNydWhlCkdFUk1BTlkKaHR0cHM6Ly93
+d3cuZW10cmlvbi5kZQoKQW10c2dlcmljaHQgTWFubmhlaW0KSFJCIDExMCAzMDAKR2VzY2jDpGZ0
+c2bDvGhyZXI6IERpZXRlciBCYXVyLCBSYW1vbmEgTWF1cmVyCgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
