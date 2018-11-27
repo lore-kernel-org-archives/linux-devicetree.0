@@ -1,87 +1,126 @@
-Return-Path: <SRS0=JTqt=OG=kontron.de=frieder.schrempf@kernel.org>
-From: Schrempf Frieder <frieder.schrempf@kontron.de>
-Subject: Re: [PATCH v3 3/4] usb: chipidea: host: override ehci->hub_control
-Date: Tue, 27 Nov 2018 13:41:07 +0000
-Message-ID: <3f8ded20-0264-76af-15dc-e1c4b094f71a@kontron.de>
+Return-Path: <SRS0=g9Sy=OG=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr60054.outbound.protection.outlook.com ([40.107.6.54]:26834
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728512AbeK0U2V (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 27 Nov 2018 15:28:21 -0500
+From: PETER CHEN <peter.chen@nxp.com>
+Subject: [PATCH v3 3/4] usb: chipidea: host: override ehci->hub_control
+Date: Tue, 27 Nov 2018 09:30:59 +0000
+Message-ID: <20181127092824.22756-4-peter.chen@nxp.com>
 References: <20181127092824.22756-1-peter.chen@nxp.com>
- <20181127092824.22756-4-peter.chen@nxp.com>
-In-Reply-To: <20181127092824.22756-4-peter.chen@nxp.com>
+In-Reply-To: <20181127092824.22756-1-peter.chen@nxp.com>
 Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1050BA47F5132742B220B0198D896C20@snt-world.com>
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-To: PETER CHEN <peter.chen@nxp.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>, PETER CHEN <peter.chen@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-T24gMjcuMTEuMTggMTA6MzAsIFBFVEVSIENIRU4gd3JvdGU6DQo+IFRoZSBjaGlwaWRlYSBjb250
-cm9sbGVyIGhhcyBzb21lIHNwZWNpYWwgcmVxdWlyZW1lbnRzIGR1cmluZw0KPiBzdXNwZW5kL3Jl
-c3VtZSwgb3ZlcnJpZGUgY29tbW9uIGVoY2ktPmh1Yl9jb250cm9sIHRvIGltcGxlbWVudA0KPiBp
-dC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFBldGVyIENoZW4gPHBldGVyLmNoZW5AbnhwLmNvbT4N
-Cg0KVGVzdGVkIG9uIGkuTVg2UyB3aXRoIE1pY3JvY2hpcCBMQU45NzMwIFVTQiBIU0lDIEV0aGVy
-bmV0IENvbnRyb2xsZXIuDQpJIGhhdmUgc29tZSBtaW5vciBmb3JtYXQgZml4ZXMgYmVsb3cuIEFw
-YXJ0IGZyb20gdGhhdDoNCg0KUmV2aWV3ZWQtYnk6IEZyaWVkZXIgU2NocmVtcGYgPGZyaWVkZXIu
-c2NocmVtcGZAa29udHJvbi5kZT4NClRlc3RlZC1ieTogRnJpZWRlciBTY2hyZW1wZiA8ZnJpZWRl
-ci5zY2hyZW1wZkBrb250cm9uLmRlPg0KDQo+IC0tLQ0KPiAgIGRyaXZlcnMvdXNiL2NoaXBpZGVh
-L2hvc3QuYyB8IDc2ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-Kw0KPiAgIDEgZmlsZSBjaGFuZ2VkLCA3NiBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy91c2IvY2hpcGlkZWEvaG9zdC5jIGIvZHJpdmVycy91c2IvY2hpcGlkZWEvaG9z
-dC5jDQo+IGluZGV4IDAyOGEzNTc0MjY2YS4uYWE0NzU2ZGFiNDg3IDEwMDY0NA0KPiAtLS0gYS9k
-cml2ZXJzL3VzYi9jaGlwaWRlYS9ob3N0LmMNCj4gKysrIGIvZHJpdmVycy91c2IvY2hpcGlkZWEv
-aG9zdC5jDQo+IEBAIC0yMjAsNiArMjIwLDgxIEBAIHZvaWQgY2lfaGRyY19ob3N0X2Rlc3Ryb3ko
-c3RydWN0IGNpX2hkcmMgKmNpKQ0KPiAgIAkJaG9zdF9zdG9wKGNpKTsNCj4gICB9DQo+ICAgDQo+
-ICsvKiBUaGUgYmVsb3cgY29kZSBpcyBiYXNlZCBvbiB0ZWdyYSBlaGNpIGRyaXZlciAqLw0KPiAr
-c3RhdGljIGludCBjaV9laGNpX2h1Yl9jb250cm9sKA0KPiArCXN0cnVjdCB1c2JfaGNkCSpoY2Qs
-DQo+ICsJdTE2CQl0eXBlUmVxLA0KPiArCXUxNgkJd1ZhbHVlLA0KPiArCXUxNgkJd0luZGV4LA0K
-PiArCWNoYXIJCSpidWYsDQo+ICsJdTE2CQl3TGVuZ3RoDQo+ICspDQo+ICt7DQo+ICsJc3RydWN0
-IGVoY2lfaGNkCSplaGNpID0gaGNkX3RvX2VoY2koaGNkKTsNCj4gKwl1MzIgX19pb21lbQkqc3Rh
-dHVzX3JlZzsNCj4gKwl1MzIJCXRlbXA7DQo+ICsJdW5zaWduZWQgbG9uZwlmbGFnczsNCj4gKwlp
-bnQJCXJldHZhbCA9IDA7DQo+ICsJc3RydWN0IGRldmljZSAqZGV2ID0gaGNkLT5zZWxmLmNvbnRy
-b2xsZXI7DQo+ICsJc3RydWN0IGNpX2hkcmMgKmNpID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQo+
-ICsNCj4gKwlzdGF0dXNfcmVnID0gJmVoY2ktPnJlZ3MtPnBvcnRfc3RhdHVzWyh3SW5kZXggJiAw
-eGZmKSAtIDFdOw0KPiArDQo+ICsJc3Bpbl9sb2NrX2lycXNhdmUoJmVoY2ktPmxvY2ssIGZsYWdz
-KTsNCj4gKw0KPiArCWlmICh0eXBlUmVxID09IFNldFBvcnRGZWF0dXJlICYmIHdWYWx1ZSA9PSBV
-U0JfUE9SVF9GRUFUX1NVU1BFTkQpIHsNCj4gKwkJdGVtcCA9IGVoY2lfcmVhZGwoZWhjaSwgc3Rh
-dHVzX3JlZyk7DQo+ICsJCWlmICgodGVtcCAmIFBPUlRfUEUpID09IDAgfHwgKHRlbXAgJiBQT1JU
-X1JFU0VUKSAhPSAwKSB7DQo+ICsJCQlyZXR2YWwgPSAtRVBJUEU7DQo+ICsJCQlnb3RvIGRvbmU7
-DQo+ICsJCX0NCj4gKw0KPiArCQl0ZW1wICY9IH4oUE9SVF9SV0NfQklUUyB8IFBPUlRfV0tDT05O
-X0UpOw0KPiArCQl0ZW1wIHw9IFBPUlRfV0tESVNDX0UgfCBQT1JUX1dLT0NfRTsNCj4gKwkJZWhj
-aV93cml0ZWwoZWhjaSwgdGVtcCB8IFBPUlRfU1VTUEVORCwgc3RhdHVzX3JlZyk7DQo+ICsNCj4g
-KwkJLyoNCj4gKwkJICogSWYgYSB0cmFuc2FjdGlvbiBpcyBpbiBwcm9ncmVzcywgdGhlcmUgbWF5
-IGJlIGEgZGVsYXkgaW4NCj4gKwkJICogc3VzcGVuZGluZyB0aGUgcG9ydC4gUG9sbCB1bnRpbCB0
-aGUgcG9ydCBpcyBzdXNwZW5kZWQuDQo+ICsJCSAqLw0KPiArCQlpZiAoZWhjaV9oYW5kc2hha2Uo
-ZWhjaSwgc3RhdHVzX3JlZywgUE9SVF9TVVNQRU5ELA0KPiArCQkJCQkJUE9SVF9TVVNQRU5ELCA1
-MDAwKSkNCg0KSW5kZW50YXRpb246ICAgICAgICAgICAgICAgICAgICAgICBeICAgICAgICAgICAg
-Xg0KDQo+ICsJCQllaGNpX2VycihlaGNpLCAidGltZW91dCB3YWl0aW5nIGZvciBTVVNQRU5EXG4i
-KTsNCj4gKw0KPiArCQlpZiAoY2ktPnBsYXRkYXRhLT5mbGFncyAmIENJX0hEUkNfSU1YX0lTX0hT
-SUMpIHsNCj4gKwkJCWlmIChjaS0+cGxhdGRhdGEtPm5vdGlmeV9ldmVudCkNCj4gKwkJCQljaS0+
-cGxhdGRhdGEtPm5vdGlmeV9ldmVudA0KPiArCQkJCQkoY2ksIENJX0hEUkNfSU1YX0hTSUNfU1VT
-UEVORF9FVkVOVCk7DQoNCkkgdGhpbmsgdGhlIG9wZW4gcGFyZW50aGVzZXMgYW5kIHRoZSBmaXJz
-dCBwYXJhbWV0ZXIgc2hvdWxkIGJlIG9uIHRoZSANCmZpcnN0IGxpbmU6DQoNCgkJCQljaS0+cGxh
-dGRhdGEtPm5vdGlmeV9ldmVudChjaSwNCgkJCQkJQ0lfSERSQ19JTVhfSFNJQ19TVVNQRU5EX0VW
-RU5UKTsNCg0KPiArDQo+ICsJCQl0ZW1wID0gZWhjaV9yZWFkbChlaGNpLCBzdGF0dXNfcmVnKTsN
-Cj4gKwkJCXRlbXAgJj0gfihQT1JUX1dLRElTQ19FIHwgUE9SVF9XS0NPTk5fRSk7DQo+ICsJCQll
-aGNpX3dyaXRlbChlaGNpLCB0ZW1wLCBzdGF0dXNfcmVnKTsNCj4gKwkJfQ0KPiArDQo+ICsJCXNl
-dF9iaXQoKHdJbmRleCAmIDB4ZmYpIC0gMSwgJmVoY2ktPnN1c3BlbmRlZF9wb3J0cyk7DQo+ICsJ
-CWdvdG8gZG9uZTsNCj4gKwl9DQo+ICsNCj4gKwkvKg0KPiArCSAqIEFmdGVyIHJlc3VtZSBoYXMg
-ZmluaXNoZWQsIGl0IG5lZWRzIGRvIHNvbWUgcG9zdCByZXN1bWUNCj4gKwkgKiBvcGVyYXRpb24g
-Zm9yIHNvbWUgU29Dcy4NCj4gKwkgKi8NCj4gKwllbHNlIGlmICh0eXBlUmVxID09IENsZWFyUG9y
-dEZlYXR1cmUgJiYNCj4gKwkJCQkJd1ZhbHVlID09IFVTQl9QT1JUX0ZFQVRfQ19TVVNQRU5EKSB7
-DQoNCkluZGVudGF0aW9uOiAgICAgXiAgICAgICAgICAgICAgICAgICAgICBeDQoNCj4gKw0KPiAr
-CQkvKiBNYWtlIHN1cmUgdGhlIHJlc3VtZSBoYXMgZmluaXNoZWQsIGl0IHNob3VsZCBiZSBmaW5p
-c2hlZCAqLw0KPiArCQlpZiAoZWhjaV9oYW5kc2hha2UoZWhjaSwgc3RhdHVzX3JlZywgUE9SVF9S
-RVNVTUUsIDAsIDI1MDAwKSkNCj4gKwkJCWVoY2lfZXJyKGVoY2ksICJ0aW1lb3V0IHdhaXRpbmcg
-Zm9yIHJlc3VtZVxuIik7DQo+ICsJfQ0KPiArDQo+ICsJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgm
-ZWhjaS0+bG9jaywgZmxhZ3MpOw0KPiArDQo+ICsJLyogSGFuZGxlIHRoZSBodWIgY29udHJvbCBl
-dmVudHMgaGVyZSAqLw0KPiArCXJldHVybiBlaGNpX2h1Yl9jb250cm9sKGhjZCwgdHlwZVJlcSwg
-d1ZhbHVlLCB3SW5kZXgsIGJ1Ziwgd0xlbmd0aCk7DQo+ICtkb25lOg0KPiArCXNwaW5fdW5sb2Nr
-X2lycXJlc3RvcmUoJmVoY2ktPmxvY2ssIGZsYWdzKTsNCj4gKwlyZXR1cm4gcmV0dmFsOw0KPiAr
-fQ0KPiAgIHN0YXRpYyBpbnQgY2lfZWhjaV9idXNfc3VzcGVuZChzdHJ1Y3QgdXNiX2hjZCAqaGNk
-KQ0KPiAgIHsNCj4gICAJc3RydWN0IGVoY2lfaGNkICplaGNpID0gaGNkX3RvX2VoY2koaGNkKTsN
-Cj4gQEAgLTI5OCw0ICszNzMsNSBAQCB2b2lkIGNpX2hkcmNfaG9zdF9kcml2ZXJfaW5pdCh2b2lk
-KQ0KPiAgIAllaGNpX2luaXRfZHJpdmVyKCZjaV9laGNpX2hjX2RyaXZlciwgJmVoY2lfY2lfb3Zl
-cnJpZGVzKTsNCj4gICAJb3JpZ19idXNfc3VzcGVuZCA9IGNpX2VoY2lfaGNfZHJpdmVyLmJ1c19z
-dXNwZW5kOw0KPiAgIAljaV9laGNpX2hjX2RyaXZlci5idXNfc3VzcGVuZCA9IGNpX2VoY2lfYnVz
-X3N1c3BlbmQ7DQo+ICsJY2lfZWhjaV9oY19kcml2ZXIuaHViX2NvbnRyb2wgPSBjaV9laGNpX2h1
-Yl9jb250cm9sOw0KPiAgIH0NCj4g
+The chipidea controller has some special requirements during
+suspend/resume, override common ehci->hub_control to implement
+it.
+
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+---
+ drivers/usb/chipidea/host.c | 76 +++++++++++++++++++++++++++++++++++++++++=
+++++
+ 1 file changed, 76 insertions(+)
+
+diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+index 028a3574266a..aa4756dab487 100644
+--- a/drivers/usb/chipidea/host.c
++++ b/drivers/usb/chipidea/host.c
+@@ -220,6 +220,81 @@ void ci_hdrc_host_destroy(struct ci_hdrc *ci)
+ 		host_stop(ci);
+ }
+=20
++/* The below code is based on tegra ehci driver */
++static int ci_ehci_hub_control(
++	struct usb_hcd	*hcd,
++	u16		typeReq,
++	u16		wValue,
++	u16		wIndex,
++	char		*buf,
++	u16		wLength
++)
++{
++	struct ehci_hcd	*ehci =3D hcd_to_ehci(hcd);
++	u32 __iomem	*status_reg;
++	u32		temp;
++	unsigned long	flags;
++	int		retval =3D 0;
++	struct device *dev =3D hcd->self.controller;
++	struct ci_hdrc *ci =3D dev_get_drvdata(dev);
++
++	status_reg =3D &ehci->regs->port_status[(wIndex & 0xff) - 1];
++
++	spin_lock_irqsave(&ehci->lock, flags);
++
++	if (typeReq =3D=3D SetPortFeature && wValue =3D=3D USB_PORT_FEAT_SUSPEND)=
+ {
++		temp =3D ehci_readl(ehci, status_reg);
++		if ((temp & PORT_PE) =3D=3D 0 || (temp & PORT_RESET) !=3D 0) {
++			retval =3D -EPIPE;
++			goto done;
++		}
++
++		temp &=3D ~(PORT_RWC_BITS | PORT_WKCONN_E);
++		temp |=3D PORT_WKDISC_E | PORT_WKOC_E;
++		ehci_writel(ehci, temp | PORT_SUSPEND, status_reg);
++
++		/*
++		 * If a transaction is in progress, there may be a delay in
++		 * suspending the port. Poll until the port is suspended.
++		 */
++		if (ehci_handshake(ehci, status_reg, PORT_SUSPEND,
++						PORT_SUSPEND, 5000))
++			ehci_err(ehci, "timeout waiting for SUSPEND\n");
++
++		if (ci->platdata->flags & CI_HDRC_IMX_IS_HSIC) {
++			if (ci->platdata->notify_event)
++				ci->platdata->notify_event
++					(ci, CI_HDRC_IMX_HSIC_SUSPEND_EVENT);
++
++			temp =3D ehci_readl(ehci, status_reg);
++			temp &=3D ~(PORT_WKDISC_E | PORT_WKCONN_E);
++			ehci_writel(ehci, temp, status_reg);
++		}
++
++		set_bit((wIndex & 0xff) - 1, &ehci->suspended_ports);
++		goto done;
++	}
++
++	/*
++	 * After resume has finished, it needs do some post resume
++	 * operation for some SoCs.
++	 */
++	else if (typeReq =3D=3D ClearPortFeature &&
++					wValue =3D=3D USB_PORT_FEAT_C_SUSPEND) {
++
++		/* Make sure the resume has finished, it should be finished */
++		if (ehci_handshake(ehci, status_reg, PORT_RESUME, 0, 25000))
++			ehci_err(ehci, "timeout waiting for resume\n");
++	}
++
++	spin_unlock_irqrestore(&ehci->lock, flags);
++
++	/* Handle the hub control events here */
++	return ehci_hub_control(hcd, typeReq, wValue, wIndex, buf, wLength);
++done:
++	spin_unlock_irqrestore(&ehci->lock, flags);
++	return retval;
++}
+ static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
+ {
+ 	struct ehci_hcd *ehci =3D hcd_to_ehci(hcd);
+@@ -298,4 +373,5 @@ void ci_hdrc_host_driver_init(void)
+ 	ehci_init_driver(&ci_ehci_hc_driver, &ehci_ci_overrides);
+ 	orig_bus_suspend =3D ci_ehci_hc_driver.bus_suspend;
+ 	ci_ehci_hc_driver.bus_suspend =3D ci_ehci_bus_suspend;
++	ci_ehci_hc_driver.hub_control =3D ci_ehci_hub_control;
+ }
+--=20
+2.14.1
