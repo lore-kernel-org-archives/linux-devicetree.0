@@ -1,463 +1,57 @@
-From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v10 4/4] media: add Rockchip VPU JPEG encoder driver
-Date: Tue, 27 Nov 2018 19:09:59 +0900
-Message-ID: <CAAFQd5Ds=NGfXeEQDkF40-ZPisLah_Bc2j4s4oRp75dKxGr05g@mail.gmail.com>
-References: <20181121195907.23752-1-ezequiel@collabora.com>
- <CAAFQd5ArFG0hU6MgcyLd+_UOP3+T_U-aw2FXv6sE7fGqVCVGqw@mail.gmail.com>
- <c36f68773cec5aca0509d8af5172812110df73a5.camel@collabora.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v18 0/5] iommu/arm-smmu: Add runtime pm/sleep support
+Date: Tue, 27 Nov 2018 15:41:40 +0530
+Message-ID: <20181127101145.7682-1-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <c36f68773cec5aca0509d8af5172812110df73a5.camel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 23, 2018 at 5:24 AM Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
-[snip]
-> > > +const struct rockchip_vpu_variant rk3288_vpu_variant = {
-> > > +       .enc_offset = 0x0,
-> > > +       .enc_fmts = rk3288_vpu_enc_fmts,
-> > > +       .num_enc_fmts = ARRAY_SIZE(rk3288_vpu_enc_fmts),
-> > > +       .codec_ops = rk3288_vpu_codec_ops,
-> > > +       .codec = RK_VPU_CODEC_JPEG,
-> > > +       .vepu_irq = rk3288_vepu_irq,
-> > > +       .init = rk3288_vpu_hw_init,
-> > > +       .clk_names = {"aclk", "hclk"},
-> >
-> > nit: Spaces inside the brackets.
-> >
->
-> You mean you this style is prefered?
->
-> .clk_names = { "aclk", "hclk" },
->
-> Grepping thru sources, it seems there is no convention on this,
-> so it's your call.
->
+Looks like this is going to be the final respin before this support
+finally lands.
+The change isn't much from v17_resend series [1] besides taking
+Thor's change [2] for clocks.
 
-I thought this is a part of CodingStyle, but it doesn't seem to
-mention it. I personally prefer to have the spaces there, but we can
-go with your personal preferences here. :)
-[snip]
-> > > +        * by .vidioc_s_fmt_vid_cap_mplane() callback
-> > > +        */
-> > > +       reg = VEPU_REG_IN_IMG_CTRL_ROW_LEN(pix_fmt->width);
-> > > +       vepu_write_relaxed(vpu, reg, VEPU_REG_INPUT_LUMA_INFO);
-> > > +
-> > > +       reg = VEPU_REG_IN_IMG_CTRL_OVRFLR_D4(0) |
-> > > +             VEPU_REG_IN_IMG_CTRL_OVRFLB(0);
-> >
-> > For reference, this register controls the input crop, as the offset
-> > from the right/bottom within the last macroblock. The offset from the
-> > right must be divided by 4 and so the crop must be aligned to 4 pixels
-> > horizontally.
-> >
->
-> OK, I'll add a comment.
->
+Changes since v17:
+ - Addressing Will's comment to embed Thor's change [2] for pulling
+   clocks information from device tree. This is done by squashing
+   Thor's change [2] in v17's 1/5 patch [3].
+ - Another minor change is addition of runtime pm hooks to
+   arm_smmu_iova_to_phys_hard().
 
-I meant to refer to the comment Hans had, about input images of
-resolutions that are not of full macroblocks, so the comment would
-probably go to the TODO file together with Hans's note.
-[snip]
-> > > +static inline u32 vepu_read(struct rockchip_vpu_dev *vpu, u32 reg)
-> > > +{
-> > > +       u32 val = readl(vpu->enc_base + reg);
-> > > +
-> > > +       vpu_debug(6, "MARK: get reg[%03d]: %08x\n", reg / 4, val);
-> >
-> > I remember seeing this "MARK" in the logs when debugging. I don't
-> > think it's desired here.
-> >
-> > How about printing "%s(%03d) = %08x\n" for reads and "%s(%08x,
-> > %03d)\n" for writes?
+Previous version of this patch series is @ [1].
+Also refer to [4] for change logs for previous versions.
 
-Actually, I missed the 0x prefix for hex values and possibly also
-changing the decimal register offset to hexadecimal:
-"%s(0x%04x) = 0x%08x\n"
+[1] https://lore.kernel.org/patchwork/cover/1013166/
+[2] https://lore.kernel.org/patchwork/patch/996143/
+[3] https://lore.kernel.org/patchwork/patch/1013167/
+[4] https://lore.kernel.org/patchwork/cover/979429/
 
-> >
->
-> Makes sense, but why a %s string format?
->
+Sricharan R (3):
+  iommu/arm-smmu: Add pm_runtime/sleep ops
+  iommu/arm-smmu: Invoke pm_runtime during probe, add/remove device
+  iommu/arm-smmu: Add the device_link between masters and smmu
 
-For __func__, so that we end up with messages like:
+Vivek Gautam (2):
+  dt-bindings: arm-smmu: Add bindings for qcom,smmu-v2
+  iommu/arm-smmu: Add support for qcom,smmu-v2 variant
 
-vepu_write(0x12345678, 0x0123)
-vepu_read(0x0123) = 0x12345678
+ .../devicetree/bindings/iommu/arm,smmu.txt         |  39 ++++
+ drivers/iommu/arm-smmu.c                           | 212 +++++++++++++++++++--
+ 2 files changed, 239 insertions(+), 12 deletions(-)
 
-[snip]
-> > > +       dst->field = src->field;
-> > > +       dst->timecode = src->timecode;
-> >
-> > Time code is only valid if the buffer has V4L2_BUF_FLAG_TIMECODE set.
-> > I don't think there is any use case for mem2mem devices for it.
-> >
->
-> Right. Other mem2mem drivers seem to pass thru the timecode like this:
->
->         if (in_vb->flags & V4L2_BUF_FLAG_TIMECODE)
->                 out_vb->timecode = in_vb->timecode;
->
-> It fails a v4l2-compliance test without it.
->
-
-Hmm, I don't see the spec defining it to be copied by a mem2mem device
-and I wonder if it's actually of any use for those. Hans, could you
-comment on this?
-
-> > > +       dst->vb2_buf.timestamp = src->vb2_buf.timestamp;
-> > > +       dst->flags &= ~V4L2_BUF_FLAG_TSTAMP_SRC_MASK;
-> > > +       dst->flags |= src->flags & V4L2_BUF_FLAG_TSTAMP_SRC_MASK;
-> >
-> > Not V4L2_BUF_FLAG_TIMESTAMP_COPY?
-> >
->
-> I believe v4l core should take care of it in __fill_v4l2_buffer,
-> as timestamp_flags is set when the vb2_queue structs are init'ed.
->
-
-Ah, okay, I confused this with V4L2_BUF_FLAG_TIMESTAMP_MASK.
-
-> > > +
-> > > +       if (bytesused) {
-> >
-> > Should we check whether bytesused (read from hardware) is not bigger
-> > than size of the buffer?
-> >
->
-> Good catch, makes sense. OTOH, if bytesused is bigger than the dst
-> buffer, it is also bigger than the bounce buffer. I guess the IOMMU
-> helps prevents nasty issues?
->
-
-Yes, in that case it would likely trigger an IOMMU fault.
-
-Another thing is whether there isn't some special bit somewhere high
-in the register we're reading from that we're not aware of, which
-would make the bytesused bigger than the buffer.
-
-[snip]
-> > > +void rockchip_vpu_irq_done(struct rockchip_vpu_dev *vpu,
-> > > +                          unsigned int bytesused,
-> > > +                          enum vb2_buffer_state result)
-> > > +{
-> > > +       struct rockchip_vpu_ctx *ctx =
-> > > +               (struct rockchip_vpu_ctx *)v4l2_m2m_get_curr_priv(vpu->m2m_dev);
-> >
-> > I don't think we need to cast from void *?
-> >
->
-> Right.
->
-> > > +
-> > > +       /* Atomic watchdog cancel. The worker may still be
-> > > +        * running after calling this.
-> > > +        */
-> >
-> > Wrong multi-line comment style.
-> >
->
-> Right.
->
-> > > +       cancel_delayed_work(&vpu->watchdog_work);
-> > > +       if (ctx)
-> > > +               rockchip_vpu_job_finish(vpu, ctx, bytesused, result);
-> > > +}
-> > > +
-> > > +void rockchip_vpu_watchdog(struct work_struct *work)
-> > > +{
-> > > +       struct rockchip_vpu_dev *vpu;
-> > > +       struct rockchip_vpu_ctx *ctx;
-> > > +
-> > > +       vpu = container_of(to_delayed_work(work),
-> > > +                          struct rockchip_vpu_dev, watchdog_work);
-> > > +       ctx = (struct rockchip_vpu_ctx *)v4l2_m2m_get_curr_priv(vpu->m2m_dev);
-> >
-> > Ditto.
-> >
-> > > +       if (ctx) {
-> >
-> > Is !ctx possible here?
-> >
->
-> Yes, it's possible because cancel_delayed_work doesn't flush
-> the worker, so the top-half competes with the watchdog delayed
-> worker.
->
-
-Ah, right. What prevents a race between rockchip_vpu_irq_done() and
-rockchip_vpu_watchdog() and both running rockchip_job_finish() on the
-same context?
-
-Perhaps in rockchip_vpu_irq_done() we could check the return value of
-cancel_delayed_work() and if it's false, just give up and let the
-watchdog handle the current ctx?
-
-> > > +               vpu_err("frame processing timed out!\n");
-> > > +               ctx->codec_ops->reset(ctx);
-> > > +               rockchip_vpu_job_finish(vpu, ctx, 0, VB2_BUF_STATE_ERROR);
-> > > +       }
-> > > +}
-> > > +
-> > > +static void device_run(void *priv)
-> > > +{
-> > > +       struct rockchip_vpu_ctx *ctx = priv;
-> > > +
-> > > +       pm_runtime_get_sync(ctx->dev->dev);
-> >
-> > Shouldn't we handle errors here?
-> >
->
-> Yes, definitely.
->
-> > > +
-> > > +       ctx->codec_ops->run(ctx);
-> > > +}
-> > > +
-> > > +static struct v4l2_m2m_ops vpu_m2m_ops = {
-> > > +       .device_run = device_run,
-> > > +};
-> > > +
-> > > +static int
-> > > +enc_queue_init(void *priv, struct vb2_queue *src_vq, struct vb2_queue *dst_vq)
-> > > +{
-> > > +       struct rockchip_vpu_ctx *ctx = priv;
-> > > +       int ret;
-> > > +
-> > > +       src_vq->type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
-> > > +       src_vq->io_modes = VB2_MMAP | VB2_DMABUF;
-> > > +       src_vq->drv_priv = ctx;
-> > > +       src_vq->ops = &rockchip_vpu_enc_queue_ops;
-> > > +       src_vq->mem_ops = &vb2_dma_contig_memops;
-> > > +       src_vq->dma_attrs = DMA_ATTR_ALLOC_SINGLE_PAGES |
-> > > +                           DMA_ATTR_NO_KERNEL_MAPPING;
-> > > +       src_vq->buf_struct_size = sizeof(struct v4l2_m2m_buffer);
-> > > +       src_vq->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_COPY;
-> > > +       src_vq->lock = &ctx->dev->vpu_mutex;
-> > > +       src_vq->dev = ctx->dev->v4l2_dev.dev;
-> > > +
-> > > +       ret = vb2_queue_init(src_vq);
-> > > +       if (ret)
-> > > +               return ret;
-> > > +
-> > > +       /* The CAPTURE queue doesn't need dma memory,
-> > > +        * as the CPU needs to create the JPEG frames,
-> > > +        * from the hardware-produced JPEG payload.
-> > > +        *
-> > > +        * For the DMA destination buffer, we use
-> > > +        * a bounce buffer.
-> >
-> > Alternatively we could use a normal buffer and memmove() the payload
-> > to make space for the headers, as we used to do in the VP8 encoder on
-> > rk3288. Either is fine and perhaps we could even do away without that
-> > with some smart trick. Something for the TODO list I guess.
-> >
->
-> Perhaps we can re-discuss this in IRC? Anyway, it's a nice optimization
-> to keep in mind.
->
-
-Yeah, just some ideas for the follow up patches.
-
-[snip]
-> > > +static int __maybe_unused rockchip_vpu_runtime_resume(struct device *dev)
-> > > +{
-> > > +       struct rockchip_vpu_dev *vpu = dev_get_drvdata(dev);
-> > > +
-> > > +       return clk_bulk_enable(vpu->variant->num_clocks, vpu->clocks);
-> >
-> > Something for the TODO list: We should disable the clocks as soon as
-> > the hardware becomes idle, because it's super cheap and the delay
-> > between the idle and autosuspend is quite significant.
-> >
->
-> You mean getting rid of autosuspend, right?
->
-
-Not exactly. The autosuspend is to avoid too frequent *power*
-transitions, which could be costly. Actually, even if we get rid of
-it, the genpd code will still throttle runtime suspends based on the
-PM domain suspend/resume latency it measured.
-
-The only way to control the clocks without throttling is managing them
-explicitly, just before the call to pm_runtime_put_autosuspend() or
-after pm_runtime_get_sync().
-
-[snip]
-> > > +static int
-> > > +vidioc_try_fmt_cap_mplane(struct file *file, void *priv, struct v4l2_format *f)
-> > > +{
-> > > +       struct rockchip_vpu_ctx *ctx = fh_to_ctx(priv);
-> > > +       struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
-> > > +       const struct rockchip_vpu_fmt *fmt;
-> > > +
-> > > +       vpu_debug(4, "%c%c%c%c\n",
-> > > +                 (pix_mp->pixelformat & 0x7f),
-> > > +                 (pix_mp->pixelformat >> 8) & 0x7f,
-> > > +                 (pix_mp->pixelformat >> 16) & 0x7f,
-> > > +                 (pix_mp->pixelformat >> 24) & 0x7f);
-> > > +
-> > > +       fmt = rockchip_vpu_find_format(ctx, pix_mp->pixelformat);
-> > > +       if (!fmt) {
-> > > +               fmt = rockchip_vpu_get_default_fmt(ctx, true);
-> > > +               f->fmt.pix.pixelformat = fmt->fourcc;
-> > > +       }
-> > > +
-> > > +       pix_mp->num_planes = 1;
-> > > +       pix_mp->field = V4L2_FIELD_NONE;
-> > > +       pix_mp->width = clamp(pix_mp->width,
-> > > +                             fmt->frmsize.min_width,
-> > > +                             fmt->frmsize.max_width);
-> > > +       pix_mp->height = clamp(pix_mp->height,
-> > > +                              fmt->frmsize.min_height,
-> > > +                              fmt->frmsize.max_height);
-> >
-> > Don't we also need to align to macroblocks?
-> >
-> > > +       pix_mp->plane_fmt[0].sizeimage = fmt->header_size +
-> > > +               pix_mp->width * pix_mp->height * fmt->max_depth;
-> >
-> > I suppose this is a hint for the potential maximum compressed size?
-> >
->
-> Indeed.
->
-> > I don't like the idea of enforcing one particular size on the user
-> > space. Or even a minimum size. For example, the user may know that the
-> > image is well-compressible and want to use smaller buffers. Or may
-> > want to try with a smaller buffer first and reallocate to a bigger one
-> > if it turns out to be too small.
-> >
-> > I'd just leave this kind of logic to the user space.
-> >
->
-> Right. However, it seems to me we still need to set a value,
-> and return it to userspace when userspace doesn't provide any.
->
-
-There was another discussion about this wrt the venus driver and the
-conclusion is to specify this for codecs as follows:
-
-    For compressed formats (and only those!) userspace can set sizeimage to a
-    proposed value. The driver may either ignore it and just set its own value,
-    or modify it to satisfy HW requirements. The returned value will be used
-    by REQBUFS when it allocates buffers.
-
-So I guess the driver could reset it to default if it doesn't sound
-reasonable (0?).
-
-[snip]
-> > > +void rockchip_vpu_enc_reset_src_fmt(struct rockchip_vpu_dev *vpu,
-> > > +                                   struct rockchip_vpu_ctx *ctx)
-> > > +{
-> > > +       struct v4l2_pix_format_mplane *fmt = &ctx->src_fmt;
-> > > +       unsigned int width, height;
-> > > +
-> > > +       ctx->vpu_src_fmt = rockchip_vpu_get_default_fmt(ctx, false);
-> > > +
-> > > +       memset(fmt, 0, sizeof(*fmt));
-> > > +
-> > > +       width = clamp(fmt->width, ctx->vpu_dst_fmt->frmsize.min_width,
-> > > +                     ctx->vpu_dst_fmt->frmsize.max_width);
-> > > +       height = clamp(fmt->height, ctx->vpu_dst_fmt->frmsize.min_height,
-> > > +                      ctx->vpu_dst_fmt->frmsize.max_height);
-> > > +       fmt->field = V4L2_FIELD_NONE;
-> > > +       fmt->colorspace = ctx->colorspace;
-> > > +       fmt->ycbcr_enc = ctx->ycbcr_enc;
-> > > +       fmt->xfer_func = ctx->xfer_func;
-> > > +       fmt->quantization = ctx->quantization;
-> >
-> > Ditto.
-> >
-> > > +
-> > > +       fill_pixfmt_mp(fmt, ctx->vpu_src_fmt->fourcc, width, height);
-> > > +}
-> >
-> > These two don't seem to be very encoder-specific. In particular,
-> > rockchip_vpu_enc_reset_dst_fmt() is not even used by the encoder after
-> > the context is initialized, but it's going to be used by the decoder
-> > to reset the raw format when the coded format changes (similarly to
-> > rockchip_vpu_enc_reset_src_fmt() for encoder).
-> >
->
-> Yeah, I'm aware there might be some commong logic here, but since
-> the driver is an encoder only for now, I decided to let it be.
->
-> However, I've made sure the driver is ready to support
-> decoding and other variants, with fairly simple changes.
->
-
-Fair enough.
-
-[snip]
-> > > +void rockchip_vpu_jpeg_render(struct rockchip_vpu_jpeg_ctx *ctx)
-> >
-> > nit: I'm not sure "render" is the right word here. Maybe it's just me,
-> > but I associate it with rendering of visible graphics. Perhaps
-> > "assemble" would be better?
-> >
->
-> I don't think render is gfx only, but.. it might be confusing, so
-> how about "rockchip_vpu_jpeg_header_prepare" or "rockchip_vpu_jpeg_header_set" ?
->
-> This function might be moved to lib/jpeg.c, so getting the name
-> right is not that much of a nitpick.
->
-
-rockchip_vpu_jpeg_header_assemble()? (My preference for "assemble"
-comes from building the header from the pieces as the function does.)
-
-> > > +{
-> > > +       char *buf = ctx->buffer;
-> > > +
-> > > +       memcpy(buf, rockchip_vpu_jpeg_header,
-> > > +              sizeof(rockchip_vpu_jpeg_header));
-> > > +
-> > > +       buf[HEIGHT_OFF + 0] = ctx->height >> 8;
-> > > +       buf[HEIGHT_OFF + 1] = ctx->height;
-> > > +       buf[WIDTH_OFF + 0] = ctx->width >> 8;
-> > > +       buf[WIDTH_OFF + 1] = ctx->width;
-> > > +
-> > > +       memcpy(buf + HUFF_LUMA_DC_OFF, luma_dc_table, sizeof(luma_dc_table));
-> > > +       memcpy(buf + HUFF_LUMA_AC_OFF, luma_ac_table, sizeof(luma_ac_table));
-> > > +       memcpy(buf + HUFF_CHROMA_DC_OFF, chroma_dc_table,
-> > > +              sizeof(chroma_dc_table));
-> > > +       memcpy(buf + HUFF_CHROMA_AC_OFF, chroma_ac_table,
-> > > +              sizeof(chroma_ac_table));
-> > > +
-> > > +       jpeg_set_quality(buf, ctx->quality);
-> > > +}
-> > > diff --git a/drivers/staging/media/rockchip/vpu/rockchip_vpu_jpeg.h b/drivers/staging/media/rockchip/vpu/rockchip_vpu_jpeg.h
-> > > new file mode 100644
-> > > index 000000000000..ebe34071851e
-> > > --- /dev/null
-> > > +++ b/drivers/staging/media/rockchip/vpu/rockchip_vpu_jpeg.h
-> > > @@ -0,0 +1,14 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0+ */
-> > > +
-> > > +#define JPEG_HEADER_SIZE       601
-> >
-> > Could we just use ARRAY_SIZE() instead?
-> >
-> >
->
-> We can, just not sure how easily.
->
-> Thanks a lot for the review!
-
-You're welcome.
-
-Best regards,
-Tomasz
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
