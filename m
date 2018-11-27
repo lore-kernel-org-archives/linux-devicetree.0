@@ -1,175 +1,72 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 01/17] dt-bindings: remoteproc: Add TI PRUSS bindings
-Date: Tue, 27 Nov 2018 17:15:15 +0200
-Message-ID: <5BFD5F83.3070807@ti.com>
-References: <1542886753-17625-1-git-send-email-rogerq@ti.com>
- <1542886753-17625-2-git-send-email-rogerq@ti.com>
- <a4fe952b-9065-d91b-4c07-984ec3f5b276@lechnology.com>
+From: Govind Singh <govinds@codeaurora.org>
+Subject: [PATCH v2] arm64: dts: qcom: qcs404: Add WCN3990 WLAN module device node
+Date: Tue, 27 Nov 2018 20:47:16 +0530
+Message-ID: <20181127151716.31992-1-govinds@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a4fe952b-9065-d91b-4c07-984ec3f5b276@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, tony@atomide.com
-Cc: robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: andy.gross@linaro.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Add device node for the ath10k SNOC platform driver probe
+and add resources required for WCN3990 on qcs404 soc.
+Optional clock and regulator controls are not yet available in
+upstream, hence add them once available.
 
-On 26/11/18 23:14, David Lechner wrote:
-> On 11/22/18 5:38 AM, Roger Quadros wrote:
->> From: Suman Anna <s-anna@ti.com>
->>
->> This patch adds the bindings for the Programmable Real-Time Unit
->> and Industrial Communication Subsystem (PRU-ICSS) present on various
->> TI SoCs. The IP is present on multiple TI SoC architecture families
->> including the OMAP architecture SoCs such as AM33xx, AM437x and
->> AM57xx; and on a Keystone 2 architecture based 66AK2G SoC. It is
->> also present on the Davinci based OMAPL138 SoCs and K3 architecture
->> based AM65x SoCs as well (not covered for now). Details have been
->> added to include bindings for various core sub-modules like the PRU
->> Cores, the PRUSS Interrupt Controller, and other sub-modules used
->> for Industrial Communication purposes, covering the MDIO, MII_RT
->> and the IEP sub-modules. The binding mostly uses standard DT
->> properties.
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->>   .../devicetree/bindings/soc/ti/ti,pruss.txt        | 360 +++++++++++++++++++++
->>   1 file changed, 360 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
->>
->> diff --git a/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt b/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
->> new file mode 100644
->> index 0000000..24fedad
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
-> 
-> ...
-> 
->> +
->> +PRU-ICSS SoC Bus Parent Node
->> +=============================
->> +This node represents the integration of the PRU-ICSS IP into a SoC, and is
->> +required for all SoCs. The PRU-ICSS parent nodes need to be defined as child
->> +nodes of this node.
->> +
->> +Required Properties:
->> +--------------------
->> +- compatible     : should be one of,
->> +                       "ti,am3356-pruss-soc-bus" for AM335x family of SoCs
->> +                       "ti,am4376-pruss-soc-bus" for AM437x family of SoCs
->> +                       "ti,am5728-pruss-soc-bus" for AM57xx family of SoCs
->> +                       "ti,k2g-pruss-soc-bus" for 66AK2G family of SoCs
->> +- reg            : address and size of the PRUSS CFG sub-module registers
->> +                   dictating the interconnect configuration
-> 
-> I haven't looked into Tony's suggestion of using ti-sysc yet, so this may be a
-> moot point, but how will this work with AM18xx that does not have a PRUSS CFG
-> register? It seems to me that reg here should be the address and size of the
-> entire PRUSS IP block and the CFG register should be a syscon node or something
-> like that.
+Signed-off-by: Govind Singh <govinds@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi |  4 ++++
+ arch/arm64/boot/dts/qcom/qcs404.dtsi     | 20 ++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
 
-The reg property description is incorrect in the patch. It should have been
-
-reg		: address of SYSCFG register.
-
-The SYSCFG register is used to enable and reset the module.
-
-But based on Tony's suggestion this wrapper driver will change to ti,sysc for
-OMAP like SoCs.
-
-For AM18xx it could be a simple wrapper driver that just populates the children?
-
-> 
->> +- #address-cells : should be 1
->> +- #size-cells    : should be 1
->> +- ranges         : standard ranges definition
->> +
-> 
-> ...
-> 
->> +
->> +PRUSS INTC Child Node
->> +======================
->> +Each PRUSS has a single interrupt controller instance that is common to both
->> +the PRU cores. Each interrupt controller can detect 64 input events which are
->> +then mapped to 10 possible output interrupts through two levels of mapping. The
->> +input events can be triggered by either the PRUs and/or various other PRUSS
->> +internal and external peripherals. The first 2 output interrupts are fed
->> +exclusively to the internal PRU cores, with the remaining 8 connected to
->> +external interrupt controllers including the MPU.
-> 
-> FYI, on AM18xx, there is a PRUSSEVTSEL bit in CFGCHIP3[3] (already a syscon node
-> in the device tree) that allows selecting one of two groups of 32 input events
-> out of this group of 64. This is perhaps getting out of the scope of this patch
-> series, but I just want to make sure we end up with something that can be easily
-> extended for this case. For example, I was thinking that this binding could be
-> modified so that #interrupt-cells could be 1 or 2. If it is 2, then the first
-> cell specifies the PRUSSEVTSEL value and the second value is the event number.
-> 
-
-this is da850.dtsi correct?
-
-As PRUSSEVTSEL is not SYSEVENT specific but applies to all the SYSEVENTs at a time.
-I don't think interrupt-cells is the right place to specify this.
-
-Can it be set in DT in the board file? But this can't change once booted so maybe restrictive.
-
-If runtime change is required it can only be done before a PRU boots.
-
-How about providing this info in the resource table and/or application DT node?
-
-> 
->> +
->> +Required Properties:
->> +--------------------
->> +- compatible           : should be one of,
->> +                             "ti,am3356-pruss-intc" for AM335x family of SoCs
->> +                             "ti,am4376-pruss-intc" for AM437x family of SoCs
->> +                             "ti,am5728-pruss-intc" for AM57xx family of SoCs
->> +                             "ti,k2g-pruss-intc" for 66AK2G family of SoCs
->> +- reg                  : base address and size for the PRUSS INTC sub-module
->> +- reg-names            : should contain the string "intc"
->> +- interrupt-controller : mark this node as an interrupt controller
->> +- #interrupt-cells     : should be 1. Client users shall use the PRU System
->> +                         event number (the interrupt source that the client
->> +                         is interested in) as the value of the interrupts
->> +                         property in their node
->> +
->> +
->> +PRU Child Node
->> +===============
->> +Each PRUSS has dual PRU cores, each represented by a PRU child node. Each node
->> +can optionally be rendered inactive by using the standard DT string property,
->> +"status".
->> +
->> +Required Properties:
->> +--------------------
->> +- compatible     : should be
->> +                       "ti,am3356-pru" for AM335x family of SoCs
->> +                       "ti,am4376-pru" for AM437x family of SoCs
->> +                       "ti,am5728-pru" for AM57xx family of SoCs
->> +                       "ti,k2g-pru" for 66AK2G family of SoCs
->> +- reg            : base address and size for each of the 3 sub-module address
->> +                   spaces as mentioned in reg-names, and in the same order as
->> +                   the reg-names
->> +- reg-names      : should contain each of the following 3 names, the binding is
->> +                   agnostic of the order of these reg-names
->> +                       "iram" for Instruction RAM,
->> +                       "control" for the CTRL sub-module registers,
->> +                       "debug" for the Debug sub-module registers,
->> +- firmware-name  : should contain the name of the default firmware image file
->> +                   located on the firmware search path
-> 
-> What does the default firmware do? It doesn't seem like this could be useful
-> since the PRU doesn't have a definite purpose.
-
-There is no such firmware. I think I'll drop "default" from the description.
-
-cheers,
--roger
+diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+index 0767389c68c1..36905524b0ff 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+@@ -310,6 +310,10 @@
+ 	status = "okay";
+ };
+ 
++&wifi {
++	status = "okay";
++};
++
+ /* PINCTRL - additions to nodes defined in qcs404.dtsi */
+ 
+ &blsp1_i2c1_default {
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index 9ca4f061ecc5..b3b98745046f 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -886,6 +886,26 @@
+ 			status = "disabled";
+ 		};
+ 
++		wifi: wifi@a000000 {
++			compatible = "qcom,wcn3990-wifi";
++			reg = <0xa000000 0x800000>;
++			reg-names = "membase";
++			memory-region = <&wlan_msa_mem>;
++			interrupts = <GIC_SPI 277 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 278 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 279 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 280 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 284 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
+ 		intc: interrupt-controller@b000000 {
+ 			compatible = "qcom,msm-qgic2";
+ 			interrupt-controller;
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
