@@ -1,22 +1,27 @@
-Return-Path: <SRS0=pBn+=OG=pengutronix.de=mfe@kernel.org>
-Date: Tue, 27 Nov 2018 14:47:18 +0100
-From: Marco Felsch <m.felsch@pengutronix.de>
+Return-Path: <SRS0=g9Sy=OG=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36481 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727026AbeK1Ah2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 27 Nov 2018 19:37:28 -0500
+Message-ID: <1543325967.8212.1.camel@pengutronix.de>
 Subject: Re: [PATCH v3 6/6] media: mt9m111: allow to setup pixclk polarity
-Message-ID: <20181127134718.7rtlkbsha3jj3qhj@pengutronix.de>
-References: <20181127100253.30845-1-m.felsch@pengutronix.de>
- <20181127100253.30845-7-m.felsch@pengutronix.de>
- <20181127131948.maqwyqmlnwowf4ng@paasikivi.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Date: Tue, 27 Nov 2018 14:39:27 +0100
 In-Reply-To: <20181127131948.maqwyqmlnwowf4ng@paasikivi.fi.intel.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, enrico.scholz@sigma-chemnitz.de, devicetree@vger.kernel.org, akinobu.mita@gmail.com, linux-media@vger.kernel.org, graphics@pengutronix.de, Michael Grzeschik <m.grzeschik@pengutronix.de>
+References: <20181127100253.30845-1-m.felsch@pengutronix.de>
+         <20181127100253.30845-7-m.felsch@pengutronix.de>
+         <20181127131948.maqwyqmlnwowf4ng@paasikivi.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, Marco Felsch <m.felsch@pengutronix.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Michael Grzeschik <m.grzeschik@pengutronix.de>, enrico.scholz@sigma-chemnitz.de, akinobu.mita@gmail.com, robh+dt@kernel.org, mchehab@kernel.org, graphics@pengutronix.de, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
 Hi Sakari,
 
-On 18-11-27 15:19, Sakari Ailus wrote:
+On Tue, 2018-11-27 at 15:19 +0200, Sakari Ailus wrote:
 > Hi Marco,
 > 
 > On Tue, Nov 27, 2018 at 11:02:53AM +0100, Marco Felsch wrote:
@@ -65,6 +70,13 @@ On 18-11-27 15:19, Sakari Ailus wrote:
 > -	if (IS_ERR(bus_cfg)) {
 > -		ret = PTR_ERR(bus_cfg);
 > +	ret = v4l2_fwnode_endpoint_alloc_parse(np, &bus_cfg);
+
+Should that be
+
++	ret = v4l2_fwnode_endpoint_parse(np, &bus_cfg);
+
+intead?
+
 > +	if (ret)
 >  		goto out_put_fw;
 > -	}
@@ -81,13 +93,5 @@ On 18-11-27 15:19, Sakari Ailus wrote:
 > 
 > Please base on current media tree master on the next time. Thanks.
 
-Sorry, thanks for the inline fix :)
-
-Kind regards,
-Marco
-
-> -- 
-> Kind regards,
-> 
-> Sakari Ailus
-> sakari.ailus@linux.intel.com
+regards
+Philipp
