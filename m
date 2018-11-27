@@ -1,34 +1,54 @@
-Return-Path: <SRS0=jbWM=N7=linaro.org=shawn.guo@kernel.org>
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: [PATCH 1/2] dt-bindings: pinctrl: fix qcom-pmic-gpio for pms405
-Date: Tue, 20 Nov 2018 13:45:21 +0800
-Message-Id: <20181120054522.18698-1-shawn.guo@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>
+Return-Path: <SRS0=g9Sy=OG=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr40059.outbound.protection.outlook.com ([40.107.4.59]:59447
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728729AbeK0Uiw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 27 Nov 2018 15:38:52 -0500
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH 2/4] dt-bindings: rtc: add binding doc for i.MX system
+ controller RTC driver
+Date: Tue, 27 Nov 2018 09:41:29 +0000
+Message-ID: <1543311334-8807-3-git-send-email-Anson.Huang@nxp.com>
+References: <1543311334-8807-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1543311334-8807-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Rather than gpio1-gpio11 for pms405, there are 12 GPIOs for pms405.
-But gpio1, gpio9 and gpio10 are not available.  Fix the bindings doc
-to make it correct for pms405.
+NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+system controller, the system controller is in charge of system
+power, clock and secure RTC etc. management, Linux kernel
+has to communicate with system controller via MU (message unit)
+IPC to do RTC operation, this patch adds binding doc for i.MX
+system controller RTC driver.
 
-Fixes: ed80f6eb799a ("dt-bindings: pinctrl: qcom-pmic-gpio: Add pms405 support")
-Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-index ab4000eab07d..759aa1732e48 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-@@ -92,7 +92,7 @@ to specify in a pin configuration subnode:
- 		    gpio1-gpio26 for pm8998
- 		    gpio1-gpio22 for pma8084
- 		    gpio1-gpio10 for pmi8994
--		    gpio1-gpio11 for pms405
-+		    gpio1-gpio12 for pms405 (holes on gpio1, gpio9 and gpio10)
- 
- - function:
- 	Usage: required
--- 
-2.18.0
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt b/Documen=
+tation/devicetree/bindings/rtc/rtc-imx-sc.txt
+new file mode 100644
+index 0000000..d6e2353
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
+@@ -0,0 +1,10 @@
++* NXP i.MX System Controller Real Time Clock
++
++Required properties:
++- compatible: should be "nxp,imx8qxp-sc-rtc";
++
++Example:
++
++rtc: rtc {
++	compatible =3D "nxp,imx8qxp-sc-rtc";
++};
+--=20
+2.7.4
