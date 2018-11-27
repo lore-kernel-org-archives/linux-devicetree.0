@@ -1,96 +1,44 @@
-Return-Path: <SRS0=2X+C=OH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44857 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728922AbeK2DoE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 28 Nov 2018 22:44:04 -0500
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH] dt-bindings: tegra186-gpio: Add Tegra186 specific prefix
-Date: Wed, 28 Nov 2018 17:41:44 +0100
-Message-Id: <20181128164144.13240-1-thierry.reding@gmail.com>
+Return-Path: <SRS0=pBn+=OG=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v3 2/6] media: mt9m111: add streaming check to set_fmt
+Date: Tue, 27 Nov 2018 11:02:49 +0100
+Message-Id: <20181127100253.30845-3-m.felsch@pengutronix.de>
+In-Reply-To: <20181127100253.30845-1-m.felsch@pengutronix.de>
+References: <20181127100253.30845-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: enrico.scholz@sigma-chemnitz.de, devicetree@vger.kernel.org, akinobu.mita@gmail.com, linux-media@vger.kernel.org, graphics@pengutronix.de, Michael Grzeschik <m.grzeschik@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Thierry Reding <treding@nvidia.com>
+From: Michael Grzeschik <m.grzeschik@pengutronix.de>
 
-Subsequent generations of Tegra, such as Tegra194, contain a completely
-different set of GPIOs. In order to clarify that the Tegra186 defines
-are indeed specific to Tegra186, change the prefix from TEGRA_ to
-TEGRA186_.
+Currently set_fmt don't care about the streaming status, so the format
+can be changed during streaming. This can lead into wrong behaviours.
 
-Note that for now we need to keep the old definitions in place to avoid
-breaking compilation in files that use this header. Once all users have
-been converted to use the new defines, the old ones can be removed.
+Check if the device is already streaming and return -EBUSY to avoid
+wrong behaviours.
 
-Also note that this is only a naming change and doesn't affect device
-tree ABI.
-
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- include/dt-bindings/gpio/tegra186-gpio.h | 41 ++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ drivers/media/i2c/mt9m111.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/dt-bindings/gpio/tegra186-gpio.h b/include/dt-bindings/gpio/tegra186-gpio.h
-index 463ad398fe3e..cabc5712e745 100644
---- a/include/dt-bindings/gpio/tegra186-gpio.h
-+++ b/include/dt-bindings/gpio/tegra186-gpio.h
-@@ -14,6 +14,34 @@
- #include <dt-bindings/gpio/gpio.h>
+diff --git a/drivers/media/i2c/mt9m111.c b/drivers/media/i2c/mt9m111.c
+index 03559669de9f..9b0a3689fa98 100644
+--- a/drivers/media/i2c/mt9m111.c
++++ b/drivers/media/i2c/mt9m111.c
+@@ -563,6 +563,9 @@ static int mt9m111_set_fmt(struct v4l2_subdev *sd,
+ 	bool bayer;
+ 	int ret;
  
- /* GPIOs implemented by main GPIO controller */
-+#define TEGRA186_MAIN_GPIO_PORT_A 0
-+#define TEGRA186_MAIN_GPIO_PORT_B 1
-+#define TEGRA186_MAIN_GPIO_PORT_C 2
-+#define TEGRA186_MAIN_GPIO_PORT_D 3
-+#define TEGRA186_MAIN_GPIO_PORT_E 4
-+#define TEGRA186_MAIN_GPIO_PORT_F 5
-+#define TEGRA186_MAIN_GPIO_PORT_G 6
-+#define TEGRA186_MAIN_GPIO_PORT_H 7
-+#define TEGRA186_MAIN_GPIO_PORT_I 8
-+#define TEGRA186_MAIN_GPIO_PORT_J 9
-+#define TEGRA186_MAIN_GPIO_PORT_K 10
-+#define TEGRA186_MAIN_GPIO_PORT_L 11
-+#define TEGRA186_MAIN_GPIO_PORT_M 12
-+#define TEGRA186_MAIN_GPIO_PORT_N 13
-+#define TEGRA186_MAIN_GPIO_PORT_O 14
-+#define TEGRA186_MAIN_GPIO_PORT_P 15
-+#define TEGRA186_MAIN_GPIO_PORT_Q 16
-+#define TEGRA186_MAIN_GPIO_PORT_R 17
-+#define TEGRA186_MAIN_GPIO_PORT_T 18
-+#define TEGRA186_MAIN_GPIO_PORT_X 19
-+#define TEGRA186_MAIN_GPIO_PORT_Y 20
-+#define TEGRA186_MAIN_GPIO_PORT_BB 21
-+#define TEGRA186_MAIN_GPIO_PORT_CC 22
++	if (mt9m111->is_streaming)
++		return -EBUSY;
 +
-+#define TEGRA186_MAIN_GPIO(port, offset) \
-+	((TEGRA186_MAIN_GPIO_PORT_##port * 8) + offset)
-+
-+/* need to keep these for backwards-compatibility */
- #define TEGRA_MAIN_GPIO_PORT_A 0
- #define TEGRA_MAIN_GPIO_PORT_B 1
- #define TEGRA_MAIN_GPIO_PORT_C 2
-@@ -42,6 +70,19 @@
- 	((TEGRA_MAIN_GPIO_PORT_##port * 8) + offset)
+ 	if (format->pad)
+ 		return -EINVAL;
  
- /* GPIOs implemented by AON GPIO controller */
-+#define TEGRA186_AON_GPIO_PORT_S 0
-+#define TEGRA186_AON_GPIO_PORT_U 1
-+#define TEGRA186_AON_GPIO_PORT_V 2
-+#define TEGRA186_AON_GPIO_PORT_W 3
-+#define TEGRA186_AON_GPIO_PORT_Z 4
-+#define TEGRA186_AON_GPIO_PORT_AA 5
-+#define TEGRA186_AON_GPIO_PORT_EE 6
-+#define TEGRA186_AON_GPIO_PORT_FF 7
-+
-+#define TEGRA186_AON_GPIO(port, offset) \
-+	((TEGRA186_AON_GPIO_PORT_##port * 8) + offset)
-+
-+/* need to keep these for backwards-compatibility */
- #define TEGRA_AON_GPIO_PORT_S 0
- #define TEGRA_AON_GPIO_PORT_U 1
- #define TEGRA_AON_GPIO_PORT_V 2
 -- 
 2.19.1
