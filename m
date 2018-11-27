@@ -1,40 +1,29 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH/RFC] net: phy: device: Don't deassert the reset when
- register and probe
-Date: Tue, 27 Nov 2018 17:44:11 +0100
-Message-ID: <20181127164411.GB19601@lunn.ch>
-References: <1543320947-32763-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH 0/3] mfd: syscon: Add optional clock support needed on stm32
+Date: Tue, 27 Nov 2018 17:48:14 +0100
+Message-ID: <1543337297-21873-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1543320947-32763-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, robh+dt@kernel.org, alexandre.torgue@st.com
+Cc: mcoquelin.stm32@gmail.com, arnd@arndb.de, mark.rutland@arm.com, gabriel.fernandez@st.com, fabrice.gasnier@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 27, 2018 at 12:18:20PM +0000, Yoshihiro Shimoda wrote:
-> Some PHY device needs edge signal of the reset, but the previous code
-> is impossible to achieve it like following:
-> 
->  1) Kernel boots by using initramfs.
->  --> No open the nic, so the provious code deasserts the reset by
->      phy_device_register() and phy_probe().
->  2) Kernel enters the suspend.
->  --> So, keep the reset signal as deassert.
->  --> On R-Car Salvator-XS board, unfortunately, the board power is
->      turned off.
->  3) Kernel returns from suspend.
->  4) ifconfig eth0 up
->  --> Then, since edge signal of the reset doesn't happen,
->      it cannot link up.
+STM32 syscfg registers are accessed using syscon. It needs syscfg clock
+to be enabled while accessing registers.
+This adds support for optional clock on syscon, and the relevant clock
+in stm32mp157 device tree.
 
-Hi Yoshihiro
+Fabrice Gasnier (3):
+  dt-bindings: mfd: syscon: Add optional clock support
+  mfd: syscon: Add optional clock support
+  ARM: dts: stm32: Add clock on stm32mp157c syscfg
 
-It sounds like you should be adding code to the suspend/resume
-handling of phylib, so that it toggle the reset on resume. You cannot
-just delete code like you proposed, it is going to break devices. But
-adding code should be O.K.
+ Documentation/devicetree/bindings/mfd/syscon.txt |  1 +
+ arch/arm/boot/dts/stm32mp157c.dtsi               |  1 +
+ drivers/mfd/syscon.c                             | 19 +++++++++++++++++++
+ 3 files changed, 21 insertions(+)
 
-       Andrew
+-- 
+1.9.1
