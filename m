@@ -1,99 +1,31 @@
 Return-Path: <robherring2@gmail.com>
+Date: Mon, 26 Nov 2018 19:49:35 -0600
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 01/10] dt-bindings: usb: add support for dwc3 controller
- on HiSilicon SoCs
-Message-ID: <20181112160241.GA14074@bogus>
-References: <20181027095820.40056-1-chenyu56@huawei.com>
- <20181027095820.40056-2-chenyu56@huawei.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: watchdog: Add Qualcomm PM8916
+ watchdog
+Message-ID: <20181127014935.GA7099@bogus>
+References: <1542962678-13697-1-git-send-email-loic.poulain@linaro.org>
+ <1542962678-13697-2-git-send-email-loic.poulain@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20181027095820.40056-2-chenyu56@huawei.com>
-Date: Mon, 12 Nov 2018 10:02:47 -0600
-To: Yu Chen <chenyu56@huawei.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>
+In-Reply-To: <1542962678-13697-2-git-send-email-loic.poulain@linaro.org>
+To: Loic Poulain <loic.poulain@linaro.org>
+Cc: wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, andy.gross@linaro.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Sat, Oct 27, 2018 at 05:58:11PM +0800, Yu Chen wrote:
-> This patch adds binding descriptions to support the dwc3 controller
-> on HiSilicon SoCs and boards like the HiKey960.
+On Fri, 23 Nov 2018 09:44:37 +0100, Loic Poulain wrote:
+> Document support for the Watchdog Timer (WDT) Controller in the
+> Qualcomm PM8916 PMIC module.
 > 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: John Stultz <john.stultz@linaro.org>
-> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
 > ---
->  .../devicetree/bindings/usb/dwc3-hisi.txt          | 53 ++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+>  v2: Add interrupts and timeout-sec props
+>  v3: Reword props summary
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3-hisi.txt b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
-> new file mode 100644
-> index 000000000000..e715e7b1c324
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
-> @@ -0,0 +1,53 @@
-> +HiSilicon DWC3 USB SoC controller
-> +
-> +This file documents the parameters for the dwc3-hisi driver.
-> +
-> +Required properties:
-> +- compatible:	should be "hisilicon,hi3660-dwc3"
-> +- clocks:	A list of phandle + clock-specifier pairs for the
-> +		clocks listed in clock-names
-> +- clock-names:	Specify clock names
-> +- resets:	list of phandle and reset specifier pairs.
-> +
-> +Sub-nodes:
-> +The dwc3 core should be added as subnode to HiSilicon DWC3 as shown in the
-> +example below. The DT binding details of dwc3 can be found in:
-> +Documentation/devicetree/bindings/usb/dwc3.txt
-
-If you only have clocks and resets and no glue registers, then you 
-don't need a sub-node. Just make the controller one node.
-
-> +
-> +Example:
-> +	usb3: hisi_dwc3 {
-> +		compatible = "hisilicon,hi3660-dwc3";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
-> +			 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-> +		clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
-> +		assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-> +		assigned-clock-rates = <229000000>;
-> +		resets = <&crg_rst 0x90 8>,
-> +			 <&crg_rst 0x90 7>,
-> +			 <&crg_rst 0x90 6>,
-> +			 <&crg_rst 0x90 5>;
-> +
-> +		dwc3: dwc3@ff100000 {
-
-usb@...
-
-> +			compatible = "snps,dwc3";
-> +			reg = <0x0 0xff100000 0x0 0x100000>;
-> +			interrupts = <0 159 4>, <0 161 4>;
-> +			phys = <&usb_phy>;
-> +			phy-names = "usb3-phy";
-> +			dr_mode = "otg";
-> +			maximum-speed = "super-speed";
-> +			phy_type = "utmi";
-> +			snps,dis-del-phy-power-chg-quirk;
-> +			snps,lfps_filter_quirk;
-> +			snps,dis_u2_susphy_quirk;
-> +			snps,dis_u3_susphy_quirk;
-> +			snps,tx_de_emphasis_quirk;
-> +			snps,tx_de_emphasis = <1>;
-> +			snps,dis_enblslpm_quirk;
-> +			snps,gctl-reset-quirk;
-> +			extcon = <&hisi_hikey_usb>;
-> +		};
-> +	};
-> -- 
-> 2.15.0-rc2
+>  .../bindings/watchdog/qcom,pm8916-wdt.txt          | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/qcom,pm8916-wdt.txt
 > 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
