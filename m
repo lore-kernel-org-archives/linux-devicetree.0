@@ -1,332 +1,280 @@
-Return-Path: <SRS0=VUrL=OJ=cadence.com=jank@kernel.org>
-From: Janek Kotas <jank@cadence.com>
-Subject: Re: [PATCH 2/2] clk: Add Fixed MMIO clock driver
-Date: Fri, 30 Nov 2018 08:52:16 +0000
-Message-ID: <76BDCB72-CC05-41D1-93A0-6D71CBD97651@global.cadence.com>
-References: <D3711617-229C-4FA5-9E73-A7A3C025893B@global.cadence.com>
- <154223394933.88331.14659021245427374668@swboyd.mtv.corp.google.com>
- <CAE55F09-516A-4737-8F74-07BBA3AF5737@global.cadence.com>
- <154353057449.88331.10017415440005548379@swboyd.mtv.corp.google.com>
-In-Reply-To: 
- <154353057449.88331.10017415440005548379@swboyd.mtv.corp.google.com>
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_76BDCB72CC0541D193A06D71CBD97651globalcadencecom_"
+Return-Path: <SRS0=pBn+=OG=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v3 3/6] media: mt9m111: add support to select formats and fps for {Q,SXGA}
+Date: Tue, 27 Nov 2018 11:02:50 +0100
+Message-Id: <20181127100253.30845-4-m.felsch@pengutronix.de>
+In-Reply-To: <20181127100253.30845-1-m.felsch@pengutronix.de>
+References: <20181127100253.30845-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: enrico.scholz@sigma-chemnitz.de, devicetree@vger.kernel.org, akinobu.mita@gmail.com, linux-media@vger.kernel.org, graphics@pengutronix.de, Michael Grzeschik <m.grzeschik@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
---_000_76BDCB72CC0541D193A06D71CBD97651globalcadencecom_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Michael Grzeschik <m.grzeschik@pengutronix.de>
 
-DQoNCk9uIDI5IE5vdiAyMDE4LCBhdCAyMzoyOSwgU3RlcGhlbiBCb3lkIDxzYm95ZEBrZXJuZWwu
-b3JnPG1haWx0bzpzYm95ZEBrZXJuZWwub3JnPj4gd3JvdGU6DQoNClF1b3RpbmcgSmFuZWsgS290
-YXMgKDIwMTgtMTEtMTUgMDA6Mjc6MTUpDQpUaGFua3MgZm9yIHRoZSByZXBseS4NCkphbg0KDQpP
-biAxNCBOb3YgMjAxOCwgYXQgMjM6MTksIFN0ZXBoZW4gQm95ZCA8c2JveWRAa2VybmVsLm9yZzxt
-YWlsdG86c2JveWRAa2VybmVsLm9yZz4+IHdyb3RlOg0KDQpRdW90aW5nIEphbmVrIEtvdGFzICgy
-MDE4LTExLTE0IDA3OjI0OjM5KQ0KVGhpcyBwYXRjaCBhZGRzIGEgZHJpdmVyIGZvciBGaXhlZCBN
-TUlPIGNsb2NrLg0KVGhlIGRyaXZlciByZWFkcyBhIGNsb2NrIGZyZXF1ZW5jeSB2YWx1ZSBmcm9t
-IGEgc2luZ2xlIDMyLWJpdCBtZW1vcnkNCm1hcHBlZCByZWdpc3RlciBhbmQgcmVnaXN0ZXJzIGl0
-IGFzIGEgZml4ZWQgcmF0ZSBjbG9jay4NCg0KSXQgY2FuIGJlIGVuYWJsZWQgd2l0aCBDT01NT05f
-Q0xLX0ZJWEVEX01NSU8gS2NvbmZpZyBvcHRpb24uDQoNClNpZ25lZC1vZmYtYnk6IEphbiBLb3Rh
-cyA8amFua0BjYWRlbmNlLmNvbTxtYWlsdG86amFua0BjYWRlbmNlLmNvbT4+DQoNClNvdW5kcyBs
-aWtlIGEgZmluZSBpZGVhLiBFeGNlcHQgSSBjYW4gc2VlIGhvdyBpdCB3aWxsIGJlIGFidXNlZCBp
-ZiB0aGVyZQ0KYXJlIGEgaGFuZGZ1bCBvZiB0aGVzZSBmaXhlZCByYXRlICJjbGtzIiBzb21ld2hl
-cmUgaW4gbWVtb3J5IHRoYXQgYWxsDQpnZXQgcG9wdWxhdGVkLg0KDQpEbyB5b3UgcmVhbGx5IGhh
-dmUgYSBmaXhlZCByYXRlIGNsayBpbiBoYXJkd2FyZSB0aGF0IGV4cG9zZXMgYSBzaW5nbGUNCnJl
-Z2lzdGVyLCBvciBkbyB5b3UgaGF2ZSBhIHNldCBvZiB0aGVtIHRoYXQgc29tZSBmaXJtd2FyZSBp
-cyBwb3B1bGF0aW5nDQppbnRvIGFuIEkvTyBtZW1vcnkgc3BhY2UgdGhhdCB3ZSBjYW4gcmVhZCB0
-aGUgZml4ZWQgcmF0ZXMgZnJvbT8gSWYgaXQncw0KdGhlIGxhdHRlciwgSSB3b25kZXIgd2h5IHdl
-IGNhbid0IGp1c3QgaGF2ZSB0aGUgZmlybXdhcmUgcG9wdWxhdGUgdGhlDQpmaXhlZCByYXRlIGNs
-a3MgaW50byBEVCBpdHNlbGY/DQoNClRoZSBmaXJzdCBjYXNlLg0KV2UgaGF2ZSBhIHNpbmdsZSBy
-ZWdpc3RlciBpbiBhIGZpeGVkIGxvY2F0aW9uIHdoaWNoIGNvbnRhaW5zDQp0aGUgZnJlcXVlbmN5
-IG9mIHRoZSBtYWluIHN5c3RlbSBjbG9jay4NClRoaXMgYWxsb3dzIHVzIHRvIHVzZSB0aGUgc2Ft
-ZSBpbWFnZSBpbiBlbXVsYXRpb24sIEZQR0ENCmFuZCBzaW11bGF0aW9uIHdpdGhvdXQgYW55IGNo
-YW5nZXMuDQpXZSB1c3VhbGx5IGRvbuKAmXQgdXNlIGEgZnVsbCBib290bG9hZGVyLCBqdXN0IGEg
-c2ltcGxlIHdyYXBwZXIsDQp3aGljaCBpbml0aWFsaXplcyB0aGUgbmVjZXNzYXJ5IHN0dWZmIGFu
-ZCBqdW1wcyB0byB0aGUga2VybmVsLg0KDQpTbyB0aGUgaGFyZHdhcmUgdGVhbSBoYXMgZGVjaWRl
-ZCB0byB0aHJvdyBhIGZyZXF1ZW5jeSByZWdpc3RlciBpbiB0aGVyZT8NCkFscmlnaHQhIERvZXMg
-dGhhdCBmaXhlZCByYXRlIGNsayBnZW5lcmF0ZSBpdHMgZml4ZWQgcmF0ZSBmcm9tIHNvbWUNCm90
-aGVyIGNsaz8gSeKAmW0gY3VyaW91cyBpZiB0aGlzIGZpeGVkIHJhdGUgY2xrIGhhcyBhIHBhcmVu
-dCBzb3VyY2UuDQoNCkl0IGRlcGVuZHMsIGluIHNpbXVsYXRpb24gYW5kIGVtdWxhdGlvbiB3ZSBj
-YW4ganVzdCBnZW5lcmF0ZQ0KYSBjbG9jayBzb3VyY2Ugd2l0aCBhIGdpdmVuIGZyZXF1ZW5jeS4N
-Ck9uIEZQR0EgaXTigJlzIHVzdWFsbHkgYW4gZXh0ZXJuYWwgb3NjaWxsYXRvciwgc29tZXRpbWVz
-IGEgZml4ZWQgUExMLg0KVGhlIGRyaXZlciBpcyBub3QgaW50ZW5kZWQgdG8gYmUgdXNlZCBpbiBm
-dWxsLCBjb21wbGV4IFNvQ3MuDQoNCkl0IHdvdWxkIGFsc28gYmUgZ29vZCB0byBtYWtlIHN1cmUg
-dGhhdCBhbnkgY2xrcyByZWdpc3RlcmVkIGZyb20gdGhpcw0KZHJpdmVyIGNhbid0IGJlIHBvcHVs
-YXRlZCBmcm9tIHJlZ2lvbnMgb2YgbWVtb3J5IGxpa2UgRERSLiBDYW4geW91DQpjb25maXJtPyBJ
-IHRoaW5rIGl0IHdpbGwgZmFpbCwgYnV0IGl0IHdvdWxkIGJlIHdvcnRoIGNoZWNraW5nDQoNCg0K
-DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvY2xrLWZpeGVkLW1taW8uYyBiL2RyaXZlcnMvY2xr
-L2Nsay1maXhlZC1tbWlvLmMNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAwMDAw
-Li5iYmNhZGFiMzQ1DQotLS0gL2Rldi9udWxsDQorKysgYi9kcml2ZXJzL2Nsay9jbGstZml4ZWQt
-bW1pby5jDQoNCg0KK30NCisNCitDTEtfT0ZfREVDTEFSRShmaXhlZF9tbWlvX2NsaywgImZpeGVk
-LW1taW8tY2xvY2siLCBvZl9maXhlZF9tbWlvX2Nsa19zZXR1cCk7DQoNCkFueSByZWFzb24gd2h5
-IHRoaXMgY2FuJ3QgYmUgYSBwbGF0Zm9ybSBkcml2ZXI/IEl0IHdvdWxkIG1ha2UgdGhpcyBtdWNo
-DQpsZXNzIERUIHNwZWNpZmljIGFuZCB1c2FibGUgb24gb3RoZXIgZmlybXdhcmVzL3BsYXRmb3Jt
-cyBpZiB3ZSB1c2VkIGENCnBsYXRmb3JtIGRyaXZlciBoZXJlLg0KDQoNCkkgbG9va2VkIGF0IHRo
-ZSBmaXhlZCByYXRlIGNsb2NrIGFzIGEgcmVmZXJlbmNlLCBidXQgSSBjYW4gY2hhbmdlIGl0IHRv
-DQphIHBsYXRmb3JtIGRyaXZlciwgaWYgdGhhdOKAmXMgcHJlZmVycmVkLg0KDQoNClllcyBJJ2Qg
-cHJlZmVyIGEgcGxhdGZvcm0gZHJpdmVyIHVubGVzcyB0aGVyZSdzIHNvbWUgcmVhc29uIGl0IGNh
-bid0IGJlDQpkb25lLiBXZSBtYXkgbmVlZCB0byBoYXZlIGJvdGggaW4gY2FzZSB0aGlzIG5lZWRz
-IHRvIGJlIHBvcHVsYXRlZCB2ZXJ5DQplYXJseSwgYnV0IGlmIHRoYXQgaXNu4oCZdCB0aGUgY2Fz
-ZSB0aGVuIGp1c3QgYSBwbGF0Zm9ybSBkcml2ZXIgZm9yIG5vdy4NCg0KSSBwbGF5ZWQgd2l0aCBp
-dCBhIGJpdCwgYW5kIGl0IGFuZCBpdCBsb29rcyBsaWtlIEkgbmVlZCBib3RoLg0KV2UgdXNlIHRo
-aXMgY2xvY2sgc291cmNlIHdpdGggc29tZSBvZiBvdXIgY29tcG9uZW50cywNCmFuZCBmb3Igc29t
-ZSBvZiB0aGVtIHRoZSBwbGF0Zm9ybSBkcml2ZXIgd2FzIGluaXRpYWxpemVkIHRvbyBsYXRlLg0K
-DQo=
+This patch implements the framerate selection using the skipping and
+readout power-modi features. The power-modi cut the framerate by half
+and each context has an independent selection bit. The same applies to
+the 2x skipping feature.
 
---_000_76BDCB72CC0541D193A06D71CBD97651globalcadencecom_
-Content-Type: text/html; charset="utf-8"
-Content-ID: <B42C89791FDE5E46B37664A051D78B9A@namprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 
-PGh0bWw+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0i
-dGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjwvaGVhZD4NCjxib2R5IHN0eWxlPSJ3b3JkLXdy
-YXA6IGJyZWFrLXdvcmQ7IC13ZWJraXQtbmJzcC1tb2RlOiBzcGFjZTsgbGluZS1icmVhazogYWZ0
-ZXItd2hpdGUtc3BhY2U7IiBjbGFzcz0iIj4NCjxiciBjbGFzcz0iIj4NCjxkaXYgY2xhc3M9IiI+
-PGJyIGNsYXNzPSIiPg0KPC9kaXY+DQo8ZGl2Pg0KPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSIgY2xh
-c3M9IiI+DQo8ZGl2IGNsYXNzPSIiPk9uIDI5IE5vdiAyMDE4LCBhdCAyMzoyOSwgU3RlcGhlbiBC
-b3lkICZsdDs8YSBocmVmPSJtYWlsdG86c2JveWRAa2VybmVsLm9yZyIgY2xhc3M9IiI+c2JveWRA
-a2VybmVsLm9yZzwvYT4mZ3Q7IHdyb3RlOjwvZGl2Pg0KPGRpdiBjbGFzcz0iIj48YnIgc3R5bGU9
-ImNhcmV0LWNvbG9yOiByZ2IoMCwgMCwgMCk7IGZvbnQtZmFtaWx5OiBIZWx2ZXRpY2E7IGZvbnQt
-c2l6ZTogMTNweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQtY2Fwczogbm9ybWFs
-OyBmb250LXdlaWdodDogbm9ybWFsOyBsZXR0ZXItc3BhY2luZzogbm9ybWFsOyB0ZXh0LWFsaWdu
-OiBzdGFydDsgdGV4dC1pbmRlbnQ6IDBweDsgdGV4dC10cmFuc2Zvcm06IG5vbmU7IHdoaXRlLXNw
-YWNlOiBub3JtYWw7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRo
-OiAwcHg7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsiIGNsYXNzPSIiPg0KPHNwYW4gc3R5bGU9ImNh
-cmV0LWNvbG9yOiByZ2IoMCwgMCwgMCk7IGZvbnQtZmFtaWx5OiBIZWx2ZXRpY2E7IGZvbnQtc2l6
-ZTogMTNweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQtY2Fwczogbm9ybWFsOyBm
-b250LXdlaWdodDogbm9ybWFsOyBsZXR0ZXItc3BhY2luZzogbm9ybWFsOyB0ZXh0LWFsaWduOiBz
-dGFydDsgdGV4dC1pbmRlbnQ6IDBweDsgdGV4dC10cmFuc2Zvcm06IG5vbmU7IHdoaXRlLXNwYWNl
-OiBub3JtYWw7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAw
-cHg7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsgZmxvYXQ6IG5vbmU7IGRpc3BsYXk6IGlubGluZSAh
-aW1wb3J0YW50OyIgY2xhc3M9IiI+UXVvdGluZw0KIEphbmVrIEtvdGFzICgyMDE4LTExLTE1IDAw
-OjI3OjE1KTwvc3Bhbj48YnIgc3R5bGU9ImNhcmV0LWNvbG9yOiByZ2IoMCwgMCwgMCk7IGZvbnQt
-ZmFtaWx5OiBIZWx2ZXRpY2E7IGZvbnQtc2l6ZTogMTNweDsgZm9udC1zdHlsZTogbm9ybWFsOyBm
-b250LXZhcmlhbnQtY2Fwczogbm9ybWFsOyBmb250LXdlaWdodDogbm9ybWFsOyBsZXR0ZXItc3Bh
-Y2luZzogbm9ybWFsOyB0ZXh0LWFsaWduOiBzdGFydDsgdGV4dC1pbmRlbnQ6IDBweDsgdGV4dC10
-cmFuc2Zvcm06IG5vbmU7IHdoaXRlLXNwYWNlOiBub3JtYWw7IHdvcmQtc3BhY2luZzogMHB4OyAt
-d2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsiIGNs
-YXNzPSIiPg0KPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSIgc3R5bGU9ImZvbnQtZmFtaWx5OiBIZWx2
-ZXRpY2E7IGZvbnQtc2l6ZTogMTNweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQt
-Y2Fwczogbm9ybWFsOyBmb250LXdlaWdodDogbm9ybWFsOyBsZXR0ZXItc3BhY2luZzogbm9ybWFs
-OyBvcnBoYW5zOiBhdXRvOyB0ZXh0LWFsaWduOiBzdGFydDsgdGV4dC1pbmRlbnQ6IDBweDsgdGV4
-dC10cmFuc2Zvcm06IG5vbmU7IHdoaXRlLXNwYWNlOiBub3JtYWw7IHdpZG93czogYXV0bzsgd29y
-ZC1zcGFjaW5nOiAwcHg7IC13ZWJraXQtdGV4dC1zaXplLWFkanVzdDogYXV0bzsgLXdlYmtpdC10
-ZXh0LXN0cm9rZS13aWR0aDogMHB4OyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IiBjbGFzcz0iIj4N
-ClRoYW5rcyBmb3IgdGhlIHJlcGx5LjxiciBjbGFzcz0iIj4NCkphbjxiciBjbGFzcz0iIj4NCjxi
-ciBjbGFzcz0iIj4NCjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiIGNsYXNzPSIiPk9uIDE0IE5vdiAy
-MDE4LCBhdCAyMzoxOSwgU3RlcGhlbiBCb3lkICZsdDs8YSBocmVmPSJtYWlsdG86c2JveWRAa2Vy
-bmVsLm9yZyIgY2xhc3M9IiI+c2JveWRAa2VybmVsLm9yZzwvYT4mZ3Q7IHdyb3RlOjxiciBjbGFz
-cz0iIj4NCjxiciBjbGFzcz0iIj4NClF1b3RpbmcgSmFuZWsgS290YXMgKDIwMTgtMTEtMTQgMDc6
-MjQ6MzkpPGJyIGNsYXNzPSIiPg0KPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSIgY2xhc3M9IiI+VGhp
-cyBwYXRjaCBhZGRzIGEgZHJpdmVyIGZvciBGaXhlZCBNTUlPIGNsb2NrLjxiciBjbGFzcz0iIj4N
-ClRoZSBkcml2ZXIgcmVhZHMgYSBjbG9jayBmcmVxdWVuY3kgdmFsdWUgZnJvbSBhIHNpbmdsZSAz
-Mi1iaXQgbWVtb3J5PGJyIGNsYXNzPSIiPg0KbWFwcGVkIHJlZ2lzdGVyIGFuZCByZWdpc3RlcnMg
-aXQgYXMgYSBmaXhlZCByYXRlIGNsb2NrLjxiciBjbGFzcz0iIj4NCjxiciBjbGFzcz0iIj4NCkl0
-IGNhbiBiZSBlbmFibGVkIHdpdGggQ09NTU9OX0NMS19GSVhFRF9NTUlPIEtjb25maWcgb3B0aW9u
-LjxiciBjbGFzcz0iIj4NCjxiciBjbGFzcz0iIj4NClNpZ25lZC1vZmYtYnk6IEphbiBLb3RhcyAm
-bHQ7PGEgaHJlZj0ibWFpbHRvOmphbmtAY2FkZW5jZS5jb20iIGNsYXNzPSIiPmphbmtAY2FkZW5j
-ZS5jb208L2E+Jmd0OzxiciBjbGFzcz0iIj4NCjwvYmxvY2txdW90ZT4NCjxiciBjbGFzcz0iIj4N
-ClNvdW5kcyBsaWtlIGEgZmluZSBpZGVhLiBFeGNlcHQgSSBjYW4gc2VlIGhvdyBpdCB3aWxsIGJl
-IGFidXNlZCBpZiB0aGVyZTxiciBjbGFzcz0iIj4NCmFyZSBhIGhhbmRmdWwgb2YgdGhlc2UgZml4
-ZWQgcmF0ZSAmcXVvdDtjbGtzJnF1b3Q7IHNvbWV3aGVyZSBpbiBtZW1vcnkgdGhhdCBhbGw8YnIg
-Y2xhc3M9IiI+DQpnZXQgcG9wdWxhdGVkLjxzcGFuIGNsYXNzPSJBcHBsZS1jb252ZXJ0ZWQtc3Bh
-Y2UiPiZuYnNwOzwvc3Bhbj48YnIgY2xhc3M9IiI+DQo8YnIgY2xhc3M9IiI+DQpEbyB5b3UgcmVh
-bGx5IGhhdmUgYSBmaXhlZCByYXRlIGNsayBpbiBoYXJkd2FyZSB0aGF0IGV4cG9zZXMgYSBzaW5n
-bGU8YnIgY2xhc3M9IiI+DQpyZWdpc3Rlciwgb3IgZG8geW91IGhhdmUgYSBzZXQgb2YgdGhlbSB0
-aGF0IHNvbWUgZmlybXdhcmUgaXMgcG9wdWxhdGluZzxiciBjbGFzcz0iIj4NCmludG8gYW4gSS9P
-IG1lbW9yeSBzcGFjZSB0aGF0IHdlIGNhbiByZWFkIHRoZSBmaXhlZCByYXRlcyBmcm9tPyBJZiBp
-dCdzPGJyIGNsYXNzPSIiPg0KdGhlIGxhdHRlciwgSSB3b25kZXIgd2h5IHdlIGNhbid0IGp1c3Qg
-aGF2ZSB0aGUgZmlybXdhcmUgcG9wdWxhdGUgdGhlPGJyIGNsYXNzPSIiPg0KZml4ZWQgcmF0ZSBj
-bGtzIGludG8gRFQgaXRzZWxmPzxiciBjbGFzcz0iIj4NCjwvYmxvY2txdW90ZT4NCjxiciBjbGFz
-cz0iIj4NClRoZSBmaXJzdCBjYXNlLjxiciBjbGFzcz0iIj4NCldlIGhhdmUgYSBzaW5nbGUgcmVn
-aXN0ZXIgaW4gYSBmaXhlZCBsb2NhdGlvbiB3aGljaCBjb250YWluczxzcGFuIGNsYXNzPSJBcHBs
-ZS1jb252ZXJ0ZWQtc3BhY2UiPiZuYnNwOzwvc3Bhbj48YnIgY2xhc3M9IiI+DQp0aGUgZnJlcXVl
-bmN5IG9mIHRoZSBtYWluIHN5c3RlbSBjbG9jay48YnIgY2xhc3M9IiI+DQpUaGlzIGFsbG93cyB1
-cyB0byB1c2UgdGhlIHNhbWUgaW1hZ2UgaW4gZW11bGF0aW9uLCBGUEdBPGJyIGNsYXNzPSIiPg0K
-YW5kIHNpbXVsYXRpb24gd2l0aG91dCBhbnkgY2hhbmdlcy48YnIgY2xhc3M9IiI+DQpXZSB1c3Vh
-bGx5IGRvbuKAmXQgdXNlIGEgZnVsbCBib290bG9hZGVyLCBqdXN0IGEgc2ltcGxlIHdyYXBwZXIs
-PGJyIGNsYXNzPSIiPg0Kd2hpY2ggaW5pdGlhbGl6ZXMgdGhlIG5lY2Vzc2FyeSBzdHVmZiBhbmQg
-anVtcHMgdG8gdGhlIGtlcm5lbC48YnIgY2xhc3M9IiI+DQo8L2Jsb2NrcXVvdGU+DQo8YnIgc3R5
-bGU9ImNhcmV0LWNvbG9yOiByZ2IoMCwgMCwgMCk7IGZvbnQtZmFtaWx5OiBIZWx2ZXRpY2E7IGZv
-bnQtc2l6ZTogMTNweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQtY2Fwczogbm9y
-bWFsOyBmb250LXdlaWdodDogbm9ybWFsOyBsZXR0ZXItc3BhY2luZzogbm9ybWFsOyB0ZXh0LWFs
-aWduOiBzdGFydDsgdGV4dC1pbmRlbnQ6IDBweDsgdGV4dC10cmFuc2Zvcm06IG5vbmU7IHdoaXRl
-LXNwYWNlOiBub3JtYWw7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdp
-ZHRoOiAwcHg7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsiIGNsYXNzPSIiPg0KPHNwYW4gc3R5bGU9
-ImNhcmV0LWNvbG9yOiByZ2IoMCwgMCwgMCk7IGZvbnQtZmFtaWx5OiBIZWx2ZXRpY2E7IGZvbnQt
-c2l6ZTogMTNweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQtY2Fwczogbm9ybWFs
-OyBmb250LXdlaWdodDogbm9ybWFsOyBsZXR0ZXItc3BhY2luZzogbm9ybWFsOyB0ZXh0LWFsaWdu
-OiBzdGFydDsgdGV4dC1pbmRlbnQ6IDBweDsgdGV4dC10cmFuc2Zvcm06IG5vbmU7IHdoaXRlLXNw
-YWNlOiBub3JtYWw7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRo
-OiAwcHg7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsgZmxvYXQ6IG5vbmU7IGRpc3BsYXk6IGlubGlu
-ZSAhaW1wb3J0YW50OyIgY2xhc3M9IiI+U28NCiB0aGUgaGFyZHdhcmUgdGVhbSBoYXMgZGVjaWRl
-ZCB0byB0aHJvdyBhIGZyZXF1ZW5jeSByZWdpc3RlciBpbiB0aGVyZT88L3NwYW4+PGJyIHN0eWxl
-PSJjYXJldC1jb2xvcjogcmdiKDAsIDAsIDApOyBmb250LWZhbWlseTogSGVsdmV0aWNhOyBmb250
-LXNpemU6IDEzcHg7IGZvbnQtc3R5bGU6IG5vcm1hbDsgZm9udC12YXJpYW50LWNhcHM6IG5vcm1h
-bDsgZm9udC13ZWlnaHQ6IG5vcm1hbDsgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsgdGV4dC1hbGln
-bjogc3RhcnQ7IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3aGl0ZS1z
-cGFjZTogbm9ybWFsOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0
-aDogMHB4OyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IiBjbGFzcz0iIj4NCjxzcGFuIHN0eWxlPSJj
-YXJldC1jb2xvcjogcmdiKDAsIDAsIDApOyBmb250LWZhbWlseTogSGVsdmV0aWNhOyBmb250LXNp
-emU6IDEzcHg7IGZvbnQtc3R5bGU6IG5vcm1hbDsgZm9udC12YXJpYW50LWNhcHM6IG5vcm1hbDsg
-Zm9udC13ZWlnaHQ6IG5vcm1hbDsgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsgdGV4dC1hbGlnbjog
-c3RhcnQ7IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3aGl0ZS1zcGFj
-ZTogbm9ybWFsOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDog
-MHB4OyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IGZsb2F0OiBub25lOyBkaXNwbGF5OiBpbmxpbmUg
-IWltcG9ydGFudDsiIGNsYXNzPSIiPkFscmlnaHQhDQogRG9lcyB0aGF0IGZpeGVkIHJhdGUgY2xr
-IGdlbmVyYXRlIGl0cyBmaXhlZCByYXRlIGZyb20gc29tZTwvc3Bhbj48YnIgc3R5bGU9ImNhcmV0
-LWNvbG9yOiByZ2IoMCwgMCwgMCk7IGZvbnQtZmFtaWx5OiBIZWx2ZXRpY2E7IGZvbnQtc2l6ZTog
-MTNweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQtY2Fwczogbm9ybWFsOyBmb250
-LXdlaWdodDogbm9ybWFsOyBsZXR0ZXItc3BhY2luZzogbm9ybWFsOyB0ZXh0LWFsaWduOiBzdGFy
-dDsgdGV4dC1pbmRlbnQ6IDBweDsgdGV4dC10cmFuc2Zvcm06IG5vbmU7IHdoaXRlLXNwYWNlOiBu
-b3JtYWw7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7
-IHRleHQtZGVjb3JhdGlvbjogbm9uZTsiIGNsYXNzPSIiPg0KPHNwYW4gc3R5bGU9ImNhcmV0LWNv
-bG9yOiByZ2IoMCwgMCwgMCk7IGZvbnQtZmFtaWx5OiBIZWx2ZXRpY2E7IGZvbnQtc2l6ZTogMTNw
-eDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQtY2Fwczogbm9ybWFsOyBmb250LXdl
-aWdodDogbm9ybWFsOyBsZXR0ZXItc3BhY2luZzogbm9ybWFsOyB0ZXh0LWFsaWduOiBzdGFydDsg
-dGV4dC1pbmRlbnQ6IDBweDsgdGV4dC10cmFuc2Zvcm06IG5vbmU7IHdoaXRlLXNwYWNlOiBub3Jt
-YWw7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7IHRl
-eHQtZGVjb3JhdGlvbjogbm9uZTsgZmxvYXQ6IG5vbmU7IGRpc3BsYXk6IGlubGluZSAhaW1wb3J0
-YW50OyIgY2xhc3M9IiI+b3RoZXINCiBjbGs/IEnigJltIGN1cmlvdXMgaWYgdGhpcyBmaXhlZCBy
-YXRlIGNsayBoYXMgYSBwYXJlbnQgc291cmNlLjwvc3Bhbj48YnIgc3R5bGU9ImNhcmV0LWNvbG9y
-OiByZ2IoMCwgMCwgMCk7IGZvbnQtZmFtaWx5OiBIZWx2ZXRpY2E7IGZvbnQtc2l6ZTogMTNweDsg
-Zm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQtY2Fwczogbm9ybWFsOyBmb250LXdlaWdo
-dDogbm9ybWFsOyBsZXR0ZXItc3BhY2luZzogbm9ybWFsOyB0ZXh0LWFsaWduOiBzdGFydDsgdGV4
-dC1pbmRlbnQ6IDBweDsgdGV4dC10cmFuc2Zvcm06IG5vbmU7IHdoaXRlLXNwYWNlOiBub3JtYWw7
-IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7IHRleHQt
-ZGVjb3JhdGlvbjogbm9uZTsiIGNsYXNzPSIiPg0KPC9kaXY+DQo8L2Jsb2NrcXVvdGU+DQo8ZGl2
-PjxiciBjbGFzcz0iIj4NCjwvZGl2Pg0KSXQgZGVwZW5kcywgaW4gc2ltdWxhdGlvbiBhbmQgZW11
-bGF0aW9uIHdlIGNhbiBqdXN0IGdlbmVyYXRlJm5ic3A7PC9kaXY+DQo8ZGl2PmEgY2xvY2sgc291
-cmNlIHdpdGggYSBnaXZlbiBmcmVxdWVuY3kuPC9kaXY+DQo8ZGl2Pk9uIEZQR0EgaXTigJlzIHVz
-dWFsbHkgYW4gZXh0ZXJuYWwgb3NjaWxsYXRvciwgc29tZXRpbWVzIGEgZml4ZWQgUExMLjwvZGl2
-Pg0KPGRpdj5UaGUgZHJpdmVyIGlzIG5vdCBpbnRlbmRlZCB0byBiZSB1c2VkIGluIGZ1bGwsIGNv
-bXBsZXggU29Dcy48L2Rpdj4NCjxkaXY+PGJyIGNsYXNzPSIiPg0KPC9kaXY+DQo8ZGl2Pg0KPGJs
-b2NrcXVvdGUgdHlwZT0iY2l0ZSIgY2xhc3M9IiI+DQo8ZGl2IGNsYXNzPSIiPjxzcGFuIHN0eWxl
-PSJjYXJldC1jb2xvcjogcmdiKDAsIDAsIDApOyBmb250LWZhbWlseTogSGVsdmV0aWNhOyBmb250
-LXNpemU6IDEzcHg7IGZvbnQtc3R5bGU6IG5vcm1hbDsgZm9udC12YXJpYW50LWNhcHM6IG5vcm1h
-bDsgZm9udC13ZWlnaHQ6IG5vcm1hbDsgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsgdGV4dC1hbGln
-bjogc3RhcnQ7IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3aGl0ZS1z
-cGFjZTogbm9ybWFsOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0
-aDogMHB4OyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IGZsb2F0OiBub25lOyBkaXNwbGF5OiBpbmxp
-bmUgIWltcG9ydGFudDsiIGNsYXNzPSIiPkl0DQogd291bGQgYWxzbyBiZSBnb29kIHRvIG1ha2Ug
-c3VyZSB0aGF0IGFueSBjbGtzIHJlZ2lzdGVyZWQgZnJvbSB0aGlzPC9zcGFuPjxiciBzdHlsZT0i
-Y2FyZXQtY29sb3I6IHJnYigwLCAwLCAwKTsgZm9udC1mYW1pbHk6IEhlbHZldGljYTsgZm9udC1z
-aXplOiAxM3B4OyBmb250LXN0eWxlOiBub3JtYWw7IGZvbnQtdmFyaWFudC1jYXBzOiBub3JtYWw7
-IGZvbnQtd2VpZ2h0OiBub3JtYWw7IGxldHRlci1zcGFjaW5nOiBub3JtYWw7IHRleHQtYWxpZ246
-IHN0YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3Bh
-Y2U6IG5vcm1hbDsgd29yZC1zcGFjaW5nOiAwcHg7IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6
-IDBweDsgdGV4dC1kZWNvcmF0aW9uOiBub25lOyIgY2xhc3M9IiI+DQo8c3BhbiBzdHlsZT0iY2Fy
-ZXQtY29sb3I6IHJnYigwLCAwLCAwKTsgZm9udC1mYW1pbHk6IEhlbHZldGljYTsgZm9udC1zaXpl
-OiAxM3B4OyBmb250LXN0eWxlOiBub3JtYWw7IGZvbnQtdmFyaWFudC1jYXBzOiBub3JtYWw7IGZv
-bnQtd2VpZ2h0OiBub3JtYWw7IGxldHRlci1zcGFjaW5nOiBub3JtYWw7IHRleHQtYWxpZ246IHN0
-YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3BhY2U6
-IG5vcm1hbDsgd29yZC1zcGFjaW5nOiAwcHg7IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6IDBw
-eDsgdGV4dC1kZWNvcmF0aW9uOiBub25lOyBmbG9hdDogbm9uZTsgZGlzcGxheTogaW5saW5lICFp
-bXBvcnRhbnQ7IiBjbGFzcz0iIj5kcml2ZXINCiBjYW4ndCBiZSBwb3B1bGF0ZWQgZnJvbSByZWdp
-b25zIG9mIG1lbW9yeSBsaWtlIEREUi4gQ2FuIHlvdTwvc3Bhbj48YnIgc3R5bGU9ImNhcmV0LWNv
-bG9yOiByZ2IoMCwgMCwgMCk7IGZvbnQtZmFtaWx5OiBIZWx2ZXRpY2E7IGZvbnQtc2l6ZTogMTNw
-eDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQtY2Fwczogbm9ybWFsOyBmb250LXdl
-aWdodDogbm9ybWFsOyBsZXR0ZXItc3BhY2luZzogbm9ybWFsOyB0ZXh0LWFsaWduOiBzdGFydDsg
-dGV4dC1pbmRlbnQ6IDBweDsgdGV4dC10cmFuc2Zvcm06IG5vbmU7IHdoaXRlLXNwYWNlOiBub3Jt
-YWw7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7IHRl
-eHQtZGVjb3JhdGlvbjogbm9uZTsiIGNsYXNzPSIiPg0KPHNwYW4gc3R5bGU9ImNhcmV0LWNvbG9y
-OiByZ2IoMCwgMCwgMCk7IGZvbnQtZmFtaWx5OiBIZWx2ZXRpY2E7IGZvbnQtc2l6ZTogMTNweDsg
-Zm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQtY2Fwczogbm9ybWFsOyBmb250LXdlaWdo
-dDogbm9ybWFsOyBsZXR0ZXItc3BhY2luZzogbm9ybWFsOyB0ZXh0LWFsaWduOiBzdGFydDsgdGV4
-dC1pbmRlbnQ6IDBweDsgdGV4dC10cmFuc2Zvcm06IG5vbmU7IHdoaXRlLXNwYWNlOiBub3JtYWw7
-IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7IHRleHQt
-ZGVjb3JhdGlvbjogbm9uZTsgZmxvYXQ6IG5vbmU7IGRpc3BsYXk6IGlubGluZSAhaW1wb3J0YW50
-OyIgY2xhc3M9IiI+Y29uZmlybT8NCiBJIHRoaW5rIGl0IHdpbGwgZmFpbCwgYnV0IGl0IHdvdWxk
-IGJlIHdvcnRoIGNoZWNraW5nPC9zcGFuPjxiciBzdHlsZT0iY2FyZXQtY29sb3I6IHJnYigwLCAw
-LCAwKTsgZm9udC1mYW1pbHk6IEhlbHZldGljYTsgZm9udC1zaXplOiAxM3B4OyBmb250LXN0eWxl
-OiBub3JtYWw7IGZvbnQtdmFyaWFudC1jYXBzOiBub3JtYWw7IGZvbnQtd2VpZ2h0OiBub3JtYWw7
-IGxldHRlci1zcGFjaW5nOiBub3JtYWw7IHRleHQtYWxpZ246IHN0YXJ0OyB0ZXh0LWluZGVudDog
-MHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3BhY2U6IG5vcm1hbDsgd29yZC1zcGFj
-aW5nOiAwcHg7IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6IDBweDsgdGV4dC1kZWNvcmF0aW9u
-OiBub25lOyIgY2xhc3M9IiI+DQo8YnIgc3R5bGU9ImNhcmV0LWNvbG9yOiByZ2IoMCwgMCwgMCk7
-IGZvbnQtZmFtaWx5OiBIZWx2ZXRpY2E7IGZvbnQtc2l6ZTogMTNweDsgZm9udC1zdHlsZTogbm9y
-bWFsOyBmb250LXZhcmlhbnQtY2Fwczogbm9ybWFsOyBmb250LXdlaWdodDogbm9ybWFsOyBsZXR0
-ZXItc3BhY2luZzogbm9ybWFsOyB0ZXh0LWFsaWduOiBzdGFydDsgdGV4dC1pbmRlbnQ6IDBweDsg
-dGV4dC10cmFuc2Zvcm06IG5vbmU7IHdoaXRlLXNwYWNlOiBub3JtYWw7IHdvcmQtc3BhY2luZzog
-MHB4OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7IHRleHQtZGVjb3JhdGlvbjogbm9u
-ZTsiIGNsYXNzPSIiPg0KPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSIgc3R5bGU9ImZvbnQtZmFtaWx5
-OiBIZWx2ZXRpY2E7IGZvbnQtc2l6ZTogMTNweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZh
-cmlhbnQtY2Fwczogbm9ybWFsOyBmb250LXdlaWdodDogbm9ybWFsOyBsZXR0ZXItc3BhY2luZzog
-bm9ybWFsOyBvcnBoYW5zOiBhdXRvOyB0ZXh0LWFsaWduOiBzdGFydDsgdGV4dC1pbmRlbnQ6IDBw
-eDsgdGV4dC10cmFuc2Zvcm06IG5vbmU7IHdoaXRlLXNwYWNlOiBub3JtYWw7IHdpZG93czogYXV0
-bzsgd29yZC1zcGFjaW5nOiAwcHg7IC13ZWJraXQtdGV4dC1zaXplLWFkanVzdDogYXV0bzsgLXdl
-YmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4OyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IiBjbGFz
-cz0iIj4NCjxiciBjbGFzcz0iIj4NCjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiIGNsYXNzPSIiPjxi
-ciBjbGFzcz0iIj4NCjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiIGNsYXNzPSIiPmRpZmYgLS1naXQg
-YS9kcml2ZXJzL2Nsay9jbGstZml4ZWQtbW1pby5jIGIvZHJpdmVycy9jbGsvY2xrLWZpeGVkLW1t
-aW8uYzxiciBjbGFzcz0iIj4NCm5ldyBmaWxlIG1vZGUgMTAwNjQ0PGJyIGNsYXNzPSIiPg0KaW5k
-ZXggMDAwMDAwMDAwMC4uYmJjYWRhYjM0NTxiciBjbGFzcz0iIj4NCi0tLSAvZGV2L251bGw8YnIg
-Y2xhc3M9IiI+DQomIzQzOyYjNDM7JiM0MzsgYi9kcml2ZXJzL2Nsay9jbGstZml4ZWQtbW1pby5j
-PGJyIGNsYXNzPSIiPg0KPC9ibG9ja3F1b3RlPg0KPC9ibG9ja3F1b3RlPg0KPGJyIGNsYXNzPSIi
-Pg0KPGJsb2NrcXVvdGUgdHlwZT0iY2l0ZSIgY2xhc3M9IiI+PGJyIGNsYXNzPSIiPg0KPGJsb2Nr
-cXVvdGUgdHlwZT0iY2l0ZSIgY2xhc3M9IiI+JiM0Mzt9PGJyIGNsYXNzPSIiPg0KJiM0Mzs8YnIg
-Y2xhc3M9IiI+DQomIzQzO0NMS19PRl9ERUNMQVJFKGZpeGVkX21taW9fY2xrLCAmcXVvdDtmaXhl
-ZC1tbWlvLWNsb2NrJnF1b3Q7LCBvZl9maXhlZF9tbWlvX2Nsa19zZXR1cCk7PGJyIGNsYXNzPSIi
-Pg0KPC9ibG9ja3F1b3RlPg0KPGJyIGNsYXNzPSIiPg0KQW55IHJlYXNvbiB3aHkgdGhpcyBjYW4n
-dCBiZSBhIHBsYXRmb3JtIGRyaXZlcj8gSXQgd291bGQgbWFrZSB0aGlzIG11Y2g8YnIgY2xhc3M9
-IiI+DQpsZXNzIERUIHNwZWNpZmljIGFuZCB1c2FibGUgb24gb3RoZXIgZmlybXdhcmVzL3BsYXRm
-b3JtcyBpZiB3ZSB1c2VkIGE8YnIgY2xhc3M9IiI+DQpwbGF0Zm9ybSBkcml2ZXIgaGVyZS48YnIg
-Y2xhc3M9IiI+DQo8YnIgY2xhc3M9IiI+DQo8L2Jsb2NrcXVvdGU+DQo8YnIgY2xhc3M9IiI+DQpJ
-IGxvb2tlZCBhdCB0aGUgZml4ZWQgcmF0ZSBjbG9jayBhcyBhIHJlZmVyZW5jZSwgYnV0IEkgY2Fu
-IGNoYW5nZSBpdCB0bzxzcGFuIGNsYXNzPSJBcHBsZS1jb252ZXJ0ZWQtc3BhY2UiPiZuYnNwOzwv
-c3Bhbj48YnIgY2xhc3M9IiI+DQphIHBsYXRmb3JtIGRyaXZlciwgaWYgdGhhdOKAmXMgcHJlZmVy
-cmVkLjxiciBjbGFzcz0iIj4NCjxiciBjbGFzcz0iIj4NCjwvYmxvY2txdW90ZT4NCjxiciBzdHls
-ZT0iY2FyZXQtY29sb3I6IHJnYigwLCAwLCAwKTsgZm9udC1mYW1pbHk6IEhlbHZldGljYTsgZm9u
-dC1zaXplOiAxM3B4OyBmb250LXN0eWxlOiBub3JtYWw7IGZvbnQtdmFyaWFudC1jYXBzOiBub3Jt
-YWw7IGZvbnQtd2VpZ2h0OiBub3JtYWw7IGxldHRlci1zcGFjaW5nOiBub3JtYWw7IHRleHQtYWxp
-Z246IHN0YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUt
-c3BhY2U6IG5vcm1hbDsgd29yZC1zcGFjaW5nOiAwcHg7IC13ZWJraXQtdGV4dC1zdHJva2Utd2lk
-dGg6IDBweDsgdGV4dC1kZWNvcmF0aW9uOiBub25lOyIgY2xhc3M9IiI+DQo8c3BhbiBzdHlsZT0i
-Y2FyZXQtY29sb3I6IHJnYigwLCAwLCAwKTsgZm9udC1mYW1pbHk6IEhlbHZldGljYTsgZm9udC1z
-aXplOiAxM3B4OyBmb250LXN0eWxlOiBub3JtYWw7IGZvbnQtdmFyaWFudC1jYXBzOiBub3JtYWw7
-IGZvbnQtd2VpZ2h0OiBub3JtYWw7IGxldHRlci1zcGFjaW5nOiBub3JtYWw7IHRleHQtYWxpZ246
-IHN0YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3Bh
-Y2U6IG5vcm1hbDsgd29yZC1zcGFjaW5nOiAwcHg7IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6
-IDBweDsgdGV4dC1kZWNvcmF0aW9uOiBub25lOyBmbG9hdDogbm9uZTsgZGlzcGxheTogaW5saW5l
-ICFpbXBvcnRhbnQ7IiBjbGFzcz0iIj5ZZXMNCiBJJ2QgcHJlZmVyIGEgcGxhdGZvcm0gZHJpdmVy
-IHVubGVzcyB0aGVyZSdzIHNvbWUgcmVhc29uIGl0IGNhbid0IGJlPC9zcGFuPjxiciBzdHlsZT0i
-Y2FyZXQtY29sb3I6IHJnYigwLCAwLCAwKTsgZm9udC1mYW1pbHk6IEhlbHZldGljYTsgZm9udC1z
-aXplOiAxM3B4OyBmb250LXN0eWxlOiBub3JtYWw7IGZvbnQtdmFyaWFudC1jYXBzOiBub3JtYWw7
-IGZvbnQtd2VpZ2h0OiBub3JtYWw7IGxldHRlci1zcGFjaW5nOiBub3JtYWw7IHRleHQtYWxpZ246
-IHN0YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3Bh
-Y2U6IG5vcm1hbDsgd29yZC1zcGFjaW5nOiAwcHg7IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6
-IDBweDsgdGV4dC1kZWNvcmF0aW9uOiBub25lOyIgY2xhc3M9IiI+DQo8c3BhbiBzdHlsZT0iY2Fy
-ZXQtY29sb3I6IHJnYigwLCAwLCAwKTsgZm9udC1mYW1pbHk6IEhlbHZldGljYTsgZm9udC1zaXpl
-OiAxM3B4OyBmb250LXN0eWxlOiBub3JtYWw7IGZvbnQtdmFyaWFudC1jYXBzOiBub3JtYWw7IGZv
-bnQtd2VpZ2h0OiBub3JtYWw7IGxldHRlci1zcGFjaW5nOiBub3JtYWw7IHRleHQtYWxpZ246IHN0
-YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3BhY2U6
-IG5vcm1hbDsgd29yZC1zcGFjaW5nOiAwcHg7IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6IDBw
-eDsgdGV4dC1kZWNvcmF0aW9uOiBub25lOyBmbG9hdDogbm9uZTsgZGlzcGxheTogaW5saW5lICFp
-bXBvcnRhbnQ7IiBjbGFzcz0iIj5kb25lLg0KIFdlIG1heSBuZWVkIHRvIGhhdmUgYm90aCBpbiBj
-YXNlIHRoaXMgbmVlZHMgdG8gYmUgcG9wdWxhdGVkIHZlcnk8L3NwYW4+PGJyIHN0eWxlPSJjYXJl
-dC1jb2xvcjogcmdiKDAsIDAsIDApOyBmb250LWZhbWlseTogSGVsdmV0aWNhOyBmb250LXNpemU6
-IDEzcHg7IGZvbnQtc3R5bGU6IG5vcm1hbDsgZm9udC12YXJpYW50LWNhcHM6IG5vcm1hbDsgZm9u
-dC13ZWlnaHQ6IG5vcm1hbDsgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsgdGV4dC1hbGlnbjogc3Rh
-cnQ7IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3aGl0ZS1zcGFjZTog
-bm9ybWFsOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4
-OyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IiBjbGFzcz0iIj4NCjxzcGFuIHN0eWxlPSJjYXJldC1j
-b2xvcjogcmdiKDAsIDAsIDApOyBmb250LWZhbWlseTogSGVsdmV0aWNhOyBmb250LXNpemU6IDEz
-cHg7IGZvbnQtc3R5bGU6IG5vcm1hbDsgZm9udC12YXJpYW50LWNhcHM6IG5vcm1hbDsgZm9udC13
-ZWlnaHQ6IG5vcm1hbDsgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsgdGV4dC1hbGlnbjogc3RhcnQ7
-IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3aGl0ZS1zcGFjZTogbm9y
-bWFsOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4OyB0
-ZXh0LWRlY29yYXRpb246IG5vbmU7IGZsb2F0OiBub25lOyBkaXNwbGF5OiBpbmxpbmUgIWltcG9y
-dGFudDsiIGNsYXNzPSIiPmVhcmx5LA0KIGJ1dCBpZiB0aGF0IGlzbuKAmXQgdGhlIGNhc2UgdGhl
-biBqdXN0IGEgcGxhdGZvcm0gZHJpdmVyIGZvciBub3cuPC9zcGFuPjwvZGl2Pg0KPC9ibG9ja3F1
-b3RlPg0KPGJyIGNsYXNzPSIiPg0KPC9kaXY+DQo8ZGl2PkkgcGxheWVkIHdpdGggaXQgYSBiaXQs
-IGFuZCBpdCBhbmQgaXQgbG9va3MgbGlrZSBJIG5lZWQgYm90aC48L2Rpdj4NCjxkaXY+V2UgdXNl
-IHRoaXMgY2xvY2sgc291cmNlIHdpdGggc29tZSBvZiBvdXIgY29tcG9uZW50cywmbmJzcDs8L2Rp
-dj4NCjxkaXY+YW5kIGZvciBzb21lIG9mIHRoZW0gdGhlIHBsYXRmb3JtIGRyaXZlciB3YXMgaW5p
-dGlhbGl6ZWQgdG9vIGxhdGUuPC9kaXY+DQo8YnIgY2xhc3M9IiI+DQo8L2JvZHk+DQo8L2h0bWw+
-DQo=
+---
+Changelog
 
---_000_76BDCB72CC0541D193A06D71CBD97651globalcadencecom_--
+v3:
+- check if sensor window size is set to default and return if not
+- check if requested fps is supported by image size and do not update
+  the image size if requested fps is not supported by selected image
+  size
+- update fps mode only if a mode was found
+
+v2:
+- fix updating read mode register, use mt9m111_reg_mask() to update the
+  relevant bits only. For this purpose add reg_mask field to
+  struct mt9m111_mode_info.
+
+ drivers/media/i2c/mt9m111.c | 165 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 165 insertions(+)
+
+diff --git a/drivers/media/i2c/mt9m111.c b/drivers/media/i2c/mt9m111.c
+index 9b0a3689fa98..f97fd32181ed 100644
+--- a/drivers/media/i2c/mt9m111.c
++++ b/drivers/media/i2c/mt9m111.c
+@@ -129,6 +129,8 @@
+ #define MT9M111_OUTFMT_SWAP_YCbCr_Cb_Cr_RGB_R_B	(1 << 0)
+ #define MT9M111_TPG_SEL_MASK		GENMASK(2, 0)
+ #define MT9M111_EFFECTS_MODE_MASK	GENMASK(2, 0)
++#define MT9M111_RM_PWR_MASK		BIT(10)
++#define MT9M111_RM_SKIP2_MASK		GENMASK(3, 2)
+ 
+ /*
+  * Camera control register addresses (0x200..0x2ff not implemented)
+@@ -207,6 +209,23 @@ static const struct mt9m111_datafmt mt9m111_colour_fmts[] = {
+ 	{MEDIA_BUS_FMT_SBGGR10_2X8_PADHI_LE, V4L2_COLORSPACE_SRGB},
+ };
+ 
++enum mt9m111_mode_id {
++	MT9M111_MODE_SXGA_8FPS,
++	MT9M111_MODE_SXGA_15FPS,
++	MT9M111_MODE_QSXGA_30FPS,
++	MT9M111_NUM_MODES,
++};
++
++struct mt9m111_mode_info {
++	unsigned int sensor_w;
++	unsigned int sensor_h;
++	unsigned int max_image_w;
++	unsigned int max_image_h;
++	unsigned int max_fps;
++	unsigned int reg_val;
++	unsigned int reg_mask;
++};
++
+ struct mt9m111 {
+ 	struct v4l2_subdev subdev;
+ 	struct v4l2_ctrl_handler hdl;
+@@ -216,6 +235,8 @@ struct mt9m111 {
+ 	struct v4l2_clk *clk;
+ 	unsigned int width;	/* output */
+ 	unsigned int height;	/* sizes */
++	struct v4l2_fract frame_interval;
++	const struct mt9m111_mode_info *current_mode;
+ 	struct mutex power_lock; /* lock to protect power_count */
+ 	int power_count;
+ 	const struct mt9m111_datafmt *fmt;
+@@ -226,6 +247,37 @@ struct mt9m111 {
+ #endif
+ };
+ 
++static const struct mt9m111_mode_info mt9m111_mode_data[MT9M111_NUM_MODES] = {
++	[MT9M111_MODE_SXGA_8FPS] = {
++		.sensor_w = 1280,
++		.sensor_h = 1024,
++		.max_image_w = 1280,
++		.max_image_h = 1024,
++		.max_fps = 8,
++		.reg_val = MT9M111_RM_LOW_POWER_RD,
++		.reg_mask = MT9M111_RM_PWR_MASK | MT9M111_RM_SKIP2_MASK,
++	},
++	[MT9M111_MODE_SXGA_15FPS] = {
++		.sensor_w = 1280,
++		.sensor_h = 1024,
++		.max_image_w = 1280,
++		.max_image_h = 1024,
++		.max_fps = 15,
++		.reg_val = MT9M111_RM_FULL_POWER_RD,
++		.reg_mask = MT9M111_RM_PWR_MASK | MT9M111_RM_SKIP2_MASK,
++	},
++	[MT9M111_MODE_QSXGA_30FPS] = {
++		.sensor_w = 1280,
++		.sensor_h = 1024,
++		.max_image_w = 640,
++		.max_image_h = 512,
++		.max_fps = 30,
++		.reg_val = MT9M111_RM_LOW_POWER_RD | MT9M111_RM_COL_SKIP_2X |
++			   MT9M111_RM_ROW_SKIP_2X,
++		.reg_mask = MT9M111_RM_PWR_MASK | MT9M111_RM_SKIP2_MASK,
++	},
++};
++
+ /* Find a data format by a pixel code */
+ static const struct mt9m111_datafmt *mt9m111_find_datafmt(struct mt9m111 *mt9m111,
+ 						u32 code)
+@@ -618,6 +670,61 @@ static int mt9m111_set_fmt(struct v4l2_subdev *sd,
+ 	return ret;
+ }
+ 
++static const struct mt9m111_mode_info *
++mt9m111_find_mode(struct mt9m111 *mt9m111, unsigned int req_fps,
++		  unsigned int width, unsigned int height)
++{
++	const struct mt9m111_mode_info *mode;
++	struct v4l2_rect *sensor_rect = &mt9m111->rect;
++	unsigned int gap, gap_best = (unsigned int) -1;
++	int i, best_gap_idx = MT9M111_MODE_SXGA_15FPS;
++	bool skip_30fps = false;
++
++	/*
++	 * The fps selection is based on the row, column skipping mechanism.
++	 * So ensure that the sensor window is set to default else the fps
++	 * aren't calculated correctly within the sensor hw.
++	 */
++	if (sensor_rect->width != MT9M111_MAX_WIDTH ||
++	    sensor_rect->height != MT9M111_MAX_HEIGHT) {
++		dev_info(mt9m111->subdev.dev,
++			 "Framerate selection is not supported for cropped "
++			 "images\n");
++		return NULL;
++	}
++
++	/* 30fps only supported for images not exceeding 640x512 */
++	if (width > MT9M111_MAX_WIDTH / 2 || height > MT9M111_MAX_HEIGHT / 2) {
++		dev_dbg(mt9m111->subdev.dev,
++			"Framerates > 15fps are supported only for images "
++			"not exceeding 640x512\n");
++		skip_30fps = true;
++	}
++
++	/* find best matched fps */
++	for (i = 0; i < MT9M111_NUM_MODES; i++) {
++		unsigned int fps = mt9m111_mode_data[i].max_fps;
++
++		if (fps == 30 && skip_30fps)
++			continue;
++
++		gap = abs(fps - req_fps);
++		if (gap < gap_best) {
++			best_gap_idx = i;
++			gap_best = gap;
++		}
++	}
++
++	/*
++	 * Use context a/b default timing values instead of calculate blanking
++	 * timing values.
++	 */
++	mode = &mt9m111_mode_data[best_gap_idx];
++	mt9m111->ctx = (best_gap_idx == MT9M111_MODE_QSXGA_30FPS) ? &context_a :
++								    &context_b;
++	return mode;
++}
++
+ #ifdef CONFIG_VIDEO_ADV_DEBUG
+ static int mt9m111_g_register(struct v4l2_subdev *sd,
+ 			      struct v4l2_dbg_register *reg)
+@@ -803,11 +910,16 @@ static int mt9m111_suspend(struct mt9m111 *mt9m111)
+ 
+ static void mt9m111_restore_state(struct mt9m111 *mt9m111)
+ {
++	struct i2c_client *client = v4l2_get_subdevdata(&mt9m111->subdev);
++
+ 	mt9m111_set_context(mt9m111, mt9m111->ctx);
+ 	mt9m111_set_pixfmt(mt9m111, mt9m111->fmt->code);
+ 	mt9m111_setup_geometry(mt9m111, &mt9m111->rect,
+ 			mt9m111->width, mt9m111->height, mt9m111->fmt->code);
+ 	v4l2_ctrl_handler_setup(&mt9m111->hdl);
++	mt9m111_reg_mask(client, mt9m111->ctx->read_mode,
++			 mt9m111->current_mode->reg_val,
++			 mt9m111->current_mode->reg_mask);
+ }
+ 
+ static int mt9m111_resume(struct mt9m111 *mt9m111)
+@@ -903,6 +1015,53 @@ static const struct v4l2_subdev_core_ops mt9m111_subdev_core_ops = {
+ #endif
+ };
+ 
++static int mt9m111_g_frame_interval(struct v4l2_subdev *sd,
++				   struct v4l2_subdev_frame_interval *fi)
++{
++	struct mt9m111 *mt9m111 = container_of(sd, struct mt9m111, subdev);
++
++	fi->interval = mt9m111->frame_interval;
++
++	return 0;
++}
++
++static int mt9m111_s_frame_interval(struct v4l2_subdev *sd,
++				   struct v4l2_subdev_frame_interval *fi)
++{
++	struct mt9m111 *mt9m111 = container_of(sd, struct mt9m111, subdev);
++	const struct mt9m111_mode_info *mode;
++	struct v4l2_fract *fract = &fi->interval;
++	int fps;
++
++	if (mt9m111->is_streaming)
++		return -EBUSY;
++
++	if (fi->pad != 0)
++		return -EINVAL;
++
++	if (fract->numerator == 0) {
++		fract->denominator = 30;
++		fract->numerator = 1;
++	}
++
++	fps = DIV_ROUND_CLOSEST(fract->denominator, fract->numerator);
++
++	/* Find best fitting mode. Do not update the mode if no one was found. */
++	mode = mt9m111_find_mode(mt9m111, fps, mt9m111->width, mt9m111->height);
++	if (!mode)
++		return 0;
++
++	if (mode->max_fps != fps) {
++		fract->denominator = mode->max_fps;
++		fract->numerator = 1;
++	}
++
++	mt9m111->current_mode = mode;
++	mt9m111->frame_interval = fi->interval;
++
++	return 0;
++}
++
+ static int mt9m111_enum_mbus_code(struct v4l2_subdev *sd,
+ 		struct v4l2_subdev_pad_config *cfg,
+ 		struct v4l2_subdev_mbus_code_enum *code)
+@@ -936,6 +1095,8 @@ static int mt9m111_g_mbus_config(struct v4l2_subdev *sd,
+ static const struct v4l2_subdev_video_ops mt9m111_subdev_video_ops = {
+ 	.g_mbus_config	= mt9m111_g_mbus_config,
+ 	.s_stream	= mt9m111_s_stream,
++	.g_frame_interval = mt9m111_g_frame_interval,
++	.s_frame_interval = mt9m111_s_frame_interval,
+ };
+ 
+ static const struct v4l2_subdev_pad_ops mt9m111_subdev_pad_ops = {
+@@ -1061,6 +1222,10 @@ static int mt9m111_probe(struct i2c_client *client,
+ 		goto out_hdlfree;
+ #endif
+ 
++	mt9m111->current_mode = &mt9m111_mode_data[MT9M111_MODE_SXGA_15FPS];
++	mt9m111->frame_interval.numerator = 1;
++	mt9m111->frame_interval.denominator = mt9m111->current_mode->max_fps;
++
+ 	/* Second stage probe - when a capture adapter is there */
+ 	mt9m111->rect.left	= MT9M111_MIN_DARK_COLS;
+ 	mt9m111->rect.top	= MT9M111_MIN_DARK_ROWS;
+-- 
+2.19.1
