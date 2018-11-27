@@ -1,27 +1,81 @@
-Return-Path: <SRS0=Z+zc=OI=verge.net.au=horms@kernel.org>
-Date: Thu, 29 Nov 2018 15:07:27 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 08/22] ARM: dts: r8a7744: Add USB-DMAC and HSUSB device
- nodes
-Message-ID: <20181129140727.iwucruldjundyir6@verge.net.au>
+Return-Path: <SRS0=lXjp=OG=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 08/22] ARM: dts: r8a7744: Add USB-DMAC and HSUSB device nodes
+Date: Tue, 27 Nov 2018 11:56:21 +0000
+Message-Id: <1543319795-48325-9-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
 References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
- <1543319795-48325-9-git-send-email-biju.das@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1543319795-48325-9-git-send-email-biju.das@bp.renesas.com>
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Nov 27, 2018 at 11:56:21AM +0000, Biju Das wrote:
-> Add usb dmac and hsusb device nodes on RZ/G1N SoC dtsi.
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Add usb dmac and hsusb device nodes on RZ/G1N SoC dtsi.
 
-Thanks,
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+---
+ arch/arm/boot/dts/r8a7744.dtsi | 42 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 41 insertions(+), 1 deletion(-)
 
-This looks fine to me but I will wait to see if there are other reviews
-before applying.
-
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
+index 3549ee1..118a596 100644
+--- a/arch/arm/boot/dts/r8a7744.dtsi
++++ b/arch/arm/boot/dts/r8a7744.dtsi
+@@ -463,8 +463,20 @@
+ 		};
+ 
+ 		hsusb: usb@e6590000 {
++			compatible = "renesas,usbhs-r8a7744",
++				     "renesas,rcar-gen2-usbhs";
+ 			reg = <0 0xe6590000 0 0x100>;
+-			/* placeholder */
++			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 704>;
++			dmas = <&usb_dmac0 0>, <&usb_dmac0 1>,
++			       <&usb_dmac1 0>, <&usb_dmac1 1>;
++			dma-names = "ch0", "ch1", "ch2", "ch3";
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 704>;
++			renesas,buswait = <4>;
++			phys = <&usb0 1>;
++			phy-names = "usb";
++			status = "disabled";
+ 		};
+ 
+ 		usbphy: usb-phy@e6590100 {
+@@ -489,6 +501,34 @@
+ 			};
+ 		};
+ 
++		usb_dmac0: dma-controller@e65a0000 {
++			compatible = "renesas,r8a7744-usb-dmac",
++				     "renesas,usb-dmac";
++			reg = <0 0xe65a0000 0 0x100>;
++			interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "ch0", "ch1";
++			clocks = <&cpg CPG_MOD 330>;
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 330>;
++			#dma-cells = <1>;
++			dma-channels = <2>;
++		};
++
++		usb_dmac1: dma-controller@e65b0000 {
++			compatible = "renesas,r8a7744-usb-dmac",
++				     "renesas,usb-dmac";
++			reg = <0 0xe65b0000 0 0x100>;
++			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "ch0", "ch1";
++			clocks = <&cpg CPG_MOD 331>;
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 331>;
++			#dma-cells = <1>;
++			dma-channels = <2>;
++		};
++
+ 		dmac0: dma-controller@e6700000 {
+ 			compatible = "renesas,dmac-r8a7744",
+ 				     "renesas,rcar-dmac";
+-- 
+2.7.4
