@@ -1,64 +1,55 @@
-Return-Path: <SRS0=nKhH=OJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr40054.outbound.protection.outlook.com ([40.107.4.54]:43808
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726392AbeK3Nlm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 30 Nov 2018 08:41:42 -0500
-From: PETER CHEN <peter.chen@nxp.com>
-Subject: RE: [PATCH v3 4/4] doc: usb: ci-hdrc-usb2: Add pinctrl properties for
- HSIC pin groups
-Date: Fri, 30 Nov 2018 02:33:45 +0000
-Message-ID: <VI1PR04MB5327E51B366724706028E07E8BD30@VI1PR04MB5327.eurprd04.prod.outlook.com>
-References: <20181127092824.22756-1-peter.chen@nxp.com>
- <20181127092824.22756-5-peter.chen@nxp.com>
- <CAOMZO5CV9Hk5ORnmjOLSZv5bk61nc2Ljq_4vKvRvAvO_F=Fzxg@mail.gmail.com>
-In-Reply-To: <CAOMZO5CV9Hk5ORnmjOLSZv5bk61nc2Ljq_4vKvRvAvO_F=Fzxg@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=JFxn=OG=gmail.com=festevam@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: USB list <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Schrempf Frieder <frieder.schrempf@exceet.de>
+References: <20181127092824.22756-1-peter.chen@nxp.com> <20181127092824.22756-5-peter.chen@nxp.com>
+In-Reply-To: <20181127092824.22756-5-peter.chen@nxp.com>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Tue, 27 Nov 2018 09:09:50 -0200
+Message-ID: <CAOMZO5CV9Hk5ORnmjOLSZv5bk61nc2Ljq_4vKvRvAvO_F=Fzxg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] doc: usb: ci-hdrc-usb2: Add pinctrl properties for
+ HSIC pin groups
+Content-Type: text/plain; charset="UTF-8"
+To: Peter Chen <peter.chen@nxp.com>
+Cc: USB list <linux-usb@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Schrempf Frieder <frieder.schrempf@exceet.de>
 List-ID: <devicetree@vger.kernel.org>
 
-IA0KPiANCj4gT24gVHVlLCBOb3YgMjcsIDIwMTggYXQgNzozMSBBTSBQRVRFUiBDSEVOIDxwZXRl
-ci5jaGVuQG54cC5jb20+IHdyb3RlOg0KPiA+DQo+ID4gRm9yIFVTQiBIU0lDLCB0aGUgZGF0YSBh
-bmQgc3Ryb2JlIHBpbiBuZWVkcyB0byBiZSBwdWxsZWQgZG93biBhdA0KPiA+IGRlZmF1bHQsIHdl
-IGNvbnNpZGVyIGl0IGFzICJpZGxlIiBzdGF0ZS4gV2hlbiB0aGUgVVNCIGhvc3QgaXMgcmVhZHkg
-dG8NCj4gPiBiZSB1c2VkLCB0aGUgc3Ryb2JlIHBpbiBuZWVkcyB0byBiZSBwdWxsZWQgdXAsIHdl
-IGNvbnNpZGVyIGl0IGFzDQo+ID4gImFjdGl2ZSIgc3RhdGUuDQo+ID4NCj4gPiBTaWduZWQtb2Zm
-LWJ5OiBQZXRlciBDaGVuIDxwZXRlci5jaGVuQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvY2ktaGRyYy11c2IyLnR4dCB8IDggKysr
-KysrKy0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
-KQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy91c2IvY2ktaGRyYy11c2IyLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3VzYi9jaS1oZHJjLXVzYjIudHh0DQo+ID4gaW5kZXggNTI5ZTUxODc5ZmIyLi4xZTVl
-N2RkZmIxYTUgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3VzYi9jaS1oZHJjLXVzYjIudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3VzYi9jaS1oZHJjLXVzYjIudHh0DQo+ID4gQEAgLTgwLDcgKzgwLDEwIEBA
-IE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gICAgY29udHJvbGxlci4gSXQncyBleHBlY3RlZCB0
-aGF0IGEgbXV4IHN0YXRlIG9mIDAgaW5kaWNhdGVzIGRldmljZSBtb2RlIGFuZCBhDQo+ID4gICAg
-bXV4IHN0YXRlIG9mIDEgaW5kaWNhdGVzIGhvc3QgbW9kZS4NCj4gPiAgLSBtdXgtY29udHJvbC1u
-YW1lczogU2hhbGwgYmUgInVzYl9zd2l0Y2giIGlmIG11eC1jb250cm9scyBpcyBzcGVjaWZpZWQu
-DQo+ID4gLS0gcGluY3RybC1uYW1lczogTmFtZXMgZm9yIG9wdGlvbmFsIHBpbiBtb2RlcyBpbiAi
-ZGVmYXVsdCIsICJob3N0IiwgImRldmljZSINCj4gPiArLSBwaW5jdHJsLW5hbWVzOiBOYW1lcyBm
-b3Igb3B0aW9uYWwgcGluIG1vZGVzIGluICJkZWZhdWx0IiwgImhvc3QiLCAiZGV2aWNlIi4NCj4g
-PiArICBJbiBjYXNlIG9mIEhTSUMtbW9kZSwgImlkbGUiIGFuZCAiYWN0aXZlIiBwaW4gbW9kZXMg
-YXJlIG1hbmRhdG9yeS4NCj4gPiArSW4gdGhpcw0KPiA+ICsgIGNhc2UsIHRoZSAiaWRsZSIgc3Rh
-dGUgbmVlZHMgdG8gcHVsbCBkb3duIHRoZSBkYXRhIGFuZCBzdHJvYmUgcGluDQo+ID4gKyAgYW5k
-IHRoZSAiYWN0aXZlIiBzdGF0ZSBuZWVkcyB0byBwdWxsIHVwIHRoZSBzdHJvYmUgcGluLg0KPiA+
-ICAtIHBpbmN0cmwtbjogYWx0ZXJuYXRlIHBpbiBtb2Rlcw0KPiA+DQo+ID4gIGkubXggc3BlY2lm
-aWMgcHJvcGVydGllcw0KPiA+IEBAIC0xMTAsNCArMTEzLDcgQEAgRXhhbXBsZToNCj4gPiAgICAg
-ICAgICAgICAgICAgcGh5LWNsa2dhdGUtZGVsYXktdXMgPSA8NDAwPjsNCj4gPiAgICAgICAgICAg
-ICAgICAgbXV4LWNvbnRyb2xzID0gPCZ1c2Jfc3dpdGNoPjsNCj4gPiAgICAgICAgICAgICAgICAg
-bXV4LWNvbnRyb2wtbmFtZXMgPSAidXNiX3N3aXRjaCI7DQo+ID4gKyAgICAgICAgICAgICAgIHBp
-bmN0cmwtbmFtZXMgPSAiaWRsZSIsICJhY3RpdmUiOw0KPiA+ICsgICAgICAgICAgICAgICBwaW5j
-dHJsLTAgPSA8JnBpbmN0cmxfdXNiaDJfMT47DQo+ID4gKyAgICAgICAgICAgICAgIHBpbmN0cmwt
-MSA9IDwmcGluY3RybF91c2JoMl8yPjsNCj4gDQo+IEkgd291bGQgcHV0IHRoZSAiaWRsZSIgYW5k
-ICJhY3RpdmUiIGVudHJpZXMgaW5zaWRlIGEgZXhwbGljaXQgc2VjdGlvbiBmb3IgSFNJQy4NCj4g
-DQo+IE90aGVyd2lzZSwgaXQgbWF5IGNvbmZ1c2UgcGVvcGxlIHVzaW5nIG5vbi1IU0lDIGJpbmRp
-bmdzLg0KDQpJdCBpcyBqdXN0IGFuIGV4YW1wbGU7IHRoZSB1c2VyIHNob3VsZCBjaGVjayB0aGUg
-bWVhbmluZyBmb3Igb3B0aW9uYWwgcHJvcGVydGllcyBiZWZvcmUNCnVzaW5nIGl0LCBsaWtlIHRo
-ZSBwcm9wZXJ0eSAicGh5LWNsa2dhdGUtZGVsYXktdXMiLCBvbmx5IGlteDdkLzdzIG5lZWRzIGl0
-Lg0KDQpQZXRlcg0K
+Hi Peter,
+
+On Tue, Nov 27, 2018 at 7:31 AM PETER CHEN <peter.chen@nxp.com> wrote:
+>
+> For USB HSIC, the data and strobe pin needs to be pulled down
+> at default, we consider it as "idle" state. When the USB host
+> is ready to be used, the strobe pin needs to be pulled up,
+> we consider it as "active" state.
+>
+> Signed-off-by: Peter Chen <peter.chen@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> index 529e51879fb2..1e5e7ddfb1a5 100644
+> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> @@ -80,7 +80,10 @@ Optional properties:
+>    controller. It's expected that a mux state of 0 indicates device mode and a
+>    mux state of 1 indicates host mode.
+>  - mux-control-names: Shall be "usb_switch" if mux-controls is specified.
+> -- pinctrl-names: Names for optional pin modes in "default", "host", "device"
+> +- pinctrl-names: Names for optional pin modes in "default", "host", "device".
+> +  In case of HSIC-mode, "idle" and "active" pin modes are mandatory. In this
+> +  case, the "idle" state needs to pull down the data and strobe pin
+> +  and the "active" state needs to pull up the strobe pin.
+>  - pinctrl-n: alternate pin modes
+>
+>  i.mx specific properties
+> @@ -110,4 +113,7 @@ Example:
+>                 phy-clkgate-delay-us = <400>;
+>                 mux-controls = <&usb_switch>;
+>                 mux-control-names = "usb_switch";
+> +               pinctrl-names = "idle", "active";
+> +               pinctrl-0 = <&pinctrl_usbh2_1>;
+> +               pinctrl-1 = <&pinctrl_usbh2_2>;
+
+I would put the "idle" and "active" entries inside a explicit section for HSIC.
+
+Otherwise, it may confuse people using non-HSIC bindings.
