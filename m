@@ -1,52 +1,157 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH] ARM64: dts: imx: add i.MX8QXP thermal support
-Date: Tue, 27 Nov 2018 06:21:05 +0000
-Message-ID: <DB3PR0402MB39167E727CC0C0520806191BF5D00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1543299200-8526-1-git-send-email-Anson.Huang@nxp.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH 5/5] DO NOT MERGE: ARM: dts: bananapi: Add Camera support
+Date: Tue, 27 Nov 2018 12:26:09 +0530
+Message-ID: <CAMty3ZBO6B=vgduv5u28zC8P1DOm1TYGFAVjDtJOpU8dozrk=A@mail.gmail.com>
+References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
+ <12093630fdd7d8b43ebcb0340691e0f2200e26c6.1542097288.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543299200-8526-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
+In-Reply-To: <12093630fdd7d8b43ebcb0340691e0f2200e26c6.1542097288.git-series.maxime.ripard@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, laurent.pinchart@ideasonboard.com, linux-media <linux-media@vger.kernel.org>, a.hajda@samsung.com, Chen-Yu Tsai <wens@csie.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Rm9yZ290IHRvIG1lbnRpb25lZDogVGhpcyBwYXRjaCBpcyBiYXNlZCBvbiAiW1Y0LDMvNV0gYXJt
-NjQ6IGR0czogaW14OiBhZGQgaW14OHF4cCBzdXBwb3J0IiwgaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
-bmVsLm9yZy9wYXRjaC8xMDY3NzMxMS8NCg0KQmVzdCBSZWdhcmRzIQ0KQW5zb24gSHVhbmcNCg0K
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbnNvbiBIdWFuZw0KPiBTZW50
-OiAyMDE4xOoxMdTCMjfI1SAxNDoxOQ0KPiBUbzogcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1
-dGxhbmRAYXJtLmNvbTsgQWlzaGVuZyBET05HDQo+IDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3Jn
-OyBzaGF3bmd1b0BrZXJuZWwub3JnDQo+IENjOiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAu
-Y29tPg0KPiBTdWJqZWN0OiBbUEFUQ0hdIEFSTTY0OiBkdHM6IGlteDogYWRkIGkuTVg4UVhQIHRo
-ZXJtYWwgc3VwcG9ydA0KPiANCj4gQWRkIGkuTVg4UVhQIENQVSB0aGVybWFsIHpvbmUgc3VwcG9y
-dC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29t
-Pg0KPiAtLS0NCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhxeHAuZHRzaSB8
-IDI3DQo+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDI3
-IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
-ZWVzY2FsZS9pbXg4cXhwLmR0c2kNCj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9p
-bXg4cXhwLmR0c2kNCj4gaW5kZXggZGE5OWI2Zi4uOTE1NWQ0NSAxMDA2NDQNCj4gLS0tIGEvYXJj
-aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC5kdHNpDQo+ICsrKyBiL2FyY2gvYXJt
-NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhxeHAuZHRzaQ0KPiBAQCAtOSw2ICs5LDcgQEANCj4g
-ICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9maXJtd2FyZS9pbXgvcnNyYy5oPiAgI2luY2x1ZGUNCj4g
-PGR0LWJpbmRpbmdzL2dwaW8vZ3Bpby5oPiAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL3BpbmN0cmwv
-cGFkcy1pbXg4cXhwLmg+DQo+ICsjaW5jbHVkZSA8ZHQtYmluZGluZ3MvdGhlcm1hbC90aGVybWFs
-Lmg+DQo+IA0KPiAgI2luY2x1ZGUgImlteDgtY2EzNS5kdHNpIg0KPiANCj4gQEAgLTg1LDYgKzg2
-LDMyIEBADQo+ICAJCX07DQo+ICAJfTsNCj4gDQo+ICsJdHNlbnM6IHRoZXJtYWwtc2Vuc29yIHsN
-Cj4gKwkJY29tcGF0aWJsZSA9ICJueHAsaW14OHF4cC1zYy10aGVybWFsIjsNCj4gKwkJdHNlbnMt
-bnVtID0gPDE+Ow0KPiArCQkjdGhlcm1hbC1zZW5zb3ItY2VsbHMgPSA8MT47DQo+ICsJfTsNCj4g
-Kw0KPiArCXRoZXJtYWxfem9uZXM6IHRoZXJtYWwtem9uZXMgew0KPiArCQljcHUtdGhlcm1hbDAg
-ew0KPiArCQkJcG9sbGluZy1kZWxheS1wYXNzaXZlID0gPDI1MD47DQo+ICsJCQlwb2xsaW5nLWRl
-bGF5ID0gPDIwMDA+Ow0KPiArCQkJdGhlcm1hbC1zZW5zb3JzID0gPCZ0c2VucyAzNTU+Ow0KPiAr
-CQkJdHJpcHMgew0KPiArCQkJCWNwdV9hbGVydDA6IHRyaXAwIHsNCj4gKwkJCQkJdGVtcGVyYXR1
-cmUgPSA8MTA3MDAwPjsNCj4gKwkJCQkJaHlzdGVyZXNpcyA9IDwyMDAwPjsNCj4gKwkJCQkJdHlw
-ZSA9ICJwYXNzaXZlIjsNCj4gKwkJCQl9Ow0KPiArCQkJCWNwdV9jcml0MDogdHJpcDEgew0KPiAr
-CQkJCQl0ZW1wZXJhdHVyZSA9IDwxMjcwMDA+Ow0KPiArCQkJCQloeXN0ZXJlc2lzID0gPDIwMDA+
-Ow0KPiArCQkJCQl0eXBlID0gImNyaXRpY2FsIjsNCj4gKwkJCQl9Ow0KPiArCQkJfTsNCj4gKwkJ
-fTsNCj4gKwl9Ow0KPiArDQo+ICAJYWRtYV9zdWJzeXM6IGJ1c0A1OTAwMDAwMCB7DQo+ICAJCWNv
-bXBhdGlibGUgPSAic2ltcGxlLWJ1cyI7DQo+ICAJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiAt
-LQ0KPiAyLjcuNA0KDQo=
+On Tue, Nov 13, 2018 at 1:54 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> ---
+>  arch/arm/boot/dts/sun7i-a20-bananapi.dts | 98 +++++++++++++++++++++++++-
+>  1 file changed, 98 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> index 70dfc4ac0bb5..18dbff9f1ce9 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> @@ -54,6 +54,9 @@
+>         compatible = "lemaker,bananapi", "allwinner,sun7i-a20";
+>
+>         aliases {
+> +               i2c0 = &i2c0;
+> +               i2c1 = &i2c1;
+> +               i2c2 = &i2c2;
+>                 serial0 = &uart0;
+>                 serial1 = &uart3;
+>                 serial2 = &uart7;
+> @@ -63,6 +66,41 @@
+>                 stdout-path = "serial0:115200n8";
+>         };
+>
+> +       reg_cam: cam {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "cam";
+> +               regulator-min-microvolt = <5000000>;
+> +               regulator-max-microvolt = <5000000>;
+> +               vin-supply = <&reg_vcc5v0>;
+> +               gpio = <&pio 7 16 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +               regulator-always-on;
+> +       };
+> +
+> +        reg_cam_avdd: cam-avdd {
+> +                compatible = "regulator-fixed";
+> +                regulator-name = "cam500b-avdd";
+> +                regulator-min-microvolt = <2800000>;
+> +                regulator-max-microvolt = <2800000>;
+> +                vin-supply = <&reg_cam>;
+> +        };
+> +
+> +        reg_cam_dovdd: cam-dovdd {
+> +                compatible = "regulator-fixed";
+> +                regulator-name = "cam500b-dovdd";
+> +                regulator-min-microvolt = <1800000>;
+> +                regulator-max-microvolt = <1800000>;
+> +                vin-supply = <&reg_cam>;
+> +        };
+> +
+> +        reg_cam_dvdd: cam-dvdd {
+> +                compatible = "regulator-fixed";
+> +                regulator-name = "cam500b-dvdd";
+> +                regulator-min-microvolt = <1500000>;
+> +                regulator-max-microvolt = <1500000>;
+> +                vin-supply = <&reg_cam>;
+> +        };
+> +
+>         hdmi-connector {
+>                 compatible = "hdmi-connector";
+>                 type = "a";
+> @@ -120,6 +158,27 @@
+>                 >;
+>  };
+>
+> +&csi0 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&csi0_pins_a>;
+> +       status = "okay";
+> +
+> +       port {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               csi_from_ov5640: endpoint {
+> +                        remote-endpoint = <&ov5640_to_csi>;
+> +                        bus-width = <8>;
+> +                        data-shift = <2>;
+> +                        hsync-active = <1>; /* Active high */
+> +                        vsync-active = <0>; /* Active low */
+> +                        data-active = <1>;  /* Active high */
+> +                        pclk-sample = <1>;  /* Rising */
+> +                };
+> +       };
+> +};
+> +
+>  &de {
+>         status = "okay";
+>  };
+> @@ -167,6 +226,39 @@
+>         };
+>  };
+>
+> +&i2c1 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&i2c1_pins_a>;
+> +       status = "okay";
+> +
+> +       camera: camera@21 {
+> +               compatible = "ovti,ov5640";
+> +               reg = <0x21>;
+> +                clocks = <&ccu CLK_CSI0>;
+> +                clock-names = "xclk";
+> +               assigned-clocks = <&ccu CLK_CSI0>;
+> +               assigned-clock-rates = <24000000>;
+> +
+> +                reset-gpios = <&pio 7 14 GPIO_ACTIVE_LOW>;
+> +                powerdown-gpios = <&pio 7 19 GPIO_ACTIVE_HIGH>;
+> +                AVDD-supply = <&reg_cam_avdd>;
+> +                DOVDD-supply = <&reg_cam_dovdd>;
+> +                DVDD-supply = <&reg_cam_dvdd>;
+> +
+> +                port {
+> +                        ov5640_to_csi: endpoint {
+> +                                remote-endpoint = <&csi_from_ov5640>;
+> +                                bus-width = <8>;
+> +                                data-shift = <2>;
+> +                                hsync-active = <1>; /* Active high */
+> +                                vsync-active = <0>; /* Active low */
+> +                                data-active = <1>;  /* Active high */
+> +                                pclk-sample = <1>;  /* Rising */
+> +                        };
+> +                };
+> +       };
+
+Does ov5640 need any further patches, wrt linux-next? I'm trying to
+test this on top of linux-next but the slave id seems not detecting.
+
+[    2.304711] ov5640 1-0021: Linked as a consumer to regulator.5
+[    2.310639] ov5640 1-0021: Linked as a consumer to regulator.6
+[    2.316592] ov5640 1-0021: Linked as a consumer to regulator.4
+[    2.351540] ov5640 1-0021: ov5640_init_slave_id: failed with -6
+[    2.357543] ov5640 1-0021: Dropping the link to regulator.5
+[    2.363224] ov5640 1-0021: Dropping the link to regulator.6
+[    2.368829] ov5640 1-0021: Dropping the link to regulator.4
+
+Here is the full log [1], please let me know if I miss anything, I
+even tried to remove MCLK pin
+
+[1] https://paste.ubuntu.com/p/yfy5cvs32x/
