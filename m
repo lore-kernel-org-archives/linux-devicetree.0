@@ -1,130 +1,235 @@
-From: Auger Eric <eric.auger@redhat.com>
-Subject: Re: [PATCH v5 0/7] Add virtio-iommu driver
-Date: Tue, 27 Nov 2018 19:02:53 +0100
-Message-ID: <d3e38d89-46f8-7f82-98cc-5a3b94be26b8@redhat.com>
-References: <20181122193801.50510-1-jean-philippe.brucker@arm.com>
- <20181127114402-mutt-send-email-mst@kernel.org>
- <6c061729-c404-ac25-f86f-7fe222bf5bc7@redhat.com>
- <20181127121036-mutt-send-email-mst@kernel.org>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [PATCH v10 0/8] Introduce on-chip interconnect API
+Date: Tue, 27 Nov 2018 20:03:42 +0200
+Message-ID: <20181127180349.29997-1-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <virtio-dev-return-5054-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
-Sender: <virtio-dev@lists.oasis-open.org>
-List-Post: <mailto:virtio-dev@lists.oasis-open.org>
-List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
-List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
-List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
-In-Reply-To: <20181127121036-mutt-send-email-mst@kernel.org>
-Content-Language: en-US
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, virtualization@lists.linux-foundation.org, virtio-dev@lists.oasis-open.org, joro@8bytes.org, jasowang@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com, bhelgaas@google.com, frowand.list@gmail.com, kvmarm@lists.cs.columbia.edu, tnowicki@caviumnetworks.com, kevin.tian@intel.com, marc.zyngier@arm.com, robin.murphy@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, bharat.bhushan@nxp.com
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, rjw@rjwysocki.net, robh+dt@kernel.org, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, arnd@arndb.de, thierry.reding@gmail.com, ksitaraman@nvidia.com, sanjayc@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org, georgi.djakov@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Michael,
+Modern SoCs have multiple processors and various dedicated cores (video, gpu,
+graphics, modem). These cores are talking to each other and can generate a
+lot of data flowing through the on-chip interconnects. These interconnect
+buses could form different topologies such as crossbar, point to point buses,
+hierarchical buses or use the network-on-chip concept.
 
-On 11/27/18 6:16 PM, Michael S. Tsirkin wrote:
-> On Tue, Nov 27, 2018 at 06:09:25PM +0100, Auger Eric wrote:
->> Hi Michael,
->>
->> On 11/27/18 5:53 PM, Michael S. Tsirkin wrote:
->>> On Thu, Nov 22, 2018 at 07:37:54PM +0000, Jean-Philippe Brucker wrote:
->>>> Implement the virtio-iommu driver, following specification v0.9 [1].
->>>>
->>>> Since v4 [2] I fixed the issues reported by Eric, and added Reviewed-by
->>>> from Eric and Rob. Thanks!
->>>>
->>>> I changed the specification to fix one inconsistency discussed in v4.
->>>> That the device fills the probe buffer with zeroes is now a "SHOULD"
->>>> instead of a "MAY", since it's the only way for the driver to know if
->>>> the device wrote the status. Existing devices already do this. In
->>>> addition the device now needs to fill the three padding bytes at the
->>>> tail with zeroes.
->>>>
->>>> You can find Linux driver and kvmtool device on branches
->>>> virtio-iommu/v0.9 [3]. I also lightly tested with Eric's latest QEMU
->>>> device [4].
->>>
->>> I tried to get this to work on my x86 box but without
->>> success. Any hints? Does this have to do with the IORT table?
->>> I think we really should just reserve our own table ID
->>> and avoid the pain of trying to add things to the IORT spec.
->>> I'm reluctant to merge lots of code that I can't easily test.
->>> Again, if we found a way to push more configuration into
->>> virtio config space the problem space would be smaller.
->>
->> You can at least test it with QEMU ARM virt in TCG mode.
-> 
-> It's slow enough that I generally just focus on KVM.
-fair enough
-> 
->> Then I have
->> worked on the IORT integration in PC/Q35 but this is not yet functional.
->> I need to debug what's wrong on guest ACPI probing. I plan to work on
->> this this week.
->>
->> Thanks
->>
->> Eric
-> 
-> Sounds good. Did you need to make changes to IORT?  I don't remember. If
-> yes it would be very easy to just have a virtio specific ACPI table -
-> I am assuming ARM guys will be just as hostile to virt changes
-> to IORT as they were to minor changes to ARM vIOMMU.
+These buses have been sized usually to handle use cases with high data
+throughput but it is not necessary all the time and consume a lot of power.
+Furthermore, the priority between masters can vary depending on the running
+use case like video playback or CPU intensive tasks.
 
-Well the only difference is that on ARM we have 3 nodes in the IORT: the
-root complex node -> the VIRTIO-IOMMU node -> the ITS node. The ITS is
-the ARM MSI controller which does MSI translation. So the ARM IORT
-describes the chained ID mappings from the end point RID through the
-StreamID SMMU input to the device ID MSI controller input. On Intel we
-don't have the last node.
+Having an API to control the requirement of the system in terms of bandwidth
+and QoS, so we can adapt the interconnect configuration to match those by
+scaling the frequencies, setting link priority and tuning QoS parameters.
+This configuration can be a static, one-time operation done at boot for some
+platforms or a dynamic set of operations that happen at run-time.
 
-But again my integration is not yet functional and I don't know yet if I
-have captured the whole picture.
+This patchset introduce a new API to get the requirement and configure the
+interconnect buses across the entire chipset to fit with the current demand.
+The API is NOT for changing the performance of the endpoint devices, but only
+the interconnect path in between them.
 
-Thanks
+The API is using a consumer/provider-based model, where the providers are
+the interconnect buses and the consumers could be various drivers.
+The consumers request interconnect resources (path) to an endpoint and set
+the desired constraints on this data flow path. The provider(s) receive
+requests from consumers and aggregate these requests for all master-slave
+pairs on that path. Then the providers configure each participating in the
+topology node according to the requested data flow path, physical links and
+constraints. The topology could be complicated and multi-tiered and is SoC
+specific.
 
-Eric
-> 
-> 
->>>
->>>> [1] Virtio-iommu specification v0.9, sources, pdf and diff from v0.8
->>>>     git://linux-arm.org/virtio-iommu.git virtio-iommu/v0.9
->>>>     http://jpbrucker.net/virtio-iommu/spec/v0.9/virtio-iommu-v0.9.pdf
->>>>     http://jpbrucker.net/virtio-iommu/spec/diffs/virtio-iommu-pdf-diff-v0.8-v0.9.pdf
->>>>
->>>> [2] [PATCH v4 0/7] Add virtio-iommu driver
->>>>     https://lists.linuxfoundation.org/pipermail/iommu/2018-November/031074.html
->>>>
->>>> [3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.9
->>>>     git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.9
->>>>
->>>> [4] [RFC v9 00/17] VIRTIO-IOMMU device
->>>>     https://www.mail-archive.com/qemu-devel@nongnu.org/msg575578.html
->>>>
->>>> Jean-Philippe Brucker (7):
->>>>   dt-bindings: virtio-mmio: Add IOMMU description
->>>>   dt-bindings: virtio: Add virtio-pci-iommu node
->>>>   of: Allow the iommu-map property to omit untranslated devices
->>>>   PCI: OF: Initialize dev->fwnode appropriately
->>>>   iommu: Add virtio-iommu driver
->>>>   iommu/virtio: Add probe request
->>>>   iommu/virtio: Add event queue
->>>>
->>>>  .../devicetree/bindings/virtio/iommu.txt      |   66 +
->>>>  .../devicetree/bindings/virtio/mmio.txt       |   30 +
->>>>  MAINTAINERS                                   |    7 +
->>>>  drivers/iommu/Kconfig                         |   11 +
->>>>  drivers/iommu/Makefile                        |    1 +
->>>>  drivers/iommu/virtio-iommu.c                  | 1157 +++++++++++++++++
->>>>  drivers/of/base.c                             |   10 +-
->>>>  drivers/pci/of.c                              |    7 +
->>>>  include/uapi/linux/virtio_ids.h               |    1 +
->>>>  include/uapi/linux/virtio_iommu.h             |  161 +++
->>>>  10 files changed, 1448 insertions(+), 3 deletions(-)
->>>>  create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
->>>>  create mode 100644 drivers/iommu/virtio-iommu.c
->>>>  create mode 100644 include/uapi/linux/virtio_iommu.h
->>>>
->>>> -- 
->>>> 2.19.1
+Below is a simplified diagram of a real-world SoC topology. The interconnect
+providers are the NoCs.
+
++----------------+    +----------------+
+| HW Accelerator |--->|      M NoC     |<---------------+
++----------------+    +----------------+                |
+                        |      |                    +------------+
+ +-----+  +-------------+      V       +------+     |            |
+ | DDR |  |                +--------+  | PCIe |     |            |
+ +-----+  |                | Slaves |  +------+     |            |
+   ^ ^    |                +--------+     |         |   C NoC    |
+   | |    V                               V         |            |
++------------------+   +------------------------+   |            |   +-----+
+|                  |-->|                        |-->|            |-->| CPU |
+|                  |-->|                        |<--|            |   +-----+
+|     Mem NoC      |   |         S NoC          |   +------------+
+|                  |<--|                        |---------+    |
+|                  |<--|                        |<------+ |    |   +--------+
++------------------+   +------------------------+       | |    +-->| Slaves |
+  ^  ^    ^    ^          ^                             | |        +--------+
+  |  |    |    |          |                             | V
++------+  |  +-----+   +-----+  +---------+   +----------------+   +--------+
+| CPUs |  |  | GPU |   | DSP |  | Masters |-->|       P NoC    |-->| Slaves |
++------+  |  +-----+   +-----+  +---------+   +----------------+   +--------+
+          |
+      +-------+
+      | Modem |
+      +-------+
+
+TODO:
+* Create icc_set_extended() to handle parameters such as latency and other
+  QoS values. Nvidia and Qcom guys are interested in this.
+* Cache the path between the nodes instead of walking the graph on each get().
+* Sync interconnect requests with the idle state of the device.
+
+Changes since patchset v9 (https://lkml.org/lkml/2018/8/31/444)
+* Converted from using global node identifiers to local per provider ids.
+* Dropped msm8916 platform driver until we figure out DT bindings.
+* Included sdm845 platform driver instead.
+* Added macros for converting to mbps, gbps, etc. to icc units.
+* Added comments about aggregation, other minor changes.
+* Fixed uninitialized variable. (Gustavo A. R. Silva)
+* Removed set but not used variable. (YueHaibing)
+* Fixed build error without DEBUGFS. (Arnd Bergmann)
+
+Changes since patchset v8 (https://lkml.org/lkml/2018/8/10/387)
+* Fixed the names of the files when built as modules.
+* Corrected some typos in comments.
+
+Changes since patchset v7 (https://lkml.org/lkml/2018/7/31/647)
+* Addressed comments on kernel-doc and grammar. (Randy)
+* Picked Reviewed-by: Evan
+* Squashed consumer and provider DT bindings into single patch. (Rob)
+* Cleaned-up msm8916 DT bindings docs by removing unused port ids.
+* Updated documentation for the cases when NULL is returned. (Saravana)
+* New patch to add myself as maintainer.
+
+Changes since patchset v6 (https://lkml.org/lkml/2018/7/9/698)
+* [patches 1,6]: Move the aggregation within the provider from the framework to
+  the platform driver's set() callback, as the aggregation point could be SoC
+  specific.
+* [patch 1]: Include missing header, reset state only of the traversed nodes,
+  move more code into path_init(), add more asserts, move misplaced mutex,
+  simplify icc_link_destroy() (Evan)
+* [patch 1]: Fix the order of requests to go from source to destination. (Alex)
+* [patch 7]: Use better wording in the documentation. (Evan)
+* [patch 6]: Reorder struct members, sort nodes alphabetically, improve naming
+  of variables , add missing clk_disable_unprepare() in error paths. (Matthias)
+* [patch 6]: Remove redundant NULL pointer check in msm8916 driver. (Alex)
+* [patch 6]: Add missing depend on QCOM_SMD_RPM in Kconfig. (Evan)
+* [patch 3]: Don't check for errors on debugfs calls, remove debugfs directory
+  when module is unloaded (Greg)
+
+Changes since patchset v5 (https://lkml.org/lkml/2018/6/20/453)
+* Fix the modular build, make rpm-smd driver a module.
+* Optimize locking and move to higher level. (Evan)
+* Code cleanups. Fix typos. (Evan, Matthias)
+* Add the source node to the path. (Evan)
+* Rename path_allocate() to path_init() with minor refactoring. (Evan)
+* Rename *_remove() functions to *_destroy().
+* Return fixed errors in icc_link_destroy(). (Evan)
+* Fix krealloc() usage in icc_link_destroy(). (Evan)
+* Add missing kfree() in icc_node_create(). (Matthias)
+* Make icc_node_add() return void. (Matthias)
+* Change mutex_init to mutex_lock in icc_provider_add(). (Matthias)
+* Add new icc_node_del() function to delete nodes from provider.
+* Fix the header guard to reflect the path in smd-rpm.h. (Evan)
+* Check for errors returned by qcom_icc_rpm_smd_send(). (Evan)
+* Propagate the error of icc_provider_del(). (Evan)
+
+Changes since patchset v4 (https://lkml.org/lkml/2018/3/9/856)
+* Simplified locking by using a single global mutex. (Evan)
+* Changed the aggregation function interface.
+* Implemented functions for node, link, provider removal. (Evan)
+* Naming changes on variables and functions, removed redundant code. (Evan)
+* Fixes and clarifications in the docs. (Matthias, Evan, Amit, Alexandre)
+* Removed mandatory reg DT property, made interconnect-names optional. (Bjorn)
+* Made interconnect-cells property required to align with other bindings. (Neil)
+* Moved msm8916 specific bindings into a separate file and patch. (Bjorn)
+* Use the names, instead of the hardcoded ids for topology. (Matthias)
+* Init the node before creating the links. (Evan)
+* Added icc_units_to_bps macro. (Amit)
+
+Changes since patchset v3 (https://lkml.org/lkml/2017/9/8/544)
+* Refactored the constraints aggregation.
+* Use the IDR API.
+* Split the provider and consumer bindings into separate patches and propose
+  new bindings for consumers, which allows to specify the local source port.
+* Adopted the icc_ prefix for API functions.
+* Introduced separate API functions for creating interconnect nodes and links.
+* Added DT lookup support in addition to platform data.
+* Dropped the event tracing patch for now.
+* Added a patch to provide summary via debugfs.
+* Use macro for the list of topology definitions in the platform driver.
+* Various minor changes.
+
+Changes since patchset v2 (https://lkml.org/lkml/2017/7/20/825)
+* Split the aggregation into per node and per provider. Cache the
+  aggregated values.
+* Various small refactorings and cleanups in the framework.
+* Added a patch introducing basic tracepoint support for monitoring
+  the time required to update the interconnect nodes.
+
+Changes since patchset v1 (https://lkml.org/lkml/2017/6/27/890)
+* Updates in the documentation.
+* Changes in request aggregation, locking.
+* Dropped the aggregate() callback and use the default as it currently
+  sufficient for the single vendor driver. Will add it later when needed.
+* Dropped the dt-bindings draft patch for now.
+
+Changes since RFC v2 (https://lkml.org/lkml/2017/6/12/316)
+* Converted documentation to rst format.
+* Fixed an incorrect call to mutex_lock. Renamed max_bw to peak_bw.
+
+Changes since RFC v1 (https://lkml.org/lkml/2017/5/15/605)
+* Refactored code into shorter functions.
+* Added a new aggregate() API function.
+* Rearranged some structs to reduce padding bytes.
+
+Changes since RFC v0 (https://lkml.org/lkml/2017/3/1/599)
+* Removed DT support and added optional Patch 3 with new bindings proposal.
+* Converted the topology into internal driver data.
+* Made the framework modular.
+* interconnect_get() now takes (src and dst ports as arguments).
+* Removed public declarations of some structs.
+* Now passing prev/next nodes to the vendor driver.
+* Properly remove requests on _put().
+* Added refcounting.
+* Updated documentation.
+* Changed struct interconnect_path to use array instead of linked list.
+
+David Dai (2):
+  interconnect: qcom: Add sdm845 interconnect provider driver
+  arm64: dts: sdm845: Add interconnect provider DT nodes
+
+Georgi Djakov (5):
+  interconnect: Add generic on-chip interconnect API
+  dt-bindings: Introduce interconnect binding
+  interconnect: Allow endpoints translation via DT
+  interconnect: Add debugfs support
+  MAINTAINERS: add a maintainer for the interconnect API
+
+ .../bindings/interconnect/interconnect.txt    |  60 ++
+ .../bindings/interconnect/qcom,sdm845.txt     |  24 +
+ Documentation/interconnect/interconnect.rst   |  94 ++
+ MAINTAINERS                                   |  10 +
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |   5 +
+ drivers/Kconfig                               |   2 +
+ drivers/Makefile                              |   1 +
+ drivers/interconnect/Kconfig                  |  15 +
+ drivers/interconnect/Makefile                 |   6 +
+ drivers/interconnect/core.c                   | 796 +++++++++++++++++
+ drivers/interconnect/qcom/Kconfig             |  13 +
+ drivers/interconnect/qcom/Makefile            |   5 +
+ drivers/interconnect/qcom/sdm845.c            | 836 ++++++++++++++++++
+ .../dt-bindings/interconnect/qcom,sdm845.h    | 143 +++
+ include/linux/interconnect-provider.h         | 142 +++
+ include/linux/interconnect.h                  |  58 ++
+ 16 files changed, 2210 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/interconnect.txt
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
+ create mode 100644 Documentation/interconnect/interconnect.rst
+ create mode 100644 drivers/interconnect/Kconfig
+ create mode 100644 drivers/interconnect/Makefile
+ create mode 100644 drivers/interconnect/core.c
+ create mode 100644 drivers/interconnect/qcom/Kconfig
+ create mode 100644 drivers/interconnect/qcom/Makefile
+ create mode 100644 drivers/interconnect/qcom/sdm845.c
+ create mode 100644 include/dt-bindings/interconnect/qcom,sdm845.h
+ create mode 100644 include/linux/interconnect-provider.h
+ create mode 100644 include/linux/interconnect.h
