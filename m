@@ -1,43 +1,46 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v3 0/4] thermal: tsens: Add support for QCS404 platform
-Date: Tue, 27 Nov 2018 21:59:03 +0530
-Message-ID: <cover.1543335819.git.amit.kucheria@linaro.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: qcom: qcs404: Add WCN3990 WLAN module
+ device node
+Date: Tue, 27 Nov 2018 22:09:28 +0530
+Message-ID: <20181127163928.GF3175@vkoul-mobl.Dlink>
+References: <20181127151716.31992-1-govinds@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181127151716.31992-1-govinds@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, vkoul@kernel.org, khasim.mohammed@linaro.org, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-soc@vger.kernel.org
+To: Govind Singh <govinds@codeaurora.org>
+Cc: andy.gross@linaro.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for the Qualcomm QCS404 platform that contains v1 of the TSENS
-IP. Introduce a fallback binding to handle "v1" functionality.
+On 27-11-18, 20:47, Govind Singh wrote:
+> Add device node for the ath10k SNOC platform driver probe
+> and add resources required for WCN3990 on qcs404 soc.
+> Optional clock and regulator controls are not yet available in
+> upstream, hence add them once available.
+> 
+> Signed-off-by: Govind Singh <govinds@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs404-evb.dtsi |  4 ++++
+>  arch/arm64/boot/dts/qcom/qcs404.dtsi     | 20 ++++++++++++++++++++
+>  2 files changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> index 0767389c68c1..36905524b0ff 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> @@ -310,6 +310,10 @@
+>  	status = "okay";
+>  };
+>  
+> +&wifi {
+> +	status = "okay";
+> +};
 
-These patches have been tested on top of 4.20-rc3 + various qcs404-related
-DT patches now in Andy's ci-next branch[1].
+I am assuming this is common to both evb variants, so:
 
-Changes since v2:
-- Fix a conversion error in the get_temp routine the caused negative
-  temperature readings (Reported by Khasim)
-
-Changes since v1:
-- Change p1 and p2 to be fixed-size arrays
-- Refactor DT entries to be sorted by address, Thanks Vinod
-- Added Acks
-
-Amit Kucheria (4):
-  dt: thermal: tsens: Add bindings for qcs404
-  drivers: thermal: tsens: Add generic support for TSENS v1 IP
-  arm64: dts: qcom: qcs404: Add tsens controller
-  arm64: dts: qcom: qcs404: Add thermal zones for each sensor
-
- .../bindings/thermal/qcom-tsens.txt           |   3 +
- arch/arm64/boot/dts/qcom/qcs404.dtsi          | 226 ++++++++++++++++++
- drivers/thermal/qcom/Makefile                 |   2 +-
- drivers/thermal/qcom/tsens-common.c           |   2 +-
- drivers/thermal/qcom/tsens-v1.c               | 196 +++++++++++++++
- drivers/thermal/qcom/tsens.c                  |   3 +
- drivers/thermal/qcom/tsens.h                  |   3 +-
- 7 files changed, 432 insertions(+), 3 deletions(-)
- create mode 100644 drivers/thermal/qcom/tsens-v1.c
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
 -- 
-2.17.1
+~Vinod
