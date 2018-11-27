@@ -1,135 +1,58 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCH 3/3] soc: qcom: Add AOSS QMP genpd provider
-Date: Tue, 27 Nov 2018 09:01:40 +0530
-Message-ID: <dfd0096c-d1f1-da0e-7c4c-3da916d521dc@codeaurora.org>
-References: <20181112080557.22698-1-bjorn.andersson@linaro.org>
- <20181112080557.22698-4-bjorn.andersson@linaro.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V4 2/2] base/drivers/arch_topology: Default dmips-mhz if
+ they are not set in DT
+Date: Tue, 27 Nov 2018 09:27:35 +0530
+Message-ID: <20181127035735.keqirmzjfbw4cq64@vireshk-i7>
+References: <1543234847-21611-1-git-send-email-daniel.lezcano@linaro.org>
+ <1543234847-21611-2-git-send-email-daniel.lezcano@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181112080557.22698-4-bjorn.andersson@linaro.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1543234847-21611-2-git-send-email-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: rjw@rjwysocki.net, linux-kernel@vger.kernel.org, Chris Redpath <chris.redpath@linaro.org>, Quentin Perret <quentin.perret@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Li Yang <leoyang.li@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+On 26-11-18, 13:20, Daniel Lezcano wrote:
+> diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> index 84262cd..f53a3c9 100644
+> --- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> @@ -54,6 +54,12 @@ fall back to the default capacity value for every CPU. If cpufreq is not
+>  available, final capacities are calculated by directly using capacity-dmips-
+>  mhz values (normalized w.r.t. the highest value found while parsing the DT).
+>  
+> +If capacity-dmips-mhz is not specified or if the parsing fails, the
+> +default capacity value will be computed against the highest frequency.
+> +When all CPUs have the same OPP, they will have the same capacity
+> +value otherwise the capacity will be scaled down for CPUs having lower
+> +frequencies.
 
-On 11/12/2018 1:35 PM, Bjorn Andersson wrote:
-> The AOSS QMP genpd provider implements control over power-related
-> resources related to low-power state associated with the remoteprocs in
-> the system as well as control over a set of clocks related to debug
-> hardware in the SoC.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->   drivers/soc/qcom/Kconfig       |   8 ++
->   drivers/soc/qcom/Makefile      |   1 +
->   drivers/soc/qcom/aoss-qmp-pd.c | 135 +++++++++++++++++++++++++++++++++
->   3 files changed, 144 insertions(+)
->   create mode 100644 drivers/soc/qcom/aoss-qmp-pd.c
-> 
-> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-> index ba08fc00d7f5..e1eda3d59748 100644
-> --- a/drivers/soc/qcom/Kconfig
-> +++ b/drivers/soc/qcom/Kconfig
-> @@ -10,6 +10,14 @@ config QCOM_AOSS_QMP
->   	  micro-controller in the AOSS, using QMP, to control certain resource
->   	  that are not exposed through RPMh.
->   
-> +config QCOM_AOSS_QMP_PD
-> +	tristate "Qualcomm AOSS Messaging Power Domain driver"
-> +	depends on QCOM_AOSS_QMP
-> +	help
-> +	  This driver provides the means of controlling the AOSSs handling of
-> +	  low-power state for resources related to the remoteproc subsystems as
-> +	  well as controlling the debug clocks.
-> +
->   config QCOM_COMMAND_DB
->   	bool "Qualcomm Command DB"
->   	depends on ARCH_QCOM || COMPILE_TEST
-> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-> index d0d7fdc94d9a..ebfa414a5b77 100644
-> --- a/drivers/soc/qcom/Makefile
-> +++ b/drivers/soc/qcom/Makefile
-> @@ -1,6 +1,7 @@
->   # SPDX-License-Identifier: GPL-2.0
->   CFLAGS_rpmh-rsc.o := -I$(src)
->   obj-$(CONFIG_QCOM_AOSS_QMP) +=	aoss-qmp.o
-> +obj-$(CONFIG_QCOM_AOSS_QMP_PD) += aoss-qmp-pd.o
->   obj-$(CONFIG_QCOM_GENI_SE) +=	qcom-geni-se.o
->   obj-$(CONFIG_QCOM_COMMAND_DB) += cmd-db.o
->   obj-$(CONFIG_QCOM_GLINK_SSR) +=	glink_ssr.o
-> diff --git a/drivers/soc/qcom/aoss-qmp-pd.c b/drivers/soc/qcom/aoss-qmp-pd.c
-> new file mode 100644
-> index 000000000000..467d0db4abfa
-> --- /dev/null
-> +++ b/drivers/soc/qcom/aoss-qmp-pd.c
-> @@ -0,0 +1,135 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018, Linaro Ltd
-> + */
-> +#include <linux/interrupt.h>
-> +#include <linux/module.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_domain.h>
-> +#include <linux/soc/qcom/aoss-qmp.h>
-> +
-> +#include <dt-bindings/power/qcom-aoss-qmp.h>
-> +
-> +struct qmp_pd {
-> +	struct qmp *qmp;
-> +
-> +	struct generic_pm_domain pd;
-> +
-> +	const char *name;
-> +};
-> +
-> +#define to_qmp_pd_resource(res) container_of(res, struct qmp_pd, pd)
-> +
-> +struct qmp_pd_resource {
-> +	const char *name;
-> +	int (*on)(struct generic_pm_domain *domain);
-> +	int (*off)(struct generic_pm_domain *domain);
-> +};
-> +
-> +static int qmp_pd_clock_toggle(struct qmp_pd *res, bool enable)
-> +{
-> +	char buf[96];
-> +	size_t n;
-> +
-> +	n = snprintf(buf, sizeof(buf), "{class: clock, res: %s, val: %d}",
-> +		     res->name, !!enable);
-> +	return qmp_send(res->qmp, buf, n);
-> +}
-> +
+I know you added this based on Quentin's feedback, but I wonder if this is
+really required and if it is improving anything at all. This is what the
+documentation says currently without this patch:
 
-I was trying to get QDSS working with these patches and found one issue
-in qmp_send of qmp_pd_clock_toggle.
+"
+capacity-dmips-mhz is an optional cpu node [1] property: u32 value
+representing CPU capacity expressed in normalized DMIPS/MHz. At boot time, the
+maximum frequency available to the cpu is then used to calculate the capacity
+value internally used by the kernel.
 
-The third return value should be sizeof(buf) instead of n because n just
-returns len as 33 and the below check in qmp send will always fail and
-trigger WARN_ON's.
+capacity-dmips-mhz property is all-or-nothing: if it is specified for a cpu
+node, it has to be specified for every other cpu nodes, or the system will
+fall back to the default capacity value for every CPU. If cpufreq is not
+available, final capacities are calculated by directly using capacity-dmips-
+mhz values (normalized w.r.t. the highest value found while parsing the DT).
+"
 
-          if (WARN_ON(len % sizeof(u32))) {
-                  dev_err(qmp->dev, "message not 32-bit aligned\n");
-                  return -EINVAL;
-          }
+So it already clearly says two things:
+- If all CPUs don't have this property, we fallback to default capacity for
+  every CPU.
+- And the OS may also normalize the capacity based on the maximum frequency.
 
-Also I observed that multiple "ucore will not ack channel" messages with
-len being returned n instead of buf size.
-
-One more thing is do we really require *WARN_ON and dev_err* both 
-because it just spams the kernel logs, I think dev_err message is clear
-enough to be able to understand the error condition.
-
-Thanks,
-Sai
+What more do we want to add here ?
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+viresh
