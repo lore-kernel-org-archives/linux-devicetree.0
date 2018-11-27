@@ -1,69 +1,152 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v4 0/2] dmaengine: add UniPhier MIO DMAC driver
-Date: Tue, 27 Nov 2018 20:29:11 +0530
-Message-ID: <20181127145911.GC3175@vkoul-mobl.Dlink>
-References: <1539276063-5103-1-git-send-email-yamada.masahiro@socionext.com>
- <20181124141616.GH3175@vkoul-mobl.Dlink>
- <CAK7LNAR8Tk9iXPLnv4XDM0E=kTWwv2+UGz+xmtA-eJyjRFjFRw@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 1/5] dt-bindings: media: Add Allwinner A10 CSI binding
+Date: Tue, 27 Nov 2018 16:04:19 +0100
+Message-ID: <20181127150419.wmlqhhixb5pg7mkr@flea>
+References: <cover.71b0f9855c251f9dc389ee77ee6f0e1fad91fb0b.1542097288.git-series.maxime.ripard@bootlin.com>
+ <60494dd4245ab01473d074dc5cd46198a2181614.1542097288.git-series.maxime.ripard@bootlin.com>
+ <20181113083855.s5jxrb32ru3myu3t@kekkonen.localdomain>
+ <20181115190424.gpuekifrjli5mu77@flea>
+ <20181121215650.urefxctd245os6t5@mara.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yv57llofassyfdse"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAK7LNAR8Tk9iXPLnv4XDM0E=kTWwv2+UGz+xmtA-eJyjRFjFRw@mail.gmail.com>
+In-Reply-To: <20181121215650.urefxctd245os6t5@mara.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 25-11-18, 22:53, Masahiro Yamada wrote:
-> On Sat, Nov 24, 2018 at 11:16 PM Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > On 12-10-18, 01:41, Masahiro Yamada wrote:
-> > > 1/2: DT-binding
-> > > 2/2: driver
-> >
-> > Applied this series, thanks
-> 
-> 
-> Thanks.
-> 
-> 
-> > While building I noticed that we get few warns when compiling with
-> > C=1, I would prefer you fix them. Please send fixes on top of the
-> > applied patches.
-> 
-> My code is fine.
 
-Lets see..
+--yv57llofassyfdse
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> If you are talking about the following, your sparse is too old.
-> Upgrade your sparse.
+Hi,
 
-Not really!!
+On Wed, Nov 21, 2018 at 11:56:50PM +0200, Sakari Ailus wrote:
+> On Thu, Nov 15, 2018 at 08:04:24PM +0100, Maxime Ripard wrote:
+> > On Tue, Nov 13, 2018 at 10:38:55AM +0200, Sakari Ailus wrote:
+> > > > +  - allwinner,has-isp: Whether the CSI controller has an ISP
+> > > > +                       associated to it or not
+> > >=20
+> > > Is the ISP a part of the same device? It sounds like that this is act=
+ually
+> > > a different device if it contains an ISP as well, and that should be
+> > > apparent from the compatible string. What do you think?
+> >=20
+> > I guess we can see it as both. It seems to be the exact same register
+> > set, except for the fact that the first instance has that ISP in
+> > addition, and several channels, as you pointed out in your other mail.
+>=20
+> I'm simply referring to existing practices as far as I know them. If it's=
+ a
+> different device, it should have a different compatible string, not a
+> vendor-specific property to tell it's somehow different.
 
-$ sparse --version
-0.5.2
+The line is blurrier than that. Different devices are indeed
+represented using different compatibles, but different features set
+can be represented using properties.
 
-.. is the last released version!
+> Many SoCs also separate the DMA and the CSI-2 receivers, and thus they ha=
+ve
+> separate drivers. I don't know about your case, but the ISP requiring a
+> different clock is a hint.
 
-Do you use from git?
+In this particular case, the datasheet represents the ISP as part of
+the DMA, so it looks like a feature. And since we don't have any
+source code for this, we can only do guesswork.
 
-> ./include/linux/overflow.h:285:13: error: undefined identifier
-> '__builtin_mul_overflow'
-> ./include/linux/overflow.h:285:13: error: incorrect type in conditional
-> ./include/linux/overflow.h:285:13:    got void
-> ./include/linux/overflow.h:287:13: error: undefined identifier
-> '__builtin_add_overflow'
-> ./include/linux/overflow.h:287:13: error: incorrect type in conditional
-> ./include/linux/overflow.h:287:13:    got void
-> ./include/linux/overflow.h:285:13: warning: call with no type!
-> ./include/linux/overflow.h:287:13: warning: call with no type!
+> > What these channels are is not exactly clear. It looks like it's
+> > related to the BT656 interface where you could interleave channel
+> > bytes over the bus. I haven't really looked into it, and it doesn't
+> > look like we have any code (or hardware) able to do that though.
+> >=20
+> > > > +
+> > > > +If allwinner,has-isp is set, an additional "isp" clock is needed,
+> > > > +being a phandle to the clock driving the ISP.
+> > > > +
+> > > > +The CSI node should contain one 'port' child node with one child
+> > > > +'endpoint' node, according to the bindings defined in
+> > > > +Documentation/devicetree/bindings/media/video-interfaces.txt. The
+> > > > +endpoint's bus type must be parallel or BT656.
+> > > > +
+> > > > +Endpoint node properties for CSI
+> > > > +---------------------------------
+> > > > +
+> > > > +- remote-endpoint	: (required) a phandle to the bus receiver's end=
+point
+> > > > +			   node
+> > >=20
+> > > Rob's opinion has been (AFAIU) that this is not needed as it's alread=
+y a
+> > > part of the graph bindings. Unless you want to say that it's required=
+, that
+> > > is --- the graph bindings document it as optional.
+> >=20
+> > Ok, I'll remove it.
+> >=20
+> > > > +- bus-width:		: (required) must be 8
+> > >=20
+> > > If this is the only value the hardware supports, I don't see why you =
+should
+> > > specify it here.
+> >=20
+> > Ditto :)
+> >=20
+> > > > +- pclk-sample		: (optional) (default: sample on falling edge)
+> > > > +- hsync-active		: (only required for parallel)
+> > > > +- vsync-active		: (only required for parallel)
+> > > > +
+> > > > +Example:
+> > > > +
+> > > > +csi0: csi@1c09000 {
+> > > > +	compatible =3D "allwinner,sun7i-a20-csi",
+> > > > +		     "allwinner,sun4i-a10-csi";
+> > > > +	reg =3D <0x01c09000 0x1000>;
+> > > > +	interrupts =3D <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+> > > > +	clocks =3D <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI0>,
+> > > > +		 <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
+> > > > +	clock-names =3D "ahb", "mod", "isp", "ram";
+> > > > +	resets =3D <&ccu RST_CSI0>;
+> > > > +	allwinner,csi-channels =3D <4>;
+> > > > +	allwinner,has-isp;
+> > > > +=09
+> > > > +	port {
+> > > > +		csi_from_ov5640: endpoint {
+> > > > +                        remote-endpoint =3D <&ov5640_to_csi>;
+> > > > +                        bus-width =3D <8>;
+> > > > +                        data-shift =3D <2>;
+> > >=20
+> > > data-shift needs to be documented above if it's relevant for the devi=
+ce.
+> >=20
+> > It's not really related to the CSI device in that case but the sensor,
+> > so I'll just leave it out.
+>=20
+> Hmm. data-shift should only be relevant for the receiver, shoudn't it?
 
-and I was also talking about:
+Sorry, I mispoke. We're not using it anywhere in either drivers, so
+it's totally useless.
 
-arch/arm64/include/asm/sysreg.h:471:42: warning: constant 0xffffffffffffffff is so big it is unsigned long
-arch/arm64/include/asm/sysreg.h:512:42: warning: constant 0xffffffffffffffff is so big it is unsigned long
-include/linux/slab.h:332:43: warning: dubious: x & !y
+Maxime
 
--- 
-~Vinod
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--yv57llofassyfdse
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW/1c8wAKCRDj7w1vZxhR
+xeFUAQDoNrYNTYuKW2LxDjXbck0L8ZtFCpeDjUEIV1DD17iiBQEA/c54jPVLSpeF
+KfglcnCThL6gXzqesTYg5UoodftYNAs=
+=bisM
+-----END PGP SIGNATURE-----
+
+--yv57llofassyfdse--
