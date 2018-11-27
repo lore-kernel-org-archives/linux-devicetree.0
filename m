@@ -1,65 +1,253 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add videocc node
-Date: Mon, 26 Nov 2018 16:35:50 -0800
-Message-ID: <CAD=FV=X3C=oKep1kPWjasLDZdFKfhCs0JMWTOensgYDj=apvuQ@mail.gmail.com>
-References: <1541414117-27864-1-git-send-email-tdas@codeaurora.org>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v3] arm64: dts: rockchip: Add DT for nanopc-t4
+Date: Tue, 27 Nov 2018 08:45:13 +0800
+Message-ID: <e9ee8167-c398-c14e-d798-3b4233ba2ff2@rock-chips.com>
+References: <20181123073120.6250-1-tomeu.vizoso@collabora.com>
+ <20181126145107.38222-1-tomeu.vizoso@collabora.com>
+ <26178858.xdqtN7Rtck@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541414117-27864-1-git-send-email-tdas@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>, Andy Gross <andy.gross@linaro.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <26178858.xdqtN7Rtck@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, shawn.lin@rock-chips.com, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Ezequiel Garcia <ezequiel@collabora.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 2018/11/27 7:48, Heiko Stuebner wrote:
+> Hi Tomeu,
+> 
+> Am Montag, 26. November 2018, 15:47:49 CET schrieb Tomeu Vizoso:
+>> This adds a device tree for the NanoPC-T4 SBC, which is based on the
+>> Rockchip RK3399 SoC and marketed by FriendlyELEC.
+>>
+>> Known working:
+>>
+>> - Serial
+>> - Ethernet
+>> - HDMI
+>> - USB 2.0
+>>
+>> All of the interesting stuff is in a .dtsi because there are at least
+>> two other boards that share most of it: NanoPi M4 and NanoPi NEO4.
+>>
+>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+> 
+> looks pretty good overall, just some more small-scale things
+> below.
+> 
+>> ---
+>>
+>> v2: - Rename compatible from friendlyelec to friendlyarm, to match
+>>        existing bindings
+>>      - Remove superfluous node spi1
+>>
+>> v3: - Rewrite regulator tree to match the schematics (Heiko)
+>>      - Sort top-level nodes alphabetically (Heiko)
+>>      - Used defines for GPIO numbers (Heiko)
+>>      - Enabled rga (Heiko)
+>>      - Removed cdn_dp node (Heiko)
+>>      - Removed dependencies to fusb0 as extcon (Heiko)
+>>      - Removed superfluous properties (Heiko)
+> 
+> 
+>> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+>> index 49042c477870..4cbd2c461052 100644
+>> --- a/arch/arm64/boot/dts/rockchip/Makefile
+>> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+>> @@ -1,6 +1,7 @@
+>>   # SPDX-License-Identifier: GPL-2.0
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
+>> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopc-t4.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-rock64.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-roc-cc.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-evb-act8846.dtb
+> 
+> These are definitly sorted in the Makefile, so this should move between
+> rk3399-gru-scarlet-kd.dtb and rk3399-puma-haikou.dtb :-)
+> 
+> 
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
+>> new file mode 100644
+>> index 000000000000..f102ff2317c3
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
+>> @@ -0,0 +1,740 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * RK3399-based FriendlyElec boards device tree source
+>> + *
+>> + * Copyright (c) 2016 Fuzhou Rockchip Electronics Co., Ltd
+>> + *
+>> + * Copyright (c) 2018 FriendlyElec Computer Tech. Co., Ltd.
+>> + * (http://www.friendlyarm.com)
+>> + *
+>> + * Copyright (c) 2018 Collabora Ltd.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include <dt-bindings/input/linux-event-codes.h>
+>> +#include "rk3399.dtsi"
+>> +#include "rk3399-opp.dtsi"
+>> +
+>> +/ {
+>> +	chosen {
+>> +		stdout-path = "serial2:1500000n8";
+>> +	};
+>> +
+>> +	clkin_gmac: external-gmac-clock {
+>> +		compatible = "fixed-clock";
+>> +		clock-frequency = <125000000>;
+>> +		clock-output-names = "clkin_gmac";
+>> +		#clock-cells = <0>;
+>> +	};
+>> +
+>> +	vdd_5v: vdd_5v {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vdd_5v";
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +	};
+>> +
+>> +	vcc5v0_core: vcc5v0_core {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vcc5v0_core";
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +		vin-supply = <&vdd_5v>;
+>> +	};
+>> +
+>> +	vcc3v3_sys: vcc3v3_sys {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vcc3v3_sys";
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +		regulator-min-microvolt = <3300000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +		vin-supply = <&vcc5v0_core>;
+>> +	};
+>> +
+>> +	vcc5v0_sys: vcc5v0_sys {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vcc5v0_sys";
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +		regulator-min-microvolt = <5000000>;
+>> +		regulator-max-microvolt = <5000000>;
+>> +		vin-supply = <&vdd_5v>;
+>> +	};
+>> +
+>> +	vcc5v0_usb1: vcc5v0_usb1 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vcc5v0_usb1";
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +		vin-supply = <&vcc5v0_sys>;
+>> +	};
+>> +
+>> +	vcc5v0_usb2: vcc5v0_usb2 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vcc5v0_usb2";
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +		vin-supply = <&vcc5v0_sys>;
+>> +	};
+>> +
+>> +	/* switched by pmic_sleep */
+>> +	vcc1v8_s3: vcca1v8_s3: vcc1v8-s3 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vcc1v8_s3";
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +		regulator-min-microvolt = <1800000>;
+>> +		regulator-max-microvolt = <1800000>;
+>> +		vin-supply = <&vcc_1v8>;
+>> +	};
+>> +
+>> +	vcc3v0_sd: vcc3v0_sd {
+> 
+> dt-spec mandates node names with "-", so this should become
+> 	vcc3v0_sd: vcc3v0-sd {
+> 
+> Same for most regulators above.
+> 
+>> +	rk808: pmic@1b {
+>> +		compatible = "rockchip,rk808";
+>> +		reg = <0x1b>;
+>> +		interrupt-parent = <&gpio1>;
+>> +		interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&pmic_int_l>;
+>> +		rockchip,system-power-controller;
+>> +		wakeup-source;
+>> +		#clock-cells = <1>;
+>> +		clock-output-names = "rk808-clkout1", "rk808-clkout2";
+> 
+> rename rk808-clkout1 to xin32k so that it hooks correctly into
+> the rk3399 clock controller, as that signals is providing the 32kHz clock
+> for the system. (see $debug/clk/clk_summary and rk3399-cru dt binding)
+> 
+> 
+>> +&pinctrl {
+>> +
+> 
+> unnecessary empty line
+> 
+>> +	pmic {
+> 
+> 
+>> +&rga {
+>> +	status = "okay";
+>> +};
+> 
+> rga is not dependant on pinout, so is always enabled in rk3399.dtsi
+> So this node can go away.
+> 
+>> +&sdhci {
+>> +	bus-width = <8>;
+>> +	mmc-hs400-1_8v;
+>> +	supports-emmc;
+> 
+> remnant from the vendor-kernel?
+> Should also go away.
+> 
+>> +	non-removable;
+>> +	keep-power-in-suspend;
 
-On Mon, Nov 5, 2018 at 2:35 AM Taniya Das <tdas@codeaurora.org> wrote:
->
-> This adds the video clock controller node to sdm845 based on the examples
-> in the bindings.
->
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index b72bdb0..91a281b 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -8,6 +8,7 @@
->  #include <dt-bindings/clock/qcom,dispcc-sdm845.h>
->  #include <dt-bindings/clock/qcom,gcc-sdm845.h>
->  #include <dt-bindings/clock/qcom,rpmh.h>
-> +#include <dt-bindings/clock/qcom,videocc-sdm845.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/phy/phy-qcom-qusb2.h>
->  #include <dt-bindings/reset/qcom,sdm845-aoss.h>
-> @@ -1256,6 +1257,13 @@
->                         #power-domain-cells = <1>;
->                 };
->
-> +               videocc: clock-controller@ab00000 {
-> +                       compatible = "qcom,sdm845-videocc";
-> +                       reg = <0xab00000 0x10000>;
-> +                       #clock-cells = <1>;
-> +                       #power-domain-cells = <1>;
+keep-power-in-suspend is for SDIO only.
+Please remove this.
 
-Any reason not to include "#reset-cells = <1>;" here?  The bindings
-list it as optional but I see no reason why we should leave it off.
-The file "include/dt-bindings/clock/qcom,videocc-sdm845.h" seems to
-include some #defines for resets.  Even though the driver doesn't seem
-like it supports it yet, it still should be fine to list it here.
-
-
-> +               };
-> +
->                 tsens0: thermal-sensor@c263000 {
-
-Please sort your new node by unit address.  Specifically "ab00000"
-comes before "af00000", thus I would expect you to have your node
-right before the dispcc.
-
-
--Doug
+>> +	mmc-hs400-enhanced-strobe;
+>> +	status = "okay";
+>> +};
+>> +
+> 
+>> +&usbdrd3_0 {
+>> +	status = "okay";
+>> +	extcon = <&fusb0>;
+> 
+> I still don't think that extcon gets defined at all and is also
+> not specified in any dwc3 binding, so should probably go away.
+> 
+> 
+> Heiko
+> 
+> 
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> 
+> 
+> 
