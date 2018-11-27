@@ -1,29 +1,36 @@
 From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 0/3] mfd: syscon: Add optional clock support needed on stm32
-Date: Tue, 27 Nov 2018 17:48:14 +0100
-Message-ID: <1543337297-21873-1-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH 1/3] dt-bindings: mfd: syscon: Add optional clock support
+Date: Tue, 27 Nov 2018 17:48:15 +0100
+Message-ID: <1543337297-21873-2-git-send-email-fabrice.gasnier@st.com>
+References: <1543337297-21873-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1543337297-21873-1-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: lee.jones@linaro.org, robh+dt@kernel.org, alexandre.torgue@st.com
 Cc: mcoquelin.stm32@gmail.com, arnd@arndb.de, mark.rutland@arm.com, gabriel.fernandez@st.com, fabrice.gasnier@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-STM32 syscfg registers are accessed using syscon. It needs syscfg clock
-to be enabled while accessing registers.
-This adds support for optional clock on syscon, and the relevant clock
-in stm32mp157 device tree.
+Some system control registers need to be clocked, so the registers can
+be accessed. Add an optional clock.
 
-Fabrice Gasnier (3):
-  dt-bindings: mfd: syscon: Add optional clock support
-  mfd: syscon: Add optional clock support
-  ARM: dts: stm32: Add clock on stm32mp157c syscfg
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ Documentation/devicetree/bindings/mfd/syscon.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
- Documentation/devicetree/bindings/mfd/syscon.txt |  1 +
- arch/arm/boot/dts/stm32mp157c.dtsi               |  1 +
- drivers/mfd/syscon.c                             | 19 +++++++++++++++++++
- 3 files changed, 21 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
+index 25d9e9c..a9aaa51 100644
+--- a/Documentation/devicetree/bindings/mfd/syscon.txt
++++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+@@ -17,6 +17,7 @@ Optional property:
+ - reg-io-width: the size (in bytes) of the IO accesses that should be
+   performed on the device.
+ - hwlocks: reference to a phandle of a hardware spinlock provider node.
++- clocks: phandle to the syscon clock
+ 
+ Examples:
+ gpr: iomuxc-gpr@20e0000 {
 -- 
 1.9.1
