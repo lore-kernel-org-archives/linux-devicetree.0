@@ -1,58 +1,70 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: [PATCH v18 5/5] iommu/arm-smmu: Add support for qcom,smmu-v2 variant
-Date: Tue, 27 Nov 2018 15:41:45 +0530
-Message-ID: <20181127101145.7682-6-vivek.gautam@codeaurora.org>
-References: <20181127101145.7682-1-vivek.gautam@codeaurora.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V4 2/2] base/drivers/arch_topology: Default dmips-mhz if
+ they are not set in DT
+Date: Tue, 27 Nov 2018 15:45:47 +0530
+Message-ID: <20181127101547.pjdqmkc5agwm7a77@vireshk-i7>
+References: <1543234847-21611-1-git-send-email-daniel.lezcano@linaro.org>
+ <1543234847-21611-2-git-send-email-daniel.lezcano@linaro.org>
+ <20181127035735.keqirmzjfbw4cq64@vireshk-i7>
+ <20181127090940.feegcsxmyxdzbk27@queper01-ThinkPad-T460s>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181127101145.7682-1-vivek.gautam@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20181127090940.feegcsxmyxdzbk27@queper01-ThinkPad-T460s>
 Sender: linux-kernel-owner@vger.kernel.org
-To: joro@8bytes.org, robh+dt@kernel.org, robin.murphy@arm.com, will.deacon@arm.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org
-Cc: alex.williamson@redhat.com, mark.rutland@arm.com, rjw@rjwysocki.net, robdclark@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, freedreno@lists.freedesktop.org, sboyd@kernel.org, tfiga@chromium.org, jcrouse@codeaurora.org, sricharan@codeaurora.org, m.szyprowski@samsung.com, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, thor.thayer@linux.intel.com, Vivek Gautam <vivek.gautam@codeaurora.org>
+To: Quentin Perret <quentin.perret@linaro.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, Chris Redpath <chris.redpath@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Li Yang <leoyang.li@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-qcom,smmu-v2 is an arm,smmu-v2 implementation with specific
-clock and power requirements.
-On msm8996, multiple cores, viz. mdss, video, etc. use this
-smmu. On sdm845, this smmu is used with gpu.
-Add bindings for the same.
+On 27-11-18, 09:09, Quentin Perret wrote:
+> On Tuesday 27 Nov 2018 at 09:27:35 (+0530), Viresh Kumar wrote:
+> > On 26-11-18, 13:20, Daniel Lezcano wrote:
+> > > diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> > > index 84262cd..f53a3c9 100644
+> > > --- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> > > +++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> > > @@ -54,6 +54,12 @@ fall back to the default capacity value for every CPU. If cpufreq is not
+> > >  available, final capacities are calculated by directly using capacity-dmips-
+> > >  mhz values (normalized w.r.t. the highest value found while parsing the DT).
+> > >  
+> > > +If capacity-dmips-mhz is not specified or if the parsing fails, the
+> > > +default capacity value will be computed against the highest frequency.
+> > > +When all CPUs have the same OPP, they will have the same capacity
+> > > +value otherwise the capacity will be scaled down for CPUs having lower
+> > > +frequencies.
+> > 
+> > I know you added this based on Quentin's feedback, but I wonder if this is
+> > really required and if it is improving anything at all. This is what the
+> > documentation says currently without this patch:
+> > 
+> > "
+> > capacity-dmips-mhz is an optional cpu node [1] property: u32 value
+> > representing CPU capacity expressed in normalized DMIPS/MHz. At boot time, the
+> > maximum frequency available to the cpu is then used to calculate the capacity
+> > value internally used by the kernel.
+> > 
+> > capacity-dmips-mhz property is all-or-nothing: if it is specified for a cpu
+> > node, it has to be specified for every other cpu nodes, or the system will
+> > fall back to the default capacity value for every CPU. If cpufreq is not
+> > available, final capacities are calculated by directly using capacity-dmips-
+> > mhz values (normalized w.r.t. the highest value found while parsing the DT).
+> > "
+> > 
+> > So it already clearly says two things:
+> > - If all CPUs don't have this property, we fallback to default capacity for
+> >   every CPU.
+> 
+> Which is not what we do with this patch any more. We fallback to
+> scaling with frequency.
 
-Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
----
- drivers/iommu/arm-smmu.c | 3 +++
- 1 file changed, 3 insertions(+)
+I read it as that the documentation always said that OS shall do freq based
+normalization at boot time and we weren't doing the right thing earlier. On
+partially filled DT we used to fallback to the default capacity but never did
+the freq based normalization, which was the second step to be done after reading
+the capacity-dmips-mhz value.
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index f02e0f58e696..29ce9e10abd4 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -121,6 +121,7 @@ enum arm_smmu_implementation {
- 	GENERIC_SMMU,
- 	ARM_MMU500,
- 	CAVIUM_SMMUV2,
-+	QCOM_SMMUV2,
- };
- 
- struct arm_smmu_s2cr {
-@@ -2031,6 +2032,7 @@ ARM_SMMU_MATCH_DATA(smmu_generic_v2, ARM_SMMU_V2, GENERIC_SMMU);
- ARM_SMMU_MATCH_DATA(arm_mmu401, ARM_SMMU_V1_64K, GENERIC_SMMU);
- ARM_SMMU_MATCH_DATA(arm_mmu500, ARM_SMMU_V2, ARM_MMU500);
- ARM_SMMU_MATCH_DATA(cavium_smmuv2, ARM_SMMU_V2, CAVIUM_SMMUV2);
-+ARM_SMMU_MATCH_DATA(qcom_smmuv2, ARM_SMMU_V2, QCOM_SMMUV2);
- 
- static const struct of_device_id arm_smmu_of_match[] = {
- 	{ .compatible = "arm,smmu-v1", .data = &smmu_generic_v1 },
-@@ -2039,6 +2041,7 @@ static const struct of_device_id arm_smmu_of_match[] = {
- 	{ .compatible = "arm,mmu-401", .data = &arm_mmu401 },
- 	{ .compatible = "arm,mmu-500", .data = &arm_mmu500 },
- 	{ .compatible = "cavium,smmu-v2", .data = &cavium_smmuv2 },
-+	{ .compatible = "qcom,smmu-v2", .data = &qcom_smmuv2 },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, arm_smmu_of_match);
+Anyway, its fine if all other are in sync to get this included :)
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+viresh
