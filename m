@@ -1,55 +1,85 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH 3/3] PCI: imx: Add support for i.MX8MQ
-Date: Tue, 27 Nov 2018 11:06:09 +0100
-Message-ID: <1543313169.2507.39.camel@pengutronix.de>
-References: <20181117181225.10737-1-andrew.smirnov@gmail.com>
-         <20181117181225.10737-4-andrew.smirnov@gmail.com>
-         <ce2ac1a880ce2a7a39f0e42b5059676daa748e52.camel@nxp.com>
-         <CAHQ1cqH6LT4GsxUchrmVG1m3fqawgyUjxdHvh=SzxhBiQOd8eg@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 03/12] drm/sun4i: sun6i_mipi_dsi: Setup
+ burst mode timings
+Date: Tue, 27 Nov 2018 11:07:24 +0100
+Message-ID: <20181127100724.od5rm7vxdn7qemdv@flea>
+References: <20181116163916.29621-1-jagan@amarulasolutions.com>
+ <20181116163916.29621-4-jagan@amarulasolutions.com>
+ <20181119083036.riydru5xefao3xte@flea>
+ <CAMty3ZBDBDqtH5_m4g-kkKKx+JqcC-r9mc-H+_WWgkLubMWPew@mail.gmail.com>
+ <20181120154532.mykbbrc3homwf2fi@flea>
+ <CAMty3ZCZtTa=YYxVnqvOHSGxA4vkXf6iinhoKfVN7B6CHFg_xQ@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHQ1cqH6LT4GsxUchrmVG1m3fqawgyUjxdHvh=SzxhBiQOd8eg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com, Chris Healy <cphealy@gmail.com>, Dong Aisheng <aisheng.dong@nxp.com>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ljkfb22ybl2pyuox"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2FO6TPQKGQEPTRFKYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZCZtTa=YYxVnqvOHSGxA4vkXf6iinhoKfVN7B6CHFg_xQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, TL Lim <tllim-F7SikzrIcFYdnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrey,
 
-Am Montag, den 26.11.2018, 10:24 -0800 schrieb Andrey Smirnov:
-> On Tue, Nov 20, 2018 at 2:49 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
-> > 
-> > On Sat, 2018-11-17 at 10:12 -0800, Andrey Smirnov wrote:
-> > > @@ -921,7 +1004,28 @@ static int imx6_pcie_probe(struct platform_device *pdev)
-> > > -     case IMX7D:
-> > > +     case IMX8MQ:
-> > > +             if (of_property_read_u32(node, "fsl,iomux-gpr1x",
-> > > +                                      &imx6_pcie->gpr1x)) {
-> > > +                     dev_err(dev, "Failed to get GPR1x address\n");
-> > > +                     return -EINVAL;
-> > > +             }
-> > 
-> > This is for distinguishing multiple controllers on the SOC but other
-> > registers and bits might differ. Isn't it preferable to have a property
-> > for controller id instead of adding many registers to DT?
-> > 
+--ljkfb22ybl2pyuox
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Tue, Nov 20, 2018 at 09:52:23PM +0530, Jagan Teki wrote:
+> On Tue, Nov 20, 2018 at 9:15 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> >
+> > On Mon, Nov 19, 2018 at 04:30:37PM +0530, Jagan Teki wrote:
+> > > On Mon, Nov 19, 2018 at 2:00 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > > >
+> > > > On Fri, Nov 16, 2018 at 10:09:07PM +0530, Jagan Teki wrote:
+> > > > > Burst mode display timings are different from convectional
+> > > > > video mode so update the horizontal and vertical timings.
+> > > > >
+> > > > > Reference code taken from BSP (from linux-sunxi/
+> > > > > drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
+> > > > >
+> > > > > dsi_hsa  = 0;
+> > > > > dsi_hbp  = 0;
+> > > > > dsi_hact = x*dsi_pixel_bits[format]/8;
+> > > > > dsi_hblk = dsi_hact;
+> > > > > dsi_hfp  = 0;
+> > > > > dsi_vblk = 0;
+> > > > >
+> > > > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > >
+> > > > How is that matching the code you have in the rest of your patch?
+> > >
+> > > +       if (device->mode_flags & MIPI_DSI_MODE_VIDEO_BURST)
+> > > +               timings.hblk = (mode->hdisplay * Bpp);
+> > > +       else
+> > > +               sun6i_dsi_get_timings(dsi, mode, &timings);
+> > >
+> > > It's again your request to "keep the couple of function to make more
+> > > readable"
+> >
+> > That function in particular doesn't make it much more readable, but
+> > more importantly, your commit log doesn't match what you code does.
 > 
-> I liked encoding necessary info in DT directly slightly better than
-> encoding abstract ID and then decoding it further in the driver code.
-> OTOH, I am not really attached to that path. Lucas, can you comment on
-> this please?
+> May be I can update the commit message if the function is OK. for
+> burst most of the timings are 0 so I used structure with memset to
+> keep not assigning 0's explicitly. otherwise do you have any
+> suggestions, please let me know.
 
-Yes, after rereading the patch with this in mind I agree that having
-the GPR offset on DT directly is IMO the better approach than an
-abstract ID.
+Drop the part that move the timings setup to another function in this
+patch.
 
-One other thing I noticed is that we probably need some property to
-encode if the clock is supplied by an external clkgen, or if the clock
-is provided by the i.MX. Hardcoding this in the driver will lead to DT
-backward compatibility headaches later on if someone decides to build a
-board with the clock provided from the i.MX.
+Thanks!
+Maxime
 
-Regards,
-Lucas
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--ljkfb22ybl2pyuox--
