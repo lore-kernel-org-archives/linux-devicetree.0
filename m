@@ -1,70 +1,52 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH] ARM64: dts: imx: add i.MX8QXP thermal support
-Date: Tue, 27 Nov 2018 06:18:52 +0000
-Message-ID: <1543299200-8526-1-git-send-email-Anson.Huang@nxp.com>
+Subject: RE: [PATCH] ARM64: dts: imx: add i.MX8QXP thermal support
+Date: Tue, 27 Nov 2018 06:21:05 +0000
+Message-ID: <DB3PR0402MB39167E727CC0C0520806191BF5D00@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1543299200-8526-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1543299200-8526-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add i.MX8QXP CPU thermal zone support.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 27 ++++++++++++++++++++++++++=
-+
- 1 file changed, 27 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
-ts/freescale/imx8qxp.dtsi
-index da99b6f..9155d45 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -9,6 +9,7 @@
- #include <dt-bindings/firmware/imx/rsrc.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/pinctrl/pads-imx8qxp.h>
-+#include <dt-bindings/thermal/thermal.h>
-=20
- #include "imx8-ca35.dtsi"
-=20
-@@ -85,6 +86,32 @@
- 		};
- 	};
-=20
-+	tsens: thermal-sensor {
-+		compatible =3D "nxp,imx8qxp-sc-thermal";
-+		tsens-num =3D <1>;
-+		#thermal-sensor-cells =3D <1>;
-+	};
-+
-+	thermal_zones: thermal-zones {
-+		cpu-thermal0 {
-+			polling-delay-passive =3D <250>;
-+			polling-delay =3D <2000>;
-+			thermal-sensors =3D <&tsens 355>;
-+			trips {
-+				cpu_alert0: trip0 {
-+					temperature =3D <107000>;
-+					hysteresis =3D <2000>;
-+					type =3D "passive";
-+				};
-+				cpu_crit0: trip1 {
-+					temperature =3D <127000>;
-+					hysteresis =3D <2000>;
-+					type =3D "critical";
-+				};
-+			};
-+		};
-+	};
-+
- 	adma_subsys: bus@59000000 {
- 		compatible =3D "simple-bus";
- 		#address-cells =3D <1>;
---=20
-2.7.4
+Rm9yZ290IHRvIG1lbnRpb25lZDogVGhpcyBwYXRjaCBpcyBiYXNlZCBvbiAiW1Y0LDMvNV0gYXJt
+NjQ6IGR0czogaW14OiBhZGQgaW14OHF4cCBzdXBwb3J0IiwgaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
+bmVsLm9yZy9wYXRjaC8xMDY3NzMxMS8NCg0KQmVzdCBSZWdhcmRzIQ0KQW5zb24gSHVhbmcNCg0K
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbnNvbiBIdWFuZw0KPiBTZW50
+OiAyMDE4xOoxMdTCMjfI1SAxNDoxOQ0KPiBUbzogcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1
+dGxhbmRAYXJtLmNvbTsgQWlzaGVuZyBET05HDQo+IDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47IGRl
+dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3Jn
+OyBzaGF3bmd1b0BrZXJuZWwub3JnDQo+IENjOiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAu
+Y29tPg0KPiBTdWJqZWN0OiBbUEFUQ0hdIEFSTTY0OiBkdHM6IGlteDogYWRkIGkuTVg4UVhQIHRo
+ZXJtYWwgc3VwcG9ydA0KPiANCj4gQWRkIGkuTVg4UVhQIENQVSB0aGVybWFsIHpvbmUgc3VwcG9y
+dC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29t
+Pg0KPiAtLS0NCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhxeHAuZHRzaSB8
+IDI3DQo+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDI3
+IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
+ZWVzY2FsZS9pbXg4cXhwLmR0c2kNCj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9p
+bXg4cXhwLmR0c2kNCj4gaW5kZXggZGE5OWI2Zi4uOTE1NWQ0NSAxMDA2NDQNCj4gLS0tIGEvYXJj
+aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC5kdHNpDQo+ICsrKyBiL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhxeHAuZHRzaQ0KPiBAQCAtOSw2ICs5LDcgQEANCj4g
+ICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9maXJtd2FyZS9pbXgvcnNyYy5oPiAgI2luY2x1ZGUNCj4g
+PGR0LWJpbmRpbmdzL2dwaW8vZ3Bpby5oPiAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL3BpbmN0cmwv
+cGFkcy1pbXg4cXhwLmg+DQo+ICsjaW5jbHVkZSA8ZHQtYmluZGluZ3MvdGhlcm1hbC90aGVybWFs
+Lmg+DQo+IA0KPiAgI2luY2x1ZGUgImlteDgtY2EzNS5kdHNpIg0KPiANCj4gQEAgLTg1LDYgKzg2
+LDMyIEBADQo+ICAJCX07DQo+ICAJfTsNCj4gDQo+ICsJdHNlbnM6IHRoZXJtYWwtc2Vuc29yIHsN
+Cj4gKwkJY29tcGF0aWJsZSA9ICJueHAsaW14OHF4cC1zYy10aGVybWFsIjsNCj4gKwkJdHNlbnMt
+bnVtID0gPDE+Ow0KPiArCQkjdGhlcm1hbC1zZW5zb3ItY2VsbHMgPSA8MT47DQo+ICsJfTsNCj4g
+Kw0KPiArCXRoZXJtYWxfem9uZXM6IHRoZXJtYWwtem9uZXMgew0KPiArCQljcHUtdGhlcm1hbDAg
+ew0KPiArCQkJcG9sbGluZy1kZWxheS1wYXNzaXZlID0gPDI1MD47DQo+ICsJCQlwb2xsaW5nLWRl
+bGF5ID0gPDIwMDA+Ow0KPiArCQkJdGhlcm1hbC1zZW5zb3JzID0gPCZ0c2VucyAzNTU+Ow0KPiAr
+CQkJdHJpcHMgew0KPiArCQkJCWNwdV9hbGVydDA6IHRyaXAwIHsNCj4gKwkJCQkJdGVtcGVyYXR1
+cmUgPSA8MTA3MDAwPjsNCj4gKwkJCQkJaHlzdGVyZXNpcyA9IDwyMDAwPjsNCj4gKwkJCQkJdHlw
+ZSA9ICJwYXNzaXZlIjsNCj4gKwkJCQl9Ow0KPiArCQkJCWNwdV9jcml0MDogdHJpcDEgew0KPiAr
+CQkJCQl0ZW1wZXJhdHVyZSA9IDwxMjcwMDA+Ow0KPiArCQkJCQloeXN0ZXJlc2lzID0gPDIwMDA+
+Ow0KPiArCQkJCQl0eXBlID0gImNyaXRpY2FsIjsNCj4gKwkJCQl9Ow0KPiArCQkJfTsNCj4gKwkJ
+fTsNCj4gKwl9Ow0KPiArDQo+ICAJYWRtYV9zdWJzeXM6IGJ1c0A1OTAwMDAwMCB7DQo+ICAJCWNv
+bXBhdGlibGUgPSAic2ltcGxlLWJ1cyI7DQo+ICAJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiAt
+LQ0KPiAyLjcuNA0KDQo=
