@@ -1,69 +1,61 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC] net: phy: device: Don't deassert the reset when
- register and probe
-Date: Tue, 27 Nov 2018 22:02:41 +0100
-Message-ID: <CAMuHMdVOFxDCmFDPgNbvsP9PEcw9yAtN8CPmF3=Tx79buDZWrg@mail.gmail.com>
-References: <1543320947-32763-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20181127164411.GB19601@lunn.ch> <4aa356d3-7c99-a9d6-0e6c-d46be7e44948@gmail.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH 3/3] PCI: imx: Add support for i.MX8MQ
+Date: Tue, 27 Nov 2018 13:03:56 -0800
+Message-ID: <CAHQ1cqE0cUUsT99A5ZM6XkNd7E5+17qjZRkCdCERSp2-nWsf=Q@mail.gmail.com>
+References: <20181117181225.10737-1-andrew.smirnov@gmail.com>
+ <20181117181225.10737-4-andrew.smirnov@gmail.com> <ce2ac1a880ce2a7a39f0e42b5059676daa748e52.camel@nxp.com>
+ <CAHQ1cqH6LT4GsxUchrmVG1m3fqawgyUjxdHvh=SzxhBiQOd8eg@mail.gmail.com> <VI1PR04MB553359EA5E0F88701A92A3AEEED00@VI1PR04MB5533.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <4aa356d3-7c99-a9d6-0e6c-d46be7e44948@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <VI1PR04MB553359EA5E0F88701A92A3AEEED00@VI1PR04MB5533.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>, Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com, Chris Healy <cphealy@gmail.com>, Dong Aisheng <aisheng.dong@nxp.com>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, kishon@ti.com, lorenzo.pieralisi@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiner,
-
-On Tue, Nov 27, 2018 at 8:47 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
-> On 27.11.2018 17:44, Andrew Lunn wrote:
-> > On Tue, Nov 27, 2018 at 12:18:20PM +0000, Yoshihiro Shimoda wrote:
-> >> Some PHY device needs edge signal of the reset, but the previous code
-> >> is impossible to achieve it like following:
+On Tue, Nov 27, 2018 at 2:16 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
+>
+> On 11/26/18 8:24 PM, Andrey Smirnov wrote:
+> > On Tue, Nov 20, 2018 at 2:49 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
+> >> On Sat, 2018-11-17 at 10:12 -0800, Andrey Smirnov wrote:
+>
+> >>> +             if (of_property_read_u32_array(
+> >>> +                         node, "fsl,gpr12-device-type",
+> >>> +                         imx6_pcie->device_type,
+> >>> +                         ARRAY_SIZE(imx6_pcie->device_type))) {
+> >>> +                     dev_err(dev, "Failed to get device type
+> >>> mask/value\n");
+> >>> +                     return -EINVAL;
+> >>> +             }
 > >>
-> >>  1) Kernel boots by using initramfs.
-> >>  --> No open the nic, so the provious code deasserts the reset by
-> >>      phy_device_register() and phy_probe().
-> >>  2) Kernel enters the suspend.
-> >>  --> So, keep the reset signal as deassert.
-> >>  --> On R-Car Salvator-XS board, unfortunately, the board power is
-> >>      turned off.
-> >>  3) Kernel returns from suspend.
-> >>  4) ifconfig eth0 up
-> >>  --> Then, since edge signal of the reset doesn't happen,
-> >>      it cannot link up.
+> >> The device type can be set on multiple SOCs, why are you adding a
+> >> mandatory property only for 8m?
 > >
-> > Hi Yoshihiro
-> >
-> > It sounds like you should be adding code to the suspend/resume
-> > handling of phylib, so that it toggle the reset on resume. You cannot
-> > just delete code like you proposed, it is going to break devices. But
-> > adding code should be O.K.
-> >
-> The commit message mentions that the patch is supposed to fix some
-> issue on the Salvator-XS board. I found the following from a year ago
-> https://www.spinics.net/lists/netdev/msg457308.html
-> which is also about PHY reset and this board. Is there still something
-> open?  But as Andrew mentioned already: Just deleting code w/o
-> checking what it's good for and whether this could have side effects,
-> isn't a solution. Especially because the patch would silently remove
-> the call to phy_scan_fixups().
+> > My thinking was that other SoCs don't really have two controllers, so
+> > they don't really need to have that property, but, more importantly,
+> > not forcing them to have this property should preserve backwards
+> > compatibility with old DTBs.
+>
+> The "device_type" registers determine Root Complex versus End Point
+> mode. This is not yet supported on imx in upstream but it can be done on
+> many soc versions.
+>
 
-That's correct: my original motivation for picking up Sergei's patches was to
-make Ethernet work after suspend/resume on the same Salvator-XS board.
+Yeah, I am aware, I wasn't really trying to make it possible to
+configure IP block to be a EP, that is just an unavoidable consequence
+of the approach taken.
 
-The main difference seems to be that I was using NFS root, while Shimoda-san
-is using an initramfs.  Hence there probably is an inconsistency in reset
-handling for an active vs. inactive Ethernet interface.
+> Looking at other pcie controllers (and dwc core) this is normally done
+> with a different compatible string with an "-ep" suffix. It feels wrong
+> to expose bitmasks and values directly in DT instead.
+>
+> For this patch you should probably just hardcode RC mode.
 
-Gr{oetje,eeting}s,
+Hmm, given how the mask/value have to be different for each
+controller, the only way to hardcode it  that I can think of would be
+to change the property pass a bit offset instead of mask/value pair.
+Is that what you are suggesting?
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+Andrey Smirnov
