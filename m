@@ -1,511 +1,89 @@
-From: Pascal PAILLET-LME <p.paillet@st.com>
-Subject: [PATCH v6 2/8] mfd: stpmic1: add stpmic1 driver
-Date: Tue, 27 Nov 2018 16:52:14 +0000
-Message-ID: <1543337529-22301-3-git-send-email-p.paillet@st.com>
-References: <1543337529-22301-1-git-send-email-p.paillet@st.com>
+From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 0/7] Add virtio-iommu driver
+Date: Tue, 27 Nov 2018 11:53:14 -0500
+Message-ID: <20181127114402-mutt-send-email-mst@kernel.org>
+References: <20181122193801.50510-1-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543337529-22301-1-git-send-email-p.paillet@st.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
-Cc: Pascal PAILLET-LME <p.paillet@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20181122193801.50510-1-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, virtio-dev-sDuHXQ4OtrM4h7I2RyI4rWD2FQJk+8+b@public.gmane.org, kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, tnowicki-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-STPMIC1 is a PMIC from STMicroelectronics. The STPMIC1 integrates 10
-regulators, 3 power switches, a watchdog and an input for a power on key.
+On Thu, Nov 22, 2018 at 07:37:54PM +0000, Jean-Philippe Brucker wrote:
+> Implement the virtio-iommu driver, following specification v0.9 [1].
+> 
+> Since v4 [2] I fixed the issues reported by Eric, and added Reviewed-by
+> from Eric and Rob. Thanks!
+> 
+> I changed the specification to fix one inconsistency discussed in v4.
+> That the device fills the probe buffer with zeroes is now a "SHOULD"
+> instead of a "MAY", since it's the only way for the driver to know if
+> the device wrote the status. Existing devices already do this. In
+> addition the device now needs to fill the three padding bytes at the
+> tail with zeroes.
+> 
+> You can find Linux driver and kvmtool device on branches
+> virtio-iommu/v0.9 [3]. I also lightly tested with Eric's latest QEMU
+> device [4].
 
-Signed-off-by: Pascal Paillet <p.paillet@st.com>
----
-changes in v6:
-* replace i2c_device_id by of_device_id
-* fix commit message and Kconfig description
+I tried to get this to work on my x86 box but without
+success. Any hints? Does this have to do with the IORT table?
+I think we really should just reserve our own table ID
+and avoid the pain of trying to add things to the IORT spec.
+I'm reluctant to merge lots of code that I can't easily test.
+Again, if we found a way to push more configuration into
+virtio config space the problem space would be smaller.
 
- drivers/mfd/Kconfig         |  16 ++++
- drivers/mfd/Makefile        |   1 +
- drivers/mfd/stpmic1.c       | 213 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/stpmic1.h | 212 +++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 442 insertions(+)
- create mode 100644 drivers/mfd/stpmic1.c
- create mode 100644 include/linux/mfd/stpmic1.h
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 11841f4..0677bac 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1855,6 +1855,22 @@ config MFD_STM32_TIMERS
- 	  for PWM and IIO Timer. This driver allow to share the
- 	  registers between the others drivers.
- 
-+config MFD_STPMIC1
-+	tristate "Support for STPMIC1 PMIC"
-+	depends on (I2C=y && OF)
-+	select REGMAP_I2C
-+	select REGMAP_IRQ
-+	select MFD_CORE
-+	help
-+	  Support for ST Microelectronics STPMIC1 PMIC. STPMIC1 has power on
-+	  key, watchdog and regulator functionalities which are supported via
-+	  the relevant subsystems. This driver provides core support for the
-+	  STPMIC1. In order to use the actual functionaltiy of the device other
-+	  drivers must be enabled.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called stpmic1.
-+
- menu "Multimedia Capabilities Port drivers"
- 	depends on ARCH_SA1100
- 
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 5856a94..76fff14 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -232,6 +232,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
- obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
- 
- obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
-+obj-$(CONFIG_MFD_STPMIC1)	+= stpmic1.o
- obj-$(CONFIG_MFD_SUN4I_GPADC)	+= sun4i-gpadc.o
- 
- obj-$(CONFIG_MFD_STM32_LPTIMER)	+= stm32-lptimer.o
-diff --git a/drivers/mfd/stpmic1.c b/drivers/mfd/stpmic1.c
-new file mode 100644
-index 0000000..7dfbe89
---- /dev/null
-+++ b/drivers/mfd/stpmic1.c
-@@ -0,0 +1,213 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) STMicroelectronics 2018
-+// Author: Pascal Paillet <p.paillet@st.com>
-+
-+#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mfd/stpmic1.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/pm_wakeirq.h>
-+#include <linux/regmap.h>
-+
-+#include <dt-bindings/mfd/st,stpmic1.h>
-+
-+#define STPMIC1_MAIN_IRQ 0
-+
-+static const struct regmap_range stpmic1_readable_ranges[] = {
-+	regmap_reg_range(TURN_ON_SR, VERSION_SR),
-+	regmap_reg_range(SWOFF_PWRCTRL_CR, LDO6_STDBY_CR),
-+	regmap_reg_range(BST_SW_CR, BST_SW_CR),
-+	regmap_reg_range(INT_PENDING_R1, INT_PENDING_R4),
-+	regmap_reg_range(INT_CLEAR_R1, INT_CLEAR_R4),
-+	regmap_reg_range(INT_MASK_R1, INT_MASK_R4),
-+	regmap_reg_range(INT_SET_MASK_R1, INT_SET_MASK_R4),
-+	regmap_reg_range(INT_CLEAR_MASK_R1, INT_CLEAR_MASK_R4),
-+	regmap_reg_range(INT_SRC_R1, INT_SRC_R1),
-+};
-+
-+static const struct regmap_range stpmic1_writeable_ranges[] = {
-+	regmap_reg_range(SWOFF_PWRCTRL_CR, LDO6_STDBY_CR),
-+	regmap_reg_range(BST_SW_CR, BST_SW_CR),
-+	regmap_reg_range(INT_CLEAR_R1, INT_CLEAR_R4),
-+	regmap_reg_range(INT_SET_MASK_R1, INT_SET_MASK_R4),
-+	regmap_reg_range(INT_CLEAR_MASK_R1, INT_CLEAR_MASK_R4),
-+};
-+
-+static const struct regmap_range stpmic1_volatile_ranges[] = {
-+	regmap_reg_range(TURN_ON_SR, VERSION_SR),
-+	regmap_reg_range(WCHDG_CR, WCHDG_CR),
-+	regmap_reg_range(INT_PENDING_R1, INT_PENDING_R4),
-+	regmap_reg_range(INT_SRC_R1, INT_SRC_R4),
-+};
-+
-+static const struct regmap_access_table stpmic1_readable_table = {
-+	.yes_ranges = stpmic1_readable_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(stpmic1_readable_ranges),
-+};
-+
-+static const struct regmap_access_table stpmic1_writeable_table = {
-+	.yes_ranges = stpmic1_writeable_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(stpmic1_writeable_ranges),
-+};
-+
-+static const struct regmap_access_table stpmic1_volatile_table = {
-+	.yes_ranges = stpmic1_volatile_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(stpmic1_volatile_ranges),
-+};
-+
-+const struct regmap_config stpmic1_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.cache_type = REGCACHE_RBTREE,
-+	.max_register = PMIC_MAX_REGISTER_ADDRESS,
-+	.rd_table = &stpmic1_readable_table,
-+	.wr_table = &stpmic1_writeable_table,
-+	.volatile_table = &stpmic1_volatile_table,
-+};
-+
-+static const struct regmap_irq stpmic1_irqs[] = {
-+	REGMAP_IRQ_REG(IT_PONKEY_F, 0, 0x01),
-+	REGMAP_IRQ_REG(IT_PONKEY_R, 0, 0x02),
-+	REGMAP_IRQ_REG(IT_WAKEUP_F, 0, 0x04),
-+	REGMAP_IRQ_REG(IT_WAKEUP_R, 0, 0x08),
-+	REGMAP_IRQ_REG(IT_VBUS_OTG_F, 0, 0x10),
-+	REGMAP_IRQ_REG(IT_VBUS_OTG_R, 0, 0x20),
-+	REGMAP_IRQ_REG(IT_SWOUT_F, 0, 0x40),
-+	REGMAP_IRQ_REG(IT_SWOUT_R, 0, 0x80),
-+
-+	REGMAP_IRQ_REG(IT_CURLIM_BUCK1, 1, 0x01),
-+	REGMAP_IRQ_REG(IT_CURLIM_BUCK2, 1, 0x02),
-+	REGMAP_IRQ_REG(IT_CURLIM_BUCK3, 1, 0x04),
-+	REGMAP_IRQ_REG(IT_CURLIM_BUCK4, 1, 0x08),
-+	REGMAP_IRQ_REG(IT_OCP_OTG, 1, 0x10),
-+	REGMAP_IRQ_REG(IT_OCP_SWOUT, 1, 0x20),
-+	REGMAP_IRQ_REG(IT_OCP_BOOST, 1, 0x40),
-+	REGMAP_IRQ_REG(IT_OVP_BOOST, 1, 0x80),
-+
-+	REGMAP_IRQ_REG(IT_CURLIM_LDO1, 2, 0x01),
-+	REGMAP_IRQ_REG(IT_CURLIM_LDO2, 2, 0x02),
-+	REGMAP_IRQ_REG(IT_CURLIM_LDO3, 2, 0x04),
-+	REGMAP_IRQ_REG(IT_CURLIM_LDO4, 2, 0x08),
-+	REGMAP_IRQ_REG(IT_CURLIM_LDO5, 2, 0x10),
-+	REGMAP_IRQ_REG(IT_CURLIM_LDO6, 2, 0x20),
-+	REGMAP_IRQ_REG(IT_SHORT_SWOTG, 2, 0x40),
-+	REGMAP_IRQ_REG(IT_SHORT_SWOUT, 2, 0x80),
-+
-+	REGMAP_IRQ_REG(IT_TWARN_F, 3, 0x01),
-+	REGMAP_IRQ_REG(IT_TWARN_R, 3, 0x02),
-+	REGMAP_IRQ_REG(IT_VINLOW_F, 3, 0x04),
-+	REGMAP_IRQ_REG(IT_VINLOW_R, 3, 0x08),
-+	REGMAP_IRQ_REG(IT_SWIN_F, 3, 0x40),
-+	REGMAP_IRQ_REG(IT_SWIN_R, 3, 0x80),
-+};
-+
-+static const struct regmap_irq_chip stpmic1_regmap_irq_chip = {
-+	.name = "pmic_irq",
-+	.status_base = INT_PENDING_R1,
-+	.mask_base = INT_CLEAR_MASK_R1,
-+	.unmask_base = INT_SET_MASK_R1,
-+	.ack_base = INT_CLEAR_R1,
-+	.num_regs = STPMIC1_PMIC_NUM_IRQ_REGS,
-+	.irqs = stpmic1_irqs,
-+	.num_irqs = ARRAY_SIZE(stpmic1_irqs),
-+};
-+
-+static int stpmic1_probe(struct i2c_client *i2c,
-+			 const struct i2c_device_id *id)
-+{
-+	struct stpmic1 *ddata;
-+	struct device *dev = &i2c->dev;
-+	int ret;
-+	struct device_node *np = dev->of_node;
-+	u32 reg;
-+
-+	ddata = devm_kzalloc(dev, sizeof(struct stpmic1), GFP_KERNEL);
-+	if (!ddata)
-+		return -ENOMEM;
-+
-+	i2c_set_clientdata(i2c, ddata);
-+	ddata->dev = dev;
-+
-+	ddata->regmap = devm_regmap_init_i2c(i2c, &stpmic1_regmap_config);
-+	if (IS_ERR(ddata->regmap))
-+		return PTR_ERR(ddata->regmap);
-+
-+	ddata->irq = of_irq_get(np, STPMIC1_MAIN_IRQ);
-+	if (ddata->irq < 0) {
-+		dev_err(dev, "Failed to get main IRQ: %d\n", ddata->irq);
-+		return ddata->irq;
-+	}
-+
-+	ret = regmap_read(ddata->regmap, VERSION_SR, &reg);
-+	if (ret) {
-+		dev_err(dev, "Unable to read PMIC version\n");
-+		return ret;
-+	}
-+	dev_info(dev, "PMIC Chip Version: 0x%x\n", reg);
-+
-+	/* Initialize PMIC IRQ Chip & associated IRQ domains */
-+	ret = devm_regmap_add_irq_chip(dev, ddata->regmap, ddata->irq,
-+				       IRQF_ONESHOT | IRQF_SHARED,
-+				       0, &stpmic1_regmap_irq_chip,
-+				       &ddata->irq_data);
-+	if (ret) {
-+		dev_err(dev, "IRQ Chip registration failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return devm_of_platform_populate(dev);
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int stpmic1_suspend(struct device *dev)
-+{
-+	struct i2c_client *i2c = to_i2c_client(dev);
-+	struct stpmic1 *pmic_dev = i2c_get_clientdata(i2c);
-+
-+	disable_irq(pmic_dev->irq);
-+
-+	return 0;
-+}
-+
-+static int stpmic1_resume(struct device *dev)
-+{
-+	struct i2c_client *i2c = to_i2c_client(dev);
-+	struct stpmic1 *pmic_dev = i2c_get_clientdata(i2c);
-+	int ret;
-+
-+	ret = regcache_sync(pmic_dev->regmap);
-+	if (ret)
-+		return ret;
-+
-+	enable_irq(pmic_dev->irq);
-+
-+	return 0;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(stpmic1_pm, stpmic1_suspend, stpmic1_resume);
-+
-+static const struct of_device_id stpmic1_of_match[] = {
-+	{ .compatible = "st,stpmic1", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, stpmic1_of_match);
-+
-+static struct i2c_driver stpmic1_driver = {
-+	.driver = {
-+		.name = "stpmic1",
-+		.of_match_table = of_match_ptr(stpmic1_of_match),
-+		.pm = &stpmic1_pm,
-+	},
-+	.probe = stpmic1_probe,
-+};
-+
-+module_i2c_driver(stpmic1_driver);
-+
-+MODULE_DESCRIPTION("STPMIC1 PMIC Driver");
-+MODULE_AUTHOR("Pascal Paillet <p.paillet@st.com>");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/mfd/stpmic1.h b/include/linux/mfd/stpmic1.h
-new file mode 100644
-index 0000000..fa3f99f
---- /dev/null
-+++ b/include/linux/mfd/stpmic1.h
-@@ -0,0 +1,212 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) STMicroelectronics 2018 - All Rights Reserved
-+ * Author: Philippe Peurichard <philippe.peurichard@st.com>,
-+ * Pascal Paillet <p.paillet@st.com> for STMicroelectronics.
-+ */
-+
-+#ifndef __LINUX_MFD_STPMIC1_H
-+#define __LINUX_MFD_STPMIC1_H
-+
-+#define TURN_ON_SR		0x1
-+#define TURN_OFF_SR		0x2
-+#define ICC_LDO_TURN_OFF_SR	0x3
-+#define ICC_BUCK_TURN_OFF_SR	0x4
-+#define RREQ_STATE_SR		0x5
-+#define VERSION_SR		0x6
-+
-+#define SWOFF_PWRCTRL_CR	0x10
-+#define PADS_PULL_CR		0x11
-+#define BUCKS_PD_CR		0x12
-+#define LDO14_PD_CR		0x13
-+#define LDO56_VREF_PD_CR	0x14
-+#define VBUS_DET_VIN_CR		0x15
-+#define PKEY_TURNOFF_CR		0x16
-+#define BUCKS_MASK_RANK_CR	0x17
-+#define BUCKS_MASK_RESET_CR	0x18
-+#define LDOS_MASK_RANK_CR	0x19
-+#define LDOS_MASK_RESET_CR	0x1A
-+#define WCHDG_CR		0x1B
-+#define WCHDG_TIMER_CR		0x1C
-+#define BUCKS_ICCTO_CR		0x1D
-+#define LDOS_ICCTO_CR		0x1E
-+
-+#define BUCK1_ACTIVE_CR		0x20
-+#define BUCK2_ACTIVE_CR		0x21
-+#define BUCK3_ACTIVE_CR		0x22
-+#define BUCK4_ACTIVE_CR		0x23
-+#define VREF_DDR_ACTIVE_CR	0x24
-+#define LDO1_ACTIVE_CR		0x25
-+#define LDO2_ACTIVE_CR		0x26
-+#define LDO3_ACTIVE_CR		0x27
-+#define LDO4_ACTIVE_CR		0x28
-+#define LDO5_ACTIVE_CR		0x29
-+#define LDO6_ACTIVE_CR		0x2A
-+
-+#define BUCK1_STDBY_CR		0x30
-+#define BUCK2_STDBY_CR		0x31
-+#define BUCK3_STDBY_CR		0x32
-+#define BUCK4_STDBY_CR		0x33
-+#define VREF_DDR_STDBY_CR	0x34
-+#define LDO1_STDBY_CR		0x35
-+#define LDO2_STDBY_CR		0x36
-+#define LDO3_STDBY_CR		0x37
-+#define LDO4_STDBY_CR		0x38
-+#define LDO5_STDBY_CR		0x39
-+#define LDO6_STDBY_CR		0x3A
-+
-+#define BST_SW_CR		0x40
-+
-+#define INT_PENDING_R1		0x50
-+#define INT_PENDING_R2		0x51
-+#define INT_PENDING_R3		0x52
-+#define INT_PENDING_R4		0x53
-+
-+#define INT_DBG_LATCH_R1	0x60
-+#define INT_DBG_LATCH_R2	0x61
-+#define INT_DBG_LATCH_R3	0x62
-+#define INT_DBG_LATCH_R4	0x63
-+
-+#define INT_CLEAR_R1		0x70
-+#define INT_CLEAR_R2		0x71
-+#define INT_CLEAR_R3		0x72
-+#define INT_CLEAR_R4		0x73
-+
-+#define INT_MASK_R1		0x80
-+#define INT_MASK_R2		0x81
-+#define INT_MASK_R3		0x82
-+#define INT_MASK_R4		0x83
-+
-+#define INT_SET_MASK_R1		0x90
-+#define INT_SET_MASK_R2		0x91
-+#define INT_SET_MASK_R3		0x92
-+#define INT_SET_MASK_R4		0x93
-+
-+#define INT_CLEAR_MASK_R1	0xA0
-+#define INT_CLEAR_MASK_R2	0xA1
-+#define INT_CLEAR_MASK_R3	0xA2
-+#define INT_CLEAR_MASK_R4	0xA3
-+
-+#define INT_SRC_R1		0xB0
-+#define INT_SRC_R2		0xB1
-+#define INT_SRC_R3		0xB2
-+#define INT_SRC_R4		0xB3
-+
-+#define PMIC_MAX_REGISTER_ADDRESS INT_SRC_R4
-+
-+#define STPMIC1_PMIC_NUM_IRQ_REGS 4
-+
-+#define TURN_OFF_SR_ICC_EVENT	0x08
-+
-+#define LDO_VOLTAGE_MASK		GENMASK(6, 2)
-+#define BUCK_VOLTAGE_MASK		GENMASK(7, 2)
-+#define LDO_BUCK_VOLTAGE_SHIFT		2
-+
-+#define LDO_ENABLE_MASK			BIT(0)
-+#define BUCK_ENABLE_MASK		BIT(0)
-+
-+#define BUCK_HPLP_ENABLE_MASK		BIT(1)
-+#define BUCK_HPLP_SHIFT			1
-+
-+#define STDBY_ENABLE_MASK  BIT(0)
-+
-+#define BUCKS_PD_CR_REG_MASK	GENMASK(7, 0)
-+#define BUCK_MASK_RANK_REGISTER_MASK	GENMASK(3, 0)
-+#define BUCK_MASK_RESET_REGISTER_MASK	GENMASK(3, 0)
-+#define LDO1234_PULL_DOWN_REGISTER_MASK	GENMASK(7, 0)
-+#define LDO56_VREF_PD_CR_REG_MASK	GENMASK(5, 0)
-+#define LDO_MASK_RANK_REGISTER_MASK	GENMASK(5, 0)
-+#define LDO_MASK_RESET_REGISTER_MASK	GENMASK(5, 0)
-+
-+#define BUCK1_PULL_DOWN_REG		BUCKS_PD_CR
-+#define BUCK1_PULL_DOWN_MASK		BIT(0)
-+#define BUCK2_PULL_DOWN_REG		BUCKS_PD_CR
-+#define BUCK2_PULL_DOWN_MASK		BIT(2)
-+#define BUCK3_PULL_DOWN_REG		BUCKS_PD_CR
-+#define BUCK3_PULL_DOWN_MASK		BIT(4)
-+#define BUCK4_PULL_DOWN_REG		BUCKS_PD_CR
-+#define BUCK4_PULL_DOWN_MASK		BIT(6)
-+
-+#define LDO1_PULL_DOWN_REG		LDO14_PD_CR
-+#define LDO1_PULL_DOWN_MASK		BIT(0)
-+#define LDO2_PULL_DOWN_REG		LDO14_PD_CR
-+#define LDO2_PULL_DOWN_MASK		BIT(2)
-+#define LDO3_PULL_DOWN_REG		LDO14_PD_CR
-+#define LDO3_PULL_DOWN_MASK		BIT(4)
-+#define LDO4_PULL_DOWN_REG		LDO14_PD_CR
-+#define LDO4_PULL_DOWN_MASK		BIT(6)
-+#define LDO5_PULL_DOWN_REG		LDO56_VREF_PD_CR
-+#define LDO5_PULL_DOWN_MASK		BIT(0)
-+#define LDO6_PULL_DOWN_REG		LDO56_VREF_PD_CR
-+#define LDO6_PULL_DOWN_MASK		BIT(2)
-+#define VREF_DDR_PULL_DOWN_REG		LDO56_VREF_PD_CR
-+#define VREF_DDR_PULL_DOWN_MASK		BIT(4)
-+
-+#define BUCKS_ICCTO_CR_REG_MASK	GENMASK(6, 0)
-+#define LDOS_ICCTO_CR_REG_MASK	GENMASK(5, 0)
-+
-+#define LDO_BYPASS_MASK			BIT(7)
-+
-+/* Main PMIC Control Register
-+ * SWOFF_PWRCTRL_CR
-+ * Address : 0x10
-+ */
-+#define ICC_EVENT_ENABLED		BIT(4)
-+#define PWRCTRL_POLARITY_HIGH		BIT(3)
-+#define PWRCTRL_PIN_VALID		BIT(2)
-+#define RESTART_REQUEST_ENABLED		BIT(1)
-+#define SOFTWARE_SWITCH_OFF_ENABLED	BIT(0)
-+
-+/* Main PMIC PADS Control Register
-+ * PADS_PULL_CR
-+ * Address : 0x11
-+ */
-+#define WAKEUP_DETECTOR_DISABLED	BIT(4)
-+#define PWRCTRL_PD_ACTIVE		BIT(3)
-+#define PWRCTRL_PU_ACTIVE		BIT(2)
-+#define WAKEUP_PD_ACTIVE		BIT(1)
-+#define PONKEY_PU_INACTIVE		BIT(0)
-+
-+/* Main PMIC VINLOW Control Register
-+ * VBUS_DET_VIN_CRC DMSC
-+ * Address : 0x15
-+ */
-+#define SWIN_DETECTOR_ENABLED		BIT(7)
-+#define SWOUT_DETECTOR_ENABLED		BIT(6)
-+#define VINLOW_ENABLED			BIT(0)
-+#define VINLOW_CTRL_REG_MASK		GENMASK(7, 0)
-+
-+/* USB Control Register
-+ * Address : 0x40
-+ */
-+#define BOOST_OVP_DISABLED		BIT(7)
-+#define VBUS_OTG_DETECTION_DISABLED	BIT(6)
-+#define SW_OUT_DISCHARGE		BIT(5)
-+#define VBUS_OTG_DISCHARGE		BIT(4)
-+#define OCP_LIMIT_HIGH			BIT(3)
-+#define SWIN_SWOUT_ENABLED		BIT(2)
-+#define USBSW_OTG_SWITCH_ENABLED	BIT(1)
-+#define BOOST_ENABLED			BIT(0)
-+
-+/* PKEY_TURNOFF_CR
-+ * Address : 0x16
-+ */
-+#define PONKEY_PWR_OFF			BIT(7)
-+#define PONKEY_CC_FLAG_CLEAR		BIT(6)
-+#define PONKEY_TURNOFF_TIMER_MASK	GENMASK(3, 0)
-+#define PONKEY_TURNOFF_MASK		GENMASK(7, 0)
-+
-+/*
-+ * struct stpmic1 - stpmic1 master device for sub-drivers
-+ * @dev: master device of the chip (can be used to access platform data)
-+ * @irq: main IRQ number
-+ * @regmap_irq_chip_data: irq chip data
-+ */
-+struct stpmic1 {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	int irq;
-+	struct regmap_irq_chip_data *irq_data;
-+};
-+
-+#endif /*  __LINUX_MFD_STPMIC1_H */
--- 
-1.9.1
+> [1] Virtio-iommu specification v0.9, sources, pdf and diff from v0.8
+>     git://linux-arm.org/virtio-iommu.git virtio-iommu/v0.9
+>     http://jpbrucker.net/virtio-iommu/spec/v0.9/virtio-iommu-v0.9.pdf
+>     http://jpbrucker.net/virtio-iommu/spec/diffs/virtio-iommu-pdf-diff-v0.8-v0.9.pdf
+> 
+> [2] [PATCH v4 0/7] Add virtio-iommu driver
+>     https://lists.linuxfoundation.org/pipermail/iommu/2018-November/031074.html
+> 
+> [3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.9
+>     git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.9
+> 
+> [4] [RFC v9 00/17] VIRTIO-IOMMU device
+>     https://www.mail-archive.com/qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org/msg575578.html
+> 
+> Jean-Philippe Brucker (7):
+>   dt-bindings: virtio-mmio: Add IOMMU description
+>   dt-bindings: virtio: Add virtio-pci-iommu node
+>   of: Allow the iommu-map property to omit untranslated devices
+>   PCI: OF: Initialize dev->fwnode appropriately
+>   iommu: Add virtio-iommu driver
+>   iommu/virtio: Add probe request
+>   iommu/virtio: Add event queue
+> 
+>  .../devicetree/bindings/virtio/iommu.txt      |   66 +
+>  .../devicetree/bindings/virtio/mmio.txt       |   30 +
+>  MAINTAINERS                                   |    7 +
+>  drivers/iommu/Kconfig                         |   11 +
+>  drivers/iommu/Makefile                        |    1 +
+>  drivers/iommu/virtio-iommu.c                  | 1157 +++++++++++++++++
+>  drivers/of/base.c                             |   10 +-
+>  drivers/pci/of.c                              |    7 +
+>  include/uapi/linux/virtio_ids.h               |    1 +
+>  include/uapi/linux/virtio_iommu.h             |  161 +++
+>  10 files changed, 1448 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
+>  create mode 100644 drivers/iommu/virtio-iommu.c
+>  create mode 100644 include/uapi/linux/virtio_iommu.h
+> 
+> -- 
+> 2.19.1
