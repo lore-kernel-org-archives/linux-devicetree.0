@@ -1,74 +1,47 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 10/14] regulator: dts: set proper lradc vref on OLinuXino
- Lime2
-Date: Tue, 27 Nov 2018 10:47:30 +0100
-Message-ID: <20181127094730.dewrb5ri6uyebl2e@flea>
-References: <cover.156212c9c5df493e098556cad9793a07dcab5e32.1543245984.git-series.plaes@plaes.org>
- <b27515a1cfe3512253a3fbcda04a3367818520b9.1543245984.git-series.plaes@plaes.org>
- <20181127093735.amfqfcsxzreajte4@flea>
- <CAGb2v66odUU9OOwon4URR-+P_jFw2rV+8PLVzrnLmFpKtqT8gA@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC PATCH v4 05/17] irqchip/sun4i: Add a struct to
+ hold global variables
+Date: Tue, 27 Nov 2018 10:48:14 +0100
+Message-ID: <20181127094814.zxv5ovgw2xhfe5vh@flea>
+References: <cover.1543131714.git.mesihkilinc@gmail.com>
+ <2904a51d360af76765eccfb3b963a867a06a14ee.1543131714.git.mesihkilinc@gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hldriuc2m2xqr5kq"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="c5zxhz2sc4rhe6ig"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6VF6TPQKGQE4KWNGDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <CAGb2v66odUU9OOwon4URR-+P_jFw2rV+8PLVzrnLmFpKtqT8gA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Priit Laes <plaes@plaes.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, Oliver Schinagl <oliver@schinagl.nl>
+In-Reply-To: <2904a51d360af76765eccfb3b963a867a06a14ee.1543131714.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---hldriuc2m2xqr5kq
-Content-Type: text/plain; charset=us-ascii
+--c5zxhz2sc4rhe6ig
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 27, 2018 at 05:41:10PM +0800, Chen-Yu Tsai wrote:
-> On Tue, Nov 27, 2018 at 5:37 PM Maxime Ripard <maxime.ripard@bootlin.com>=
- wrote:
-> >
-> > On Mon, Nov 26, 2018 at 05:27:51PM +0200, Priit Laes wrote:
-> > > From: Olliver Schinagl <oliver@schinagl.nl>
-> > >
-> > > The lradc's analog reference voltage is set to 3.0 volt in the
-> > > hardware. This is more or less set in copper for at least lradc0. Set=
- the
-> > > property in the dts to ensure the lradc is referenced properly.
-> > >
-> > > Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
-> > > Signed-off-by: Priit Laes <plaes@plaes.org>
-> >
-> > I'm not sure why that patch is part of this series, but I applied
-> > it. Thanks!
->=20
-> Please help fix up the subject. Should read
->=20
-> "ARM: dts: sun7i: set proper lradc vref on OLinuXino Lime2"
->=20
-> or
->=20
-> "ARM: dts: sun7i: olinoxino-lime2: set proper lradc vref"
+On Sun, Nov 25, 2018 at 10:43:08AM +0300, Mesih Kilinc wrote:
+> In order to support different chips, IC specific data should be hold in
+> a struct. This patch moves irq_base and irq_domain global variables to
+> struct.
+> 
+> Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Yes, I've noticed it while applying, and this is already fixed :)
+Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
-Thanks for the reminder!
+Thanks!
 Maxime
 
---=20
+-- 
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
-
---hldriuc2m2xqr5kq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCW/0SsgAKCRDj7w1vZxhR
-xXITAQDbWa/mzPFfiJALRj6XfjXQSresZPgzPppLQh2uz7waawD/QmzIbaTdQJch
-HKeJlhuKNx1wUUNTe7mPbqun+NcIVwY=
-=GjQp
------END PGP SIGNATURE-----
-
---hldriuc2m2xqr5kq--
+--c5zxhz2sc4rhe6ig--
