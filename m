@@ -1,55 +1,64 @@
-Return-Path: <SRS0=JPrT=OB=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 3/7] ARM: dts: r8a7744-iwg20d-q7: Add support for iWave G20D-Q7 board based on RZ/G1N
-Date: Thu, 22 Nov 2018 09:14:31 +0000
-Message-Id: <1542878075-61314-4-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com>
-References: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=pBn+=OG=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v3 4/6] dt-bindings: media: mt9m111: adapt documentation to be more clear
+Date: Tue, 27 Nov 2018 11:02:51 +0100
+Message-Id: <20181127100253.30845-5-m.felsch@pengutronix.de>
+In-Reply-To: <20181127100253.30845-1-m.felsch@pengutronix.de>
+References: <20181127100253.30845-1-m.felsch@pengutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: enrico.scholz@sigma-chemnitz.de, devicetree@vger.kernel.org, akinobu.mita@gmail.com, linux-media@vger.kernel.org, graphics@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for iWave RainboW-G20D-Qseven board based on RZ/G1N.
+Replace the vague binding by a more verbose. Remove the remote property
+from the example since the driver don't support such a property. Also
+remove the bus-width property from the endpoint since the driver don't
+take care of it.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
+
 ---
- arch/arm/boot/dts/Makefile              |  1 +
- arch/arm/boot/dts/r8a7744-iwg20d-q7.dts | 15 +++++++++++++++
- 2 files changed, 16 insertions(+)
- create mode 100644 arch/arm/boot/dts/r8a7744-iwg20d-q7.dts
+Changelog:
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b0e966d..aba5a25 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -829,6 +829,7 @@ dtb-$(CONFIG_ARCH_RENESAS) += \
- 	r8a7743-iwg20d-q7.dtb \
- 	r8a7743-iwg20d-q7-dbcm-ca.dtb \
- 	r8a7743-sk-rzg1m.dtb \
-+	r8a7744-iwg20d-q7.dtb \
- 	r8a7745-iwg22d-sodimm.dtb \
- 	r8a7745-iwg22d-sodimm-dbhd-ca.dtb \
- 	r8a7745-sk-rzg1e.dtb \
-diff --git a/arch/arm/boot/dts/r8a7744-iwg20d-q7.dts b/arch/arm/boot/dts/r8a7744-iwg20d-q7.dts
-new file mode 100644
-index 0000000..1fdac52
---- /dev/null
-+++ b/arch/arm/boot/dts/r8a7744-iwg20d-q7.dts
-@@ -0,0 +1,15 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the iWave-RZ/G1N Qseven board
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corp.
-+ */
-+
-+/dts-v1/;
-+#include "r8a7744-iwg20m.dtsi"
-+#include "iwg20d-q7-common.dtsi"
-+
-+/ {
-+	model = "iWave Systems RainboW-G20D-Qseven board based on RZ/G1N";
-+	compatible = "iwave,g20d", "iwave,g20m", "renesas,r8a7744";
-+};
+v3:
+- drop remote-endpoint docu, since it is documented by
+  video-interfaces.txt.
+
+v2:
+- initial commit
+
+ Documentation/devicetree/bindings/media/i2c/mt9m111.txt | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/mt9m111.txt b/Documentation/devicetree/bindings/media/i2c/mt9m111.txt
+index 6b910036b57e..a431fb45704b 100644
+--- a/Documentation/devicetree/bindings/media/i2c/mt9m111.txt
++++ b/Documentation/devicetree/bindings/media/i2c/mt9m111.txt
+@@ -9,8 +9,10 @@ Required Properties:
+ - clocks: reference to the master clock.
+ - clock-names: shall be "mclk".
+ 
+-For further reading on port node refer to
+-Documentation/devicetree/bindings/media/video-interfaces.txt.
++The device node must contain one 'port' child node with one 'endpoint' child
++sub-node for its digital output video port, in accordance with the video
++interface bindings defined in:
++Documentation/devicetree/bindings/media/video-interfaces.txt
+ 
+ Example:
+ 
+@@ -21,10 +23,8 @@ Example:
+ 			clocks = <&mclk>;
+ 			clock-names = "mclk";
+ 
+-			remote = <&pxa_camera>;
+ 			port {
+ 				mt9m111_1: endpoint {
+-					bus-width = <8>;
+ 					remote-endpoint = <&pxa_camera>;
+ 				};
+ 			};
 -- 
-2.7.4
+2.19.1
