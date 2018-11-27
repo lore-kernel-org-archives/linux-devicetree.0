@@ -1,26 +1,45 @@
-Return-Path: <SRS0=Z+zc=OI=verge.net.au=horms@kernel.org>
-Date: Thu, 29 Nov 2018 14:54:59 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 05/22] ARM: dts: r8a7744-iwg20m: Add eMMC support
-Message-ID: <20181129135458.6ul4qsoftjkrrcqv@verge.net.au>
+Return-Path: <SRS0=lXjp=OG=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 05/22] ARM: dts: r8a7744-iwg20m: Add eMMC support
+Date: Tue, 27 Nov 2018 11:56:18 +0000
+Message-Id: <1543319795-48325-6-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
 References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
- <1543319795-48325-6-git-send-email-biju.das@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1543319795-48325-6-git-send-email-biju.das@bp.renesas.com>
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Nov 27, 2018 at 11:56:18AM +0000, Biju Das wrote:
-> Add eMMC support for iWave RZ/G1N Qseven System On Module.
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Add eMMC support for iWave RZ/G1N Qseven System On Module.
 
-Thanks,
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+---
+ arch/arm/boot/dts/r8a7744-iwg20m.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-This looks fine to me but I will wait to see if there are other reviews
-before applying.
-
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+diff --git a/arch/arm/boot/dts/r8a7744-iwg20m.dtsi b/arch/arm/boot/dts/r8a7744-iwg20m.dtsi
+index 6166ae0..1e57b1f 100644
+--- a/arch/arm/boot/dts/r8a7744-iwg20m.dtsi
++++ b/arch/arm/boot/dts/r8a7744-iwg20m.dtsi
+@@ -29,3 +29,20 @@
+ &extal_clk {
+ 	clock-frequency = <20000000>;
+ };
++
++&pfc {
++	mmcif0_pins: mmc {
++		groups = "mmc_data8_b", "mmc_ctrl";
++		function = "mmc";
++	};
++};
++
++&mmcif0 {
++	pinctrl-0 = <&mmcif0_pins>;
++	pinctrl-names = "default";
++
++	vmmc-supply = <&reg_3p3v>;
++	bus-width = <8>;
++	non-removable;
++	status = "okay";
++};
+-- 
+2.7.4
