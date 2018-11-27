@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC PATCH v4 05/17] irqchip/sun4i: Add a struct to
- hold global variables
-Date: Tue, 27 Nov 2018 10:48:14 +0100
-Message-ID: <20181127094814.zxv5ovgw2xhfe5vh@flea>
+Subject: Re: [RFC PATCH v4 06/17] irqchip/sun4i: Move IC
+ specific register offsets to struct
+Date: Tue, 27 Nov 2018 10:49:06 +0100
+Message-ID: <20181127094906.l7mebisuoikrivf2@flea>
 References: <cover.1543131714.git.mesihkilinc@gmail.com>
- <2904a51d360af76765eccfb3b963a867a06a14ee.1543131714.git.mesihkilinc@gmail.com>
+ <0242923026be282e26fe9e50d9bb0ec3d5ae355f.1543131714.git.mesihkilinc@gmail.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="c5zxhz2sc4rhe6ig"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6VF6TPQKGQE4KWNGDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="rdqrcqhrj4mj4mce"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBHNG6TPQKGQEXFJW5XI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <2904a51d360af76765eccfb3b963a867a06a14ee.1543131714.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <0242923026be282e26fe9e50d9bb0ec3d5ae355f.1543131714.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,24 +24,22 @@ Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreC
 List-Id: devicetree@vger.kernel.org
 
 
---c5zxhz2sc4rhe6ig
+--rdqrcqhrj4mj4mce
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Sun, Nov 25, 2018 at 10:43:08AM +0300, Mesih Kilinc wrote:
-> In order to support different chips, IC specific data should be hold in
-> a struct. This patch moves irq_base and irq_domain global variables to
-> struct.
+On Sun, Nov 25, 2018 at 10:43:09AM +0300, Mesih Kilinc wrote:
+> This patch moves IC specific register offsets to sun4i_irq_chip_data
+> struct in order to support different chips.
 > 
 > Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
 Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
-Thanks!
 Maxime
 
 -- 
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---c5zxhz2sc4rhe6ig--
+--rdqrcqhrj4mj4mce--
