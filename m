@@ -1,51 +1,107 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH i2c-next v9 1/5] dt-bindings: i2c: Add 'bus-timeout-ms'
- and '#retries' properties as common optional
-Date: Wed, 28 Nov 2018 16:36:09 -0600
-Message-ID: <5dde6770-ce7a-720a-f1db-56d9ef044a99@linux.intel.com>
-References: <20181030210917.32711-1-jae.hyun.yoo@linux.intel.com>
- <20181030210917.32711-2-jae.hyun.yoo@linux.intel.com>
- <20181128215458.GB1666@kunai>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: [PATCH 0/2] gpio: lpc18xx: add GPIO pin interrupt controller support
+Date: Thu, 29 Nov 2018 00:48:39 +0200
+Message-ID: <20181128224841.3646-1-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181128215458.GB1666@kunai>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Brendan Higgins <brendanhiggins@google.com>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/28/2018 3:54 PM, Wolfram Sang wrote:
-> On Tue, Oct 30, 2018 at 02:09:12PM -0700, Jae Hyun Yoo wrote:
->> This commit adds 'bus-timeout-ms' and '#retries' properties as
->> common optional properties that can be used for setting 'timeout'
->> and 'retries' values of 'struct i2c_adapter'. With this patch, the
->> bus timeout value and the master transfer retries count can be set
->> through these properties at the registration time of an adapter.
->> Still the values can be set by I2C_TIMEOUT and I2C_RETRIES ioctls
->> on cdev at runtime too.
->>
->> These properties may not be supported by all drivers. However, if
->> a driver wants to support one of them, it should adapt the
->> bindings in this document.
->>
->> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> Definately NACK on the #retries part. This is purely a configuration
-> thing. Besides that it is kind of ancient cruft, too. I don't recommend
-> it, at all.
-> 
-> On the timeout thing, I am still not fully convinced that this is a HW
-> description. I said that before. But maybe I need to understand your
-> problem case better.
-> 
+>From LPC18xx and LPC43xx User Manuals the GPIO controller consists of
+the following blocks:
+* GPIO pin interrupt block at 0x40087000, this change adds its support,
+* GPIO GROUP0 interrupt block at 0x40088000,
+* GPIO GROUP1 interrupt block at 0x40089000,
+* GPIO port block at 0x400F4000, it is supported by the original driver.
 
-Okay, I got it. I'll leave those as configuration things. Will remove
-this part in the next version.
+While the blocks are relatively independant and potentially they can
+be defined under their own device tree nodes, all blocks share the
+same clock to enable access to register interfaces and the same reset
+signal.
 
-Thanks for your comment.
+The change extends the existing gpio@400f4000 device tree node described
+in arch/arm/boot/dts/lpc18xx.dtsi by adding 'reg-names' property to
 
-Jae
+	gpio: gpio@400f4000 {
+		compatible = "nxp,lpc1850-gpio";
+		reg = <0x400f4000 0x4000>, <0x40087000 0x1000>,
+		      <0x40088000 0x1000>, <0x40089000 0x1000>;
+		reg-names = "gpio", "gpio-pin-ic",
+			    "gpio-group0-ic", "gpio-gpoup1-ic";
+		clocks = <&ccu1 CLK_CPU_GPIO>;
+		resets = <&rgu 28>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		interrupt-controller;
+		#interrupt-cells = <2>;
+	};
+
+Note that all 4 blocks find their place, but the functional change adds
+support of the GPIO pin interrupt contoller only.
+
+Alternative and probably better representation of the GPIO pin interrupt
+contoller block can be like this one added in parallel to gpio@400f4000 {}:
+
+	gpio_pin: interrupt-controller@40087000 {
+		compatible = "nxp,lpc1850-gpio-pin-ic";
+		reg = <0x40087000 0x1000>;
+		clocks = <&ccu1 CLK_CPU_GPIO>;
+		resets = <&rgu 28>;
+		interrupt-controller;
+		#interrupt-cells = <2>;
+	};
+
+The unpleasant side effects associated with this representation are:
+
+1) both gpio@400f4000 and interrupt-controller@40087000 (plus potential
+   interrupt-controller@40088000 and interrupt-controller@40089000) share
+   the same reset and the same clock,
+2) separate device node and 'compatible' imply a new drivers/irqchip/
+   driver, it is totally okay, but
+3) while Linux device drivers provide interfaces and support well usage
+   of the same reset or clock, interrupt controller drivers does not
+   depend on clock providers, of_clk_get() will ask for defer, but
+   IRQCHIP_DECLARE()d initialization won't be reprobed,
+4) it might be more or less reliably assumed that GPIO pin interrupt
+   controller does not get any consumer in runtime, who is not the
+   consumer of the same GPIO which serves as an interrupt, so implicitly
+   access to the interrupt controller functions will happen after
+   the registration of the GPIO controller driver, which in turn enables
+   the shared clock, and thus access to the interrupt controller registers
+   will be successful then, but you see, the complexity and indirection
+   leads to unavoidable fragility.
+
+So, I go ahead with the extension of the exisitng GPIO controller device
+node, comments and other opinions are welcome as usual.
+
+The change depends on a minor clean-up series, which was sent aforehand:
+* https://marc.info/?l=linux-gpio&m=154344413726424&w=1
+
+The actual lpc18xx.dtsi change will be sent afterwards after getting
+the acceptance of the proposed device tree node changes.
+
+Marc, this is the change, which I had a luck to discuss with you on ELCE.
+
+Vladimir Zapolskiy (2):
+  dt-bindings: gpio: lpc18xx: describe interrupt controllers of GPIO controller
+  gpio: lpc18xx: add GPIO pin interrupt controller support
+
+ .../bindings/gpio/nxp,lpc1850-gpio.txt        |  38 ++-
+ drivers/gpio/Kconfig                          |   1 +
+ drivers/gpio/gpio-lpc18xx.c                   | 267 +++++++++++++++++-
+ 3 files changed, 293 insertions(+), 13 deletions(-)
+
+-- 
+2.17.1
