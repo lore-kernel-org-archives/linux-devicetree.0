@@ -1,86 +1,50 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH 4/4] ARM64: dts: imx: add i.MX8QXP system controller RTC
- support
-Date: Wed, 28 Nov 2018 10:12:30 +0100
-Message-ID: <20181128101230.435bfbeb@ipc1.ka-ro>
-References: <1543311334-8807-1-git-send-email-Anson.Huang@nxp.com>
-        <1543311334-8807-5-git-send-email-Anson.Huang@nxp.com>
-        <20181128100420.0c9a721a@karo-electronics.de>
-        <DB3PR0402MB3916FFD700313BF684CF32AAF5D10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 2/8] mfd: lochnagar: Add initial binding documentation
+Date: Wed, 28 Nov 2018 09:18:43 +0000
+Message-ID: <20181128091843.GV4272@dell>
+References: <20181120141631.18949-1-ckeepax@opensource.cirrus.com>
+ <20181120141631.18949-2-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB3PR0402MB3916FFD700313BF684CF32AAF5D10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <20181120141631.18949-2-ckeepax@opensource.cirrus.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>sh
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, broonie@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Anson Huang <anson.huang@nxp.com> wrote:
+On Tue, 20 Nov 2018, Charles Keepax wrote:
 
-> Hi, Lothar
+> Lochnagar is an evaluation and development board for Cirrus
+> Logic Smart CODEC and Amp devices. It allows the connection of
+> most Cirrus Logic devices on mini-cards, as well as allowing
+> connection of various application processor systems to provide a
+> full evaluation platform. This driver supports the board
+> controller chip on the Lochnagar board.
 > 
-> Best Regards!
-> Anson Huang
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
 > 
-> > -----Original Message-----
-> > From: Lothar Waßmann [mailto:LW@KARO-electronics.de]
-> > Sent: 2018年11月28日 17:04
-> > To: Anson Huang <anson.huang@nxp.com>
-> > Cc: a.zummo@towertech.it; alexandre.belloni@bootlin.com;
-> > robh+dt@kernel.org; mark.rutland@arm.com; catalin.marinas@arm.com;
-> > will.deacon@arm.com; Aisheng DONG <aisheng.dong@nxp.com>; Andy Gross
-> > <andy.gross@linaro.org>; arnd@arndb.de; horms+renesas@verge.net.au;
-> > heiko@sntech.de; bjorn.andersson@linaro.org; enric.balletbo@collabora.com;
-> > amit.kucheria@linaro.org; ezequiel@collabora.com; olof@lixom.net;
-> > shawnguo@kernel.org; linux-rtc@vger.kernel.org; devicetree@vger.kernel.org;
-> > linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > dl-linux-imx <linux-imx@nxp.com>
-> > Subject: Re: [PATCH 4/4] ARM64: dts: imx: add i.MX8QXP system controller
-> > RTC support
-> > 
-> > Hi,
-> > 
-> > On Tue, 27 Nov 2018 09:41:46 +0000 Anson Huang wrote:  
-> > > Add i.MX8QXP system controller RTC support.
-> > >
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > ---
-> > >  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi  
-> > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi  
-> > > index 9155d45..ef57db6 100644
-> > > --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > > @@ -433,4 +433,8 @@
-> > >  		#size-cells = <1>;
-> > >  		ranges = <0x5f000000 0x0 0x5f000000 0x1000000>;
-> > >  	};
-> > > +
-> > > +	rtc: rtc {
-> > > +		compatible = "nxp,imx8qxp-sc-rtc";
-> > > +	};
-> > >  };  
-> > IMO this should be disabled by default.  
+> Changes since v4:
+>  - Move sub-bindings into separate documents
 > 
-> This module is NOT depending on any board design, should it be enabled by default in soc dtsi?
-> Like wdog etc..
+> Again incase Rob missed v4 I have dropped his ack due to the large
+> changes introduced in v4, see:
 > 
-What about existing users (if there are any), which would have a new
-device appearing when updating the DTB?
+>  https://patchwork.kernel.org/patch/10673891/
+> 
+> Thanks,
+> Charles
+> 
+>  .../devicetree/bindings/mfd/cirrus,lochnagar.txt   |  71 +++++++++++
 
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-Lothar Waßmann
 -- 
-___________________________________________________________
-
-Ka-Ro electronics GmbH | Pascalstraße 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Geschäftsführer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
-
-www.karo-electronics.de | info@karo-electronics.de
-___________________________________________________________
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
