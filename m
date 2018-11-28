@@ -1,108 +1,54 @@
-From: Miles Chen <miles.chen@mediatek.com>
-Subject: Re: [RFC PATCH] of: make MAX_RESERVED_REGIONS configurable
-Date: Wed, 28 Nov 2018 09:56:04 +0800
-Message-ID: <1543370164.29143.9.camel@mtkswgap22>
-References: <1542787873-8429-1-git-send-email-miles.chen@mediatek.com>
-         <CAL_JsqLGvUYQmCGXLgSO+6kFj2i87dpaTbMGbyu5oMt=eeu35A@mail.gmail.com>
-         <1542855088.15789.6.camel@mtkswgap22>
-         <CAL_Jsq+O1YDP1yiHZpcxUaFG1LYDqi74D_kEnErP+cwGDppVWQ@mail.gmail.com>
-         <1543196004.21289.1.camel@mtkswgap22>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 02/14] dt-bindings: soc: milbeaut: Add Milbeaut trampoline
+ description
+Date: Tue, 27 Nov 2018 18:01:14 -0800
+Message-ID: <154337047410.88331.9696178601340675631@swboyd.mtv.corp.google.com>
+References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
+ <1542589274-13878-3-git-send-email-sugaya.taichi@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543196004.21289.1.camel@mtkswgap22>
+In-Reply-To: <1542589274-13878-3-git-send-email-sugaya.taichi@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sugaya Taichi <sugaya.taichi@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-11-26 at 09:33 +0800, Miles Chen wrote:
-> On Sat, 2018-11-24 at 14:56 -0600, Rob Herring wrote:
-> > On Wed, Nov 21, 2018 at 8:51 PM Miles Chen <miles.chen@mediatek.com> wrote:
-> > >
-> > > On Wed, 2018-11-21 at 10:39 -0600, Rob Herring wrote:
-> > > > On Wed, Nov 21, 2018 at 2:11 AM <miles.chen@mediatek.com> wrote:
-> > > > >
-> > > > > From: Miles Chen <miles.chen@mediatek.com>
-> > > > >
-> > > > > When we use more than 32 entries in /resered-memory,
-> > > > > there will be an error message: "not enough space all defined regions.".
-> > > > > We can increase MAX_RESERVED_REGIONS to fix this.
-> > > > >
-> > > > > commit 22f8cc6e3373 ("drivers: of: increase MAX_RESERVED_REGIONS to 32")
-> > > > > increased MAX_RESERVED_REGIONS to 32 but I'm not sure if increasing
-> > > > > MAX_RESERVED_REGIONS to 64 is suitable for everyone.
-> > > > >
-> > > > > In this RFC patch, CONFIG_MAX_OF_RESERVED_REGIONS is added and used as
-> > > > > MAX_RESERVED_REGIONS. Add a sanity test to make sure that
-> > > > > MAX_RESERVED_REGIONS is less than INIT_MEMBLOCK_REGIONS.
-> > > > > Users can configure CONFIG_MAX_OF_RESERVED_REGIONS according to their
-> > > > > need.
-> > > >
-> > > > I don't want a kconfig option for this. I think it should be dynamic instead.
-> > > >
-> > > > The current flow is like this:
-> > > >
-> > > > for each reserved node:
-> > > >   - call memblock_reserve
-> > > >   - Add info to reserved_mem array
-> > > >
-> > > > I think we should change it to:
-> > > >
-> > > > for each reserved node:
-> > > >   - call memblock_reserve
-> > > >   - count number of nodes
-> > > >
-> > > > Alloc array using memblock_alloc
-> > > >
-> > > > for each reserved node:
-> > > >    - Add info to reserved_mem array
-> > > >
-> > >
-> > > thanks for your comment.
-> > >
-> > > I reviewed the flow and it might be easier to count the
-> > > nodes and setup array first:
-> > >
-> > > for each reserved node:
-> > >     - count number of nodes
-> > >
-> > > Alloc array using memblock_alloc
-> > >
-> > >
-> > > for each reserved node:
-> > >    - call memblock_reserve
-> > 
-> > The order here is wrong. It is important that you reserve the memory
-> > blocks before doing any allocations.
-> 
-> thanks for pointing that out. You are right. I'll follow your
-> suggestion.
+Quoting Sugaya Taichi (2018-11-18 17:01:07)
+> Add DT bindings document for Milbeaut trampoline.
+> =
 
-I got a problem while implementing this change: the array allocation
-is done successfully but the kernel does not create mappings for it yet,
-so the array is not accessible. (kernel will create the mapping later in
-paging_init())
+> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
+> ---
+>  .../devicetree/bindings/soc/socionext/socionext,m10v.txt     | 12 ++++++=
+++++++
+>  1 file changed, 12 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/socionext/socio=
+next,m10v.txt
+> =
 
-For example: aarch64 setup_arch()
-setup_arch()
-{
-    memblock_init(); /* early_init_fdt_scan_reserved_mem() is called */
-    paging_init();
-}
+> diff --git a/Documentation/devicetree/bindings/soc/socionext/socionext,m1=
+0v.txt b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
+> new file mode 100644
+> index 0000000..f5d906c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
+> @@ -0,0 +1,12 @@
+> +Socionext M10V SMP trampoline driver binding
+> +
+> +This is a driver to wait for sub-cores while boot process.
+> +
+> +- compatible: should be "socionext,smp-trampoline"
+> +- reg: should be <0x4C000100 0x100>
+> +
+> +EXAMPLE
+> +       trampoline: trampoline@0x4C000100 {
 
-Could you give me some advice, please?
+Drop the 0x part of unit addresses.
 
-Miles
-> 
-> > 
-> > >    - Add info to reserved_mem array
-> > >
-> > > What do you think?
-> > >
-> > > > Rob
-> > >
-> > >
-> 
-> 
+> +               compatible =3D "socionext,smp-trampoline";
+> +               reg =3D <0x4C000100 0x100>;
+
+Looks like a software construct, which we wouldn't want to put into DT
+this way. DT doesn't describe drivers.
