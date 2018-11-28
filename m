@@ -1,13 +1,13 @@
 From: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 02/17] dt-bindings: arm: Add new Allwinner
- ARMv5 F1C100s SoC
-Date: Thu, 29 Nov 2018 01:33:12 +0300
-Message-ID: <8daadf3f8467f7b56154e19ae60b921d14aa7098.1543443475.git.mesihkilinc@gmail.com>
+Subject: [PATCH v5 01/17] ARM: Check ARCH_MULTI_V7 to
+ differentiate ARMv5/v7 Allwinner SoCs
+Date: Thu, 29 Nov 2018 01:33:11 +0300
+Message-ID: <ec9d798e883d45d5dc0e01617e4bf217bc9a6be7.1543443475.git.mesihkilinc@gmail.com>
 References: <cover.1543443475.git.mesihkilinc@gmail.com>
 Reply-To: mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDI4VHO5SYLBBZ5P7TPQKGQEFK2FX5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDI4VHO5SYLBBZVP7TPQKGQEZNRFEJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <cover.1543443475.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,24 +20,39 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreC
 Cc: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add new Allwinner ARMv5 F1C100s SoC's compatible string
+Allwinner also has some ARMv5 SoCs.
+
+In order to add support for them, check ARM_MULTI_V7 before enabling
+ARMv7 SoC's. Add help text for ARCH_SUNXI menuconfig.
 
 Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-sunxi/Kconfig | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
-index e4beec3..f9ddc05 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.txt
-+++ b/Documentation/devicetree/bindings/arm/sunxi.txt
-@@ -18,4 +18,5 @@ using one of the following compatible strings:
-   allwinner,sun8i-v3s
-   allwinner,sun9i-a80
-   allwinner,sun50i-a64
-+  allwinner,suniv-f1c100s
-   nextthing,gr8
+diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
+index d9c8ecf..185c573 100644
+--- a/arch/arm/mach-sunxi/Kconfig
++++ b/arch/arm/mach-sunxi/Kconfig
+@@ -9,9 +9,13 @@ menuconfig ARCH_SUNXI
+ 	select PM_OPP
+ 	select SUN4I_TIMER
+ 	select RESET_CONTROLLER
++	help
++	  Support for Allwinner ARM-based family of processors
+ 
+ if ARCH_SUNXI
+ 
++if ARCH_MULTI_V7
++
+ config MACH_SUN4I
+ 	bool "Allwinner A10 (sun4i) SoCs support"
+ 	default ARCH_SUNXI
+@@ -56,3 +60,5 @@ config ARCH_SUNXI_MC_SMP
+ 	select ARM_CPU_SUSPEND
+ 
+ endif
++
++endif
 -- 
 2.7.4
