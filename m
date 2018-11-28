@@ -1,99 +1,122 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 08/15] rtc: sun6i: Expose internal
- oscillator through device tree
-Date: Wed, 28 Nov 2018 11:33:02 +0100
-Message-ID: <20181128103302.n7abjuf4ixjafth6@flea>
-References: <20181128093013.24442-1-wens@csie.org>
- <20181128093013.24442-10-wens@csie.org>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 7/9] dt-bindings: tegra186-gpio: Add wakeup parent support
+Date: Wed, 28 Nov 2018 11:44:36 +0100
+Message-ID: <20181128104436.GA22559@ulmo>
+References: <20180921102546.12745-1-thierry.reding@gmail.com>
+ <20180921102546.12745-8-thierry.reding@gmail.com>
+ <20181015144612.GA23929@bogus>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4vh5seys36kdunea"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB3W57HPQKGQEB6RD3OY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+        protocol="application/pgp-signature"; boundary="cNdxnHkX5QqsyA0e"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181128093013.24442-10-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181015144612.GA23929@bogus>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---4vh5seys36kdunea
-Content-Type: text/plain; charset="UTF-8"
+--cNdxnHkX5QqsyA0e
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-65;5402;1c
-On Wed, Nov 28, 2018 at 05:30:06PM +0800, Chen-Yu Tsai wrote:
-> The bindings have been updated to expose the RTC's internal oscillator,
-> for some SoCs that have it directly feeding the PRCM block. The changes
-> include the index 2 for the clock outputs, as well as the clock output
-> names.
-> 
-> This patch adds the internal oscillator to the list of clocks exposed
-> through of_clk_add_hw_provider(), and also have the driver optionally
-> fetch the name of the clock from the device tree if it's available.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
->  drivers/rtc/rtc-sun6i.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-> index 62ed9ce53d8c..273ab7fbbbe3 100644
-> --- a/drivers/rtc/rtc-sun6i.c
-> +++ b/drivers/rtc/rtc-sun6i.c
-> @@ -220,6 +220,7 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
->  		.ops		= &sun6i_rtc_osc_ops,
->  		.name		= "losc",
->  	};
-> +	const char *iosc_name = "rtc-int-osc";
->  	const char *clkout_name = "osc32k-out";
->  	const char *parents[2];
->  
-> @@ -228,7 +229,7 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
->  		return;
->  
->  	rtc->data = data;
-> -	clk_data = kzalloc(struct_size(clk_data, hws, 2), GFP_KERNEL);
-> +	clk_data = kzalloc(struct_size(clk_data, hws, 3), GFP_KERNEL);
->  	if (!clk_data) {
->  		kfree(rtc);
->  		return;
-> @@ -253,8 +254,10 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
->  	if (!of_get_property(node, "clocks", NULL))
->  		goto err;
->  
-> +	of_property_read_string_index(node, "clock-output-names", 2,
-> +				      &iosc_name);
->  	rtc->int_osc = clk_hw_register_fixed_rate_with_accuracy(NULL,
-> -								"rtc-int-osc",
-> +								iosc_name,
->  								NULL, 0,
->  								rtc->data->rc_osc_rate,
->  								300000000);
-> @@ -290,9 +293,10 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
->  		return;
->  	}
->  
-> -	clk_data->num = 2;
-> +	clk_data->num = 3;
->  	clk_data->hws[0] = &rtc->hw;
->  	clk_data->hws[1] = __clk_get_hw(rtc->ext_losc);
-> +	clk_data->hws[2] = rtc->int_osc;
+On Mon, Oct 15, 2018 at 09:46:12AM -0500, Rob Herring wrote:
+> On Fri, Sep 21, 2018 at 12:25:44PM +0200, Thierry Reding wrote:
+> > From: Thierry Reding <treding@nvidia.com>
+> >=20
+> > Tegra186 and later have some top-level controls for wake events in the
+> > power management controller (PMC). In order to enable the system to wake
+> > up from low power states, additional registers in the PMC need to be
+> > programmed. Add a wakeup-parent property to establish this relationship
+> > between the GPIO controller and the PMC.
+> >=20
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > ---
+> >  .../devicetree/bindings/gpio/nvidia,tegra186-gpio.txt      | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/gpio/nvidia,tegra186-gpi=
+o.txt b/Documentation/devicetree/bindings/gpio/nvidia,tegra186-gpio.txt
+> > index adff16c71d21..cbb51a8990c3 100644
+> > --- a/Documentation/devicetree/bindings/gpio/nvidia,tegra186-gpio.txt
+> > +++ b/Documentation/devicetree/bindings/gpio/nvidia,tegra186-gpio.txt
+> > @@ -127,6 +127,11 @@ Required properties:
+> >              - 8: Active low level-sensitive.
+> >              Valid combinations are 1, 2, 3, 4, 8.
+> > =20
+> > +Optional properties:
+> > +- wake-parent
+> > +    A phandle to the Power Management Controller (PMC) that contains t=
+op-
+> > +    level controls to enable the wake-up capabilities of some GPIOs.
+> > +
+> >  Example:
+> > =20
+> >  #include <dt-bindings/interrupt-controller/irq.h>
+> > @@ -148,6 +153,7 @@ gpio@2200000 {
+> >  	#gpio-cells =3D <2>;
+> >  	interrupt-controller;
+> >  	#interrupt-cells =3D <2>;
+> > +	wakeup-parent =3D <&pmc>;
+> >  };
+> > =20
+> >  gpio@c2f0000 {
+> > @@ -162,4 +168,5 @@ gpio@c2f0000 {
+> >  	#gpio-cells =3D <2>;
+> >  	interrupt-controller;
+> >  	#interrupt-cells =3D <2>;
+> > +	wakeup-parent =3D <&pmc>;
+>=20
+> If all the GPIO instances point to the same PMC and have no per instance=
+=20
+> data, why do you need this in DT? You can just search for the compatible=
+=20
+> node.
 
-Shouldn't we add a check on either the compatible on the number of
-clock-output-names?
+That would be slightly annoying to do. I mean, we'd have to somehow
+construct the compatible string that we're looking for. I guess we could
+get around this mostly by just looking for a device matching one of the
+entries in a "pmc_gpio_of_match" table. That would potentially match a
+Tegra194 GPIO against a Tegra186 PMC, but that should never happen in
+practice because it'd be a bug in the DT.
 
-Maxime
+Although that somewhat depends on exactly what we mean by "compatible".
+Technically the Tegra194 PMC is compatible with the Tegra186 PMC in
+terms of register layout and so on. However, since both chips have
+undergone quite some changes with regards to the pins they expose, the
+set of wake events exposed on Tegra186 and Tegra194 varies wildly. So if
+that means that the compatible needs to be different (I think it should)
+then we could go with the OF match table approach.
 
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---4vh5seys36kdunea--
+Actually, thinking about it some more, even if we had a Tegra186
+fallback compatible string in the Tegra194 PMC's device tree node, we'd
+still be matching on the correct instance, and therefore get the right
+IRQ domain for the hierarchy.
+
+I'll rework the patches accordingly.
+
+Thierry
+
+--cNdxnHkX5QqsyA0e
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlv+cZIACgkQ3SOs138+
+s6EyIA/+LkKrq620emgEtZpd9U8q5GjkFRVNO7ncdVE1d3P1znsFtICWHyX0Iux5
+r3V0vB7/R4HoH0bPDZzJdbFH/BrsWRf9H2E+S7LbFNsBDuN07vjHQlDGexR82c5q
+h0D+QQ9JYzJkqciahQlqIvJ/AulAbXfozP/3jxlq0FtSSnc3apn8YDyRV1kWCDnc
+IOgW59NqqBBoXCz1cBXIk+U22NvbtxLVL/qR+TjQJIsHZKWh7Kqv6oAZM53xW7XJ
+sLt3Hvvot+6pwfOMQAhViix/MZgIM/Yq8gmy7ZmPW4JpIOtHvtqoIekrdpw2M+8q
+gjsv1yU/4zrgtlRq4FqEqJjFAPNo6lnFt3uas1be1PrzDVQU1BYe6DPtqJhileFa
+gi2kBD+MfPPGaz58IXnpCFHZ+ynoj/lzqlU85txkXC7C4iTHtn7NKhGA3g7+7Pok
+FQNlhm1VKjzyac7qFu3MLtXy7Yit+k9AFqmYh7PtH9OfX5C046lnawKiEahzAd5c
+AQrxCT7/Q+dRVWXTRhZ4YQyBeYRLM/cayFgUrRs3lB0zNf4Kdv+dW7WcW2P64+i1
+T9dfM5cq/Su66zqOWp1KT/wqOG5aUk4OovC6CsYv7wtMAGtiWBozzizYDBSji6dl
+XwEX54BBof0kWZAhShV0lSB469yw3m3ebkluFoVGy0fNVyN+muw=
+=U3yi
+-----END PGP SIGNATURE-----
+
+--cNdxnHkX5QqsyA0e--
