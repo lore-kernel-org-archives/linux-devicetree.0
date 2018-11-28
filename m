@@ -1,8 +1,7 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V2 1/4] dt-bindings: thermal: add binding doc for i.MX system
- controller thermal driver
-Date: Wed, 28 Nov 2018 05:58:15 +0000
-Message-ID: <1543384349-2851-2-git-send-email-Anson.Huang__32830.3180555396$1543384606$gmane$org@nxp.com>
+Subject: [PATCH V2 4/4] ARM64: dts: imx: add i.MX8QXP thermal support
+Date: Wed, 28 Nov 2018 05:58:37 +0000
+Message-ID: <1543384349-2851-5-git-send-email-Anson.Huang@nxp.com>
 References: <1543384349-2851-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,58 +22,57 @@ To: "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezva
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-system controller, the system controller is in charge of system
-power, clock and thermal sensors etc. management, Linux kernel
-has to communicate with system controller via MU (message unit)
-IPC to get temperature from thermal sensors, this patch adds
-binding doc for i.MX system controller thermal driver.
+Add i.MX8QXP CPU thermal zone support.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-no change since V1.
- .../devicetree/bindings/thermal/imx-sc-thermal.txt | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/imx-sc-thermal.txt
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/thermal/imx-sc-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-sc-thermal.txt
-new file mode 100644
-index 0000000..2f5b0a2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/imx-sc-thermal.txt
-@@ -0,0 +1,33 @@
-+* Temperature Monitor (TEMPMON) on NXP i.MX SoCs with System Controller
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+index 5e8b554..ef57db6 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+@@ -9,6 +9,7 @@
+ #include <dt-bindings/firmware/imx/rsrc.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/pinctrl/pads-imx8qxp.h>
++#include <dt-bindings/thermal/thermal.h>
+ 
+ #include "imx8-ca35.dtsi"
+ 
+@@ -85,6 +86,32 @@
+ 		};
+ 	};
+ 
++	tsens: thermal-sensor {
++		compatible = "nxp,imx8qxp-sc-thermal";
++		tsens-num = <1>;
++		#thermal-sensor-cells = <1>;
++	};
 +
-+Required properties:
-+- compatible : Must be "nxp,imx8qxp-sc-thermal";
-+- tsens-num : Total number of thermal sensors supported;
-+- #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
-+
-+Example:
-+tsens: thermal-sensor {
-+	compatible = "nxp,imx8qxp-sc-thermal";
-+	tsens-num = <1>;
-+	#thermal-sensor-cells = <1>;
-+};
-+
-+thermal_zones: thermal-zones {
-+	cpu-thermal0 {
-+		polling-delay-passive = <250>;
-+		polling-delay = <2000>;
-+		thermal-sensors = <&tsens 355>;
-+		trips {
-+			cpu_alert0: trip0 {
-+				temperature = <107000>;
-+				hysteresis = <2000>;
-+				type = "passive";
-+			};
-+			cpu_crit0: trip1 {
-+				temperature = <127000>;
-+				hysteresis = <2000>;
-+				type = "critical";
++	thermal_zones: thermal-zones {
++		cpu-thermal0 {
++			polling-delay-passive = <250>;
++			polling-delay = <2000>;
++			thermal-sensors = <&tsens 355>;
++			trips {
++				cpu_alert0: trip0 {
++					temperature = <107000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cpu_crit0: trip1 {
++					temperature = <127000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
 +			};
 +		};
 +	};
-+};
++
+ 	adma_subsys: bus@59000000 {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
 -- 
 2.7.4
