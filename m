@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 08/15] rtc: sun6i: Expose internal oscillator
- through device tree
-Date: Wed, 28 Nov 2018 17:30:06 +0800
-Message-ID: <20181128093013.24442-10-wens@csie.org>
+Subject: [PATCH 07/15] rtc: sun6i: Add support for all known
+ pre-H6 variants
+Date: Wed, 28 Nov 2018 17:30:04 +0800
+Message-ID: <20181128093013.24442-8-wens@csie.org>
 References: <20181128093013.24442-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBO6A7HPQKGQE4M5QGZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBOWA7HPQKGQEJC6277I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181128093013.24442-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,64 +20,84 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Alexa
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The bindings have been updated to expose the RTC's internal oscillator,
-for some SoCs that have it directly feeding the PRCM block. The changes
-include the index 2 for the clock outputs, as well as the clock output
-names.
+There are different variants to the RTC hardware first seen on sun6i
+(A31). The differences we care about in this driver are the clock rate
+for the internal oscillator, prescalers, and the presence of an external
+clock output.
 
-This patch adds the internal oscillator to the list of clocks exposed
-through of_clk_add_hw_provider(), and also have the driver optionally
-fetch the name of the clock from the device tree if it's available.
+This patch adds support for all the known pre-H6 base compatibles using
+the variants data structure previously introduced.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/rtc/rtc-sun6i.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/rtc/rtc-sun6i.c | 48 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
 diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-index 62ed9ce53d8c..273ab7fbbbe3 100644
+index d1866d90b9ef..62ed9ce53d8c 100644
 --- a/drivers/rtc/rtc-sun6i.c
 +++ b/drivers/rtc/rtc-sun6i.c
-@@ -220,6 +220,7 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
- 		.ops		= &sun6i_rtc_osc_ops,
- 		.name		= "losc",
- 	};
-+	const char *iosc_name = "rtc-int-osc";
- 	const char *clkout_name = "osc32k-out";
- 	const char *parents[2];
+@@ -312,6 +312,50 @@ static void __init sun6i_a31_rtc_clk_init(struct device_node *node)
+ CLK_OF_DECLARE_DRIVER(sun6i_a31_rtc_clk, "allwinner,sun6i-a31-rtc",
+ 		      sun6i_a31_rtc_clk_init);
  
-@@ -228,7 +229,7 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
- 		return;
- 
- 	rtc->data = data;
--	clk_data = kzalloc(struct_size(clk_data, hws, 2), GFP_KERNEL);
-+	clk_data = kzalloc(struct_size(clk_data, hws, 3), GFP_KERNEL);
- 	if (!clk_data) {
- 		kfree(rtc);
- 		return;
-@@ -253,8 +254,10 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
- 	if (!of_get_property(node, "clocks", NULL))
- 		goto err;
- 
-+	of_property_read_string_index(node, "clock-output-names", 2,
-+				      &iosc_name);
- 	rtc->int_osc = clk_hw_register_fixed_rate_with_accuracy(NULL,
--								"rtc-int-osc",
-+								iosc_name,
- 								NULL, 0,
- 								rtc->data->rc_osc_rate,
- 								300000000);
-@@ -290,9 +293,10 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
- 		return;
- 	}
- 
--	clk_data->num = 2;
-+	clk_data->num = 3;
- 	clk_data->hws[0] = &rtc->hw;
- 	clk_data->hws[1] = __clk_get_hw(rtc->ext_losc);
-+	clk_data->hws[2] = rtc->int_osc;
- 	of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
- 	return;
- 
++static const struct sun6i_rtc_clk_data sun8i_a23_rtc_data = {
++	.rc_osc_rate = 667000, /* datasheet says 600 ~ 700 KHz */
++	.has_prescaler = 1,
++	.has_out_clk = 1,
++};
++
++static void __init sun8i_a23_rtc_clk_init(struct device_node *node)
++{
++	sun6i_rtc_clk_init(node, &sun8i_a23_rtc_data);
++}
++CLK_OF_DECLARE_DRIVER(sun8i_a23_rtc_clk, "allwinner,sun8i-a23-rtc",
++		      sun8i_a23_rtc_clk_init);
++
++static const struct sun6i_rtc_clk_data sun8i_h3_rtc_data = {
++	.rc_osc_rate = 16000000,
++	.fixed_prescaler = 32,
++	.has_prescaler = 1,
++	.has_out_clk = 1,
++};
++
++static void __init sun8i_h3_rtc_clk_init(struct device_node *node)
++{
++	sun6i_rtc_clk_init(node, &sun8i_h3_rtc_data);
++}
++CLK_OF_DECLARE_DRIVER(sun8i_h3_rtc_clk, "allwinner,sun8i-h3-rtc",
++		      sun8i_h3_rtc_clk_init);
++/* As far as we are concerned, clocks for H5 and H6 are the same as H3 */
++CLK_OF_DECLARE_DRIVER(sun50i_h5_rtc_clk, "allwinner,sun50i-h5-rtc",
++		      sun8i_h3_rtc_clk_init);
++CLK_OF_DECLARE_DRIVER(sun50i_h6_rtc_clk, "allwinner,sun50i-h6-rtc",
++		      sun8i_h3_rtc_clk_init);
++
++static const struct sun6i_rtc_clk_data sun8i_v3_rtc_data = {
++	.rc_osc_rate = 32000,
++	.has_out_clk = 1,
++};
++
++static void __init sun8i_v3_rtc_clk_init(struct device_node *node)
++{
++	sun6i_rtc_clk_init(node, &sun8i_v3_rtc_data);
++}
++CLK_OF_DECLARE_DRIVER(sun8i_v3_rtc_clk, "allwinner,sun8i-v3-rtc",
++		      sun8i_v3_rtc_clk_init);
++
+ static irqreturn_t sun6i_rtc_alarmirq(int irq, void *id)
+ {
+ 	struct sun6i_rtc_dev *chip = (struct sun6i_rtc_dev *) id;
+@@ -625,6 +669,10 @@ static int sun6i_rtc_probe(struct platform_device *pdev)
+  */
+ static const struct of_device_id sun6i_rtc_dt_ids[] = {
+ 	{ .compatible = "allwinner,sun6i-a31-rtc" },
++	{ .compatible = "allwinner,sun8i-a23-rtc" },
++	{ .compatible = "allwinner,sun8i-h3-rtc" },
++	{ .compatible = "allwinner,sun8i-v3-rtc" },
++	{ .compatible = "allwinner,sun50i-h5-rtc" },
+ 	{ /* sentinel */ },
+ };
+ MODULE_DEVICE_TABLE(of, sun6i_rtc_dt_ids);
 -- 
 2.20.0.rc1
