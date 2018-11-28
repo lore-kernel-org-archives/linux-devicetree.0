@@ -1,53 +1,40 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 2/2] arm64: dts: sdm845: Add gpu clock controller node
-Date: Wed, 28 Nov 2018 10:57:43 -0800
-Message-ID: <20181128185743.75328-2-dianders@chromium.org>
-References: <20181128185743.75328-1-dianders@chromium.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2] arm64: dts: qcom: sdm845: Add qspi (quad SPI) node
+Date: Wed, 28 Nov 2018 10:59:33 -0800
+Message-ID: <CAD=FV=X-Y1q9-1EMAJmB+axwYb9yXz-vHq-3SLhwR18rTRstXg@mail.gmail.com>
+References: <20181008201711.152038-1-dianders@chromium.org> <153904072826.119890.13295983146179211257@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181128185743.75328-1-dianders@chromium.org>
+In-Reply-To: <153904072826.119890.13295983146179211257@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, Taniya Das <tdas@codeaurora.org>, "Kristian H . Kristensen" <hoegsberg@chromium.org>, Jordan Crouse <jcrouse@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, ryandcase@chromium.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Girish Mahadevan <girishm@codeaurora.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the GPU clock controller nodes as per the example.
+Andy,
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+On Mon, Oct 8, 2018 at 4:18 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Douglas Anderson (2018-10-08 13:17:11)
+> > This adds the Quad SPI controller to the main sdm845 device tree file.
+> > Boards will be expected to assign the proper pinctrl depending on how
+> > many chip selects they have hooked up and how many data lines.
+> >
+> > This depends on commit 48735597f7bd ("clk: qcom: Add qspi (Quad SPI)
+> > clock defines for sdm845 to header") to add the needed defines.  It
+> > also shouldn't land until the patch ("dt-bindings: spi: Qualcomm Quad
+> > SPI(QSPI) documentation") [1] lands.
+> >
+> > [1] https://lkml.kernel.org/r/20181002214709.162330-1-ryandcase@chromium.org
+> >
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Any reason why this patch can't land?
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 1419b0098cb3..300688e92439 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -7,6 +7,7 @@
- 
- #include <dt-bindings/clock/qcom,dispcc-sdm845.h>
- #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-+#include <dt-bindings/clock/qcom,gpucc-sdm845.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/phy/phy-qcom-qusb2.h>
-@@ -1078,6 +1079,16 @@
- 			};
- 		};
- 
-+		gpucc: clock-controller@5090000 {
-+			compatible = "qcom,sdm845-gpucc";
-+			reg = <0x5090000 0x9000>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+			clocks = <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "xo";
-+		};
-+
- 		usb_1_hsphy: phy@88e2000 {
- 			compatible = "qcom,sdm845-qusb2-phy";
- 			reg = <0x88e2000 0x400>;
--- 
-2.20.0.rc0.387.gc7a69e6b6c-goog
+Thanks!
+
+-Doug
