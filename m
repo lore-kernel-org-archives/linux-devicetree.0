@@ -1,81 +1,343 @@
-From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v18 1/5] iommu/arm-smmu: Add pm_runtime/sleep ops
-Date: Wed, 28 Nov 2018 08:32:58 -0600
-Message-ID: <eb6ed521-8e04-924d-f9a8-5729b88e2bec@linux.intel.com>
-References: <20181127101145.7682-1-vivek.gautam@codeaurora.org>
-	<20181127101145.7682-2-vivek.gautam@codeaurora.org>
-Reply-To: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [RFC PATCH v2 10/15] usb:cdns3: Ep0 operations part of the API
+Date: Wed, 28 Nov 2018 16:31:46 +0200
+Message-ID: <5BFEA6D2.9010906@ti.com>
+References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
+ <1542535751-16079-11-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20181127101145.7682-2-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1542535751-16079-11-git-send-email-pawell@cadence.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pawel Laszczak <pawell@cadence.com>, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, adouglas@cadence.com, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/27/18 4:11 AM, Vivek Gautam wrote:
-> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+
+
+On 18/11/18 12:09, Pawel Laszczak wrote:
+> Patch implements related to default endpoint callback functions
+> defined in usb_ep_ops object
 > 
-> The smmu needs to be functional only when the respective
-> master's using it are active. The device_link feature
-> helps to track such functional dependencies, so that the
-> iommu gets powered when the master device enables itself
-> using pm_runtime. So by adapting the smmu driver for
-> runtime pm, above said dependency can be addressed.
-> 
-> This patch adds the pm runtime/sleep callbacks to the
-> driver and also the functions to parse the smmu clocks
-> from DT and enable them in resume/suspend.
-> We pull all the information about clocks from device tree.
-> 
-> Also, while we enable the runtime pm add a pm sleep suspend
-> callback that pushes devices to low power state by turning
-> the clocks off in a system sleep.
-> Also add corresponding clock enable path in resume callback.
-> 
-> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> [Thor: Rework to get clocks from device tree]
-> Signed-off-by: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> [vivek: rework for clock and pm ops]
-> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Tested-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
 > ---
->   drivers/iommu/arm-smmu.c | 100 +++++++++++++++++++++++++++++++++++++++++++++--
->   1 file changed, 97 insertions(+), 3 deletions(-)
+>  drivers/usb/cdns3/ep0.c    | 191 ++++++++++++++++++++++++++++++++++++-
+>  drivers/usb/cdns3/gadget.c |   8 ++
+>  drivers/usb/cdns3/gadget.h |  10 ++
+>  3 files changed, 207 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index 5a28ae892504..e47c840fc6a8 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -44,10 +44,12 @@
->   #include <linux/module.h>
->   #include <linux/of.h>
->   #include <linux/of_address.h>
-> +#include <linux/of_clk.h>
->   #include <linux/of_device.h>
->   #include <linux/of_iommu.h>
->   #include <linux/pci.h>
->   #include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
->   #include <linux/slab.h>
->   #include <linux/spinlock.h>
->  <snip>
+> diff --git a/drivers/usb/cdns3/ep0.c b/drivers/usb/cdns3/ep0.c
+> index ca1795467155..d05169e73631 100644
+> --- a/drivers/usb/cdns3/ep0.c
+> +++ b/drivers/usb/cdns3/ep0.c
+> @@ -18,11 +18,185 @@ static struct usb_endpoint_descriptor cdns3_gadget_ep0_desc = {
+>  	.bmAttributes =	USB_ENDPOINT_XFER_CONTROL,
+>  };
+>  
+> +/**
+> + * cdns3_ep0_run_transfer - Do transfer on default endpoint hardware
+> + * @priv_dev: extended gadget object
+> + * @dma_addr: physical address where data is/will be stored
+> + * @length: data length
+> + * @erdy: set it to 1 when ERDY packet should be sent -
+> + *        exit from flow control state
+> + */
+> +static void cdns3_ep0_run_transfer(struct cdns3_device *priv_dev,
+> +				   dma_addr_t dma_addr,
+> +				   unsigned int length, int erdy)
+> +{
+> +	struct cdns3_usb_regs __iomem *regs = priv_dev->regs;
+> +
+> +	priv_dev->trb_ep0->buffer = TRB_BUFFER(dma_addr);
+> +	priv_dev->trb_ep0->length = TRB_LEN(length);
+> +	priv_dev->trb_ep0->control = TRB_CYCLE | TRB_IOC | TRB_TYPE(TRB_NORMAL);
+> +
+> +	cdns3_select_ep(priv_dev,
+> +			priv_dev->ep0_data_dir ? USB_DIR_IN : USB_DIR_OUT);
+> +
+> +	writel(EP_STS_TRBERR, &regs->ep_sts);
+> +	writel(EP_TRADDR_TRADDR(priv_dev->trb_ep0_dma), &regs->ep_traddr);
+> +
+> +	dev_dbg(&priv_dev->dev, "//Ding Dong ep0%s\n",
+> +		priv_dev->ep0_data_dir ? "IN" : "OUT");
+> +
+> +	/* TRB should be prepared before starting transfer */
+> +	writel(EP_CMD_DRDY, &regs->ep_cmd);
+> +
+> +	if (erdy)
+> +		writel(EP_CMD_ERDY, &priv_dev->regs->ep_cmd);
+> +}
+> +
+>  static void cdns3_prepare_setup_packet(struct cdns3_device *priv_dev)
+>  {
+>  	//TODO: Implements this function
+>  }
+>  
+> +static void cdns3_set_hw_configuration(struct cdns3_device *priv_dev)
 
-Thanks! Tested the device tree clock portions on Intel SOCFPGA Stratix10 
-DevKit.
+Is this going to be used only for ep0?
+If yes then let's have ep0 in the name.
+If not then this function should be in gadget.c
 
-Tested-by: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> +{
+> +	struct cdns3_endpoint *priv_ep;
+> +	struct usb_request *request;
+> +	struct usb_ep *ep;
+> +	int result = 0;
+> +
+> +	if (priv_dev->hw_configured_flag)
+> +		return;
+> +
+> +	writel(USB_CONF_CFGSET, &priv_dev->regs->usb_conf);
+> +	writel(EP_CMD_ERDY | EP_CMD_REQ_CMPL, &priv_dev->regs->ep_cmd);
+> +
+> +	cdns3_set_register_bit(&priv_dev->regs->usb_conf,
+> +			       USB_CONF_U1EN | USB_CONF_U2EN);
+
+Shouldn't U1/U2 be enabled only if the USB_DEVICE_U1_ENABLE/USB_DEVICE_U2_ENABLE
+device request was received?
+
+> +
+> +	/* wait until configuration set */
+> +	result = cdns3_handshake(&priv_dev->regs->usb_sts,
+> +				 USB_STS_CFGSTS_MASK, 1, 100);
+> +
+> +	priv_dev->hw_configured_flag = 1;
+> +	cdns3_enable_l1(priv_dev, 1);
+> +
+> +	list_for_each_entry(ep, &priv_dev->gadget.ep_list, ep_list) {
+> +		if (ep->enabled) {
+> +			priv_ep = ep_to_cdns3_ep(ep);
+> +			request = cdns3_next_request(&priv_ep->request_list);
+> +			if (request)
+> +				cdns3_ep_run_transfer(priv_ep, request);
+
+why are you starting transfers in a function that is supposed to set hw configuration only.
+
+> +		}
+> +	}
+> +}
+> +
+> +/**
+> + * cdns3_gadget_ep0_enable
+> + * Function shouldn't be called by gadget driver,
+> + * endpoint 0 is allways active
+> + */
+> +static int cdns3_gadget_ep0_enable(struct usb_ep *ep,
+> +				   const struct usb_endpoint_descriptor *desc)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +/**
+> + * cdns3_gadget_ep0_disable
+> + * Function shouldn't be called by gadget driver,
+> + * endpoint 0 is allways active
+> + */
+> +static int cdns3_gadget_ep0_disable(struct usb_ep *ep)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +/**
+> + * cdns3_gadget_ep0_set_halt
+> + * @ep: pointer to endpoint zero object
+> + * @value: 1 for set stall, 0 for clear stall
+> + *
+> + * Returns 0
+> + */
+> +static int cdns3_gadget_ep0_set_halt(struct usb_ep *ep, int value)
+> +{
+> +	/* TODO */
+> +	return 0;
+> +}
+> +
+> +/**
+> + * cdns3_gadget_ep0_queue Transfer data on endpoint zero
+> + * @ep: pointer to endpoint zero object
+> + * @request: pointer to request object
+> + * @gfp_flags: gfp flags
+> + *
+> + * Returns 0 on success, error code elsewhere
+> + */
+> +static int cdns3_gadget_ep0_queue(struct usb_ep *ep,
+> +				  struct usb_request *request,
+> +				  gfp_t gfp_flags)
+> +{
+> +	struct cdns3_endpoint *priv_ep = ep_to_cdns3_ep(ep);
+> +	struct cdns3_device *priv_dev = priv_ep->cdns3_dev;
+> +	unsigned long flags;
+> +	int erdy_sent = 0;
+> +	int ret = 0;
+> +
+> +	dev_dbg(&priv_dev->dev, "Queue to Ep0%s L: %d\n",
+> +		priv_dev->ep0_data_dir ? "IN" : "OUT",
+> +		request->length);
+> +
+> +	/* send STATUS stage */
+> +	if (request->length == 0 && request->zero == 0) {
+
+Is this check sufficient to know STATUS stage?
+It might be normal for vendor specific control request to have
+request->length = 0 and request->zero = 0.
+
+
+> +		spin_lock_irqsave(&priv_dev->lock, flags);
+> +		cdns3_select_ep(priv_dev, 0x00);
+> +
+> +		erdy_sent = !priv_dev->hw_configured_flag;
+> +		cdns3_set_hw_configuration(priv_dev);
+
+What if we're still busy with DATA stage of previous ep0_queue?
+
+if (!list_empty(&priv_ep->request_list)) should be done as the first thing in this function.
+
+> +
+> +		if (!erdy_sent)
+> +			writel(EP_CMD_ERDY | EP_CMD_REQ_CMPL,
+> +			       &priv_dev->regs->ep_cmd);
+> +
+> +		cdns3_prepare_setup_packet(priv_dev);
+> +		request->actual = 0;
+> +		priv_dev->status_completion_no_call = true;
+> +		priv_dev->pending_status_request = request;
+> +		spin_unlock_irqrestore(&priv_dev->lock, flags);
+> +
+> +		/*
+> +		 * Since there is no completion interrupt for status stage,
+> +		 * it needs to call ->completion in software after
+> +		 * ep0_queue is back.
+> +		 */
+> +		queue_work(system_freezable_wq, &priv_dev->pending_status_wq);
+> +		return 0;
+> +	}
+> +
+> +	spin_lock_irqsave(&priv_dev->lock, flags);
+> +	if (!list_empty(&priv_ep->request_list)) {
+> +		dev_err(&priv_dev->dev,
+> +			"can't handle multiple requests for ep0\n");
+> +		spin_unlock_irqrestore(&priv_dev->lock, flags);
+> +		return -EOPNOTSUPP;
+
+-EBUSY?
+
+> +	}
+> +
+> +	ret = usb_gadget_map_request_by_dev(priv_dev->sysdev, request,
+> +					    priv_dev->ep0_data_dir);
+> +	if (ret) {
+> +		spin_unlock_irqrestore(&priv_dev->lock, flags);
+> +		dev_err(&priv_dev->dev, "failed to map request\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	priv_dev->ep0_request = request;
+> +	list_add_tail(&request->list, &priv_ep->request_list);
+> +	cdns3_ep0_run_transfer(priv_dev, request->dma, request->length, 1);
+> +	spin_unlock_irqrestore(&priv_dev->lock, flags);
+> +
+> +	return ret;
+> +}
+> +
+>  /**
+>   * cdns3_gadget_ep_set_wedge Set wedge on selected endpoint
+>   * @ep: endpoint object
+> @@ -41,6 +215,17 @@ int cdns3_gadget_ep_set_wedge(struct usb_ep *ep)
+>  	return 0;
+>  }
+>  
+> +const struct usb_ep_ops cdns3_gadget_ep0_ops = {
+> +	.enable = cdns3_gadget_ep0_enable,
+> +	.disable = cdns3_gadget_ep0_disable,
+> +	.alloc_request = cdns3_gadget_ep_alloc_request,
+> +	.free_request = cdns3_gadget_ep_free_request,
+> +	.queue = cdns3_gadget_ep0_queue,
+> +	.dequeue = cdns3_gadget_ep_dequeue,
+> +	.set_halt = cdns3_gadget_ep0_set_halt,
+> +	.set_wedge = cdns3_gadget_ep_set_wedge,
+> +};
+> +
+>  /**
+>   * cdns3_ep0_config - Configures default endpoint
+>   * @priv_dev: extended gadget object
+> @@ -62,6 +247,9 @@ void cdns3_ep0_config(struct cdns3_device *priv_dev)
+>  		priv_dev->ep0_request = NULL;
+>  	}
+>  
+> +	priv_dev->u1_allowed = 0;
+> +	priv_dev->u2_allowed = 0;
+> +
+
+where do you set these?
+
+>  	priv_dev->gadget.ep0->maxpacket = max_packet_size;
+>  	cdns3_gadget_ep0_desc.wMaxPacketSize = cpu_to_le16(max_packet_size);
+>  
+> @@ -106,8 +294,7 @@ int cdns3_init_ep0(struct cdns3_device *priv_dev)
+>  	sprintf(ep0->name, "ep0");
+>  
+>  	/* fill linux fields */
+> -	//TODO: implements cdns3_gadget_ep0_ops object
+> -	//ep0->endpoint.ops = &cdns3_gadget_ep0_ops;
+> +	ep0->endpoint.ops = &cdns3_gadget_ep0_ops;
+>  	ep0->endpoint.maxburst = 1;
+>  	usb_ep_set_maxpacket_limit(&ep0->endpoint, ENDPOINT0_MAX_PACKET_LIMIT);
+>  	ep0->endpoint.address = 0;
+> diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
+> index 1f2a434486dc..c965da16c0c8 100644
+> --- a/drivers/usb/cdns3/gadget.c
+> +++ b/drivers/usb/cdns3/gadget.c
+> @@ -188,6 +188,14 @@ static void cdns3_ep_stall_flush(struct cdns3_endpoint *priv_ep)
+>  	priv_ep->flags |= EP_STALL;
+>  }
+>  
+
+> +void cdns3_enable_l1(struct cdns3_device *priv_dev, int enable)
+
+Some comment might help as to what L1 is.
+
+> +{
+> +	if (enable)
+> +		writel(USB_CONF_L1EN, &priv_dev->regs->usb_conf);
+> +	else
+> +		writel(USB_CONF_L1DS, &priv_dev->regs->usb_conf);
+> +}
+> +
+>  /**
+>   * cdns3_gadget_giveback - call struct usb_request's ->complete callback
+>   * @priv_ep: The endpoint to whom the request belongs to
+> diff --git a/drivers/usb/cdns3/gadget.h b/drivers/usb/cdns3/gadget.h
+> index a4be288b34cb..224f6b830bc9 100644
+> --- a/drivers/usb/cdns3/gadget.h
+> +++ b/drivers/usb/cdns3/gadget.h
+> @@ -1068,11 +1068,21 @@ struct cdns3_device {
+>  	struct usb_request		*pending_status_request;
+>  };
+>  
+> +int cdns3_handshake(void __iomem *ptr, u32 mask, u32 done, int usec);
+>  void cdns3_set_register_bit(void __iomem *ptr, u32 mask);
+>  int cdns3_init_ep0(struct cdns3_device *priv_dev);
+>  void cdns3_ep0_config(struct cdns3_device *priv_dev);
+>  void cdns3_select_ep(struct cdns3_device *priv_dev, u32 ep);
+> +void cdns3_enable_l1(struct cdns3_device *priv_dev, int enable);
+> +struct usb_request *cdns3_next_request(struct list_head *list);
+> +int cdns3_ep_run_transfer(struct cdns3_endpoint *priv_ep,
+> +			  struct usb_request *request);
+>  int cdns3_gadget_ep_set_wedge(struct usb_ep *ep);
+>  int cdns3_gadget_ep_set_halt(struct usb_ep *ep, int value);
+> +struct usb_request *cdns3_gadget_ep_alloc_request(struct usb_ep *ep,
+> +						  gfp_t gfp_flags);
+> +void cdns3_gadget_ep_free_request(struct usb_ep *ep,
+> +				  struct usb_request *request);
+> +int cdns3_gadget_ep_dequeue(struct usb_ep *ep, struct usb_request *request);
+>  
+>  #endif /* __LINUX_CDNS3_GADGET */
+> 
+
+cheers,
+-roger
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
