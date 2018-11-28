@@ -1,97 +1,51 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: [PATCH v1 3/3] arm64: dts: qcom: sdm845: Add SD nodes for sdm845-mtp
-Date: Wed, 28 Nov 2018 14:34:28 -0800
-Message-ID: <20181128223428.177313-4-evgreen@chromium.org>
-References: <20181128223428.177313-1-evgreen@chromium.org>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH i2c-next v9 1/5] dt-bindings: i2c: Add 'bus-timeout-ms'
+ and '#retries' properties as common optional
+Date: Wed, 28 Nov 2018 16:36:09 -0600
+Message-ID: <5dde6770-ce7a-720a-f1db-56d9ef044a99@linux.intel.com>
+References: <20181030210917.32711-1-jae.hyun.yoo@linux.intel.com>
+ <20181030210917.32711-2-jae.hyun.yoo@linux.intel.com>
+ <20181128215458.GB1666@kunai>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181128223428.177313-1-evgreen@chromium.org>
+In-Reply-To: <20181128215458.GB1666@kunai>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Douglas Anderson <dianders@chromium.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Brendan Higgins <brendanhiggins@google.com>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable support for the micro SD slot on the MTP.
+On 11/28/2018 3:54 PM, Wolfram Sang wrote:
+> On Tue, Oct 30, 2018 at 02:09:12PM -0700, Jae Hyun Yoo wrote:
+>> This commit adds 'bus-timeout-ms' and '#retries' properties as
+>> common optional properties that can be used for setting 'timeout'
+>> and 'retries' values of 'struct i2c_adapter'. With this patch, the
+>> bus timeout value and the master transfer retries count can be set
+>> through these properties at the registration time of an adapter.
+>> Still the values can be set by I2C_TIMEOUT and I2C_RETRIES ioctls
+>> on cdev at runtime too.
+>>
+>> These properties may not be supported by all drivers. However, if
+>> a driver wants to support one of them, it should adapt the
+>> bindings in this document.
+>>
+>> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> Definately NACK on the #retries part. This is purely a configuration
+> thing. Besides that it is kind of ancient cruft, too. I don't recommend
+> it, at all.
+> 
+> On the timeout thing, I am still not fully convinced that this is a HW
+> description. I said that before. But maybe I need to understand your
+> problem case better.
+> 
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
----
+Okay, I got it. I'll leave those as configuration things. Will remove
+this part in the next version.
 
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 53 +++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+Thanks for your comment.
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-index d667eee4e6d03..b85e9fed14845 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-@@ -7,6 +7,7 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
- #include "sdm845.dtsi"
- 
-@@ -348,6 +349,18 @@
- 	clock-frequency = <400000>;
- };
- 
-+&sdhc_2 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdc2_clk &sdc2_cmd &sdc2_data &sd_cd_odl>;
-+
-+	vmmc-supply = <&vreg_l21a_2p95>;
-+	vqmmc-supply = <&vddpx_2>;
-+
-+	cd-gpios = <&tlmm 126 GPIO_ACTIVE_LOW>;
-+};
-+
- &qupv3_id_1 {
- 	status = "okay";
- };
-@@ -444,3 +457,43 @@
- 		bias-pull-up;
- 	};
- };
-+
-+&tlmm {
-+	/* It seems that mmc_test reports errors if drive strength is not 16. */
-+	sdc2_clk: sdc2-clk {
-+		pinconf {
-+			pins = "sdc2_clk";
-+			bias-disable;
-+			drive-strength = <16>;
-+		};
-+	};
-+
-+	sdc2_cmd: sdc2-cmd {
-+		pinconf {
-+			pins = "sdc2_cmd";
-+			bias-pull-up;
-+			drive-strength = <16>;
-+		};
-+	};
-+
-+	sdc2_data: sdc2-data {
-+		pinconf {
-+			pins = "sdc2_data";
-+			bias-pull-up;
-+			drive-strength = <16>;
-+		};
-+	};
-+
-+	sd_cd_odl: sd-cd-odl {
-+		pinmux {
-+			pins = "gpio126";
-+			function = "gpio";
-+		};
-+
-+		pinconf {
-+			pins = "gpio126";
-+			bias-pull-up;
-+			drive-strength = <2>;
-+		};
-+	};
-+};
--- 
-2.18.1
+Jae
