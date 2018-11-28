@@ -1,127 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 1/4] dt-bindings: pps: descriptor-based gpio,
- capture-clear addition
-Date: Wed, 28 Nov 2018 11:13:16 -0600
-Message-ID: <CAL_Jsq+-S2tF++VstMCeUrX4SXcB4B99Tc-SFUQ3R66KPHVf+Q@mail.gmail.com>
-References: <20181114125432.16044-1-tom@aussec.com> <20181114125432.16044-2-tom@aussec.com>
- <20181116224919.GA18008@bogus> <20181117213522.12672utznrvpbn56@www.aussec.com>
- <CAL_JsqKZHg5_8ghMmU4qO4CVZibcHOvtVJH669zod_6GLGakRg@mail.gmail.com>
- <20181118113502.55634v85ybgkt586@www.aussec.com> <CAL_Jsq+_Fb8mRDf_g=qDVsw-KPnrdZunLksYrgBFvhehzVNX+g@mail.gmail.com>
- <20181127145729.128452ujmj4uhb55@aussec.com>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [RFC v3 2/3] dt-bindings: sdm845-pinctrl: add wakeup interrupt
+ parent for GPIO
+Date: Wed, 28 Nov 2018 10:39:59 -0700
+Message-ID: <20181128173959.GC18262@codeaurora.org>
+References: <20181121000648.29262-1-ilina@codeaurora.org>
+ <20181121000648.29262-3-ilina@codeaurora.org>
+ <154283618199.88331.10217252750356423959@swboyd.mtv.corp.google.com>
+ <20181126161455.GA28236@codeaurora.org>
+ <154330994255.88331.11409511159882116164@swboyd.mtv.corp.google.com>
+ <20181127182123.GC28236@codeaurora.org>
+ <154335513853.88331.9713562640538396853@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181127145729.128452ujmj4uhb55@aussec.com>
+Content-Disposition: inline
+In-Reply-To: <154335513853.88331.9713562640538396853@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tom Burkart <tom@aussec.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: evgreen@chromium.org, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, thierry.reding@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 26, 2018 at 9:57 PM tom burkart <tom@aussec.com> wrote:
+On Tue, Nov 27 2018 at 14:45 -0700, Stephen Boyd wrote:
+>Quoting Lina Iyer (2018-11-27 10:21:23)
+>> On Tue, Nov 27 2018 at 02:12 -0700, Stephen Boyd wrote:
+>> >
+>> >Two reasons. First, simplicity. The TLMM driver just needs to pass the
+>> >gpio number up to the PDC gpio domain and then that domain can figure
+>> >out what hwirq it maps to within the PDC hw irq space. I don't see any
+>> >reason why we have to know the hwirq of PDC within the TLMM driver
+>> >besides "let's not be different".
+>> >
+>> >And second, it makes it easier for us to implement the MPM case in the
+>> >TLMM driver by letting the TLMM code just ask "should I mask the irq
+>> >here or not?" by passing that with a wrapper struct around the fwspec
+>> >and a dedicated domain in the PDC/MPM driver. Keeping less things in the
+>> >TLMM driver and not driving the decision from DT but from tables in the
+>> >PDC driver also keeps things simple and reduces DT parsing code/time.
+>> >
+>> Couldn't this be simply achieved by matching the compatible flags for
+>> PDC/MPM bindings for the wakeup-parent in the TLMM driver?
+>>
 >
-> Hi Rob,
->
-> Quoting Rob Herring <robh@kernel.org>:
->
-> > On Sat, Nov 17, 2018 at 6:35 PM tom burkart <tom@aussec.com> wrote:
-> >>
-> >> Quoting Rob Herring <robh@kernel.org>:
-> >>
-> >> > On Sat, Nov 17, 2018 at 4:35 AM tom burkart <tom@aussec.com> wrote:
-> >> >>
-> >> >> Quoting Rob Herring <robh@kernel.org>:
-> >> >>
-> >> >> > On Wed, Nov 14, 2018 at 11:54:29PM +1100, Tom Burkart wrote:
-> >> >> >> This patch changes the devicetree bindings for the pps-gpio driver
-> >> >> >> from the integer based ABI to the descriptor based ABI.
-> >> >> > ? That has nothing to do with DT.
-> >> >>
-> >> >> I believe it does, as the change in ABI forces a rename in the DT
-> >> >> naming convention.
-> >> >> This is due to the descriptor based ABI appending "-gpio" or
-> >> "-gpios" (see
-> >> >> Documentation/gpio/base.txt.)
-> >> >> Admittedly, I may have called it by the wrong name due to ignorance,
-> >> >> my apologies.
-> >> >
-> >> > If what you say is correct, then you can't change this driver. You'll
-> >> > break compatibility with any existing DT.
-> >> >
-> >> > Changing the binding reasoning should purely be that this is the
-> >> > preferred form. Bindings must be independent from changing kernel
-> >> > APIs.
-> >>
-> >> See comments from Philip Zabel.  I misread the documentation and this
-> >> has now been corrected in v8 of the patch.  I hope that eliminates all
-> >> comments made above.
-> >>
-> >> >> >>  It also adds
-> >> >> >> documentation for the device tree capture-clear option.  The legacy
-> >> >> >> device tree entry for the GPIO pin is supported.
-> >> >> >>
-> >> >> >> Signed-off-by: Tom Burkart <tom@aussec.com>
-> >> >> >> ---
-> >> >> >>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 8 ++++++--
-> >> >> >>  1 file changed, 6 insertions(+), 2 deletions(-)
-> >> >> >>
-> >> >> >> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt
-> >> >> >> b/Documentation/devicetree/bindings/pps/pps-gpio.txt
-> >> >> >> index 3683874832ae..6c9fc0998d94 100644
-> >> >> >> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
-> >> >> >> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
-> >> >> >> @@ -5,19 +5,23 @@ a GPIO pin.
-> >> >> >>
-> >> >> >>  Required properties:
-> >> >> >>  - compatible: should be "pps-gpio"
-> >> >> >> -- gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
-> >> >> >> +- pps-gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
-> >> >> >> +Alternatively (DEPRECATED), instead of pps-gpios above, it may have:
-> >> >> >> +- gpios: one PPS GPIO as above
-> >> >> >>
-> >> >> >>  Optional properties:
-> >> >> >>  - assert-falling-edge: when present, assert is indicated by a
-> >> >> falling edge
-> >> >> >>                         (instead of by a rising edge)
-> >> >> >> +- capture-clear: when present, also capture the PPS clear event
-> >> >> >
-> >> >> > Is this a h/w thing? or driver configuration?
-> >> >>
-> >> >> Driver configuration.  Most of the code was present in the driver, yet
-> >> >> it was not documented, or usable due to a two line (code) omission
-> >> >> (the value was not being fetched from DT).
-> >> >
-> >> > So what determines how you want to configure this? If the user will
-> >> > want to change it, then it should be a sysfs attr and exposed to
-> >> > userspace. If it depends on h/w config for a board then it can be in
-> >> > DT.
-> >>
-> >> Sorry, I misled you somewhat.  If the PPS pulse active transition from
-> >> the hardware is on the falling edge, this flag is required to get the
-> >> OS to use that as the active transition.  This would not change at the
-> >> user's whim but rather it is dependent on connected hardware.
-> >
-> > This description sounds more like 'assert-falling-edge' than 'capture-clear'.
-> >
-> > I'm still not clear on what 'capture-clear' is.
->
-> Ignoring my patch for a minute, the pps_gpio_irq_handler will only
-> report a pps PPS_CAPTURECLEAR event if 'capture-clear' is set.  As the
-> current pps-gpio driver is not able to set this flag, it cannot ever
-> report a PPS_CAPTURECLEAR event.
->
-> My patch adds the ability to set this flag and adds the documentation
-> to go with it.
-> Admittedly, I do not require this functionality for what I want, but
-> working with the code, I noticed the omission and decided to add it
-> for someone else to use it, if they need it.
->
-> I am happy to remove this out of my patch, if you feel this to be the
-> best way forward.
+>It could be, but then we would be making TLMM highly aware of the wakeup
+>parent
+It is is not aware of anything about the wakeup parent, just the
+compatible that indicates whether it needs to be mask locally or not.
 
-I found this prior discussion on adding this[1]. Seems to me this
-should be userspace configurable if the GPIO line can interrupt on
-both edges. We shouldn't need a DT property to determine that.
+>and have to do compatible string matching in two places, instead
+>of making TLMM more abstractly aware that it needs to keep things masked
+>while irq parent deals with the interrupts.
+>
+Your approach seems too complex just to circumvent a simple match node.
+I think we are stretching too much to support something that is not a
+priority.
 
-Rob
-
-[1] https://lore.kernel.org/patchwork/patch/557781/
+-- Lina
