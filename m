@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 03/15] dt-bindings: rtc: sun6i-rtc:
- Deprecate external clock output for A31
-Date: Wed, 28 Nov 2018 11:20:15 +0100
-Message-ID: <20181128102015.jfzqgdlstkjmdfwl@flea>
+Subject: Re: [PATCH 05/15] rtc: sun6i: Add default clock name
+ for LOSC
+Date: Wed, 28 Nov 2018 11:21:00 +0100
+Message-ID: <20181128102100.h3qkvnpbazpy2lbk@flea>
 References: <20181128093013.24442-1-wens@csie.org>
- <20181128093013.24442-4-wens@csie.org>
+ <20181128093013.24442-6-wens@csie.org>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ig5bgrnyb7hl22gp"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2WX7HPQKGQEQWEJPSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="vkawjol7kokps5ro"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBHOY7HPQKGQE7434VDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20181128093013.24442-4-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <20181128093013.24442-6-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,23 +24,21 @@ Cc: Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---ig5bgrnyb7hl22gp
+--vkawjol7kokps5ro
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Wed, Nov 28, 2018 at 05:30:00PM +0800, Chen-Yu Tsai wrote:
-> The A31 does not have an external clock output directly from the RTC.
-> Instead, it has four muxable clock outputs: three (A, B, C) are
-> controlled from the CCU, and the last (D) is controlled from the PRCM.
+On Wed, Nov 28, 2018 at 05:30:02PM +0800, Chen-Yu Tsai wrote:
+> The RTC's main clock, used internally and exported to the rest of the
+> SoC, is called "LOSC" (low speed oscillator) through the hardware
+> documentation.
 > 
-> Deprecate the usage of the external clock output for the A31 compatible.
+> This patch adds a default name for this clock, in case the device tree
+> does not provide one. This shouldn't happen, but lets play it safe.
 > 
 > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
 Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-
-I guess we should add a warning in the code as well if one tries to
-use it.
 
 Maxime
 
@@ -48,4 +46,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---ig5bgrnyb7hl22gp--
+--vkawjol7kokps5ro--
