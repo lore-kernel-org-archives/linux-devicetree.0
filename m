@@ -1,66 +1,73 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 05/14] dt-bindings: mfd: axp20x: add support for
- regulator-ramp-delay for AXP209
-Date: Wed, 28 Nov 2018 09:28:41 +0000
-Message-ID: <20181128092841.GY4272@dell>
-References: <cover.156212c9c5df493e098556cad9793a07dcab5e32.1543245984.git-series.plaes@plaes.org>
- <4333f81dfa1d9be082b09ab9ddf2694cb56285e2.1543245984.git-series.plaes@plaes.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 02/15] dt-bindings: rtc: sun6i-rtc: Add
+ compatible strings for pre-H6 variants
+Date: Wed, 28 Nov 2018 17:29:59 +0800
+Message-ID: <20181128093013.24442-3-wens@csie.org>
+References: <20181128093013.24442-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4333f81dfa1d9be082b09ab9ddf2694cb56285e2.1543245984.git-series.plaes@plaes.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Priit Laes <plaes@plaes.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Sebastian Reichel <sre@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Olliver Schinagl <oliver@schinagl.nl>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBNWA7HPQKGQE7BMMDBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181128093013.24442-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 26 Nov 2018, Priit Laes wrote:
+While doing Bluetooth enablement for various boards based on various
+Allwinner SoCs, minor differences in the RTC modules were found. These
+include a lack of an external clock output (A31), different internal
+oscillator frequencies (H3/H5/A64/V3/V3s), different regulator voltage
+settings (H5/H6), and the presence of miscellaneous registers unrelated
+to the RTC (A64/R40/H5/H6). The datasheet also describes different number
+of registers for non-volatile storage, though based on actual experiments
+the actual number is the same across the board.
 
-> From: Olliver Schinagl <oliver@schinagl.nl>
-> 
-> The AXP209 supports ramping up voltages on several regulators such as
-> DCDC2 and LDO3, therefore we can use the standard 'regulator-ramp-delay'
-> property for those 2 regulators.
-> 
-> Note that the voltage ramp only works when the regulator is already
-> enabled. E.g. when going from say 0.7 V to 3.6 V.
-> 
-> When turning on the regulator, no voltage ramp is performed in hardware.
-> 
-> What this means, is that if the bootloader brings up the voltage at 0.7 V,
-> the ramp delay property is properly applied. If however, the bootloader
-> leaves the power off, no ramp delay is applied when the power is
-> enabled by the regulator framework.
-> 
-> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
-> Signed-off-by: Priit Laes <plaes@plaes.org>
-> ---
->  Documentation/devicetree/bindings/mfd/axp20x.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
-> index 188f037..5542212 100644
-> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-> @@ -32,6 +32,11 @@ Required properties:
->  - interrupt-controller: The PMIC has its own internal IRQs
->  - #interrupt-cells: Should be set to 1
->  
-> +Supported common regulator properties, see regulator.txt for more information:
+This patch adds a list of all pre-H6 variants, grouped by the internal
+oscillator's clock rate, regulator settings, and the presence of the
+external clock output. Combinations are introduced for the variants that
+have miscellaneous registers.
 
-regulator.txt should be a relative path.
+The RTC block in the H6 also handles the 24 MHz DCXO. This will require
+more device tree binding changes and will be done later.
 
-../regulator/regulator.txt in this case.
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ .../devicetree/bindings/rtc/sun6i-rtc.txt        | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-Once changed, please apply my:
-
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-
+diff --git a/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt b/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
+index d3e96459fc66..b1eaa443347d 100644
+--- a/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
++++ b/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
+@@ -3,7 +3,21 @@
+ RTC controller for the Allwinner A31
+ 
+ Required properties:
+-- compatible	: Should be "allwinner,sun6i-a31-rtc"
++- compatible	: Should be one of the following combinations:
++		    - "allwinner,sun6i-a31-rtc"
++		    - "allwinner,sun8i-a23-rtc"
++		    - "allwinner,sun8i-h3-rtc"
++		    - "allwinner,sun8i-r40-rtc", "allwinner,sun8i-h3-rtc"
++		    - "allwinner,sun8i-v3-rtc"
++		    - "allwinner,sun50i-a64-rtc", "allwinner,sun8i-h3-rtc"
++		    - "allwinner,sun50i-h5-rtc"
++
++		  Where there are two or more compatible strings, this
++		  denotes the hardware covered by the most specific one
++		  is backward-compatible with the latter ones, and the
++		  implementation for the latter ones can be used, albeit
++		  with reduced functionality.
++
+ - reg		: physical base address of the controller and length of
+ 		  memory mapped region.
+ - interrupts	: IRQ lines for the RTC alarm 0 and alarm 1, in that order.
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.20.0.rc1
