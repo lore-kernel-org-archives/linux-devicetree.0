@@ -1,127 +1,89 @@
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: Re: [PATCH 4/4] clk: samsung: exynos5433: add imem clock
-Date: Wed, 28 Nov 2018 14:31:12 +0100
-Message-ID: <29a0412e-1209-b633-8a10-f6db8eb8af09@partner.samsung.com>
-References: <20181121120509.18892-1-k.konieczny@partner.samsung.com>
-        <CGME20181121120524eucas1p166a26857df78947c9e08f0fb8dbf75e4@eucas1p1.samsung.com>
-        <20181121120509.18892-5-k.konieczny@partner.samsung.com>
-        <5BF5520A.5050500@samsung.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH] arm64: dts: rockchip: Add 32k clk on rk3399-gru
+Date: Wed, 28 Nov 2018 14:45:59 +0100
+Message-ID: <6602824.AOVt5XvbUN@diego>
+References: <20181127232331.49628-1-dbasehore@chromium.org> <CAD=FV=WJCvt-Ez_F+gTJaLWnOOY2J0fXxgq8vy0ojKoHv+AQ7w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5BF5520A.5050500@samsung.com>
-Content-Language: en-US
+In-Reply-To: <CAD=FV=WJCvt-Ez_F+gTJaLWnOOY2J0fXxgq8vy0ojKoHv+AQ7w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Derek Basehore <dbasehore@chromium.org>, LKML <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Tony Xie <tony.xie@rock-chips.com>, Chris <zyw@rock-chips.com>, ayaka@soulik.info, "nickey.yang" <nickey.yang@rock-chips.com>, =?utf-8?B?6YOR6Iic5Lm+?= <zhengsq@rock-chips.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Brian Norris <briannorris@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Thank you for your review, see below for answers and questions.
-
-On 21.11.2018 13:39, Chanwoo Choi wrote:
+Am Mittwoch, 28. November 2018, 01:42:36 CET schrieb Doug Anderson:
 > Hi,
 > 
-> On 2018년 11월 21일 21:05, Kamil Konieczny wrote:
->> Add imem clock for exynos5433.
+> On Tue, Nov 27, 2018 at 3:23 PM Derek Basehore <dbasehore@chromium.org> 
+wrote:
+> > This adds the 32k clock to the RK3399 Gru board file. Even though it's
+> > not directly used, muxes will end up traversing the entire clk tree on
+> > calls to determine_rate if it doesn't exist. This is because the 32k
+> > clk is listed as a possible parent on some clks. Since the clk doesn't
+> > know about the 32k clk (it was never registered), it triggers a global
+> > search for it. This can happen about 40 times per second, which isn't
+> > great for power.
 > 
-> It is diffcult to understand the meaning of 'imem' without the description.
-> Please add more detailed description as the patch2 description.
+> I seem to remember Heiko requesting something be added to the commit
 > 
+> message.  Ah yes, he said:
+> > That would also be a great part of the commit message, like
+> > "...on Gru boards the 32kHz clock gets produced by a Silego oscillator"
+> > or so when you move it over to rk3399-gru.dtsi .
+> 
+> Presumably Heiko could add that to the commit message when he applies
+> the patch, so maybe wait to see if he wants you to respin it?
+> 
+> > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> > ---
+> > 
+> >  arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> > b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi index
+> > ca07f6032200..a07aa4c570c0 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> > @@ -14,6 +14,13 @@
+> > 
+> >                 stdout-path = "serial2:115200n8";
+> >         
+> >         };
+> > 
+> > +       ap_rtc_clk: ap-rtc-clk {
+> > +               compatible = "fixed-clock";
+> > +               clock-frequency = <32768>;
+> > +               clock-output-names = "xin32k";
+> > +               #clock-cells = <0>;
+> > +       };
+> > +
+> > 
+> >         /*
+> >         
+> >          * Power Tree
+> 
+> Really this should be below the power tree, AKA right above
+> "gpio-keys".  Convention has typically been that only "special" nodes
+> like "chosen" go all the way at the top here.  Then the power tree
+> (parents first), then other nodes.
+> 
+> In the Chrome OS tree we had an "/* END REGULATORS */ comment to try
+> to separate out the power tree from the rest of the nodes, but I guess
+> Heiko didn't like that when this went upstream so now you just have to
+> know the convention.  :-P
+> 
+> Possibly Heiko would re-sort this for you himself when applying the
+> change if he agrees with my understanding of the conventions.
 
-Will this be enough for description:
+We hashed out the dt-conventions somewhat together during veyron
+times, so I'd be surprised if we didn't agree on them :-D .
 
-Add imem clock for exynos5433. This will enable to use crypto Security
-SubSystem (in short SSS) and SlimSSS IP blocks.
+In any case, I've adapted the commit message to add the Silego part,
+moved the clock to the correct position and applied the result with
+your Reviewed-by for 4.21.
 
-What do you think ?
 
->> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
->> ---
->>  drivers/clk/samsung/clk-exynos5433.c   | 123 +++++++++++++++++++++++++
->>  include/dt-bindings/clock/exynos5433.h |  55 +++++++++++
->>  2 files changed, 178 insertions(+)
->>
->> diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
->> index 24c3360db65b..db29cbd1fbdc 100644
->> --- a/drivers/clk/samsung/clk-exynos5433.c
->> +++ b/drivers/clk/samsung/clk-exynos5433.c
->> @@ -2345,6 +2345,129 @@ static const struct samsung_cmu_info fsys_cmu_info __initconst = {
->>  	.clk_name		= "aclk_fsys_200",
->>  };
->>  
->> +/*
->> + * Register offset definitions for CMU_IMEM
->> + *
->> + */
->> +
-> 
-> Remove unneeded blank line.
-
-ok
-
-> 
->> +#define ENABLE_ACLK_IMEM			0x0800
->> +#define ENABLE_ACLK_IMEM_SSS			0x0808
->> +#define ENABLE_ACLK_IMEM_SLIMSSS		0x080c
->> +#define ENABLE_PCLK_IMEM			0x0900
->> +#define ENABLE_PCLK_IMEM_SSS			0x0904
->> +#define ENABLE_PCLK_IMEM_SLIMSSS		0x0908
-> 
-> When I checked the registers of IMEM block, there are more registers as following:
-> Why do you implement the clocks for only six registers?
-
-I added only those that will be used by crypto block (aes and hash block).
-I can add all of them in version 2.
-
-> CLK_ENABLE_ACLK_IMEM			0x0800
-> 
-> CLK_ENABLE_ACLK_IMEM_SECURE_INT_MEM	0x0804
-> 
-> CLK_ENABLE_ACLK_IMEM_SECURE_SSS		0x0808
-> 
-> CLK_ENABLE_ACLK_IMEM_SECURE_SLIMSSS	0x080C
-> 
-> CLK_ENABLE_ACLK_IMEM_SECURE_RTIC	0x0810
-> 
-> CLK_ENABLE_ACLK_IMEM_SECURE_SMMU_SSS	0x0814
-> [...]
-> 
->> +
->> +static const unsigned long imem_clk_regs[] __initconst = {
->> +ENABLE_ACLK_IMEM,
->> +ENABLE_ACLK_IMEM_SSS,
->> +ENABLE_ACLK_IMEM_SLIMSSS,
->> +ENABLE_PCLK_IMEM,
->> +ENABLE_PCLK_IMEM_SSS,
->> +ENABLE_PCLK_IMEM_SLIMSSS,
-> 
-> Add a tab in front of registers.
-> 
-
-ok
-
->> [...]
->> +static void __init exynos5433_cmu_imem_init(struct device_node *np)
->> +{
->> +	samsung_cmu_register_one(np, &imem_cmu_info);
->> +}
->> +
->> +CLK_OF_DECLARE(exynos5433_cmu_imem, "samsung,exynos5433-cmu-imem",
->> +		exynos5433_cmu_imem_init);
-> 
-> Except for "samsmung,exynos5433-cmu-atlas/apollo", the remained clock blocks
-> were added to exynos5433_cmu_of_match[] table for power management.
-> 
-> If there is no any h/w issue, add the new entry to exynos5433_cmu_of_match for imem block.
-
-ok, I will add this.
-
->> [...]
-
--- 
-Best regards,
-Kamil Konieczny
-Samsung R&D Institute Poland
+Heiko
