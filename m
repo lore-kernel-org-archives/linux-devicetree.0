@@ -1,102 +1,106 @@
-Return-Path: <SRS0=X76U=OJ=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 04/21] ARM: dts: r8a7744: Add SYS-DMAC support
-Date: Fri, 30 Nov 2018 15:26:18 +0000
-Message-Id: <1543591595-37861-5-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
-References: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=2X+C=OH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38449 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728052AbeK1Uzk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 28 Nov 2018 15:55:40 -0500
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH v3 07/12] mailbox: tegra-hsp: Use device-managed registration API
+Date: Wed, 28 Nov 2018 10:54:16 +0100
+Message-Id: <20181128095421.20573-8-thierry.reding@gmail.com>
+In-Reply-To: <20181128095421.20573-1-thierry.reding@gmail.com>
+References: <20181128095421.20573-1-thierry.reding@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mikko Perttunen <mperttunen@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, Pekka Pessi <ppessi@nvidia.com>, Mika Liljeberg <mliljeberg@nvidia.com>, linux-tegra@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Describe SYS-DMAC0/1 in the R8A7744 device tree.
+From: Thierry Reding <treding@nvidia.com>
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-V1-->V2
-   * No change
----
- arch/arm/boot/dts/r8a7744.dtsi | 66 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
+In order to get rid of a lot of cleanup boilerplate code, use the
+device-managed registration API.
 
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index f4d0abd..732c5d7 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -215,6 +215,72 @@
- 			/* placeholder */
- 		};
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ drivers/mailbox/tegra-hsp.c | 30 ++++++------------------------
+ 1 file changed, 6 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/mailbox/tegra-hsp.c b/drivers/mailbox/tegra-hsp.c
+index 9628e52e2371..e443f6a2ec4b 100644
+--- a/drivers/mailbox/tegra-hsp.c
++++ b/drivers/mailbox/tegra-hsp.c
+@@ -721,7 +721,7 @@ static int tegra_hsp_probe(struct platform_device *pdev)
+ 		}
+ 	}
  
-+		dmac0: dma-controller@e6700000 {
-+			compatible = "renesas,dmac-r8a7744",
-+				     "renesas,rcar-dmac";
-+			reg = <0 0xe6700000 0 0x20000>;
-+			interrupts = <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 201 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 202 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 203 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 214 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "error",
-+					  "ch0", "ch1", "ch2", "ch3",
-+					  "ch4", "ch5", "ch6", "ch7",
-+					  "ch8", "ch9", "ch10", "ch11",
-+					  "ch12", "ch13", "ch14";
-+			clocks = <&cpg CPG_MOD 219>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 219>;
-+			#dma-cells = <1>;
-+			dma-channels = <15>;
-+		};
-+
-+		dmac1: dma-controller@e6720000 {
-+			compatible = "renesas,dmac-r8a7744",
-+				     "renesas,rcar-dmac";
-+			reg = <0 0xe6720000 0 0x20000>;
-+			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "error",
-+					  "ch0", "ch1", "ch2", "ch3",
-+					  "ch4", "ch5", "ch6", "ch7",
-+					  "ch8", "ch9", "ch10", "ch11",
-+					  "ch12", "ch13", "ch14";
-+			clocks = <&cpg CPG_MOD 218>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 218>;
-+			#dma-cells = <1>;
-+			dma-channels = <15>;
-+		};
-+
- 		avb: ethernet@e6800000 {
- 			reg = <0 0xe6800000 0 0x800>, <0 0xee0e8000 0 0x4000>;
- 			#address-cells = <1>;
+-	err = mbox_controller_register(&hsp->mbox_db);
++	err = devm_mbox_controller_register(&pdev->dev, &hsp->mbox_db);
+ 	if (err < 0) {
+ 		dev_err(&pdev->dev, "failed to register doorbell mailbox: %d\n",
+ 			err);
+@@ -745,15 +745,15 @@ static int tegra_hsp_probe(struct platform_device *pdev)
+ 		if (err < 0) {
+ 			dev_err(&pdev->dev, "failed to add mailboxes: %d\n",
+ 			        err);
+-			goto unregister_mbox_db;
++			return err;
+ 		}
+ 	}
+ 
+-	err = mbox_controller_register(&hsp->mbox_sm);
++	err = devm_mbox_controller_register(&pdev->dev, &hsp->mbox_sm);
+ 	if (err < 0) {
+ 		dev_err(&pdev->dev, "failed to register shared mailbox: %d\n",
+ 			err);
+-		goto unregister_mbox_db;
++		return err;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, hsp);
+@@ -766,33 +766,16 @@ static int tegra_hsp_probe(struct platform_device *pdev)
+ 			dev_err(&pdev->dev,
+ 			        "failed to request doorbell IRQ#%u: %d\n",
+ 				hsp->doorbell_irq, err);
+-			goto unregister_mbox_sm;
++			return err;
+ 		}
+ 	}
+ 
+ 	if (hsp->shared_irqs) {
+ 		err = tegra_hsp_request_shared_irq(hsp);
+ 		if (err < 0)
+-			goto unregister_mbox_sm;
++			return err;
+ 	}
+ 
+-	return 0;
+-
+-unregister_mbox_sm:
+-	mbox_controller_unregister(&hsp->mbox_sm);
+-unregister_mbox_db:
+-	mbox_controller_unregister(&hsp->mbox_db);
+-
+-	return err;
+-}
+-
+-static int tegra_hsp_remove(struct platform_device *pdev)
+-{
+-	struct tegra_hsp *hsp = platform_get_drvdata(pdev);
+-
+-	mbox_controller_unregister(&hsp->mbox_sm);
+-	mbox_controller_unregister(&hsp->mbox_db);
+-
+ 	return 0;
+ }
+ 
+@@ -842,7 +825,6 @@ static struct platform_driver tegra_hsp_driver = {
+ 		.pm = &tegra_hsp_pm_ops,
+ 	},
+ 	.probe = tegra_hsp_probe,
+-	.remove = tegra_hsp_remove,
+ };
+ 
+ static int __init tegra_hsp_init(void)
 -- 
-2.7.4
+2.19.1
