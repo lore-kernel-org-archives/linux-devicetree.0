@@ -1,91 +1,95 @@
-Return-Path: <SRS0=g9Sy=OG=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr60054.outbound.protection.outlook.com ([40.107.6.54]:26834
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728512AbeK0U2Q (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 27 Nov 2018 15:28:16 -0500
-From: PETER CHEN <peter.chen@nxp.com>
-Subject: [PATCH v3 1/4] usb: chipidea: add flag for imx hsic implementation
-Date: Tue, 27 Nov 2018 09:30:53 +0000
-Message-ID: <20181127092824.22756-2-peter.chen@nxp.com>
-References: <20181127092824.22756-1-peter.chen@nxp.com>
-In-Reply-To: <20181127092824.22756-1-peter.chen@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=2X+C=OH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:35664 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727724AbeK1Uzo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 28 Nov 2018 15:55:44 -0500
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH v3 10/12] arm64: tegra: Add nodes for TCU on Tegra194
+Date: Wed, 28 Nov 2018 10:54:19 +0100
+Message-Id: <20181128095421.20573-11-thierry.reding@gmail.com>
+In-Reply-To: <20181128095421.20573-1-thierry.reding@gmail.com>
+References: <20181128095421.20573-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>, PETER CHEN <peter.chen@nxp.com>
+To: Thierry Reding <thierry.reding@gmail.com>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mikko Perttunen <mperttunen@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, Pekka Pessi <ppessi@nvidia.com>, Mika Liljeberg <mliljeberg@nvidia.com>, linux-tegra@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-NXP (Freecale) imx HSIC design has some special requirements, add
-some flags at host code to handle them.
+From: Mikko Perttunen <mperttunen@nvidia.com>
 
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Add nodes required for communication through the Tegra Combined UART.
+This includes the AON HSP instance, addition of shared interrupts
+for the TOP0 HSP instance, and finally the TCU node itself. Also
+mark the HSP instances as compatible to tegra194-hsp, as the hardware
+is not identical but is compatible to tegra186-hsp.
+
+Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/usb/chipidea/host.c  | 17 +++++++++++++++++
- include/linux/usb/chipidea.h |  3 +++
- 2 files changed, 20 insertions(+)
+Changes in v2:
+- encode direction of mailboxes in device tree mailbox specifier
+---
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 38 ++++++++++++++++++++++--
+ 1 file changed, 35 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
-index d858a82c4f44..028a3574266a 100644
---- a/drivers/usb/chipidea/host.c
-+++ b/drivers/usb/chipidea/host.c
-@@ -170,6 +170,11 @@ static int host_start(struct ci_hdrc *ci)
- 			otg->host =3D &hcd->self;
- 			hcd->self.otg_port =3D 1;
- 		}
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index d64fe306d2e4..1d8ed688fe59 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -688,10 +688,35 @@
+ 		};
+ 
+ 		hsp_top0: hsp@3c00000 {
+-			compatible = "nvidia,tegra186-hsp";
++			compatible = "nvidia,tegra194-hsp", "nvidia,tegra186-hsp";
+ 			reg = <0x03c00000 0xa0000>;
+-			interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-names = "doorbell";
++			interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>,
++			             <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
++			             <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
++			             <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
++			             <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
++			             <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
++			             <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
++			             <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
++			             <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "doorbell", "shared0", "shared1", "shared2",
++			                  "shared3", "shared4", "shared5", "shared6",
++			                  "shared7";
++			#mbox-cells = <2>;
++		};
 +
-+		if (ci->platdata->notify_event &&
-+			(ci->platdata->flags & CI_HDRC_IMX_IS_HSIC))
-+			ci->platdata->notify_event
-+				(ci, CI_HDRC_IMX_HSIC_ACTIVE_EVENT);
- 	}
-=20
- 	return ret;
-@@ -218,6 +223,8 @@ void ci_hdrc_host_destroy(struct ci_hdrc *ci)
- static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
- {
- 	struct ehci_hcd *ehci =3D hcd_to_ehci(hcd);
-+	struct device *dev =3D hcd->self.controller;
-+	struct ci_hdrc *ci =3D dev_get_drvdata(dev);
- 	int port;
- 	u32 tmp;
-=20
-@@ -249,6 +256,16 @@ static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
- 			 * It needs a short delay between set RS bit and PHCD.
- 			 */
- 			usleep_range(150, 200);
++		hsp_aon: hsp@c150000 {
++			compatible = "nvidia,tegra194-hsp", "nvidia,tegra186-hsp";
++			reg = <0x0c150000 0xa0000>;
++			interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>,
++			             <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
++			             <GIC_SPI 135 IRQ_TYPE_LEVEL_HIGH>,
++			             <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
 +			/*
-+			 * Need to clear WKCN and WKOC for imx HSIC,
-+			 * otherwise, there will be wakeup event.
++			 * Shared interrupt 0 is routed only to AON/SPE, so
++			 * we only have 4 shared interrupts for the CCPLEX.
 +			 */
-+			if (ci->platdata->flags & CI_HDRC_IMX_IS_HSIC) {
-+				tmp =3D ehci_readl(ehci, reg);
-+				tmp &=3D ~(PORT_WKDISC_E | PORT_WKCONN_E);
-+				ehci_writel(ehci, tmp, reg);
-+			}
++			interrupt-names = "shared1", "shared2", "shared3", "shared4";
+ 			#mbox-cells = <2>;
+ 		};
+ 
+@@ -879,6 +904,13 @@
+ 		method = "smc";
+ 	};
+ 
++	tcu: tcu {
++		compatible = "nvidia,tegra194-tcu";
++		mboxes = <&hsp_top0 TEGRA_HSP_MBOX_TYPE_SM TEGRA_HSP_SM_RX(0)>,
++		         <&hsp_aon TEGRA_HSP_MBOX_TYPE_SM TEGRA_HSP_SM_TX(1)>;
++		mbox-names = "rx", "tx";
++	};
 +
- 			break;
- 		}
- 	}
-diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-index 63758c399e4e..911e05af671e 100644
---- a/include/linux/usb/chipidea.h
-+++ b/include/linux/usb/chipidea.h
-@@ -60,9 +60,12 @@ struct ci_hdrc_platform_data {
- #define CI_HDRC_OVERRIDE_RX_BURST	BIT(11)
- #define CI_HDRC_OVERRIDE_PHY_CONTROL	BIT(12) /* Glue layer manages phy */
- #define CI_HDRC_REQUIRES_ALIGNED_DMA	BIT(13)
-+#define CI_HDRC_IMX_IS_HSIC		BIT(14)
- 	enum usb_dr_mode	dr_mode;
- #define CI_HDRC_CONTROLLER_RESET_EVENT		0
- #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
-+#define CI_HDRC_IMX_HSIC_ACTIVE_EVENT		2
-+#define CI_HDRC_IMX_HSIC_SUSPEND_EVENT		3
- 	int	(*notify_event) (struct ci_hdrc *ci, unsigned event);
- 	struct regulator	*reg_vbus;
- 	struct usb_otg_caps	ci_otg_caps;
---=20
-2.14.1
+ 	thermal-zones {
+ 		cpu {
+ 			thermal-sensors = <&{/bpmp/thermal}
+-- 
+2.19.1
