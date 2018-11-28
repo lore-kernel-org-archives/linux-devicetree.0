@@ -1,76 +1,67 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: Add 32k clk on rk3399-gru
-Date: Tue, 27 Nov 2018 16:42:36 -0800
-Message-ID: <CAD=FV=WJCvt-Ez_F+gTJaLWnOOY2J0fXxgq8vy0ojKoHv+AQ7w@mail.gmail.com>
-References: <20181127232331.49628-1-dbasehore@chromium.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: clock: Introduce QCOM Graphics clock bindings
+Date: Tue, 27 Nov 2018 16:49:37 -0800
+Message-ID: <154336617743.88331.11824624815680965054@swboyd.mtv.corp.google.com>
+References: <1543120569-14444-1-git-send-email-tdas@codeaurora.org>
+ <1543120569-14444-2-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181127232331.49628-1-dbasehore@chromium.org>
+In-Reply-To: <1543120569-14444-2-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Derek Basehore <dbasehore@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Tony Xie <tony.xie@rock-chips.com>, Chris <zyw@rock-chips.com>, ayaka@soulik.info, "nickey.yang" <nickey.yang@rock-chips.com>, =?UTF-8?B?6YOR6Iic5Lm+?= <zhengsq@rock-chips.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Brian Norris <briannorris@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+To: Michael Turquette <mturquette@baylibre.com>, Taniya Das <tdas@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, Amit Nischal <anischal@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Quoting Taniya Das (2018-11-24 20:36:07)
+> From: Amit Nischal <anischal@codeaurora.org>
+> =
 
-On Tue, Nov 27, 2018 at 3:23 PM Derek Basehore <dbasehore@chromium.org> wrote:
->
-> This adds the 32k clock to the RK3399 Gru board file. Even though it's
-> not directly used, muxes will end up traversing the entire clk tree on
-> calls to determine_rate if it doesn't exist. This is because the 32k
-> clk is listed as a possible parent on some clks. Since the clk doesn't
-> know about the 32k clk (it was never registered), it triggers a global
-> search for it. This can happen about 40 times per second, which isn't
-> great for power.
+> Add device tree bindings for graphics clock controller for
+> Qualcomm Technology Inc's SDM845 SoCs.
+> =
 
-I seem to remember Heiko requesting something be added to the commit
-message.  Ah yes, he said:
+> Signed-off-by: Amit Nischal <anischal@codeaurora.org>
 
-> That would also be a great part of the commit message, like
-> "...on Gru boards the 32kHz clock gets produced by a Silego oscillator"
-> or so when you move it over to rk3399-gru.dtsi .
+You could have added your sign off here, but I don't think this is
+really different from the original posting that's on the list so it's
+OK.
 
-Presumably Heiko could add that to the commit message when he applies
-the patch, so maybe wait to see if he wants you to respin it?
-
-
-> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
 > ---
->  arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-> index ca07f6032200..a07aa4c570c0 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-> @@ -14,6 +14,13 @@
->                 stdout-path = "serial2:115200n8";
->         };
->
-> +       ap_rtc_clk: ap-rtc-clk {
-> +               compatible = "fixed-clock";
-> +               clock-frequency = <32768>;
-> +               clock-output-names = "xin32k";
-> +               #clock-cells = <0>;
-> +       };
+>  .../devicetree/bindings/clock/qcom,gpucc.txt       | 18 ++++++++++++++++
+>  include/dt-bindings/clock/qcom,gpucc-sdm845.h      | 24 ++++++++++++++++=
+++++++
+>  2 files changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gpucc.txt
+>  create mode 100644 include/dt-bindings/clock/qcom,gpucc-sdm845.h
+> =
+
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,gpucc.txt b/Doc=
+umentation/devicetree/bindings/clock/qcom,gpucc.txt
+> new file mode 100644
+> index 0000000..93752db
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,gpucc.txt
+> @@ -0,0 +1,18 @@
+> +Qualcomm Graphics Clock & Reset Controller Binding
+> +--------------------------------------------------
 > +
->         /*
->          * Power Tree
+> +Required properties :
+> +- compatible : shall contain "qcom,sdm845-gpucc".
+> +- reg : shall contain base register location and length.
+> +- #clock-cells : from common clock binding, shall contain 1.
+> +- #reset-cells : from common reset binding, shall contain 1.
+> +- #power-domain-cells : from generic power domain binding, shall contain=
+ 1.
+> +
+> +Example:
+> +       gpucc: clock-controller@5090000 {
+> +               compatible =3D "qcom,sdm845-gpucc";
+> +               reg =3D <0x5090000 0x9000>;
+> +               #clock-cells =3D <1>;
+> +               #reset-cells =3D <1>;
+> +               #power-domain-cells =3D <1>;
 
-Really this should be below the power tree, AKA right above
-"gpio-keys".  Convention has typically been that only "special" nodes
-like "chosen" go all the way at the top here.  Then the power tree
-(parents first), then other nodes.
-
-In the Chrome OS tree we had an "/* END REGULATORS */ comment to try
-to separate out the power tree from the rest of the nodes, but I guess
-Heiko didn't like that when this went upstream so now you just have to
-know the convention.  :-P
-
-Possibly Heiko would re-sort this for you himself when applying the
-change if he agrees with my understanding of the conventions.
-
-Other than my nits:
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+I would expect to see the xo clk here as a clocks and clock-names
+property. I added it myself and applied to clk-next.
