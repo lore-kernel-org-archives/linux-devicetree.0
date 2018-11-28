@@ -1,63 +1,65 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 4/4] ARM64: dts: imx: add i.MX8QXP system controller RTC
- support
-Date: Wed, 28 Nov 2018 09:21:56 +0000
-Message-ID: <DB3PR0402MB39168AC8DB69B81C51CE63C2F5D10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1543311334-8807-1-git-send-email-Anson.Huang@nxp.com>
- <1543311334-8807-5-git-send-email-Anson.Huang@nxp.com>
- <20181128100420.0c9a721a@karo-electronics.de>
- <DB3PR0402MB3916FFD700313BF684CF32AAF5D10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20181128091943.GB8952@piout.net>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 6/8] mfd: lochnagar: Add support for the Cirrus Logic
+ Lochnagar
+Date: Wed, 28 Nov 2018 09:22:13 +0000
+Message-ID: <20181128092213.GW4272@dell>
+References: <20181120141631.18949-1-ckeepax@opensource.cirrus.com>
+ <20181120141631.18949-6-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ks_c_5601-1987"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181128091943.GB8952@piout.net>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181120141631.18949-6-ckeepax@opensource.cirrus.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: =?ks_c_5601-1987?B?TG90aGFyIFdhqaxtYW5u?= <LW@KARO-electronics.de>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, broonie@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
-LS0tLS0NCj4gRnJvbTogQWxleGFuZHJlIEJlbGxvbmkgW21haWx0bzphbGV4YW5kcmUuYmVsbG9u
-aUBib290bGluLmNvbV0NCj4gU2VudDogMjAxONK0MTHqxTI47O0gMTc6MjANCj4gVG86IEFuc29u
-IEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogTG90aGFyIFdhqaxtYW5uIDxMV0BL
-QVJPLWVsZWN0cm9uaWNzLmRlPjsgYS56dW1tb0B0b3dlcnRlY2guaXQ7DQo+IHJvYmgrZHRAa2Vy
-bmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOw0K
-PiB3aWxsLmRlYWNvbkBhcm0uY29tOyBBaXNoZW5nIERPTkcgPGFpc2hlbmcuZG9uZ0BueHAuY29t
-PjsgQW5keSBHcm9zcw0KPiA8YW5keS5ncm9zc0BsaW5hcm8ub3JnPjsgYXJuZEBhcm5kYi5kZTsg
-aG9ybXMrcmVuZXNhc0B2ZXJnZS5uZXQuYXU7DQo+IGhlaWtvQHNudGVjaC5kZTsgYmpvcm4uYW5k
-ZXJzc29uQGxpbmFyby5vcmc7IGVucmljLmJhbGxldGJvQGNvbGxhYm9yYS5jb207DQo+IGFtaXQu
-a3VjaGVyaWFAbGluYXJvLm9yZzsgZXplcXVpZWxAY29sbGFib3JhLmNvbTsgb2xvZkBsaXhvbS5u
-ZXQ7DQo+IHNoYXduZ3VvQGtlcm5lbC5vcmc7IGxpbnV4LXJ0Y0B2Z2VyLmtlcm5lbC5vcmc7IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3Jn
-OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRsLWxpbnV4LWlteCA8
-bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggNC80XSBBUk02NDogZHRz
-OiBpbXg6IGFkZCBpLk1YOFFYUCBzeXN0ZW0gY29udHJvbGxlcg0KPiBSVEMgc3VwcG9ydA0KPiAN
-Cj4gT24gMjgvMTEvMjAxOCAwOTowNjoyNyswMDAwLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gPiA+
-ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhxeHAuZHRz
-aQ0KPiA+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4cXhwLmR0c2kNCj4g
-PiA+ID4gaW5kZXggOTE1NWQ0NS4uZWY1N2RiNiAxMDA2NDQNCj4gPiA+ID4gLS0tIGEvYXJjaC9h
-cm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC5kdHNpDQo+ID4gPiA+ICsrKyBiL2FyY2gv
-YXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhxeHAuZHRzaQ0KPiA+ID4gPiBAQCAtNDMzLDQg
-KzQzMyw4IEBADQo+ID4gPiA+ICAJCSNzaXplLWNlbGxzID0gPDE+Ow0KPiA+ID4gPiAgCQlyYW5n
-ZXMgPSA8MHg1ZjAwMDAwMCAweDAgMHg1ZjAwMDAwMCAweDEwMDAwMDA+Ow0KPiA+ID4gPiAgCX07
-DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwlydGM6IHJ0YyB7DQo+ID4gPiA+ICsJCWNvbXBhdGlibGUg
-PSAibnhwLGlteDhxeHAtc2MtcnRjIjsNCj4gPiA+ID4gKwl9Ow0KPiA+ID4gPiAgfTsNCj4gPiA+
-IElNTyB0aGlzIHNob3VsZCBiZSBkaXNhYmxlZCBieSBkZWZhdWx0Lg0KPiA+DQo+ID4gVGhpcyBt
-b2R1bGUgaXMgTk9UIGRlcGVuZGluZyBvbiBhbnkgYm9hcmQgZGVzaWduLCBzaG91bGQgaXQgYmUg
-ZW5hYmxlZCBieQ0KPiBkZWZhdWx0IGluIHNvYyBkdHNpPw0KPiA+IExpa2Ugd2RvZyBldGMuLg0K
-PiA+DQo+IA0KPiBJIGd1ZXNzIHRoZSBwb2ludCBpcyB0aGF0IHlvdSBtYXkgbm90IHdhbnQgaXQg
-ZW5hYmxlZCwgZXZlbiBpZiBpdCBzaG91bGQgYWx3YXlzDQo+IGJlIHdvcmtpbmcuIGVuYWJsaW5n
-IGl0IGJ5IGRlZmF1bHQgd291bGQgYWZmZWN0IHRoZSBSVEMgb3JkZXJpbmcgZm9yIGV4YW1wbGUu
-DQoNCmkuTVggU29DcyBPTkxZIGhhdmUgMSBSVEMuIEFuZCBSVEMgYXJlIGFsd2F5cyBlbmFibGVk
-IGJ5IGRlZmF1bHQgZm9yIGFsbCBpLk1YDQpTb0NzLCBzbyBkbyB3ZSBoYXZlIHRvIGRpc2FibGUg
-aXQgaGVyZSBhbmQgZW5hYmxlIGl0IGluIGJvYXJkIGR0cz8NCg0KQW5zb24uDQoNCj4gDQo+IA0K
-PiAtLQ0KPiBBbGV4YW5kcmUgQmVsbG9uaSwgQm9vdGxpbg0KPiBFbWJlZGRlZCBMaW51eCBhbmQg
-S2VybmVsIGVuZ2luZWVyaW5nDQo+IGh0dHBzOi8vZW1lYTAxLnNhZmVsaW5rcy5wcm90ZWN0aW9u
-Lm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZib290bA0KPiBpbi5jb20mYW1wO2RhdGE9
-MDIlN0MwMSU3Q2Fuc29uLmh1YW5nJTQwbnhwLmNvbSU3QzA1ODZmZDEwZDZmZjQNCj4gNWQwM2Y0
-MzA4ZDY1NTEyYTg2NCU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzAN
-Cj4gJTdDNjM2Nzg5OTM1OTUxMjE1NzAzJmFtcDtzZGF0YT1IczFBWFhvWk1NS2w4aW5PWEZzOHhY
-TlhROUVKRw0KPiBndHBoeVROaEZ2TWlURSUzRCZhbXA7cmVzZXJ2ZWQ9MA0K
+On Tue, 20 Nov 2018, Charles Keepax wrote:
+
+> Lochnagar is an evaluation and development board for Cirrus
+> Logic Smart CODEC and Amp devices. It allows the connection of
+> most Cirrus Logic devices on mini-cards, as well as allowing
+> connection of various application processor systems to provide a
+> full evaluation platform. This driver supports the board
+> controller chip on the Lochnagar board. Audio system topology,
+> clocking and power can all be controlled through the Lochnagar
+> controller chip, allowing the device under test to be used in
+> a variety of possible use cases.
+> 
+> As the Lochnagar is a fairly complex device this MFD driver
+> allows the drivers for the various features to be bound
+> in. Initially clocking, regulator and pinctrl will be added as
+> these are necessary to configure the system. But in time at least
+> audio and voltage/current monitoring will also be added.
+> 
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+> 
+> No change since v4.
+> 
+> Thanks,
+> Charles
+> 
+>  MAINTAINERS                         |  17 ++
+>  drivers/mfd/Kconfig                 |   8 +
+>  drivers/mfd/Makefile                |   2 +
+>  drivers/mfd/lochnagar-i2c.c         | 394 ++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/lochnagar.h       |  55 +++++
+>  include/linux/mfd/lochnagar1_regs.h | 157 ++++++++++++++
+>  include/linux/mfd/lochnagar2_regs.h | 253 +++++++++++++++++++++++
+>  7 files changed, 886 insertions(+)
+>  create mode 100644 drivers/mfd/lochnagar-i2c.c
+>  create mode 100644 include/linux/mfd/lochnagar.h
+>  create mode 100644 include/linux/mfd/lochnagar1_regs.h
+>  create mode 100644 include/linux/mfd/lochnagar2_regs.h
+
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
