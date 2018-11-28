@@ -1,118 +1,141 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: [PATCH 1/2] dt-bindings: gpio: lpc18xx: describe interrupt
- controllers of GPIO controller
-Date: Thu, 29 Nov 2018 00:48:40 +0200
-Message-ID: <20181128224841.3646-2-vz@mleia.com>
-References: <20181128224841.3646-1-vz@mleia.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] arm64: dts: qcom: sdm845: Add dpu to
+ sdm845 dts file
+Date: Wed, 28 Nov 2018 15:05:06 -0800
+Message-ID: <20181128230506.GB24969@minitux>
+References: <1541125523-28358-1-git-send-email-jsanka@codeaurora.org>
+ <1541125523-28358-2-git-send-email-jsanka@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181128224841.3646-1-vz@mleia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1541125523-28358-2-git-send-email-jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
->From LPC18xx and LPC43xx User Manuals the GPIO controller consists of
-the following weakly connected blocks:
-* GPIO pin interrupt block at 0x40087000,
-* GPIO GROUP0 interrupt block at 0x40088000,
-* GPIO GROUP1 interrupt block at 0x40089000,
-* GPIO port block at 0x400F4000.
-
-While all 4 sub-controller blocks have their own I/O addresses, moreover
-all 3 interrupt blocks are APB0 peripherals and high-speed GPIO block is
-an AHB slave, according to the hardware manual interrupt controllers and
-GPIO controller block are seen as a single device, all 4 sub-controllers
-have the shared reset signal RGU #28 and the same shared clock to access
-registers CLK_Mx_GPIO on CCU1.
-
-The change adds descriptions of the currently missing interrupt controller
-blocks found on GPIO controller, new added properties are 'reg-names',
-'resets', 'interrupt-controller' and '#interrupt-cells', also the example
-is updated to reflect the changes in device tree binding description.
-
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
----
- .../bindings/gpio/nxp,lpc1850-gpio.txt        | 38 ++++++++++++++-----
- 1 file changed, 29 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.txt b/Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.txt
-index eb7cdd69e10b..627efc78ecf2 100644
---- a/Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/nxp,lpc1850-gpio.txt
-@@ -3,12 +3,24 @@ NXP LPC18xx/43xx GPIO controller Device Tree Bindings
- 
- Required properties:
- - compatible		: Should be "nxp,lpc1850-gpio"
--- reg			: Address and length of the register set for the device
--- clocks		: Clock specifier (see clock bindings for details)
--- gpio-controller	: Marks the device node as a GPIO controller.
--- #gpio-cells 		: Should be two
--			  - First cell is the GPIO line number
--			  - Second cell is used to specify polarity
-+- reg			: List of addresses and lengths of the GPIO controller
-+			  register sets
-+- reg-names		: Should be "gpio", "gpio-pin-ic", "gpio-group0-ic" and
-+			  "gpio-gpoup1-ic"
-+- clocks		: Phandle and clock specifier pair for GPIO controller
-+- resets		: Phandle and reset specifier pair for GPIO controller
-+- gpio-controller	: Marks the device node as a GPIO controller
-+- #gpio-cells 		: Should be two:
-+			  - The first cell is the GPIO line number
-+			  - The second cell is used to specify polarity
-+- interrupt-controller	: Marks the device node as an interrupt controller
-+- #interrupt-cells	: Should be two:
-+			  - The first cell is an interrupt number within
-+			    0..9 range, for GPIO pin interrupts it is equal
-+			    to 'nxp,gpio-pin-interrupt' property value of
-+			    GPIO pin configuration, 8 is for GPIO GROUP0
-+			    interrupt, 9 is for GPIO GROUP1 interrupt
-+			  - The second cell is used to specify interrupt type
- 
- Optional properties:
- - gpio-ranges		: Mapping between GPIO and pinctrl
-@@ -19,21 +31,29 @@ Example:
- 
- gpio: gpio@400f4000 {
- 	compatible = "nxp,lpc1850-gpio";
--	reg = <0x400f4000 0x4000>;
-+	reg = <0x400f4000 0x4000>, <0x40087000 0x1000>,
-+	      <0x40088000 0x1000>, <0x40089000 0x1000>;
-+	reg-names = "gpio", "gpio-pin-ic",
-+		    "gpio-group0-ic", "gpio-gpoup1-ic";
- 	clocks = <&ccu1 CLK_CPU_GPIO>;
-+	resets = <&rgu 28>;
- 	gpio-controller;
- 	#gpio-cells = <2>;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
- 	gpio-ranges =	<&pinctrl LPC_GPIO(0,0)  LPC_PIN(0,0)  2>,
- 			...
- 			<&pinctrl LPC_GPIO(7,19) LPC_PIN(f,5)  7>;
- };
- 
- gpio_joystick {
--	compatible = "gpio-keys-polled";
-+	compatible = "gpio-keys";
- 	...
- 
--	button@0 {
-+	button0 {
- 		...
-+		interrupt-parent = <&gpio>;
-+		interrupts = <1 IRQ_TYPE_EDGE_BOTH>;
- 		gpios = <&gpio LPC_GPIO(4,8) GPIO_ACTIVE_LOW>;
- 	};
- };
--- 
-2.17.1
+T24gVGh1IDAxIE5vdiAxOToyNSBQRFQgMjAxOCwgSmV5a3VtYXIgU2Fua2FyYW4gd3JvdGU6Cgo+
+IERQVSBpcyBzaG9ydCBmb3IgdGhlIERpc3BsYXkgUHJvY2Vzc2luZyBVbml0LiBJdCBpcyB0aGUg
+ZGlzcGxheQo+IGNvbnRyb2xsZXIgb24gUXVhbGNvbW0gU0RNODQ1IGNoaXBzLgo+IAo+IFRoaXMg
+Y2hhbmdlIGFkZHMgTURTUyBhbmQgRFNJIG5vZGVzIHRvIGVuYWJsZSBkaXNwbGF5IG9uIHRoZQo+
+IHRhcmdldCBkZXZpY2UuCj4gCgpIYXBweSB0byBzZWUgc3VwcG9ydCByZWFjaGluZyB0aGUgbGV2
+ZWwgd2hlcmUgd2UgY2FuIGludHJvZHVjZSB0aGlzIGluCnRoZSBkdHNpIQoKQnV0LCBub3QgYWxs
+IGRldmljZXMgaGFzIGEgZGlzcGxheSBhbmQgbm90IGFsbCBkZXZpY2VzIHdpdGggZGlzcGxheSBo
+YXMKRFNJLCBzbyBJIHdvdWxkIHN1Z2dlc3QgdGhhdCB5b3UgbWFyayB0aGVzZSBzdGF0dXMgPSAi
+ZGlzYWJsZWQiIGFuZAplbmFibGUgdGhlbSBpbiB0aGUgYm9hcmQgZHRzLgoKUmVnYXJkcywKQmpv
+cm4KCj4gQ2hhbmdlcyBpbiB2MjoKPiAJIC0gQmVlZmVkIHVwIGNvbW1pdCBtZXNzYWdlCj4gCSAt
+IFVzZSBTb0Mgc3BlY2lmaWMgY29tcGF0aWJsZXMgZm9yIG1kc3MgYW5kIGRwdSAoUm9iIEgpCj4g
+CSAtIFVzZSBhc3NpZ25lZC1jbG9ja3MgdG8gc2V0IGluaXRpYWwgY2xvY2sgZnJlcXVlbmN5KFJv
+YiBIKQo+IENoYW5nZXMgaW4gdjM6Cj4gCSAtIGFkZGVkIElPTU1VIG5vZGUKPiAJIC0gRml4IGRl
+dmljZSBuYW1pbmcgKHJlbW92ZSBfcGh5cykKPiAJIC0gVXNlIGNvcnJlY3QgSVJRX1RZUEUgaW4g
+aW50ZXJydXB0IHNwZWNpZmllcnMKPiAKPiBTaWduZWQtb2ZmLWJ5OiBKZXlrdW1hciBTYW5rYXJh
+biA8anNhbmthQGNvZGVhdXJvcmEub3JnPgo+IFNpZ25lZC1vZmYtYnk6IFNlYW4gUGF1bCA8c2Vh
+bnBhdWxAY2hyb21pdW0ub3JnPgo+IC0tLQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2Rt
+ODQ1LmR0c2kgfCAxOTEgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgMSBm
+aWxlIGNoYW5nZWQsIDE5MSBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9z
+ZG04NDUuZHRzaQo+IGluZGV4IDBjOWEyYWEuLmRkNjEyYWMgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9h
+cm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0
+cy9xY29tL3NkbTg0NS5kdHNpCj4gQEAgLTk3OCw2ICs5NzgsMTk3IEBACj4gIAkJCSN0aGVybWFs
+LXNlbnNvci1jZWxscyA9IDwxPjsKPiAgCQl9Owo+ICAKPiArCQltZHNzOiBtZHNzQGFlMDAwMDAg
+ewo+ICsJCQljb21wYXRpYmxlID0gInFjb20sc2RtODQ1LW1kc3MiOwo+ICsJCQlyZWcgPSA8MHhh
+ZTAwMDAwIDB4MTAwMD47Cj4gKwkJCXJlZy1uYW1lcyA9ICJtZHNzIjsKPiArCj4gKwkJCXBvd2Vy
+LWRvbWFpbnMgPSA8JmRpc3BjYyAwPjsKPiArCj4gKwkJCWNsb2NrcyA9IDwmZ2NjIEdDQ19ESVNQ
+X0FIQl9DTEs+LAo+ICsJCQkJIDwmZ2NjIEdDQ19ESVNQX0FYSV9DTEs+LAo+ICsJCQkJIDwmZGlz
+cGNjIERJU1BfQ0NfTURTU19NRFBfQ0xLPjsKPiArCQkJY2xvY2stbmFtZXMgPSAiaWZhY2UiLCAi
+YnVzIiwgImNvcmUiOwo+ICsKPiArCQkJYXNzaWduZWQtY2xvY2tzID0gPCZkaXNwY2MgRElTUF9D
+Q19NRFNTX01EUF9DTEs+Owo+ICsJCQlhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDwzMDAwMDAwMDA+
+Owo+ICsKPiArCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDgzIElSUV9UWVBFX0xFVkVMX0hJR0g+
+Owo+ICsJCQlpbnRlcnJ1cHQtY29udHJvbGxlcjsKPiArCQkJI2ludGVycnVwdC1jZWxscyA9IDwx
+PjsKPiArCj4gKwkJCWlvbW11cyA9IDwmYXBwc19zbW11IDB4ODgwIDB4OD4sCj4gKwkJCSAgICAg
+ICAgIDwmYXBwc19zbW11IDB4YzgwIDB4OD47Cj4gKwo+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwx
+PjsKPiArCQkJI3NpemUtY2VsbHMgPSA8MT47Cj4gKwkJCXJhbmdlczsKPiArCj4gKwkJCW1kc3Nf
+bWRwOiBtZHBAYWUwMTAwMCB7Cj4gKwkJCQljb21wYXRpYmxlID0gInFjb20sc2RtODQ1LWRwdSI7
+Cj4gKwkJCQlyZWcgPSA8MHgwYWUwMTAwMCAweDhmMDAwPiwKPiArCQkJCSAgICAgIDwweDBhZWIw
+MDAwIDB4MjAwOD47Cj4gKwkJCQlyZWctbmFtZXMgPSAibWRwIiwgInZiaWYiOwo+ICsKPiArCQkJ
+CWNsb2NrcyA9IDwmZGlzcGNjIERJU1BfQ0NfTURTU19BSEJfQ0xLPiwKPiArCQkJCQkgPCZkaXNw
+Y2MgRElTUF9DQ19NRFNTX0FYSV9DTEs+LAo+ICsJCQkJCSA8JmRpc3BjYyBESVNQX0NDX01EU1Nf
+TURQX0NMSz4sCj4gKwkJCQkJIDwmZGlzcGNjIERJU1BfQ0NfTURTU19WU1lOQ19DTEs+Owo+ICsJ
+CQkJY2xvY2stbmFtZXMgPSAiaWZhY2UiLCAiYnVzIiwgImNvcmUiLCAidnN5bmMiOwo+ICsKPiAr
+CQkJCWFzc2lnbmVkLWNsb2NrcyA9IDwmZGlzcGNjIERJU1BfQ0NfTURTU19NRFBfQ0xLPiwKPiAr
+CQkJCQkJICA8JmRpc3BjYyBESVNQX0NDX01EU1NfVlNZTkNfQ0xLPjsKPiArCQkJCWFzc2lnbmVk
+LWNsb2NrLXJhdGVzID0gPDMwMDAwMDAwMD4sCj4gKwkJCQkJCSAgICAgICA8MTkyMDAwMDA+Owo+
+ICsKPiArCQkJCWludGVycnVwdC1wYXJlbnQgPSA8Jm1kc3M+Owo+ICsJCQkJaW50ZXJydXB0cyA9
+IDwwIElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ICsKPiArCQkJCXBvcnRzIHsKPiArCQkJCQkjYWRk
+cmVzcy1jZWxscyA9IDwxPjsKPiArCQkJCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKwkJCQkJ
+cG9ydEAwIHsKPiArCQkJCQkJcmVnID0gPDA+Owo+ICsJCQkJCQlkcHVfaW50ZjFfb3V0OiBlbmRw
+b2ludCB7Cj4gKwkJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaTBfaW4+Owo+ICsJCQkJCQl9
+Owo+ICsJCQkJCX07Cj4gKwo+ICsJCQkJCXBvcnRAMSB7Cj4gKwkJCQkJCXJlZyA9IDwxPjsKPiAr
+CQkJCQkJZHB1X2ludGYyX291dDogZW5kcG9pbnQgewo+ICsJCQkJCQkJcmVtb3RlLWVuZHBvaW50
+ID0gPCZkc2kxX2luPjsKPiArCQkJCQkJfTsKPiArCQkJCQl9Owo+ICsJCQkJfTsKPiArCQkJfTsK
+PiArCj4gKwkJCWRzaTA6IGRzaUBhZTk0MDAwIHsKPiArCQkJCWNvbXBhdGlibGUgPSAicWNvbSxt
+ZHNzLWRzaS1jdHJsIjsKPiArCQkJCXJlZyA9IDwweGFlOTQwMDAgMHg0MDA+Owo+ICsJCQkJcmVn
+LW5hbWVzID0gImRzaV9jdHJsIjsKPiArCj4gKwkJCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZtZHNz
+PjsKPiArCQkJCWludGVycnVwdHMgPSA8NCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiArCj4gKwkJ
+CQljbG9ja3MgPSA8JmRpc3BjYyBESVNQX0NDX01EU1NfQllURTBfQ0xLPiwKPiArCQkJCQkgPCZk
+aXNwY2MgRElTUF9DQ19NRFNTX0JZVEUwX0lOVEZfQ0xLPiwKPiArCQkJCQkgPCZkaXNwY2MgRElT
+UF9DQ19NRFNTX1BDTEswX0NMSz4sCj4gKwkJCQkJIDwmZGlzcGNjIERJU1BfQ0NfTURTU19FU0Mw
+X0NMSz4sCj4gKwkJCQkJIDwmZGlzcGNjIERJU1BfQ0NfTURTU19BSEJfQ0xLPiwKPiArCQkJCQkg
+PCZkaXNwY2MgRElTUF9DQ19NRFNTX0FYSV9DTEs+Owo+ICsJCQkJY2xvY2stbmFtZXMgPSAiYnl0
+ZV9jbGsiLAo+ICsJCQkJCSAgICAgICJieXRlX2ludGZfY2xrIiwKPiArCQkJCQkgICAgICAicGl4
+ZWxfY2xrIiwKPiArCQkJCQkgICAgICAiY29yZV9jbGsiLAo+ICsJCQkJCSAgICAgICJpZmFjZV9j
+bGsiLAo+ICsJCQkJCSAgICAgICJidXNfY2xrIjsKPiArCj4gKwkJCQlwaHlzID0gPCZkc2kwX3Bo
+eT47Cj4gKwkJCQlwaHktbmFtZXMgPSAiZHNpLXBoeSI7Cj4gKwo+ICsJCQkJI2FkZHJlc3MtY2Vs
+bHMgPSA8MT47Cj4gKwkJCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKwkJCQlwb3J0cyB7Cj4g
+KwkJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4g
+Kwo+ICsJCQkJCXBvcnRAMCB7Cj4gKwkJCQkJCXJlZyA9IDwwPjsKPiArCQkJCQkJZHNpMF9pbjog
+ZW5kcG9pbnQgewo+ICsJCQkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkcHVfaW50ZjFfb3V0PjsK
+PiArCQkJCQkJfTsKPiArCQkJCQl9Owo+ICsKPiArCQkJCQlwb3J0QDEgewo+ICsJCQkJCQlyZWcg
+PSA8MT47Cj4gKwkJCQkJCWRzaTBfb3V0OiBlbmRwb2ludCB7Cj4gKwkJCQkJCX07Cj4gKwkJCQkJ
+fTsKPiArCQkJCX07Cj4gKwkJCX07Cj4gKwo+ICsJCQlkc2kwX3BoeTogZHNpLXBoeUBhZTk0NDAw
+IHsKPiArCQkJCWNvbXBhdGlibGUgPSAicWNvbSxkc2ktcGh5LTEwbm0iOwo+ICsJCQkJcmVnID0g
+PDB4YWU5NDQwMCAweDIwMD4sCj4gKwkJCQkgICAgICA8MHhhZTk0YTAwIDB4MWUwPiwKPiArCQkJ
+CSAgICAgIDwweGFlOTQ2MDAgMHgyODA+Owo+ICsJCQkJcmVnLW5hbWVzID0gImRzaV9waHkiLAo+
+ICsJCQkJCSAgICAiZHNpX3BsbCIsCj4gKwkJCQkJICAgICJkc2lfcGh5X2xhbmUiOwo+ICsKPiAr
+CQkJCSNjbG9jay1jZWxscyA9IDwxPjsKPiArCQkJCSNwaHktY2VsbHMgPSA8MD47Cj4gKwo+ICsJ
+CQkJY2xvY2tzID0gPCZkaXNwY2MgRElTUF9DQ19NRFNTX0FIQl9DTEs+Owo+ICsJCQkJY2xvY2st
+bmFtZXMgPSAiaWZhY2VfY2xrIjsKPiArCQkJfTsKPiArCj4gKwkJCWRzaTE6IGRzaUBhZTk2MDAw
+IHsKPiArCQkJCWNvbXBhdGlibGUgPSAicWNvbSxtZHNzLWRzaS1jdHJsIjsKPiArCQkJCXJlZyA9
+IDwweGFlOTYwMDAgMHg0MDA+Owo+ICsJCQkJcmVnLW5hbWVzID0gImRzaV9jdHJsIjsKPiArCj4g
+KwkJCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZtZHNzPjsKPiArCQkJCWludGVycnVwdHMgPSA8NSBJ
+UlFfVFlQRV9MRVZFTF9ISUdIPjsKPiArCj4gKwkJCQljbG9ja3MgPSA8JmRpc3BjYyBESVNQX0ND
+X01EU1NfQllURTFfQ0xLPiwKPiArCQkJCQkgPCZkaXNwY2MgRElTUF9DQ19NRFNTX0JZVEUxX0lO
+VEZfQ0xLPiwKPiArCQkJCQkgPCZkaXNwY2MgRElTUF9DQ19NRFNTX1BDTEsxX0NMSz4sCj4gKwkJ
+CQkJIDwmZGlzcGNjIERJU1BfQ0NfTURTU19FU0MxX0NMSz4sCj4gKwkJCQkJIDwmZGlzcGNjIERJ
+U1BfQ0NfTURTU19BSEJfQ0xLPiwKPiArCQkJCQkgPCZkaXNwY2MgRElTUF9DQ19NRFNTX0FYSV9D
+TEs+Owo+ICsJCQkJY2xvY2stbmFtZXMgPSAiYnl0ZV9jbGsiLAo+ICsJCQkJCSAgICAgICJieXRl
+X2ludGZfY2xrIiwKPiArCQkJCQkgICAgICAicGl4ZWxfY2xrIiwKPiArCQkJCQkgICAgICAiY29y
+ZV9jbGsiLAo+ICsJCQkJCSAgICAgICJpZmFjZV9jbGsiLAo+ICsJCQkJCSAgICAgICJidXNfY2xr
+IjsKPiArCj4gKwkJCQlwaHlzID0gPCZkc2kxX3BoeT47Cj4gKwkJCQlwaHktbmFtZXMgPSAiZHNp
+LXBoeSI7Cj4gKwo+ICsJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCQkjc2l6ZS1jZWxs
+cyA9IDwwPjsKPiArCj4gKwkJCQlwb3J0cyB7Cj4gKwkJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47
+Cj4gKwkJCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwo+ICsJCQkJCXBvcnRAMCB7Cj4gKwkJCQkJ
+CXJlZyA9IDwwPjsKPiArCQkJCQkJZHNpMV9pbjogZW5kcG9pbnQgewo+ICsJCQkJCQkJcmVtb3Rl
+LWVuZHBvaW50ID0gPCZkcHVfaW50ZjJfb3V0PjsKPiArCQkJCQkJfTsKPiArCQkJCQl9Owo+ICsK
+PiArCQkJCQlwb3J0QDEgewo+ICsJCQkJCQlyZWcgPSA8MT47Cj4gKwkJCQkJCWRzaTFfb3V0OiBl
+bmRwb2ludCB7Cj4gKwkJCQkJCX07Cj4gKwkJCQkJfTsKPiArCQkJCX07Cj4gKwkJCX07Cj4gKwo+
+ICsJCQlkc2kxX3BoeTogZHNpLXBoeUBhZTk2NDAwIHsKPiArCQkJCWNvbXBhdGlibGUgPSAicWNv
+bSxkc2ktcGh5LTEwbm0iOwo+ICsJCQkJcmVnID0gPDB4YWU5NjQwMCAweDIwMD4sCj4gKwkJCQkg
+ICAgICA8MHhhZTk2YTAwIDB4MTBlPiwKPiArCQkJCSAgICAgIDwweGFlOTY2MDAgMHgyODA+Owo+
+ICsJCQkJcmVnLW5hbWVzID0gImRzaV9waHkiLAo+ICsJCQkJCSAgICAiZHNpX3BsbCIsCj4gKwkJ
+CQkJICAgICJkc2lfcGh5X2xhbmUiOwo+ICsKPiArCQkJCSNjbG9jay1jZWxscyA9IDwxPjsKPiAr
+CQkJCSNwaHktY2VsbHMgPSA8MD47Cj4gKwo+ICsJCQkJY2xvY2tzID0gPCZkaXNwY2MgRElTUF9D
+Q19NRFNTX0FIQl9DTEs+Owo+ICsJCQkJY2xvY2stbmFtZXMgPSAiaWZhY2VfY2xrIjsKPiArCQkJ
+fTsKPiArCQl9Owo+ICsKPiAgCQlzcG1pX2J1czogc3BtaUBjNDQwMDAwIHsKPiAgCQkJY29tcGF0
+aWJsZSA9ICJxY29tLHNwbWktcG1pYy1hcmIiOwo+ICAJCQlyZWcgPSA8MHhjNDQwMDAwIDB4MTEw
+MD4sCj4gLS0gCj4gVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVt
+YmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKPiBhIExpbnV4IEZvdW5kYXRpb24gQ29sbGFi
+b3JhdGl2ZSBQcm9qZWN0Cj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Zy
+ZWVkcmVubwo=
