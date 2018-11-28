@@ -1,141 +1,139 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] arm64: dts: qcom: sdm845: Add dpu to
- sdm845 dts file
-Date: Wed, 28 Nov 2018 15:05:06 -0800
-Message-ID: <20181128230506.GB24969@minitux>
-References: <1541125523-28358-1-git-send-email-jsanka@codeaurora.org>
- <1541125523-28358-2-git-send-email-jsanka@codeaurora.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH] ARM: dts: qcom: msm8974-hammerhead: add WiFi support
+Date: Wed, 28 Nov 2018 15:07:27 -0800
+Message-ID: <20181128230727.GC24969@minitux>
+References: <20181104215034.3677-1-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1541125523-28358-2-git-send-email-jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+In-Reply-To: <20181104215034.3677-1-masneyb@onstation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jonathan Marek <jonathan@marek.ca>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1IDAxIE5vdiAxOToyNSBQRFQgMjAxOCwgSmV5a3VtYXIgU2Fua2FyYW4gd3JvdGU6Cgo+
-IERQVSBpcyBzaG9ydCBmb3IgdGhlIERpc3BsYXkgUHJvY2Vzc2luZyBVbml0LiBJdCBpcyB0aGUg
-ZGlzcGxheQo+IGNvbnRyb2xsZXIgb24gUXVhbGNvbW0gU0RNODQ1IGNoaXBzLgo+IAo+IFRoaXMg
-Y2hhbmdlIGFkZHMgTURTUyBhbmQgRFNJIG5vZGVzIHRvIGVuYWJsZSBkaXNwbGF5IG9uIHRoZQo+
-IHRhcmdldCBkZXZpY2UuCj4gCgpIYXBweSB0byBzZWUgc3VwcG9ydCByZWFjaGluZyB0aGUgbGV2
-ZWwgd2hlcmUgd2UgY2FuIGludHJvZHVjZSB0aGlzIGluCnRoZSBkdHNpIQoKQnV0LCBub3QgYWxs
-IGRldmljZXMgaGFzIGEgZGlzcGxheSBhbmQgbm90IGFsbCBkZXZpY2VzIHdpdGggZGlzcGxheSBo
-YXMKRFNJLCBzbyBJIHdvdWxkIHN1Z2dlc3QgdGhhdCB5b3UgbWFyayB0aGVzZSBzdGF0dXMgPSAi
-ZGlzYWJsZWQiIGFuZAplbmFibGUgdGhlbSBpbiB0aGUgYm9hcmQgZHRzLgoKUmVnYXJkcywKQmpv
-cm4KCj4gQ2hhbmdlcyBpbiB2MjoKPiAJIC0gQmVlZmVkIHVwIGNvbW1pdCBtZXNzYWdlCj4gCSAt
-IFVzZSBTb0Mgc3BlY2lmaWMgY29tcGF0aWJsZXMgZm9yIG1kc3MgYW5kIGRwdSAoUm9iIEgpCj4g
-CSAtIFVzZSBhc3NpZ25lZC1jbG9ja3MgdG8gc2V0IGluaXRpYWwgY2xvY2sgZnJlcXVlbmN5KFJv
-YiBIKQo+IENoYW5nZXMgaW4gdjM6Cj4gCSAtIGFkZGVkIElPTU1VIG5vZGUKPiAJIC0gRml4IGRl
-dmljZSBuYW1pbmcgKHJlbW92ZSBfcGh5cykKPiAJIC0gVXNlIGNvcnJlY3QgSVJRX1RZUEUgaW4g
-aW50ZXJydXB0IHNwZWNpZmllcnMKPiAKPiBTaWduZWQtb2ZmLWJ5OiBKZXlrdW1hciBTYW5rYXJh
-biA8anNhbmthQGNvZGVhdXJvcmEub3JnPgo+IFNpZ25lZC1vZmYtYnk6IFNlYW4gUGF1bCA8c2Vh
-bnBhdWxAY2hyb21pdW0ub3JnPgo+IC0tLQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2Rt
-ODQ1LmR0c2kgfCAxOTEgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgMSBm
-aWxlIGNoYW5nZWQsIDE5MSBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
-NjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9z
-ZG04NDUuZHRzaQo+IGluZGV4IDBjOWEyYWEuLmRkNjEyYWMgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9h
-cm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0
-cy9xY29tL3NkbTg0NS5kdHNpCj4gQEAgLTk3OCw2ICs5NzgsMTk3IEBACj4gIAkJCSN0aGVybWFs
-LXNlbnNvci1jZWxscyA9IDwxPjsKPiAgCQl9Owo+ICAKPiArCQltZHNzOiBtZHNzQGFlMDAwMDAg
-ewo+ICsJCQljb21wYXRpYmxlID0gInFjb20sc2RtODQ1LW1kc3MiOwo+ICsJCQlyZWcgPSA8MHhh
-ZTAwMDAwIDB4MTAwMD47Cj4gKwkJCXJlZy1uYW1lcyA9ICJtZHNzIjsKPiArCj4gKwkJCXBvd2Vy
-LWRvbWFpbnMgPSA8JmRpc3BjYyAwPjsKPiArCj4gKwkJCWNsb2NrcyA9IDwmZ2NjIEdDQ19ESVNQ
-X0FIQl9DTEs+LAo+ICsJCQkJIDwmZ2NjIEdDQ19ESVNQX0FYSV9DTEs+LAo+ICsJCQkJIDwmZGlz
-cGNjIERJU1BfQ0NfTURTU19NRFBfQ0xLPjsKPiArCQkJY2xvY2stbmFtZXMgPSAiaWZhY2UiLCAi
-YnVzIiwgImNvcmUiOwo+ICsKPiArCQkJYXNzaWduZWQtY2xvY2tzID0gPCZkaXNwY2MgRElTUF9D
-Q19NRFNTX01EUF9DTEs+Owo+ICsJCQlhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDwzMDAwMDAwMDA+
-Owo+ICsKPiArCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDgzIElSUV9UWVBFX0xFVkVMX0hJR0g+
-Owo+ICsJCQlpbnRlcnJ1cHQtY29udHJvbGxlcjsKPiArCQkJI2ludGVycnVwdC1jZWxscyA9IDwx
-PjsKPiArCj4gKwkJCWlvbW11cyA9IDwmYXBwc19zbW11IDB4ODgwIDB4OD4sCj4gKwkJCSAgICAg
-ICAgIDwmYXBwc19zbW11IDB4YzgwIDB4OD47Cj4gKwo+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwx
-PjsKPiArCQkJI3NpemUtY2VsbHMgPSA8MT47Cj4gKwkJCXJhbmdlczsKPiArCj4gKwkJCW1kc3Nf
-bWRwOiBtZHBAYWUwMTAwMCB7Cj4gKwkJCQljb21wYXRpYmxlID0gInFjb20sc2RtODQ1LWRwdSI7
-Cj4gKwkJCQlyZWcgPSA8MHgwYWUwMTAwMCAweDhmMDAwPiwKPiArCQkJCSAgICAgIDwweDBhZWIw
-MDAwIDB4MjAwOD47Cj4gKwkJCQlyZWctbmFtZXMgPSAibWRwIiwgInZiaWYiOwo+ICsKPiArCQkJ
-CWNsb2NrcyA9IDwmZGlzcGNjIERJU1BfQ0NfTURTU19BSEJfQ0xLPiwKPiArCQkJCQkgPCZkaXNw
-Y2MgRElTUF9DQ19NRFNTX0FYSV9DTEs+LAo+ICsJCQkJCSA8JmRpc3BjYyBESVNQX0NDX01EU1Nf
-TURQX0NMSz4sCj4gKwkJCQkJIDwmZGlzcGNjIERJU1BfQ0NfTURTU19WU1lOQ19DTEs+Owo+ICsJ
-CQkJY2xvY2stbmFtZXMgPSAiaWZhY2UiLCAiYnVzIiwgImNvcmUiLCAidnN5bmMiOwo+ICsKPiAr
-CQkJCWFzc2lnbmVkLWNsb2NrcyA9IDwmZGlzcGNjIERJU1BfQ0NfTURTU19NRFBfQ0xLPiwKPiAr
-CQkJCQkJICA8JmRpc3BjYyBESVNQX0NDX01EU1NfVlNZTkNfQ0xLPjsKPiArCQkJCWFzc2lnbmVk
-LWNsb2NrLXJhdGVzID0gPDMwMDAwMDAwMD4sCj4gKwkJCQkJCSAgICAgICA8MTkyMDAwMDA+Owo+
-ICsKPiArCQkJCWludGVycnVwdC1wYXJlbnQgPSA8Jm1kc3M+Owo+ICsJCQkJaW50ZXJydXB0cyA9
-IDwwIElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ICsKPiArCQkJCXBvcnRzIHsKPiArCQkJCQkjYWRk
-cmVzcy1jZWxscyA9IDwxPjsKPiArCQkJCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKwkJCQkJ
-cG9ydEAwIHsKPiArCQkJCQkJcmVnID0gPDA+Owo+ICsJCQkJCQlkcHVfaW50ZjFfb3V0OiBlbmRw
-b2ludCB7Cj4gKwkJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaTBfaW4+Owo+ICsJCQkJCQl9
-Owo+ICsJCQkJCX07Cj4gKwo+ICsJCQkJCXBvcnRAMSB7Cj4gKwkJCQkJCXJlZyA9IDwxPjsKPiAr
-CQkJCQkJZHB1X2ludGYyX291dDogZW5kcG9pbnQgewo+ICsJCQkJCQkJcmVtb3RlLWVuZHBvaW50
-ID0gPCZkc2kxX2luPjsKPiArCQkJCQkJfTsKPiArCQkJCQl9Owo+ICsJCQkJfTsKPiArCQkJfTsK
-PiArCj4gKwkJCWRzaTA6IGRzaUBhZTk0MDAwIHsKPiArCQkJCWNvbXBhdGlibGUgPSAicWNvbSxt
-ZHNzLWRzaS1jdHJsIjsKPiArCQkJCXJlZyA9IDwweGFlOTQwMDAgMHg0MDA+Owo+ICsJCQkJcmVn
-LW5hbWVzID0gImRzaV9jdHJsIjsKPiArCj4gKwkJCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZtZHNz
-PjsKPiArCQkJCWludGVycnVwdHMgPSA8NCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiArCj4gKwkJ
-CQljbG9ja3MgPSA8JmRpc3BjYyBESVNQX0NDX01EU1NfQllURTBfQ0xLPiwKPiArCQkJCQkgPCZk
-aXNwY2MgRElTUF9DQ19NRFNTX0JZVEUwX0lOVEZfQ0xLPiwKPiArCQkJCQkgPCZkaXNwY2MgRElT
-UF9DQ19NRFNTX1BDTEswX0NMSz4sCj4gKwkJCQkJIDwmZGlzcGNjIERJU1BfQ0NfTURTU19FU0Mw
-X0NMSz4sCj4gKwkJCQkJIDwmZGlzcGNjIERJU1BfQ0NfTURTU19BSEJfQ0xLPiwKPiArCQkJCQkg
-PCZkaXNwY2MgRElTUF9DQ19NRFNTX0FYSV9DTEs+Owo+ICsJCQkJY2xvY2stbmFtZXMgPSAiYnl0
-ZV9jbGsiLAo+ICsJCQkJCSAgICAgICJieXRlX2ludGZfY2xrIiwKPiArCQkJCQkgICAgICAicGl4
-ZWxfY2xrIiwKPiArCQkJCQkgICAgICAiY29yZV9jbGsiLAo+ICsJCQkJCSAgICAgICJpZmFjZV9j
-bGsiLAo+ICsJCQkJCSAgICAgICJidXNfY2xrIjsKPiArCj4gKwkJCQlwaHlzID0gPCZkc2kwX3Bo
-eT47Cj4gKwkJCQlwaHktbmFtZXMgPSAiZHNpLXBoeSI7Cj4gKwo+ICsJCQkJI2FkZHJlc3MtY2Vs
-bHMgPSA8MT47Cj4gKwkJCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKwkJCQlwb3J0cyB7Cj4g
-KwkJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4g
-Kwo+ICsJCQkJCXBvcnRAMCB7Cj4gKwkJCQkJCXJlZyA9IDwwPjsKPiArCQkJCQkJZHNpMF9pbjog
-ZW5kcG9pbnQgewo+ICsJCQkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkcHVfaW50ZjFfb3V0PjsK
-PiArCQkJCQkJfTsKPiArCQkJCQl9Owo+ICsKPiArCQkJCQlwb3J0QDEgewo+ICsJCQkJCQlyZWcg
-PSA8MT47Cj4gKwkJCQkJCWRzaTBfb3V0OiBlbmRwb2ludCB7Cj4gKwkJCQkJCX07Cj4gKwkJCQkJ
-fTsKPiArCQkJCX07Cj4gKwkJCX07Cj4gKwo+ICsJCQlkc2kwX3BoeTogZHNpLXBoeUBhZTk0NDAw
-IHsKPiArCQkJCWNvbXBhdGlibGUgPSAicWNvbSxkc2ktcGh5LTEwbm0iOwo+ICsJCQkJcmVnID0g
-PDB4YWU5NDQwMCAweDIwMD4sCj4gKwkJCQkgICAgICA8MHhhZTk0YTAwIDB4MWUwPiwKPiArCQkJ
-CSAgICAgIDwweGFlOTQ2MDAgMHgyODA+Owo+ICsJCQkJcmVnLW5hbWVzID0gImRzaV9waHkiLAo+
-ICsJCQkJCSAgICAiZHNpX3BsbCIsCj4gKwkJCQkJICAgICJkc2lfcGh5X2xhbmUiOwo+ICsKPiAr
-CQkJCSNjbG9jay1jZWxscyA9IDwxPjsKPiArCQkJCSNwaHktY2VsbHMgPSA8MD47Cj4gKwo+ICsJ
-CQkJY2xvY2tzID0gPCZkaXNwY2MgRElTUF9DQ19NRFNTX0FIQl9DTEs+Owo+ICsJCQkJY2xvY2st
-bmFtZXMgPSAiaWZhY2VfY2xrIjsKPiArCQkJfTsKPiArCj4gKwkJCWRzaTE6IGRzaUBhZTk2MDAw
-IHsKPiArCQkJCWNvbXBhdGlibGUgPSAicWNvbSxtZHNzLWRzaS1jdHJsIjsKPiArCQkJCXJlZyA9
-IDwweGFlOTYwMDAgMHg0MDA+Owo+ICsJCQkJcmVnLW5hbWVzID0gImRzaV9jdHJsIjsKPiArCj4g
-KwkJCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZtZHNzPjsKPiArCQkJCWludGVycnVwdHMgPSA8NSBJ
-UlFfVFlQRV9MRVZFTF9ISUdIPjsKPiArCj4gKwkJCQljbG9ja3MgPSA8JmRpc3BjYyBESVNQX0ND
-X01EU1NfQllURTFfQ0xLPiwKPiArCQkJCQkgPCZkaXNwY2MgRElTUF9DQ19NRFNTX0JZVEUxX0lO
-VEZfQ0xLPiwKPiArCQkJCQkgPCZkaXNwY2MgRElTUF9DQ19NRFNTX1BDTEsxX0NMSz4sCj4gKwkJ
-CQkJIDwmZGlzcGNjIERJU1BfQ0NfTURTU19FU0MxX0NMSz4sCj4gKwkJCQkJIDwmZGlzcGNjIERJ
-U1BfQ0NfTURTU19BSEJfQ0xLPiwKPiArCQkJCQkgPCZkaXNwY2MgRElTUF9DQ19NRFNTX0FYSV9D
-TEs+Owo+ICsJCQkJY2xvY2stbmFtZXMgPSAiYnl0ZV9jbGsiLAo+ICsJCQkJCSAgICAgICJieXRl
-X2ludGZfY2xrIiwKPiArCQkJCQkgICAgICAicGl4ZWxfY2xrIiwKPiArCQkJCQkgICAgICAiY29y
-ZV9jbGsiLAo+ICsJCQkJCSAgICAgICJpZmFjZV9jbGsiLAo+ICsJCQkJCSAgICAgICJidXNfY2xr
-IjsKPiArCj4gKwkJCQlwaHlzID0gPCZkc2kxX3BoeT47Cj4gKwkJCQlwaHktbmFtZXMgPSAiZHNp
-LXBoeSI7Cj4gKwo+ICsJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCQkjc2l6ZS1jZWxs
-cyA9IDwwPjsKPiArCj4gKwkJCQlwb3J0cyB7Cj4gKwkJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47
-Cj4gKwkJCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwo+ICsJCQkJCXBvcnRAMCB7Cj4gKwkJCQkJ
-CXJlZyA9IDwwPjsKPiArCQkJCQkJZHNpMV9pbjogZW5kcG9pbnQgewo+ICsJCQkJCQkJcmVtb3Rl
-LWVuZHBvaW50ID0gPCZkcHVfaW50ZjJfb3V0PjsKPiArCQkJCQkJfTsKPiArCQkJCQl9Owo+ICsK
-PiArCQkJCQlwb3J0QDEgewo+ICsJCQkJCQlyZWcgPSA8MT47Cj4gKwkJCQkJCWRzaTFfb3V0OiBl
-bmRwb2ludCB7Cj4gKwkJCQkJCX07Cj4gKwkJCQkJfTsKPiArCQkJCX07Cj4gKwkJCX07Cj4gKwo+
-ICsJCQlkc2kxX3BoeTogZHNpLXBoeUBhZTk2NDAwIHsKPiArCQkJCWNvbXBhdGlibGUgPSAicWNv
-bSxkc2ktcGh5LTEwbm0iOwo+ICsJCQkJcmVnID0gPDB4YWU5NjQwMCAweDIwMD4sCj4gKwkJCQkg
-ICAgICA8MHhhZTk2YTAwIDB4MTBlPiwKPiArCQkJCSAgICAgIDwweGFlOTY2MDAgMHgyODA+Owo+
-ICsJCQkJcmVnLW5hbWVzID0gImRzaV9waHkiLAo+ICsJCQkJCSAgICAiZHNpX3BsbCIsCj4gKwkJ
-CQkJICAgICJkc2lfcGh5X2xhbmUiOwo+ICsKPiArCQkJCSNjbG9jay1jZWxscyA9IDwxPjsKPiAr
-CQkJCSNwaHktY2VsbHMgPSA8MD47Cj4gKwo+ICsJCQkJY2xvY2tzID0gPCZkaXNwY2MgRElTUF9D
-Q19NRFNTX0FIQl9DTEs+Owo+ICsJCQkJY2xvY2stbmFtZXMgPSAiaWZhY2VfY2xrIjsKPiArCQkJ
-fTsKPiArCQl9Owo+ICsKPiAgCQlzcG1pX2J1czogc3BtaUBjNDQwMDAwIHsKPiAgCQkJY29tcGF0
-aWJsZSA9ICJxY29tLHNwbWktcG1pYy1hcmIiOwo+ICAJCQlyZWcgPSA8MHhjNDQwMDAwIDB4MTEw
-MD4sCj4gLS0gCj4gVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVt
-YmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKPiBhIExpbnV4IEZvdW5kYXRpb24gQ29sbGFi
-b3JhdGl2ZSBQcm9qZWN0Cj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Zy
-ZWVkcmVubwo=
+On Sun 04 Nov 13:50 PST 2018, Brian Masney wrote:
+
+> From: Jonathan Marek <jonathan@marek.ca>
+> 
+> This patch adds WiFi support to the LG Nexus 5 (hammerhead) phone.
+> 
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> [masneyb@onstation.org: Enabled wlan_regulator_pin and wlan_sleep_clk_pin]
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> ---
+>  .../qcom-msm8974-lge-nexus5-hammerhead.dts    | 70 +++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+> index fe2b5524a679..7fad5a48d4a3 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+> +++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+> @@ -221,6 +221,20 @@
+>  			};
+>  		};
+>  	};
+> +
+> +	vreg_wlan: wlan-regulator {
+> +		compatible = "regulator-fixed";
+> +
+> +		regulator-name = "wl-reg";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +
+> +		gpio = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&wlan_regulator_pin>;
+> +	};
+>  };
+>  
+>  &soc {
+> @@ -253,6 +267,20 @@
+>  			};
+>  		};
+>  
+> +		sdhc2_pin_a: sdhc2-pin-active {
+> +			clk {
+> +				pins = "sdc2_clk";
+> +				drive-strength = <6>;
+> +				bias-disable;
+> +			};
+> +
+> +			cmd-data {
+> +				pins = "sdc2_cmd", "sdc2_data";
+> +				drive-strength = <6>;
+> +				bias-pull-up;
+> +			};
+> +		};
+> +
+>  		i2c3_pins: i2c3 {
+>  			mux {
+>  				pins = "gpio10", "gpio11";
+> @@ -324,6 +352,32 @@
+>  		pinctrl-0 = <&sdhc1_pin_a>;
+>  	};
+>  
+> +	sdhci@f98a4900 {
+> +		status = "ok";
+> +
+> +		max-frequency = <100000000>;
+> +		bus-width = <4>;
+> +		non-removable;
+> +		vmmc-supply = <&vreg_wlan>;
+> +		vqmmc-supply = <&pm8941_s3>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&sdhc2_pin_a>;
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		bcrmf@1 {
+> +			compatible = "brcm,bcm4339-fmac", "brcm,bcm4329-fmac";
+> +			reg = <1>;
+> +
+> +			brcm,drive-strength = <10>;
+> +
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&wlan_sleep_clk_pin>;
+> +		};
+> +	};
+> +
+>  	gpio-keys {
+>  		compatible = "gpio-keys";
+>  		input-name = "gpio-keys";
+> @@ -463,6 +517,22 @@
+>  				output-high;
+>  				line-name = "otg-gpio";
+>  			};
+> +
+> +			wlan_sleep_clk_pin: wl-sleep-clk {
+> +				pins = "gpio16";
+> +				function = "func2";
+> +
+> +				output-high;
+> +				power-source = <PM8941_GPIO_S3>;
+> +			};
+> +
+> +			wlan_regulator_pin: wl-reg-active {
+> +				pins = "gpio17";
+> +				function = "normal";
+> +
+> +				bias-disable;
+> +				power-source = <PM8941_GPIO_S3>;
+> +			};
+>  		};
+>  	};
+>  };
+> -- 
+> 2.17.2
+> 
