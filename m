@@ -1,141 +1,54 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v2 00/15] ARM: sunxi: Enable Broadcom-based Bluetooth controllers
-Date: Wed, 28 Nov 2018 12:25:48 +0800
-Message-ID: <CAGb2v66YJ8tkd8wMsBBHETO3UfQDNdmDtgy6SrUXSYergsSUTA@mail.gmail.com>
-References: <20181115093603.26729-1-wens@csie.org>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v2 0/3] Reset controller support for i.MX8MQ
+Date: Tue, 27 Nov 2018 20:37:35 -0800
+Message-ID: <20181128043738.12714-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181115093603.26729-1-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Loic Poulain <loic.poulain@gmail.com>, linux-bluetooth@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: linux-kernel@vger.kernel.org
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, p.zabel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, cphealy@gmail.com, l.stach@pengutronix.de, Leonard Crestez <leonard.crestez@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Everyone:
 
-On Thu, Nov 15, 2018 at 5:36 PM Chen-Yu Tsai <wens@csie.org> wrote:
->
-> Hi everyone,
->
-> This is v2 of my Broadcom-based Bluetooth controllers on Allwinner SoC-
-> based SBCs series.
->
-> Changes since v1:
->
->   - Collected tags
->   - Re-organize dt binding clocks and clock-names properties
->   - Simplify check for deferred probe when getting clocks
->   - Add explanation of Cubietruck's clk_out_a pinmux setting placement
->     to commit message.
->   - Add missing "uart-has-rtscts" property to Cubietruck device tree
->
-> Original cover letter follows.
->
->
-> On many Allwinner SBCs / developer boards, there is a WiFi+BT combo
-> module from AMPAK. Inside is either one or two Broadcom chips, depending
-> on the model. This series enables the Bluetooth controllers for AMPAK
-> AP6210, AP6212, and AP6330 found on several boards. More will come later
-> as other SoCs require changes to some other parts. I did not cover the
-> SCO PCM connections from the controller to the SoC's I2S interface. It
-> seems no one is actually doing this, so I was not sure how to proceed.
-> Any suggestions?
->
-> I deliberately left out the netdev mailing list and Dave Miller, as the
-> only thing that is under net is the binding document. Maybe we should
-> move that out of Documentation/devicetree/bindings/net/ ?
->
-> Also, I'm not subscribed to the linux-bluetooth ML, so please CC me for
-> any discussions.
->
-> Patches 1 through 4 are device tree binding changes:
->
-> 1 - Make the external clock name unambiguous, and add a second entry for
->     the LPO clock.
->
-> 2 - Add regulator supply properties for the VBAT and VDDIO power pins.
->
-> 3 - Add a compatible string for BCM20702A1.
->
-> 4 - Add a compatible string for BCM4330.
->
-> Patches 5 through 13 are changes to the driver, either improvements,
-> or updates to handle the updated device tree binding.
->
-> 5 - Make the driver handle deferred probing for the external clock.
->
-> 6 - Simplify clock error checking for subsequent clk API calls.
->
-> 7 - Handle clock-names for the main external clock.
->
-> 8 - Support a new external clock, the LPO.
->
-> 9 - Support regulator supplies.
->
-> 10 - Wait a small amount of time after toggling the GPIO for the device
->      to settle.
->
-> 11 - Add support for BCM20702A1, including its default address.
->
-> 12 - Add BCM4330 compatible string to the driver.
->
-> 13 - Handle default address for BCM43430A0.
->
-> 14 - Enable Broadcom-based serdev Bluetooth for multiple Allwinner ARMv7
->      boards.
->
-> 15 - Enable Broadcom-based serdev Bluetooth for the Bananapi M64.
->
-> checkpatch reports an error for both patch 11 and patch 13:
->
->     ERROR: space required after that close brace '}'
->
-> I followed the existing code's style. If this is undesirable, I can send
-> a follow-up patch fixing the entire code block.
->
-> The first 13 patches should go through the Bluetooth tree, while we, the
-> sunxi maintainers, will take the last 2.
+This patch contains changes I made in order to add support for i.MX8MQ
+to reset-imx7.c in order to enable support of PCIE IP block on i.MX8MQ
+SoCs (full tree can be found at [github-v1]).
 
-It's been close to two weeks. Any comments or concerns from the Bluetooth
-maintainers? I'd like to see this in 4.22 if possible.
+NOTE: This patch depens on CONFIG_ARCH_IMX8MQ introduced in [imx8mq]
 
-Thanks
-ChenYu
+Feedback is welcome!
 
-> Thanks
-> ChenYu
->
-> Chen-Yu Tsai (14):
->   dt-bindings: net: broadcom-bluetooth: Fix external clock names
->   dt-bindings: net: broadcom-bluetooth: Add VBAT and VDDIO supplies
->   dt-bindings: net: broadcom-bluetooth: Add BCM20702A1 compatible string
->   dt-bindings: net: broadcom-bluetooth: Add BCM4330 compatible string
->   Bluetooth: hci_bcm: Handle deferred probing for the clock supply
->   Bluetooth: hci_bcm: Simplify clk_get error handling
->   Bluetooth: hci_bcm: Use "txco" and "extclk" to get clock reference
->   Bluetooth: hci_bcm: Add support for LPO clock
->   Bluetooth: hci_bcm: Add support for regulator supplies
->   Bluetooth: hci_bcm: Wait for device to come out of reset after power
->     on
->   Bluetooth: hci_bcm: Add compatible string for BCM4330
->   Bluetooth: btbcm: Add default address for BCM43430A0
->   ARM: dts: sunxi: Enable Broadcom-based Bluetooth for multiple boards
->   arm64: dts: allwinner: a64: bananapi-m64: Add Bluetooth device node
->
-> Maxime Ripard (1):
->   Bluetooth: hci_bcm: Add BCM20702A1 variant
->
->  .../bindings/net/broadcom-bluetooth.txt       |  11 +-
->  arch/arm/boot/dts/sun7i-a20-cubietruck.dts    |  23 ++++
->  arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts  |  18 +++
->  .../boot/dts/sun8i-a83t-cubietruck-plus.dts   |  18 +++
->  arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts  |  14 +++
->  .../dts/allwinner/sun50i-a64-bananapi-m64.dts |  14 +++
->  drivers/bluetooth/btbcm.c                     |  13 +-
->  drivers/bluetooth/hci_bcm.c                   | 112 +++++++++++++++---
->  8 files changed, 206 insertions(+), 17 deletions(-)
->
-> --
-> 2.19.1
->
+Thanks,
+Andrey Smirnov
+
+Changes since [v1]
+
+ - Series re-written to use a per-variant LUT instead of using a
+   single table
+
+- Changed driver to use "imx8mq" insead of "imx8m" to match other
+  drivers and CONFIG_ARCH_IMX8MQ
+
+- Updated list of exported i.MX8MQ resets, add missing and remove
+  bogus ones (hopefully nothing is missing this time)
+
+[v1] lkml.kernel.org/r/20181117181131.9330-2-andrew.smirnov@gmail.com
+[github-v1] https://github.com/ndreys/linux/commits/imx8mq-pcie-v1
+[imx8mq] https://www.spinics.net/lists/arm-kernel/msg687293.html
+
+Andrey Smirnov (3):
+  reset: imx7: Add plubming to support multiple IP variants
+  reset: imx7: Add support for i.MX8MQ IP block variant
+  dt-bindings: reset: imx7: Document usage on i.MX8MQ SoCs
+
+ .../bindings/reset/fsl,imx7-src.txt           |   7 +-
+ drivers/reset/Kconfig                         |   2 +-
+ drivers/reset/reset-imx7.c                    | 166 ++++++++++++++++--
+ include/dt-bindings/reset/imx8mq-reset.h      |  64 +++++++
+ 4 files changed, 220 insertions(+), 19 deletions(-)
+ create mode 100644 include/dt-bindings/reset/imx8mq-reset.h
+
+-- 
+2.19.1
