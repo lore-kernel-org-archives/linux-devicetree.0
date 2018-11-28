@@ -1,54 +1,134 @@
 Return-Path: <SRS0=2X+C=OH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr10077.outbound.protection.outlook.com ([40.107.1.77]:37917
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726972AbeK1QVX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 28 Nov 2018 11:21:23 -0500
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V2 0/4] Add i.MX system controller RTC driver
-Date: Wed, 28 Nov 2018 05:20:57 +0000
-Message-ID: <1543382119-2918-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44086 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728075AbeK1Uzj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 28 Nov 2018 15:55:39 -0500
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH v3 06/12] mailbox: tegra-hsp: use devm_kstrdup_const()
+Date: Wed, 28 Nov 2018 10:54:15 +0100
+Message-Id: <20181128095421.20573-7-thierry.reding@gmail.com>
+In-Reply-To: <20181128095421.20573-1-thierry.reding@gmail.com>
+References: <20181128095421.20573-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Thierry Reding <thierry.reding@gmail.com>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mikko Perttunen <mperttunen@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, Pekka Pessi <ppessi@nvidia.com>, Mika Liljeberg <mliljeberg@nvidia.com>, linux-tegra@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-system controller, the system controller is in charge of system
-power, clock and secure RTC etc. management, Linux kernel
-has to communicate with system controller via MU (message unit)
-IPC to do RTC operation.
+From: Bartosz Golaszewski <brgl@bgdev.pl>
 
-Since the RTC set time MUST to be done in secure EL3 mode (required
-by system controller firmware) and ALARM functions needs to be done
-with general MU IRQ handle, these are NOT ready NOW, so this patch
-ONLY supports RTC read time for now.
+Use devm_kstrdup_const() in the tegra-hsp driver. This mostly serves as
+an example of how to use this new routine to shrink driver code.
 
-Note that this patch set is based on [V4,5/5] defconfig: arm64: add imx8qxp=
- support,
-https://patchwork.kernel.org/patch/10677315/
+Also use devm_kzalloc() instead of regular kzalloc() to shrink the
+driver even more.
 
-Anson Huang (4):
-  dt-bindings: rtc: add binding doc for i.MX system controller RTC
-    driver
-  rtc: add i.MX system controller RTC support
-  defconfig: arm64: add i.MX system controller RTC support
-  ARM64: dts: imx: add i.MX8QXP system controller RTC support
+Doorbell objects are only removed in the driver's remove callback so
+it's safe to convert all memory allocations to devres.
 
- .../devicetree/bindings/rtc/rtc-imx-sc.txt         |  10 ++
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   4 +
- arch/arm64/configs/defconfig                       |   1 +
- drivers/rtc/Kconfig                                |   6 ++
- drivers/rtc/Makefile                               |   1 +
- drivers/rtc/rtc-imx-sc.c                           | 107 +++++++++++++++++=
-++++
- 6 files changed, 129 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
- create mode 100644 drivers/rtc/rtc-imx-sc.c
+Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ drivers/mailbox/tegra-hsp.c | 36 ++++--------------------------------
+ 1 file changed, 4 insertions(+), 32 deletions(-)
 
---=20
-2.7.4
+diff --git a/drivers/mailbox/tegra-hsp.c b/drivers/mailbox/tegra-hsp.c
+index 07d1fbff3642..9628e52e2371 100644
+--- a/drivers/mailbox/tegra-hsp.c
++++ b/drivers/mailbox/tegra-hsp.c
+@@ -281,7 +281,7 @@ tegra_hsp_doorbell_create(struct tegra_hsp *hsp, const char *name,
+ 	unsigned int offset;
+ 	unsigned long flags;
+ 
+-	db = kzalloc(sizeof(*db), GFP_KERNEL);
++	db = devm_kzalloc(hsp->dev, sizeof(*db), GFP_KERNEL);
+ 	if (!db)
+ 		return ERR_PTR(-ENOMEM);
+ 
+@@ -291,7 +291,7 @@ tegra_hsp_doorbell_create(struct tegra_hsp *hsp, const char *name,
+ 	db->channel.regs = hsp->regs + offset;
+ 	db->channel.hsp = hsp;
+ 
+-	db->name = kstrdup_const(name, GFP_KERNEL);
++	db->name = devm_kstrdup_const(hsp->dev, name, GFP_KERNEL);
+ 	db->master = master;
+ 	db->index = index;
+ 
+@@ -302,13 +302,6 @@ tegra_hsp_doorbell_create(struct tegra_hsp *hsp, const char *name,
+ 	return &db->channel;
+ }
+ 
+-static void __tegra_hsp_doorbell_destroy(struct tegra_hsp_doorbell *db)
+-{
+-	list_del(&db->list);
+-	kfree_const(db->name);
+-	kfree(db);
+-}
+-
+ static int tegra_hsp_doorbell_send_data(struct mbox_chan *chan, void *data)
+ {
+ 	struct tegra_hsp_doorbell *db = chan->con_priv;
+@@ -567,19 +560,6 @@ static struct mbox_chan *tegra_hsp_sm_xlate(struct mbox_controller *mbox,
+ 	return mb->channel.chan;
+ }
+ 
+-static void tegra_hsp_remove_doorbells(struct tegra_hsp *hsp)
+-{
+-	struct tegra_hsp_doorbell *db, *tmp;
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&hsp->lock, flags);
+-
+-	list_for_each_entry_safe(db, tmp, &hsp->doorbells, list)
+-		__tegra_hsp_doorbell_destroy(db);
+-
+-	spin_unlock_irqrestore(&hsp->lock, flags);
+-}
+-
+ static int tegra_hsp_add_doorbells(struct tegra_hsp *hsp)
+ {
+ 	const struct tegra_hsp_db_map *map = hsp->soc->map;
+@@ -588,10 +568,8 @@ static int tegra_hsp_add_doorbells(struct tegra_hsp *hsp)
+ 	while (map->name) {
+ 		channel = tegra_hsp_doorbell_create(hsp, map->name,
+ 						    map->master, map->index);
+-		if (IS_ERR(channel)) {
+-			tegra_hsp_remove_doorbells(hsp);
++		if (IS_ERR(channel))
+ 			return PTR_ERR(channel);
+-		}
+ 
+ 		map++;
+ 	}
+@@ -747,7 +725,7 @@ static int tegra_hsp_probe(struct platform_device *pdev)
+ 	if (err < 0) {
+ 		dev_err(&pdev->dev, "failed to register doorbell mailbox: %d\n",
+ 			err);
+-		goto remove_doorbells;
++		return err;
+ 	}
+ 
+ 	/* setup the shared mailbox controller */
+@@ -804,9 +782,6 @@ static int tegra_hsp_probe(struct platform_device *pdev)
+ 	mbox_controller_unregister(&hsp->mbox_sm);
+ unregister_mbox_db:
+ 	mbox_controller_unregister(&hsp->mbox_db);
+-remove_doorbells:
+-	if (hsp->doorbell_irq)
+-		tegra_hsp_remove_doorbells(hsp);
+ 
+ 	return err;
+ }
+@@ -818,9 +793,6 @@ static int tegra_hsp_remove(struct platform_device *pdev)
+ 	mbox_controller_unregister(&hsp->mbox_sm);
+ 	mbox_controller_unregister(&hsp->mbox_db);
+ 
+-	if (hsp->doorbell_irq)
+-		tegra_hsp_remove_doorbells(hsp);
+-
+ 	return 0;
+ }
+ 
+-- 
+2.19.1
