@@ -1,37 +1,44 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 12/14] mfd: axp20x: use explicit bit defines
-Date: Wed, 28 Nov 2018 09:33:35 +0000
-Message-ID: <20181128093335.GB4272@dell>
-References: <cover.156212c9c5df493e098556cad9793a07dcab5e32.1543245984.git-series.plaes@plaes.org>
- <a0f3f8a763d948159de122b8071b5de4bfc785c0.1543245984.git-series.plaes@plaes.org>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 4/4] ARM64: dts: imx: add i.MX8QXP system controller RTC
+ support
+Date: Wed, 28 Nov 2018 10:33:45 +0100
+Message-ID: <20181128093345.GC8952@piout.net>
+References: <1543311334-8807-1-git-send-email-Anson.Huang@nxp.com>
+ <1543311334-8807-5-git-send-email-Anson.Huang@nxp.com>
+ <20181128100420.0c9a721a@karo-electronics.de>
+ <DB3PR0402MB3916FFD700313BF684CF32AAF5D10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20181128091943.GB8952@piout.net>
+ <DB3PR0402MB39168AC8DB69B81C51CE63C2F5D10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <a0f3f8a763d948159de122b8071b5de4bfc785c0.1543245984.git-series.plaes@plaes.org>
+In-Reply-To: <DB3PR0402MB39168AC8DB69B81C51CE63C2F5D10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Priit Laes <plaes@plaes.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Sebastian Reichel <sre@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Olliver Schinagl <oliver@schinagl.nl>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: Lothar =?utf-8?B?V2Hvv73vv71tYW5u?= <LW@KARO-electronics.de>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, shawn
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 26 Nov 2018, Priit Laes wrote:
-
-> From: Olliver Schinagl <oliver@schinagl.nl>
+On 28/11/2018 09:21:56+0000, Anson Huang wrote:
+> > > This module is NOT depending on any board design, should it be enabled by
+> > default in soc dtsi?
+> > > Like wdog etc..
+> > >
+> > 
+> > I guess the point is that you may not want it enabled, even if it should always
+> > be working. enabling it by default would affect the RTC ordering for example.
 > 
-> The AXP20X_OFF define is an actual specific bit, define it as such.
+> i.MX SoCs ONLY have 1 RTC. And RTC are always enabled by default for all i.MX
+> SoCs, so do we have to disable it here and enable it in board dts?
 > 
-> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
-> Signed-off-by: Priit Laes <plaes@plaes.org>
-> ---
->  drivers/mfd/axp20x.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+I would say that most of the i.MX based boards include another RTC
+because the SoC one consumes way too much power.
+
+Note that I don't care too much whether it is enabled by default, I
+was simply explaining why you may want to disable it by default.
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
