@@ -1,59 +1,96 @@
-Return-Path: <SRS0=YZ5O=OA=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:36834 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730169AbeKUWje (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 21 Nov 2018 17:39:34 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20181121120525euoutp01c2a67a5b04ffd4c425708ed3833ea523~pIi10n0DZ1575615756euoutp01L
-        for <devicetree@vger.kernel.org>; Wed, 21 Nov 2018 12:05:25 +0000 (GMT)
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: [PATCH 3/4] arm64: dts: exynos: add imem clock
-Date: Wed, 21 Nov 2018 13:05:08 +0100
-Message-Id: <20181121120509.18892-4-k.konieczny@partner.samsung.com>
-In-Reply-To: <20181121120509.18892-1-k.konieczny@partner.samsung.com>
+Return-Path: <SRS0=2X+C=OH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:44857 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728922AbeK2DoE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 28 Nov 2018 22:44:04 -0500
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH] dt-bindings: tegra186-gpio: Add Tegra186 specific prefix
+Date: Wed, 28 Nov 2018 17:41:44 +0100
+Message-Id: <20181128164144.13240-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-References: <20181121120509.18892-1-k.konieczny@partner.samsung.com>
-        <CGME20181121120524eucas1p2545f7ee0ed4064a10b3bc18f446c288c@eucas1p2.samsung.com>
 Sender: devicetree-owner@vger.kernel.org
-To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
-Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add description for imem clock. The users can use compatibility
-"samsung,exynos5433-cmu-imem".
+From: Thierry Reding <treding@nvidia.com>
 
-Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Subsequent generations of Tegra, such as Tegra194, contain a completely
+different set of GPIOs. In order to clarify that the Tegra186 defines
+are indeed specific to Tegra186, change the prefix from TEGRA_ to
+TEGRA186_.
+
+Note that for now we need to keep the old definitions in place to avoid
+breaking compilation in files that use this header. Once all users have
+been converted to use the new defines, the old ones can be removed.
+
+Also note that this is only a naming change and doesn't affect device
+tree ABI.
+
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- arch/arm64/boot/dts/exynos/exynos5433.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ include/dt-bindings/gpio/tegra186-gpio.h | 41 ++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-index 2131f12364cb..34055fa3a9d0 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-@@ -340,6 +340,21 @@
- 				<&cmu_top CLK_SCLK_USBDRD30_FSYS>;
- 		};
+diff --git a/include/dt-bindings/gpio/tegra186-gpio.h b/include/dt-bindings/gpio/tegra186-gpio.h
+index 463ad398fe3e..cabc5712e745 100644
+--- a/include/dt-bindings/gpio/tegra186-gpio.h
++++ b/include/dt-bindings/gpio/tegra186-gpio.h
+@@ -14,6 +14,34 @@
+ #include <dt-bindings/gpio/gpio.h>
  
-+		cmu_imem: clock-controller@11060000 {
-+			compatible = "samsung,exynos5433-cmu-imem";
-+			reg = <0x11060000 0x1000>;
-+			#clock-cells = <1>;
+ /* GPIOs implemented by main GPIO controller */
++#define TEGRA186_MAIN_GPIO_PORT_A 0
++#define TEGRA186_MAIN_GPIO_PORT_B 1
++#define TEGRA186_MAIN_GPIO_PORT_C 2
++#define TEGRA186_MAIN_GPIO_PORT_D 3
++#define TEGRA186_MAIN_GPIO_PORT_E 4
++#define TEGRA186_MAIN_GPIO_PORT_F 5
++#define TEGRA186_MAIN_GPIO_PORT_G 6
++#define TEGRA186_MAIN_GPIO_PORT_H 7
++#define TEGRA186_MAIN_GPIO_PORT_I 8
++#define TEGRA186_MAIN_GPIO_PORT_J 9
++#define TEGRA186_MAIN_GPIO_PORT_K 10
++#define TEGRA186_MAIN_GPIO_PORT_L 11
++#define TEGRA186_MAIN_GPIO_PORT_M 12
++#define TEGRA186_MAIN_GPIO_PORT_N 13
++#define TEGRA186_MAIN_GPIO_PORT_O 14
++#define TEGRA186_MAIN_GPIO_PORT_P 15
++#define TEGRA186_MAIN_GPIO_PORT_Q 16
++#define TEGRA186_MAIN_GPIO_PORT_R 17
++#define TEGRA186_MAIN_GPIO_PORT_T 18
++#define TEGRA186_MAIN_GPIO_PORT_X 19
++#define TEGRA186_MAIN_GPIO_PORT_Y 20
++#define TEGRA186_MAIN_GPIO_PORT_BB 21
++#define TEGRA186_MAIN_GPIO_PORT_CC 22
 +
-+			clock-names = "oscclk",
-+				"aclk_imem_sssx_266",
-+				"aclk_imem_266",
-+				"aclk_imem_200";
-+			clocks = <&xxti>,
-+				<&cmu_top CLK_DIV_ACLK_IMEM_SSSX_266>,
-+				<&cmu_top CLK_DIV_ACLK_IMEM_266>,
-+				<&cmu_top CLK_DIV_ACLK_IMEM_200>;
-+		};
++#define TEGRA186_MAIN_GPIO(port, offset) \
++	((TEGRA186_MAIN_GPIO_PORT_##port * 8) + offset)
 +
- 		cmu_g2d: clock-controller@12460000 {
- 			compatible = "samsung,exynos5433-cmu-g2d";
- 			reg = <0x12460000 0x1000>;
++/* need to keep these for backwards-compatibility */
+ #define TEGRA_MAIN_GPIO_PORT_A 0
+ #define TEGRA_MAIN_GPIO_PORT_B 1
+ #define TEGRA_MAIN_GPIO_PORT_C 2
+@@ -42,6 +70,19 @@
+ 	((TEGRA_MAIN_GPIO_PORT_##port * 8) + offset)
+ 
+ /* GPIOs implemented by AON GPIO controller */
++#define TEGRA186_AON_GPIO_PORT_S 0
++#define TEGRA186_AON_GPIO_PORT_U 1
++#define TEGRA186_AON_GPIO_PORT_V 2
++#define TEGRA186_AON_GPIO_PORT_W 3
++#define TEGRA186_AON_GPIO_PORT_Z 4
++#define TEGRA186_AON_GPIO_PORT_AA 5
++#define TEGRA186_AON_GPIO_PORT_EE 6
++#define TEGRA186_AON_GPIO_PORT_FF 7
++
++#define TEGRA186_AON_GPIO(port, offset) \
++	((TEGRA186_AON_GPIO_PORT_##port * 8) + offset)
++
++/* need to keep these for backwards-compatibility */
+ #define TEGRA_AON_GPIO_PORT_S 0
+ #define TEGRA_AON_GPIO_PORT_U 1
+ #define TEGRA_AON_GPIO_PORT_V 2
 -- 
 2.19.1
