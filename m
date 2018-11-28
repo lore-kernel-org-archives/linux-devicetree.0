@@ -1,105 +1,124 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH anybus v4 1/7] fieldbus_dev: add Fieldbus Device
- subsystem.
-Date: Wed, 28 Nov 2018 19:36:22 +0100
-Message-ID: <20181128183622.GA9236@kroah.com>
-References: <20181121150709.6030-1-TheSven73@googlemail.com>
- <20181121150709.6030-2-TheSven73@googlemail.com>
- <20181127075431.GG13965@kroah.com>
- <CAGngYiUL7bZVEehj4LGC2H+kv+Z4v_s=tG4uosOp1-Rc4_pGWw@mail.gmail.com>
- <20181128174238.GA4367@kroah.com>
- <CAGngYiXqscqVtSUkwwKGGweOgMm=E=W8nbxOXAbpeyYsk=5B0g@mail.gmail.com>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 00/15] rtc: sun6i: clock rework and pre-H6
+ SoC support
+Date: Wed, 28 Nov 2018 19:45:28 +0100
+Message-ID: <20181128184528.GA22504@Red>
+References: <20181128093013.24442-1-wens@csie.org>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBTOE7PPQKGQEZ6NZBZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <CAGngYiXqscqVtSUkwwKGGweOgMm=E=W8nbxOXAbpeyYsk=5B0g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sven Van Asbroeck <thesven73@gmail.com>
-Cc: Sven Van Asbroeck <svendev@arcx.com>, robh+dt@kernel.org, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, treding@nvidia.com, David Lechner <david@lechnology.com>, noralf@tronnes.org, johan@kernel.org, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, Arnd Bergmann <arnd@arndb.de>, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+In-Reply-To: <20181128093013.24442-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 28, 2018 at 01:19:05PM -0500, Sven Van Asbroeck wrote:
-> On Wed, Nov 28, 2018 at 12:42 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+On Wed, Nov 28, 2018 at 05:29:57PM +0800, Chen-Yu Tsai wrote:
+> Hi everyone,
 > 
-> > It depends on what you want to do with this device node.  You can use a
-> > static one in your structure if you use it to "cast back" to your real
-> > structure in the open() call, do you do that?
+> This series was started as part of enabling Bluetooth on various
+> Allwinner SBCs. The bluetooth controller requires a precise 32.768 kHz
+> clock fed to it to correctly detect the frequency of its main oscillator.
+> This clock signal is provided by the RTC, either directly from a special
+> pin on the SoC, or some clock output function from the clock controllers.
+> I found that the clock-related properties of the RTC on later SoCs were
+> incorrect or missing.
 > 
-> I do...
+> This series reworks the compatible strings and clock parts of the device
+> tree bindings for sun6i-rtc. Currently we assume most Allwinner SoCs use
+> the same sun6i-rtc variant, when in fact they do not. The differences
+> that matter with regards to clocks are a) the A31 does not have an extra
+> external output for the RTC 32K clock, while most of the others do;
+> b) the clock frequency of the internal RC oscillator is different on
+> some SoCs; c) on the H6 the RTC also handles the 24 MHz DCXO, which
+> feeds the system HOSC. The last difference, and by extension the H6, are
+> not covered in this series.
 > 
-> static int fieldbus_open(struct inode *inode, struct file *filp)
-> {
->         struct fieldbus_dev *fbdev = container_of(inode->i_cdev,
->                                                 struct fieldbus_dev,
->                                                 cdev);
-
-Ok, good, that's a nice way to use this, nevermind my objection.
-
-> > Or use a misc device?  How many of these do you need?
+> Patch 1 cleans up the clock-related section of the RTC device tree
+> binding. This would make it easier to read and easier to add additional
+> clocks.
 > 
-> Just one per fieldbus device.
-> But my main concern is naming in sysfs. A misc device will always show up as
-> /sys/class/misc/..., right? Given that this is a userspace fieldbus API,
-> we'd prefer /sys/class/fieldbus_dev/..., and cdev is the only way?
-
-Ah, the common misunderstanding.
-
-A cdev has NOTHING to do with the /sys/class/ entries.  It is only there
-to register a char device with the kernel core and to handle the file
-operations that are caused by it.  It does not do much, and not even the
-/dev/NODE stuff either.  That is up to your class device code.
-
-So you still need a char device, and you will have have a load of them,
-just use the misc device api.  It's simple, clean, and is hard to get
-wrong.  The cdev api is hard, complex, and trivial to get wrong in any
-number of different ways that it can be used :)
-
-That being said, it looks like you used it correctly, so all should be
-fine here.
-
-And your /sys/class/fieldbus_dev/ is "interesting", why name it that?
-
-> > For an online/offline attribute, no need to poll on it, just do a
-> > 'kobject change' event for online/offline and all should be fine.  This
-> > is not a high-frequency event, right?
+> Patch 2 adds compatible strings for all identified variants introduced
+> prior to the H6.
 > 
-> Grepping... you mean kobject_uevent(KOBJ_CHANGE) ?
-> THAT mechanism seems to fit much better, thanks !!
-
-Yes, use that please.
-
-> > Hey, if no one wants to use it, either no need to write any code at all,
-> > or you get to decide everything.  Either way, you're in charge!  :)
+> Patch 3 deprecates the external clock output for the A31. The A31 does
+> not have this output, so it's introduction and usage was an error.
 > 
-> I did get the impression that people are reluctant to take my patch partly
-> because of an unproven userspace API. Maybe they are (rightly) worried that,
-> once in, we will have to support this userspace API for evermore.
+> Patch 4 adds a clock output for the RTC's internal oscillator to the
+> device tree binding. This feeds the PRCM in some SoCs.
 > 
-> I'd love to get others involved in Fieldbus on Linux, but I'm not sure
-> how.
-
-Adding a new driver subsystem is messy, it takes a lot of work and
-finding the right reviewers is hard.  It's not just you, it happens all
-the time (look at how long the i3c code took to get merged as one
-example...)
-
-So keep submitting, I'll try to review it the next time around, and all
-should be fine.  But keep your user api as simple as possible for now,
-only doing what you need it to do, worry about future stuff then.
-
-
-> > But you do need to document the thing, in Documentation/ABI/ to get it
-> > correct and able to be reviewed.
+> Patch 5 adds a default clock name for the LOSC to the RTC driver.
 > 
-> The documentation is already included in this patch? Should I indicate this
-> in some standardized fashion?
+> Patch 6 adds support for different hardware variants to the RTC driver.
 > 
->  create mode 100644 Documentation/ABI/testing/fieldbus-dev-cdev
->  create mode 100644 Documentation/ABI/testing/sysfs-class-fieldbus-dev
+> Patch 7 adds support for all known pre-H6 variants.
+> 
+> Patch 8 exposes the RTC's internal oscillator through the device tree.
+> 
+> Patch 9 makes the R40's CCU use the LOSC from the RTC module, instead of
+> its own internal oscillator.
+> 
+> Patch 10 through 15 adds an RTC node or fixes up the RTC device node
+> address ranges, clock properties, names of existing clocks, and adds
+> accuracy properties for the external fixed oscillators.
+> 
+> The clock names require fixing because the sunxi clock driver implicitly
+> depends on the HOSC and LOSC being named "osc24M" and "osc32k". The
+> "fixes" to the clock hierarchy introduced in this series means the names
+> must also be shuffled around or the in kernel representation would be
+> incorrect. This has been the case since the sunxi-ng drivers were
+> introduced. There are plans to address this, but the code is still in its
+> early stages.
+> 
+> Please have a look.
+> 
+> Thanks
+> ChenYu
+> 
+> Chen-Yu Tsai (15):
+>   dt-bindings: rtc: sun6i-rtc: Rewrite clock outputs as a list
+>   dt-bindings: rtc: sun6i-rtc: Add compatible strings for pre-H6
+>     variants
+>   dt-bindings: rtc: sun6i-rtc: Deprecate external clock output for A31
+>   dt-bindings: rtc: sun6i-rtc: Export internal RC oscillator
+>   rtc: sun6i: Add default clock name for LOSC
+>   rtc: sun6i: Add support for different variants
+>   rtc: sun6i: Add support for all known pre-H6 variants
+>   rtc: sun6i: Expose internal oscillator through device tree
+>   clk: sunxi-ng: r40: Force LOSC parent to RTC LOSC output
+>   ARM: dts: sun8i: a23/a33: Fix up RTC device node
+>   ARM: dts: sunxi: h3/h5: Add clock accuracy for external oscillators
+>   ARM: dts: sunxi: h3/h5: Fix up RTC device node and clock references
+>   ARM: dts: sun8i: r40: Add clock accuracy for external oscillators
+>   ARM: dts: sun8i: r40: Add RTC device node
+>   arm64: dts: allwinner: a64: Fix up RTC device node and clock
+>     references
+> 
+>  .../devicetree/bindings/rtc/sun6i-rtc.txt     |  31 ++++-
+>  arch/arm/boot/dts/sun8i-a23-a33.dtsi          |   6 +-
+>  arch/arm/boot/dts/sun8i-h3.dtsi               |   4 +
+>  arch/arm/boot/dts/sun8i-r40.dtsi              |  18 ++-
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  28 ++---
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  22 ++--
+>  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |   4 +
+>  drivers/clk/sunxi-ng/ccu-sun8i-r40.c          |  11 ++
+>  drivers/rtc/rtc-sun6i.c                       | 117 ++++++++++++++++--
+>  9 files changed, 188 insertions(+), 53 deletions(-)
+> 
+> -- 
 
-Ah, sorry, I didn't read it, my fault :(
+Hello
 
-Why not just /sys/class/fieldbus/ ?  No need for "dev", right?
+Tested-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Tested-on: sun8i-r40-bananapi-m2-ultra
+Tested-on: sun50i-h5-nanopi-neo-plus2
 
-greg k-h
+Regards
