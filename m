@@ -1,13 +1,12 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 11/15] ARM: dts: sunxi: h3/h5: Add clock
- accuracy for external oscillators
-Date: Wed, 28 Nov 2018 17:30:09 +0800
-Message-ID: <20181128093013.24442-13-wens@csie.org>
+Subject: [PATCH 05/15] rtc: sun6i: Add default clock name for LOSC
+Date: Wed, 28 Nov 2018 17:30:02 +0800
+Message-ID: <20181128093013.24442-6-wens@csie.org>
 References: <20181128093013.24442-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBOWA7HPQKGQEJC6277I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBO6A7HPQKGQE4M5QGZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181128093013.24442-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,34 +19,29 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Alexa
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The H3 datasheet specifies a tolerance range for the external
-oscillators used. Add them to the device tree as the clock accuracy.
-The internal oscillator is left unchanged, as it will be removed later.
+The RTC's main clock, used internally and exported to the rest of the
+SoC, is called "LOSC" (low speed oscillator) through the hardware
+documentation.
+
+This patch adds a default name for this clock, in case the device tree
+does not provide one. This shouldn't happen, but lets play it safe.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sunxi-h3-h5.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/rtc/rtc-sun6i.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index 0d9e9eac518c..bce3bf1d6ae5 100644
---- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-+++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -86,6 +86,7 @@
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
- 			clock-frequency = <24000000>;
-+			clock-accuracy = <50000>;
- 			clock-output-names = "osc24M";
- 		};
- 
-@@ -93,6 +94,7 @@
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
- 			clock-frequency = <32768>;
-+			clock-accuracy = <50000>;
- 			clock-output-names = "osc32k";
- 		};
- 
+diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+index fe07310952df..8edd9e1ec007 100644
+--- a/drivers/rtc/rtc-sun6i.c
++++ b/drivers/rtc/rtc-sun6i.c
+@@ -191,6 +191,7 @@ static void __init sun6i_rtc_clk_init(struct device_node *node)
+ 	struct sun6i_rtc_dev *rtc;
+ 	struct clk_init_data init = {
+ 		.ops		= &sun6i_rtc_osc_ops,
++		.name		= "losc",
+ 	};
+ 	const char *clkout_name = "osc32k-out";
+ 	const char *parents[2];
 -- 
 2.20.0.rc1
