@@ -1,176 +1,76 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: Adding a Basic DT for the Linksys ea6500 v2 wireless home router
-Date: Tue, 27 Nov 2018 16:23:08 -0800
-Message-ID: <5a6a30cf-1d93-7232-e607-3919b86bbdff@gmail.com>
-References: <CACE8ZKbUhFyWg5oK1B8+aWAa0tdqKf5Kokj80+8x1X2EUaA_DQ@mail.gmail.com>
- <CACE8ZKZEpQjOW6CSvUuM9xhjtkSCF0bYxcfQ3htSabC=rVJcTA@mail.gmail.com>
- <86f391e5-9e38-c8b0-4753-4646c322c9bc@hauke-m.de>
- <CACE8ZKb5CxEBAdCdGAhwaQHC9_nHBjTTVwxdDOXRayqgz0FK5g@mail.gmail.com>
- <CACE8ZKYCyDx_E+3sLpjQSV6xrFxGyrYwEfhEO=QZPGpm3jsBrQ@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: Add 32k clk on rk3399-gru
+Date: Tue, 27 Nov 2018 16:42:36 -0800
+Message-ID: <CAD=FV=WJCvt-Ez_F+gTJaLWnOOY2J0fXxgq8vy0ojKoHv+AQ7w@mail.gmail.com>
+References: <20181127232331.49628-1-dbasehore@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACE8ZKYCyDx_E+3sLpjQSV6xrFxGyrYwEfhEO=QZPGpm3jsBrQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181127232331.49628-1-dbasehore@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Ren=c3=a9_Kjellerup?= <rk.katana.steel@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>
-Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Derek Basehore <dbasehore@chromium.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Tony Xie <tony.xie@rock-chips.com>, Chris <zyw@rock-chips.com>, ayaka@soulik.info, "nickey.yang" <nickey.yang@rock-chips.com>, =?UTF-8?B?6YOR6Iic5Lm+?= <zhengsq@rock-chips.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Brian Norris <briannorris@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
+
+On Tue, Nov 27, 2018 at 3:23 PM Derek Basehore <dbasehore@chromium.org> wrote:
+>
+> This adds the 32k clock to the RK3399 Gru board file. Even though it's
+> not directly used, muxes will end up traversing the entire clk tree on
+> calls to determine_rate if it doesn't exist. This is because the 32k
+> clk is listed as a possible parent on some clks. Since the clk doesn't
+> know about the 32k clk (it was never registered), it triggers a global
+> search for it. This can happen about 40 times per second, which isn't
+> great for power.
+
+I seem to remember Heiko requesting something be added to the commit
+message.  Ah yes, he said:
+
+> That would also be a great part of the commit message, like
+> "...on Gru boards the 32kHz clock gets produced by a Silego oscillator"
+> or so when you move it over to rk3399-gru.dtsi .
+
+Presumably Heiko could add that to the commit message when he applies
+the patch, so maybe wait to see if he wants you to respin it?
 
 
-On 11/26/18 4:49 PM, René Kjellerup wrote:
-> To the broadcom kernel maintainers, (for BCM4708 CPUs)
-> 
-> I just want to add a little attention to this patch again...
-> let me know if there's any concerns and I will try to address highlighted issues
-> as soon as possible.
-> 
-> I've been running the development builds of OpenWrt kernels, where
-> this patch has
-> been included, on my Linksys EA6500v2 router for the past months,
-> updating as new
-> builds are available. With only the on board BCM4360 chip (5GHz WiFi) is being
-> disabled, has so far been stable for my use case.
+> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> index ca07f6032200..a07aa4c570c0 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> @@ -14,6 +14,13 @@
+>                 stdout-path = "serial2:115200n8";
+>         };
+>
+> +       ap_rtc_clk: ap-rtc-clk {
+> +               compatible = "fixed-clock";
+> +               clock-frequency = <32768>;
+> +               clock-output-names = "xin32k";
+> +               #clock-cells = <0>;
+> +       };
+> +
+>         /*
+>          * Power Tree
 
-(Please no top posting). Your submission did make it through patchwork
-and looks okay, I will run build tests and queue it up for 4.21 if
-everything looks good. Thanks.
+Really this should be below the power tree, AKA right above
+"gpio-keys".  Convention has typically been that only "special" nodes
+like "chosen" go all the way at the top here.  Then the power tree
+(parents first), then other nodes.
 
-> 
-> thank you for the consideration
-> Rene (aka Katana_Steel)
-> 
-> On Mon, Oct 8, 2018 at 9:34 AM René Kjellerup <rk.katana.steel@gmail.com> wrote:
->>
->> Hi Hauke,
->>
->> Updated the file header per your suggestion.
->>
->> From e97c15ef78d2535c23f32ebbec43bced72b5eaf7 Mon Sep 17 00:00:00 2001
->> From: Rene Kjellerup <rk.katana.steel@gmail.com>
->> Date: Mon, 1 Oct 2018 14:11:56 -0700
->> Subject: [PATCH] ARM: dts: BCM5301X: Add basic DT for Linksys EA6500 V2
->>
->> It's wireless home router based on BCM4708A0 with BCM4360 + BCM4331
->> wireless chipsets. The 5GHz chip currently isn't supported only due
->> to missing compatible firmware.
->>
->> the DTS here was based on the Linksys EA6300 V1 DTS, only changing
->> the model strings
->>
->> Signed-off-by: Rene Kjellerup <rk.katana.steel@gmail.com>
->> ---
->>  arch/arm/boot/dts/Makefile                      |  1 +
->>  arch/arm/boot/dts/bcm4708-linksys-ea6500-v2.dts | 47 +++++++++++++++++++++++++
->>  2 files changed, 48 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/bcm4708-linksys-ea6500-v2.dts
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index b5bd3de87c33..adf8f28f5e44 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -88,6 +88,7 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
->>      bcm4708-asus-rt-ac68u.dtb \
->>      bcm4708-buffalo-wzr-1750dhp.dtb \
->>      bcm4708-linksys-ea6300-v1.dtb \
->> +    bcm4708-linksys-ea6500-v2.dtb \
->>      bcm4708-luxul-xap-1510.dtb \
->>      bcm4708-luxul-xwc-1000.dtb \
->>      bcm4708-netgear-r6250.dtb \
->> diff --git a/arch/arm/boot/dts/bcm4708-linksys-ea6500-v2.dts
->> b/arch/arm/boot/dts/bcm4708-linksys-ea6500-v2.dts
->> new file mode 100644
->> index 000000000000..8a434d2a4b72
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/bcm4708-linksys-ea6500-v2.dts
->> @@ -0,0 +1,47 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
->> +/*
->> + * Copyright (C) 2017 Rafał Miłecki <rafal@milecki.pl>
->> + * Copyright (C) 2018 Rene Kjellerup <rk.katana.steel@gmail.com>
->> + *
->> + * this DTS was originally based on bcm4708-linksys-ea6300-v1.dts
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include "bcm4708.dtsi"
->> +#include "bcm5301x-nand-cs0-bch8.dtsi"
->> +
->> +/ {
->> +    compatible = "linksys,ea6500-v2", "brcm,bcm4708";
->> +    model = "Linksys EA6500 V2";
->> +
->> +    chosen {
->> +        bootargs = "console=ttyS0,115200";
->> +    };
->> +
->> +    memory {
->> +        reg = <0x00000000 0x08000000>;
->> +    };
->> +
->> +    gpio-keys {
->> +        compatible = "gpio-keys";
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +
->> +        wps {
->> +            label = "WPS";
->> +            linux,code = <KEY_WPS_BUTTON>;
->> +            gpios = <&chipcommon 7 GPIO_ACTIVE_LOW>;
->> +        };
->> +
->> +        restart {
->> +            label = "Reset";
->> +            linux,code = <KEY_RESTART>;
->> +            gpios = <&chipcommon 11 GPIO_ACTIVE_LOW>;
->> +        };
->> +    };
->> +};
->> +
->> +&usb3_phy {
->> +    status = "okay";
->> +};
->> --
->> 2.16.4
->>
->> On Sun, Oct 7, 2018 at 2:08 PM Hauke Mehrtens <hauke@hauke-m.de> wrote:
->>>
->>> On 10/04/2018 11:08 PM, René Kjellerup wrote:
->>>> Hi Hauke,
->>>>
->>>> thank you for suggesting adding the dts patch to mainline kernel,
->>>> so here it is.
->>>> I feel Rafal technically still have the copyrights, this is pretty
->>>> much just a few string updates for the ea6500v2. However with this
->>>> dts in latest OpenWrt 18.06 loads and installs on my device.
->>>>
->>>> I will be available to do more testing should it be required.
->>>>
->>>> Regrads
->>>> Rene Kjellerup
->>>> --
->>>> -- as life grows older, I gain experience.
->>>> -- http://www.alchemiestick.net/
->>>>
->>>
->>> Hi Rene,
->>>
->>> Please send you patch inline in the mail and not as an attachment, I
->>> would suggest to use "git send-email" for sending the patch.
->>>
->>> Adding Rafal as copyright owner is ok, like you did it now. You could
->>> mention in the file header on which dts file this is based.
->>>
->>> Hauke
->>>
->>
->>
->> --
->> -- as life grows older, I gain experience.
->> -- http://www.alchemiestick.net/apps/
+In the Chrome OS tree we had an "/* END REGULATORS */ comment to try
+to separate out the power tree from the rest of the nodes, but I guess
+Heiko didn't like that when this went upstream so now you just have to
+know the convention.  :-P
 
--- 
-Florian
+Possibly Heiko would re-sort this for you himself when applying the
+change if he agrees with my understanding of the conventions.
+
+Other than my nits:
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
