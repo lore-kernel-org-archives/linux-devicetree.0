@@ -1,36 +1,48 @@
 From: Evan Green <evgreen@chromium.org>
-Subject: [PATCH v1 1/3] dt-bindings: mmc: sdhci-msm: Clarify register requirements
-Date: Wed, 28 Nov 2018 14:34:26 -0800
-Message-ID: <20181128223428.177313-2-evgreen@chromium.org>
+Subject: [PATCH v1 2/3] arm64: dts: qcom: sdm845: Add SD nodes
+Date: Wed, 28 Nov 2018 14:34:27 -0800
+Message-ID: <20181128223428.177313-3-evgreen@chromium.org>
 References: <20181128223428.177313-1-evgreen@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181128223428.177313-1-evgreen@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Douglas Anderson <dianders@chromium.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Douglas Anderson <dianders@chromium.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In sdhci-msm-v5 and beyond, the MCI registers are removed, so there is only
-one register region required.
+Add the SD controller to SDM845.
 
 Signed-off-by: Evan Green <evgreen@chromium.org>
 ---
 
- Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-index b72871ac90cb2..da4edb146a983 100644
---- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-@@ -25,7 +25,7 @@ Required properties:
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 1419b0098cb38..bb8eacdf40910 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1078,6 +1078,21 @@
+ 			};
+ 		};
  
- - reg: Base address and length of the register in the following order:
- 	- Host controller register map (required)
--	- SD Core register map (required)
-+	- SD Core register map (required for msm-v4 and below)
- - interrupts: Should contain an interrupt-specifiers for the interrupts:
- 	- Host controller interrupt (required)
- - pinctrl-names: Should contain only one value - "default".
++		sdhc_2: sdhci@8804000 {
++			compatible = "qcom,sdm845-sdhci", "qcom,sdhci-msm-v5";
++			reg = <0x8804000 0x1000>;
++
++			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hc_irq", "pwr_irq";
++
++			clocks = <&gcc GCC_SDCC2_AHB_CLK>,
++				 <&gcc GCC_SDCC2_APPS_CLK>;
++			clock-names = "iface", "core";
++
++			status = "disabled";
++		};
++
+ 		usb_1_hsphy: phy@88e2000 {
+ 			compatible = "qcom,sdm845-qusb2-phy";
+ 			reg = <0x88e2000 0x400>;
 -- 
 2.18.1
