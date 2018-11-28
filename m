@@ -1,98 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH anybus v4 6/7] dt-bindings: anybuss-host: document
- devicetree binding
-Date: Wed, 28 Nov 2018 10:36:24 -0600
-Message-ID: <CAL_JsqK--6UE9N2je3mkoxf_0+i5fTYqYpmTF2bpzFf-KRjhaQ@mail.gmail.com>
-References: <20181121150709.6030-1-TheSven73@googlemail.com>
- <20181121150709.6030-7-TheSven73@googlemail.com> <20181126220804.GA23069@bogus>
- <CAGngYiWBBe7P80ASQJnS8woe6SKLgNUmqKxOHMeyV1fGSCpY_w@mail.gmail.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v18 1/5] iommu/arm-smmu: Add
+ pm_runtime/sleep ops
+Date: Wed, 28 Nov 2018 16:36:36 +0000
+Message-ID: <0d76b669-6c4f-7c3b-50a1-084201f2c07a@arm.com>
+References: <20181127101145.7682-1-vivek.gautam@codeaurora.org>
+ <20181127101145.7682-2-vivek.gautam@codeaurora.org>
+ <154342225921.88331.14467967828250776155@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGngYiWBBe7P80ASQJnS8woe6SKLgNUmqKxOHMeyV1fGSCpY_w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sven Van Asbroeck <thesven73@gmail.com>
-Cc: Sven Van Asbroeck <svendev@arcx.com>, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>, Johan Hovold <johan@kernel.org>, Michal Simek <monstr@monstr.eu>, =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Garry <john.garry@huawei.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Robin Murphy <robin.murphy@arm.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <154342225921.88331.14467967828250776155-n1Xw8LXHxjTHt/MElyovVYaSKrA+ACpX0E9HWUfgJXw@public.gmane.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 28, 2018 at 9:38 AM Sven Van Asbroeck <thesven73@gmail.com> wrote:
->
-> Rob, thank you so much for the review !
->
-> On Mon, Nov 26, 2018 at 5:08 PM Rob Herring <robh@kernel.org> wrote:
->
-> > Unit-addresses are based on 'reg'. So this should either be '89' or
-> > based on a definition for the bus (e.g. PCI uses dev and func).
-> >
-> >> +                     reg = <0x0089>;
-> >
-> > Is fieldbus type how one addresses a device on the bus?
->
-> I'm afraid not. Anybus cards don't have an address, because only a single card
-> can be connected to an anybus at a time.
-
-Then you don't need reg as you should only have 1 child node.
-
-> Fieldbus type defines the type/functionality of the connected card. Like pci
-> device ids.
-
-Which for PCI can be overridden in DT, but is part of reg.
-
-> The current patchset allows devicetree nodes to be provided depending on
-> the type of card connected to the bus. It identifies the card by type,
-> not location.
->
-> Is this not desired / allowed ?
-
-No, 'reg' is how you address a device. You could use 'type' in the
-compatible string if type implies some sort of standard class
-interface.
-
-> > I'm still not clear what a bridge vs. host is. Both examples are on WEIM
-> > bus CS0?
->
-> I agree that the terminology is too confusing. I'm looking to change it.
->
-> Let's compare current anybus with a well-established bus architecture like pci:
->
->                                 pci                     anybus
-> --------------------------------------------------------------------------------
-> Common bus code (spec),         pci/pci_driver.c        fieldbus/anybuss-host.c
->   calls bus_register()                                  must be parallel bus
->                                                         subnode
->                                 no of compatible        has of compatible
-> --------------------------------------------------------------------------------
-> Device on bus, calls
->   XXX_client_driver_register()  hwmon/k8temp.c          fieldbus/hms-profinet.c
-> --------------------------------------------------------------------------------
-> Controller, silicon driver      pci/pcie-tango.c        fieldbus/anybus-bridge.c
->                                 platform_driver calls   platform_driver does not
->                                 pci_host_probe()        register with anybus
->
-> I should probably rework this so it conforms more closely to the way it's done
-> on pci. Would the following look any better?
-
-Yes, this looks better.
-
->                                 pci                     anybus
-> --------------------------------------------------------------------------------
-> Common bus code (spec),         pci/pci_driver.c        anybus/anybus_driver.c
-
-Maybe just anybus/core.c or anybus/bus.c. I'm guessing your
-implementation will be *much* more simple than PCI.
-
->   calls bus_register()          no of compatible        no of compatible
-> --------------------------------------------------------------------------------
-> Device on bus, calls
->   XXX_client_driver_register()  hwmon/k8temp.c          fieldbus/hms-profinet.c
-> --------------------------------------------------------------------------------
-> Controller, silicon driver      pci/pcie-tango.c        anybus/arcx-controller.c
->                                 platform_driver calls   platform_driver calls
->                                 pci_host_probe()        anybus_host_probe()
->
-> Of course, the analogy is not perfect, as there can only be a single card
-> (device) connected to an anybus at a time.
-
-Right, that should simplify the bus code a lot.
-
-Rob
+T24gMjgvMTEvMjAxOCAxNjoyNCwgU3RlcGhlbiBCb3lkIHdyb3RlOgo+IFF1b3RpbmcgVml2ZWsg
+R2F1dGFtICgyMDE4LTExLTI3IDAyOjExOjQxKQo+PiBAQCAtMTk2Niw2ICsxOTcwLDIzIEBAIHN0
+YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGFybV9zbW11X29mX21hdGNoW10gPSB7Cj4+
+ICAgfTsKPj4gICBNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBhcm1fc21tdV9vZl9tYXRjaCk7Cj4+
+ICAgCj4+ICtzdGF0aWMgdm9pZCBhcm1fc21tdV9maWxsX2Nsa19kYXRhKHN0cnVjdCBhcm1fc21t
+dV9kZXZpY2UgKnNtbXUsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29u
+c3QgY2hhciAqIGNvbnN0ICpjbGtzKQo+PiArewo+PiArICAgICAgIGludCBpOwo+PiArCj4+ICsg
+ICAgICAgaWYgKHNtbXUtPm51bV9jbGtzIDwgMSkKPj4gKyAgICAgICAgICAgICAgIHJldHVybjsK
+Pj4gKwo+PiArICAgICAgIHNtbXUtPmNsa3MgPSBkZXZtX2tjYWxsb2Moc21tdS0+ZGV2LCBzbW11
+LT5udW1fY2xrcywKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNpemVvZigq
+c21tdS0+Y2xrcyksIEdGUF9LRVJORUwpOwo+PiArICAgICAgIGlmICghc21tdS0+Y2xrcykKPj4g
+KyAgICAgICAgICAgICAgIHJldHVybjsKPj4gKwo+PiArICAgICAgIGZvciAoaSA9IDA7IGkgPCBz
+bW11LT5udW1fY2xrczsgaSsrKQo+PiArICAgICAgICAgICAgICAgc21tdS0+Y2xrc1tpXS5pZCA9
+IGNsa3NbaV07Cj4gCj4gSXMgdGhpcyBjbGtfYnVsa19nZXRfYWxsKCk/CgpPb2gsIGRpZCB0aGF0
+IGZpbmFsbHkgZ2V0IG1lcmdlZCB3aGlsZSB3ZSB3ZXJlbid0IGxvb2tpbmc/IEdyZWF0IQoKTXVj
+aCBhcyBJIGRvbid0IHdhbnQgdG8gZHJhZyB0aGlzIHNlcmllcyBvdXQgdG8gYSB2MTksIGl0ICp3
+b3VsZCogYmUgCm5lYXQgaWYgd2Ugbm8gbG9uZ2VyIG5lZWQgdG8gb3Blbi1jb2RlIHRoYXQgYml0
+Li4uCgpSb2Jpbi4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5v
+Cg==
