@@ -1,52 +1,57 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Subject: RE: [PATCH/RFC] net: phy: device: Don't deassert the reset when
  register and probe
-Date: Wed, 28 Nov 2018 01:10:42 +0000
-Message-ID: <TY2PR01MB22978DCFA053CC2C79631058D8D10@TY2PR01MB2297.jpnprd01.prod.outlook.com>
+Date: Wed, 28 Nov 2018 01:17:10 +0000
+Message-ID: <TY2PR01MB22971DD32317631C7E3C4ABDD8D10@TY2PR01MB2297.jpnprd01.prod.outlook.com>
 References: <1543320947-32763-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
  <20181127164411.GB19601@lunn.ch>
+ <4aa356d3-7c99-a9d6-0e6c-d46be7e44948@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20181127164411.GB19601@lunn.ch>
+In-Reply-To: <4aa356d3-7c99-a9d6-0e6c-d46be7e44948@gmail.com>
 Content-Language: ja-JP
 Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
+To: Heiner Kallweit <hkallweit1@gmail.com>, Andrew Lunn <andrew@lunn.ch>
 Cc: "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
-
-> From: Andrew Lunn, Sent: Wednesday, November 28, 2018 1:44 AM
->=20
-> On Tue, Nov 27, 2018 at 12:18:20PM +0000, Yoshihiro Shimoda wrote:
-> > Some PHY device needs edge signal of the reset, but the previous code
-> > is impossible to achieve it like following:
-> >
-> >  1) Kernel boots by using initramfs.
-> >  --> No open the nic, so the provious code deasserts the reset by
-> >      phy_device_register() and phy_probe().
-> >  2) Kernel enters the suspend.
-> >  --> So, keep the reset signal as deassert.
-> >  --> On R-Car Salvator-XS board, unfortunately, the board power is
-> >      turned off.
-> >  3) Kernel returns from suspend.
-> >  4) ifconfig eth0 up
-> >  --> Then, since edge signal of the reset doesn't happen,
-> >      it cannot link up.
->=20
-> Hi Yoshihiro
->=20
-> It sounds like you should be adding code to the suspend/resume
-> handling of phylib, so that it toggle the reset on resume. You cannot
-> just delete code like you proposed, it is going to break devices. But
-> adding code should be O.K.
-
-Thank you for your comment!
-I understood we cannot delete the code, but can add the suspend/resume hand=
-ling
-of phylib. I'll make such a patch.
-
-Best regards,
-Yoshihiro Shimoda
+SGkgSGVpbmVyLA0KDQo+IEZyb206IEhlaW5lciBLYWxsd2VpLCBTZW50OiBXZWRuZXNkYXksIE5v
+dmVtYmVyIDI4LCAyMDE4IDQ6NDYgQU0NCj4gDQo+IE9uIDI3LjExLjIwMTggMTc6NDQsIEFuZHJl
+dyBMdW5uIHdyb3RlOg0KPiA+IE9uIFR1ZSwgTm92IDI3LCAyMDE4IGF0IDEyOjE4OjIwUE0gKzAw
+MDAsIFlvc2hpaGlybyBTaGltb2RhIHdyb3RlOg0KPiA+PiBTb21lIFBIWSBkZXZpY2UgbmVlZHMg
+ZWRnZSBzaWduYWwgb2YgdGhlIHJlc2V0LCBidXQgdGhlIHByZXZpb3VzIGNvZGUNCj4gPj4gaXMg
+aW1wb3NzaWJsZSB0byBhY2hpZXZlIGl0IGxpa2UgZm9sbG93aW5nOg0KPiA+Pg0KPiA+PiAgMSkg
+S2VybmVsIGJvb3RzIGJ5IHVzaW5nIGluaXRyYW1mcy4NCj4gPj4gIC0tPiBObyBvcGVuIHRoZSBu
+aWMsIHNvIHRoZSBwcm92aW91cyBjb2RlIGRlYXNzZXJ0cyB0aGUgcmVzZXQgYnkNCj4gPj4gICAg
+ICBwaHlfZGV2aWNlX3JlZ2lzdGVyKCkgYW5kIHBoeV9wcm9iZSgpLg0KPiA+PiAgMikgS2VybmVs
+IGVudGVycyB0aGUgc3VzcGVuZC4NCj4gPj4gIC0tPiBTbywga2VlcCB0aGUgcmVzZXQgc2lnbmFs
+IGFzIGRlYXNzZXJ0Lg0KPiA+PiAgLS0+IE9uIFItQ2FyIFNhbHZhdG9yLVhTIGJvYXJkLCB1bmZv
+cnR1bmF0ZWx5LCB0aGUgYm9hcmQgcG93ZXIgaXMNCj4gPj4gICAgICB0dXJuZWQgb2ZmLg0KPiA+
+PiAgMykgS2VybmVsIHJldHVybnMgZnJvbSBzdXNwZW5kLg0KPiA+PiAgNCkgaWZjb25maWcgZXRo
+MCB1cA0KPiA+PiAgLS0+IFRoZW4sIHNpbmNlIGVkZ2Ugc2lnbmFsIG9mIHRoZSByZXNldCBkb2Vz
+bid0IGhhcHBlbiwNCj4gPj4gICAgICBpdCBjYW5ub3QgbGluayB1cC4NCj4gPg0KPiA+IEhpIFlv
+c2hpaGlybw0KPiA+DQo+ID4gSXQgc291bmRzIGxpa2UgeW91IHNob3VsZCBiZSBhZGRpbmcgY29k
+ZSB0byB0aGUgc3VzcGVuZC9yZXN1bWUNCj4gPiBoYW5kbGluZyBvZiBwaHlsaWIsIHNvIHRoYXQg
+aXQgdG9nZ2xlIHRoZSByZXNldCBvbiByZXN1bWUuIFlvdSBjYW5ub3QNCj4gPiBqdXN0IGRlbGV0
+ZSBjb2RlIGxpa2UgeW91IHByb3Bvc2VkLCBpdCBpcyBnb2luZyB0byBicmVhayBkZXZpY2VzLiBC
+dXQNCj4gPiBhZGRpbmcgY29kZSBzaG91bGQgYmUgTy5LLg0KPiA+DQo+IFRoZSBjb21taXQgbWVz
+c2FnZSBtZW50aW9ucyB0aGF0IHRoZSBwYXRjaCBpcyBzdXBwb3NlZCB0byBmaXggc29tZQ0KPiBp
+c3N1ZSBvbiB0aGUgU2FsdmF0b3ItWFMgYm9hcmQuIEkgZm91bmQgdGhlIGZvbGxvd2luZyBmcm9t
+IGEgeWVhciBhZ28NCj4gaHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvbmV0ZGV2L21zZzQ1
+NzMwOC5odG1sDQo+IHdoaWNoIGlzIGFsc28gYWJvdXQgUEhZIHJlc2V0IGFuZCB0aGlzIGJvYXJk
+LiBJcyB0aGVyZSBzdGlsbCBzb21ldGhpbmcNCj4gb3Blbj8NCg0KVGhhbmsgeW91IGZvciB5b3Vy
+IGNvbW1lbnQhDQpBcyBHZWVydCBtZW50aW9uZWQgb24gdGhpcyBlbWFpbCB0aHJlYWQsIHRoYXQg
+cGF0Y2ggY2FuIGhhbmRsZSBpZiB1c2VyIG9wZW5lZA0KdGhlIE5JQyBhbmQgdGhlbiB0aGUgUEhZ
+IHdhcyBhY3RpdmUuDQoNCj4gIEJ1dCBhcyBBbmRyZXcgbWVudGlvbmVkIGFscmVhZHk6IEp1c3Qg
+ZGVsZXRpbmcgY29kZSB3L28NCj4gY2hlY2tpbmcgd2hhdCBpdCdzIGdvb2QgZm9yIGFuZCB3aGV0
+aGVyIHRoaXMgY291bGQgaGF2ZSBzaWRlIGVmZmVjdHMsDQo+IGlzbid0IGEgc29sdXRpb24uIEVz
+cGVjaWFsbHkgYmVjYXVzZSB0aGUgcGF0Y2ggd291bGQgc2lsZW50bHkgcmVtb3ZlDQo+IHRoZSBj
+YWxsIHRvIHBoeV9zY2FuX2ZpeHVwcygpLg0KDQpJIHNob3VsZCBoYXZlIG1lbnRpb25lZCBvbiB0
+aGUgY29tbWl0IGxvZywgYnV0IHBoeV9zY2FuX2ZpeHVwcygpIGlzIGNhbGxlZA0KYnkgcGh5X2lu
+aXRfaHcoKSBhbmQgcGh5X2luaXRfaHcoKSBpcyBjYWxsZWQgcGh5X2F0dGFjaF9kaXJlY3QoKS4g
+U28sDQpJIHRoaW5rIHdlIGNhbiByZW1vdmUgcGh5X3NjYW5fZml4dXBzKCkuIEhvd2V2ZXIsIGFz
+IHlvdSBtZW50aW9uZWQsDQp0aGlzIHBhdGNoIGNvdWxkIGhhdmUgc2lkZSBlZmZlY3RzLi4uDQoN
+ClNvLCBJJ2xsIG1ha2Ugc3VjaCBhIHN1c3BlbmQvcmVzdW1lIHBhdGNoIHRoYXQgQW5kcmV3IG1l
+bnRpb25lZCBsYXRlci4NCg0KQmVzdCByZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0K
