@@ -1,36 +1,50 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 07/15] rtc: sun6i: Add support for all known variants
-Date: Wed, 28 Nov 2018 17:44:10 +0800
-Message-ID: <CAGb2v669CSQLq+jQPkzn0MH3Avt2tf0vEA4E29epeXrQA4=yww@mail.gmail.com>
-References: <20181128093013.24442-1-wens@csie.org> <20181128093013.24442-9-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v6 3/8] dt-bindings: regulator: document stpmic1 pmic
+ regulators
+Date: Wed, 28 Nov 2018 09:48:01 +0000
+Message-ID: <20181128094801.GF6828@sirena.org.uk>
+References: <1543337529-22301-1-git-send-email-p.paillet@st.com>
+ <1543337529-22301-4-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB6WG7HPQKGQEHXCTVEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181128093013.24442-9-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="twz1s1Hj1O0rHoT0"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1543337529-22301-4-git-send-email-p.paillet@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pascal PAILLET-LME <p.paillet@st.com>
+Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 28, 2018 at 5:30 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->
-> There are different variants to the RTC hardware first seen on sun6i
-> (A31). The differences we care about in this driver are the clock rate
-> for the internal oscillator, prescalers, and the presence of an external
-> clock output.
->
-> This patch adds support for all the known base compatibles using the
-> variants data structure previously introduced.
->
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-This one was from a prior WiP version. Please ignore it.
+--twz1s1Hj1O0rHoT0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-ChenYu
+On Tue, Nov 27, 2018 at 04:52:15PM +0000, Pascal PAILLET-LME wrote:
+> The STPMIC1 regulators supply power to the application processor as well as
+> to the external system peripherals such as DDR, Flash memories and system
+> devices.
+
+Please do not submit new versions of already applied patches, please
+submit incremental updates to the existing code.  Modifying existing
+commits creates problems for other users building on top of those
+commits so it's best practice to only change pubished git commits if
+absolutely essential.
+
+--twz1s1Hj1O0rHoT0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlv+ZFAACgkQJNaLcl1U
+h9AA3wf+PMfJhuWzSDo4Gyt+6hi/sZYBOjjmRyNUvr4h4+MD5GD+hKM/khHZHOAX
+5DNTnPbq9QxpSz0diLf0ccI2gai1kxHGFeOn3rz6M7VTPPBM06h2KHDdNUQUOyFq
+QRCbUmCBT1BvgRXorwBiVQvc7KyanV9MkXaNgleXpb5wMCilOIWREX00Ldo6pZEA
+LZzRtxDzz+0HC0M8kADW56NfMKpATi4yW4qAejc/fnkkYAmpE4Jkt7tf2YzFgdRp
+f2GNjyVVwMqYnvOcDNeY7rajJQJFTaRahTdUn8LAtsR8tEicx0WAzexFgx/iNjDn
+TNPYztrJuVKThCXbbDQEOvlf8Q2EXg==
+=rEEf
+-----END PGP SIGNATURE-----
+
+--twz1s1Hj1O0rHoT0--
