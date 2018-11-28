@@ -1,62 +1,183 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/3] ARM: dts: imx1: Fix memory node duplicaton
-Date: Wed, 28 Nov 2018 16:53:39 +0800
-Message-ID: <20181128085337.GP20643@dragon>
-References: <1543236054-10450-1-git-send-email-festevam@gmail.com>
- <7a0bd2b6-a624-85f0-6b63-ae2f80907685@mentor.com>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCH V2 2/4] rtc: add i.MX system controller RTC support
+Date: Wed, 28 Nov 2018 10:00:40 +0100
+Message-ID: <20181128100040.4072d8e4@karo-electronics.de>
+References: <1543382119-2918-1-git-send-email-Anson.Huang@nxp.com>
+        <1543382119-2918-3-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <7a0bd2b6-a624-85f0-6b63-ae2f80907685@mentor.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1543382119-2918-3-git-send-email-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>sh
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 26, 2018 at 03:13:24PM +0200, Vladimir Zapolskiy wrote:
-> Hi Fabio,
-> 
-> On 11/26/2018 02:40 PM, Fabio Estevam wrote:
-> > Boards based on imx1 have duplicate memory nodes:
-> > 
-> > - One coming from the board dts file: memory@
-> > 
-> > - One coming from the imx1.dtsi file.
-> > 
-> > Fix the duplication by removing the memory node from the dtsi file
-> > and by adding 'device_type = "memory";' in the board dts.
-> > 
-> > Reported-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Fabio Estevam <festevam@gmail.com>
-> > ---
-> >  arch/arm/boot/dts/imx1-ads.dts     | 1 +
-> >  arch/arm/boot/dts/imx1-apf9328.dts | 1 +
-> >  arch/arm/boot/dts/imx1.dtsi        | 2 --
-> >  3 files changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx1-ads.dts b/arch/arm/boot/dts/imx1-ads.dts
-> > index a1d81ba..3459a58 100644
-> > --- a/arch/arm/boot/dts/imx1-ads.dts
-> > +++ b/arch/arm/boot/dts/imx1-ads.dts
-> > @@ -21,6 +21,7 @@
-> >  	};
-> >  
-> >  	memory@8000000 {
-> > +		 device_type = "memory";
-> >  		reg = <0x08000000 0x04000000>;
-> 
-> there is an unwanted space symbol before 'device_type'.
+Hi,
 
-I fixed it up and applied the series.
+On Wed, 28 Nov 2018 05:21:11 +0000 Anson Huang wrote:
+> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
+> inside, the system controller is in charge of controlling power,
+> clock and secure rtc etc..
+> 
+> This patch adds i.MX system controller RTC driver support,
+> Linux kernel has to communicate with system controller via MU
+> (message unit) IPC to set/get RTC time and other alarm functions,
+> since the RTC set time needs to be done in secure EL3 mode (required
+> by system controller firmware) and alarm functions needs to be done
+> with general MU IRQ handle, these depend on other components which
+> are NOT ready, so this patch ONLY enables the RTC time read.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> changes since V1:
+> 	- sort module in Makefile alphabetically;
+> 	- remove boiler plate license text;
+> 	- use devm_rtc_allocate_device and rtc_register_device to register the RTC.
+>  drivers/rtc/Kconfig      |   6 +++
+>  drivers/rtc/Makefile     |   1 +
+>  drivers/rtc/rtc-imx-sc.c | 107 +++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 114 insertions(+)
+>  create mode 100644 drivers/rtc/rtc-imx-sc.c
+> 
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> index a819ef0..3b9642e 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -1677,6 +1677,12 @@ config RTC_DRV_SNVS
+>  	   This driver can also be built as a module, if so, the module
+>  	   will be called "rtc-snvs".
+>  
+> +config RTC_DRV_IMX_SC
+> +	tristate "NXP i.MX System Controller RTC support"
+> +	help
+> +	   If you say yes here you get support for the NXP i.MX System
+> +	   Controller RTC module.
+> +
+>  config RTC_DRV_SIRFSOC
+>  	tristate "SiRFSOC RTC"
+>  	depends on ARCH_SIRF
+> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+> index 290c173..f97c05e 100644
+> --- a/drivers/rtc/Makefile
+> +++ b/drivers/rtc/Makefile
+> @@ -75,6 +75,7 @@ obj-$(CONFIG_RTC_DRV_GOLDFISH)	+= rtc-goldfish.o
+>  obj-$(CONFIG_RTC_DRV_HID_SENSOR_TIME) += rtc-hid-sensor-time.o
+>  obj-$(CONFIG_RTC_DRV_HYM8563)	+= rtc-hym8563.o
+>  obj-$(CONFIG_RTC_DRV_IMXDI)	+= rtc-imxdi.o
+> +obj-$(CONFIG_RTC_DRV_IMX_SC)	+= rtc-imx-sc.o
+>  obj-$(CONFIG_RTC_DRV_ISL12022)	+= rtc-isl12022.o
+>  obj-$(CONFIG_RTC_DRV_ISL12026)	+= rtc-isl12026.o
+>  obj-$(CONFIG_RTC_DRV_ISL1208)	+= rtc-isl1208.o
+> diff --git a/drivers/rtc/rtc-imx-sc.c b/drivers/rtc/rtc-imx-sc.c
+> new file mode 100644
+> index 0000000..7212e38
+> --- /dev/null
+> +++ b/drivers/rtc/rtc-imx-sc.c
+> @@ -0,0 +1,107 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright 2018 NXP.
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/firmware/imx/sci.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/rtc.h>
+> +
+> +#define IMX_SC_TIMER_FUNC_GET_RTC_SEC1970	9
+> +#define IMX_SC_TIMER_FUNC_SET_RTC_TIME		6
+> +
+> +struct imx_sc_ipc *rtc_ipc_handle;
+> +struct rtc_device *rtc;
+> +
+Shouldn't these be static?
+A generic name like 'rtc' as a global variable name is definitely a very
+bad idea.
 
-Shawn
+> +struct imx_sc_msg_req_timer_get_rtc_time {
+> +	struct imx_sc_rpc_msg hdr;
+> +} __packed;
+> +
+> +struct imx_sc_msg_resp_timer_get_rtc_time {
+> +	struct imx_sc_rpc_msg hdr;
+> +	u32 time;
+> +} __packed;
+> +
+> +static int imx_sc_rtc_read_time(struct device *dev, struct rtc_time *tm)
+> +{
+> +	struct imx_sc_msg_resp_timer_get_rtc_time *resp;
+> +	struct imx_sc_msg_req_timer_get_rtc_time msg;
+> +	struct imx_sc_rpc_msg *hdr = &msg.hdr;
+> +	int ret;
+> +
+> +	hdr->ver = IMX_SC_RPC_VERSION;
+> +	hdr->svc = IMX_SC_RPC_SVC_TIMER;
+> +	hdr->func = IMX_SC_TIMER_FUNC_GET_RTC_SEC1970;
+> +	hdr->size = 1;
+> +
+> +	ret = imx_scu_call_rpc(rtc_ipc_handle, &msg, true);
+> +	if (ret) {
+> +		pr_err("read rtc time failed, ret %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	resp = (struct imx_sc_msg_resp_timer_get_rtc_time *)&msg;
+> +	rtc_time_to_tm(resp->time, tm);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct rtc_class_ops imx_sc_rtc_ops = {
+> +	.read_time = imx_sc_rtc_read_time,
+> +};
+> +
+> +static int imx_sc_rtc_probe(struct platform_device *pdev)
+> +{
+> +	int ret;
+> +
+> +	ret = imx_scu_get_handle(&rtc_ipc_handle);
+> +	if (ret) {
+> +		if (ret == -EPROBE_DEFER)
+> +			return ret;
+> +
+> +		dev_err(&pdev->dev, "failed to get ipc handle: %d!\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	rtc = devm_rtc_allocate_device(&pdev->dev);
+> +	if (IS_ERR(rtc)) {
+> +		ret = PTR_ERR(rtc);
+> +		return ret;
+> +	}
+> +
+> +	rtc->ops = &imx_sc_rtc_ops;
+> +	rtc->range_min = 0;
+> +	rtc->range_max = U32_MAX;
+> +
+> +	ret = rtc_register_device(rtc);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to register rtc: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id imx_sc_dt_ids[] = {
+> +	{ .compatible = "nxp,imx8qxp-sc-rtc", },
+> +	{},
+s/{},/{}/
+The trailing comma is usually added to make patches that add more
+entries to the array simpler and help avoid patch conflicts.
+Since the empty entry MUST be the LAST entry in this array the comma
+should NOT be added here. Without the comma, adding new entries after
+the EOL marker will generate a compile error.
+
+
+Lothar Waßmann
