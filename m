@@ -1,88 +1,36 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v2 01/10] mailbox: Support blocking transfers in atomic
- context
-Date: Wed, 28 Nov 2018 09:43:29 +0000
-Message-ID: <0545f5e1-1740-2129-9d0e-5c950bd9bf74@nvidia.com>
-References: <20181112151853.29289-1-thierry.reding@gmail.com>
- <20181112151853.29289-2-thierry.reding@gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 07/15] rtc: sun6i: Add support for all known variants
+Date: Wed, 28 Nov 2018 17:44:10 +0800
+Message-ID: <CAGb2v669CSQLq+jQPkzn0MH3Avt2tf0vEA4E29epeXrQA4=yww@mail.gmail.com>
+References: <20181128093013.24442-1-wens@csie.org> <20181128093013.24442-9-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181112151853.29289-2-thierry.reding@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>, Jassi Brar <jassisinghbrar@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, Mika Liljeberg <mliljeberg@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>, Timo Alho <talho@nvidia.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, linux-tegra@vger.kernel.org, Pekka Pessi <ppessi@nvidia.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB6WG7HPQKGQEHXCTVEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181128093013.24442-9-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Nov 28, 2018 at 5:30 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+>
+> There are different variants to the RTC hardware first seen on sun6i
+> (A31). The differences we care about in this driver are the clock rate
+> for the internal oscillator, prescalers, and the presence of an external
+> clock output.
+>
+> This patch adds support for all the known base compatibles using the
+> variants data structure previously introduced.
+>
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-On 12/11/2018 15:18, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> The mailbox framework supports blocking transfers via completions for
-> clients that can sleep. In order to support blocking transfers in cases
-> where the transmission is not permitted to sleep, add a new ->flush()
-> callback that controller drivers can implement to busy loop until the
-> transmission has been completed. This will automatically be called when
-> available and interrupts are disabled for clients that request blocking
-> transfers.
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->  drivers/mailbox/mailbox.c          | 8 ++++++++
->  include/linux/mailbox_controller.h | 4 ++++
->  2 files changed, 12 insertions(+)
-> 
-> diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-> index 674b35f402f5..0eaf21259874 100644
-> --- a/drivers/mailbox/mailbox.c
-> +++ b/drivers/mailbox/mailbox.c
-> @@ -267,6 +267,14 @@ int mbox_send_message(struct mbox_chan *chan, void *mssg)
->  		unsigned long wait;
->  		int ret;
->  
-> +		if (irqs_disabled() && chan->mbox->ops->flush) {
-> +			ret = chan->mbox->ops->flush(chan, chan->cl->tx_tout);
-> +			if (ret < 0)
-> +				tx_tick(chan, ret);
-> +
-> +			return ret;
-> +		}
+This one was from a prior WiP version. Please ignore it.
 
-It seems to me that if mbox_send_message() is called from an atomic
-context AND tx_block is true, then if 'flush' is not populated this
-should be an error condition as we do not wish to call
-wait_for_completion from an atomic context.
-
-I understand that there is some debate about adding such flush support,
-but irrespective of the above change, it seems to me that if the
-mbox_send_message() can be called from an atomic context (which it
-appears to), then it should be detecting if someone is trying to do so
-with 'tx_block' set as this should be an error.
-
-Furthermore, if the underlying mailbox driver can support sending a
-message from an atomic context and busy wait until it is done, surely
-the mailbox framework should provide a means to support this?
-
-Now it could be possible for the underlying mailbox driver to detect we
-are in an atomic context and if the 'tx_block' is set do the right thing
-by busy waiting until the message is sent. However, the problem with
-that is, that for the mbox_send_message() to ensure the right thing is
-done, it needs to check that 'tx_done' is set in the case of a blocking
-transfer in an atomic context. At that point you may as well add the
-flush operator as I think it is more implicit/clear.
-
-Cheers
-Jon
-
--- 
-nvpublic
+ChenYu
