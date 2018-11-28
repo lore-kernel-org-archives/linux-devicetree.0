@@ -1,43 +1,54 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 2/7] drm/msm/dsi: 14nm PHY: Get ref clock from the DT
-Date: Tue, 27 Nov 2018 21:56:46 -0800
-Message-ID: <CAD=FV=WNHUL+W1ozoRaCCd=-OcAD3QmqZaNLK0PNJQVbDqdaLQ@mail.gmail.com>
-References: <20181126231159.122298-1-mka@chromium.org> <20181126231159.122298-3-mka@chromium.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V2 0/4] Add i.MX System Controller thermal driver support
+Date: Wed, 28 Nov 2018 05:58:07 +0000
+Message-ID: <1543384349-2851-1-git-send-email-Anson.Huang__2904.81961933455$1543384586$gmane$org@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181126231159.122298-3-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Archit Taneja <architt@codeaurora.org>, Sean Paul <seanpaul@chromium.org>, Rajesh Yadav <ryadav@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Jeykumar Sankaran <jsanka@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, freedreno <freedreno@lists.freedesktop.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "arnd@arndb.de" <arnd@arndb.de>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
+inside, the system controller is in charge of controlling power,
+clock and thermal sensors etc..
 
-On Mon, Nov 26, 2018 at 3:12 PM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> Get the ref clock of the PHY from the device tree instead of
-> hardcoding its name and rate.
+This patch adds i.MX system controller thermal driver support,
+Linux kernel has to communicate with system controller via MU
+(message unit) IPC to get each thermal sensor's temperature,
+it supports multiple sensors which are passed from device tree,
+please see the binding doc for details.
 
-In the case of the 14nm PHY I think it's OK that you break
-compatibility with old device tree files (as this patch does) since
-the 14nm support was added sorta recently and "git grep" shows no
-users in linuxnext.  You should note that you're breaking
-compatibility with old DTS files in the commit message here so that if
-someone crawls out of the woodwork it will be easy for them to
-understand what happened.
+Note that this patch set is based on [V4,5/5] defconfig: arm64: add imx8qxp support,
+https://patchwork.kernel.org/patch/10677315/
 
+Anson Huang (4):
+  dt-bindings: thermal: add binding doc for i.MX system controller
+    thermal driver
+  thermal: imx_sc: add i.MX system controller thermal support
+  defconfig: arm64: add i.MX system controller thermal support
+  ARM64: dts: imx: add i.MX8QXP thermal support
 
-> +       pll_14nm->vco_ref_clk = devm_clk_get(&pdev->dev, "ref");
-> +       if (IS_ERR(pll_14nm->vco_ref_clk)) {
-> +               ret = PTR_ERR(pll_14nm->vco_ref_clk);
-> +               if (ret != EPROBE_DEFER)
+ .../devicetree/bindings/thermal/imx-sc-thermal.txt |  33 ++++
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |  27 +++
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/thermal/Kconfig                            |  11 ++
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/imx_sc_thermal.c                   | 201 +++++++++++++++++++++
+ 6 files changed, 274 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/imx-sc-thermal.txt
+ create mode 100644 drivers/thermal/imx_sc_thermal.c
 
-Shouldn't this check against -EPROBE_DEFER, not against EPROBE_DEFER?
-It's negative.  Presumably this same feedback needs to be applied to
-the whole patch series.
-
-Other than that this looks good to me and you can feel free to add my
-Reviewed-by tag FWIW.
-
--Doug
+-- 
+2.7.4
