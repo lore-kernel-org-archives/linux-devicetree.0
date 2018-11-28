@@ -1,59 +1,40 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 6/8] mfd: lochnagar: Add support for the Cirrus Logic
- Lochnagar
-Date: Wed, 28 Nov 2018 09:22:13 +0000
-Message-ID: <20181128092213.GW4272@dell>
-References: <20181120141631.18949-1-ckeepax@opensource.cirrus.com>
- <20181120141631.18949-6-ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH 02/14] regulator: axp20x: name voltage ramping define
+ properly
+Date: Wed, 28 Nov 2018 09:26:34 +0000
+Message-ID: <20181128092634.GX4272@dell>
+References: <cover.156212c9c5df493e098556cad9793a07dcab5e32.1543245984.git-series.plaes@plaes.org>
+ <66ac03ac0e34e196e0469927c0feb3c98bc35837.1543245984.git-series.plaes@plaes.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181120141631.18949-6-ckeepax@opensource.cirrus.com>
+In-Reply-To: <66ac03ac0e34e196e0469927c0feb3c98bc35837.1543245984.git-series.plaes@plaes.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, broonie@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+To: Priit Laes <plaes@plaes.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Sebastian Reichel <sre@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Olliver Schinagl <oliver@schinagl.nl>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 Nov 2018, Charles Keepax wrote:
+On Mon, 26 Nov 2018, Priit Laes wrote:
 
-> Lochnagar is an evaluation and development board for Cirrus
-> Logic Smart CODEC and Amp devices. It allows the connection of
-> most Cirrus Logic devices on mini-cards, as well as allowing
-> connection of various application processor systems to provide a
-> full evaluation platform. This driver supports the board
-> controller chip on the Lochnagar board. Audio system topology,
-> clocking and power can all be controlled through the Lochnagar
-> controller chip, allowing the device under test to be used in
-> a variety of possible use cases.
+> From: Olliver Schinagl <oliver@schinagl.nl>
 > 
-> As the Lochnagar is a fairly complex device this MFD driver
-> allows the drivers for the various features to be bound
-> in. Initially clocking, regulator and pinctrl will be added as
-> these are necessary to configure the system. But in time at least
-> audio and voltage/current monitoring will also be added.
+> The current axp20x names the ramping register 'scal' which probably
+> means scaling. Since the register really has nothing to do with
+> scaling, but really is the voltage ramp we rename it appropriately.
 > 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
+> Signed-off-by: Priit Laes <plaes@plaes.org>
 > ---
-> 
-> No change since v4.
-> 
-> Thanks,
-> Charles
-> 
->  MAINTAINERS                         |  17 ++
->  drivers/mfd/Kconfig                 |   8 +
->  drivers/mfd/Makefile                |   2 +
->  drivers/mfd/lochnagar-i2c.c         | 394 ++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/lochnagar.h       |  55 +++++
->  include/linux/mfd/lochnagar1_regs.h | 157 ++++++++++++++
->  include/linux/mfd/lochnagar2_regs.h | 253 +++++++++++++++++++++++
->  7 files changed, 886 insertions(+)
->  create mode 100644 drivers/mfd/lochnagar-i2c.c
->  create mode 100644 include/linux/mfd/lochnagar.h
->  create mode 100644 include/linux/mfd/lochnagar1_regs.h
->  create mode 100644 include/linux/mfd/lochnagar2_regs.h
+>  include/linux/mfd/axp20x.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+
+This is clearly not a regulator patch.
+
+Please change the subject line to "mfd", 
+
+Once changed you can add my:
 
 For my own reference:
   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
