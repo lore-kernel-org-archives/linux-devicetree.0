@@ -1,211 +1,63 @@
-From: Aisheng DONG <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V3 2/4] rtc: add i.MX system controller RTC support
-Date: Wed, 28 Nov 2018 15:44:58 +0000
-Message-ID: <AM0PR04MB4211140489B0BE1DEC4165B880D10@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1543398696-3140-1-git-send-email-Anson.Huang@nxp.com>
- <1543398696-3140-3-git-send-email-Anson.Huang@nxp.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH 08/17] soc: ti: pruss: Add a PRUSS irqchip driver for
+ PRUSS interrupts
+Date: Wed, 28 Nov 2018 09:46:24 -0600
+Message-ID: <421ca9ad-1816-021e-76af-b719f80a5531@lechnology.com>
+References: <1542886753-17625-1-git-send-email-rogerq@ti.com>
+ <1542886753-17625-9-git-send-email-rogerq@ti.com>
+ <af2f8ce3-923b-aa27-59b2-2ebb848c28c9@lechnology.com>
+ <5BFD651C.7020903@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1543398696-3140-3-git-send-email-Anson.Huang@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5BFD651C.7020903@ti.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <anson.huang@nxp.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, linux-rtc@vger.kernel.o
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, tony@atomide.com
+Cc: robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Anson Huang
-> Sent: Wednesday, November 28, 2018 5:57 PM
-[...]
-> Subject: [PATCH V3 2/4] rtc: add i.MX system controller RTC support
+On 11/27/18 9:39 AM, Roger Quadros wrote:
 > 
-> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller inside,
-> the system controller is in charge of controlling power, clock and secure rtc
-> etc..
+> On 26/11/18 23:17, David Lechner wrote:
+>> On 11/22/18 5:39 AM, Roger Quadros wrote:
+>>> From: Suman Anna <s-anna@ti.com>
+>>>
+>>> The Programmable Real-Time Unit Subsystem (PRUSS) contains an
+>>> interrupt controller (INTC) that can handle various system input
+>>> events and post interrupts back to the device-level initiators.
+>>> The INTC can support upto 64 input events with individual control
+>>> configuration and hardware prioritization. These events are mapped
+>>> onto 10 interrupt signals through two levels of many-to-one mapping
+>>> support. Different interrupt signals are routed to the individual
+>>> PRU cores or to the host CPU.
+>>>
+>>> The PRUSS INTC platform driver manages this PRUSS interrupt
+>>> controller and implements an irqchip driver to provide a Linux
+>>> standard way for the PRU client users to enable/disable/ack/
+>>> re-trigger a PRUSS system event. The system events to interrupt
+>>> channels and host interrupts relies on the mapping configuration
+>>> provided through a firmware resource table for now. This will be
+>>> revisited and enhanced in the future for a better interface. The
+>>> mappings will currently be programmed during the boot/shutdown
+>>> of the PRU.
+>>
+>> Does this mapping table take up space in the PRU IRAM or DRAM? If
+>> so, that can be a problem on the AM18xx because it has such limited
+>> resources - every byte counts.
 > 
-> This patch adds i.MX system controller RTC driver support, Linux kernel has to
-> communicate with system controller via MU (message unit) IPC to set/get RTC
-> time and other alarm functions, since the RTC set time needs to be done in
-> secure EL3 mode (required by system controller firmware) and alarm functions
-> needs to be done with general MU IRQ handle, these depend on other
-> components which are NOT ready, so this patch ONLY enables the RTC time
-> read.
+> Currently the entire resource table is being placed in DRAM.
+> But that is only because the current rpmsg vdev implementation depends on the
+> rpmsg channel information and vring buffers to be in DRAM.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> changes since V2:
-> 	- make rtc_ipc_handle/imx_sc_rtc static;
-> 	- remove comma in last entry of imx_sc_dt_ids;
-> 	- rename rtc_device.
->  drivers/rtc/Kconfig      |   6 +++
->  drivers/rtc/Makefile     |   1 +
->  drivers/rtc/rtc-imx-sc.c | 107
-
-This change log format seems strange.
-
-> +++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 114 insertions(+)
->  create mode 100644 drivers/rtc/rtc-imx-sc.c
+> I think the right way is to split up the 2 things.
+> i.e. separate out rpmgs channel DRAM allocation from resource table
+> and don't copy the resource table to DRAM.
 > 
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig index a819ef0..3b9642e
-> 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -1677,6 +1677,12 @@ config RTC_DRV_SNVS
->  	   This driver can also be built as a module, if so, the module
->  	   will be called "rtc-snvs".
+> This way if there is no rpmsg channel in the resource table we won't eat
+> any DRAM.
 > 
-> +config RTC_DRV_IMX_SC
-> +	tristate "NXP i.MX System Controller RTC support"
-> +	help
-> +	   If you say yes here you get support for the NXP i.MX System
-> +	   Controller RTC module.
-> +
->  config RTC_DRV_SIRFSOC
->  	tristate "SiRFSOC RTC"
->  	depends on ARCH_SIRF
-> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile index 290c173..f97c05e
-> 100644
-> --- a/drivers/rtc/Makefile
-> +++ b/drivers/rtc/Makefile
-> @@ -75,6 +75,7 @@ obj-$(CONFIG_RTC_DRV_GOLDFISH)	+= rtc-goldfish.o
->  obj-$(CONFIG_RTC_DRV_HID_SENSOR_TIME) += rtc-hid-sensor-time.o
->  obj-$(CONFIG_RTC_DRV_HYM8563)	+= rtc-hym8563.o
->  obj-$(CONFIG_RTC_DRV_IMXDI)	+= rtc-imxdi.o
-> +obj-$(CONFIG_RTC_DRV_IMX_SC)	+= rtc-imx-sc.o
->  obj-$(CONFIG_RTC_DRV_ISL12022)	+= rtc-isl12022.o
->  obj-$(CONFIG_RTC_DRV_ISL12026)	+= rtc-isl12026.o
->  obj-$(CONFIG_RTC_DRV_ISL1208)	+= rtc-isl1208.o
-> diff --git a/drivers/rtc/rtc-imx-sc.c b/drivers/rtc/rtc-imx-sc.c new file mode
-> 100644 index 0000000..b8e331e
-> --- /dev/null
-> +++ b/drivers/rtc/rtc-imx-sc.c
-> @@ -0,0 +1,107 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright 2018 NXP.
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
+> I'm not sure if there are any bottlenecks. I will only know when I work on it.
 
-Do we need them all?
-
-> +#include <linux/firmware/imx/sci.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/rtc.h>
-> +
-> +#define IMX_SC_TIMER_FUNC_GET_RTC_SEC1970	9
-> +#define IMX_SC_TIMER_FUNC_SET_RTC_TIME		6
-> +
-> +static struct imx_sc_ipc *rtc_ipc_handle; static struct rtc_device
-> +*imx_sc_rtc;
-> +
-> +struct imx_sc_msg_req_timer_get_rtc_time {
-> +	struct imx_sc_rpc_msg hdr;
-> +} __packed;
-> +
-> +struct imx_sc_msg_resp_timer_get_rtc_time {
-> +	struct imx_sc_rpc_msg hdr;
-> +	u32 time;
-> +} __packed;
-> +
-> +static int imx_sc_rtc_read_time(struct device *dev, struct rtc_time
-> +*tm) {
-> +	struct imx_sc_msg_resp_timer_get_rtc_time *resp;
-> +	struct imx_sc_msg_req_timer_get_rtc_time msg;
-> +	struct imx_sc_rpc_msg *hdr = &msg.hdr;
-> +	int ret;
-> +
-> +	hdr->ver = IMX_SC_RPC_VERSION;
-> +	hdr->svc = IMX_SC_RPC_SVC_TIMER;
-> +	hdr->func = IMX_SC_TIMER_FUNC_GET_RTC_SEC1970;
-> +	hdr->size = 1;
-> +
-> +	ret = imx_scu_call_rpc(rtc_ipc_handle, &msg, true);
-> +	if (ret) {
-> +		pr_err("read rtc time failed, ret %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	resp = (struct imx_sc_msg_resp_timer_get_rtc_time *)&msg;
-
-This is wrong and may result in memory corruption.
-Please refer to how the scu-clk driver does.
-
-Regards
-Dong Aisheng
-
-> +	rtc_time_to_tm(resp->time, tm);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct rtc_class_ops imx_sc_rtc_ops = {
-> +	.read_time = imx_sc_rtc_read_time,
-> +};
-> +
-> +static int imx_sc_rtc_probe(struct platform_device *pdev) {
-> +	int ret;
-> +
-> +	ret = imx_scu_get_handle(&rtc_ipc_handle);
-> +	if (ret) {
-> +		if (ret == -EPROBE_DEFER)
-> +			return ret;
-> +
-> +		dev_err(&pdev->dev, "failed to get ipc handle: %d!\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	imx_sc_rtc = devm_rtc_allocate_device(&pdev->dev);
-> +	if (IS_ERR(imx_sc_rtc)) {
-> +		ret = PTR_ERR(imx_sc_rtc);
-> +		return ret;
-> +	}
-> +
-> +	imx_sc_rtc->ops = &imx_sc_rtc_ops;
-> +	imx_sc_rtc->range_min = 0;
-> +	imx_sc_rtc->range_max = U32_MAX;
-> +
-> +	ret = rtc_register_device(imx_sc_rtc);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to register rtc: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id imx_sc_dt_ids[] = {
-> +	{ .compatible = "nxp,imx8qxp-sc-rtc", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, imx_sc_dt_ids);
-> +
-> +static struct platform_driver imx_sc_rtc_driver = {
-> +	.driver = {
-> +		.name	= "imx-sc-rtc",
-> +		.of_match_table = imx_sc_dt_ids,
-> +	},
-> +	.probe		= imx_sc_rtc_probe,
-> +};
-> +module_platform_driver(imx_sc_rtc_driver);
-> +
-> +MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
-> +MODULE_DESCRIPTION("NXP i.MX System Controller RTC Driver");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.7.4
+Sounds good to me.
