@@ -1,36 +1,48 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 09/15] clk: sunxi-ng: r40: Force LOSC parent to RTC LOSC output
-Date: Wed, 28 Nov 2018 13:29:04 -0800
-Message-ID: <154344054442.88331.8887745218976145062@swboyd.mtv.corp.google.com>
-References: <20181128093013.24442-1-wens@csie.org>
- <20181128093013.24442-11-wens@csie.org>
+Subject: Re: [RFC PATCH v4 13/17] clk: sunxi-ng: add support for suniv F1C100s SoC
+Date: Wed, 28 Nov 2018 13:53:04 -0800
+Message-ID: <154344198484.88331.1207175109618819774@swboyd.mtv.corp.google.com>
+References: <cover.1543131714.git.mesihkilinc@gmail.com>
+ <6fa817af55c7a54cb6ce91710378aafe1369c744.1543131714.git.mesihkilinc@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181128093013.24442-11-wens@csie.org>
+In-Reply-To: <6fa817af55c7a54cb6ce91710378aafe1369c744.1543131714.git.mesihkilinc@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Cc: Mesih Kilinc <mesihkilinc@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Julian Calaby <julian.calaby@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Chen-Yu Tsai (2018-11-28 01:30:07)
-> On the R40, in addition to a mux between the RTC's own RC oscillator and
-> an external 32768 Hz crystal, which are muxed inside the RTC module, the
-> CCU also has its own RC oscillator, which runs at around 2 MHz, and can
-> be muxed with the LOSC output from the RTC. This muxed output is called
-> "SYS 32K" in the module clock diagram, but otherwise referred to as the
-> LOSC throughout the CCU documentation.
-> =
+Quoting Mesih Kilinc (2018-11-24 23:43:16)
+> diff --git a/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.c b/drivers/clk/sunxi=
+-ng/ccu-suniv-f1c100s.c
+> new file mode 100644
+> index 0000000..d933dba
+> --- /dev/null
+> +++ b/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.c
+> @@ -0,0 +1,536 @@
+> +/*
+> + * Copyright (c) 2016 Icenowy Zheng <icenowy@aosc.io>
+> + *
+> + * SPDX-License-Identifier: GPL-2.0
 
-> The RC oscillator is not very accurate, even though it has an undocumented
-> calibration function. We really want a precise clock at 32768 Hz,
-> instead of something at around 32 KHz. This patch forces the SYS 32K
-> clock to use the RTC output as its parent, and doesn't bother
-> registering the internal oscillator nor a clock mux.
-> =
+Echoing Rob. Goes on first line.
 
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> ---
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/of_address.h>
+> diff --git a/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.h b/drivers/clk/sunxi=
+-ng/ccu-suniv-f1c100s.h
+> new file mode 100644
+> index 0000000..1da687a
+> --- /dev/null
+> +++ b/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.h
+> @@ -0,0 +1,34 @@
+> +/*
+> + * Copyright 2017 Icenowy Zheng <icenowy@aosc.io>
+> + *
+> + * SPDX-License-Identifier: GPL-2.0+
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+ditto.
