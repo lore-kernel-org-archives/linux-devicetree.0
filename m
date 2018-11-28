@@ -1,60 +1,72 @@
-From: Sven Van Asbroeck <thesven73@gmail.com>
-Subject: Re: [PATCH anybus v4 1/7] fieldbus_dev: add Fieldbus Device subsystem.
-Date: Wed, 28 Nov 2018 14:39:55 -0500
-Message-ID: <CAGngYiXYVoesCQyf4+trM1V4ydwasrZnx_CqSDzQGHM-v81ZZA@mail.gmail.com>
-References: <20181121150709.6030-1-TheSven73@googlemail.com>
- <20181121150709.6030-2-TheSven73@googlemail.com> <20181127075431.GG13965@kroah.com>
- <CAGngYiUL7bZVEehj4LGC2H+kv+Z4v_s=tG4uosOp1-Rc4_pGWw@mail.gmail.com>
- <20181128174238.GA4367@kroah.com> <CAGngYiXqscqVtSUkwwKGGweOgMm=E=W8nbxOXAbpeyYsk=5B0g@mail.gmail.com>
- <20181128183622.GA9236@kroah.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v10 3/3] clk: qcom: Add lpass clock controller driver for SDM845
+Date: Wed, 28 Nov 2018 13:10:41 -0800
+Message-ID: <154343944180.88331.8662440760190505722@swboyd.mtv.corp.google.com>
+References: <1542873221-13693-1-git-send-email-tdas@codeaurora.org>
+ <1542873221-13693-4-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181128183622.GA9236@kroah.com>
+In-Reply-To: <1542873221-13693-4-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org
-Cc: Sven Van Asbroeck <svendev@arcx.com>, robh+dt@kernel.org, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, treding@nvidia.com, David Lechner <david@lechnology.com>, noralf@tronnes.org, johan@kernel.org, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, Arnd Bergmann <arnd@arndb.de>, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 28, 2018 at 1:36 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+Quoting Taniya Das (2018-11-21 23:53:41)
+> diff --git a/drivers/clk/qcom/gcc-sdm845.c b/drivers/clk/qcom/gcc-sdm845.c
+> index f133b7f..ba8ff99 100644
+> --- a/drivers/clk/qcom/gcc-sdm845.c
+> +++ b/drivers/clk/qcom/gcc-sdm845.c
+> @@ -3153,6 +3153,34 @@ enum {
+>         },
+>  };
+> =
 
-> So you still need a char device, and you will have have a load of them,
-> just use the misc device api.  It's simple, clean, and is hard to get
-> wrong.  The cdev api is hard, complex, and trivial to get wrong in any
-> number of different ways that it can be used :)
+> +static struct clk_branch gcc_lpass_q6_axi_clk =3D {
+> +       .halt_reg =3D 0x47000,
+> +       .halt_check =3D BRANCH_HALT,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x47000,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "gcc_lpass_q6_axi_clk",
+> +                       .flags =3D CLK_IS_CRITICAL,
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+> +static struct clk_branch gcc_lpass_sway_clk =3D {
+> +       .halt_reg =3D 0x47008,
+> +       .halt_check =3D BRANCH_HALT,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x47008,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "gcc_lpass_sway_clk",
+> +                       .flags =3D CLK_IS_CRITICAL,
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+>  static struct gdsc pcie_0_gdsc =3D {
+>         .gdscr =3D 0x6b004,
+>         .pd =3D {
+> @@ -3453,6 +3481,8 @@ enum {
+>         [GCC_QSPI_CORE_CLK_SRC] =3D &gcc_qspi_core_clk_src.clkr,
+>         [GCC_QSPI_CORE_CLK] =3D &gcc_qspi_core_clk.clkr,
+>         [GCC_QSPI_CNOC_PERIPH_AHB_CLK] =3D &gcc_qspi_cnoc_periph_ahb_clk.=
+clkr,
+> +       [GCC_LPASS_Q6_AXI_CLK] =3D &gcc_lpass_q6_axi_clk.clkr,
+> +       [GCC_LPASS_SWAY_CLK] =3D &gcc_lpass_sway_clk.clkr,
 
-Awesome little nugget! These things you just can't tell by reading the kernel
-tree. In many cases, it's not immediately obvious to me which of the various
-methods are 'recommended', and which ones are historic leftovers.
-
-> And your /sys/class/fieldbus_dev/ is "interesting", why name it that?
-
-Not sure why it's interesting? I figured it would allow userspace to enumerate
-all fieldbus devices simply by going to /sys/class/fieldbus_dev/ and process
-every subdirectory.
-
-Example with 3 fieldbus cards:
-/sys/class/fieldbus_dev/fieldbus_dev0/name etc
-/sys/class/fieldbus_dev/fieldbus_dev1/name etc
-/sys/class/fieldbus_dev/fieldbus_dev2/name etc
-
-Is there a better way?
-
-> So keep submitting, I'll try to review it the next time around, and all
-> should be fine.  But keep your user api as simple as possible for now,
-> only doing what you need it to do, worry about future stuff then.
-
-Thanks, that's awesome !!
-
-I figured that I should take baby steps. I simplified the userspace API to the
-absolute bare minimum. To the point that the profinet card isn't useable in
-our company's specific use case, because there's no configuration API yet.
-
-> Why not just /sys/class/fieldbus/ ?  No need for "dev", right?
-
-Good question... Two very different classes of devices sit on a fieldbus:
-Fieldbus device     is like a slave
-Fieldbus controller is like a master
-
-This subsystem is specific for fieldbus *devices*. I figured I'd encode this
-in the API name, in case someone wants to support fieldbus controllers later.
+I have one single idea to avoid the integration nightmare with dts
+needing another update for this on platforms where these can't be
+touched. It's not perfect, but we can throw these clks and usage of the
+clks behind an #ifdef CONFIG_SDM_LPASSCC_845 and then let the dts parts
+match up with the clk driver parts in linux-next. After everything is
+merged together, someone can turn on the knobs for LPASS clk controller
+and make sure they have the right dts bits to mark them as protected.
