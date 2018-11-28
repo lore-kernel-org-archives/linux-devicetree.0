@@ -1,51 +1,54 @@
-From: Aisheng DONG <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V3 1/4] dt-bindings: rtc: add binding doc for i.MX system
- controller RTC driver
-Date: Wed, 28 Nov 2018 15:38:31 +0000
-Message-ID: <AM0PR04MB421116B3A25246AB43B535F380D10__48445.6921498806$1543419409$gmane$org@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1543398696-3140-1-git-send-email-Anson.Huang@nxp.com>
- <1543398696-3140-2-git-send-email-Anson.Huang@nxp.com>
+From: Sven Van Asbroeck <thesven73@gmail.com>
+Subject: Re: [PATCH anybus v4 1/7] fieldbus_dev: add Fieldbus Device subsystem.
+Date: Wed, 28 Nov 2018 10:39:41 -0500
+Message-ID: <CAGngYiUL7bZVEehj4LGC2H+kv+Z4v_s=tG4uosOp1-Rc4_pGWw@mail.gmail.com>
+References: <20181121150709.6030-1-TheSven73@googlemail.com>
+ <20181121150709.6030-2-TheSven73@googlemail.com> <20181127075431.GG13965@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1543398696-3140-2-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <anson.huang@nxp.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, linux-rtc@vger.kernel.o
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181127075431.GG13965@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org
+Cc: Sven Van Asbroeck <svendev@arcx.com>, robh+dt@kernel.org, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, treding@nvidia.com, David Lechner <david@lechnology.com>, noralf@tronnes.org, johan@kernel.org, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, Arnd Bergmann <arnd@arndb.de>, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
-> b/Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
-> new file mode 100644
-> index 0000000..d6e2353
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
+Wow Greg, thanks for the review, this is awesome !!
 
-This should belong to scu binding doc.
+On Tue, Nov 27, 2018 at 2:54 AM Greg KH <gregkh@linuxfoundation.org> wrote:
 
-Regards
-Dong Aisheng
+>> +     cdev_init(&fb->cdev, &fieldbus_fops);
+>> +     err = cdev_add(&fb->cdev, devno, 1);
+>> +     if (err) {
+>> +             pr_err("fieldbus_dev%d unable to add device %d:%d\n",
+>> +                     fb->id, MAJOR(fieldbus_devt), fb->id);
+>> +             goto err_cdev;
+>> +     }
+>
+> Why do you have a static cdev?
 
-> @@ -0,0 +1,10 @@
-> +* NXP i.MX System Controller Real Time Clock
-> +
-> +Required properties:
-> +- compatible: should be "nxp,imx8qxp-sc-rtc";
-> +
-> +Example:
-> +
-> +rtc: rtc {
-> +	compatible = "nxp,imx8qxp-sc-rtc";
-> +};
-> --
-> 2.7.4
+The proposed fieldbus API needs a single /dev/fieldbus_devX node for every
+device. I just looked around the drivers/ tree to see how others accomplish
+this.
+
+Is there a better way?
+
+>> +     fb->online_sd = sysfs_get_dirent(fb->dev->kobj.sd, "online");
+>
+> Ick, what?  Why?  Why are you messing around with a raw sysfs attribute?
+
+The proposed fieldbus API has a sysfs attribute that can be poll/select'ed on.
+Is this behaviour still allowed / ok?
+If so, you're saying that I should not store the raw attribute, but just do:
+sysfs_notify(&fb->dev->kobj, NULL, "online") ?
+
+Now that I (hopefully) have a few seconds of your attention...
+I suppose the fieldbus API in this patch can't go anywhere, without buy-in from
+multiple people who also want to use fieldbus. Right now, there are none.
+
+This might be a chicken-and-egg problem. Perhaps here are no fieldbus
+devices because
+there's no good general API. There's no good general API because there are no
+fieldbus devices yet.
+
+ Is there a tried and tested way to break this deadlock?
