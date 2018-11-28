@@ -1,44 +1,66 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 4/4] ARM64: dts: imx: add i.MX8QXP system controller RTC
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 4/4] ARM64: dts: imx: add i.MX8QXP system controller RTC
  support
-Date: Wed, 28 Nov 2018 10:33:45 +0100
-Message-ID: <20181128093345.GC8952@piout.net>
+Date: Wed, 28 Nov 2018 09:41:22 +0000
+Message-ID: <DB3PR0402MB3916DE94D437DC51435D00CEF5D10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 References: <1543311334-8807-1-git-send-email-Anson.Huang@nxp.com>
  <1543311334-8807-5-git-send-email-Anson.Huang@nxp.com>
  <20181128100420.0c9a721a@karo-electronics.de>
  <DB3PR0402MB3916FFD700313BF684CF32AAF5D10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
  <20181128091943.GB8952@piout.net>
  <DB3PR0402MB39168AC8DB69B81C51CE63C2F5D10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20181128093345.GC8952@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB39168AC8DB69B81C51CE63C2F5D10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <20181128093345.GC8952@piout.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: Lothar =?utf-8?B?V2Hvv73vv71tYW5u?= <LW@KARO-electronics.de>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, shawn
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: =?utf-8?B?TG90aGFyIFdh77+977+9bWFubg==?= <LW@KARO-electronics.de>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On 28/11/2018 09:21:56+0000, Anson Huang wrote:
-> > > This module is NOT depending on any board design, should it be enabled by
-> > default in soc dtsi?
-> > > Like wdog etc..
-> > >
-> > 
-> > I guess the point is that you may not want it enabled, even if it should always
-> > be working. enabling it by default would affect the RTC ordering for example.
-> 
-> i.MX SoCs ONLY have 1 RTC. And RTC are always enabled by default for all i.MX
-> SoCs, so do we have to disable it here and enable it in board dts?
-> 
-
-I would say that most of the i.MX based boards include another RTC
-because the SoC one consumes way too much power.
-
-Note that I don't care too much whether it is enabled by default, I
-was simply explaining why you may want to disable it by default.
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+DQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
+LS0tLS0NCj4gRnJvbTogQWxleGFuZHJlIEJlbGxvbmkgW21haWx0bzphbGV4YW5kcmUuYmVsbG9u
+aUBib290bGluLmNvbV0NCj4gU2VudDogMjAxOOW5tDEx5pyIMjjml6UgMTc6MzQNCj4gVG86IEFu
+c29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogTG90aGFyIFdh77+977+9bWFu
+biA8TFdAS0FSTy1lbGVjdHJvbmljcy5kZT47IGEuenVtbW9AdG93ZXJ0ZWNoLml0Ow0KPiByb2Jo
+K2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBjYXRhbGluLm1hcmluYXNAYXJt
+LmNvbTsNCj4gd2lsbC5kZWFjb25AYXJtLmNvbTsgQWlzaGVuZyBET05HIDxhaXNoZW5nLmRvbmdA
+bnhwLmNvbT47IEFuZHkgR3Jvc3MNCj4gPGFuZHkuZ3Jvc3NAbGluYXJvLm9yZz47IGFybmRAYXJu
+ZGIuZGU7IGhvcm1zK3JlbmVzYXNAdmVyZ2UubmV0LmF1Ow0KPiBoZWlrb0BzbnRlY2guZGU7IGJq
+b3JuLmFuZGVyc3NvbkBsaW5hcm8ub3JnOyBlbnJpYy5iYWxsZXRib0Bjb2xsYWJvcmEuY29tOw0K
+PiBhbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc7IGV6ZXF1aWVsQGNvbGxhYm9yYS5jb207IG9sb2ZA
+bGl4b20ubmV0Ow0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBsaW51eC1ydGNAdmdlci5rZXJuZWwu
+b3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBkbC1saW51
+eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDQvNF0gQVJN
+NjQ6IGR0czogaW14OiBhZGQgaS5NWDhRWFAgc3lzdGVtIGNvbnRyb2xsZXINCj4gUlRDIHN1cHBv
+cnQNCj4gDQo+IE9uIDI4LzExLzIwMTggMDk6MjE6NTYrMDAwMCwgQW5zb24gSHVhbmcgd3JvdGU6
+DQo+ID4gPiA+IFRoaXMgbW9kdWxlIGlzIE5PVCBkZXBlbmRpbmcgb24gYW55IGJvYXJkIGRlc2ln
+biwgc2hvdWxkIGl0IGJlDQo+ID4gPiA+IGVuYWJsZWQgYnkNCj4gPiA+IGRlZmF1bHQgaW4gc29j
+IGR0c2k/DQo+ID4gPiA+IExpa2Ugd2RvZyBldGMuLg0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+IEkg
+Z3Vlc3MgdGhlIHBvaW50IGlzIHRoYXQgeW91IG1heSBub3Qgd2FudCBpdCBlbmFibGVkLCBldmVu
+IGlmIGl0DQo+ID4gPiBzaG91bGQgYWx3YXlzIGJlIHdvcmtpbmcuIGVuYWJsaW5nIGl0IGJ5IGRl
+ZmF1bHQgd291bGQgYWZmZWN0IHRoZSBSVEMNCj4gb3JkZXJpbmcgZm9yIGV4YW1wbGUuDQo+ID4N
+Cj4gPiBpLk1YIFNvQ3MgT05MWSBoYXZlIDEgUlRDLiBBbmQgUlRDIGFyZSBhbHdheXMgZW5hYmxl
+ZCBieSBkZWZhdWx0IGZvcg0KPiA+IGFsbCBpLk1YIFNvQ3MsIHNvIGRvIHdlIGhhdmUgdG8gZGlz
+YWJsZSBpdCBoZXJlIGFuZCBlbmFibGUgaXQgaW4gYm9hcmQgZHRzPw0KPiA+DQo+IA0KPiBJIHdv
+dWxkIHNheSB0aGF0IG1vc3Qgb2YgdGhlIGkuTVggYmFzZWQgYm9hcmRzIGluY2x1ZGUgYW5vdGhl
+ciBSVEMgYmVjYXVzZQ0KPiB0aGUgU29DIG9uZSBjb25zdW1lcyB3YXkgdG9vIG11Y2ggcG93ZXIu
+DQo+IA0KPiBOb3RlIHRoYXQgSSBkb24ndCBjYXJlIHRvbyBtdWNoIHdoZXRoZXIgaXQgaXMgZW5h
+YmxlZCBieSBkZWZhdWx0LCBJIHdhcyBzaW1wbHkNCj4gZXhwbGFpbmluZyB3aHkgeW91IG1heSB3
+YW50IHRvIGRpc2FibGUgaXQgYnkgZGVmYXVsdC4NCg0KT0ssIHRoaXMgc3lzdGVtIGNvbnRyb2xs
+ZXIgUlRDIGlzIGEgbGl0dGxlIGRpZmZlcmVudCwgaXQgaXMgY29udHJvbGxlZCBieSBzeXN0ZW0g
+Y29udHJvbGxlciBmaXJtd2FyZSwNCmFuZCBzeXN0ZW0gY29udHJvbGxlciBmaXJtd2FyZSB3aWxs
+IGFsd2F5cyBzZWxlY3QgdGhlIGJlc3Qgb25lIGZvciBpdHMgdXNlcihMaW51eCBrZXJuZWwpIGlm
+IHRoZXJlIGFyZSBvdGhlcg0KUlRDcyBhdmFpbGFibGUsIHNvIEkgdGhpbmsgd2UgY2FuIGtlZXAg
+aXQgZW5hYmxlZCBieSBkZWZhdWx0IGZvciBub3cuIFRoYW5rcy4NCg0KQW5zb24uDQoNCj4gDQo+
+IC0tDQo+IEFsZXhhbmRyZSBCZWxsb25pLCBCb290bGluDQo+IEVtYmVkZGVkIExpbnV4IGFuZCBL
+ZXJuZWwgZW5naW5lZXJpbmcNCj4gaHR0cHM6Ly9lbWVhMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24u
+b3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRmJvb3RsDQo+IGluLmNvbSZhbXA7ZGF0YT0w
+MiU3QzAxJTdDYW5zb24uaHVhbmclNDBueHAuY29tJTdDNWJlNmQwMTRmMmE1DQo+IDQ4NzZjYzk0
+MDhkNjU1MTRlYWYzJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUlN0MwJTdDDQo+
+IDAlN0M2MzY3ODk5NDU2NjQ2NDY3ODUmYW1wO3NkYXRhPU1XMHh5M2NVaENMQlRyRUZrazR2QXls
+eFNBd0INCj4gbXgxV3M2WmVFaEFzZE1FJTNEJmFtcDtyZXNlcnZlZD0wDQo=
