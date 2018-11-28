@@ -1,33 +1,23 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/4] ARM: dts: imx6ul-ccimx6ulsom: Add memory node to
- board dts
-Date: Wed, 28 Nov 2018 16:17:32 +0800
-Message-ID: <20181128081730.GH20643@dragon>
-References: <1542729585-9330-1-git-send-email-festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6sll-evk: add debug LED support
+Date: Wed, 28 Nov 2018 16:22:09 +0800
+Message-ID: <20181128082207.GJ20643@dragon>
+References: <1542783500-19546-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1542729585-9330-1-git-send-email-festevam@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de
+In-Reply-To: <1542783500-19546-1-git-send-email-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 20, 2018 at 01:59:42PM -0200, Fabio Estevam wrote:
-> Add memory node to board dts.
+On Wed, Nov 21, 2018 at 07:03:44AM +0000, Anson Huang wrote:
+> On i.MX6SLL EVK board, there is a debug LED controlled
+> by MX6SLL_PAD_EPDC_VCOM1__GPIO2_IO04 pin, add support
+> for it.
 > 
-> This is done in preparation of removing the memory node from imx6ul.dtsi. 
-> 
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Applied all, thanks.
+Applied, thanks.
