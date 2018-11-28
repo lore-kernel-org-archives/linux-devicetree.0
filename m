@@ -1,57 +1,71 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [RFC v3 2/3] dt-bindings: sdm845-pinctrl: add wakeup interrupt
- parent for GPIO
-Date: Wed, 28 Nov 2018 10:39:59 -0700
-Message-ID: <20181128173959.GC18262@codeaurora.org>
-References: <20181121000648.29262-1-ilina@codeaurora.org>
- <20181121000648.29262-3-ilina@codeaurora.org>
- <154283618199.88331.10217252750356423959@swboyd.mtv.corp.google.com>
- <20181126161455.GA28236@codeaurora.org>
- <154330994255.88331.11409511159882116164@swboyd.mtv.corp.google.com>
- <20181127182123.GC28236@codeaurora.org>
- <154335513853.88331.9713562640538396853@swboyd.mtv.corp.google.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH anybus v4 1/7] fieldbus_dev: add Fieldbus Device
+ subsystem.
+Date: Wed, 28 Nov 2018 18:42:38 +0100
+Message-ID: <20181128174238.GA4367@kroah.com>
+References: <20181121150709.6030-1-TheSven73@googlemail.com>
+ <20181121150709.6030-2-TheSven73@googlemail.com>
+ <20181127075431.GG13965@kroah.com>
+ <CAGngYiUL7bZVEehj4LGC2H+kv+Z4v_s=tG4uosOp1-Rc4_pGWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <154335513853.88331.9713562640538396853@swboyd.mtv.corp.google.com>
+In-Reply-To: <CAGngYiUL7bZVEehj4LGC2H+kv+Z4v_s=tG4uosOp1-Rc4_pGWw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: evgreen@chromium.org, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, thierry.reding@gmail.com
+To: Sven Van Asbroeck <thesven73@gmail.com>
+Cc: Sven Van Asbroeck <svendev@arcx.com>, robh+dt@kernel.org, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, treding@nvidia.com, David Lechner <david@lechnology.com>, noralf@tronnes.org, johan@kernel.org, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, Arnd Bergmann <arnd@arndb.de>, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 27 2018 at 14:45 -0700, Stephen Boyd wrote:
->Quoting Lina Iyer (2018-11-27 10:21:23)
->> On Tue, Nov 27 2018 at 02:12 -0700, Stephen Boyd wrote:
->> >
->> >Two reasons. First, simplicity. The TLMM driver just needs to pass the
->> >gpio number up to the PDC gpio domain and then that domain can figure
->> >out what hwirq it maps to within the PDC hw irq space. I don't see any
->> >reason why we have to know the hwirq of PDC within the TLMM driver
->> >besides "let's not be different".
->> >
->> >And second, it makes it easier for us to implement the MPM case in the
->> >TLMM driver by letting the TLMM code just ask "should I mask the irq
->> >here or not?" by passing that with a wrapper struct around the fwspec
->> >and a dedicated domain in the PDC/MPM driver. Keeping less things in the
->> >TLMM driver and not driving the decision from DT but from tables in the
->> >PDC driver also keeps things simple and reduces DT parsing code/time.
->> >
->> Couldn't this be simply achieved by matching the compatible flags for
->> PDC/MPM bindings for the wakeup-parent in the TLMM driver?
->>
->
->It could be, but then we would be making TLMM highly aware of the wakeup
->parent
-It is is not aware of anything about the wakeup parent, just the
-compatible that indicates whether it needs to be mask locally or not.
+On Wed, Nov 28, 2018 at 10:39:41AM -0500, Sven Van Asbroeck wrote:
+> Wow Greg, thanks for the review, this is awesome !!
+> 
+> On Tue, Nov 27, 2018 at 2:54 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> 
+> >> +     cdev_init(&fb->cdev, &fieldbus_fops);
+> >> +     err = cdev_add(&fb->cdev, devno, 1);
+> >> +     if (err) {
+> >> +             pr_err("fieldbus_dev%d unable to add device %d:%d\n",
+> >> +                     fb->id, MAJOR(fieldbus_devt), fb->id);
+> >> +             goto err_cdev;
+> >> +     }
+> >
+> > Why do you have a static cdev?
+> 
+> The proposed fieldbus API needs a single /dev/fieldbus_devX node for every
+> device. I just looked around the drivers/ tree to see how others accomplish
+> this.
+> 
+> Is there a better way?
 
->and have to do compatible string matching in two places, instead
->of making TLMM more abstractly aware that it needs to keep things masked
->while irq parent deals with the interrupts.
->
-Your approach seems too complex just to circumvent a simple match node.
-I think we are stretching too much to support something that is not a
-priority.
+It depends on what you want to do with this device node.  You can use a
+static one in your structure if you use it to "cast back" to your real
+structure in the open() call, do you do that?  If not, just create one
+dynamically.
 
--- Lina
+Or use a misc device?  How many of these do you need?
+
+> >> +     fb->online_sd = sysfs_get_dirent(fb->dev->kobj.sd, "online");
+> >
+> > Ick, what?  Why?  Why are you messing around with a raw sysfs attribute?
+> 
+> The proposed fieldbus API has a sysfs attribute that can be poll/select'ed on.
+> Is this behaviour still allowed / ok?
+
+For an online/offline attribute, no need to poll on it, just do a
+'kobject change' event for online/offline and all should be fine.  This
+is not a high-frequency event, right?
+
+> Now that I (hopefully) have a few seconds of your attention...
+> I suppose the fieldbus API in this patch can't go anywhere, without buy-in from
+> multiple people who also want to use fieldbus. Right now, there are none.
+
+Hey, if no one wants to use it, either no need to write any code at all,
+or you get to decide everything.  Either way, you're in charge!  :)
+
+But you do need to document the thing, in Documentation/ABI/ to get it
+correct and able to be reviewed.
+
+thanks,
+
+greg k-h
