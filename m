@@ -1,148 +1,41 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: at91-usart: add power management support" to the spi tree
-Date: Wed, 28 Nov 2018 16:05:54 +0000 (GMT)
-Message-ID: <20181128160554.460C0112521B@debutante.sirena.org.uk>
-References: <20181121112732.15690-2-radu_nicolae.pirea@upb.ro>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181121112732.15690-2-radu_nicolae.pirea@upb.ro>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Radu Pirea <radu_nicolae.pirea@upb.ro>
-Cc: Mark Brown <broonie@kernel.org>, richard.genoud@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, ludovic.desroches@microchip.cobroonie@kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.orglinux-spi@vger.kernel.org
+From: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v18 1/5] iommu/arm-smmu: Add
+ pm_runtime/sleep ops
+Date: Wed, 28 Nov 2018 08:24:19 -0800
+Message-ID: <154342225921.88331.14467967828250776155@swboyd.mtv.corp.google.com>
+References: <20181127101145.7682-1-vivek.gautam@codeaurora.org>
+ <20181127101145.7682-2-vivek.gautam@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20181127101145.7682-2-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
-
-   spi: at91-usart: add power management support
-
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 96ed3ecde2c0911ffa11838050a058c2a40742f0 Mon Sep 17 00:00:00 2001
-From: Radu Pirea <radu_nicolae.pirea@upb.ro>
-Date: Wed, 21 Nov 2018 13:27:30 +0200
-Subject: [PATCH] spi: at91-usart: add power management support
-
-This patch implements power management callback function for USART as
-SPI driver.
-
-Signed-off-by: Radu Pirea <radu_nicolae.pirea@upb.ro>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-at91-usart.c | 61 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
-
-diff --git a/drivers/spi/spi-at91-usart.c b/drivers/spi/spi-at91-usart.c
-index a924657642fa..0b07c746453d 100644
---- a/drivers/spi/spi-at91-usart.c
-+++ b/drivers/spi/spi-at91-usart.c
-@@ -13,6 +13,7 @@
- #include <linux/module.h>
- #include <linux/of_gpio.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
- 
- #include <linux/spi/spi.h>
- 
-@@ -399,6 +400,59 @@ static int at91_usart_spi_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+__maybe_unused static int at91_usart_spi_runtime_suspend(struct device *dev)
-+{
-+	struct spi_controller *ctlr = dev_get_drvdata(dev);
-+	struct at91_usart_spi *aus = spi_master_get_devdata(ctlr);
-+
-+	clk_disable_unprepare(aus->clk);
-+	pinctrl_pm_select_sleep_state(dev);
-+
-+	return 0;
-+}
-+
-+__maybe_unused static int at91_usart_spi_runtime_resume(struct device *dev)
-+{
-+	struct spi_controller *ctrl = dev_get_drvdata(dev);
-+	struct at91_usart_spi *aus = spi_master_get_devdata(ctrl);
-+
-+	pinctrl_pm_select_default_state(dev);
-+
-+	return clk_prepare_enable(aus->clk);
-+}
-+
-+__maybe_unused static int at91_usart_spi_suspend(struct device *dev)
-+{
-+	struct spi_controller *ctrl = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = spi_controller_suspend(ctrl);
-+	if (ret)
-+		return ret;
-+
-+	if (!pm_runtime_suspended(dev))
-+		at91_usart_spi_runtime_suspend(dev);
-+
-+	return 0;
-+}
-+
-+__maybe_unused static int at91_usart_spi_resume(struct device *dev)
-+{
-+	struct spi_controller *ctrl = dev_get_drvdata(dev);
-+	struct at91_usart_spi *aus = spi_master_get_devdata(ctrl);
-+	int ret;
-+
-+	if (!pm_runtime_suspended(dev)) {
-+		ret = at91_usart_spi_runtime_resume(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	at91_usart_spi_init(aus);
-+
-+	return spi_controller_resume(ctrl);
-+}
-+
- static int at91_usart_spi_remove(struct platform_device *pdev)
- {
- 	struct spi_controller *ctlr = platform_get_drvdata(pdev);
-@@ -409,6 +463,12 @@ static int at91_usart_spi_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct dev_pm_ops at91_usart_spi_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(at91_usart_spi_suspend, at91_usart_spi_resume)
-+	SET_RUNTIME_PM_OPS(at91_usart_spi_runtime_suspend,
-+			   at91_usart_spi_runtime_resume, NULL)
-+};
-+
- static const struct of_device_id at91_usart_spi_dt_ids[] = {
- 	{ .compatible = "microchip,at91sam9g45-usart-spi"},
- 	{ /* sentinel */}
-@@ -419,6 +479,7 @@ MODULE_DEVICE_TABLE(of, at91_usart_spi_dt_ids);
- static struct platform_driver at91_usart_spi_driver = {
- 	.driver = {
- 		.name = "at91_usart_spi",
-+		.pm = &at91_usart_spi_pm_ops,
- 	},
- 	.probe = at91_usart_spi_probe,
- 	.remove = at91_usart_spi_remove,
--- 
-2.19.0.rc2
+UXVvdGluZyBWaXZlayBHYXV0YW0gKDIwMTgtMTEtMjcgMDI6MTE6NDEpCj4gQEAgLTE5NjYsNiAr
+MTk3MCwyMyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBhcm1fc21tdV9vZl9t
+YXRjaFtdID0gewo+ICB9Owo+ICBNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBhcm1fc21tdV9vZl9t
+YXRjaCk7Cj4gIAo+ICtzdGF0aWMgdm9pZCBhcm1fc21tdV9maWxsX2Nsa19kYXRhKHN0cnVjdCBh
+cm1fc21tdV9kZXZpY2UgKnNtbXUsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBjb25zdCBjaGFyICogY29uc3QgKmNsa3MpCj4gK3sKPiArICAgICAgIGludCBpOwo+ICsKPiAr
+ICAgICAgIGlmIChzbW11LT5udW1fY2xrcyA8IDEpCj4gKyAgICAgICAgICAgICAgIHJldHVybjsK
+PiArCj4gKyAgICAgICBzbW11LT5jbGtzID0gZGV2bV9rY2FsbG9jKHNtbXUtPmRldiwgc21tdS0+
+bnVtX2Nsa3MsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNpemVvZigqc21t
+dS0+Y2xrcyksIEdGUF9LRVJORUwpOwo+ICsgICAgICAgaWYgKCFzbW11LT5jbGtzKQo+ICsgICAg
+ICAgICAgICAgICByZXR1cm47Cj4gKwo+ICsgICAgICAgZm9yIChpID0gMDsgaSA8IHNtbXUtPm51
+bV9jbGtzOyBpKyspCj4gKyAgICAgICAgICAgICAgIHNtbXUtPmNsa3NbaV0uaWQgPSBjbGtzW2ld
+OwoKSXMgdGhpcyBjbGtfYnVsa19nZXRfYWxsKCk/CgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0Bs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9mcmVlZHJlbm8K
