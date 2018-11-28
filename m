@@ -1,30 +1,41 @@
-Return-Path: <SRS0=qqZh=OJ=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <1543423111-19745-1-git-send-email-biju.das@bp.renesas.com> <1543423111-19745-6-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543423111-19745-6-git-send-email-biju.das@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 30 Nov 2018 10:05:39 +0100
-Message-ID: <CAMuHMdUHTNuVFfUNru0L4=gh6mCcvpf+nqzNJQzY+dnSpCh6uA@mail.gmail.com>
-Subject: Re: [PATCH 5/5] ARM: dts: r8a7744: Add TPU support
-Content-Type: text/plain; charset="UTF-8"
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=vcRE=OH=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 5/5] ARM: dts: r8a7744: Add TPU support
+Date: Wed, 28 Nov 2018 16:38:31 +0000
+Message-Id: <1543423111-19745-6-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543423111-19745-1-git-send-email-biju.das@bp.renesas.com>
+References: <1543423111-19745-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Nov 28, 2018 at 5:47 PM Biju Das <biju.das@bp.renesas.com> wrote:
-> Add TPU support to SoC DT.
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Add TPU support to SoC DT.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+---
+ arch/arm/boot/dts/r8a7744.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
+index 43da6a0..40de227 100644
+--- a/arch/arm/boot/dts/r8a7744.dtsi
++++ b/arch/arm/boot/dts/r8a7744.dtsi
+@@ -272,6 +272,16 @@
+ 			reg = <0 0xe6060000 0 0x164>;
+ 		};
+ 
++		tpu: pwm@e60f0000 {
++			compatible = "renesas,tpu-r8a7744", "renesas,tpu";
++			reg = <0 0xe60f0000 0 0x148>;
++			clocks = <&cpg CPG_MOD 304>;
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 304>;
++			#pwm-cells = <3>;
++			status = "disabled";
++		};
++
+ 		cpg: clock-controller@e6150000 {
+ 			compatible = "renesas,r8a7744-cpg-mssr";
+ 			reg = <0 0xe6150000 0 0x1000>;
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.7.4
