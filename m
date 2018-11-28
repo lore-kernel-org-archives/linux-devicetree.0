@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 12/15] ARM: dts: sunxi: h3/h5: Fix up RTC device
- node and clock references
-Date: Wed, 28 Nov 2018 17:30:10 +0800
-Message-ID: <20181128093013.24442-14-wens@csie.org>
+Subject: [PATCH 11/15] ARM: dts: sunxi: h3/h5: Add clock
+ accuracy for external oscillators
+Date: Wed, 28 Nov 2018 17:30:09 +0800
+Message-ID: <20181128093013.24442-13-wens@csie.org>
 References: <20181128093013.24442-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBO6A7HPQKGQE4M5QGZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBOWA7HPQKGQEJC6277I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181128093013.24442-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,122 +20,34 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Alexa
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The RTC module on the H3 was claimed to be the same as on the A31, when
-in fact it is not. The A31 does not have an RTC external clock output,
-and its internal RC oscillator's average clock rate is not in the same
-range. The H5's RTC has some extra crypto-related registers compared to
-the H3. Their exact functions are not clear. Also the RTC-VIO regulator
-has different settings.
-
-This patch fixes the compatible string and clock properties to conform
-to the updated bindings. The device node for the internal oscillator is
-removed, as it is internalized into the RTC device. Clock references to
-the IOSC and LOSC are also fixed.
+The H3 datasheet specifies a tolerance range for the external
+oscillators used. Add them to the device tree as the clock accuracy.
+The internal oscillator is left unchanged, as it will be removed later.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-
-squash! ARM: dts: sunxi: h3/h5: Fix up RTC device node and clock references
 ---
- arch/arm/boot/dts/sun8i-h3.dtsi              |  4 +++
- arch/arm/boot/dts/sunxi-h3-h5.dtsi           | 26 ++++++++------------
- arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi |  4 +++
- 3 files changed, 18 insertions(+), 16 deletions(-)
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 3ecfabb10151..9497d4076e65 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -241,3 +241,7 @@
- &pio {
- 	compatible = "allwinner,sun8i-h3-pinctrl";
- };
-+
-+&rtc {
-+	compatible = "allwinner,sun8i-h3-rtc";
-+};
 diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index bce3bf1d6ae5..3cc4366c07fd 100644
+index 0d9e9eac518c..bce3bf1d6ae5 100644
 --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
 +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -95,15 +95,7 @@
+@@ -86,6 +86,7 @@
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <24000000>;
++			clock-accuracy = <50000>;
+ 			clock-output-names = "osc24M";
+ 		};
+ 
+@@ -93,6 +94,7 @@
+ 			#clock-cells = <0>;
  			compatible = "fixed-clock";
  			clock-frequency = <32768>;
- 			clock-accuracy = <50000>;
--			clock-output-names = "osc32k";
--		};
--
--		iosc: internal-osc-clk {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <16000000>;
--			clock-accuracy = <300000000>;
--			clock-output-names = "iosc";
-+			clock-output-names = "ext_osc32k";
- 		};
- 	};
- 
-@@ -377,7 +369,7 @@
- 		ccu: clock@1c20000 {
- 			/* compatible is in per SoC .dtsi file */
- 			reg = <0x01c20000 0x400>;
--			clocks = <&osc24M>, <&osc32k>;
-+			clocks = <&osc24M>, <&rtc 0>;
- 			clock-names = "hosc", "losc";
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
-@@ -388,7 +380,7 @@
- 			reg = <0x01c20800 0x400>;
- 			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&osc32k>;
-+			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&rtc 0>;
- 			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			#gpio-cells = <3>;
-@@ -813,17 +805,19 @@
++			clock-accuracy = <50000>;
+ 			clock-output-names = "osc32k";
  		};
  
- 		rtc: rtc@1f00000 {
--			compatible = "allwinner,sun6i-a31-rtc";
--			reg = <0x01f00000 0x54>;
-+			/* compatible is in per SoC .dtsi file */
-+			reg = <0x01f00000 0x400>;
- 			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-output-names = "osc32k", "osc32k-out", "iosc";
-+			clocks = <&osc32k>;
-+			#clock-cells = <1>;
- 		};
- 
- 		r_ccu: clock@1f01400 {
- 			compatible = "allwinner,sun8i-h3-r-ccu";
- 			reg = <0x01f01400 0x100>;
--			clocks = <&osc24M>, <&osc32k>, <&iosc>,
--				 <&ccu 9>;
-+			clocks = <&osc24M>, <&rtc 0>, <&rtc 2>, <&ccu 9>;
- 			clock-names = "hosc", "losc", "iosc", "pll-periph";
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
-@@ -861,7 +855,7 @@
- 			compatible = "allwinner,sun8i-h3-r-pinctrl";
- 			reg = <0x01f02c00 0x400>;
- 			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&r_ccu CLK_APB0_PIO>, <&osc24M>, <&osc32k>;
-+			clocks = <&r_ccu CLK_APB0_PIO>, <&osc24M>, <&rtc 0>;
- 			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			#gpio-cells = <3>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-index b41dc1aab67d..fe731b35f761 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-@@ -172,3 +172,7 @@
- 		     <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
- 	compatible = "allwinner,sun50i-h5-pinctrl";
- };
-+
-+&rtc {
-+	compatible = "allwinner,sun50i-h5-rtc";
-+};
 -- 
 2.20.0.rc1
