@@ -1,130 +1,54 @@
-Return-Path: <SRS0=lXjp=OG=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 07/22] ARM: dts: r8a7744: USB 2.0 host support
-Date: Tue, 27 Nov 2018 11:56:20 +0000
-Message-Id: <1543319795-48325-8-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
-References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=2X+C=OH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr70070.outbound.protection.outlook.com ([40.107.7.70]:14095
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727662AbeK1VAF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 28 Nov 2018 16:00:05 -0500
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V3 0/4] Add i.MX System Controller thermal driver support
+Date: Wed, 28 Nov 2018 09:58:43 +0000
+Message-ID: <1543398783-3185-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "arnd@arndb.de" <arnd@arndb.de>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Describe internal PCI bridge devices, USB phy device and
-link PCI USB devices to USB phy.
+i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
+inside, the system controller is in charge of controlling power,
+clock and thermal sensors etc..
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm/boot/dts/r8a7744.dtsi | 77 +++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 72 insertions(+), 5 deletions(-)
+This patch adds i.MX system controller thermal driver support,
+Linux kernel has to communicate with system controller via MU
+(message unit) IPC to get each thermal sensor's temperature,
+it supports multiple sensors which are passed from device tree,
+please see the binding doc for details.
 
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index 7a0ccae..3549ee1 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -468,8 +468,25 @@
- 		};
- 
- 		usbphy: usb-phy@e6590100 {
-+			compatible = "renesas,usb-phy-r8a7744",
-+				     "renesas,rcar-gen2-usb-phy";
- 			reg = <0 0xe6590100 0 0x100>;
--			/* placeholder */
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&cpg CPG_MOD 704>;
-+			clock-names = "usbhs";
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 704>;
-+			status = "disabled";
-+
-+			usb0: usb-channel@0 {
-+				reg = <0>;
-+				#phy-cells = <1>;
-+			};
-+			usb2: usb-channel@2 {
-+				reg = <2>;
-+				#phy-cells = <1>;
-+			};
- 		};
- 
- 		dmac0: dma-controller@e6700000 {
-@@ -861,23 +878,73 @@
- 		};
- 
- 		pci0: pci@ee090000 {
--			reg = <0 0xee090000 0 0xc00>;
-+			compatible = "renesas,pci-r8a7744",
-+				     "renesas,pci-rcar-gen2";
-+			device_type = "pci";
-+			reg = <0 0xee090000 0 0xc00>,
-+			      <0 0xee080000 0 0x1100>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 703>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 703>;
-+			status = "disabled";
- 
- 			bus-range = <0 0>;
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			#interrupt-cells = <1>;
--			/* placeholder */
-+			ranges = <0x02000000 0 0xee080000 0 0xee080000 0 0x00010000>;
-+			interrupt-map-mask = <0xff00 0 0 0x7>;
-+			interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
-+					 0x0800 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
-+					 0x1000 0 0 2 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			usb@1,0 {
-+				reg = <0x800 0 0 0 0>;
-+				phys = <&usb0 0>;
-+				phy-names = "usb";
-+			};
-+
-+			usb@2,0 {
-+				reg = <0x1000 0 0 0 0>;
-+				phys = <&usb0 0>;
-+				phy-names = "usb";
-+			};
- 		};
- 
- 		pci1: pci@ee0d0000 {
--			reg = <0 0xee0d0000 0 0xc00>;
-+			compatible = "renesas,pci-r8a7744",
-+				     "renesas,pci-rcar-gen2";
-+			device_type = "pci";
-+			reg = <0 0xee0d0000 0 0xc00>,
-+			      <0 0xee0c0000 0 0x1100>;
-+			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 703>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 703>;
-+			status = "disabled";
- 
- 			bus-range = <1 1>;
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			#interrupt-cells = <1>;
--			/* placeholder */
-+			ranges = <0x02000000 0 0xee0c0000 0 0xee0c0000 0 0x00010000>;
-+			interrupt-map-mask = <0xff00 0 0 0x7>;
-+			interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
-+					 0x0800 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
-+					 0x1000 0 0 2 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			usb@1,0 {
-+				reg = <0x10800 0 0 0 0>;
-+				phys = <&usb2 0>;
-+				phy-names = "usb";
-+			};
-+
-+			usb@2,0 {
-+				reg = <0x11000 0 0 0 0>;
-+				phys = <&usb2 0>;
-+				phy-names = "usb";
-+			};
- 		};
- 
- 		sdhi0: sd@ee100000 {
--- 
+Note that this patch set is based on [V4,5/5] defconfig: arm64: add imx8qxp=
+ support,
+https://patchwork.kernel.org/patch/10677315/
+
+Anson Huang (4):
+  dt-bindings: thermal: add binding doc for i.MX system controller
+    thermal driver
+  thermal: imx_sc: add i.MX system controller thermal support
+  defconfig: arm64: add i.MX system controller thermal support
+  ARM64: dts: imx: add i.MX8QXP thermal support
+
+ .../devicetree/bindings/thermal/imx-sc-thermal.txt |  33 ++++
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |  27 +++
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/thermal/Kconfig                            |  11 ++
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/imx_sc_thermal.c                   | 201 +++++++++++++++++=
+++++
+ 6 files changed, 274 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/imx-sc-therma=
+l.txt
+ create mode 100644 drivers/thermal/imx_sc_thermal.c
+
+--=20
 2.7.4
