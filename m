@@ -1,49 +1,38 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH] ARM: dts: dra7: Move the ti, no-idle quirk on proper gmac
- node
-Date: Wed, 28 Nov 2018 17:11:35 -0600
-Message-ID: <1c2e5a69-f0c4-47c6-79d4-a11521b6ecda@ti.com>
-References: <1543401907-14751-1-git-send-email-t-kristo@ti.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] arm64: dts: sdm845: Add dsi pinctrl
+ nodes
+Date: Wed, 28 Nov 2018 15:13:42 -0800
+Message-ID: <20181128231342.GD24969@minitux>
+References: <1541197576-19730-1-git-send-email-jsanka@codeaurora.org>
+ <1541197576-19730-3-git-send-email-jsanka@codeaurora.org>
+ <CAD=FV=WGFCNo6_qbvb3mXFMiTyUkq8gRjHZ_N2oVBwM=0+nHrA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1543401907-14751-1-git-send-email-t-kristo@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, tony@atomide.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=WGFCNo6_qbvb3mXFMiTyUkq8gRjHZ_N2oVBwM=0+nHrA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kristian Kristensen <hoegsberg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/28/18 4:45 AM, Tero Kristo wrote:
-> Hwmod parses the DT hierarchically from root to search for matching
-> ti,hwmod property. With the introduction of L4 data, we have two nodes
-> with the ti,hwmod = "gmac" declaration, and the hwmod core only matches
-> the first one found, which is the target-module one. This node incorrectly
-> dropped the ti,no-idle flag, which causes number of problems, like ignoring
-> errata i877, and also causing an intermittent boot failure on certain dra7
-> boards.
-> 
-> Fix the issue by moving the ti,no-idle flag to the proper node.
-> 
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> Reported-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> ---
-> FYI: The problem is seen in linux-next.
-
-Thank you.
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com> 
-
--- 
-regards,
--grygorii
+T24gVHVlIDA2IE5vdiAxNjozMSBQU1QgMjAxOCwgRG91ZyBBbmRlcnNvbiB3cm90ZToKWy4uXQo+
+IE1heWJlIHdlIGNhbiBqdXN0IGRyb3AgdGhlIHdob2xlICJhY3RpdmUiIHZzLiAic2xlZXAiIGZv
+ciBub3cgYW5kIHdlCj4gY2FuIGludHJvZHVjZSBpdCBsYXRlciB3aGVuIHdlIHNob3cgdGhhdCBp
+dCdzIHVzZWZ1bCBmb3Igc29tZXRoaW5nLgpbLi5dCj4gTWF5YmUgK0Jqb3JuIG9yICtTdGVwaGVu
+IGhhcyBhIGRpZmZlcmVudCBvcGluaW9uIHRob3VnaC4uLgo+IAoKVGhpcyBzb3VuZHMgbGlrZSBh
+IGdvb2Qgc3VnZ2VzdGlvbiwgaW4gcGFydGljdWxhciB3ZSBrbm93IHRoYXQgaXQgd29uJ3QKYnJl
+YWsgbGlrZSBTUEkgZGlkIG9uY2Ugd2Ugc2VsZWN0IHRoZSAic2xlZXAiIHN0YXRlIHNvbWV0aW1l
+IGluIHRoZQpmdXR1cmUuCgpSZWdhcmRzLApCam9ybgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0Bs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9mcmVlZHJlbm8K
