@@ -1,21 +1,21 @@
 Return-Path: <SRS0=2X+C=OH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr60046.outbound.protection.outlook.com ([40.107.6.46]:18958
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+Received: from mail-eopbgr30062.outbound.protection.outlook.com ([40.107.3.62]:4832
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727951AbeK1WFL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 28 Nov 2018 17:05:11 -0500
+        id S1727662AbeK1Uk0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 28 Nov 2018 15:40:26 -0500
 From: Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: [PATCH V4 2/3] ARM: dts: imx6sx-sabreauto: add flexcan support
-Date: Wed, 28 Nov 2018 11:03:52 +0000
-Message-ID: <20181128110138.587-3-qiangqing.zhang@nxp.com>
-References: <20181128110138.587-1-qiangqing.zhang@nxp.com>
-In-Reply-To: <20181128110138.587-1-qiangqing.zhang@nxp.com>
+Subject: [PATCH V3 2/3] ARM: dts: imx6sx-sabreauto: add flexcan support
+Date: Wed, 28 Nov 2018 09:39:21 +0000
+Message-ID: <20181128093658.27990-3-qiangqing.zhang@nxp.com>
+References: <20181128093658.27990-1-qiangqing.zhang@nxp.com>
+In-Reply-To: <20181128093658.27990-1-qiangqing.zhang@nxp.com>
 Content-Language: en-US
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: "mkl@pengutronix.de" <mkl@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
 Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng DONG <aisheng.dong@nxp.com>, Joakim Zhang <qiangqing.zhang@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
@@ -33,7 +33,7 @@ Signed-off-by: Aisheng Dong <aisheng.dong@nxp.com>
 Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
 ---
 ChangeLog:
-V1->V4:
+V1->V3:
 	*no change.
 ---
  arch/arm/boot/dts/imx6sx-sabreauto.dts | 57 ++++++++++++++++++++++++++
