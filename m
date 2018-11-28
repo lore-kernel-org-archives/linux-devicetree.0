@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 01/15] dt-bindings: rtc: sun6i-rtc: Rewrite
- clock outputs as a list
-Date: Wed, 28 Nov 2018 11:17:47 +0100
-Message-ID: <20181128101747.t2lcgesulh2rkwyi@flea>
+Subject: Re: [PATCH 02/15] dt-bindings: rtc: sun6i-rtc: Add
+ compatible strings for pre-H6 variants
+Date: Wed, 28 Nov 2018 11:19:06 +0100
+Message-ID: <20181128101906.xkqaoezxodz25c3x@flea>
 References: <20181128093013.24442-1-wens@csie.org>
- <20181128093013.24442-2-wens@csie.org>
+ <20181128093013.24442-3-wens@csie.org>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yoj3yp3ufe5a5hnf"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBVWW7HPQKGQEIBKJRTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="564j2t6jjeonxwuc"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBW6X7HPQKGQEPHCVFQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20181128093013.24442-2-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <20181128093013.24442-3-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,19 +24,27 @@ Cc: Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---yoj3yp3ufe5a5hnf
+--564j2t6jjeonxwuc
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Wed, Nov 28, 2018 at 05:29:58PM +0800, Chen-Yu Tsai wrote:
-> The clock output section for this binding describes the two outputs in
-> the descriptions for both the #clock-cells and clock-output-names
-> properties.
+On Wed, Nov 28, 2018 at 05:29:59PM +0800, Chen-Yu Tsai wrote:
+> While doing Bluetooth enablement for various boards based on various
+> Allwinner SoCs, minor differences in the RTC modules were found. These
+> include a lack of an external clock output (A31), different internal
+> oscillator frequencies (H3/H5/A64/V3/V3s), different regulator voltage
+> settings (H5/H6), and the presence of miscellaneous registers unrelated
+> to the RTC (A64/R40/H5/H6). The datasheet also describes different number
+> of registers for non-volatile storage, though based on actual experiments
+> the actual number is the same across the board.
 > 
-> Instead of overlapping information that is hard to read, rewrite the
-> clock outputs as a list of indices and descriptions. The properies
-> can reference this list instead. This will also make it easier to
-> add notes or conditions to the clocks, and also for adding new outputs.
+> This patch adds a list of all pre-H6 variants, grouped by the internal
+> oscillator's clock rate, regulator settings, and the presence of the
+> external clock output. Combinations are introduced for the variants that
+> have miscellaneous registers.
+> 
+> The RTC block in the H6 also handles the 24 MHz DCXO. This will require
+> more device tree binding changes and will be done later.
 > 
 > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
@@ -48,4 +56,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---yoj3yp3ufe5a5hnf--
+--564j2t6jjeonxwuc--
