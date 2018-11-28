@@ -1,57 +1,108 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH/RFC] net: phy: device: Don't deassert the reset when
- register and probe
-Date: Wed, 28 Nov 2018 01:17:10 +0000
-Message-ID: <TY2PR01MB22971DD32317631C7E3C4ABDD8D10@TY2PR01MB2297.jpnprd01.prod.outlook.com>
-References: <1543320947-32763-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20181127164411.GB19601@lunn.ch>
- <4aa356d3-7c99-a9d6-0e6c-d46be7e44948@gmail.com>
+From: Miles Chen <miles.chen@mediatek.com>
+Subject: Re: [RFC PATCH] of: make MAX_RESERVED_REGIONS configurable
+Date: Wed, 28 Nov 2018 09:56:04 +0800
+Message-ID: <1543370164.29143.9.camel@mtkswgap22>
+References: <1542787873-8429-1-git-send-email-miles.chen@mediatek.com>
+         <CAL_JsqLGvUYQmCGXLgSO+6kFj2i87dpaTbMGbyu5oMt=eeu35A@mail.gmail.com>
+         <1542855088.15789.6.camel@mtkswgap22>
+         <CAL_Jsq+O1YDP1yiHZpcxUaFG1LYDqi74D_kEnErP+cwGDppVWQ@mail.gmail.com>
+         <1543196004.21289.1.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <4aa356d3-7c99-a9d6-0e6c-d46be7e44948@gmail.com>
-Content-Language: ja-JP
-Sender: netdev-owner@vger.kernel.org
-To: Heiner Kallweit <hkallweit1@gmail.com>, Andrew Lunn <andrew@lunn.ch>
-Cc: "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1543196004.21289.1.camel@mtkswgap22>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpbmVyLA0KDQo+IEZyb206IEhlaW5lciBLYWxsd2VpLCBTZW50OiBXZWRuZXNkYXksIE5v
-dmVtYmVyIDI4LCAyMDE4IDQ6NDYgQU0NCj4gDQo+IE9uIDI3LjExLjIwMTggMTc6NDQsIEFuZHJl
-dyBMdW5uIHdyb3RlOg0KPiA+IE9uIFR1ZSwgTm92IDI3LCAyMDE4IGF0IDEyOjE4OjIwUE0gKzAw
-MDAsIFlvc2hpaGlybyBTaGltb2RhIHdyb3RlOg0KPiA+PiBTb21lIFBIWSBkZXZpY2UgbmVlZHMg
-ZWRnZSBzaWduYWwgb2YgdGhlIHJlc2V0LCBidXQgdGhlIHByZXZpb3VzIGNvZGUNCj4gPj4gaXMg
-aW1wb3NzaWJsZSB0byBhY2hpZXZlIGl0IGxpa2UgZm9sbG93aW5nOg0KPiA+Pg0KPiA+PiAgMSkg
-S2VybmVsIGJvb3RzIGJ5IHVzaW5nIGluaXRyYW1mcy4NCj4gPj4gIC0tPiBObyBvcGVuIHRoZSBu
-aWMsIHNvIHRoZSBwcm92aW91cyBjb2RlIGRlYXNzZXJ0cyB0aGUgcmVzZXQgYnkNCj4gPj4gICAg
-ICBwaHlfZGV2aWNlX3JlZ2lzdGVyKCkgYW5kIHBoeV9wcm9iZSgpLg0KPiA+PiAgMikgS2VybmVs
-IGVudGVycyB0aGUgc3VzcGVuZC4NCj4gPj4gIC0tPiBTbywga2VlcCB0aGUgcmVzZXQgc2lnbmFs
-IGFzIGRlYXNzZXJ0Lg0KPiA+PiAgLS0+IE9uIFItQ2FyIFNhbHZhdG9yLVhTIGJvYXJkLCB1bmZv
-cnR1bmF0ZWx5LCB0aGUgYm9hcmQgcG93ZXIgaXMNCj4gPj4gICAgICB0dXJuZWQgb2ZmLg0KPiA+
-PiAgMykgS2VybmVsIHJldHVybnMgZnJvbSBzdXNwZW5kLg0KPiA+PiAgNCkgaWZjb25maWcgZXRo
-MCB1cA0KPiA+PiAgLS0+IFRoZW4sIHNpbmNlIGVkZ2Ugc2lnbmFsIG9mIHRoZSByZXNldCBkb2Vz
-bid0IGhhcHBlbiwNCj4gPj4gICAgICBpdCBjYW5ub3QgbGluayB1cC4NCj4gPg0KPiA+IEhpIFlv
-c2hpaGlybw0KPiA+DQo+ID4gSXQgc291bmRzIGxpa2UgeW91IHNob3VsZCBiZSBhZGRpbmcgY29k
-ZSB0byB0aGUgc3VzcGVuZC9yZXN1bWUNCj4gPiBoYW5kbGluZyBvZiBwaHlsaWIsIHNvIHRoYXQg
-aXQgdG9nZ2xlIHRoZSByZXNldCBvbiByZXN1bWUuIFlvdSBjYW5ub3QNCj4gPiBqdXN0IGRlbGV0
-ZSBjb2RlIGxpa2UgeW91IHByb3Bvc2VkLCBpdCBpcyBnb2luZyB0byBicmVhayBkZXZpY2VzLiBC
-dXQNCj4gPiBhZGRpbmcgY29kZSBzaG91bGQgYmUgTy5LLg0KPiA+DQo+IFRoZSBjb21taXQgbWVz
-c2FnZSBtZW50aW9ucyB0aGF0IHRoZSBwYXRjaCBpcyBzdXBwb3NlZCB0byBmaXggc29tZQ0KPiBp
-c3N1ZSBvbiB0aGUgU2FsdmF0b3ItWFMgYm9hcmQuIEkgZm91bmQgdGhlIGZvbGxvd2luZyBmcm9t
-IGEgeWVhciBhZ28NCj4gaHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvbmV0ZGV2L21zZzQ1
-NzMwOC5odG1sDQo+IHdoaWNoIGlzIGFsc28gYWJvdXQgUEhZIHJlc2V0IGFuZCB0aGlzIGJvYXJk
-LiBJcyB0aGVyZSBzdGlsbCBzb21ldGhpbmcNCj4gb3Blbj8NCg0KVGhhbmsgeW91IGZvciB5b3Vy
-IGNvbW1lbnQhDQpBcyBHZWVydCBtZW50aW9uZWQgb24gdGhpcyBlbWFpbCB0aHJlYWQsIHRoYXQg
-cGF0Y2ggY2FuIGhhbmRsZSBpZiB1c2VyIG9wZW5lZA0KdGhlIE5JQyBhbmQgdGhlbiB0aGUgUEhZ
-IHdhcyBhY3RpdmUuDQoNCj4gIEJ1dCBhcyBBbmRyZXcgbWVudGlvbmVkIGFscmVhZHk6IEp1c3Qg
-ZGVsZXRpbmcgY29kZSB3L28NCj4gY2hlY2tpbmcgd2hhdCBpdCdzIGdvb2QgZm9yIGFuZCB3aGV0
-aGVyIHRoaXMgY291bGQgaGF2ZSBzaWRlIGVmZmVjdHMsDQo+IGlzbid0IGEgc29sdXRpb24uIEVz
-cGVjaWFsbHkgYmVjYXVzZSB0aGUgcGF0Y2ggd291bGQgc2lsZW50bHkgcmVtb3ZlDQo+IHRoZSBj
-YWxsIHRvIHBoeV9zY2FuX2ZpeHVwcygpLg0KDQpJIHNob3VsZCBoYXZlIG1lbnRpb25lZCBvbiB0
-aGUgY29tbWl0IGxvZywgYnV0IHBoeV9zY2FuX2ZpeHVwcygpIGlzIGNhbGxlZA0KYnkgcGh5X2lu
-aXRfaHcoKSBhbmQgcGh5X2luaXRfaHcoKSBpcyBjYWxsZWQgcGh5X2F0dGFjaF9kaXJlY3QoKS4g
-U28sDQpJIHRoaW5rIHdlIGNhbiByZW1vdmUgcGh5X3NjYW5fZml4dXBzKCkuIEhvd2V2ZXIsIGFz
-IHlvdSBtZW50aW9uZWQsDQp0aGlzIHBhdGNoIGNvdWxkIGhhdmUgc2lkZSBlZmZlY3RzLi4uDQoN
-ClNvLCBJJ2xsIG1ha2Ugc3VjaCBhIHN1c3BlbmQvcmVzdW1lIHBhdGNoIHRoYXQgQW5kcmV3IG1l
-bnRpb25lZCBsYXRlci4NCg0KQmVzdCByZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0K
+On Mon, 2018-11-26 at 09:33 +0800, Miles Chen wrote:
+> On Sat, 2018-11-24 at 14:56 -0600, Rob Herring wrote:
+> > On Wed, Nov 21, 2018 at 8:51 PM Miles Chen <miles.chen@mediatek.com> wrote:
+> > >
+> > > On Wed, 2018-11-21 at 10:39 -0600, Rob Herring wrote:
+> > > > On Wed, Nov 21, 2018 at 2:11 AM <miles.chen@mediatek.com> wrote:
+> > > > >
+> > > > > From: Miles Chen <miles.chen@mediatek.com>
+> > > > >
+> > > > > When we use more than 32 entries in /resered-memory,
+> > > > > there will be an error message: "not enough space all defined regions.".
+> > > > > We can increase MAX_RESERVED_REGIONS to fix this.
+> > > > >
+> > > > > commit 22f8cc6e3373 ("drivers: of: increase MAX_RESERVED_REGIONS to 32")
+> > > > > increased MAX_RESERVED_REGIONS to 32 but I'm not sure if increasing
+> > > > > MAX_RESERVED_REGIONS to 64 is suitable for everyone.
+> > > > >
+> > > > > In this RFC patch, CONFIG_MAX_OF_RESERVED_REGIONS is added and used as
+> > > > > MAX_RESERVED_REGIONS. Add a sanity test to make sure that
+> > > > > MAX_RESERVED_REGIONS is less than INIT_MEMBLOCK_REGIONS.
+> > > > > Users can configure CONFIG_MAX_OF_RESERVED_REGIONS according to their
+> > > > > need.
+> > > >
+> > > > I don't want a kconfig option for this. I think it should be dynamic instead.
+> > > >
+> > > > The current flow is like this:
+> > > >
+> > > > for each reserved node:
+> > > >   - call memblock_reserve
+> > > >   - Add info to reserved_mem array
+> > > >
+> > > > I think we should change it to:
+> > > >
+> > > > for each reserved node:
+> > > >   - call memblock_reserve
+> > > >   - count number of nodes
+> > > >
+> > > > Alloc array using memblock_alloc
+> > > >
+> > > > for each reserved node:
+> > > >    - Add info to reserved_mem array
+> > > >
+> > >
+> > > thanks for your comment.
+> > >
+> > > I reviewed the flow and it might be easier to count the
+> > > nodes and setup array first:
+> > >
+> > > for each reserved node:
+> > >     - count number of nodes
+> > >
+> > > Alloc array using memblock_alloc
+> > >
+> > >
+> > > for each reserved node:
+> > >    - call memblock_reserve
+> > 
+> > The order here is wrong. It is important that you reserve the memory
+> > blocks before doing any allocations.
+> 
+> thanks for pointing that out. You are right. I'll follow your
+> suggestion.
+
+I got a problem while implementing this change: the array allocation
+is done successfully but the kernel does not create mappings for it yet,
+so the array is not accessible. (kernel will create the mapping later in
+paging_init())
+
+For example: aarch64 setup_arch()
+setup_arch()
+{
+    memblock_init(); /* early_init_fdt_scan_reserved_mem() is called */
+    paging_init();
+}
+
+Could you give me some advice, please?
+
+Miles
+> 
+> > 
+> > >    - Add info to reserved_mem array
+> > >
+> > > What do you think?
+> > >
+> > > > Rob
+> > >
+> > >
+> 
+> 
