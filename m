@@ -1,47 +1,44 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V2 4/4] ARM64: dts: imx: add i.MX8QXP system controller RTC
- support
-Date: Wed, 28 Nov 2018 05:21:26 +0000
-Message-ID: <1543382119-2918-5-git-send-email-Anson.Huang__3807.6082747013$1543382431$gmane$org@nxp.com>
-References: <1543382119-2918-1-git-send-email-Anson.Huang@nxp.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 1/7] dt-bindings: msm/dsi: Add ref clock for PHYs
+Date: Tue, 27 Nov 2018 21:41:39 -0800
+Message-ID: <CAD=FV=WvXFpZDJGbdvvY=HL_=tDWyhKpTg7zu8s=gUuJgK1ebg@mail.gmail.com>
+References: <20181126231159.122298-1-mka@chromium.org> <20181126231159.122298-2-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1543382119-2918-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, devicetree@vger
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181126231159.122298-2-mka@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Archit Taneja <architt@codeaurora.org>, Sean Paul <seanpaul@chromium.org>, Rajesh Yadav <ryadav@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Jeykumar Sankaran <jsanka@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, freedreno <freedreno@lists.freedesktop.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add i.MX8QXP system controller RTC support.
+Hi,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+On Mon, Nov 26, 2018 at 3:12 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> Allow the PHY drivers to get the ref clock from the DT.
+>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> Changes in v2:
+> - add the ref clock for all PHYs, not only the 10nm one
+> - updated commit message
+> ---
+>  Documentation/devicetree/bindings/display/msm/dsi.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> index dfc743219bd88..b0485559a719c 100644
+> --- a/Documentation/devicetree/bindings/display/msm/dsi.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> @@ -106,6 +106,7 @@ Required properties:
+>  - clocks: Phandles to device clocks. See [1] for details on clock bindings.
+>  - clock-names: the following clocks are required:
+>    * "iface"
+> +  * "ref"
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-index 9155d45..ef57db6 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -433,4 +433,8 @@
- 		#size-cells = <1>;
- 		ranges = <0x5f000000 0x0 0x5f000000 0x1000000>;
- 	};
-+
-+	rtc: rtc {
-+		compatible = "nxp,imx8qxp-sc-rtc";
-+	};
- };
--- 
-2.7.4
+We can't quite make ref "required" because there are some old device
+tree files dating back to 2016 that would be broken.  It could be
+listed as optional, but I _think_ Rob is OK with it being listed as
+"required" for all new device tree files with the footnote that if
+it's not present then the code will still work.
