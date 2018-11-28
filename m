@@ -1,36 +1,67 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v2 3/3] regulator: mcp16502: add regulator driver for
- MCP16502
-Date: Wed, 28 Nov 2018 12:02:13 +0800
-Message-ID: <201811281205.lpne37p2%fengguang.wu@intel.com>
-References: <1543335937-12689-4-git-send-email-andrei.stefanescu@microchip.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v4 0/2] Add new UniPhier PCIe host driver
+Date: Wed, 28 Nov 2018 13:04:24 +0900
+Message-ID: <1543377866-16634-1-git-send-email-hayashi.kunihiko@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1543335937-12689-4-git-send-email-andrei.stefanescu@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, Nicolas.Ferre@microchip.com, Cristian.Birsan@microchip.com, Claudiu.Beznea@microchip.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrei.Stefanescu@microchip.com
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrei.Stefanescu,
+This series adds PCIe host controller driver for Socionext UniPhier SoCs.
+This controller is based on the DesignWare PCIe core. This driver
+supports LD20 and PXs3 SoCs.
 
-Thank you for the patch! Perhaps something to improve:
+v3: https://www.spinics.net/lists/linux-pci/msg77224.html
 
-[auto build test WARNING on regulator/for-next]
-[also build test WARNING on v4.20-rc4 next-20181127]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+About legacy IRQ, it might be necessary to share common view from
+keystone driver that have been cleaned up[1].
 
-url:    https://github.com/0day-ci/linux/commits/Andrei-Stefanescu-microchip-com/add-support-for-MCP16502-PMIC/20181128-041809
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+[1] https://lore.kernel.org/patchwork/patch/989541/
 
+Changes since v3:
+- dt-bindings: fix INTX numbering of legacy interrupt map
+- change interrupts to level ones
+- remove .xlate function
+- merge uniphier_pcie_ltssm_disable() into uniphier_pcie_ltssm_enable()
+- remove an error message on uniphier_pcie_establish_link()
+- change the order between irq_domain_add_liniear() and
+  irq_set_chained_handler_and_data()
+- replace dummy_irq_chip with uniphier_pcie_irq_chip and its functions
+- add dependency on CONFIG_HAS_IOMEM
+- MAINTAINERS: add pcie-uniphier entry
 
-coccinelle warnings: (new ones prefixed by >>)
+Changes since v2:
+- dt-bindings: remove a comment that the node name isn't important
+- dt-bindings: remove "intx" interrupt
+- dt-bindings: define 'legacy-interrupt-controller' node and its properties
+- return an error value when link up fails
+- remove devm_request_irq() and a handler for MSI IRQ
+- use chained interrupt instead of devm_request_irq() for legacy IRQ
+- add unipher_pcie_config_legacy_irq() to get legacy IRQ from
+  'legacy-interrupt controller' node
+- replace 4 statments to handle INTX with for_each_set_bit()
+- remove initialization of pp->root_bus_nr
+- remove indivisual interrupt enable bit definitions
+- rename 'irq_domain' member to 'legacy_irq_domain' in private structure
+- use pci_irqd_intx_xlate() for irq_domain_ops.xlate function
 
->> drivers/regulator/mcp16502.c:530:3-8: No need to set .owner here. The core will do it.
+Changes since v1:
+- follow capitalization conventions in the descriptions
+- use C style comments except for the SPDX line
 
-Please review and possibly fold the followup patch.
+Kunihiko Hayashi (2):
+  dt-bindings: PCI: Add UniPhier PCIe host controller description
+  PCI: uniphier: Add UniPhier PCIe host controller support
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ .../devicetree/bindings/pci/uniphier-pcie.txt      |  81 ++++
+ MAINTAINERS                                        |   7 +
+ drivers/pci/controller/dwc/Kconfig                 |  10 +
+ drivers/pci/controller/dwc/Makefile                |   1 +
+ drivers/pci/controller/dwc/pcie-uniphier.c         | 471 +++++++++++++++++++++
+ 5 files changed, 570 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+ create mode 100644 drivers/pci/controller/dwc/pcie-uniphier.c
+
+-- 
+2.7.4
