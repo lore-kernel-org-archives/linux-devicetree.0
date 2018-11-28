@@ -1,149 +1,78 @@
-Return-Path: <SRS0=pBn+=OG=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v3 6/6] media: mt9m111: allow to setup pixclk polarity
-Date: Tue, 27 Nov 2018 11:02:53 +0100
-Message-Id: <20181127100253.30845-7-m.felsch@pengutronix.de>
-In-Reply-To: <20181127100253.30845-1-m.felsch@pengutronix.de>
-References: <20181127100253.30845-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=2X+C=OH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr70053.outbound.protection.outlook.com ([40.107.7.53]:55712
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727662AbeK1VA1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 28 Nov 2018 16:00:27 -0500
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V3 4/4] ARM64: dts: imx: add i.MX8QXP thermal support
+Date: Wed, 28 Nov 2018 09:59:15 +0000
+Message-ID: <1543398783-3185-5-git-send-email-Anson.Huang@nxp.com>
+References: <1543398783-3185-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1543398783-3185-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: enrico.scholz@sigma-chemnitz.de, devicetree@vger.kernel.org, akinobu.mita@gmail.com, linux-media@vger.kernel.org, graphics@pengutronix.de, Michael Grzeschik <m.grzeschik@pengutronix.de>
+Sender: devicetree-owner@vger.kernel.org
+To: "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "arnd@arndb.de" <arnd@arndb.de>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+Add i.MX8QXP CPU thermal zone support.
 
-The chip can be configured to output data transitions on the
-rising or falling edge of PIXCLK (Datasheet R58:1[9]), default is on the
-falling edge.
-
-Parsing the fw-node is made in a subfunction to bundle all (future)
-dt-parsing / fw-parsing stuff.
-
-Signed-off-by: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-(m.grzeschik@pengutronix.de: Fix inverting clock. INV_PIX_CLOCK bit is set
-per default. Set bit to 0 (enable mask bit without value) to enable
-falling edge sampling.)
-Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
-(m.felsch@pengutronix.de: use fwnode helpers)
-(m.felsch@pengutronix.de: mv fw parsing into own function)
-(m.felsch@pengutronix.de: adapt commit msg)
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-Changelog:
+no change since V2.
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 27 ++++++++++++++++++++++++++=
++
+ 1 file changed, 27 insertions(+)
 
-v3:
-- call mt9m111_probe_fw() before v4l2_clk_get() to avoid error handling
-
-v2:
-- make use of fwnode_*() to drop OF dependency and ifdef's
-- mt9m111_g_mbus_config: fix pclk_sample logic which I made due the
-  conversion from Enrico's patch.
----
- drivers/media/i2c/mt9m111.c | 46 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 45 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/media/i2c/mt9m111.c b/drivers/media/i2c/mt9m111.c
-index f97fd32181ed..2ef332b9b914 100644
---- a/drivers/media/i2c/mt9m111.c
-+++ b/drivers/media/i2c/mt9m111.c
-@@ -15,6 +15,7 @@
- #include <linux/delay.h>
- #include <linux/v4l2-mediabus.h>
- #include <linux/module.h>
-+#include <linux/property.h>
- 
- #include <media/v4l2-async.h>
- #include <media/v4l2-clk.h>
-@@ -22,6 +23,7 @@
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-device.h>
- #include <media/v4l2-event.h>
-+#include <media/v4l2-fwnode.h>
- 
- /*
-  * MT9M111, MT9M112 and MT9M131:
-@@ -242,6 +244,8 @@ struct mt9m111 {
- 	const struct mt9m111_datafmt *fmt;
- 	int lastpage;	/* PageMap cache value */
- 	bool is_streaming;
-+	/* user point of view - 0: falling 1: rising edge */
-+	unsigned int pclk_sample:1;
- #ifdef CONFIG_MEDIA_CONTROLLER
- 	struct media_pad pad;
- #endif
-@@ -594,6 +598,10 @@ static int mt9m111_set_pixfmt(struct mt9m111 *mt9m111,
- 		return -EINVAL;
- 	}
- 
-+	/* receiver samples on falling edge, chip-hw default is rising */
-+	if (mt9m111->pclk_sample == 0)
-+		mask_outfmt2 |= MT9M111_OUTFMT_INV_PIX_CLOCK;
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
+ts/freescale/imx8qxp.dtsi
+index 5e8b554..ef57db6 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+@@ -9,6 +9,7 @@
+ #include <dt-bindings/firmware/imx/rsrc.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/pinctrl/pads-imx8qxp.h>
++#include <dt-bindings/thermal/thermal.h>
+=20
+ #include "imx8-ca35.dtsi"
+=20
+@@ -85,6 +86,32 @@
+ 		};
+ 	};
+=20
++	tsens: thermal-sensor {
++		compatible =3D "nxp,imx8qxp-sc-thermal";
++		tsens-num =3D <1>;
++		#thermal-sensor-cells =3D <1>;
++	};
 +
- 	ret = mt9m111_reg_mask(client, context_a.output_fmt_ctrl2,
- 			       data_outfmt2, mask_outfmt2);
- 	if (!ret)
-@@ -1084,9 +1092,15 @@ static int mt9m111_s_stream(struct v4l2_subdev *sd, int enable)
- static int mt9m111_g_mbus_config(struct v4l2_subdev *sd,
- 				struct v4l2_mbus_config *cfg)
- {
--	cfg->flags = V4L2_MBUS_MASTER | V4L2_MBUS_PCLK_SAMPLE_RISING |
-+	struct mt9m111 *mt9m111 = container_of(sd, struct mt9m111, subdev);
++	thermal_zones: thermal-zones {
++		cpu-thermal0 {
++			polling-delay-passive =3D <250>;
++			polling-delay =3D <2000>;
++			thermal-sensors =3D <&tsens 355>;
++			trips {
++				cpu_alert0: trip0 {
++					temperature =3D <107000>;
++					hysteresis =3D <2000>;
++					type =3D "passive";
++				};
++				cpu_crit0: trip1 {
++					temperature =3D <127000>;
++					hysteresis =3D <2000>;
++					type =3D "critical";
++				};
++			};
++		};
++	};
 +
-+	cfg->flags = V4L2_MBUS_MASTER |
- 		V4L2_MBUS_HSYNC_ACTIVE_HIGH | V4L2_MBUS_VSYNC_ACTIVE_HIGH |
- 		V4L2_MBUS_DATA_ACTIVE_HIGH;
-+
-+	cfg->flags |= mt9m111->pclk_sample ? V4L2_MBUS_PCLK_SAMPLE_RISING :
-+		V4L2_MBUS_PCLK_SAMPLE_FALLING;
-+
- 	cfg->type = V4L2_MBUS_PARALLEL;
- 
- 	return 0;
-@@ -1156,6 +1170,32 @@ static int mt9m111_video_probe(struct i2c_client *client)
- 	return ret;
- }
- 
-+static int mt9m111_probe_fw(struct i2c_client *client, struct mt9m111 *mt9m111)
-+{
-+	struct v4l2_fwnode_endpoint *bus_cfg;
-+	struct fwnode_handle *np;
-+	int ret = 0;
-+
-+	np = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev), NULL);
-+	if (!np)
-+		return -EINVAL;
-+
-+	bus_cfg = v4l2_fwnode_endpoint_alloc_parse(np);
-+	if (IS_ERR(bus_cfg)) {
-+		ret = PTR_ERR(bus_cfg);
-+		goto out_put_fw;
-+	}
-+
-+	mt9m111->pclk_sample = !!(bus_cfg->bus.parallel.flags &
-+				  V4L2_MBUS_PCLK_SAMPLE_RISING);
-+
-+	v4l2_fwnode_endpoint_free(bus_cfg);
-+
-+out_put_fw:
-+	fwnode_handle_put(np);
-+	return ret;
-+}
-+
- static int mt9m111_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *did)
- {
-@@ -1173,6 +1213,10 @@ static int mt9m111_probe(struct i2c_client *client,
- 	if (!mt9m111)
- 		return -ENOMEM;
- 
-+	ret = mt9m111_probe_fw(client, mt9m111);
-+	if (ret)
-+		return ret;
-+
- 	mt9m111->clk = v4l2_clk_get(&client->dev, "mclk");
- 	if (IS_ERR(mt9m111->clk))
- 		return PTR_ERR(mt9m111->clk);
--- 
-2.19.1
+ 	adma_subsys: bus@59000000 {
+ 		compatible =3D "simple-bus";
+ 		#address-cells =3D <1>;
+--=20
+2.7.4
