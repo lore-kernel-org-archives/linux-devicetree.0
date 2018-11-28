@@ -1,71 +1,154 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 4/4] ARM64: dts: imx: add i.MX8QXP system controller RTC
- support
-Date: Wed, 28 Nov 2018 10:03:01 +0000
-Message-ID: <DB3PR0402MB39164C9E9A7DC29C6D451AC0F5D10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1543311334-8807-1-git-send-email-Anson.Huang@nxp.com>
- <1543311334-8807-5-git-send-email-Anson.Huang@nxp.com>
- <20181128100420.0c9a721a@karo-electronics.de>
- <DB3PR0402MB3916FFD700313BF684CF32AAF5D10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20181128091943.GB8952@piout.net>
- <DB3PR0402MB39168AC8DB69B81C51CE63C2F5D10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20181128093345.GC8952@piout.net>
- <DB3PR0402MB3916DE94D437DC51435D00CEF5D10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20181128095823.GE8952@piout.net>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 01/10] mailbox: Support blocking transfers in atomic
+ context
+Date: Wed, 28 Nov 2018 11:08:19 +0100
+Message-ID: <20181128100819.GA20723@ulmo>
+References: <20181112151853.29289-1-thierry.reding@gmail.com>
+ <20181112151853.29289-2-thierry.reding@gmail.com>
+ <0545f5e1-1740-2129-9d0e-5c950bd9bf74@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181128095823.GE8952@piout.net>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: =?utf-8?B?TG90aGFyIFdh77+977+9bWFubg==?= <LW@KARO-electronics.de>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>
+Content-Type: multipart/mixed; boundary="===============9205694295242488681=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <0545f5e1-1740-2129-9d0e-5c950bd9bf74@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jassi Brar <jassisinghbrar@gmail.com>, Mika Liljeberg <mliljeberg@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>, Timo Alho <talho@nvidia.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, linux-tegra@vger.kernel.org, Pekka Pessi <ppessi@nvidia.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
-LS0tLS0NCj4gRnJvbTogQWxleGFuZHJlIEJlbGxvbmkgW21haWx0bzphbGV4YW5kcmUuYmVsbG9u
-aUBib290bGluLmNvbV0NCj4gU2VudDogMjAxOOW5tDEx5pyIMjjml6UgMTc6NTgNCj4gVG86IEFu
-c29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzogTG90aGFyIFdh77+977+9bWFu
-biA8TFdAS0FSTy1lbGVjdHJvbmljcy5kZT47IGEuenVtbW9AdG93ZXJ0ZWNoLml0Ow0KPiByb2Jo
-K2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBjYXRhbGluLm1hcmluYXNAYXJt
-LmNvbTsNCj4gd2lsbC5kZWFjb25AYXJtLmNvbTsgQWlzaGVuZyBET05HIDxhaXNoZW5nLmRvbmdA
-bnhwLmNvbT47IEFuZHkgR3Jvc3MNCj4gPGFuZHkuZ3Jvc3NAbGluYXJvLm9yZz47IGFybmRAYXJu
-ZGIuZGU7IGhvcm1zK3JlbmVzYXNAdmVyZ2UubmV0LmF1Ow0KPiBoZWlrb0BzbnRlY2guZGU7IGJq
-b3JuLmFuZGVyc3NvbkBsaW5hcm8ub3JnOyBlbnJpYy5iYWxsZXRib0Bjb2xsYWJvcmEuY29tOw0K
-PiBhbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc7IGV6ZXF1aWVsQGNvbGxhYm9yYS5jb207IG9sb2ZA
-bGl4b20ubmV0Ow0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBsaW51eC1ydGNAdmdlci5rZXJuZWwu
-b3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2Vy
-bmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBkbC1saW51
-eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDQvNF0gQVJN
-NjQ6IGR0czogaW14OiBhZGQgaS5NWDhRWFAgc3lzdGVtIGNvbnRyb2xsZXINCj4gUlRDIHN1cHBv
-cnQNCj4gDQo+IE9uIDI4LzExLzIwMTggMDk6NDE6MjIrMDAwMCwgQW5zb24gSHVhbmcgd3JvdGU6
-DQo+ID4gPiA+IGkuTVggU29DcyBPTkxZIGhhdmUgMSBSVEMuIEFuZCBSVEMgYXJlIGFsd2F5cyBl
-bmFibGVkIGJ5IGRlZmF1bHQNCj4gPiA+ID4gZm9yIGFsbCBpLk1YIFNvQ3MsIHNvIGRvIHdlIGhh
-dmUgdG8gZGlzYWJsZSBpdCBoZXJlIGFuZCBlbmFibGUgaXQgaW4gYm9hcmQNCj4gZHRzPw0KPiA+
-ID4gPg0KPiA+ID4NCj4gPiA+IEkgd291bGQgc2F5IHRoYXQgbW9zdCBvZiB0aGUgaS5NWCBiYXNl
-ZCBib2FyZHMgaW5jbHVkZSBhbm90aGVyIFJUQw0KPiA+ID4gYmVjYXVzZSB0aGUgU29DIG9uZSBj
-b25zdW1lcyB3YXkgdG9vIG11Y2ggcG93ZXIuDQo+ID4gPg0KPiA+ID4gTm90ZSB0aGF0IEkgZG9u
-J3QgY2FyZSB0b28gbXVjaCB3aGV0aGVyIGl0IGlzIGVuYWJsZWQgYnkgZGVmYXVsdCwgSQ0KPiA+
-ID4gd2FzIHNpbXBseSBleHBsYWluaW5nIHdoeSB5b3UgbWF5IHdhbnQgdG8gZGlzYWJsZSBpdCBi
-eSBkZWZhdWx0Lg0KPiA+DQo+ID4gT0ssIHRoaXMgc3lzdGVtIGNvbnRyb2xsZXIgUlRDIGlzIGEg
-bGl0dGxlIGRpZmZlcmVudCwgaXQgaXMgY29udHJvbGxlZA0KPiA+IGJ5IHN5c3RlbSBjb250cm9s
-bGVyIGZpcm13YXJlLCBhbmQgc3lzdGVtIGNvbnRyb2xsZXIgZmlybXdhcmUgd2lsbA0KPiA+IGFs
-d2F5cyBzZWxlY3QgdGhlIGJlc3Qgb25lIGZvciBpdHMgdXNlcihMaW51eCBrZXJuZWwpIGlmIHRo
-ZXJlIGFyZSBvdGhlciBSVENzDQo+IGF2YWlsYWJsZSwgc28gSSB0aGluayB3ZSBjYW4ga2VlcCBp
-dCBlbmFibGVkIGJ5IGRlZmF1bHQgZm9yIG5vdy4gVGhhbmtzLg0KPiA+DQo+IA0KPiBEbyB5b3Ug
-bWVhbiB0aGF0IHRoZSBwbGFuIGlzIHRvIHB1c2ggc3VwcG9ydCBmb3IgdGhlIGV4dGVybmFsIFJU
-Q3MgKGUuZy4NCj4gdGhlIGkyYyBvbmVzKSB0byB0aGUgTTQgZmlybXdhcmU/DQoNCkFzIGZhciBh
-cyBJIGtub3csIGN1cnJlbnRseSB0aGVyZSBpcyBubyBzdWNoIHBsYW4vc3VwcG9ydCBpbiBzeXN0
-ZW0gY29udHJvbGxlciAoTTQpIGZpcm13YXJlLA0KYW5kIGlmIHRoZXJlIGFyZSBleHRlcm5hbCBS
-VENzLCBsaWtlIHNvbWUgUE1JQ3MgaGF2ZSBSVEMgaW5zaWRlLCB5ZXMsIE00IHdpbGwNCmNvbnRy
-b2wgaXQgYW5kIExpbnV4IGtlcm5lbCAoQVApIGRvZXMgTk9UIG5lZWQgdG8gY2FyZSBhYm91dCB3
-aGljaCBSVEMgaXMgdXNlZCwNCnNhbWUgSVBDIEFQSSB3aWxsIGJlIHVzZWQgSSB0aGluay4NCg0K
-QW5zb24uDQoNCj4gDQo+IC0tDQo+IEFsZXhhbmRyZSBCZWxsb25pLCBCb290bGluDQo+IEVtYmVk
-ZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcNCj4gaHR0cHM6Ly9lbWVhMDEuc2FmZWxp
-bmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRmJvb3RsDQo+IGlu
-LmNvbSZhbXA7ZGF0YT0wMiU3QzAxJTdDYW5zb24uaHVhbmclNDBueHAuY29tJTdDMDE1ZmU4YTE1
-ZjM2NA0KPiAwNjZhNmE2MDhkNjU1MTgxZDAzJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMz
-MDE2MzUlN0MwJTdDDQo+IDAlN0M2MzY3ODk5NTkzOTg4MTU0OTUmYW1wO3NkYXRhPXdtZ1ZlcGFN
-alp5YzdkSlEweDhjTFNhUVVsc2hzDQo+IDZqS0NqQmRnQzRGb1lnJTNEJmFtcDtyZXNlcnZlZD0w
-DQo=
+
+--===============9205694295242488681==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="X1bOJ3K7DJ5YkBrT"
+Content-Disposition: inline
+
+
+--X1bOJ3K7DJ5YkBrT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Nov 28, 2018 at 09:43:29AM +0000, Jon Hunter wrote:
+>=20
+> On 12/11/2018 15:18, Thierry Reding wrote:
+> > From: Thierry Reding <treding@nvidia.com>
+> >=20
+> > The mailbox framework supports blocking transfers via completions for
+> > clients that can sleep. In order to support blocking transfers in cases
+> > where the transmission is not permitted to sleep, add a new ->flush()
+> > callback that controller drivers can implement to busy loop until the
+> > transmission has been completed. This will automatically be called when
+> > available and interrupts are disabled for clients that request blocking
+> > transfers.
+> >=20
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > ---
+> >  drivers/mailbox/mailbox.c          | 8 ++++++++
+> >  include/linux/mailbox_controller.h | 4 ++++
+> >  2 files changed, 12 insertions(+)
+> >=20
+> > diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
+> > index 674b35f402f5..0eaf21259874 100644
+> > --- a/drivers/mailbox/mailbox.c
+> > +++ b/drivers/mailbox/mailbox.c
+> > @@ -267,6 +267,14 @@ int mbox_send_message(struct mbox_chan *chan, void=
+ *mssg)
+> >  		unsigned long wait;
+> >  		int ret;
+> > =20
+> > +		if (irqs_disabled() && chan->mbox->ops->flush) {
+> > +			ret =3D chan->mbox->ops->flush(chan, chan->cl->tx_tout);
+> > +			if (ret < 0)
+> > +				tx_tick(chan, ret);
+> > +
+> > +			return ret;
+> > +		}
+>=20
+> It seems to me that if mbox_send_message() is called from an atomic
+> context AND tx_block is true, then if 'flush' is not populated this
+> should be an error condition as we do not wish to call
+> wait_for_completion from an atomic context.
+>=20
+> I understand that there is some debate about adding such flush support,
+> but irrespective of the above change, it seems to me that if the
+> mbox_send_message() can be called from an atomic context (which it
+> appears to), then it should be detecting if someone is trying to do so
+> with 'tx_block' set as this should be an error.
+>=20
+> Furthermore, if the underlying mailbox driver can support sending a
+> message from an atomic context and busy wait until it is done, surely
+> the mailbox framework should provide a means to support this?
+>=20
+> Now it could be possible for the underlying mailbox driver to detect we
+> are in an atomic context and if the 'tx_block' is set do the right thing
+> by busy waiting until the message is sent. However, the problem with
+> that is, that for the mbox_send_message() to ensure the right thing is
+> done, it needs to check that 'tx_done' is set in the case of a blocking
+> transfer in an atomic context. At that point you may as well add the
+> flush operator as I think it is more implicit/clear.
+
+Heh, interesting timing, I just sent out v3 of this series with a
+slightly different solution. Basically what v3 implements is explicit
+flushing of the mailbox via a new function called mbox_flush().
+
+I originally liked the idea of "hiding" the flush operation in the
+mbox_send_message() function, but the more I look at the new explicit
+flush solution, the more I prefer it. One reason why I prefer it is
+because it no longer has the slightly odd "irqs_disabled()" check that
+always made me a bit uneasy. The other advantage of the explicit flush
+is that it becomes completely opt-in for both mailbox providers and
+consumers. Furthermore the consumer should always know if it can be
+called in atomic context or not, so none of these code paths should
+have to be "clever" and check at runtime whether or not interrupts are
+enabled. If the consumer knows that it will be called in atomic context
+it can just unconditionally flush the mailbox.
+
+Also, it nicely addresses the concern about erroring out if the provider
+doesn't support flushing. The new mbox_flush() API returns -ENOTSUPP if
+called on a mailbox channel provided by a driver that doesn't implement
+->flush().
+
+Thierry
+
+--X1bOJ3K7DJ5YkBrT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlv+aREACgkQ3SOs138+
+s6FKGA/+JnGDszEAHnvCgJHje4SnuIB+cjPqszAruiIvjzVfLGCtwsOw9zR8gM/G
+tYdRwLDYLdympxaXjiGuru1pDIgaAp+s1RqUNTdr3gq4JaKKqPidjEqxgqLa4LPi
+oH2RZyaSNEGCYmvAiebupZp/PyQn/iJuckkMAcBVpakkknJPBHNoA/GZWxRjS1vl
++nzX5SsUBr6wuzWohGeg9xtQjdOX1YiL5+0kh++3prmsadm+Uk+HcJF4I+Xkx5PR
+TNNuF7rVuQ11DvQ5iWpDHbxA0fgCA+4tEfY0/7lLV/eTqKDhMXjhhTix3IHjiFaL
+8jEBzLrcUtNif2/dIxZEQzzR1/LOqcA/7lqUAQzTpfFAs6caK5mK4ZGF0UQGYxYi
+htyR/oXBr0qVN6mc/BU7CUL28D0jIfjiyMIgvLeNw+cBFxMH8OzP9LeQ6p9D2qqT
+ICM43RJCN/z11ZPESq2kpyiBBo/9cpD+ivTMIJju31vCgbgwiU4Icb0HP+/jMrsB
+XDjQ0qGz0YjURhCf/vHDjhyuPzCiQC5bnq1wqpTQA2m2KytQydniOI8fq5/io8ZW
+p9p2jLaMhz5a3JAi/5HGlPCkdkga4hwyuOr3+PuLiUhye8gGtV0nOce81Y6Y7Y0X
+it0n9MY1TuRe80vhuWcmr22H6pkpV+Z9Cd6vosc6ErqFx5Vq3yQ=
+=WfgI
+-----END PGP SIGNATURE-----
+
+--X1bOJ3K7DJ5YkBrT--
+
+
+--===============9205694295242488681==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============9205694295242488681==--
