@@ -1,70 +1,52 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 3/4] iio: adc: add STMPE ADC devicetree bindings
-Date: Wed, 28 Nov 2018 09:02:33 +0000
-Message-ID: <20181128090233.GQ4272@dell>
-References: <20181123142411.8921-1-dev@pschenker.ch>
- <20181123142411.8921-3-dev@pschenker.ch>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2 0/2] net: phy: micrel: add tobling phy reset
+Date: Wed, 28 Nov 2018 09:02:41 +0000
+Message-ID: <1543395612-5430-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181123142411.8921-3-dev@pschenker.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Schenker <dev@pschenker.ch>
-Cc: jic23@kernel.org, marcel.ziswiler@toradex.com, stefan@agner.ch, Max Krummenacher <max.krummenacher@toradex.com>, Philippe Schenker <philippe.schenker@toradex.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Alexandre Torgue <alexandre.torgue@st.com>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, Lars-Peter Clausen <lars@metafoo.de>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: "andrew@lunn.ch" <andrew@lunn.ch>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "davem@davemloft.net" <davem@davemloft.net>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 23 Nov 2018, Philippe Schenker wrote:
+This patch set is for R-Car Gen3 Salvator-XS boards. If we do
+the following method, the phy cannot link up correctly.
 
-> From: Stefan Agner <stefan@agner.ch>
-> 
-> This adds the devicetree bindings for the STMPE ADC.
-> 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-> ---
-> 
-> Changes in v3:
->  - Reformatted documentation for touchscreen to use tabs and have a better
->    overview of the settings.
->  - Added note which adc-settings will take precedence.
->  - changed typo in sample-time setting from 144 clocks to 124 clocks, as stated
->    in the datasheet.
-> 
-> Changes in v2:
->  - Moved the bindings for ADC to the overlying mfd.
->  - Reformatted for better readability
-> 
->  .../devicetree/bindings/iio/adc/stmpe-adc.txt | 21 +++++++
->  .../bindings/input/touchscreen/stmpe.txt      | 60 ++++++++++++-------
->  .../devicetree/bindings/mfd/stmpe.txt         | 28 ++++++---
->  3 files changed, 80 insertions(+), 29 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/stmpe-adc.txt
-[...]
+ 1) Kernel boots by using initramfs.
+ --> No open the nic, so phy_device_register() and phy_probe()
+     deasserts the reset.
+ 2) Kernel enters the suspend.
+ --> So, keep the reset signal as deassert.
+ --> On R-Car Salvator-XS board, unfortunately, the board power is
+     turned off.
+ 3) Kernel returns from suspend.
+ 4) ifconfig eth0 up
+ --> Then, since edge signal of the reset doesn't happen,
+     it cannot link up.
+ 5) ifconfig eth0 down
+ 6) ifconfig eth0 up
+ --> In this case, it can link up.
 
-> diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Documentation/devicetree/bindings/mfd/stmpe.txt
-> index c797c05cd3c2..d4408a417193 100644
-> --- a/Documentation/devicetree/bindings/mfd/stmpe.txt
-> +++ b/Documentation/devicetree/bindings/mfd/stmpe.txt
-> @@ -4,15 +4,29 @@ STMPE is an MFD device which may expose the following inbuilt devices: gpio,
->  keypad, touchscreen, adc, pwm, rotator.
->  
->  Required properties:
-> - - compatible                   : "st,stmpe[610|801|811|1600|1601|2401|2403]"
-> - - reg                          : I2C/SPI address of the device
-> + - compatible			: "st,stmpe[610|801|811|1600|1601|2401|2403]"
-> + - reg				: I2C/SPI address of the device
+When resolving this issue after I got feedback from Andrew and Heiner,
+I found an issue that the phy_device.c didn't call phy_resume()
+if the PHY was not attached. So, patch 1 fixes it and add toggling
+the phy reset to the micrel phy driver.
 
-Formatting changes should be completed in a separate patch.
+Changes from v1 (as RFC):
+ - No remove the current code of phy_device.c to avoid any side effects.
+ - Fix the mdio_bus_phy_resume() in phy_device.c.
+ - Add toggling the phy reset in micrel.c if the PHY is not attached.
 
-Here they only serve to obscure the real changes you have made.
+Yoshihiro Shimoda (2):
+  net: phy: Fix not to call phy_resume() if PHY is not attached
+  net: phy: micrel: add toggling phy reset if PHY is not attached
 
-Please split the formatting changes out and re-submit.
+ drivers/net/phy/micrel.c     |  8 ++++++++
+ drivers/net/phy/phy_device.c | 11 ++++++-----
+ 2 files changed, 14 insertions(+), 5 deletions(-)
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--=20
+1.9.1
