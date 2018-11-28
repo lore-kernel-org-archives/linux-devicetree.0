@@ -1,63 +1,59 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 08/17] soc: ti: pruss: Add a PRUSS irqchip driver for
- PRUSS interrupts
-Date: Wed, 28 Nov 2018 09:46:24 -0600
-Message-ID: <421ca9ad-1816-021e-76af-b719f80a5531@lechnology.com>
-References: <1542886753-17625-1-git-send-email-rogerq@ti.com>
- <1542886753-17625-9-git-send-email-rogerq@ti.com>
- <af2f8ce3-923b-aa27-59b2-2ebb848c28c9@lechnology.com>
- <5BFD651C.7020903@ti.com>
+From: Aisheng DONG <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V3 4/4] ARM64: dts: imx: add i.MX8QXP system controller
+ RTC support
+Date: Wed, 28 Nov 2018 15:46:24 +0000
+Message-ID: <AM0PR04MB42115A31CAE5A72D047BE7B880D10__36983.9267609224$1543419879$gmane$org@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1543398696-3140-1-git-send-email-Anson.Huang@nxp.com>
+ <1543398696-3140-5-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5BFD651C.7020903@ti.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1543398696-3140-5-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, tony@atomide.com
-Cc: robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anson Huang <anson.huang@nxp.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, linux-rtc@vger.kernel.o
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/27/18 9:39 AM, Roger Quadros wrote:
+[...]
+> Subject: [PATCH V3 4/4] ARM64: dts: imx: add i.MX8QXP system controller RTC
+> support
 > 
-> On 26/11/18 23:17, David Lechner wrote:
->> On 11/22/18 5:39 AM, Roger Quadros wrote:
->>> From: Suman Anna <s-anna@ti.com>
->>>
->>> The Programmable Real-Time Unit Subsystem (PRUSS) contains an
->>> interrupt controller (INTC) that can handle various system input
->>> events and post interrupts back to the device-level initiators.
->>> The INTC can support upto 64 input events with individual control
->>> configuration and hardware prioritization. These events are mapped
->>> onto 10 interrupt signals through two levels of many-to-one mapping
->>> support. Different interrupt signals are routed to the individual
->>> PRU cores or to the host CPU.
->>>
->>> The PRUSS INTC platform driver manages this PRUSS interrupt
->>> controller and implements an irqchip driver to provide a Linux
->>> standard way for the PRU client users to enable/disable/ack/
->>> re-trigger a PRUSS system event. The system events to interrupt
->>> channels and host interrupts relies on the mapping configuration
->>> provided through a firmware resource table for now. This will be
->>> revisited and enhanced in the future for a better interface. The
->>> mappings will currently be programmed during the boot/shutdown
->>> of the PRU.
->>
->> Does this mapping table take up space in the PRU IRAM or DRAM? If
->> so, that can be a problem on the AM18xx because it has such limited
->> resources - every byte counts.
+> Add i.MX8QXP system controller RTC support.
 > 
-> Currently the entire resource table is being placed in DRAM.
-> But that is only because the current rpmsg vdev implementation depends on the
-> rpmsg channel information and vring buffers to be in DRAM.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> I think the right way is to split up the 2 things.
-> i.e. separate out rpmgs channel DRAM allocation from resource table
-> and don't copy the resource table to DRAM.
-> 
-> This way if there is no rpmsg channel in the resource table we won't eat
-> any DRAM.
-> 
-> I'm not sure if there are any bottlenecks. I will only know when I work on it.
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> index da99b6f..5e8b554 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -406,4 +406,8 @@
+>  		#size-cells = <1>;
+>  		ranges = <0x5f000000 0x0 0x5f000000 0x1000000>;
+>  	};
+> +
+> +	rtc: rtc {
+> +		compatible = "nxp,imx8qxp-sc-rtc";
 
-Sounds good to me.
+As I replied in patch 1, this belongs to scu node as well.
+
+Regards
+Dong Aisheng
+
+> +	};
+>  };
+> --
+> 2.7.4
