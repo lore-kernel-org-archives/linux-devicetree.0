@@ -1,101 +1,81 @@
-Return-Path: <SRS0=vcRE=OH=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 4/5] ARM: dts: r8a7744: Add PWM SoC support
-Date: Wed, 28 Nov 2018 16:38:30 +0000
-Message-Id: <1543423111-19745-5-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543423111-19745-1-git-send-email-biju.das@bp.renesas.com>
-References: <1543423111-19745-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=2X+C=OH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr70070.outbound.protection.outlook.com ([40.107.7.70]:14095
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727678AbeK1VAK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 28 Nov 2018 16:00:10 -0500
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V3 1/4] dt-bindings: thermal: add binding doc for i.MX system
+ controller thermal driver
+Date: Wed, 28 Nov 2018 09:58:51 +0000
+Message-ID: <1543398783-3185-2-git-send-email-Anson.Huang@nxp.com>
+References: <1543398783-3185-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1543398783-3185-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "arnd@arndb.de" <arnd@arndb.de>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add the definitions for pwm[0123456] to the SoC dtsi.
+NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+system controller, the system controller is in charge of system
+power, clock and thermal sensors etc. management, Linux kernel
+has to communicate with system controller via MU (message unit)
+IPC to get temperature from thermal sensors, this patch adds
+binding doc for i.MX system controller thermal driver.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm/boot/dts/r8a7744.dtsi | 70 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
+no change since V2.
+ .../devicetree/bindings/thermal/imx-sc-thermal.txt | 33 ++++++++++++++++++=
+++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/imx-sc-therma=
+l.txt
 
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index 152431c..43da6a0 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -1050,6 +1050,76 @@
- 			status = "disabled";
- 		};
- 
-+		pwm0: pwm@e6e30000 {
-+			compatible = "renesas,pwm-r8a7744", "renesas,pwm-rcar";
-+			reg = <0 0xe6e30000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
+diff --git a/Documentation/devicetree/bindings/thermal/imx-sc-thermal.txt b=
+/Documentation/devicetree/bindings/thermal/imx-sc-thermal.txt
+new file mode 100644
+index 0000000..2f5b0a2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/imx-sc-thermal.txt
+@@ -0,0 +1,33 @@
++* Temperature Monitor (TEMPMON) on NXP i.MX SoCs with System Controller
 +
-+		pwm1: pwm@e6e31000 {
-+			compatible = "renesas,pwm-r8a7744", "renesas,pwm-rcar";
-+			reg = <0 0xe6e31000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
++Required properties:
++- compatible : Must be "nxp,imx8qxp-sc-thermal";
++- tsens-num : Total number of thermal sensors supported;
++- #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description=
+.
 +
-+		pwm2: pwm@e6e32000 {
-+			compatible = "renesas,pwm-r8a7744", "renesas,pwm-rcar";
-+			reg = <0 0xe6e32000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
++Example:
++tsens: thermal-sensor {
++	compatible =3D "nxp,imx8qxp-sc-thermal";
++	tsens-num =3D <1>;
++	#thermal-sensor-cells =3D <1>;
++};
 +
-+		pwm3: pwm@e6e33000 {
-+			compatible = "renesas,pwm-r8a7744", "renesas,pwm-rcar";
-+			reg = <0 0xe6e33000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
++thermal_zones: thermal-zones {
++	cpu-thermal0 {
++		polling-delay-passive =3D <250>;
++		polling-delay =3D <2000>;
++		thermal-sensors =3D <&tsens 355>;
++		trips {
++			cpu_alert0: trip0 {
++				temperature =3D <107000>;
++				hysteresis =3D <2000>;
++				type =3D "passive";
++			};
++			cpu_crit0: trip1 {
++				temperature =3D <127000>;
++				hysteresis =3D <2000>;
++				type =3D "critical";
++			};
 +		};
-+
-+		pwm4: pwm@e6e34000 {
-+			compatible = "renesas,pwm-r8a7744", "renesas,pwm-rcar";
-+			reg = <0 0xe6e34000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
-+
-+		pwm5: pwm@e6e35000 {
-+			compatible = "renesas,pwm-r8a7744", "renesas,pwm-rcar";
-+			reg = <0 0xe6e35000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
-+
-+		pwm6: pwm@e6e36000 {
-+			compatible = "renesas,pwm-r8a7744", "renesas,pwm-rcar";
-+			reg = <0 0xe6e36000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
-+
- 		can0: can@e6e80000 {
- 			compatible = "renesas,can-r8a7744",
- 				     "renesas,rcar-gen2-can";
--- 
++	};
++};
+--=20
 2.7.4
