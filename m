@@ -1,124 +1,47 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 00/15] rtc: sun6i: clock rework and pre-H6
- SoC support
-Date: Wed, 28 Nov 2018 19:45:28 +0100
-Message-ID: <20181128184528.GA22504@Red>
-References: <20181128093013.24442-1-wens@csie.org>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH 1/2] dt-bindings: clock: qcom: Fix the xo parent in gpucc example
+Date: Wed, 28 Nov 2018 10:57:42 -0800
+Message-ID: <20181128185743.75328-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBTOE7PPQKGQEZ6NZBZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20181128093013.24442-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, Taniya Das <tdas@codeaurora.org>, "Kristian H . Kristensen" <hoegsberg@chromium.org>, Jordan Crouse <jcrouse@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 28, 2018 at 05:29:57PM +0800, Chen-Yu Tsai wrote:
-> Hi everyone,
-> 
-> This series was started as part of enabling Bluetooth on various
-> Allwinner SBCs. The bluetooth controller requires a precise 32.768 kHz
-> clock fed to it to correctly detect the frequency of its main oscillator.
-> This clock signal is provided by the RTC, either directly from a special
-> pin on the SoC, or some clock output function from the clock controllers.
-> I found that the clock-related properties of the RTC on later SoCs were
-> incorrect or missing.
-> 
-> This series reworks the compatible strings and clock parts of the device
-> tree bindings for sun6i-rtc. Currently we assume most Allwinner SoCs use
-> the same sun6i-rtc variant, when in fact they do not. The differences
-> that matter with regards to clocks are a) the A31 does not have an extra
-> external output for the RTC 32K clock, while most of the others do;
-> b) the clock frequency of the internal RC oscillator is different on
-> some SoCs; c) on the H6 the RTC also handles the 24 MHz DCXO, which
-> feeds the system HOSC. The last difference, and by extension the H6, are
-> not covered in this series.
-> 
-> Patch 1 cleans up the clock-related section of the RTC device tree
-> binding. This would make it easier to read and easier to add additional
-> clocks.
-> 
-> Patch 2 adds compatible strings for all identified variants introduced
-> prior to the H6.
-> 
-> Patch 3 deprecates the external clock output for the A31. The A31 does
-> not have this output, so it's introduction and usage was an error.
-> 
-> Patch 4 adds a clock output for the RTC's internal oscillator to the
-> device tree binding. This feeds the PRCM in some SoCs.
-> 
-> Patch 5 adds a default clock name for the LOSC to the RTC driver.
-> 
-> Patch 6 adds support for different hardware variants to the RTC driver.
-> 
-> Patch 7 adds support for all known pre-H6 variants.
-> 
-> Patch 8 exposes the RTC's internal oscillator through the device tree.
-> 
-> Patch 9 makes the R40's CCU use the LOSC from the RTC module, instead of
-> its own internal oscillator.
-> 
-> Patch 10 through 15 adds an RTC node or fixes up the RTC device node
-> address ranges, clock properties, names of existing clocks, and adds
-> accuracy properties for the external fixed oscillators.
-> 
-> The clock names require fixing because the sunxi clock driver implicitly
-> depends on the HOSC and LOSC being named "osc24M" and "osc32k". The
-> "fixes" to the clock hierarchy introduced in this series means the names
-> must also be shuffled around or the in kernel representation would be
-> incorrect. This has been the case since the sunxi-ng drivers were
-> introduced. There are plans to address this, but the code is still in its
-> early stages.
-> 
-> Please have a look.
-> 
-> Thanks
-> ChenYu
-> 
-> Chen-Yu Tsai (15):
->   dt-bindings: rtc: sun6i-rtc: Rewrite clock outputs as a list
->   dt-bindings: rtc: sun6i-rtc: Add compatible strings for pre-H6
->     variants
->   dt-bindings: rtc: sun6i-rtc: Deprecate external clock output for A31
->   dt-bindings: rtc: sun6i-rtc: Export internal RC oscillator
->   rtc: sun6i: Add default clock name for LOSC
->   rtc: sun6i: Add support for different variants
->   rtc: sun6i: Add support for all known pre-H6 variants
->   rtc: sun6i: Expose internal oscillator through device tree
->   clk: sunxi-ng: r40: Force LOSC parent to RTC LOSC output
->   ARM: dts: sun8i: a23/a33: Fix up RTC device node
->   ARM: dts: sunxi: h3/h5: Add clock accuracy for external oscillators
->   ARM: dts: sunxi: h3/h5: Fix up RTC device node and clock references
->   ARM: dts: sun8i: r40: Add clock accuracy for external oscillators
->   ARM: dts: sun8i: r40: Add RTC device node
->   arm64: dts: allwinner: a64: Fix up RTC device node and clock
->     references
-> 
->  .../devicetree/bindings/rtc/sun6i-rtc.txt     |  31 ++++-
->  arch/arm/boot/dts/sun8i-a23-a33.dtsi          |   6 +-
->  arch/arm/boot/dts/sun8i-h3.dtsi               |   4 +
->  arch/arm/boot/dts/sun8i-r40.dtsi              |  18 ++-
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  28 ++---
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  22 ++--
->  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |   4 +
->  drivers/clk/sunxi-ng/ccu-sun8i-r40.c          |  11 ++
->  drivers/rtc/rtc-sun6i.c                       | 117 ++++++++++++++++--
->  9 files changed, 188 insertions(+), 53 deletions(-)
-> 
-> -- 
+In the bindings that landed for the gpucc we require that the XO clock
+(one possible parent of the gpucc) be listed.  The code doesn't use
+this yet--this is just to allow us to move toward the day when it does
+use it.  What the code does do today is to hardcode the parent name to
+"bi_tcxo".  That's all well and good.
 
-Hello
+...but the example in the bindings shows this clock mapping to the
+clock "xo_board".  On the current sdm845.dtsi file the "xo_board"
+clock is a fixed clock with an output name of "xo_board".  The clock
+with the name "bi_tcxo" is actually provided by the RPMh Clock
+Controller.  Presumably that's the one that was wanted.
 
-Tested-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Tested-on: sun8i-r40-bananapi-m2-ultra
-Tested-on: sun50i-h5-nanopi-neo-plus2
+Let's update the example to make this clearer.
 
-Regards
+Fixes: e431c92188a9 ("dt-bindings: clock: Introduce QCOM Graphics clock bindings")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ Documentation/devicetree/bindings/clock/qcom,gpucc.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gpucc.txt b/Documentation/devicetree/bindings/clock/qcom,gpucc.txt
+index 9d0358cc08b4..4e5215ef1acd 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,gpucc.txt
++++ b/Documentation/devicetree/bindings/clock/qcom,gpucc.txt
+@@ -17,6 +17,6 @@ Example:
+ 		#clock-cells = <1>;
+ 		#reset-cells = <1>;
+ 		#power-domain-cells = <1>;
+-		clocks = <&xo_board>;
++		clocks = <&rpmhcc RPMH_CXO_CLK>;
+ 		clock-names = "xo";
+ 	};
+-- 
+2.20.0.rc0.387.gc7a69e6b6c-goog
