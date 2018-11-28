@@ -1,206 +1,127 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH v3 01/14] media: ov7670: split register setting from
- set_fmt() logic
-Date: Wed, 28 Nov 2018 18:10:13 +0100
-Message-ID: <4158fda782575fbbe2c6abeab0f04ebed50efed4.camel@v3.sk>
-References: <20181120100318.367987-1-lkundrak@v3.sk>
-         <20181120100318.367987-2-lkundrak@v3.sk> <20181122183730.GE3808@w540>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v7 1/4] dt-bindings: pps: descriptor-based gpio,
+ capture-clear addition
+Date: Wed, 28 Nov 2018 11:13:16 -0600
+Message-ID: <CAL_Jsq+-S2tF++VstMCeUrX4SXcB4B99Tc-SFUQ3R66KPHVf+Q@mail.gmail.com>
+References: <20181114125432.16044-1-tom@aussec.com> <20181114125432.16044-2-tom@aussec.com>
+ <20181116224919.GA18008@bogus> <20181117213522.12672utznrvpbn56@www.aussec.com>
+ <CAL_JsqKZHg5_8ghMmU4qO4CVZibcHOvtVJH669zod_6GLGakRg@mail.gmail.com>
+ <20181118113502.55634v85ybgkt586@www.aussec.com> <CAL_Jsq+_Fb8mRDf_g=qDVsw-KPnrdZunLksYrgBFvhehzVNX+g@mail.gmail.com>
+ <20181127145729.128452ujmj4uhb55@aussec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181122183730.GE3808@w540>
+In-Reply-To: <20181127145729.128452ujmj4uhb55@aussec.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>
+To: Tom Burkart <tom@aussec.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-11-22 at 19:37 +0100, jacopo mondi wrote:
-> Hi Lubomir,
-> 
-> On Tue, Nov 20, 2018 at 11:03:06AM +0100, Lubomir Rintel wrote:
-> > This will allow us to restore the last set format after the device
-> > returns
-> > from a power off.
-> > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > 
-> > ---
-> > Changes since v2:
-> > - This patch was added to the series
-> > 
-> >  drivers/media/i2c/ov7670.c | 80 ++++++++++++++++++++++----------
-> > ------
-> >  1 file changed, 46 insertions(+), 34 deletions(-)
-> > 
-> > diff --git a/drivers/media/i2c/ov7670.c
-> > b/drivers/media/i2c/ov7670.c
-> > index bc68a3a5b4ec..ee2302fbdeee 100644
-> > --- a/drivers/media/i2c/ov7670.c
-> > +++ b/drivers/media/i2c/ov7670.c
-> > @@ -240,6 +240,7 @@ struct ov7670_info {
-> >  	};
-> >  	struct v4l2_mbus_framefmt format;
-> >  	struct ov7670_format_struct *fmt;  /* Current format */
-> > +	struct ov7670_win_size *wsize;
-> >  	struct clk *clk;
-> >  	struct gpio_desc *resetb_gpio;
-> >  	struct gpio_desc *pwdn_gpio;
-> > @@ -1003,48 +1004,20 @@ static int ov7670_try_fmt_internal(struct
-> > v4l2_subdev *sd,
-> >  	return 0;
-> >  }
-> > 
-> > -/*
-> > - * Set a format.
-> > - */
-> > -static int ov7670_set_fmt(struct v4l2_subdev *sd,
-> > -		struct v4l2_subdev_pad_config *cfg,
-> > -		struct v4l2_subdev_format *format)
-> > +static int ov7670_apply_fmt(struct v4l2_subdev *sd)
-> >  {
-> > -	struct ov7670_format_struct *ovfmt;
-> > -	struct ov7670_win_size *wsize;
-> >  	struct ov7670_info *info = to_state(sd);
-> > -#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
-> > -	struct v4l2_mbus_framefmt *mbus_fmt;
-> > -#endif
-> > +	struct ov7670_win_size *wsize = info->wsize;
-> >  	unsigned char com7, com10 = 0;
-> >  	int ret;
-> > 
-> > -	if (format->pad)
-> > -		return -EINVAL;
-> > -
-> > -	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
-> > -		ret = ov7670_try_fmt_internal(sd, &format->format,
-> > NULL, NULL);
-> > -		if (ret)
-> > -			return ret;
-> > -#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
-> > -		mbus_fmt = v4l2_subdev_get_try_format(sd, cfg, format-
-> > >pad);
-> > -		*mbus_fmt = format->format;
-> > -		return 0;
-> > -#else
-> > -		return -ENOTTY;
-> > -#endif
-> > -	}
-> > -
-> > -	ret = ov7670_try_fmt_internal(sd, &format->format, &ovfmt,
-> > &wsize);
-> > -	if (ret)
-> > -		return ret;
-> >  	/*
-> >  	 * COM7 is a pain in the ass, it doesn't like to be read then
-> >  	 * quickly written afterward.  But we have everything we need
-> >  	 * to set it absolutely here, as long as the format-specific
-> >  	 * register sets list it first.
-> >  	 */
-> > -	com7 = ovfmt->regs[0].value;
-> > +	com7 = info->fmt->regs[0].value;
-> >  	com7 |= wsize->com7_bit;
-> >  	ret = ov7670_write(sd, REG_COM7, com7);
-> >  	if (ret)
-> > @@ -1066,7 +1039,7 @@ static int ov7670_set_fmt(struct v4l2_subdev
-> > *sd,
-> >  	/*
-> >  	 * Now write the rest of the array.  Also store start/stops
-> >  	 */
-> > -	ret = ov7670_write_array(sd, ovfmt->regs + 1);
-> > +	ret = ov7670_write_array(sd, info->fmt->regs + 1);
-> >  	if (ret)
-> >  		return ret;
-> > 
-> > @@ -1081,8 +1054,6 @@ static int ov7670_set_fmt(struct v4l2_subdev
-> > *sd,
-> >  			return ret;
-> >  	}
-> > 
-> > -	info->fmt = ovfmt;
-> > -
-> >  	/*
-> >  	 * If we're running RGB565, we must rewrite clkrc after setting
-> >  	 * the other parameters or the image looks poor.  If we're
-> > *not*
-> > @@ -1100,6 +1071,46 @@ static int ov7670_set_fmt(struct v4l2_subdev
-> > *sd,
-> >  	return 0;
-> >  }
-> > 
-> > +/*
-> > + * Set a format.
-> > + */
-> > +static int ov7670_set_fmt(struct v4l2_subdev *sd,
-> > +		struct v4l2_subdev_pad_config *cfg,
-> > +		struct v4l2_subdev_format *format)
-> > +{
-> > +	struct ov7670_info *info = to_state(sd);
-> > +#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
-> > +	struct v4l2_mbus_framefmt *mbus_fmt;
-> > +#endif
-> > +	int ret;
-> > +
-> > +	if (format->pad)
-> > +		return -EINVAL;
-> > +
-> > +	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
-> > +		ret = ov7670_try_fmt_internal(sd, &format->format,
-> > NULL, NULL);
-> > +		if (ret)
-> > +			return ret;
-> > +#ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
-> > +		mbus_fmt = v4l2_subdev_get_try_format(sd, cfg, format-
-> > >pad);
-> 
-> This #ifdef CONFIG_VIDEO_V4L2_SUBDEV_API seems to be quite in some
-> drivers... Maybe stubs should be defined in v4l2-subdev.h.
+On Mon, Nov 26, 2018 at 9:57 PM tom burkart <tom@aussec.com> wrote:
+>
+> Hi Rob,
+>
+> Quoting Rob Herring <robh@kernel.org>:
+>
+> > On Sat, Nov 17, 2018 at 6:35 PM tom burkart <tom@aussec.com> wrote:
+> >>
+> >> Quoting Rob Herring <robh@kernel.org>:
+> >>
+> >> > On Sat, Nov 17, 2018 at 4:35 AM tom burkart <tom@aussec.com> wrote:
+> >> >>
+> >> >> Quoting Rob Herring <robh@kernel.org>:
+> >> >>
+> >> >> > On Wed, Nov 14, 2018 at 11:54:29PM +1100, Tom Burkart wrote:
+> >> >> >> This patch changes the devicetree bindings for the pps-gpio driver
+> >> >> >> from the integer based ABI to the descriptor based ABI.
+> >> >> > ? That has nothing to do with DT.
+> >> >>
+> >> >> I believe it does, as the change in ABI forces a rename in the DT
+> >> >> naming convention.
+> >> >> This is due to the descriptor based ABI appending "-gpio" or
+> >> "-gpios" (see
+> >> >> Documentation/gpio/base.txt.)
+> >> >> Admittedly, I may have called it by the wrong name due to ignorance,
+> >> >> my apologies.
+> >> >
+> >> > If what you say is correct, then you can't change this driver. You'll
+> >> > break compatibility with any existing DT.
+> >> >
+> >> > Changing the binding reasoning should purely be that this is the
+> >> > preferred form. Bindings must be independent from changing kernel
+> >> > APIs.
+> >>
+> >> See comments from Philip Zabel.  I misread the documentation and this
+> >> has now been corrected in v8 of the patch.  I hope that eliminates all
+> >> comments made above.
+> >>
+> >> >> >>  It also adds
+> >> >> >> documentation for the device tree capture-clear option.  The legacy
+> >> >> >> device tree entry for the GPIO pin is supported.
+> >> >> >>
+> >> >> >> Signed-off-by: Tom Burkart <tom@aussec.com>
+> >> >> >> ---
+> >> >> >>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 8 ++++++--
+> >> >> >>  1 file changed, 6 insertions(+), 2 deletions(-)
+> >> >> >>
+> >> >> >> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt
+> >> >> >> b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+> >> >> >> index 3683874832ae..6c9fc0998d94 100644
+> >> >> >> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
+> >> >> >> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+> >> >> >> @@ -5,19 +5,23 @@ a GPIO pin.
+> >> >> >>
+> >> >> >>  Required properties:
+> >> >> >>  - compatible: should be "pps-gpio"
+> >> >> >> -- gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
+> >> >> >> +- pps-gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
+> >> >> >> +Alternatively (DEPRECATED), instead of pps-gpios above, it may have:
+> >> >> >> +- gpios: one PPS GPIO as above
+> >> >> >>
+> >> >> >>  Optional properties:
+> >> >> >>  - assert-falling-edge: when present, assert is indicated by a
+> >> >> falling edge
+> >> >> >>                         (instead of by a rising edge)
+> >> >> >> +- capture-clear: when present, also capture the PPS clear event
+> >> >> >
+> >> >> > Is this a h/w thing? or driver configuration?
+> >> >>
+> >> >> Driver configuration.  Most of the code was present in the driver, yet
+> >> >> it was not documented, or usable due to a two line (code) omission
+> >> >> (the value was not being fetched from DT).
+> >> >
+> >> > So what determines how you want to configure this? If the user will
+> >> > want to change it, then it should be a sysfs attr and exposed to
+> >> > userspace. If it depends on h/w config for a board then it can be in
+> >> > DT.
+> >>
+> >> Sorry, I misled you somewhat.  If the PPS pulse active transition from
+> >> the hardware is on the falling edge, this flag is required to get the
+> >> OS to use that as the active transition.  This would not change at the
+> >> user's whim but rather it is dependent on connected hardware.
+> >
+> > This description sounds more like 'assert-falling-edge' than 'capture-clear'.
+> >
+> > I'm still not clear on what 'capture-clear' is.
+>
+> Ignoring my patch for a minute, the pps_gpio_irq_handler will only
+> report a pps PPS_CAPTURECLEAR event if 'capture-clear' is set.  As the
+> current pps-gpio driver is not able to set this flag, it cannot ever
+> report a PPS_CAPTURECLEAR event.
+>
+> My patch adds the ability to set this flag and adds the documentation
+> to go with it.
+> Admittedly, I do not require this functionality for what I want, but
+> working with the code, I noticed the omission and decided to add it
+> for someone else to use it, if they need it.
+>
+> I am happy to remove this out of my patch, if you feel this to be the
+> best way forward.
 
-Actually, I've also thought it's sorta ugly. I'll send out a patch that
-does what you suggest.
+I found this prior discussion on adding this[1]. Seems to me this
+should be userspace configurable if the GPIO line can interrupt on
+both edges. We shouldn't need a DT property to determine that.
 
-> Anway, that's unrealted, the patch seems fine to me:
-> Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+Rob
 
-Thanks
-Lubo
-
-> 
-> Thanks
->   j
-> 
-> 
-> > +		*mbus_fmt = format->format;
-> > +		return 0;
-> > +#else
-> > +		return -ENOTTY;
-> > +#endif
-> > +	}
-> > +
-> > +	ret = ov7670_try_fmt_internal(sd, &format->format, &info->fmt,
-> > &info->wsize);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = ov7670_apply_fmt(sd);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int ov7670_get_fmt(struct v4l2_subdev *sd,
-> >  			  struct v4l2_subdev_pad_config *cfg,
-> >  			  struct v4l2_subdev_format *format)
-> > @@ -1847,6 +1858,7 @@ static int ov7670_probe(struct i2c_client
-> > *client,
-> > 
-> >  	info->devtype = &ov7670_devdata[id->driver_data];
-> >  	info->fmt = &ov7670_formats[0];
-> > +	info->wsize = &info->devtype->win_sizes[0];
-> > 
-> >  	ov7670_get_default_format(sd, &info->format);
-> > 
-> > --
-> > 2.19.1
-> > 
+[1] https://lore.kernel.org/patchwork/patch/557781/
