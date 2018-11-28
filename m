@@ -1,48 +1,44 @@
-Return-Path: <SRS0=gYPT=OI=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from andre.telenet-ops.be ([195.130.132.53]:42948 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbeK2WBU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 29 Nov 2018 17:01:20 -0500
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 6/6] [RFC] dt-bindings: power: r8a77965: Remove non-existent A3IR power domain
-Date: Thu, 29 Nov 2018 11:56:19 +0100
-Message-Id: <20181129105619.10695-7-geert+renesas@glider.be>
-In-Reply-To: <20181129105619.10695-1-geert+renesas@glider.be>
-References: <20181129105619.10695-1-geert+renesas@glider.be>
+Return-Path: <SRS0=2X+C=OH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38464 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727724AbeK1Uzr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 28 Nov 2018 15:55:47 -0500
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH v3 12/12] arm64: defconfig: Enable Tegra TCU
+Date: Wed, 28 Nov 2018 10:54:21 +0100
+Message-Id: <20181128095421.20573-13-thierry.reding@gmail.com>
+In-Reply-To: <20181128095421.20573-1-thierry.reding@gmail.com>
+References: <20181128095421.20573-1-thierry.reding@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Thierry Reding <thierry.reding@gmail.com>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mikko Perttunen <mperttunen@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, Pekka Pessi <ppessi@nvidia.com>, Mika Liljeberg <mliljeberg@nvidia.com>, linux-tegra@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The R-Car Gen3 HardWare Manual Errata for Rev. 0.80 (Feb 28, 2018)
-removed the A3IR power domain on R-Car M3-N, as this SoC does not have
-an Image Processing Unit (IMP-X5).
+From: Thierry Reding <treding@nvidia.com>
 
-As this definition is no longer used from DT, it can be removed.
+The Tegra Combined UART is used on some Tegra194 devices as a way of
+multiplexing output from multiple producers onto a single physical UART.
+Enable this by default so that it can be used as the default console to
+write kernel messages to.
 
-Fixes: a527709b78b3c997 ("soc: renesas: rcar-sysc: Add R-Car M3-N support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
-Marked as RFC, as this patch depends on "arm64: dts: renesas:
-r8a77965: Remove non-existent IPMMU-IR".
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-If the dependency goes in first, this patch can be squashed with "soc:
-renesas: r8a77965-sysc: Remove non-existent A3IR power domain".
----
- include/dt-bindings/power/r8a77965-sysc.h | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/include/dt-bindings/power/r8a77965-sysc.h b/include/dt-bindings/power/r8a77965-sysc.h
-index 05a4b5917314791a..de82d8a15ea13a85 100644
---- a/include/dt-bindings/power/r8a77965-sysc.h
-+++ b/include/dt-bindings/power/r8a77965-sysc.h
-@@ -21,7 +21,6 @@
- #define R8A77965_PD_A3VC		14
- #define R8A77965_PD_3DG_A		17
- #define R8A77965_PD_3DG_B		18
--#define R8A77965_PD_A3IR		24
- #define R8A77965_PD_A2VC1		26
- 
- /* Always-on power area */
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 1f1f4eab89df..db947853fc92 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -300,6 +300,7 @@ CONFIG_SERIAL_MESON_CONSOLE=y
+ CONFIG_SERIAL_SAMSUNG=y
+ CONFIG_SERIAL_SAMSUNG_CONSOLE=y
+ CONFIG_SERIAL_TEGRA=y
++CONFIG_SERIAL_TEGRA_TCU=y
+ CONFIG_SERIAL_SH_SCI=y
+ CONFIG_SERIAL_MSM=y
+ CONFIG_SERIAL_MSM_CONSOLE=y
 -- 
-2.17.1
+2.19.1
