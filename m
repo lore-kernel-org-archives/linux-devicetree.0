@@ -1,21 +1,21 @@
 Return-Path: <SRS0=2X+C=OH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr60046.outbound.protection.outlook.com ([40.107.6.46]:18958
+Received: from mail-eopbgr60060.outbound.protection.outlook.com ([40.107.6.60]:51776
         "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728119AbeK1WFJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 28 Nov 2018 17:05:09 -0500
+        id S1727662AbeK1UkV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 28 Nov 2018 15:40:21 -0500
 From: Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: [PATCH V4 1/3] ARM: dts: imx6sx-sdb: add flexcan support
-Date: Wed, 28 Nov 2018 11:03:48 +0000
-Message-ID: <20181128110138.587-2-qiangqing.zhang@nxp.com>
-References: <20181128110138.587-1-qiangqing.zhang@nxp.com>
-In-Reply-To: <20181128110138.587-1-qiangqing.zhang@nxp.com>
+Subject: [PATCH V3 1/3] ARM: dts: imx6sx-sdb: add flexcan support
+Date: Wed, 28 Nov 2018 09:39:17 +0000
+Message-ID: <20181128093658.27990-2-qiangqing.zhang@nxp.com>
+References: <20181128093658.27990-1-qiangqing.zhang@nxp.com>
+In-Reply-To: <20181128093658.27990-1-qiangqing.zhang@nxp.com>
 Content-Language: en-US
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: "mkl@pengutronix.de" <mkl@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
 Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng DONG <aisheng.dong@nxp.com>, Joakim Zhang <qiangqing.zhang@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
@@ -35,8 +35,6 @@ V2->V3:
 	 &reg_can_en{
 	     ...
 	 };
-V3->V4:
-	*no change.
 ---
  arch/arm/boot/dts/imx6sx-sdb-reva.dts | 12 ++++++++
  arch/arm/boot/dts/imx6sx-sdb.dts      |  5 ++++
