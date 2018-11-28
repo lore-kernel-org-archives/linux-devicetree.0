@@ -1,22 +1,16 @@
-Return-Path: <SRS0=2X+C=OH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr70070.outbound.protection.outlook.com ([40.107.7.70]:14095
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727678AbeK1VAK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 28 Nov 2018 16:00:10 -0500
+Return-Path: <SRS0=NeMx=OH=nxp.com=anson.huang@kernel.org>
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V3 1/4] dt-bindings: thermal: add binding doc for i.MX system
+Subject: [PATCH V2 1/4] dt-bindings: thermal: add binding doc for i.MX system
  controller thermal driver
-Date: Wed, 28 Nov 2018 09:58:51 +0000
-Message-ID: <1543398783-3185-2-git-send-email-Anson.Huang@nxp.com>
-References: <1543398783-3185-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1543398783-3185-1-git-send-email-Anson.Huang@nxp.com>
+Date: Wed, 28 Nov 2018 05:58:15 +0000
+Message-ID: <1543384349-2851-2-git-send-email-Anson.Huang@nxp.com>
+References: <1543384349-2851-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1543384349-2851-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "arnd@arndb.de" <arnd@arndb.de>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "arnd@arndb.de" <arnd@arndb.de>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
@@ -29,7 +23,7 @@ binding doc for i.MX system controller thermal driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-no change since V2.
+no change since V1.
  .../devicetree/bindings/thermal/imx-sc-thermal.txt | 33 ++++++++++++++++++=
 ++++
  1 file changed, 33 insertions(+)
