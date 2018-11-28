@@ -1,134 +1,172 @@
-Return-Path: <SRS0=2X+C=OH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44086 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728075AbeK1Uzj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 28 Nov 2018 15:55:39 -0500
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH v3 06/12] mailbox: tegra-hsp: use devm_kstrdup_const()
-Date: Wed, 28 Nov 2018 10:54:15 +0100
-Message-Id: <20181128095421.20573-7-thierry.reding@gmail.com>
-In-Reply-To: <20181128095421.20573-1-thierry.reding@gmail.com>
-References: <20181128095421.20573-1-thierry.reding@gmail.com>
+Return-Path: <SRS0=ggKL=OH=pengutronix.de=mkl@kernel.org>
+References: <20181128093658.27990-1-qiangqing.zhang@nxp.com>
+ <20181128093658.27990-4-qiangqing.zhang@nxp.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH V3 3/3] ARM: dts: imx6qdl-sabreauto: add flexcan support
+Message-ID: <456ad490-21d2-5324-4b4c-52a0cbde062e@pengutronix.de>
+Date: Wed, 28 Nov 2018 11:00:28 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mikko Perttunen <mperttunen@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, Pekka Pessi <ppessi@nvidia.com>, Mika Liljeberg <mliljeberg@nvidia.com>, linux-tegra@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20181128093658.27990-4-qiangqing.zhang@nxp.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="KjKAlwyV8QaFeMksXOAHYMfOCOffNksyl"
+To: Joakim Zhang <qiangqing.zhang@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Cc: Aisheng DONG <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Bartosz Golaszewski <brgl@bgdev.pl>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--KjKAlwyV8QaFeMksXOAHYMfOCOffNksyl
+Content-Type: multipart/mixed; boundary="Zito7c7nvJXeWrvUqZaxMRDwpc3vXSAW6";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Joakim Zhang <qiangqing.zhang@nxp.com>,
+ "shawnguo@kernel.org" <shawnguo@kernel.org>,
+ "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Cc: Aisheng DONG <aisheng.dong@nxp.com>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>,
+ "kernel@pengutronix.de" <kernel@pengutronix.de>,
+ Fabio Estevam <fabio.estevam@nxp.com>
+Message-ID: <456ad490-21d2-5324-4b4c-52a0cbde062e@pengutronix.de>
+Subject: Re: [PATCH V3 3/3] ARM: dts: imx6qdl-sabreauto: add flexcan support
+References: <20181128093658.27990-1-qiangqing.zhang@nxp.com>
+ <20181128093658.27990-4-qiangqing.zhang@nxp.com>
+In-Reply-To: <20181128093658.27990-4-qiangqing.zhang@nxp.com>
 
-Use devm_kstrdup_const() in the tegra-hsp driver. This mostly serves as
-an example of how to use this new routine to shrink driver code.
+--Zito7c7nvJXeWrvUqZaxMRDwpc3vXSAW6
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
 
-Also use devm_kzalloc() instead of regular kzalloc() to shrink the
-driver even more.
+On 11/28/18 10:39 AM, Joakim Zhang wrote:
+> From: Aisheng Dong <aisheng.dong@nxp.com>
+>=20
+> The flexcan1 is pin conflict with fec. User would make flexcan1 enabled=
 
-Doorbell objects are only removed in the driver's remove callback so
-it's safe to convert all memory allocations to devres.
+> with fec disabled to use CAN.
+>=20
+> Signed-off-by: Aisheng Dong <aisheng.dong@nxp.com>
+> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+> ---
+> V1->V2:
+> 	*using SPDX tag for new files and remove pinctrl-assert-gpios property=
+=2E
 
-Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- drivers/mailbox/tegra-hsp.c | 36 ++++--------------------------------
- 1 file changed, 4 insertions(+), 32 deletions(-)
+There's a pinctrl-assert-gpios in the dtsi.
 
-diff --git a/drivers/mailbox/tegra-hsp.c b/drivers/mailbox/tegra-hsp.c
-index 07d1fbff3642..9628e52e2371 100644
---- a/drivers/mailbox/tegra-hsp.c
-+++ b/drivers/mailbox/tegra-hsp.c
-@@ -281,7 +281,7 @@ tegra_hsp_doorbell_create(struct tegra_hsp *hsp, const char *name,
- 	unsigned int offset;
- 	unsigned long flags;
- 
--	db = kzalloc(sizeof(*db), GFP_KERNEL);
-+	db = devm_kzalloc(hsp->dev, sizeof(*db), GFP_KERNEL);
- 	if (!db)
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -291,7 +291,7 @@ tegra_hsp_doorbell_create(struct tegra_hsp *hsp, const char *name,
- 	db->channel.regs = hsp->regs + offset;
- 	db->channel.hsp = hsp;
- 
--	db->name = kstrdup_const(name, GFP_KERNEL);
-+	db->name = devm_kstrdup_const(hsp->dev, name, GFP_KERNEL);
- 	db->master = master;
- 	db->index = index;
- 
-@@ -302,13 +302,6 @@ tegra_hsp_doorbell_create(struct tegra_hsp *hsp, const char *name,
- 	return &db->channel;
- }
- 
--static void __tegra_hsp_doorbell_destroy(struct tegra_hsp_doorbell *db)
--{
--	list_del(&db->list);
--	kfree_const(db->name);
--	kfree(db);
--}
--
- static int tegra_hsp_doorbell_send_data(struct mbox_chan *chan, void *data)
- {
- 	struct tegra_hsp_doorbell *db = chan->con_priv;
-@@ -567,19 +560,6 @@ static struct mbox_chan *tegra_hsp_sm_xlate(struct mbox_controller *mbox,
- 	return mb->channel.chan;
- }
- 
--static void tegra_hsp_remove_doorbells(struct tegra_hsp *hsp)
--{
--	struct tegra_hsp_doorbell *db, *tmp;
--	unsigned long flags;
--
--	spin_lock_irqsave(&hsp->lock, flags);
--
--	list_for_each_entry_safe(db, tmp, &hsp->doorbells, list)
--		__tegra_hsp_doorbell_destroy(db);
--
--	spin_unlock_irqrestore(&hsp->lock, flags);
--}
--
- static int tegra_hsp_add_doorbells(struct tegra_hsp *hsp)
- {
- 	const struct tegra_hsp_db_map *map = hsp->soc->map;
-@@ -588,10 +568,8 @@ static int tegra_hsp_add_doorbells(struct tegra_hsp *hsp)
- 	while (map->name) {
- 		channel = tegra_hsp_doorbell_create(hsp, map->name,
- 						    map->master, map->index);
--		if (IS_ERR(channel)) {
--			tegra_hsp_remove_doorbells(hsp);
-+		if (IS_ERR(channel))
- 			return PTR_ERR(channel);
--		}
- 
- 		map++;
- 	}
-@@ -747,7 +725,7 @@ static int tegra_hsp_probe(struct platform_device *pdev)
- 	if (err < 0) {
- 		dev_err(&pdev->dev, "failed to register doorbell mailbox: %d\n",
- 			err);
--		goto remove_doorbells;
-+		return err;
- 	}
- 
- 	/* setup the shared mailbox controller */
-@@ -804,9 +782,6 @@ static int tegra_hsp_probe(struct platform_device *pdev)
- 	mbox_controller_unregister(&hsp->mbox_sm);
- unregister_mbox_db:
- 	mbox_controller_unregister(&hsp->mbox_db);
--remove_doorbells:
--	if (hsp->doorbell_irq)
--		tegra_hsp_remove_doorbells(hsp);
- 
- 	return err;
- }
-@@ -818,9 +793,6 @@ static int tegra_hsp_remove(struct platform_device *pdev)
- 	mbox_controller_unregister(&hsp->mbox_sm);
- 	mbox_controller_unregister(&hsp->mbox_db);
- 
--	if (hsp->doorbell_irq)
--		tegra_hsp_remove_doorbells(hsp);
--
- 	return 0;
- }
- 
--- 
-2.19.1
+> V2->V3:
+> 	*remove the new files due to a pile of DTS files for a single
+> 	 development board with pin sharing among different devices not
+> 	 maintained.
+> ---
+>  arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 47 ++++++++++++++++++++++++=
+
+>  1 file changed, 47 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/d=
+ts/imx6qdl-sabreauto.dtsi
+> index a10f0ad0bfb1..bd4fe0add59d 100644
+> --- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+> @@ -101,6 +101,25 @@
+>  		enable-active-high;
+>  	};
+> =20
+> +	reg_can_en: regulator-can-en {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "can-en";
+> +		regulator-min-microvolt =3D <3300000>;
+> +		regulator-max-microvolt =3D <3300000>;
+> +		gpio =3D <&max7310_b 6 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	reg_can_stby: regulator-can-stby {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "can-stby";
+> +		regulator-min-microvolt =3D <3300000>;
+> +		regulator-max-microvolt =3D <3300000>;
+> +		gpio =3D <&max7310_b 5 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +		vin-supply =3D <&reg_can_en>;
+> +	};
+> +
+>  	sound-cs42888 {
+>  		compatible =3D "fsl,imx6-sabreauto-cs42888",
+>  			"fsl,imx-audio-cs42888";
+> @@ -279,6 +298,20 @@
+>  	status =3D "okay";
+>  };
+> =20
+> +&can1 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_flexcan1>;
+> +	pinctrl-assert-gpios =3D <&max7310_b 3 GPIO_ACTIVE_HIGH>; /* TX */
+        ^^^^^^^^^^^^^^^^^^^^
+
+Marc
+
+> +	xceiver-supply =3D <&reg_can_stby>;
+> +	status =3D "disabled"; /* pin conflict with fec */ };
+> +
+> +&can2 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_flexcan2>;
+> +	xceiver-supply =3D <&reg_can_stby>;
+> +	status =3D "okay";
+> +};
+> +
+>  &gpmi {
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&pinctrl_gpmi_nand>;
+> @@ -494,6 +527,20 @@
+>  			>;
+>  		};
+> =20
+> +		pinctrl_flexcan1: flexcan1grp {
+> +			fsl,pins =3D <
+> +				MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX        0x17059
+> +				MX6QDL_PAD_KEY_COL2__FLEXCAN1_TX	0x17059
+> +			>;
+> +		};
+> +
+> +		pinctrl_flexcan2: flexcan2grp {
+> +			fsl,pins =3D <
+> +				MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX	0x17059
+> +				MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX	0x17059
+> +			>;
+> +		};
+> +
+>  		pinctrl_gpio_keys: gpiokeysgrp {
+>  			fsl,pins =3D <
+>  				MX6QDL_PAD_SD2_CMD__GPIO1_IO11		0x1b0b0
+>=20
+
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--Zito7c7nvJXeWrvUqZaxMRDwpc3vXSAW6--
+
+--KjKAlwyV8QaFeMksXOAHYMfOCOffNksyl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEENrCndlB/VnAEWuH5k9IU1zQoZfEFAlv+ZzwACgkQk9IU1zQo
+ZfHwXQgAtVUnwixpA1TkOwTqHuPxOef5m6i/ObKPQBRZsfQBiQ0adfgzPs4b8kCo
+VXKs8Uos2GmwKxjS3RZjvyXlXlvGRywBEGwms73gb2VWtckaWmdLJUfRSvnQyprH
+vTs5TFKi50cbex1INbcXaWg1HKoDBoVfK0f1YLfsbJ7CZIs4F0AkWaITAsjx2EMu
+uTcXukQ3BpUoKYYwe6B2c9yX1oiuBX1iOcnuOeCIt4P/f60dKPjdKQwR8fDiQnwT
+EGR7NiMaHfO66dQHxr0fuUS7JcvvmTEOqwB3NN+rsKhHCiSoueDyF98EniPrL4qP
+491mYELyxsvE16bGPij387QruBWyRw==
+=Mku1
+-----END PGP SIGNATURE-----
+
+--KjKAlwyV8QaFeMksXOAHYMfOCOffNksyl--
