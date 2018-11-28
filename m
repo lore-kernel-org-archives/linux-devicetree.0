@@ -1,62 +1,143 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH v5 3/5] arm64: dts: qcom: sdm845: add UFS controller
-Date: Wed, 28 Nov 2018 15:43:13 -0800
-Message-ID: <CAE=gft55NLPAD4Z5w5aDDPB0YRPJP9xX-RmD1sz4ZfNCxURb+Q@mail.gmail.com>
-References: <20181026173544.136037-1-evgreen@chromium.org> <20181026173544.136037-4-evgreen@chromium.org>
- <20181122071847.GL2225@minitux>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3] arm64: dts: qcom: sdm845: Add dpu to
+ sdm845 dts file
+Date: Wed, 28 Nov 2018 16:44:19 -0700
+Message-ID: <20181128234418.GC17663@jcrouse-lnx.qualcomm.com>
+References: <1541125523-28358-1-git-send-email-jsanka@codeaurora.org>
+ <1541125523-28358-2-git-send-email-jsanka@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181122071847.GL2225@minitux>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: robh@kernel.org, Andy Gross <andy.gross@linaro.org>, kishon@ti.com, Doug Anderson <dianders@chromium.org>, swboyd@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, David Brown <david.brown@linaro.org>, mark.rutland@arm.com, linux-soc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1541125523-28358-2-git-send-email-jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 21, 2018 at 11:18 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Fri 26 Oct 10:35 PDT 2018, Evan Green wrote:
-> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > index b72bdb0a31a5..9c72edb678ec 100644
-> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > @@ -808,6 +808,73 @@
-> >                       };
-> >               };
-> >
-> > +             ufshc1: ufshc@1d84000 {
->
-> There's only one ufshc and one ufsphy, so no need to include the index.
-
-Aren't there two UFS controllers on SDM845, a "card" one and a "mem"
-one? I'm only adding the "mem" one here since that's all I can test,
-but I thought it made sense to leave the number there so someone could
-add the "card" one later if needed.
->
-> [..]
-> > +                     resets = <&gcc GCC_UFS_PHY_BCR>;
-> > +                     reset-names = "rst";
->
-> I have this as well, but this is not used by the upstream driver nor is
-> it mentioned in the dt-binding.
-
-I see it in Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt,
-but then the only place I see it being used is ufs-hisi.c. So you're
-right, I think I should spin and remove this. Since I'm spinning, let
-me know about the numbering thing above.
-
-
->
-> > +
-> > +                     status = "disabled";
-> > +             };
-> > +
-> > +             ufsphy1: phy@1d87000 {
->
-> With reservation for the "reset" issue:
->
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->
-> Regards,
-> Bjorn
+T24gVGh1LCBOb3YgMDEsIDIwMTggYXQgMDc6MjU6MjNQTSAtMDcwMCwgSmV5a3VtYXIgU2Fua2Fy
+YW4gd3JvdGU6Cj4gRFBVIGlzIHNob3J0IGZvciB0aGUgRGlzcGxheSBQcm9jZXNzaW5nIFVuaXQu
+IEl0IGlzIHRoZSBkaXNwbGF5Cj4gY29udHJvbGxlciBvbiBRdWFsY29tbSBTRE04NDUgY2hpcHMu
+Cj4gCj4gVGhpcyBjaGFuZ2UgYWRkcyBNRFNTIGFuZCBEU0kgbm9kZXMgdG8gZW5hYmxlIGRpc3Bs
+YXkgb24gdGhlCj4gdGFyZ2V0IGRldmljZS4KPiAKPiBDaGFuZ2VzIGluIHYyOgo+IAkgLSBCZWVm
+ZWQgdXAgY29tbWl0IG1lc3NhZ2UKPiAJIC0gVXNlIFNvQyBzcGVjaWZpYyBjb21wYXRpYmxlcyBm
+b3IgbWRzcyBhbmQgZHB1IChSb2IgSCkKPiAJIC0gVXNlIGFzc2lnbmVkLWNsb2NrcyB0byBzZXQg
+aW5pdGlhbCBjbG9jayBmcmVxdWVuY3koUm9iIEgpCj4gQ2hhbmdlcyBpbiB2MzoKPiAJIC0gYWRk
+ZWQgSU9NTVUgbm9kZQo+IAkgLSBGaXggZGV2aWNlIG5hbWluZyAocmVtb3ZlIF9waHlzKQo+IAkg
+LSBVc2UgY29ycmVjdCBJUlFfVFlQRSBpbiBpbnRlcnJ1cHQgc3BlY2lmaWVycwo+IAo+IFNpZ25l
+ZC1vZmYtYnk6IEpleWt1bWFyIFNhbmthcmFuIDxqc2Fua2FAY29kZWF1cm9yYS5vcmc+Cj4gU2ln
+bmVkLW9mZi1ieTogU2VhbiBQYXVsIDxzZWFucGF1bEBjaHJvbWl1bS5vcmc+Cj4gLS0tCj4gIGFy
+Y2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaSB8IDE5MSArKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMTkxIGluc2VydGlvbnMoKykK
+PiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpIGIv
+YXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpCj4gaW5kZXggMGM5YTJhYS4uZGQ2
+MTJhYyAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kK
+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiBAQCAtOTc4LDYg
+Kzk3OCwxOTcgQEAKPiAgCQkJI3RoZXJtYWwtc2Vuc29yLWNlbGxzID0gPDE+Owo+ICAJCX07Cj4g
+IAo+ICsJCW1kc3M6IG1kc3NAYWUwMDAwMCB7Cj4gKwkJCWNvbXBhdGlibGUgPSAicWNvbSxzZG04
+NDUtbWRzcyI7Cj4gKwkJCXJlZyA9IDwweGFlMDAwMDAgMHgxMDAwPjsKPiArCQkJcmVnLW5hbWVz
+ID0gIm1kc3MiOwo+ICsKPiArCQkJcG93ZXItZG9tYWlucyA9IDwmZGlzcGNjIDA+OwoKV291bGQg
+dGhlIHBvd2Vycy10aGF0LWJlIGluIHRoZSBwb3dlciBkb21haW4gcHJlZmVyIHRoaXMgdG8gaGF2
+ZSBhIHN5bWJvbGljCnZhbHVlPyBJIHNlZSBNRFNTX0dEU0MgaW4gdGhlIGJpbmRpbmdzIGhlYWRl
+ci4KCj4gKwo+ICsJCQljbG9ja3MgPSA8JmdjYyBHQ0NfRElTUF9BSEJfQ0xLPiwKPiArCQkJCSA8
+JmdjYyBHQ0NfRElTUF9BWElfQ0xLPiwKPiArCQkJCSA8JmRpc3BjYyBESVNQX0NDX01EU1NfTURQ
+X0NMSz47Cj4gKwkJCWNsb2NrLW5hbWVzID0gImlmYWNlIiwgImJ1cyIsICJjb3JlIjsKPiArCj4g
+KwkJCWFzc2lnbmVkLWNsb2NrcyA9IDwmZGlzcGNjIERJU1BfQ0NfTURTU19NRFBfQ0xLPjsKPiAr
+CQkJYXNzaWduZWQtY2xvY2stcmF0ZXMgPSA8MzAwMDAwMDAwPjsKPiArCj4gKwkJCWludGVycnVw
+dHMgPSA8R0lDX1NQSSA4MyBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiArCQkJaW50ZXJydXB0LWNv
+bnRyb2xsZXI7Cj4gKwkJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47Cj4gKwo+ICsJCQlpb21tdXMg
+PSA8JmFwcHNfc21tdSAweDg4MCAweDg+LAo+ICsJCQkgICAgICAgICA8JmFwcHNfc21tdSAweGM4
+MCAweDg+Owo+ICsKPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCSNzaXplLWNlbGxz
+ID0gPDE+Owo+ICsJCQlyYW5nZXM7Cj4gKwo+ICsJCQltZHNzX21kcDogbWRwQGFlMDEwMDAgewo+
+ICsJCQkJY29tcGF0aWJsZSA9ICJxY29tLHNkbTg0NS1kcHUiOwo+ICsJCQkJcmVnID0gPDB4MGFl
+MDEwMDAgMHg4ZjAwMD4sCj4gKwkJCQkgICAgICA8MHgwYWViMDAwMCAweDIwMDg+Owo+ICsJCQkJ
+cmVnLW5hbWVzID0gIm1kcCIsICJ2YmlmIjsKPiArCj4gKwkJCQljbG9ja3MgPSA8JmRpc3BjYyBE
+SVNQX0NDX01EU1NfQUhCX0NMSz4sCj4gKwkJCQkJIDwmZGlzcGNjIERJU1BfQ0NfTURTU19BWElf
+Q0xLPiwKPiArCQkJCQkgPCZkaXNwY2MgRElTUF9DQ19NRFNTX01EUF9DTEs+LAo+ICsJCQkJCSA8
+JmRpc3BjYyBESVNQX0NDX01EU1NfVlNZTkNfQ0xLPjsKPiArCQkJCWNsb2NrLW5hbWVzID0gImlm
+YWNlIiwgImJ1cyIsICJjb3JlIiwgInZzeW5jIjsKPiArCj4gKwkJCQlhc3NpZ25lZC1jbG9ja3Mg
+PSA8JmRpc3BjYyBESVNQX0NDX01EU1NfTURQX0NMSz4sCj4gKwkJCQkJCSAgPCZkaXNwY2MgRElT
+UF9DQ19NRFNTX1ZTWU5DX0NMSz47Cj4gKwkJCQlhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDwzMDAw
+MDAwMDA+LAo+ICsJCQkJCQkgICAgICAgPDE5MjAwMDAwPjsKPiArCj4gKwkJCQlpbnRlcnJ1cHQt
+cGFyZW50ID0gPCZtZHNzPjsKPiArCQkJCWludGVycnVwdHMgPSA8MCBJUlFfVFlQRV9MRVZFTF9I
+SUdIPjsKPiArCj4gKwkJCQlwb3J0cyB7Cj4gKwkJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4g
+KwkJCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwo+ICsJCQkJCXBvcnRAMCB7Cj4gKwkJCQkJCXJl
+ZyA9IDwwPjsKPiArCQkJCQkJZHB1X2ludGYxX291dDogZW5kcG9pbnQgewo+ICsJCQkJCQkJcmVt
+b3RlLWVuZHBvaW50ID0gPCZkc2kwX2luPjsKPiArCQkJCQkJfTsKPiArCQkJCQl9Owo+ICsKPiAr
+CQkJCQlwb3J0QDEgewo+ICsJCQkJCQlyZWcgPSA8MT47Cj4gKwkJCQkJCWRwdV9pbnRmMl9vdXQ6
+IGVuZHBvaW50IHsKPiArCQkJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHNpMV9pbj47Cj4gKwkJ
+CQkJCX07Cj4gKwkJCQkJfTsKPiArCQkJCX07Cj4gKwkJCX07Cj4gKwo+ICsJCQlkc2kwOiBkc2lA
+YWU5NDAwMCB7Cj4gKwkJCQljb21wYXRpYmxlID0gInFjb20sbWRzcy1kc2ktY3RybCI7Cj4gKwkJ
+CQlyZWcgPSA8MHhhZTk0MDAwIDB4NDAwPjsKPiArCQkJCXJlZy1uYW1lcyA9ICJkc2lfY3RybCI7
+Cj4gKwo+ICsJCQkJaW50ZXJydXB0LXBhcmVudCA9IDwmbWRzcz47Cj4gKwkJCQlpbnRlcnJ1cHRz
+ID0gPDQgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gKwo+ICsJCQkJY2xvY2tzID0gPCZkaXNwY2Mg
+RElTUF9DQ19NRFNTX0JZVEUwX0NMSz4sCj4gKwkJCQkJIDwmZGlzcGNjIERJU1BfQ0NfTURTU19C
+WVRFMF9JTlRGX0NMSz4sCj4gKwkJCQkJIDwmZGlzcGNjIERJU1BfQ0NfTURTU19QQ0xLMF9DTEs+
+LAo+ICsJCQkJCSA8JmRpc3BjYyBESVNQX0NDX01EU1NfRVNDMF9DTEs+LAo+ICsJCQkJCSA8JmRp
+c3BjYyBESVNQX0NDX01EU1NfQUhCX0NMSz4sCj4gKwkJCQkJIDwmZGlzcGNjIERJU1BfQ0NfTURT
+U19BWElfQ0xLPjsKPiArCQkJCWNsb2NrLW5hbWVzID0gImJ5dGVfY2xrIiwKPiArCQkJCQkgICAg
+ICAiYnl0ZV9pbnRmX2NsayIsCj4gKwkJCQkJICAgICAgInBpeGVsX2NsayIsCj4gKwkJCQkJICAg
+ICAgImNvcmVfY2xrIiwKPiArCQkJCQkgICAgICAiaWZhY2VfY2xrIiwKPiArCQkJCQkgICAgICAi
+YnVzX2NsayI7CgpXZSB3aWxsIG5lZWQgdG8gcmVtb3ZlICB0aGUgX2NsayBleHRlbnNpb24gYW5k
+IGZpeCB0aGUgY29kZSBpZiBuZWVkZWQuCgo+ICsKPiArCQkJCXBoeXMgPSA8JmRzaTBfcGh5PjsK
+PiArCQkJCXBoeS1uYW1lcyA9ICJkc2ktcGh5IjsKClRoaXMgdG9vLCBJIHJlY2tvbi4KCj4gKwkJ
+CQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiAr
+CQkJCXBvcnRzIHsKPiArCQkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkJCQkjc2l6ZS1j
+ZWxscyA9IDwwPjsKPiArCj4gKwkJCQkJcG9ydEAwIHsKPiArCQkJCQkJcmVnID0gPDA+Owo+ICsJ
+CQkJCQlkc2kwX2luOiBlbmRwb2ludCB7Cj4gKwkJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRw
+dV9pbnRmMV9vdXQ+Owo+ICsJCQkJCQl9Owo+ICsJCQkJCX07Cj4gKwo+ICsJCQkJCXBvcnRAMSB7
+Cj4gKwkJCQkJCXJlZyA9IDwxPjsKPiArCQkJCQkJZHNpMF9vdXQ6IGVuZHBvaW50IHsKPiArCQkJ
+CQkJfTsKPiArCQkJCQl9Owo+ICsJCQkJfTsKPiArCQkJfTsKPiArCj4gKwkJCWRzaTBfcGh5OiBk
+c2ktcGh5QGFlOTQ0MDAgewo+ICsJCQkJY29tcGF0aWJsZSA9ICJxY29tLGRzaS1waHktMTBubSI7
+Cj4gKwkJCQlyZWcgPSA8MHhhZTk0NDAwIDB4MjAwPiwKPiArCQkJCSAgICAgIDwweGFlOTRhMDAg
+MHgxZTA+LAo+ICsJCQkJICAgICAgPDB4YWU5NDYwMCAweDI4MD47CgpJIHRoaW5rIGl0IHdvdWxk
+IGJlIGJldHRlciBpZiB0aGVzZSB3ZXJlIGluIG51bWVyaWNhbCBvcmRlci4KCj4gKwkJCQlyZWct
+bmFtZXMgPSAiZHNpX3BoeSIsCj4gKwkJCQkJICAgICJkc2lfcGxsIiwKPiArCQkJCQkgICAgImRz
+aV9waHlfbGFuZSI7Cj4gKwo+ICsJCQkJI2Nsb2NrLWNlbGxzID0gPDE+Owo+ICsJCQkJI3BoeS1j
+ZWxscyA9IDwwPjsKPiArCj4gKwkJCQljbG9ja3MgPSA8JmRpc3BjYyBESVNQX0NDX01EU1NfQUhC
+X0NMSz47Cj4gKwkJCQljbG9jay1uYW1lcyA9ICJpZmFjZV9jbGsiOwoKUmVtb3ZlIF9jbGsgZXh0
+ZW5zaW9uLgoKPiArCQkJfTsKPiArCj4gKwkJCWRzaTE6IGRzaUBhZTk2MDAwIHsKPiArCQkJCWNv
+bXBhdGlibGUgPSAicWNvbSxtZHNzLWRzaS1jdHJsIjsKPiArCQkJCXJlZyA9IDwweGFlOTYwMDAg
+MHg0MDA+Owo+ICsJCQkJcmVnLW5hbWVzID0gImRzaV9jdHJsIjsKPiArCj4gKwkJCQlpbnRlcnJ1
+cHQtcGFyZW50ID0gPCZtZHNzPjsKPiArCQkJCWludGVycnVwdHMgPSA8NSBJUlFfVFlQRV9MRVZF
+TF9ISUdIPjsKPiArCj4gKwkJCQljbG9ja3MgPSA8JmRpc3BjYyBESVNQX0NDX01EU1NfQllURTFf
+Q0xLPiwKPiArCQkJCQkgPCZkaXNwY2MgRElTUF9DQ19NRFNTX0JZVEUxX0lOVEZfQ0xLPiwKPiAr
+CQkJCQkgPCZkaXNwY2MgRElTUF9DQ19NRFNTX1BDTEsxX0NMSz4sCj4gKwkJCQkJIDwmZGlzcGNj
+IERJU1BfQ0NfTURTU19FU0MxX0NMSz4sCj4gKwkJCQkJIDwmZGlzcGNjIERJU1BfQ0NfTURTU19B
+SEJfQ0xLPiwKPiArCQkJCQkgPCZkaXNwY2MgRElTUF9DQ19NRFNTX0FYSV9DTEs+Owo+ICsJCQkJ
+Y2xvY2stbmFtZXMgPSAiYnl0ZV9jbGsiLAo+ICsJCQkJCSAgICAgICJieXRlX2ludGZfY2xrIiwK
+PiArCQkJCQkgICAgICAicGl4ZWxfY2xrIiwKPiArCQkJCQkgICAgICAiY29yZV9jbGsiLAo+ICsJ
+CQkJCSAgICAgICJpZmFjZV9jbGsiLAo+ICsJCQkJCSAgICAgICJidXNfY2xrIjsKCkFuZCBoZXJl
+LgoKPiArCj4gKwkJCQlwaHlzID0gPCZkc2kxX3BoeT47Cj4gKwkJCQlwaHktbmFtZXMgPSAiZHNp
+LXBoeSI7CgpBbmQgaGVyZS4KCj4gKwo+ICsJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJ
+CQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKwkJCQlwb3J0cyB7Cj4gKwkJCQkJI2FkZHJlc3Mt
+Y2VsbHMgPSA8MT47Cj4gKwkJCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwo+ICsJCQkJCXBvcnRA
+MCB7Cj4gKwkJCQkJCXJlZyA9IDwwPjsKPiArCQkJCQkJZHNpMV9pbjogZW5kcG9pbnQgewo+ICsJ
+CQkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkcHVfaW50ZjJfb3V0PjsKPiArCQkJCQkJfTsKPiAr
+CQkJCQl9Owo+ICsKPiArCQkJCQlwb3J0QDEgewo+ICsJCQkJCQlyZWcgPSA8MT47Cj4gKwkJCQkJ
+CWRzaTFfb3V0OiBlbmRwb2ludCB7Cj4gKwkJCQkJCX07Cj4gKwkJCQkJfTsKPiArCQkJCX07Cj4g
+KwkJCX07Cj4gKwo+ICsJCQlkc2kxX3BoeTogZHNpLXBoeUBhZTk2NDAwIHsKPiArCQkJCWNvbXBh
+dGlibGUgPSAicWNvbSxkc2ktcGh5LTEwbm0iOwo+ICsJCQkJcmVnID0gPDB4YWU5NjQwMCAweDIw
+MD4sCj4gKwkJCQkgICAgICA8MHhhZTk2YTAwIDB4MTBlPiwKPiArCQkJCSAgICAgIDwweGFlOTY2
+MDAgMHgyODA+OwoKTnVtZXJpY2FsIG9yZGVyIHdvdWxkIGJlIHByZWZlcnJlZC4KCj4gKwkJCQly
+ZWctbmFtZXMgPSAiZHNpX3BoeSIsCj4gKwkJCQkJICAgICJkc2lfcGxsIiwKPiArCQkJCQkgICAg
+ImRzaV9waHlfbGFuZSI7Cj4gKwo+ICsJCQkJI2Nsb2NrLWNlbGxzID0gPDE+Owo+ICsJCQkJI3Bo
+eS1jZWxscyA9IDwwPjsKPiArCj4gKwkJCQljbG9ja3MgPSA8JmRpc3BjYyBESVNQX0NDX01EU1Nf
+QUhCX0NMSz47Cj4gKwkJCQljbG9jay1uYW1lcyA9ICJpZmFjZV9jbGsiOwoKQW5kIG9uZSBtb3Jl
+IGV4dGVuc2lvbi4KCj4gKwkJCX07Cj4gKwkJfTsKPiArCj4gIAkJc3BtaV9idXM6IHNwbWlAYzQ0
+MDAwMCB7Cj4gIAkJCWNvbXBhdGlibGUgPSAicWNvbSxzcG1pLXBtaWMtYXJiIjsKPiAgCQkJcmVn
+ID0gPDB4YzQ0MDAwMCAweDExMDA+LAoKLS0gClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRl
+ciwgSW5jLiBpcyBhIG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0
+aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9mcmVlZHJlbm8K
