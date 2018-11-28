@@ -1,13 +1,12 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 02/15] dt-bindings: rtc: sun6i-rtc: Add
- compatible strings for pre-H6 variants
-Date: Wed, 28 Nov 2018 17:29:59 +0800
-Message-ID: <20181128093013.24442-3-wens@csie.org>
+Subject: [PATCH 06/15] rtc: sun6i: Add support for different variants
+Date: Wed, 28 Nov 2018 17:30:03 +0800
+Message-ID: <20181128093013.24442-7-wens@csie.org>
 References: <20181128093013.24442-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBNWA7HPQKGQE7BMMDBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBOGA7HPQKGQEJK2K32Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181128093013.24442-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,54 +19,151 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Alexa
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-While doing Bluetooth enablement for various boards based on various
-Allwinner SoCs, minor differences in the RTC modules were found. These
-include a lack of an external clock output (A31), different internal
-oscillator frequencies (H3/H5/A64/V3/V3s), different regulator voltage
-settings (H5/H6), and the presence of miscellaneous registers unrelated
-to the RTC (A64/R40/H5/H6). The datasheet also describes different number
-of registers for non-volatile storage, though based on actual experiments
-the actual number is the same across the board.
+Amongst the Allwinner SoCs that have seen some kind of coverage by the
+linux-sunxi community, whether it be mainline Linux or U-boot support,
+or just available datasheets, most newer chips use the RTC design first
+seen in the A31 (sun6i).
 
-This patch adds a list of all pre-H6 variants, grouped by the internal
-oscillator's clock rate, regulator settings, and the presence of the
-external clock output. Combinations are introduced for the variants that
-have miscellaneous registers.
+Overall there have been some minor differences. This patch covers the
+following:
 
-The RTC block in the H6 also handles the 24 MHz DCXO. This will require
-more device tree binding changes and will be done later.
+  - average clock rate of the internal RC oscillator
+    + presence of fixed and adjustable prescaler for this clock
+  - availability of an external (to the SoC) clock output
+
+One major difference regarding the H6 is the 24 MHz crystal is now
+routed through the RTC, as a digitally compensated oscillator (DCXO).
+This is not covered in this patch and will be supported later.
+
+Other differences are either unrelated to RTC or clock functionality,
+such as boot or crypto related registers, or the driver simply doesn't
+use the feature in question. One example of the latter is the
+calibration function for the RC oscillator. We consider this clock to
+be very bad and avoid using it.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- .../devicetree/bindings/rtc/sun6i-rtc.txt        | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/rtc/rtc-sun6i.c | 58 ++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 51 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt b/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
-index d3e96459fc66..b1eaa443347d 100644
---- a/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
-+++ b/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
-@@ -3,7 +3,21 @@
- RTC controller for the Allwinner A31
+diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+index 8edd9e1ec007..d1866d90b9ef 100644
+--- a/drivers/rtc/rtc-sun6i.c
++++ b/drivers/rtc/rtc-sun6i.c
+@@ -118,9 +118,30 @@
+ #define SUN6I_YEAR_MAX				2033
+ #define SUN6I_YEAR_OFF				(SUN6I_YEAR_MIN - 1900)
  
- Required properties:
--- compatible	: Should be "allwinner,sun6i-a31-rtc"
-+- compatible	: Should be one of the following combinations:
-+		    - "allwinner,sun6i-a31-rtc"
-+		    - "allwinner,sun8i-a23-rtc"
-+		    - "allwinner,sun8i-h3-rtc"
-+		    - "allwinner,sun8i-r40-rtc", "allwinner,sun8i-h3-rtc"
-+		    - "allwinner,sun8i-v3-rtc"
-+		    - "allwinner,sun50i-a64-rtc", "allwinner,sun8i-h3-rtc"
-+		    - "allwinner,sun50i-h5-rtc"
++/*
++ * There are other differences between models, including:
++ *
++ *   - number of GPIO pins that can be configured to hold a certain level
++ *   - crypto-key related registers (H5, H6)
++ *   - boot process related (super standby, secondary processor entry address)
++ *     registers (R40, H6)
++ *   - SYS power domain controls (R40)
++ *   - DCXO controls (H6)
++ *   - RC oscillator calibration (H6)
++ *
++ * These functions are not covered by this driver.
++ */
++struct sun6i_rtc_clk_data {
++	unsigned long rc_osc_rate;
++	unsigned int fixed_prescaler : 16;
++	unsigned int has_prescaler : 1;
++	unsigned int has_out_clk : 1;
++};
 +
-+		  Where there are two or more compatible strings, this
-+		  denotes the hardware covered by the most specific one
-+		  is backward-compatible with the latter ones, and the
-+		  implementation for the latter ones can be used, albeit
-+		  with reduced functionality.
+ struct sun6i_rtc_dev {
+ 	struct rtc_device *rtc;
+ 	struct device *dev;
++	const struct sun6i_rtc_clk_data *data;
+ 	void __iomem *base;
+ 	int irq;
+ 	unsigned long alarm;
+@@ -139,14 +160,19 @@ static unsigned long sun6i_rtc_osc_recalc_rate(struct clk_hw *hw,
+ 					       unsigned long parent_rate)
+ {
+ 	struct sun6i_rtc_dev *rtc = container_of(hw, struct sun6i_rtc_dev, hw);
+-	u32 val;
++	u32 val = 0;
+ 
+ 	val = readl(rtc->base + SUN6I_LOSC_CTRL);
+ 	if (val & SUN6I_LOSC_CTRL_EXT_OSC)
+ 		return parent_rate;
+ 
+-	val = readl(rtc->base + SUN6I_LOSC_CLK_PRESCAL);
+-	val &= GENMASK(4, 0);
++	if (rtc->data->fixed_prescaler)
++		parent_rate /= rtc->data->fixed_prescaler;
 +
- - reg		: physical base address of the controller and length of
- 		  memory mapped region.
- - interrupts	: IRQ lines for the RTC alarm 0 and alarm 1, in that order.
++	if (rtc->data->has_prescaler) {
++		val = readl(rtc->base + SUN6I_LOSC_CLK_PRESCAL);
++		val &= GENMASK(4, 0);
++	}
+ 
+ 	return parent_rate / (val + 1);
+ }
+@@ -185,7 +211,8 @@ static const struct clk_ops sun6i_rtc_osc_ops = {
+ 	.set_parent	= sun6i_rtc_osc_set_parent,
+ };
+ 
+-static void __init sun6i_rtc_clk_init(struct device_node *node)
++static void __init sun6i_rtc_clk_init(struct device_node *node,
++				      const struct sun6i_rtc_clk_data *data)
+ {
+ 	struct clk_hw_onecell_data *clk_data;
+ 	struct sun6i_rtc_dev *rtc;
+@@ -200,6 +227,7 @@ static void __init sun6i_rtc_clk_init(struct device_node *node)
+ 	if (!rtc)
+ 		return;
+ 
++	rtc->data = data;
+ 	clk_data = kzalloc(struct_size(clk_data, hws, 2), GFP_KERNEL);
+ 	if (!clk_data) {
+ 		kfree(rtc);
+@@ -228,7 +256,7 @@ static void __init sun6i_rtc_clk_init(struct device_node *node)
+ 	rtc->int_osc = clk_hw_register_fixed_rate_with_accuracy(NULL,
+ 								"rtc-int-osc",
+ 								NULL, 0,
+-								667000,
++								rtc->data->rc_osc_rate,
+ 								300000000);
+ 	if (IS_ERR(rtc->int_osc)) {
+ 		pr_crit("Couldn't register the internal oscillator\n");
+@@ -271,8 +299,18 @@ static void __init sun6i_rtc_clk_init(struct device_node *node)
+ err:
+ 	kfree(clk_data);
+ }
+-CLK_OF_DECLARE_DRIVER(sun6i_rtc_clk, "allwinner,sun6i-a31-rtc",
+-		      sun6i_rtc_clk_init);
++
++static const struct sun6i_rtc_clk_data sun6i_a31_rtc_data = {
++	.rc_osc_rate = 667000, /* datasheet says 600 ~ 700 KHz */
++	.has_prescaler = 1,
++};
++
++static void __init sun6i_a31_rtc_clk_init(struct device_node *node)
++{
++	sun6i_rtc_clk_init(node, &sun6i_a31_rtc_data);
++}
++CLK_OF_DECLARE_DRIVER(sun6i_a31_rtc_clk, "allwinner,sun6i-a31-rtc",
++		      sun6i_a31_rtc_clk_init);
+ 
+ static irqreturn_t sun6i_rtc_alarmirq(int irq, void *id)
+ {
+@@ -579,6 +617,12 @@ static int sun6i_rtc_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++/*
++ * As far as RTC functionality goes, all models are the same. The
++ * datasheets claim that different models have different number of
++ * registers available for non-volatile storage, but experiments show
++ * that all SoCs have 16 registers available for this purpose.
++ */
+ static const struct of_device_id sun6i_rtc_dt_ids[] = {
+ 	{ .compatible = "allwinner,sun6i-a31-rtc" },
+ 	{ /* sentinel */ },
 -- 
 2.20.0.rc1
