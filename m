@@ -1,38 +1,40 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx50: Fix memory node duplicaton
-Date: Wed, 28 Nov 2018 16:30:06 +0800
-Message-ID: <20181128083004.GL20643@dragon>
-References: <1542979519-31747-1-git-send-email-festevam@gmail.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v4 4/4] driver core: Add fwnode member to struct
+ device_connection
+Date: Wed, 28 Nov 2018 10:34:06 +0200
+Message-ID: <20181128083406.GA32679@kuha.fi.intel.com>
+References: <20181127142855.73899-1-heikki.krogerus@linux.intel.com>
+ <20181127142855.73899-5-heikki.krogerus@linux.intel.com>
+ <20181127143237.GA22859@kuha.fi.intel.com>
+ <20181127150756.GV10650@smile.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1542979519-31747-1-git-send-email-festevam@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20181127150756.GV10650@smile.fi.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 23, 2018 at 11:25:19AM -0200, Fabio Estevam wrote:
-> imx50-evk has duplicate memory nodes:
+On Tue, Nov 27, 2018 at 05:07:56PM +0200, Andy Shevchenko wrote:
+> On Tue, Nov 27, 2018 at 04:32:37PM +0200, Heikki Krogerus wrote:
+> > On Tue, Nov 27, 2018 at 05:28:55PM +0300, Heikki Krogerus wrote:
+> > > This will prepare the device connection API for connections
+> > > described in firmware.
+> > 
+> > This one does not belong to this series, sorry. Please skip it, or if
+> > you prefer, I'll resend.
 > 
-> - One coming from the board dts file: memory@
+> Please, resend. It would reduce amount of confusion,
 > 
-> - One coming from the imx50.dtsi file.
+> Otherwise the series looks good to me.
 > 
-> Fix the duplication by removing the memory node from the dtsi file
-> and by adding 'device_type = "memory";' in the board dts.
-> 
-> Reported-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Applied, thanks.
+Sure. I'll resend. Thanks Andy!
+
+br,
+
+-- 
+heikki
