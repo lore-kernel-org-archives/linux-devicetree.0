@@ -1,146 +1,211 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 01/17] dt-bindings: remoteproc: Add TI PRUSS bindings
-Date: Wed, 28 Nov 2018 09:42:19 -0600
-Message-ID: <ee02b7d3-e7fd-2f4a-4213-d556d364194b@lechnology.com>
-References: <1542886753-17625-1-git-send-email-rogerq@ti.com>
- <1542886753-17625-2-git-send-email-rogerq@ti.com>
- <a4fe952b-9065-d91b-4c07-984ec3f5b276@lechnology.com>
- <5BFD5F83.3070807@ti.com>
+From: Aisheng DONG <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V3 2/4] rtc: add i.MX system controller RTC support
+Date: Wed, 28 Nov 2018 15:44:58 +0000
+Message-ID: <AM0PR04MB4211140489B0BE1DEC4165B880D10@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1543398696-3140-1-git-send-email-Anson.Huang@nxp.com>
+ <1543398696-3140-3-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5BFD5F83.3070807@ti.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1543398696-3140-3-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, tony@atomide.com
-Cc: robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anson Huang <anson.huang@nxp.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, linux-rtc@vger.kernel.o
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/27/18 9:15 AM, Roger Quadros wrote:
+> -----Original Message-----
+> From: Anson Huang
+> Sent: Wednesday, November 28, 2018 5:57 PM
+[...]
+> Subject: [PATCH V3 2/4] rtc: add i.MX system controller RTC support
 > 
-> On 26/11/18 23:14, David Lechner wrote:
->> On 11/22/18 5:38 AM, Roger Quadros wrote:
->>> From: Suman Anna <s-anna@ti.com>
->>>
->>> This patch adds the bindings for the Programmable Real-Time Unit
->>> and Industrial Communication Subsystem (PRU-ICSS) present on various
->>> TI SoCs. The IP is present on multiple TI SoC architecture families
->>> including the OMAP architecture SoCs such as AM33xx, AM437x and
->>> AM57xx; and on a Keystone 2 architecture based 66AK2G SoC. It is
->>> also present on the Davinci based OMAPL138 SoCs and K3 architecture
->>> based AM65x SoCs as well (not covered for now). Details have been
->>> added to include bindings for various core sub-modules like the PRU
->>> Cores, the PRUSS Interrupt Controller, and other sub-modules used
->>> for Industrial Communication purposes, covering the MDIO, MII_RT
->>> and the IEP sub-modules. The binding mostly uses standard DT
->>> properties.
->>>
->>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>> ---
->>>    .../devicetree/bindings/soc/ti/ti,pruss.txt        | 360 +++++++++++++++++++++
->>>    1 file changed, 360 insertions(+)
->>>    create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt b/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
->>> new file mode 100644
->>> index 0000000..24fedad
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
->>
->> ...
->>
->>> +
->>> +PRU-ICSS SoC Bus Parent Node
->>> +=============================
->>> +This node represents the integration of the PRU-ICSS IP into a SoC, and is
->>> +required for all SoCs. The PRU-ICSS parent nodes need to be defined as child
->>> +nodes of this node.
->>> +
->>> +Required Properties:
->>> +--------------------
->>> +- compatible     : should be one of,
->>> +                       "ti,am3356-pruss-soc-bus" for AM335x family of SoCs
->>> +                       "ti,am4376-pruss-soc-bus" for AM437x family of SoCs
->>> +                       "ti,am5728-pruss-soc-bus" for AM57xx family of SoCs
->>> +                       "ti,k2g-pruss-soc-bus" for 66AK2G family of SoCs
->>> +- reg            : address and size of the PRUSS CFG sub-module registers
->>> +                   dictating the interconnect configuration
->>
->> I haven't looked into Tony's suggestion of using ti-sysc yet, so this may be a
->> moot point, but how will this work with AM18xx that does not have a PRUSS CFG
->> register? It seems to me that reg here should be the address and size of the
->> entire PRUSS IP block and the CFG register should be a syscon node or something
->> like that.
+> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller inside,
+> the system controller is in charge of controlling power, clock and secure rtc
+> etc..
 > 
-> The reg property description is incorrect in the patch. It should have been
+> This patch adds i.MX system controller RTC driver support, Linux kernel has to
+> communicate with system controller via MU (message unit) IPC to set/get RTC
+> time and other alarm functions, since the RTC set time needs to be done in
+> secure EL3 mode (required by system controller firmware) and alarm functions
+> needs to be done with general MU IRQ handle, these depend on other
+> components which are NOT ready, so this patch ONLY enables the RTC time
+> read.
 > 
-> reg		: address of SYSCFG register.
-> 
-> The SYSCFG register is used to enable and reset the module.
-> 
-> But based on Tony's suggestion this wrapper driver will change to ti,sysc for
-> OMAP like SoCs.
-> 
-> For AM18xx it could be a simple wrapper driver that just populates the children?
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> changes since V2:
+> 	- make rtc_ipc_handle/imx_sc_rtc static;
+> 	- remove comma in last entry of imx_sc_dt_ids;
+> 	- rename rtc_device.
+>  drivers/rtc/Kconfig      |   6 +++
+>  drivers/rtc/Makefile     |   1 +
+>  drivers/rtc/rtc-imx-sc.c | 107
 
-I suppose that could work. I will look into it (perhaps after seeing what you
-come up with in v2).
+This change log format seems strange.
 
+> +++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 114 insertions(+)
+>  create mode 100644 drivers/rtc/rtc-imx-sc.c
 > 
->>
->>> +- #address-cells : should be 1
->>> +- #size-cells    : should be 1
->>> +- ranges         : standard ranges definition
->>> +
->>
->> ...
->>
->>> +
->>> +PRUSS INTC Child Node
->>> +======================
->>> +Each PRUSS has a single interrupt controller instance that is common to both
->>> +the PRU cores. Each interrupt controller can detect 64 input events which are
->>> +then mapped to 10 possible output interrupts through two levels of mapping. The
->>> +input events can be triggered by either the PRUs and/or various other PRUSS
->>> +internal and external peripherals. The first 2 output interrupts are fed
->>> +exclusively to the internal PRU cores, with the remaining 8 connected to
->>> +external interrupt controllers including the MPU.
->>
->> FYI, on AM18xx, there is a PRUSSEVTSEL bit in CFGCHIP3[3] (already a syscon node
->> in the device tree) that allows selecting one of two groups of 32 input events
->> out of this group of 64. This is perhaps getting out of the scope of this patch
->> series, but I just want to make sure we end up with something that can be easily
->> extended for this case. For example, I was thinking that this binding could be
->> modified so that #interrupt-cells could be 1 or 2. If it is 2, then the first
->> cell specifies the PRUSSEVTSEL value and the second value is the event number.
->>
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig index a819ef0..3b9642e
+> 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -1677,6 +1677,12 @@ config RTC_DRV_SNVS
+>  	   This driver can also be built as a module, if so, the module
+>  	   will be called "rtc-snvs".
 > 
-> this is da850.dtsi correct?
+> +config RTC_DRV_IMX_SC
+> +	tristate "NXP i.MX System Controller RTC support"
+> +	help
+> +	   If you say yes here you get support for the NXP i.MX System
+> +	   Controller RTC module.
+> +
+>  config RTC_DRV_SIRFSOC
+>  	tristate "SiRFSOC RTC"
+>  	depends on ARCH_SIRF
+> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile index 290c173..f97c05e
+> 100644
+> --- a/drivers/rtc/Makefile
+> +++ b/drivers/rtc/Makefile
+> @@ -75,6 +75,7 @@ obj-$(CONFIG_RTC_DRV_GOLDFISH)	+= rtc-goldfish.o
+>  obj-$(CONFIG_RTC_DRV_HID_SENSOR_TIME) += rtc-hid-sensor-time.o
+>  obj-$(CONFIG_RTC_DRV_HYM8563)	+= rtc-hym8563.o
+>  obj-$(CONFIG_RTC_DRV_IMXDI)	+= rtc-imxdi.o
+> +obj-$(CONFIG_RTC_DRV_IMX_SC)	+= rtc-imx-sc.o
+>  obj-$(CONFIG_RTC_DRV_ISL12022)	+= rtc-isl12022.o
+>  obj-$(CONFIG_RTC_DRV_ISL12026)	+= rtc-isl12026.o
+>  obj-$(CONFIG_RTC_DRV_ISL1208)	+= rtc-isl1208.o
+> diff --git a/drivers/rtc/rtc-imx-sc.c b/drivers/rtc/rtc-imx-sc.c new file mode
+> 100644 index 0000000..b8e331e
+> --- /dev/null
+> +++ b/drivers/rtc/rtc-imx-sc.c
+> @@ -0,0 +1,107 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright 2018 NXP.
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
 
-Yes.
+Do we need them all?
 
-> 
-> As PRUSSEVTSEL is not SYSEVENT specific but applies to all the SYSEVENTs at a time.
-> I don't think interrupt-cells is the right place to specify this.
-> 
-> Can it be set in DT in the board file? But this can't change once booted so maybe restrictive.
+> +#include <linux/firmware/imx/sci.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/rtc.h>
+> +
+> +#define IMX_SC_TIMER_FUNC_GET_RTC_SEC1970	9
+> +#define IMX_SC_TIMER_FUNC_SET_RTC_TIME		6
+> +
+> +static struct imx_sc_ipc *rtc_ipc_handle; static struct rtc_device
+> +*imx_sc_rtc;
+> +
+> +struct imx_sc_msg_req_timer_get_rtc_time {
+> +	struct imx_sc_rpc_msg hdr;
+> +} __packed;
+> +
+> +struct imx_sc_msg_resp_timer_get_rtc_time {
+> +	struct imx_sc_rpc_msg hdr;
+> +	u32 time;
+> +} __packed;
+> +
+> +static int imx_sc_rtc_read_time(struct device *dev, struct rtc_time
+> +*tm) {
+> +	struct imx_sc_msg_resp_timer_get_rtc_time *resp;
+> +	struct imx_sc_msg_req_timer_get_rtc_time msg;
+> +	struct imx_sc_rpc_msg *hdr = &msg.hdr;
+> +	int ret;
+> +
+> +	hdr->ver = IMX_SC_RPC_VERSION;
+> +	hdr->svc = IMX_SC_RPC_SVC_TIMER;
+> +	hdr->func = IMX_SC_TIMER_FUNC_GET_RTC_SEC1970;
+> +	hdr->size = 1;
+> +
+> +	ret = imx_scu_call_rpc(rtc_ipc_handle, &msg, true);
+> +	if (ret) {
+> +		pr_err("read rtc time failed, ret %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	resp = (struct imx_sc_msg_resp_timer_get_rtc_time *)&msg;
 
-I guess the way I see this is that it is like specifying the bank and index for
-a GPIO. If you only specify the system event number, then it is not clear which
-event you mean - it could be one of two events. You have to also specify the
-PRUSSEVTSEL value (one could call this the bank or group, I suppose) to fully
-describe the system event.
+This is wrong and may result in memory corruption.
+Please refer to how the scu-clk driver does.
 
-> 
-> If runtime change is required it can only be done before a PRU boots.
-> 
-> How about providing this info in the resource table and/or application DT node?
+Regards
+Dong Aisheng
 
-This seems like this would make it easy to end up with a broken interrupts
-if you accidentally try to use interrupts from both groups. Instead this
-could be implemented in the irqchip driver such that the first interrupt
-(system event) requested gets to select the group. If any interrupts from
-the other group are requested later, they can just return an error. Any
-interrupts in the same group as the first can be requested successfully.
+> +	rtc_time_to_tm(resp->time, tm);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct rtc_class_ops imx_sc_rtc_ops = {
+> +	.read_time = imx_sc_rtc_read_time,
+> +};
+> +
+> +static int imx_sc_rtc_probe(struct platform_device *pdev) {
+> +	int ret;
+> +
+> +	ret = imx_scu_get_handle(&rtc_ipc_handle);
+> +	if (ret) {
+> +		if (ret == -EPROBE_DEFER)
+> +			return ret;
+> +
+> +		dev_err(&pdev->dev, "failed to get ipc handle: %d!\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	imx_sc_rtc = devm_rtc_allocate_device(&pdev->dev);
+> +	if (IS_ERR(imx_sc_rtc)) {
+> +		ret = PTR_ERR(imx_sc_rtc);
+> +		return ret;
+> +	}
+> +
+> +	imx_sc_rtc->ops = &imx_sc_rtc_ops;
+> +	imx_sc_rtc->range_min = 0;
+> +	imx_sc_rtc->range_max = U32_MAX;
+> +
+> +	ret = rtc_register_device(imx_sc_rtc);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to register rtc: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id imx_sc_dt_ids[] = {
+> +	{ .compatible = "nxp,imx8qxp-sc-rtc", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, imx_sc_dt_ids);
+> +
+> +static struct platform_driver imx_sc_rtc_driver = {
+> +	.driver = {
+> +		.name	= "imx-sc-rtc",
+> +		.of_match_table = imx_sc_dt_ids,
+> +	},
+> +	.probe		= imx_sc_rtc_probe,
+> +};
+> +module_platform_driver(imx_sc_rtc_driver);
+> +
+> +MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
+> +MODULE_DESCRIPTION("NXP i.MX System Controller RTC Driver");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.7.4
