@@ -1,15 +1,21 @@
-Return-Path: <SRS0=NeMx=OH=nxp.com=anson.huang@kernel.org>
+Return-Path: <SRS0=2X+C=OH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr60058.outbound.protection.outlook.com ([40.107.6.58]:8386
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726972AbeK1QVi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 28 Nov 2018 11:21:38 -0500
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V3 2/4] rtc: add i.MX system controller RTC support
-Date: Wed, 28 Nov 2018 09:57:29 +0000
-Message-ID: <1543398696-3140-3-git-send-email-Anson.Huang@nxp.com>
-References: <1543398696-3140-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1543398696-3140-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 2/4] rtc: add i.MX system controller RTC support
+Date: Wed, 28 Nov 2018 05:21:11 +0000
+Message-ID: <1543382119-2918-3-git-send-email-Anson.Huang@nxp.com>
+References: <1543382119-2918-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1543382119-2918-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-To: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: devicetree-owner@vger.kernel.org
+To: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
@@ -27,10 +33,11 @@ are NOT ready, so this patch ONLY enables the RTC time read.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-changes since V2:
-	- make rtc_ipc_handle/imx_sc_rtc static;
-	- remove comma in last entry of imx_sc_dt_ids;
-	- rename rtc_device.
+changes since V1:
+	- sort module in Makefile alphabetically;
+	- remove boiler plate license text;
+	- use devm_rtc_allocate_device and rtc_register_device to register the RTC=
+.
  drivers/rtc/Kconfig      |   6 +++
  drivers/rtc/Makefile     |   1 +
  drivers/rtc/rtc-imx-sc.c | 107 +++++++++++++++++++++++++++++++++++++++++++=
@@ -69,7 +76,7 @@ index 290c173..f97c05e 100644
  obj-$(CONFIG_RTC_DRV_ISL1208)	+=3D rtc-isl1208.o
 diff --git a/drivers/rtc/rtc-imx-sc.c b/drivers/rtc/rtc-imx-sc.c
 new file mode 100644
-index 0000000..b8e331e
+index 0000000..7212e38
 --- /dev/null
 +++ b/drivers/rtc/rtc-imx-sc.c
 @@ -0,0 +1,107 @@
@@ -90,8 +97,8 @@ index 0000000..b8e331e
 +#define IMX_SC_TIMER_FUNC_GET_RTC_SEC1970	9
 +#define IMX_SC_TIMER_FUNC_SET_RTC_TIME		6
 +
-+static struct imx_sc_ipc *rtc_ipc_handle;
-+static struct rtc_device *imx_sc_rtc;
++struct imx_sc_ipc *rtc_ipc_handle;
++struct rtc_device *rtc;
 +
 +struct imx_sc_msg_req_timer_get_rtc_time {
 +	struct imx_sc_rpc_msg hdr;
@@ -143,17 +150,17 @@ index 0000000..b8e331e
 +		return ret;
 +	}
 +
-+	imx_sc_rtc =3D devm_rtc_allocate_device(&pdev->dev);
-+	if (IS_ERR(imx_sc_rtc)) {
-+		ret =3D PTR_ERR(imx_sc_rtc);
++	rtc =3D devm_rtc_allocate_device(&pdev->dev);
++	if (IS_ERR(rtc)) {
++		ret =3D PTR_ERR(rtc);
 +		return ret;
 +	}
 +
-+	imx_sc_rtc->ops =3D &imx_sc_rtc_ops;
-+	imx_sc_rtc->range_min =3D 0;
-+	imx_sc_rtc->range_max =3D U32_MAX;
++	rtc->ops =3D &imx_sc_rtc_ops;
++	rtc->range_min =3D 0;
++	rtc->range_max =3D U32_MAX;
 +
-+	ret =3D rtc_register_device(imx_sc_rtc);
++	ret =3D rtc_register_device(rtc);
 +	if (ret) {
 +		dev_err(&pdev->dev, "failed to register rtc: %d\n", ret);
 +		return ret;
@@ -164,7 +171,7 @@ index 0000000..b8e331e
 +
 +static const struct of_device_id imx_sc_dt_ids[] =3D {
 +	{ .compatible =3D "nxp,imx8qxp-sc-rtc", },
-+	{}
++	{},
 +};
 +MODULE_DEVICE_TABLE(of, imx_sc_dt_ids);
 +
