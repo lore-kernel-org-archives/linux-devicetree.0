@@ -1,17 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 14/15] ARM: dts: sun8i: r40: Add RTC device node
-Date: Wed, 28 Nov 2018 11:28:17 +0100
-Message-ID: <20181128102817.4xzxlvrxxstca6dj@flea>
+Subject: Re: [PATCH 15/15] arm64: dts: allwinner: a64: Fix up
+ RTC device node and clock references
+Date: Wed, 28 Nov 2018 11:28:44 +0100
+Message-ID: <20181128102844.vkleeqmryyxs5s4i@flea>
 References: <20181128093013.24442-1-wens@csie.org>
- <20181128093013.24442-16-wens@csie.org>
+ <20181128093013.24442-17-wens@csie.org>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="akhquq7vtaqev4k2"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBZW37HPQKGQEY6UTKVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="asb6ihdhthh672dt"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6G37HPQKGQEOY4PNLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20181128093013.24442-16-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <20181128093013.24442-17-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -23,16 +24,20 @@ Cc: Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---akhquq7vtaqev4k2
+--asb6ihdhthh672dt
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Wed, Nov 28, 2018 at 05:30:12PM +0800, Chen-Yu Tsai wrote:
-> The R40 has an RTC hardware block, which has additional registers
-> that are not related to RTC or clock functions, and is otherwise
-> compatible with the H3's RTC.
+On Wed, Nov 28, 2018 at 05:30:13PM +0800, Chen-Yu Tsai wrote:
+> The RTC module on the A64 was claimed to be the same as on the A31, when
+> in fact it is not. It is actually compatible to the H3's RTC. The A64's
+> RTC has some extra crypto-related registers which the H3's does not, but
+> the exact function of these is not clear.
 > 
-> Add a device node for it, and fix up any references to the LOSC.
+> This patch fixes the compatible string and clock properties to conform
+> to the updated bindings. The device node for the internal oscillator is
+> removed, as it is internalized into the RTC device. Clock references to
+> the IOSC and LOSC are also fixed.
 > 
 > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
@@ -44,4 +49,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---akhquq7vtaqev4k2--
+--asb6ihdhthh672dt--
