@@ -1,39 +1,39 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 4/7] arm64: dts: qcom: msm8916: Set
- 'xo_board' as ref clock of the DSI PHY
-Date: Tue, 27 Nov 2018 22:10:58 -0800
-Message-ID: <CAD=FV=XWaQqhzwBp0YAavnD-2kL+QFO7_wZBxp+2KjN7HNEfMQ@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 6/7] arm64: dts: sdm845: Set 'bi_tcxo' as ref clock of
+ the DSI PHYs
+Date: Tue, 27 Nov 2018 22:12:34 -0800
+Message-ID: <CAD=FV=VZ+9D8Ho+ncSvgdHAPEX52ocZXFAJQP47FwcwT-VXfLA@mail.gmail.com>
 References: <20181126231159.122298-1-mka@chromium.org>
- <20181126231159.122298-5-mka@chromium.org>
+ <20181126231159.122298-7-mka@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181126231159.122298-5-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20181126231159.122298-7-mka@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rajesh Yadav <ryadav@codeaurora.org>, David Airlie <airlied@linux.ie>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Stephen Boyd <swboyd@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Andy Gross <andy.gross@linaro.org>, freedreno <freedreno@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
 SGksCgpPbiBNb24sIE5vdiAyNiwgMjAxOCBhdCAzOjEyIFBNIE1hdHRoaWFzIEthZWhsY2tlIDxt
-a2FAY2hyb21pdW0ub3JnPiB3cm90ZToKPgo+IEFkZCAneG9fYm9hcmQnIGFzIHJlZiBjbG9jayBm
-b3IgdGhlIERTSSBQSFlzLCBpdCB3YXMgcHJldmlvdXNseQo+IGhhcmRjb2RlZCBpbiB0aGUgUExM
-ICdkcml2ZXInIGZvciB0aGUgMjhubSBQSFkuCgpOb3RlOiBwcmVzdW1hYmx5IHlvdXIgc2VyaWVz
-IHNob3VsZCBoYXZlIG9uZSBtb3JlIHBhdGNoIHRvIGZpeAoiYXJjaC9hcm0vYm9vdC9kdHMvcWNv
-bS1hcHE4MDY0LmR0c2kiIHRvbz8KCgo+IFNpZ25lZC1vZmYtYnk6IE1hdHRoaWFzIEthZWhsY2tl
-IDxta2FAY2hyb21pdW0ub3JnPgo+IC0tLQo+IENoYW5nZXMgaW4gdjI6Cj4gLSBwYXRjaCBhZGRl
-ZCB0byB0aGUgc2VyaWVzCj4gLS0tCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9tc204OTE2
-LmR0c2kgfCA1ICsrKy0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDIgZGVs
-ZXRpb25zKC0pCgpUaGlzIGxvb2tzIHJpZ2h0IHRvIG1lLgoKUmV2aWV3ZWQtYnk6IERvdWdsYXMg
+a2FAY2hyb21pdW0ub3JnPiB3cm90ZToKPgo+IEFkZCAnYmlfdGN4bycgYXMgcmVmIGNsb2NrIGZv
+ciB0aGUgRFNJIFBIWXMsIGl0IHdhcyBwcmV2aW91c2x5Cj4gaGFyZGNvZGVkIGluIHRoZSBQTEwg
+J2RyaXZlcicgZm9yIHRoZSAxMG5tIFBIWS4KPgo+IFNpZ25lZC1vZmYtYnk6IE1hdHRoaWFzIEth
+ZWhsY2tlIDxta2FAY2hyb21pdW0ub3JnPgo+IC0tLQo+IGJhc2VkIG9uICJbdjQsMS8zXSBhcm02
+NDogZHRzOiBxY29tOiBzZG04NDU6IEFkZCBkcHUgdG8gc2RtODQ1IGR0cyBmaWxlIgo+ICAgKGh0
+dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA2NjYyNTMvKQo+Cj4gQ2hhbmdlcyBp
+biB2MjoKPiAtIHBhdGNoIGFkZGVkIHRvIHRoZSBzZXJpZXMKPiAtLS0KPiAgYXJjaC9hcm02NC9i
+b290L2R0cy9xY29tL3NkbTg0NS5kdHNpIHwgMTAgKysrKysrLS0tLQo+ICAxIGZpbGUgY2hhbmdl
+ZCwgNiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQoKUmV2aWV3ZWQtYnk6IERvdWdsYXMg
 QW5kZXJzb24gPGRpYW5kZXJzQGNocm9taXVtLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9A
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
 bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
