@@ -1,139 +1,49 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] ARM: dts: qcom: msm8974-hammerhead: add WiFi support
-Date: Wed, 28 Nov 2018 15:07:27 -0800
-Message-ID: <20181128230727.GC24969@minitux>
-References: <20181104215034.3677-1-masneyb@onstation.org>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH] ARM: dts: dra7: Move the ti, no-idle quirk on proper gmac
+ node
+Date: Wed, 28 Nov 2018 17:11:35 -0600
+Message-ID: <1c2e5a69-f0c4-47c6-79d4-a11521b6ecda@ti.com>
+References: <1543401907-14751-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181104215034.3677-1-masneyb@onstation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jonathan Marek <jonathan@marek.ca>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1543401907-14751-1-git-send-email-t-kristo@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, tony@atomide.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun 04 Nov 13:50 PST 2018, Brian Masney wrote:
 
-> From: Jonathan Marek <jonathan@marek.ca>
+
+On 11/28/18 4:45 AM, Tero Kristo wrote:
+> Hwmod parses the DT hierarchically from root to search for matching
+> ti,hwmod property. With the introduction of L4 data, we have two nodes
+> with the ti,hwmod = "gmac" declaration, and the hwmod core only matches
+> the first one found, which is the target-module one. This node incorrectly
+> dropped the ti,no-idle flag, which causes number of problems, like ignoring
+> errata i877, and also causing an intermittent boot failure on certain dra7
+> boards.
 > 
-> This patch adds WiFi support to the LG Nexus 5 (hammerhead) phone.
+> Fix the issue by moving the ti,no-idle flag to the proper node.
 > 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> [masneyb@onstation.org: Enabled wlan_regulator_pin and wlan_sleep_clk_pin]
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> Reported-by: Grygorii Strashko <grygorii.strashko@ti.com>
 > ---
->  .../qcom-msm8974-lge-nexus5-hammerhead.dts    | 70 +++++++++++++++++++
->  1 file changed, 70 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> index fe2b5524a679..7fad5a48d4a3 100644
-> --- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> +++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> @@ -221,6 +221,20 @@
->  			};
->  		};
->  	};
-> +
-> +	vreg_wlan: wlan-regulator {
-> +		compatible = "regulator-fixed";
-> +
-> +		regulator-name = "wl-reg";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +
-> +		gpio = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&wlan_regulator_pin>;
-> +	};
->  };
->  
->  &soc {
-> @@ -253,6 +267,20 @@
->  			};
->  		};
->  
-> +		sdhc2_pin_a: sdhc2-pin-active {
-> +			clk {
-> +				pins = "sdc2_clk";
-> +				drive-strength = <6>;
-> +				bias-disable;
-> +			};
-> +
-> +			cmd-data {
-> +				pins = "sdc2_cmd", "sdc2_data";
-> +				drive-strength = <6>;
-> +				bias-pull-up;
-> +			};
-> +		};
-> +
->  		i2c3_pins: i2c3 {
->  			mux {
->  				pins = "gpio10", "gpio11";
-> @@ -324,6 +352,32 @@
->  		pinctrl-0 = <&sdhc1_pin_a>;
->  	};
->  
-> +	sdhci@f98a4900 {
-> +		status = "ok";
-> +
-> +		max-frequency = <100000000>;
-> +		bus-width = <4>;
-> +		non-removable;
-> +		vmmc-supply = <&vreg_wlan>;
-> +		vqmmc-supply = <&pm8941_s3>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&sdhc2_pin_a>;
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		bcrmf@1 {
-> +			compatible = "brcm,bcm4339-fmac", "brcm,bcm4329-fmac";
-> +			reg = <1>;
-> +
-> +			brcm,drive-strength = <10>;
-> +
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&wlan_sleep_clk_pin>;
-> +		};
-> +	};
-> +
->  	gpio-keys {
->  		compatible = "gpio-keys";
->  		input-name = "gpio-keys";
-> @@ -463,6 +517,22 @@
->  				output-high;
->  				line-name = "otg-gpio";
->  			};
-> +
-> +			wlan_sleep_clk_pin: wl-sleep-clk {
-> +				pins = "gpio16";
-> +				function = "func2";
-> +
-> +				output-high;
-> +				power-source = <PM8941_GPIO_S3>;
-> +			};
-> +
-> +			wlan_regulator_pin: wl-reg-active {
-> +				pins = "gpio17";
-> +				function = "normal";
-> +
-> +				bias-disable;
-> +				power-source = <PM8941_GPIO_S3>;
-> +			};
->  		};
->  	};
->  };
-> -- 
-> 2.17.2
-> 
+> FYI: The problem is seen in linux-next.
+
+Thank you.
+Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com> 
+
+-- 
+regards,
+-grygorii
