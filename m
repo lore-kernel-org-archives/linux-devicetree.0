@@ -1,46 +1,56 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 02/14] regulator: axp20x: name voltage ramping define
- properly
-Date: Wed, 28 Nov 2018 09:26:34 +0000
-Message-ID: <20181128092634.GX4272@dell>
-References: <cover.156212c9c5df493e098556cad9793a07dcab5e32.1543245984.git-series.plaes@plaes.org>
- <66ac03ac0e34e196e0469927c0feb3c98bc35837.1543245984.git-series.plaes@plaes.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3] reset: Exclusive resets must be dedicated to a single
+ hardware block
+Date: Wed, 28 Nov 2018 10:28:25 +0100
+Message-ID: <CAMuHMdX-X6dTJi6WgRKYVs-w+rxO3cJP8kX5AZwOXNO4qpgcqQ@mail.gmail.com>
+References: <20181113133520.20889-1-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <66ac03ac0e34e196e0469927c0feb3c98bc35837.1543245984.git-series.plaes@plaes.org>
+In-Reply-To: <20181113133520.20889-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Priit Laes <plaes@plaes.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Sebastian Reichel <sre@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Olliver Schinagl <oliver@schinagl.nl>
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 26 Nov 2018, Priit Laes wrote:
-
-> From: Olliver Schinagl <oliver@schinagl.nl>
-> 
-> The current axp20x names the ramping register 'scal' which probably
-> means scaling. Since the register really has nothing to do with
-> scaling, but really is the voltage ramp we rename it appropriately.
-> 
-> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
-> Signed-off-by: Priit Laes <plaes@plaes.org>
+On Tue, Nov 13, 2018 at 2:35 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> In some SoCs multiple hardware blocks may share a reset control.
+> The reset control API for shared resets will only assert such a reset
+> when the drivers for all hardware blocks agree.
+> The exclusive reset control API still allows to assert such a reset, but
+> that impacts all other hardware blocks sharing the reset.
+>
+> While the kernel doc comments clearly state that the API for shared
+> resets applies to reset controls which are shared between hardware
+> blocks, the exact meaning of exclusive resets is not documented.
+> Fix the semantic ambiguity with respect to exclusive access vs.
+> exclusive reset lines by:
+>   1. Clarifying that exclusive resets really are intended for use with
+>      reset controls which are dedicated to a single hardware block,
+>   2. Ensuring that obtaining an exclusive reset control will fail if the
+>      reset is shared by multiple hardware blocks, for both DT-based and
+>      lookup-based reset controls.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  include/linux/mfd/axp20x.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Question from Philipp for the DT maintainers:
+>
+>    "I'd still like to hear the device tree maintainers' opinion on
+>     parsing the whole DT for "resets" phandle properties to find shared
+>     resets like this."
 
-This is clearly not a regulator patch.
+Mark, Rob: Ping?
 
-Please change the subject line to "mfd", 
+Thanks!
 
-Once changed you can add my:
+Gr{oetje,eeting}s,
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+                        Geert
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
