@@ -1,7 +1,7 @@
 From: Evan Green <evgreen@chromium.org>
-Subject: [PATCH v1 2/4] arm64: dts: qcom: msm8996: Fix QMP PHY #clock-cells
-Date: Thu, 29 Nov 2018 14:13:55 -0800
-Message-ID: <20181129221357.67417-3-evgreen@chromium.org>
+Subject: [PATCH v1 3/4] arm64: dts: qcom: sdm845: Fix QMP PHY #clock-cells
+Date: Thu, 29 Nov 2018 14:13:56 -0800
+Message-ID: <20181129221357.67417-4-evgreen@chromium.org>
 References: <20181129221357.67417-1-evgreen@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181129221357.67417-1-evgreen@chromium.org>
@@ -10,66 +10,51 @@ To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, An
 Cc: Douglas Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Move #clock-cells into the child node and set it to 0 to conform to the
-proper binding specification.
+Move #clock-cells into the child node for instances of the qcom-qmp-phy
+nodes, and set it to zero, in accordance with the proper bindings. PHYs
+that don't provide clocks don't have #clock-cells, and so are left alone.
 
 Signed-off-by: Evan Green <evgreen@chromium.org>
 ---
 
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 13bb96444df00..4af740ca0880f 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -767,7 +767,6 @@
- 		phy@34000 {
- 			compatible = "qcom,msm8996-qmp-pcie-phy";
- 			reg = <0x34000 0x488>;
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 61a7cee153eae..4582db5e86350 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1178,7 +1178,6 @@
+ 			      <0x88e8000 0x10>;
+ 			reg-names = "reg-base", "dp_com";
+ 			status = "disabled";
 -			#clock-cells = <1>;
  			#address-cells = <1>;
  			#size-cells = <1>;
  			ranges;
-@@ -790,6 +789,7 @@
- 				reg = <0x035000 0x130>,
- 					<0x035200 0x200>,
- 					<0x035400 0x1dc>;
+@@ -1200,6 +1199,7 @@
+ 				      <0x88e9600 0x128>,
+ 				      <0x88e9800 0x200>,
+ 				      <0x88e9a00 0x100>;
 +				#clock-cells = <0>;
  				#phy-cells = <0>;
- 
- 				clock-output-names = "pcie_0_pipe_clk_src";
-@@ -803,6 +803,7 @@
- 				reg = <0x036000 0x130>,
- 					<0x036200 0x200>,
- 					<0x036400 0x1dc>;
-+				#clock-cells = <0>;
- 				#phy-cells = <0>;
- 
- 				clock-output-names = "pcie_1_pipe_clk_src";
-@@ -816,6 +817,7 @@
- 				reg = <0x037000 0x130>,
- 					<0x037200 0x200>,
- 					<0x037400 0x1dc>;
-+				#clock-cells = <0>;
- 				#phy-cells = <0>;
- 
- 				clock-output-names = "pcie_2_pipe_clk_src";
-@@ -829,7 +831,6 @@
- 		phy@7410000 {
- 			compatible = "qcom,msm8996-qmp-usb3-phy";
- 			reg = <0x7410000 0x1c4>;
+ 				clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
+ 				clock-names = "pipe0";
+@@ -1211,7 +1211,6 @@
+ 			compatible = "qcom,sdm845-qmp-usb3-uni-phy";
+ 			reg = <0x88eb000 0x18c>;
+ 			status = "disabled";
 -			#clock-cells = <1>;
  			#address-cells = <1>;
  			#size-cells = <1>;
  			ranges;
-@@ -851,6 +852,7 @@
- 				reg = <0x7410200 0x200>,
- 					<0x7410400 0x130>,
- 					<0x7410600 0x1a8>;
+@@ -1231,6 +1230,7 @@
+ 				      <0x88eb400 0x1fc>,
+ 				      <0x88eb800 0x218>,
+ 				      <0x88e9600 0x70>;
 +				#clock-cells = <0>;
  				#phy-cells = <0>;
- 
- 				clock-output-names = "usb3_phy_pipe_clk_src";
+ 				clocks = <&gcc GCC_USB3_SEC_PHY_PIPE_CLK>;
+ 				clock-names = "pipe0";
 -- 
 2.18.1
