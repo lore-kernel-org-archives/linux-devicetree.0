@@ -1,151 +1,59 @@
-From: tom burkart <tom@aussec.com>
-Subject: Re: [PATCH v7 1/4] dt-bindings: pps: descriptor-based gpio,
- capture-clear addition
-Date: Thu, 29 Nov 2018 13:05:20 +1100
-Message-ID: <20181129130520.198263bp7uxu51ls@aussec.com>
-References: <20181114125432.16044-1-tom@aussec.com>
- <20181114125432.16044-2-tom@aussec.com> <20181116224919.GA18008@bogus>
- <20181117213522.12672utznrvpbn56@www.aussec.com>
- <CAL_JsqKZHg5_8ghMmU4qO4CVZibcHOvtVJH669zod_6GLGakRg@mail.gmail.com>
- <20181118113502.55634v85ybgkt586@www.aussec.com>
- <CAL_Jsq+_Fb8mRDf_g=qDVsw-KPnrdZunLksYrgBFvhehzVNX+g@mail.gmail.com>
- <20181127145729.128452ujmj4uhb55@aussec.com>
- <CAL_Jsq+-S2tF++VstMCeUrX4SXcB4B99Tc-SFUQ3R66KPHVf+Q@mail.gmail.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH 2/5] usb: mtu3: enable hardware remote wakeup from L1 automatically
+Date: Thu, 29 Nov 2018 10:34:33 +0800
+Message-ID: <2105ae1c2fede0fd1923e2fdb58ade7b3aa678f6.1543458320.git.chunfeng.yun@mediatek.com>
+References: <e178546b79c3d602736a0db2cbfd76f7588e4022.1543458319.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8;
- DelSp="Yes";
- format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+-S2tF++VstMCeUrX4SXcB4B99Tc-SFUQ3R66KPHVf+Q@mail.gmail.com>
-Content-Disposition: inline
+In-Reply-To: <e178546b79c3d602736a0db2cbfd76f7588e4022.1543458319.git.chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rob Herring <robh@kernel.org>:
+Enable hardware remote wakeup from L1 automatically based on the FIFO
+status, instead of manual way.
 
-> On Mon, Nov 26, 2018 at 9:57 PM tom burkart <tom@aussec.com> wrote:
->>
->> Quoting Rob Herring <robh@kernel.org>:
->>
->> > On Sat, Nov 17, 2018 at 6:35 PM tom burkart <tom@aussec.com> wrote:
->> >>
->> >> Quoting Rob Herring <robh@kernel.org>:
->> >>
->> >> > On Sat, Nov 17, 2018 at 4:35 AM tom burkart <tom@aussec.com> wrote:
->> >> >>
->> >> >> Quoting Rob Herring <robh@kernel.org>:
->> >> >>
->> >> >> > On Wed, Nov 14, 2018 at 11:54:29PM +1100, Tom Burkart wrote:
->> >> >> >> This patch changes the devicetree bindings for the pps-gpio driver
->> >> >> >> from the integer based ABI to the descriptor based ABI.
->> >> >> > ? That has nothing to do with DT.
->> >> >>
->> >> >> I believe it does, as the change in ABI forces a rename in the DT
->> >> >> naming convention.
->> >> >> This is due to the descriptor based ABI appending "-gpio" or
->> >> "-gpios" (see
->> >> >> Documentation/gpio/base.txt.)
->> >> >> Admittedly, I may have called it by the wrong name due to ignorance,
->> >> >> my apologies.
->> >> >
->> >> > If what you say is correct, then you can't change this driver. You'll
->> >> > break compatibility with any existing DT.
->> >> >
->> >> > Changing the binding reasoning should purely be that this is the
->> >> > preferred form. Bindings must be independent from changing kernel
->> >> > APIs.
->> >>
->> >> See comments from Philip Zabel.  I misread the documentation and this
->> >> has now been corrected in v8 of the patch.  I hope that eliminates all
->> >> comments made above.
->> >>
->> >> >> >>  It also adds
->> >> >> >> documentation for the device tree capture-clear option.  The legacy
->> >> >> >> device tree entry for the GPIO pin is supported.
->> >> >> >>
->> >> >> >> Signed-off-by: Tom Burkart <tom@aussec.com>
->> >> >> >> ---
->> >> >> >>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 8 ++++++--
->> >> >> >>  1 file changed, 6 insertions(+), 2 deletions(-)
->> >> >> >>
->> >> >> >> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> >> >> b/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> >> >> index 3683874832ae..6c9fc0998d94 100644
->> >> >> >> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> >> >> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> >> >> @@ -5,19 +5,23 @@ a GPIO pin.
->> >> >> >>
->> >> >> >>  Required properties:
->> >> >> >>  - compatible: should be "pps-gpio"
->> >> >> >> -- gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
->> >> >> >> +- pps-gpios: one PPS GPIO in the format described by  
->> ../gpio/gpio.txt
->> >> >> >> +Alternatively (DEPRECATED), instead of pps-gpios above,  
->> it may have:
->> >> >> >> +- gpios: one PPS GPIO as above
->> >> >> >>
->> >> >> >>  Optional properties:
->> >> >> >>  - assert-falling-edge: when present, assert is indicated by a
->> >> >> falling edge
->> >> >> >>                         (instead of by a rising edge)
->> >> >> >> +- capture-clear: when present, also capture the PPS clear event
->> >> >> >
->> >> >> > Is this a h/w thing? or driver configuration?
->> >> >>
->> >> >> Driver configuration.  Most of the code was present in the driver, yet
->> >> >> it was not documented, or usable due to a two line (code) omission
->> >> >> (the value was not being fetched from DT).
->> >> >
->> >> > So what determines how you want to configure this? If the user will
->> >> > want to change it, then it should be a sysfs attr and exposed to
->> >> > userspace. If it depends on h/w config for a board then it can be in
->> >> > DT.
->> >>
->> >> Sorry, I misled you somewhat.  If the PPS pulse active transition from
->> >> the hardware is on the falling edge, this flag is required to get the
->> >> OS to use that as the active transition.  This would not change at the
->> >> user's whim but rather it is dependent on connected hardware.
->> >
->> > This description sounds more like 'assert-falling-edge' than  
->> 'capture-clear'.
->> >
->> > I'm still not clear on what 'capture-clear' is.
->>
->> Ignoring my patch for a minute, the pps_gpio_irq_handler will only
->> report a pps PPS_CAPTURECLEAR event if 'capture-clear' is set.  As the
->> current pps-gpio driver is not able to set this flag, it cannot ever
->> report a PPS_CAPTURECLEAR event.
->>
->> My patch adds the ability to set this flag and adds the documentation
->> to go with it.
->> Admittedly, I do not require this functionality for what I want, but
->> working with the code, I noticed the omission and decided to add it
->> for someone else to use it, if they need it.
->>
->> I am happy to remove this out of my patch, if you feel this to be the
->> best way forward.
->
-> I found this prior discussion on adding this[1]. Seems to me this
-> should be userspace configurable if the GPIO line can interrupt on
-> both edges. We shouldn't need a DT property to determine that.
->
-> Rob
->
-> [1] https://lore.kernel.org/patchwork/patch/557781/
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+ drivers/usb/mtu3/mtu3_core.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-Hi Rob,
-the fact that prior knowledge of board/CPU/SOC specifics is required  
-is the most compelling argument for this to be in the DT.  This is not  
-something a user should need to know or remember.
-
-Userspace is already asking for what they need via the  
-time_pps_setparams call, but to do that they have to first call  
-time_pps_getparams.  Time_pps_getparams will not return  
-PPS_CAPTURECLEAR as it is never set in the driver due to it being  
-hardware specific/unable to be set.
-
-Tom
+diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
+index 3dce5fd9887d..981e4e8c5c13 100644
+--- a/drivers/usb/mtu3/mtu3_core.c
++++ b/drivers/usb/mtu3/mtu3_core.c
+@@ -180,7 +180,7 @@ static void mtu3_intr_enable(struct mtu3 *mtu)
+ 	mtu3_writel(mbase, U3D_LV1IESR, value);
+ 
+ 	/* Enable U2 common USB interrupts */
+-	value = SUSPEND_INTR | RESUME_INTR | RESET_INTR | LPM_RESUME_INTR;
++	value = SUSPEND_INTR | RESUME_INTR | RESET_INTR;
+ 	mtu3_writel(mbase, U3D_COMMON_USB_INTR_ENABLE, value);
+ 
+ 	if (mtu->is_u3_ip) {
+@@ -594,6 +594,8 @@ static void mtu3_regs_init(struct mtu3 *mtu)
+ 	mtu3_writel(mbase, U3D_DEVICE_CONF, 0);
+ 	/* vbus detected by HW */
+ 	mtu3_clrbits(mbase, U3D_MISC_CTRL, VBUS_FRC_EN | VBUS_ON);
++	/* enable automatical HWRW from L1 */
++	mtu3_setbits(mbase, U3D_POWER_MANAGEMENT, LPM_HRWE);
+ }
+ 
+ static irqreturn_t mtu3_link_isr(struct mtu3 *mtu)
+@@ -706,12 +708,6 @@ static irqreturn_t mtu3_u2_common_isr(struct mtu3 *mtu)
+ 	if (u2comm & RESET_INTR)
+ 		mtu3_gadget_reset(mtu);
+ 
+-	if (u2comm & LPM_RESUME_INTR) {
+-		if (!(mtu3_readl(mbase, U3D_POWER_MANAGEMENT) & LPM_HRWE))
+-			mtu3_setbits(mbase, U3D_USB20_MISC_CONTROL,
+-				     LPM_U3_ACK_EN);
+-	}
+-
+ 	return IRQ_HANDLED;
+ }
+ 
+-- 
+2.19.1
