@@ -1,30 +1,57 @@
-Return-Path: <SRS0=qqZh=OJ=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com> <1543319795-48325-7-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543319795-48325-7-git-send-email-biju.das@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 30 Nov 2018 10:50:44 +0100
-Message-ID: <CAMuHMdU9J4KOk6nZbuNHxjakxRQTc_LML+n32K7tAmLgO0NO6A@mail.gmail.com>
+Return-Path: <SRS0=Z+zc=OI=verge.net.au=horms@kernel.org>
+Date: Thu, 29 Nov 2018 14:56:58 +0100
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH 06/22] ARM: dts: r8a7744-iwg20m: Enable SDHI10 controller
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <20181129135658.rhcghkxxnqlktkgd@verge.net.au>
+References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
+ <1543319795-48325-7-git-send-email-biju.das@bp.renesas.com>
+ <1e63706f-806a-2610-81e7-af6a36e3cad3@cogentembedded.com>
+ <OSBPR01MB2103C36CA2867F42EB197739B8D00@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <20181128132426.jfma4zu5i5b7ljls@verge.net.au>
+ <OSBPR01MB2103CC5D39445184648AB3E2B8D10@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OSBPR01MB2103CC5D39445184648AB3E2B8D10@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Nov 27, 2018 at 1:05 PM Biju Das <biju.das@bp.renesas.com> wrote:
-> Enable the SDHI0 controller on iWave RZ/G1N Qseven System On Module.
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+On Wed, Nov 28, 2018 at 02:15:55PM +0000, Biju Das wrote:
+> 
+> > -----Original Message-----
+> > From: linux-renesas-soc-owner@vger.kernel.org <linux-renesas-soc-
+> > owner@vger.kernel.org> On Behalf Of Simon Horman
+> > Sent: 28 November 2018 13:24
+> > To: Biju Das <biju.das@bp.renesas.com>
+> > Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>; Rob Herring
+> > <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Magnus
+> > Damm <magnus.damm@gmail.com>; linux-renesas-soc@vger.kernel.org;
+> > devicetree@vger.kernel.org; Geert Uytterhoeven
+> > <geert+renesas@glider.be>; Chris Paterson
+> > <Chris.Paterson2@renesas.com>; Fabrizio Castro
+> > <fabrizio.castro@bp.renesas.com>
+> > Subject: Re: [PATCH 06/22] ARM: dts: r8a7744-iwg20m: Enable SDHI10
+> > > >
+> > > > On 11/27/2018 02:56 PM, Biju Das wrote:
+> > > >
+> > > > > Enable the SDHI0 controller on iWave RZ/G1N Qseven System On
+> > Module.
+> > > >
+> > > >    Why your subject has SDHI10?
+> > >
+> > > It is a typo.
+> > >
+> > > Simon, Will you fix this while applying or do you want me to send V2?
+> > > Please let me know.
+> >
+> > No need to repost for this.
+> 
+> Thanks Simon.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Thanks again,
 
-Gr{oetje,eeting}s,
+I have now reviewed this patch and it looks fine to me but I will wait to
+see if there are other reviews before applying.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
