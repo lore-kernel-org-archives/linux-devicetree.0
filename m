@@ -1,63 +1,166 @@
-From: Aisheng DONG <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v13 0/5] Add i.MX8MQ clock driver
-Date: Thu, 29 Nov 2018 07:46:41 +0000
-Message-ID: <AM0PR04MB42117F72B9C4D41C14B96CBD80D20@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1542125975-8448-1-git-send-email-abel.vesa@nxp.com>
- <154345210894.88331.8277410833858111600@swboyd.mtv.corp.google.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 01/17] dt-bindings: remoteproc: Add TI PRUSS bindings
+Date: Thu, 29 Nov 2018 10:49:21 +0200
+Message-ID: <5BFFA811.3080907@ti.com>
+References: <1542886753-17625-1-git-send-email-rogerq@ti.com>
+ <1542886753-17625-2-git-send-email-rogerq@ti.com>
+ <a4fe952b-9065-d91b-4c07-984ec3f5b276@lechnology.com>
+ <5BFD5F83.3070807@ti.com>
+ <ee02b7d3-e7fd-2f4a-4213-d556d364194b@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154345210894.88331.8277410833858111600@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+In-Reply-To: <ee02b7d3-e7fd-2f4a-4213-d556d364194b@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>
+To: David Lechner <david@lechnology.com>, tony@atomide.com
+Cc: robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTdGVwaGVuIEJveWQgW21haWx0
-bzpzYm95ZEBrZXJuZWwub3JnXQ0KWy4uLl0NCj4gPg0KPiA+IENoYW5nZXMgc2luY2UgdjEyOg0K
-PiA+ICAqIHJlcGxhY2VkIHRoZSBkaXZpc2lvbiBpbiBjbGtfcGxsX3JlY2FsY19yYXRlIGluIGNs
-ay1mcmFjDQo+ID4gICAgd2l0aCBkb19kaXYgYXMgc3VnZ2VzdGVkIGJ5IFN0ZXBoZW4NCj4gPg0K
-PiA+IEFiZWwgVmVzYSAoMik6DQo+ID4gICBjbGs6IGlteDogQWRkIGlteCBjb21wb3NpdGUgY2xv
-Y2sNCj4gPiAgIGNsazogaW14OiBBZGQgY2xvY2sgZHJpdmVyIGZvciBpLk1YOE1RIENDTQ0KPiA+
-DQo+ID4gTHVjYXMgU3RhY2ggKDMpOg0KPiA+ICAgZHQtYmluZGluZ3M6IGFkZCBiaW5kaW5nIGZv
-ciBpLk1YOE1RIENDTQ0KPiA+ICAgY2xrOiBpbXg6IGFkZCBmcmFjdGlvbmFsIFBMTCBvdXRwdXQg
-Y2xvY2sNCj4gPiAgIGNsazogaW14OiBBZGQgU0NDRyBQTEwgdHlwZQ0KPiA+DQo+IA0KPiBJIGhh
-ZCB0byBhcHBseSB0aGlzIHNldCBvZiBmaXhlcyB0byBzaWxlbmNlIHNwYXJzZSBhbmQgc21hdGNo
-IHdhcm5pbmdzIGFib3V0DQo+IHRoaW5ncyB0aGF0IGFyZSBub3QgcmlnaHQuIFBsZWFzZSB0YWtl
-IGEgbG9vayBvdmVyIHRoaW5ncyBhbmQgc2VlIGlmIGl0J3Mgc2FuZS4NCj4gDQoNClRoZSBjaGFu
-Z2UgbG9va3MgZ29vZCB0byBtZSBhbmQgdGVzdGVkIG9rLg0KSSBkaWQgbm90IHNlZSB0aGlzIHBh
-dGNoIHNlcmllcyBpbiB5b3VyIHRyZWUuDQpEbyB5b3Ugd2FudCB1cyB0byBhcHBseSB5b3VyIGNo
-YW5nZXMgYW5kIHJlLXNlbmQgZm9yIGVhc3kgcGljayB1cD8NCg0KUmVnYXJkcw0KRG9uZyBBaXNo
-ZW5nDQoNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2lteC9jbGstY29tcG9zaXRlLThtLmMN
-Cj4gYi9kcml2ZXJzL2Nsay9pbXgvY2xrLWNvbXBvc2l0ZS04bS5jDQo+IGluZGV4IGJjZDMxZDg4
-OTU4NC4uNmQ5ZDM3MTRiNGRmIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2Nsay9pbXgvY2xrLWNv
-bXBvc2l0ZS04bS5jDQo+ICsrKyBiL2RyaXZlcnMvY2xrL2lteC9jbGstY29tcG9zaXRlLThtLmMN
-Cj4gQEAgLTEyNyw4ICsxMjcsOCBAQCBzdHJ1Y3QgY2xrICppbXg4bV9jbGtfY29tcG9zaXRlX2Zs
-YWdzKGNvbnN0IGNoYXINCj4gKm5hbWUsDQo+ICAJCQkJCWludCBudW1fcGFyZW50cywgdm9pZCBf
-X2lvbWVtICpyZWcsDQo+ICAJCQkJCXVuc2lnbmVkIGxvbmcgZmxhZ3MpDQo+ICB7DQo+IC0Jc3Ry
-dWN0IGNsa19odyAqaHcgPSBOVUxMLCAqbXV4X2h3ID0gTlVMTDsNCj4gLQlzdHJ1Y3QgY2xrX2h3
-ICpkaXZfaHcgPSBOVUxMLCAqZ2F0ZV9odyA9IE5VTEw7DQo+ICsJc3RydWN0IGNsa19odyAqaHcg
-PSBFUlJfUFRSKC1FTk9NRU0pLCAqbXV4X2h3Ow0KPiArCXN0cnVjdCBjbGtfaHcgKmRpdl9odywg
-KmdhdGVfaHc7DQo+ICAJc3RydWN0IGNsa19kaXZpZGVyICpkaXYgPSBOVUxMOw0KPiAgCXN0cnVj
-dCBjbGtfZ2F0ZSAqZ2F0ZSA9IE5VTEw7DQo+ICAJc3RydWN0IGNsa19tdXggKm11eCA9IE5VTEw7
-DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9pbXgvY2xrLWZyYWMtcGxsLmMgYi9kcml2ZXJz
-L2Nsay9pbXgvY2xrLWZyYWMtcGxsLmMgaW5kZXgNCj4gYTM3MzJiZTVhZDdmLi45ODcyNjIwNmYz
-YzQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvY2xrL2lteC9jbGstZnJhYy1wbGwuYw0KPiArKysg
-Yi9kcml2ZXJzL2Nsay9pbXgvY2xrLWZyYWMtcGxsLmMNCj4gQEAgLTE0LDYgKzE0LDggQEANCj4g
-ICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvYml0ZmllbGQuaD4N
-Cj4gDQo+ICsjaW5jbHVkZSAiY2xrLmgiDQo+ICsNCj4gICNkZWZpbmUgUExMX0NGRzAJCTB4MA0K
-PiAgI2RlZmluZSBQTExfQ0ZHMQkJMHg0DQo+IA0KPiBAQCAtMjE0LDcgKzIxNiw3IEBAIHN0cnVj
-dCBjbGsgKmlteF9jbGtfZnJhY19wbGwoY29uc3QgY2hhciAqbmFtZSwgY29uc3QNCj4gY2hhciAq
-cGFyZW50X25hbWUsDQo+ICAJcmV0ID0gY2xrX2h3X3JlZ2lzdGVyKE5VTEwsIGh3KTsNCj4gIAlp
-ZiAocmV0KSB7DQo+ICAJCWtmcmVlKHBsbCk7DQo+IC0JCXJldHVybiBFUlJfQ0FTVChodyk7DQo+
-ICsJCXJldHVybiBFUlJfUFRSKHJldCk7DQo+ICAJfQ0KPiANCj4gIAlyZXR1cm4gaHctPmNsazsN
-Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2lteC9jbGstc2NjZy1wbGwuYyBiL2RyaXZlcnMv
-Y2xrL2lteC9jbGstc2NjZy1wbGwuYyBpbmRleA0KPiA0NjY2Yjk2YmRiM2YuLmVlNzc1MmJhY2U4
-OSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9jbGsvaW14L2Nsay1zY2NnLXBsbC5jDQo+ICsrKyBi
-L2RyaXZlcnMvY2xrL2lteC9jbGstc2NjZy1wbGwuYw0KPiBAQCAtMjQ5LDcgKzI0OSw3IEBAIHN0
-cnVjdCBjbGsgKmlteF9jbGtfc2NjZ19wbGwoY29uc3QgY2hhciAqbmFtZSwNCj4gIAlyZXQgPSBj
-bGtfaHdfcmVnaXN0ZXIoTlVMTCwgaHcpOw0KPiAgCWlmIChyZXQpIHsNCj4gIAkJa2ZyZWUocGxs
-KTsNCj4gLQkJcmV0dXJuIEVSUl9DQVNUKGh3KTsNCj4gKwkJcmV0dXJuIEVSUl9QVFIocmV0KTsN
-Cj4gIAl9DQo+IA0KPiAgCXJldHVybiBody0+Y2xrOw0K
+David,
+
+On 28/11/18 17:42, David Lechner wrote:
+> On 11/27/18 9:15 AM, Roger Quadros wrote:
+>>
+>> On 26/11/18 23:14, David Lechner wrote:
+>>> On 11/22/18 5:38 AM, Roger Quadros wrote:
+>>>> From: Suman Anna <s-anna@ti.com>
+>>>>
+>>>> This patch adds the bindings for the Programmable Real-Time Unit
+>>>> and Industrial Communication Subsystem (PRU-ICSS) present on various
+>>>> TI SoCs. The IP is present on multiple TI SoC architecture families
+>>>> including the OMAP architecture SoCs such as AM33xx, AM437x and
+>>>> AM57xx; and on a Keystone 2 architecture based 66AK2G SoC. It is
+>>>> also present on the Davinci based OMAPL138 SoCs and K3 architecture
+>>>> based AM65x SoCs as well (not covered for now). Details have been
+>>>> added to include bindings for various core sub-modules like the PRU
+>>>> Cores, the PRUSS Interrupt Controller, and other sub-modules used
+>>>> for Industrial Communication purposes, covering the MDIO, MII_RT
+>>>> and the IEP sub-modules. The binding mostly uses standard DT
+>>>> properties.
+>>>>
+>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>>> ---
+>>>>    .../devicetree/bindings/soc/ti/ti,pruss.txt        | 360 +++++++++++++++++++++
+>>>>    1 file changed, 360 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt b/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
+>>>> new file mode 100644
+>>>> index 0000000..24fedad
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
+>>>
+>>> ...
+>>>
+>>>> +
+>>>> +PRU-ICSS SoC Bus Parent Node
+>>>> +=============================
+>>>> +This node represents the integration of the PRU-ICSS IP into a SoC, and is
+>>>> +required for all SoCs. The PRU-ICSS parent nodes need to be defined as child
+>>>> +nodes of this node.
+>>>> +
+>>>> +Required Properties:
+>>>> +--------------------
+>>>> +- compatible     : should be one of,
+>>>> +                       "ti,am3356-pruss-soc-bus" for AM335x family of SoCs
+>>>> +                       "ti,am4376-pruss-soc-bus" for AM437x family of SoCs
+>>>> +                       "ti,am5728-pruss-soc-bus" for AM57xx family of SoCs
+>>>> +                       "ti,k2g-pruss-soc-bus" for 66AK2G family of SoCs
+>>>> +- reg            : address and size of the PRUSS CFG sub-module registers
+>>>> +                   dictating the interconnect configuration
+>>>
+>>> I haven't looked into Tony's suggestion of using ti-sysc yet, so this may be a
+>>> moot point, but how will this work with AM18xx that does not have a PRUSS CFG
+>>> register? It seems to me that reg here should be the address and size of the
+>>> entire PRUSS IP block and the CFG register should be a syscon node or something
+>>> like that.
+>>
+>> The reg property description is incorrect in the patch. It should have been
+>>
+>> reg        : address of SYSCFG register.
+>>
+>> The SYSCFG register is used to enable and reset the module.
+>>
+>> But based on Tony's suggestion this wrapper driver will change to ti,sysc for
+>> OMAP like SoCs.
+>>
+>> For AM18xx it could be a simple wrapper driver that just populates the children?
+> 
+> I suppose that could work. I will look into it (perhaps after seeing what you
+> come up with in v2).
+> 
+>>
+>>>
+>>>> +- #address-cells : should be 1
+>>>> +- #size-cells    : should be 1
+>>>> +- ranges         : standard ranges definition
+>>>> +
+>>>
+>>> ...
+>>>
+>>>> +
+>>>> +PRUSS INTC Child Node
+>>>> +======================
+>>>> +Each PRUSS has a single interrupt controller instance that is common to both
+>>>> +the PRU cores. Each interrupt controller can detect 64 input events which are
+>>>> +then mapped to 10 possible output interrupts through two levels of mapping. The
+>>>> +input events can be triggered by either the PRUs and/or various other PRUSS
+>>>> +internal and external peripherals. The first 2 output interrupts are fed
+>>>> +exclusively to the internal PRU cores, with the remaining 8 connected to
+>>>> +external interrupt controllers including the MPU.
+>>>
+>>> FYI, on AM18xx, there is a PRUSSEVTSEL bit in CFGCHIP3[3] (already a syscon node
+>>> in the device tree) that allows selecting one of two groups of 32 input events
+>>> out of this group of 64. This is perhaps getting out of the scope of this patch
+>>> series, but I just want to make sure we end up with something that can be easily
+>>> extended for this case. For example, I was thinking that this binding could be
+>>> modified so that #interrupt-cells could be 1 or 2. If it is 2, then the first
+>>> cell specifies the PRUSSEVTSEL value and the second value is the event number.
+>>>
+>>
+>> this is da850.dtsi correct?
+> 
+> Yes.
+> 
+>>
+>> As PRUSSEVTSEL is not SYSEVENT specific but applies to all the SYSEVENTs at a time.
+>> I don't think interrupt-cells is the right place to specify this.
+>>
+>> Can it be set in DT in the board file? But this can't change once booted so maybe restrictive.
+> 
+> I guess the way I see this is that it is like specifying the bank and index for
+> a GPIO. If you only specify the system event number, then it is not clear which
+> event you mean - it could be one of two events. You have to also specify the
+> PRUSSEVTSEL value (one could call this the bank or group, I suppose) to fully
+> describe the system event.
+
+But this PRUSSEVTSEL is not present on most SoCs. I think it is only on the AM18xx and OMAP-L13x SoCs.
+
+How about modelling this as a linear map of 64 events and decode this internally in INTC driver.
+i.e. 0 to 31 set PRUSSEVTSEL to 0 and 32 to 63 set PRUSSEVTSEL to 1.
+
+If any interrupt map provides sysevents from both groups simultaneously then we complain and error out.
+
+This should keep the dt-binding and resource table format identical across all SoCs.
+
+> 
+>>
+>> If runtime change is required it can only be done before a PRU boots.
+>>
+>> How about providing this info in the resource table and/or application DT node?
+> 
+> This seems like this would make it easy to end up with a broken interrupts
+> if you accidentally try to use interrupts from both groups. Instead this
+> could be implemented in the irqchip driver such that the first interrupt
+> (system event) requested gets to select the group. If any interrupts from
+> the other group are requested later, they can just return an error. Any
+> interrupts in the same group as the first can be requested successfully.
+
+cheers,
+-roger
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
