@@ -1,75 +1,73 @@
-Return-Path: <SRS0=NeMx=OH=nxp.com=anson.huang@kernel.org>
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V2 1/4] dt-bindings: thermal: add binding doc for i.MX system
- controller thermal driver
-Date: Wed, 28 Nov 2018 05:58:15 +0000
-Message-ID: <1543384349-2851-2-git-send-email-Anson.Huang@nxp.com>
-References: <1543384349-2851-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1543384349-2851-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=gYPT=OI=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from perceval.ideasonboard.com ([213.167.242.64]:55694 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbeK3GE6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 30 Nov 2018 01:04:58 -0500
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v4 1/4] dt-bindings: adv748x: make data-lanes property mandatory for CSI-2 endpoints
+Date: Thu, 29 Nov 2018 20:58:59 +0200
+Message-ID: <4738724.38cIGBxbul@avalon>
+In-Reply-To: <20181129020147.22115-2-niklas.soderlund+renesas@ragnatech.se>
+References: <20181129020147.22115-1-niklas.soderlund+renesas@ragnatech.se> <20181129020147.22115-2-niklas.soderlund+renesas@ragnatech.se>
 MIME-Version: 1.0
-To: "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "arnd@arndb.de" <arnd@arndb.de>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+Sender: devicetree-owner@vger.kernel.org
+To: Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: Kieran Bingham <kieran.bingham@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-system controller, the system controller is in charge of system
-power, clock and thermal sensors etc. management, Linux kernel
-has to communicate with system controller via MU (message unit)
-IPC to get temperature from thermal sensors, this patch adds
-binding doc for i.MX system controller thermal driver.
+Hi Niklas,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-no change since V1.
- .../devicetree/bindings/thermal/imx-sc-thermal.txt | 33 ++++++++++++++++++=
-++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/imx-sc-therma=
-l.txt
+Thank you for the patch.
 
-diff --git a/Documentation/devicetree/bindings/thermal/imx-sc-thermal.txt b=
-/Documentation/devicetree/bindings/thermal/imx-sc-thermal.txt
-new file mode 100644
-index 0000000..2f5b0a2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/imx-sc-thermal.txt
-@@ -0,0 +1,33 @@
-+* Temperature Monitor (TEMPMON) on NXP i.MX SoCs with System Controller
-+
-+Required properties:
-+- compatible : Must be "nxp,imx8qxp-sc-thermal";
-+- tsens-num : Total number of thermal sensors supported;
-+- #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description=
-.
-+
-+Example:
-+tsens: thermal-sensor {
-+	compatible =3D "nxp,imx8qxp-sc-thermal";
-+	tsens-num =3D <1>;
-+	#thermal-sensor-cells =3D <1>;
-+};
-+
-+thermal_zones: thermal-zones {
-+	cpu-thermal0 {
-+		polling-delay-passive =3D <250>;
-+		polling-delay =3D <2000>;
-+		thermal-sensors =3D <&tsens 355>;
-+		trips {
-+			cpu_alert0: trip0 {
-+				temperature =3D <107000>;
-+				hysteresis =3D <2000>;
-+				type =3D "passive";
-+			};
-+			cpu_crit0: trip1 {
-+				temperature =3D <127000>;
-+				hysteresis =3D <2000>;
-+				type =3D "critical";
-+			};
-+		};
-+	};
-+};
---=20
-2.7.4
+On Thursday, 29 November 2018 04:01:44 EET Niklas S=F6derlund wrote:
+> The CSI-2 transmitters can use a different number of lanes to transmit
+> data. Make the data-lanes mandatory for the endpoints that describe the
+> transmitters as no good default can be set to fallback on.
+>=20
+> Signed-off-by: Niklas S=F6derlund <niklas.soderlund+renesas@ragnatech.se>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+> * Changes since v3
+> - Add paragraph to describe the accepted values for the source endpoint
+>   data-lane property. Thanks Jacopo for pointing this out and sorry for
+>   missing this in v2.
+> * Changes since v2
+> - Update paragraph according to Laurents comments.
+> ---
+>  .../devicetree/bindings/media/i2c/adv748x.txt         | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> b/Documentation/devicetree/bindings/media/i2c/adv748x.txt index
+> 5dddc95f9cc46084..4f91686e54a6b939 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> @@ -48,7 +48,16 @@ are numbered as follows.
+>  	  TXA		source		10
+>  	  TXB		source		11
+>=20
+> -The digital output port nodes must contain at least one endpoint.
+> +The digital output port nodes, when present, shall contain at least one
+> +endpoint. Each of those endpoints shall contain the data-lanes property =
+as
+> +described in video-interfaces.txt.
+> +
+> +Required source endpoint properties:
+> +  - data-lanes: an array of physical data lane indexes
+> +    The accepted value(s) for this property depends on which of the two
+> +    sources are described. For TXA 1, 2 or 4 data lanes can be described
+> +    while for TXB only 1 data lane is valid. See video-interfaces.txt
+> +    for detailed description.
+>=20
+>  Ports are optional if they are not connected to anything at the hardware
+> level.
+
+
+=2D-=20
+Regards,
+
+Laurent Pinchart
