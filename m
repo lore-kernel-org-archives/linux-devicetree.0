@@ -1,47 +1,57 @@
-Return-Path: <SRS0=lXjp=OG=bp.renesas.com=biju.das@kernel.org>
+Return-Path: <SRS0=eLSC=OI=bp.renesas.com=biju.das@kernel.org>
 From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 18/22] ARM: dts: r8a7744: Add QSPI support
-Date: Tue, 27 Nov 2018 11:56:31 +0000
-Message-Id: <1543319795-48325-19-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
-References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
+Subject: [PATCH v2 4/4] ARM: dts: iwg23s-sbc: Enable RTC
+Date: Thu, 29 Nov 2018 16:54:46 +0000
+Message-Id: <1543510486-29532-5-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543510486-29532-1-git-send-email-biju.das@bp.renesas.com>
+References: <1543510486-29532-1-git-send-email-biju.das@bp.renesas.com>
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add the DT node for the QSPI interface to the SoC dtsi.
+Enable NXP pcf85263 real time clock for the iWave SBC based on RZ/G1C.
 
 Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 ---
- arch/arm/boot/dts/r8a7744.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+V1-->V2 no change
+---
+ arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index 39f309c..abe0ee3 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -649,6 +649,22 @@
- 			status = "disabled";
- 		};
+diff --git a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
+index 40b7f98..77d1824 100644
+--- a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
++++ b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
+@@ -84,12 +84,30 @@
+ 	clock-frequency = <20000000>;
+ };
  
-+		qspi: spi@e6b10000 {
-+			compatible = "renesas,qspi-r8a7744", "renesas,qspi";
-+			reg = <0 0xe6b10000 0 0x2c>;
-+			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 917>;
-+			dmas = <&dmac0 0x17>, <&dmac0 0x18>,
-+			       <&dmac1 0x17>, <&dmac1 0x18>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			num-cs = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			resets = <&cpg 917>;
-+			status = "disabled";
-+		};
++&i2c3 {
++	pinctrl-0 = <&i2c3_pins>;
++	pinctrl-names = "default";
 +
- 		scifa0: serial@e6c40000 {
- 			compatible = "renesas,scifa-r8a7744",
- 				     "renesas,rcar-gen2-scifa", "renesas,scifa";
++	status = "okay";
++	clock-frequency = <400000>;
++
++	rtc@51 {
++		compatible = "nxp,pcf85263";
++		reg = <0x51>;
++	};
++};
++
+ &pfc {
+ 	avb_pins: avb {
+ 		groups = "avb_mdio", "avb_gmii_tx_rx";
+ 		function = "avb";
+ 	};
+ 
++	i2c3_pins: i2c3 {
++		groups = "i2c3_c";
++		function = "i2c3";
++	};
++
+ 	mmc_pins_uhs: mmc_uhs {
+ 		groups = "mmc_data8", "mmc_ctrl";
+ 		function = "mmc";
 -- 
 2.7.4
