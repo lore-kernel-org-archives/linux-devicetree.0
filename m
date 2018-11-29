@@ -1,64 +1,36 @@
-Return-Path: <SRS0=vcRE=OH=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 1/5] ARM: dts: r8a7744: add VIN dt support
-Date: Wed, 28 Nov 2018 16:38:27 +0000
-Message-Id: <1543423111-19745-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543423111-19745-1-git-send-email-biju.das@bp.renesas.com>
-References: <1543423111-19745-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=QSTz=OI=partner.samsung.com=k.konieczny@kernel.org>
+From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Subject: [PATCH v2 0/5] Add imem clock for Exynos 5433
+Date: Thu, 29 Nov 2018 16:51:29 +0100
+Message-Id: <20181129155134.19141-1-k.konieczny@partner.samsung.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+References: <CGME20181129155144eucas1p25ff3b4c969bd61830befd975ed5085ce@eucas1p2.samsung.com>
+To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
+Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add VIN[012] support to SoC dt.
+Add imem clock for Exynos 5433. This will allow to use SSS and SlimSSS
+(Security SubSystem) with crypto functions.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm/boot/dts/r8a7744.dtsi | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+Changes since v1:
+- splitted typo patch into two, one of them for stable, suggested by Krzystof
+  Kozlowski
+- added more registers as suggested by Chanwoo Choi
 
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index 2eae905..3b8aa3b 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -1020,6 +1020,39 @@
- 			status = "disabled";
- 		};
- 
-+		vin0: video@e6ef0000 {
-+			compatible = "renesas,vin-r8a7744",
-+				     "renesas,rcar-gen2-vin";
-+			reg = <0 0xe6ef0000 0 0x1000>;
-+			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 811>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 811>;
-+			status = "disabled";
-+		};
-+
-+		vin1: video@e6ef1000 {
-+			compatible = "renesas,vin-r8a7744",
-+				     "renesas,rcar-gen2-vin";
-+			reg = <0 0xe6ef1000 0 0x1000>;
-+			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 810>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 810>;
-+			status = "disabled";
-+		};
-+
-+		vin2: video@e6ef2000 {
-+			compatible = "renesas,vin-r8a7744",
-+				     "renesas,rcar-gen2-vin";
-+			reg = <0 0xe6ef2000 0 0x1000>;
-+			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 809>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 809>;
-+			status = "disabled";
-+		};
-+
- 		rcar_sound: sound@ec500000 {
- 			/*
- 			 * #sound-dai-cells is required
+Kamil Konieczny (5):
+  clk: samsung: exynos5433: fix typo in imem divider
+  clk: samsung: exynos5433: fix name typo in sssx
+  arm64: dts: bindings: document imem clock
+  arm64: dts: exynos: add imem clock
+  clk: samsung: exynos5433: add imem clock
+
+ .../bindings/clock/exynos5433-clock.txt       |  23 +++
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi    |  15 ++
+ drivers/clk/samsung/clk-exynos5433.c          | 195 +++++++++++++++++-
+ include/dt-bindings/clock/exynos5433.h        |  57 ++++-
+ 4 files changed, 286 insertions(+), 4 deletions(-)
+
 -- 
-2.7.4
+2.19.1
