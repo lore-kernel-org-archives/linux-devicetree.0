@@ -1,8 +1,8 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V4 4/4] ARM64: dts: imx: add i.MX8QXP system controller RTC
+Subject: [PATCH V4 3/4] defconfig: arm64: add i.MX system controller RTC
  support
-Date: Thu, 29 Nov 2018 01:50:26 +0000
-Message-ID: <1543455856-18021-5-git-send-email-Anson.Huang__24115.9223406159$1543456174$gmane$org@nxp.com>
+Date: Thu, 29 Nov 2018 01:50:19 +0000
+Message-ID: <1543455856-18021-4-git-send-email-Anson.Huang__893.336119088595$1543456378$gmane$org@nxp.com>
 References: <1543455856-18021-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,30 +23,24 @@ To: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.co
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add i.MX8QXP system controller RTC support.
+This patch enables CONFIG_RTC_DRV_IMX_SC as module by default.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-ChangeLog:
-V3->V4:
-  *move sc rtc to inside of SCU node.
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-index 9155d45..b38730a 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -84,6 +84,10 @@
- 			compatible = "fsl,imx8qxp-scu-pd";
- 			#power-domain-cells = <1>;
- 		};
-+
-+		rtc: rtc {
-+			compatible = "fsl,imx8qxp-sc-rtc";
-+		};
- 	};
- 
- 	tsens: thermal-sensor {
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 10fade8..9f12324 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -573,6 +573,7 @@ CONFIG_RTC_DRV_PL031=y
+ CONFIG_RTC_DRV_SUN6I=y
+ CONFIG_RTC_DRV_ARMADA38X=y
+ CONFIG_RTC_DRV_TEGRA=y
++CONFIG_RTC_DRV_IMX_SC=m
+ CONFIG_RTC_DRV_XGENE=y
+ CONFIG_DMADEVICES=y
+ CONFIG_DMA_BCM2835=m
 -- 
 2.7.4
