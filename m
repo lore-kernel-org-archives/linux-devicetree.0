@@ -1,55 +1,188 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 2/2] i2c: meson: add support for Meson G12A SoC I2C
- controller
-Date: Thu, 29 Nov 2018 12:26:45 +0100
-Message-ID: <865b607c-8419-9c9e-0a00-018e87adf8de@baylibre.com>
-References: <1543489197-183181-1-git-send-email-jian.hu@amlogic.com>
- <1543489197-183181-3-git-send-email-jian.hu@amlogic.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v2] PCI: mediatek: Use
+ devm_of_pci_get_host_bridge_resources() to parse DT
+Date: Thu, 29 Nov 2018 11:33:24 +0000
+Message-ID: <20181129113324.GA27228@e107981-ln.cambridge.arm.com>
+References: <1541645815-30340-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543489197-183181-3-git-send-email-jian.hu@amlogic.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1541645815-30340-1-git-send-email-honghui.zhang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jian Hu <jian.hu@amlogic.com>, Jerome Brunet <jbrunet@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, linux-amlogic@lists.infradead.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: honghui.zhang@mediatek.com
+Cc: bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com, devicetree@vger.kernel.org, youlin.pei@mediatek.com, jianjun.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 29/11/2018 11:59, Jian Hu wrote:
-> Add compatible and data for G12A I2C controller.
+On Thu, Nov 08, 2018 at 10:56:55AM +0800, honghui.zhang@mediatek.com wrote:
+> From: Honghui Zhang <honghui.zhang@mediatek.com>
 > 
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+> Use the devm_of_pci_get_host_bridge_resources() API in place of the PCI OF
+> DT parser.
+> 
+> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
 > ---
->  drivers/i2c/busses/i2c-meson.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  drivers/pci/controller/pcie-mediatek.c | 98 +++++++++-------------------------
+>  1 file changed, 24 insertions(+), 74 deletions(-)
 > 
-> diff --git a/drivers/i2c/busses/i2c-meson.c b/drivers/i2c/busses/i2c-meson.c
-> index 90f5d04..b86eed7 100644
-> --- a/drivers/i2c/busses/i2c-meson.c
-> +++ b/drivers/i2c/busses/i2c-meson.c
-> @@ -462,10 +462,15 @@ static int meson_i2c_remove(struct platform_device *pdev)
->  	.div_factor = 3,
->  };
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index 2a1f97c..0590a93 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -197,11 +197,7 @@ struct mtk_pcie_port {
+>   * @dev: pointer to PCIe device
+>   * @base: IO mapped register base
+>   * @free_ck: free-run reference clock
+> - * @io: IO resource
+> - * @pio: PIO resource
+>   * @mem: non-prefetchable memory resource
+> - * @busn: bus range
+> - * @offset: IO / Memory offset
+>   * @ports: pointer to PCIe port information
+>   * @soc: pointer to SoC-dependent operations
+>   */
+> @@ -210,14 +206,7 @@ struct mtk_pcie {
+>  	void __iomem *base;
+>  	struct clk *free_ck;
 >  
-> +static const struct meson_i2c_data i2c_g12a_data = {
-> +	.div_factor = 3,
-
-Especially if the div_factor is the same as AXG.
-
-If you have some other fixes for G12a in the pipe, you will add the new compatible and meson_i2c_data later,
-for the div_factor, simply use the axg struct and compatible.
-
-Neil
-
-> +};
-> +
->  static const struct of_device_id meson_i2c_match[] = {
->  	{ .compatible = "amlogic,meson6-i2c", .data = &i2c_meson6_data },
->  	{ .compatible = "amlogic,meson-gxbb-i2c", .data = &i2c_gxbb_data },
->  	{ .compatible = "amlogic,meson-axg-i2c", .data = &i2c_axg_data },
-> +	{ .compatible = "amlogic,meson-g12a-i2c", .data = &i2c_g12a_data },
->  	{},
+> -	struct resource io;
+> -	struct resource pio;
+>  	struct resource mem;
+> -	struct resource busn;
+> -	struct {
+> -		resource_size_t mem;
+> -		resource_size_t io;
+> -	} offset;
+>  	struct list_head ports;
+>  	const struct mtk_pcie_soc *soc;
 >  };
+> @@ -1045,55 +1034,43 @@ static int mtk_pcie_setup(struct mtk_pcie *pcie)
+>  {
+>  	struct device *dev = pcie->dev;
+>  	struct device_node *node = dev->of_node, *child;
+> -	struct of_pci_range_parser parser;
+> -	struct of_pci_range range;
+> -	struct resource res;
+>  	struct mtk_pcie_port *port, *tmp;
+> +	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
+> +	struct list_head *windows = &host->windows;
+> +	struct resource_entry *win, *tmp_win;
+> +	resource_size_t io_base;
+>  	int err;
 >  
-> 
+> -	if (of_pci_range_parser_init(&parser, node)) {
+> -		dev_err(dev, "missing \"ranges\" property\n");
+> -		return -EINVAL;
+> -	}
+> +	err = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
+> +						    windows, &io_base);
+> +	if (err)
+> +		return err;
+>  
+> -	for_each_of_pci_range(&parser, &range) {
+> -		err = of_pci_range_to_resource(&range, node, &res);
+> -		if (err < 0)
+> -			return err;
+> +	err = devm_request_pci_bus_resources(dev, windows);
+> +	if (err < 0)
+> +		return err;
+>  
+> -		switch (res.flags & IORESOURCE_TYPE_BITS) {
+> +	/* Get the I/O and memory ranges from DT */
+> +	resource_list_for_each_entry_safe(win, tmp_win, windows) {
+> +		switch (resource_type(win->res)) {
+>  		case IORESOURCE_IO:
+> -			pcie->offset.io = res.start - range.pci_addr;
+> -
+> -			memcpy(&pcie->pio, &res, sizeof(res));
+> -			pcie->pio.name = node->full_name;
+> -
+> -			pcie->io.start = range.cpu_addr;
+> -			pcie->io.end = range.cpu_addr + range.size - 1;
+> -			pcie->io.flags = IORESOURCE_MEM;
+> -			pcie->io.name = "I/O";
+> -
+> -			memcpy(&res, &pcie->io, sizeof(res));
+> +			err = devm_pci_remap_iospace(dev, win->res, io_base);
+> +			if (err) {
+> +				dev_warn(dev, "error %d: failed to map resource %pR\n",
+> +					 err, win->res);
+> +				resource_list_destroy_entry(win);
+> +			}
+>  			break;
+> -
+>  		case IORESOURCE_MEM:
+> -			pcie->offset.mem = res.start - range.pci_addr;
+> -
+> -			memcpy(&pcie->mem, &res, sizeof(res));
+> +			memcpy(&pcie->mem, win->res, sizeof(*win->res));
+>  			pcie->mem.name = "non-prefetchable";
+>  			break;
+> +		case IORESOURCE_BUS:
+> +			host->busnr = win->res->start;
+> +			break;
+>  		}
+>  	}
+>  
+> -	err = of_pci_parse_bus_range(node, &pcie->busn);
+> -	if (err < 0) {
+> -		dev_err(dev, "failed to parse bus ranges property: %d\n", err);
+> -		pcie->busn.name = node->name;
+> -		pcie->busn.start = 0;
+> -		pcie->busn.end = 0xff;
+> -		pcie->busn.flags = IORESOURCE_BUS;
+> -	}
+> -
+>  	for_each_available_child_of_node(node, child) {
+>  		int slot;
+>  
+> @@ -1125,28 +1102,6 @@ static int mtk_pcie_setup(struct mtk_pcie *pcie)
+>  	return 0;
+>  }
+>  
+> -static int mtk_pcie_request_resources(struct mtk_pcie *pcie)
+> -{
+> -	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
+> -	struct list_head *windows = &host->windows;
+> -	struct device *dev = pcie->dev;
+> -	int err;
+> -
+> -	pci_add_resource_offset(windows, &pcie->pio, pcie->offset.io);
+> -	pci_add_resource_offset(windows, &pcie->mem, pcie->offset.mem);
+> -	pci_add_resource(windows, &pcie->busn);
+> -
+> -	err = devm_request_pci_bus_resources(dev, windows);
+> -	if (err < 0)
+> -		return err;
+> -
+> -	err = devm_pci_remap_iospace(dev, &pcie->pio, pcie->io.start);
+> -	if (err < 0)
+> -		return err;
+> -
+> -	return 0;
+> -}
+> -
+>  static int mtk_pcie_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -1169,11 +1124,6 @@ static int mtk_pcie_probe(struct platform_device *pdev)
+>  	if (err)
+>  		return err;
+>  
+> -	err = mtk_pcie_request_resources(pcie);
+> -	if (err)
+> -		goto put_resources;
+> -
+> -	host->busnr = pcie->busn.start;
+>  	host->dev.parent = pcie->dev;
+>  	host->ops = pcie->soc->ops;
+>  	host->map_irq = of_irq_parse_and_map_pci;
+
+I would prefer having all the host initialization carried out in a
+single function. I appreciate you may need to reintroduce a temporary
+busnumber value or reshuffle the code to do that, sorry for asking to
+change it again but I do not want to see the struct pci_host_bridge
+variables initialization scattered around, it is confusing.
+
+Thanks,
+Lorenzo
