@@ -1,26 +1,32 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v5 12/17] dt-bindings: clock: Add Allwinner suniv F1C100s CCU
-Date: Wed, 28 Nov 2018 16:47:33 -0800
-Message-ID: <154345245385.88331.8344308999294645427@swboyd.mtv.corp.google.com>
-References: <cover.1543443475.git.mesihkilinc@gmail.com>
- <47d0f466155e3d678d3383655856c1e15e975870.1543443475.git.mesihkilinc@gmail.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 0/2] ARM: dts: meson: add the timer interrupts and clocks
+Date: Wed, 28 Nov 2018 16:49:46 -0800
+Message-ID: <7hzhtsbtcl.fsf@baylibre.com>
+References: <20181116204235.3925-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <47d0f466155e3d678d3383655856c1e15e975870.1543443475.git.mesihkilinc@gmail.com>
+In-Reply-To: <20181116204235.3925-1-martin.blumenstingl@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Cc: Mesih Kilinc <mesihkilinc@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Julian Calaby <julian.calaby@gmail.com>
+To: linux-amlogic@lists.infradead.org, carlo@caione.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Mesih Kilinc (2018-11-28 14:33:22)
-> Add compatiple string for Allwinner suniv F1C100s CCU.
-> Add clock and reset definitions.
-> =
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-> Signed-off-by: Mesih Kilinc <mesihkilinc@gmail.com>
-> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
+> This is a follow-up of my series "meson6_timer: dt-bindings updates"
+> from [0].
+> We were missing the interrupts for timer B, C and D. This is harmless
+> so far because the meson6_timer driver only implements timer A. Timer
+> E doesn't have any interrupt.
+>
+> Additionally the timer IP block has two clock inputs. This also adds
+> them.
+>
+> NOTE: the alias "timer_abcde" was chosen because there's a second
+> timer instance (F..I which are similar to A..D and J which is
+> similar to E).
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+Queued for v4.21 (branch: v4.21/dt)
+
+Kevin
