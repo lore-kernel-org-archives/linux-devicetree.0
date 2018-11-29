@@ -1,263 +1,208 @@
-From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v14 4/5] clk: imx: Add imx composite clock
-Date: Thu, 29 Nov 2018 09:28:36 +0000
-Message-ID: <1543483640-4585-5-git-send-email-abel.vesa@nxp.com>
-References: <1543483640-4585-1-git-send-email-abel.vesa@nxp.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 12/16] dt-bindings: remoteproc: ti-pruss: Document
+ application node bindings
+Date: Thu, 29 Nov 2018 12:07:27 +0200
+Message-ID: <5BFFBA5F.703@ti.com>
+References: <1543218769-5507-1-git-send-email-rogerq@ti.com>
+ <1543218769-5507-13-git-send-email-rogerq@ti.com>
+ <6a945433-00b2-e0e5-2dc8-2a4d2bf0db6f@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1543483640-4585-1-git-send-email-abel.vesa@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sascha Hauer <kernel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Aisheng DONG <aisheng.dong@nxp.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Abel Vesa <abel.vesa@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Abel Vesa <abelvesa@linux.com>, dl-linux-imx <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6a945433-00b2-e0e5-2dc8-2a4d2bf0db6f@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>, ohad@wizery.com, bjorn.andersson@linaro.org
+Cc: tony@atomide.com, robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Since a lot of clocks on imx8m are formed by a mux, gate, predivider and
-divider, the idea here is to combine all of those into one composite clock,
-but we need to deal with both predivider and divider at the same time and
-therefore we add the imx8m_clk_composite_divider_ops and register
-the composite clock with those.
+On 27/11/18 01:27, David Lechner wrote:
+> On 11/26/18 1:52 AM, Roger Quadros wrote:
+>> From: Tero Kristo <t-kristo@ti.com>
+>>
+>> Add documentation for the Texas Instruments PRU application nodes.
+>> These are used to configure specific user applications for PRU instances.
+> 
+> Could this be made into a generic remoteproc producer/consumer binding? Or
+> are there really things that are specific to the TI PRU that need to be
+> handled?
 
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-Suggested-by: Sascha Hauer <s.hauer@pengutronix.de>
-Reviewed-by: Sascha Hauer <s.hauer@pengutronix.de>
----
- drivers/clk/imx/Makefile           |   1 +
- drivers/clk/imx/clk-composite-8m.c | 178 +++++++++++++++++++++++++++++++++++++
- drivers/clk/imx/clk.h              |  16 ++++
- 3 files changed, 195 insertions(+)
- create mode 100644 drivers/clk/imx/clk-composite-8m.c
+The remoteproc handle and firmware name sound generic enough.
+But there are TI PRU specific properties as well which we'll discuss if
+they can be made generic.
 
-diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
-index b87513c..237444b 100644
---- a/drivers/clk/imx/Makefile
-+++ b/drivers/clk/imx/Makefile
-@@ -3,6 +3,7 @@
- obj-y += \
- 	clk.o \
- 	clk-busy.o \
-+	clk-composite-8m.o \
- 	clk-cpu.o \
- 	clk-fixup-div.o \
- 	clk-fixup-mux.o \
-diff --git a/drivers/clk/imx/clk-composite-8m.c b/drivers/clk/imx/clk-composite-8m.c
-new file mode 100644
-index 0000000..6d9d371
---- /dev/null
-+++ b/drivers/clk/imx/clk-composite-8m.c
-@@ -0,0 +1,178 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2018 NXP
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/slab.h>
-+#include <linux/clk-provider.h>
-+
-+#include "clk.h"
-+
-+#define PCG_PREDIV_SHIFT	16
-+#define PCG_PREDIV_WIDTH	3
-+#define PCG_PREDIV_MAX		8
-+
-+#define PCG_DIV_SHIFT		0
-+#define PCG_DIV_WIDTH		6
-+#define PCG_DIV_MAX		64
-+
-+#define PCG_PCS_SHIFT		24
-+#define PCG_PCS_MASK		0x7
-+
-+#define PCG_CGC_SHIFT		28
-+
-+static unsigned long imx8m_clk_composite_divider_recalc_rate(struct clk_hw *hw,
-+						unsigned long parent_rate)
-+{
-+	struct clk_divider *divider = to_clk_divider(hw);
-+	unsigned long prediv_rate;
-+	unsigned int prediv_value;
-+	unsigned int div_value;
-+
-+	prediv_value = readl(divider->reg) >> divider->shift;
-+	prediv_value &= clk_div_mask(divider->width);
-+
-+	prediv_rate = divider_recalc_rate(hw, parent_rate, prediv_value,
-+						NULL, divider->flags,
-+						divider->width);
-+
-+	div_value = readl(divider->reg) >> PCG_DIV_SHIFT;
-+	div_value &= clk_div_mask(PCG_DIV_WIDTH);
-+
-+	return divider_recalc_rate(hw, prediv_rate, div_value, NULL,
-+				   divider->flags, PCG_DIV_WIDTH);
-+}
-+
-+static int imx8m_clk_composite_compute_dividers(unsigned long rate,
-+						unsigned long parent_rate,
-+						int *prediv, int *postdiv)
-+{
-+	int div1, div2;
-+	int error = INT_MAX;
-+	int ret = -EINVAL;
-+
-+	*prediv = 1;
-+	*postdiv = 1;
-+
-+	for (div1 = 1; div1 <= PCG_PREDIV_MAX; div1++) {
-+		for (div2 = 1; div2 <= PCG_DIV_MAX; div2++) {
-+			int new_error = ((parent_rate / div1) / div2) - rate;
-+
-+			if (abs(new_error) < abs(error)) {
-+				*prediv = div1;
-+				*postdiv = div2;
-+				error = new_error;
-+				ret = 0;
-+			}
-+		}
-+	}
-+	return ret;
-+}
-+
-+static long imx8m_clk_composite_divider_round_rate(struct clk_hw *hw,
-+						unsigned long rate,
-+						unsigned long *prate)
-+{
-+	int prediv_value;
-+	int div_value;
-+
-+	imx8m_clk_composite_compute_dividers(rate, *prate,
-+						&prediv_value, &div_value);
-+	rate = DIV_ROUND_UP(*prate, prediv_value);
-+
-+	return DIV_ROUND_UP(rate, div_value);
-+
-+}
-+
-+static int imx8m_clk_composite_divider_set_rate(struct clk_hw *hw,
-+					unsigned long rate,
-+					unsigned long parent_rate)
-+{
-+	struct clk_divider *divider = to_clk_divider(hw);
-+	unsigned long flags = 0;
-+	int prediv_value;
-+	int div_value;
-+	int ret = 0;
-+	u32 val;
-+
-+	ret = imx8m_clk_composite_compute_dividers(rate, parent_rate,
-+						&prediv_value, &div_value);
-+	if (ret)
-+		return -EINVAL;
-+
-+	spin_lock_irqsave(divider->lock, flags);
-+
-+	val = readl(divider->reg);
-+	val &= ~((clk_div_mask(divider->width) << divider->shift) |
-+			(clk_div_mask(PCG_DIV_WIDTH) << PCG_DIV_SHIFT));
-+
-+	val |= (u32)(prediv_value  - 1) << divider->shift;
-+	val |= (u32)(div_value - 1) << PCG_DIV_SHIFT;
-+	writel(val, divider->reg);
-+
-+	spin_unlock_irqrestore(divider->lock, flags);
-+
-+	return ret;
-+}
-+
-+static const struct clk_ops imx8m_clk_composite_divider_ops = {
-+	.recalc_rate = imx8m_clk_composite_divider_recalc_rate,
-+	.round_rate = imx8m_clk_composite_divider_round_rate,
-+	.set_rate = imx8m_clk_composite_divider_set_rate,
-+};
-+
-+struct clk *imx8m_clk_composite_flags(const char *name,
-+					const char **parent_names,
-+					int num_parents, void __iomem *reg,
-+					unsigned long flags)
-+{
-+	struct clk_hw *hw = ERR_PTR(-ENOMEM), *mux_hw;
-+	struct clk_hw *div_hw, *gate_hw;
-+	struct clk_divider *div = NULL;
-+	struct clk_gate *gate = NULL;
-+	struct clk_mux *mux = NULL;
-+
-+	mux = kzalloc(sizeof(*mux), GFP_KERNEL);
-+	if (!mux)
-+		goto fail;
-+
-+	mux_hw = &mux->hw;
-+	mux->reg = reg;
-+	mux->shift = PCG_PCS_SHIFT;
-+	mux->mask = PCG_PCS_MASK;
-+
-+	div = kzalloc(sizeof(*div), GFP_KERNEL);
-+	if (!div)
-+		goto fail;
-+
-+	div_hw = &div->hw;
-+	div->reg = reg;
-+	div->shift = PCG_PREDIV_SHIFT;
-+	div->width = PCG_PREDIV_WIDTH;
-+	div->lock = &imx_ccm_lock;
-+	div->flags = CLK_DIVIDER_ROUND_CLOSEST;
-+
-+	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!gate)
-+		goto fail;
-+
-+	gate_hw = &gate->hw;
-+	gate->reg = reg;
-+	gate->bit_idx = PCG_CGC_SHIFT;
-+
-+	hw = clk_hw_register_composite(NULL, name, parent_names, num_parents,
-+			mux_hw, &clk_mux_ops, div_hw,
-+			&imx8m_clk_composite_divider_ops,
-+			gate_hw, &clk_gate_ops, flags);
-+	if (IS_ERR(hw))
-+		goto fail;
-+
-+	return hw->clk;
-+
-+fail:
-+	kfree(gate);
-+	kfree(div);
-+	kfree(mux);
-+	return ERR_CAST(hw);
-+}
-diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-index 864cd8a..cb3e92c 100644
---- a/drivers/clk/imx/clk.h
-+++ b/drivers/clk/imx/clk.h
-@@ -239,4 +239,20 @@ struct clk *imx_clk_cpu(const char *name, const char *parent_name,
- 		struct clk *div, struct clk *mux, struct clk *pll,
- 		struct clk *step);
- 
-+struct clk *imx8m_clk_composite_flags(const char *name,
-+					const char **parent_names,
-+					int num_parents, void __iomem *reg,
-+					unsigned long flags);
-+
-+#define __imx8m_clk_composite(name, parent_names, reg, flags) \
-+	imx8m_clk_composite_flags(name, parent_names, \
-+		ARRAY_SIZE(parent_names), reg, \
-+		flags | CLK_SET_RATE_NO_REPARENT | CLK_OPS_PARENT_ENABLE)
-+
-+#define imx8m_clk_composite(name, parent_names, reg) \
-+	__imx8m_clk_composite(name, parent_names, reg, 0)
-+
-+#define imx8m_clk_composite_critical(name, parent_names, reg) \
-+	__imx8m_clk_composite(name, parent_names, reg, CLK_IS_CRITICAL)
-+
- #endif
+> 
+>>
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> [s-anna@ti.com: some binding updates]
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>>   .../devicetree/bindings/soc/ti/ti,pruss.txt        | 43 ++++++++++++++++++++++
+>>   1 file changed, 43 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt b/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
+>> index 3e5f32f..94c91ee 100644
+>> --- a/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
+>> +++ b/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
+>> @@ -210,6 +210,38 @@ used in TI Davinci SoCs. Please refer to the corresponding binding document,
+>>   Documentation/devicetree/bindings/net/davinci-mdio.txt for details.
+>>     +Application/User Nodes
+>> +=======================
+> 
+> Are these supposed to be stand-alone platform devices?
+> 
+
+Yes. The first use case we're going to address is the Ethernet ports on the IDKs.
+(Industrial development Kit) http://www.ti.com/tool/TMDXIDK437X
+
+>> +A PRU application/user node typically uses one or more PRU device nodes to
+>> +implement a PRU application/functionality. Each application/client node would
+>> +need a reference to at least a PRU node, and optionally pass some configuration
+>> +parameters.
+> 
+> I thought device tree is not supposed to be used for configuration.
+
+I think we need to word it properly. It is really a hardware/firmware map.
+> 
+>> +
+>> +Required Properties:
+>> +--------------------
+>> +- prus                 : phandles to the PRU nodes used
+>> +
+>> +Optional Properties:
+>> +--------------------
+>> +- firmware-name        : firmwares for the PRU cores, the default firmware
+>> +                         for the core from the PRU node will be used if not
+>> +                         provided. The firmware names should correspond to
+>> +                         the PRU cores listed in the 'prus' property
+> 
+> Perhaps this should be a "compatible" property instead of "firmware-name"? The
+> driver that matches the compatible string can then set the firmware names.
+
+Compatible property is there to choose the application driver. Should have mentioned
+it in Required properties.
+
+It is tricky for the driver to decipher the firmware-name as it needs to support
+the same use case on multiple platforms and the firmware name will be different for each.
+The driver itself is platform agnostic.
+
+So providing the firmware-name in the DT is the easiest and scalable solution.
+> 
+>> +- ti,pruss-gp-mux-sel  : array of values for the GP_MUX_SEL under PRUSS_GPCFG
+>> +                         register for a PRU. This selects the internal muxing
+>> +                         scheme for the PRU instance. If not provided, the
+>> +                         default out-of-reset value (0) for the PRU core is
+>> +                         used. Values should correspond to the PRU cores listed
+>> +                         in the 'prus' property
+> 
+> Is this supposed to be a pinmux? So maybe we should be using pinmux bindings?
+
+We already have pinmux binding for the PRU pins. This GP mux setting is an odd duck.
+
+It provides a way for a set of signals inside the ICSS to be connected to the PRU pins
+on the SOC, which are again multiplexed with other SOC pins via the regular pinmux.
+
+Some of the sets are
+
+GPIO mode (0)
+EnDAT mode (1)
+SD mode (3)
+MII2 mode (4)
+
+The application node needs to decide which set it wants to use.
+
+> 
+>> +- ti,pru-interrupt-map : PRU interrupt mappings, containing an array of entries
+>> +                         with each entry consisting of 4 cell-values. First one
+>> +                         is an index towards the "prus" property to identify the
+>> +                         PRU core for the interrupt map, second is the PRU
+>> +                         System Event id, third is the PRU interrupt channel id
+>> +                         and fourth is the PRU host interrupt id. If provided,
+>> +                         this map will supercede any other configuration
+>> +                         provided through firmware
+> 
+> Could this mapping just be cells of the interrupt consumer nodes instead of an
+> extra property? As I mentioned in a reply to another patch, unless there is a
+> compelling reason to do otherwise, the channel to host mapping can be required
+> to be 1:1 as recommended in the TRMs, so that cell can be omitted. Also, since
+> the interrupt controller is independent of the PRU cores, the cell specifying the
+> index of the PRU core is not needed in this case. The #interrupt-cells already
+> includes a cell for the system event number, so this just leaves one cell, the
+> host channel, to be added to the #interrupt-cells.
+> 
+> So, instead of:
+> 
+>     ti,pru-interrupt-map = <0 16 2 7 >, <1 19 1 3>;
+> 
+> we could have:
+> 
+>     interrupt-parent = <&pruss_intc>;
+>     interrupts = <16 7>, <19 3>;
+> 
+
+No, interrupts property will be used to provide the actual sysevent IRQs to the
+application driver. Below is how the ethernet application node looks like.
+
+	pruss2_eth {
+		compatible = "ti,am57-prueth";
+		prus = <&pru2_0>, <&pru2_1>;
+		firmware-name = "ti-pruss/am57xx-pru0-prueth-fw.elf",
+				"ti-pruss/am57xx-pru1-prueth-fw.elf";
+		sram = <&ocmcram1>;
+		interrupt-parent = <&pruss2_intc>;
+		mii-rt = <&pruss2_mii_rt>;
+		iep = <&pruss2_iep>;
+
+		pruss2_emac0: ethernet-mii0 {
+			phy-handle = <&pruss2_eth0_phy>;
+			phy-mode = "mii";
+			interrupts = <20>, <22>;
+			interrupt-names = "rx", "tx";
+		};
+
+		pruss2_emac1: ethernet-mii1 {
+			phy-handle = <&pruss2_eth1_phy>;
+			phy-mode = "mii";
+			interrupts = <21>, <23>;
+			interrupt-names = "rx", "tx";
+		};
+	};
+
+You can see that interrupts is providing the RX and TX sysevents.
+
+There needs to be a different way to provide the internal INTC map.
+
+Currently there are 2 ways of providing the INTC map. One is via the
+resource table and other is via DT.
+
+> There are also already alternate interrupt bindings that allow for the case
+> where there is more than one interrupt-parent.
+> 
+>> +
+>>   Example:
+>>   ========
+>>   1.    /* AM33xx PRU-ICSS */
+>> @@ -397,3 +429,14 @@ Example:
+>>               ...
+>>           };
+>>       };
+>> +
+>> +3:    /* PRU application node example */
+>> +    app_node: app_node {
+>> +        prus = <&pru1_0>, <&pru1_1>;
+>> +        firmware-name = "pruss-app-fw", "pruss-app-fw-2";
+>> +        ti,pruss-gp-mux-sel = <2>, <1>;
+>> +        /* setup interrupts for prus:
+>> +           prus[0] => pru1_0: ev=16, chnl=2, host-irq=7,
+>> +           prus[1] => pru1_1: ev=19, chnl=1, host-irq=3 */
+>> +        ti,pru-interrupt-map = <0 16 2 7 >, <1 19 1 3>;
+>> +    }
+>>
+> 
+
+cheers,
+-roger
 -- 
-2.7.4
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
