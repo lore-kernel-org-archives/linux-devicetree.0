@@ -1,52 +1,51 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 4/4] ARM: dts: meson: consistently disable pin bias
-Date: Wed, 28 Nov 2018 16:44:40 -0800
-Message-ID: <7h7egwd85j.fsf@baylibre.com>
-References: <20181109140445.17795-1-jbrunet@baylibre.com> <20181109140445.17795-5-jbrunet@baylibre.com> <CAFBinCCDMUem0AJ56jrW2ZQf06Q=O690aRwWY4Ua79np0J+g+w@mail.gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v5 13/17] clk: sunxi-ng: add support for suniv F1C100s SoC
+Date: Wed, 28 Nov 2018 16:47:16 -0800
+Message-ID: <154345243603.88331.17915868280143383591@swboyd.mtv.corp.google.com>
+References: <cover.1543443475.git.mesihkilinc@gmail.com>
+ <cc1357c9272628b4d89af007cead83117d9ba6e9.1543443475.git.mesihkilinc@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCCDMUem0AJ56jrW2ZQf06Q=O690aRwWY4Ua79np0J+g+w@mail.gmail.com>
+In-Reply-To: <cc1357c9272628b4d89af007cead83117d9ba6e9.1543443475.git.mesihkilinc@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, jbrunet@baylibre.com
-Cc: carlo@caione.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Cc: Mesih Kilinc <mesihkilinc@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Julian Calaby <julian.calaby@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+Quoting Mesih Kilinc (2018-11-28 14:33:23)
+> diff --git a/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.c b/drivers/clk/sunxi=
+-ng/ccu-suniv-f1c100s.c
+> new file mode 100644
+> index 0000000..d4bc1b8
+> --- /dev/null
+> +++ b/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.c
+> @@ -0,0 +1,541 @@
+> +/*
+> + * Copyright (c) 2016 Icenowy Zheng <icenowy@aosc.io>
+> + *
+> + * SPDX-License-Identifier: GPL-2.0
 
-> On Fri, Nov 9, 2018 at 3:05 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
->>
->> On Amlogic chipsets, the bias set through pinconf applies to the pad
->> itself, not only the GPIO function. This means that even when we change
->> the function of the pad from GPIO to anything else, the bias previously
->> set still applies.
->>
->> As we have seen with the eMMC, depending on the bias type and the function,
->> it may trigger problems.
->>
->> The underlying issue is that we inherit whatever was left by previous user
->> of the pad (pinconf, u-boot or the ROM code). As a consequence, the actual
->> setup we will get is undefined.
->>
->> There is nothing mentioned in the documentation about pad bias and pinmux
->> function, however leaving it undefined is not an option.
->>
->> This change consistently disable the pad bias for every pinmux functions.
->> It seems to work well, we can only assume that the necessary bias (if any)
->> is already provided by the pin function itself.
->>
->> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> Acked-by: Martin Blumenstingl<martin.blumenstingl@googlemail.com>
->
-> my Odroid-C1 still boots fine from SD card and Ethernet (ping) also still works
->
-> Kevin, can you please move this patch from your v4.21/dt64 branch to
-> the v4.21/dt (32-bit) branch?
-> all other patches from this series are for the 64-bit SoCs, so only
-> this single patch has to be moved
+Please fix this location.
 
-Thanks for catching it.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/of_address.h>
+> diff --git a/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.h b/drivers/clk/sunxi=
+-ng/ccu-suniv-f1c100s.h
+> new file mode 100644
+> index 0000000..1da687a
+> --- /dev/null
+> +++ b/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.h
+> @@ -0,0 +1,34 @@
+> +/*
+> + * Copyright 2017 Icenowy Zheng <icenowy@aosc.io>
+> + *
+> + * SPDX-License-Identifier: GPL-2.0+
 
-I moved it to the 32-bit branch, and added your ack.
+Ditto.
 
-Kevin
+> + */
+> +
