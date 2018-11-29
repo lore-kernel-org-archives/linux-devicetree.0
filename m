@@ -1,97 +1,52 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v13 0/5] Add i.MX8MQ clock driver
-Date: Wed, 28 Nov 2018 16:41:48 -0800
-Message-ID: <154345210894.88331.8277410833858111600@swboyd.mtv.corp.google.com>
-References: <1542125975-8448-1-git-send-email-abel.vesa@nxp.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 4/4] ARM: dts: meson: consistently disable pin bias
+Date: Wed, 28 Nov 2018 16:44:40 -0800
+Message-ID: <7h7egwd85j.fsf@baylibre.com>
+References: <20181109140445.17795-1-jbrunet@baylibre.com> <20181109140445.17795-5-jbrunet@baylibre.com> <CAFBinCCDMUem0AJ56jrW2ZQf06Q=O690aRwWY4Ua79np0J+g+w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542125975-8448-1-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <CAFBinCCDMUem0AJ56jrW2ZQf06Q=O690aRwWY4Ua79np0J+g+w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, jbrunet@baylibre.com
+Cc: carlo@caione.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Abel Vesa (2018-11-13 08:19:56)
-> Here is a link to the 12th version:
-> https://lkml.org/lkml/2018/11/7/642
-> =
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-> Changes since v12:
->  * replaced the division in clk_pll_recalc_rate in clk-frac
->    with do_div as suggested by Stephen
-> =
+> On Fri, Nov 9, 2018 at 3:05 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+>>
+>> On Amlogic chipsets, the bias set through pinconf applies to the pad
+>> itself, not only the GPIO function. This means that even when we change
+>> the function of the pad from GPIO to anything else, the bias previously
+>> set still applies.
+>>
+>> As we have seen with the eMMC, depending on the bias type and the function,
+>> it may trigger problems.
+>>
+>> The underlying issue is that we inherit whatever was left by previous user
+>> of the pad (pinconf, u-boot or the ROM code). As a consequence, the actual
+>> setup we will get is undefined.
+>>
+>> There is nothing mentioned in the documentation about pad bias and pinmux
+>> function, however leaving it undefined is not an option.
+>>
+>> This change consistently disable the pad bias for every pinmux functions.
+>> It seems to work well, we can only assume that the necessary bias (if any)
+>> is already provided by the pin function itself.
+>>
+>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> Acked-by: Martin Blumenstingl<martin.blumenstingl@googlemail.com>
+>
+> my Odroid-C1 still boots fine from SD card and Ethernet (ping) also still works
+>
+> Kevin, can you please move this patch from your v4.21/dt64 branch to
+> the v4.21/dt (32-bit) branch?
+> all other patches from this series are for the 64-bit SoCs, so only
+> this single patch has to be moved
 
-> Abel Vesa (2):
->   clk: imx: Add imx composite clock
->   clk: imx: Add clock driver for i.MX8MQ CCM
-> =
+Thanks for catching it.
 
-> Lucas Stach (3):
->   dt-bindings: add binding for i.MX8MQ CCM
->   clk: imx: add fractional PLL output clock
->   clk: imx: Add SCCG PLL type
-> =
+I moved it to the 32-bit branch, and added your ack.
 
-
-I had to apply this set of fixes to silence sparse and smatch warnings
-about things that are not right. Please take a look over things and see
-if it's sane.
-
-diff --git a/drivers/clk/imx/clk-composite-8m.c b/drivers/clk/imx/clk-compo=
-site-8m.c
-index bcd31d889584..6d9d3714b4df 100644
---- a/drivers/clk/imx/clk-composite-8m.c
-+++ b/drivers/clk/imx/clk-composite-8m.c
-@@ -127,8 +127,8 @@ struct clk *imx8m_clk_composite_flags(const char *name,
- 					int num_parents, void __iomem *reg,
- 					unsigned long flags)
- {
--	struct clk_hw *hw =3D NULL, *mux_hw =3D NULL;
--	struct clk_hw *div_hw =3D NULL, *gate_hw =3D NULL;
-+	struct clk_hw *hw =3D ERR_PTR(-ENOMEM), *mux_hw;
-+	struct clk_hw *div_hw, *gate_hw;
- 	struct clk_divider *div =3D NULL;
- 	struct clk_gate *gate =3D NULL;
- 	struct clk_mux *mux =3D NULL;
-diff --git a/drivers/clk/imx/clk-frac-pll.c b/drivers/clk/imx/clk-frac-pll.c
-index a3732be5ad7f..98726206f3c4 100644
---- a/drivers/clk/imx/clk-frac-pll.c
-+++ b/drivers/clk/imx/clk-frac-pll.c
-@@ -14,6 +14,8 @@
- #include <linux/slab.h>
- #include <linux/bitfield.h>
- =
-
-+#include "clk.h"
-+
- #define PLL_CFG0		0x0
- #define PLL_CFG1		0x4
- =
-
-@@ -214,7 +216,7 @@ struct clk *imx_clk_frac_pll(const char *name, const ch=
-ar *parent_name,
- 	ret =3D clk_hw_register(NULL, hw);
- 	if (ret) {
- 		kfree(pll);
--		return ERR_CAST(hw);
-+		return ERR_PTR(ret);
- 	}
- =
-
- 	return hw->clk;
-diff --git a/drivers/clk/imx/clk-sccg-pll.c b/drivers/clk/imx/clk-sccg-pll.c
-index 4666b96bdb3f..ee7752bace89 100644
---- a/drivers/clk/imx/clk-sccg-pll.c
-+++ b/drivers/clk/imx/clk-sccg-pll.c
-@@ -249,7 +249,7 @@ struct clk *imx_clk_sccg_pll(const char *name,
- 	ret =3D clk_hw_register(NULL, hw);
- 	if (ret) {
- 		kfree(pll);
--		return ERR_CAST(hw);
-+		return ERR_PTR(ret);
- 	}
- =
-
- 	return hw->clk;
+Kevin
