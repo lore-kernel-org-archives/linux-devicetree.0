@@ -1,75 +1,92 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3] arm64: dts: qcom: sdm845: Add dpu to
- sdm845 dts file
-Date: Wed, 28 Nov 2018 15:51:58 -0800
-Message-ID: <CAD=FV=U1nBH1mW8=N4vsLzED6csrUdP8vBF+hQWj6GmUoT-Qzw@mail.gmail.com>
-References: <1541125523-28358-1-git-send-email-jsanka@codeaurora.org>
- <1541125523-28358-2-git-send-email-jsanka@codeaurora.org>
- <20181128234418.GC17663@jcrouse-lnx.qualcomm.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/2] ARM: dts: qcom: Add SoC-specific string for
+ sdhci-msm-v4 nodes
+Date: Wed, 28 Nov 2018 16:03:08 -0800
+Message-ID: <20181129000308.GF24969@minitux>
+References: <20181105210921.253707-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181128234418.GC17663-9PYrDHPZ2Orvke4nUoYGnHL1okKdlPRT@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kristian Kristensen <hoegsberg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181105210921.253707-1-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBXZWQsIE5vdiAyOCwgMjAxOCBhdCAzOjQ0IFBNIEpvcmRhbiBDcm91c2UgPGpjcm91
-c2VAY29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+Cj4gT24gVGh1LCBOb3YgMDEsIDIwMTggYXQgMDc6
-MjU6MjNQTSAtMDcwMCwgSmV5a3VtYXIgU2Fua2FyYW4gd3JvdGU6Cj4gPiBEUFUgaXMgc2hvcnQg
-Zm9yIHRoZSBEaXNwbGF5IFByb2Nlc3NpbmcgVW5pdC4gSXQgaXMgdGhlIGRpc3BsYXkKPiA+IGNv
-bnRyb2xsZXIgb24gUXVhbGNvbW0gU0RNODQ1IGNoaXBzLgo+ID4KPiA+IFRoaXMgY2hhbmdlIGFk
-ZHMgTURTUyBhbmQgRFNJIG5vZGVzIHRvIGVuYWJsZSBkaXNwbGF5IG9uIHRoZQo+ID4gdGFyZ2V0
-IGRldmljZS4KPiA+Cj4gPiBDaGFuZ2VzIGluIHYyOgo+ID4gICAgICAgIC0gQmVlZmVkIHVwIGNv
-bW1pdCBtZXNzYWdlCj4gPiAgICAgICAgLSBVc2UgU29DIHNwZWNpZmljIGNvbXBhdGlibGVzIGZv
-ciBtZHNzIGFuZCBkcHUgKFJvYiBIKQo+ID4gICAgICAgIC0gVXNlIGFzc2lnbmVkLWNsb2NrcyB0
-byBzZXQgaW5pdGlhbCBjbG9jayBmcmVxdWVuY3koUm9iIEgpCj4gPiBDaGFuZ2VzIGluIHYzOgo+
-ID4gICAgICAgIC0gYWRkZWQgSU9NTVUgbm9kZQo+ID4gICAgICAgIC0gRml4IGRldmljZSBuYW1p
-bmcgKHJlbW92ZSBfcGh5cykKPiA+ICAgICAgICAtIFVzZSBjb3JyZWN0IElSUV9UWVBFIGluIGlu
-dGVycnVwdCBzcGVjaWZpZXJzCj4gPgo+ID4gU2lnbmVkLW9mZi1ieTogSmV5a3VtYXIgU2Fua2Fy
-YW4gPGpzYW5rYUBjb2RlYXVyb3JhLm9yZz4KPiA+IFNpZ25lZC1vZmYtYnk6IFNlYW4gUGF1bCA8
-c2VhbnBhdWxAY2hyb21pdW0ub3JnPgo+ID4gLS0tCj4gPiAgYXJjaC9hcm02NC9ib290L2R0cy9x
-Y29tL3NkbTg0NS5kdHNpIHwgMTkxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-Cj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE5MSBpbnNlcnRpb25zKCspCj4gPgo+ID4gZGlmZiAtLWdp
-dCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaSBiL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvcWNvbS9zZG04NDUuZHRzaQo+ID4gaW5kZXggMGM5YTJhYS4uZGQ2MTJhYyAxMDA2NDQK
-PiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQo+ID4gKysrIGIv
-YXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpCj4gPiBAQCAtOTc4LDYgKzk3OCwx
-OTcgQEAKPiA+ICAgICAgICAgICAgICAgICAgICAgICAjdGhlcm1hbC1zZW5zb3ItY2VsbHMgPSA8
-MT47Cj4gPiAgICAgICAgICAgICAgIH07Cj4gPgo+ID4gKyAgICAgICAgICAgICBtZHNzOiBtZHNz
-QGFlMDAwMDAgewo+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicWNvbSxz
-ZG04NDUtbWRzcyI7Cj4gPiArICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4YWUwMDAwMCAw
-eDEwMDA+Owo+ID4gKyAgICAgICAgICAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJtZHNzIjsKPiA+
-ICsKPiA+ICsgICAgICAgICAgICAgICAgICAgICBwb3dlci1kb21haW5zID0gPCZkaXNwY2MgMD47
-Cj4KPiBXb3VsZCB0aGUgcG93ZXJzLXRoYXQtYmUgaW4gdGhlIHBvd2VyIGRvbWFpbiBwcmVmZXIg
-dGhpcyB0byBoYXZlIGEgc3ltYm9saWMKPiB2YWx1ZT8gSSBzZWUgTURTU19HRFNDIGluIHRoZSBi
-aW5kaW5ncyBoZWFkZXIuCgpZb3UncmUgb25lIHBhdGNoIHZlcnNpb24gYmVoaW5kLiAgQ2FuIHlv
-dSBsb29rIGF0OgoKaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDY2NjI1My8g
-QUtBCmh0dHBzOi8vbGttbC5rZXJuZWwub3JnL3IvMTU0MTE5NzU3Ni0xOTczMC0yLWdpdC1zZW5k
-LWVtYWlsLWpzYW5rYUBjb2RlYXVyb3JhLm9yZwoKLi4udGhhdCBhZGRyZXNzZXMgdGhlIF9jbGsg
-aXNzdWVzIGFuZCBJIGNvbW1lbnRlZCBhYm91dCB0aGUgI2RlZmluZSB0b28uCgoKPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHBoeXMgPSA8JmRzaTBfcGh5PjsKPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHBoeS1uYW1lcyA9ICJkc2ktcGh5IjsKPgo+IFRoaXMgdG9v
-LCBJIHJlY2tvbi4KCkkgZGlkbid0IG5vdGljZSB0aGlzIG9uZSwgc28gaXQncyBzdGlsbCAiZHNp
-LXBoeSIgaW4gdjQuCgoKPiA+ICsgICAgICAgICAgICAgICAgICAgICBkc2kwX3BoeTogZHNpLXBo
-eUBhZTk0NDAwIHsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUg
-PSAicWNvbSxkc2ktcGh5LTEwbm0iOwo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-cmVnID0gPDB4YWU5NDQwMCAweDIwMD4sCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICA8MHhhZTk0YTAwIDB4MWUwPiwKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIDwweGFlOTQ2MDAgMHgyODA+Owo+Cj4gSSB0aGluayBpdCB3b3VsZCBiZSBiZXR0
-ZXIgaWYgdGhlc2Ugd2VyZSBpbiBudW1lcmljYWwgb3JkZXIuCgpTdGlsbCBicm9rZW4gaW4gdjQu
-CgoKQWxzbyBCam9ybidzIHRob3VnaHQgYWJvdXQgYWRkaW5nIGEgJ3N0YXR1cyA9ICJkaXNhYmxl
-ZCInIGFsc28gbWFrZXMgc2Vuc2UuCgpTbyBJIGd1ZXNzIGl0J3MgdGltZSBmb3IgYSB2NSBKZXlr
-dW1hci4KCgotRG91ZwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJl
-bm8K
+On Mon 05 Nov 13:09 PST 2018, Douglas Anderson wrote:
+
+> As per upstream discussion [1], we should have an SoC-specific
+> compatible string for Qualcomm's SDHCI nodes.  Let's add it.
+> 
+> [1] https://lkml.kernel.org/r/20181105203657.GA32282@bogus
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> ---
+> 
+>  arch/arm/boot/dts/qcom-apq8084.dtsi | 4 ++--
+>  arch/arm/boot/dts/qcom-msm8974.dtsi | 6 +++---
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
+> index 0e1e98707e3f..899f28533ed7 100644
+> --- a/arch/arm/boot/dts/qcom-apq8084.dtsi
+> +++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
+> @@ -412,7 +412,7 @@
+>  		};
+>  
+>  		sdhci@f9824900 {
+> -			compatible = "qcom,sdhci-msm-v4";
+> +			compatible = "qcom,apq8084-sdhci", "qcom,sdhci-msm-v4";
+>  			reg = <0xf9824900 0x11c>, <0xf9824000 0x800>;
+>  			reg-names = "hc_mem", "core_mem";
+>  			interrupts = <0 123 0>, <0 138 0>;
+> @@ -425,7 +425,7 @@
+>  		};
+>  
+>  		sdhci@f98a4900 {
+> -			compatible = "qcom,sdhci-msm-v4";
+> +			compatible = "qcom,apq8084-sdhci", "qcom,sdhci-msm-v4";
+>  			reg = <0xf98a4900 0x11c>, <0xf98a4000 0x800>;
+>  			reg-names = "hc_mem", "core_mem";
+>  			interrupts = <0 125 0>, <0 221 0>;
+> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> index aba159d5a95a..891990c0d0b4 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
+> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> @@ -602,7 +602,7 @@
+>  		};
+>  
+>  		sdhci@f9824900 {
+> -			compatible = "qcom,sdhci-msm-v4";
+> +			compatible = "qcom,msm8974-sdhci", "qcom,sdhci-msm-v4";
+>  			reg = <0xf9824900 0x11c>, <0xf9824000 0x800>;
+>  			reg-names = "hc_mem", "core_mem";
+>  			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
+> @@ -616,7 +616,7 @@
+>  		};
+>  
+>  		sdhci@f9864900 {
+> -			compatible = "qcom,sdhci-msm-v4";
+> +			compatible = "qcom,msm8974-sdhci", "qcom,sdhci-msm-v4";
+>  			reg = <0xf9864900 0x11c>, <0xf9864000 0x800>;
+>  			reg-names = "hc_mem", "core_mem";
+>  			interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>,
+> @@ -630,7 +630,7 @@
+>  		};
+>  
+>  		sdhci@f98a4900 {
+> -			compatible = "qcom,sdhci-msm-v4";
+> +			compatible = "qcom,msm8974-sdhci", "qcom,sdhci-msm-v4";
+>  			reg = <0xf98a4900 0x11c>, <0xf98a4000 0x800>;
+>  			reg-names = "hc_mem", "core_mem";
+>  			interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
+> -- 
+> 2.19.1.930.g4563a0d9d0-goog
+> 
