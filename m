@@ -1,33 +1,63 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH 2/3] dt-bindings: crypto: ccree: add dt bindings for
- ccree 703
-Date: Thu, 29 Nov 2018 14:42:18 +0800
-Message-ID: <20181129064218.53qc33vus5anla76@gondor.apana.org.au>
-References: <1542102039-22256-1-git-send-email-gilad@benyossef.com>
- <1542102039-22256-3-git-send-email-gilad@benyossef.com>
+From: Aisheng DONG <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v13 0/5] Add i.MX8MQ clock driver
+Date: Thu, 29 Nov 2018 07:46:41 +0000
+Message-ID: <AM0PR04MB42117F72B9C4D41C14B96CBD80D20@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1542125975-8448-1-git-send-email-abel.vesa@nxp.com>
+ <154345210894.88331.8277410833858111600@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1542102039-22256-3-git-send-email-gilad@benyossef.com>
+In-Reply-To: <154345210894.88331.8277410833858111600@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yael Chemla <yael.chemla@foss.arm.com>, Ofir Drang <Ofir.Drang@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>
+Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 13, 2018 at 09:40:36AM +0000, Gilad Ben-Yossef wrote:
-> Add device tree bindings associating Arm TrustZone CryptoCell 703 with the
-> ccree driver.
-> 
-> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-> ---
->  Documentation/devicetree/bindings/crypto/arm-cryptocell.txt | 1 +
->  1 file changed, 1 insertion(+)
-
-Which tree is this patch meant to go through?
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTdGVwaGVuIEJveWQgW21haWx0
+bzpzYm95ZEBrZXJuZWwub3JnXQ0KWy4uLl0NCj4gPg0KPiA+IENoYW5nZXMgc2luY2UgdjEyOg0K
+PiA+ICAqIHJlcGxhY2VkIHRoZSBkaXZpc2lvbiBpbiBjbGtfcGxsX3JlY2FsY19yYXRlIGluIGNs
+ay1mcmFjDQo+ID4gICAgd2l0aCBkb19kaXYgYXMgc3VnZ2VzdGVkIGJ5IFN0ZXBoZW4NCj4gPg0K
+PiA+IEFiZWwgVmVzYSAoMik6DQo+ID4gICBjbGs6IGlteDogQWRkIGlteCBjb21wb3NpdGUgY2xv
+Y2sNCj4gPiAgIGNsazogaW14OiBBZGQgY2xvY2sgZHJpdmVyIGZvciBpLk1YOE1RIENDTQ0KPiA+
+DQo+ID4gTHVjYXMgU3RhY2ggKDMpOg0KPiA+ICAgZHQtYmluZGluZ3M6IGFkZCBiaW5kaW5nIGZv
+ciBpLk1YOE1RIENDTQ0KPiA+ICAgY2xrOiBpbXg6IGFkZCBmcmFjdGlvbmFsIFBMTCBvdXRwdXQg
+Y2xvY2sNCj4gPiAgIGNsazogaW14OiBBZGQgU0NDRyBQTEwgdHlwZQ0KPiA+DQo+IA0KPiBJIGhh
+ZCB0byBhcHBseSB0aGlzIHNldCBvZiBmaXhlcyB0byBzaWxlbmNlIHNwYXJzZSBhbmQgc21hdGNo
+IHdhcm5pbmdzIGFib3V0DQo+IHRoaW5ncyB0aGF0IGFyZSBub3QgcmlnaHQuIFBsZWFzZSB0YWtl
+IGEgbG9vayBvdmVyIHRoaW5ncyBhbmQgc2VlIGlmIGl0J3Mgc2FuZS4NCj4gDQoNClRoZSBjaGFu
+Z2UgbG9va3MgZ29vZCB0byBtZSBhbmQgdGVzdGVkIG9rLg0KSSBkaWQgbm90IHNlZSB0aGlzIHBh
+dGNoIHNlcmllcyBpbiB5b3VyIHRyZWUuDQpEbyB5b3Ugd2FudCB1cyB0byBhcHBseSB5b3VyIGNo
+YW5nZXMgYW5kIHJlLXNlbmQgZm9yIGVhc3kgcGljayB1cD8NCg0KUmVnYXJkcw0KRG9uZyBBaXNo
+ZW5nDQoNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2lteC9jbGstY29tcG9zaXRlLThtLmMN
+Cj4gYi9kcml2ZXJzL2Nsay9pbXgvY2xrLWNvbXBvc2l0ZS04bS5jDQo+IGluZGV4IGJjZDMxZDg4
+OTU4NC4uNmQ5ZDM3MTRiNGRmIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2Nsay9pbXgvY2xrLWNv
+bXBvc2l0ZS04bS5jDQo+ICsrKyBiL2RyaXZlcnMvY2xrL2lteC9jbGstY29tcG9zaXRlLThtLmMN
+Cj4gQEAgLTEyNyw4ICsxMjcsOCBAQCBzdHJ1Y3QgY2xrICppbXg4bV9jbGtfY29tcG9zaXRlX2Zs
+YWdzKGNvbnN0IGNoYXINCj4gKm5hbWUsDQo+ICAJCQkJCWludCBudW1fcGFyZW50cywgdm9pZCBf
+X2lvbWVtICpyZWcsDQo+ICAJCQkJCXVuc2lnbmVkIGxvbmcgZmxhZ3MpDQo+ICB7DQo+IC0Jc3Ry
+dWN0IGNsa19odyAqaHcgPSBOVUxMLCAqbXV4X2h3ID0gTlVMTDsNCj4gLQlzdHJ1Y3QgY2xrX2h3
+ICpkaXZfaHcgPSBOVUxMLCAqZ2F0ZV9odyA9IE5VTEw7DQo+ICsJc3RydWN0IGNsa19odyAqaHcg
+PSBFUlJfUFRSKC1FTk9NRU0pLCAqbXV4X2h3Ow0KPiArCXN0cnVjdCBjbGtfaHcgKmRpdl9odywg
+KmdhdGVfaHc7DQo+ICAJc3RydWN0IGNsa19kaXZpZGVyICpkaXYgPSBOVUxMOw0KPiAgCXN0cnVj
+dCBjbGtfZ2F0ZSAqZ2F0ZSA9IE5VTEw7DQo+ICAJc3RydWN0IGNsa19tdXggKm11eCA9IE5VTEw7
+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9pbXgvY2xrLWZyYWMtcGxsLmMgYi9kcml2ZXJz
+L2Nsay9pbXgvY2xrLWZyYWMtcGxsLmMgaW5kZXgNCj4gYTM3MzJiZTVhZDdmLi45ODcyNjIwNmYz
+YzQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvY2xrL2lteC9jbGstZnJhYy1wbGwuYw0KPiArKysg
+Yi9kcml2ZXJzL2Nsay9pbXgvY2xrLWZyYWMtcGxsLmMNCj4gQEAgLTE0LDYgKzE0LDggQEANCj4g
+ICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvYml0ZmllbGQuaD4N
+Cj4gDQo+ICsjaW5jbHVkZSAiY2xrLmgiDQo+ICsNCj4gICNkZWZpbmUgUExMX0NGRzAJCTB4MA0K
+PiAgI2RlZmluZSBQTExfQ0ZHMQkJMHg0DQo+IA0KPiBAQCAtMjE0LDcgKzIxNiw3IEBAIHN0cnVj
+dCBjbGsgKmlteF9jbGtfZnJhY19wbGwoY29uc3QgY2hhciAqbmFtZSwgY29uc3QNCj4gY2hhciAq
+cGFyZW50X25hbWUsDQo+ICAJcmV0ID0gY2xrX2h3X3JlZ2lzdGVyKE5VTEwsIGh3KTsNCj4gIAlp
+ZiAocmV0KSB7DQo+ICAJCWtmcmVlKHBsbCk7DQo+IC0JCXJldHVybiBFUlJfQ0FTVChodyk7DQo+
+ICsJCXJldHVybiBFUlJfUFRSKHJldCk7DQo+ICAJfQ0KPiANCj4gIAlyZXR1cm4gaHctPmNsazsN
+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2lteC9jbGstc2NjZy1wbGwuYyBiL2RyaXZlcnMv
+Y2xrL2lteC9jbGstc2NjZy1wbGwuYyBpbmRleA0KPiA0NjY2Yjk2YmRiM2YuLmVlNzc1MmJhY2U4
+OSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9jbGsvaW14L2Nsay1zY2NnLXBsbC5jDQo+ICsrKyBi
+L2RyaXZlcnMvY2xrL2lteC9jbGstc2NjZy1wbGwuYw0KPiBAQCAtMjQ5LDcgKzI0OSw3IEBAIHN0
+cnVjdCBjbGsgKmlteF9jbGtfc2NjZ19wbGwoY29uc3QgY2hhciAqbmFtZSwNCj4gIAlyZXQgPSBj
+bGtfaHdfcmVnaXN0ZXIoTlVMTCwgaHcpOw0KPiAgCWlmIChyZXQpIHsNCj4gIAkJa2ZyZWUocGxs
+KTsNCj4gLQkJcmV0dXJuIEVSUl9DQVNUKGh3KTsNCj4gKwkJcmV0dXJuIEVSUl9QVFIocmV0KTsN
+Cj4gIAl9DQo+IA0KPiAgCXJldHVybiBody0+Y2xrOw0K
