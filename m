@@ -1,103 +1,54 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/2] clk: Add Fixed MMIO clock driver
-Date: Thu, 29 Nov 2018 14:29:34 -0800
-Message-ID: <154353057449.88331.10017415440005548379@swboyd.mtv.corp.google.com>
-References: <D3711617-229C-4FA5-9E73-A7A3C025893B@global.cadence.com>
- <154223394933.88331.14659021245427374668@swboyd.mtv.corp.google.com>
- <CAE55F09-516A-4737-8F74-07BBA3AF5737@global.cadence.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v2 1/5] clk: samsung: exynos5433: fix typo in imem
+ divider
+Date: Fri, 30 Nov 2018 07:53:42 +0900
+Message-ID: <5C006DF6.5090506@samsung.com>
+References: <20181129155134.19141-1-k.konieczny@partner.samsung.com>
+        <CGME20181129155145eucas1p18b3f72cb77218279c9a844cbc179b728@eucas1p1.samsung.com>
+        <20181129155134.19141-2-k.konieczny@partner.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAE55F09-516A-4737-8F74-07BBA3AF5737@global.cadence.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Janek Kotas <jank@cadence.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <stable-owner@vger.kernel.org>
+In-reply-to: <20181129155134.19141-2-k.konieczny@partner.samsung.com>
+Sender: stable-owner@vger.kernel.org
+To: Kamil Konieczny <k.konieczny@partner.samsung.com>, linux-samsung-soc@vger.kernel.org
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Janek Kotas (2018-11-15 00:27:15)
-> Thanks for the reply.
-> Jan
-> =
+Hi,
 
-> > On 14 Nov 2018, at 23:19, Stephen Boyd <sboyd@kernel.org> wrote:
-> > =
+On 2018년 11월 30일 00:51, Kamil Konieczny wrote:
+> Fix typo in imem clock divider 200 switched with 266.
+> 
+> Fixes: 5785d6e61f27 ("clk: samsung: exynos5433: Add clocks for CMU_BUS{0|1|2} domains")
+> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+> ---
+>  drivers/clk/samsung/clk-exynos5433.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
+> index 751e2c4fb65b..ea47f49abc7f 100644
+> --- a/drivers/clk/samsung/clk-exynos5433.c
+> +++ b/drivers/clk/samsung/clk-exynos5433.c
+> @@ -568,10 +568,10 @@ static const struct samsung_gate_clock top_gate_clks[] __initconst = {
+>  	GATE(CLK_ACLK_BUS1_400, "aclk_bus1_400", "div_aclk_bus1_400",
+>  			ENABLE_ACLK_TOP, 25,
+>  			CLK_IS_CRITICAL | CLK_SET_RATE_PARENT, 0),
+> -	GATE(CLK_ACLK_IMEM_200, "aclk_imem_200", "div_aclk_imem_266",
+> +	GATE(CLK_ACLK_IMEM_200, "aclk_imem_200", "div_aclk_imem_200",
+>  			ENABLE_ACLK_TOP, 24,
+>  			CLK_IS_CRITICAL | CLK_SET_RATE_PARENT, 0),
+> -	GATE(CLK_ACLK_IMEM_266, "aclk_imem_266", "div_aclk_imem_200",
+> +	GATE(CLK_ACLK_IMEM_266, "aclk_imem_266", "div_aclk_imem_266",
+>  			ENABLE_ACLK_TOP, 23,
+>  			CLK_IGNORE_UNUSED | CLK_SET_RATE_PARENT, 0),
+>  	GATE(CLK_ACLK_PERIC_66, "aclk_peric_66", "div_aclk_peric_66_b",
+> 
 
-> > Quoting Janek Kotas (2018-11-14 07:24:39)
-> >> This patch adds a driver for Fixed MMIO clock.
-> >> The driver reads a clock frequency value from a single 32-bit memory
-> >> mapped register and registers it as a fixed rate clock.
-> >> =
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-> >> It can be enabled with COMMON_CLK_FIXED_MMIO Kconfig option.
-> >> =
-
-> >> Signed-off-by: Jan Kotas <jank@cadence.com>
-> > =
-
-> > Sounds like a fine idea. Except I can see how it will be abused if there
-> > are a handful of these fixed rate "clks" somewhere in memory that all
-> > get populated. =
-
-> > =
-
-> > Do you really have a fixed rate clk in hardware that exposes a single
-> > register, or do you have a set of them that some firmware is populating
-> > into an I/O memory space that we can read the fixed rates from? If it's
-> > the latter, I wonder why we can't just have the firmware populate the
-> > fixed rate clks into DT itself?
-> =
-
-> The first case.
-> We have a single register in a fixed location which contains =
-
-> the frequency of the main system clock.
-> This allows us to use the same image in emulation, FPGA
-> and simulation without any changes.
-> We usually don=E2=80=99t use a full bootloader, just a simple wrapper,
-> which initializes the necessary stuff and jumps to the kernel.
-
-So the hardware team has decided to throw a frequency register in there?
-Alright! Does that fixed rate clk generate its fixed rate from some
-other clk? I'm curious if this fixed rate clk has a parent source.
-
-It would also be good to make sure that any clks registered from this
-driver can't be populated from regions of memory like DDR. Can you
-confirm? I think it will fail, but it would be worth checking
-
-> =
-
-> > =
-
-> >> diff --git a/drivers/clk/clk-fixed-mmio.c b/drivers/clk/clk-fixed-mmio=
-.c
-> >> new file mode 100644
-> >> index 0000000000..bbcadab345
-> >> --- /dev/null
-> >> +++ b/drivers/clk/clk-fixed-mmio.c
-> =
-
-> > =
-
-> >> +}
-> >> +
-> >> +CLK_OF_DECLARE(fixed_mmio_clk, "fixed-mmio-clock", of_fixed_mmio_clk_=
-setup);
-> > =
-
-> > Any reason why this can't be a platform driver? It would make this much
-> > less DT specific and usable on other firmwares/platforms if we used a
-> > platform driver here.
-> > =
-
-> =
-
-> I looked at the fixed rate clock as a reference, but I can change it to =
-
-> a platform driver, if that=E2=80=99s preferred.
-> =
-
-
-Yes I'd prefer a platform driver unless there's some reason it can't be
-done. We may need to have both in case this needs to be populated very
-early, but if that isn't the case then just a platform driver for now.
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
