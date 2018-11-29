@@ -1,32 +1,77 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 0/2] i2c: meson: add support for Meson G12A SoC i2c
- controller
-Date: Thu, 29 Nov 2018 12:02:22 +0100
-Message-ID: <8a6a204b28523e5a181f9e85dda18fade76a26a3.camel@baylibre.com>
-References: <1543489197-183181-1-git-send-email-jian.hu@amlogic.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 3/3] PCI: imx: Add support for i.MX8MQ
+Date: Thu, 29 Nov 2018 12:12:08 +0100
+Message-ID: <1543489928.2507.59.camel@pengutronix.de>
+References: <20181117181225.10737-1-andrew.smirnov@gmail.com>
+         <20181117181225.10737-4-andrew.smirnov@gmail.com>
+         <ce2ac1a880ce2a7a39f0e42b5059676daa748e52.camel@nxp.com>
+         <CAHQ1cqH6LT4GsxUchrmVG1m3fqawgyUjxdHvh=SzxhBiQOd8eg@mail.gmail.com>
+         <1543313169.2507.39.camel@pengutronix.de>
+         <VI1PR04MB5533DE497786CD80D4FE0941EED00@VI1PR04MB5533.eurprd04.prod.outlook.com>
+         <CAHQ1cqEGABcH3EG9yGo7Ns2fPR1s_u1YPtFoKRjUh50=aa=J2Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543489197-183181-1-git-send-email-jian.hu@amlogic.com>
+In-Reply-To: <CAHQ1cqEGABcH3EG9yGo7Ns2fPR1s_u1YPtFoKRjUh50=aa=J2Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jian Hu <jian.hu@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, linux-amlogic@lists.infradead.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com, Chris Healy <cphealy@gmail.com>, Dong Aisheng <aisheng.dong@nxp.com>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-11-29 at 18:59 +0800, Jian Hu wrote:
-> 1)Add G12A SoC i2c compatible string in dt-bindings.
-> 2)Add compatible and data for G12A I2C controller driver.
+Am Dienstag, den 27.11.2018, 13:14 -0800 schrieb Andrey Smirnov:
+> On Tue, Nov 27, 2018 at 2:46 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
+> > 
+> > On 11/27/18 12:06 PM, Lucas Stach wrote:
+> > > Hi Andrey,
+> > > 
+> > > Am Montag, den 26.11.2018, 10:24 -0800 schrieb Andrey Smirnov:
+> > > > On Tue, Nov 20, 2018 at 2:49 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
+> > > > > 
+> > > > > On Sat, 2018-11-17 at 10:12 -0800, Andrey Smirnov wrote:
+> > > > > > @@ -921,7 +1004,28 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+> > > > > > -     case IMX7D:
+> > > > > > +     case IMX8MQ:
+> > > > > > +             if (of_property_read_u32(node, "fsl,iomux-gpr1x",
+> > > > > > +                                      &imx6_pcie->gpr1x)) {
+> > > > > > +                     dev_err(dev, "Failed to get GPR1x address\n");
+> > > > > > +                     return -EINVAL;
+> > > > > > +             }
+> > > > > 
+> > > > > This is for distinguishing multiple controllers on the SOC but other
+> > > > > registers and bits might differ. Isn't it preferable to have a property
+> > > > > for controller id instead of adding many registers to DT?
+> > > > 
+> > > > I liked encoding necessary info in DT directly slightly better than
+> > > > encoding abstract ID and then decoding it further in the driver code.
+> > > > OTOH, I am not really attached to that path. Lucas, can you comment on
+> > > > this please?
+> > > 
+> > > Yes, after rereading the patch with this in mind I agree that having
+> > > the GPR offset on DT directly is IMO the better approach than an
+> > > abstract ID.
+> > 
+> > But it's not a single offset, for example the device_type (EP/RC) has
+> > bits for the two controllers side-by-side in GPR12.
+> > 
 > 
-> Jian Hu (2):
->   dt-bindings: i2c: meson: add Meson G12A SoC i2c compatible string
->   i2c: meson: add support for Meson G12A SoC I2C controller
+> Playing devil's advocate for a bit:
+> 
+> More specifically, currently the following per-controller bits need to
+> be configured:
+> 
+> - Location of the "device type" field within GPR12
+> - GPR register to use to control PCIn_CLKREQ_B_OVERRIDE_EN and
+> PCIn_CLKREQ_B_OVERRIDE_EN (GPR14 vs GPR16)
+> - Now that Philip spoke against PCIE_CTRL_APPS_CLK_REQ being exposed
+> via reset controller driver, we need to know which SRC register to use
+> to control that bit (SRC_PCIEPHY_RCR vs. SRC_PCIE2_RCR)
 
-Looks to me that the g12a is compatible with the axg. What is the point of
-adding this new compatible string ?
+If if we need a lot of different GPR offsets, I revise my earlier
+opinion. We certainly don't want lots of bit offsets and masks in the
+DT. The whole GPR thing is ugly, but I would rather hide this in the
+driver code, keyed by compatible and a controller id property, where we
+can change things without any worries about DT backward compatibility.
 
-> 
->  Documentation/devicetree/bindings/i2c/i2c-meson.txt | 1 +
->  drivers/i2c/busses/i2c-meson.c                      | 5 +++++
->  2 files changed, 6 insertions(+)
-> 
+Regards,
+Lucas
