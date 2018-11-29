@@ -1,188 +1,63 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v2] PCI: mediatek: Use
- devm_of_pci_get_host_bridge_resources() to parse DT
-Date: Thu, 29 Nov 2018 11:33:24 +0000
-Message-ID: <20181129113324.GA27228@e107981-ln.cambridge.arm.com>
-References: <1541645815-30340-1-git-send-email-honghui.zhang@mediatek.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH] arm64: dts: Add uart for mt6797 EVB
+Date: Thu, 29 Nov 2018 12:50:07 +0100
+Message-ID: <4a28375f-7487-f745-5d05-e2bc4c939369@gmail.com>
+References: <20181116183040.18696-1-matthias.bgg@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1541645815-30340-1-git-send-email-honghui.zhang@mediatek.com>
+In-Reply-To: <20181116183040.18696-1-matthias.bgg@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: honghui.zhang@mediatek.com
-Cc: bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com, devicetree@vger.kernel.org, youlin.pei@mediatek.com, jianjun.wang@mediatek.com
+To: matthias.bgg@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 08, 2018 at 10:56:55AM +0800, honghui.zhang@mediatek.com wrote:
-> From: Honghui Zhang <honghui.zhang@mediatek.com>
+
+
+On 16/11/2018 19:30, matthias.bgg@kernel.org wrote:
+> From: Matthias Brugger <mbrugger@suse.com>
 > 
-> Use the devm_of_pci_get_host_bridge_resources() API in place of the PCI OF
-> DT parser.
+> This patch adds the pinctrl configuration for the mt6797 EVB.
 > 
-> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
 > ---
->  drivers/pci/controller/pcie-mediatek.c | 98 +++++++++-------------------------
->  1 file changed, 24 insertions(+), 74 deletions(-)
+>  arch/arm64/boot/dts/mediatek/mt6797-evb.dts | 2 ++
+>  arch/arm64/boot/dts/mediatek/mt6797.dtsi    | 7 +++++++
+>  2 files changed, 9 insertions(+)
 > 
-> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> index 2a1f97c..0590a93 100644
-> --- a/drivers/pci/controller/pcie-mediatek.c
-> +++ b/drivers/pci/controller/pcie-mediatek.c
-> @@ -197,11 +197,7 @@ struct mtk_pcie_port {
->   * @dev: pointer to PCIe device
->   * @base: IO mapped register base
->   * @free_ck: free-run reference clock
-> - * @io: IO resource
-> - * @pio: PIO resource
->   * @mem: non-prefetchable memory resource
-> - * @busn: bus range
-> - * @offset: IO / Memory offset
->   * @ports: pointer to PCIe port information
->   * @soc: pointer to SoC-dependent operations
->   */
-> @@ -210,14 +206,7 @@ struct mtk_pcie {
->  	void __iomem *base;
->  	struct clk *free_ck;
+
+pushed to v4.20-next/dts64
+
+
+> diff --git a/arch/arm64/boot/dts/mediatek/mt6797-evb.dts b/arch/arm64/boot/dts/mediatek/mt6797-evb.dts
+> index c79109c65409..237e869a5fa1 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt6797-evb.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt6797-evb.dts
+> @@ -33,4 +33,6 @@
 >  
-> -	struct resource io;
-> -	struct resource pio;
->  	struct resource mem;
-> -	struct resource busn;
-> -	struct {
-> -		resource_size_t mem;
-> -		resource_size_t io;
-> -	} offset;
->  	struct list_head ports;
->  	const struct mtk_pcie_soc *soc;
+>  &uart0 {
+>  	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart0_pins_a>;
 >  };
-> @@ -1045,55 +1034,43 @@ static int mtk_pcie_setup(struct mtk_pcie *pcie)
->  {
->  	struct device *dev = pcie->dev;
->  	struct device_node *node = dev->of_node, *child;
-> -	struct of_pci_range_parser parser;
-> -	struct of_pci_range range;
-> -	struct resource res;
->  	struct mtk_pcie_port *port, *tmp;
-> +	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
-> +	struct list_head *windows = &host->windows;
-> +	struct resource_entry *win, *tmp_win;
-> +	resource_size_t io_base;
->  	int err;
+> diff --git a/arch/arm64/boot/dts/mediatek/mt6797.dtsi b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
+> index a64bb84bdec3..2b2a69c7567f 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt6797.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
+> @@ -142,6 +142,13 @@
+>  		gpio-controller;
+>  		#gpio-cells = <2>;
 >  
-> -	if (of_pci_range_parser_init(&parser, node)) {
-> -		dev_err(dev, "missing \"ranges\" property\n");
-> -		return -EINVAL;
-> -	}
-> +	err = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
-> +						    windows, &io_base);
-> +	if (err)
-> +		return err;
->  
-> -	for_each_of_pci_range(&parser, &range) {
-> -		err = of_pci_range_to_resource(&range, node, &res);
-> -		if (err < 0)
-> -			return err;
-> +	err = devm_request_pci_bus_resources(dev, windows);
-> +	if (err < 0)
-> +		return err;
->  
-> -		switch (res.flags & IORESOURCE_TYPE_BITS) {
-> +	/* Get the I/O and memory ranges from DT */
-> +	resource_list_for_each_entry_safe(win, tmp_win, windows) {
-> +		switch (resource_type(win->res)) {
->  		case IORESOURCE_IO:
-> -			pcie->offset.io = res.start - range.pci_addr;
-> -
-> -			memcpy(&pcie->pio, &res, sizeof(res));
-> -			pcie->pio.name = node->full_name;
-> -
-> -			pcie->io.start = range.cpu_addr;
-> -			pcie->io.end = range.cpu_addr + range.size - 1;
-> -			pcie->io.flags = IORESOURCE_MEM;
-> -			pcie->io.name = "I/O";
-> -
-> -			memcpy(&res, &pcie->io, sizeof(res));
-> +			err = devm_pci_remap_iospace(dev, win->res, io_base);
-> +			if (err) {
-> +				dev_warn(dev, "error %d: failed to map resource %pR\n",
-> +					 err, win->res);
-> +				resource_list_destroy_entry(win);
-> +			}
->  			break;
-> -
->  		case IORESOURCE_MEM:
-> -			pcie->offset.mem = res.start - range.pci_addr;
-> -
-> -			memcpy(&pcie->mem, &res, sizeof(res));
-> +			memcpy(&pcie->mem, win->res, sizeof(*win->res));
->  			pcie->mem.name = "non-prefetchable";
->  			break;
-> +		case IORESOURCE_BUS:
-> +			host->busnr = win->res->start;
-> +			break;
->  		}
->  	}
->  
-> -	err = of_pci_parse_bus_range(node, &pcie->busn);
-> -	if (err < 0) {
-> -		dev_err(dev, "failed to parse bus ranges property: %d\n", err);
-> -		pcie->busn.name = node->name;
-> -		pcie->busn.start = 0;
-> -		pcie->busn.end = 0xff;
-> -		pcie->busn.flags = IORESOURCE_BUS;
-> -	}
-> -
->  	for_each_available_child_of_node(node, child) {
->  		int slot;
->  
-> @@ -1125,28 +1102,6 @@ static int mtk_pcie_setup(struct mtk_pcie *pcie)
->  	return 0;
->  }
->  
-> -static int mtk_pcie_request_resources(struct mtk_pcie *pcie)
-> -{
-> -	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
-> -	struct list_head *windows = &host->windows;
-> -	struct device *dev = pcie->dev;
-> -	int err;
-> -
-> -	pci_add_resource_offset(windows, &pcie->pio, pcie->offset.io);
-> -	pci_add_resource_offset(windows, &pcie->mem, pcie->offset.mem);
-> -	pci_add_resource(windows, &pcie->busn);
-> -
-> -	err = devm_request_pci_bus_resources(dev, windows);
-> -	if (err < 0)
-> -		return err;
-> -
-> -	err = devm_pci_remap_iospace(dev, &pcie->pio, pcie->io.start);
-> -	if (err < 0)
-> -		return err;
-> -
-> -	return 0;
-> -}
-> -
->  static int mtk_pcie_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -1169,11 +1124,6 @@ static int mtk_pcie_probe(struct platform_device *pdev)
->  	if (err)
->  		return err;
->  
-> -	err = mtk_pcie_request_resources(pcie);
-> -	if (err)
-> -		goto put_resources;
-> -
-> -	host->busnr = pcie->busn.start;
->  	host->dev.parent = pcie->dev;
->  	host->ops = pcie->soc->ops;
->  	host->map_irq = of_irq_parse_and_map_pci;
-
-I would prefer having all the host initialization carried out in a
-single function. I appreciate you may need to reintroduce a temporary
-busnumber value or reshuffle the code to do that, sorry for asking to
-change it again but I do not want to see the struct pci_host_bridge
-variables initialization scattered around, it is confusing.
-
-Thanks,
-Lorenzo
+> +		uart0_pins_a: uart0 {
+> +			pins0 {
+> +				pinmux = <MT6797_GPIO234__FUNC_UTXD0>,
+> +					 <MT6797_GPIO235__FUNC_URXD0>;
+> +			};
+> +		};
+> +
+>  		uart1_pins_a: uart1 {
+>  			pins1 {
+>  				pinmux = <MT6797_GPIO232__FUNC_URXD1>,
+> 
