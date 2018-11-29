@@ -1,40 +1,106 @@
-Return-Path: <SRS0=rVD/=OC=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.bootlin.com ([62.4.15.54]:52897 "EHLO mail.bootlin.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409180AbeKWU2Y (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 23 Nov 2018 15:28:24 -0500
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 4/4] dt-bindings: clk: armada3700: document the PCIe clock
-Date: Fri, 23 Nov 2018 10:44:43 +0100
-Message-Id: <20181123094444.27956-5-miquel.raynal@bootlin.com>
-In-Reply-To: <20181123094444.27956-1-miquel.raynal@bootlin.com>
-References: <20181123094444.27956-1-miquel.raynal@bootlin.com>
+Return-Path: <SRS0=sRnJ=OI=nvidia.com=jonathanh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: tegra186-gpio: Add Tegra186 specific prefix
+References: <20181123124341.21431-1-thierry.reding@gmail.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <07ba710c-719c-f3dc-2d39-8fdbf0e9f643@nvidia.com>
+Date: Thu, 29 Nov 2018 13:25:57 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+In-Reply-To: <20181123124341.21431-1-thierry.reding@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Thierry Reding <thierry.reding@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add a reference to the missing PCIe clock managed by this IP. The
-clock resides in the south bridge.
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- .../devicetree/bindings/clock/armada3700-periph-clock.txt        | 1 +
- 1 file changed, 1 insertion(+)
+On 23/11/2018 12:43, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> Subsequent generations of Tegra, such as Tegra194, contain a completely
+> different set of GPIOs. In order to clarify that the Tegra186 defines
+> are indeed specific to Tegra186, change the prefix from TEGRA_ to
+> TEGRA186_.
+> 
+> Note that for now we need to keep the old definitions in place to avoid
+> breaking compilation in file that use this header. Once all users have
+> been converted to use the new defines, the old ones can be removed.
+> 
+> Also note that this is only a naming change and doesn't affect device
+> tree ABI.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+>  include/dt-bindings/gpio/tegra186-gpio.h | 41 ++++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+> 
+> diff --git a/include/dt-bindings/gpio/tegra186-gpio.h b/include/dt-bindings/gpio/tegra186-gpio.h
+> index 463ad398fe3e..cabc5712e745 100644
+> --- a/include/dt-bindings/gpio/tegra186-gpio.h
+> +++ b/include/dt-bindings/gpio/tegra186-gpio.h
+> @@ -14,6 +14,34 @@
+>  #include <dt-bindings/gpio/gpio.h>
+>  
+>  /* GPIOs implemented by main GPIO controller */
+> +#define TEGRA186_MAIN_GPIO_PORT_A 0
+> +#define TEGRA186_MAIN_GPIO_PORT_B 1
+> +#define TEGRA186_MAIN_GPIO_PORT_C 2
+> +#define TEGRA186_MAIN_GPIO_PORT_D 3
+> +#define TEGRA186_MAIN_GPIO_PORT_E 4
+> +#define TEGRA186_MAIN_GPIO_PORT_F 5
+> +#define TEGRA186_MAIN_GPIO_PORT_G 6
+> +#define TEGRA186_MAIN_GPIO_PORT_H 7
+> +#define TEGRA186_MAIN_GPIO_PORT_I 8
+> +#define TEGRA186_MAIN_GPIO_PORT_J 9
+> +#define TEGRA186_MAIN_GPIO_PORT_K 10
+> +#define TEGRA186_MAIN_GPIO_PORT_L 11
+> +#define TEGRA186_MAIN_GPIO_PORT_M 12
+> +#define TEGRA186_MAIN_GPIO_PORT_N 13
+> +#define TEGRA186_MAIN_GPIO_PORT_O 14
+> +#define TEGRA186_MAIN_GPIO_PORT_P 15
+> +#define TEGRA186_MAIN_GPIO_PORT_Q 16
+> +#define TEGRA186_MAIN_GPIO_PORT_R 17
+> +#define TEGRA186_MAIN_GPIO_PORT_T 18
+> +#define TEGRA186_MAIN_GPIO_PORT_X 19
+> +#define TEGRA186_MAIN_GPIO_PORT_Y 20
+> +#define TEGRA186_MAIN_GPIO_PORT_BB 21
+> +#define TEGRA186_MAIN_GPIO_PORT_CC 22
+> +
+> +#define TEGRA186_MAIN_GPIO(port, offset) \
+> +	((TEGRA186_MAIN_GPIO_PORT_##port * 8) + offset)
+> +
+> +/* need to keep these for backwards-compatibility */
+>  #define TEGRA_MAIN_GPIO_PORT_A 0
+>  #define TEGRA_MAIN_GPIO_PORT_B 1
+>  #define TEGRA_MAIN_GPIO_PORT_C 2
+> @@ -42,6 +70,19 @@
+>  	((TEGRA_MAIN_GPIO_PORT_##port * 8) + offset)
+>  
+>  /* GPIOs implemented by AON GPIO controller */
+> +#define TEGRA186_AON_GPIO_PORT_S 0
+> +#define TEGRA186_AON_GPIO_PORT_U 1
+> +#define TEGRA186_AON_GPIO_PORT_V 2
+> +#define TEGRA186_AON_GPIO_PORT_W 3
+> +#define TEGRA186_AON_GPIO_PORT_Z 4
+> +#define TEGRA186_AON_GPIO_PORT_AA 5
+> +#define TEGRA186_AON_GPIO_PORT_EE 6
+> +#define TEGRA186_AON_GPIO_PORT_FF 7
+> +
+> +#define TEGRA186_AON_GPIO(port, offset) \
+> +	((TEGRA186_AON_GPIO_PORT_##port * 8) + offset)
+> +
+> +/* need to keep these for backwards-compatibility */
+>  #define TEGRA_AON_GPIO_PORT_S 0
+>  #define TEGRA_AON_GPIO_PORT_U 1
+>  #define TEGRA_AON_GPIO_PORT_V 2
 
-diff --git a/Documentation/devicetree/bindings/clock/armada3700-periph-clock.txt b/Documentation/devicetree/bindings/clock/armada3700-periph-clock.txt
-index 85972715e593..fbf58c443c04 100644
---- a/Documentation/devicetree/bindings/clock/armada3700-periph-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/armada3700-periph-clock.txt
-@@ -46,6 +46,7 @@ ID	Clock name	Description
- 10	sdio		SDIO
- 11	usb32-sub2-sys	USB 2 clock
- 12	usb32-ss-sys	USB 3 clock
-+13	pcie		PCIe controller
- 
- Required properties:
- 
+I guess this will make it more consistent with what we have for
+Tegra194, so looks fine to me ...
+
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+
+Cheers
+Jon
+
 -- 
-2.19.1
+nvpublic
