@@ -1,97 +1,41 @@
-Return-Path: <SRS0=JPrT=OB=bp.renesas.com=biju.das@kernel.org>
+Return-Path: <SRS0=eLSC=OI=bp.renesas.com=biju.das@kernel.org>
 From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 4/7] ARM: dts: r8a7744: Add SYS-DMAC support
-Date: Thu, 22 Nov 2018 09:14:32 +0000
-Message-Id: <1542878075-61314-5-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com>
-References: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH v2 0/4] Add NXP pcf85263 real-time clock support
+Date: Thu, 29 Nov 2018 16:54:42 +0000
+Message-Id: <1543510486-29532-1-git-send-email-biju.das@bp.renesas.com>
+To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Describe SYS-DMAC0/1 in the R8A7744 device tree.
+This patch set aims to add support for NXP pcf85263 real-time clock. 
+pcf85263 rtc is compatible with pcf85363 rtc except that pcf85363 has
+64 bytes additional RAM. 
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm/boot/dts/r8a7744.dtsi | 66 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
+1 byte of nvmem is supported in pcf85263 and is exposed through sysfs.
 
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index cf02bf7..a9ebd09 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -215,6 +215,72 @@
- 			/* placeholder */
- 		};
- 
-+		dmac0: dma-controller@e6700000 {
-+			compatible = "renesas,dmac-r8a7744",
-+				     "renesas,rcar-dmac";
-+			reg = <0 0xe6700000 0 0x20000>;
-+			interrupts = <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 201 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 202 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 203 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 214 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "error",
-+					  "ch0", "ch1", "ch2", "ch3",
-+					  "ch4", "ch5", "ch6", "ch7",
-+					  "ch8", "ch9", "ch10", "ch11",
-+					  "ch12", "ch13", "ch14";
-+			clocks = <&cpg CPG_MOD 219>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 219>;
-+			#dma-cells = <1>;
-+			dma-channels = <15>;
-+		};
-+
-+		dmac1: dma-controller@e6720000 {
-+			compatible = "renesas,dmac-r8a7744",
-+				     "renesas,rcar-dmac";
-+			reg = <0 0xe6720000 0 0x20000>;
-+			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "error",
-+					  "ch0", "ch1", "ch2", "ch3",
-+					  "ch4", "ch5", "ch6", "ch7",
-+					  "ch8", "ch9", "ch10", "ch11",
-+					  "ch12", "ch13", "ch14";
-+			clocks = <&cpg CPG_MOD 218>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 218>;
-+			#dma-cells = <1>;
-+			dma-channels = <15>;
-+		};
-+
- 		avb: ethernet@e6800000 {
- 			reg = <0 0xe6800000 0 0x800>, <0 0xee0e8000 0 0x4000>;
- 			#address-cells = <1>;
+The details of pcf85363 and pcf85263 can be found in the below data sheets.
+
+https://www.nxp.com/docs/en/data-sheet/PCF85363A.pdf
+
+https://www.nxp.com/docs/en/data-sheet/PCF85263A.pdf
+
+This patch is tested against linux-next.
+
+V1-->V2
+   * Incorporated simon's review comment for binding patch.
+   * Incorporated Geert and Alexandre's review comments.
+
+Biju Das (4):
+  dt-bindings: rtc: pcf85363: Document pcf85263 real-time clock
+  rtc: pcf85363: Add support for NXP pcf85263 rtc
+  ARM: shmobile: Enable NXP pcf85363 rtc in shmobile_defconfig
+  ARM: dts: iwg23s-sbc: Enable RTC
+
+ Documentation/devicetree/bindings/rtc/pcf85363.txt |  4 +-
+ arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts          | 18 ++++++
+ arch/arm/configs/shmobile_defconfig                |  1 +
+ drivers/rtc/rtc-pcf85363.c                         | 72 +++++++++++++++++-----
+ 4 files changed, 78 insertions(+), 17 deletions(-)
+
 -- 
 2.7.4
