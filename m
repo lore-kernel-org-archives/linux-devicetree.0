@@ -1,71 +1,65 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 4/5] usb: mtu3: enable SETUPENDISR interrupt
-Date: Thu, 29 Nov 2018 10:34:35 +0800
-Message-ID: <93297cec234cfa1c9bc733f9ba5ea933f9ce51f1.1543458321.git.chunfeng.yun@mediatek.com>
-References: <e178546b79c3d602736a0db2cbfd76f7588e4022.1543458319.git.chunfeng.yun@mediatek.com>
+From: Houlong Wei <houlong.wei@mediatek.com>
+Subject: [PATCH v27 0/2] MediaTek MT8173 CMDQ support
+Date: Thu, 29 Nov 2018 11:37:07 +0800
+Message-ID: <1543462629-32746-1-git-send-email-houlong.wei@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e178546b79c3d602736a0db2cbfd76f7588e4022.1543458319.git.chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Monica Wang <monica.wang@mediatek.com>, Houlong Wei <houlong.wei@medi>
 List-Id: devicetree@vger.kernel.org
 
-If the controller receives a new SETUP during SETUP data stage,
-and will generate SETUPENDISR interrupt, the driver should abort
-the current SETUP command and process the new one.
+Hi,
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- drivers/usb/mtu3/mtu3_core.c       | 2 +-
- drivers/usb/mtu3/mtu3_gadget_ep0.c | 6 +++++-
- drivers/usb/mtu3/mtu3_hw_regs.h    | 1 +
- 3 files changed, 7 insertions(+), 2 deletions(-)
+This is Mediatek MT8173 Command Queue(CMDQ) driver. The CMDQ is used
+to help write registers with critical time limitation, such as
+updating display configuration during the vblank. It controls Global
+Command Engine (GCE) hardware to achieve this requirement.
 
-diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
-index 1ffc0bc31c1d..b6b20949d63a 100644
---- a/drivers/usb/mtu3/mtu3_core.c
-+++ b/drivers/usb/mtu3/mtu3_core.c
-@@ -484,7 +484,7 @@ void mtu3_ep0_setup(struct mtu3 *mtu)
- 	mtu3_writel(mtu->mac_base, U3D_EP0CSR, csr);
- 
- 	/* Enable EP0 interrupt */
--	mtu3_writel(mtu->mac_base, U3D_EPIESR, EP0ISR);
-+	mtu3_writel(mtu->mac_base, U3D_EPIESR, EP0ISR | SETUPENDISR);
- }
- 
- static int mtu3_mem_alloc(struct mtu3 *mtu)
-diff --git a/drivers/usb/mtu3/mtu3_gadget_ep0.c b/drivers/usb/mtu3/mtu3_gadget_ep0.c
-index 3c464d8ae023..7cb7ac980446 100644
---- a/drivers/usb/mtu3/mtu3_gadget_ep0.c
-+++ b/drivers/usb/mtu3/mtu3_gadget_ep0.c
-@@ -692,9 +692,13 @@ irqreturn_t mtu3_ep0_isr(struct mtu3 *mtu)
- 	mtu3_writel(mbase, U3D_EPISR, int_status); /* W1C */
- 
- 	/* only handle ep0's */
--	if (!(int_status & EP0ISR))
-+	if (!(int_status & (EP0ISR | SETUPENDISR)))
- 		return IRQ_NONE;
- 
-+	/* abort current SETUP, and process new one */
-+	if (int_status & SETUPENDISR)
-+		mtu->ep0_state = MU3D_EP0_STATE_SETUP;
-+
- 	csr = mtu3_readl(mbase, U3D_EP0CSR);
- 
- 	dev_dbg(mtu->dev, "%s csr=0x%x\n", __func__, csr);
-diff --git a/drivers/usb/mtu3/mtu3_hw_regs.h b/drivers/usb/mtu3/mtu3_hw_regs.h
-index a45bb253939f..d11fcd64c19d 100644
---- a/drivers/usb/mtu3/mtu3_hw_regs.h
-+++ b/drivers/usb/mtu3/mtu3_hw_regs.h
-@@ -104,6 +104,7 @@
- 
- /* U3D_EPISR */
- #define EPRISR(x)		(BIT(16) << (x))
-+#define SETUPENDISR		BIT(16)
- #define EPTISR(x)		(BIT(0) << (x))
- #define EP0ISR			BIT(0)
- 
+Changes since v26:
+ -rebase on v4.20-rc1
+ -add comment to explain why cmdq_buf_size is increased in case of
+  appending command failure
+Changes since v25:
+ -Replace WARN_ON() with WARN_ONCE() and add debug information.
+Changes since v24:
+ -move WARN_ON() into cmdq_pkt_append_command() from outside
+Changes since v23:
+ -rebase on v4.19-rc1
+ -revise return value of cmdq_mbox_create()
+ -revise cmdq_pkt_create()
+ -add MODULE_LICENSE() for mtk-cmdq-helper.c
+ -adjust functions order in mtk-cmdq.h
+Changes since v22:
+ -remove properties 'timeout' and 'thread-num' from device tree
+ -move timer from CMDQ driver to CMDQ helper
+ -move dma unmap from CMDQ driver to CMDQ helper
+ -config thread number in CMDQ match table
+ -remove reallocate mechanism and let client specify the cmdq buffer size
+ -let client specify the timeout time
+Changes since v21:
+ -rebase on v4.18-rc1
+ -remove subsys code and event id definition from mtk-cmdq-helper.c
+ -add mt8173-gce.h to define the subsys code and envent id
+Changes since v20:
+ -rebase on v4.15-rc1
+ -move dma_map_single outside of spinlock
+Changes since v19:
+ -rebase to v4.10-rc2
+
+Houlong Wei (2):
+  arm64: dts: mt8173: Add GCE node
+  soc: mediatek: Add Mediatek CMDQ helper
+
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi |  10 +
+ drivers/soc/mediatek/Kconfig             |  12 +
+ drivers/soc/mediatek/Makefile            |   1 +
+ drivers/soc/mediatek/mtk-cmdq-helper.c   | 300 +++++++++++++++++++++++
+ include/linux/soc/mediatek/mtk-cmdq.h    | 133 ++++++++++
+ 5 files changed, 456 insertions(+)
+ create mode 100644 drivers/soc/mediatek/mtk-cmdq-helper.c
+ create mode 100644 include/linux/soc/mediatek/mtk-cmdq.h
+
 -- 
 2.19.1
