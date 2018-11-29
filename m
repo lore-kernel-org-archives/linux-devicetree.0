@@ -1,72 +1,45 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: [RESEND PATCH 4/4] mtd: spi-nor: mtk-quadspi: rename config to a common one
-Date: Thu, 29 Nov 2018 14:29:56 +0800
-Message-ID: <d3722d3a7d410f0b47a25363f6d0dc6cd9a7a18e.1543472168.git.ryder.lee@mediatek.com>
-References: <235ade9c5cda19fb0c9356913e3f56ad86600f59.1543472168.git.ryder.lee@mediatek.com>
+From: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 13/17] clk: sunxi-ng: add support for
+ suniv F1C100s SoC
+Date: Thu, 29 Nov 2018 09:39:52 +0300
+Message-ID: <20181129063952.623svjr7pti7apah@ThinkPad>
+References: <cover.1543443475.git.mesihkilinc@gmail.com>
+ <cc1357c9272628b4d89af007cead83117d9ba6e9.1543443475.git.mesihkilinc@gmail.com>
+ <154345243603.88331.17915868280143383591@swboyd.mtv.corp.google.com>
+Reply-To: mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <235ade9c5cda19fb0c9356913e3f56ad86600f59.1543472168.git.ryder.lee@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDI4VHO5SYLBBPMT73PQKGQEDOO6HLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <154345243603.88331.17915868280143383591-n1Xw8LXHxjTHt/MElyovVYaSKrA+ACpX0E9HWUfgJXw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The quadspi is a generic communication interface which could be shared
-with other MediaTek SoCs. Hence rename it to a common one.
+On 18/11/28 04:47, Stephen Boyd wrote:
+> Quoting Mesih Kilinc (2018-11-28 14:33:23)
+> > diff --git a/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.c b/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.c
+> > new file mode 100644
+> > index 0000000..d4bc1b8
+> > --- /dev/null
+> > +++ b/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.c
+> > @@ -0,0 +1,541 @@
+> > +/*
+> > + * Copyright (c) 2016 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> > + *
+> > + * SPDX-License-Identifier: GPL-2.0
+> 
+> Please fix this location.
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
----
- drivers/mtd/spi-nor/Kconfig  | 16 ++++++++--------
- drivers/mtd/spi-nor/Makefile |  2 +-
- 2 files changed, 9 insertions(+), 9 deletions(-)
+I am very sorry, I should have been more carefull. Should I resend whole
+patchset or just resending this patch is enough? 
 
-diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
-index 6cc9c92..2062611 100644
---- a/drivers/mtd/spi-nor/Kconfig
-+++ b/drivers/mtd/spi-nor/Kconfig
-@@ -7,14 +7,6 @@ menuconfig MTD_SPI_NOR
- 
- if MTD_SPI_NOR
- 
--config MTD_MT81xx_NOR
--	tristate "Mediatek MT81xx SPI NOR flash controller"
--	depends on HAS_IOMEM
--	help
--	  This enables access to SPI NOR flash, using MT81xx SPI NOR flash
--	  controller. This controller does not support generic SPI BUS, it only
--	  supports SPI NOR Flash.
--
- config MTD_SPI_NOR_USE_4K_SECTORS
- 	bool "Use small 4096 B erase sectors"
- 	default y
-@@ -86,6 +78,14 @@ config SPI_NXP_SPIFI
- 	  Flash. Enable this option if you have a device with a SPIFI
- 	  controller and want to access the Flash as a mtd device.
- 
-+config SPI_MTK_QUADSPI
-+	tristate "MediaTek Quad SPI controller"
-+	depends on HAS_IOMEM
-+	help
-+	  This enables support for the Quad SPI controller in master mode.
-+	  This controller does not support generic SPI. It only supports
-+	  SPI NOR.
-+
- config SPI_INTEL_SPI
- 	tristate
- 
-diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
-index f4c61d2..7f4b6f6 100644
---- a/drivers/mtd/spi-nor/Makefile
-+++ b/drivers/mtd/spi-nor/Makefile
-@@ -5,7 +5,7 @@ obj-$(CONFIG_SPI_ATMEL_QUADSPI)	+= atmel-quadspi.o
- obj-$(CONFIG_SPI_CADENCE_QUADSPI)	+= cadence-quadspi.o
- obj-$(CONFIG_SPI_FSL_QUADSPI)	+= fsl-quadspi.o
- obj-$(CONFIG_SPI_HISI_SFC)	+= hisi-sfc.o
--obj-$(CONFIG_MTD_MT81xx_NOR)    += mtk-quadspi.o
-+obj-$(CONFIG_SPI_MTK_QUADSPI)    += mtk-quadspi.o
- obj-$(CONFIG_SPI_NXP_SPIFI)	+= nxp-spifi.o
- obj-$(CONFIG_SPI_INTEL_SPI)	+= intel-spi.o
- obj-$(CONFIG_SPI_INTEL_SPI_PCI)	+= intel-spi-pci.o
--- 
-1.9.1
+Thanks,
+Mesih
