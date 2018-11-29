@@ -1,116 +1,62 @@
-Return-Path: <SRS0=2X+C=OH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr60078.outbound.protection.outlook.com ([40.107.6.78]:32245
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727519AbeK1WFz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 28 Nov 2018 17:05:55 -0500
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: [PATCH V4 3/3] ARM: dts: imx6qdl-sabreauto: add flexcan support
-Date: Wed, 28 Nov 2018 11:03:56 +0000
-Message-ID: <20181128110138.587-4-qiangqing.zhang@nxp.com>
-References: <20181128110138.587-1-qiangqing.zhang@nxp.com>
-In-Reply-To: <20181128110138.587-1-qiangqing.zhang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
+Return-Path: <SRS0=gYPT=OI=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from xavier.telenet-ops.be ([195.130.132.52]:34552 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727221AbeK2WBU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 29 Nov 2018 17:01:20 -0500
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 4/6] soc: renesas: r8a77980-sysc: Correct names of A2DP[01] power domains
+Date: Thu, 29 Nov 2018 11:56:17 +0100
+Message-Id: <20181129105619.10695-5-geert+renesas@glider.be>
+In-Reply-To: <20181129105619.10695-1-geert+renesas@glider.be>
+References: <20181129105619.10695-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
-To: "mkl@pengutronix.de" <mkl@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng DONG <aisheng.dong@nxp.com>, Joakim Zhang <qiangqing.zhang@nxp.com>
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Aisheng Dong <aisheng.dong@nxp.com>
+The R-Car Gen3 HardWare Manual Errata for Rev. 0.80 (Feb 28, 2018)
+renamed the A2PD0 and A2DP0 power domains on R-Car V3H to A2DP0 resp.
+A2DP1.
 
-The flexcan1 is pin conflict with fec. User would make flexcan1 enabled
-with fec disabled to use CAN.
+As these definitions are not yet used from DT, they can just be renamed.
 
-Signed-off-by: Aisheng Dong <aisheng.dong@nxp.com>
-Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+Fixes: 7755b40d07a8dba7 ("dt-bindings: power: add R8A77980 SYSC power domain definitions")
+Fixes: 41d6d8bd8ae94ca9 ("soc: renesas: rcar-sysc: add R8A77980 support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-V1->V2:
-	*using SPDX tag for new files and remove pinctrl-assert-gpios property.
-V2->V3:
-	*remove the new files due to a pile of DTS files for a single
-	 development board with pin sharing among different devices not
-	 maintained.
-V3->V4:
-	*remove pinctrl-assert-gpios proverty in V3.
----
- arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 47 ++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ drivers/soc/renesas/r8a77980-sysc.c       | 4 ++--
+ include/dt-bindings/power/r8a77980-sysc.h | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/i=
-mx6qdl-sabreauto.dtsi
-index a10f0ad0bfb1..c1111b972b46 100644
---- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-@@ -101,6 +101,25 @@
- 		enable-active-high;
- 	};
-=20
-+	reg_can_en: regulator-can-en {
-+		compatible =3D "regulator-fixed";
-+		regulator-name =3D "can-en";
-+		regulator-min-microvolt =3D <3300000>;
-+		regulator-max-microvolt =3D <3300000>;
-+		gpio =3D <&max7310_b 6 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_can_stby: regulator-can-stby {
-+		compatible =3D "regulator-fixed";
-+		regulator-name =3D "can-stby";
-+		regulator-min-microvolt =3D <3300000>;
-+		regulator-max-microvolt =3D <3300000>;
-+		gpio =3D <&max7310_b 5 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		vin-supply =3D <&reg_can_en>;
-+	};
-+
- 	sound-cs42888 {
- 		compatible =3D "fsl,imx6-sabreauto-cs42888",
- 			"fsl,imx-audio-cs42888";
-@@ -279,6 +298,20 @@
- 	status =3D "okay";
- };
-=20
-+&can1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_flexcan1>;
-+	xceiver-supply =3D <&reg_can_stby>;
-+	status =3D "disabled"; /* pin conflict with fec */
-+};
-+
-+&can2 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_flexcan2>;
-+	xceiver-supply =3D <&reg_can_stby>;
-+	status =3D "okay";
-+};
-+
- &gpmi {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&pinctrl_gpmi_nand>;
-@@ -494,6 +527,20 @@
- 			>;
- 		};
-=20
-+		pinctrl_flexcan1: flexcan1grp {
-+			fsl,pins =3D <
-+				MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX        0x17059
-+				MX6QDL_PAD_KEY_COL2__FLEXCAN1_TX	0x17059
-+			>;
-+		};
-+
-+		pinctrl_flexcan2: flexcan2grp {
-+			fsl,pins =3D <
-+				MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX	0x17059
-+				MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX	0x17059
-+			>;
-+		};
-+
- 		pinctrl_gpio_keys: gpiokeysgrp {
- 			fsl,pins =3D <
- 				MX6QDL_PAD_SD2_CMD__GPIO1_IO11		0x1b0b0
---=20
+diff --git a/drivers/soc/renesas/r8a77980-sysc.c b/drivers/soc/renesas/r8a77980-sysc.c
+index 9265fb525ef34228..dbb2621ce4e3ea18 100644
+--- a/drivers/soc/renesas/r8a77980-sysc.c
++++ b/drivers/soc/renesas/r8a77980-sysc.c
+@@ -38,8 +38,8 @@ static const struct rcar_sysc_area r8a77980_areas[] __initconst = {
+ 	{ "a2sc2",	0x400, 8, R8A77980_PD_A2SC2,	R8A77980_PD_A3IR },
+ 	{ "a2sc3",	0x400, 9, R8A77980_PD_A2SC3,	R8A77980_PD_A3IR },
+ 	{ "a2sc4",	0x400, 10, R8A77980_PD_A2SC4,	R8A77980_PD_A3IR },
+-	{ "a2pd0",	0x400, 11, R8A77980_PD_A2PD0,	R8A77980_PD_A3IR },
+-	{ "a2pd1",	0x400, 12, R8A77980_PD_A2PD1,	R8A77980_PD_A3IR },
++	{ "a2dp0",	0x400, 11, R8A77980_PD_A2DP0,	R8A77980_PD_A3IR },
++	{ "a2dp1",	0x400, 12, R8A77980_PD_A2DP1,	R8A77980_PD_A3IR },
+ 	{ "a2cn",	0x400, 13, R8A77980_PD_A2CN,	R8A77980_PD_A3IR },
+ 	{ "a3vip",	0x2c0, 0, R8A77980_PD_A3VIP,	R8A77980_PD_ALWAYS_ON },
+ 	{ "a3vip1",	0x300, 0, R8A77980_PD_A3VIP1,	R8A77980_PD_A3VIP },
+diff --git a/include/dt-bindings/power/r8a77980-sysc.h b/include/dt-bindings/power/r8a77980-sysc.h
+index 2c90c12377253e5f..7bebe7e8dbdbb68e 100644
+--- a/include/dt-bindings/power/r8a77980-sysc.h
++++ b/include/dt-bindings/power/r8a77980-sysc.h
+@@ -15,8 +15,8 @@
+ #define R8A77980_PD_A2SC2		0
+ #define R8A77980_PD_A2SC3		1
+ #define R8A77980_PD_A2SC4		2
+-#define R8A77980_PD_A2PD0		3
+-#define R8A77980_PD_A2PD1		4
++#define R8A77980_PD_A2DP0		3
++#define R8A77980_PD_A2DP1		4
+ #define R8A77980_PD_CA53_CPU0		5
+ #define R8A77980_PD_CA53_CPU1		6
+ #define R8A77980_PD_CA53_CPU2		7
+-- 
 2.17.1
