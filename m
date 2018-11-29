@@ -1,33 +1,26 @@
-Return-Path: <SRS0=qqZh=OJ=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com> <1543319795-48325-6-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543319795-48325-6-git-send-email-biju.das@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 30 Nov 2018 10:50:03 +0100
-Message-ID: <CAMuHMdVrPimL2yRNfb7xm6vM6Rm-LPr2hwY0mHfMTr_3O+KjmA@mail.gmail.com>
+Return-Path: <SRS0=Z+zc=OI=verge.net.au=horms@kernel.org>
+Date: Thu, 29 Nov 2018 14:54:59 +0100
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH 05/22] ARM: dts: r8a7744-iwg20m: Add eMMC support
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <20181129135458.6ul4qsoftjkrrcqv@verge.net.au>
+References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
+ <1543319795-48325-6-git-send-email-biju.das@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1543319795-48325-6-git-send-email-biju.das@bp.renesas.com>
 To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Nov 27, 2018 at 1:05 PM Biju Das <biju.das@bp.renesas.com> wrote:
+On Tue, Nov 27, 2018 at 11:56:18AM +0000, Biju Das wrote:
 > Add eMMC support for iWave RZ/G1N Qseven System On Module.
->
+> 
 > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Thanks,
 
-I assume the PCB is the same for RZ/G1M and RZ/G1N, so perhaps this
-can be factored out in a common .dtsi file, like we did for Salvator-X(S)?
+This looks fine to me but I will wait to see if there are other reviews
+before applying.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
