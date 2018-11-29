@@ -1,43 +1,43 @@
 Return-Path: <SRS0=gYPT=OI=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from andre.telenet-ops.be ([195.130.132.53]:42950 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727402AbeK2WBU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 29 Nov 2018 17:01:20 -0500
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/6] soc: renesas: r8a77965-sysc: Remove non-existent A3IR power domain
-Date: Thu, 29 Nov 2018 11:56:14 +0100
-Message-Id: <20181129105619.10695-2-geert+renesas@glider.be>
-In-Reply-To: <20181129105619.10695-1-geert+renesas@glider.be>
-References: <20181129105619.10695-1-geert+renesas@glider.be>
+Received: from mail-eopbgr10064.outbound.protection.outlook.com ([40.107.1.64]:61808
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727333AbeK2Mya (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 29 Nov 2018 07:54:30 -0500
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V4 3/4] defconfig: arm64: add i.MX system controller RTC
+ support
+Date: Thu, 29 Nov 2018 01:50:19 +0000
+Message-ID: <1543455856-18021-4-git-send-email-Anson.Huang@nxp.com>
+References: <1543455856-18021-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1543455856-18021-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The R-Car Gen3 HardWare Manual Errata for Rev. 0.80 (Feb 28, 2018)
-removed the A3IR power domain on R-Car M3-N, as this SoC does not have
-an Image Processing Unit (IMP-X5).
+This patch enables CONFIG_RTC_DRV_IMX_SC as module by default.
 
-The definition in the DT bindings header cannot be removed yet, until
-its (incorrect) user has been removed.
-
-Fixes: a527709b78b3c997 ("soc: renesas: rcar-sysc: Add R-Car M3-N support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/soc/renesas/r8a77965-sysc.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/soc/renesas/r8a77965-sysc.c b/drivers/soc/renesas/r8a77965-sysc.c
-index d7f7928e3c071b45..e0533beb50fd7063 100644
---- a/drivers/soc/renesas/r8a77965-sysc.c
-+++ b/drivers/soc/renesas/r8a77965-sysc.c
-@@ -28,7 +28,6 @@ static const struct rcar_sysc_area r8a77965_areas[] __initconst = {
- 	{ "a2vc1",	0x3c0, 1, R8A77965_PD_A2VC1,	R8A77965_PD_A3VC },
- 	{ "3dg-a",	0x100, 0, R8A77965_PD_3DG_A,	R8A77965_PD_ALWAYS_ON },
- 	{ "3dg-b",	0x100, 1, R8A77965_PD_3DG_B,	R8A77965_PD_3DG_A },
--	{ "a3ir",	0x180, 0, R8A77965_PD_A3IR,	R8A77965_PD_ALWAYS_ON },
- };
- 
- const struct rcar_sysc_info r8a77965_sysc_info __initconst = {
--- 
-2.17.1
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 10fade8..9f12324 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -573,6 +573,7 @@ CONFIG_RTC_DRV_PL031=3Dy
+ CONFIG_RTC_DRV_SUN6I=3Dy
+ CONFIG_RTC_DRV_ARMADA38X=3Dy
+ CONFIG_RTC_DRV_TEGRA=3Dy
++CONFIG_RTC_DRV_IMX_SC=3Dm
+ CONFIG_RTC_DRV_XGENE=3Dy
+ CONFIG_DMADEVICES=3Dy
+ CONFIG_DMA_BCM2835=3Dm
+--=20
+2.7.4
