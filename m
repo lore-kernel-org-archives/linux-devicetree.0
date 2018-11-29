@@ -1,43 +1,137 @@
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: [PATCH v2 1/5] clk: samsung: exynos5433: fix typo in imem divider
-Date: Thu, 29 Nov 2018 16:51:30 +0100
-Message-ID: <20181129155134.19141-2-k.konieczny@partner.samsung.com>
-References: <20181129155134.19141-1-k.konieczny@partner.samsung.com>
-        <CGME20181129155145eucas1p18b3f72cb77218279c9a844cbc179b728@eucas1p1.samsung.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 2/6] phy: add A3700 COMPHY support
+Date: Thu, 29 Nov 2018 17:12:45 +0100
+Message-ID: <20181129171245.4f683045@xps13>
+References: <20181122210420.14861-1-miquel.raynal@bootlin.com>
+        <20181122210420.14861-3-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20181129155134.19141-1-k.konieczny@partner.samsung.com>
-Sender: stable-owner@vger.kernel.org
-To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
-Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181122210420.14861-3-miquel.raynal@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Evan Wang <xswang@marvell.com>, "Nadav Haklai (Marvell)" <nadavh@marvell.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Marcin Wojtas <mw@semihalf.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Fix typo in imem clock divider 200 switched with 266.
+Hello,
 
-Fixes: 5785d6e61f27 ("clk: samsung: exynos5433: Add clocks for CMU_BUS{0|1|2} domains")
-Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
----
- drivers/clk/samsung/clk-exynos5433.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Miquel Raynal <miquel.raynal@bootlin.com> wrote on Thu, 22 Nov 2018
+22:04:16 +0100:
 
-diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
-index 751e2c4fb65b..ea47f49abc7f 100644
---- a/drivers/clk/samsung/clk-exynos5433.c
-+++ b/drivers/clk/samsung/clk-exynos5433.c
-@@ -568,10 +568,10 @@ static const struct samsung_gate_clock top_gate_clks[] __initconst = {
- 	GATE(CLK_ACLK_BUS1_400, "aclk_bus1_400", "div_aclk_bus1_400",
- 			ENABLE_ACLK_TOP, 25,
- 			CLK_IS_CRITICAL | CLK_SET_RATE_PARENT, 0),
--	GATE(CLK_ACLK_IMEM_200, "aclk_imem_200", "div_aclk_imem_266",
-+	GATE(CLK_ACLK_IMEM_200, "aclk_imem_200", "div_aclk_imem_200",
- 			ENABLE_ACLK_TOP, 24,
- 			CLK_IS_CRITICAL | CLK_SET_RATE_PARENT, 0),
--	GATE(CLK_ACLK_IMEM_266, "aclk_imem_266", "div_aclk_imem_200",
-+	GATE(CLK_ACLK_IMEM_266, "aclk_imem_266", "div_aclk_imem_266",
- 			ENABLE_ACLK_TOP, 23,
- 			CLK_IGNORE_UNUSED | CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_ACLK_PERIC_66, "aclk_peric_66", "div_aclk_peric_66_b",
--- 
-2.19.1
+> Add a driver to support COMPHY, a hardware block providing shared
+> serdes PHYs on Marvell Armada 3700. This driver uses SMC calls and
+> rely on having an up-to-date firmware.
+> 
+> SATA, PCie and USB3 host mode have been tested successfully with an
+> ESPRESSObin. SGMII mode cannot be tested with this platform.
+> 
+> Co-Developed-by: Evan Wang <xswang@marvell.com>
+> Signed-off-by: Evan Wang <xswang@marvell.com>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+
+[...]
+
+> +static struct phy *mvebu_a3700_comphy_xlate(struct device *dev,
+> +					    struct of_phandle_args *args)
+> +{
+> +	struct mvebu_a3700_comphy_lane *lane;
+> +	struct phy *phy;
+> +
+> +	if (WARN_ON(args->args[0] >= MVEBU_A3700_COMPHY_PORTS))
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	phy = of_phy_simple_xlate(dev, args);
+> +	if (IS_ERR(phy))
+> +		return phy;
+> +
+> +	lane = phy_get_drvdata(phy);
+> +	if (lane->port >= 0)
+> +		return ERR_PTR(-EBUSY);
+
+This is not valid. It works only the first time the consumer gets
+a PHY for this lane. If the consumer put the PHY (module is unloaded)
+and then gets the PHY again (module is re-loaded a second time), the
+port is already set to != -1 and this will exit with an error and
+prevent the module to probe.
+
+> +
+> +	lane->port = args->args[0];
+
+I will remove the above check and transform it into a valid "port"
+value right here.
+
+Note: the same applies to the cp110 comphy driver on which the driver
+structure is based.
+
+> +
+> +	return phy;
+> +}
+> +
+> +static int mvebu_a3700_comphy_probe(struct platform_device *pdev)
+> +{
+> +	struct phy_provider *provider;
+> +	struct device_node *child;
+> +
+> +	for_each_available_child_of_node(pdev->dev.of_node, child) {
+> +		struct mvebu_a3700_comphy_lane *lane;
+> +		struct phy *phy;
+> +		int ret;
+> +		u32 lane_id;
+> +
+> +		ret = of_property_read_u32(child, "reg", &lane_id);
+> +		if (ret < 0) {
+> +			dev_err(&pdev->dev, "missing 'reg' property (%d)\n",
+> +				ret);
+> +			continue;
+> +		}
+> +
+> +		if (lane_id >= MVEBU_A3700_COMPHY_LANES) {
+> +			dev_err(&pdev->dev, "invalid 'reg' property\n");
+> +			continue;
+> +		}
+> +
+> +		lane = devm_kzalloc(&pdev->dev, sizeof(*lane), GFP_KERNEL);
+> +		if (!lane)
+> +			return -ENOMEM;
+> +
+> +		phy = devm_phy_create(&pdev->dev, child,
+> +				      &mvebu_a3700_comphy_ops);
+> +		if (IS_ERR(phy))
+> +			return PTR_ERR(phy);
+> +
+> +		lane->dev = &pdev->dev;
+> +		lane->mode = PHY_MODE_INVALID;
+> +		lane->id = lane_id;
+> +		lane->port = -1;
+> +		phy_set_drvdata(phy, lane);
+> +	}
+> +
+> +	provider = devm_of_phy_provider_register(&pdev->dev,
+> +						 mvebu_a3700_comphy_xlate);
+> +	return PTR_ERR_OR_ZERO(provider);
+> +}
+> +
+> +static const struct of_device_id mvebu_a3700_comphy_of_match_table[] = {
+> +	{ .compatible = "marvell,comphy-a3700" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, mvebu_a3700_comphy_of_match_table);
+> +
+> +static struct platform_driver mvebu_a3700_comphy_driver = {
+> +	.probe	= mvebu_a3700_comphy_probe,
+> +	.driver	= {
+> +		.name = "mvebu-a3700-comphy",
+> +		.of_match_table = mvebu_a3700_comphy_of_match_table,
+> +	},
+> +};
+> +module_platform_driver(mvebu_a3700_comphy_driver);
+> +
+> +MODULE_AUTHOR("Miquèl Raynal <miquel.raynal@bootlin.com>");
+> +MODULE_DESCRIPTION("Common PHY driver for A3700");
+> +MODULE_LICENSE("GPL v2");
+
+
+Thanks,
+Miquèl
