@@ -1,108 +1,74 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 1/5] usb: mtu3: remove QMU checksum
-Date: Thu, 29 Nov 2018 10:34:32 +0800
-Message-ID: <e178546b79c3d602736a0db2cbfd76f7588e4022.1543458319.git.chunfeng.yun@mediatek.com>
+Subject: [PATCH 5/5] usb: mtu3: clear SOFTCONN when clear USB3_EN if work as
+ HS mode
+Date: Thu, 29 Nov 2018 10:34:36 +0800
+Message-ID: <8b9d260a3aebc4ce4aaf1b87ef3c2e83a7c55355.1543458321.git.chunfeng.yun@mediatek.com>
+References: <e178546b79c3d602736a0db2cbfd76f7588e4022.1543458319.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <e178546b79c3d602736a0db2cbfd76f7588e4022.1543458319.git.chunfeng.yun@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The QMU checksum calculation is redundant, mostly used by debug,
-so remove it here.
+When the controller supports SS mode, but works as HS mode, the
+SOFTCONN will not be cleared automatically when clear USB3_EN
+by default, this cause an issue that can't disconnect from host,
+so clear SOFTCONN when clear USB3_EN when the class driver want
+to disable the D+ pullup.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/usb/mtu3/mtu3_core.c |  2 --
- drivers/usb/mtu3/mtu3_qmu.c  | 26 --------------------------
- 2 files changed, 28 deletions(-)
+ drivers/usb/mtu3/mtu3_core.c    | 2 ++
+ drivers/usb/mtu3/mtu3_hw_regs.h | 5 +++++
+ 2 files changed, 7 insertions(+)
 
 diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
-index ae70b9bfd797..3dce5fd9887d 100644
+index b6b20949d63a..4fee200795a5 100644
 --- a/drivers/usb/mtu3/mtu3_core.c
 +++ b/drivers/usb/mtu3/mtu3_core.c
-@@ -592,8 +592,6 @@ static void mtu3_regs_init(struct mtu3 *mtu)
- 	mtu3_clrbits(mbase, U3D_LINK_RESET_INFO, WTCHRP_MSK);
- 	/* U2/U3 detected by HW */
- 	mtu3_writel(mbase, U3D_DEVICE_CONF, 0);
--	/* enable QMU 16B checksum */
--	mtu3_setbits(mbase, U3D_QCR0, QMU_CS16B_EN);
- 	/* vbus detected by HW */
- 	mtu3_clrbits(mbase, U3D_MISC_CTRL, VBUS_FRC_EN | VBUS_ON);
- }
-diff --git a/drivers/usb/mtu3/mtu3_qmu.c b/drivers/usb/mtu3/mtu3_qmu.c
-index ff62ba232177..73ac042c45a8 100644
---- a/drivers/usb/mtu3/mtu3_qmu.c
-+++ b/drivers/usb/mtu3/mtu3_qmu.c
-@@ -154,27 +154,6 @@ void mtu3_gpd_ring_free(struct mtu3_ep *mep)
- 	memset(ring, 0, sizeof(*ring));
- }
+@@ -586,6 +586,8 @@ static void mtu3_regs_init(struct mtu3 *mtu)
+ 		mtu3_clrbits(mbase, U3D_LTSSM_CTRL, SOFT_U3_EXIT_EN);
+ 		/* automatically build U2 link when U3 detect fail */
+ 		mtu3_setbits(mbase, U3D_USB2_TEST_MODE, U2U3_AUTO_SWITCH);
++		/* auto clear SOFT_CONN when clear USB3_EN if work as HS */
++		mtu3_setbits(mbase, U3D_U3U2_SWITCH_CTRL, SOFTCON_CLR_AUTO_EN);
+ 	}
  
--/*
-- * calculate check sum of a gpd or bd
-- * add "noinline" and "mb" to prevent wrong calculation
-- */
--static noinline u8 qmu_calc_checksum(u8 *data)
--{
--	u8 chksum = 0;
--	int i;
--
--	data[1] = 0x0;  /* set checksum to 0 */
--
--	mb();	/* ensure the gpd/bd is really up-to-date */
--	for (i = 0; i < QMU_CHECKSUM_LEN; i++)
--		chksum += data[i];
--
--	/* Default: HWO=1, @flag[bit0] */
--	chksum += 1;
--
--	return 0xFF - chksum;
--}
--
- void mtu3_qmu_resume(struct mtu3_ep *mep)
- {
- 	struct mtu3 *mtu = mep->mtu;
-@@ -260,7 +239,6 @@ static int mtu3_prepare_tx_gpd(struct mtu3_ep *mep, struct mtu3_request *mreq)
- 	if (req->zero)
- 		gpd->ext_flag |= GPD_EXT_FLAG_ZLP;
+ 	mtu3_set_speed(mtu);
+diff --git a/drivers/usb/mtu3/mtu3_hw_regs.h b/drivers/usb/mtu3/mtu3_hw_regs.h
+index d11fcd64c19d..1d65b7476f23 100644
+--- a/drivers/usb/mtu3/mtu3_hw_regs.h
++++ b/drivers/usb/mtu3/mtu3_hw_regs.h
+@@ -268,6 +268,8 @@
+ #define U3D_LTSSM_INTR_ENABLE	(SSUSB_USB3_MAC_CSR_BASE + 0x013C)
+ #define U3D_LTSSM_INTR		(SSUSB_USB3_MAC_CSR_BASE + 0x0140)
  
--	gpd->chksum = qmu_calc_checksum((u8 *)gpd);
- 	gpd->flag |= GPD_FLAGS_HWO;
++#define U3D_U3U2_SWITCH_CTRL	(SSUSB_USB3_MAC_CSR_BASE + 0x0170)
++
+ /*---------------- SSUSB_USB3_MAC_CSR FIELD DEFINITION ----------------*/
  
- 	mreq->gpd = gpd;
-@@ -295,7 +273,6 @@ static int mtu3_prepare_rx_gpd(struct mtu3_ep *mep, struct mtu3_request *mreq)
- 	gpd->next_gpd = cpu_to_le32(lower_32_bits(enq_dma));
- 	ext_addr |= GPD_EXT_NGP(upper_32_bits(enq_dma));
- 	gpd->rx_ext_addr = cpu_to_le16(ext_addr);
--	gpd->chksum = qmu_calc_checksum((u8 *)gpd);
- 	gpd->flag |= GPD_FLAGS_HWO;
+ /* U3D_LTSSM_CTRL */
+@@ -302,6 +304,9 @@
+ #define SS_DISABLE_INTR		BIT(1)
+ #define SS_INACTIVE_INTR	BIT(0)
  
- 	mreq->gpd = gpd;
-@@ -323,7 +300,6 @@ int mtu3_qmu_start(struct mtu3_ep *mep)
- 		/* set QMU start address */
- 		write_txq_start_addr(mbase, epnum, ring->dma);
- 		mtu3_setbits(mbase, MU3D_EP_TXCR0(epnum), TX_DMAREQEN);
--		mtu3_setbits(mbase, U3D_QCR0, QMU_TX_CS_EN(epnum));
- 		/* send zero length packet according to ZLP flag in GPD */
- 		mtu3_setbits(mbase, U3D_QCR1, QMU_TX_ZLP(epnum));
- 		mtu3_writel(mbase, U3D_TQERRIESR0,
-@@ -338,7 +314,6 @@ int mtu3_qmu_start(struct mtu3_ep *mep)
- 	} else {
- 		write_rxq_start_addr(mbase, epnum, ring->dma);
- 		mtu3_setbits(mbase, MU3D_EP_RXCR0(epnum), RX_DMAREQEN);
--		mtu3_setbits(mbase, U3D_QCR0, QMU_RX_CS_EN(epnum));
- 		/* don't expect ZLP */
- 		mtu3_clrbits(mbase, U3D_QCR3, QMU_RX_ZLP(epnum));
- 		/* move to next GPD when receive ZLP */
-@@ -441,7 +416,6 @@ static void qmu_tx_zlp_error_handler(struct mtu3 *mtu, u8 epnum)
++/* U3D_U3U2_SWITCH_CTRL */
++#define SOFTCON_CLR_AUTO_EN	BIT(0)
++
+ /*---------------- SSUSB_USB3_SYS_CSR REGISTER DEFINITION ----------------*/
  
- 	/* by pass the current GDP */
- 	gpd_current->flag |= GPD_FLAGS_BPS;
--	gpd_current->chksum = qmu_calc_checksum((u8 *)gpd_current);
- 	gpd_current->flag |= GPD_FLAGS_HWO;
- 
- 	/*enable DMAREQEN, switch back to QMU mode */
+ #define U3D_LINK_UX_INACT_TIMER	(SSUSB_USB3_SYS_CSR_BASE + 0x020C)
 -- 
 2.19.1
