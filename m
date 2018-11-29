@@ -1,74 +1,92 @@
 From: Christophe Kerello <christophe.kerello@st.com>
-Subject: [ v3 0/3] mtd: rawnand: add STM32 FMC2 NAND flash controller driver
-Date: Thu, 29 Nov 2018 17:41:00 +0100
-Message-ID: <1543509663-26128-1-git-send-email-christophe.kerello@st.com>
+Subject: [ v3 1/3] dt-bindings: mtd: stm32_fmc2: add STM32 FMC2 NAND controller documentation
+Date: Thu, 29 Nov 2018 17:41:01 +0100
+Message-ID: <1543509663-26128-2-git-send-email-christophe.kerello@st.com>
+References: <1543509663-26128-1-git-send-email-christophe.kerello@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1543509663-26128-1-git-send-email-christophe.kerello@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: boris.brezillon@bootlin.com, miquel.raynal@bootlin.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, Christophe Kerello <christophe.kerello@st.com>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Christophe Kerello <christophe.kerello@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds the support for the STMicroelectronics FMC2 NAND flash
-controller found on STM32MP SOCs.
+This patch adds the documentation of the device tree bindings for the STM32
+FMC2 NAND controller.
 
-This patchset supports:
-  - the command sequencer feature, a hardware accelerator for read/write
-    within a page
-  - the manual mode feature, useful for debug purpose
-  - a maximum 8k page size
-  - following ECC strength and step size
-	- nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8)
-	- nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
-	- nand-ecc-strength = <1>, nand-ecc-step-size = <512> (Extended
-	  ecc based on HAMMING)
-    
-This patchset has been tested on Micron MT29F8G08ABACAH4 (8-bit SLC NAND)
-and MT29F8G16ABACAH4 (16-bit SLC NAND)
-
-Changes v3:
- - modify clocks property description
- - add NAND reg property description
- - stm32_fmc2_nfc inherits from nand_controller structure
- - rewrite stm32_fmc2_read_data/stm32_fmc2_write_data functions
-   to handle aligned and not aligned buffers
- - replace uint8_t by u8
- - use of NAND_ROW_ADDR_3 option
-
-Changes v2:
- - separate the controller structure and the NAND chip structure
- - remove timings description from the device tree
- - fix typo issues
- - fix kbuildrobot issues
-
-Christophe Kerello (3):
-  dt-bindings: mtd: stm32_fmc2: add STM32 FMC2 NAND controller
-    documentation
-  mtd: rawnand: stm32_fmc2: add STM32 FMC2 NAND flash controller driver
-  mtd: rawnand: stm32_fmc2: add manual mode
-
- .../devicetree/bindings/mtd/stm32-fmc2-nand.txt    |   61 +
- drivers/mtd/nand/raw/Kconfig                       |    9 +
- drivers/mtd/nand/raw/Makefile                      |    1 +
- drivers/mtd/nand/raw/stm32_fmc2_nand.c             | 2073 ++++++++++++++++++++
- 4 files changed, 2144 insertions(+)
+Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+---
+ .../devicetree/bindings/mtd/stm32-fmc2-nand.txt    | 61 ++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
- create mode 100644 drivers/mtd/nand/raw/stm32_fmc2_nand.c
 
+diff --git a/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt b/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
+new file mode 100644
+index 0000000..ad2bef8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
+@@ -0,0 +1,61 @@
++STMicroelectronics Flexible Memory Controller 2 (FMC2)
++NAND Interface
++
++Required properties:
++- compatible: Should be one of:
++              * st,stm32mp15-fmc2
++- reg: NAND flash controller memory areas.
++       First region contains the register location.
++       Regions 2 to 4 respectively contain the data, command,
++       and address space for CS0.
++       Regions 5 to 7 contain the same areas for CS1.
++- interrupts: The interrupt number
++- pinctrl-0: Standard Pinctrl phandle (see: pinctrl/pinctrl-bindings.txt)
++- clocks: The clock needed by the NAND flash controller
++
++Optional properties:
++- resets: Reference to a reset controller asserting the FMC controller
++- dmas: DMA specifiers (see: dma/stm32-mdma.txt)
++- dma-names: Must be "tx", "rx" and "ecc"
++
++* NAND device bindings:
++
++Required properties:
++- reg: describes the CS lines assigned to the NAND device.
++
++Optional properties:
++- nand-on-flash-bbt: see nand.txt
++- nand-ecc-strength: see nand.txt
++- nand-ecc-step-size: see nand.txt
++
++The following ECC strength and step size are currently supported:
++ - nand-ecc-strength = <1>, nand-ecc-step-size = <512> (Hamming)
++ - nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
++ - nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8) (default)
++
++Example:
++
++	fmc: nand-controller@58002000 {
++		compatible = "st,stm32mp15-fmc2";
++		reg = <0x58002000 0x1000>,
++		      <0x80000000 0x1000>,
++		      <0x88010000 0x1000>,
++		      <0x88020000 0x1000>,
++		      <0x81000000 0x1000>,
++		      <0x89010000 0x1000>,
++		      <0x89020000 0x1000>;
++		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&rcc FMC_K>;
++		resets = <&rcc FMC_R>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&fmc_pins_a>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		nand@0 {
++			reg = <0>;
++			nand-on-flash-bbt;
++			#address-cells = <1>;
++			#size-cells = <1>;
++		};
++	};
 -- 
 1.9.1
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
