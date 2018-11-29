@@ -1,41 +1,29 @@
-Return-Path: <SRS0=eLSC=OI=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 0/4] Add NXP pcf85263 real-time clock support
-Date: Thu, 29 Nov 2018 16:54:42 +0000
-Message-Id: <1543510486-29532-1-git-send-email-biju.das@bp.renesas.com>
-To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=tEXb=OI=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH 0/2] Add Initial Device Tree for RZ/A2
+Date: Thu, 29 Nov 2018 08:05:57 -0500
+Message-Id: <20181129130559.66732-1-chris.brandt@renesas.com>
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch set aims to add support for NXP pcf85263 real-time clock. 
-pcf85263 rtc is compatible with pcf85363 rtc except that pcf85363 has
-64 bytes additional RAM. 
+Add a Device Tree for RZ/A2 and the existing eval board.
 
-1 byte of nvmem is supported in pcf85263 and is exposed through sysfs.
+Once these get approved, I'll start piling on the other drivers in
+another patch series.
 
-The details of pcf85363 and pcf85263 can be found in the below data sheets.
 
-https://www.nxp.com/docs/en/data-sheet/PCF85363A.pdf
+Chris Brandt (2):
+  ARM: dts: r7s9210: Initial SoC device tree
+  ARM: dts: r7s9210-rza2mevb: Add support for RZ/A2M EVB
 
-https://www.nxp.com/docs/en/data-sheet/PCF85263A.pdf
-
-This patch is tested against linux-next.
-
-V1-->V2
-   * Incorporated simon's review comment for binding patch.
-   * Incorporated Geert and Alexandre's review comments.
-
-Biju Das (4):
-  dt-bindings: rtc: pcf85363: Document pcf85263 real-time clock
-  rtc: pcf85363: Add support for NXP pcf85263 rtc
-  ARM: shmobile: Enable NXP pcf85363 rtc in shmobile_defconfig
-  ARM: dts: iwg23s-sbc: Enable RTC
-
- Documentation/devicetree/bindings/rtc/pcf85363.txt |  4 +-
- arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts          | 18 ++++++
- arch/arm/configs/shmobile_defconfig                |  1 +
- drivers/rtc/rtc-pcf85363.c                         | 72 +++++++++++++++++-----
- 4 files changed, 78 insertions(+), 17 deletions(-)
+ Documentation/devicetree/bindings/arm/shmobile.txt |   2 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/r7s9210-rza2mevb.dts             | 133 +++++++++++++
+ arch/arm/boot/dts/r7s9210.dtsi                     | 211 +++++++++++++++++++++
+ 4 files changed, 347 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r7s9210-rza2mevb.dts
+ create mode 100644 arch/arm/boot/dts/r7s9210.dtsi
 
 -- 
-2.7.4
+2.16.1
