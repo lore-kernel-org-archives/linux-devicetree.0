@@ -1,95 +1,54 @@
-Return-Path: <SRS0=2X+C=OH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:35664 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727724AbeK1Uzo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 28 Nov 2018 15:55:44 -0500
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH v3 10/12] arm64: tegra: Add nodes for TCU on Tegra194
-Date: Wed, 28 Nov 2018 10:54:19 +0100
-Message-Id: <20181128095421.20573-11-thierry.reding@gmail.com>
-In-Reply-To: <20181128095421.20573-1-thierry.reding@gmail.com>
-References: <20181128095421.20573-1-thierry.reding@gmail.com>
+Return-Path: <SRS0=gYPT=OI=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr20075.outbound.protection.outlook.com ([40.107.2.75]:65312
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727026AbeK2NlH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 29 Nov 2018 08:41:07 -0500
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V4 0/4] Add i.MX System Controller thermal driver support
+Date: Thu, 29 Nov 2018 02:37:16 +0000
+Message-ID: <1543458696-4741-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mikko Perttunen <mperttunen@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, Pekka Pessi <ppessi@nvidia.com>, Mika Liljeberg <mliljeberg@nvidia.com>, linux-tegra@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+To: "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "arnd@arndb.de" <arnd@arndb.de>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Mikko Perttunen <mperttunen@nvidia.com>
+i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
+inside, the system controller is in charge of controlling power,
+clock and thermal sensors etc..
 
-Add nodes required for communication through the Tegra Combined UART.
-This includes the AON HSP instance, addition of shared interrupts
-for the TOP0 HSP instance, and finally the TCU node itself. Also
-mark the HSP instances as compatible to tegra194-hsp, as the hardware
-is not identical but is compatible to tegra186-hsp.
+This patch adds i.MX system controller thermal driver support,
+Linux kernel has to communicate with system controller via MU
+(message unit) IPC to get each thermal sensor's temperature,
+it supports multiple sensors which are passed from device tree,
+please see the binding doc for details.
 
-Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
-Changes in v2:
-- encode direction of mailboxes in device tree mailbox specifier
----
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 38 ++++++++++++++++++++++--
- 1 file changed, 35 insertions(+), 3 deletions(-)
+Note that this patch set is based on [V4,4/4] ARM64: dts: imx: add i.MX8QXP=
+ system controller RTC support,
+https://patchwork.kernel.org/patch/10703779/
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index d64fe306d2e4..1d8ed688fe59 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -688,10 +688,35 @@
- 		};
- 
- 		hsp_top0: hsp@3c00000 {
--			compatible = "nvidia,tegra186-hsp";
-+			compatible = "nvidia,tegra194-hsp", "nvidia,tegra186-hsp";
- 			reg = <0x03c00000 0xa0000>;
--			interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "doorbell";
-+			interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>,
-+			             <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
-+			             <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-+			             <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-+			             <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-+			             <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
-+			             <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-+			             <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
-+			             <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "doorbell", "shared0", "shared1", "shared2",
-+			                  "shared3", "shared4", "shared5", "shared6",
-+			                  "shared7";
-+			#mbox-cells = <2>;
-+		};
-+
-+		hsp_aon: hsp@c150000 {
-+			compatible = "nvidia,tegra194-hsp", "nvidia,tegra186-hsp";
-+			reg = <0x0c150000 0xa0000>;
-+			interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>,
-+			             <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
-+			             <GIC_SPI 135 IRQ_TYPE_LEVEL_HIGH>,
-+			             <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
-+			/*
-+			 * Shared interrupt 0 is routed only to AON/SPE, so
-+			 * we only have 4 shared interrupts for the CCPLEX.
-+			 */
-+			interrupt-names = "shared1", "shared2", "shared3", "shared4";
- 			#mbox-cells = <2>;
- 		};
- 
-@@ -879,6 +904,13 @@
- 		method = "smc";
- 	};
- 
-+	tcu: tcu {
-+		compatible = "nvidia,tegra194-tcu";
-+		mboxes = <&hsp_top0 TEGRA_HSP_MBOX_TYPE_SM TEGRA_HSP_SM_RX(0)>,
-+		         <&hsp_aon TEGRA_HSP_MBOX_TYPE_SM TEGRA_HSP_SM_TX(1)>;
-+		mbox-names = "rx", "tx";
-+	};
-+
- 	thermal-zones {
- 		cpu {
- 			thermal-sensors = <&{/bpmp/thermal}
--- 
-2.19.1
+Anson Huang (4):
+  dt-bindings: thermal: add binding doc for i.MX system controller
+    thermal driver
+  thermal: imx_sc: add i.MX system controller thermal support
+  defconfig: arm64: add i.MX system controller thermal support
+  ARM64: dts: imx: add i.MX8QXP thermal support
+
+ .../devicetree/bindings/thermal/imx-sc-thermal.txt |  33 ++++
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |  27 +++
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/thermal/Kconfig                            |  11 ++
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/imx_sc_thermal.c                   | 201 +++++++++++++++++=
+++++
+ 6 files changed, 274 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/imx-sc-therma=
+l.txt
+ create mode 100644 drivers/thermal/imx_sc_thermal.c
+
+--=20
+2.7.4
