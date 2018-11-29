@@ -1,51 +1,61 @@
-Return-Path: <SRS0=QSTz=OI=partner.samsung.com=k.konieczny@kernel.org>
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: [PATCH v2 4/5] arm64: dts: exynos: add imem clock
-Date: Thu, 29 Nov 2018 16:51:33 +0100
-Message-Id: <20181129155134.19141-5-k.konieczny@partner.samsung.com>
-In-Reply-To: <20181129155134.19141-1-k.konieczny@partner.samsung.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
+Return-Path: <SRS0=kUEf=OI=samsung.com=cw00.choi@kernel.org>
+MIME-version: 1.0
+Content-transfer-encoding: 8BIT
+Content-type: text/plain; charset="utf-8"
+Message-id: <5C006E30.6060400@samsung.com>
+Date: Fri, 30 Nov 2018 07:54:40 +0900
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v2 2/5] clk: samsung: exynos5433: fix name typo in sssx
+In-reply-to: <20181129155134.19141-3-k.konieczny@partner.samsung.com>
 References: <20181129155134.19141-1-k.konieczny@partner.samsung.com>
-	<CGME20181129155146eucas1p15ff987ffae765e34b64cd2244e9078c3@eucas1p1.samsung.com>
-To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
-Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+	<CGME20181129155145eucas1p2bcf8fe4747d16d721ade85dc520551e4@eucas1p2.samsung.com>
+	<20181129155134.19141-3-k.konieczny@partner.samsung.com>
+To: Kamil Konieczny <k.konieczny@partner.samsung.com>, linux-samsung-soc@vger.kernel.org
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add description for imem clock. The users can use compatibility
-"samsung,exynos5433-cmu-imem".
+Hi,
 
-Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
----
- arch/arm64/boot/dts/exynos/exynos5433.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+On 2018년 11월 30일 00:51, Kamil Konieczny wrote:
+> Fix typo in sssx name, there should be three letters 's'.
+> 
+> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+> ---
+>  drivers/clk/samsung/clk-exynos5433.c   | 2 +-
+>  include/dt-bindings/clock/exynos5433.h | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
+> index ea47f49abc7f..24c3360db65b 100644
+> --- a/drivers/clk/samsung/clk-exynos5433.c
+> +++ b/drivers/clk/samsung/clk-exynos5433.c
+> @@ -559,7 +559,7 @@ static const struct samsung_gate_clock top_gate_clks[] __initconst = {
+>  	/* ENABLE_ACLK_TOP */
+>  	GATE(CLK_ACLK_G3D_400, "aclk_g3d_400", "div_aclk_g3d_400",
+>  			ENABLE_ACLK_TOP, 30, CLK_IS_CRITICAL, 0),
+> -	GATE(CLK_ACLK_IMEM_SSX_266, "aclk_imem_ssx_266",
+> +	GATE(CLK_ACLK_IMEM_SSSX_266, "aclk_imem_sssx_266",
+>  			"div_aclk_imem_sssx_266", ENABLE_ACLK_TOP,
+>  			29, CLK_IGNORE_UNUSED, 0),
+>  	GATE(CLK_ACLK_BUS0_400, "aclk_bus0_400", "div_aclk_bus0_400",
+> diff --git a/include/dt-bindings/clock/exynos5433.h b/include/dt-bindings/clock/exynos5433.h
+> index 98bd85ce1e45..87bb2b017143 100644
+> --- a/include/dt-bindings/clock/exynos5433.h
+> +++ b/include/dt-bindings/clock/exynos5433.h
+> @@ -156,7 +156,7 @@
+>  #define CLK_ACLK_G2D_266		220
+>  #define CLK_ACLK_G2D_400		221
+>  #define CLK_ACLK_G3D_400		222
+> -#define CLK_ACLK_IMEM_SSX_266		223
+> +#define CLK_ACLK_IMEM_SSSX_266		223
+>  #define CLK_ACLK_BUS0_400		224
+>  #define CLK_ACLK_BUS1_400		225
+>  #define CLK_ACLK_IMEM_200		226
+> 
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-index 2131f12364cb..34055fa3a9d0 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-@@ -340,6 +340,21 @@
- 				<&cmu_top CLK_SCLK_USBDRD30_FSYS>;
- 		};
- 
-+		cmu_imem: clock-controller@11060000 {
-+			compatible = "samsung,exynos5433-cmu-imem";
-+			reg = <0x11060000 0x1000>;
-+			#clock-cells = <1>;
-+
-+			clock-names = "oscclk",
-+				"aclk_imem_sssx_266",
-+				"aclk_imem_266",
-+				"aclk_imem_200";
-+			clocks = <&xxti>,
-+				<&cmu_top CLK_DIV_ACLK_IMEM_SSSX_266>,
-+				<&cmu_top CLK_DIV_ACLK_IMEM_266>,
-+				<&cmu_top CLK_DIV_ACLK_IMEM_200>;
-+		};
-+
- 		cmu_g2d: clock-controller@12460000 {
- 			compatible = "samsung,exynos5433-cmu-g2d";
- 			reg = <0x12460000 0x1000>;
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+
 -- 
-2.19.1
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
