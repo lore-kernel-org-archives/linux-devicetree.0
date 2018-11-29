@@ -1,90 +1,55 @@
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: Re: [PATCH v7 0/4] clk: meson: add a sub EMMC clock controller
- support
-Date: Thu, 29 Nov 2018 09:48:19 +0800
-Message-ID: <aa21f2d6-507d-a672-9e9b-0896df011307@amlogic.com>
-References: <1542284312-55418-1-git-send-email-jianxin.pan@amlogic.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V4 0/4] Add i.MX system controller RTC driver
+Date: Thu, 29 Nov 2018 01:49:57 +0000
+Message-ID: <1543455856-18021-1-git-send-email-Anson.Huang__1316.41293778575$1543456095$gmane$org@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542284312-55418-1-git-send-email-jianxin.pan@amlogic.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, linux-rtc@vger.kernel
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jerome,
+NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+system controller, the system controller is in charge of system
+power, clock and secure RTC etc. management, Linux kernel
+has to communicate with system controller via MU (message unit)
+IPC to do RTC operation.
 
-I made some modifications as you suggested， could you please take a look?
+Since the RTC set time MUST to be done in secure EL3 mode (required
+by system controller firmware) and ALARM functions needs to be done
+with general MU IRQ handle, these are NOT ready NOW, so this patch
+ONLY supports RTC read time for now.
 
-On 2018/11/15 20:18, Jianxin Pan wrote:
-> This driver will add a MMC clock controller driver support.
-> The original idea about adding a clock controller is during the
-> discussion in the NAND driver mainline effort[1].
-> 
-> This driver is tested in the S400 board (AXG platform) with NAND driver.
-> 
-> Changes since v6 [7]:
->  - add one based support for sclk divier
->  - alloc sclk in probe for multiple instance
->  - fix coding styles
-> 
-> Changes since v5 [6]:
->  - remove divider ops with .init and use sclk_div instead
->  - drop CLK_DIVIDER_ROUND_CLOSEST in mux and div
->  - drop the useless type cast 
-> 
-> Changes since v4 [5]:
->  - use struct parm in phase delay driver
->  - remove 0 delay releted part in phase delay driver
->  - don't rebuild the parent name once again
->  - add divider ops with .init
-> 
-> Changes since v3 [4]:
->  - separate clk-phase-delay driver
->  - replace clk_get_rate() with clk_hw_get_rate()
->  - collect Rob's R-Y
->  - drop 'meson-' prefix from compatible string
-> 
->  Changes since v2 [3]:
->  - squash dt-binding clock-id patch
->  - update license
->  - fix alignment
->  - construct a clk register helper() function
-> 
-> Changes since v1 [2]:
->  - implement phase clock
->  - update compatible name
->  - adjust file name
->  - divider probe() into small functions, and re-use them
-> 
-> [1] https://lkml.kernel.org/r/20180628090034.0637a062@xps13
-> [2] https://lkml.kernel.org/r/20180703145716.31860-1-yixun.lan@amlogic.com
-> [3] https://lkml.kernel.org/r/20180710163658.6175-1-yixun.lan@amlogic.com
-> [4] https://lkml.kernel.org/r/20180712211244.11428-1-yixun.lan@amlogic.com
-> [5] https://lkml.kernel.org/r/20180809070724.11935-4-yixun.lan@amlogic.com
-> [6] https://lkml.kernel.org/r/1539839245-13793-1-git-send-email-jianxin.pan@amlogic.com
-> [7] https://lkml.kernel.org/r/1541089855-19356-1-git-send-email-jianxin.pan@amlogic.com
-> Yixun Lan (3):
->   clk: meson: add emmc sub clock phase delay driver
->   clk: meson: add DT documentation for emmc clock controller
->   clk: meson: add sub MMC clock controller driver
->   clk: meson: add one based divider support for sclk divider
-> 
->  .../devicetree/bindings/clock/amlogic,mmc-clkc.txt |  39 +++
->  drivers/clk/meson/Kconfig                          |  10 +
->  drivers/clk/meson/Makefile                         |   3 +-
->  drivers/clk/meson/clk-phase-delay.c                |  64 +++++
->  drivers/clk/meson/clkc-audio.h                     |   1 +
->  drivers/clk/meson/clkc.h                           |  13 +
->  drivers/clk/meson/mmc-clkc.c                       | 313 +++++++++++++++++++++
->  drivers/clk/meson/sclk-div.c                       |  28 +-
->  include/dt-bindings/clock/amlogic,mmc-clkc.h       |  17 ++
->  9 files changed, 477 insertions(+), 11 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
->  create mode 100644 drivers/clk/meson/clk-phase-delay.c
->  create mode 100644 drivers/clk/meson/mmc-clkc.c
->  create mode 100644 include/dt-bindings/clock/amlogic,mmc-clkc.h
-> 
+Note that this patch set is based on [V4,5/5] defconfig: arm64: add imx8qxp support,
+https://patchwork.kernel.org/patch/10677315/
+
+Anson Huang (4):
+  rtc: add i.MX system controller RTC support
+  dt-bindings: rtc: add binding doc for i.MX system controller RTC
+    driver
+  defconfig: arm64: add i.MX system controller RTC support
+  ARM64: dts: imx: add i.MX8QXP system controller RTC support
+
+ .../devicetree/bindings/rtc/rtc-imx-sc.txt         |  10 ++
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   4 +
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/rtc/Kconfig                                |   6 ++
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-imx-sc.c                           | 104 +++++++++++++++++++++
+ 6 files changed, 126 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
+ create mode 100644 drivers/rtc/rtc-imx-sc.c
+
+-- 
+2.7.4
