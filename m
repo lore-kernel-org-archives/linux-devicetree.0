@@ -1,63 +1,58 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH] arm64: dts: Add uart for mt6797 EVB
-Date: Thu, 29 Nov 2018 12:50:07 +0100
-Message-ID: <4a28375f-7487-f745-5d05-e2bc4c939369@gmail.com>
-References: <20181116183040.18696-1-matthias.bgg@kernel.org>
+From: Jian Hu <jian.hu@amlogic.com>
+Subject: Re: [PATCH 0/2] i2c: meson: add support for Meson G12A SoC i2c
+ controller
+Date: Thu, 29 Nov 2018 19:55:43 +0800
+Message-ID: <b2bceaf4-92ce-92a4-c382-713d29ae3b70@amlogic.com>
+References: <1543489197-183181-1-git-send-email-jian.hu@amlogic.com>
+ <8a6a204b28523e5a181f9e85dda18fade76a26a3.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181116183040.18696-1-matthias.bgg@kernel.org>
+In-Reply-To: <8a6a204b28523e5a181f9e85dda18fade76a26a3.camel@baylibre.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: matthias.bgg@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>
+To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, linux-amlogic@lists.infradead.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 16/11/2018 19:30, matthias.bgg@kernel.org wrote:
-> From: Matthias Brugger <mbrugger@suse.com>
+On 2018/11/29 19:02, Jerome Brunet wrote:
+> On Thu, 2018-11-29 at 18:59 +0800, Jian Hu wrote:
+>> 1)Add G12A SoC i2c compatible string in dt-bindings.
+>> 2)Add compatible and data for G12A I2C controller driver.
+>>
+>> Jian Hu (2):
+>>    dt-bindings: i2c: meson: add Meson G12A SoC i2c compatible string
+>>    i2c: meson: add support for Meson G12A SoC I2C controller
 > 
-> This patch adds the pinctrl configuration for the mt6797 EVB.
-> 
-> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt6797-evb.dts | 2 ++
->  arch/arm64/boot/dts/mediatek/mt6797.dtsi    | 7 +++++++
->  2 files changed, 9 insertions(+)
+> Looks to me that the g12a is compatible with the axg. What is the point of
+> adding this new compatible string ?
 > 
 
-pushed to v4.20-next/dts64
+I am okay if it is reasonable below in file 
+arch/arm64/boot/dts/amlogic/meson-g12a.dtsi. I2c controller node just 
+uses axg's compatible.
 
+			i2c0: i2c@1f000 {
+				compatible = "amlogic,meson-axg-i2c";
+				reg = <0x0 0x1f000 0x0 0x20>;
+				interrupts = <GIC_SPI 21 		   IRQ_TYPE_EDGE_RISING>;
+				clocks = <&clkc CLKID_I2C>;
+				#address-cells = <1>;
+				#size-cells = <0>;
+				status = "disabled";
+			};
 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6797-evb.dts b/arch/arm64/boot/dts/mediatek/mt6797-evb.dts
-> index c79109c65409..237e869a5fa1 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt6797-evb.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt6797-evb.dts
-> @@ -33,4 +33,6 @@
->  
->  &uart0 {
->  	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart0_pins_a>;
->  };
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6797.dtsi b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-> index a64bb84bdec3..2b2a69c7567f 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-> @@ -142,6 +142,13 @@
->  		gpio-controller;
->  		#gpio-cells = <2>;
->  
-> +		uart0_pins_a: uart0 {
-> +			pins0 {
-> +				pinmux = <MT6797_GPIO234__FUNC_UTXD0>,
-> +					 <MT6797_GPIO235__FUNC_URXD0>;
-> +			};
-> +		};
-> +
->  		uart1_pins_a: uart1 {
->  			pins1 {
->  				pinmux = <MT6797_GPIO232__FUNC_URXD1>,
+If it is, I just submit the i2c controller node in meson-g12a.dtsi.
+
+>>
+>>   Documentation/devicetree/bindings/i2c/i2c-meson.txt | 1 +
+>>   drivers/i2c/busses/i2c-meson.c                      | 5 +++++
+>>   2 files changed, 6 insertions(+)
+>>
+> 
+> 
+> .
 > 
