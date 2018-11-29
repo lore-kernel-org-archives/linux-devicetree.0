@@ -1,213 +1,74 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 12/16] dt-bindings: remoteproc: ti-pruss: Document
- application node bindings
-Date: Thu, 29 Nov 2018 10:33:22 -0600
-Message-ID: <377707a9-6ea8-8faf-35dc-0aa1fddda272@lechnology.com>
-References: <1543218769-5507-1-git-send-email-rogerq@ti.com>
- <1543218769-5507-13-git-send-email-rogerq@ti.com>
- <6a945433-00b2-e0e5-2dc8-2a4d2bf0db6f@lechnology.com> <5BFFBA5F.703@ti.com>
+From: Christophe Kerello <christophe.kerello@st.com>
+Subject: [ v3 0/3] mtd: rawnand: add STM32 FMC2 NAND flash controller driver
+Date: Thu, 29 Nov 2018 17:41:00 +0100
+Message-ID: <1543509663-26128-1-git-send-email-christophe.kerello@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5BFFBA5F.703@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, ohad@wizery.com, bjorn.andersson@linaro.org
-Cc: tony@atomide.com, robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: boris.brezillon@bootlin.com, miquel.raynal@bootlin.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, Christophe Kerello <christophe.kerello@st.com>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/29/18 4:07 AM, Roger Quadros wrote:
-> On 27/11/18 01:27, David Lechner wrote:
->> On 11/26/18 1:52 AM, Roger Quadros wrote:
->>> From: Tero Kristo <t-kristo@ti.com>
->>>
->>> Add documentation for the Texas Instruments PRU application nodes.
->>> These are used to configure specific user applications for PRU instances.
->>
->> Could this be made into a generic remoteproc producer/consumer binding? Or
->> are there really things that are specific to the TI PRU that need to be
->> handled?
-> 
-> The remoteproc handle and firmware name sound generic enough.
-> But there are TI PRU specific properties as well which we'll discuss if
-> they can be made generic.
-> 
->>
->>>
->>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>> [s-anna@ti.com: some binding updates]
->>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>> ---
->>>    .../devicetree/bindings/soc/ti/ti,pruss.txt        | 43 ++++++++++++++++++++++
->>>    1 file changed, 43 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt b/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
->>> index 3e5f32f..94c91ee 100644
->>> --- a/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
->>> +++ b/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
->>> @@ -210,6 +210,38 @@ used in TI Davinci SoCs. Please refer to the corresponding binding document,
->>>    Documentation/devicetree/bindings/net/davinci-mdio.txt for details.
->>>      +Application/User Nodes
->>> +=======================
->>
->> Are these supposed to be stand-alone platform devices?
->>
-> 
-> Yes. The first use case we're going to address is the Ethernet ports on the IDKs.
-> (Industrial development Kit) http://www.ti.com/tool/TMDXIDK437X
-> 
->>> +A PRU application/user node typically uses one or more PRU device nodes to
->>> +implement a PRU application/functionality. Each application/client node would
->>> +need a reference to at least a PRU node, and optionally pass some configuration
->>> +parameters.
->>
->> I thought device tree is not supposed to be used for configuration.
-> 
-> I think we need to word it properly. It is really a hardware/firmware map.
->>
->>> +
->>> +Required Properties:
->>> +--------------------
->>> +- prus                 : phandles to the PRU nodes used
->>> +
->>> +Optional Properties:
->>> +--------------------
->>> +- firmware-name        : firmwares for the PRU cores, the default firmware
->>> +                         for the core from the PRU node will be used if not
->>> +                         provided. The firmware names should correspond to
->>> +                         the PRU cores listed in the 'prus' property
->>
->> Perhaps this should be a "compatible" property instead of "firmware-name"? The
->> driver that matches the compatible string can then set the firmware names.
-> 
-> Compatible property is there to choose the application driver. Should have mentioned
-> it in Required properties.
-> 
-> It is tricky for the driver to decipher the firmware-name as it needs to support
-> the same use case on multiple platforms and the firmware name will be different for each.
-> The driver itself is platform agnostic.
-> 
-> So providing the firmware-name in the DT is the easiest and scalable solution.
->>
->>> +- ti,pruss-gp-mux-sel  : array of values for the GP_MUX_SEL under PRUSS_GPCFG
->>> +                         register for a PRU. This selects the internal muxing
->>> +                         scheme for the PRU instance. If not provided, the
->>> +                         default out-of-reset value (0) for the PRU core is
->>> +                         used. Values should correspond to the PRU cores listed
->>> +                         in the 'prus' property
->>
->> Is this supposed to be a pinmux? So maybe we should be using pinmux bindings?
-> 
-> We already have pinmux binding for the PRU pins. This GP mux setting is an odd duck.
-> 
-> It provides a way for a set of signals inside the ICSS to be connected to the PRU pins
-> on the SOC, which are again multiplexed with other SOC pins via the regular pinmux.
-> 
-> Some of the sets are
-> 
-> GPIO mode (0)
-> EnDAT mode (1)
-> SD mode (3)
-> MII2 mode (4)
-> 
-> The application node needs to decide which set it wants to use.
-> 
->>
->>> +- ti,pru-interrupt-map : PRU interrupt mappings, containing an array of entries
->>> +                         with each entry consisting of 4 cell-values. First one
->>> +                         is an index towards the "prus" property to identify the
->>> +                         PRU core for the interrupt map, second is the PRU
->>> +                         System Event id, third is the PRU interrupt channel id
->>> +                         and fourth is the PRU host interrupt id. If provided,
->>> +                         this map will supercede any other configuration
->>> +                         provided through firmware
->>
->> Could this mapping just be cells of the interrupt consumer nodes instead of an
->> extra property? As I mentioned in a reply to another patch, unless there is a
->> compelling reason to do otherwise, the channel to host mapping can be required
->> to be 1:1 as recommended in the TRMs, so that cell can be omitted. Also, since
->> the interrupt controller is independent of the PRU cores, the cell specifying the
->> index of the PRU core is not needed in this case. The #interrupt-cells already
->> includes a cell for the system event number, so this just leaves one cell, the
->> host channel, to be added to the #interrupt-cells.
->>
->> So, instead of:
->>
->>      ti,pru-interrupt-map = <0 16 2 7 >, <1 19 1 3>;
->>
->> we could have:
->>
->>      interrupt-parent = <&pruss_intc>;
->>      interrupts = <16 7>, <19 3>;
->>
-> 
-> No, interrupts property will be used to provide the actual sysevent IRQs to the
-> application driver. Below is how the ethernet application node looks like.
-> 
-> 	pruss2_eth {
-> 		compatible = "ti,am57-prueth";
-> 		prus = <&pru2_0>, <&pru2_1>;
-> 		firmware-name = "ti-pruss/am57xx-pru0-prueth-fw.elf",
-> 				"ti-pruss/am57xx-pru1-prueth-fw.elf";
-> 		sram = <&ocmcram1>;
-> 		interrupt-parent = <&pruss2_intc>;
-> 		mii-rt = <&pruss2_mii_rt>;
-> 		iep = <&pruss2_iep>;
-> 
-> 		pruss2_emac0: ethernet-mii0 {
-> 			phy-handle = <&pruss2_eth0_phy>;
-> 			phy-mode = "mii";
-> 			interrupts = <20>, <22>;
-> 			interrupt-names = "rx", "tx";
-> 		};
-> 
-> 		pruss2_emac1: ethernet-mii1 {
-> 			phy-handle = <&pruss2_eth1_phy>;
-> 			phy-mode = "mii";
-> 			interrupts = <21>, <23>;
-> 			interrupt-names = "rx", "tx";
-> 		};
-> 	};
-> 
-> You can see that interrupts is providing the RX and TX sysevents.
-> 
-> There needs to be a different way to provide the internal INTC map.
-> 
-> Currently there are 2 ways of providing the INTC map. One is via the
-> resource table and other is via DT.
-> 
->> There are also already alternate interrupt bindings that allow for the case
->> where there is more than one interrupt-parent.
+This patchset adds the support for the STMicroelectronics FMC2 NAND flash
+controller found on STM32MP SOCs.
 
-Thanks for the insights. On the example above there is not a
-ti,pru-interrupt-map property. Does this mean that the interrupt
-mapping table comes from the firmware/resource-table in this case?
+This patchset supports:
+  - the command sequencer feature, a hardware accelerator for read/write
+    within a page
+  - the manual mode feature, useful for debug purpose
+  - a maximum 8k page size
+  - following ECC strength and step size
+	- nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8)
+	- nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
+	- nand-ecc-strength = <1>, nand-ecc-step-size = <512> (Extended
+	  ecc based on HAMMING)
+    
+This patchset has been tested on Micron MT29F8G08ABACAH4 (8-bit SLC NAND)
+and MT29F8G16ABACAH4 (16-bit SLC NAND)
 
->>
->>> +
->>>    Example:
->>>    ========
->>>    1.    /* AM33xx PRU-ICSS */
->>> @@ -397,3 +429,14 @@ Example:
->>>                ...
->>>            };
->>>        };
->>> +
->>> +3:    /* PRU application node example */
->>> +    app_node: app_node {
->>> +        prus = <&pru1_0>, <&pru1_1>;
->>> +        firmware-name = "pruss-app-fw", "pruss-app-fw-2";
->>> +        ti,pruss-gp-mux-sel = <2>, <1>;
->>> +        /* setup interrupts for prus:
->>> +           prus[0] => pru1_0: ev=16, chnl=2, host-irq=7,
->>> +           prus[1] => pru1_1: ev=19, chnl=1, host-irq=3 */
->>> +        ti,pru-interrupt-map = <0 16 2 7 >, <1 19 1 3>;
->>> +    }
->>>
->>
-> 
-> cheers,
-> -roger
-> 
+Changes v3:
+ - modify clocks property description
+ - add NAND reg property description
+ - stm32_fmc2_nfc inherits from nand_controller structure
+ - rewrite stm32_fmc2_read_data/stm32_fmc2_write_data functions
+   to handle aligned and not aligned buffers
+ - replace uint8_t by u8
+ - use of NAND_ROW_ADDR_3 option
+
+Changes v2:
+ - separate the controller structure and the NAND chip structure
+ - remove timings description from the device tree
+ - fix typo issues
+ - fix kbuildrobot issues
+
+Christophe Kerello (3):
+  dt-bindings: mtd: stm32_fmc2: add STM32 FMC2 NAND controller
+    documentation
+  mtd: rawnand: stm32_fmc2: add STM32 FMC2 NAND flash controller driver
+  mtd: rawnand: stm32_fmc2: add manual mode
+
+ .../devicetree/bindings/mtd/stm32-fmc2-nand.txt    |   61 +
+ drivers/mtd/nand/raw/Kconfig                       |    9 +
+ drivers/mtd/nand/raw/Makefile                      |    1 +
+ drivers/mtd/nand/raw/stm32_fmc2_nand.c             | 2073 ++++++++++++++++++++
+ 4 files changed, 2144 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
+ create mode 100644 drivers/mtd/nand/raw/stm32_fmc2_nand.c
+
+-- 
+1.9.1
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
