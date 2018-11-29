@@ -1,90 +1,61 @@
-Return-Path: <SRS0=vcRE=OH=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 3/5] ARM: dts: r8a7744: Add IPMMU DT nodes
-Date: Wed, 28 Nov 2018 16:38:29 +0000
-Message-Id: <1543423111-19745-4-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543423111-19745-1-git-send-email-biju.das@bp.renesas.com>
-References: <1543423111-19745-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <bunk@kernel.org>
+From: Adrian Bunk <bunk@kernel.org>
+Subject: [PATCH v4 2/2] eeprom: at24: Add 24c2048
+Date: Thu, 29 Nov 2018 21:58:58 +0200
+Message-Id: <20181129195858.32367-2-bunk@kernel.org>
+In-Reply-To: <20181129195858.32367-1-bunk@kernel.org>
+References: <20181129195858.32367-1-bunk@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>, linux-i2c <linux-i2c@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add the six IPMMU instances found in the r8a7744 to DT with a disabled
-status.
+Works with an ST M24M02.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Adrian Bunk <bunk@kernel.org>
 ---
- arch/arm/boot/dts/r8a7744.dtsi | 58 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
+ drivers/misc/eeprom/Kconfig | 2 +-
+ drivers/misc/eeprom/at24.c  | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index 0937349..152431c 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -340,6 +340,64 @@
- 			#thermal-sensor-cells = <0>;
- 		};
+diff --git a/drivers/misc/eeprom/Kconfig b/drivers/misc/eeprom/Kconfig
+index fe7a1d27a017..a846faefa210 100644
+--- a/drivers/misc/eeprom/Kconfig
++++ b/drivers/misc/eeprom/Kconfig
+@@ -13,7 +13,7 @@ config EEPROM_AT24
+ 	  ones like at24c64, 24lc02 or fm24c04:
  
-+		ipmmu_sy0: mmu@e6280000 {
-+			compatible = "renesas,ipmmu-r8a7744",
-+				     "renesas,ipmmu-vmsa";
-+			reg = <0 0xe6280000 0 0x1000>;
-+			interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>;
-+			#iommu-cells = <1>;
-+			status = "disabled";
-+		};
-+
-+		ipmmu_sy1: mmu@e6290000 {
-+			compatible = "renesas,ipmmu-r8a7744",
-+				     "renesas,ipmmu-vmsa";
-+			reg = <0 0xe6290000 0 0x1000>;
-+			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
-+			#iommu-cells = <1>;
-+			status = "disabled";
-+		};
-+
-+		ipmmu_ds: mmu@e6740000 {
-+			compatible = "renesas,ipmmu-r8a7744",
-+				     "renesas,ipmmu-vmsa";
-+			reg = <0 0xe6740000 0 0x1000>;
-+			interrupts = <GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>;
-+			#iommu-cells = <1>;
-+			status = "disabled";
-+		};
-+
-+		ipmmu_mp: mmu@ec680000 {
-+			compatible = "renesas,ipmmu-r8a7744",
-+				     "renesas,ipmmu-vmsa";
-+			reg = <0 0xec680000 0 0x1000>;
-+			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>;
-+			#iommu-cells = <1>;
-+			status = "disabled";
-+		};
-+
-+		ipmmu_mx: mmu@fe951000 {
-+			compatible = "renesas,ipmmu-r8a7744",
-+				     "renesas,ipmmu-vmsa";
-+			reg = <0 0xfe951000 0 0x1000>;
-+			interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
-+			#iommu-cells = <1>;
-+			status = "disabled";
-+		};
-+
-+		ipmmu_gp: mmu@e62a0000 {
-+			compatible = "renesas,ipmmu-r8a7744",
-+				     "renesas,ipmmu-vmsa";
-+			reg = <0 0xe62a0000 0 0x1000>;
-+			interrupts = <GIC_SPI 260 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 261 IRQ_TYPE_LEVEL_HIGH>;
-+			#iommu-cells = <1>;
-+			status = "disabled";
-+		};
-+
- 		icram0:	sram@e63a0000 {
- 			compatible = "mmio-sram";
- 			reg = <0 0xe63a0000 0 0x12000>;
+ 	     24c00, 24c01, 24c02, spd (readonly 24c02), 24c04, 24c08,
+-	     24c16, 24c32, 24c64, 24c128, 24c256, 24c512, 24c1024
++	     24c16, 24c32, 24c64, 24c128, 24c256, 24c512, 24c1024, 24c2048
+ 
+ 	  Unless you like data loss puzzles, always be sure that any chip
+ 	  you configure as a 24c32 (32 kbit) or larger is NOT really a
+diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+index 636ed7149793..ddfcf4ade7bf 100644
+--- a/drivers/misc/eeprom/at24.c
++++ b/drivers/misc/eeprom/at24.c
+@@ -156,6 +156,7 @@ AT24_CHIP_DATA(at24_data_24c128, 131072 / 8, AT24_FLAG_ADDR16);
+ AT24_CHIP_DATA(at24_data_24c256, 262144 / 8, AT24_FLAG_ADDR16);
+ AT24_CHIP_DATA(at24_data_24c512, 524288 / 8, AT24_FLAG_ADDR16);
+ AT24_CHIP_DATA(at24_data_24c1024, 1048576 / 8, AT24_FLAG_ADDR16);
++AT24_CHIP_DATA(at24_data_24c2048, 2097152 / 8, AT24_FLAG_ADDR16);
+ /* identical to 24c08 ? */
+ AT24_CHIP_DATA(at24_data_INT3499, 8192 / 8, 0);
+ 
+@@ -182,6 +183,7 @@ static const struct i2c_device_id at24_ids[] = {
+ 	{ "24c256",	(kernel_ulong_t)&at24_data_24c256 },
+ 	{ "24c512",	(kernel_ulong_t)&at24_data_24c512 },
+ 	{ "24c1024",	(kernel_ulong_t)&at24_data_24c1024 },
++	{ "24c2048",    (kernel_ulong_t)&at24_data_24c2048 },
+ 	{ "at24",	0 },
+ 	{ /* END OF LIST */ }
+ };
+@@ -210,6 +212,7 @@ static const struct of_device_id at24_of_match[] = {
+ 	{ .compatible = "atmel,24c256",		.data = &at24_data_24c256 },
+ 	{ .compatible = "atmel,24c512",		.data = &at24_data_24c512 },
+ 	{ .compatible = "atmel,24c1024",	.data = &at24_data_24c1024 },
++	{ .compatible = "atmel,24c2048",	.data = &at24_data_24c2048 },
+ 	{ /* END OF LIST */ },
+ };
+ MODULE_DEVICE_TABLE(of, at24_of_match);
 -- 
-2.7.4
+2.11.0
