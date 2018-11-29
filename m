@@ -1,136 +1,161 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v10 06/27] of: base: Add of_get_cpu_state_node() to get idle
- states for a CPU node
-Date: Thu, 29 Nov 2018 18:46:39 +0100
-Message-ID: <20181129174700.16585-7-ulf.hansson@linaro.org>
-References: <20181129174700.16585-1-ulf.hansson@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v7 1/4] dt-bindings: pps: descriptor-based gpio,
+ capture-clear addition
+Date: Thu, 29 Nov 2018 12:00:56 -0600
+Message-ID: <CAL_JsqLSz+iS0Ghy26+cvOd2xHdgc8z6VY88J2hm5gHFHR9vwg@mail.gmail.com>
+References: <20181114125432.16044-1-tom@aussec.com> <20181114125432.16044-2-tom@aussec.com>
+ <20181116224919.GA18008@bogus> <20181117213522.12672utznrvpbn56@www.aussec.com>
+ <CAL_JsqKZHg5_8ghMmU4qO4CVZibcHOvtVJH669zod_6GLGakRg@mail.gmail.com>
+ <20181118113502.55634v85ybgkt586@www.aussec.com> <CAL_Jsq+_Fb8mRDf_g=qDVsw-KPnrdZunLksYrgBFvhehzVNX+g@mail.gmail.com>
+ <20181127145729.128452ujmj4uhb55@aussec.com> <CAL_Jsq+-S2tF++VstMCeUrX4SXcB4B99Tc-SFUQ3R66KPHVf+Q@mail.gmail.com>
+ <20181129130520.198263bp7uxu51ls@aussec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181129174700.16585-1-ulf.hansson@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-pm@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181129130520.198263bp7uxu51ls@aussec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tom Burkart <tom@aussec.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The CPU's idle state nodes are currently parsed at the common cpuidle DT
-library, but also when initializing back-end data for the arch specific CPU
-operations, as in the PSCI driver case.
+On Wed, Nov 28, 2018 at 8:05 PM tom burkart <tom@aussec.com> wrote:
+>
+> Quoting Rob Herring <robh@kernel.org>:
+>
+> > On Mon, Nov 26, 2018 at 9:57 PM tom burkart <tom@aussec.com> wrote:
+> >>
+> >> Quoting Rob Herring <robh@kernel.org>:
+> >>
+> >> > On Sat, Nov 17, 2018 at 6:35 PM tom burkart <tom@aussec.com> wrote:
+> >> >>
+> >> >> Quoting Rob Herring <robh@kernel.org>:
+> >> >>
+> >> >> > On Sat, Nov 17, 2018 at 4:35 AM tom burkart <tom@aussec.com> wrote:
+> >> >> >>
+> >> >> >> Quoting Rob Herring <robh@kernel.org>:
+> >> >> >>
+> >> >> >> > On Wed, Nov 14, 2018 at 11:54:29PM +1100, Tom Burkart wrote:
+> >> >> >> >> This patch changes the devicetree bindings for the pps-gpio driver
+> >> >> >> >> from the integer based ABI to the descriptor based ABI.
+> >> >> >> > ? That has nothing to do with DT.
+> >> >> >>
+> >> >> >> I believe it does, as the change in ABI forces a rename in the DT
+> >> >> >> naming convention.
+> >> >> >> This is due to the descriptor based ABI appending "-gpio" or
+> >> >> "-gpios" (see
+> >> >> >> Documentation/gpio/base.txt.)
+> >> >> >> Admittedly, I may have called it by the wrong name due to ignorance,
+> >> >> >> my apologies.
+> >> >> >
+> >> >> > If what you say is correct, then you can't change this driver. You'll
+> >> >> > break compatibility with any existing DT.
+> >> >> >
+> >> >> > Changing the binding reasoning should purely be that this is the
+> >> >> > preferred form. Bindings must be independent from changing kernel
+> >> >> > APIs.
+> >> >>
+> >> >> See comments from Philip Zabel.  I misread the documentation and this
+> >> >> has now been corrected in v8 of the patch.  I hope that eliminates all
+> >> >> comments made above.
+> >> >>
+> >> >> >> >>  It also adds
+> >> >> >> >> documentation for the device tree capture-clear option.  The legacy
+> >> >> >> >> device tree entry for the GPIO pin is supported.
+> >> >> >> >>
+> >> >> >> >> Signed-off-by: Tom Burkart <tom@aussec.com>
+> >> >> >> >> ---
+> >> >> >> >>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 8 ++++++--
+> >> >> >> >>  1 file changed, 6 insertions(+), 2 deletions(-)
+> >> >> >> >>
+> >> >> >> >> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt
+> >> >> >> >> b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+> >> >> >> >> index 3683874832ae..6c9fc0998d94 100644
+> >> >> >> >> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
+> >> >> >> >> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+> >> >> >> >> @@ -5,19 +5,23 @@ a GPIO pin.
+> >> >> >> >>
+> >> >> >> >>  Required properties:
+> >> >> >> >>  - compatible: should be "pps-gpio"
+> >> >> >> >> -- gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
+> >> >> >> >> +- pps-gpios: one PPS GPIO in the format described by
+> >> ../gpio/gpio.txt
+> >> >> >> >> +Alternatively (DEPRECATED), instead of pps-gpios above,
+> >> it may have:
+> >> >> >> >> +- gpios: one PPS GPIO as above
+> >> >> >> >>
+> >> >> >> >>  Optional properties:
+> >> >> >> >>  - assert-falling-edge: when present, assert is indicated by a
+> >> >> >> falling edge
+> >> >> >> >>                         (instead of by a rising edge)
+> >> >> >> >> +- capture-clear: when present, also capture the PPS clear event
+> >> >> >> >
+> >> >> >> > Is this a h/w thing? or driver configuration?
+> >> >> >>
+> >> >> >> Driver configuration.  Most of the code was present in the driver, yet
+> >> >> >> it was not documented, or usable due to a two line (code) omission
+> >> >> >> (the value was not being fetched from DT).
+> >> >> >
+> >> >> > So what determines how you want to configure this? If the user will
+> >> >> > want to change it, then it should be a sysfs attr and exposed to
+> >> >> > userspace. If it depends on h/w config for a board then it can be in
+> >> >> > DT.
+> >> >>
+> >> >> Sorry, I misled you somewhat.  If the PPS pulse active transition from
+> >> >> the hardware is on the falling edge, this flag is required to get the
+> >> >> OS to use that as the active transition.  This would not change at the
+> >> >> user's whim but rather it is dependent on connected hardware.
+> >> >
+> >> > This description sounds more like 'assert-falling-edge' than
+> >> 'capture-clear'.
+> >> >
+> >> > I'm still not clear on what 'capture-clear' is.
+> >>
+> >> Ignoring my patch for a minute, the pps_gpio_irq_handler will only
+> >> report a pps PPS_CAPTURECLEAR event if 'capture-clear' is set.  As the
+> >> current pps-gpio driver is not able to set this flag, it cannot ever
+> >> report a PPS_CAPTURECLEAR event.
+> >>
+> >> My patch adds the ability to set this flag and adds the documentation
+> >> to go with it.
+> >> Admittedly, I do not require this functionality for what I want, but
+> >> working with the code, I noticed the omission and decided to add it
+> >> for someone else to use it, if they need it.
+> >>
+> >> I am happy to remove this out of my patch, if you feel this to be the
+> >> best way forward.
+> >
+> > I found this prior discussion on adding this[1]. Seems to me this
+> > should be userspace configurable if the GPIO line can interrupt on
+> > both edges. We shouldn't need a DT property to determine that.
+> >
+> > Rob
+> >
+> > [1] https://lore.kernel.org/patchwork/patch/557781/
+>
+> Hi Rob,
+> the fact that prior knowledge of board/CPU/SOC specifics is required
+> is the most compelling argument for this to be in the DT.  This is not
+> something a user should need to know or remember.
+>
+> Userspace is already asking for what they need via the
+> time_pps_setparams call, but to do that they have to first call
+> time_pps_getparams.  Time_pps_getparams will not return
+> PPS_CAPTURECLEAR as it is never set in the driver due to it being
+> hardware specific/unable to be set.
 
-To avoid open-coding, let's introduce of_get_cpu_state_node(), which takes
-the device node for the CPU and the index to the requested idle state node,
-as in-parameters. In case a corresponding idle state node is found, it
-returns the node with the refcount incremented for it, else it returns
-NULL.
+My understanding is it is a 2 step process. The capability is exposed
+to the user if the hardware supports it, but it is still a user
+decision whether or not to enable it. So as far as DT bindings are
+concerned, we're only concerned with the first part. Whether the
+hardware supports capture clear in the GPIO PPS case just depends on
+whether the GPIO controller can support both edge interrupts (or
+emulate that by switching between rising/falling edge interrupts). Do
+we agree on that part?
 
-Moreover, for ARM, there are two generic methods, to describe the CPU's
-idle states, either via the flattened description through the
-"cpu-idle-states" binding [1] or via the hierarchical layout, using the
-"power-domains" and the "domain-idle-states" bindings [2]. Hence, let's
-take both options into account.
+Needing to know GPIO interrupt capabilities is hardly specific to PPS.
+There is not any explicit property in DT for this capability because
+it is implicit based on the GPIO controller's compatible string (or
+driver capabilities if emulated). Therefore, it is up to the GPIO
+driver and API to expose this information to client drivers like PPS.
 
-[1]
-Documentation/devicetree/bindings/arm/idle-states.txt
-[2]
-Documentation/devicetree/bindings/arm/psci.txt
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: Lina Iyer <ilina@codeaurora.org>
-Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
-Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-
-Changes in v10:
-	- None.
-
----
- drivers/of/base.c  | 35 +++++++++++++++++++++++++++++++++++
- include/linux/of.h |  8 ++++++++
- 2 files changed, 43 insertions(+)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 09692c9b32a7..8f6974a22006 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -429,6 +429,41 @@ int of_cpu_node_to_id(struct device_node *cpu_node)
- }
- EXPORT_SYMBOL(of_cpu_node_to_id);
- 
-+/**
-+ * of_get_cpu_state_node - Get CPU's idle state node at the given index
-+ *
-+ * @cpu_node: The device node for the CPU
-+ * @index: The index in the list of the idle states
-+ *
-+ * Two generic methods can be used to describe a CPU's idle states, either via
-+ * a flattened description through the "cpu-idle-states" binding or via the
-+ * hierarchical layout, using the "power-domains" and the "domain-idle-states"
-+ * bindings. This function check for both and returns the idle state node for
-+ * the requested index.
-+ *
-+ * In case and idle state node is found at index, the refcount incremented for
-+ * it, so call of_node_put() on it when done. Returns NULL if not found.
-+ */
-+struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
-+					  int index)
-+{
-+	struct of_phandle_args args;
-+	int err;
-+
-+	err = of_parse_phandle_with_args(cpu_node, "power-domains",
-+					"#power-domain-cells", 0, &args);
-+	if (!err) {
-+		struct device_node *state_node =
-+			of_parse_phandle(args.np, "domain-idle-states", index);
-+
-+		of_node_put(args.np);
-+		return state_node;
-+	}
-+
-+	return of_parse_phandle(cpu_node, "cpu-idle-states", index);
-+}
-+EXPORT_SYMBOL(of_get_cpu_state_node);
-+
- /**
-  * __of_device_is_compatible() - Check if the node matches given constraints
-  * @device: pointer to node
-diff --git a/include/linux/of.h b/include/linux/of.h
-index a5aee3c438ad..f9f0c65c095c 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -348,6 +348,8 @@ extern const void *of_get_property(const struct device_node *node,
- 				int *lenp);
- extern struct device_node *of_get_cpu_node(int cpu, unsigned int *thread);
- extern struct device_node *of_get_next_cpu_node(struct device_node *prev);
-+extern struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
-+						 int index);
- 
- #define for_each_property_of_node(dn, pp) \
- 	for (pp = dn->properties; pp != NULL; pp = pp->next)
-@@ -762,6 +764,12 @@ static inline struct device_node *of_get_next_cpu_node(struct device_node *prev)
- 	return NULL;
- }
- 
-+static inline struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
-+					int index)
-+{
-+	return NULL;
-+}
-+
- static inline int of_n_addr_cells(struct device_node *np)
- {
- 	return 0;
--- 
-2.17.1
+Rob
