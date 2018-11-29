@@ -1,37 +1,45 @@
-Return-Path: <SRS0=NeMx=OH=nxp.com=anson.huang@kernel.org>
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V2 3/4] defconfig: arm64: add i.MX system controller RTC
- support
-Date: Wed, 28 Nov 2018 05:21:19 +0000
-Message-ID: <1543382119-2918-4-git-send-email-Anson.Huang@nxp.com>
-References: <1543382119-2918-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1543382119-2918-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-To: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Return-Path: <SRS0=gYPT=OI=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from laurent.telenet-ops.be ([195.130.137.89]:59350 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbeK2Vjl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 29 Nov 2018 16:39:41 -0500
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 0/2] arm64: dts: renesas: Miscellaneous IPMMU fixes
+Date: Thu, 29 Nov 2018 11:34:33 +0100
+Message-Id: <20181129103435.9260-1-geert+renesas@glider.be>
+Sender: devicetree-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch enables CONFIG_RTC_DRV_IMX_SC as module by default.
+	Hi Simon, Magnus,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+This patch series contains two IPMMU-related fixes for the R-Car M3-N
+and R-Car H3 ES1.x SoCs.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 6d224f7..e3df5dd 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -573,6 +573,7 @@ CONFIG_RTC_DRV_PL031=3Dy
- CONFIG_RTC_DRV_SUN6I=3Dy
- CONFIG_RTC_DRV_ARMADA38X=3Dy
- CONFIG_RTC_DRV_TEGRA=3Dy
-+CONFIG_RTC_DRV_IMX_SC=3Dm
- CONFIG_RTC_DRV_XGENE=3Dy
- CONFIG_DMADEVICES=3Dy
- CONFIG_DMA_BCM2835=3Dm
---=20
-2.7.4
+The first patch is a dependency for a later fix.
+
+Thanks!
+
+Geert Uytterhoeven (2):
+  arm64: dts: renesas: r8a77965: Remove non-existent IPMMU-IR
+  arm64: dts: renesas: r8a7795-es1: Add missing power domains to IPMMU
+    nodes
+
+ arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi | 2 ++
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi    | 8 --------
+ 2 files changed, 2 insertions(+), 8 deletions(-)
+
+-- 
+2.17.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
