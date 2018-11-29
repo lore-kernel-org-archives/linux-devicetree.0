@@ -1,31 +1,27 @@
-Return-Path: <SRS0=qqZh=OJ=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com> <1542878075-61314-4-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1542878075-61314-4-git-send-email-biju.das@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 30 Nov 2018 10:46:15 +0100
-Message-ID: <CAMuHMdUuFq94mMF8fJiXDPKmb9a36B9qWOUh4ROCHP5fE_WTnw@mail.gmail.com>
+Return-Path: <SRS0=Z+zc=OI=verge.net.au=horms@kernel.org>
+Date: Thu, 29 Nov 2018 13:50:43 +0100
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH 3/7] ARM: dts: r8a7744-iwg20d-q7: Add support for iWave
  G20D-Q7 board based on RZ/G1N
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <20181129125043.hbmp7pkebwjfqvmy@verge.net.au>
+References: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com>
+ <1542878075-61314-4-git-send-email-biju.das@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1542878075-61314-4-git-send-email-biju.das@bp.renesas.com>
 To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Nov 22, 2018 at 10:23 AM Biju Das <biju.das@bp.renesas.com> wrote:
+On Thu, Nov 22, 2018 at 09:14:31AM +0000, Biju Das wrote:
 > Add support for iWave RainboW-G20D-Qseven board based on RZ/G1N.
->
+> 
 > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Thanks,
 
-Gr{oetje,eeting}s,
+This looks fine to me but I will wait to see if there are other reviews
+before applying.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
