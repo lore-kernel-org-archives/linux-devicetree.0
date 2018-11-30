@@ -1,61 +1,152 @@
-From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 14/15] arm64: dts: allwinner: h5: Add Video
- Engine and reserved memory node
-Date: Fri, 30 Nov 2018 14:16:50 +0100
-Message-ID: <2a52719446c1050990494e44a991acb932da8273.camel@bootlin.com>
-References: <20181115145013.3378-1-paul.kocialkowski@bootlin.com>
-	 <20181115145013.3378-15-paul.kocialkowski@bootlin.com>
-	 <CAGb2v64pVKG4mSAF48xR54yj00rQ6iTvgYQB9Bf-XWmH2FhVqQ@mail.gmail.com>
-Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v16 06/16] lib: fdt: add a helper function for handling
+ memory range property
+Date: Fri, 30 Nov 2018 13:21:07 +0000
+Message-ID: <20181130132106.GD9000@arm.com>
+References: <20181115055254.2812-1-takahiro.akashi@linaro.org>
+ <20181115055254.2812-7-takahiro.akashi@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-453EcI7CdM8GuIru8Jyr"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBQ7QQTQAKGQEOCMZUHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v64pVKG4mSAF48xR54yj00rQ6iTvgYQB9Bf-XWmH2FhVqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181115055254.2812-7-takahiro.akashi@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, mark.rutland@arm.com, robh+dt@kernel.org, frowand.list@gmail.com
+Cc: catalin.marinas@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, prudo@linux.ibm.com, ard.biesheuvel@linaro.org, james.morse@arm.com, bhsharma@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+[moving some DT people to TO:]
 
---=-453EcI7CdM8GuIru8Jyr
-Content-Type: text/plain; charset="UTF-8"
-
-Hi,
-
-On Thu, 2018-11-15 at 23:35 +0800, Chen-Yu Tsai wrote:
-> On Thu, Nov 15, 2018 at 10:51 PM Paul Kocialkowski
-> <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > This adds nodes for the Video Engine and the associated reserved memory
-> > for the H5. Up to 96 MiB of memory are dedicated to the CMA pool.
-> > 
-> > The pool is located at the end of the first 256 MiB of RAM so that the
-> > VPU can access it. It is unclear whether this is still a hard
-> > requirement for this platform, but it seems safer that way.
+On Thu, Nov 15, 2018 at 02:52:45PM +0900, AKASHI Takahiro wrote:
+> Added function, fdt_setprop_reg(), will be used later to handle
+> kexec-specific property in arm64's kexec_file implementation.
+> It will possibly be merged into libfdt in the future.
 > 
-> I think we can actually test this. You could move the reserved memory
-> pool beyond 256 MiB, and have cedrus decode stuff, and try to display
-> the results. If it's gibberish, or the system crashes, it's likely the
-> memory access wrapped around at 256 MiB.
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  include/linux/libfdt.h | 26 ++++++++++++++++++++
+>  lib/Makefile           |  2 +-
+>  lib/fdt_addresses.c    | 56 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 83 insertions(+), 1 deletion(-)
+>  create mode 100644 lib/fdt_addresses.c
+
+We need an ack from the DT side before we can merge this series, please.
+
+Will
+
+> diff --git a/include/linux/libfdt.h b/include/linux/libfdt.h
+> index 90ed4ebfa692..47c4dc9e135c 100644
+> --- a/include/linux/libfdt.h
+> +++ b/include/linux/libfdt.h
+> @@ -5,4 +5,30 @@
+>  #include <linux/libfdt_env.h>
+>  #include "../../scripts/dtc/libfdt/libfdt.h"
+>  
+> +/**
+> + * fdt_setprop_reg - add/set a memory region property
+> + * @fdt: pointer to the device tree blob
+> + * @nodeoffset: offset of the node to add a property at
+> + * @name: name of property
+> + * @addr: physical start address
+> + * @size: size of region
+> + *
+> + * returns:
+> + *	0, on success
+> + *      -FDT_ERR_BADLAYOUT,
+> + *	-FDT_ERR_BADMAGIC,
+> + *	-FDT_ERR_BADNCELLS, if the node has a badly formatted or invalid
+> + *		#address-cells property
+> + *      -FDT_ERR_BADOFFSET, nodeoffset did not point to FDT_BEGIN_NODE tag
+> + *	-FDT_ERR_BADSTATE,
+> + *	-FDT_ERR_BADSTRUCTURE,
+> + *	-FDT_ERR_BADVERSION,
+> + *	-FDT_ERR_BADVALUE, addr or size doesn't fit to respective cells size
+> + *      -FDT_ERR_NOSPACE, there is insufficient free space in the blob to
+> + *              contain a new property
+> + *	-FDT_ERR_TRUNCATED, standard meanings
+> + */
+> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
+> +					       u64 addr, u64 size);
+> +
+>  #endif /* _INCLUDE_LIBFDT_H_ */
+> diff --git a/lib/Makefile b/lib/Makefile
+> index db06d1237898..2a96cb05e15d 100644
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@ -205,7 +205,7 @@ KASAN_SANITIZE_stackdepot.o := n
+>  KCOV_INSTRUMENT_stackdepot.o := n
+>  
+>  libfdt_files = fdt.o fdt_ro.o fdt_wip.o fdt_rw.o fdt_sw.o fdt_strerror.o \
+> -	       fdt_empty_tree.o
+> +	       fdt_empty_tree.o fdt_addresses.o
+>  $(foreach file, $(libfdt_files), \
+>  	$(eval CFLAGS_$(file) = -I$(src)/../scripts/dtc/libfdt))
+>  lib-$(CONFIG_LIBFDT) += $(libfdt_files)
+> diff --git a/lib/fdt_addresses.c b/lib/fdt_addresses.c
+> new file mode 100644
+> index 000000000000..97ddd5a5cc10
+> --- /dev/null
+> +++ b/lib/fdt_addresses.c
+> @@ -0,0 +1,56 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/libfdt_env.h>
+> +#include <linux/types.h>
+> +#include "../scripts/dtc/libfdt/fdt_addresses.c"
+> +
+> +/*
+> + * helper functions for arm64 kexec
+> + * Those functions may be merged into libfdt in the future.
+> + */
+> +
+> +/* This function assumes that cells is 1 or 2 */
+> +static void cpu64_to_fdt_cells(void *buf, u64 val64, int cells)
+> +{
+> +	__be32 val32;
+> +
+> +	while (cells) {
+> +		val32 = cpu_to_fdt32(val64 >> (32 * (--cells)));
+> +		memcpy(buf, &val32, sizeof(val32));
+> +		buf += sizeof(val32);
+> +	}
+> +}
+> +
+> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
+> +						u64 addr, u64 size)
+> +{
+> +	int addr_cells, size_cells;
+> +	char buf[sizeof(__be32) * 2 * 2];
+> +		/* assume dt_root_[addr|size]_cells <= 2 */
+> +	void *prop;
+> +	size_t buf_size;
+> +
+> +	addr_cells = fdt_address_cells(fdt, 0);
+> +	if (addr_cells < 0)
+> +		return addr_cells;
+> +	size_cells = fdt_size_cells(fdt, 0);
+> +	if (size_cells < 0)
+> +		return size_cells;
+> +
+> +	/* if *_cells >= 2, cells can hold 64-bit values anyway */
+> +	if ((addr_cells == 1) && ((addr > U32_MAX) ||
+> +				  ((addr + size) > U32_MAX)))
+> +		return -FDT_ERR_BADVALUE;
+> +
+> +	if ((size_cells == 1) && (size > U32_MAX))
+> +		return -FDT_ERR_BADVALUE;
+> +
+> +	buf_size = (addr_cells + size_cells) * sizeof(u32);
+> +	prop = buf;
+> +
+> +	cpu64_to_fdt_cells(prop, addr, addr_cells);
+> +	prop += addr_cells * sizeof(u32);
+> +
+> +	cpu64_to_fdt_cells(prop, size, size_cells);
+> +
+> +	return fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
+> +}
+> -- 
+> 2.19.0
 > 
-> What do you think?
-
-I did the test on various platforms and found that starting with the
-A33, the VPU can map any address in RAM! SO we shouldn't need reserved
-memory nodes for these devices after all.
-
-Cheers,
-
-Paul
-
--- 
-Paul Kocialkowski, Bootlin (formerly Free Electrons)
-Embedded Linux and kernel engineering
-https://bootlin.com
---=-453EcI7CdM8GuIru8Jyr--
