@@ -1,70 +1,35 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 0/6] media: sun6i: Separate H3 compatible from A31
-Date: Fri, 30 Nov 2018 09:47:08 +0100
-Message-ID: <20181130084708.rbggq5y3f2c5w7vu@flea>
-References: <20181130075849.16941-1-wens@csie.org>
+From: Pascal PAILLET-LME <p.paillet@st.com>
+Subject: Re: [PATCH v6 3/8] dt-bindings: regulator: document stpmic1 pmic
+ regulators
+Date: Fri, 30 Nov 2018 08:51:28 +0000
+Message-ID: <5C00FA0F.3020303@st.com>
+References: <1543337529-22301-1-git-send-email-p.paillet@st.com>
+ <1543337529-22301-4-git-send-email-p.paillet@st.com>
+ <20181128094801.GF6828@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="l27y7yu4kizrcwqt"
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181130075849.16941-1-wens@csie.org>
+In-Reply-To: <20181128094801.GF6828@sirena.org.uk>
+Content-Language: en-US
+Content-ID: <9DB619103FCF3F4681616A2DF44F3FBE@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
 List-Id: devicetree@vger.kernel.org
 
+Le 11/28/2018 10:48 AM, Mark Brown a écrit :
+> On Tue, Nov 27, 2018 at 04:52:15PM +0000, Pascal PAILLET-LME wrote:
+>> The STPMIC1 regulators supply power to the application processor as well as
+>> to the external system peripherals such as DDR, Flash memories and system
+>> devices.
+> Please do not submit new versions of already applied patches, please
+> submit incremental updates to the existing code.  Modifying existing
+> commits creates problems for other users building on top of those
+> commits so it's best practice to only change pubished git commits if
+> absolutely essential.
 
---l27y7yu4kizrcwqt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sorry Mark, I will submit my changes on the regulator driver in separate 
+patches.
 
-On Fri, Nov 30, 2018 at 03:58:43PM +0800, Chen-Yu Tsai wrote:
-> The CSI (camera sensor interface) controller found on the H3 (and H5)
-> is a reduced version of the one found on the A31. It only has 1 channel,
-> instead of 4 channels supporting time-multiplexed BT.656 on the A31.
-> Since the H3 is a reduced version, it cannot "fallback" to a compatible
-> that implements more features than it supports.
->=20
-> This series separates support for the H3 variant from the A31 variant.
->=20
-> Patches 1 ~ 3 separate H3 CSI from A31 CSI in the bindings, driver, and
-> device tree, respectively.
->=20
-> Patch 4 adds a pinmux setting for the MCLK (master clock). Some camera
-> sensors use the master clock from the SoC instead of a standalone
-> crystal.
->=20
-> Patches 5 and 6 are examples of using a camera sensor with an SBC.
-> Since the modules are detachable, these changes should not be merged.
-> They should be implemented as overlays instead.
->=20
-> Please have a look.
->=20
-> In addition, I found that the first frame captured seems to always be
-> incomplete, with either parts cropped, out of position, or missing
-> color components.
-
-For the first 4 patches,
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---l27y7yu4kizrcwqt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXAD5DAAKCRDj7w1vZxhR
-xauvAP4issrQ4ZQs2FKhnrnSC1e5aHrpRt9yMYST6XBEX3tNIwD/WUtRUNxlN5GK
-gwcfuhO9WrkqAxQhilUqJ4LX5m69qwA=
-=ng2d
------END PGP SIGNATURE-----
-
---l27y7yu4kizrcwqt--
+pascal
