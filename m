@@ -1,45 +1,52 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 09/15] clk: sunxi-ng: r40: Force LOSC parent
- to RTC LOSC output
-Date: Fri, 30 Nov 2018 11:55:44 +0800
-Message-ID: <CAGb2v64cER=qU2e_jnZemVfYbtQFNk+ev1MFBQDQu86f98X2dw@mail.gmail.com>
-References: <20181128093013.24442-1-wens@csie.org> <20181128093013.24442-11-wens@csie.org>
- <154344054442.88331.8887745218976145062@swboyd.mtv.corp.google.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: PETER CHEN <peter.chen@nxp.com>
+Subject: RE: [RFC PATCH v2 07/15] usb:cdns3: Adds Device mode support -
+ initialization.
+Date: Fri, 30 Nov 2018 04:20:41 +0000
+Message-ID: <VI1PR04MB5327227A807B92DDA62CF9038BD30@VI1PR04MB5327.eurprd04.prod.outlook.com>
+References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
+ <1542535751-16079-8-git-send-email-pawell@cadence.com>
+ <5BFE7D2E.7030702@ti.com> <87pnupzaz1.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBUHJQLQAKGQEZHKXUSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <154344054442.88331.8887745218976145062-n1Xw8LXHxjTHt/MElyovVYaSKrA+ACpX0E9HWUfgJXw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87pnupzaz1.fsf@linux.intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@kernel.org>, Roger Quadros <rogerq@ti.com>, Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "adouglas@cadence.com" <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, "sureshp@cadence.com" <sureshp@cadence.com>, "pjez@cadence.com" <pjez@cadence.com>, "kurahul@cadence.com" <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 29, 2018 at 5:29 AM Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->
-> Quoting Chen-Yu Tsai (2018-11-28 01:30:07)
-> > On the R40, in addition to a mux between the RTC's own RC oscillator and
-> > an external 32768 Hz crystal, which are muxed inside the RTC module, the
-> > CCU also has its own RC oscillator, which runs at around 2 MHz, and can
-> > be muxed with the LOSC output from the RTC. This muxed output is called
-> > "SYS 32K" in the module clock diagram, but otherwise referred to as the
-> > LOSC throughout the CCU documentation.
+=20
+> Roger Quadros <rogerq@ti.com> writes:
+> >> +static void cdns3_gadget_config(struct cdns3_device *priv_dev) {
+> >> +	struct cdns3_usb_regs __iomem *regs =3D priv_dev->regs;
+> >> +
+> >> +	cdns3_ep0_config(priv_dev);
+> >> +
+> >> +	/* enable interrupts for endpoint 0 (in and out) */
+> >> +	writel(EP_IEN_EP_OUT0 | EP_IEN_EP_IN0, &regs->ep_ien);
+> >> +
+> >> +	/* enable generic interrupt*/
+> >> +	writel(USB_IEN_INIT, &regs->usb_ien);
+> >> +	writel(USB_CONF_CLK2OFFDS | USB_CONF_L1DS, &regs->usb_conf);
+> >> +	writel(USB_CONF_DMULT, &regs->usb_conf);
+> >> +	writel(USB_CONF_DEVEN, &regs->usb_conf);
 > >
-> > The RC oscillator is not very accurate, even though it has an undocumented
-> > calibration function. We really want a precise clock at 32768 Hz,
-> > instead of something at around 32 KHz. This patch forces the SYS 32K
-> > clock to use the RTC output as its parent, and doesn't bother
-> > registering the internal oscillator nor a clock mux.
-> >
-> > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> > ---
->
-> Acked-by: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > If you are enabling interrupts in this patch you should handle them in =
+the ISR.
+>=20
+> Frankly, I don't understand why this is a series. It's a single driver an=
+d splitting it into
+> a series just makes it more difficult to review, actually.
+>=20
+> Sure, a single patch will be large, but there's no way to have a function=
+al driver until
+> all patches are applied, anyway.
+>=20
 
-Merged with acks from Maxime and Stephen.
+Yes, I agree with Felipe. Pawel, you could remove the "RFC" prefix, and sen=
+d the whole
+one as one patch. I will test it at my hardware.
+
+Peter
