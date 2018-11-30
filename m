@@ -1,87 +1,34 @@
-Return-Path: <SRS0=0T4O=N4=gmail.com=chunkeey@kernel.org>
-From: Christian Lamparter <chunkeey@gmail.com>
-Subject: [PATCH v3 1/2] dt-bindings: dmaengine: dw-dmac: add protection control property
-Date: Sat, 17 Nov 2018 15:10:39 +0100
-Message-Id: <3472502295a0b638de7167e48f4b826050196e55.1542463411.git.chunkeey@gmail.com>
+Return-Path: <SRS0=nKhH=OJ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from kirsty.vergenet.net ([202.4.237.240]:51992 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbeK3V3d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 30 Nov 2018 16:29:33 -0500
+Date: Fri, 30 Nov 2018 11:20:41 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 5/6] soc: renesas: r8a77980-sysc: Correct A3VIP[012]
+ power domain hierarchy
+Message-ID: <20181130102040.vl6r7cj6lijfuleb@verge.net.au>
+References: <20181129105619.10695-1-geert+renesas@glider.be>
+ <20181129105619.10695-6-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: dmaengine@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vkoul@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Viresh Kumar <vireshk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181129105619.10695-6-geert+renesas@glider.be>
+Sender: devicetree-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch for the DesignWare AHB Central
-Direct Memory Access Controller adds the dma
-protection control property:
-	"snps,dma-protection-control"
+On Thu, Nov 29, 2018 at 11:56:18AM +0100, Geert Uytterhoeven wrote:
+> The R-Car Gen3 HardWare Manual Errata for Rev. 0.80 (Feb 28, 2018)
+> renamed the A3VIP power domain on R-Car V3H to A3VIP0, and clarified the
+> power domain hierarchy for the A3VIP[012] power domains.
+> 
+> As the definition for the A3VIP0 domain is not yet used from DT, it can
+> just be renamed.
+> 
+> Fixes: 7755b40d07a8dba7 ("dt-bindings: power: add R8A77980 SYSC power domain definitions")
+> Fixes: 41d6d8bd8ae94ca9 ("soc: renesas: rcar-sysc: add R8A77980 support")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-as well as the properties specific values defines into
-a new include file: include/dt-bindings/dma/dw-dmac.h
-
-Note: The protection control signals are one-to-one
-mapped to the AHB HPROT[1:3] signals for this controller.
-The HPROT0 (Data Access) is always hardwired to 1.
-
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
----
----
- Documentation/devicetree/bindings/dma/snps-dma.txt |  4 ++++
- MAINTAINERS                                        |  4 +++-
- include/dt-bindings/dma/dw-dmac.h                  | 14 ++++++++++++++
- 3 files changed, 21 insertions(+), 1 deletion(-)
- create mode 100644 include/dt-bindings/dma/dw-dmac.h
-
-diff --git a/Documentation/devicetree/bindings/dma/snps-dma.txt b/Documentation/devicetree/bindings/dma/snps-dma.txt
-index 39e2b26be344..db757df7057d 100644
---- a/Documentation/devicetree/bindings/dma/snps-dma.txt
-+++ b/Documentation/devicetree/bindings/dma/snps-dma.txt
-@@ -27,6 +27,10 @@ Optional properties:
-   general purpose DMA channel allocator. False if not passed.
- - multi-block: Multi block transfers supported by hardware. Array property with
-   one cell per channel. 0: not supported, 1 (default): supported.
-+- snps,dma-protection-control: AHB HPROT[3:1] protection setting.
-+  The default value is 0 (for non-cacheable, non-buffered,
-+  unprivileged data access).
-+  Refer to include/dt-bindings/dma/dw-dmac.h for possible values.
- 
- Example:
- 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3bd775ba51ce..68327503fa94 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14379,9 +14379,11 @@ SYNOPSYS DESIGNWARE DMAC DRIVER
- M:	Viresh Kumar <vireshk@kernel.org>
- R:	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
- S:	Maintained
-+F:	Documentation/devicetree/bindings/dma/snps-dma.txt
-+F:	drivers/dma/dw/
-+F:	include/dt-bindings/dma/dw-dmac.h
- F:	include/linux/dma/dw.h
- F:	include/linux/platform_data/dma-dw.h
--F:	drivers/dma/dw/
- 
- SYNOPSYS DESIGNWARE ENTERPRISE ETHERNET DRIVER
- M:	Jose Abreu <Jose.Abreu@synopsys.com>
-diff --git a/include/dt-bindings/dma/dw-dmac.h b/include/dt-bindings/dma/dw-dmac.h
-new file mode 100644
-index 000000000000..d1ca705c95b3
---- /dev/null
-+++ b/include/dt-bindings/dma/dw-dmac.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-+
-+#ifndef __DT_BINDINGS_DMA_DW_DMAC_H__
-+#define __DT_BINDINGS_DMA_DW_DMAC_H__
-+
-+/*
-+ * Protection Control bits provide protection against illegal transactions.
-+ * The protection bits[0:2] are one-to-one mapped to AHB HPROT[3:1] signals.
-+ */
-+#define DW_DMAC_HPROT1_PRIVILEGED_MODE	(1 << 0)	/* Privileged Mode */
-+#define DW_DMAC_HPROT2_BUFFERABLE	(1 << 1)	/* DMA is bufferable */
-+#define DW_DMAC_HPROT3_CACHEABLE	(1 << 2)	/* DMA is cacheable */
-+
-+#endif /* __DT_BINDINGS_DMA_DW_DMAC_H__ */
--- 
-2.19.1
+Thanks, applied for v4.21.
