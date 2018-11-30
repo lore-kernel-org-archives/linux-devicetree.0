@@ -1,76 +1,50 @@
-Return-Path: <SRS0=2X+C=OH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36501 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728052AbeK1Uzl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 28 Nov 2018 15:55:41 -0500
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH v3 08/12] dt-bindings: serial: Add bindings for nvidia,tegra194-tcu
-Date: Wed, 28 Nov 2018 10:54:17 +0100
-Message-Id: <20181128095421.20573-9-thierry.reding@gmail.com>
-In-Reply-To: <20181128095421.20573-1-thierry.reding@gmail.com>
-References: <20181128095421.20573-1-thierry.reding@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mikko Perttunen <mperttunen@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, Pekka Pessi <ppessi@nvidia.com>, Mika Liljeberg <mliljeberg@nvidia.com>, linux-tegra@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=X76U=OJ=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v2 12/21] ARM: dts: r8a7744-iwg20m: Add eMMC support
+Date: Fri, 30 Nov 2018 15:26:26 +0000
+Message-Id: <1543591595-37861-13-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
+References: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Mikko Perttunen <mperttunen@nvidia.com>
+Add eMMC support for iWave RZ/G1N Qseven System On Module.
 
-Add bindings for the Tegra Combined UART device used to talk to the
-UART console on Tegra194 systems.
-
-Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- .../bindings/serial/nvidia,tegra194-tcu.txt   | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/nvidia,tegra194-tcu.txt
+V1-->V2
+   * No Change
+---
+ arch/arm/boot/dts/r8a7744-iwg20m.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/serial/nvidia,tegra194-tcu.txt b/Documentation/devicetree/bindings/serial/nvidia,tegra194-tcu.txt
-new file mode 100644
-index 000000000000..085a8591accd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/nvidia,tegra194-tcu.txt
-@@ -0,0 +1,35 @@
-+NVIDIA Tegra Combined UART (TCU)
+diff --git a/arch/arm/boot/dts/r8a7744-iwg20m.dtsi b/arch/arm/boot/dts/r8a7744-iwg20m.dtsi
+index 6166ae0..1e57b1f 100644
+--- a/arch/arm/boot/dts/r8a7744-iwg20m.dtsi
++++ b/arch/arm/boot/dts/r8a7744-iwg20m.dtsi
+@@ -29,3 +29,20 @@
+ &extal_clk {
+ 	clock-frequency = <20000000>;
+ };
 +
-+The TCU is a system for sharing a hardware UART instance among multiple
-+systems within the Tegra SoC. It is implemented through a mailbox-
-+based protocol where each "virtual UART" has a pair of mailboxes, one
-+for transmitting and one for receiving, that is used to communicate
-+with the hardware implementing the TCU.
++&pfc {
++	mmcif0_pins: mmc {
++		groups = "mmc_data8_b", "mmc_ctrl";
++		function = "mmc";
++	};
++};
 +
-+Required properties:
-+- name : Should be tcu
-+- compatible
-+    Array of strings
-+    One of:
-+    - "nvidia,tegra194-tcu"
-+- mbox-names:
-+    "rx" - Mailbox for receiving data from hardware UART
-+    "tx" - Mailbox for transmitting data to hardware UART
-+- mboxes: Mailboxes corresponding to the mbox-names.
++&mmcif0 {
++	pinctrl-0 = <&mmcif0_pins>;
++	pinctrl-names = "default";
 +
-+This node is a mailbox consumer. See the following files for details of
-+the mailbox subsystem, and the specifiers implemented by the relevant
-+provider(s):
-+
-+- .../mailbox/mailbox.txt
-+- .../mailbox/nvidia,tegra186-hsp.txt
-+
-+Example bindings:
-+-----------------
-+
-+tcu: tcu {
-+	compatible = "nvidia,tegra194-tcu";
-+	mboxes = <&hsp_top0 TEGRA_HSP_MBOX_TYPE_SM 0>,
-+	         <&hsp_aon TEGRA_HSP_MBOX_TYPE_SM 1>;
-+	mbox-names = "rx", "tx";
++	vmmc-supply = <&reg_3p3v>;
++	bus-width = <8>;
++	non-removable;
++	status = "okay";
 +};
 -- 
-2.19.1
+2.7.4
