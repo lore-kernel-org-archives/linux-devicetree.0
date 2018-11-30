@@ -1,65 +1,81 @@
-From: Pascal PAILLET-LME <p.paillet@st.com>
-Subject: [PATCH v7 3/7] dt-bindings: input: document stpmic1 pmic onkey
-Date: Fri, 30 Nov 2018 09:55:49 +0000
-Message-ID: <1543571742-17995-4-git-send-email-p.paillet@st.com>
-References: <1543571742-17995-1-git-send-email-p.paillet@st.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [RFC PATCH 0/6] char: Add support to Qualcomm FastRPC driver
+Date: Fri, 30 Nov 2018 10:46:51 +0000
+Message-ID: <20181130104657.14875-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543571742-17995-1-git-send-email-p.paillet@st.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
-Cc: Pascal PAILLET-LME <p.paillet@st.com>
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, bkumar@qti.qualcomm.com, thierry.escande@linaro.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The stpmic1 pmic is able to manage an onkey button. It can be configured
-to shut-down the power supplies on a long key-press with an adjustable
-duration.
+This patchset adds support to Qualcomm FastRPC driver which implements
+an IPC (Inter-Processor Communication) mechanism that allows for clients
+to transparently make remote method invocations across processor boundaries.
 
-Signed-off-by: Pascal Paillet <p.paillet@st.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-changes in v7: nothing
+The below diagram depicts invocation of a single method where the client
+and objects reside on different processors. An object could expose
+multiple methods which can be grouped together and referred to as an
+interface.
 
- .../devicetree/bindings/input/st,stpmic1-onkey.txt | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
+: ,--------,        ,------,  ,-----------,  ,------,        ,--------,
+: |        | method |      |  |           |  |      | method |        |
+: | Client |------->| Stub |->| Transport |->| Skel |------->| Object |
+: |        |        |      |  |           |  |      |        |        |
+: `--------`        `------`  `-----------`  `------`        `--------`
 
-diff --git a/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt b/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
-new file mode 100644
-index 0000000..4494613
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
-@@ -0,0 +1,28 @@
-+STMicroelectronics STPMIC1 Onkey
-+
-+Required properties:
-+
-+- compatible = "st,stpmic1-onkey";
-+- interrupts: interrupt line to use
-+- interrupt-names = "onkey-falling", "onkey-rising"
-+	onkey-falling: happens when onkey is pressed; IT_PONKEY_F of pmic
-+	onkey-rising: happens when onkey is released; IT_PONKEY_R of pmic
-+
-+Optional properties:
-+
-+- st,onkey-clear-cc-flag: onkey is able power on after an
-+  over-current shutdown event.
-+- st,onkey-pu-inactive: onkey pull up is not active
-+- power-off-time-sec: Duration in seconds which the key should be kept
-+        pressed for device to power off automatically (from 1 to 16 seconds).
-+        see See Documentation/devicetree/bindings/input/keys.txt
-+
-+Example:
-+
-+onkey {
-+	compatible = "st,stpmic1-onkey";
-+	interrupt-parent = <&pmic>;
-+	interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
-+	interrupt-names = "onkey-falling", "onkey-rising";
-+	power-off-time-sec = <10>;
-+};
+Client:    Linux user mode process that initiates the remote invocation
+Stub:      Auto generated code linked in with the user mode process that
+           takes care of marshaling parameters
+
+Transport: Involved in carrying an invocation from a client to an
+           object. This involves two portions: 1) FastRPC Linux
+           kernel driver that receives the remote invocation, queues
+           them up and then waits for the response after signaling the
+           remote side. 2) Service running on the remote side that
+           dequeues the messages from the queue and dispatches them for
+           processing.
+Skel:      Auto generated code that takes care of un-marshaling
+           parameters
+Object:    Method implementation
+
+Most of the work is derived from various downstream Qualcomm kernels.
+Credits to various Qualcomm authors who have contributed to this code.
+Specially Tharun Kumar Merugu <mtharu@codeaurora.org>
+
+Keeping the first version simple, below are few things are TODO:
+ - Support INIT_STATIC process
+ - Support remote mmap/unmap methods.
+ - Handling secure compute context banks.
+ - Add secure buffer support
+
+This patchset has been tested on DB410c(msm8916), DB820c (msm8996), SDM845
+Qualcomm SoCs with sample apps like matrix multiply, calculator
+from Hexagon SDK.
+
+Thanks,
+srini
+
+Srinivas Kandagatla (5):
+  char: dt-bindings: Add Qualcomm Fastrpc bindings
+  char: fastrpc: Add Qualcomm fastrpc basic driver model
+  char: fastrpc: Add support for context Invoke method
+  char: fastrpc: Add support for create remote init process
+  char: fastrpc: Add support for dmabuf exporter
+
+Thierry Escande (1):
+  char: fastrpc: Add support for compat ioctls
+
+ .../devicetree/bindings/char/qcom,fastrpc.txt |   73 +
+ drivers/char/Kconfig                          |   10 +
+ drivers/char/Makefile                         |    1 +
+ drivers/char/fastrpc.c                        | 1749 +++++++++++++++++
+ include/uapi/linux/fastrpc.h                  |   82 +
+ 5 files changed, 1915 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/char/qcom,fastrpc.txt
+ create mode 100644 drivers/char/fastrpc.c
+ create mode 100644 include/uapi/linux/fastrpc.h
+
 -- 
-1.9.1
+2.19.2
