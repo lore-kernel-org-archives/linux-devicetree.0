@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 7/8] ARM64: dts: marvell: armada-37xx: fix SATA node scope
-Date: Fri, 30 Nov 2018 15:47:42 +0100
-Message-ID: <20181130144743.675-8-miquel.raynal@bootlin.com>
+Subject: [PATCH v2 8/8] ARM64: dts: marvell: armada-37xx: declare the COMPHY node
+Date: Fri, 30 Nov 2018 15:47:43 +0100
+Message-ID: <20181130144743.675-9-miquel.raynal@bootlin.com>
 References: <20181130144743.675-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,28 +12,58 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Fix the SATA IP memory area which is only 0x178 bytes long (from
-Marvell A3700 specification). Actually, starting from the offset
-0xe0178, there is an area dedicated to the COMPHY driver.
+Describe the A3700 COMPHY node. It has three PHYs that can be
+configured as follow:
+* PCIe or GbE
+* USB3 or GbE
+* SATA or USB3
+Each of them has its own memory area.
 
 Suggested-by: Grzegorz Jaszczyk <jaz@semihalf.com>
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 29 ++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index 4472bcd8f9fb..e7405931f381 100644
+index e7405931f381..036d6fd6c9ef 100644
 --- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
 +++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -358,7 +358,7 @@
- 
- 			sata: sata@e0000 {
- 				compatible = "marvell,armada-3700-ahci";
--				reg = <0xe0000 0x2000>;
-+				reg = <0xe0000 0x178>;
- 				interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
+@@ -242,6 +242,35 @@
+ 				reg = <0x14000 0x60>;
  			};
+ 
++			comphy: phy@18300 {
++				compatible = "marvell,comphy-a3700";
++				reg = <0x18300 0x300>,
++				      <0x1F000 0x400>,
++				      <0x5C000 0x400>,
++				      <0xe0178 0x8>;
++				reg-names = "comphy",
++					    "lane1_pcie_gbe",
++					    "lane0_usb3_gbe",
++					    "lane2_sata_usb3";
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				comphy0: phy@0 {
++					reg = <0>;
++					#phy-cells = <1>;
++				};
++
++				comphy1: phy@1 {
++					reg = <1>;
++					#phy-cells = <1>;
++				};
++
++				comphy2: phy@2 {
++					reg = <2>;
++					#phy-cells = <1>;
++				};
++			};
++
+ 			pinctrl_sb: pinctrl@18800 {
+ 				compatible = "marvell,armada3710-sb-pinctrl",
+ 					     "syscon", "simple-mfd";
 -- 
 2.19.1
