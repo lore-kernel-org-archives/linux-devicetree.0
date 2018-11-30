@@ -1,35 +1,81 @@
-From: Pascal PAILLET-LME <p.paillet@st.com>
-Subject: Re: [PATCH v6 3/8] dt-bindings: regulator: document stpmic1 pmic
- regulators
-Date: Fri, 30 Nov 2018 08:51:28 +0000
-Message-ID: <5C00FA0F.3020303@st.com>
-References: <1543337529-22301-1-git-send-email-p.paillet@st.com>
- <1543337529-22301-4-git-send-email-p.paillet@st.com>
- <20181128094801.GF6828@sirena.org.uk>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 2/2] clk: Add Fixed MMIO clock driver
+Date: Fri, 30 Nov 2018 00:58:30 -0800
+Message-ID: <154356831048.88331.9290972200429107619@swboyd.mtv.corp.google.com>
+References: <D3711617-229C-4FA5-9E73-A7A3C025893B@global.cadence.com>
+ <154223394933.88331.14659021245427374668@swboyd.mtv.corp.google.com>
+ <CAE55F09-516A-4737-8F74-07BBA3AF5737@global.cadence.com>
+ <154353057449.88331.10017415440005548379@swboyd.mtv.corp.google.com>
+ <76BDCB72-CC05-41D1-93A0-6D71CBD97651@global.cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181128094801.GF6828@sirena.org.uk>
-Content-Language: en-US
-Content-ID: <9DB619103FCF3F4681616A2DF44F3FBE@st.com>
+In-Reply-To: <76BDCB72-CC05-41D1-93A0-6D71CBD97651@global.cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
+To: Janek Kotas <jank@cadence.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 11/28/2018 10:48 AM, Mark Brown a écrit :
-> On Tue, Nov 27, 2018 at 04:52:15PM +0000, Pascal PAILLET-LME wrote:
->> The STPMIC1 regulators supply power to the application processor as well as
->> to the external system peripherals such as DDR, Flash memories and system
->> devices.
-> Please do not submit new versions of already applied patches, please
-> submit incremental updates to the existing code.  Modifying existing
-> commits creates problems for other users building on top of those
-> commits so it's best practice to only change pubished git commits if
-> absolutely essential.
+Quoting Janek Kotas (2018-11-30 00:52:16)
+> =
 
-Sorry Mark, I will submit my changes on the regulator driver in separate 
-patches.
+>         We have a single register in a fixed location which contains =
 
-pascal
+>         the frequency of the main system clock.
+>         This allows us to use the same image in emulation, FPGA
+>         and simulation without any changes.
+>         We usually don=E2=80=99t use a full bootloader, just a simple wra=
+pper,
+>         which initializes the necessary stuff and jumps to the kernel.
+> =
+
+> =
+
+>     So the hardware team has decided to throw a frequency register in the=
+re?
+>     Alright! Does that fixed rate clk generate its fixed rate from some
+>     other clk? I=E2=80=99m curious if this fixed rate clk has a parent so=
+urce.
+> =
+
+> =
+
+> It depends, in simulation and emulation we can just generate =
+
+> a clock source with a given frequency.
+> On FPGA it=E2=80=99s usually an external oscillator, sometimes a fixed PL=
+L.
+> The driver is not intended to be used in full, complex SoCs.
+
+Ok, sounds like it isn't worth modeling this then.
+
+> =
+
+> =
+
+>     It would also be good to make sure that any clks registered from this
+>     driver can't be populated from regions of memory like DDR. Can you
+>     confirm? I think it will fail, but it would be worth checking
+> =
+
+
+Please try this.
+
+>     Yes I'd prefer a platform driver unless there's some reason it can't =
+be
+>     done. We may need to have both in case this needs to be populated very
+>     early, but if that isn=E2=80=99t the case then just a platform driver=
+ for now.
+> =
+
+> =
+
+> I played with it a bit, and it and it looks like I need both.
+> We use this clock source with some of our components, =
+
+> and for some of them the platform driver was initialized too late.
+> =
+
+
+Ok. So do both then.
