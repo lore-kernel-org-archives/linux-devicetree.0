@@ -1,79 +1,75 @@
-Return-Path: <SRS0=lXjp=OG=bp.renesas.com=biju.das@kernel.org>
+Return-Path: <SRS0=X76U=OJ=bp.renesas.com=biju.das@kernel.org>
 From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 20/22] ARM: dts: r8a7744: Add MSIOF[012] support
-Date: Tue, 27 Nov 2018 11:56:33 +0000
-Message-Id: <1543319795-48325-21-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
+Subject: RE: [PATCH 19/22] ARM: dts: r8a7744-iwg20m: Add SPI NOR support
+Date: Fri, 30 Nov 2018 11:02:08 +0000
+Message-ID: 
+ <OSBPR01MB21036C33152005C92E19853DB8D30@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+ <1543319795-48325-20-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdVhON=3hgZAdeeP9zwebVaZQNG=wsvqX3W3MVmQOWanbw@mail.gmail.com>
+ <OSBPR01MB21038E1B2F3E83248DCCD298B8D30@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <CAMuHMdX7ghhyZcvrgit_zrNwTyVcizB0nbySYNeL-38ux9VJQw@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdX7ghhyZcvrgit_zrNwTyVcizB0nbySYNeL-38ux9VJQw@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Geert Uytterhoeven" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add the DT nodes needed by MSIOF[012] interfaces to the SoC dtsi.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm/boot/dts/r8a7744.dtsi | 48 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index abe0ee3..c9e9678 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -944,6 +944,54 @@
- 			status = "disabled";
- 		};
- 
-+		msiof0: spi@e6e20000 {
-+			compatible = "renesas,msiof-r8a7744",
-+				     "renesas,rcar-gen2-msiof";
-+			reg = <0 0xe6e20000 0 0x0064>;
-+			interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 000>;
-+			dmas = <&dmac0 0x51>, <&dmac0 0x52>,
-+			       <&dmac1 0x51>, <&dmac1 0x52>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			resets = <&cpg 000>;
-+			status = "disabled";
-+		};
-+
-+		msiof1: spi@e6e10000 {
-+			compatible = "renesas,msiof-r8a7744",
-+				     "renesas,rcar-gen2-msiof";
-+			reg = <0 0xe6e10000 0 0x0064>;
-+			interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 208>;
-+			dmas = <&dmac0 0x55>, <&dmac0 0x56>,
-+			       <&dmac1 0x55>, <&dmac1 0x56>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			resets = <&cpg 208>;
-+			status = "disabled";
-+		};
-+
-+		msiof2: spi@e6e00000 {
-+			compatible = "renesas,msiof-r8a7744",
-+				     "renesas,rcar-gen2-msiof";
-+			reg = <0 0xe6e00000 0 0x0064>;
-+			interrupts = <GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 205>;
-+			dmas = <&dmac0 0x41>, <&dmac0 0x42>,
-+			       <&dmac1 0x41>, <&dmac1 0x42>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			resets = <&cpg 205>;
-+			status = "disabled";
-+		};
-+
- 		can0: can@e6e80000 {
- 			compatible = "renesas,can-r8a7744",
- 				     "renesas,rcar-gen2-can";
--- 
-2.7.4
+SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IFN1YmplY3Q6IFJlOiBb
+UEFUQ0ggMTkvMjJdIEFSTTogZHRzOiByOGE3NzQ0LWl3ZzIwbTogQWRkIFNQSSBOT1Igc3VwcG9y
+dA0KPg0KPiBIaSBCaWp1LA0KPg0KPiBPbiBGcmksIE5vdiAzMCwgMjAxOCBhdCAxMTozNCBBTSBC
+aWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+ID4gU3ViamVjdDog
+UmU6IFtQQVRDSCAxOS8yMl0gQVJNOiBkdHM6IHI4YTc3NDQtaXdnMjBtOiBBZGQgU1BJIE5PUg0K
+PiA+ID4gc3VwcG9ydCBPbiBUdWUsIE5vdiAyNywgMjAxOCBhdCAxOjA1IFBNIEJpanUgRGFzDQo+
+IDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gPiA+IEFkZCBzdXBwb3J0IGZv
+ciB0aGUgU1BJIE5PUiBkZXZpY2UgdXNlZCB0byBib290IHVwIHRoZSBzeXN0ZW0gdG8NCj4gPiA+
+ID4gdGhlIGlXYXZlIFJaL0cxTiBRc2V2ZW4gU3lzdGVtIE9uIE1vZHVsZSBEVC4NCj4gPiA+ID4N
+Cj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29t
+Pg0KPiA+ID4NCj4gPiA+IFRoYW5rcyBmb3IgeW91ciBwYXRjaCENCj4gPiA+DQo+ID4gPiA+IC0t
+LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3NDQtaXdnMjBtLmR0c2kNCj4gPiA+ID4gKysrIGIv
+YXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc0NC1pd2cyMG0uZHRzaQ0KPiA+ID4NCj4gPiA+ID4gQEAg
+LTUzLDYgKzU4LDI3IEBADQo+ID4gPiA+ICAgICAgICAgc3RhdHVzID0gIm9rYXkiOw0KPiA+ID4g
+PiAgfTsNCj4gPiA+ID4NCj4gPiA+ID4gKyZxc3BpIHsNCj4gPiA+ID4gKyAgICAgICBwaW5jdHJs
+LTAgPSA8JnFzcGlfcGlucz47DQo+ID4gPiA+ICsgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZh
+dWx0IjsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgIHN0YXR1cyA9ICJva2F5IjsNCj4gPiA+
+ID4gKw0KPiA+ID4gPiArICAgICAgIC8qIFdBUk5JTkcgLSBUaGlzIGRldmljZSBjb250YWlucyB0
+aGUgYm9vdGxvYWRlci4gSGFuZGxlIHdpdGgNCj4gY2FyZS4NCj4gPiA+ICovDQo+ID4gPiA+ICsg
+ICAgICAgZmxhc2g6IGZsYXNoQDAgew0KPiA+ID4gPiArICAgICAgICAgICAgICAgI2FkZHJlc3Mt
+Y2VsbHMgPSA8MT47DQo+ID4gPiA+ICsgICAgICAgICAgICAgICAjc2l6ZS1jZWxscyA9IDwxPjsN
+Cj4gPiA+ID4gKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAic3N0LHNzdDI1dmYwMTZiIiwg
+ImplZGVjLHNwaS1ub3IiOw0KPiA+ID4NCj4gPiA+IEFjY29yZGluZyB0byB0aGUgc2NoZW1hdGlj
+cywgdGhpcyBpcyBhbiBJU1NJIElTMjVMUDAxNkQ/DQo+ID4gPiBJU1NJIHdhcyBhY3F1aXJlZCBi
+eSBHaWdhRGV2aWNlLCBhY2NvcmRpbmcgdG8gV2lraXBlZGlhLg0KPiA+ID4gV2hpbGUgU1NUIGlz
+IG5vdyBNaWNyb0NoaXAuDQo+ID4NCj4gPiBBcyBwZXIgdGhlIHNjaGVtYXRpYyBhbmQgQm9NLCAg
+aXQgaXMuDQo+ID4gSUMgRkxBU0ggMTZNQklUIDUwTUhaIDhTT0lDIFNTVDI1VkYwMTZCLTUwLTRJ
+LVMyQUYgTWljcm9jaGlwDQo+ID4gVGVjaG5vbG9neSAxIFUxDQo+DQo+IE9oLCB0aGlzIHNlZW1z
+IHRvIGRpZmZlciBmb3IgZGlmZmVyZW50IHJldmlzaW9ucyBvZiB0aGUgc2NoZW1hdGljcy4NCj4g
+UjUuMSBoYXMgdGhlIElTU0kgcGFydCwgUjMuNCBoYXMgdGhlIFNTVCBwYXJ0Lg0KPg0KPiBEdWUg
+dG8gImplZGVjLHNwaS1ub3IiLCBpdCB3aWxsIGF1dG8tZGV0ZWN0LCBidXQgSUlSQywgdGhlIGRy
+aXZlciB3aWxsIHdhcm4gaWYgdGhlDQo+IGNvbXBhdGlibGUgZG9lc24ndCBtYXRjaCB0aGUgZGV0
+ZWN0ZWQgcGFydCwgd2hpY2ggdGh1cyBtYXkgaGFwcGVuIGZvcg0KPiBzb21lIGJvYXJkcy4NCg0K
+T0suIFdpbGwgcmVtb3ZlICJzc3QiIHBhcnQgZm9yIHRoZSBjb21wYXRpYmxlIHN0cmluZy4NCg0K
+PiA+ID4gPiArICAgICAgICAgICAgICAgcmVnID0gPDA+Ow0KPiA+ID4gPiArICAgICAgICAgICAg
+ICAgc3BpLW1heC1mcmVxdWVuY3kgPSA8NTAwMDAwMDA+Ow0KPiA+ID4gPiArICAgICAgICAgICAg
+ICAgc3BpLXR4LWJ1cy13aWR0aCA9IDwxPjsNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIHNwaS1y
+eC1idXMtd2lkdGggPSA8MT47DQo+ID4gPg0KPiA+ID4gPDE+IGlzIHRoZSBkZWZhdWx0LCBidXQg
+aXQncyBpbmRlZWQgZ29vZCB0byBtYWtlIHRoaXMgZXhwbGljaXQsIGFzDQo+ID4gPiB0aGlzIGlz
+IGEgUVNQSSBkZXZpY2Ugd2l0aCAyIHVud2lyZWQgZGF0YSBwaW5zLg0KPiA+ID4gSG93ZXZlciwg
+YXMgdGhlIGRldmljZSBzZWVtcyB0byBzdXBwb3J0IGR1YWwgdHJhbnNmZXJzLCBhbmQgZHVhbA0K
+PiA+ID4gbW9kZSB1c2VzIHRoZSBzdGFuZGFyZCBNT1NJL01JU08gcGlucywgeW91IHNob3VsZCB1
+c2UgPDI+IGZvciBib3RoLg0KPiA+ID4gVGhlIFJTUEkgZHJpdmVyIHN1cHBvcnRzIHRoaXMuDQo+
+ID4gPg0KPiA+ID4gVGhlIHNhbWUgYXBwbGllcyB0byB0aGUgUlovRzFNIHZlcnNpb24uDQo+ID4N
+Cj4gPiBTU1QyNVZGMDE2QiB0aGlzIGRvZXNuJ3Qgc3VwcG9ydCBkdWFsIG1vZGUuDQo+DQo+IE9L
+Lg0KPg0KPiBTbyBzb21lIGJvYXJkcyBoYXZlIGEgZHVhbC1jYXBhYmxlIHBhcnQsIG90aGVycyBk
+b24ndC4NCj4NCj4gSSdtIG5vdCAxMDAlIHN1cmUsIGJ1dCBJIHRoaW5rIHdyaXRpbmcgPDI+IHdp
+bGwgc3RpbGwgd29yaywgYXMgdGhlIGRyaXZlciB3b24ndA0KPiB1c2UgZHVhbCBtb2RlIG9uIHRo
+ZSBTU1QyNVZGMDE2QiBwYXJ0LCBkdWUgdG8gbGFjayBvZg0KPiBTUElfTk9SX0RVQUxfUkVBRCBp
+biB0aGUgZW50cnkgaW4gdGhlIHNwaS1ub3IgZHJpdmVyLg0KDQpPSy4gV2lsbCBjaGVjayB0aGlz
+Lg0KDQpSZWdhcmRzLA0KQmlqdQ0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTHRk
+LCBEdWtlcyBNZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5naGFtc2hp
+cmUsIFNMOCA1RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRlciBSZWdp
+c3RlcmVkIE5vLiAwNDU4NjcwOS4NCg==
