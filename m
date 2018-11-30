@@ -1,43 +1,49 @@
-From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH] ARM: dts: s5pv210: Add s5p-jpeg codec node.
-Date: Fri, 30 Nov 2018 19:04:23 +0100
-Message-ID: <20181130180423.9421-1-pawel.mikolaj.chmiel@gmail.com>
+From: Daniel Mack <daniel@zonque.org>
+Subject: [PATCH 3/7] ARM: dts: pxa2xx: fix hwuart memory range
+Date: Fri, 30 Nov 2018 18:55:39 +0100
+Message-ID: <20181130175543.32628-4-daniel@zonque.org>
+References: <20181130175543.32628-1-daniel@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181130175543.32628-1-daniel@zonque.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robert.jarzmik@free.fr, haojian.zhuang@gmail.com
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, Daniel Mack <daniel@zonque.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds node for s5p-jpeg codec,
-which is present in S5PV210 SOC.
+The memory range for the hwuart is at 0x41600000, not 0x41100000.
+This also solves a conflict with the MMC controller node.
 
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Signed-off-by: Daniel Mack <daniel@zonque.org>
 ---
- arch/arm/boot/dts/s5pv210.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/pxa2xx.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
-index 75f454a210d6..12eac8930eac 100644
---- a/arch/arm/boot/dts/s5pv210.dtsi
-+++ b/arch/arm/boot/dts/s5pv210.dtsi
-@@ -627,6 +627,15 @@
- 				samsung,lcd-wb;
- 			};
+diff --git a/arch/arm/boot/dts/pxa2xx.dtsi b/arch/arm/boot/dts/pxa2xx.dtsi
+index 7d3dfa8259f8..30e77ebbcc4d 100644
+--- a/arch/arm/boot/dts/pxa2xx.dtsi
++++ b/arch/arm/boot/dts/pxa2xx.dtsi
+@@ -117,9 +117,9 @@
+ 			status = "disabled";
  		};
-+
-+		jpeg_codec: jpeg-codec@fb600000 {
-+			compatible = "samsung,s5pv210-jpeg";
-+			reg = <0xfb600000 0x1000>;
-+			interrupt-parent = <&vic2>;
-+			interrupts = <8>;
-+			clocks = <&clocks CLK_JPEG>;
-+			clock-names = "jpeg";
-+		};
- 	};
- };
  
+-		hwuart: serial@41100000 {
++		hwuart: serial@41600000 {
+ 			compatible = "mrvl,pxa-uart";
+-			reg = <0x41100000 0x30>;
++			reg = <0x41600000 0x30>;
+ 			interrupts = <7>;
+ 			status = "disabled";
+ 		};
 -- 
-2.17.1
+2.19.2
