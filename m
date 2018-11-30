@@ -1,8 +1,7 @@
 From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 6/7] ARM: dts: pxa3xx: clean up pxa3xx clock controller node
- name
-Date: Fri, 30 Nov 2018 18:55:42 +0100
-Message-ID: <20181130175543.32628-7-daniel@zonque.org>
+Subject: [PATCH 5/7] ARM: dts: pxa3xx: order timer and gcu nodes under /pxabus
+Date: Fri, 30 Nov 2018 18:55:41 +0100
+Message-ID: <20181130175543.32628-6-daniel@zonque.org>
 References: <20181130175543.32628-1-daniel@zonque.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,26 +21,61 @@ To: robert.jarzmik@free.fr, haojian.zhuang@gmail.com
 Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, Daniel Mack <daniel@zonque.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The clock controller node does not need a unit slave designator as it does
-not have a reg property. Also, remove the underscore from the name.
+These are devices on the PXA bus, so make the device tree structure
+reflect that.
 
 Signed-off-by: Daniel Mack <daniel@zonque.org>
 ---
- arch/arm/boot/dts/pxa3xx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/pxa3xx.dtsi | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
 diff --git a/arch/arm/boot/dts/pxa3xx.dtsi b/arch/arm/boot/dts/pxa3xx.dtsi
-index de49e7f666c0..6131491ab5e7 100644
+index eb9443208578..de49e7f666c0 100644
 --- a/arch/arm/boot/dts/pxa3xx.dtsi
 +++ b/arch/arm/boot/dts/pxa3xx.dtsi
-@@ -292,7 +292,7 @@
- 		#size-cells = <1>;
- 		ranges;
+@@ -265,6 +265,22 @@
+ 			clocks = <&clks CLK_SSP4>;
+ 			status = "disabled";
+ 		};
++
++		timer@40a00000 {
++			compatible = "marvell,pxa-timer";
++			reg = <0x40a00000 0x20>;
++			interrupts = <26>;
++			clocks = <&clks CLK_OSTIMER>;
++			status = "okay";
++		};
++
++		gcu: display-controller@54000000 {
++			compatible = "marvell,pxa300-gcu";
++			reg = <0x54000000 0x1000>;
++			interrupts = <39>;
++			clocks = <&clks CLK_PXA300_GCU>;
++			status = "disabled";
++		};
+ 	};
  
--		clks: pxa3xx_clks@41300004 {
-+		clks: clocks {
- 			compatible = "marvell,pxa300-clocks";
- 			#clock-cells = <1>;
+ 	clocks {
+@@ -282,20 +298,4 @@
  			status = "okay";
+ 		};
+ 	};
+-
+-	timer@40a00000 {
+-		compatible = "marvell,pxa-timer";
+-		reg = <0x40a00000 0x20>;
+-		interrupts = <26>;
+-		clocks = <&clks CLK_OSTIMER>;
+-		status = "okay";
+-	};
+-
+-	gcu: display-controller@54000000 {
+-		compatible = "marvell,pxa300-gcu";
+-		reg = <0x54000000 0x1000>;
+-		interrupts = <39>;
+-		clocks = <&clks CLK_PXA300_GCU>;
+-		status = "disabled";
+-	};
+ };
 -- 
 2.19.2
