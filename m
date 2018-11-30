@@ -1,187 +1,64 @@
-Return-Path: <SRS0=tEXb=OI=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 2/2] ARM: dts: r7s9210-rza2mevb: Add support for RZ/A2M EVB
-Date: Thu, 29 Nov 2018 08:05:59 -0500
-Message-Id: <20181129130559.66732-3-chris.brandt@renesas.com>
-In-Reply-To: <20181129130559.66732-1-chris.brandt@renesas.com>
-References: <20181129130559.66732-1-chris.brandt@renesas.com>
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=nKhH=OJ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr40054.outbound.protection.outlook.com ([40.107.4.54]:43808
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726392AbeK3Nlm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 30 Nov 2018 08:41:42 -0500
+From: PETER CHEN <peter.chen@nxp.com>
+Subject: RE: [PATCH v3 4/4] doc: usb: ci-hdrc-usb2: Add pinctrl properties for
+ HSIC pin groups
+Date: Fri, 30 Nov 2018 02:33:45 +0000
+Message-ID: <VI1PR04MB5327E51B366724706028E07E8BD30@VI1PR04MB5327.eurprd04.prod.outlook.com>
+References: <20181127092824.22756-1-peter.chen@nxp.com>
+ <20181127092824.22756-5-peter.chen@nxp.com>
+ <CAOMZO5CV9Hk5ORnmjOLSZv5bk61nc2Ljq_4vKvRvAvO_F=Fzxg@mail.gmail.com>
+In-Reply-To: <CAOMZO5CV9Hk5ORnmjOLSZv5bk61nc2Ljq_4vKvRvAvO_F=Fzxg@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: USB list <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Schrempf Frieder <frieder.schrempf@exceet.de>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for Renesas RZ/A2M evaluation board.
-
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- Documentation/devicetree/bindings/arm/shmobile.txt |   2 +
- arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/r7s9210-rza2mevb.dts             | 133 +++++++++++++++++++++
- 3 files changed, 136 insertions(+)
- create mode 100644 arch/arm/boot/dts/r7s9210-rza2mevb.dts
-
-diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-index a94db59d8e2d..67a6810c4345 100644
---- a/Documentation/devicetree/bindings/arm/shmobile.txt
-+++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-@@ -125,6 +125,8 @@ Boards:
-     compatible = "renesas,porter", "renesas,r8a7791"
-   - RSKRZA1 (YR0K77210C000BE)
-     compatible = "renesas,rskrza1", "renesas,r7s72100"
-+  - RZ/A2M Eval Board (RTK7921053S00000BE)
-+    compatible = "renesas,rza2mevb", "renesas,r7s9210"
-   - RZN1D-DB (RZ/N1D Demo Board for the RZ/N1D 400 pins package)
-     compatible = "renesas,rzn1d400-db", "renesas,r9a06g032"
-   - Salvator-X (RTP0RC7795SIPB0010S)
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b0e966d625b9..fbdd068fd8af 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -824,6 +824,7 @@ dtb-$(CONFIG_ARCH_RENESAS) += \
- 	r7s72100-genmai.dtb \
- 	r7s72100-gr-peach.dtb \
- 	r7s72100-rskrza1.dtb \
-+	r7s9210-rza2mevb.dtb \
- 	r8a73a4-ape6evm.dtb \
- 	r8a7740-armadillo800eva.dtb \
- 	r8a7743-iwg20d-q7.dtb \
-diff --git a/arch/arm/boot/dts/r7s9210-rza2mevb.dts b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-new file mode 100644
-index 000000000000..9570aeb8f1ce
---- /dev/null
-+++ b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-@@ -0,0 +1,133 @@
-+/*
-+ * Device Tree Source for the RZA2MEVB board
-+ *
-+ * Copyright (C) 2018 Renesas Electronics
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "r7s9210.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/r7s9210-pinctrl.h>
-+
-+/ {
-+	model = "RZA2MEVB";
-+	compatible = "renesas,rza2mevb", "renesas,r7s9210";
-+
-+	aliases {
-+		serial0 = &scif4;
-+	};
-+
-+	chosen {
-+		bootargs = "ignore_loglevel earlycon rootfstype=cramfs root=mtd:rootfs";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x40000000 0x00800000>;	 /* HyperRAM */
-+	};
-+
-+	lbsc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+	};
-+
-+	leds {
-+		status = "okay";
-+		compatible = "gpio-leds";
-+
-+		led0 {
-+			gpios = <&pinctrl RZA2_PIN(PORT6, 0) GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	/* Cramfs XIP File System in QSPI */
-+	qspi@20000000 {
-+		compatible = "mtd-rom";
-+		probe-type = "direct-mapped";	/* XIP from QSPI */
-+		reg = <0x20000000 0x4000000>;	/* 64 MB*/
-+		bank-width = <4>;
-+		device-width = <1>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		partition@800000 {
-+			label ="rootfs";
-+			reg = <0x0800000 0x1000000>; /* 16MB @ 0x20800000 */
-+			read-only;
-+		};
-+	};
-+};
-+
-+/* EXTAL */
-+&extal_clk {
-+	clock-frequency = <24000000>;	/* 24MHz */
-+};
-+
-+/* RTC_X1 */
-+&rtc_x1_clk {
-+	clock-frequency = <32768>;
-+};
-+
-+&pinctrl {
-+
-+	/* Serial Console */
-+	scif4_pins: serial4 {
-+		pinmux = <RZA2_PINMUX(PORT9, 0, 4)>,	/* TxD4 */
-+			 <RZA2_PINMUX(PORT9, 1, 4)>;	/* RxD4 */
-+	};
-+};
-+
-+/* High resolution System tick timers */
-+&ostm0 {
-+	status = "okay";
-+};
-+
-+&ostm1 {
-+	status = "okay";
-+};
-+
-+/* Serial Console */
-+&scif4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&scif4_pins>;
-+
-+	status = "okay";
-+};
--- 
-2.16.1
+IA0KPiANCj4gT24gVHVlLCBOb3YgMjcsIDIwMTggYXQgNzozMSBBTSBQRVRFUiBDSEVOIDxwZXRl
+ci5jaGVuQG54cC5jb20+IHdyb3RlOg0KPiA+DQo+ID4gRm9yIFVTQiBIU0lDLCB0aGUgZGF0YSBh
+bmQgc3Ryb2JlIHBpbiBuZWVkcyB0byBiZSBwdWxsZWQgZG93biBhdA0KPiA+IGRlZmF1bHQsIHdl
+IGNvbnNpZGVyIGl0IGFzICJpZGxlIiBzdGF0ZS4gV2hlbiB0aGUgVVNCIGhvc3QgaXMgcmVhZHkg
+dG8NCj4gPiBiZSB1c2VkLCB0aGUgc3Ryb2JlIHBpbiBuZWVkcyB0byBiZSBwdWxsZWQgdXAsIHdl
+IGNvbnNpZGVyIGl0IGFzDQo+ID4gImFjdGl2ZSIgc3RhdGUuDQo+ID4NCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBQZXRlciBDaGVuIDxwZXRlci5jaGVuQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvY2ktaGRyYy11c2IyLnR4dCB8IDggKysr
+KysrKy0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
+KQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy91c2IvY2ktaGRyYy11c2IyLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3VzYi9jaS1oZHJjLXVzYjIudHh0DQo+ID4gaW5kZXggNTI5ZTUxODc5ZmIyLi4xZTVl
+N2RkZmIxYTUgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3VzYi9jaS1oZHJjLXVzYjIudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3VzYi9jaS1oZHJjLXVzYjIudHh0DQo+ID4gQEAgLTgwLDcgKzgwLDEwIEBA
+IE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gICAgY29udHJvbGxlci4gSXQncyBleHBlY3RlZCB0
+aGF0IGEgbXV4IHN0YXRlIG9mIDAgaW5kaWNhdGVzIGRldmljZSBtb2RlIGFuZCBhDQo+ID4gICAg
+bXV4IHN0YXRlIG9mIDEgaW5kaWNhdGVzIGhvc3QgbW9kZS4NCj4gPiAgLSBtdXgtY29udHJvbC1u
+YW1lczogU2hhbGwgYmUgInVzYl9zd2l0Y2giIGlmIG11eC1jb250cm9scyBpcyBzcGVjaWZpZWQu
+DQo+ID4gLS0gcGluY3RybC1uYW1lczogTmFtZXMgZm9yIG9wdGlvbmFsIHBpbiBtb2RlcyBpbiAi
+ZGVmYXVsdCIsICJob3N0IiwgImRldmljZSINCj4gPiArLSBwaW5jdHJsLW5hbWVzOiBOYW1lcyBm
+b3Igb3B0aW9uYWwgcGluIG1vZGVzIGluICJkZWZhdWx0IiwgImhvc3QiLCAiZGV2aWNlIi4NCj4g
+PiArICBJbiBjYXNlIG9mIEhTSUMtbW9kZSwgImlkbGUiIGFuZCAiYWN0aXZlIiBwaW4gbW9kZXMg
+YXJlIG1hbmRhdG9yeS4NCj4gPiArSW4gdGhpcw0KPiA+ICsgIGNhc2UsIHRoZSAiaWRsZSIgc3Rh
+dGUgbmVlZHMgdG8gcHVsbCBkb3duIHRoZSBkYXRhIGFuZCBzdHJvYmUgcGluDQo+ID4gKyAgYW5k
+IHRoZSAiYWN0aXZlIiBzdGF0ZSBuZWVkcyB0byBwdWxsIHVwIHRoZSBzdHJvYmUgcGluLg0KPiA+
+ICAtIHBpbmN0cmwtbjogYWx0ZXJuYXRlIHBpbiBtb2Rlcw0KPiA+DQo+ID4gIGkubXggc3BlY2lm
+aWMgcHJvcGVydGllcw0KPiA+IEBAIC0xMTAsNCArMTEzLDcgQEAgRXhhbXBsZToNCj4gPiAgICAg
+ICAgICAgICAgICAgcGh5LWNsa2dhdGUtZGVsYXktdXMgPSA8NDAwPjsNCj4gPiAgICAgICAgICAg
+ICAgICAgbXV4LWNvbnRyb2xzID0gPCZ1c2Jfc3dpdGNoPjsNCj4gPiAgICAgICAgICAgICAgICAg
+bXV4LWNvbnRyb2wtbmFtZXMgPSAidXNiX3N3aXRjaCI7DQo+ID4gKyAgICAgICAgICAgICAgIHBp
+bmN0cmwtbmFtZXMgPSAiaWRsZSIsICJhY3RpdmUiOw0KPiA+ICsgICAgICAgICAgICAgICBwaW5j
+dHJsLTAgPSA8JnBpbmN0cmxfdXNiaDJfMT47DQo+ID4gKyAgICAgICAgICAgICAgIHBpbmN0cmwt
+MSA9IDwmcGluY3RybF91c2JoMl8yPjsNCj4gDQo+IEkgd291bGQgcHV0IHRoZSAiaWRsZSIgYW5k
+ICJhY3RpdmUiIGVudHJpZXMgaW5zaWRlIGEgZXhwbGljaXQgc2VjdGlvbiBmb3IgSFNJQy4NCj4g
+DQo+IE90aGVyd2lzZSwgaXQgbWF5IGNvbmZ1c2UgcGVvcGxlIHVzaW5nIG5vbi1IU0lDIGJpbmRp
+bmdzLg0KDQpJdCBpcyBqdXN0IGFuIGV4YW1wbGU7IHRoZSB1c2VyIHNob3VsZCBjaGVjayB0aGUg
+bWVhbmluZyBmb3Igb3B0aW9uYWwgcHJvcGVydGllcyBiZWZvcmUNCnVzaW5nIGl0LCBsaWtlIHRo
+ZSBwcm9wZXJ0eSAicGh5LWNsa2dhdGUtZGVsYXktdXMiLCBvbmx5IGlteDdkLzdzIG5lZWRzIGl0
+Lg0KDQpQZXRlcg0K
