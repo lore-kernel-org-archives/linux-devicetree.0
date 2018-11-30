@@ -1,63 +1,78 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH] clk: imx6q: add DCICx clocks gate
-Date: Fri, 30 Nov 2018 06:31:40 +0000
-Message-ID: <1543559158-2891-1-git-send-email-Anson.Huang@nxp.com>
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [PATCH RFC 4/5] gnss: sirf: add a separate supply for a lna
+Date: Fri, 30 Nov 2018 07:38:04 +0100
+Message-ID: <20181130073804.1e57226f@kemnade.info>
+References: <20181118215801.12280-1-andreas@kemnade.info>
+        <20181118215801.12280-5-andreas@kemnade.info>
+        <20181127180356.GA32751@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/BTjEbUtPs1dNVLJ671peYpD"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <20181127180356.GA32751@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "clement.peron@devialet.com" <clement.peron@devialet.com>, "colin.didier@devialet.com" <colin.didier@devialet.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: johan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-On i.MX6QP/i.MX6Q/i.MX6DL, there are DCIC1/DCIC2 clocks
-gate in CCM_CCGR0 register, add them into clock tree for
-clock management.
+--Sig_/BTjEbUtPs1dNVLJ671peYpD
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/clk/imx/clk-imx6q.c               | 2 ++
- include/dt-bindings/clock/imx6qdl-clock.h | 4 +++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+Hi,
 
-diff --git a/drivers/clk/imx/clk-imx6q.c b/drivers/clk/imx/clk-imx6q.c
-index bbe0c60..31a9d94 100644
---- a/drivers/clk/imx/clk-imx6q.c
-+++ b/drivers/clk/imx/clk-imx6q.c
-@@ -737,6 +737,8 @@ static void __init imx6q_clocks_init(struct device_node=
- *ccm_node)
- 	clk[IMX6QDL_CLK_CAN1_SERIAL]  =3D imx_clk_gate2("can1_serial",   "can_roo=
-t",          base + 0x68, 16);
- 	clk[IMX6QDL_CLK_CAN2_IPG]     =3D imx_clk_gate2("can2_ipg",      "ipg",  =
-             base + 0x68, 18);
- 	clk[IMX6QDL_CLK_CAN2_SERIAL]  =3D imx_clk_gate2("can2_serial",   "can_roo=
-t",          base + 0x68, 20);
-+	clk[IMX6QDL_CLK_DCIC1]        =3D imx_clk_gate2("dcic1",         "ipu1_po=
-df",         base + 0x68, 24);
-+	clk[IMX6QDL_CLK_DCIC2]        =3D imx_clk_gate2("dcic2",         "ipu2_po=
-df",         base + 0x68, 26);
- 	clk[IMX6QDL_CLK_ECSPI1]       =3D imx_clk_gate2("ecspi1",        "ecspi_r=
-oot",        base + 0x6c, 0);
- 	clk[IMX6QDL_CLK_ECSPI2]       =3D imx_clk_gate2("ecspi2",        "ecspi_r=
-oot",        base + 0x6c, 2);
- 	clk[IMX6QDL_CLK_ECSPI3]       =3D imx_clk_gate2("ecspi3",        "ecspi_r=
-oot",        base + 0x6c, 4);
-diff --git a/include/dt-bindings/clock/imx6qdl-clock.h b/include/dt-binding=
-s/clock/imx6qdl-clock.h
-index 87b068f..b3cef29 100644
---- a/include/dt-bindings/clock/imx6qdl-clock.h
-+++ b/include/dt-bindings/clock/imx6qdl-clock.h
-@@ -274,6 +274,8 @@
- #define IMX6QDL_CLK_EPIT1			261
- #define IMX6QDL_CLK_EPIT2			262
- #define IMX6QDL_CLK_MMDC_P0_IPG			263
--#define IMX6QDL_CLK_END				264
-+#define IMX6QDL_CLK_DCIC1			264
-+#define IMX6QDL_CLK_DCIC2			265
-+#define IMX6QDL_CLK_END				266
-=20
- #endif /* __DT_BINDINGS_CLOCK_IMX6QDL_H */
---=20
-2.7.4
+On Tue, 27 Nov 2018 19:03:57 +0100
+Pavel Machek <pavel@ucw.cz> wrote:
+
+> Hi!
+>=20
+> > Devices might have a separate lna between antenna output of the gps
+> > chip and the antenna which might have a separate supply =20
+>=20
+> Might have.
+>=20
+> > @@ -340,6 +349,12 @@ static int sirf_probe(struct serdev_device *serdev)
+> >  		goto err_put_device;
+> >  	}
+> > =20
+> > +	data->lna =3D devm_regulator_get(dev, "lna");
+> > +	if (IS_ERR(data->lna)) {
+> > +		ret =3D PTR_ERR(data->lna);
+> > +		goto err_put_device;
+> > +	}
+> > + =20
+>=20
+> But it is not optional in the code. Probably should be?
+
+well, if it no lna regulator is defined in the dtb, the regulator
+framework will return a dummy regulator. devm_regulator_get_optional()
+would not do that and would require more error checking in the code.
+But if there is some rule which says that devm_regulator_get_optional()
+should be used here, I can of course change that.
+Before sending a v2, is that the only issue here?
+
+Regards,
+Andreas
+
+--Sig_/BTjEbUtPs1dNVLJ671peYpD
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE7sDbhY5mwNpwYgrAfb1qx03ikyQFAlwA2swACgkQfb1qx03i
+kySlihAAgI5DPKdMqJIbrhgXmk5vhH+z5xvplIxqHczGRwSfYt+7JKNRtJbvGhwX
+Pxi4oVEb72fOeNRItULe4/pCsC/G5DY2fYdw5G7iiqbdb1/9PdvXctsop67G0Fvs
+P48doJ5eR3XQi8UFGi/jHJ3sWIqVNz9sHTM4yL8kvtVUpfia4+j6ivFZhXgKm8XX
+0YTCACWdd4a8wbdZCvQT5oNktirTLsuVHlyR/DlTEzrPD6SpR1J8aFUdo5PbQ/yw
+kuwoGZl+vADWcXkW8tyD2ebL1eCu059m652JjNIEtCHz7yihQgRTVpAkIgHL/YXI
+V6HgS8Tz3QVMPMbJA5ffwYlEubwFWrdrYaC20C4d2TbxPuosFTXpdnDXxmYKWqHl
+XMHiV29o25UscGixG+QHIugHfV9tJpzle6Ogiv/p+HGRvJx39j+sXeioLdDlPmAR
+iiORgk2ocZCERYxV+BvzWFX2PRhwQmlhgdEIy9XdC4pQHAKcOV5N3n2+9CSa3ing
+5mapahXMe4p3XiNb0LMFcIJtMaI0x01qgB+PfXVXa35tjW3j2pNSOHoC8lQdXSuQ
+6U6riISyyKg8QJ8MWugci2xipM1z35pZ52oD9YuvLAcsKgsWGGlEvZ24uCpZW7zG
+l8CaQx1YyzChw57BDEWzaUh/+wvtSJqBlFoYnnqDUP+48ST2tR0=
+=gVCe
+-----END PGP SIGNATURE-----
+
+--Sig_/BTjEbUtPs1dNVLJ671peYpD--
