@@ -1,104 +1,131 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v5 08/12] dt-bindings: mediatek: Change the binding for mmsys
- clocks
-Date: Thu, 29 Nov 2018 22:43:57 -0800
-Message-ID: <154356023767.88331.18401188808548429052@swboyd.mtv.corp.google.com>
-References: <20181116125449.23581-1-matthias.bgg@kernel.org>
- <20181116125449.23581-9-matthias.bgg@kernel.org>
- <20181116231522.GA18006@bogus>
- <2a23e407-4cd4-2e2b-97a5-4e2bb96846e0@gmail.com>
- <CAL_JsqKJQwfDJbpmwW+oCxiDkSp5+6mG-uoURmCQVEMP_jFOEg@mail.gmail.com>
- <154281878765.88331.10581984256202566195@swboyd.mtv.corp.google.com>
- <458178ac-c0fc-9671-7fc8-ed2d6f61424c@suse.com>
+From: PETER CHEN <peter.chen@nxp.com>
+Subject: RE: [RFC PATCH v2 02/15] usb:cdns3: Device side header file.
+Date: Fri, 30 Nov 2018 06:48:08 +0000
+Message-ID: <VI1PR04MB5327F686BE6E9F5D85380BA98BD30@VI1PR04MB5327.eurprd04.prod.outlook.com>
+References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
+ <1542535751-16079-3-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <458178ac-c0fc-9671-7fc8-ed2d6f61424c@suse.com>
+In-Reply-To: <1542535751-16079-3-git-send-email-pawell@cadence.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Matthias Brugger <mbrugger@suse.com>, Rob Herring <robh@kernel.org>
-Cc: matthias.bgg@kernel.org, Mark Rutland <mark.rutland@arm.com>, CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sean Wang <sean.wang@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Chen-Yu Tsai <wens@csie.org>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, linux-clk <linux-clk@vger.kernel.>
+To: Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "adouglas@cadence.com" <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, "sureshp@cadence.com" <sureshp@cadence.com>, "pjez@cadence.com" <pjez@cadence.com>, "kurahul@cadence.com" <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Matthias Brugger (2018-11-21 09:09:52)
-> =
+=20
+=20
+> +
+> +/*
+> + * USBSS-DEV register interface.
+> + * This corresponds to the USBSS Device Controller Interface  */
+> +/**
+> + * struct xhci_cap_regs - xHCI Host Controller Capability Registers.
 
-> =
+struct cdns3_usb_regs - device controller registers
 
-> On 21/11/2018 17:46, Stephen Boyd wrote:
-> > Quoting Rob Herring (2018-11-19 11:15:16)
-> >> On Sun, Nov 18, 2018 at 11:12 AM Matthias Brugger
-> >> <matthias.bgg@gmail.com> wrote:
-> >>> On 11/17/18 12:15 AM, Rob Herring wrote:
-> >>>> On Fri, Nov 16, 2018 at 01:54:45PM +0100, matthias.bgg@kernel.org wr=
-ote:
-> >>>>> -    #clock-cells =3D <1>;
-> >>>>> +
-> >>>>> +    mmsys_clk: clock-controller@14000000 {
-> >>>>> +            compatible =3D "mediatek,mt2712-mmsys-clk";
-> >>>>> +            #clock-cells =3D <1>;
-> >>>>
-> >>>> This goes against the general direction of not defining separate nod=
-es
-> >>>> for providers with no resources.
-> >>>>
-> >>>> Why do you need this and what does it buy if you have to continue to
-> >>>> support the existing chips?
-> >>>>
-> >>>
-> >>> It would show explicitly that the mmsys block is used to probe two
-> >>> drivers, one for the gpu and one for the clocks. Otherwise that is
-> >>> hidden in the drm driver code. I think it is cleaner to describe that=
- in
-> >>> the device tree.
-> >>
-> >> No, that's maybe cleaner for the driver implementation in the Linux
-> >> kernel. What about other OS's or when Linux drivers and subsystems
-> >> needs change? Cleaner for DT is design bindings that reflect the h/w.
-> >> Hardware is sometimes just messy.
-> >>
-> > =
+> +struct cdns3_device;
+> +
+> +struct cdns3_endpoint {
+> +	struct usb_ep		endpoint;
+> +	struct list_head	request_list;
+> +	struct list_head	ep_match_pending_list;
+> +
+> +	struct cdns3_trb	*trb_pool;
+> +	dma_addr_t		trb_pool_dma;
+> +
+> +	struct cdns3_device	*cdns3_dev;
+> +	char			name[20];
+> +
+> +#define EP_ENABLED		BIT(0)
+> +#define EP_STALL		BIT(1)
+> +#define EP_WEDGE		BIT(2)
+> +#define EP_TRANSFER_STARTED	BIT(3)
+> +#define EP_UPDATE_EP_TRBADDR	BIT(4)
+> +#define EP_PENDING_REQUEST	BIT(5)
+> +#define EP_USED			BIT(5)
+> +	u32			flags;
+> +
+> +	void			*aligned_buff;
+> +	dma_addr_t		aligned_dma_addr;
+> +	u8			dir;
+> +	u8			num;
+> +	u8			type;
+> +
+> +	int			free_trbs;
+> +	u8			pcs;
+> +	u8			ccs;
+> +	int			enqueue;
+> +	int			dequeue;
+> +};
+> +
 
-> > I agree. I fail to see what this patch series is doing besides changing
-> > driver probe and device creation methods and making a backwards
-> > incompatible change to DT. Is there any other benefit here?
-> > =
+Would you please add kernel doc for above structure?
 
-> =
+> +struct cdns3_request {
+> +	struct usb_request request;
+> +	struct cdns3_endpoint *priv_ep;
+> +	struct cdns3_trb *trb;
+> +	int start_trb;
+> +	int end_trb;
+> +	int on_ring:1;
+> +};
+> +
+> +#define to_cdns3_request(r) (container_of(r, struct cdns3_request,
+> +request))
+> +
+> +struct cdns3_device {
+> +	struct device			dev;
+> +	struct cdns3_usb_regs		__iomem *regs;
+> +
+> +	struct usb_gadget		gadget;
+> +	struct usb_gadget_driver	*gadget_driver;
+> +
+> +	struct usb_ctrlrequest		*setup;
+> +	dma_addr_t			setup_dma;
+> +	dma_addr_t			trb_ep0_dma;
+> +	struct cdns3_trb		*trb_ep0;
+> +	void				*zlp_buf;
+> +
+> +	struct cdns3_endpoint		*eps[USB_SS_ENDPOINTS_MAX_COUNT];
+> +	int				ep_nums;
+> +	/*
+> +	 * field used for improving performance. It holds the last
+> +	 * selected endpoint number
+> +	 */
+> +	u32				selected_ep;
+> +	struct usb_request		*ep0_request;
+> +	int				ep0_data_dir;
+> +	int				hw_configured_flag;
+> +	int				wake_up_flag;
+> +	u16				isoch_delay;
+> +	/* generic spin-lock for drivers */
+> +	spinlock_t			lock;
+> +
+> +	unsigned			is_connected:1;
+> +	unsigned			in_standby_mode:1;
+> +	unsigned			status_completion_no_call:1;
+> +	unsigned			u1_allowed:1;
+> +	unsigned			u2_allowed:1;
+> +
+> +	u32				usb_ien;
+> +	u32				ep_ien;
+> +	int				setup_pending;
+> +	struct device			*sysdev;
+> +	/* The device mode is enabled */
+> +	int				start_gadget;
+> +	struct list_head		ep_match_list;
+> +	/* KB */
+> +	int				onchip_mem_allocated_size;
+> +	/* Memory is allocated for OUT */
+> +	int				out_mem_is_allocated:1;
+> +	struct work_struct		pending_status_wq;
+> +	struct usb_request		*pending_status_request;
+> +};
+> +
 
-> You are referring whole series?
-> Citing the cover letter:
-> "MMSYS in Mediatek SoCs has some registers to control clock gates (which =
-is
-> used in the clk driver) and some registers to set the routing and enable
-> the differnet (sic!) blocks of the display subsystem.
-> =
+kernel-doc please
 
-> Up to now both drivers, clock and drm are probed with the same device tree
-> compatible. But only the first driver get probed, which in effect breaks
-> graphics on mt8173 and mt2701.
-
-Ouch!
-
-> =
-
-> This patch uses a platform device registration in the DRM driver, which
-> will trigger the probe of the corresponding clock driver. It was tested o=
-n the
-> bananapi-r2 and the Acer R13 Chromebook."
-
-Alright, please don't add nodes in DT just to make device drivers probe.
-Instead, register clks from the drm driver or create a child platform
-device for the clk bits purely in the drm driver and have that probe the
-associated clk driver from there.
-
-> =
-
-> DT is broken right now, because two drivers rely on the same node, which =
-gets
-> consumed just once. The new DT introduced does not break anything because=
- it is
-> only used for boards that: "[..] are not available to the general public
-> (mt2712e) or only have the mmsys clock driver part implemented (mt6797)."
-
-Ok, so backwards compatibility is irrelevant then. Sounds fine to me.
+Peter
