@@ -1,7 +1,7 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [RFC PATCH 5/6] char: fastrpc: Add support for dmabuf exporter
-Date: Fri, 30 Nov 2018 10:46:56 +0000
-Message-ID: <20181130104657.14875-6-srinivas.kandagatla@linaro.org>
+Subject: [RFC PATCH 6/6] char: fastrpc: Add support for compat ioctls
+Date: Fri, 30 Nov 2018 10:46:57 +0000
+Message-ID: <20181130104657.14875-7-srinivas.kandagatla@linaro.org>
 References: <20181130104657.14875-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,258 +12,323 @@ To: robh+dt@kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de
 Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, bkumar@qti.qualcomm.com, thierry.escande@linaro.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-User process can involve dealing with big buffer sizes, and also passing
-buffers from one compute context bank to other compute context bank for
-complex dsp algorithms.
+From: Thierry Escande <thierry.escande@linaro.org>
 
-This patch adds support to fastrpc to make it a proper dmabuf exporter
-to avoid making copies of buffers.
+This patch adds support for compat ioctl from 32 bits userland to
+Qualcomm fastrpc driver.
 
+Supported ioctls in this change are INIT, INVOKE, and ALLOC/FREE_DMA.
+
+Most of the work is derived from various downstream Qualcomm kernels.
+Credits to various Qualcomm authors who have contributed to this code.
+Specially Tharun Kumar Merugu <mtharu@codeaurora.org>
+
+Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/char/fastrpc.c       | 173 ++++++++++++++++++++++++++++++++++-
- include/uapi/linux/fastrpc.h |   8 ++
- 2 files changed, 180 insertions(+), 1 deletion(-)
+ drivers/char/fastrpc.c | 279 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 279 insertions(+)
 
 diff --git a/drivers/char/fastrpc.c b/drivers/char/fastrpc.c
-index 3630e883d3f4..3c52502eae9f 100644
+index 3c52502eae9f..0b99a13109ea 100644
 --- a/drivers/char/fastrpc.c
 +++ b/drivers/char/fastrpc.c
-@@ -110,10 +110,20 @@ struct fastrpc_invoke_rsp {
+@@ -3,6 +3,7 @@
+ // Copyright (c) 2018, Linaro Limited
  
- struct fastrpc_buf {
- 	struct fastrpc_user *fl;
-+	struct dma_buf *dmabuf;
- 	struct device *dev;
- 	void *virt;
- 	uint64_t phys;
- 	size_t size;
-+	/* Lock for dma buf attachments */
-+	struct mutex lock;
-+	struct list_head attachments;
-+};
-+
-+struct fastrpc_dma_buf_attachment {
-+	struct device *dev;
-+	struct sg_table sgt;
-+	struct list_head node;
- };
- 
- struct fastrpc_map {
-@@ -256,6 +266,9 @@ static int fastrpc_buf_alloc(struct fastrpc_user *fl, struct device *dev,
- 	if (!buf)
- 		return -ENOMEM;
- 
-+	INIT_LIST_HEAD(&buf->attachments);
-+	mutex_init(&buf->lock);
-+
- 	buf->fl = fl;
- 	buf->virt = NULL;
- 	buf->phys = 0;
-@@ -394,6 +407,109 @@ static struct fastrpc_invoke_ctx *fastrpc_context_alloc(
- 	return ERR_PTR(err);
+ #include <linux/cdev.h>
++#include <linux/compat.h>
+ #include <linux/completion.h>
+ #include <linux/device.h>
+ #include <linux/dma-buf.h>
+@@ -1207,10 +1208,288 @@ static long fastrpc_device_ioctl(struct file *file, unsigned int cmd,
+ 	return err;
  }
  
-+static struct sg_table *fastrpc_map_dma_buf(struct dma_buf_attachment
-+			*attachment, enum dma_data_direction dir)
-+{
-+	struct fastrpc_dma_buf_attachment *a = attachment->priv;
-+	struct sg_table *table;
++#ifdef CONFIG_COMPAT
 +
-+	table = &a->sgt;
++#define FASTRPC_COMPAT_IOCTL_ALLOC_DMA_BUFF \
++		_IOWR('R', 1, struct fastrpc_compat_ioctl_alloc_dma_buf)
++#define FASTRPC_COMPAT_IOCTL_FREE_DMA_BUFF \
++		_IOWR('R', 2, uint32_t)
++#define FASTRPC_COMPAT_IOCTL_INVOKE \
++		_IOWR('R', 3, struct fastrpc_compat_ioctl_invoke)
++#define FASTRPC_COMPAT_IOCTL_INIT \
++		_IOWR('R', 4, struct fastrpc_compat_ioctl_init)
 +
-+	if (!dma_map_sg(attachment->dev, table->sgl, table->nents, dir))
-+		return ERR_PTR(-ENOMEM);
-+
-+	return table;
-+}
-+
-+static void fastrpc_unmap_dma_buf(struct dma_buf_attachment *attach,
-+				     struct sg_table *table,
-+				     enum dma_data_direction dir)
-+{
-+}
-+
-+static void fastrpc_release(struct dma_buf *dmabuf)
-+{
-+	struct fastrpc_buf *buffer = dmabuf->priv;
-+
-+	fastrpc_buf_free(buffer);
-+}
-+
-+static int fastrpc_dma_buf_attach(struct dma_buf *dmabuf,
-+			      struct dma_buf_attachment *attachment)
-+{
-+	struct fastrpc_dma_buf_attachment *a;
-+	struct fastrpc_buf *buffer = dmabuf->priv;
-+	int ret;
-+
-+	a = kzalloc(sizeof(*a), GFP_KERNEL);
-+	if (!a)
-+		return -ENOMEM;
-+
-+	ret = dma_get_sgtable(buffer->dev, &a->sgt, buffer->virt,
-+			      FASTRPC_PHYS(buffer->phys), buffer->size);
-+	if (ret < 0) {
-+		dev_err(buffer->dev, "failed to get scatterlist from DMA API\n");
-+		return -EINVAL;
-+	}
-+
-+	a->dev = attachment->dev;
-+	INIT_LIST_HEAD(&a->node);
-+	attachment->priv = a;
-+
-+	mutex_lock(&buffer->lock);
-+	list_add(&a->node, &buffer->attachments);
-+	mutex_unlock(&buffer->lock);
-+
-+	return 0;
-+}
-+
-+static void fastrpc_dma_buf_detatch(struct dma_buf *dmabuf,
-+				    struct dma_buf_attachment *attachment)
-+{
-+	struct fastrpc_dma_buf_attachment *a = attachment->priv;
-+	struct fastrpc_buf *buffer = dmabuf->priv;
-+
-+	mutex_lock(&buffer->lock);
-+	list_del(&a->node);
-+	mutex_unlock(&buffer->lock);
-+	kfree(a);
-+}
-+
-+static void *fastrpc_kmap(struct dma_buf *dmabuf, unsigned long pgnum)
-+{
-+	struct fastrpc_buf *buf = dmabuf->priv;
-+
-+	return buf->virt ? buf->virt + pgnum * PAGE_SIZE : NULL;
-+}
-+
-+static void *fastrpc_vmap(struct dma_buf *dmabuf)
-+{
-+	struct fastrpc_buf *buf = dmabuf->priv;
-+
-+	return buf->virt;
-+}
-+
-+static int fastrpc_mmap(struct dma_buf *dmabuf,
-+			       struct vm_area_struct *vma)
-+{
-+	struct fastrpc_buf *buf = dmabuf->priv;
-+	size_t size = vma->vm_end - vma->vm_start;
-+
-+	return dma_mmap_coherent(buf->dev, vma, buf->virt,
-+				 FASTRPC_PHYS(buf->phys), size);
-+}
-+
-+static const struct dma_buf_ops fastrpc_dma_buf_ops = {
-+	.attach = fastrpc_dma_buf_attach,
-+	.detach = fastrpc_dma_buf_detatch,
-+	.map_dma_buf = fastrpc_map_dma_buf,
-+	.unmap_dma_buf = fastrpc_unmap_dma_buf,
-+	.mmap = fastrpc_mmap,
-+	.map = fastrpc_kmap,
-+	.vmap = fastrpc_vmap,
-+	.release = fastrpc_release,
++struct compat_remote_buf {
++	compat_uptr_t pv;	/* buffer pointer */
++	compat_size_t len;	/* length of buffer */
 +};
 +
- static int fastrpc_map_create(struct fastrpc_user *fl, int fd, uintptr_t va,
- 			       size_t len, struct fastrpc_map **ppmap)
- {
-@@ -989,7 +1105,8 @@ static long fastrpc_device_ioctl(struct file *file, unsigned int cmd,
- 	char __user *argp = (char __user *)arg;
- 	int err;
- 
--	if (!fl->sctx) {
-+	if (!fl->sctx && cmd != FASTRPC_IOCTL_ALLOC_DMA_BUFF &&
-+			cmd != FASTRPC_IOCTL_FREE_DMA_BUFF) {
- 		fl->sctx = fastrpc_session_alloc(cctx, 0);
- 		if (!fl->sctx)
- 			return -ENOENT;
-@@ -1027,6 +1144,60 @@ static long fastrpc_device_ioctl(struct file *file, unsigned int cmd,
- 			goto bail;
- 		}
- 		break;
++union compat_remote_arg {
++	struct compat_remote_buf buf;
++	compat_uint_t h;
++};
 +
-+	case FASTRPC_IOCTL_FREE_DMA_BUFF: {
-+		struct dma_buf *buf;
-+		uint32_t info;
++struct fastrpc_compat_ioctl_alloc_dma_buf {
++	compat_int_t   fd;
++	compat_ssize_t size;
++	compat_uint_t  flags;
++};
 +
-+		err = copy_from_user(&info, argp, sizeof(info));
-+		if (err)
-+			goto bail;
++struct fastrpc_compat_ioctl_invoke {
++	compat_uint_t handle;	/* remote handle */
++	compat_uint_t sc;	/* scalars describing the data */
++	compat_uptr_t pra;	/* remote arguments list */
++	compat_uptr_t fds;	/* fd list */
++	compat_uptr_t attrs;	/* attribute list */
++	compat_uptr_t crc;	/* crc list */
++};
 +
-+		buf = dma_buf_get(info);
-+		if (IS_ERR_OR_NULL(buf)) {
-+			err = -EINVAL;
-+			goto bail;
-+		}
-+		/*
-+		 * one for the last get and other for the ALLOC_DMA_BUFF ioctl
-+		 */
-+		dma_buf_put(buf);
-+		dma_buf_put(buf);
++struct fastrpc_compat_ioctl_init {
++	compat_uint_t flags;	/* one of FASTRPC_INIT_* macros */
++	compat_uptr_t file;	/* pointer to elf file */
++	compat_int_t filelen;	/* elf file length */
++	compat_int_t filefd;	/* dmabuf fd for the file */
++	compat_uptr_t mem;	/* mem for the PD */
++	compat_int_t memlen;	/* mem length */
++	compat_int_t memfd;	/* dmabuf fd for the mem */
++	compat_int_t attrs;	/* attributes to init process */
++	compat_int_t siglen;	/* test signature file length */
++};
++
++static int fastrpc_compat_get_ioctl_alloc_dma_buf(
++			struct fastrpc_compat_ioctl_alloc_dma_buf __user *buf32,
++			struct fastrpc_ioctl_alloc_dma_buf __user *buf)
++{
++	compat_size_t size;
++	compat_uint_t flags;
++	int err;
++
++	err = put_user(0, &buf->fd);
++	err |= get_user(size, &buf32->size);
++	err |= put_user(size, &buf->size);
++	err |= get_user(flags, &buf32->flags);
++	err |= put_user(flags, &buf->flags);
++
++	return err;
++}
++
++static int fastrpc_compat_put_ioctl_alloc_dma_buf(
++			struct fastrpc_compat_ioctl_alloc_dma_buf __user *buf32,
++			struct fastrpc_ioctl_alloc_dma_buf __user *buf)
++{
++	compat_int_t fd;
++	int err;
++
++	err = get_user(fd, &buf->fd);
++	err |= put_user(fd, &buf32->fd);
++
++	return err;
++}
++
++static int compat_get_fastrpc_ioctl_invoke(
++			struct fastrpc_compat_ioctl_invoke __user *inv32,
++			struct fastrpc_ioctl_invoke __user **inva)
++{
++	compat_uint_t u, sc;
++	compat_size_t s;
++	compat_uptr_t p;
++	struct fastrpc_ioctl_invoke *inv;
++	union compat_remote_arg *pra32;
++	union remote_arg *pra;
++	int err, len, j;
++
++	err = get_user(sc, &inv32->sc);
++	if (err)
++		return err;
++
++	len = REMOTE_SCALARS_LENGTH(sc);
++	inv = compat_alloc_user_space(sizeof(*inv) + len * sizeof(*pra));
++	if (!inv)
++		return -EFAULT;
++
++	pra = (union remote_arg *)(inv + 1);
++	err = put_user(pra, &inv->pra);
++	err |= put_user(sc, &inv->sc);
++	err |= get_user(u, &inv32->handle);
++	err |= put_user(u, &inv->handle);
++	err |= get_user(p, &inv32->pra);
++	if (err)
++		return err;
++
++	pra32 = compat_ptr(p);
++	pra = (union remote_arg *)(inv + 1);
++	for (j = 0; j < len; j++) {
++		err |= get_user(p, &pra32[j].buf.pv);
++		err |= put_user(p, (uintptr_t *)&pra[j].buf.pv);
++		err |= get_user(s, &pra32[j].buf.len);
++		err |= put_user(s, &pra[j].buf.len);
 +	}
-+	break;
-+	case FASTRPC_IOCTL_ALLOC_DMA_BUFF: {
-+		struct fastrpc_ioctl_alloc_dma_buf bp;
-+		DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
-+		struct fastrpc_buf *buf = NULL;
 +
-+		err = copy_from_user(&bp, argp, sizeof(bp));
++	err |= put_user(NULL, &inv->fds);
++	if (inv32->fds) {
++		err |= get_user(p, &inv32->fds);
++		err |= put_user(p, (compat_uptr_t *)&inv->fds);
++	}
++
++	err |= put_user(NULL, &inv->attrs);
++	if (inv32->attrs) {
++		err |= get_user(p, &inv32->attrs);
++		err |= put_user(p, (compat_uptr_t *)&inv->attrs);
++	}
++
++	err |= put_user(NULL, (compat_uptr_t __user **)&inv->crc);
++	if (inv32->crc) {
++		err |= get_user(p, &inv32->crc);
++		err |= put_user(p, (compat_uptr_t __user *)&inv->crc);
++	}
++
++	*inva = inv;
++
++	return err;
++}
++
++static int compat_get_fastrpc_ioctl_init(
++				struct fastrpc_compat_ioctl_init __user *init32,
++				struct fastrpc_ioctl_init __user *init)
++{
++	compat_uint_t u;
++	compat_uptr_t p;
++	compat_int_t i;
++	int err;
++
++	err = get_user(u, &init32->flags);
++	err |= put_user(u, &init->flags);
++	err |= get_user(p, &init32->file);
++	err |= put_user(p, &init->file);
++	err |= get_user(i, &init32->filelen);
++	err |= put_user(i, &init->filelen);
++	err |= get_user(i, &init32->filefd);
++	err |= put_user(i, &init->filefd);
++	err |= get_user(p, &init32->mem);
++	err |= put_user(p, &init->mem);
++	err |= get_user(i, &init32->memlen);
++	err |= put_user(i, &init->memlen);
++	err |= get_user(i, &init32->memfd);
++	err |= put_user(i, &init->memfd);
++
++	err |= put_user(0, &init->attrs);
++	if (init32->attrs) {
++		err |= get_user(i, &init32->attrs);
++		err |= put_user(i, &init->attrs);
++	}
++
++	err |= put_user(0, &init->siglen);
++	if (init32->siglen) {
++		err |= get_user(i, &init32->siglen);
++		err |= put_user(i, &init->siglen);
++	}
++
++	return err;
++}
++
++static long fastrpc_compat_device_ioctl(struct file *filp, unsigned int cmd,
++					unsigned long arg)
++{
++	int err;
++
++	if (!filp->f_op || !filp->f_op->unlocked_ioctl)
++		return -ENOTTY;
++
++	switch (cmd) {
++	case FASTRPC_COMPAT_IOCTL_ALLOC_DMA_BUFF: {
++		struct fastrpc_compat_ioctl_alloc_dma_buf __user *buf32;
++		struct fastrpc_ioctl_alloc_dma_buf __user *buf;
++
++		buf32 = compat_ptr(arg);
++		buf = compat_alloc_user_space(sizeof(*buf));
++		if (!buf) {
++			err = -EFAULT;
++			break;
++		}
++
++		err = fastrpc_compat_get_ioctl_alloc_dma_buf(buf32, buf);
 +		if (err)
-+			goto bail;
++			break;
 +
-+		err = fastrpc_buf_alloc(fl, fl->dev, bp.size, &buf);
-+		exp_info.ops = &fastrpc_dma_buf_ops;
-+		exp_info.size = bp.size;
-+		exp_info.flags = O_RDWR;
-+		exp_info.priv = buf;
-+		buf->dmabuf = dma_buf_export(&exp_info);
-+		if (IS_ERR(buf->dmabuf)) {
-+			err = PTR_ERR(buf->dmabuf);
-+			goto bail;
-+		}
-+		get_dma_buf(buf->dmabuf);
-+		bp.fd = dma_buf_fd(buf->dmabuf, O_ACCMODE);
-+		if (bp.fd < 0) {
-+			dma_buf_put(buf->dmabuf);
-+			err = -EINVAL;
-+			goto bail;
-+		}
-+
-+		err = copy_to_user(argp, &bp, sizeof(bp));
++		err = filp->f_op->unlocked_ioctl(filp,
++						 FASTRPC_IOCTL_ALLOC_DMA_BUFF,
++						 (unsigned long)buf);
 +		if (err)
-+			goto bail;
++			break;
 +
-+		}
++		err = fastrpc_compat_put_ioctl_alloc_dma_buf(buf32, buf);
 +		break;
- default:
- 		err = -ENOTTY;
- 		pr_info("bad ioctl: %d\n", cmd);
-diff --git a/include/uapi/linux/fastrpc.h b/include/uapi/linux/fastrpc.h
-index 6b596fc7ddf3..6b1ca29867fd 100644
---- a/include/uapi/linux/fastrpc.h
-+++ b/include/uapi/linux/fastrpc.h
-@@ -5,6 +5,8 @@
- 
- #include <linux/types.h>
- 
-+#define FASTRPC_IOCTL_ALLOC_DMA_BUFF _IOWR('R', 1, struct fastrpc_ioctl_alloc_dma_buf)
-+#define FASTRPC_IOCTL_FREE_DMA_BUFF _IOWR('R', 2, uint32_t)
- #define FASTRPC_IOCTL_INVOKE	_IOWR('R', 3, struct fastrpc_ioctl_invoke)
- #define FASTRPC_IOCTL_INIT	_IOWR('R', 4, struct fastrpc_ioctl_init)
- 
-@@ -71,4 +73,10 @@ struct fastrpc_ioctl_init {
- 	unsigned int siglen;
++	}
++	case FASTRPC_COMPAT_IOCTL_FREE_DMA_BUFF: {
++		compat_uptr_t __user *info32;
++		uint32_t __user *info;
++		compat_uint_t u;
++
++		info32 = compat_ptr(arg);
++		info = compat_alloc_user_space(sizeof(*info));
++		if (!info) {
++			err = -EFAULT;
++			break;
++		}
++
++		err = get_user(u, info32);
++		err |= put_user(u, info);
++		if (err)
++			break;
++
++		err = filp->f_op->unlocked_ioctl(filp,
++						 FASTRPC_IOCTL_FREE_DMA_BUFF,
++						 (unsigned long)info);
++		break;
++	}
++	case FASTRPC_COMPAT_IOCTL_INVOKE: {
++		struct fastrpc_compat_ioctl_invoke __user *inv32;
++		struct fastrpc_ioctl_invoke __user *inv;
++
++		inv32 = compat_ptr(arg);
++
++		err = compat_get_fastrpc_ioctl_invoke(inv32, &inv);
++		if (err)
++			break;
++
++		err = filp->f_op->unlocked_ioctl(filp,
++				FASTRPC_IOCTL_INVOKE, (unsigned long)inv);
++		break;
++	}
++	case FASTRPC_COMPAT_IOCTL_INIT: {
++		struct fastrpc_compat_ioctl_init __user *init32;
++		struct fastrpc_ioctl_init __user *init;
++
++		init32 = compat_ptr(arg);
++		init = compat_alloc_user_space(sizeof(*init));
++		if (!init)
++			return -EFAULT;
++
++		err = compat_get_fastrpc_ioctl_init(init32, init);
++		if (err)
++			return err;
++
++		err = filp->f_op->unlocked_ioctl(filp, FASTRPC_IOCTL_INIT,
++						 (unsigned long)init);
++		break;
++	}
++	default:
++		err = -ENOTTY;
++		pr_info("bad ioctl: %d\n", cmd);
++		break;
++	}
++
++	return err;
++}
++#endif /* CONFIG_COMPAT */
++
+ static const struct file_operations fastrpc_fops = {
+ 	.open = fastrpc_device_open,
+ 	.release = fastrpc_device_release,
+ 	.unlocked_ioctl = fastrpc_device_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl = fastrpc_compat_device_ioctl,
++#endif
  };
  
-+struct fastrpc_ioctl_alloc_dma_buf {
-+	int     fd;	/* fd */
-+	ssize_t size;	/* size */
-+	uint32_t flags;	/* flags to map with */
-+};
-+
- #endif /* __QCOM_FASTRPC_H__ */
+ static int fastrpc_cb_probe(struct platform_device *pdev)
 -- 
 2.19.2
