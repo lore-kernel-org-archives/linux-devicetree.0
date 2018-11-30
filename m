@@ -1,7 +1,7 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 2/6] media: sun6i: Add H3 compatible
-Date: Fri, 30 Nov 2018 15:58:45 +0800
-Message-ID: <20181130075849.16941-3-wens@csie.org>
+Subject: [PATCH 4/6] ARM: dts: sunxi: h3-h5: Add pinmux setting for CSI MCLK on PE1
+Date: Fri, 30 Nov 2018 15:58:47 +0800
+Message-ID: <20181130075849.16941-5-wens@csie.org>
 References: <20181130075849.16941-1-wens@csie.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,30 +12,33 @@ To: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.or
 Cc: Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The CSI controller found on the H3 (and H5) is a reduced version of the
-one found on the A31. It only has 1 channel, instead of 4 channels for
-time-multiplexed BT.656. Since the H3 is a reduced version, it cannot
-"fallback" to a compatible that implements more features than it
-supports.
+Some camera modules have the SoC feeding a master clock to the sensor
+instead of having a standalone crystal. This clock signal is generated
+from the clock control unit and output from the CSI MCLK function of
+pin PE1.
 
-Add a compatible string entry for the H3.
+Add a pinmux setting for it for camera sensors to reference.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-index 6950585edb5a..ee882b66a5ea 100644
---- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-+++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-@@ -893,6 +893,7 @@ static int sun6i_csi_remove(struct platform_device *pdev)
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index c9c9ec71945f..b70899500825 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -400,6 +400,11 @@
+ 				function = "csi";
+ 			};
  
- static const struct of_device_id sun6i_csi_of_match[] = {
- 	{ .compatible = "allwinner,sun6i-a31-csi", },
-+	{ .compatible = "allwinner,sun8i-h3-csi", },
- 	{ .compatible = "allwinner,sun8i-v3s-csi", },
- 	{},
- };
++			csi_mclk_pin: csi-mclk {
++				pins = "PE1";
++				function = "csi";
++			};
++
+ 			emac_rgmii_pins: emac0 {
+ 				pins = "PD0", "PD1", "PD2", "PD3", "PD4",
+ 				       "PD5", "PD7", "PD8", "PD9", "PD10",
 -- 
 2.20.0.rc1
