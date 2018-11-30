@@ -1,43 +1,30 @@
-Return-Path: <SRS0=gYPT=OI=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr20062.outbound.protection.outlook.com ([40.107.2.62]:61360
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727026AbeK2Nla (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 29 Nov 2018 08:41:30 -0500
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V4 3/4] defconfig: arm64: add i.MX system controller thermal
- support
-Date: Thu, 29 Nov 2018 02:37:40 +0000
-Message-ID: <1543458696-4741-4-git-send-email-Anson.Huang@nxp.com>
-References: <1543458696-4741-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1543458696-4741-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=qqZh=OJ=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "arnd@arndb.de" <arnd@arndb.de>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com> <1543319795-48325-14-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543319795-48325-14-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 30 Nov 2018 10:00:52 +0100
+Message-ID: <CAMuHMdVaTPP2-rgTsPZk0XTw=zFpSobHqP1dU+F9TZmNPdMd4g@mail.gmail.com>
+Subject: Re: [PATCH 13/22] ARM: dts: r8a7744: Add CAN support
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch enables CONFIG_IMX_SC_THERMAL as module.
+On Tue, Nov 27, 2018 at 1:05 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> Add the definitions for can0 and can1 to the r8a7744 SoC dtsi.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index abd80c5..9f12324 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -376,6 +376,7 @@ CONFIG_SENSORS_RASPBERRYPI_HWMON=3Dm
- CONFIG_THERMAL_GOV_POWER_ALLOCATOR=3Dy
- CONFIG_CPU_THERMAL=3Dy
- CONFIG_THERMAL_EMULATION=3Dy
-+CONFIG_IMX_SC_THERMAL=3Dm
- CONFIG_ROCKCHIP_THERMAL=3Dm
- CONFIG_RCAR_GEN3_THERMAL=3Dy
- CONFIG_ARMADA_THERMAL=3Dy
---=20
-2.7.4
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
