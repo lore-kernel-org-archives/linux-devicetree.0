@@ -1,75 +1,94 @@
-Return-Path: <SRS0=X76U=OJ=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH 19/22] ARM: dts: r8a7744-iwg20m: Add SPI NOR support
-Date: Fri, 30 Nov 2018 11:02:08 +0000
-Message-ID: 
- <OSBPR01MB21036C33152005C92E19853DB8D30@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+Return-Path: <SRS0=qqZh=OJ=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
 References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
  <1543319795-48325-20-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdVhON=3hgZAdeeP9zwebVaZQNG=wsvqX3W3MVmQOWanbw@mail.gmail.com>
- <OSBPR01MB21038E1B2F3E83248DCCD298B8D30@OSBPR01MB2103.jpnprd01.prod.outlook.com>
- <CAMuHMdX7ghhyZcvrgit_zrNwTyVcizB0nbySYNeL-38ux9VJQw@mail.gmail.com>
-In-Reply-To: 
- <CAMuHMdX7ghhyZcvrgit_zrNwTyVcizB0nbySYNeL-38ux9VJQw@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Geert Uytterhoeven" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+ <CAMuHMdVhON=3hgZAdeeP9zwebVaZQNG=wsvqX3W3MVmQOWanbw@mail.gmail.com> <OSBPR01MB21038E1B2F3E83248DCCD298B8D30@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSBPR01MB21038E1B2F3E83248DCCD298B8D30@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 30 Nov 2018 11:46:16 +0100
+Message-ID: <CAMuHMdX7ghhyZcvrgit_zrNwTyVcizB0nbySYNeL-38ux9VJQw@mail.gmail.com>
+Subject: Re: [PATCH 19/22] ARM: dts: r8a7744-iwg20m: Add SPI NOR support
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IFN1YmplY3Q6IFJlOiBb
-UEFUQ0ggMTkvMjJdIEFSTTogZHRzOiByOGE3NzQ0LWl3ZzIwbTogQWRkIFNQSSBOT1Igc3VwcG9y
-dA0KPg0KPiBIaSBCaWp1LA0KPg0KPiBPbiBGcmksIE5vdiAzMCwgMjAxOCBhdCAxMTozNCBBTSBC
-aWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+ID4gU3ViamVjdDog
-UmU6IFtQQVRDSCAxOS8yMl0gQVJNOiBkdHM6IHI4YTc3NDQtaXdnMjBtOiBBZGQgU1BJIE5PUg0K
-PiA+ID4gc3VwcG9ydCBPbiBUdWUsIE5vdiAyNywgMjAxOCBhdCAxOjA1IFBNIEJpanUgRGFzDQo+
-IDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gPiA+IEFkZCBzdXBwb3J0IGZv
-ciB0aGUgU1BJIE5PUiBkZXZpY2UgdXNlZCB0byBib290IHVwIHRoZSBzeXN0ZW0gdG8NCj4gPiA+
-ID4gdGhlIGlXYXZlIFJaL0cxTiBRc2V2ZW4gU3lzdGVtIE9uIE1vZHVsZSBEVC4NCj4gPiA+ID4N
-Cj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29t
-Pg0KPiA+ID4NCj4gPiA+IFRoYW5rcyBmb3IgeW91ciBwYXRjaCENCj4gPiA+DQo+ID4gPiA+IC0t
-LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3NDQtaXdnMjBtLmR0c2kNCj4gPiA+ID4gKysrIGIv
-YXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc0NC1pd2cyMG0uZHRzaQ0KPiA+ID4NCj4gPiA+ID4gQEAg
-LTUzLDYgKzU4LDI3IEBADQo+ID4gPiA+ICAgICAgICAgc3RhdHVzID0gIm9rYXkiOw0KPiA+ID4g
-PiAgfTsNCj4gPiA+ID4NCj4gPiA+ID4gKyZxc3BpIHsNCj4gPiA+ID4gKyAgICAgICBwaW5jdHJs
-LTAgPSA8JnFzcGlfcGlucz47DQo+ID4gPiA+ICsgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZh
-dWx0IjsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgIHN0YXR1cyA9ICJva2F5IjsNCj4gPiA+
-ID4gKw0KPiA+ID4gPiArICAgICAgIC8qIFdBUk5JTkcgLSBUaGlzIGRldmljZSBjb250YWlucyB0
-aGUgYm9vdGxvYWRlci4gSGFuZGxlIHdpdGgNCj4gY2FyZS4NCj4gPiA+ICovDQo+ID4gPiA+ICsg
-ICAgICAgZmxhc2g6IGZsYXNoQDAgew0KPiA+ID4gPiArICAgICAgICAgICAgICAgI2FkZHJlc3Mt
-Y2VsbHMgPSA8MT47DQo+ID4gPiA+ICsgICAgICAgICAgICAgICAjc2l6ZS1jZWxscyA9IDwxPjsN
-Cj4gPiA+ID4gKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAic3N0LHNzdDI1dmYwMTZiIiwg
-ImplZGVjLHNwaS1ub3IiOw0KPiA+ID4NCj4gPiA+IEFjY29yZGluZyB0byB0aGUgc2NoZW1hdGlj
-cywgdGhpcyBpcyBhbiBJU1NJIElTMjVMUDAxNkQ/DQo+ID4gPiBJU1NJIHdhcyBhY3F1aXJlZCBi
-eSBHaWdhRGV2aWNlLCBhY2NvcmRpbmcgdG8gV2lraXBlZGlhLg0KPiA+ID4gV2hpbGUgU1NUIGlz
-IG5vdyBNaWNyb0NoaXAuDQo+ID4NCj4gPiBBcyBwZXIgdGhlIHNjaGVtYXRpYyBhbmQgQm9NLCAg
-aXQgaXMuDQo+ID4gSUMgRkxBU0ggMTZNQklUIDUwTUhaIDhTT0lDIFNTVDI1VkYwMTZCLTUwLTRJ
-LVMyQUYgTWljcm9jaGlwDQo+ID4gVGVjaG5vbG9neSAxIFUxDQo+DQo+IE9oLCB0aGlzIHNlZW1z
-IHRvIGRpZmZlciBmb3IgZGlmZmVyZW50IHJldmlzaW9ucyBvZiB0aGUgc2NoZW1hdGljcy4NCj4g
-UjUuMSBoYXMgdGhlIElTU0kgcGFydCwgUjMuNCBoYXMgdGhlIFNTVCBwYXJ0Lg0KPg0KPiBEdWUg
-dG8gImplZGVjLHNwaS1ub3IiLCBpdCB3aWxsIGF1dG8tZGV0ZWN0LCBidXQgSUlSQywgdGhlIGRy
-aXZlciB3aWxsIHdhcm4gaWYgdGhlDQo+IGNvbXBhdGlibGUgZG9lc24ndCBtYXRjaCB0aGUgZGV0
-ZWN0ZWQgcGFydCwgd2hpY2ggdGh1cyBtYXkgaGFwcGVuIGZvcg0KPiBzb21lIGJvYXJkcy4NCg0K
-T0suIFdpbGwgcmVtb3ZlICJzc3QiIHBhcnQgZm9yIHRoZSBjb21wYXRpYmxlIHN0cmluZy4NCg0K
-PiA+ID4gPiArICAgICAgICAgICAgICAgcmVnID0gPDA+Ow0KPiA+ID4gPiArICAgICAgICAgICAg
-ICAgc3BpLW1heC1mcmVxdWVuY3kgPSA8NTAwMDAwMDA+Ow0KPiA+ID4gPiArICAgICAgICAgICAg
-ICAgc3BpLXR4LWJ1cy13aWR0aCA9IDwxPjsNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIHNwaS1y
-eC1idXMtd2lkdGggPSA8MT47DQo+ID4gPg0KPiA+ID4gPDE+IGlzIHRoZSBkZWZhdWx0LCBidXQg
-aXQncyBpbmRlZWQgZ29vZCB0byBtYWtlIHRoaXMgZXhwbGljaXQsIGFzDQo+ID4gPiB0aGlzIGlz
-IGEgUVNQSSBkZXZpY2Ugd2l0aCAyIHVud2lyZWQgZGF0YSBwaW5zLg0KPiA+ID4gSG93ZXZlciwg
-YXMgdGhlIGRldmljZSBzZWVtcyB0byBzdXBwb3J0IGR1YWwgdHJhbnNmZXJzLCBhbmQgZHVhbA0K
-PiA+ID4gbW9kZSB1c2VzIHRoZSBzdGFuZGFyZCBNT1NJL01JU08gcGlucywgeW91IHNob3VsZCB1
-c2UgPDI+IGZvciBib3RoLg0KPiA+ID4gVGhlIFJTUEkgZHJpdmVyIHN1cHBvcnRzIHRoaXMuDQo+
-ID4gPg0KPiA+ID4gVGhlIHNhbWUgYXBwbGllcyB0byB0aGUgUlovRzFNIHZlcnNpb24uDQo+ID4N
-Cj4gPiBTU1QyNVZGMDE2QiB0aGlzIGRvZXNuJ3Qgc3VwcG9ydCBkdWFsIG1vZGUuDQo+DQo+IE9L
-Lg0KPg0KPiBTbyBzb21lIGJvYXJkcyBoYXZlIGEgZHVhbC1jYXBhYmxlIHBhcnQsIG90aGVycyBk
-b24ndC4NCj4NCj4gSSdtIG5vdCAxMDAlIHN1cmUsIGJ1dCBJIHRoaW5rIHdyaXRpbmcgPDI+IHdp
-bGwgc3RpbGwgd29yaywgYXMgdGhlIGRyaXZlciB3b24ndA0KPiB1c2UgZHVhbCBtb2RlIG9uIHRo
-ZSBTU1QyNVZGMDE2QiBwYXJ0LCBkdWUgdG8gbGFjayBvZg0KPiBTUElfTk9SX0RVQUxfUkVBRCBp
-biB0aGUgZW50cnkgaW4gdGhlIHNwaS1ub3IgZHJpdmVyLg0KDQpPSy4gV2lsbCBjaGVjayB0aGlz
-Lg0KDQpSZWdhcmRzLA0KQmlqdQ0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTHRk
-LCBEdWtlcyBNZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5naGFtc2hp
-cmUsIFNMOCA1RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRlciBSZWdp
-c3RlcmVkIE5vLiAwNDU4NjcwOS4NCg==
+Hi Biju,
+
+On Fri, Nov 30, 2018 at 11:34 AM Biju Das <biju.das@bp.renesas.com> wrote:
+> > Subject: Re: [PATCH 19/22] ARM: dts: r8a7744-iwg20m: Add SPI NOR support
+> > On Tue, Nov 27, 2018 at 1:05 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> > > Add support for the SPI NOR device used to boot up the system to the
+> > > iWave RZ/G1N Qseven System On Module DT.
+> > >
+> > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> >
+> > Thanks for your patch!
+> >
+> > > --- a/arch/arm/boot/dts/r8a7744-iwg20m.dtsi
+> > > +++ b/arch/arm/boot/dts/r8a7744-iwg20m.dtsi
+> >
+> > > @@ -53,6 +58,27 @@
+> > >         status = "okay";
+> > >  };
+> > >
+> > > +&qspi {
+> > > +       pinctrl-0 = <&qspi_pins>;
+> > > +       pinctrl-names = "default";
+> > > +
+> > > +       status = "okay";
+> > > +
+> > > +       /* WARNING - This device contains the bootloader. Handle with care.
+> > */
+> > > +       flash: flash@0 {
+> > > +               #address-cells = <1>;
+> > > +               #size-cells = <1>;
+> > > +               compatible = "sst,sst25vf016b", "jedec,spi-nor";
+> >
+> > According to the schematics, this is an ISSI IS25LP016D?
+> > ISSI was acquired by GigaDevice, according to Wikipedia.
+> > While SST is now MicroChip.
+>
+> As per the schematic and BoM,  it is.
+> IC FLASH 16MBIT 50MHZ 8SOIC SST25VF016B-50-4I-S2AF Microchip Technology 1 U1
+
+Oh, this seems to differ for different revisions of the schematics.
+R5.1 has the ISSI part, R3.4 has the SST part.
+
+Due to "jedec,spi-nor", it will auto-detect, but IIRC, the driver will warn
+if the compatible doesn't match the detected part, which thus may happen
+for some boards.
+
+> > > +               reg = <0>;
+> > > +               spi-max-frequency = <50000000>;
+> > > +               spi-tx-bus-width = <1>;
+> > > +               spi-rx-bus-width = <1>;
+> >
+> > <1> is the default, but it's indeed good to make this explicit, as this is a QSPI
+> > device with 2 unwired data pins.
+> > However, as the device seems to support dual transfers, and dual mode uses
+> > the standard MOSI/MISO pins, you should use <2> for both.
+> > The RSPI driver supports this.
+> >
+> > The same applies to the RZ/G1M version.
+>
+> SST25VF016B this doesn't support dual mode.
+
+OK.
+
+So some boards have a dual-capable part, others don't.
+
+I'm not 100% sure, but I think writing <2> will still work, as the driver
+won't use dual mode on the SST25VF016B part, due to lack of
+SPI_NOR_DUAL_READ in the entry in the spi-nor driver.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
