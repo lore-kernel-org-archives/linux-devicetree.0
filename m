@@ -1,67 +1,84 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v6 0/8] AXP8x3 AC and battery power supply support
-Date: Fri, 30 Nov 2018 16:31:28 +0800
-Message-ID: <CAGb2v65Bwve25jwdGHHK9j03RxQ3tKwme51762DjyQK2femG6g@mail.gmail.com>
-References: <20181120175211.3913-1-oskari@lemmela.net>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH RFC 4/5] gnss: sirf: add a separate supply for a lna
+Date: Fri, 30 Nov 2018 09:43:15 +0100
+Message-ID: <20181130084315.GA25587@amd>
+References: <20181118215801.12280-1-andreas@kemnade.info>
+ <20181118215801.12280-5-andreas@kemnade.info>
+ <20181127180356.GA32751@localhost>
+ <20181130073804.1e57226f@kemnade.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181120175211.3913-1-oskari@lemmela.net>
+Content-Disposition: inline
+In-Reply-To: <20181130073804.1e57226f@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Lee Jones <lee.jones@linaro.org>, oskari@lemmela.net
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Quentin Schulz <quentin.schulz@bootlin.com>, Vasily Khoruzhick <anarsoul@gmail.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: johan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 21, 2018 at 1:52 AM Oskari Lemmela <oskari@lemmela.net> wrote:
->
-> AXP813 AC power supply support with input current and
-> voltage limiting support.
->
-> AXP803 AC and battery power supply support.
->
-> Changes in v6:
-> * Collected tags
-> * Rebase to master
-> * Dropped AXP803 compatible patches
->
-> Changes in v5:
-> * Return correct input current limit for values 0x6 and 0x7
-> * Add specific compatibles for AXP803
-> * Change commit messages
-> * Add Vasily Khoruzhick Pinebook DTS patch
->
-> Changes in v4:
-> * Change order of axp20x-gpio in axp20x.c
-> * Fix indentation and spaces to tabs in axp20x.c
->
-> Changes in v3:
-> * Reorder ac_power_supply DT node
-> * Rename axp20x_ac_power_set_property function
-> * Split mfd commit
->
-> Changes in v2:
-> * Reuse axp813 compatibles for axp803
-> * Refactor axp20x_ac_power.c
->
->
-> Oskari Lemmela (7):
->   dt-bindings: power: supply: axp20x: add AXP813 AC power DT binding
->   ARM: dts: axp81x: add AC power supply subnode
->   arm64: dts: allwinner: axp803: add AC and battery power supplies
->   arm64: dts: allwinner: a64: sopine-baseboard: enable power supplies
->   power: supply: add AC power supply driver for AXP813
->   mfd: axp20x: Add AC power supply cell for AXP813
->   mfd: axp20x: Add supported cells for AXP803
->
-> Vasily Khoruzhick (1):
->   arm64: dts: allwinner: a64: pinebook: enable power supplies
 
-Since this series has been fully reviewed, and the devices it
-adds/enables aren't critical, i.e. won't cause the system to fail
-if the drivers are missing, I've merged the dts patches for 4.21.
+--3V7upXqbjpZ4EhLz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hopefully Sebastian and Lee will get around to merging the driver
-patches.
+On Fri 2018-11-30 07:38:04, Andreas Kemnade wrote:
+> Hi,
+>=20
+> On Tue, 27 Nov 2018 19:03:57 +0100
+> Pavel Machek <pavel@ucw.cz> wrote:
+>=20
+> > Hi!
+> >=20
+> > > Devices might have a separate lna between antenna output of the gps
+> > > chip and the antenna which might have a separate supply =20
+> >=20
+> > Might have.
+> >=20
+> > > @@ -340,6 +349,12 @@ static int sirf_probe(struct serdev_device *serd=
+ev)
+> > >  		goto err_put_device;
+> > >  	}
+> > > =20
+> > > +	data->lna =3D devm_regulator_get(dev, "lna");
+> > > +	if (IS_ERR(data->lna)) {
+> > > +		ret =3D PTR_ERR(data->lna);
+> > > +		goto err_put_device;
+> > > +	}
+> > > + =20
+> >=20
+> > But it is not optional in the code. Probably should be?
+>=20
+> well, if it no lna regulator is defined in the dtb, the regulator
+> framework will return a dummy
 
-Thanks.
-ChenYu
+Aha, did not know that detail. It is ok, then...
+
+> would not do that and would require more error checking in the code.
+> But if there is some rule which says that devm_regulator_get_optional()
+> should be used here, I can of course change that.
+> Before sending a v2, is that the only issue here?
+
+Quick look did not reveal anything else.
+
+Best regards,
+							Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--3V7upXqbjpZ4EhLz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlwA+CMACgkQMOfwapXb+vKJxACgoJeecgtF1KtFCjEppOxKBsxy
+OIUAn1ov1xofhbf3qXKyY8ipAR43iEIe
+=3odg
+-----END PGP SIGNATURE-----
+
+--3V7upXqbjpZ4EhLz--
