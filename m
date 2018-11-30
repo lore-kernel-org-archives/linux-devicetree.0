@@ -1,402 +1,59 @@
-Return-Path: <SRS0=X76U=OJ=bp.renesas.com=biju.das@kernel.org>
+Return-Path: <SRS0=nKhH=OJ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr1410098.outbound.protection.outlook.com ([40.107.141.98]:48480
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726465AbeK3UX4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 30 Nov 2018 15:23:56 -0500
 From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 02/21] ARM: dts: r8a7744: Initial SoC device tree
-Date: Fri, 30 Nov 2018 15:26:16 +0000
-Message-Id: <1543591595-37861-3-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
-References: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 2/7] ARM: dts: r8a7744: Initial SoC device tree
+Date: Fri, 30 Nov 2018 09:15:10 +0000
+Message-ID: <OSBPR01MB2103B826D4EAD45FEA1DE132B8D30@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com>
+ <1542878075-61314-3-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdUiWDtafBtHvKH5CAOx1ntBdHrmE-d__nrayykKdZYdDg@mail.gmail.com>
+In-Reply-To: <CAMuHMdUiWDtafBtHvKH5CAOx1ntBdHrmE-d__nrayykKdZYdDg@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Basic support for the RZ/G1N (R8A7744) SoC. Added placeholders
-to avoid compilation error with the common platform code.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-V1-->V2
-   * Fixed pfc register size, GIC_CPU_MASK_SIMPLE in gic/timer nodes
----
- arch/arm/boot/dts/r8a7744.dtsi | 369 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 369 insertions(+)
- create mode 100644 arch/arm/boot/dts/r8a7744.dtsi
-
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-new file mode 100644
-index 0000000..f4d0abd
---- /dev/null
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -0,0 +1,369 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the r8a7744 SoC
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corp.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/r8a7744-cpg-mssr.h>
-+#include <dt-bindings/power/r8a7744-sysc.h>
-+
-+/ {
-+	compatible = "renesas,r8a7744";
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	/*
-+	 * The external audio clocks are configured as 0 Hz fixed frequency
-+	 * clocks by default.
-+	 * Boards that provide audio clocks should override them.
-+	 */
-+	audio_clk_a: audio_clk_a {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
-+	audio_clk_b: audio_clk_b {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
-+	audio_clk_c: audio_clk_c {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
-+	/* External CAN clock */
-+	can_clk: can {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* This value must be overridden by the board. */
-+		clock-frequency = <0>;
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a15";
-+			reg = <0>;
-+			clock-frequency = <1500000000>;
-+			clocks = <&cpg CPG_CORE R8A7744_CLK_Z>;
-+			clock-latency = <300000>; /* 300 us */
-+			power-domains = <&sysc R8A7744_PD_CA15_CPU0>;
-+			next-level-cache = <&L2_CA15>;
-+
-+			/* kHz - uV - OPPs unknown yet */
-+			operating-points = <1500000 1000000>,
-+					   <1312500 1000000>,
-+					   <1125000 1000000>,
-+					   < 937500 1000000>,
-+					   < 750000 1000000>,
-+					   < 375000 1000000>;
-+		};
-+
-+		L2_CA15: cache-controller-0 {
-+			compatible = "cache";
-+			cache-unified;
-+			cache-level = <2>;
-+			power-domains = <&sysc R8A7744_PD_CA15_SCU>;
-+		};
-+	};
-+
-+	/* External root clock */
-+	extal_clk: extal {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* This value must be overridden by the board. */
-+		clock-frequency = <0>;
-+	};
-+
-+	/* External PCIe clock - can be overridden by the board */
-+	pcie_bus_clk: pcie_bus {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
-+	pmu {
-+		compatible = "arm,cortex-a15-pmu";
-+		interrupts-extended = <&gic GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
-+				      <&gic GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>;
-+	};
-+
-+	/* External SCIF clock */
-+	scif_clk: scif {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* This value must be overridden by the board. */
-+		clock-frequency = <0>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		interrupt-parent = <&gic>;
-+
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		gpio0: gpio@e6050000 {
-+			reg = <0 0xe6050000 0 0x50>;
-+			#gpio-cells = <2>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			/* placeholder */
-+		};
-+
-+		gpio1: gpio@e6051000 {
-+			reg = <0 0xe6051000 0 0x50>;
-+			#gpio-cells = <2>;
-+			/* placeholder */
-+		};
-+
-+		gpio2: gpio@e6052000 {
-+			reg = <0 0xe6052000 0 0x50>;
-+			#gpio-cells = <2>;
-+			/* placeholder */
-+		};
-+
-+		gpio6: gpio@e6055400 {
-+			reg = <0 0xe6055400 0 0x50>;
-+			#gpio-cells = <2>;
-+			/* placeholder */
-+		};
-+
-+		pfc: pin-controller@e6060000 {
-+			compatible = "renesas,pfc-r8a7744";
-+			reg = <0 0xe6060000 0 0x250>;
-+		};
-+
-+		cpg: clock-controller@e6150000 {
-+			compatible = "renesas,r8a7744-cpg-mssr";
-+			reg = <0 0xe6150000 0 0x1000>;
-+			clocks = <&extal_clk>, <&usb_extal_clk>;
-+			clock-names = "extal", "usb_extal";
-+			#clock-cells = <2>;
-+			#power-domain-cells = <0>;
-+			#reset-cells = <1>;
-+		};
-+
-+		rst: reset-controller@e6160000 {
-+			compatible = "renesas,r8a7744-rst";
-+			reg = <0 0xe6160000 0 0x100>;
-+		};
-+
-+		sysc: system-controller@e6180000 {
-+			compatible = "renesas,r8a7744-sysc";
-+			reg = <0 0xe6180000 0 0x200>;
-+			#power-domain-cells = <1>;
-+		};
-+
-+		icram0:	sram@e63a0000 {
-+			compatible = "mmio-sram";
-+			reg = <0 0xe63a0000 0 0x12000>;
-+		};
-+
-+		icram1:	sram@e63c0000 {
-+			compatible = "mmio-sram";
-+			reg = <0 0xe63c0000 0 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0 0xe63c0000 0x1000>;
-+
-+			smp-sram@0 {
-+				compatible = "renesas,smp-sram";
-+				reg = <0 0x100>;
-+			};
-+		};
-+
-+		icram2:	sram@e6300000 {
-+			compatible = "mmio-sram";
-+			reg = <0 0xe6300000 0 0x40000>;
-+		};
-+
-+		i2c2: i2c@e6530000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0 0xe6530000 0 0x40>;
-+			/* placeholder */
-+		};
-+
-+		i2c5: i2c@e6528000 {
-+			/* doesn't need pinmux */
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0 0xe6528000 0 0x40>;
-+			/* placeholder */
-+		};
-+
-+		hsusb: usb@e6590000 {
-+			reg = <0 0xe6590000 0 0x100>;
-+			/* placeholder */
-+		};
-+
-+		usbphy: usb-phy@e6590100 {
-+			reg = <0 0xe6590100 0 0x100>;
-+			/* placeholder */
-+		};
-+
-+		avb: ethernet@e6800000 {
-+			reg = <0 0xe6800000 0 0x800>, <0 0xee0e8000 0 0x4000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			/* placeholder */
-+		};
-+
-+		scifb1: serial@e6c30000 {
-+			reg = <0 0xe6c30000 0 0x100>;
-+			/* placeholder */
-+		};
-+
-+		scif0: serial@e6e60000 {
-+			compatible = "renesas,scif-r8a7744",
-+				     "renesas,rcar-gen2-scif", "renesas,scif";
-+			reg = <0 0xe6e60000 0 0x40>;
-+			interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 721>,
-+				 <&cpg CPG_CORE R8A7744_CLK_ZS>, <&scif_clk>;
-+			clock-names = "fck", "brg_int", "scif_clk";
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 721>;
-+			status = "disabled";
-+		};
-+
-+		scif1: serial@e6e68000 {
-+			reg = <0 0xe6e68000 0 0x40>;
-+			/* placeholder */
-+		};
-+
-+		hscif1: serial@e62c8000 {
-+			reg = <0 0xe62c8000 0 0x60>;
-+			/* placeholder */
-+		};
-+
-+		can0: can@e6e80000 {
-+			reg = <0 0xe6e80000 0 0x1000>;
-+			/* placeholder */
-+		};
-+
-+		can1: can@e6e88000 {
-+			reg = <0 0xe6e88000 0 0x1000>;
-+			/* placeholder */
-+		};
-+
-+		rcar_sound: sound@ec500000 {
-+			reg = <0 0xec500000 0 0x1000>;
-+
-+			rcar_sound,dvc {
-+				dvc0: dvc-0 {};
-+				dvc1: dvc-1 {};
-+			};
-+
-+			rcar_sound,src {
-+				src2: src-2 {};
-+				src3: src-3 {};
-+			};
-+
-+			rcar_sound,ssi {
-+				ssi0: ssi-0 {};
-+				ssi1: ssi-1 {};
-+			};
-+			/* placeholder */
-+		};
-+
-+		pci0: pci@ee090000 {
-+			reg = <0 0xee090000 0 0xc00>;
-+
-+			bus-range = <0 0>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			/* placeholder */
-+		};
-+
-+		pci1: pci@ee0d0000 {
-+			reg = <0 0xee0d0000 0 0xc00>;
-+
-+			bus-range = <1 1>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			/* placeholder */
-+		};
-+
-+		sdhi1: sd@ee140000 {
-+			reg = <0 0xee140000 0 0x100>;
-+			/* placeholder */
-+		};
-+
-+		sdhi2: sd@ee160000 {
-+			reg = <0 0xee160000 0 0x100>;
-+			/* placeholder */
-+		};
-+
-+		gic: interrupt-controller@f1001000 {
-+			compatible = "arm,gic-400";
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+			interrupt-controller;
-+			reg = <0 0xf1001000 0 0x1000>, <0 0xf1002000 0 0x2000>,
-+			      <0 0xf1004000 0 0x2000>, <0 0xf1006000 0 0x2000>;
-+			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_HIGH)>;
-+			clocks = <&cpg CPG_MOD 408>;
-+			clock-names = "clk";
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 408>;
-+		};
-+
-+		du: display@feb00000 {
-+			reg = <0 0xfeb00000 0 0x40000>,
-+			      <0 0xfeb90000 0 0x1c>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					du_out_rgb: endpoint {
-+					};
-+				};
-+				port@1 {
-+					reg = <1>;
-+					du_out_lvds0: endpoint {
-+					};
-+				};
-+			};
-+			/* placeholder */
-+		};
-+
-+		prr: chipid@ff000044 {
-+			compatible = "renesas,prr";
-+			reg = <0 0xff000044 0 4>;
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv7-timer";
-+		interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
-+				      <&gic GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
-+				      <&gic GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
-+				      <&gic GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	/* External USB clock - can be overridden by the board */
-+	usb_extal_clk: usb_extal {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <48000000>;
-+	};
-+};
--- 
-2.7.4
+SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IC0tLS0tT3JpZ2luYWwg
+TWVzc2FnZS0tLS0tDQo+IEZyb206IGxpbnV4LXJlbmVzYXMtc29jLW93bmVyQHZnZXIua2VybmVs
+Lm9yZyA8bGludXgtcmVuZXNhcy1zb2MtDQo+IG93bmVyQHZnZXIua2VybmVsLm9yZz4gT24gQmVo
+YWxmIE9mIEdlZXJ0IFV5dHRlcmhvZXZlbg0KPiBTZW50OiAzMCBOb3ZlbWJlciAyMDE4IDA4OjQ5
+DQo+IFRvOiBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+DQo+IENjOiBSb2IgSGVy
+cmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kDQo+IDxtYXJrLnJ1dGxhbmRA
+YXJtLmNvbT47IFNpbW9uIEhvcm1hbiA8aG9ybXNAdmVyZ2UubmV0LmF1PjsgTWFnbnVzDQo+IERh
+bW0gPG1hZ251cy5kYW1tQGdtYWlsLmNvbT47IExpbnV4LVJlbmVzYXMgPGxpbnV4LXJlbmVzYXMt
+DQo+IHNvY0B2Z2VyLmtlcm5lbC5vcmc+OyBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQgRkxB
+VFRFTkVEIERFVklDRQ0KPiBUUkVFIEJJTkRJTkdTIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+Zz47IEdlZXJ0IFV5dHRlcmhvZXZlbg0KPiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+OyBDaHJp
+cyBQYXRlcnNvbg0KPiA8Q2hyaXMuUGF0ZXJzb24yQHJlbmVzYXMuY29tPjsgRmFicml6aW8gQ2Fz
+dHJvDQo+IDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+DQo+IFN1YmplY3Q6IFJlOiBb
+UEFUQ0ggMi83XSBBUk06IGR0czogcjhhNzc0NDogSW5pdGlhbCBTb0MgZGV2aWNlIHRyZWUNCj4N
+Cj4gSGkgQmlqdSwNCj4NCj4gT24gVGh1LCBOb3YgMjIsIDIwMTggYXQgMTA6MjMgQU0gQmlqdSBE
+YXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiB3cm90ZToNCj4gPiBCYXNpYyBzdXBwb3J0
+IGZvciB0aGUgUlovRzFOIChSOEE3NzQ0KSBTb0MuIEFkZGVkIHBsYWNlaG9sZGVycyB0bw0KPiA+
+IGF2b2lkIGNvbXBpbGF0aW9uIGVycm9yIHdpdGggdGhlIGNvbW1vbiBwbGF0Zm9ybSBjb2RlLg0K
+PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29t
+Pg0KPg0KPiBUaGFua3MgZm9yIHlvdXIgcGF0Y2ghDQo+DQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+
+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3NDQuZHRzaQ0KPg0KPiA+ICsgICAgICAgc29j
+IHsNCj4NCj4gPiArICAgICAgICAgICAgICAgcGZjOiBwaW4tY29udHJvbGxlckBlNjA2MDAwMCB7
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJyZW5lc2FzLHBmYy1y
+OGE3NzQ0IjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MCAweGU2MDYwMDAw
+IDAgMHgxNjQ+Ow0KPg0KPiBHaXZlbiB0aGUgZGF0YXNoZWV0IG1lbnRpb25zIChyZXNlcnZlZCkg
+cmVnaXN0ZXJzIHVwIHRvIG9mZnNldCAweDI0YywgeW91DQo+IG1heSB3YW50IHRvIHVzZSAweDI1
+MCBmb3IgdGhlIHJlZ2lzdGVyIGJsb2NrIGxlbmd0aC4NCj4NCg0KT2sgd2lsbCBzZW5kIFYyIGZv
+ciB0aGlzLg0KDQpJIHdhcyBpbiBjb25mdXNpb24gdG8gc2V0IHRoZSBzaXplIGFzIDB4MTY0IG9y
+IDB4MjUwLCBzaW5jZSB0aGUgRGF0YSBzaGVldCBtZW50aW9uIHRoYXQgc2V0dGluZyBwcm9oaWJp
+dGVkIGZvciAgMHgyNDAtMHgyNGMgYW5kIGlzIHJlc2VydmVkLg0KDQo+IFJldmlld2VkLWJ5OiBH
+ZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPg0KPg0KPiBHcntvZXRq
+ZSxlZXRpbmd9cywNCj4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCg0KUmVnYXJk
+cywNCkJpanUNCg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVh
+ZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZI
+LCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4g
+MDQ1ODY3MDkuDQo=
