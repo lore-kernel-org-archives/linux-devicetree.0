@@ -1,100 +1,62 @@
-Return-Path: <SRS0=X76U=OJ=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH 11/22] ARM: dts: r8a7744: Add DU support
-Date: Fri, 30 Nov 2018 09:34:23 +0000
-Message-ID: 
- <OSBPR01MB2103DC4DC448288E1E1EE8F1B8D30@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
- <1543319795-48325-12-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdWq=dP77rrdC2GzPT8gEzKgxKLpqxkzcXOS=ThFu_9=fA@mail.gmail.com>
-In-Reply-To: 
- <CAMuHMdWq=dP77rrdC2GzPT8gEzKgxKLpqxkzcXOS=ThFu_9=fA@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=qqZh=OJ=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Geert Uytterhoeven" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com> <1543319795-48325-12-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543319795-48325-12-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 30 Nov 2018 10:00:21 +0100
+Message-ID: <CAMuHMdWq=dP77rrdC2GzPT8gEzKgxKLpqxkzcXOS=ThFu_9=fA@mail.gmail.com>
+Subject: Re: [PATCH 11/22] ARM: dts: r8a7744: Add DU support
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IFN1YmplY3Q6IFJlOiBb
-UEFUQ0ggMTEvMjJdIEFSTTogZHRzOiByOGE3NzQ0OiBBZGQgRFUgc3VwcG9ydA0KPg0KPiBIaSBC
-aWp1LA0KPg0KPiBPbiBUdWUsIE5vdiAyNywgMjAxOCBhdCAxOjA1IFBNIEJpanUgRGFzIDxiaWp1
-LmRhc0BicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gQWRkIGR1IG5vZGUgdG8gcjhhNzc0NCBT
-b0MgRFQuIEJvYXJkcyB0aGF0IHdhbnQgdG8gZW5hYmxlIHRoZSBEVSBuZWVkDQo+ID4gdG8gc3Bl
-Y2lmeSB0aGUgb3V0cHV0IHRvcG9sb2d5Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQmlqdSBE
-YXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPg0KPiBUaGFua3MgZm9yIHlvdXIgcGF0Y2gh
-DQo+DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc0NC5kdHNpDQo+ID4gKysrIGIv
-YXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc0NC5kdHNpDQo+ID4gQEAgLTEzMDAsOCArMTMwMCwxNyBA
-QA0KPiA+ICAgICAgICAgICAgICAgICB9Ow0KPiA+DQo+ID4gICAgICAgICAgICAgICAgIGR1OiBk
-aXNwbGF5QGZlYjAwMDAwIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxl
-ID0gInJlbmVzYXMsZHUtcjhhNzc0NCI7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgcmVn
-ID0gPDAgMHhmZWIwMDAwMCAwIDB4NDAwMDA+LA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIDwwIDB4ZmViOTAwMDAgMCAweDFjPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICByZWctbmFtZXMgPSAiZHUiLCAibHZkcy4wIjsNCj4NCj4gUGxlYXNlIHVzZSB0aGUgbmV3IERV
-L0xWRFMgYmluZGluZ3MsIHVzaW5nIGEgc2VwYXJhdGUgbm9kZSBmb3IgTFZEUy4NCj4NCj4gQlRX
-LCBJIGJlbGlldmUgdGhlIGRpc3BsYXkgd29uJ3Qgd29yayB3aXRoIGEgcmVjZW50IHRyZWUsIHVu
-bGVzcyB5b3UndmUNCj4gYWRkZWQgYSBEVCBsaXZlIHBhdGNoIGRyaXZlcnMvZ3B1L2RybS9yY2Fy
-LQ0KPiBkdS9yY2FyX2R1X29mX2x2ZHNfcjhhNzc0NC5kdHM/DQo+DQo+IFRoZSBzYW1lIGlzIHRy
-dWUgZm9yIFJaL0cxTS4NCg0KU28gZmFyIHdlIGhhdmVuJ3QgZW5hYmxlZCBMVkRTIHBhbmVsIG9u
-IGJvYXJkIHNwZWNpZmljIGR0c2kuDQoNCkkgaGF2ZSB0ZXN0ZWQgZHUgIHdpdGggYmVsb3cgcmVu
-ZXNhcy1kZXYga2VybmVsIHZlcnNpb24NCg0KTGludXggdmVyc2lvbiA0LjIwLjAtcmM0LTAwMTI3
-LWc1YWQ4YWM4IChiaWp1QGJlMXlvY3RvKSAoZ2NjIHZlcnNpb24gNy4yLjEgMjAxNzEwMTEgKExp
-bmFybyBHQ0MgNy4yLTIwMTcuMTEpKSAjNTYgU01QIEZyaSBOb3YgMzAgMDg6MDM6MjEgR01UIDIw
-MTgNCg0KWyAgICAxLjk0MjYwM10gW2RybV0gRGV2aWNlIGZlYjAwMDAwLmRpc3BsYXkgcHJvYmVk
-DQpyb290QGl3ZzIwbTp+IyBtb2RldGVzdCAtTSByY2FyLWR1DQpFbmNvZGVyczoNCmlkICAgICAg
-Y3J0YyAgICB0eXBlICAgIHBvc3NpYmxlIGNydGNzICBwb3NzaWJsZSBjbG9uZXMNCjU0ICAgICAg
-NTIgICAgICBub25lICAgIDB4MDAwMDAwMDMgICAgICAweDAwMDAwMDAxDQoNCkNvbm5lY3RvcnM6
-DQppZCAgICAgIGVuY29kZXIgc3RhdHVzICAgICAgICAgIG5hbWUgICAgICAgICAgICBzaXplICht
-bSkgICAgICAgbW9kZXMgICBlbmNvZGVycw0KNTUgICAgICA1NCAgICAgIGNvbm5lY3RlZCAgICAg
-ICBIRE1JLUEtMSAgICAgICAgNTIweDMyMCAgICAgICAgIDI3ICAgICAgNTQNCiAgbW9kZXM6DQog
-ICAgICAgIG5hbWUgcmVmcmVzaCAoSHopIGhkaXNwIGhzcyBoc2UgaHRvdCB2ZGlzcCB2c3MgdnNl
-IHZ0b3QpDQogIDE5MjB4MTA4MCA2MCAxOTIwIDE5NjggMjAwMCAyMDgwIDEwODAgMTA4MiAxMDg3
-IDExMTEgMTM4MDAwIGZsYWdzOiBwaHN5bmMsIG52c3luYzsgdHlwZTogcHJlZmVycmVkLCBkcml2
-ZXINCiAgMTkyMHgxMDgwIDYwIDE5MjAgMjAwOCAyMDUyIDIyMDAgMTA4MCAxMDg0IDEwODkgMTEy
-NSAxNDg1MDAgZmxhZ3M6IHBoc3luYywgcHZzeW5jOyB0eXBlOiBkcml2ZXINCiAgMTkyMHgxMDgw
-IDYwIDE5MjAgMjAwOCAyMDUyIDIyMDAgMTA4MCAxMDg0IDEwODkgMTEyNSAxNDgzNTIgZmxhZ3M6
-IHBoc3luYywgcHZzeW5jOyB0eXBlOiBkcml2ZXINCiAgMTI4MHgxMDI0IDc1IDEyODAgMTI5NiAx
-NDQwIDE2ODggMTAyNCAxMDI1IDEwMjggMTA2NiAxMzUwMDAgZmxhZ3M6IHBoc3luYywgcHZzeW5j
-OyB0eXBlOiBkcml2ZXINCiAgMTI4MHgxMDI0IDYwIDEyODAgMTMyOCAxNDQwIDE2ODggMTAyNCAx
-MDI1IDEwMjggMTA2NiAxMDgwMDAgZmxhZ3M6IHBoc3luYywgcHZzeW5jOyB0eXBlOiBkcml2ZXIN
-CiAgMTE1Mng4NjQgNzUgMTE1MiAxMjE2IDEzNDQgMTYwMCA4NjQgODY1IDg2OCA5MDAgMTA4MDAw
-IGZsYWdzOiBwaHN5bmMsIHB2c3luYzsgdHlwZTogZHJpdmVyDQogIDEyODB4NzIwIDYwIDEyODAg
-MTM5MCAxNDMwIDE2NTAgNzIwIDcyNSA3MzAgNzUwIDc0MjUwIGZsYWdzOiBwaHN5bmMsIHB2c3lu
-YzsgdHlwZTogZHJpdmVyDQogIDEyODB4NzIwIDYwIDEyODAgMTM5MCAxNDMwIDE2NTAgNzIwIDcy
-NSA3MzAgNzUwIDc0MTc2IGZsYWdzOiBwaHN5bmMsIHB2c3luYzsgdHlwZTogZHJpdmVyDQogIDEy
-ODB4NzIwIDUwIDEyODAgMTcyMCAxNzYwIDE5ODAgNzIwIDcyNSA3MzAgNzUwIDc0MjUwIGZsYWdz
-OiBwaHN5bmMsIHB2c3luYzsgdHlwZTogZHJpdmVyDQogIDEwMjR4NzY4IDc1IDEwMjQgMTA0MCAx
-MTM2IDEzMTIgNzY4IDc2OSA3NzIgODAwIDc4NzUwIGZsYWdzOiBwaHN5bmMsIHB2c3luYzsgdHlw
-ZTogZHJpdmVyDQogIDEwMjR4NzY4IDcwIDEwMjQgMTA0OCAxMTg0IDEzMjggNzY4IDc3MSA3Nzcg
-ODA2IDc1MDAwIGZsYWdzOiBuaHN5bmMsIG52c3luYzsgdHlwZTogZHJpdmVyDQogIDEwMjR4NzY4
-IDYwIDEwMjQgMTA0OCAxMTg0IDEzNDQgNzY4IDc3MSA3NzcgODA2IDY1MDAwIGZsYWdzOiBuaHN5
-bmMsIG52c3luYzsgdHlwZTogZHJpdmVyDQogIDEwODB4NjA3IDYwIDEwODAgMTEyMCAxMjMyIDEz
-ODQgNjA3IDYwOCA2MTEgNjI5IDUyMjEwIGZsYWdzOiBuaHN5bmMsIHB2c3luYzsgdHlwZToNCiAg
-ODMyeDYyNCA3NSA4MzIgODY0IDkyOCAxMTUyIDYyNCA2MjUgNjI4IDY2NyA1NzI4NCBmbGFnczog
-bmhzeW5jLCBudnN5bmM7IHR5cGU6IGRyaXZlcg0KICA4MDB4NjAwIDc1IDgwMCA4MTYgODk2IDEw
-NTYgNjAwIDYwMSA2MDQgNjI1IDQ5NTAwIGZsYWdzOiBwaHN5bmMsIHB2c3luYzsgdHlwZTogZHJp
-dmVyDQogIDgwMHg2MDAgNzIgODAwIDg1NiA5NzYgMTA0MCA2MDAgNjM3IDY0MyA2NjYgNTAwMDAg
-ZmxhZ3M6IHBoc3luYywgcHZzeW5jOyB0eXBlOiBkcml2ZXINCiAgODAweDYwMCA2MCA4MDAgODQw
-IDk2OCAxMDU2IDYwMCA2MDEgNjA1IDYyOCA0MDAwMCBmbGFnczogcGhzeW5jLCBwdnN5bmM7IHR5
-cGU6IGRyaXZlcg0KICA4MDB4NjAwIDU2IDgwMCA4MjQgODk2IDEwMjQgNjAwIDYwMSA2MDMgNjI1
-IDM2MDAwIGZsYWdzOiBwaHN5bmMsIHB2c3luYzsgdHlwZTogZHJpdmVyDQogIDcyMHg1NzYgNTAg
-NzIwIDczMiA3OTYgODY0IDU3NiA1ODEgNTg2IDYyNSAyNzAwMCBmbGFnczogbmhzeW5jLCBudnN5
-bmM7IHR5cGU6IGRyaXZlcg0KICA3MjB4NDgwIDYwIDcyMCA3MzYgNzk4IDg1OCA0ODAgNDg5IDQ5
-NSA1MjUgMjcwMjcgZmxhZ3M6IG5oc3luYywgbnZzeW5jOyB0eXBlOiBkcml2ZXINCiAgNzIweDQ4
-MCA2MCA3MjAgNzM2IDc5OCA4NTggNDgwIDQ4OSA0OTUgNTI1IDI3MDAwIGZsYWdzOiBuaHN5bmMs
-IG52c3luYzsgdHlwZTogZHJpdmVyDQogIDY0MHg0ODAgNzUgNjQwIDY1NiA3MjAgODQwIDQ4MCA0
-ODEgNDg0IDUwMCAzMTUwMCBmbGFnczogbmhzeW5jLCBudnN5bmM7IHR5cGU6IGRyaXZlcg0KICA2
-NDB4NDgwIDczIDY0MCA2NjQgNzA0IDgzMiA0ODAgNDg5IDQ5MiA1MjAgMzE1MDAgZmxhZ3M6IG5o
-c3luYywgbnZzeW5jOyB0eXBlOiBkcml2ZXINCiAgNjQweDQ4MCA2NyA2NDAgNzA0IDc2OCA4NjQg
-NDgwIDQ4MyA0ODYgNTI1IDMwMjQwIGZsYWdzOiBuaHN5bmMsIG52c3luYzsgdHlwZTogZHJpdmVy
-DQogIDY0MHg0ODAgNjAgNjQwIDY1NiA3NTIgODAwIDQ4MCA0OTAgNDkyIDUyNSAyNTIwMCBmbGFn
-czogbmhzeW5jLCBudnN5bmM7IHR5cGU6IGRyaXZlcg0KICA2NDB4NDgwIDYwIDY0MCA2NTYgNzUy
-IDgwMCA0ODAgNDkwIDQ5MiA1MjUgMjUxNzUgZmxhZ3M6IG5oc3luYywgbnZzeW5jOyB0eXBlOiBk
-cml2ZXINCiAgNzIweDQwMCA3MCA3MjAgNzM4IDg0NiA5MDAgNDAwIDQxMiA0MTQgNDQ5IDI4MzIw
-IGZsYWdzOiBuaHN5bmMsIHB2c3luYzsgdHlwZTogZHJpdmVyDQoNCg0KQWxzbyB0ZXN0ZWQgbGli
-ZHJtL2ttcyB0ZXN0cy4gIEl0IHdvcmtzIGZpbmUgd2l0aCA0LjIwLjAtcmM0IGtlcm5lbCBvbiBy
-ZW5lc2FzLWRldiBicmFuY2guDQoNClJlZ2FyZHMsDQpCaWp1DQoNCg0KDQpSZW5lc2FzIEVsZWN0
-cm9uaWNzIEV1cm9wZSBMdGQsIER1a2VzIE1lYWRvdywgTWlsbGJvYXJkIFJvYWQsIEJvdXJuZSBF
-bmQsIEJ1Y2tpbmdoYW1zaGlyZSwgU0w4IDVGSCwgVUsuIFJlZ2lzdGVyZWQgaW4gRW5nbGFuZCAm
-IFdhbGVzIHVuZGVyIFJlZ2lzdGVyZWQgTm8uIDA0NTg2NzA5Lg0K
+Hi Biju,
+
+On Tue, Nov 27, 2018 at 1:05 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> Add du node to r8a7744 SoC DT. Boards that want to enable the DU
+> need to specify the output topology.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+
+Thanks for your patch!
+
+> --- a/arch/arm/boot/dts/r8a7744.dtsi
+> +++ b/arch/arm/boot/dts/r8a7744.dtsi
+> @@ -1300,8 +1300,17 @@
+>                 };
+>
+>                 du: display@feb00000 {
+> +                       compatible = "renesas,du-r8a7744";
+>                         reg = <0 0xfeb00000 0 0x40000>,
+>                               <0 0xfeb90000 0 0x1c>;
+> +                       reg-names = "du", "lvds.0";
+
+Please use the new DU/LVDS bindings, using a separate node for LVDS.
+
+BTW, I believe the display won't work with a recent tree, unless you've added
+a DT live patch drivers/gpu/drm/rcar-du/rcar_du_of_lvds_r8a7744.dts?
+
+The same is true for RZ/G1M.
+
+> +                       interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
+> +                                    <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&cpg CPG_MOD 724>,
+> +                                <&cpg CPG_MOD 723>,
+> +                                <&cpg CPG_MOD 726>;
+> +                       clock-names = "du.0", "du.1", "lvds.0";
+> +                       status = "disabled";
+>
+>                         ports {
+>                                 #address-cells = <1>;
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
