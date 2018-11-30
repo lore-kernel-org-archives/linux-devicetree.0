@@ -1,48 +1,82 @@
-Return-Path: <SRS0=gYPT=OI=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from michel.telenet-ops.be ([195.130.137.88]:46428 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbeK2Vjk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 29 Nov 2018 16:39:40 -0500
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/2] arm64: dts: renesas: r8a7795-es1: Add missing power domains to IPMMU nodes
-Date: Thu, 29 Nov 2018 11:34:35 +0100
-Message-Id: <20181129103435.9260-3-geert+renesas@glider.be>
-In-Reply-To: <20181129103435.9260-1-geert+renesas@glider.be>
-References: <20181129103435.9260-1-geert+renesas@glider.be>
+Return-Path: <SRS0=nKhH=OJ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr10085.outbound.protection.outlook.com ([40.107.1.85]:64303
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726401AbeK3NvU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 30 Nov 2018 08:51:20 -0500
+From: PETER CHEN <peter.chen@nxp.com>
+Subject: RE: [PATCH v3 3/4] usb: chipidea: host: override ehci->hub_control
+Date: Fri, 30 Nov 2018 02:43:30 +0000
+Message-ID: <VI1PR04MB53273D835A32B35DE94DE7AD8BD30@VI1PR04MB5327.eurprd04.prod.outlook.com>
+References: <20181127092824.22756-1-peter.chen@nxp.com>
+ <20181127092824.22756-4-peter.chen@nxp.com>
+ <3f8ded20-0264-76af-15dc-e1c4b094f71a@kontron.de>
+In-Reply-To: <3f8ded20-0264-76af-15dc-e1c4b094f71a@kontron.de>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Schrempf Frieder <frieder.schrempf@kontron.de>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-While commit 3b7e7848f0e88b36 ("arm64: dts: renesas: r8a7795: Add IPMMU
-device nodes") for R-Car H3 ES2.0 did include power-domains properties,
-they were forgotten in the counterpart for older R-Car H3 ES1.x SoCs.
-
-Fixes: e4b9a493df45075b ("arm64: dts: renesas: r8a7795-es1: Add IPMMU device nodes")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi b/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
-index 0fb84c219b2feaca..40d10daca85201aa 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
-@@ -28,6 +28,7 @@
- 		compatible = "renesas,ipmmu-r8a7795";
- 		reg = <0 0xec680000 0 0x1000>;
- 		renesas,ipmmu-main = <&ipmmu_mm 5>;
-+		power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
- 		#iommu-cells = <1>;
- 	};
- 
-@@ -35,6 +36,7 @@
- 		compatible = "renesas,ipmmu-r8a7795";
- 		reg = <0 0xe7730000 0 0x1000>;
- 		renesas,ipmmu-main = <&ipmmu_mm 8>;
-+		power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
- 		#iommu-cells = <1>;
- 	};
- 
--- 
-2.17.1
+IA0KPiBPbiAyNy4xMS4xOCAxMDozMCwgUEVURVIgQ0hFTiB3cm90ZToNCj4gPiBUaGUgY2hpcGlk
+ZWEgY29udHJvbGxlciBoYXMgc29tZSBzcGVjaWFsIHJlcXVpcmVtZW50cyBkdXJpbmcNCj4gPiBz
+dXNwZW5kL3Jlc3VtZSwgb3ZlcnJpZGUgY29tbW9uIGVoY2ktPmh1Yl9jb250cm9sIHRvIGltcGxl
+bWVudCBpdC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFBldGVyIENoZW4gPHBldGVyLmNoZW5A
+bnhwLmNvbT4NCj4gDQo+IFRlc3RlZCBvbiBpLk1YNlMgd2l0aCBNaWNyb2NoaXAgTEFOOTczMCBV
+U0IgSFNJQyBFdGhlcm5ldCBDb250cm9sbGVyLg0KPiBJIGhhdmUgc29tZSBtaW5vciBmb3JtYXQg
+Zml4ZXMgYmVsb3cuIEFwYXJ0IGZyb20gdGhhdDoNCj4gDQo+IFJldmlld2VkLWJ5OiBGcmllZGVy
+IFNjaHJlbXBmIDxmcmllZGVyLnNjaHJlbXBmQGtvbnRyb24uZGU+DQo+IFRlc3RlZC1ieTogRnJp
+ZWRlciBTY2hyZW1wZiA8ZnJpZWRlci5zY2hyZW1wZkBrb250cm9uLmRlPg0KPiANCj4gPiAtLS0N
+Cj4gPiAgIGRyaXZlcnMvdXNiL2NoaXBpZGVhL2hvc3QuYyB8IDc2DQo+ICsrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDc2
+IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9jaGlwaWRl
+YS9ob3N0LmMgYi9kcml2ZXJzL3VzYi9jaGlwaWRlYS9ob3N0LmMNCj4gPiBpbmRleCAwMjhhMzU3
+NDI2NmEuLmFhNDc1NmRhYjQ4NyAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3VzYi9jaGlwaWRl
+YS9ob3N0LmMNCj4gPiArKysgYi9kcml2ZXJzL3VzYi9jaGlwaWRlYS9ob3N0LmMNCj4gPiBAQCAt
+MjIwLDYgKzIyMCw4MSBAQCB2b2lkIGNpX2hkcmNfaG9zdF9kZXN0cm95KHN0cnVjdCBjaV9oZHJj
+ICpjaSkNCj4gPiAgIAkJaG9zdF9zdG9wKGNpKTsNCj4gPiAgIH0NCj4gPg0KPiA+ICsvKiBUaGUg
+YmVsb3cgY29kZSBpcyBiYXNlZCBvbiB0ZWdyYSBlaGNpIGRyaXZlciAqLyBzdGF0aWMgaW50DQo+
+ID4gK2NpX2VoY2lfaHViX2NvbnRyb2woDQo+ID4gKwlzdHJ1Y3QgdXNiX2hjZAkqaGNkLA0KPiA+
+ICsJdTE2CQl0eXBlUmVxLA0KPiA+ICsJdTE2CQl3VmFsdWUsDQo+ID4gKwl1MTYJCXdJbmRleCwN
+Cj4gPiArCWNoYXIJCSpidWYsDQo+ID4gKwl1MTYJCXdMZW5ndGgNCj4gPiArKQ0KPiA+ICt7DQo+
+ID4gKwlzdHJ1Y3QgZWhjaV9oY2QJKmVoY2kgPSBoY2RfdG9fZWhjaShoY2QpOw0KPiA+ICsJdTMy
+IF9faW9tZW0JKnN0YXR1c19yZWc7DQo+ID4gKwl1MzIJCXRlbXA7DQo+ID4gKwl1bnNpZ25lZCBs
+b25nCWZsYWdzOw0KPiA+ICsJaW50CQlyZXR2YWwgPSAwOw0KPiA+ICsJc3RydWN0IGRldmljZSAq
+ZGV2ID0gaGNkLT5zZWxmLmNvbnRyb2xsZXI7DQo+ID4gKwlzdHJ1Y3QgY2lfaGRyYyAqY2kgPSBk
+ZXZfZ2V0X2RydmRhdGEoZGV2KTsNCj4gPiArDQo+ID4gKwlzdGF0dXNfcmVnID0gJmVoY2ktPnJl
+Z3MtPnBvcnRfc3RhdHVzWyh3SW5kZXggJiAweGZmKSAtIDFdOw0KPiA+ICsNCj4gPiArCXNwaW5f
+bG9ja19pcnFzYXZlKCZlaGNpLT5sb2NrLCBmbGFncyk7DQo+ID4gKw0KPiA+ICsJaWYgKHR5cGVS
+ZXEgPT0gU2V0UG9ydEZlYXR1cmUgJiYgd1ZhbHVlID09IFVTQl9QT1JUX0ZFQVRfU1VTUEVORCkN
+Cj4gew0KPiA+ICsJCXRlbXAgPSBlaGNpX3JlYWRsKGVoY2ksIHN0YXR1c19yZWcpOw0KPiA+ICsJ
+CWlmICgodGVtcCAmIFBPUlRfUEUpID09IDAgfHwgKHRlbXAgJiBQT1JUX1JFU0VUKSAhPSAwKSB7
+DQo+ID4gKwkJCXJldHZhbCA9IC1FUElQRTsNCj4gPiArCQkJZ290byBkb25lOw0KPiA+ICsJCX0N
+Cj4gPiArDQo+ID4gKwkJdGVtcCAmPSB+KFBPUlRfUldDX0JJVFMgfCBQT1JUX1dLQ09OTl9FKTsN
+Cj4gPiArCQl0ZW1wIHw9IFBPUlRfV0tESVNDX0UgfCBQT1JUX1dLT0NfRTsNCj4gPiArCQllaGNp
+X3dyaXRlbChlaGNpLCB0ZW1wIHwgUE9SVF9TVVNQRU5ELCBzdGF0dXNfcmVnKTsNCj4gPiArDQo+
+ID4gKwkJLyoNCj4gPiArCQkgKiBJZiBhIHRyYW5zYWN0aW9uIGlzIGluIHByb2dyZXNzLCB0aGVy
+ZSBtYXkgYmUgYSBkZWxheSBpbg0KPiA+ICsJCSAqIHN1c3BlbmRpbmcgdGhlIHBvcnQuIFBvbGwg
+dW50aWwgdGhlIHBvcnQgaXMgc3VzcGVuZGVkLg0KPiA+ICsJCSAqLw0KPiA+ICsJCWlmIChlaGNp
+X2hhbmRzaGFrZShlaGNpLCBzdGF0dXNfcmVnLCBQT1JUX1NVU1BFTkQsDQo+ID4gKwkJCQkJCVBP
+UlRfU1VTUEVORCwgNTAwMCkpDQo+IA0KPiBJbmRlbnRhdGlvbjogICAgICAgICAgICAgICAgICAg
+ICAgIF4gICAgICAgICAgICBeDQo+IA0KPiA+ICsJCQllaGNpX2VycihlaGNpLCAidGltZW91dCB3
+YWl0aW5nIGZvciBTVVNQRU5EXG4iKTsNCj4gPiArDQo+ID4gKwkJaWYgKGNpLT5wbGF0ZGF0YS0+
+ZmxhZ3MgJiBDSV9IRFJDX0lNWF9JU19IU0lDKSB7DQo+ID4gKwkJCWlmIChjaS0+cGxhdGRhdGEt
+Pm5vdGlmeV9ldmVudCkNCj4gPiArCQkJCWNpLT5wbGF0ZGF0YS0+bm90aWZ5X2V2ZW50DQo+ID4g
+KwkJCQkJKGNpLCBDSV9IRFJDX0lNWF9IU0lDX1NVU1BFTkRfRVZFTlQpOw0KPiANCj4gSSB0aGlu
+ayB0aGUgb3BlbiBwYXJlbnRoZXNlcyBhbmQgdGhlIGZpcnN0IHBhcmFtZXRlciBzaG91bGQgYmUg
+b24gdGhlIGZpcnN0IGxpbmU6DQo+IA0KPiAJCQkJY2ktPnBsYXRkYXRhLT5ub3RpZnlfZXZlbnQo
+Y2ksDQo+IAkJCQkJQ0lfSERSQ19JTVhfSFNJQ19TVVNQRU5EX0VWRU5UKTsNCj4gDQo+ID4gKw0K
+PiA+ICsJCQl0ZW1wID0gZWhjaV9yZWFkbChlaGNpLCBzdGF0dXNfcmVnKTsNCj4gPiArCQkJdGVt
+cCAmPSB+KFBPUlRfV0tESVNDX0UgfCBQT1JUX1dLQ09OTl9FKTsNCj4gPiArCQkJZWhjaV93cml0
+ZWwoZWhjaSwgdGVtcCwgc3RhdHVzX3JlZyk7DQo+ID4gKwkJfQ0KPiA+ICsNCj4gPiArCQlzZXRf
+Yml0KCh3SW5kZXggJiAweGZmKSAtIDEsICZlaGNpLT5zdXNwZW5kZWRfcG9ydHMpOw0KPiA+ICsJ
+CWdvdG8gZG9uZTsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwkvKg0KPiA+ICsJICogQWZ0ZXIgcmVz
+dW1lIGhhcyBmaW5pc2hlZCwgaXQgbmVlZHMgZG8gc29tZSBwb3N0IHJlc3VtZQ0KPiA+ICsJICog
+b3BlcmF0aW9uIGZvciBzb21lIFNvQ3MuDQo+ID4gKwkgKi8NCj4gPiArCWVsc2UgaWYgKHR5cGVS
+ZXEgPT0gQ2xlYXJQb3J0RmVhdHVyZSAmJg0KPiA+ICsJCQkJCXdWYWx1ZSA9PSBVU0JfUE9SVF9G
+RUFUX0NfU1VTUEVORCkNCj4gew0KPiANCj4gSW5kZW50YXRpb246ICAgICBeICAgICAgICAgICAg
+ICAgICAgICAgIF4NCj4gDQogDQpUaGFua3MsIEkgd2lsbCBjaGFuZ2UgdGhlc2UgY29kZSBzdHls
+ZSBjb21tZW50cyBmb3IgbmV4dCByZXZpc2lvbi4NCg0KUGV0ZXINCg==
