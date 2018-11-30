@@ -1,52 +1,83 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v2 2/7] drm/msm/dsi: 14nm PHY: Get ref clock from the DT
-Date: Fri, 30 Nov 2018 14:18:57 -0800
-Message-ID: <20181130221857.GC22824@google.com>
-References: <20181126231159.122298-1-mka@chromium.org>
- <20181126231159.122298-3-mka@chromium.org>
- <CAD=FV=WNHUL+W1ozoRaCCd=-OcAD3QmqZaNLK0PNJQVbDqdaLQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 04/24] dt-bindings: leds: Add function and color properties
+Date: Fri, 30 Nov 2018 16:19:18 -0600
+Message-ID: <CAL_JsqK4oaUTBemXiTZzLeOKOndQ_GZp2F7mJ0VzGEKVGHY20Q@mail.gmail.com>
+References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
+ <1541542052-10081-5-git-send-email-jacek.anaszewski@gmail.com>
+ <5bea0eb8.1c69fb81.6b921.80e6@mx.google.com> <dfb5bd23-bcb9-7501-a608-969cb0464168@gmail.com>
+ <0a0b176c-4eb4-4b0e-6c3c-b3c6c8f5fff5@gmail.com> <CAL_JsqKEpbJjExkQKSXwYma9wPPO+8E0QMTyWTPs1nkGSd49_g@mail.gmail.com>
+ <20181130210814.GA5756@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=WNHUL+W1ozoRaCCd=-OcAD3QmqZaNLK0PNJQVbDqdaLQ@mail.gmail.com>
+In-Reply-To: <20181130210814.GA5756@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Archit Taneja <architt@codeaurora.org>, Sean Paul <seanpaul@chromium.org>, Rajesh Yadav <ryadav@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Jeykumar Sankaran <jsanka@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, freedreno <freedreno@lists.freedesktop.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Linux LED Subsystem <linux-leds@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 27, 2018 at 09:56:46PM -0800, Doug Anderson wrote:
-> Hi,
-> 
-> On Mon, Nov 26, 2018 at 3:12 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+On Fri, Nov 30, 2018 at 3:08 PM Pavel Machek <pavel@ucw.cz> wrote:
+>
+> Hi!
+>
+> > > Pavel gave following examples:
+> > >
+> > > eth0:green:link
+> > > adsl0:green:link
+> > > adsl0:red:error
+> > >
+> > > So we would have e.g.:
+> > >
+> > > associated-vl42-device = <&camera1>;
+> > > associated-network-device = <&phy1>;
+> > > associated-block-device = <&phy1>;
 > >
-> > Get the ref clock of the PHY from the device tree instead of
-> > hardcoding its name and rate.
-> 
-> In the case of the 14nm PHY I think it's OK that you break
-> compatibility with old device tree files (as this patch does) since
-> the 14nm support was added sorta recently and "git grep" shows no
-> users in linuxnext.  You should note that you're breaking
-> compatibility with old DTS files in the commit message here so that if
-> someone crawls out of the woodwork it will be easy for them to
-> understand what happened.
+> > Variable property names are kind of a pain to parse.
+>
+> Ok, would it be enough to have associated-device = <&whatever>?
 
-ok, I'll add the note
+Yeah, but I though you needed the device type name in there.
 
-> > +       pll_14nm->vco_ref_clk = devm_clk_get(&pdev->dev, "ref");
-> > +       if (IS_ERR(pll_14nm->vco_ref_clk)) {
-> > +               ret = PTR_ERR(pll_14nm->vco_ref_clk);
-> > +               if (ret != EPROBE_DEFER)
-> 
-> Shouldn't this check against -EPROBE_DEFER, not against EPROBE_DEFER?
-> It's negative.  Presumably this same feedback needs to be applied to
-> the whole patch series.
+> > Perhaps when LEDs are associated with a device, we shouldn't care
+> > within the context of the LED subsystem what the name is. The
+> > association is more important and if you have that exposed, then you
+> > don't really need to care what the name is. You still have to deal
+> > with a device with more than 1 LED, but that becomes a problem local
+> > to that device.
+> >
+> > What I'm getting at is following a more standard binding pattern of
+> > providers and consumers like we have for gpios, clocks, etc. So we'd
+> > have something like this:
+> >
+> > ethernet {
+> >   ...
+> >   leds = <&green_led>, <&red_led>;
+> >   led-names = "link", "err";
+> > };
+>
+> Basically every single device could have a LED associated with it
+> ("activity"). Would doing it like this mean we'd have to modify every
+> single driver to parse leds / led-names properties?
 
-You are right, will fix it throughout the series, thanks!
+Normally, that's how properties like this would work. A driver is also
+what knows how the leds should function. A driver can retrieve the led
+and associate it with the 'foo-bar' function. The 'foo-bar' function
+then doesn't have to be defined in DT nor exposed to userspace. It
+wouldn't even have to be driver specific. The driver's subsystem could
+handle it all if the led functions are standardized. Though then you'd
+be back to needing standard names for 'led-names', but that's no worse
+that trigger names. This model would also allow getting rid of
+'linux,default-trigger' properties in a lot of cases which wouldn't be
+a bad thing.
 
-> Other than that this looks good to me and you can feel free to add my
-> Reviewed-by tag FWIW.
+However, having drivers handle this is not required. You can iterate
+thru the tree for nodes with 'leds' and find the node which has a
+phandle to the led node you care about. Sure, it's not that efficient,
+but it does work and it's only done once. Basically, as long as the
+linkage is there, we can make it work. I think using
+'associated-device' might work better for the current implementation
+of Linux LED support, but leds/led-names would be more inline with
+other DT bindings. The current Linux implementation shouldn't dictate
+the binding design.
 
-Great, thanks for the review!
-
-Matthias
+Rob
