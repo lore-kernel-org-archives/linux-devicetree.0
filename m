@@ -1,63 +1,53 @@
 Return-Path: <SRS0=X76U=OJ=bp.renesas.com=biju.das@kernel.org>
 From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 01/21] ARM: dts: r8a7744-iwg20m: Add iWave RZ/G1N Qseven SOM
-Date: Fri, 30 Nov 2018 15:26:15 +0000
-Message-Id: <1543591595-37861-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
-References: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 1/7] ARM: dts: r8a7744-iwg20m: Add iWave RZ/G1N Qseven SOM
+Date: Fri, 30 Nov 2018 10:04:12 +0000
+Message-ID: 
+ <OSBPR01MB2103D6BA846095B3504348F3B8D30@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com>
+ <1542878075-61314-2-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdXzN5jyX1oUQ_0jmQ9ot6907R9EJtidk73jwg5p8oH8aA@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdXzN5jyX1oUQ_0jmQ9ot6907R9EJtidk73jwg5p8oH8aA@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Geert Uytterhoeven" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for iWave RZ/G1N Qseven System On Module.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-V1-->V2
-    * No change
----
- arch/arm/boot/dts/r8a7744-iwg20m.dtsi | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 arch/arm/boot/dts/r8a7744-iwg20m.dtsi
-
-diff --git a/arch/arm/boot/dts/r8a7744-iwg20m.dtsi b/arch/arm/boot/dts/r8a7744-iwg20m.dtsi
-new file mode 100644
-index 0000000..6166ae0
---- /dev/null
-+++ b/arch/arm/boot/dts/r8a7744-iwg20m.dtsi
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the iWave RZ/G1N Qseven SOM
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corp.
-+ */
-+
-+#include "r8a7744.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	compatible = "iwave,g20m", "renesas,r8a7744";
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0 0x40000000 0 0x40000000>;
-+	};
-+
-+	reg_3p3v: 3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&extal_clk {
-+	clock-frequency = <20000000>;
-+};
--- 
-2.7.4
+SGVsbG8gR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IC0tLS0tT3JpZ2lu
+YWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnRAbGludXgt
+bTY4ay5vcmc+DQo+IFNlbnQ6IDMwIE5vdmVtYmVyIDIwMTggMDk6NDUNCj4gVG86IEJpanUgRGFz
+IDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtl
+cm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQNCj4gPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgU2ltb24g
+SG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+OyBNYWdudXMNCj4gRGFtbSA8bWFnbnVzLmRhbW1A
+Z21haWwuY29tPjsgTGludXgtUmVuZXNhcyA8bGludXgtcmVuZXNhcy0NCj4gc29jQHZnZXIua2Vy
+bmVsLm9yZz47IG9wZW4gbGlzdDpPUEVOIEZJUk1XQVJFIEFORCBGTEFUVEVORUQgREVWSUNFDQo+
+IFRSRUUgQklORElOR1MgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgR2VlcnQgVXl0dGVy
+aG9ldmVuDQo+IDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT47IENocmlzIFBhdGVyc29uDQo+IDxD
+aHJpcy5QYXRlcnNvbjJAcmVuZXNhcy5jb20+OyBGYWJyaXppbyBDYXN0cm8NCj4gPGZhYnJpemlv
+LmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzddIEFSTTog
+ZHRzOiByOGE3NzQ0LWl3ZzIwbTogQWRkIGlXYXZlIFJaL0cxTg0KPiBRc2V2ZW4gU09NDQo+DQo+
+IEhpIEJpanUsDQo+DQo+IE9uIFRodSwgTm92IDIyLCAyMDE4IGF0IDEwOjIyIEFNIEJpanUgRGFz
+IDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4gd3JvdGU6DQo+ID4gQWRkIHN1cHBvcnQgZm9y
+IGlXYXZlIFJaL0cxTiBRc2V2ZW4gU3lzdGVtIE9uIE1vZHVsZS4NCj4gPg0KPiA+IFNpZ25lZC1v
+ZmYtYnk6IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4NCj4gUmV2aWV3ZWQt
+Ynk6IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+DQo+DQo+ID4g
+LS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3NDQtaXdnMjBt
+LmR0c2kNCj4gPiBAQCAtMCwwICsxLDMxIEBADQo+ID4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlm
+aWVyOiBHUEwtMi4wDQo+ID4gKy8qDQo+ID4gKyAqIERldmljZSBUcmVlIFNvdXJjZSBmb3IgdGhl
+IGlXYXZlIFJaL0cxTiBRc2V2ZW4gU09NDQo+ID4gKyAqDQo+ID4gKyAqIENvcHlyaWdodCAoQykg
+MjAxOCBSZW5lc2FzIEVsZWN0cm9uaWNzIENvcnAuDQo+ID4gKyAqLw0KPiA+ICsNCj4gPiArI2lu
+Y2x1ZGUgInI4YTc3NDQuZHRzaSINCj4gPiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2dwaW8vZ3Bp
+by5oPg0KPiA+ICsNCj4gPiArLyB7DQo+ID4gKyAgICAgICBjb21wYXRpYmxlID0gIml3YXZlLGcy
+MG0iLCAicmVuZXNhcyxyOGE3NzQ0IjsNCj4gPiArDQo+ID4gKyAgICAgICBtZW1vcnlANDAwMDAw
+MDAgew0KPiA+ICsgICAgICAgICAgICAgICBkZXZpY2VfdHlwZSA9ICJtZW1vcnkiOw0KPiA+ICsg
+ICAgICAgICAgICAgICByZWcgPSA8MCAweDQwMDAwMDAwIDAgMHg0MDAwMDAwMD47DQo+ID4gKyAg
+ICAgICB9Ow0KPg0KPiBJIGNvdWxkIG5vdCB2ZXJpZnkgdGhlIG1lbW9yeSBjb25maWd1cmF0aW9u
+LCBidXQgSSBhc3N1bWUgaXQncyBjb3JyZWN0IDstKQ0KDQpZZXMgaXQgaXMgY29ycmVjdCwgMUdC
+IG1lbW9yeSBwb3B1bGF0ZWQgb24gdGhpcyBib2FyZC4NCg0KUmVnYXJkcywNCkJpanUNCg0KDQoN
+ClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQg
+Um9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJl
+ZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
