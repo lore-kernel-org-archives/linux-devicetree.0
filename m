@@ -1,78 +1,99 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [PATCH RFC 4/5] gnss: sirf: add a separate supply for a lna
-Date: Fri, 30 Nov 2018 07:38:04 +0100
-Message-ID: <20181130073804.1e57226f@kemnade.info>
-References: <20181118215801.12280-1-andreas@kemnade.info>
-        <20181118215801.12280-5-andreas@kemnade.info>
-        <20181127180356.GA32751@localhost>
+From: Alexandre Courbot <acourbot@chromium.org>
+Subject: Re: [PATCH v2] arm64: dts: sdm845: add video nodes
+Date: Fri, 30 Nov 2018 15:39:48 +0900
+Message-ID: <CAPBb6MU6b01OEfJ=dHF7Y2E1MeNNR3TTVJDo_SyaNURJVoU2ww@mail.gmail.com>
+References: <1543410642-6475-1-git-send-email-mgottam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/BTjEbUtPs1dNVLJ671peYpD"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181127180356.GA32751@localhost>
+In-Reply-To: <1543410642-6475-1-git-send-email-mgottam@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: johan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+To: mgottam@codeaurora.org
+Cc: Andy Gross <andy.gross@linaro.org>, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, vgarodia@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/BTjEbUtPs1dNVLJ671peYpD
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Nov 28, 2018 at 10:12 PM Malathi Gottam <mgottam@codeaurora.org> wrote:
+>
+> This adds video nodes to sdm845 based on the examples
+> in the bindings.
+>
+> Signed-off-by: Malathi Gottam <mgottam@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 0c9a2aa..4c9d6a4 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -84,6 +84,11 @@
+>                         reg = <0 0x86200000 0 0x2d00000>;
+>                         no-map;
+>                 };
+> +
+> +               venus_region: memory@95800000 {
+> +                       reg = <0x0 0x95800000 0x0 0x500000>;
 
-Hi,
+This patch depends on the firmware loader being fixed to not expect a
+6MB area size. I think you can do it as follows:
 
-On Tue, 27 Nov 2018 19:03:57 +0100
-Pavel Machek <pavel@ucw.cz> wrote:
+1) Record the reserved area size in the venus_core structure during
+venus_load_fw(),
+2) Use that area size in place of VENUS_FW_MEM_SIZE everywhere else in the code.
 
-> Hi!
->=20
-> > Devices might have a separate lna between antenna output of the gps
-> > chip and the antenna which might have a separate supply =20
->=20
-> Might have.
->=20
-> > @@ -340,6 +349,12 @@ static int sirf_probe(struct serdev_device *serdev)
-> >  		goto err_put_device;
-> >  	}
-> > =20
-> > +	data->lna =3D devm_regulator_get(dev, "lna");
-> > +	if (IS_ERR(data->lna)) {
-> > +		ret =3D PTR_ERR(data->lna);
-> > +		goto err_put_device;
-> > +	}
-> > + =20
->=20
-> But it is not optional in the code. Probably should be?
+That way we don't put any artificial limitation on the expected
+firmware size, or on the reserved area in the DT matching a hardcoded
+size.
 
-well, if it no lna regulator is defined in the dtb, the regulator
-framework will return a dummy regulator. devm_regulator_get_optional()
-would not do that and would require more error checking in the code.
-But if there is some rule which says that devm_regulator_get_optional()
-should be used here, I can of course change that.
-Before sending a v2, is that the only issue here?
+Once you have this, the driver should work no matter what the size of
+the reserved area is, provided the firmware first into it.
 
-Regards,
-Andreas
+> +                       no-map;
+> +               };
+>         };
+>
+>         cpus {
+> @@ -1103,5 +1108,35 @@
+>                                 status = "disabled";
+>                         };
+>                 };
+> +
+> +               video-codec@aa00000 {
+> +                       compatible = "qcom,sdm845-venus";
+> +                       reg = <0x0aa00000 0xff000>;
+> +                       interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +                       power-domains = <&videocc VENUS_GDSC>;
+> +                       clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+> +                                <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+> +                                <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
+> +                       clock-names = "core", "iface", "bus";
+> +                       iommus = <&apps_smmu 0x10a0 0x8>,
+> +                                <&apps_smmu 0x10b0 0x0>;
+> +                       memory-region = <&venus_region>;
+> +
+> +                       video-core0 {
+> +                               compatible = "venus-decoder";
+> +                               clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
+> +                                        <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
+> +                               clock-names = "core", "bus";
+> +                               power-domains = <&videocc VCODEC0_GDSC>;
+> +                       };
+> +
+> +                       video-core1 {
+> +                               compatible = "venus-encoder";
+> +                               clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
+> +                                        <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
+> +                               clock-names = "core", "bus";
+> +                               power-domains = <&videocc VCODEC1_GDSC>;
+> +                       };
 
---Sig_/BTjEbUtPs1dNVLJ671peYpD
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+We should probably have status = "disabled" here and enable this node
+on a per-board basis?
 
------BEGIN PGP SIGNATURE-----
+Also, shouldn't we define the firmware subnode here too?
 
-iQIzBAEBCAAdFiEE7sDbhY5mwNpwYgrAfb1qx03ikyQFAlwA2swACgkQfb1qx03i
-kySlihAAgI5DPKdMqJIbrhgXmk5vhH+z5xvplIxqHczGRwSfYt+7JKNRtJbvGhwX
-Pxi4oVEb72fOeNRItULe4/pCsC/G5DY2fYdw5G7iiqbdb1/9PdvXctsop67G0Fvs
-P48doJ5eR3XQi8UFGi/jHJ3sWIqVNz9sHTM4yL8kvtVUpfia4+j6ivFZhXgKm8XX
-0YTCACWdd4a8wbdZCvQT5oNktirTLsuVHlyR/DlTEzrPD6SpR1J8aFUdo5PbQ/yw
-kuwoGZl+vADWcXkW8tyD2ebL1eCu059m652JjNIEtCHz7yihQgRTVpAkIgHL/YXI
-V6HgS8Tz3QVMPMbJA5ffwYlEubwFWrdrYaC20C4d2TbxPuosFTXpdnDXxmYKWqHl
-XMHiV29o25UscGixG+QHIugHfV9tJpzle6Ogiv/p+HGRvJx39j+sXeioLdDlPmAR
-iiORgk2ocZCERYxV+BvzWFX2PRhwQmlhgdEIy9XdC4pQHAKcOV5N3n2+9CSa3ing
-5mapahXMe4p3XiNb0LMFcIJtMaI0x01qgB+PfXVXa35tjW3j2pNSOHoC8lQdXSuQ
-6U6riISyyKg8QJ8MWugci2xipM1z35pZ52oD9YuvLAcsKgsWGGlEvZ24uCpZW7zG
-l8CaQx1YyzChw57BDEWzaUh/+wvtSJqBlFoYnnqDUP+48ST2tR0=
-=gVCe
------END PGP SIGNATURE-----
-
---Sig_/BTjEbUtPs1dNVLJ671peYpD--
+Cheers,
+Alex.
+> --
+> 1.9.1
+>
