@@ -1,91 +1,58 @@
-Return-Path: <SRS0=T/c1=OC=gmail.com=thierry.reding@kernel.org>
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH] dt-bindings: tegra186-gpio: Add Tegra186 specific prefix
-Date: Fri, 23 Nov 2018 13:43:41 +0100
-Message-Id: <20181123124341.21431-1-thierry.reding@gmail.com>
+Return-Path: <SRS0=qqZh=OJ=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Jon Hunter <jonathanh@nvidia.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
+References: <20181129130559.66732-1-chris.brandt@renesas.com>
+ <20181129130559.66732-3-chris.brandt@renesas.com> <20181130115713.blmkvpa2vsdnqdt6@verge.net.au>
+ <OSAPR01MB155353707920BFFEB7C4280E8AD30@OSAPR01MB1553.jpnprd01.prod.outlook.com>
+ <CAMuHMdU6u8_qhe976afyY6Ydhu3byGZcBP=ipsvNowG3Ci=vGA@mail.gmail.com> <OSAPR01MB1553FA10324223CBF4B774DC8AD30@OSAPR01MB1553.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSAPR01MB1553FA10324223CBF4B774DC8AD30@OSAPR01MB1553.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 30 Nov 2018 17:16:09 +0100
+Message-ID: <CAMuHMdVwL6HQAjQvuoGZJ=aDbD9wCnViMdnCOEqdr8Jh4TT7YQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ARM: dts: r7s9210-rza2mevb: Add support for RZ/A2M EVB
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Thierry Reding <treding@nvidia.com>
+Hi Chris,
 
-Subsequent generations of Tegra, such as Tegra194, contain a completely
-different set of GPIOs. In order to clarify that the Tegra186 defines
-are indeed specific to Tegra186, change the prefix from TEGRA_ to
-TEGRA186_.
+On Fri, Nov 30, 2018 at 5:10 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> On Friday, November 30, 2018 1, Geert wrote:
+> > > So in our RZ/A BSP that I release to customers I would use this dual
+> > > license. You can see the exact same license in a number of dts files in
+> > > mainline.
+> >
+> > Note that your file includes
+> >
+> >     #include <dt-bindings/gpio/gpio.h>
+> >     #include <dt-bindings/pinctrl/r7s9210-pinctrl.h>
+> >
+> > both of which are
+> >
+> >    include/dt-bindings/gpio/gpio.h:/* SPDX-License-Identifier: GPL-2.0 */
+> >    include/dt-bindings/pinctrl/r7s9210-pinctrl.h:/*
+> > SPDX-License-Identifier: GPL-2.0 */
+>
+> After I wrote that, I realized that we'll always have:
+>         #include "r7s9210.dtsi"
+> Which I have as GPL-2.0....so the dual license idea in pointless.
+>
+> So to make things easy, I'll just drop the dual license thing and just
+> use SPDX GPL-2.0
 
-Note that for now we need to keep the old definitions in place to avoid
-breaking compilation in file that use this header. Once all users have
-been converted to use the new defines, the old ones can be removed.
+That's one solution.
 
-Also note that this is only a naming change and doesn't affect device
-tree ABI.
+Another solution would be to relicense all DT binding definitions and DTS files.
+Cfr. e.g. commit d061864b89c3234b ("ARM: dt: relicense two DT binding IRQ
+headers").
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- include/dt-bindings/gpio/tegra186-gpio.h | 41 ++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+Gr{oetje,eeting}s,
 
-diff --git a/include/dt-bindings/gpio/tegra186-gpio.h b/include/dt-bindings/gpio/tegra186-gpio.h
-index 463ad398fe3e..cabc5712e745 100644
---- a/include/dt-bindings/gpio/tegra186-gpio.h
-+++ b/include/dt-bindings/gpio/tegra186-gpio.h
-@@ -14,6 +14,34 @@
- #include <dt-bindings/gpio/gpio.h>
- 
- /* GPIOs implemented by main GPIO controller */
-+#define TEGRA186_MAIN_GPIO_PORT_A 0
-+#define TEGRA186_MAIN_GPIO_PORT_B 1
-+#define TEGRA186_MAIN_GPIO_PORT_C 2
-+#define TEGRA186_MAIN_GPIO_PORT_D 3
-+#define TEGRA186_MAIN_GPIO_PORT_E 4
-+#define TEGRA186_MAIN_GPIO_PORT_F 5
-+#define TEGRA186_MAIN_GPIO_PORT_G 6
-+#define TEGRA186_MAIN_GPIO_PORT_H 7
-+#define TEGRA186_MAIN_GPIO_PORT_I 8
-+#define TEGRA186_MAIN_GPIO_PORT_J 9
-+#define TEGRA186_MAIN_GPIO_PORT_K 10
-+#define TEGRA186_MAIN_GPIO_PORT_L 11
-+#define TEGRA186_MAIN_GPIO_PORT_M 12
-+#define TEGRA186_MAIN_GPIO_PORT_N 13
-+#define TEGRA186_MAIN_GPIO_PORT_O 14
-+#define TEGRA186_MAIN_GPIO_PORT_P 15
-+#define TEGRA186_MAIN_GPIO_PORT_Q 16
-+#define TEGRA186_MAIN_GPIO_PORT_R 17
-+#define TEGRA186_MAIN_GPIO_PORT_T 18
-+#define TEGRA186_MAIN_GPIO_PORT_X 19
-+#define TEGRA186_MAIN_GPIO_PORT_Y 20
-+#define TEGRA186_MAIN_GPIO_PORT_BB 21
-+#define TEGRA186_MAIN_GPIO_PORT_CC 22
-+
-+#define TEGRA186_MAIN_GPIO(port, offset) \
-+	((TEGRA186_MAIN_GPIO_PORT_##port * 8) + offset)
-+
-+/* need to keep these for backwards-compatibility */
- #define TEGRA_MAIN_GPIO_PORT_A 0
- #define TEGRA_MAIN_GPIO_PORT_B 1
- #define TEGRA_MAIN_GPIO_PORT_C 2
-@@ -42,6 +70,19 @@
- 	((TEGRA_MAIN_GPIO_PORT_##port * 8) + offset)
- 
- /* GPIOs implemented by AON GPIO controller */
-+#define TEGRA186_AON_GPIO_PORT_S 0
-+#define TEGRA186_AON_GPIO_PORT_U 1
-+#define TEGRA186_AON_GPIO_PORT_V 2
-+#define TEGRA186_AON_GPIO_PORT_W 3
-+#define TEGRA186_AON_GPIO_PORT_Z 4
-+#define TEGRA186_AON_GPIO_PORT_AA 5
-+#define TEGRA186_AON_GPIO_PORT_EE 6
-+#define TEGRA186_AON_GPIO_PORT_FF 7
-+
-+#define TEGRA186_AON_GPIO(port, offset) \
-+	((TEGRA186_AON_GPIO_PORT_##port * 8) + offset)
-+
-+/* need to keep these for backwards-compatibility */
- #define TEGRA_AON_GPIO_PORT_S 0
- #define TEGRA_AON_GPIO_PORT_U 1
- #define TEGRA_AON_GPIO_PORT_V 2
+                        Geert
+
 -- 
-2.19.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
