@@ -1,113 +1,30 @@
-Return-Path: <SRS0=ytGm=NT=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-os2jpn01on0120.outbound.protection.outlook.com ([104.47.92.120]:62345
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726143AbeKHQ7S (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 8 Nov 2018 11:59:18 -0500
-From: Gaku Inami <gaku.inami.xh@renesas.com>
-Subject: [PATCH v2 1/2] arm64: dts: renesas: Add CPU topology on R-Car Gen3 SoCs
-Date: Thu,  8 Nov 2018 16:24:54 +0900
-Message-Id: <1541661895-7064-2-git-send-email-gaku.inami.xh@renesas.com>
-In-Reply-To: <1541661895-7064-1-git-send-email-gaku.inami.xh@renesas.com>
-References: <1541661895-7064-1-git-send-email-gaku.inami.xh@renesas.com>
+Return-Path: <SRS0=qqZh=OJ=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Gaku Inami <gaku.inami.xh@renesas.com>
+References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com> <1543319795-48325-4-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543319795-48325-4-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 30 Nov 2018 09:56:13 +0100
+Message-ID: <CAMuHMdV+Ybc=u6R=pafVOLOLpmzzDFyNuy9NdW50ce0OcQZaFg@mail.gmail.com>
+Subject: Re: [PATCH 03/22] ARM: dts: r8a7744: Add SDHI nodes
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds the "cpu-map" into r8a7795/r8a7796 composed of
-multi-cluster. This definition is used to parse the cpu topology.
+On Tue, Nov 27, 2018 at 1:05 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> Add SDHI nodes to the DT of the r8a7744 SoC.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-Signed-off-by: Gaku Inami <gaku.inami.xh@renesas.com>
----
-v1 -> v2:
- - Consolidate two patches for r8a7795 and r8a7796 into one patch
----
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 32 ++++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/renesas/r8a7796.dtsi | 26 ++++++++++++++++++++++++++
- 2 files changed, 58 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index 0b54c53..63d5b61 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -116,6 +116,38 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&a57_0>;
-+				};
-+				core1 {
-+					cpu = <&a57_1>;
-+				};
-+				core2 {
-+					cpu = <&a57_2>;
-+				};
-+				core3 {
-+					cpu = <&a57_3>;
-+				};
-+			};
-+
-+			cluster1 {
-+				core0 {
-+					cpu = <&a53_0>;
-+				};
-+				core1 {
-+					cpu = <&a53_1>;
-+				};
-+				core2 {
-+					cpu = <&a53_2>;
-+				};
-+				core3 {
-+					cpu = <&a53_3>;
-+				};
-+			};
-+		};
-+
- 		a57_0: cpu@0 {
- 			compatible = "arm,cortex-a57", "arm,armv8";
- 			reg = <0x0>;
-diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-index 3baee26..b12bf73 100644
---- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-@@ -127,6 +127,32 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&a57_0>;
-+				};
-+				core1 {
-+					cpu = <&a57_1>;
-+				};
-+			};
-+
-+			cluster1 {
-+				core0 {
-+					cpu = <&a53_0>;
-+				};
-+				core1 {
-+					cpu = <&a53_1>;
-+				};
-+				core2 {
-+					cpu = <&a53_2>;
-+				};
-+				core3 {
-+					cpu = <&a53_3>;
-+				};
-+			};
-+		};
-+
- 		a57_0: cpu@0 {
- 			compatible = "arm,cortex-a57", "arm,armv8";
- 			reg = <0x0>;
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
