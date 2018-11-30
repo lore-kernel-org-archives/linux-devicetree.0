@@ -1,85 +1,86 @@
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: Re: [RFC PATCH] of: Add a GitLab CI config file for unittests
-Date: Fri, 30 Nov 2018 21:52:52 +0100
-Message-ID: <CAKMK7uGrBnaip1E+vp6foGfvdRb2=bhPNOmmZfjTUt2HZPLQcA@mail.gmail.com>
-References: <20181130203232.5743-1-robh@kernel.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 04/24] dt-bindings: leds: Add function and color
+ properties
+Date: Fri, 30 Nov 2018 22:08:14 +0100
+Message-ID: <20181130210814.GA5756@amd>
+References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
+ <1541542052-10081-5-git-send-email-jacek.anaszewski@gmail.com>
+ <5bea0eb8.1c69fb81.6b921.80e6@mx.google.com>
+ <dfb5bd23-bcb9-7501-a608-969cb0464168@gmail.com>
+ <0a0b176c-4eb4-4b0e-6c3c-b3c6c8f5fff5@gmail.com>
+ <CAL_JsqKEpbJjExkQKSXwYma9wPPO+8E0QMTyWTPs1nkGSd49_g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181130203232.5743-1-robh@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKEpbJjExkQKSXwYma9wPPO+8E0QMTyWTPs1nkGSd49_g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
-Cc: devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Linux LED Subsystem <linux-leds@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 30, 2018 at 9:32 PM Rob Herring <robh@kernel.org> wrote:
->
-> This adds a GitLab CI config file running the DT unittest in a usermode
-> Linux build. The corresponding CI job can be found here:
->
-> https://gitlab.com/robherring/linux-dt-unittest/pipelines
->
-> This CI job can be duplicated by others by creating a kernel repo on a
-> GitLab instance and configuring GitLab CI to use
-> drivers/of/.gitlab-ci.yml config file.
->
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Adding dri-devel.
+--ZGiS0Q5IWpPtfppv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> ---
->  drivers/of/.gitlab-ci.yml | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 drivers/of/.gitlab-ci.yml
->
-> diff --git a/drivers/of/.gitlab-ci.yml b/drivers/of/.gitlab-ci.yml
-> new file mode 100644
-> index 000000000000..44a4824f5c33
-> --- /dev/null
-> +++ b/drivers/of/.gitlab-ci.yml
-> @@ -0,0 +1,18 @@
-> +# SPDX-License-Identifier: GPL-2.0+
-> +
-> +image: registry.gitlab.com/robherring/docker-images/ubuntu-kernel-build
+Hi!
 
-I think it's better to include the docker recipe too. One because
-shipping pre-built dockers is a license nightmare, second because
-better hackability. For a full on example see:
+> > Pavel gave following examples:
+> >
+> > eth0:green:link
+> > adsl0:green:link
+> > adsl0:red:error
+> >
+> > So we would have e.g.:
+> >
+> > associated-vl42-device =3D <&camera1>;
+> > associated-network-device =3D <&phy1>;
+> > associated-block-device =3D <&phy1>;
+>=20
+> Variable property names are kind of a pain to parse.
 
-https://gitlab.freedesktop.org/drm/igt-gpu-tools/blob/master/.gitlab-ci.yml
+Ok, would it be enough to have associated-device =3D <&whatever>?
 
-For the kernel I guess the question is where we should put all the
-docker files. There's going to be some need for subsystem specific
-tooling (e.g. we want something that has igt installed eventually for
-anything drm), so maybe just keeping them in subsystem directories is
-best. Was at least my plan with drivers/gpu.
+> Perhaps when LEDs are associated with a device, we shouldn't care
+> within the context of the LED subsystem what the name is. The
+> association is more important and if you have that exposed, then you
+> don't really need to care what the name is. You still have to deal
+> with a device with more than 1 LED, but that becomes a problem local
+> to that device.
+>=20
+> What I'm getting at is following a more standard binding pattern of
+> providers and consumers like we have for gpios, clocks, etc. So we'd
+> have something like this:
+>=20
+> ethernet {
+>   ...
+>   leds =3D <&green_led>, <&red_led>;
+>   led-names =3D "link", "err";
+> };
 
-Needs latest gitlab to make the build-on-demand stuff work, but
-gitlab.com has that.
--Daniel
-> +
-> +variables:
-> +  ARCH: um
-> +
-> +job-unittest:
-> +  artifacts:
-> +    paths:
-> +      - "*.log"
-> +
-> +  script:
-> +    - echo -e "CONFIG_OF=y\nCONFIG_OF_UNITTEST=y\nCONFIG_OF_OVERLAY=y" > kernel/configs/extra.config
-> +    - make defconfig extra.config
-> +    - make -s -j $(nproc) vmlinux | tee build.log
-> +    - TMP=/tmp ./vmlinux > boot.log || true
-> +    - grep -E '\#\#\# dt-test \#\#\# end of unittest - [0-9]* passed, 0 failed' boot.log
-> --
-> 2.19.1
->
+Basically every single device could have a LED associated with it
+("activity"). Would doing it like this mean we'd have to modify every
+single driver to parse leds / led-names properties?
 
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+--ZGiS0Q5IWpPtfppv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlwBpr4ACgkQMOfwapXb+vL96QCfdY7k6J8earpw9VTU/PFyLHAg
+0TcAn35xQjH4+gVL97ylZhidUy84B5+h
+=5ag6
+-----END PGP SIGNATURE-----
+
+--ZGiS0Q5IWpPtfppv--
