@@ -1,70 +1,178 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 1/7] ata: libahci_platform: comply to PHY framework
-Date: Fri, 30 Nov 2018 16:40:16 +0100
-Message-ID: <20181130164016.7699efb3@xps13>
-References: <20181123101556.29888-1-miquel.raynal@bootlin.com>
- <20181123101556.29888-2-miquel.raynal@bootlin.com>
- <f14c6e8e-73a9-0b62-0dbc-87d390789c0c@redhat.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [RFC PATCH 3/6] char: fastrpc: Add support for context Invoke
+ method
+Date: Fri, 30 Nov 2018 16:40:01 +0000
+Message-ID: <35bfe1db-ae9c-4858-c1a3-12a0306bfa3a@linaro.org>
+References: <20181130104657.14875-1-srinivas.kandagatla@linaro.org>
+ <20181130104657.14875-4-srinivas.kandagatla@linaro.org>
+ <CAK8P3a1mFWJyXCn74_Yd_y3Df0JN=qM4nw4-2t_LjRO7yXmXBw@mail.gmail.com>
+ <3c177508-cf6f-1f8d-a324-5bec40fd9a9c@linaro.org>
+ <CAK8P3a0d=VRP+9vZm+eJeJM933PWYL4sruMAYBYzWjg5B_kL2g@mail.gmail.com>
+ <633cb111-f5d7-3648-54af-a476f3cbb279@linaro.org>
+ <CAK8P3a1JSyxjuH2Xez-K3SFV20f-FJnzZHdNR1o41VrNNZkUPQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <f14c6e8e-73a9-0b62-0dbc-87d390789c0c@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, linux-pm@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jens Axboe <axboe@kernel.dk>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a1JSyxjuH2Xez-K3SFV20f-FJnzZHdNR1o41VrNNZkUPQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>, gregkh <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm@vger.kernel.org, bkumar@qti.qualcomm.com, thierry.escande@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGFucywKClRoYW5rcyBmb3IgdGhlIHJldmlldy4KCkhhbnMgZGUgR29lZGUgPGhkZWdvZWRl
-QHJlZGhhdC5jb20+IHdyb3RlIG9uIEZyaSwgMjMgTm92IDIwMTggMTE6MzM6MTUKKzAxMDA6Cgo+
-IEhpIE1pcXVlbCwKPiAKPiBPbiAyMy0xMS0xOCAxMToxNSwgTWlxdWVsIFJheW5hbCB3cm90ZToK
-PiA+IEN1cnJlbnQgaW1wbGVtZW50YXRpb24gb2YgdGhlIGxpYmFoY2kgZG9lcyBub3QgdGFrZSBp
-bnRvIGFjY291bnQgdGhlCj4gPiBuZXcgUEhZIGZyYW1ld29yay4gQ29ycmVjdCB0aGUgc2l0dWF0
-aW9uIGJ5IGFkZGluZyBhIGNhbGwgdG8KPiA+IHBoeV9zZXRfbW9kZSgpIGJlZm9yZSBwaHlfcG93
-ZXJfb24oKSBhbmQgYnkgYWRkaW5nIGNhbGxzIHRvCj4gPiBhaGNpX3BsYXRmb3JtX2VuYWJsZS9k
-aXNhYmxlX3BoeXMoKSBhdCBzdXNwZW5kL3Jlc3VtZV9ob3N0KCkgdGltZS4KPiA+IAo+ID4gU2ln
-bmVkLW9mZi1ieTogTWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4KPiA+
-IC0tLQo+ID4gICBkcml2ZXJzL2F0YS9saWJhaGNpX3BsYXRmb3JtLmMgfCAxMSArKysrKysrKysr
-Kwo+ID4gICAxIGZpbGUgY2hhbmdlZCwgMTEgaW5zZXJ0aW9ucygrKQo+ID4gCj4gPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9hdGEvbGliYWhjaV9wbGF0Zm9ybS5jIGIvZHJpdmVycy9hdGEvbGliYWhj
-aV9wbGF0Zm9ybS5jCj4gPiBpbmRleCA0YjkwMGZjNjU5ZjcuLjlmMzNmNzJiNjc0YiAxMDA2NDQK
-PiA+IC0tLSBhL2RyaXZlcnMvYXRhL2xpYmFoY2lfcGxhdGZvcm0uYwo+ID4gKysrIGIvZHJpdmVy
-cy9hdGEvbGliYWhjaV9wbGF0Zm9ybS5jCj4gPiBAQCAtNTYsNiArNTYsMTIgQEAgc3RhdGljIGlu
-dCBhaGNpX3BsYXRmb3JtX2VuYWJsZV9waHlzKHN0cnVjdCBhaGNpX2hvc3RfcHJpdiAqaHByaXYp
-Cj4gPiAgIAkJaWYgKHJjKQo+ID4gICAJCQlnb3RvIGRpc2FibGVfcGh5czsgIAo+ID4gICA+ICsJ
-CXJjID0gcGh5X3NldF9tb2RlKGhwcml2LT5waHlzW2ldLCBQSFlfTU9ERV9TQVRBKTsgIAo+ID4g
-KwkJaWYgKHJjKSB7Cj4gPiArCQkJcGh5X2V4aXQoaHByaXYtPnBoeXNbaV0pOwo+ID4gKwkJCWdv
-dG8gZGlzYWJsZV9waHlzOwo+ID4gKwkJfQo+ID4gKyAgCj4gCj4gSSBzZWUgdGhhdCBwaHlfc2V0
-X21vZGUgcmV0dXJucyAwIGZvciBkcml2ZXJzIHdoaWNoIGRvIG5vdCBpbXBsZW1lbnQgaXQsCj4g
-c28gdGhpcyBzaG91bGQgYmUgZmluZS4KPiAKPiAKPiA+ICAgCQlyYyA9IHBoeV9wb3dlcl9vbiho
-cHJpdi0+cGh5c1tpXSk7Cj4gPiAgIAkJaWYgKHJjKSB7Cj4gPiAgIAkJCXBoeV9leGl0KGhwcml2
-LT5waHlzW2ldKTsKPiA+IEBAIC03MzgsNiArNzQ0LDggQEAgaW50IGFoY2lfcGxhdGZvcm1fc3Vz
-cGVuZF9ob3N0KHN0cnVjdCBkZXZpY2UgKmRldikKPiA+ICAgCXdyaXRlbChjdGwsIG1taW8gKyBI
-T1NUX0NUTCk7Cj4gPiAgIAlyZWFkbChtbWlvICsgSE9TVF9DVEwpOyAvKiBmbHVzaCAqLyAgCj4g
-PiAgID4gKwlhaGNpX3BsYXRmb3JtX2Rpc2FibGVfcGh5cyhocHJpdik7ICAKPiA+ICsKPiA+ICAg
-CXJldHVybiBhdGFfaG9zdF9zdXNwZW5kKGhvc3QsIFBNU0dfU1VTUEVORCk7Cj4gPiAgIH0KPiA+
-ICAgRVhQT1JUX1NZTUJPTF9HUEwoYWhjaV9wbGF0Zm9ybV9zdXNwZW5kX2hvc3QpOyAgCj4gCj4g
-SSdtIGFmcmFpZCB0aGF0IHRoaXMgYW5kIHRoZSBtYXRjaGluZyBjaGFuZ2UgaW4gYWhjaV9wbGF0
-Zm9ybV9zdXNwZW5kX2hvc3QKPiBuZWVkcyB0byBiZSBndWFyZGVkIGJ5IGEgZmxhZywgdGhlcmUg
-YXJlIHF1aXRlIGEgZmV3IHNhdGEgZHJpdmVycwo+IHVzaW5nIHRoZSBsaWJhaGNpX3BsYXRmb3Jt
-IGZ1bmN0aW9ucyBhcyB3ZWxsIGFzIHF1aXRlIGEgZmV3IHNhdGEgZHJpdmVycwo+IGNvbWJpbmlu
-ZyB0aGlzIHdpdGggdXNpbmcgcGh5IGRyaXZlcnMuCj4gCj4gSSdtIHdvcnJpZWQgdGhhdCBkb2lu
-ZyB0aGlzIHVuY29uZGl0aW9uYWxseSBvbiBkcml2ZXJzIHdoaWNoIGhhdmUKPiBub3QgYmVlbiB0
-ZXN0ZWQgd2l0aCB0aGlzIGNoYW5nZSBteSBicmVhayB0aGluZ3MuCj4gCj4gSSB0aGluayBpdCBt
-aWdodCBiZSBjbGVhbmVzdCB0byBleHRlbmQgdGhlIGV4aXN0aW5nIGZsYWdzIHBhc3NlZAo+IHRv
-IGFoY2lfcGxhdGZvcm1fZ2V0X3Jlc291cmNlcyB3aXRoIGEgZmxhZyBmb3IgdGhpcyBhbmQgc3Rv
-cmluZyB0aGVtCj4gc29tZXdoZXJlIGluIGFoY2lfaG9zdF9wcml2IHNvIHRoYXQgdGhlIHN1c3Bl
-bmQvcmVzdW1lIGZ1bmN0aW9ucyBjYW4KPiBnZXQgdG8gdGhlbS4KCkkgdW5kZXJzdGFuZCB5b3Vy
-IGNvbmNlcm4sIHBsZWFzZSBoYXZlIGEgbG9vayBhdCB0aGUgdjIgd2hpY2ggYWRkcmVzc2VzCnRo
-aXMgdGhlIHdheSB5b3Ugc3VnZ2VzdGVkLgoKClRoYW5rcywKTWlxdcOobAoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+
+
+On 30/11/18 16:19, Arnd Bergmann wrote:
+> On Fri, Nov 30, 2018 at 5:03 PM Srinivas Kandagatla
+> <srinivas.kandagatla@linaro.org> wrote:
+>> On 30/11/18 15:08, Arnd Bergmann wrote:
+>>> On Fri, Nov 30, 2018 at 4:01 PM Srinivas Kandagatla
+>>> <srinivas.kandagatla@linaro.org> wrote:
+>>>> Thanks Arnd for the review comments!
+>>>> On 30/11/18 13:41, Arnd Bergmann wrote:
+>>>>> On Fri, Nov 30, 2018 at 11:48 AM Srinivas Kandagatla
+>>>>> <srinivas.kandagatla@linaro.org> wrote:
+>>>
+>>>>>> +static long fastrpc_device_ioctl(struct file *file, unsigned int cmd,
+>>>>>> +                                unsigned long arg)
+>>>>>> +{
+>>>>>> +       struct fastrpc_user *fl = (struct fastrpc_user *)file->private_data;
+>>>>>> +       struct fastrpc_channel_ctx *cctx = fl->cctx;
+>>>>>> +       char __user *argp = (char __user *)arg;
+>>>>>> +       int err;
+>>>>>> +
+>>>>>> +       if (!fl->sctx) {
+>>>>>> +               fl->sctx = fastrpc_session_alloc(cctx, 0);
+>>>>>> +               if (!fl->sctx)
+>>>>>> +                       return -ENOENT;
+>>>>>> +       }
+>>>>>
+>>>>> Shouldn't that session be allocated during open()?
+>>>>>
+>>>> Yes, and no, we do not need context in all the cases. In cases like we
+>>>> just want to allocate dmabuf.
+>>>
+>>> Can you give an example what that would be good for?
+>>>
+>>
+>> Currently the instance which does not need session is used as simple
+>> memory allocator (rpcmem), TBH, this is the side effect of trying to fit
+>> in with downstream application infrastructure which uses ion for andriod
+>> usecases.
+> 
+> That does not sound like enough of a reason then, user space is
+> easy to change here to just allocate the memory from the device itself.
+> The only reason that I can see for needing a dmabuf would be if
+> you have to share a buffer between two instances, and then you
+> can use either of them.
+
+I agree, I will try rework this and remove the instances that does not 
+require sessions!
+
+Sharing buffer is also a reason for dmabuf here.
+
+> 
+>>>>>> +static void fastrpc_notify_users(struct fastrpc_user *user)
+>>>>>> +{
+>>>>>> +       struct fastrpc_invoke_ctx *ctx, *n;will go
+>>>>>> +
+>>>>>> +       spin_lock(&user->lock);
+>>>>>> +       list_for_each_entry_safe(ctx, n, &user->pending, node)
+>>>>>> +               complete(&ctx->work);
+>>>>>> +       spin_unlock(&user->lock);
+>>>>>> +}
+>>>>>
+>>>>> Can you explain here what it means to have multiple 'users'
+>>>>> a 'fastrpc_user' structure? Why are they all done at the same time?
+>>
+>> user is allocated on every open(). Having multiple users means that
+>> there are more than one compute sessions running on a given dsp.
+>>
+>> They reason why all the users are notified here is because the dsp is
+>> going down, so all the compute sessions associated with it will not see
+>> any response from dsp, so any pending/waiting compute contexts are
+>> explicitly notified.
+> 
+> I don't get it yet. What are 'compute sessions'? Do you have
+> multiple threads running on a single instance at the same time?
+
+compute sessions are "compute context-banks" instances in DSP.
+
+DSP supports multiple compute banks, Ideally 12 context banks, 4 which 
+are reserved for other purposes and 8 of them are used for compute, one 
+for each process. So ideally we can run 8 parallel computes.
+
+
+> I would have expected to only ever see one thread in the
+> 'wait_for_completion()' above, and others possibly waiting
+> for a chance to get to but not already running.
+> 
+>>>> struct fastrpc_remote_crc {
+>>>>           __u64 crc;
+>>>>           __u64 reserved1
+>>>>           __u64 reserved2
+>>>>           __u64 reserved3
+>>>> };
+>>>
+>>> I don't see a need to add extra served fields for structures
+>>> that are already naturally aligned here, e.g. in
+>>> fastrpc_remote_arg we need the 'reserved1' but not
+>>> the 'reserved2'.
+>> Yes, I see, I overdone it!
+>> Other idea, is, may be I can try to combine these into single structure
+>> something like:
+>>
+>> struct fastrpc_invoke_arg {
+>>          __u64 ptr;
+>>          __u64 len;
+>>          __u32 fd;
+>>          __u32 reserved1
+>>          __u64 attr;
+>>          __u64 crc;
+>> };
+>>
+>> struct fastrpc_ioctl_invoke {
+>>          __u32 handle;
+>>          __u32 sc;
+>>          /* The minimum size is scalar_length * 32*/
+>>          struct fastrpc_invoke_args *args;
+>> };
+> 
+> That is still two structure, not one ;-)
+> 
+>>>> struct fastrpc_ioctl_invoke {
+>>>>           __u32 handle;
+>>>>           __u32 sc;
+>>>>           /* The minimum size is scalar_length * 32 */
+>>>>           struct fastrpc_remote_args *rargs;
+>>>>           struct fastrpc_remote_fd *fds;
+>>>>           struct fastrpc_remote_attr *attrs;
+>>>>           struct fastrpc_remote_crc *crc;
+>>>> };
+>>>
+>>> Do these really have to be indirect then? Are they all
+>>> lists of variable length? How do you know how long?
+>> Yes, they are variable length and will be scalar length long.
+>> Scalar length is derived from sc variable in this structure.
+> 
+> Do you mean we have a variable number 'sc', but each array
+> always has the same length as the other ones? In that
+> case: yes, combining them seems sensible.
+Yes thats what I meant!
+
+> 
+> The other question this raises is: what is 'handle'?
+> Why is the file descriptor not enough to identify the
+> instance we want to talk to?
+This is remote handle to opened interface on which this method has to be 
+invoked.
+For example we are running a calculator application, calculator will 
+have a unique handle on which calculate() method needs to be invoked.
+
+
+thanks,
+srini
+> 
+>        Arnd
+> 
