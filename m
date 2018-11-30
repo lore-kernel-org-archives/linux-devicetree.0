@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 3/8] phy: enumerate SATA PHY mode
-Date: Fri, 30 Nov 2018 15:47:38 +0100
-Message-ID: <20181130144743.675-4-miquel.raynal@bootlin.com>
+Subject: [PATCH v2 2/8] phy: mvebu-cp110-comphy: fix port check in ->xlate()
+Date: Fri, 30 Nov 2018 15:47:37 +0100
+Message-ID: <20181130144743.675-3-miquel.raynal@bootlin.com>
 References: <20181130144743.675-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,30 +12,37 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Grzegorz Jaszczyk <jaz@semihalf.com>
+So far the PHY ->xlate() callback was checking if the port was
+"invalid" before continuing, meaning that the port has not been used
+yet. This check is not correct as there is no opposite call to
+->xlate() once the PHY is released by the user and the port will
+remain "valid" after the first phy_get()/phy_put() calls. Hence, if
+this driver is built as a module, inserted, removed and inserted
+again, the PHY will appear busy and the second probe will fail.
 
-Add SATA mode to the PHY framework in preparation of upcoming PHYs
-that will handle it. For instance, SATA mode will be used by the
-Armada3700 COMPHY driver, which supports configuring SERDES lanes to
-be used by various controllers: Ethernet, USB3, SATA and PCIe.
+To fix this, just drop the faulty check and instead verify that the
+port number is valid (ie. in the possible range).
 
-Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- include/linux/phy/phy.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 03b319f89a34..553d8520e37f 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -42,6 +42,7 @@ enum phy_mode {
- 	PHY_MODE_UFS_HS_A,
- 	PHY_MODE_UFS_HS_B,
- 	PHY_MODE_PCIE,
-+	PHY_MODE_SATA,
- };
+diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+index 31b9a1c18345..a40b876ff214 100644
+--- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
++++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+@@ -567,9 +567,9 @@ static struct phy *mvebu_comphy_xlate(struct device *dev,
+ 		return phy;
  
- /**
+ 	lane = phy_get_drvdata(phy);
+-	if (lane->port >= 0)
+-		return ERR_PTR(-EBUSY);
+ 	lane->port = args->args[0];
++	if (lane->port >= MVEBU_COMPHY_PORTS)
++		return ERR_PTR(-EINVAL);
+ 
+ 	return phy;
+ }
 -- 
 2.19.1
