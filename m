@@ -1,64 +1,46 @@
-Return-Path: <SRS0=tAzC=OA=partner.samsung.com=k.konieczny@kernel.org>
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: [PATCH 1/4] clk: samsung: exynos5433: fix name typos
-Date: Wed, 21 Nov 2018 13:05:06 +0100
-Message-Id: <20181121120509.18892-2-k.konieczny@partner.samsung.com>
-In-Reply-To: <20181121120509.18892-1-k.konieczny@partner.samsung.com>
+Return-Path: <SRS0=qqZh=OJ=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-References: <20181121120509.18892-1-k.konieczny@partner.samsung.com>
-	<CGME20181121120523eucas1p1e69848a515c713315499e6e21f099cc2@eucas1p1.samsung.com>
-To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
-Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com> <1543319795-48325-10-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543319795-48325-10-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 30 Nov 2018 09:58:51 +0100
+Message-ID: <CAMuHMdXochKEPzgThx6_wTc2t4kC4jy9hbdD+q23bx-BCqq9rw@mail.gmail.com>
+Subject: Re: [PATCH 09/22] ARM: dts: r8a7744: Add RWDT node
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Fix typo in imem sssx name and typo 200 switched with 266.
+Hi Biju,
 
-Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
----
- drivers/clk/samsung/clk-exynos5433.c   | 6 +++---
- include/dt-bindings/clock/exynos5433.h | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+On Tue, Nov 27, 2018 at 1:05 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> Add a device node for the Watchdog Timer (RWDT) controller on the Renesas
+> RZ/G1N (r8a7744) SoC.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
-index 751e2c4fb65b..24c3360db65b 100644
---- a/drivers/clk/samsung/clk-exynos5433.c
-+++ b/drivers/clk/samsung/clk-exynos5433.c
-@@ -559,7 +559,7 @@ static const struct samsung_gate_clock top_gate_clks[] __initconst = {
- 	/* ENABLE_ACLK_TOP */
- 	GATE(CLK_ACLK_G3D_400, "aclk_g3d_400", "div_aclk_g3d_400",
- 			ENABLE_ACLK_TOP, 30, CLK_IS_CRITICAL, 0),
--	GATE(CLK_ACLK_IMEM_SSX_266, "aclk_imem_ssx_266",
-+	GATE(CLK_ACLK_IMEM_SSSX_266, "aclk_imem_sssx_266",
- 			"div_aclk_imem_sssx_266", ENABLE_ACLK_TOP,
- 			29, CLK_IGNORE_UNUSED, 0),
- 	GATE(CLK_ACLK_BUS0_400, "aclk_bus0_400", "div_aclk_bus0_400",
-@@ -568,10 +568,10 @@ static const struct samsung_gate_clock top_gate_clks[] __initconst = {
- 	GATE(CLK_ACLK_BUS1_400, "aclk_bus1_400", "div_aclk_bus1_400",
- 			ENABLE_ACLK_TOP, 25,
- 			CLK_IS_CRITICAL | CLK_SET_RATE_PARENT, 0),
--	GATE(CLK_ACLK_IMEM_200, "aclk_imem_200", "div_aclk_imem_266",
-+	GATE(CLK_ACLK_IMEM_200, "aclk_imem_200", "div_aclk_imem_200",
- 			ENABLE_ACLK_TOP, 24,
- 			CLK_IS_CRITICAL | CLK_SET_RATE_PARENT, 0),
--	GATE(CLK_ACLK_IMEM_266, "aclk_imem_266", "div_aclk_imem_200",
-+	GATE(CLK_ACLK_IMEM_266, "aclk_imem_266", "div_aclk_imem_266",
- 			ENABLE_ACLK_TOP, 23,
- 			CLK_IGNORE_UNUSED | CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_ACLK_PERIC_66, "aclk_peric_66", "div_aclk_peric_66_b",
-diff --git a/include/dt-bindings/clock/exynos5433.h b/include/dt-bindings/clock/exynos5433.h
-index 98bd85ce1e45..87bb2b017143 100644
---- a/include/dt-bindings/clock/exynos5433.h
-+++ b/include/dt-bindings/clock/exynos5433.h
-@@ -156,7 +156,7 @@
- #define CLK_ACLK_G2D_266		220
- #define CLK_ACLK_G2D_400		221
- #define CLK_ACLK_G3D_400		222
--#define CLK_ACLK_IMEM_SSX_266		223
-+#define CLK_ACLK_IMEM_SSSX_266		223
- #define CLK_ACLK_BUS0_400		224
- #define CLK_ACLK_BUS1_400		225
- #define CLK_ACLK_IMEM_200		226
--- 
-2.19.1
+Thanks for your patch!
+
+> --- a/arch/arm/boot/dts/r8a7744.dtsi
+> +++ b/arch/arm/boot/dts/r8a7744.dtsi
+> @@ -293,6 +293,16 @@
+>                         reg = <0 0xe6160000 0 0x100>;
+>                 };
+>
+> +               rwdt: watchdog@e6020000 {
+
+Please preserve sort order (by address, per group of devices), by
+inserting before gpio@e6050000.
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
