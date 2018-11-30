@@ -1,57 +1,35 @@
-Return-Path: <SRS0=R6H7=N7=babblebit.net=cmc@kernel.org>
-From: Chris Coffey <cmc@babblebit.net>
-Subject: [PATCH v3 1/2] dt-bindings: iio: potentiometer: Add Microchip MCP41xxx/42xxx
-Date: Tue, 20 Nov 2018 14:17:12 +0000
-Message-Id: <20181120141713.9963-2-cmc@babblebit.net>
-In-Reply-To: <20181120141713.9963-1-cmc@babblebit.net>
-References: <20181120141713.9963-1-cmc@babblebit.net>
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc: Peter Rosin <peda@axentia.se>, Slawomir Stepien <sst@poczta.fm>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Chris Coffey <cmc@babblebit.net>
+Return-Path: <SRS0=nKhH=OJ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from kirsty.vergenet.net ([202.4.237.240]:51982 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbeK3V2b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 30 Nov 2018 16:28:31 -0500
+Date: Fri, 30 Nov 2018 11:19:39 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 3/6] soc: renesas: r8a77970-sysc: Correct names of
+ A2DP/A2CN power domains
+Message-ID: <20181130101938.l2qlhekm7b3amh5z@verge.net.au>
+References: <20181129105619.10695-1-geert+renesas@glider.be>
+ <20181129105619.10695-4-geert+renesas@glider.be>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181129105619.10695-4-geert+renesas@glider.be>
+Sender: devicetree-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds device tree documentation for the Microchip
-MCP41xxx/42xxx family of digital potentiometers.
+On Thu, Nov 29, 2018 at 11:56:16AM +0100, Geert Uytterhoeven wrote:
+> The R-Car Gen3 HardWare Manual Errata for Rev. 0.80 (Feb 28, 2018)
+> renamed the A2IR2 and A2IR3 power domains on R-Car V3M to A2DP resp.
+> A2CN.
+> 
+> As these definitions are not yet used from DT, they can just be renamed.
+> 
+> While at it, fix the indentation of the A3IR definition.
+> 
+> Fixes: 833bdb47c826a1a6 ("dt-bindings: power: add R8A77970 SYSC power domain definitions")
+> Fixes: bab9b2a74fe9da96 ("soc: renesas: rcar-sysc: add R8A77970 support")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Chris Coffey <cmc@babblebit.net>
----
- .../bindings/iio/potentiometer/mcp41010.txt        | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt b/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt
-new file mode 100644
-index 0000000000..7dcf2071b7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/potentiometer/mcp41010.txt
-@@ -0,0 +1,29 @@
-+* Microchip MCP41010/41050/41100/42010/42050/42100 Digital Potentiometer
-+  driver
-+
-+Datasheet publicly available at:
-+http://ww1.microchip.com/downloads/en/devicedoc/11195c.pdf
-+
-+The node for this driver must be a child node of a SPI controller, hence
-+all mandatory properties described in
-+
-+        Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+must be specified.
-+
-+Required properties:
-+	- compatible:  	Must be one of the following, depending on the
-+			model:
-+			"microchip,mcp41010"
-+			"microchip,mcp41050"
-+			"microchip,mcp41100"
-+			"microchip,mcp42010"
-+			"microchip,mcp42050"
-+			"microchip,mcp42100"
-+
-+Example:
-+potentiometer@0 {
-+	compatible = "microchip,mcp41010";
-+	reg = <0>;
-+	spi-max-frequency = <500000>;
-+};
--- 
-2.11.0
+Thanks, applied for v4.21.
