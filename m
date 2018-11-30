@@ -1,54 +1,30 @@
-Return-Path: <SRS0=g9Sy=OG=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr40059.outbound.protection.outlook.com ([40.107.4.59]:59447
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728729AbeK0Uiw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 27 Nov 2018 15:38:52 -0500
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH 2/4] dt-bindings: rtc: add binding doc for i.MX system
- controller RTC driver
-Date: Tue, 27 Nov 2018 09:41:29 +0000
-Message-ID: <1543311334-8807-3-git-send-email-Anson.Huang@nxp.com>
-References: <1543311334-8807-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1543311334-8807-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=qqZh=OJ=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com> <1543319795-48325-15-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543319795-48325-15-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 30 Nov 2018 10:01:18 +0100
+Message-ID: <CAMuHMdX+KoH6CWpMupDzqX=-T8ems+sg3oDA89BQSPF5bEw9OQ@mail.gmail.com>
+Subject: Re: [PATCH 14/22] ARM: dts: r8a7744: Add IRQC support
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-system controller, the system controller is in charge of system
-power, clock and secure RTC etc. management, Linux kernel
-has to communicate with system controller via MU (message unit)
-IPC to do RTC operation, this patch adds binding doc for i.MX
-system controller RTC driver.
+On Tue, Nov 27, 2018 at 1:05 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> Describe the IRQC interrupt controller in the r8a7744 device tree.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt | 10 ++++++++++
- 1 file changed, 10 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt b/Documen=
-tation/devicetree/bindings/rtc/rtc-imx-sc.txt
-new file mode 100644
-index 0000000..d6e2353
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
-@@ -0,0 +1,10 @@
-+* NXP i.MX System Controller Real Time Clock
-+
-+Required properties:
-+- compatible: should be "nxp,imx8qxp-sc-rtc";
-+
-+Example:
-+
-+rtc: rtc {
-+	compatible =3D "nxp,imx8qxp-sc-rtc";
-+};
---=20
-2.7.4
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
