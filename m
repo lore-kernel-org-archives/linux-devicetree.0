@@ -1,41 +1,66 @@
-From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v1] drm/bridge: fix AUX_CMD_SEND bit value for
- ti, sn65dsi86 bridge
-Date: Fri, 30 Nov 2018 14:57:45 +0530
-Message-ID: <20181130092745.4219-1-spanda@codeaurora.org>
+From: Pascal PAILLET-LME <p.paillet@st.com>
+Subject: [PATCH v7 0/7] Introduce STPMIC1 PMIC Driver
+Date: Fri, 30 Nov 2018 09:55:48 +0000
+Message-ID: <1543571742-17995-1-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
+Cc: Pascal PAILLET-LME <p.paillet@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Rml4IHRoZSBBVVhfQ01EX1NFTkQgYml0IGZvciB0aSxzbjY1ZHNpODYgYnJpZGdlIGNoaXAuIFdp
-dGggd3JvbmcKdmFsdWUgdGhlIGRwY2QgYXV4IHRyYW5zYWN0aW9ucyB3aXRoIGVEUCBwYW5lbCBh
-cmUgZmFpbGluZy4KClNpZ25lZC1vZmYtYnk6IFNhbmRlZXAgUGFuZGEgPHNwYW5kYUBjb2RlYXVy
-b3JhLm9yZz4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RpLXNuNjVkc2k4Ni5jIHwgMiAr
-LQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aS1zbjY1ZHNpODYuYyBiL2RyaXZlcnMvZ3B1
-L2RybS9icmlkZ2UvdGktc242NWRzaTg2LmMKaW5kZXggNjgwNTY2ZDk3YWRjZi4uMTAyNDM5NjVl
-ZTdjMCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aS1zbjY1ZHNpODYuYwor
-KysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RpLXNuNjVkc2k4Ni5jCkBAIC01NCw3ICs1NCw3
-IEBACiAjZGVmaW5lIFNOX0FVWF9BRERSXzdfMF9SRUcJCQkweDc2CiAjZGVmaW5lIFNOX0FVWF9M
-RU5HVEhfUkVHCQkJMHg3NwogI2RlZmluZSBTTl9BVVhfQ01EX1JFRwkJCQkweDc4Ci0jZGVmaW5l
-ICBBVVhfQ01EX1NFTkQJCQkJQklUKDEpCisjZGVmaW5lICBBVVhfQ01EX1NFTkQJCQkJQklUKDAp
-CiAjZGVmaW5lICBBVVhfQ01EX1JFUSh4KQkJCQkoKHgpIDw8IDQpCiAjZGVmaW5lIFNOX0FVWF9S
-REFUQV9SRUcoeCkJCQkoMHg3OSArICh4KSkKICNkZWZpbmUgU05fU1NDX0NPTkZJR19SRUcJCQkw
-eDkzCi0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIg
-b2YgdGhlIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2
-ZSBQcm9qZWN0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+The goal of this patch-set is to propose a driver for the STPMIC1 PMIC from 
+STMicroelectronics. 
+The STPMIC1 regulators supply power to an application processor as well as 
+to external system peripherals such as DDR, Flash memories and system
+devices. It also features onkey button input and an hardware watchdog.
+The STPMIC1 is controlled via I2C. 
+
+Main driver is drivers/mfd/stpmic1 that handle I2C regmap configuration and
+irqchip. stpmic1_regulator, stpmic1_onkey and stpmic1_wdt need stpmic1 mfd
+as parent.
+
+STPMIC1 MFD and regulator drivers maybe mandatory at boot time.
+
+Pascal Paillet (7):
+changes in v7:
+* rebase on regul/for-next
+
+  dt-bindings: mfd: document stpmic1
+  mfd: stpmic1: add stpmic1 driver
+  dt-bindings: input: document stpmic1 pmic onkey
+  input: stpmic1: add stpmic1 onkey driver
+  dt-bindings: watchdog: document stpmic1 pmic watchdog
+  watchdog: stpmic1: add stpmic1 watchdog driver
+  regulator: stpmic1: fix regulator_lock usage
+
+ .../devicetree/bindings/input/st,stpmic1-onkey.txt |  28 +++
+ .../devicetree/bindings/mfd/st,stpmic1.txt         |  61 ++++++
+ .../bindings/watchdog/st,stpmic1-wdt.txt           |  11 ++
+ drivers/input/misc/Kconfig                         |  11 ++
+ drivers/input/misc/Makefile                        |   2 +
+ drivers/input/misc/stpmic1_onkey.c                 | 198 +++++++++++++++++++
+ drivers/mfd/Kconfig                                |  16 ++
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/stpmic1.c                              | 213 +++++++++++++++++++++
+ drivers/regulator/stpmic1_regulator.c              |   2 +-
+ drivers/watchdog/Kconfig                           |  12 ++
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/stpmic1_wdt.c                     | 139 ++++++++++++++
+ include/dt-bindings/mfd/st,stpmic1.h               |  50 +++++
+ include/linux/mfd/stpmic1.h                        | 212 ++++++++++++++++++++
+ 15 files changed, 956 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
+ create mode 100644 drivers/input/misc/stpmic1_onkey.c
+ create mode 100644 drivers/mfd/stpmic1.c
+ create mode 100644 drivers/watchdog/stpmic1_wdt.c
+ create mode 100644 include/dt-bindings/mfd/st,stpmic1.h
+ create mode 100644 include/linux/mfd/stpmic1.h
+
+-- 
+1.9.1
