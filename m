@@ -1,175 +1,100 @@
-Return-Path: <SRS0=2PS9=NM=googlemail.com=martin.blumenstingl@kernel.org>
+Return-Path: <SRS0=X76U=OJ=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH 11/22] ARM: dts: r8a7744: Add DU support
+Date: Fri, 30 Nov 2018 09:34:23 +0000
+Message-ID: 
+ <OSBPR01MB2103DC4DC448288E1E1EE8F1B8D30@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
+ <1543319795-48325-12-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdWq=dP77rrdC2GzPT8gEzKgxKLpqxkzcXOS=ThFu_9=fA@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdWq=dP77rrdC2GzPT8gEzKgxKLpqxkzcXOS=ThFu_9=fA@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20181028120859.5735-1-martin.blumenstingl@googlemail.com> <20181030221310.GA22640@bogus>
-In-Reply-To: <20181030221310.GA22640@bogus>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date: Thu, 1 Nov 2018 11:10:35 +0100
-Message-ID: <CAFBinCDnB5GiX530eLR5fa6JEZP9GtYDhJq6S7sKMXEtMP5FHQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Meson8/Meson8b: introduce a HHI syscon node
-Content-Type: text/plain; charset="UTF-8"
-To: robh@kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, jbrunet@baylibre.com, mark.rutland@arm.com, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, carlo@caione.org, khilman@baylibre.com, linux-clk@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Geert Uytterhoeven" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Rob,
-
-On Tue, Oct 30, 2018 at 11:13 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Sun, Oct 28, 2018 at 01:08:56PM +0100, Martin Blumenstingl wrote:
-> > The Meson8/Meson8b/Meson8m2 SoCs are suffering from a similar problem
-> > as the GXBB/GXL/GXM SoCs (see the GX series from Jerome: [0]):
-> > There is a register area called "HHI" which is used for multiple IP
-> > blocks of the SoC:
-> > - the system clock controller
-> > - a few reset lines (there is a separate reset controller, these reset
-> >   lines are not part of the other reset controller). this reset
-> >   controller is currently implemented in the clock controller driver
-> > - a HDMI controller
->
-> Does this have it's own clocks, resets or other resources?
-I'm not sure what's the best way to answer this as the HDMI part is
-not part of the public S805 datasheet. however, I went ahead and read
-Amlogic's BSP code (see [1], [2] and [3] - beware: these files will
-not make checkpatch happy ;)).
-first I have to make a correction here: while looking deeper into this
-the HDMI controller is *not* inside the HHI register area (but instead
-on the APB bus). sorry for getting this wrong
-
-here's how would make the .dts to look like (assuming we support all
-peripherals that I know of in the HHI area):
-
-&hhi {
-    compatible = "amlogic,meson-hhi-sysctrl",
-                           "simple-mfd",
-                           "syscon";
-
-    clkc: clock-controller {
-        ...
-    };
-
-    hhi_power: power-controller {
-        compatible = "amlogic,meson8-hhi-power-controller";
-        #power-domain-cells = <1>;
-    };
-
-    hdmi_phy: phy {
-        compatible = "amlogic,meson8-hdmi-phy";
-        #phy-cells = <0>;
-        /*
-         * HHI_HDMI_PHY_CNTL0 needs a magic value based on
-         * power on/off status. HHI_HDMI_PHY_CNTL1 has
-         * bit[1]: enable clock, bit[0]: soft reset (maybe
-         * these two should be provided by the clkc?)
-         */
-    };
-};
-
-&apb {
-    hdmi_tx: hdmi-tx@42000 {
-        compatible = "amlogic,meson8-hdmi";
-        reg = <0x42000 0xc>;
-        interrupts = <GIC_SPI 57 IRQ_TYPE_EDGE_RISING>;
-        #address-cells = <1>;
-        #size-cells = <0>;
-
-        /*
-         * internally the actual HDMI controller registers
-         * are not accessed directly but through two special
-         * (address and data) registers: HDMI_ADDR_PORT,
-         * HDMI_DATA_PORT.
-         */
-
-        /*
-         * there are five internal reset registers:
-         * TX_SYS5_TX_SOFT_RESET_1
-         * TX_SYS5_TX_SOFT_RESET_2
-         * TX_SYS5_RX_SOFT_RESET_1
-         * TX_SYS5_RX_SOFT_RESET_2
-         * TX_SYS5_RX_SOFT_RESET_3
-         */
-
-        /*
-         * TODO: this has to know a few details about the
-         * audio stream as well to route the audio correctly
-         * (vendor code differentiates between 2ch / 8ch and
-         * programs the HDMI controller accordingly)
-         */
-
-        pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
-        pinctrl-names = "default";
-
-        /* TODO: what is VCLK1_HDMI exactly? */
-        clocks = <&clkc CLKID_HDMI_PCLK>,
-                 <&clkc CLKID_HDMI_SYS>,
-                 <&clkc CLKID_VCLK1_HDMI>;
-        clock-names = "pclk", "sys", "vclk1";
-
-        power-domains = <&hhi_power 0>, <&hhi_power 1> ;
-        power-domain-names = "edid", "hdcp";
-
-        phys = <&hdmi_phy>;
-        phy-names = "hdmi";
-
-        /* VPU VENC Input */
-        hdmi_tx_venc_port: port@0 {
-            reg = <0>;
-
-            hdmi_tx_in: endpoint {
-                /*
-                 * this is provided by the VPU which has
-                 * many (>10) clock inputs - all connected
-                 * to "clkc" above
-                 */
-                remote-endpoint = <&hdmi_tx_out>;
-            };
-        };
-
-        /* TMDS Output */
-        hdmi_tx_tmds_port: port@1 {
-            reg = <1>;
-        };
-    };
-};
-
-&saradc {
-...
-    /*
-     * patches for this are already sent: TSC bit[4] is
-     * stored in HHI_DPLL_TOP_0 (which is right between the
-     * SYS_PLL and VID_PLL registers. the PLL clocks from
-     * these other registers are implemented in the driver
-     * for the "clkc" node above)
-     */
-    amlogic,hhi-sysctrl = <&hhi>;
-};
-
-
-> > - temperature sensor calibration data (by "data" I really mean data,
-> >   the ADC driver has four bits for the TSC data in it's own register
-> >   space, however on Meson8b and Meson8m2 there is a fifth TSC bit which
-> >   is stored in the HHI register area)
-> >
-> > The first three could be implemented with a single node (either in one
-> > big driver, or using a MFD driver which would register function-
-> > specific drivers).
-> > However, the TSC data is a big problem, because the ADC has it's own
-> > set of registers but needs to write one bit in the HHI register area.
->
-> Generally, that would be solved with a phandle to the HHI and maybe an
-> offset cell in the ADC node. I don't see why that's a big problem.
-this is what I'm trying to do, see my dt-bindings patch for the SAR
-ADC (which is used to read the temperature sensor): [0]
-my understanding was that I should go through syscon to avoid double
-ioremap() of the same register set (the clock controller and SAR ADC
-would have to do it).
-which APIs (other than syscon) would you suggest for this case?
-
-
-Regards
-Martin
-
-
-[0] https://patchwork.kernel.org/patch/10658557/
-[1] https://github.com/endlessm/linux-meson/blob/3a749cb45a381fb977bae0bee36c6c1cbee32ac1/arch/arm/mach-meson8b/hdmi_tx_hw/hdmi_tx_hw.c
-[2] https://github.com/endlessm/linux-meson/blob/3a749cb45a381fb977bae0bee36c6c1cbee32ac1/arch/arm/mach-meson8b/hdmi_tx_hw/hdmi_tx_reg.c
-[3] https://github.com/endlessm/linux-meson/blob/3a749cb45a381fb977bae0bee36c6c1cbee32ac1/arch/arm/mach-meson8b/include/mach/register.h
+SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IFN1YmplY3Q6IFJlOiBb
+UEFUQ0ggMTEvMjJdIEFSTTogZHRzOiByOGE3NzQ0OiBBZGQgRFUgc3VwcG9ydA0KPg0KPiBIaSBC
+aWp1LA0KPg0KPiBPbiBUdWUsIE5vdiAyNywgMjAxOCBhdCAxOjA1IFBNIEJpanUgRGFzIDxiaWp1
+LmRhc0BicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gQWRkIGR1IG5vZGUgdG8gcjhhNzc0NCBT
+b0MgRFQuIEJvYXJkcyB0aGF0IHdhbnQgdG8gZW5hYmxlIHRoZSBEVSBuZWVkDQo+ID4gdG8gc3Bl
+Y2lmeSB0aGUgb3V0cHV0IHRvcG9sb2d5Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQmlqdSBE
+YXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPg0KPiBUaGFua3MgZm9yIHlvdXIgcGF0Y2gh
+DQo+DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc0NC5kdHNpDQo+ID4gKysrIGIv
+YXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc0NC5kdHNpDQo+ID4gQEAgLTEzMDAsOCArMTMwMCwxNyBA
+QA0KPiA+ICAgICAgICAgICAgICAgICB9Ow0KPiA+DQo+ID4gICAgICAgICAgICAgICAgIGR1OiBk
+aXNwbGF5QGZlYjAwMDAwIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxl
+ID0gInJlbmVzYXMsZHUtcjhhNzc0NCI7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgcmVn
+ID0gPDAgMHhmZWIwMDAwMCAwIDB4NDAwMDA+LA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIDwwIDB4ZmViOTAwMDAgMCAweDFjPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
+ICByZWctbmFtZXMgPSAiZHUiLCAibHZkcy4wIjsNCj4NCj4gUGxlYXNlIHVzZSB0aGUgbmV3IERV
+L0xWRFMgYmluZGluZ3MsIHVzaW5nIGEgc2VwYXJhdGUgbm9kZSBmb3IgTFZEUy4NCj4NCj4gQlRX
+LCBJIGJlbGlldmUgdGhlIGRpc3BsYXkgd29uJ3Qgd29yayB3aXRoIGEgcmVjZW50IHRyZWUsIHVu
+bGVzcyB5b3UndmUNCj4gYWRkZWQgYSBEVCBsaXZlIHBhdGNoIGRyaXZlcnMvZ3B1L2RybS9yY2Fy
+LQ0KPiBkdS9yY2FyX2R1X29mX2x2ZHNfcjhhNzc0NC5kdHM/DQo+DQo+IFRoZSBzYW1lIGlzIHRy
+dWUgZm9yIFJaL0cxTS4NCg0KU28gZmFyIHdlIGhhdmVuJ3QgZW5hYmxlZCBMVkRTIHBhbmVsIG9u
+IGJvYXJkIHNwZWNpZmljIGR0c2kuDQoNCkkgaGF2ZSB0ZXN0ZWQgZHUgIHdpdGggYmVsb3cgcmVu
+ZXNhcy1kZXYga2VybmVsIHZlcnNpb24NCg0KTGludXggdmVyc2lvbiA0LjIwLjAtcmM0LTAwMTI3
+LWc1YWQ4YWM4IChiaWp1QGJlMXlvY3RvKSAoZ2NjIHZlcnNpb24gNy4yLjEgMjAxNzEwMTEgKExp
+bmFybyBHQ0MgNy4yLTIwMTcuMTEpKSAjNTYgU01QIEZyaSBOb3YgMzAgMDg6MDM6MjEgR01UIDIw
+MTgNCg0KWyAgICAxLjk0MjYwM10gW2RybV0gRGV2aWNlIGZlYjAwMDAwLmRpc3BsYXkgcHJvYmVk
+DQpyb290QGl3ZzIwbTp+IyBtb2RldGVzdCAtTSByY2FyLWR1DQpFbmNvZGVyczoNCmlkICAgICAg
+Y3J0YyAgICB0eXBlICAgIHBvc3NpYmxlIGNydGNzICBwb3NzaWJsZSBjbG9uZXMNCjU0ICAgICAg
+NTIgICAgICBub25lICAgIDB4MDAwMDAwMDMgICAgICAweDAwMDAwMDAxDQoNCkNvbm5lY3RvcnM6
+DQppZCAgICAgIGVuY29kZXIgc3RhdHVzICAgICAgICAgIG5hbWUgICAgICAgICAgICBzaXplICht
+bSkgICAgICAgbW9kZXMgICBlbmNvZGVycw0KNTUgICAgICA1NCAgICAgIGNvbm5lY3RlZCAgICAg
+ICBIRE1JLUEtMSAgICAgICAgNTIweDMyMCAgICAgICAgIDI3ICAgICAgNTQNCiAgbW9kZXM6DQog
+ICAgICAgIG5hbWUgcmVmcmVzaCAoSHopIGhkaXNwIGhzcyBoc2UgaHRvdCB2ZGlzcCB2c3MgdnNl
+IHZ0b3QpDQogIDE5MjB4MTA4MCA2MCAxOTIwIDE5NjggMjAwMCAyMDgwIDEwODAgMTA4MiAxMDg3
+IDExMTEgMTM4MDAwIGZsYWdzOiBwaHN5bmMsIG52c3luYzsgdHlwZTogcHJlZmVycmVkLCBkcml2
+ZXINCiAgMTkyMHgxMDgwIDYwIDE5MjAgMjAwOCAyMDUyIDIyMDAgMTA4MCAxMDg0IDEwODkgMTEy
+NSAxNDg1MDAgZmxhZ3M6IHBoc3luYywgcHZzeW5jOyB0eXBlOiBkcml2ZXINCiAgMTkyMHgxMDgw
+IDYwIDE5MjAgMjAwOCAyMDUyIDIyMDAgMTA4MCAxMDg0IDEwODkgMTEyNSAxNDgzNTIgZmxhZ3M6
+IHBoc3luYywgcHZzeW5jOyB0eXBlOiBkcml2ZXINCiAgMTI4MHgxMDI0IDc1IDEyODAgMTI5NiAx
+NDQwIDE2ODggMTAyNCAxMDI1IDEwMjggMTA2NiAxMzUwMDAgZmxhZ3M6IHBoc3luYywgcHZzeW5j
+OyB0eXBlOiBkcml2ZXINCiAgMTI4MHgxMDI0IDYwIDEyODAgMTMyOCAxNDQwIDE2ODggMTAyNCAx
+MDI1IDEwMjggMTA2NiAxMDgwMDAgZmxhZ3M6IHBoc3luYywgcHZzeW5jOyB0eXBlOiBkcml2ZXIN
+CiAgMTE1Mng4NjQgNzUgMTE1MiAxMjE2IDEzNDQgMTYwMCA4NjQgODY1IDg2OCA5MDAgMTA4MDAw
+IGZsYWdzOiBwaHN5bmMsIHB2c3luYzsgdHlwZTogZHJpdmVyDQogIDEyODB4NzIwIDYwIDEyODAg
+MTM5MCAxNDMwIDE2NTAgNzIwIDcyNSA3MzAgNzUwIDc0MjUwIGZsYWdzOiBwaHN5bmMsIHB2c3lu
+YzsgdHlwZTogZHJpdmVyDQogIDEyODB4NzIwIDYwIDEyODAgMTM5MCAxNDMwIDE2NTAgNzIwIDcy
+NSA3MzAgNzUwIDc0MTc2IGZsYWdzOiBwaHN5bmMsIHB2c3luYzsgdHlwZTogZHJpdmVyDQogIDEy
+ODB4NzIwIDUwIDEyODAgMTcyMCAxNzYwIDE5ODAgNzIwIDcyNSA3MzAgNzUwIDc0MjUwIGZsYWdz
+OiBwaHN5bmMsIHB2c3luYzsgdHlwZTogZHJpdmVyDQogIDEwMjR4NzY4IDc1IDEwMjQgMTA0MCAx
+MTM2IDEzMTIgNzY4IDc2OSA3NzIgODAwIDc4NzUwIGZsYWdzOiBwaHN5bmMsIHB2c3luYzsgdHlw
+ZTogZHJpdmVyDQogIDEwMjR4NzY4IDcwIDEwMjQgMTA0OCAxMTg0IDEzMjggNzY4IDc3MSA3Nzcg
+ODA2IDc1MDAwIGZsYWdzOiBuaHN5bmMsIG52c3luYzsgdHlwZTogZHJpdmVyDQogIDEwMjR4NzY4
+IDYwIDEwMjQgMTA0OCAxMTg0IDEzNDQgNzY4IDc3MSA3NzcgODA2IDY1MDAwIGZsYWdzOiBuaHN5
+bmMsIG52c3luYzsgdHlwZTogZHJpdmVyDQogIDEwODB4NjA3IDYwIDEwODAgMTEyMCAxMjMyIDEz
+ODQgNjA3IDYwOCA2MTEgNjI5IDUyMjEwIGZsYWdzOiBuaHN5bmMsIHB2c3luYzsgdHlwZToNCiAg
+ODMyeDYyNCA3NSA4MzIgODY0IDkyOCAxMTUyIDYyNCA2MjUgNjI4IDY2NyA1NzI4NCBmbGFnczog
+bmhzeW5jLCBudnN5bmM7IHR5cGU6IGRyaXZlcg0KICA4MDB4NjAwIDc1IDgwMCA4MTYgODk2IDEw
+NTYgNjAwIDYwMSA2MDQgNjI1IDQ5NTAwIGZsYWdzOiBwaHN5bmMsIHB2c3luYzsgdHlwZTogZHJp
+dmVyDQogIDgwMHg2MDAgNzIgODAwIDg1NiA5NzYgMTA0MCA2MDAgNjM3IDY0MyA2NjYgNTAwMDAg
+ZmxhZ3M6IHBoc3luYywgcHZzeW5jOyB0eXBlOiBkcml2ZXINCiAgODAweDYwMCA2MCA4MDAgODQw
+IDk2OCAxMDU2IDYwMCA2MDEgNjA1IDYyOCA0MDAwMCBmbGFnczogcGhzeW5jLCBwdnN5bmM7IHR5
+cGU6IGRyaXZlcg0KICA4MDB4NjAwIDU2IDgwMCA4MjQgODk2IDEwMjQgNjAwIDYwMSA2MDMgNjI1
+IDM2MDAwIGZsYWdzOiBwaHN5bmMsIHB2c3luYzsgdHlwZTogZHJpdmVyDQogIDcyMHg1NzYgNTAg
+NzIwIDczMiA3OTYgODY0IDU3NiA1ODEgNTg2IDYyNSAyNzAwMCBmbGFnczogbmhzeW5jLCBudnN5
+bmM7IHR5cGU6IGRyaXZlcg0KICA3MjB4NDgwIDYwIDcyMCA3MzYgNzk4IDg1OCA0ODAgNDg5IDQ5
+NSA1MjUgMjcwMjcgZmxhZ3M6IG5oc3luYywgbnZzeW5jOyB0eXBlOiBkcml2ZXINCiAgNzIweDQ4
+MCA2MCA3MjAgNzM2IDc5OCA4NTggNDgwIDQ4OSA0OTUgNTI1IDI3MDAwIGZsYWdzOiBuaHN5bmMs
+IG52c3luYzsgdHlwZTogZHJpdmVyDQogIDY0MHg0ODAgNzUgNjQwIDY1NiA3MjAgODQwIDQ4MCA0
+ODEgNDg0IDUwMCAzMTUwMCBmbGFnczogbmhzeW5jLCBudnN5bmM7IHR5cGU6IGRyaXZlcg0KICA2
+NDB4NDgwIDczIDY0MCA2NjQgNzA0IDgzMiA0ODAgNDg5IDQ5MiA1MjAgMzE1MDAgZmxhZ3M6IG5o
+c3luYywgbnZzeW5jOyB0eXBlOiBkcml2ZXINCiAgNjQweDQ4MCA2NyA2NDAgNzA0IDc2OCA4NjQg
+NDgwIDQ4MyA0ODYgNTI1IDMwMjQwIGZsYWdzOiBuaHN5bmMsIG52c3luYzsgdHlwZTogZHJpdmVy
+DQogIDY0MHg0ODAgNjAgNjQwIDY1NiA3NTIgODAwIDQ4MCA0OTAgNDkyIDUyNSAyNTIwMCBmbGFn
+czogbmhzeW5jLCBudnN5bmM7IHR5cGU6IGRyaXZlcg0KICA2NDB4NDgwIDYwIDY0MCA2NTYgNzUy
+IDgwMCA0ODAgNDkwIDQ5MiA1MjUgMjUxNzUgZmxhZ3M6IG5oc3luYywgbnZzeW5jOyB0eXBlOiBk
+cml2ZXINCiAgNzIweDQwMCA3MCA3MjAgNzM4IDg0NiA5MDAgNDAwIDQxMiA0MTQgNDQ5IDI4MzIw
+IGZsYWdzOiBuaHN5bmMsIHB2c3luYzsgdHlwZTogZHJpdmVyDQoNCg0KQWxzbyB0ZXN0ZWQgbGli
+ZHJtL2ttcyB0ZXN0cy4gIEl0IHdvcmtzIGZpbmUgd2l0aCA0LjIwLjAtcmM0IGtlcm5lbCBvbiBy
+ZW5lc2FzLWRldiBicmFuY2guDQoNClJlZ2FyZHMsDQpCaWp1DQoNCg0KDQpSZW5lc2FzIEVsZWN0
+cm9uaWNzIEV1cm9wZSBMdGQsIER1a2VzIE1lYWRvdywgTWlsbGJvYXJkIFJvYWQsIEJvdXJuZSBF
+bmQsIEJ1Y2tpbmdoYW1zaGlyZSwgU0w4IDVGSCwgVUsuIFJlZ2lzdGVyZWQgaW4gRW5nbGFuZCAm
+IFdhbGVzIHVuZGVyIFJlZ2lzdGVyZWQgTm8uIDA0NTg2NzA5Lg0K
