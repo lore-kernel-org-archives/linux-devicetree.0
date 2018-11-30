@@ -1,144 +1,212 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 3/6] char: fastrpc: Add support for context Invoke method
-Date: Fri, 30 Nov 2018 17:19:53 +0100
-Message-ID: <CAK8P3a1JSyxjuH2Xez-K3SFV20f-FJnzZHdNR1o41VrNNZkUPQ@mail.gmail.com>
-References: <20181130104657.14875-1-srinivas.kandagatla@linaro.org>
- <20181130104657.14875-4-srinivas.kandagatla@linaro.org> <CAK8P3a1mFWJyXCn74_Yd_y3Df0JN=qM4nw4-2t_LjRO7yXmXBw@mail.gmail.com>
- <3c177508-cf6f-1f8d-a324-5bec40fd9a9c@linaro.org> <CAK8P3a0d=VRP+9vZm+eJeJM933PWYL4sruMAYBYzWjg5B_kL2g@mail.gmail.com>
- <633cb111-f5d7-3648-54af-a476f3cbb279@linaro.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCHv2 5/6] pci: layerscape: Add the EP mode support.
+Date: Fri, 30 Nov 2018 16:22:15 +0000
+Message-ID: <20181130162214.GA23332@e107981-ln.cambridge.arm.com>
+References: <20181105084653.26597-1-xiaowei.bao@nxp.com>
+ <20181105084653.26597-5-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <633cb111-f5d7-3648-54af-a476f3cbb279@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20181105084653.26597-5-xiaowei.bao@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, gregkh <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm@vger.kernel.org, bkumar@qti.qualcomm.com, thierry.escande@linaro.org
+To: Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org, cyrille.pitchen@free-electrons.com, pombredanne@nexb.com, shawn.lin@rock-chips.com, niklas.cassel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 30, 2018 at 5:03 PM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
-> On 30/11/18 15:08, Arnd Bergmann wrote:
-> > On Fri, Nov 30, 2018 at 4:01 PM Srinivas Kandagatla
-> > <srinivas.kandagatla@linaro.org> wrote:
-> >> Thanks Arnd for the review comments!
-> >> On 30/11/18 13:41, Arnd Bergmann wrote:
-> >>> On Fri, Nov 30, 2018 at 11:48 AM Srinivas Kandagatla
-> >>> <srinivas.kandagatla@linaro.org> wrote:
-> >
-> >>>> +static long fastrpc_device_ioctl(struct file *file, unsigned int cmd,
-> >>>> +                                unsigned long arg)
-> >>>> +{
-> >>>> +       struct fastrpc_user *fl = (struct fastrpc_user *)file->private_data;
-> >>>> +       struct fastrpc_channel_ctx *cctx = fl->cctx;
-> >>>> +       char __user *argp = (char __user *)arg;
-> >>>> +       int err;
-> >>>> +
-> >>>> +       if (!fl->sctx) {
-> >>>> +               fl->sctx = fastrpc_session_alloc(cctx, 0);
-> >>>> +               if (!fl->sctx)
-> >>>> +                       return -ENOENT;
-> >>>> +       }
-> >>>
-> >>> Shouldn't that session be allocated during open()?
-> >>>
-> >> Yes, and no, we do not need context in all the cases. In cases like we
-> >> just want to allocate dmabuf.
-> >
-> > Can you give an example what that would be good for?
-> >
->
-> Currently the instance which does not need session is used as simple
-> memory allocator (rpcmem), TBH, this is the side effect of trying to fit
-> in with downstream application infrastructure which uses ion for andriod
-> usecases.
+On Mon, Nov 05, 2018 at 04:46:52PM +0800, Xiaowei Bao wrote:
+> Add the PCIe EP mode support for layerscape platform.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> ---
+> v2:
+>  - remove the EP mode check function.
+> 
+>  drivers/pci/controller/dwc/Makefile            |    2 +-
+>  drivers/pci/controller/dwc/pci-layerscape-ep.c |  147 ++++++++++++++++++++++++
+>  2 files changed, 148 insertions(+), 1 deletions(-)
+>  create mode 100644 drivers/pci/controller/dwc/pci-layerscape-ep.c
+> 
+> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+> index 5d2ce72..b26d617 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -8,7 +8,7 @@ obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
+>  obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
+>  obj-$(CONFIG_PCIE_SPEAR13XX) += pcie-spear13xx.o
+>  obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone-dw.o pci-keystone.o
+> -obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
+> +obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o pci-layerscape-ep.o
+>  obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
+>  obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
+>  obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> new file mode 100644
+> index 0000000..289618b
+> --- /dev/null
+> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> @@ -0,0 +1,147 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PCIe controller EP driver for Freescale Layerscape SoCs
+> + *
+> + * Copyright (C) 2018 NXP Semiconductor.
+> + *
+> + * Author: Xiaowei Bao <xiaowei.bao@nxp.com>
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/init.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_address.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/resource.h>
+> +
+> +#include "pcie-designware.h"
+> +
+> +#define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
+> +
+> +struct ls_pcie_ep {
+> +	struct dw_pcie		*pci;
+> +};
 
-That does not sound like enough of a reason then, user space is
-easy to change here to just allocate the memory from the device itself.
-The only reason that I can see for needing a dmabuf would be if
-you have to share a buffer between two instances, and then you
-can use either of them.
+I am not really sure why you need an additional struct.
 
-> >>>> +static void fastrpc_notify_users(struct fastrpc_user *user)
-> >>>> +{
-> >>>> +       struct fastrpc_invoke_ctx *ctx, *n;will go
-> >>>> +
-> >>>> +       spin_lock(&user->lock);
-> >>>> +       list_for_each_entry_safe(ctx, n, &user->pending, node)
-> >>>> +               complete(&ctx->work);
-> >>>> +       spin_unlock(&user->lock);
-> >>>> +}
-> >>>
-> >>> Can you explain here what it means to have multiple 'users'
-> >>> a 'fastrpc_user' structure? Why are they all done at the same time?
->
-> user is allocated on every open(). Having multiple users means that
-> there are more than one compute sessions running on a given dsp.
->
-> They reason why all the users are notified here is because the dsp is
-> going down, so all the compute sessions associated with it will not see
-> any response from dsp, so any pending/waiting compute contexts are
-> explicitly notified.
+> +#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
 
-I don't get it yet. What are 'compute sessions'? Do you have
-multiple threads running on a single instance at the same time?
-I would have expected to only ever see one thread in the
-'wait_for_completion()' above, and others possibly waiting
-for a chance to get to but not already running.
+Unused.
 
-> >> struct fastrpc_remote_crc {
-> >>          __u64 crc;
-> >>          __u64 reserved1
-> >>          __u64 reserved2
-> >>          __u64 reserved3
-> >> };
-> >
-> > I don't see a need to add extra served fields for structures
-> > that are already naturally aligned here, e.g. in
-> > fastrpc_remote_arg we need the 'reserved1' but not
-> > the 'reserved2'.
-> Yes, I see, I overdone it!
-> Other idea, is, may be I can try to combine these into single structure
-> something like:
->
-> struct fastrpc_invoke_arg {
->         __u64 ptr;
->         __u64 len;
->         __u32 fd;
->         __u32 reserved1
->         __u64 attr;
->         __u64 crc;
-> };
->
-> struct fastrpc_ioctl_invoke {
->         __u32 handle;
->         __u32 sc;
->         /* The minimum size is scalar_length * 32*/
->         struct fastrpc_invoke_args *args;
-> };
+> +
+> +static int ls_pcie_establish_link(struct dw_pcie *pci)
+> +{
+> +	return 0;
+> +}
+> +
+> +static const struct dw_pcie_ops ls_pcie_ep_ops = {
+> +	.start_link = ls_pcie_establish_link,
+> +};
+> +
+> +static const struct of_device_id ls_pcie_ep_of_match[] = {
+> +	{ .compatible = "fsl,ls-pcie-ep",},
+> +	{ },
+> +};
+> +
+> +static void ls_pcie_ep_init(struct dw_pcie_ep *ep)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct pci_epc *epc = ep->epc;
+> +	enum pci_barno bar;
+> +
+> +	for (bar = BAR_0; bar <= BAR_5; bar++)
+> +		dw_pcie_ep_reset_bar(pci, bar);
+> +
+> +	epc->features |= EPC_FEATURE_NO_LINKUP_NOTIFIER;
+> +}
+> +
+> +static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> +				  enum pci_epc_irq_type type, u16 interrupt_num)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +
+> +	switch (type) {
+> +	case PCI_EPC_IRQ_LEGACY:
+> +		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
+> +	case PCI_EPC_IRQ_MSI:
+> +		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
+> +	case PCI_EPC_IRQ_MSIX:
+> +		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
+> +	default:
+> +		dev_err(pci->dev, "UNKNOWN IRQ type\n");
+> +	}
+> +
+> +	return 0;
 
-That is still two structure, not one ;-)
+So if it falls through to the default, we log an error but return 0 ? This
+does not make much sense.
 
-> >> struct fastrpc_ioctl_invoke {
-> >>          __u32 handle;
-> >>          __u32 sc;
-> >>          /* The minimum size is scalar_length * 32 */
-> >>          struct fastrpc_remote_args *rargs;
-> >>          struct fastrpc_remote_fd *fds;
-> >>          struct fastrpc_remote_attr *attrs;
-> >>          struct fastrpc_remote_crc *crc;
-> >> };
-> >
-> > Do these really have to be indirect then? Are they all
-> > lists of variable length? How do you know how long?
-> Yes, they are variable length and will be scalar length long.
-> Scalar length is derived from sc variable in this structure.
+I know you probably copy/pasted code from DWC platform, that code must
+be fixed too I suppose.
 
-Do you mean we have a variable number 'sc', but each array
-always has the same length as the other ones? In that
-case: yes, combining them seems sensible.
+Lorenzo
 
-The other question this raises is: what is 'handle'?
-Why is the file descriptor not enough to identify the
-instance we want to talk to?
-
-      Arnd
+> +}
+> +
+> +static struct dw_pcie_ep_ops pcie_ep_ops = {
+> +	.ep_init = ls_pcie_ep_init,
+> +	.raise_irq = ls_pcie_ep_raise_irq,
+> +};
+> +
+> +static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
+> +					struct platform_device *pdev)
+> +{
+> +	struct dw_pcie *pci = pcie->pci;
+> +	struct device *dev = pci->dev;
+> +	struct dw_pcie_ep *ep;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	ep = &pci->ep;
+> +	ep->ops = &pcie_ep_ops;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	ep->phys_base = res->start;
+> +	ep->addr_size = resource_size(res);
+> +
+> +	ret = dw_pcie_ep_init(ep);
+> +	if (ret) {
+> +		dev_err(dev, "failed to initialize endpoint\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct dw_pcie *pci;
+> +	struct ls_pcie_ep *pcie;
+> +	struct resource *dbi_base;
+> +	int ret;
+> +
+> +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> +	if (!pcie)
+> +		return -ENOMEM;
+> +
+> +	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
+> +	if (!pci)
+> +		return -ENOMEM;
+> +
+> +	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
+> +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> +	if (IS_ERR(pci->dbi_base))
+> +		return PTR_ERR(pci->dbi_base);
+> +
+> +	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+> +	pci->dev = dev;
+> +	pci->ops = &ls_pcie_ep_ops;
+> +	pcie->pci = pci;
+> +
+> +	platform_set_drvdata(pdev, pcie);
+> +
+> +	ret = ls_add_pcie_ep(pcie, pdev);
+> +
+> +	return ret;
+> +}
+> +
+> +static struct platform_driver ls_pcie_ep_driver = {
+> +	.driver = {
+> +		.name = "layerscape-pcie-ep",
+> +		.of_match_table = ls_pcie_ep_of_match,
+> +		.suppress_bind_attrs = true,
+> +	},
+> +};
+> +builtin_platform_driver_probe(ls_pcie_ep_driver, ls_pcie_ep_probe);
+> -- 
+> 1.7.1
+> 
