@@ -1,243 +1,55 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 2/5] bcm2835-pm: Move bcm2835-watchdog's DT probe to
- an MFD.
-Date: Fri, 30 Nov 2018 14:10:44 -0800
-Message-ID: <20181130221044.GA15333@roeck-us.net>
-References: <20181130202743.20585-1-eric@anholt.net>
- <20181130202743.20585-3-eric@anholt.net>
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 1/7] dt-bindings: msm/dsi: Add ref clock
+ for PHYs
+Date: Fri, 30 Nov 2018 14:16:50 -0800
+Message-ID: <20181130221650.GB22824@google.com>
+References: <20181126231159.122298-1-mka@chromium.org>
+ <20181126231159.122298-2-mka@chromium.org>
+ <CAD=FV=WvXFpZDJGbdvvY=HL_=tDWyhKpTg7zu8s=gUuJgK1ebg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20181130202743.20585-3-eric@anholt.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, linux-watchdog@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com
+In-Reply-To: <CAD=FV=WvXFpZDJGbdvvY=HL_=tDWyhKpTg7zu8s=gUuJgK1ebg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 30, 2018 at 12:27:40PM -0800, Eric Anholt wrote:
-> The PM block that the wdt driver was binding to actually has multiple
-> features we want to expose (power domains, reset, watchdog).  Move the
-> DT attachment to a MFD driver and make WDT probe against MFD.
-> 
-> Signed-off-by: Eric Anholt <eric@anholt.net>
-
-For watchdog:
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-> ---
-> 
-> v3: don't reset bcm2835_power_off_wdt on remove, drop pm driver's
->     empty remove, sort includes, add a "static".
-> 
->  arch/arm/mach-bcm/Kconfig      |  1 +
->  drivers/mfd/Makefile           |  1 +
->  drivers/mfd/bcm2835-pm.c       | 64 ++++++++++++++++++++++++++++++++++
->  drivers/watchdog/bcm2835_wdt.c | 26 +++++---------
->  include/linux/mfd/bcm2835-pm.h | 13 +++++++
->  5 files changed, 88 insertions(+), 17 deletions(-)
->  create mode 100644 drivers/mfd/bcm2835-pm.c
->  create mode 100644 include/linux/mfd/bcm2835-pm.h
-> 
-> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-> index 25aac6ee2ab1..95242c2162a2 100644
-> --- a/arch/arm/mach-bcm/Kconfig
-> +++ b/arch/arm/mach-bcm/Kconfig
-> @@ -167,6 +167,7 @@ config ARCH_BCM2835
->  	select BCM2835_TIMER
->  	select PINCTRL
->  	select PINCTRL_BCM2835
-> +	select MFD_CORE
->  	help
->  	  This enables support for the Broadcom BCM2835 and BCM2836 SoCs.
->  	  This SoC is used in the Raspberry Pi and Roku 2 devices.
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 12980a4ad460..ee6fb6af655e 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -10,6 +10,7 @@ obj-$(CONFIG_MFD_88PM805)	+= 88pm805.o 88pm80x.o
->  obj-$(CONFIG_MFD_ACT8945A)	+= act8945a.o
->  obj-$(CONFIG_MFD_SM501)		+= sm501.o
->  obj-$(CONFIG_MFD_ASIC3)		+= asic3.o tmio_core.o
-> +obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835-pm.o
->  obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
->  obj-$(CONFIG_MFD_BD9571MWV)	+= bd9571mwv.o
->  cros_ec_core-objs		:= cros_ec.o
-> diff --git a/drivers/mfd/bcm2835-pm.c b/drivers/mfd/bcm2835-pm.c
-> new file mode 100644
-> index 000000000000..53839e6a81e7
-> --- /dev/null
-> +++ b/drivers/mfd/bcm2835-pm.c
-> @@ -0,0 +1,64 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * PM MFD driver for Broadcom BCM2835
-> + *
-> + * This driver binds to the PM block and creates the MFD device for
-> + * the WDT driver.
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/mfd/bcm2835-pm.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/types.h>
-> +#include <linux/watchdog.h>
-> +
-> +static const struct mfd_cell bcm2835_pm_devs[] = {
-> +	{ .name = "bcm2835-wdt" },
-> +};
-> +
-> +static int bcm2835_pm_probe(struct platform_device *pdev)
-> +{
-> +	struct resource *res;
-> +	struct device *dev = &pdev->dev;
-> +	struct bcm2835_pm *pm;
-> +
-> +	pm = devm_kzalloc(dev, sizeof(*pm), GFP_KERNEL);
-> +	if (!pm)
-> +		return -ENOMEM;
-> +	platform_set_drvdata(pdev, pm);
-> +
-> +	pm->dev = dev;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	pm->base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(pm->base))
-> +		return PTR_ERR(pm->base);
-> +
-> +	return devm_mfd_add_devices(dev, -1,
-> +				    bcm2835_pm_devs, ARRAY_SIZE(bcm2835_pm_devs),
-> +				    NULL, 0, NULL);
-> +}
-> +
-> +static const struct of_device_id bcm2835_pm_of_match[] = {
-> +	{ .compatible = "brcm,bcm2835-pm-wdt", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, bcm2835_pm_of_match);
-> +
-> +static struct platform_driver bcm2835_pm_driver = {
-> +	.probe		= bcm2835_pm_probe,
-> +	.driver = {
-> +		.name =	"bcm2835-pm",
-> +		.of_match_table = bcm2835_pm_of_match,
-> +	},
-> +};
-> +module_platform_driver(bcm2835_pm_driver);
-> +
-> +MODULE_AUTHOR("Eric Anholt <eric@anholt.net>");
-> +MODULE_DESCRIPTION("Driver for Broadcom BCM2835 PM MFD");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/watchdog/bcm2835_wdt.c b/drivers/watchdog/bcm2835_wdt.c
-> index ed05514cc2dc..1834524ae373 100644
-> --- a/drivers/watchdog/bcm2835_wdt.c
-> +++ b/drivers/watchdog/bcm2835_wdt.c
-> @@ -12,6 +12,7 @@
->  
->  #include <linux/delay.h>
->  #include <linux/types.h>
-> +#include <linux/mfd/bcm2835-pm.h>
->  #include <linux/module.h>
->  #include <linux/io.h>
->  #include <linux/watchdog.h>
-> @@ -47,6 +48,8 @@ struct bcm2835_wdt {
->  	spinlock_t		lock;
->  };
->  
-> +static struct bcm2835_wdt *bcm2835_power_off_wdt;
-> +
->  static unsigned int heartbeat;
->  static bool nowayout = WATCHDOG_NOWAYOUT;
->  
-> @@ -148,10 +151,7 @@ static struct watchdog_device bcm2835_wdt_wdd = {
->   */
->  static void bcm2835_power_off(void)
->  {
-> -	struct device_node *np =
-> -		of_find_compatible_node(NULL, NULL, "brcm,bcm2835-pm-wdt");
-> -	struct platform_device *pdev = of_find_device_by_node(np);
-> -	struct bcm2835_wdt *wdt = platform_get_drvdata(pdev);
-> +	struct bcm2835_wdt *wdt = bcm2835_power_off_wdt;
->  	u32 val;
->  
->  	/*
-> @@ -169,7 +169,7 @@ static void bcm2835_power_off(void)
->  
->  static int bcm2835_wdt_probe(struct platform_device *pdev)
->  {
-> -	struct resource *res;
-> +	struct bcm2835_pm *pm = dev_get_drvdata(pdev->dev.parent);
->  	struct device *dev = &pdev->dev;
->  	struct bcm2835_wdt *wdt;
->  	int err;
-> @@ -181,10 +181,7 @@ static int bcm2835_wdt_probe(struct platform_device *pdev)
->  
->  	spin_lock_init(&wdt->lock);
->  
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	wdt->base = devm_ioremap_resource(dev, res);
-> -	if (IS_ERR(wdt->base))
-> -		return PTR_ERR(wdt->base);
-> +	wdt->base = pm->base;
->  
->  	watchdog_set_drvdata(&bcm2835_wdt_wdd, wdt);
->  	watchdog_init_timeout(&bcm2835_wdt_wdd, heartbeat, dev);
-> @@ -211,8 +208,10 @@ static int bcm2835_wdt_probe(struct platform_device *pdev)
->  		return err;
->  	}
->  
-> -	if (pm_power_off == NULL)
-> +	if (pm_power_off == NULL) {
->  		pm_power_off = bcm2835_power_off;
-> +		bcm2835_power_off_wdt = wdt;
-> +	}
->  
->  	dev_info(dev, "Broadcom BCM2835 watchdog timer");
->  	return 0;
-> @@ -226,18 +225,11 @@ static int bcm2835_wdt_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> -static const struct of_device_id bcm2835_wdt_of_match[] = {
-> -	{ .compatible = "brcm,bcm2835-pm-wdt", },
-> -	{},
-> -};
-> -MODULE_DEVICE_TABLE(of, bcm2835_wdt_of_match);
-> -
->  static struct platform_driver bcm2835_wdt_driver = {
->  	.probe		= bcm2835_wdt_probe,
->  	.remove		= bcm2835_wdt_remove,
->  	.driver = {
->  		.name =		"bcm2835-wdt",
-> -		.of_match_table = bcm2835_wdt_of_match,
->  	},
->  };
->  module_platform_driver(bcm2835_wdt_driver);
-> diff --git a/include/linux/mfd/bcm2835-pm.h b/include/linux/mfd/bcm2835-pm.h
-> new file mode 100644
-> index 000000000000..b7d0ee1feffa
-> --- /dev/null
-> +++ b/include/linux/mfd/bcm2835-pm.h
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +
-> +#ifndef BCM2835_MFD_PM_H
-> +#define BCM2835_MFD_PM_H
-> +
-> +#include <linux/regmap.h>
-> +
-> +struct bcm2835_pm {
-> +	struct device *dev;
-> +	void __iomem *base;
-> +};
-> +
-> +#endif /* BCM2835_MFD_PM_H */
-> -- 
-> 2.20.0.rc1
-> 
+T24gVHVlLCBOb3YgMjcsIDIwMTggYXQgMDk6NDE6MzlQTSAtMDgwMCwgRG91ZyBBbmRlcnNvbiB3
+cm90ZToKPiBIaSwKPiAKPiBPbiBNb24sIE5vdiAyNiwgMjAxOCBhdCAzOjEyIFBNIE1hdHRoaWFz
+IEthZWhsY2tlIDxta2FAY2hyb21pdW0ub3JnPiB3cm90ZToKPiA+Cj4gPiBBbGxvdyB0aGUgUEhZ
+IGRyaXZlcnMgdG8gZ2V0IHRoZSByZWYgY2xvY2sgZnJvbSB0aGUgRFQuCj4gPgo+ID4gU2lnbmVk
+LW9mZi1ieTogTWF0dGhpYXMgS2FlaGxja2UgPG1rYUBjaHJvbWl1bS5vcmc+Cj4gPiAtLS0KPiA+
+IENoYW5nZXMgaW4gdjI6Cj4gPiAtIGFkZCB0aGUgcmVmIGNsb2NrIGZvciBhbGwgUEhZcywgbm90
+IG9ubHkgdGhlIDEwbm0gb25lCj4gPiAtIHVwZGF0ZWQgY29tbWl0IG1lc3NhZ2UKPiA+IC0tLQo+
+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0
+IHwgMSArCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCj4gPgo+ID4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2ku
+dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50
+eHQKPiA+IGluZGV4IGRmYzc0MzIxOWJkODguLmIwNDg1NTU5YTcxOWMgMTAwNjQ0Cj4gPiAtLS0g
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZHNpLnR4dAo+
+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2Rz
+aS50eHQKPiA+IEBAIC0xMDYsNiArMTA2LDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ICAt
+IGNsb2NrczogUGhhbmRsZXMgdG8gZGV2aWNlIGNsb2Nrcy4gU2VlIFsxXSBmb3IgZGV0YWlscyBv
+biBjbG9jayBiaW5kaW5ncy4KPiA+ICAtIGNsb2NrLW5hbWVzOiB0aGUgZm9sbG93aW5nIGNsb2Nr
+cyBhcmUgcmVxdWlyZWQ6Cj4gPiAgICAqICJpZmFjZSIKPiA+ICsgICogInJlZiIKPiAKPiBXZSBj
+YW4ndCBxdWl0ZSBtYWtlIHJlZiAicmVxdWlyZWQiIGJlY2F1c2UgdGhlcmUgYXJlIHNvbWUgb2xk
+IGRldmljZQo+IHRyZWUgZmlsZXMgZGF0aW5nIGJhY2sgdG8gMjAxNiB0aGF0IHdvdWxkIGJlIGJy
+b2tlbi4gIEl0IGNvdWxkIGJlCj4gbGlzdGVkIGFzIG9wdGlvbmFsLCBidXQgSSBfdGhpbmtfIFJv
+YiBpcyBPSyB3aXRoIGl0IGJlaW5nIGxpc3RlZCBhcwo+ICJyZXF1aXJlZCIgZm9yIGFsbCBuZXcg
+ZGV2aWNlIHRyZWUgZmlsZXMgd2l0aCB0aGUgZm9vdG5vdGUgdGhhdCBpZgo+IGl0J3Mgbm90IHBy
+ZXNlbnQgdGhlbiB0aGUgY29kZSB3aWxsIHN0aWxsIHdvcmsuCgpPaywgd2lsbCB1cGRhdGUgdGhl
+IGNvZGUgdG8ga2VlcCBzdXBwb3J0aW5nIG9sZCBEVCBmaWxlcyBhbmQgdXBkYXRlCnRoZSBkZXNj
+cmlwdGlvbi4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+RnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
