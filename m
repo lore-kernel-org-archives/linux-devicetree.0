@@ -1,57 +1,30 @@
-Return-Path: <SRS0=eLSC=OI=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 4/4] ARM: dts: iwg23s-sbc: Enable RTC
-Date: Thu, 29 Nov 2018 16:54:46 +0000
-Message-Id: <1543510486-29532-5-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543510486-29532-1-git-send-email-biju.das@bp.renesas.com>
-References: <1543510486-29532-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=qqZh=OJ=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com> <1542878075-61314-7-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1542878075-61314-7-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 30 Nov 2018 09:50:15 +0100
+Message-ID: <CAMuHMdX36U9RnK8r1ShFA0b3Cb2r3jrNvzWypHpQ2ODFhRscTg@mail.gmail.com>
+Subject: Re: [PATCH 6/7] ARM: dts: r8a7744: Add Ethernet AVB support
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Enable NXP pcf85263 real time clock for the iWave SBC based on RZ/G1C.
+On Thu, Nov 22, 2018 at 10:23 AM Biju Das <biju.das@bp.renesas.com> wrote:
+> Add Ethernet AVB support for R8A7744 SoC.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-V1-->V2 no change
----
- arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-index 40b7f98..77d1824 100644
---- a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-+++ b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-@@ -84,12 +84,30 @@
- 	clock-frequency = <20000000>;
- };
- 
-+&i2c3 {
-+	pinctrl-0 = <&i2c3_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	rtc@51 {
-+		compatible = "nxp,pcf85263";
-+		reg = <0x51>;
-+	};
-+};
-+
- &pfc {
- 	avb_pins: avb {
- 		groups = "avb_mdio", "avb_gmii_tx_rx";
- 		function = "avb";
- 	};
- 
-+	i2c3_pins: i2c3 {
-+		groups = "i2c3_c";
-+		function = "i2c3";
-+	};
-+
- 	mmc_pins_uhs: mmc_uhs {
- 		groups = "mmc_data8", "mmc_ctrl";
- 		function = "mmc";
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
