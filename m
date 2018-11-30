@@ -1,51 +1,402 @@
-Return-Path: <SRS0=QSTz=OI=partner.samsung.com=k.konieczny@kernel.org>
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: [PATCH v2 2/5] clk: samsung: exynos5433: fix name typo in sssx
-Date: Thu, 29 Nov 2018 16:51:31 +0100
-Message-Id: <20181129155134.19141-3-k.konieczny@partner.samsung.com>
-In-Reply-To: <20181129155134.19141-1-k.konieczny@partner.samsung.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-References: <20181129155134.19141-1-k.konieczny@partner.samsung.com>
-	<CGME20181129155145eucas1p2bcf8fe4747d16d721ade85dc520551e4@eucas1p2.samsung.com>
-To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
-Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Return-Path: <SRS0=X76U=OJ=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v2 02/21] ARM: dts: r8a7744: Initial SoC device tree
+Date: Fri, 30 Nov 2018 15:26:16 +0000
+Message-Id: <1543591595-37861-3-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
+References: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Fix typo in sssx name, there should be three letters 's'.
+Basic support for the RZ/G1N (R8A7744) SoC. Added placeholders
+to avoid compilation error with the common platform code.
 
-Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/clk/samsung/clk-exynos5433.c   | 2 +-
- include/dt-bindings/clock/exynos5433.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+V1-->V2
+   * Fixed pfc register size, GIC_CPU_MASK_SIMPLE in gic/timer nodes
+---
+ arch/arm/boot/dts/r8a7744.dtsi | 369 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 369 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a7744.dtsi
 
-diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
-index ea47f49abc7f..24c3360db65b 100644
---- a/drivers/clk/samsung/clk-exynos5433.c
-+++ b/drivers/clk/samsung/clk-exynos5433.c
-@@ -559,7 +559,7 @@ static const struct samsung_gate_clock top_gate_clks[] __initconst = {
- 	/* ENABLE_ACLK_TOP */
- 	GATE(CLK_ACLK_G3D_400, "aclk_g3d_400", "div_aclk_g3d_400",
- 			ENABLE_ACLK_TOP, 30, CLK_IS_CRITICAL, 0),
--	GATE(CLK_ACLK_IMEM_SSX_266, "aclk_imem_ssx_266",
-+	GATE(CLK_ACLK_IMEM_SSSX_266, "aclk_imem_sssx_266",
- 			"div_aclk_imem_sssx_266", ENABLE_ACLK_TOP,
- 			29, CLK_IGNORE_UNUSED, 0),
- 	GATE(CLK_ACLK_BUS0_400, "aclk_bus0_400", "div_aclk_bus0_400",
-diff --git a/include/dt-bindings/clock/exynos5433.h b/include/dt-bindings/clock/exynos5433.h
-index 98bd85ce1e45..87bb2b017143 100644
---- a/include/dt-bindings/clock/exynos5433.h
-+++ b/include/dt-bindings/clock/exynos5433.h
-@@ -156,7 +156,7 @@
- #define CLK_ACLK_G2D_266		220
- #define CLK_ACLK_G2D_400		221
- #define CLK_ACLK_G3D_400		222
--#define CLK_ACLK_IMEM_SSX_266		223
-+#define CLK_ACLK_IMEM_SSSX_266		223
- #define CLK_ACLK_BUS0_400		224
- #define CLK_ACLK_BUS1_400		225
- #define CLK_ACLK_IMEM_200		226
+diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
+new file mode 100644
+index 0000000..f4d0abd
+--- /dev/null
++++ b/arch/arm/boot/dts/r8a7744.dtsi
+@@ -0,0 +1,369 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the r8a7744 SoC
++ *
++ * Copyright (C) 2018 Renesas Electronics Corp.
++ */
++
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/r8a7744-cpg-mssr.h>
++#include <dt-bindings/power/r8a7744-sysc.h>
++
++/ {
++	compatible = "renesas,r8a7744";
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	/*
++	 * The external audio clocks are configured as 0 Hz fixed frequency
++	 * clocks by default.
++	 * Boards that provide audio clocks should override them.
++	 */
++	audio_clk_a: audio_clk_a {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++
++	audio_clk_b: audio_clk_b {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++
++	audio_clk_c: audio_clk_c {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++
++	/* External CAN clock */
++	can_clk: can {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		/* This value must be overridden by the board. */
++		clock-frequency = <0>;
++	};
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a15";
++			reg = <0>;
++			clock-frequency = <1500000000>;
++			clocks = <&cpg CPG_CORE R8A7744_CLK_Z>;
++			clock-latency = <300000>; /* 300 us */
++			power-domains = <&sysc R8A7744_PD_CA15_CPU0>;
++			next-level-cache = <&L2_CA15>;
++
++			/* kHz - uV - OPPs unknown yet */
++			operating-points = <1500000 1000000>,
++					   <1312500 1000000>,
++					   <1125000 1000000>,
++					   < 937500 1000000>,
++					   < 750000 1000000>,
++					   < 375000 1000000>;
++		};
++
++		L2_CA15: cache-controller-0 {
++			compatible = "cache";
++			cache-unified;
++			cache-level = <2>;
++			power-domains = <&sysc R8A7744_PD_CA15_SCU>;
++		};
++	};
++
++	/* External root clock */
++	extal_clk: extal {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		/* This value must be overridden by the board. */
++		clock-frequency = <0>;
++	};
++
++	/* External PCIe clock - can be overridden by the board */
++	pcie_bus_clk: pcie_bus {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++
++	pmu {
++		compatible = "arm,cortex-a15-pmu";
++		interrupts-extended = <&gic GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
++				      <&gic GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>;
++	};
++
++	/* External SCIF clock */
++	scif_clk: scif {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		/* This value must be overridden by the board. */
++		clock-frequency = <0>;
++	};
++
++	soc {
++		compatible = "simple-bus";
++		interrupt-parent = <&gic>;
++
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		gpio0: gpio@e6050000 {
++			reg = <0 0xe6050000 0 0x50>;
++			#gpio-cells = <2>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			/* placeholder */
++		};
++
++		gpio1: gpio@e6051000 {
++			reg = <0 0xe6051000 0 0x50>;
++			#gpio-cells = <2>;
++			/* placeholder */
++		};
++
++		gpio2: gpio@e6052000 {
++			reg = <0 0xe6052000 0 0x50>;
++			#gpio-cells = <2>;
++			/* placeholder */
++		};
++
++		gpio6: gpio@e6055400 {
++			reg = <0 0xe6055400 0 0x50>;
++			#gpio-cells = <2>;
++			/* placeholder */
++		};
++
++		pfc: pin-controller@e6060000 {
++			compatible = "renesas,pfc-r8a7744";
++			reg = <0 0xe6060000 0 0x250>;
++		};
++
++		cpg: clock-controller@e6150000 {
++			compatible = "renesas,r8a7744-cpg-mssr";
++			reg = <0 0xe6150000 0 0x1000>;
++			clocks = <&extal_clk>, <&usb_extal_clk>;
++			clock-names = "extal", "usb_extal";
++			#clock-cells = <2>;
++			#power-domain-cells = <0>;
++			#reset-cells = <1>;
++		};
++
++		rst: reset-controller@e6160000 {
++			compatible = "renesas,r8a7744-rst";
++			reg = <0 0xe6160000 0 0x100>;
++		};
++
++		sysc: system-controller@e6180000 {
++			compatible = "renesas,r8a7744-sysc";
++			reg = <0 0xe6180000 0 0x200>;
++			#power-domain-cells = <1>;
++		};
++
++		icram0:	sram@e63a0000 {
++			compatible = "mmio-sram";
++			reg = <0 0xe63a0000 0 0x12000>;
++		};
++
++		icram1:	sram@e63c0000 {
++			compatible = "mmio-sram";
++			reg = <0 0xe63c0000 0 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0 0xe63c0000 0x1000>;
++
++			smp-sram@0 {
++				compatible = "renesas,smp-sram";
++				reg = <0 0x100>;
++			};
++		};
++
++		icram2:	sram@e6300000 {
++			compatible = "mmio-sram";
++			reg = <0 0xe6300000 0 0x40000>;
++		};
++
++		i2c2: i2c@e6530000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0 0xe6530000 0 0x40>;
++			/* placeholder */
++		};
++
++		i2c5: i2c@e6528000 {
++			/* doesn't need pinmux */
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0 0xe6528000 0 0x40>;
++			/* placeholder */
++		};
++
++		hsusb: usb@e6590000 {
++			reg = <0 0xe6590000 0 0x100>;
++			/* placeholder */
++		};
++
++		usbphy: usb-phy@e6590100 {
++			reg = <0 0xe6590100 0 0x100>;
++			/* placeholder */
++		};
++
++		avb: ethernet@e6800000 {
++			reg = <0 0xe6800000 0 0x800>, <0 0xee0e8000 0 0x4000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			/* placeholder */
++		};
++
++		scifb1: serial@e6c30000 {
++			reg = <0 0xe6c30000 0 0x100>;
++			/* placeholder */
++		};
++
++		scif0: serial@e6e60000 {
++			compatible = "renesas,scif-r8a7744",
++				     "renesas,rcar-gen2-scif", "renesas,scif";
++			reg = <0 0xe6e60000 0 0x40>;
++			interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 721>,
++				 <&cpg CPG_CORE R8A7744_CLK_ZS>, <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 721>;
++			status = "disabled";
++		};
++
++		scif1: serial@e6e68000 {
++			reg = <0 0xe6e68000 0 0x40>;
++			/* placeholder */
++		};
++
++		hscif1: serial@e62c8000 {
++			reg = <0 0xe62c8000 0 0x60>;
++			/* placeholder */
++		};
++
++		can0: can@e6e80000 {
++			reg = <0 0xe6e80000 0 0x1000>;
++			/* placeholder */
++		};
++
++		can1: can@e6e88000 {
++			reg = <0 0xe6e88000 0 0x1000>;
++			/* placeholder */
++		};
++
++		rcar_sound: sound@ec500000 {
++			reg = <0 0xec500000 0 0x1000>;
++
++			rcar_sound,dvc {
++				dvc0: dvc-0 {};
++				dvc1: dvc-1 {};
++			};
++
++			rcar_sound,src {
++				src2: src-2 {};
++				src3: src-3 {};
++			};
++
++			rcar_sound,ssi {
++				ssi0: ssi-0 {};
++				ssi1: ssi-1 {};
++			};
++			/* placeholder */
++		};
++
++		pci0: pci@ee090000 {
++			reg = <0 0xee090000 0 0xc00>;
++
++			bus-range = <0 0>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			#interrupt-cells = <1>;
++			/* placeholder */
++		};
++
++		pci1: pci@ee0d0000 {
++			reg = <0 0xee0d0000 0 0xc00>;
++
++			bus-range = <1 1>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			#interrupt-cells = <1>;
++			/* placeholder */
++		};
++
++		sdhi1: sd@ee140000 {
++			reg = <0 0xee140000 0 0x100>;
++			/* placeholder */
++		};
++
++		sdhi2: sd@ee160000 {
++			reg = <0 0xee160000 0 0x100>;
++			/* placeholder */
++		};
++
++		gic: interrupt-controller@f1001000 {
++			compatible = "arm,gic-400";
++			#interrupt-cells = <3>;
++			#address-cells = <0>;
++			interrupt-controller;
++			reg = <0 0xf1001000 0 0x1000>, <0 0xf1002000 0 0x2000>,
++			      <0 0xf1004000 0 0x2000>, <0 0xf1006000 0 0x2000>;
++			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_HIGH)>;
++			clocks = <&cpg CPG_MOD 408>;
++			clock-names = "clk";
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 408>;
++		};
++
++		du: display@feb00000 {
++			reg = <0 0xfeb00000 0 0x40000>,
++			      <0 0xfeb90000 0 0x1c>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					du_out_rgb: endpoint {
++					};
++				};
++				port@1 {
++					reg = <1>;
++					du_out_lvds0: endpoint {
++					};
++				};
++			};
++			/* placeholder */
++		};
++
++		prr: chipid@ff000044 {
++			compatible = "renesas,prr";
++			reg = <0 0xff000044 0 4>;
++		};
++	};
++
++	timer {
++		compatible = "arm,armv7-timer";
++		interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
++				      <&gic GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
++				      <&gic GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
++				      <&gic GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>;
++	};
++
++	/* External USB clock - can be overridden by the board */
++	usb_extal_clk: usb_extal {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <48000000>;
++	};
++};
 -- 
-2.19.1
+2.7.4
