@@ -1,7 +1,8 @@
 From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 3/7] ARM: dts: pxa2xx: fix hwuart memory range
-Date: Fri, 30 Nov 2018 18:55:39 +0100
-Message-ID: <20181130175543.32628-4-daniel@zonque.org>
+Subject: [PATCH 6/7] ARM: dts: pxa3xx: clean up pxa3xx clock controller node
+ name
+Date: Fri, 30 Nov 2018 18:55:42 +0100
+Message-ID: <20181130175543.32628-7-daniel@zonque.org>
 References: <20181130175543.32628-1-daniel@zonque.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,29 +22,26 @@ To: robert.jarzmik@free.fr, haojian.zhuang@gmail.com
 Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, Daniel Mack <daniel@zonque.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The memory range for the hwuart is at 0x41600000, not 0x41100000.
-This also solves a conflict with the MMC controller node.
+The clock controller node does not need a unit slave designator as it does
+not have a reg property. Also, remove the underscore from the name.
 
 Signed-off-by: Daniel Mack <daniel@zonque.org>
 ---
- arch/arm/boot/dts/pxa2xx.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/pxa3xx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/pxa2xx.dtsi b/arch/arm/boot/dts/pxa2xx.dtsi
-index 7d3dfa8259f8..30e77ebbcc4d 100644
---- a/arch/arm/boot/dts/pxa2xx.dtsi
-+++ b/arch/arm/boot/dts/pxa2xx.dtsi
-@@ -117,9 +117,9 @@
- 			status = "disabled";
- 		};
+diff --git a/arch/arm/boot/dts/pxa3xx.dtsi b/arch/arm/boot/dts/pxa3xx.dtsi
+index de49e7f666c0..6131491ab5e7 100644
+--- a/arch/arm/boot/dts/pxa3xx.dtsi
++++ b/arch/arm/boot/dts/pxa3xx.dtsi
+@@ -292,7 +292,7 @@
+ 		#size-cells = <1>;
+ 		ranges;
  
--		hwuart: serial@41100000 {
-+		hwuart: serial@41600000 {
- 			compatible = "mrvl,pxa-uart";
--			reg = <0x41100000 0x30>;
-+			reg = <0x41600000 0x30>;
- 			interrupts = <7>;
- 			status = "disabled";
- 		};
+-		clks: pxa3xx_clks@41300004 {
++		clks: clocks {
+ 			compatible = "marvell,pxa300-clocks";
+ 			#clock-cells = <1>;
+ 			status = "okay";
 -- 
 2.19.2
