@@ -1,106 +1,50 @@
-Return-Path: <SRS0=Q87M=OJ=bootlin.com=miquel.raynal@kernel.org>
-Date: Fri, 30 Nov 2018 11:58:21 +0100
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 2/4] clk: mvebu: armada-37xx-periph: change
- suspend/resume time
-Message-ID: <20181130115821.255394d4@xps13>
-In-Reply-To: <154353827849.88331.12767996548874447262@swboyd.mtv.corp.google.com>
-References: <20181123094444.27956-1-miquel.raynal@bootlin.com>
-	<20181123094444.27956-3-miquel.raynal@bootlin.com>
-	<154353827849.88331.12767996548874447262@swboyd.mtv.corp.google.com>
+Return-Path: <sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>
+From: Stephen Boyd <sboyd@kernel.org>
+In-Reply-To: <20181123094444.27956-3-miquel.raynal@bootlin.com>
+References: <20181123094444.27956-1-miquel.raynal@bootlin.com>
+ <20181123094444.27956-3-miquel.raynal@bootlin.com>
+Message-ID: <154353827849.88331.12767996548874447262@swboyd.mtv.corp.google.com>
+Subject: Re: [PATCH 2/4] clk: mvebu: armada-37xx-periph: change suspend/resume time
+Date: Thu, 29 Nov 2018 16:37:58 -0800
+To: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Stephen,
+Quoting Miquel Raynal (2018-11-23 01:44:41)
+> Armada 3700 PCIe IP relies on the PCIe clock managed by this
+> driver. For reasons related to the PCI core's organization when
+> suspending/resuming, PCI host controller drivers must reconfigure
+> their register at suspend_noirq()/resume_noirq() which happens after
+> suspend()/suspend_late() and before resume_early()/resume().
+> =
 
-+ Bjorn to help us on PCI suspend/resume questions.
+> Device link support in the clock framework enforce that the clock
+> driver's resume() callback will be called before the PCIe
+> driver's. But, any resume_noirq() callback will be called before all
+> the registered resume() callbacks.
 
-Stephen Boyd <sboyd@kernel.org> wrote on Thu, 29 Nov 2018 16:37:58
--0800:
+I thought any device driver that provides something to another device
+driver will implicitly be probed before the driver that consumes said
+resources. And we actually reorder the dpm list on probe defer so that
+the order of devices is correct. Is it more that we want to parallelize
+suspend/resume of the PCIe chip so we need to have device links so that
+we know the dependency of the PCIe driver on the clock driver?
 
-> Quoting Miquel Raynal (2018-11-23 01:44:41)
-> > Armada 3700 PCIe IP relies on the PCIe clock managed by this
-> > driver. For reasons related to the PCI core's organization when
-> > suspending/resuming, PCI host controller drivers must reconfigure
-> > their register at suspend_noirq()/resume_noirq() which happens after
-> > suspend()/suspend_late() and before resume_early()/resume().
-> >=20
-> > Device link support in the clock framework enforce that the clock
-> > driver's resume() callback will be called before the PCIe
-> > driver's. But, any resume_noirq() callback will be called before all
-> > the registered resume() callbacks. =20
->=20
-> I thought any device driver that provides something to another device
-> driver will implicitly be probed before the driver that consumes said
-> resources. And we actually reorder the dpm list on probe defer so that
-> the order of devices is correct. Is it more that we want to parallelize
-> suspend/resume of the PCIe chip so we need to have device links so that
-> we know the dependency of the PCIe driver on the clock driver?
+> =
 
-I had the same idea of device links before testing. I hope I did
-not make any mistake leading me to wrong observations, but indeed
-this is what I think is happening:
-* PM core call all suspend() callbacks
-* then all suspend_late()
-* then all suspend_noirq()
-For me, the PM core does not care if a suspend_noirq() depends on the
-suspend() of another driver.
+> The solution to support PCIe resume operation is to change the
+> "priority" of this clock driver PM callbacks to "_noirq()".
 
-I hope I did not miss anything.
+This seems sad that the PM core can't "priority boost" any
+suspend/resume callbacks of a device that doesn't have noirq callbacks
+when a device that depends on it from the device link perspective does
+have noirq callbacks. And why does the PCIe device need to use noirq
+callbacks in general?
 
->=20
-> >=20
-> > The solution to support PCIe resume operation is to change the
-> > "priority" of this clock driver PM callbacks to "_noirq()". =20
->=20
-> This seems sad that the PM core can't "priority boost" any
-> suspend/resume callbacks of a device that doesn't have noirq callbacks
-> when a device that depends on it from the device link perspective does
-> have noirq callbacks.
-
-I do agree on this but I'm not sure it would work. I suppose the
-"noirq" state is a global state and thus code in regular suspend()
-callbacks could probably fail to run in a "noirq" context?
-
-> And why does the PCIe device need to use noirq callbacks in general?
-
-I would like Bjorn to confirm this, but there is this commit that could
-explain the situation:
-
-commit ab14d45ea58eae67c739e4ba01871cae7b6c4586
-Author: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Date:   Tue Mar 17 15:55:45 2015 +0100
-
-    PCI: mvebu: Add suspend/resume support
-   =20
-    Add suspend/resume support for the mvebu PCIe host driver.  Without this
-    commit, the system will panic at resume time when PCIe devices are
-    connected.
-   =20
-    Note that we have to use the ->suspend_noirq() and ->resume_noirq() hoo=
-ks,
-    because at resume time, the PCI fixups are done at ->resume_noirq() tim=
-e,
-    so the PCIe controller has to be ready at this point.
-   =20
-    Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-    Acked-by: Jason Cooper <jason@lakedaemon.net>
-
->=20
-> I'm just saying this seems like a more fundamental problem with ordering
-> of provider and consumer suspend/resume functions that isn't being
-> solved in this patch. In fact, it's quite the opposite, this is working
-> around the problem.
->=20
-
-I do agree with your point, but I would not be confident tweaking the PM
-core's scheduling "alone" :)
-
-
-Thanks,
-Miqu=C3=A8l
+I'm just saying this seems like a more fundamental problem with ordering
+of provider and consumer suspend/resume functions that isn't being
+solved in this patch. In fact, it's quite the opposite, this is working
+around the problem.
