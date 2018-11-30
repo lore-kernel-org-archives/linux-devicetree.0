@@ -1,68 +1,38 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v18 1/5] iommu/arm-smmu: Add
- pm_runtime/sleep ops
-Date: Fri, 30 Nov 2018 18:15:37 +0000
-Message-ID: <20181130181536.GA15274@arm.com>
-References: <20181127101145.7682-1-vivek.gautam@codeaurora.org>
- <20181127101145.7682-2-vivek.gautam@codeaurora.org>
- <154342225921.88331.14467967828250776155@swboyd.mtv.corp.google.com>
- <0d76b669-6c4f-7c3b-50a1-084201f2c07a@arm.com>
- <CAFp+6iEC8hobAdVF5nLdhQdCUqbi1xa4Vi-NLugGshV=dg+h1A@mail.gmail.com>
+From: Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v10 3/3] clk: qcom: Add lpass clock controller driver for
+ SDM845
+Date: Fri, 30 Nov 2018 23:47:17 +0530
+Message-ID: <0691834a-e2bf-20bb-fa5c-081ee6668250@codeaurora.org>
+References: <1542873221-13693-1-git-send-email-tdas@codeaurora.org>
+ <1542873221-13693-4-git-send-email-tdas@codeaurora.org>
+ <154331006901.88331.9760589510991406736@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAFp+6iEC8hobAdVF5nLdhQdCUqbi1xa4Vi-NLugGshV=dg+h1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
- Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <154331006901.88331.9760589510991406736@swboyd.mtv.corp.google.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBOb3YgMjksIDIwMTggYXQgMDg6MjU6MjBQTSArMDUzMCwgVml2ZWsgR2F1dGFtIHdy
-b3RlOgo+IE9uIFdlZCwgTm92IDI4LCAyMDE4IGF0IDEwOjA3IFBNIFJvYmluIE11cnBoeSA8cm9i
-aW4ubXVycGh5QGFybS5jb20+IHdyb3RlOgo+ID4KPiA+IE9uIDI4LzExLzIwMTggMTY6MjQsIFN0
-ZXBoZW4gQm95ZCB3cm90ZToKPiA+ID4gUXVvdGluZyBWaXZlayBHYXV0YW0gKDIwMTgtMTEtMjcg
-MDI6MTE6NDEpCj4gPiA+PiBAQCAtMTk2Niw2ICsxOTcwLDIzIEBAIHN0YXRpYyBjb25zdCBzdHJ1
-Y3Qgb2ZfZGV2aWNlX2lkIGFybV9zbW11X29mX21hdGNoW10gPSB7Cj4gPiA+PiAgIH07Cj4gPiA+
-PiAgIE1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIGFybV9zbW11X29mX21hdGNoKTsKPiA+ID4+Cj4g
-PiA+PiArc3RhdGljIHZvaWQgYXJtX3NtbXVfZmlsbF9jbGtfZGF0YShzdHJ1Y3QgYXJtX3NtbXVf
-ZGV2aWNlICpzbW11LAo+ID4gPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBj
-b25zdCBjaGFyICogY29uc3QgKmNsa3MpCj4gPiA+PiArewo+ID4gPj4gKyAgICAgICBpbnQgaTsK
-PiA+ID4+ICsKPiA+ID4+ICsgICAgICAgaWYgKHNtbXUtPm51bV9jbGtzIDwgMSkKPiA+ID4+ICsg
-ICAgICAgICAgICAgICByZXR1cm47Cj4gPiA+PiArCj4gPiA+PiArICAgICAgIHNtbXUtPmNsa3Mg
-PSBkZXZtX2tjYWxsb2Moc21tdS0+ZGV2LCBzbW11LT5udW1fY2xrcywKPiA+ID4+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBzaXplb2YoKnNtbXUtPmNsa3MpLCBHRlBfS0VSTkVM
-KTsKPiA+ID4+ICsgICAgICAgaWYgKCFzbW11LT5jbGtzKQo+ID4gPj4gKyAgICAgICAgICAgICAg
-IHJldHVybjsKPiA+ID4+ICsKPiA+ID4+ICsgICAgICAgZm9yIChpID0gMDsgaSA8IHNtbXUtPm51
-bV9jbGtzOyBpKyspCj4gPiA+PiArICAgICAgICAgICAgICAgc21tdS0+Y2xrc1tpXS5pZCA9IGNs
-a3NbaV07Cj4gPiA+Cj4gPiA+IElzIHRoaXMgY2xrX2J1bGtfZ2V0X2FsbCgpPwo+IAo+IEZyb20g
-d2hhdCBJIHJlbWVtYmVyLCBhbmQgbm93IEkgY291bGQgZ28gYmFjayB0byB2NyBhbmQgY2hlY2sg
-WzFdLCB3ZSBwYXJrZWQKPiBjbGtfYnVsa19nZXQgb3V0IG9mIE9GJ3Mgc29sZSBwdXJ2aWV3IGFz
-IHdlIGFsc28gaGF2ZQo+IGFybV9zbW11X2RldmljZV9hY3BpX3Byb2JlKCkgYmVzaWRlcyBhcm1f
-c21tdV9kZXZpY2VfZHRfcHJvYmUoKS4KPiAKPiBhcm1fc21tdV9kZXZpY2VfZHRfcHJvYmUoKSBj
-b3VsZCBnZXQgdGhlIGNsb2NrcyBmcm9tIGR0IGFuZCBmaWxsIGluCj4gdGhlIGNsb2NrIGJ1bGsg
-ZGF0YSwgYW5kCj4gc2ltaWxhcmx5LCBhcm1fc21tdV9kZXZpY2VfYWNwaV9wcm9iZSgpIGNvdWxk
-IGZpbGwgdGhlIGNsb2NrIGJ1bGsgZGF0YQo+IGJ5IGdldHRpbmcgaXQgZnJvbSBBQ1BJLgo+IAo+
-IGNsa19idWxrX2dldF9hbGwoKSBzZWVtcyBsaWtlIGdvaW5nIG9ubHkgdGhlIE9GIHdheS4KPiBJ
-cyB0aGVyZSBhbm90aGVyIHdheSBoZXJlIHRvIGhhdmUgc29tZXRoaW5nIGNvbW1vbiBiZXR3ZWVu
-IEFDUEkKPiBhbmQgT0YsIGFuZCB0aGVuIGRvIHRoZSBjbGtfYnVsa19nZXQ/CgpJJ2Qgc2F5IGp1
-c3QgZ28gd2l0aCBjbGtfYnVsa19nZXRfYWxsKCkgYW5kIGlmIHNvbWVib2R5IHJlYWxseSB3YW50
-cyB0bwptZXNzIHdpdGggdGhlIFNNTVUgY2xvY2tzIG9uIGEgc3lzdGVtIGJvb3RlZCB2aWEgQUNQ
-SSwgdGhlbiBpdCdzIHRoZWlyCnByb2JsZW0gdG8gc29sdmUuIE15IHVuZGVyc3RhbmRpbmcgaXMg
-dGhhdCB0aGUgZGVzaWduIG9mIElPUlQgbWFrZXMgdGhpcwpuZXh0IHRvIGltcG9zc2libGUgdG8g
-c29sdmUgYW55d2F5LCBiZWNhdXNlIGEgc3RhdGljIHRhYmxlIGlzIHVzZWQgYW5kCnRoZXJlZm9y
-ZSB3ZSdyZSB1bmFibGUgdG8gcnVuIHdoYXRldmVyIEFTTCBtZXRob2RzIG5lZWQgdG8gYmUgaW52
-b2tlZCB0bwptZXNzIHdpdGggdGhlIGNsb2Nrcy4KCldpbGwKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJl
-bm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+Hello Stephen,
+
+On 11/27/2018 2:44 PM, Stephen Boyd wrote:
+> Quoting Taniya Das (2018-11-21 23:53:41)
+>> +
+>> +static struct clk_branch lpass_qdsp6ss_core_clk = {
+>> +       .halt_reg = 0x20,
+>> +       /* CLK_OFF would not toggle until LPASS is not out of reset */
+> 
+> Is this really "CLK_OFF won't toggle until LPASS it out of reset"?
+> 
+
+Would take care of it, in the next series.
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
