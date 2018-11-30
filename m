@@ -1,88 +1,48 @@
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: Re: [RFC PATCH] of: Add a GitLab CI config file for unittests
-Date: Sat, 1 Dec 2018 00:20:15 +0100
-Message-ID: <CAKMK7uFoAKgKmqaz2GpTq958CijTp6EOJVYFcNKPcm1yEyqa0g@mail.gmail.com>
-References: <20181130203232.5743-1-robh@kernel.org>
- <CAKMK7uGrBnaip1E+vp6foGfvdRb2=bhPNOmmZfjTUt2HZPLQcA@mail.gmail.com>
- <CAL_JsqKwnzA+e6pbfUCzCX5ZCJAYixjJtDV2Dfh9u-bgOBKYHQ@mail.gmail.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH] ARM: dts: aspeed: add missing memory unit-address
+Date: Fri, 30 Nov 2018 15:20:40 -0800
+Message-ID: <20181130232040.z4i4sm5dsycxbmlu@localhost>
+References: <20181130015251.20754-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqKwnzA+e6pbfUCzCX5ZCJAYixjJtDV2Dfh9u-bgOBKYHQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20181130015251.20754-1-robh@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
+Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, arm@kernel.org, Joel Stanley <joel@jms.id.au>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBOb3YgMzAsIDIwMTggYXQgMTE6MjIgUE0gUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
-Lm9yZz4gd3JvdGU6Cj4KPiBPbiBGcmksIE5vdiAzMCwgMjAxOCBhdCAyOjUzIFBNIERhbmllbCBW
-ZXR0ZXIgPGRhbmllbC52ZXR0ZXJAZmZ3bGwuY2g+IHdyb3RlOgo+ID4KPiA+IE9uIEZyaSwgTm92
-IDMwLCAyMDE4IGF0IDk6MzIgUE0gUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6
-Cj4gPiA+Cj4gPiA+IFRoaXMgYWRkcyBhIEdpdExhYiBDSSBjb25maWcgZmlsZSBydW5uaW5nIHRo
-ZSBEVCB1bml0dGVzdCBpbiBhIHVzZXJtb2RlCj4gPiA+IExpbnV4IGJ1aWxkLiBUaGUgY29ycmVz
-cG9uZGluZyBDSSBqb2IgY2FuIGJlIGZvdW5kIGhlcmU6Cj4gPiA+Cj4gPiA+IGh0dHBzOi8vZ2l0
-bGFiLmNvbS9yb2JoZXJyaW5nL2xpbnV4LWR0LXVuaXR0ZXN0L3BpcGVsaW5lcwo+ID4gPgo+ID4g
-PiBUaGlzIENJIGpvYiBjYW4gYmUgZHVwbGljYXRlZCBieSBvdGhlcnMgYnkgY3JlYXRpbmcgYSBr
-ZXJuZWwgcmVwbyBvbiBhCj4gPiA+IEdpdExhYiBpbnN0YW5jZSBhbmQgY29uZmlndXJpbmcgR2l0
-TGFiIENJIHRvIHVzZQo+ID4gPiBkcml2ZXJzL29mLy5naXRsYWItY2kueW1sIGNvbmZpZyBmaWxl
-Lgo+ID4gPgo+ID4gPiBDYzogRnJhbmsgUm93YW5kIDxmcm93YW5kLmxpc3RAZ21haWwuY29tPgo+
-ID4gPiBDYzogRGFuaWVsIFZldHRlciA8ZGFuaWVsLnZldHRlckBmZndsbC5jaD4KPiA+ID4gU2ln
-bmVkLW9mZi1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPiA+Cj4gPiBBZGRpbmcg
-ZHJpLWRldmVsLgo+ID4KPiA+ID4gLS0tCj4gPiA+ICBkcml2ZXJzL29mLy5naXRsYWItY2kueW1s
-IHwgMTggKysrKysrKysrKysrKysrKysrCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTggaW5zZXJ0
-aW9ucygrKQo+ID4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvb2YvLmdpdGxhYi1jaS55
-bWwKPiA+ID4KPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvLmdpdGxhYi1jaS55bWwgYi9k
-cml2ZXJzL29mLy5naXRsYWItY2kueW1sCj4gPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiA+
-IGluZGV4IDAwMDAwMDAwMDAwMC4uNDRhNDgyNGY1YzMzCj4gPiA+IC0tLSAvZGV2L251bGwKPiA+
-ID4gKysrIGIvZHJpdmVycy9vZi8uZ2l0bGFiLWNpLnltbAo+ID4gPiBAQCAtMCwwICsxLDE4IEBA
-Cj4gPiA+ICsjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wKwo+ID4gPiArCj4gPiA+
-ICtpbWFnZTogcmVnaXN0cnkuZ2l0bGFiLmNvbS9yb2JoZXJyaW5nL2RvY2tlci1pbWFnZXMvdWJ1
-bnR1LWtlcm5lbC1idWlsZAo+ID4KPiA+IEkgdGhpbmsgaXQncyBiZXR0ZXIgdG8gaW5jbHVkZSB0
-aGUgZG9ja2VyIHJlY2lwZSB0b28uIE9uZSBiZWNhdXNlCj4gPiBzaGlwcGluZyBwcmUtYnVpbHQg
-ZG9ja2VycyBpcyBhIGxpY2Vuc2UgbmlnaHRtYXJlLCBzZWNvbmQgYmVjYXVzZQo+ID4gYmV0dGVy
-IGhhY2thYmlsaXR5LiBGb3IgYSBmdWxsIG9uIGV4YW1wbGUgc2VlOgo+ID4KPiA+IGh0dHBzOi8v
-Z2l0bGFiLmZyZWVkZXNrdG9wLm9yZy9kcm0vaWd0LWdwdS10b29scy9ibG9iL21hc3Rlci8uZ2l0
-bGFiLWNpLnltbAo+Cj4gSHVtbSwgYnV0IGluIHRoZSBlbmQgeW91IGFyZSBzdGlsbCBwdWJsaXNo
-aW5nIHRoZSBkb2NrZXIgaW1hZ2VzIGVpdGhlcgo+IHdheS4gSXQncyBqdXN0IGEgZGlmZmVyZW5j
-ZSBvZiBwdWJsaXNoaW5nIGFjcm9zcyBwcm9qZWN0cyBhbmQgd2hldGhlcgo+IGl0J3MgMiBqb2Jz
-IG9yIDEgam9iIHdpdGggMiBzdGFnZXMuCgpZZWFoLCBidXQgaXQgY29tZXMgd2l0aCBzb3VyY2Vz
-IGZvciByZWJ1aWxkaW5nIHRoZSBpbWFnZSA6LSkKCj4gSSBkbyB0ZW5kIHRvIHByZWZlciB0aGUg
-VHJhdmlzLUNJIHNpbXBsaWNpdHkgb2YganVzdCBsaXN0aW5nIHBhY2thZ2VzCj4gdG8gaW5zdGFs
-bC4gSXQgc2VlbXMgbGlrZSB0aGUgc2FtZSBjb3VsZCBiZSBkb25lIHdpdGggZG9ja2VyIGFuZCBz
-b21lCj4gbWFnaWMgb24gdGhlIHNlcnZlciBzaWRlLiBBdCBsZWFzdCBmb3IgdGhlIHNpbXBsZSBj
-YXNlIG9mICdpbnN0YWxsCj4gdGhpcyBsaXN0IG9mIHBhY2thZ2VzJy4KClllYWgsIGdpdGxhYiBp
-cyBhIGJ1bmNoIG1vcmUgZXhwbGljaXQsIGFuZCB5b3UgbmVlZCB0byBkbyB5b3VyIGNhY2hpbmcK
-b2YgdGhlIHNldHVwIHlvdSB3YW50IHlvdXJzZWxmLgoKPiA+IEZvciB0aGUga2VybmVsIEkgZ3Vl
-c3MgdGhlIHF1ZXN0aW9uIGlzIHdoZXJlIHdlIHNob3VsZCBwdXQgYWxsIHRoZQo+ID4gZG9ja2Vy
-IGZpbGVzLiBUaGVyZSdzIGdvaW5nIHRvIGJlIHNvbWUgbmVlZCBmb3Igc3Vic3lzdGVtIHNwZWNp
-ZmljCj4gPiB0b29saW5nIChlLmcuIHdlIHdhbnQgc29tZXRoaW5nIHRoYXQgaGFzIGlndCBpbnN0
-YWxsZWQgZXZlbnR1YWxseSBmb3IKPiA+IGFueXRoaW5nIGRybSksIHNvIG1heWJlIGp1c3Qga2Vl
-cGluZyB0aGVtIGluIHN1YnN5c3RlbSBkaXJlY3RvcmllcyBpcwo+ID4gYmVzdC4gV2FzIGF0IGxl
-YXN0IG15IHBsYW4gd2l0aCBkcml2ZXJzL2dwdS4KPgo+IE15IHBsYW4gKHRvIHRoZSBleHRlbnQg
-SSBoYXZlIG9uZSkgd2FzIHRvIHB1dCB0aGUgY29tbW9uIHBhcnRzIGludG8KPiB0aGUgZG9ja2Vy
-IGltYWdlIGFuZCBsZWF2ZSB0aGUgc21hbGwgam9iIHNwZWNpZmljIHRoaW5ncyBpbiB0aGUgam9i
-Cj4gc2V0dXAuIFRoZW4gSSBjYW4gdXNlIHRoZSBzYW1lIGRvY2tlciBpbWFnZSBhY3Jvc3Mgam9i
-cy4gTWF5YmUgdGhhdCdzCj4gYSBwb2ludGxlc3MgZ29hbCBpbiB0aGUgZG9ja2VyIHdvcmxkLgoK
-V2UgZG8gdGhhdCB0b28uIFRoZSBkaWZmZXJlbnQgZG9ja2VyIGltYWdlcyB3ZSBoYXZlIGlzIGZv
-ciBkaWZmZXJlbnQKdGVzdGluZyAobmV3L29sZCBkaXN0cm9zLCBhbmQgdGhlIGNyb3NzIGJ1aWxk
-IGNoYWluIGluIHVzZXJzcGFjZQpjb25mbGljdHMsIHNvIG5lZWQgc2VwYXJhdGUgZG9ja2VyIGlt
-YWdlcyBmb3IgdGhhdCkuIEFzaWRlIGZyb20gdGhvc2UKY2FzZXMgd2hlcmUgd2UgbmVlZCBkaWZm
-ZXJlbnQgaW1hZ2VzIGJlY2F1c2UgdGhleSdyZSBpbmNvbXBhdGlibGUsIHdlCmRvIHJldXNlIHRo
-ZW0uCgpGb3IgdGhlIGtlcm5lbCB0aGVyZSdzIG11Y2ggbGVzcyBvZiB0aGVzZSB1c2Vyc3BhY2Ug
-cHJvYmxlbXMsIHNvIG9uZQppbWFnZSBzaG91bGQgYmUgZ29vZCBlbm91Z2ggZm9yIGFsbCBqb2Jz
-LgotRGFuaWVsCgo+IE15IGRvY2tlcmZpbGUgaXMgc2ltcGxlIGVub3VnaCwgSSBjb3VsZCBwcm9i
-YWJseSBqdXN0IGNyZWF0ZSBpdCB3aXRoaW4KPiB0aGUgLmdpdGxhYi1jaS55bWwuCj4KPiBSb2IK
-CgoKLS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9u
-Cis0MSAoMCkgNzkgMzY1IDU3IDQ4IC0gaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
-dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Thu, Nov 29, 2018 at 07:52:51PM -0600, Rob Herring wrote:
+> The base aspeed-g5.dtsi already defines a '/memory@80000000' node, so
+> '/memory' in the board files create a duplicate node. We're probably
+> getting lucky that the bootloader fixes up the memory node that the
+> kernel ends up using. Add the unit-address so it's merged with the base
+> node.
+> 
+> Found with DT json-schema checks.
+> 
+> Cc: Joel Stanley <joel@jms.id.au>
+> Cc: Andrew Jeffery <andrew@aj.id.au>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-aspeed@lists.ozlabs.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Might be better to just remove the node altogether from the SoC dtsi 
+> file. It's only saving the device_type definition.
+
+Since I'm sweeping DT pull requests right now, and this is pretty
+straightforward, I've applied it to next/dt directly.
+
+
+-Olof
