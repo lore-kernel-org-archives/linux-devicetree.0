@@ -1,40 +1,41 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] dt-bindings: clock: Require #reset-cells in sdm845-videocc
-Date: Fri, 30 Nov 2018 01:01:35 -0800
-Message-ID: <154356849500.88331.9932899465368459791@swboyd.mtv.corp.google.com>
-References: <20181127192443.136158-1-dianders@chromium.org>
+From: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v1] drm/bridge: fix AUX_CMD_SEND bit value for
+ ti, sn65dsi86 bridge
+Date: Fri, 30 Nov 2018 14:57:45 +0530
+Message-ID: <20181130092745.4219-1-spanda@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181127192443.136158-1-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org, Taniya Das <tdas@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Douglas Anderson (2018-11-27 11:24:43)
-> The #reset-cells was listed as optional in the bindings for
-> qcom,sdm845-videocc.  There's no reason for it to be optional.  As per
-> Stephen [1]:
-> =
-
-> > We should update the binding to make it a required property. It
-> > doesn't make any sense why that property would be optional given
-> > that the hardware either has support for resets or it doesn't.
-> =
-
-> sdm845 support is still in its infancy so we shouldn't be affecting
-> any real device trees by modifying the bindings here.
-> =
-
-> [1] https://lkml.kernel.org/r/154330186815.88331.12720647562079303842@swb=
-oyd.mtv.corp.google.com
-> =
-
-> Fixes: 84b66b211603 ("dt-bindings: clock: Introduce QCOM Video clock bind=
-ings")
-> Suggested-by: Stephen Boyd <sboyd@kernel.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-
-Applied to clk-next
+Rml4IHRoZSBBVVhfQ01EX1NFTkQgYml0IGZvciB0aSxzbjY1ZHNpODYgYnJpZGdlIGNoaXAuIFdp
+dGggd3JvbmcKdmFsdWUgdGhlIGRwY2QgYXV4IHRyYW5zYWN0aW9ucyB3aXRoIGVEUCBwYW5lbCBh
+cmUgZmFpbGluZy4KClNpZ25lZC1vZmYtYnk6IFNhbmRlZXAgUGFuZGEgPHNwYW5kYUBjb2RlYXVy
+b3JhLm9yZz4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RpLXNuNjVkc2k4Ni5jIHwgMiAr
+LQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aS1zbjY1ZHNpODYuYyBiL2RyaXZlcnMvZ3B1
+L2RybS9icmlkZ2UvdGktc242NWRzaTg2LmMKaW5kZXggNjgwNTY2ZDk3YWRjZi4uMTAyNDM5NjVl
+ZTdjMCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aS1zbjY1ZHNpODYuYwor
+KysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RpLXNuNjVkc2k4Ni5jCkBAIC01NCw3ICs1NCw3
+IEBACiAjZGVmaW5lIFNOX0FVWF9BRERSXzdfMF9SRUcJCQkweDc2CiAjZGVmaW5lIFNOX0FVWF9M
+RU5HVEhfUkVHCQkJMHg3NwogI2RlZmluZSBTTl9BVVhfQ01EX1JFRwkJCQkweDc4Ci0jZGVmaW5l
+ICBBVVhfQ01EX1NFTkQJCQkJQklUKDEpCisjZGVmaW5lICBBVVhfQ01EX1NFTkQJCQkJQklUKDAp
+CiAjZGVmaW5lICBBVVhfQ01EX1JFUSh4KQkJCQkoKHgpIDw8IDQpCiAjZGVmaW5lIFNOX0FVWF9S
+REFUQV9SRUcoeCkJCQkoMHg3OSArICh4KSkKICNkZWZpbmUgU05fU1NDX0NPTkZJR19SRUcJCQkw
+eDkzCi0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIg
+b2YgdGhlIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2
+ZSBQcm9qZWN0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
