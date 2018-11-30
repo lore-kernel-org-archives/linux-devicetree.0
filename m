@@ -1,60 +1,68 @@
-From: Thierry Escande <thierry.escande@linaro.org>
-Subject: Re: [RFC PATCH 6/6] char: fastrpc: Add support for compat ioctls
-Date: Fri, 30 Nov 2018 14:50:32 +0100
-Message-ID: <ff3caa6c-6df1-b83f-5237-25fc024b0143@linaro.org>
-References: <20181130104657.14875-1-srinivas.kandagatla@linaro.org>
- <20181130104657.14875-7-srinivas.kandagatla@linaro.org>
- <CAK8P3a1XaGHu3NrAeLn0OEg0nL1uae_MyrP7EgadJpfeeXtR2Q@mail.gmail.com>
- <2dbd06c5-d094-6d16-2983-131d3ae24c8d@linaro.org>
- <CAK8P3a3DsADgQo7b1B5vWV2Ws8mOpB1ixbi5tR=Z6cfvp+eZpA@mail.gmail.com>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH 1/2] dt-bindings: trivial: add ti,lm3630a binding
+Date: Fri, 30 Nov 2018 08:59:27 -0500
+Message-ID: <20181130135927.GA27500@basecamp>
+References: <20181124141703.29232-1-masneyb@onstation.org>
+ <20181127105642.uu56phxjfl7bjl2p@holly.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a3DsADgQo7b1B5vWV2Ws8mOpB1ixbi5tR=Z6cfvp+eZpA@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181127105642.uu56phxjfl7bjl2p@holly.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, gregkh <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm@vger.kernel.org, bkumar@qti.qualcomm.com
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: lee.jones@linaro.org, jingoohan1@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, jonathan@marek.ca, ctatlor97@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 30/11/2018 14:46, Arnd Bergmann wrote:
-> On Fri, Nov 30, 2018 at 2:20 PM Thierry Escande
-> <thierry.escande@linaro.org> wrote:
->> On 30/11/2018 13:58, Arnd Bergmann wrote:
->>> On Fri, Nov 30, 2018 at 11:48 AM Srinivas Kandagatla
->>> <srinivas.kandagatla@linaro.org> wrote:
->>>>
->>>> From: Thierry Escande <thierry.escande@linaro.org>
->>>>
->>>> This patch adds support for compat ioctl from 32 bits userland to
->>>> Qualcomm fastrpc driver.
->>>>
->>>> Supported ioctls in this change are INIT, INVOKE, and ALLOC/FREE_DMA.
->>>>
->>>> Most of the work is derived from various downstream Qualcomm kernels.
->>>> Credits to various Qualcomm authors who have contributed to this code.
->>>> Specially Tharun Kumar Merugu <mtharu@codeaurora.org>
->>>>
->>>> Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
->>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>>
->>> Can't you just define the native ioctls so that you don't need this.
->>
->> There are long time defined structures that are passed as argument to
->> these ioctls and their sizes vary between 32 and 64 bits userlands, so
->> the ioctl command values.
+On Tue, Nov 27, 2018 at 10:56:42AM +0000, Daniel Thompson wrote:
+> On Sat, Nov 24, 2018 at 09:17:02AM -0500, Brian Masney wrote:
+> > Add a trivial binding for the Texas Instruments LM3630A Backlight Chip.
 > 
-> Where? I don't see them in linux-4.19.
+> It's quite unusual for a backlight device to have a trivial binding.
 > 
->> Unless I'm missing something here this also has the advantage not to be
->> compiled if CONFIG_COMPAT is not set.
-> 
-> You can normally just set .compat_ioctl() to the same function as
-> .unlocked_ioctl(), and get no overhead either way.
+> The driver supports fairly extensive parametrization via struct
+> lm3530a_platform_data. It is really the case that none of these
+> properties should ever be set via DT?
 
-As you suggested for the other patches in this series, we will rework 
-these ioctl data structures and then use the same function.
+Hi Daniel,
 
-Regards,
-Thierry
+I initially assumed that we would let user space configure these values
+once the system has booted, but you are right that these should be
+available in device tree.
+ 
+The driver has two different LED banks that can be configured
+independently. How do you feel about having a single property in
+device tree populate the initial values for both banks? I propose that
+we could use the property default-brightness-level for leda_init_brt
+and ledb_init_brt in struct lm3630a_platform_data. The max-brightness
+property can populate leda_max_brt and ledb_max_brt.
+
+I need to look at other bindings this weekend to see if there are any
+standard properties that I can use for leda_ctrl/ledb_ctrl, pwm_ctrl,
+and pwm_period.
+
+Brian
+
+
+> 
+> > 
+> > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > ---
+> >  Documentation/devicetree/bindings/trivial-devices.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
+> > index 6ab001fa1ed4..86486368dc35 100644
+> > --- a/Documentation/devicetree/bindings/trivial-devices.txt
+> > +++ b/Documentation/devicetree/bindings/trivial-devices.txt
+> > @@ -182,6 +182,7 @@ taos,tsl2550		Ambient Light Sensor with SMBUS/Two Wire Serial Interface
+> >  ti,ads7828		8-Channels, 12-bit ADC
+> >  ti,ads7830		8-Channels, 8-bit ADC
+> >  ti,amc6821		Temperature Monitoring and Fan Control
+> > +ti,lm3630a		Texas Instruments LM3630A Backlight Chip
+> >  ti,tsc2003		I2C Touch-Screen Controller
+> >  ti,tmp102		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
+> >  ti,tmp103		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
+> > -- 
+> > 2.17.2
+> > 
