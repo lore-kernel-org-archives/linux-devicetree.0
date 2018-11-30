@@ -1,40 +1,30 @@
-Return-Path: <SRS0=eLSC=OI=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 1/4] dt-bindings: rtc: pcf85363: Document pcf85263 real-time clock
-Date: Thu, 29 Nov 2018 16:54:43 +0000
-Message-Id: <1543510486-29532-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543510486-29532-1-git-send-email-biju.das@bp.renesas.com>
-References: <1543510486-29532-1-git-send-email-biju.das@bp.renesas.com>
-To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=qqZh=OJ=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <1543423111-19745-1-git-send-email-biju.das@bp.renesas.com> <1543423111-19745-6-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543423111-19745-6-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 30 Nov 2018 10:05:39 +0100
+Message-ID: <CAMuHMdUHTNuVFfUNru0L4=gh6mCcvpf+nqzNJQzY+dnSpCh6uA@mail.gmail.com>
+Subject: Re: [PATCH 5/5] ARM: dts: r8a7744: Add TPU support
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The pcf85263 RTC is compatible with the pcf85363 RTC.
+On Wed, Nov 28, 2018 at 5:47 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> Add TPU support to SoC DT.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-The difference between the pcf85263 and pcf85363 RTC is that the latter has
-64 bytes more RAM. This renders them incompatible from a DT point of view.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-  V1-->V2 Incorporated Simon's review comment.
----
- Documentation/devicetree/bindings/rtc/pcf85363.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Gr{oetje,eeting}s,
 
-diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-index 76fdabc..94adc1c 100644
---- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
-+++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-@@ -1,8 +1,8 @@
--NXP PCF85363 Real Time Clock
-+NXP PCF85263/PCF85363 Real Time Clock
- ============================
- 
- Required properties:
--- compatible: Should contain "nxp,pcf85363".
-+- compatible: Should contain "nxp,pcf85263" or "nxp,pcf85363".
- - reg: I2C address for chip.
- 
- Optional properties:
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
