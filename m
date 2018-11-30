@@ -1,54 +1,53 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v2 2/8] phy: mvebu-cp110-comphy: fix port check in
- ->xlate()
-Date: Fri, 30 Nov 2018 19:00:31 +0000
-Message-ID: <20181130190031.GH30658@n2100.armlinux.org.uk>
-References: <20181130144743.675-1-miquel.raynal@bootlin.com>
- <20181130144743.675-3-miquel.raynal@bootlin.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH v3 4/5] ARM: bcm283x: Extend the WDT DT node out to cover the whole PM block.
+Date: Fri, 30 Nov 2018 12:27:42 -0800
+Message-ID: <20181130202743.20585-5-eric@anholt.net>
+References: <20181130202743.20585-1-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181130144743.675-3-miquel.raynal@bootlin.com>
+In-Reply-To: <20181130202743.20585-1-eric@anholt.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, linux-kernel@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org
+Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 30, 2018 at 03:47:37PM +0100, Miquel Raynal wrote:
-> So far the PHY ->xlate() callback was checking if the port was
-> "invalid" before continuing, meaning that the port has not been used
-> yet. This check is not correct as there is no opposite call to
-> ->xlate() once the PHY is released by the user and the port will
-> remain "valid" after the first phy_get()/phy_put() calls. Hence, if
-> this driver is built as a module, inserted, removed and inserted
-> again, the PHY will appear busy and the second probe will fail.
-> 
-> To fix this, just drop the faulty check and instead verify that the
-> port number is valid (ie. in the possible range).
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-> index 31b9a1c18345..a40b876ff214 100644
-> --- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-> +++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-> @@ -567,9 +567,9 @@ static struct phy *mvebu_comphy_xlate(struct device *dev,
->  		return phy;
->  
->  	lane = phy_get_drvdata(phy);
-> -	if (lane->port >= 0)
-> -		return ERR_PTR(-EBUSY);
->  	lane->port = args->args[0];
-> +	if (lane->port >= MVEBU_COMPHY_PORTS)
-> +		return ERR_PTR(-EINVAL);
+It was covering part of the PM block's range, up to the WDT regs.  To
+support the rest of the PM block's functionality, we need the full
+register range plus the AXI Async Bridge regs for PM sequencing.
 
-Shouldn't we validate args->args[0] before doing anything?
+This doesn't convert any of the consumers over to the new binding yet,
+since we will need to be careful in coordinating our usage of firmware
+services that might power domains on and off versus the bcm2835-pm
+driver's access of those same domains.
 
+Signed-off-by: Eric Anholt <eric@anholt.net>
+---
+ arch/arm/boot/dts/bcm283x.dtsi | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index 31b29646b14c..bd5be68b4561 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -121,8 +121,16 @@
+ 		};
+ 
+ 		watchdog@7e100000 {
+-			compatible = "brcm,bcm2835-pm-wdt";
+-			reg = <0x7e100000 0x28>;
++			compatible = "brcm,bcm2835-pm", "brcm,bcm2835-pm-wdt";
++			#power-domain-cells = <1>;
++			#reset-cells = <1>;
++			reg = <0x7e100000 0x114>,
++			      <0x7e00a000 0x24>;
++			clocks = <&clocks BCM2835_CLOCK_V3D>,
++				 <&clocks BCM2835_CLOCK_PERI_IMAGE>,
++				 <&clocks BCM2835_CLOCK_H264>,
++				 <&clocks BCM2835_CLOCK_ISP>;
++			clock-names = "v3d", "peri_image", "h264", "isp";
+ 		};
+ 
+ 		clocks: cprman@7e101000 {
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.20.0.rc1
