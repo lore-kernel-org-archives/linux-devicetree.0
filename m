@@ -1,52 +1,146 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Kill off skeleton{64}.dtsi
-Date: Fri, 30 Nov 2018 18:21:35 +0100
-Message-ID: <CACRpkdaxAX72a6vpOqGwhhPEKeCz3YJz3wjxF5nsRmei-cRY8w@mail.gmail.com>
-References: <20181130170634.9467-1-robh@kernel.org>
+From: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v11 0/4] Add Rockchip VPU JPEG encoder
+Date: Fri, 30 Nov 2018 14:34:29 -0300
+Message-ID: <20181130173433.24185-1-ezequiel@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20181130170634.9467-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory Clement <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Hauke Mehrtens <hauke>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 30, 2018 at 6:06 PM Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+Nothing like sending a new round on a Friday,
+so people can test and review during the weekend! ;-)
 
-> Remove the usage of skeleton.dtsi in the remaining dts files. It was
-> deprecated since commit 9c0da3cc61f1 ("ARM: dts: explicitly mark
-> skeleton.dtsi as deprecated"). This will make adding a unit-address to
-> memory nodes easier.
->
-> The main tricky part to removing skeleton.dtsi is we could end up with
-> no /memory node at all when a bootloader depends on one being present. I
-> hacked up dtc to check for this condition.
->
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+As before, this series is based on Mauro's master branch,
+with the following patch applied:
 
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Good riddance.
+https://patchwork.kernel.org/patch/10676149/
 
-> Yes, I'm being lazy and not splitting this up into dozens of sub-arch
-> patches. I don't think this should conflict nor should we be getting new
-> dependencies on skeleton.dtsi. So please apply directly to arm-soc.
+On this new round, I've addressed all the feedback
+provided by Tomasz on v10.
 
-A patch should be "one technical step" and this is one technical step.
+As always, any additional feedback is well received.
 
-I don't think the compulsive requests to split patches up gives
-us anything in cases like this, it just cost us valuable development
-time.
+This patchset has been tested on RK3288 and RK3399
+using bleeding-edge Gstreamer, with these pipelines:
 
-So this is the right approach.
+function gst_kms {
+        gst-launch-1.0 -v videotestsrc num-buffers=${4} ! video/x-raw,width=${1},height=${2},format=${3}! v4l2jpegenc extra-controls="c,compression_quality=100" ! jpegdec ! videoconvert ! video/x-raw,format=BGRx ! queue leaky=1 ! kmssink sync=0
+}
 
-Linus Walleij
+gst_kms 640 480 YUY2 30
+gst_kms 640 480 NV12 30
+gst_kms 640 480 I420 30
+(and more sizes)
+
+There are a few warnings after running check_patch.pl --strict,
+but I've chosen not to address them, as it would reducely
+readability.
+
+Also, v4l2-compliance -s passes on both platforms, as has
+been the case for the past submissions.
+
+v11:
+ * Update TODO file
+ * Make macroblock alignment codec specific
+ * Rename VEPU_REG_ADDR_IN_LUMA,CR,CB to
+   VEPU_REG_ADDR_IN_PLANE_0,12,
+ * Only write plane address (VEPU_REG_ADDR_IN_PLANE_0,1,2)
+   when needed.
+ * s/rockchip_vpu_jpeg_render/rockchip_vpu_jpeg_header_assemble
+ * Drop wmb() and use a writel, which has an implicit barrier.
+ * Added missing documentation for all structs.
+ * Removed unused struct fields.
+ * Simplified xfer_func et al usage.
+ * Reworked vepu_debug for i/o
+ * Explicitly enabled/disabled clocks before/after work,
+   instead of via the PM runtime infra.
+ * Copy buffer timecode only when required 
+ * Bound check the amount of bytes transferred by the hardware.
+ * Remove useless void * cast.
+ * Fix race condition between top half and watchdog .
+ * Drop redundant check for v4l2_ctrl errors.
+ * Add rounding up in fill_fmt helpers.
+ * Remove unneeded DMA alignment implementation (needed only for
+ * USERPTR).
+ * Add check for different width and height in CAPTURE S_FMT.
+ * Remove check for peer busy queue in OUTPUT S_FMT.
+ * Remove double whitespace.
+ * Multi-line comments fixed.
+ * Google copyright fixed.
+ * Typos fixed.
+
+v10:
+ * Fix SPDX syntax
+ * Add missing patch with binding documentation
+ * Remove white line in Kconfig
+
+v9:
+ * Address some style comments from Hans.
+ * Fix TODO file
+
+v8:
+ * Drop new JPEG_RAW format.
+ * Drop quantization table user controls.
+ * Add JPEG headers to produce JPEG frames.
+
+Ezequiel Garcia (4):
+  media: dt-bindings: Document the Rockchip VPU bindings
+  ARM: dts: rockchip: add VPU device node for RK3288
+  arm64: dts: rockchip: add VPU device node for RK3399
+  media: add Rockchip VPU JPEG encoder driver
+
+ .../bindings/media/rockchip-vpu.txt           |  29 +
+ MAINTAINERS                                   |   7 +
+ arch/arm/boot/dts/rk3288.dtsi                 |  14 +-
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi      |  14 +-
+ drivers/staging/media/Kconfig                 |   2 +
+ drivers/staging/media/Makefile                |   1 +
+ drivers/staging/media/rockchip/vpu/Kconfig    |  13 +
+ drivers/staging/media/rockchip/vpu/Makefile   |  10 +
+ drivers/staging/media/rockchip/vpu/TODO       |  13 +
+ .../media/rockchip/vpu/rk3288_vpu_hw.c        | 118 +++
+ .../rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c     | 130 ++++
+ .../media/rockchip/vpu/rk3288_vpu_regs.h      | 442 ++++++++++++
+ .../media/rockchip/vpu/rk3399_vpu_hw.c        | 118 +++
+ .../rockchip/vpu/rk3399_vpu_hw_jpeg_enc.c     | 164 +++++
+ .../media/rockchip/vpu/rk3399_vpu_regs.h      | 600 ++++++++++++++++
+ .../staging/media/rockchip/vpu/rockchip_vpu.h | 232 ++++++
+ .../media/rockchip/vpu/rockchip_vpu_common.h  |  29 +
+ .../media/rockchip/vpu/rockchip_vpu_drv.c     | 531 ++++++++++++++
+ .../media/rockchip/vpu/rockchip_vpu_enc.c     | 676 ++++++++++++++++++
+ .../media/rockchip/vpu/rockchip_vpu_hw.h      |  58 ++
+ .../media/rockchip/vpu/rockchip_vpu_jpeg.c    | 290 ++++++++
+ .../media/rockchip/vpu/rockchip_vpu_jpeg.h    |  14 +
+ 22 files changed, 3503 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.txt
+ create mode 100644 drivers/staging/media/rockchip/vpu/Kconfig
+ create mode 100644 drivers/staging/media/rockchip/vpu/Makefile
+ create mode 100644 drivers/staging/media/rockchip/vpu/TODO
+ create mode 100644 drivers/staging/media/rockchip/vpu/rk3288_vpu_hw.c
+ create mode 100644 drivers/staging/media/rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c
+ create mode 100644 drivers/staging/media/rockchip/vpu/rk3288_vpu_regs.h
+ create mode 100644 drivers/staging/media/rockchip/vpu/rk3399_vpu_hw.c
+ create mode 100644 drivers/staging/media/rockchip/vpu/rk3399_vpu_hw_jpeg_enc.c
+ create mode 100644 drivers/staging/media/rockchip/vpu/rk3399_vpu_regs.h
+ create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu.h
+ create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_common.h
+ create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c
+ create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c
+ create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_hw.h
+ create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_jpeg.c
+ create mode 100644 drivers/staging/media/rockchip/vpu/rockchip_vpu_jpeg.h
+
+-- 
+2.20.0.rc1
