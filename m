@@ -1,56 +1,55 @@
-Return-Path: <SRS0=qRW3=N5=gmail.com=marek.vasut@kernel.org>
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: [PATCH 1/2] dt-bindings: can: rcar_canfd: document r8a77965 support
-Date: Sun, 18 Nov 2018 18:32:00 +0100
-Message-Id: <20181118173201.4645-1-marek.vasut+renesas@gmail.com>
-To: devicetree@vger.kernel.org
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>, Eugeniu Rosca <erosca@de.adit-jv.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh@kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=X76U=OJ=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v2 00/21] Add support for iWave G20D-Q7 board based on RZ/G1N
+Date: Fri, 30 Nov 2018 15:54:11 +0000
+Message-Id: <1543593251-15322-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document the support for rcar_canfd on R8A77965 SoC devices.
+This patch series aims to add support for iWave G20D-Q7 board based on RZ/G1N.
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Simon Horman <horms+renesas@verge.net.au>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-renesas-soc@vger.kernel.org
----
- .../devicetree/bindings/net/can/rcar_canfd.txt      | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+This patch series is tested against renesas-dev
 
-diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-index ac71daa46195..4720e916fbdd 100644
---- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-+++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-@@ -6,6 +6,7 @@ Required properties:
-   - "renesas,rcar-gen3-canfd" for R-Car Gen3 compatible controller.
-   - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
-   - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3-W) compatible controller.
-+  - "renesas,r8a77965-canfd" for R8A77965 (R-Car M3-N) compatible controller.
-   - "renesas,r8a77970-canfd" for R8A77970 (R-Car V3M) compatible controller.
-   - "renesas,r8a77980-canfd" for R8A77980 (R-Car V3H) compatible controller.
- 
-@@ -26,12 +27,12 @@ The name of the child nodes are "channel0" and "channel1" respectively. Each
- child node supports the "status" property only, which is used to
- enable/disable the respective channel.
- 
--Required properties for "renesas,r8a7795-canfd" and "renesas,r8a7796-canfd"
--compatible:
--In R8A7795 and R8A7796 SoCs, canfd clock is a div6 clock and can be used by both
--CAN and CAN FD controller at the same time. It needs to be scaled to maximum
--frequency if any of these controllers use it. This is done using the below
--properties:
-+Required properties for "renesas,r8a7795-canfd", "renesas,r8a7796-canfd" and
-+"renesas,r8a77965-canfd" compatible:
-+In R8A7795, R8A7796 and R8A77965 SoCs, canfd clock is a div6 clock and can
-+be used by both CAN and CAN FD controller at the same time. It needs to be
-+scaled to maximum frequency if any of these controllers use it. This is done
-+using the below properties:
- 
- - assigned-clocks: phandle of canfd clock.
- - assigned-clock-rates: maximum frequency of this clock.
+V1-->V2
+    * r8a7744: Initial SoC device tree: Fixed pfc register size, GIC_CPU_MASK_SIMPLE in gic/timer nodes
+    * r8a7744: Add SMP support: Fixed GIC_CPU_MASK_SIMPLE in gic/timer nodes
+    * r8a7744: Add I2C and IIC support: Dropped i2c aliases, removed generic compatible from iic3.
+    * r8a7744-iwg20m: Enable SDHI0 controller: Fixed subject line
+    * r8a7744: Add RWDT node: Moved rwdt node just before gpio.
+
+Biju Das (21):
+  ARM: dts: r8a7744-iwg20m: Add iWave RZ/G1N Qseven SOM
+  ARM: dts: r8a7744: Initial SoC device tree
+  ARM: dts: r8a7744-iwg20d-q7: Add support for iWave G20D-Q7 board based
+    on RZ/G1N
+  ARM: dts: r8a7744: Add SYS-DMAC support
+  ARM: dts: r8a7744: Add GPIO support
+  ARM: dts: r8a7744: Add Ethernet AVB support
+  ARM: dts: r8a7744: Add SMP support
+  ARM: dts: r8a7744: Add [H]SCIF{A|B} support
+  ARM: dts: r8a7744: Add I2C and IIC support
+  ARM: dts: r8a7744: Add SDHI nodes
+  ARM: dts: r8a7744: Add MMC node
+  ARM: dts: r8a7744-iwg20m: Add eMMC support
+  ARM: dts: r8a7744-iwg20m: Enable SDHI0 controller
+  ARM: dts: r8a7744: USB 2.0 host support
+  ARM: dts: r8a7744: Add USB-DMAC and HSUSB device nodes
+  ARM: dts: r8a7744: Add RWDT node
+  ARM: dts: r8a7744: Add audio support
+  ARM: dts: r8a7744: Add CAN support
+  ARM: dts: r8a7744: Add IRQC support
+  ARM: dts: r8a7744: Add thermal device to DT
+  ARM: dts: r8a7744: Add CMT SoC specific support
+
+ arch/arm/boot/dts/Makefile              |    1 +
+ arch/arm/boot/dts/r8a7744-iwg20d-q7.dts |   15 +
+ arch/arm/boot/dts/r8a7744-iwg20m.dtsi   |   64 ++
+ arch/arm/boot/dts/r8a7744.dtsi          | 1431 +++++++++++++++++++++++++++++++
+ 4 files changed, 1511 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a7744-iwg20d-q7.dts
+ create mode 100644 arch/arm/boot/dts/r8a7744-iwg20m.dtsi
+ create mode 100644 arch/arm/boot/dts/r8a7744.dtsi
+
 -- 
-2.18.0
+2.7.4
