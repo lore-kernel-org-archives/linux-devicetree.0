@@ -1,35 +1,30 @@
-Return-Path: <SRS0=2X+C=OH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr60080.outbound.protection.outlook.com ([40.107.6.80]:61216
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727662AbeK1UkS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 28 Nov 2018 15:40:18 -0500
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: [PATCH V3 0/3] ARM: dts: add flexcan support
-Date: Wed, 28 Nov 2018 09:39:13 +0000
-Message-ID: <20181128093658.27990-1-qiangqing.zhang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=qqZh=OJ=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Joakim Zhang <qiangqing.zhang@nxp.com>
+References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com> <1543319795-48325-21-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543319795-48325-21-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 30 Nov 2018 10:02:49 +0100
+Message-ID: <CAMuHMdU4puVT82eL9RXYY4rFEqcxvXdG_uSwX0xQDSmVrgsLMw@mail.gmail.com>
+Subject: Re: [PATCH 20/22] ARM: dts: r8a7744: Add MSIOF[012] support
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch series intends to add flexcan support for IMX6 platforms.
+On Tue, Nov 27, 2018 at 1:05 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> Add the DT nodes needed by MSIOF[012] interfaces to the SoC dtsi.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-Aisheng Dong (3):
-  ARM: dts: imx6sx-sdb: add flexcan support
-  ARM: dts: imx6sx-sabreauto: add flexcan support
-  ARM: dts: imx6qdl-sabreauto: add flexcan support
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
- arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 47 +++++++++++++++++++
- arch/arm/boot/dts/imx6sx-sabreauto.dts   | 57 ++++++++++++++++++++++++
- arch/arm/boot/dts/imx6sx-sdb-reva.dts    | 12 +++++
- arch/arm/boot/dts/imx6sx-sdb.dts         |  5 +++
- arch/arm/boot/dts/imx6sx-sdb.dtsi        | 42 +++++++++++++++++
- 5 files changed, 163 insertions(+)
+Gr{oetje,eeting}s,
 
---=20
-2.17.1
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
