@@ -1,33 +1,34 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v3 0/5] ASoC: qdsp6: add compress offload support
-Date: Fri, 30 Nov 2018 17:52:20 +0530
-Message-ID: <20181130122220.GO3175@vkoul-mobl.Dlink>
-References: <20181115181324.26784-1-srinivas.kandagatla@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 6/6] char: fastrpc: Add support for compat ioctls
+Date: Fri, 30 Nov 2018 13:58:36 +0100
+Message-ID: <CAK8P3a1XaGHu3NrAeLn0OEg0nL1uae_MyrP7EgadJpfeeXtR2Q@mail.gmail.com>
+References: <20181130104657.14875-1-srinivas.kandagatla@linaro.org> <20181130104657.14875-7-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181115181324.26784-1-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20181130104657.14875-7-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: broonie@kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, bgoswami@codeaurora.org, rohitkr@codeaurora.org, lgirdwood@gmail.com, tiwai@suse.com, devicetree@vger.kernel.org, srini@kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, gregkh <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm@vger.kernel.org, bkumar@qti.qualcomm.com, thierry.escande@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 15-11-18, 18:13, Srinivas Kandagatla wrote:
-> This patchset adds support to very basic MP3 playback compress offload
-> support via QDSP ASM module.
-> 
-> Tested this patchset on DB410c with APQ8016 and DB820c with APQ8096 using
-> tinycompress library.
-> 
-> Adding other codec support should be trivial w.r.t qdsp6 side, however
-> there are other dependencies like compress UAPI header changes and
-> FastRPC which are being worked in parallel. Once ready will post them!
+On Fri, Nov 30, 2018 at 11:48 AM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+>
+> From: Thierry Escande <thierry.escande@linaro.org>
+>
+> This patch adds support for compat ioctl from 32 bits userland to
+> Qualcomm fastrpc driver.
+>
+> Supported ioctls in this change are INIT, INVOKE, and ALLOC/FREE_DMA.
+>
+> Most of the work is derived from various downstream Qualcomm kernels.
+> Credits to various Qualcomm authors who have contributed to this code.
+> Specially Tharun Kumar Merugu <mtharu@codeaurora.org>
+>
+> Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-Thanks Srini, with this we will have compress support upstream for a
-public board.
+Can't you just define the native ioctls so that you don't need this.
 
-Acked-by: Vinod Koul <vkoul@kernel.org>
-
--- 
-~Vinod
+     Arnd
