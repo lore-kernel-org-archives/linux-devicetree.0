@@ -1,152 +1,60 @@
-Return-Path: <SRS0=JPrT=OB=bp.renesas.com=biju.das@kernel.org>
+Return-Path: <SRS0=X76U=OJ=bp.renesas.com=biju.das@kernel.org>
 From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 5/7] ARM: dts: r8a7744: Add GPIO support
-Date: Thu, 22 Nov 2018 09:14:33 +0000
-Message-Id: <1542878075-61314-6-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com>
-References: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com>
+Subject: [PATCH v2 03/21] ARM: dts: r8a7744-iwg20d-q7: Add support for iWave G20D-Q7 board based on RZ/G1N
+Date: Fri, 30 Nov 2018 15:26:17 +0000
+Message-Id: <1543591595-37861-4-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
+References: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Describe GPIO blocks in the R8A7744 device tree.
+Add support for iWave RainboW-G20D-Qseven board based on RZ/G1N.
 
 Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r8a7744.dtsi | 102 +++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 98 insertions(+), 4 deletions(-)
+V1-->V2
+	* No change
+---
+ arch/arm/boot/dts/Makefile              |  1 +
+ arch/arm/boot/dts/r8a7744-iwg20d-q7.dts | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a7744-iwg20d-q7.dts
 
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index a9ebd09..114642a 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -116,29 +116,123 @@
- 		ranges;
- 
- 		gpio0: gpio@e6050000 {
-+			compatible = "renesas,gpio-r8a7744",
-+				     "renesas,rcar-gen2-gpio";
- 			reg = <0 0xe6050000 0 0x50>;
-+			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
- 			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 0 32>;
- 			#interrupt-cells = <2>;
- 			interrupt-controller;
--			/* placeholder */
-+			clocks = <&cpg CPG_MOD 912>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 912>;
- 		};
- 
- 		gpio1: gpio@e6051000 {
-+			compatible = "renesas,gpio-r8a7744",
-+				     "renesas,rcar-gen2-gpio";
- 			reg = <0 0xe6051000 0 0x50>;
-+			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
- 			#gpio-cells = <2>;
--			/* placeholder */
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 32 26>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 911>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 911>;
- 		};
- 
- 		gpio2: gpio@e6052000 {
-+			compatible = "renesas,gpio-r8a7744",
-+				     "renesas,rcar-gen2-gpio";
- 			reg = <0 0xe6052000 0 0x50>;
-+			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
- 			#gpio-cells = <2>;
--			/* placeholder */
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 64 32>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 910>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 910>;
-+		};
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b0e966d..aba5a25 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -829,6 +829,7 @@ dtb-$(CONFIG_ARCH_RENESAS) += \
+ 	r8a7743-iwg20d-q7.dtb \
+ 	r8a7743-iwg20d-q7-dbcm-ca.dtb \
+ 	r8a7743-sk-rzg1m.dtb \
++	r8a7744-iwg20d-q7.dtb \
+ 	r8a7745-iwg22d-sodimm.dtb \
+ 	r8a7745-iwg22d-sodimm-dbhd-ca.dtb \
+ 	r8a7745-sk-rzg1e.dtb \
+diff --git a/arch/arm/boot/dts/r8a7744-iwg20d-q7.dts b/arch/arm/boot/dts/r8a7744-iwg20d-q7.dts
+new file mode 100644
+index 0000000..1fdac52
+--- /dev/null
++++ b/arch/arm/boot/dts/r8a7744-iwg20d-q7.dts
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the iWave-RZ/G1N Qseven board
++ *
++ * Copyright (C) 2018 Renesas Electronics Corp.
++ */
 +
-+		gpio3: gpio@e6053000 {
-+			compatible = "renesas,gpio-r8a7744",
-+				     "renesas,rcar-gen2-gpio";
-+			reg = <0 0xe6053000 0 0x50>;
-+			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 96 32>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 909>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 909>;
-+		};
++/dts-v1/;
++#include "r8a7744-iwg20m.dtsi"
++#include "iwg20d-q7-common.dtsi"
 +
-+		gpio4: gpio@e6054000 {
-+			compatible = "renesas,gpio-r8a7744",
-+				     "renesas,rcar-gen2-gpio";
-+			reg = <0 0xe6054000 0 0x50>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 128 32>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 908>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 908>;
-+		};
-+
-+		gpio5: gpio@e6055000 {
-+			compatible = "renesas,gpio-r8a7744",
-+				     "renesas,rcar-gen2-gpio";
-+			reg = <0 0xe6055000 0 0x50>;
-+			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 160 32>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 907>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 907>;
- 		};
- 
- 		gpio6: gpio@e6055400 {
-+			compatible = "renesas,gpio-r8a7744",
-+				     "renesas,rcar-gen2-gpio";
- 			reg = <0 0xe6055400 0 0x50>;
-+			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
- 			#gpio-cells = <2>;
--			/* placeholder */
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 192 32>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 905>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 905>;
-+		};
-+
-+		gpio7: gpio@e6055800 {
-+			compatible = "renesas,gpio-r8a7744",
-+				     "renesas,rcar-gen2-gpio";
-+			reg = <0 0xe6055800 0 0x50>;
-+			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 224 26>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 904>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 904>;
- 		};
- 
- 		pfc: pin-controller@e6060000 {
++/ {
++	model = "iWave Systems RainboW-G20D-Qseven board based on RZ/G1N";
++	compatible = "iwave,g20d", "iwave,g20m", "renesas,r8a7744";
++};
 -- 
 2.7.4
