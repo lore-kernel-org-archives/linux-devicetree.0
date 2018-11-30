@@ -1,14 +1,14 @@
 From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH] ARM: dts: aspeed: add missing memory unit-address
-Date: Fri, 30 Nov 2018 15:20:40 -0800
-Message-ID: <20181130232040.z4i4sm5dsycxbmlu@localhost>
-References: <20181130015251.20754-1-robh@kernel.org>
+Subject: Re: [PATCH] ARM: dts: realview-pbx: Fix duplicate regulator nodes
+Date: Fri, 30 Nov 2018 15:19:17 -0800
+Message-ID: <20181130231917.fvunplj47qrnysbv@localhost>
+References: <20181130010547.24757-1-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20181130015251.20754-1-robh@kernel.org>
+In-Reply-To: <20181130010547.24757-1-robh@kernel.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,30 +19,25 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, arm@kernel.org, Joel Stanley <joel@jms.id.au>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, arm@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 29, 2018 at 07:52:51PM -0600, Rob Herring wrote:
-> The base aspeed-g5.dtsi already defines a '/memory@80000000' node, so
-> '/memory' in the board files create a duplicate node. We're probably
-> getting lucky that the bootloader fixes up the memory node that the
-> kernel ends up using. Add the unit-address so it's merged with the base
-> node.
+On Thu, Nov 29, 2018 at 07:05:47PM -0600, Rob Herring wrote:
+> There's a bug in dtc in checking for duplicate node names when there's
+> another section (e.g. "/ { };"). In this case, skeleton.dtsi provides
+> another section. Upon removal of skeleton.dtsi, the dtb fails to build
+> due to a duplicate node 'fixedregulator@0'. As both nodes were pretty
+> much the same 3.3V fixed regulator, it hasn't really mattered. Fix this
+> by renaming the nodes to something unique. In the process, drop the
+> unit-address which shouldn't be present wtihout reg property.
 > 
-> Found with DT json-schema checks.
-> 
-> Cc: Joel Stanley <joel@jms.id.au>
-> Cc: Andrew Jeffery <andrew@aj.id.au>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-aspeed@lists.ozlabs.org
+> Cc: Linus Walleij <linus.walleij@linaro.org>
 > Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
-> Might be better to just remove the node altogether from the SoC dtsi 
-> file. It's only saving the device_type definition.
+>  arch/arm/boot/dts/arm-realview-pbx.dtsi | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 
-Since I'm sweeping DT pull requests right now, and this is pretty
-straightforward, I've applied it to next/dt directly.
+Applied to next/dt. Thanks.
 
 
 -Olof
