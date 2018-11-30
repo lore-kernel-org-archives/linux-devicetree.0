@@ -1,29 +1,30 @@
-Return-Path: <SRS0=tEXb=OI=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 0/2] Add Initial Device Tree for RZ/A2
-Date: Thu, 29 Nov 2018 08:05:57 -0500
-Message-Id: <20181129130559.66732-1-chris.brandt@renesas.com>
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=qqZh=OJ=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com> <1543319795-48325-5-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543319795-48325-5-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 30 Nov 2018 09:56:32 +0100
+Message-ID: <CAMuHMdVPayiAg=nnBpi5dH-6Z_PtLzzkB71iC9t4uGgJhZ2G9Q@mail.gmail.com>
+Subject: Re: [PATCH 04/22] ARM: dts: r8a7744: Add MMC node
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add a Device Tree for RZ/A2 and the existing eval board.
+On Tue, Nov 27, 2018 at 1:05 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> Add MMC node to the DT of the r8a7744 SoC.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-Once these get approved, I'll start piling on the other drivers in
-another patch series.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+Gr{oetje,eeting}s,
 
-Chris Brandt (2):
-  ARM: dts: r7s9210: Initial SoC device tree
-  ARM: dts: r7s9210-rza2mevb: Add support for RZ/A2M EVB
-
- Documentation/devicetree/bindings/arm/shmobile.txt |   2 +
- arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/r7s9210-rza2mevb.dts             | 133 +++++++++++++
- arch/arm/boot/dts/r7s9210.dtsi                     | 211 +++++++++++++++++++++
- 4 files changed, 347 insertions(+)
- create mode 100644 arch/arm/boot/dts/r7s9210-rza2mevb.dts
- create mode 100644 arch/arm/boot/dts/r7s9210.dtsi
+                        Geert
 
 -- 
-2.16.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
