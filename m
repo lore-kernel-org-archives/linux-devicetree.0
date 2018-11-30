@@ -1,61 +1,65 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [PATCH v4 0/4] Add support of STM32 hwspinlock
-Date: Fri, 30 Nov 2018 15:45:03 +0100
-Message-ID: <CA+M3ks5m1=gsGqB55T4xSGtAQW9Ct3Fxqx-gbYg=GoNwoX6B-w@mail.gmail.com>
-References: <20181114090027.7580-1-benjamin.gaignard@linaro.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v2 0/8] Add Armada 3700 COMPHY support
+Date: Fri, 30 Nov 2018 15:47:35 +0100
+Message-ID: <20181130144743.675-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181114090027.7580-1-benjamin.gaignard@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ohad Ben Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>
-Cc: linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Le mer. 14 nov. 2018 =C3=A0 10:00, Benjamin Gaignard
-<benjamin.gaignard@linaro.org> a =C3=A9crit :
->
-> This serie adds the support of the hardware semaphore block for stm32mp1 =
-SoC.
->
-> version 4:
-> - add Linaro SoB
+Hello,
 
-Gentle ping on this series
+This series adds a new driver to support Armada 3700 COMPHY IP.
+The series has been tested on an ESPRESSObin with SATA, PCIe
+and USB3 host. For this purpose, patch 1 enumerates the SATA PHY
+mode. The SGMII PHY mode that is supported by the IP has been written
+(uses SMC calls anyway) but could not be tested on this platform.
 
-Regards,
-Benjamin
+Three series will follow to add PHY support (or at least a PHY nodes
+in the A3700/ESPRESSObin device trees) to the MVEBU AHCI driver, the
+Aardvark PCI controller driver and the MVEBU xHCI driver. All this is
+needed in order to achieve suspend to RAM on this platform.
 
->
-> version 3:
-> - fix clock name in properties description.
-> - use postcore_initcall() instead of module_platform_driver()
->
-> version 2:
-> - fix comments done by Bjorn about clock naming, license terms in header,
->   alphabetic ordering in Makefile and Kconfig and remove function
-> - Do not push test module in this version while waiting for feedbacks abo=
-ut it
->
-> Benjamin Gaignard (4):
->   dt-bindings: hwlock: Document STM32 hwspinlock bindings
->   hwspinlock: add STM32 hwspinlock device
->   ARM: dts: stm32: Add hwspinlock node for stm32mp157 SoC
->   ARM: dts: stm32: enable hwspinlock on stm32mp157c-ed1
->
->  .../bindings/hwlock/st,stm32-hwspinlock.txt        |  23 +++
->  arch/arm/boot/dts/stm32mp157c-ed1.dts              |   4 +
->  arch/arm/boot/dts/stm32mp157c.dtsi                 |   9 ++
->  drivers/hwspinlock/Kconfig                         |   9 ++
->  drivers/hwspinlock/Makefile                        |   1 +
->  drivers/hwspinlock/stm32_hwspinlock.c              | 156 +++++++++++++++=
-++++++
->  6 files changed, 202 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwlock/st,stm32-hws=
-pinlock.txt
->  create mode 100644 drivers/hwspinlock/stm32_hwspinlock.c
->
-> --
-> 2.15.0
->
+Thanks,
+Miquèl
+
+
+Changes since v1:
+=================
+* Fix wrong check in ->xlate().
+* Apply the same fix to the cp110 comphy driver from which the a3700
+  driver is based.
+* Added credit to Gregorz Jaszczyk for his work.
+* Added Suggested-by tag to the patch adding the COMPHY DT node.
+
+
+Grzegorz Jaszczyk (1):
+  phy: enumerate SATA PHY mode
+
+Miquel Raynal (7):
+  phy: mvebu-cp110-comphy: fix spelling in structure name
+  phy: mvebu-cp110-comphy: fix port check in ->xlate()
+  phy: add A3700 COMPHY support
+  dt-bindings: phy: mvebu-comphy: extend the file to describe a3700
+    bindings
+  MAINTAINERS: phy: add entry for Armada 3700 COMPHY driver
+  ARM64: dts: marvell: armada-37xx: fix SATA node scope
+  ARM64: dts: marvell: armada-37xx: declare the COMPHY node
+
+ .../bindings/phy/phy-mvebu-comphy.txt         |  65 ++++-
+ MAINTAINERS                                   |   6 +
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |  31 +-
+ drivers/phy/marvell/Kconfig                   |  10 +
+ drivers/phy/marvell/Makefile                  |   1 +
+ drivers/phy/marvell/phy-mvebu-a3700-comphy.c  | 276 ++++++++++++++++++
+ drivers/phy/marvell/phy-mvebu-cp110-comphy.c  |   8 +-
+ include/linux/phy/phy.h                       |   1 +
+ 8 files changed, 381 insertions(+), 17 deletions(-)
+ create mode 100644 drivers/phy/marvell/phy-mvebu-a3700-comphy.c
+
+-- 
+2.19.1
