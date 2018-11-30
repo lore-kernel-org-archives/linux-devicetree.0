@@ -1,81 +1,69 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 5/7] ARM: dts: pxa3xx: order timer and gcu nodes under /pxabus
-Date: Fri, 30 Nov 2018 18:55:41 +0100
-Message-ID: <20181130175543.32628-6-daniel@zonque.org>
-References: <20181130175543.32628-1-daniel@zonque.org>
+From: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v11 2/4] ARM: dts: rockchip: add VPU device node for RK3288
+Date: Fri, 30 Nov 2018 14:34:31 -0300
+Message-ID: <20181130173433.24185-3-ezequiel@collabora.com>
+References: <20181130173433.24185-1-ezequiel@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181130175543.32628-1-daniel@zonque.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robert.jarzmik@free.fr, haojian.zhuang@gmail.com
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, Daniel Mack <daniel@zonque.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20181130173433.24185-1-ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-These are devices on the PXA bus, so make the device tree structure
-reflect that.
+Add the Video Processing Unit node for RK3288 SoC.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
+Fix the VPU IOMMU node, which was disabled and lacking
+its power domain property.
+
+Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 ---
- arch/arm/boot/dts/pxa3xx.dtsi | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ arch/arm/boot/dts/rk3288.dtsi | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/pxa3xx.dtsi b/arch/arm/boot/dts/pxa3xx.dtsi
-index eb9443208578..de49e7f666c0 100644
---- a/arch/arm/boot/dts/pxa3xx.dtsi
-+++ b/arch/arm/boot/dts/pxa3xx.dtsi
-@@ -265,6 +265,22 @@
- 			clocks = <&clks CLK_SSP4>;
- 			status = "disabled";
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 0840ffb3205c..40d203cdca09 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -1223,6 +1223,18 @@
  		};
-+
-+		timer@40a00000 {
-+			compatible = "marvell,pxa-timer";
-+			reg = <0x40a00000 0x20>;
-+			interrupts = <26>;
-+			clocks = <&clks CLK_OSTIMER>;
-+			status = "okay";
-+		};
-+
-+		gcu: display-controller@54000000 {
-+			compatible = "marvell,pxa300-gcu";
-+			reg = <0x54000000 0x1000>;
-+			interrupts = <39>;
-+			clocks = <&clks CLK_PXA300_GCU>;
-+			status = "disabled";
-+		};
  	};
  
- 	clocks {
-@@ -282,20 +298,4 @@
- 			status = "okay";
- 		};
- 	};
--
--	timer@40a00000 {
--		compatible = "marvell,pxa-timer";
--		reg = <0x40a00000 0x20>;
--		interrupts = <26>;
--		clocks = <&clks CLK_OSTIMER>;
--		status = "okay";
--	};
--
--	gcu: display-controller@54000000 {
--		compatible = "marvell,pxa300-gcu";
--		reg = <0x54000000 0x1000>;
--		interrupts = <39>;
--		clocks = <&clks CLK_PXA300_GCU>;
++	vpu: video-codec@ff9a0000 {
++		compatible = "rockchip,rk3288-vpu";
++		reg = <0x0 0xff9a0000 0x0 0x800>;
++		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "vepu", "vdpu";
++		clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
++		clock-names = "aclk", "hclk";
++		power-domains = <&power RK3288_PD_VIDEO>;
++		iommus = <&vpu_mmu>;
++	};
++
+ 	vpu_mmu: iommu@ff9a0800 {
+ 		compatible = "rockchip,iommu";
+ 		reg = <0x0 0xff9a0800 0x0 0x100>;
+@@ -1230,8 +1242,8 @@
+ 		interrupt-names = "vpu_mmu";
+ 		clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
+ 		clock-names = "aclk", "iface";
++		power-domains = <&power RK3288_PD_VIDEO>;
+ 		#iommu-cells = <0>;
 -		status = "disabled";
--	};
- };
+ 	};
+ 
+ 	hevc_mmu: iommu@ff9c0440 {
 -- 
-2.19.2
+2.20.0.rc1
