@@ -1,69 +1,68 @@
-From: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH v11 2/4] ARM: dts: rockchip: add VPU device node for RK3288
-Date: Fri, 30 Nov 2018 14:34:31 -0300
-Message-ID: <20181130173433.24185-3-ezequiel@collabora.com>
-References: <20181130173433.24185-1-ezequiel@collabora.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v18 1/5] iommu/arm-smmu: Add
+ pm_runtime/sleep ops
+Date: Fri, 30 Nov 2018 18:15:37 +0000
+Message-ID: <20181130181536.GA15274@arm.com>
+References: <20181127101145.7682-1-vivek.gautam@codeaurora.org>
+ <20181127101145.7682-2-vivek.gautam@codeaurora.org>
+ <154342225921.88331.14467967828250776155@swboyd.mtv.corp.google.com>
+ <0d76b669-6c4f-7c3b-50a1-084201f2c07a@arm.com>
+ <CAFp+6iEC8hobAdVF5nLdhQdCUqbi1xa4Vi-NLugGshV=dg+h1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20181130173433.24185-1-ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAFp+6iEC8hobAdVF5nLdhQdCUqbi1xa4Vi-NLugGshV=dg+h1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+ Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the Video Processing Unit node for RK3288 SoC.
-
-Fix the VPU IOMMU node, which was disabled and lacking
-its power domain property.
-
-Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
----
- arch/arm/boot/dts/rk3288.dtsi | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 0840ffb3205c..40d203cdca09 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -1223,6 +1223,18 @@
- 		};
- 	};
- 
-+	vpu: video-codec@ff9a0000 {
-+		compatible = "rockchip,rk3288-vpu";
-+		reg = <0x0 0xff9a0000 0x0 0x800>;
-+		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "vepu", "vdpu";
-+		clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
-+		clock-names = "aclk", "hclk";
-+		power-domains = <&power RK3288_PD_VIDEO>;
-+		iommus = <&vpu_mmu>;
-+	};
-+
- 	vpu_mmu: iommu@ff9a0800 {
- 		compatible = "rockchip,iommu";
- 		reg = <0x0 0xff9a0800 0x0 0x100>;
-@@ -1230,8 +1242,8 @@
- 		interrupt-names = "vpu_mmu";
- 		clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
- 		clock-names = "aclk", "iface";
-+		power-domains = <&power RK3288_PD_VIDEO>;
- 		#iommu-cells = <0>;
--		status = "disabled";
- 	};
- 
- 	hevc_mmu: iommu@ff9c0440 {
--- 
-2.20.0.rc1
+T24gVGh1LCBOb3YgMjksIDIwMTggYXQgMDg6MjU6MjBQTSArMDUzMCwgVml2ZWsgR2F1dGFtIHdy
+b3RlOgo+IE9uIFdlZCwgTm92IDI4LCAyMDE4IGF0IDEwOjA3IFBNIFJvYmluIE11cnBoeSA8cm9i
+aW4ubXVycGh5QGFybS5jb20+IHdyb3RlOgo+ID4KPiA+IE9uIDI4LzExLzIwMTggMTY6MjQsIFN0
+ZXBoZW4gQm95ZCB3cm90ZToKPiA+ID4gUXVvdGluZyBWaXZlayBHYXV0YW0gKDIwMTgtMTEtMjcg
+MDI6MTE6NDEpCj4gPiA+PiBAQCAtMTk2Niw2ICsxOTcwLDIzIEBAIHN0YXRpYyBjb25zdCBzdHJ1
+Y3Qgb2ZfZGV2aWNlX2lkIGFybV9zbW11X29mX21hdGNoW10gPSB7Cj4gPiA+PiAgIH07Cj4gPiA+
+PiAgIE1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIGFybV9zbW11X29mX21hdGNoKTsKPiA+ID4+Cj4g
+PiA+PiArc3RhdGljIHZvaWQgYXJtX3NtbXVfZmlsbF9jbGtfZGF0YShzdHJ1Y3QgYXJtX3NtbXVf
+ZGV2aWNlICpzbW11LAo+ID4gPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBj
+b25zdCBjaGFyICogY29uc3QgKmNsa3MpCj4gPiA+PiArewo+ID4gPj4gKyAgICAgICBpbnQgaTsK
+PiA+ID4+ICsKPiA+ID4+ICsgICAgICAgaWYgKHNtbXUtPm51bV9jbGtzIDwgMSkKPiA+ID4+ICsg
+ICAgICAgICAgICAgICByZXR1cm47Cj4gPiA+PiArCj4gPiA+PiArICAgICAgIHNtbXUtPmNsa3Mg
+PSBkZXZtX2tjYWxsb2Moc21tdS0+ZGV2LCBzbW11LT5udW1fY2xrcywKPiA+ID4+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBzaXplb2YoKnNtbXUtPmNsa3MpLCBHRlBfS0VSTkVM
+KTsKPiA+ID4+ICsgICAgICAgaWYgKCFzbW11LT5jbGtzKQo+ID4gPj4gKyAgICAgICAgICAgICAg
+IHJldHVybjsKPiA+ID4+ICsKPiA+ID4+ICsgICAgICAgZm9yIChpID0gMDsgaSA8IHNtbXUtPm51
+bV9jbGtzOyBpKyspCj4gPiA+PiArICAgICAgICAgICAgICAgc21tdS0+Y2xrc1tpXS5pZCA9IGNs
+a3NbaV07Cj4gPiA+Cj4gPiA+IElzIHRoaXMgY2xrX2J1bGtfZ2V0X2FsbCgpPwo+IAo+IEZyb20g
+d2hhdCBJIHJlbWVtYmVyLCBhbmQgbm93IEkgY291bGQgZ28gYmFjayB0byB2NyBhbmQgY2hlY2sg
+WzFdLCB3ZSBwYXJrZWQKPiBjbGtfYnVsa19nZXQgb3V0IG9mIE9GJ3Mgc29sZSBwdXJ2aWV3IGFz
+IHdlIGFsc28gaGF2ZQo+IGFybV9zbW11X2RldmljZV9hY3BpX3Byb2JlKCkgYmVzaWRlcyBhcm1f
+c21tdV9kZXZpY2VfZHRfcHJvYmUoKS4KPiAKPiBhcm1fc21tdV9kZXZpY2VfZHRfcHJvYmUoKSBj
+b3VsZCBnZXQgdGhlIGNsb2NrcyBmcm9tIGR0IGFuZCBmaWxsIGluCj4gdGhlIGNsb2NrIGJ1bGsg
+ZGF0YSwgYW5kCj4gc2ltaWxhcmx5LCBhcm1fc21tdV9kZXZpY2VfYWNwaV9wcm9iZSgpIGNvdWxk
+IGZpbGwgdGhlIGNsb2NrIGJ1bGsgZGF0YQo+IGJ5IGdldHRpbmcgaXQgZnJvbSBBQ1BJLgo+IAo+
+IGNsa19idWxrX2dldF9hbGwoKSBzZWVtcyBsaWtlIGdvaW5nIG9ubHkgdGhlIE9GIHdheS4KPiBJ
+cyB0aGVyZSBhbm90aGVyIHdheSBoZXJlIHRvIGhhdmUgc29tZXRoaW5nIGNvbW1vbiBiZXR3ZWVu
+IEFDUEkKPiBhbmQgT0YsIGFuZCB0aGVuIGRvIHRoZSBjbGtfYnVsa19nZXQ/CgpJJ2Qgc2F5IGp1
+c3QgZ28gd2l0aCBjbGtfYnVsa19nZXRfYWxsKCkgYW5kIGlmIHNvbWVib2R5IHJlYWxseSB3YW50
+cyB0bwptZXNzIHdpdGggdGhlIFNNTVUgY2xvY2tzIG9uIGEgc3lzdGVtIGJvb3RlZCB2aWEgQUNQ
+SSwgdGhlbiBpdCdzIHRoZWlyCnByb2JsZW0gdG8gc29sdmUuIE15IHVuZGVyc3RhbmRpbmcgaXMg
+dGhhdCB0aGUgZGVzaWduIG9mIElPUlQgbWFrZXMgdGhpcwpuZXh0IHRvIGltcG9zc2libGUgdG8g
+c29sdmUgYW55d2F5LCBiZWNhdXNlIGEgc3RhdGljIHRhYmxlIGlzIHVzZWQgYW5kCnRoZXJlZm9y
+ZSB3ZSdyZSB1bmFibGUgdG8gcnVuIHdoYXRldmVyIEFTTCBtZXRob2RzIG5lZWQgdG8gYmUgaW52
+b2tlZCB0bwptZXNzIHdpdGggdGhlIGNsb2Nrcy4KCldpbGwKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJl
+bm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
