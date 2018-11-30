@@ -1,51 +1,31 @@
-From: Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>
-Subject: Re: [PATCH v1] drm/bridge: fix AUX_CMD_SEND bit value
- for ti, sn65dsi86 bridge
-Date: Fri, 30 Nov 2018 10:49:11 -0500
-Message-ID: <20181130154911.GJ154160@art_vandelay>
-References: <20181130092745.4219-1-spanda@codeaurora.org>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [PATCH] ARM: dts: socfpga: remove incorrect 0x leading
+Date: Fri, 30 Nov 2018 10:02:49 -0600
+Message-ID: <a8b55198-ed1d-08d3-c3ea-159dade5d98c@kernel.org>
+References: <20181129125649.4060-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20181130092745.4219-1-spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Sandeep Panda <spanda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181129125649.4060-1-peron.clem@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBOb3YgMzAsIDIwMTggYXQgMDI6NTc6NDVQTSArMDUzMCwgU2FuZGVlcCBQYW5kYSB3
-cm90ZToKPiBGaXggdGhlIEFVWF9DTURfU0VORCBiaXQgZm9yIHRpLHNuNjVkc2k4NiBicmlkZ2Ug
-Y2hpcC4gV2l0aCB3cm9uZwo+IHZhbHVlIHRoZSBkcGNkIGF1eCB0cmFuc2FjdGlvbnMgd2l0aCBl
-RFAgcGFuZWwgYXJlIGZhaWxpbmcuCj4gCj4gU2lnbmVkLW9mZi1ieTogU2FuZGVlcCBQYW5kYSA8
-c3BhbmRhQGNvZGVhdXJvcmEub3JnPgoKUHVzaGVkIHRvIC1taXNjLWZpeGVzLCB0aGFua3MgZm9y
-IHRoZSBwYXRjaAoKU2VhbgoKPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aS1zbjY1
-ZHNpODYuYyB8IDIgKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0
-aW9uKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGktc242NWRz
-aTg2LmMgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RpLXNuNjVkc2k4Ni5jCj4gaW5kZXggNjgw
-NTY2ZDk3YWRjZi4uMTAyNDM5NjVlZTdjMCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0v
-YnJpZGdlL3RpLXNuNjVkc2k4Ni5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aS1z
-bjY1ZHNpODYuYwo+IEBAIC01NCw3ICs1NCw3IEBACj4gICNkZWZpbmUgU05fQVVYX0FERFJfN18w
-X1JFRwkJCTB4NzYKPiAgI2RlZmluZSBTTl9BVVhfTEVOR1RIX1JFRwkJCTB4NzcKPiAgI2RlZmlu
-ZSBTTl9BVVhfQ01EX1JFRwkJCQkweDc4Cj4gLSNkZWZpbmUgIEFVWF9DTURfU0VORAkJCQlCSVQo
-MSkKPiArI2RlZmluZSAgQVVYX0NNRF9TRU5ECQkJCUJJVCgwKQo+ICAjZGVmaW5lICBBVVhfQ01E
-X1JFUSh4KQkJCQkoKHgpIDw8IDQpCj4gICNkZWZpbmUgU05fQVVYX1JEQVRBX1JFRyh4KQkJCSgw
-eDc5ICsgKHgpKQo+ICAjZGVmaW5lIFNOX1NTQ19DT05GSUdfUkVHCQkJMHg5Mwo+IC0tIAo+IFRo
-ZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUgQ29k
-ZSBBdXJvcmEgRm9ydW0sCj4gYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVj
-dAo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4g
-RnJlZWRyZW5vIG1haWxpbmcgbGlzdAo+IEZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-PiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVu
-bwoKLS0gClNlYW4gUGF1bCwgU29mdHdhcmUgRW5naW5lZXIsIEdvb2dsZSAvIENocm9taXVtIE9T
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVu
-byBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+
+
+On 11/29/18 6:56 AM, Clément Péron wrote:
+> unit-address does not have a leading "0x" (the number is assumed to be hexadecimal).
+> 
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> ---
+>  arch/arm/boot/dts/socfpga.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+
+Applied!
+
+Thanks,
+Dinh
