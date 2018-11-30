@@ -1,43 +1,33 @@
-From: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: =?utf-8?q?=5BDPU_PATCH=C2=A0=5D_drm/msm/dpu=3A_Ignore?=
- =?utf-8?q?_alpha_for_XBGR8888_format?=
-Date: Fri, 30 Nov 2018 17:22:50 +0530
-Message-ID: <1543578770-25708-1-git-send-email-jshekhar@codeaurora.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v3 0/5] ASoC: qdsp6: add compress offload support
+Date: Fri, 30 Nov 2018 17:52:20 +0530
+Message-ID: <20181130122220.GO3175@vkoul-mobl.Dlink>
+References: <20181115181324.26784-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181115181324.26784-1-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: broonie@kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, bgoswami@codeaurora.org, rohitkr@codeaurora.org, lgirdwood@gmail.com, tiwai@suse.com, devicetree@vger.kernel.org, srini@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QWxwaGEgZW5hYmxlIGluIHRoZSBwaXhlbCBmb3JtYXQgd2lsbCBoZWxwIGluCnNlbGVjdGluZyB0
-aGUgYmxlbmQgcnVsZS4gQnkga2VlcGluZyBhbHBoYSBlbmFibGUKdG8gdHJ1ZSB3ZSBhcmUgYWxs
-b3dpbmcgZm9yZWdyb3VuZCBhbHBoYSB0byBibGVuZAp3aXRoIHRoZSBsYXllci4gSWYgYWxwaGEg
-aXMgZG9uJ3QgY2FyZSwgdGhlbiB3ZQpzaG91bGQgbm90IGFsbG93IHBpeGVsIGFscGhhIHRvIGJl
-IHBhcnQgb2YgYmxlbmQKZXF1YXRpb24uCgpTaWduZWQtb2ZmLWJ5OiBKYXlhbnQgU2hla2hhciA8
-anNoZWtoYXJAY29kZWF1cm9yYS5vcmc+Ci0tLQogZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2Rw
-dTEvZHB1X2Zvcm1hdHMuYyB8IDIgKy0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwg
-MSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUx
-L2RwdV9mb3JtYXRzLmMgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfZm9ybWF0
-cy5jCmluZGV4IGJmY2QxNjUuLmQ3NDNlN2MgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9t
-c20vZGlzcC9kcHUxL2RwdV9mb3JtYXRzLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNw
-L2RwdTEvZHB1X2Zvcm1hdHMuYwpAQCAtMjE2LDcgKzIxNiw3IEBAIHN0cnVjdCBkcHVfbWVkaWFf
-Y29sb3JfbWFwIHsKIAlJTlRFUkxFQVZFRF9SR0JfRk1UKFhCR1I4ODg4LAogCQlDT0xPUl84QklU
-LCBDT0xPUl84QklULCBDT0xPUl84QklULCBDT0xPUl84QklULAogCQlDMl9SX0NyLCBDMF9HX1ks
-IEMxX0JfQ2IsIEMzX0FMUEhBLCA0LAotCQl0cnVlLCA0LCAwLAorCQlmYWxzZSwgNCwgMCwKIAkJ
-RFBVX0ZFVENIX0xJTkVBUiwgMSksCiAKIAlJTlRFUkxFQVZFRF9SR0JfRk1UKFJHQkE4ODg4LAot
-LSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRo
-ZSBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJv
-amVjdAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJl
-ZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+On 15-11-18, 18:13, Srinivas Kandagatla wrote:
+> This patchset adds support to very basic MP3 playback compress offload
+> support via QDSP ASM module.
+> 
+> Tested this patchset on DB410c with APQ8016 and DB820c with APQ8096 using
+> tinycompress library.
+> 
+> Adding other codec support should be trivial w.r.t qdsp6 side, however
+> there are other dependencies like compress UAPI header changes and
+> FastRPC which are being worked in parallel. Once ready will post them!
+
+Thanks Srini, with this we will have compress support upstream for a
+public board.
+
+Acked-by: Vinod Koul <vkoul@kernel.org>
+
+-- 
+~Vinod
