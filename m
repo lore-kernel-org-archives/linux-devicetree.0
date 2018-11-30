@@ -1,113 +1,53 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 06/14] dt-bindings: clock: milbeaut: add Milbeaut clock
- description
-Date: Fri, 30 Nov 2018 00:19:29 -0800
-Message-ID: <154356596981.88331.14415961625410424962@swboyd.mtv.corp.google.com>
-References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
- <1542589274-13878-7-git-send-email-sugaya.taichi@socionext.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 2/3] dt-bindings: clk: meson: add main controller clock
+ input
+Date: Fri, 30 Nov 2018 09:21:05 +0100
+Message-ID: <42372fe968835e59dae6aa1ce726b694f8a16a39.camel@baylibre.com>
+References: <20181129164524.18670-1-jbrunet@baylibre.com>
+         <20181129164524.18670-3-jbrunet@baylibre.com>
+         <154353500665.88331.5525788751558555940@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542589274-13878-7-git-send-email-sugaya.taichi@socionext.com>
+In-Reply-To: <154353500665.88331.5525788751558555940@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sugaya Taichi <sugaya.taichi@socionext.com>
+To: Stephen Boyd <sboyd@kernel.org>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Sugaya Taichi (2018-11-18 17:01:11)
-> Add DT bindings document for Milbeaut clock.
-> =
+On Thu, 2018-11-29 at 15:43 -0800, Stephen Boyd wrote:
+> Quoting Jerome Brunet (2018-11-29 08:45:23)
+> > Add the clock input of the main clock controller
+> > 
+> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> > ---
+> >  Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt 
+> > b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+> > index e950599566a9..79454869f96d 100644
+> > --- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+> > +++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+> > @@ -9,6 +9,8 @@ Required Properties:
+> >                 "amlogic,gxbb-clkc" for GXBB SoC,
+> >                 "amlogic,gxl-clkc" for GXL and GXM SoC,
+> >                 "amlogic,axg-clkc" for AXG SoC.
+> > +- clocks: phandle to the input clock of the controller, presumably the
+> > +         platform xtal.
+> 
+> Any reason to not have clock-names? 
 
-> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
-> ---
->  .../devicetree/bindings/clock/milbeaut-clock.txt   | 93 ++++++++++++++++=
-++++++
->  1 file changed, 93 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/milbeaut-cloc=
-k.txt
-> =
+Not really, I did not bother because there was only one input clock.
+I can easily fix this
 
-> diff --git a/Documentation/devicetree/bindings/clock/milbeaut-clock.txt b=
-/Documentation/devicetree/bindings/clock/milbeaut-clock.txt
-> new file mode 100644
-> index 0000000..5c093c8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/milbeaut-clock.txt
-> @@ -0,0 +1,93 @@
-> +Milbeaut M10V Clock Controller Binding
-> +----------------------------------------
-> +Milbeaut clock controller is consists of few oscillators, PLL, multiplex=
-er
-> +and few divider modules
-> +
-> +This binding uses common clock bindings
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Required properties:
-> +- compatible: shall be "socionext,milbeaut-m10v-clk-regs"
-> +- reg: shall contain base address and length of clock registers
-> +- #clock-cells: shall be 0
-> +
-> +Example:
-> +       m10v-clk-tree@ {
-> +               compatible =3D "socionext,milbeaut-m10v-clk-regs";
-> +               reg =3D <0x1d021000 0x4000>;
-> +
-> +               clocks {
-> +                       #address-cells =3D <0>;
-> +                       #size-cells =3D <0>;
-> +
-> +                       uclk40xi: uclk40xi {
-> +                               compatible =3D "fixed-clock";
-> +                               #clock-cells =3D <0>;
-> +                               clock-frequency =3D <40000000>;
-> +                       };
-> +               };
-
-This style of binding is highly discouraged. We don't describe each and
-every clk in DT, we describe clk controllers and their outputs and
-inputs in DT. The driver is the place where the clock controller
-describes the internal clk topology of that controller. Also, fixed
-frequency clks are typically oscillators and those would come from the
-board dts file, but otherwise I wouldn't expect to see fixed frequency
-clks in DT.
-
-> +       }
-> +
-> +The clock consumer shall specify the desired clock-output of the clock
-> +controller (as defined in [2]) by specifying output-id in its "clock"
-> +phandle cell
-> +[2] arch/arm/boot/dts/milbeaut-m10v-clk.h
-> +
-[...]
-> +
-> +Example
-> +       piclk_mux_0: spiclk_mux_0 {
-> +               compatible =3D "socionext,m10v-clk-div";
-> +               #clock-cells =3D <0>;
-> +               clocks =3D <&pll10_div_1_2>;
-> +               offset =3D <bSPICLK>;
-> +               mask =3D <0x3>;
-> +               ratios =3D <4 0x5 2 0x4>;
-> +       };
-> +
-> +       pll10: pll10 {
-> +               compatible =3D "socionext,m10v-pll-fixed-factor";
-> +               #clock-cells =3D <0>;
-> +               clocks =3D <&uclk40xi>;
-> +               offset =3D <10>;
-> +               clock-div =3D <5>;
-> +               clock-mult =3D <108>;
-> +       };
-> +
-> +       emmcclk: emmcclk {
-> +               compatible =3D "socionext,m10v-clk-div";
-> +               #clock-cells =3D <0>;
-> +               clocks =3D <&pll11>;
-> +               offset =3D <bEMMCCLK>;
-> +               mask =3D <0x3>;
-> +               ratios =3D <15 0x7 10 0x6 9 0x5 8 0x4>;
-
-Yeah, please no. This whole binding needs a rewrite to not have one node
-per clk.
+> I'd prefer to have them because then
+> we can easily hook up providers with their parents based on strings. I
+> suppose we'll have to support both modes of strings and numbers for
+> connections, but that may be more for legacy reasons that could be
+> avoided here if a clock-names property existed.
+> 
+> >  
+> >  - #clock-cells: should be 1.
+> >  
