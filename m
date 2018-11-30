@@ -1,55 +1,63 @@
 Return-Path: <SRS0=X76U=OJ=bp.renesas.com=biju.das@kernel.org>
 From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 19/21] ARM: dts: r8a7744: Add IRQC support
-Date: Fri, 30 Nov 2018 15:26:33 +0000
-Message-Id: <1543591595-37861-20-git-send-email-biju.das@bp.renesas.com>
+Subject: [PATCH v2 01/21] ARM: dts: r8a7744-iwg20m: Add iWave RZ/G1N Qseven SOM
+Date: Fri, 30 Nov 2018 15:26:15 +0000
+Message-Id: <1543591595-37861-2-git-send-email-biju.das@bp.renesas.com>
 In-Reply-To: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
 References: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Describe the IRQC interrupt controller in the r8a7744 device tree.
+Add support for iWave RZ/G1N Qseven System On Module.
 
 Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 V1-->V2
-   * No Change
+    * No change
 ---
- arch/arm/boot/dts/r8a7744.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm/boot/dts/r8a7744-iwg20m.dtsi | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a7744-iwg20m.dtsi
 
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index 87187f2..91096c3 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -297,6 +297,26 @@
- 			#power-domain-cells = <1>;
- 		};
- 
-+		irqc: interrupt-controller@e61c0000 {
-+			compatible = "renesas,irqc-r8a7744", "renesas,irqc";
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			reg = <0 0xe61c0000 0 0x200>;
-+			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 407>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 407>;
-+		};
+diff --git a/arch/arm/boot/dts/r8a7744-iwg20m.dtsi b/arch/arm/boot/dts/r8a7744-iwg20m.dtsi
+new file mode 100644
+index 0000000..6166ae0
+--- /dev/null
++++ b/arch/arm/boot/dts/r8a7744-iwg20m.dtsi
+@@ -0,0 +1,31 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the iWave RZ/G1N Qseven SOM
++ *
++ * Copyright (C) 2018 Renesas Electronics Corp.
++ */
 +
- 		icram0:	sram@e63a0000 {
- 			compatible = "mmio-sram";
- 			reg = <0 0xe63a0000 0 0x12000>;
++#include "r8a7744.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	compatible = "iwave,g20m", "renesas,r8a7744";
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0 0x40000000 0 0x40000000>;
++	};
++
++	reg_3p3v: 3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++};
++
++&extal_clk {
++	clock-frequency = <20000000>;
++};
 -- 
 2.7.4
