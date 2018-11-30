@@ -1,53 +1,64 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/4] of/device: Add a way to probe drivers by match data
-Date: Thu, 29 Nov 2018 19:01:54 -0600
-Message-ID: <CAL_JsqJuZAr7ndznrUu0cuM7DpB5A7ixjJ+vZ97s5G4xz0sVow@mail.gmail.com>
-References: <20181106183609.207702-1-sboyd@kernel.org> <20181106183609.207702-2-sboyd@kernel.org>
- <CAL_JsqLvKWcJUYDyWOg3rMeEWv7JV4zw7-YkOUWiL5rfXgVRvQ@mail.gmail.com>
- <154161585170.88331.1822872519370217248@swboyd.mtv.corp.google.com> <154353772392.88331.16937191244549721858@swboyd.mtv.corp.google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] ARM: dts: realview-pbx: Fix duplicate regulator nodes
+Date: Thu, 29 Nov 2018 19:05:47 -0600
+Message-ID: <20181130010547.24757-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154353772392.88331.16937191244549721858@swboyd.mtv.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, arm@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 29, 2018 at 6:28 PM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Stephen Boyd (2018-11-07 10:37:31)
-> > appropriate structure with to_platform_device() or to_i2c_client()?
-> >
-> > So the example would become
-> >
-> >   struct of_driver_probe_func {
-> >         int (*probe)(struct device *dev);
-> >   };
-> >
-> >   struct of_driver_probe_func mtk_probes[] = {
-> >         mtk_probe1,
-> >         mtk_probe2,
-> >         mtk_probe3,
-> >   };
-> >
-> >   struct platform_driver mtk_driver = {
-> >         .driver = {
-> >                 .name = "mtk-foo";
-> >                 .of_match_table = mtk_match_table,
-> >                 .of_probes = &mtk_probes;
-> >         },
-> >   };
-> >
-> > And the probe functions might need to container_of() the device pointer
-> > to get the struct they know they need. The probe function could also be
-> > added to of_device_id and then we would have to look and see if that
-> > pointer is populated when the device is matched in generic device code.
-> >
->
-> I guess I'll go down the path of extending the of_device_id structure?
+There's a bug in dtc in checking for duplicate node names when there's
+another section (e.g. "/ { };"). In this case, skeleton.dtsi provides
+another section. Upon removal of skeleton.dtsi, the dtb fails to build
+due to a duplicate node 'fixedregulator@0'. As both nodes were pretty
+much the same 3.3V fixed regulator, it hasn't really mattered. Fix this
+by renaming the nodes to something unique. In the process, drop the
+unit-address which shouldn't be present wtihout reg property.
 
-Unfortunately, I don't think you can change of_device_id as it's part
-of the kernel ABI.
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ arch/arm/boot/dts/arm-realview-pbx.dtsi | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Rob
+diff --git a/arch/arm/boot/dts/arm-realview-pbx.dtsi b/arch/arm/boot/dts/arm-realview-pbx.dtsi
+index a5676697ff3b..916a97734f84 100644
+--- a/arch/arm/boot/dts/arm-realview-pbx.dtsi
++++ b/arch/arm/boot/dts/arm-realview-pbx.dtsi
+@@ -44,7 +44,7 @@
+ 	};
+ 
+ 	/* The voltage to the MMC card is hardwired at 3.3V */
+-	vmmc: fixedregulator@0 {
++	vmmc: regulator-vmmc {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vmmc";
+ 		regulator-min-microvolt = <3300000>;
+@@ -52,7 +52,7 @@
+ 		regulator-boot-on;
+         };
+ 
+-	veth: fixedregulator@0 {
++	veth: regulator-veth {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "veth";
+ 		regulator-min-microvolt = <3300000>;
+@@ -567,4 +567,3 @@
+ 		};
+ 	};
+ };
+-
+-- 
+2.19.1
