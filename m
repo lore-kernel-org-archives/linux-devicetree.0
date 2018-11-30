@@ -1,35 +1,83 @@
-From: Felix Brack <fb@ltec.ch>
-Subject: [PATCH] ARM: dts: am335x-pdu001: Fix polarity of card detection input
-Date: Fri, 30 Nov 2018 15:54:46 +0100
-Message-ID: <20181130145446.3819-1-fb@ltec.ch>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH 1/2] dt-bindings: trivial: add ti,lm3630a binding
+Date: Fri, 30 Nov 2018 09:37:26 -0600
+Message-ID: <e29497f4-2c8d-378e-0f9b-9a5bcee3fb1b@ti.com>
+References: <20181124141703.29232-1-masneyb@onstation.org>
+ <20181127105642.uu56phxjfl7bjl2p@holly.lan> <20181130135927.GA27500@basecamp>
+ <CAL_Jsq+-AZFf==911Pmf_ObUk+3VQgC+2+BvQ9q8LyQ_v=FdOA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+-AZFf==911Pmf_ObUk+3VQgC+2+BvQ9q8LyQ_v=FdOA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: tony@atomide.com, bcousson@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, Felix Brack <fb@ltec.ch>
+To: Rob Herring <robh+dt@kernel.org>, Brian Masney <masneyb@onstation.org>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, Lee Jones <lee.jones@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonathan Marek <jonathan@marek.ca>, Craig Tatlor <ctatlor97@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-When a micro SD card is inserted in the PDU001 card cage, the card
-detection switch is opened and the corresponding GPIO input is driven
-by a pull-up. Hence change the active level of the card detection
-input from low to high.
+Rob/Brian
 
-Signed-off-by: Felix Brack <fb@ltec.ch>
----
- arch/arm/boot/dts/am335x-pdu001.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 11/30/2018 08:13 AM, Rob Herring wrote:
+> +Dan M
+> 
+> On Fri, Nov 30, 2018 at 7:59 AM Brian Masney <masneyb@onstation.org> wrote:
+>>
+>> On Tue, Nov 27, 2018 at 10:56:42AM +0000, Daniel Thompson wrote:
+>>> On Sat, Nov 24, 2018 at 09:17:02AM -0500, Brian Masney wrote:
+>>>> Add a trivial binding for the Texas Instruments LM3630A Backlight Chip.
+> 
+> How does this chip relate to ones Dan has been working on?
+> 
 
-diff --git a/arch/arm/boot/dts/am335x-pdu001.dts b/arch/arm/boot/dts/am335x-pdu001.dts
-index 6dd9d487aaeb..ae43d61f4e8b 100644
---- a/arch/arm/boot/dts/am335x-pdu001.dts
-+++ b/arch/arm/boot/dts/am335x-pdu001.dts
-@@ -585,7 +585,7 @@
- 	bus-width = <4>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc2_pins>;
--	cd-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
-+	cd-gpios = <&gpio2 2 GPIO_ACTIVE_HIGH>;
- };
- 
- &sham {
+This is a standard 8-bit white LED driver.  It looks like Brian is just adding DT
+support to load the driver.
+
+I would expect that the bindings need to be updated to be able to register one string or
+another using the led-sources property.  There are a couple of examples in the kernel and
+a couple of them in patch form.
+
+This driver and binding need to be updated to the latest spec, as you pointed out with child nodes.
+
+And Jacek has some new proposed bindings for the LED class so we may want to adopt those standards here
+as well.  This is what I am waiting on for agreement so I can update my patch set.
+
+Dan
+
+>>>
+>>> It's quite unusual for a backlight device to have a trivial binding.
+>>>
+>>> The driver supports fairly extensive parametrization via struct
+>>> lm3530a_platform_data. It is really the case that none of these
+>>> properties should ever be set via DT?
+>>
+>> Hi Daniel,
+>>
+>> I initially assumed that we would let user space configure these values
+>> once the system has booted, but you are right that these should be
+>> available in device tree.
+>>
+>> The driver has two different LED banks that can be configured
+>> independently.
+> 
+> That is usually represented with child nodes which makes this anything
+> but trivial. Plus, given that we have bindings for LEDs/backlights, no
+> LED/backlight controller is a trivial device.
+> 
+>> How do you feel about having a single property in
+>> device tree populate the initial values for both banks? I propose that
+>> we could use the property default-brightness-level for leda_init_brt
+>> and ledb_init_brt in struct lm3630a_platform_data. The max-brightness
+>> property can populate leda_max_brt and ledb_max_brt.
+>>
+>> I need to look at other bindings this weekend to see if there are any
+>> standard properties that I can use for leda_ctrl/ledb_ctrl, pwm_ctrl,
+>> and pwm_period.
+>>
+>> Brian
+>>
+
+
 -- 
-2.17.1
+------------------
+Dan Murphy
