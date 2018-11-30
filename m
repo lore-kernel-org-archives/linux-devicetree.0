@@ -1,128 +1,96 @@
-From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 07/15] arm64: dts: allwinner: h5: Add
- system-control node with SRAM C1
-Date: Fri, 30 Nov 2018 14:26:34 +0100
-Message-ID: <82a1ef7ea170ba50f58f74e26dac6170ac87783f.camel@bootlin.com>
-References: <20181115145013.3378-1-paul.kocialkowski@bootlin.com>
-	 <20181115145013.3378-8-paul.kocialkowski@bootlin.com>
-	 <CAGb2v64t6t3Bwf4nc8gQWRDkdv4zGRF1-+Q7snqX6bkEVqirvA@mail.gmail.com>
-	 <CAGb2v65yNKnqbeQmUYjMzDtydYL=7kxmtPrAEEU9U=a5XbMiFg@mail.gmail.com>
-Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 4/6] char: fastrpc: Add support for create remote init process
+Date: Fri, 30 Nov 2018 14:26:23 +0100
+Message-ID: <CAK8P3a0CzU5mGE9YBfe5FVPGCBhjFRsZbgbyy8Yvopu4wQ7uxA@mail.gmail.com>
+References: <20181130104657.14875-1-srinivas.kandagatla@linaro.org> <20181130104657.14875-5-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-GiwLARmS2nmhlZHes8Vi"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBDHVQTQAKGQEHZGRVUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v65yNKnqbeQmUYjMzDtydYL=7kxmtPrAEEU9U=a5XbMiFg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181130104657.14875-5-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, gregkh <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm@vger.kernel.org, bkumar@qti.qualcomm.com, thierry.escande@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Nov 30, 2018 at 11:48 AM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
 
---=-GiwLARmS2nmhlZHes8Vi
-Content-Type: text/plain; charset="UTF-8"
+> +
+> +static int fastrpc_init_process(struct fastrpc_user *fl,
+> +                               struct fastrpc_ioctl_init *init)
+> +{
+> +       struct fastrpc_ioctl_invoke *ioctl;
+> +       struct fastrpc_phy_page pages[1];
+> +       struct fastrpc_map *file = NULL, *mem = NULL;
+> +       struct fastrpc_buf *imem = NULL;
+> +       int err = 0;
+> +
+> +       ioctl = kzalloc(sizeof(*ioctl), GFP_KERNEL);
+> +       if (!ioctl)
+> +               return -ENOMEM;
+> +
+> +       if (init->flags == FASTRPC_INIT_ATTACH) {
+> +               remote_arg_t ra[1];
+> +               int tgid = fl->tgid;
+> +
+> +               ra[0].buf.pv = (void *)&tgid;
+> +               ra[0].buf.len = sizeof(tgid);
+> +               ioctl->handle = 1;
+> +               ioctl->sc = FASTRPC_SCALARS(FASTRPC_RMID_INIT_ATTACH, 1, 0);
+> +               ioctl->pra = ra;
+> +               fl->pd = 0;
+> +
+> +               err = fastrpc_internal_invoke(fl, 1, ioctl);
+> +               if (err)
+> +                       goto bail;
 
-Hi,
+It doesn't seem right to me to dynamically allocate an 'ioctl' data structure
+from kernel context and pass that down to another function. Maybe eliminate
+that structure and change fastrpc_internal_invoke to take the individual
+arguments here instead of a pointer?
 
-On Fri, 2018-11-30 at 11:38 +0800, Chen-Yu Tsai wrote:
-> On Fri, Nov 16, 2018 at 12:52 AM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> > On Thu, Nov 15, 2018 at 10:50 PM Paul Kocialkowski
-> > <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > Add the H5-specific system control node description to its device-tree
-> > > with support for the SRAM C1 section, that will be used by the video
-> > > codec node later on.
-> > > 
-> > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> > > ---
-> > >  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 22 ++++++++++++++++++++
-> > >  1 file changed, 22 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-> > > index b41dc1aab67d..c2d14b22b8c1 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-> > > @@ -94,6 +94,28 @@
-> > >         };
-> > > 
-> > >         soc {
-> > > +               system-control@1c00000 {
-> > > +                       compatible = "allwinner,sun50i-h5-system-control";
-> > > +                       reg = <0x01c00000 0x1000>;
-> > > +                       #address-cells = <1>;
-> > > +                       #size-cells = <1>;
-> > > +                       ranges;
-> > > +
-> > > +                       sram_c1: sram@1d00000 {
-> > > +                               compatible = "mmio-sram";
-> > > +                               reg = <0x01d00000 0x80000>;
-> > 
-> > I'll try to check this one tomorrow.
-> > 
-> > I did find something interesting on the H3: there also seems to be SRAM at
-> > 0x01dc0000 to 0x01dcfeff , again mapped by the same bits as SRAM C1.
-> > 
-> > And on the A33, the SRAM C1 range is 0x01d00000 to 0x01d478ff.
-> > 
-> > This was found by mapping the SRAM to the CPU, then using devmem to poke
-> > around the register range. If there's SRAM, the first read would typically
-> > return random data, and a subsequent write to it would set some value that
-> > would be read back correctly. If there's no SRAM, a read either returns 0x0
-> > or some random data that can't be overwritten.
-> > 
-> > You might want to check the other SoCs.
-> 
-> This range seems to contain stuff other than SRAM, possibly fixed lookup
-> tables. Since this is entirely unknown, lets just stick to the known full
-> range instead.
+> +       } else if (init->flags == FASTRPC_INIT_CREATE) {
 
-Thanks for investigating all this!
+How about splitting each flags== case into a separate function?
 
-I also conducted some tests and found that the H5 has its SRAM C1
-(marked as SRAM C in the manual) at 0x18000. However for the A64, SRAM
-C1 gets mapped to 0x1D00000. There is also SRAM C at 0x18000 but this
-one seems unrelated to the VPU and only used by DE2 (as already
-described in the A64 dt).
+> diff --git a/include/uapi/linux/fastrpc.h b/include/uapi/linux/fastrpc.h
+> index 8fec66601337..6b596fc7ddf3 100644
+> --- a/include/uapi/linux/fastrpc.h
+> +++ b/include/uapi/linux/fastrpc.h
+> @@ -6,6 +6,12 @@
+>  #include <linux/types.h>
+>
+>  #define FASTRPC_IOCTL_INVOKE   _IOWR('R', 3, struct fastrpc_ioctl_invoke)
+> +#define FASTRPC_IOCTL_INIT     _IOWR('R', 4, struct fastrpc_ioctl_init)
+> +
+> +/* INIT a new process or attach to guestos */
+> +#define FASTRPC_INIT_ATTACH      0
+> +#define FASTRPC_INIT_CREATE      1
+> +#define FASTRPC_INIT_CREATE_STATIC  2
 
-I share your conclusion that there seems to be more than SRAM in there.
-Testing with devmem write/read on the start address was reliable as a
-test, but some chunks in the range did not behave like SRAM (not the
-same value read).
+Maybe use three command codes here, and remove the 'flags' member?
 
-I agree that we should keep the known full range as there are lots of
-unknowns here.
+> @@ -53,4 +59,16 @@ struct fastrpc_ioctl_invoke {
+>         unsigned int *crc;
+>  };
+>
+> +struct fastrpc_ioctl_init {
+> +       uint32_t flags;         /* one of FASTRPC_INIT_* macros */
+> +       uintptr_t file;         /* pointer to elf file */
+> +       uint32_t filelen;       /* elf file length */
+> +       int32_t filefd;         /* ION fd for the file */
 
-Cheers,
+What does this have to do with ION? The driver seems to otherwise
+just use the generic dma_buf interfaces.
 
-Paul
+> +       uintptr_t mem;          /* mem for the PD */
+> +       uint32_t memlen;        /* mem length */
+> +       int32_t memfd;          /* fd for the mem */
+> +       int attrs;
+> +       unsigned int siglen;
+> +};
 
-> ChenYu
-> 
-> > > +                               #address-cells = <1>;
-> > > +                               #size-cells = <1>;
-> > > +                               ranges = <0 0x01d00000 0x80000>;
-> > > +
-> > > +                               ve_sram: sram-section@0 {
-> > > +                                       compatible = "allwinner,sun50i-h5-sram-c1",
-> > > +                                                    "allwinner,sun4i-a10-sram-c1";
-> > > +                                       reg = <0x000000 0x80000>;
-> > > +                               };
-> > > +                       };
-> > > +               };
-> > > +
-> > >                 mali: gpu@1e80000 {
-> > >                         compatible = "allwinner,sun50i-h5-mali", "arm,mali-450";
-> > >                         reg = <0x01e80000 0x30000>;
-> > > --
-> > > 2.19.1
-> > > 
--- 
-Paul Kocialkowski, Bootlin (formerly Free Electrons)
-Embedded Linux and kernel engineering
-https://bootlin.com
---=-GiwLARmS2nmhlZHes8Vi--
+This structure is again not suitable for ioctls. Please used fixed-length
+members and no holes in the structure.
+
+       Arnd
