@@ -1,189 +1,290 @@
-Return-Path: <SRS0=/scJ=N2=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v5 2/2] dt-bindings: pinctrl: Add RZ/A2 pinctrl and GPIO
-Date: Wed, 14 Nov 2018 20:40:35 -0500
-Message-Id: <20181115014035.125320-3-chris.brandt@renesas.com>
-In-Reply-To: <20181115014035.125320-1-chris.brandt@renesas.com>
-References: <20181115014035.125320-1-chris.brandt@renesas.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: jacopo mondi <jacopo@jmondi.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=X76U=OJ=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v2 17/21] ARM: dts: r8a7744: Add audio support
+Date: Fri, 30 Nov 2018 15:26:31 +0000
+Message-Id: <1543591595-37861-18-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
+References: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree binding documentation and header file for Renesas R7S9210
-(RZ/A2) SoCs.
+Add sound support for the RZ/G1N SoC (a.k.a. R8A7744).
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+This work is based on similar work done on the R8A7743 SoC.
+
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 ---
-v4:
- * Converted Px to PORTx because of conflict with "PM"
- * Rounded up reg range
- * Changed 'should' to 'shall' because when there is only 1 in a list, you
-   have no choice but to choose it.
- * Commented that Port M pins are also called JP_x in HW manual
- * Fixed typos and grammar
- * Added more Reviewed-by
-v3:
- * Added Reviewed-by
-v2:
- * Moved gpio-controller to required
- * Wrote a better description of what the sub-nodes are for
- * Added pinmux property description
- * Changed macro RZA2_PIN_ID to RZA2_PIN
+V1-->V2
+   * No Change
 ---
- .../bindings/pinctrl/renesas,rza2-pinctrl.txt      | 87 ++++++++++++++++++++++
- include/dt-bindings/pinctrl/r7s9210-pinctrl.h      | 47 ++++++++++++
- 2 files changed, 134 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
- create mode 100644 include/dt-bindings/pinctrl/r7s9210-pinctrl.h
+ arch/arm/boot/dts/r8a7744.dtsi | 243 +++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 235 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
-new file mode 100644
-index 000000000000..a63ccd476cda
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
-@@ -0,0 +1,87 @@
-+Renesas RZ/A2 combined Pin and GPIO controller
+diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
+index fabc7f9..cb6dfb5 100644
+--- a/arch/arm/boot/dts/r8a7744.dtsi
++++ b/arch/arm/boot/dts/r8a7744.dtsi
+@@ -894,23 +894,250 @@
+ 		};
+ 
+ 		rcar_sound: sound@ec500000 {
+-			reg = <0 0xec500000 0 0x1000>;
++			/*
++			 * #sound-dai-cells is required
++			 *
++			 * Single DAI : #sound-dai-cells = <0>;         <&rcar_sound>;
++			 * Multi  DAI : #sound-dai-cells = <1>;         <&rcar_sound N>;
++			 */
++			compatible = "renesas,rcar_sound-r8a7744",
++				     "renesas,rcar_sound-gen2";
++			reg = <0 0xec500000 0 0x1000>, /* SCU */
++			      <0 0xec5a0000 0 0x100>,  /* ADG */
++			      <0 0xec540000 0 0x1000>, /* SSIU */
++			      <0 0xec541000 0 0x280>,  /* SSI */
++			      <0 0xec740000 0 0x200>;  /* Audio DMAC peri peri*/
++			reg-names = "scu", "adg", "ssiu", "ssi", "audmapp";
 +
-+The Renesas SoCs of the RZ/A2 series feature a combined Pin and GPIO controller.
-+Pin multiplexing and GPIO configuration is performed on a per-pin basis.
-+Each port features up to 8 pins, each of them configurable for GPIO
-+function (port mode) or in alternate function mode.
-+Up to 8 different alternate function modes exist for each single pin.
++			clocks = <&cpg CPG_MOD 1005>,
++				 <&cpg CPG_MOD 1006>, <&cpg CPG_MOD 1007>,
++				 <&cpg CPG_MOD 1008>, <&cpg CPG_MOD 1009>,
++				 <&cpg CPG_MOD 1010>, <&cpg CPG_MOD 1011>,
++				 <&cpg CPG_MOD 1012>, <&cpg CPG_MOD 1013>,
++				 <&cpg CPG_MOD 1014>, <&cpg CPG_MOD 1015>,
++				 <&cpg CPG_MOD 1022>, <&cpg CPG_MOD 1023>,
++				 <&cpg CPG_MOD 1024>, <&cpg CPG_MOD 1025>,
++				 <&cpg CPG_MOD 1026>, <&cpg CPG_MOD 1027>,
++				 <&cpg CPG_MOD 1028>, <&cpg CPG_MOD 1029>,
++				 <&cpg CPG_MOD 1030>, <&cpg CPG_MOD 1031>,
++				 <&cpg CPG_MOD 1021>, <&cpg CPG_MOD 1020>,
++				 <&cpg CPG_MOD 1021>, <&cpg CPG_MOD 1020>,
++				 <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>,
++				 <&audio_clk_a>, <&audio_clk_b>, <&audio_clk_c>,
++				 <&cpg CPG_CORE R8A7744_CLK_M2>;
++			clock-names = "ssi-all",
++				      "ssi.9", "ssi.8", "ssi.7", "ssi.6", "ssi.5",
++				      "ssi.4", "ssi.3", "ssi.2", "ssi.1", "ssi.0",
++				      "src.9", "src.8", "src.7", "src.6", "src.5",
++				      "src.4", "src.3", "src.2", "src.1", "src.0",
++				      "ctu.0", "ctu.1",
++				      "mix.0", "mix.1",
++				      "dvc.0", "dvc.1",
++				      "clk_a", "clk_b", "clk_c", "clk_i";
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 1005>,
++				 <&cpg 1006>, <&cpg 1007>, <&cpg 1008>, <&cpg 1009>,
++				 <&cpg 1010>, <&cpg 1011>, <&cpg 1012>, <&cpg 1013>,
++				 <&cpg 1014>, <&cpg 1015>;
++			reset-names = "ssi-all",
++				      "ssi.9", "ssi.8", "ssi.7", "ssi.6", "ssi.5",
++				      "ssi.4", "ssi.3", "ssi.2", "ssi.1", "ssi.0";
++			status = "disabled";
+ 
+ 			rcar_sound,dvc {
+-				dvc0: dvc-0 {};
+-				dvc1: dvc-1 {};
++				dvc0: dvc-0 {
++					dmas = <&audma1 0xbc>;
++					dma-names = "tx";
++				};
++				dvc1: dvc-1 {
++					dmas = <&audma1 0xbe>;
++					dma-names = "tx";
++				};
++			};
 +
-+Pin controller node
-+-------------------
++			rcar_sound,mix {
++				mix0: mix-0 { };
++				mix1: mix-1 { };
++			};
 +
-+Required properties:
-+  - compatible: shall be:
-+    - "renesas,r7s9210-pinctrl": for RZ/A2M
-+  - reg
-+    Address base and length of the memory area where the pin controller
-+    hardware is mapped to.
-+  - gpio-controller
-+    This pin controller also controls pins as GPIO
-+  - #gpio-cells
-+    Must be 2
-+  - gpio-ranges
-+    Expresses the total number of GPIO ports/pins in this SoC
-+
-+Example: Pin controller node for RZ/A2M SoC (r7s9210)
-+
-+	pinctrl: pin-controller@fcffe000 {
-+		compatible = "renesas,r7s9210-pinctrl";
-+		reg = <0xfcffe000 0x1000>;
-+
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		gpio-ranges = <&pinctrl 0 0 176>;
-+	};
-+
-+Sub-nodes
-+---------
-+
-+The child nodes of the pin controller designate pins to be used for
-+specific peripheral functions or as GPIO.
-+
-+- Pin multiplexing sub-nodes:
-+  A pin multiplexing sub-node describes how to configure a set of
-+  (or a single) pin in some desired alternate function mode.
-+  The values for the pinmux properties are a combination of port name, pin
-+  number and the desired function index. Use the RZA2_PINMUX macro located
-+  in include/dt-bindings/pinctrl/r7s9210-pinctrl.h to easily define these.
-+  For assigning GPIO pins, use the macro RZA2_PIN also in r7s9210-pinctrl.h
-+  to express the desired port pin.
-+
-+  Required properties:
-+    - pinmux:
-+      integer array representing pin number and pin multiplexing configuration.
-+      When a pin has to be configured in alternate function mode, use this
-+      property to identify the pin by its global index, and provide its
-+      alternate function configuration number along with it.
-+      When multiple pins are required to be configured as part of the same
-+      alternate function they shall be specified as members of the same
-+      argument list of a single "pinmux" property.
-+      Helper macros to ease assembling the pin index from its position
-+      (port where it sits on and pin number) and alternate function identifier
-+      are provided by the pin controller header file at:
-+      <dt-bindings/pinctrl/r7s9210-pinctrl.h>
-+      Integers values in "pinmux" argument list are assembled as:
-+      ((PORT * 8 + PIN) | MUX_FUNC << 16)
-+
-+  Example: Board specific pins configuration
-+
-+	&pinctrl {
-+		/* Serial Console */
-+		scif4_pins: serial4 {
-+			pinmux = <RZA2_PINMUX(PORT9, 0, 4)>,	/* TxD4 */
-+				 <RZA2_PINMUX(PORT9, 1, 4)>;	/* RxD4 */
++			rcar_sound,ctu {
++				ctu00: ctu-0 { };
++				ctu01: ctu-1 { };
++				ctu02: ctu-2 { };
++				ctu03: ctu-3 { };
++				ctu10: ctu-4 { };
++				ctu11: ctu-5 { };
++				ctu12: ctu-6 { };
++				ctu13: ctu-7 { };
+ 			};
+ 
+ 			rcar_sound,src {
+-				src2: src-2 {};
+-				src3: src-3 {};
++				src0: src-0 {
++					interrupts = <GIC_SPI 352 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x85>, <&audma1 0x9a>;
++					dma-names = "rx", "tx";
++				};
++				src1: src-1 {
++					interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x87>, <&audma1 0x9c>;
++					dma-names = "rx", "tx";
++				};
++				src2: src-2 {
++					interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x89>, <&audma1 0x9e>;
++					dma-names = "rx", "tx";
++				};
++				src3: src-3 {
++					interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x8b>, <&audma1 0xa0>;
++					dma-names = "rx", "tx";
++				};
++				src4: src-4 {
++					interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x8d>, <&audma1 0xb0>;
++					dma-names = "rx", "tx";
++				};
++				src5: src-5 {
++					interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x8f>, <&audma1 0xb2>;
++					dma-names = "rx", "tx";
++				};
++				src6: src-6 {
++					interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x91>, <&audma1 0xb4>;
++					dma-names = "rx", "tx";
++				};
++				src7: src-7 {
++					interrupts = <GIC_SPI 359 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x93>, <&audma1 0xb6>;
++					dma-names = "rx", "tx";
++				};
++				src8: src-8 {
++					interrupts = <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x95>, <&audma1 0xb8>;
++					dma-names = "rx", "tx";
++				};
++				src9: src-9 {
++					interrupts = <GIC_SPI 361 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x97>, <&audma1 0xba>;
++					dma-names = "rx", "tx";
++				};
+ 			};
+ 
+ 			rcar_sound,ssi {
+-				ssi0: ssi-0 {};
+-				ssi1: ssi-1 {};
++				ssi0: ssi-0 {
++					interrupts = <GIC_SPI 370 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x01>, <&audma1 0x02>, <&audma0 0x15>, <&audma1 0x16>;
++					dma-names = "rx", "tx", "rxu", "txu";
++				};
++				ssi1: ssi-1 {
++					interrupts = <GIC_SPI 371 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x03>, <&audma1 0x04>, <&audma0 0x49>, <&audma1 0x4a>;
++					dma-names = "rx", "tx", "rxu", "txu";
++				};
++				ssi2: ssi-2 {
++					interrupts = <GIC_SPI 372 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x05>, <&audma1 0x06>, <&audma0 0x63>, <&audma1 0x64>;
++					dma-names = "rx", "tx", "rxu", "txu";
++				};
++				ssi3: ssi-3 {
++					interrupts = <GIC_SPI 373 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x07>, <&audma1 0x08>, <&audma0 0x6f>, <&audma1 0x70>;
++					dma-names = "rx", "tx", "rxu", "txu";
++				};
++				ssi4: ssi-4 {
++					interrupts = <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x09>, <&audma1 0x0a>, <&audma0 0x71>, <&audma1 0x72>;
++					dma-names = "rx", "tx", "rxu", "txu";
++				};
++				ssi5: ssi-5 {
++					interrupts = <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x0b>, <&audma1 0x0c>, <&audma0 0x73>, <&audma1 0x74>;
++					dma-names = "rx", "tx", "rxu", "txu";
++				};
++				ssi6: ssi-6 {
++					interrupts = <GIC_SPI 376 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x0d>, <&audma1 0x0e>, <&audma0 0x75>, <&audma1 0x76>;
++					dma-names = "rx", "tx", "rxu", "txu";
++				};
++				ssi7: ssi-7 {
++					interrupts = <GIC_SPI 377 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x0f>, <&audma1 0x10>, <&audma0 0x79>, <&audma1 0x7a>;
++					dma-names = "rx", "tx", "rxu", "txu";
++				};
++				ssi8: ssi-8 {
++					interrupts = <GIC_SPI 378 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x11>, <&audma1 0x12>, <&audma0 0x7b>, <&audma1 0x7c>;
++					dma-names = "rx", "tx", "rxu", "txu";
++				};
++				ssi9: ssi-9 {
++					interrupts = <GIC_SPI 379 IRQ_TYPE_LEVEL_HIGH>;
++					dmas = <&audma0 0x13>, <&audma1 0x14>, <&audma0 0x7d>, <&audma1 0x7e>;
++					dma-names = "rx", "tx", "rxu", "txu";
++				};
+ 			};
+-			/* placeholder */
 +		};
-+	};
 +
-+  Example: Assigning a GPIO:
-+
-+	leds {
-+		status = "okay";
-+		compatible = "gpio-leds";
-+
-+		led0 {
-+			/* P6_0 */
-+			gpios = <&pinctrl RZA2_PIN(PORT6, 0) GPIO_ACTIVE_HIGH>;
++		audma0: dma-controller@ec700000 {
++			compatible = "renesas,dmac-r8a7744",
++				     "renesas,rcar-dmac";
++			reg = <0 0xec700000 0 0x10000>;
++			interrupts = <GIC_SPI 346 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "error",
++					  "ch0", "ch1", "ch2", "ch3",
++					  "ch4", "ch5", "ch6", "ch7",
++					  "ch8", "ch9", "ch10", "ch11",
++					  "ch12";
++			clocks = <&cpg CPG_MOD 502>;
++			clock-names = "fck";
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 502>;
++			#dma-cells = <1>;
++			dma-channels = <13>;
 +		};
-+	};
-diff --git a/include/dt-bindings/pinctrl/r7s9210-pinctrl.h b/include/dt-bindings/pinctrl/r7s9210-pinctrl.h
-new file mode 100644
-index 000000000000..2d0c23e5d3a7
---- /dev/null
-+++ b/include/dt-bindings/pinctrl/r7s9210-pinctrl.h
-@@ -0,0 +1,47 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Defines macros and constants for Renesas RZ/A2 pin controller pin
-+ * muxing functions.
-+ */
-+#ifndef __DT_BINDINGS_PINCTRL_RENESAS_RZA2_H
-+#define __DT_BINDINGS_PINCTRL_RENESAS_RZA2_H
 +
-+#define RZA2_PINS_PER_PORT	8
-+
-+/* Port names as labeled in the Hardware Manual */
-+#define PORT0 0
-+#define PORT1 1
-+#define PORT2 2
-+#define PORT3 3
-+#define PORT4 4
-+#define PORT5 5
-+#define PORT6 6
-+#define PORT7 7
-+#define PORT8 8
-+#define PORT9 9
-+#define PORTA 10
-+#define PORTB 11
-+#define PORTC 12
-+#define PORTD 13
-+#define PORTE 14
-+#define PORTF 15
-+#define PORTG 16
-+#define PORTH 17
-+/* No I */
-+#define PORTJ 18
-+#define PORTK 19
-+#define PORTL 20
-+#define PORTM 21	/* Pins PM_0/1 are labeled JP_0/1 in HW manual */
-+
-+/*
-+ * Create the pin index from its bank and position numbers and store in
-+ * the upper 16 bits the alternate function identifier
-+ */
-+#define RZA2_PINMUX(b, p, f)	((b) * RZA2_PINS_PER_PORT + (p) | (f << 16))
-+
-+/*
-+ * Convert a port and pin label to its global pin index
-+ */
-+ #define RZA2_PIN(port, pin)	((port) * RZA2_PINS_PER_PORT + (pin))
-+
-+#endif /* __DT_BINDINGS_PINCTRL_RENESAS_RZA2_H */
++		audma1: dma-controller@ec720000 {
++			compatible = "renesas,dmac-r8a7744",
++				     "renesas,rcar-dmac";
++			reg = <0 0xec720000 0 0x10000>;
++			interrupts = <GIC_SPI 347 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 338 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 345 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "error",
++					  "ch0", "ch1", "ch2", "ch3",
++					  "ch4", "ch5", "ch6", "ch7",
++					  "ch8", "ch9", "ch10", "ch11",
++					  "ch12";
++			clocks = <&cpg CPG_MOD 501>;
++			clock-names = "fck";
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 501>;
++			#dma-cells = <1>;
++			dma-channels = <13>;
+ 		};
+ 
+ 		pci0: pci@ee090000 {
 -- 
-2.16.1
+2.7.4
