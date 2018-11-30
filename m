@@ -1,83 +1,61 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 1/2] dt-bindings: trivial: add ti,lm3630a binding
-Date: Fri, 30 Nov 2018 09:37:26 -0600
-Message-ID: <e29497f4-2c8d-378e-0f9b-9a5bcee3fb1b@ti.com>
-References: <20181124141703.29232-1-masneyb@onstation.org>
- <20181127105642.uu56phxjfl7bjl2p@holly.lan> <20181130135927.GA27500@basecamp>
- <CAL_Jsq+-AZFf==911Pmf_ObUk+3VQgC+2+BvQ9q8LyQ_v=FdOA@mail.gmail.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v2 2/6] ata: ahci: mvebu: remove stale comment
+Date: Fri, 30 Nov 2018 16:38:29 +0100
+Message-ID: <20181130153833.11421-3-miquel.raynal@bootlin.com>
+References: <20181130153833.11421-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+-AZFf==911Pmf_ObUk+3VQgC+2+BvQ9q8LyQ_v=FdOA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Brian Masney <masneyb@onstation.org>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>, Lee Jones <lee.jones@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonathan Marek <jonathan@marek.ca>, Craig Tatlor <ctatlor97@gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181130153833.11421-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jens Axboe <axboe@kernel.dk>, Hans de Goede <hdegoede@redhat.com>
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Rob/Brian
+For Armada-38x (32-bit) SoCs, PM platform support has been added since:
+commit 32f9494c9dfd ("ARM: mvebu: prepare pm-board.c for the
+                      introduction of Armada 38x support")
+commit 3cbd6a6ca81c ("ARM: mvebu: Add standby support")
 
-On 11/30/2018 08:13 AM, Rob Herring wrote:
-> +Dan M
-> 
-> On Fri, Nov 30, 2018 at 7:59 AM Brian Masney <masneyb@onstation.org> wrote:
->>
->> On Tue, Nov 27, 2018 at 10:56:42AM +0000, Daniel Thompson wrote:
->>> On Sat, Nov 24, 2018 at 09:17:02AM -0500, Brian Masney wrote:
->>>> Add a trivial binding for the Texas Instruments LM3630A Backlight Chip.
-> 
-> How does this chip relate to ones Dan has been working on?
-> 
+For Armada 64-bit SoCs, like the A3700 also using this AHCI driver, PM
+platform support has always existed.
 
-This is a standard 8-bit white LED driver.  It looks like Brian is just adding DT
-support to load the driver.
+There are even suspend/resume hooks in this driver since:
+commit d6ecf15814888 ("ata: ahci_mvebu: add suspend/resume support")
 
-I would expect that the bindings need to be updated to be able to register one string or
-another using the led-sources property.  There are a couple of examples in the kernel and
-a couple of them in patch form.
+Remove the stale comment at the end of this driver stating that all
+the above does not exist yet.
 
-This driver and binding need to be updated to the latest spec, as you pointed out with child nodes.
+Fixes: d6ecf15814888 ("ata: ahci_mvebu: add suspend/resume support")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/ata/ahci_mvebu.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-And Jacek has some new proposed bindings for the LED class so we may want to adopt those standards here
-as well.  This is what I am waiting on for agreement so I can update my patch set.
-
-Dan
-
->>>
->>> It's quite unusual for a backlight device to have a trivial binding.
->>>
->>> The driver supports fairly extensive parametrization via struct
->>> lm3530a_platform_data. It is really the case that none of these
->>> properties should ever be set via DT?
->>
->> Hi Daniel,
->>
->> I initially assumed that we would let user space configure these values
->> once the system has booted, but you are right that these should be
->> available in device tree.
->>
->> The driver has two different LED banks that can be configured
->> independently.
-> 
-> That is usually represented with child nodes which makes this anything
-> but trivial. Plus, given that we have bindings for LEDs/backlights, no
-> LED/backlight controller is a trivial device.
-> 
->> How do you feel about having a single property in
->> device tree populate the initial values for both banks? I propose that
->> we could use the property default-brightness-level for leda_init_brt
->> and ledb_init_brt in struct lm3630a_platform_data. The max-brightness
->> property can populate leda_max_brt and ledb_max_brt.
->>
->> I need to look at other bindings this weekend to see if there are any
->> standard properties that I can use for leda_ctrl/ledb_ctrl, pwm_ctrl,
->> and pwm_period.
->>
->> Brian
->>
-
-
+diff --git a/drivers/ata/ahci_mvebu.c b/drivers/ata/ahci_mvebu.c
+index f9cb51be38eb..128d6f22926d 100644
+--- a/drivers/ata/ahci_mvebu.c
++++ b/drivers/ata/ahci_mvebu.c
+@@ -197,11 +197,6 @@ static const struct of_device_id ahci_mvebu_of_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, ahci_mvebu_of_match);
+ 
+-/*
+- * We currently don't provide power management related operations,
+- * since there is no suspend/resume support at the platform level for
+- * Armada 38x for the moment.
+- */
+ static struct platform_driver ahci_mvebu_driver = {
+ 	.probe = ahci_mvebu_probe,
+ 	.remove = ata_platform_remove_one,
 -- 
-------------------
-Dan Murphy
+2.19.1
