@@ -1,63 +1,63 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [RFC PATCH v2 07/15] usb:cdns3: Adds Device mode support -
- initialization.
-Date: Fri, 30 Nov 2018 06:29:31 +0000
-Message-ID: <BYAPR07MB470997B0FBAAE31DABC61A22DDD30@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
- <1542535751-16079-8-git-send-email-pawell@cadence.com>
- <5BFE7D2E.7030702@ti.com> <87pnupzaz1.fsf@linux.intel.com>
- <VI1PR04MB5327227A807B92DDA62CF9038BD30@VI1PR04MB5327.eurprd04.prod.outlook.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH] clk: imx6q: add DCICx clocks gate
+Date: Fri, 30 Nov 2018 06:31:40 +0000
+Message-ID: <1543559158-2891-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB5327227A807B92DDA62CF9038BD30@VI1PR04MB5327.eurprd04.prod.outlook.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: PETER CHEN <peter.chen@nxp.com>, Felipe Balbi <balbi@kernel.org>, Roger Quadros <rogerq@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "clement.peron@devialet.com" <clement.peron@devialet.com>, "colin.didier@devialet.com" <colin.didier@devialet.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On i.MX6QP/i.MX6Q/i.MX6DL, there are DCIC1/DCIC2 clocks
+gate in CCM_CCGR0 register, add them into clock tree for
+clock management.
 
->> Roger Quadros <rogerq@ti.com> writes:
->> >> +static void cdns3_gadget_config(struct cdns3_device *priv_dev) {
->> >> +	struct cdns3_usb_regs __iomem *regs =3D priv_dev->regs;
->> >> +
->> >> +	cdns3_ep0_config(priv_dev);
->> >> +
->> >> +	/* enable interrupts for endpoint 0 (in and out) */
->> >> +	writel(EP_IEN_EP_OUT0 | EP_IEN_EP_IN0, &regs->ep_ien);
->> >> +
->> >> +	/* enable generic interrupt*/
->> >> +	writel(USB_IEN_INIT, &regs->usb_ien);
->> >> +	writel(USB_CONF_CLK2OFFDS | USB_CONF_L1DS, &regs->usb_conf);
->> >> +	writel(USB_CONF_DMULT, &regs->usb_conf);
->> >> +	writel(USB_CONF_DEVEN, &regs->usb_conf);
->> >
->> > If you are enabling interrupts in this patch you should handle them in=
- the ISR.
->>
->> Frankly, I don't understand why this is a series. It's a single driver a=
-nd splitting it into
->> a series just makes it more difficult to review, actually.
->>
->> Sure, a single patch will be large, but there's no way to have a functio=
-nal driver until
->> all patches are applied, anyway.
->>
->
->Yes, I agree with Felipe. Pawel, you could remove the "RFC" prefix, and se=
-nd the whole
->one as one patch. I will test it at my hardware.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/clk/imx/clk-imx6q.c               | 2 ++
+ include/dt-bindings/clock/imx6qdl-clock.h | 4 +++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-Ok, I will prepare such single patch. =20
-Peter I know that you have little different platform.=20
-Probably you should made some additional changes for your platform.=20
-
-I assume that core.c should be common file.=20
-Probably we should add also some platform specific file.=20
-
-Thanks. =20
-
-Pawel.
+diff --git a/drivers/clk/imx/clk-imx6q.c b/drivers/clk/imx/clk-imx6q.c
+index bbe0c60..31a9d94 100644
+--- a/drivers/clk/imx/clk-imx6q.c
++++ b/drivers/clk/imx/clk-imx6q.c
+@@ -737,6 +737,8 @@ static void __init imx6q_clocks_init(struct device_node=
+ *ccm_node)
+ 	clk[IMX6QDL_CLK_CAN1_SERIAL]  =3D imx_clk_gate2("can1_serial",   "can_roo=
+t",          base + 0x68, 16);
+ 	clk[IMX6QDL_CLK_CAN2_IPG]     =3D imx_clk_gate2("can2_ipg",      "ipg",  =
+             base + 0x68, 18);
+ 	clk[IMX6QDL_CLK_CAN2_SERIAL]  =3D imx_clk_gate2("can2_serial",   "can_roo=
+t",          base + 0x68, 20);
++	clk[IMX6QDL_CLK_DCIC1]        =3D imx_clk_gate2("dcic1",         "ipu1_po=
+df",         base + 0x68, 24);
++	clk[IMX6QDL_CLK_DCIC2]        =3D imx_clk_gate2("dcic2",         "ipu2_po=
+df",         base + 0x68, 26);
+ 	clk[IMX6QDL_CLK_ECSPI1]       =3D imx_clk_gate2("ecspi1",        "ecspi_r=
+oot",        base + 0x6c, 0);
+ 	clk[IMX6QDL_CLK_ECSPI2]       =3D imx_clk_gate2("ecspi2",        "ecspi_r=
+oot",        base + 0x6c, 2);
+ 	clk[IMX6QDL_CLK_ECSPI3]       =3D imx_clk_gate2("ecspi3",        "ecspi_r=
+oot",        base + 0x6c, 4);
+diff --git a/include/dt-bindings/clock/imx6qdl-clock.h b/include/dt-binding=
+s/clock/imx6qdl-clock.h
+index 87b068f..b3cef29 100644
+--- a/include/dt-bindings/clock/imx6qdl-clock.h
++++ b/include/dt-bindings/clock/imx6qdl-clock.h
+@@ -274,6 +274,8 @@
+ #define IMX6QDL_CLK_EPIT1			261
+ #define IMX6QDL_CLK_EPIT2			262
+ #define IMX6QDL_CLK_MMDC_P0_IPG			263
+-#define IMX6QDL_CLK_END				264
++#define IMX6QDL_CLK_DCIC1			264
++#define IMX6QDL_CLK_DCIC2			265
++#define IMX6QDL_CLK_END				266
+=20
+ #endif /* __DT_BINDINGS_CLOCK_IMX6QDL_H */
+--=20
+2.7.4
