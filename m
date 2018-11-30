@@ -1,56 +1,85 @@
-Return-Path: <SRS0=X76U=OJ=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 13/21] ARM: dts: r8a7744-iwg20m: Enable SDHI0 controller
-Date: Fri, 30 Nov 2018 15:26:27 +0000
-Message-Id: <1543591595-37861-14-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
-References: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=Cfze=OJ=googlemail.com=martin.blumenstingl@kernel.org>
+MIME-Version: 1.0
+References: <20181028120859.5735-1-martin.blumenstingl@googlemail.com>
+ <20181028120859.5735-4-martin.blumenstingl@googlemail.com>
+ <6720a94f-ee87-937c-e360-87c2e37d29aa@baylibre.com> <7hr2f25t4b.fsf@baylibre.com>
+ <7h4lby5nky.fsf@baylibre.com>
+In-Reply-To: <7h4lby5nky.fsf@baylibre.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Fri, 30 Nov 2018 23:45:51 +0100
+Message-ID: <CAFBinCCH2AOV0nJBzEdE9=rfb7d=L-Uni2gZkfdLAbLg+GkiPw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] ARM: dts: meson: switch the clock controller to
+ the HHI register area
+Content-Type: text/plain; charset="UTF-8"
+To: khilman@baylibre.com
+Cc: Neil Armstrong <narmstrong@baylibre.com>, jbrunet@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, carlo@caione.org, linux-clk@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Enable the SDHI0 controller on iWave RZ/G1N Qseven System On Module.
+Hi Kevin,
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-V1-->V2
-   * Fixed subject line SDHI10 to SDHI0
----
- arch/arm/boot/dts/r8a7744-iwg20m.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+On Fri, Nov 30, 2018 at 9:15 PM Kevin Hilman <khilman@baylibre.com> wrote:
+>
+> Kevin Hilman <khilman@baylibre.com> writes:
+>
+> > Neil Armstrong <narmstrong@baylibre.com> writes:
+> >
+> >> On 28/10/2018 13:08, Martin Blumenstingl wrote:
+> >>> The clock controller on Meson8/Meson8m2 and Meson8b is part of a
+> >>> register region called "HHI". This register area contains more
+> >>> functionality than just a clock controller:
+> >>> - the clock controller
+> >>> - some reset controller bits
+> >>> - temperature sensor calibration data (on Meson8b and Meson8m2 only)
+> >>> - HDMI controller
+> >>>
+> >>> Allow access to this HHI register area as "system controller". Also
+> >>> migrate the Meson8 and Meson8b clock controllers to this new node.
+> >>>
+> >>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> >>> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+> >>> ---
+> >>>  arch/arm/boot/dts/meson.dtsi   |  7 +++++++
+> >>>  arch/arm/boot/dts/meson8.dtsi  | 15 ++++++++-------
+> >>>  arch/arm/boot/dts/meson8b.dtsi | 15 ++++++++-------
+> >>>  3 files changed, 23 insertions(+), 14 deletions(-)
+> >>>
+> >>> diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
+> >>> index 0d9faf1a51ea..ad903d1a2cb6 100644
+> >>> --- a/arch/arm/boot/dts/meson.dtsi
+> >>> +++ b/arch/arm/boot/dts/meson.dtsi
+> >>
+> >> [...]
+> >>
+> >>>
+> >>> +&hhi {
+> >>> +   clkc: clock-controller {
+> >>> +           compatible = "amlogic,meson8-clkc";
+> >>> +           #clock-cells = <1>;
+> >>> +           #reset-cells = <1>;
+> >>> +   };
+> >>> +};
+> >>> +
+> >>>  &hwrng {
+> >>>     compatible = "amlogic,meson8b-rng", "amlogic,meson-rng";
+> >>>     clocks = <&clkc CLKID_RNG0>;
+> >>>
+> >>
+> >> Kevin,
+> >>
+> >> I didn't apply this one, but it can wait another cycle I think.
+> >
+> > OK, I'll take that one through my dt branch.
+> >
+> > I don't see any obvious dependency on the clock patches,
+>
+> ... and a quick boot test shows I was wrong, and should've (re)read
+> Martin's cover letter a couple more times. :)
+yes, there's a hard dependency on the clock patches
 
-diff --git a/arch/arm/boot/dts/r8a7744-iwg20m.dtsi b/arch/arm/boot/dts/r8a7744-iwg20m.dtsi
-index 1e57b1f..503583e 100644
---- a/arch/arm/boot/dts/r8a7744-iwg20m.dtsi
-+++ b/arch/arm/boot/dts/r8a7744-iwg20m.dtsi
-@@ -35,6 +35,12 @@
- 		groups = "mmc_data8_b", "mmc_ctrl";
- 		function = "mmc";
- 	};
-+
-+	sdhi0_pins: sd0 {
-+		groups = "sdhi0_data4", "sdhi0_ctrl";
-+		function = "sdhi0";
-+		power-source = <3300>;
-+	};
- };
- 
- &mmcif0 {
-@@ -46,3 +52,13 @@
- 	non-removable;
- 	status = "okay";
- };
-+
-+&sdhi0 {
-+	pinctrl-0 = <&sdhi0_pins>;
-+	pinctrl-names = "default";
-+
-+	vmmc-supply = <&reg_3p3v>;
-+	vqmmc-supply = <&reg_3p3v>;
-+	cd-gpios = <&gpio7 11 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
--- 
-2.7.4
+> I think it's best to leave this one until the next cycle when all the
+> deps are merged.
+I have this on my "resend this for the next development cycle" list
+
+
+Regards
+Martin
