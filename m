@@ -1,111 +1,51 @@
-Return-Path: <SRS0=X76U=OJ=bp.renesas.com=biju.das@kernel.org>
+Return-Path: <SRS0=nKhH=OJ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr1400115.outbound.protection.outlook.com ([40.107.140.115]:22432
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726473AbeK3Uav (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 30 Nov 2018 15:30:51 -0500
 From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 07/21] ARM: dts: r8a7744: Add SMP support
-Date: Fri, 30 Nov 2018 15:26:21 +0000
-Message-Id: <1543591595-37861-8-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
-References: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 7/7] ARM: dts: r8a7744: Add SMP support
+Date: Fri, 30 Nov 2018 09:22:04 +0000
+Message-ID: <OSBPR01MB2103A3E57CCFD945E5711FE9B8D30@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com>
+ <1542878075-61314-8-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdUgfrGyA1Y6vpRT-2KwfM6Gpzy945Oac-2_06HRed3Hjw@mail.gmail.com>
+In-Reply-To: <CAMuHMdUgfrGyA1Y6vpRT-2KwfM6Gpzy945Oac-2_06HRed3Hjw@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add DT node for the Advanced Power Management Unit (APMU), add the
-second CPU core, and use "renesas,apmu" as "enable-method".
-
-Also add cpu1 phandle node to the PMU interrupt-affinity property.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-V1-->V2
-   * Fixed GIC_CPU_MASK_SIMPLE in gic/timer nodes
----
- arch/arm/boot/dts/r8a7744.dtsi | 38 ++++++++++++++++++++++++++++++++------
- 1 file changed, 32 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index 4d4ddba..2cb6d8f 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -49,6 +49,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "renesas,apmu";
- 
- 		cpu0: cpu@0 {
- 			device_type = "cpu";
-@@ -69,6 +70,25 @@
- 					   < 375000 1000000>;
- 		};
- 
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a15";
-+			reg = <1>;
-+			clock-frequency = <1500000000>;
-+			clocks = <&cpg CPG_CORE R8A7744_CLK_Z>;
-+			clock-latency = <300000>; /* 300 us */
-+			power-domains = <&sysc R8A7744_PD_CA15_CPU1>;
-+			next-level-cache = <&L2_CA15>;
-+
-+			/* kHz - uV - OPPs unknown yet */
-+			operating-points = <1500000 1000000>,
-+					   <1312500 1000000>,
-+					   <1125000 1000000>,
-+					   < 937500 1000000>,
-+					   < 750000 1000000>,
-+					   < 375000 1000000>;
-+		};
-+
- 		L2_CA15: cache-controller-0 {
- 			compatible = "cache";
- 			cache-unified;
-@@ -96,7 +116,7 @@
- 		compatible = "arm,cortex-a15-pmu";
- 		interrupts-extended = <&gic GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
- 				      <&gic GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-affinity = <&cpu0>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>;
- 	};
- 
- 	/* External SCIF clock */
-@@ -250,6 +270,12 @@
- 			#reset-cells = <1>;
- 		};
- 
-+		apmu@e6152000 {
-+			compatible = "renesas,r8a7744-apmu", "renesas,apmu";
-+			reg = <0 0xe6152000 0 0x188>;
-+			cpus = <&cpu0 &cpu1>;
-+		};
-+
- 		rst: reset-controller@e6160000 {
- 			compatible = "renesas,r8a7744-rst";
- 			reg = <0 0xe6160000 0 0x100>;
-@@ -483,7 +509,7 @@
- 			interrupt-controller;
- 			reg = <0 0xf1001000 0 0x1000>, <0 0xf1002000 0 0x2000>,
- 			      <0 0xf1004000 0 0x2000>, <0 0xf1006000 0 0x2000>;
--			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_HIGH)>;
-+			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
- 			clocks = <&cpg CPG_MOD 408>;
- 			clock-names = "clk";
- 			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-@@ -520,10 +546,10 @@
- 
- 	timer {
- 		compatible = "arm,armv7-timer";
--		interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
--				      <&gic GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
--				      <&gic GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
--				      <&gic GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>;
-+		interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-+				      <&gic GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-+				      <&gic GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-+				      <&gic GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
- 	};
- 
- 	/* External USB clock - can be overridden by the board */
--- 
-2.7.4
+SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IC0tLS0tT3JpZ2luYWwg
+TWVzc2FnZS0tLS0tDQo+IEZyb206IGxpbnV4LXJlbmVzYXMtc29jLW93bmVyQHZnZXIua2VybmVs
+Lm9yZyA8bGludXgtcmVuZXNhcy1zb2MtDQo+IG93bmVyQHZnZXIua2VybmVsLm9yZz4gT24gQmVo
+YWxmIE9mIEdlZXJ0IFV5dHRlcmhvZXZlbg0KPiBTZW50OiAzMCBOb3ZlbWJlciAyMDE4IDA4OjU0
+DQo+IFRvOiBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+DQo+IENjOiBSb2IgSGVy
+cmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kDQo+IDxtYXJrLnJ1dGxhbmRA
+YXJtLmNvbT47IFNpbW9uIEhvcm1hbiA8aG9ybXNAdmVyZ2UubmV0LmF1PjsgTWFnbnVzDQo+IERh
+bW0gPG1hZ251cy5kYW1tQGdtYWlsLmNvbT47IExpbnV4LVJlbmVzYXMgPGxpbnV4LXJlbmVzYXMt
+DQo+IHNvY0B2Z2VyLmtlcm5lbC5vcmc+OyBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQgRkxB
+VFRFTkVEIERFVklDRQ0KPiBUUkVFIEJJTkRJTkdTIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+Zz47IEdlZXJ0IFV5dHRlcmhvZXZlbg0KPiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+OyBDaHJp
+cyBQYXRlcnNvbg0KPiA8Q2hyaXMuUGF0ZXJzb24yQHJlbmVzYXMuY29tPjsgRmFicml6aW8gQ2Fz
+dHJvDQo+IDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+DQo+IFN1YmplY3Q6IFJlOiBb
+UEFUQ0ggNy83XSBBUk06IGR0czogcjhhNzc0NDogQWRkIFNNUCBzdXBwb3J0DQo+DQo+IE9uIFRo
+dSwgTm92IDIyLCAyMDE4IGF0IDEwOjIzIEFNIEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2Fz
+LmNvbT4NCj4gd3JvdGU6DQo+ID4gQWRkIERUIG5vZGUgZm9yIHRoZSBBZHZhbmNlZCBQb3dlciBN
+YW5hZ2VtZW50IFVuaXQgKEFQTVUpLCBhZGQgdGhlDQo+ID4gc2Vjb25kIENQVSBjb3JlLCBhbmQg
+dXNlICJyZW5lc2FzLGFwbXUiIGFzICJlbmFibGUtbWV0aG9kIi4NCj4gPg0KPiA+IEFsc28gYWRk
+IGNwdTEgcGhhbmRsZSBub2RlIHRvIHRoZSBQTVUgaW50ZXJydXB0LWFmZmluaXR5IHByb3BlcnR5
+Lg0KPg0KPiBQbGVhc2UgY2hhbmdlIEdJQ19DUFVfTUFTS19TSU1QTEUoKSBmcm9tIDEgdG8gMiBp
+biB0aGlzIHBhdGNoLCB0b28uDQoNCk9LLCBXaWxsIHNlbmQgVjIgZm9yIHRoaXMuDQoNCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+DQo+DQo+IFJl
+dmlld2VkLWJ5OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPg0K
+Pg0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2Vl
+cnQNCj4NCg0KUmVnYXJkcywNCkJpanUNCg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3Bl
+IEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hh
+bXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIg
+UmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
