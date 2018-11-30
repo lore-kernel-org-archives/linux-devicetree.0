@@ -1,99 +1,104 @@
-From: Alexandre Courbot <acourbot@chromium.org>
-Subject: Re: [PATCH v2] arm64: dts: sdm845: add video nodes
-Date: Fri, 30 Nov 2018 15:39:48 +0900
-Message-ID: <CAPBb6MU6b01OEfJ=dHF7Y2E1MeNNR3TTVJDo_SyaNURJVoU2ww@mail.gmail.com>
-References: <1543410642-6475-1-git-send-email-mgottam@codeaurora.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v5 08/12] dt-bindings: mediatek: Change the binding for mmsys
+ clocks
+Date: Thu, 29 Nov 2018 22:43:57 -0800
+Message-ID: <154356023767.88331.18401188808548429052@swboyd.mtv.corp.google.com>
+References: <20181116125449.23581-1-matthias.bgg@kernel.org>
+ <20181116125449.23581-9-matthias.bgg@kernel.org>
+ <20181116231522.GA18006@bogus>
+ <2a23e407-4cd4-2e2b-97a5-4e2bb96846e0@gmail.com>
+ <CAL_JsqKJQwfDJbpmwW+oCxiDkSp5+6mG-uoURmCQVEMP_jFOEg@mail.gmail.com>
+ <154281878765.88331.10581984256202566195@swboyd.mtv.corp.google.com>
+ <458178ac-c0fc-9671-7fc8-ed2d6f61424c@suse.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543410642-6475-1-git-send-email-mgottam@codeaurora.org>
+In-Reply-To: <458178ac-c0fc-9671-7fc8-ed2d6f61424c@suse.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mgottam@codeaurora.org
-Cc: Andy Gross <andy.gross@linaro.org>, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, vgarodia@codeaurora.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Matthias Brugger <mbrugger@suse.com>, Rob Herring <robh@kernel.org>
+Cc: matthias.bgg@kernel.org, Mark Rutland <mark.rutland@arm.com>, CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sean Wang <sean.wang@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Chen-Yu Tsai <wens@csie.org>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, linux-clk <linux-clk@vger.kernel.>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 28, 2018 at 10:12 PM Malathi Gottam <mgottam@codeaurora.org> wrote:
->
-> This adds video nodes to sdm845 based on the examples
-> in the bindings.
->
-> Signed-off-by: Malathi Gottam <mgottam@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 35 +++++++++++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 0c9a2aa..4c9d6a4 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -84,6 +84,11 @@
->                         reg = <0 0x86200000 0 0x2d00000>;
->                         no-map;
->                 };
-> +
-> +               venus_region: memory@95800000 {
-> +                       reg = <0x0 0x95800000 0x0 0x500000>;
+Quoting Matthias Brugger (2018-11-21 09:09:52)
+> =
 
-This patch depends on the firmware loader being fixed to not expect a
-6MB area size. I think you can do it as follows:
+> =
 
-1) Record the reserved area size in the venus_core structure during
-venus_load_fw(),
-2) Use that area size in place of VENUS_FW_MEM_SIZE everywhere else in the code.
+> On 21/11/2018 17:46, Stephen Boyd wrote:
+> > Quoting Rob Herring (2018-11-19 11:15:16)
+> >> On Sun, Nov 18, 2018 at 11:12 AM Matthias Brugger
+> >> <matthias.bgg@gmail.com> wrote:
+> >>> On 11/17/18 12:15 AM, Rob Herring wrote:
+> >>>> On Fri, Nov 16, 2018 at 01:54:45PM +0100, matthias.bgg@kernel.org wr=
+ote:
+> >>>>> -    #clock-cells =3D <1>;
+> >>>>> +
+> >>>>> +    mmsys_clk: clock-controller@14000000 {
+> >>>>> +            compatible =3D "mediatek,mt2712-mmsys-clk";
+> >>>>> +            #clock-cells =3D <1>;
+> >>>>
+> >>>> This goes against the general direction of not defining separate nod=
+es
+> >>>> for providers with no resources.
+> >>>>
+> >>>> Why do you need this and what does it buy if you have to continue to
+> >>>> support the existing chips?
+> >>>>
+> >>>
+> >>> It would show explicitly that the mmsys block is used to probe two
+> >>> drivers, one for the gpu and one for the clocks. Otherwise that is
+> >>> hidden in the drm driver code. I think it is cleaner to describe that=
+ in
+> >>> the device tree.
+> >>
+> >> No, that's maybe cleaner for the driver implementation in the Linux
+> >> kernel. What about other OS's or when Linux drivers and subsystems
+> >> needs change? Cleaner for DT is design bindings that reflect the h/w.
+> >> Hardware is sometimes just messy.
+> >>
+> > =
 
-That way we don't put any artificial limitation on the expected
-firmware size, or on the reserved area in the DT matching a hardcoded
-size.
+> > I agree. I fail to see what this patch series is doing besides changing
+> > driver probe and device creation methods and making a backwards
+> > incompatible change to DT. Is there any other benefit here?
+> > =
 
-Once you have this, the driver should work no matter what the size of
-the reserved area is, provided the firmware first into it.
+> =
 
-> +                       no-map;
-> +               };
->         };
->
->         cpus {
-> @@ -1103,5 +1108,35 @@
->                                 status = "disabled";
->                         };
->                 };
-> +
-> +               video-codec@aa00000 {
-> +                       compatible = "qcom,sdm845-venus";
-> +                       reg = <0x0aa00000 0xff000>;
-> +                       interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> +                       power-domains = <&videocc VENUS_GDSC>;
-> +                       clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
-> +                                <&videocc VIDEO_CC_VENUS_AHB_CLK>,
-> +                                <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
-> +                       clock-names = "core", "iface", "bus";
-> +                       iommus = <&apps_smmu 0x10a0 0x8>,
-> +                                <&apps_smmu 0x10b0 0x0>;
-> +                       memory-region = <&venus_region>;
-> +
-> +                       video-core0 {
-> +                               compatible = "venus-decoder";
-> +                               clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
-> +                                        <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
-> +                               clock-names = "core", "bus";
-> +                               power-domains = <&videocc VCODEC0_GDSC>;
-> +                       };
-> +
-> +                       video-core1 {
-> +                               compatible = "venus-encoder";
-> +                               clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
-> +                                        <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
-> +                               clock-names = "core", "bus";
-> +                               power-domains = <&videocc VCODEC1_GDSC>;
-> +                       };
+> You are referring whole series?
+> Citing the cover letter:
+> "MMSYS in Mediatek SoCs has some registers to control clock gates (which =
+is
+> used in the clk driver) and some registers to set the routing and enable
+> the differnet (sic!) blocks of the display subsystem.
+> =
 
-We should probably have status = "disabled" here and enable this node
-on a per-board basis?
+> Up to now both drivers, clock and drm are probed with the same device tree
+> compatible. But only the first driver get probed, which in effect breaks
+> graphics on mt8173 and mt2701.
 
-Also, shouldn't we define the firmware subnode here too?
+Ouch!
 
-Cheers,
-Alex.
-> --
-> 1.9.1
->
+> =
+
+> This patch uses a platform device registration in the DRM driver, which
+> will trigger the probe of the corresponding clock driver. It was tested o=
+n the
+> bananapi-r2 and the Acer R13 Chromebook."
+
+Alright, please don't add nodes in DT just to make device drivers probe.
+Instead, register clks from the drm driver or create a child platform
+device for the clk bits purely in the drm driver and have that probe the
+associated clk driver from there.
+
+> =
+
+> DT is broken right now, because two drivers rely on the same node, which =
+gets
+> consumed just once. The new DT introduced does not break anything because=
+ it is
+> only used for boards that: "[..] are not available to the general public
+> (mt2712e) or only have the mmsys clock driver part implemented (mt6797)."
+
+Ok, so backwards compatibility is irrelevant then. Sounds fine to me.
