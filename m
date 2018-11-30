@@ -1,59 +1,58 @@
-Return-Path: <SRS0=nKhH=OJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr1410098.outbound.protection.outlook.com ([40.107.141.98]:48480
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726465AbeK3UX4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 30 Nov 2018 15:23:56 -0500
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH 2/7] ARM: dts: r8a7744: Initial SoC device tree
-Date: Fri, 30 Nov 2018 09:15:10 +0000
-Message-ID: <OSBPR01MB2103B826D4EAD45FEA1DE132B8D30@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-References: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com>
- <1542878075-61314-3-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdUiWDtafBtHvKH5CAOx1ntBdHrmE-d__nrayykKdZYdDg@mail.gmail.com>
-In-Reply-To: <CAMuHMdUiWDtafBtHvKH5CAOx1ntBdHrmE-d__nrayykKdZYdDg@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=qqZh=OJ=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
+References: <1542878075-61314-1-git-send-email-biju.das@bp.renesas.com> <1542878075-61314-3-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1542878075-61314-3-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 30 Nov 2018 09:53:12 +0100
+Message-ID: <CAMuHMdUzPDW=3569eN1XLSC90=TXiRE272KgBdv8cf7iw=XRbw@mail.gmail.com>
+Subject: Re: [PATCH 2/7] ARM: dts: r8a7744: Initial SoC device tree
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+IEZyb206IGxpbnV4LXJlbmVzYXMtc29jLW93bmVyQHZnZXIua2VybmVs
-Lm9yZyA8bGludXgtcmVuZXNhcy1zb2MtDQo+IG93bmVyQHZnZXIua2VybmVsLm9yZz4gT24gQmVo
-YWxmIE9mIEdlZXJ0IFV5dHRlcmhvZXZlbg0KPiBTZW50OiAzMCBOb3ZlbWJlciAyMDE4IDA4OjQ5
-DQo+IFRvOiBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+DQo+IENjOiBSb2IgSGVy
-cmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kDQo+IDxtYXJrLnJ1dGxhbmRA
-YXJtLmNvbT47IFNpbW9uIEhvcm1hbiA8aG9ybXNAdmVyZ2UubmV0LmF1PjsgTWFnbnVzDQo+IERh
-bW0gPG1hZ251cy5kYW1tQGdtYWlsLmNvbT47IExpbnV4LVJlbmVzYXMgPGxpbnV4LXJlbmVzYXMt
-DQo+IHNvY0B2Z2VyLmtlcm5lbC5vcmc+OyBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQgRkxB
-VFRFTkVEIERFVklDRQ0KPiBUUkVFIEJJTkRJTkdTIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-Zz47IEdlZXJ0IFV5dHRlcmhvZXZlbg0KPiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+OyBDaHJp
-cyBQYXRlcnNvbg0KPiA8Q2hyaXMuUGF0ZXJzb24yQHJlbmVzYXMuY29tPjsgRmFicml6aW8gQ2Fz
-dHJvDQo+IDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+DQo+IFN1YmplY3Q6IFJlOiBb
-UEFUQ0ggMi83XSBBUk06IGR0czogcjhhNzc0NDogSW5pdGlhbCBTb0MgZGV2aWNlIHRyZWUNCj4N
-Cj4gSGkgQmlqdSwNCj4NCj4gT24gVGh1LCBOb3YgMjIsIDIwMTggYXQgMTA6MjMgQU0gQmlqdSBE
-YXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiB3cm90ZToNCj4gPiBCYXNpYyBzdXBwb3J0
-IGZvciB0aGUgUlovRzFOIChSOEE3NzQ0KSBTb0MuIEFkZGVkIHBsYWNlaG9sZGVycyB0bw0KPiA+
-IGF2b2lkIGNvbXBpbGF0aW9uIGVycm9yIHdpdGggdGhlIGNvbW1vbiBwbGF0Zm9ybSBjb2RlLg0K
-PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29t
-Pg0KPg0KPiBUaGFua3MgZm9yIHlvdXIgcGF0Y2ghDQo+DQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+
-ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3NDQuZHRzaQ0KPg0KPiA+ICsgICAgICAgc29j
-IHsNCj4NCj4gPiArICAgICAgICAgICAgICAgcGZjOiBwaW4tY29udHJvbGxlckBlNjA2MDAwMCB7
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJyZW5lc2FzLHBmYy1y
-OGE3NzQ0IjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MCAweGU2MDYwMDAw
-IDAgMHgxNjQ+Ow0KPg0KPiBHaXZlbiB0aGUgZGF0YXNoZWV0IG1lbnRpb25zIChyZXNlcnZlZCkg
-cmVnaXN0ZXJzIHVwIHRvIG9mZnNldCAweDI0YywgeW91DQo+IG1heSB3YW50IHRvIHVzZSAweDI1
-MCBmb3IgdGhlIHJlZ2lzdGVyIGJsb2NrIGxlbmd0aC4NCj4NCg0KT2sgd2lsbCBzZW5kIFYyIGZv
-ciB0aGlzLg0KDQpJIHdhcyBpbiBjb25mdXNpb24gdG8gc2V0IHRoZSBzaXplIGFzIDB4MTY0IG9y
-IDB4MjUwLCBzaW5jZSB0aGUgRGF0YSBzaGVldCBtZW50aW9uIHRoYXQgc2V0dGluZyBwcm9oaWJp
-dGVkIGZvciAgMHgyNDAtMHgyNGMgYW5kIGlzIHJlc2VydmVkLg0KDQo+IFJldmlld2VkLWJ5OiBH
-ZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPg0KPg0KPiBHcntvZXRq
-ZSxlZXRpbmd9cywNCj4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCg0KUmVnYXJk
-cywNCkJpanUNCg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVh
-ZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZI
-LCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4g
-MDQ1ODY3MDkuDQo=
+Hi Biju,
+
+On Thu, Nov 22, 2018 at 10:23 AM Biju Das <biju.das@bp.renesas.com> wrote:
+> Basic support for the RZ/G1N (R8A7744) SoC. Added placeholders
+> to avoid compilation error with the common platform code.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/r8a7744.dtsi
+> @@ -0,0 +1,369 @@
+
+> +       soc {
+
+> +               gic: interrupt-controller@f1001000 {
+> +                       compatible = "arm,gic-400";
+> +                       #interrupt-cells = <3>;
+> +                       #address-cells = <0>;
+> +                       interrupt-controller;
+> +                       reg = <0 0xf1001000 0 0x1000>, <0 0xf1002000 0 0x2000>,
+> +                             <0 0xf1004000 0 0x2000>, <0 0xf1006000 0 0x2000>;
+> +                       interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
+
+Tehcnically, this mask should be GIC_CPU_MASK_SIMPLE(1)
+until you add the second CPU node.
+
+> +       timer {
+> +               compatible = "arm,armv7-timer";
+> +               interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+> +                                     <&gic GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+> +                                     <&gic GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+> +                                     <&gic GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
+
+Likewise.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
