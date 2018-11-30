@@ -1,69 +1,33 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [RFC v3 2/3] dt-bindings: sdm845-pinctrl: add wakeup interrupt
- parent for GPIO
-Date: Fri, 30 Nov 2018 11:33:17 -0700
-Message-ID: <20181130183317.GL18262@codeaurora.org>
-References: <20181121000648.29262-1-ilina@codeaurora.org>
- <20181121000648.29262-3-ilina@codeaurora.org>
- <154283618199.88331.10217252750356423959@swboyd.mtv.corp.google.com>
- <20181126161455.GA28236@codeaurora.org>
- <154330994255.88331.11409511159882116164@swboyd.mtv.corp.google.com>
- <20181127182123.GC28236@codeaurora.org>
- <154335513853.88331.9713562640538396853@swboyd.mtv.corp.google.com>
- <20181128173959.GC18262@codeaurora.org>
- <20181129002457.GJ24969@minitux>
- <20181129214539.GG18262@codeaurora.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Describe Northstar pins mux controller
+Date: Fri, 30 Nov 2018 10:35:03 -0800
+Message-ID: <20181130183503.9659-1-f.fainelli@gmail.com>
+References: <20181109085649.31772-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181129214539.GG18262@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Stephen Boyd <swboyd@chromium.org>, evgreen@chromium.org, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, thierry.reding@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181109085649.31772-1-zajec5@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: bcm-kernel-feedback-list@broadcom.com, =?iso-8859-2?q?Rafa=B3_Mi=B3ecki?= <zajec5@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, =?iso-8859-2?q?Rafa=B3_Mi=B3ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 29 2018 at 14:45 -0700, Lina Iyer wrote:
->On Wed, Nov 28 2018 at 17:25 -0700, Bjorn Andersson wrote:
->>On Wed 28 Nov 09:39 PST 2018, Lina Iyer wrote:
->>
->>>On Tue, Nov 27 2018 at 14:45 -0700, Stephen Boyd wrote:
->>>> Quoting Lina Iyer (2018-11-27 10:21:23)
->>>> > On Tue, Nov 27 2018 at 02:12 -0700, Stephen Boyd wrote:
-
-[...]
->BTW, I am discussing with the internal folks here on if we need to mask
->TLMM when the wakeup-parent is MPM. If we don't have to, we should be
->able to follow the same model as we done in this patch and don't even
->have to check the compatible or use the approach suggested by Stephen.
->
-The TLMM and the MPM are not active at the same time. However, there is
-a small chance they might be (a few clock cycles) when the system is
-going down, but even then, since we replay the interrupt from the MPM
-driver before the interrupts are serviced by Linux, we would not see
-multiple GPIO interrupts.
-
-The way we have MPM working downstream, for a wakeup GPIO IRQ -
-
-a. Application cores gets a wakeup interrupt either from RPM or GIC (if
-TLMM was not powered down) while still in the interrupt locked context.
-
-b. In the hardware, apps core handshakes with the RPM and then starts
-resuming from the platform's system idle driver.
-
-c. The first CPU to wake up calls MPM driver from the idle driver, which
-reads the shared memory to find the MPM pins that are set. Converts the
-MPM pins to their corresponding linux interrupt and replays the
-interrupt.
-
-d. Idle driver exits and wakeup GPIO interrupt is handled.
-
-The MPM pins are not updated after the RPM lets the application core to
-run. Since TLMM is functional after the RPM handshake, it takes over.
-
-Note, the downstream design is predicated on the OS-Initiated support
-for all MPM based SoCs which serializes the last CPU going down and the
-first CPU coming out of idle.
-
-Thanks,
-Lina
+T24gRnJpLCAgOSBOb3YgMjAxOCAwOTo1Njo0OSArMDEwMCwgUmFmYcWCIE1pxYJlY2tpIDx6YWpl
+YzVAZ21haWwuY29tPiB3cm90ZToKPiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVj
+a2kucGw+Cj4gCj4gVGhpcyBkZXNjcmliZXMgaGFyZHdhcmUgJiB3aWxsIGFsbG93IHJlZmVyZW5j
+aW5nIHBpbiBmdW5jdGlvbnMuIFRoZQo+IGZpcnN0IHVzYWdlIGlzIFVBUlQxIHdoaWNoIGFsbG93
+cyBzdXBwb3J0aW5nIGRldmljZXMgdXNpbmcgaXQuCj4gCj4gU2lnbmVkLW9mZi1ieTogUmFmYcWC
+IE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+IC0tLQoKQXBwbGllZCB0byBkZXZpY2V0cmVl
+L25leHQsIHRoYW5rcyEKLS0KRmxvcmlhbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
