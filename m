@@ -1,61 +1,62 @@
-Return-Path: <bunk@kernel.org>
-From: Adrian Bunk <bunk@kernel.org>
-Subject: [PATCH v4 2/2] eeprom: at24: Add 24c2048
-Date: Thu, 29 Nov 2018 21:58:58 +0200
-Message-Id: <20181129195858.32367-2-bunk@kernel.org>
-In-Reply-To: <20181129195858.32367-1-bunk@kernel.org>
-References: <20181129195858.32367-1-bunk@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>, linux-i2c <linux-i2c@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Return-Path: <SRS0=X76U=OJ=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v2 18/21] ARM: dts: r8a7744: Add CAN support
+Date: Fri, 30 Nov 2018 15:26:32 +0000
+Message-Id: <1543591595-37861-19-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
+References: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Works with an ST M24M02.
+Add the definitions for can0 and can1 to the r8a7744 SoC dtsi.
 
-Signed-off-by: Adrian Bunk <bunk@kernel.org>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/misc/eeprom/Kconfig | 2 +-
- drivers/misc/eeprom/at24.c  | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+V1-->V2
+   * No Change
+---
+ arch/arm/boot/dts/r8a7744.dtsi | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/eeprom/Kconfig b/drivers/misc/eeprom/Kconfig
-index fe7a1d27a017..a846faefa210 100644
---- a/drivers/misc/eeprom/Kconfig
-+++ b/drivers/misc/eeprom/Kconfig
-@@ -13,7 +13,7 @@ config EEPROM_AT24
- 	  ones like at24c64, 24lc02 or fm24c04:
+diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
+index cb6dfb5..87187f2 100644
+--- a/arch/arm/boot/dts/r8a7744.dtsi
++++ b/arch/arm/boot/dts/r8a7744.dtsi
+@@ -884,13 +884,31 @@
+ 		};
  
- 	     24c00, 24c01, 24c02, spd (readonly 24c02), 24c04, 24c08,
--	     24c16, 24c32, 24c64, 24c128, 24c256, 24c512, 24c1024
-+	     24c16, 24c32, 24c64, 24c128, 24c256, 24c512, 24c1024, 24c2048
+ 		can0: can@e6e80000 {
++			compatible = "renesas,can-r8a7744",
++				     "renesas,rcar-gen2-can";
+ 			reg = <0 0xe6e80000 0 0x1000>;
+-			/* placeholder */
++			interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 916>,
++				 <&cpg CPG_CORE R8A7744_CLK_RCAN>,
++				 <&can_clk>;
++			clock-names = "clkp1", "clkp2", "can_clk";
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 916>;
++			status = "disabled";
+ 		};
  
- 	  Unless you like data loss puzzles, always be sure that any chip
- 	  you configure as a 24c32 (32 kbit) or larger is NOT really a
-diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-index 636ed7149793..ddfcf4ade7bf 100644
---- a/drivers/misc/eeprom/at24.c
-+++ b/drivers/misc/eeprom/at24.c
-@@ -156,6 +156,7 @@ AT24_CHIP_DATA(at24_data_24c128, 131072 / 8, AT24_FLAG_ADDR16);
- AT24_CHIP_DATA(at24_data_24c256, 262144 / 8, AT24_FLAG_ADDR16);
- AT24_CHIP_DATA(at24_data_24c512, 524288 / 8, AT24_FLAG_ADDR16);
- AT24_CHIP_DATA(at24_data_24c1024, 1048576 / 8, AT24_FLAG_ADDR16);
-+AT24_CHIP_DATA(at24_data_24c2048, 2097152 / 8, AT24_FLAG_ADDR16);
- /* identical to 24c08 ? */
- AT24_CHIP_DATA(at24_data_INT3499, 8192 / 8, 0);
+ 		can1: can@e6e88000 {
++			compatible = "renesas,can-r8a7744",
++				     "renesas,rcar-gen2-can";
+ 			reg = <0 0xe6e88000 0 0x1000>;
+-			/* placeholder */
++			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 915>,
++				 <&cpg CPG_CORE R8A7744_CLK_RCAN>,
++				 <&can_clk>;
++			clock-names = "clkp1", "clkp2", "can_clk";
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 915>;
++			status = "disabled";
+ 		};
  
-@@ -182,6 +183,7 @@ static const struct i2c_device_id at24_ids[] = {
- 	{ "24c256",	(kernel_ulong_t)&at24_data_24c256 },
- 	{ "24c512",	(kernel_ulong_t)&at24_data_24c512 },
- 	{ "24c1024",	(kernel_ulong_t)&at24_data_24c1024 },
-+	{ "24c2048",    (kernel_ulong_t)&at24_data_24c2048 },
- 	{ "at24",	0 },
- 	{ /* END OF LIST */ }
- };
-@@ -210,6 +212,7 @@ static const struct of_device_id at24_of_match[] = {
- 	{ .compatible = "atmel,24c256",		.data = &at24_data_24c256 },
- 	{ .compatible = "atmel,24c512",		.data = &at24_data_24c512 },
- 	{ .compatible = "atmel,24c1024",	.data = &at24_data_24c1024 },
-+	{ .compatible = "atmel,24c2048",	.data = &at24_data_24c2048 },
- 	{ /* END OF LIST */ },
- };
- MODULE_DEVICE_TABLE(of, at24_of_match);
+ 		rcar_sound: sound@ec500000 {
 -- 
-2.11.0
+2.7.4
