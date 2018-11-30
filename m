@@ -1,56 +1,47 @@
-Return-Path: <SRS0=Nr/5=NP=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41076 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729988AbeKDXyg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 4 Nov 2018 18:54:36 -0500
-Received: by mail-wr1-f66.google.com with SMTP id x12-v6so6640502wrw.8
-        for <devicetree@vger.kernel.org>; Sun, 04 Nov 2018 06:39:21 -0800 (PST)
-From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Subject: [PATCH 3/7] iio: imu: st_lsm6dsx: remove static from st_lsm6dsx_set_watermark
-Date: Sun,  4 Nov 2018 15:39:02 +0100
-Message-Id: <732b033d7ea91401e674da6de67316277826e96f.1541341926.git.lorenzo.bianconi@redhat.com>
-In-Reply-To: <cover.1541341926.git.lorenzo.bianconi@redhat.com>
-References: <cover.1541341926.git.lorenzo.bianconi@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=X76U=OJ=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v2 16/21] ARM: dts: r8a7744: Add RWDT node
+Date: Fri, 30 Nov 2018 15:26:30 +0000
+Message-Id: <1543591595-37861-17-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
+References: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Remove static qualifier from st_lsm6dsx_set_watermark routine in
-order to be reused supporting st_lsm6dsx i2c controller
+Add a device node for the Watchdog Timer (RWDT) controller on the Renesas
+RZ/G1N (r8a7744) SoC.
 
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      | 1 +
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+V1-->V2
+   * Moved rwdt node before gpio.
+---
+ arch/arm/boot/dts/r8a7744.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-index ec204d3b4b1f..ac4cbbb0b3fb 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-@@ -185,6 +185,7 @@ int st_lsm6dsx_probe(struct device *dev, int irq, int hw_id, const char *name,
- int st_lsm6dsx_sensor_enable(struct st_lsm6dsx_sensor *sensor);
- int st_lsm6dsx_sensor_disable(struct st_lsm6dsx_sensor *sensor);
- int st_lsm6dsx_fifo_setup(struct st_lsm6dsx_hw *hw);
-+int st_lsm6dsx_set_watermark(struct iio_dev *iio_dev, unsigned int val);
- int st_lsm6dsx_update_watermark(struct st_lsm6dsx_sensor *sensor,
- 				u16 watermark);
- int st_lsm6dsx_flush_fifo(struct st_lsm6dsx_hw *hw);
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-index e3ebd04d8078..3433a5b6bf4d 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -600,7 +600,7 @@ static int st_lsm6dsx_write_raw(struct iio_dev *iio_dev,
- 	return err;
- }
+diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
+index cf05ce0..fabc7f9 100644
+--- a/arch/arm/boot/dts/r8a7744.dtsi
++++ b/arch/arm/boot/dts/r8a7744.dtsi
+@@ -135,6 +135,16 @@
+ 		#size-cells = <2>;
+ 		ranges;
  
--static int st_lsm6dsx_set_watermark(struct iio_dev *iio_dev, unsigned int val)
-+int st_lsm6dsx_set_watermark(struct iio_dev *iio_dev, unsigned int val)
- {
- 	struct st_lsm6dsx_sensor *sensor = iio_priv(iio_dev);
- 	struct st_lsm6dsx_hw *hw = sensor->hw;
++		rwdt: watchdog@e6020000 {
++			compatible = "renesas,r8a7744-wdt",
++				     "renesas,rcar-gen2-wdt";
++			reg = <0 0xe6020000 0 0x0c>;
++			clocks = <&cpg CPG_MOD 402>;
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 402>;
++			status = "disabled";
++		};
++
+ 		gpio0: gpio@e6050000 {
+ 			compatible = "renesas,gpio-r8a7744",
+ 				     "renesas,rcar-gen2-gpio";
 -- 
-2.19.1
+2.7.4
