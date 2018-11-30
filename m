@@ -1,107 +1,157 @@
-Return-Path: <SRS0=UOv9=OH=gmail.com=rk.katana.steel@kernel.org>
-MIME-Version: 1.0
-References: <CACE8ZKbUhFyWg5oK1B8+aWAa0tdqKf5Kokj80+8x1X2EUaA_DQ@mail.gmail.com>
- <CACE8ZKZEpQjOW6CSvUuM9xhjtkSCF0bYxcfQ3htSabC=rVJcTA@mail.gmail.com>
- <86f391e5-9e38-c8b0-4753-4646c322c9bc@hauke-m.de> <CACE8ZKb5CxEBAdCdGAhwaQHC9_nHBjTTVwxdDOXRayqgz0FK5g@mail.gmail.com>
- <CACE8ZKYCyDx_E+3sLpjQSV6xrFxGyrYwEfhEO=QZPGpm3jsBrQ@mail.gmail.com> <5a6a30cf-1d93-7232-e607-3919b86bbdff@gmail.com>
-In-Reply-To: <5a6a30cf-1d93-7232-e607-3919b86bbdff@gmail.com>
-From: =?UTF-8?Q?Ren=C3=A9_Kjellerup?= <rk.katana.steel@gmail.com>
-Date: Tue, 27 Nov 2018 18:09:42 -0800
-Message-ID: <CACE8ZKaMBfa5vWJMp_xVjstkuxkjO=DDwp1srA+Am1RP46gZcQ@mail.gmail.com>
-Subject: Re: Adding a Basic DT for the Linksys ea6500 v2 wireless home router
-Content-Type: multipart/alternative; boundary="000000000000daeaf4057bb00f9f"
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-Path: <SRS0=X76U=OJ=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v2 05/21] ARM: dts: r8a7744: Add GPIO support
+Date: Fri, 30 Nov 2018 15:26:19 +0000
+Message-Id: <1543591595-37861-6-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
+References: <1543591595-37861-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
---000000000000daeaf4057bb00f9f
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Describe GPIO blocks in the R8A7744 device tree.
 
-On Tue, Nov 27, 2018 at 4:23 PM Florian Fainelli <f.fainelli@gmail.com>
-wrote:
->
->
->
-> On 11/26/18 4:49 PM, Ren=C3=A9 Kjellerup wrote:
-> > To the broadcom kernel maintainers, (for BCM4708 CPUs)
-> >
-> > I just want to add a little attention to this patch again...
-> > let me know if there's any concerns and I will try to address
-highlighted issues
-> > as soon as possible.
-> >
-> > I've been running the development builds of OpenWrt kernels, where
-> > this patch has
-> > been included, on my Linksys EA6500v2 router for the past months,
-> > updating as new
-> > builds are available. With only the on board BCM4360 chip (5GHz WiFi)
-is being
-> > disabled, has so far been stable for my use case.
->
-> (Please no top posting). Your submission did make it through patchwork
-> and looks okay, I will run build tests and queue it up for 4.21 if
-> everything looks good. Thanks.
->
-...
->
-> --
-> Florian
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+V1-->V2
+   * No Change
+---
+ arch/arm/boot/dts/r8a7744.dtsi | 102 +++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 98 insertions(+), 4 deletions(-)
 
-thank you Florian for the update
-I appreciate the feedback
-
-Rene
---=20
--- as life grows older, I gain experience.
--- http://www.alchemiestick.net/
-
---000000000000daeaf4057bb00f9f
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"auto"><br>
-On Tue, Nov 27, 2018 at 4:23 PM Florian Fainelli &lt;<a href=3D"mailto:f.fa=
-inelli@gmail.com" target=3D"_blank" rel=3D"noreferrer">f.fainelli@gmail.com=
-</a>&gt; wrote:<br>
-&gt;<br>
-&gt;<br>
-&gt;<br>
-&gt; On 11/26/18 4:49 PM, Ren=C3=A9 Kjellerup wrote:<br>
-&gt; &gt; To the broadcom kernel maintainers, (for BCM4708 CPUs)<br>
-&gt; &gt;<br>
-&gt; &gt; I just want to add a little attention to this patch again...<br>
-&gt; &gt; let me know if there&#39;s any concerns and I will try to address=
- highlighted issues<br>
-&gt; &gt; as soon as possible.<br>
-&gt; &gt;<br>
-&gt; &gt; I&#39;ve been running the development builds of OpenWrt kernels, =
-where<br>
-&gt; &gt; this patch has<br>
-&gt; &gt; been included, on my Linksys EA6500v2 router for the past months,=
-<br>
-&gt; &gt; updating as new<br>
-&gt; &gt; builds are available. With only the on board BCM4360 chip (5GHz W=
-iFi) is being<br>
-&gt; &gt; disabled, has so far been stable for my use case.<br>
-&gt;<br>
-&gt; (Please no top posting). Your submission did make it through patchwork=
-<br>
-&gt; and looks okay, I will run build tests and queue it up for 4.21 if<br>
-&gt; everything looks good. Thanks.<br>
-&gt;<br>
-...<br>
-&gt;<br>
-&gt; --<br>
-&gt; Florian<br>
-<br>
-thank you Florian for the update<br>
-I appreciate the feedback<br>
-<br>
-Rene<br>
--- <br>
--- as life grows older, I gain experience.<br>
--- <a href=3D"http://www.alchemiestick.net/" rel=3D"noreferrer noreferrer" =
-target=3D"_blank">http://www.alchemiestick.net/</a><br></div>
-
---000000000000daeaf4057bb00f9f--
+diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
+index 732c5d7..ea1a782 100644
+--- a/arch/arm/boot/dts/r8a7744.dtsi
++++ b/arch/arm/boot/dts/r8a7744.dtsi
+@@ -116,29 +116,123 @@
+ 		ranges;
+ 
+ 		gpio0: gpio@e6050000 {
++			compatible = "renesas,gpio-r8a7744",
++				     "renesas,rcar-gen2-gpio";
+ 			reg = <0 0xe6050000 0 0x50>;
++			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+ 			#gpio-cells = <2>;
++			gpio-controller;
++			gpio-ranges = <&pfc 0 0 32>;
+ 			#interrupt-cells = <2>;
+ 			interrupt-controller;
+-			/* placeholder */
++			clocks = <&cpg CPG_MOD 912>;
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 912>;
+ 		};
+ 
+ 		gpio1: gpio@e6051000 {
++			compatible = "renesas,gpio-r8a7744",
++				     "renesas,rcar-gen2-gpio";
+ 			reg = <0 0xe6051000 0 0x50>;
++			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+ 			#gpio-cells = <2>;
+-			/* placeholder */
++			gpio-controller;
++			gpio-ranges = <&pfc 0 32 26>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 911>;
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 911>;
+ 		};
+ 
+ 		gpio2: gpio@e6052000 {
++			compatible = "renesas,gpio-r8a7744",
++				     "renesas,rcar-gen2-gpio";
+ 			reg = <0 0xe6052000 0 0x50>;
++			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
+ 			#gpio-cells = <2>;
+-			/* placeholder */
++			gpio-controller;
++			gpio-ranges = <&pfc 0 64 32>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 910>;
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 910>;
++		};
++
++		gpio3: gpio@e6053000 {
++			compatible = "renesas,gpio-r8a7744",
++				     "renesas,rcar-gen2-gpio";
++			reg = <0 0xe6053000 0 0x50>;
++			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			gpio-ranges = <&pfc 0 96 32>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 909>;
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 909>;
++		};
++
++		gpio4: gpio@e6054000 {
++			compatible = "renesas,gpio-r8a7744",
++				     "renesas,rcar-gen2-gpio";
++			reg = <0 0xe6054000 0 0x50>;
++			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			gpio-ranges = <&pfc 0 128 32>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 908>;
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 908>;
++		};
++
++		gpio5: gpio@e6055000 {
++			compatible = "renesas,gpio-r8a7744",
++				     "renesas,rcar-gen2-gpio";
++			reg = <0 0xe6055000 0 0x50>;
++			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			gpio-ranges = <&pfc 0 160 32>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 907>;
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 907>;
+ 		};
+ 
+ 		gpio6: gpio@e6055400 {
++			compatible = "renesas,gpio-r8a7744",
++				     "renesas,rcar-gen2-gpio";
+ 			reg = <0 0xe6055400 0 0x50>;
++			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+ 			#gpio-cells = <2>;
+-			/* placeholder */
++			gpio-controller;
++			gpio-ranges = <&pfc 0 192 32>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 905>;
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 905>;
++		};
++
++		gpio7: gpio@e6055800 {
++			compatible = "renesas,gpio-r8a7744",
++				     "renesas,rcar-gen2-gpio";
++			reg = <0 0xe6055800 0 0x50>;
++			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			gpio-ranges = <&pfc 0 224 26>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 904>;
++			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
++			resets = <&cpg 904>;
+ 		};
+ 
+ 		pfc: pin-controller@e6060000 {
+-- 
+2.7.4
