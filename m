@@ -1,54 +1,55 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v3 0/5] BCM2835 PM driver (MFD version respin)
-Date: Fri, 30 Nov 2018 12:27:38 -0800
-Message-ID: <20181130202743.20585-1-eric@anholt.net>
+From: Rob Herring <robh@kernel.org>
+Subject: [RFC PATCH] of: Add a GitLab CI config file for unittests
+Date: Fri, 30 Nov 2018 14:32:32 -0600
+Message-ID: <20181130203232.5743-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Frank Rowand <frowand.list@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-Guenter had some minor changes to patch #2, which I've done in this
-version.
+This adds a GitLab CI config file running the DT unittest in a usermode
+Linux build. The corresponding CI job can be found here:
 
-Eric Anholt (5):
-  dt-bindings: soc: Add a new binding for the BCM2835 PM node.
-  bcm2835-pm: Move bcm2835-watchdog's DT probe to an MFD.
-  soc: bcm: bcm2835-pm: Add support for power domains under a new
-    binding.
-  ARM: bcm283x: Extend the WDT DT node out to cover the whole PM block.
-  ARM: bcm283x: Switch V3D over to using the PM driver instead of
-    firmware.
+https://gitlab.com/robherring/linux-dt-unittest/pipelines
 
- .../bindings/soc/bcm/brcm,bcm2835-pm.txt      |  42 ++
- arch/arm/boot/dts/bcm2835-rpi.dtsi            |   4 -
- arch/arm/boot/dts/bcm283x.dtsi                |  16 +-
- arch/arm/mach-bcm/Kconfig                     |   1 +
- drivers/mfd/Makefile                          |   1 +
- drivers/mfd/bcm2835-pm.c                      |  92 +++
- drivers/soc/bcm/Kconfig                       |  11 +
- drivers/soc/bcm/Makefile                      |   1 +
- drivers/soc/bcm/bcm2835-power.c               | 661 ++++++++++++++++++
- drivers/watchdog/bcm2835_wdt.c                |  26 +-
- include/dt-bindings/soc/bcm2835-pm.h          |  28 +
- include/linux/mfd/bcm2835-pm.h                |  14 +
- 12 files changed, 873 insertions(+), 24 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-pm.txt
- create mode 100644 drivers/mfd/bcm2835-pm.c
- create mode 100644 drivers/soc/bcm/bcm2835-power.c
- create mode 100644 include/dt-bindings/soc/bcm2835-pm.h
- create mode 100644 include/linux/mfd/bcm2835-pm.h
+This CI job can be duplicated by others by creating a kernel repo on a
+GitLab instance and configuring GitLab CI to use
+drivers/of/.gitlab-ci.yml config file.
 
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ drivers/of/.gitlab-ci.yml | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 drivers/of/.gitlab-ci.yml
+
+diff --git a/drivers/of/.gitlab-ci.yml b/drivers/of/.gitlab-ci.yml
+new file mode 100644
+index 000000000000..44a4824f5c33
+--- /dev/null
++++ b/drivers/of/.gitlab-ci.yml
+@@ -0,0 +1,18 @@
++# SPDX-License-Identifier: GPL-2.0+
++
++image: registry.gitlab.com/robherring/docker-images/ubuntu-kernel-build
++
++variables:
++  ARCH: um
++
++job-unittest:
++  artifacts:
++    paths:
++      - "*.log"
++
++  script:
++    - echo -e "CONFIG_OF=y\nCONFIG_OF_UNITTEST=y\nCONFIG_OF_OVERLAY=y" > kernel/configs/extra.config
++    - make defconfig extra.config
++    - make -s -j $(nproc) vmlinux | tee build.log
++    - TMP=/tmp ./vmlinux > boot.log || true
++    - grep -E '\#\#\# dt-test \#\#\# end of unittest - [0-9]* passed, 0 failed' boot.log
 -- 
-2.20.0.rc1
+2.19.1
