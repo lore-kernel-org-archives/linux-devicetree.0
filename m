@@ -1,65 +1,46 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 0/8] Add Armada 3700 COMPHY support
-Date: Fri, 30 Nov 2018 15:47:35 +0100
-Message-ID: <20181130144743.675-1-miquel.raynal@bootlin.com>
+Subject: [PATCH v2 1/8] phy: mvebu-cp110-comphy: fix spelling in structure name
+Date: Fri, 30 Nov 2018 15:47:36 +0100
+Message-ID: <20181130144743.675-2-miquel.raynal@bootlin.com>
+References: <20181130144743.675-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181130144743.675-1-miquel.raynal@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Rename the mvebu_comhy_conf structure to be mvebu_comphy_conf, which is
+probably what the original author meant.
 
-This series adds a new driver to support Armada 3700 COMPHY IP.
-The series has been tested on an ESPRESSObin with SATA, PCIe
-and USB3 host. For this purpose, patch 1 enumerates the SATA PHY
-mode. The SGMII PHY mode that is supported by the IP has been written
-(uses SMC calls anyway) but could not be tested on this platform.
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Three series will follow to add PHY support (or at least a PHY nodes
-in the A3700/ESPRESSObin device trees) to the MVEBU AHCI driver, the
-Aardvark PCI controller driver and the MVEBU xHCI driver. All this is
-needed in order to achieve suspend to RAM on this platform.
-
-Thanks,
-Miquèl
-
-
-Changes since v1:
-=================
-* Fix wrong check in ->xlate().
-* Apply the same fix to the cp110 comphy driver from which the a3700
-  driver is based.
-* Added credit to Gregorz Jaszczyk for his work.
-* Added Suggested-by tag to the patch adding the COMPHY DT node.
-
-
-Grzegorz Jaszczyk (1):
-  phy: enumerate SATA PHY mode
-
-Miquel Raynal (7):
-  phy: mvebu-cp110-comphy: fix spelling in structure name
-  phy: mvebu-cp110-comphy: fix port check in ->xlate()
-  phy: add A3700 COMPHY support
-  dt-bindings: phy: mvebu-comphy: extend the file to describe a3700
-    bindings
-  MAINTAINERS: phy: add entry for Armada 3700 COMPHY driver
-  ARM64: dts: marvell: armada-37xx: fix SATA node scope
-  ARM64: dts: marvell: armada-37xx: declare the COMPHY node
-
- .../bindings/phy/phy-mvebu-comphy.txt         |  65 ++++-
- MAINTAINERS                                   |   6 +
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |  31 +-
- drivers/phy/marvell/Kconfig                   |  10 +
- drivers/phy/marvell/Makefile                  |   1 +
- drivers/phy/marvell/phy-mvebu-a3700-comphy.c  | 276 ++++++++++++++++++
- drivers/phy/marvell/phy-mvebu-cp110-comphy.c  |   8 +-
- include/linux/phy/phy.h                       |   1 +
- 8 files changed, 381 insertions(+), 17 deletions(-)
- create mode 100644 drivers/phy/marvell/phy-mvebu-a3700-comphy.c
-
+diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+index 86a5f7b9448b..31b9a1c18345 100644
+--- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
++++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+@@ -114,7 +114,7 @@
+ #define MVEBU_COMPHY_LANES	6
+ #define MVEBU_COMPHY_PORTS	3
+ 
+-struct mvebu_comhy_conf {
++struct mvebu_comphy_conf {
+ 	enum phy_mode mode;
+ 	unsigned lane;
+ 	unsigned port;
+@@ -129,7 +129,7 @@ struct mvebu_comhy_conf {
+ 		.mux = _mux,				\
+ 	}
+ 
+-static const struct mvebu_comhy_conf mvebu_comphy_cp110_modes[] = {
++static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
+ 	/* lane 0 */
+ 	MVEBU_COMPHY_CONF(0, 1, PHY_MODE_SGMII, 0x1),
+ 	MVEBU_COMPHY_CONF(0, 1, PHY_MODE_2500SGMII, 0x1),
 -- 
 2.19.1
