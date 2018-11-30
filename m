@@ -1,54 +1,53 @@
-Return-Path: <SRS0=gYPT=OI=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr20075.outbound.protection.outlook.com ([40.107.2.75]:65312
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+Return-Path: <SRS0=nKhH=OJ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr1400094.outbound.protection.outlook.com ([40.107.140.94]:6876
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727026AbeK2NlH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 29 Nov 2018 08:41:07 -0500
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V4 0/4] Add i.MX System Controller thermal driver support
-Date: Thu, 29 Nov 2018 02:37:16 +0000
-Message-ID: <1543458696-4741-1-git-send-email-Anson.Huang@nxp.com>
+        id S1726161AbeK3ND0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 30 Nov 2018 08:03:26 -0500
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Subject: Re: [PATCH 2/2][resend] OF: add for_each_port_of_node()
+Date: Fri, 30 Nov 2018 01:55:46 +0000
+Message-ID: <871s731gnr.wl-kuninori.morimoto.gx@renesas.com>
+References: <87r2f60wiu.wl-kuninori.morimoto.gx@renesas.com>
+        <87o9aa0whf.wl-kuninori.morimoto.gx@renesas.com>
+        <CAL_JsqJmYcd=SVjivse93_GyYvz9MnbOzgjkf_PSxqRCZtUAqg@mail.gmail.com>
+        <87in0h24yx.wl-kuninori.morimoto.gx@renesas.com>
+        <CAL_JsqJ=44-odEWvefbXn-2Kdx=pPuC8n9REYKEFHaPZZd--XA@mail.gmail.com>
+        <877egv1jtc.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <877egv1jtc.wl-kuninori.morimoto.gx@renesas.com>
 Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <6E8A358F433C36469F999F311529C995@jpnprd01.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "heiko@sntech.de" <heiko@sntech.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "arnd@arndb.de" <arnd@arndb.de>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
-inside, the system controller is in charge of controlling power,
-clock and thermal sensors etc..
 
-This patch adds i.MX system controller thermal driver support,
-Linux kernel has to communicate with system controller via MU
-(message unit) IPC to get each thermal sensor's temperature,
-it supports multiple sensors which are passed from device tree,
-please see the binding doc for details.
+Hi Rob, again
 
-Note that this patch set is based on [V4,4/4] ARM64: dts: imx: add i.MX8QXP=
- system controller RTC support,
-https://patchwork.kernel.org/patch/10703779/
+> > > -       for_each_endpoint_of_node(node, endpoint) {
+> > > -               if (endpoint =3D=3D ep)
+> > > +       for_each_port_of_node(node, p) {
+> > > +               if (port =3D=3D p)
+> > >                         id =3D i;
+> > >                 i++;
+> > >         }
+> >=20
+> > This is fragile because it assumes 0-N port numbering. While that's
+> > usually true, it's not guaranteed.
+> >=20
+> > Just add a of_graph_get_port_id() that reads and returns 'reg' value
+> > or 0 if no 'reg'. Or just use of_graph_parse_endpoint().
+>=20
+> OK, will think about this.
+> How about [1/2] patch ? Is it good or not ?
 
-Anson Huang (4):
-  dt-bindings: thermal: add binding doc for i.MX system controller
-    thermal driver
-  thermal: imx_sc: add i.MX system controller thermal support
-  defconfig: arm64: add i.MX system controller thermal support
-  ARM64: dts: imx: add i.MX8QXP thermal support
+Thank you for your advice.
+of_graph_parse_endpoint() was good enough !
 
- .../devicetree/bindings/thermal/imx-sc-thermal.txt |  33 ++++
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |  27 +++
- arch/arm64/configs/defconfig                       |   1 +
- drivers/thermal/Kconfig                            |  11 ++
- drivers/thermal/Makefile                           |   1 +
- drivers/thermal/imx_sc_thermal.c                   | 201 +++++++++++++++++=
-++++
- 6 files changed, 274 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/imx-sc-therma=
-l.txt
- create mode 100644 drivers/thermal/imx_sc_thermal.c
-
---=20
-2.7.4
+Best regards
+---
+Kuninori Morimoto
