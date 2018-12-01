@@ -1,7 +1,8 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH] ARM: dts: pxa: clean up USB controller nodes
-Date: Sat,  1 Dec 2018 14:54:51 +0100
-Message-ID: <20181201135451.3505-1-daniel@zonque.org>
+From: Carlo Caione <ccaione@baylibre.com>
+Subject: [PATCH] arm64: dts: meson-axg: Fix and enable GPIO interrupt
+ controller
+Date: Sat,  1 Dec 2018 14:56:14 +0000
+Message-ID: <20181201145614.5381-1-ccaione@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -15,68 +16,49 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robert.jarzmik@free.fr, haojian.zhuang@gmail.com
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, Daniel Mack <daniel@zonque.org>, linux-arm-kernel@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, jbrunet@baylibre.com
+Cc: Carlo Caione <ccaione@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-PXA25xx SoCs don't have a USB controller, so drop the node from the
-common pxa2xx.dtsi base file. Both pxa27x and pxa3xx have a dedicated
-node already anyway.
+The GPIO interrupt controller registers are mapped to the wrong
+offset in the DTSI. Fix the offset in the DTSI and enable the interrupt
+controller in the DTS of the only AXG board enabled.
 
-While at it, unify the names for the nodes across all pxa platforms.
-
-Signed-off-by: Daniel Mack <daniel@zonque.org>
-Reported-by: Sergey Yanovich <ynvich@gmail.com>
-Link: https://patchwork.kernel.org/patch/8375421/
+Signed-off-by: Carlo Caione <ccaione@baylibre.com>
 ---
- arch/arm/boot/dts/pxa27x.dtsi | 2 +-
- arch/arm/boot/dts/pxa2xx.dtsi | 7 -------
- arch/arm/boot/dts/pxa3xx.dtsi | 2 +-
- 3 files changed, 2 insertions(+), 9 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 6 ++++++
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-index 3228ad5fb725..ccbecad9c5c7 100644
---- a/arch/arm/boot/dts/pxa27x.dtsi
-+++ b/arch/arm/boot/dts/pxa27x.dtsi
-@@ -35,7 +35,7 @@
- 			clocks = <&clks CLK_NONE>;
- 		};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+index 18778ada7bd3..c3e4aac75782 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+@@ -374,6 +374,12 @@
+ 	status = "okay";
+ };
  
--		pxa27x_ohci: usb@4c000000 {
-+		usb0: usb@4c000000 {
- 			compatible = "marvell,pxa-ohci";
- 			reg = <0x4c000000 0x10000>;
- 			interrupts = <3>;
-diff --git a/arch/arm/boot/dts/pxa2xx.dtsi b/arch/arm/boot/dts/pxa2xx.dtsi
-index 30e77ebbcc4d..e83879d97aea 100644
---- a/arch/arm/boot/dts/pxa2xx.dtsi
-+++ b/arch/arm/boot/dts/pxa2xx.dtsi
-@@ -134,13 +134,6 @@
- 			status = "disabled";
- 		};
++&gpio_intc {
++	compatible = "amlogic,meson-gpio-intc",
++		     "amlogic,meson-axg-gpio-intc";
++	status = "okay";
++};
++
+ &ir {
+ 	status = "okay";
+ 	pinctrl-0 = <&remote_input_ao_pins>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index df017dbd2e57..f1affc12e3e6 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -1415,7 +1415,7 @@
  
--		usb0: ohci@4c000000 {
--			compatible = "marvell,pxa-ohci";
--			reg = <0x4c000000 0x10000>;
--			interrupts = <3>;
--			status = "disabled";
--		};
--
- 		mmc0: mmc@41100000 {
- 			compatible = "marvell,pxa-mmc";
- 			reg = <0x41100000 0x1000>;
-diff --git a/arch/arm/boot/dts/pxa3xx.dtsi b/arch/arm/boot/dts/pxa3xx.dtsi
-index d9f7c68479ab..e1e607f53ce6 100644
---- a/arch/arm/boot/dts/pxa3xx.dtsi
-+++ b/arch/arm/boot/dts/pxa3xx.dtsi
-@@ -202,7 +202,7 @@
- 			status = "disabled";
- 		};
- 
--		pxa3xx_ohci: usb@4c000000 {
-+		usb0: usb@4c000000 {
- 			compatible = "marvell,pxa-ohci";
- 			reg = <0x4c000000 0x10000>;
- 			interrupts = <3>;
+ 			gpio_intc: interrupt-controller@f080 {
+ 				compatible = "amlogic,meson-gpio-intc";
+-				reg = <0x0 0xf080 0x0 0x10>;
++				reg = <0x0 0x9880 0x0 0x10>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 				amlogic,channel-interrupts = <64 65 66 67 68 69 70 71>;
 -- 
-2.19.2
+2.19.1
