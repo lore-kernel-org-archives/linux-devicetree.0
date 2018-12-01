@@ -1,47 +1,47 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH v10 6/7] arm64: dts: sdm845: Add interconnect provider DT nodes
-Date: Fri, 30 Nov 2018 16:39:11 -0800
-Message-ID: <CAE=gft4XEqkL4oON=Q1oji=AoYeEdL5DFjy3h6hN6uFR9oRA4A@mail.gmail.com>
-References: <20181127180349.29997-1-georgi.djakov@linaro.org> <20181127180349.29997-7-georgi.djakov@linaro.org>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH v3 0/8] drm/msm/dsi: Get PHY ref clocks from the DT
+Date: Fri, 30 Nov 2018 16:52:46 -0800
+Message-ID: <20181201005254.139908-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181127180349.29997-7-georgi.djakov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: georgi.djakov@linaro.org
-Cc: linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, rjw@rjwysocki.net, robh+dt@kernel.org, Michael Turquette <mturquette@baylibre.com>, khilman@baylibre.com, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, Alexandre Bailon <abailon@baylibre.com>, maxime.ripard@bootlin.com, Arnd Bergmann <arnd@arndb.de>, thierry.reding@gmail.com, ksitaraman@nvidia.com, sanjayc@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
+To: Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Archit Taneja <architt@codeaurora.org>, Sean Paul <seanpaul@chromium.org>, Rajesh Yadav <ryadav@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Jeykumar Sankaran <jsanka@codeaurora.org>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 27, 2018 at 10:04 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
->
-> From: David Dai <daidavid1@codeaurora.org>
->
-> Add RSC (Resource State Coordinator) provider
-> dictating network-on-chip interconnect bus performance
-> found on SDM845-based platforms.
->
-> Signed-off-by: David Dai <daidavid1@codeaurora.org>
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index b72bdb0a31a5..856d33604e9c 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -1324,6 +1324,11 @@
->                                 compatible = "qcom,sdm845-rpmh-clk";
->                                 #clock-cells = <1>;
->                         };
-> +
-> +                       qnoc: qnoc {
-> +                               compatible = "qcom,sdm845-rsc-hlos";
-> +                               #interconnect-cells = <1>;
-> +                       };
+The MSM DSI PHY drivers currently hardcode the name and the rate of
+the PHY ref clock. Get the ref clock from the device tree instead.
 
-Should we alphabetize this node above rpmhcc?
+Note: testing of this series was limited to SDM845 and the 10nm PHY
 
->                 };
->
->                 intc: interrupt-controller@17a00000 {
+Major changes in v3:
+- keep supporting DTs without ref clock for the 28nm and the 28nm
+  8960 PHYs
+- added patch to add ref clock to qcom-apq8064.dtsi
+
+Major changes in v2:
+- apply to all MSM DSI PHY drivers, not only 10nm
+
+Matthias Kaehlcke (8):
+  dt-bindings: msm/dsi: Add ref clock for PHYs
+  drm/msm/dsi: 28nm 8960 PHY: Get ref clock from the DT
+  drm/msm/dsi: 28nm PHY: Get ref clock from the DT
+  drm/msm/dsi: 14nm PHY: Get ref clock from the DT
+  drm/msm/dsi: 10nm PHY: Get ref clock from the DT
+  arm64: dts: qcom: msm8916: Set 'xo_board' as ref clock of the DSI PHY
+  arm64: dts: sdm845: Set 'bi_tcxo' as ref clock of the DSI PHYs
+  ARM: dts: qcom-apq8064: Set 'xo_board' as ref clock of the DSI PHY
+
+ .../devicetree/bindings/display/msm/dsi.txt   |  1 +
+ arch/arm/boot/dts/qcom-apq8064.dtsi           |  5 +--
+ arch/arm64/boot/dts/qcom/msm8916.dtsi         |  5 +--
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 10 +++---
+ drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c    | 13 ++++++-
+ drivers/gpu/drm/msm/dsi/pll/dsi_pll_14nm.c    | 16 +++++++--
+ drivers/gpu/drm/msm/dsi/pll/dsi_pll_28nm.c    | 35 ++++++++++++++-----
+ .../gpu/drm/msm/dsi/pll/dsi_pll_28nm_8960.c   | 28 ++++++++++++---
+ 8 files changed, 87 insertions(+), 26 deletions(-)
+
+-- 
+2.20.0.rc1.387.gf8505762e3-goog
