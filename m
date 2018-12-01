@@ -1,388 +1,44 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [RFC PATCH v2 08/15] usb:cdns3: Implements device operations part
- of the API
-Date: Sat, 1 Dec 2018 11:11:01 +0000
-Message-ID: <BYAPR07MB4709BBB7E78C7A7244270215DDAC0@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
- <1542535751-16079-9-git-send-email-pawell@cadence.com>
- <5BFE8883.7090802@ti.com>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH 4/7] ARM: dts: pxa: merge &pxa3xx_ohci with &usb0
+Date: Sat, 01 Dec 2018 14:30:45 +0100
+Message-ID: <87lg59xtkq.fsf@belgarion.home>
+References: <20181130175543.32628-1-daniel@zonque.org>
+ <20181130175543.32628-5-daniel@zonque.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5BFE8883.7090802@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>, Felipe Balbi <balbi@kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181130175543.32628-5-daniel@zonque.org> (Daniel Mack's message
+ of "Fri, 30 Nov 2018 18:55:40 +0100")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Mack <daniel@zonque.org>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, haojian.zhuang@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Daniel Mack <daniel@zonque.org> writes:
 
->> Patch adds implementation callback function defined in
->> usb_gadget_ops object.
->>
->> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
->> ---
->>  drivers/usb/cdns3/gadget.c | 249 ++++++++++++++++++++++++++++++++++++-
->>  1 file changed, 247 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
->> index 376b68b13d1b..702a05faa664 100644
->> --- a/drivers/usb/cdns3/gadget.c
->> +++ b/drivers/usb/cdns3/gadget.c
->> @@ -17,6 +17,36 @@
->>  #include "gadget-export.h"
->>  #include "gadget.h"
->>
->> +/**
->> + * cdns3_handshake - spin reading  until handshake completes or fails
->> + * @ptr: address of device controller register to be read
->> + * @mask: bits to look at in result of read
->> + * @done: value of those bits when handshake succeeds
->> + * @usec: timeout in microseconds
->> + *
->> + * Returns negative errno, or zero on success
->> + *
->> + * Success happens when the "mask" bits have the specified value (hardw=
-are
->> + * handshake done). There are two failure modes: "usec" have passed (ma=
-jor
->> + * hardware flakeout), or the register reads as all-ones (hardware remo=
-ved).
->> + */
->> +int cdns3_handshake(void __iomem *ptr, u32 mask, u32 done, int usec)
->> +{
->> +	u32	result;
->> +
->> +	do {
->> +		result =3D readl(ptr);
->> +		if (result =3D=3D ~(u32)0)	/* card removed */
->> +			return -ENODEV;
+> Both pxa3xx.dtsi and pxa2xx.dtsi define a node for the USB controller. Merge
+> them, and get rid of the one in pxa3xx.dtsi.
 >
->Is this applicable to all registers?
->What is meant by card removed? We're not connected to host?
->
->how does EP reset behave when there is no USB connection?
->
+> Signed-off-by: Daniel Mack <daniel@zonque.org>
+Excellent, but can be even better :)
+Could you please address as well pxa27x.dtsi ?
 
-Function was adopted from XHCI driver (xhci_handshake).=20
-I think it's about PCI card.  If this happens driver should read 0xffffffff=
- from any register.=20
-I need to confirm it with hardware team or test it.=20
-I remember that I had such situation some time ago.=20
-My testing platform consist of separate FPGA  board and PC. Both has  PCI a=
-dapter=20
-and are connected by means of special PCI cable.
+As a matter of fact, this was already discussed here :
+https://patchwork.kernel.org/patch/8375421/
 
->> +		result &=3D mask;
->> +		if (result =3D=3D done)
->> +			return 0;
->> +		udelay(1);
->> +		usec--;
->> +	} while (usec > 0);
->> +	return -ETIMEDOUT;
->> +}
->> +
->>  /**
->>   * cdns3_set_register_bit - set bit in given register.
->>   * @ptr: address of device controller register to be read and changed
->> @@ -43,6 +73,25 @@ void cdns3_select_ep(struct cdns3_device *priv_dev, u=
-32 ep)
->>  	writel(ep, &priv_dev->regs->ep_sel);
->>  }
->>
->> +static void cdns3_free_trb_pool(struct cdns3_endpoint *priv_ep)
->> +{
->> +	struct cdns3_device *priv_dev =3D priv_ep->cdns3_dev;
->> +
->> +	if (priv_ep->trb_pool) {
->> +		dma_free_coherent(priv_dev->sysdev,
->> +				  TRB_RIGN_SIZE,
->> +				  priv_ep->trb_pool, priv_ep->trb_pool_dma);
->> +		priv_ep->trb_pool =3D NULL;
->> +	}
->> +
->> +	if (priv_ep->aligned_buff) {
->> +		dma_free_coherent(priv_dev->sysdev, CDNS3_UNALIGNED_BUF_SIZE,
->> +				  priv_ep->aligned_buff,
->> +				  priv_ep->aligned_dma_addr);
->> +		priv_ep->aligned_buff =3D NULL;
->> +	}
->> +}
->> +
->>  /**
->>   * cdns3_irq_handler - irq line interrupt handler
->>   * @cdns: cdns3 instance
->> @@ -58,6 +107,114 @@ static irqreturn_t cdns3_irq_handler_thread(struct =
-cdns3 *cdns)
->>  	return ret;
->>  }
->>
->> +/* Find correct direction for HW endpoint according to description */
->> +static int cdns3_ep_dir_is_correct(struct usb_endpoint_descriptor *desc=
-,
->> +				   struct cdns3_endpoint *priv_ep)
->> +{
->> +	return (priv_ep->endpoint.caps.dir_in && usb_endpoint_dir_in(desc)) ||
->> +	       (priv_ep->endpoint.caps.dir_out && usb_endpoint_dir_out(desc));
->> +}
->> +
->> +static struct cdns3_endpoint *cdns3_find_available_ss_ep(struct cdns3_d=
-evice *priv_dev,
->> +							 struct usb_endpoint_descriptor *desc)
->
->why is this function called ss_ep? This doesn't seem like only for supersp=
-eed endpoints.
+So the proper solution might be a bit different, as if you look at the thread I
+put up there, pxa25x doesn't have an USB host controller.
 
-I will remove _ss_.=20
->
->> +{
->> +	struct usb_ep *ep;
->> +	struct cdns3_endpoint *priv_ep;
->> +
->> +	list_for_each_entry(ep, &priv_dev->gadget.ep_list, ep_list) {
->> +		unsigned long num;
->> +		int ret;
->> +		/* ep name pattern likes epXin or epXout */
->> +		char c[2] =3D {ep->name[2], '\0'};
->> +
->> +		ret =3D kstrtoul(c, 10, &num);
->> +		if (ret)
->> +			return ERR_PTR(ret);
->> +
->> +		priv_ep =3D ep_to_cdns3_ep(ep);
->> +		if (cdns3_ep_dir_is_correct(desc, priv_ep)) {
->> +			if (!(priv_ep->flags & EP_USED)) {
->> +				priv_ep->num  =3D num;
->> +				priv_ep->flags |=3D EP_USED;
->> +				return priv_ep;
->> +			}
->> +		}
->> +	}
->> +	return ERR_PTR(-ENOENT);
->> +}
->> +
->> +static struct usb_ep *cdns3_gadget_match_ep(struct usb_gadget *gadget,
->> +					    struct usb_endpoint_descriptor *desc,
->> +					    struct usb_ss_ep_comp_descriptor *comp_desc)
->> +{
->> +	struct cdns3_device *priv_dev =3D gadget_to_cdns3_device(gadget);
->> +	struct cdns3_endpoint *priv_ep;
->> +	unsigned long flags;
->> +
->> +	priv_ep =3D cdns3_find_available_ss_ep(priv_dev, desc);
->> +	if (IS_ERR(priv_ep)) {
->> +		dev_err(&priv_dev->dev, "no available ep\n");
->> +		return NULL;
->> +	}
->> +
->> +	dev_dbg(&priv_dev->dev, "match endpoint: %s\n", priv_ep->name);
->> +
->> +	spin_lock_irqsave(&priv_dev->lock, flags);
->> +	priv_ep->endpoint.desc =3D desc;
->> +	priv_ep->dir  =3D usb_endpoint_dir_in(desc) ? USB_DIR_IN : USB_DIR_OUT=
-;
->> +	priv_ep->type =3D usb_endpoint_type(desc);
->> +
->> +	list_add_tail(&priv_ep->ep_match_pending_list,
->> +		      &priv_dev->ep_match_list);
->> +	spin_unlock_irqrestore(&priv_dev->lock, flags);
->> +	return &priv_ep->endpoint;
->> +}
->
->Why do you need a custom match_ep?
->doesn't usb_ep_autoconfig suffice?
+Cheers.
 
-I need to test it but at first glance it  looks like usb_ep_autoconfig suff=
-ice.
-
->
->You can check if EP is claimed or not by checking the ep->claimed flag.
->
->> +
->> +/**
->> + * cdns3_gadget_get_frame Returns number of actual ITP frame
->> + * @gadget: gadget object
->> + *
->> + * Returns number of actual ITP frame
->> + */
->> +static int cdns3_gadget_get_frame(struct usb_gadget *gadget)
->> +{
->> +	struct cdns3_device *priv_dev =3D gadget_to_cdns3_device(gadget);
->> +
->> +	return readl(&priv_dev->regs->usb_iptn);
->> +}
->> +
->> +static int cdns3_gadget_wakeup(struct usb_gadget *gadget)
->> +{
->> +	return 0;
->> +}
->> +
->> +static int cdns3_gadget_set_selfpowered(struct usb_gadget *gadget,
->> +					int is_selfpowered)
->> +{
->> +	struct cdns3_device *priv_dev =3D gadget_to_cdns3_device(gadget);
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&priv_dev->lock, flags);
->> +	gadget->is_selfpowered =3D !!is_selfpowered;
->> +	spin_unlock_irqrestore(&priv_dev->lock, flags);
->> +	return 0;
->> +}
->> +
->> +static int cdns3_gadget_pullup(struct usb_gadget *gadget, int is_on)
->> +{
->> +	struct cdns3_device *priv_dev =3D gadget_to_cdns3_device(gadget);
->> +
->> +	if (!priv_dev->start_gadget)
->> +		return 0;
->> +
->> +	if (is_on)
->> +		writel(USB_CONF_DEVEN, &priv_dev->regs->usb_conf);
->> +	else
->> +		writel(USB_CONF_DEVDS, &priv_dev->regs->usb_conf);
->> +
->> +	return 0;
->> +}
->> +
->>  static void cdns3_gadget_config(struct cdns3_device *priv_dev)
->>  {
->>  	struct cdns3_usb_regs __iomem *regs =3D priv_dev->regs;
->> @@ -74,6 +231,95 @@ static void cdns3_gadget_config(struct cdns3_device =
-*priv_dev)
->>  	writel(USB_CONF_DEVEN, &regs->usb_conf);
->>  }
->>
->> +/**
->> + * cdns3_gadget_udc_start Gadget start
->> + * @gadget: gadget object
->> + * @driver: driver which operates on this gadget
->> + *
->> + * Returns 0 on success, error code elsewhere
->> + */
->> +static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
->> +				  struct usb_gadget_driver *driver)
->> +{
->> +	struct cdns3_device *priv_dev =3D gadget_to_cdns3_device(gadget);
->> +	unsigned long flags;
->> +
->> +	if (priv_dev->gadget_driver) {
->> +		dev_err(&priv_dev->dev, "%s is already bound to %s\n",
->> +			priv_dev->gadget.name,
->> +			priv_dev->gadget_driver->driver.name);
->> +		return -EBUSY;
->> +	}
->
->Not sure if this check is required. UDC core should be doing that.
->
->> +
->> +	spin_lock_irqsave(&priv_dev->lock, flags);
->> +	priv_dev->gadget_driver =3D driver;
->> +	if (!priv_dev->start_gadget)
->> +		goto unlock;
->> +
->> +	cdns3_gadget_config(priv_dev);
->> +unlock:
->> +	spin_unlock_irqrestore(&priv_dev->lock, flags);
->> +	return 0;
->> +}
->> +
->> +/**
->> + * cdns3_gadget_udc_stop Stops gadget
->> + * @gadget: gadget object
->> + *
->> + * Returns 0
->> + */
->> +static int cdns3_gadget_udc_stop(struct usb_gadget *gadget)
->> +{
->> +	struct cdns3_device *priv_dev =3D gadget_to_cdns3_device(gadget);
->> +	struct cdns3_endpoint *priv_ep, *temp_ep;
->> +	u32 bEndpointAddress;
->> +	struct usb_ep *ep;
->> +	int ret =3D 0;
->> +	int i;
->> +
->> +	priv_dev->gadget_driver =3D NULL;
->> +	list_for_each_entry_safe(priv_ep, temp_ep, &priv_dev->ep_match_list,
->> +				 ep_match_pending_list) {
->> +		list_del(&priv_ep->ep_match_pending_list);
->> +		priv_ep->flags &=3D ~EP_USED;
->> +	}
->> +
->> +	priv_dev->onchip_mem_allocated_size =3D 0;
->> +	priv_dev->out_mem_is_allocated =3D 0;
->> +	priv_dev->gadget.speed =3D USB_SPEED_UNKNOWN;
->> +
->> +	for (i =3D 0; i < priv_dev->ep_nums ; i++)
->> +		cdns3_free_trb_pool(priv_dev->eps[i]);
->> +
->> +	if (!priv_dev->start_gadget)
->> +		return 0;
->
->This looks tricky. Why do we need this flag?
-
-It will be removed in next version. It's no longer needed.=20
->
->> +
->> +	list_for_each_entry(ep, &priv_dev->gadget.ep_list, ep_list) {
->> +		priv_ep =3D ep_to_cdns3_ep(ep);
->> +		bEndpointAddress =3D priv_ep->num | priv_ep->dir;
->> +		cdns3_select_ep(priv_dev, bEndpointAddress);
->> +		writel(EP_CMD_EPRST, &priv_dev->regs->ep_cmd);
->> +		ret =3D cdns3_handshake(&priv_dev->regs->ep_cmd,
->> +				      EP_CMD_EPRST, 0, 100);
->> +	}
->> +
->> +	/* disable interrupt for device */
->> +	writel(0, &priv_dev->regs->usb_ien);
->> +	writel(USB_CONF_DEVDS, &priv_dev->regs->usb_conf);
->
->where are you requesting the interrupt? Looks like it should be done in
->udc_start() no?
-
-Currently it is in initialization when the role is switched on. Interrupt i=
-s freeing=20
-during switching off role. So now the concept is the same as for host role.=
-=20
-Whole device part is loaded and unloaded during changing role..=20
->
->> +
->> +	return ret;
->> +}
->
->Can we combine cdns3_gadget_udc_start() and cdns3_gadget_udc_start()
->with cdns3_gadget_start() and cdns3_gadget_stop() respectively so that
->cdns3_gadget_config() and cleanup() is done at one place.
->
-
-Ok, probably it can be invoked only in cdns3_gadget_udc_start() and=20
-cdns3_gadget_udc_start(), but I have to test it.=20
->> +
->> +static const struct usb_gadget_ops cdns3_gadget_ops =3D {
->> +	.get_frame =3D cdns3_gadget_get_frame,
->> +	.wakeup =3D cdns3_gadget_wakeup,
->> +	.set_selfpowered =3D cdns3_gadget_set_selfpowered,
->> +	.pullup =3D cdns3_gadget_pullup,
->> +	.udc_start =3D cdns3_gadget_udc_start,
->> +	.udc_stop =3D cdns3_gadget_udc_stop,
->> +	.match_ep =3D cdns3_gadget_match_ep,
->> +};
->> +
->>  /**
->>   * cdns3_init_ep Initializes software endpoints of gadget
->>   * @cdns3: extended gadget object
->> @@ -184,8 +430,7 @@ static int __cdns3_gadget_init(struct cdns3 *cdns)
->>  	/* fill gadget fields */
->>  	priv_dev->gadget.max_speed =3D USB_SPEED_SUPER;
->>  	priv_dev->gadget.speed =3D USB_SPEED_UNKNOWN;
->> -	//TODO: Add implementation of cdns3_gadget_ops
->> -	//priv_dev->gadget.ops =3D &cdns3_gadget_ops;
->> +	priv_dev->gadget.ops =3D &cdns3_gadget_ops;
->>  	priv_dev->gadget.name =3D "usb-ss-gadget";
->>  	priv_dev->gadget.sg_supported =3D 1;
->>  	priv_dev->is_connected =3D 0;
->>
->
-Cheers
-Pawel
+--
+Robert
