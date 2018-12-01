@@ -1,101 +1,73 @@
-From: Carlo Caione <ccaione@baylibre.com>
-Subject: Re: [PATCH] arm64: dts: meson-axg: Fix and enable GPIO interrupt
- controller
-Date: Sat, 01 Dec 2018 15:31:04 +0000
-Message-ID: <b0f979de8ab9bf347b3a13048d9aa6237109b511.camel@baylibre.com>
-References: <20181201145614.5381-1-ccaione@baylibre.com>
- <CAFBinCDEJK-tJJJCd7wPLJHRCV0DegnSGO21XH3EXU7s7Om=Bw@mail.gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 1/7] staging:iio:ad2s90: Add device tree support
+Date: Sat, 1 Dec 2018 15:34:10 +0000
+Message-ID: <20181201153410.0a62c450@archlinux>
+References: <20181124002312.6923-1-matheus.bernardino@usp.br>
+ <20181124002312.6923-2-matheus.bernardino@usp.br>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFBinCDEJK-tJJJCd7wPLJHRCV0DegnSGO21XH3EXU7s7Om=Bw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@baylibre.com, robh+dt@kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20181124002312.6923-2-matheus.bernardino@usp.br>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Matheus Tavares <matheus.bernardino@usp.br>
+Cc: Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Alexandru Ardelean <alexandru.ardelean@analog.com>, victorcolombo@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2018-12-01 at 16:20 +0100, Martin Blumenstingl wrote:
-> Hi Carlo,
+On Fri, 23 Nov 2018 22:23:06 -0200
+Matheus Tavares <matheus.bernardino@usp.br> wrote:
 
-Hi Martin,
-
-> On Sat, Dec 1, 2018 at 3:56 PM Carlo Caione <ccaione@baylibre.com>
-> wrote:
-> > The GPIO interrupt controller registers are mapped to the wrong
-> > offset in the DTSI. Fix the offset in the DTSI and enable the
-> > interrupt
-> > controller in the DTS of the only AXG board enabled.
-> > 
-> > Signed-off-by: Carlo Caione <ccaione@baylibre.com>
-> > ---
-> >  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 6 ++++++
-> >  arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 2 +-
-> >  2 files changed, 7 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> > b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> > index 18778ada7bd3..c3e4aac75782 100644
-> > --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> > +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> > @@ -374,6 +374,12 @@
-> >         status = "okay";
-> >  };
-> > 
-> > +&gpio_intc {
-> > +       compatible = "amlogic,meson-gpio-intc",
-> > +                    "amlogic,meson-axg-gpio-intc";
-> multiple compatible strings should be ordered:
-> - use the most specific compatible (the AXG one) first
-> - the the less specific ones
-
-mindlessly copied and pasted from the GXL.
-
-> also why did you add the AXG compatible string in the s400 board .dts
-> instead of meson-axg.dtsi (which makes it available for all AXG
-> boards)?
-
-good point.
-
-> > +       status = "okay";
-> > +};
-> > +
-> >  &ir {
-> >         status = "okay";
-> >         pinctrl-0 = <&remote_input_ao_pins>;
-> > diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> > b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> > index df017dbd2e57..f1affc12e3e6 100644
-> > --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> > +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> > @@ -1415,7 +1415,7 @@
-> > 
-> >                         gpio_intc: interrupt-controller@f080 {
-> unit-address should match the reg property: ...@9880
+> This patch adds device tree support to ad2s90 with standard
+> device tree id table.
 > 
-> >                                 compatible = "amlogic,meson-gpio-
-> > intc";
-> > -                               reg = <0x0 0xf080 0x0 0x10>;
-> > +                               reg = <0x0 0x9880 0x0 0x10>;
-> Amlogic's patched 4.9 buildroot kernel uses 0xf080 - can you add a
-> short sentence to the description on which board you have tested this
-> (I assume you used the s400)
+> Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-The datasheet reports a different offset. But I tested again on 0xf080
-and it looks like 0xf080 is actually the correct one? Need to test this
-better.
+Thanks,
 
-I'll follow this up with v2.
+Joanthan
 
-Cheers,
-
---
-Carlo Caione
+> ---
+> Changes in v3:
+>  - Removed of_patch_ptr from of_match_table assignment
+> 
+> Changes in v2:
+>  - none
+> 
+>  drivers/staging/iio/resolver/ad2s90.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/staging/iio/resolver/ad2s90.c b/drivers/staging/iio/resolver/ad2s90.c
+> index 3e257ac46f7a..fdae067ed866 100644
+> --- a/drivers/staging/iio/resolver/ad2s90.c
+> +++ b/drivers/staging/iio/resolver/ad2s90.c
+> @@ -107,6 +107,12 @@ static int ad2s90_probe(struct spi_device *spi)
+>  	return devm_iio_device_register(indio_dev->dev.parent, indio_dev);
+>  }
+>  
+> +static const struct of_device_id ad2s90_of_match[] = {
+> +	{ .compatible = "adi,ad2s90", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, ad2s90_of_match);
+> +
+>  static const struct spi_device_id ad2s90_id[] = {
+>  	{ "ad2s90" },
+>  	{}
+> @@ -116,6 +122,7 @@ MODULE_DEVICE_TABLE(spi, ad2s90_id);
+>  static struct spi_driver ad2s90_driver = {
+>  	.driver = {
+>  		.name = "ad2s90",
+> +		.of_match_table = ad2s90_of_match,
+>  	},
+>  	.probe = ad2s90_probe,
+>  	.id_table = ad2s90_id,
