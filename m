@@ -1,16 +1,15 @@
 From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH 2/7] ARM: dts: pxa3xx: drop #address-cells and #size-cells
- from pinctrl node
-Date: Sat, 01 Dec 2018 14:31:27 +0100
-Message-ID: <87d0qlxtjk.fsf@belgarion.home>
+Subject: Re: [PATCH 3/7] ARM: dts: pxa2xx: fix hwuart memory range
+Date: Sat, 01 Dec 2018 14:31:42 +0100
+Message-ID: <878t19xtj5.fsf@belgarion.home>
 References: <20181130175543.32628-1-daniel@zonque.org>
- <20181130175543.32628-3-daniel@zonque.org>
+ <20181130175543.32628-4-daniel@zonque.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181130175543.32628-3-daniel@zonque.org> (Daniel Mack's message
- of "Fri, 30 Nov 2018 18:55:38 +0100")
+In-Reply-To: <20181130175543.32628-4-daniel@zonque.org> (Daniel Mack's message
+ of "Fri, 30 Nov 2018 18:55:39 +0100")
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -26,8 +25,8 @@ List-Id: devicetree@vger.kernel.org
 
 Daniel Mack <daniel@zonque.org> writes:
 
-> The pinctrl node does not have any children, so the #address-cells and #size-cells
-> properties are not needed.
+> The memory range for the hwuart is at 0x41600000, not 0x41100000.
+> This also solves a conflict with the MMC controller node.
 >
 > Signed-off-by: Daniel Mack <daniel@zonque.org>
 Applied to pxa/dt, thanks.
