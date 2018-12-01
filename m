@@ -1,15 +1,11 @@
 From: Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH 4/7] ARM: dts: pxa: merge &pxa3xx_ohci with &usb0
-Date: Sat, 1 Dec 2018 14:49:40 +0100
-Message-ID: <8f6aa1b2-b154-dbdd-9c0c-76ba882f7933@zonque.org>
-References: <20181130175543.32628-1-daniel@zonque.org>
- <20181130175543.32628-5-daniel@zonque.org> <87lg59xtkq.fsf@belgarion.home>
+Subject: [PATCH] ARM: dts: pxa: clean up USB controller nodes
+Date: Sat,  1 Dec 2018 14:54:51 +0100
+Message-ID: <20181201135451.3505-1-daniel@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <87lg59xtkq.fsf@belgarion.home>
-Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,29 +15,68 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, haojian.zhuang@gmail.com
+To: robert.jarzmik@free.fr, haojian.zhuang@gmail.com
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, Daniel Mack <daniel@zonque.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 1/12/2018 2:30 PM, Robert Jarzmik wrote:
-> Daniel Mack <daniel@zonque.org> writes:
-> 
->> Both pxa3xx.dtsi and pxa2xx.dtsi define a node for the USB controller. Merge
->> them, and get rid of the one in pxa3xx.dtsi.
->>
->> Signed-off-by: Daniel Mack <daniel@zonque.org>
-> Excellent, but can be even better :)
-> Could you please address as well pxa27x.dtsi ?
-> 
-> As a matter of fact, this was already discussed here :
-> https://patchwork.kernel.org/patch/8375421/
-> 
-> So the proper solution might be a bit different, as if you look at the thread I
-> put up there, pxa25x doesn't have an USB host controller.
+PXA25xx SoCs don't have a USB controller, so drop the node from the
+common pxa2xx.dtsi base file. Both pxa27x and pxa3xx have a dedicated
+node already anyway.
 
-Ah, okay. Thanks for the pointer. Will send a new patch, just ignore 
-this one please.
+While at it, unify the names for the nodes across all pxa platforms.
 
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+Reported-by: Sergey Yanovich <ynvich@gmail.com>
+Link: https://patchwork.kernel.org/patch/8375421/
+---
+ arch/arm/boot/dts/pxa27x.dtsi | 2 +-
+ arch/arm/boot/dts/pxa2xx.dtsi | 7 -------
+ arch/arm/boot/dts/pxa3xx.dtsi | 2 +-
+ 3 files changed, 2 insertions(+), 9 deletions(-)
 
-Thanks,
-Daniel
+diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
+index 3228ad5fb725..ccbecad9c5c7 100644
+--- a/arch/arm/boot/dts/pxa27x.dtsi
++++ b/arch/arm/boot/dts/pxa27x.dtsi
+@@ -35,7 +35,7 @@
+ 			clocks = <&clks CLK_NONE>;
+ 		};
+ 
+-		pxa27x_ohci: usb@4c000000 {
++		usb0: usb@4c000000 {
+ 			compatible = "marvell,pxa-ohci";
+ 			reg = <0x4c000000 0x10000>;
+ 			interrupts = <3>;
+diff --git a/arch/arm/boot/dts/pxa2xx.dtsi b/arch/arm/boot/dts/pxa2xx.dtsi
+index 30e77ebbcc4d..e83879d97aea 100644
+--- a/arch/arm/boot/dts/pxa2xx.dtsi
++++ b/arch/arm/boot/dts/pxa2xx.dtsi
+@@ -134,13 +134,6 @@
+ 			status = "disabled";
+ 		};
+ 
+-		usb0: ohci@4c000000 {
+-			compatible = "marvell,pxa-ohci";
+-			reg = <0x4c000000 0x10000>;
+-			interrupts = <3>;
+-			status = "disabled";
+-		};
+-
+ 		mmc0: mmc@41100000 {
+ 			compatible = "marvell,pxa-mmc";
+ 			reg = <0x41100000 0x1000>;
+diff --git a/arch/arm/boot/dts/pxa3xx.dtsi b/arch/arm/boot/dts/pxa3xx.dtsi
+index d9f7c68479ab..e1e607f53ce6 100644
+--- a/arch/arm/boot/dts/pxa3xx.dtsi
++++ b/arch/arm/boot/dts/pxa3xx.dtsi
+@@ -202,7 +202,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		pxa3xx_ohci: usb@4c000000 {
++		usb0: usb@4c000000 {
+ 			compatible = "marvell,pxa-ohci";
+ 			reg = <0x4c000000 0x10000>;
+ 			interrupts = <3>;
+-- 
+2.19.2
