@@ -1,43 +1,52 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v3 8/8] ARM: dts: qcom-apq8064: Set 'xo_board' as ref clock of the DSI PHY
-Date: Fri, 30 Nov 2018 16:52:54 -0800
-Message-ID: <20181201005254.139908-9-mka@chromium.org>
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v3 7/8] arm64: dts: sdm845: Set 'bi_tcxo' as ref
+ clock of the DSI PHYs
+Date: Fri, 30 Nov 2018 16:52:53 -0800
+Message-ID: <20181201005254.139908-8-mka@chromium.org>
 References: <20181201005254.139908-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181201005254.139908-1-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: Archit Taneja <architt@codeaurora.org>, Sean Paul <seanpaul@chromium.org>, Rajesh Yadav <ryadav@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Jeykumar Sankaran <jsanka@codeaurora.org>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20181201005254.139908-1-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add 'xo_board' as ref clock for the DSI PHY, it was previously
-hardcoded in the PLL 'driver' for the 28nm 8960 PHY.
-
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-Changes in v3:
-- patch added to the series
----
- arch/arm/boot/dts/qcom-apq8064.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 48c3cf4276101..d337ae9326cd8 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -1338,8 +1338,9 @@
- 				<0x04700300 0x200>,
- 				<0x04700500 0x5c>;
- 			reg-names = "dsi_pll", "dsi_phy", "dsi_phy_regulator";
--			clock-names = "iface_clk";
--			clocks = <&mmcc DSI_M_AHB_CLK>;
-+			clock-names = "iface_clk", "ref";
-+			clocks = <&mmcc DSI_M_AHB_CLK>,
-+				 <&xo_board>;
- 		};
- 
- 
--- 
-2.20.0.rc1.387.gf8505762e3-goog
+QWRkICdiaV90Y3hvJyBhcyByZWYgY2xvY2sgZm9yIHRoZSBEU0kgUEhZcywgaXQgd2FzIHByZXZp
+b3VzbHkKaGFyZGNvZGVkIGluIHRoZSBQTEwgJ2RyaXZlcicgZm9yIHRoZSAxMG5tIFBIWS4KClNp
+Z25lZC1vZmYtYnk6IE1hdHRoaWFzIEthZWhsY2tlIDxta2FAY2hyb21pdW0ub3JnPgpSZXZpZXdl
+ZC1ieTogRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPgotLS0KYmFzZWQg
+b24gIlt2NCwxLzNdIGFybTY0OiBkdHM6IHFjb206IHNkbTg0NTogQWRkIGRwdSB0byBzZG04NDUg
+ZHRzIGZpbGUiCiAgKGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA2NjYyNTMv
+KQoKQ2hhbmdlcyBpbiB2MzoKLSBhZGRlZCAnUmV2aWV3ZWQtYnk6IERvdWdsYXMgQW5kZXJzb24g
+PGRpYW5kZXJzQGNocm9taXVtLm9yZz4nIHRhZwoKQ2hhbmdlcyBpbiB2MjoKLSBwYXRjaCBhZGRl
+ZCB0byB0aGUgc2VyaWVzCi0tLQogYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNp
+IHwgMTAgKysrKysrLS0tLQogMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgNCBkZWxl
+dGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0
+c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKaW5kZXggNTcyOGI0Y2Zh
+ZTI2OS4uY2RiNWE5YmIyM2U2OSAxMDA2NDQKLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9xY29t
+L3NkbTg0NS5kdHNpCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQpA
+QCAtMTM3Miw4ICsxMzcyLDkgQEAKIAkJCQkjY2xvY2stY2VsbHMgPSA8MT47CiAJCQkJI3BoeS1j
+ZWxscyA9IDwwPjsKIAotCQkJCWNsb2NrcyA9IDwmZGlzcGNjIERJU1BfQ0NfTURTU19BSEJfQ0xL
+PjsKLQkJCQljbG9jay1uYW1lcyA9ICJpZmFjZSI7CisJCQkJY2xvY2tzID0gPCZkaXNwY2MgRElT
+UF9DQ19NRFNTX0FIQl9DTEs+LAorCQkJCQkgPCZycG1oY2MgUlBNSF9DWE9fQ0xLPjsKKwkJCQlj
+bG9jay1uYW1lcyA9ICJpZmFjZSIsICJyZWYiOwogCQkJfTsKIAogCQkJZHNpMTogZHNpQGFlOTYw
+MDAgewpAQCAtMTQzNCw4ICsxNDM1LDkgQEAKIAkJCQkjY2xvY2stY2VsbHMgPSA8MT47CiAJCQkJ
+I3BoeS1jZWxscyA9IDwwPjsKIAotCQkJCWNsb2NrcyA9IDwmZGlzcGNjIERJU1BfQ0NfTURTU19B
+SEJfQ0xLPjsKLQkJCQljbG9jay1uYW1lcyA9ICJpZmFjZSI7CisJCQkJY2xvY2tzID0gPCZkaXNw
+Y2MgRElTUF9DQ19NRFNTX0FIQl9DTEs+LAorCQkJCQkgPCZycG1oY2MgUlBNSF9DWE9fQ0xLPjsK
+KwkJCQljbG9jay1uYW1lcyA9ICJpZmFjZSIsICJyZWYiOwogCQkJfTsKIAkJfTsKIAotLSAKMi4y
+MC4wLnJjMS4zODcuZ2Y4NTA1NzYyZTMtZ29vZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZnJlZWRyZW5vCg==
