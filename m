@@ -1,87 +1,48 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 2/7] staging:iio:ad2s90: Remove spi setup that should
- be done via dt
-Date: Sat, 1 Dec 2018 15:34:28 +0000
-Message-ID: <20181201153428.399caf50@archlinux>
+Subject: Re: [PATCH v3 4/7] dt-bindings:iio:resolver: Add docs for ad2s90
+Date: Sat, 1 Dec 2018 15:37:04 +0000
+Message-ID: <20181201153704.0f17dfcc@archlinux>
 References: <20181124002312.6923-1-matheus.bernardino@usp.br>
- <20181124002312.6923-3-matheus.bernardino@usp.br>
+        <20181124002312.6923-5-matheus.bernardino@usp.br>
+        <20181127015227.GA11401@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20181124002312.6923-3-matheus.bernardino@usp.br>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Matheus Tavares <matheus.bernardino@usp.br>
-Cc: Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Alexandru Ardelean <alexandru.ardelean@analog.com>, victorcolombo@gmail.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181127015227.GA11401@bogus>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Matheus Tavares <matheus.bernardino@usp.br>, Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alexandru Ardelean <alexandru.ardelean@analog.com>, kernel-usp@googlegroups.com, victorcolombo@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 23 Nov 2018 22:23:07 -0200
-Matheus Tavares <matheus.bernardino@usp.br> wrote:
+On Mon, 26 Nov 2018 19:52:27 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-> The ad2s90 driver currently sets some spi settings (max_speed_hz and
-> mode) at ad2s90_probe. Since the maximum frequency is a required element
-> in DT binding for spi slave devices and because the spi mode for the
-> device can be either (0,0) or (1,1), these settings should be handled
-> via device tree, not in the driver's code. This patch removes them from
-> the probe function.
+> On Fri, 23 Nov 2018 22:23:09 -0200, Matheus Tavares wrote:
+> > This patch adds the device tree binding documentation for the ad2s90
+> > resolver-to-digital converter.
+> > 
+> > Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
+> > ---
+> > Changes in v3:
+> >  - Added reference to spi-bus documentation after spi properties, as
+> >  suggested by Alexandru Ardelean.
+> > 
+> > Changes in v2:
+> >  - Rewritten 'spi-cpol and spi-cpha' item to say that the device can
+> >  work in either mode (0,0) or (1,1) and explain how they should be
+> >  specified in DT.
+> > 
+> >  .../bindings/iio/resolver/ad2s90.txt          | 31 +++++++++++++++++++
+> >  1 file changed, 31 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/resolver/ad2s90.txt
+> >   
 > 
-> Note: The way in which the mentioned spi settings need to be specified
-> on the ad2s90's node of a device tree will be documented in the future
-> patch "dt-bindings:iio:resolver: Add docs for ad2s90".
-> 
-> Signed-off-by: Matheus Tavares <matheus.bernardino@usp.br>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Applied,
+Applied to the togreg branch of iio.git and pushed out as testing for the autobuilders
+to play with it.
 
 Thanks,
 
 Jonathan
-
-> ---
-> Changes in v3:
->  - none
-> 
-> Changes in v2:
->  - Rewritten patch message to better explain why the code snippet in
->  question should be removed.
-> 
->  drivers/staging/iio/resolver/ad2s90.c | 11 -----------
->  1 file changed, 11 deletions(-)
-> 
-> diff --git a/drivers/staging/iio/resolver/ad2s90.c b/drivers/staging/iio/resolver/ad2s90.c
-> index fdae067ed866..abb9b9147ee6 100644
-> --- a/drivers/staging/iio/resolver/ad2s90.c
-> +++ b/drivers/staging/iio/resolver/ad2s90.c
-> @@ -77,7 +77,6 @@ static int ad2s90_probe(struct spi_device *spi)
->  {
->  	struct iio_dev *indio_dev;
->  	struct ad2s90_state *st;
-> -	int ret;
->  
->  	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
->  	if (!indio_dev)
-> @@ -94,16 +93,6 @@ static int ad2s90_probe(struct spi_device *spi)
->  	indio_dev->num_channels = 1;
->  	indio_dev->name = spi_get_device_id(spi)->name;
->  
-> -	/* need 600ns between CS and the first falling edge of SCLK */
-> -	spi->max_speed_hz = 830000;
-> -	spi->mode = SPI_MODE_3;
-> -	ret = spi_setup(spi);
-> -
-> -	if (ret < 0) {
-> -		dev_err(&spi->dev, "spi_setup failed!\n");
-> -		return ret;
-> -	}
-> -
->  	return devm_iio_device_register(indio_dev->dev.parent, indio_dev);
->  }
->  
