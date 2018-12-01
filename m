@@ -1,52 +1,102 @@
-From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 7/8] arm64: dts: sdm845: Set 'bi_tcxo' as ref
- clock of the DSI PHYs
-Date: Fri, 30 Nov 2018 16:52:53 -0800
-Message-ID: <20181201005254.139908-8-mka@chromium.org>
-References: <20181201005254.139908-1-mka@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181201005254.139908-1-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Oskari Lemmela <oskari@lemmela.net>
+Subject: [PATCH 1/2] arm64: dts: rockchip: rockpro64 fix regulator gpios
+Date: Sat,  1 Dec 2018 12:08:16 +0200
+Message-ID: <20181201100817.20688-2-oskari@lemmela.net>
+References: <20181201100817.20688-1-oskari@lemmela.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181201100817.20688-1-oskari@lemmela.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: Akash Gajjar <Akash_Gajjar@mentor.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Oskari Lemmela <oskari@lemmela.net>
 List-Id: devicetree@vger.kernel.org
 
-QWRkICdiaV90Y3hvJyBhcyByZWYgY2xvY2sgZm9yIHRoZSBEU0kgUEhZcywgaXQgd2FzIHByZXZp
-b3VzbHkKaGFyZGNvZGVkIGluIHRoZSBQTEwgJ2RyaXZlcicgZm9yIHRoZSAxMG5tIFBIWS4KClNp
-Z25lZC1vZmYtYnk6IE1hdHRoaWFzIEthZWhsY2tlIDxta2FAY2hyb21pdW0ub3JnPgpSZXZpZXdl
-ZC1ieTogRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPgotLS0KYmFzZWQg
-b24gIlt2NCwxLzNdIGFybTY0OiBkdHM6IHFjb206IHNkbTg0NTogQWRkIGRwdSB0byBzZG04NDUg
-ZHRzIGZpbGUiCiAgKGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA2NjYyNTMv
-KQoKQ2hhbmdlcyBpbiB2MzoKLSBhZGRlZCAnUmV2aWV3ZWQtYnk6IERvdWdsYXMgQW5kZXJzb24g
-PGRpYW5kZXJzQGNocm9taXVtLm9yZz4nIHRhZwoKQ2hhbmdlcyBpbiB2MjoKLSBwYXRjaCBhZGRl
-ZCB0byB0aGUgc2VyaWVzCi0tLQogYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNp
-IHwgMTAgKysrKysrLS0tLQogMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgNCBkZWxl
-dGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0
-c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKaW5kZXggNTcyOGI0Y2Zh
-ZTI2OS4uY2RiNWE5YmIyM2U2OSAxMDA2NDQKLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9xY29t
-L3NkbTg0NS5kdHNpCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQpA
-QCAtMTM3Miw4ICsxMzcyLDkgQEAKIAkJCQkjY2xvY2stY2VsbHMgPSA8MT47CiAJCQkJI3BoeS1j
-ZWxscyA9IDwwPjsKIAotCQkJCWNsb2NrcyA9IDwmZGlzcGNjIERJU1BfQ0NfTURTU19BSEJfQ0xL
-PjsKLQkJCQljbG9jay1uYW1lcyA9ICJpZmFjZSI7CisJCQkJY2xvY2tzID0gPCZkaXNwY2MgRElT
-UF9DQ19NRFNTX0FIQl9DTEs+LAorCQkJCQkgPCZycG1oY2MgUlBNSF9DWE9fQ0xLPjsKKwkJCQlj
-bG9jay1uYW1lcyA9ICJpZmFjZSIsICJyZWYiOwogCQkJfTsKIAogCQkJZHNpMTogZHNpQGFlOTYw
-MDAgewpAQCAtMTQzNCw4ICsxNDM1LDkgQEAKIAkJCQkjY2xvY2stY2VsbHMgPSA8MT47CiAJCQkJ
-I3BoeS1jZWxscyA9IDwwPjsKIAotCQkJCWNsb2NrcyA9IDwmZGlzcGNjIERJU1BfQ0NfTURTU19B
-SEJfQ0xLPjsKLQkJCQljbG9jay1uYW1lcyA9ICJpZmFjZSI7CisJCQkJY2xvY2tzID0gPCZkaXNw
-Y2MgRElTUF9DQ19NRFNTX0FIQl9DTEs+LAorCQkJCQkgPCZycG1oY2MgUlBNSF9DWE9fQ0xLPjsK
-KwkJCQljbG9jay1uYW1lcyA9ICJpZmFjZSIsICJyZWYiOwogCQkJfTsKIAkJfTsKIAotLSAKMi4y
-MC4wLnJjMS4zODcuZ2Y4NTA1NzYyZTMtZ29vZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZnJlZWRyZW5vCg==
+Rockpro64 is not able boot if GPIO1_C1 pin is pulled high
+before loading linux kernel.
+
+In rockpro64 GPIO1_C1 pin is connected vdd_cpu_b regulator
+VSEL pin. Pin should be pulled down in normal operation and
+pulled high in suspend.
+
+PMIC LDO_REG2 is connected to touch panel connector.
+Rename regulator and set it to correct voltage.
+
+PCIe power is controller by GPIO1_D0.
+
+Schematics can be downloaded from:
+http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
+
+Signed-off-by: Oskari Lemmela <oskari@lemmela.net>
+---
+ .../boot/dts/rockchip/rk3399-rockpro64.dts    | 20 +++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+index 1d35f5406b5e..5bd4d69914bd 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+@@ -97,7 +97,7 @@
+ 	vcc3v3_pcie: vcc3v3-pcie-regulator {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+-		gpio = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
++		gpio = <&gpio1 RK_PD0 GPIO_ACTIVE_HIGH>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pcie_pwr_en>;
+ 		regulator-name = "vcc3v3_pcie";
+@@ -293,12 +293,12 @@
+ 				};
+ 			};
+ 
+-			vcc2v8_dvp: LDO_REG2 {
+-				regulator-name = "vcc2v8_dvp";
++			vcc3v0_touch: LDO_REG2 {
++				regulator-name = "vcc3v0_touch";
+ 				regulator-always-on;
+ 				regulator-boot-on;
+-				regulator-min-microvolt = <2800000>;
+-				regulator-max-microvolt = <2800000>;
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <3000000>;
+ 				regulator-state-mem {
+ 					regulator-off-in-suspend;
+ 				};
+@@ -397,7 +397,9 @@
+ 	vdd_cpu_b: regulator@40 {
+ 		compatible = "silergy,syr827";
+ 		reg = <0x40>;
+-		fcs,suspend-voltage-selector = <0>;
++		fcs,suspend-voltage-selector = <1>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&vsel1_gpio>;
+ 		regulator-name = "vdd_cpu_b";
+ 		regulator-min-microvolt = <712500>;
+ 		regulator-max-microvolt = <1500000>;
+@@ -415,6 +417,8 @@
+ 		compatible = "silergy,syr828";
+ 		reg = <0x41>;
+ 		fcs,suspend-voltage-selector = <1>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&vsel2_gpio>;
+ 		regulator-name = "vdd_gpu";
+ 		regulator-min-microvolt = <712500>;
+ 		regulator-max-microvolt = <1500000>;
+@@ -519,7 +523,7 @@
+ 
+ 	pcie {
+ 		pcie_pwr_en: pcie-pwr-en {
+-			rockchip,pins = <1 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
++			rockchip,pins = <1 RK_PD0 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
+ 
+@@ -529,7 +533,7 @@
+ 		};
+ 
+ 		vsel1_gpio: vsel1-gpio {
+-			rockchip,pins = <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_down>;
++			rockchip,pins = <1 RK_PC1 RK_FUNC_GPIO &pcfg_pull_down>;
+ 		};
+ 
+ 		vsel2_gpio: vsel2-gpio {
+-- 
+2.17.1
