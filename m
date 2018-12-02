@@ -1,68 +1,227 @@
-From: Jeykumar Sankaran <jsanka@codeaurora.org>
-Subject: =?UTF-8?Q?Re=3A_=5BPatch_v3=C2=A0=5D_drm/msm/dpu=3A_Correct_dpu_?=
- =?UTF-8?Q?destroy_and_disable_order?=
-Date: Sat, 01 Dec 2018 18:24:41 -0800
-Message-ID: <2b15d68ebafebe0c7f40bcb09b3d1ba6@codeaurora.org>
-References: <1542608738-3315-1-git-send-email-jshekhar@codeaurora.org>
+From: Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v10 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ
+ Firmware bindings
+Date: Sun, 2 Dec 2018 09:13:43 +0530
+Message-ID: <bb1f83af-13db-cd62-6868-2d34beefdace@codeaurora.org>
+References: <1542796967-5949-1-git-send-email-tdas@codeaurora.org>
+ <1542796967-5949-2-git-send-email-tdas@codeaurora.org>
+ <20181121180236.GS22824@google.com> <20181126185808.GA32621@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542608738-3315-1-git-send-email-jshekhar@codeaurora.org>
+In-Reply-To: <20181126185808.GA32621@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jayant Shekhar <jshekhar@codeaurora.org>
-Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robdclark@gmail.com, seanpaul@chromium.org, hoegsberg@chromium.org, abhinavk@codeaurora.org, chandanu@codeaurora.org, nganji@codeaurora.org
+To: Rob Herring <robh@kernel.org>, Matthias Kaehlcke <mka@chromium.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-On 2018-11-18 22:25, Jayant Shekhar wrote:
-> In case of msm drm bind failure, pm runtime put sync
-> is called from dsi driver which issues an asynchronous
-> put on mdss device. Subsequently when dpu_mdss_destroy
-> is triggered the change will make sure to put the mdss
-> device in suspend and clearing pending work if not
-> scheduled.
-> 
-> Changes in v2:
->    - Removed double spacings [Jeykumar]
-> 
-> Changes in v3:
->    - Fix clock on issue during bootup [Rajendra]
-> 
-> Signed-off-by: Jayant Shekhar <jshekhar@codeaurora.org>
-> ---
+Hello Rob,
 
-Acked-by: Jeykumar Sankaran <jsanka@codeaurora.org>
+On 11/27/2018 12:28 AM, Rob Herring wrote:
+> On Wed, Nov 21, 2018 at 10:02:36AM -0800, Matthias Kaehlcke wrote:
+>> On Wed, Nov 21, 2018 at 04:12:46PM +0530, Taniya Das wrote:
+>>> Add QCOM cpufreq firmware device bindings for Qualcomm Technology Inc's
+>>> SoCs. This is required for managing the cpu frequency transitions which are
+>>> controlled by the hardware engine.
+>>>
+>>> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+>>> ---
+>>>   .../bindings/cpufreq/cpufreq-qcom-hw.txt           | 172 +++++++++++++++++++++
+>>>   1 file changed, 172 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+>>> new file mode 100644
+>>> index 0000000..90e396b
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+>>> @@ -0,0 +1,172 @@
+>>> +Qualcomm Technologies, Inc. CPUFREQ Bindings
+>>> +
+>>> +CPUFREQ HW is a hardware engine used by some Qualcomm Technologies, Inc. (QTI)
+>>> +SoCs to manage frequency in hardware. It is capable of controlling frequency
+>>> +for multiple clusters.
+>>> +
+>>> +Properties:
+>>> +- compatible
+>>> +	Usage:		required
+>>> +	Value type:	<string>
+>>> +	Definition:	must be "qcom,cpufreq-hw".
+>>> +
+>>> +- clocks
+>>> +	Usage:		required
+>>> +	Value type:	<phandle> From common clock binding.
+>>> +	Definition:	clock handle for XO clock and GPLL0 clock.
+>>> +
+>>> +- clock-names
+>>> +	Usage:		required
+>>> +	Value type:	<string> From common clock binding.
+>>> +	Definition:	must be "xo", "cpu_clk".
+>>> +
+>>> +- reg
+>>> +	Usage:		required
+>>> +	Value type:	<prop-encoded-array>
+>>> +	Definition:	Addresses and sizes for the memory of the HW bases in
+>>> +			each frequency domain.
+>>> +- reg-names
+>>> +	Usage:		Optional
+>>> +	Value type:	<string>
+>>> +	Definition:	Frequency domain name i.e.
+>>> +			"freq-domain0", "freq-domain1".
+>>> +
+>>> +- freq-domain-cells:
+>>> +	Usage:		required.
+>>> +	Definition:	Number of cells in a freqency domain specifier.
+>>> +
+>>> +* Property qcom,freq-domain
+>>> +Devices supporting freq-domain must set their "qcom,freq-domain" property with
+>>> +phandle to a cpufreq_hw followed by the Domain ID(0/1) in the CPU DT node.
+>>> +
+>>> +
+>>> +Example:
+>>> +
+>>> +Example 1: Dual-cluster, Quad-core per cluster. CPUs within a cluster switch
+>>> +DCVS state together.
+>>> +
+>>> +/ {
+>>> +	cpus {
+>>> +		#address-cells = <2>;
+>>> +		#size-cells = <0>;
+>>> +
+>>> +		CPU0: cpu@0 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "qcom,kryo385";
+>>> +			reg = <0x0 0x0>;
+>>> +			enable-method = "psci";
+>>> +			next-level-cache = <&L2_0>;
+>>> +			qcom,freq-domain = <&cpufreq_hw 0>;
+>>> +			L2_0: l2-cache {
+>>> +				compatible = "cache";
+>>> +				next-level-cache = <&L3_0>;
+>>> +				L3_0: l3-cache {
+>>> +				      compatible = "cache";
+>>> +				};
+>>> +			};
+>>> +		};
+>>> +
+>>> +		CPU1: cpu@100 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "qcom,kryo385";
+>>> +			reg = <0x0 0x100>;
+>>> +			enable-method = "psci";
+>>> +			next-level-cache = <&L2_100>;
+>>> +			qcom,freq-domain = <&cpufreq_hw 0>;
+>>> +			L2_100: l2-cache {
+>>> +				compatible = "cache";
+>>> +				next-level-cache = <&L3_0>;
+>>> +			};
+>>> +		};
+>>> +
+>>> +		CPU2: cpu@200 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "qcom,kryo385";
+>>> +			reg = <0x0 0x200>;
+>>> +			enable-method = "psci";
+>>> +			next-level-cache = <&L2_200>;
+>>> +			qcom,freq-domain = <&cpufreq_hw 0>;
+>>> +			L2_200: l2-cache {
+>>> +				compatible = "cache";
+>>> +				next-level-cache = <&L3_0>;
+>>> +			};
+>>> +		};
+>>> +
+>>> +		CPU3: cpu@300 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "qcom,kryo385";
+>>> +			reg = <0x0 0x300>;
+>>> +			enable-method = "psci";
+>>> +			next-level-cache = <&L2_300>;
+>>> +			qcom,freq-domain = <&cpufreq_hw 0>;
+>>> +			L2_300: l2-cache {
+>>> +				compatible = "cache";
+>>> +				next-level-cache = <&L3_0>;
+>>> +			};
+>>> +		};
+>>> +
+>>> +		CPU4: cpu@400 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "qcom,kryo385";
+>>> +			reg = <0x0 0x400>;
+>>> +			enable-method = "psci";
+>>> +			next-level-cache = <&L2_400>;
+>>> +			qcom,freq-domain = <&cpufreq_hw 1>;
+>>> +			L2_400: l2-cache {
+>>> +				compatible = "cache";
+>>> +				next-level-cache = <&L3_0>;
+>>> +			};
+>>> +		};
+>>> +
+>>> +		CPU5: cpu@500 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "qcom,kryo385";
+>>> +			reg = <0x0 0x500>;
+>>> +			enable-method = "psci";
+>>> +			next-level-cache = <&L2_500>;
+>>> +			qcom,freq-domain = <&cpufreq_hw 1>;
+>>> +			L2_500: l2-cache {
+>>> +				compatible = "cache";
+>>> +				next-level-cache = <&L3_0>;
+>>> +			};
+>>> +		};
+>>> +
+>>> +		CPU6: cpu@600 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "qcom,kryo385";
+>>> +			reg = <0x0 0x600>;
+>>> +			enable-method = "psci";
+>>> +			next-level-cache = <&L2_600>;
+>>> +			qcom,freq-domain = <&cpufreq_hw 1>;
+>>> +			L2_600: l2-cache {
+>>> +				compatible = "cache";
+>>> +				next-level-cache = <&L3_0>;
+>>> +			};
+>>> +		};
+>>> +
+>>> +		CPU7: cpu@700 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "qcom,kryo385";
+>>> +			reg = <0x0 0x700>;
+>>> +			enable-method = "psci";
+>>> +			next-level-cache = <&L2_700>;
+>>> +			qcom,freq-domain = <&cpufreq_hw 1>;
+>>> +			L2_700: l2-cache {
+>>> +				compatible = "cache";
+>>> +				next-level-cache = <&L3_0>;
+>>> +			};
+>>> +		};
+>>> +	};
+>>> +
+>>> + soc {
+>>> +	cpufreq_hw: cpufreq@17d43000 {
+>>> +		compatible = "qcom,cpufreq-hw";
+>>> +		reg = <0x17d43000 0x1400>, <0x17d45800 0x1400>;
+>>> +		reg-names = "freq-domain0", "freq-domain1";
+>>> +
+>>> +		clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
+>>> +		clock-names = "xo", "gcc_cpuss_gpll0_clk_src";
+>>
+>> I don't have/find the document with the clock configuration of this
+>> IP block, but the 'clock-names' sound more like aliases for the actual
+>> clocks specified in the 'clocks' property (especially
+>> 'gcc_cpuss_gpll0_clk_src') than input signals from the IP POV, which
+>> I'd expect to have more generic names.
+> 
+> Also, this doesn't match the documented value above.
+> 
+> Rob
+> 
 
->  drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-> b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-> index fd9c893..df8127b 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-> @@ -156,18 +156,16 @@ static void dpu_mdss_destroy(struct drm_device 
-> *dev)
->  	struct dpu_mdss *dpu_mdss = to_dpu_mdss(priv->mdss);
->  	struct dss_module_power *mp = &dpu_mdss->mp;
-> 
-> +	pm_runtime_suspend(dev->dev);
-> +	pm_runtime_disable(dev->dev);
->  	_dpu_mdss_irq_domain_fini(dpu_mdss);
-> -
->  	free_irq(platform_get_irq(pdev, 0), dpu_mdss);
-> -
->  	msm_dss_put_clk(mp->clk_config, mp->num_clk);
->  	devm_kfree(&pdev->dev, mp->clk_config);
-> 
->  	if (dpu_mdss->mmio)
->  		devm_iounmap(&pdev->dev, dpu_mdss->mmio);
->  	dpu_mdss->mmio = NULL;
-> -
-> -	pm_runtime_disable(dev->dev);
->  	priv->mdss = NULL;
->  }
+Thanks, updated it in the latest patch.
 
 -- 
-Jeykumar S
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
