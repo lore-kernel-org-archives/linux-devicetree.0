@@ -1,61 +1,62 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Kill off skeleton{64}.dtsi
-Date: Sun, 2 Dec 2018 20:44:17 +0100
-Message-ID: <e819a81d-e1b2-df99-6fc6-19a3eb4d47c4@gmail.com>
-References: <20181130170634.9467-1-robh@kernel.org>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v27 1/2] arm64: dts: mt8173: Add GCE node
+Date: Sun, 2 Dec 2018 20:47:18 +0100
+Message-ID: <99c858af-f9dd-0fa6-6554-a624d71a1967@gmail.com>
+References: <1543462629-32746-1-git-send-email-houlong.wei@mediatek.com>
+ <1543462629-32746-2-git-send-email-houlong.wei@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20181130170634.9467-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1543462629-32746-2-git-send-email-houlong.wei@mediatek.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory Clement <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Houlong Wei <houlong.wei@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Monica Wang <monica.wang@mediatek.com>, HS Liao <hs.liao@mediatek.com>, ginny.chen@mediatek.c
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 30/11/2018 18:06, Rob Herring wrote:
-> Remove the usage of skeleton.dtsi in the remaining dts files. It was
-> deprecated since commit 9c0da3cc61f1 ("ARM: dts: explicitly mark
-> skeleton.dtsi as deprecated"). This will make adding a unit-address to
-> memory nodes easier.
+On 29/11/2018 04:37, Houlong Wei wrote:
+> This patch adds the device node of the GCE hardware for CMDQ module.
 > 
-> The main tricky part to removing skeleton.dtsi is we could end up with
-> no /memory node at all when a bootloader depends on one being present. I
-> hacked up dtc to check for this condition.
-> 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Houlong Wei <houlong.wei@mediatek.com>
+> Signed-off-by: HS Liao <hs.liao@mediatek.com>
 > ---
-> Yes, I'm being lazy and not splitting this up into dozens of sub-arch 
-> patches. I don't think this should conflict nor should we be getting new 
-> dependencies on skeleton.dtsi. So please apply directly to arm-soc.
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi |   10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> Rob
-> 
->  arch/arm/boot/dts/alphascale-asm9260.dtsi      |  3 ++-
-[...]
->  arch/arm/boot/dts/mt2701-evb.dts               |  1 +
->  arch/arm/boot/dts/mt2701.dtsi                  |  3 ++-
->  arch/arm/boot/dts/mt6580-evbp1.dts             |  1 +
->  arch/arm/boot/dts/mt6580.dtsi                  |  1 -
->  arch/arm/boot/dts/mt6589-aquaris5.dts          |  1 +
->  arch/arm/boot/dts/mt6589.dtsi                  |  3 ++-
->  arch/arm/boot/dts/mt6592-evb.dts               |  2 +-
->  arch/arm/boot/dts/mt6592.dtsi                  |  3 ++-
->  arch/arm/boot/dts/mt8127-moose.dts             |  1 +
->  arch/arm/boot/dts/mt8127.dtsi                  |  3 ++-
->  arch/arm/boot/dts/mt8135-evbp1.dts             |  1 +
->  arch/arm/boot/dts/mt8135.dtsi                  |  3 ++-
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index abd2f15..412ffd4 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
 
-For the MediaTek part:
-Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Applied to v4.20-next/dts64
+
+Thanks a lot, it was a long journey :)
+
+> @@ -18,6 +18,7 @@
+>  #include <dt-bindings/phy/phy.h>
+>  #include <dt-bindings/power/mt8173-power.h>
+>  #include <dt-bindings/reset/mt8173-resets.h>
+> +#include <dt-bindings/gce/mt8173-gce.h>
+>  #include "mt8173-pinfunc.h"
+>  
+>  / {
+> @@ -521,6 +522,15 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		gce: mailbox@10212000 {
+> +			compatible = "mediatek,mt8173-gce";
+> +			reg = <0 0x10212000 0 0x1000>;
+> +			interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&infracfg CLK_INFRA_GCE>;
+> +			clock-names = "gce";
+> +			#mbox-cells = <3>;
+> +		};
+> +
+>  		mipi_tx0: mipi-dphy@10215000 {
+>  			compatible = "mediatek,mt8173-mipi-tx";
+>  			reg = <0 0x10215000 0 0x1000>;
+> 
