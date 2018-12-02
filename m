@@ -1,416 +1,207 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [RFC PATCH v2 10/15] usb:cdns3: Ep0 operations part of the API
-Date: Sun, 2 Dec 2018 10:34:54 +0000
-Message-ID: <BYAPR07MB47091013A58927991F7E2C1DDDAD0@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
- <1542535751-16079-11-git-send-email-pawell@cadence.com>
- <5BFEA6D2.9010906@ti.com>
+From: Matt Ranostay <matt.ranostay@konsulko.com>
+Subject: Re: [PATCH 1/3] iio: add IIO_MASSCONCENTRATION channel type
+Date: Sun, 2 Dec 2018 13:32:56 +0200
+Message-ID: <CAJCx=g=S1wxsYGZ-kLkS22whdxTgUf+mfFhvX4diMzE3=kze1g@mail.gmail.com>
+References: <20181124221415.10081-1-tduszyns@gmail.com> <20181124221415.10081-2-tduszyns@gmail.com>
+ <CAJCx=g=H6Zp4AtWPpC-KdZmyOxTymtdgf+Hx8VvThLFg0bjYVQ@mail.gmail.com>
+ <20181125140316.59d9872b@archlinux> <CAJCx=g=oUmcfCA2octwfaoWr6aC=ZF7LUkMsraNe8buHc9mjPg@mail.gmail.com>
+ <20181125154423.GC5053@arch> <20181201154835.19482d7a@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5BFEA6D2.9010906@ti.com>
-Content-Language: en-US
+In-Reply-To: <20181201154835.19482d7a@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: jic23@jic23.retrosnub.co.uk
+Cc: Tomasz Duszynski <tduszyns@gmail.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
->> Patch implements related to default endpoint callback functions
->> defined in usb_ep_ops object
->>
->> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
->> ---
->>  drivers/usb/cdns3/ep0.c    | 191 ++++++++++++++++++++++++++++++++++++-
->>  drivers/usb/cdns3/gadget.c |   8 ++
->>  drivers/usb/cdns3/gadget.h |  10 ++
->>  3 files changed, 207 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/usb/cdns3/ep0.c b/drivers/usb/cdns3/ep0.c
->> index ca1795467155..d05169e73631 100644
->> --- a/drivers/usb/cdns3/ep0.c
->> +++ b/drivers/usb/cdns3/ep0.c
->> @@ -18,11 +18,185 @@ static struct usb_endpoint_descriptor cdns3_gadget_=
-ep0_desc =3D {
->>  	.bmAttributes =3D	USB_ENDPOINT_XFER_CONTROL,
->>  };
->>
->> +/**
->> + * cdns3_ep0_run_transfer - Do transfer on default endpoint hardware
->> + * @priv_dev: extended gadget object
->> + * @dma_addr: physical address where data is/will be stored
->> + * @length: data length
->> + * @erdy: set it to 1 when ERDY packet should be sent -
->> + *        exit from flow control state
->> + */
->> +static void cdns3_ep0_run_transfer(struct cdns3_device *priv_dev,
->> +				   dma_addr_t dma_addr,
->> +				   unsigned int length, int erdy)
->> +{
->> +	struct cdns3_usb_regs __iomem *regs =3D priv_dev->regs;
->> +
->> +	priv_dev->trb_ep0->buffer =3D TRB_BUFFER(dma_addr);
->> +	priv_dev->trb_ep0->length =3D TRB_LEN(length);
->> +	priv_dev->trb_ep0->control =3D TRB_CYCLE | TRB_IOC | TRB_TYPE(TRB_NORM=
-AL);
->> +
->> +	cdns3_select_ep(priv_dev,
->> +			priv_dev->ep0_data_dir ? USB_DIR_IN : USB_DIR_OUT);
->> +
->> +	writel(EP_STS_TRBERR, &regs->ep_sts);
->> +	writel(EP_TRADDR_TRADDR(priv_dev->trb_ep0_dma), &regs->ep_traddr);
->> +
->> +	dev_dbg(&priv_dev->dev, "//Ding Dong ep0%s\n",
->> +		priv_dev->ep0_data_dir ? "IN" : "OUT");
->> +
->> +	/* TRB should be prepared before starting transfer */
->> +	writel(EP_CMD_DRDY, &regs->ep_cmd);
->> +
->> +	if (erdy)
->> +		writel(EP_CMD_ERDY, &priv_dev->regs->ep_cmd);
->> +}
->> +
->>  static void cdns3_prepare_setup_packet(struct cdns3_device *priv_dev)
->>  {
->>  	//TODO: Implements this function
->>  }
->>
->> +static void cdns3_set_hw_configuration(struct cdns3_device *priv_dev)
+On Sat, Dec 1, 2018 at 5:48 PM Jonathan Cameron
+<jic23@jic23.retrosnub.co.uk> wrote:
 >
->Is this going to be used only for ep0?
->If yes then let's have ep0 in the name.
->If not then this function should be in gadget.c
-
-It going to be used only in ep0.c file but general it's related to all non-=
-control endpoints.=20
-
-The controller has one strange limitation, namely endpoints configuration i=
-n controller=20
-can be set only once. and this function inform control about this.
-
-II think that, will be better to move this function to gadget.c then adding=
- ep0 to name.
+> On Sun, 25 Nov 2018 16:44:23 +0100
+> Tomasz Duszynski <tduszyns@gmail.com> wrote:
 >
->> +{
->> +	struct cdns3_endpoint *priv_ep;
->> +	struct usb_request *request;
->> +	struct usb_ep *ep;
->> +	int result =3D 0;
->> +
->> +	if (priv_dev->hw_configured_flag)
->> +		return;
->> +
->> +	writel(USB_CONF_CFGSET, &priv_dev->regs->usb_conf);
->> +	writel(EP_CMD_ERDY | EP_CMD_REQ_CMPL, &priv_dev->regs->ep_cmd);
->> +
->> +	cdns3_set_register_bit(&priv_dev->regs->usb_conf,
->> +			       USB_CONF_U1EN | USB_CONF_U2EN);
+> > On Sun, Nov 25, 2018 at 06:14:44AM -0800, Matt Ranostay wrote:
+> > > On Sun, Nov 25, 2018 at 6:03 AM Jonathan Cameron
+> > > <jic23@jic23.retrosnub.co.uk> wrote:
+> > > >
+> > > > On Sun, 25 Nov 2018 05:51:32 -0800
+> > > > Matt Ranostay <matt.ranostay@konsulko.com> wrote:
+> > > >
+> > > > > On Sat, Nov 24, 2018 at 2:14 PM Tomasz Duszynski <tduszyns@gmail.com> wrote:
+> > > > > >
+> > > > > > Measuring particulate matter in ug / m3 (micro-grams per cubic meter)
+> > > > > > is de facto standard. Existing air quality sensors usually follow
+> > > > > > this convention and are capable of returning measurements using
+> > > > > > this unit.
+> > > > > >
+> > > > > > IIO currently does not offer suitable channel type for this
+> > > > > > type of measurements hence this patch adds this.
+> > > > > >
+> > > > > > In addition, two modifiers are introduced used for distinguishing
+> > > > > > between coarse (PM10) and fine particles (PM2p5) measurements, i.e
+> > > > > > IIO_MOD_PM10 and IIO_MOD_PM2p5.
+> > > > > >
+> > > > > > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
+> > > > > > ---
+> > > > > >  Documentation/ABI/testing/sysfs-bus-iio | 11 ++++++++++-
+> > > > > >  drivers/iio/industrialio-core.c         |  3 +++
+> > > > > >  include/uapi/linux/iio/types.h          |  3 +++
+> > > > > >  tools/iio/iio_event_monitor.c           |  6 ++++++
+> > > > > >  4 files changed, 22 insertions(+), 1 deletion(-)
+> > > > > >
+> > > > > > diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+> > > > > > index 8127a08e366d..ce0ed140660d 100644
+> > > > > > --- a/Documentation/ABI/testing/sysfs-bus-iio
+> > > > > > +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> > > > > > @@ -1684,4 +1684,13 @@ KernelVersion:   4.18
+> > > > > >  Contact:       linux-iio@vger.kernel.org
+> > > > > >  Description:
+> > > > > >                 Raw (unscaled) phase difference reading from channel Y
+> > > > > > -               that can be processed to radians.
+> > > > > > \ No newline at end of file
+> > > > > > +               that can be processed to radians.
+> > > > > > +
+> > > > > > +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentration_pm2p5_input
+> > > > > > +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentrationY_pm2p5_input
+> > > > > > +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentration_pm10_input
+> > > > > > +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentrationY_pm10_input
+> > > > > > +KernelVersion: 4.21
+> > > > > > +Contact:       linux-iio@vger.kernel.org
+> > > > > > +Description:
+> > > > > > +               Mass concentration reading of particulate matter in ug / m3.
+> > > > > > diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> > > > > > index a062cfddc5af..2a9ef600c1fb 100644
+> > > > > > --- a/drivers/iio/industrialio-core.c
+> > > > > > +++ b/drivers/iio/industrialio-core.c
+> > > > > > @@ -87,6 +87,7 @@ static const char * const iio_chan_type_name_spec[] = {
+> > > > > >         [IIO_GRAVITY]  = "gravity",
+> > > > > >         [IIO_POSITIONRELATIVE]  = "positionrelative",
+> > > > > >         [IIO_PHASE] = "phase",
+> > > > > > +       [IIO_MASSCONCENTRATION] = "massconcentration",
+> > > > > >  };
+> > > > > >
+> > > > > >  static const char * const iio_modifier_names[] = {
+> > > > > > @@ -127,6 +128,8 @@ static const char * const iio_modifier_names[] = {
+> > > > > >         [IIO_MOD_Q] = "q",
+> > > > > >         [IIO_MOD_CO2] = "co2",
+> > > > > >         [IIO_MOD_VOC] = "voc",
+> > > > > > +       [IIO_MOD_PM2p5] = "pm2p5",
+> > > > > > +       [IIO_MOD_PM10] = "pm10",
+> > > > > >  };
+> > > > > >
+> > > > > >  /* relies on pairs of these shared then separate */
+> > > > > > diff --git a/include/uapi/linux/iio/types.h b/include/uapi/linux/iio/types.h
+> > > > > > index 92baabc103ac..465044b42af5 100644
+> > > > > > --- a/include/uapi/linux/iio/types.h
+> > > > > > +++ b/include/uapi/linux/iio/types.h
+> > > > > > @@ -46,6 +46,7 @@ enum iio_chan_type {
+> > > > > >         IIO_GRAVITY,
+> > > > > >         IIO_POSITIONRELATIVE,
+> > > > > >         IIO_PHASE,
+> > > > > > +       IIO_MASSCONCENTRATION,
+> > > > >
+> > > > > So I'm guessing IIO_CONCENTRATION can't be scaled to the micro-grams
+> > > > > per cubic meter?
+> > > >
+> > > > Currently concentration is defined as a percentage reading of a substance
+> > > > (which does make me wonder if it is meant to be percentage of the volume or
+> > > > percentage of the mass?)  Either way, if can't convert to a density measurement
+> > > > as it's a unit free ratio (I think).
+> > >
+> > > Seems like it can be both..  guessing all the atmosphere ( CO2, VOC,
+> > > etc) ones are mass/density because on how they work.
+> >
+> > Hmm, but still percentage was picked up for IIO_CONCENTRATION which does
+> > really match PM expectations. Perhaps if units were sticked to modifiers
+> > it whould be easier to reuse that.
 >
->Shouldn't U1/U2 be enabled only if the USB_DEVICE_U1_ENABLE/USB_DEVICE_U2_=
-ENABLE
->device request was received?
-
-These bits only inform the controller that it should enter to U1/U2 only if=
- host asks for such a transition.
-
-Device to force transition to U1/U2 must use other bits.=20
-
->> +
->> +	/* wait until configuration set */
->> +	result =3D cdns3_handshake(&priv_dev->regs->usb_sts,
->> +				 USB_STS_CFGSTS_MASK, 1, 100);
->> +
->> +	priv_dev->hw_configured_flag =3D 1;
->> +	cdns3_enable_l1(priv_dev, 1);
->> +
->> +	list_for_each_entry(ep, &priv_dev->gadget.ep_list, ep_list) {
->> +		if (ep->enabled) {
->> +			priv_ep =3D ep_to_cdns3_ep(ep);
->> +			request =3D cdns3_next_request(&priv_ep->request_list);
->> +			if (request)
->> +				cdns3_ep_run_transfer(priv_ep, request);
+> It gets very messy if we start doing that modifiers, I'd rather stick to
+> different channel types.  We already do this with other channel types
+> position / positionrelative for example.
 >
->why are you starting transfers in a function that is supposed to set hw co=
-nfiguration only.
+> It isn't as though it's actually possible to convert between the two without
+> knowing what the particles actually are...
 
-Because we can't start transfer before configuring endpoints in hardware.=20
-Also we can't configure each endpoint separately  in cdns3_gadget_ep_enable=
- because=20
-USB_CONF_CFGSET can be set only once. It's the reason why transfer are defe=
-rred.=20
-It is disadvantage of this controller witch causes some problems.=20
->
->> +		}
->> +	}
->> +}
->> +
->> +/**
->> + * cdns3_gadget_ep0_enable
->> + * Function shouldn't be called by gadget driver,
->> + * endpoint 0 is allways active
->> + */
->> +static int cdns3_gadget_ep0_enable(struct usb_ep *ep,
->> +				   const struct usb_endpoint_descriptor *desc)
->> +{
->> +	return -EINVAL;
->> +}
->> +
->> +/**
->> + * cdns3_gadget_ep0_disable
->> + * Function shouldn't be called by gadget driver,
->> + * endpoint 0 is allways active
->> + */
->> +static int cdns3_gadget_ep0_disable(struct usb_ep *ep)
->> +{
->> +	return -EINVAL;
->> +}
->> +
->> +/**
->> + * cdns3_gadget_ep0_set_halt
->> + * @ep: pointer to endpoint zero object
->> + * @value: 1 for set stall, 0 for clear stall
->> + *
->> + * Returns 0
->> + */
->> +static int cdns3_gadget_ep0_set_halt(struct usb_ep *ep, int value)
->> +{
->> +	/* TODO */
->> +	return 0;
->> +}
->> +
->> +/**
->> + * cdns3_gadget_ep0_queue Transfer data on endpoint zero
->> + * @ep: pointer to endpoint zero object
->> + * @request: pointer to request object
->> + * @gfp_flags: gfp flags
->> + *
->> + * Returns 0 on success, error code elsewhere
->> + */
->> +static int cdns3_gadget_ep0_queue(struct usb_ep *ep,
->> +				  struct usb_request *request,
->> +				  gfp_t gfp_flags)
->> +{
->> +	struct cdns3_endpoint *priv_ep =3D ep_to_cdns3_ep(ep);
->> +	struct cdns3_device *priv_dev =3D priv_ep->cdns3_dev;
->> +	unsigned long flags;
->> +	int erdy_sent =3D 0;
->> +	int ret =3D 0;
->> +
->> +	dev_dbg(&priv_dev->dev, "Queue to Ep0%s L: %d\n",
->> +		priv_dev->ep0_data_dir ? "IN" : "OUT",
->> +		request->length);
->> +
->> +	/* send STATUS stage */
->> +	if (request->length =3D=3D 0 && request->zero =3D=3D 0) {
->
->Is this check sufficient to know STATUS stage?
->It might be normal for vendor specific control request to have
->request->length =3D 0 and request->zero =3D 0.
+Wondering if some of the current chemical sensors in the tree should
+be switched to IIO_MASSCONCENTRATION, and only one I can think is
+truly by volume is the electro-conductivity sensor (part of the
+atlas-ph-sensor.c)
 
-It's sufficient. =20
-cdns3_gadget_ep0_queue is invoked by gadget driver only for DATA stage=20
-or deferred STATUS stage (e.g during SET_CONFIGURATION request).=20
-In DATA stage driver shall send a number of date specified in SETUP packet
-and it should not be zero.=20
-If wLength in SETUP packet is 0 then we don't have DATA stage, only SETUP a=
-nd STATUS stage
+- Matt
 
 >
+> Jonathan
+> >
+> > > But the electro-conductivity sensor that is using IIO_CONCENTRATION
+> > > channels is likely from percentage of volume.
+> > >
+> > > - Matt
+> > >
+> > > >
+> > > > >
+> > > > > >  };
+> > > > > >
+> > > > > >  enum iio_modifier {
+> > > > > > @@ -87,6 +88,8 @@ enum iio_modifier {
+> > > > > >         IIO_MOD_VOC,
+> > > > > >         IIO_MOD_LIGHT_UV,
+> > > > > >         IIO_MOD_LIGHT_DUV,
+> > > > > > +       IIO_MOD_PM2p5,
+> > > > >
+> > > > > I know this is unit of measure but the lowercase p in IIO_MOD_PM2p5 is
+> > > > > a bit non-standard for iio defines/enum.
+> > > > It is a bit odd and will get us scripted reports so maybe best to
+> > > > just go upper case and not worry about it.
+> > > >
+> > > > Jonathan
+> > > > >
+> > > > > - Matt
+> > > > >
+> > > > > > +       IIO_MOD_PM10,
+> > > > > >  };
+> > > > > >
+> > > > > >  enum iio_event_type {
+> > > > > > diff --git a/tools/iio/iio_event_monitor.c b/tools/iio/iio_event_monitor.c
+> > > > > > index ac2de6b7e89f..f0fcfeddba2b 100644
+> > > > > > --- a/tools/iio/iio_event_monitor.c
+> > > > > > +++ b/tools/iio/iio_event_monitor.c
+> > > > > > @@ -60,6 +60,7 @@ static const char * const iio_chan_type_name_spec[] = {
+> > > > > >         [IIO_GRAVITY] = "gravity",
+> > > > > >         [IIO_POSITIONRELATIVE] = "positionrelative",
+> > > > > >         [IIO_PHASE] = "phase",
+> > > > > > +       [IIO_MASSCONCENTRATION] = "massconcentration",
+> > > > > >  };
+> > > > > >
+> > > > > >  static const char * const iio_ev_type_text[] = {
+> > > > > > @@ -115,6 +116,8 @@ static const char * const iio_modifier_names[] = {
+> > > > > >         [IIO_MOD_Q] = "q",
+> > > > > >         [IIO_MOD_CO2] = "co2",
+> > > > > >         [IIO_MOD_VOC] = "voc",
+> > > > > > +       [IIO_MOD_PM2p5] = "pm2p5",
+> > > > > > +       [IIO_MOD_PM10] = "pm10",
+> > > > > >  };
+> > > > > >
+> > > > > >  static bool event_is_known(struct iio_event_data *event)
+> > > > > > @@ -156,6 +159,7 @@ static bool event_is_known(struct iio_event_data *event)
+> > > > > >         case IIO_GRAVITY:
+> > > > > >         case IIO_POSITIONRELATIVE:
+> > > > > >         case IIO_PHASE:
+> > > > > > +       case IIO_MASSCONCENTRATION:
+> > > > > >                 break;
+> > > > > >         default:
+> > > > > >                 return false;
+> > > > > > @@ -200,6 +204,8 @@ static bool event_is_known(struct iio_event_data *event)
+> > > > > >         case IIO_MOD_Q:
+> > > > > >         case IIO_MOD_CO2:
+> > > > > >         case IIO_MOD_VOC:
+> > > > > > +       case IIO_MOD_PM2p5:
+> > > > > > +       case IIO_MOD_PM10:
+> > > > > >                 break;
+> > > > > >         default:
+> > > > > >                 return false;
+> > > > > > --
+> > > > > > 2.19.2
+> > > > > >
+> > > >
 >
->> +		spin_lock_irqsave(&priv_dev->lock, flags);
->> +		cdns3_select_ep(priv_dev, 0x00);
->> +
->> +		erdy_sent =3D !priv_dev->hw_configured_flag;
->> +		cdns3_set_hw_configuration(priv_dev);
->
->What if we're still busy with DATA stage of previous ep0_queue?
->
->if (!list_empty(&priv_ep->request_list)) should be done as the first thing=
- in this function.
->
-The SETUP hast to be handled. If the previous one has not been finished the=
-n controller
-driver must abort the previous one and start handling the new one.
-I know, and I can't find code responsible for this behavior.
-I will add some protection against such situation.=20
-
->> +
->> +		if (!erdy_sent)
->> +			writel(EP_CMD_ERDY | EP_CMD_REQ_CMPL,
->> +			       &priv_dev->regs->ep_cmd);
->> +
->> +		cdns3_prepare_setup_packet(priv_dev);
->> +		request->actual =3D 0;
->> +		priv_dev->status_completion_no_call =3D true;
->> +		priv_dev->pending_status_request =3D request;
->> +		spin_unlock_irqrestore(&priv_dev->lock, flags);
->> +
->> +		/*
->> +		 * Since there is no completion interrupt for status stage,
->> +		 * it needs to call ->completion in software after
->> +		 * ep0_queue is back.
->> +		 */
->> +		queue_work(system_freezable_wq, &priv_dev->pending_status_wq);
->> +		return 0;
->> +	}
->> +
->> +	spin_lock_irqsave(&priv_dev->lock, flags);
->> +	if (!list_empty(&priv_ep->request_list)) {
->> +		dev_err(&priv_dev->dev,
->> +			"can't handle multiple requests for ep0\n");
->> +		spin_unlock_irqrestore(&priv_dev->lock, flags);
->> +		return -EOPNOTSUPP;
->
->-EBUSY?
->
->> +	}
->> +
->> +	ret =3D usb_gadget_map_request_by_dev(priv_dev->sysdev, request,
->> +					    priv_dev->ep0_data_dir);
->> +	if (ret) {
->> +		spin_unlock_irqrestore(&priv_dev->lock, flags);
->> +		dev_err(&priv_dev->dev, "failed to map request\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	priv_dev->ep0_request =3D request;
->> +	list_add_tail(&request->list, &priv_ep->request_list);
->> +	cdns3_ep0_run_transfer(priv_dev, request->dma, request->length, 1);
->> +	spin_unlock_irqrestore(&priv_dev->lock, flags);
->> +
->> +	return ret;
->> +}
->> +
->>  /**
->>   * cdns3_gadget_ep_set_wedge Set wedge on selected endpoint
->>   * @ep: endpoint object
->> @@ -41,6 +215,17 @@ int cdns3_gadget_ep_set_wedge(struct usb_ep *ep)
->>  	return 0;
->>  }
->>
->> +const struct usb_ep_ops cdns3_gadget_ep0_ops =3D {
->> +	.enable =3D cdns3_gadget_ep0_enable,
->> +	.disable =3D cdns3_gadget_ep0_disable,
->> +	.alloc_request =3D cdns3_gadget_ep_alloc_request,
->> +	.free_request =3D cdns3_gadget_ep_free_request,
->> +	.queue =3D cdns3_gadget_ep0_queue,
->> +	.dequeue =3D cdns3_gadget_ep_dequeue,
->> +	.set_halt =3D cdns3_gadget_ep0_set_halt,
->> +	.set_wedge =3D cdns3_gadget_ep_set_wedge,
->> +};
->> +
->>  /**
->>   * cdns3_ep0_config - Configures default endpoint
->>   * @priv_dev: extended gadget object
->> @@ -62,6 +247,9 @@ void cdns3_ep0_config(struct cdns3_device *priv_dev)
->>  		priv_dev->ep0_request =3D NULL;
->>  	}
->>
->> +	priv_dev->u1_allowed =3D 0;
->> +	priv_dev->u2_allowed =3D 0;
->> +
->
->where do you set these?
-
-In function cdns3_ep0_feature_handle_device in patch 12.=20
-It was stupid  idea to split this driver into series of patches.=20
-I thought that it was  required for such big driver.=20
-The next will be posted as single patch.=20
->
->>  	priv_dev->gadget.ep0->maxpacket =3D max_packet_size;
->>  	cdns3_gadget_ep0_desc.wMaxPacketSize =3D cpu_to_le16(max_packet_size);
->>
->> @@ -106,8 +294,7 @@ int cdns3_init_ep0(struct cdns3_device *priv_dev)
->>  	sprintf(ep0->name, "ep0");
->>
->>  	/* fill linux fields */
->> -	//TODO: implements cdns3_gadget_ep0_ops object
->> -	//ep0->endpoint.ops =3D &cdns3_gadget_ep0_ops;
->> +	ep0->endpoint.ops =3D &cdns3_gadget_ep0_ops;
->>  	ep0->endpoint.maxburst =3D 1;
->>  	usb_ep_set_maxpacket_limit(&ep0->endpoint, ENDPOINT0_MAX_PACKET_LIMIT)=
-;
->>  	ep0->endpoint.address =3D 0;
->> diff --git a/drivers/usb/cdns3/gadget.c b/drivers/usb/cdns3/gadget.c
->> index 1f2a434486dc..c965da16c0c8 100644
->> --- a/drivers/usb/cdns3/gadget.c
->> +++ b/drivers/usb/cdns3/gadget.c
->> @@ -188,6 +188,14 @@ static void cdns3_ep_stall_flush(struct cdns3_endpo=
-int *priv_ep)
->>  	priv_ep->flags |=3D EP_STALL;
->>  }
->>
->
->> +void cdns3_enable_l1(struct cdns3_device *priv_dev, int enable)
->
->Some comment might help as to what L1 is.
-
-I even had to check what it meant.
-
->From controller specification:=20
-"
-After receiving Extended Token packet, the USBSS-DEV answers with:
-- ACK handshake when accepts transition to the Sleep state (L1 mode is turn=
-ed on by setting
-L1EN in USB_CONF) or
-- NYET handshake when is not ready to make transition to the Sleep state (L=
-1 mode is turned
-off (default) by setting L1DS in USB_CONF )
-- STALL handshake when doesn't recognize requested link state (bLinkState v=
-alue). The only
-supported bLinkState value is "0001" (Sleep state).
-If L1 mode is enabled, then the status bit 'L1ENS' in 'USB_STS' is asserted=
-."
-
-So I think that the name of function should look like:=20
-cdns3_allow_enable_l1
-
-I will add comment to function and change the name.
->
->> +{
->> +	if (enable)
->> +		writel(USB_CONF_L1EN, &priv_dev->regs->usb_conf);
->> +	else
->> +		writel(USB_CONF_L1DS, &priv_dev->regs->usb_conf);
->> +}
->> +
->>  /**
->>   * cdns3_gadget_giveback - call struct usb_request's ->complete callbac=
-k
->>   * @priv_ep: The endpoint to whom the request belongs to
->> diff --git a/drivers/usb/cdns3/gadget.h b/drivers/usb/cdns3/gadget.h
->> index a4be288b34cb..224f6b830bc9 100644
->> --- a/drivers/usb/cdns3/gadget.h
->> +++ b/drivers/usb/cdns3/gadget.h
->> @@ -1068,11 +1068,21 @@ struct cdns3_device {
->>  	struct usb_request		*pending_status_request;
->>  };
->>
->> +int cdns3_handshake(void __iomem *ptr, u32 mask, u32 done, int usec);
->>  void cdns3_set_register_bit(void __iomem *ptr, u32 mask);
->>  int cdns3_init_ep0(struct cdns3_device *priv_dev);
->>  void cdns3_ep0_config(struct cdns3_device *priv_dev);
->>  void cdns3_select_ep(struct cdns3_device *priv_dev, u32 ep);
->> +void cdns3_enable_l1(struct cdns3_device *priv_dev, int enable);
->> +struct usb_request *cdns3_next_request(struct list_head *list);
->> +int cdns3_ep_run_transfer(struct cdns3_endpoint *priv_ep,
->> +			  struct usb_request *request);
->>  int cdns3_gadget_ep_set_wedge(struct usb_ep *ep);
->>  int cdns3_gadget_ep_set_halt(struct usb_ep *ep, int value);
->> +struct usb_request *cdns3_gadget_ep_alloc_request(struct usb_ep *ep,
->> +						  gfp_t gfp_flags);
->> +void cdns3_gadget_ep_free_request(struct usb_ep *ep,
->> +				  struct usb_request *request);
->> +int cdns3_gadget_ep_dequeue(struct usb_ep *ep, struct usb_request *requ=
-est);
->>
->>  #endif /* __LINUX_CDNS3_GADGET */
->>
->
->cheers,
->-roger
->
->--
->Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
