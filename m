@@ -1,7 +1,7 @@
 From: Otavio Salvador <otavio@ossystems.com.br>
-Subject: [PATCH 1/9] ARM: dts: imx7d-pico: Do not harcode the memory size
-Date: Sun,  2 Dec 2018 19:25:12 -0200
-Message-ID: <20181202212520.16650-2-otavio@ossystems.com.br>
+Subject: [PATCH 2/9] ARM: dts: imx7d-pico: Switch to SPDX identifier
+Date: Sun,  2 Dec 2018 19:25:13 -0200
+Message-ID: <20181202212520.16650-3-otavio@ossystems.com.br>
 References: <20181202212520.16650-1-otavio@ossystems.com.br>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,34 +14,120 @@ List-Id: devicetree@vger.kernel.org
 
 From: Fabio Estevam <festevam@gmail.com>
 
-Currently the memory size described in dts is 2GB, which is incorrect.
-
-There are 512MB and 1GB versions of imx7d-pico boards, so remove
-the hardcoded memory size and let the bootloader pass the correct
-value to the kernel.
+Adopt the SPDX license identifier headers to ease license compliance
+management.
 
 Signed-off-by: Fabio Estevam <festevam@gmail.com>
 Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
 ---
 
- arch/arm/boot/dts/imx7d-pico.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx7d-pico-pi.dts | 44 ++---------------------------
+ arch/arm/boot/dts/imx7d-pico.dtsi   | 44 ++---------------------------
+ 2 files changed, 6 insertions(+), 82 deletions(-)
 
+diff --git a/arch/arm/boot/dts/imx7d-pico-pi.dts b/arch/arm/boot/dts/imx7d-pico-pi.dts
+index ee02d931cf49..33951f4c7f41 100644
+--- a/arch/arm/boot/dts/imx7d-pico-pi.dts
++++ b/arch/arm/boot/dts/imx7d-pico-pi.dts
+@@ -1,44 +1,6 @@
+-/*
+- * Copyright 2017 NXP
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License, or (at your option) any later version.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+- */
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++//
++// Copyright 2017 NXP
+ 
+ #include "imx7d-pico.dtsi"
+ 
 diff --git a/arch/arm/boot/dts/imx7d-pico.dtsi b/arch/arm/boot/dts/imx7d-pico.dtsi
-index 934a019f341e..0df68e53e9fa 100644
+index 0df68e53e9fa..d957454ce16b 100644
 --- a/arch/arm/boot/dts/imx7d-pico.dtsi
 +++ b/arch/arm/boot/dts/imx7d-pico.dtsi
-@@ -48,9 +48,10 @@
- 	model = "Technexion Pico i.MX7D Board";
- 	compatible = "technexion,imx7d-pico", "fsl,imx7d";
+@@ -1,44 +1,6 @@
+-/*
+- * Copyright 2017 NXP
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License, or (at your option) any later version.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+- */
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++//
++// Copyright 2017 NXP
  
-+	/* Will be filled by the bootloader */
- 	memory@80000000 {
- 		device_type = "memory";
--		reg = <0x80000000 0x80000000>;
-+		reg = <0x80000000 0>;
- 	};
+ /dts-v1/;
  
- 	reg_ap6212: regulator-ap6212 {
 -- 
 2.19.2
