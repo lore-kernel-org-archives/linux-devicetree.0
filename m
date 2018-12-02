@@ -1,207 +1,33 @@
-From: Matt Ranostay <matt.ranostay@konsulko.com>
-Subject: Re: [PATCH 1/3] iio: add IIO_MASSCONCENTRATION channel type
-Date: Sun, 2 Dec 2018 13:32:56 +0200
-Message-ID: <CAJCx=g=S1wxsYGZ-kLkS22whdxTgUf+mfFhvX4diMzE3=kze1g@mail.gmail.com>
-References: <20181124221415.10081-1-tduszyns@gmail.com> <20181124221415.10081-2-tduszyns@gmail.com>
- <CAJCx=g=H6Zp4AtWPpC-KdZmyOxTymtdgf+Hx8VvThLFg0bjYVQ@mail.gmail.com>
- <20181125140316.59d9872b@archlinux> <CAJCx=g=oUmcfCA2octwfaoWr6aC=ZF7LUkMsraNe8buHc9mjPg@mail.gmail.com>
- <20181125154423.GC5053@arch> <20181201154835.19482d7a@archlinux>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH] dt-bindings: arm: mrvl: amend Browstone compatible string
+Date: Sun,  2 Dec 2018 12:40:08 +0100
+Message-ID: <20181202114008.2861-1-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181201154835.19482d7a@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@jic23.retrosnub.co.uk
-Cc: Tomasz Duszynski <tduszyns@gmail.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 1, 2018 at 5:48 PM Jonathan Cameron
-<jic23@jic23.retrosnub.co.uk> wrote:
->
-> On Sun, 25 Nov 2018 16:44:23 +0100
-> Tomasz Duszynski <tduszyns@gmail.com> wrote:
->
-> > On Sun, Nov 25, 2018 at 06:14:44AM -0800, Matt Ranostay wrote:
-> > > On Sun, Nov 25, 2018 at 6:03 AM Jonathan Cameron
-> > > <jic23@jic23.retrosnub.co.uk> wrote:
-> > > >
-> > > > On Sun, 25 Nov 2018 05:51:32 -0800
-> > > > Matt Ranostay <matt.ranostay@konsulko.com> wrote:
-> > > >
-> > > > > On Sat, Nov 24, 2018 at 2:14 PM Tomasz Duszynski <tduszyns@gmail.com> wrote:
-> > > > > >
-> > > > > > Measuring particulate matter in ug / m3 (micro-grams per cubic meter)
-> > > > > > is de facto standard. Existing air quality sensors usually follow
-> > > > > > this convention and are capable of returning measurements using
-> > > > > > this unit.
-> > > > > >
-> > > > > > IIO currently does not offer suitable channel type for this
-> > > > > > type of measurements hence this patch adds this.
-> > > > > >
-> > > > > > In addition, two modifiers are introduced used for distinguishing
-> > > > > > between coarse (PM10) and fine particles (PM2p5) measurements, i.e
-> > > > > > IIO_MOD_PM10 and IIO_MOD_PM2p5.
-> > > > > >
-> > > > > > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
-> > > > > > ---
-> > > > > >  Documentation/ABI/testing/sysfs-bus-iio | 11 ++++++++++-
-> > > > > >  drivers/iio/industrialio-core.c         |  3 +++
-> > > > > >  include/uapi/linux/iio/types.h          |  3 +++
-> > > > > >  tools/iio/iio_event_monitor.c           |  6 ++++++
-> > > > > >  4 files changed, 22 insertions(+), 1 deletion(-)
-> > > > > >
-> > > > > > diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> > > > > > index 8127a08e366d..ce0ed140660d 100644
-> > > > > > --- a/Documentation/ABI/testing/sysfs-bus-iio
-> > > > > > +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> > > > > > @@ -1684,4 +1684,13 @@ KernelVersion:   4.18
-> > > > > >  Contact:       linux-iio@vger.kernel.org
-> > > > > >  Description:
-> > > > > >                 Raw (unscaled) phase difference reading from channel Y
-> > > > > > -               that can be processed to radians.
-> > > > > > \ No newline at end of file
-> > > > > > +               that can be processed to radians.
-> > > > > > +
-> > > > > > +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentration_pm2p5_input
-> > > > > > +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentrationY_pm2p5_input
-> > > > > > +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentration_pm10_input
-> > > > > > +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentrationY_pm10_input
-> > > > > > +KernelVersion: 4.21
-> > > > > > +Contact:       linux-iio@vger.kernel.org
-> > > > > > +Description:
-> > > > > > +               Mass concentration reading of particulate matter in ug / m3.
-> > > > > > diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> > > > > > index a062cfddc5af..2a9ef600c1fb 100644
-> > > > > > --- a/drivers/iio/industrialio-core.c
-> > > > > > +++ b/drivers/iio/industrialio-core.c
-> > > > > > @@ -87,6 +87,7 @@ static const char * const iio_chan_type_name_spec[] = {
-> > > > > >         [IIO_GRAVITY]  = "gravity",
-> > > > > >         [IIO_POSITIONRELATIVE]  = "positionrelative",
-> > > > > >         [IIO_PHASE] = "phase",
-> > > > > > +       [IIO_MASSCONCENTRATION] = "massconcentration",
-> > > > > >  };
-> > > > > >
-> > > > > >  static const char * const iio_modifier_names[] = {
-> > > > > > @@ -127,6 +128,8 @@ static const char * const iio_modifier_names[] = {
-> > > > > >         [IIO_MOD_Q] = "q",
-> > > > > >         [IIO_MOD_CO2] = "co2",
-> > > > > >         [IIO_MOD_VOC] = "voc",
-> > > > > > +       [IIO_MOD_PM2p5] = "pm2p5",
-> > > > > > +       [IIO_MOD_PM10] = "pm10",
-> > > > > >  };
-> > > > > >
-> > > > > >  /* relies on pairs of these shared then separate */
-> > > > > > diff --git a/include/uapi/linux/iio/types.h b/include/uapi/linux/iio/types.h
-> > > > > > index 92baabc103ac..465044b42af5 100644
-> > > > > > --- a/include/uapi/linux/iio/types.h
-> > > > > > +++ b/include/uapi/linux/iio/types.h
-> > > > > > @@ -46,6 +46,7 @@ enum iio_chan_type {
-> > > > > >         IIO_GRAVITY,
-> > > > > >         IIO_POSITIONRELATIVE,
-> > > > > >         IIO_PHASE,
-> > > > > > +       IIO_MASSCONCENTRATION,
-> > > > >
-> > > > > So I'm guessing IIO_CONCENTRATION can't be scaled to the micro-grams
-> > > > > per cubic meter?
-> > > >
-> > > > Currently concentration is defined as a percentage reading of a substance
-> > > > (which does make me wonder if it is meant to be percentage of the volume or
-> > > > percentage of the mass?)  Either way, if can't convert to a density measurement
-> > > > as it's a unit free ratio (I think).
-> > >
-> > > Seems like it can be both..  guessing all the atmosphere ( CO2, VOC,
-> > > etc) ones are mass/density because on how they work.
-> >
-> > Hmm, but still percentage was picked up for IIO_CONCENTRATION which does
-> > really match PM expectations. Perhaps if units were sticked to modifiers
-> > it whould be easier to reuse that.
->
-> It gets very messy if we start doing that modifiers, I'd rather stick to
-> different channel types.  We already do this with other channel types
-> position / positionrelative for example.
->
-> It isn't as though it's actually possible to convert between the two without
-> knowing what the particles actually are...
+The Brownstone board is compatible with "mrvl,mmp2". The actual DTS
+already contains the string -- add it to the binding doc as well.
 
-Wondering if some of the current chemical sensors in the tree should
-be switched to IIO_MASSCONCENTRATION, and only one I can think is
-truly by volume is the electro-conductivity sensor (part of the
-atlas-ph-sensor.c)
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ Documentation/devicetree/bindings/arm/mrvl/mrvl.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-- Matt
-
->
-> Jonathan
-> >
-> > > But the electro-conductivity sensor that is using IIO_CONCENTRATION
-> > > channels is likely from percentage of volume.
-> > >
-> > > - Matt
-> > >
-> > > >
-> > > > >
-> > > > > >  };
-> > > > > >
-> > > > > >  enum iio_modifier {
-> > > > > > @@ -87,6 +88,8 @@ enum iio_modifier {
-> > > > > >         IIO_MOD_VOC,
-> > > > > >         IIO_MOD_LIGHT_UV,
-> > > > > >         IIO_MOD_LIGHT_DUV,
-> > > > > > +       IIO_MOD_PM2p5,
-> > > > >
-> > > > > I know this is unit of measure but the lowercase p in IIO_MOD_PM2p5 is
-> > > > > a bit non-standard for iio defines/enum.
-> > > > It is a bit odd and will get us scripted reports so maybe best to
-> > > > just go upper case and not worry about it.
-> > > >
-> > > > Jonathan
-> > > > >
-> > > > > - Matt
-> > > > >
-> > > > > > +       IIO_MOD_PM10,
-> > > > > >  };
-> > > > > >
-> > > > > >  enum iio_event_type {
-> > > > > > diff --git a/tools/iio/iio_event_monitor.c b/tools/iio/iio_event_monitor.c
-> > > > > > index ac2de6b7e89f..f0fcfeddba2b 100644
-> > > > > > --- a/tools/iio/iio_event_monitor.c
-> > > > > > +++ b/tools/iio/iio_event_monitor.c
-> > > > > > @@ -60,6 +60,7 @@ static const char * const iio_chan_type_name_spec[] = {
-> > > > > >         [IIO_GRAVITY] = "gravity",
-> > > > > >         [IIO_POSITIONRELATIVE] = "positionrelative",
-> > > > > >         [IIO_PHASE] = "phase",
-> > > > > > +       [IIO_MASSCONCENTRATION] = "massconcentration",
-> > > > > >  };
-> > > > > >
-> > > > > >  static const char * const iio_ev_type_text[] = {
-> > > > > > @@ -115,6 +116,8 @@ static const char * const iio_modifier_names[] = {
-> > > > > >         [IIO_MOD_Q] = "q",
-> > > > > >         [IIO_MOD_CO2] = "co2",
-> > > > > >         [IIO_MOD_VOC] = "voc",
-> > > > > > +       [IIO_MOD_PM2p5] = "pm2p5",
-> > > > > > +       [IIO_MOD_PM10] = "pm10",
-> > > > > >  };
-> > > > > >
-> > > > > >  static bool event_is_known(struct iio_event_data *event)
-> > > > > > @@ -156,6 +159,7 @@ static bool event_is_known(struct iio_event_data *event)
-> > > > > >         case IIO_GRAVITY:
-> > > > > >         case IIO_POSITIONRELATIVE:
-> > > > > >         case IIO_PHASE:
-> > > > > > +       case IIO_MASSCONCENTRATION:
-> > > > > >                 break;
-> > > > > >         default:
-> > > > > >                 return false;
-> > > > > > @@ -200,6 +204,8 @@ static bool event_is_known(struct iio_event_data *event)
-> > > > > >         case IIO_MOD_Q:
-> > > > > >         case IIO_MOD_CO2:
-> > > > > >         case IIO_MOD_VOC:
-> > > > > > +       case IIO_MOD_PM2p5:
-> > > > > > +       case IIO_MOD_PM10:
-> > > > > >                 break;
-> > > > > >         default:
-> > > > > >                 return false;
-> > > > > > --
-> > > > > > 2.19.2
-> > > > > >
-> > > >
->
+diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt b/Docume=
+ntation/devicetree/bindings/arm/mrvl/mrvl.txt
+index 117d741a2e4f..951687528efb 100644
+--- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
++++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+@@ -11,4 +11,4 @@ Required root node properties:
+=20
+ MMP2 Brownstone Board
+ Required root node properties:
+-	- compatible =3D "mrvl,mmp2-brownstone";
++	- compatible =3D "mrvl,mmp2-brownstone", "mrvl,mmp2";
+--=20
+2.19.1
