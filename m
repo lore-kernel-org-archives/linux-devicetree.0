@@ -1,154 +1,66 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2 1/6] ata: libahci_platform: comply to PHY framework
-Date: Sun, 2 Dec 2018 14:19:49 +0100
-Message-ID: <0517746d-3fca-db57-8dca-8976910dad9c@redhat.com>
-References: <20181130153833.11421-1-miquel.raynal@bootlin.com>
- <20181130153833.11421-2-miquel.raynal@bootlin.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: gpu: add bus clock for
+ Mali Midgard GPUs
+Date: Sun, 02 Dec 2018 21:46:37 +0800
+Message-ID: <41099855eb644a004ebf67059232a53146b278c1.camel@aosc.io>
+References: <20181127074249.15204-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181130153833.11421-2-miquel.raynal@bootlin.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jens Axboe <axboe@kernel.dk>
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBR6ER7QAKGQEXH72FXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181127074249.15204-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+=E5=9C=A8 2018-11-27=E4=BA=8C=E7=9A=84 15:42 +0800=EF=BC=8CIcenowy Zheng=E5=
+=86=99=E9=81=93=EF=BC=9A
+> Some SoCs adds a bus clock gate to the Mali Midgard GPU.
+>=20
+> Add the binding for the bus clock.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
-On 30-11-18 16:38, Miquel Raynal wrote:
-> Current implementation of the libahci does not take into account the
-> new PHY framework. Correct the situation by adding a call to
-> phy_set_mode() before phy_power_on() and by adding calls to
-> ahci_platform_enable/disable_phys() at suspend/resume_host() time.
-> 
-> Suggested-by: Grzegorz Jaszczyk <jaz@semihalf.com>
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-
-Much better. Some remarks inline.
+Could anyone have a check on this patchset?
 
 > ---
->   drivers/ata/ahci.h             |  2 ++
->   drivers/ata/libahci_platform.c | 19 ++++++++++++++++++-
->   2 files changed, 20 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-> index ef356e70e6de..982638b37fee 100644
-> --- a/drivers/ata/ahci.h
-> +++ b/drivers/ata/ahci.h
-> @@ -254,6 +254,8 @@ enum {
->   	AHCI_HFLAG_IS_MOBILE		= (1 << 25), /* mobile chipset, use
->   							SATA_MOBILE_LPM_POLICY
->   							as default lpm_policy */
-> +	AHCI_HFLAG_MANAGE_PHYS		= (1 << 26), /* let the core manage the
-> +							PHYs when relevant */
-
-Using a hflag for this is a good idea, but the MANAGE_PHYS names is a bit
-generic, even if this is not set then ahci_platform_enable_resources() will
-still enable the phy. So I would name this AHCI_HFLAG_SUSPEND_PHYS to make
-clear this only influences suspend/resume behavior.
-
-Also see below.
-
->   	/* ap->flags bits */
->   
-> diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
-> index 4b900fc659f7..f5a64eb1fea8 100644
-> --- a/drivers/ata/libahci_platform.c
-> +++ b/drivers/ata/libahci_platform.c
-> @@ -56,6 +56,12 @@ static int ahci_platform_enable_phys(struct ahci_host_priv *hpriv)
->   		if (rc)
->   			goto disable_phys;
->   
-> +		rc = phy_set_mode(hpriv->phys[i], PHY_MODE_SATA);
-> +		if (rc) {
-> +			phy_exit(hpriv->phys[i]);
-> +			goto disable_phys;
-> +		}
+>  Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt | 6
+> ++++++
+>  1 file changed, 6 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-
+> midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-
+> midgard.txt
+> index 18a2cde2e5f3..02f870cd60e6 100644
+> --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> @@ -31,6 +31,12 @@ Optional properties:
+> =20
+>  - clocks : Phandle to clock for the Mali Midgard device.
+> =20
+> +- clock-names : Specify the names of the clocks specified in clocks
+> +  when multiple clocks are present.
+> +    * bus: bus clock for the GPU
+> +    * core: clock driving the GPU itself (When only one clock is
+> present,
+> +      assume it's this clock.)
 > +
->   		rc = phy_power_on(hpriv->phys[i]);
->   		if (rc) {
->   			phy_exit(hpriv->phys[i]);
-> @@ -378,7 +384,8 @@ static int ahci_platform_get_regulator(struct ahci_host_priv *hpriv, u32 port,
->    * 3) 0 - AHCI_MAX_CLKS clocks, as specified in the devs devicetree node,
->    *    or for non devicetree enabled platforms a single clock
->    * 4) resets, if flags has AHCI_PLATFORM_GET_RESETS (optional)
-> - * 5) phys (optional)
-> + * 5) phys (optional), PHY handling during suspend/resume will be skipped if the
-> + *    flag AHCI_HFLAG_MANAGE_PHYS is missing.
->    *
->    * RETURNS:
->    * The allocated ahci_host_priv on success, otherwise an ERR_PTR value
-> @@ -458,6 +465,9 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev,
->   		}
->   	}
->   
-> +	if (flags & AHCI_HFLAG_MANAGE_PHYS)
-> +		hpriv->flags |= AHCI_HFLAG_MANAGE_PHYS;
-> +
->   	hpriv->nports = child_nodes = of_get_child_count(dev->of_node);
->   
->   	/*
+>  - mali-supply : Phandle to regulator for the Mali device. Refer to
+>    Documentation/devicetree/bindings/regulator/regulator.txt for
+> details.
+> =20
 
-Interpreting a flag passed to ahci_platform_get_resources using a
-AHCI_HFLAG_* mask is asking for trouble in the future.
-
-Since you are using a hflag for this, you can just drop this chunk / change
-and in the caller of ahci_platform_get_resources() do:
-
-	hpriv = ahci_platform_get_resources(pdev, ...);
-	if (IS_ERR(hpriv))
-		...
-
-	hpriv->flags |= AHCI_HFLAG_MANAGE_PHYS;
-
-Settting hflags like this after calling ahci_platform_get_resources()
-is already done in several place.
-
-Once this is changed, this patch looks good to go upstream to me.
-
-Regards,
-
-Hans
-
-
-
-
-> @@ -738,6 +748,9 @@ int ahci_platform_suspend_host(struct device *dev)
->   	writel(ctl, mmio + HOST_CTL);
->   	readl(mmio + HOST_CTL); /* flush */
->   
-> +	if (hpriv->flags & AHCI_HFLAG_MANAGE_PHYS)
-> +		ahci_platform_disable_phys(hpriv);
-> +
->   	return ata_host_suspend(host, PMSG_SUSPEND);
->   }
->   EXPORT_SYMBOL_GPL(ahci_platform_suspend_host);
-> @@ -756,6 +769,7 @@ EXPORT_SYMBOL_GPL(ahci_platform_suspend_host);
->   int ahci_platform_resume_host(struct device *dev)
->   {
->   	struct ata_host *host = dev_get_drvdata(dev);
-> +	struct ahci_host_priv *hpriv = host->private_data;
->   	int rc;
->   
->   	if (dev->power.power_state.event == PM_EVENT_SUSPEND) {
-> @@ -766,6 +780,9 @@ int ahci_platform_resume_host(struct device *dev)
->   		ahci_init_controller(host);
->   	}
->   
-> +	if (hpriv->flags & AHCI_HFLAG_MANAGE_PHYS)
-> +		ahci_platform_enable_phys(hpriv);
-> +
->   	ata_host_resume(host);
->   
->   	return 0;
-> 
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
