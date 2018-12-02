@@ -1,136 +1,64 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [RFC PATCH v2 02/15] usb:cdns3: Device side header file.
-Date: Sun, 2 Dec 2018 19:27:28 +0000
-Message-ID: <BYAPR07MB4709E47639F2DA3339D99147DDAD0@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
- <1542535751-16079-3-git-send-email-pawell@cadence.com>
- <VI1PR04MB5327F686BE6E9F5D85380BA98BD30@VI1PR04MB5327.eurprd04.prod.outlook.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 2/8] phy: mvebu-cp110-comphy: fix port check in
+ ->xlate()
+Date: Sun, 2 Dec 2018 20:35:09 +0100
+Message-ID: <20181202203509.21b067c4@xps13>
+References: <20181130144743.675-1-miquel.raynal@bootlin.com>
+        <20181130144743.675-3-miquel.raynal@bootlin.com>
+        <20181130190031.GH30658@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB5327F686BE6E9F5D85380BA98BD30@VI1PR04MB5327.eurprd04.prod.outlook.com>
-Content-Language: en-US
+In-Reply-To: <20181130190031.GH30658@n2100.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: PETER CHEN <peter.chen@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, linux-kernel@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter
->> +
->> +/*
->> + * USBSS-DEV register interface.
->> + * This corresponds to the USBSS Device Controller Interface  */
->> +/**
->> + * struct xhci_cap_regs - xHCI Host Controller Capability Registers.
->
->struct cdns3_usb_regs - device controller registers
+Hi Russell,
 
-thanks, =20
-I had this from beginning. I don't know why. =20
-I=20
->
->> +struct cdns3_device;
->> +
->> +struct cdns3_endpoint {
->> +	struct usb_ep		endpoint;
->> +	struct list_head	request_list;
->> +	struct list_head	ep_match_pending_list;
->> +
->> +	struct cdns3_trb	*trb_pool;
->> +	dma_addr_t		trb_pool_dma;
->> +
->> +	struct cdns3_device	*cdns3_dev;
->> +	char			name[20];
->> +
->> +#define EP_ENABLED		BIT(0)
->> +#define EP_STALL		BIT(1)
->> +#define EP_WEDGE		BIT(2)
->> +#define EP_TRANSFER_STARTED	BIT(3)
->> +#define EP_UPDATE_EP_TRBADDR	BIT(4)
->> +#define EP_PENDING_REQUEST	BIT(5)
->> +#define EP_USED			BIT(5)
->> +	u32			flags;
->> +
->> +	void			*aligned_buff;
->> +	dma_addr_t		aligned_dma_addr;
->> +	u8			dir;
->> +	u8			num;
->> +	u8			type;
->> +
->> +	int			free_trbs;
->> +	u8			pcs;
->> +	u8			ccs;
->> +	int			enqueue;
->> +	int			dequeue;
->> +};
->> +
->
->Would you please add kernel doc for above structure?
+Russell King - ARM Linux <linux@armlinux.org.uk> wrote on Fri, 30 Nov
+2018 19:00:31 +0000:
 
-Done.
->
->> +struct cdns3_request {
->> +	struct usb_request request;
->> +	struct cdns3_endpoint *priv_ep;
->> +	struct cdns3_trb *trb;
->> +	int start_trb;
->> +	int end_trb;
->> +	int on_ring:1;
->> +};
->> +
->> +#define to_cdns3_request(r) (container_of(r, struct cdns3_request,
->> +request))
->> +
->> +struct cdns3_device {
->> +	struct device			dev;
->> +	struct cdns3_usb_regs		__iomem *regs;
->> +
->> +	struct usb_gadget		gadget;
->> +	struct usb_gadget_driver	*gadget_driver;
->> +
->> +	struct usb_ctrlrequest		*setup;
->> +	dma_addr_t			setup_dma;
->> +	dma_addr_t			trb_ep0_dma;
->> +	struct cdns3_trb		*trb_ep0;
->> +	void				*zlp_buf;
->> +
->> +	struct cdns3_endpoint		*eps[USB_SS_ENDPOINTS_MAX_COUNT];
->> +	int				ep_nums;
->> +	/*
->> +	 * field used for improving performance. It holds the last
->> +	 * selected endpoint number
->> +	 */
->> +	u32				selected_ep;
->> +	struct usb_request		*ep0_request;
->> +	int				ep0_data_dir;
->> +	int				hw_configured_flag;
->> +	int				wake_up_flag;
->> +	u16				isoch_delay;
->> +	/* generic spin-lock for drivers */
->> +	spinlock_t			lock;
->> +
->> +	unsigned			is_connected:1;
->> +	unsigned			in_standby_mode:1;
->> +	unsigned			status_completion_no_call:1;
->> +	unsigned			u1_allowed:1;
->> +	unsigned			u2_allowed:1;
->> +
->> +	u32				usb_ien;
->> +	u32				ep_ien;
->> +	int				setup_pending;
->> +	struct device			*sysdev;
->> +	/* The device mode is enabled */
->> +	int				start_gadget;
->> +	struct list_head		ep_match_list;
->> +	/* KB */
->> +	int				onchip_mem_allocated_size;
->> +	/* Memory is allocated for OUT */
->> +	int				out_mem_is_allocated:1;
->> +	struct work_struct		pending_status_wq;
->> +	struct usb_request		*pending_status_request;
->> +};
->> +
+> On Fri, Nov 30, 2018 at 03:47:37PM +0100, Miquel Raynal wrote:
+> > So far the PHY ->xlate() callback was checking if the port was
+> > "invalid" before continuing, meaning that the port has not been used
+> > yet. This check is not correct as there is no opposite call to  
+> > ->xlate() once the PHY is released by the user and the port will  
+> > remain "valid" after the first phy_get()/phy_put() calls. Hence, if
+> > this driver is built as a module, inserted, removed and inserted
+> > again, the PHY will appear busy and the second probe will fail.
+> > 
+> > To fix this, just drop the faulty check and instead verify that the
+> > port number is valid (ie. in the possible range).
+> > 
+> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > ---
+> >  drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+> > index 31b9a1c18345..a40b876ff214 100644
+> > --- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+> > +++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+> > @@ -567,9 +567,9 @@ static struct phy *mvebu_comphy_xlate(struct device *dev,
+> >  		return phy;
+> >  
+> >  	lane = phy_get_drvdata(phy);
+> > -	if (lane->port >= 0)
+> > -		return ERR_PTR(-EBUSY);
+> >  	lane->port = args->args[0];
+> > +	if (lane->port >= MVEBU_COMPHY_PORTS)
+> > +		return ERR_PTR(-EINVAL);  
+> 
+> Shouldn't we validate args->args[0] before doing anything?
+> 
 
-Cheers
-Pawel
+I don't understand your point, there is a check on args->args[0] as
+we check its value (through lane->port) right after. What do you
+have in mind?
+
+
+Thanks,
+Miquèl
