@@ -1,66 +1,136 @@
-From: Tomasz Duszynski <tduszyns@gmail.com>
-Subject: Re: [PATCH 3/3] iio: chemical: sps30: add device tree support
-Date: Sun, 2 Dec 2018 19:29:44 +0100
-Message-ID: <20181202182943.GA8286@arch>
-References: <20181124221415.10081-1-tduszyns@gmail.com>
- <20181124221415.10081-4-tduszyns@gmail.com>
- <20181125085939.421523d6@archlinux>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [RFC PATCH v2 02/15] usb:cdns3: Device side header file.
+Date: Sun, 2 Dec 2018 19:27:28 +0000
+Message-ID: <BYAPR07MB4709E47639F2DA3339D99147DDAD0@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
+ <1542535751-16079-3-git-send-email-pawell@cadence.com>
+ <VI1PR04MB5327F686BE6E9F5D85380BA98BD30@VI1PR04MB5327.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181125085939.421523d6@archlinux>
+In-Reply-To: <VI1PR04MB5327F686BE6E9F5D85380BA98BD30@VI1PR04MB5327.eurprd04.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Cc: Tomasz Duszynski <tduszyns@gmail.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+To: PETER CHEN <peter.chen@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 25, 2018 at 08:59:39AM +0000, Jonathan Cameron wrote:
-> On Sat, 24 Nov 2018 23:14:15 +0100
-> Tomasz Duszynski <tduszyns@gmail.com> wrote:
+Hi Peter
+>> +
+>> +/*
+>> + * USBSS-DEV register interface.
+>> + * This corresponds to the USBSS Device Controller Interface  */
+>> +/**
+>> + * struct xhci_cap_regs - xHCI Host Controller Capability Registers.
 >
-> > Add device tree support for Sensirion SPS30 particulate
-> > matter sensor.
-> >
-> > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
-> one comment inine, around the fact we are trying to move
-> to generic names in DT where ever possible.  Now we don't
-> have a suitable one (IIRC) yet so time to make one up ;)
->
-> +CC Rob for his input on that.
-> > ---
-> >  .../bindings/iio/chemical/sensirion,sps30.txt        | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt b/Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
-> > new file mode 100644
-> > index 000000000000..6eee2709b5b6
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
-> > @@ -0,0 +1,12 @@
-> > +* Sensirion SPS30 particulate matter sensor
-> > +
-> > +Required properties:
-> > +- compatible: must be "sensirion,sps30"
-> > +- reg: the I2C address of the sensor
-> > +
-> > +Example:
-> > +
-> > +sps30@69 {
-> We should define a generic type.  Rob, what would work for this
-> one?
->
-> particlesensor@69?
->
+>struct cdns3_usb_regs - device controller registers
 
-Wouldn't air-pollution-sensor be somewhat more generic? At least
-wikipedia has some article about that. Various other names like
-particle-sensor, pm-sensor, particulate-matter-sensor,
-air-quality-sensor, tend to return more or less similar number
-of search hits. Which means there's no universal naming convention.
-
-> > +	compatible = "sensirion,sps30";
-> > +	reg = <0x69>;
-> > +};
+thanks, =20
+I had this from beginning. I don't know why. =20
+I=20
 >
+>> +struct cdns3_device;
+>> +
+>> +struct cdns3_endpoint {
+>> +	struct usb_ep		endpoint;
+>> +	struct list_head	request_list;
+>> +	struct list_head	ep_match_pending_list;
+>> +
+>> +	struct cdns3_trb	*trb_pool;
+>> +	dma_addr_t		trb_pool_dma;
+>> +
+>> +	struct cdns3_device	*cdns3_dev;
+>> +	char			name[20];
+>> +
+>> +#define EP_ENABLED		BIT(0)
+>> +#define EP_STALL		BIT(1)
+>> +#define EP_WEDGE		BIT(2)
+>> +#define EP_TRANSFER_STARTED	BIT(3)
+>> +#define EP_UPDATE_EP_TRBADDR	BIT(4)
+>> +#define EP_PENDING_REQUEST	BIT(5)
+>> +#define EP_USED			BIT(5)
+>> +	u32			flags;
+>> +
+>> +	void			*aligned_buff;
+>> +	dma_addr_t		aligned_dma_addr;
+>> +	u8			dir;
+>> +	u8			num;
+>> +	u8			type;
+>> +
+>> +	int			free_trbs;
+>> +	u8			pcs;
+>> +	u8			ccs;
+>> +	int			enqueue;
+>> +	int			dequeue;
+>> +};
+>> +
+>
+>Would you please add kernel doc for above structure?
+
+Done.
+>
+>> +struct cdns3_request {
+>> +	struct usb_request request;
+>> +	struct cdns3_endpoint *priv_ep;
+>> +	struct cdns3_trb *trb;
+>> +	int start_trb;
+>> +	int end_trb;
+>> +	int on_ring:1;
+>> +};
+>> +
+>> +#define to_cdns3_request(r) (container_of(r, struct cdns3_request,
+>> +request))
+>> +
+>> +struct cdns3_device {
+>> +	struct device			dev;
+>> +	struct cdns3_usb_regs		__iomem *regs;
+>> +
+>> +	struct usb_gadget		gadget;
+>> +	struct usb_gadget_driver	*gadget_driver;
+>> +
+>> +	struct usb_ctrlrequest		*setup;
+>> +	dma_addr_t			setup_dma;
+>> +	dma_addr_t			trb_ep0_dma;
+>> +	struct cdns3_trb		*trb_ep0;
+>> +	void				*zlp_buf;
+>> +
+>> +	struct cdns3_endpoint		*eps[USB_SS_ENDPOINTS_MAX_COUNT];
+>> +	int				ep_nums;
+>> +	/*
+>> +	 * field used for improving performance. It holds the last
+>> +	 * selected endpoint number
+>> +	 */
+>> +	u32				selected_ep;
+>> +	struct usb_request		*ep0_request;
+>> +	int				ep0_data_dir;
+>> +	int				hw_configured_flag;
+>> +	int				wake_up_flag;
+>> +	u16				isoch_delay;
+>> +	/* generic spin-lock for drivers */
+>> +	spinlock_t			lock;
+>> +
+>> +	unsigned			is_connected:1;
+>> +	unsigned			in_standby_mode:1;
+>> +	unsigned			status_completion_no_call:1;
+>> +	unsigned			u1_allowed:1;
+>> +	unsigned			u2_allowed:1;
+>> +
+>> +	u32				usb_ien;
+>> +	u32				ep_ien;
+>> +	int				setup_pending;
+>> +	struct device			*sysdev;
+>> +	/* The device mode is enabled */
+>> +	int				start_gadget;
+>> +	struct list_head		ep_match_list;
+>> +	/* KB */
+>> +	int				onchip_mem_allocated_size;
+>> +	/* Memory is allocated for OUT */
+>> +	int				out_mem_is_allocated:1;
+>> +	struct work_struct		pending_status_wq;
+>> +	struct usb_request		*pending_status_request;
+>> +};
+>> +
+
+Cheers
+Pawel
