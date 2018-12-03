@@ -1,7 +1,7 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 17/34] dt-bindings: arm: Convert TI davinci board/soc bindings to json-schema
-Date: Mon,  3 Dec 2018 15:32:06 -0600
-Message-ID: <20181203213223.16986-18-robh@kernel.org>
+Subject: [PATCH v2 15/34] dt-bindings: arm: Convert Atmel board/soc bindings to json-schema
+Date: Mon,  3 Dec 2018 15:32:04 -0600
+Message-ID: <20181203213223.16986-16-robh@kernel.org>
 References: <20181203213223.16986-1-robh@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,85 +9,240 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181203213223.16986-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, arm@kernel.org, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, arm@kernel.org, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Convert TI Davinci SoC bindings to DT schema format using json-schema.
+Convert Atmel SoC bindings to DT schema format using json-schema.
 
-Cc: Sekhar Nori <nsekhar@ti.com>
-Cc: Kevin Hilman <khilman@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/arm/davinci.txt       | 25 ------------------
- .../bindings/arm/ti/ti,davinci.yaml           | 26 +++++++++++++++++++
- 2 files changed, 26 insertions(+), 25 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/davinci.txt
- create mode 100644 Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml
+ .../devicetree/bindings/arm/atmel-at91.txt    |  72 ----------
+ .../devicetree/bindings/arm/atmel-at91.yaml   | 133 ++++++++++++++++++
+ 2 files changed, 133 insertions(+), 72 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/atmel-at91.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/atmel-at91.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/davinci.txt b/Documentation/devicetree/bindings/arm/davinci.txt
+diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
 deleted file mode 100644
-index 715622c36260..000000000000
---- a/Documentation/devicetree/bindings/arm/davinci.txt
+index 4bf1b4da7659..000000000000
+--- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
 +++ /dev/null
-@@ -1,25 +0,0 @@
--Texas Instruments DaVinci Platforms Device Tree Bindings
----------------------------------------------------------
+@@ -1,72 +0,0 @@
+-Atmel AT91 device tree bindings.
+-================================
 -
--DA850/OMAP-L138/AM18x Evaluation Module (EVM) board
+-Boards with a SoC of the Atmel AT91 or SMART family shall have the following
+-properties:
+-
 -Required root node properties:
--    - compatible = "ti,da850-evm", "ti,da850";
+-compatible: must be one of:
+- * "atmel,at91rm9200"
 -
--DA850/OMAP-L138/AM18x L138/C6748 Development Kit (LCDK) board
--Required root node properties:
--    - compatible = "ti,da850-lcdk", "ti,da850";
+- * "atmel,at91sam9" for SoCs using an ARM926EJ-S core, shall be extended with
+-   the specific SoC family or compatible:
+-    o "atmel,at91sam9260"
+-    o "atmel,at91sam9261"
+-    o "atmel,at91sam9263"
+-    o "atmel,at91sam9x5" for the 5 series, shall be extended with the specific
+-      SoC compatible:
+-       - "atmel,at91sam9g15"
+-       - "atmel,at91sam9g25"
+-       - "atmel,at91sam9g35"
+-       - "atmel,at91sam9x25"
+-       - "atmel,at91sam9x35"
+-    o "atmel,at91sam9g20"
+-    o "atmel,at91sam9g45"
+-    o "atmel,at91sam9n12"
+-    o "atmel,at91sam9rl"
+-    o "atmel,at91sam9xe"
+- * "atmel,sama5" for SoCs using a Cortex-A5, shall be extended with the specific
+-   SoC family:
+-    o "atmel,sama5d2" shall be extended with the specific SoC compatible:
+-       - "atmel,sama5d27"
+-    o "atmel,sama5d3" shall be extended with the specific SoC compatible:
+-       - "atmel,sama5d31"
+-       - "atmel,sama5d33"
+-       - "atmel,sama5d34"
+-       - "atmel,sama5d35"
+-       - "atmel,sama5d36"
+-    o "atmel,sama5d4" shall be extended with the specific SoC compatible:
+-       - "atmel,sama5d41"
+-       - "atmel,sama5d42"
+-       - "atmel,sama5d43"
+-       - "atmel,sama5d44"
 -
--EnBW AM1808 based CMC board
--Required root node properties:
--    - compatible = "enbw,cmc", "ti,da850;
--
--LEGO MINDSTORMS EV3 (AM1808 based)
--Required root node properties:
--    - compatible = "lego,ev3", "ti,da850";
--
--Generic DaVinci Boards
------------------------
--
--DA850/OMAP-L138/AM18x generic board
--Required root node properties:
--    - compatible = "ti,da850";
-diff --git a/Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml b/Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml
+- * "atmel,samv7" for MCUs using a Cortex-M7, shall be extended with the specific
+-   SoC family:
+-    o "atmel,sams70" shall be extended with the specific MCU compatible:
+-       - "atmel,sams70j19"
+-       - "atmel,sams70j20"
+-       - "atmel,sams70j21"
+-       - "atmel,sams70n19"
+-       - "atmel,sams70n20"
+-       - "atmel,sams70n21"
+-       - "atmel,sams70q19"
+-       - "atmel,sams70q20"
+-       - "atmel,sams70q21"
+-    o "atmel,samv70" shall be extended with the specific MCU compatible:
+-       - "atmel,samv70j19"
+-       - "atmel,samv70j20"
+-       - "atmel,samv70n19"
+-       - "atmel,samv70n20"
+-       - "atmel,samv70q19"
+-       - "atmel,samv70q20"
+-    o "atmel,samv71" shall be extended with the specific MCU compatible:
+-       - "atmel,samv71j19"
+-       - "atmel,samv71j20"
+-       - "atmel,samv71j21"
+-       - "atmel,samv71n19"
+-       - "atmel,samv71n20"
+-       - "atmel,samv71n21"
+-       - "atmel,samv71q19"
+-       - "atmel,samv71q20"
+-       - "atmel,samv71q21"
+diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.yaml b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
 new file mode 100644
-index 000000000000..4326d2cfa15d
+index 000000000000..19431f58b906
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml
-@@ -0,0 +1,26 @@
++++ b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+@@ -0,0 +1,133 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/arm/ti/davinci.yaml#
++$id: http://devicetree.org/schemas/arm/atmel-at91.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Texas Instruments DaVinci Platforms Device Tree Bindings
++title: Atmel AT91 device tree bindings.
 +
 +maintainers:
-+  - Sekhar Nori <nsekhar@ti.com>
++  - Alexandre Belloni <alexandre.belloni@free-electrons.com>
++  - Ludovic Desroches <ludovic.desroches@atmel.com>
 +
-+description:
-+  DA850/OMAP-L138/AM18x based boards
++description: |
++  Boards with a SoC of the Atmel AT91 or SMART family shall have the following
 +
 +properties:
 +  $nodename:
 +    const: '/'
 +  compatible:
-+    items:
-+      - enum:
-+          - ti,da850-evm    # DA850/OMAP-L138/AM18x Evaluation Module (EVM) board
-+          - ti,da850-lcdk   # DA850/OMAP-L138/AM18x L138/C6748 Development Kit (LCDK) board
-+          - enbw,cmc        # EnBW AM1808 based CMC board
-+          - lego,ev3        # LEGO MINDSTORMS EV3 (AM1808 based)
-+      - const: ti,da850
++    oneOf:
++      - items:
++          - const: atmel,at91rm9200
++      - items:
++          - enum:
++              - olimex,sam9-l9260
++          - enum:
++              - atmel,at91sam9260
++              - atmel,at91sam9261
++              - atmel,at91sam9263
++              - atmel,at91sam9g20
++              - atmel,at91sam9g45
++              - atmel,at91sam9n12
++              - atmel,at91sam9rl
++              - atmel,at91sam9xe
++          - const: atmel,at91sam9
++
++      - items:
++          - enum:
++              - atmel,at91sam9g15
++              - atmel,at91sam9g25
++              - atmel,at91sam9g35
++              - atmel,at91sam9x25
++              - atmel,at91sam9x35
++          - const: atmel,at91sam9x5
++          - const: atmel,at91sam9
++
++      - items:
++          - const: atmel,sama5d27
++          - const: atmel,sama5d2
++          - const: atmel,sama5
++
++      - description: Nattis v2 board with Natte v2 power board
++        items:
++          - const: axentia,nattis-2
++          - const: axentia,natte-2
++          - const: axentia,linea
++          - const: atmel,sama5d31
++          - const: atmel,sama5d3
++          - const: atmel,sama5
++
++      - description: TSE-850 v3 board
++        items:
++          - const: axentia,tse850v3
++          - const: axentia,linea
++          - const: atmel,sama5d31
++          - const: atmel,sama5d3
++          - const: atmel,sama5
++
++      - items:
++          - const: axentia,linea
++          - const: atmel,sama5d31
++          - const: atmel,sama5d3
++          - const: atmel,sama5
++
++      - items:
++          - enum:
++              - atmel,sama5d31
++              - atmel,sama5d33
++              - atmel,sama5d34
++              - atmel,sama5d35
++              - atmel,sama5d36
++          - const: atmel,sama5d3
++          - const: atmel,sama5
++
++      - items:
++          - enum:
++              - atmel,sama5d41
++              - atmel,sama5d42
++              - atmel,sama5d43
++              - atmel,sama5d44
++          - const: atmel,sama5d4
++          - const: atmel,sama5
++
++      - items:
++          - enum:
++              - atmel,sams70j19
++              - atmel,sams70j20
++              - atmel,sams70j21
++              - atmel,sams70n19
++              - atmel,sams70n20
++              - atmel,sams70n21
++              - atmel,sams70q19
++              - atmel,sams70q20
++              - atmel,sams70q21
++          - const: atmel,sams70
++          - const: atmel,samv7
++
++      - items:
++          - enum:
++              - atmel,samv70j19
++              - atmel,samv70j20
++              - atmel,samv70n19
++              - atmel,samv70n20
++              - atmel,samv70q19
++              - atmel,samv70q20
++          - const: atmel,samv70
++          - const: atmel,samv7
++
++      - items:
++          - enum:
++              - atmel,samv71j19
++              - atmel,samv71j20
++              - atmel,samv71j21
++              - atmel,samv71n19
++              - atmel,samv71n20
++              - atmel,samv71n21
++              - atmel,samv71q19
++              - atmel,samv71q20
++              - atmel,samv71q21
++          - const: atmel,samv71
++          - const: atmel,samv7
++
 +...
 -- 
 2.19.1
