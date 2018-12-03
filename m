@@ -1,56 +1,40 @@
-From: Jonathan Marek <jonathan-eSc4qw6YbEQ@public.gmane.org>
-Subject: [PATCH v3 4/4] ARM: dts: imx5: add gpu nodes
-Date: Mon,  3 Dec 2018 16:18:16 -0500
-Message-ID: <20181203211816.5129-4-jonathan@marek.ca>
-References: <20181203211816.5129-1-jonathan@marek.ca>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH 7/7 v2] ARM: dts: pxa3xx: Add Raumfeld DTS files
+Date: Mon, 03 Dec 2018 22:31:10 +0100
+Message-ID: <874lbuwb4x.fsf@belgarion.home>
+References: <20181130175543.32628-1-daniel@zonque.org>
+ <20181130175543.32628-8-daniel@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181203211816.5129-1-jonathan-eSc4qw6YbEQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris.Healy-c8ZVq/bFV1I@public.gmane.org, Pengutronix Kernel Team <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, NXP Linux Team <linux-imx-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181130175543.32628-8-daniel@zonque.org> (Daniel Mack's message
+ of "Fri, 30 Nov 2018 18:55:43 +0100")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Mack <daniel@zonque.org>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, haojian.zhuang@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogSm9uYXRoYW4gTWFyZWsgPGpvbmF0aGFuQG1hcmVrLmNhPgotLS0KIGFy
-Y2gvYXJtL2Jvb3QvZHRzL2lteDUxLmR0c2kgfCAxNyArKysrKysrKysrKysrKysrKwogYXJjaC9h
-cm0vYm9vdC9kdHMvaW14NTMuZHRzaSB8IDE3ICsrKysrKysrKysrKysrKysrCiAyIGZpbGVzIGNo
-YW5nZWQsIDM0IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9p
-bXg1MS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NTEuZHRzaQppbmRleCA2N2Q0NjI3MTUu
-LmU5YTdiYmNlOSAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NTEuZHRzaQorKysg
-Yi9hcmNoL2FybS9ib290L2R0cy9pbXg1MS5kdHNpCkBAIC02MjgsNSArNjI4LDIyIEBACiAJCQkJ
-Y2xvY2stbmFtZXMgPSAiaXBnIiwgImFoYiI7CiAJCQl9OwogCQl9OworCisJCWdwdTogZ3B1QDMw
-MDAwMDAwIHsKKwkJCWNvbXBhdGlibGUgPSAiYW1kLGltYWdlb24tMjAwLjEiLCAiYW1kLGltYWdl
-b24iOworCQkJcmVnID0gPDB4MzAwMDAwMDAgMHgyMDAwMD47CisJCQlyZWctbmFtZXMgPSAia2dz
-bF8zZDBfcmVnX21lbW9yeSI7CisJCQlpbnRlcnJ1cHRzID0gPDEyPjsKKwkJCWludGVycnVwdC1u
-YW1lcyA9ICJrZ3NsXzNkMF9pcnEiOworCQkJY2xvY2tzID0gPCZjbGtzIElNWDVfQ0xLX0dQVTNE
-X0dBVEU+LCA8JmNsa3MgSU1YNV9DTEtfR0FSQl9HQVRFPjsKKwkJCWNsb2NrLW5hbWVzID0gImNv
-cmVfY2xrIiwgIm1lbV9pZmFjZV9jbGsiOworCisJCQlxY29tLGdwdS1wd3JsZXZlbHMgeworCQkJ
-CWNvbXBhdGlibGUgPSAicWNvbSxncHUtcHdybGV2ZWxzIjsKKwkJCQlxY29tLGdwdS1wd3JsZXZl
-bEAwIHsKKwkJCQkJcWNvbSxncHUtZnJlcSA9IDwxNjYyNTAwMDA+OworCQkJCX07CisJCQl9Owor
-CQl9OwogCX07CiB9OwpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NTMuZHRzaSBi
-L2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLmR0c2kKaW5kZXggMjA3ZWI1NTdjLi41ODZkNDU1ODYg
-MTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLmR0c2kKKysrIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvaW14NTMuZHRzaQpAQCAtODM4LDUgKzgzOCwyMiBAQAogCQkJcmVnID0gPDB4Zjgw
-MDAwMDAgMHgyMDAwMD47CiAJCQljbG9ja3MgPSA8JmNsa3MgSU1YNV9DTEtfT0NSQU0+OwogCQl9
-OworCisJCWdwdTogZ3B1QDMwMDAwMDAwIHsKKwkJCWNvbXBhdGlibGUgPSAiYW1kLGltYWdlb24t
-MjAwLjAiLCAiYW1kLGltYWdlb24iOworCQkJcmVnID0gPDB4MzAwMDAwMDAgMHgyMDAwMD47CisJ
-CQlyZWctbmFtZXMgPSAia2dzbF8zZDBfcmVnX21lbW9yeSI7CisJCQlpbnRlcnJ1cHRzID0gPDEy
-PjsKKwkJCWludGVycnVwdC1uYW1lcyA9ICJrZ3NsXzNkMF9pcnEiOworCQkJY2xvY2tzID0gPCZj
-bGtzIElNWDVfQ0xLX0dQVTNEX0dBVEU+LCA8JmNsa3MgSU1YNV9DTEtfR0FSQl9HQVRFPjsKKwkJ
-CWNsb2NrLW5hbWVzID0gImNvcmVfY2xrIiwgIm1lbV9pZmFjZV9jbGsiOworCisJCQlxY29tLGdw
-dS1wd3JsZXZlbHMgeworCQkJCWNvbXBhdGlibGUgPSAicWNvbSxncHUtcHdybGV2ZWxzIjsKKwkJ
-CQlxY29tLGdwdS1wd3JsZXZlbEAwIHsKKwkJCQkJcWNvbSxncHUtZnJlcSA9IDwyMDAwMDAwMDA+
-OworCQkJCX07CisJCQl9OworCQl9OwogCX07CiB9OwotLSAKMi4xNy4xCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0
-CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+Daniel Mack <daniel@zonque.org> writes:
+
+> This patch adds a set of DTS files that support all PXA3xx based Raumfeld
+> audio hardware devices.
+>
+> Common nodes are factored out into 'common' and 'tuneable-clock' include
+> files to keep the top-level DTS files smaller.
+>
+> Signed-off-by: Daniel Mack <daniel@zonque.org>
+Queued into pxa/dt, thanks.
+
+Cheers.
+
+--
+Robert
