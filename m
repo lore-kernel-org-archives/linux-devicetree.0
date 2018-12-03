@@ -1,193 +1,101 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH] ARM: dts: vf: Fix memory node duplication
-Date: Mon, 03 Dec 2018 14:40:38 +0100
-Message-ID: <d055ad83728d3fe5f7d7cd4403158987@agner.ch>
-References: <1543625092-24498-1-git-send-email-festevam@gmail.com>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: Re: [PATCH V5 2/2] base/drivers/arch_topology: Default dmips-mhz if
+ they are not set in DT
+Date: Mon, 3 Dec 2018 14:46:09 +0100
+Message-ID: <2b050e93-f734-f2f3-ac67-a30d37bf1950@arm.com>
+References: <1543325060-1599-1-git-send-email-daniel.lezcano@linaro.org>
+ <1543325060-1599-2-git-send-email-daniel.lezcano@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1543625092-24498-1-git-send-email-festevam@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1543325060-1599-2-git-send-email-daniel.lezcano@linaro.org>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, rjw@rjwysocki.net
+Cc: linux-kernel@vger.kernel.org, viresh.kumar@linaro.org, Chris Redpath <chris.redpath@linaro.org>, Quentin Perret <quentin.perret@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh@kernel.org>, Quentin Perret <quentin.perret@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Li Yang <leoyang.li@nxp.com>, Olof Johansson <olof@lixom.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 01.12.2018 01:44, Fabio Estevam wrote:
-> Boards based on vf500/vf600 have duplicate memory nodes:
-> 
-> - One coming from the board dts file: memory@
-> 
-> - One coming from the vf500.dtsi/vf610m4.dtsi files.
-> 
-> Fix the duplication by removing the memory node from the dtsi file
-> and by adding 'device_type = "memory";' in the board dts.
+Hi Daniel,
 
-Looks good to me:
++cc: Russell King <linux@armlinux.org.uk>
 
-Reviewed-by: Stefan Agner <stefan@agner.ch>
+On 11/27/18 2:24 PM, Daniel Lezcano wrote:
+> In the case of asymmetric SoC with the same micro-architecture, we
+> have a group of CPUs with smaller OPPs than the other group. One
+> example is the 96boards dragonboard 820c. There is no dmips/MHz
+> difference between both groups, so no need to specify the values in
+> the DT. Unfortunately, without these defined, there is no scaling
+> capacity computation triggered, so we need to write
+> 'capacity-dmips-mhz' for each CPU with the same value in order to
+> force the scaled capacity computation.
+> 
+> In order to fix this situation, allocate 'raw_capacity' so the pointer
+> is set and the init_cpu_capacity_callback() function can be called.
+> 
+> This was tested on db820c:
+>   - specified values in the DT (correct results)
+>   - partial values defined in the DT (error + fallback to defaults)
+>   - no specified values in the DT (correct results)
+> 
+> correct results are:
+>    cat /sys/devices/system/cpu/cpu*/cpu_capacity
+>     758
+>     758
+>    1024
+>    1024
+> 
+>    ... respectively for CPU0, CPU1, CPU2 and CPU3.
+> 
+> That reflects the capacity for the max frequencies 1593600 and 2150400.
 
-> 
-> Reported-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
-> ---
->  arch/arm/boot/dts/vf500-colibri.dtsi      | 1 +
->  arch/arm/boot/dts/vf500.dtsi              | 1 -
->  arch/arm/boot/dts/vf610-bk4.dts           | 1 +
->  arch/arm/boot/dts/vf610-colibri.dtsi      | 1 +
->  arch/arm/boot/dts/vf610-cosmic.dts        | 1 +
->  arch/arm/boot/dts/vf610-twr.dts           | 1 +
->  arch/arm/boot/dts/vf610-zii-cfu1.dts      | 1 +
->  arch/arm/boot/dts/vf610-zii-dev.dtsi      | 1 +
->  arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts | 1 +
->  arch/arm/boot/dts/vf610m4-colibri.dts     | 1 +
->  arch/arm/boot/dts/vf610m4.dtsi            | 1 -
->  11 files changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/vf500-colibri.dtsi
-> b/arch/arm/boot/dts/vf500-colibri.dtsi
-> index 2e7e3ce..237b024 100644
-> --- a/arch/arm/boot/dts/vf500-colibri.dtsi
-> +++ b/arch/arm/boot/dts/vf500-colibri.dtsi
-> @@ -47,6 +47,7 @@
->  	compatible = "toradex,vf610-colibri_vf50", "fsl,vf500";
->  
->  	memory@80000000 {
-> +		device_type = "memory";
->  		reg = <0x80000000 0x8000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/vf500.dtsi b/arch/arm/boot/dts/vf500.dtsi
-> index 76a0949..b0ec475 100644
-> --- a/arch/arm/boot/dts/vf500.dtsi
-> +++ b/arch/arm/boot/dts/vf500.dtsi
-> @@ -10,7 +10,6 @@
->  	#size-cells = <1>;
->  	chosen { };
->  	aliases { };
-> -	memory { device_type = "memory"; };
->  
->  	cpus {
->  		#address-cells = <1>;
-> diff --git a/arch/arm/boot/dts/vf610-bk4.dts b/arch/arm/boot/dts/vf610-bk4.dts
-> index cab9571..689c893 100644
-> --- a/arch/arm/boot/dts/vf610-bk4.dts
-> +++ b/arch/arm/boot/dts/vf610-bk4.dts
-> @@ -16,6 +16,7 @@
->  	};
->  
->  	memory@80000000 {
-> +		device_type = "memory";
->  		reg = <0x80000000 0x8000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/vf610-colibri.dtsi
-> b/arch/arm/boot/dts/vf610-colibri.dtsi
-> index aeaf99f..05c9a39 100644
-> --- a/arch/arm/boot/dts/vf610-colibri.dtsi
-> +++ b/arch/arm/boot/dts/vf610-colibri.dtsi
-> @@ -47,6 +47,7 @@
->  	compatible = "toradex,vf610-colibri_vf61", "fsl,vf610";
->  
->  	memory@80000000 {
-> +		device_type = "memory";
->  		reg = <0x80000000 0x10000000>;
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/vf610-cosmic.dts
-> b/arch/arm/boot/dts/vf610-cosmic.dts
-> index a3014e8..ea1b996 100644
-> --- a/arch/arm/boot/dts/vf610-cosmic.dts
-> +++ b/arch/arm/boot/dts/vf610-cosmic.dts
-> @@ -20,6 +20,7 @@
->  	};
->  
->  	memory@80000000 {
-> +		device_type = "memory";
->  		reg = <0x80000000 0x10000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
-> index 59fceea..dbb5ffc 100644
-> --- a/arch/arm/boot/dts/vf610-twr.dts
-> +++ b/arch/arm/boot/dts/vf610-twr.dts
-> @@ -14,6 +14,7 @@
->  	};
->  
->  	memory@80000000 {
-> +		device_type = "memory";
->  		reg = <0x80000000 0x8000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/vf610-zii-cfu1.dts
-> b/arch/arm/boot/dts/vf610-zii-cfu1.dts
-> index b76c3d04..7cdcc5f 100644
-> --- a/arch/arm/boot/dts/vf610-zii-cfu1.dts
-> +++ b/arch/arm/boot/dts/vf610-zii-cfu1.dts
-> @@ -16,6 +16,7 @@
->  	};
->  
->  	memory@80000000 {
-> +		device_type = "memory";
->  		reg = <0x80000000 0x20000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/vf610-zii-dev.dtsi
-> b/arch/arm/boot/dts/vf610-zii-dev.dtsi
-> index 5ae5abf..19eb4a8 100644
-> --- a/arch/arm/boot/dts/vf610-zii-dev.dtsi
-> +++ b/arch/arm/boot/dts/vf610-zii-dev.dtsi
-> @@ -50,6 +50,7 @@
->  	};
->  
->  	memory@80000000 {
-> +		device_type = "memory";
->  		reg = <0x80000000 0x20000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
-> b/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
-> index fe35766..757af56 100644
-> --- a/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
-> +++ b/arch/arm/boot/dts/vf610-zii-ssmb-spu3.dts
-> @@ -24,6 +24,7 @@
->  	};
->  
->  	memory@80000000 {
-> +		device_type = "memory";
->  		reg = <0x80000000 0x20000000>;
->  	};
->  
-> diff --git a/arch/arm/boot/dts/vf610m4-colibri.dts
-> b/arch/arm/boot/dts/vf610m4-colibri.dts
-> index ca62495..d4bc0e3 100644
-> --- a/arch/arm/boot/dts/vf610m4-colibri.dts
-> +++ b/arch/arm/boot/dts/vf610m4-colibri.dts
-> @@ -55,6 +55,7 @@
->  	};
->  
->  	memory@8c000000 {
-> +		device_type = "memory";
->  		reg = <0x8c000000 0x3000000>;
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/vf610m4.dtsi b/arch/arm/boot/dts/vf610m4.dtsi
-> index 8293276..76bbfd5 100644
-> --- a/arch/arm/boot/dts/vf610m4.dtsi
-> +++ b/arch/arm/boot/dts/vf610m4.dtsi
-> @@ -50,7 +50,6 @@
->  	#size-cells = <1>;
->  	chosen { };
->  	aliases { };
-> -	memory { device_type = "memory"; };
->  };
->  
->  &mscm_ir {
+[...]
+
+I'm afraid that this change is incompatible with the still existing 
+cpu_efficiency interface we have in Arm32 for A15/A7 systems like Arm TC2:
+
+In case you specify clock-frequency dt properties per cpu for such a 
+system, the cpu_capacity values are determined via the cpu_efficiency 
+code in arch/arm/kernel/topology.c.
+
+So on Arm TC2 with clock-frequency = <1000000000> [A15] and <800000000> 
+[A7] you get:
+
+root@linaro-nano:~# cat /sys/devices/system/cpu/cpu*/cpu_capacity
+606
+1441
+1441
+606
+606
+
+With your patches on top (cpu_capacity functionality in 
+drivers/base/arch_topology.c does not have to be switched on by 
+specifying capacity-dmips-mhz dt properties anymore) we end up scaling 
+by max frequency again:
+
+root@linaro-nano:~# cat /sys/devices/system/cpu/cpu*/cpu_capacity
+358
+1024
+1024
+358
+358
+
+I tried to remove the cpu_efficiency based API a year ago but Russell 
+pointed out that the compatibility has to be maintained for longer:
+
+https://lore.kernel.org/lkml/20171024102718.16113-1-dietmar.eggemann@arm.com/
+
+I assume that the capacity-dmips-mhz dt property is like a switch to 
+turn this functionality on for big.Little and so called gold/silver 
+platforms, which have cores with the same uArch but in frequency domains 
+with different max frequency values.
+
+So what's wrong with specifying capacity-dmips-mhz = <1024> for all 
+cores for those gold/silver platforms? I don't expect that there will be 
+so many of them. And normal SMP platforms (w/o frequency domains w/o 
+different max frequency values) don't have to execute this code.
+
+IMHO, at least we should remove the cpu_efficiency bits before we do 
+this change.
+
+[...]
