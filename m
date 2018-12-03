@@ -1,111 +1,74 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v2 5/5] arm: dts: exynos4: opp-suspend in DMC and
- leftbus
-Date: Mon, 3 Dec 2018 18:48:52 +0100
-Message-ID: <fed94fcf-74f4-a6e4-1405-12fb67ed5c9f@partner.samsung.com>
-References: <1543847475-7600-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20181203143135eucas1p165fe6183ae90de7906f9683cb41ff4c1@eucas1p1.samsung.com>
-        <1543847475-7600-6-git-send-email-l.luba@partner.samsung.com>
-        <20181203172251.GA15124@kozik-lap>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v2 06/15] arm: dts: Add devicetree for OrangePi 2G IoT board
+Date: Mon, 3 Dec 2018 09:53:00 -0800
+Message-ID: <CAOesGMi=qFB0jTTAzTYxBduYf_7RVwOZkKNjckpqg6tbd3sPow@mail.gmail.com>
+References: <20181121033652.12247-1-manivannan.sadhasivam@linaro.org>
+ <20181121033652.12247-7-manivannan.sadhasivam@linaro.org> <CAL_JsqJ=88ORdgbRDn+VWk9=ydShidqwOxdAMfDbH4W2drnXzA@mail.gmail.com>
+ <CAOesGMgSxwcmBLDvxsvcCJ9-NvJ3-wK8fZBZV2ZNuzAa1idi3w@mail.gmail.com> <CAL_JsqLZY_5rZ35YSGeH7wmEZoLP1TjG+0n4BWGiUBwOFSq-Vw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181203172251.GA15124@kozik-lap>
-Content-Language: en-US
+In-Reply-To: <CAL_JsqLZY_5rZ35YSGeH7wmEZoLP1TjG+0n4BWGiUBwOFSq-Vw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, cw00.choi@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-serial@vger.kernel.org, Amit Kucheria <amit.kucheria@linaro.org>, LinusW <linus.walleij@linaro.org>, zhao_steven@263.net, overseas.sales@unisoc.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+On Mon, Dec 3, 2018 at 9:21 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Mon, Dec 3, 2018 at 11:11 AM Olof Johansson <olof@lixom.net> wrote:
+> >
+> > On Mon, Dec 3, 2018 at 7:54 AM Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Tue, Nov 20, 2018 at 9:38 PM Manivannan Sadhasivam
+> > > <manivannan.sadhasivam@linaro.org> wrote:
+> > > >
+> > > > Add initial devicetree support for OrangePi 2G IoT board from Xunlo=
+ng.
+> > > >
+> > > > Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.=
+org>
+> > > > ---
+> > > >  arch/arm/boot/dts/Makefile                    |  2 +
+> > > >  .../boot/dts/rda8810pl-orangepi-2g-iot.dts    | 40 +++++++++++++++=
+++++
+> > > >  2 files changed, 42 insertions(+)
+> > > >  create mode 100644 arch/arm/boot/dts/rda8810pl-orangepi-2g-iot.dts
+> > > >
+> > > > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefil=
+e
+> > > > index b0e966d625b9..a0fdad8f10dd 100644
+> > > > --- a/arch/arm/boot/dts/Makefile
+> > > > +++ b/arch/arm/boot/dts/Makefile
+> > > > @@ -806,6 +806,8 @@ dtb-$(CONFIG_ARCH_QCOM) +=3D \
+> > > >         qcom-msm8974-sony-xperia-castor.dtb \
+> > > >         qcom-msm8974-sony-xperia-honami.dtb \
+> > > >         qcom-mdm9615-wp8548-mangoh-green.dtb
+> > > > +dtb-$(CONFIG_ARCH_RDA) +=3D \
+> > > > +       rda8810pl-orangepi-2g-iot.dtb
+> > > >  dtb-$(CONFIG_ARCH_REALVIEW) +=3D \
+> > >
+> > > Question for Arnd/Olof: can we *please* start putting new SoC familie=
+s
+> > > in sub-dirs?
+> >
+> > I think we're at a point where it's becoming quite awkward to keep it
+> > in a flat directory, yes.
+> >
+> > Best way to handle this is usually right before the closing of a merge
+> > window, so let's do it then. It'll be a conflict-ridden mess if we try
+> > to stage something in -next, so I'd rather just do it directly in our
+> > tree as a one-shot thing.
+>
+> While I'd like to see the whole thing converted, I was only asking
+> about this one platform. That should be doable now, right?
 
-On 12/3/18 6:22 PM, Krzysztof Kozlowski wrote:
-> On Mon, Dec 03, 2018 at 03:31:15PM +0100, Lukasz Luba wrote:
->> Mark the state for devfreq device while entring suspend/resume process.
->>
->> The patch is based on earlier work by Tobias Jakobi.
->>
->> Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
->> Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   arch/arm/boot/dts/exynos4210.dtsi | 2 ++
->>   arch/arm/boot/dts/exynos4412.dtsi | 2 ++
->>   2 files changed, 4 insertions(+)
-> 
-> Thanks, applied with some minor commit msg changes. In general, please
-> take care about title prefix (git log --oneline
-> arch/arm/boot/dts/exynos*) and always explain why you are doing this.
-Thank you that you have applied and for the hint.
-
-> You just mentioned "what" but that is pretty obvious by looking at
-> commit contents. The commit msg should answer why these should be marked
-> as opp-suspend and why these values were chosen.
-> 
-> The cover letter just briefly describes "issue with devfreq devices' frequency
-> during suspend/resume"... but what issue?
-In the cover letter there is sentence:
-'The suspending device has now chance to set proper
-state when the system is going for suspend. This phase is the right place
-to set needed frequences for the next resume process.'
-Generally speaking, there is a need of setting the right
-frequency/voltage, because we need that frequency during resume,
-i.e. for booting CPUs (which are poked earlier during resume than the 
-buses in this design).
-
-Regards,
-Lukasz
+I'd rather apply this to current scheme and then move everything once,
+instead of having maintainers go "Oh, I guess I need to move mine" and
+we end up with an onslaught of conflicting pull requests to move
+things apart.
 
 
-> 
-> Best regards,
-> Krzysztof
-> 
->>
->> diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
->> index b6091c2..4429b72 100644
->> --- a/arch/arm/boot/dts/exynos4210.dtsi
->> +++ b/arch/arm/boot/dts/exynos4210.dtsi
->> @@ -298,6 +298,7 @@
->>   			opp-400000000 {
->>   				opp-hz = /bits/ 64 <400000000>;
->>   				opp-microvolt = <1150000>;
->> +				opp-suspend;
->>   			};
->>   		};
->>   
->> @@ -367,6 +368,7 @@
->>   			};
->>   			opp-200000000 {
->>   				opp-hz = /bits/ 64 <200000000>;
->> +				opp-suspend;
->>   			};
->>   		};
->>   	};
->> diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
->> index 51f72f0..908c0c4 100644
->> --- a/arch/arm/boot/dts/exynos4412.dtsi
->> +++ b/arch/arm/boot/dts/exynos4412.dtsi
->> @@ -432,6 +432,7 @@
->>   			opp-400000000 {
->>   				opp-hz = /bits/ 64 <400000000>;
->>   				opp-microvolt = <1050000>;
->> +				opp-suspend;
->>   			};
->>   		};
->>   
->> @@ -520,6 +521,7 @@
->>   			opp-200000000 {
->>   				opp-hz = /bits/ 64 <200000000>;
->>   				opp-microvolt = <1000000>;
->> +				opp-suspend;
->>   			};
->>   		};
->>   
->> -- 
->> 2.7.4
->>
-> 
-> 
+-Olof
