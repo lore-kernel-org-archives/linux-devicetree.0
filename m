@@ -1,176 +1,67 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v1 08/12] usb: roles: Add usb role switch notifier.
-Date: Mon, 3 Dec 2018 14:38:24 +0200
-Message-ID: <20181203123824.GE24338@kuha.fi.intel.com>
-References: <20181203034515.91412-1-chenyu56@huawei.com>
- <20181203034515.91412-9-chenyu56@huawei.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 12/36] dt-bindings: arm: Convert cpu binding to
+ json-schema
+Date: Mon, 3 Dec 2018 12:40:52 +0000
+Message-ID: <20181203124039.GA25097@arm.com>
+References: <20181005165848.3474-1-robh@kernel.org>
+ <20181005165848.3474-13-robh@kernel.org>
+ <035ae23f-3c92-ffd9-0753-abbd604c5c02@xilinx.com>
+ <CAL_JsqJJkcbxvfbVVOTPb5gavPgypO-Cd05C6qpvbvPMd1G81g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181203034515.91412-9-chenyu56@huawei.com>
+In-Reply-To: <CAL_JsqJJkcbxvfbVVOTPb5gavPgypO-Cd05C6qpvbvPMd1G81g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yu Chen <chenyu56@huawei.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, John Stultz <john.stultz@linaro.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Michal Simek <michal.simek@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Tom Rini <trini@konsulko.com>, Kumar Gala <kumar.gala@linaro.org>, Grant Likely <glikely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Matthias
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 03, 2018 at 11:45:11AM +0800, Yu Chen wrote:
-> This patch adds notifier for drivers want to be informed of the usb role switch.
-
-I think in this case it would be good to explain a little for what we
-need the notifier for.
-
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: John Stultz <john.stultz@linaro.org>
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+On Fri, Nov 30, 2018 at 12:00:05PM -0600, Rob Herring wrote:
+> On Thu, Nov 8, 2018 at 2:49 AM Michal Simek <michal.simek@xilinx.com> wrote:
+> >
+> > Hi Rob,
+> >
+> > On 05. 10. 18 18:58, Rob Herring wrote:
+> > > Convert ARM CPU binding to DT schema format using json-schema.
+> > >
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> > > Cc: devicetree@vger.kernel.org
+> > > Cc: linux-arm-kernel@lists.infradead.org
+> > > Cc: linux-mediatek@lists.infradead.org
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > >  .../devicetree/bindings/arm/cpus.txt          | 490 -----------------
+> > >  .../devicetree/bindings/arm/cpus.yaml         | 503 ++++++++++++++++++
+> > >  2 files changed, 503 insertions(+), 490 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/arm/cpus.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/arm/cpus.yaml
 > 
-> --
-> v0:
-> The patch is provided by Heikki Krogerus. I modified and test it
-> on Hikey960 platform.
-
-I don't think I actually made a "patch" for this. The "diff" I made
-showing the idea does not count, so you should not sign off the patch
-with my address.
-
-In this case I believe something like "Suggested-by" should be used
-instead of SoB tag:
-
-        Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-
-Side note: If this was from me, then there should be "from" line with
-my address as well.
-
-> --
-> ---
->  drivers/usb/common/roles.c | 20 +++++++++++++++++++-
->  include/linux/usb/role.h   | 46 ++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 65 insertions(+), 1 deletion(-)
+> [...]
 > 
-> diff --git a/drivers/usb/common/roles.c b/drivers/usb/common/roles.c
-> index 0f48090c5c30..bfd7a988b64c 100644
-> --- a/drivers/usb/common/roles.c
-> +++ b/drivers/usb/common/roles.c
-> @@ -21,6 +21,7 @@ struct usb_role_switch {
->  	struct device dev;
->  	struct mutex lock; /* device lock*/
->  	enum usb_role role;
-> +	struct blocking_notifier_head nh;
->  
->  	/* From descriptor */
->  	struct device *usb2_port;
-> @@ -50,8 +51,10 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
->  	mutex_lock(&sw->lock);
->  
->  	ret = sw->set(sw->dev.parent, role);
-> -	if (!ret)
-> +	if (!ret) {
->  		sw->role = role;
-> +		blocking_notifier_call_chain(&sw->nh, role, NULL);
-> +	}
->  
->  	mutex_unlock(&sw->lock);
->  
-> @@ -59,6 +62,20 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
->  }
->  EXPORT_SYMBOL_GPL(usb_role_switch_set_role);
->  
-> +int usb_role_switch_register_notifier(struct usb_role_switch *sw,
-> +				      struct notifier_block *nb)
-> +{
-> +	return blocking_notifier_chain_register(&sw->nh, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(usb_role_switch_register_notifier);
-> +
-> +int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
-> +					struct notifier_block *nb)
-> +{
-> +	return blocking_notifier_chain_unregister(&sw->nh, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(usb_role_switch_unregister_notifier);
-> +
->  /**
->   * usb_role_switch_get_role - Get the USB role for a switch
->   * @sw: USB role switch
-> @@ -297,6 +314,7 @@ usb_role_switch_register(struct device *parent,
->  		return ERR_PTR(-ENOMEM);
->  
->  	mutex_init(&sw->lock);
-> +	BLOCKING_INIT_NOTIFIER_HEAD(&sw->nh);
->  
->  	sw->allow_userspace_control = desc->allow_userspace_control;
->  	sw->usb2_port = desc->usb2_port;
-> diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
-> index edc51be4a77c..c97d4be91ada 100644
-> --- a/include/linux/usb/role.h
-> +++ b/include/linux/usb/role.h
-> @@ -40,6 +40,8 @@ struct usb_role_switch_desc {
->  	bool allow_userspace_control;
->  };
->  
-> +
-> +#if IS_ENABLED(CONFIG_USB_ROLE_SWITCH)
->  int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
->  enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
->  struct usb_role_switch *usb_role_switch_get(struct device *dev);
-> @@ -49,5 +51,49 @@ struct usb_role_switch *
->  usb_role_switch_register(struct device *parent,
->  			 const struct usb_role_switch_desc *desc);
->  void usb_role_switch_unregister(struct usb_role_switch *sw);
-> +int usb_role_switch_register_notifier(struct usb_role_switch *sw,
-> +				      struct notifier_block *nb);
-> +int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
-> +					struct notifier_block *nb);
-> +#else
-> +static inline int usb_role_switch_set_role(struct usb_role_switch *sw,
-> +		enum usb_role role)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
-> +{
-> +	return USB_ROLE_NONE;
-> +}
-> +
-> +static inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
-> +{
-> +	return ERR_PTR(-ENODEV);
-> +}
-> +
-> +static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
-> +
-> +static inline struct usb_role_switch *
-> +usb_role_switch_register(struct device *parent,
-> +			 const struct usb_role_switch_desc *desc)
-> +{
-> +	return ERR_PTR(-ENODEV);
-> +}
-> +
-> +static inline void usb_role_switch_unregister(struct usb_role_switch *sw) { }
-> +
-> +static int usb_role_switch_register_notifier(struct usb_role_switch *sw,
-> +				      struct notifier_block *nb)
-> +{
-> +	return -ENODEV;
-> +}
-> +
-> +static int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
-> +					struct notifier_block *nb)
-> +{
-> +	return -ENODEV;
-> +}
-> +#endif
->  
->  #endif /* __LINUX_USB_ROLE_H */
-> -- 
-> 2.15.0-rc2
+> > I have take a look at xilinx part of this and try to build it for arm64
+> > platforms and I see errors coming from this cpu description.
+> > /root/linux/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dt.yaml:
+> > cpu@0:compatible: ['arm,cortex-a53', 'arm,armv8'] is too long
+> > /root/linux/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dt.yaml:
+> > cpu@0:compatible: Additional items are not allowed ('arm,armv8' was
+> > unexpected)
+> 
+> Thanks for actually giving this a spin!
+> 
+> > Based on grep this is used in a lot of places
+> > compatible = "arm,cortex-a53", "arm,armv8";
+> >
+> > Should this be moved to just simple?
+> > compatible = "arm,cortex-a53";
+> 
+> I'd normally go with the majority which would be to keep it. However,
+> 'arm,armv8' is of questionable value, isn't actually documented, and
+> doesn't exist for any other version of the architecture. So we should
+> kill it IMO.
 
-thanks,
+I'd prefer to keep it around, since that's what's used to describe the CPUs
+on the fastmodel iirc.
 
--- 
-heikki
+Will
