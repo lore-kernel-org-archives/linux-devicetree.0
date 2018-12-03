@@ -1,7 +1,7 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 20/34] dt-bindings: arm: Convert TI nspire board/soc bindings to json-schema
-Date: Mon,  3 Dec 2018 15:32:09 -0600
-Message-ID: <20181203213223.16986-21-robh@kernel.org>
+Subject: [PATCH v2 21/34] dt-bindings: arm: Convert Oxford Semi board/soc bindings to json-schema
+Date: Mon,  3 Dec 2018 15:32:10 -0600
+Message-ID: <20181203213223.16986-22-robh@kernel.org>
 References: <20181203213223.16986-1-robh@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,70 +9,74 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181203213223.16986-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, arm@kernel.org, Mark Rutland <mark.rutland@arm.com>
+Cc: Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, arm@kernel.org, Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-oxnas@groups.io
 List-Id: devicetree@vger.kernel.org
 
-Convert TI NSpire SoC bindings to DT schema format using json-schema.
+Convert Oxford Semi SoC bindings to DT schema format using json-schema.
 
 Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>
 Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-oxnas@groups.io
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/arm/nspire.txt        | 14 -----------
- .../devicetree/bindings/arm/ti/nspire.yaml    | 24 +++++++++++++++++++
- 2 files changed, 24 insertions(+), 14 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/nspire.txt
- create mode 100644 Documentation/devicetree/bindings/arm/ti/nspire.yaml
+ .../devicetree/bindings/arm/oxnas.txt         | 14 -----------
+ .../devicetree/bindings/arm/oxnas.yaml        | 25 +++++++++++++++++++
+ 2 files changed, 25 insertions(+), 14 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/oxnas.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/oxnas.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/nspire.txt b/Documentation/devicetree/bindings/arm/nspire.txt
+diff --git a/Documentation/devicetree/bindings/arm/oxnas.txt b/Documentation/devicetree/bindings/arm/oxnas.txt
 deleted file mode 100644
-index 4d08518bd176..000000000000
---- a/Documentation/devicetree/bindings/arm/nspire.txt
+index ac64e60f99f1..000000000000
+--- a/Documentation/devicetree/bindings/arm/oxnas.txt
 +++ /dev/null
 @@ -1,14 +0,0 @@
--TI-NSPIRE calculators
+-Oxford Semiconductor OXNAS SoCs Family device tree bindings
+--------------------------------------------
 -
--Required properties:
--- compatible: Compatible property value should contain "ti,nspire".
--	CX models should have "ti,nspire-cx"
--	Touchpad models should have "ti,nspire-tp"
--	Clickpad models should have "ti,nspire-clp"
+-Boards with the OX810SE SoC shall have the following properties:
+-  Required root node property:
+-    compatible: "oxsemi,ox810se"
 -
--Example:
+-Boards with the OX820 SoC shall have the following properties:
+-  Required root node property:
+-    compatible: "oxsemi,ox820"
 -
--/ {
--	model = "TI-NSPIRE CX";
--	compatible = "ti,nspire-cx";
--	...
-diff --git a/Documentation/devicetree/bindings/arm/ti/nspire.yaml b/Documentation/devicetree/bindings/arm/ti/nspire.yaml
+-Board compatible values:
+-  - "wd,mbwe" (OX810SE)
+-  - "cloudengines,pogoplugv3" (OX820)
+diff --git a/Documentation/devicetree/bindings/arm/oxnas.yaml b/Documentation/devicetree/bindings/arm/oxnas.yaml
 new file mode 100644
-index 000000000000..e372b43da62f
+index 000000000000..6ae51ef513be
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/ti/nspire.yaml
-@@ -0,0 +1,24 @@
++++ b/Documentation/devicetree/bindings/arm/oxnas.yaml
+@@ -0,0 +1,25 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/arm/ti/nspire.yaml#
++$id: http://devicetree.org/schemas/arm/oxnas.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: TI-NSPIRE calculators
++title: Oxford Semiconductor OXNAS SoCs Family device tree bindings
 +
 +maintainers:
-+  - Daniel Tang <dt.tangr@gmail.com>
++  - Neil Armstrong <narmstrong@baylibre.com>
 +
 +properties:
 +  $nodename:
 +    const: '/'
 +  compatible:
-+    items:
-+      - enum:
-+          # CX models
-+          - ti,nspire-cx
-+          # Touchpad models
-+          - ti,nspire-tp
-+          # Clickpad models
-+          - ti,nspire-clp
-+...
++    oneOf:
++      - items:
++        - enum:
++            - wd,mbwe
++        - const: oxsemi,ox810se
++
++      - items:
++        - enum:
++            - cloudengines,pogoplugv3
++        - const: oxsemi,ox820
 -- 
 2.19.1
