@@ -1,63 +1,92 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 05/12] PCI: aardvark: add suspend to RAM support
-Date: Mon, 3 Dec 2018 16:38:46 +0100
-Message-ID: <20181203163846.494904f9@xps13>
-References: <20181123141831.8214-1-miquel.raynal@bootlin.com>
-        <20181123141831.8214-6-miquel.raynal@bootlin.com>
-        <20181203102708.GA6090@e107981-ln.cambridge.arm.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v6 2/2] media: platform: Add Aspeed Video Engine driver
+Date: Mon, 3 Dec 2018 16:43:48 +0100
+Message-ID: <d876ac01-238f-7e74-2738-f1c878921c77@xs4all.nl>
+References: <1543347457-59224-1-git-send-email-eajames@linux.ibm.com>
+ <1543347457-59224-3-git-send-email-eajames@linux.ibm.com>
+ <1d5f3260-2d95-32b2-090e-2f57ae9e6833@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181203102708.GA6090@e107981-ln.cambridge.arm.com>
+In-Reply-To: <1d5f3260-2d95-32b2-090e-2f57ae9e6833@xs4all.nl>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, sudeep.holla@arm.com, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
+To: Eddie James <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
+On 12/03/2018 12:04 PM, Hans Verkuil wrote:
+> On 11/27/2018 08:37 PM, Eddie James wrote:
+>> The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
+>> can capture and compress video data from digital or analog sources. With
+>> the Aspeed chip acting a service processor, the Video Engine can capture
+>> the host processor graphics output.
+>>
+>> Add a V4L2 driver to capture video data and compress it to JPEG images.
+>> Make the video frames available through the V4L2 streaming interface.
+>>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>> ---
 
-Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote on Mon, 3 Dec 2018
-10:27:08 +0000:
+<snip>
 
-> [+Rafael, Sudeep]
+>> +static void aspeed_video_bufs_done(struct aspeed_video *video,
+>> +				   enum vb2_buffer_state state)
+>> +{
+>> +	unsigned long flags;
+>> +	struct aspeed_video_buffer *buf;
+>> +
+>> +	spin_lock_irqsave(&video->lock, flags);
+>> +	list_for_each_entry(buf, &video->buffers, link) {
+>> +		if (list_is_last(&buf->link, &video->buffers))
+>> +			buf->vb.flags |= V4L2_BUF_FLAG_LAST;
 > 
-> On Fri, Nov 23, 2018 at 03:18:24PM +0100, Miquel Raynal wrote:
-> > Add suspend and resume callbacks. The priority of these are
-> > "_noirq()", to workaround early access to the registers done by the
-> > PCI core through the ->read()/->write() callbacks at resume time.
-> > 
-> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > ---
-> >  drivers/pci/controller/pci-aardvark.c | 52 +++++++++++++++++++++++++++
-> >  1 file changed, 52 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > index 108b3f15c410..7ecf1ac4036b 100644
-> > --- a/drivers/pci/controller/pci-aardvark.c
-> > +++ b/drivers/pci/controller/pci-aardvark.c
-> > @@ -1108,6 +1108,55 @@ static int advk_pcie_setup_clk(struct advk_pcie *pcie)
-> >  	return ret;
-> >  }
-> >  
-> > +static int __maybe_unused advk_pcie_suspend(struct device *dev)
-> > +{
-> > +	struct advk_pcie *pcie = dev_get_drvdata(dev);
-> > +
-> > +	advk_pcie_disable_phy(pcie);
-> > +
-> > +	clk_disable_unprepare(pcie->clk);  
+> This really makes no sense. This flag is for codecs, not for receivers.
 > 
-> I have noticed it is common practice, still, I would like to check whether
-> it is allowed to call functions that may sleep in a NOIRQ suspend/resume
-> callback ?
+> You say in an earlier reply about this:
+> 
+> "I mentioned before that dequeue calls hang in an error condition unless
+> this flag is specified. For example if resolution change is detected and
+> application is in the middle of trying to dequeue..."
+> 
+> What error condition are you referring to? Isn't your application using
+> the select() or poll() calls to wait for events or new buffers to dequeue?
+> If you just call VIDIOC_DQBUF to wait in blocking mode for a new buffer,
+> then it will indeed block in that call.
+> 
+> No other video receiver needs this flag, so there is something else that is
+> the cause.
 
-You are right this is weird. I double checked and for instance,
-pcie-mediatek.c, pci-tegra.c and pci-imx6.c do the exact same thing. There are
-probably other cases where drivers call functions that may sleep from a NOIRQ
-context. I am interested to know if this is valid and if not, what is the
-alternative?
+Let me give a bit more information on how video receivers behave when the
+signal disappears:
 
+They will all send the SOURCE_CHANGE event, but what they do with respect
+to streaming buffers is hardware dependent:
 
-Thanks,
-Miquèl
+1) Some receivers have a freewheeling mode where the hardware generates
+   an image when there is no signal (usually this is just a fixed color).
+   In that case the application will just keep receiving buffers.
+
+2) VIDIOC_DQBUF blocks until a new signal appears with the same timings,
+   then the driver will just keep going as if nothing changed. DQBUF
+   remains blocked as long as there is no signal, or the timings are
+   different from the currently active timings.
+
+3) The hardware requires a hard stop and cannot continue streaming. In
+   that case it can call vb2_queue_error().
+
+That last option should be avoided if possible as it's not very polite.
+>From what I can tell from this hardware it seems option 2 is the
+appropriate choice.
+
+Regards,
+
+	Hans
+
+> 
+>> +		vb2_buffer_done(&buf->vb.vb2_buf, state);
+>> +	}
+>> +	INIT_LIST_HEAD(&video->buffers);
+>> +	spin_unlock_irqrestore(&video->lock, flags);
+>> +}
