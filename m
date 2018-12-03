@@ -1,93 +1,77 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 04/34] dt-bindings: altera: Convert clkmgr binding to
- json-schema
-Date: Mon,  3 Dec 2018 15:31:53 -0600
-Message-ID: <20181203213223.16986-5-robh@kernel.org>
+Subject: [PATCH v2 16/34] dt-bindings: arm: Convert Calxeda board/soc bindings to json-schema
+Date: Mon,  3 Dec 2018 15:32:05 -0600
+Message-ID: <20181203213223.16986-17-robh@kernel.org>
 References: <20181203213223.16986-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181203213223.16986-1-robh@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Kumar Gala <kumar.gala@linaro.org>, arm@kernel.org, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, Dinh Nguyen <dinguyen@kernel.org>, Grant Likely <grant.likely@arm.com>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Cc: Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, arm@kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Convert Altera clkmgr to DT schema format using json-schema.
+Convert Calxeda SoC bindings to DT schema format using json-schema.
 
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Dinh Nguyen <dinguyen@kernel.org>
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../arm/altera/socfpga-clk-manager.txt        | 11 -------
- .../arm/altera/socfpga-clk-manager.yaml       | 31 +++++++++++++++++++
- 2 files changed, 31 insertions(+), 11 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.txt
- create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
+ .../devicetree/bindings/arm/calxeda.txt       | 15 -------------
+ .../devicetree/bindings/arm/calxeda.yaml      | 22 +++++++++++++++++++
+ 2 files changed, 22 insertions(+), 15 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/calxeda.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/calxeda.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.txt
+diff --git a/Documentation/devicetree/bindings/arm/calxeda.txt b/Documentation/devicetree/bindings/arm/calxeda.txt
 deleted file mode 100644
-index 2c28f1d12f45..000000000000
---- a/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.txt
+index 25fcf96795ca..000000000000
+--- a/Documentation/devicetree/bindings/arm/calxeda.txt
 +++ /dev/null
-@@ -1,11 +0,0 @@
--Altera SOCFPGA Clock Manager
+@@ -1,15 +0,0 @@
+-Calxeda Platforms Device Tree Bindings
+------------------------------------------------
 -
--Required properties:
--- compatible : "altr,clk-mgr"
--- reg : Should contain base address and length for Clock Manager
+-Boards with Calxeda Cortex-A9 based ECX-1000 (Highbank) SOC shall have the
+-following properties.
 -
--Example:
--	 clkmgr@ffd04000 {
--		compatible = "altr,clk-mgr";
--		reg = <0xffd04000 0x1000>;
--	};
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml b/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
+-Required root node properties:
+-    - compatible = "calxeda,highbank";
+-
+-
+-Boards with Calxeda Cortex-A15 based ECX-2000 SOC shall have the following
+-properties.
+-
+-Required root node properties:
+-    - compatible = "calxeda,ecx-2000";
+diff --git a/Documentation/devicetree/bindings/arm/calxeda.yaml b/Documentation/devicetree/bindings/arm/calxeda.yaml
 new file mode 100644
-index 000000000000..e4131fa42b26
+index 000000000000..aa5571d23c39
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
-@@ -0,0 +1,31 @@
-+# SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/devicetree/bindings/arm/calxeda.yaml
+@@ -0,0 +1,22 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/arm/altera/socfpga-clk-manager.yaml#
++$id: http://devicetree.org/schemas/arm/calxeda.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Altera SOCFPGA Clock Manager
++title: Calxeda Platforms Device Tree Bindings
 +
 +maintainers:
-+  - Dinh Nguyen <dinguyen@kernel.org>
-+
-+description: test
++  - Rob Herring <robh@kernel.org>
++description: |+
++  Bindings for boards with Calxeda Cortex-A9 based ECX-1000 (Highbank) SOC
++  or Cortex-A15 based ECX-2000 SOCs
 +
 +properties:
++  $nodename:
++    const: '/'
 +  compatible:
 +    items:
-+      - const: altr,clk-mgr
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |
-+    clkmgr@ffd04000 {
-+      compatible = "altr,clk-mgr";
-+      reg = <0xffd04000 0x1000>;
-+    };
-+
-+...
++      - enum:
++          - calxeda,highbank
++          - calxeda,ecx-2000
 -- 
 2.19.1
