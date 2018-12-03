@@ -1,474 +1,138 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 06/34] dt-bindings: timer: Convert ARM timer bindings to json-schema
-Date: Mon,  3 Dec 2018 15:31:55 -0600
-Message-ID: <20181203213223.16986-7-robh@kernel.org>
+Subject: [PATCH v2 10/34] dt-bindings: arm: Convert Actions Semi bindings to jsonschema
+Date: Mon,  3 Dec 2018 15:31:59 -0600
+Message-ID: <20181203213223.16986-11-robh@kernel.org>
 References: <20181203213223.16986-1-robh@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181203213223.16986-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, arm@kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>
+Cc: Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, arm@kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Convert ARM timers to DT schema format using json-schema.
+Convert Actions Semi SoC bindings to DT schema format using json-schema.
 
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: "Andreas Färber" <afaerber@suse.de>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/timer/arm,arch_timer.txt         | 112 ----------------
- .../bindings/timer/arm,arch_timer.yaml        | 103 +++++++++++++++
- .../bindings/timer/arm,arch_timer_mmio.yaml   | 120 ++++++++++++++++++
- .../bindings/timer/arm,global_timer.txt       |  27 ----
- .../bindings/timer/arm,global_timer.yaml      |  46 +++++++
- 5 files changed, 269 insertions(+), 139 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/arm,arch_timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/arm,arch_timer.yaml
- create mode 100644 Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
- delete mode 100644 Documentation/devicetree/bindings/timer/arm,global_timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/arm,global_timer.yaml
+ .../devicetree/bindings/arm/actions.txt       | 56 -------------------
+ .../devicetree/bindings/arm/actions.yaml      | 38 +++++++++++++
+ 2 files changed, 38 insertions(+), 56 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/actions.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/actions.yaml
 
-diff --git a/Documentation/devicetree/bindings/timer/arm,arch_timer.txt b/Documentation/devicetree/bindings/timer/arm,arch_timer.txt
+diff --git a/Documentation/devicetree/bindings/arm/actions.txt b/Documentation/devicetree/bindings/arm/actions.txt
 deleted file mode 100644
-index 68301b77e854..000000000000
---- a/Documentation/devicetree/bindings/timer/arm,arch_timer.txt
+index d54f33c4e0da..000000000000
+--- a/Documentation/devicetree/bindings/arm/actions.txt
 +++ /dev/null
-@@ -1,112 +0,0 @@
--* ARM architected timer
--
--ARM cores may have a per-core architected timer, which provides per-cpu timers,
--or a memory mapped architected timer, which provides up to 8 frames with a
--physical and optional virtual timer per frame.
--
--The per-core architected timer is attached to a GIC to deliver its
--per-processor interrupts via PPIs. The memory mapped timer is attached to a GIC
--to deliver its interrupts via SPIs.
--
--** CP15 Timer node properties:
--
--- compatible : Should at least contain one of
--	"arm,armv7-timer"
--	"arm,armv8-timer"
--
--- interrupts : Interrupt list for secure, non-secure, virtual and
--  hypervisor timers, in that order.
--
--- clock-frequency : The frequency of the main counter, in Hz. Should be present
--  only where necessary to work around broken firmware which does not configure
--  CNTFRQ on all CPUs to a uniform correct value. Use of this property is
--  strongly discouraged; fix your firmware unless absolutely impossible.
--
--- always-on : a boolean property. If present, the timer is powered through an
--  always-on power domain, therefore it never loses context.
--
--- fsl,erratum-a008585 : A boolean property. Indicates the presence of
--  QorIQ erratum A-008585, which says that reading the counter is
--  unreliable unless the same value is returned by back-to-back reads.
--  This also affects writes to the tval register, due to the implicit
--  counter read.
--
--- hisilicon,erratum-161010101 : A boolean property. Indicates the
--  presence of Hisilicon erratum 161010101, which says that reading the
--  counters is unreliable in some cases, and reads may return a value 32
--  beyond the correct value. This also affects writes to the tval
--  registers, due to the implicit counter read.
--
--** Optional properties:
--
--- arm,cpu-registers-not-fw-configured : Firmware does not initialize
--  any of the generic timer CPU registers, which contain their
--  architecturally-defined reset values. Only supported for 32-bit
--  systems which follow the ARMv7 architected reset values.
--
--- arm,no-tick-in-suspend : The main counter does not tick when the system is in
--  low-power system suspend on some SoCs. This behavior does not match the
--  Architecture Reference Manual's specification that the system counter "must
--  be implemented in an always-on power domain."
+@@ -1,56 +0,0 @@
+-Actions Semi platforms device tree bindings
+--------------------------------------------
 -
 -
--Example:
+-S500 SoC
+-========
 -
--	timer {
--		compatible = "arm,cortex-a15-timer",
--			     "arm,armv7-timer";
--		interrupts = <1 13 0xf08>,
--			     <1 14 0xf08>,
--			     <1 11 0xf08>,
--			     <1 10 0xf08>;
--		clock-frequency = <100000000>;
--	};
+-Required root node properties:
 -
--** Memory mapped timer node properties:
+- - compatible :  must contain "actions,s500"
 -
--- compatible : Should at least contain "arm,armv7-timer-mem".
 -
--- clock-frequency : The frequency of the main counter, in Hz. Should be present
--  only when firmware has not configured the MMIO CNTFRQ registers.
+-Modules:
 -
--- reg : The control frame base address.
+-Root node property compatible must contain, depending on module:
 -
--Note that #address-cells, #size-cells, and ranges shall be present to ensure
--the CPU can address a frame's registers.
+- - LeMaker Guitar: "lemaker,guitar"
 -
--A timer node has up to 8 frame sub-nodes, each with the following properties:
 -
--- frame-number: 0 to 7.
+-Boards:
 -
--- interrupts : Interrupt list for physical and virtual timers in that order.
--  The virtual timer interrupt is optional.
+-Root node property compatible must contain, depending on board:
 -
--- reg : The first and second view base addresses in that order. The second view
--  base address is optional.
+- - Allo.com Sparky: "allo,sparky"
+- - Cubietech CubieBoard6: "cubietech,cubieboard6"
+- - LeMaker Guitar Base Board rev. B: "lemaker,guitar-bb-rev-b", "lemaker,guitar"
 -
--- status : "disabled" indicates the frame is not available for use. Optional.
 -
--Example:
+-S700 SoC
+-========
 -
--	timer@f0000000 {
--		compatible = "arm,armv7-timer-mem";
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges;
--		reg = <0xf0000000 0x1000>;
--		clock-frequency = <50000000>;
+-Required root node properties:
 -
--		frame@f0001000 {
--			frame-number = <0>
--			interrupts = <0 13 0x8>,
--				     <0 14 0x8>;
--			reg = <0xf0001000 0x1000>,
--			      <0xf0002000 0x1000>;
--		};
+-- compatible :  must contain "actions,s700"
 -
--		frame@f0003000 {
--			frame-number = <1>
--			interrupts = <0 15 0x8>;
--			reg = <0xf0003000 0x1000>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/timer/arm,arch_timer.yaml b/Documentation/devicetree/bindings/timer/arm,arch_timer.yaml
+-
+-Boards:
+-
+-Root node property compatible must contain, depending on board:
+-
+- - Cubietech CubieBoard7: "cubietech,cubieboard7"
+-
+-
+-S900 SoC
+-========
+-
+-Required root node properties:
+-
+-- compatible :  must contain "actions,s900"
+-
+-
+-Boards:
+-
+-Root node property compatible must contain, depending on board:
+-
+- - uCRobotics Bubblegum-96: "ucrobotics,bubblegum-96"
+diff --git a/Documentation/devicetree/bindings/arm/actions.yaml b/Documentation/devicetree/bindings/arm/actions.yaml
 new file mode 100644
-index 000000000000..6deead07728e
+index 000000000000..60abd371e474
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/arm,arch_timer.yaml
-@@ -0,0 +1,103 @@
++++ b/Documentation/devicetree/bindings/arm/actions.yaml
+@@ -0,0 +1,38 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/timer/arm,arch_timer.yaml#
++$id: http://devicetree.org/schemas/arm/actions.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: ARM architected timer
++title: Actions Semi platforms device tree bindings
 +
 +maintainers:
-+  - Marc Zyngier <marc.zyngier@arm.com>
-+  - Mark Rutland <mark.rutland@arm.com>
-+description: |+
-+  ARM cores may have a per-core architected timer, which provides per-cpu timers,
-+  or a memory mapped architected timer, which provides up to 8 frames with a
-+  physical and optional virtual timer per frame.
-+
-+  The per-core architected timer is attached to a GIC to deliver its
-+  per-processor interrupts via PPIs. The memory mapped timer is attached to a GIC
-+  to deliver its interrupts via SPIs.
++  - Andreas Färber <afaerber@suse.de>
++  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 +
 +properties:
 +  compatible:
 +    oneOf:
++      # The Actions Semi S500 is a quad-core ARM Cortex-A9 SoC.
 +      - items:
 +          - enum:
-+              - arm,cortex-a15-timer
-+          - enum:
-+              - arm,armv7-timer
++              - allo,sparky # Allo.com Sparky
++              - cubietech,cubieboard6 # Cubietech CubieBoard6
++          - const: actions,s500
 +      - items:
 +          - enum:
-+            - arm,armv7-timer
++              - lemaker,guitar-bb-rev-b # LeMaker Guitar Base Board rev. B
++          - const: lemaker,guitar
++          - const: actions,s500
++
++      # The Actions Semi S700 is a quad-core ARM Cortex-A53 SoC.
 +      - items:
 +          - enum:
-+            - arm,armv8-timer
++              - cubietech,cubieboard7 # Cubietech CubieBoard7
++          - const: actions,s700
 +
-+  interrupts:
-+    items:
-+      - description: secure timer irq
-+      - description: non-secure timer irq
-+      - description: virtual timer irq
-+      - description: hypervisor timer irq
-+
-+  clock-frequency:
-+    description: The frequency of the main counter, in Hz. Should be present
-+      only where necessary to work around broken firmware which does not configure
-+      CNTFRQ on all CPUs to a uniform correct value. Use of this property is
-+      strongly discouraged; fix your firmware unless absolutely impossible.
-+
-+  always-on:
-+    type: boolean
-+    description: If present, the timer is powered through an always-on power
-+      domain, therefore it never loses context.
-+
-+  fsl,erratum-a008585:
-+    type: boolean
-+    description: Indicates the presence of QorIQ erratum A-008585, which says
-+      that reading the counter is unreliable unless the same value is returned
-+      by back-to-back reads. This also affects writes to the tval register, due
-+      to the implicit counter read.
-+
-+  hisilicon,erratum-161010101:
-+    type: boolean
-+    description: Indicates the presence of Hisilicon erratum 161010101, which
-+      says that reading the counters is unreliable in some cases, and reads may
-+      return a value 32 beyond the correct value. This also affects writes to
-+      the tval registers, due to the implicit counter read.
-+
-+  arm,cpu-registers-not-fw-configured:
-+    type: boolean
-+    description: Firmware does not initialize any of the generic timer CPU
-+      registers, which contain their architecturally-defined reset values. Only
-+      supported for 32-bit systems which follow the ARMv7 architected reset
-+      values.
-+
-+  arm,no-tick-in-suspend:
-+    type: boolean
-+    description: The main counter does not tick when the system is in
-+      low-power system suspend on some SoCs. This behavior does not match the
-+      Architecture Reference Manual's specification that the system counter "must
-+      be implemented in an always-on power domain."
-+
-+required:
-+  - compatible
-+
-+oneOf:
-+  - required:
-+      - interrupts
-+  - required:
-+      - interrupts-extended
-+
-+examples:
-+  - |
-+    timer {
-+      compatible = "arm,cortex-a15-timer",
-+             "arm,armv7-timer";
-+      interrupts = <1 13 0xf08>,
-+             <1 14 0xf08>,
-+             <1 11 0xf08>,
-+             <1 10 0xf08>;
-+      clock-frequency = <100000000>;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml b/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
-new file mode 100644
-index 000000000000..c4ab59550fc2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
-@@ -0,0 +1,120 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/arm,arch_timer_mmio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ARM memory mapped architected timer
-+
-+maintainers:
-+  - Marc Zyngier <marc.zyngier@arm.com>
-+  - Mark Rutland <mark.rutland@arm.com>
-+
-+description: |+
-+  ARM cores may have a memory mapped architected timer, which provides up to 8
-+  frames with a physical and optional virtual timer per frame.
-+
-+  The memory mapped timer is attached to a GIC to deliver its interrupts via SPIs.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+        - arm,armv7-timer-mem
-+
-+  reg:
-+    maxItems: 1
-+    description: The control frame base address
-+
-+  '#address-cells':
-+    enum: [1, 2]
-+
-+  '#size-cells':
-+    const: 1
-+
-+  clock-frequency:
-+    description: The frequency of the main counter, in Hz. Should be present
-+      only where necessary to work around broken firmware which does not configure
-+      CNTFRQ on all CPUs to a uniform correct value. Use of this property is
-+      strongly discouraged; fix your firmware unless absolutely impossible.
-+
-+  always-on:
-+    type: boolean
-+    description: If present, the timer is powered through an always-on power
-+      domain, therefore it never loses context.
-+
-+  arm,cpu-registers-not-fw-configured:
-+    type: boolean
-+    description: Firmware does not initialize any of the generic timer CPU
-+      registers, which contain their architecturally-defined reset values. Only
-+      supported for 32-bit systems which follow the ARMv7 architected reset
-+      values.
-+
-+  arm,no-tick-in-suspend:
-+    type: boolean
-+    description: The main counter does not tick when the system is in
-+      low-power system suspend on some SoCs. This behavior does not match the
-+      Architecture Reference Manual's specification that the system counter "must
-+      be implemented in an always-on power domain."
-+
-+patternProperties:
-+  '^frame@[0-9a-z]*$':
-+    description: A timer node has up to 8 frame sub-nodes, each with the following properties.
-+    properties:
-+      frame-number:
-+        allOf:
-+          - $ref: "/schemas/types.yaml#/definitions/uint32"
-+          - minimum: 0
-+            maximum: 7
-+
-+      interrupts:
-+        minItems: 1
-+        maxItems: 2
-+        items:
-+          - description: physical timer irq
-+          - description: virtual timer irq
-+
-+      reg :
-+        minItems: 1
-+        maxItems: 2
-+        items:
-+          - description: 1st view base address
-+          - description: 2nd optional view base address
-+
-+    required:
-+      - frame-number
-+      - interrupts
-+      - reg
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#address-cells'
-+  - '#size-cells'
-+
-+examples:
-+  - |
-+    timer@f0000000 {
-+      compatible = "arm,armv7-timer-mem";
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+      ranges;
-+      reg = <0xf0000000 0x1000>;
-+      clock-frequency = <50000000>;
-+
-+      frame@f0001000 {
-+        frame-number = <0>;
-+        interrupts = <0 13 0x8>,
-+               <0 14 0x8>;
-+        reg = <0xf0001000 0x1000>,
-+              <0xf0002000 0x1000>;
-+      };
-+
-+      frame@f0003000 {
-+        frame-number = <1>;
-+        interrupts = <0 15 0x8>;
-+        reg = <0xf0003000 0x1000>;
-+      };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/timer/arm,global_timer.txt b/Documentation/devicetree/bindings/timer/arm,global_timer.txt
-deleted file mode 100644
-index bdae3a818793..000000000000
---- a/Documentation/devicetree/bindings/timer/arm,global_timer.txt
-+++ /dev/null
-@@ -1,27 +0,0 @@
--
--* ARM Global Timer
--	Cortex-A9 are often associated with a per-core Global timer.
--
--** Timer node required properties:
--
--- compatible : should contain
--	     * "arm,cortex-a5-global-timer" for Cortex-A5 global timers.
--	     * "arm,cortex-a9-global-timer" for Cortex-A9 global
--	         timers or any compatible implementation. Note: driver
--	         supports versions r2p0 and above.
--
--- interrupts : One interrupt to each core
--
--- reg : Specify the base address and the size of the GT timer
--	register window.
--
--- clocks : Should be phandle to a clock.
--
--Example:
--
--	timer@2c000600 {
--		compatible = "arm,cortex-a9-global-timer";
--		reg = <0x2c000600 0x20>;
--		interrupts = <1 13 0xf01>;
--		clocks = <&arm_periph_clk>;
--	};
-diff --git a/Documentation/devicetree/bindings/timer/arm,global_timer.yaml b/Documentation/devicetree/bindings/timer/arm,global_timer.yaml
-new file mode 100644
-index 000000000000..21c24a8e28fd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/arm,global_timer.yaml
-@@ -0,0 +1,46 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/arm,global_timer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ARM Global Timer
-+
-+maintainers:
-+  - Stuart Menefy <stuart.menefy@st.com>
-+
-+description:
-+  Cortex-A9 are often associated with a per-core Global timer.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - arm,cortex-a5-global-timer
-+          - arm,cortex-a9-global-timer
-+
-+    description: driver supports versions r2p0 and above.
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+examples:
-+  - |
-+    timer@2c000600 {
-+      compatible = "arm,cortex-a9-global-timer";
-+      reg = <0x2c000600 0x20>;
-+      interrupts = <1 13 0xf01>;
-+      clocks = <&arm_periph_clk>;
-+    };
-+...
++      # The Actions Semi S900 is a quad-core ARM Cortex-A53 SoC.
++      - items:
++          - enum:
++              - ucrobotics,bubblegum-96 # uCRobotics Bubblegum-96
++          - const: actions,s900
 -- 
 2.19.1
