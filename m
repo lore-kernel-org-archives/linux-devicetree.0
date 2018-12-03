@@ -1,28 +1,31 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v3 4/4] ARM: dts: imx5: add gpu nodes
-Date: Mon, 3 Dec 2018 21:06:22 -0200
-Message-ID: <CAOMZO5BAPATbQGpdnjud29gVA2uDH8xJp0UVK+P88DF4PFJi6Q@mail.gmail.com>
-References: <20181203211816.5129-1-jonathan@marek.ca> <20181203211816.5129-4-jonathan@marek.ca>
- <CAOMZO5B18DyZ0zvit6AgaueMifnMf2ctSo7pE_XndRpt7+bnLw@mail.gmail.com> <3e8d1f9e-ffb4-dd6a-0a68-f59b4c1134a0@marek.ca>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: clk: meson-g12a: Add G12A EE Clock
+ Bindings
+Date: Mon, 3 Dec 2018 17:06:45 -0600
+Message-ID: <20181203230645.GA14522@bogus>
+References: <1543498917-98605-1-git-send-email-jian.hu@amlogic.com>
+ <1543498917-98605-2-git-send-email-jian.hu@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3e8d1f9e-ffb4-dd6a-0a68-f59b4c1134a0@marek.ca>
+Content-Disposition: inline
+In-Reply-To: <1543498917-98605-2-git-send-email-jian.hu@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jonathan@marek.ca
-Cc: freedreno@lists.freedesktop.org, Chris Healy <Chris.Healy@zii.aero>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Jian Hu <jian.hu@amlogic.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Yixun Lan <yixun.lan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 3, 2018 at 8:24 PM Jonathan marek <jonathan@marek.ca> wrote:
+On Thu, Nov 29, 2018 at 09:41:56PM +0800, Jian Hu wrote:
+> Add new clock controller compatible and dt-bingdings headers
+> for the Everything-Else domain of the g12a SoC
+> 
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+> ---
+>  .../bindings/clock/amlogic,gxbb-clkc.txt           |  1 +
+>  include/dt-bindings/clock/g12a-clkc.h              | 93 ++++++++++++++++++++++
+>  2 files changed, 94 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/g12a-clkc.h
 
-> > I can't find the dt-bindings for these compatible entries. Have you
-> > documented them?
-> >
->
-> It is the same as qcom,adreno which is documented here:
->
-> Documentation/devicetree/bindings/display/msm/gpu.txt
->
-> I guess I should add amd,imageon there.
+Please add acks/reviewed-bys when posting new versions.
 
-Yes, please.
+Rob
