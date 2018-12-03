@@ -1,74 +1,78 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v18 1/5] iommu/arm-smmu: Add
- pm_runtime/sleep ops
-Date: Mon, 3 Dec 2018 12:13:38 +0530
-Message-ID: <CAFp+6iH-T3KsUH8SDoLDfmJ6x_iHxtHGDySuKib0L_u46G6h6w@mail.gmail.com>
-References: <20181127101145.7682-1-vivek.gautam@codeaurora.org>
- <20181127101145.7682-2-vivek.gautam@codeaurora.org>
- <154342225921.88331.14467967828250776155@swboyd.mtv.corp.google.com>
- <0d76b669-6c4f-7c3b-50a1-084201f2c07a@arm.com>
- <CAFp+6iEC8hobAdVF5nLdhQdCUqbi1xa4Vi-NLugGshV=dg+h1A@mail.gmail.com>
- <20181130181536.GA15274@arm.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 0/7] Introduce STPMIC1 PMIC Driver
+Date: Mon, 3 Dec 2018 07:11:45 +0000
+Message-ID: <20181203071145.GA26661@dell>
+References: <1543571742-17995-1-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181130181536.GA15274-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
- Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1543571742-17995-1-git-send-email-p.paillet@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pascal PAILLET-LME <p.paillet@st.com>
+Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBOb3YgMzAsIDIwMTggYXQgMTE6NDUgUE0gV2lsbCBEZWFjb24gPHdpbGwuZGVhY29u
-QGFybS5jb20+IHdyb3RlOgo+Cj4gT24gVGh1LCBOb3YgMjksIDIwMTggYXQgMDg6MjU6MjBQTSAr
-MDUzMCwgVml2ZWsgR2F1dGFtIHdyb3RlOgo+ID4gT24gV2VkLCBOb3YgMjgsIDIwMTggYXQgMTA6
-MDcgUE0gUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4gd3JvdGU6Cj4gPiA+Cj4g
-PiA+IE9uIDI4LzExLzIwMTggMTY6MjQsIFN0ZXBoZW4gQm95ZCB3cm90ZToKPiA+ID4gPiBRdW90
-aW5nIFZpdmVrIEdhdXRhbSAoMjAxOC0xMS0yNyAwMjoxMTo0MSkKPiA+ID4gPj4gQEAgLTE5NjYs
-NiArMTk3MCwyMyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBhcm1fc21tdV9v
-Zl9tYXRjaFtdID0gewo+ID4gPiA+PiAgIH07Cj4gPiA+ID4+ICAgTU9EVUxFX0RFVklDRV9UQUJM
-RShvZiwgYXJtX3NtbXVfb2ZfbWF0Y2gpOwo+ID4gPiA+Pgo+ID4gPiA+PiArc3RhdGljIHZvaWQg
-YXJtX3NtbXVfZmlsbF9jbGtfZGF0YShzdHJ1Y3QgYXJtX3NtbXVfZGV2aWNlICpzbW11LAo+ID4g
-PiA+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IGNoYXIgKiBjb25z
-dCAqY2xrcykKPiA+ID4gPj4gK3sKPiA+ID4gPj4gKyAgICAgICBpbnQgaTsKPiA+ID4gPj4gKwo+
-ID4gPiA+PiArICAgICAgIGlmIChzbW11LT5udW1fY2xrcyA8IDEpCj4gPiA+ID4+ICsgICAgICAg
-ICAgICAgICByZXR1cm47Cj4gPiA+ID4+ICsKPiA+ID4gPj4gKyAgICAgICBzbW11LT5jbGtzID0g
-ZGV2bV9rY2FsbG9jKHNtbXUtPmRldiwgc21tdS0+bnVtX2Nsa3MsCj4gPiA+ID4+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBzaXplb2YoKnNtbXUtPmNsa3MpLCBHRlBfS0VSTkVM
-KTsKPiA+ID4gPj4gKyAgICAgICBpZiAoIXNtbXUtPmNsa3MpCj4gPiA+ID4+ICsgICAgICAgICAg
-ICAgICByZXR1cm47Cj4gPiA+ID4+ICsKPiA+ID4gPj4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwg
-c21tdS0+bnVtX2Nsa3M7IGkrKykKPiA+ID4gPj4gKyAgICAgICAgICAgICAgIHNtbXUtPmNsa3Nb
-aV0uaWQgPSBjbGtzW2ldOwo+ID4gPiA+Cj4gPiA+ID4gSXMgdGhpcyBjbGtfYnVsa19nZXRfYWxs
-KCk/Cj4gPgo+ID4gRnJvbSB3aGF0IEkgcmVtZW1iZXIsIGFuZCBub3cgSSBjb3VsZCBnbyBiYWNr
-IHRvIHY3IGFuZCBjaGVjayBbMV0sIHdlIHBhcmtlZAo+ID4gY2xrX2J1bGtfZ2V0IG91dCBvZiBP
-RidzIHNvbGUgcHVydmlldyBhcyB3ZSBhbHNvIGhhdmUKPiA+IGFybV9zbW11X2RldmljZV9hY3Bp
-X3Byb2JlKCkgYmVzaWRlcyBhcm1fc21tdV9kZXZpY2VfZHRfcHJvYmUoKS4KPiA+Cj4gPiBhcm1f
-c21tdV9kZXZpY2VfZHRfcHJvYmUoKSBjb3VsZCBnZXQgdGhlIGNsb2NrcyBmcm9tIGR0IGFuZCBm
-aWxsIGluCj4gPiB0aGUgY2xvY2sgYnVsayBkYXRhLCBhbmQKPiA+IHNpbWlsYXJseSwgYXJtX3Nt
-bXVfZGV2aWNlX2FjcGlfcHJvYmUoKSBjb3VsZCBmaWxsIHRoZSBjbG9jayBidWxrIGRhdGEKPiA+
-IGJ5IGdldHRpbmcgaXQgZnJvbSBBQ1BJLgo+ID4KPiA+IGNsa19idWxrX2dldF9hbGwoKSBzZWVt
-cyBsaWtlIGdvaW5nIG9ubHkgdGhlIE9GIHdheS4KPiA+IElzIHRoZXJlIGFub3RoZXIgd2F5IGhl
-cmUgdG8gaGF2ZSBzb21ldGhpbmcgY29tbW9uIGJldHdlZW4gQUNQSQo+ID4gYW5kIE9GLCBhbmQg
-dGhlbiBkbyB0aGUgY2xrX2J1bGtfZ2V0Pwo+Cj4gSSdkIHNheSBqdXN0IGdvIHdpdGggY2xrX2J1
-bGtfZ2V0X2FsbCgpIGFuZCBpZiBzb21lYm9keSByZWFsbHkgd2FudHMgdG8KPiBtZXNzIHdpdGgg
-dGhlIFNNTVUgY2xvY2tzIG9uIGEgc3lzdGVtIGJvb3RlZCB2aWEgQUNQSSwgdGhlbiBpdCdzIHRo
-ZWlyCj4gcHJvYmxlbSB0byBzb2x2ZS4gTXkgdW5kZXJzdGFuZGluZyBpcyB0aGF0IHRoZSBkZXNp
-Z24gb2YgSU9SVCBtYWtlcyB0aGlzCj4gbmV4dCB0byBpbXBvc3NpYmxlIHRvIHNvbHZlIGFueXdh
-eSwgYmVjYXVzZSBhIHN0YXRpYyB0YWJsZSBpcyB1c2VkIGFuZAo+IHRoZXJlZm9yZSB3ZSdyZSB1
-bmFibGUgdG8gcnVuIHdoYXRldmVyIEFTTCBtZXRob2RzIG5lZWQgdG8gYmUgaW52b2tlZCB0bwo+
-IG1lc3Mgd2l0aCB0aGUgY2xvY2tzLgoKU3VyZSB0aGVuLiBJIHdpbGwgcmVzcGluIHRoaXMgcGF0
-Y2gtc2VyaWVzLgoKPgo+IFdpbGwKCgoKLS0gClFVQUxDT01NIElORElBLCBvbiBiZWhhbGYgb2Yg
-UXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIKb2YgQ29kZSBBdXJv
-cmEgRm9ydW0sIGhvc3RlZCBieSBUaGUgTGludXggRm91bmRhdGlvbgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZy
-ZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+On Fri, 30 Nov 2018, Pascal PAILLET-LME wrote:
+
+> The goal of this patch-set is to propose a driver for the STPMIC1 PMIC from 
+> STMicroelectronics. 
+> The STPMIC1 regulators supply power to an application processor as well as 
+> to external system peripherals such as DDR, Flash memories and system
+> devices. It also features onkey button input and an hardware watchdog.
+> The STPMIC1 is controlled via I2C. 
+> 
+> Main driver is drivers/mfd/stpmic1 that handle I2C regmap configuration and
+> irqchip. stpmic1_regulator, stpmic1_onkey and stpmic1_wdt need stpmic1 mfd
+> as parent.
+> 
+> STPMIC1 MFD and regulator drivers maybe mandatory at boot time.
+> 
+> Pascal Paillet (7):
+> changes in v7:
+> * rebase on regul/for-next
+> 
+>   dt-bindings: mfd: document stpmic1
+>   mfd: stpmic1: add stpmic1 driver
+>   dt-bindings: input: document stpmic1 pmic onkey
+>   input: stpmic1: add stpmic1 onkey driver
+>   dt-bindings: watchdog: document stpmic1 pmic watchdog
+>   watchdog: stpmic1: add stpmic1 watchdog driver
+>   regulator: stpmic1: fix regulator_lock usage
+> 
+>  .../devicetree/bindings/input/st,stpmic1-onkey.txt |  28 +++
+>  .../devicetree/bindings/mfd/st,stpmic1.txt         |  61 ++++++
+>  .../bindings/watchdog/st,stpmic1-wdt.txt           |  11 ++
+>  drivers/input/misc/Kconfig                         |  11 ++
+>  drivers/input/misc/Makefile                        |   2 +
+>  drivers/input/misc/stpmic1_onkey.c                 | 198 +++++++++++++++++++
+>  drivers/mfd/Kconfig                                |  16 ++
+>  drivers/mfd/Makefile                               |   1 +
+>  drivers/mfd/stpmic1.c                              | 213 +++++++++++++++++++++
+
+>  drivers/regulator/stpmic1_regulator.c              |   2 +-
+
+Is it just Mark you're waiting on now?
+
+>  drivers/watchdog/Kconfig                           |  12 ++
+>  drivers/watchdog/Makefile                          |   1 +
+>  drivers/watchdog/stpmic1_wdt.c                     | 139 ++++++++++++++
+>  include/dt-bindings/mfd/st,stpmic1.h               |  50 +++++
+>  include/linux/mfd/stpmic1.h                        | 212 ++++++++++++++++++++
+>  15 files changed, 956 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
+>  create mode 100644 drivers/input/misc/stpmic1_onkey.c
+>  create mode 100644 drivers/mfd/stpmic1.c
+>  create mode 100644 drivers/watchdog/stpmic1_wdt.c
+>  create mode 100644 include/dt-bindings/mfd/st,stpmic1.h
+>  create mode 100644 include/linux/mfd/stpmic1.h
+> 
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
