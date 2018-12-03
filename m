@@ -1,28 +1,34 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: Provide support for reading ID code from MVB
- device (BK4)
-Date: Mon, 3 Dec 2018 09:13:50 -0200
-Message-ID: <CAOMZO5AJPiexbvHUq+vsz5zz6gNwL3O1KJ9ka_XPFotac2Sb=A@mail.gmail.com>
-References: <20181113121213.14296-1-lukma@denx.de> <20181126143619.GB31334@dragon>
- <20181203103333.111c2463@jawa>
+From: YT Shen <yt.shen@mediatek.com>
+Subject: [PATCH 0/8] add dts nodes to MT2712 SoC
+Date: Mon, 3 Dec 2018 19:35:54 +0800
+Message-ID: <1543836962-18293-1-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181203103333.111c2463@jawa>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Fabio Estevam <fabio.estevam@nxp.com>
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, YT Shen <yt.shen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz,
+This patch series based on v4.20-rc1, include MT2712 usb/iommu/smi/i2c/spi/pwm/mmc/nand/pcie device nodes
 
-On Mon, Dec 3, 2018 at 7:33 AM Lukasz Majewski <lukma@denx.de> wrote:
+Chunfeng Yun (1):
+  arm64: dts: Add USB3 related nodes for MT2712
 
-> > > +           72xx165@0 {
-> >
-> > Please use a generic name for the node.
->
-> This is a bit tricky.
+Honghui Zhang (1):
+  arm64: dts: add pcie nodes for MT2712
 
-What about using 'gpio@0' like described in
-Documentation/devicetree/bindings/gpio/gpio-pisosr.txt ?
+YT Shen (6):
+  arm64: dts: add iommu/smi nodes for MT2712
+  arm64: dts: add i2c nodes for MT2712
+  arm64: dts: add spi nodes for MT2712
+  arm64: dts: add pwm nodes for MT2712
+  arm64: dts: add mmc nodes for MT2712
+  arm64: dts: add nand nodes for MT2712
+
+ arch/arm64/boot/dts/mediatek/mt2712-evb.dts |  98 +++++
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi   | 555 ++++++++++++++++++++++++++++
+ 2 files changed, 653 insertions(+)
+
+-- 
+1.9.1
