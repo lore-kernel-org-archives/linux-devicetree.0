@@ -1,61 +1,42 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCHv2 3/6] PCI: layerscape: Add the EP mode support
-Date: Mon, 3 Dec 2018 04:10:12 +0000
-Message-ID: <HE1PR04MB1497E4A26E7902E5EAB15D36F5AE0@HE1PR04MB1497.eurprd04.prod.outlook.com>
-References: <20181105084653.26597-1-xiaowei.bao@nxp.com>
- <20181105084653.26597-3-xiaowei.bao@nxp.com>
- <20181130105512.GB17598@e107981-ln.cambridge.arm.com>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: [PATCH RESEND V2 0/4] ARM: dts: imx: Add flexcan stop mode wake
+Date: Mon, 3 Dec 2018 05:20:16 +0000
+Message-ID: <20181203051753.1532-1-qiangqing.zhang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181130105512.GB17598@e107981-ln.cambridge.arm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "cyrille.pitchen@free-electrons.com" <cyrille.pitchen@free-electrons.com>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger>
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Joakim Zhang <qiangqing.zhang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTG9yZW56bywNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IExvcmVuem8g
-UGllcmFsaXNpIDxsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tPiANClNlbnQ6IDIwMTjE6jEx1MIz
-MMjVIDE4OjU1DQpUbzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQpDYzogYmhl
-bGdhYXNAZ29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNv
-bTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNo
-b25AdGkuY29tOyBhcm5kQGFybmRiLmRlOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsgTS5o
-LiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54
-cC5jb20+OyBSb3kgWmFuZyA8cm95LnphbmdAbnhwLmNvbT47IGtzdGV3YXJ0QGxpbnV4Zm91bmRh
-dGlvbi5vcmc7IGN5cmlsbGUucGl0Y2hlbkBmcmVlLWVsZWN0cm9ucy5jb207IHBvbWJyZWRhbm5l
-QG5leGIuY29tOyBzaGF3bi5saW5Acm9jay1jaGlwcy5jb207IG5pa2xhcy5jYXNzZWxAYXhpcy5j
-b207IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
-ZnJhZGVhZC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnDQpTdWJqZWN0OiBSZTog
-W1BBVENIdjIgMy82XSBQQ0k6IGxheWVyc2NhcGU6IEFkZCB0aGUgRVAgbW9kZSBzdXBwb3J0DQoN
-Ck9uIE1vbiwgTm92IDA1LCAyMDE4IGF0IDA0OjQ2OjUwUE0gKzA4MDAsIFhpYW93ZWkgQmFvIHdy
-b3RlOg0KPiBBZGQgdGhlIEVQIG1vZGUgc3VwcG9ydC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFhp
-YW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiAtLS0NCj4gdjI6DQo+ICAtIEFkZCB0
-aGUgU29DIHNwZWNpZmljIGNvbXBhdGlibGVzLg0KPiANCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3BjaS9sYXllcnNjYXBlLXBjaS50eHQgICAgIHwgICAgMyArKysNCj4gIDEgZmlsZXMgY2hh
-bmdlZCwgMyBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQ0KDQpXcm9uZyBjb21taXQgJFNV
-QkpFQ1QsIHRoaXMgaXMgbm90IFBDSSBjb2RlLCBpdCBpcyBhIERUIGJpbmRpbmcgdXBkYXRlLCBJ
-IHdpbGwgaGF2ZSBhIGxvb2sgYXQgdGhlIHJlc3Qgb2YgdGhlIHNlcmllcyB0byBzZWUgaWYgSSBj
-YW4gdXBkYXRlIHRoaXMgcGF0Y2ggb3IgeW91IHdpbGwgZG8gaXQgd2l0aCB0aGUgbmV4dCByZXNw
-aW4uDQoNCkxvcmVuem8NCltYaWFvd2VpIEJhb10gSEkgTG9yZW56bywgdGhhbmtzIGEgbG90LCBJ
-IHdpbGwgc2VuZCBWMyBwYXRjaCB0byBtb2RpZnkgdGhlIGNvbW1pdHMuIA0KDQo+IGRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNp
-LnR4dCANCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2Nh
-cGUtcGNpLnR4dA0KPiBpbmRleCA2NmRmMWU4Li45YzA5MGM3IDEwMDY0NA0KPiAtLS0gYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLnR4dA0KPiAr
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNp
-LnR4dA0KPiBAQCAtMTMsMTIgKzEzLDE1IEBAIGluZm9ybWF0aW9uLg0KPiAgDQo+ICBSZXF1aXJl
-ZCBwcm9wZXJ0aWVzOg0KPiAgLSBjb21wYXRpYmxlOiBzaG91bGQgY29udGFpbiB0aGUgcGxhdGZv
-cm0gaWRlbnRpZmllciBzdWNoIGFzOg0KPiArICBSQyBtb2RlOg0KPiAgICAgICAgICAiZnNsLGxz
-MTAyMWEtcGNpZSIsICJzbnBzLGR3LXBjaWUiDQo+ICAgICAgICAgICJmc2wsbHMyMDgwYS1wY2ll
-IiwgImZzbCxsczIwODVhLXBjaWUiLCAic25wcyxkdy1wY2llIg0KPiAgICAgICAgICAiZnNsLGxz
-MjA4OGEtcGNpZSINCj4gICAgICAgICAgImZzbCxsczEwODhhLXBjaWUiDQo+ICAgICAgICAgICJm
-c2wsbHMxMDQ2YS1wY2llIg0KPiAgICAgICAgICAiZnNsLGxzMTAxMmEtcGNpZSINCj4gKyAgRVAg
-bW9kZToNCj4gKyAgICAgICAgImZzbCxsczEwNDZhLXBjaWUtZXAiLCAiZnNsLGxzLXBjaWUtZXAi
-DQo+ICAtIHJlZzogYmFzZSBhZGRyZXNzZXMgYW5kIGxlbmd0aHMgb2YgdGhlIFBDSWUgY29udHJv
-bGxlciByZWdpc3RlciBibG9ja3MuDQo+ICAtIGludGVycnVwdHM6IEEgbGlzdCBvZiBpbnRlcnJ1
-cHQgb3V0cHV0cyBvZiB0aGUgY29udHJvbGxlci4gTXVzdCBjb250YWluIGFuDQo+ICAgIGVudHJ5
-IGZvciBlYWNoIGVudHJ5IGluIHRoZSBpbnRlcnJ1cHQtbmFtZXMgcHJvcGVydHkuDQo+IC0tDQo+
-IDEuNy4xDQo+IA0K
+This patchset intends to add flexcan stop mode wakeup support on IMX6/7 pla=
+tforms.
+
+ChangeLog:
+V1->V2:
+	*update stop mode property(stop-mode -> fsl,stop-mode).
+
+Hi Shawn,
+   This property has been merged both flexcan bindings doc and kernel
+   driver.
+
+Best Regards,
+Joakim Zhang
+
+Aisheng Dong (4):
+  ARM: dts: imx6sx: Add flexcan stop mode wakeup support
+  ARM: dts: imx6qdl: Add flexcan stop mode wakeup support
+  ARM: dts: imx6ul: Add flexcan stop mode wakeup support
+  ARM: dts: imx7s: Add flexcan stop mode wakeup support
+
+ arch/arm/boot/dts/imx6qdl.dtsi | 2 ++
+ arch/arm/boot/dts/imx6sx.dtsi  | 2 ++
+ arch/arm/boot/dts/imx6ul.dtsi  | 2 ++
+ arch/arm/boot/dts/imx7s.dtsi   | 2 ++
+ 4 files changed, 8 insertions(+)
+
+--=20
+2.17.1
