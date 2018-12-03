@@ -1,57 +1,58 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 06/17] Platform: OLPC: Add XO-1.75 EC driver
-Date: Mon, 3 Dec 2018 09:54:40 +0200
-Message-ID: <CAHp75Vc9pbj-jTQ86qV54FDtxzzoY-vvgH9qtvoFWWY1JQOMew@mail.gmail.com>
-References: <20181116162403.49854-1-lkundrak@v3.sk> <20181116162403.49854-7-lkundrak@v3.sk>
- <20181202231328.GB23087@wrath>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: Re: [PATCH 2/3] dt-bindings: mmc: sdhci-of-arasan: Add deprecated
+ message for am654
+Date: Mon, 3 Dec 2018 13:33:50 +0530
+Message-ID: <e431f6f8-3c8d-3540-3d21-d3e9aa292574@ti.com>
+References: <20181129161513.31734-1-faiz_abbas@ti.com>
+ <20181129161513.31734-3-faiz_abbas@ti.com>
+ <6f4734e6-8238-2e14-ae11-114e396df75c@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181202231328.GB23087@wrath>
+In-Reply-To: <6f4734e6-8238-2e14-ae11-114e396df75c@xilinx.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Lubomir Rintel <lkundrak@v3.sk>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, quozl@laptop.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, devel@driverdev.osuosl.orgLinux
+To: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
+Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, adrian.hunter@intel.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 3, 2018 at 1:13 AM Darren Hart <dvhart@infradead.org> wrote:
-> On Fri, Nov 16, 2018 at 05:23:52PM +0100, Lubomir Rintel wrote:
-> > It's based off the driver from the OLPC kernel sources. Somewhat
-> > modernized and cleaned up, for better or worse.
-> >
-> > Modified to plug into the olpc-ec driver infrastructure (so that battery
-> > interface and debugfs could be reused) and the SPI slave framework.
+Hi Michal,
 
-> > - Count the terminating NUL in LOG_BUF_SIZE
-> > - Make olpc_xo175_ec_is_valid_cmd() return -EINVAL instead of -1
-> >   on error
-> > - Spell keyboard/touchpad in full for CHAN_KEYBOARD/TOUCHPAD messages
-> > - Use a #define for PM wakeup processing time
-> > - Log a message on unknown event
-> > - Escape logging payload with %*pE
-> > - Replace an open-coded min()
-> > - Correct an error code on short read
-> > - replaced PM callback #ifdefs with __maybe_unusedm SET_RUNTIME_PM_OPS
-> >   and SET_NOIRQ_SYSTEM_SLEEP_PM_OPS
-> > - dev_get_drvdata() instead of a round-trip through platform device
-> > - s/unsigned char x/u8 x/ in olpc_xo175_ec_resume()
-> > - Use GENMASK() instead of 0xffff for the event mask
-> > - Replace cmd tx/resp rx buffers with structures
-> > - Turned suspend hint arguments into a struct, and tidied up the comment
->
-> Just from these comments, each of these could be a separate patch. You
-> can group related things together, or those that change the same line or
-> function for example. Order them with cleanups / non-functional-changes
-> first, followed by functional changes.
->
-> >
-> > Basically all of the above is based on the review by Andy Shevchenko.
->
-> Andy, what was your intent for Lubomir here? From the above, this looks
-> like it should be several patches to me.
+On 30/11/18 12:48 PM, Michal Simek wrote:
+> On 29. 11. 18 17:15, Faiz Abbas wrote:
+>> The "ti,am654-sdhci-5.1" binding has been moved to a new driver. Indicate
+>> this by a deprecated message.
+>>
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+>> index e2effe17f05e..1edbb049cccb 100644
+>> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+>> @@ -16,6 +16,10 @@ Required Properties:
+>>      - "rockchip,rk3399-sdhci-5.1", "arasan,sdhci-5.1": rk3399 eMMC PHY
+>>        For this device it is strongly suggested to include arasan,soc-ctl-syscon.
+>>      - "ti,am654-sdhci-5.1", "arasan,sdhci-5.1": TI AM654 MMC PHY
+>> +	Note: This binding has been deprecated and moved to [5].
+>> +
+>> +  [5] Documentation/devicetree/bindings/mmc/sdhci-am654.txt
+>> +
+>>    - reg: From mmc bindings: Register location and length.
+>>    - clocks: From clock bindings: Handles to clock inputs.
+>>    - clock-names: From clock bindings: Tuple including "clk_xin" and "clk_ahb"
+>>
+> 
+> I would prefer if you can extend commit message by description you have
+> in cover letter which explains reasons. When this is applied and someone
+> look at git history none will understand from first read why you have
+> done that.
+> 
 
-This is a new module, I don't see why it can't be one patch. For the
-existing code I agree with you.
+Ok. Will add full explanations to both documentation patches.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Faiz
