@@ -1,155 +1,102 @@
-From: "Derald D. Woods" <woods.technical@gmail.com>
-Subject: Re: [PATCH 00/17] Add support for TI PRU ICSS
-Date: Sun, 2 Dec 2018 20:04:32 -0600
-Message-ID: <20181203020431.GC18592@ethiopia>
-References: <1542886753-17625-1-git-send-email-rogerq@ti.com>
+From: Yu Chen <chenyu56@huawei.com>
+Subject: [PATCH v1 01/12] dt-bindings: usb: add support for dwc3 controller on HiSilicon SoCs
+Date: Mon, 3 Dec 2018 11:45:04 +0800
+Message-ID: <20181203034515.91412-2-chenyu56@huawei.com>
+References: <20181203034515.91412-1-chenyu56@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1542886753-17625-1-git-send-email-rogerq@ti.com>
+In-Reply-To: <20181203034515.91412-1-chenyu56@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: tony@atomide.com, robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Yu Chen <chenyu56@huawei.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 22, 2018 at 01:38:56PM +0200, Roger Quadros wrote:
-> Hi,
-> 
-> The Programmable Real-Time Unit and Industrial Communication Subsystem
-> (PRU-ICSS) is present on various TI SoCs such as AM335x, AM437x, AM57x,
-> Keystone 66AK2G, etc. A PRUSS consists of dual 32-bit RISC cores (Programmable
-> Real-Time Units, or PRUs), data and instruction RAMs, shard RAM, and
-> interrupt controller and some internal peripheral modules to facilitate
-> industrial communication. The programmable nature of the PRUs provide
-> flexibility to implement custom peripheral interfaces, fast real-time
-> responses, or specialized data handling. The common peripheral modules
-> include the following,
->   - an MII_RT module with two MII ports for Ethernet
->   - an MDIO port for external Ethernet PHYs
->   - an Industrial Ethernet Peripheral (IEP) to manage/generate Industrial
->     Ethernet functions
->   - an Enhanced Capture Module (eCAP)
->   - an Industrial Ethernet Timer with 7/9 capture and 16 compare events
->   - a 16550-compatible UART to support PROFIBUS
-> 
-> A typical usage scenario would be to load the application firmware into
-> one or more of the PRU cores, initialize one or more of the peripherals
-> and perform I/O through shared RAM (or MSMC RAM) from either a Kernel driver
-> or directly from userspace.
-> 
-> With this two-part series we should be able to use the kernel RPMSG driver
-> along with firmware and user-space examples in the
-> pru-software-support-package [1].
-> 
-> We will also be able to get Dual Ethernet functionality using a kernel driver
-> which will be posted later.
-> 
-> The kernel code will be split into the following sections
-> 
-> 1) soc: pruss_soc_bus: The sole purpose of this driver is to handle platform
-> specific Power management quirks and allow the child node (i.e entire PRUSS)
-> to be unbound from the default kernel driver and bound to something else. e.g. uio_pruss,
-> while allowing to manage PM in the kernel.
-> 
-> 2) soc: pruss: This is the driver for the entire ICSS. Its main purpose is
-> to populate the different modules and handle platform specific quirks.
-> It will also manage the interrupt controller and provide kernel APIs to
-> change ICSS specific knobs in the CFG space e.g. GP_MUX.
-> 
-> 3) remoteproc: pru: This provides a remoteproc interface for the PRU cores.
-> With this we can load firmware, start/stop PRU from kernel or userspace.
-> It adds support for virtio RPMSG. It also provides some kernel APIs
-> (e.g. pru_rproc_set_ctable()) that are PRU specific and required for
-> in-kernel applications (e.g. ethernet)
-> 
-> 4) ARM: OMAP: DTS:
-> Platform data and device tree files.
-> 
-> Due to the large number of patches patches are  split this into 2 email threads.
-> This thread covers (1), (3) and (4).
-> 
-> A second thread will cover the remoteproc driver (3).
-> 
-> The series only adds platform support for AM335x to keep patch count small.
-> Support for other platforms (AM43x, AM57x, K2G) will be added later.
-> 
-> Testing:
-> To test the code with example firmware you can try the LAB5 tutorial
-> http://processors.wiki.ti.com/index.php/PRU_Training:_Hands-on_Labs#LAB_5:_RPMsg_Communication_between_ARM_and_PRU
-> with the pru-software-support package at [2] and the sample rpmsg-client driver.
-> NOTE: you no longer need to build and run PRU_Halt example as shown in the tutorial.
-> 
-> cheers,
-> -roger
-> 
-> [1] https://git.ti.com/pru-software-support-package
-> 	NOTE: The repo needs update to the INTC resource data structures
-> 	The updates that are required are listed in the below repo with one example fixed.
-> [2] https://github.com/rogerq/pru-software-support-package/commits/upstream/pruss
-> 
+This patch adds binding descriptions to support the dwc3 controller
+on HiSilicon SoCs and boards like the HiKey960.
 
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Yu Chen <chenyu56@huawei.com>
+---
+ .../devicetree/bindings/usb/dwc3-hisi.txt          | 67 ++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/dwc3-hisi.txt
 
-Per Roger's instructions, I was able test both patch series on the
-am335x-pocketbeagle, based on linux v4.20-rc4, with the following
-additional 'rpmsg_pru' patches:
-
-https://github.com/beagleboard/linux/commit/2b013313cae8659f2cbd659c314e471a71f1623c
-https://github.com/beagleboard/linux/commit/b894d492a35aa43a7b54512b971a04b9aec17814
-
-Tested-by: Derald D. Woods <woods.technical@gmail.com>
-
-
-> Andrew F. Davis (1):
->   soc: ti: pruss: add pruss_{request,release}_mem_region() API
-> 
-> Roger Quadros (2):
->   soc: ti: pruss: add pruss_cfg_read()/update() API
->   soc: ti: pruss: export pruss_intc_configure/unconfigure APIs
-> 
-> Suman Anna (13):
->   dt-bindings: remoteproc: Add TI PRUSS bindings
->   soc: ti: pruss: Define platform data for PRUSS bus driver
->   soc: ti: pruss: Add pruss_soc_bus platform driver
->   soc: ti: pruss: Fix system suspend/MStandby config issues
->   soc: ti: pruss: Configure SYSCFG properly during probe/remove
->   soc: ti: pruss: Add a platform driver for PRUSS in TI SoCs
->   soc: ti: pruss: enable OCP master ports in SYSCFG always
->   soc: ti: pruss: Add a PRUSS irqchip driver for PRUSS interrupts
->   soc: ti: pruss_intc: Add API to trigger a PRU sysevent
->   ARM: OMAP2+: use pdata quirks for PRUSS reset lines on AM335x
->   ARM: dts: AM33xx: Add the PRU-ICSS DT nodes
->   ARM: dts: AM33xx: Add PRU system events for virtio
->   ARM: dts: am335x-*: Enable PRU-ICSS nodes
-> 
-> Tero Kristo (1):
->   soc: ti: pruss: add pruss_get()/put() API
-> 
->  .../devicetree/bindings/soc/ti/ti,pruss.txt        | 360 ++++++++++++
->  arch/arm/boot/dts/am335x-bone-common.dtsi          |   8 +
->  arch/arm/boot/dts/am335x-evm.dts                   |   8 +
->  arch/arm/boot/dts/am335x-evmsk.dts                 |   8 +
->  arch/arm/boot/dts/am335x-icev2.dts                 |   8 +
->  arch/arm/boot/dts/am33xx.dtsi                      |  78 +++
->  arch/arm/mach-omap2/pdata-quirks.c                 |  11 +
->  drivers/soc/ti/Kconfig                             |  12 +
->  drivers/soc/ti/Makefile                            |   1 +
->  drivers/soc/ti/pruss.c                             | 306 +++++++++++
->  drivers/soc/ti/pruss.h                             |  36 ++
->  drivers/soc/ti/pruss_intc.c                        | 604 +++++++++++++++++++++
->  drivers/soc/ti/pruss_soc_bus.c                     | 279 ++++++++++
->  include/linux/platform_data/ti-pruss.h             |  25 +
->  include/linux/pruss.h                              | 235 ++++++++
->  15 files changed, 1979 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
->  create mode 100644 drivers/soc/ti/pruss.c
->  create mode 100644 drivers/soc/ti/pruss.h
->  create mode 100644 drivers/soc/ti/pruss_intc.c
->  create mode 100644 drivers/soc/ti/pruss_soc_bus.c
->  create mode 100644 include/linux/platform_data/ti-pruss.h
->  create mode 100644 include/linux/pruss.h
-> 
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
+diff --git a/Documentation/devicetree/bindings/usb/dwc3-hisi.txt b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+new file mode 100644
+index 000000000000..d32d2299a0a1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+@@ -0,0 +1,67 @@
++HiSilicon DWC3 USB SoC controller
++
++This file documents the parameters for the dwc3-hisi driver.
++
++Required properties:
++- compatible:	should be "hisilicon,hi3660-dwc3"
++- clocks:	A list of phandle + clock-specifier pairs for the
++		clocks listed in clock-names
++- clock-names:	Specify clock names
++- resets:	list of phandle and reset specifier pairs.
++
++Sub-nodes:
++The dwc3 core should be added as subnode to HiSilicon DWC3 as shown in the
++example below. The DT binding details of dwc3 can be found in:
++Documentation/devicetree/bindings/usb/dwc3.txt
++
++Example:
++	usb3: hisi_dwc3 {
++		compatible = "hisilicon,hi3660-dwc3";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
++			 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
++		clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
++		assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
++		assigned-clock-rates = <229000000>;
++		resets = <&crg_rst 0x90 8>,
++			 <&crg_rst 0x90 7>,
++			 <&crg_rst 0x90 6>,
++			 <&crg_rst 0x90 5>;
++
++		dwc3: dwc3@ff100000 {
++			compatible = "snps,dwc3";
++			reg = <0x0 0xff100000 0x0 0x100000>;
++			interrupts = <0 159 4>, <0 161 4>;
++			phys = <&usb_phy>;
++			phy-names = "usb3-phy";
++			dr_mode = "otg";
++			maximum-speed = "super-speed";
++			phy_type = "utmi";
++			snps,dis-del-phy-power-chg-quirk;
++			snps,lfps_filter_quirk;
++			snps,dis_u2_susphy_quirk;
++			snps,dis_u3_susphy_quirk;
++			snps,tx_de_emphasis_quirk;
++			snps,tx_de_emphasis = <1>;
++			snps,dis_enblslpm_quirk;
++			snps,gctl-reset-quirk;
++
++			port {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				dwc3_role_switch: endpoint@0 {
++					reg = <0>;
++					remote-endpoint = <&rt1711h_ep>;
++				};
++
++				dwc3_role_switch_notify: endpoint@1 {
++					reg = <1>;
++					remote-endpoint = <&hikey_usb_ep>;
++				};
++			};
++		};
++	};
+-- 
+2.15.0-rc2
