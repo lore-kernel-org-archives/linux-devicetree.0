@@ -1,7 +1,7 @@
 From: YT Shen <yt.shen@mediatek.com>
-Subject: [PATCH 6/8] arm64: dts: add mmc nodes for MT2712
-Date: Mon, 3 Dec 2018 19:36:00 +0800
-Message-ID: <1543836962-18293-7-git-send-email-yt.shen@mediatek.com>
+Subject: [PATCH 7/8] arm64: dts: add nand nodes for MT2712
+Date: Mon, 3 Dec 2018 19:36:01 +0800
+Message-ID: <1543836962-18293-8-git-send-email-yt.shen@mediatek.com>
 References: <1543836962-18293-1-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,53 +14,40 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: YT Shen <yt.shen@mediatek.com>
 ---
- arch/arm64/boot/dts/mediatek/mt2712e.dtsi | 34 +++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-index e9856fe..4f0aa65 100644
+index 4f0aa65..e8afb54 100644
 --- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-@@ -611,6 +611,40 @@
+@@ -504,6 +504,27 @@
  		status = "disabled";
  	};
  
-+	mmc0: mmc@11230000 {
-+		compatible = "mediatek,mt2712-mmc";
-+		reg = <0 0x11230000 0 0x1000>;
-+		interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&pericfg CLK_PERI_MSDC30_0>,
-+			 <&pericfg CLK_PERI_MSDC50_0_HCLK_EN>,
-+			 <&pericfg CLK_PERI_MSDC30_0_QTR_EN>,
-+			 <&pericfg CLK_PERI_MSDC50_0_EN>;
-+		clock-names = "source", "hclk", "bus_clk", "source_cg";
++	nandc: nfi@1100e000 {
++		compatible = "mediatek,mt2712-nfc";
++		reg = <0 0x1100e000 0 0x1000>;
++		interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&topckgen CLK_TOP_NFI2X_EN>, <&pericfg CLK_PERI_NFI>;
++		clock-names = "nfi_clk", "pad_clk";
++		ecc-engine = <&bch>;
++		#address-cells = <1>;
++		#size-cells = <0>;
 +		status = "disabled";
 +	};
 +
-+	mmc1: mmc@11240000 {
-+		compatible = "mediatek,mt2712-mmc";
-+		reg = <0 0x11240000 0 0x1000>;
-+		interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&pericfg CLK_PERI_MSDC30_1>,
-+			 <&topckgen CLK_TOP_AXI_SEL>,
-+			 <&pericfg CLK_PERI_MSDC30_1_EN>;
-+		clock-names = "source", "hclk", "source_cg";
++	bch: ecc@1100f000 {
++		compatible = "mediatek,mt2712-ecc";
++		reg = <0 0x1100f000 0 0x1000>;
++		interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&topckgen CLK_TOP_NFI1X_CK_EN>;
++		clock-names = "nfiecc_clk";
 +		status = "disabled";
 +	};
 +
-+	mmc2: mmc@11250000 {
-+		compatible = "mediatek,mt2712-mmc";
-+		reg = <0 0x11250000 0 0x1000>;
-+		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&pericfg CLK_PERI_MSDC30_2>,
-+			 <&topckgen CLK_TOP_AXI_SEL>,
-+			 <&pericfg CLK_PERI_MSDC30_2_EN>;
-+		clock-names = "source", "hclk", "source_cg";
-+		status = "disabled";
-+	};
-+
- 	ssusb: usb@11271000 {
- 		compatible = "mediatek,mt2712-mtu3", "mediatek,mtu3";
- 		reg = <0 0x11271000 0 0x3000>,
+ 	i2c3: i2c@11010000 {
+ 		compatible = "mediatek,mt2712-i2c";
+ 		reg = <0 0x11010000 0 0x90>,
 -- 
 1.9.1
