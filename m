@@ -1,78 +1,87 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 0/7] Introduce STPMIC1 PMIC Driver
-Date: Mon, 3 Dec 2018 07:11:45 +0000
-Message-ID: <20181203071145.GA26661@dell>
-References: <1543571742-17995-1-git-send-email-p.paillet@st.com>
+From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
+Subject: Re: [PATCH 02/14] dt-bindings: soc: milbeaut: Add Milbeaut trampoline
+ description
+Date: Mon, 3 Dec 2018 16:42:56 +0900
+Message-ID: <f5917f71-f15b-a92d-649c-e3f5f5f10698@socionext.com>
+References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
+ <1542589274-13878-3-git-send-email-sugaya.taichi@socionext.com>
+ <154337047410.88331.9696178601340675631@swboyd.mtv.corp.google.com>
+ <c746a3de-a9e3-9f25-ecb9-703ceb7e62d0@socionext.com>
+ <154356579701.88331.5043467509900444879@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1543571742-17995-1-git-send-email-p.paillet@st.com>
+In-Reply-To: <154356579701.88331.5043467509900444879@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pascal PAILLET-LME <p.paillet@st.com>
-Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
+To: Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 30 Nov 2018, Pascal PAILLET-LME wrote:
+Hi,
 
-> The goal of this patch-set is to propose a driver for the STPMIC1 PMIC from 
-> STMicroelectronics. 
-> The STPMIC1 regulators supply power to an application processor as well as 
-> to external system peripherals such as DDR, Flash memories and system
-> devices. It also features onkey button input and an hardware watchdog.
-> The STPMIC1 is controlled via I2C. 
+On 2018/11/30 17:16, Stephen Boyd wrote:
+> Quoting Sugaya, Taichi (2018-11-29 04:24:51)
+>> On 2018/11/28 11:01, Stephen Boyd wrote:
+>>> Quoting Sugaya Taichi (2018-11-18 17:01:07)
+>>>>    create mode 100644 Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
+>>>> new file mode 100644
+>>>> index 0000000..f5d906c
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
+>>>> @@ -0,0 +1,12 @@
+>>>> +Socionext M10V SMP trampoline driver binding
+>>>> +
+>>>> +This is a driver to wait for sub-cores while boot process.
+>>>> +
+>>>> +- compatible: should be "socionext,smp-trampoline"
+>>>> +- reg: should be <0x4C000100 0x100>
+>>>> +
+>>>> +EXAMPLE
+>>>> +       trampoline: trampoline@0x4C000100 {
+>>> Drop the 0x part of unit addresses.
+>>
+>> Okay.
+>>
+>>
+>>>> +               compatible = "socionext,smp-trampoline";
+>>>> +               reg = <0x4C000100 0x100>;
+>>> Looks like a software construct, which we wouldn't want to put into DT
+>>> this way. DT doesn't describe drivers.
+>> We would like to use this node only getting the address of the
+>> trampoline area
+>> in which sub-cores wait.  (They have finished to go to this area in previous
+>> bootloader process.)
 > 
-> Main driver is drivers/mfd/stpmic1 that handle I2C regmap configuration and
-> irqchip. stpmic1_regulator, stpmic1_onkey and stpmic1_wdt need stpmic1 mfd
-> as parent.
-> 
-> STPMIC1 MFD and regulator drivers maybe mandatory at boot time.
-> 
-> Pascal Paillet (7):
-> changes in v7:
-> * rebase on regul/for-next
-> 
->   dt-bindings: mfd: document stpmic1
->   mfd: stpmic1: add stpmic1 driver
->   dt-bindings: input: document stpmic1 pmic onkey
->   input: stpmic1: add stpmic1 onkey driver
->   dt-bindings: watchdog: document stpmic1 pmic watchdog
->   watchdog: stpmic1: add stpmic1 watchdog driver
->   regulator: stpmic1: fix regulator_lock usage
-> 
->  .../devicetree/bindings/input/st,stpmic1-onkey.txt |  28 +++
->  .../devicetree/bindings/mfd/st,stpmic1.txt         |  61 ++++++
->  .../bindings/watchdog/st,stpmic1-wdt.txt           |  11 ++
->  drivers/input/misc/Kconfig                         |  11 ++
->  drivers/input/misc/Makefile                        |   2 +
->  drivers/input/misc/stpmic1_onkey.c                 | 198 +++++++++++++++++++
->  drivers/mfd/Kconfig                                |  16 ++
->  drivers/mfd/Makefile                               |   1 +
->  drivers/mfd/stpmic1.c                              | 213 +++++++++++++++++++++
+> Is this area part of memory, or a special SRAM? If it's part of memory,
+> I would expect this node to be under the reserved-memory node and
+> pointed to by some other node that uses this region. Could even be the
+> CPU nodes.
 
->  drivers/regulator/stpmic1_regulator.c              |   2 +-
+Yes, 0x4C000100 is a part of memory under the reserved-memory node. So 
+we would like to use the SRAM ( allocated 0x00000000 ) area instead.
+BTW, sorry, the trampoline address of this example is simply wrong.  We 
+were going to use a part of the SRAM from the beginning.
 
-Is it just Mark you're waiting on now?
-
->  drivers/watchdog/Kconfig                           |  12 ++
->  drivers/watchdog/Makefile                          |   1 +
->  drivers/watchdog/stpmic1_wdt.c                     | 139 ++++++++++++++
->  include/dt-bindings/mfd/st,stpmic1.h               |  50 +++++
->  include/linux/mfd/stpmic1.h                        | 212 ++++++++++++++++++++
->  15 files changed, 956 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
->  create mode 100644 Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
->  create mode 100644 drivers/input/misc/stpmic1_onkey.c
->  create mode 100644 drivers/mfd/stpmic1.c
->  create mode 100644 drivers/watchdog/stpmic1_wdt.c
->  create mode 100644 include/dt-bindings/mfd/st,stpmic1.h
->  create mode 100644 include/linux/mfd/stpmic1.h
 > 
+>>
+>> So should we embed the constant value in source codes instead of getting
+>> from
+>> DT because the address is constant at the moment? Or is there other
+>> approach?
+>>
+> 
+> If it's constant then that also works. Why does it need to come from DT
+> at all then?
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+We think it is not good to embed constant value in driver codes and do 
+not have another way...
+Are there better ways?
+
+Thanks
+Sugaya Taichi
+
+> 
