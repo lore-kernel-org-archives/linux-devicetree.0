@@ -1,88 +1,224 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 23/34] dt-bindings: arm: Convert Realtek board/soc bindings to json-schema
-Date: Mon,  3 Dec 2018 15:32:12 -0600
-Message-ID: <20181203213223.16986-24-robh@kernel.org>
+Subject: [PATCH v2 22/34] dt-bindings: arm: Convert QCom board/soc bindings to json-schema
+Date: Mon,  3 Dec 2018 15:32:11 -0600
+Message-ID: <20181203213223.16986-23-robh@kernel.org>
 References: <20181203213223.16986-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181203213223.16986-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, arm@kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Mark Rutland <mark.rutland@arm.com>
+Cc: Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, arm@kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Convert Realtek SoC bindings to DT schema format using json-schema.
+Convert QCom SoC bindings to DT schema format using json-schema.
 
-Cc: "Andreas Färber" <afaerber@suse.de>
+Cc: Andy Gross <andy.gross@linaro.org>
+Cc: David Brown <david.brown@linaro.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/arm/realtek.txt       | 22 ------------------
- .../devicetree/bindings/arm/realtek.yaml      | 23 +++++++++++++++++++
- 2 files changed, 23 insertions(+), 22 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/realtek.txt
- create mode 100644 Documentation/devicetree/bindings/arm/realtek.yaml
+ .../devicetree/bindings/arm/qcom.txt          |  57 --------
+ .../devicetree/bindings/arm/qcom.yaml         | 125 ++++++++++++++++++
+ 2 files changed, 125 insertions(+), 57 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/qcom.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/qcom.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/realtek.txt b/Documentation/devicetree/bindings/arm/realtek.txt
+diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
 deleted file mode 100644
-index 95839e19ae92..000000000000
---- a/Documentation/devicetree/bindings/arm/realtek.txt
+index ee532e705d6c..000000000000
+--- a/Documentation/devicetree/bindings/arm/qcom.txt
 +++ /dev/null
-@@ -1,22 +0,0 @@
--Realtek platforms device tree bindings
----------------------------------------
+@@ -1,57 +0,0 @@
+-QCOM device tree bindings
+--------------------------
 -
+-Some qcom based bootloaders identify the dtb blob based on a set of
+-device properties like SoC and platform and revisions of those components.
+-To support this scheme, we encode this information into the board compatible
+-string.
 -
--RTD1295 SoC
--===========
+-Each board must specify a top-level board compatible string with the following
+-format:
 -
--Required root node properties:
+-	compatible = "qcom,<SoC>[-<soc_version>][-<foundry_id>]-<board>[/<subtype>][-<board_version>]"
 -
-- - compatible :  must contain "realtek,rtd1295"
+-The 'SoC' and 'board' elements are required. All other elements are optional.
 -
+-The 'SoC' element must be one of the following strings:
 -
--Root node property compatible must contain, depending on board:
+-	apq8016
+-	apq8074
+-	apq8084
+-	apq8096
+-	msm8916
+-	msm8974
+-	msm8992
+-	msm8994
+-	msm8996
+-	mdm9615
+-	ipq8074
+-	sdm845
 -
-- - MeLE V9: "mele,v9"
-- - ProBox2 AVA: "probox2,ava"
-- - Zidoo X9S: "zidoo,x9s"
+-The 'board' element must be one of the following strings:
 -
+-	cdp
+-	liquid
+-	dragonboard
+-	mtp
+-	sbc
+-	hk01
 -
--Example:
+-The 'soc_version' and 'board_version' elements take the form of v<Major>.<Minor>
+-where the minor number may be omitted when it's zero, i.e.  v1.0 is the same
+-as v1. If all versions of the 'board_version' elements match, then a
+-wildcard '*' should be used, e.g. 'v*'.
 -
--    compatible = "zidoo,x9s", "realtek,rtd1295";
-diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
+-The 'foundry_id' and 'subtype' elements are one or more digits from 0 to 9.
+-
+-Examples:
+-
+-	"qcom,msm8916-v1-cdp-pm8916-v2.1"
+-
+-A CDP board with an msm8916 SoC, version 1 paired with a pm8916 PMIC of version
+-2.1.
+-
+-	"qcom,apq8074-v2.0-2-dragonboard/1-v0.1"
+-
+-A dragonboard board v0.1 of subtype 1 with an apq8074 SoC version 2, made in
+-foundry 2.
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
 new file mode 100644
-index 000000000000..84ee9b22ef7a
+index 000000000000..f6316ab66385
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/realtek.yaml
-@@ -0,0 +1,23 @@
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -0,0 +1,125 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/arm/realtek.yaml#
++$id: http://devicetree.org/schemas/bindings/arm/qcom.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Realtek platforms device tree bindings
++title: QCOM device tree bindings
 +
 +maintainers:
-+  - Andreas Färber <afaerber@suse.de>
++  - Stephen Boyd <sboyd@codeaurora.org>
++
++description: |
++  Some qcom based bootloaders identify the dtb blob based on a set of
++  device properties like SoC and platform and revisions of those components.
++  To support this scheme, we encode this information into the board compatible
++  string.
++
++  Each board must specify a top-level board compatible string with the following
++  format:
++
++  	compatible = "qcom,<SoC>[-<soc_version>][-<foundry_id>]-<board>[/<subtype>][-<board_version>]"
++
++  The 'SoC' and 'board' elements are required. All other elements are optional.
++
++  The 'SoC' element must be one of the following strings:
++
++  	apq8016
++  	apq8074
++  	apq8084
++  	apq8096
++  	msm8916
++  	msm8974
++  	msm8992
++  	msm8994
++  	msm8996
++  	mdm9615
++  	ipq8074
++  	sdm845
++
++  The 'board' element must be one of the following strings:
++
++  	cdp
++  	liquid
++  	dragonboard
++  	mtp
++  	sbc
++  	hk01
++
++  The 'soc_version' and 'board_version' elements take the form of v<Major>.<Minor>
++  where the minor number may be omitted when it's zero, i.e.  v1.0 is the same
++  as v1. If all versions of the 'board_version' elements match, then a
++  wildcard '*' should be used, e.g. 'v*'.
++
++  The 'foundry_id' and 'subtype' elements are one or more digits from 0 to 9.
++
++  Examples:
++
++  	"qcom,msm8916-v1-cdp-pm8916-v2.1"
++
++  A CDP board with an msm8916 SoC, version 1 paired with a pm8916 PMIC of version
++  2.1.
++
++  	"qcom,apq8074-v2.0-2-dragonboard/1-v0.1"
++
++  A dragonboard board v0.1 of subtype 1 with an apq8074 SoC version 2, made in
++  foundry 2.
 +
 +properties:
-+  $nodename:
-+    const: '/'
 +  compatible:
-+    # RTD1295 SoC based boards
-+    items:
-+      - enum:
-+          - mele,v9
-+          - probox2,ava
-+          - zidoo,x9s
-+      - const: realtek,rtd1295
++    oneOf:
++      - items:
++          - enum:
++              - qcom,apq8016-sbc
++          - const: qcom,apq8016
++
++      - items:
++          - enum:
++              - qcom,apq8064-cm-qs600
++              - qcom,apq8064-ifc6410
++          - const: qcom,apq8064
++
++      - items:
++          - enum:
++              - qcom,apq8074-dragonboard
++          - const: qcom,apq8074
++
++      - items:
++          - enum:
++              - qcom,apq8060-dragonboard
++              - qcom,msm8660-surf
++          - const: qcom,msm8660
++
++      - items:
++          - enum:
++              - qcom,apq8084-mtp
++              - qcom,apq8084-sbc
++          - const: qcom,apq8084
++
++      - items:
++          - enum:
++              - qcom,msm8960-cdp
++          - const: qcom,msm8960
++
++      - items:
++          - const: qcom,msm8916-mtp/1
++          - const: qcom,msm8916-mtp
++          - const: qcom,msm8916
++
++      - items:
++          - const: qcom,msm8996-mtp
++
++      - items:
++          - const: qcom,ipq4019
++
++      - items:
++          - enum:
++              - qcom,ipq8064-ap148
++          - const: qcom,ipq8064
++
++      - items:
++          - enum:
++              - qcom,ipq8074-hk01
++          - const: qcom,ipq8074
++
 +...
 -- 
 2.19.1
