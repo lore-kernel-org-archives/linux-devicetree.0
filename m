@@ -1,60 +1,84 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v3 4/4] ARM: dts: imx5: add gpu nodes
-Date: Mon, 3 Dec 2018 20:16:07 -0200
-Message-ID: <CAOMZO5B18DyZ0zvit6AgaueMifnMf2ctSo7pE_XndRpt7+bnLw@mail.gmail.com>
-References: <20181203211816.5129-1-jonathan@marek.ca> <20181203211816.5129-4-jonathan@marek.ca>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 05/12] PCI: aardvark: add suspend to RAM support
+Date: Mon, 3 Dec 2018 23:18:44 +0100
+Message-ID: <20181203231844.0791bdee@xps13>
+References: <20181123141831.8214-1-miquel.raynal@bootlin.com>
+        <20181203102708.GA6090@e107981-ln.cambridge.arm.com>
+        <20181203163846.494904f9@xps13>
+        <1999610.6DN9RK2Tt3@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181203211816.5129-4-jonathan@marek.ca>
+In-Reply-To: <1999610.6DN9RK2Tt3@aspire.rjw.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jonathan@marek.ca
-Cc: freedreno@lists.freedesktop.org, Chris Healy <Chris.Healy@zii.aero>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, sudeep.holla@arm.com, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonathan,
+Hi Rafael, Stephen,
 
-Thanks for working on this. Really nice to see GPU support for mx51/mx53!
+"Rafael J. Wysocki" <rjw@rjwysocki.net> wrote on Mon, 03 Dec 2018
+23:00:20 +0100:
 
-On Mon, Dec 3, 2018 at 7:21 PM Jonathan Marek <jonathan@marek.ca> wrote:
+> On Monday, December 3, 2018 4:38:46 PM CET Miquel Raynal wrote:
+> > Hi Lorenzo,
+> > 
+> > Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote on Mon, 3 Dec 2018
+> > 10:27:08 +0000:
+> >   
+> > > [+Rafael, Sudeep]
+> > > 
+> > > On Fri, Nov 23, 2018 at 03:18:24PM +0100, Miquel Raynal wrote:  
+> > > > Add suspend and resume callbacks. The priority of these are
+> > > > "_noirq()", to workaround early access to the registers done by the
+> > > > PCI core through the ->read()/->write() callbacks at resume time.
+> > > > 
+> > > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > > > ---
+> > > >  drivers/pci/controller/pci-aardvark.c | 52 +++++++++++++++++++++++++++
+> > > >  1 file changed, 52 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > > > index 108b3f15c410..7ecf1ac4036b 100644
+> > > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > > @@ -1108,6 +1108,55 @@ static int advk_pcie_setup_clk(struct advk_pcie *pcie)
+> > > >  	return ret;
+> > > >  }
+> > > >  
+> > > > +static int __maybe_unused advk_pcie_suspend(struct device *dev)
+> > > > +{
+> > > > +	struct advk_pcie *pcie = dev_get_drvdata(dev);
+> > > > +
+> > > > +	advk_pcie_disable_phy(pcie);
+> > > > +
+> > > > +	clk_disable_unprepare(pcie->clk);    
+> > > 
+> > > I have noticed it is common practice, still, I would like to check whether
+> > > it is allowed to call functions that may sleep in a NOIRQ suspend/resume
+> > > callback ?  
+> > 
+> > You are right this is weird. I double checked and for instance,
+> > pcie-mediatek.c, pci-tegra.c and pci-imx6.c do the exact same thing. There are
+> > probably other cases where drivers call functions that may sleep from a NOIRQ
+> > context. I am interested to know if this is valid and if not, what is the
+> > alternative?
+> >   
+> 
+> Yes, it is valid.  _noirq means that the high-level action handlers will not be
+> invoked for interrupts occurring during that period, but that doesn't apply to
+> timer interrupts.
+> 
+> IOW, don't expect *your* IRQ handler to be invoked then (if this is not a timer
+> IRQ), but you can sleep.
+> 
+> Thanks,
+> Rafael
+> 
 
-Please add a commit log.
+Thank you both for the enlightenment.
 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 
-> ---
->  arch/arm/boot/dts/imx51.dtsi | 17 +++++++++++++++++
->  arch/arm/boot/dts/imx53.dtsi | 17 +++++++++++++++++
->  2 files changed, 34 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
-> index 67d462715..e9a7bbce9 100644
-> --- a/arch/arm/boot/dts/imx51.dtsi
-> +++ b/arch/arm/boot/dts/imx51.dtsi
-> @@ -628,5 +628,22 @@
->                                 clock-names = "ipg", "ahb";
->                         };
->                 };
-> +
-> +               gpu: gpu@30000000 {
-
-We put the peripheral nodes in address order, so this one should go
-prior to the IPU node.
-
-> +                       compatible = "amd,imageon-200.1", "amd,imageon";
-
-I can't find the dt-bindings for these compatible entries. Have you
-documented them?
-
-> +                       reg = <0x30000000 0x20000>;
-> +                       reg-names = "kgsl_3d0_reg_memory";
-> +                       interrupts = <12>;
-> +                       interrupt-names = "kgsl_3d0_irq";
-> +                       clocks = <&clks IMX5_CLK_GPU3D_GATE>, <&clks IMX5_CLK_GARB_GATE>;
-> +                       clock-names = "core_clk", "mem_iface_clk";
-> +
-> +                       qcom,gpu-pwrlevels {
-> +                               compatible = "qcom,gpu-pwrlevels";
-> +                               qcom,gpu-pwrlevel@0 {
-
-You could drop this @0
+Thanks,
+Miquèl
