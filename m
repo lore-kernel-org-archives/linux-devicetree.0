@@ -1,88 +1,123 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 5/5] arm: dts: exynos4: opp-suspend in DMC and leftbus
-Date: Mon, 3 Dec 2018 18:22:51 +0100
-Message-ID: <20181203172251.GA15124@kozik-lap>
-References: <1543847475-7600-1-git-send-email-l.luba@partner.samsung.com>
- <CGME20181203143135eucas1p165fe6183ae90de7906f9683cb41ff4c1@eucas1p1.samsung.com>
- <1543847475-7600-6-git-send-email-l.luba@partner.samsung.com>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [RFT PATCH v1 2/4] dt-binding: cpu-topology: Move cpu-map to a
+ common binding.
+Date: Mon, 3 Dec 2018 09:23:42 -0800
+Message-ID: <f902086b-09e1-ad85-d191-137708f5b105@wdc.com>
+References: <1543534100-3654-1-git-send-email-atish.patra@wdc.com>
+ <1543534100-3654-3-git-send-email-atish.patra@wdc.com>
+ <20181203165521.GB17883@e107155-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1543847475-7600-6-git-send-email-l.luba@partner.samsung.com>
+In-Reply-To: <20181203165521.GB17883@e107155-lin>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, cw00.choi@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitriy Cherkasov <dmitriy@oss-tech.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Juri Lelli <juri.lelli@arm.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Peter Z
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 03, 2018 at 03:31:15PM +0100, Lukasz Luba wrote:
-> Mark the state for devfreq device while entring suspend/resume process.
+On 12/3/18 8:55 AM, Sudeep Holla wrote:
+> On Thu, Nov 29, 2018 at 03:28:18PM -0800, Atish Patra wrote:
+>> cpu-map binding can be used to described cpu topology for both
+>> RISC-V & ARM. It makes more sense to move the binding to document
+>> to a common place.
+>>
+>> The relevant discussion can be found here.
+>> https://lkml.org/lkml/2018/11/6/19
+>>
 > 
-> The patch is based on earlier work by Tobias Jakobi.
+> Looks good to me apart from a minor query below in the example.
 > 
-> Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-> Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  arch/arm/boot/dts/exynos4210.dtsi | 2 ++
->  arch/arm/boot/dts/exynos4412.dtsi | 2 ++
->  2 files changed, 4 insertions(+)
-
-Thanks, applied with some minor commit msg changes. In general, please
-take care about title prefix (git log --oneline
-arch/arm/boot/dts/exynos*) and always explain why you are doing this.
-You just mentioned "what" but that is pretty obvious by looking at
-commit contents. The commit msg should answer why these should be marked
-as opp-suspend and why these values were chosen.
-
-The cover letter just briefly describes "issue with devfreq devices' frequency
-during suspend/resume"... but what issue?
-
-Best regards,
-Krzysztof
-
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
 > 
-> diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
-> index b6091c2..4429b72 100644
-> --- a/arch/arm/boot/dts/exynos4210.dtsi
-> +++ b/arch/arm/boot/dts/exynos4210.dtsi
-> @@ -298,6 +298,7 @@
->  			opp-400000000 {
->  				opp-hz = /bits/ 64 <400000000>;
->  				opp-microvolt = <1150000>;
-> +				opp-suspend;
->  			};
->  		};
->  
-> @@ -367,6 +368,7 @@
->  			};
->  			opp-200000000 {
->  				opp-hz = /bits/ 64 <200000000>;
-> +				opp-suspend;
->  			};
->  		};
->  	};
-> diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-> index 51f72f0..908c0c4 100644
-> --- a/arch/arm/boot/dts/exynos4412.dtsi
-> +++ b/arch/arm/boot/dts/exynos4412.dtsi
-> @@ -432,6 +432,7 @@
->  			opp-400000000 {
->  				opp-hz = /bits/ 64 <400000000>;
->  				opp-microvolt = <1050000>;
-> +				opp-suspend;
->  			};
->  		};
->  
-> @@ -520,6 +521,7 @@
->  			opp-200000000 {
->  				opp-hz = /bits/ 64 <200000000>;
->  				opp-microvolt = <1000000>;
-> +				opp-suspend;
->  			};
->  		};
->  
-> -- 
-> 2.7.4
+>> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+>> ---
+>>   .../{arm/topology.txt => cpu/cpu-topology.txt}     | 81 ++++++++++++++++++----
+>>   1 file changed, 67 insertions(+), 14 deletions(-)
+>>   rename Documentation/devicetree/bindings/{arm/topology.txt => cpu/cpu-topology.txt} (86%)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
+>> similarity index 86%
+>> rename from Documentation/devicetree/bindings/arm/topology.txt
+>> rename to Documentation/devicetree/bindings/cpu/cpu-topology.txt
+>> index 66848355..1de6fbce 100644
+>> --- a/Documentation/devicetree/bindings/arm/topology.txt
+>> +++ b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
+> 
+> [...]
+> 
+>> +Example 3: HiFive Unleashed (RISC-V 64 bit, 4 core system)
+>> +
+>> +cpus {
+>> +	#address-cells = <2>;
+>> +	#size-cells = <2>;
+>> +	compatible = "sifive,fu540g", "sifive,fu500";
+>> +	model = "sifive,hifive-unleashed-a00";
+>> +
+>> +	...
+>> +
+>> +	cpu-map {
+>> +		cluster0 {
+>> +			core0 {
+>> +				cpu = <&L12>;
+>> +		 	};
+>> +			core1 {
+>> +				cpu = <&L15>;
+>> +			};
+>> +			core2 {
+>> +				cpu0 = <&L18>;
+>> +			};
+>> +			core3 {
+>> +				cpu0 = <&L21>;
+>> +			};
+>> +		};
+>> + 	};
+>> +
+>> +	L12: cpu@1 {
+>> +		device_type = "cpu";
+>> +		compatible = "sifive,rocket0", "riscv";
+>> +		reg = <0x1>;
+>> +	}
+>> +
+>> +	L15: cpu@2 {
+>> +		device_type = "cpu";
+>> +		compatible = "sifive,rocket0", "riscv";
+>> +		reg = <0x2>;
+>> +	}
+>> +	L18: cpu@3 {
+>> +		device_type = "cpu";
+>> +		compatible = "sifive,rocket0", "riscv";
+>> +		reg = <0x3>;
+>> +	}
+>> +	L21: cpu@4 {
+>> +		device_type = "cpu";
+>> +		compatible = "sifive,rocket0", "riscv";
+>> +		reg = <0x4>;
+>> +	}
+>> +};
+> 
+> The labels for the CPUs drew my attention. Is it intentionally random
+> (or even specific) or just chosen to show anything can be used as labels ?
+
+SiFive generates the device tree from RTL directly. So I am not sure if 
+they assign random numbers or a particular algorithm chooses the label. 
+I tried to put the exact ones that is available publicly.
+
+https://github.com/riscv/riscv-device-tree-doc/blob/master/examples/sifive-hifive_unleashed-microsemi.dts 
+
+
+Regards,
+Atish
+> The reason I ask is people tend to copy from existing DT or examples
+> like here and so want to make sure if it can be kept as generic as
+> possible in the example. Just my opinion and I am fine if you want to
+> keep it as is, thought of checking the intentions here.
+> 
+
+
+
+> --
+> Regards,
+> Sudeep
 > 
