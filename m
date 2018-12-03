@@ -1,86 +1,187 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH 9/9] arm64: dts: allwinner: a64-amarula-relic:
- Add GT5663 CTP node
-Date: Mon,  3 Dec 2018 15:45:47 +0530
-Message-ID: <20181203101547.16835-9-jagan@amarulasolutions.com>
-References: <20181203101547.16835-1-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v6 0/2] media: platform: Add Aspeed Video Engine driver
+Date: Mon, 3 Dec 2018 11:17:49 +0100
+Message-ID: <ed7f7598-c2a8-2a78-3513-d80344fd51b5@xs4all.nl>
+References: <1543347457-59224-1-git-send-email-eajames@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBZUESTQAKGQEWINRH3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181203101547.16835-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1543347457-59224-1-git-send-email-eajames@linux.ibm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eddie James <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add Goodix GT5663 capacitive touch controller node on
-Amarula A64-Relic board.
+On 11/27/2018 08:37 PM, Eddie James wrote:
+> The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
+> can capture and compress video data from digital or analog sources. With
+> the Aspeed chip acting as a service processor, the Video Engine can
+> capture the host processor graphics output.
+> 
+> This series adds a V4L2 driver for the VE, providing the usual V4L2 streaming
+> interface by way of videobuf2. Each frame, the driver triggers the hardware to
+> capture the host graphics output and compress it to JPEG format.
+> 
+> v4l2-compliance SHA: ac9596560fedb3cd29148ef90b03778d76f1cd9a, 32 bits
+> 
+> Compliance test for device /dev/video0:
+> 
+> Driver Info:
+> 	Driver name      : aspeed-video
+> 	Card type        : Aspeed Video Engine
+> 	Bus info         : platform:aspeed-video
+> 	Driver version   : 4.18.19
+> 	Capabilities     : 0x85200001
+> 		Video Capture
+> 		Read/Write
+> 		Streaming
+> 		Extended Pix Format
+> 		Device Capabilities
+> 	Device Caps      : 0x05200001
+> 		Video Capture
+> 		Read/Write
+> 		Streaming
+> 		Extended Pix Format
+> 
+> Required ioctls:
+> 	test VIDIOC_QUERYCAP: OK
+> 
+> Allow for multiple opens:
+> 	test second /dev/video0 open: OK
+> 	test VIDIOC_QUERYCAP: OK
+> 	test VIDIOC_G/S_PRIORITY: OK
+> 	test for unlimited opens: OK
+> 
+> Debug ioctls:
+> 	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+> 	test VIDIOC_LOG_STATUS: OK (Not Supported)
+> 
+> Input ioctls:
+> 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+> 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+> 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+> 	test VIDIOC_G/S/ENUMINPUT: OK
+> 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+> 	Inputs: 1 Audio Inputs: 0 Tuners: 0
+> 
+> Output ioctls:
+> 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+> 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+> 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+> 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+> 	Outputs: 0 Audio Outputs: 0 Modulators: 0
+> 
+> Input/Output configuration ioctls:
+> 	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+> 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK
+> 	test VIDIOC_DV_TIMINGS_CAP: OK
+> 	test VIDIOC_G/S_EDID: OK (Not Supported)
+> 
+> Control ioctls (Input 0):
+> 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+> 	test VIDIOC_QUERYCTRL: OK
+> 	test VIDIOC_G/S_CTRL: OK
+> 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+> 		fail: v4l2-test-controls.cpp(831): failed to find event for control 'Chroma Subsampling'
 
-The CTP connected to board with,
-- SDA, SCK from i2c1
-- GPIO-LD0 as vcc supply
-- PH4 gpio as interrupt pin
-- PH8 gpio as reset pin
-- X and Y axis are inverted
+This is fixed in our master branch. Event handling was broken for a while.
 
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
- .../allwinner/sun50i-a64-amarula-relic.dts    | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
+I recommend that you upgrade, since this was a nasty little bug.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-index 9ac6d773188b..913fcdff828e 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-@@ -88,6 +88,28 @@
- 	status = "okay";
- };
- 
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+	status = "okay";
-+
-+	touchscreen@5d {
-+		compatible = "goodix,gt5663";
-+		reg = <0x5d>;
-+		vcc-supply = <&reg_ldo_io0>;			/* VCC-CTP: GPIO0-LDO */
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 4 IRQ_TYPE_EDGE_FALLING>;
-+		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>;	/* CTP-INT: PH4 */
-+		reset-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>;	/* CTP-RST: PH8 */
-+		touchscreen-inverted-x;
-+		touchscreen-inverted-y;
-+	};
-+};
-+
-+&i2c1_pins {
-+	bias-pull-up;
-+};
-+
- &mmc1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins>;
-@@ -251,6 +273,13 @@
- 	regulator-name = "vdd-cpus";
- };
- 
-+&reg_ldo_io0 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-ctp";
-+	status = "okay";
-+};
-+
- &reg_rtc_ldo {
- 	regulator-name = "vcc-rtc";
- };
--- 
-2.18.0.321.gffc6fa0e3
+Regards,
+
+	Hans
+
+> 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
+> 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+> 	Standard Controls: 3 Private Controls: 0
+> 
+> Format ioctls (Input 0):
+> 	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+> 	test VIDIOC_G/S_PARM: OK
+> 	test VIDIOC_G_FBUF: OK (Not Supported)
+> 	test VIDIOC_G_FMT: OK
+> 	test VIDIOC_TRY_FMT: OK
+> 	test VIDIOC_S_FMT: OK
+> 	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+> 	test Cropping: OK (Not Supported)
+> 	test Composing: OK (Not Supported)
+> 	test Scaling: OK (Not Supported)
+> 
+> Codec ioctls (Input 0):
+> 	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+> 	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+> 	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+> 
+> Buffer ioctls (Input 0):
+> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+> 	test VIDIOC_EXPBUF: OK
+> 	test Requests: OK (Not Supported)
+> 
+> Test input 0:
+> 
+> Streaming ioctls:
+> 	test read/write: OK
+> 	test blocking wait: OK
+> 	test MMAP: OK                                     
+> 	test USERPTR: OK (Not Supported)
+> 	test DMABUF: Cannot test, specify --expbuf-device
+> 
+> Total: 48, Succeeded: 47, Failed: 1, Warnings: 0
+> 
+> Changes since v5:
+>  - Rework resolution change and v4l2 timings functions again with active and
+>    detected timings.
+>  - Renamed a few things.
+>  - Fixed polarities in the timings.
+> 
+> Changes since v4:
+>  - Set real min and max resolution in enum_dv_timings
+>  - Add check for vb2_is_busy before settings the timings
+>  - Set max frame rate to the actual max rather than max + 1
+>  - Correct the input status to 0.
+>  - Rework resolution change to only set the relevant h/w regs during startup or
+>    when set_timings is called.
+> 
+> Changes since v3:
+>  - Switch update reg function to use u32 clear rather than unsigned long mask
+>  - Add timing information from host VGA signal
+>  - Fix binding documentation mispelling
+>  - Fix upper case hex values
+>  - Add wait_prepare and wait_finish
+>  - Set buffer state to queued (rather than error) if streaming fails to start
+>  - Switch engine busy print statement to error
+>  - Removed a couple unecessary type assignments in v4l2 ioctls
+>  - Added query_dv_timings, fixed get_dv_timings
+>  - Corrected source change event to fire if and only if size actually changes
+>  - Locked open and release
+> 
+> Changes since v2:
+>  - Switch to streaming interface. This involved a lot of changes.
+>  - Rework memory allocation due to using videobuf2 buffers, but also only
+>    allocate the necessary size of source buffer rather than the max size
+> 
+> Changes since v1:
+>  - Removed le32_to_cpu calls for JPEG header data
+>  - Reworked v4l2 ioctls to be compliant.
+>  - Added JPEG controls
+>  - Updated devicetree docs according to Rob's suggestions.
+>  - Added myself to MAINTAINERS
+> 
+> Eddie James (2):
+>   dt-bindings: media: Add Aspeed Video Engine binding documentation
+>   media: platform: Add Aspeed Video Engine driver
+> 
+>  .../devicetree/bindings/media/aspeed-video.txt     |   26 +
+>  MAINTAINERS                                        |    8 +
+>  drivers/media/platform/Kconfig                     |    9 +
+>  drivers/media/platform/Makefile                    |    1 +
+>  drivers/media/platform/aspeed-video.c              | 1719 ++++++++++++++++++++
+>  5 files changed, 1763 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
+>  create mode 100644 drivers/media/platform/aspeed-video.c
+> 
