@@ -1,38 +1,50 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 0/3] CAN fix for stm32mp157c
-Date: Mon, 3 Dec 2018 09:58:07 +0100
-Message-ID: <ccc28b23-ce6d-41a9-74ea-2f7c85f69c84@st.com>
-References: <1542271942-28130-1-git-send-email-bich.hemon@st.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v6 14/17] dt-bindings: sram: Add Allwinner suniv F1C100s
+Date: Mon, 3 Dec 2018 09:58:27 +0100
+Message-ID: <20181203085827.ytu25vahyomrbk2f@flea>
+References: <cover.1543781680.git.mesihkilinc@gmail.com>
+ <0b60c924d30ce3e04325214789de2c5b0403a056.1543781680.git.mesihkilinc@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fzgdrbtgggpcxae2"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542271942-28130-1-git-send-email-bich.hemon@st.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <0b60c924d30ce3e04325214789de2c5b0403a056.1543781680.git.mesihkilinc@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bich HEMON <bich.hemon@st.com>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
+To: Mesih Kilinc <mesihkilinc@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Julian Calaby <julian.calaby@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bich,
 
-On 11/15/18 9:52 AM, Bich HEMON wrote:
-> This patchset changes the CAN RAM mapping and adds CAN sleep pins.
-> 
-> Bich Hemon (3):
->    ARM: dts: stm32: change CAN RAM mapping on stm32mp157c
->    ARM: dts: stm32: add can1 sleep pins muxing
->    ARM: dts: stm32: add can1 sleep pins muxing on stm32mp157c-ev1 board
-> 
->   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 7 +++++++
->   arch/arm/boot/dts/stm32mp157c-ev1.dts     | 3 ++-
->   arch/arm/boot/dts/stm32mp157c.dtsi        | 4 ++--
->   3 files changed, 11 insertions(+), 3 deletions(-)
-> 
-> -- 
-> 1.9.1
+--fzgdrbtgggpcxae2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Series applied on stm32-next.
+On Sun, Dec 02, 2018 at 11:23:48PM +0300, Mesih Kilinc wrote:
+> The suniv ARMv5 F1C100s chip has similar sram controller to sun4i A10.
+> Add compatible string for it.
+>=20
+> Signed-off-by: Mesih Kilinc <mesihkilinc@gmail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Regards
-Alex
+Applied, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--fzgdrbtgggpcxae2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXATwMwAKCRDj7w1vZxhR
+xdSoAP4/HPXU3Q61NogkhzLHf2yDoRjUAkg8CuS2L52tW0OzuwEA+KBPQe++ZqGv
+rs+mcOAAv916/2YgTUOS+YbPUKP7dQg=
+=PsyZ
+-----END PGP SIGNATURE-----
+
+--fzgdrbtgggpcxae2--
