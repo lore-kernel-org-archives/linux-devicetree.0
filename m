@@ -1,78 +1,147 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [RFC PATCH v2 08/15] usb:cdns3: Implements device operations part
- of the API
-Date: Mon, 3 Dec 2018 10:19:47 +0000
-Message-ID: <BYAPR07MB47098B0E57C9AF98A457D1B5DDAE0@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
- <1542535751-16079-9-git-send-email-pawell@cadence.com>
- <5BFE8883.7090802@ti.com>
- <BYAPR07MB4709BBB7E78C7A7244270215DDAC0@BYAPR07MB4709.namprd07.prod.outlook.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 5/5] arm64: dts: allwinner: a64-amarula-relic: Add OV5640
+ camera node
+Date: Mon, 3 Dec 2018 18:24:52 +0800
+Message-ID: <CAGb2v6441wV7PM6q=vF2cpJtP9BGdYjQQqNU54rqELNJ5YcmdQ@mail.gmail.com>
+References: <20181203100747.16442-1-jagan@amarulasolutions.com> <20181203100747.16442-6-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR07MB4709BBB7E78C7A7244270215DDAC0@BYAPR07MB4709.namprd07.prod.outlook.com>
-Content-Language: en-US
+In-Reply-To: <20181203100747.16442-6-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>, Felipe Balbi <balbi@kernel.org>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
->>> +
->>> +static struct usb_ep *cdns3_gadget_match_ep(struct usb_gadget *gadget,
->>> +					    struct usb_endpoint_descriptor *desc,
->>> +					    struct usb_ss_ep_comp_descriptor *comp_desc)
->>> +{
->>> +	struct cdns3_device *priv_dev =3D gadget_to_cdns3_device(gadget);
->>> +	struct cdns3_endpoint *priv_ep;
->>> +	unsigned long flags;
->>> +
->>> +	priv_ep =3D cdns3_find_available_ss_ep(priv_dev, desc);
->>> +	if (IS_ERR(priv_ep)) {
->>> +		dev_err(&priv_dev->dev, "no available ep\n");
->>> +		return NULL;
->>> +	}
->>> +
->>> +	dev_dbg(&priv_dev->dev, "match endpoint: %s\n", priv_ep->name);
->>> +
->>> +	spin_lock_irqsave(&priv_dev->lock, flags);
->>> +	priv_ep->endpoint.desc =3D desc;
->>> +	priv_ep->dir  =3D usb_endpoint_dir_in(desc) ? USB_DIR_IN : USB_DIR_OU=
-T;
->>> +	priv_ep->type =3D usb_endpoint_type(desc);
->>> +
->>> +	list_add_tail(&priv_ep->ep_match_pending_list,
->>> +		      &priv_dev->ep_match_list);
->>> +	spin_unlock_irqrestore(&priv_dev->lock, flags);
->>> +	return &priv_ep->endpoint;
->>> +}
->>
->>Why do you need a custom match_ep?
->>doesn't usb_ep_autoconfig suffice?
+On Mon, Dec 3, 2018 at 6:08 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
 >
->I need to test it but at first glance it  looks like usb_ep_autoconfig suf=
-fice.
+> Amarula A64-Relic board by default bound with OV5640 camera,
+> so add support for it with below pin information.
 >
->>
->>You can check if EP is claimed or not by checking the ep->claimed flag.
->>
-I checked it and did not work correct. The flag claimed is set in usb_ep_au=
-toconf, but=20
-a little bit later during USB RESET this flag is cleared.=20
-So, I can't base on this flag.  I think that it's incorrect behavior in gad=
-get core driver or in function drivers.
-Maybe we should have additional flag in usb_ep object used during resetting=
-, or usb_ep_autoconf function should be called after each USB RESET.=20
+> - PE13, PE12 via i2c-gpio bitbanging
+> - CLK_CSI_MCLK as external clock
+> - PE1 as external clock pin muxing
+> - DLDO3 as vcc-csi supply
+> - DLDO3 as AVDD supply
+> - ALDO1 as DOVDD supply
+> - ELDO3 as DVDD supply
+> - PE14 gpio for reset pin
+> - PE15 gpio for powerdown pin
+>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+>  .../allwinner/sun50i-a64-amarula-relic.dts    | 54 +++++++++++++++++++
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  5 ++
+>  2 files changed, 59 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> index 6cb2b7f0c817..9ac6d773188b 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> @@ -22,6 +22,41 @@
+>                 stdout-path = "serial0:115200n8";
+>         };
+>
+> +       i2c-csi {
+> +               compatible = "i2c-gpio";
+> +               sda-gpios = <&pio 4 13 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
+> +               scl-gpios = <&pio 4 12 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
 
-I notice that I can based on ep->address it is set also in usb_ep_autoconf =
-and probably is not cleared anywhere.
-It's little tricky, but It looks like it works correct. I add some comment =
-for this checking.=20
-Maybe in feature I will be able to replace it with claimed flag.
+FYI our hardware doesn't do open drain.
 
-Felipe what's your opinion about claimed flag.  It's should be fixed or not=
- ?
+> +               i2c-gpio,delay-us = <5>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               ov5640: camera@3c {
+> +                       compatible = "ovti,ov5640";
+> +                       reg = <0x3c>;
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&csi_mclk_pin>;
+> +                       clocks = <&ccu CLK_CSI_MCLK>;
+> +                       clock-names = "xclk";
+> +
+> +                       AVDD-supply = <&reg_dldo3>;
+> +                       DOVDD-supply = <&reg_aldo1>;
 
-Cheers
-Pawel
+DOVDD is the supply for I/O. You say it is ALDO1 here.
+
+> +                       DVDD-supply = <&reg_eldo3>;
+> +                       reset-gpios = <&pio 4 14 GPIO_ACTIVE_LOW>; /* CSI-RST-R: PE14 */
+> +                       powerdown-gpios = <&pio 4 15 GPIO_ACTIVE_HIGH>; /* CSI-STBY-R: PE15 */
+> +
+> +                       port {
+> +                               ov5640_ep: endpoint {
+> +                                       remote-endpoint = <&csi_ep>;
+> +                                       bus-width = <8>;
+> +                                       hsync-active = <1>; /* Active high */
+> +                                       vsync-active = <0>; /* Active low */
+> +                                       data-active = <1>;  /* Active high */
+> +                                       pclk-sample = <1>;  /* Rising */
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
+>         wifi_pwrseq: wifi-pwrseq {
+>                 compatible = "mmc-pwrseq-simple";
+>                 clocks = <&rtc 1>;
+> @@ -30,6 +65,25 @@
+>         };
+>  };
+>
+> +&csi {
+> +       vcc-csi-supply = <&reg_dldo3>;
+
+But here you say the SoC-side pins are driven from DLDO3.
+
+This is a somewhat odd mismatch.
+
+Regardless, the ov5640 driver enables all three regulators at probe time.
+Shouldn't that be enough to get the I2C bus working? The pin voltage
+supply does not belong here.
+
+> +       status = "okay";
+> +
+> +       port {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               csi_ep: endpoint {
+> +                       remote-endpoint = <&ov5640_ep>;
+> +                       bus-width = <8>;
+> +                       hsync-active = <1>; /* Active high */
+> +                       vsync-active = <0>; /* Active low */
+> +                       data-active = <1>;  /* Active high */
+> +                       pclk-sample = <1>;  /* Rising */
+> +               };
+> +       };
+> +};
+> +
+>  &ehci0 {
+>         status = "okay";
+>  };
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> index d32ff694ac5c..844bb44a78af 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -538,6 +538,11 @@
+>                                 function = "csi0";
+>                         };
+>
+> +                       csi_mclk_pin: csi-mclk {
+> +                               pins = "PE1";
+> +                               function = "csi0";
+> +                       };
+> +
+
+This should be a separate patch.
+
+ChenYu
+
+>                         i2c0_pins: i2c0_pins {
+>                                 pins = "PH0", "PH1";
+>                                 function = "i2c0";
+> --
+> 2.18.0.321.gffc6fa0e3
+>
