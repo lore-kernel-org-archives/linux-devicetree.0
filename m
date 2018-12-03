@@ -1,42 +1,28 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFT PATCH v1 1/4] Documentation: DT: arm: add support for
- sockets defining package boundaries
-Date: Mon, 3 Dec 2018 16:46:43 +0000
-Message-ID: <20181203164643.GA17883@e107155-lin>
-References: <1543534100-3654-1-git-send-email-atish.patra@wdc.com>
- <1543534100-3654-2-git-send-email-atish.patra@wdc.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v11 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ Firmware
+ bindings
+Date: Mon, 03 Dec 2018 08:55:17 -0800
+Message-ID: <154385611714.88331.8566017812494618071@swboyd.mtv.corp.google.com>
+References: <1543722903-10989-1-git-send-email-tdas@codeaurora.org>
+ <1543722903-10989-2-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1543534100-3654-2-git-send-email-atish.patra@wdc.com>
+In-Reply-To: <1543722903-10989-2-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Dmitriy Cherkasov <dmitriy@oss-tech.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Juri Lelli <juri.lelli@arm.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Palmer Dabbelt <palmer@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, evgreen@google.com, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 29, 2018 at 03:28:17PM -0800, Atish Patra wrote:
-> From: Sudeep Holla <sudeep.holla@arm.com>
-> 
-> The current ARM DT topology description provides the operating system
-> with a topological view of the system that is based on leaf nodes
-> representing either cores or threads (in an SMT system) and a
-> hierarchical set of cluster nodes that creates a hierarchical topology
-> view of how those cores and threads are grouped.
-> 
-> However this hierarchical representation of clusters does not allow to
-> describe what topology level actually represents the physical package or
-> the socket boundary, which is a key piece of information to be used by
-> an operating system to optimize resource allocation and scheduling.
-> 
-> Lets add a new "socket" node type in the cpu-map node to describe the
-> same.
-> 
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Quoting Taniya Das (2018-12-01 19:55:02)
+> Add QCOM cpufreq firmware device bindings for Qualcomm Technology Inc's
+> SoCs. This is required for managing the cpu frequency transitions which a=
+re
+> controlled by the hardware engine.
+> =
 
-Thanks for picking this up and putting it as part of your unification
-work. I will try to test the series and review it soon.
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
 
---
-Regards,
-Sudeep
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
