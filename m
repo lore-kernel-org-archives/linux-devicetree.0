@@ -1,99 +1,41 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 5/6] [DO NOT MERGE] ARM: dts: sunxi: bananapi-m2p: Add
- HDF5640 camera module
-Date: Mon, 3 Dec 2018 17:54:54 +0800
-Message-ID: <CAGb2v64dbDW9Fpb_B0d8wQW7WTELqGoUzasV_KXonfEkucRZTA@mail.gmail.com>
-References: <20181130075849.16941-1-wens@csie.org> <20181130075849.16941-6-wens@csie.org>
- <CAMty3ZAuBM0s3eNhQBySSaUrUAkiF=Hk+Ab=gsN=QucLJv0zyw@mail.gmail.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH 0/5] media/sun6i: Allwinner A64 CSI support
+Date: Mon,  3 Dec 2018 15:37:42 +0530
+Message-ID: <20181203100747.16442-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMty3ZAuBM0s3eNhQBySSaUrUAkiF=Hk+Ab=gsN=QucLJv0zyw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 3, 2018 at 5:52 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> On Fri, Nov 30, 2018 at 1:29 PM Chen-Yu Tsai <wens@csie.org> wrote:
-> >
-> > The Bananapi M2+ comes with an optional sensor based on the ov5640 from
-> > Omnivision. Enable the support for it in the DT.
-> >
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > ---
-> >  arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi | 87 +++++++++++++++++++
-> >  1 file changed, 87 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi
-> > index b3283aeb5b7d..d97a98acf378 100644
-> > --- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi
-> > +++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi
-> > @@ -89,6 +89,42 @@
-> >                 };
-> >         };
-> >
-> > +       reg_cam_avdd: cam-avdd {
-> > +               compatible = "regulator-fixed";
-> > +               regulator-name = "csi-avdd";
-> > +               regulator-min-microvolt = <2800000>;
-> > +               regulator-max-microvolt = <2800000>;
-> > +               startup-delay-us = <200>; /* 50 us + board delays */
-> > +               enable-active-high;
-> > +               gpio = <&pio 3 14 GPIO_ACTIVE_HIGH>; /* PD14 */
-> > +       };
-> > +
-> > +       reg_cam_dovdd: cam-dovdd {
-> > +               compatible = "regulator-fixed";
-> > +               regulator-name = "csi-dovdd";
-> > +               regulator-min-microvolt = <2800000>;
-> > +               regulator-max-microvolt = <2800000>;
-> > +               /*
-> > +                * This regulator also powers the pull-ups for the I2C bus.
-> > +                * For some reason, if this is turned off, subsequent use
-> > +                * of the I2C bus, even when turned on, does not work.
-> > +                */
-> > +               startup-delay-us = <200>; /* 50 us + board delays */
-> > +               regulator-always-on;
-> > +               enable-active-high;
-> > +               gpio = <&pio 3 14 GPIO_ACTIVE_HIGH>; /* PD14 */
-> > +       };
-> > +
-> > +       reg_cam_dvdd: cam-dvdd {
-> > +               compatible = "regulator-fixed";
-> > +               regulator-name = "csi-dvdd";
-> > +               regulator-min-microvolt = <1500000>;
-> > +               regulator-max-microvolt = <1500000>;
-> > +               startup-delay-us = <200>; /* 50 us + board delays */
-> > +               enable-active-high;
-> > +               gpio = <&pio 3 14 GPIO_ACTIVE_HIGH>; /* PD14 */
-> > +       };
-> > +
-> >         reg_gmac_3v3: gmac-3v3 {
-> >                       compatible = "regulator-fixed";
-> >                       regulator-name = "gmac-3v3";
-> > @@ -106,6 +142,26 @@
-> >         };
-> >  };
-> >
-> > +&csi {
-> > +       status = "okay";
-> > +
-> > +       port {
-> > +               #address-cells = <1>;
-> > +               #size-cells = <0>;
-> > +
-> > +               /* Parallel bus endpoint */
-> > +               csi_from_ov5640: endpoint {
-> > +                       remote-endpoint = <&ov5640_to_csi>;
-> > +                       bus-width = <8>;
-> > +                       data-shift = <2>;
->
-> If I'm not wrong, the data-shift is not available in sun6i at-least in
-> conf register.
+This series support CSI on Allwinner A64.
 
-Indeed. Seems only a few drivers actually take this into account. Since
-this is just an example, I'm not going to respin it.
+The CSI controller seems similar to that of in H3, so fallback
+compatible is used to load the driver.
 
-ChenYu
+Unlike other SoC's A64 has set of GPIO Pin gropus SDA, SCK intead
+of dedicated I2C controller, so this series used i2c-gpio bitbanging.
+
+Right now the camera is able to detect, but capture images shows 
+sequence of red, blue line. any suggestion please help.
+
+Any inputs,
+Jagan.
+
+Jagan Teki (5):
+  dt-bindings: media: sun6i: Add A64 CSI compatible (w/ H3 fallback)
+  dt-bindings: media: sun6i: Add vcc-csi supply property
+  media: sun6i: Add vcc-csi supply regulator
+  arm64: dts: allwinner: a64: Add A64 CSI controller
+  arm64: dts: allwinner: a64-amarula-relic: Add OV5640 camera node
+
+ .../devicetree/bindings/media/sun6i-csi.txt   |  4 ++
+ .../allwinner/sun50i-a64-amarula-relic.dts    | 54 +++++++++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 26 +++++++++
+ .../platform/sunxi/sun6i-csi/sun6i_csi.c      | 15 ++++++
+ 4 files changed, 99 insertions(+)
+
+-- 
+2.18.0.321.gffc6fa0e3
