@@ -1,45 +1,38 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 02/17] dt-bindings: arm: Add new
- Allwinner ARMv5 F1C100s SoC
-Date: Mon, 3 Dec 2018 09:57:08 +0100
-Message-ID: <20181203085708.fblw4z66p2vyr52c@flea>
-References: <cover.1543781680.git.mesihkilinc@gmail.com>
- <6fa3cf509379a0888388821eef3e322c014df5b8.1543781680.git.mesihkilinc@gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 0/3] CAN fix for stm32mp157c
+Date: Mon, 3 Dec 2018 09:58:07 +0100
+Message-ID: <ccc28b23-ce6d-41a9-74ea-2f7c85f69c84@st.com>
+References: <1542271942-28130-1-git-send-email-bich.hemon@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lvx2wzkx735lsbsm"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4G7SPQAKGQEMBXNXLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <6fa3cf509379a0888388821eef3e322c014df5b8.1543781680.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1542271942-28130-1-git-send-email-bich.hemon@st.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bich HEMON <bich.hemon@st.com>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Bich,
 
---lvx2wzkx735lsbsm
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Sun, Dec 02, 2018 at 11:23:36PM +0300, Mesih Kilinc wrote:
-> Add new Allwinner ARMv5 F1C100s SoC's compatible string
+On 11/15/18 9:52 AM, Bich HEMON wrote:
+> This patchset changes the CAN RAM mapping and adds CAN sleep pins.
 > 
-> Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Bich Hemon (3):
+>    ARM: dts: stm32: change CAN RAM mapping on stm32mp157c
+>    ARM: dts: stm32: add can1 sleep pins muxing
+>    ARM: dts: stm32: add can1 sleep pins muxing on stm32mp157c-ev1 board
+> 
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 7 +++++++
+>   arch/arm/boot/dts/stm32mp157c-ev1.dts     | 3 ++-
+>   arch/arm/boot/dts/stm32mp157c.dtsi        | 4 ++--
+>   3 files changed, 11 insertions(+), 3 deletions(-)
+> 
+> -- 
+> 1.9.1
 
-Applie,d thanks!
-Maxime
+Series applied on stm32-next.
 
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---lvx2wzkx735lsbsm--
+Regards
+Alex
