@@ -1,101 +1,102 @@
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: Re: [PATCH V5 2/2] base/drivers/arch_topology: Default dmips-mhz if
- they are not set in DT
-Date: Mon, 3 Dec 2018 14:46:09 +0100
-Message-ID: <2b050e93-f734-f2f3-ac67-a30d37bf1950@arm.com>
-References: <1543325060-1599-1-git-send-email-daniel.lezcano@linaro.org>
- <1543325060-1599-2-git-send-email-daniel.lezcano@linaro.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 2/8] phy: mvebu-cp110-comphy: fix port check in
+ ->xlate()
+Date: Mon, 3 Dec 2018 14:56:22 +0100
+Message-ID: <20181203145622.0d38869d@xps13>
+References: <20181130144743.675-1-miquel.raynal@bootlin.com>
+        <20181130144743.675-3-miquel.raynal@bootlin.com>
+        <20181130190031.GH30658@n2100.armlinux.org.uk>
+        <20181202203509.21b067c4@xps13>
+        <20181203003623.GJ30658@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543325060-1599-2-git-send-email-daniel.lezcano@linaro.org>
-Content-Language: en-GB
+In-Reply-To: <20181203003623.GJ30658@n2100.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, rjw@rjwysocki.net
-Cc: linux-kernel@vger.kernel.org, viresh.kumar@linaro.org, Chris Redpath <chris.redpath@linaro.org>, Quentin Perret <quentin.perret@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh@kernel.org>, Quentin Perret <quentin.perret@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Li Yang <leoyang.li@nxp.com>, Olof Johansson <olof@lixom.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, linux-kernel@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+Hi Russell,
 
-+cc: Russell King <linux@armlinux.org.uk>
+Russell King - ARM Linux <linux@armlinux.org.uk> wrote on Mon, 3 Dec
+2018 00:36:23 +0000:
 
-On 11/27/18 2:24 PM, Daniel Lezcano wrote:
-> In the case of asymmetric SoC with the same micro-architecture, we
-> have a group of CPUs with smaller OPPs than the other group. One
-> example is the 96boards dragonboard 820c. There is no dmips/MHz
-> difference between both groups, so no need to specify the values in
-> the DT. Unfortunately, without these defined, there is no scaling
-> capacity computation triggered, so we need to write
-> 'capacity-dmips-mhz' for each CPU with the same value in order to
-> force the scaled capacity computation.
+> On Sun, Dec 02, 2018 at 08:35:09PM +0100, Miquel Raynal wrote:
+> > Hi Russell,
+> > 
+> > Russell King - ARM Linux <linux@armlinux.org.uk> wrote on Fri, 30 Nov
+> > 2018 19:00:31 +0000:
+> >   
+> > > On Fri, Nov 30, 2018 at 03:47:37PM +0100, Miquel Raynal wrote:  
+> > > > So far the PHY ->xlate() callback was checking if the port was
+> > > > "invalid" before continuing, meaning that the port has not been used
+> > > > yet. This check is not correct as there is no opposite call to    
+> > > > ->xlate() once the PHY is released by the user and the port will    
+> > > > remain "valid" after the first phy_get()/phy_put() calls. Hence, if
+> > > > this driver is built as a module, inserted, removed and inserted
+> > > > again, the PHY will appear busy and the second probe will fail.
+> > > > 
+> > > > To fix this, just drop the faulty check and instead verify that the
+> > > > port number is valid (ie. in the possible range).
+> > > > 
+> > > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > > > ---
+> > > >  drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 4 ++--
+> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+> > > > index 31b9a1c18345..a40b876ff214 100644
+> > > > --- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+> > > > +++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+> > > > @@ -567,9 +567,9 @@ static struct phy *mvebu_comphy_xlate(struct device *dev,
+> > > >  		return phy;
+> > > >  
+> > > >  	lane = phy_get_drvdata(phy);
+> > > > -	if (lane->port >= 0)
+> > > > -		return ERR_PTR(-EBUSY);
+> > > >  	lane->port = args->args[0];
+> > > > +	if (lane->port >= MVEBU_COMPHY_PORTS)
+> > > > +		return ERR_PTR(-EINVAL);    
+> > > 
+> > > Shouldn't we validate args->args[0] before doing anything?
+> > >   
+> > 
+> > I don't understand your point, there is a check on args->args[0] as
+> > we check its value (through lane->port) right after. What do you
+> > have in mind?  
 > 
-> In order to fix this situation, allocate 'raw_capacity' so the pointer
-> is set and the init_cpu_capacity_callback() function can be called.
+> Right, there is already a check on args->args[0] for it being greater
+> than MVEBU_COMPHY_PORTS and returning an error (and in fact warning
+> if that is the case).  So in that case, what is the use of the above
+> additional test you are proposing to add?  The resulting code ends up
+> looking like this:
 > 
-> This was tested on db820c:
->   - specified values in the DT (correct results)
->   - partial values defined in the DT (error + fallback to defaults)
->   - no specified values in the DT (correct results)
+> 	if (WARN_ON(args->args[0] >= MVEBU_COMPHY_PORTS))
+> 		return ERR_PTR(-EINVAL);
+> ...
+> 	lane->port = args->args[0];
+> +	if (lane->port >= MVEBU_COMPHY_PORTS)
+> +		return ERR_PTR(-EINVAL);  
 > 
-> correct results are:
->    cat /sys/devices/system/cpu/cpu*/cpu_capacity
->     758
->     758
->    1024
->    1024
+> which is just silly - the second test can never be evaluated as true,
+> and therefore is redundant.
 > 
->    ... respectively for CPU0, CPU1, CPU2 and CPU3.
+> In any case, my point was that in your patch, where you assign
+> lane->port and then validate the lane->port value, this is in
+> principle the wrong order - the order should always be: validate
+> first, then make use.
 > 
-> That reflects the capacity for the max frequencies 1593600 and 2150400.
 
-[...]
+You are right, this test is redundant; I forgot about the first
+check. I will just drop these additional two lines and just do:
 
-I'm afraid that this change is incompatible with the still existing 
-cpu_efficiency interface we have in Arm32 for A15/A7 systems like Arm TC2:
+                [...]
+                lane->port = args->args[0];
 
-In case you specify clock-frequency dt properties per cpu for such a 
-system, the cpu_capacity values are determined via the cpu_efficiency 
-code in arch/arm/kernel/topology.c.
+                return 0;
+        }
 
-So on Arm TC2 with clock-frequency = <1000000000> [A15] and <800000000> 
-[A7] you get:
-
-root@linaro-nano:~# cat /sys/devices/system/cpu/cpu*/cpu_capacity
-606
-1441
-1441
-606
-606
-
-With your patches on top (cpu_capacity functionality in 
-drivers/base/arch_topology.c does not have to be switched on by 
-specifying capacity-dmips-mhz dt properties anymore) we end up scaling 
-by max frequency again:
-
-root@linaro-nano:~# cat /sys/devices/system/cpu/cpu*/cpu_capacity
-358
-1024
-1024
-358
-358
-
-I tried to remove the cpu_efficiency based API a year ago but Russell 
-pointed out that the compatibility has to be maintained for longer:
-
-https://lore.kernel.org/lkml/20171024102718.16113-1-dietmar.eggemann@arm.com/
-
-I assume that the capacity-dmips-mhz dt property is like a switch to 
-turn this functionality on for big.Little and so called gold/silver 
-platforms, which have cores with the same uArch but in frequency domains 
-with different max frequency values.
-
-So what's wrong with specifying capacity-dmips-mhz = <1024> for all 
-cores for those gold/silver platforms? I don't expect that there will be 
-so many of them. And normal SMP platforms (w/o frequency domains w/o 
-different max frequency values) don't have to execute this code.
-
-IMHO, at least we should remove the cpu_efficiency bits before we do 
-this change.
-
-[...]
+Thanks,
+Miquèl
