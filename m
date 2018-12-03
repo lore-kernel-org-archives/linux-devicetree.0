@@ -1,174 +1,82 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v1 04/12] usb: dwc3: dwc3-hisi: Add code for dwc3 of
- Hisilicon Soc Platform
-Date: Mon, 3 Dec 2018 16:30:33 +0800
-Message-ID: <2b46d6fc-a132-40fa-6f15-78e84a4d3b01@huawei.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v1 01/12] dt-bindings: usb: add support for dwc3
+ controller on HiSilicon SoCs
+Date: Mon, 3 Dec 2018 11:35:10 +0300
+Message-ID: <fde4d37b-0c4d-055b-a0ba-4e9fe87717ad@cogentembedded.com>
 References: <20181203034515.91412-1-chenyu56@huawei.com>
- <20181203034515.91412-5-chenyu56@huawei.com>
- <CAHp75VcdbJ9KV2Xr9mQsAcODMCJUMXz0OY0t_FSJgZ6dXx2fYQ@mail.gmail.com>
+ <20181203034515.91412-2-chenyu56@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VcdbJ9KV2Xr9mQsAcODMCJUMXz0OY0t_FSJgZ6dXx2fYQ@mail.gmail.com>
+In-Reply-To: <20181203034515.91412-2-chenyu56@huawei.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: wangbinghui@hisilicon.com, USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, John Stultz <john.stultz@linaro.org>
+To: Yu Chen <chenyu56@huawei.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello!
 
-On 2018/12/3 16:12, Andy Shevchenko wrote:
-> On Mon, Dec 3, 2018 at 5:48 AM Yu Chen <chenyu56@huawei.com> wrote:
->>
->> This driver handles the poweron and shutdown of dwc3 core
->> on Hisilicon Soc Platform.
-> 
->> +config USB_DWC3_HISI
->> +       tristate "HiSilicon Kirin Platforms"
->> +       depends on ((ARCH_HISI && ARM64) || COMPILE_TEST) && OF
-> 
-> It would be easy to read if
-> depends on OF
-> would be on a separate line
-> 
->> +       default USB_DWC3
->> +       help
->> +         Support USB2/3 functionality in HiSilicon Kirin platforms.
->> +         Say 'Y' or 'M' if you have one such device.
-> 
->> +++ b/drivers/usb/dwc3/dwc3-hisi.c
->> @@ -0,0 +1,335 @@
->> +// SPDX-License-Identifier: GPL-2.0+
-> 
-> You need to talk to your manager and fix License correspondingly.
-> Currently there is an ambigous reading.
-> 
->> +/**
-> 
-> Why /** ?
-> 
->> + * dwc3-hisi.c - Support for dwc3 platform devices on HiSilicon platforms
-> 
-> Usually put filename in the file is not the best idea.
-> 
->> + *
->> + * Copyright (C) 2017-2018 Hilisicon Electronics Co., Ltd.
->> + *             http://www.huawei.com
->> + *
->> + * Authors: Yu Chen <chenyu56@huawei.com>
-> 
->> + *
->> + * This program is free software: you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2  of
->> + * the License as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
-> 
-> The idea of SPDX is exactly to remove the above boilerplate text.
-> 
->> + */
->> +
->> +#include <linux/module.h>
->> +#include <linux/kernel.h>
->> +#include <linux/slab.h>
->> +#include <linux/of.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/pm_runtime.h>
->> +#include <linux/clk.h>
->> +#include <linux/clk-provider.h>
->> +#include <linux/regmap.h>
->> +#include <linux/reset.h>
->> +#include <linux/extcon.h>
->> +#include <linux/regulator/consumer.h>
->> +#include <linux/pinctrl/consumer.h>
-> 
-> It would be easy to maintain ordered list in the future.
-> 
->> +                       while (--i >= 0)
-> 
-> while (i--)
-> 
->> +                       while (--i >= 0)
-> 
-> while (i--)
-> 
->> +                       while (--i >= 0)
-> 
-> while (i--)
-> 
->> +                       while (--i >= 0)
-> 
-> while (i--)
-> 
->> +                       while (--i >= 0)
-> 
->> +static int dwc3_hisi_probe(struct platform_device *pdev)
->> +{
->> +       struct dwc3_hisi        *dwc3_hisi;
->> +       struct device           *dev = &pdev->dev;
->> +       struct device_node      *np = dev->of_node;
-> 
->> +
-> 
-> Redundant blank line
-> 
->> +       int                     ret;
->> +       int                     i;
-> 
->> +}
-> 
->> +#ifdef CONFIG_PM_SLEEP
->> +static int dwc3_hisi_suspend(struct device *dev)
-> 
-> Don't know the usual practice here, but you can just use
-> __maybe_unused and remove this #ifdef.
-> 
->> +{
->> +       struct dwc3_hisi *dwc3_hisi = dev_get_drvdata(dev);
->> +       int ret;
->> +
-> 
->> +       dev_info(dev, "%s\n", __func__);
-> 
-> Noise
-> 
->> +}
-> 
->> +static int dwc3_hisi_resume(struct device *dev)
-> 
-> __maybe_unused ?
-> 
->> +{
-> 
->> +       dev_info(dev, "%s\n", __func__);
-> 
-> Noise.
-> 
->> +       /* Wait for clock stable */
->> +       msleep(100);
-> 
-> Don't you have any hardware notification that clocks are stable?
-> (Something like PLL locked?)
-> 
->> +
->> +       return 0;
->> +}
->> +#endif /* CONFIG_PM_SLEEP */
-> 
->> +static const struct of_device_id dwc3_hisi_match[] = {
->> +       { .compatible = "hisilicon,hi3660-dwc3" },
->> +       { /* sentinel */ },
-> 
-> No need comma for terminator line.
-> 
->> +};
-> 
+On 03.12.2018 6:45, Yu Chen wrote:
 
-Thanks a lot for your advice! I will check and fix the patch.
+> This patch adds binding descriptions to support the dwc3 controller
+> on HiSilicon SoCs and boards like the HiKey960.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: John Stultz <john.stultz@linaro.org>
+> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> ---
+>   .../devicetree/bindings/usb/dwc3-hisi.txt          | 67 ++++++++++++++++++++++
+>   1 file changed, 67 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3-hisi.txt b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+> new file mode 100644
+> index 000000000000..d32d2299a0a1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+> @@ -0,0 +1,67 @@
+> +HiSilicon DWC3 USB SoC controller
+> +
+> +This file documents the parameters for the dwc3-hisi driver.
+> +
+> +Required properties:
+> +- compatible:	should be "hisilicon,hi3660-dwc3"
+> +- clocks:	A list of phandle + clock-specifier pairs for the
+> +		clocks listed in clock-names
+> +- clock-names:	Specify clock names
+> +- resets:	list of phandle and reset specifier pairs.
+> +
+> +Sub-nodes:
+> +The dwc3 core should be added as subnode to HiSilicon DWC3 as shown in the
+> +example below. The DT binding details of dwc3 can be found in:
+> +Documentation/devicetree/bindings/usb/dwc3.txt
+> +
+> +Example:
+> +	usb3: hisi_dwc3 {
+> +		compatible = "hisilicon,hi3660-dwc3";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
+> +			 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+> +		clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
+> +		assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+> +		assigned-clock-rates = <229000000>;
+> +		resets = <&crg_rst 0x90 8>,
+> +			 <&crg_rst 0x90 7>,
+> +			 <&crg_rst 0x90 6>,
+> +			 <&crg_rst 0x90 5>;
+> +
+> +		dwc3: dwc3@ff100000 {
 
-Chen Yu
+     According to the DT spec, the node names should be generic, not chip 
+specific, i.e. usb@ff100000 in this case.
+
+[...]
+
+MBR, Sergei
