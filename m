@@ -1,35 +1,60 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v1 09/12] usb: dwc3: Registering a role switch in the DRD code.
-Date: Mon, 3 Dec 2018 11:15:17 +0200
-Message-ID: <CAHp75VcU_vP_GEhn2-wvE_LRL2xtsY45kzjCRYU+BAnTcYDA4A@mail.gmail.com>
-References: <20181203034515.91412-1-chenyu56@huawei.com> <20181203034515.91412-10-chenyu56@huawei.com>
+From: Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v1 0/2] SPI-NOR add NPCM FIU controller driver
+Date: Mon,  3 Dec 2018 11:14:54 +0200
+Message-ID: <20181203091456.454030-1-tmaimon77@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181203034515.91412-10-chenyu56@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: chenyu56@huawei.com
-Cc: USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@bootlin.com, marek.vasut@gmail.com, richard@nod.at, robh+dt@kernel.org, mark.rutland@arm.com, yuenn@google.com, venture@google.com, brendanhiggins@google.com, avifishman70@gmail.com, joel@jms.id.au
+Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 3, 2018 at 5:47 AM Yu Chen <chenyu56@huawei.com> wrote:
->
-> The Type-C drivers use USB role switch API to inform the
-> system about the negotiated data role, so registering a role
-> switch in the DRD code in order to support platforms with
-> USB Type-C connectors.
+This patch set adds Flash Interface Unit(FIU) SPI-NOR
+support for the Nuvoton NPCM Baseboard Management 
+Controller (BMC).
+    
+The FIU supports single, dual or quad communication interface.
+    
+the FIU controller can operate in following modes:
+- User Mode Access(UMA): provides flash access by using an
+  indirect address/data mechanism.
+- direct rd/wr mode: maps the flash memory into the core
+  address space.
+- SPI-X mode: used for an expansion bus to an ASIC or CPLD.
 
-> +       pr_info("%s:set role %d\n", __func__, role);
+The NPCM750/730/715/710 supports up to three FIU devices:
+- FIU0 supports two chip select.
+- FIU3 supports four chip select.
+- FIUX supports two chip select.
 
-Noise!
+The NPCM FIU driver tested on NPCM750 evaluation board.
 
-> +       return role;
-> +
+Tomer Maimon (2):
+  dt-binding: mtd: add NPCM FIU controller
+  mtd: spi-nor: add NPCM FIU controller driver
 
-Redundant blank line.
-
-> +}
+ Documentation/devicetree/bindings/mtd/npcm-fiu.txt |  64 ++
+ drivers/mtd/spi-nor/Kconfig                        |   8 +
+ drivers/mtd/spi-nor/Makefile                       |   1 +
+ drivers/mtd/spi-nor/npcm-fiu.c                     | 930 +++++++++++++++++++++
+ 4 files changed, 1003 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/npcm-fiu.txt
+ create mode 100644 drivers/mtd/spi-nor/npcm-fiu.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.14.1
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
