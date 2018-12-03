@@ -1,73 +1,65 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v6 2/2] media: platform: Add Aspeed Video Engine driver
-Date: Mon, 3 Dec 2018 22:09:35 +0100
-Message-ID: <8b1b1f60-d21c-c0a2-2597-8bdb77f5f7c9@xs4all.nl>
-References: <1543347457-59224-1-git-send-email-eajames@linux.ibm.com>
- <1543347457-59224-3-git-send-email-eajames@linux.ibm.com>
- <1d5f3260-2d95-32b2-090e-2f57ae9e6833@xs4all.nl>
- <52cae852-5a2b-ee37-3829-73de7a47df1c@linux.ibm.com>
- <0c5dbd34-a10c-04ce-43bb-646e712f0e99@xs4all.nl>
- <6c92cb5c-2134-e5d8-1a6b-2d311731cef3@linux.ibm.com>
+From: Jonathan Marek <jonathan-eSc4qw6YbEQ@public.gmane.org>
+Subject: [PATCH v3 1/4] drm/msm/mdp4: add lcdc-align-lsb flag to
+ control lane alignment
+Date: Mon,  3 Dec 2018 16:18:13 -0500
+Message-ID: <20181203211816.5129-1-jonathan@marek.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6c92cb5c-2134-e5d8-1a6b-2d311731cef3@linux.ibm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Chris.Healy-c8ZVq/bFV1I@public.gmane.org, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/03/2018 09:37 PM, Eddie James wrote:
-
-<snip>
-
->>>>> +static int aspeed_video_start(struct aspeed_video *video)
->>>>> +{
->>>>> +	int rc;
->>>>> +
->>>>> +	aspeed_video_on(video);
->>>>> +
->>>>> +	aspeed_video_init_regs(video);
->>>>> +
->>>>> +	rc = aspeed_video_get_resolution(video);
->>>>> +	if (rc)
->>>>> +		return rc;
->>>>> +
->>>>> +	/*
->>>>> +	 * Set the timings here since the device was just opened for the first
->>>>> +	 * time.
->>>>> +	 */
->>>>> +	video->active_timings = video->detected_timings;
->>>> What happens if no valid signal was detected?
->>>>
->>>> My recommendation is to fallback to some default timings (VGA?) if no valid
->>>> initial timings were found.
->>>>
->>>> The expectation is that applications will always call QUERY_DV_TIMINGS first,
->>>> so it is really not all that important what the initial active_timings are,
->>>> as long as they are valid timings (valid as in: something that the hardware
->>>> can support).
->>> See just above, this call returns with a failure if no signal is
->>> detected, meaning the device cannot be opened. The only valid timings
->>> are the detected timings.
->> That's wrong. You must ALWAYS be able to open the device. If not valid
->> resolution is detected, just fallback to some default.
-> 
-> Why must open always succeed? What use is a video device that cannot 
-> provide any video?
-You always must be able to open the video device so applications can call
-QUERYCAP. In fact, any ioctl that returns state information (G_FMT, G_CTRL,
-G_INPUT, ENUM_*, etc) can always be called, regardless of whether there is
-a video signal or if video streaming is in progress.
-
-With this restriction I cannot even run an application that waits for the
-SOURCE_CHANGE event to start streaming, such as 'v4l2-ctl --stream-mmap'
-does because the open() will fail immediately.
-
-Sorry, this is really wrong.
-
-Regards,
-
-	Hans
+VGhpcyBhbGxvd3MgY29udHJvbGxpbmcgd2hpY2ggb2YgdGhlIDggbGFuZXMgYXJlIHVzZWQgZm9y
+IDYgYml0IGNvbG9yLgoKU2lnbmVkLW9mZi1ieTogSm9uYXRoYW4gTWFyZWsgPGpvbmF0aGFuQG1h
+cmVrLmNhPgotLS0KdjM6IHJlbW92ZWQgZW1wdHkgbGluZSBhbmQgYWRkZWQgZG9jdW1lbnRhdGlv
+bgoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL21kcDQudHh0ICB8ICAyICsr
+CiAuLi4vZ3B1L2RybS9tc20vZGlzcC9tZHA0L21kcDRfbGNkY19lbmNvZGVyLmMgfCAyMSArKysr
+KysrKysrKystLS0tLS0tCiAyIGZpbGVzIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDggZGVs
+ZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvbXNtL21kcDQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvbXNtL21kcDQudHh0CmluZGV4IDNjMzQxYTE1Yy4uYjA3ZWViMzhmIDEwMDY0NAot
+LS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vbWRwNC50
+eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL21k
+cDQudHh0CkBAIC0zOCw2ICszOCw4IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6CiBPcHRpb25hbCBw
+cm9wZXJ0aWVzOgogLSBjbG9jay1uYW1lczogdGhlIGZvbGxvd2luZyBjbG9ja3MgYXJlIG9wdGlv
+bmFsOgogICAqICJsdXRfY2xrIgorLSBxY29tLGxjZGMtYWxpZ24tbHNiOiBCb29sZWFuIHZhbHVl
+IGluZGljYXRpbmcgdGhhdCBMU0IgYWxpZ25tZW50IHNob3VsZCBiZQorICB1c2VkIGZvciBMQ0RD
+LiBUaGlzIGlzIG9ubHkgdmFsaWQgZm9yIDE4YnBwIHBhbmVscy4KIAogRXhhbXBsZToKIApkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL21kcDQvbWRwNF9sY2RjX2VuY29kZXIu
+YyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9tZHA0L21kcDRfbGNkY19lbmNvZGVyLmMKaW5k
+ZXggOWUwOGMyZWZhLi5jOWUzNDUwMWEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tc20v
+ZGlzcC9tZHA0L21kcDRfbGNkY19lbmNvZGVyLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9k
+aXNwL21kcDQvbWRwNF9sY2RjX2VuY29kZXIuYwpAQCAtMzc3LDIwICszNzcsMjUgQEAgc3RhdGlj
+IHZvaWQgbWRwNF9sY2RjX2VuY29kZXJfZW5hYmxlKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2Rl
+cikKIAl1bnNpZ25lZCBsb25nIHBjID0gbWRwNF9sY2RjX2VuY29kZXItPnBpeGNsb2NrOwogCXN0
+cnVjdCBtZHA0X2ttcyAqbWRwNF9rbXMgPSBnZXRfa21zKGVuY29kZXIpOwogCXN0cnVjdCBkcm1f
+cGFuZWwgKnBhbmVsOworCXVpbnQzMl90IGNvbmZpZzsKIAlpbnQgaSwgcmV0OwogCiAJaWYgKFdB
+Uk5fT04obWRwNF9sY2RjX2VuY29kZXItPmVuYWJsZWQpKQogCQlyZXR1cm47CiAKIAkvKiBUT0RP
+OiBoYXJkLWNvZGVkIGZvciAxOGJwcDogKi8KLQltZHA0X2NydGNfc2V0X2NvbmZpZyhlbmNvZGVy
+LT5jcnRjLAotCQkJTURQNF9ETUFfQ09ORklHX1JfQlBDKEJQQzYpIHwKLQkJCU1EUDRfRE1BX0NP
+TkZJR19HX0JQQyhCUEM2KSB8Ci0JCQlNRFA0X0RNQV9DT05GSUdfQl9CUEMoQlBDNikgfAotCQkJ
+TURQNF9ETUFfQ09ORklHX1BBQ0tfQUxJR05fTVNCIHwKLQkJCU1EUDRfRE1BX0NPTkZJR19QQUNL
+KDB4MjEpIHwKLQkJCU1EUDRfRE1BX0NPTkZJR19ERUZMS1JfRU4gfAotCQkJTURQNF9ETUFfQ09O
+RklHX0RJVEhFUl9FTik7CisJY29uZmlnID0KKwkJTURQNF9ETUFfQ09ORklHX1JfQlBDKEJQQzYp
+IHwKKwkJTURQNF9ETUFfQ09ORklHX0dfQlBDKEJQQzYpIHwKKwkJTURQNF9ETUFfQ09ORklHX0Jf
+QlBDKEJQQzYpIHwKKwkJTURQNF9ETUFfQ09ORklHX1BBQ0soMHgyMSkgfAorCQlNRFA0X0RNQV9D
+T05GSUdfREVGTEtSX0VOIHwKKwkJTURQNF9ETUFfQ09ORklHX0RJVEhFUl9FTjsKKworCWlmICgh
+b2ZfcHJvcGVydHlfcmVhZF9ib29sKGRldi0+ZGV2LT5vZl9ub2RlLCAicWNvbSxsY2RjLWFsaWdu
+LWxzYiIpKQorCQljb25maWcgfD0gTURQNF9ETUFfQ09ORklHX1BBQ0tfQUxJR05fTVNCOworCisJ
+bWRwNF9jcnRjX3NldF9jb25maWcoZW5jb2Rlci0+Y3J0YywgY29uZmlnKTsKIAltZHA0X2NydGNf
+c2V0X2ludGYoZW5jb2Rlci0+Y3J0YywgSU5URl9MQ0RDX0RUViwgMCk7CiAKIAlic19zZXQobWRw
+NF9sY2RjX2VuY29kZXIsIDEpOwotLSAKMi4xNy4xCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0Bs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9mcmVlZHJlbm8K
