@@ -1,8 +1,8 @@
 From: Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: [PATCH RESEND V2 2/4] ARM: dts: imx6qdl: Add flexcan stop mode wakeup
+Subject: [PATCH RESEND V2 1/4] ARM: dts: imx6sx: Add flexcan stop mode wakeup
  support
-Date: Mon, 3 Dec 2018 05:20:23 +0000
-Message-ID: <20181203051753.1532-3-qiangqing.zhang@nxp.com>
+Date: Mon, 3 Dec 2018 05:20:19 +0000
+Message-ID: <20181203051753.1532-2-qiangqing.zhang@nxp.com>
 References: <20181203051753.1532-1-qiangqing.zhang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -23,27 +23,26 @@ feature.
 Signed-off-by: Aisheng Dong <aisheng.dong@nxp.com>
 Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
 ---
- arch/arm/boot/dts/imx6qdl.dtsi | 2 ++
+ arch/arm/boot/dts/imx6sx.dtsi | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dts=
-i
-index 6d827b69ead0..7fb8be1c9cef 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -561,6 +561,7 @@
- 				clocks =3D <&clks IMX6QDL_CLK_CAN1_IPG>,
- 					 <&clks IMX6QDL_CLK_CAN1_SERIAL>;
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 6c8d2bb09025..272ff6133ec1 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -451,6 +451,7 @@
+ 				clocks =3D <&clks IMX6SX_CLK_CAN1_IPG>,
+ 					 <&clks IMX6SX_CLK_CAN1_SERIAL>;
  				clock-names =3D "ipg", "per";
-+				fsl,stop-mode =3D <&gpr 0x34 28 0x10 17>;
++				fsl,stop-mode =3D <&gpr 0x10 1 0x10 17>;
  				status =3D "disabled";
  			};
 =20
-@@ -571,6 +572,7 @@
- 				clocks =3D <&clks IMX6QDL_CLK_CAN2_IPG>,
- 					 <&clks IMX6QDL_CLK_CAN2_SERIAL>;
+@@ -461,6 +462,7 @@
+ 				clocks =3D <&clks IMX6SX_CLK_CAN2_IPG>,
+ 					 <&clks IMX6SX_CLK_CAN2_SERIAL>;
  				clock-names =3D "ipg", "per";
-+				fsl,stop-mode =3D <&gpr 0x34 29 0x10 18>;
++				fsl,stop-mode =3D <&gpr 0x10 2 0x10 18>;
  				status =3D "disabled";
  			};
 =20
