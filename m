@@ -1,104 +1,42 @@
 From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v1 01/12] dt-bindings: usb: add support for dwc3
- controller on HiSilicon SoCs
-Date: Mon, 3 Dec 2018 17:28:56 +0800
-Message-ID: <bbe390f0-2fa6-515b-42c5-ede620b2b8c7@huawei.com>
+Subject: Re: [PATCH v1 09/12] usb: dwc3: Registering a role switch in the DRD
+ code.
+Date: Mon, 3 Dec 2018 17:30:02 +0800
+Message-ID: <e0b03fee-9d32-d119-80a7-4329c34093c8@huawei.com>
 References: <20181203034515.91412-1-chenyu56@huawei.com>
- <20181203034515.91412-2-chenyu56@huawei.com>
- <fde4d37b-0c4d-055b-a0ba-4e9fe87717ad@cogentembedded.com>
- <33cda716-d09c-28e7-d4b4-26f246786f5e@huawei.com>
- <680c5b9f-e2c7-926d-7d10-4ce2cd091282@cogentembedded.com>
+ <20181203034515.91412-10-chenyu56@huawei.com>
+ <CAHp75VcU_vP_GEhn2-wvE_LRL2xtsY45kzjCRYU+BAnTcYDA4A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <680c5b9f-e2c7-926d-7d10-4ce2cd091282@cogentembedded.com>
+In-Reply-To: <CAHp75VcU_vP_GEhn2-wvE_LRL2xtsY45kzjCRYU+BAnTcYDA4A@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: wangbinghui@hisilicon.com, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: wangbinghui@hisilicon.com, USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 2018/12/3 16:59, Sergei Shtylyov wrote:
-> On 03.12.2018 11:51, Chen Yu wrote:
-> 
->>>> This patch adds binding descriptions to support the dwc3 controller
->>>> on HiSilicon SoCs and boards like the HiKey960.
->>>>
->>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>> Cc: Rob Herring <robh+dt@kernel.org>
->>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>> Cc: John Stultz <john.stultz@linaro.org>
->>>> Signed-off-by: Yu Chen <chenyu56@huawei.com>
->>>> ---
->>>>    .../devicetree/bindings/usb/dwc3-hisi.txt          | 67 ++++++++++++++++++++++
->>>>    1 file changed, 67 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/usb/dwc3-hisi.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3-hisi.txt b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
->>>> new file mode 100644
->>>> index 000000000000..d32d2299a0a1
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
->>>> @@ -0,0 +1,67 @@
->>>> +HiSilicon DWC3 USB SoC controller
->>>> +
->>>> +This file documents the parameters for the dwc3-hisi driver.
->>>> +
->>>> +Required properties:
->>>> +- compatible:    should be "hisilicon,hi3660-dwc3"
->>>> +- clocks:    A list of phandle + clock-specifier pairs for the
->>>> +        clocks listed in clock-names
->>>> +- clock-names:    Specify clock names
->>>> +- resets:    list of phandle and reset specifier pairs.
->>>> +
->>>> +Sub-nodes:
->>>> +The dwc3 core should be added as subnode to HiSilicon DWC3 as shown in the
->>>> +example below. The DT binding details of dwc3 can be found in:
->>>> +Documentation/devicetree/bindings/usb/dwc3.txt
->>>> +
->>>> +Example:
->>>> +    usb3: hisi_dwc3 {
->>>> +        compatible = "hisilicon,hi3660-dwc3";
->>>> +        #address-cells = <2>;
->>>> +        #size-cells = <2>;
->>>> +        ranges;
->>>> +
->>>> +        clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
->>>> +             <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
->>>> +        clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
->>>> +        assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
->>>> +        assigned-clock-rates = <229000000>;
->>>> +        resets = <&crg_rst 0x90 8>,
->>>> +             <&crg_rst 0x90 7>,
->>>> +             <&crg_rst 0x90 6>,
->>>> +             <&crg_rst 0x90 5>;
->>>> +
->>>> +        dwc3: dwc3@ff100000 {
->>>
->>>      According to the DT spec, the node names should be generic, not chip specific, i.e. usb@ff100000 in this case.
->>>
+On 2018/12/3 17:15, Andy Shevchenko wrote:
+> On Mon, Dec 3, 2018 at 5:47 AM Yu Chen <chenyu56@huawei.com> wrote:
 >>
->> Do you mean it should be usb@ff100000: dwc3@ff100000 ?
+>> The Type-C drivers use USB role switch API to inform the
+>> system about the negotiated data role, so registering a role
+>> switch in the DRD code in order to support platforms with
+>> USB Type-C connectors.
 > 
->     dwc3: usb@ff100000
+>> +       pr_info("%s:set role %d\n", __func__, role);
 > 
->    "dwc3:" is a label, not name.
+> Noise!
+> 
+>> +       return role;
+>> +
+> 
+> Redundant blank line.
+> 
+>> +}
+> 
+OK. Thanks!
 
-I use the node name "dwc3@ff100000" according to Documentation/devicetree/bindings/usb/dwc3.txt
-and documentations of vendor drivers, i.e. qcom,dwc3.txt, rockchip,dwc3.txt.
-
-In these documentations, the dwc3 sub-node name uses "dwc3@xxxxxxxx".
-
-I think it is better to be same as the other vendor's dwc3 drivers.
-> 
->> Thanks!
->>
->>> [...]
-> 
-> MBR, Sergei
-> 
-> .
-> 
+Chen Yu
