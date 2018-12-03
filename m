@@ -1,44 +1,86 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 06/15] arm: dts: Add devicetree for OrangePi 2G IoT board
-Date: Mon, 3 Dec 2018 09:53:57 -0600
-Message-ID: <CAL_JsqJ=88ORdgbRDn+VWk9=ydShidqwOxdAMfDbH4W2drnXzA@mail.gmail.com>
-References: <20181121033652.12247-1-manivannan.sadhasivam@linaro.org> <20181121033652.12247-7-manivannan.sadhasivam@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 01/10] dt-bindings: usb: add support for dwc3 controller
+ on HiSilicon SoCs
+Date: Mon, 3 Dec 2018 10:01:25 -0600
+Message-ID: <CAL_JsqKObFGdf5tPdv=Ss2ZWCPBgimbEUn72rkR2+L7uRbAirg@mail.gmail.com>
+References: <20181027095820.40056-1-chenyu56@huawei.com> <20181027095820.40056-2-chenyu56@huawei.com>
+ <20181112160241.GA14074@bogus> <9fce6a58-d986-25e4-1791-ba375e4f075e@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181121033652.12247-7-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <9fce6a58-d986-25e4-1791-ba375e4f075e@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, zhao_steven@263.net, overseas.sales@unisoc.com
+To: Chen Yu <chenyu56@huawei.com>
+Cc: Wangbinghui <wangbinghui@hisilicon.com>, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 20, 2018 at 9:38 PM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
+On Fri, Nov 16, 2018 at 8:29 PM Chen Yu <chenyu56@huawei.com> wrote:
 >
-> Add initial devicetree support for OrangePi 2G IoT board from Xunlong.
+> Hi,
 >
-> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  arch/arm/boot/dts/Makefile                    |  2 +
->  .../boot/dts/rda8810pl-orangepi-2g-iot.dts    | 40 +++++++++++++++++++
->  2 files changed, 42 insertions(+)
->  create mode 100644 arch/arm/boot/dts/rda8810pl-orangepi-2g-iot.dts
+> On 2018/11/13 0:02, Rob Herring wrote:
+> > On Sat, Oct 27, 2018 at 05:58:11PM +0800, Yu Chen wrote:
+> >> This patch adds binding descriptions to support the dwc3 controller
+> >> on HiSilicon SoCs and boards like the HiKey960.
+> >>
+> >> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >> Cc: Rob Herring <robh+dt@kernel.org>
+> >> Cc: Mark Rutland <mark.rutland@arm.com>
+> >> Cc: John Stultz <john.stultz@linaro.org>
+> >> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> >> ---
+> >>  .../devicetree/bindings/usb/dwc3-hisi.txt          | 53 +++++++++++++=
++++++++++
+> >>  1 file changed, 53 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/usb/dwc3-hisi.tx=
+t
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/usb/dwc3-hisi.txt b/Doc=
+umentation/devicetree/bindings/usb/dwc3-hisi.txt
+> >> new file mode 100644
+> >> index 000000000000..e715e7b1c324
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+> >> @@ -0,0 +1,53 @@
+> >> +HiSilicon DWC3 USB SoC controller
+> >> +
+> >> +This file documents the parameters for the dwc3-hisi driver.
+> >> +
+> >> +Required properties:
+> >> +- compatible:       should be "hisilicon,hi3660-dwc3"
+> >> +- clocks:   A list of phandle + clock-specifier pairs for the
+> >> +            clocks listed in clock-names
+> >> +- clock-names:      Specify clock names
+> >> +- resets:   list of phandle and reset specifier pairs.
+> >> +
+> >> +Sub-nodes:
+> >> +The dwc3 core should be added as subnode to HiSilicon DWC3 as shown i=
+n the
+> >> +example below. The DT binding details of dwc3 can be found in:
+> >> +Documentation/devicetree/bindings/usb/dwc3.txt
+> >
+> > If you only have clocks and resets and no glue registers, then you
+> > don't need a sub-node. Just make the controller one node.
+> >
 >
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index b0e966d625b9..a0fdad8f10dd 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -806,6 +806,8 @@ dtb-$(CONFIG_ARCH_QCOM) +=3D \
->         qcom-msm8974-sony-xperia-castor.dtb \
->         qcom-msm8974-sony-xperia-honami.dtb \
->         qcom-mdm9615-wp8548-mangoh-green.dtb
-> +dtb-$(CONFIG_ARCH_RDA) +=3D \
-> +       rda8810pl-orangepi-2g-iot.dtb
->  dtb-$(CONFIG_ARCH_REALVIEW) +=3D \
+> In dwc3 glue driver=EF=BC=8Cthe controller driver usually probed by call =
+of_platform_populate
+> which will search the child node of glue driver.
+> The code of function of_platform_populate is as below:
+>
+>         for_each_child_of_node(root, child) {
+>                  rc =3D of_platform_bus_create(child, matches, lookup, pa=
+rent, true);
+>                  if (rc) {
+>                          of_node_put(child);
+>                          break;
+>                  }
+>          }
+>
+> So I think the controller node should be a sub-node.
 
-Question for Arnd/Olof: can we *please* start putting new SoC families
-in sub-dirs?
+It was done that way, but has changed. See commit fe8abf332b8f ("usb:
+dwc3: support clocks and resets for DWC3 core").
 
 Rob
