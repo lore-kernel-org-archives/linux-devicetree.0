@@ -1,64 +1,70 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v3 0/4] Add support of STM32 hwspinlock
-Date: Mon, 3 Dec 2018 09:46:03 +0100
-Message-ID: <5c137862-e8fa-abb4-d931-f5c63db50649@st.com>
-References: <20181112152342.6561-1-benjamin.gaignard@st.com>
+From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: RE: [PATCH v4 1/7] spi: add support for octo mode I/O data transfer
+Date: Mon, 3 Dec 2018 08:47:48 +0000
+Message-ID: <VI1PR04MB5726A8B992BF7DE2A646D20C99AE0@VI1PR04MB5726.eurprd04.prod.outlook.com>
+References: <1542863544-21257-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+        <1542863544-21257-2-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <20181203090444.0c37efa7@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181112152342.6561-1-benjamin.gaignard@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181203090444.0c37efa7@bbrezillon>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>, ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, "broonie@kernel.org" <broonie@kernel.org>
+Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Benjamin,
+Hi Boris,
 
-On 11/12/18 4:23 PM, Benjamin Gaignard wrote:
-> This serie adds the support of the hardware semaphore block for stm32mp1 SoC.
-> 
-> version 3:
-> - fix clock name in properties description.
-> - use postcore_initcall() instead of module_platform_driver()
-> 
-> version 2:
-> - fix comments done by Bjorn about clock naming, license terms in header,
->    alphabetic ordering in Makefile and Kconfig and remove function
-> - Do not push test module in this version while waiting for feedbacks about it
-> 
-> 
-> Benjamin Gaignard (4):
->    dt-bindings: hwlock: Document STM32 hwspinlock bindings
->    hwspinlock: add STM32 hwspinlock device
->    ARM: dts: stm32: Add hwspinlock node for stm32mp157 SoC
->    ARM: dts: stm32: enable hwspinlock on stm32mp157c-ed1
-> 
->   .../bindings/hwlock/st,stm32-hwspinlock.txt        |  23 +++
->   arch/arm/boot/dts/stm32mp157c-ed1.dts              |   4 +
->   arch/arm/boot/dts/stm32mp157c.dtsi                 |   9 ++
->   drivers/hwspinlock/Kconfig                         |   9 ++
->   drivers/hwspinlock/Makefile                        |   1 +
->   drivers/hwspinlock/stm32_hwspinlock.c              | 156 +++++++++++++++++++++
->   6 files changed, 202 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt
->   create mode 100644 drivers/hwspinlock/stm32_hwspinlock.c
-> 
+> -----Original Message-----
+> From: Boris Brezillon [mailto:boris.brezillon@bootlin.com]
+> Sent: Monday, December 3, 2018 1:35 PM
+> To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>;
+> broonie@kernel.org
+> Cc: linux-mtd@lists.infradead.org; marek.vasut@gmail.com; vigneshr@ti.com=
+;
+> linux-spi@vger.kernel.org; devicetree@vger.kernel.org; robh@kernel.org;
+> mark.rutland@arm.com; shawnguo@kernel.org; linux-arm-
+> kernel@lists.infradead.org; computersforpeace@gmail.com;
+> frieder.schrempf@exceet.de; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH v4 1/7] spi: add support for octo mode I/O data trans=
+fer
+>=20
+> Hi Yogesh,
+>=20
+> On Thu, 22 Nov 2018 05:14:31 +0000
+> Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
+>=20
+> > Add flags for Octo mode I/O data transfer Required for the SPI
+> > controller which can do the data transfer (TX/RX) on 8 data lines e.g.
+> > NXP FlexSPI controller.
+> >  SPI_TX_OCTO: transmit with 8 wires
+> >  SPI_RX_OCTO: receive with 8 wires
+> >
+> > Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+> > Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
+> > ---
+> > Changes for v4:
+> > - Rebase on top of v4.20-rc2
+> > Changes for v3:
+> > - Modified string 'octal' with 'octo'.
+>=20
+> When I listed the differences between your version and mine, I mentioned =
+the
+> OCTO vs OCTAL name, but I didn't say my decision was the correct one :-).=
+ Looks
+> like OCTAL is the term employed almost everywhere, and it's also consiste=
+nt
+> with DUAL. Would you mind sending a new version reverting the name to OCT=
+AL.
+>=20
+Next version of patch series send [1]
 
-There is a (strong) dependency between pinctrl and hsem.
-As our pin controller is enabled by default, it's better to enable also
-your hwspinlock device by default. It will avoid pin controller probe 
-defer and a no stable behavior. So, I gonna remove DT patches from 
-stm32-next. Those Dt patches will not be included in my 4.20 pull-request.
+--
+Regards,
+Yogesh Gaur
+[1] https://patchwork.ozlabs.org/project/linux-mtd/list/?series=3D79338
 
-regards
-Alex
+[...]
