@@ -1,86 +1,70 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 01/10] dt-bindings: usb: add support for dwc3 controller
- on HiSilicon SoCs
-Date: Mon, 3 Dec 2018 10:01:25 -0600
-Message-ID: <CAL_JsqKObFGdf5tPdv=Ss2ZWCPBgimbEUn72rkR2+L7uRbAirg@mail.gmail.com>
-References: <20181027095820.40056-1-chenyu56@huawei.com> <20181027095820.40056-2-chenyu56@huawei.com>
- <20181112160241.GA14074@bogus> <9fce6a58-d986-25e4-1791-ba375e4f075e@huawei.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v1 1/4] drm/panel: simple: Add AUO G101EVN010 panel
+ support
+Date: Mon, 3 Dec 2018 17:08:37 +0100
+Message-ID: <20181203160837.GA10037@ulmo>
+References: <1540480173-12009-1-git-send-email-alex.gonzalez@digi.com>
+ <1540480173-12009-2-git-send-email-alex.gonzalez@digi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9fce6a58-d986-25e4-1791-ba375e4f075e@huawei.com>
+Content-Disposition: inline
+In-Reply-To: <1540480173-12009-2-git-send-email-alex.gonzalez@digi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen Yu <chenyu56@huawei.com>
-Cc: Wangbinghui <wangbinghui@hisilicon.com>, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>
+To: Alex Gonzalez <alex.gonzalez@digi.com>
+Cc: airlied@linux.ie, dri-devel@lists.freedesktop.org, shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 16, 2018 at 8:29 PM Chen Yu <chenyu56@huawei.com> wrote:
->
-> Hi,
->
-> On 2018/11/13 0:02, Rob Herring wrote:
-> > On Sat, Oct 27, 2018 at 05:58:11PM +0800, Yu Chen wrote:
-> >> This patch adds binding descriptions to support the dwc3 controller
-> >> on HiSilicon SoCs and boards like the HiKey960.
-> >>
-> >> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >> Cc: Rob Herring <robh+dt@kernel.org>
-> >> Cc: Mark Rutland <mark.rutland@arm.com>
-> >> Cc: John Stultz <john.stultz@linaro.org>
-> >> Signed-off-by: Yu Chen <chenyu56@huawei.com>
-> >> ---
-> >>  .../devicetree/bindings/usb/dwc3-hisi.txt          | 53 +++++++++++++=
-+++++++++
-> >>  1 file changed, 53 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/usb/dwc3-hisi.tx=
-t
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/usb/dwc3-hisi.txt b/Doc=
-umentation/devicetree/bindings/usb/dwc3-hisi.txt
-> >> new file mode 100644
-> >> index 000000000000..e715e7b1c324
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
-> >> @@ -0,0 +1,53 @@
-> >> +HiSilicon DWC3 USB SoC controller
-> >> +
-> >> +This file documents the parameters for the dwc3-hisi driver.
-> >> +
-> >> +Required properties:
-> >> +- compatible:       should be "hisilicon,hi3660-dwc3"
-> >> +- clocks:   A list of phandle + clock-specifier pairs for the
-> >> +            clocks listed in clock-names
-> >> +- clock-names:      Specify clock names
-> >> +- resets:   list of phandle and reset specifier pairs.
-> >> +
-> >> +Sub-nodes:
-> >> +The dwc3 core should be added as subnode to HiSilicon DWC3 as shown i=
-n the
-> >> +example below. The DT binding details of dwc3 can be found in:
-> >> +Documentation/devicetree/bindings/usb/dwc3.txt
-> >
-> > If you only have clocks and resets and no glue registers, then you
-> > don't need a sub-node. Just make the controller one node.
-> >
->
-> In dwc3 glue driver=EF=BC=8Cthe controller driver usually probed by call =
-of_platform_populate
-> which will search the child node of glue driver.
-> The code of function of_platform_populate is as below:
->
->         for_each_child_of_node(root, child) {
->                  rc =3D of_platform_bus_create(child, matches, lookup, pa=
-rent, true);
->                  if (rc) {
->                          of_node_put(child);
->                          break;
->                  }
->          }
->
-> So I think the controller node should be a sub-node.
 
-It was done that way, but has changed. See commit fe8abf332b8f ("usb:
-dwc3: support clocks and resets for DWC3 core").
+--bg08WKrSYDhXBjb5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rob
+On Thu, Oct 25, 2018 at 05:09:30PM +0200, Alex Gonzalez wrote:
+> The change adds support for the AU Optronics G101EVN010 10.1" TFT LCD
+> panel.
+>=20
+> Signed-off-by: Alex Gonzalez <alex.gonzalez@digi.com>
+> ---
+>  .../bindings/display/panel/auo,g101evn010          | 12 ++++++++++
+>  drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++=
+++++++
+>  2 files changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/auo,g=
+101evn010
+
+Two things to keep in mind for next time: please split up DT bindings
+and driver changes into two separate patches (checkpatch.pl warns about
+this) and keep entries in panel-simple sorted alphabetically.
+
+I fixed the sorting myself and also added a .txt suffix to the DT
+binding documentation for consistency with other files in that
+directory.
+
+Applied to drm-misc-next, thanks.
+
+Thierry
+
+--bg08WKrSYDhXBjb5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlwFVQEACgkQ3SOs138+
+s6Gt/Q//fW3RY8o0MJeeWb5pyty3d3BVcUWDLS9phurF90m/1HbMIWE7/8d53bBV
+DavgsKBPmhRlqy1Lu1O3940r+xS6WtlDXzFbt5Iiqd5DtwP+gftTzLND71wohAKc
+Pc9lGjzdbeIndY8VcB/oBAEd62DD5BZsn6gMewARCpvT/VcLRCo5Ks/pkGl8QGbe
+Ze3tzeAQwWMumzrdJLqbyBE72QA0/9/1ql8iqujmyFHZ5A1vlMozihUcnQ6cyyAt
+p9MEJ/TVfKGu42sLc5OW+oPb9f3tLO+G/jVoZ9lLgfRyQH7nyucJPqZ1SPXmI9AR
+OI9g34RCqnldcEjh2QPtCchpZBT9Ip55B/GJxZpFonZVjK1Fty9bpSQ5ZZLo03cT
+OL1psLujcsLAb3TrkKfCt0fROv9xix0qo954o61E5LjmOx3o8OkKvsM68CuSvUVC
+1CrjVZzacco5DeGO5z8NZ4SsmF2hRyzmGNvSAv19toqjXvvrZMasUmSrU+pdBYgW
+aZipFthJkw/jlXnk1UTVvMfd/OHfrwDBiXuLvQSfMJ4aVpti2Kq/q8NF2eZw1OWU
+cJngTfAVPVD1uHVjJSSDv93u/A43hvJMHcVD0gd0Rpu+AXePbHdfPje5Nmni+QZK
+b4S2QNnwsTHZP5pvKP7ai1/OXv/Qjo2DSBQAFLR2Gi7gcRcVRXw=
+=/9Nx
+-----END PGP SIGNATURE-----
+
+--bg08WKrSYDhXBjb5--
