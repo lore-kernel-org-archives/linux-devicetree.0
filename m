@@ -1,55 +1,73 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v2] dt-bindings: i2c: Use correct vendor prefix for Atmel
-Date: Mon, 3 Dec 2018 22:00:35 +0100
-Message-ID: <20181203210035.GA4611@kunai>
-References: <20181123121009.17213-1-thierry.reding@gmail.com>
- <20181123125138.22489-1-thierry.reding@gmail.com>
- <20181127125050.GO1107@kunai>
- <CAL_JsqJZJVMvd0aQJ8eDXBqiZ=quLrNGr3hhqePm8fCushHxxQ@mail.gmail.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v6 2/2] media: platform: Add Aspeed Video Engine driver
+Date: Mon, 3 Dec 2018 22:09:35 +0100
+Message-ID: <8b1b1f60-d21c-c0a2-2597-8bdb77f5f7c9@xs4all.nl>
+References: <1543347457-59224-1-git-send-email-eajames@linux.ibm.com>
+ <1543347457-59224-3-git-send-email-eajames@linux.ibm.com>
+ <1d5f3260-2d95-32b2-090e-2f57ae9e6833@xs4all.nl>
+ <52cae852-5a2b-ee37-3829-73de7a47df1c@linux.ibm.com>
+ <0c5dbd34-a10c-04ce-43bb-646e712f0e99@xs4all.nl>
+ <6c92cb5c-2134-e5d8-1a6b-2d311731cef3@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJZJVMvd0aQJ8eDXBqiZ=quLrNGr3hhqePm8fCushHxxQ@mail.gmail.com>
+In-Reply-To: <6c92cb5c-2134-e5d8-1a6b-2d311731cef3@linux.ibm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Peter Rosin <peda@axentia.se>, Linux I2C <linux-i2c@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Eddie James <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 12/03/2018 09:37 PM, Eddie James wrote:
 
---4Ckj6UjgE2iN1+kY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+<snip>
 
+>>>>> +static int aspeed_video_start(struct aspeed_video *video)
+>>>>> +{
+>>>>> +	int rc;
+>>>>> +
+>>>>> +	aspeed_video_on(video);
+>>>>> +
+>>>>> +	aspeed_video_init_regs(video);
+>>>>> +
+>>>>> +	rc = aspeed_video_get_resolution(video);
+>>>>> +	if (rc)
+>>>>> +		return rc;
+>>>>> +
+>>>>> +	/*
+>>>>> +	 * Set the timings here since the device was just opened for the first
+>>>>> +	 * time.
+>>>>> +	 */
+>>>>> +	video->active_timings = video->detected_timings;
+>>>> What happens if no valid signal was detected?
+>>>>
+>>>> My recommendation is to fallback to some default timings (VGA?) if no valid
+>>>> initial timings were found.
+>>>>
+>>>> The expectation is that applications will always call QUERY_DV_TIMINGS first,
+>>>> so it is really not all that important what the initial active_timings are,
+>>>> as long as they are valid timings (valid as in: something that the hardware
+>>>> can support).
+>>> See just above, this call returns with a failure if no signal is
+>>> detected, meaning the device cannot be opened. The only valid timings
+>>> are the detected timings.
+>> That's wrong. You must ALWAYS be able to open the device. If not valid
+>> resolution is detected, just fallback to some default.
+> 
+> Why must open always succeed? What use is a video device that cannot 
+> provide any video?
+You always must be able to open the video device so applications can call
+QUERYCAP. In fact, any ioctl that returns state information (G_FMT, G_CTRL,
+G_INPUT, ENUM_*, etc) can always be called, regardless of whether there is
+a video signal or if video streaming is in progress.
 
-> Didn't we agree that I take trivial devices changes? Normally, it
-> doesn't really matter, but I'll have to delay landing the json-schema
-> conversion because this will conflict.
+With this restriction I cannot even run an application that waits for the
+SOURCE_CHANGE event to start streaming, such as 'v4l2-ctl --stream-mmap'
+does because the open() will fail immediately.
 
-Oh, sorry, I missed that! I haven't send my pull request to Linus, so I
-can easily drop this patch again and apply a version not touching
-trivial-devices instead.
+Sorry, this is really wrong.
 
+Regards,
 
---4Ckj6UjgE2iN1+kY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlwFmW8ACgkQFA3kzBSg
-KbbjEA/+OKQ7MdMHGblhl5HTt3byGdsdKyB36y6xbG2jtRbs79sZI7YbEk6hDyaZ
-e1MiKL32PtkaxTGCQZRyMwFolO463ESYuN+KsrzDKkb6vv3KZieTJh17WOFmD9gP
-1o4q9PINNf4HkjgFRbJEKRZCnYI6jYhDgPHduTib7c1K3J9FH/DNOVfj4Vdpw6UO
-BPmtdyyauDkUBlkdTM1fFk8Y8zhg8bd/8gqa0oIFsKVKM2DocCoRCojtIBB9QQZA
-LR7ponmAL4bChhccnE4op9BYCiD+Nv6fAq2mZSmYAF/nl93y+YwchbAY9oBmONSf
-xhG7BwhJag5UnIbPgrVFd8XL9+UO1dLijUezAJd9WVDLICOmb6wL65G4iZzIN4Tq
-3eRhfgaUumP1vIgGZwSQ9c7MmZ3rpKgQvaes5dl33cwIKJD9JqFdbo102aO0ntHD
-n66b2KbEknyYYQvC08o2EZMOqt5RI1IoPY+vI7x1UH860Z6SRWpO+wMuH2PPiH81
-TZjdJFGM409DADjbrIdaAN/XqJ9F8Qkne4iCWJ+YX+e4k3O0oBEsrTuYDlyBT6kq
-D4VdyR6UkeGAAbOZoPNdoWXrZib6OufsIglU9opQPMWuMRNryYak4ooKsxM5nY6R
-SHFPNLstdHTsXNd4YYqXFWDG4nQAFqLM95KtnFA9w5ZbMNWea6Q=
-=g2RM
------END PGP SIGNATURE-----
-
---4Ckj6UjgE2iN1+kY--
+	Hans
