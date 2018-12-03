@@ -1,91 +1,49 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH 5/6] [DO NOT MERGE] ARM: dts: sunxi: bananapi-m2p: Add
- HDF5640 camera module
-Date: Mon, 3 Dec 2018 15:21:50 +0530
-Message-ID: <CAMty3ZAuBM0s3eNhQBySSaUrUAkiF=Hk+Ab=gsN=QucLJv0zyw@mail.gmail.com>
-References: <20181130075849.16941-1-wens@csie.org> <20181130075849.16941-6-wens@csie.org>
+From: Krzysztof Opasiak <k.opasiak@samsung.com>
+Subject: Re: [PATCH v1 11/12] usb: gadget: Add configfs attribuite for
+ controling match_existing_only
+Date: Mon, 3 Dec 2018 10:53:28 +0100
+Message-ID: <1eafffa7-9183-d9c9-2d22-410cc6e0982a@samsung.com>
+References: <20181203034515.91412-1-chenyu56@huawei.com>
+        <CGME20181203034629epcas3p12958dc0d45a7de56c65d24390b4d0dd7@epcas3p1.samsung.com>
+        <20181203034515.91412-12-chenyu56@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181130075849.16941-6-wens@csie.org>
+In-Reply-To: <20181203034515.91412-12-chenyu56@huawei.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Yu Chen <chenyu56@huawei.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Binghui Wang <wangbinghui@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 30, 2018 at 1:29 PM Chen-Yu Tsai <wens@csie.org> wrote:
->
-> The Bananapi M2+ comes with an optional sensor based on the ov5640 from
-> Omnivision. Enable the support for it in the DT.
->
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> ---
->  arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi | 87 +++++++++++++++++++
->  1 file changed, 87 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi
-> index b3283aeb5b7d..d97a98acf378 100644
-> --- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi
-> +++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi
-> @@ -89,6 +89,42 @@
->                 };
->         };
->
-> +       reg_cam_avdd: cam-avdd {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "csi-avdd";
-> +               regulator-min-microvolt = <2800000>;
-> +               regulator-max-microvolt = <2800000>;
-> +               startup-delay-us = <200>; /* 50 us + board delays */
-> +               enable-active-high;
-> +               gpio = <&pio 3 14 GPIO_ACTIVE_HIGH>; /* PD14 */
-> +       };
-> +
-> +       reg_cam_dovdd: cam-dovdd {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "csi-dovdd";
-> +               regulator-min-microvolt = <2800000>;
-> +               regulator-max-microvolt = <2800000>;
-> +               /*
-> +                * This regulator also powers the pull-ups for the I2C bus.
-> +                * For some reason, if this is turned off, subsequent use
-> +                * of the I2C bus, even when turned on, does not work.
-> +                */
-> +               startup-delay-us = <200>; /* 50 us + board delays */
-> +               regulator-always-on;
-> +               enable-active-high;
-> +               gpio = <&pio 3 14 GPIO_ACTIVE_HIGH>; /* PD14 */
-> +       };
-> +
-> +       reg_cam_dvdd: cam-dvdd {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "csi-dvdd";
-> +               regulator-min-microvolt = <1500000>;
-> +               regulator-max-microvolt = <1500000>;
-> +               startup-delay-us = <200>; /* 50 us + board delays */
-> +               enable-active-high;
-> +               gpio = <&pio 3 14 GPIO_ACTIVE_HIGH>; /* PD14 */
-> +       };
-> +
->         reg_gmac_3v3: gmac-3v3 {
->                       compatible = "regulator-fixed";
->                       regulator-name = "gmac-3v3";
-> @@ -106,6 +142,26 @@
->         };
->  };
->
-> +&csi {
-> +       status = "okay";
-> +
-> +       port {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               /* Parallel bus endpoint */
-> +               csi_from_ov5640: endpoint {
-> +                       remote-endpoint = <&ov5640_to_csi>;
-> +                       bus-width = <8>;
-> +                       data-shift = <2>;
 
-If I'm not wrong, the data-shift is not available in sun6i at-least in
-conf register.
+
+On 03.12.2018 04:45, Yu Chen wrote:
+> Currently the "match_existing_only" of usb_gadget_driver in configfs is
+> set to one which is not flexible.
+> Dwc3 udc will be removed when usb core switch to host mode. This causes
+> failure of writing name of dwc3 udc to configfs's UDC attribuite.
+> To fix this we need to add a way to change the config of
+> "match_existing_only".
+> This patch adds a configfs attribuite for controling match_existing_only
+> which allow user to config "match_existing_only".
+> 
+
+To be honest I strongly disagree with that patch.
+This attribute was intended for build-in gadgets to allow user to decide 
+whether probe should fail or gadget should wait for UDC (used when 
+gadget is built-in). For ConfigFS we expect the UDC to always exist 
+prior to binding a gadget to it. If UDC goes away from what ever reason 
+gadget should be unbound.
+
+So what this patch does in my opinion is abusing the attribute and 
+hacking the kernel instead of creating a simple udev rule that whenever 
+dwc3 appears and it gadget should be enabled write its name to UDC 
+attribute.
+
+Best regards,
+-- 
+Krzysztof Opasiak
+Samsung R&D Institute Poland
+Samsung Electronics
