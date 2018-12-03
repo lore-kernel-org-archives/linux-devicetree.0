@@ -1,26 +1,28 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v1 3/4] arm64: dts: qcom: sdm845: Fix QMP PHY #clock-cells
-Date: Mon, 03 Dec 2018 14:37:56 -0800
-Message-ID: <154387667618.88331.14674785921714656321@swboyd.mtv.corp.google.com>
-References: <20181129221357.67417-1-evgreen@chromium.org>
- <20181129221357.67417-4-evgreen@chromium.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v3 4/4] ARM: dts: imx5: add gpu nodes
+Date: Mon, 3 Dec 2018 21:06:22 -0200
+Message-ID: <CAOMZO5BAPATbQGpdnjud29gVA2uDH8xJp0UVK+P88DF4PFJi6Q@mail.gmail.com>
+References: <20181203211816.5129-1-jonathan@marek.ca> <20181203211816.5129-4-jonathan@marek.ca>
+ <CAOMZO5B18DyZ0zvit6AgaueMifnMf2ctSo7pE_XndRpt7+bnLw@mail.gmail.com> <3e8d1f9e-ffb4-dd6a-0a68-f59b4c1134a0@marek.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181129221357.67417-4-evgreen@chromium.org>
+In-Reply-To: <3e8d1f9e-ffb4-dd6a-0a68-f59b4c1134a0@marek.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Douglas Anderson <dianders@chromium.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
+To: jonathan@marek.ca
+Cc: freedreno@lists.freedesktop.org, Chris Healy <Chris.Healy@zii.aero>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Evan Green (2018-11-29 14:13:56)
-> Move #clock-cells into the child node for instances of the qcom-qmp-phy
-> nodes, and set it to zero, in accordance with the proper bindings. PHYs
-> that don't provide clocks don't have #clock-cells, and so are left alone.
-> =
+On Mon, Dec 3, 2018 at 8:24 PM Jonathan marek <jonathan@marek.ca> wrote:
 
-> Signed-off-by: Evan Green <evgreen@chromium.org>
-> ---
+> > I can't find the dt-bindings for these compatible entries. Have you
+> > documented them?
+> >
+>
+> It is the same as qcom,adreno which is documented here:
+>
+> Documentation/devicetree/bindings/display/msm/gpu.txt
+>
+> I guess I should add amd,imageon there.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Yes, please.
