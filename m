@@ -1,32 +1,83 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] power: reset: gpio-poweroff: add ability to specific
- active and inactive delays
-Date: Mon, 3 Dec 2018 17:49:23 -0600
-Message-ID: <20181203234923.GA29934@bogus>
-References: <20181111214538.32477-1-heiko@sntech.de>
+Subject: Re: [PATCH 1/3] dt-bindings: soc: qcom: Add AOSS QMP binding
+Date: Mon, 3 Dec 2018 17:51:45 -0600
+Message-ID: <20181203235145.GA30118@bogus>
+References: <20181112080557.22698-1-bjorn.andersson@linaro.org>
+ <20181112080557.22698-2-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181111214538.32477-1-heiko@sntech.de>
+In-Reply-To: <20181112080557.22698-2-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mdf@kernel.org, heiko@sntech.de, Heiko Stuebner <heiko.stuebner@bq.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 11 Nov 2018 22:45:38 +0100, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@bq.com>
+On Mon, Nov 12, 2018 at 12:05:55AM -0800, Bjorn Andersson wrote:
+> Add binding for the QMP based side-channel communication mechanism to
+> the AOSS, which is used to control resources not exposed through the
+> RPMh interface.
 > 
-> Similar to gpio-reset allow to specify active and inactive delays
-> while keeping the 100ms defaults that were used previously all the time.
-> 
-> The dt-properties are named the same as in gpio-reset but get an "-ms"
-> suffix as properties should contain such a suffix specifying its unit.
-> 
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->  .../devicetree/bindings/power/reset/gpio-poweroff.txt  |  2 ++
->  drivers/power/reset/gpio-poweroff.c                    | 10 ++++++++--
->  2 files changed, 10 insertions(+), 2 deletions(-)
+>  .../bindings/soc/qcom/qcom,aoss-qmp.txt       | 63 +++++++++++++++++++
+>  include/dt-bindings/power/qcom-aoss-qmp.h     | 15 +++++
+>  2 files changed, 78 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+>  create mode 100644 include/dt-bindings/power/qcom-aoss-qmp.h
 > 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+> new file mode 100644
+> index 000000000000..e3c8cb4372f2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+> @@ -0,0 +1,63 @@
+> +Qualcomm Always-On Subsystem side channel binding
+> +
+> +This binding describes the hardware component responsible for side channel
+> +requests to the always-on subsystem (AOSS), used for certain power management
+> +requests that is not handled by the standard RPMh interface. Each client in the
+> +SoC has it's own block of message RAM and IRQ for communication with the AOSS.
+> +The protocol used to communicate in the message RAM is known as QMP.
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be "qcom,sdm845-aoss-qmp"
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: the base address and size of the message RAM for this
+> +		    client's communication with the AOSS
+> +
+> +- interrupts:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: should specify the AOSS message IRQ for this client
+> +
+> +- mboxes:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: reference to the mailbox representing the outgoing doorbell
+> +		    in APCS for this client, as described in mailbox/mailbox.txt
+> +
+> += AOSS Power-domains
+> +The AOSS side channel exposes control over a set of resources, used to control
+> +a set of debug related clocks and to affect the low power state of resources
+> +related to the secondary subsystems. These resources are described as a set of
+> +power-domains in a subnode of hte AOSS side channel node.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Why does this need to be a sub-node? Are there other sub-nodes needed?
+
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be "qcom,sdm845-aoss-qmp-pd"
+> +
+> +- #power-domain-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: must be 1
