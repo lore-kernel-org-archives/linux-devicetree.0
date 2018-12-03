@@ -1,74 +1,47 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v11 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ
- Firmware bindings
-Date: Mon, 3 Dec 2018 17:09:07 -0600
-Message-ID: <20181203230907.GA17086@bogus>
-References: <1543722903-10989-1-git-send-email-tdas@codeaurora.org>
- <1543722903-10989-2-git-send-email-tdas@codeaurora.org>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v2 0/2] net: phy: micrel: add tobling phy reset
+Date: Mon, 03 Dec 2018 15:20:57 -0800 (PST)
+Message-ID: <20181203.152057.61263535375452379.davem@davemloft.net>
+References: <1543395612-5430-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1543722903-10989-2-git-send-email-tdas@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, evgreen@google.com
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1543395612-5430-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: yoshihiro.shimoda.uh@renesas.com
+Cc: andrew@lunn.ch, f.fainelli@gmail.com, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 02, 2018 at 09:25:02AM +0530, Taniya Das wrote:
-> Add QCOM cpufreq firmware device bindings for Qualcomm Technology Inc's
-> SoCs. This is required for managing the cpu frequency transitions which are
-> controlled by the hardware engine.
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Date: Wed, 28 Nov 2018 09:02:41 +0000
+
+> This patch set is for R-Car Gen3 Salvator-XS boards. If we do
+> the following method, the phy cannot link up correctly.
 > 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  .../bindings/cpufreq/cpufreq-qcom-hw.txt           | 172 +++++++++++++++++++++
->  1 file changed, 172 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+>  1) Kernel boots by using initramfs.
+>  --> No open the nic, so phy_device_register() and phy_probe()
+>      deasserts the reset.
+>  2) Kernel enters the suspend.
+>  --> So, keep the reset signal as deassert.
+>  --> On R-Car Salvator-XS board, unfortunately, the board power is
+>      turned off.
+>  3) Kernel returns from suspend.
+>  4) ifconfig eth0 up
+>  --> Then, since edge signal of the reset doesn't happen,
+>      it cannot link up.
+>  5) ifconfig eth0 down
+>  6) ifconfig eth0 up
+>  --> In this case, it can link up.
 > 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
-> new file mode 100644
-> index 0000000..2b82965
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
-> @@ -0,0 +1,172 @@
-> +Qualcomm Technologies, Inc. CPUFREQ Bindings
-> +
-> +CPUFREQ HW is a hardware engine used by some Qualcomm Technologies, Inc. (QTI)
-> +SoCs to manage frequency in hardware. It is capable of controlling frequency
-> +for multiple clusters.
-> +
-> +Properties:
-> +- compatible
-> +	Usage:		required
-> +	Value type:	<string>
-> +	Definition:	must be "qcom,cpufreq-hw".
-> +
-> +- clocks
-> +	Usage:		required
-> +	Value type:	<phandle> From common clock binding.
-> +	Definition:	clock handle for XO clock and GPLL0 clock.
-> +
-> +- clock-names
-> +	Usage:		required
-> +	Value type:	<string> From common clock binding.
-> +	Definition:	must be "xo", "alternate".
-> +
-> +- reg
-> +	Usage:		required
-> +	Value type:	<prop-encoded-array>
-> +	Definition:	Addresses and sizes for the memory of the HW bases in
-> +			each frequency domain.
-> +- reg-names
-> +	Usage:		Optional
-> +	Value type:	<string>
-> +	Definition:	Frequency domain name i.e.
-> +			"freq-domain0", "freq-domain1".
-> +
-> +- freq-domain-cells:
+> When resolving this issue after I got feedback from Andrew and Heiner,
+> I found an issue that the phy_device.c didn't call phy_resume()
+> if the PHY was not attached. So, patch 1 fixes it and add toggling
+> the phy reset to the micrel phy driver.
+> 
+> Changes from v1 (as RFC):
+>  - No remove the current code of phy_device.c to avoid any side effects.
+>  - Fix the mdio_bus_phy_resume() in phy_device.c.
+>  - Add toggling the phy reset in micrel.c if the PHY is not attached.
 
-#freq-domain-cells
-
-Otherwise,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+Series applied, thank you.
