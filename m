@@ -1,93 +1,50 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v1 01/12] dt-bindings: usb: add support for dwc3
- controller on HiSilicon SoCs
-Date: Mon, 3 Dec 2018 16:51:09 +0800
-Message-ID: <33cda716-d09c-28e7-d4b4-26f246786f5e@huawei.com>
-References: <20181203034515.91412-1-chenyu56@huawei.com>
- <20181203034515.91412-2-chenyu56@huawei.com>
- <fde4d37b-0c4d-055b-a0ba-4e9fe87717ad@cogentembedded.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v6 13/17] clk: sunxi-ng: add support for
+ suniv F1C100s SoC
+Date: Mon, 3 Dec 2018 09:55:31 +0100
+Message-ID: <20181203085531.exlmkfs6b4ejv5dr@flea>
+References: <cover.1543781680.git.mesihkilinc@gmail.com>
+ <b3d266d9f5f0f7504701c3bbec819acde6d19257.1543781680.git.mesihkilinc@gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fde4d37b-0c4d-055b-a0ba-4e9fe87717ad@cogentembedded.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: wangbinghui@hisilicon.com, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="rnvyyf5rs3zyws7h"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBDW7SPQAKGQE63VCWYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <b3d266d9f5f0f7504701c3bbec819acde6d19257.1543781680.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 2018/12/3 16:35, Sergei Shtylyov wrote:
-> Hello!
-> 
-> On 03.12.2018 6:45, Yu Chen wrote:
-> 
->> This patch adds binding descriptions to support the dwc3 controller
->> on HiSilicon SoCs and boards like the HiKey960.
->>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: John Stultz <john.stultz@linaro.org>
->> Signed-off-by: Yu Chen <chenyu56@huawei.com>
->> ---
->>   .../devicetree/bindings/usb/dwc3-hisi.txt          | 67 ++++++++++++++++++++++
->>   1 file changed, 67 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/usb/dwc3-hisi.txt
->>
->> diff --git a/Documentation/devicetree/bindings/usb/dwc3-hisi.txt b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
->> new file mode 100644
->> index 000000000000..d32d2299a0a1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
->> @@ -0,0 +1,67 @@
->> +HiSilicon DWC3 USB SoC controller
->> +
->> +This file documents the parameters for the dwc3-hisi driver.
->> +
->> +Required properties:
->> +- compatible:    should be "hisilicon,hi3660-dwc3"
->> +- clocks:    A list of phandle + clock-specifier pairs for the
->> +        clocks listed in clock-names
->> +- clock-names:    Specify clock names
->> +- resets:    list of phandle and reset specifier pairs.
->> +
->> +Sub-nodes:
->> +The dwc3 core should be added as subnode to HiSilicon DWC3 as shown in the
->> +example below. The DT binding details of dwc3 can be found in:
->> +Documentation/devicetree/bindings/usb/dwc3.txt
->> +
->> +Example:
->> +    usb3: hisi_dwc3 {
->> +        compatible = "hisilicon,hi3660-dwc3";
->> +        #address-cells = <2>;
->> +        #size-cells = <2>;
->> +        ranges;
->> +
->> +        clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
->> +             <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
->> +        clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
->> +        assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
->> +        assigned-clock-rates = <229000000>;
->> +        resets = <&crg_rst 0x90 8>,
->> +             <&crg_rst 0x90 7>,
->> +             <&crg_rst 0x90 6>,
->> +             <&crg_rst 0x90 5>;
->> +
->> +        dwc3: dwc3@ff100000 {
-> 
->     According to the DT spec, the node names should be generic, not chip specific, i.e. usb@ff100000 in this case.
-> 
+--rnvyyf5rs3zyws7h
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Do you mean it should be usb@ff100000: dwc3@ff100000 ?
+On Sun, Dec 02, 2018 at 11:23:47PM +0300, Mesih Kilinc wrote:
+> diff --git a/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.c b/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.c
+> new file mode 100644
+> index 0000000..ea335a6
+> --- /dev/null
+> +++ b/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.c
+> @@ -0,0 +1,541 @@
+> +/* SPDX-License-Identifier: GPL-2.0
 
-Thanks!
+This isn't the proper SPDX format, and this is reported by
+checkpatch. I've fixed it while applying, but please make sure to run
+checkpatch.
 
-> [...]
-> 
-> MBR, Sergei
-> 
-> .
-> 
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--rnvyyf5rs3zyws7h--
