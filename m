@@ -1,103 +1,186 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 07/14] rtc: sun6i: Add support for all known
- pre-H6 variants
-Date: Mon,  3 Dec 2018 22:58:18 +0800
-Message-ID: <20181203145825.20511-8-wens@csie.org>
-References: <20181203145825.20511-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Lars Poeschel <poeschel@lemonage.de>
+Subject: Re: [PATCH v4 4/6] nfc: pn533: add UART phy driver
+Date: Mon, 3 Dec 2018 15:26:22 +0100
+Message-ID: <20181203142622.GA8057@lem-wkst-02.lemonage>
+References: <20181101100216.613-1-poeschel@lemonage.de>
+ <20181101100216.613-4-poeschel@lemonage.de>
+ <20181114153517.GB19900@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBGMJSXQAKGQEMY2ARYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181203145825.20511-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181114153517.GB19900@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, open list <linux-kernel@vger.kernel.org>, "open list:NFC SUBSYSTEM" <linux-wireless@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-There are different variants to the RTC hardware first seen on sun6i
-(A31). The differences we care about in this driver are the clock rate
-for the internal oscillator, prescalers, and the presence of an external
-clock output.
+On Wed, Nov 14, 2018 at 04:35:17PM +0100, Johan Hovold wrote:
+> On Thu, Nov 01, 2018 at 11:02:12AM +0100, Lars Poeschel wrote:
+> > This adds the UART phy interface for the pn533 driver.
+> > The pn533 driver can be used through UART interface this way.
+> > It is implemented as a serdev device.
+> > 
+> > Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+> 
+> Please make sure to include reviewers on CC.
 
-This patch adds support for all the known pre-H6 base compatibles using
-the variants data structure previously introduced.
+It's hard to do all things right, about how to correctly email patches,
+patch sets and follow ups and send what to whom.
+I am still learning. Sorry about that.
 
-Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Tested-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- drivers/rtc/rtc-sun6i.c | 46 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+> > ---
+> > Changes in v4:
+> > - SPDX-License-Identifier: GPL-2.0+
+> > - Source code comments above refering items
+> > - Error check for serdev_device_write's
+> > - Change if (xxx == NULL) to if (!xxx)
+> > - Remove device name from a dev_err
+> > - move pn533_register in _probe a bit towards the end of _probe
+> > - make use of newly added dev_up / dev_down phy_ops
+> > - control send_wakeup variable from dev_up / dev_down
+> > 
+> > Changes in v3:
+> > - depend on SERIAL_DEV_BUS in Kconfig
+> > 
+> > Changes in v2:
+> > - switched from tty line discipline to serdev, resulting in many
+> >   simplifications
+> > - SPDX License Identifier
+> > 
+> >  drivers/nfc/pn533/Kconfig  |  11 ++
+> >  drivers/nfc/pn533/Makefile |   2 +
+> >  drivers/nfc/pn533/pn533.h  |   8 +
+> >  drivers/nfc/pn533/uart.c   | 311 +++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 332 insertions(+)
+> >  create mode 100644 drivers/nfc/pn533/uart.c
+> > 
+> > +static void pn532_dev_up(struct pn533 *dev)
+> > +{
+> > +	struct pn532_uart_phy *pn532 = dev->phy;
+> > +
+> > +	serdev_device_open(pn532->serdev);
+> > +	pn532->send_wakeup = PN532_SEND_LAST_WAKEUP;
+> > +}
+> > +
+> > +static void pn532_dev_down(struct pn533 *dev)
+> > +{
+> > +	struct pn532_uart_phy *pn532 = dev->phy;
+> > +
+> > +	serdev_device_close(pn532->serdev);
+> > +	pn532->send_wakeup = PN532_SEND_WAKEUP;
+> > +}
+> > +
+> > +static struct pn533_phy_ops uart_phy_ops = {
+> > +	.send_frame = pn532_uart_send_frame,
+> > +	.send_ack = pn532_uart_send_ack,
+> > +	.abort_cmd = pn532_uart_abort_cmd,
+> > +	.dev_up = pn532_dev_up,
+> > +	.dev_down = pn532_dev_down,
+> > +};
+> 
+> > +static int pn532_uart_probe(struct serdev_device *serdev)
+> > +{
+> > +	struct pn532_uart_phy *pn532;
+> > +	struct pn533 *priv;
+> > +	int err;
+> > +
+> > +	err = -ENOMEM;
+> > +	pn532 = kzalloc(sizeof(*pn532), GFP_KERNEL);
+> > +	if (!pn532)
+> > +		goto err_exit;
+> > +
+> > +	pn532->recv_skb = alloc_skb(PN532_UART_SKB_BUFF_LEN, GFP_KERNEL);
+> > +	if (!pn532->recv_skb)
+> > +		goto err_free;
+> > +
+> > +	pn532->serdev = serdev;
+> > +	serdev_device_set_drvdata(serdev, pn532);
+> > +	serdev_device_set_client_ops(serdev, &pn532_serdev_ops);
+> > +	err = serdev_device_open(serdev);
+> > +	if (err) {
+> > +		dev_err(&serdev->dev, "Unable to open device\n");
+> > +		goto err_skb;
+> > +	}
+> > +
+> > +	err = serdev_device_set_baudrate(serdev, 115200);
+> > +	if (err != 115200) {
+> > +		err = -EINVAL;
+> > +		goto err_serdev;
+> > +	}
+> > +
+> > +	serdev_device_set_flow_control(serdev, false);
+> > +	pn532->send_wakeup = PN532_SEND_WAKEUP;
+> > +	timer_setup(&pn532->cmd_timeout, pn532_cmd_timeout, 0);
+> > +	priv = pn533_register_device(PN533_DEVICE_PN532,
+> > +				     PN533_NO_TYPE_B_PROTOCOLS,
+> > +				     PN533_PROTO_REQ_ACK_RESP,
+> > +				     pn532, &uart_phy_ops, NULL,
+> > +				     &pn532->serdev->dev,
+> > +				     &serdev->dev);
+> > +	if (IS_ERR(priv)) {
+> > +		err = PTR_ERR(priv);
+> > +		goto err_serdev;
+> > +	}
+> > +
+> > +	pn532->priv = priv;
+> > +	err = pn533_finalize_setup(pn532->priv);
+> > +	if (err)
+> > +		goto err_unregister;
+> > +
+> > +	serdev_device_close(serdev);
+> 
+> This looks broken; what if the NFC interface is brought up before this
+> point? You'd get a double open, which is likely to crash things, but
+> even if you survive that, the port would not be closed despite the
+> interface being up.
 
-diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-index d1866d90b9ef..46609ae56ffd 100644
---- a/drivers/rtc/rtc-sun6i.c
-+++ b/drivers/rtc/rtc-sun6i.c
-@@ -312,6 +312,48 @@ static void __init sun6i_a31_rtc_clk_init(struct device_node *node)
- CLK_OF_DECLARE_DRIVER(sun6i_a31_rtc_clk, "allwinner,sun6i-a31-rtc",
- 		      sun6i_a31_rtc_clk_init);
- 
-+static const struct sun6i_rtc_clk_data sun8i_a23_rtc_data = {
-+	.rc_osc_rate = 667000, /* datasheet says 600 ~ 700 KHz */
-+	.has_prescaler = 1,
-+	.has_out_clk = 1,
-+};
-+
-+static void __init sun8i_a23_rtc_clk_init(struct device_node *node)
-+{
-+	sun6i_rtc_clk_init(node, &sun8i_a23_rtc_data);
-+}
-+CLK_OF_DECLARE_DRIVER(sun8i_a23_rtc_clk, "allwinner,sun8i-a23-rtc",
-+		      sun8i_a23_rtc_clk_init);
-+
-+static const struct sun6i_rtc_clk_data sun8i_h3_rtc_data = {
-+	.rc_osc_rate = 16000000,
-+	.fixed_prescaler = 32,
-+	.has_prescaler = 1,
-+	.has_out_clk = 1,
-+};
-+
-+static void __init sun8i_h3_rtc_clk_init(struct device_node *node)
-+{
-+	sun6i_rtc_clk_init(node, &sun8i_h3_rtc_data);
-+}
-+CLK_OF_DECLARE_DRIVER(sun8i_h3_rtc_clk, "allwinner,sun8i-h3-rtc",
-+		      sun8i_h3_rtc_clk_init);
-+/* As far as we are concerned, clocks for H5 are the same as H3 */
-+CLK_OF_DECLARE_DRIVER(sun50i_h5_rtc_clk, "allwinner,sun50i-h5-rtc",
-+		      sun8i_h3_rtc_clk_init);
-+
-+static const struct sun6i_rtc_clk_data sun8i_v3_rtc_data = {
-+	.rc_osc_rate = 32000,
-+	.has_out_clk = 1,
-+};
-+
-+static void __init sun8i_v3_rtc_clk_init(struct device_node *node)
-+{
-+	sun6i_rtc_clk_init(node, &sun8i_v3_rtc_data);
-+}
-+CLK_OF_DECLARE_DRIVER(sun8i_v3_rtc_clk, "allwinner,sun8i-v3-rtc",
-+		      sun8i_v3_rtc_clk_init);
-+
- static irqreturn_t sun6i_rtc_alarmirq(int irq, void *id)
- {
- 	struct sun6i_rtc_dev *chip = (struct sun6i_rtc_dev *) id;
-@@ -625,6 +667,10 @@ static int sun6i_rtc_probe(struct platform_device *pdev)
-  */
- static const struct of_device_id sun6i_rtc_dt_ids[] = {
- 	{ .compatible = "allwinner,sun6i-a31-rtc" },
-+	{ .compatible = "allwinner,sun8i-a23-rtc" },
-+	{ .compatible = "allwinner,sun8i-h3-rtc" },
-+	{ .compatible = "allwinner,sun8i-v3-rtc" },
-+	{ .compatible = "allwinner,sun50i-h5-rtc" },
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, sun6i_rtc_dt_ids);
--- 
-2.20.0.rc1
+I understand the problem and would like to solve it with a mutex. I will
+not have time to work on that until next year. Please be patient. I will
+send a new patchset.
+
+> Can't you finalise your setup before registering the interface?
+
+Well, propably I can do that. But I did it the way the other drivers
+(usb and i2c) are already doing and reusing the code of the pn533 core
+driver. Since their probe works very similar to mine, I suspect them to
+have the same problems.
+I can rewrite the probe for my driver, but not for the other two. I can
+not test them.
+Would you prefer that I rewrite my own _register_device and
+_finalize_setup functions, not using the ones from the core driver ?
+
+> > +	return 0;
+> > +
+> > +err_unregister:
+> > +	pn533_unregister_device(pn532->priv);
+> > +err_serdev:
+> > +	serdev_device_close(serdev);
+> > +err_skb:
+> > +	kfree_skb(pn532->recv_skb);
+> > +err_free:
+> > +	kfree(pn532);
+> > +err_exit:
+> > +	return err;
+> > +}
+> > +
+> > +static void pn532_uart_remove(struct serdev_device *serdev)
+> > +{
+> > +	struct pn532_uart_phy *pn532 = serdev_device_get_drvdata(serdev);
+> > +
+> > +	pn533_unregister_device(pn532->priv);
+> > +	serdev_device_close(serdev);
+> 
+> This is also broken; the port should have been closed when the interface
+> was deregistered.
+
+Same as above.
+
+> > +	kfree_skb(pn532->recv_skb);
+> > +	kfree(pn532);
+> > +}
+
+Thank you for your very valuable feedback.
+
+Regards,
+Lars
