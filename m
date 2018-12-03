@@ -1,116 +1,40 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFT PATCH v1 2/4] dt-binding: cpu-topology: Move cpu-map to a
- common binding.
-Date: Mon, 3 Dec 2018 17:33:06 +0000
-Message-ID: <20181203173306.GF17883@e107155-lin>
-References: <1543534100-3654-1-git-send-email-atish.patra@wdc.com>
- <1543534100-3654-3-git-send-email-atish.patra@wdc.com>
- <20181203165521.GB17883@e107155-lin>
- <f902086b-09e1-ad85-d191-137708f5b105@wdc.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f902086b-09e1-ad85-d191-137708f5b105@wdc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitriy Cherkasov <dmitriy@oss-tech.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Juri Lelli <juri.lelli@arm.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Peter Z
+From: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v2 0/3] ath10k: Add support to configure BB timing for external FEM
+Date: Mon,  3 Dec 2018 23:03:32 +0530
+Message-ID: <1543858415-23953-1-git-send-email-bperumal@codeaurora.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 03, 2018 at 09:23:42AM -0800, Atish Patra wrote:
-> On 12/3/18 8:55 AM, Sudeep Holla wrote:
-> > On Thu, Nov 29, 2018 at 03:28:18PM -0800, Atish Patra wrote:
-> > > cpu-map binding can be used to described cpu topology for both
-> > > RISC-V & ARM. It makes more sense to move the binding to document
-> > > to a common place.
-> > > 
-> > > The relevant discussion can be found here.
-> > > https://lkml.org/lkml/2018/11/6/19
-> > > 
-> > 
-> > Looks good to me apart from a minor query below in the example.
-> > 
-> > Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-> > 
-> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > > ---
-> > >   .../{arm/topology.txt => cpu/cpu-topology.txt}     | 81 ++++++++++++++++++----
-> > >   1 file changed, 67 insertions(+), 14 deletions(-)
-> > >   rename Documentation/devicetree/bindings/{arm/topology.txt => cpu/cpu-topology.txt} (86%)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
-> > > similarity index 86%
-> > > rename from Documentation/devicetree/bindings/arm/topology.txt
-> > > rename to Documentation/devicetree/bindings/cpu/cpu-topology.txt
-> > > index 66848355..1de6fbce 100644
-> > > --- a/Documentation/devicetree/bindings/arm/topology.txt
-> > > +++ b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
-> > 
-> > [...]
-> > 
-> > > +Example 3: HiFive Unleashed (RISC-V 64 bit, 4 core system)
-> > > +
-> > > +cpus {
-> > > +	#address-cells = <2>;
-> > > +	#size-cells = <2>;
-> > > +	compatible = "sifive,fu540g", "sifive,fu500";
-> > > +	model = "sifive,hifive-unleashed-a00";
-> > > +
-> > > +	...
-> > > +
-> > > +	cpu-map {
-> > > +		cluster0 {
-> > > +			core0 {
-> > > +				cpu = <&L12>;
-> > > +		 	};
-> > > +			core1 {
-> > > +				cpu = <&L15>;
-> > > +			};
-> > > +			core2 {
-> > > +				cpu0 = <&L18>;
-> > > +			};
-> > > +			core3 {
-> > > +				cpu0 = <&L21>;
-> > > +			};
-> > > +		};
-> > > + 	};
-> > > +
-> > > +	L12: cpu@1 {
-> > > +		device_type = "cpu";
-> > > +		compatible = "sifive,rocket0", "riscv";
-> > > +		reg = <0x1>;
-> > > +	}
-> > > +
-> > > +	L15: cpu@2 {
-> > > +		device_type = "cpu";
-> > > +		compatible = "sifive,rocket0", "riscv";
-> > > +		reg = <0x2>;
-> > > +	}
-> > > +	L18: cpu@3 {
-> > > +		device_type = "cpu";
-> > > +		compatible = "sifive,rocket0", "riscv";
-> > > +		reg = <0x3>;
-> > > +	}
-> > > +	L21: cpu@4 {
-> > > +		device_type = "cpu";
-> > > +		compatible = "sifive,rocket0", "riscv";
-> > > +		reg = <0x4>;
-> > > +	}
-> > > +};
-> > 
-> > The labels for the CPUs drew my attention. Is it intentionally random
-> > (or even specific) or just chosen to show anything can be used as labels ?
-> 
-> SiFive generates the device tree from RTL directly. So I am not sure if they
-> assign random numbers or a particular algorithm chooses the label. I tried
-> to put the exact ones that is available publicly.
-> 
-> https://github.com/riscv/riscv-device-tree-doc/blob/master/examples/sifive-hifive_unleashed-microsemi.dts
+This adds support to choose correct Base Band(BB) timing values based on
+the input Front End Module(FEM) hardware name from Device Tree entry and
+configure it in hardware through WMI interface. Since the BB timing values
+can vary between FEM hardwares and not same as default value used
+in reference hardware.
 
-Cool, love that. So you don't have the problem I was trying to explain.
-But I still see the possibility of some other RISC-V vendor copy-pasting
-from here ;). Anyways it's left to you.
+Bhagavathi Perumal S (3):
+  dt-bindings: net: ath10k: fix node name and device type in qcom ath10k
+    example
+  dt-bindings: net: ath10k: add new dt entry to identify external FEM
+  ath10k: Add support to configure BB timing over wmi
 
---
-Regards,
-Sudeep
+v2:
+ Addressed review comments in dt:
+  * Fixed node name and device type with new dt patch "dt-bindings: net: ath10k:
+     fix node name and device type in qcom ath10k example".
+  * Changed the dt patch subject to "dt-bindings: net: ath10k: add new dt entry
+    to identify external FEM".
+  * Added new property in existing example.
+  * Enumarated some valid FEM names.
+
+ .../bindings/net/wireless/qcom,ath10k.txt          | 11 +++--
+ drivers/net/wireless/ath/ath10k/mac.c              | 47 ++++++++++++++++++++++
+ drivers/net/wireless/ath/ath10k/wmi-ops.h          | 20 +++++++++
+ drivers/net/wireless/ath/ath10k/wmi.c              | 23 +++++++++++
+ drivers/net/wireless/ath/ath10k/wmi.h              | 26 ++++++++++++
+ 5 files changed, 124 insertions(+), 3 deletions(-)
+
+-- 
+1.9.1
