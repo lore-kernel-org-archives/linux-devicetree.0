@@ -1,70 +1,93 @@
-From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Subject: RE: [PATCH v4 1/7] spi: add support for octo mode I/O data transfer
-Date: Mon, 3 Dec 2018 08:47:48 +0000
-Message-ID: <VI1PR04MB5726A8B992BF7DE2A646D20C99AE0@VI1PR04MB5726.eurprd04.prod.outlook.com>
-References: <1542863544-21257-1-git-send-email-yogeshnarayan.gaur@nxp.com>
-        <1542863544-21257-2-git-send-email-yogeshnarayan.gaur@nxp.com>
- <20181203090444.0c37efa7@bbrezillon>
+From: Chen Yu <chenyu56@huawei.com>
+Subject: Re: [PATCH v1 01/12] dt-bindings: usb: add support for dwc3
+ controller on HiSilicon SoCs
+Date: Mon, 3 Dec 2018 16:51:09 +0800
+Message-ID: <33cda716-d09c-28e7-d4b4-26f246786f5e@huawei.com>
+References: <20181203034515.91412-1-chenyu56@huawei.com>
+ <20181203034515.91412-2-chenyu56@huawei.com>
+ <fde4d37b-0c4d-055b-a0ba-4e9fe87717ad@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181203090444.0c37efa7@bbrezillon>
+In-Reply-To: <fde4d37b-0c4d-055b-a0ba-4e9fe87717ad@cogentembedded.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, "broonie@kernel.org" <broonie@kernel.org>
-Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: wangbinghui@hisilicon.com, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+Hi,
 
-> -----Original Message-----
-> From: Boris Brezillon [mailto:boris.brezillon@bootlin.com]
-> Sent: Monday, December 3, 2018 1:35 PM
-> To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>;
-> broonie@kernel.org
-> Cc: linux-mtd@lists.infradead.org; marek.vasut@gmail.com; vigneshr@ti.com=
-;
-> linux-spi@vger.kernel.org; devicetree@vger.kernel.org; robh@kernel.org;
-> mark.rutland@arm.com; shawnguo@kernel.org; linux-arm-
-> kernel@lists.infradead.org; computersforpeace@gmail.com;
-> frieder.schrempf@exceet.de; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v4 1/7] spi: add support for octo mode I/O data trans=
-fer
->=20
-> Hi Yogesh,
->=20
-> On Thu, 22 Nov 2018 05:14:31 +0000
-> Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
->=20
-> > Add flags for Octo mode I/O data transfer Required for the SPI
-> > controller which can do the data transfer (TX/RX) on 8 data lines e.g.
-> > NXP FlexSPI controller.
-> >  SPI_TX_OCTO: transmit with 8 wires
-> >  SPI_RX_OCTO: receive with 8 wires
-> >
-> > Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-> > Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
-> > ---
-> > Changes for v4:
-> > - Rebase on top of v4.20-rc2
-> > Changes for v3:
-> > - Modified string 'octal' with 'octo'.
->=20
-> When I listed the differences between your version and mine, I mentioned =
-the
-> OCTO vs OCTAL name, but I didn't say my decision was the correct one :-).=
- Looks
-> like OCTAL is the term employed almost everywhere, and it's also consiste=
-nt
-> with DUAL. Would you mind sending a new version reverting the name to OCT=
-AL.
->=20
-Next version of patch series send [1]
+On 2018/12/3 16:35, Sergei Shtylyov wrote:
+> Hello!
+> 
+> On 03.12.2018 6:45, Yu Chen wrote:
+> 
+>> This patch adds binding descriptions to support the dwc3 controller
+>> on HiSilicon SoCs and boards like the HiKey960.
+>>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: John Stultz <john.stultz@linaro.org>
+>> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+>> ---
+>>   .../devicetree/bindings/usb/dwc3-hisi.txt          | 67 ++++++++++++++++++++++
+>>   1 file changed, 67 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/dwc3-hisi.txt b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+>> new file mode 100644
+>> index 000000000000..d32d2299a0a1
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+>> @@ -0,0 +1,67 @@
+>> +HiSilicon DWC3 USB SoC controller
+>> +
+>> +This file documents the parameters for the dwc3-hisi driver.
+>> +
+>> +Required properties:
+>> +- compatible:    should be "hisilicon,hi3660-dwc3"
+>> +- clocks:    A list of phandle + clock-specifier pairs for the
+>> +        clocks listed in clock-names
+>> +- clock-names:    Specify clock names
+>> +- resets:    list of phandle and reset specifier pairs.
+>> +
+>> +Sub-nodes:
+>> +The dwc3 core should be added as subnode to HiSilicon DWC3 as shown in the
+>> +example below. The DT binding details of dwc3 can be found in:
+>> +Documentation/devicetree/bindings/usb/dwc3.txt
+>> +
+>> +Example:
+>> +    usb3: hisi_dwc3 {
+>> +        compatible = "hisilicon,hi3660-dwc3";
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +        ranges;
+>> +
+>> +        clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
+>> +             <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+>> +        clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
+>> +        assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+>> +        assigned-clock-rates = <229000000>;
+>> +        resets = <&crg_rst 0x90 8>,
+>> +             <&crg_rst 0x90 7>,
+>> +             <&crg_rst 0x90 6>,
+>> +             <&crg_rst 0x90 5>;
+>> +
+>> +        dwc3: dwc3@ff100000 {
+> 
+>     According to the DT spec, the node names should be generic, not chip specific, i.e. usb@ff100000 in this case.
+> 
 
---
-Regards,
-Yogesh Gaur
-[1] https://patchwork.ozlabs.org/project/linux-mtd/list/?series=3D79338
+Do you mean it should be usb@ff100000: dwc3@ff100000 ?
 
-[...]
+Thanks!
+
+> [...]
+> 
+> MBR, Sergei
+> 
+> .
+> 
