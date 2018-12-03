@@ -1,91 +1,69 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v3 3/3] arm64: dts: meson: add clock controller clock inputs
-Date: Mon,  3 Dec 2018 18:16:40 +0100
-Message-ID: <20181203171640.12110-4-jbrunet@baylibre.com>
-References: <20181203171640.12110-1-jbrunet@baylibre.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 05/12] PCI: aardvark: add suspend to RAM support
+Date: Mon, 3 Dec 2018 17:18:59 +0000
+Message-ID: <20181203171859.GA12792@e107981-ln.cambridge.arm.com>
+References: <20181123141831.8214-1-miquel.raynal@bootlin.com>
+ <20181123141831.8214-6-miquel.raynal@bootlin.com>
+ <20181203102708.GA6090@e107981-ln.cambridge.arm.com>
+ <20181203163846.494904f9@xps13>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181203171640.12110-1-jbrunet@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <20181203163846.494904f9@xps13>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, sudeep.holla@arm.com, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the clock inputs of the clock controllers
+[+Stephen, Mike]
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi  | 4 ++++
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 4 ++++
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 4 ++++
- 3 files changed, 12 insertions(+)
+On Mon, Dec 03, 2018 at 04:38:46PM +0100, Miquel Raynal wrote:
+> Hi Lorenzo,
+> 
+> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote on Mon, 3 Dec 2018
+> 10:27:08 +0000:
+> 
+> > [+Rafael, Sudeep]
+> > 
+> > On Fri, Nov 23, 2018 at 03:18:24PM +0100, Miquel Raynal wrote:
+> > > Add suspend and resume callbacks. The priority of these are
+> > > "_noirq()", to workaround early access to the registers done by the
+> > > PCI core through the ->read()/->write() callbacks at resume time.
+> > > 
+> > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > > ---
+> > >  drivers/pci/controller/pci-aardvark.c | 52 +++++++++++++++++++++++++++
+> > >  1 file changed, 52 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > > index 108b3f15c410..7ecf1ac4036b 100644
+> > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > @@ -1108,6 +1108,55 @@ static int advk_pcie_setup_clk(struct advk_pcie *pcie)
+> > >  	return ret;
+> > >  }
+> > >  
+> > > +static int __maybe_unused advk_pcie_suspend(struct device *dev)
+> > > +{
+> > > +	struct advk_pcie *pcie = dev_get_drvdata(dev);
+> > > +
+> > > +	advk_pcie_disable_phy(pcie);
+> > > +
+> > > +	clk_disable_unprepare(pcie->clk);  
+> > 
+> > I have noticed it is common practice, still, I would like to check whether
+> > it is allowed to call functions that may sleep in a NOIRQ suspend/resume
+> > callback ?
+> 
+> You are right this is weird. I double checked and for instance,
+> pcie-mediatek.c, pci-tegra.c and pci-imx6.c do the exact same thing.
+> There are probably other cases where drivers call functions that may
+> sleep from a NOIRQ context. I am interested to know if this is valid
+> and if not, what is the alternative?
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 5f512c91471e..5f3ac275f1ab 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -1089,6 +1089,8 @@
- 				clkc: clock-controller {
- 					compatible = "amlogic,axg-clkc";
- 					#clock-cells = <1>;
-+					clocks = <&xtal>;
-+					clock-names = "xtal";
- 				};
- 			};
- 		};
-@@ -1334,6 +1336,8 @@
- 					compatible = "amlogic,meson-axg-aoclkc";
- 					#clock-cells = <1>;
- 					#reset-cells = <1>;
-+					clocks = <&xtal>, <&clkc CLKID_CLK81>;
-+					clock-names = "xtal", "mpeg-clk";
- 				};
- 			};
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 6796d250985a..a7b883ced0a8 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -299,6 +299,8 @@
- 
- &clkc_AO {
- 	compatible = "amlogic,meson-gxbb-aoclkc", "amlogic,meson-gx-aoclkc";
-+	clocks = <&xtal>, <&clkc CLKID_CLK81>;
-+	clock-names = "xtal", "mpeg-clk";
- };
- 
- &efuse {
-@@ -334,6 +336,8 @@
- 	clkc: clock-controller {
- 		compatible = "amlogic,gxbb-clkc";
- 		#clock-cells = <1>;
-+		clocks = <&xtal>;
-+		clock-names = "xtal";
- 	};
- };
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index ed278097825b..d5c3d78aafeb 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -260,6 +260,8 @@
- 
- &clkc_AO {
- 	compatible = "amlogic,meson-gxl-aoclkc", "amlogic,meson-gx-aoclkc";
-+	clocks = <&xtal>, <&clkc CLKID_CLK81>;
-+	clock-names = "xtal", "mpeg-clk";
- };
- 
- &gpio_intc {
-@@ -284,6 +286,8 @@
- 	clkc: clock-controller {
- 		compatible = "amlogic,gxl-clkc";
- 		#clock-cells = <1>;
-+		clocks = <&xtal>;
-+		clock-names = "xtal";
- 	};
- };
- 
--- 
-2.19.1
+I added Stephen and Mike, who along with Rafael can help us shed some
+light into this, I do not have the necessary bits of info myself, I just
+noticed.
+
+Lorenzo
