@@ -1,67 +1,63 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH 12/36] dt-bindings: arm: Convert cpu binding to
- json-schema
-Date: Mon, 3 Dec 2018 12:40:52 +0000
-Message-ID: <20181203124039.GA25097@arm.com>
-References: <20181005165848.3474-1-robh@kernel.org>
- <20181005165848.3474-13-robh@kernel.org>
- <035ae23f-3c92-ffd9-0753-abbd604c5c02@xilinx.com>
- <CAL_JsqJJkcbxvfbVVOTPb5gavPgypO-Cd05C6qpvbvPMd1G81g@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: gpu: add Allwinner H6 Mali
+ Midgard binding
+Date: Mon, 3 Dec 2018 13:42:07 +0100
+Message-ID: <20181203124207.qqasvbio67u7bhvz@flea>
+References: <20181127074249.15204-1-icenowy@aosc.io>
+ <20181127074249.15204-2-icenowy@aosc.io>
+ <11894938.HOUtrQJeEF@phil>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4ojmp36grwkvkfun"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBKWJSTQAKGQE5G4RJWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJJkcbxvfbVVOTPb5gavPgypO-Cd05C6qpvbvPMd1G81g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Michal Simek <michal.simek@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Tom Rini <trini@konsulko.com>, Kumar Gala <kumar.gala@linaro.org>, Grant Likely <glikely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Matthias
+In-Reply-To: <11894938.HOUtrQJeEF@phil>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 30, 2018 at 12:00:05PM -0600, Rob Herring wrote:
-> On Thu, Nov 8, 2018 at 2:49 AM Michal Simek <michal.simek@xilinx.com> wrote:
-> >
-> > Hi Rob,
-> >
-> > On 05. 10. 18 18:58, Rob Herring wrote:
-> > > Convert ARM CPU binding to DT schema format using json-schema.
-> > >
-> > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> > > Cc: devicetree@vger.kernel.org
-> > > Cc: linux-arm-kernel@lists.infradead.org
-> > > Cc: linux-mediatek@lists.infradead.org
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > >  .../devicetree/bindings/arm/cpus.txt          | 490 -----------------
-> > >  .../devicetree/bindings/arm/cpus.yaml         | 503 ++++++++++++++++++
-> > >  2 files changed, 503 insertions(+), 490 deletions(-)
-> > >  delete mode 100644 Documentation/devicetree/bindings/arm/cpus.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/arm/cpus.yaml
-> 
-> [...]
-> 
-> > I have take a look at xilinx part of this and try to build it for arm64
-> > platforms and I see errors coming from this cpu description.
-> > /root/linux/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dt.yaml:
-> > cpu@0:compatible: ['arm,cortex-a53', 'arm,armv8'] is too long
-> > /root/linux/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dt.yaml:
-> > cpu@0:compatible: Additional items are not allowed ('arm,armv8' was
-> > unexpected)
-> 
-> Thanks for actually giving this a spin!
-> 
-> > Based on grep this is used in a lot of places
-> > compatible = "arm,cortex-a53", "arm,armv8";
-> >
-> > Should this be moved to just simple?
-> > compatible = "arm,cortex-a53";
-> 
-> I'd normally go with the majority which would be to keep it. However,
-> 'arm,armv8' is of questionable value, isn't actually documented, and
-> doesn't exist for any other version of the architecture. So we should
-> kill it IMO.
 
-I'd prefer to keep it around, since that's what's used to describe the CPUs
-on the fastmodel iirc.
+--4ojmp36grwkvkfun
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Will
+On Mon, Dec 03, 2018 at 01:25:21PM +0100, Heiko Stuebner wrote:
+> >  - reg : Physical base address of the device and length of the register area.
+> >  
+> > @@ -44,6 +45,18 @@ Optional properties:
+> >    for details.
+> >  
+> >  
+> > +Vendor-specific bindings
+> > +------------------------
+> > +
+> > +The Mali GPU is integrated very differently from one SoC to
+> > +another. In order to accomodate those differences, you have the option
+> > +to specify one more vendor-specific compatible, among:
+> > +
+> > +  - allwinner,sun50i-h6-mali
+> > +    Required properties:
+> > +      * resets: phandle to the reset line for the GPU
+> 
+> While this paragraph is similar to how it is done in Utgard, I'm
+> wondering why we cannot just describe the "resets" as regular
+> optional property above that.
+
+Because it's not really optional, it's mandatory on some platforms
+(like this one) and has no significance on others.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--4ojmp36grwkvkfun--
