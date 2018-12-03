@@ -1,82 +1,51 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v1 01/12] dt-bindings: usb: add support for dwc3
- controller on HiSilicon SoCs
-Date: Mon, 3 Dec 2018 11:35:10 +0300
-Message-ID: <fde4d37b-0c4d-055b-a0ba-4e9fe87717ad@cogentembedded.com>
-References: <20181203034515.91412-1-chenyu56@huawei.com>
- <20181203034515.91412-2-chenyu56@huawei.com>
+From: Richard Leitner <richard.leitner@skidata.com>
+Subject: Re: [PATCH v2 0/7] Input: sx8654 - reset-gpio, sx865[056] support,
+ etc.
+Date: Mon, 3 Dec 2018 09:25:44 +0100
+Message-ID: <1c5c06fd-35aa-2e6c-d851-3f675dc87a11@skidata.com>
+References: <20181017125116.20077-1-richard.leitner@skidata.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181203034515.91412-2-chenyu56@huawei.com>
+In-Reply-To: <20181017125116.20077-1-richard.leitner@skidata.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yu Chen <chenyu56@huawei.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>
+To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Richard Leitner <richard.leitner@skidata.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+Hi,
+another friendly reminder for this patchset...
 
-On 03.12.2018 6:45, Yu Chen wrote:
+Any comments/objections?
 
-> This patch adds binding descriptions to support the dwc3 controller
-> on HiSilicon SoCs and boards like the HiKey960.
+regards;Richard.L
+
+On 17.10.18 14:51, Richard Leitner wrote:
+> Add reset-gpio, sx8654[056] and common of_touchscreen functions support
+> for the sx8654 driver.
 > 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: John Stultz <john.stultz@linaro.org>
-> Signed-off-by: Yu Chen <chenyu56@huawei.com>
-> ---
->   .../devicetree/bindings/usb/dwc3-hisi.txt          | 67 ++++++++++++++++++++++
->   1 file changed, 67 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+> Changes v2:
+> 	- use devm_gpiod_get_optional in probe instead of in #ifdef CONFIG_OF
+> 	- convert flags to BIT() in a separate patch
+> 	- replace hrtimer with "regular" timer
+> 	- use of_device_get_match_data instead of of_match_device
+> 	- add driver data to i2c_device_id table for non-DT fallback
+> 	- fix sequence of common touchscreen initialization
+> 	- div. minor stlye changes
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3-hisi.txt b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
-> new file mode 100644
-> index 000000000000..d32d2299a0a1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
-> @@ -0,0 +1,67 @@
-> +HiSilicon DWC3 USB SoC controller
-> +
-> +This file documents the parameters for the dwc3-hisi driver.
-> +
-> +Required properties:
-> +- compatible:	should be "hisilicon,hi3660-dwc3"
-> +- clocks:	A list of phandle + clock-specifier pairs for the
-> +		clocks listed in clock-names
-> +- clock-names:	Specify clock names
-> +- resets:	list of phandle and reset specifier pairs.
-> +
-> +Sub-nodes:
-> +The dwc3 core should be added as subnode to HiSilicon DWC3 as shown in the
-> +example below. The DT binding details of dwc3 can be found in:
-> +Documentation/devicetree/bindings/usb/dwc3.txt
-> +
-> +Example:
-> +	usb3: hisi_dwc3 {
-> +		compatible = "hisilicon,hi3660-dwc3";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
-> +			 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-> +		clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
-> +		assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-> +		assigned-clock-rates = <229000000>;
-> +		resets = <&crg_rst 0x90 8>,
-> +			 <&crg_rst 0x90 7>,
-> +			 <&crg_rst 0x90 6>,
-> +			 <&crg_rst 0x90 5>;
-> +
-> +		dwc3: dwc3@ff100000 {
-
-     According to the DT spec, the node names should be generic, not chip 
-specific, i.e. usb@ff100000 in this case.
-
-[...]
-
-MBR, Sergei
+> Richard Leitner (8):
+>   dt-bindings: input: touchscreen: sx8654: add reset-gpio property
+>   Input: sx8654 - add reset-gpio support
+>   dt-bindings: input: touchscreen: sx8654: add compatible models
+>   Input: sx8654 - add sx8655 and sx8656 to compatibles
+>   dt-bindings: input: touchscreen: sx8654: add sx8650 to comatibles
+>   Input: sx8654 - add sx8650 support
+>   Input: sx8654 - use common of_touchscreen functions
+>   Input: sx8654 - convert #defined flags to BIT(x)
+> 
+>  .../bindings/input/touchscreen/sx8654.txt          |  10 +-
+>  drivers/input/touchscreen/sx8654.c                 | 245 ++++++++++++++++++---
+>  2 files changed, 229 insertions(+), 26 deletions(-)
+> 
