@@ -1,127 +1,60 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v1 10/12] hikey960: Support usb functionality of Hikey960
-Date: Mon, 3 Dec 2018 11:23:00 +0200
-Message-ID: <CAHp75VdSowHk4meQqqUamSjJJoVT59+pMZ1qjmmWd-W5nWBcUw@mail.gmail.com>
-References: <20181203034515.91412-1-chenyu56@huawei.com> <20181203034515.91412-11-chenyu56@huawei.com>
+From: Antoine Tenart <antoine.tenart-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Kill off skeleton{64}.dtsi
+Date: Mon, 3 Dec 2018 10:23:17 +0100
+Message-ID: <20181203092317.GA3173@kwain>
+References: <20181130170634.9467-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181203034515.91412-11-chenyu56@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: chenyu56@huawei.com
-Cc: USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Wangbinghui <wangbinghui@hisilicon.com>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20181130170634.9467-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-oxnas-GWfripvEmMdhl2p70BpVqQ@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory Clement <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bcm-kernel-feedback-list@broadcom.c
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 3, 2018 at 5:47 AM Yu Chen <chenyu56@huawei.com> wrote:
->
-> This driver handles usb hub power on and typeC port event of HiKey960 board:
-> 1)DP&DM switching between usb hub and typeC port base on typeC port
-> state
-> 2)Control power of usb hub on Hikey960
-> 3)Control vbus of typeC port
+Hi Rob,
 
-> +config HISI_HIKEY_USB
-> +       tristate "USB functionality of HiSilicon Hikey Platform"
-> +       depends on GPIOLIB
+On Fri, Nov 30, 2018 at 11:06:34AM -0600, Rob Herring wrote:
+> Remove the usage of skeleton.dtsi in the remaining dts files. It was
+> deprecated since commit 9c0da3cc61f1 ("ARM: dts: explicitly mark
+> skeleton.dtsi as deprecated"). This will make adding a unit-address to
+> memory nodes easier.
+> =
 
-> +       default n
+> The main tricky part to removing skeleton.dtsi is we could end up with
+> no /memory node at all when a bootloader depends on one being present. I
+> hacked up dtc to check for this condition.
+> =
 
-No, Linus is not happy about this.
-Default n _is_ a default.
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> Yes, I'm being lazy and not splitting this up into dozens of sub-arch =
 
-> +       help
-> +         If you say yes here you get support for usb functionality of HiSilicon Hikey Platform.
+> patches. I don't think this should conflict nor should we be getting new =
 
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * hisi_hikey_usb.c
-> + *
-> + * Copyright (c) Hisilicon Tech. Co., Ltd. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + */
+> dependencies on skeleton.dtsi. So please apply directly to arm-soc.
 
-Same comments to the above lines.
+>  arch/arm/boot/dts/alpine.dtsi                  |  8 +++++++-
 
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/slab.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/usb/role.h>
-> +#include <linux/notifier.h>
+For the above file,
 
-Order?
+Acked-by: Antoine Tenart <antoine.tenart-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
-> +       pr_debug("%s: set hub power %d\n", __func__, value);
+Thanks!
+Antoine
 
-Noise.
+-- =
 
-> +       pr_debug("%s: switch to %s\n", __func__, switch_to_str);
-
-Noise.
-
-> +       pr_debug("%s: set typec vbus gpio to %d\n", __func__, value);
-
-Noise.
-
-> +       if (!nb)
-> +               return -EINVAL;
-
-On which conditions this happen?
-
-> +       pr_info("%s:set typec state to %lu\n", __func__, state);
-
-Noise!
-
-Guys, you perhaps can read about tracepoints and function tracer
-facilities in the kernel.
-
-> +static int hisi_hikey_usb_probe(struct platform_device *pdev)
-> +{
-
-> +               pr_info("%s: typc_vbus_enable_val can't get\n", __func__);
-
-Noise!
-
-> +       if (IS_ERR_OR_NULL(hisi_hikey_usb->typec_vbus)) {
-
-So, this check is redundant. You are repeating it below.
-
-> +               if (!hisi_hikey_usb->typec_vbus)
-> +                       ret = -EINVAL;
-> +               else
-> +                       ret = PTR_ERR(hisi_hikey_usb->typec_vbus);
-> +               return ret;
-> +       }
-
-> +       if (IS_ERR_OR_NULL(hisi_hikey_usb->role_sw)) {
-
-> +               pr_err("%s: usb_role_switch_get failed\n", __func__);
-
-Noise and same comment to the conditional check as above
-
-> +               if (!hisi_hikey_usb->role_sw)
-> +                       ret = -ENOENT;
-> +               else
-> +                       ret = PTR_ERR(hisi_hikey_usb->role_sw);
-> +               return ret;
-> +       }
-
-> +               .of_match_table = of_match_ptr(id_table_hisi_hikey_usb),
-
-Does it compiles for non-OF case? Why macro is in use?
-
--- 
-With Best Regards,
-Andy Shevchenko
+Antoine T=E9nart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
