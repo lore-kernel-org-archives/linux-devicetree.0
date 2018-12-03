@@ -1,107 +1,104 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/6] Documentation: ARM: sunxi: pwm: add
- Allwinner sun8i.
-Date: Mon, 3 Dec 2018 10:28:09 +0100
-Message-ID: <20181203092809.mgeaxpwg6u4s23vq@flea>
-References: <20181125161859.GA5277@arx-s1>
- <20181127075226.qo3mv3o6etqdjaop@flea>
- <20181127083523.pciie2gyaplrwiey@pengutronix.de>
- <20181127103253.ubbjjy2ji6sxc7xs@flea>
- <CAJeuY79RRzTqLpaXSe5d8TuNKGeQeYLbXraRVrZk9HBMYBf1+A@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Chen Yu <chenyu56@huawei.com>
+Subject: Re: [PATCH v1 01/12] dt-bindings: usb: add support for dwc3
+ controller on HiSilicon SoCs
+Date: Mon, 3 Dec 2018 17:28:56 +0800
+Message-ID: <bbe390f0-2fa6-515b-42c5-ede620b2b8c7@huawei.com>
+References: <20181203034515.91412-1-chenyu56@huawei.com>
+ <20181203034515.91412-2-chenyu56@huawei.com>
+ <fde4d37b-0c4d-055b-a0ba-4e9fe87717ad@cogentembedded.com>
+ <33cda716-d09c-28e7-d4b4-26f246786f5e@huawei.com>
+ <680c5b9f-e2c7-926d-7d10-4ce2cd091282@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zznxkq7h2qi3betk"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBNPOSPQAKGQE24WXNHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAJeuY79RRzTqLpaXSe5d8TuNKGeQeYLbXraRVrZk9HBMYBf1+A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, wens-jdAy2FN1RRM@public.gmane.org, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <680c5b9f-e2c7-926d-7d10-4ce2cd091282@cogentembedded.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: wangbinghui@hisilicon.com, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---zznxkq7h2qi3betk
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2018/12/3 16:59, Sergei Shtylyov wrote:
+> On 03.12.2018 11:51, Chen Yu wrote:
+> 
+>>>> This patch adds binding descriptions to support the dwc3 controller
+>>>> on HiSilicon SoCs and boards like the HiKey960.
+>>>>
+>>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>> Cc: John Stultz <john.stultz@linaro.org>
+>>>> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+>>>> ---
+>>>>    .../devicetree/bindings/usb/dwc3-hisi.txt          | 67 ++++++++++++++++++++++
+>>>>    1 file changed, 67 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3-hisi.txt b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+>>>> new file mode 100644
+>>>> index 000000000000..d32d2299a0a1
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+>>>> @@ -0,0 +1,67 @@
+>>>> +HiSilicon DWC3 USB SoC controller
+>>>> +
+>>>> +This file documents the parameters for the dwc3-hisi driver.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible:    should be "hisilicon,hi3660-dwc3"
+>>>> +- clocks:    A list of phandle + clock-specifier pairs for the
+>>>> +        clocks listed in clock-names
+>>>> +- clock-names:    Specify clock names
+>>>> +- resets:    list of phandle and reset specifier pairs.
+>>>> +
+>>>> +Sub-nodes:
+>>>> +The dwc3 core should be added as subnode to HiSilicon DWC3 as shown in the
+>>>> +example below. The DT binding details of dwc3 can be found in:
+>>>> +Documentation/devicetree/bindings/usb/dwc3.txt
+>>>> +
+>>>> +Example:
+>>>> +    usb3: hisi_dwc3 {
+>>>> +        compatible = "hisilicon,hi3660-dwc3";
+>>>> +        #address-cells = <2>;
+>>>> +        #size-cells = <2>;
+>>>> +        ranges;
+>>>> +
+>>>> +        clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
+>>>> +             <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+>>>> +        clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
+>>>> +        assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+>>>> +        assigned-clock-rates = <229000000>;
+>>>> +        resets = <&crg_rst 0x90 8>,
+>>>> +             <&crg_rst 0x90 7>,
+>>>> +             <&crg_rst 0x90 6>,
+>>>> +             <&crg_rst 0x90 5>;
+>>>> +
+>>>> +        dwc3: dwc3@ff100000 {
+>>>
+>>>      According to the DT spec, the node names should be generic, not chip specific, i.e. usb@ff100000 in this case.
+>>>
+>>
+>> Do you mean it should be usb@ff100000: dwc3@ff100000 ?
+> 
+>     dwc3: usb@ff100000
+> 
+>    "dwc3:" is a label, not name.
 
-Hi!
+I use the node name "dwc3@ff100000" according to Documentation/devicetree/bindings/usb/dwc3.txt
+and documentations of vendor drivers, i.e. qcom,dwc3.txt, rockchip,dwc3.txt.
 
-(Please keep all the recipiens in Cc)
+In these documentations, the dwc3 sub-node name uses "dwc3@xxxxxxxx".
 
-On Sun, Dec 02, 2018 at 12:13:21AM +0800, Hao Zhang wrote:
-> Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E4=BA=8E2018=E5=B9=B411=E6=9C=
-=8827=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=886:33=E5=86=99=E9=81=93=
-=EF=BC=9A
-> >
-> > On Tue, Nov 27, 2018 at 09:35:23AM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > > Hello,
-> > >
-> > > On Tue, Nov 27, 2018 at 08:52:26AM +0100, Maxime Ripard wrote:
-> > > > On Mon, Nov 26, 2018 at 12:18:59AM +0800, Hao Zhang wrote:
-> > > > > +  - clocks: From common clock binding, handle to the parent cloc=
-k.
-> > > > > +  - clock-names: Must contain the clock names described just abo=
-ve.
-> > > >
-> > > > [...]
-> > > >
-> > > > You seem to have used mux-0 and mux-1 for the clock names. I guess =
-we
-> > > > don't have to use a name there, we can simply use the position to f=
-ind
-> > > > out (as long as it's documented in the binding)
-> > >
-> > > I also wondered if the driver relies on the fact that the second cloc=
-k
-> > > is the faster running one. Is this sensible?
-> >
-> > Not really, I'm not sure we can make those expectations in the DT
-> > binding, especially since clock rate can change at runtime.
->
-> How about just add one clock on DT, most of the time, 24MHZ is enough
-> (apb1 is 100MHZ)
-> other one just use as a optional.
-> clock rate change at runtime would make the same pair pwm channel
-> uncontrollable,
-> because previous one would be change by the new one different setting.
-
-The DT is a hardware representation. If the hardware block can use
-both clocks, it should be described.
-
-Now, you can totally use only one clock of these 2 in your driver if that's
-easier / more reasonable.
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---zznxkq7h2qi3betk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXAT3KQAKCRDj7w1vZxhR
-xQeYAQDbnRAmYhwUqiaSbkwrmQzprsqASJeNCuc1rI/hF22HsAD6A/smAChtdem8
-w8QGGZGN16H/E9vHXpmuF6xCPL7VDgw=
-=gmHJ
------END PGP SIGNATURE-----
-
---zznxkq7h2qi3betk--
+I think it is better to be same as the other vendor's dwc3 drivers.
+> 
+>> Thanks!
+>>
+>>> [...]
+> 
+> MBR, Sergei
+> 
+> .
+> 
