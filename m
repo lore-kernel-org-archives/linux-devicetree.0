@@ -1,87 +1,51 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Kill off skeleton{64}.dtsi
-Date: Mon, 3 Dec 2018 08:50:57 +0100
-Message-ID: <20181203075057.pcizmbqdp47mibbl@flea>
-References: <20181130170634.9467-1-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0925202551832418922=="
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20181130170634.9467-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-oxnas-GWfripvEmMdhl2p70BpVqQ@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory Clement <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Andy
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH 0/7] microblaze: fix various problems in building boot images
+Date: Mon,  3 Dec 2018 16:50:50 +0900
+Message-ID: <1543823457-32478-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: linux-kbuild@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch set fixes various issues in microblaze Makefiles.
 
---===============0925202551832418922==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="qsmchuoo3f2ici6o"
-Content-Disposition: inline
+BTW, "simpleImage.<dt>" works like a phony target to generate the
+following four images, where the first three are just aliases.
 
+ - arch/microblaze/boot/simpleImage.<dt>:
+         identical to arch/microblaze/boot/linux.bin
 
---qsmchuoo3f2ici6o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ - arch/microblaze/boot/simpleImage.<dt>.unstrip:
+         identical to vmlinux
 
-On Fri, Nov 30, 2018 at 11:06:34AM -0600, Rob Herring wrote:
-> Remove the usage of skeleton.dtsi in the remaining dts files. It was
-> deprecated since commit 9c0da3cc61f1 ("ARM: dts: explicitly mark
-> skeleton.dtsi as deprecated"). This will make adding a unit-address to
-> memory nodes easier.
->=20
-> The main tricky part to removing skeleton.dtsi is we could end up with
-> no /memory node at all when a bootloader depends on one being present. I
-> hacked up dtc to check for this condition.
->=20
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-> Yes, I'm being lazy and not splitting this up into dozens of sub-arch=20
-> patches. I don't think this should conflict nor should we be getting new=
-=20
-> dependencies on skeleton.dtsi. So please apply directly to arm-soc.
+ - arch/microblaze/boot/simpleImage.<dt>.ub:
+         identical to arch/microblaze/boot/linux.bin.ub
 
-It will conflict for the sunxi DTSIs. We merged a similar patch last
-week that is in linux-next now.
+ - arch/microblaze/boot/simpleImage.<dt>.strip:
+         stripped vmlinux
 
-Maxime
+I am not sure how much useful those copies are,
+but, I tried my best to keep the same behavior.
 
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---qsmchuoo3f2ici6o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXATgTwAKCRDj7w1vZxhR
-xWbUAQDH16tgE3VXonBWiWEE58T0kCN0jg4fOSRuiMCm1pgSHAD/S03/Sa6uM6fh
-Cf8afWvO7pAfjTiuWubEJ2Ng7pUSVwI=
-=cO9s
------END PGP SIGNATURE-----
-
---qsmchuoo3f2ici6o--
+IMHO, I guess DTB=<dt> would be more sensible,
+but it is up to Michal.
 
 
---===============0925202551832418922==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
-_______________________________________________
-Linux-mediatek mailing list
-Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-http://lists.infradead.org/mailman/listinfo/linux-mediatek
+Masahiro Yamada (7):
+  microblaze: fix cleaning of boot images
+  microblaze: adjust the help to the real behavior
+  microblaze: move "... is ready" message to arch/microblaze/Makefile
+  microblaze: fix multiple bugs in arch/microblaze/boot/Makefile
+  microblaze: add linux.bin* and simpleImage.* to PHONY
+  microblaze: fix race condition in building boot images
+  microblaze: remove the unneeded code just in case file copy fails
 
---===============0925202551832418922==--
+ arch/microblaze/Makefile          | 14 +++++++++-----
+ arch/microblaze/boot/Makefile     | 33 +++++++++++++++++----------------
+ arch/microblaze/boot/dts/Makefile |  5 +----
+ 3 files changed, 27 insertions(+), 25 deletions(-)
+
+-- 
+2.7.4
