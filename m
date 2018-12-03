@@ -1,88 +1,155 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v2 2/8] phy: mvebu-cp110-comphy: fix port check in
- ->xlate()
-Date: Mon, 3 Dec 2018 00:36:23 +0000
-Message-ID: <20181203003623.GJ30658@n2100.armlinux.org.uk>
-References: <20181130144743.675-1-miquel.raynal@bootlin.com>
- <20181130144743.675-3-miquel.raynal@bootlin.com>
- <20181130190031.GH30658@n2100.armlinux.org.uk>
- <20181202203509.21b067c4@xps13>
+From: "Derald D. Woods" <woods.technical@gmail.com>
+Subject: Re: [PATCH 00/17] Add support for TI PRU ICSS
+Date: Sun, 2 Dec 2018 20:04:32 -0600
+Message-ID: <20181203020431.GC18592@ethiopia>
+References: <1542886753-17625-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181202203509.21b067c4@xps13>
+In-Reply-To: <1542886753-17625-1-git-send-email-rogerq@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, linux-kernel@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: tony@atomide.com, robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 02, 2018 at 08:35:09PM +0100, Miquel Raynal wrote:
-> Hi Russell,
+On Thu, Nov 22, 2018 at 01:38:56PM +0200, Roger Quadros wrote:
+> Hi,
 > 
-> Russell King - ARM Linux <linux@armlinux.org.uk> wrote on Fri, 30 Nov
-> 2018 19:00:31 +0000:
+> The Programmable Real-Time Unit and Industrial Communication Subsystem
+> (PRU-ICSS) is present on various TI SoCs such as AM335x, AM437x, AM57x,
+> Keystone 66AK2G, etc. A PRUSS consists of dual 32-bit RISC cores (Programmable
+> Real-Time Units, or PRUs), data and instruction RAMs, shard RAM, and
+> interrupt controller and some internal peripheral modules to facilitate
+> industrial communication. The programmable nature of the PRUs provide
+> flexibility to implement custom peripheral interfaces, fast real-time
+> responses, or specialized data handling. The common peripheral modules
+> include the following,
+>   - an MII_RT module with two MII ports for Ethernet
+>   - an MDIO port for external Ethernet PHYs
+>   - an Industrial Ethernet Peripheral (IEP) to manage/generate Industrial
+>     Ethernet functions
+>   - an Enhanced Capture Module (eCAP)
+>   - an Industrial Ethernet Timer with 7/9 capture and 16 compare events
+>   - a 16550-compatible UART to support PROFIBUS
 > 
-> > On Fri, Nov 30, 2018 at 03:47:37PM +0100, Miquel Raynal wrote:
-> > > So far the PHY ->xlate() callback was checking if the port was
-> > > "invalid" before continuing, meaning that the port has not been used
-> > > yet. This check is not correct as there is no opposite call to  
-> > > ->xlate() once the PHY is released by the user and the port will  
-> > > remain "valid" after the first phy_get()/phy_put() calls. Hence, if
-> > > this driver is built as a module, inserted, removed and inserted
-> > > again, the PHY will appear busy and the second probe will fail.
-> > > 
-> > > To fix this, just drop the faulty check and instead verify that the
-> > > port number is valid (ie. in the possible range).
-> > > 
-> > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > > ---
-> > >  drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-> > > index 31b9a1c18345..a40b876ff214 100644
-> > > --- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-> > > +++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-> > > @@ -567,9 +567,9 @@ static struct phy *mvebu_comphy_xlate(struct device *dev,
-> > >  		return phy;
-> > >  
-> > >  	lane = phy_get_drvdata(phy);
-> > > -	if (lane->port >= 0)
-> > > -		return ERR_PTR(-EBUSY);
-> > >  	lane->port = args->args[0];
-> > > +	if (lane->port >= MVEBU_COMPHY_PORTS)
-> > > +		return ERR_PTR(-EINVAL);  
-> > 
-> > Shouldn't we validate args->args[0] before doing anything?
-> > 
+> A typical usage scenario would be to load the application firmware into
+> one or more of the PRU cores, initialize one or more of the peripherals
+> and perform I/O through shared RAM (or MSMC RAM) from either a Kernel driver
+> or directly from userspace.
 > 
-> I don't understand your point, there is a check on args->args[0] as
-> we check its value (through lane->port) right after. What do you
-> have in mind?
+> With this two-part series we should be able to use the kernel RPMSG driver
+> along with firmware and user-space examples in the
+> pru-software-support-package [1].
+> 
+> We will also be able to get Dual Ethernet functionality using a kernel driver
+> which will be posted later.
+> 
+> The kernel code will be split into the following sections
+> 
+> 1) soc: pruss_soc_bus: The sole purpose of this driver is to handle platform
+> specific Power management quirks and allow the child node (i.e entire PRUSS)
+> to be unbound from the default kernel driver and bound to something else. e.g. uio_pruss,
+> while allowing to manage PM in the kernel.
+> 
+> 2) soc: pruss: This is the driver for the entire ICSS. Its main purpose is
+> to populate the different modules and handle platform specific quirks.
+> It will also manage the interrupt controller and provide kernel APIs to
+> change ICSS specific knobs in the CFG space e.g. GP_MUX.
+> 
+> 3) remoteproc: pru: This provides a remoteproc interface for the PRU cores.
+> With this we can load firmware, start/stop PRU from kernel or userspace.
+> It adds support for virtio RPMSG. It also provides some kernel APIs
+> (e.g. pru_rproc_set_ctable()) that are PRU specific and required for
+> in-kernel applications (e.g. ethernet)
+> 
+> 4) ARM: OMAP: DTS:
+> Platform data and device tree files.
+> 
+> Due to the large number of patches patches are  split this into 2 email threads.
+> This thread covers (1), (3) and (4).
+> 
+> A second thread will cover the remoteproc driver (3).
+> 
+> The series only adds platform support for AM335x to keep patch count small.
+> Support for other platforms (AM43x, AM57x, K2G) will be added later.
+> 
+> Testing:
+> To test the code with example firmware you can try the LAB5 tutorial
+> http://processors.wiki.ti.com/index.php/PRU_Training:_Hands-on_Labs#LAB_5:_RPMsg_Communication_between_ARM_and_PRU
+> with the pru-software-support package at [2] and the sample rpmsg-client driver.
+> NOTE: you no longer need to build and run PRU_Halt example as shown in the tutorial.
+> 
+> cheers,
+> -roger
+> 
+> [1] https://git.ti.com/pru-software-support-package
+> 	NOTE: The repo needs update to the INTC resource data structures
+> 	The updates that are required are listed in the below repo with one example fixed.
+> [2] https://github.com/rogerq/pru-software-support-package/commits/upstream/pruss
+> 
 
-Right, there is already a check on args->args[0] for it being greater
-than MVEBU_COMPHY_PORTS and returning an error (and in fact warning
-if that is the case).  So in that case, what is the use of the above
-additional test you are proposing to add?  The resulting code ends up
-looking like this:
 
-	if (WARN_ON(args->args[0] >= MVEBU_COMPHY_PORTS))
-		return ERR_PTR(-EINVAL);
-...
-	lane->port = args->args[0];
-+	if (lane->port >= MVEBU_COMPHY_PORTS)
-+		return ERR_PTR(-EINVAL);  
+Per Roger's instructions, I was able test both patch series on the
+am335x-pocketbeagle, based on linux v4.20-rc4, with the following
+additional 'rpmsg_pru' patches:
 
-which is just silly - the second test can never be evaluated as true,
-and therefore is redundant.
+https://github.com/beagleboard/linux/commit/2b013313cae8659f2cbd659c314e471a71f1623c
+https://github.com/beagleboard/linux/commit/b894d492a35aa43a7b54512b971a04b9aec17814
 
-In any case, my point was that in your patch, where you assign
-lane->port and then validate the lane->port value, this is in
-principle the wrong order - the order should always be: validate
-first, then make use.
+Tested-by: Derald D. Woods <woods.technical@gmail.com>
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+
+> Andrew F. Davis (1):
+>   soc: ti: pruss: add pruss_{request,release}_mem_region() API
+> 
+> Roger Quadros (2):
+>   soc: ti: pruss: add pruss_cfg_read()/update() API
+>   soc: ti: pruss: export pruss_intc_configure/unconfigure APIs
+> 
+> Suman Anna (13):
+>   dt-bindings: remoteproc: Add TI PRUSS bindings
+>   soc: ti: pruss: Define platform data for PRUSS bus driver
+>   soc: ti: pruss: Add pruss_soc_bus platform driver
+>   soc: ti: pruss: Fix system suspend/MStandby config issues
+>   soc: ti: pruss: Configure SYSCFG properly during probe/remove
+>   soc: ti: pruss: Add a platform driver for PRUSS in TI SoCs
+>   soc: ti: pruss: enable OCP master ports in SYSCFG always
+>   soc: ti: pruss: Add a PRUSS irqchip driver for PRUSS interrupts
+>   soc: ti: pruss_intc: Add API to trigger a PRU sysevent
+>   ARM: OMAP2+: use pdata quirks for PRUSS reset lines on AM335x
+>   ARM: dts: AM33xx: Add the PRU-ICSS DT nodes
+>   ARM: dts: AM33xx: Add PRU system events for virtio
+>   ARM: dts: am335x-*: Enable PRU-ICSS nodes
+> 
+> Tero Kristo (1):
+>   soc: ti: pruss: add pruss_get()/put() API
+> 
+>  .../devicetree/bindings/soc/ti/ti,pruss.txt        | 360 ++++++++++++
+>  arch/arm/boot/dts/am335x-bone-common.dtsi          |   8 +
+>  arch/arm/boot/dts/am335x-evm.dts                   |   8 +
+>  arch/arm/boot/dts/am335x-evmsk.dts                 |   8 +
+>  arch/arm/boot/dts/am335x-icev2.dts                 |   8 +
+>  arch/arm/boot/dts/am33xx.dtsi                      |  78 +++
+>  arch/arm/mach-omap2/pdata-quirks.c                 |  11 +
+>  drivers/soc/ti/Kconfig                             |  12 +
+>  drivers/soc/ti/Makefile                            |   1 +
+>  drivers/soc/ti/pruss.c                             | 306 +++++++++++
+>  drivers/soc/ti/pruss.h                             |  36 ++
+>  drivers/soc/ti/pruss_intc.c                        | 604 +++++++++++++++++++++
+>  drivers/soc/ti/pruss_soc_bus.c                     | 279 ++++++++++
+>  include/linux/platform_data/ti-pruss.h             |  25 +
+>  include/linux/pruss.h                              | 235 ++++++++
+>  15 files changed, 1979 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
+>  create mode 100644 drivers/soc/ti/pruss.c
+>  create mode 100644 drivers/soc/ti/pruss.h
+>  create mode 100644 drivers/soc/ti/pruss_intc.c
+>  create mode 100644 drivers/soc/ti/pruss_soc_bus.c
+>  create mode 100644 include/linux/platform_data/ti-pruss.h
+>  create mode 100644 include/linux/pruss.h
+> 
+> -- 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
