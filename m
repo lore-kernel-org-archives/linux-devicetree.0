@@ -1,69 +1,64 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 05/12] PCI: aardvark: add suspend to RAM support
-Date: Mon, 3 Dec 2018 17:18:59 +0000
-Message-ID: <20181203171859.GA12792@e107981-ln.cambridge.arm.com>
-References: <20181123141831.8214-1-miquel.raynal@bootlin.com>
- <20181123141831.8214-6-miquel.raynal@bootlin.com>
- <20181203102708.GA6090@e107981-ln.cambridge.arm.com>
- <20181203163846.494904f9@xps13>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 06/15] arm: dts: Add devicetree for OrangePi 2G IoT board
+Date: Mon, 3 Dec 2018 11:21:29 -0600
+Message-ID: <CAL_JsqLZY_5rZ35YSGeH7wmEZoLP1TjG+0n4BWGiUBwOFSq-Vw@mail.gmail.com>
+References: <20181121033652.12247-1-manivannan.sadhasivam@linaro.org>
+ <20181121033652.12247-7-manivannan.sadhasivam@linaro.org> <CAL_JsqJ=88ORdgbRDn+VWk9=ydShidqwOxdAMfDbH4W2drnXzA@mail.gmail.com>
+ <CAOesGMgSxwcmBLDvxsvcCJ9-NvJ3-wK8fZBZV2ZNuzAa1idi3w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181203163846.494904f9@xps13>
+In-Reply-To: <CAOesGMgSxwcmBLDvxsvcCJ9-NvJ3-wK8fZBZV2ZNuzAa1idi3w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, sudeep.holla@arm.com, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>
+To: Olof Johansson <olof@lixom.net>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, zhao_steven@263.net, overseas.sales@unisoc.com
 List-Id: devicetree@vger.kernel.org
 
-[+Stephen, Mike]
-
-On Mon, Dec 03, 2018 at 04:38:46PM +0100, Miquel Raynal wrote:
-> Hi Lorenzo,
-> 
-> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote on Mon, 3 Dec 2018
-> 10:27:08 +0000:
-> 
-> > [+Rafael, Sudeep]
-> > 
-> > On Fri, Nov 23, 2018 at 03:18:24PM +0100, Miquel Raynal wrote:
-> > > Add suspend and resume callbacks. The priority of these are
-> > > "_noirq()", to workaround early access to the registers done by the
-> > > PCI core through the ->read()/->write() callbacks at resume time.
-> > > 
-> > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+On Mon, Dec 3, 2018 at 11:11 AM Olof Johansson <olof@lixom.net> wrote:
+>
+> On Mon, Dec 3, 2018 at 7:54 AM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Tue, Nov 20, 2018 at 9:38 PM Manivannan Sadhasivam
+> > <manivannan.sadhasivam@linaro.org> wrote:
+> > >
+> > > Add initial devicetree support for OrangePi 2G IoT board from Xunlong=
+.
+> > >
+> > > Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.or=
+g>
 > > > ---
-> > >  drivers/pci/controller/pci-aardvark.c | 52 +++++++++++++++++++++++++++
-> > >  1 file changed, 52 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > index 108b3f15c410..7ecf1ac4036b 100644
-> > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > @@ -1108,6 +1108,55 @@ static int advk_pcie_setup_clk(struct advk_pcie *pcie)
-> > >  	return ret;
-> > >  }
-> > >  
-> > > +static int __maybe_unused advk_pcie_suspend(struct device *dev)
-> > > +{
-> > > +	struct advk_pcie *pcie = dev_get_drvdata(dev);
-> > > +
-> > > +	advk_pcie_disable_phy(pcie);
-> > > +
-> > > +	clk_disable_unprepare(pcie->clk);  
-> > 
-> > I have noticed it is common practice, still, I would like to check whether
-> > it is allowed to call functions that may sleep in a NOIRQ suspend/resume
-> > callback ?
-> 
-> You are right this is weird. I double checked and for instance,
-> pcie-mediatek.c, pci-tegra.c and pci-imx6.c do the exact same thing.
-> There are probably other cases where drivers call functions that may
-> sleep from a NOIRQ context. I am interested to know if this is valid
-> and if not, what is the alternative?
+> > >  arch/arm/boot/dts/Makefile                    |  2 +
+> > >  .../boot/dts/rda8810pl-orangepi-2g-iot.dts    | 40 +++++++++++++++++=
+++
+> > >  2 files changed, 42 insertions(+)
+> > >  create mode 100644 arch/arm/boot/dts/rda8810pl-orangepi-2g-iot.dts
+> > >
+> > > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > > index b0e966d625b9..a0fdad8f10dd 100644
+> > > --- a/arch/arm/boot/dts/Makefile
+> > > +++ b/arch/arm/boot/dts/Makefile
+> > > @@ -806,6 +806,8 @@ dtb-$(CONFIG_ARCH_QCOM) +=3D \
+> > >         qcom-msm8974-sony-xperia-castor.dtb \
+> > >         qcom-msm8974-sony-xperia-honami.dtb \
+> > >         qcom-mdm9615-wp8548-mangoh-green.dtb
+> > > +dtb-$(CONFIG_ARCH_RDA) +=3D \
+> > > +       rda8810pl-orangepi-2g-iot.dtb
+> > >  dtb-$(CONFIG_ARCH_REALVIEW) +=3D \
+> >
+> > Question for Arnd/Olof: can we *please* start putting new SoC families
+> > in sub-dirs?
+>
+> I think we're at a point where it's becoming quite awkward to keep it
+> in a flat directory, yes.
+>
+> Best way to handle this is usually right before the closing of a merge
+> window, so let's do it then. It'll be a conflict-ridden mess if we try
+> to stage something in -next, so I'd rather just do it directly in our
+> tree as a one-shot thing.
 
-I added Stephen and Mike, who along with Rafael can help us shed some
-light into this, I do not have the necessary bits of info myself, I just
-noticed.
+While I'd like to see the whole thing converted, I was only asking
+about this one platform. That should be doable now, right?
 
-Lorenzo
+Rob
