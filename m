@@ -1,60 +1,64 @@
-From: Antoine Tenart <antoine.tenart-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Kill off skeleton{64}.dtsi
-Date: Mon, 3 Dec 2018 10:23:17 +0100
-Message-ID: <20181203092317.GA3173@kwain>
-References: <20181130170634.9467-1-robh@kernel.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v1 11/12] usb: gadget: Add configfs attribuite for
+ controling match_existing_only
+Date: Mon, 3 Dec 2018 11:25:36 +0200
+Message-ID: <CAHp75VcUQN_PuXDVkeR+jagTsUaOWLtytVt+f_eR+x2iw9B5-A@mail.gmail.com>
+References: <20181203034515.91412-1-chenyu56@huawei.com> <20181203034515.91412-12-chenyu56@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20181130170634.9467-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-oxnas-GWfripvEmMdhl2p70BpVqQ@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory Clement <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bcm-kernel-feedback-list@broadcom.c
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181203034515.91412-12-chenyu56@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: chenyu56@huawei.com
+Cc: USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Wangbinghui <wangbinghui@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Mon, Dec 3, 2018 at 5:47 AM Yu Chen <chenyu56@huawei.com> wrote:
+>
+> Currently the "match_existing_only" of usb_gadget_driver in configfs is
+> set to one which is not flexible.
+> Dwc3 udc will be removed when usb core switch to host mode. This causes
+> failure of writing name of dwc3 udc to configfs's UDC attribuite.
+> To fix this we need to add a way to change the config of
+> "match_existing_only".
+> This patch adds a configfs attribuite for controling match_existing_only
+> which allow user to config "match_existing_only".
 
-On Fri, Nov 30, 2018 at 11:06:34AM -0600, Rob Herring wrote:
-> Remove the usage of skeleton.dtsi in the remaining dts files. It was
-> deprecated since commit 9c0da3cc61f1 ("ARM: dts: explicitly mark
-> skeleton.dtsi as deprecated"). This will make adding a unit-address to
-> memory nodes easier.
-> =
+> +static ssize_t gadget_driver_match_existing_only_store(struct config_item *item,
+> +               const char *page, size_t len)
+> +{
 
-> The main tricky part to removing skeleton.dtsi is we could end up with
-> no /memory node at all when a bootloader depends on one being present. I
-> hacked up dtc to check for this condition.
-> =
+> +       struct usb_gadget_driver *gadget_driver =
+> +               &(to_gadget_info(item)->composite.gadget_driver);
 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-> Yes, I'm being lazy and not splitting this up into dozens of sub-arch =
+It would be easier for reader to see two lines with two variables
+instead of this.
 
-> patches. I don't think this should conflict nor should we be getting new =
+> +       bool match_existing_only;
+> +       int ret;
+> +
+> +       ret = kstrtobool(page, &match_existing_only);
+> +       if (ret)
+> +               return ret;
+> +
 
-> dependencies on skeleton.dtsi. So please apply directly to arm-soc.
+> +       if (match_existing_only)
+> +               gadget_driver->match_existing_only = 1;
+> +       else
+> +               gadget_driver->match_existing_only = 0;
 
->  arch/arm/boot/dts/alpine.dtsi                  |  8 +++++++-
+          gadget_driver->match_existing_only = match_existing_only;
+But the question rather why is it not direct parameter to kstrtobool?
 
-For the above file,
+> +
+> +       return len;
+> +}
 
-Acked-by: Antoine Tenart <antoine.tenart-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> +       struct usb_gadget_driver *gadget_driver =
+> +               &(to_gadget_info(item)->composite.gadget_driver);
 
-Thanks!
-Antoine
+Make it neat.
 
--- =
-
-Antoine T=E9nart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+-- 
+With Best Regards,
+Andy Shevchenko
