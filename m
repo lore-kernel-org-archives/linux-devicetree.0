@@ -1,141 +1,75 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH] of/device: add blacklist for iommu dma_ops
-Date: Mon, 3 Dec 2018 12:45:46 +0000
-Message-ID: <a29008a3-8eff-260d-5c93-9757a729f9e0@arm.com>
-References: <20181201165348.24140-1-robdclark@gmail.com>
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: Re: [PATCH 3/3] iio: chemical: sps30: add device tree support
+Date: Mon, 3 Dec 2018 13:10:31 +0000
+Message-ID: <20181203131031.00006b26@huawei.com>
+References: <20181124221415.10081-1-tduszyns@gmail.com>
+        <20181124221415.10081-4-tduszyns@gmail.com>
+        <20181125085939.421523d6@archlinux>
+        <20181202182943.GA8286@arch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20181201165348.24140-1-robdclark@gmail.com>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Clark <robdclark@gmail.com>, iommu@lists.linux-foundation.org
-Cc: devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, David Airlie <airlied@linux.ie>, linux-arm-msm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, Tomasz Figa <tfiga@chromium.org>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, freedreno@lists.freedesktop.org, hch@lst.de, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181202182943.GA8286@arch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomasz Duszynski <tduszyns@gmail.com>
+Cc: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gMDEvMTIvMjAxOCAxNjo1MywgUm9iIENsYXJrIHdyb3RlOgo+IFRoaXMgc29s
-dmVzIGEgcHJvYmxlbSB3ZSBzZWUgd2l0aCBkcm0vbXNtLCBjYXVzZWQgYnkgZ2V0dGluZwo+IGlv
-bW11X2RtYV9vcHMgd2hpbGUgd2UgYXR0YWNoIG91ciBvd24gZG9tYWluIGFuZCBtYW5hZ2UgaXQg
-ZGlyZWN0bHkgYXQKPiB0aGUgaW9tbXUgQVBJIGxldmVsOgo+IAo+ICAgIFswMDAwMDAwMDAwMDAw
-MDM4XSB1c2VyIGFkZHJlc3MgYnV0IGFjdGl2ZV9tbSBpcyBzd2FwcGVyCj4gICAgSW50ZXJuYWwg
-ZXJyb3I6IE9vcHM6IDk2MDAwMDA1IFsjMV0gUFJFRU1QVCBTTVAKPiAgICBNb2R1bGVzIGxpbmtl
-ZCBpbjoKPiAgICBDUFU6IDcgUElEOiA3MCBDb21tOiBrd29ya2VyLzc6MSBUYWludGVkOiBHICAg
-ICAgICBXICAgICAgICAgNC4xOS4zICM5MAo+ICAgIEhhcmR3YXJlIG5hbWU6IHh4eCAoRFQpCj4g
-ICAgV29ya3F1ZXVlOiBldmVudHMgZGVmZXJyZWRfcHJvYmVfd29ya19mdW5jCj4gICAgcHN0YXRl
-OiA4MGMwMDAwOSAoTnpjdiBkYWlmICtQQU4gK1VBTykKPiAgICBwYyA6IGlvbW11X2RtYV9tYXBf
-c2crMHg3Yy8weDJjOAo+ICAgIGxyIDogaW9tbXVfZG1hX21hcF9zZysweDQwLzB4MmM4Cj4gICAg
-c3AgOiBmZmZmZmY4MDA5NWViNGYwCj4gICAgeDI5OiBmZmZmZmY4MDA5NWViNGYwIHgyODogMDAw
-MDAwMDAwMDAwMDAwMAo+ICAgIHgyNzogZmZmZmZmYzBmOTQzMTU3OCB4MjY6IDAwMDAwMDAwMDAw
-MDAwMDAKPiAgICB4MjU6IDAwMDAwMDAwZmZmZmZmZmYgeDI0OiAwMDAwMDAwMDAwMDAwMDAzCj4g
-ICAgeDIzOiAwMDAwMDAwMDAwMDAwMDAxIHgyMjogZmZmZmZmYzBmYTlhYzAxMAo+ICAgIHgyMTog
-MDAwMDAwMDAwMDAwMDAwMCB4MjA6IGZmZmZmZmMwZmFiNDA5ODAKPiAgICB4MTk6IGZmZmZmZmMw
-ZmFiNDA5ODAgeDE4OiAwMDAwMDAwMDAwMDAwMDAzCj4gICAgeDE3OiAwMDAwMDAwMDAwMDAwMWM0
-IHgxNjogMDAwMDAwMDAwMDAwMDAwNwo+ICAgIHgxNTogMDAwMDAwMDAwMDAwMDAwZSB4MTQ6IGZm
-ZmZmZmZmZmZmZmZmZmYKPiAgICB4MTM6IGZmZmYwMDAwMDAwMDAwMDAgeDEyOiAwMDAwMDAwMDAw
-MDAwMDI4Cj4gICAgeDExOiAwMTAxMDEwMTAxMDEwMTAxIHgxMDogN2Y3ZjdmN2Y3ZjdmN2Y3Zgo+
-ICAgIHg5IDogMDAwMDAwMDAwMDAwMDAwMCB4OCA6IGZmZmZmZmMwZmFiNDA5YTAKPiAgICB4NyA6
-IDAwMDAwMDAwMDAwMDAwMDAgeDYgOiAwMDAwMDAwMDAwMDAwMDAyCj4gICAgeDUgOiAwMDAwMDAw
-MTAwMDAwMDAwIHg0IDogMDAwMDAwMDAwMDAwMDAwMAo+ICAgIHgzIDogMDAwMDAwMDAwMDAwMDAw
-MSB4MiA6IDAwMDAwMDAwMDAwMDAwMDIKPiAgICB4MSA6IGZmZmZmZmMwZjk0MzE1NzggeDAgOiAw
-MDAwMDAwMDAwMDAwMDAwCj4gICAgUHJvY2VzcyBrd29ya2VyLzc6MSAocGlkOiA3MCwgc3RhY2sg
-bGltaXQgPSAweDAwMDAwMDAwMTdkMDhmZmIpCj4gICAgQ2FsbCB0cmFjZToKPiAgICAgaW9tbXVf
-ZG1hX21hcF9zZysweDdjLzB4MmM4Cj4gICAgIF9faW9tbXVfbWFwX3NnX2F0dHJzKzB4NzAvMHg4
-NAo+ICAgICBnZXRfcGFnZXMrMHgxNzAvMHgxZTgKPiAgICAgbXNtX2dlbV9nZXRfaW92YSsweDhj
-LzB4MTI4Cj4gICAgIF9tc21fZ2VtX2tlcm5lbF9uZXcrMHg2Yy8weGM4Cj4gICAgIG1zbV9nZW1f
-a2VybmVsX25ldysweDRjLzB4NTgKPiAgICAgZHNpX3R4X2J1Zl9hbGxvY182ZysweDRjLzB4OGMK
-PiAgICAgbXNtX2RzaV9ob3N0X21vZGVzZXRfaW5pdCsweGM4LzB4MTA4Cj4gICAgIG1zbV9kc2lf
-bW9kZXNldF9pbml0KzB4NTQvMHgxOGMKPiAgICAgX2RwdV9rbXNfZHJtX29ial9pbml0KzB4NDMw
-LzB4NDc0Cj4gICAgIGRwdV9rbXNfaHdfaW5pdCsweDVmOC8weDZiNAo+ICAgICBtc21fZHJtX2Jp
-bmQrMHgzNjAvMHg2YzgKPiAgICAgdHJ5X3RvX2JyaW5nX3VwX21hc3Rlci5wYXJ0LjcrMHgyOC8w
-eDcwCj4gICAgIGNvbXBvbmVudF9tYXN0ZXJfYWRkX3dpdGhfbWF0Y2grMHhlOC8weDEyNAo+ICAg
-ICBtc21fcGRldl9wcm9iZSsweDI5NC8weDJiNAo+ICAgICBwbGF0Zm9ybV9kcnZfcHJvYmUrMHg1
-OC8weGE0Cj4gICAgIHJlYWxseV9wcm9iZSsweDE1MC8weDI5NAo+ICAgICBkcml2ZXJfcHJvYmVf
-ZGV2aWNlKzB4YWMvMHhlOAo+ICAgICBfX2RldmljZV9hdHRhY2hfZHJpdmVyKzB4YTQvMHhiNAo+
-ICAgICBidXNfZm9yX2VhY2hfZHJ2KzB4OTgvMHhjOAo+ICAgICBfX2RldmljZV9hdHRhY2grMHhh
-Yy8weDEyYwo+ICAgICBkZXZpY2VfaW5pdGlhbF9wcm9iZSsweDI0LzB4MzAKPiAgICAgYnVzX3By
-b2JlX2RldmljZSsweDM4LzB4OTgKPiAgICAgZGVmZXJyZWRfcHJvYmVfd29ya19mdW5jKzB4Nzgv
-MHhhNAo+ICAgICBwcm9jZXNzX29uZV93b3JrKzB4MjRjLzB4M2RjCj4gICAgIHdvcmtlcl90aHJl
-YWQrMHgyODAvMHgzNjAKPiAgICAga3RocmVhZCsweDEzNC8weDEzYwo+ICAgICByZXRfZnJvbV9m
-b3JrKzB4MTAvMHgxOAo+ICAgIENvZGU6IGQyODAwMDA0IDkxMDAwNzI1IDZiMTcwMzlmIDU0MDAw
-NDhhIChmOTQwMWY0MCkKPiAgICAtLS1bIGVuZCB0cmFjZSBmMjJkZGE1N2YzNjQ4ZTJjIF0tLS0K
-PiAgICBLZXJuZWwgcGFuaWMgLSBub3Qgc3luY2luZzogRmF0YWwgZXhjZXB0aW9uCj4gICAgU01Q
-OiBzdG9wcGluZyBzZWNvbmRhcnkgQ1BVcwo+ICAgIEtlcm5lbCBPZmZzZXQ6IGRpc2FibGVkCj4g
-ICAgQ1BVIGZlYXR1cmVzOiAweDAsMjI4MDJhMTgKPiAgICBNZW1vcnkgTGltaXQ6IG5vbmUKPiAK
-PiBUaGUgcHJvYmxlbSBpcyB0aGF0IHdoZW4gZHJtL21zbSBkb2VzIGl0J3Mgb3duIGlvbW11X2F0
-dGFjaF9kZXZpY2UoKSwKPiBub3cgdGhlIGRvbWFpbiByZXR1cm5lZCBieSBpb21tdV9nZXRfZG9t
-YWluX2Zvcl9kZXYoKSBpcyBkcm0vbXNtJ3MKPiBkb21haW4sIGFuZCBpdCBkb2Vzbid0IGhhdmUg
-ZG9tYWluLT5pb3ZhX2Nvb2tpZS4KCkRvZXMgdGhpcyBjcmFzaCBzdGlsbCBoYXBwZW4gd2l0aCA0
-LjIwLXJjPyBCZWNhdXNlIGFzIG9mIDZhZjU4OGZlZDM5MSBpdCAKcmVhbGx5IHNob3VsZG4ndC4K
-Cj4gV2Uga2luZCBvZiBhdm9pZGVkIHRoaXMgcHJvYmxlbSBwcmlvciB0byBzZG04NDUvZHB1IGJl
-Y2F1c2UgdGhlIGlvbW11Cj4gd2FzIGF0dGFjaGVkIHRvIHRoZSBtZHAgbm9kZSBpbiBkdCwgd2hp
-Y2ggaXMgYSBjaGlsZCBvZiB0aGUgdG9wbGV2ZWwKPiBtZHNzIG5vZGUgKHdoaWNoIGNvcnJlc3Bv
-bmRzIHRvIHRoZSBkZXYgcGFzc2VkIGluIGRtYV9tYXBfc2coKSkuICBCdXQKPiB3aXRoIHNkbTg0
-NSwgbm93IHRoZSBpb21tdSBpcyBhdHRhY2hlZCBhdCB0aGUgbWRzcyBsZXZlbCBzbyB3ZSBoaXQg
-dGhlCj4gaW9tbXVfZG1hX29wcyBpbiBkbWFfbWFwX3NnKCkuCj4gCj4gQnV0IGF1dG8gYWxsb2Nh
-dGluZy9hdHRhY2hpbmcgYSBkb21haW4gYmVmb3JlIHRoZSBkcml2ZXIgaXMgcHJvYmVkIHdhcwo+
-IGFscmVhZHkgYSBibG9ja2luZyBwcm9ibGVtIGZvciBlbmFibGluZyBwZXItY29udGV4dCBwYWdl
-dGFibGVzIGZvciB0aGUKPiBHUFUuICBUaGlzIHByb2JsZW0gaXMgYWxzbyBub3cgc29sdmVkIHdp
-dGggdGhpcyBwYXRjaC4KCnMvc29sdmVkL3dvcmtlZCBhcm91bmQvCgpJZiB5b3Ugd2FudCBhIGd1
-YXJhbnRlZSBvZiBhY3R1YWxseSBnZXR0aW5nIGEgc3BlY2lmaWMgaGFyZHdhcmUgY29udGV4dCAK
-YWxsb2NhdGVkIGZvciBhIGdpdmVuIGRvbWFpbiwgdGhlcmUgbmVlZHMgdG8gYmUgY29kZSBpbiB0
-aGUgSU9NTVUgZHJpdmVyIAp0byB1bmRlcnN0YW5kIGFuZCBob25vdXIgdGhhdC4gSW1wbGljaXRs
-eSBkZXBlbmRpbmcgb24gd2hhdGV2ZXIgaGFwcGVucyAKdG8gZmFsbCBvdXQgb2YgY3VycmVudCBk
-cml2ZXIgYmVoYXZpb3VyIG9uIGN1cnJlbnQgc3lzdGVtcyBpcyBub3QgYSByZWFsIApzb2x1dGlv
-bi4KCj4gRml4ZXM6IDk3ODkwYmE5Mjg5YyBkbWEtbWFwcGluZzogZGV0ZWN0IGFuZCBjb25maWd1
-cmUgSU9NTVUgaW4gb2ZfZG1hX2NvbmZpZ3VyZQoKVGhhdCdzIHJhdGhlciBtaXNsZWFkaW5nLCBz
-aW5jZSB0aGUgY3Jhc2ggZGVzY3JpYmVkIGFib3ZlIGRlcGVuZHMgb24gYXQgCmxlYXN0IHR3byBv
-dGhlciBtYWpvciBjaGFuZ2VzIHdoaWNoIGNhbWUgbG9uZyBhZnRlciB0aGF0IGNvbW1pdC4KCkl0
-J3Mgbm90IHRoYXQgSSBkb24ndCB1bmRlcnN0YW5kIGV4YWN0bHkgd2hhdCB5b3Ugd2FudCBoZXJl
-IC0ganVzdCB0aGF0IAp0aGlzIGNvbW1pdCBtZXNzYWdlIGlzbid0IGEgY29oZXJlbnQganVzdGlm
-aWNhdGlvbiBmb3IgdGhhdCA7KQoKPiBUZXN0ZWQtYnk6IERvdWdsYXMgQW5kZXJzb24gPGRpYW5k
-ZXJzQGNocm9taXVtLm9yZz4KPiBTaWduZWQtb2ZmLWJ5OiBSb2IgQ2xhcmsgPHJvYmRjbGFya0Bn
-bWFpbC5jb20+Cj4gLS0tCj4gVGhpcyBpcyBhbiBhbHRlcm5hdGl2ZS9yZXBsYWNlbWVudCBmb3Ig
-WzFdLiAgV2hhdCBpdCBsYWNrcyBpbiBlbGVnYW5jZQo+IGl0IG1ha2VzIHVwIGZvciBpbiBwcmFj
-dGljYWxpdHkgOy0pCj4gCj4gWzFdIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9w
-YXRjaC8yNjQ5MzAvCj4gCj4gICBkcml2ZXJzL29mL2RldmljZS5jIHwgMjIgKysrKysrKysrKysr
-KysrKysrKysrKwo+ICAgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKykKPiAKPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9vZi9kZXZpY2UuYyBiL2RyaXZlcnMvb2YvZGV2aWNlLmMKPiBpbmRl
-eCA1OTU3Y2Q0ZmEyNjIuLjE1ZmZlZTAwZmIyMiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL29mL2Rl
-dmljZS5jCj4gKysrIGIvZHJpdmVycy9vZi9kZXZpY2UuYwo+IEBAIC03Miw2ICs3MiwxNCBAQCBp
-bnQgb2ZfZGV2aWNlX2FkZChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpvZmRldikKPiAgIAlyZXR1
-cm4gZGV2aWNlX2FkZCgmb2ZkZXYtPmRldik7Cj4gICB9Cj4gICAKPiArc3RhdGljIGNvbnN0IHN0
-cnVjdCBvZl9kZXZpY2VfaWQgaW9tbXVfYmxhY2tsaXN0W10gPSB7Cj4gKwl7IC5jb21wYXRpYmxl
-ID0gInFjb20sbWRwNCIgfSwKPiArCXsgLmNvbXBhdGlibGUgPSAicWNvbSxtZHNzIiB9LAo+ICsJ
-eyAuY29tcGF0aWJsZSA9ICJxY29tLHNkbTg0NS1tZHNzIiB9LAo+ICsJeyAuY29tcGF0aWJsZSA9
-ICJxY29tLGFkcmVubyIgfSwKPiArCXt9Cj4gK307Cj4gKwo+ICAgLyoqCj4gICAgKiBvZl9kbWFf
-Y29uZmlndXJlIC0gU2V0dXAgRE1BIGNvbmZpZ3VyYXRpb24KPiAgICAqIEBkZXY6CURldmljZSB0
-byBhcHBseSBETUEgY29uZmlndXJhdGlvbgo+IEBAIC0xNjQsNiArMTcyLDIwIEBAIGludCBvZl9k
-bWFfY29uZmlndXJlKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZV9ub2RlICpucCwg
-Ym9vbCBmb3JjZV9kbWEpCj4gICAJZGV2X2RiZyhkZXYsICJkZXZpY2UgaXMlc2JlaGluZCBhbiBp
-b21tdVxuIiwKPiAgIAkJaW9tbXUgPyAiICIgOiAiIG5vdCAiKTsKPiAgIAo+ICsJLyoKPiArCSAq
-IFRoZXJlIGlzIGF0IGxlYXN0IG9uZSBjYXNlIHdoZXJlIHRoZSBkcml2ZXIgd2FudHMgdG8gZGly
-ZWN0bHkKPiArCSAqIG1hbmFnZSB0aGUgSU9NTVUsIGJ1dCBpZiB3ZSBlbmQgdXAgd2l0aCBpb21t
-dSBkbWFfb3BzLCB0aGF0Cj4gKwkgKiBpbnRlcmZlcmVzIHdpdGggdGhlIGRyaXZlcnMgYWJpbGl0
-eSB0byB1c2UgZG1hX21hcF9zZygpIGZvcgo+ICsJICogY2FjaGUgb3BlcmF0aW9ucy4gIFNpbmNl
-IHdlIGRvbid0IGN1cnJlbnRseSBoYXZlIGEgYmV0dGVyCj4gKwkgKiBzb2x1dGlvbiwgYW5kIHRo
-aXMgY29kZSBydW5zIGJlZm9yZSB0aGUgZHJpdmVyIGlzIHByb2JlZCBhbmQKPiArCSAqIGhhcyBh
-IGNoYW5jZSB0byBpbnRlcnZlbmUsIHVzZSBhIHNpbXBsZSBibGFja2xpc3QgdG8gYXZvaWQKPiAr
-CSAqIGVuZGluZyB1cCB3aXRoIGlvbW11IGRtYV9vcHM6Cj4gKwkgKi8KPiArCWlmIChvZl9tYXRj
-aF9kZXZpY2UoaW9tbXVfYmxhY2tsaXN0LCBkZXYpKSB7Cj4gKwkJZGV2X2RiZyhkZXYsICJza2lw
-cGluZyBpb21tdSBob29rdXBcbiIpOwo+ICsJCWlvbW11ID0gTlVMTDsKPiArCX0KCkdpdmVuIHRo
-YXQgYSBkZWZhdWx0IGRvbWFpbiB3aWxsIGFscmVhZHkgaGF2ZSBiZWVuIGFsbG9jYXRlZCBieSB0
-aGUgdGltZSAKd2UgZ2V0IGhlcmUsIHJlZ2FyZGxlc3Mgb2Ygd2hldGhlciB3ZSBwcmV0ZW5kIG9m
-X2lvbW11X2NvbmZpZ3VyZSgpIGRpZCAKbm90aGluZywgSSdtIHB1enpsZWQgYXMgdG8gaG93IHRo
-aXMgY2hhbmdlIGlzICdzb2x2aW5nJyB0aGF0IGFzcGVjdCBhcyAKY2xhaW1lZCA6LwoKSXMgQ09O
-RklHX0lPTU1VX0RFRkFVTFRfUEFTU1RIUk9VR0ggYSBzdWZmaWNpZW50IHdvcmthcm91bmQgZm9y
-IG1zbSBhdCAKdGhlIG1vbWVudCwgb3IgZG8geW91IGhhdmUgb3RoZXIgZGV2aWNlcyB3aGljaCBk
-byBhY3R1YWxseSB3YW50IAppb21tdV9kbWFfb3BzPwoKUm9iaW4uCgo+ICsKPiAgIAlhcmNoX3Nl
-dHVwX2RtYV9vcHMoZGV2LCBkbWFfYWRkciwgc2l6ZSwgaW9tbXUsIGNvaGVyZW50KTsKPiAgIAo+
-ICAgCXJldHVybiAwOwo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+On Sun, 2 Dec 2018 19:29:44 +0100
+Tomasz Duszynski <tduszyns@gmail.com> wrote:
+
+> On Sun, Nov 25, 2018 at 08:59:39AM +0000, Jonathan Cameron wrote:
+> > On Sat, 24 Nov 2018 23:14:15 +0100
+> > Tomasz Duszynski <tduszyns@gmail.com> wrote:
+> >  
+> > > Add device tree support for Sensirion SPS30 particulate
+> > > matter sensor.
+> > >
+> > > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>  
+> > one comment inine, around the fact we are trying to move
+> > to generic names in DT where ever possible.  Now we don't
+> > have a suitable one (IIRC) yet so time to make one up ;)
+> >
+> > +CC Rob for his input on that.  
+> > > ---
+> > >  .../bindings/iio/chemical/sensirion,sps30.txt        | 12 ++++++++++++
+> > >  1 file changed, 12 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt b/Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
+> > > new file mode 100644
+> > > index 000000000000..6eee2709b5b6
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
+> > > @@ -0,0 +1,12 @@
+> > > +* Sensirion SPS30 particulate matter sensor
+> > > +
+> > > +Required properties:
+> > > +- compatible: must be "sensirion,sps30"
+> > > +- reg: the I2C address of the sensor
+> > > +
+> > > +Example:
+> > > +
+> > > +sps30@69 {  
+> > We should define a generic type.  Rob, what would work for this
+> > one?
+> >
+> > particlesensor@69?
+> >  
+> 
+> Wouldn't air-pollution-sensor be somewhat more generic? At least
+> wikipedia has some article about that. Various other names like
+> particle-sensor, pm-sensor, particulate-matter-sensor,
+> air-quality-sensor, tend to return more or less similar number
+> of search hits. Which means there's no universal naming convention.
+
+I have not strong feeling in favor of a particular choice. 
+Happy with wherever the discussion converges.
+
+Jonathan
+> 
+> > > +	compatible = "sensirion,sps30";
+> > > +	reg = <0x69>;
+> > > +};  
+> >  
