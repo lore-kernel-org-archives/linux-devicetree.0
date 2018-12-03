@@ -1,207 +1,169 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 19/34] dt-bindings: arm: Convert MediaTek board/soc bindings to json-schema
-Date: Mon,  3 Dec 2018 15:32:08 -0600
-Message-ID: <20181203213223.16986-20-robh@kernel.org>
+Subject: [PATCH v2 05/34] dt-bindings: i2c: Convert i2c-gpio binding to
+ json-schema
+Date: Mon,  3 Dec 2018 15:31:54 -0600
+Message-ID: <20181203213223.16986-6-robh@kernel.org>
 References: <20181203213223.16986-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20181203213223.16986-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, arm@kernel.org, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org
+Cc: Kumar Gala <kumar.gala@linaro.org>, arm@kernel.org, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@arm.com>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Convert MediaTek SoC bindings to DT schema format using json-schema.
+Convert the i2c-gpio binding to DT schema format using json-schema. This
+serves as an example of how to include other schema (i2c-controller.yaml
+in this case).
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mediatek@lists.infradead.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/arm/mediatek.txt      | 79 -----------------
- .../devicetree/bindings/arm/mediatek.yaml     | 85 +++++++++++++++++++
- 2 files changed, 85 insertions(+), 79 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/mediatek.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek.yaml
+ .../devicetree/bindings/i2c/i2c-gpio.txt      | 46 ------------
+ .../devicetree/bindings/i2c/i2c-gpio.yaml     | 73 +++++++++++++++++++
+ 2 files changed, 73 insertions(+), 46 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-gpio.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-gpio.txt b/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
 deleted file mode 100644
-index 8f260e5cfd16..000000000000
---- a/Documentation/devicetree/bindings/arm/mediatek.txt
+index 38a05562d1d2..000000000000
+--- a/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
 +++ /dev/null
-@@ -1,79 +0,0 @@
--MediaTek SoC based Platforms Device Tree Bindings
+@@ -1,46 +0,0 @@
+-Device-Tree bindings for i2c gpio driver
 -
--Boards with a MediaTek SoC shall have the following property:
+-Required properties:
+-	- compatible = "i2c-gpio";
+-	- sda-gpios: gpio used for the sda signal, this should be flagged as
+-	  active high using open drain with (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)
+-	  from <dt-bindings/gpio/gpio.h> since the signal is by definition
+-	  open drain.
+-	- scl-gpios: gpio used for the scl signal, this should be flagged as
+-	  active high using open drain with (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)
+-	  from <dt-bindings/gpio/gpio.h> since the signal is by definition
+-	  open drain.
 -
--Required root node property:
+-Optional properties:
+-	- i2c-gpio,scl-output-only: scl as output only
+-	- i2c-gpio,delay-us: delay between GPIO operations (may depend on each platform)
+-	- i2c-gpio,timeout-ms: timeout to get data
 -
--compatible: Must contain one of
--   "mediatek,mt2701"
--   "mediatek,mt2712"
--   "mediatek,mt6580"
--   "mediatek,mt6589"
--   "mediatek,mt6592"
--   "mediatek,mt6755"
--   "mediatek,mt6765"
--   "mediatek,mt6795"
--   "mediatek,mt6797"
--   "mediatek,mt7622"
--   "mediatek,mt7623" which is referred to MT7623N SoC
--   "mediatek,mt7623a"
--   "mediatek,mt8127"
--   "mediatek,mt8135"
--   "mediatek,mt8173"
+-Deprecated properties, do not use in new device tree sources:
+-	- gpios: sda and scl gpio, alternative for {sda,scl}-gpios
+-	- i2c-gpio,sda-open-drain: this means that something outside of our
+-	  control has put the GPIO line used for SDA into open drain mode, and
+-	  that something is not the GPIO chip. It is essentially an
+-	  inconsistency flag.
+-	- i2c-gpio,scl-open-drain: this means that something outside of our
+-	  control has put the GPIO line used for SCL into open drain mode, and
+-	  that something is not the GPIO chip. It is essentially an
+-	  inconsistency flag.
 -
+-Example nodes:
 -
--Supported boards:
+-#include <dt-bindings/gpio/gpio.h>
 -
--- Evaluation board for MT2701:
--    Required root node properties:
--      - compatible = "mediatek,mt2701-evb", "mediatek,mt2701";
--- Evaluation board for MT2712:
--    Required root node properties:
--      - compatible = "mediatek,mt2712-evb", "mediatek,mt2712";
--- Evaluation board for MT6580:
--    Required root node properties:
--      - compatible = "mediatek,mt6580-evbp1", "mediatek,mt6580";
--- bq Aquaris5 smart phone:
--    Required root node properties:
--      - compatible = "mundoreader,bq-aquaris5", "mediatek,mt6589";
--- Evaluation board for MT6592:
--    Required root node properties:
--      - compatible = "mediatek,mt6592-evb", "mediatek,mt6592";
--- Evaluation phone for MT6755(Helio P10):
--    Required root node properties:
--      - compatible = "mediatek,mt6755-evb", "mediatek,mt6755";
--- Evaluation board for MT6765(Helio P22):
--    Required root node properties:
--      - compatible = "mediatek,mt6765-evb", "mediatek,mt6765";
--- Evaluation board for MT6795(Helio X10):
--    Required root node properties:
--      - compatible = "mediatek,mt6795-evb", "mediatek,mt6795";
--- Evaluation board for MT6797(Helio X20):
--    Required root node properties:
--      - compatible = "mediatek,mt6797-evb", "mediatek,mt6797";
--- Mediatek X20 Development Board:
--    Required root node properties:
--      - compatible = "archermind,mt6797-x20-dev", "mediatek,mt6797";
--- Reference board variant 1 for MT7622:
--    Required root node properties:
--      - compatible = "mediatek,mt7622-rfb1", "mediatek,mt7622";
--- Reference board for MT7623a with eMMC:
--    Required root node properties:
--      - compatible = "mediatek,mt7623a-rfb-emmc", "mediatek,mt7623";
--- Reference board for MT7623a with NAND:
--    Required root node properties:
--      - compatible = "mediatek,mt7623a-rfb-nand", "mediatek,mt7623";
--- Reference board for MT7623n with eMMC:
--    Required root node properties:
--      - compatible = "mediatek,mt7623n-rfb-emmc", "mediatek,mt7623";
--- Bananapi BPI-R2 board:
--      - compatible = "bananapi,bpi-r2", "mediatek,mt7623";
--- MTK mt8127 tablet moose EVB:
--    Required root node properties:
--      - compatible = "mediatek,mt8127-moose", "mediatek,mt8127";
--- MTK mt8135 tablet EVB:
--    Required root node properties:
--      - compatible = "mediatek,mt8135-evbp1", "mediatek,mt8135";
--- MTK mt8173 tablet EVB:
--    Required root node properties:
--      - compatible = "mediatek,mt8173-evb", "mediatek,mt8173";
-diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
+-i2c@0 {
+-	compatible = "i2c-gpio";
+-	sda-gpios = <&pioA 23 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
+-	scl-gpios = <&pioA 24 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
+-	i2c-gpio,delay-us = <2>;	/* ~100 kHz */
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-
+-	rv3029c2@56 {
+-		compatible = "rv3029c2";
+-		reg = <0x56>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-gpio.yaml b/Documentation/devicetree/bindings/i2c/i2c-gpio.yaml
 new file mode 100644
-index 000000000000..d991676222e7
+index 000000000000..da6129090a8e
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
-@@ -0,0 +1,85 @@
++++ b/Documentation/devicetree/bindings/i2c/i2c-gpio.yaml
+@@ -0,0 +1,73 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/arm/mediatek.yaml#
++$id: http://devicetree.org/schemas/i2c/i2c-gpio.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: MediaTek SoC based Platforms Device Tree Bindings
++title: Bindings for GPIO bitbanged I2C
 +
 +maintainers:
-+  - Sean Wang <sean.wang@mediatek.com>
-+  - Matthias Brugger <matthias.bgg@gmail.com>
-+description: |
-+  Boards with a MediaTek SoC shall have the following properties.
++  - Wolfram Sang <wolfram@the-dreams.de>
++
++allOf:
++  - $ref: /schemas/i2c/i2c-controller.yaml#
 +
 +properties:
-+  $nodename:
-+    const: '/'
 +  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - mediatek,mt2701-evb
-+          - const: mediatek,mt2701
++    items:
++      - const: i2c-gpio
 +
-+      - items:
-+          - enum:
-+              - mediatek,mt2712-evb
-+          - const: mediatek,mt2712
-+      - items:
-+          - enum:
-+              - mediatek,mt6580-evbp1
-+          - const: mediatek,mt6580
-+      - items:
-+          - enum:
-+              - mundoreader,bq-aquaris5
-+          - const: mediatek,mt6589
-+      - items:
-+          - enum:
-+              - mediatek,mt6592-evb
-+          - const: mediatek,mt6592
-+      - items:
-+          - enum:
-+              - mediatek,mt6755-evb
-+          - const: mediatek,mt6755
-+      - items:
-+          - enum:
-+              - mediatek,mt6765-evb
-+          - const: mediatek,mt6765
-+      - items:
-+          - enum:
-+              - mediatek,mt6795-evb
-+          - const: mediatek,mt6795
-+      - items:
-+          - enum:
-+              - archermind,mt6797-x20-dev
-+              - mediatek,mt6797-evb
-+          - const: mediatek,mt6797
-+      - items:
-+          - enum:
-+              - mediatek,mt7622-rfb1
-+          - const: mediatek,mt7622
-+      - items:
-+          - enum:
-+              - mediatek,mt7623a-rfb-emmc
-+              - mediatek,mt7623a-rfb-nand
-+              - mediatek,mt7623n-rfb-emmc
-+              - bananapi,bpi-r2
-+          - const: mediatek,mt7623
-+        description: Also referred to as MT7623N SoC
++  sda-gpios:
++    description:
++      gpio used for the sda signal, this should be flagged as
++      active high using open drain with (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)
++      from <dt-bindings/gpio/gpio.h> since the signal is by definition
++      open drain.
++    maxItems: 1
 +
-+      - items:
-+          - const: mediatek,mt7623a
-+      - items:
-+          - enum:
-+              - mediatek,mt8127-moose
-+          - const: mediatek,mt8127
-+      - items:
-+          - enum:
-+              - mediatek,mt8135-evbp1
-+          - const: mediatek,mt8135
-+      - items:
-+          - enum:
-+              - mediatek,mt8173-evb
-+          - const: mediatek,mt8173
++  scl-gpios:
++    description:
++      gpio used for the scl signal, this should be flagged as
++      active high using open drain with (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)
++      from <dt-bindings/gpio/gpio.h> since the signal is by definition
++      open drain.
++    maxItems: 1
++
++  i2c-gpio,scl-output-only:
++    description: scl as output only
++    type: boolean
++
++  i2c-gpio,delay-us:
++    description: delay between GPIO operations (may depend on each platform)
++    $ref: /schemas/types.yaml#/definitions/uint32
++
++  i2c-gpio,timeout-ms:
++    description: timeout to get data
++    $ref: /schemas/types.yaml#/definitions/uint32
++
++  # Deprecated properties, do not use in new device tree sources:
++  gpios:
++    minItems: 2
++    maxItems: 2
++    description: sda and scl gpio, alternative for {sda,scl}-gpios
++
++  i2c-gpio,sda-open-drain:
++    # Generate a warning if present
++    not: true
++    description: this means that something outside of our control has put
++      the GPIO line used for SDA into open drain mode, and that something is
++      not the GPIO chip. It is essentially an inconsistency flag.
++
++  i2c-gpio,scl-open-drain:
++    # Generate a warning if present
++    not: true
++    description: this means that something outside of our control has put the
++      GPIO line used for SCL into open drain mode, and that something is not
++      the GPIO chip. It is essentially an inconsistency flag.
++
++required:
++  - compatible
++  - sda-gpios
++  - scl-gpios
++
 +...
 -- 
 2.19.1
