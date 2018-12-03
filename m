@@ -1,59 +1,69 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 2/2] dt-bindings: gpu: add Allwinner H6 Mali Midgard
- binding
-Date: Mon, 03 Dec 2018 13:25:21 +0100
-Message-ID: <11894938.HOUtrQJeEF@phil>
-References: <20181127074249.15204-1-icenowy@aosc.io>
- <20181127074249.15204-2-icenowy@aosc.io>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v1 07/12] usb: roles: Find the usb role switch by also
+ matching against the device node
+Date: Mon, 3 Dec 2018 14:25:34 +0200
+Message-ID: <20181203122534.GD24338@kuha.fi.intel.com>
+References: <20181203034515.91412-1-chenyu56@huawei.com>
+ <20181203034515.91412-8-chenyu56@huawei.com>
+ <CAHp75VfUKAQ+Q0cQz-4-=i2JL9uACBX1bVvCeNjZLL1HStDGKQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20181127074249.15204-2-icenowy@aosc.io>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VfUKAQ+Q0cQz-4-=i2JL9uACBX1bVvCeNjZLL1HStDGKQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: chenyu56@huawei.com, USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRGllbnN0YWcsIDI3LiBOb3ZlbWJlciAyMDE4LCAwODo0Mjo0OSBDRVQgc2NocmllYiBJY2Vu
-b3d5IFpoZW5nOgo+IEFsbHdpbm5lciBINiBTb0MgdXNlcyBhIE1hbGkgVDcyMCBHUFUsIHdoaWNo
-IGlzIG9uZSBvZiB0aGUgR1BVcyBpbiB0aGUKPiBNaWRnYXJkIEdQVSBwcm9kdWN0IGxpbmUuCj4g
-Cj4gQWRkIGJpbmRpbmcgZm9yIHRoZSBINiBNYWxpIE1pZGdhcmQgR1BVLgo+IAo+IFNpZ25lZC1v
-ZmYtYnk6IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy5pbz4KPiAtLS0KPiAgLi4uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZ3B1L2FybSxtYWxpLW1pZGdhcmQudHh0ICAgIHwgMTMgKysrKysrKysr
-KysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FybSxtYWxpLW1pZGdhcmQu
-dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRn
-YXJkLnR4dAo+IGluZGV4IDAyZjg3MGNkNjBlNi4uYzg5N2RkN2JlNDhmIDEwMDY0NAo+IC0tLSBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJtLG1hbGktbWlkZ2FyZC50
-eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FybSxtYWxp
-LW1pZGdhcmQudHh0Cj4gQEAgLTE4LDYgKzE4LDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAg
-ICAgICsgImFtbG9naWMsbWVzb24tZ3htLW1hbGkiCj4gICAgICArICJyb2NrY2hpcCxyazMyODgt
-bWFsaSIKPiAgICAgICsgInJvY2tjaGlwLHJrMzM5OS1tYWxpIgo+ICsgICAgKyAiYWxsd2lubmVy
-LHN1bjUwaS1oNi1tYWxpIgoKSSdkIHRoaW5rIHlvdSBtaWdodCB3YW50IHRvIGtlZXAgYW4gYWxw
-aGFiZXRpY2FsIHNvcnRpbmcgaGVyZSwgYWthCmFib3ZlIGFtbG9naWMsIG90aGVyd2lzZSB0aGUg
-bGlzdCB3aWxsIHByb2JhYmx5IGJlY29tZSBoYXJkIHRvIHJlYWQKYXQgc29tZSBsYXRlciBwb2lu
-dC4KCgo+ICAtIHJlZyA6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBvZiB0aGUgZGV2aWNlIGFuZCBs
-ZW5ndGggb2YgdGhlIHJlZ2lzdGVyIGFyZWEuCj4gIAo+IEBAIC00NCw2ICs0NSwxOCBAQCBPcHRp
-b25hbCBwcm9wZXJ0aWVzOgo+ICAgIGZvciBkZXRhaWxzLgo+ICAKPiAgCj4gK1ZlbmRvci1zcGVj
-aWZpYyBiaW5kaW5ncwo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArCj4gK1RoZSBNYWxp
-IEdQVSBpcyBpbnRlZ3JhdGVkIHZlcnkgZGlmZmVyZW50bHkgZnJvbSBvbmUgU29DIHRvCj4gK2Fu
-b3RoZXIuIEluIG9yZGVyIHRvIGFjY29tb2RhdGUgdGhvc2UgZGlmZmVyZW5jZXMsIHlvdSBoYXZl
-IHRoZSBvcHRpb24KPiArdG8gc3BlY2lmeSBvbmUgbW9yZSB2ZW5kb3Itc3BlY2lmaWMgY29tcGF0
-aWJsZSwgYW1vbmc6Cj4gKwo+ICsgIC0gYWxsd2lubmVyLHN1bjUwaS1oNi1tYWxpCj4gKyAgICBS
-ZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICsgICAgICAqIHJlc2V0czogcGhhbmRsZSB0byB0aGUgcmVz
-ZXQgbGluZSBmb3IgdGhlIEdQVQoKV2hpbGUgdGhpcyBwYXJhZ3JhcGggaXMgc2ltaWxhciB0byBo
-b3cgaXQgaXMgZG9uZSBpbiBVdGdhcmQsIEknbQp3b25kZXJpbmcgd2h5IHdlIGNhbm5vdCBqdXN0
-IGRlc2NyaWJlIHRoZSAicmVzZXRzIiBhcyByZWd1bGFyCm9wdGlvbmFsIHByb3BlcnR5IGFib3Zl
-IHRoYXQuCgoKSGVpa28KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+Hi,
+
+On Mon, Dec 03, 2018 at 10:17:20AM +0200, Andy Shevchenko wrote:
+> On Mon, Dec 3, 2018 at 5:45 AM Yu Chen <chenyu56@huawei.com> wrote:
+> >
+> > This patch adds code for supporting find usb role switch by matching against
+> > the device node described using of_graph.
+> 
+> >  #include <linux/module.h>
+> >  #include <linux/mutex.h>
+> >  #include <linux/slab.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_graph.h>
+> 
+> Keep it ordered.
+> 
+> > +static int __switch_match_by_of_node(struct device *dev, const void *name)
+> > +{
+> > +       if (!dev->parent || !dev->parent->of_node)
+> > +               return 0;
+> > +
+> > +       return of_node_name_eq(dev->parent->of_node, (const char *)name);
+> > +}
+> 
+> I think Heikki has introduced some more generic function for this.
+
+Yes, for this I'm proposing a new function fwnode_get_name() that
+should allow us to support ACPI as well as OF platforms:
+https://lkml.org/lkml/2018/11/28/784
+
+> >         sw = device_connection_find_match(dev, "usb-role-switch", NULL,
+> >                                           usb_role_switch_match);
+> 
+> > +       sw = of_graph_find_match_by_type(dev, "usb-role-switch");
+> 
+> Why this is here?! device_connection_find_match() should take care for OF case.
+
+Exactly. device_connection_find_match() needs to parse the graph (OF
+and ACPI), and I already made proposal (RFC) for that:
+https://lkml.org/lkml/2018/10/24/619
+
+I have prepared a more finalized version of those patches. I've been
+waiting for that fwnode_get_name() to be accepted before sending it
+out since we are going to need that function, but I'll send a new RFC
+if nothing happens soon with that fwnode_get_name() series.
+
+
+Br,
+
+-- 
+heikki
