@@ -1,34 +1,88 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH] ARM: dts: mmp2: trivial whitespace fix
-Date: Mon,  3 Dec 2018 12:47:54 +0100
-Message-ID: <20181203114754.637472-1-lkundrak@v3.sk>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 00/23] PCI: refactor the Mobiveil driver and add PCIe
+ support for NXP LX SoCs
+Date: Mon, 3 Dec 2018 11:58:50 +0000
+Message-ID: <20181203115850.GB8040@e107981-ln.cambridge.arm.com>
+References: <20181106131807.29951-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181106131807.29951-1-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Kosina <trivial@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>, Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-A missing space before a curly brace.
+On Tue, Nov 06, 2018 at 01:19:03PM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> This patch set is aim to refactor the Mobiveil driver and add
+> PCIe support for NXP LX series SoCs.
+> 
+> Hou Zhiqiang (23):
+>   PCI: mobiveil: uniform the register accessors
+>   PCI: mobiveil: format the code without function change
+>   PCI: mobiveil: correct the returned error number
+>   PCI: mobiveil: remove flag MSI_FLAG_MULTI_PCI_MSI
+>   PCI: mobiveil: correct PCI base address in MEM/IO outbound windows
+>   PCI: mobiveil: replace the resource list iteration function
+>   PCI: mobiveil: use WIN_NUM_0 explicitly for CFG outbound window
+>   PCI: mobiveil: use the 1st inbound window for MEM inbound transactions
+>   PCI: mobiveil: correct the inbound/outbound window setup routine
+>   PCI: mobiveil: fix the INTx process error
+>   PCI: mobiveil: only fixup the Class Code field
+>   PCI: mobiveil: move out the link up waiting from mobiveil_host_init
+>   PCI: mobiveil: move irq chained handler setup out of DT parse
+>   PCI: mobiveil: initialize Primary/Secondary/Subordinate bus number
+>   dt-bindings: pci: mobiveil: change gpio_slave and apb_csr to optional
+>   PCI: mobiveil: refactor the Mobiveil driver
+>   PCI: mobiveil: continue to initialize the host upon no PCIe link
+>   PCI: mobiveil: disabled IB and OB windows set by bootloader
+>   PCI: mobiveil: add Byte and Half-Word width register accessors
+>   PCI: mobiveil: change prototype of function mobiveil_host_init
+>   dt-bindings: pci: Add NXP LX SoCs PCIe controller
+>   PCI: mobiveil: add PCIe RC driver for NXP LX series SoCs
+>   arm64: dts: freescale: lx2160a: add pcie DT nodes
+> 
+>  .../devicetree/bindings/pci/lx-pci.txt        |  52 ++
+>  .../devicetree/bindings/pci/mobiveil-pcie.txt |   2 +
+>  MAINTAINERS                                   |  10 +-
+>  .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 157 ++++
+>  drivers/pci/controller/Kconfig                |  11 +-
+>  drivers/pci/controller/Makefile               |   2 +-
+>  drivers/pci/controller/mobiveil/Kconfig       |  34 +
+>  drivers/pci/controller/mobiveil/Makefile      |   5 +
+>  drivers/pci/controller/mobiveil/pci-lx.c      | 222 +++++
+>  .../controller/mobiveil/pcie-mobiveil-host.c  | 622 +++++++++++++
+>  .../controller/mobiveil/pcie-mobiveil-plat.c  |  54 ++
+>  .../pci/controller/mobiveil/pcie-mobiveil.c   | 245 +++++
+>  .../pci/controller/mobiveil/pcie-mobiveil.h   | 221 +++++
+>  drivers/pci/controller/pcie-mobiveil.c        | 861 ------------------
+>  14 files changed, 1625 insertions(+), 873 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/lx-pci.txt
+>  create mode 100644 drivers/pci/controller/mobiveil/Kconfig
+>  create mode 100644 drivers/pci/controller/mobiveil/Makefile
+>  create mode 100644 drivers/pci/controller/mobiveil/pci-lx.c
+>  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+>  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-plat.c
+>  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.c
+>  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.h
+>  delete mode 100644 drivers/pci/controller/pcie-mobiveil.c
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- arch/arm/boot/dts/mmp2.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Subrahmanya,
 
-diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
-index 766bbb8495b6..4161d4701e4c 100644
---- a/arch/arm/boot/dts/mmp2.dtsi
-+++ b/arch/arm/boot/dts/mmp2.dtsi
-@@ -241,7 +241,7 @@
- 			};
- 		};
-=20
--		soc_clocks: clocks{
-+		soc_clocks: clocks {
- 			compatible =3D "marvell,mmp2-clock";
- 			reg =3D <0xd4050000 0x1000>,
- 			      <0xd4282800 0x400>,
---=20
-2.19.1
+for the records, this is the driver *you* are maintaining, aren't you ?
+
+We ask developers to be added to the MAINTAINERS list in order to hold
+them accountable, merging a driver upstream means that you need to
+actively maintain it, which in turn means reviewing series affecting
+its code, like this one.
+
+I will have a look too but it is your responsibility to review these
+patches and ACK them accordingly.
+
+So I strongly suggest you start doing it please.
+
+Thanks,
+Lorenzo
