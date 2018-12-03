@@ -1,27 +1,49 @@
-Return-Path: <SRS0=jrs2=ON=verge.net.au=horms@kernel.org>
-Date: Tue, 4 Dec 2018 06:26:09 -0800
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 12/22] ARM: dts: r8a7744-iwg20d-q7-dbcm-ca: Add device
- tree for camera DB
-Message-ID: <20181204142608.p2nqduzwdmy5amsw@verge.net.au>
-References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
- <1543319795-48325-13-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdWX2p=j-0SxC9Vyw29y7WPWqcD4H+-=PQVJ_cQ8eVagDQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWX2p=j-0SxC9Vyw29y7WPWqcD4H+-=PQVJ_cQ8eVagDQ@mail.gmail.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=so6l=OM=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from baptiste.telenet-ops.be ([195.130.132.51]:60068 "EHLO
+        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726609AbeLCPMv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Dec 2018 10:12:51 -0500
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 0/2] arm: dts: renesas: Convert remaining boards to new LVDS DT bindings
+Date: Mon,  3 Dec 2018 16:12:40 +0100
+Message-Id: <20181203151242.25875-1-geert+renesas@glider.be>
+Sender: devicetree-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Marek Vasut <marek.vasut@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Nov 30, 2018 at 11:04:02AM +0100, Geert Uytterhoeven wrote:
-> On Tue, Nov 27, 2018 at 1:05 PM Biju Das <biju.das@bp.renesas.com> wrote:
-> > This patch adds support for the camera daughter board which is
-> > connected to iWave's RZ/G1N Qseven carrier board.
-> >
-> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+	Hi Simon, Magnus, Laurent, Marek,
 
-Thanks, applied for v4.21.
+As of commit 6d2ca85279becdff ("dt-bindings: display: renesas: Deprecate
+LVDS support in the DU bindings"), the internal LVDS encoder has DT
+bindings separate from the DU.  Most board device trees were ported over
+to the new model, but Stout with R-Car H2 and Salvator-XS with R-Car
+M3-W were forgotten.
+
+This patch series converts the remaining boards.
+Both patches were compiled-tested only.
+
+Thanks!
+
+Geert Uytterhoeven (2):
+  ARM: dts: stout: Convert to new LVDS DT bindings
+  arm64: dts: renesas: r8a7796: salvator-xs: Convert to new LVDS DT
+    bindings
+
+ arch/arm/boot/dts/r8a7790-stout.dts               | 15 ++++++++++++---
+ .../boot/dts/renesas/r8a7796-salvator-xs.dts      |  3 +--
+ 2 files changed, 13 insertions(+), 5 deletions(-)
+
+-- 
+2.17.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
