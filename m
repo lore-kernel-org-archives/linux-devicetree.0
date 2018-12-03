@@ -1,88 +1,76 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 00/23] PCI: refactor the Mobiveil driver and add PCIe
- support for NXP LX SoCs
-Date: Mon, 3 Dec 2018 11:58:50 +0000
-Message-ID: <20181203115850.GB8040@e107981-ln.cambridge.arm.com>
-References: <20181106131807.29951-1-Zhiqiang.Hou@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: dt-bindings: use a generic node name for rt5631" to the asoc tree
+Date: Mon,  3 Dec 2018 12:07:11 +0000 (GMT)
+Message-ID: <20181203120711.92D33440080@finisterre.ee.mobilebroadband>
+References: <20181203114728.636936-1-lkundrak@v3.sk>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181106131807.29951-1-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <20181203114728.636936-1-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>, Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 06, 2018 at 01:19:03PM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> This patch set is aim to refactor the Mobiveil driver and add
-> PCIe support for NXP LX series SoCs.
-> 
-> Hou Zhiqiang (23):
->   PCI: mobiveil: uniform the register accessors
->   PCI: mobiveil: format the code without function change
->   PCI: mobiveil: correct the returned error number
->   PCI: mobiveil: remove flag MSI_FLAG_MULTI_PCI_MSI
->   PCI: mobiveil: correct PCI base address in MEM/IO outbound windows
->   PCI: mobiveil: replace the resource list iteration function
->   PCI: mobiveil: use WIN_NUM_0 explicitly for CFG outbound window
->   PCI: mobiveil: use the 1st inbound window for MEM inbound transactions
->   PCI: mobiveil: correct the inbound/outbound window setup routine
->   PCI: mobiveil: fix the INTx process error
->   PCI: mobiveil: only fixup the Class Code field
->   PCI: mobiveil: move out the link up waiting from mobiveil_host_init
->   PCI: mobiveil: move irq chained handler setup out of DT parse
->   PCI: mobiveil: initialize Primary/Secondary/Subordinate bus number
->   dt-bindings: pci: mobiveil: change gpio_slave and apb_csr to optional
->   PCI: mobiveil: refactor the Mobiveil driver
->   PCI: mobiveil: continue to initialize the host upon no PCIe link
->   PCI: mobiveil: disabled IB and OB windows set by bootloader
->   PCI: mobiveil: add Byte and Half-Word width register accessors
->   PCI: mobiveil: change prototype of function mobiveil_host_init
->   dt-bindings: pci: Add NXP LX SoCs PCIe controller
->   PCI: mobiveil: add PCIe RC driver for NXP LX series SoCs
->   arm64: dts: freescale: lx2160a: add pcie DT nodes
-> 
->  .../devicetree/bindings/pci/lx-pci.txt        |  52 ++
->  .../devicetree/bindings/pci/mobiveil-pcie.txt |   2 +
->  MAINTAINERS                                   |  10 +-
->  .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 157 ++++
->  drivers/pci/controller/Kconfig                |  11 +-
->  drivers/pci/controller/Makefile               |   2 +-
->  drivers/pci/controller/mobiveil/Kconfig       |  34 +
->  drivers/pci/controller/mobiveil/Makefile      |   5 +
->  drivers/pci/controller/mobiveil/pci-lx.c      | 222 +++++
->  .../controller/mobiveil/pcie-mobiveil-host.c  | 622 +++++++++++++
->  .../controller/mobiveil/pcie-mobiveil-plat.c  |  54 ++
->  .../pci/controller/mobiveil/pcie-mobiveil.c   | 245 +++++
->  .../pci/controller/mobiveil/pcie-mobiveil.h   | 221 +++++
->  drivers/pci/controller/pcie-mobiveil.c        | 861 ------------------
->  14 files changed, 1625 insertions(+), 873 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/lx-pci.txt
->  create mode 100644 drivers/pci/controller/mobiveil/Kconfig
->  create mode 100644 drivers/pci/controller/mobiveil/Makefile
->  create mode 100644 drivers/pci/controller/mobiveil/pci-lx.c
->  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
->  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-plat.c
->  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.c
->  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.h
->  delete mode 100644 drivers/pci/controller/pcie-mobiveil.c
+The patch
 
-Subrahmanya,
+   ASoC: dt-bindings: use a generic node name for rt5631
 
-for the records, this is the driver *you* are maintaining, aren't you ?
+has been applied to the asoc tree at
 
-We ask developers to be added to the MAINTAINERS list in order to hold
-them accountable, merging a driver upstream means that you need to
-actively maintain it, which in turn means reviewing series affecting
-its code, like this one.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-I will have a look too but it is your responsibility to review these
-patches and ACK them accordingly.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-So I strongly suggest you start doing it please.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
-Lorenzo
+Mark
+
+>From 1286f930a0d7447748b398564d14e84ea5dfe890 Mon Sep 17 00:00:00 2001
+From: Lubomir Rintel <lkundrak@v3.sk>
+Date: Mon, 3 Dec 2018 12:47:28 +0100
+Subject: [PATCH] ASoC: dt-bindings: use a generic node name for rt5631
+
+The example should follow the practice or using a generic node name
+instead of the precise programming model, as recommended by the DTSpec.
+
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/sound/rt5631.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/rt5631.txt b/Documentation/devicetree/bindings/sound/rt5631.txt
+index 92b986ca337b..56bc85232c49 100644
+--- a/Documentation/devicetree/bindings/sound/rt5631.txt
++++ b/Documentation/devicetree/bindings/sound/rt5631.txt
+@@ -35,14 +35,14 @@ Pins on the device (for linking into audio routes):
+ 
+ Example:
+ 
+-alc5631: alc5631@1a {
++alc5631: audio-codec@1a {
+ 	compatible = "realtek,alc5631";
+ 	reg = <0x1a>;
+ };
+ 
+ or
+ 
+-rt5631: rt5631@1a {
++rt5631: audio-codec@1a {
+ 	compatible = "realtek,rt5631";
+ 	reg = <0x1a>;
+ };
+-- 
+2.20.0.rc1
