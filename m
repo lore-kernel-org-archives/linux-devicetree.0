@@ -1,69 +1,64 @@
-From: Yong Wu <yong.wu@mediatek.com>
-Subject: Re: [PATCH v3 13/15] memory: mtk-smi: Get rid of need_larbid
-Date: Mon, 3 Dec 2018 16:40:51 +0800
-Message-ID: <1543826451.23023.35.camel@mhfsdcap03>
-References: <1542422142-30688-1-git-send-email-yong.wu@mediatek.com>
-         <1542422142-30688-14-git-send-email-yong.wu@mediatek.com>
-         <21767ceb-1db5-045f-06ac-29c57f1a74a5@gmail.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v3 0/4] Add support of STM32 hwspinlock
+Date: Mon, 3 Dec 2018 09:46:03 +0100
+Message-ID: <5c137862-e8fa-abb4-d931-f5c63db50649@st.com>
+References: <20181112152342.6561-1-benjamin.gaignard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <21767ceb-1db5-045f-06ac-29c57f1a74a5@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, youlin.pei@mediatek.com, devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, arnd@arndb.de, srv_heupstream@mediatek.com, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@google.com>, iommu@lists.linux-foundation.org, linux-mediatek@lists.infradead.org, Arvind Yadav <arvind.yadav.cs@gmail.com>, yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, YT.shen@mediatek.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181112152342.6561-1-benjamin.gaignard@st.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>, ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-12-03 at 00:04 +0100, Matthias Brugger wrote:
+Hi Benjamin,
+
+On 11/12/18 4:23 PM, Benjamin Gaignard wrote:
+> This serie adds the support of the hardware semaphore block for stm32mp1 SoC.
 > 
-> On 17/11/2018 03:35, Yong Wu wrote:
-> > The "mediatek,larb-id" has already been parsed in MTK IOMMU driver.
-> > It's no need to parse it again in SMI driver. Only clean some codes.
-> > This patch is fit for all the current mt2701, mt2712, mt7623, mt8173
-> > and mt8183.
+> version 3:
+> - fix clock name in properties description.
+> - use postcore_initcall() instead of module_platform_driver()
 > 
-> I'm trying to understand why we need the mediatek,larb-id at all. From what I
-> understand as long as the mediatek larbs described in the iommu are ordered
-> (larb0, larb1, larb2, etc) we actually get the same value as defined by
-> mediatek,larb-id. At least this holds for all present implementations.
+> version 2:
+> - fix comments done by Bjorn about clock naming, license terms in header,
+>    alphabetic ordering in Makefile and Kconfig and remove function
+> - Do not push test module in this version while waiting for feedbacks about it
 > 
-> On the other hand I don't see where the mtk_iommu_v1 driver actually parses the
-> larb-id, can you please help to understand:
 > 
-> 1) why we need the larb-id at all
-
-Actually only mt2712 which have 2 M4U HW need "mediatek,larb-id".
-
-This is larbs in the m4u0/1 dtsi node of mt2712:
-m4u0 { mediatek,larbs = <&larb0 &larb1 &larb2 &larb3 &larb6>;}
-m4u1 { mediatek,larbs = <&larb4 &larb5 &larb7>;}
-
-the id don't increase one by one, M4U have to get the larbid with the
-help of "mediatek,larb-id".
-
-(The m4u/smi dtsi patch of mt2712 will be send with some other modules,
-maybe in this week.)
-
-
-> 2) how this will work if we do not parse the larb-id for v1 iommu at all
-
-As you said above and I also have wrote that the larbid "must sort
-according to the local arbiter index" in the "mediatek,larbs"
-description of dt-binding. All the M4U except mt2712 could ignore
-"mediatek,larb-id". the v1 iommu also should be ok.
-
-I'm not sure whether we should change [1], if only reserving mt2712
-there, we also should change the dtsi file of mt2701 and mt7623.or keep
-it as is.
-
-[1]
-https://elixir.bootlin.com/linux/v4.20-rc1/source/Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt#L20
-
+> Benjamin Gaignard (4):
+>    dt-bindings: hwlock: Document STM32 hwspinlock bindings
+>    hwspinlock: add STM32 hwspinlock device
+>    ARM: dts: stm32: Add hwspinlock node for stm32mp157 SoC
+>    ARM: dts: stm32: enable hwspinlock on stm32mp157c-ed1
 > 
-> Thanks a lot,
-> Matthias
+>   .../bindings/hwlock/st,stm32-hwspinlock.txt        |  23 +++
+>   arch/arm/boot/dts/stm32mp157c-ed1.dts              |   4 +
+>   arch/arm/boot/dts/stm32mp157c.dtsi                 |   9 ++
+>   drivers/hwspinlock/Kconfig                         |   9 ++
+>   drivers/hwspinlock/Makefile                        |   1 +
+>   drivers/hwspinlock/stm32_hwspinlock.c              | 156 +++++++++++++++++++++
+>   6 files changed, 202 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt
+>   create mode 100644 drivers/hwspinlock/stm32_hwspinlock.c
 > 
-> > 
 
-[snip]
+There is a (strong) dependency between pinctrl and hsem.
+As our pin controller is enabled by default, it's better to enable also
+your hwspinlock device by default. It will avoid pin controller probe 
+defer and a no stable behavior. So, I gonna remove DT patches from 
+stm32-next. Those Dt patches will not be included in my 4.20 pull-request.
+
+regards
+Alex
