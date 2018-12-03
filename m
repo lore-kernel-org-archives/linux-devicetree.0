@@ -1,84 +1,62 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 05/12] PCI: aardvark: add suspend to RAM support
-Date: Mon, 3 Dec 2018 23:18:44 +0100
-Message-ID: <20181203231844.0791bdee@xps13>
-References: <20181123141831.8214-1-miquel.raynal@bootlin.com>
-        <20181203102708.GA6090@e107981-ln.cambridge.arm.com>
-        <20181203163846.494904f9@xps13>
-        <1999610.6DN9RK2Tt3@aspire.rjw.lan>
+From: Jonathan marek <jonathan-eSc4qw6YbEQ@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] ARM: dts: imx5: add gpu nodes
+Date: Mon, 3 Dec 2018 17:21:40 -0500
+Message-ID: <3e8d1f9e-ffb4-dd6a-0a68-f59b4c1134a0@marek.ca>
+References: <20181203211816.5129-1-jonathan@marek.ca>
+ <20181203211816.5129-4-jonathan@marek.ca>
+ <CAOMZO5B18DyZ0zvit6AgaueMifnMf2ctSo7pE_XndRpt7+bnLw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1999610.6DN9RK2Tt3@aspire.rjw.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, sudeep.holla@arm.com, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <CAOMZO5B18DyZ0zvit6AgaueMifnMf2ctSo7pE_XndRpt7+bnLw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Healy <Chris.Healy-c8ZVq/bFV1I@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, NXP Linux Team <linux-imx-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafael, Stephen,
-
-"Rafael J. Wysocki" <rjw@rjwysocki.net> wrote on Mon, 03 Dec 2018
-23:00:20 +0100:
-
-> On Monday, December 3, 2018 4:38:46 PM CET Miquel Raynal wrote:
-> > Hi Lorenzo,
-> > 
-> > Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote on Mon, 3 Dec 2018
-> > 10:27:08 +0000:
-> >   
-> > > [+Rafael, Sudeep]
-> > > 
-> > > On Fri, Nov 23, 2018 at 03:18:24PM +0100, Miquel Raynal wrote:  
-> > > > Add suspend and resume callbacks. The priority of these are
-> > > > "_noirq()", to workaround early access to the registers done by the
-> > > > PCI core through the ->read()/->write() callbacks at resume time.
-> > > > 
-> > > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > > > ---
-> > > >  drivers/pci/controller/pci-aardvark.c | 52 +++++++++++++++++++++++++++
-> > > >  1 file changed, 52 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > > index 108b3f15c410..7ecf1ac4036b 100644
-> > > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > > @@ -1108,6 +1108,55 @@ static int advk_pcie_setup_clk(struct advk_pcie *pcie)
-> > > >  	return ret;
-> > > >  }
-> > > >  
-> > > > +static int __maybe_unused advk_pcie_suspend(struct device *dev)
-> > > > +{
-> > > > +	struct advk_pcie *pcie = dev_get_drvdata(dev);
-> > > > +
-> > > > +	advk_pcie_disable_phy(pcie);
-> > > > +
-> > > > +	clk_disable_unprepare(pcie->clk);    
-> > > 
-> > > I have noticed it is common practice, still, I would like to check whether
-> > > it is allowed to call functions that may sleep in a NOIRQ suspend/resume
-> > > callback ?  
-> > 
-> > You are right this is weird. I double checked and for instance,
-> > pcie-mediatek.c, pci-tegra.c and pci-imx6.c do the exact same thing. There are
-> > probably other cases where drivers call functions that may sleep from a NOIRQ
-> > context. I am interested to know if this is valid and if not, what is the
-> > alternative?
-> >   
-> 
-> Yes, it is valid.  _noirq means that the high-level action handlers will not be
-> invoked for interrupts occurring during that period, but that doesn't apply to
-> timer interrupts.
-> 
-> IOW, don't expect *your* IRQ handler to be invoked then (if this is not a timer
-> IRQ), but you can sleep.
-> 
-> Thanks,
-> Rafael
-> 
-
-Thank you both for the enlightenment.
-
-
-Thanks,
-Miquèl
+T24gMTIvMDMvMjAxOCAwNToxNiBQTSwgRmFiaW8gRXN0ZXZhbSB3cm90ZToKPiBIaSBKb25hdGhh
+biwKPiAKPiBUaGFua3MgZm9yIHdvcmtpbmcgb24gdGhpcy4gUmVhbGx5IG5pY2UgdG8gc2VlIEdQ
+VSBzdXBwb3J0IGZvciBteDUxL214NTMhCj4gCj4gT24gTW9uLCBEZWMgMywgMjAxOCBhdCA3OjIx
+IFBNIEpvbmF0aGFuIE1hcmVrIDxqb25hdGhhbkBtYXJlay5jYT4gd3JvdGU6Cj4gCj4gUGxlYXNl
+IGFkZCBhIGNvbW1pdCBsb2cuCj4gCj4+IFNpZ25lZC1vZmYtYnk6IEpvbmF0aGFuIE1hcmVrIDxq
+b25hdGhhbkBtYXJlay5jYT4KPiAKPj4gLS0tCj4+ICAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NTEu
+ZHRzaSB8IDE3ICsrKysrKysrKysrKysrKysrCj4+ICAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NTMu
+ZHRzaSB8IDE3ICsrKysrKysrKysrKysrKysrCj4+ICAgMiBmaWxlcyBjaGFuZ2VkLCAzNCBpbnNl
+cnRpb25zKCspCj4+Cj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg1MS5kdHNp
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NTEuZHRzaQo+PiBpbmRleCA2N2Q0NjI3MTUuLmU5YTdi
+YmNlOSAxMDA2NDQKPj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NTEuZHRzaQo+PiArKysg
+Yi9hcmNoL2FybS9ib290L2R0cy9pbXg1MS5kdHNpCj4+IEBAIC02MjgsNSArNjI4LDIyIEBACj4+
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gImlwZyIsICJh
+aGIiOwo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPj4gICAgICAgICAgICAgICAgICB9
+Owo+PiArCj4+ICsgICAgICAgICAgICAgICBncHU6IGdwdUAzMDAwMDAwMCB7Cj4gCj4gV2UgcHV0
+IHRoZSBwZXJpcGhlcmFsIG5vZGVzIGluIGFkZHJlc3Mgb3JkZXIsIHNvIHRoaXMgb25lIHNob3Vs
+ZCBnbwo+IHByaW9yIHRvIHRoZSBJUFUgbm9kZS4KPiAKPj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgY29tcGF0aWJsZSA9ICJhbWQsaW1hZ2Vvbi0yMDAuMSIsICJhbWQsaW1hZ2VvbiI7Cj4gCj4g
+SSBjYW4ndCBmaW5kIHRoZSBkdC1iaW5kaW5ncyBmb3IgdGhlc2UgY29tcGF0aWJsZSBlbnRyaWVz
+LiBIYXZlIHlvdQo+IGRvY3VtZW50ZWQgdGhlbT8KPiAKCkl0IGlzIHRoZSBzYW1lIGFzIHFjb20s
+YWRyZW5vIHdoaWNoIGlzIGRvY3VtZW50ZWQgaGVyZToKCkRvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9ncHUudHh0CgpJIGd1ZXNzIEkgc2hvdWxkIGFkZCBhbWQs
+aW1hZ2VvbiB0aGVyZS4KCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDMwMDAw
+MDAwIDB4MjAwMDA+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICByZWctbmFtZXMgPSAia2dz
+bF8zZDBfcmVnX21lbW9yeSI7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMg
+PSA8MTI+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHQtbmFtZXMgPSAia2dz
+bF8zZDBfaXJxIjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjbGtzIElN
+WDVfQ0xLX0dQVTNEX0dBVEU+LCA8JmNsa3MgSU1YNV9DTEtfR0FSQl9HQVRFPjsKPj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiY29yZV9jbGsiLCAibWVtX2lmYWNlX2Ns
+ayI7Cj4+ICsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgcWNvbSxncHUtcHdybGV2ZWxzIHsK
+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInFjb20sZ3B1
+LXB3cmxldmVscyI7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcWNvbSxncHUt
+cHdybGV2ZWxAMCB7Cj4gCj4gWW91IGNvdWxkIGRyb3AgdGhpcyBAMAo+IApfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0
+CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
