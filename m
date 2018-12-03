@@ -1,116 +1,65 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 05/12] PCI: aardvark: add suspend to RAM support
-Date: Mon, 3 Dec 2018 10:27:08 +0000
-Message-ID: <20181203102708.GA6090@e107981-ln.cambridge.arm.com>
-References: <20181123141831.8214-1-miquel.raynal@bootlin.com>
- <20181123141831.8214-6-miquel.raynal@bootlin.com>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Kill off skeleton{64}.dtsi
+Date: Mon, 3 Dec 2018 11:29:09 +0100
+Message-ID: <b34072f1-d0f3-8115-741b-fa70d5723f0f@st.com>
+References: <20181130170634.9467-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181123141831.8214-6-miquel.raynal@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, sudeep.holla@arm.com
-Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20181130170634.9467-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory Clement <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebasti
 List-Id: devicetree@vger.kernel.org
 
-[+Rafael, Sudeep]
+Hi Rob
 
-On Fri, Nov 23, 2018 at 03:18:24PM +0100, Miquel Raynal wrote:
-> Add suspend and resume callbacks. The priority of these are
-> "_noirq()", to workaround early access to the registers done by the
-> PCI core through the ->read()/->write() callbacks at resume time.
+On 11/30/18 6:06 PM, Rob Herring wrote:
+> Remove the usage of skeleton.dtsi in the remaining dts files. It was
+> deprecated since commit 9c0da3cc61f1 ("ARM: dts: explicitly mark
+> skeleton.dtsi as deprecated"). This will make adding a unit-address to
+> memory nodes easier.
 > 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> The main tricky part to removing skeleton.dtsi is we could end up with
+> no /memory node at all when a bootloader depends on one being present. I
+> hacked up dtc to check for this condition.
+> 
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
->  drivers/pci/controller/pci-aardvark.c | 52 +++++++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
+> Yes, I'm being lazy and not splitting this up into dozens of sub-arch
+> patches. I don't think this should conflict nor should we be getting new
+> dependencies on skeleton.dtsi. So please apply directly to arm-soc.
 > 
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index 108b3f15c410..7ecf1ac4036b 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -1108,6 +1108,55 @@ static int advk_pcie_setup_clk(struct advk_pcie *pcie)
->  	return ret;
->  }
->  
-> +static int __maybe_unused advk_pcie_suspend(struct device *dev)
-> +{
-> +	struct advk_pcie *pcie = dev_get_drvdata(dev);
-> +
-> +	advk_pcie_disable_phy(pcie);
-> +
-> +	clk_disable_unprepare(pcie->clk);
+> Rob
 
-I have noticed it is common practice, still, I would like to check whether
-it is allowed to call functions that may sleep in a NOIRQ suspend/resume
-callback ?
+...
 
-Thanks,
-Lorenzo
+>   arch/arm/boot/dts/stm32429i-eval.dts           |  1 +
+>   arch/arm/boot/dts/stm32746g-eval.dts           |  1 +
+>   arch/arm/boot/dts/stm32f429-disco.dts          |  1 +
+>   arch/arm/boot/dts/stm32f429.dtsi               |  4 +++-
+>   arch/arm/boot/dts/stm32f469-disco.dts          |  1 +
+>   arch/arm/boot/dts/stm32f746-disco.dts          |  1 +
+>   arch/arm/boot/dts/stm32f746.dtsi               |  4 +++-
+>   arch/arm/boot/dts/stm32f769-disco.dts          |  1 +
+>   arch/arm/boot/dts/stm32h743.dtsi               |  4 +++-
+>   arch/arm/boot/dts/stm32h743i-disco.dts         |  1 +
+>   arch/arm/boot/dts/stm32h743i-eval.dts          |  1 +
+>   arch/arm/boot/dts/stm32mp157c-ed1.dts          |  1 +
 
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused advk_pcie_resume(struct device *dev)
-> +{
-> +	struct advk_pcie *pcie = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(pcie->clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * Empirical delay needed after enabling the clock and before
-> +	 * accessing any register.
-> +	 */
-> +	msleep(10);
-> +
-> +	ret = advk_pcie_enable_phy(pcie);
-> +	if (ret)
-> +		return ret;
-> +
-> +	advk_pcie_hard_reset(pcie);
-> +
-> +	advk_pcie_setup_hw(pcie);
-> +
-> +	advk_sw_pci_bridge_init(pcie);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * The PCI core will try to reconfigure the bus quite early in the resume path.
-> + * We must use the _noirq() alternatives to ensure the controller is ready when
-> + * the core uses the ->read()/->write() callbacks.
-> + */
-> +static const struct dev_pm_ops advk_pcie_dev_pm_ops = {
-> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(advk_pcie_suspend,
-> +				      advk_pcie_resume)
-> +};
-> +
->  static int advk_pcie_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -1188,6 +1237,8 @@ static int advk_pcie_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	dev_set_drvdata(dev, pcie);
-> +
->  	return 0;
->  }
->  
-> @@ -1200,6 +1251,7 @@ static struct platform_driver advk_pcie_driver = {
->  	.driver = {
->  		.name = "advk-pcie",
->  		.of_match_table = advk_pcie_of_match_table,
-> +		.pm = &advk_pcie_dev_pm_ops,
->  		/* Driver unloading/unbinding currently not supported */
->  		.suppress_bind_attrs = true,
->  	},
-> -- 
-> 2.19.1
-> 
+For STM32 files:
+
+Acked-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+
+Regards
+Alex
