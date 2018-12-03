@@ -1,43 +1,55 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 1/6] media: dt-bindings: media: sun6i: Separate H3
- compatible from A31
-Date: Mon, 3 Dec 2018 17:48:31 +0800
-Message-ID: <CAGb2v67xoqV+QuVxDyBrUzzpab9vsbJRQBFPA0OS=h_bZ2H7Tw@mail.gmail.com>
-References: <20181130075849.16941-1-wens@csie.org> <20181130075849.16941-2-wens@csie.org>
- <CAMty3ZC-4hnVOx9AYhm7uUCUHF=n_NoH3xV-3SyUXWxb_X8TGg@mail.gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v3 6/6] ARM: PWM: add allwinner sun8i R40/T3/V40 PWM
+ support.
+Date: Mon, 3 Dec 2018 10:49:08 +0100
+Message-ID: <20181203094908.lga2r56gelaghrej@pengutronix.de>
+References: <20181125162319.GA5422@arx-s1>
+ <20181126213158.q5m5bbwnmewud2gb@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMty3ZC-4hnVOx9AYhm7uUCUHF=n_NoH3xV-3SyUXWxb_X8TGg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20181126213158.q5m5bbwnmewud2gb@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Hao Zhang <hao5781286@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, mturquette@baylibre.com, sboyd@kernel.org, thierry.reding@gmail.com, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 3, 2018 at 5:42 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> On Fri, Nov 30, 2018 at 1:29 PM Chen-Yu Tsai <wens@csie.org> wrote:
-> >
-> > The CSI controller found on the H3 (and H5) is a reduced version of the
-> > one found on the A31. It only has 1 channel, instead of 4 channels for
-> > time-multiplexed BT.656. Since the H3 is a reduced version, it cannot
-> > "fallback" to a compatible that implements more features than it
-> > supports.
-> >
-> > Split out the H3 compatible as a separate entry, with no fallback.
-> >
-> > Fixes: b7eadaa3a02a ("media: dt-bindings: media: sun6i: Add A31 and H3
-> >                       compatibles")
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->
-> "media" text appear two times on commit head.
+Hello,
 
-Just following what previous commits did. :)
+On Mon, Nov 26, 2018 at 10:31:58PM +0100, Uwe Kleine-König wrote:
+> > +static int sun8i_pwm_config(struct sun8i_pwm_chip *sun8i_pwm, u8 ch,
+> > +			    struct pwm_state *state)
+> > +{
+> > +[...]
+> > +		clk_rate = clk_get_rate(clk);
+> > +		val = state->period * clk_rate;
+> > +		do_div(val, NSEC_PER_SEC);
+> > +		if (val <= 1) {
+> > +			dev_err(sun8i_pwm->chip.dev,
+> > +				"Period expects a larger value\n");
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		/* change clock source to "mux-1" */
+> > +		clk_disable_unprepare(sun8i_pwm->clk);
+> > +		devm_clk_put(sun8i_pwm->chip.dev, sun8i_pwm->clk);
+> > +		sun8i_pwm->clk = clk;
+> 
+> sun8i_pwm is shared for all 8 PWMs, right? So if you assign mux-1 here
+> for the second mux, how does this influence the first PWM?
 
-> Reviewed-by: Jagan Teki <jagan@amarulasolutions.com>
+To clearify my question:
 
-BTW, I know you've been trying to get CSI to work on the A64.
-I have it working for the Bananapi-M64. The CSI SCLK needs to
-be lowered to 300 MHz or the image gets corrupted.
+after the first pwm is used and enabled (maybe using mux-0) changing
+sun8i_pwm->clk for the second pwm is broken because then when the first
+pwm is disabled the wrong clock is stopped.
 
-ChenYu
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
