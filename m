@@ -1,187 +1,78 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v6 0/2] media: platform: Add Aspeed Video Engine driver
-Date: Mon, 3 Dec 2018 11:17:49 +0100
-Message-ID: <ed7f7598-c2a8-2a78-3513-d80344fd51b5@xs4all.nl>
-References: <1543347457-59224-1-git-send-email-eajames@linux.ibm.com>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [RFC PATCH v2 08/15] usb:cdns3: Implements device operations part
+ of the API
+Date: Mon, 3 Dec 2018 10:19:47 +0000
+Message-ID: <BYAPR07MB47098B0E57C9AF98A457D1B5DDAE0@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
+ <1542535751-16079-9-git-send-email-pawell@cadence.com>
+ <5BFE8883.7090802@ti.com>
+ <BYAPR07MB4709BBB7E78C7A7244270215DDAC0@BYAPR07MB4709.namprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543347457-59224-1-git-send-email-eajames@linux.ibm.com>
+In-Reply-To: <BYAPR07MB4709BBB7E78C7A7244270215DDAC0@BYAPR07MB4709.namprd07.prod.outlook.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>, Felipe Balbi <balbi@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/27/2018 08:37 PM, Eddie James wrote:
-> The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
-> can capture and compress video data from digital or analog sources. With
-> the Aspeed chip acting as a service processor, the Video Engine can
-> capture the host processor graphics output.
-> 
-> This series adds a V4L2 driver for the VE, providing the usual V4L2 streaming
-> interface by way of videobuf2. Each frame, the driver triggers the hardware to
-> capture the host graphics output and compress it to JPEG format.
-> 
-> v4l2-compliance SHA: ac9596560fedb3cd29148ef90b03778d76f1cd9a, 32 bits
-> 
-> Compliance test for device /dev/video0:
-> 
-> Driver Info:
-> 	Driver name      : aspeed-video
-> 	Card type        : Aspeed Video Engine
-> 	Bus info         : platform:aspeed-video
-> 	Driver version   : 4.18.19
-> 	Capabilities     : 0x85200001
-> 		Video Capture
-> 		Read/Write
-> 		Streaming
-> 		Extended Pix Format
-> 		Device Capabilities
-> 	Device Caps      : 0x05200001
-> 		Video Capture
-> 		Read/Write
-> 		Streaming
-> 		Extended Pix Format
-> 
-> Required ioctls:
-> 	test VIDIOC_QUERYCAP: OK
-> 
-> Allow for multiple opens:
-> 	test second /dev/video0 open: OK
-> 	test VIDIOC_QUERYCAP: OK
-> 	test VIDIOC_G/S_PRIORITY: OK
-> 	test for unlimited opens: OK
-> 
-> Debug ioctls:
-> 	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-> 	test VIDIOC_LOG_STATUS: OK (Not Supported)
-> 
-> Input ioctls:
-> 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMINPUT: OK
-> 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-> 	Inputs: 1 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
-> 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-> 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-> 	Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
-> 	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-> 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK
-> 	test VIDIOC_DV_TIMINGS_CAP: OK
-> 	test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
-> Control ioctls (Input 0):
-> 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-> 	test VIDIOC_QUERYCTRL: OK
-> 	test VIDIOC_G/S_CTRL: OK
-> 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-> 		fail: v4l2-test-controls.cpp(831): failed to find event for control 'Chroma Subsampling'
+Hi
+>>> +
+>>> +static struct usb_ep *cdns3_gadget_match_ep(struct usb_gadget *gadget,
+>>> +					    struct usb_endpoint_descriptor *desc,
+>>> +					    struct usb_ss_ep_comp_descriptor *comp_desc)
+>>> +{
+>>> +	struct cdns3_device *priv_dev =3D gadget_to_cdns3_device(gadget);
+>>> +	struct cdns3_endpoint *priv_ep;
+>>> +	unsigned long flags;
+>>> +
+>>> +	priv_ep =3D cdns3_find_available_ss_ep(priv_dev, desc);
+>>> +	if (IS_ERR(priv_ep)) {
+>>> +		dev_err(&priv_dev->dev, "no available ep\n");
+>>> +		return NULL;
+>>> +	}
+>>> +
+>>> +	dev_dbg(&priv_dev->dev, "match endpoint: %s\n", priv_ep->name);
+>>> +
+>>> +	spin_lock_irqsave(&priv_dev->lock, flags);
+>>> +	priv_ep->endpoint.desc =3D desc;
+>>> +	priv_ep->dir  =3D usb_endpoint_dir_in(desc) ? USB_DIR_IN : USB_DIR_OU=
+T;
+>>> +	priv_ep->type =3D usb_endpoint_type(desc);
+>>> +
+>>> +	list_add_tail(&priv_ep->ep_match_pending_list,
+>>> +		      &priv_dev->ep_match_list);
+>>> +	spin_unlock_irqrestore(&priv_dev->lock, flags);
+>>> +	return &priv_ep->endpoint;
+>>> +}
+>>
+>>Why do you need a custom match_ep?
+>>doesn't usb_ep_autoconfig suffice?
+>
+>I need to test it but at first glance it  looks like usb_ep_autoconfig suf=
+fice.
+>
+>>
+>>You can check if EP is claimed or not by checking the ep->claimed flag.
+>>
+I checked it and did not work correct. The flag claimed is set in usb_ep_au=
+toconf, but=20
+a little bit later during USB RESET this flag is cleared.=20
+So, I can't base on this flag.  I think that it's incorrect behavior in gad=
+get core driver or in function drivers.
+Maybe we should have additional flag in usb_ep object used during resetting=
+, or usb_ep_autoconf function should be called after each USB RESET.=20
 
-This is fixed in our master branch. Event handling was broken for a while.
+I notice that I can based on ep->address it is set also in usb_ep_autoconf =
+and probably is not cleared anywhere.
+It's little tricky, but It looks like it works correct. I add some comment =
+for this checking.=20
+Maybe in feature I will be able to replace it with claimed flag.
 
-I recommend that you upgrade, since this was a nasty little bug.
+Felipe what's your opinion about claimed flag.  It's should be fixed or not=
+ ?
 
-Regards,
-
-	Hans
-
-> 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
-> 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-> 	Standard Controls: 3 Private Controls: 0
-> 
-> Format ioctls (Input 0):
-> 	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-> 	test VIDIOC_G/S_PARM: OK
-> 	test VIDIOC_G_FBUF: OK (Not Supported)
-> 	test VIDIOC_G_FMT: OK
-> 	test VIDIOC_TRY_FMT: OK
-> 	test VIDIOC_S_FMT: OK
-> 	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-> 	test Cropping: OK (Not Supported)
-> 	test Composing: OK (Not Supported)
-> 	test Scaling: OK (Not Supported)
-> 
-> Codec ioctls (Input 0):
-> 	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-> 	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-> 	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> 
-> Buffer ioctls (Input 0):
-> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-> 	test VIDIOC_EXPBUF: OK
-> 	test Requests: OK (Not Supported)
-> 
-> Test input 0:
-> 
-> Streaming ioctls:
-> 	test read/write: OK
-> 	test blocking wait: OK
-> 	test MMAP: OK                                     
-> 	test USERPTR: OK (Not Supported)
-> 	test DMABUF: Cannot test, specify --expbuf-device
-> 
-> Total: 48, Succeeded: 47, Failed: 1, Warnings: 0
-> 
-> Changes since v5:
->  - Rework resolution change and v4l2 timings functions again with active and
->    detected timings.
->  - Renamed a few things.
->  - Fixed polarities in the timings.
-> 
-> Changes since v4:
->  - Set real min and max resolution in enum_dv_timings
->  - Add check for vb2_is_busy before settings the timings
->  - Set max frame rate to the actual max rather than max + 1
->  - Correct the input status to 0.
->  - Rework resolution change to only set the relevant h/w regs during startup or
->    when set_timings is called.
-> 
-> Changes since v3:
->  - Switch update reg function to use u32 clear rather than unsigned long mask
->  - Add timing information from host VGA signal
->  - Fix binding documentation mispelling
->  - Fix upper case hex values
->  - Add wait_prepare and wait_finish
->  - Set buffer state to queued (rather than error) if streaming fails to start
->  - Switch engine busy print statement to error
->  - Removed a couple unecessary type assignments in v4l2 ioctls
->  - Added query_dv_timings, fixed get_dv_timings
->  - Corrected source change event to fire if and only if size actually changes
->  - Locked open and release
-> 
-> Changes since v2:
->  - Switch to streaming interface. This involved a lot of changes.
->  - Rework memory allocation due to using videobuf2 buffers, but also only
->    allocate the necessary size of source buffer rather than the max size
-> 
-> Changes since v1:
->  - Removed le32_to_cpu calls for JPEG header data
->  - Reworked v4l2 ioctls to be compliant.
->  - Added JPEG controls
->  - Updated devicetree docs according to Rob's suggestions.
->  - Added myself to MAINTAINERS
-> 
-> Eddie James (2):
->   dt-bindings: media: Add Aspeed Video Engine binding documentation
->   media: platform: Add Aspeed Video Engine driver
-> 
->  .../devicetree/bindings/media/aspeed-video.txt     |   26 +
->  MAINTAINERS                                        |    8 +
->  drivers/media/platform/Kconfig                     |    9 +
->  drivers/media/platform/Makefile                    |    1 +
->  drivers/media/platform/aspeed-video.c              | 1719 ++++++++++++++++++++
->  5 files changed, 1763 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
->  create mode 100644 drivers/media/platform/aspeed-video.c
-> 
+Cheers
+Pawel
