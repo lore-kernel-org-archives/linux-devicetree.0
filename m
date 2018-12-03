@@ -1,87 +1,87 @@
-From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH 02/14] dt-bindings: soc: milbeaut: Add Milbeaut trampoline
- description
-Date: Mon, 3 Dec 2018 16:42:56 +0900
-Message-ID: <f5917f71-f15b-a92d-649c-e3f5f5f10698@socionext.com>
-References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
- <1542589274-13878-3-git-send-email-sugaya.taichi@socionext.com>
- <154337047410.88331.9696178601340675631@swboyd.mtv.corp.google.com>
- <c746a3de-a9e3-9f25-ecb9-703ceb7e62d0@socionext.com>
- <154356579701.88331.5043467509900444879@swboyd.mtv.corp.google.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Kill off skeleton{64}.dtsi
+Date: Mon, 3 Dec 2018 08:50:57 +0100
+Message-ID: <20181203075057.pcizmbqdp47mibbl@flea>
+References: <20181130170634.9467-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154356579701.88331.5043467509900444879@swboyd.mtv.corp.google.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: multipart/mixed; boundary="===============0925202551832418922=="
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20181130170634.9467-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-oxnas-GWfripvEmMdhl2p70BpVqQ@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory Clement <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Andy
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 2018/11/30 17:16, Stephen Boyd wrote:
-> Quoting Sugaya, Taichi (2018-11-29 04:24:51)
->> On 2018/11/28 11:01, Stephen Boyd wrote:
->>> Quoting Sugaya Taichi (2018-11-18 17:01:07)
->>>>    create mode 100644 Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
->>>> new file mode 100644
->>>> index 0000000..f5d906c
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
->>>> @@ -0,0 +1,12 @@
->>>> +Socionext M10V SMP trampoline driver binding
->>>> +
->>>> +This is a driver to wait for sub-cores while boot process.
->>>> +
->>>> +- compatible: should be "socionext,smp-trampoline"
->>>> +- reg: should be <0x4C000100 0x100>
->>>> +
->>>> +EXAMPLE
->>>> +       trampoline: trampoline@0x4C000100 {
->>> Drop the 0x part of unit addresses.
->>
->> Okay.
->>
->>
->>>> +               compatible = "socionext,smp-trampoline";
->>>> +               reg = <0x4C000100 0x100>;
->>> Looks like a software construct, which we wouldn't want to put into DT
->>> this way. DT doesn't describe drivers.
->> We would like to use this node only getting the address of the
->> trampoline area
->> in which sub-cores wait.  (They have finished to go to this area in previous
->> bootloader process.)
-> 
-> Is this area part of memory, or a special SRAM? If it's part of memory,
-> I would expect this node to be under the reserved-memory node and
-> pointed to by some other node that uses this region. Could even be the
-> CPU nodes.
+--===============0925202551832418922==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="qsmchuoo3f2ici6o"
+Content-Disposition: inline
 
-Yes, 0x4C000100 is a part of memory under the reserved-memory node. So 
-we would like to use the SRAM ( allocated 0x00000000 ) area instead.
-BTW, sorry, the trampoline address of this example is simply wrong.  We 
-were going to use a part of the SRAM from the beginning.
 
-> 
->>
->> So should we embed the constant value in source codes instead of getting
->> from
->> DT because the address is constant at the moment? Or is there other
->> approach?
->>
-> 
-> If it's constant then that also works. Why does it need to come from DT
-> at all then?
+--qsmchuoo3f2ici6o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-We think it is not good to embed constant value in driver codes and do 
-not have another way...
-Are there better ways?
+On Fri, Nov 30, 2018 at 11:06:34AM -0600, Rob Herring wrote:
+> Remove the usage of skeleton.dtsi in the remaining dts files. It was
+> deprecated since commit 9c0da3cc61f1 ("ARM: dts: explicitly mark
+> skeleton.dtsi as deprecated"). This will make adding a unit-address to
+> memory nodes easier.
+>=20
+> The main tricky part to removing skeleton.dtsi is we could end up with
+> no /memory node at all when a bootloader depends on one being present. I
+> hacked up dtc to check for this condition.
+>=20
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> Yes, I'm being lazy and not splitting this up into dozens of sub-arch=20
+> patches. I don't think this should conflict nor should we be getting new=
+=20
+> dependencies on skeleton.dtsi. So please apply directly to arm-soc.
 
-Thanks
-Sugaya Taichi
+It will conflict for the sunxi DTSIs. We merged a similar patch last
+week that is in linux-next now.
 
-> 
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--qsmchuoo3f2ici6o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXATgTwAKCRDj7w1vZxhR
+xWbUAQDH16tgE3VXonBWiWEE58T0kCN0jg4fOSRuiMCm1pgSHAD/S03/Sa6uM6fh
+Cf8afWvO7pAfjTiuWubEJ2Ng7pUSVwI=
+=cO9s
+-----END PGP SIGNATURE-----
+
+--qsmchuoo3f2ici6o--
+
+
+--===============0925202551832418922==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Linux-mediatek mailing list
+Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+http://lists.infradead.org/mailman/listinfo/linux-mediatek
+
+--===============0925202551832418922==--
