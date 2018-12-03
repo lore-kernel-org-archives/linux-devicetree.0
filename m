@@ -1,75 +1,38 @@
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH 3/3] iio: chemical: sps30: add device tree support
-Date: Mon, 3 Dec 2018 13:10:31 +0000
-Message-ID: <20181203131031.00006b26@huawei.com>
-References: <20181124221415.10081-1-tduszyns@gmail.com>
-        <20181124221415.10081-4-tduszyns@gmail.com>
-        <20181125085939.421523d6@archlinux>
-        <20181202182943.GA8286@arch>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH v2 0/3] arm64: dts: meson: add clock controllers input clocks
+Date: Mon,  3 Dec 2018 14:18:47 +0100
+Message-ID: <20181203131850.31388-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181202182943.GA8286@arch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Duszynski <tduszyns@gmail.com>
-Cc: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+To: Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2 Dec 2018 19:29:44 +0100
-Tomasz Duszynski <tduszyns@gmail.com> wrote:
+This patchset is the first step that needs to be done so the
+amlogic clock controllers properly claim their input clocks
+through DT instead of relying on fixed names.
 
-> On Sun, Nov 25, 2018 at 08:59:39AM +0000, Jonathan Cameron wrote:
-> > On Sat, 24 Nov 2018 23:14:15 +0100
-> > Tomasz Duszynski <tduszyns@gmail.com> wrote:
-> >  
-> > > Add device tree support for Sensirion SPS30 particulate
-> > > matter sensor.
-> > >
-> > > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>  
-> > one comment inine, around the fact we are trying to move
-> > to generic names in DT where ever possible.  Now we don't
-> > have a suitable one (IIRC) yet so time to make one up ;)
-> >
-> > +CC Rob for his input on that.  
-> > > ---
-> > >  .../bindings/iio/chemical/sensirion,sps30.txt        | 12 ++++++++++++
-> > >  1 file changed, 12 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt b/Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
-> > > new file mode 100644
-> > > index 000000000000..6eee2709b5b6
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
-> > > @@ -0,0 +1,12 @@
-> > > +* Sensirion SPS30 particulate matter sensor
-> > > +
-> > > +Required properties:
-> > > +- compatible: must be "sensirion,sps30"
-> > > +- reg: the I2C address of the sensor
-> > > +
-> > > +Example:
-> > > +
-> > > +sps30@69 {  
-> > We should define a generic type.  Rob, what would work for this
-> > one?
-> >
-> > particlesensor@69?
-> >  
-> 
-> Wouldn't air-pollution-sensor be somewhat more generic? At least
-> wikipedia has some article about that. Various other names like
-> particle-sensor, pm-sensor, particulate-matter-sensor,
-> air-quality-sensor, tend to return more or less similar number
-> of search hits. Which means there's no universal naming convention.
+I'll be waiting for this hit mainline before sending the related
+driver changes.
 
-I have not strong feeling in favor of a particular choice. 
-Happy with wherever the discussion converges.
+Changes since v1: [0]
+- add clock-names for the main clock controller
 
-Jonathan
-> 
-> > > +	compatible = "sensirion,sps30";
-> > > +	reg = <0x69>;
-> > > +};  
-> >  
+[0]: https://lkml.kernel.org/r/20181129164524.18670-1-jbrunet@baylibre.com
+
+Jerome Brunet (3):
+  dt-bindings: clk: meson: add ao controller clock inputs
+  dt-bindings: clk: meson: add main controller clock input
+  arm64: dts: meson: add clock controller clock inputs
+
+ .../devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt     | 8 +++++++-
+ .../devicetree/bindings/clock/amlogic,gxbb-clkc.txt       | 5 +++++
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi                | 4 ++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi               | 4 ++++
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi                | 4 ++++
+ 5 files changed, 24 insertions(+), 1 deletion(-)
+
+-- 
+2.19.1
