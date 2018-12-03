@@ -1,92 +1,88 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v6 2/2] media: platform: Add Aspeed Video Engine driver
-Date: Mon, 3 Dec 2018 16:43:48 +0100
-Message-ID: <d876ac01-238f-7e74-2738-f1c878921c77@xs4all.nl>
-References: <1543347457-59224-1-git-send-email-eajames@linux.ibm.com>
- <1543347457-59224-3-git-send-email-eajames@linux.ibm.com>
- <1d5f3260-2d95-32b2-090e-2f57ae9e6833@xs4all.nl>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 02/14] dt-bindings: soc: milbeaut: Add Milbeaut trampoline description
+Date: Mon, 3 Dec 2018 09:49:29 -0600
+Message-ID: <CAL_Jsq+dnKht3TwCh1qB1H4pYFhQJmSN0nAayU+=PJLAvq0bbQ@mail.gmail.com>
+References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
+ <1542589274-13878-3-git-send-email-sugaya.taichi@socionext.com>
+ <154337047410.88331.9696178601340675631@swboyd.mtv.corp.google.com>
+ <c746a3de-a9e3-9f25-ecb9-703ceb7e62d0@socionext.com> <154356579701.88331.5043467509900444879@swboyd.mtv.corp.google.com>
+ <f5917f71-f15b-a92d-649c-e3f5f5f10698@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1d5f3260-2d95-32b2-090e-2f57ae9e6833@xs4all.nl>
-Content-Language: en-US
+In-Reply-To: <f5917f71-f15b-a92d-649c-e3f5f5f10698@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org
+To: sugaya.taichi@socionext.com
+Cc: Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/03/2018 12:04 PM, Hans Verkuil wrote:
-> On 11/27/2018 08:37 PM, Eddie James wrote:
->> The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
->> can capture and compress video data from digital or analog sources. With
->> the Aspeed chip acting a service processor, the Video Engine can capture
->> the host processor graphics output.
->>
->> Add a V4L2 driver to capture video data and compress it to JPEG images.
->> Make the video frames available through the V4L2 streaming interface.
->>
->> Signed-off-by: Eddie James <eajames@linux.ibm.com>
->> ---
+On Mon, Dec 3, 2018 at 1:42 AM Sugaya, Taichi
+<sugaya.taichi@socionext.com> wrote:
+>
+> Hi,
+>
+> On 2018/11/30 17:16, Stephen Boyd wrote:
+> > Quoting Sugaya, Taichi (2018-11-29 04:24:51)
+> >> On 2018/11/28 11:01, Stephen Boyd wrote:
+> >>> Quoting Sugaya Taichi (2018-11-18 17:01:07)
+> >>>>    create mode 100644 Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
+> >>>> new file mode 100644
+> >>>> index 0000000..f5d906c
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
+> >>>> @@ -0,0 +1,12 @@
+> >>>> +Socionext M10V SMP trampoline driver binding
+> >>>> +
+> >>>> +This is a driver to wait for sub-cores while boot process.
+> >>>> +
+> >>>> +- compatible: should be "socionext,smp-trampoline"
+> >>>> +- reg: should be <0x4C000100 0x100>
+> >>>> +
+> >>>> +EXAMPLE
+> >>>> +       trampoline: trampoline@0x4C000100 {
+> >>> Drop the 0x part of unit addresses.
+> >>
+> >> Okay.
+> >>
+> >>
+> >>>> +               compatible = "socionext,smp-trampoline";
+> >>>> +               reg = <0x4C000100 0x100>;
+> >>> Looks like a software construct, which we wouldn't want to put into DT
+> >>> this way. DT doesn't describe drivers.
+> >> We would like to use this node only getting the address of the
+> >> trampoline area
+> >> in which sub-cores wait.  (They have finished to go to this area in previous
+> >> bootloader process.)
+> >
+> > Is this area part of memory, or a special SRAM? If it's part of memory,
+> > I would expect this node to be under the reserved-memory node and
+> > pointed to by some other node that uses this region. Could even be the
+> > CPU nodes.
+>
+> Yes, 0x4C000100 is a part of memory under the reserved-memory node. So
+> we would like to use the SRAM ( allocated 0x00000000 ) area instead.
+> BTW, sorry, the trampoline address of this example is simply wrong.  We
+> were going to use a part of the SRAM from the beginning.
+>
+> >
+> >>
+> >> So should we embed the constant value in source codes instead of getting
+> >> from
+> >> DT because the address is constant at the moment? Or is there other
+> >> approach?
+> >>
+> >
+> > If it's constant then that also works. Why does it need to come from DT
+> > at all then?
+>
+> We think it is not good to embed constant value in driver codes and do
+> not have another way...
+> Are there better ways?
 
-<snip>
+If this is just memory, can you use the standard spin-table binding in
+the DT spec? There are some requirements like 64-bit values even on
+32-bit machines (though this gets violated).
 
->> +static void aspeed_video_bufs_done(struct aspeed_video *video,
->> +				   enum vb2_buffer_state state)
->> +{
->> +	unsigned long flags;
->> +	struct aspeed_video_buffer *buf;
->> +
->> +	spin_lock_irqsave(&video->lock, flags);
->> +	list_for_each_entry(buf, &video->buffers, link) {
->> +		if (list_is_last(&buf->link, &video->buffers))
->> +			buf->vb.flags |= V4L2_BUF_FLAG_LAST;
-> 
-> This really makes no sense. This flag is for codecs, not for receivers.
-> 
-> You say in an earlier reply about this:
-> 
-> "I mentioned before that dequeue calls hang in an error condition unless
-> this flag is specified. For example if resolution change is detected and
-> application is in the middle of trying to dequeue..."
-> 
-> What error condition are you referring to? Isn't your application using
-> the select() or poll() calls to wait for events or new buffers to dequeue?
-> If you just call VIDIOC_DQBUF to wait in blocking mode for a new buffer,
-> then it will indeed block in that call.
-> 
-> No other video receiver needs this flag, so there is something else that is
-> the cause.
-
-Let me give a bit more information on how video receivers behave when the
-signal disappears:
-
-They will all send the SOURCE_CHANGE event, but what they do with respect
-to streaming buffers is hardware dependent:
-
-1) Some receivers have a freewheeling mode where the hardware generates
-   an image when there is no signal (usually this is just a fixed color).
-   In that case the application will just keep receiving buffers.
-
-2) VIDIOC_DQBUF blocks until a new signal appears with the same timings,
-   then the driver will just keep going as if nothing changed. DQBUF
-   remains blocked as long as there is no signal, or the timings are
-   different from the currently active timings.
-
-3) The hardware requires a hard stop and cannot continue streaming. In
-   that case it can call vb2_queue_error().
-
-That last option should be avoided if possible as it's not very polite.
->From what I can tell from this hardware it seems option 2 is the
-appropriate choice.
-
-Regards,
-
-	Hans
-
-> 
->> +		vb2_buffer_done(&buf->vb.vb2_buf, state);
->> +	}
->> +	INIT_LIST_HEAD(&video->buffers);
->> +	spin_unlock_irqrestore(&video->lock, flags);
->> +}
+Rob
