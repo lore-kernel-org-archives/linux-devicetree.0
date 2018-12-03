@@ -1,69 +1,117 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v1 0/2] SPI-NOR add NPCM FIU controller driver
-Date: Mon, 3 Dec 2018 15:30:46 +0100
-Message-ID: <20181203153046.0554854f@bbrezillon>
-References: <20181203091456.454030-1-tmaimon77@gmail.com>
-        <20181203102240.79a86a26@bbrezillon>
-        <CAP6Zq1ib3p=UVC8ct_gvB801_XjTwknXMKPfFCq7=d1Jxv0Dfg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v2 1/5] devfreq: refactor set_target frequency function
+Date: Mon,  3 Dec 2018 15:31:11 +0100
+Message-ID: <1543847475-7600-2-git-send-email-l.luba@partner.samsung.com>
+References: <1543847475-7600-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20181203143129eucas1p2955b6becc60ee57110cbc52f6e4f60c5@eucas1p2.samsung.com>
+Content-Type: text/plain; charset="utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAP6Zq1ib3p=UVC8ct_gvB801_XjTwknXMKPfFCq7=d1Jxv0Dfg@mail.gmail.com>
+In-Reply-To: <1543847475-7600-1-git-send-email-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nancy Yuen <yuenn@google.com>, Patrick Venture <venture@google.com>, Brendan Higgins <brendanhiggins@google.com>, Avi Fishman <avifishman70@gmail.com>, Joel Stanley <joel@jms.id.au>, linux-mtd@lists.infradead.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, cw00.choi@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com, Lukasz Luba <l.luba@partner.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomer;
+The refactoring is needed for the new client in devfreq: suspend.
+To avoid code duplication, move it to the new local function
+devfreq_set_target.
 
-On Mon, 3 Dec 2018 16:09:19 +0200
-Tomer Maimon <tmaimon77@gmail.com> wrote:
+The patch is based on earlier work by Tobias Jakobi.
 
+Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+---
+ drivers/devfreq/devfreq.c | 62 +++++++++++++++++++++++++++--------------------
+ 1 file changed, 36 insertions(+), 26 deletions(-)
 
-> A few comments/input:
-> 
-> 
->    1. We have been working on this driver for quite a long time to port it
->    to the latest Linux conventions, polish the code, run tests and reach high
->    quality.
->    Our partners and customers are waiting to get this driver upstream so
->    they can freely use it.
-
-Your patch prefix says "v1", so I'm assuming this is the first public
-version. I'm sure you spent a lot of time developing this driver
-internally, but no matter how long it took, it's a first version for
-us, and since we are moving away from the spi_nor controller interface,
-I'm not willing to accept new drivers using this interface.
-
-If you want more background about the spi_nor controller interface
-deprecation, you can read [1].
-
->    Since this driver is already in final stages and is in very good shape
->    we will appreciate if you can review this specific driver/interface and
->    help us to upstream it.
-
-Actually, I'd like to do it the other way around: let you rework the
-driver to implement the spi-mem interface and review this version.
-Otherwise I'll be reviewing things I don't intend to merge anyway.
-
->    2.  As for the new interface, we are open for any discussion and for
->    porting the driver as required.
->    We are unsure what is this specific interface and weather it really fits
->    a driver for a Flash Interface Controller module (rather than a SPI flash
->    device).
-
-Didn't go through the code in details, but at first glance, it looks
-like it would fit pretty well.
-
->    Is it possible to get a sample driver from another Flash Interface
->    Controller module that was ported to this new interface ?
-
-We recently converted the atmel QSPI driver [2].
-
-Regards,
-
-Boris
-
-[1]https://bootlin.com/blog/spi-mem-bringing-some-consistency-to-the-spi-memory-ecosystem/
-[2]https://patchwork.kernel.org/project/spi-devel-general/list/?series=38347&state=*
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index 1414130..a9fd61b 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -285,6 +285,40 @@ static int devfreq_notify_transition(struct devfreq *devfreq,
+ 	return 0;
+ }
+ 
++static int devfreq_set_target(struct devfreq *devfreq, unsigned long new_freq,
++			      u32 flags)
++{
++	struct devfreq_freqs freqs;
++	unsigned long cur_freq;
++	int err = 0;
++
++	if (devfreq->profile->get_cur_freq)
++		devfreq->profile->get_cur_freq(devfreq->dev.parent, &cur_freq);
++	else
++		cur_freq = devfreq->previous_freq;
++
++	freqs.old = cur_freq;
++	freqs.new = new_freq;
++	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_PRECHANGE);
++
++	err = devfreq->profile->target(devfreq->dev.parent, &new_freq, flags);
++	if (err) {
++		freqs.new = cur_freq;
++		devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
++		return err;
++	}
++
++	freqs.new = new_freq;
++	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
++
++	if (devfreq_update_status(devfreq, new_freq))
++		dev_err(&devfreq->dev,
++			"Couldn't update frequency transition information.\n");
++
++	devfreq->previous_freq = new_freq;
++	return err;
++}
++
+ /* Load monitoring helper functions for governors use */
+ 
+ /**
+@@ -296,8 +330,7 @@ static int devfreq_notify_transition(struct devfreq *devfreq,
+  */
+ int update_devfreq(struct devfreq *devfreq)
+ {
+-	struct devfreq_freqs freqs;
+-	unsigned long freq, cur_freq, min_freq, max_freq;
++	unsigned long freq, min_freq, max_freq;
+ 	int err = 0;
+ 	u32 flags = 0;
+ 
+@@ -333,31 +366,8 @@ int update_devfreq(struct devfreq *devfreq)
+ 		flags |= DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use LUB */
+ 	}
+ 
+-	if (devfreq->profile->get_cur_freq)
+-		devfreq->profile->get_cur_freq(devfreq->dev.parent, &cur_freq);
+-	else
+-		cur_freq = devfreq->previous_freq;
+-
+-	freqs.old = cur_freq;
+-	freqs.new = freq;
+-	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_PRECHANGE);
++	return devfreq_set_target(devfreq, freq, flags);
+ 
+-	err = devfreq->profile->target(devfreq->dev.parent, &freq, flags);
+-	if (err) {
+-		freqs.new = cur_freq;
+-		devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+-		return err;
+-	}
+-
+-	freqs.new = freq;
+-	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+-
+-	if (devfreq_update_status(devfreq, freq))
+-		dev_err(&devfreq->dev,
+-			"Couldn't update frequency transition information.\n");
+-
+-	devfreq->previous_freq = freq;
+-	return err;
+ }
+ EXPORT_SYMBOL(update_devfreq);
+ 
+-- 
+2.7.4
