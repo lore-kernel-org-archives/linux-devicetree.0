@@ -1,55 +1,91 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v3 6/6] ARM: PWM: add allwinner sun8i R40/T3/V40 PWM
- support.
-Date: Mon, 3 Dec 2018 10:49:08 +0100
-Message-ID: <20181203094908.lga2r56gelaghrej@pengutronix.de>
-References: <20181125162319.GA5422@arx-s1>
- <20181126213158.q5m5bbwnmewud2gb@pengutronix.de>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH 5/6] [DO NOT MERGE] ARM: dts: sunxi: bananapi-m2p: Add
+ HDF5640 camera module
+Date: Mon, 3 Dec 2018 15:21:50 +0530
+Message-ID: <CAMty3ZAuBM0s3eNhQBySSaUrUAkiF=Hk+Ab=gsN=QucLJv0zyw@mail.gmail.com>
+References: <20181130075849.16941-1-wens@csie.org> <20181130075849.16941-6-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181126213158.q5m5bbwnmewud2gb@pengutronix.de>
+In-Reply-To: <20181130075849.16941-6-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hao Zhang <hao5781286@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, mturquette@baylibre.com, sboyd@kernel.org, thierry.reding@gmail.com, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-sunxi@googlegroups.com
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Fri, Nov 30, 2018 at 1:29 PM Chen-Yu Tsai <wens@csie.org> wrote:
+>
+> The Bananapi M2+ comes with an optional sensor based on the ov5640 from
+> Omnivision. Enable the support for it in the DT.
+>
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+>  arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi | 87 +++++++++++++++++++
+>  1 file changed, 87 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi
+> index b3283aeb5b7d..d97a98acf378 100644
+> --- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi
+> +++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi
+> @@ -89,6 +89,42 @@
+>                 };
+>         };
+>
+> +       reg_cam_avdd: cam-avdd {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "csi-avdd";
+> +               regulator-min-microvolt = <2800000>;
+> +               regulator-max-microvolt = <2800000>;
+> +               startup-delay-us = <200>; /* 50 us + board delays */
+> +               enable-active-high;
+> +               gpio = <&pio 3 14 GPIO_ACTIVE_HIGH>; /* PD14 */
+> +       };
+> +
+> +       reg_cam_dovdd: cam-dovdd {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "csi-dovdd";
+> +               regulator-min-microvolt = <2800000>;
+> +               regulator-max-microvolt = <2800000>;
+> +               /*
+> +                * This regulator also powers the pull-ups for the I2C bus.
+> +                * For some reason, if this is turned off, subsequent use
+> +                * of the I2C bus, even when turned on, does not work.
+> +                */
+> +               startup-delay-us = <200>; /* 50 us + board delays */
+> +               regulator-always-on;
+> +               enable-active-high;
+> +               gpio = <&pio 3 14 GPIO_ACTIVE_HIGH>; /* PD14 */
+> +       };
+> +
+> +       reg_cam_dvdd: cam-dvdd {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "csi-dvdd";
+> +               regulator-min-microvolt = <1500000>;
+> +               regulator-max-microvolt = <1500000>;
+> +               startup-delay-us = <200>; /* 50 us + board delays */
+> +               enable-active-high;
+> +               gpio = <&pio 3 14 GPIO_ACTIVE_HIGH>; /* PD14 */
+> +       };
+> +
+>         reg_gmac_3v3: gmac-3v3 {
+>                       compatible = "regulator-fixed";
+>                       regulator-name = "gmac-3v3";
+> @@ -106,6 +142,26 @@
+>         };
+>  };
+>
+> +&csi {
+> +       status = "okay";
+> +
+> +       port {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               /* Parallel bus endpoint */
+> +               csi_from_ov5640: endpoint {
+> +                       remote-endpoint = <&ov5640_to_csi>;
+> +                       bus-width = <8>;
+> +                       data-shift = <2>;
 
-On Mon, Nov 26, 2018 at 10:31:58PM +0100, Uwe Kleine-König wrote:
-> > +static int sun8i_pwm_config(struct sun8i_pwm_chip *sun8i_pwm, u8 ch,
-> > +			    struct pwm_state *state)
-> > +{
-> > +[...]
-> > +		clk_rate = clk_get_rate(clk);
-> > +		val = state->period * clk_rate;
-> > +		do_div(val, NSEC_PER_SEC);
-> > +		if (val <= 1) {
-> > +			dev_err(sun8i_pwm->chip.dev,
-> > +				"Period expects a larger value\n");
-> > +			return -EINVAL;
-> > +		}
-> > +
-> > +		/* change clock source to "mux-1" */
-> > +		clk_disable_unprepare(sun8i_pwm->clk);
-> > +		devm_clk_put(sun8i_pwm->chip.dev, sun8i_pwm->clk);
-> > +		sun8i_pwm->clk = clk;
-> 
-> sun8i_pwm is shared for all 8 PWMs, right? So if you assign mux-1 here
-> for the second mux, how does this influence the first PWM?
-
-To clearify my question:
-
-after the first pwm is used and enabled (maybe using mux-0) changing
-sun8i_pwm->clk for the second pwm is broken because then when the first
-pwm is disabled the wrong clock is stopped.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+If I'm not wrong, the data-shift is not available in sun6i at-least in
+conf register.
