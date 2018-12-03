@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 13/17] clk: sunxi-ng: add support for
- suniv F1C100s SoC
-Date: Mon, 3 Dec 2018 09:55:31 +0100
-Message-ID: <20181203085531.exlmkfs6b4ejv5dr@flea>
+Subject: Re: [PATCH v6 01/17] ARM: Check ARCH_MULTI_V7 to
+ differentiate ARMv5/v7 Allwinner SoCs
+Date: Mon, 3 Dec 2018 09:56:53 +0100
+Message-ID: <20181203085653.jw7jkr6tzssfjzvq@flea>
 References: <cover.1543781680.git.mesihkilinc@gmail.com>
- <b3d266d9f5f0f7504701c3bbec819acde6d19257.1543781680.git.mesihkilinc@gmail.com>
+ <1a4e6f2b1d6aa5a079e2afb5d1ddf39f830eb8be.1543781680.git.mesihkilinc@gmail.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rnvyyf5rs3zyws7h"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBDW7SPQAKGQE63VCWYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="m6z5g2vlrpry4m4d"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBYG7SPQAKGQEXOOTVLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <b3d266d9f5f0f7504701c3bbec819acde6d19257.1543781680.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1a4e6f2b1d6aa5a079e2afb5d1ddf39f830eb8be.1543781680.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,27 +24,23 @@ Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreC
 List-Id: devicetree@vger.kernel.org
 
 
---rnvyyf5rs3zyws7h
+--m6z5g2vlrpry4m4d
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Sun, Dec 02, 2018 at 11:23:47PM +0300, Mesih Kilinc wrote:
-> diff --git a/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.c b/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.c
-> new file mode 100644
-> index 0000000..ea335a6
-> --- /dev/null
-> +++ b/drivers/clk/sunxi-ng/ccu-suniv-f1c100s.c
-> @@ -0,0 +1,541 @@
-> +/* SPDX-License-Identifier: GPL-2.0
+On Sun, Dec 02, 2018 at 11:23:35PM +0300, Mesih Kilinc wrote:
+> Allwinner also has some ARMv5 SoCs.
+> 
+> In order to add support for them, check ARM_MULTI_V7 before enabling
+> ARMv7 SoC's. Add help text for ARCH_SUNXI menuconfig.
+> 
+> Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-This isn't the proper SPDX format, and this is reported by
-checkpatch. I've fixed it while applying, but please make sure to run
-checkpatch.
-
+Applied, thanks!
 Maxime
 
 -- 
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---rnvyyf5rs3zyws7h--
+--m6z5g2vlrpry4m4d--
