@@ -1,7 +1,7 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 3/5] media: sun6i: Add vcc-csi supply regulator
-Date: Mon,  3 Dec 2018 15:37:45 +0530
-Message-ID: <20181203100747.16442-4-jagan@amarulasolutions.com>
+Subject: [PATCH 4/5] arm64: dts: allwinner: a64: Add A64 CSI controller
+Date: Mon,  3 Dec 2018 15:37:46 +0530
+Message-ID: <20181203100747.16442-5-jagan@amarulasolutions.com>
 References: <20181203100747.16442-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,69 +12,52 @@ To: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.or
 Cc: Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Most of the Allwinner A64 CSI controllers are supply with
-VCC-PE pin, which may not be turned on by default.
-
-Add support for such boards by adding voltage regulator handling
-code to sun6i csi driver.
-
-Used vcc-csi instead of vcc-pe to have better naming convention
-wrt other controller pin supplies.
+Allwinner A64 CSI controller has similar features as like in
+H3, So add support for A64 via H3 fallback.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- .../media/platform/sunxi/sun6i-csi/sun6i_csi.c    | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-index 6950585edb5a..5836fa5e6b01 100644
---- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-+++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-@@ -18,6 +18,7 @@
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/reset.h>
- #include <linux/sched.h>
- #include <linux/sizes.h>
-@@ -36,6 +37,7 @@ struct sun6i_csi_dev {
- 	struct clk			*clk_mod;
- 	struct clk			*clk_ram;
- 	struct reset_control		*rstc_bus;
-+	struct regulator		*regulator;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 384c417cb7a2..d32ff694ac5c 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -532,6 +532,12 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
  
- 	int				planar_offset[3];
- };
-@@ -163,9 +165,16 @@ int sun6i_csi_set_power(struct sun6i_csi *csi, bool enable)
- 		clk_disable_unprepare(sdev->clk_ram);
- 		clk_disable_unprepare(sdev->clk_mod);
- 		reset_control_assert(sdev->rstc_bus);
-+		regulator_disable(sdev->regulator);
- 		return 0;
- 	}
- 
-+	ret = regulator_enable(sdev->regulator);
-+	if (ret) {
-+		dev_err(sdev->dev, "Enable vcc csi supply err %d\n", ret);
-+		return ret;
-+	}
++			csi_pins: csi-pins {
++				pins = "PE0", "PE2", "PE3", "PE4", "PE5", "PE6",
++				       "PE7", "PE8", "PE9", "PE10", "PE11";
++				function = "csi0";
++			};
 +
- 	ret = clk_prepare_enable(sdev->clk_mod);
- 	if (ret) {
- 		dev_err(sdev->dev, "Enable csi clk err %d\n", ret);
-@@ -809,6 +818,12 @@ static int sun6i_csi_resource_request(struct sun6i_csi_dev *sdev,
- 	if (IS_ERR(io_base))
- 		return PTR_ERR(io_base);
+ 			i2c0_pins: i2c0_pins {
+ 				pins = "PH0", "PH1";
+ 				function = "i2c0";
+@@ -899,6 +905,21 @@
+ 			status = "disabled";
+ 		};
  
-+	sdev->regulator = devm_regulator_get(&pdev->dev, "vcc-csi");
-+	if (IS_ERR(sdev->regulator)) {
-+		dev_err(&pdev->dev, "Unable to acquire csi vcc supply\n");
-+		return PTR_ERR(sdev->regulator);
-+	}
++		csi: csi@1cb0000 {
++			compatible = "allwinner,sun50i-a64-csi",
++				     "allwinner,sun8i-h3-csi";
++			reg = <0x01cb0000 0x1000>;
++			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_CSI>,
++				 <&ccu CLK_CSI_SCLK>,
++				 <&ccu CLK_DRAM_CSI>;
++			clock-names = "bus", "mod", "ram";
++			resets = <&ccu RST_BUS_CSI>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&csi_pins>;
++			status = "disabled";
++		};
 +
- 	sdev->regmap = devm_regmap_init_mmio_clk(&pdev->dev, "bus", io_base,
- 						 &sun6i_csi_regmap_config);
- 	if (IS_ERR(sdev->regmap)) {
+ 		hdmi: hdmi@1ee0000 {
+ 			compatible = "allwinner,sun50i-a64-dw-hdmi",
+ 				     "allwinner,sun8i-a83t-dw-hdmi";
 -- 
 2.18.0.321.gffc6fa0e3
