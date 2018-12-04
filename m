@@ -1,39 +1,35 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v1 10/12] hikey960: Support usb functionality of Hikey960
-Date: Wed, 5 Dec 2018 10:44:31 +0200
-Message-ID: <CAHp75Vee21_x47wS9y7eoLsnemst=gigVv9sw_LrUd-kTs0mtA@mail.gmail.com>
-References: <20181203034515.91412-1-chenyu56@huawei.com> <20181203034515.91412-11-chenyu56@huawei.com>
- <CAHp75VdSowHk4meQqqUamSjJJoVT59+pMZ1qjmmWd-W5nWBcUw@mail.gmail.com>
- <6810012e-9a77-dfdf-a738-14ce77a3027a@huawei.com> <CAHp75Vf_nemtPuMZV-1ezyYaB_BuuDM6uqaBf9DLBWLdCnm4Gg@mail.gmail.com>
- <a1168f88-5679-6245-41d8-5ef4be5493b2@huawei.com>
+From: Otavio Salvador <otavio.salvador@ossystems.com.br>
+Subject: Re: [PATCH 1/3] dt-bindings: Add vendor prefix for VXT Ltd
+Date: Tue, 4 Dec 2018 17:07:15 -0200
+Message-ID: <CAP9ODKp-P-mc3zro=897EC1XWRCjttSS0aJJ32qj7BksAW_FeQ@mail.gmail.com>
+References: <1543942655-5942-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a1168f88-5679-6245-41d8-5ef4be5493b2@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: chenyu56@huawei.com
-Cc: liuyu712@hisilicon.com, Wangbinghui <wangbinghui@hisilicon.com>, USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1543942655-5942-1-git-send-email-festevam@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: devicetree@vger.kernel.org, Otavio Salvador <otavio@ossystems.com.br>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, thierry.reding@gmail.com, John Weber <john.weber@technexion.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 5, 2018 at 3:57 AM Chen Yu <chenyu56@huawei.com> wrote:
-> On 2018/12/5 1:47, Andy Shevchenko wrote:
-> > On Tue, Dec 4, 2018 at 3:40 AM Chen Yu <chenyu56@huawei.com> wrote:
-> >> On 2018/12/3 17:23, Andy Shevchenko wrote:
-> >>> On Mon, Dec 3, 2018 at 5:47 AM Yu Chen <chenyu56@huawei.com> wrote:
-> >
-> >>>> +               .of_match_table = of_match_ptr(id_table_hisi_hikey_usb),
-> >>>
-> >>> Does it compiles for non-OF case? Why macro is in use?
-> >
-> >> OK. I will add the "CONFIG_OF".
-> > Why? Is this driver supposed to work without DT?
-> >
-> No. This driver should depend on OF.
-> Can I solve this by add "dpends on OF" in Kconfig?
-
-Yes and don't forget to drop unneeded macro(s) like of_match_ptr() above.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+T24gVHVlLCBEZWMgNCwgMjAxOCBhdCAyOjU3IFBNIEZhYmlvIEVzdGV2YW0gPGZlc3RldmFtQGdt
+YWlsLmNvbT4gd3JvdGU6Cj4KPiBWWFQgTHRkIGlzIGEgbWFudWZhY3R1cmVyIG9mIHByb2plY3Rl
+ZCBjYXBhY2l0aXZlIHRvdWNoIHBhbmVsCj4gYW5kIGRpc3BsYXkgc29sdXRpb25zOiBodHRwOi8v
+d3d3LnZ4dC5jb20udHcvCj4KPiBTaWduZWQtb2ZmLWJ5OiBGYWJpbyBFc3RldmFtIDxmZXN0ZXZh
+bUBnbWFpbC5jb20+CgpSZXZpZXdlZC1ieTogT3RhdmlvIFNhbHZhZG9yIDxvdGF2aW9Ab3NzeXN0
+ZW1zLmNvbS5icj4KCi0tIApPdGF2aW8gU2FsdmFkb3IgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIE8uUy4gU3lzdGVtcwpodHRwOi8vd3d3Lm9zc3lzdGVtcy5jb20uYnIgICAgICAgIGh0dHA6
+Ly9jb2RlLm9zc3lzdGVtcy5jb20uYnIKTW9iaWxlOiArNTUgKDUzKSA5IDk5ODEtNzg1NCAgICAg
+ICAgICBNb2JpbGU6ICsxICgzNDcpIDkwMy05NzUwCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbAo=
