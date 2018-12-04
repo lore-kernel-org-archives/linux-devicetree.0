@@ -1,62 +1,132 @@
-From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
-Subject: =?utf-8?B?W1BBVENIIDQvNF0gQVJNOiBteHM6IGNmYTEwMDM2OiBGaXh1cCBPTEVEwqBk?=
- =?utf-8?Q?isplay_reset_polarity?=
-Date: Tue, 4 Dec 2018 15:03:40 +0000
-Message-ID: <1543935806-94880-5-git-send-email-michal.vokac@ysoft.com>
-References: <1543935806-94880-1-git-send-email-michal.vokac@ysoft.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 24/34] dt-bindings: arm: Convert Rockchip board/soc
+ bindings to json-schema
+Date: Tue, 4 Dec 2018 09:04:00 -0600
+Message-ID: <CAL_JsqLwSg=CWQYzvfCq9WVexU5donsF6ugib2ONNN3vvjzZXw@mail.gmail.com>
+References: <20181203213223.16986-1-robh@kernel.org> <20181203213223.16986-25-robh@kernel.org>
+ <3170130.k0DT9deCHj@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543935806-94880-1-git-send-email-michal.vokac@ysoft.com>
-Content-Language: en-US
-Content-ID: <738447F86299104B827666F04D0CB600@eurprd04.prod.outlook.com>
+In-Reply-To: <3170130.k0DT9deCHj@phil>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Maxime Ripard <maxime.ripard@bootlin.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
+To: "heiko@sntech.de" <heiko@sntech.de>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlcmUgd2FzIGEgYnVnIGluIHJlc2V0IHNpZ25hbCBnZW5lcmF0aW9uIGluIHNzZDEzMDdmYiBP
-TEVEIGRyaXZlci4NClRoZSBkaXNwbGF5IG5lZWRzIGFuIGFjdGl2ZS1sb3cgcmVzZXQgc2lnbmFs
-IGJ1dCB0aGUgZHJpdmVyIHByb2R1Y2VkDQp0aGUgY29ycmVjdCBzZXF1ZW5jZSBvbmx5IGlmIHRo
-ZSBHUElPIHVzZWQgZm9yIHJlc2V0IHdhcyBzcGVjaWZpZWQgYXMNCkdQSU9fQUNUSVZFX0hJR0gu
-DQoNCk5vdyBhcyB0aGUgT0xFRCBkcml2ZXIgaXMgZml4ZWQgaXQgaXMgYWxzbyBuZWNlc3NhcnJ5
-IHRvIGltcGxlbWVudA0KYSBmaXh1cCBmb3IgYWxsIGN1cnJlbnQgdXNlcnMgb2YgdGhlIG9sZCBE
-VCBBQkkuIFRoZXJlIGlzIG9ubHkgb25lDQppbi10cmVlIHVzZXIgYW5kIHRoYXQgaXMgdGhlIENy
-eXN0YWxmb250eiBDRkEtMTAwMzYgYm9hcmQuIEluIGNhc2UNCnRoaXMgYm9hcmQgaXMgYm9vdGlu
-ZyBhbmQgR1BJT19BQ1RJVkVfSElHSCBpcyB1c2VkIGZvciByZXNldCB3ZQ0Kb3ZlcnJpZGUgaXQg
-dG8gR1BJT19BQ1RJVkVfTE9XLg0KDQpTaWduZWQtb2ZmLWJ5OiBNaWNoYWwgVm9rw6HEjSA8bWlj
-aGFsLnZva2FjQHlzb2Z0LmNvbT4NCi0tLQ0KIGFyY2gvYXJtL21hY2gtbXhzL21hY2gtbXhzLmMg
-fCA0NSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KIDEgZmls
-ZSBjaGFuZ2VkLCA0NSBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybS9tYWNo
-LW14cy9tYWNoLW14cy5jIGIvYXJjaC9hcm0vbWFjaC1teHMvbWFjaC1teHMuYw0KaW5kZXggMWM2
-MDYyZC4uMjNjMjYwYyAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtL21hY2gtbXhzL21hY2gtbXhzLmMN
-CisrKyBiL2FyY2gvYXJtL21hY2gtbXhzL21hY2gtbXhzLmMNCkBAIC0yMSw2ICsyMSw3IEBADQog
-I2luY2x1ZGUgPGxpbnV4L3JlYm9vdC5oPg0KICNpbmNsdWRlIDxsaW51eC9taWNyZWxfcGh5Lmg+
-DQogI2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4NCisjaW5jbHVkZSA8bGludXgvb2ZfZ3Bp
-by5oPg0KICNpbmNsdWRlIDxsaW51eC9vZl9wbGF0Zm9ybS5oPg0KICNpbmNsdWRlIDxsaW51eC9w
-aHkuaD4NCiAjaW5jbHVkZSA8bGludXgvcGluY3RybC9jb25zdW1lci5oPg0KQEAgLTI2OCw5ICsy
-NjksNTMgQEAgc3RhdGljIHZvaWQgX19pbml0IGFweDRkZXZraXRfaW5pdCh2b2lkKQ0KIAkJCQkJ
-ICAgYXB4NGRldmtpdF9waHlfZml4dXApOw0KIH0NCiANCisjZGVmaW5lIE9MRURfUkVTRVRfR1BJ
-T19MRU4JMw0KKyNkZWZpbmUgT0xFRF9SRVNFVF9HUElPX1NJWkUJKE9MRURfUkVTRVRfR1BJT19M
-RU4gKiBzaXplb2YodTMyKSkNCisNCitzdGF0aWMgdm9pZCBfX2luaXQgY3J5c3RhbGZvbnR6X29s
-ZWRfcmVzZXRfZml4dXAodm9pZCkNCit7DQorCXN0cnVjdCBwcm9wZXJ0eSAqbmV3Z3BpbzsNCisJ
-c3RydWN0IGRldmljZV9ub2RlICpucDsNCisJdTMyICpncGlvc3BlYzsNCisJaW50IGksIHJldDsN
-CisNCisJbnAgPSBvZl9maW5kX2NvbXBhdGlibGVfbm9kZShOVUxMLCBOVUxMLCAic29sb21vbixz
-c2QxMzA2ZmItaTJjIik7DQorCWlmICghbnApDQorCQlyZXR1cm47DQorDQorCW5ld2dwaW8gPSBr
-emFsbG9jKHNpemVvZigqbmV3Z3BpbykgKyBPTEVEX1JFU0VUX0dQSU9fU0laRSwgR0ZQX0tFUk5F
-TCk7DQorCWlmICghbmV3Z3BpbykNCisJCXJldHVybjsNCisNCisJbmV3Z3Bpby0+dmFsdWUgPSBu
-ZXdncGlvICsgMTsNCisJbmV3Z3Bpby0+bGVuZ3RoID0gT0xFRF9SRVNFVF9HUElPX1NJWkU7DQor
-CW5ld2dwaW8tPm5hbWUgPSBrc3RyZHVwKCJyZXNldC1ncGlvcyIsIEdGUF9LRVJORUwpOw0KKwlp
-ZiAoIW5ld2dwaW8tPm5hbWUpIHsNCisJCWtmcmVlKG5ld2dwaW8pOw0KKwkJcmV0dXJuOw0KKwl9
-DQorDQorCWdwaW9zcGVjID0gbmV3Z3Bpby0+dmFsdWU7DQorCWZvciAoaSA9IDA7IGkgPCBPTEVE
-X1JFU0VUX0dQSU9fTEVOOyBpKyspIHsNCisJCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyX2lu
-ZGV4KG5wLCAicmVzZXQtZ3Bpb3MiLCBpLA0KKwkJCQkJCSAmZ3Bpb3NwZWNbaV0pOw0KKwkJaWYg
-KHJldCkgew0KKwkJCWtmcmVlKG5ld2dwaW8pOw0KKwkJCXJldHVybjsNCisJCX0NCisJfQ0KKw0K
-KwlpZiAoIShncGlvc3BlY1syXSAmIE9GX0dQSU9fQUNUSVZFX0xPVykpIHsNCisJCWdwaW9zcGVj
-WzJdIHw9IE9GX0dQSU9fQUNUSVZFX0xPVzsNCisJCWNwdV90b19iZTMyX2FycmF5KGdwaW9zcGVj
-LCBncGlvc3BlYywgT0xFRF9SRVNFVF9HUElPX0xFTik7DQorCQlvZl91cGRhdGVfcHJvcGVydHko
-bnAsIG5ld2dwaW8pOw0KKwl9DQorfQ0KKw0KIHN0YXRpYyB2b2lkIF9faW5pdCBjcnlzdGFsZm9u
-dHpfaW5pdCh2b2lkKQ0KIHsNCiAJdXBkYXRlX2ZlY19tYWNfcHJvcChPVUlfQ1JZU1RBTEZPTlRa
-KTsNCisJY3J5c3RhbGZvbnR6X29sZWRfcmVzZXRfZml4dXAoKTsNCiB9DQogDQogc3RhdGljIHZv
-aWQgX19pbml0IGR1Y2tiaWxsX2luaXQodm9pZCkNCi0tIA0KMi4xLjQNCg0K
+On Tue, Dec 4, 2018 at 8:16 AM Heiko Stuebner <heiko@sntech.de> wrote:
+>
+> Am Montag, 3. Dezember 2018, 22:32:13 CET schrieb Rob Herring:
+> > Convert Rockchip SoC bindings to DT schema format using json-schema.
+> >
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Heiko Stuebner <heiko@sntech.de>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-rockchip@lists.infradead.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+>
+> > diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> > new file mode 100644
+> > index 000000000000..3d30ec9adcd3
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> > @@ -0,0 +1,251 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/arm/rockchip.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Rockchip platforms device tree bindings
+> > +
+> > +maintainers:
+> > +  - Beniamino Galvani <b.galvani@gmail.com>
+>
+> # scripts/get_maintainer.pl -f Documentation/devicetree/bindings/arm/rockchip.txt
+>
+> doesn't list Beniamino at all and he hasn't been active on Rockchip stuff
+> for a number of years, so I'm not really sure where this mention as
+> maintainer comes from.
+
+git history. get_maintainers.pl had too many cases where I ended up as
+the maintainer.
+
+I'll drop him.
+
+> > +  - Heiko Stuebner <heiko@sntech.de>
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    const: '/'
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +          - enum:
+> > +              - amarula,vyasa-rk3288
+> > +              - asus,rk3288-tinker
+> > +              - asus,rk3288-tinker-s
+> > +              - radxa,rock2-square
+> > +              - chipspark,popmetal-rk3288
+> > +              - netxeon,r89
+> > +              - firefly,firefly-rk3288
+> > +              - firefly,firefly-rk3288-beta
+> > +              - firefly,firefly-rk3288-reload
+> > +              - mqmaker,miqi
+> > +              - rockchip,rk3288-fennec
+> > +          - const: rockchip,rk3288
+>
+> [...]
+>
+> > +      - items:
+> > +          - enum:
+> > +              - firefly,firefly-rk3399
+> > +              - firefly,roc-rk3399-pc
+> > +              - pine64,rockpro64
+> > +              - rockchip,rk3399-evb
+> > +              - rockchip,rk3399-sapphire
+> > +              - rockchip,rk3399-sapphire-excavator
+> > +              - tsd,rk3399-q7-haikou
+> > +              - vamrs,ficus
+> > +              - vamrs,rock960 # 96boards RK3399 Rock960 (ROCK960 Consumer Edition)
+> > +          - const: rockchip,rk3399
+>
+>
+> as said before, loosing the description of the boards that get thrown
+> into one listing really decreases the usability a lot.
+
+Sorry, I thought I addressed these previous comments.
+
+> Best example is maybe the rk3399 rock960, where the consumer-edition
+> board is actually named "ficus" and the description actually brings the
+> connection to the product-name.
+>
+> So here it may increase the machine-readability but definitly descreases
+> the human readability of the file itself.
+>
+> I guess just using the format that all the Google-boards got for all boards
+> would just be easiest, so for example the rock960 also would just become:
+>
+>       - description: 96boards RK3399 Ficus (ROCK960 Enterprise Edition)
+>         items:
+>           - const: vamrs,ficus
+>           - const: rockchip,rk3399
+>
+>       - description: 96boards RK3399 Ficus (ROCK960 Consumer Edition)
+>         items:
+>           - const: vamrs,rock960
+>           - const: rockchip,rk3399
+
+Sure, you can do this if you like. I prefer the other way as it is a
+one line change to add a board. The SoC maintainers can pick whatever
+they like. You could split into a file per SoC too if you wanted.
+
+> Looking at other socs, this is likely similar there. Like on Mediatek
+> all the MT67xx eval boards loose the mapping to the
+> socs marketing name "Helio Foobar" when the description is gone,
+> which could've been helpful for people reading the binding.
+
+Generally when we had just 'hello,foobar' with 'Hello Foobar' I
+dropped the comment as I didn't think it added much.
+
+Rob
