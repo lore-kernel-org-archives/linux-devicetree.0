@@ -1,7 +1,7 @@
 From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v5 5/8] arm64: dts: msm8996: Add rpmpd device node
-Date: Tue,  4 Dec 2018 10:51:16 +0530
-Message-ID: <20181204052119.806-6-rnayak@codeaurora.org>
+Subject: [PATCH v5 7/8] arm64: dts: sdm845: Add rpmh powercontroller node
+Date: Tue,  4 Dec 2018 10:51:18 +0530
+Message-ID: <20181204052119.806-8-rnayak@codeaurora.org>
 References: <20181204052119.806-1-rnayak@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,60 +12,82 @@ To: robh@kernel.org, viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linar
 Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add rpmpd device node and its OPP table
+Add the DT node for the rpmhpd powercontroller.
 
 Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 34 +++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 51 ++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index b29fe80d7288..ed35f0ced699 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -306,6 +306,40 @@
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index b72bdb0a31a5..a6d0cd8d17b0 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -10,6 +10,7 @@
+ #include <dt-bindings/clock/qcom,rpmh.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/phy/phy-qcom-qusb2.h>
++#include <dt-bindings/power/qcom-rpmpd.h>
+ #include <dt-bindings/reset/qcom,sdm845-aoss.h>
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+ 
+@@ -1324,6 +1325,56 @@
+ 				compatible = "qcom,sdm845-rpmh-clk";
  				#clock-cells = <1>;
  			};
- 
-+			rpmpd: power-controller {
-+				compatible = "qcom,msm8996-rpmpd";
++
++			rpmhpd: power-controller {
++				compatible = "qcom,sdm845-rpmhpd";
 +				#power-domain-cells = <1>;
-+				operating-points-v2 = <&rpmpd_opp_table>;
++				operating-points-v2 = <&rpmhpd_opp_table>;
 +			};
 +
-+			rpmpd_opp_table: opp-table {
++			rpmhpd_opp_table: opp-table {
 +				compatible = "operating-points-v2-qcom-level";
 +
-+				rpmpd_opp1: opp1 {
-+					qcom,level = <1>;
++				rpmhpd_opp_ret: opp1 {
++					qcom,level = <RPMH_REGULATOR_LEVEL_RETENTION>;
 +				};
 +
-+				rpmpd_opp2: opp2 {
-+					qcom,level = <2>;
++				rpmhpd_opp_min_svs: opp2 {
++					qcom,level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
 +				};
 +
-+				rpmpd_opp3: opp3 {
-+					qcom,level = <3>;
++				rpmhpd_opp_low_svs: opp3 {
++					qcom,level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
 +				};
 +
-+				rpmpd_opp4: opp4 {
-+					qcom,level = <4>;
++				rpmhpd_opp_svs: opp4 {
++					qcom,level = <RPMH_REGULATOR_LEVEL_SVS>;
 +				};
 +
-+				rpmpd_opp5: opp5 {
-+					qcom,level = <5>;
++				rpmhpd_opp_svs_l1: opp5 {
++					qcom,level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
 +				};
 +
-+				rpmpd_opp6: opp6 {
-+					qcom,level = <6>;
++				rpmhpd_opp_nom: opp6 {
++					qcom,level = <RPMH_REGULATOR_LEVEL_NOM>;
++				};
++
++				rpmhpd_opp_nom_l1: opp7 {
++					qcom,level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
++				};
++
++				rpmhpd_opp_nom_l2: opp8 {
++					qcom,level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
++				};
++
++				rpmhpd_opp_turbo: opp9 {
++					qcom,level = <RPMH_REGULATOR_LEVEL_TURBO>;
++				};
++
++				rpmhpd_opp_turbo_l1: opp10 {
++					qcom,level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
 +				};
 +			};
-+
- 			pm8994-regulators {
- 				compatible = "qcom,rpm-pm8994-regulators";
+ 		};
  
+ 		intc: interrupt-controller@17a00000 {
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
