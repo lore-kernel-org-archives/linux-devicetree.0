@@ -1,43 +1,50 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] dt-bindings: ti-tsc-adc: Add new compatible for AM654
- SoCs
-Date: Tue, 4 Dec 2018 09:54:01 +0000
-Message-ID: <20181204095401.GU26661@dell>
-References: <20181119094509.22542-1-vigneshr@ti.com>
- <4b42082c-462d-3d94-8ee9-6e7a61f57134@ti.com>
- <20181204095233.GT26661@dell>
+From: <Andrei.Stefanescu@microchip.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: add SAMA5D2 PIOBU support
+Date: Tue, 4 Dec 2018 09:58:10 +0000
+Message-ID: <b581a73c-2f72-5915-5fc8-3cf9f5518a9c@microchip.com>
+References: <1542701330-23466-1-git-send-email-andrei.stefanescu@microchip.com>
+ <1542701330-23466-2-git-send-email-andrei.stefanescu@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181204095233.GT26661@dell>
+In-Reply-To: <1542701330-23466-2-git-send-email-andrei.stefanescu@microchip.com>
+Content-Language: en-US
+Content-ID: <EF3978FE7B95694CA14EBFFA432BB883@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: robh+dt@kernel.org
+Cc: linus.walleij@linaro.org, gregkh@linuxfoundation.org, Nicolas.Ferre@microchip.com, mark.rutland@arm.com, Ludovic.Desroches@microchip.com, Cristian.Birsan@microchip.com, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 04 Dec 2018, Lee Jones wrote:
-> On Tue, 04 Dec 2018, Vignesh R wrote:
-> > On 19/11/18 3:15 PM, Vignesh R wrote:
-> > > AM654 SoCs has ADC IP which is similar to AM335x. Add new compatible to
-> > > handle AM654 SoCs. Also, it seems that existing compatible strings used
-> > > in the kernel DTs were never documented. So, document them now.
-> > > 
-> > > Signed-off-by: Vignesh R <vigneshr@ti.com>
-> > > ---
-> > 
-> > Gentle ping on this patch..
-> 
-> Don't do that.
-> 
-> If you think your patch has been forgotten, please submit a [RESEND].
-
-As an aside, the subject line is missing a subsystem, which might be
-why it was missed by the subsystem maintainer.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+SGVsbG8gUm9iLA0KDQpDb3VsZCB5b3UgcGxlYXNlIHRlbGwgbWUgaWYgdGhlcmUgYXJlIGFueSBp
+bXByb3ZlbWVudHMNCnRvIGJlIG1hZGUgdG8gdGhlIHBhdGNoPw0KDQpCZXN0IHJlZ2FyZHMsDQpB
+bmRyZWkNCg0KT24gMjAuMTEuMjAxOCAxMDowOCwgQW5kcmVpIFN0ZWZhbmVzY3UgLSBNNTA1MDYg
+d3JvdGU6DQo+IFRoaXMgcGF0Y2ggZGVzY3JpYmVzIHRoZSBjb21wYXRpYmxlIGFuZCB0aGUgZGV2
+aWNlIHRyZWUNCj4gYmluZGluZ3MgbmVjZXNzYXJ5IGZvciB0aGUgU0FNQTVEMiBQSU9CVSBHUElP
+Lg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBBbmRyZWkgU3RlZmFuZXNjdSA8YW5kcmVpLnN0ZWZhbmVz
+Y3VAbWljcm9jaGlwLmNvbT4NCj4gLS0tDQo+ICAgLi4uL2JpbmRpbmdzL2dwaW8vZ3Bpby1zYW1h
+NWQyLXBpb2J1LnR4dCAgICAgICAgICAgfCAzMSArKysrKysrKysrKysrKysrKysrKysrDQo+ICAg
+MSBmaWxlIGNoYW5nZWQsIDMxIGluc2VydGlvbnMoKykNCj4gICBjcmVhdGUgbW9kZSAxMDA2NDQg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8vZ3Bpby1zYW1hNWQyLXBpb2J1
+LnR4dA0KPg0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2dwaW8vZ3Bpby1zYW1hNWQyLXBpb2J1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9ncGlvL2dwaW8tc2FtYTVkMi1waW9idS50eHQNCj4gbmV3IGZpbGUgbW9kZSAxMDA2
+NDQNCj4gaW5kZXggMDAwMDAwMC4uMmUyNjBlMQ0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncGlvL2dwaW8tc2FtYTVkMi1waW9idS50
+eHQNCj4gQEAgLTAsMCArMSwzMSBAQA0KPiArR1BJTyBjb250cm9sbGVyIGZvciBTQU1BNUQyIFBJ
+T0JVIHBpbnMuDQo+ICsNCj4gK1RoZXNlIHBpbnMgaGF2ZSB0aGUgcHJvcGVydHkgb2Ygbm90IGxv
+c2luZyB0aGVpciB2b2x0YWdlDQo+ICtkdXJpbmcgQmFja3VwL1NlbGYtcmVmcmVzaCBtb2RlLg0K
+PiArDQo+ICtUaGVzZSBiaW5kaW5ncyBzaG91bGQgYmUgc2V0IHRvIGEgbm9kZSBpbiB0aGUgZHRz
+aSBmaWxlLg0KPiArDQo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiArLSBjb21wYXRpYmxlOgkJ
+InN5c2NvbiIsICJtaWNyb2NoaXAsc2FtYTVkMi1waW9idSINCj4gKy0gI2dwaW8tY2VsbHM6CQlU
+aGVyZSBhcmUgMi4gVGhlIHBpbiBudW1iZXIgaXMgdGhlDQo+ICsJCQlmaXJzdCwgdGhlIHNlY29u
+ZCByZXByZXNlbnRzIGFkZGl0aW9uYWwNCj4gKwkJCXBhcmFtZXRlcnMgc3VjaCBhcyBHUElPX0FD
+VElWRV9ISUdIL0xPVy4NCj4gKy0gZ3Bpby1jb250cm9sbGVyOglNYXJrcyB0aGUgcG9ydCBhcyBH
+UElPIGNvbnRyb2xsZXIuDQo+ICsNCj4gK05vdGUgdGhhdCB0aGUgZHJpdmVyIHVzZXMgc3lzY29u
+IGFuZCBzaG91bGQgYmUgdGhlIGNoaWxkIG9mDQo+ICt0aGUgc3lzY29uIG5vZGUuDQo+ICsNCj4g
+K0V4YW1wbGU6DQo+ICsNCj4gKwlzZWN1bW9kQGZjMDQwMDAwIHsNCj4gKwkJY29tcGF0aWJsZSA9
+ICJhdG1lbCxzYW1hNWQyLXNlY3Vtb2QiLCAic3lzY29uIiwgInNpbXBsZS1tZmQiOw0KPiArCQlz
+dGF0dXMgPSAib2theSI7DQo+ICsJCXJlZyA9IDwweGZjMDQwMDAwIDB4MTAwPjsNCj4gKw0KPiAr
+CQlwaW9CVTogcGlvYnUgew0KPiArCQkJc3RhdHVzID0gIm9rYXkiOw0KPiArCQkJY29tcGF0aWJs
+ZSA9ICJtaWNyb2NoaXAsc2FtYTVkMi1waW9idSI7DQo+ICsJCQlncGlvLWNvbnRyb2xsZXI7DQo+
+ICsJCQkjZ3Bpby1jZWxscyA9IDwyPjsNCj4gKwkJfTsNCj4gKwl9Ow0K
