@@ -1,13 +1,11 @@
 From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V3 3/3] arm64: dts: broadcom: Add reference to RPi 3 A+
-Date: Tue,  4 Dec 2018 19:58:19 +0100
-Message-ID: <1543949899-13380-4-git-send-email-stefan.wahren@i2se.com>
-References: <1543949899-13380-1-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH V3 0/3] ARM: dts: add Raspberry Pi 3 A+
+Date: Tue,  4 Dec 2018 19:58:16 +0100
+Message-ID: <1543949899-13380-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1543949899-13380-1-git-send-email-stefan.wahren@i2se.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,36 +19,29 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Flori
 Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a reference to the dts of the Raspberry Pi 3 A+,
-so we don't need to maintain the content in arm64.
+This patch series adds support for the brand new Raspberry Pi 3 A+ .
+Since there is no official DTS file yet, this one bases on a procfs dump. 
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Reviewed-by: Eric Anholt <eric@anholt.net>
----
- arch/arm64/boot/dts/broadcom/Makefile                 | 3 ++-
- arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-a-plus.dts | 2 ++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+Changes in V3:
+- add Eric's Reviewed-by
+- fix wifi reset GPIO polarity
+
+Changes in V2:
+- add missing Makefile change for arm64
+
+Stefan Wahren (3):
+  dt-bindings: bcm: Add Raspberry Pi 3 A+
+  ARM: dts: add Raspberry Pi 3 A+
+  arm64: dts: broadcom: Add reference to RPi 3 A+
+
+ .../devicetree/bindings/arm/bcm/brcm,bcm2835.txt   |   4 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts         | 107 +++++++++++++++++++++
+ arch/arm64/boot/dts/broadcom/Makefile              |   3 +-
+ .../boot/dts/broadcom/bcm2837-rpi-3-a-plus.dts     |   2 +
+ 5 files changed, 116 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
  create mode 100644 arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-a-plus.dts
 
-diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts/broadcom/Makefile
-index 667ca98..d1d31cc 100644
---- a/arch/arm64/boot/dts/broadcom/Makefile
-+++ b/arch/arm64/boot/dts/broadcom/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
--dtb-$(CONFIG_ARCH_BCM2835) += bcm2837-rpi-3-b.dtb \
-+dtb-$(CONFIG_ARCH_BCM2835) += bcm2837-rpi-3-a-plus.dtb \
-+			      bcm2837-rpi-3-b.dtb \
- 			      bcm2837-rpi-3-b-plus.dtb \
- 			      bcm2837-rpi-cm3-io3.dtb
- 
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-a-plus.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-a-plus.dts
-new file mode 100644
-index 0000000..f0ec56a
---- /dev/null
-+++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-a-plus.dts
-@@ -0,0 +1,2 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "arm/bcm2837-rpi-3-a-plus.dts"
 -- 
 2.7.4
