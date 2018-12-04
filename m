@@ -1,138 +1,101 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v1 10/12] hikey960: Support usb functionality of Hikey960
-Date: Tue, 4 Dec 2018 09:40:45 +0800
-Message-ID: <6810012e-9a77-dfdf-a738-14ce77a3027a@huawei.com>
-References: <20181203034515.91412-1-chenyu56@huawei.com>
- <20181203034515.91412-11-chenyu56@huawei.com>
- <CAHp75VdSowHk4meQqqUamSjJJoVT59+pMZ1qjmmWd-W5nWBcUw@mail.gmail.com>
+From: Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v5 1/3] arm64: dts: qcom: sdm845: Add dpu to
+ sdm845 dts file
+Date: Mon, 03 Dec 2018 18:41:22 -0800
+Message-ID: <e9207da13c30cae15cd2aba77078d08b@codeaurora.org>
+References: <1543876054-12998-1-git-send-email-jsanka@codeaurora.org>
+ <CAD=FV=WKtf0Ba2Fk-V8kktp6KPJh_6DcMQSVF=ynoAA4nkqKBQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VdSowHk4meQqqUamSjJJoVT59+pMZ1qjmmWd-W5nWBcUw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: wangbinghui@hisilicon.com, USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <CAD=FV=WKtf0Ba2Fk-V8kktp6KPJh_6DcMQSVF=ynoAA4nkqKBQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kristian Kristensen <hoegsberg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 2018/12/3 17:23, Andy Shevchenko wrote:
-> On Mon, Dec 3, 2018 at 5:47 AM Yu Chen <chenyu56@huawei.com> wrote:
->>
->> This driver handles usb hub power on and typeC port event of HiKey960 board:
->> 1)DP&DM switching between usb hub and typeC port base on typeC port
->> state
->> 2)Control power of usb hub on Hikey960
->> 3)Control vbus of typeC port
-> 
->> +config HISI_HIKEY_USB
->> +       tristate "USB functionality of HiSilicon Hikey Platform"
->> +       depends on GPIOLIB
-> 
->> +       default n
-> 
-> No, Linus is not happy about this.
-> Default n _is_ a default.
-
-OK.
-> 
->> +       help
->> +         If you say yes here you get support for usb functionality of HiSilicon Hikey Platform.
-> 
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * hisi_hikey_usb.c
->> + *
->> + * Copyright (c) Hisilicon Tech. Co., Ltd. All rights reserved.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + *
->> + */
-> 
-> Same comments to the above lines.
-> 
->> +#include <linux/module.h>
->> +#include <linux/kernel.h>
->> +#include <linux/slab.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/of.h>
->> +#include <linux/gpio/consumer.h>
->> +#include <linux/usb/role.h>
->> +#include <linux/notifier.h>
-> 
-> Order?
-> 
->> +       pr_debug("%s: set hub power %d\n", __func__, value);
-> 
-> Noise.
-> 
->> +       pr_debug("%s: switch to %s\n", __func__, switch_to_str);
-> 
-> Noise.
-> 
->> +       pr_debug("%s: set typec vbus gpio to %d\n", __func__, value);
-> 
-> Noise.
-> 
->> +       if (!nb)
->> +               return -EINVAL;
-> 
-> On which conditions this happen?
-> 
->> +       pr_info("%s:set typec state to %lu\n", __func__, state);
-> 
-> Noise!
-> 
-> Guys, you perhaps can read about tracepoints and function tracer
-> facilities in the kernel.
-> 
->> +static int hisi_hikey_usb_probe(struct platform_device *pdev)
->> +{
-> 
->> +               pr_info("%s: typc_vbus_enable_val can't get\n", __func__);
-> 
-> Noise!
-
-OK.
-> 
->> +       if (IS_ERR_OR_NULL(hisi_hikey_usb->typec_vbus)) {
-> 
-> So, this check is redundant. You are repeating it below.
-> 
->> +               if (!hisi_hikey_usb->typec_vbus)
->> +                       ret = -EINVAL;
->> +               else
->> +                       ret = PTR_ERR(hisi_hikey_usb->typec_vbus);
->> +               return ret;
->> +       }
-OK.
-
-> 
->> +       if (IS_ERR_OR_NULL(hisi_hikey_usb->role_sw)) {
-> 
->> +               pr_err("%s: usb_role_switch_get failed\n", __func__);
-> 
-> Noise and same comment to the conditional check as above
-> 
->> +               if (!hisi_hikey_usb->role_sw)
->> +                       ret = -ENOENT;
->> +               else
->> +                       ret = PTR_ERR(hisi_hikey_usb->role_sw);
->> +               return ret;
->> +       }
-> 
->> +               .of_match_table = of_match_ptr(id_table_hisi_hikey_usb),
-> 
-> Does it compiles for non-OF case? Why macro is in use?
-> 
-OK. I will add the "CONFIG_OF".
+T24gMjAxOC0xMi0wMyAxNjo1NywgRG91ZyBBbmRlcnNvbiB3cm90ZToKPiBIaSwKPiAKPiBPbiBN
+b24sIERlYyAzLCAyMDE4IGF0IDI6MjcgUE0gSmV5a3VtYXIgU2Fua2FyYW4gCj4gPGpzYW5rYUBj
+b2RlYXVyb3JhLm9yZz4KPiB3cm90ZToKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgZHNpMDog
+ZHNpQGFlOTQwMDAgewo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGli
+bGUgPSAicWNvbSxtZHNzLWRzaS1jdHJsIjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICByZWcgPSA8MHhhZTk0MDAwIDB4NDAwPjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICByZWctbmFtZXMgPSAiZHNpX2N0cmwiOwo+PiArCj4+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgaW50ZXJydXB0LXBhcmVudCA9IDwmbWRzcz47Cj4+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDw0IElSUV9UWVBFX0xFVkVMX0hJR0g+
+Owo+PiArCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZkaXNw
+Y2MgCj4+IERJU1BfQ0NfTURTU19CWVRFMF9DTEs+LAo+PiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIDwmZGlzcGNjCj4+IERJU1BfQ0NfTURTU19CWVRFMF9JTlRGX0NM
+Sz4sCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZkaXNwY2Mg
+Cj4+IERJU1BfQ0NfTURTU19QQ0xLMF9DTEs+LAo+PiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIDwmZGlzcGNjIAo+PiBESVNQX0NDX01EU1NfRVNDMF9DTEs+LAo+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwmZGlzcGNjIAo+PiBESVNQ
+X0NDX01EU1NfQUhCX0NMSz4sCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgPCZkaXNwY2MgCj4+IERJU1BfQ0NfTURTU19BWElfQ0xLPjsKPj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJieXRlIiwKPj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJieXRlX2ludGYiLAo+PiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInBpeGVsIiwKPj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJjb3JlIiwKPj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJpZmFjZSIsCj4+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiYnVzIjsKPj4gKwo+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBoeXMgPSA8JmRzaTBfcGh5PjsKPj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwaHktbmFtZXMgPSAiZHNpMCI7Cj4gCj4gSSdt
+IHByZXR0eSBzdXJlIHRoYXQgdGhpcyBzaG91bGQganVzdCBiZSAiZHNpIiBhbmQgdGhlIG9uZSBi
+ZWxvdyBpbgo+IGRzaTEgc2hvdWxkIGFsc28gYmUgY2FsbGVkICJkc2kiLiAgK0pvcmRhbiBzaG91
+bGQgY29uZmlybS4KPiAKTWFrZXMgc2Vuc2UuIEkgY2FuIGZpeCB0aGF0IQo+IAo+PiArICAgICAg
+ICAgICAgICAgICAgICAgICBkc2kxOiBkc2lAYWU5NjAwMCB7Cj4+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJxY29tLG1kc3MtZHNpLWN0cmwiOwo+PiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweGFlOTYwMDAgMHg0MDA+Owo+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJkc2lfY3RybCI7Cj4+
+ICsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0g
+PCZtZHNzPjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0g
+PDUgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4+ICsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBjbG9ja3MgPSA8JmRpc3BjYyAKPj4gRElTUF9DQ19NRFNTX0JZVEUxX0NMSz4sCj4+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZkaXNwY2MKPj4gRElT
+UF9DQ19NRFNTX0JZVEUxX0lOVEZfQ0xLPiwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICA8JmRpc3BjYyAKPj4gRElTUF9DQ19NRFNTX1BDTEsxX0NMSz4sCj4+ICsg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZkaXNwY2MgCj4+IERJU1Bf
+Q0NfTURTU19FU0MxX0NMSz4sCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgPCZkaXNwY2MgCj4+IERJU1BfQ0NfTURTU19BSEJfQ0xLPiwKPj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmRpc3BjYyAKPj4gRElTUF9DQ19NRFNTX0FY
+SV9DTEs+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0g
+ImJ5dGUiLAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ImJ5dGVfaW50ZiIsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAicGl4ZWwiLAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgImNvcmUiLAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgImlmYWNlIiwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICJidXMiOwo+PiArCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGh5
+cyA9IDwmZHNpMV9waHk+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBoeS1u
+YW1lcyA9ICJkc2kxIjsKPj4gKwo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0
+YXR1cyA9ICJkaXNhYmxlZCI7Cj4gCj4gVGhpcyAiZGlzYWJsZWQiIGlzIGNhdXNpbmcgbWUgcHJv
+YmxlbXMuICBJIGRvbid0IGFjdHVhbGx5IG5lZWQgImRzaTEiCj4gYnV0IGlmIEkgZG9uJ3QgZW5h
+YmxlICJkc2kxIiB0aGVuIG15IGRpc3BsYXkgZG9lc24ndCBjb21lIHVwLiAgOiggIEkKPiByYW4g
+b3V0IG9mIHRpbWUgdG8gZGVidWcgYnV0IEkgd29uZGVyIGlmIHRoaXMgaXMgdGhpcyB0aGUgc3Rh
+bmRhcmQKPiB0aGluZyB3aGVyZSBEUk0gbmVlZHMgdG8gd2FpdCBmb3IgYWxsIHRoZSBjb21wb25l
+bnRzIHRvIHByb2JlIHVudGlsIGl0Cj4gY2FuIGZpbmlzaD8gIElmIG5vYm9keSBvbiB0aGlzIGxp
+c3QganVzdCBrbm93cyBJJ2xsIGRpZyB0b21vcnJvdyBhbmQKPiBjb25maXJtIHRoYXQgbXkgbWVt
+b3J5IGlzbid0IGZhdWx0eSBhbmQgc2VlIHdoYXQgd2UndmUgZG9uZSBhYm91dCB0aGlzCj4gaW4g
+dGhlIHBhc3QuCj4gCmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA0Njc4OTUv
+CgpDYW4geW91IHRyeSBvdXQgd2l0aCB0aGlzIGNoYW5nZSAocmV2aWV3ZWQgYnV0IG5vdCBtZXJn
+ZWQgeWV0KS4gSXQgCnZhbGlkYXRlcwp0aGUgbm9kZXMgYmVmb3JlIGFkZGluZyB0byB0aGUgRFNJ
+IGxpc3QuCj4gCj4gCj4gT25lIGxhc3Qgbm90ZTogaXQncyBwcmV0dHkgd2VpcmQgdGhhdCB5b3Ug
+c2VudCBvdXQgb25seSAxLzMgYW5kIG5vdAo+IDIvMyBhbmQgMy8zLiAgSWYgeW91J3JlIG5vdCBy
+ZWFkeSB0byBzZW5kIG91dCBNVFAgc3R1ZmYgeWV0IHRoZW4geW91Cj4gc2hvdWxkIHNlbmQgb3V0
+IHY2IGFzIGp1c3QgYSBzaW5nbGV0b24gcGF0Y2guClllcy4gSSB3YXMgdHJ5aW5nIHRvIHNlcGFy
+YXRlIHRoaXMgb25lIG91dCBhcyBhbiBpbmRlcGVuZGVudCBjaGFuZ2UuIApTYW5kZWVwCmlzIHdv
+cmtpbmcgb24gdGhlIGNvbW1lbnRzIG9uIHJlbW92aW5nIHRoZSBwaW5jdHJsIG5vZGVzIGFuZCB1
+cGRhdGVkCm10cCBub2Rlcy4gSGUgc2hvdWxkIGJlIHBvc3RpbmcgMi8zIGFuZCAzLzMgaW4gdGhl
+IG5leHQgY291cGxlIG9mIGRheXMuCgpUaGFua3MsCkpleWt1bWFyIFMuCgo+IAo+IAo+IC1Eb3Vn
+CgotLSAKSmV5a3VtYXIgUwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVl
+ZHJlbm8K
