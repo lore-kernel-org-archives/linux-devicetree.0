@@ -1,46 +1,111 @@
-Return-Path: <SRS0=Is9l=ON=nvidia.com=spujar@kernel.org>
-From: Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH] arm64: dts: tegra: Add HDA node to Jetson Xavier
-Date: Tue, 4 Dec 2018 17:44:22 +0530
-Message-ID: <1543925662-18677-1-git-send-email-spujar@nvidia.com>
+Return-Path: <SRS0=jrs2=ON=verge.net.au=horms@kernel.org>
+Date: Tue, 4 Dec 2018 06:32:31 -0800
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 19/22] ARM: dts: r8a7744-iwg20m: Add SPI NOR support
+Message-ID: <20181204143231.wthll3wgvq4xnbn7@verge.net.au>
+References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
+ <1543319795-48325-20-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdVhON=3hgZAdeeP9zwebVaZQNG=wsvqX3W3MVmQOWanbw@mail.gmail.com>
+ <OSBPR01MB21038E1B2F3E83248DCCD298B8D30@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <CAMuHMdX7ghhyZcvrgit_zrNwTyVcizB0nbySYNeL-38ux9VJQw@mail.gmail.com>
+ <OSBPR01MB21036C33152005C92E19853DB8D30@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: mark.rutland@arm.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OSBPR01MB21036C33152005C92E19853DB8D30@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Device tree node for hda is populated with relevant fields
+On Fri, Nov 30, 2018 at 11:02:08AM +0000, Biju Das wrote:
+> Hi Geert,
+> 
+> Thanks for the feedback.
+> 
+> > Subject: Re: [PATCH 19/22] ARM: dts: r8a7744-iwg20m: Add SPI NOR support
+> >
+> > Hi Biju,
+> >
+> > On Fri, Nov 30, 2018 at 11:34 AM Biju Das <biju.das@bp.renesas.com> wrote:
+> > > > Subject: Re: [PATCH 19/22] ARM: dts: r8a7744-iwg20m: Add SPI NOR
+> > > > support On Tue, Nov 27, 2018 at 1:05 PM Biju Das
+> > <biju.das@bp.renesas.com> wrote:
+> > > > > Add support for the SPI NOR device used to boot up the system to
+> > > > > the iWave RZ/G1N Qseven System On Module DT.
+> > > > >
+> > > > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > > >
+> > > > Thanks for your patch!
+> > > >
+> > > > > --- a/arch/arm/boot/dts/r8a7744-iwg20m.dtsi
+> > > > > +++ b/arch/arm/boot/dts/r8a7744-iwg20m.dtsi
+> > > >
+> > > > > @@ -53,6 +58,27 @@
+> > > > >         status = "okay";
+> > > > >  };
+> > > > >
+> > > > > +&qspi {
+> > > > > +       pinctrl-0 = <&qspi_pins>;
+> > > > > +       pinctrl-names = "default";
+> > > > > +
+> > > > > +       status = "okay";
+> > > > > +
+> > > > > +       /* WARNING - This device contains the bootloader. Handle with
+> > care.
+> > > > */
+> > > > > +       flash: flash@0 {
+> > > > > +               #address-cells = <1>;
+> > > > > +               #size-cells = <1>;
+> > > > > +               compatible = "sst,sst25vf016b", "jedec,spi-nor";
+> > > >
+> > > > According to the schematics, this is an ISSI IS25LP016D?
+> > > > ISSI was acquired by GigaDevice, according to Wikipedia.
+> > > > While SST is now MicroChip.
+> > >
+> > > As per the schematic and BoM,  it is.
+> > > IC FLASH 16MBIT 50MHZ 8SOIC SST25VF016B-50-4I-S2AF Microchip
+> > > Technology 1 U1
+> >
+> > Oh, this seems to differ for different revisions of the schematics.
+> > R5.1 has the ISSI part, R3.4 has the SST part.
+> >
+> > Due to "jedec,spi-nor", it will auto-detect, but IIRC, the driver will warn if the
+> > compatible doesn't match the detected part, which thus may happen for
+> > some boards.
+> 
+> OK. Will remove "sst" part for the compatible string.
 
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-Reviewed-by: Thierry Reding <treding@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+I have marked this patch as "Changes Requested" and am awaiting v2.
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index f274562..93f9163 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -957,4 +957,20 @@
- 				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
- 		interrupt-parent = <&gic>;
- 	};
-+
-+	hda@3510000 {
-+		compatible = "nvidia,tegra194-hda", "nvidia,tegra30-hda";
-+		reg = <0x0 0x3510000 0x0 0x10000>;
-+		interrupts = <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&bpmp TEGRA194_CLK_HDA>,
-+			<&bpmp TEGRA194_CLK_HDA2CODEC_2X>,
-+			<&bpmp TEGRA194_CLK_HDA2HDMICODEC>;
-+		clock-names = "hda", "hda2codec_2x", "hda2hdmi";
-+		resets = <&bpmp TEGRA194_RESET_HDA>,
-+			<&bpmp TEGRA194_RESET_HDA2CODEC_2X>,
-+			<&bpmp TEGRA194_RESET_HDA2HDMICODEC>;
-+		reset-names = "hda", "hda2codec_2x", "hda2hdmi";
-+		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_DISP>;
-+		status = "disabled";
-+	};
- };
--- 
-2.7.4
+> 
+> > > > > +               reg = <0>;
+> > > > > +               spi-max-frequency = <50000000>;
+> > > > > +               spi-tx-bus-width = <1>;
+> > > > > +               spi-rx-bus-width = <1>;
+> > > >
+> > > > <1> is the default, but it's indeed good to make this explicit, as
+> > > > this is a QSPI device with 2 unwired data pins.
+> > > > However, as the device seems to support dual transfers, and dual
+> > > > mode uses the standard MOSI/MISO pins, you should use <2> for both.
+> > > > The RSPI driver supports this.
+> > > >
+> > > > The same applies to the RZ/G1M version.
+> > >
+> > > SST25VF016B this doesn't support dual mode.
+> >
+> > OK.
+> >
+> > So some boards have a dual-capable part, others don't.
+> >
+> > I'm not 100% sure, but I think writing <2> will still work, as the driver won't
+> > use dual mode on the SST25VF016B part, due to lack of
+> > SPI_NOR_DUAL_READ in the entry in the spi-nor driver.
+> 
+> OK. Will check this.
+> 
+> Regards,
+> Biju
+> 
+> 
+> 
+> Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered No. 04586709.
