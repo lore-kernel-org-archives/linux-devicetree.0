@@ -1,56 +1,29 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 3/3] drm/panel: simple: Add support for VXT VL050-8048NT-C01
- panel
-Date: Tue,  4 Dec 2018 14:57:35 -0200
-Message-ID: <1543942655-5942-3-git-send-email-festevam@gmail.com>
-References: <1543942655-5942-1-git-send-email-festevam@gmail.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/2] clk: meson: add clk-input helper
+Date: Tue,  4 Dec 2018 17:58:17 +0100
+Message-ID: <20181204165819.21541-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1543942655-5942-1-git-send-email-festevam@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: thierry.reding@gmail.com
-Cc: devicetree@vger.kernel.org, otavio@ossystems.com.br, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, john.weber@technexion.com
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHN1cHBvcnQgZm9yIHRoZSBWWFQgVkwwNTAtODA0OE5ULUMwMSA4MDB4NDgwIHBhbmVsIHRv
-IHRoZQpwYW5lbC1zaW1wbGUgZHJpdmVyLiAKClRoaXMgcGFuZWwgaXMgdXNlZCBvbiBzb21lIGJv
-YXJkcyBtYW51ZmFjdHVyZWQgYnkgVGVjaE5leGlvbiwgc3VjaCBhcwppbXg3ZC1waWNvLgoKU2ln
-bmVkLW9mZi1ieTogRmFiaW8gRXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPgotLS0KIGRyaXZl
-cnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyB8IDI3ICsrKysrKysrKysrKysrKysrKysr
-KysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDI3IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFu
-ZWwvcGFuZWwtc2ltcGxlLmMKaW5kZXggNWZiZWU4My4uMmU3NmU5NSAxMDA2NDQKLS0tIGEvZHJp
-dmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9w
-YW5lbC9wYW5lbC1zaW1wbGUuYwpAQCAtMjQxMCw2ICsyNDEwLDMwIEBAIHN0YXRpYyBjb25zdCBz
-dHJ1Y3QgcGFuZWxfZGVzYyB1cnRfdW1zaF84NTk2bWRfcGFyYWxsZWwgPSB7CiAJLmJ1c19mb3Jt
-YXQgPSBNRURJQV9CVVNfRk1UX1JHQjY2Nl8xWDE4LAogfTsKIAorc3RhdGljIGNvbnN0IHN0cnVj
-dCBkcm1fZGlzcGxheV9tb2RlIHZsMDUwXzgwNDhudF9jMDFfbW9kZSA9IHsKKwkuY2xvY2sgPSAz
-MzMzMywKKwkuaGRpc3BsYXkgPSA4MDAsCisJLmhzeW5jX3N0YXJ0ID0gODAwICsgMjEwLAorCS5o
-c3luY19lbmQgPSA4MDAgKyAyMTAgKyAyMCwKKwkuaHRvdGFsID0gODAwICsgMjEwICsgMjAgKyA0
-NiwKKwkudmRpc3BsYXkgPSAgNDgwLAorCS52c3luY19zdGFydCA9IDQ4MCArIDIyLAorCS52c3lu
-Y19lbmQgPSA0ODAgKyAyMiArIDEwLAorCS52dG90YWwgPSA0ODAgKyAyMiArIDEwICsgMjMsCisJ
-LnZyZWZyZXNoID0gNjAsCit9OworCitzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2Mgdmww
-NTBfODA0OG50X2MwMSA9IHsKKwkubW9kZXMgPSAmdmwwNTBfODA0OG50X2MwMV9tb2RlLAorCS5u
-dW1fbW9kZXMgPSAxLAorCS5icGMgPSA4LAorCS5zaXplID0geworCQkud2lkdGggPSAxMjAsCisJ
-CS5oZWlnaHQgPSA3NiwKKwl9LAorCS5idXNfZm9ybWF0ID0gTUVESUFfQlVTX0ZNVF9SR0I4ODhf
-MVgyNCwKK307CisKIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSB3aW5zdGFy
-X3dmMzVsdGlhY2RfbW9kZSA9IHsKIAkuY2xvY2sgPSA2NDEwLAogCS5oZGlzcGxheSA9IDMyMCwK
-QEAgLTI3MjUsNiArMjc0OSw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBs
-YXRmb3JtX29mX21hdGNoW10gPSB7CiAJCS5jb21wYXRpYmxlID0gInVydCx1bXNoLTg1OTZtZC0y
-MHQiLAogCQkuZGF0YSA9ICZ1cnRfdW1zaF84NTk2bWRfcGFyYWxsZWwsCiAJfSwgeworCQkuY29t
-cGF0aWJsZSA9ICJ2eHQsdmwwNTAtODA0OG50LWMwMSIsCisJCS5kYXRhID0gJnZsMDUwXzgwNDhu
-dF9jMDEsCisJfSwgewogCQkuY29tcGF0aWJsZSA9ICJ3aW5zdGFyLHdmMzVsdGlhY2QiLAogCQku
-ZGF0YSA9ICZ3aW5zdGFyX3dmMzVsdGlhY2QsCiAJfSwgewotLSAKMi43LjQKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+When the related bindings get merged, we will add more input clocks
+to the different amlogic clock controllers. Instead of copying this
+code around, lets create an helper function and use it.
+
+Jerome Brunet (2):
+  clk: meson: add clk-input helper function
+  clk: meson: axg-audio: use the clk input helper function
+
+ drivers/clk/meson/Makefile    |  2 +-
+ drivers/clk/meson/axg-audio.c | 83 ++++++++++-------------------------
+ drivers/clk/meson/clk-input.c | 44 +++++++++++++++++++
+ drivers/clk/meson/clkc.h      |  5 +++
+ 4 files changed, 74 insertions(+), 60 deletions(-)
+ create mode 100644 drivers/clk/meson/clk-input.c
+
+-- 
+2.19.1
