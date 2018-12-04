@@ -1,21 +1,20 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/5] dt-bindings: gnss: add w2sg0004 compatible string
-Date: Tue, 4 Dec 2018 16:57:52 -0600
-Message-ID: <20181204225752.GA23361@bogus>
+Subject: Re: [PATCH RFC 5/5] dt-bindings: gnss: add lna-supply property
+Date: Tue, 4 Dec 2018 16:59:37 -0600
+Message-ID: <20181204225937.GA25800@bogus>
 References: <20181118215801.12280-1-andreas@kemnade.info>
- <20181118215801.12280-4-andreas@kemnade.info>
+ <20181118215801.12280-6-andreas@kemnade.info>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181118215801.12280-4-andreas@kemnade.info>
+In-Reply-To: <20181118215801.12280-6-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
 Cc: johan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Andreas Kemnade <andreas@kemnade.info>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 18 Nov 2018 22:57:59 +0100, Andreas Kemnade wrote:
-> Add w2sg0004 compatible string since devices without wakeup
-> pins are now supported.
+On Sun, 18 Nov 2018 22:58:01 +0100, Andreas Kemnade wrote:
+> Add lna-supply property.
 > 
 > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 > ---
