@@ -1,14 +1,13 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: Moving ARM dts files
-Date: Tue, 4 Dec 2018 19:47:45 +0100
-Message-ID: <20181204184745.GS8952@piout.net>
-References: <20181204183649.GA5716@bogus>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH V3 2/3] ARM: dts: add Raspberry Pi 3 A+
+Date: Tue,  4 Dec 2018 19:58:18 +0100
+Message-ID: <1543949899-13380-3-git-send-email-stefan.wahren@i2se.com>
+References: <1543949899-13380-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20181204183649.GA5716@bogus>
+In-Reply-To: <1543949899-13380-1-git-send-email-stefan.wahren@i2se.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,87 +17,145 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thierry Reding <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory Clement <gregory.clement@bootlin.com>, Michal Simek <michal.simek@xilinx.com>, Krzysztof Kozlowski <krzk@kernel.org>, arm@kernel.org, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Daniel Mack <daniel@zonque.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Eric Anholt <eric@anholt.net>, Arnd Bergmann <arnd@arndb.de>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
+The Raspberry Pi 3 A+ is similar to the Pi 3 B+ but has only 512 MB RAM,
+1 USB 2.0 port and no Ethernet.
 
-On 04/12/2018 12:36:49-0600, Rob Herring wrote:
-> Olof, Arnd,
-> 
-> I've put together a script to move the dts files and update the 
-> makefiles. It doesn't handle files not following a common prefix which 
-> isn't many and some includes within the dts files will need some fixups 
-> by hand.
-> 
-> MAINTAINERS will also need updating.
-> 
-> A few questions:
-> 
-> Do we want to move absolutely everything to subdirs? There's quite a 
-> few platforms with only 1-2 platforms. I haven't added these to the 
-> list yet, but can.
-> 
-> Do any vendors need another level of directories? davinci, omap, nspire, 
-> etc. for TI for example.
-> 
-> What to do with armv7m.dtsi? I guess it should remain and we just fixup 
-> the include. There may be a few other cross vendor things.
-> 
-> 
-> Sub-arch maintainers, 
-> 'vendor_map' below is the mapping of file prefix to new subdirectory 
-> (the SoC vendor prefix). Please comment if there are any issues.
-> 
-> Rob
-> 
-> 8<-----------------------------------------------------------
-> #!/usr/bin/env python3
-> 
-> import os
-> import re
-> from git import Git
-> import glob
-> 
-> vendor_map = {
->     'imx': 'fsl',
->     'ls': 'fsl',
->     'vf': 'fsl',
->     'qcom': 'qcom',
->     'am3' : 'ti',
->     'am4' : 'ti',
->     'am5' : 'ti',
->     'da' : 'ti',
->     'dm' : 'ti',
->     'dra' : 'ti',
->     'keystone' : 'ti',
->     'omap' : 'ti',
->     'nspire' : 'ti',
->     'armada' : 'marvell',
->     'berlin' : 'marvell',
->     'dove' : 'marvell',
->     'kirkwood' : 'marvell',
->     'orion' : 'marvell',
->     'pxa' : 'marvell',
->     'mvebu' : 'marvell',
->     'mmp2' : 'marvell',
->     'arm-' : 'arm',
->     'integ' : 'arm',
->     've' : 'arm',
->     'aspeed' : 'aspeed',
->     'at91' : 'atmel',
->     'sama' : 'atmel',
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Reviewed-by: Eric Anholt <eric@anholt.net>
+---
+ arch/arm/boot/dts/Makefile                 |   1 +
+ arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts | 107 +++++++++++++++++++++++++++++
+ 2 files changed, 108 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
 
-Unfortunately, we have many boards without a proper prefix. Wouldn't it
-be better to use arch/arm/boot/dts/Makefile and map dtb-$(CONFIG_*) to a
-vendor directory?
-
-This way you would be sure to not miss any. This would also ease the
-creation of subdirs if we decide to do that.
-
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b0e966d..15bbd0d 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -79,6 +79,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
+ 	bcm2835-rpi-a-plus.dtb \
+ 	bcm2835-rpi-cm1-io1.dtb \
+ 	bcm2836-rpi-2-b.dtb \
++	bcm2837-rpi-3-a-plus.dtb \
+ 	bcm2837-rpi-3-b.dtb \
+ 	bcm2837-rpi-3-b-plus.dtb \
+ 	bcm2837-rpi-cm3-io3.dtb \
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts b/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
+new file mode 100644
+index 0000000..b2df7cf
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
+@@ -0,0 +1,107 @@
++// SPDX-License-Identifier: GPL-2.0
++/dts-v1/;
++#include "bcm2837.dtsi"
++#include "bcm2836-rpi.dtsi"
++#include "bcm283x-rpi-usb-host.dtsi"
++
++/ {
++	compatible = "raspberrypi,3-model-a-plus", "brcm,bcm2837";
++	model = "Raspberry Pi 3 Model A+";
++
++	chosen {
++		/* 8250 auxiliary UART instead of pl011 */
++		stdout-path = "serial1:115200n8";
++	};
++
++	memory {
++		reg = <0 0x20000000>;
++	};
++
++	leds {
++		act {
++			gpios = <&gpio 29 GPIO_ACTIVE_HIGH>;
++		};
++
++		pwr {
++			label = "PWR";
++			gpios = <&expgpio 2 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	wifi_pwrseq: wifi-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&expgpio 1 GPIO_ACTIVE_LOW>;
++	};
++};
++
++&firmware {
++	expgpio: gpio {
++		compatible = "raspberrypi,firmware-gpio";
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-line-names = "BT_ON",
++				  "WL_ON",
++				  "STATUS_LED",
++				  "",
++				  "",
++				  "CAM_GPIO0",
++				  "CAM_GPIO1",
++				  "";
++		status = "okay";
++	};
++};
++
++&hdmi {
++	hpd-gpios = <&gpio 28 GPIO_ACTIVE_LOW>;
++};
++
++&pwm {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm0_gpio40 &pwm1_gpio41>;
++	status = "okay";
++};
++
++/* SDHCI is used to control the SDIO for wireless */
++&sdhci {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&emmc_gpio34>;
++	status = "okay";
++	bus-width = <4>;
++	non-removable;
++	mmc-pwrseq = <&wifi_pwrseq>;
++
++	brcmf: wifi@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++	};
++};
++
++/* SDHOST is used to drive the SD card */
++&sdhost {
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdhost_gpio48>;
++	status = "okay";
++	bus-width = <4>;
++};
++
++/* uart0 communicates with the BT module */
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_ctsrts_gpio30 &uart0_gpio32 &gpclk2_gpio43>;
++	status = "okay";
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		max-speed = <2000000>;
++		shutdown-gpios = <&expgpio 0 GPIO_ACTIVE_HIGH>;
++	};
++};
++
++/* uart1 is mapped to the pin header */
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_gpio14>;
++	status = "okay";
++};
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.7.4
