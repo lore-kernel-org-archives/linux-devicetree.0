@@ -1,88 +1,92 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] arm64: dts: qcom: sdm845: Add dpu to
- sdm845 dts file
-Date: Mon, 3 Dec 2018 16:57:45 -0800
-Message-ID: <CAD=FV=WKtf0Ba2Fk-V8kktp6KPJh_6DcMQSVF=ynoAA4nkqKBQ@mail.gmail.com>
-References: <1543876054-12998-1-git-send-email-jsanka@codeaurora.org>
+From: Chen Yu <chenyu56@huawei.com>
+Subject: Re: [PATCH 01/10] dt-bindings: usb: add support for dwc3 controller
+ on HiSilicon SoCs
+Date: Tue, 4 Dec 2018 09:03:40 +0800
+Message-ID: <21d15bb1-b26f-0e90-4137-823e9a15ca69@huawei.com>
+References: <20181027095820.40056-1-chenyu56@huawei.com>
+ <20181027095820.40056-2-chenyu56@huawei.com> <20181112160241.GA14074@bogus>
+ <9fce6a58-d986-25e4-1791-ba375e4f075e@huawei.com>
+ <CAL_JsqKObFGdf5tPdv=Ss2ZWCPBgimbEUn72rkR2+L7uRbAirg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1543876054-12998-1-git-send-email-jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kristian Kristensen <hoegsberg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKObFGdf5tPdv=Ss2ZWCPBgimbEUn72rkR2+L7uRbAirg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: wangbinghui@hisilicon.com, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBNb24sIERlYyAzLCAyMDE4IGF0IDI6MjcgUE0gSmV5a3VtYXIgU2Fua2FyYW4gPGpz
-YW5rYUBjb2RlYXVyb3JhLm9yZz4gd3JvdGU6Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgZHNp
-MDogZHNpQGFlOTQwMDAgewo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0
-aWJsZSA9ICJxY29tLG1kc3MtZHNpLWN0cmwiOwo+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgcmVnID0gPDB4YWU5NDAwMCAweDQwMD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICByZWctbmFtZXMgPSAiZHNpX2N0cmwiOwo+ICsKPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIGludGVycnVwdC1wYXJlbnQgPSA8Jm1kc3M+Owo+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDw0IElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+
-ICsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmZGlzcGNjIERJ
-U1BfQ0NfTURTU19CWVRFMF9DTEs+LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgPCZkaXNwY2MgRElTUF9DQ19NRFNTX0JZVEUwX0lOVEZfQ0xLPiwKPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwmZGlzcGNjIERJU1BfQ0NfTURTU19Q
-Q0xLMF9DTEs+LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZk
-aXNwY2MgRElTUF9DQ19NRFNTX0VTQzBfQ0xLPiwKPiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIDwmZGlzcGNjIERJU1BfQ0NfTURTU19BSEJfQ0xLPiwKPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwmZGlzcGNjIERJU1BfQ0NfTURTU19B
-WElfQ0xLPjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0g
-ImJ5dGUiLAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAi
-Ynl0ZV9pbnRmIiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgInBpeGVsIiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgImNvcmUiLAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAiaWZhY2UiLAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAiYnVzIjsKPiArCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwaHlzID0gPCZk
-c2kwX3BoeT47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwaHktbmFtZXMgPSAi
-ZHNpMCI7CgpJJ20gcHJldHR5IHN1cmUgdGhhdCB0aGlzIHNob3VsZCBqdXN0IGJlICJkc2kiIGFu
-ZCB0aGUgb25lIGJlbG93IGluCmRzaTEgc2hvdWxkIGFsc28gYmUgY2FsbGVkICJkc2kiLiAgK0pv
-cmRhbiBzaG91bGQgY29uZmlybS4KCgo+ICsgICAgICAgICAgICAgICAgICAgICAgIGRzaTE6IGRz
-aUBhZTk2MDAwIHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUg
-PSAicWNvbSxtZHNzLWRzaS1jdHJsIjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IHJlZyA9IDwweGFlOTYwMDAgMHg0MDA+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgcmVnLW5hbWVzID0gImRzaV9jdHJsIjsKPiArCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZtZHNzPjsKPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIGludGVycnVwdHMgPSA8NSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiArCj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JmRpc3BjYyBESVNQX0ND
-X01EU1NfQllURTFfQ0xLPiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIDwmZGlzcGNjIERJU1BfQ0NfTURTU19CWVRFMV9JTlRGX0NMSz4sCj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmRpc3BjYyBESVNQX0NDX01EU1NfUENMSzFf
-Q0xLPiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwmZGlzcGNj
-IERJU1BfQ0NfTURTU19FU0MxX0NMSz4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICA8JmRpc3BjYyBESVNQX0NDX01EU1NfQUhCX0NMSz4sCj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmRpc3BjYyBESVNQX0NDX01EU1NfQVhJX0NM
-Sz47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJieXRl
-IiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImJ5dGVf
-aW50ZiIsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJw
-aXhlbCIsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJj
-b3JlIiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImlm
-YWNlIiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImJ1
-cyI7Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGh5cyA9IDwmZHNpMV9w
-aHk+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGh5LW5hbWVzID0gImRzaTEi
-Owo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxl
-ZCI7CgpUaGlzICJkaXNhYmxlZCIgaXMgY2F1c2luZyBtZSBwcm9ibGVtcy4gIEkgZG9uJ3QgYWN0
-dWFsbHkgbmVlZCAiZHNpMSIKYnV0IGlmIEkgZG9uJ3QgZW5hYmxlICJkc2kxIiB0aGVuIG15IGRp
-c3BsYXkgZG9lc24ndCBjb21lIHVwLiAgOiggIEkKcmFuIG91dCBvZiB0aW1lIHRvIGRlYnVnIGJ1
-dCBJIHdvbmRlciBpZiB0aGlzIGlzIHRoaXMgdGhlIHN0YW5kYXJkCnRoaW5nIHdoZXJlIERSTSBu
-ZWVkcyB0byB3YWl0IGZvciBhbGwgdGhlIGNvbXBvbmVudHMgdG8gcHJvYmUgdW50aWwgaXQKY2Fu
-IGZpbmlzaD8gIElmIG5vYm9keSBvbiB0aGlzIGxpc3QganVzdCBrbm93cyBJJ2xsIGRpZyB0b21v
-cnJvdyBhbmQKY29uZmlybSB0aGF0IG15IG1lbW9yeSBpc24ndCBmYXVsdHkgYW5kIHNlZSB3aGF0
-IHdlJ3ZlIGRvbmUgYWJvdXQgdGhpcwppbiB0aGUgcGFzdC4KCgoKT25lIGxhc3Qgbm90ZTogaXQn
-cyBwcmV0dHkgd2VpcmQgdGhhdCB5b3Ugc2VudCBvdXQgb25seSAxLzMgYW5kIG5vdAoyLzMgYW5k
-IDMvMy4gIElmIHlvdSdyZSBub3QgcmVhZHkgdG8gc2VuZCBvdXQgTVRQIHN0dWZmIHlldCB0aGVu
-IHlvdQpzaG91bGQgc2VuZCBvdXQgdjYgYXMganVzdCBhIHNpbmdsZXRvbiBwYXRjaC4KCgotRG91
-ZwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJl
-bm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+
+
+On 2018/12/4 0:01, Rob Herring wrote:
+> On Fri, Nov 16, 2018 at 8:29 PM Chen Yu <chenyu56@huawei.com> wrote:
+>>
+>> Hi,
+>>
+>> On 2018/11/13 0:02, Rob Herring wrote:
+>>> On Sat, Oct 27, 2018 at 05:58:11PM +0800, Yu Chen wrote:
+>>>> This patch adds binding descriptions to support the dwc3 controller
+>>>> on HiSilicon SoCs and boards like the HiKey960.
+>>>>
+>>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>> Cc: John Stultz <john.stultz@linaro.org>
+>>>> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+>>>> ---
+>>>>  .../devicetree/bindings/usb/dwc3-hisi.txt          | 53 ++++++++++++++++++++++
+>>>>  1 file changed, 53 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3-hisi.txt b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+>>>> new file mode 100644
+>>>> index 000000000000..e715e7b1c324
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+>>>> @@ -0,0 +1,53 @@
+>>>> +HiSilicon DWC3 USB SoC controller
+>>>> +
+>>>> +This file documents the parameters for the dwc3-hisi driver.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible:       should be "hisilicon,hi3660-dwc3"
+>>>> +- clocks:   A list of phandle + clock-specifier pairs for the
+>>>> +            clocks listed in clock-names
+>>>> +- clock-names:      Specify clock names
+>>>> +- resets:   list of phandle and reset specifier pairs.
+>>>> +
+>>>> +Sub-nodes:
+>>>> +The dwc3 core should be added as subnode to HiSilicon DWC3 as shown in the
+>>>> +example below. The DT binding details of dwc3 can be found in:
+>>>> +Documentation/devicetree/bindings/usb/dwc3.txt
+>>>
+>>> If you only have clocks and resets and no glue registers, then you
+>>> don't need a sub-node. Just make the controller one node.
+>>>
+>>
+>> In dwc3 glue driver，the controller driver usually probed by call of_platform_populate
+>> which will search the child node of glue driver.
+>> The code of function of_platform_populate is as below:
+>>
+>>         for_each_child_of_node(root, child) {
+>>                  rc = of_platform_bus_create(child, matches, lookup, parent, true);
+>>                  if (rc) {
+>>                          of_node_put(child);
+>>                          break;
+>>                  }
+>>          }
+>>
+>> So I think the controller node should be a sub-node.
+> 
+> It was done that way, but has changed. See commit fe8abf332b8f ("usb:
+> dwc3: support clocks and resets for DWC3 core").
+
+OK.Thanks!
+
+> 
+> Rob
+> 
+> .
+> 
