@@ -1,53 +1,167 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v3 2/8] drm/msm/dsi: 28nm 8960 PHY: Get ref clock from the DT
-Date: Tue, 04 Dec 2018 10:26:47 -0800
-Message-ID: <154394800757.88331.14079790416847469573@swboyd.mtv.corp.google.com>
-References: <20181201005254.139908-1-mka@chromium.org>
- <20181201005254.139908-3-mka@chromium.org>
- <154394184065.88331.4558186365546696323@swboyd.mtv.corp.google.com>
- <20181204173549.GB14307@google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Moving ARM dts files
+Date: Tue, 4 Dec 2018 12:36:49 -0600
+Message-ID: <20181204183649.GA5716@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181204173549.GB14307@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Airlie <airlied@linux.ie>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Archit Taneja <architt@codeaurora.org>, Sean Paul <seanpaul@chromium.org>, Rajesh Yadav <ryadav@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Jeykumar Sankaran <jsanka@codeaurora.org>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org
+Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thierry Reding <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory Clement <gregory.clement@bootlin.com>, Michal Simek <michal.simek@xilinx.com>, Krzysztof Kozlowski <krzk@kernel.org>, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Matthias Kaehlcke (2018-12-04 09:35:49)
-> On Tue, Dec 04, 2018 at 08:44:00AM -0800, Stephen Boyd wrote:
-> > Quoting Matthias Kaehlcke (2018-11-30 16:52:48)
-> > > +
-> > >         /* custom byte clock divider */
-> > >         struct clk_bytediv *bytediv;
-> > >  =
+Olof, Arnd,
 
-> > > @@ -125,7 +127,10 @@ static int dsi_pll_28nm_clk_set_rate(struct clk_=
-hw *hw, unsigned long rate,
-> > >         DBG("rate=3D%lu, parent's=3D%lu", rate, parent_rate);
-> > >  =
+I've put together a script to move the dts files and update the 
+makefiles. It doesn't handle files not following a common prefix which 
+isn't many and some includes within the dts files will need some fixups 
+by hand.
 
-> > >         temp =3D rate / 10;
-> > > -       val =3D VCO_REF_CLK_RATE / 10;
-> > > +       if (parent_rate)
-> > > +               val =3D parent_rate / 10;
-> > > +       else
-> > > +               val =3D VCO_REF_CLK_DEFAULT_RATE / 10;
-> > =
+MAINTAINERS will also need updating.
 
-> > Is the clk not properly hooked up to a parent sometimes so parent_rate
-> > is 0? That sounds odd given the fact that it used to be 'pxo' and that
-> > has always existed on the system as 27 MHz. So I'd remove this and just
-> > use parent_rate all the time.
-> =
+A few questions:
 
-> I wondered about this, but since I don't have hardware for testing I
-> kept the previous hardcoded rate. If we know for sure that 'pxo'
-> always exists it should indeed be fine to use the parent rate.
+Do we want to move absolutely everything to subdirs? There's quite a 
+few platforms with only 1-2 platforms. I haven't added these to the 
+list yet, but can.
 
-Yes we know for sure. The 'pxo' board clk is there on apq8064 dtsi file
-which seems to be the only place this is used. The pxo_board clk is sent
-through a 'pxo' clk that's created in drivers/clk/qcom/common.c
-qcom_cc_register_board_clk().
+Do any vendors need another level of directories? davinci, omap, nspire, 
+etc. for TI for example.
+
+What to do with armv7m.dtsi? I guess it should remain and we just fixup 
+the include. There may be a few other cross vendor things.
+
+
+Sub-arch maintainers, 
+'vendor_map' below is the mapping of file prefix to new subdirectory 
+(the SoC vendor prefix). Please comment if there are any issues.
+
+Rob
+
+8<-----------------------------------------------------------
+#!/usr/bin/env python3
+
+import os
+import re
+from git import Git
+import glob
+
+vendor_map = {
+    'imx': 'fsl',
+    'ls': 'fsl',
+    'vf': 'fsl',
+    'qcom': 'qcom',
+    'am3' : 'ti',
+    'am4' : 'ti',
+    'am5' : 'ti',
+    'da' : 'ti',
+    'dm' : 'ti',
+    'dra' : 'ti',
+    'keystone' : 'ti',
+    'omap' : 'ti',
+    'nspire' : 'ti',
+    'armada' : 'marvell',
+    'berlin' : 'marvell',
+    'dove' : 'marvell',
+    'kirkwood' : 'marvell',
+    'orion' : 'marvell',
+    'pxa' : 'marvell',
+    'mvebu' : 'marvell',
+    'mmp2' : 'marvell',
+    'arm-' : 'arm',
+    'integ' : 'arm',
+    've' : 'arm',
+    'aspeed' : 'aspeed',
+    'at91' : 'atmel',
+    'sama' : 'atmel',
+    'bcm' : 'brcm',
+    'exynos' : 'samsung',
+    's3c' : 'samsung',
+    's5p' : 'samsung',
+    'gemini' : 'cortina',
+    'hi3' : 'hisilicon',
+    'hip' : 'hisilicon',
+    'hisi' : 'hisilicon',
+    'mt' : 'mediatek',
+    'meson' : 'amlogic',
+    'owl' : 'actions',
+    'r7' : 'renesas',
+    'r8' : 'renesas',
+    'r9' : 'renesas',
+    'rk' : 'rockchip',
+    'socfpga' : 'altera',
+    'st' : 'st',
+    'spear' : 'st',
+    'sun' : 'allwinner',
+    'tegra' : 'nvidia',
+    'zynq' : 'xilinx',
+    'wm' : 'wm',
+    'uniph' : 'socionext',
+    'zx' : 'zte',
+}
+
+if __name__ == "__main__":
+    g = Git('.')
+
+    g.checkout("HEAD", "arch/arm/boot/dts/Makefile")
+    dts_make = open("arch/arm/boot/dts/Makefile", "r").read()
+
+    # make entries 1 line
+    make2 = re.sub(r'\\\n', '', dts_make)
+
+    for k,v in vendor_map.items():
+        for f in glob.iglob("arch/arm/boot/dts/" + k + "*.*"):
+            new_dir = "arch/arm/boot/dts/" + v + "/"
+            base = os.path.splitext(os.path.basename(f))[0]
+
+            os.makedirs(new_dir, exist_ok=True)
+            g.mv(f, new_dir)
+
+            # Remove the file from the makefile
+            dts_make = re.sub('.*' + base + r'\.dtb.*\\\n', '', dts_make)
+            dts_make = re.sub('.*' + base + r'\.dtb', '', dts_make)
+
+            # extract the matching makefile entry
+            reg = re.search(r'.*' + base + r'.*', make2)
+            if not reg:
+                continue
+
+            entry = reg.group(0)
+            make2 = re.sub(r'.*' + base + r'.*', '', make2)
+            if entry:
+                makefile = open(new_dir + 'Makefile', 'a+')
+                print(entry, file=makefile)
+                makefile.close()
+
+
+    for d in sorted(glob.iglob("arch/arm/boot/dts/*/")):
+        dts_make += 'subdir-y += ' + d.split(os.path.sep)[-2] + '\n'
+
+        # Add license and sort entries of sub-dir makefile
+        vendor_make = '# SPDX-License-Identifier: GPL-2.0\n'
+        make_lines = open(d + 'Makefile', 'r').readlines()
+        for l in sorted(make_lines):
+            vendor_make += l
+
+        vendor_make = re.sub(r'\t', r'\\\n\t', vendor_make)
+
+        f = open(d + 'Makefile', 'w')
+        f.write(vendor_make)
+        f.close()
+        g.add(d + 'Makefile')
+
+    # Remove entries with no dtbs left
+    dts_make = re.sub(r'.*\+= \\\n\n', '', dts_make)
+
+    open("arch/arm/boot/dts/Makefile", "w").write(dts_make)
+    g.add("arch/arm/boot/dts/Makefile")
