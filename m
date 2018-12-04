@@ -1,81 +1,39 @@
-From: Carlo Caione <ccaione@baylibre.com>
-Subject: [PATCH 1/2] arm64: dts: meson: Fix IRQ trigger type for macirq
-Date: Tue,  4 Dec 2018 16:04:46 +0000
-Message-ID: <20181204160447.27869-2-ccaione@baylibre.com>
-References: <20181204160447.27869-1-ccaione@baylibre.com>
+From: Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>
+Subject: [PATCH 2/2] arm64: dts: ls1088a: Add missing dma-ranges property
+Date: Tue, 4 Dec 2018 16:33:07 +0000
+Message-ID: <1543941180-5147-2-git-send-email-ruxandra.radulescu@nxp.com>
+References: <1543941180-5147-1-git-send-email-ruxandra.radulescu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181204160447.27869-1-ccaione@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, martin.blumenstingl@googlemail.com
-Cc: Carlo Caione <ccaione@baylibre.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1543941180-5147-1-git-send-email-ruxandra.radulescu@nxp.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-A long running stress test on a custom board shipping an AXG SoCs and a
-Realtek RTL8211F PHY revealed that after a few hours the connection
-speed would drop drastically, from ~1000Mbps to ~3Mbps. At the same time
-the 'macirq' (eth0) IRQ would stop being triggered at all and as
-consequence the GMAC IRQs never ACKed.
+LS1088A has a 48-bit address size so make sure that the
+dma-ranges property reflects this.
 
-After a painful investigation the problem seemed to be due to a wrong
-defined IRQ type for the GMAC IRQ that should be LEVEL_HIGH instead of
-EDGE_RISING.
-
-Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+Signed-off-by: Ioana Radulescu <ruxandra.radulescu@nxp.com>
 ---
- arch/arm/boot/dts/meson.dtsi               | 2 +-
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 2 +-
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
-index 0d9faf1a51ea..a86b89086334 100644
---- a/arch/arm/boot/dts/meson.dtsi
-+++ b/arch/arm/boot/dts/meson.dtsi
-@@ -263,7 +263,7 @@
- 			compatible = "amlogic,meson6-dwmac", "snps,dwmac";
- 			reg = <0xc9410000 0x10000
- 			       0xc1108108 0x4>;
--			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "macirq";
- 			status = "disabled";
- 		};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index df017dbd2e57..b1a42e99cb67 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -143,7 +143,7 @@
- 			compatible = "amlogic,meson-axg-dwmac", "snps,dwmac";
- 			reg = <0x0 0xff3f0000 0x0 0x10000
- 			       0x0 0xff634540 0x0 0x8>;
--			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "macirq";
- 			clocks = <&clkc CLKID_ETH>,
- 				 <&clkc CLKID_FCLK_DIV2>,
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index f1e5cdbade5e..58e6bcaac1d8 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -462,7 +462,7 @@
- 			compatible = "amlogic,meson-gx-dwmac", "amlogic,meson-gxbb-dwmac", "snps,dwmac";
- 			reg = <0x0 0xc9410000 0x0 0x10000
- 			       0x0 0xc8834540 0x0 0x4>;
--			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "macirq";
- 			status = "disabled";
- 		};
--- 
-2.19.1
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/bo=
+ot/dts/freescale/fsl-ls1088a.dtsi
+index ba5ce73..e73e55f 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -191,6 +191,7 @@
+ 		#address-cells =3D <2>;
+ 		#size-cells =3D <2>;
+ 		ranges;
++		dma-ranges =3D <0x0 0x0 0x0 0x0 0x10000 0x00000000>;
+=20
+ 		clockgen: clocking@1300000 {
+ 			compatible =3D "fsl,ls1088a-clockgen";
+--=20
+2.7.4
