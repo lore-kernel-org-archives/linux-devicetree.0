@@ -1,38 +1,26 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2] arm64: dts: meson-axg: Enable watchdog on Meson AXG
- SoCs
-Date: Tue, 04 Dec 2018 14:56:59 -0800
-Message-ID: <7h8t14dhok.fsf@baylibre.com>
-References: <20181123144541.15114-1-ccaione@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/5] dt-bindings: gnss: add w2sg0004 compatible string
+Date: Tue, 4 Dec 2018 16:57:52 -0600
+Message-ID: <20181204225752.GA23361@bogus>
+References: <20181118215801.12280-1-andreas@kemnade.info>
+ <20181118215801.12280-4-andreas@kemnade.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181123144541.15114-1-ccaione@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, jbrunet@baylibre.com
-Cc: Carlo Caione <ccaione@baylibre.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181118215801.12280-4-andreas@kemnade.info>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: johan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Andreas Kemnade <andreas@kemnade.info>
 List-Id: devicetree@vger.kernel.org
 
-Carlo Caione <ccaione@baylibre.com> writes:
-
-> Add the watchdog node also on the AXG platforms.
->
-> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+On Sun, 18 Nov 2018 22:57:59 +0100, Andreas Kemnade wrote:
+> Add w2sg0004 compatible string since devices without wakeup
+> pins are now supported.
+> 
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 > ---
-> V2:
->  - Remove amlogic,meson-axg-wdt compatible
+>  Documentation/devicetree/bindings/gnss/sirfstar.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Queued for v4.21 with Neil's tag (branch: v4.21/dt64)
-
-Thanks,
-
-Kevin
+Reviewed-by: Rob Herring <robh@kernel.org>
