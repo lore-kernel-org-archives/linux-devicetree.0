@@ -1,58 +1,38 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 1/5] dt-bindings: clk: meson: add ao slow clock path ids
-Date: Tue,  4 Dec 2018 17:53:06 +0100
-Message-ID: <20181204165310.20806-2-jbrunet@baylibre.com>
-References: <20181204165310.20806-1-jbrunet@baylibre.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH 1/3] dt-bindings: Add vendor prefix for VXT Ltd
+Date: Tue,  4 Dec 2018 14:57:33 -0200
+Message-ID: <1543942655-5942-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181204165310.20806-1-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: thierry.reding@gmail.com
+Cc: devicetree@vger.kernel.org, otavio@ossystems.com.br, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, john.weber@technexion.com
 List-Id: devicetree@vger.kernel.org
 
-Add the CLKIDs for the slow clock generation path
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- include/dt-bindings/clock/axg-aoclkc.h  | 7 ++++++-
- include/dt-bindings/clock/gxbb-aoclkc.h | 7 +++++++
- 2 files changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/include/dt-bindings/clock/axg-aoclkc.h b/include/dt-bindings/clock/axg-aoclkc.h
-index 61955016a55b..8ec4a269c7a6 100644
---- a/include/dt-bindings/clock/axg-aoclkc.h
-+++ b/include/dt-bindings/clock/axg-aoclkc.h
-@@ -21,6 +21,11 @@
- #define CLKID_AO_SAR_ADC_SEL	8
- #define CLKID_AO_SAR_ADC_DIV	9
- #define CLKID_AO_SAR_ADC_CLK	10
--#define CLKID_AO_ALT_XTAL	11
-+#define CLKID_AO_CTS_OSCIN	11
-+#define CLKID_AO_32K_PRE	12
-+#define CLKID_AO_32K_DIV	13
-+#define CLKID_AO_32K_SEL	14
-+#define CLKID_AO_32K		15
-+#define CLKID_AO_CTS_RTC_OSCIN	16
- 
- #endif
-diff --git a/include/dt-bindings/clock/gxbb-aoclkc.h b/include/dt-bindings/clock/gxbb-aoclkc.h
-index 9d15e2221fdb..ec3b26319fc4 100644
---- a/include/dt-bindings/clock/gxbb-aoclkc.h
-+++ b/include/dt-bindings/clock/gxbb-aoclkc.h
-@@ -63,5 +63,12 @@
- #define CLKID_AO_UART2		4
- #define CLKID_AO_IR_BLASTER	5
- #define CLKID_AO_CEC_32K	6
-+#define CLKID_AO_CTS_OSCIN	7
-+#define CLKID_AO_32K_PRE	8
-+#define CLKID_AO_32K_DIV	9
-+#define CLKID_AO_32K_SEL	10
-+#define CLKID_AO_32K		11
-+#define CLKID_AO_CTS_RTC_OSCIN	12
-+#define CLKID_AO_CLK81		13
- 
- #endif
--- 
-2.19.1
+VlhUIEx0ZCBpcyBhIG1hbnVmYWN0dXJlciBvZiBwcm9qZWN0ZWQgY2FwYWNpdGl2ZSB0b3VjaCBw
+YW5lbAphbmQgZGlzcGxheSBzb2x1dGlvbnM6IGh0dHA6Ly93d3cudnh0LmNvbS50dy8KClNpZ25l
+ZC1vZmYtYnk6IEZhYmlvIEVzdGV2YW0gPGZlc3RldmFtQGdtYWlsLmNvbT4KLS0tCiBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCB8IDEgKwogMSBm
+aWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dAppbmRleCAzYmJlM2I4Li4xNmEy
+YTk3IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9y
+LXByZWZpeGVzLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVu
+ZG9yLXByZWZpeGVzLnR4dApAQCAtNDI2LDYgKzQyNiw3IEBAIHZpdmFudGUJVml2YW50ZSBDb3Jw
+b3JhdGlvbgogdm9jb3JlIFZvQ29yZSBTdHVkaW8KIHZvaXBhYwlWb2lwYWMgVGVjaG5vbG9naWVz
+IHMuci5vLgogdm90CVZpc2lvbiBPcHRpY2FsIFRlY2hub2xvZ3kgQ28uLCBMdGQuCit2eHQJVlhU
+IEx0ZAogd2QJV2VzdGVybiBEaWdpdGFsIENvcnAuCiB3ZXRlawlXZVRlayBFbGVjdHJvbmljcywg
+bGltaXRlZC4KIHdleGxlcglXZXhsZXIKLS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
