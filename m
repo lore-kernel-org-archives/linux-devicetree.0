@@ -1,82 +1,99 @@
-From: Tom Psyborg <pozega.tomislav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: net: ath10k: add new dt entry to
- identify external FEM
-Date: Tue, 4 Dec 2018 12:23:22 +0100
-Message-ID: <CAKR_QVKFx3oqb7cvyeY_+fKMxKA9PQkSDex-tvxrQcdc7hJ-CQ@mail.gmail.com>
-References: <1543858415-23953-1-git-send-email-bperumal@codeaurora.org>
- <1543858415-23953-3-git-send-email-bperumal@codeaurora.org> <d7d53ffb-9778-927c-5030-243c2ae57fcc@newmedia-net.de>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 11/14] pinctrl: milbeaut: Add Milbeaut M10V pinctrl
+Date: Tue, 4 Dec 2018 20:23:38 +0900
+Message-ID: <CAK7LNASnBobLm51VL=EVt+97-KBX3vEqXGjTH-L-q1Qn8_GUQA@mail.gmail.com>
+References: <1542589336-13925-1-git-send-email-sugaya.taichi@socionext.com> <1542589336-13925-2-git-send-email-sugaya.taichi@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d7d53ffb-9778-927c-5030-243c2ae57fcc-9LViYcISHtuk6R/r8kmGfQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Gottschall <s.gottschall-9LViYcISHtuk6R/r8kmGfQ@public.gmane.org>
-Cc: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1542589336-13925-2-git-send-email-sugaya.taichi@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sugaya.taichi@socionext.com
+Cc: linux-clk <linux-clk@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/12/2018, Sebastian Gottschall <s.gottschall-9LViYcISHtuk6R/r8kmGfQ@public.gmane.org> wrote:
-> Hi
->
-> you write that
->
-> "microsemi-lx5586", "sky85703-11" and "sky85803" is supported, but you just
-> check for microsemi-lx5586
->   in part 3
->
-> Am 03.12.2018 um 18:33 schrieb Bhagavathi Perumal S:
->> This adds new dt entry ext-fem-name, it is used by ath10k driver
->> to select correct timing parameters and configure it in target wifi
->> hardware.
->> The Front End Module(FEM) normally includes tx power amplifier(PA) and
->> rx low noise amplifier(LNA). The default timing parameters like tx end to
->> PA off timing values were fine tuned for internal FEM used in reference
->> design. And these timing values can not be same if ODM modifies hardware
->> design with different external FEM. This DT entry helps to choose correct
->> timing values in driver if different external FEM hardware used.
->>
->> Signed-off-by: Bhagavathi Perumal S<bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>   Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 8
->> +++++++-
->>   1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git
->> a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> index ef60f25..2dd0c52 100644
->> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> @@ -61,8 +61,13 @@ Optional properties:
->>   	Value type: <phandle>
->>   	Definition: reference to the reserved-memory for the msa region
->>   		    used by the wifi firmware running in Q6.
->> +- ext-fem-name:
->> +	Usage: Optional
->> +	Value type: string
->> +	Definition: Name of external front end module used. Valid FEM names are
->> +		    "microsemi-lx5586", "sky85703-11" and "sky85803" etc.
->>
->> -Example (to supply the calibration data alone):
->> +Example (to supply PCI based wifi block details):
->>
->>   In this example, the node is defined as child node of the PCI
->> controller.
->>
->> @@ -77,6 +82,7 @@ pci {
->>   		wifi@0,0 {
->>   			reg = <0 0 0 0 0>;
->>   			qcom,ath10k-calibration-data = [ 01 02 03 ... ];
->> +			ext-fem-name = "microsemi-lx5586";
->>   		};
->>   	};
->>   };
->> -- 1.9.1
->
+Hi Sugaya-san
 
-Sebastian might be right.
+On Mon, Nov 19, 2018 at 10:01 AM Sugaya Taichi
+<sugaya.taichi@socionext.com> wrote:
+>
+> Add Milbeaut M10V pinctrl.
+> The M10V has the pins that can be used GPIOs or take multiple other
+> functions.
+>
+> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
 
-"Valid FEM names are
->> +		    "microsemi-lx5586", "sky85703-11" and "sky85803" etc."
 
-etc. inidicate you could put whatever here. where does the actual code
-resides that manages different FEM ?
+This patch was sent to:
+
+linux-clk@vger.kernel.org,
+devicetree@vger.kernel.org,
+linux-arm-kernel@lists.infradead.org,
+linux-kernel@vger.kernel.org,
+linux-serial@vger.kernel.org
+
+
+
+
+Unfortunately, the most important ML
+
+  linux-gpio@vger.kernel.org
+
+was not addressed.
+
+
+The pinctrl maintainer may not notice this patch.
+
+
+
+
+
+
+
+> diff --git a/drivers/pinctrl/pinctrl-m10v.c b/drivers/pinctrl/pinctrl-m10v.c
+> new file mode 100644
+> index 0000000..d4ca713
+> --- /dev/null
+> +++ b/drivers/pinctrl/pinctrl-m10v.c
+> @@ -0,0 +1,765 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2018 Socionext Ltd.
+> + * Copyright (C) 2015 Linaro Ltd.
+> + * Author: Jassi Brar <jaswinder.singh@linaro.org>
+
+
+My company name is "Socionext Inc." instead of "Socionext Ltd."
+
+
+
+
+
+
+
+> +static struct platform_driver m10v_pinctrl_driver = {
+> +       .probe  = m10v_pinctrl_probe,
+> +       .driver = {
+> +               .name           = "m10v-pinctrl",
+> +               .of_match_table = m10v_pmatch,
+> +       },
+> +};
+> +
+> +static int __init m10v_pinctrl_init(void)
+> +{
+> +       return platform_driver_register(&m10v_pinctrl_driver);
+> +}
+> +arch_initcall(m10v_pinctrl_init);
+
+
+Can't it be builtin_platform_driver()?
+
+Which device requires this to be arch_initcall()?
+
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
