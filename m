@@ -1,186 +1,431 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v2 2/5] devfreq: add support for suspend/resume of a
- devfreq device
-Date: Tue, 04 Dec 2018 14:43:42 +0900
-Message-ID: <5C06140E.7010603@samsung.com>
-References: <1543847475-7600-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20181203143131eucas1p217f22ac6d19682a54a57658a06980914@eucas1p2.samsung.com>
-        <1543847475-7600-3-git-send-email-l.luba@partner.samsung.com>
-        <5C06124B.5030409@samsung.com>
+From: Sean Wang <sean.wang@kernel.org>
+Subject: Re: [PATCH 5/5] i2c: mediatek: Add i2c compatible for MediaTek MT8183
+Date: Mon, 3 Dec 2018 21:49:23 -0800
+Message-ID: <CAGp9LzqsnF-mvyggw3XMxcNnjvTVgAbiK29413cS0-fF8n57og@mail.gmail.com>
+References: <1543843974-4054-1-git-send-email-qii.wang@mediatek.com> <1543843974-4054-6-git-send-email-qii.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <5C06124B.5030409@samsung.com>
+In-Reply-To: <1543843974-4054-6-git-send-email-qii.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+To: qii.wang@mediatek.com
+Cc: wsa@the-dreams.de, devicetree@vger.kernel.org, ryder.lee@mediatek.com, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+<qii.wang@mediatek.com> =E6=96=BC 2018=E5=B9=B412=E6=9C=883=E6=97=A5 =E9=80=
+=B1=E4=B8=80 =E4=B8=8A=E5=8D=885:34=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> From: qii wang <qii.wang@mediatek.com>
+>
+> Add i2c compatible for MT8183. Compare to 2712 i2c controller, MT8183 has
+> different registers, offsets, clock, and multi-user function.
+>
+> Signed-off-by: qii wang <qii.wang@mediatek.com>
+> ---
+>  drivers/i2c/busses/i2c-mt65xx.c |  136 +++++++++++++++++++++++++++++++++=
+++++--
+>  1 file changed, 130 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt6=
+5xx.c
+> index 428ac99..6b979ab 100644
+> --- a/drivers/i2c/busses/i2c-mt65xx.c
+> +++ b/drivers/i2c/busses/i2c-mt65xx.c
+> @@ -35,17 +35,23 @@
+>  #include <linux/slab.h>
+>
+>  #define I2C_RS_TRANSFER                        (1 << 4)
+> +#define I2C_ARB_LOST                   (1 << 3)
 
-On 2018년 12월 04일 14:36, Chanwoo Choi wrote:
-> Hi Lukasz,
-> 
-> Looks good to me. But, I add the some comments.
-> If you will fix it, feel free to add my tag:
-> Reviewed-by: Chanwoo choi <cw00.choi@samsung.com>
+it seems no one refers to the macro in the patch so it should be
+better to be removed
 
-Sorry. Fix typo 'choi' to 'Choi' as following.
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+>  #define I2C_HS_NACKERR                 (1 << 2)
+>  #define I2C_ACKERR                     (1 << 1)
+>  #define I2C_TRANSAC_COMP               (1 << 0)
+>  #define I2C_TRANSAC_START              (1 << 0)
+> +#define I2C_RESUME_ARBIT               (1 << 1)
+>  #define I2C_RS_MUL_CNFG                        (1 << 15)
+>  #define I2C_RS_MUL_TRIG                        (1 << 14)
+> +#define I2C_HS_TIME_EN                 (1 << 7)
+>  #define I2C_DCM_DISABLE                        0x0000
+>  #define I2C_IO_CONFIG_OPEN_DRAIN       0x0003
+>  #define I2C_IO_CONFIG_PUSH_PULL                0x0000
+>  #define I2C_SOFT_RST                   0x0001
+>  #define I2C_FIFO_ADDR_CLR              0x0001
+> +#define I2C_FIFO_ADDR_CLRH             0x0002
+> +#define I2C_FIFO_ADDR_CLR_MCH          0x0004
+> +#define I2C_HFIFO_DATA                 0x8208
+>  #define I2C_DELAY_LEN                  0x0002
+>  #define I2C_ST_START_CON               0x8001
+>  #define I2C_FS_START_CON               0x1800
+> @@ -76,6 +82,8 @@
+>  #define I2C_CONTROL_DIR_CHANGE          (0x1 << 4)
+>  #define I2C_CONTROL_ACKERR_DET_EN       (0x1 << 5)
+>  #define I2C_CONTROL_TRANSFER_LEN_CHANGE (0x1 << 6)
+> +#define I2C_CONTROL_DMAACK_EN           (0x1 << 8)
+> +#define I2C_CONTROL_ASYNC_MODE          (0x1 << 9)
+>  #define I2C_CONTROL_WRAPPER             (0x1 << 0)
+>
+>  #define I2C_DRV_NAME           "i2c-mt65xx"
+> @@ -130,6 +138,15 @@ enum I2C_REGS_OFFSET {
+>         OFFSET_DEBUGCTRL,
+>         OFFSET_TRANSFER_LEN_AUX,
+>         OFFSET_CLOCK_DIV,
+> +       /* MT8183 only regs */
+> +       OFFSET_LTIMING,
+> +       OFFSET_DATA_TIMING,
+> +       OFFSET_MCU_INTR,
+> +       OFFSET_HW_TIMEOUT,
+> +       OFFSET_HFIFO_DATA,
+> +       OFFSET_HFIFO_STAT,
+> +       OFFSET_MULTI_DMA,
+> +       OFFSET_ROLLBACK,
+>  };
+>
+>  static const u16 mt_i2c_regs_v1[] =3D {
+> @@ -159,6 +176,39 @@ enum I2C_REGS_OFFSET {
+>         [OFFSET_CLOCK_DIV] =3D 0x70,
+>  };
+>
+> +static const u16 mt_i2c_regs_v2[] =3D {
+> +       [OFFSET_DATA_PORT] =3D 0x0,
+> +       [OFFSET_SLAVE_ADDR] =3D 0x4,
+> +       [OFFSET_INTR_MASK] =3D 0x8,
+> +       [OFFSET_INTR_STAT] =3D 0xc,
+> +       [OFFSET_CONTROL] =3D 0x10,
+> +       [OFFSET_TRANSFER_LEN] =3D 0x14,
+> +       [OFFSET_TRANSAC_LEN] =3D 0x18,
+> +       [OFFSET_DELAY_LEN] =3D 0x1c,
+> +       [OFFSET_TIMING] =3D 0x20,
+> +       [OFFSET_START] =3D 0x24,
+> +       [OFFSET_EXT_CONF] =3D 0x28,
+> +       [OFFSET_LTIMING] =3D 0x2c,
+> +       [OFFSET_HS] =3D 0x30,
+> +       [OFFSET_IO_CONFIG] =3D 0x34,
+> +       [OFFSET_FIFO_ADDR_CLR] =3D 0x38,
+> +       [OFFSET_DATA_TIMING] =3D 0x3c,
+> +       [OFFSET_MCU_INTR] =3D 0x40,
+> +       [OFFSET_TRANSFER_LEN_AUX] =3D 0x44,
+> +       [OFFSET_CLOCK_DIV] =3D 0x48,
+> +       [OFFSET_HW_TIMEOUT] =3D 0x4c,
+> +       [OFFSET_SOFTRESET] =3D 0x50,
+> +       [OFFSET_HFIFO_DATA] =3D 0x70,
+> +       [OFFSET_DEBUGSTAT] =3D 0xe0,
+> +       [OFFSET_DEBUGCTRL] =3D 0xe8,
+> +       [OFFSET_FIFO_STAT] =3D 0xf4,
+> +       [OFFSET_FIFO_THRESH] =3D 0xf8,
+> +       [OFFSET_HFIFO_STAT] =3D 0xfc,
+> +       [OFFSET_DCM_EN] =3D 0xf88,
+> +       [OFFSET_MULTI_DMA] =3D 0xf8c,
+> +       [OFFSET_ROLLBACK] =3D 0xf98,
+> +};
+> +
+>  struct mtk_i2c_compatible {
+>         const struct i2c_adapter_quirks *quirks;
+>         const u16 *regs;
+> @@ -168,6 +218,7 @@ struct mtk_i2c_compatible {
+>         unsigned char aux_len_reg: 1;
+>         unsigned char support_33bits: 1;
+>         unsigned char timing_adjust: 1;
+> +       unsigned char dma_sync: 1;
+>  };
+>
+>  struct mtk_i2c {
+> @@ -181,8 +232,11 @@ struct mtk_i2c {
+>         struct clk *clk_main;           /* main clock for i2c bus */
+>         struct clk *clk_dma;            /* DMA clock for i2c via DMA */
+>         struct clk *clk_pmic;           /* PMIC clock for i2c from PMIC *=
+/
+> +       struct clk *clk_arb;            /* Arbitrator clock for i2c */
+>         bool have_pmic;                 /* can use i2c pins from PMIC */
+>         bool use_push_pull;             /* IO config push-pull mode */
+> +       bool share_i3c;                 /* share i3c IP*/
+> +       u32 ch_offset;                  /* i2c multi-user channel offset =
+*/
+>
+>         u16 irq_stat;                   /* interrupt status */
+>         unsigned int clk_src_div;
+> @@ -190,6 +244,7 @@ struct mtk_i2c {
+>         enum mtk_trans_op op;
+>         u16 timing_reg;
+>         u16 high_speed_reg;
+> +       u16 ltiming_reg;
+>         unsigned char auto_restart;
+>         bool ignore_restart_irq;
+>         const struct mtk_i2c_compatible *dev_comp;
+> @@ -216,6 +271,7 @@ struct mtk_i2c {
+>         .aux_len_reg =3D 1,
+>         .support_33bits =3D 1,
+>         .timing_adjust =3D 1,
+> +       .dma_sync =3D 0,
+>  };
+>
+>  static const struct mtk_i2c_compatible mt6577_compat =3D {
+> @@ -227,6 +283,7 @@ struct mtk_i2c {
+>         .aux_len_reg =3D 0,
+>         .support_33bits =3D 0,
+>         .timing_adjust =3D 0,
+> +       .dma_sync =3D 0,
+>  };
+>
+>  static const struct mtk_i2c_compatible mt6589_compat =3D {
+> @@ -238,6 +295,7 @@ struct mtk_i2c {
+>         .aux_len_reg =3D 0,
+>         .support_33bits =3D 0,
+>         .timing_adjust =3D 0,
+> +       .dma_sync =3D 0,
+>  };
+>
+>  static const struct mtk_i2c_compatible mt7622_compat =3D {
+> @@ -249,6 +307,7 @@ struct mtk_i2c {
+>         .aux_len_reg =3D 1,
+>         .support_33bits =3D 0,
+>         .timing_adjust =3D 0,
+> +       .dma_sync =3D 0,
+>  };
+>
+>  static const struct mtk_i2c_compatible mt8173_compat =3D {
+> @@ -259,6 +318,18 @@ struct mtk_i2c {
+>         .aux_len_reg =3D 1,
+>         .support_33bits =3D 1,
+>         .timing_adjust =3D 0,
+> +       .dma_sync =3D 0,
+> +};
+> +
+> +static const struct mtk_i2c_compatible mt8183_compat =3D {
+> +       .regs =3D mt_i2c_regs_v2,
+> +       .pmic_i2c =3D 0,
+> +       .dcm =3D 0,
+> +       .auto_restart =3D 1,
+> +       .aux_len_reg =3D 1,
+> +       .support_33bits =3D 1,
+> +       .timing_adjust =3D 1,
+> +       .dma_sync =3D 1,
+>  };
+>
+>  static const struct of_device_id mtk_i2c_of_match[] =3D {
+> @@ -267,19 +338,20 @@ struct mtk_i2c {
+>         { .compatible =3D "mediatek,mt6589-i2c", .data =3D &mt6589_compat=
+ },
+>         { .compatible =3D "mediatek,mt7622-i2c", .data =3D &mt7622_compat=
+ },
+>         { .compatible =3D "mediatek,mt8173-i2c", .data =3D &mt8173_compat=
+ },
+> +       { .compatible =3D "mediatek,mt8183-i2c", .data =3D &mt8183_compat=
+ },
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(of, mtk_i2c_of_match);
+>
+>  static u16 mtk_i2c_readw(struct mtk_i2c *i2c, enum I2C_REGS_OFFSET reg)
+>  {
+> -       return readw(i2c->base + i2c->dev_comp->regs[reg]);
+> +       return readw(i2c->base + i2c->ch_offset + i2c->dev_comp->regs[reg=
+]);
+>  }
+>
+>  static void mtk_i2c_writew(struct mtk_i2c *i2c, u16 val,
+>                            enum I2C_REGS_OFFSET reg)
+>  {
+> -       writew(val, i2c->base + i2c->dev_comp->regs[reg]);
+> +       writew(val, i2c->base + i2c->ch_offset + i2c->dev_comp->regs[reg]=
+);
+>  }
+>
+>  static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
+> @@ -299,8 +371,18 @@ static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
+>                 if (ret)
+>                         goto err_pmic;
+>         }
+> +
+> +       if (i2c->clk_arb) {
+> +               ret =3D clk_prepare_enable(i2c->clk_arb);
+> +               if (ret)
+> +                       goto err_arb;
+> +       }
+> +
+>         return 0;
+>
+> +err_arb:
+> +       if (i2c->have_pmic)
+> +               clk_disable_unprepare(i2c->clk_pmic);
+>  err_pmic:
+>         clk_disable_unprepare(i2c->clk_main);
+>  err_main:
+> @@ -311,6 +393,9 @@ static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
+>
+>  static void mtk_i2c_clock_disable(struct mtk_i2c *i2c)
+>  {
+> +       if (i2c->clk_arb)
+> +               clk_disable_unprepare(i2c->clk_arb);
+> +
+>         if (i2c->have_pmic)
+>                 clk_disable_unprepare(i2c->clk_pmic);
+>
+> @@ -333,11 +418,23 @@ static void mtk_i2c_init_hw(struct mtk_i2c *i2c)
+>         if (i2c->dev_comp->dcm)
+>                 mtk_i2c_writew(i2c, I2C_DCM_DISABLE, OFFSET_DCM_EN);
+>
+> -       if (i2c->dev_comp->timing_adjust)
+> +       if (i2c->ch_offset)
+> +               writew(I2C_RESUME_ARBIT, i2c->base +
+> +                                        i2c->dev_comp->regs[OFFSET_START=
+]);
+> +
+> +       if (i2c->dev_comp->timing_adjust && i2c->share_i3c) {
+> +               mtk_i2c_writew(i2c, (I2C_DEFAULT_CLK_DIV - 1) |
+> +                                   (I2C_DEFAULT_CLK_DIV - 1) << 8,
+> +                                   OFFSET_CLOCK_DIV);
+> +               i2c->high_speed_reg |=3D I2C_HS_TIME_EN;
+> +       } else {
+>                 mtk_i2c_writew(i2c, I2C_DEFAULT_CLK_DIV - 1, OFFSET_CLOCK=
+_DIV);
+> +       }
+>
+>         mtk_i2c_writew(i2c, i2c->timing_reg, OFFSET_TIMING);
+>         mtk_i2c_writew(i2c, i2c->high_speed_reg, OFFSET_HS);
+> +       if (i2c->dev_comp->regs =3D=3D mt_i2c_regs_v2)
+> +               mtk_i2c_writew(i2c, i2c->ltiming_reg, OFFSET_LTIMING);
+>
+>         /* If use i2c pin from PMIC mt6397 side, need set PATH_DIR first =
+*/
+>         if (i2c->have_pmic)
+> @@ -345,6 +442,9 @@ static void mtk_i2c_init_hw(struct mtk_i2c *i2c)
+>
+>         control_reg =3D I2C_CONTROL_ACKERR_DET_EN |
+>                       I2C_CONTROL_CLK_EXT_EN | I2C_CONTROL_DMA_EN;
+> +       if (i2c->dev_comp->dma_sync)
+> +               control_reg |=3D I2C_CONTROL_DMAACK_EN | I2C_CONTROL_ASYN=
+C_MODE;
+> +
+>         mtk_i2c_writew(i2c, control_reg, OFFSET_CONTROL);
+>         mtk_i2c_writew(i2c, I2C_DELAY_LEN, OFFSET_DELAY_LEN);
+>
+> @@ -434,6 +534,8 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, uns=
+igned int parent_clk)
+>         unsigned int clk_src;
+>         unsigned int step_cnt;
+>         unsigned int sample_cnt;
+> +       unsigned int l_step_cnt;
+> +       unsigned int l_sample_cnt;
+>         unsigned int target_speed;
+>         int ret;
+>
+> @@ -443,11 +545,11 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, u=
+nsigned int parent_clk)
+>         if (target_speed > MAX_FS_MODE_SPEED) {
+>                 /* Set master code speed register */
+>                 ret =3D mtk_i2c_calculate_speed(i2c, clk_src, MAX_FS_MODE=
+_SPEED,
+> -                                             &step_cnt, &sample_cnt);
+> +                                             &l_step_cnt, &l_sample_cnt)=
+;
+>                 if (ret < 0)
+>                         return ret;
+>
+> -               i2c->timing_reg =3D (sample_cnt << 8) | step_cnt;
+> +               i2c->timing_reg =3D (l_sample_cnt << 8) | l_step_cnt;
+>
+>                 /* Set the high speed mode register */
+>                 ret =3D mtk_i2c_calculate_speed(i2c, clk_src, target_spee=
+d,
+> @@ -457,6 +559,8 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, uns=
+igned int parent_clk)
+>
+>                 i2c->high_speed_reg =3D I2C_TIME_DEFAULT_VALUE |
+>                         (sample_cnt << 12) | (step_cnt << 8);
+> +               i2c->ltiming_reg =3D (l_sample_cnt << 6) | l_step_cnt |
+> +                                  (sample_cnt << 12) | (step_cnt << 9);
+>         } else {
+>                 ret =3D mtk_i2c_calculate_speed(i2c, clk_src, target_spee=
+d,
+>                                               &step_cnt, &sample_cnt);
+> @@ -467,6 +571,8 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, uns=
+igned int parent_clk)
+>
+>                 /* Disable the high speed transaction */
+>                 i2c->high_speed_reg =3D I2C_TIME_CLR_VALUE;
+> +
+> +               i2c->ltiming_reg =3D (sample_cnt << 6) | step_cnt;
+>         }
+>
+>         return 0;
+> @@ -483,6 +589,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, s=
+truct i2c_msg *msgs,
+>         u16 addr_reg;
+>         u16 start_reg;
+>         u16 control_reg;
+> +       u16 fifo_clr_reg;
+>         u16 restart_flag =3D 0;
+>         u32 reg_4g_mode;
+>         u8 *dma_rd_buf =3D NULL;
+> @@ -521,7 +628,15 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, =
+struct i2c_msg *msgs,
+>         mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
+>                I2C_TRANSAC_COMP, OFFSET_INTR_STAT);
+>
+> -       mtk_i2c_writew(i2c, I2C_FIFO_ADDR_CLR, OFFSET_FIFO_ADDR_CLR);
 
-> 
-> On 2018년 12월 03일 23:31, Lukasz Luba wrote:
->> The patch prepares devfreq device for handling suspend/resume
->> functionality.  The new fields will store needed information during this
-> 
-> nitpick. Remove unneeded space. There are two spaces between '.' and 'The new'. 
-> 
->> process.  Devfreq framework handles opp-suspend DT entry and there is no
-> 
-> ditto.
-> 
->> need of modyfications in the drivers code.  It uses atomic variables to
-> 
-> ditto.
-> 
->> make sure no race condition affects the process.
->>
->> The patch is based on earlier work by Tobias Jakobi.
-> 
-> Please remove it from each patch description.
-> 
->>
->> Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
->> Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>  drivers/devfreq/devfreq.c | 51 +++++++++++++++++++++++++++++++++++++++--------
->>  include/linux/devfreq.h   |  7 +++++++
->>  2 files changed, 50 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
->> index a9fd61b..36bed24 100644
->> --- a/drivers/devfreq/devfreq.c
->> +++ b/drivers/devfreq/devfreq.c
->> @@ -316,6 +316,10 @@ static int devfreq_set_target(struct devfreq *devfreq, unsigned long new_freq,
->>  			"Couldn't update frequency transition information.\n");
->>  
->>  	devfreq->previous_freq = new_freq;
->> +
->> +	if (devfreq->suspend_freq)
->> +		devfreq->resume_freq = cur_freq;
->> +
->>  	return err;
->>  }
->>  
->> @@ -667,6 +671,9 @@ struct devfreq *devfreq_add_device(struct device *dev,
->>  	}
->>  	devfreq->max_freq = devfreq->scaling_max_freq;
->>  
->> +	devfreq->suspend_freq = dev_pm_opp_get_suspend_opp_freq(dev);
->> +	atomic_set(&devfreq->suspend_count, 0);
->> +
->>  	dev_set_name(&devfreq->dev, "devfreq%d",
->>  				atomic_inc_return(&devfreq_no));
->>  	err = device_register(&devfreq->dev);
->> @@ -867,14 +874,28 @@ EXPORT_SYMBOL(devm_devfreq_remove_device);
->>   */
->>  int devfreq_suspend_device(struct devfreq *devfreq)
->>  {
->> +	int ret;
->> +
->>  	if (!devfreq)
->>  		return -EINVAL;
->>  
->> -	if (!devfreq->governor)
->> -		return 0;
->> +	if (devfreq->governor) {
->> +		ret = devfreq->governor->event_handler(devfreq,
->> +					DEVFREQ_GOV_SUSPEND, NULL);
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
->> +	if (devfreq->suspend_freq) {
->> +		if (atomic_inc_return(&devfreq->suspend_count) > 1)
->> +			return 0;
->> +
->> +		ret = devfreq_set_target(devfreq, devfreq->suspend_freq, 0);
->> +		if (ret)
->> +			return ret;
->> +	}
->>  
->> -	return devfreq->governor->event_handler(devfreq,
->> -				DEVFREQ_GOV_SUSPEND, NULL);
->> +	return 0;
->>  }
->>  EXPORT_SYMBOL(devfreq_suspend_device);
->>  
->> @@ -888,14 +909,28 @@ EXPORT_SYMBOL(devfreq_suspend_device);
->>   */
->>  int devfreq_resume_device(struct devfreq *devfreq)
->>  {
->> +	int ret;
->> +
->>  	if (!devfreq)
->>  		return -EINVAL;
->>  
->> -	if (!devfreq->governor)
->> -		return 0;
->> +	if (devfreq->resume_freq) {
->> +		if (atomic_dec_return(&devfreq->suspend_count) >= 1)
->> +			return 0;
->>  
->> -	return devfreq->governor->event_handler(devfreq,
->> -				DEVFREQ_GOV_RESUME, NULL);
->> +		ret = devfreq_set_target(devfreq, devfreq->resume_freq, 0);
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
->> +	if (devfreq->governor) {
->> +		ret = devfreq->governor->event_handler(devfreq,
->> +					DEVFREQ_GOV_RESUME, NULL);
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
->> +	return 0;
->>  }
->>  EXPORT_SYMBOL(devfreq_resume_device);
->>  
->> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
->> index e4963b0..d985199 100644
->> --- a/include/linux/devfreq.h
->> +++ b/include/linux/devfreq.h
->> @@ -131,6 +131,9 @@ struct devfreq_dev_profile {
->>   * @scaling_min_freq:	Limit minimum frequency requested by OPP interface
->>   * @scaling_max_freq:	Limit maximum frequency requested by OPP interface
->>   * @stop_polling:	 devfreq polling status of a device.
->> + * @suspend_freq:	 frequency of a device set during suspend phase.
->> + * @resume_freq:	 frequency of a device set in resume phase.
->> + * @suspend_count:	 suspend requests counter for a device.
->>   * @total_trans:	Number of devfreq transitions
->>   * @trans_table:	Statistics of devfreq transitions
->>   * @time_in_state:	Statistics of devfreq states
->> @@ -167,6 +170,10 @@ struct devfreq {
->>  	unsigned long scaling_max_freq;
->>  	bool stop_polling;
->>  
->> +	unsigned long suspend_freq;
->> +	unsigned long resume_freq;
->> +	atomic_t suspend_count;
->> +
->>  	/* information for device frequency transition */
->>  	unsigned int total_trans;
->>  	unsigned int *trans_table;
->>
-> 
-> 
+There's a missing initialization to fifo_clr_reg here, I guess
+fifo_clr_reg =3D I2C_FIFO_ADDR_CLR should be necessarily made here;
 
+> +       if (i2c->share_i3c)
+> +               fifo_clr_reg =3D I2C_FIFO_ADDR_CLR | I2C_FIFO_ADDR_CLRH;
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+fifo_clr_reg |=3D I2C_FIFO_ADDR_CLRH baed on initialized value
+
+> +       if (i2c->ch_offset)
+> +               fifo_clr_reg =3D I2C_FIFO_ADDR_CLR | I2C_FIFO_ADDR_CLR_MC=
+H;
+
+and then fifo_clr_reg |=3D I2C_FIFO_ADDR_CLR_MCH;
+
+> +
+> +       mtk_i2c_writew(i2c, fifo_clr_reg, OFFSET_FIFO_ADDR_CLR);
+> +
+> +       if ((i2c->speed_hz > MAX_FS_MODE_SPEED) && i2c->share_i3c)
+> +               mtk_i2c_writew(i2c, I2C_HFIFO_DATA, OFFSET_HFIFO_DATA);
+>
+>         /* Enable interrupt */
+>         mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
+> @@ -817,6 +932,11 @@ static int mtk_i2c_parse_dt(struct device_node *np, =
+struct mtk_i2c *i2c)
+>         if (i2c->clk_src_div =3D=3D 0)
+>                 return -EINVAL;
+>
+> +       ret =3D of_property_read_u32(np, "ch-offset", &i2c->ch_offset);
+
+if ch-offset is a vendor-specific property, it should be better to add
+a vendor prefix
+
+> +       if (ret < 0)
+> +               i2c->ch_offset =3D 0;
+> +
+> +       i2c->share_i3c =3D of_property_read_bool(np, "mediatek,share-i3c"=
+);
+>         i2c->have_pmic =3D of_property_read_bool(np, "mediatek,have-pmic"=
+);
+>         i2c->use_push_pull =3D
+>                 of_property_read_bool(np, "mediatek,use-push-pull");
+> @@ -884,6 +1004,10 @@ static int mtk_i2c_probe(struct platform_device *pd=
+ev)
+>                 return PTR_ERR(i2c->clk_dma);
+>         }
+>
+> +       i2c->clk_arb =3D devm_clk_get(&pdev->dev, "arb");
+> +       if (IS_ERR(i2c->clk_arb))
+> +               i2c->clk_arb =3D NULL;
+> +
+>         clk =3D i2c->clk_main;
+>         if (i2c->have_pmic) {
+>                 i2c->clk_pmic =3D devm_clk_get(&pdev->dev, "pmic");
+> --
+> 1.7.9.5
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
