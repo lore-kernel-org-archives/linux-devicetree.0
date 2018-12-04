@@ -1,15 +1,14 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v3 1/7] ata: libahci_platform: comply to PHY framework
-Date: Tue, 4 Dec 2018 20:48:15 +0100
-Message-ID: <ccde58fa-badd-dcd6-9834-7ef689e922e2@redhat.com>
-References: <20181204192831.12440-1-miquel.raynal@bootlin.com>
- <20181204192831.12440-2-miquel.raynal@bootlin.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/2] arm64: dts: meson: Fix IRQ trigger type for macirq
+Date: Tue, 04 Dec 2018 20:52:45 +0100
+Message-ID: <5C06DB0D.3010306@baylibre.com>
+References: <20181204160447.27869-1-ccaione@baylibre.com>
+ <20181204160447.27869-2-ccaione@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181204192831.12440-2-miquel.raynal@bootlin.com>
-Content-Language: en-US
+In-Reply-To: <20181204160447.27869-2-ccaione@baylibre.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,101 +18,82 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jens Axboe <axboe@kernel.dk>
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
+To: Carlo Caione <ccaione@baylibre.com>, robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, martin.blumenstingl@googlemail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Carlo,
 
-On 04-12-18 20:28, Miquel Raynal wrote:
-> Current implementation of the libahci does not take into account the
-> new PHY framework. Correct the situation by adding a call to
-> phy_set_mode() before phy_power_on().
-> 
-> PHYs should also be handled at suspend/resume time. For this, call
-> ahci_platform_enable/disable_phys() at suspend/resume_host() time. These
-> calls are guarded by a HFLAG (AHCI_HFLAG_SUSPEND_PHYS) that the user of
-> the libahci driver must set manually in hpriv->flags at probe time. This
-> is to avoid breaking users that have not been tested with this change.
-> 
-> Suggested-by: Grzegorz Jaszczyk <jaz@semihalf.com>
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Le 04/12/2018 17:04, Carlo Caione a =E9crit :
+> A long running stress test on a custom board shipping an AXG SoCs and a
+> Realtek RTL8211F PHY revealed that after a few hours the connection
+> speed would drop drastically, from ~1000Mbps to ~3Mbps. At the same time
+> the 'macirq' (eth0) IRQ would stop being triggered at all and as
+> consequence the GMAC IRQs never ACKed.
+> =
 
-Patch looks good to me now:
+> After a painful investigation the problem seemed to be due to a wrong
+> defined IRQ type for the GMAC IRQ that should be LEVEL_HIGH instead of
+> EDGE_RISING.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+This is a good news !
 
-Rest of the series looks ok to me to:
+Kevin,
+What's the best procedure here to make it apply on the 4.19, 4.14 and 4.9 s=
+table
+trees ? for 4.14 and 4.9 it will need to be reworked to apply correctly.
 
-Acked-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
 
-Regards,
+> =
 
-Hans
-
-
-
+> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
 > ---
->   drivers/ata/ahci.h             |  2 ++
->   drivers/ata/libahci_platform.c | 13 +++++++++++++
->   2 files changed, 15 insertions(+)
-> 
-> diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-> index ef356e70e6de..8810475f307a 100644
-> --- a/drivers/ata/ahci.h
-> +++ b/drivers/ata/ahci.h
-> @@ -254,6 +254,8 @@ enum {
->   	AHCI_HFLAG_IS_MOBILE		= (1 << 25), /* mobile chipset, use
->   							SATA_MOBILE_LPM_POLICY
->   							as default lpm_policy */
-> +	AHCI_HFLAG_SUSPEND_PHYS		= (1 << 26), /* handle PHYs during
-> +							suspend/resume */
->   
->   	/* ap->flags bits */
->   
-> diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
-> index 4b900fc659f7..81b1a3332ed6 100644
-> --- a/drivers/ata/libahci_platform.c
-> +++ b/drivers/ata/libahci_platform.c
-> @@ -56,6 +56,12 @@ static int ahci_platform_enable_phys(struct ahci_host_priv *hpriv)
->   		if (rc)
->   			goto disable_phys;
->   
-> +		rc = phy_set_mode(hpriv->phys[i], PHY_MODE_SATA);
-> +		if (rc) {
-> +			phy_exit(hpriv->phys[i]);
-> +			goto disable_phys;
-> +		}
-> +
->   		rc = phy_power_on(hpriv->phys[i]);
->   		if (rc) {
->   			phy_exit(hpriv->phys[i]);
-> @@ -738,6 +744,9 @@ int ahci_platform_suspend_host(struct device *dev)
->   	writel(ctl, mmio + HOST_CTL);
->   	readl(mmio + HOST_CTL); /* flush */
->   
-> +	if (hpriv->flags & AHCI_HFLAG_SUSPEND_PHYS)
-> +		ahci_platform_disable_phys(hpriv);
-> +
->   	return ata_host_suspend(host, PMSG_SUSPEND);
->   }
->   EXPORT_SYMBOL_GPL(ahci_platform_suspend_host);
-> @@ -756,6 +765,7 @@ EXPORT_SYMBOL_GPL(ahci_platform_suspend_host);
->   int ahci_platform_resume_host(struct device *dev)
->   {
->   	struct ata_host *host = dev_get_drvdata(dev);
-> +	struct ahci_host_priv *hpriv = host->private_data;
->   	int rc;
->   
->   	if (dev->power.power_state.event == PM_EVENT_SUSPEND) {
-> @@ -766,6 +776,9 @@ int ahci_platform_resume_host(struct device *dev)
->   		ahci_init_controller(host);
->   	}
->   
-> +	if (hpriv->flags & AHCI_HFLAG_SUSPEND_PHYS)
-> +		ahci_platform_enable_phys(hpriv);
-> +
->   	ata_host_resume(host);
->   
->   	return 0;
-> 
+>  arch/arm/boot/dts/meson.dtsi               | 2 +-
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 2 +-
+>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi  | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> =
+
+> diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
+> index 0d9faf1a51ea..a86b89086334 100644
+> --- a/arch/arm/boot/dts/meson.dtsi
+> +++ b/arch/arm/boot/dts/meson.dtsi
+> @@ -263,7 +263,7 @@
+>  			compatible =3D "amlogic,meson6-dwmac", "snps,dwmac";
+>  			reg =3D <0xc9410000 0x10000
+>  			       0xc1108108 0x4>;
+> -			interrupts =3D <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
+> +			interrupts =3D <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+>  			interrupt-names =3D "macirq";
+>  			status =3D "disabled";
+>  		};
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot=
+/dts/amlogic/meson-axg.dtsi
+> index df017dbd2e57..b1a42e99cb67 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> @@ -143,7 +143,7 @@
+>  			compatible =3D "amlogic,meson-axg-dwmac", "snps,dwmac";
+>  			reg =3D <0x0 0xff3f0000 0x0 0x10000
+>  			       0x0 0xff634540 0x0 0x8>;
+> -			interrupts =3D <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
+> +			interrupts =3D <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+>  			interrupt-names =3D "macirq";
+>  			clocks =3D <&clkc CLKID_ETH>,
+>  				 <&clkc CLKID_FCLK_DIV2>,
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/=
+dts/amlogic/meson-gx.dtsi
+> index f1e5cdbade5e..58e6bcaac1d8 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> @@ -462,7 +462,7 @@
+>  			compatible =3D "amlogic,meson-gx-dwmac", "amlogic,meson-gxbb-dwmac", =
+"snps,dwmac";
+>  			reg =3D <0x0 0xc9410000 0x0 0x10000
+>  			       0x0 0xc8834540 0x0 0x4>;
+> -			interrupts =3D <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
+> +			interrupts =3D <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+>  			interrupt-names =3D "macirq";
+>  			status =3D "disabled";
+>  		};
+> =
