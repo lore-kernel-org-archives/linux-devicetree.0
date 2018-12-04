@@ -1,60 +1,40 @@
-From: Sean Wang <sean.wang@kernel.org>
-Subject: Re: [PATCH 1/5] dt-bindings: i2c: Add Mediatek MT7629 i2c binding
-Date: Tue, 4 Dec 2018 12:19:16 -0800
-Message-ID: <CAGp9Lzppg3NXBtfgG2SLzMxKBiV9ozgDbBQRTffYA2JhT48Efg@mail.gmail.com>
-References: <1543843974-4054-1-git-send-email-qii.wang@mediatek.com> <1543843974-4054-2-git-send-email-qii.wang@mediatek.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 6/6] ARM: dts: rockchip: add BQ Edison 2 QC devicetree
+Date: Tue, 4 Dec 2018 14:21:17 -0600
+Message-ID: <20181204202117.GA24452@bogus>
+References: <20181113130559.31221-1-heiko@sntech.de>
+ <20181113130559.31221-7-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543843974-4054-2-git-send-email-qii.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: qii.wang@mediatek.com
-Cc: wsa@the-dreams.de, devicetree@vger.kernel.org, ryder.lee@mediatek.com, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20181113130559.31221-7-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko.stuebner-K3U4GQvHnyU@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-<qii.wang@mediatek.com> =E6=96=BC 2018=E5=B9=B412=E6=9C=883=E6=97=A5 =E9=80=
-=B1=E4=B8=80 =E4=B8=8A=E5=8D=885:34=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> From: qii wang <qii.wang@mediatek.com>
->
-> Add MT7629 i2c binding to i2c-mt2712.txt and there is no need to
-
-where's i2c-mt2712.txt mentioned here?
-
-> modify i2c driver.
-
-suggest not to mention driver in any dt-binding, dt-binding self
-should be os-agnostic
-
->
-> Signed-off-by: qii wang <qii.wang@mediatek.com>
+On Tue, 13 Nov 2018 14:05:59 +0100, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner-K3U4GQvHnyU@public.gmane.org>
+> 
+> The Edison 2 Quad-Core was a Tablet device released in 2013 by MundoReader
+> using a rk3188 soc. Add a devicetree for it.
+> 
+> Signed-off-by: Heiko Stuebner <heiko.stuebner-K3U4GQvHnyU@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/i2c/i2c-mtk.txt |    1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt b/Document=
-ation/devicetree/bindings/i2c/i2c-mtk.txt
-> index e199695..7729e57 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-> @@ -10,6 +10,7 @@ Required properties:
->        "mediatek,mt6589-i2c": for MediaTek MT6589
->        "mediatek,mt7622-i2c": for MediaTek MT7622
->        "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for MediaTek MT7623
-> +      "mediatek,mt7629-i2c", "mediatek,mt2712-i2c": for MediaTek mt7629
+>  .../devicetree/bindings/arm/rockchip.txt      |   4 +
+>  arch/arm/boot/dts/Makefile                    |   1 +
+>  arch/arm/boot/dts/rk3188-bqedison2qc.dts      | 711 ++++++++++++++++++
+>  3 files changed, 716 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/rk3188-bqedison2qc.dts
+> 
 
-change mt7629 to MT7629 to align to the others
-
->        "mediatek,mt8173-i2c": for MediaTek MT8173
->    - reg: physical base address of the controller and dma base, length of=
- memory
->      mapped region.
-> --
-> 1.7.9.5
->
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
