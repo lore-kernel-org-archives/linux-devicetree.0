@@ -1,55 +1,45 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 26/34] dt-bindings: arm: Convert Renesas board/soc
- bindings to json-schema
-Date: Tue, 4 Dec 2018 15:57:31 +0100
-Message-ID: <CAMuHMdV5brJyAmP0Bj7Bp7wruLNM1tSWkj_AyN5HCx4vdg-nrg@mail.gmail.com>
-References: <20181203213223.16986-1-robh@kernel.org> <20181203213223.16986-27-robh@kernel.org>
- <20181204144822.uqonsto45u7ysdu5@verge.net.au>
+From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
+Subject: [PATCH 0/4] Fix ssd1307fb OLED driver reset
+Date: Tue, 4 Dec 2018 15:03:34 +0000
+Message-ID: <1543935806-94880-1-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181204144822.uqonsto45u7ysdu5@verge.net.au>
+Content-Language: en-US
+Content-ID: <1E53DEEA3565284E837E4EA2D450AA48@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Kumar Gala <kumar.gala@linaro.org>, arm@kernel.org, darknighte@darknighte.com, Frank Rowand <frowand.list@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Grant Likely <grant.likely@arm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Maxime Ripard <maxime.ripard@bootlin.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
-
-On Tue, Dec 4, 2018 at 3:48 PM Simon Horman <horms@verge.net.au> wrote:
-> On Mon, Dec 03, 2018 at 03:32:15PM -0600, Rob Herring wrote:
-> > Convert Renesas SoC bindings to DT schema format using json-schema.
-> >
-> > Cc: Simon Horman <horms@verge.net.au>
-> > Cc: Magnus Damm <magnus.damm@gmail.com>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: linux-renesas-soc@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  .../devicetree/bindings/arm/shmobile.txt      | 151 ------------
-> >  .../devicetree/bindings/arm/shmobile.yaml     | 218 ++++++++++++++++++
-> >  2 files changed, 218 insertions(+), 151 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/arm/shmobile.txt
-> >  create mode 100644 Documentation/devicetree/bindings/arm/shmobile.yaml
->
-> Hi Rob,
->
-> what is this based on? I get a conflict when applying the .txt change
-> and if I knew the base for this patch it would be rather easy to work
-> out what has changed.
->
-> Also, should we do an s/shmobile.txt/shmobile.yaml/ in MAINTAINERS?
-
-Probably even s/shmobile.yaml/renesas.yaml/, while at it?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgYWxsLA0KDQp0aGlzIGlzIG15IHRoaXJkIGF0dGVtcHQgdG8gZml4IHRoZSBzc2QxMzA3ZmIg
+T0xFRCBkcml2ZXIgcmVzZXQuIEluIHRoZQ0Kc2Vjb25kIGF0dGVtcHQgWzFdIFJvYiBzdWdnZXN0
+ZWQgdG8gdGFrZSBkaWZmZXJlbnQgYXByb2FjaC4gVGhhdCBpcyB0bw0KYXBwbHkgd2hhdCB3YXMg
+b3JpZ2luYWx5IHBhcnQgb2YgdGhlIGZpcnN0IHJvdW5kIGFuZCBldmVudHVhbGx5IG1lcmdlZA0K
+YnV0IHJldmVydGVkIGxhdGVyIG9uIFsyXVszXS4NCg0KTmV4dCBzdGVwIGlzIHRvIGFwcGx5IGEg
+Zml4dXAgZm9yIHRoZSBzaW5nbGUgdXNlciAoaW4tdHJlZSkgdGhhdCB1c2VzDQp0aGlzIE9MRUQu
+IEFzIFJvYiBzdWdnZXN0ZWQsIHRoZSBmaXh1cCBtYXkgYmUgYXBwbGllZCBvbmx5IGFmdGVyDQpz
+b21lb25lIGNvbXBsYWlucyB0aGVpciBkaXNwbGF5IGJyb2tlLg0KDQpJIGFtIG5vdCByZWFsbHkg
+c3VyZSB3aGF0IGlzIHRoZSBwcm9wcGVyIHdheSB0byBoYW5kbGUgdGhpcyBzbyB0aGUNCnNlcmll
+cyBjb250YWlucyB0aGUgb3JpZ2luYWwgcGF0Y2hlcyArIGEgbWlub3IgZml4IGluIHRoZSBkb2Nz
+IGFuZA0KdGhlIGZpeHVwIGFzIHRoZSBsYXN0IHBhdGNoLg0KDQpBZGRpbmcgQWxleGFuZHJlIGFu
+ZCBNYXhpbWUgZnJvbSBCb290bGluIHRvIHRoZSBDYyBsaXN0IGFzIHlvdSBzZWVtDQp0byBiZSB0
+aGUgbGFzdCBvbmVzIHdobyB0b3VjaGVkIHRoZSBDcnlzdGFsZm9udHogcGxhdGZvcm0uIFlvdXIg
+Y29tZW50DQpyZWdhcmRpbmcgdGhlIHN0YXR1cyBvZiB0aGUgcGxhdGZvcm0gYW5kIHdoZXRoZXIg
+dGhlIGZpeHVwIHNob3VsZCBiZQ0KYXBwbGllZCBzdHJhaWdodCBhd2F5IG9yIG5vdCBhdCBhbGwg
+d2lsbCBiZSBhcHByZWNpYXRlZC4NCg0KVGhhbmsgeW91LA0KTWljaGFsDQoNClsxXSBodHRwczov
+L3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwNjY1NTk3LyMyMjMyNzIyNw0KWzJdIGh0dHBz
+Oi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA2MTc3MjkvDQpbM10gaHR0cHM6Ly9wYXRj
+aHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDYxNzczMS8jMjIyNTcxNzUNCg0KTWljaGFsIFZva8Oh
+xI0gKDQpOg0KICBkdC1iaW5kaW5nczogZGlzcGxheTogc3NkMTMwN2ZiOiBSZW1vdmUgcmVzZXQt
+YWN0aXZlLWxvdyBmcm9tIGV4YW1wbGVzDQogIHZpZGVvOiBzc2QxMzA3ZmI6IERvIG5vdCBoYXJk
+IGNvZGUgYWN0aXZlLWxvdyByZXNldCBzZXF1ZW5jZQ0KICBBUk06IGR0czogaW14MjgtY2ZhMTAw
+MzY6IEZpeCB0aGUgcmVzZXQgZ3BpbyBzaWduYWwgcG9sYXJpdHkNCiAgQVJNOiBteHM6IGNmYTEw
+MDM2OiBGaXh1cCBPTEVEwqBkaXNwbGF5IHJlc2V0IHBvbGFyaXR5DQoNCiAuLi4vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3NzZDEzMDdmYi50eHQgICAgICB8ICAyIC0NCiBhcmNoL2FybS9i
+b290L2R0cy9pbXgyOC1jZmExMDAzNi5kdHMgICAgICAgICAgICAgICB8ICAzICstDQogYXJjaC9h
+cm0vbWFjaC1teHMvbWFjaC1teHMuYyAgICAgICAgICAgICAgICAgICAgICAgfCA0NSArKysrKysr
+KysrKysrKysrKysrKysrDQogZHJpdmVycy92aWRlby9mYmRldi9zc2QxMzA3ZmIuYyAgICAgICAg
+ICAgICAgICAgICAgfCAgNCArLQ0KIDQgZmlsZXMgY2hhbmdlZCwgNDkgaW5zZXJ0aW9ucygrKSwg
+NSBkZWxldGlvbnMoLSkNCg0KLS0gDQoyLjEuNA0KDQo=
