@@ -1,85 +1,63 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] arm64: dts: qcom: sdm845: Add dpu to
- sdm845 dts file
-Date: Tue, 4 Dec 2018 10:08:34 -0800
-Message-ID: <CAD=FV=XHGosaC=4wY376K7bR_WytayWCg4KBXsZxjQP6B1qzUw@mail.gmail.com>
-References: <1543876054-12998-1-git-send-email-jsanka@codeaurora.org>
- <CAD=FV=WKtf0Ba2Fk-V8kktp6KPJh_6DcMQSVF=ynoAA4nkqKBQ@mail.gmail.com>
- <e9207da13c30cae15cd2aba77078d08b@codeaurora.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 2/4] ARM: dts: am437x: Move l4 child devices to probe
+ them with ti-sysc
+Date: Tue, 4 Dec 2018 10:11:21 -0800
+Message-ID: <20181204181121.GC6707@atomide.com>
+References: <20180925000545.22931-1-tony@atomide.com>
+ <20180925000545.22931-3-tony@atomide.com>
+ <f890f989-bfd0-47eb-66e0-5a8573e398b7@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <e9207da13c30cae15cd2aba77078d08b-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kristian Kristensen <hoegsberg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <f890f989-bfd0-47eb-66e0-5a8573e398b7@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>, Tero Kristo <t-kristo@ti.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBNb24sIERlYyAzLCAyMDE4IGF0IDY6NDEgUE0gSmV5a3VtYXIgU2Fua2FyYW4gPGpz
-YW5rYUBjb2RlYXVyb3JhLm9yZz4gd3JvdGU6Cj4gPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ZHNpMTogZHNpQGFlOTYwMDAgewo+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-Y29tcGF0aWJsZSA9ICJxY29tLG1kc3MtZHNpLWN0cmwiOwo+ID4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgcmVnID0gPDB4YWU5NjAwMCAweDQwMD47Cj4gPj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICByZWctbmFtZXMgPSAiZHNpX2N0cmwiOwo+ID4+ICsKPiA+PiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdC1wYXJlbnQgPSA8Jm1kc3M+
-Owo+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDw1IElS
-UV9UWVBFX0xFVkVMX0hJR0g+Owo+ID4+ICsKPiA+PiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIGNsb2NrcyA9IDwmZGlzcGNjCj4gPj4gRElTUF9DQ19NRFNTX0JZVEUxX0NMSz4sCj4g
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmRpc3BjYwo+ID4+
-IERJU1BfQ0NfTURTU19CWVRFMV9JTlRGX0NMSz4sCj4gPj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICA8JmRpc3BjYwo+ID4+IERJU1BfQ0NfTURTU19QQ0xLMV9DTEs+
-LAo+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZkaXNwY2MK
-PiA+PiBESVNQX0NDX01EU1NfRVNDMV9DTEs+LAo+ID4+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgPCZkaXNwY2MKPiA+PiBESVNQX0NDX01EU1NfQUhCX0NMSz4sCj4g
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmRpc3BjYwo+ID4+
-IERJU1BfQ0NfTURTU19BWElfQ0xLPjsKPiA+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIGNsb2NrLW5hbWVzID0gImJ5dGUiLAo+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAiYnl0ZV9pbnRmIiwKPiA+PiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgInBpeGVsIiwKPiA+PiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImNvcmUiLAo+ID4+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiaWZhY2UiLAo+ID4+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiYnVzIjsKPiA+PiArCj4gPj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwaHlzID0gPCZkc2kxX3BoeT47Cj4gPj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwaHktbmFtZXMgPSAiZHNpMSI7Cj4gPj4gKwo+
-ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsK
-PiA+Cj4gPiBUaGlzICJkaXNhYmxlZCIgaXMgY2F1c2luZyBtZSBwcm9ibGVtcy4gIEkgZG9uJ3Qg
-YWN0dWFsbHkgbmVlZCAiZHNpMSIKPiA+IGJ1dCBpZiBJIGRvbid0IGVuYWJsZSAiZHNpMSIgdGhl
-biBteSBkaXNwbGF5IGRvZXNuJ3QgY29tZSB1cC4gIDooICBJCj4gPiByYW4gb3V0IG9mIHRpbWUg
-dG8gZGVidWcgYnV0IEkgd29uZGVyIGlmIHRoaXMgaXMgdGhpcyB0aGUgc3RhbmRhcmQKPiA+IHRo
-aW5nIHdoZXJlIERSTSBuZWVkcyB0byB3YWl0IGZvciBhbGwgdGhlIGNvbXBvbmVudHMgdG8gcHJv
-YmUgdW50aWwgaXQKPiA+IGNhbiBmaW5pc2g/ICBJZiBub2JvZHkgb24gdGhpcyBsaXN0IGp1c3Qg
-a25vd3MgSSdsbCBkaWcgdG9tb3Jyb3cgYW5kCj4gPiBjb25maXJtIHRoYXQgbXkgbWVtb3J5IGlz
-bid0IGZhdWx0eSBhbmQgc2VlIHdoYXQgd2UndmUgZG9uZSBhYm91dCB0aGlzCj4gPiBpbiB0aGUg
-cGFzdC4KPiA+Cj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDQ2Nzg5NS8K
-Pgo+IENhbiB5b3UgdHJ5IG91dCB3aXRoIHRoaXMgY2hhbmdlIChyZXZpZXdlZCBidXQgbm90IG1l
-cmdlZCB5ZXQpLiBJdAo+IHZhbGlkYXRlcwo+IHRoZSBub2RlcyBiZWZvcmUgYWRkaW5nIHRvIHRo
-ZSBEU0kgbGlzdC4KCk5vLCB0aGF0IGRvZXNuJ3QgZml4IGl0LiAgSSBhbHNvIGRvbid0IHNlZSB5
-b3VyIHByaW50b3V0LgoKT0ssIGZvdW5kIHRoZSBwcm9ibGVtIGFuZCBwb3N0ZWQgYSBwYXRjaC4g
-IFNlZQo8aHR0cHM6Ly9sa21sLmtlcm5lbC5vcmcvci8yMDE4MTIwNDE4MDQ0MS4yMTgxNjAtMS1k
-aWFuZGVyc0BjaHJvbWl1bS5vcmc+LgpQbGVhc2UgdGVzdCBhbmQgcmV2aWV3IGlmIHlvdSBhcmUg
-YWJsZS4KCgo+ID4gT25lIGxhc3Qgbm90ZTogaXQncyBwcmV0dHkgd2VpcmQgdGhhdCB5b3Ugc2Vu
-dCBvdXQgb25seSAxLzMgYW5kIG5vdAo+ID4gMi8zIGFuZCAzLzMuICBJZiB5b3UncmUgbm90IHJl
-YWR5IHRvIHNlbmQgb3V0IE1UUCBzdHVmZiB5ZXQgdGhlbiB5b3UKPiA+IHNob3VsZCBzZW5kIG91
-dCB2NiBhcyBqdXN0IGEgc2luZ2xldG9uIHBhdGNoLgo+IFllcy4gSSB3YXMgdHJ5aW5nIHRvIHNl
-cGFyYXRlIHRoaXMgb25lIG91dCBhcyBhbiBpbmRlcGVuZGVudCBjaGFuZ2UuCj4gU2FuZGVlcAo+
-IGlzIHdvcmtpbmcgb24gdGhlIGNvbW1lbnRzIG9uIHJlbW92aW5nIHRoZSBwaW5jdHJsIG5vZGVz
-IGFuZCB1cGRhdGVkCj4gbXRwIG5vZGVzLiBIZSBzaG91bGQgYmUgcG9zdGluZyAyLzMgYW5kIDMv
-MyBpbiB0aGUgbmV4dCBjb3VwbGUgb2YgZGF5cy4KCk9LLCBnb29kIHRvIGtub3cuICBQcm9iYWJs
-eSAyLzMgYW5kIDMvMyB3aWxsIGJlIHNxdWFzaGVkIGFueXdheSBzaW5jZQooYXMgSSBzdWdnZXN0
-ZWQgaW4gdGhlIHJldmlldykgdGhleSBzaG91bGQgYm90aCBiZSB0b3VjaGluZyB0aGUgTVRQCmRl
-dmljZSB0cmVlIGZpbGUuCgouLi5pbiBhbnkgY2FzZSwgeW91IHNob3VsZCBzZW5kIHlvdXJzIG91
-dCBhcyBhIHNpbmdsZXRvbiBwYXRjaCBhbmQKdGhlbiB5b3UgZG9uJ3QgaGF2ZSB0byBndWVzcyBo
-b3cgbWFueSBwYXRjaGVzIG1pZ2h0IG9yIG1pZ2h0IG5vdCBiZQpzZW50IG91dCBsYXRlci4gIFNh
-bmRlZXAgY2FuIHNlbmQgb3V0IGhpcyBwYXRjaCBhbmQgc2F5IGl0IGRlcGVuZHMgb24KeW91cnMu
-CgotRG91ZwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpG
-cmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+* Peter Ujfalusi <peter.ujfalusi@ti.com> [181204 12:22]:
+> Hi Tony,
+> 
+> On 25/09/2018 3.05, Tony Lindgren wrote:
+> > With l4 interconnect hierarchy and ti-sysc interconnect target module
+> > data in place, we can simply move all the related child devices to
+> > their proper location and enable probing using ti-sysc.
+> > 
+> > In general the first child device address range starts at range 0
+> > from the ti-sysc interconnect target so the move involves adjusting
+> > the child device reg properties for that.
+> > 
+> > In case of any regressions, problem devices can be reverted to probe
+> > with legacy platform data as needed by moving them back and removing
+> > the related interconnect target module node.
+> > 
+> > Note that we are not yet moving dss or wkup_m3, those will be moved
+> > later after some related driver changes.
+> 
+> Exactly the same issue as with am335x after:
+> ARM: dts: am335x: Move l4 child devices to probe them with ti-sysc
+> 
+> reverting this patch makes audio working:
+> 
+> Without revert the McASP FIFO would constantly underflow.
+> 
+> Memcpy test via dmatest works with EDMA
+
+OK I should be able to debug it here with am437x-sk-evm then.
+
+If it's not immediately obvious what's going on, let's just
+do a revert here too and debug it more separately.
+
+Regards,
+
+Tony
