@@ -1,41 +1,61 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 3/8] phy: enumerate SATA PHY mode
-Date: Tue,  4 Dec 2018 20:17:25 +0100
-Message-ID: <20181204191730.11516-4-miquel.raynal@bootlin.com>
-References: <20181204191730.11516-1-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 2/7] ata: ahci: mvebu: remove stale comment
+Date: Tue,  4 Dec 2018 20:28:26 +0100
+Message-ID: <20181204192831.12440-3-miquel.raynal@bootlin.com>
+References: <20181204192831.12440-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181204191730.11516-1-miquel.raynal@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181204192831.12440-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jens Axboe <axboe@kernel.dk>, Hans de Goede <hdegoede@redhat.com>
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Grzegorz Jaszczyk <jaz@semihalf.com>
+For Armada-38x (32-bit) SoCs, PM platform support has been added since:
+commit 32f9494c9dfd ("ARM: mvebu: prepare pm-board.c for the
+                      introduction of Armada 38x support")
+commit 3cbd6a6ca81c ("ARM: mvebu: Add standby support")
 
-Add SATA mode to the PHY framework in preparation of upcoming PHYs
-that will handle it. For instance, SATA mode will be used by the
-Armada3700 COMPHY driver, which supports configuring SERDES lanes to
-be used by various controllers: Ethernet, USB3, SATA and PCIe.
+For Armada 64-bit SoCs, like the A3700 also using this AHCI driver, PM
+platform support has always existed.
 
-Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+There are even suspend/resume hooks in this driver since:
+commit d6ecf15814888 ("ata: ahci_mvebu: add suspend/resume support")
+
+Remove the stale comment at the end of this driver stating that all
+the above does not exist yet.
+
+Fixes: d6ecf15814888 ("ata: ahci_mvebu: add suspend/resume support")
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- include/linux/phy/phy.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/ata/ahci_mvebu.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 03b319f89a34..553d8520e37f 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -42,6 +42,7 @@ enum phy_mode {
- 	PHY_MODE_UFS_HS_A,
- 	PHY_MODE_UFS_HS_B,
- 	PHY_MODE_PCIE,
-+	PHY_MODE_SATA,
+diff --git a/drivers/ata/ahci_mvebu.c b/drivers/ata/ahci_mvebu.c
+index f9cb51be38eb..128d6f22926d 100644
+--- a/drivers/ata/ahci_mvebu.c
++++ b/drivers/ata/ahci_mvebu.c
+@@ -197,11 +197,6 @@ static const struct of_device_id ahci_mvebu_of_match[] = {
  };
+ MODULE_DEVICE_TABLE(of, ahci_mvebu_of_match);
  
- /**
+-/*
+- * We currently don't provide power management related operations,
+- * since there is no suspend/resume support at the platform level for
+- * Armada 38x for the moment.
+- */
+ static struct platform_driver ahci_mvebu_driver = {
+ 	.probe = ahci_mvebu_probe,
+ 	.remove = ata_platform_remove_one,
 -- 
 2.19.1
