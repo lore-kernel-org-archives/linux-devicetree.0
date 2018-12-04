@@ -1,40 +1,25 @@
-Return-Path: <SRS0=v28C=OU=gmail.com=thierry.reding@kernel.org>
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH v2 1/3] dt-bindings: media: tegra-cec: Document Tegra186 and Tegra194
-Date: Tue, 11 Dec 2018 10:48:39 +0100
-Message-Id: <20181211094841.16027-1-thierry.reding@gmail.com>
+Return-Path: <SRS0=jrs2=ON=verge.net.au=horms@kernel.org>
+Date: Tue, 4 Dec 2018 06:28:41 -0800
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 18/22] ARM: dts: r8a7744: Add QSPI support
+Message-ID: <20181204142840.dsj5lagggznunxko@verge.net.au>
+References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
+ <1543319795-48325-19-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdWDAvTubKLp1_z9sJuakBYkU3DH7-xN+2P4s0d5H7WL2A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWDAvTubKLp1_z9sJuakBYkU3DH7-xN+2P4s0d5H7WL2A@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Thierry Reding <treding@nvidia.com>
+On Fri, Nov 30, 2018 at 10:02:16AM +0100, Geert Uytterhoeven wrote:
+> On Tue, Nov 27, 2018 at 1:05 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> > Add the DT node for the QSPI interface to the SoC dtsi.
+> >
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-The Tegra186 and Tegra194 contain a CEC controller that is identical to
-that found in earlier generations. Document the compatible strings for
-these newer chips.
-
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
-Changes in v2:
-- new patch adding missing compatible strings
-
- Documentation/devicetree/bindings/media/tegra-cec.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/media/tegra-cec.txt b/Documentation/devicetree/bindings/media/tegra-cec.txt
-index c503f06f3b84..da3590f0b7a1 100644
---- a/Documentation/devicetree/bindings/media/tegra-cec.txt
-+++ b/Documentation/devicetree/bindings/media/tegra-cec.txt
-@@ -8,6 +8,8 @@ Required properties:
- 	"nvidia,tegra114-cec"
- 	"nvidia,tegra124-cec"
- 	"nvidia,tegra210-cec"
-+	"nvidia,tegra186-cec"
-+	"nvidia,tegra194-cec"
-   - reg : Physical base address of the IP registers and length of memory
- 	  mapped region.
-   - interrupts : HDMI CEC interrupt number to the CPU.
--- 
-2.19.1
+Thanks, applied for v4.21.
