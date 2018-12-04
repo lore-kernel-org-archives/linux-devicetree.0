@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 2/2] clk: meson: axg-audio: use the clk input helper function
-Date: Tue,  4 Dec 2018 17:58:19 +0100
-Message-ID: <20181204165819.21541-3-jbrunet@baylibre.com>
+Subject: [PATCH 1/2] clk: meson: add clk-input helper function
+Date: Tue,  4 Dec 2018 17:58:18 +0100
+Message-ID: <20181204165819.21541-2-jbrunet@baylibre.com>
 References: <20181204165819.21541-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,166 +12,94 @@ To: Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com
 Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Rework the axg audio clock controller to use the new clk-input helper
-function.
+Add the clock input helper function. Several amlogic clock controllers
+will now be registering bypass clock input. Instead of copying this
+code in every of them, let's make an helper function for it
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- drivers/clk/meson/axg-audio.c | 83 ++++++++++-------------------------
- 1 file changed, 24 insertions(+), 59 deletions(-)
+ drivers/clk/meson/Makefile    |  2 +-
+ drivers/clk/meson/clk-input.c | 44 +++++++++++++++++++++++++++++++++++
+ drivers/clk/meson/clkc.h      |  5 ++++
+ 3 files changed, 50 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/meson/clk-input.c
 
-diff --git a/drivers/clk/meson/axg-audio.c b/drivers/clk/meson/axg-audio.c
-index 5f6c860aa122..72b717e61a68 100644
---- a/drivers/clk/meson/axg-audio.c
-+++ b/drivers/clk/meson/axg-audio.c
-@@ -631,22 +631,23 @@ static struct clk_regmap *const axg_audio_clk_regmaps[] = {
- 	&axg_tdmout_c_lrclk,
- };
+diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
+index 6da1d7082f1a..e8d1c727cf69 100644
+--- a/drivers/clk/meson/Makefile
++++ b/drivers/clk/meson/Makefile
+@@ -3,7 +3,7 @@
+ #
  
--static struct clk *devm_clk_get_enable(struct device *dev, char *id)
-+static int devm_clk_get_enable(struct device *dev, char *id)
- {
- 	struct clk *clk;
- 	int ret;
- 
- 	clk = devm_clk_get(dev, id);
- 	if (IS_ERR(clk)) {
--		if (PTR_ERR(clk) != -EPROBE_DEFER)
-+		ret = PTR_ERR(clk);
-+		if (ret != -EPROBE_DEFER)
- 			dev_err(dev, "failed to get %s", id);
--		return clk;
-+		return ret;
- 	}
- 
- 	ret = clk_prepare_enable(clk);
- 	if (ret) {
- 		dev_err(dev, "failed to enable %s", id);
--		return ERR_PTR(ret);
-+		return ret;
- 	}
- 
- 	ret = devm_add_action_or_reset(dev,
-@@ -654,74 +655,40 @@ static struct clk *devm_clk_get_enable(struct device *dev, char *id)
- 				       clk);
- 	if (ret) {
- 		dev_err(dev, "failed to add reset action on %s", id);
--		return ERR_PTR(ret);
-+		return ret;
- 	}
- 
--	return clk;
--}
--
--static const struct clk_ops axg_clk_no_ops = {};
--
--static struct clk_hw *axg_clk_hw_register_bypass(struct device *dev,
--						 const char *name,
--						 const char *parent_name)
--{
--	struct clk_hw *hw;
--	struct clk_init_data init;
--	char *clk_name;
--	int ret;
--
--	hw = devm_kzalloc(dev, sizeof(*hw), GFP_KERNEL);
--	if (!hw)
--		return ERR_PTR(-ENOMEM);
--
--	clk_name = kasprintf(GFP_KERNEL, "axg_%s", name);
--	if (!clk_name)
--		return ERR_PTR(-ENOMEM);
--
--	init.name = clk_name;
--	init.ops = &axg_clk_no_ops;
--	init.flags = 0;
--	init.parent_names = parent_name ? &parent_name : NULL;
--	init.num_parents = parent_name ? 1 : 0;
--	hw->init = &init;
--
--	ret = devm_clk_hw_register(dev, hw);
--	kfree(clk_name);
--
--	return ret ? ERR_PTR(ret) : hw;
-+	return 0;
- }
- 
- static int axg_register_clk_hw_input(struct device *dev,
- 				     const char *name,
- 				     unsigned int clkid)
- {
--	struct clk *parent_clk = devm_clk_get(dev, name);
--	struct clk_hw *hw = NULL;
-+	char *clk_name;
+ obj-$(CONFIG_COMMON_CLK_AMLOGIC) += clk-pll.o clk-mpll.o clk-phase.o vid-pll-div.o
+-obj-$(CONFIG_COMMON_CLK_AMLOGIC) += clk-dualdiv.o
++obj-$(CONFIG_COMMON_CLK_AMLOGIC) += clk-dualdiv.o clk-input.o
+ obj-$(CONFIG_COMMON_CLK_AMLOGIC_AUDIO)	+= clk-triphase.o sclk-div.o
+ obj-$(CONFIG_COMMON_CLK_MESON_AO) += meson-aoclk.o
+ obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o
+diff --git a/drivers/clk/meson/clk-input.c b/drivers/clk/meson/clk-input.c
+new file mode 100644
+index 000000000000..06b3e3bb6a66
+--- /dev/null
++++ b/drivers/clk/meson/clk-input.c
+@@ -0,0 +1,44 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Copyright (c) 2018 BayLibre, SAS.
++ * Author: Jerome Brunet <jbrunet@baylibre.com>
++ */
++
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/device.h>
++#include "clkc.h"
++
++static const struct clk_ops meson_clk_no_ops = {};
++
++struct clk_hw *meson_clk_hw_register_input(struct device *dev,
++					   const char *of_name,
++					   const char *clk_name,
++					   unsigned long flags)
++{
++	struct clk *parent_clk = devm_clk_get(dev, of_name);
++	struct clk_init_data init;
++	const char *parent_name;
 +	struct clk_hw *hw;
-+	int err = 0;
++	int ret;
++
++	if (IS_ERR(parent_clk))
++		return (struct clk_hw *)parent_clk;
++
++	hw = devm_kzalloc(dev, sizeof(*hw), GFP_KERNEL);
++	if (!hw)
++		return ERR_PTR(-ENOMEM);
++
++	parent_name = __clk_get_name(parent_clk);
++	init.name = clk_name;
++	init.ops = &meson_clk_no_ops;
++	init.flags = flags;
++	init.parent_names = &parent_name;
++	init.num_parents = 1;
++	hw->init = &init;
++
++	ret = devm_clk_hw_register(dev, hw);
++
++	return ret ? ERR_PTR(ret) : hw;
++}
++EXPORT_SYMBOL_GPL(meson_clk_hw_register_input);
+diff --git a/drivers/clk/meson/clkc.h b/drivers/clk/meson/clkc.h
+index 1efa6be9cfe4..e3cd442db739 100644
+--- a/drivers/clk/meson/clkc.h
++++ b/drivers/clk/meson/clkc.h
+@@ -138,4 +138,9 @@ extern const struct clk_ops meson_vid_pll_div_ro_ops;
+ extern const struct clk_ops meson_clk_dualdiv_ops;
+ extern const struct clk_ops meson_clk_dualdiv_ro_ops;
  
--	if (IS_ERR(parent_clk)) {
--		int err = PTR_ERR(parent_clk);
-+	clk_name = kasprintf(GFP_KERNEL, "axg_%s", name);
-+	if (!clk_name)
-+		return -ENOMEM;
- 
-+	hw = meson_clk_hw_register_input(dev, name, clk_name, 0);
-+	if (IS_ERR(hw)) {
- 		/* It is ok if an input clock is missing */
--		if (err == -ENOENT) {
-+		if (PTR_ERR(hw) == -ENOENT) {
- 			dev_dbg(dev, "%s not provided", name);
- 		} else {
-+			err = PTR_ERR(hw);
- 			if (err != -EPROBE_DEFER)
- 				dev_err(dev, "failed to get %s clock", name);
--			return err;
- 		}
- 	} else {
--		hw = axg_clk_hw_register_bypass(dev, name,
--						__clk_get_name(parent_clk));
--	}
--
--	if (IS_ERR(hw)) {
--		dev_err(dev, "failed to register %s clock", name);
--		return PTR_ERR(hw);
-+		axg_audio_hw_onecell_data.hws[clkid] = hw;
- 	}
- 
--	axg_audio_hw_onecell_data.hws[clkid] = hw;
--	return 0;
-+	kfree(clk_name);
-+	return err;
- }
- 
- static int axg_register_clk_hw_inputs(struct device *dev,
-@@ -759,7 +726,6 @@ static int axg_audio_clkc_probe(struct platform_device *pdev)
- 	struct regmap *map;
- 	struct resource *res;
- 	void __iomem *regs;
--	struct clk *clk;
- 	struct clk_hw *hw;
- 	int ret, i;
- 
-@@ -775,9 +741,9 @@ static int axg_audio_clkc_probe(struct platform_device *pdev)
- 	}
- 
- 	/* Get the mandatory peripheral clock */
--	clk = devm_clk_get_enable(dev, "pclk");
--	if (IS_ERR(clk))
--		return PTR_ERR(clk);
-+	ret = devm_clk_get_enable(dev, "pclk");
-+	if (ret)
-+		return ret;
- 
- 	ret = device_reset(dev);
- 	if (ret) {
-@@ -786,8 +752,7 @@ static int axg_audio_clkc_probe(struct platform_device *pdev)
- 	}
- 
- 	/* Register the peripheral input clock */
--	hw = axg_clk_hw_register_bypass(dev, "audio_pclk",
--					__clk_get_name(clk));
-+	hw = meson_clk_hw_register_input(dev, "pclk", "audio_pclk", 0);
- 	if (IS_ERR(hw))
- 		return PTR_ERR(hw);
- 
++struct clk_hw *meson_clk_hw_register_input(struct device *dev,
++					   const char *of_name,
++					   const char *clk_name,
++					   unsigned long flags);
++
+ #endif /* __CLKC_H */
 -- 
 2.19.1
