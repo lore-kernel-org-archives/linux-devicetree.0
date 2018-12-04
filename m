@@ -1,140 +1,106 @@
-From: Priit Laes <plaes@plaes.org>
-Subject: Re: [PATCH 06/14] regulator: axp20x: add software based soft_start
- for AXP209 LDO3
-Date: Tue, 4 Dec 2018 13:31:44 +0000
-Message-ID: <20181204133144.eqd3dk3jgqm4fbk4@plaes.org>
-References: <cover.156212c9c5df493e098556cad9793a07dcab5e32.1543245984.git-series.plaes@plaes.org>
- <41cb1b4dac3a15595c89fa962b78d3f68f370021.1543245984.git-series.plaes@plaes.org>
- <20181127093619.72ensythkx2mhdf5@flea>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 02/14] dt-bindings: soc: milbeaut: Add Milbeaut trampoline description
+Date: Tue, 4 Dec 2018 07:32:41 -0600
+Message-ID: <CAL_JsqJ=FRfzVFiOJ0wvoV5iZV+Gx3ft9pGyhb-GoKnOAQgPtQ@mail.gmail.com>
+References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
+ <1542589274-13878-3-git-send-email-sugaya.taichi@socionext.com>
+ <154337047410.88331.9696178601340675631@swboyd.mtv.corp.google.com>
+ <c746a3de-a9e3-9f25-ecb9-703ceb7e62d0@socionext.com> <154356579701.88331.5043467509900444879@swboyd.mtv.corp.google.com>
+ <f5917f71-f15b-a92d-649c-e3f5f5f10698@socionext.com> <CAL_Jsq+dnKht3TwCh1qB1H4pYFhQJmSN0nAayU+=PJLAvq0bbQ@mail.gmail.com>
+ <90b00858-6e9e-8f7c-f6d4-b35e5daa6eee@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181127093619.72ensythkx2mhdf5@flea>
+In-Reply-To: <90b00858-6e9e-8f7c-f6d4-b35e5daa6eee@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Sebastian Reichel <sre@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Olliver Schinagl <oliver@schinagl.nl>
+To: sugaya.taichi@socionext.com
+Cc: Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 27, 2018 at 10:36:19AM +0100, Maxime Ripard wrote:
-> On Mon, Nov 26, 2018 at 05:27:47PM +0200, Priit Laes wrote:
-> > From: Olliver Schinagl <oliver@schinagl.nl>
-> > 
-> > In the past, there have been words on various lists that if LDO3 is
-> > disabled in u-boot, but enabled in the DTS, the axp209 driver would
-> > fail to continue/hang. Several enable/disable patches have been
-> > issues to devicetree's in both the kernel and u-boot to address
-> > this issue.
-> > 
-> > What really happened however, was that the AXP209 shuts down without
-> > a notice and without setting an interrupt. This is caused when LDO3
-> > gets overloaded, for example with large capacitors on the LDO3 output.
-> > 
-> > Normally, we would expect that AXP209 would source 200 mA as per
-> > datasheet and set and trigger an interrupt when being overloaded.
-> > For some reason however, this does not happen.
-> > 
-> > As a work-around, we use the soft-start constraint of the regulator
-> > node to first bring up the LDO3 to the lowest possible voltage and
-> > then enable the LDO. After that, we can set the requested voltage
-> > as usual.
-> > 
-> > Combining this setting with the regulator-ramp-delay allows LDO3 to
-> > enable voltage slowly and staggered, potentially reducing overall
-> > inrush current.
-> > 
-> > Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
-> > Signed-off-by: Priit Laes <plaes@plaes.org>
-> > ---
-> >  drivers/regulator/axp20x-regulator.c | 57 ++++++++++++++++++++++++++++-
-> >  1 file changed, 56 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-> > index 1d9fa62..e8a895b 100644
-> > --- a/drivers/regulator/axp20x-regulator.c
-> > +++ b/drivers/regulator/axp20x-regulator.c
-> > @@ -14,6 +14,7 @@
-> >   */
-> >  
-> >  #include <linux/bitops.h>
-> > +#include <linux/delay.h>
-> >  #include <linux/err.h>
-> >  #include <linux/init.h>
-> >  #include <linux/mfd/axp20x.h>
-> > @@ -23,6 +24,7 @@
-> >  #include <linux/platform_device.h>
-> >  #include <linux/regmap.h>
-> >  #include <linux/regulator/driver.h>
-> > +#include <linux/regulator/machine.h>
-> >  #include <linux/regulator/of_regulator.h>
-> >  
-> >  #define AXP20X_GPIO0_FUNC_MASK		GENMASK(3, 0)
-> > @@ -430,6 +432,59 @@ static int axp20x_set_ramp_delay(struct regulator_dev *rdev, int ramp)
-> >  	return regmap_update_bits(axp20x->regmap, reg, mask, cfg);
-> >  }
-> >  
-> > +static int axp20x_regulator_enable_regmap(struct regulator_dev *rdev)
-> > +{
-> > +	struct axp20x_dev *axp20x = rdev_get_drvdata(rdev);
-> > +	const struct regulator_desc *desc = rdev->desc;
-> > +
-> > +	if (!rdev)
-> > +		return -EINVAL;
-> > +
-> > +	switch (axp20x->variant) {
-> > +	case AXP209_ID:
-> > +		if ((desc->id == AXP20X_LDO3) &&
-> > +		    rdev->constraints && rdev->constraints->soft_start) {
-> > +			int v_out;
-> > +			int ret;
-> > +
-> > +			/*
-> > +			 * On some boards, the LDO3 can be overloaded when
-> > +			 * turning on, causing the entire PMIC to shutdown
-> > +			 * without warning. Turning it on at the minimal voltage
-> > +			 * and then setting the voltage to the requested value
-> > +			 * works reliably.
-> > +			 */
-> > +			if (regulator_is_enabled_regmap(rdev))
-> > +				break;
-> > +
-> > +			v_out = regulator_get_voltage_sel_regmap(rdev);
-> > +			if (v_out < 0)
-> > +				return v_out;
-> > +
-> > +			if (v_out == 0)
-> > +				break;
-> > +
-> > +			ret = regulator_set_voltage_sel_regmap(rdev, 0x00);
-> > +			/*
-> > +			 * A small pause is needed between
-> > +			 * setting the voltage and enabling the LDO to give the
-> > +			 * internal state machine time to process the request.
-> > +			 */
-> > +			usleep_range(1000, 5000);
-> > +			ret |= regulator_enable_regmap(rdev);
-> > +			ret |= regulator_set_voltage_sel_regmap(rdev, v_out);
-> > +
-> > +			return ret;
-> > +		}
-> > +		break;
-> > +	default:
-> > +		/* No quirks */
-> > +		break;
-> > +	}
-> > +
-> > +	return regulator_enable_regmap(rdev);
-> > +};
-> > +
-> 
-> This is some pretty generic code, and could be useful to some other
-> users. I guess a generic function would be better for this.
+On Tue, Dec 4, 2018 at 5:30 AM Sugaya, Taichi
+<sugaya.taichi@socionext.com> wrote:
+>
+> Hi
+>
+> On 2018/12/04 0:49, Rob Herring wrote:
+> > On Mon, Dec 3, 2018 at 1:42 AM Sugaya, Taichi
+> > <sugaya.taichi@socionext.com> wrote:
+> >>
+> >> Hi,
+> >>
+> >> On 2018/11/30 17:16, Stephen Boyd wrote:
+> >>> Quoting Sugaya, Taichi (2018-11-29 04:24:51)
+> >>>> On 2018/11/28 11:01, Stephen Boyd wrote:
+> >>>>> Quoting Sugaya Taichi (2018-11-18 17:01:07)
+> >>>>>>     create mode 100644 Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
+> >>>>>>
+> >>>>>> diff --git a/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
+> >>>>>> new file mode 100644
+> >>>>>> index 0000000..f5d906c
+> >>>>>> --- /dev/null
+> >>>>>> +++ b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
+> >>>>>> @@ -0,0 +1,12 @@
+> >>>>>> +Socionext M10V SMP trampoline driver binding
+> >>>>>> +
+> >>>>>> +This is a driver to wait for sub-cores while boot process.
+> >>>>>> +
+> >>>>>> +- compatible: should be "socionext,smp-trampoline"
+> >>>>>> +- reg: should be <0x4C000100 0x100>
+> >>>>>> +
+> >>>>>> +EXAMPLE
+> >>>>>> +       trampoline: trampoline@0x4C000100 {
+> >>>>> Drop the 0x part of unit addresses.
+> >>>>
+> >>>> Okay.
+> >>>>
+> >>>>
+> >>>>>> +               compatible = "socionext,smp-trampoline";
+> >>>>>> +               reg = <0x4C000100 0x100>;
+> >>>>> Looks like a software construct, which we wouldn't want to put into DT
+> >>>>> this way. DT doesn't describe drivers.
+> >>>> We would like to use this node only getting the address of the
+> >>>> trampoline area
+> >>>> in which sub-cores wait.  (They have finished to go to this area in previous
+> >>>> bootloader process.)
+> >>>
+> >>> Is this area part of memory, or a special SRAM? If it's part of memory,
+> >>> I would expect this node to be under the reserved-memory node and
+> >>> pointed to by some other node that uses this region. Could even be the
+> >>> CPU nodes.
+> >>
+> >> Yes, 0x4C000100 is a part of memory under the reserved-memory node. So
+> >> we would like to use the SRAM ( allocated 0x00000000 ) area instead.
+> >> BTW, sorry, the trampoline address of this example is simply wrong.  We
+> >> were going to use a part of the SRAM from the beginning.
+> >>
+> >>>
+> >>>>
+> >>>> So should we embed the constant value in source codes instead of getting
+> >>>> from
+> >>>> DT because the address is constant at the moment? Or is there other
+> >>>> approach?
+> >>>>
+> >>>
+> >>> If it's constant then that also works. Why does it need to come from DT
+> >>> at all then?
+> >>
+> >> We think it is not good to embed constant value in driver codes and do
+> >> not have another way...
+> >> Are there better ways?
+> >
+> > If this is just memory, can you use the standard spin-table binding in
+> > the DT spec? There are some requirements like 64-bit values even on
+> > 32-bit machines (though this gets violated).
+>
+> The spin-table seems to be used on only 64-bit arch. Have it ever worked
+> on 32-bit machine?
 
-Yes, makes sense. Although, should we then also distinguish between
-regulators which support soft-start in hardware and devices which emulate
-it by delay, like in this case?
+Yes.
 
+> And I would like not to use it because avoid violation.
 
-Päikest,
-Priit
+The issue now that I remember is cpu-release-addr is defined to always
+be a 64-bit value while some platforms made it a 32-bit value.
+'cpu-release-addr' is also used for some other enable-methods.
+
+Rob
