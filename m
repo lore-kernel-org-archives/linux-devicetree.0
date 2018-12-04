@@ -1,34 +1,30 @@
-From: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3 8/8] ARM: dts: qcom-apq8064: Set
- 'xo_board' as ref clock of the DSI PHY
-Date: Tue, 04 Dec 2018 08:48:22 -0800
-Message-ID: <154394210277.88331.12250945038852318544@swboyd.mtv.corp.google.com>
-References: <20181201005254.139908-1-mka@chromium.org>
- <20181201005254.139908-9-mka@chromium.org>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v2 0/2] net: phy: micrel: add tobling phy reset
+Date: Tue, 04 Dec 2018 08:49:37 -0800 (PST)
+Message-ID: <20181204.084937.2062398264103773495.davem@davemloft.net>
+References: <20181203.152057.61263535375452379.davem@davemloft.net>
+        <92358866-e231-15e7-84f4-86a6fa51ed49@gmail.com>
+        <20181204104333.GC741@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181201005254.139908-9-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20181204104333.GC741@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: andrew@lunn.ch
+Cc: f.fainelli@gmail.com, yoshihiro.shimoda.uh@renesas.com, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBNYXR0aGlhcyBLYWVobGNrZSAoMjAxOC0xMS0zMCAxNjo1Mjo1NCkKPiBBZGQgJ3hv
-X2JvYXJkJyBhcyByZWYgY2xvY2sgZm9yIHRoZSBEU0kgUEhZLCBpdCB3YXMgcHJldmlvdXNseQo+
-IGhhcmRjb2RlZCBpbiB0aGUgUExMICdkcml2ZXInIGZvciB0aGUgMjhubSA4OTYwIFBIWS4KCldo
-eSBpcyBkcml2ZXIgaW4gcXVvdGVzPwoKPiAKPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aGlhcyBLYWVo
-bGNrZSA8bWthQGNocm9taXVtLm9yZz4KClJldmlld2VkLWJ5OiBTdGVwaGVuIEJveWQgPHN3Ym95
-ZEBjaHJvbWl1bS5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVk
-cmVubwo=
+From: Andrew Lunn <andrew@lunn.ch>
+Date: Tue, 4 Dec 2018 11:43:33 +0100
+
+>> > Series applied, thank you.
+>> 
+>> Meh! I guess we should be faster at reviewing stuff :/
+> 
+> And there have been things going on behind the scenes to try to get a
+> real fix. Sorry, i should of mentioned that.
+> 
+> David, could you revert this please?
+
+Sure, done.
