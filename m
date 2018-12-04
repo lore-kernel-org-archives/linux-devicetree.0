@@ -1,145 +1,87 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v2 3/5] devfreq: add devfreq_suspend/resume() functions
-Date: Tue, 4 Dec 2018 10:44:46 +0100
-Message-ID: <bb7c2fd1-69e2-fdc6-ecb9-83ee22c2601e@partner.samsung.com>
-References: <1543847475-7600-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20181203143132eucas1p128c029a7c7461e1127924a08e4a71811@eucas1p1.samsung.com>
-        <1543847475-7600-4-git-send-email-l.luba@partner.samsung.com>
-        <5C061C74.808@samsung.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 05/12] PCI: aardvark: add suspend to RAM support
+Date: Tue, 4 Dec 2018 09:45:58 +0000
+Message-ID: <20181204094558.GA24588@e107981-ln.cambridge.arm.com>
+References: <20181123141831.8214-1-miquel.raynal@bootlin.com>
+ <20181203102708.GA6090@e107981-ln.cambridge.arm.com>
+ <20181203163846.494904f9@xps13>
+ <1999610.6DN9RK2Tt3@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5C061C74.808@samsung.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1999610.6DN9RK2Tt3@aspire.rjw.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>, sudeep.holla@arm.com, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
+On Mon, Dec 03, 2018 at 11:00:20PM +0100, Rafael J. Wysocki wrote:
+> On Monday, December 3, 2018 4:38:46 PM CET Miquel Raynal wrote:
+> > Hi Lorenzo,
+> > 
+> > Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote on Mon, 3 Dec 2018
+> > 10:27:08 +0000:
+> > 
+> > > [+Rafael, Sudeep]
+> > > 
+> > > On Fri, Nov 23, 2018 at 03:18:24PM +0100, Miquel Raynal wrote:
+> > > > Add suspend and resume callbacks. The priority of these are
+> > > > "_noirq()", to workaround early access to the registers done by the
+> > > > PCI core through the ->read()/->write() callbacks at resume time.
+> > > > 
+> > > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > > > ---
+> > > >  drivers/pci/controller/pci-aardvark.c | 52 +++++++++++++++++++++++++++
+> > > >  1 file changed, 52 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > > > index 108b3f15c410..7ecf1ac4036b 100644
+> > > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > > @@ -1108,6 +1108,55 @@ static int advk_pcie_setup_clk(struct advk_pcie *pci
+> > > >  	return ret;
+> > > >  }
+> > > >  
+> > > > +static int __maybe_unused advk_pcie_suspend(struct device *dev)
+> > > > +{
+> > > > +	struct advk_pcie *pcie = dev_get_drvdata(dev);
+> > > > +
+> > > > +	advk_pcie_disable_phy(pcie);
+> > > > +
+> > > > +	clk_disable_unprepare(pcie->clk);  
+> > > 
+> > > I have noticed it is common practice, still, I would like to check whether
+> > > it is allowed to call functions that may sleep in a NOIRQ suspend/resume
+> > > callback ?
+> > 
+> > You are right this is weird. I double checked and for instance,
+> > pcie-mediatek.c, pci-tegra.c and pci-imx6.c do the exact same thing. There are
+> > probably other cases where drivers call functions that may sleep from a NOIRQ
+> > context. I am interested to know if this is valid and if not, what is the
+> > alternative?
+> > 
+> 
+> Yes, it is valid.  _noirq means that the high-level action handlers
+> will not be invoked for interrupts occurring during that period, but
+> that doesn't apply to timer interrupts.
+> 
+> IOW, don't expect *your* IRQ handler to be invoked then (if this is
+> not a timer IRQ), but you can sleep.
 
-On 12/4/18 7:19 AM, Chanwoo Choi wrote:
-> Hi Lukasz,
-> 
-> On 2018년 12월 03일 23:31, Lukasz Luba wrote:
->> This patch adds implementation for global suspend/resume for
->> devfreq framework. System suspend will next use these functions.
->>
->> The patch is based on earlier work by Tobias Jakobi.
-> 
-> Please remove it from each patch description.
-OK
-> 
->>
->> Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
->> Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   drivers/devfreq/devfreq.c | 42 ++++++++++++++++++++++++++++++++++++++++++
->>   include/linux/devfreq.h   |  6 ++++++
->>   2 files changed, 48 insertions(+)
->>
->> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
->> index 36bed24..7d60423 100644
->> --- a/drivers/devfreq/devfreq.c
->> +++ b/drivers/devfreq/devfreq.c
->> @@ -935,6 +935,48 @@ int devfreq_resume_device(struct devfreq *devfreq)
->>   EXPORT_SYMBOL(devfreq_resume_device);
->>   
->>   /**
->> + * devfreq_suspend() - Suspend devfreq governors and devices
->> + *
->> + * Called during system wide Suspend/Hibernate cycles for suspending governors
->> + * and devices preserving the state for resume. On some platforms the devfreq
->> + * device must have precise state (frequency) after resume in order to provide
->> + * fully operating setup.
->> + */
->> +void devfreq_suspend(void)
->> +{
->> +	struct devfreq *devfreq;
->> +	int ret;
->> +
->> +	mutex_lock(&devfreq_list_lock);
->> +	list_for_each_entry(devfreq, &devfreq_list, node) {
->> +		ret = devfreq_suspend_device(devfreq);
->> +		if (ret)
->> +			dev_warn(&devfreq->dev, "device suspend failed\n");
-> 
-> When I checked the cpufreq_suspend(), cpufreq_suspend() prints message as 'err' level.
-> I think that dev_err is more proper than dev_warn.
-> 
-> I'm not sure what is more correct log.
-> But, 'devfreq->dev' device has the separate suspend/resume function.
-> So, I think that devfreq_suspend() should print error log containing
-> that it is error by devfreq framework.
-> 
-> "device suspend failed"
-> -> "failed to suspend devfreq device"
-OK, changed in next v3 patch set.
-> 
->> +	}
->> +	mutex_unlock(&devfreq_list_lock);
->> +}
->> +
->> +/**
->> + * devfreq_resume() - Resume devfreq governors and devices
->> + *
->> + * Called during system wide Suspend/Hibernate cycle for resuming governors and
->> + * devices that are suspended with devfreq_suspend().
->> + */
->> +void devfreq_resume(void)
->> +{
->> +	struct devfreq *devfreq;
->> +	int ret;
->> +
->> +	mutex_lock(&devfreq_list_lock);
->> +	list_for_each_entry(devfreq, &devfreq_list, node) {
->> +		ret = devfreq_resume_device(devfreq);
->> +		if (ret)
->> +			dev_warn(&devfreq->dev, "device resume failed\n");
-> 
-> ditto.
-> 
-> "device resume failed"
-> -> "failed to resume devfreq device"
-> 
-ACK
+Hi Rafael, all,
 
-Regards,
-Lukasz
-> 
->> +	}
->> +	mutex_unlock(&devfreq_list_lock);
->> +}
->> +
->> +/**
->>    * devfreq_add_governor() - Add devfreq governor
->>    * @governor:	the devfreq governor to be added
->>    */
->> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
->> index d985199..fbffa74 100644
->> --- a/include/linux/devfreq.h
->> +++ b/include/linux/devfreq.h
->> @@ -205,6 +205,9 @@ extern void devm_devfreq_remove_device(struct device *dev,
->>   extern int devfreq_suspend_device(struct devfreq *devfreq);
->>   extern int devfreq_resume_device(struct devfreq *devfreq);
->>   
->> +extern void devfreq_suspend(void);
->> +extern void devfreq_resume(void);
->> +
->>   /**
->>    * update_devfreq() - Reevaluate the device and configure frequency
->>    * @devfreq:	the devfreq device
->> @@ -331,6 +334,9 @@ static inline int devfreq_resume_device(struct devfreq *devfreq)
->>   	return 0;
->>   }
->>   
->> +static inline void devfreq_suspend(void) {}
->> +static inline void devfreq_resume(void) {}
->> +
->>   static inline struct dev_pm_opp *devfreq_recommended_opp(struct device *dev,
->>   					   unsigned long *freq, u32 flags)
->>   {
->>
-> 
+I did not ask my question (that may be silly) properly apologies. I know
+that the S2R context allows sleeping the question is, in case
+clk_disable_unprepare() (and resume counterparts) sleeps, what is going
+to wake it up, given that we are in the S2R NOIRQ phase and as you said
+the action handlers (that are possibly required to wake up the eg
+clk_disable_unprepare() caller) are disabled (unless, AFAIK,
+IRQF_NO_SUSPEND is passed at IRQ request time in the respective driver).
+
+The clk API implementations back-ends are beyond my depth, I just wanted
+to make sure I understand how the S2R flow is expected to work in this
+specific case.
+
+Thanks,
+Lorenzo
