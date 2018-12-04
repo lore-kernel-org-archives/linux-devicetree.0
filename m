@@ -1,45 +1,86 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v4 8/8] ARM: dts: qcom-apq8064: Set 'xo_board' as ref clock of
- the DSI PHY
-Date: Tue,  4 Dec 2018 14:42:34 -0800
-Message-ID: <20181204224234.62619-9-mka@chromium.org>
-References: <20181204224234.62619-1-mka@chromium.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 15/34] dt-bindings: arm: Convert Atmel board/soc
+ bindings to json-schema
+Date: Tue, 4 Dec 2018 16:48:59 -0600
+Message-ID: <CAL_JsqLfZwG6NSs0rq5QYjmOCmYFnMRRA5qz=uT2ER9Q3zLiCw@mail.gmail.com>
+References: <20181203213223.16986-1-robh@kernel.org> <20181203213223.16986-16-robh@kernel.org>
+ <61c52081-7d6d-4de3-81a6-1cd074ac9adc@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20181204224234.62619-1-mka@chromium.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: devicetree@vger.kernel.org, Rajesh Yadav <ryadav@codeaurora.org>, linux-arm-msm@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, Stephen Boyd <swboyd@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, Sean Paul <seanpaul@chromium.org>, freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <61c52081-7d6d-4de3-81a6-1cd074ac9adc@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <Nicolas.Ferre@microchip.com>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-QWRkICd4b19ib2FyZCcgYXMgcmVmIGNsb2NrIGZvciB0aGUgRFNJIFBIWSwgaXQgd2FzIHByZXZp
-b3VzbHkKaGFyZGNvZGVkIGluIHRoZSBQTEwgJ2RyaXZlcicgZm9yIHRoZSAyOG5tIDg5NjAgUEhZ
-LgoKU2lnbmVkLW9mZi1ieTogTWF0dGhpYXMgS2FlaGxja2UgPG1rYUBjaHJvbWl1bS5vcmc+ClJl
-dmlld2VkLWJ5OiBTdGVwaGVuIEJveWQgPHN3Ym95ZEBjaHJvbWl1bS5vcmc+Ci0tLQpDaGFuZ2Vz
-IGluIHY0OgotIGFkZGVkICdSZXZpZXdlZC1ieTogU3RlcGhlbiBCb3lkIDxzd2JveWRAY2hyb21p
-dW0ub3JnPicgdGFnCgpDaGFuZ2VzIGluIHYzOgotIHBhdGNoIGFkZGVkIHRvIHRoZSBzZXJpZXMK
-LS0tCiBhcmNoL2FybS9ib290L2R0cy9xY29tLWFwcTgwNjQuZHRzaSB8IDUgKysrLS0KIDEgZmls
-ZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEv
-YXJjaC9hcm0vYm9vdC9kdHMvcWNvbS1hcHE4MDY0LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9x
-Y29tLWFwcTgwNjQuZHRzaQppbmRleCA0OGMzY2Y0Mjc2MTAxLi5kMzM3YWU5MzI2Y2Q4IDEwMDY0
-NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9xY29tLWFwcTgwNjQuZHRzaQorKysgYi9hcmNoL2Fy
-bS9ib290L2R0cy9xY29tLWFwcTgwNjQuZHRzaQpAQCAtMTMzOCw4ICsxMzM4LDkgQEAKIAkJCQk8
-MHgwNDcwMDMwMCAweDIwMD4sCiAJCQkJPDB4MDQ3MDA1MDAgMHg1Yz47CiAJCQlyZWctbmFtZXMg
-PSAiZHNpX3BsbCIsICJkc2lfcGh5IiwgImRzaV9waHlfcmVndWxhdG9yIjsKLQkJCWNsb2NrLW5h
-bWVzID0gImlmYWNlX2NsayI7Ci0JCQljbG9ja3MgPSA8Jm1tY2MgRFNJX01fQUhCX0NMSz47CisJ
-CQljbG9jay1uYW1lcyA9ICJpZmFjZV9jbGsiLCAicmVmIjsKKwkJCWNsb2NrcyA9IDwmbW1jYyBE
-U0lfTV9BSEJfQ0xLPiwKKwkJCQkgPCZ4b19ib2FyZD47CiAJCX07CiAKIAotLSAKMi4yMC4wLnJj
-MS4zODcuZ2Y4NTA1NzYyZTMtZ29vZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+On Tue, Dec 4, 2018 at 2:12 AM <Nicolas.Ferre@microchip.com> wrote:
+>
+> On 03/12/2018 at 22:32, Rob Herring wrote:
+> > Convert Atmel SoC bindings to DT schema format using json-schema.
+> >
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+>
+> I'm listed here...
+>
+> > Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>
+> Proper email address here...
+>
+>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >   .../devicetree/bindings/arm/atmel-at91.txt    |  72 ----------
+> >   .../devicetree/bindings/arm/atmel-at91.yaml   | 133 ++++++++++++++++++
+> >   2 files changed, 133 insertions(+), 72 deletions(-)
+> >   delete mode 100644 Documentation/devicetree/bindings/arm/atmel-at91.txt
+> >   create mode 100644 Documentation/devicetree/bindings/arm/atmel-at91.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+> > deleted file mode 100644
+> > index 4bf1b4da7659..000000000000
+> > --- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
+> > +++ /dev/null
+> > @@ -1,72 +0,0 @@
+> > -Atmel AT91 device tree bindings.
+> > -================================
+>
+> [..]
+>
+> > diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.yaml b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+> > new file mode 100644
+> > index 000000000000..19431f58b906
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+> > @@ -0,0 +1,133 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/arm/atmel-at91.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Atmel AT91 device tree bindings.
+> > +
+> > +maintainers:
+> > +  - Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> > +  - Ludovic Desroches <ludovic.desroches@atmel.com>
+>
+> ... and sorry but it's not correct just above ^^^
+> - wrong Ludovic's email address
+> - wrong Alexander's email address
+> - and I'm not part of the game anymore...
+
+Humm, I think get_maintainers.pl says you are as that's where the Cc
+list came from. But it could be stale if that changed recently.
+
+>
+> So actually our MAINTAINER's entry is up-to-date: please use it.
+
+Sorry, it was generated from git history. Many of cases with
+get_maintainers.pl was not correct and ended with me being listed.
+Probably should have made the git history a fallback.
+
+Rob
