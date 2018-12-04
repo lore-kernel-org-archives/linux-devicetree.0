@@ -1,39 +1,27 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v5 7/8] arm64: dts: sdm845: Add rpmh powercontroller node
-Date: Tue, 04 Dec 2018 15:16:03 -0800
-Message-ID: <154396536335.88331.9265777410326926096@swboyd.mtv.corp.google.com>
-References: <20181204052119.806-1-rnayak@codeaurora.org>
- <20181204052119.806-8-rnayak@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: ti-tsc-adc: Add new compatible for AM654
+ SoCs
+Date: Tue, 4 Dec 2018 17:16:07 -0600
+Message-ID: <20181204231607.GA16737@bogus>
+References: <20181119094509.22542-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181204052119.806-8-rnayak@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20181119094509.22542-1-vigneshr@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, collinsd@codeaurora.org, mka@chromium.org, robh@kernel.org, ulf.hansson@linaro.org, viresh.kumar@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Vignesh R <vigneshr@ti.com>, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rajendra Nayak (2018-12-03 21:21:18)
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/q=
-com/sdm845.dtsi
-> index b72bdb0a31a5..a6d0cd8d17b0 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -1324,6 +1325,56 @@
->                                 compatible =3D "qcom,sdm845-rpmh-clk";
->                                 #clock-cells =3D <1>;
->                         };
-> +
-> +                       rpmhpd: power-controller {
-> +                               compatible =3D "qcom,sdm845-rpmhpd";
-> +                               #power-domain-cells =3D <1>;
-> +                               operating-points-v2 =3D <&rpmhpd_opp_tabl=
-e>;
-> +                       };
-> +
-> +                       rpmhpd_opp_table: opp-table {
+On Mon, 19 Nov 2018 15:15:09 +0530, Vignesh R wrote:
+> AM654 SoCs has ADC IP which is similar to AM335x. Add new compatible to
+> handle AM654 SoCs. Also, it seems that existing compatible strings used
+> in the kernel DTs were never documented. So, document them now.
+> 
+> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> ---
+>  .../devicetree/bindings/input/touchscreen/ti-tsc-adc.txt  | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
 
-This table should go somewhere else? I don't understand why it's in the
-rpmh node because it's not an rpmh device. Does it go to the root? Or
-does it go under rpmhpd itself? I'm not sure.
+Reviewed-by: Rob Herring <robh@kernel.org>
