@@ -1,41 +1,48 @@
-From: "Gonzalez, Alex" <Alex.Gonzalez@digi.com>
-Subject: Re: [PATCH v1 0/4] ARM: dts: ccimx6ulsbcpro: Add 10" AUO/Goodix
- LVDS panel accessory kit
-Date: Tue, 4 Dec 2018 16:52:47 +0000
-Message-ID: <20181204165246.GA8605@agonzal-linux>
-References: <1540480173-12009-1-git-send-email-alex.gonzalez@digi.com>
- <20181104085425.GG26016@tiger>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/5] clk: meson: axg: add 32k clock generation
+Date: Tue,  4 Dec 2018 17:53:05 +0100
+Message-ID: <20181204165310.20806-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20181104085425.GG26016@tiger>
-Content-Language: en-US
-Content-ID: <957967DC1D77AD47AC1E44DA136A34E7@digi.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBOb3YgMDQsIDIwMTggYXQgMDg6NTQ6MjZBTSArMDAwMCwgU2hhd24gR3VvIHdyb3Rl
-Ogo+T24gVGh1LCBPY3QgMjUsIDIwMTggYXQgMDU6MDk6MjlQTSArMDIwMCwgQWxleCBHb256YWxl
-eiB3cm90ZToKPj4gQWxleCBHb256YWxleiAoNCk6Cj4+ICAgZHJtL3BhbmVsOiBzaW1wbGU6IEFk
-ZCBBVU8gRzEwMUVWTjAxMCBwYW5lbCBzdXBwb3J0Cj4+ICAgQVJNOiBkdHM6IGNjaW14NnVsc2Jj
-cHJvOiBFbmFibGUgQVVPIEcxMDFFVk4wMTAgbGNkaWYgcGFuZWwKPj4gICBBUk06IGlteF92Nl92
-N19kZWZjb25maWc6IFNlbGVjdCBUT1VDSFNDUkVFTl9HT09ESVgKPj4gICBBUk06IGR0czogY2Np
-bXg2dWxzYmNwcm86IEFkZCBzdXBwb3J0IGZvciBHb29kaXggdG91Y2ggY29udHJvbGxlcgo+Cj5J
-dCBsb29rcyBnb29kIHRvIG1lLiAgUGluZyBtZSB3aGVuIHRoZSBwYXRjaCAjMSBnZXRzIGFjY2Vw
-dGVkIGFuZCBJCj53aWxsIGFwcGx5IHRoZSB0ZXN0IHRoZW4uCj4KPlNoYXduCgpIaSBTaGF3biwK
-ClBhdGNoICMxIGlzIGFscmVhZHkgYXBwbGllZCB0byBkcm0tbWlzYy1uZXh0ICh0aGFua3MgdG8g
-VGhpZXJyeSBmb3IgZml4aW5nIGl0IAp1cCBmb3IgbWUpCgpBbGV4Cl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+The goal of this patchset is to add the internal generation of the
+32768Hz clock within the axg AO clock controller.
+
+This was initially added has the CEC clock on gxbb. To properly
+integrate it on the axg, a simpler 'dual divider' driver is added.
+Then gxbb AO clock controller is reworked to use it. Finally the 32k
+clock tree is added to the AXG.
+
+This patchset requires depends on this CCF change [0]
+
+[0]: https://lkml.kernel.org/r/20181204163257.32085-1-jbrunet@baylibre.com
+
+Jerome Brunet (5):
+  dt-bindings: clk: meson: add ao slow clock path ids
+  clk: meson: clean-up clock registration
+  clk: meson: add dual divider clock driver
+  clk: meson: gxbb-ao: replace cec-32k with the dual divider
+  clk: meson: axg-ao: add 32k generation subtree
+
+ drivers/clk/meson/Makefile              |   3 +-
+ drivers/clk/meson/axg-aoclk.c           | 175 +++++++++++++++--
+ drivers/clk/meson/axg-aoclk.h           |  13 +-
+ drivers/clk/meson/clk-dualdiv.c         | 130 +++++++++++++
+ drivers/clk/meson/clkc.h                |  19 ++
+ drivers/clk/meson/gxbb-aoclk-32k.c      | 193 -------------------
+ drivers/clk/meson/gxbb-aoclk.c          | 238 +++++++++++++++++++-----
+ drivers/clk/meson/gxbb-aoclk.h          |  20 +-
+ drivers/clk/meson/meson-aoclk.c         |  15 +-
+ include/dt-bindings/clock/axg-aoclkc.h  |   7 +-
+ include/dt-bindings/clock/gxbb-aoclkc.h |   7 +
+ 11 files changed, 527 insertions(+), 293 deletions(-)
+ create mode 100644 drivers/clk/meson/clk-dualdiv.c
+ delete mode 100644 drivers/clk/meson/gxbb-aoclk-32k.c
+
+-- 
+2.19.1
