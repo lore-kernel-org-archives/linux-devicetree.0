@@ -1,8 +1,8 @@
 From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
-Subject: [PATCH 3/4] ARM: dts: imx28-cfa10036: Fix the reset gpio signal
- polarity
-Date: Tue, 4 Dec 2018 15:03:38 +0000
-Message-ID: <1543935806-94880-4-git-send-email-michal.vokac@ysoft.com>
+Subject: [PATCH 2/4] video: ssd1307fb: Do not hard code active-low reset
+ sequence
+Date: Tue, 4 Dec 2018 15:03:37 +0000
+Message-ID: <1543935806-94880-3-git-send-email-michal.vokac@ysoft.com>
 References: <1543935806-94880-1-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -10,26 +10,28 @@ Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1543935806-94880-1-git-send-email-michal.vokac@ysoft.com>
 Content-Language: en-US
-Content-ID: <5AEC70A3473AB748836A0F1C4C24A202@eurprd04.prod.outlook.com>
+Content-ID: <DFEBB006D9A470479A0B03225DF6057F@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Maxime Ripard <maxime.ripard@bootlin.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIHJlc2V0IHNpZ25hbCBvZiB0aGUgU1NEMTMwNiBPTEVEIGRpc3BsYXkgaXMgYWN0dWFsbHkg
-YWN0aXZlLWxvdy4NCkFkYXB0IHRoZSBEVCB0byByZWZsZWN0IHRoZSByZWFsIHdvcmxkLg0KDQpT
-aWduZWQtb2ZmLWJ5OiBNaWNoYWwgVm9rw6HEjSA8bWljaGFsLnZva2FjQHlzb2Z0LmNvbT4NCi0t
-LQ0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDI4LWNmYTEwMDM2LmR0cyB8IDMgKystDQogMSBmaWxl
-IGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEv
-YXJjaC9hcm0vYm9vdC9kdHMvaW14MjgtY2ZhMTAwMzYuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-aW14MjgtY2ZhMTAwMzYuZHRzDQppbmRleCA4MzM3Y2EyLi5kNmVjYTMxIDEwMDY0NA0KLS0tIGEv
-YXJjaC9hcm0vYm9vdC9kdHMvaW14MjgtY2ZhMTAwMzYuZHRzDQorKysgYi9hcmNoL2FybS9ib290
-L2R0cy9pbXgyOC1jZmExMDAzNi5kdHMNCkBAIC0xMSw2ICsxMSw3IEBADQogDQogL2R0cy12MS87
-DQogI2luY2x1ZGUgImlteDI4LmR0c2kiDQorI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2dwaW8vZ3Bp
-by5oPg0KIA0KIC8gew0KIAltb2RlbCA9ICJDcnlzdGFsZm9udHogQ0ZBLTEwMDM2IEJvYXJkIjsN
-CkBAIC05NSw3ICs5Niw3IEBADQogCQkJCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KIAkJ
-CQkJcGluY3RybC0wID0gPCZzc2QxMzA2X2NmYTEwMDM2PjsNCiAJCQkJCXJlZyA9IDwweDNjPjsN
-Ci0JCQkJCXJlc2V0LWdwaW9zID0gPCZncGlvMiA3IDA+Ow0KKwkJCQkJcmVzZXQtZ3Bpb3MgPSA8
-JmdwaW8yIDcgR1BJT19BQ1RJVkVfTE9XPjsNCiAJCQkJCXNvbG9tb24saGVpZ2h0ID0gPDMyPjsN
-CiAJCQkJCXNvbG9tb24sd2lkdGggPSA8MTI4PjsNCiAJCQkJCXNvbG9tb24scGFnZS1vZmZzZXQg
-PSA8MD47DQotLSANCjIuMS40DQoNCg==
+VGhlIFNTRDEzMHggT0xFRMKgZGlzcGxheSByZXNldCBzaWduYWwgaXMgYWN0aXZlIGxvdy4gTm93
+IHRoZSByZXNldA0Kc2VxdWVuY2UgaXMgaW1wbGVtZW50ZWQgaW4gc3VjaCBhIHdheSB0aGF0IHVz
+ZXJzIGFyZSBmb3JjZWQgdG8NCmRlZmluZSByZXNldC1ncGlvcyBhcyBHUElPX0FDVElWRV9ISUdI
+IGluIERUIHRvIG1ha2UgdGhlIHJlc2V0IHdvcmsuDQoNCkRvIG5vdCBoYXJkIGNvZGUgdGhlIGFj
+dGl2ZS1sb3cgc2VxdWVuY2UgaW50byB0aGUgZHJpdmVyIGJ1dCBpbnN0ZWFkDQphbGxvdyB0aGUg
+dXNlciB0byBzcGVjaWZ5IHRoZSBncGlvIGFzIEdQSU9fQUNUSVZFX0xPVyB0byByZWZsZWN0DQp0
+aGUgcmVhbCB3b3JsZC4NCg0KU2lnbmVkLW9mZi1ieTogTWljaGFsIFZva8OhxI0gPG1pY2hhbC52
+b2thY0B5c29mdC5jb20+DQotLS0NCiBkcml2ZXJzL3ZpZGVvL2ZiZGV2L3NzZDEzMDdmYi5jIHwg
+NCArKy0tDQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkN
+Cg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvdmlkZW8vZmJkZXYvc3NkMTMwN2ZiLmMgYi9kcml2ZXJz
+L3ZpZGVvL2ZiZGV2L3NzZDEzMDdmYi5jDQppbmRleCA0MDYxYTIwLi4zYjM2MWJjIDEwMDY0NA0K
+LS0tIGEvZHJpdmVycy92aWRlby9mYmRldi9zc2QxMzA3ZmIuYw0KKysrIGIvZHJpdmVycy92aWRl
+by9mYmRldi9zc2QxMzA3ZmIuYw0KQEAgLTY2NywxMCArNjY3LDEwIEBAIHN0YXRpYyBpbnQgc3Nk
+MTMwN2ZiX3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsDQogDQogCWlmIChwYXItPnJl
+c2V0KSB7DQogCQkvKiBSZXNldCB0aGUgc2NyZWVuICovDQotCQlncGlvZF9zZXRfdmFsdWVfY2Fu
+c2xlZXAocGFyLT5yZXNldCwgMCk7DQotCQl1ZGVsYXkoNCk7DQogCQlncGlvZF9zZXRfdmFsdWVf
+Y2Fuc2xlZXAocGFyLT5yZXNldCwgMSk7DQogCQl1ZGVsYXkoNCk7DQorCQlncGlvZF9zZXRfdmFs
+dWVfY2Fuc2xlZXAocGFyLT5yZXNldCwgMCk7DQorCQl1ZGVsYXkoNCk7DQogCX0NCiANCiAJaWYg
+KHBhci0+dmJhdF9yZWcpIHsNCi0tIA0KMi4xLjQNCg0K
