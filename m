@@ -1,29 +1,85 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v1 10/12] hikey960: Support usb functionality of Hikey960
-Date: Tue, 4 Dec 2018 19:47:50 +0200
-Message-ID: <CAHp75Vf_nemtPuMZV-1ezyYaB_BuuDM6uqaBf9DLBWLdCnm4Gg@mail.gmail.com>
-References: <20181203034515.91412-1-chenyu56@huawei.com> <20181203034515.91412-11-chenyu56@huawei.com>
- <CAHp75VdSowHk4meQqqUamSjJJoVT59+pMZ1qjmmWd-W5nWBcUw@mail.gmail.com> <6810012e-9a77-dfdf-a738-14ce77a3027a@huawei.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v5 1/3] arm64: dts: qcom: sdm845: Add dpu to
+ sdm845 dts file
+Date: Tue, 4 Dec 2018 10:08:34 -0800
+Message-ID: <CAD=FV=XHGosaC=4wY376K7bR_WytayWCg4KBXsZxjQP6B1qzUw@mail.gmail.com>
+References: <1543876054-12998-1-git-send-email-jsanka@codeaurora.org>
+ <CAD=FV=WKtf0Ba2Fk-V8kktp6KPJh_6DcMQSVF=ynoAA4nkqKBQ@mail.gmail.com>
+ <e9207da13c30cae15cd2aba77078d08b@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6810012e-9a77-dfdf-a738-14ce77a3027a@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: chenyu56@huawei.com
-Cc: Wangbinghui <wangbinghui@hisilicon.com>, USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <e9207da13c30cae15cd2aba77078d08b-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kristian Kristensen <hoegsberg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 4, 2018 at 3:40 AM Chen Yu <chenyu56@huawei.com> wrote:
-> On 2018/12/3 17:23, Andy Shevchenko wrote:
-> > On Mon, Dec 3, 2018 at 5:47 AM Yu Chen <chenyu56@huawei.com> wrote:
-
-> >> +               .of_match_table = of_match_ptr(id_table_hisi_hikey_usb),
-> >
-> > Does it compiles for non-OF case? Why macro is in use?
-
-> OK. I will add the "CONFIG_OF".
-Why? Is this driver supposed to work without DT?
-
--- 
-With Best Regards,
-Andy Shevchenko
+SGksCgpPbiBNb24sIERlYyAzLCAyMDE4IGF0IDY6NDEgUE0gSmV5a3VtYXIgU2Fua2FyYW4gPGpz
+YW5rYUBjb2RlYXVyb3JhLm9yZz4gd3JvdGU6Cj4gPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ZHNpMTogZHNpQGFlOTYwMDAgewo+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+Y29tcGF0aWJsZSA9ICJxY29tLG1kc3MtZHNpLWN0cmwiOwo+ID4+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgcmVnID0gPDB4YWU5NjAwMCAweDQwMD47Cj4gPj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICByZWctbmFtZXMgPSAiZHNpX2N0cmwiOwo+ID4+ICsKPiA+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdC1wYXJlbnQgPSA8Jm1kc3M+
+Owo+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDw1IElS
+UV9UWVBFX0xFVkVMX0hJR0g+Owo+ID4+ICsKPiA+PiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIGNsb2NrcyA9IDwmZGlzcGNjCj4gPj4gRElTUF9DQ19NRFNTX0JZVEUxX0NMSz4sCj4g
+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmRpc3BjYwo+ID4+
+IERJU1BfQ0NfTURTU19CWVRFMV9JTlRGX0NMSz4sCj4gPj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICA8JmRpc3BjYwo+ID4+IERJU1BfQ0NfTURTU19QQ0xLMV9DTEs+
+LAo+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZkaXNwY2MK
+PiA+PiBESVNQX0NDX01EU1NfRVNDMV9DTEs+LAo+ID4+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgPCZkaXNwY2MKPiA+PiBESVNQX0NDX01EU1NfQUhCX0NMSz4sCj4g
+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmRpc3BjYwo+ID4+
+IERJU1BfQ0NfTURTU19BWElfQ0xLPjsKPiA+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIGNsb2NrLW5hbWVzID0gImJ5dGUiLAo+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAiYnl0ZV9pbnRmIiwKPiA+PiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgInBpeGVsIiwKPiA+PiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImNvcmUiLAo+ID4+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiaWZhY2UiLAo+ID4+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiYnVzIjsKPiA+PiArCj4gPj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwaHlzID0gPCZkc2kxX3BoeT47Cj4gPj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwaHktbmFtZXMgPSAiZHNpMSI7Cj4gPj4gKwo+
+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsK
+PiA+Cj4gPiBUaGlzICJkaXNhYmxlZCIgaXMgY2F1c2luZyBtZSBwcm9ibGVtcy4gIEkgZG9uJ3Qg
+YWN0dWFsbHkgbmVlZCAiZHNpMSIKPiA+IGJ1dCBpZiBJIGRvbid0IGVuYWJsZSAiZHNpMSIgdGhl
+biBteSBkaXNwbGF5IGRvZXNuJ3QgY29tZSB1cC4gIDooICBJCj4gPiByYW4gb3V0IG9mIHRpbWUg
+dG8gZGVidWcgYnV0IEkgd29uZGVyIGlmIHRoaXMgaXMgdGhpcyB0aGUgc3RhbmRhcmQKPiA+IHRo
+aW5nIHdoZXJlIERSTSBuZWVkcyB0byB3YWl0IGZvciBhbGwgdGhlIGNvbXBvbmVudHMgdG8gcHJv
+YmUgdW50aWwgaXQKPiA+IGNhbiBmaW5pc2g/ICBJZiBub2JvZHkgb24gdGhpcyBsaXN0IGp1c3Qg
+a25vd3MgSSdsbCBkaWcgdG9tb3Jyb3cgYW5kCj4gPiBjb25maXJtIHRoYXQgbXkgbWVtb3J5IGlz
+bid0IGZhdWx0eSBhbmQgc2VlIHdoYXQgd2UndmUgZG9uZSBhYm91dCB0aGlzCj4gPiBpbiB0aGUg
+cGFzdC4KPiA+Cj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDQ2Nzg5NS8K
+Pgo+IENhbiB5b3UgdHJ5IG91dCB3aXRoIHRoaXMgY2hhbmdlIChyZXZpZXdlZCBidXQgbm90IG1l
+cmdlZCB5ZXQpLiBJdAo+IHZhbGlkYXRlcwo+IHRoZSBub2RlcyBiZWZvcmUgYWRkaW5nIHRvIHRo
+ZSBEU0kgbGlzdC4KCk5vLCB0aGF0IGRvZXNuJ3QgZml4IGl0LiAgSSBhbHNvIGRvbid0IHNlZSB5
+b3VyIHByaW50b3V0LgoKT0ssIGZvdW5kIHRoZSBwcm9ibGVtIGFuZCBwb3N0ZWQgYSBwYXRjaC4g
+IFNlZQo8aHR0cHM6Ly9sa21sLmtlcm5lbC5vcmcvci8yMDE4MTIwNDE4MDQ0MS4yMTgxNjAtMS1k
+aWFuZGVyc0BjaHJvbWl1bS5vcmc+LgpQbGVhc2UgdGVzdCBhbmQgcmV2aWV3IGlmIHlvdSBhcmUg
+YWJsZS4KCgo+ID4gT25lIGxhc3Qgbm90ZTogaXQncyBwcmV0dHkgd2VpcmQgdGhhdCB5b3Ugc2Vu
+dCBvdXQgb25seSAxLzMgYW5kIG5vdAo+ID4gMi8zIGFuZCAzLzMuICBJZiB5b3UncmUgbm90IHJl
+YWR5IHRvIHNlbmQgb3V0IE1UUCBzdHVmZiB5ZXQgdGhlbiB5b3UKPiA+IHNob3VsZCBzZW5kIG91
+dCB2NiBhcyBqdXN0IGEgc2luZ2xldG9uIHBhdGNoLgo+IFllcy4gSSB3YXMgdHJ5aW5nIHRvIHNl
+cGFyYXRlIHRoaXMgb25lIG91dCBhcyBhbiBpbmRlcGVuZGVudCBjaGFuZ2UuCj4gU2FuZGVlcAo+
+IGlzIHdvcmtpbmcgb24gdGhlIGNvbW1lbnRzIG9uIHJlbW92aW5nIHRoZSBwaW5jdHJsIG5vZGVz
+IGFuZCB1cGRhdGVkCj4gbXRwIG5vZGVzLiBIZSBzaG91bGQgYmUgcG9zdGluZyAyLzMgYW5kIDMv
+MyBpbiB0aGUgbmV4dCBjb3VwbGUgb2YgZGF5cy4KCk9LLCBnb29kIHRvIGtub3cuICBQcm9iYWJs
+eSAyLzMgYW5kIDMvMyB3aWxsIGJlIHNxdWFzaGVkIGFueXdheSBzaW5jZQooYXMgSSBzdWdnZXN0
+ZWQgaW4gdGhlIHJldmlldykgdGhleSBzaG91bGQgYm90aCBiZSB0b3VjaGluZyB0aGUgTVRQCmRl
+dmljZSB0cmVlIGZpbGUuCgouLi5pbiBhbnkgY2FzZSwgeW91IHNob3VsZCBzZW5kIHlvdXJzIG91
+dCBhcyBhIHNpbmdsZXRvbiBwYXRjaCBhbmQKdGhlbiB5b3UgZG9uJ3QgaGF2ZSB0byBndWVzcyBo
+b3cgbWFueSBwYXRjaGVzIG1pZ2h0IG9yIG1pZ2h0IG5vdCBiZQpzZW50IG91dCBsYXRlci4gIFNh
+bmRlZXAgY2FuIHNlbmQgb3V0IGhpcyBwYXRjaCBhbmQgc2F5IGl0IGRlcGVuZHMgb24KeW91cnMu
+CgotRG91ZwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpG
+cmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
