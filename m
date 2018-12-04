@@ -1,64 +1,78 @@
-Return-Path: <SRS0=ZHC+=OO=mediatek.com=jianjun.wang@kernel.org>
-From: Jianjun Wang <jianjun.wang@mediatek.com>
-Subject: [PATCH 0/2] PCI: mediatek: Add support for MT7629
-Date: Wed, 5 Dec 2018 15:30:44 +0800
-Message-ID: <1543995046-4988-1-git-send-email-jianjun.wang@mediatek.com>
+Return-Path: <SRS0=yj3V=ON=gmail.com=marek.vasut@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: can: rcar_canfd: document r8a77965
+ support
+References: <20181118173201.4645-1-marek.vasut+renesas@gmail.com>
+ <20181204225603.GA16478@bogus>
+From: Marek Vasut <marek.vasut@gmail.com>
+Message-ID: <a2034a8d-a312-928c-e6e7-b026ab34435b@gmail.com>
+Date: Wed, 5 Dec 2018 00:44:50 +0100
 MIME-Version: 1.0
-Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_006_1766130120.718704326"
-To: ryder.lee@mediatek.com, bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, matthias.bgg@gmail.com, linux-pci@vger.kernel.org
-Cc: mark.rutland@arm.com, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, honghui.zhang@mediatek.com, youlin.pei@mediatek.com, Jianjun Wang <jianjun.wang@mediatek.com>
+In-Reply-To: <20181204225603.GA16478@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Eugeniu Rosca <erosca@de.adit-jv.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Marc Kleine-Budde <mkl@pengutronix.de>, Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_006_1766130120.718704326
-Content-Transfer-Encoding: base64
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_007_68071110.37179817"
+On 12/04/2018 11:56 PM, Rob Herring wrote:
+> On Sun, Nov 18, 2018 at 06:32:00PM +0100, Marek Vasut wrote:
+>> Document the support for rcar_canfd on R8A77965 SoC devices.
+>>
+>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+>> Cc: Eugeniu Rosca <erosca@de.adit-jv.com>
+>> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+>> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Cc: Simon Horman <horms+renesas@verge.net.au>
+>> Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>> Cc: linux-renesas-soc@vger.kernel.org
+>> ---
+>>  .../devicetree/bindings/net/can/rcar_canfd.txt      | 13 +++++++------
+>>  1 file changed, 7 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+>> index ac71daa46195..4720e916fbdd 100644
+>> --- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+>> +++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+>> @@ -6,6 +6,7 @@ Required properties:
+>>    - "renesas,rcar-gen3-canfd" for R-Car Gen3 compatible controller.
+>>    - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
+>>    - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3-W) compatible controller.
+>> +  - "renesas,r8a77965-canfd" for R8A77965 (R-Car M3-N) compatible controller.
+>>    - "renesas,r8a77970-canfd" for R8A77970 (R-Car V3M) compatible controller.
+>>    - "renesas,r8a77980-canfd" for R8A77980 (R-Car V3H) compatible controller.
+>>  
+>> @@ -26,12 +27,12 @@ The name of the child nodes are "channel0" and "channel1" respectively. Each
+>>  child node supports the "status" property only, which is used to
+>>  enable/disable the respective channel.
+>>  
+>> -Required properties for "renesas,r8a7795-canfd" and "renesas,r8a7796-canfd"
+>> -compatible:
+>> -In R8A7795 and R8A7796 SoCs, canfd clock is a div6 clock and can be used by both
+>> -CAN and CAN FD controller at the same time. It needs to be scaled to maximum
+>> -frequency if any of these controllers use it. This is done using the below
+>> -properties:
+>> +Required properties for "renesas,r8a7795-canfd", "renesas,r8a7796-canfd" and
+>> +"renesas,r8a77965-canfd" compatible:
+>> +In R8A7795, R8A7796 and R8A77965 SoCs, canfd clock is a div6 clock and can
+> 
+> Do we have to list the SoCs twice so that the paragraph has to be 
+> reformatted every time? Just the compatibles above should be enough.
 
---__=_Part_Boundary_007_68071110.37179817
-Content-Type: text/html
-Content-Transfer-Encoding: base64
+We don't , but that's about it for the SoCs that need this.
 
-PHByZT4NClRoZXNlIHNlcmllcyBwYXRjaGVzIG1vZGlmeSBwY2llLW1lZGlhdGVrLmMgYW5kIGR0
-LWJpbmRpbmdzIGNvbXBhdGlibGUNCnN0cmluZyB0byBzdXBwb3J0IE1UNzYyOSBQQ0llIGhvc3Qu
-DQoNCkppYW5qdW4gV2FuZyAoMik6DQogIGR0LWJpbmRpbmdzOiBQQ0k6IEFkZCBzdXBwb3J0IGZv
-ciBNVDc2MjkNCiAgUENJOiBtZWRpYXRlazogQWRkIGNvbnRyb2xsZXIgc3VwcG9ydCBmb3IgTVQ3
-NjI5DQoNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbWVkaWF0ZWstcGNpZS50eHQgfCAg
-MSArDQogZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1lZGlhdGVrLmMgICAgICAgIHwgMjYg
-KysrKysrKysrKysrKysrKysrKw0KIGluY2x1ZGUvbGludXgvcGNpX2lkcy5oICAgICAgICAgICAg
-ICAgICAgICAgICB8ICAxICsNCiAzIGZpbGVzIGNoYW5nZWQsIDI4IGluc2VydGlvbnMoKykNCg0K
-LS0gDQoyLjE5LjENCg0KPC9wcmU+PCEtLXR5cGU6dGV4dC0tPjwhLS17LS0+PHByZT4qKioqKioq
-KioqKioqIEVtYWlsIENvbmZpZGVudGlhbGl0eSBOb3RpY2UgKioqKioqKioqKioqKioqKioqKioN
-ClRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaW4gdGhpcyBlLW1haWwgbWVzc2FnZSAoaW5jbHVk
-aW5nIGFueSANCmF0dGFjaG1lbnRzKSBtYXkgYmUgY29uZmlkZW50aWFsLCBwcm9wcmlldGFyeSwg
-cHJpdmlsZWdlZCwgb3Igb3RoZXJ3aXNlDQpleGVtcHQgZnJvbSBkaXNjbG9zdXJlIHVuZGVyIGFw
-cGxpY2FibGUgbGF3cy4gSXQgaXMgaW50ZW5kZWQgdG8gYmUgDQpjb252ZXllZCBvbmx5IHRvIHRo
-ZSBkZXNpZ25hdGVkIHJlY2lwaWVudChzKS4gQW55IHVzZSwgZGlzc2VtaW5hdGlvbiwgDQpkaXN0
-cmlidXRpb24sIHByaW50aW5nLCByZXRhaW5pbmcgb3IgY29weWluZyBvZiB0aGlzIGUtbWFpbCAo
-aW5jbHVkaW5nIGl0cyANCmF0dGFjaG1lbnRzKSBieSB1bmludGVuZGVkIHJlY2lwaWVudChzKSBp
-cyBzdHJpY3RseSBwcm9oaWJpdGVkIGFuZCBtYXkgDQpiZSB1bmxhd2Z1bC4gSWYgeW91IGFyZSBu
-b3QgYW4gaW50ZW5kZWQgcmVjaXBpZW50IG9mIHRoaXMgZS1tYWlsLCBvciBiZWxpZXZlIA0KdGhh
-dCB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFpbCBpbiBlcnJvciwgcGxlYXNlIG5vdGlmeSB0
-aGUgc2VuZGVyIA0KaW1tZWRpYXRlbHkgKGJ5IHJlcGx5aW5nIHRvIHRoaXMgZS1tYWlsKSwgZGVs
-ZXRlIGFueSBhbmQgYWxsIGNvcGllcyBvZiANCnRoaXMgZS1tYWlsIChpbmNsdWRpbmcgYW55IGF0
-dGFjaG1lbnRzKSBmcm9tIHlvdXIgc3lzdGVtLCBhbmQgZG8gbm90DQpkaXNjbG9zZSB0aGUgY29u
-dGVudCBvZiB0aGlzIGUtbWFpbCB0byBhbnkgb3RoZXIgcGVyc29uLiBUaGFuayB5b3UhPC9wcmU+
-PCEtLX0tLT4=
+>> +be used by both CAN and CAN FD controller at the same time. It needs to be
+>> +scaled to maximum frequency if any of these controllers use it. This is done
+>> +using the below properties:
+>>  
+>>  - assigned-clocks: phandle of canfd clock.
+>>  - assigned-clock-rates: maximum frequency of this clock.
+>> -- 
+>> 2.18.0
+>>
 
---__=_Part_Boundary_007_68071110.37179817
-Content-Type: text/plain
-Content-Transfer-Encoding: base64
 
-VGhlc2Ugc2VyaWVzIHBhdGNoZXMgbW9kaWZ5IHBjaWUtbWVkaWF0ZWsuYyBhbmQgZHQtYmluZGlu
-Z3MgY29tcGF0aWJsZQ0Kc3RyaW5nIHRvIHN1cHBvcnQgTVQ3NjI5IFBDSWUgaG9zdC4NCg0KSmlh
-bmp1biBXYW5nICgyKToNCiAgZHQtYmluZGluZ3M6IFBDSTogQWRkIHN1cHBvcnQgZm9yIE1UNzYy
-OQ0KICBQQ0k6IG1lZGlhdGVrOiBBZGQgY29udHJvbGxlciBzdXBwb3J0IGZvciBNVDc2MjkNCg0K
-IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLnR4dCB8ICAxICsNCiBk
-cml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbWVkaWF0ZWsuYyAgICAgICAgfCAyNiArKysrKysr
-KysrKysrKysrKysrDQogaW5jbHVkZS9saW51eC9wY2lfaWRzLmggICAgICAgICAgICAgICAgICAg
-ICAgIHwgIDEgKw0KIDMgZmlsZXMgY2hhbmdlZCwgMjggaW5zZXJ0aW9ucygrKQ0KDQotLSANCjIu
-MTkuMQ0K
-
---__=_Part_Boundary_007_68071110.37179817--
-
---__=_Part_Boundary_006_1766130120.718704326--
+-- 
+Best regards,
+Marek Vasut
