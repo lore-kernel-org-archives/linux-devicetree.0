@@ -1,7 +1,7 @@
 From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V3 2/3] ARM: dts: add Raspberry Pi 3 A+
-Date: Tue,  4 Dec 2018 19:58:18 +0100
-Message-ID: <1543949899-13380-3-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH V3 1/3] dt-bindings: bcm: Add Raspberry Pi 3 A+
+Date: Tue,  4 Dec 2018 19:58:17 +0100
+Message-ID: <1543949899-13380-2-git-send-email-stefan.wahren@i2se.com>
 References: <1543949899-13380-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,141 +21,28 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Flori
 Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Raspberry Pi 3 A+ is similar to the Pi 3 B+ but has only 512 MB RAM,
-1 USB 2.0 port and no Ethernet.
+This adds the root properties for the Raspberry Pi 3 A+ .
 
 Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 Reviewed-by: Eric Anholt <eric@anholt.net>
 ---
- arch/arm/boot/dts/Makefile                 |   1 +
- arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts | 107 +++++++++++++++++++++++++++++
- 2 files changed, 108 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
+ Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b0e966d..15bbd0d 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -79,6 +79,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
- 	bcm2835-rpi-a-plus.dtb \
- 	bcm2835-rpi-cm1-io1.dtb \
- 	bcm2836-rpi-2-b.dtb \
-+	bcm2837-rpi-3-a-plus.dtb \
- 	bcm2837-rpi-3-b.dtb \
- 	bcm2837-rpi-3-b-plus.dtb \
- 	bcm2837-rpi-cm3-io3.dtb \
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts b/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
-new file mode 100644
-index 0000000..b2df7cf
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
-@@ -0,0 +1,107 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/dts-v1/;
-+#include "bcm2837.dtsi"
-+#include "bcm2836-rpi.dtsi"
-+#include "bcm283x-rpi-usb-host.dtsi"
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
+index 0dcc3ea..245328f 100644
+--- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
++++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
+@@ -30,6 +30,10 @@ Raspberry Pi 2 Model B
+ Required root node properties:
+ compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
+ 
++Raspberry Pi 3 Model A+
++Required root node properties:
++compatible = "raspberrypi,3-model-a-plus", "brcm,bcm2837";
 +
-+/ {
-+	compatible = "raspberrypi,3-model-a-plus", "brcm,bcm2837";
-+	model = "Raspberry Pi 3 Model A+";
-+
-+	chosen {
-+		/* 8250 auxiliary UART instead of pl011 */
-+		stdout-path = "serial1:115200n8";
-+	};
-+
-+	memory {
-+		reg = <0 0x20000000>;
-+	};
-+
-+	leds {
-+		act {
-+			gpios = <&gpio 29 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		pwr {
-+			label = "PWR";
-+			gpios = <&expgpio 2 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	wifi_pwrseq: wifi-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&expgpio 1 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+&firmware {
-+	expgpio: gpio {
-+		compatible = "raspberrypi,firmware-gpio";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		gpio-line-names = "BT_ON",
-+				  "WL_ON",
-+				  "STATUS_LED",
-+				  "",
-+				  "",
-+				  "CAM_GPIO0",
-+				  "CAM_GPIO1",
-+				  "";
-+		status = "okay";
-+	};
-+};
-+
-+&hdmi {
-+	hpd-gpios = <&gpio 28 GPIO_ACTIVE_LOW>;
-+};
-+
-+&pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm0_gpio40 &pwm1_gpio41>;
-+	status = "okay";
-+};
-+
-+/* SDHCI is used to control the SDIO for wireless */
-+&sdhci {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emmc_gpio34>;
-+	status = "okay";
-+	bus-width = <4>;
-+	non-removable;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+
-+	brcmf: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+	};
-+};
-+
-+/* SDHOST is used to drive the SD card */
-+&sdhost {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdhost_gpio48>;
-+	status = "okay";
-+	bus-width = <4>;
-+};
-+
-+/* uart0 communicates with the BT module */
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_ctsrts_gpio30 &uart0_gpio32 &gpclk2_gpio43>;
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		max-speed = <2000000>;
-+		shutdown-gpios = <&expgpio 0 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+/* uart1 is mapped to the pin header */
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_gpio14>;
-+	status = "okay";
-+};
+ Raspberry Pi 3 Model B
+ Required root node properties:
+ compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
 -- 
 2.7.4
