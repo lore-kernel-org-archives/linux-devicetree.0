@@ -1,25 +1,46 @@
-Return-Path: <SRS0=jrs2=ON=verge.net.au=horms@kernel.org>
-Date: Tue, 4 Dec 2018 06:34:13 -0800
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 20/22] ARM: dts: r8a7744: Add MSIOF[012] support
-Message-ID: <20181204143412.utmtm4upazeyeuwh@verge.net.au>
-References: <1543319795-48325-1-git-send-email-biju.das@bp.renesas.com>
- <1543319795-48325-21-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdU4puVT82eL9RXYY4rFEqcxvXdG_uSwX0xQDSmVrgsLMw@mail.gmail.com>
+Return-Path: <SRS0=Is9l=ON=nvidia.com=spujar@kernel.org>
+From: Sameer Pujar <spujar@nvidia.com>
+Subject: [PATCH] arm64: dts: tegra: Add HDA node to Jetson Xavier
+Date: Tue, 4 Dec 2018 17:44:22 +0530
+Message-ID: <1543925662-18677-1-git-send-email-spujar@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdU4puVT82eL9RXYY4rFEqcxvXdG_uSwX0xQDSmVrgsLMw@mail.gmail.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Content-Type: text/plain
+To: mark.rutland@arm.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Nov 30, 2018 at 10:02:49AM +0100, Geert Uytterhoeven wrote:
-> On Tue, Nov 27, 2018 at 1:05 PM Biju Das <biju.das@bp.renesas.com> wrote:
-> > Add the DT nodes needed by MSIOF[012] interfaces to the SoC dtsi.
-> >
-> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Device tree node for hda is populated with relevant fields
 
-Thanks, applied for v4.21.
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index f274562..93f9163 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -957,4 +957,20 @@
+ 				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+ 		interrupt-parent = <&gic>;
+ 	};
++
++	hda@3510000 {
++		compatible = "nvidia,tegra194-hda", "nvidia,tegra30-hda";
++		reg = <0x0 0x3510000 0x0 0x10000>;
++		interrupts = <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&bpmp TEGRA194_CLK_HDA>,
++			<&bpmp TEGRA194_CLK_HDA2CODEC_2X>,
++			<&bpmp TEGRA194_CLK_HDA2HDMICODEC>;
++		clock-names = "hda", "hda2codec_2x", "hda2hdmi";
++		resets = <&bpmp TEGRA194_RESET_HDA>,
++			<&bpmp TEGRA194_RESET_HDA2CODEC_2X>,
++			<&bpmp TEGRA194_RESET_HDA2HDMICODEC>;
++		reset-names = "hda", "hda2codec_2x", "hda2hdmi";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_DISP>;
++		status = "disabled";
++	};
+ };
+-- 
+2.7.4
