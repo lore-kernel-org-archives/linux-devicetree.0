@@ -1,28 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: crypto: ccree: add dt bindings for
- ccree 703
-Date: Tue, 4 Dec 2018 14:14:31 -0600
-Message-ID: <20181204201431.GA15089@bogus>
-References: <1542102039-22256-1-git-send-email-gilad@benyossef.com>
- <1542102039-22256-3-git-send-email-gilad@benyossef.com>
+Subject: Re: [PATCH] dt-bindings: display: add binding for Innolux
+ ee101ia-01d panel
+Date: Tue, 4 Dec 2018 14:15:50 -0600
+Message-ID: <20181204201550.GA16947@bogus>
+References: <20181113124205.29319-1-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1542102039-22256-3-git-send-email-gilad@benyossef.com>
+In-Reply-To: <20181113124205.29319-1-heiko@sntech.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Yael Chemla <yael.chemla@foss.arm.com>, Ofir Drang <Ofir.Drang@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heiko@sntech.de, Heiko Stuebner <heiko.stuebner@bq.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Nov 2018 09:40:36 +0000, Gilad Ben-Yossef wrote:
-> Add device tree bindings associating Arm TrustZone CryptoCell 703 with the
-> ccree driver.
+On Tue, 13 Nov 2018 13:42:05 +0100, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@bq.com>
 > 
-> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+> This is a panel handled through the generic lvds-panel binding,
+> so only needs its additional compatible specified.
+> 
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
 > ---
->  Documentation/devicetree/bindings/crypto/arm-cryptocell.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../bindings/display/panel/innolux,ee101ia-01d.txt         | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/innolux,ee101ia-01d.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
