@@ -1,30 +1,41 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2 0/2] net: phy: micrel: add tobling phy reset
-Date: Tue, 04 Dec 2018 08:49:37 -0800 (PST)
-Message-ID: <20181204.084937.2062398264103773495.davem@davemloft.net>
-References: <20181203.152057.61263535375452379.davem@davemloft.net>
-        <92358866-e231-15e7-84f4-86a6fa51ed49@gmail.com>
-        <20181204104333.GC741@lunn.ch>
+From: "Gonzalez, Alex" <Alex.Gonzalez@digi.com>
+Subject: Re: [PATCH v1 0/4] ARM: dts: ccimx6ulsbcpro: Add 10" AUO/Goodix
+ LVDS panel accessory kit
+Date: Tue, 4 Dec 2018 16:52:47 +0000
+Message-ID: <20181204165246.GA8605@agonzal-linux>
+References: <1540480173-12009-1-git-send-email-alex.gonzalez@digi.com>
+ <20181104085425.GG26016@tiger>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20181204104333.GC741@lunn.ch>
-Sender: netdev-owner@vger.kernel.org
-To: andrew@lunn.ch
-Cc: f.fainelli@gmail.com, yoshihiro.shimoda.uh@renesas.com, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20181104085425.GG26016@tiger>
+Content-Language: en-US
+Content-ID: <957967DC1D77AD47AC1E44DA136A34E7@digi.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
-Date: Tue, 4 Dec 2018 11:43:33 +0100
-
->> > Series applied, thank you.
->> 
->> Meh! I guess we should be faster at reviewing stuff :/
-> 
-> And there have been things going on behind the scenes to try to get a
-> real fix. Sorry, i should of mentioned that.
-> 
-> David, could you revert this please?
-
-Sure, done.
+T24gU3VuLCBOb3YgMDQsIDIwMTggYXQgMDg6NTQ6MjZBTSArMDAwMCwgU2hhd24gR3VvIHdyb3Rl
+Ogo+T24gVGh1LCBPY3QgMjUsIDIwMTggYXQgMDU6MDk6MjlQTSArMDIwMCwgQWxleCBHb256YWxl
+eiB3cm90ZToKPj4gQWxleCBHb256YWxleiAoNCk6Cj4+ICAgZHJtL3BhbmVsOiBzaW1wbGU6IEFk
+ZCBBVU8gRzEwMUVWTjAxMCBwYW5lbCBzdXBwb3J0Cj4+ICAgQVJNOiBkdHM6IGNjaW14NnVsc2Jj
+cHJvOiBFbmFibGUgQVVPIEcxMDFFVk4wMTAgbGNkaWYgcGFuZWwKPj4gICBBUk06IGlteF92Nl92
+N19kZWZjb25maWc6IFNlbGVjdCBUT1VDSFNDUkVFTl9HT09ESVgKPj4gICBBUk06IGR0czogY2Np
+bXg2dWxzYmNwcm86IEFkZCBzdXBwb3J0IGZvciBHb29kaXggdG91Y2ggY29udHJvbGxlcgo+Cj5J
+dCBsb29rcyBnb29kIHRvIG1lLiAgUGluZyBtZSB3aGVuIHRoZSBwYXRjaCAjMSBnZXRzIGFjY2Vw
+dGVkIGFuZCBJCj53aWxsIGFwcGx5IHRoZSB0ZXN0IHRoZW4uCj4KPlNoYXduCgpIaSBTaGF3biwK
+ClBhdGNoICMxIGlzIGFscmVhZHkgYXBwbGllZCB0byBkcm0tbWlzYy1uZXh0ICh0aGFua3MgdG8g
+VGhpZXJyeSBmb3IgZml4aW5nIGl0IAp1cCBmb3IgbWUpCgpBbGV4Cl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
