@@ -1,106 +1,88 @@
-From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH 02/14] dt-bindings: soc: milbeaut: Add Milbeaut trampoline
- description
-Date: Tue, 4 Dec 2018 20:30:53 +0900
-Message-ID: <90b00858-6e9e-8f7c-f6d4-b35e5daa6eee@socionext.com>
-References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
- <1542589274-13878-3-git-send-email-sugaya.taichi@socionext.com>
- <154337047410.88331.9696178601340675631@swboyd.mtv.corp.google.com>
- <c746a3de-a9e3-9f25-ecb9-703ceb7e62d0@socionext.com>
- <154356579701.88331.5043467509900444879@swboyd.mtv.corp.google.com>
- <f5917f71-f15b-a92d-649c-e3f5f5f10698@socionext.com>
- <CAL_Jsq+dnKht3TwCh1qB1H4pYFhQJmSN0nAayU+=PJLAvq0bbQ@mail.gmail.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v3 1/3] usb: chipidea: imx: support configuring for active
+ low oc signal
+Date: Tue, 4 Dec 2018 12:43:21 +0100
+Message-ID: <05dbcf6d-1551-31b4-4c9b-fb713fc71362@i2se.com>
+References: <20181204083131.12524-1-u.kleine-koenig@pengutronix.de>
+ <20181204083131.12524-2-u.kleine-koenig@pengutronix.de>
+ <ce751026-d61f-400e-cb5d-abd9d45dc05f@i2se.com>
+ <20181204085250.o4vaviz7ta43zpfo@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+dnKht3TwCh1qB1H4pYFhQJmSN0nAayU+=PJLAvq0bbQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181204085250.o4vaviz7ta43zpfo@pengutronix.de>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Peter Chen <Peter.Chen@nxp.com>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, linux-usb@vger.kernel.org, Matthew Starr <mstarr@hedonline.com>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
-
-On 2018/12/04 0:49, Rob Herring wrote:
-> On Mon, Dec 3, 2018 at 1:42 AM Sugaya, Taichi
-> <sugaya.taichi@socionext.com> wrote:
->>
->> Hi,
->>
->> On 2018/11/30 17:16, Stephen Boyd wrote:
->>> Quoting Sugaya, Taichi (2018-11-29 04:24:51)
->>>> On 2018/11/28 11:01, Stephen Boyd wrote:
->>>>> Quoting Sugaya Taichi (2018-11-18 17:01:07)
->>>>>>     create mode 100644 Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
->>>>>> new file mode 100644
->>>>>> index 0000000..f5d906c
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
->>>>>> @@ -0,0 +1,12 @@
->>>>>> +Socionext M10V SMP trampoline driver binding
->>>>>> +
->>>>>> +This is a driver to wait for sub-cores while boot process.
->>>>>> +
->>>>>> +- compatible: should be "socionext,smp-trampoline"
->>>>>> +- reg: should be <0x4C000100 0x100>
->>>>>> +
->>>>>> +EXAMPLE
->>>>>> +       trampoline: trampoline@0x4C000100 {
->>>>> Drop the 0x part of unit addresses.
->>>>
->>>> Okay.
->>>>
->>>>
->>>>>> +               compatible = "socionext,smp-trampoline";
->>>>>> +               reg = <0x4C000100 0x100>;
->>>>> Looks like a software construct, which we wouldn't want to put into DT
->>>>> this way. DT doesn't describe drivers.
->>>> We would like to use this node only getting the address of the
->>>> trampoline area
->>>> in which sub-cores wait.  (They have finished to go to this area in previous
->>>> bootloader process.)
->>>
->>> Is this area part of memory, or a special SRAM? If it's part of memory,
->>> I would expect this node to be under the reserved-memory node and
->>> pointed to by some other node that uses this region. Could even be the
->>> CPU nodes.
->>
->> Yes, 0x4C000100 is a part of memory under the reserved-memory node. So
->> we would like to use the SRAM ( allocated 0x00000000 ) area instead.
->> BTW, sorry, the trampoline address of this example is simply wrong.  We
->> were going to use a part of the SRAM from the beginning.
->>
->>>
->>>>
->>>> So should we embed the constant value in source codes instead of getting
->>>> from
->>>> DT because the address is constant at the moment? Or is there other
->>>> approach?
->>>>
->>>
->>> If it's constant then that also works. Why does it need to come from DT
->>> at all then?
->>
->> We think it is not good to embed constant value in driver codes and do
->> not have another way...
->> Are there better ways?
-> 
-> If this is just memory, can you use the standard spin-table binding in
-> the DT spec? There are some requirements like 64-bit values even on
-> 32-bit machines (though this gets violated).
-
-The spin-table seems to be used on only 64-bit arch. Have it ever worked 
-on 32-bit machine?
-And I would like not to use it because avoid violation.
-
-Thanks
-Sugaya Taichi
-
-
-> 
-> Rob
-> 
+QW0gMDQuMTIuMTggdW0gMDk6NTIgc2NocmllYiBVd2UgS2xlaW5lLUvDtm5pZzoKPiBIZWxsbyBT
+dGVmYW4sCj4KPiBPbiBUdWUsIERlYyAwNCwgMjAxOCBhdCAwOTo0MDoyNkFNICswMTAwLCBTdGVm
+YW4gV2FocmVuIHdyb3RlOgo+PiBBbSAwNC4xMi4xOCB1bSAwOTozMSBzY2hyaWViIFV3ZSBLbGVp
+bmUtS8O2bmlnOgo+Pj4gVGhlIHN0YXR1cyBxdW8gb24gaS5NWDYgaXMgdGhhdCBpZiAib3Zlci1j
+dXJyZW50LWFjdGl2ZS1oaWdoIiBpcwo+Pj4gc3BlY2lmaWVkIGluIHRoZSBkZXZpY2UgdHJlZSB0
+aGlzIGlzIGNvbmZpZ3VyZWQgYXMgZXhwZWN0ZWQuIElmCj4+PiB0aGUgcHJvcGVydHkgaXMgbWlz
+c2luZyBwb2xhcml0eSBpc24ndCBjaGFuZ2VkIGFuZCBzbyB0aGUKPj4+IHBvbGFyaXR5IGlzIGtl
+cHQgYXMgc2V0dXAgYnkgdGhlIGJvb3Rsb2FkZXIuIFJlc2V0IGRlZmF1bHQgaXMKPj4+IGFjdGl2
+ZSBoaWdoLCBzbyBhY3RpdmUgbG93IGNhbiBvbmx5IGJlIHVzZWQgd2l0aCBoZWxwIGJ5IHRoZQo+
+Pj4gYm9vdGxvYWRlci4gT24gaS5NWDcgaXQgaXMgc2ltaWxhciwgYnV0IHRoZXJlIGRpc2FibGlu
+ZyBvZgo+Pj4gb3ZlciBjdXJyZW50IGRldGVjdGlvbiBoYXMgYSBzaW1pbGFyIGluY29uc2lzdGVu
+Y3kuCj4+Pgo+Pj4gVGhpcyBwYXRjaCBpbnRyb2R1Y2VzIGEgbmV3IHByb3BlcnR5IHRoYXQgYWxs
+b3dzIHRvIGV4cGxpY2l0bHkKPj4+IGNvbmZpZ3VyZSBmb3IgYWN0aXZlIGxvdyBvdmVyIGN1cnJl
+bnQgZGV0ZWN0aW9uIGFuZCBjb25zaXN0ZW50bHkKPj4+IHNldHMgdGhpcyB1cC4gSW4gdGhlIGFi
+c2VuY2Ugb2YgYW4gZXhwbGljaXQgY29uZmlndXJhdGlvbiB0aGUKPj4+IGJpdCBpcyBrZXB0IGFz
+IGlzLiBPbiBpLk1YNyBvdmVyIGN1cnJlbnQgZGV0ZWN0aW9uIGlzIHVzZWQgdW5sZXNzCj4+PiBk
+aXNhYmxlZCBpbiB0aGUgZGV2aWNlIHRyZWUuCj4+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogVXdlIEts
+ZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5kZT4KPj4+IC0tLQo+Pj4g
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9jaS1oZHJjLXVzYjIudHh0ICB8ICA1ICsrLS0K
+Pj4+ICBkcml2ZXJzL3VzYi9jaGlwaWRlYS9jaV9oZHJjX2lteC5jICAgICAgICAgICAgfCAxNiAr
+KysrKysrKy0tLQo+Pj4gIGRyaXZlcnMvdXNiL2NoaXBpZGVhL2NpX2hkcmNfaW14LmggICAgICAg
+ICAgICB8ICA4ICsrKysrLQo+Pj4gIGRyaXZlcnMvdXNiL2NoaXBpZGVhL3VzYm1pc2NfaW14LmMg
+ICAgICAgICAgICB8IDI4ICsrKysrKysrKysrKysrLS0tLS0KPj4+ICA0IGZpbGVzIGNoYW5nZWQs
+IDQzIGluc2VydGlvbnMoKyksIDE0IGRlbGV0aW9ucygtKQo+Pj4KPj4+IGRpZmYgLS1naXQgYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2NpLWhkcmMtdXNiMi50eHQgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2NpLWhkcmMtdXNiMi50eHQKPj4+
+IGluZGV4IDUyOWU1MTg3OWZiMi4uYzMyZjZlOTgzY2Y2IDEwMDY0NAo+Pj4gLS0tIGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9jaS1oZHJjLXVzYjIudHh0Cj4+PiArKysg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2NpLWhkcmMtdXNiMi50eHQK
+Pj4+IEBAIC04Nyw4ICs4Nyw5IEBAIGkubXggc3BlY2lmaWMgcHJvcGVydGllcwo+Pj4gIC0gZnNs
+LHVzYm1pc2M6IHBoYW5kbGVyIG9mIG5vbi1jb3JlIHJlZ2lzdGVyIGRldmljZSwgd2l0aCBvbmUK
+Pj4+ICAgIGFyZ3VtZW50IHRoYXQgaW5kaWNhdGUgdXNiIGNvbnRyb2xsZXIgaW5kZXgKPj4+ICAt
+IGRpc2FibGUtb3Zlci1jdXJyZW50OiBkaXNhYmxlIG92ZXIgY3VycmVudCBkZXRlY3QKPj4+IC0t
+IG92ZXItY3VycmVudC1hY3RpdmUtaGlnaDogb3ZlciBjdXJyZW50IHNpZ25hbCBwb2xhcml0eSBp
+cyBoaWdoIGFjdGl2ZSwKPj4+IC0gIHR5cGljYWxseSBvdmVyIGN1cnJlbnQgc2lnbmFsIHBvbGFy
+aXR5IGlzIGxvdyBhY3RpdmUuCj4+PiArLSBvdmVyLWN1cnJlbnQtYWN0aXZlLWxvdzogb3ZlciBj
+dXJyZW50IHNpZ25hbCBwb2xhcml0eSBpcyBhY3RpdmUgbG93Lgo+Pj4gKy0gb3Zlci1jdXJyZW50
+LWFjdGl2ZS1oaWdoOiBvdmVyIGN1cnJlbnQgc2lnbmFsIHBvbGFyaXR5IGlzIGFjdGl2ZSBoaWdo
+Lgo+Pj4gKyAgSXQncyByZWNvbW1lbmRlZCB0byBzcGVjaWZ5IHRoZSBvdmVyIGN1cnJlbnQgcG9s
+YXJpdHkuCj4+PiAgLSBleHRlcm5hbC12YnVzLWRpdmlkZXI6IGVuYWJsZXMgb2ZmLWNoaXAgcmVz
+aXN0b3IgZGl2aWRlciBmb3IgVmJ1cwo+Pj4gIAo+Pj4gIEV4YW1wbGU6Cj4+IHRoYW5rcyBmb3Ig
+bWFraW5nIHRoaXMgY29uZmlndXJhYmxlLiBCdXQgc2hvdWxkbid0IHRoaXMgYmUgYSBzZXBhcmF0
+ZQo+PiBwYXRjaCBhbmQgcmV2aWV3ZWQgYnkgdGhlIGRldmljZXRyZWUgZ3V5cz8KPiBJJ20gbm90
+IHN1cmUgYWJvdXQgdGhlIHNlcGFyYXRlIHBhdGNoIHBhcnQuIE15IGltcHJlc3Npb24gaXMgaXQg
+ZGVwZW5kcwo+IG9uIHRoZSBtYWludGFpbmVyIGlmIGEgY2hhbmdlIHRvIHRoZSBiaW5kaW5nIChv
+cHBvc2VkIHRvIHRoZQo+IGludHJvZHVjdGlvbiBvZiBhIGJpbmRpbmcpIHNob3VsZCBiZSBzZXBh
+cmF0ZSBvciBub3QuCj4KPiBCdXQgZm9yIHRoZSByZXZpZXcgeW91IGFyZSByaWdodCwgSSBhZGRl
+ZCB0aGUgZHQgcGVvcGxlIHRvIENjIGZvciB0aGVtCj4gdG8gY29tbWVudC4gSW4gdjIgTWF0dGhl
+dyBhbHNvIG5vdGVkIHRoYXQgaGUgd291bGQgcHJlZmVyIHRvIGhhbmRsZSB0aGUKPiBzaXR1YXRp
+b24gd2hlbiBib3RoIG92ZXItY3VycmVudC1hY3RpdmUtbG93IGFuZCBvdmVyLWN1cnJlbnQtYWN0
+aXZlLWhpZ2gKPiB3ZXJlIGdpdmVuIGRpZmZlcmVudGx5LiBJIHRoaW5rIHdlIGRvbid0IG5lZWQg
+dGhhdCBhcyB0aGlzIGlzIGEgY2FzZSBvZgo+ICJicm9rZW4gZHQiIGFuZCBpdCBkb2Vzbid0IG1h
+dHRlciBtdWNoIHdoYXQgaXMgZG9uZSB0aGVuLiAoV2l0aCBteSBwYXRjaAo+IHdlJ3JlIGNvbmZp
+Z3VyaW5nIGZvciBhY3RpdmUgaGlnaCBpbiB0aGF0IGNhc2UuKSBBIGZlZWRiYWNrIGhlcmUgd291
+bGQKPiBiZSBncmVhdCwgdG9vLgoKQUZBSVIgc3VjaCBpbnZhbGlkIHNldHRpbmdzIHNob3VsZCBi
+ZSBjYXRjaGVkIHdpdGggYSBwcm9wZXIgZXJyb3IKbWVzc2FnZSBhbmQgYWJvcnQgb2YgdGhlIHBy
+b2JpbmcuCgpSZWdhcmRzClN0ZWZhbgoKPgo+IEJlc3QgcmVnYXJkcwo+IFV3ZQo+CgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
+IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
