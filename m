@@ -1,7 +1,7 @@
 From: Hans Ole Hatzel <hohatzel@jusst.de>
-Subject: [PATCH 1/4] ARM: dts: imx7d: cl-som-imx7: fix pinctrl for i2c2
-Date: Tue,  4 Dec 2018 12:07:38 +0100
-Message-ID: <20181204110741.6943-2-hohatzel@jusst.de>
+Subject: [PATCH 4/4] ARM: dts: imx7d: sbc imx7: add uart5
+Date: Tue,  4 Dec 2018 12:07:41 +0100
+Message-ID: <20181204110741.6943-5-hohatzel@jusst.de>
 References: <20181204110741.6943-1-hohatzel@jusst.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,32 +21,67 @@ To: linux-arm-kernel@lists.infradead.org, ilya@compulab.co.il, devicetree@vger.k
 Cc: Julian Scheel <jscheel@jusst.de>, Hans Ole Hatzel <hohatzel@jusst.de>
 List-Id: devicetree@vger.kernel.org
 
-On cl-som-imx7 the I2C2 port is wired to GPIO1 6/7 pads, change the
-pinctrl to reflect this. Also disable the internal pull-up, as the
-board has appropriate external pull ups in place.
-This fixes initialization of all peripherals on the i2c2 bus,
-particularly pmic and gpio expander.
+Adds uart5 connections as used on the sbc.
+In the sbc's reference material this is known as uart1, it does however
+connect to the som as uart5. This uart is connected via the soc's
+pins 11 (TX) and 13 (RX). On the sbc it is pinned out on P5
+using pins 15 (TX) and 17 (RX).
 
 Signed-off-by: Hans Ole Hatzel <hohatzel@jusst.de>
 Signed-off-by: Julian Scheel <jscheel@jusst.de>
 ---
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 16 ++++++++++++++++
+ arch/arm/boot/dts/imx7d-sbc-imx7.dts    |  4 ++++
+ 2 files changed, 20 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index 8bf365d28cac..11bd713b540f 100644
+index 6c2c844dc052..f7c002093c67 100644
 --- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
 +++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -249,8 +249,8 @@
+@@ -223,6 +223,15 @@
+ 	fsl;
+ };
  
- 	pinctrl_i2c2: i2c2grp {
- 		fsl,pins = <
--			MX7D_PAD_I2C2_SDA__I2C2_SDA		0x4000007f
--			MX7D_PAD_I2C2_SCL__I2C2_SCL		0x4000007f
-+			MX7D_PAD_LPSR_GPIO1_IO07__I2C2_SDA	0x4000000f
-+			MX7D_PAD_LPSR_GPIO1_IO06__I2C2_SCL	0x4000000f
++&uart5 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart5>;
++	assigned-clocks = <&clks IMX7D_UART5_ROOT_SRC>;
++	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
++	status = "okay";
++	fsl;
++};
++
+ &usbotg1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usbotg1>;
+@@ -330,6 +339,13 @@
  		>;
  	};
  
++	pinctrl_uart5: uart5grp {
++		fsl,pins = <
++			MX7D_PAD_I2C4_SCL__UART5_DCE_RX		0x79
++			MX7D_PAD_I2C4_SDA__UART5_DCE_TX		0x79
++		>;
++	};
++
+ 	pinctrl_usdhc2: usdhc2grp {
+ 		fsl,pins = <
+ 			MX7D_PAD_SD2_CMD__SD2_CMD			0x59
+diff --git a/arch/arm/boot/dts/imx7d-sbc-imx7.dts b/arch/arm/boot/dts/imx7d-sbc-imx7.dts
+index 74904127fbc6..d23d62aceb82 100644
+--- a/arch/arm/boot/dts/imx7d-sbc-imx7.dts
++++ b/arch/arm/boot/dts/imx7d-sbc-imx7.dts
+@@ -30,6 +30,10 @@
+ 	status = "okay";
+ };
+ 
++&uart5 {
++	status = "okay";
++};
++
+ &iomuxc {
+ 	pinctrl_usdhc1: usdhc1grp {
+ 		fsl,pins = <
 -- 
 2.19.2
