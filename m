@@ -1,68 +1,28 @@
-Return-Path: <robherring2@gmail.com>
-Date: Tue, 4 Dec 2018 16:56:03 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: can: rcar_canfd: document r8a77965
- support
-Message-ID: <20181204225603.GA16478@bogus>
-References: <20181118173201.4645-1-marek.vasut+renesas@gmail.com>
+Return-Path: <SRS0=jrs2=ON=verge.net.au=horms@kernel.org>
+Date: Tue, 4 Dec 2018 06:15:28 -0800
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 00/21] Add support for iWave G20D-Q7 board based on
+ RZ/G1N
+Message-ID: <20181204141527.34dnmyprqcdgp3r3@verge.net.au>
+References: <1543593251-15322-1-git-send-email-biju.das@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20181118173201.4645-1-marek.vasut+renesas@gmail.com>
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: devicetree@vger.kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Eugeniu Rosca <erosca@de.adit-jv.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Marc Kleine-Budde <mkl@pengutronix.de>, Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <1543593251-15322-1-git-send-email-biju.das@bp.renesas.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Sun, Nov 18, 2018 at 06:32:00PM +0100, Marek Vasut wrote:
-> Document the support for rcar_canfd on R8A77965 SoC devices.
+On Fri, Nov 30, 2018 at 03:54:11PM +0000, Biju Das wrote:
+> This patch series aims to add support for iWave G20D-Q7 board based on RZ/G1N.
 > 
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> Cc: Eugeniu Rosca <erosca@de.adit-jv.com>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Simon Horman <horms+renesas@verge.net.au>
-> Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Cc: linux-renesas-soc@vger.kernel.org
-> ---
->  .../devicetree/bindings/net/can/rcar_canfd.txt      | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
+> This patch series is tested against renesas-dev
 > 
-> diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> index ac71daa46195..4720e916fbdd 100644
-> --- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> +++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> @@ -6,6 +6,7 @@ Required properties:
->    - "renesas,rcar-gen3-canfd" for R-Car Gen3 compatible controller.
->    - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
->    - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3-W) compatible controller.
-> +  - "renesas,r8a77965-canfd" for R8A77965 (R-Car M3-N) compatible controller.
->    - "renesas,r8a77970-canfd" for R8A77970 (R-Car V3M) compatible controller.
->    - "renesas,r8a77980-canfd" for R8A77980 (R-Car V3H) compatible controller.
->  
-> @@ -26,12 +27,12 @@ The name of the child nodes are "channel0" and "channel1" respectively. Each
->  child node supports the "status" property only, which is used to
->  enable/disable the respective channel.
->  
-> -Required properties for "renesas,r8a7795-canfd" and "renesas,r8a7796-canfd"
-> -compatible:
-> -In R8A7795 and R8A7796 SoCs, canfd clock is a div6 clock and can be used by both
-> -CAN and CAN FD controller at the same time. It needs to be scaled to maximum
-> -frequency if any of these controllers use it. This is done using the below
-> -properties:
-> +Required properties for "renesas,r8a7795-canfd", "renesas,r8a7796-canfd" and
-> +"renesas,r8a77965-canfd" compatible:
-> +In R8A7795, R8A7796 and R8A77965 SoCs, canfd clock is a div6 clock and can
+> V1-->V2
+>     * r8a7744: Initial SoC device tree: Fixed pfc register size, GIC_CPU_MASK_SIMPLE in gic/timer nodes
+>     * r8a7744: Add SMP support: Fixed GIC_CPU_MASK_SIMPLE in gic/timer nodes
+>     * r8a7744: Add I2C and IIC support: Dropped i2c aliases, removed generic compatible from iic3.
+>     * r8a7744-iwg20m: Enable SDHI0 controller: Fixed subject line
+>     * r8a7744: Add RWDT node: Moved rwdt node just before gpio.
 
-Do we have to list the SoCs twice so that the paragraph has to be 
-reformatted every time? Just the compatibles above should be enough.
-
-> +be used by both CAN and CAN FD controller at the same time. It needs to be
-> +scaled to maximum frequency if any of these controllers use it. This is done
-> +using the below properties:
->  
->  - assigned-clocks: phandle of canfd clock.
->  - assigned-clock-rates: maximum frequency of this clock.
-> -- 
-> 2.18.0
-> 
+Thanks, applied for v4.21.
