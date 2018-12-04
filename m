@@ -1,170 +1,34 @@
-Return-Path: <robherring2@gmail.com>
-Date: Tue, 11 Dec 2018 20:15:49 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] ARM: dts: r7s9210-rza2mevb: Add support for RZ/A2M
- EVB
-Message-ID: <20181212021549.GA26333@bogus>
-References: <20181129130559.66732-1-chris.brandt@renesas.com>
- <20181129130559.66732-3-chris.brandt@renesas.com>
+Return-Path: <SRS0=yP1+=ON=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20181129130559.66732-3-chris.brandt@renesas.com>
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+References: <20181129130559.66732-1-chris.brandt@renesas.com>
+ <20181129130559.66732-3-chris.brandt@renesas.com> <CAMuHMdX-kqoVRs-VouhwEwv+gHmUsyHcUH9iyAaZyRQE-VWJ9A@mail.gmail.com>
+ <TY1PR01MB15623456678425BFE93461568AAF0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB15623456678425BFE93461568AAF0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 4 Dec 2018 17:27:58 +0100
+Message-ID: <CAMuHMdWwjbVYAd6no50eiZVM=yRGZ_4ATQkaSk5d7T52w-Om7g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ARM: dts: r7s9210-rza2mevb: Add support for RZ/A2M EVB
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Nov 29, 2018 at 08:05:59AM -0500, Chris Brandt wrote:
-> Add support for Renesas RZ/A2M evaluation board.
-> 
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> ---
->  Documentation/devicetree/bindings/arm/shmobile.txt |   2 +
->  arch/arm/boot/dts/Makefile                         |   1 +
->  arch/arm/boot/dts/r7s9210-rza2mevb.dts             | 133 +++++++++++++++++++++
->  3 files changed, 136 insertions(+)
->  create mode 100644 arch/arm/boot/dts/r7s9210-rza2mevb.dts
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-> index a94db59d8e2d..67a6810c4345 100644
-> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
-> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-> @@ -125,6 +125,8 @@ Boards:
->      compatible = "renesas,porter", "renesas,r8a7791"
->    - RSKRZA1 (YR0K77210C000BE)
->      compatible = "renesas,rskrza1", "renesas,r7s72100"
-> +  - RZ/A2M Eval Board (RTK7921053S00000BE)
-> +    compatible = "renesas,rza2mevb", "renesas,r7s9210"
->    - RZN1D-DB (RZ/N1D Demo Board for the RZ/N1D 400 pins package)
->      compatible = "renesas,rzn1d400-db", "renesas,r9a06g032"
->    - Salvator-X (RTP0RC7795SIPB0010S)
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index b0e966d625b9..fbdd068fd8af 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -824,6 +824,7 @@ dtb-$(CONFIG_ARCH_RENESAS) += \
->  	r7s72100-genmai.dtb \
->  	r7s72100-gr-peach.dtb \
->  	r7s72100-rskrza1.dtb \
-> +	r7s9210-rza2mevb.dtb \
->  	r8a73a4-ape6evm.dtb \
->  	r8a7740-armadillo800eva.dtb \
->  	r8a7743-iwg20d-q7.dtb \
-> diff --git a/arch/arm/boot/dts/r7s9210-rza2mevb.dts b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-> new file mode 100644
-> index 000000000000..9570aeb8f1ce
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-> @@ -0,0 +1,133 @@
-> +/*
-> + * Device Tree Source for the RZA2MEVB board
-> + *
-> + * Copyright (C) 2018 Renesas Electronics
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +#include "r7s9210.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/pinctrl/r7s9210-pinctrl.h>
-> +
-> +/ {
-> +	model = "RZA2MEVB";
-> +	compatible = "renesas,rza2mevb", "renesas,r7s9210";
-> +
-> +	aliases {
-> +		serial0 = &scif4;
-> +	};
-> +
-> +	chosen {
-> +		bootargs = "ignore_loglevel earlycon rootfstype=cramfs root=mtd:rootfs";
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	memory@80000000 {
+Hi Chris,
 
-Wrong unit-address.
+On Tue, Dec 4, 2018 at 5:25 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> Besides, this board will only boot as XIP_KERNEL which is an impossible
+> configuration in the mainline kernel, so this .dts file is mostly for
+> checking the .dtsi file.
 
-> +		device_type = "memory";
-> +		reg = <0x40000000 0x00800000>;	 /* HyperRAM */
-> +	};
-> +
-> +	lbsc {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +	};
-> +
-> +	leds {
-> +		status = "okay";
+Let's hope we can fix that anytime soon.
 
-gpio-leds shouldn't need this as it shouldn't be in the SoC file.
+Gr{oetje,eeting}s,
 
-> +		compatible = "gpio-leds";
-> +
-> +		led0 {
-> +			gpios = <&pinctrl RZA2_PIN(PORT6, 0) GPIO_ACTIVE_HIGH>;
-> +		};
-> +	};
-> +
-> +	/* Cramfs XIP File System in QSPI */
-> +	qspi@20000000 {
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> +		compatible = "mtd-rom";
-
-This should be the actual Quad-SPI controller and then a flash device 
-underneath it. It may work as-is initially, but eventually won't you 
-need the flash details?
-
-> +		probe-type = "direct-mapped";	/* XIP from QSPI */
-> +		reg = <0x20000000 0x4000000>;	/* 64 MB*/
-> +		bank-width = <4>;
-> +		device-width = <1>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		partition@800000 {
-
-Best practice is grouping under a 'partitions' node.
-
-> +			label ="rootfs";
-> +			reg = <0x0800000 0x1000000>; /* 16MB @ 0x20800000 */
-> +			read-only;
-> +		};
-> +	};
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
