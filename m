@@ -1,37 +1,51 @@
-Return-Path: <robherring2@gmail.com>
-Date: Fri, 7 Dec 2018 17:08:11 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/4] dt-bindings: adv748x: make data-lanes property
- mandatory for CSI-2 endpoints
-Message-ID: <20181207230811.GA2563@bogus>
-References: <20181129020147.22115-1-niklas.soderlund+renesas@ragnatech.se>
- <20181129020147.22115-2-niklas.soderlund+renesas@ragnatech.se>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20181129020147.22115-2-niklas.soderlund+renesas@ragnatech.se>
-To: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: Kieran Bingham <kieran.bingham@ideasonboard.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=K2Zf=ON=mellanox.com=kblaiech@kernel.org>
+From: Khalil Blaiech <kblaiech@mellanox.com>
+Subject: [PATCH v2 0/2] i2c: added driver for Mellanox BlueField SoC
+Date: Tue,  4 Dec 2018 12:40:56 -0500
+Message-Id: <cover.1543941145.git.kblaiech@mellanox.com>
+To: Rob Herring <robh@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Wolfram Sang <wsa+renesas@sang-engineering.com>, David Woods <dwoods@mellanox.com>
+Cc: Khalil Blaiech <kblaiech@mellanox.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, 29 Nov 2018 03:01:44 +0100, =?UTF-8?q?Niklas=20S=C3=B6derlund?=          wrote:
-> The CSI-2 transmitters can use a different number of lanes to transmit
-> data. Make the data-lanes mandatory for the endpoints that describe the
-> transmitters as no good default can be set to fallback on.
-> 
-> Signed-off-by: Niklas S�derlund <niklas.soderlund+renesas@ragnatech.se>
-> 
-> ---
-> * Changes since v3
-> - Add paragraph to describe the accepted values for the source endpoint
->   data-lane property. Thanks Jacopo for pointing this out and sorry for
->   missing this in v2.
-> * Changes since v2
-> - Update paragraph according to Laurents comments.
-> ---
->  .../devicetree/bindings/media/i2c/adv748x.txt         | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
+Added I2C SMBus driver and device tree bindings documentation.
+This patch set depends on ARCH_MLNX_BLUEFIELD. There is separate
+effort that aims to add support for the Mellanox BlueField SoC
+to the kernel tree.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Changes since v1:
+
+1) Device bindings documentation:
+
+   - Enumerate the device resources.
+   - Edit the 'compatible' property to make it less generic.
+   - Remove the 'bus' index property and replace i with a
+     standard approach to read the bus identifier.
+   - Get rid of the 'profile' property.
+   - Use 'clock-frequency' property instead of 'bus-freq'.
+   - Convert the clock frequency from KHz to Hz.
+   - Remove useless examples.
+
+2) Device driver source:
+
+   - Update the '.compatible' field of of_device_id.
+   - Update mlx_i2c_of_probe() call to extract the bus id
+     from the pre-defined aliases.
+   - Don't check the profile property.
+   - Read the 'clock-frequency' property to get the timing
+     parameters. 
+   - Convert the timing configuration from KHz to Hz.
+
+Khalil Blaiech (2):
+  i2c: i2c-mlx: I2C SMBus driver for Mellanox BlueField SoC
+  dt-bindings: i2c: I2C binding for Mellanox BlueField SoC
+
+ .../devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt |   67 +
+ drivers/i2c/busses/Kconfig                         |   13 +
+ drivers/i2c/busses/Makefile                        |    1 +
+ drivers/i2c/busses/i2c-mlx.c                       | 2341 ++++++++++++++++++++
+ 4 files changed, 2422 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
+ create mode 100644 drivers/i2c/busses/i2c-mlx.c
+
+-- 
+2.1.2
