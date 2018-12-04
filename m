@@ -1,101 +1,133 @@
-From: Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] arm64: dts: qcom: sdm845: Add dpu to
- sdm845 dts file
-Date: Mon, 03 Dec 2018 18:41:22 -0800
-Message-ID: <e9207da13c30cae15cd2aba77078d08b@codeaurora.org>
-References: <1543876054-12998-1-git-send-email-jsanka@codeaurora.org>
- <CAD=FV=WKtf0Ba2Fk-V8kktp6KPJh_6DcMQSVF=ynoAA4nkqKBQ@mail.gmail.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v2 1/5] devfreq: refactor set_target frequency function
+Date: Tue, 04 Dec 2018 13:39:45 +0900
+Message-ID: <5C060511.8020802@samsung.com>
+References: <1543847475-7600-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20181203143129eucas1p2955b6becc60ee57110cbc52f6e4f60c5@eucas1p2.samsung.com>
+        <1543847475-7600-2-git-send-email-l.luba@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <CAD=FV=WKtf0Ba2Fk-V8kktp6KPJh_6DcMQSVF=ynoAA4nkqKBQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kristian Kristensen <hoegsberg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1543847475-7600-2-git-send-email-l.luba@partner.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lukasz Luba <l.luba@partner.samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0xMi0wMyAxNjo1NywgRG91ZyBBbmRlcnNvbiB3cm90ZToKPiBIaSwKPiAKPiBPbiBN
-b24sIERlYyAzLCAyMDE4IGF0IDI6MjcgUE0gSmV5a3VtYXIgU2Fua2FyYW4gCj4gPGpzYW5rYUBj
-b2RlYXVyb3JhLm9yZz4KPiB3cm90ZToKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgZHNpMDog
-ZHNpQGFlOTQwMDAgewo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGli
-bGUgPSAicWNvbSxtZHNzLWRzaS1jdHJsIjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICByZWcgPSA8MHhhZTk0MDAwIDB4NDAwPjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICByZWctbmFtZXMgPSAiZHNpX2N0cmwiOwo+PiArCj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgaW50ZXJydXB0LXBhcmVudCA9IDwmbWRzcz47Cj4+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDw0IElSUV9UWVBFX0xFVkVMX0hJR0g+
-Owo+PiArCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZkaXNw
-Y2MgCj4+IERJU1BfQ0NfTURTU19CWVRFMF9DTEs+LAo+PiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIDwmZGlzcGNjCj4+IERJU1BfQ0NfTURTU19CWVRFMF9JTlRGX0NM
-Sz4sCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZkaXNwY2Mg
-Cj4+IERJU1BfQ0NfTURTU19QQ0xLMF9DTEs+LAo+PiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIDwmZGlzcGNjIAo+PiBESVNQX0NDX01EU1NfRVNDMF9DTEs+LAo+PiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwmZGlzcGNjIAo+PiBESVNQ
-X0NDX01EU1NfQUhCX0NMSz4sCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgPCZkaXNwY2MgCj4+IERJU1BfQ0NfTURTU19BWElfQ0xLPjsKPj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJieXRlIiwKPj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJieXRlX2ludGYiLAo+PiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInBpeGVsIiwKPj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJjb3JlIiwKPj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJpZmFjZSIsCj4+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiYnVzIjsKPj4gKwo+PiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBoeXMgPSA8JmRzaTBfcGh5PjsKPj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwaHktbmFtZXMgPSAiZHNpMCI7Cj4gCj4gSSdt
-IHByZXR0eSBzdXJlIHRoYXQgdGhpcyBzaG91bGQganVzdCBiZSAiZHNpIiBhbmQgdGhlIG9uZSBi
-ZWxvdyBpbgo+IGRzaTEgc2hvdWxkIGFsc28gYmUgY2FsbGVkICJkc2kiLiAgK0pvcmRhbiBzaG91
-bGQgY29uZmlybS4KPiAKTWFrZXMgc2Vuc2UuIEkgY2FuIGZpeCB0aGF0IQo+IAo+PiArICAgICAg
-ICAgICAgICAgICAgICAgICBkc2kxOiBkc2lAYWU5NjAwMCB7Cj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJxY29tLG1kc3MtZHNpLWN0cmwiOwo+PiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweGFlOTYwMDAgMHg0MDA+Owo+PiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJkc2lfY3RybCI7Cj4+
-ICsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0g
-PCZtZHNzPjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0g
-PDUgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4+ICsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBjbG9ja3MgPSA8JmRpc3BjYyAKPj4gRElTUF9DQ19NRFNTX0JZVEUxX0NMSz4sCj4+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZkaXNwY2MKPj4gRElT
-UF9DQ19NRFNTX0JZVEUxX0lOVEZfQ0xLPiwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICA8JmRpc3BjYyAKPj4gRElTUF9DQ19NRFNTX1BDTEsxX0NMSz4sCj4+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZkaXNwY2MgCj4+IERJU1Bf
-Q0NfTURTU19FU0MxX0NMSz4sCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgPCZkaXNwY2MgCj4+IERJU1BfQ0NfTURTU19BSEJfQ0xLPiwKPj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmRpc3BjYyAKPj4gRElTUF9DQ19NRFNTX0FY
-SV9DTEs+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0g
-ImJ5dGUiLAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ImJ5dGVfaW50ZiIsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAicGl4ZWwiLAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgImNvcmUiLAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgImlmYWNlIiwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICJidXMiOwo+PiArCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGh5
-cyA9IDwmZHNpMV9waHk+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBoeS1u
-YW1lcyA9ICJkc2kxIjsKPj4gKwo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0
-YXR1cyA9ICJkaXNhYmxlZCI7Cj4gCj4gVGhpcyAiZGlzYWJsZWQiIGlzIGNhdXNpbmcgbWUgcHJv
-YmxlbXMuICBJIGRvbid0IGFjdHVhbGx5IG5lZWQgImRzaTEiCj4gYnV0IGlmIEkgZG9uJ3QgZW5h
-YmxlICJkc2kxIiB0aGVuIG15IGRpc3BsYXkgZG9lc24ndCBjb21lIHVwLiAgOiggIEkKPiByYW4g
-b3V0IG9mIHRpbWUgdG8gZGVidWcgYnV0IEkgd29uZGVyIGlmIHRoaXMgaXMgdGhpcyB0aGUgc3Rh
-bmRhcmQKPiB0aGluZyB3aGVyZSBEUk0gbmVlZHMgdG8gd2FpdCBmb3IgYWxsIHRoZSBjb21wb25l
-bnRzIHRvIHByb2JlIHVudGlsIGl0Cj4gY2FuIGZpbmlzaD8gIElmIG5vYm9keSBvbiB0aGlzIGxp
-c3QganVzdCBrbm93cyBJJ2xsIGRpZyB0b21vcnJvdyBhbmQKPiBjb25maXJtIHRoYXQgbXkgbWVt
-b3J5IGlzbid0IGZhdWx0eSBhbmQgc2VlIHdoYXQgd2UndmUgZG9uZSBhYm91dCB0aGlzCj4gaW4g
-dGhlIHBhc3QuCj4gCmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA0Njc4OTUv
-CgpDYW4geW91IHRyeSBvdXQgd2l0aCB0aGlzIGNoYW5nZSAocmV2aWV3ZWQgYnV0IG5vdCBtZXJn
-ZWQgeWV0KS4gSXQgCnZhbGlkYXRlcwp0aGUgbm9kZXMgYmVmb3JlIGFkZGluZyB0byB0aGUgRFNJ
-IGxpc3QuCj4gCj4gCj4gT25lIGxhc3Qgbm90ZTogaXQncyBwcmV0dHkgd2VpcmQgdGhhdCB5b3Ug
-c2VudCBvdXQgb25seSAxLzMgYW5kIG5vdAo+IDIvMyBhbmQgMy8zLiAgSWYgeW91J3JlIG5vdCBy
-ZWFkeSB0byBzZW5kIG91dCBNVFAgc3R1ZmYgeWV0IHRoZW4geW91Cj4gc2hvdWxkIHNlbmQgb3V0
-IHY2IGFzIGp1c3QgYSBzaW5nbGV0b24gcGF0Y2guClllcy4gSSB3YXMgdHJ5aW5nIHRvIHNlcGFy
-YXRlIHRoaXMgb25lIG91dCBhcyBhbiBpbmRlcGVuZGVudCBjaGFuZ2UuIApTYW5kZWVwCmlzIHdv
-cmtpbmcgb24gdGhlIGNvbW1lbnRzIG9uIHJlbW92aW5nIHRoZSBwaW5jdHJsIG5vZGVzIGFuZCB1
-cGRhdGVkCm10cCBub2Rlcy4gSGUgc2hvdWxkIGJlIHBvc3RpbmcgMi8zIGFuZCAzLzMgaW4gdGhl
-IG5leHQgY291cGxlIG9mIGRheXMuCgpUaGFua3MsCkpleWt1bWFyIFMuCgo+IAo+IAo+IC1Eb3Vn
-CgotLSAKSmV5a3VtYXIgUwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVl
-ZHJlbm8K
+Hi Lukasz,
+
+On 2018년 12월 03일 23:31, Lukasz Luba wrote:
+> The refactoring is needed for the new client in devfreq: suspend.
+> To avoid code duplication, move it to the new local function
+> devfreq_set_target.
+> 
+> The patch is based on earlier work by Tobias Jakobi.
+
+As I already commented, Please remove it. You already mentioned it on cover-letter.
+If you want to contain the contribution history of Tobias, you might better
+to add 'Signed-off-by' or others.
+
+> 
+> Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+> Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  drivers/devfreq/devfreq.c | 62 +++++++++++++++++++++++++++--------------------
+>  1 file changed, 36 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index 1414130..a9fd61b 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -285,6 +285,40 @@ static int devfreq_notify_transition(struct devfreq *devfreq,
+>  	return 0;
+>  }
+>  
+> +static int devfreq_set_target(struct devfreq *devfreq, unsigned long new_freq,
+> +			      u32 flags)
+> +{
+> +	struct devfreq_freqs freqs;
+> +	unsigned long cur_freq;
+> +	int err = 0;
+> +
+> +	if (devfreq->profile->get_cur_freq)
+> +		devfreq->profile->get_cur_freq(devfreq->dev.parent, &cur_freq);
+> +	else
+> +		cur_freq = devfreq->previous_freq;
+> +
+> +	freqs.old = cur_freq;
+> +	freqs.new = new_freq;
+> +	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_PRECHANGE);
+> +
+> +	err = devfreq->profile->target(devfreq->dev.parent, &new_freq, flags);
+> +	if (err) {
+> +		freqs.new = cur_freq;
+> +		devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+> +		return err;
+> +	}
+> +
+> +	freqs.new = new_freq;
+> +	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+> +
+> +	if (devfreq_update_status(devfreq, new_freq))
+> +		dev_err(&devfreq->dev,
+> +			"Couldn't update frequency transition information.\n");
+> +
+> +	devfreq->previous_freq = new_freq;
+> +	return err;
+> +}
+> +
+>  /* Load monitoring helper functions for governors use */
+>  
+>  /**
+> @@ -296,8 +330,7 @@ static int devfreq_notify_transition(struct devfreq *devfreq,
+>   */
+>  int update_devfreq(struct devfreq *devfreq)
+>  {
+> -	struct devfreq_freqs freqs;
+> -	unsigned long freq, cur_freq, min_freq, max_freq;
+> +	unsigned long freq, min_freq, max_freq;
+>  	int err = 0;
+>  	u32 flags = 0;
+>  
+> @@ -333,31 +366,8 @@ int update_devfreq(struct devfreq *devfreq)
+>  		flags |= DEVFREQ_FLAG_LEAST_UPPER_BOUND; /* Use LUB */
+>  	}
+>  
+> -	if (devfreq->profile->get_cur_freq)
+> -		devfreq->profile->get_cur_freq(devfreq->dev.parent, &cur_freq);
+> -	else
+> -		cur_freq = devfreq->previous_freq;
+> -
+> -	freqs.old = cur_freq;
+> -	freqs.new = freq;
+> -	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_PRECHANGE);
+> +	return devfreq_set_target(devfreq, freq, flags);
+>  
+> -	err = devfreq->profile->target(devfreq->dev.parent, &freq, flags);
+> -	if (err) {
+> -		freqs.new = cur_freq;
+> -		devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+> -		return err;
+> -	}
+> -
+> -	freqs.new = freq;
+> -	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+> -
+> -	if (devfreq_update_status(devfreq, freq))
+> -		dev_err(&devfreq->dev,
+> -			"Couldn't update frequency transition information.\n");
+> -
+> -	devfreq->previous_freq = freq;
+> -	return err;
+>  }
+>  EXPORT_SYMBOL(update_devfreq);
+>  
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
