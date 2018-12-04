@@ -1,64 +1,109 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH] dt-bindings: ti-tsc-adc: Add new compatible for AM654
- SoCs
-Date: Tue, 4 Dec 2018 14:00:43 +0530
-Message-ID: <4b42082c-462d-3d94-8ee9-6e7a61f57134@ti.com>
-References: <20181119094509.22542-1-vigneshr@ti.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 13/34] dt-bindings: arm: amlogic: Move 'amlogic,
+ meson-gx-ao-secure' binding to its own file
+Date: Tue, 4 Dec 2018 09:31:42 +0100
+Message-ID: <cd586e5a-d7c3-5fd9-5eb0-1903d5165806@baylibre.com>
+References: <20181203213223.16986-1-robh@kernel.org>
+ <20181203213223.16986-14-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181119094509.22542-1-vigneshr@ti.com>
+In-Reply-To: <20181203213223.16986-14-robh@kernel.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Kumar Gala <kumar.gala@linaro.org>, arm@kernel.org, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@arm.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 19/11/18 3:15 PM, Vignesh R wrote:
-> AM654 SoCs has ADC IP which is similar to AM335x. Add new compatible to
-> handle AM654 SoCs. Also, it seems that existing compatible strings used
-> in the kernel DTs were never documented. So, document them now.
+On 03/12/2018 22:32, Rob Herring wrote:
+> It is best practice to have 1 binding per file, so board level bindings
+> should be separate for various misc SoC bindings.
 > 
-> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Carlo Caione <carlo@caione.org>
+> Cc: Kevin Hilman <khilman@baylibre.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-amlogic@lists.infradead.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
-
-Gentle ping on this patch..
-
->  .../devicetree/bindings/input/touchscreen/ti-tsc-adc.txt  | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  .../devicetree/bindings/arm/amlogic.txt       | 29 -------------------
+>  .../amlogic/amlogic,meson-gx-ao-secure.txt    | 28 ++++++++++++++++++
+>  2 files changed, 28 insertions(+), 29 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-> index b1163bf97146..aad5e34965eb 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-> @@ -2,7 +2,12 @@
->  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+> index 4498292b833d..f5c8d50a3506 100644
+> --- a/Documentation/devicetree/bindings/arm/amlogic.txt
+> +++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+> @@ -107,32 +107,3 @@ Board compatible values (alphabetically, grouped by SoC):
+>    - "amlogic,s400" (Meson axg a113d)
 >  
->  Required properties:
-> +- mfd
-> +	compatible: Should be
-> +		"ti,am3359-tscadc" for AM335x/AM437x SoCs
-> +		"ti,am654-tscadc", "ti,am3359-tscadc" for AM654 SoCs
->  - child "tsc"
-> +	compatible: Should be "ti,am3359-tsc".
->  	ti,wires: Wires refer to application modes i.e. 4/5/8 wire touchscreen
->  		  support on the platform.
->  	ti,x-plate-resistance: X plate resistance
-> @@ -25,6 +30,9 @@ Required properties:
->  			AIN0 = 0, AIN1 = 1 and so on till AIN7 = 7.
->  			XP  = 0, XN = 1, YP = 2, YN = 3.
->  - child "adc"
-> +	compatible: Should be
-> +		    "ti,am3359-adc" for AM335x/AM437x SoCs
-> +		    "ti,am654-adc", "ti,am3359-adc" for AM654 SoCs
->  	ti,adc-channels: List of analog inputs available for ADC.
->  			 AIN0 = 0, AIN1 = 1 and so on till AIN7 = 7.
->  
+>    - "amlogic,u200" (Meson g12a s905d2)
+> -
+> -Amlogic Meson Firmware registers Interface
+> -------------------------------------------
+> -
+> -The Meson SoCs have a register bank with status and data shared with the
+> -secure firmware.
+> -
+> -Required properties:
+> - - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-ao-secure", "syscon"
+> -
+> -Properties should indentify components of this register interface :
+> -
+> -Meson GX SoC Information
+> -------------------------
+> -A firmware register encodes the SoC type, package and revision information on
+> -the Meson GX SoCs.
+> -If present, the following property should be added :
+> -
+> -Optional properties:
+> -  - amlogic,has-chip-id: If present, the interface gives the current SoC version.
+> -
+> -Example
+> --------
+> -
+> -ao-secure@140 {
+> -	compatible = "amlogic,meson-gx-ao-secure", "syscon";
+> -	reg = <0x0 0x140 0x0 0x140>;
+> -	amlogic,has-chip-id;
+> -};
+> diff --git a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
+> new file mode 100644
+> index 000000000000..c67d9f48fb91
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
+> @@ -0,0 +1,28 @@
+> +Amlogic Meson Firmware registers Interface
+> +------------------------------------------
+> +
+> +The Meson SoCs have a register bank with status and data shared with the
+> +secure firmware.
+> +
+> +Required properties:
+> + - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-ao-secure", "syscon"
+> +
+> +Properties should indentify components of this register interface :
+> +
+> +Meson GX SoC Information
+> +------------------------
+> +A firmware register encodes the SoC type, package and revision information on
+> +the Meson GX SoCs.
+> +If present, the following property should be added :
+> +
+> +Optional properties:
+> +  - amlogic,has-chip-id: If present, the interface gives the current SoC version.
+> +
+> +Example
+> +-------
+> +
+> +ao-secure@140 {
+> +	compatible = "amlogic,meson-gx-ao-secure", "syscon";
+> +	reg = <0x0 0x140 0x0 0x140>;
+> +	amlogic,has-chip-id;
+> +};
 > 
 
--- 
-Regards
-Vignesh
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
