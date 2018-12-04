@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 04/14] dt-bindings: rtc: sun6i-rtc:
- Export internal RC oscillator
-Date: Tue, 4 Dec 2018 10:17:23 +0100
-Message-ID: <20181204091723.p2cvqzmsnnogxxfc@flea>
+Subject: Re: [PATCH v2 08/14] rtc: sun6i: Expose internal
+ oscillator through device tree
+Date: Tue, 4 Dec 2018 10:17:59 +0100
+Message-ID: <20181204091759.o5rp464qopm3ity7@flea>
 References: <20181203145825.20511-1-wens@csie.org>
- <20181203145825.20511-5-wens@csie.org>
+ <20181203145825.20511-9-wens@csie.org>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ui42vfi36ynka5nl"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBS4MTHQAKGQEUT3BVRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="o4zvu5pyfbvkyy7z"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUUMTHQAKGQEYDYZY4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20181203145825.20511-5-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <20181203145825.20511-9-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,17 +24,19 @@ Cc: Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---ui42vfi36ynka5nl
+--o4zvu5pyfbvkyy7z
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Mon, Dec 03, 2018 at 10:58:15PM +0800, Chen-Yu Tsai wrote:
-> Experiments showed that on at least the H3/H5/A64 the RTC's internal
-> oscillator also feeds the CPUS mux in the PRCM.
+On Mon, Dec 03, 2018 at 10:58:19PM +0800, Chen-Yu Tsai wrote:
+> The bindings have been updated to expose the RTC's internal oscillator,
+> for some SoCs that have it directly feeding the PRCM block. The changes
+> include the index 2 for the clock outputs, as well as the clock output
+> names.
 > 
-> Export this clock through the device tree, instead of having to use
-> a dummy fixed-clock device node, for the PRCM to consume. This will
-> properly describe the relationship between the clocks.
+> This patch adds the internal oscillator to the list of clocks exposed
+> through of_clk_add_hw_provider(), and also have the driver optionally
+> fetch the name of the clock from the device tree if it's available.
 > 
 > Tested-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
@@ -47,4 +49,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---ui42vfi36ynka5nl--
+--o4zvu5pyfbvkyy7z--
