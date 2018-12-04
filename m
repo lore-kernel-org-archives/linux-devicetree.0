@@ -1,16 +1,14 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: RE: [PATCH v4 1/4] soc: Add TmFifo driver for Mellanox BlueField Soc
-Date: Tue, 4 Dec 2018 22:12:00 +0000
-Message-ID: <DB6PR05MB3223F3BF022DE61725C98D66A1AF0@DB6PR05MB3223.eurprd05.prod.outlook.com>
-References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
- <1540403734-137721-1-git-send-email-lsun@mellanox.com>
- <CAK8P3a0VJkQgqaq7na1_KTQzVs4-PvxYghv5_LysW7EdeBM7fw@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: Moving ARM dts files
+Date: Tue, 4 Dec 2018 14:21:57 -0800
+Message-ID: <20181204222156.4wy3qk5yv23o5d4k@verge.net.au>
+References: <20181204183649.GA5716@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAK8P3a0VJkQgqaq7na1_KTQzVs4-PvxYghv5_LysW7EdeBM7fw@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181204183649.GA5716@bogus>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,171 +18,171 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Woods <dwoods@mellanox.com>, arm-soc <arm@kernel.org>, Olof Johansson <olof@lixom.net>, Robin Murphy <robin.murphy@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thierry Reding <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory Clement <gregory.clement@bootlin.com>, Michal Simek <michal.simek@xilinx.com>, Krzysztof Kozlowski <krzk@kernel.org>, arm@kernel.org, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, linux-arm-kernel@lists.infradead.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
-Just an update that I have uploaded new patch series v6, which includes the other half of the driver that runs on the external USB host machine, and also tries to resolve the previous comments.
+On Tue, Dec 04, 2018 at 12:36:49PM -0600, Rob Herring wrote:
+> Olof, Arnd,
+> 
+> I've put together a script to move the dts files and update the 
+> makefiles. It doesn't handle files not following a common prefix which 
+> isn't many and some includes within the dts files will need some fixups 
+> by hand.
+> 
+> MAINTAINERS will also need updating.
+> 
+> A few questions:
+> 
+> Do we want to move absolutely everything to subdirs? There's quite a 
+> few platforms with only 1-2 platforms. I haven't added these to the 
+> list yet, but can.
+> 
+> Do any vendors need another level of directories? davinci, omap, nspire, 
+> etc. for TI for example.
+> 
+> What to do with armv7m.dtsi? I guess it should remain and we just fixup 
+> the include. There may be a few other cross vendor things.
+> 
+> 
+> Sub-arch maintainers, 
+> 'vendor_map' below is the mapping of file prefix to new subdirectory 
+> (the SoC vendor prefix). Please comment if there are any issues.
+> 
+> Rob
+> 
+> 8<-----------------------------------------------------------
+> #!/usr/bin/env python3
+> 
+> import os
+> import re
+> from git import Git
+> import glob
+> 
+> vendor_map = {
+>     'imx': 'fsl',
+>     'ls': 'fsl',
+>     'vf': 'fsl',
+>     'qcom': 'qcom',
+>     'am3' : 'ti',
+>     'am4' : 'ti',
+>     'am5' : 'ti',
+>     'da' : 'ti',
+>     'dm' : 'ti',
+>     'dra' : 'ti',
+>     'keystone' : 'ti',
+>     'omap' : 'ti',
+>     'nspire' : 'ti',
+>     'armada' : 'marvell',
+>     'berlin' : 'marvell',
+>     'dove' : 'marvell',
+>     'kirkwood' : 'marvell',
+>     'orion' : 'marvell',
+>     'pxa' : 'marvell',
+>     'mvebu' : 'marvell',
+>     'mmp2' : 'marvell',
+>     'arm-' : 'arm',
+>     'integ' : 'arm',
+>     've' : 'arm',
+>     'aspeed' : 'aspeed',
+>     'at91' : 'atmel',
+>     'sama' : 'atmel',
+>     'bcm' : 'brcm',
+>     'exynos' : 'samsung',
+>     's3c' : 'samsung',
+>     's5p' : 'samsung',
+>     'gemini' : 'cortina',
+>     'hi3' : 'hisilicon',
+>     'hip' : 'hisilicon',
+>     'hisi' : 'hisilicon',
+>     'mt' : 'mediatek',
+>     'meson' : 'amlogic',
+>     'owl' : 'actions',
+>     'r7' : 'renesas',
+>     'r8' : 'renesas',
+>     'r9' : 'renesas',
 
-The v6 patches could also be found at
-https://patchwork.kernel.org/project/linux-arm-kernel/list/?submitter=176699
+The above 'r' prefixes could be a bit longer if desired.
 
-Thanks!
+e.g.:
+      'r7s'
+      'r8a'
+      'r9a'
 
------Original Message-----
-From: arndbergmann@gmail.com <arndbergmann@gmail.com> On Behalf Of Arnd Bergmann
-Sent: Thursday, October 25, 2018 11:58 AM
-To: Liming Sun <lsun@mellanox.com>
-Cc: Olof Johansson <olof@lixom.net>; David Woods <dwoods@mellanox.com>; Robin Murphy <robin.murphy@arm.com>; arm-soc <arm@kernel.org>; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 1/4] soc: Add TmFifo driver for Mellanox BlueField Soc
+>     'rk' : 'rockchip',
+>     'socfpga' : 'altera',
+>     'st' : 'st',
+>     'spear' : 'st',
+>     'sun' : 'allwinner',
+>     'tegra' : 'nvidia',
+>     'zynq' : 'xilinx',
+>     'wm' : 'wm',
+>     'uniph' : 'socionext',
+>     'zx' : 'zte',
 
-On 10/24/18, Liming Sun <lsun@mellanox.com> wrote:
-> This commit adds the TmFifo driver for Mellanox BlueField Soc.
-> TmFifo is a shared FIFO which enables external host machine to 
-> exchange data with the SoC via USB or PCIe. The driver is based on 
-> virtio framework and has console and network access enabled.
->
-> Reviewed-by: David Woods <dwoods@mellanox.com>
-> Signed-off-by: Liming Sun <lsun@mellanox.com>
+For renesas I believe you also want:
 
-I definitely like the idea of using virtio-net and virtio-console here, this is a great way of reusing the existing high-level drivers, and i similar in concept (but also much simpler) to what we have in drivers/misc/mic/ for another Linux-running machine that can be a PCIe add-on card.
+	'emev2'
+	'gr-peach'
+	'iwg20d-q7'
+	'sh'
 
-Have you also posted the other half of this driver? I'd like to see how it all fits together.
 
-A few style comments:
-
-> +
-> +#define TMFIFO_GET_FIELD(reg, mask)	FIELD_GET(mask, reg)
-> +
-> +#define TMFIFO_SET_FIELD(reg, mask, value) \
-> +	((reg & ~mask) | FIELD_PREP(mask, value))
-
-I think it would be nicer to use FIELD_GET/FIELD_PREP in the code directly, and avoid adding extra wrappers around them.
-
-> +/* Vring size. */
-> +#define TMFIFO_VRING_SIZE			1024
-> +
-> +/* Console Tx buffer size. */
-> +#define TMFIFO_CONS_TX_BUF_SIZE			(32 * 1024)
-> +
-> +/* Use a timer for house-keeping. */
-> +static int tmfifo_timer_interval = HZ / 10;
-> +
-> +/* Global lock. */
-> +static struct mutex tmfifo_lock;
-
-Maybe use 'static DEFINE_MUTEX(tmfifo_lock) here and remove the initialization call.
-
-> +/* Virtio ring size. */
-> +static int tmfifo_vring_size = TMFIFO_VRING_SIZE; 
-> +module_param(tmfifo_vring_size, int, 0444); 
-> +MODULE_PARM_DESC(tmfifo_vring_size, "Size of the vring.");
-> +
-> +struct tmfifo;
-> +
-> +/* A flag to indicate TmFifo ready. */ static bool tmfifo_ready;
-> +
-> +/* Virtual devices sharing the TM FIFO. */
-> +#define TMFIFO_VDEV_MAX		(VIRTIO_ID_CONSOLE + 1)
-> +
-> +/* Spin lock. */
-> +static DEFINE_SPINLOCK(tmfifo_spin_lock);
-
-Generally speaking, it's nicer to write a driver in a way that avoids global variables and make the flags and locks all members of a device specific structure.
-
-> +struct tmfifo_vdev {
-> +	struct virtio_device vdev;	/* virtual device */
-> +	u8 status;
-> +	u64 features;
-> +	union {				/* virtio config space */
-> +		struct virtio_console_config cons;
-> +		struct virtio_net_config net;
-> +	} config;
-> +	struct tmfifo_vring vrings[TMFIFO_VRING_NUM];
-> +	u8 *tx_buf;			/* tx buffer */
-> +	u32 tx_head;			/* tx buffer head */
-> +	u32 tx_tail;			/* tx buffer tail */
-> +};
-
-I suppose you did this to keep the driver simple, but it seems a little inflexible to only support two specific device types. Wouldn't we also want e.g. 9pfs or virtio_blk in some configurations?
-
-> +
-> +#define TMFIFO_VDEV_TX_BUF_AVAIL(vdev) \
-> +	(((vdev)->tx_tail >= (vdev)->tx_head) ? \
-> +	(TMFIFO_CONS_TX_BUF_SIZE - 8 - ((vdev)->tx_tail - (vdev)->tx_head)) : \
-> +	((vdev)->tx_head - (vdev)->tx_tail - 8))
-> +
-> +#define TMFIFO_VDEV_TX_BUF_PUSH(vdev, len) do { \
-> +	(vdev)->tx_tail += (len); \
-> +	if ((vdev)->tx_tail >= TMFIFO_CONS_TX_BUF_SIZE) \
-> +		(vdev)->tx_tail -= TMFIFO_CONS_TX_BUF_SIZE; \ } while (0)
-> +
-> +#define TMFIFO_VDEV_TX_BUF_POP(vdev, len) do { \
-> +	(vdev)->tx_head += (len); \
-> +	if ((vdev)->tx_head >= TMFIFO_CONS_TX_BUF_SIZE) \
-> +		(vdev)->tx_head -= TMFIFO_CONS_TX_BUF_SIZE; \ } while (0)
-
-It would be nicer to turn these into inline functions rather than macros.
-
-> +/* TMFIFO device structure */
-> +struct tmfifo {
-> +	struct tmfifo_vdev *vdev[TMFIFO_VDEV_MAX];	/* virtual devices */
-> +	struct platform_device *pdev;	/* platform device */
-> +	struct mutex lock;
-> +	void __iomem *rx_base;		/* mapped register base */
-> +	void __iomem *tx_base;		/* mapped register base */
-> +	int tx_fifo_size;		/* number of entries of the Tx FIFO */
-> +	int rx_fifo_size;		/* number of entries of the Rx FIFO */
-> +	unsigned long pend_events;	/* pending bits for deferred process */
-> +	int irq[TM_IRQ_CNT];		/* irq numbers */
-> +	struct work_struct work;	/* work struct for deferred process */
-> +	struct timer_list timer;	/* keepalive timer */
-> +	struct tmfifo_vring *vring[2];	/* current Tx/Rx ring */
-> +};
-> +
-> +union tmfifo_msg_hdr {
-> +	struct {
-> +		u8 type;		/* message type */
-> +		__be16 len;		/* payload length */
-> +		u8 unused[5];		/* reserved, set to 0 */
-> +	} __packed;
-> +	u64 data;
-> +};
-> +
-> +/*
-> + * Default MAC.
-> + * This MAC address will be read from EFI persistent variable if
-> configured.
-> + * It can also be reconfigured with standard Linux tools.
-> + */
-> +static u8 tmfifo_net_default_mac[6] = {0x00, 0x1A, 0xCA, 0xFF, 0xFF,
-> 0x01};
-> +
-
-Is a predefined MAC address better than a random one here?
-
-For DT based systems, we tend to also call of_get_mac_address() in order to allow setting a unique address from firmware.
-
-> +/* Forward declaration. */
-> +static void tmfifo_virtio_rxtx(struct virtqueue *vq, bool is_rx); 
-> +static void tmfifo_release_pkt(struct virtio_device *vdev,
-> +			       struct tmfifo_vring *vring,
-> +			       struct vring_desc **desc);
-
-Try to avoid forward declarations by reordering the functions according to how they get called.
-
-> +
-> +/* Interrupt handler. */
-> +static irqreturn_t tmfifo_irq_handler(int irq, void *dev_id) {
-> +	int i = (uintptr_t)dev_id % sizeof(void *);
-> +	struct tmfifo *fifo = dev_id - i;
-> +
-> +	if (i < TM_IRQ_CNT && !test_and_set_bit(i, &fifo->pend_events))
-> +		schedule_work(&fifo->work);
-> +
-> +	return IRQ_HANDLED;
-> +}
-
-Maybe using a request_threaded_irq() would be a better way to defer the handler into IRQ context.
-
-        Arnd
+> }
+> 
+> if __name__ == "__main__":
+>     g = Git('.')
+> 
+>     g.checkout("HEAD", "arch/arm/boot/dts/Makefile")
+>     dts_make = open("arch/arm/boot/dts/Makefile", "r").read()
+> 
+>     # make entries 1 line
+>     make2 = re.sub(r'\\\n', '', dts_make)
+> 
+>     for k,v in vendor_map.items():
+>         for f in glob.iglob("arch/arm/boot/dts/" + k + "*.*"):
+>             new_dir = "arch/arm/boot/dts/" + v + "/"
+>             base = os.path.splitext(os.path.basename(f))[0]
+> 
+>             os.makedirs(new_dir, exist_ok=True)
+>             g.mv(f, new_dir)
+> 
+>             # Remove the file from the makefile
+>             dts_make = re.sub('.*' + base + r'\.dtb.*\\\n', '', dts_make)
+>             dts_make = re.sub('.*' + base + r'\.dtb', '', dts_make)
+> 
+>             # extract the matching makefile entry
+>             reg = re.search(r'.*' + base + r'.*', make2)
+>             if not reg:
+>                 continue
+> 
+>             entry = reg.group(0)
+>             make2 = re.sub(r'.*' + base + r'.*', '', make2)
+>             if entry:
+>                 makefile = open(new_dir + 'Makefile', 'a+')
+>                 print(entry, file=makefile)
+>                 makefile.close()
+> 
+> 
+>     for d in sorted(glob.iglob("arch/arm/boot/dts/*/")):
+>         dts_make += 'subdir-y += ' + d.split(os.path.sep)[-2] + '\n'
+> 
+>         # Add license and sort entries of sub-dir makefile
+>         vendor_make = '# SPDX-License-Identifier: GPL-2.0\n'
+>         make_lines = open(d + 'Makefile', 'r').readlines()
+>         for l in sorted(make_lines):
+>             vendor_make += l
+> 
+>         vendor_make = re.sub(r'\t', r'\\\n\t', vendor_make)
+> 
+>         f = open(d + 'Makefile', 'w')
+>         f.write(vendor_make)
+>         f.close()
+>         g.add(d + 'Makefile')
+> 
+>     # Remove entries with no dtbs left
+>     dts_make = re.sub(r'.*\+= \\\n\n', '', dts_make)
+> 
+>     open("arch/arm/boot/dts/Makefile", "w").write(dts_make)
+>     g.add("arch/arm/boot/dts/Makefile")
+> 
