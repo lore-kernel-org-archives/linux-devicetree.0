@@ -1,87 +1,64 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 00/28] Allwinner H6 DE3 and HDMI support
-Date: Tue, 4 Dec 2018 09:29:14 +0100
-Message-ID: <20181204082914.iyysctlftlgaffv3@flea>
-References: <20181104182705.18047-1-jernej.skrabec@siol.net>
- <20181105094341.qedt7jvnxooiojki@flea>
- <14295738.m69morCfDC@jernej-laptop>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH] dt-bindings: ti-tsc-adc: Add new compatible for AM654
+ SoCs
+Date: Tue, 4 Dec 2018 14:00:43 +0530
+Message-ID: <4b42082c-462d-3d94-8ee9-6e7a61f57134@ti.com>
+References: <20181119094509.22542-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="nick2en3or4insev"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBZXVTDQAKGQE7W3P7HI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <14295738.m69morCfDC@jernej-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181119094509.22542-1-vigneshr@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---nick2en3or4insev
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 19/11/18 3:15 PM, Vignesh R wrote:
+> AM654 SoCs has ADC IP which is similar to AM335x. Add new compatible to
+> handle AM654 SoCs. Also, it seems that existing compatible strings used
+> in the kernel DTs were never documented. So, document them now.
+> 
+> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> ---
 
-On Mon, Dec 03, 2018 at 07:09:50PM +0100, Jernej =C5=A0krabec wrote:
-> Dne ponedeljek, 05. november 2018 ob 10:43:41 CET je Maxime Ripard napisa=
-l(a):
-> > On Sun, Nov 04, 2018 at 07:26:37PM +0100, Jernej Skrabec wrote:
-> > > This series adds support for Display Engine 3.0 and HDMI 2.0a, which
-> > > can be found on H6 SoC.
-> > >=20
-> > > Display Engine 3.0 in comparison to 2.0 mostly adds features needed f=
-or
-> > > displaying and processing 10-bit and AFBC formats, which are not yet
-> > > supported by this series.
-> > >=20
-> > > H6 is also the first SoC which supports IOMMU, but support for it is
-> > > not yet added.
-> > >=20
-> > > This series is based on linux-next at next-20181102.
-> > >=20
-> > > I suggest all patches go through allwinner tree, except DRM patches,
-> > > which should go through drm-misc tree.
-> >=20
-> > Applied all patches up to the 26. The two last one however should not
-> > use the clk bindings define you added in the first clk patches, since
-> > clk and dt patches are going through different tree.
->=20
-> I think you forgot to merge patch "drm/sun4i: Add compatible for H6 displ=
-ay=20
-> engine". At least it is not in linux-next.
+Gentle ping on this patch..
 
-Sorry, I just applied it. thanks!
-Maxime
+>  .../devicetree/bindings/input/touchscreen/ti-tsc-adc.txt  | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+> index b1163bf97146..aad5e34965eb 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+> @@ -2,7 +2,12 @@
+>  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>  
+>  Required properties:
+> +- mfd
+> +	compatible: Should be
+> +		"ti,am3359-tscadc" for AM335x/AM437x SoCs
+> +		"ti,am654-tscadc", "ti,am3359-tscadc" for AM654 SoCs
+>  - child "tsc"
+> +	compatible: Should be "ti,am3359-tsc".
+>  	ti,wires: Wires refer to application modes i.e. 4/5/8 wire touchscreen
+>  		  support on the platform.
+>  	ti,x-plate-resistance: X plate resistance
+> @@ -25,6 +30,9 @@ Required properties:
+>  			AIN0 = 0, AIN1 = 1 and so on till AIN7 = 7.
+>  			XP  = 0, XN = 1, YP = 2, YN = 3.
+>  - child "adc"
+> +	compatible: Should be
+> +		    "ti,am3359-adc" for AM335x/AM437x SoCs
+> +		    "ti,am654-adc", "ti,am3359-adc" for AM654 SoCs
+>  	ti,adc-channels: List of analog inputs available for ADC.
+>  			 AIN0 = 0, AIN1 = 1 and so on till AIN7 = 7.
+>  
+> 
 
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---nick2en3or4insev
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXAY62gAKCRDj7w1vZxhR
-xccKAQDREKow//RUsju4juH/zjvD1TLHoS2siseRM84JC9rJNQEAx0PrxX1bzz1R
-imBJVWh5FSLkywqxNMaZvX8zkPyE2wg=
-=VwNa
------END PGP SIGNATURE-----
-
---nick2en3or4insev--
+-- 
+Regards
+Vignesh
