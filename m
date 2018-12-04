@@ -1,50 +1,124 @@
-From: <Andrei.Stefanescu@microchip.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: add SAMA5D2 PIOBU support
-Date: Tue, 4 Dec 2018 09:58:10 +0000
-Message-ID: <b581a73c-2f72-5915-5fc8-3cf9f5518a9c@microchip.com>
-References: <1542701330-23466-1-git-send-email-andrei.stefanescu@microchip.com>
- <1542701330-23466-2-git-send-email-andrei.stefanescu@microchip.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH V5 2/2] base/drivers/arch_topology: Default dmips-mhz if
+ they are not set in DT
+Date: Tue, 4 Dec 2018 11:02:12 +0100
+Message-ID: <db264663-3b7c-6dd3-a180-d71de9dc83f2@linaro.org>
+References: <1543325060-1599-1-git-send-email-daniel.lezcano@linaro.org>
+ <1543325060-1599-2-git-send-email-daniel.lezcano@linaro.org>
+ <2b050e93-f734-f2f3-ac67-a30d37bf1950@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1542701330-23466-2-git-send-email-andrei.stefanescu@microchip.com>
+In-Reply-To: <2b050e93-f734-f2f3-ac67-a30d37bf1950@arm.com>
 Content-Language: en-US
-Content-ID: <EF3978FE7B95694CA14EBFFA432BB883@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org
-Cc: linus.walleij@linaro.org, gregkh@linuxfoundation.org, Nicolas.Ferre@microchip.com, mark.rutland@arm.com, Ludovic.Desroches@microchip.com, Cristian.Birsan@microchip.com, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Dietmar Eggemann <dietmar.eggemann@arm.com>, rjw@rjwysocki.net
+Cc: linux-kernel@vger.kernel.org, viresh.kumar@linaro.org, Chris Redpath <chris.redpath@linaro.org>, Quentin Perret <quentin.perret@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh@kernel.org>, Quentin Perret <quentin.perret@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Li Yang <leoyang.li@nxp.com>, Olof Johansson <olof@lixom.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gUm9iLA0KDQpDb3VsZCB5b3UgcGxlYXNlIHRlbGwgbWUgaWYgdGhlcmUgYXJlIGFueSBp
-bXByb3ZlbWVudHMNCnRvIGJlIG1hZGUgdG8gdGhlIHBhdGNoPw0KDQpCZXN0IHJlZ2FyZHMsDQpB
-bmRyZWkNCg0KT24gMjAuMTEuMjAxOCAxMDowOCwgQW5kcmVpIFN0ZWZhbmVzY3UgLSBNNTA1MDYg
-d3JvdGU6DQo+IFRoaXMgcGF0Y2ggZGVzY3JpYmVzIHRoZSBjb21wYXRpYmxlIGFuZCB0aGUgZGV2
-aWNlIHRyZWUNCj4gYmluZGluZ3MgbmVjZXNzYXJ5IGZvciB0aGUgU0FNQTVEMiBQSU9CVSBHUElP
-Lg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBBbmRyZWkgU3RlZmFuZXNjdSA8YW5kcmVpLnN0ZWZhbmVz
-Y3VAbWljcm9jaGlwLmNvbT4NCj4gLS0tDQo+ICAgLi4uL2JpbmRpbmdzL2dwaW8vZ3Bpby1zYW1h
-NWQyLXBpb2J1LnR4dCAgICAgICAgICAgfCAzMSArKysrKysrKysrKysrKysrKysrKysrDQo+ICAg
-MSBmaWxlIGNoYW5nZWQsIDMxIGluc2VydGlvbnMoKykNCj4gICBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8vZ3Bpby1zYW1hNWQyLXBpb2J1
-LnR4dA0KPg0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2dwaW8vZ3Bpby1zYW1hNWQyLXBpb2J1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9ncGlvL2dwaW8tc2FtYTVkMi1waW9idS50eHQNCj4gbmV3IGZpbGUgbW9kZSAxMDA2
-NDQNCj4gaW5kZXggMDAwMDAwMC4uMmUyNjBlMQ0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncGlvL2dwaW8tc2FtYTVkMi1waW9idS50
-eHQNCj4gQEAgLTAsMCArMSwzMSBAQA0KPiArR1BJTyBjb250cm9sbGVyIGZvciBTQU1BNUQyIFBJ
-T0JVIHBpbnMuDQo+ICsNCj4gK1RoZXNlIHBpbnMgaGF2ZSB0aGUgcHJvcGVydHkgb2Ygbm90IGxv
-c2luZyB0aGVpciB2b2x0YWdlDQo+ICtkdXJpbmcgQmFja3VwL1NlbGYtcmVmcmVzaCBtb2RlLg0K
-PiArDQo+ICtUaGVzZSBiaW5kaW5ncyBzaG91bGQgYmUgc2V0IHRvIGEgbm9kZSBpbiB0aGUgZHRz
-aSBmaWxlLg0KPiArDQo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiArLSBjb21wYXRpYmxlOgkJ
-InN5c2NvbiIsICJtaWNyb2NoaXAsc2FtYTVkMi1waW9idSINCj4gKy0gI2dwaW8tY2VsbHM6CQlU
-aGVyZSBhcmUgMi4gVGhlIHBpbiBudW1iZXIgaXMgdGhlDQo+ICsJCQlmaXJzdCwgdGhlIHNlY29u
-ZCByZXByZXNlbnRzIGFkZGl0aW9uYWwNCj4gKwkJCXBhcmFtZXRlcnMgc3VjaCBhcyBHUElPX0FD
-VElWRV9ISUdIL0xPVy4NCj4gKy0gZ3Bpby1jb250cm9sbGVyOglNYXJrcyB0aGUgcG9ydCBhcyBH
-UElPIGNvbnRyb2xsZXIuDQo+ICsNCj4gK05vdGUgdGhhdCB0aGUgZHJpdmVyIHVzZXMgc3lzY29u
-IGFuZCBzaG91bGQgYmUgdGhlIGNoaWxkIG9mDQo+ICt0aGUgc3lzY29uIG5vZGUuDQo+ICsNCj4g
-K0V4YW1wbGU6DQo+ICsNCj4gKwlzZWN1bW9kQGZjMDQwMDAwIHsNCj4gKwkJY29tcGF0aWJsZSA9
-ICJhdG1lbCxzYW1hNWQyLXNlY3Vtb2QiLCAic3lzY29uIiwgInNpbXBsZS1tZmQiOw0KPiArCQlz
-dGF0dXMgPSAib2theSI7DQo+ICsJCXJlZyA9IDwweGZjMDQwMDAwIDB4MTAwPjsNCj4gKw0KPiAr
-CQlwaW9CVTogcGlvYnUgew0KPiArCQkJc3RhdHVzID0gIm9rYXkiOw0KPiArCQkJY29tcGF0aWJs
-ZSA9ICJtaWNyb2NoaXAsc2FtYTVkMi1waW9idSI7DQo+ICsJCQlncGlvLWNvbnRyb2xsZXI7DQo+
-ICsJCQkjZ3Bpby1jZWxscyA9IDwyPjsNCj4gKwkJfTsNCj4gKwl9Ow0K
+
+Hi Dietmar,
+
+thanks for the review and spotting this.
+
+On 03/12/2018 14:46, Dietmar Eggemann wrote:
+> Hi Daniel,
+> 
+> +cc: Russell King <linux@armlinux.org.uk>
+> 
+> On 11/27/18 2:24 PM, Daniel Lezcano wrote:
+>> In the case of asymmetric SoC with the same micro-architecture, we
+>> have a group of CPUs with smaller OPPs than the other group. One
+>> example is the 96boards dragonboard 820c. There is no dmips/MHz
+>> difference between both groups, so no need to specify the values in
+>> the DT. Unfortunately, without these defined, there is no scaling
+>> capacity computation triggered, so we need to write
+>> 'capacity-dmips-mhz' for each CPU with the same value in order to
+>> force the scaled capacity computation.
+>>
+>> In order to fix this situation, allocate 'raw_capacity' so the pointer
+>> is set and the init_cpu_capacity_callback() function can be called.
+>>
+>> This was tested on db820c:
+>>   - specified values in the DT (correct results)
+>>   - partial values defined in the DT (error + fallback to defaults)
+>>   - no specified values in the DT (correct results)
+>>
+>> correct results are:
+>>    cat /sys/devices/system/cpu/cpu*/cpu_capacity
+>>     758
+>>     758
+>>    1024
+>>    1024
+>>
+>>    ... respectively for CPU0, CPU1, CPU2 and CPU3.
+>>
+>> That reflects the capacity for the max frequencies 1593600 and 2150400.
+> 
+> [...]
+> 
+> I'm afraid that this change is incompatible with the still existing
+> cpu_efficiency interface we have in Arm32 for A15/A7 systems like Arm TC2:
+> 
+> In case you specify clock-frequency dt properties per cpu for such a
+> system, the cpu_capacity values are determined via the cpu_efficiency
+> code in arch/arm/kernel/topology.c.
+> 
+> So on Arm TC2 with clock-frequency = <1000000000> [A15] and <800000000>
+> [A7] you get:
+> 
+> root@linaro-nano:~# cat /sys/devices/system/cpu/cpu*/cpu_capacity
+> 606
+> 1441
+> 1441
+> 606
+> 606
+> 
+> With your patches on top (cpu_capacity functionality in
+> drivers/base/arch_topology.c does not have to be switched on by
+> specifying capacity-dmips-mhz dt properties anymore) we end up scaling
+> by max frequency again:
+> 
+> root@linaro-nano:~# cat /sys/devices/system/cpu/cpu*/cpu_capacity
+> 358
+> 1024
+> 1024
+> 358
+> 358
+> 
+> I tried to remove the cpu_efficiency based API a year ago but Russell
+> pointed out that the compatibility has to be maintained for longer:
+> 
+> https://lore.kernel.org/lkml/20171024102718.16113-1-dietmar.eggemann@arm.com/
+> 
+> 
+> I assume that the capacity-dmips-mhz dt property is like a switch to
+> turn this functionality on for big.Little and so called gold/silver
+> platforms, which have cores with the same uArch but in frequency domains
+> with different max frequency values.
+> 
+> So what's wrong with specifying capacity-dmips-mhz = <1024> for all
+> cores for those gold/silver platforms? 
+
+There is nothing wrong, I just don't like to specify in a DT a default
+values.
+
+> I don't expect that there will be
+> so many of them. And normal SMP platforms (w/o frequency domains w/o
+> different max frequency values) don't have to execute this code.
+
+Fair enough, I will send a DT change, I'm tired of playing mikado with
+this code.
+
+Thanks again for the review.
+
+  -- Daniel
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
