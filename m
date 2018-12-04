@@ -1,14 +1,13 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 6/6] arm64: dts: marvell: add interrupt support to cp110
- thermal node
-Date: Tue,  4 Dec 2018 20:03:32 +0100
-Message-ID: <20181204190332.10351-7-miquel.raynal@bootlin.com>
-References: <20181204190332.10351-1-miquel.raynal@bootlin.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: Moving ARM dts files
+Date: Tue, 4 Dec 2018 13:09:07 -0600
+Message-ID: <CAL_JsqJUt2igJ+42N82J4hh8u=Ai_ez6cyWwNvreU71dTHa4hA@mail.gmail.com>
+References: <20181204183649.GA5716@bogus> <20181204184745.GS8952@piout.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181204190332.10351-1-miquel.raynal@bootlin.com>
+In-Reply-To: <20181204184745.GS8952@piout.net>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,53 +17,89 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Marc Zyngier <marc.zyngier@arm.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thierry Reding <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory CLEMENT <gregory.clement@bootlin.com>, Michal Simek <michal.simek@xilinx.com>, Krzysztof Kozlowski <krzk@kernel.org>, ARM-SoC Maintainers <arm@kernel.org>, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Shawn Guo <shawnguo@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>Daniel Mack <d>
 List-Id: devicetree@vger.kernel.org
 
-Add interrupt properties in the thermal node as well as a critical trip
-point in the thermal-zone.
+On Tue, Dec 4, 2018 at 12:47 PM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> Hello Rob,
+>
+> On 04/12/2018 12:36:49-0600, Rob Herring wrote:
+> > Olof, Arnd,
+> >
+> > I've put together a script to move the dts files and update the
+> > makefiles. It doesn't handle files not following a common prefix which
+> > isn't many and some includes within the dts files will need some fixups
+> > by hand.
+> >
+> > MAINTAINERS will also need updating.
+> >
+> > A few questions:
+> >
+> > Do we want to move absolutely everything to subdirs? There's quite a
+> > few platforms with only 1-2 platforms. I haven't added these to the
+> > list yet, but can.
+> >
+> > Do any vendors need another level of directories? davinci, omap, nspire,
+> > etc. for TI for example.
+> >
+> > What to do with armv7m.dtsi? I guess it should remain and we just fixup
+> > the include. There may be a few other cross vendor things.
+> >
+> >
+> > Sub-arch maintainers,
+> > 'vendor_map' below is the mapping of file prefix to new subdirectory
+> > (the SoC vendor prefix). Please comment if there are any issues.
+> >
+> > Rob
+> >
+> > 8<-----------------------------------------------------------
+> > #!/usr/bin/env python3
+> >
+> > import os
+> > import re
+> > from git import Git
+> > import glob
+> >
+> > vendor_map = {
+> >     'imx': 'fsl',
+> >     'ls': 'fsl',
+> >     'vf': 'fsl',
+> >     'qcom': 'qcom',
+> >     'am3' : 'ti',
+> >     'am4' : 'ti',
+> >     'am5' : 'ti',
+> >     'da' : 'ti',
+> >     'dm' : 'ti',
+> >     'dra' : 'ti',
+> >     'keystone' : 'ti',
+> >     'omap' : 'ti',
+> >     'nspire' : 'ti',
+> >     'armada' : 'marvell',
+> >     'berlin' : 'marvell',
+> >     'dove' : 'marvell',
+> >     'kirkwood' : 'marvell',
+> >     'orion' : 'marvell',
+> >     'pxa' : 'marvell',
+> >     'mvebu' : 'marvell',
+> >     'mmp2' : 'marvell',
+> >     'arm-' : 'arm',
+> >     'integ' : 'arm',
+> >     've' : 'arm',
+> >     'aspeed' : 'aspeed',
+> >     'at91' : 'atmel',
+> >     'sama' : 'atmel',
+>
+> Unfortunately, we have many boards without a proper prefix. Wouldn't it
+> be better to use arch/arm/boot/dts/Makefile and map dtb-$(CONFIG_*) to a
+> vendor directory?
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- arch/arm64/boot/dts/marvell/armada-cp110.dtsi | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+Only 13 boards by my count Atmel. And 2 boards each for omap3 and
+Renesas. That's manageable to do by hand or just add to the map.
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-index b9d9f31e3ba1..4d6e4a097f72 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-@@ -28,12 +28,19 @@
- 	 */
- 	thermal-zones {
- 		CP110_LABEL(thermal_ic): CP110_NODE_NAME(thermal-ic) {
--			polling-delay-passive = <1000>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>; /* Interrupt driven */
-+			polling-delay = <0>; /* Interrupt driven */
- 
- 			thermal-sensors = <&CP110_LABEL(thermal) 0>;
- 
--			trips {	};
-+			trips {
-+				CP110_LABEL(crit): crit {
-+					temperature = <100000>; /* mC degrees */
-+					hysteresis = <2000>; /* mC degrees */
-+					type = "critical";
-+				};
-+			};
-+
- 			cooling-maps { };
- 		};
- 	};
-@@ -259,6 +266,8 @@
- 			CP110_LABEL(thermal): thermal-sensor@70 {
- 				compatible = "marvell,armada-cp110-thermal";
- 				reg = <0x70 0x10>;
-+				interrupts-extended =
-+					<&CP110_LABEL(icu_sei) 116 IRQ_TYPE_LEVEL_HIGH>;
- 				#thermal-sensor-cells = <1>;
- 			};
- 		};
--- 
-2.19.1
+Though in hindsight I probably would have used the config.
+
+> This way you would be sure to not miss any. This would also ease the
+> creation of subdirs if we decide to do that.
