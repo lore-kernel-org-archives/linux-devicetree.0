@@ -1,92 +1,181 @@
 From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH 01/10] dt-bindings: usb: add support for dwc3 controller
- on HiSilicon SoCs
-Date: Tue, 4 Dec 2018 09:03:40 +0800
-Message-ID: <21d15bb1-b26f-0e90-4137-823e9a15ca69@huawei.com>
-References: <20181027095820.40056-1-chenyu56@huawei.com>
- <20181027095820.40056-2-chenyu56@huawei.com> <20181112160241.GA14074@bogus>
- <9fce6a58-d986-25e4-1791-ba375e4f075e@huawei.com>
- <CAL_JsqKObFGdf5tPdv=Ss2ZWCPBgimbEUn72rkR2+L7uRbAirg@mail.gmail.com>
+Subject: Re: [PATCH v1 08/12] usb: roles: Add usb role switch notifier.
+Date: Tue, 4 Dec 2018 09:07:08 +0800
+Message-ID: <fd1e34c9-51f3-1cf7-61d2-3df56e2f2a70@huawei.com>
+References: <20181203034515.91412-1-chenyu56@huawei.com>
+ <20181203034515.91412-9-chenyu56@huawei.com>
+ <20181203123824.GE24338@kuha.fi.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKObFGdf5tPdv=Ss2ZWCPBgimbEUn72rkR2+L7uRbAirg@mail.gmail.com>
+In-Reply-To: <20181203123824.GE24338@kuha.fi.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: wangbinghui@hisilicon.com, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: wangbinghui@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 2018/12/4 0:01, Rob Herring wrote:
-> On Fri, Nov 16, 2018 at 8:29 PM Chen Yu <chenyu56@huawei.com> wrote:
->>
->> Hi,
->>
->> On 2018/11/13 0:02, Rob Herring wrote:
->>> On Sat, Oct 27, 2018 at 05:58:11PM +0800, Yu Chen wrote:
->>>> This patch adds binding descriptions to support the dwc3 controller
->>>> on HiSilicon SoCs and boards like the HiKey960.
->>>>
->>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>> Cc: Rob Herring <robh+dt@kernel.org>
->>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>> Cc: John Stultz <john.stultz@linaro.org>
->>>> Signed-off-by: Yu Chen <chenyu56@huawei.com>
->>>> ---
->>>>  .../devicetree/bindings/usb/dwc3-hisi.txt          | 53 ++++++++++++++++++++++
->>>>  1 file changed, 53 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/usb/dwc3-hisi.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3-hisi.txt b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
->>>> new file mode 100644
->>>> index 000000000000..e715e7b1c324
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
->>>> @@ -0,0 +1,53 @@
->>>> +HiSilicon DWC3 USB SoC controller
->>>> +
->>>> +This file documents the parameters for the dwc3-hisi driver.
->>>> +
->>>> +Required properties:
->>>> +- compatible:       should be "hisilicon,hi3660-dwc3"
->>>> +- clocks:   A list of phandle + clock-specifier pairs for the
->>>> +            clocks listed in clock-names
->>>> +- clock-names:      Specify clock names
->>>> +- resets:   list of phandle and reset specifier pairs.
->>>> +
->>>> +Sub-nodes:
->>>> +The dwc3 core should be added as subnode to HiSilicon DWC3 as shown in the
->>>> +example below. The DT binding details of dwc3 can be found in:
->>>> +Documentation/devicetree/bindings/usb/dwc3.txt
->>>
->>> If you only have clocks and resets and no glue registers, then you
->>> don't need a sub-node. Just make the controller one node.
->>>
->>
->> In dwc3 glue driver，the controller driver usually probed by call of_platform_populate
->> which will search the child node of glue driver.
->> The code of function of_platform_populate is as below:
->>
->>         for_each_child_of_node(root, child) {
->>                  rc = of_platform_bus_create(child, matches, lookup, parent, true);
->>                  if (rc) {
->>                          of_node_put(child);
->>                          break;
->>                  }
->>          }
->>
->> So I think the controller node should be a sub-node.
+On 2018/12/3 20:38, Heikki Krogerus wrote:
+> On Mon, Dec 03, 2018 at 11:45:11AM +0800, Yu Chen wrote:
+>> This patch adds notifier for drivers want to be informed of the usb role switch.
 > 
-> It was done that way, but has changed. See commit fe8abf332b8f ("usb:
-> dwc3: support clocks and resets for DWC3 core").
+> I think in this case it would be good to explain a little for what we
+> need the notifier for.
+> 
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+>> Cc: Hans de Goede <hdegoede@redhat.com>
+>> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+>> Cc: John Stultz <john.stultz@linaro.org>
+>> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+>> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+>>
+>> --
+>> v0:
+>> The patch is provided by Heikki Krogerus. I modified and test it
+>> on Hikey960 platform.
+> 
+> I don't think I actually made a "patch" for this. The "diff" I made
+> showing the idea does not count, so you should not sign off the patch
+> with my address.
+> 
+> In this case I believe something like "Suggested-by" should be used
+> instead of SoB tag:
+> 
+>         Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> 
+> Side note: If this was from me, then there should be "from" line with
+> my address as well.
+> 
 
-OK.Thanks!
-
+OK. Thanks！
+>> --
+>> ---
+>>  drivers/usb/common/roles.c | 20 +++++++++++++++++++-
+>>  include/linux/usb/role.h   | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 65 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/usb/common/roles.c b/drivers/usb/common/roles.c
+>> index 0f48090c5c30..bfd7a988b64c 100644
+>> --- a/drivers/usb/common/roles.c
+>> +++ b/drivers/usb/common/roles.c
+>> @@ -21,6 +21,7 @@ struct usb_role_switch {
+>>  	struct device dev;
+>>  	struct mutex lock; /* device lock*/
+>>  	enum usb_role role;
+>> +	struct blocking_notifier_head nh;
+>>  
+>>  	/* From descriptor */
+>>  	struct device *usb2_port;
+>> @@ -50,8 +51,10 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
+>>  	mutex_lock(&sw->lock);
+>>  
+>>  	ret = sw->set(sw->dev.parent, role);
+>> -	if (!ret)
+>> +	if (!ret) {
+>>  		sw->role = role;
+>> +		blocking_notifier_call_chain(&sw->nh, role, NULL);
+>> +	}
+>>  
+>>  	mutex_unlock(&sw->lock);
+>>  
+>> @@ -59,6 +62,20 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
+>>  }
+>>  EXPORT_SYMBOL_GPL(usb_role_switch_set_role);
+>>  
+>> +int usb_role_switch_register_notifier(struct usb_role_switch *sw,
+>> +				      struct notifier_block *nb)
+>> +{
+>> +	return blocking_notifier_chain_register(&sw->nh, nb);
+>> +}
+>> +EXPORT_SYMBOL_GPL(usb_role_switch_register_notifier);
+>> +
+>> +int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
+>> +					struct notifier_block *nb)
+>> +{
+>> +	return blocking_notifier_chain_unregister(&sw->nh, nb);
+>> +}
+>> +EXPORT_SYMBOL_GPL(usb_role_switch_unregister_notifier);
+>> +
+>>  /**
+>>   * usb_role_switch_get_role - Get the USB role for a switch
+>>   * @sw: USB role switch
+>> @@ -297,6 +314,7 @@ usb_role_switch_register(struct device *parent,
+>>  		return ERR_PTR(-ENOMEM);
+>>  
+>>  	mutex_init(&sw->lock);
+>> +	BLOCKING_INIT_NOTIFIER_HEAD(&sw->nh);
+>>  
+>>  	sw->allow_userspace_control = desc->allow_userspace_control;
+>>  	sw->usb2_port = desc->usb2_port;
+>> diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
+>> index edc51be4a77c..c97d4be91ada 100644
+>> --- a/include/linux/usb/role.h
+>> +++ b/include/linux/usb/role.h
+>> @@ -40,6 +40,8 @@ struct usb_role_switch_desc {
+>>  	bool allow_userspace_control;
+>>  };
+>>  
+>> +
+>> +#if IS_ENABLED(CONFIG_USB_ROLE_SWITCH)
+>>  int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
+>>  enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
+>>  struct usb_role_switch *usb_role_switch_get(struct device *dev);
+>> @@ -49,5 +51,49 @@ struct usb_role_switch *
+>>  usb_role_switch_register(struct device *parent,
+>>  			 const struct usb_role_switch_desc *desc);
+>>  void usb_role_switch_unregister(struct usb_role_switch *sw);
+>> +int usb_role_switch_register_notifier(struct usb_role_switch *sw,
+>> +				      struct notifier_block *nb);
+>> +int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
+>> +					struct notifier_block *nb);
+>> +#else
+>> +static inline int usb_role_switch_set_role(struct usb_role_switch *sw,
+>> +		enum usb_role role)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>> +static inline enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
+>> +{
+>> +	return USB_ROLE_NONE;
+>> +}
+>> +
+>> +static inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
+>> +{
+>> +	return ERR_PTR(-ENODEV);
+>> +}
+>> +
+>> +static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
+>> +
+>> +static inline struct usb_role_switch *
+>> +usb_role_switch_register(struct device *parent,
+>> +			 const struct usb_role_switch_desc *desc)
+>> +{
+>> +	return ERR_PTR(-ENODEV);
+>> +}
+>> +
+>> +static inline void usb_role_switch_unregister(struct usb_role_switch *sw) { }
+>> +
+>> +static int usb_role_switch_register_notifier(struct usb_role_switch *sw,
+>> +				      struct notifier_block *nb)
+>> +{
+>> +	return -ENODEV;
+>> +}
+>> +
+>> +static int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
+>> +					struct notifier_block *nb)
+>> +{
+>> +	return -ENODEV;
+>> +}
+>> +#endif
+>>  
+>>  #endif /* __LINUX_USB_ROLE_H */
+>> -- 
+>> 2.15.0-rc2
 > 
-> Rob
-> 
-> .
+> thanks,
 > 
