@@ -1,7 +1,7 @@
 From: Carlo Caione <ccaione@baylibre.com>
-Subject: [PATCH 2/2] arm64: dts: meson: Remove eee-broken-1000t quirk
-Date: Tue,  4 Dec 2018 16:04:47 +0000
-Message-ID: <20181204160447.27869-3-ccaione@baylibre.com>
+Subject: [PATCH 1/2] arm64: dts: meson: Fix IRQ trigger type for macirq
+Date: Tue,  4 Dec 2018 16:04:46 +0000
+Message-ID: <20181204160447.27869-2-ccaione@baylibre.com>
 References: <20181204160447.27869-1-ccaione@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,67 +21,61 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com, devicetree@v
 Cc: Carlo Caione <ccaione@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-The change in the macirq IRQ type also solved another long standing
-issue affecting this SoC/PHY where EEE was causing the network
-connection to die after stressing it with iperf3 (even though much
-sooner). It's now possible to remove the 'eee-broken-1000t' quirk as
-well.
+A long running stress test on a custom board shipping an AXG SoCs and a
+Realtek RTL8211F PHY revealed that after a few hours the connection
+speed would drop drastically, from ~1000Mbps to ~3Mbps. At the same time
+the 'macirq' (eth0) IRQ would stop being triggered at all and as
+consequence the GMAC IRQs never ACKed.
+
+After a painful investigation the problem seemed to be due to a wrong
+defined IRQ type for the GMAC IRQ that should be LEVEL_HIGH instead of
+EDGE_RISING.
 
 Signed-off-by: Carlo Caione <ccaione@baylibre.com>
 ---
- arch/arm/boot/dts/meson8b-odroidc1.dts              | 1 -
- arch/arm64/boot/dts/amlogic/meson-axg-s400.dts      | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi   | 1 -
- 4 files changed, 4 deletions(-)
+ arch/arm/boot/dts/meson.dtsi               | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
-index 58669abda259..a951a6632d0c 100644
---- a/arch/arm/boot/dts/meson8b-odroidc1.dts
-+++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
-@@ -221,7 +221,6 @@
- 		/* Realtek RTL8211F (0x001cc916) */
- 		eth_phy: ethernet-phy@0 {
- 			reg = <0>;
--			eee-broken-1000t;
- 			interrupt-parent = <&gpio_intc>;
- 			/* GPIOH_3 */
- 			interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-index 18778ada7bd3..4d57363ac536 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-@@ -357,7 +357,6 @@
- 		eth_phy0: ethernet-phy@0 {
- 			/* Realtek RTL8211F (0x001cc916) */
- 			reg = <0>;
--			eee-broken-1000t;
+diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
+index 0d9faf1a51ea..a86b89086334 100644
+--- a/arch/arm/boot/dts/meson.dtsi
++++ b/arch/arm/boot/dts/meson.dtsi
+@@ -263,7 +263,7 @@
+ 			compatible = "amlogic,meson6-dwmac", "snps,dwmac";
+ 			reg = <0xc9410000 0x10000
+ 			       0xc1108108 0x4>;
+-			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
++			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "macirq";
+ 			status = "disabled";
  		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index 54954b314a45..f8d1cedbe600 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -143,7 +143,6 @@
- 			interrupt-parent = <&gpio_intc>;
- 			/* MAC_INTR on GPIOZ_15 */
- 			interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
--			eee-broken-1000t;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index df017dbd2e57..b1a42e99cb67 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -143,7 +143,7 @@
+ 			compatible = "amlogic,meson-axg-dwmac", "snps,dwmac";
+ 			reg = <0x0 0xff3f0000 0x0 0x10000
+ 			       0x0 0xff634540 0x0 0x8>;
+-			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
++			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "macirq";
+ 			clocks = <&clkc CLKID_ETH>,
+ 				 <&clkc CLKID_FCLK_DIV2>,
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index f1e5cdbade5e..58e6bcaac1d8 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -462,7 +462,7 @@
+ 			compatible = "amlogic,meson-gx-dwmac", "amlogic,meson-gxbb-dwmac", "snps,dwmac";
+ 			reg = <0x0 0xc9410000 0x0 0x10000
+ 			       0x0 0xc8834540 0x0 0x4>;
+-			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
++			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "macirq";
+ 			status = "disabled";
  		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-index 70325b273bd2..ec09bb5792b7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-@@ -142,7 +142,6 @@
- 		eth_phy0: ethernet-phy@0 {
- 			/* Realtek RTL8211F (0x001cc916) */
- 			reg = <0>;
--			eee-broken-1000t;
- 		};
- 	};
- };
 -- 
 2.19.1
