@@ -1,94 +1,131 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 21/34] dt-bindings: arm: Convert Oxford Semi board/soc
- bindings to json-schema
-Date: Tue, 4 Dec 2018 08:04:54 -0600
-Message-ID: <CAL_JsqJ3oL4FWSQKVLRtmg5Bma5q6-QgicfATcOEo3nQY-TdPw@mail.gmail.com>
-References: <20181203213223.16986-1-robh@kernel.org> <20181203213223.16986-22-robh@kernel.org>
- <be37bd18-a573-307e-3a9e-e879010cfc89@baylibre.com>
+From: Schrempf Frieder <frieder.schrempf@kontron.de>
+Subject: [PATCH v7 1/9] ARM: dts: Reflect change of FSL QSPI driver and remove
+ unused properties
+Date: Tue, 4 Dec 2018 14:15:12 +0000
+Message-ID: <1543932685-15011-2-git-send-email-frieder.schrempf@kontron.de>
+References: <1543932685-15011-1-git-send-email-frieder.schrempf@kontron.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <be37bd18-a573-307e-3a9e-e879010cfc89@baylibre.com>
+In-Reply-To: <1543932685-15011-1-git-send-email-frieder.schrempf@kontron.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-oxnas@groups.io
+To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Li Yang <leoyang.li@nxp.com>
+Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "richard@nod.at" <richard@nod.at>, "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>, "broonie@kernel.org" <broonie@kernel.org>, "david.wolfe@nxp.com" <david.wolfe@nxp.com>, "prabhakar.kushwaha@nxp.com" <prabhakar.kushwaha@nxp.com>, "yogeshnarayan.gaur@nxp.com" <yogeshnarayan.gaur@nxp.com>, "han.xu@nxp.com" <han.xu@nxp.com>, Schrempf Frieder <frieder.schrempf@kontron.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 4, 2018 at 2:43 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> On 03/12/2018 22:32, Rob Herring wrote:
-> > Convert Oxford Semi SoC bindings to DT schema format using json-schema.
-> >
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Neil Armstrong <narmstrong@baylibre.com>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: linux-oxnas@groups.io
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  .../devicetree/bindings/arm/oxnas.txt         | 14 -----------
-> >  .../devicetree/bindings/arm/oxnas.yaml        | 25 +++++++++++++++++++
-> >  2 files changed, 25 insertions(+), 14 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/arm/oxnas.txt
-> >  create mode 100644 Documentation/devicetree/bindings/arm/oxnas.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/oxnas.txt b/Documentation/devicetree/bindings/arm/oxnas.txt
-> > deleted file mode 100644
-> > index ac64e60f99f1..000000000000
-> > --- a/Documentation/devicetree/bindings/arm/oxnas.txt
-> > +++ /dev/null
-> > @@ -1,14 +0,0 @@
-> > -Oxford Semiconductor OXNAS SoCs Family device tree bindings
-> > --------------------------------------------
-> > -
-> > -Boards with the OX810SE SoC shall have the following properties:
-> > -  Required root node property:
-> > -    compatible: "oxsemi,ox810se"
-> > -
-> > -Boards with the OX820 SoC shall have the following properties:
-> > -  Required root node property:
-> > -    compatible: "oxsemi,ox820"
-> > -
-> > -Board compatible values:
-> > -  - "wd,mbwe" (OX810SE)
-> > -  - "cloudengines,pogoplugv3" (OX820)
-> > diff --git a/Documentation/devicetree/bindings/arm/oxnas.yaml b/Documentation/devicetree/bindings/arm/oxnas.yaml
-> > new file mode 100644
-> > index 000000000000..6ae51ef513be
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/oxnas.yaml
-> > @@ -0,0 +1,25 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/arm/oxnas.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Oxford Semiconductor OXNAS SoCs Family device tree bindings
-> > +
-> > +maintainers:
-> > +  - Neil Armstrong <narmstrong@baylibre.com>
-> > +
-> > +properties:
-> > +  $nodename:
-> > +    const: '/'
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +        - enum:
-> > +            - wd,mbwe
-> > +        - const: oxsemi,ox810se
-> > +
-> > +      - items:
-> > +        - enum:
-> > +            - cloudengines,pogoplugv3
-> > +        - const: oxsemi,ox820
-> >
->
-> We also loose all the "human friendly" description of board/SoC relationship here,
-> and I think it's a shame.
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-You can have whatever comments or description properties you like, so
-how would you like it to look?
+The FSL QSPI driver will be moved to the SPI framework and it then
+acts as a SPI controller. Therefore the subnodes need to set
+spi-[rx/tx]-bus-width = <4>, so quad mode is used just as before.
 
-Rob
+Also the properties 'bus-num', 'fsl,spi-num-chipselects' and
+'fsl,spi-flash-chipselects' were never read by the driver and
+can be removed.
+
+The 'reg' properties are adjusted to reflect what bus and
+chipselect the flash is connected to, as the new driver needs
+this information.
+
+The property 'fsl,qspi-has-second-chip' is not needed anymore
+and will be removed after the old driver was disabled to avoid
+breaking ls1021a-moxa-uc-8410a.dts.
+
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+---
+ arch/arm/boot/dts/imx6sx-sdb-reva.dts       | 8 ++++++--
+ arch/arm/boot/dts/imx6sx-sdb.dts            | 8 ++++++--
+ arch/arm/boot/dts/imx6ul-14x14-evk.dtsi     | 2 ++
+ arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts | 5 ++---
+ 4 files changed, 16 insertions(+), 7 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+index 9cc6ff2..9997156 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb-reva.dts
++++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+@@ -132,13 +132,17 @@
+ 		#size-cells = <1>;
+ 		compatible = "spansion,s25fl128s", "jedec,spi-nor";
+ 		spi-max-frequency = <66000000>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
+ 	};
+ 
+-	flash1: s25fl128s@1 {
+-		reg = <1>;
++	flash1: s25fl128s@2 {
++		reg = <2>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		compatible = "spansion,s25fl128s", "jedec,spi-nor";
+ 		spi-max-frequency = <66000000>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx6sx-sdb.dts b/arch/arm/boot/dts/imx6sx-sdb.dts
+index 6dd9beb..9acfda8 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb.dts
++++ b/arch/arm/boot/dts/imx6sx-sdb.dts
+@@ -117,15 +117,19 @@
+ 		#size-cells = <1>;
+ 		compatible = "micron,n25q256a", "jedec,spi-nor";
+ 		spi-max-frequency = <29000000>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
+ 		reg = <0>;
+ 	};
+ 
+-	flash1: n25q256a@1 {
++	flash1: n25q256a@2 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		compatible = "micron,n25q256a", "jedec,spi-nor";
+ 		spi-max-frequency = <29000000>;
+-		reg = <1>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
++		reg = <2>;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+index 32a0723..c2c9a2a 100644
+--- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
++++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+@@ -176,6 +176,8 @@
+ 		#size-cells = <1>;
+ 		compatible = "micron,n25q256a";
+ 		spi-max-frequency = <29000000>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
+ 		reg = <0>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
+index d01f64b..6a83f30 100644
+--- a/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
++++ b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
+@@ -203,9 +203,6 @@
+ };
+ 
+ &qspi {
+-	bus-num = <0>;
+-	fsl,spi-num-chipselects = <2>;
+-	fsl,spi-flash-chipselects = <0>;
+ 	fsl,qspi-has-second-chip;
+ 	status = "okay";
+ 
+@@ -214,6 +211,8 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		spi-max-frequency = <20000000>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
+ 		reg = <0>;
+ 
+ 		partitions@0 {
+-- 
+2.7.4
