@@ -1,55 +1,73 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v1 09/12] usb: dwc3: Registering a role switch in the DRD
- code.
-Date: Tue, 4 Dec 2018 12:54:16 +0200
-Message-ID: <20181204105416.GA10657@kuha.fi.intel.com>
-References: <20181203034515.91412-1-chenyu56@huawei.com>
- <20181203034515.91412-10-chenyu56@huawei.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 07/14] clock: milbeaut: Add Milbeaut M10V clock control
+Date: Tue, 4 Dec 2018 20:03:53 +0900
+Message-ID: <CAK7LNAQEeLo=PW=DygyVxVHyn5jgRP18nb0cK+u1wGNd4BUh7Q@mail.gmail.com>
+References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
+ <1542589274-13878-8-git-send-email-sugaya.taichi@socionext.com>
+ <154356669840.88331.4455990896653868594@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181203034515.91412-10-chenyu56@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yu Chen <chenyu56@huawei.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <154356669840.88331.4455990896653868594@swboyd.mtv.corp.google.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, sugaya.taichi@socionext.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michael Turquette <mturquette@baylibre.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Thomas Gleixner <tglx@linutronix.de>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 03, 2018 at 11:45:12AM +0800, Yu Chen wrote:
-> The Type-C drivers use USB role switch API to inform the
-> system about the negotiated data role, so registering a role
-> switch in the DRD code in order to support platforms with
-> USB Type-C connectors.
-> 
-> Cc: Felipe Balbi <balbi@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Yu Chen <chenyu56@huawei.com>
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> 
-> --
-> v0:
-> The patch is provided by Heikki Krogerus. I modified and test it
-> on Hikey960 platform.
-> --
-> ---
->  drivers/usb/dwc3/core.h |  2 ++
->  drivers/usb/dwc3/drd.c  | 49 +++++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 51 insertions(+)
+Hi Stephen,
 
-You need to select USB_ROLE_SWITCH in Kconfig:
 
-diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
-index 1a0404fda596..3a0cb9f1f38a 100644
---- a/drivers/usb/dwc3/Kconfig
-+++ b/drivers/usb/dwc3/Kconfig
-@@ -42,6 +42,7 @@ config USB_DWC3_DUAL_ROLE
-        bool "Dual Role mode"
-        depends on ((USB=y || USB=USB_DWC3) && (USB_GADGET=y || USB_GADGET=USB_DWC3))
-        depends on (EXTCON=y || EXTCON=USB_DWC3)
-+       select USB_ROLE_SWITCH
-        help
-          This is the default mode of working of DWC3 controller where
-          both host and gadget features are enabled.
+On Fri, Nov 30, 2018 at 5:31 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Sugaya Taichi (2018-11-18 17:01:12)
+> > Add Milbeaut M10V clock ( including PLL ) control.
+>
+> Please give some more details here.
+>
+> >
+> > Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
+> > ---
+> >  drivers/clk/Makefile   |   1 +
+> >  drivers/clk/clk-m10v.c | 671 +++++++++++++++++++++++++++++++++++++++++++++++++
+>
+> And this is different from Uniphier? Maybe we need a socionext
+> directory under drivers/clk/.
 
--- 
-heikki
+
+
+This is always a difficult question,
+and I do not have a strong opinion.
+
+
+I am fine with moving the files to drivers/clk/socionext
+although no file would be shared.
+
+
+FYI
+
+UniPhier and Milbeaut are completely different platforms
+developed/maintained by different teams.
+
+They happen to live in the same company now
+just because Socionext merged the LSI business from Panasonic and Fujitsu.
+
+UniPhier originates in Panasonic, while Milbeaut in Fujitsu.
+
+
+Thanks.
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
