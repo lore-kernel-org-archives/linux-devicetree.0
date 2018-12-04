@@ -1,109 +1,33 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 13/34] dt-bindings: arm: amlogic: Move 'amlogic,
- meson-gx-ao-secure' binding to its own file
-Date: Tue, 4 Dec 2018 09:31:42 +0100
-Message-ID: <cd586e5a-d7c3-5fd9-5eb0-1903d5165806@baylibre.com>
-References: <20181203213223.16986-1-robh@kernel.org>
- <20181203213223.16986-14-robh@kernel.org>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
+Subject: Re: [PATCH 2/3] dt-bindings: crypto: ccree: add dt bindings for ccree 703
+Date: Tue, 4 Dec 2018 10:38:26 +0200
+Message-ID: <CAOtvUMepGR89J-5SQXnReRiHanrOhp52cEKKm58Ej2uoHFAcyA@mail.gmail.com>
+References: <1542102039-22256-1-git-send-email-gilad@benyossef.com>
+ <1542102039-22256-3-git-send-email-gilad@benyossef.com> <20181129064218.53qc33vus5anla76@gondor.apana.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181203213223.16986-14-robh@kernel.org>
-Content-Language: en-US
+In-Reply-To: <20181129064218.53qc33vus5anla76@gondor.apana.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Kumar Gala <kumar.gala@linaro.org>, arm@kernel.org, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@arm.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, yaeceh01 <yael.chemla@foss.arm.com>, Ofir Drang <Ofir.Drang@arm.com>, Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux kernel mailing list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/12/2018 22:32, Rob Herring wrote:
-> It is best practice to have 1 binding per file, so board level bindings
-> should be separate for various misc SoC bindings.
-> 
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Carlo Caione <carlo@caione.org>
-> Cc: Kevin Hilman <khilman@baylibre.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-amlogic@lists.infradead.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/arm/amlogic.txt       | 29 -------------------
->  .../amlogic/amlogic,meson-gx-ao-secure.txt    | 28 ++++++++++++++++++
->  2 files changed, 28 insertions(+), 29 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
-> index 4498292b833d..f5c8d50a3506 100644
-> --- a/Documentation/devicetree/bindings/arm/amlogic.txt
-> +++ b/Documentation/devicetree/bindings/arm/amlogic.txt
-> @@ -107,32 +107,3 @@ Board compatible values (alphabetically, grouped by SoC):
->    - "amlogic,s400" (Meson axg a113d)
->  
->    - "amlogic,u200" (Meson g12a s905d2)
-> -
-> -Amlogic Meson Firmware registers Interface
-> -------------------------------------------
-> -
-> -The Meson SoCs have a register bank with status and data shared with the
-> -secure firmware.
-> -
-> -Required properties:
-> - - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-ao-secure", "syscon"
-> -
-> -Properties should indentify components of this register interface :
-> -
-> -Meson GX SoC Information
-> -------------------------
-> -A firmware register encodes the SoC type, package and revision information on
-> -the Meson GX SoCs.
-> -If present, the following property should be added :
-> -
-> -Optional properties:
-> -  - amlogic,has-chip-id: If present, the interface gives the current SoC version.
-> -
-> -Example
-> --------
-> -
-> -ao-secure@140 {
-> -	compatible = "amlogic,meson-gx-ao-secure", "syscon";
-> -	reg = <0x0 0x140 0x0 0x140>;
-> -	amlogic,has-chip-id;
-> -};
-> diff --git a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
-> new file mode 100644
-> index 000000000000..c67d9f48fb91
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
-> @@ -0,0 +1,28 @@
-> +Amlogic Meson Firmware registers Interface
-> +------------------------------------------
-> +
-> +The Meson SoCs have a register bank with status and data shared with the
-> +secure firmware.
-> +
-> +Required properties:
-> + - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-ao-secure", "syscon"
-> +
-> +Properties should indentify components of this register interface :
-> +
-> +Meson GX SoC Information
-> +------------------------
-> +A firmware register encodes the SoC type, package and revision information on
-> +the Meson GX SoCs.
-> +If present, the following property should be added :
-> +
-> +Optional properties:
-> +  - amlogic,has-chip-id: If present, the interface gives the current SoC version.
-> +
-> +Example
-> +-------
-> +
-> +ao-secure@140 {
-> +	compatible = "amlogic,meson-gx-ao-secure", "syscon";
-> +	reg = <0x0 0x140 0x0 0x140>;
-> +	amlogic,has-chip-id;
-> +};
-> 
+On Thu, Nov 29, 2018 at 8:42 AM Herbert Xu <herbert@gondor.apana.org.au> wrote:
+>
+> On Tue, Nov 13, 2018 at 09:40:36AM +0000, Gilad Ben-Yossef wrote:
+> > Add device tree bindings associating Arm TrustZone CryptoCell 703 with the
+> > ccree driver.
+> >
+> > Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+> > ---
+> >  Documentation/devicetree/bindings/crypto/arm-cryptocell.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+>
+> Which tree is this patch meant to go through?
 
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+I'm not sure the question was addressed to me but if it did - either
+going through the device tree or the crypto tree is fine by me.
+
+Thanks,
+Gilad
