@@ -1,70 +1,74 @@
-From: Carlo Caione <ccaione@baylibre.com>
-Subject: Re: [PATCH 0/2] meson: Fix IRQ trigger type
-Date: Tue, 04 Dec 2018 20:51:21 +0000
-Message-ID: <e152a2b038aa3e3e37e031eff5585008f4637ded.camel@baylibre.com>
-References: <20181204160447.27869-1-ccaione@baylibre.com>
- <CAFBinCDCE7RP4vgs25bqSZ8vBjrmcuB=qb3U92X6QfpmzeqrBg@mail.gmail.com>
+From: Sean Wang <sean.wang@kernel.org>
+Subject: Re: [PATCH 4/5] dt-bindings: i2c: Add Mediatek MT8183 i2c binding
+Date: Tue, 4 Dec 2018 12:59:49 -0800
+Message-ID: <CAGp9LzpBn=bdRa_jf7+R1hPm7GC+San_63ZOG7U6W3ToaEzjaQ@mail.gmail.com>
+References: <1543843974-4054-1-git-send-email-qii.wang@mediatek.com> <1543843974-4054-5-git-send-email-qii.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFBinCDCE7RP4vgs25bqSZ8vBjrmcuB=qb3U92X6QfpmzeqrBg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, ingrassia@epigenesys.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@baylibre.com, robh+dt@kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1543843974-4054-5-git-send-email-qii.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: qii.wang@mediatek.com
+Cc: wsa@the-dreams.de, devicetree@vger.kernel.org, ryder.lee@mediatek.com, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-12-04 at 20:59 +0100, Martin Blumenstingl wrote:
-> adding Emiliano because he experienced high packet loss on Odroid-C1
-> without "eee-broken-1000t"
+On Mon, Dec 3, 2018 at 5:34 AM <qii.wang@mediatek.com> wrote:
+>
+> From: qii wang <qii.wang@mediatek.com>
+>
+> Add MT8183 i2c binding to binding file. Compare to 2712 i2c
+> controller, MT8183 has different registers, offsets, clock,
+> and multi-user function.
+>
+> Signed-off-by: qii wang <qii.wang@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-mtk.txt |    7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
+> index 7729e57..dfde624 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
+> @@ -12,14 +12,15 @@ Required properties:
+>        "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for MediaTek MT7623
+>        "mediatek,mt7629-i2c", "mediatek,mt2712-i2c": for MediaTek mt7629
+>        "mediatek,mt8173-i2c": for MediaTek MT8173
+> +      "mediatek,mt8183-i2c": for MediaTek MT8183
+>    - reg: physical base address of the controller and dma base, length of memory
+>      mapped region.
+>    - interrupts: interrupt number to the cpu.
+>    - clock-div: the fixed value for frequency divider of clock source in i2c
+>      module. Each IC may be different.
+>    - clocks: clock name from clock manager
+> -  - clock-names: Must include "main" and "dma", if enable have-pmic need include
+> -    "pmic" extra.
+> +  - clock-names: Must include "main" and "dma", "arb" is optional, if enable
 
-Yes, it would be nice to have confirmation. I tested this using an AXG
-board with iperf3 both in TX/RX.
+if arb is optional, the multi-user function still can work? arb seems
+like the clock fed to arbitrating bus when multiple users are
+accessing at the same time.
 
-> I find it strange though that Amlogic's buildroot kernel (even the
-> latest buildroot_openlinux_kernel_4.9_fbdev_20180706) uses:
->   interrupts = <0 8 1>
-> which translates to:
->   interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>
-> 
-> does the datasheet give a hint that this IRQ should be level
-> triggered
-> or did you find out by trial and error?
+> +    have-pmic need include "pmic" extra.
+>
+>  Optional properties:
+>    - clock-frequency: Frequency in Hz of the bus when transfer, the default value
+> @@ -27,6 +28,8 @@ Optional properties:
+>    - mediatek,have-pmic: platform can control i2c form special pmic side.
+>      Only mt6589 and mt8135 support this feature.
+>    - mediatek,use-push-pull: IO config use push-pull mode.
+> +  - ch-offset: base reg offset for multi-user.
 
-The datasheet says nothing about that. Looking at the GMAC registers
-you can get some clues but we confirmed that with long lasting tests.
+add a vendor prefix if the property is vendor-specific one.
 
-> > Carlo Caione (2):
-> >   arm64: dts: meson: Fix IRQ trigger type for macirq
-> >   arm64: dts: meson: Remove eee-broken-1000t quirk
-> > 
-> >  arch/arm/boot/dts/meson.dtsi                        | 2 +-
-> >  arch/arm/boot/dts/meson8b-odroidc1.dts              | 1 -
-> these two should be in separate patches with "ARM: dts: " as prefix
-
-Right, they slipped in after I had already written the commit message.
-
-Kevin, Neil, let me push a V2 so that I can fix the commit messages.
-
-> >  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts      | 1 -
-> >  arch/arm64/boot/dts/amlogic/meson-axg.dtsi          | 2 +-
-> >  arch/arm64/boot/dts/amlogic/meson-gx.dtsi           | 2 +-
-> >  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 1 -
-> >  arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi   | 1 -
-> >  7 files changed, 3 insertions(+), 7 deletions(-)
-> > 
-> > --
-> > 2.19.1
-
-Cheers,
-
---
-Carlo Caione
+> +  - mediatek,share-i3c: i3c controller can share i2c function.
+>
+>  Example:
+>
+> --
+> 1.7.9.5
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
