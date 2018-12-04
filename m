@@ -1,167 +1,51 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Moving ARM dts files
-Date: Tue, 4 Dec 2018 12:36:49 -0600
-Message-ID: <20181204183649.GA5716@bogus>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 5/5] clk: samsung: exynos5433: add imem clocks
+Date: Tue, 04 Dec 2018 10:40:45 -0800
+Message-ID: <154394884525.88331.3007383362383800806@swboyd.mtv.corp.google.com>
+References: <20181204165248.17572-1-k.konieczny@partner.samsung.com>
+ <CGME20181204165318eucas1p2dccd5382ee8b9f4da8c3076fb56607ee@eucas1p2.samsung.com>
+ <20181204165248.17572-6-k.konieczny@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arm@kernel.org
-Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thierry Reding <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory Clement <gregory.clement@bootlin.com>, Michal Simek <michal.simek@xilinx.com>, Krzysztof Kozlowski <krzk@kernel.org>, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Daniel Mack <daniel@zonque.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181204165248.17572-6-k.konieczny@partner.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Olof, Arnd,
+Quoting Kamil Konieczny (2018-12-04 08:52:48)
+> +
+> +static const unsigned long imem_clk_regs[] __initconst =3D {
+> +       ENABLE_ACLK_IMEM,
+> +       ENABLE_ACLK_IMEM_INT_MEM,
+> +       ENABLE_ACLK_IMEM_SSS,
+> +       ENABLE_ACLK_IMEM_SLIMSSS,
+> +       ENABLE_ACLK_IMEM_RTIC,
+> +       ENABLE_ACLK_IMEM_SMMU_SSS,
+> +       ENABLE_ACLK_IMEM_SMMU_SLIMSSS,
+> +       ENABLE_ACLK_IMEM_SMMU_RTIC,
+> +       ENABLE_ACLK_IMEM_ARBG_TX,
+> +       ENABLE_ACLK_IMEM_SMMU_ARBG_TX,
+> +       ENABLE_PCLK_IMEM,
+> +       ENABLE_PCLK_IMEM_SSS,
+> +       ENABLE_PCLK_IMEM_SLIMSSS,
+> +       ENABLE_PCLK_IMEM_RTIC,
+> +       ENABLE_PCLK_IMEM_SMMU_SSS,
+> +       ENABLE_PCLK_IMEM_SMMU_SLIMSSS,
+> +       ENABLE_PCLK_IMEM_SMMU_RTIC,
+> +       ENABLE_PCLK_IMEM_SMMU_ARGB_TX,
+> +};
+> +
+> +static const struct samsung_gate_clock imem_gate_clks[] __initconst =3D {
+> +       /* ENABLE_ACLK_IMEM */
+> +       GATE(CLK_ACLK_AXI2AHB_IMEMH, "aclk_axi2ahb_imemh", "aclk_imem_200=
+",
+> +                       ENABLE_ACLK_IMEM, 24, 0, 0),
+> +       GATE(CLK_ACLK_AXIDS_SROMC, "aclk_axids_sromc", "aclk_imem_200",
+> +                       ENABLE_ACLK_IMEM, 23, CLK_IGNORE_UNUSED, 0),
 
-I've put together a script to move the dts files and update the 
-makefiles. It doesn't handle files not following a common prefix which 
-isn't many and some includes within the dts files will need some fixups 
-by hand.
+Why is there so much use of CLK_IGNORE_UNUSED in this file?
 
-MAINTAINERS will also need updating.
-
-A few questions:
-
-Do we want to move absolutely everything to subdirs? There's quite a 
-few platforms with only 1-2 platforms. I haven't added these to the 
-list yet, but can.
-
-Do any vendors need another level of directories? davinci, omap, nspire, 
-etc. for TI for example.
-
-What to do with armv7m.dtsi? I guess it should remain and we just fixup 
-the include. There may be a few other cross vendor things.
-
-
-Sub-arch maintainers, 
-'vendor_map' below is the mapping of file prefix to new subdirectory 
-(the SoC vendor prefix). Please comment if there are any issues.
-
-Rob
-
-8<-----------------------------------------------------------
-#!/usr/bin/env python3
-
-import os
-import re
-from git import Git
-import glob
-
-vendor_map = {
-    'imx': 'fsl',
-    'ls': 'fsl',
-    'vf': 'fsl',
-    'qcom': 'qcom',
-    'am3' : 'ti',
-    'am4' : 'ti',
-    'am5' : 'ti',
-    'da' : 'ti',
-    'dm' : 'ti',
-    'dra' : 'ti',
-    'keystone' : 'ti',
-    'omap' : 'ti',
-    'nspire' : 'ti',
-    'armada' : 'marvell',
-    'berlin' : 'marvell',
-    'dove' : 'marvell',
-    'kirkwood' : 'marvell',
-    'orion' : 'marvell',
-    'pxa' : 'marvell',
-    'mvebu' : 'marvell',
-    'mmp2' : 'marvell',
-    'arm-' : 'arm',
-    'integ' : 'arm',
-    've' : 'arm',
-    'aspeed' : 'aspeed',
-    'at91' : 'atmel',
-    'sama' : 'atmel',
-    'bcm' : 'brcm',
-    'exynos' : 'samsung',
-    's3c' : 'samsung',
-    's5p' : 'samsung',
-    'gemini' : 'cortina',
-    'hi3' : 'hisilicon',
-    'hip' : 'hisilicon',
-    'hisi' : 'hisilicon',
-    'mt' : 'mediatek',
-    'meson' : 'amlogic',
-    'owl' : 'actions',
-    'r7' : 'renesas',
-    'r8' : 'renesas',
-    'r9' : 'renesas',
-    'rk' : 'rockchip',
-    'socfpga' : 'altera',
-    'st' : 'st',
-    'spear' : 'st',
-    'sun' : 'allwinner',
-    'tegra' : 'nvidia',
-    'zynq' : 'xilinx',
-    'wm' : 'wm',
-    'uniph' : 'socionext',
-    'zx' : 'zte',
-}
-
-if __name__ == "__main__":
-    g = Git('.')
-
-    g.checkout("HEAD", "arch/arm/boot/dts/Makefile")
-    dts_make = open("arch/arm/boot/dts/Makefile", "r").read()
-
-    # make entries 1 line
-    make2 = re.sub(r'\\\n', '', dts_make)
-
-    for k,v in vendor_map.items():
-        for f in glob.iglob("arch/arm/boot/dts/" + k + "*.*"):
-            new_dir = "arch/arm/boot/dts/" + v + "/"
-            base = os.path.splitext(os.path.basename(f))[0]
-
-            os.makedirs(new_dir, exist_ok=True)
-            g.mv(f, new_dir)
-
-            # Remove the file from the makefile
-            dts_make = re.sub('.*' + base + r'\.dtb.*\\\n', '', dts_make)
-            dts_make = re.sub('.*' + base + r'\.dtb', '', dts_make)
-
-            # extract the matching makefile entry
-            reg = re.search(r'.*' + base + r'.*', make2)
-            if not reg:
-                continue
-
-            entry = reg.group(0)
-            make2 = re.sub(r'.*' + base + r'.*', '', make2)
-            if entry:
-                makefile = open(new_dir + 'Makefile', 'a+')
-                print(entry, file=makefile)
-                makefile.close()
-
-
-    for d in sorted(glob.iglob("arch/arm/boot/dts/*/")):
-        dts_make += 'subdir-y += ' + d.split(os.path.sep)[-2] + '\n'
-
-        # Add license and sort entries of sub-dir makefile
-        vendor_make = '# SPDX-License-Identifier: GPL-2.0\n'
-        make_lines = open(d + 'Makefile', 'r').readlines()
-        for l in sorted(make_lines):
-            vendor_make += l
-
-        vendor_make = re.sub(r'\t', r'\\\n\t', vendor_make)
-
-        f = open(d + 'Makefile', 'w')
-        f.write(vendor_make)
-        f.close()
-        g.add(d + 'Makefile')
-
-    # Remove entries with no dtbs left
-    dts_make = re.sub(r'.*\+= \\\n\n', '', dts_make)
-
-    open("arch/arm/boot/dts/Makefile", "w").write(dts_make)
-    g.add("arch/arm/boot/dts/Makefile")
+> +       GATE(CLK_ACLK_SROMC, "aclk_sromc", "aclk_imem_200",
