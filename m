@@ -1,13 +1,11 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: Moving ARM dts files
-Date: Tue, 4 Dec 2018 13:09:07 -0600
-Message-ID: <CAL_JsqJUt2igJ+42N82J4hh8u=Ai_ez6cyWwNvreU71dTHa4hA@mail.gmail.com>
-References: <20181204183649.GA5716@bogus> <20181204184745.GS8952@piout.net>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v3 0/6] Add hw overheat IRQ support to Marvell thermal driver
+Date: Tue,  4 Dec 2018 20:03:26 +0100
+Message-ID: <20181204190332.10351-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181204184745.GS8952@piout.net>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,89 +15,57 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thierry Reding <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory CLEMENT <gregory.clement@bootlin.com>, Michal Simek <michal.simek@xilinx.com>, Krzysztof Kozlowski <krzk@kernel.org>, ARM-SoC Maintainers <arm@kernel.org>, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Shawn Guo <shawnguo@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>Daniel Mack <d>
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Marc Zyngier <marc.zyngier@arm.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 4, 2018 at 12:47 PM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
->
-> Hello Rob,
->
-> On 04/12/2018 12:36:49-0600, Rob Herring wrote:
-> > Olof, Arnd,
-> >
-> > I've put together a script to move the dts files and update the
-> > makefiles. It doesn't handle files not following a common prefix which
-> > isn't many and some includes within the dts files will need some fixups
-> > by hand.
-> >
-> > MAINTAINERS will also need updating.
-> >
-> > A few questions:
-> >
-> > Do we want to move absolutely everything to subdirs? There's quite a
-> > few platforms with only 1-2 platforms. I haven't added these to the
-> > list yet, but can.
-> >
-> > Do any vendors need another level of directories? davinci, omap, nspire,
-> > etc. for TI for example.
-> >
-> > What to do with armv7m.dtsi? I guess it should remain and we just fixup
-> > the include. There may be a few other cross vendor things.
-> >
-> >
-> > Sub-arch maintainers,
-> > 'vendor_map' below is the mapping of file prefix to new subdirectory
-> > (the SoC vendor prefix). Please comment if there are any issues.
-> >
-> > Rob
-> >
-> > 8<-----------------------------------------------------------
-> > #!/usr/bin/env python3
-> >
-> > import os
-> > import re
-> > from git import Git
-> > import glob
-> >
-> > vendor_map = {
-> >     'imx': 'fsl',
-> >     'ls': 'fsl',
-> >     'vf': 'fsl',
-> >     'qcom': 'qcom',
-> >     'am3' : 'ti',
-> >     'am4' : 'ti',
-> >     'am5' : 'ti',
-> >     'da' : 'ti',
-> >     'dm' : 'ti',
-> >     'dra' : 'ti',
-> >     'keystone' : 'ti',
-> >     'omap' : 'ti',
-> >     'nspire' : 'ti',
-> >     'armada' : 'marvell',
-> >     'berlin' : 'marvell',
-> >     'dove' : 'marvell',
-> >     'kirkwood' : 'marvell',
-> >     'orion' : 'marvell',
-> >     'pxa' : 'marvell',
-> >     'mvebu' : 'marvell',
-> >     'mmp2' : 'marvell',
-> >     'arm-' : 'arm',
-> >     'integ' : 'arm',
-> >     've' : 'arm',
-> >     'aspeed' : 'aspeed',
-> >     'at91' : 'atmel',
-> >     'sama' : 'atmel',
->
-> Unfortunately, we have many boards without a proper prefix. Wouldn't it
-> be better to use arch/arm/boot/dts/Makefile and map dtb-$(CONFIG_*) to a
-> vendor directory?
-
-Only 13 boards by my count Atmel. And 2 boards each for omap3 and
-Renesas. That's manageable to do by hand or just add to the map.
-
-Though in hindsight I probably would have used the config.
-
-> This way you would be sure to not miss any. This would also ease the
-> creation of subdirs if we decide to do that.
+SGVsbG8sCgpUaGlzIGlzIHRoZSBsYXN0IGJhdGNoIG9mIHBhdGNoZXMgYWJvdXQgdGhlIHRoZXJt
+YWwgZHJpdmVyIHRoYXQgd2FzCnN1c3BlbmRlZCwgd2FpdGluZyBmb3IgdGhlIElDVS9TRUkgc2Vy
+aWVzIHRvIGJlIG1lcmdlZC4gTm93IHRoYXQKZXZlcnl0aGluZyBpcyByZWFkeSBpbiBtYWlubGlu
+ZSwgbGV0J3MgYWRkIGhhcmR3YXJlIG92ZXJoZWF0IGludGVycnVwdApzdXBwb3J0IHRvIHRoaXMg
+ZHJpdmVyLgoKQmluZGluZ3MgYW5kIERUIGFyZSB1cGRhdGVkIGFjY29yZGluZ2x5LiBUaGUgaW50
+ZXJydXB0IHdpbGwgb25seSBiZQp0cmlnZ2VyZWQgaWYgdGhlIHBsYXRmb3JtIGdvZXMgYWJvdmUg
+fjEwMsKwQyAodGhyZXNob2xkIHNldCB0byAxMDDCsEMsCmh5c3RlcmVzaXMgdG8gPiAywrBDKS4g
+VGhlIGludGVycnVwdCBwcm9wZXJ0eSBpcyBvZiBjb3Vyc2Ugbm90Cm1hbmRhdG9yeS4KCkluIHRo
+ZSBtZWFuIHRpbWUsIEkgYWRkIG15c2VsZiB0byB0aGUgTUFJTlRBSU5FUlMgZmlsZSB0byByZWNl
+aXZlIGFuZApyZXZpZXcgcG9zc2libGUgZml4ZXMvbmV3IGZlYXR1cmVzLgoKVGhhbmtzLApNaXF1
+w6hsCgpDaGFuZ2VzIHNpbmNlIHYyOgo9PT09PT09PT09PT09PT09PQoqIFJlbW92ZSB1c2VsZXNz
+IGdvdG8gc3RhdGVtZW50LgoqIE1vdmUgdGhlIGh5c3RlcmVzaXMgYXJyYXkgb3V0IG9mIHRoZSBm
+dW5jdGlvbiB1c2luZyBpdCBhbmQgZGVjbGFyZQogIHRoZSBhcnJheSBzdGF0aWNhbGx5IGluc3Rl
+YWQgdGhhdCBkb2luZyBzbyBvbiB0aGUgc3RhY2suCiogUmVtb3ZlIHVubmVjZXNzYXJ5IGNhc3Qu
+CiogT24gZXJyb3IsIGF2b2lkIHJldHVybmluZyBhIHZhbHVlIG5vdCBjb21wYXRpYmxlIHdpdGgg
+aXJxcmV0dXJuX3QgaW4KICB0aGUgSVJRIGhhbmRsZXIgKGFuZCB3aGVuIGRvaW5nIHNvLCByZS1l
+bmFibGUgaW50ZXJydXB0cwogIGZpcnN0KS4gVGhpcyBpcyBzaW1wbHkgaGFuZGxlZCB3aXRoIGEg
+Z290byBzdGF0ZW1lbnQuCiogMCBpcyBub3QgYSB2YWxpZCBpbnRlcnJ1cHQsIHRha2UgdGhpcyBp
+bnRvIGFjY291bnQgZHVyaW5nIHZhcmlhYmxlcwogIHZhbGlkYXRpb24uCgpDaGFuZ2VzICpub3Qq
+IGFkZHJlc3NlZCBzaW5jZSB2MjoKPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KKiBP
+dmVyaGVhdCBpbnRlcnJ1cHQgY29uZmlndXJhdGlvbiBoYXMgY2VydGFpbiBsaW1pdGF0aW9ucyBv
+biB3aGljaAogIE1hcmMgYXNrZWQgcXVlc3Rpb25zLiBJIGRvbid0IGtub3cgaWYvd2hhdCBJIG5l
+ZWQgdG8gY2hhbmdlIHNvCiAga2VlcGluZyBpdCBsaWtlIHRoaXMgZm9yIHRoaXMgdmVyc2lvbi4K
+KiBFZHVhcmRvIHBvaW50ZWQgdGhhdCBvbmNlIGEgY3JpdGljYWwgbGV2ZWwgaGFzIGJlZW4gcmVh
+Y2hlZCwgdGhlcmUKICBpcyBubyB3YXkgYmFjaywgdGhlIHN5c3RlbSB3aWxsIHNodXRkb3duLiBJ
+IGRlc2lnbmVkIHRoZSBoYW5kbGVyIHRvCiAgcmVjb3ZlciBmcm9tIHRoYXQgYW5kIHRvIGVuYWJs
+ZSB0aGUgSVJRIGFnYWluIGlmIG5lZWRlZCwgYnV0IG1heWJlCiAgdGhpcyBpcyB1c2VsZXNzIGFu
+ZCBzaG91bGQgYmUgcmVtb3ZlZC4gV2hpbGUgd2FpdGluZyBmb3IgaGlzIGFuc3dlciwKICBJIGFt
+IHNlbmRpbmcgYW5vdGhlciB2ZXJzaW9uIGFuZCB3aWxsIGNvcnJlY3QgaW4gYSB2NCBpZiBuZWVk
+ZWQuCgpDaGFuZ2VzIHNpbmNlIHYxOgo9PT09PT09PT09PT09PT09PQoqIFVzZSBhIHRocmVhZGVk
+IElSUSBoYW5kbGVyIHRvIGF2b2lkIGEgcG90ZW50aWFsIGxvY2sgZGVwZW5jeSB3aGVuCiAgbm90
+aWZ5aW5nIHRoZSBjb3JlIG9mIGFuIG92ZXJoZWF0IHNpdHVhdGlvbi4KCgpNaXF1ZWwgUmF5bmFs
+ICg2KToKICB0aGVybWFsOiBhcm1hZGE6IGFkZCBvdmVyaGVhdCBpbnRlcnJ1cHQgc3VwcG9ydAog
+IE1BSU5UQUlORVJTOiB0aGVybWFsOiBhZGQgZW50cnkgZm9yIE1hcnZlbGwgTVZFQlUgdGhlcm1h
+bCBkcml2ZXIKICBkdC1iaW5kaW5nczogYXA4MDY6IGRvY3VtZW50IHRoZSB0aGVybWFsIGludGVy
+cnVwdCBjYXBhYmlsaXRpZXMKICBkdC1iaW5kaW5nczogY3AxMTA6IGRvY3VtZW50IHRoZSB0aGVy
+bWFsIGludGVycnVwdCBjYXBhYmlsaXRpZXMKICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBhZGQgaW50
+ZXJydXB0IHN1cHBvcnQgdG8gYXA4MDYgdGhlcm1hbCBub2RlCiAgYXJtNjQ6IGR0czogbWFydmVs
+bDogYWRkIGludGVycnVwdCBzdXBwb3J0IHRvIGNwMTEwIHRoZXJtYWwgbm9kZQoKIC4uLi9hcm0v
+bWFydmVsbC9hcDgwNi1zeXN0ZW0tY29udHJvbGxlci50eHQgICB8ICAgOCArCiAuLi4vYXJtL21h
+cnZlbGwvY3AxMTAtc3lzdGVtLWNvbnRyb2xsZXIudHh0ICAgfCAgIDkgKwogTUFJTlRBSU5FUlMg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA1ICsKIGFyY2gvYXJtNjQvYm9v
+dC9kdHMvbWFydmVsbC9hcm1hZGEtYXA4MDYuZHRzaSB8ICAxOCArLQogYXJjaC9hcm02NC9ib290
+L2R0cy9tYXJ2ZWxsL2FybWFkYS1jcDExMC5kdHNpIHwgIDE1ICstCiBkcml2ZXJzL3RoZXJtYWwv
+YXJtYWRhX3RoZXJtYWwuYyAgICAgICAgICAgICAgfCAyNzAgKysrKysrKysrKysrKysrKystCiA2
+IGZpbGVzIGNoYW5nZWQsIDMxOCBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQoKLS0gCjIu
+MTkuMQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
+bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
+LWFybS1rZXJuZWwK
