@@ -1,181 +1,74 @@
-From: <Andrei.Stefanescu@microchip.com>
-Subject: [PATCH v3 1/3] regulator: dt-bindings: add MCP16502 regulator
- bindings
-Date: Tue, 4 Dec 2018 09:52:28 +0000
-Message-ID: <1543917126-32572-2-git-send-email-andrei.stefanescu@microchip.com>
-References: <1543917126-32572-1-git-send-email-andrei.stefanescu@microchip.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] dt-bindings: ti-tsc-adc: Add new compatible for AM654
+ SoCs
+Date: Tue, 4 Dec 2018 09:52:33 +0000
+Message-ID: <20181204095233.GT26661@dell>
+References: <20181119094509.22542-1-vigneshr@ti.com>
+ <4b42082c-462d-3d94-8ee9-6e7a61f57134@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543917126-32572-1-git-send-email-andrei.stefanescu@microchip.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <4b42082c-462d-3d94-8ee9-6e7a61f57134@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, Nicolas.Ferre@microchip.com, Cristian.Birsan@microchip.com, Claudiu.Beznea@microchip.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrei.Stefanescu@microchip.com
+To: Vignesh R <vigneshr@ti.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch describes the compatible and the device tree
-bindings necessary for the MCP16502 PMIC.
+On Tue, 04 Dec 2018, Vignesh R wrote:
 
-Signed-off-by: Andrei Stefanescu <andrei.stefanescu@microchip.com>
----
- .../bindings/regulator/mcp16502-regulator.txt      | 143 +++++++++++++++++=
-++++
- 1 file changed, 143 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/mcp16502-re=
-gulator.txt
+> Hi,
+> 
+> On 19/11/18 3:15 PM, Vignesh R wrote:
+> > AM654 SoCs has ADC IP which is similar to AM335x. Add new compatible to
+> > handle AM654 SoCs. Also, it seems that existing compatible strings used
+> > in the kernel DTs were never documented. So, document them now.
+> > 
+> > Signed-off-by: Vignesh R <vigneshr@ti.com>
+> > ---
+> 
+> Gentle ping on this patch..
 
-diff --git a/Documentation/devicetree/bindings/regulator/mcp16502-regulator=
-.txt b/Documentation/devicetree/bindings/regulator/mcp16502-regulator.txt
-new file mode 100644
-index 0000000..b8f843f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/mcp16502-regulator.txt
-@@ -0,0 +1,143 @@
-+MCP16502 PMIC
-+
-+Required properties:
-+- compatible: "microchip,mcp16502"
-+- reg: I2C slave address
-+- lpm-gpios: GPIO for LPM pin. Note that this GPIO *must* remain high duri=
-ng
-+	     suspend-to-ram, keeping the PMIC into HIBERNATE mode.
-+- regulators: A node that houses a sub-node for each regulator within
-+              the device. Each sub-node is identified using the node's
-+              name. The content of each sub-node is defined by the
-+              standard binding for regulators; see regulator.txt.
-+
-+Regualtors of MCP16502 PMIC:
-+1) VDD_IO	- Buck (1.2 - 3.7 V)
-+2) VDD_DDR	- Buck (0.6 - 1.85 V)
-+3) VDD_CORE	- Buck (0.6 - 1.85 V)
-+4) VDD_OTHER	- BUCK (0.6 - 1.85 V)
-+5) LDO1		- LDO  (1.2 - 3.7 V)
-+6) LDO2		- LDO  (1.2 - 3.7 V)
-+
-+Regulator modes:
-+2 - FPWM: higher precision, higher consumption
-+4 - AutoPFM: lower precision, lower consumption
-+
-+Each regulator is defined using the standard binding for regulators.
-+
-+Example:
-+
-+mcp16502@5b {
-+	compatible =3D "microchip,mcp16502";
-+	reg =3D <0x5b>;
-+	status =3D "okay";
-+	lpm-gpios =3D <&pioBU 7 GPIO_ACTIVE_HIGH>;
-+
-+	regulators {
-+		VDD_IO {
-+			regulator-name =3D "VDD_IO";
-+			regulator-min-microvolt =3D <1200000>;
-+			regulator-max-microvolt =3D <3700000>;
-+			regulator-initial-mode =3D <2>;
-+			regulator-allowed-modes =3D <2>, <4>;
-+			regulator-always-on;
-+
-+			regulator-state-standby {
-+				regulator-on-in-suspend;
-+				regulator-mode =3D <4>;
-+			};
-+
-+			regulator-state-mem {
-+				regulator-off-in-suspend;
-+				regulator-mode =3D <4>;
-+			};
-+		};
-+
-+		VDD_DDR {
-+			regulator-name =3D "VDD_DDR";
-+			regulator-min-microvolt =3D <600000>;
-+			regulator-max-microvolt =3D <1850000>;
-+			regulator-initial-mode =3D <2>;
-+			regulator-allowed-modes =3D <2>, <4>;
-+			regulator-always-on;
-+
-+			regulator-state-standby {
-+				regulator-on-in-suspend;
-+				regulator-mode =3D <4>;
-+			};
-+
-+			regulator-state-mem {
-+				regulator-on-in-suspend;
-+				regulator-mode =3D <4>;
-+			};
-+		};
-+
-+		VDD_CORE {
-+			regulator-name =3D "VDD_CORE";
-+			regulator-min-microvolt =3D <600000>;
-+			regulator-max-microvolt =3D <1850000>;
-+			regulator-initial-mode =3D <2>;
-+			regulator-allowed-modes =3D <2>, <4>;
-+			regulator-always-on;
-+
-+			regulator-state-standby {
-+				regulator-on-in-suspend;
-+				regulator-mode =3D <4>;
-+			};
-+
-+			regulator-state-mem {
-+				regulator-off-in-suspend;
-+				regulator-mode =3D <4>;
-+			};
-+		};
-+
-+		VDD_OTHER {
-+			regulator-name =3D "VDD_OTHER";
-+			regulator-min-microvolt =3D <600000>;
-+			regulator-max-microvolt =3D <1850000>;
-+			regulator-initial-mode =3D <2>;
-+			regulator-allowed-modes =3D <2>, <4>;
-+			regulator-always-on;
-+
-+			regulator-state-standby {
-+				regulator-on-in-suspend;
-+				regulator-mode =3D <4>;
-+			};
-+
-+			regulator-state-mem {
-+				regulator-off-in-suspend;
-+				regulator-mode =3D <4>;
-+			};
-+		};
-+
-+		LDO1 {
-+			regulator-name =3D "LDO1";
-+			regulator-min-microvolt =3D <1200000>;
-+			regulator-max-microvolt =3D <3700000>;
-+			regulator-always-on;
-+
-+			regulator-state-standby {
-+				regulator-on-in-suspend;
-+			};
-+
-+			regulator-state-mem {
-+				regulator-off-in-suspend;
-+			};
-+		};
-+
-+		LDO2 {
-+			regulator-name =3D "LDO2";
-+			regulator-min-microvolt =3D <1200000>;
-+			regulator-max-microvolt =3D <3700000>;
-+			regulator-always-on;
-+
-+			regulator-state-standby {
-+				regulator-on-in-suspend;
-+			};
-+
-+			regulator-state-mem {
-+				regulator-off-in-suspend;
-+			};
-+		};
-+
-+	};
-+};
---=20
-2.7.4
+Don't do that.
+
+If you think your patch has been forgotten, please submit a [RESEND].
+
+> >  .../devicetree/bindings/input/touchscreen/ti-tsc-adc.txt  | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+> > index b1163bf97146..aad5e34965eb 100644
+> > --- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+> > +++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+> > @@ -2,7 +2,12 @@
+> >  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >  
+> >  Required properties:
+> > +- mfd
+> > +	compatible: Should be
+> > +		"ti,am3359-tscadc" for AM335x/AM437x SoCs
+> > +		"ti,am654-tscadc", "ti,am3359-tscadc" for AM654 SoCs
+> >  - child "tsc"
+> > +	compatible: Should be "ti,am3359-tsc".
+> >  	ti,wires: Wires refer to application modes i.e. 4/5/8 wire touchscreen
+> >  		  support on the platform.
+> >  	ti,x-plate-resistance: X plate resistance
+> > @@ -25,6 +30,9 @@ Required properties:
+> >  			AIN0 = 0, AIN1 = 1 and so on till AIN7 = 7.
+> >  			XP  = 0, XN = 1, YP = 2, YN = 3.
+> >  - child "adc"
+> > +	compatible: Should be
+> > +		    "ti,am3359-adc" for AM335x/AM437x SoCs
+> > +		    "ti,am654-adc", "ti,am3359-adc" for AM654 SoCs
+> >  	ti,adc-channels: List of analog inputs available for ADC.
+> >  			 AIN0 = 0, AIN1 = 1 and so on till AIN7 = 7.
+> >  
+> > 
+> 
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
