@@ -1,44 +1,182 @@
-From: Schrempf Frieder <frieder.schrempf@kontron.de>
-Subject: [PATCH v7 7/9] ARM: dts: ls1021a: Remove fsl,qspi-has-second-chip as
- it is not used
-Date: Tue, 4 Dec 2018 14:15:24 +0000
-Message-ID: <1543932685-15011-8-git-send-email-frieder.schrempf@kontron.de>
-References: <1543932685-15011-1-git-send-email-frieder.schrempf@kontron.de>
+From: Aisheng DONG <aisheng.dong@nxp.com>
+Subject: [PATCH V9 3/7] dt-bindings: clock: imx8qxp: add SCU clock IDs
+Date: Tue, 4 Dec 2018 14:39:29 +0000
+Message-ID: <1543934041-12572-4-git-send-email-aisheng.dong@nxp.com>
+References: <1543934041-12572-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543932685-15011-1-git-send-email-frieder.schrempf@kontron.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1543934041-12572-1-git-send-email-aisheng.dong@nxp.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "richard@nod.at" <richard@nod.at>, "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>, "broonie@kernel.org" <broonie@kernel.org>, "david.wolfe@nxp.com" <david.wolfe@nxp.com>, "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>, "prabhakar.kushwaha@nxp.com" <prabhakar.kushwaha@nxp.com>, "yogeshnarayan.gaur@nxp.com" <yogeshnarayan.gaur@nxp.com>, "han.xu@nxp.com" <han.xu@nxp.com>, Schrempf Frieder <frieder.schrempf@kontron.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc: Aisheng DONG <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+Add IMX8QXP SCU clock IDs.
 
-After switching to the new FSL QSPI driver the property
-'fsl,qspi-has-second-chip' is not needed anymore.
-
-The driver now uses the 'reg' property to determine the bus and
-the chipselect.
-
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>
+Cc: devicetree@vger.kernel.org
+Cc: linux-clk@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
- arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts | 1 -
- 1 file changed, 1 deletion(-)
+ include/dt-bindings/clock/imx8qxp-clock.h | 136 ++++++++++++++++++++++++++++++
+ 1 file changed, 136 insertions(+)
+ create mode 100644 include/dt-bindings/clock/imx8qxp-clock.h
 
-diff --git a/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
-index 6a83f30..d3a1a73 100644
---- a/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
-+++ b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
-@@ -203,7 +203,6 @@
- };
- 
- &qspi {
--	fsl,qspi-has-second-chip;
- 	status = "okay";
- 
- 	flash: flash@0 {
+diff --git a/include/dt-bindings/clock/imx8qxp-clock.h b/include/dt-bindings/clock/imx8qxp-clock.h
+new file mode 100644
+index 0000000..d72a39c
+--- /dev/null
++++ b/include/dt-bindings/clock/imx8qxp-clock.h
+@@ -0,0 +1,136 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * Copyright 2018 NXP
++ *   Dong Aisheng <aisheng.dong@nxp.com>
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_IMX8QXP_H
++#define __DT_BINDINGS_CLOCK_IMX8QXP_H
++
++/* SCU Clocks */
++
++#define IMX8QXP_CLK_DUMMY				0
++
++/* CPU */
++#define IMX8QXP_A35_CLK					1
++
++/* LSIO SS */
++#define IMX8QXP_LSIO_MEM_CLK				2
++#define IMX8QXP_LSIO_BUS_CLK				3
++#define IMX8QXP_LSIO_PWM0_CLK				10
++#define IMX8QXP_LSIO_PWM1_CLK				11
++#define IMX8QXP_LSIO_PWM2_CLK				12
++#define IMX8QXP_LSIO_PWM3_CLK				13
++#define IMX8QXP_LSIO_PWM4_CLK				14
++#define IMX8QXP_LSIO_PWM5_CLK				15
++#define IMX8QXP_LSIO_PWM6_CLK				16
++#define IMX8QXP_LSIO_PWM7_CLK				17
++#define IMX8QXP_LSIO_GPT0_CLK				18
++#define IMX8QXP_LSIO_GPT1_CLK				19
++#define IMX8QXP_LSIO_GPT2_CLK				20
++#define IMX8QXP_LSIO_GPT3_CLK				21
++#define IMX8QXP_LSIO_GPT4_CLK				22
++#define IMX8QXP_LSIO_FSPI0_CLK				23
++#define IMX8QXP_LSIO_FSPI1_CLK				24
++
++/* Connectivity SS */
++#define IMX8QXP_CONN_AXI_CLK_ROOT			30
++#define IMX8QXP_CONN_AHB_CLK_ROOT			31
++#define IMX8QXP_CONN_IPG_CLK_ROOT			32
++#define IMX8QXP_CONN_SDHC0_CLK				40
++#define IMX8QXP_CONN_SDHC1_CLK				41
++#define IMX8QXP_CONN_SDHC2_CLK				42
++#define IMX8QXP_CONN_ENET0_ROOT_CLK			43
++#define IMX8QXP_CONN_ENET0_BYPASS_CLK			44
++#define IMX8QXP_CONN_ENET0_RGMII_CLK			45
++#define IMX8QXP_CONN_ENET1_ROOT_CLK			46
++#define IMX8QXP_CONN_ENET1_BYPASS_CLK			47
++#define IMX8QXP_CONN_ENET1_RGMII_CLK			48
++#define IMX8QXP_CONN_GPMI_BCH_IO_CLK			49
++#define IMX8QXP_CONN_GPMI_BCH_CLK			50
++#define IMX8QXP_CONN_USB2_ACLK				51
++#define IMX8QXP_CONN_USB2_BUS_CLK			52
++#define IMX8QXP_CONN_USB2_LPM_CLK			53
++
++/* HSIO SS */
++#define IMX8QXP_HSIO_AXI_CLK				60
++#define IMX8QXP_HSIO_PER_CLK				61
++
++/* Display controller SS */
++#define IMX8QXP_DC_AXI_EXT_CLK				70
++#define IMX8QXP_DC_AXI_INT_CLK				71
++#define IMX8QXP_DC_CFG_CLK				72
++#define IMX8QXP_DC0_PLL0_CLK				80
++#define IMX8QXP_DC0_PLL1_CLK				81
++#define IMX8QXP_DC0_DISP0_CLK				82
++#define IMX8QXP_DC0_DISP1_CLK				83
++
++/* MIPI-LVDS SS */
++#define IMX8QXP_MIPI_IPG_CLK				90
++#define IMX8QXP_MIPI0_PIXEL_CLK				100
++#define IMX8QXP_MIPI0_BYPASS_CLK			101
++#define IMX8QXP_MIPI0_LVDS_PIXEL_CLK			102
++#define IMX8QXP_MIPI0_LVDS_BYPASS_CLK			103
++#define IMX8QXP_MIPI0_LVDS_PHY_CLK			104
++#define IMX8QXP_MIPI0_I2C0_CLK				105
++#define IMX8QXP_MIPI0_I2C1_CLK				106
++#define IMX8QXP_MIPI0_PWM0_CLK				107
++#define IMX8QXP_MIPI1_PIXEL_CLK				108
++#define IMX8QXP_MIPI1_BYPASS_CLK			109
++#define IMX8QXP_MIPI1_LVDS_PIXEL_CLK			110
++#define IMX8QXP_MIPI1_LVDS_BYPASS_CLK			111
++#define IMX8QXP_MIPI1_LVDS_PHY_CLK			112
++#define IMX8QXP_MIPI1_I2C0_CLK				113
++#define IMX8QXP_MIPI1_I2C1_CLK				114
++#define IMX8QXP_MIPI1_PWM0_CLK				115
++
++/* IMG SS */
++#define IMX8QXP_IMG_AXI_CLK				120
++#define IMX8QXP_IMG_IPG_CLK				121
++#define IMX8QXP_IMG_PXL_CLK				122
++
++/* MIPI-CSI SS */
++#define IMX8QXP_CSI0_CORE_CLK				130
++#define IMX8QXP_CSI0_ESC_CLK				131
++#define IMX8QXP_CSI0_PWM0_CLK				132
++#define IMX8QXP_CSI0_I2C0_CLK				133
++
++/* PARALLER CSI SS */
++#define IMX8QXP_PARALLEL_CSI_DPLL_CLK			140
++#define IMX8QXP_PARALLEL_CSI_PIXEL_CLK			141
++#define IMX8QXP_PARALLEL_CSI_MCLK_CLK			142
++
++/* VPU SS */
++#define IMX8QXP_VPU_ENC_CLK				150
++#define IMX8QXP_VPU_DEC_CLK				151
++
++/* GPU SS */
++#define IMX8QXP_GPU0_CORE_CLK				160
++#define IMX8QXP_GPU0_SHADER_CLK				161
++
++/* ADMA SS */
++#define IMX8QXP_ADMA_IPG_CLK_ROOT			165
++#define IMX8QXP_ADMA_UART0_CLK				170
++#define IMX8QXP_ADMA_UART1_CLK				171
++#define IMX8QXP_ADMA_UART2_CLK				172
++#define IMX8QXP_ADMA_UART3_CLK				173
++#define IMX8QXP_ADMA_SPI0_CLK				174
++#define IMX8QXP_ADMA_SPI1_CLK				175
++#define IMX8QXP_ADMA_SPI2_CLK				176
++#define IMX8QXP_ADMA_SPI3_CLK				177
++#define IMX8QXP_ADMA_CAN0_CLK				178
++#define IMX8QXP_ADMA_CAN1_CLK				179
++#define IMX8QXP_ADMA_CAN2_CLK				180
++#define IMX8QXP_ADMA_I2C0_CLK				181
++#define IMX8QXP_ADMA_I2C1_CLK				182
++#define IMX8QXP_ADMA_I2C2_CLK				183
++#define IMX8QXP_ADMA_I2C3_CLK				184
++#define IMX8QXP_ADMA_FTM0_CLK				185
++#define IMX8QXP_ADMA_FTM1_CLK				186
++#define IMX8QXP_ADMA_ADC0_CLK				187
++#define IMX8QXP_ADMA_PWM_CLK				188
++#define IMX8QXP_ADMA_LCD_CLK				189
++
++#define IMX8QXP_SCU_CLK_END				190
++
++#endif /* __DT_BINDINGS_CLOCK_IMX8QXP_H */
 -- 
 2.7.4
