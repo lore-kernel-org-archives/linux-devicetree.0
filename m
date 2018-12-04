@@ -1,176 +1,145 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] of/device: add blacklist for iommu dma_ops
-Date: Tue, 4 Dec 2018 12:04:42 +0530
-Message-ID: <CAFp+6iH8x4ieK5QqrYcAnLALpQL4KC3E507KHurJJV1Gh1Z=Ng@mail.gmail.com>
-References: <20181201165348.24140-1-robdclark@gmail.com>
- <a29008a3-8eff-260d-5c93-9757a729f9e0@arm.com>
- <CAF6AEGvo0-oWNKcz6BEA8Eh250FL4rXaBVYXuJGBtshPk4jz+g@mail.gmail.com>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [RFC PATCH v2 04/15] usb:cdns3: Driver initialization code.
+Date: Tue, 4 Dec 2018 15:11:40 +0800
+Message-ID: <CAL411-rzhH+y-b0-xze4-WmeVtey4bXt4Jc6TWYyfw6E8x-5Eg@mail.gmail.com>
+References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
+ <1542535751-16079-5-git-send-email-pawell@cadence.com> <CAL411-rWbQ6yj1r_aaLP8UagVRJhsn7xdznQwXS9enkxXTs2LA@mail.gmail.com>
+ <BYAPR07MB4709A8E4B0B0CC05A842B708DDAD0@BYAPR07MB4709.namprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <CAF6AEGvo0-oWNKcz6BEA8Eh250FL4rXaBVYXuJGBtshPk4jz+g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
- Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, daniel-/w4YWyX8dFk@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, hch-jcswGhMUV9g@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <BYAPR07MB4709A8E4B0B0CC05A842B708DDAD0@BYAPR07MB4709.namprd07.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: pawell@cadence.com
+Cc: devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, rogerq@ti.com, lkml <linux-kernel@vger.kernel.org>, adouglas@cadence.com, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBEZWMgMywgMjAxOCBhdCA3OjU2IFBNIFJvYiBDbGFyayA8cm9iZGNsYXJrQGdtYWls
-LmNvbT4gd3JvdGU6Cj4KPiBPbiBNb24sIERlYyAzLCAyMDE4IGF0IDc6NDUgQU0gUm9iaW4gTXVy
-cGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4gd3JvdGU6Cj4gPgo+ID4gSGkgUm9iLAo+ID4KPiA+
-IE9uIDAxLzEyLzIwMTggMTY6NTMsIFJvYiBDbGFyayB3cm90ZToKPiA+ID4gVGhpcyBzb2x2ZXMg
-YSBwcm9ibGVtIHdlIHNlZSB3aXRoIGRybS9tc20sIGNhdXNlZCBieSBnZXR0aW5nCj4gPiA+IGlv
-bW11X2RtYV9vcHMgd2hpbGUgd2UgYXR0YWNoIG91ciBvd24gZG9tYWluIGFuZCBtYW5hZ2UgaXQg
-ZGlyZWN0bHkgYXQKPiA+ID4gdGhlIGlvbW11IEFQSSBsZXZlbDoKPiA+ID4KPiA+ID4gICAgWzAw
-MDAwMDAwMDAwMDAwMzhdIHVzZXIgYWRkcmVzcyBidXQgYWN0aXZlX21tIGlzIHN3YXBwZXIKPiA+
-ID4gICAgSW50ZXJuYWwgZXJyb3I6IE9vcHM6IDk2MDAwMDA1IFsjMV0gUFJFRU1QVCBTTVAKPiA+
-ID4gICAgTW9kdWxlcyBsaW5rZWQgaW46Cj4gPiA+ICAgIENQVTogNyBQSUQ6IDcwIENvbW06IGt3
-b3JrZXIvNzoxIFRhaW50ZWQ6IEcgICAgICAgIFcgICAgICAgICA0LjE5LjMgIzkwCj4gPiA+ICAg
-IEhhcmR3YXJlIG5hbWU6IHh4eCAoRFQpCj4gPiA+ICAgIFdvcmtxdWV1ZTogZXZlbnRzIGRlZmVy
-cmVkX3Byb2JlX3dvcmtfZnVuYwo+ID4gPiAgICBwc3RhdGU6IDgwYzAwMDA5IChOemN2IGRhaWYg
-K1BBTiArVUFPKQo+ID4gPiAgICBwYyA6IGlvbW11X2RtYV9tYXBfc2crMHg3Yy8weDJjOAo+ID4g
-PiAgICBsciA6IGlvbW11X2RtYV9tYXBfc2crMHg0MC8weDJjOAo+ID4gPiAgICBzcCA6IGZmZmZm
-ZjgwMDk1ZWI0ZjAKPiA+ID4gICAgeDI5OiBmZmZmZmY4MDA5NWViNGYwIHgyODogMDAwMDAwMDAw
-MDAwMDAwMAo+ID4gPiAgICB4Mjc6IGZmZmZmZmMwZjk0MzE1NzggeDI2OiAwMDAwMDAwMDAwMDAw
-MDAwCj4gPiA+ICAgIHgyNTogMDAwMDAwMDBmZmZmZmZmZiB4MjQ6IDAwMDAwMDAwMDAwMDAwMDMK
-PiA+ID4gICAgeDIzOiAwMDAwMDAwMDAwMDAwMDAxIHgyMjogZmZmZmZmYzBmYTlhYzAxMAo+ID4g
-PiAgICB4MjE6IDAwMDAwMDAwMDAwMDAwMDAgeDIwOiBmZmZmZmZjMGZhYjQwOTgwCj4gPiA+ICAg
-IHgxOTogZmZmZmZmYzBmYWI0MDk4MCB4MTg6IDAwMDAwMDAwMDAwMDAwMDMKPiA+ID4gICAgeDE3
-OiAwMDAwMDAwMDAwMDAwMWM0IHgxNjogMDAwMDAwMDAwMDAwMDAwNwo+ID4gPiAgICB4MTU6IDAw
-MDAwMDAwMDAwMDAwMGUgeDE0OiBmZmZmZmZmZmZmZmZmZmZmCj4gPiA+ICAgIHgxMzogZmZmZjAw
-MDAwMDAwMDAwMCB4MTI6IDAwMDAwMDAwMDAwMDAwMjgKPiA+ID4gICAgeDExOiAwMTAxMDEwMTAx
-MDEwMTAxIHgxMDogN2Y3ZjdmN2Y3ZjdmN2Y3Zgo+ID4gPiAgICB4OSA6IDAwMDAwMDAwMDAwMDAw
-MDAgeDggOiBmZmZmZmZjMGZhYjQwOWEwCj4gPiA+ICAgIHg3IDogMDAwMDAwMDAwMDAwMDAwMCB4
-NiA6IDAwMDAwMDAwMDAwMDAwMDIKPiA+ID4gICAgeDUgOiAwMDAwMDAwMTAwMDAwMDAwIHg0IDog
-MDAwMDAwMDAwMDAwMDAwMAo+ID4gPiAgICB4MyA6IDAwMDAwMDAwMDAwMDAwMDEgeDIgOiAwMDAw
-MDAwMDAwMDAwMDAyCj4gPiA+ICAgIHgxIDogZmZmZmZmYzBmOTQzMTU3OCB4MCA6IDAwMDAwMDAw
-MDAwMDAwMDAKPiA+ID4gICAgUHJvY2VzcyBrd29ya2VyLzc6MSAocGlkOiA3MCwgc3RhY2sgbGlt
-aXQgPSAweDAwMDAwMDAwMTdkMDhmZmIpCj4gPiA+ICAgIENhbGwgdHJhY2U6Cj4gPiA+ICAgICBp
-b21tdV9kbWFfbWFwX3NnKzB4N2MvMHgyYzgKPiA+ID4gICAgIF9faW9tbXVfbWFwX3NnX2F0dHJz
-KzB4NzAvMHg4NAo+ID4gPiAgICAgZ2V0X3BhZ2VzKzB4MTcwLzB4MWU4Cj4gPiA+ICAgICBtc21f
-Z2VtX2dldF9pb3ZhKzB4OGMvMHgxMjgKPiA+ID4gICAgIF9tc21fZ2VtX2tlcm5lbF9uZXcrMHg2
-Yy8weGM4Cj4gPiA+ICAgICBtc21fZ2VtX2tlcm5lbF9uZXcrMHg0Yy8weDU4Cj4gPiA+ICAgICBk
-c2lfdHhfYnVmX2FsbG9jXzZnKzB4NGMvMHg4Ywo+ID4gPiAgICAgbXNtX2RzaV9ob3N0X21vZGVz
-ZXRfaW5pdCsweGM4LzB4MTA4Cj4gPiA+ICAgICBtc21fZHNpX21vZGVzZXRfaW5pdCsweDU0LzB4
-MThjCj4gPiA+ICAgICBfZHB1X2ttc19kcm1fb2JqX2luaXQrMHg0MzAvMHg0NzQKPiA+ID4gICAg
-IGRwdV9rbXNfaHdfaW5pdCsweDVmOC8weDZiNAo+ID4gPiAgICAgbXNtX2RybV9iaW5kKzB4MzYw
-LzB4NmM4Cj4gPiA+ICAgICB0cnlfdG9fYnJpbmdfdXBfbWFzdGVyLnBhcnQuNysweDI4LzB4NzAK
-PiA+ID4gICAgIGNvbXBvbmVudF9tYXN0ZXJfYWRkX3dpdGhfbWF0Y2grMHhlOC8weDEyNAo+ID4g
-PiAgICAgbXNtX3BkZXZfcHJvYmUrMHgyOTQvMHgyYjQKPiA+ID4gICAgIHBsYXRmb3JtX2Rydl9w
-cm9iZSsweDU4LzB4YTQKPiA+ID4gICAgIHJlYWxseV9wcm9iZSsweDE1MC8weDI5NAo+ID4gPiAg
-ICAgZHJpdmVyX3Byb2JlX2RldmljZSsweGFjLzB4ZTgKPiA+ID4gICAgIF9fZGV2aWNlX2F0dGFj
-aF9kcml2ZXIrMHhhNC8weGI0Cj4gPiA+ICAgICBidXNfZm9yX2VhY2hfZHJ2KzB4OTgvMHhjOAo+
-ID4gPiAgICAgX19kZXZpY2VfYXR0YWNoKzB4YWMvMHgxMmMKPiA+ID4gICAgIGRldmljZV9pbml0
-aWFsX3Byb2JlKzB4MjQvMHgzMAo+ID4gPiAgICAgYnVzX3Byb2JlX2RldmljZSsweDM4LzB4OTgK
-PiA+ID4gICAgIGRlZmVycmVkX3Byb2JlX3dvcmtfZnVuYysweDc4LzB4YTQKPiA+ID4gICAgIHBy
-b2Nlc3Nfb25lX3dvcmsrMHgyNGMvMHgzZGMKPiA+ID4gICAgIHdvcmtlcl90aHJlYWQrMHgyODAv
-MHgzNjAKPiA+ID4gICAgIGt0aHJlYWQrMHgxMzQvMHgxM2MKPiA+ID4gICAgIHJldF9mcm9tX2Zv
-cmsrMHgxMC8weDE4Cj4gPiA+ICAgIENvZGU6IGQyODAwMDA0IDkxMDAwNzI1IDZiMTcwMzlmIDU0
-MDAwNDhhIChmOTQwMWY0MCkKPiA+ID4gICAgLS0tWyBlbmQgdHJhY2UgZjIyZGRhNTdmMzY0OGUy
-YyBdLS0tCj4gPiA+ICAgIEtlcm5lbCBwYW5pYyAtIG5vdCBzeW5jaW5nOiBGYXRhbCBleGNlcHRp
-b24KPiA+ID4gICAgU01QOiBzdG9wcGluZyBzZWNvbmRhcnkgQ1BVcwo+ID4gPiAgICBLZXJuZWwg
-T2Zmc2V0OiBkaXNhYmxlZAo+ID4gPiAgICBDUFUgZmVhdHVyZXM6IDB4MCwyMjgwMmExOAo+ID4g
-PiAgICBNZW1vcnkgTGltaXQ6IG5vbmUKPiA+ID4KPiA+ID4gVGhlIHByb2JsZW0gaXMgdGhhdCB3
-aGVuIGRybS9tc20gZG9lcyBpdCdzIG93biBpb21tdV9hdHRhY2hfZGV2aWNlKCksCj4gPiA+IG5v
-dyB0aGUgZG9tYWluIHJldHVybmVkIGJ5IGlvbW11X2dldF9kb21haW5fZm9yX2RldigpIGlzIGRy
-bS9tc20ncwo+ID4gPiBkb21haW4sIGFuZCBpdCBkb2Vzbid0IGhhdmUgZG9tYWluLT5pb3ZhX2Nv
-b2tpZS4KPiA+Cj4gPiBEb2VzIHRoaXMgY3Jhc2ggc3RpbGwgaGFwcGVuIHdpdGggNC4yMC1yYz8g
-QmVjYXVzZSBhcyBvZiA2YWY1ODhmZWQzOTEgaXQKPiA+IHJlYWxseSBzaG91bGRuJ3QuCj4gPgo+
-ID4gPiBXZSBraW5kIG9mIGF2b2lkZWQgdGhpcyBwcm9ibGVtIHByaW9yIHRvIHNkbTg0NS9kcHUg
-YmVjYXVzZSB0aGUgaW9tbXUKPiA+ID4gd2FzIGF0dGFjaGVkIHRvIHRoZSBtZHAgbm9kZSBpbiBk
-dCwgd2hpY2ggaXMgYSBjaGlsZCBvZiB0aGUgdG9wbGV2ZWwKPiA+ID4gbWRzcyBub2RlICh3aGlj
-aCBjb3JyZXNwb25kcyB0byB0aGUgZGV2IHBhc3NlZCBpbiBkbWFfbWFwX3NnKCkpLiAgQnV0Cj4g
-PiA+IHdpdGggc2RtODQ1LCBub3cgdGhlIGlvbW11IGlzIGF0dGFjaGVkIGF0IHRoZSBtZHNzIGxl
-dmVsIHNvIHdlIGhpdCB0aGUKPiA+ID4gaW9tbXVfZG1hX29wcyBpbiBkbWFfbWFwX3NnKCkuCj4g
-PiA+Cj4gPiA+IEJ1dCBhdXRvIGFsbG9jYXRpbmcvYXR0YWNoaW5nIGEgZG9tYWluIGJlZm9yZSB0
-aGUgZHJpdmVyIGlzIHByb2JlZCB3YXMKPiA+ID4gYWxyZWFkeSBhIGJsb2NraW5nIHByb2JsZW0g
-Zm9yIGVuYWJsaW5nIHBlci1jb250ZXh0IHBhZ2V0YWJsZXMgZm9yIHRoZQo+ID4gPiBHUFUuICBU
-aGlzIHByb2JsZW0gaXMgYWxzbyBub3cgc29sdmVkIHdpdGggdGhpcyBwYXRjaC4KPiA+Cj4gPiBz
-L3NvbHZlZC93b3JrZWQgYXJvdW5kLwo+ID4KPiA+IElmIHlvdSB3YW50IGEgZ3VhcmFudGVlIG9m
-IGFjdHVhbGx5IGdldHRpbmcgYSBzcGVjaWZpYyBoYXJkd2FyZSBjb250ZXh0Cj4gPiBhbGxvY2F0
-ZWQgZm9yIGEgZ2l2ZW4gZG9tYWluLCB0aGVyZSBuZWVkcyB0byBiZSBjb2RlIGluIHRoZSBJT01N
-VSBkcml2ZXIKPiA+IHRvIHVuZGVyc3RhbmQgYW5kIGhvbm91ciB0aGF0LiBJbXBsaWNpdGx5IGRl
-cGVuZGluZyBvbiB3aGF0ZXZlciBoYXBwZW5zCj4gPiB0byBmYWxsIG91dCBvZiBjdXJyZW50IGRy
-aXZlciBiZWhhdmlvdXIgb24gY3VycmVudCBzeXN0ZW1zIGlzIG5vdCBhIHJlYWwKPiA+IHNvbHV0
-aW9uLgo+ID4KPiA+ID4gRml4ZXM6IDk3ODkwYmE5Mjg5YyBkbWEtbWFwcGluZzogZGV0ZWN0IGFu
-ZCBjb25maWd1cmUgSU9NTVUgaW4gb2ZfZG1hX2NvbmZpZ3VyZQo+ID4KPiA+IFRoYXQncyByYXRo
-ZXIgbWlzbGVhZGluZywgc2luY2UgdGhlIGNyYXNoIGRlc2NyaWJlZCBhYm92ZSBkZXBlbmRzIG9u
-IGF0Cj4gPiBsZWFzdCB0d28gb3RoZXIgbWFqb3IgY2hhbmdlcyB3aGljaCBjYW1lIGxvbmcgYWZ0
-ZXIgdGhhdCBjb21taXQuCj4gPgo+ID4gSXQncyBub3QgdGhhdCBJIGRvbid0IHVuZGVyc3RhbmQg
-ZXhhY3RseSB3aGF0IHlvdSB3YW50IGhlcmUgLSBqdXN0IHRoYXQKPiA+IHRoaXMgY29tbWl0IG1l
-c3NhZ2UgaXNuJ3QgYSBjb2hlcmVudCBqdXN0aWZpY2F0aW9uIGZvciB0aGF0IDspCj4gPgo+ID4g
-PiBUZXN0ZWQtYnk6IERvdWdsYXMgQW5kZXJzb24gPGRpYW5kZXJzQGNocm9taXVtLm9yZz4KPiA+
-ID4gU2lnbmVkLW9mZi1ieTogUm9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29tPgo+ID4gPiAt
-LS0KPiA+ID4gVGhpcyBpcyBhbiBhbHRlcm5hdGl2ZS9yZXBsYWNlbWVudCBmb3IgWzFdLiAgV2hh
-dCBpdCBsYWNrcyBpbiBlbGVnYW5jZQo+ID4gPiBpdCBtYWtlcyB1cCBmb3IgaW4gcHJhY3RpY2Fs
-aXR5IDstKQo+ID4gPgo+ID4gPiBbMV0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3Jn
-L3BhdGNoLzI2NDkzMC8KPiA+ID4KPiA+ID4gICBkcml2ZXJzL29mL2RldmljZS5jIHwgMjIgKysr
-KysrKysrKysrKysrKysrKysrKwo+ID4gPiAgIDEgZmlsZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25z
-KCspCj4gPiA+Cj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL29mL2RldmljZS5jIGIvZHJpdmVy
-cy9vZi9kZXZpY2UuYwo+ID4gPiBpbmRleCA1OTU3Y2Q0ZmEyNjIuLjE1ZmZlZTAwZmIyMiAxMDA2
-NDQKPiA+ID4gLS0tIGEvZHJpdmVycy9vZi9kZXZpY2UuYwo+ID4gPiArKysgYi9kcml2ZXJzL29m
-L2RldmljZS5jCj4gPiA+IEBAIC03Miw2ICs3MiwxNCBAQCBpbnQgb2ZfZGV2aWNlX2FkZChzdHJ1
-Y3QgcGxhdGZvcm1fZGV2aWNlICpvZmRldikKPiA+ID4gICAgICAgcmV0dXJuIGRldmljZV9hZGQo
-Jm9mZGV2LT5kZXYpOwo+ID4gPiAgIH0KPiA+ID4KPiA+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qg
-b2ZfZGV2aWNlX2lkIGlvbW11X2JsYWNrbGlzdFtdID0gewo+ID4gPiArICAgICB7IC5jb21wYXRp
-YmxlID0gInFjb20sbWRwNCIgfSwKPiA+ID4gKyAgICAgeyAuY29tcGF0aWJsZSA9ICJxY29tLG1k
-c3MiIH0sCj4gPiA+ICsgICAgIHsgLmNvbXBhdGlibGUgPSAicWNvbSxzZG04NDUtbWRzcyIgfSwK
-PiA+ID4gKyAgICAgeyAuY29tcGF0aWJsZSA9ICJxY29tLGFkcmVubyIgfSwKPiA+ID4gKyAgICAg
-e30KPiA+ID4gK307Cj4gPiA+ICsKPiA+ID4gICAvKioKPiA+ID4gICAgKiBvZl9kbWFfY29uZmln
-dXJlIC0gU2V0dXAgRE1BIGNvbmZpZ3VyYXRpb24KPiA+ID4gICAgKiBAZGV2OiAgICBEZXZpY2Ug
-dG8gYXBwbHkgRE1BIGNvbmZpZ3VyYXRpb24KPiA+ID4gQEAgLTE2NCw2ICsxNzIsMjAgQEAgaW50
-IG9mX2RtYV9jb25maWd1cmUoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlX25vZGUg
-Km5wLCBib29sIGZvcmNlX2RtYSkKPiA+ID4gICAgICAgZGV2X2RiZyhkZXYsICJkZXZpY2UgaXMl
-c2JlaGluZCBhbiBpb21tdVxuIiwKPiA+ID4gICAgICAgICAgICAgICBpb21tdSA/ICIgIiA6ICIg
-bm90ICIpOwo+ID4gPgo+ID4gPiArICAgICAvKgo+ID4gPiArICAgICAgKiBUaGVyZSBpcyBhdCBs
-ZWFzdCBvbmUgY2FzZSB3aGVyZSB0aGUgZHJpdmVyIHdhbnRzIHRvIGRpcmVjdGx5Cj4gPiA+ICsg
-ICAgICAqIG1hbmFnZSB0aGUgSU9NTVUsIGJ1dCBpZiB3ZSBlbmQgdXAgd2l0aCBpb21tdSBkbWFf
-b3BzLCB0aGF0Cj4gPiA+ICsgICAgICAqIGludGVyZmVyZXMgd2l0aCB0aGUgZHJpdmVycyBhYmls
-aXR5IHRvIHVzZSBkbWFfbWFwX3NnKCkgZm9yCj4gPiA+ICsgICAgICAqIGNhY2hlIG9wZXJhdGlv
-bnMuICBTaW5jZSB3ZSBkb24ndCBjdXJyZW50bHkgaGF2ZSBhIGJldHRlcgo+ID4gPiArICAgICAg
-KiBzb2x1dGlvbiwgYW5kIHRoaXMgY29kZSBydW5zIGJlZm9yZSB0aGUgZHJpdmVyIGlzIHByb2Jl
-ZCBhbmQKPiA+ID4gKyAgICAgICogaGFzIGEgY2hhbmNlIHRvIGludGVydmVuZSwgdXNlIGEgc2lt
-cGxlIGJsYWNrbGlzdCB0byBhdm9pZAo+ID4gPiArICAgICAgKiBlbmRpbmcgdXAgd2l0aCBpb21t
-dSBkbWFfb3BzOgo+ID4gPiArICAgICAgKi8KPiA+ID4gKyAgICAgaWYgKG9mX21hdGNoX2Rldmlj
-ZShpb21tdV9ibGFja2xpc3QsIGRldikpIHsKPiA+ID4gKyAgICAgICAgICAgICBkZXZfZGJnKGRl
-diwgInNraXBwaW5nIGlvbW11IGhvb2t1cFxuIik7Cj4gPiA+ICsgICAgICAgICAgICAgaW9tbXUg
-PSBOVUxMOwo+ID4gPiArICAgICB9Cj4gPgo+ID4gR2l2ZW4gdGhhdCBhIGRlZmF1bHQgZG9tYWlu
-IHdpbGwgYWxyZWFkeSBoYXZlIGJlZW4gYWxsb2NhdGVkIGJ5IHRoZSB0aW1lCj4gPiB3ZSBnZXQg
-aGVyZSwgcmVnYXJkbGVzcyBvZiB3aGV0aGVyIHdlIHByZXRlbmQgb2ZfaW9tbXVfY29uZmlndXJl
-KCkgZGlkCj4gPiBub3RoaW5nLCBJJ20gcHV6emxlZCBhcyB0byBob3cgdGhpcyBjaGFuZ2UgaXMg
-J3NvbHZpbmcnIHRoYXQgYXNwZWN0IGFzCj4gPiBjbGFpbWVkIDovCj4KPiBQb3NzaWJseSBJJ20g
-cmVhZGluZyB0aGlzIHdyb25nLi4gSSB0aG91Z2h0IGl0IGlzIG5vdCBjcmVhdGVkIHVudGlsCj4g
-YXJtX2lvbW11X2NyZWF0ZV9tYXBwaW5nKCkuLgo+Cj4gYnV0IGhtbSwgSSBndWVzcyBJIHdhcyBs
-b29raW5nIGF0IHRoZSBhcm12NyBjb2RlLiAgU2VlbXMgdG8gYmUKPiBkaWZmZXJlbnQgb24gYXJt
-NjQuLiB1Z2cuLgo+Cj4gPiBJcyBDT05GSUdfSU9NTVVfREVGQVVMVF9QQVNTVEhST1VHSCBhIHN1
-ZmZpY2llbnQgd29ya2Fyb3VuZCBmb3IgbXNtIGF0Cj4gPiB0aGUgbW9tZW50LCBvciBkbyB5b3Ug
-aGF2ZSBvdGhlciBkZXZpY2VzIHdoaWNoIGRvIGFjdHVhbGx5IHdhbnQKPiA+IGlvbW11X2RtYV9v
-cHM/Cj4KPiBJIHRoaW5rIHRoZXJlIGFyZSBhdCBsZWFzdCBhIGZldyBvdGhlciBkZXZpY2VzICh2
-ZW51cywgY2FtZXJhLCBtYXliZQo+IHNvbWUgb3RoZXJzIHRoYXQgYXJlIG5vdCB3aXJlZCB1cCB5
-ZXQ/KQoKWWVzLCBmb3IgbXNtLCB0aGUgZHJtIGRldmljZXMgZG8gbm90IHdhbnQgdGhlIGRlZmF1
-bHQgRE1BIGRvbWFpbiwgd2hlcmVhcwp0aGUgVjRMIGRldmljZXMgLSB2aWRlbyBhbmQgY2FtZXJh
-IHJlbHkgY29tcGxldGVseSBvbiBETUEgaW9tbXUgZG9tYWluCmFuZCB1c2UgdGhlIGRtYSBtYXBw
-aW5nIGFwaXMgdG8gbWFuYWdlIHRoaW5ncy4KU28gZW5hYmxpbmcgQ09ORklHX0lPTU1VX0RFRkFV
-TFRfUEFTU1RIUk9VR0ggZm9yIG1zbSBwbGF0Zm9ybXMKaXMgbm90IHRoZSBkZXNpcmVkIGNvbmZp
-Z3VyYXRpb24uCk1vcmVvdmVyLCB3ZSBjYW4ndCBlbmFibGUgdGhpcyBjb25maWcgd2l0aCB1cHN0
-cmVhbSBrZXJuZWxzIGFueXdheXMuCgpUaGFua3MKVml2ZWsKCj4KPiBCUiwKPiAtUgo+Cj4gPgo+
-ID4gUm9iaW4uCj4gPgo+ID4gPiArCj4gPiA+ICAgICAgIGFyY2hfc2V0dXBfZG1hX29wcyhkZXYs
-IGRtYV9hZGRyLCBzaXplLCBpb21tdSwgY29oZXJlbnQpOwo+ID4gPgo+ID4gPiAgICAgICByZXR1
-cm4gMDsKPiA+ID4KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwo+IGlvbW11IG1haWxpbmcgbGlzdAo+IGlvbW11QGxpc3RzLmxpbnV4LWZvdW5kYXRpb24u
-b3JnCj4gaHR0cHM6Ly9saXN0cy5saW51eGZvdW5kYXRpb24ub3JnL21haWxtYW4vbGlzdGluZm8v
-aW9tbXUKCgoKLS0gClFVQUxDT01NIElORElBLCBvbiBiZWhhbGYgb2YgUXVhbGNvbW0gSW5ub3Zh
-dGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIKb2YgQ29kZSBBdXJvcmEgRm9ydW0sIGhvc3Rl
-ZCBieSBUaGUgTGludXggRm91bmRhdGlvbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9mcmVlZHJlbm8K
+On Mon, Dec 3, 2018 at 4:34 AM Pawel Laszczak <pawell@cadence.com> wrote:
+>
+> >>
+> >> Patch adds core.c and core.h file that implements initialization
+> >> of platform driver and adds function responsible for selecting,
+> >> switching and running appropriate Device/Host mode.
+> >>
+> >> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+> >> ---
+> >>  drivers/usb/cdns3/Makefile |   2 +
+> >>  drivers/usb/cdns3/core.c   | 413 +++++++++++++++++++++++++++++++++++++
+> >>  drivers/usb/cdns3/core.h   | 100 +++++++++
+> >>  3 files changed, 515 insertions(+)
+> >>  create mode 100644 drivers/usb/cdns3/core.c
+> >>  create mode 100644 drivers/usb/cdns3/core.h
+> >>
+> >> diff --git a/drivers/usb/cdns3/Makefile b/drivers/usb/cdns3/Makefile
+> >> index dcdd62003c6a..02d25b23c5d3 100644
+> >> --- a/drivers/usb/cdns3/Makefile
+> >> +++ b/drivers/usb/cdns3/Makefile
+> >> @@ -1,3 +1,5 @@
+> >> +obj-$(CONFIG_USB_CDNS3)                        += cdns3.o
+> >>  obj-$(CONFIG_USB_CDNS3_PCI_WRAP)       += cdns3-pci.o
+> >>
+> >> +cdns3-y                                        := core.o
+> >>  cdns3-pci-y                            := cdns3-pci-wrap.o
+> >> diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
+> >> new file mode 100644
+> >> index 000000000000..f9055d4da67f
+> >> --- /dev/null
+> >> +++ b/drivers/usb/cdns3/core.c
+> >> @@ -0,0 +1,413 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +/*
+> >> + * Cadence USBSS DRD Driver.
+> >> + *
+> >> + * Copyright (C) 2018 Cadence.
+> >> + *
+> >
+> >Please add NXP copyright too.
+>
+> Ok, I don't know why I omitted this.
+> I know that you are the main author of this file
+> Sorry for that.
+>
+> One additional question. What year I should add in Copyright for NXP?.
+> The original year 2017 or I should modified all to 2018.
+>
+Please use below copyright, thanks.
+
+Copyright 2017-2018 NXP
+
+
+
+> >> +       mutex_init(&cdns->mutex);
+> >> +
+> >> +       cdns->phy = devm_phy_get(dev, "cdns3,usbphy");
+> >> +       if (IS_ERR(cdns->phy)) {
+> >> +               dev_info(dev, "no generic phy found\n");
+> >> +               cdns->phy = NULL;
+> >> +               /*
+> >> +                * fall through here!
+> >> +                * if no generic phy found, phy init
+> >> +                * should be done under boot!
+> >> +                */
+> >
+> >If the phy driver is defer-probed, it will be here, it is not an error.
+> >I think you could have a generic phy driver or usb generic phy driver
+> >(drivers/usb/phy/phy-generic.c) even you don't need any operations for
+> >PHY. It will be easy for other platforms.
+>
+> Yes, Roger ask me to modify this fragment. In next version it will look like:
+>         cdns->phy = devm_phy_get(dev, "cdns3,usbphy");
+>         if (IS_ERR(cdns->phy)) {
+>                 ret = PTR_ERR(cdns->phy);
+>                 if (ret == -ENOSYS || ret == -ENODEV) {
+>                         cdns->phy = NULL;
+>                 } else if (ret == -EPROBE_DEFER) {
+>                         return ret;
+>                 } else {
+>                         dev_err(dev, "no phy found\n");
+>                         goto err0;
+>                 }
+>         }
+>
+>         phy_init(cdns->phy);
+>
+> We are going to use phy driver. I don't know if it correct.
+> I don't have experience in this filed.
+> We need phy initialization but I don't have testing platform now.
+> In most usb drivers I see that there are used usb phy driverd instead phy dirverd.
+>
+
+At my CDNS3 platform, there are some USB PHY initialization for register setting
+and clock enable. You could add generic PHY driver under: drivers/phy/cadence/.
+
+Above PHY initialization code is OK for me.
+
+
+> >> +static void __exit cdns3_driver_platform_unregister(void)
+> >> +{
+> >> +       platform_driver_unregister(&cdns3_driver);
+> >> +}
+> >> +module_exit(cdns3_driver_platform_unregister);
+> >> +
+> >> +MODULE_ALIAS("platform:cdns3");
+> >> +MODULE_AUTHOR("Pawel Laszczak <pawell@cadence.com>");
+> >> +MODULE_LICENSE("GPL v2");
+> >> +MODULE_DESCRIPTION("Cadence USB3 DRD Controller Driver");
+> >> diff --git a/drivers/usb/cdns3/core.h b/drivers/usb/cdns3/core.h
+> >> new file mode 100644
+> >> index 000000000000..7c8204fe4d3d
+> >> --- /dev/null
+> >> +++ b/drivers/usb/cdns3/core.h
+> >> @@ -0,0 +1,100 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0 */
+> >> +/*
+> >> + * Cadence USBSS DRD Driver.
+> >> + *
+> >
+> >Header file
+> I don't understand. What is wrong ?
+> >
+
+The comment for this file
+
+Cadence USBSS DRD Core Header File
+
+Peter
