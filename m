@@ -1,60 +1,53 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v3 1/3] usb: chipidea: imx: support configuring for
- active low oc signal
-Date: Tue, 4 Dec 2018 14:39:56 +0100
-Message-ID: <20181204133956.54qe44fwcbfw46s3@pengutronix.de>
-References: <20181204083131.12524-1-u.kleine-koenig@pengutronix.de>
- <20181204083131.12524-2-u.kleine-koenig@pengutronix.de>
- <ce751026-d61f-400e-cb5d-abd9d45dc05f@i2se.com>
- <20181204085250.o4vaviz7ta43zpfo@pengutronix.de>
- <05dbcf6d-1551-31b4-4c9b-fb713fc71362@i2se.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <05dbcf6d-1551-31b4-4c9b-fb713fc71362@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Peter Chen <Peter.Chen@nxp.com>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, linux-usb@vger.kernel.org, Matthew Starr <mstarr@hedonline.com>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v1] spi: npcm: Modify pspi send function
+Date: Tue,  4 Dec 2018 15:40:35 +0200
+Message-ID: <20181204134035.124079-1-tmaimon77@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, yuenn@google.com, venture@google.com, brendanhiggins@google.com, avifishman70@gmail.com, joel@jms.id.au
+Cc: linux-spi@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Align pspi send function code with the recieve function
+code, Also simplify the code a bit with early return.
 
-On Tue, Dec 04, 2018 at 12:43:21PM +0100, Stefan Wahren wrote:
-> Am 04.12.18 um 09:52 schrieb Uwe Kleine-K=F6nig:
-> > But for the review you are right, I added the dt people to Cc for them
-> > to comment. In v2 Matthew also noted that he would prefer to handle the
-> > situation when both over-current-active-low and over-current-active-high
-> > were given differently. I think we don't need that as this is a case of
-> > "broken dt" and it doesn't matter much what is done then. (With my patch
-> > we're configuring for active high in that case.) A feedback here would
-> > be great, too.
-> =
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ drivers/spi/spi-npcm-pspi.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-> AFAIR such invalid settings should be catched with a proper error
-> message and abort of the probing.
-
-I remember a review commend from Rob[1]: "It is not really the kernel's
-job to validate crap in bindings. If you put [strange things] in your
-DT, then the kernel may or may not handle that."
-
-If this applies here, too, the current patches are fine.
-
-Best regards
-Uwe
-
-[1] https://patchwork.kernel.org/patch/8776441/
-
--- =
-
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+diff --git a/drivers/spi/spi-npcm-pspi.c b/drivers/spi/spi-npcm-pspi.c
+index dda91c19af93..e1dca79b9090 100644
+--- a/drivers/spi/spi-npcm-pspi.c
++++ b/drivers/spi/spi-npcm-pspi.c
+@@ -199,14 +199,22 @@ static void npcm_pspi_send(struct npcm_pspi *priv)
+ 	wsize = min(bytes_per_word(priv->bits_per_word), priv->tx_bytes);
+ 	priv->tx_bytes -= wsize;
+ 
+-	if (priv->tx_buf) {
+-		if (wsize == 1)
+-			iowrite8(*priv->tx_buf, NPCM_PSPI_DATA + priv->base);
+-		if (wsize == 2)
+-			iowrite16(*priv->tx_buf, NPCM_PSPI_DATA + priv->base);
++	if (!priv->tx_buf)
++		return;
+ 
+-		priv->tx_buf += wsize;
++	switch (wsize) {
++	case 1:
++		iowrite8(*priv->tx_buf, NPCM_PSPI_DATA + priv->base);
++		break;
++	case 2:
++		iowrite16(*priv->tx_buf, NPCM_PSPI_DATA + priv->base);
++		break;
++	default:
++		WARN_ON_ONCE(1);
++		return;
+ 	}
++
++	priv->tx_buf += wsize;
+ }
+ 
+ static void npcm_pspi_recv(struct npcm_pspi *priv)
+-- 
+2.14.1
