@@ -1,51 +1,53 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 07/14] clock: milbeaut: Add Milbeaut M10V clock control
-Date: Tue, 04 Dec 2018 10:15:41 -0800
-Message-ID: <154394734173.88331.18352656286616172689@swboyd.mtv.corp.google.com>
-References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
- <1542589274-13878-8-git-send-email-sugaya.taichi@socionext.com>
- <154356669840.88331.4455990896653868594@swboyd.mtv.corp.google.com>
- <298cd5a5-66cf-0936-405e-59bcc7c396ed@socionext.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v3 2/8] drm/msm/dsi: 28nm 8960 PHY: Get ref clock from the DT
+Date: Tue, 04 Dec 2018 10:26:47 -0800
+Message-ID: <154394800757.88331.14079790416847469573@swboyd.mtv.corp.google.com>
+References: <20181201005254.139908-1-mka@chromium.org>
+ <20181201005254.139908-3-mka@chromium.org>
+ <154394184065.88331.4558186365546696323@swboyd.mtv.corp.google.com>
+ <20181204173549.GB14307@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <298cd5a5-66cf-0936-405e-59bcc7c396ed@socionext.com>
+In-Reply-To: <20181204173549.GB14307@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Sugaya, Taichi" <sugaya.taichi@socionext.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Airlie <airlied@linux.ie>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Archit Taneja <architt@codeaurora.org>, Sean Paul <seanpaul@chromium.org>, Rajesh Yadav <ryadav@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Jeykumar Sankaran <jsanka@codeaurora.org>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Sugaya, Taichi (2018-12-04 00:26:16)
-> On 2018/11/30 17:31, Stephen Boyd wrote:
-> > Quoting Sugaya Taichi (2018-11-18 17:01:12)
-> >> +void __init m10v_clk_mux_setup(struct device_node *node)
-> >> +{
-> >> +       const char *clk_name =3D node->name;
-> >> +       struct clk_init_data init;
-> >> +       const char **parent_names;
-> >> +       struct m10v_mux *mcm;
-> >> +       struct clk *clk;
-> >> +       int i, parents;
-> >> +
-> >> +       if (!m10v_clk_iomap())
-> >> +               return;
-> >> +
-> >> +       of_property_read_string(node, "clock-output-names", &clk_name);
-> >> +
-> >> +       parents =3D of_clk_get_parent_count(node);
-> >> +       if (parents < 2) {
-> >> +               pr_err("%s: not a mux\n", clk_name);
+Quoting Matthias Kaehlcke (2018-12-04 09:35:49)
+> On Tue, Dec 04, 2018 at 08:44:00AM -0800, Stephen Boyd wrote:
+> > Quoting Matthias Kaehlcke (2018-11-30 16:52:48)
+> > > +
+> > >         /* custom byte clock divider */
+> > >         struct clk_bytediv *bytediv;
+> > >  =
+
+> > > @@ -125,7 +127,10 @@ static int dsi_pll_28nm_clk_set_rate(struct clk_=
+hw *hw, unsigned long rate,
+> > >         DBG("rate=3D%lu, parent's=3D%lu", rate, parent_rate);
+> > >  =
+
+> > >         temp =3D rate / 10;
+> > > -       val =3D VCO_REF_CLK_RATE / 10;
+> > > +       if (parent_rate)
+> > > +               val =3D parent_rate / 10;
+> > > +       else
+> > > +               val =3D VCO_REF_CLK_DEFAULT_RATE / 10;
 > > =
 
-> > How is this possible?
+> > Is the clk not properly hooked up to a parent sometimes so parent_rate
+> > is 0? That sounds odd given the fact that it used to be 'pxo' and that
+> > has always existed on the system as 27 MHz. So I'd remove this and just
+> > use parent_rate all the time.
 > =
 
-> When the node has more than 1 clks...
-> Or I am misunderstanding your question?
+> I wondered about this, but since I don't have hardware for testing I
+> kept the previous hardcoded rate. If we know for sure that 'pxo'
+> always exists it should indeed be fine to use the parent rate.
 
-This looks like code that's checking DT for correctness. We don't
-typically do that in the kernel because the kernel isn't a DT validator.
-That's all I'm saying. I think this comment is not useful if the driver
-design is done to specify parent linkages in C code instead of DT, so
-don't worry about this too much.
+Yes we know for sure. The 'pxo' board clk is there on apq8064 dtsi file
+which seems to be the only place this is used. The pxo_board clk is sent
+through a 'pxo' clk that's created in drivers/clk/qcom/common.c
+qcom_cc_register_board_clk().
