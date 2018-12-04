@@ -1,106 +1,121 @@
-From: Patrice CHOTARD <patrice.chotard@st.com>
-Subject: Re: [PATCH v2 29/34] dt-bindings: arm: Convert ST STi board/soc
+From: <Nicolas.Ferre@microchip.com>
+Subject: Re: [PATCH v2 15/34] dt-bindings: arm: Convert Atmel board/soc
  bindings to json-schema
-Date: Tue, 4 Dec 2018 08:10:52 +0000
-Message-ID: <158f1163-3489-3a02-3a37-0ef54148ac59@st.com>
+Date: Tue, 4 Dec 2018 08:12:39 +0000
+Message-ID: <61c52081-7d6d-4de3-81a6-1cd074ac9adc@microchip.com>
 References: <20181203213223.16986-1-robh@kernel.org>
- <20181203213223.16986-30-robh@kernel.org>
+ <20181203213223.16986-16-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181203213223.16986-30-robh@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181203213223.16986-16-robh@kernel.org>
 Content-Language: en-US
-Content-ID: <C6D86D7874CABE4FAA6CEA8DA4BD5091@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kumar Gala <kumar.gala@linaro.org>, "arm@kernel.org" <arm@kernel.org>, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@arm.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-ID: <06A52C3C66949A4CB61A5B451EA0F0DE@namprd11.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: darknighte@darknighte.com, frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, grant.likely@arm.com, kumar.gala@linaro.org, arm@kernel.org, mark.rutland@arm.com, alexandre.belloni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob
-
-On 12/3/18 10:32 PM, Rob Herring wrote:
-> Convert ST STi SoC bindings to DT schema format using json-schema.
-> 
-> Cc: Patrice Chotard <patrice.chotard@st.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/arm/sti.txt | 23 -------------------
->  .../devicetree/bindings/arm/sti.yaml          | 23 +++++++++++++++++++
->  2 files changed, 23 insertions(+), 23 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/sti.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/sti.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/sti.txt b/Documentation/devicetree/bindings/arm/sti.txt
-> deleted file mode 100644
-> index 8d27f6b084c7..000000000000
-> --- a/Documentation/devicetree/bindings/arm/sti.txt
-> +++ /dev/null
-> @@ -1,23 +0,0 @@
-> -ST STi Platforms Device Tree Bindings
-> ----------------------------------------
-> -
-> -Boards with the ST STiH415 SoC shall have the following properties:
-> -Required root node property:
-> -compatible = "st,stih415";
-> -
-> -Boards with the ST STiH416 SoC shall have the following properties:
-> -Required root node property:
-> -compatible = "st,stih416";
-> -
-> -Boards with the ST STiH407 SoC shall have the following properties:
-> -Required root node property:
-> -compatible = "st,stih407";
-> -
-> -Boards with the ST STiH410 SoC shall have the following properties:
-> -Required root node property:
-> -compatible = "st,stih410";
-> -
-> -Boards with the ST STiH418 SoC shall have the following properties:
-> -Required root node property:
-> -compatible = "st,stih418";
-> -
-> diff --git a/Documentation/devicetree/bindings/arm/sti.yaml b/Documentation/devicetree/bindings/arm/sti.yaml
-> new file mode 100644
-> index 000000000000..47f9b8eebaa0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/sti.yaml
-> @@ -0,0 +1,23 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/sti.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ST STi Platforms Device Tree Bindings
-> +
-> +maintainers:
-> +  - Patrice Chotard <patrice.chotard@st.com>
-> +
-> +properties:
-> +  $nodename:
-> +    const: '/'
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - st,stih415
-> +          - st,stih416
-> +          - st,stih407
-> +          - st,stih410
-> +          - st,stih418
-> +...
-> 
-
-Acked-by: Patrice Chotard <patrice.chotard@st.com>
-
-Thanks
+T24gMDMvMTIvMjAxOCBhdCAyMjozMiwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IENvbnZlcnQgQXRt
+ZWwgU29DIGJpbmRpbmdzIHRvIERUIHNjaGVtYSBmb3JtYXQgdXNpbmcganNvbi1zY2hlbWEuDQo+
+IA0KPiBDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4NCj4gQ2M6IE5pY29s
+YXMgRmVycmUgPG5pY29sYXMuZmVycmVAbWljcm9jaGlwLmNvbT4NCg0KSSdtIGxpc3RlZCBoZXJl
+Li4uDQoNCj4gQ2M6IEFsZXhhbmRyZSBCZWxsb25pIDxhbGV4YW5kcmUuYmVsbG9uaUBib290bGlu
+LmNvbT4NCg0KUHJvcGVyIGVtYWlsIGFkZHJlc3MgaGVyZS4uLg0KDQoNCj4gQ2M6IGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnDQo+IENjOiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
+ZC5vcmcNCj4gU2lnbmVkLW9mZi1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4g
+LS0tDQo+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2F0bWVsLWF0OTEudHh0ICAgIHwg
+IDcyIC0tLS0tLS0tLS0NCj4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYXRtZWwtYXQ5
+MS55YW1sICAgfCAxMzMgKysrKysrKysrKysrKysrKysrDQo+ICAgMiBmaWxlcyBjaGFuZ2VkLCAx
+MzMgaW5zZXJ0aW9ucygrKSwgNzIgZGVsZXRpb25zKC0pDQo+ICAgZGVsZXRlIG1vZGUgMTAwNjQ0
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYXRtZWwtYXQ5MS50eHQNCj4g
+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Fy
+bS9hdG1lbC1hdDkxLnlhbWwNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvYXJtL2F0bWVsLWF0OTEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2FybS9hdG1lbC1hdDkxLnR4dA0KPiBkZWxldGVkIGZpbGUgbW9kZSAxMDA2
+NDQNCj4gaW5kZXggNGJmMWI0ZGE3NjU5Li4wMDAwMDAwMDAwMDANCj4gLS0tIGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9hdG1lbC1hdDkxLnR4dA0KPiArKysgL2Rldi9u
+dWxsDQo+IEBAIC0xLDcyICswLDAgQEANCj4gLUF0bWVsIEFUOTEgZGV2aWNlIHRyZWUgYmluZGlu
+Z3MuDQo+IC09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KDQpbLi5dDQoNCj4gZGlm
+ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYXRtZWwtYXQ5
+MS55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9hdG1lbC1hdDkx
+LnlhbWwNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAwLi4xOTQz
+MWY1OGI5MDYNCj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvYXJtL2F0bWVsLWF0OTEueWFtbA0KPiBAQCAtMCwwICsxLDEzMyBAQA0KPiAr
+IyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiArJVlBTUwgMS4yDQo+ICstLS0N
+Cj4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvYXJtL2F0bWVsLWF0OTEueWFt
+bCMNCj4gKyRzY2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55
+YW1sIw0KPiArDQo+ICt0aXRsZTogQXRtZWwgQVQ5MSBkZXZpY2UgdHJlZSBiaW5kaW5ncy4NCj4g
+Kw0KPiArbWFpbnRhaW5lcnM6DQo+ICsgIC0gQWxleGFuZHJlIEJlbGxvbmkgPGFsZXhhbmRyZS5i
+ZWxsb25pQGZyZWUtZWxlY3Ryb25zLmNvbT4NCj4gKyAgLSBMdWRvdmljIERlc3JvY2hlcyA8bHVk
+b3ZpYy5kZXNyb2NoZXNAYXRtZWwuY29tPg0KDQouLi4gYW5kIHNvcnJ5IGJ1dCBpdCdzIG5vdCBj
+b3JyZWN0IGp1c3QgYWJvdmUgXl5eDQotIHdyb25nIEx1ZG92aWMncyBlbWFpbCBhZGRyZXNzDQot
+IHdyb25nIEFsZXhhbmRlcidzIGVtYWlsIGFkZHJlc3MNCi0gYW5kIEknbSBub3QgcGFydCBvZiB0
+aGUgZ2FtZSBhbnltb3JlLi4uDQoNClNvIGFjdHVhbGx5IG91ciBNQUlOVEFJTkVSJ3MgZW50cnkg
+aXMgdXAtdG8tZGF0ZTogcGxlYXNlIHVzZSBpdC4NCg0KDQo+ICtkZXNjcmlwdGlvbjogfA0KPiAr
+ICBCb2FyZHMgd2l0aCBhIFNvQyBvZiB0aGUgQXRtZWwgQVQ5MSBvciBTTUFSVCBmYW1pbHkgc2hh
+bGwgaGF2ZSB0aGUgZm9sbG93aW5nDQo+ICsNCj4gK3Byb3BlcnRpZXM6DQo+ICsgICRub2RlbmFt
+ZToNCj4gKyAgICBjb25zdDogJy8nDQo+ICsgIGNvbXBhdGlibGU6DQo+ICsgICAgb25lT2Y6DQo+
+ICsgICAgICAtIGl0ZW1zOg0KPiArICAgICAgICAgIC0gY29uc3Q6IGF0bWVsLGF0OTFybTkyMDAN
+Cj4gKyAgICAgIC0gaXRlbXM6DQo+ICsgICAgICAgICAgLSBlbnVtOg0KPiArICAgICAgICAgICAg
+ICAtIG9saW1leCxzYW05LWw5MjYwDQo+ICsgICAgICAgICAgLSBlbnVtOg0KPiArICAgICAgICAg
+ICAgICAtIGF0bWVsLGF0OTFzYW05MjYwDQo+ICsgICAgICAgICAgICAgIC0gYXRtZWwsYXQ5MXNh
+bTkyNjENCj4gKyAgICAgICAgICAgICAgLSBhdG1lbCxhdDkxc2FtOTI2Mw0KPiArICAgICAgICAg
+ICAgICAtIGF0bWVsLGF0OTFzYW05ZzIwDQo+ICsgICAgICAgICAgICAgIC0gYXRtZWwsYXQ5MXNh
+bTlnNDUNCj4gKyAgICAgICAgICAgICAgLSBhdG1lbCxhdDkxc2FtOW4xMg0KPiArICAgICAgICAg
+ICAgICAtIGF0bWVsLGF0OTFzYW05cmwNCj4gKyAgICAgICAgICAgICAgLSBhdG1lbCxhdDkxc2Ft
+OXhlDQo+ICsgICAgICAgICAgLSBjb25zdDogYXRtZWwsYXQ5MXNhbTkNCj4gKw0KPiArICAgICAg
+LSBpdGVtczoNCj4gKyAgICAgICAgICAtIGVudW06DQo+ICsgICAgICAgICAgICAgIC0gYXRtZWws
+YXQ5MXNhbTlnMTUNCj4gKyAgICAgICAgICAgICAgLSBhdG1lbCxhdDkxc2FtOWcyNQ0KPiArICAg
+ICAgICAgICAgICAtIGF0bWVsLGF0OTFzYW05ZzM1DQo+ICsgICAgICAgICAgICAgIC0gYXRtZWws
+YXQ5MXNhbTl4MjUNCj4gKyAgICAgICAgICAgICAgLSBhdG1lbCxhdDkxc2FtOXgzNQ0KPiArICAg
+ICAgICAgIC0gY29uc3Q6IGF0bWVsLGF0OTFzYW05eDUNCj4gKyAgICAgICAgICAtIGNvbnN0OiBh
+dG1lbCxhdDkxc2FtOQ0KPiArDQo+ICsgICAgICAtIGl0ZW1zOg0KPiArICAgICAgICAgIC0gY29u
+c3Q6IGF0bWVsLHNhbWE1ZDI3DQo+ICsgICAgICAgICAgLSBjb25zdDogYXRtZWwsc2FtYTVkMg0K
+PiArICAgICAgICAgIC0gY29uc3Q6IGF0bWVsLHNhbWE1DQo+ICsNCj4gKyAgICAgIC0gZGVzY3Jp
+cHRpb246IE5hdHRpcyB2MiBib2FyZCB3aXRoIE5hdHRlIHYyIHBvd2VyIGJvYXJkDQo+ICsgICAg
+ICAgIGl0ZW1zOg0KPiArICAgICAgICAgIC0gY29uc3Q6IGF4ZW50aWEsbmF0dGlzLTINCj4gKyAg
+ICAgICAgICAtIGNvbnN0OiBheGVudGlhLG5hdHRlLTINCj4gKyAgICAgICAgICAtIGNvbnN0OiBh
+eGVudGlhLGxpbmVhDQo+ICsgICAgICAgICAgLSBjb25zdDogYXRtZWwsc2FtYTVkMzENCj4gKyAg
+ICAgICAgICAtIGNvbnN0OiBhdG1lbCxzYW1hNWQzDQo+ICsgICAgICAgICAgLSBjb25zdDogYXRt
+ZWwsc2FtYTUNCj4gKw0KPiArICAgICAgLSBkZXNjcmlwdGlvbjogVFNFLTg1MCB2MyBib2FyZA0K
+PiArICAgICAgICBpdGVtczoNCj4gKyAgICAgICAgICAtIGNvbnN0OiBheGVudGlhLHRzZTg1MHYz
+DQo+ICsgICAgICAgICAgLSBjb25zdDogYXhlbnRpYSxsaW5lYQ0KPiArICAgICAgICAgIC0gY29u
+c3Q6IGF0bWVsLHNhbWE1ZDMxDQo+ICsgICAgICAgICAgLSBjb25zdDogYXRtZWwsc2FtYTVkMw0K
+PiArICAgICAgICAgIC0gY29uc3Q6IGF0bWVsLHNhbWE1DQo+ICsNCj4gKyAgICAgIC0gaXRlbXM6
+DQo+ICsgICAgICAgICAgLSBjb25zdDogYXhlbnRpYSxsaW5lYQ0KPiArICAgICAgICAgIC0gY29u
+c3Q6IGF0bWVsLHNhbWE1ZDMxDQo+ICsgICAgICAgICAgLSBjb25zdDogYXRtZWwsc2FtYTVkMw0K
+PiArICAgICAgICAgIC0gY29uc3Q6IGF0bWVsLHNhbWE1DQo+ICsNCj4gKyAgICAgIC0gaXRlbXM6
+DQo+ICsgICAgICAgICAgLSBlbnVtOg0KPiArICAgICAgICAgICAgICAtIGF0bWVsLHNhbWE1ZDMx
+DQo+ICsgICAgICAgICAgICAgIC0gYXRtZWwsc2FtYTVkMzMNCj4gKyAgICAgICAgICAgICAgLSBh
+dG1lbCxzYW1hNWQzNA0KPiArICAgICAgICAgICAgICAtIGF0bWVsLHNhbWE1ZDM1DQo+ICsgICAg
+ICAgICAgICAgIC0gYXRtZWwsc2FtYTVkMzYNCj4gKyAgICAgICAgICAtIGNvbnN0OiBhdG1lbCxz
+YW1hNWQzDQo+ICsgICAgICAgICAgLSBjb25zdDogYXRtZWwsc2FtYTUNCj4gKw0KPiArICAgICAg
+LSBpdGVtczoNCj4gKyAgICAgICAgICAtIGVudW06DQo+ICsgICAgICAgICAgICAgIC0gYXRtZWws
+c2FtYTVkNDENCj4gKyAgICAgICAgICAgICAgLSBhdG1lbCxzYW1hNWQ0Mg0KPiArICAgICAgICAg
+ICAgICAtIGF0bWVsLHNhbWE1ZDQzDQo+ICsgICAgICAgICAgICAgIC0gYXRtZWwsc2FtYTVkNDQN
+Cj4gKyAgICAgICAgICAtIGNvbnN0OiBhdG1lbCxzYW1hNWQ0DQo+ICsgICAgICAgICAgLSBjb25z
+dDogYXRtZWwsc2FtYTUNCj4gKw0KPiArICAgICAgLSBpdGVtczoNCj4gKyAgICAgICAgICAtIGVu
+dW06DQo+ICsgICAgICAgICAgICAgIC0gYXRtZWwsc2FtczcwajE5DQo+ICsgICAgICAgICAgICAg
+IC0gYXRtZWwsc2FtczcwajIwDQo+ICsgICAgICAgICAgICAgIC0gYXRtZWwsc2FtczcwajIxDQo+
+ICsgICAgICAgICAgICAgIC0gYXRtZWwsc2FtczcwbjE5DQo+ICsgICAgICAgICAgICAgIC0gYXRt
+ZWwsc2FtczcwbjIwDQo+ICsgICAgICAgICAgICAgIC0gYXRtZWwsc2FtczcwbjIxDQo+ICsgICAg
+ICAgICAgICAgIC0gYXRtZWwsc2FtczcwcTE5DQo+ICsgICAgICAgICAgICAgIC0gYXRtZWwsc2Ft
+czcwcTIwDQo+ICsgICAgICAgICAgICAgIC0gYXRtZWwsc2FtczcwcTIxDQo+ICsgICAgICAgICAg
+LSBjb25zdDogYXRtZWwsc2FtczcwDQo+ICsgICAgICAgICAgLSBjb25zdDogYXRtZWwsc2FtdjcN
+Cj4gKw0KPiArICAgICAgLSBpdGVtczoNCj4gKyAgICAgICAgICAtIGVudW06DQo+ICsgICAgICAg
+ICAgICAgIC0gYXRtZWwsc2FtdjcwajE5DQo+ICsgICAgICAgICAgICAgIC0gYXRtZWwsc2Ftdjcw
+ajIwDQo+ICsgICAgICAgICAgICAgIC0gYXRtZWwsc2FtdjcwbjE5DQo+ICsgICAgICAgICAgICAg
+IC0gYXRtZWwsc2FtdjcwbjIwDQo+ICsgICAgICAgICAgICAgIC0gYXRtZWwsc2FtdjcwcTE5DQo+
+ICsgICAgICAgICAgICAgIC0gYXRtZWwsc2FtdjcwcTIwDQo+ICsgICAgICAgICAgLSBjb25zdDog
+YXRtZWwsc2FtdjcwDQo+ICsgICAgICAgICAgLSBjb25zdDogYXRtZWwsc2FtdjcNCj4gKw0KPiAr
+ICAgICAgLSBpdGVtczoNCj4gKyAgICAgICAgICAtIGVudW06DQo+ICsgICAgICAgICAgICAgIC0g
+YXRtZWwsc2FtdjcxajE5DQo+ICsgICAgICAgICAgICAgIC0gYXRtZWwsc2FtdjcxajIwDQo+ICsg
+ICAgICAgICAgICAgIC0gYXRtZWwsc2FtdjcxajIxDQo+ICsgICAgICAgICAgICAgIC0gYXRtZWws
+c2FtdjcxbjE5DQo+ICsgICAgICAgICAgICAgIC0gYXRtZWwsc2FtdjcxbjIwDQo+ICsgICAgICAg
+ICAgICAgIC0gYXRtZWwsc2FtdjcxbjIxDQo+ICsgICAgICAgICAgICAgIC0gYXRtZWwsc2Ftdjcx
+cTE5DQo+ICsgICAgICAgICAgICAgIC0gYXRtZWwsc2FtdjcxcTIwDQo+ICsgICAgICAgICAgICAg
+IC0gYXRtZWwsc2FtdjcxcTIxDQo+ICsgICAgICAgICAgLSBjb25zdDogYXRtZWwsc2FtdjcxDQo+
+ICsgICAgICAgICAgLSBjb25zdDogYXRtZWwsc2FtdjcNCj4gKw0KPiArLi4uDQo+IA0KDQoNCi0t
+IA0KTmljb2xhcyBGZXJyZQ0K
