@@ -1,57 +1,66 @@
-From: Juri Lelli <juri.lelli@redhat.com>
-Subject: Re: [RFT PATCH v1 3/4] cpu-topology: Move cpu topology code to
- common code.
-Date: Tue, 4 Dec 2018 10:50:43 +0100
-Message-ID: <20181204095043.GD23553@localhost.localdomain>
-References: <1543534100-3654-1-git-send-email-atish.patra@wdc.com>
- <1543534100-3654-4-git-send-email-atish.patra@wdc.com>
- <20181203165833.GA27796@arm.com>
- <20181203171223.GD17883@e107155-lin>
+From: <Andrei.Stefanescu@microchip.com>
+Subject: [PATCH v3 0/3] add support for MCP16502 PMIC
+Date: Tue, 4 Dec 2018 09:52:24 +0000
+Message-ID: <1543917126-32572-1-git-send-email-andrei.stefanescu@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181203171223.GD17883@e107155-lin>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Dmitriy Cherkasov <dmitriy@oss-tech.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Palmer Dabbelt <palmer@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Rafael J. Wys
+To: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, Nicolas.Ferre@microchip.com, Cristian.Birsan@microchip.com, Claudiu.Beznea@microchip.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrei.Stefanescu@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+MCP16502 is a Power Management IC from Microchip.
+It has 4 Buck outputs and 2 LDOs. The buck regulators
+can be used in two modes: normal(FPWM) and low-power(Auto PFM).
 
-On 03/12/18 17:12, Sudeep Holla wrote:
-> (Fixed Juri Lelli's email)
-> 
-> On Mon, Dec 03, 2018 at 04:58:34PM +0000, Will Deacon wrote:
-> > On Thu, Nov 29, 2018 at 03:28:19PM -0800, Atish Patra wrote:
-> > > Both RISC-V & ARM64 are using cpu-map device tree to describe
-> > > their cpu topology. It's better to move the relevant code to
-> > > a common place instead of duplicate code.
-> > >
-> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > > ---
-> > >  arch/arm64/include/asm/topology.h |  22 ---
-> > >  arch/arm64/kernel/topology.c      | 303 +-------------------------------------
-> > >  drivers/base/arch_topology.c      | 294 ++++++++++++++++++++++++++++++++++++
-> >
-> > Whilst I'm happy seeing this code moved out, I'd like to have an entry in
-> > MAINTAINERS so that somebody can review changes from the arm64 side without
-> > having to poll a load of different lists. I assume patches would still go
-> > via Rafael and Greg, but if we could have Sudeep added as Reviewer for this
-> > file, then I'd really appreciate it.
-> >
-> 
-> Thanks Will for pointing this. I agree with you and like to be added as
-> reviewer for this.
-> 
-> Since arch_topology.c was mostly added for ARM/ARM64 and by Juri Lelli 
-> (who is no longer with ARM) and I did review the initial version, I would
-> like to assume maintenance for this file if both Juri and Greg are OK
-> with it so that I can keep an eye on this as we expect more changes to
-> this both for ARM and RISC-V.
+This patch series adds support for the MCP16502 PMIC.
 
-Sure, this is OK with me. Thanks for keeping an eye on this.
+v3:
+- use CONFIG_SUSPEND and CONFIG_PM to fix compile errors for some configs
 
-Best,
+v2:
+- use lpm-gpios instead of lpm-gpio in devicetree bindings documentation
+- describe the regulators present on the PMIC in the devicetree bindings
+  documentation
+- add SPDX license inside a C++ comment
+- prefix macro
+- remove mcp16502_update_regulator and mcp16502_read
+- replace ?: with if-else
+- change some if-else with switch statements for legibility
+- use regmap helpers for regultor settings during runtime
+- make mcp16502_get_status read the status from the PMIC STS registers
+- use module_i2c_driver
+- use the PMIC's Hibernate registers for suspend-to-mem, the PMIC's
+  Low-power registers for standby and the PMIC's Active registers for
+  normal runtime
 
-- Juri
+Note about mcp16502_suspend:
+- mcp16502_gpio_set_mode(mcp, MCP16502_OPMODE_HIB) has now been changed to
+  mcp16502_gpio_set_mode(mcp, MCP16502_OPMODE_LPM) for legibility.
+
+Note that the function call only sets the LPM pin of the PMIC to high.
+This puts the PMIC in Low-power operating mode. Hibernate operating mode
+is reached when the MPU sets the PWRHLD line to zero (typically when
+entering suspend-to-ram).
+
+Andrei Stefanescu (3):
+  regulator: dt-bindings: add MCP16502 regulator bindings
+  MAINTAINERS: add maintainer for MCP16502 PMIC driver
+  regulator: mcp16502: add regulator driver for MCP16502
+
+ .../bindings/regulator/mcp16502-regulator.txt      | 143 ++++++
+ MAINTAINERS                                        |   7 +
+ drivers/regulator/Kconfig                          |   9 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/mcp16502.c                       | 555 +++++++++++++++++=
+++++
+ 5 files changed, 715 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mcp16502-re=
+gulator.txt
+ create mode 100644 drivers/regulator/mcp16502.c
+
+--=20
+2.7.4
