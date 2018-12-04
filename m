@@ -1,68 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH v2 03/15] dt-bindings: add binding for USBSS-DRD
- controller.
-Date: Tue, 4 Dec 2018 16:41:58 -0600
-Message-ID: <20181204224158.GA29726@bogus>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
- <1542535751-16079-4-git-send-email-pawell@cadence.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH v4 0/8] drm/msm/dsi: Get PHY ref clocks from the DT
+Date: Tue,  4 Dec 2018 14:42:26 -0800
+Message-ID: <20181204224234.62619-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1542535751-16079-4-git-send-email-pawell@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>
-Cc: devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, adouglas@cadence.com, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
+To: Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Archit Taneja <architt@codeaurora.org>, Sean Paul <seanpaul@chromium.org>, Rajesh Yadav <ryadav@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Jeykumar Sankaran <jsanka@codeaurora.org>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 18, 2018 at 10:08:59AM +0000, Pawel Laszczak wrote:
-> Thsi patch aim at documenting USB related dt-bindings for the
+The MSM DSI PHY drivers currently hardcode the name and the rate of
+the PHY ref clock. Get the ref clock from the device tree instead.
 
-typo
+Note: testing of this series was limited to SDM845 and the 10nm PHY
 
-> Cadence USBSS-DRD controller.
-> 
-> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
-> ---
->  .../devicetree/bindings/usb/cdns3-usb.txt       | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/cdns3-usb.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/cdns3-usb.txt b/Documentation/devicetree/bindings/usb/cdns3-usb.txt
-> new file mode 100644
-> index 000000000000..f9e953f32d47
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/cdns3-usb.txt
-> @@ -0,0 +1,17 @@
-> +Binding for the Cadence USBSS-DRD controller
-> +
-> +Required properties:
-> +  - reg: Physical base address and size of the controller's register area.
+Major changes in v4:
+- always use parent rate for 28nm and 28nm 8960 PHYs
 
-1 or 3 regions? If 3, what is each one and the order?
+Major changes in v3:
+- keep supporting DTs without ref clock for the 28nm and the 28nm
+  8960 PHYs
+- added patch to add ref clock to qcom-apq8064.dtsi
 
-> +  - compatible: Should contain: "cdns,usb3"
+Major changes in v2:
+- apply to all MSM DSI PHY drivers, not only 10nm
 
-Only one version and one set of bugs?
+Matthias Kaehlcke (8):
+  dt-bindings: msm/dsi: Add ref clock for PHYs
+  drm/msm/dsi: 28nm 8960 PHY: Get ref clock from the DT
+  drm/msm/dsi: 28nm PHY: Get ref clock from the DT
+  drm/msm/dsi: 14nm PHY: Get ref clock from the DT
+  drm/msm/dsi: 10nm PHY: Get ref clock from the DT
+  arm64: dts: qcom: msm8916: Set 'xo_board' as ref clock of the DSI PHY
+  arm64: dts: sdm845: Set 'bi_tcxo' as ref clock of the DSI PHYs
+  ARM: dts: qcom-apq8064: Set 'xo_board' as ref clock of the DSI PHY
 
-> +  - interrupts: Interrupt specifier. Refer to interrupt bindings.
+ .../devicetree/bindings/display/msm/dsi.txt   |  1 +
+ arch/arm/boot/dts/qcom-apq8064.dtsi           |  5 +--
+ arch/arm64/boot/dts/qcom/msm8916.dtsi         |  5 +--
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 10 +++---
+ drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c    | 13 ++++++-
+ drivers/gpu/drm/msm/dsi/pll/dsi_pll_14nm.c    | 16 +++++++--
+ drivers/gpu/drm/msm/dsi/pll/dsi_pll_28nm.c    | 36 +++++++++++++------
+ .../gpu/drm/msm/dsi/pll/dsi_pll_28nm_8960.c   | 24 ++++++++++---
+ 8 files changed, 82 insertions(+), 28 deletions(-)
 
-How many interrupts?
-
-> +
-> +
-> +Example:
-> +	cdns3@f3000000 {
-
-usb@...
-
-> +		compatible = "cdns,usb3";
-> +		interrupts = <USB_IRQ  7 IRQ_TYPE_LEVEL_HIGH>;
-> +		reg = <0xf3000000 0x10000	//memory area for OTG/DRD registers
-> +			0xf3010000 0x10000	//memory area for HOST registers
-> +			0xf3020000 0x10000>;	//memory area for Device registers
-> +	};
-> +
-> -- 
-> 2.17.1
-> 
+-- 
+2.20.0.rc1.387.gf8505762e3-goog
