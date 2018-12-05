@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH 5/5] media: dt-bindings: si470x: Document new reset-gpios property
-Date: Wed,  5 Dec 2018 16:47:50 +0100
-Message-ID: <20181205154750.17996-6-pawel.mikolaj.chmiel@gmail.com>
+Subject: [PATCH 2/5] media: dt-bindings: Add binding for si470x radio
+Date: Wed,  5 Dec 2018 16:47:47 +0100
+Message-ID: <20181205154750.17996-3-pawel.mikolaj.chmiel@gmail.com>
 References: <20181205154750.17996-1-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,31 +13,43 @@ To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: hverkuil@xs4all.nl, fischerdouglasc@gmail.com, keescook@chromium.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add information about new reset-gpios property to driver documentation
+Add device tree bindings for si470x family radio receiver driver.
 
 Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
 ---
- Documentation/devicetree/bindings/media/si470x.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/media/si470x.txt      | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/si470x.txt
 
 diff --git a/Documentation/devicetree/bindings/media/si470x.txt b/Documentation/devicetree/bindings/media/si470x.txt
-index 9294fdfd3aae..a9403558362e 100644
---- a/Documentation/devicetree/bindings/media/si470x.txt
+new file mode 100644
+index 000000000000..9294fdfd3aae
+--- /dev/null
 +++ b/Documentation/devicetree/bindings/media/si470x.txt
-@@ -10,6 +10,7 @@ Required Properties:
- 
- Optional Properties:
- - interrupts : The interrupt number
-+- reset-gpios: GPIO specifier for the chips reset line
- 
- Example:
- 
-@@ -20,5 +21,6 @@ Example:
- 
-                 interrupt-parent = <&gpj2>;
-                 interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
-+                reset-gpios = <&gpj2 5 GPIO_ACTIVE_HIGH>;
-         };
- };
+@@ -0,0 +1,24 @@
++* Silicon Labs FM Radio receiver
++
++The Silicon Labs Si470x is family of FM radio receivers with receive power scan
++supporting 76-108 MHz, programmable through an I2C interface.
++Some of them includes an RDS encoder.
++
++Required Properties:
++- compatible: Should contain "silabs,si470x"
++- reg: the I2C address of the device
++
++Optional Properties:
++- interrupts : The interrupt number
++
++Example:
++
++&i2c2 {
++        si470x@63 {
++                compatible = "silabs,si470x";
++                reg = <0x63>;
++
++                interrupt-parent = <&gpj2>;
++                interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
++        };
++};
 -- 
 2.17.1
