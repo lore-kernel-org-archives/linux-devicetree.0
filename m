@@ -1,68 +1,105 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: Moving ARM dts files
-Date: Wed, 5 Dec 2018 22:03:44 +0100
-Message-ID: <CACRpkdbFnPeDeZyHRP5qOuoafDbE1bW9s_zB3EzXu8tb=kKdVA@mail.gmail.com>
-References: <20181204183649.GA5716@bogus>
- <20181205135726.70badac7@xhacker.debian>
- <CACRpkdYs_s9m=fUuOcfqcvP5BMXity5GH17RSMyvHzdZ9aFNzA@mail.gmail.com>
- <CAL_JsqJWnB+EAoXk9a1M_D-kH8kZcwD6gTj0yVa_hBCGapB4RQ@mail.gmail.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: Re: [PATCH v2 01/17] power: supply: olpc_battery: correct the
+ temperature units
+Date: Wed, 5 Dec 2018 22:05:19 +0100
+Message-ID: <20181205210519.gqxbr4c26p3v5i6l@earth.universe>
+References: <20181116162403.49854-1-lkundrak@v3.sk>
+ <20181116162403.49854-2-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqJWnB+EAoXk9a1M_D-kH8kZcwD6gTj0yVa_hBCGapB4RQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre Belloni <alexandre.belloni@bootlin.com>, ext Tony Lindgren <tony@atomide.com>, Liviu Dudau <liviu.dudau@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory Clement <gregory.clement@bootlin.com>, Michal Simek <michal.simek@xilinx.com>, Krzysztof Kozlowski <krzk@kernel.org>, arm-soc <arm@kernel.org>, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Jisheng Zhang <Jisheng.Zhang@synaptics.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Shawn Guo <shawnguo@kerne>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="f765d3e3bg5xlwkb"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181116162403.49854-2-lkundrak@v3.sk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Cameron <quozl@laptop.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, linux-pm@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 5, 2018 at 4:02 PM Rob Herring <robh@kernel.org> wrote:
 
-> We are already use vendors for arm64 (except for the oddball exynos),
-> so if we change arm, we shouldn't do something different. EBBR is also
-> going with vendor for firmware directories in the EFI system
-> partition. Speak up if you want to change that before 1.0.
+--f765d3e3bg5xlwkb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I don't think there is a silver bullet for this, except "use vendor
-or whatever makes most sense", like if in doubt use vendor but
-no need to overspecify. Rough consensus, not perfect consensus.
+Hi,
 
-> All I really care about here is things are organized by maintainers.
-> Someone care to write a script to ensure all 1800 files have a
-> maintainer attached to them (that is not me)?
+On Fri, Nov 16, 2018 at 05:23:47PM +0100, Lubomir Rintel wrote:
+> According to [1] and [2], the temperature values are in tenths of degree
+> Celsius. Exposing the Celsius value makes the battery appear on fire:
+>=20
+>   $ upower -i /org/freedesktop/UPower/devices/battery_olpc_battery
+>   ...
+>       temperature:         236.9 degrees C
+>=20
+> Tested on OLPC XO-1 and OLPC XO-1.75 laptops.
+>=20
+> [1] include/linux/power_supply.h
+> [2] Documentation/power/power_supply_class.txt
+>=20
+> Fixes: fb972873a767 ("[BATTERY] One Laptop Per Child power/battery driver=
+")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+>=20
+> ---
 
-OK why not let the maintainers choose the name of the subdir
-rather than insist to set it to $vendor? Just consistency?
+This is queued to next.
 
-For the stuff I maintain please use:
+-- Sebastian
 
-    'arm-' : 'arm',
-    'integ' : 'arm',
-    've' : 'arm',
+> Changes since v1:
+> - Add Fixes tag and an Ack
+>=20
+>  drivers/power/supply/olpc_battery.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/olpc_battery.c b/drivers/power/supply/o=
+lpc_battery.c
+> index 6da79ae14860..5a97e42a3547 100644
+> --- a/drivers/power/supply/olpc_battery.c
+> +++ b/drivers/power/supply/olpc_battery.c
+> @@ -428,14 +428,14 @@ static int olpc_bat_get_property(struct power_suppl=
+y *psy,
+>  		if (ret)
+>  			return ret;
+> =20
+> -		val->intval =3D (s16)be16_to_cpu(ec_word) * 100 / 256;
+> +		val->intval =3D (s16)be16_to_cpu(ec_word) * 10 / 256;
+>  		break;
+>  	case POWER_SUPPLY_PROP_TEMP_AMBIENT:
+>  		ret =3D olpc_ec_cmd(EC_AMB_TEMP, NULL, 0, (void *)&ec_word, 2);
+>  		if (ret)
+>  			return ret;
+> =20
+> -		val->intval =3D (int)be16_to_cpu(ec_word) * 100 / 256;
+> +		val->intval =3D (int)be16_to_cpu(ec_word) * 10 / 256;
+>  		break;
+>  	case POWER_SUPPLY_PROP_CHARGE_COUNTER:
+>  		ret =3D olpc_ec_cmd(EC_BAT_ACR, NULL, 0, (void *)&ec_word, 2);
+> --=20
+> 2.19.1
+>=20
 
-These are fine.
+--f765d3e3bg5xlwkb
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Drop this
+-----BEGIN PGP SIGNATURE-----
 
--    'gemini' : 'cortina',
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlwIPY8ACgkQ2O7X88g7
++pokYg/+KNB9FZdw0Zt4viGGjHf6+serXADkjfh1W6AW1trDUe7OysxSIOrPxLmo
+TNUyyqfXBjrymOAJfqP1fZ7Uo9UEcxK7max53lxZk0sA8p1SxSEfuN6tCEGkBZeJ
+5E4/JvT+MO7/o5oboJMa6j16JGOSXXmLRHXbUxkU9bG1CLd5ZN7EkZvYzIuq5hY1
+uL9ze2rjM8nKf8UCsFci89Ny4+Lar66SAnDKIWpur6a035vm43u7rj+zVTGlCBGe
+tsKXFEiMyCF03okVpWbNpKcJUHSS4yZhITAw/NJ822QrLTYPJzjC01P2gYqtTKb9
+9K46AxAawNxT4WSovv0KmVYCslyHmbyLN1S65lJRHOdD53746XL5NHQ90PMnM2YK
+hv7SYZV/OezWVob5YpO0VS8czxVsVIZCp7INIcwjgmCwKa0p3OZoh9IkugHR2US2
+SEFVlQDJedAChP4Cxw26aV7XhKwdrGI7QHk/67iANTLzVkBdJnsBI9VklwWDZrol
+/du9th3tBSpM5fjOZGj7i2RDKF7aGlg+kAe371rWyZqgXk3Hawax8VWkCkpNafjI
+KrZHc5Trop22eYlM8cGBdOXCYj4ES8AwoTmMOLHsbTNFwqUq27HIk/LY1BDCe5UT
+yLElmtirf7AAyF1leHRlVXwF5ZHUDtAg+t9YsHwGaeXXARc+56Y=
+=f8nw
+-----END PGP SIGNATURE-----
 
-Just use the "gemini" prefix.
-Because this was three different vendors so let's stick with the
-SoC codename.
-
-And for 'ste' I would use 'st-ericsson' or 'stericsson' (also a valid
-vendor) so it is readable.
-
-It's no super-big deal so if you think my view is just annoying I
-am not going to persist, I will just get over it.
-
-Thanks,
-Linus Walleij
+--f765d3e3bg5xlwkb--
