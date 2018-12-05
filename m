@@ -1,66 +1,137 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 00/15] Cedrus H5 and A64 support with A33
- and H3 updates
-Date: Wed, 5 Dec 2018 17:48:34 +0800
-Message-ID: <CAGb2v64fjKbxET61S7NzTaPGJc7-XUG=Zb87_BOah9xWr5zpvg@mail.gmail.com>
-References: <20181205092444.29497-1-paul.kocialkowski@bootlin.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: Moving ARM dts files
+Date: Wed, 5 Dec 2018 10:48:20 +0100
+Message-ID: <f6c266ad-6279-a8cd-0d77-df5a0f834038@xilinx.com>
+References: <20181204183649.GA5716@bogus>
+ <CAK7LNAQ-O0Xnkb3egp-B8+0hFaeBM_pzn0f0XQJ3+FLgBwNCaQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB755T3QAKGQEVMULHAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181205092444.29497-1-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK7LNAQ-O0Xnkb3egp-B8+0hFaeBM_pzn0f0XQJ3+FLgBwNCaQ@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, gregory.clement@bootlin.com, Michal Simek <michal.simek@xilinx.com>, Krzysztof Kozlowski <krzk@kernel.org>, arm-soc <arm@kernel.org>, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, DTML <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Shawn Guo <shawnguo@kernel.org>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 5, 2018 at 5:25 PM Paul Kocialkowski
-<paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> This series adds support for the Allwinner H5 and A64 platforms to the
-> cedrus stateless video codec driver, with minor updates to the A33 and
-> H3 platforms.
->
-> It requires changes to the SRAM driver bindings and driver, to properly
-> support the H5 and the A64 C1 SRAM section. Because a H5-specific
-> system-control node is introduced, the dummy syscon node that was shared
-> between the H3 and H5 is removed in favor of each platform-specific node.
-> A few fixes are included to ensure that the EMAC clock configuration
-> register is still accessible through the sunxi SRAM driver (instead of the
-> dummy syscon node, that was there for this purpose) on the H3 and H5.
->
-> The reserved memory nodes for the A33 and H3 are also removed in this
-> series, since they are not actually necessary.
->
-> Changes since v1:
-> * Removed the reserved-memory nodes for the A64 and H5;
-> * Removed the reserved-memory nodes for the A33 and H3;
-> * Corrected the SRAM bases and sizes to the best of our knowledge;
-> * Dropped cosmetic dt changes already included in the sunxi tree.
->
-> Paul Kocialkowski (15):
->   ARM: dts: sun8i: h3: Fix the system-control register range
->   ARM: dts: sun8i: a33: Remove unnecessary reserved memory node
->   ARM: dts: sun8i: h3: Remove unnecessary reserved memory node
->   soc: sunxi: sram: Enable EMAC clock access for H3 variant
->   dt-bindings: sram: sunxi: Add bindings for the H5 with SRAM C1
->   soc: sunxi: sram: Add support for the H5 SoC system control
->   arm64: dts: allwinner: h5: Add system-control node with SRAM C1
->   ARM/arm64: sunxi: Move H3/H5 syscon label over to soc-specific nodes
->   dt-bindings: sram: sunxi: Add compatible for the A64 SRAM C1
->   arm64: dts: allwinner: a64: Add support for the SRAM C1 section
->   dt-bindings: media: cedrus: Add compatibles for the A64 and H5
->   media: cedrus: Add device-tree compatible and variant for H5 support
->   media: cedrus: Add device-tree compatible and variant for A64 support
->   arm64: dts: allwinner: h5: Add Video Engine node
->   arm64: dts: allwinner: a64: Add Video Engine node
+On 05. 12. 18 5:18, Masahiro Yamada wrote:
+> On Wed, Dec 5, 2018 at 3:37 AM Rob Herring <robh@kernel.org> wrote:
+>>
+>> Olof, Arnd,
+>>
+>> I've put together a script to move the dts files and update the
+>> makefiles. It doesn't handle files not following a common prefix which
+>> isn't many and some includes within the dts files will need some fixups
+>> by hand.
+>>
+>> MAINTAINERS will also need updating.
+>>
+>> A few questions:
+>>
+>> Do we want to move absolutely everything to subdirs? There's quite a
+>> few platforms with only 1-2 platforms. I haven't added these to the
+>> list yet, but can.
+>>
+>> Do any vendors need another level of directories? davinci, omap, nspire,
+>> etc. for TI for example.
+>>
+>> What to do with armv7m.dtsi? I guess it should remain and we just fixup
+>> the include. There may be a few other cross vendor things.
+>>
+>>
+>> Sub-arch maintainers,
+>> 'vendor_map' below is the mapping of file prefix to new subdirectory
+>> (the SoC vendor prefix). Please comment if there are any issues.
+>>
+>> Rob
+>>
+>> 8<-----------------------------------------------------------
+>> #!/usr/bin/env python3
+>>
+>> import os
+>> import re
+>> from git import Git
+>> import glob
+>>
+>> vendor_map = {
+>>     'imx': 'fsl',
+>>     'ls': 'fsl',
+>>     'vf': 'fsl',
+>>     'qcom': 'qcom',
+>>     'am3' : 'ti',
+>>     'am4' : 'ti',
+>>     'am5' : 'ti',
+>>     'da' : 'ti',
+>>     'dm' : 'ti',
+>>     'dra' : 'ti',
+>>     'keystone' : 'ti',
+>>     'omap' : 'ti',
+>>     'nspire' : 'ti',
+>>     'armada' : 'marvell',
+>>     'berlin' : 'marvell',
+>>     'dove' : 'marvell',
+>>     'kirkwood' : 'marvell',
+>>     'orion' : 'marvell',
+>>     'pxa' : 'marvell',
+>>     'mvebu' : 'marvell',
+>>     'mmp2' : 'marvell',
+>>     'arm-' : 'arm',
+>>     'integ' : 'arm',
+>>     've' : 'arm',
+>>     'aspeed' : 'aspeed',
+>>     'at91' : 'atmel',
+>>     'sama' : 'atmel',
+>>     'bcm' : 'brcm',
+>>     'exynos' : 'samsung',
+>>     's3c' : 'samsung',
+>>     's5p' : 'samsung',
+>>     'gemini' : 'cortina',
+>>     'hi3' : 'hisilicon',
+>>     'hip' : 'hisilicon',
+>>     'hisi' : 'hisilicon',
+>>     'mt' : 'mediatek',
+>>     'meson' : 'amlogic',
+>>     'owl' : 'actions',
+>>     'r7' : 'renesas',
+>>     'r8' : 'renesas',
+>>     'r9' : 'renesas',
+>>     'rk' : 'rockchip',
+>>     'socfpga' : 'altera',
+>>     'st' : 'st',
+>>     'spear' : 'st',
+>>     'sun' : 'allwinner',
+>>     'tegra' : 'nvidia',
+>>     'zynq' : 'xilinx',
+>>     'wm' : 'wm',
+>>     'uniph' : 'socionext',
+> 
+> 
+> I tested this script, and
+> I confirmed all of my DT files were moved to the socionext subdirectory.
+> 
+> However, this would break arm64 build
+> because some of my arm64 DT files include arm32 ones.
+> 
+> I think it is common to share base platform boards between arm and arm64.
 
-Other than the error in patch 7,
++1
 
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Just a note here that for Zynq and ZynqMP there should be doable to run
+Microblaze in programmable logic with reusing fixed IPs.
+There could be also other soft core CPUs which could do this on Xilinx
+devices.
+
+It means maybe moving this out of arm/arm64 to more generic location
+would be one more step to consider as the part of this move.
+
+Thanks,
+Michal
