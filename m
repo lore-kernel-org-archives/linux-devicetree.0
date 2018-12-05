@@ -1,44 +1,120 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] ALSA: sparc: Use of_node_name_eq for node name comparisons
-Date: Wed,  5 Dec 2018 13:50:47 -0600
-Message-ID: <20181205195050.4759-31-robh@kernel.org>
+Subject: [PATCH] ALSA: Use of_node_name_eq for node name
+	comparisons
+Date: Wed,  5 Dec 2018 13:50:46 -0600
+Message-ID: <20181205195050.4759-30-robh@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
+Cc: alsa-devel@alsa-project.org, Michael Ellerman <mpe@ellerman.id.au>, Takashi Iwai <tiwai@suse.com>, Paul Mackerras <paulus@samba.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Johannes Berg <johannes@sipsolutions.net>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 Convert string compares of DT node names to use of_node_name_eq helper
 instead. This removes direct access to the node name pointer.
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: sparclinux@vger.kernel.org
+A couple of open coded iterating thru the child node names are converted
+to use for_each_child_of_node() instead.
+
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: alsa-devel@alsa-project.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- sound/sparc/cs4231.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ sound/aoa/fabrics/layout.c       | 2 +-
+ sound/aoa/soundbus/i2sbus/core.c | 6 +++---
+ sound/ppc/pmac.c                 | 4 ++--
+ sound/ppc/tumbler.c              | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/sound/sparc/cs4231.c b/sound/sparc/cs4231.c
-index e73c962590eb..f707cd4886c3 100644
---- a/sound/sparc/cs4231.c
-+++ b/sound/sparc/cs4231.c
-@@ -2075,12 +2075,12 @@ static int cs4231_ebus_probe(struct platform_device *op)
- static int cs4231_probe(struct platform_device *op)
+diff --git a/sound/aoa/fabrics/layout.c b/sound/aoa/fabrics/layout.c
+index 3a23fd032611..8797d42e2b76 100644
+--- a/sound/aoa/fabrics/layout.c
++++ b/sound/aoa/fabrics/layout.c
+@@ -776,7 +776,7 @@ static int check_codec(struct aoa_codec *codec,
+ 	struct codec_connection *cc;
+ 
+ 	/* if the codec has a 'codec' node, we require a reference */
+-	if (codec->node && (strcmp(codec->node->name, "codec") == 0)) {
++	if (of_node_name_eq(codec->node, "codec")) {
+ 		snprintf(propname, sizeof(propname),
+ 			 "platform-%s-codec-ref", codec->name);
+ 		ref = of_get_property(ldev->sound, propname, NULL);
+diff --git a/sound/aoa/soundbus/i2sbus/core.c b/sound/aoa/soundbus/i2sbus/core.c
+index bd7c5029fc59..c3f57a3fb1a5 100644
+--- a/sound/aoa/soundbus/i2sbus/core.c
++++ b/sound/aoa/soundbus/i2sbus/core.c
+@@ -154,7 +154,7 @@ static int i2sbus_add_dev(struct macio_dev *macio,
+ 			  struct device_node *np)
  {
- #ifdef EBUS_SUPPORT
--	if (!strcmp(op->dev.of_node->parent->name, "ebus"))
-+	if (of_node_name_eq(op->dev.of_node->parent, "ebus"))
- 		return cs4231_ebus_probe(op);
- #endif
- #ifdef SBUS_SUPPORT
--	if (!strcmp(op->dev.of_node->parent->name, "sbus") ||
--	    !strcmp(op->dev.of_node->parent->name, "sbi"))
-+	if (of_node_name_eq(op->dev.of_node->parent, "sbus") ||
-+	    of_node_name_eq(op->dev.of_node->parent, "sbi"))
- 		return cs4231_sbus_probe(op);
- #endif
- 	return -ENODEV;
+ 	struct i2sbus_dev *dev;
+-	struct device_node *child = NULL, *sound = NULL;
++	struct device_node *child, *sound = NULL;
+ 	struct resource *r;
+ 	int i, layout = 0, rlen, ok = force;
+ 	char node_name[6];
+@@ -177,8 +177,8 @@ static int i2sbus_add_dev(struct macio_dev *macio,
+ 		return 0;
+ 
+ 	i = 0;
+-	while ((child = of_get_next_child(np, child))) {
+-		if (strcmp(child->name, "sound") == 0) {
++	for_each_child_of_node(np, child) {
++		if (of_node_name_eq(child, "sound")) {
+ 			i++;
+ 			sound = child;
+ 		}
+diff --git a/sound/ppc/pmac.c b/sound/ppc/pmac.c
+index 48dd44f8e914..d692e4070167 100644
+--- a/sound/ppc/pmac.c
++++ b/sound/ppc/pmac.c
+@@ -908,7 +908,7 @@ static void detect_byte_swap(struct snd_pmac *chip)
+ 
+ 	/* if seems that Keylargo can't byte-swap  */
+ 	for (mio = chip->node->parent; mio; mio = mio->parent) {
+-		if (strcmp(mio->name, "mac-io") == 0) {
++		if (of_node_name_eq(mio, "mac-io")) {
+ 			if (of_device_is_compatible(mio, "Keylargo"))
+ 				chip->can_byte_swap = 0;
+ 			break;
+@@ -1313,7 +1313,7 @@ int snd_pmac_new(struct snd_card *card, struct snd_pmac **chip_return)
+ 	} else if (chip->is_pbook_G3) {
+ 		struct device_node* mio;
+ 		for (mio = chip->node->parent; mio; mio = mio->parent) {
+-			if (strcmp(mio->name, "mac-io") == 0) {
++			if (of_node_name_eq(mio, "mac-io")) {
+ 				struct resource r;
+ 				if (of_address_to_resource(mio, 0, &r) == 0)
+ 					chip->macio_base =
+diff --git a/sound/ppc/tumbler.c b/sound/ppc/tumbler.c
+index 0779a2912237..6d7ffffcce95 100644
+--- a/sound/ppc/tumbler.c
++++ b/sound/ppc/tumbler.c
+@@ -1365,8 +1365,8 @@ int snd_pmac_tumbler_init(struct snd_pmac *chip)
+ 	mix->anded_reset = 0;
+ 	mix->reset_on_sleep = 1;
+ 
+-	for (np = chip->node->child; np; np = np->sibling) {
+-		if (!strcmp(np->name, "sound")) {
++	for_each_child_of_node(chip->node, np) {
++		if (of_node_name_eq(np, "sound")) {
+ 			if (of_get_property(np, "has-anded-reset", NULL))
+ 				mix->anded_reset = 1;
+ 			if (of_get_property(np, "layout-id", NULL))
 -- 
 2.19.1
