@@ -1,100 +1,32 @@
-From: Sven Van Asbroeck <thesven73@gmail.com>
-Subject: Re: [PATCH v2 1/2] bus: imx-weim: support multiple address ranges per
- child node
-Date: Wed, 5 Dec 2018 10:08:16 -0500
-Message-ID: <CAGngYiUvYHTRMvsS_4s8PVyPg5_sg4DhZZU4_k8US871oAWSvQ@mail.gmail.com>
-References: <20181130205624.16227-1-TheSven73@googlemail.com>
- <20181130205624.16227-2-TheSven73@googlemail.com> <20181205075145.GN3987@dragon>
+From: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH v11 4/4] media: add Rockchip VPU JPEG encoder driver
+Date: Wed, 05 Dec 2018 12:09:09 -0300
+Message-ID: <967929d49095bf376119ec6ad2f9aae494daeaec.camel@collabora.com>
+References: <20181130173433.24185-1-ezequiel@collabora.com>
+ <20181130173433.24185-5-ezequiel@collabora.com>
+ <07aed803-0e2f-c7c1-7f1c-752b82ffad7c@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181205075145.GN3987@dragon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <07aed803-0e2f-c7c1-7f1c-752b82ffad7c-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Shawn, many thanks for the patch review, I really appreciate it !
+On Wed, 2018-12-05 at 16:01 +0100, Hans Verkuil wrote:
+> Unless something unexpected happens, then v12 should be the final
+> version and I'll make a pull request for it. Note that it will
+> probably won't make 4.20, unless you manage to do it within the next
+> hour :-)
 
-On Wed, Dec 5, 2018 at 2:52 AM Shawn Guo <shawnguo@kernel.org> wrote:
->
-> On Fri, Nov 30, 2018 at 03:56:23PM -0500, thesven73@gmail.com wrote:
-> > From: Sven Van Asbroeck <TheSven73@googlemail.com>
-> >
-> > Ensure that timing values for the child node are applied to
-> > all chip selects in the child's address ranges.
-> >
->
-> I'm not sure about that.  Shouldn't we have another child node for
-> different chip select, something like below?
->
-> &weim {
->         acme@0,0 {
->                 compatible = "acme,whatever";
->                 reg = <0 0 0x100>, <0 0x400000 0x800>;
->                 fsl,weim-cs-timing = <0x024400b1 0x00001010 0x20081100
->                                       0x00000000 0xa0000240 0x00000000>;
->         };
->
->         acme@1,400000 {
->                 compatible = "acme,whatever";
->                 reg = <1 0x400000 0x800>;
->                 fsl,weim-cs-timing = <0x024400b1 0x00001010 0x20081100
->                                       0x00000000 0xa0000240 0x00000000>;
->         };
->
-> Shawn
-
-I am submitting patches for a device that spans chip selects :(
-And such a device needs multiple address changes with different chip selects.
-
-Imagine we have an acme device, which contains a control and a fifo region,
-on different chip selects:
-
-&weim {
-        acme@0 {
-                compatible = "acme";
-                reg = <0 0x0 0x100>, <1 0x0 0x100>;
-        };
-};
-
-Now in probe we can access both regions:
-int acme_probe(struct platform_device *pdev)
-{
-        control_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-        fifo_res =    platform_get_resource(pdev, IORESOURCE_MEM, 1);
-        /* all ok */
-}
-
-But, if we have two separate child nodes, we also get two calls to probe(),
-which assumes two devices on the bus, and that is incorrect:
-
-&weim {
-        acme@0 {
-                compatible = "acme";
-                reg = <0 0x0 0x100>;
-        };
-        acme@1 {
-                compatible = "acme";
-                reg = <1 0x0 0x100>;
-        };
-};
-
-int acme_probe(struct platform_device *pdev)
-{
-        control_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-        /* next call always fails */
-        fifo_res =    platform_get_resource(pdev, IORESOURCE_MEM, 1);
-}
-
-For my patchset, Rob Herring suggested I made changes to the imx-weim driver
-to accommodate multi-chipselect devices.
-
-See the conversation below between Rob Herring and myself:
-https://lkml.org/lkml/2018/11/30/390
-
-If you are not entirely satisfied with my patch, then perhaps you
-could think of another way to support multi-chipselect devices?
-
-Many thanks,
-Sven
+Challenge accepted!
