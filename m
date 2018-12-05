@@ -1,55 +1,93 @@
-From: Kirill Marinushkin <kmarinushkin@birdec.tech>
-Subject: Re: [resend PATCH] dt-bindings: sound: Add documentation for pcm3060
- property out-single-ended
-Date: Wed, 5 Dec 2018 08:04:34 +0100
-Message-ID: <7cbf1452-354f-07d6-2310-cadc4358433e@birdec.tech>
-References: <20181115071253.22558-1-kmarinushkin@birdec.tech>
- <20181204214313.GA7847@bogus>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH v5 4/8] soc: qcom: rpmpd: Add support for get/set
+ performance state
+Date: Wed, 5 Dec 2018 12:33:14 +0530
+Message-ID: <d9317471-fb81-482a-22c1-4a7b466a1df4@codeaurora.org>
+References: <20181204052119.806-1-rnayak@codeaurora.org>
+ <20181204052119.806-5-rnayak@codeaurora.org>
+ <154396526967.88331.13652897075952274639@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181204214313.GA7847@bogus>
+In-Reply-To: <154396526967.88331.13652897075952274639@swboyd.mtv.corp.google.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, andy.gross@linaro.org, collinsd@codeaurora.org, mka@chromium.org, robh@kernel.org, ulf.hansson@linaro.org, viresh.kumar@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thank you Rob,
 
-Mark already applied this patch, with a slightly modified subject:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git/commit/?h=for-next&id=fd7de6370cb62b147185834d60069568a21acacd
-
-Best Regards,
-Kirill
-
-On 12/04/18 22:43, Rob Herring wrote:
-> On Thu, 15 Nov 2018 08:12:53 +0100, Kirill Marinushkin wrote:
->> Output of pcm3060 codec may be configured as single-ended or differential
->>
->> Signed-off-by: Kirill Marinushkin <kmarinushkin@birdec.tech>
->> Cc: devicetree@vger.kernel.org
->> ---
->> Hello Mark,
->>
->> yesterday there was a misunderstanding: when I wrote you
->>
->>> I think you forgot one patch in the series
->>
->> you accidently applied the already-applied patch instead of the forgotten
->> one. To avoid the confusion, in this e-mail I resend you the proper
->> forgotten patch in a separate mailing thread.
->>
->> Please apply this patch for-next.
->>
->> Best Regards,
->> Kirill
->> ---
->>  Documentation/devicetree/bindings/sound/pcm3060.txt | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
+On 12/5/2018 4:44 AM, Stephen Boyd wrote:
+> Quoting Rajendra Nayak (2018-12-03 21:21:15)
+>> @@ -221,6 +224,47 @@ static int rpmpd_power_off(struct generic_pm_domain *domain)
+>>          return ret;
+>>   }
+>>   
+>> +static int rpmpd_set_performance(struct generic_pm_domain *domain,
+>> +                                unsigned int state)
+>> +{
+>> +       int ret = 0;
+>> +       struct rpmpd *pd = domain_to_rpmpd(domain);
+>> +
+>> +       mutex_lock(&rpmpd_lock);
+>> +
+>> +       if (state > MAX_RPMPD_STATE)
+>> +               goto out;
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Does this need to be under the mutex lock? Doesn't look like it.
+
+Nope, will move it out.
+
 > 
+>> +
+>> +       pd->corner = state;
+>> +
+>> +       if (!pd->enabled && (pd->key != KEY_FLOOR_CORNER))
+> 
+> Please drop useless parenthesis.
+
+sure
+
+> 
+>> +               goto out;
+>> +
+>> +       ret = rpmpd_aggregate_corner(pd);
+>> +
+>> +out:
+>> +       mutex_unlock(&rpmpd_lock);
+>> +
+>> +       return ret;
+>> +}
+>> +
+>> +static unsigned int rpmpd_get_performance(struct generic_pm_domain *genpd,
+>> +                                         struct dev_pm_opp *opp)
+>> +{
+>> +       struct device_node *np;
+>> +       unsigned int corner = 0;
+>> +
+>> +       np = dev_pm_opp_get_of_node(opp);
+>> +       if (of_property_read_u32(np, "qcom,level", &corner)) {
+>> +               pr_err("%s: missing 'qcom,level' property\n", __func__);
+> 
+> We leak np reference here, assuming dev_pm_opp_get_of_node() returns an
+> of_node_get() pointer to the caller.
+
+good catch, will fix.
+
+> 
+>> +               return 0;
+>> +       }
+>> +
+>> +       of_node_put(np);
+> 
+> This same code exists twice. Perhaps a helper needs to exist for
+> qcom_rpm_get_performance() to pull the number out of the DT.
+
+Sure I can make both drivers use a common helper instead of duplicating it.
+
+> 
+>> +
+>> +       return corner;
+>> +}
