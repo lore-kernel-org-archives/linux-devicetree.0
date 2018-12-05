@@ -1,45 +1,55 @@
-From: <Andrei.Stefanescu@microchip.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: add SAMA5D2 PIOBU support
-Date: Wed, 5 Dec 2018 11:06:35 +0000
-Message-ID: <2600b55c-f8fd-ab82-6372-a75f22e382f8@microchip.com>
-References: <1542701330-23466-1-git-send-email-andrei.stefanescu@microchip.com>
- <1542701330-23466-2-git-send-email-andrei.stefanescu@microchip.com>
- <20181204232237.GA16883@bogus>
-Mime-Version: 1.0
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v3 4/5] drivers: power: suspend: call devfreq suspend/resume
+Date: Wed,  5 Dec 2018 12:05:55 +0100
+Message-ID: <1544007956-28889-5-git-send-email-l.luba@partner.samsung.com>
+References: <1544007956-28889-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20181205110623eucas1p120f9d8b38822bf856a5b7d427d00e49f@eucas1p1.samsung.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181204232237.GA16883@bogus>
-Content-Language: en-US
-Content-ID: <8784F2D07FE7FA4895DD596BA0F854A9@namprd11.prod.outlook.com>
+In-Reply-To: <1544007956-28889-1-git-send-email-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org
-Cc: linus.walleij@linaro.org, gregkh@linuxfoundation.org, Nicolas.Ferre@microchip.com, mark.rutland@arm.com, Ludovic.Desroches@microchip.com, Cristian.Birsan@microchip.com, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, cw00.choi@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com, Lukasz Luba <l.luba@partner.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gUm9iLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgZmVlZGJhY2suDQoNCkkgd2lsbCBhZGQg
-YSBiaXQgb2YgY29udGV4dCByZWdhcmRpbmcgdGhlIHNlY3Vtb2QuIFRoZSANCiJhdG1lbCxzYW1h
-NWQyLXNlY3Vtb2QiDQpjb21wYXRpYmxlIHN0cmluZyBpcyBub3QgdXNlZCBmb3IgbG9hZGluZyBh
-IGRyaXZlci4gSXQgaXMgdXNlZCBieSBhdG1lbCANCnNlY3VyYW0NCmRyaXZlciAoZHJpdmVycy9t
-aXNjL3NyYW0uYykgd2hpY2ggaGFzIGFjY2VzcyB0byBzZWN1bW9kJ3MgcmVnaXN0ZXJzIHZpYToN
-Cg0KIMKgwqDCoCBzeXNjb25fcmVnbWFwX2xvb2t1cF9ieV9jb21wYXRpYmxlKCJhdG1lbCxzYW1h
-NWQyLXNlY3Vtb2QiKQ0KDQpTbyB0aGUgc2VjdW1vZCBleHBvcnRzIG11bHRpcGxlIGhhcmR3YXJl
-IGZ1bmN0aW9ucywgZWc6IHRoZSBzZWN1cmFtLCB0aGUgDQpQSU9CVQ0KcGlucyB3aGljaCBjYW4g
-YmUgdXNlZCBhcyBHUElPIHBpbnMuDQoNCk15IGluaXRpYWwgcGF0Y2ggaGFkIHRoZSAibWljcm9j
-aGlwLHNhbWE1ZDItcGlvYnUiIGNvbXBhdGlibGUgYXBwZW5kZWQgDQp0byB0aGUNCnNlY3Vtb2Qn
-cyBjb21wYXRpYmxlIGUuZy46DQoNCnNlY3Vtb2RAZmMwNDAwMDAgew0KIMKgwqDCoCBjb21wYXRp
-YmxlID0gInN5c2NvbiIsICJtaWNyb2NoaXAsc2FtYTVkMi1waW9idSI7DQouLi4NCg0KVGFraW5n
-IGludG8gY29uc2lkZXJhdGlvbiBMaW51cyBXYWxsZWlqJ3MgYWR2aWNlIEkgYXJyaXZlZCB0byB0
-aGUgY3VycmVudA0KdmVyc2lvbi4gSSB0aG91Z2h0IHRoaXMgd2FzIGEgZ29vZCBpZGVhIGJlY2F1
-c2UgaXQgc2VwYXJhdGVzIHRoZSBzZWN1bW9kIA0Kbm9kZQ0KZnJvbSB0aGUgR1BJTyBjb250cm9s
-bGVyIG5vZGUuIFBsZWFzZSBub3RpY2UgdGhhdCBzZWN1cmFtIG5vZGUgaXMgYWxyZWFkeQ0Kc2Vw
-YXJhdGVkIGZyb20gc2VjdW1vZCBub2RlIChpdCBpcyBhIHNlcGFyYXRlIG5vZGUgaW4gdGhlIGRl
-dmljZSB0cmVlKS4NCg0KSSBoYXZlIGEgZmV3IHF1ZXN0aW9ucyBiZWNhdXNlIEkgYW0gbm90IHN1
-cmUgb2YgdGhlIGJlc3QgYXBwcm9hY2g6DQoNCjEuIElzIGl0IG9rIHRvIGhhdmUgdGhlIEdQSU8g
-Y29udHJvbGxlciBhcyBhIGNoaWxkIG5vZGU/DQoyLiBJIHVzZWQgc2ltcGxlLW1mZCBiZWNhdXNl
-IGl0IHdhcyB0aGUgb25seSB3YXkgSSBjb3VsZCB0aGluayBvZiBpbiANCm9yZGVyIHRvDQogwqDC
-oCBnZXQgdGhlIGRyaXZlciBwcm9iZWQuDQozLiBTaG91bGQgSSBhZGQgYSByZWdpc3RlciByYW5n
-ZT8gSSB0aG91Z2h0IHRoYXQgYmVjYXVzZSB0aGUgZHJpdmVyIHVzZXMgDQpzeXNjb24NCiDCoMKg
-IGl0IGlzIG5vdCBuZWNlc3NhcnkgdG8gYWRkIHRoZSByZWdpc3RlciByYW5nZS4gQWxzbywgdGhl
-IHJlZ2lzdGVyIA0KcmFuZ2Ugd291bGQNCiDCoMKgIGhhdmUgYmVlbiBhIHN1YnNldCBvZiB0aGUg
-c2VjdW1vZCdzIHJlZ2lzdGVyIHJhbmdlLg0KDQo=
+Devfreq framework supports suspend of its devices.
+Call the the devfreq interface and allow devfreq devices preserve/restore
+their states during suspend/resume.
+
+Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+---
+ drivers/base/power/main.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+index a690fd4..0992e67 100644
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -32,6 +32,7 @@
+ #include <trace/events/power.h>
+ #include <linux/cpufreq.h>
+ #include <linux/cpuidle.h>
++#include <linux/devfreq.h>
+ #include <linux/timer.h>
+ 
+ #include "../base.h"
+@@ -1078,6 +1079,7 @@ void dpm_resume(pm_message_t state)
+ 	dpm_show_time(starttime, state, 0, NULL);
+ 
+ 	cpufreq_resume();
++	devfreq_resume();
+ 	trace_suspend_resume(TPS("dpm_resume"), state.event, false);
+ }
+ 
+@@ -1852,6 +1854,7 @@ int dpm_suspend(pm_message_t state)
+ 	trace_suspend_resume(TPS("dpm_suspend"), state.event, true);
+ 	might_sleep();
+ 
++	devfreq_suspend();
+ 	cpufreq_suspend();
+ 
+ 	mutex_lock(&dpm_list_mtx);
+-- 
+2.7.4
