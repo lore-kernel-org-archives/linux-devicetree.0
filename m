@@ -1,85 +1,116 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] sbus: Use of_node_name_eq for node name comparisons
-Date: Wed,  5 Dec 2018 13:50:38 -0600
-Message-ID: <20181205195050.4759-22-robh@kernel.org>
+Subject: [PATCH] regulator: Use of_node_name_eq for node name comparisons
+Date: Wed,  5 Dec 2018 13:50:37 -0600
+Message-ID: <20181205195050.4759-21-robh@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Sangbeom Kim <sbkim73@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Convert string compares of DT node names to use of_node_name_eq helper
 instead. This removes direct access to the node name pointer.
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: sparclinux@vger.kernel.org
+For instances using of_node_cmp, this has the side effect of now using
+case sensitive comparisons. This should not matter for any FDT based
+system which all of these are.
+
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Support Opensource <support.opensource@diasemi.com>
+Cc: Sangbeom Kim <sbkim73@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/sbus/char/bbc_envctrl.c | 4 ++--
- drivers/sbus/char/envctrl.c     | 6 +++---
- drivers/sbus/char/flash.c       | 6 +++---
- 3 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/regulator/88pm8607.c               | 2 +-
+ drivers/regulator/da9052-regulator.c       | 2 +-
+ drivers/regulator/max8997-regulator.c      | 2 +-
+ drivers/regulator/mc13xxx-regulator-core.c | 2 +-
+ drivers/regulator/qcom-rpmh-regulator.c    | 2 +-
+ drivers/regulator/s5m8767.c                | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/sbus/char/bbc_envctrl.c b/drivers/sbus/char/bbc_envctrl.c
-index fb5bcf6dddc1..4f2dd21e44a0 100644
---- a/drivers/sbus/char/bbc_envctrl.c
-+++ b/drivers/sbus/char/bbc_envctrl.c
-@@ -571,9 +571,9 @@ int bbc_envctrl_init(struct bbc_i2c_bus *bp)
- 	int devidx = 0;
- 
- 	while ((op = bbc_i2c_getdev(bp, devidx++)) != NULL) {
--		if (!strcmp(op->dev.of_node->name, "temperature"))
-+		if (of_node_name_eq(op->dev.of_node, "temperature"))
- 			attach_one_temp(bp, op, temp_index++);
--		if (!strcmp(op->dev.of_node->name, "fan-control"))
-+		if (of_node_name_eq(op->dev.of_node, "fan-control"))
- 			attach_one_fan(bp, op, fan_index++);
- 	}
- 	if (temp_index != 0 && fan_index != 0) {
-diff --git a/drivers/sbus/char/envctrl.c b/drivers/sbus/char/envctrl.c
-index 56e962a01493..08b7d25c1136 100644
---- a/drivers/sbus/char/envctrl.c
-+++ b/drivers/sbus/char/envctrl.c
-@@ -906,7 +906,7 @@ static void envctrl_init_i2c_child(struct device_node *dp,
- 		int len;
- 
- 		root_node = of_find_node_by_path("/");
--		if (!strcmp(root_node->name, "SUNW,UltraSPARC-IIi-cEngine")) {
-+		if (of_node_name_eq(root_node, "SUNW,UltraSPARC-IIi-cEngine")) {
- 			for (len = 0; len < PCF8584_MAX_CHANNELS; ++len) {
- 				pchild->mon_type[len] = ENVCTRL_NOMON;
- 			}
-@@ -1037,10 +1037,10 @@ static int envctrl_probe(struct platform_device *op)
- 	index = 0;
- 	dp = op->dev.of_node->child;
- 	while (dp) {
--		if (!strcmp(dp->name, "gpio")) {
-+		if (of_node_name_eq(dp, "gpio")) {
- 			i2c_childlist[index].i2ctype = I2C_GPIO;
- 			envctrl_init_i2c_child(dp, &(i2c_childlist[index++]));
--		} else if (!strcmp(dp->name, "adc")) {
-+		} else if (of_node_name_eq(dp, "adc")) {
- 			i2c_childlist[index].i2ctype = I2C_ADC;
- 			envctrl_init_i2c_child(dp, &(i2c_childlist[index++]));
- 		}
-diff --git a/drivers/sbus/char/flash.c b/drivers/sbus/char/flash.c
-index a610b8d3d11f..515dc1ff1e33 100644
---- a/drivers/sbus/char/flash.c
-+++ b/drivers/sbus/char/flash.c
-@@ -165,9 +165,9 @@ static int flash_probe(struct platform_device *op)
- 
- 	parent = dp->parent;
- 
--	if (strcmp(parent->name, "sbus") &&
--	    strcmp(parent->name, "sbi") &&
--	    strcmp(parent->name, "ebus"))
-+	if (!of_node_name_eq(parent, "sbus") &&
-+	    !of_node_name_eq(parent, "sbi") &&
-+	    !of_node_name_eq(parent, "ebus"))
+diff --git a/drivers/regulator/88pm8607.c b/drivers/regulator/88pm8607.c
+index fd86446e499b..28f55248eb90 100644
+--- a/drivers/regulator/88pm8607.c
++++ b/drivers/regulator/88pm8607.c
+@@ -328,7 +328,7 @@ static int pm8607_regulator_dt_init(struct platform_device *pdev,
  		return -ENODEV;
+ 	}
+ 	for_each_child_of_node(nproot, np) {
+-		if (!of_node_cmp(np->name, info->desc.name)) {
++		if (of_node_name_eq(np, info->desc.name)) {
+ 			config->init_data =
+ 				of_get_regulator_init_data(&pdev->dev, np,
+ 							   &info->desc);
+diff --git a/drivers/regulator/da9052-regulator.c b/drivers/regulator/da9052-regulator.c
+index 37e4025203e3..207cb3859dcc 100644
+--- a/drivers/regulator/da9052-regulator.c
++++ b/drivers/regulator/da9052-regulator.c
+@@ -435,7 +435,7 @@ static int da9052_regulator_probe(struct platform_device *pdev)
+ 			return -ENODEV;
  
- 	flash.read_base = op->resource[0].start;
+ 		for_each_child_of_node(nproot, np) {
+-			if (!of_node_cmp(np->name,
++			if (of_node_name_eq(np,
+ 					 regulator->info->reg_desc.name)) {
+ 				config.init_data = of_get_regulator_init_data(
+ 					&pdev->dev, np,
+diff --git a/drivers/regulator/max8997-regulator.c b/drivers/regulator/max8997-regulator.c
+index 3bf5ddfaaea8..4d2487279a0a 100644
+--- a/drivers/regulator/max8997-regulator.c
++++ b/drivers/regulator/max8997-regulator.c
+@@ -925,7 +925,7 @@ static int max8997_pmic_dt_parse_pdata(struct platform_device *pdev,
+ 	pdata->regulators = rdata;
+ 	for_each_child_of_node(regulators_np, reg_np) {
+ 		for (i = 0; i < ARRAY_SIZE(regulators); i++)
+-			if (!of_node_cmp(reg_np->name, regulators[i].name))
++			if (of_node_name_eq(reg_np, regulators[i].name))
+ 				break;
+ 
+ 		if (i == ARRAY_SIZE(regulators)) {
+diff --git a/drivers/regulator/mc13xxx-regulator-core.c b/drivers/regulator/mc13xxx-regulator-core.c
+index 65eb1e0350cf..2243138d8a58 100644
+--- a/drivers/regulator/mc13xxx-regulator-core.c
++++ b/drivers/regulator/mc13xxx-regulator-core.c
+@@ -186,7 +186,7 @@ struct mc13xxx_regulator_init_data *mc13xxx_parse_regulators_dt(
+ 		for (i = 0; i < num_regulators; i++) {
+ 			if (!regulators[i].desc.name)
+ 				continue;
+-			if (!of_node_cmp(child->name,
++			if (of_node_name_eq(child,
+ 					 regulators[i].desc.name)) {
+ 				p->id = i;
+ 				p->init_data = of_get_regulator_init_data(
+diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
+index 39ccf53fdeb3..b2c2d01d1637 100644
+--- a/drivers/regulator/qcom-rpmh-regulator.c
++++ b/drivers/regulator/qcom-rpmh-regulator.c
+@@ -410,7 +410,7 @@ static int rpmh_regulator_init_vreg(struct rpmh_vreg *vreg, struct device *dev,
+ 	vreg->dev = dev;
+ 
+ 	for (rpmh_data = pmic_rpmh_data; rpmh_data->name; rpmh_data++)
+-		if (!strcmp(rpmh_data->name, node->name))
++		if (of_node_name_eq(node, rpmh_data->name))
+ 			break;
+ 
+ 	if (!rpmh_data->name) {
+diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
+index 219b9afda0cb..654f65abcb5a 100644
+--- a/drivers/regulator/s5m8767.c
++++ b/drivers/regulator/s5m8767.c
+@@ -561,7 +561,7 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
+ 	pdata->opmode = rmode;
+ 	for_each_child_of_node(regulators_np, reg_np) {
+ 		for (i = 0; i < ARRAY_SIZE(regulators); i++)
+-			if (!of_node_cmp(reg_np->name, regulators[i].name))
++			if (of_node_name_eq(reg_np, regulators[i].name))
+ 				break;
+ 
+ 		if (i == ARRAY_SIZE(regulators)) {
 -- 
 2.19.1
