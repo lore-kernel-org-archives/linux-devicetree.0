@@ -1,21 +1,21 @@
 Return-Path: <SRS0=ZHC+=OO=mediatek.com=jianjun.wang@kernel.org>
 From: Jianjun Wang <jianjun.wang@mediatek.com>
 Subject: [PATCH 0/2] PCI: mediatek: Add support for MT7629
-Date: Wed, 5 Dec 2018 15:57:19 +0800
-Message-ID: <1543996641-6280-1-git-send-email-jianjun.wang@mediatek.com>
+Date: Wed, 5 Dec 2018 15:30:44 +0800
+Message-ID: <1543995046-4988-1-git-send-email-jianjun.wang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_009_429323526.634941899"
+	boundary="__=_Part_Boundary_006_1766130120.718704326"
 To: ryder.lee@mediatek.com, bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, matthias.bgg@gmail.com, linux-pci@vger.kernel.org
 Cc: mark.rutland@arm.com, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, honghui.zhang@mediatek.com, youlin.pei@mediatek.com, Jianjun Wang <jianjun.wang@mediatek.com>
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_009_429323526.634941899
+--__=_Part_Boundary_006_1766130120.718704326
 Content-Transfer-Encoding: base64
 Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_001_296127278.1713264638"
+	boundary="__=_Part_Boundary_007_68071110.37179817"
 
---__=_Part_Boundary_001_296127278.1713264638
+--__=_Part_Boundary_007_68071110.37179817
 Content-Type: text/html
 Content-Transfer-Encoding: base64
 
@@ -45,7 +45,7 @@ dGFjaG1lbnRzKSBmcm9tIHlvdXIgc3lzdGVtLCBhbmQgZG8gbm90DQpkaXNjbG9zZSB0aGUgY29u
 dGVudCBvZiB0aGlzIGUtbWFpbCB0byBhbnkgb3RoZXIgcGVyc29uLiBUaGFuayB5b3UhPC9wcmU+
 PCEtLX0tLT4=
 
---__=_Part_Boundary_001_296127278.1713264638
+--__=_Part_Boundary_007_68071110.37179817
 Content-Type: text/plain
 Content-Transfer-Encoding: base64
 
@@ -59,6 +59,6 @@ KysrKysrKysrKysrDQogaW5jbHVkZS9saW51eC9wY2lfaWRzLmggICAgICAgICAgICAgICAgICAg
 ICAgIHwgIDEgKw0KIDMgZmlsZXMgY2hhbmdlZCwgMjggaW5zZXJ0aW9ucygrKQ0KDQotLSANCjIu
 MTkuMQ0K
 
---__=_Part_Boundary_001_296127278.1713264638--
+--__=_Part_Boundary_007_68071110.37179817--
 
---__=_Part_Boundary_009_429323526.634941899--
+--__=_Part_Boundary_006_1766130120.718704326--
