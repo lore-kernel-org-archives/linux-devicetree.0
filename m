@@ -1,24 +1,60 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v1 0/4] ARM: dts: ccimx6ulsbcpro: Add 10" AUO/Goodix LVDS
- panel accessory kit
-Date: Wed, 5 Dec 2018 08:40:31 +0800
-Message-ID: <20181205004030.GA3987@dragon>
-References: <1540480173-12009-1-git-send-email-alex.gonzalez@digi.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6] arm64: dts: qcom: sdm845: Add dpu to
+ sdm845 dts file
+Date: Tue, 4 Dec 2018 16:43:23 -0800
+Message-ID: <CAD=FV=WnAneZu8PEEw5nYabAPsGH-O9zdej-DjK8a6yXFW76EA@mail.gmail.com>
+References: <1543967653-7345-1-git-send-email-jsanka@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1540480173-12009-1-git-send-email-alex.gonzalez@digi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Gonzalez <alex.gonzalez@digi.com>
-Cc: thierry.reding@gmail.com, airlied@linux.ie, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <1543967653-7345-1-git-send-email-jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kristian Kristensen <hoegsberg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 25, 2018 at 05:09:29PM +0200, Alex Gonzalez wrote:
-> Alex Gonzalez (4):
->   drm/panel: simple: Add AUO G101EVN010 panel support
->   ARM: dts: ccimx6ulsbcpro: Enable AUO G101EVN010 lcdif panel
->   ARM: imx_v6_v7_defconfig: Select TOUCHSCREEN_GOODIX
->   ARM: dts: ccimx6ulsbcpro: Add support for Goodix touch controller
-
-Applied #2 ~ #4, thanks.
+SGksCgpPbiBUdWUsIERlYyA0LCAyMDE4IGF0IDM6NTQgUE0gSmV5a3VtYXIgU2Fua2FyYW4gPGpz
+YW5rYUBjb2RlYXVyb3JhLm9yZz4gd3JvdGU6Cj4KPiBEUFUgaXMgc2hvcnQgZm9yIHRoZSBEaXNw
+bGF5IFByb2Nlc3NpbmcgVW5pdC4gSXQgaXMgdGhlIGRpc3BsYXkKPiBjb250cm9sbGVyIG9uIFF1
+YWxjb21tIFNETTg0NSBjaGlwcy4KPgo+IFRoaXMgY2hhbmdlIGFkZHMgTURTUyBhbmQgRFNJIG5v
+ZGVzIHRvIGVuYWJsZSBkaXNwbGF5IG9uIHRoZQo+IHRhcmdldCBkZXZpY2UuCj4KPiBDaGFuZ2Vz
+IGluIHYyOgo+ICAgICAgICAgIC0gQmVlZmVkIHVwIGNvbW1pdCBtZXNzYWdlCj4gICAgICAgICAg
+LSBVc2UgU29DIHNwZWNpZmljIGNvbXBhdGlibGVzIGZvciBtZHNzIGFuZCBkcHUgKFJvYiBIKQo+
+ICAgICAgICAgIC0gVXNlIGFzc2lnbmVkLWNsb2NrcyB0byBzZXQgaW5pdGlhbCBjbG9jayBmcmVx
+dWVuY3koUm9iIEgpCj4gQ2hhbmdlcyBpbiB2MzoKPiAgICAgICAgICAtIGFkZGVkIElPTU1VIG5v
+ZGUKPiAgICAgICAgICAtIEZpeCBkZXZpY2UgbmFtaW5nIChyZW1vdmUgX3BoeXMpCj4gICAgICAg
+ICAgLSBVc2UgY29ycmVjdCBJUlFfVFlQRSBpbiBpbnRlcnJ1cHQgc3BlY2lmaWVycwo+IENoYW5n
+ZXMgaW4gdjQ6Cj4gICAgICAgICAgLSBtb3ZlIG1kc3Mgbm9kZSB0byBwcmVzZXJ2ZSB0aGUgdW5p
+dCBhZGRyZXNzIHNvcnQgb3JkZXIKPiAgICAgICAgICAtIHJlbW92ZSBfY2xrIHN1ZmZpeCBmcm9t
+IGRzaSBjbG9ja3MKPiAgICAgICAgICAoYm90aCB0aGUgY29tbWVudHMgYXJlIGZyb20gRG91ZyBB
+bmRlcnNvbikKPiBDaGFuZ2VzIGluIHY1Ogo+ICAgICAgICAgLSBLZWVwIHRoZSBkZXZpY2Ugc3Rh
+dHVzICJkaXNhYmxlZCIgYnkgZGVmYXVsdCAoQmpvcm4gQW5kZXJzc29uKQo+ICAgICAgICAgLSBV
+c2UgTURTU19HRFNDIG1hY3JvIChKb3JkYW4pCj4gICAgICAgICAtIEZpeCBwaHktbmFtZXMgKEpv
+cmRhbikKPiAgICAgICAgIC0gTGlzdCByZWcgcmFuZ2VzIGluIG51bWVyaWNhbCBvcmRlciAoSm9y
+ZGFuKQo+IENoYW5nZXMgaW4gdjY6Cj4gICAgICAgICAtIFNlcGFyYXRpbmcgdGhpcyBwYXRjaCBv
+dXQgb2YgdGhlIHNlcmllcwo+ICAgICAgICAgLSBmaXggcGh5LW5hbWVzCj4KPiBTaWduZWQtb2Zm
+LWJ5OiBKZXlrdW1hciBTYW5rYXJhbiA8anNhbmthQGNvZGVhdXJvcmEub3JnPgo+IFNpZ25lZC1v
+ZmYtYnk6IFNlYW4gUGF1bCA8c2VhbnBhdWxAY2hyb21pdW0ub3JnPgo+IC0tLQo+ICBhcmNoL2Fy
+bTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kgfCAyMDMgKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIwMyBpbnNlcnRpb25zKCspCgpXaXRo
+IG15IGFkbWl0dGVkbHkgbGltaXRlZCB1bmRlcnN0YW5kaW5nIG9mIHRoZSBkZXZpY2UgdHJlZSBm
+b3IKZ3JhcGhpY3MsIHRoaXMgbG9va3MgZ29vZCB0byBtZS4KClJldmlld2VkLWJ5OiBEb3VnbGFz
+IEFuZGVyc29uIDxkaWFuZGVyc0BjaHJvbWl1bS5vcmc+CgouLi50aGlzIHdvcmtzIGZvciBtZSBv
+biBzZG04NDUtY2hlemEuICBTcGVjaWZpY2FsbHkgSSB0ZXN0ZWQgaXQgb24gb3VyCjQuMTkgYnJh
+bmNoIHdoaWNoIGhhcyBzb21lIGRpc3BsYXkgYmFja3BvcnRzIGFuZCBhIGZldyBwaWNrcyBmcm9t
+IHRoZQptYWlsaW5nIGxpc3QuICBBbnlvbmUgc3BlY2lmaWNhbGx5IGludGVyZXN0ZWQgaW4gdGhl
+IHRyZWUgSSB0ZXN0ZWQKd2l0aCBjYW4gc2VlIGh0dHBzOi8vY3JyZXYuY29tL2MvMTMyNzkwMSwg
+d2hpY2ggaW5jbHVkZXMgdGhpcyBwYXRjaC4KVGh1czoKClRlc3RlZC1ieTogRG91Z2xhcyBBbmRl
+cnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9mcmVlZHJlbm8K
