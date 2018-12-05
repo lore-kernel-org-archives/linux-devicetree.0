@@ -1,60 +1,61 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH 3/3] ARM: dts: imx6qdl-sabresd: add accelerometer sensor
- support
-Date: Wed, 5 Dec 2018 09:19:56 +0000
-Message-ID: <1544001240-18622-3-git-send-email-Anson.Huang@nxp.com>
-References: <1544001240-18622-1-git-send-email-Anson.Huang@nxp.com>
+From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 03/15] ARM: dts: sun8i: h3: Remove
+ unnecessary reserved memory node
+Date: Wed,  5 Dec 2018 10:24:32 +0100
+Message-ID: <20181205092444.29497-4-paul.kocialkowski@bootlin.com>
+References: <20181205092444.29497-1-paul.kocialkowski@bootlin.com>
+Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544001240-18622-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRB7FST3QAKGQECQZGVDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181205092444.29497-1-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add accelerometer sensor mma8451 support on i2c1 bus.
+Just like on the A33, the video engine on the H3 can map any address in
+memory, so there is no particular need to have reserved memory at a fixed
+address.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+As a result, remove the reserved memory node and let the kernel allocate
+the CMA pool wherever it sees fit.
+
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/arm/boot/dts/sun8i-h3.dtsi | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx=
-6qdl-sabresd.dtsi
-index 141550a..fd9127f 100644
---- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-@@ -253,6 +253,15 @@
- 		>;
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index dbb7e71b6d69..e438e54580e1 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -119,20 +119,6 @@
+ 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
  	};
-=20
-+	accelerometer@1c {
-+		compatible =3D "fsl,mma8451";
-+		reg =3D <0x1c>;
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_i2c1_mma8451_int>;
-+		interrupt-parent =3D <&gpio1>;
-+		interrupts =3D <18 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
- 	ov5642: camera@3c {
- 		compatible =3D "ovti,ov5642";
- 		pinctrl-names =3D "default";
-@@ -532,6 +541,12 @@
- 			>;
- 		};
-=20
-+		pinctrl_i2c1_mma8451_int: i2c1mma8451intgrp {
-+			fsl,pins =3D <
-+				MX6QDL_PAD_SD1_CMD__GPIO1_IO18		0xb0b1
-+			>;
-+		};
-+
- 		pinctrl_i2c2: i2c2grp {
- 			fsl,pins =3D <
- 				MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
---=20
-2.7.4
+ 
+-	reserved-memory {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges;
+-
+-		default-pool {
+-			compatible = "shared-dma-pool";
+-			size = <0x6000000>;
+-			alloc-ranges = <0x4a000000 0x6000000>;
+-			reusable;
+-			linux,cma-default;
+-		};
+-	};
+-
+ 	soc {
+ 		system-control@1c00000 {
+ 			compatible = "allwinner,sun8i-h3-system-control";
+-- 
+2.19.2
