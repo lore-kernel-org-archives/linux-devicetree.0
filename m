@@ -1,38 +1,64 @@
-Return-Path: <SRS0=v28C=OU=gmail.com=thierry.reding@kernel.org>
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH v2 2/3] media: tegra-cec: Support Tegra186 and Tegra194
-Date: Tue, 11 Dec 2018 10:48:40 +0100
-Message-Id: <20181211094841.16027-2-thierry.reding@gmail.com>
-In-Reply-To: <20181211094841.16027-1-thierry.reding@gmail.com>
-References: <20181211094841.16027-1-thierry.reding@gmail.com>
+Return-Path: <SRS0=ZHC+=OO=mediatek.com=jianjun.wang@kernel.org>
+From: Jianjun Wang <jianjun.wang@mediatek.com>
+Subject: [PATCH 0/2] PCI: mediatek: Add support for MT7629
+Date: Wed, 5 Dec 2018 15:57:19 +0800
+Message-ID: <1543996641-6280-1-git-send-email-jianjun.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_009_429323526.634941899"
+To: ryder.lee@mediatek.com, bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, matthias.bgg@gmail.com, linux-pci@vger.kernel.org
+Cc: mark.rutland@arm.com, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, honghui.zhang@mediatek.com, youlin.pei@mediatek.com, Jianjun Wang <jianjun.wang@mediatek.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Thierry Reding <treding@nvidia.com>
+--__=_Part_Boundary_009_429323526.634941899
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_001_296127278.1713264638"
 
-The CEC controller found on Tegra186 and Tegra194 is the same as on
-earlier generations.
+--__=_Part_Boundary_001_296127278.1713264638
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- drivers/media/platform/tegra-cec/tegra_cec.c | 2 ++
- 1 file changed, 2 insertions(+)
+PHByZT4NClRoZXNlIHNlcmllcyBwYXRjaGVzIG1vZGlmeSBwY2llLW1lZGlhdGVrLmMgYW5kIGR0
+LWJpbmRpbmdzIGNvbXBhdGlibGUNCnN0cmluZyB0byBzdXBwb3J0IE1UNzYyOSBQQ0llIGhvc3Qu
+DQoNCkppYW5qdW4gV2FuZyAoMik6DQogIGR0LWJpbmRpbmdzOiBQQ0k6IEFkZCBzdXBwb3J0IGZv
+ciBNVDc2MjkNCiAgUENJOiBtZWRpYXRlazogQWRkIGNvbnRyb2xsZXIgc3VwcG9ydCBmb3IgTVQ3
+NjI5DQoNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbWVkaWF0ZWstcGNpZS50eHQgfCAg
+MSArDQogZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1lZGlhdGVrLmMgICAgICAgIHwgMjYg
+KysrKysrKysrKysrKysrKysrKw0KIGluY2x1ZGUvbGludXgvcGNpX2lkcy5oICAgICAgICAgICAg
+ICAgICAgICAgICB8ICAxICsNCiAzIGZpbGVzIGNoYW5nZWQsIDI4IGluc2VydGlvbnMoKykNCg0K
+LS0gDQoyLjE5LjENCg0KPC9wcmU+PCEtLXR5cGU6dGV4dC0tPjwhLS17LS0+PHByZT4qKioqKioq
+KioqKioqIEVtYWlsIENvbmZpZGVudGlhbGl0eSBOb3RpY2UgKioqKioqKioqKioqKioqKioqKioN
+ClRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaW4gdGhpcyBlLW1haWwgbWVzc2FnZSAoaW5jbHVk
+aW5nIGFueSANCmF0dGFjaG1lbnRzKSBtYXkgYmUgY29uZmlkZW50aWFsLCBwcm9wcmlldGFyeSwg
+cHJpdmlsZWdlZCwgb3Igb3RoZXJ3aXNlDQpleGVtcHQgZnJvbSBkaXNjbG9zdXJlIHVuZGVyIGFw
+cGxpY2FibGUgbGF3cy4gSXQgaXMgaW50ZW5kZWQgdG8gYmUgDQpjb252ZXllZCBvbmx5IHRvIHRo
+ZSBkZXNpZ25hdGVkIHJlY2lwaWVudChzKS4gQW55IHVzZSwgZGlzc2VtaW5hdGlvbiwgDQpkaXN0
+cmlidXRpb24sIHByaW50aW5nLCByZXRhaW5pbmcgb3IgY29weWluZyBvZiB0aGlzIGUtbWFpbCAo
+aW5jbHVkaW5nIGl0cyANCmF0dGFjaG1lbnRzKSBieSB1bmludGVuZGVkIHJlY2lwaWVudChzKSBp
+cyBzdHJpY3RseSBwcm9oaWJpdGVkIGFuZCBtYXkgDQpiZSB1bmxhd2Z1bC4gSWYgeW91IGFyZSBu
+b3QgYW4gaW50ZW5kZWQgcmVjaXBpZW50IG9mIHRoaXMgZS1tYWlsLCBvciBiZWxpZXZlIA0KdGhh
+dCB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFpbCBpbiBlcnJvciwgcGxlYXNlIG5vdGlmeSB0
+aGUgc2VuZGVyIA0KaW1tZWRpYXRlbHkgKGJ5IHJlcGx5aW5nIHRvIHRoaXMgZS1tYWlsKSwgZGVs
+ZXRlIGFueSBhbmQgYWxsIGNvcGllcyBvZiANCnRoaXMgZS1tYWlsIChpbmNsdWRpbmcgYW55IGF0
+dGFjaG1lbnRzKSBmcm9tIHlvdXIgc3lzdGVtLCBhbmQgZG8gbm90DQpkaXNjbG9zZSB0aGUgY29u
+dGVudCBvZiB0aGlzIGUtbWFpbCB0byBhbnkgb3RoZXIgcGVyc29uLiBUaGFuayB5b3UhPC9wcmU+
+PCEtLX0tLT4=
 
-diff --git a/drivers/media/platform/tegra-cec/tegra_cec.c b/drivers/media/platform/tegra-cec/tegra_cec.c
-index aba488cd0e64..8a1e10d008d0 100644
---- a/drivers/media/platform/tegra-cec/tegra_cec.c
-+++ b/drivers/media/platform/tegra-cec/tegra_cec.c
-@@ -472,6 +472,8 @@ static const struct of_device_id tegra_cec_of_match[] = {
- 	{ .compatible = "nvidia,tegra114-cec", },
- 	{ .compatible = "nvidia,tegra124-cec", },
- 	{ .compatible = "nvidia,tegra210-cec", },
-+	{ .compatible = "nvidia,tegra186-cec", },
-+	{ .compatible = "nvidia,tegra194-cec", },
- 	{},
- };
- 
--- 
-2.19.1
+--__=_Part_Boundary_001_296127278.1713264638
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
+
+VGhlc2Ugc2VyaWVzIHBhdGNoZXMgbW9kaWZ5IHBjaWUtbWVkaWF0ZWsuYyBhbmQgZHQtYmluZGlu
+Z3MgY29tcGF0aWJsZQ0Kc3RyaW5nIHRvIHN1cHBvcnQgTVQ3NjI5IFBDSWUgaG9zdC4NCg0KSmlh
+bmp1biBXYW5nICgyKToNCiAgZHQtYmluZGluZ3M6IFBDSTogQWRkIHN1cHBvcnQgZm9yIE1UNzYy
+OQ0KICBQQ0k6IG1lZGlhdGVrOiBBZGQgY29udHJvbGxlciBzdXBwb3J0IGZvciBNVDc2MjkNCg0K
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLnR4dCB8ICAxICsNCiBk
+cml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbWVkaWF0ZWsuYyAgICAgICAgfCAyNiArKysrKysr
+KysrKysrKysrKysrDQogaW5jbHVkZS9saW51eC9wY2lfaWRzLmggICAgICAgICAgICAgICAgICAg
+ICAgIHwgIDEgKw0KIDMgZmlsZXMgY2hhbmdlZCwgMjggaW5zZXJ0aW9ucygrKQ0KDQotLSANCjIu
+MTkuMQ0K
+
+--__=_Part_Boundary_001_296127278.1713264638--
+
+--__=_Part_Boundary_009_429323526.634941899--
