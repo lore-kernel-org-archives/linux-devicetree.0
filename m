@@ -1,24 +1,56 @@
-Return-Path: <SRS0=VslM=OO=gmail.com=festevam@kernel.org>
-MIME-Version: 1.0
-References: <20181127092824.22756-1-peter.chen@nxp.com> <20181127092824.22756-5-peter.chen@nxp.com>
- <CAOMZO5CV9Hk5ORnmjOLSZv5bk61nc2Ljq_4vKvRvAvO_F=Fzxg@mail.gmail.com>
- <VI1PR04MB5327E51B366724706028E07E8BD30@VI1PR04MB5327.eurprd04.prod.outlook.com>
- <a081eb16-920a-0ff4-2ae7-7c9efd28668a@kontron.de> <CAOMZO5BdzvSNovd15jcijGBMzS_G+5xnmyNBXMH7S3cmwCfKMA@mail.gmail.com>
- <0215e99c-c024-42f6-9dad-4bab70bae193@kontron.de> <VI1PR04MB532787E6EF89EBFAAE052A0C8BA80@VI1PR04MB5327.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB532787E6EF89EBFAAE052A0C8BA80@VI1PR04MB5327.eurprd04.prod.outlook.com>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Wed, 5 Dec 2018 09:10:07 -0200
-Message-ID: <CAOMZO5D=ywpBBBJ=KL2rw6gjC4wPzmy_qE32bH4EepidevSgtQ@mail.gmail.com>
+Return-Path: <SRS0=Yh07=OO=kontron.de=frieder.schrempf@kernel.org>
+From: Schrempf Frieder <frieder.schrempf@kontron.de>
 Subject: Re: [PATCH v3 4/4] doc: usb: ci-hdrc-usb2: Add pinctrl properties for
  HSIC pin groups
-Content-Type: text/plain; charset="UTF-8"
-To: Peter Chen <peter.chen@nxp.com>
-Cc: frieder.schrempf@kontron.de, USB list <linux-usb@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Schrempf Frieder <frieder.schrempf@exceet.de>
+Date: Wed, 5 Dec 2018 08:00:32 +0000
+Message-ID: <c130ccbc-3f39-0212-f377-92ccd0366936@kontron.de>
+References: <20181127092824.22756-1-peter.chen@nxp.com>
+ <20181127092824.22756-5-peter.chen@nxp.com>
+ <CAOMZO5CV9Hk5ORnmjOLSZv5bk61nc2Ljq_4vKvRvAvO_F=Fzxg@mail.gmail.com>
+ <VI1PR04MB5327E51B366724706028E07E8BD30@VI1PR04MB5327.eurprd04.prod.outlook.com>
+ <a081eb16-920a-0ff4-2ae7-7c9efd28668a@kontron.de>
+ <CAOMZO5BdzvSNovd15jcijGBMzS_G+5xnmyNBXMH7S3cmwCfKMA@mail.gmail.com>
+ <0215e99c-c024-42f6-9dad-4bab70bae193@kontron.de>
+In-Reply-To: <0215e99c-c024-42f6-9dad-4bab70bae193@kontron.de>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <847D4A7E00E37D46BAEAFBFA3FAA113F@snt-world.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Peter Chen <peter.chen@nxp.com>, USB list <linux-usb@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>, Schrempf Frieder <frieder.schrempf@exceet.de>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Dec 5, 2018 at 5:57 AM PETER CHEN <peter.chen@nxp.com> wrote:
-
-> So, there are two examples at binding-doc, one for normal, one for HSIC? Fabio, do you
-> mean that? If DT maintainer agrees it too, I will add it.
-
-Yes, I think it will makes things clearer. Thanks
+T24gMDUuMTIuMTggMDg6NDUsIFNjaHJlbXBmIEZyaWVkZXIgd3JvdGU6DQo+IEhpIEZhYmlvLA0K
+PiANCj4gT24gMDQuMTIuMTggMjE6MDEsIEZhYmlvIEVzdGV2YW0gd3JvdGU6DQo+PiBIaSBGcmll
+ZGVyLA0KPj4NCj4+IE9uIFR1ZSwgRGVjIDQsIDIwMTggYXQgMTI6MzEgUE0gU2NocmVtcGYgRnJp
+ZWRlcg0KPj4gPGZyaWVkZXIuc2NocmVtcGZAa29udHJvbi5kZT4gd3JvdGU6DQo+Pg0KPj4+IFRo
+ZXJlIGFyZSBtYW55IG90aGVyIG9wdGlvbmFsIHByb3BlcnRpZXMgZm9yIHRoaXMgZHJpdmVyIGFu
+ZCBhIGxvdCBvZg0KPj4+IHRoZW0gYXJlIG5vdCBpbiB0aGUgZ2l2ZW4gZXhhbXBsZS4gTWF5YmUg
+d2Ugc2hvdWxkIGp1c3Qga2VlcCB0aGUNCj4+PiBwaW5jdHJscyBmb3IgSFNJQy1tb2RlIG91dCBv
+ZiB0aGUgZXhhbXBsZSwgdG9vPw0KPj4NCj4+IEkgYW0ganVzdCB0cnlpbmcgdG8gbWFrZSBsaWZl
+IGVhc2llciBmb3IgdGhvc2Ugd2hvIHdhbnQgdG8gdXNlIEhTSUMNCj4+IHN1cHBvcnQgd2l0aCBj
+aGlwaWRlYS4NCj4+DQo+PiBDYW4gd2UganVzdCBhZGQgYSByZWFsIGR0cyBzbmlwcGV0IGV4YW1w
+bGUgb2YgeW91ciBib2FyZCBpbnRvIHRoZQ0KPj4gYmluZGluZyBkb2N1bWVudD8NCj4gDQo+IFN1
+cmUsIGhlcmUgaXMgd2hhdCBJIGhhdmUgaW4gbXkgZHRzOg0KPiANCj4gJnVzYmgyIHsNCj4gCXBp
+bmN0cmwtbmFtZXMgPSAiaWRsZSIsICJhY3RpdmUiOw0KPiAJcGluY3RybC0wID0gPCZwaW5jdHJs
+X3VzYmgyX2lkbGU+Ow0KPiAJcGluY3RybC0xID0gPCZwaW5jdHJsX3VzYmgyX2FjdGl2ZT47DQo+
+IAlzdGF0dXMgPSAib2theSI7DQo+IAkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gCSNzaXplLWNl
+bGxzID0gPDA+Ow0KPiANCj4gCXVzYm5ldDogc21zY0AxIHsNCj4gCQljb21wYXRpYmxlID0gInVz
+YjQyNCw5NzMwIjsNCj4gCQlyZWcgPSA8MT47DQo+IAl9Ow0KPiB9Ow0KDQpPciBtZXJnZWQgd2l0
+aCB0aGUgc2V0dGluZ3MgZnJvbSBpbXg2cWRsLmR0c2kgdGhpcyB3aWxsIGxvb2sgbGlrZSBiZWxv
+dy4gDQpNYXliZSB0aGlzIGlzIGJldHRlciBhcyBpdCBpcyB0aGUgY29tcGxldGUgbm9kZSB3aXRo
+b3V0IGRlcGVuZGluZyBvbiANCmlteDZxZGwuZHRzaToNCg0KdXNiaDI6IHVzYkAyMTg0NDAwIHsN
+Cgljb21wYXRpYmxlID0gImZzbCxpbXg2cS11c2IiLCAiZnNsLGlteDI3LXVzYiI7DQoJcmVnID0g
+PDB4MDIxODQ0MDAgMHgyMDA+Ow0KCWludGVycnVwdHMgPSA8MCA0MSBJUlFfVFlQRV9MRVZFTF9I
+SUdIPjsNCgljbG9ja3MgPSA8JmNsa3MgSU1YNlFETF9DTEtfVVNCT0gzPjsNCglmc2wsdXNicGh5
+ID0gPCZ1c2JwaHlub3AxPjsNCglmc2wsdXNibWlzYyA9IDwmdXNibWlzYyAyPjsNCglwaHlfdHlw
+ZSA9ICJoc2ljIjsNCglkcl9tb2RlID0gImhvc3QiOw0KCWFoYi1idXJzdC1jb25maWcgPSA8MHgw
+PjsNCgl0eC1idXJzdC1zaXplLWR3b3JkID0gPDB4MTA+Ow0KCXJ4LWJ1cnN0LXNpemUtZHdvcmQg
+PSA8MHgxMD47DQoJcGluY3RybC1uYW1lcyA9ICJpZGxlIiwgImFjdGl2ZSI7DQogIAlwaW5jdHJs
+LTAgPSA8JnBpbmN0cmxfdXNiaDJfaWRsZT47DQogIAlwaW5jdHJsLTEgPSA8JnBpbmN0cmxfdXNi
+aDJfYWN0aXZlPjsNCgkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCiAgCSNzaXplLWNlbGxzID0gPDA+
+Ow0KDQogIAl1c2JuZXQ6IHNtc2NAMSB7DQogIAkJY29tcGF0aWJsZSA9ICJ1c2I0MjQsOTczMCI7
+DQogIAkJcmVnID0gPDE+Ow0KICAJfTsNCn07DQoNCj4gDQo+IEBQZXRlcjogQ2FuIHlvdSBhZGQg
+dGhpcyBhcyBhIHNlY29uZCBleGFtcGxlIHRvIHRoZSBiaW5kaW5nIGRvY3VtZW50YXRpb24/DQo+
+IA0KPiBUaGFua3MsDQo+IEZyaWVkZXINCj4g
