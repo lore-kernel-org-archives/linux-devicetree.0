@@ -1,36 +1,80 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v1 10/12] hikey960: Support usb functionality of Hikey960
-Date: Wed, 5 Dec 2018 09:57:06 +0800
-Message-ID: <a1168f88-5679-6245-41d8-5ef4be5493b2@huawei.com>
-References: <20181203034515.91412-1-chenyu56@huawei.com>
- <20181203034515.91412-11-chenyu56@huawei.com>
- <CAHp75VdSowHk4meQqqUamSjJJoVT59+pMZ1qjmmWd-W5nWBcUw@mail.gmail.com>
- <6810012e-9a77-dfdf-a738-14ce77a3027a@huawei.com>
- <CAHp75Vf_nemtPuMZV-1ezyYaB_BuuDM6uqaBf9DLBWLdCnm4Gg@mail.gmail.com>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH v4 2/2] PCI: uniphier: Add UniPhier PCIe host controller support
+Date: Wed, 05 Dec 2018 11:13:52 +0900
+Message-ID: <20181205111351.00E3.4A936039@socionext.com>
+References: <1543377866-16634-3-git-send-email-hayashi.kunihiko@socionext.com> <20181204151227.GA29926@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vf_nemtPuMZV-1ezyYaB_BuuDM6uqaBf9DLBWLdCnm4Gg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181204151227.GA29926@e107981-ln.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: liuyu712@hisilicon.com, Wangbinghui <wangbinghui@hisilicon.com>, USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Lorenzo,
 
-On 2018/12/5 1:47, Andy Shevchenko wrote:
-> On Tue, Dec 4, 2018 at 3:40 AM Chen Yu <chenyu56@huawei.com> wrote:
->> On 2018/12/3 17:23, Andy Shevchenko wrote:
->>> On Mon, Dec 3, 2018 at 5:47 AM Yu Chen <chenyu56@huawei.com> wrote:
+On Tue, 4 Dec 2018 15:12:27 +0000 <lorenzo.pieralisi@arm.com> wrote:
+
+> On Wed, Nov 28, 2018 at 01:04:26PM +0900, Kunihiko Hayashi wrote:
 > 
->>>> +               .of_match_table = of_match_ptr(id_table_hisi_hikey_usb),
->>>
->>> Does it compiles for non-OF case? Why macro is in use?
+> [...]
 > 
->> OK. I will add the "CONFIG_OF".
-> Why? Is this driver supposed to work without DT?
+> > +static void uniphier_pcie_irq_ack(struct irq_data *d)
+> > +{
+> > +	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
+> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > +	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+> > +	u32 val;
+> > +
+> > +	val = readl(priv->base + PCL_RCV_INTX);
+> > +	val &= ~PCL_RCV_INTX_ALL_STATUS;
+> > +	val |= BIT(irqd_to_hwirq(d) + PCL_RCV_INTX_STATUS_SHIFT);
+> > +	writel(val, priv->base + PCL_RCV_INTX);
+> > +}
+> > +
+> > +static void uniphier_pcie_irq_mask(struct irq_data *d)
+> > +{
+> > +	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
+> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > +	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+> > +	u32 val;
+> > +
+> > +	val = readl(priv->base + PCL_RCV_INTX);
+> > +	val &= ~PCL_RCV_INTX_ALL_STATUS;
+> > +	val |= BIT(irqd_to_hwirq(d) + PCL_RCV_INTX_MASK_SHIFT);
+> > +	writel(val, priv->base + PCL_RCV_INTX);
+> > +}
+> > +
+> > +static void uniphier_pcie_irq_unmask(struct irq_data *d)
+> > +{
+> > +	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
+> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > +	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+> > +	u32 val;
+> > +
+> > +	val = readl(priv->base + PCL_RCV_INTX);
+> > +	val &= ~PCL_RCV_INTX_ALL_STATUS;
 > 
-No. This driver should depend on OF.
-Can I solve this by add "dpends on OF" in Kconfig?
+> I have noticed this operation is carried out on ACK/MASK/UNMASK,
+> what's its purpose ?
+
+Thanks for pointing out. This is wrong.
+
+The register PCL_RCV_INTX has 3 parts of bits.
+
+#define PCL_RCV_INTX_ALL_ENABLE         GENMASK(19, 16)
+#define PCL_RCV_INTX_ALL_MASK           GENMASK(11, 8)
+#define PCL_RCV_INTX_ALL_STATUS         GENMASK(3, 0)
+
+In the mask/unmask operation,
+We should use PCL_RCV_INTX_ALL_MASK to represent 'mask bits',
+not PCL_RCV_INTX_ALL_STATUS.
+And the ack operation is effective by writing 1 to 'status bits'.
+
+Thank you,
+
+---
+Best Regards,
+Kunihiko Hayashi
