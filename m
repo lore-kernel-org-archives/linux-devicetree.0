@@ -1,175 +1,78 @@
-From: Li Yang <leoyang.li@nxp.com>
-Subject: Re: Moving ARM dts files
-Date: Wed, 5 Dec 2018 11:36:07 -0600
-Message-ID: <CADRPPNRYr1iULKtDHvzGcMmXqnMSKrLy5h-S=JVae+d5LFxP3Q@mail.gmail.com>
-References: <20181204183649.GA5716@bogus>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: Re: [PATCH 13/14] power: supply: axp20x: add missing include bitops.h
+Date: Wed, 5 Dec 2018 18:43:17 +0100
+Message-ID: <20181205174317.wm5wuxrhy2tbkjih@earth.universe>
+References: <cover.156212c9c5df493e098556cad9793a07dcab5e32.1543245984.git-series.plaes@plaes.org>
+ <9547ef8e8e6fe9f933264119bd186bdd83974999.1543245984.git-series.plaes@plaes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181204183649.GA5716@bogus>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: andrew@lunn.ch, alexandre.belloni@bootlin.com, tony@atomide.com, Linus Walleij <linus.walleij@linaro.org>, liviu.dudau@arm.com, yamada.masahiro@socionext.com, Thierry Reding <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, khilman@kernel.org, gregory.clement@bootlin.com, Michal Simek <michal.simek@xilinx.com>, krzk@kernel.org, arm@kernel.org, joel@jms.id.au, Andy Gross <andy.gross@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, horms@verge.net.au, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, mcoquelin.stm32@gmail.com, Shawn Guo <shawnguo@kernel.org>, afaerber@suse.de, Daniel Mack <daniel@zonque.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6r73kfzavaa5p2y4"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9547ef8e8e6fe9f933264119bd186bdd83974999.1543245984.git-series.plaes@plaes.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Priit Laes <plaes@plaes.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Hans de Goede <hdegoede@redhat.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Olliver Schinagl <oliver@schinagl.nl>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 4, 2018 at 12:37 PM Rob Herring <robh@kernel.org> wrote:
->
-> Olof, Arnd,
->
-> I've put together a script to move the dts files and update the
-> makefiles. It doesn't handle files not following a common prefix which
-> isn't many and some includes within the dts files will need some fixups
-> by hand.
->
-> MAINTAINERS will also need updating.
->
-> A few questions:
->
-> Do we want to move absolutely everything to subdirs? There's quite a
-> few platforms with only 1-2 platforms. I haven't added these to the
-> list yet, but can.
->
-> Do any vendors need another level of directories? davinci, omap, nspire,
-> etc. for TI for example.
->
-> What to do with armv7m.dtsi? I guess it should remain and we just fixup
-> the include. There may be a few other cross vendor things.
->
->
-> Sub-arch maintainers,
-> 'vendor_map' below is the mapping of file prefix to new subdirectory
-> (the SoC vendor prefix). Please comment if there are any issues.
->
-> Rob
->
-> 8<-----------------------------------------------------------
-> #!/usr/bin/env python3
->
-> import os
-> import re
-> from git import Git
-> import glob
->
-> vendor_map = {
->     'imx': 'fsl',
->     'ls': 'fsl',
->     'vf': 'fsl',
 
-Probably we can update "fsl" to "nxp" now since you are at it.  :)  We
-didn't try to update this previously because for the past two years we
-were thinking that it will need to be updated to qcom again soon.
+--6r73kfzavaa5p2y4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->     'qcom': 'qcom',
->     'am3' : 'ti',
->     'am4' : 'ti',
->     'am5' : 'ti',
->     'da' : 'ti',
->     'dm' : 'ti',
->     'dra' : 'ti',
->     'keystone' : 'ti',
->     'omap' : 'ti',
->     'nspire' : 'ti',
->     'armada' : 'marvell',
->     'berlin' : 'marvell',
->     'dove' : 'marvell',
->     'kirkwood' : 'marvell',
->     'orion' : 'marvell',
->     'pxa' : 'marvell',
->     'mvebu' : 'marvell',
->     'mmp2' : 'marvell',
->     'arm-' : 'arm',
->     'integ' : 'arm',
->     've' : 'arm',
->     'aspeed' : 'aspeed',
->     'at91' : 'atmel',
->     'sama' : 'atmel',
->     'bcm' : 'brcm',
->     'exynos' : 'samsung',
->     's3c' : 'samsung',
->     's5p' : 'samsung',
->     'gemini' : 'cortina',
->     'hi3' : 'hisilicon',
->     'hip' : 'hisilicon',
->     'hisi' : 'hisilicon',
->     'mt' : 'mediatek',
->     'meson' : 'amlogic',
->     'owl' : 'actions',
->     'r7' : 'renesas',
->     'r8' : 'renesas',
->     'r9' : 'renesas',
->     'rk' : 'rockchip',
->     'socfpga' : 'altera',
->     'st' : 'st',
->     'spear' : 'st',
->     'sun' : 'allwinner',
->     'tegra' : 'nvidia',
->     'zynq' : 'xilinx',
->     'wm' : 'wm',
->     'uniph' : 'socionext',
->     'zx' : 'zte',
-> }
->
-> if __name__ == "__main__":
->     g = Git('.')
->
->     g.checkout("HEAD", "arch/arm/boot/dts/Makefile")
->     dts_make = open("arch/arm/boot/dts/Makefile", "r").read()
->
->     # make entries 1 line
->     make2 = re.sub(r'\\\n', '', dts_make)
->
->     for k,v in vendor_map.items():
->         for f in glob.iglob("arch/arm/boot/dts/" + k + "*.*"):
->             new_dir = "arch/arm/boot/dts/" + v + "/"
->             base = os.path.splitext(os.path.basename(f))[0]
->
->             os.makedirs(new_dir, exist_ok=True)
->             g.mv(f, new_dir)
->
->             # Remove the file from the makefile
->             dts_make = re.sub('.*' + base + r'\.dtb.*\\\n', '', dts_make)
->             dts_make = re.sub('.*' + base + r'\.dtb', '', dts_make)
->
->             # extract the matching makefile entry
->             reg = re.search(r'.*' + base + r'.*', make2)
->             if not reg:
->                 continue
->
->             entry = reg.group(0)
->             make2 = re.sub(r'.*' + base + r'.*', '', make2)
->             if entry:
->                 makefile = open(new_dir + 'Makefile', 'a+')
->                 print(entry, file=makefile)
->                 makefile.close()
->
->
->     for d in sorted(glob.iglob("arch/arm/boot/dts/*/")):
->         dts_make += 'subdir-y += ' + d.split(os.path.sep)[-2] + '\n'
->
->         # Add license and sort entries of sub-dir makefile
->         vendor_make = '# SPDX-License-Identifier: GPL-2.0\n'
->         make_lines = open(d + 'Makefile', 'r').readlines()
->         for l in sorted(make_lines):
->             vendor_make += l
->
->         vendor_make = re.sub(r'\t', r'\\\n\t', vendor_make)
->
->         f = open(d + 'Makefile', 'w')
->         f.write(vendor_make)
->         f.close()
->         g.add(d + 'Makefile')
->
->     # Remove entries with no dtbs left
->     dts_make = re.sub(r'.*\+= \\\n\n', '', dts_make)
->
->     open("arch/arm/boot/dts/Makefile", "w").write(dts_make)
->     g.add("arch/arm/boot/dts/Makefile")
+Hi,
+
+On Mon, Nov 26, 2018 at 05:27:54PM +0200, Priit Laes wrote:
+> From: Olliver Schinagl <oliver@schinagl.nl>
+>=20
+> The axp20x_usb_power driver uses BIT() operations but lacks the include
+> for it. Include the bitops.h header file.
+>=20
+> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
+> Signed-off-by: Priit Laes <plaes@plaes.org>
+> ---
+>  drivers/power/supply/axp20x_usb_power.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supp=
+ly/axp20x_usb_power.c
+> index 42001df..f52fe77 100644
+> --- a/drivers/power/supply/axp20x_usb_power.c
+> +++ b/drivers/power/supply/axp20x_usb_power.c
+> @@ -10,6 +10,7 @@
+>   * option) any later version.
+>   */
+> =20
+> +#include <linux/bitops.h>
+>  #include <linux/device.h>
+>  #include <linux/init.h>
+>  #include <linux/interrupt.h>
+> --=20
+> git-series 0.9.1
+
+Thanks, queued to power-supply-next.
+
+-- Sebastian
+
+--6r73kfzavaa5p2y4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlwIDjIACgkQ2O7X88g7
++ppZFg//W2oPevm8Wr3ZHLF2wdiahU1to0KiH0CWpU1x3nQILUUq9PDsX3y98tng
+1DINy6cuzj+ikTkuQz7fvqfVDIx5vphKA/8M+XmhkjtnC0qm7ExnUUGY2+7ZQJ8c
+UT+M04fk7/OnV797OzZbuXlC7pixYXLfSAR312RZBuh2h5pO8jUOpaCofhkm5yuh
+eQaB84w4FWLfTg9jTkfoA0IrOVYPSYH3mV/q+dew9IWEXh3lQhgagR7KAmr2tzLv
+kHxCvOAdUYksAJvCZJ2cibhoD1Fn+N8HuyjipXAgracM70cjfUq0OZb++3yDUbeD
+9oJMOW42aheaChUQvHsnRtEeUJLlEvD9OZLmqF2Fxc1g3gitStnTqFO9q0m4/S/3
+60xxKoq3wIOpSLa/neMmyvstWjd/704O5fpQFqufitWxb4XNwuxx1wGIv5ch/XT8
+HjsG9HYFQhG/Rx1v6t5uBL3aUXw3cY+zdl6hnyKxuRL4SMRR0pGoaQvMdv+Jm7GA
+r1QPmY3+9/SGUa3xBq4WoglvrSLFKNlQ8hEuwRSeXOrhW72WLPIUbd69jAgexhDh
+M1ZFjg7DiI4UPD4rfQNqKLkZ40xlCaf0ely4uC8aHpQLLznE0MQDCEMiad26Xw3P
+YqLcoUybwdQNlVTs5W4vjIzxtkOVWk2V5LcCnXUMN3cuze43/N0=
+=tgm4
+-----END PGP SIGNATURE-----
+
+--6r73kfzavaa5p2y4--
