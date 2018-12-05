@@ -1,21 +1,21 @@
 Return-Path: <SRS0=rNTY=OO=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr80049.outbound.protection.outlook.com ([40.107.8.49]:38811
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+Received: from mail-eopbgr40076.outbound.protection.outlook.com ([40.107.4.76]:33696
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727449AbeLEKY7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 5 Dec 2018 05:24:59 -0500
+        id S1727271AbeLEKVr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 5 Dec 2018 05:21:47 -0500
 From: "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
 Subject: [PATCH v1 2/9] dt/bindings: drm/komeda: Add DT bindings for ARM
  display processor D71
-Date: Wed, 5 Dec 2018 10:24:51 +0000
-Message-ID: <20181205102427.7936-1-james.qian.wang@arm.com>
+Date: Wed, 5 Dec 2018 10:21:29 +0000
+Message-ID: <20181205102105.7772-1-james.qian.wang@arm.com>
 Content-Language: en-US
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
 To: "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>nd <nd@arm.com>, "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
 Add DT bindings documentation for the ARM display processor D71 and later
@@ -73,54 +73,60 @@ index 000000000000..d4b53c11b2a2
 +
 +Example:
 +/ {
-+	...
++...
 +
-+	dp0: display@c00000 {
-+		#address-cells =3D <1>;
-+		#size-cells =3D <0>;
-+		compatible =3D "arm,mali-d71";
-+		reg =3D <0xc00000 0x20000>;
-+		interrupts =3D <0 168 4>;
-+		interrupt-names =3D "DPU";
-+		clocks =3D <&dpu_mclk>, <&dpu_aclk>;
-+		clock-names =3D "mclk", "pclk";
++dp0: display@c00000 {
++#address-cells =3D <1>;
++#size-cells =3D <0>;
++compatible =3D "arm,mali-d71";
++reg =3D <0xc00000 0x20000>;
++interrupts =3D <0 168 4>;
++interrupt-names =3D "DPU";
++clocks =3D <&dpu_mclk>, <&dpu_aclk>;
++clock-names =3D "mclk", "pclk";
 +
-+		pl0: pipeline@0 {
-+			clocks =3D <&fpgaosc2>, <&dpu_aclk>;
-+			clock-names =3D "pxclk", "aclk";
-+			reg =3D <0>;
++pl0: pipeline@0 {
++clocks =3D <&fpgaosc2>, <&dpu_aclk>;
++clock-names =3D "pxclk", "aclk";
++reg =3D <0>;
 +
-+			ports {
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
++ports {
++#address-cells =3D <1>;
++#size-cells =3D <0>;
 +
-+				port@0 {
-+					reg =3D <0>;
-+					dp0_pl0_out: endpoint {
-+						remote-endpoint =3D <&db_dvi0_in>;
-+					};
-+				};
-+			};
-+		};
-+		pl1: pipeline@1 {
-+			clocks =3D <&fpgaosc2>, <&dpu_aclk>;
-+			clock-names =3D "pxclk", "aclk";
-+			reg =3D <1>;
-+
-+			ports {
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+
-+				port@0 {
-+					reg =3D <0>;
-+					dp0_pl1_out: endpoint {
-+						remote-endpoint =3D <&db_dvi1_in>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+	...
++port@0 {
++reg =3D <0>;
++dp0_pl0_out: endpoint {
++remote-endpoint =3D <&db_dvi0_in>;
 +};
---=20
++};
++};
++};
++pl1: pipeline@1 {
++clocks =3D <&fpgaosc2>, <&dpu_aclk>;
++clock-names =3D "pxclk", "aclk";
++reg =3D <1>;
++
++ports {
++#address-cells =3D <1>;
++#size-cells =3D <0>;
++
++port@0 {
++reg =3D <0>;
++dp0_pl1_out: endpoint {
++remote-endpoint =3D <&db_dvi1_in>;
++};
++};
++};
++};
++};
++...
++};
+--
 2.17.1
+
+IMPORTANT NOTICE: The contents of this email and any attachments are confid=
+ential and may also be privileged. If you are not the intended recipient, p=
+lease notify the sender immediately and do not disclose the contents to any=
+ other person, use it for any purpose, or store or copy the information in =
+any medium. Thank you.
