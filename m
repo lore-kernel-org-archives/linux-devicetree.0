@@ -1,61 +1,63 @@
-From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 03/15] ARM: dts: sun8i: h3: Remove
- unnecessary reserved memory node
-Date: Wed,  5 Dec 2018 10:24:32 +0100
-Message-ID: <20181205092444.29497-4-paul.kocialkowski@bootlin.com>
-References: <20181205092444.29497-1-paul.kocialkowski@bootlin.com>
-Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: [PATCH v2 00/15] Cedrus H5 and A64 support with A33 and H3 updates
+Date: Wed,  5 Dec 2018 10:24:29 +0100
+Message-ID: <20181205092444.29497-1-paul.kocialkowski@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRB7FST3QAKGQECQZGVDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181205092444.29497-1-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-sunxi@googlegroups.com, Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Just like on the A33, the video engine on the H3 can map any address in
-memory, so there is no particular need to have reserved memory at a fixed
-address.
+This series adds support for the Allwinner H5 and A64 platforms to the
+cedrus stateless video codec driver, with minor updates to the A33 and
+H3 platforms.
 
-As a result, remove the reserved memory node and let the kernel allocate
-the CMA pool wherever it sees fit.
+It requires changes to the SRAM driver bindings and driver, to properly
+support the H5 and the A64 C1 SRAM section. Because a H5-specific
+system-control node is introduced, the dummy syscon node that was shared
+between the H3 and H5 is removed in favor of each platform-specific node.
+A few fixes are included to ensure that the EMAC clock configuration
+register is still accessible through the sunxi SRAM driver (instead of the
+dummy syscon node, that was there for this purpose) on the H3 and H5.
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-h3.dtsi | 14 --------------
- 1 file changed, 14 deletions(-)
+The reserved memory nodes for the A33 and H3 are also removed in this
+series, since they are not actually necessary.
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index dbb7e71b6d69..e438e54580e1 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -119,20 +119,6 @@
- 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
- 	};
- 
--	reserved-memory {
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges;
--
--		default-pool {
--			compatible = "shared-dma-pool";
--			size = <0x6000000>;
--			alloc-ranges = <0x4a000000 0x6000000>;
--			reusable;
--			linux,cma-default;
--		};
--	};
--
- 	soc {
- 		system-control@1c00000 {
- 			compatible = "allwinner,sun8i-h3-system-control";
+Changes since v1:
+* Removed the reserved-memory nodes for the A64 and H5;
+* Removed the reserved-memory nodes for the A33 and H3;
+* Corrected the SRAM bases and sizes to the best of our knowledge;
+* Dropped cosmetic dt changes already included in the sunxi tree.
+
+Paul Kocialkowski (15):
+  ARM: dts: sun8i: h3: Fix the system-control register range
+  ARM: dts: sun8i: a33: Remove unnecessary reserved memory node
+  ARM: dts: sun8i: h3: Remove unnecessary reserved memory node
+  soc: sunxi: sram: Enable EMAC clock access for H3 variant
+  dt-bindings: sram: sunxi: Add bindings for the H5 with SRAM C1
+  soc: sunxi: sram: Add support for the H5 SoC system control
+  arm64: dts: allwinner: h5: Add system-control node with SRAM C1
+  ARM/arm64: sunxi: Move H3/H5 syscon label over to soc-specific nodes
+  dt-bindings: sram: sunxi: Add compatible for the A64 SRAM C1
+  arm64: dts: allwinner: a64: Add support for the SRAM C1 section
+  dt-bindings: media: cedrus: Add compatibles for the A64 and H5
+  media: cedrus: Add device-tree compatible and variant for H5 support
+  media: cedrus: Add device-tree compatible and variant for A64 support
+  arm64: dts: allwinner: h5: Add Video Engine node
+  arm64: dts: allwinner: a64: Add Video Engine node
+
+ .../devicetree/bindings/media/cedrus.txt      |  2 ++
+ .../devicetree/bindings/sram/sunxi-sram.txt   |  5 +++
+ arch/arm/boot/dts/sun8i-a33.dtsi              | 15 ---------
+ arch/arm/boot/dts/sun8i-h3.dtsi               | 18 ++--------
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  6 ----
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 25 ++++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  | 33 +++++++++++++++++++
+ drivers/soc/sunxi/sunxi_sram.c                | 10 +++++-
+ drivers/staging/media/sunxi/cedrus/cedrus.c   | 16 +++++++++
+ 9 files changed, 92 insertions(+), 38 deletions(-)
+
 -- 
 2.19.2
