@@ -1,44 +1,50 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 010/123] ARM: dts: logicpd-somlv: Fix interrupt on mmc3_dat1
-Date: Wed,  5 Dec 2018 04:34:02 -0500
-Message-ID: <20181205093555.5386-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 015/123] arm64: dts: sdm845-mtp: Reserve reserved gpios
+Date: Wed,  5 Dec 2018 04:34:07 -0500
+Message-ID: <20181205093555.5386-15-sashal@kernel.org>
 References: <20181205093555.5386-1-sashal@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181205093555.5386-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Adam Ford <aford173@gmail.com>, Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit 3d8b804bc528d3720ec0c39c212af92dafaf6e84 ]
+[ Upstream commit 5f8d3ab136d0ccb59c4d628d8f85e0d8f2761d07 ]
 
-The interrupt on mmc3_dat1 is wrong which prevents this from
-appearing in /proc/interrupts.
+With the introduction of commit 3edfb7bd76bd ("gpiolib: Show correct
+direction from the beginning") the gpiolib will attempt to read the
+direction of all pins, which triggers a read from protected register
+regions.
 
-Fixes: ab8dd3aed011 ("ARM: DTS: Add minimal Support for Logic PD
-DM3730 SOM-LV") #Kernel 4.9+
+The pins 0 through 3 and 81 through 84 are protected, so mark these as
+reserved.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/logicpd-som-lv.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/logicpd-som-lv.dtsi b/arch/arm/boot/dts/logicpd-som-lv.dtsi
-index ac343330d0c8..98b682a8080c 100644
---- a/arch/arm/boot/dts/logicpd-som-lv.dtsi
-+++ b/arch/arm/boot/dts/logicpd-som-lv.dtsi
-@@ -129,7 +129,7 @@
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+index 6d651f314193..6921f8dc5ebb 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+@@ -31,6 +31,10 @@
+ 	status = "okay";
  };
  
- &mmc3 {
--	interrupts-extended = <&intc 94 &omap3_pmx_core2 0x46>;
-+	interrupts-extended = <&intc 94 &omap3_pmx_core 0x136>;
- 	pinctrl-0 = <&mmc3_pins &wl127x_gpio>;
- 	pinctrl-names = "default";
- 	vmmc-supply = <&wl12xx_vmmc>;
++&tlmm {
++	gpio-reserved-ranges = <0 4>, <81 4>;
++};
++
+ &uart9 {
+ 	status = "okay";
+ };
 -- 
 2.17.1
