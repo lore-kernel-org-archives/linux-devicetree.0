@@ -1,50 +1,83 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 015/123] arm64: dts: sdm845-mtp: Reserve reserved gpios
-Date: Wed,  5 Dec 2018 04:34:07 -0500
-Message-ID: <20181205093555.5386-15-sashal@kernel.org>
-References: <20181205093555.5386-1-sashal@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181205093555.5386-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: Re: [PATCH 03/19] dt-bindings: cpufreq: tegra124: remove
+ vdd-cpu-supply from required properties
+Date: Wed, 5 Dec 2018 11:37:50 +0200
+Message-ID: <20181205093750.GG26056@pdeschrijver-desktop.Nvidia.com>
+References: <20181204092548.3038-1-josephl@nvidia.com>
+ <20181204092548.3038-4-josephl@nvidia.com>
+ <20181204153600.GA26056@pdeschrijver-desktop.Nvidia.com>
+ <3a6f4512-db3f-4cba-21da-572edf14c5dc@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <3a6f4512-db3f-4cba-21da-572edf14c5dc@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joseph Lo <josephl@nvidia.com>
+Cc: devicetree@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+On Wed, Dec 05, 2018 at 11:05:58AM +0800, Joseph Lo wrote:
+> On 12/4/18 11:36 PM, Peter De Schrijver wrote:
+> > On Tue, Dec 04, 2018 at 05:25:32PM +0800, Joseph Lo wrote:
+> > > The Tegra124 cpufreq driver works only with DFLL clock, which is a
+> > > hardware-based frequency/voltage controller. The driver doesn't need to
+> > > control the regulator itself. Hence remove that.
+> > > 
+> > 
+> > I think this is required for DFLL controlled I2C regulators because the
+> > regulator is queried for voltage selectors and I2C slave ID?
+> > 
+> 
+> Hi Peter,
+> 
+> Yes, it's required for DFLL-I2C mode and defined in DFLL node. It's not
+> needed here in the CPU node for CPU freq driver to handle that. Hence remove
+> that.
+> 
 
-[ Upstream commit 5f8d3ab136d0ccb59c4d628d8f85e0d8f2761d07 ]
+Ah right. So yes, this is fine then.
 
-With the introduction of commit 3edfb7bd76bd ("gpiolib: Show correct
-direction from the beginning") the gpiolib will attempt to read the
-direction of all pins, which triggers a read from protected register
-regions.
+Peter.
 
-The pins 0 through 3 and 81 through 84 are protected, so mark these as
-reserved.
-
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-index 6d651f314193..6921f8dc5ebb 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-@@ -31,6 +31,10 @@
- 	status = "okay";
- };
- 
-+&tlmm {
-+	gpio-reserved-ranges = <0 4>, <81 4>;
-+};
-+
- &uart9 {
- 	status = "okay";
- };
--- 
-2.17.1
+> Thanks,
+> Joseph
+> 
+> 
+> > 
+> > > Cc: devicetree@vger.kernel.org
+> > > Signed-off-by: Joseph Lo <josephl@nvidia.com>
+> > > ---
+> > >   .../devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt     | 2 --
+> > >   1 file changed, 2 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
+> > > index b1669fbfb740..031545a29caf 100644
+> > > --- a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
+> > > +++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
+> > > @@ -13,7 +13,6 @@ Required properties:
+> > >     - pll_x: Fast PLL clocksource.
+> > >     - pll_p: Auxiliary PLL used during fast PLL rate changes.
+> > >     - dfll: Fast DFLL clocksource that also automatically scales CPU voltage.
+> > > -- vdd-cpu-supply: Regulator for CPU voltage
+> > >   Optional properties:
+> > >   - clock-latency: Specify the possible maximum transition latency for clock,
+> > > @@ -37,7 +36,6 @@ cpus {
+> > >   			 <&dfll>;
+> > >   		clock-names = "cpu_g", "cpu_lp", "pll_x", "pll_p", "dfll";
+> > >   		clock-latency = <300000>;
+> > > -		vdd-cpu-supply: <&vdd_cpu>;
+> > >   	};
+> > >   	<...>
+> > > -- 
+> > > 2.19.2
+> > > 
