@@ -1,117 +1,64 @@
-From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 07/15] arm64: dts: allwinner: h5: Add
- system-control node with SRAM C1
-Date: Wed, 05 Dec 2018 10:53:57 +0100
-Message-ID: <f2fd100fd4f0fa66f437b6b3cc80ed3f7da6ba3a.camel@bootlin.com>
-References: <20181205092444.29497-1-paul.kocialkowski@bootlin.com>
-	 <20181205092444.29497-8-paul.kocialkowski@bootlin.com>
-	 <CAGb2v66JwZ_RkEdk6sz-0Z7EJx7ieG3zBT6yr-95X6guxUkKTg@mail.gmail.com>
-	 <edf44a24633ecaf59a7d5bea1f4acffdd0ae01a3.camel@bootlin.com>
-	 <CAGb2v67tgp_tD_Pkx1Qkc=d__saZUMwwmE44uCCeLgVM2HWmUQ@mail.gmail.com>
-Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 0/5] clk: meson: axg: add 32k clock generation
+Date: Wed, 5 Dec 2018 10:50:10 +0100
+Message-ID: <8e7ae6ab-a38b-d2ef-ecfc-58d198821b9c@baylibre.com>
+References: <20181204165310.20806-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBQGAT3QAKGQESJVF5LA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v67tgp_tD_Pkx1Qkc=d__saZUMwwmE44uCCeLgVM2HWmUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181204165310.20806-1-jbrunet@baylibre.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, 2018-12-05 at 17:49 +0800, Chen-Yu Tsai wrote:
-> On Wed, Dec 5, 2018 at 5:48 PM Paul Kocialkowski
-> <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > Hi,
-> > 
-> > On Wed, 2018-12-05 at 17:45 +0800, Chen-Yu Tsai wrote:
-> > > On Wed, Dec 5, 2018 at 5:25 PM Paul Kocialkowski
-> > > <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > > Add the H5-specific system control node description to its device-tree
-> > > > with support for the SRAM C1 section, that will be used by the video
-> > > > codec node later on.
-> > > > 
-> > > > The CPU-side SRAM address was obtained empirically while the size was
-> > > > taken from the documentation. They may not be entirely accurate.
-> > > > 
-> > > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> > > > ---
-> > > >  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 22 ++++++++++++++++++++
-> > > >  1 file changed, 22 insertions(+)
-> > > > 
-> > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-> > > > index b41dc1aab67d..42bfb560b367 100644
-> > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-> > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-> > > > @@ -94,6 +94,28 @@
-> > > >         };
-> > > > 
-> > > >         soc {
-> > > > +               system-control@1c00000 {
-> > > > +                       compatible = "allwinner,sun50i-h5-system-control";
-> > > > +                       reg = <0x01c00000 0x1000>;
-> > > > +                       #address-cells = <1>;
-> > > > +                       #size-cells = <1>;
-> > > > +                       ranges;
-> > > > +
-> > > > +                       sram_c1: sram@1d00000 {
-> > > > +                               compatible = "mmio-sram";
-> > > > +                               reg = <0x00018000 0x1c000>;
-> > > 
-> > > 0x1d00000 or 0x18000?
-> > 
-> > For the H5, I found the VE SRAM area to be mapped to 0x18000 on the CPU
-> > side (when testing with devmem), unlike the A64, H3 and others. I was
-> > rather surprised about this as well!
+On 04/12/2018 17:53, Jerome Brunet wrote:
+> The goal of this patchset is to add the internal generation of the
+> 32768Hz clock within the axg AO clock controller.
 > 
-> I'm actually referring to the node name that still says 1d00000.
-
-Oh I totally missed that, sorry. Thanks for pointing it out!
-
-Cheers,
-
-Paul
-
-> ChenYu
+> This was initially added has the CEC clock on gxbb. To properly
+> integrate it on the axg, a simpler 'dual divider' driver is added.
+> Then gxbb AO clock controller is reworked to use it. Finally the 32k
+> clock tree is added to the AXG.
 > 
-> > > > +                               #address-cells = <1>;
-> > > > +                               #size-cells = <1>;
-> > > > +                               ranges = <0 0x00018000 0x1c000>;
-> > > 
-> > > Same here.
-> > > 
-> > > > +
-> > > > +                               ve_sram: sram-section@0 {
-> > > > +                                       compatible = "allwinner,sun50i-h5-sram-c1",
-> > > > +                                                    "allwinner,sun4i-a10-sram-c1";
-> > > > +                                       reg = <0x000000 0x1c000>;
-> > > > +                               };
-> > > > +                       };
-> > > > +               };
-> > > > +
-> > > >                 mali: gpu@1e80000 {
-> > > >                         compatible = "allwinner,sun50i-h5-mali", "arm,mali-450";
-> > > >                         reg = <0x01e80000 0x30000>;
-> > > > --
-> > > > 2.19.2
-> > 
-> > Cheers,
-> > 
-> > Paul
-> > 
-> > --
-> > Paul Kocialkowski, Bootlin (formerly Free Electrons)
-> > Embedded Linux and kernel engineering
-> > https://bootlin.com
-> > 
--- 
-Paul Kocialkowski, Bootlin (formerly Free Electrons)
-Embedded Linux and kernel engineering
-https://bootlin.com
+> This patchset requires depends on this CCF change [0]
+> 
+> [0]: https://lkml.kernel.org/r/20181204163257.32085-1-jbrunet@baylibre.com
+> 
+> Jerome Brunet (5):
+>   dt-bindings: clk: meson: add ao slow clock path ids
+>   clk: meson: clean-up clock registration
+>   clk: meson: add dual divider clock driver
+>   clk: meson: gxbb-ao: replace cec-32k with the dual divider
+>   clk: meson: axg-ao: add 32k generation subtree
+> 
+>  drivers/clk/meson/Makefile              |   3 +-
+>  drivers/clk/meson/axg-aoclk.c           | 175 +++++++++++++++--
+>  drivers/clk/meson/axg-aoclk.h           |  13 +-
+>  drivers/clk/meson/clk-dualdiv.c         | 130 +++++++++++++
+>  drivers/clk/meson/clkc.h                |  19 ++
+>  drivers/clk/meson/gxbb-aoclk-32k.c      | 193 -------------------
+>  drivers/clk/meson/gxbb-aoclk.c          | 238 +++++++++++++++++++-----
+>  drivers/clk/meson/gxbb-aoclk.h          |  20 +-
+>  drivers/clk/meson/meson-aoclk.c         |  15 +-
+>  include/dt-bindings/clock/axg-aoclkc.h  |   7 +-
+>  include/dt-bindings/clock/gxbb-aoclkc.h |   7 +
+>  11 files changed, 527 insertions(+), 293 deletions(-)
+>  create mode 100644 drivers/clk/meson/clk-dualdiv.c
+>  delete mode 100644 drivers/clk/meson/gxbb-aoclk-32k.c
+> 
+
+Good move, it's good to have a common driver to enable USB device support for
+GX and AXg families since they depends on the slow_clk path.
+
+Tested-by: Neil Armstrong <narmstrong@baylibre.com>
+
+and
+
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+
+And applied on next/drivers
+
+Neil
