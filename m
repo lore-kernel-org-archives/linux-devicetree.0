@@ -1,39 +1,95 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/2] ARM: dts: imx6ul: Correct mask for GIC PPI interrupts
-Date: Wed, 5 Dec 2018 12:14:05 +0800
-Message-ID: <20181205041404.GM3987@dragon>
-References: <1543858820-3354-1-git-send-email-festevam@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: Moving ARM dts files
+Date: Tue, 4 Dec 2018 22:17:15 -0600
+Message-ID: <CAL_JsqKO3v0pgVfNhVNOkpZ4sePrybDgZG0riN-tutvwOZ4zYg@mail.gmail.com>
+References: <20181204183649.GA5716@bogus>
+ <9c2b5528-679a-928e-3150-aa383a4f0405@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1543858820-3354-1-git-send-email-festevam@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: devicetree@vger.kernel.org, marc.zyngier@arm.com, liviu.dudau@arm.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <9c2b5528-679a-928e-3150-aa383a4f0405-l3A5Bk7waGM@public.gmane.org>
+List-Unsubscribe: <https://lists.linaro.org/mailman/options/boot-architecture>,
+ <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/boot-architecture/>
+List-Post: <mailto:boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linaro.org/mailman/listinfo/boot-architecture>,
+ <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Errors-To: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Sender: "boot-architecture" <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory CLEMENT <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ARM-SoC Maintainers <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Architecture Mailman List <boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 03, 2018 at 03:40:19PM -0200, Fabio Estevam wrote:
-> The GIC_CPU_MASK_SIMPLE() macro should take as its argument the actual
-> number of CPU cores the interrupt controller is wired to.
-> 
-> i.MX6UL contains a single Cortex-A7, hence the second interrupt specifier
-> cell for Private Peripheral Interrupts should use "GIC_CPU_MASK_SIMPLE(1)".
-> 
-> Tested on a imx6ul-evk.
-> 
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
-
-Dropped RFC patches (shouldn't be applied at all, sorry), and applied
-these two.
-
-Shawn
+T24gVHVlLCBEZWMgNCwgMjAxOCBhdCA3OjIyIFBNIEFuZHJlYXMgRsOkcmJlciA8YWZhZXJiZXJA
+c3VzZS5kZT4gd3JvdGU6Cj4KPiBSb2IsCj4KPiBBbSAwNC4xMi4xOCB1bSAxOTozNiBzY2hyaWVi
+IFJvYiBIZXJyaW5nOgo+ID4gSSd2ZSBwdXQgdG9nZXRoZXIgYSBzY3JpcHQgdG8gbW92ZSB0aGUg
+ZHRzIGZpbGVzIGFuZCB1cGRhdGUgdGhlCj4gPiBtYWtlZmlsZXMuIEl0IGRvZXNuJ3QgaGFuZGxl
+IGZpbGVzIG5vdCBmb2xsb3dpbmcgYSBjb21tb24gcHJlZml4IHdoaWNoCj4gPiBpc24ndCBtYW55
+IGFuZCBzb21lIGluY2x1ZGVzIHdpdGhpbiB0aGUgZHRzIGZpbGVzIHdpbGwgbmVlZCBzb21lIGZp
+eHVwcwo+ID4gYnkgaGFuZC4KPiA+Cj4gPiBNQUlOVEFJTkVSUyB3aWxsIGFsc28gbmVlZCB1cGRh
+dGluZy4KPiA+Cj4gPiBBIGZldyBxdWVzdGlvbnM6Cj4gPgo+ID4gRG8gd2Ugd2FudCB0byBtb3Zl
+IGFic29sdXRlbHkgZXZlcnl0aGluZyB0byBzdWJkaXJzPwo+Cj4gVGhpcyByZWZhY3RvcmluZyBp
+cyBhIHRlcnJpYmxlIGlkZWEhCgpIb3cgZG8geW91IHJlYWxseSBmZWVsPwoKPiBXaGlsZSBpdCB3
+b3VsZCd2ZSBiZWVuIG5pY2UgdG8gaGF2ZSBtb3JlIHN0cnVjdHVyZSBmcm9tIHRoZSBzdGFydCwK
+PiBib290bG9hZGVycyBsaWtlIFUtQm9vdCBleHBlY3QgYSBmbGF0IHN0cnVjdHVyZSBmb3IgYXJt
+IC5kdGIgZmlsZXMgbm93Lgo+IElmIHlvdSBzdGFydCBpbnN0YWxsaW5nIHRoZW0gaW50byBzdWJk
+aXJzIGluc3RlYWQsIHRoZXkgd29uJ3QgZmluZCB0aGUKPiBmaWxlcyBhbnltb3JlIHVuZGVyIHRo
+ZSBoYXJkY29kZWQgbmFtZS4KPgo+IERvaW5nIHRoaXMgb25seSBmb3IgbmV3IHBsYXRmb3JtcyB3
+b3VsZCBiZSBtdWNoIGxlc3MgaW52YXNpdmUgYW5kIGFsbG93Cj4gdG8gcHJlcGFyZSBib290bG9h
+ZGVycyBhY2NvcmRpbmdseS4KClRoYXQgd2FzIG15IHN1Z2dlc3Rpb24gd2hlcmUgdGhpcyBzdGFy
+dGVkIGZvciB0aGUgbmV3IFJEQSBwbGF0Zm9ybS4KT2xvZiBwcmVmZXJyZWQgdG8gbW92ZSBldmVy
+eXRoaW5nIGFuZCB0aGF0J3MgbXkgZGVzaXJlIHRvby4KCj4gQWx0ZXJuYXRpdmVseSwgd2hpdGUt
+bGlzdCB3aGljaCBvbmVzCj4gYXJlIHNhZmUgdG8gbW92ZSBhcm91bmQuCgpJJ2QgcHJlZmVyIHRv
+IGtub3cgd2hpY2ggb25lcyB0aGUgZGlzdHJvcyBkb24ndCB3YW50IG1vdmVkLiBUaGF0CnNob3Vs
+ZCBiZSBlYXNpZXIgdG8gZmlndXJlIG91dC4gV2UgYWxzbyBuZWVkIHRoYXQgYW55d2F5cyBpbiBj
+b250ZXh0Cm9mIHdoYXQgcGxhdGZvcm1zIHdlIGNhcmUgYWJvdXQgY29tcGF0aWJpbGl0eS4KCkFu
+b3RoZXIgb3B0aW9uIGlzIGR0YnNfaW5zdGFsbCB0YXJnZXQgY291bGQgZmxhdHRlbiB0aGUgaW5z
+dGFsbGVkCmR0YnMuIFRoYXQgaXMgdGhlIG9ubHkgcGFydCB0aGUgZGlzdHJvcyBzaG91bGQgZGVw
+ZW5kIG9uLgoKPiBCdXQgZG9uJ3QganVzdCBzY3JpcHQgYSByZWZhY3RvcmluZyBiZWNhdXNlIGl0
+Cj4gbG9va3MgbmljZXIgaW4gdGhlIHNvdXJjZSB0cmVlLCB3aXRob3V0IHRlc3Rpbmcgd2hhdCBz
+aWRlIGVmZmVjdHMgdGhpcwo+IGNhbiBoYXZlIGZvciBib2FyZC9kaXN0cm8gdXNlcnMgb2YgdGhl
+IGNvbXBpbGVkIGZpbGVzIGluIHByYWN0aWNlLgo+IFdlIGFscmVhZHkgaGFkIHRoYXQgZGlzY3Vz
+c2lvbiBmb3IgYXJtNjQgYmVjYXVzZSBEZWJpYW4gY2hvc2UgdG8gaWdub3JlCj4gdGhlIGtlcm5l
+bC1pbnN0YWxsZWQgc3ViZGlyZWN0b3JpZXMgYW5kIGluc3RhbGxlZCAuZHRiIGZpbGVzIGludG8g
+YSBmbGF0Cj4gZGlyZWN0b3J5LCB3aGljaCBjb2xsaWRlZCB3aXRoIG9wZW5TVVNFIHN0aWNraW5n
+IHRvIHRoZSBrZXJuZWwgY2hvaWNlLgoKU28gZXZlcnlvbmUgYWxyZWFkeSBkZWFscyB3aXRoIHN1
+YmRpcnMgb3Igbm90IHdpdGggYXJtIGFuZCBhcm02NAphbHJlYWR5LCBzZWVtcyBsaWtlIHRoZXkg
+Y2FuIGRlYWwgd2l0aCB0aGlzLiBJIHdpbGwgcmFpc2UgdGhlIHRvcGljIG9uCnRoZSBjcm9zcy1k
+aXN0cm8gbGlzdCB0aG91Z2guCgo+IFRoaXMgdG9waWMgYmVjb21lcyBldmVuIG1vcmUgaW1wb3J0
+YW50IHdpdGggRUJCUjogVGhlcmUgaXMgbmVpdGhlciBhCj4gbWVjaGFuaXNtIGluIHBsYWNlIHRv
+IHN5bmMgLmR0cyBmaWxlcyBpbnRvIFUtQm9vdCBvciBFREsyIHNvdXJjZSB0cmVlcywKPiBub3Ig
+YXJlIGNhcHN1bGUgdXBkYXRlcyBpbXBsZW1lbnRlZCBpbiBVLUJvb3QgZm9yIGVhc2lseSBkZXBs
+b3lpbmcgc3VjaAo+IGJvb3Rsb2FkZXJzIHdpdGggbmV3IC5kdHMgc291cmNlcyBvciBwYXRocyB5
+ZXQuCgpFQkJSIGFjdHVhbGx5IHNheXMgZmlybXdhcmUgKGluY2x1ZGluZyBkdGJzKSBnb2VzIGlu
+IGRpcmVjdG9yaWVzIG5hbWVkCmJ5IHZlbmRvci4KCj4gQW5kIEkgY2FuIGFzc3VyZSB5b3UKPiB0
+aGF0IGp1c3QgZ2V0dGluZyB1c2VycyB0byBkZCB0aGUgcmlnaHQgYm9vdGxvYWRlciBjYW4gYmUg
+ZGlmZmljdWx0Li4uCj4gU2luY2UgRFQgZm9yd2FyZCBhbmQgYmFja3dhcmQgY29tcGF0aWJpbGl0
+eSBpcyBvZnRlbiBiZWluZyBuZWdsZWN0ZWQsCj4gZm9yIGV4YW1wbGUgd2l0aCBvcHRpb25hbCBw
+cm9wZXJ0aWVzIG9yIHJlbmFtZWQgY29tcGF0aWJsZXMgdGhhdCBicmVhawo+IGJvb3Rpbmcgd2l0
+aCBwcmV2aW91cyBkcml2ZXJzLCBuZXcga2VybmVsIHZlcnNpb25zIG9mdGVuIG5lZWQgdXBkYXRl
+ZAo+IERldmljZSBUcmVlcyB0byBtYWtlIHVzZSBvZiBuZXcvZW5oYW5jZWQgZHJpdmVycy4gVGhl
+cmVmb3JlIGl0IGlzCj4gdW5mb3J0dW5hdGVseSBvZnRlbiBlbm91Z2ggYSBuZWNlc3NpdHkgdG8g
+bG9hZCBuZXdlciBrZXJuZWwtYmFzZWQgLmR0Ygo+IGZpbGVzIG1hdGNoaW5nIHRoZSBrZXJuZWwg
+KGFzIG9wcG9zZWQgdG8gdGhlIGRyZWFtIG9mIGtlcm5lbC1pbmRlcGVuZGVudAo+IGhhcmR3YXJl
+IGRlc2NyaXB0aW9ucykgd2hlbiB3b3JraW5nIHdpdGggdGhlIGxhdGVzdCAtcmMgb3IgLW5leHQg
+a2VybmVscwo+IGF0IGxlYXN0LiBGb3IgZXhhbXBsZXMgb2YgRFRzIG5lZWRpbmcgdXBkYXRlcywg
+bG9vayBubyBmdXJ0aGVyIHRoYW4KPiBMaW5hcm8ncyA5NmJvYXJkcyAtIGluIGNhc2Ugb2YgaGlr
+ZXk5NjAvRURLMiBHUlVCIGlzIGFub3RoZXIgbGF5ZXIgd2hlcmUKPiAuZHRiIHBhdGhzIG1heSBi
+ZSBoYXJkY29kZWQsIGRpdHRvIGZvciBhcm07IGFuZCBBcm1hZGEgd2FzIGFuIGV4YW1wbGUKPiB3
+aGVyZSB0aGUgdXBzdHJlYW0gYmluZGluZ3MgZm9yIHRoZSBuZXR3b3JrIElQIGNoYW5nZWQgaW5j
+b21wYXRpYmx5LgoKQ29tcGF0aWJpbGl0eSBpcyBhbiBpc3N1ZSwgeWVzLCBidXQgdGhhdCByZWFs
+bHkgaGFzIG5vdGhpbmcgdG8gZG8gd2l0aCB0aGlzLgoKPiBEVCBvdmVybGF5cyBhcmUgYW5vdGhl
+ciB0b3BpYyB0aGF0IGlzIG5vdCBtYWtpbmcgYW55IHByb2dyZXNzIHVwc3RyZWFtCj4gYWNjb3Jk
+aW5nIHRvIHRoZSBFTENFIEJvRiwgc28gYmV5b25kIHRoZSBSYXNwYmVycnkgUGkgdGhlIG9ubHkg
+a25vd24KPiB3b3JraW5nIHdheSB0byBhcHBseSB0aGVtIGlzIHRvIHdyaXRlIGEgVS1Cb290IGJv
+b3Quc2NyIHNjcmlwdCwgd2hpY2gKPiBjYW4gZWl0aGVyIHJldXNlICRmZHRjb250cm9sYWRkciBE
+VCBvciB1c2UgdGhlIGZpbGVuYW1lICRmZHRmaWxlIG9yCj4gaGFyZGNvZGUgb25lLCB0aGUgbGF0
+dGVyIHR3byBvZiB3aGljaCB3b3VsZCBicmVhayB3aXRoIHlvdXIgcmVuYW1pbmcuCgpEVCBvdmVy
+bGF5cyBhbHNvIGhhdmUgbm90aGluZyB0byBkbyB3aXRoIHRoaXMgYXMgdGhlcmUgYXJlbid0IGFu
+eSBpbgp0aGUga2VybmVsLiBJJ20gbm90IGluY2xpbmVkIHRvIHRha2UgYW55IGVpdGhlciB3aXRo
+IGEgZmxhdCB0cmVlLgpXZSdyZSBhbHJlYWR5IGF0IDE4MDArIGZpbGVzLgoKUm9iCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmJvb3QtYXJjaGl0ZWN0dXJl
+IG1haWxpbmcgbGlzdApib290LWFyY2hpdGVjdHVyZUBsaXN0cy5saW5hcm8ub3JnCmh0dHBzOi8v
+bGlzdHMubGluYXJvLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Jvb3QtYXJjaGl0ZWN0dXJlCg==
