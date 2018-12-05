@@ -1,189 +1,88 @@
 From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: Moving ARM dts files
-Date: Wed, 5 Dec 2018 13:18:46 +0900
-Message-ID: <CAK7LNAQ-O0Xnkb3egp-B8+0hFaeBM_pzn0f0XQJ3+FLgBwNCaQ@mail.gmail.com>
-References: <20181204183649.GA5716@bogus>
+Subject: Re: [PATCH 07/14] clock: milbeaut: Add Milbeaut M10V clock control
+Date: Wed, 5 Dec 2018 13:26:06 +0900
+Message-ID: <CAK7LNARwq7Qc527L8P8_=taApi-UE3knHceKBUosi5Yx97+row@mail.gmail.com>
+References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
+ <1542589274-13878-8-git-send-email-sugaya.taichi@socionext.com>
+ <154356669840.88331.4455990896653868594@swboyd.mtv.corp.google.com>
+ <CAK7LNAQEeLo=PW=DygyVxVHyn5jgRP18nb0cK+u1wGNd4BUh7Q@mail.gmail.com> <154394724886.88331.4940706362054124931@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181204183649.GA5716@bogus>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, gregory.clement@bootlin.com, Michal Simek <michal.simek@xilinx.com>, Krzysztof Kozlowski <krzk@kernel.org>, arm-soc <arm@kernel.org>, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, DTML <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Shawn Guo <shawnguo@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Daniel Mack <daniel@zonque.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <154394724886.88331.4940706362054124931@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: sugaya.taichi@socionext.com, DTML <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 5, 2018 at 3:37 AM Rob Herring <robh@kernel.org> wrote:
+On Wed, Dec 5, 2018 at 3:14 AM Stephen Boyd <sboyd@kernel.org> wrote:
 >
-> Olof, Arnd,
+> Quoting Masahiro Yamada (2018-12-04 03:03:53)
+> > Hi Stephen,
+> >
+> >
+> > On Fri, Nov 30, 2018 at 5:31 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > >
+> > > Quoting Sugaya Taichi (2018-11-18 17:01:12)
+> > > > Add Milbeaut M10V clock ( including PLL ) control.
+> > >
+> > > Please give some more details here.
+> > >
+> > > >
+> > > > Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
+> > > > ---
+> > > >  drivers/clk/Makefile   |   1 +
+> > > >  drivers/clk/clk-m10v.c | 671 +++++++++++++++++++++++++++++++++++++++++++++++++
+> > >
+> > > And this is different from Uniphier? Maybe we need a socionext
+> > > directory under drivers/clk/.
+> >
+> >
+> >
+> > This is always a difficult question,
+> > and I do not have a strong opinion.
+> >
+> >
+> > I am fine with moving the files to drivers/clk/socionext
+> > although no file would be shared.
+> >
+> >
+> > FYI
+> >
+> > UniPhier and Milbeaut are completely different platforms
+> > developed/maintained by different teams.
+> >
+> > They happen to live in the same company now
+> > just because Socionext merged the LSI business from Panasonic and Fujitsu.
+> >
+> > UniPhier originates in Panasonic, while Milbeaut in Fujitsu.
+> >
 >
-> I've put together a script to move the dts files and update the
-> makefiles. It doesn't handle files not following a common prefix which
-> isn't many and some includes within the dts files will need some fixups
-> by hand.
->
-> MAINTAINERS will also need updating.
->
-> A few questions:
->
-> Do we want to move absolutely everything to subdirs? There's quite a
-> few platforms with only 1-2 platforms. I haven't added these to the
-> list yet, but can.
->
-> Do any vendors need another level of directories? davinci, omap, nspire,
-> etc. for TI for example.
->
-> What to do with armv7m.dtsi? I guess it should remain and we just fixup
-> the include. There may be a few other cross vendor things.
->
->
-> Sub-arch maintainers,
-> 'vendor_map' below is the mapping of file prefix to new subdirectory
-> (the SoC vendor prefix). Please comment if there are any issues.
->
-> Rob
->
-> 8<-----------------------------------------------------------
-> #!/usr/bin/env python3
->
-> import os
-> import re
-> from git import Git
-> import glob
->
-> vendor_map = {
->     'imx': 'fsl',
->     'ls': 'fsl',
->     'vf': 'fsl',
->     'qcom': 'qcom',
->     'am3' : 'ti',
->     'am4' : 'ti',
->     'am5' : 'ti',
->     'da' : 'ti',
->     'dm' : 'ti',
->     'dra' : 'ti',
->     'keystone' : 'ti',
->     'omap' : 'ti',
->     'nspire' : 'ti',
->     'armada' : 'marvell',
->     'berlin' : 'marvell',
->     'dove' : 'marvell',
->     'kirkwood' : 'marvell',
->     'orion' : 'marvell',
->     'pxa' : 'marvell',
->     'mvebu' : 'marvell',
->     'mmp2' : 'marvell',
->     'arm-' : 'arm',
->     'integ' : 'arm',
->     've' : 'arm',
->     'aspeed' : 'aspeed',
->     'at91' : 'atmel',
->     'sama' : 'atmel',
->     'bcm' : 'brcm',
->     'exynos' : 'samsung',
->     's3c' : 'samsung',
->     's5p' : 'samsung',
->     'gemini' : 'cortina',
->     'hi3' : 'hisilicon',
->     'hip' : 'hisilicon',
->     'hisi' : 'hisilicon',
->     'mt' : 'mediatek',
->     'meson' : 'amlogic',
->     'owl' : 'actions',
->     'r7' : 'renesas',
->     'r8' : 'renesas',
->     'r9' : 'renesas',
->     'rk' : 'rockchip',
->     'socfpga' : 'altera',
->     'st' : 'st',
->     'spear' : 'st',
->     'sun' : 'allwinner',
->     'tegra' : 'nvidia',
->     'zynq' : 'xilinx',
->     'wm' : 'wm',
->     'uniph' : 'socionext',
+> Thanks for the background info. I'd prefer to defer to however the dts
+> files are getting split up into directories. If they're all put under
+> arch/arm64/boot/dts/socionext/ then I would say combine the two clk
+> drivers into a socionext directory. Otherwise, keep them split out.
 
 
-I tested this script, and
-I confirmed all of my DT files were moved to the socionext subdirectory.
-
-However, this would break arm64 build
-because some of my arm64 DT files include arm32 ones.
-
-I think it is common to share base platform boards between arm and arm64.
-
-Of course, It will be pretty easy to fix it up by hand later, though.
+If you want to align with the DT directory structure,
+the answer is clear.
 
 
+Milbeaut DT files will be put together with UniPhier ones
+into socionext directory.
 
 
+For arm64, DT directories are already sorted out by vendors.
 
->     'zx' : 'zte',
-> }
->
-> if __name__ == "__main__":
->     g = Git('.')
->
->     g.checkout("HEAD", "arch/arm/boot/dts/Makefile")
->     dts_make = open("arch/arm/boot/dts/Makefile", "r").read()
->
->     # make entries 1 line
->     make2 = re.sub(r'\\\n', '', dts_make)
->
->     for k,v in vendor_map.items():
->         for f in glob.iglob("arch/arm/boot/dts/" + k + "*.*"):
->             new_dir = "arch/arm/boot/dts/" + v + "/"
->             base = os.path.splitext(os.path.basename(f))[0]
->
->             os.makedirs(new_dir, exist_ok=True)
->             g.mv(f, new_dir)
->
->             # Remove the file from the makefile
->             dts_make = re.sub('.*' + base + r'\.dtb.*\\\n', '', dts_make)
->             dts_make = re.sub('.*' + base + r'\.dtb', '', dts_make)
->
->             # extract the matching makefile entry
->             reg = re.search(r'.*' + base + r'.*', make2)
->             if not reg:
->                 continue
->
->             entry = reg.group(0)
->             make2 = re.sub(r'.*' + base + r'.*', '', make2)
->             if entry:
->                 makefile = open(new_dir + 'Makefile', 'a+')
->                 print(entry, file=makefile)
->                 makefile.close()
->
->
->     for d in sorted(glob.iglob("arch/arm/boot/dts/*/")):
->         dts_make += 'subdir-y += ' + d.split(os.path.sep)[-2] + '\n'
->
->         # Add license and sort entries of sub-dir makefile
->         vendor_make = '# SPDX-License-Identifier: GPL-2.0\n'
->         make_lines = open(d + 'Makefile', 'r').readlines()
->         for l in sorted(make_lines):
->             vendor_make += l
->
->         vendor_make = re.sub(r'\t', r'\\\n\t', vendor_make)
->
->         f = open(d + 'Makefile', 'w')
->         f.write(vendor_make)
->         f.close()
->         g.add(d + 'Makefile')
->
->     # Remove entries with no dtbs left
->     dts_make = re.sub(r'.*\+= \\\n\n', '', dts_make)
->
->     open("arch/arm/boot/dts/Makefile", "w").write(dts_make)
->     g.add("arch/arm/boot/dts/Makefile")
+Even 32-bit ARM is going to that way.
+
+Rob Herring just posted a python script
+to move all DT files in arch/arm/boot/dts/
+into vendor subdirectories.
+
+
+Please let me know if you want me to
+move drivers/clk/uniphier/* to drivers/clk/socionext/*.
 
 
 
