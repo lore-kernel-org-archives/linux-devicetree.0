@@ -1,90 +1,139 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: Moving ARM dts files
-Date: Wed, 5 Dec 2018 10:04:07 +0100
-Message-ID: <CACRpkdbo2rQOPyY5UWfyKA=K9PGnXXt1=EL-VVp=NKoGjHqn5Q@mail.gmail.com>
-References: <20181204183649.GA5716@bogus>
- <20181205135726.70badac7@xhacker.debian>
- <CACRpkdYs_s9m=fUuOcfqcvP5BMXity5GH17RSMyvHzdZ9aFNzA@mail.gmail.com>
- <20181205162941.2d8bbfaf@xhacker.debian>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [RFC PATCH v2 04/15] usb:cdns3: Driver initialization code.
+Date: Wed, 5 Dec 2018 17:07:37 +0800
+Message-ID: <CAL411-p+ShK7+T+QkebGit7LaUtgnrCs1_Uy04KrKvwUDfh3oQ@mail.gmail.com>
+References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
+ <1542535751-16079-5-git-send-email-pawell@cadence.com> <CAL411-rWbQ6yj1r_aaLP8UagVRJhsn7xdznQwXS9enkxXTs2LA@mail.gmail.com>
+ <BYAPR07MB4709A8E4B0B0CC05A842B708DDAD0@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <CAL411-rzhH+y-b0-xze4-WmeVtey4bXt4Jc6TWYyfw6E8x-5Eg@mail.gmail.com>
+ <BYAPR07MB47090A16A7A8A85C6C3FD46ADDA80@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <MWHPR07MB3502A7A07AD114D6343BD6C0D8A80@MWHPR07MB3502.namprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181205162941.2d8bbfaf@xhacker.debian>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre Belloni <alexandre.belloni@bootlin.com>, ext Tony Lindgren <tony@atomide.com>, Liviu Dudau <liviu.dudau@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Rob Herring <robh@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory Clement <gregory.clement@bootlin.com>, Michal Simek <michal.simek@xilinx.com>, Krzysztof Kozlowski <krzk@kernel.org>, arm-soc <arm@kernel.org>, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Shawn Guo <shawnguo@kernel.org>, =?UTF
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <MWHPR07MB3502A7A07AD114D6343BD6C0D8A80@MWHPR07MB3502.namprd07.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: adouglas@cadence.com
+Cc: pawell@cadence.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, rogerq@ti.com, lkml <linux-kernel@vger.kernel.org>, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 5, 2018 at 9:34 AM Jisheng Zhang
-<Jisheng.Zhang@synaptics.com> wrote:
-> [Me]
-> > It actually makes much more sense to organize these files by
-> > the SoC family name, because that doesn't change when the
-> > SoC is sold to another company.
+On Wed, Dec 5, 2018 at 4:55 PM Alan Douglas <adouglas@cadence.com> wrote:
 >
-> If the SoC is sold to another company, then
+> Hi Peter,
 >
-> case1: The original SoC family is renamed to another family.
+> On 05 December 2018 07:20, Pawel Laszczak wrote:
+> > Hi,
+> >
+> > >> >>
+> > >> >> Patch adds core.c and core.h file that implements initialization
+> > >> >> of platform driver and adds function responsible for selecting,
+> > >> >> switching and running appropriate Device/Host mode.
+> > >> >>
+> > >> >> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+> > >> >> ---
+> > >> >>  drivers/usb/cdns3/Makefile |   2 +
+> > >> >>  drivers/usb/cdns3/core.c   | 413 +++++++++++++++++++++++++++++++++++++
+> > >> >>  drivers/usb/cdns3/core.h   | 100 +++++++++
+> > >> >>  3 files changed, 515 insertions(+)
+> > >> >>  create mode 100644 drivers/usb/cdns3/core.c
+> > >> >>  create mode 100644 drivers/usb/cdns3/core.h
+> > >> >>
+> > >> >> diff --git a/drivers/usb/cdns3/Makefile b/drivers/usb/cdns3/Makefile
+> > >> >> index dcdd62003c6a..02d25b23c5d3 100644
+> > >> >> --- a/drivers/usb/cdns3/Makefile
+> > >> >> +++ b/drivers/usb/cdns3/Makefile
+> > >> >> @@ -1,3 +1,5 @@
+> > >> >> +obj-$(CONFIG_USB_CDNS3)                        += cdns3.o
+> > >> >>  obj-$(CONFIG_USB_CDNS3_PCI_WRAP)       += cdns3-pci.o
+> > >> >>
+> > >> >> +cdns3-y                                        := core.o
+> > >> >>  cdns3-pci-y                            := cdns3-pci-wrap.o
+> > >> >> diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
+> > >> >> new file mode 100644
+> > >> >> index 000000000000..f9055d4da67f
+> > >> >> --- /dev/null
+> > >> >> +++ b/drivers/usb/cdns3/core.c
+> > >> >> @@ -0,0 +1,413 @@
+> > >> >> +// SPDX-License-Identifier: GPL-2.0
+> > >> >> +/*
+> > >> >> + * Cadence USBSS DRD Driver.
+> > >> >> + *
+> > >> >> + * Copyright (C) 2018 Cadence.
+> > >> >> + *
+> > >> >
+> > >> >Please add NXP copyright too.
+> > >>
+> > >> Ok, I don't know why I omitted this.
+> > >> I know that you are the main author of this file
+> > >> Sorry for that.
+> > >>
+> > >> One additional question. What year I should add in Copyright for NXP?.
+> > >> The original year 2017 or I should modified all to 2018.
+> > >>
+> > >Please use below copyright, thanks.
+> > >
+> > >Copyright 2017-2018 NXP
+> >
+> > I add this in all files  modified or created by you.
+> > >
+> > >
+> > >
+> > >> >> +       mutex_init(&cdns->mutex);
+> > >> >> +
+> > >> >> +       cdns->phy = devm_phy_get(dev, "cdns3,usbphy");
+> > >> >> +       if (IS_ERR(cdns->phy)) {
+> > >> >> +               dev_info(dev, "no generic phy found\n");
+> > >> >> +               cdns->phy = NULL;
+> > >> >> +               /*
+> > >> >> +                * fall through here!
+> > >> >> +                * if no generic phy found, phy init
+> > >> >> +                * should be done under boot!
+> > >> >> +                */
+> > >> >
+> > >> >If the phy driver is defer-probed, it will be here, it is not an error.
+> > >> >I think you could have a generic phy driver or usb generic phy driver
+> > >> >(drivers/usb/phy/phy-generic.c) even you don't need any operations for
+> > >> >PHY. It will be easy for other platforms.
+> > >>
+> > >> Yes, Roger ask me to modify this fragment. In next version it will look like:
+> > >>         cdns->phy = devm_phy_get(dev, "cdns3,usbphy");
+> > >>         if (IS_ERR(cdns->phy)) {
+> > >>                 ret = PTR_ERR(cdns->phy);
+> > >>                 if (ret == -ENOSYS || ret == -ENODEV) {
+> > >>                         cdns->phy = NULL;
+> > >>                 } else if (ret == -EPROBE_DEFER) {
+> > >>                         return ret;
+> > >>                 } else {
+> > >>                         dev_err(dev, "no phy found\n");
+> > >>                         goto err0;
+> > >>                 }
+> > >>         }
+> > >>
+> > >>         phy_init(cdns->phy);
+> > >>
+> > >> We are going to use phy driver. I don't know if it correct.
+> > >> I don't have experience in this filed.
+> > >> We need phy initialization but I don't have testing platform now.
+> > >> In most usb drivers I see that there are used usb phy driverd instead phy dirverd.
+> > >>
+> > >
+> > >At my CDNS3 platform, there are some USB PHY initialization for register setting
+> > >and clock enable. You could add generic PHY driver under: drivers/phy/cadence/.
+> > >
+> > >Above PHY initialization code is OK for me.
+> >
+> > It will be added as separate driver.
+> > I think that Allan Douglas working on it.
+> > I ask him to add you to -cc in patch for phy.
+> Patch series for the cadence Sierra generic PHY driver can be found here:
+> https://lore.kernel.org/patchwork/cover/1011486/
 >
-> case2: Based on the original SoC, a newer SoC family comes out.
+> It can also be found in Kishon's linux-phy git tree at
+>     git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git
+> in the 'next' branch.
 >
-> I'm not sure it's still fine to put the new or renamed SoCs' files into the
-> original SoC directory.
->
-> Another issue is: who will be the maintainer of new or renamed SoC family?
+> It will be great if you are able to take a look at it.
 
-Of course marketing prefer to associate the acquired
-company's SoC with itself and rename it.
+I will test it, and submit some changes if needed, thanks.
 
-But that doesn't account for the case where the same SoC
-is produced by the new owner under the old name.
-
-Example:
-The Gemini SoC arch/arm/boot/dts/gemini-*
-https://dflund.se/~triad/krad/gemini/
-
-This SoC was produced by StorLink Semiconductor in Taiwan
-early 2000s.
-
-At some point between 2000 and 2008 the company changed
-its name and/or got restructured and was renamed
-Storm Semiconductor. The masks for the packaging was retained
-so the chips still said "StorLink".
-
-Then in 2008 Cortina Systems acquired Storm Semiconductor
-eventually changed the masks and and renamed the identical
-chips from "SLnnnn" to "CSnnnn" but the chip inside the package
-was still the same.
-
-The SoC is still codenamed "Gemini", that is the only constant.
-
-And now we will put these devicetrees into folder...?
-
-storlink/
-storm/
-cortina/
-
-If we look at the chip packageing, it should be different
-folders depending on what supplier was used when the device
-was manufactured.
-
-This is why the Vendor scheme is not really working.
-
-Another issue is illustrated again with the Synaptics device:
-an SoC produced exclusively for Synaptics (IIUC) but
-with a intimate relationship to a very easily identifed SoC.
-
-This naming nomenclature is a half-measure and a can
-of worms, that is my only point.
-
-Yours,
-Linus Walleij
+Peter
