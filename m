@@ -1,80 +1,69 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] Input: i8042 - Rework DT node name comparisons
-Date: Wed,  5 Dec 2018 13:50:26 -0600
-Message-ID: <20181205195050.4759-10-robh@kernel.org>
+Subject: [PATCH] memory: omap-gpmc: Use of_node_name_eq for node name comparisons
+Date: Wed,  5 Dec 2018 13:50:30 -0600
+Message-ID: <20181205195050.4759-14-robh@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Roger Quadros <rogerq@ti.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Convert string compares of DT node names to use of_node_name_eq helper
+instead. This removes direct access to the node name pointer.
+
+For instances using of_node_cmp, this has the side effect of now using
+case sensitive comparisons. This should not matter for any FDT based
+system which this is.
+
+Cc: Roger Quadros <rogerq@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/input/serio/i8042-sparcio.h | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ drivers/memory/omap-gpmc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/input/serio/i8042-sparcio.h b/drivers/input/serio/i8042-sparcio.h
-index 796289846204..fce76812843b 100644
---- a/drivers/input/serio/i8042-sparcio.h
-+++ b/drivers/input/serio/i8042-sparcio.h
-@@ -53,12 +53,11 @@ static struct resource *kbd_res;
+diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
+index 8abb9e94916a..ab5925c6d012 100644
+--- a/drivers/memory/omap-gpmc.c
++++ b/drivers/memory/omap-gpmc.c
+@@ -2060,7 +2060,7 @@ static int gpmc_probe_generic_child(struct platform_device *pdev,
+ 	 * timings.
+ 	 */
+ 	name = gpmc_cs_get_name(cs);
+-	if (name && of_node_cmp(child->name, name) == 0)
++	if (name && of_node_name_eq(child, name))
+ 		goto no_timings;
  
- static int sparc_i8042_probe(struct platform_device *op)
- {
--	struct device_node *dp = op->dev.of_node;
-+	struct device_node *dp;
+ 	ret = gpmc_cs_request(cs, resource_size(&res), &base);
+@@ -2068,7 +2068,7 @@ static int gpmc_probe_generic_child(struct platform_device *pdev,
+ 		dev_err(&pdev->dev, "cannot request GPMC CS %d\n", cs);
+ 		return ret;
+ 	}
+-	gpmc_cs_set_name(cs, child->name);
++	gpmc_cs_set_name(cs, child->full_name);
  
--	dp = dp->child;
--	while (dp) {
--		if (!strcmp(dp->name, OBP_PS2KBD_NAME1) ||
--		    !strcmp(dp->name, OBP_PS2KBD_NAME2)) {
-+	for_each_child_of_node(op->dev.of_node, dp) {
-+		if (of_node_name_eq(dp, OBP_PS2KBD_NAME1) ||
-+		    of_node_name_eq(dp, OBP_PS2KBD_NAME2)) {
- 			struct platform_device *kbd = of_find_device_by_node(dp);
- 			unsigned int irq = kbd->archdata.irqs[0];
- 			if (irq == 0xffffffff)
-@@ -67,16 +66,14 @@ static int sparc_i8042_probe(struct platform_device *op)
- 			kbd_iobase = of_ioremap(&kbd->resource[0],
- 						0, 8, "kbd");
- 			kbd_res = &kbd->resource[0];
--		} else if (!strcmp(dp->name, OBP_PS2MS_NAME1) ||
--			   !strcmp(dp->name, OBP_PS2MS_NAME2)) {
-+		} else if (of_node_name_eq(dp, OBP_PS2MS_NAME1) ||
-+			   of_node_name_eq(dp, OBP_PS2MS_NAME2)) {
- 			struct platform_device *ms = of_find_device_by_node(dp);
- 			unsigned int irq = ms->archdata.irqs[0];
- 			if (irq == 0xffffffff)
- 				irq = op->archdata.irqs[0];
- 			i8042_aux_irq = irq;
- 		}
--
--		dp = dp->sibling;
+ 	gpmc_read_settings_dt(child, &gpmc_s);
+ 	gpmc_read_timings_dt(child, &gpmc_t);
+@@ -2113,7 +2113,7 @@ static int gpmc_probe_generic_child(struct platform_device *pdev,
+ 		goto err;
  	}
  
- 	return 0;
-@@ -109,8 +106,9 @@ static struct platform_driver sparc_i8042_driver = {
- static int __init i8042_platform_init(void)
- {
- 	struct device_node *root = of_find_node_by_path("/");
-+	const char *name = of_get_property(root, "name", NULL);
+-	if (of_node_cmp(child->name, "nand") == 0) {
++	if (of_node_name_eq(child, "nand")) {
+ 		/* Warn about older DT blobs with no compatible property */
+ 		if (!of_property_read_bool(child, "compatible")) {
+ 			dev_warn(&pdev->dev,
+@@ -2123,7 +2123,7 @@ static int gpmc_probe_generic_child(struct platform_device *pdev,
+ 		}
+ 	}
  
--	if (!strcmp(root->name, "SUNW,JavaStation-1")) {
-+	if (name && !strcmp(name, "SUNW,JavaStation-1")) {
- 		/* Hardcoded values for MrCoffee.  */
- 		i8042_kbd_irq = i8042_aux_irq = 13 | 0x20;
- 		kbd_iobase = ioremap(0x71300060, 8);
-@@ -139,8 +137,9 @@ static int __init i8042_platform_init(void)
- static inline void i8042_platform_exit(void)
- {
- 	struct device_node *root = of_find_node_by_path("/");
-+	const char *name = of_get_property(root, "name", NULL);
- 
--	if (strcmp(root->name, "SUNW,JavaStation-1"))
-+	if (!name || strcmp(name, "SUNW,JavaStation-1"))
- 		platform_driver_unregister(&sparc_i8042_driver);
- }
- 
+-	if (of_node_cmp(child->name, "onenand") == 0) {
++	if (of_node_name_eq(child, "onenand")) {
+ 		/* Warn about older DT blobs with no compatible property */
+ 		if (!of_property_read_bool(child, "compatible")) {
+ 			dev_warn(&pdev->dev,
 -- 
 2.19.1
