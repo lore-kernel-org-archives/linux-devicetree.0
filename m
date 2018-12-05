@@ -1,44 +1,61 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 1/2] arm64: dts: meson: Fix IRQ trigger type for macirq
-Date: Tue, 04 Dec 2018 17:12:19 -0800
-Message-ID: <7hin08bwuk.fsf@baylibre.com>
-References: <20181204160447.27869-1-ccaione@baylibre.com>
- <20181204160447.27869-2-ccaione@baylibre.com> <5C06DB0D.3010306@baylibre.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V2] ARM: dts: imx6qdl-sabresd: add egalax touch screen support
+ on i2c2 bus
+Date: Wed, 5 Dec 2018 01:14:25 +0000
+Message-ID: <1543972116-22505-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5C06DB0D.3010306@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <ccaione@baylibre.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, martin.blumenstingl@googlemail.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-TmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJvbmdAYmF5bGlicmUuY29tPiB3cml0ZXM6Cgo+IEhpIENh
-cmxvLAo+Cj4gTGUgMDQvMTIvMjAxOCAxNzowNCwgQ2FybG8gQ2Fpb25lIGEgw6ljcml0IDoKPj4g
-QSBsb25nIHJ1bm5pbmcgc3RyZXNzIHRlc3Qgb24gYSBjdXN0b20gYm9hcmQgc2hpcHBpbmcgYW4g
-QVhHIFNvQ3MgYW5kIGEKPj4gUmVhbHRlayBSVEw4MjExRiBQSFkgcmV2ZWFsZWQgdGhhdCBhZnRl
-ciBhIGZldyBob3VycyB0aGUgY29ubmVjdGlvbgo+PiBzcGVlZCB3b3VsZCBkcm9wIGRyYXN0aWNh
-bGx5LCBmcm9tIH4xMDAwTWJwcyB0byB+M01icHMuIEF0IHRoZSBzYW1lIHRpbWUKPj4gdGhlICdt
-YWNpcnEnIChldGgwKSBJUlEgd291bGQgc3RvcCBiZWluZyB0cmlnZ2VyZWQgYXQgYWxsIGFuZCBh
-cwo+PiBjb25zZXF1ZW5jZSB0aGUgR01BQyBJUlFzIG5ldmVyIEFDS2VkLgo+PiAKPj4gQWZ0ZXIg
-YSBwYWluZnVsIGludmVzdGlnYXRpb24gdGhlIHByb2JsZW0gc2VlbWVkIHRvIGJlIGR1ZSB0byBh
-IHdyb25nCj4+IGRlZmluZWQgSVJRIHR5cGUgZm9yIHRoZSBHTUFDIElSUSB0aGF0IHNob3VsZCBi
-ZSBMRVZFTF9ISUdIIGluc3RlYWQgb2YKPj4gRURHRV9SSVNJTkcuCj4KPiBUaGlzIGlzIGEgZ29v
-ZCBuZXdzICEKPgo+IEtldmluLAo+IFdoYXQncyB0aGUgYmVzdCBwcm9jZWR1cmUgaGVyZSB0byBt
-YWtlIGl0IGFwcGx5IG9uIHRoZSA0LjE5LCA0LjE0IGFuZCA0Ljkgc3RhYmxlCj4gdHJlZXMgPyBm
-b3IgNC4xNCBhbmQgNC45IGl0IHdpbGwgbmVlZCB0byBiZSByZXdvcmtlZCB0byBhcHBseSBjb3Jy
-ZWN0bHkuCgpBZGRpbmcgYSBGaXhlczogdGFnIHdoZXJlIHRoZSBvcmlnaW5hbCBidWcgd2FzIGlu
-dHJvZHVjZSBpcyB0aGUgYmVzdCB3YXkKZm9yIGl0IHRvIGF1dG9tYXRpY2FsbHkgZ2V0IGFwcGxp
-ZWQuCgpIb3dldmVyLCBpZiByZXdvcmsgaXMgcmVxdWlyZWQsIHRoYXQgd2lsbCBoYXZlIHRvIGJl
-IG1hbnVhbGx5IGRvbmUgYW5kCnNlbnQgdG8gdGhlIHN0YWJsZSBsaXN0LgoKS2V2aW4KCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
-ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Add egalax touch screen support on i2c2 bus, it is connected
+to LVDS0, while the existing one on i2c3 bus is connected to
+LVDS1.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx=
+6qdl-sabresd.dtsi
+index 6e46a19..d7389b5 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+@@ -272,6 +272,16 @@
+ 	pinctrl-0 =3D <&pinctrl_i2c2>;
+ 	status =3D "okay";
+=20
++	touchscreen@4 {
++		compatible =3D "eeti,egalax_ts";
++		reg =3D <0x04>;
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_i2c2_egalax_int>;
++		interrupt-parent =3D <&gpio6>;
++		interrupts =3D <8 IRQ_TYPE_EDGE_FALLING>;
++		wakeup-gpios =3D <&gpio6 8 GPIO_ACTIVE_HIGH>;
++	};
++
+ 	ov5640: camera@3c {
+ 		compatible =3D "ovti,ov5640";
+ 		pinctrl-names =3D "default";
+@@ -498,6 +508,12 @@
+ 			>;
+ 		};
+=20
++		pinctrl_i2c2_egalax_int: i2c2egalaxintgrp {
++			fsl,pins =3D <
++				MX6QDL_PAD_NANDF_ALE__GPIO6_IO08	0x1b0b0
++			>;
++		};
++
+ 		pinctrl_i2c3: i2c3grp {
+ 			fsl,pins =3D <
+ 				MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
+--=20
+2.7.4
