@@ -1,95 +1,132 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [RFT PATCH v1 0/4] Unify CPU topology across ARM64 & RISC-V
-Date: Wed, 5 Dec 2018 10:53:01 -0700
-Message-ID: <d72a87f4-8dc1-2ec7-b602-0135c5e4c3a7@codeaurora.org>
-References: <1543534100-3654-1-git-send-email-atish.patra@wdc.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: Re: [PATCH v6 0/8] AXP8x3 AC and battery power supply support
+Date: Wed, 5 Dec 2018 19:00:42 +0100
+Message-ID: <20181205180042.fr5npvtwuvt2c6q3@earth.universe>
+References: <20181120175211.3913-1-oskari@lemmela.net>
+ <CAGb2v65Bwve25jwdGHHK9j03RxQ3tKwme51762DjyQK2femG6g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xnlkjubit7aft5id"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543534100-3654-1-git-send-email-atish.patra@wdc.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAGb2v65Bwve25jwdGHHK9j03RxQ3tKwme51762DjyQK2femG6g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Will Deacon <will.deacon@arm.com>, linux-riscv@lists.infradead.org, Morten Rasmussen <morten.rasmussen@arm.com>, Juri Lelli <juri.lelli@arm.com>, Dmitriy Cherkasov <dmitriy@oss-tech.org>, Anup Patel <anup@brainfault.org>, Ingo Molnar <mingo@kernel.org>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "moderated list:ARM64 PORT AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gre>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Lee Jones <lee.jones@linaro.org>, oskari@lemmela.net, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Quentin Schulz <quentin.schulz@bootlin.com>, Vasily Khoruzhick <anarsoul@gmail.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/29/2018 4:28 PM, Atish Patra wrote:
-> The cpu-map DT entry in ARM64 can describe the CPU topology in
-> much better way compared to other existing approaches. RISC-V can
-> easily adopt this binding to represent it's own CPU topology.
-> Thus, both cpu-map DT binding and topology parsing code can be
-> moved to a common location so that RISC-V or any other
-> architecture can leverage that.
-> 
-> The relevant discussion regarding unifying cpu topology can be
-> found in [1].
-> 
-> arch_topology seems to be a perfect place to move the common
-> code. I have not introduced any functional changes in the moved
-> code. The only downside in this approach is that the capacity
-> code will be executed for RISC-V as well. But, it will exit
-> immediately after not able to find the appropriate DT node. If
-> the overhead is considered too much, we can always compile out
-> capacity related functions under a different config for the
-> architectures that do not support them.
-> 
-> The patches have been tested for RISC-V and compile tested for
-> ARM64 & x86.
-> 
-> The socket change[2] is also now part of this series.
-> 
-> [1] https://lkml.org/lkml/2018/11/6/19
-> [2] https://lkml.org/lkml/2018/11/7/918
-> 
-> QEMU changes for RISC-V topology are available at
-> 
-> https://github.com/atishp04/riscv-qemu/tree/cpu_topo
-> 
-> Apologies for the previous patch series with incorrect title and
-> was sent only to kernel mailing list due to a bug in my config.
-> Please ignore that.
-> 
-> Atish Patra (3):
-> dt-binding: cpu-topology: Move cpu-map to a common binding.
-> cpu-topology: Move cpu topology code to common code.
-> RISC-V: Parse cpu topology during boot.
-> 
-> Sudeep Holla (1):
-> Documentation: DT: arm: add support for sockets defining package
-> boundaries
-> 
-> .../{arm/topology.txt => cpu/cpu-topology.txt}     | 133 +++++++--
-> arch/arm64/include/asm/topology.h                  |  22 --
-> arch/arm64/kernel/topology.c                       | 303 +--------------------
-> arch/riscv/Kconfig                                 |   1 +
-> arch/riscv/kernel/smpboot.c                        |   3 +
-> drivers/base/arch_topology.c                       | 294 ++++++++++++++++++++
-> include/linux/arch_topology.h                      |  26 ++
-> include/linux/topology.h                           |   1 +
-> 8 files changed, 435 insertions(+), 348 deletions(-)
-> rename Documentation/devicetree/bindings/{arm/topology.txt => cpu/cpu-topology.txt} (66%)
-> 
-> --
-> 2.7.4
-> 
 
-Seems to test fine on QDF2400.
+--xnlkjubit7aft5id
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Hi,
 
-I did see that git am complained about patch #2 -
+On Fri, Nov 30, 2018 at 04:31:28PM +0800, Chen-Yu Tsai wrote:
+> On Wed, Nov 21, 2018 at 1:52 AM Oskari Lemmela <oskari@lemmela.net> wrote:
+> >
+> > AXP813 AC power supply support with input current and
+> > voltage limiting support.
+> >
+> > AXP803 AC and battery power supply support.
+> >
+> > Changes in v6:
+> > * Collected tags
+> > * Rebase to master
+> > * Dropped AXP803 compatible patches
+> >
+> > Changes in v5:
+> > * Return correct input current limit for values 0x6 and 0x7
+> > * Add specific compatibles for AXP803
+> > * Change commit messages
+> > * Add Vasily Khoruzhick Pinebook DTS patch
+> >
+> > Changes in v4:
+> > * Change order of axp20x-gpio in axp20x.c
+> > * Fix indentation and spaces to tabs in axp20x.c
+> >
+> > Changes in v3:
+> > * Reorder ac_power_supply DT node
+> > * Rename axp20x_ac_power_set_property function
+> > * Split mfd commit
+> >
+> > Changes in v2:
+> > * Reuse axp813 compatibles for axp803
+> > * Refactor axp20x_ac_power.c
+> >
+> >
+> > Oskari Lemmela (7):
+> >   dt-bindings: power: supply: axp20x: add AXP813 AC power DT binding
+> >   ARM: dts: axp81x: add AC power supply subnode
+> >   arm64: dts: allwinner: axp803: add AC and battery power supplies
+> >   arm64: dts: allwinner: a64: sopine-baseboard: enable power supplies
+> >   power: supply: add AC power supply driver for AXP813
+> >   mfd: axp20x: Add AC power supply cell for AXP813
+> >   mfd: axp20x: Add supported cells for AXP803
+> >
+> > Vasily Khoruzhick (1):
+> >   arm64: dts: allwinner: a64: pinebook: enable power supplies
+>=20
+> Since this series has been fully reviewed, and the devices it
+> adds/enables aren't critical, i.e. won't cause the system to fail
+> if the drivers are missing, I've merged the dts patches for 4.21.
+>=20
+> Hopefully Sebastian and Lee will get around to merging the driver
+> patches.
 
-patch:103: space before tab in indent.
-                         };
-patch:114: space before tab in indent.
-         };
-warning: 2 lines add whitespace errors.
+I queued the power-supply driver changes and prepared a signed
+immutable tag for Lee:
 
+The following changes since commit 651022382c7f8da46cb4872a545ee1da6d097d2a:
 
--- 
-Jeffrey Hugo
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
-Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+  Linux 4.20-rc1 (2018-11-04 15:37:52 -0800)
+
+are available in the Git repository at:
+
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-su=
+pply.git tags/psy-mfd-axp813-immutable-for-v4.21-signed
+
+for you to fetch changes up to 7693b5643fd2d682de90733b67fc8032b9646911:
+
+  power: supply: add AC power supply driver for AXP813 (2018-12-05 18:49:32=
+ +0100)
+
+----------------------------------------------------------------
+Immutable branch between mfd and power-supply for driver
+changes related to axp813.
+
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+
+----------------------------------------------------------------
+Oskari Lemmela (2):
+      dt-bindings: power: supply: axp20x: add AXP813 AC power DT binding
+      power: supply: add AC power supply driver for AXP813
+
+ .../bindings/power/supply/axp20x_ac_power.txt      |  3 +
+ drivers/power/supply/axp20x_ac_power.c             | 94 ++++++++++++++++++=
+++++
+ include/linux/mfd/axp20x.h                         |  1 +
+ 3 files changed, 98 insertions(+)
+
+--xnlkjubit7aft5id
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlwIEkoACgkQ2O7X88g7
++pp4IA//c/ChZY6UHh9Rulc+1lkt/+KeQcJh9PpdFVZFJqr0zC+5B6VtMGXartdt
+lswJovpYhjmy4kXT06kqD0MmJHh29s+a76Fj4DV1c+uUglhec1AuRwFviGXBZg7y
+ush9s2FgUsPl9JBlQdElJb06oEKqsPDZ5iRssPloJngzMFg3xLdunnLW59Vv5XBq
+qg2umsW1UWKKtaSKnYQ8aSQ6wmNBOERPcvYkOjiPRL943Bn0Od73GVxcR0lOtWqR
+8v/f7Ah8qtnYWm1QPdNO2O9Hb67/gF6GKhTjI9YqdNe4Qcmp1rVoB0PPVjAlBUBD
+XZIvs5HT2YQaqtoFmkSfyHxovYbeu1bIe8ZNaZMF2++UVTRA9kB5pIy2ScMlvYmR
+DwiwRSiaJ125tnR8tTtMzJGAnrE36EAT/C9fKhW3+uq7/b0M/pqjgaMorKNOCw6u
+1VfCPY8vQN5ke5ib5My/V4HyHaRJ95OdlzOaRwZ9EqjSthOYk1IWx2ehZeTOFIuB
+XNLvR1dt4PeyYqpK5G5NG87XCvMjkF7/YWRC+zRu1R8UYHzAFzJMQG+jHXbYd7AO
+BGMFtO7cJ1eRcg6VfpigKrs6laFoaScKnhf/Y5yPrBqlkyw7WO35bYqaICush93x
+5HfcOMuR/iDnHuNf1aIQRUWc928lq5gaykdewbaWluKI+b7o8aY=
+=WNDV
+-----END PGP SIGNATURE-----
+
+--xnlkjubit7aft5id--
