@@ -1,41 +1,34 @@
-Return-Path: <SRS0=+yaY=OT=verge.net.au=horms@kernel.org>
-Date: Mon, 10 Dec 2018 14:30:21 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/2] Add Initial Device Tree for RZ/A2
-Message-ID: <20181210133020.4r4upvharhbugguw@verge.net.au>
-References: <20181205214449.52165-1-chris.brandt@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20181205214449.52165-1-chris.brandt@renesas.com>
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=DZb6=OO=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v2 0/2] Add Initial Device Tree for RZ/A2
+Date: Wed,  5 Dec 2018 16:44:47 -0500
+Message-Id: <20181205214449.52165-1-chris.brandt@renesas.com>
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Dec 05, 2018 at 04:44:47PM -0500, Chris Brandt wrote:
-> Add a Device Tree for RZ/A2 and the existing eval board.
-> 
-> Once these get approved, I'll start piling on the other drivers in
-> another patch series.
-> 
-> 
-> NOTE:
-> Since Rob is in the middle of converting shmobile.txt to renesas.yaml,
-> I'll wait till that is finisehd before I add this RZ/A2M EVB board.
+Add a Device Tree for RZ/A2 and the existing eval board.
 
-FWIIW, that is now finished.
+Once these get approved, I'll start piling on the other drivers in
+another patch series.
 
-> Chris Brandt (2):
->   ARM: dts: r7s9210: Initial SoC device tree
->   ARM: dts: r7s9210-rza2mevb: Add support for RZ/A2M EVB
-> 
->  arch/arm/boot/dts/Makefile             |   1 +
->  arch/arm/boot/dts/r7s9210-rza2mevb.dts |  98 ++++++++++++++++
->  arch/arm/boot/dts/r7s9210.dtsi         | 204 +++++++++++++++++++++++++++++++++
->  3 files changed, 303 insertions(+)
->  create mode 100644 arch/arm/boot/dts/r7s9210-rza2mevb.dts
->  create mode 100644 arch/arm/boot/dts/r7s9210.dtsi
-> 
-> -- 
-> 2.16.1
-> 
+
+NOTE:
+Since Rob is in the middle of converting shmobile.txt to renesas.yaml,
+I'll wait till that is finisehd before I add this RZ/A2M EVB board.
+
+
+
+Chris Brandt (2):
+  ARM: dts: r7s9210: Initial SoC device tree
+  ARM: dts: r7s9210-rza2mevb: Add support for RZ/A2M EVB
+
+ arch/arm/boot/dts/Makefile             |   1 +
+ arch/arm/boot/dts/r7s9210-rza2mevb.dts |  98 ++++++++++++++++
+ arch/arm/boot/dts/r7s9210.dtsi         | 204 +++++++++++++++++++++++++++++++++
+ 3 files changed, 303 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r7s9210-rza2mevb.dts
+ create mode 100644 arch/arm/boot/dts/r7s9210.dtsi
+
+-- 
+2.16.1
