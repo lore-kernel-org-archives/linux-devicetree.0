@@ -1,229 +1,78 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH 5/6] power: supply: charger-manager: Remove deprecated
- extcon APIs
-Date: Wed, 5 Dec 2018 10:57:12 +0800
-Message-ID: <CAMz4ku+5ELZ9sXz+1RzkgHnOFz_XfObwCdyixhvPN+Q0aovgUQ@mail.gmail.com>
-References: <4ea9eaf85d780afb190cb45da2df8ff5fd86d449.1542362262.git.baolin.wang@linaro.org>
- <a41e3aad0147b25c4c22189dd7af0d68c5587b92.1542362262.git.baolin.wang@linaro.org>
- <20181204215219.GA14502@bogus>
+From: Joseph Lo <josephl@nvidia.com>
+Subject: Re: [PATCH 03/19] dt-bindings: cpufreq: tegra124: remove
+ vdd-cpu-supply from required properties
+Date: Wed, 5 Dec 2018 11:05:58 +0800
+Message-ID: <3a6f4512-db3f-4cba-21da-572edf14c5dc@nvidia.com>
+References: <20181204092548.3038-1-josephl@nvidia.com>
+ <20181204092548.3038-4-josephl@nvidia.com>
+ <20181204153600.GA26056@pdeschrijver-desktop.Nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181204215219.GA14502@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181204153600.GA26056@pdeschrijver-desktop.Nvidia.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: devicetree@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob=EF=BC=8C
-On Wed, 5 Dec 2018 at 05:52, Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Nov 16, 2018 at 07:01:12PM +0800, Baolin Wang wrote:
-> > The struct extcon_specific_cable_nb and related APIs are deprecated now=
-,
-> > so we should use new method to get one extcon device and register extco=
-n
-> > notifier.
-> >
-> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> > ---
-> >  .../bindings/power/supply/charger-manager.txt      |    6 +--
->
-> Bindings should be a separate patch.
+On 12/4/18 11:36 PM, Peter De Schrijver wrote:
+> On Tue, Dec 04, 2018 at 05:25:32PM +0800, Joseph Lo wrote:
+>> The Tegra124 cpufreq driver works only with DFLL clock, which is a
+>> hardware-based frequency/voltage controller. The driver doesn't need to
+>> control the regulator itself. Hence remove that.
+>>
+> 
+> I think this is required for DFLL controlled I2C regulators because the
+> regulator is queried for voltage selectors and I2C slave ID?
+> 
 
-Sure.
+Hi Peter,
 
->
-> >  drivers/power/supply/charger-manager.c             |   51 ++++++++----=
---------
-> >  include/linux/power/charger-manager.h              |    2 +-
-> >  3 files changed, 23 insertions(+), 36 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/power/supply/charger-man=
-ager.txt b/Documentation/devicetree/bindings/power/supply/charger-manager.t=
-xt
-> > index ec4fe9d..315b0cb 100644
-> > --- a/Documentation/devicetree/bindings/power/supply/charger-manager.tx=
-t
-> > +++ b/Documentation/devicetree/bindings/power/supply/charger-manager.tx=
-t
-> > @@ -11,7 +11,7 @@ Required properties :
-> >       - cm-regulator-name : name of charger regulator
-> >       - subnode <cable> :
-> >               - cm-cable-name : name of charger cable
-> > -             - cm-cable-extcon : name of extcon dev
-> > +             - extcon : phandles to external connector devices
->
-> Somewhat less terrible, but not really. I consider extcon binding itself
-> deprecated. I suspect 'charger-manager' as a whole probably needs to be
-> reworked. This also is not a backwards compatible change.
+Yes, it's required for DFLL-I2C mode and defined in DFLL node. It's not 
+needed here in the CPU node for CPU freq driver to handle that. Hence 
+remove that.
 
-We are do some optimization for 'charger-manager', like this patch
-did, we are trying to remove the deprecated extcon API.
-And now no one use the incorrect 'cm-cable-extcon' property on
-mainline, so no need worry backwards compatibility.
-
-> >  (optional)   - cm-cable-min : minimum current of cable
-> >  (optional)   - cm-cable-max : maximum current of cable
-> >
-> > @@ -66,13 +66,13 @@ Example :
-> >                       cm-regulator-name =3D "chg-reg";
-> >                       cable@0 {
-> >                               cm-cable-name =3D "USB";
-> > -                             cm-cable-extcon =3D "extcon-dev.0";
-> > +                             extcon =3D <&extcon_usb>;
-> >                               cm-cable-min =3D <475000>;
-> >                               cm-cable-max =3D <500000>;
-> >                       };
-> >                       cable@1 {
-> >                               cm-cable-name =3D "TA";
-> > -                             cm-cable-extcon =3D "extcon-dev.0";
-> > +                             extcon =3D <&extcon_usb>;
-> >                               cm-cable-min =3D <650000>;
-> >                               cm-cable-max =3D <675000>;
-> >                       };
-> > diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/sup=
-ply/charger-manager.c
-> > index dc0c9a6..4f28c03 100644
-> > --- a/drivers/power/supply/charger-manager.c
-> > +++ b/drivers/power/supply/charger-manager.c
-> > @@ -1207,12 +1207,11 @@ static int charger_extcon_init(struct charger_m=
-anager *cm,
-> >        */
-> >       INIT_WORK(&cable->wq, charger_extcon_work);
-> >       cable->nb.notifier_call =3D charger_extcon_notifier;
-> > -     ret =3D extcon_register_interest(&cable->extcon_dev,
-> > -                     cable->extcon_name, cable->name, &cable->nb);
-> > -     if (ret < 0) {
-> > -             pr_info("Cannot register extcon_dev for %s(cable: %s)\n",
-> > -                     cable->extcon_name, cable->name);
-> > -     }
-> > +     ret =3D devm_extcon_register_notifier(cm->dev, cable->extcon_dev,
-> > +                                         EXTCON_USB, &cable->nb);
-> > +     if (ret < 0)
-> > +             dev_err(cm->dev, "Cannot register extcon_dev for (cable: =
-%s)\n",
-> > +                     cable->name);
-> >
-> >       return ret;
-> >  }
-> > @@ -1589,15 +1588,25 @@ static struct charger_desc *of_cm_parse_desc(st=
-ruct device *dev)
-> >                               for_each_child_of_node(child, _child) {
-> >                                       of_property_read_string(_child,
-> >                                       "cm-cable-name", &cables->name);
-> > -                                     of_property_read_string(_child,
-> > -                                     "cm-cable-extcon",
-> > -                                     &cables->extcon_name);
-> >                                       of_property_read_u32(_child,
-> >                                       "cm-cable-min",
-> >                                       &cables->min_uA);
-> >                                       of_property_read_u32(_child,
-> >                                       "cm-cable-max",
-> >                                       &cables->max_uA);
-> > +
-> > +                                     if (of_property_read_bool(_child,=
- "extcon")) {
-> > +                                             struct device_node *np;
-> > +
-> > +                                             np =3D of_parse_phandle(_=
-child, "extcon", 0);
-> > +                                             if (!np)
-> > +                                                     return ERR_PTR(-E=
-NODEV);
-> > +
-> > +                                             cables->extcon_dev =3D ex=
-tcon_find_edev_by_node(np);
-> > +                                             of_node_put(np);
-> > +                                             if (IS_ERR(cables->extcon=
-_dev))
-> > +                                                     return ERR_PTR(PT=
-R_ERR(cables->extcon_dev));
-> > +                                     }
-> >                                       cables++;
-> >                               }
-> >                       }
-> > @@ -1625,7 +1634,6 @@ static int charger_manager_probe(struct platform_=
-device *pdev)
-> >       struct charger_desc *desc =3D cm_get_drv_data(pdev);
-> >       struct charger_manager *cm;
-> >       int ret, i =3D 0;
-> > -     int j =3D 0;
-> >       union power_supply_propval val;
-> >       struct power_supply *fuel_gauge;
-> >       struct power_supply_config psy_cfg =3D {};
-> > @@ -1823,19 +1831,8 @@ static int charger_manager_probe(struct platform=
-_device *pdev)
-> >                               &charger->attr_g);
-> >       }
-> >  err_reg_extcon:
-> > -     for (i =3D 0; i < desc->num_charger_regulators; i++) {
-> > -             struct charger_regulator *charger;
-> > -
-> > -             charger =3D &desc->charger_regulators[i];
-> > -             for (j =3D 0; j < charger->num_cables; j++) {
-> > -                     struct charger_cable *cable =3D &charger->cables[=
-j];
-> > -                     /* Remove notifier block if only edev exists */
-> > -                     if (cable->extcon_dev.edev)
-> > -                             extcon_unregister_interest(&cable->extcon=
-_dev);
-> > -             }
-> > -
-> > +     for (i =3D 0; i < desc->num_charger_regulators; i++)
-> >               regulator_put(desc->charger_regulators[i].consumer);
-> > -     }
-> >
-> >       power_supply_unregister(cm->charger_psy);
-> >
-> > @@ -1847,7 +1844,6 @@ static int charger_manager_remove(struct platform=
-_device *pdev)
-> >       struct charger_manager *cm =3D platform_get_drvdata(pdev);
-> >       struct charger_desc *desc =3D cm->desc;
-> >       int i =3D 0;
-> > -     int j =3D 0;
-> >
-> >       /* Remove from the list */
-> >       mutex_lock(&cm_list_mtx);
-> > @@ -1857,15 +1853,6 @@ static int charger_manager_remove(struct platfor=
-m_device *pdev)
-> >       cancel_work_sync(&setup_polling);
-> >       cancel_delayed_work_sync(&cm_monitor_work);
-> >
-> > -     for (i =3D 0 ; i < desc->num_charger_regulators ; i++) {
-> > -             struct charger_regulator *charger
-> > -                             =3D &desc->charger_regulators[i];
-> > -             for (j =3D 0 ; j < charger->num_cables ; j++) {
-> > -                     struct charger_cable *cable =3D &charger->cables[=
-j];
-> > -                     extcon_unregister_interest(&cable->extcon_dev);
-> > -             }
-> > -     }
-> > -
-> >       for (i =3D 0 ; i < desc->num_charger_regulators ; i++)
-> >               regulator_put(desc->charger_regulators[i].consumer);
-> >
-> > diff --git a/include/linux/power/charger-manager.h b/include/linux/powe=
-r/charger-manager.h
-> > index c4fa907..e4d0269 100644
-> > --- a/include/linux/power/charger-manager.h
-> > +++ b/include/linux/power/charger-manager.h
-> > @@ -66,7 +66,7 @@ struct charger_cable {
-> >       const char *name;
-> >
-> >       /* The charger-manager use Extcon framework */
-> > -     struct extcon_specific_cable_nb extcon_dev;
-> > +     struct extcon_dev *extcon_dev;
-> >       struct work_struct wq;
-> >       struct notifier_block nb;
-> >
-> > --
-> > 1.7.9.5
-> >
+Thanks,
+Joseph
 
 
-
---=20
-Baolin Wang
-Best Regards
+> 
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Joseph Lo <josephl@nvidia.com>
+>> ---
+>>   .../devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt     | 2 --
+>>   1 file changed, 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
+>> index b1669fbfb740..031545a29caf 100644
+>> --- a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
+>> +++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
+>> @@ -13,7 +13,6 @@ Required properties:
+>>     - pll_x: Fast PLL clocksource.
+>>     - pll_p: Auxiliary PLL used during fast PLL rate changes.
+>>     - dfll: Fast DFLL clocksource that also automatically scales CPU voltage.
+>> -- vdd-cpu-supply: Regulator for CPU voltage
+>>   
+>>   Optional properties:
+>>   - clock-latency: Specify the possible maximum transition latency for clock,
+>> @@ -37,7 +36,6 @@ cpus {
+>>   			 <&dfll>;
+>>   		clock-names = "cpu_g", "cpu_lp", "pll_x", "pll_p", "dfll";
+>>   		clock-latency = <300000>;
+>> -		vdd-cpu-supply: <&vdd_cpu>;
+>>   	};
+>>   
+>>   	<...>
+>> -- 
+>> 2.19.2
+>>
