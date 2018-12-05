@@ -1,34 +1,58 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 0/4] add uart DMA function
-Date: Wed, 5 Dec 2018 19:50:42 +0100
-Message-ID: <20181205185042.GA27295@kroah.com>
-References: <1543999380-7946-1-git-send-email-long.cheng@mediatek.com>
- <20181205100306.GA12106@kroah.com>
- <20181205163133.GQ2847@vkoul-mobl>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 2/4] ARM: dts: am437x: Move l4 child devices to probe
+ them with ti-sysc
+Date: Wed, 5 Dec 2018 11:00:19 -0800
+Message-ID: <20181205190019.GG6707@atomide.com>
+References: <20180925000545.22931-1-tony@atomide.com>
+ <20180925000545.22931-3-tony@atomide.com>
+ <f890f989-bfd0-47eb-66e0-5a8573e398b7@ti.com>
+ <20181204181121.GC6707@atomide.com>
+ <20181204231833.GF6707@atomide.com>
+ <3feb7078-5690-abf6-2a9d-a65807ee701a@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20181205163133.GQ2847@vkoul-mobl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Long Cheng <long.cheng@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, YT Shen <yt.shen@mediatek.com>
+In-Reply-To: <3feb7078-5690-abf6-2a9d-a65807ee701a@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>, Tero Kristo <t-kristo@ti.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 05, 2018 at 10:01:33PM +0530, Vinod Koul wrote:
-> Hi Greg,
+* Peter Ujfalusi <peter.ujfalusi@ti.com> [181205 06:12]:
+> On 05/12/2018 1.18, Tony Lindgren wrote:
+> > After applying " drm/omap: fix bus_flags for panel-dpi" LCD
+> > works again. But modprobe of snd-soc-davinci-mcasp and
+> > snd-soc-tlv320aic3x still does not show anything with aplay -l.
 > 
-> On 05-12-18, 11:03, Greg Kroah-Hartman wrote:
-> > On Wed, Dec 05, 2018 at 04:42:56PM +0800, Long Cheng wrote:
-> > > In Mediatek SOCs, the uart can support DMA function.
-> > > Base on DMA engine formwork, we add the DMA code to support uart. And put the code under drivers/dma.
-> > > 
-> > > This series contains document bindings, Kconfig to control the function enable or not,
-> > > device tree including interrupt and dma device node, the code of UART DM
-> > 
-> > I've queued up patches 1 and 3 from this series in my tty tree, thanks.
-> 
-> Do you mind not taking patch 2, I would like that to go thru dmaengine
-> tree
+> Hrm, why they are not loaded automatically?
 
-Like I said, I only took patches 1 and 3...
+Hmm I guess I'm missing some piece of software I've
+removed from my system years ago already? :)
+
+> > Do I need some other patch or codec driver?
+> 
+> snd-soc-edma
+> snd-soc-davinci-mcasp
+> snd-soc-tlv320aic3x
+> snd-soc-simple-card
+
+Oh I thought I tried that but maybe I tried with graph card.
+Got it working now thanks.
+
+I think we're missing the top level ranges for mcasp l3 port
+and the translation goes wrong there, I'll fix it hopefully
+today.
+
+Regards,
+
+Tony
