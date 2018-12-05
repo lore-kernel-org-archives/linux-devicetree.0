@@ -1,10 +1,10 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 051/123] ARM: dts: at91: sama5d2: use the divided clock for SMC
-Date: Wed,  5 Dec 2018 04:34:43 -0500
-Message-ID: <20181205093555.5386-51-sashal@kernel.org>
-References: <20181205093555.5386-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 23/69] ARM: dts: at91: sama5d2: use the divided clock for SMC
+Date: Wed,  5 Dec 2018 04:42:01 -0500
+Message-ID: <20181205094247.6556-23-sashal@kernel.org>
+References: <20181205094247.6556-1-sashal@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181205093555.5386-1-sashal@kernel.org>
+In-Reply-To: <20181205094247.6556-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Romain Izard <romain.izard.pro@gmail.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
@@ -33,7 +33,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-index 61f68e5c48e9..b405992eb601 100644
+index b1a26b42d190..a8e4b89097d9 100644
 --- a/arch/arm/boot/dts/sama5d2.dtsi
 +++ b/arch/arm/boot/dts/sama5d2.dtsi
 @@ -308,7 +308,7 @@
