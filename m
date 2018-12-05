@@ -1,33 +1,51 @@
-Return-Path: <robherring2@gmail.com>
-Date: Tue, 4 Dec 2018 16:46:20 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: can: rcar_can: document r8a77990 support
-Message-ID: <20181204224620.GA7846@bogus>
-References: <20181118173056.4591-1-marek.vasut+renesas@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20181118173056.4591-1-marek.vasut+renesas@gmail.com>
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: devicetree@vger.kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Eugeniu Rosca <erosca@de.adit-jv.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Marc Kleine-Budde <mkl@pengutronix.de>, Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=nQ6t=OO=fpond.eu=uli+renesas@kernel.org>
+From: Ulrich Hecht <uli+renesas@fpond.eu>
+Subject: [PATCH v3 2/2] dt-bindings: can: rcar_canfd: add r8a77995 (R-Car D3) compatibility strings
+Date: Wed,  5 Dec 2018 09:17:05 +0800
+Message-Id: <1543972625-11267-3-git-send-email-uli+renesas@fpond.eu>
+In-Reply-To: <1543972625-11267-1-git-send-email-uli+renesas@fpond.eu>
+References: <1543972625-11267-1-git-send-email-uli+renesas@fpond.eu>
+To: linux-renesas-soc@vger.kernel.org, wsa@the-dreams.de
+Cc: devicetree@vger.kernel.org, linux-can@vger.kernel.org, robh@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Sun, 18 Nov 2018 18:30:56 +0100, Marek Vasut wrote:
-> Document the support for rcar_can on R8A77990 SoC devices.
-> Add R8A77990 to the list of SoCs which require the "assigned-clocks"
-> and "assigned-clock-rates" properties.
-> 
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> Cc: Eugeniu Rosca <erosca@de.adit-jv.com>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Simon Horman <horms+renesas@verge.net.au>
-> Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Cc: linux-renesas-soc@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/net/can/rcar_can.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
+From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Adds compatible strings for the R-Car CAN FD controller in the D3 SoC.
+
+Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+---
+ Documentation/devicetree/bindings/net/can/rcar_canfd.txt | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+index ac71daa..ae2a2b7 100644
+--- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
++++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+@@ -8,6 +8,7 @@ Required properties:
+   - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3-W) compatible controller.
+   - "renesas,r8a77970-canfd" for R8A77970 (R-Car V3M) compatible controller.
+   - "renesas,r8a77980-canfd" for R8A77980 (R-Car V3H) compatible controller.
++  - "renesas,r8a77995-canfd" for R8A77995 (R-Car D3) compatible controller.
+ 
+   When compatible with the generic version, nodes must list the
+   SoC-specific version corresponding to the platform first, followed by the
+@@ -26,10 +27,9 @@ The name of the child nodes are "channel0" and "channel1" respectively. Each
+ child node supports the "status" property only, which is used to
+ enable/disable the respective channel.
+ 
+-Required properties for "renesas,r8a7795-canfd" and "renesas,r8a7796-canfd"
+-compatible:
+-In R8A7795 and R8A7796 SoCs, canfd clock is a div6 clock and can be used by both
+-CAN and CAN FD controller at the same time. It needs to be scaled to maximum
++Required properties for R8A7795, R8A7796 and R8A77995:
++In the denoted SoCs, canfd clock is a div6 clock and can be used by both CAN
++and CAN FD controller at the same time. It needs to be scaled to maximum
+ frequency if any of these controllers use it. This is done using the below
+ properties:
+ 
+-- 
+2.7.4
