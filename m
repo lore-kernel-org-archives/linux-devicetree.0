@@ -1,61 +1,39 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V2] ARM: dts: imx6qdl-sabresd: add egalax touch screen support
- on i2c2 bus
-Date: Wed, 5 Dec 2018 01:14:25 +0000
-Message-ID: <1543972116-22505-1-git-send-email-Anson.Huang@nxp.com>
+Subject: RE: [PATCH] ARM: dts: imx6qdl-sabresd: add egalax touch screen
+ support on i2c2 bus
+Date: Wed, 5 Dec 2018 01:14:51 +0000
+Message-ID: <DB3PR0402MB3916CF664E069CB81550B5F0F5A80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1543913303-6216-1-git-send-email-Anson.Huang@nxp.com>
+ <CAOMZO5D_GTWvLUjJaPSmhPqgjadJh_4pTZqHKz92=1ZAeYkstg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5D_GTWvLUjJaPSmhPqgjadJh_4pTZqHKz92=1ZAeYkstg@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add egalax touch screen support on i2c2 bus, it is connected
-to LVDS0, while the existing one on i2c3 bus is connected to
-LVDS1.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx=
-6qdl-sabresd.dtsi
-index 6e46a19..d7389b5 100644
---- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-@@ -272,6 +272,16 @@
- 	pinctrl-0 =3D <&pinctrl_i2c2>;
- 	status =3D "okay";
-=20
-+	touchscreen@4 {
-+		compatible =3D "eeti,egalax_ts";
-+		reg =3D <0x04>;
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_i2c2_egalax_int>;
-+		interrupt-parent =3D <&gpio6>;
-+		interrupts =3D <8 IRQ_TYPE_EDGE_FALLING>;
-+		wakeup-gpios =3D <&gpio6 8 GPIO_ACTIVE_HIGH>;
-+	};
-+
- 	ov5640: camera@3c {
- 		compatible =3D "ovti,ov5640";
- 		pinctrl-names =3D "default";
-@@ -498,6 +508,12 @@
- 			>;
- 		};
-=20
-+		pinctrl_i2c2_egalax_int: i2c2egalaxintgrp {
-+			fsl,pins =3D <
-+				MX6QDL_PAD_NANDF_ALE__GPIO6_IO08	0x1b0b0
-+			>;
-+		};
-+
- 		pinctrl_i2c3: i2c3grp {
- 			fsl,pins =3D <
- 				MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
---=20
-2.7.4
+DQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
+LS0tLS0NCj4gRnJvbTogRmFiaW8gRXN0ZXZhbSBbbWFpbHRvOmZlc3RldmFtQGdtYWlsLmNvbV0N
+Cj4gU2VudDogMjAxOOW5tDEy5pyINOaXpSAxODoxOQ0KPiBUbzogQW5zb24gSHVhbmcgPGFuc29u
+Lmh1YW5nQG54cC5jb20+DQo+IENjOiBTaGF3biBHdW8gPHNoYXduZ3VvQGtlcm5lbC5vcmc+OyBT
+YXNjaGEgSGF1ZXINCj4gPHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU+OyBTYXNjaGEgSGF1ZXIgPGtl
+cm5lbEBwZW5ndXRyb25peC5kZT47IEZhYmlvDQo+IEVzdGV2YW0gPGZhYmlvLmVzdGV2YW1Abnhw
+LmNvbT47IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Ow0KPiBNYXJrIFJ1dGxhbmQg
+PG1hcmsucnV0bGFuZEBhcm0uY29tPjsgbW9kZXJhdGVkIGxpc3Q6QVJNL0ZSRUVTQ0FMRSBJTVgN
+Cj4gLyBNWEMgQVJNIEFSQ0hJVEVDVFVSRSA8bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnPjsgb3Blbg0KPiBsaXN0Ok9QRU4gRklSTVdBUkUgQU5EIEZMQVRURU5FRCBERVZJQ0Ug
+VFJFRSBCSU5ESU5HUw0KPiA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBsaW51eC1rZXJu
+ZWwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+Ow0KPiBkbC1saW51eC1pbXggPGxpbnV4
+LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBBUk06IGR0czogaW14NnFkbC1z
+YWJyZXNkOiBhZGQgZWdhbGF4IHRvdWNoIHNjcmVlbg0KPiBzdXBwb3J0IG9uIGkyYzIgYnVzDQo+
+IA0KPiBIaSBBbnNvbiwNCj4gDQo+IE9uIFR1ZSwgRGVjIDQsIDIwMTggYXQgNjo1NCBBTSBBbnNv
+biBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gd3JvdGU6DQo+ID4NCj4gPiBBZGQgZWdh
+bGF4IHRvdWNoIHNjcmVlbiBzdXBwb3J0IG9uIGkyYzIgYnVzLg0KPiANCj4gUGxlYXNlIGltcHJv
+dmUgdGhlIGNvbW1pdCBsb2cgc2F5aW5nIHRoYXQgdGhpcyBuZXdseSBpbnRyb2R1Y2VkIHRvdWNo
+c2NyZWVuDQo+IGNvbnRyb2xsZXIgaXMgY29ubmVjdGVkIHRvIExWRFMwIGFuZCB0aGUgZXhpc3Rp
+bmcgb25lIG9uDQo+IEkyQzMgaXMgY29ubmVjdGVkIHRvIExWRFMxLg0KPiANCj4gVGhhbmtzDQoN
+ClRoYW5rcyBGYWJpbywgZG9uZSBpbiBWMiBwYXRjaC4NCg0KQW5zb24uDQoNCg0K
