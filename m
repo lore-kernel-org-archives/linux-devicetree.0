@@ -1,102 +1,111 @@
-Return-Path: <SRS0=0VMp=OX=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 08/17] arm64: dts: renesas: r8a774c0: Add PWM support
-Date: Fri, 14 Dec 2018 09:37:31 +0000
-Message-Id: <1544780260-27590-9-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1544780260-27590-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1544780260-27590-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Return-Path: <mchehab@kernel.org>
+Date: Wed, 5 Dec 2018 07:57:40 -0200
+From: Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v3 0/9] TVP5150 fixes and new features
+Message-ID: <20181205075740.064e0f36@coco.lan>
+In-Reply-To: <20181109134624.2fxin2erjun57lrh@pengutronix.de>
+References: <20180918131453.21031-1-m.felsch@pengutronix.de>
+	<20181029184113.5tfdjdlj75m2wd6m@pengutronix.de>
+	<20181109134624.2fxin2erjun57lrh@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, kernel@pengutronix.de, devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, afshin.nasser@gmail.com, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add PWM support to the RZ/G2E (a.k.a. R8A774C0) SoC specific
-device tree.
+Hi Marco,
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a774c0.dtsi | 70 +++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
+Em Fri, 9 Nov 2018 14:46:24 +0100
+Marco Felsch <m.felsch@pengutronix.de> escreveu:
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-index 35b27b8..d876520 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-@@ -758,6 +758,76 @@
- 			status = "disabled";
- 		};
- 
-+		pwm0: pwm@e6e30000 {
-+			compatible = "renesas,pwm-r8a774c0", "renesas,pwm-rcar";
-+			reg = <0 0xe6e30000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
-+
-+		pwm1: pwm@e6e31000 {
-+			compatible = "renesas,pwm-r8a774c0", "renesas,pwm-rcar";
-+			reg = <0 0xe6e31000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
-+
-+		pwm2: pwm@e6e32000 {
-+			compatible = "renesas,pwm-r8a774c0", "renesas,pwm-rcar";
-+			reg = <0 0xe6e32000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
-+
-+		pwm3: pwm@e6e33000 {
-+			compatible = "renesas,pwm-r8a774c0", "renesas,pwm-rcar";
-+			reg = <0 0xe6e33000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
-+
-+		pwm4: pwm@e6e34000 {
-+			compatible = "renesas,pwm-r8a774c0", "renesas,pwm-rcar";
-+			reg = <0 0xe6e34000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
-+
-+		pwm5: pwm@e6e35000 {
-+			compatible = "renesas,pwm-r8a774c0", "renesas,pwm-rcar";
-+			reg = <0 0xe6e35000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
-+
-+		pwm6: pwm@e6e36000 {
-+			compatible = "renesas,pwm-r8a774c0", "renesas,pwm-rcar";
-+			reg = <0 0xe6e36000 0 0x8>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
-+
- 		scif0: serial@e6e60000 {
- 			compatible = "renesas,scif-r8a774c0",
- 				     "renesas,rcar-gen3-scif", "renesas,scif";
--- 
-2.7.4
+> Hi Mauro,
+> 
+> I don't want to spam you. Can you give me some feedback? I know the
+> merge window is a busy time, so maybe you have some time now.
+
+Sorry for taking so long on looking into it... has been really busy
+those days :-(
+
+I applied patch 2/9. Patch 3 doesn't apply. Would you mind
+rebasing it on the top of upstream? there are some non-trivial
+conflicts (perhaps I just missed some other preparation patch?).
+
+I suspect that it would be easier if you could rebase your tree
+on the top of the latest upstream one, e. g.:
+
+	git://linuxtv.org/media_tree.git
+	
+(master branch)
+
+Regards,
+Mauro
+> 
+> Regards,
+> Marco
+> 
+> On 18-10-29 19:41, Marco Felsch wrote:
+> > Hi Mauro,
+> > 
+> > just a reminder, Rob already added his ack/rev-by tags.
+> > 
+> > Thanks,
+> > Marco
+> > 
+> > On 18-09-18 15:14, Marco Felsch wrote:  
+> > > Hi,
+> > > 
+> > > this is my v3 with the integrated reviews from my v2 [1]. This serie
+> > > applies to Mauro's experimental.git [2].
+> > > 
+> > > @Mauro:
+> > > Patch ("media: tvp5150: fix irq_request error path during probe") is new
+> > > in this series. Maybe you can squash them with ("media: tvp5150: Add sync lock
+> > > interrupt handling"), thanks.
+> > > 
+> > > I've tested this series on a customer dt-based board. Unfortunately I
+> > > haven't a device which use the em28xx driver. So other tester a welcome :)
+> > > 
+> > > [1] https://www.spinics.net/lists/devicetree/msg244129.html
+> > > [2] https://git.linuxtv.org/mchehab/experimental.git/log/?h=tvp5150-4
+> > > 
+> > > Javier Martinez Canillas (1):
+> > >   partial revert of "[media] tvp5150: add HW input connectors support"
+> > > 
+> > > Marco Felsch (7):
+> > >   media: tvp5150: fix irq_request error path during probe
+> > >   media: tvp5150: add input source selection of_graph support
+> > >   media: dt-bindings: tvp5150: Add input port connectors DT bindings
+> > >   media: v4l2-subdev: add stubs for v4l2_subdev_get_try_*
+> > >   media: v4l2-subdev: fix v4l2_subdev_get_try_* dependency
+> > >   media: tvp5150: add FORMAT_TRY support for get/set selection handlers
+> > >   media: tvp5150: add s_power callback
+> > > 
+> > > Michael Tretter (1):
+> > >   media: tvp5150: initialize subdev before parsing device tree
+> > > 
+> > >  .../devicetree/bindings/media/i2c/tvp5150.txt |  92 ++-
+> > >  drivers/media/i2c/tvp5150.c                   | 657 +++++++++++++-----
+> > >  include/dt-bindings/media/tvp5150.h           |   2 -
+> > >  include/media/v4l2-subdev.h                   |  15 +-
+> > >  4 files changed, 584 insertions(+), 182 deletions(-)
+> > > 
+> > > -- 
+> > > 2.19.0
+> > > 
+> > > 
+> > >   
+> > 
+> > -- 
+> > Pengutronix e.K.                           |                             |
+> > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> > 
+> >   
+> 
+
+
+
+Thanks,
+Mauro
