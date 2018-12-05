@@ -1,8 +1,8 @@
 Return-Path: <SRS0=nQ6t=OO=fpond.eu=uli+renesas@kernel.org>
 From: Ulrich Hecht <uli+renesas@fpond.eu>
-Subject: [PATCH v3 2/2] dt-bindings: can: rcar_canfd: add r8a77995 (R-Car D3) compatibility strings
-Date: Wed,  5 Dec 2018 09:17:05 +0800
-Message-Id: <1543972625-11267-3-git-send-email-uli+renesas@fpond.eu>
+Subject: [PATCH v3 1/2] dt-bindings: can: rcar_can: add r8a77995 (R-Car D3) compatibility strings
+Date: Wed,  5 Dec 2018 09:17:04 +0800
+Message-Id: <1543972625-11267-2-git-send-email-uli+renesas@fpond.eu>
 In-Reply-To: <1543972625-11267-1-git-send-email-uli+renesas@fpond.eu>
 References: <1543972625-11267-1-git-send-email-uli+renesas@fpond.eu>
 To: linux-renesas-soc@vger.kernel.org, wsa@the-dreams.de
@@ -11,41 +11,36 @@ List-ID: <devicetree@vger.kernel.org>
 
 From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 
-Adds compatible strings for the R-Car CAN FD controller in the D3 SoC.
+Adds compatible strings for the R-Car CAN controller in the D3 SoC.
 
 Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 Acked-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 ---
- Documentation/devicetree/bindings/net/can/rcar_canfd.txt | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/net/can/rcar_can.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-index ac71daa..ae2a2b7 100644
---- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-+++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-@@ -8,6 +8,7 @@ Required properties:
-   - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3-W) compatible controller.
-   - "renesas,r8a77970-canfd" for R8A77970 (R-Car V3M) compatible controller.
-   - "renesas,r8a77980-canfd" for R8A77980 (R-Car V3H) compatible controller.
-+  - "renesas,r8a77995-canfd" for R8A77995 (R-Car D3) compatible controller.
+diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+index 9936b9e..a72ced1 100644
+--- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
++++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+@@ -16,6 +16,7 @@ Required properties:
+ 	      "renesas,can-r8a7795" if CAN controller is a part of R8A7795 SoC.
+ 	      "renesas,can-r8a7796" if CAN controller is a part of R8A7796 SoC.
+ 	      "renesas,can-r8a77965" if CAN controller is a part of R8A77965 SoC.
++	      "renesas,can-r8a77995" if CAN controller is a part of R8A77995 SoC.
+ 	      "renesas,rcar-gen1-can" for a generic R-Car Gen1 compatible device.
+ 	      "renesas,rcar-gen2-can" for a generic R-Car Gen2 or RZ/G1
+ 	      compatible device.
+@@ -37,7 +38,7 @@ Required properties:
+ - pinctrl-0: pin control group to be used for this controller.
+ - pinctrl-names: must be "default".
  
-   When compatible with the generic version, nodes must list the
-   SoC-specific version corresponding to the platform first, followed by the
-@@ -26,10 +27,9 @@ The name of the child nodes are "channel0" and "channel1" respectively. Each
- child node supports the "status" property only, which is used to
- enable/disable the respective channel.
- 
--Required properties for "renesas,r8a7795-canfd" and "renesas,r8a7796-canfd"
--compatible:
--In R8A7795 and R8A7796 SoCs, canfd clock is a div6 clock and can be used by both
--CAN and CAN FD controller at the same time. It needs to be scaled to maximum
-+Required properties for R8A7795, R8A7796 and R8A77995:
-+In the denoted SoCs, canfd clock is a div6 clock and can be used by both CAN
-+and CAN FD controller at the same time. It needs to be scaled to maximum
- frequency if any of these controllers use it. This is done using the below
- properties:
- 
+-Required properties for R8A7795, R8A7796 and R8A77965:
++Required properties for R8A7795, R8A7796, R8A77965 and R8A77995:
+ For the denoted SoCs, "clkp2" can be CANFD clock. This is a div6 clock and can
+ be used by both CAN and CAN FD controller at the same time. It needs to be
+ scaled to maximum frequency if any of these controllers use it. This is done
 -- 
 2.7.4
