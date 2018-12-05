@@ -1,105 +1,37 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [RFC PATCH v2 04/15] usb:cdns3: Driver initialization code.
-Date: Wed, 5 Dec 2018 07:19:51 +0000
-Message-ID: <BYAPR07MB47090A16A7A8A85C6C3FD46ADDA80@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
- <1542535751-16079-5-git-send-email-pawell@cadence.com>
- <CAL411-rWbQ6yj1r_aaLP8UagVRJhsn7xdznQwXS9enkxXTs2LA@mail.gmail.com>
- <BYAPR07MB4709A8E4B0B0CC05A842B708DDAD0@BYAPR07MB4709.namprd07.prod.outlook.com>
- <CAL411-rzhH+y-b0-xze4-WmeVtey4bXt4Jc6TWYyfw6E8x-5Eg@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] ARM: dts: vf: Fix memory node duplication
+Date: Wed, 5 Dec 2018 15:54:03 +0800
+Message-ID: <20181205075401.GO3987@dragon>
+References: <1543625092-24498-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL411-rzhH+y-b0-xze4-WmeVtey4bXt4Jc6TWYyfw6E8x-5Eg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Chen <hzpeterchen@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, lkml <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1543625092-24498-1-git-send-email-festevam@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, stefan@agner.ch
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCj4+ID4+DQo+PiA+PiBQYXRjaCBhZGRzIGNvcmUuYyBhbmQgY29yZS5oIGZpbGUgdGhh
-dCBpbXBsZW1lbnRzIGluaXRpYWxpemF0aW9uDQo+PiA+PiBvZiBwbGF0Zm9ybSBkcml2ZXIgYW5k
-IGFkZHMgZnVuY3Rpb24gcmVzcG9uc2libGUgZm9yIHNlbGVjdGluZywNCj4+ID4+IHN3aXRjaGlu
-ZyBhbmQgcnVubmluZyBhcHByb3ByaWF0ZSBEZXZpY2UvSG9zdCBtb2RlLg0KPj4gPj4NCj4+ID4+
-IFNpZ25lZC1vZmYtYnk6IFBhd2VsIExhc3pjemFrIDxwYXdlbGxAY2FkZW5jZS5jb20+DQo+PiA+
-PiAtLS0NCj4+ID4+ICBkcml2ZXJzL3VzYi9jZG5zMy9NYWtlZmlsZSB8ICAgMiArDQo+PiA+PiAg
-ZHJpdmVycy91c2IvY2RuczMvY29yZS5jICAgfCA0MTMgKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKw0KPj4gPj4gIGRyaXZlcnMvdXNiL2NkbnMzL2NvcmUuaCAgIHwgMTAwICsr
-KysrKysrKw0KPj4gPj4gIDMgZmlsZXMgY2hhbmdlZCwgNTE1IGluc2VydGlvbnMoKykNCj4+ID4+
-ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy91c2IvY2RuczMvY29yZS5jDQo+PiA+PiAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvdXNiL2NkbnMzL2NvcmUuaA0KPj4gPj4NCj4+ID4+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9jZG5zMy9NYWtlZmlsZSBiL2RyaXZlcnMvdXNiL2NkbnMz
-L01ha2VmaWxlDQo+PiA+PiBpbmRleCBkY2RkNjIwMDNjNmEuLjAyZDI1YjIzYzVkMyAxMDA2NDQN
-Cj4+ID4+IC0tLSBhL2RyaXZlcnMvdXNiL2NkbnMzL01ha2VmaWxlDQo+PiA+PiArKysgYi9kcml2
-ZXJzL3VzYi9jZG5zMy9NYWtlZmlsZQ0KPj4gPj4gQEAgLTEsMyArMSw1IEBADQo+PiA+PiArb2Jq
-LSQoQ09ORklHX1VTQl9DRE5TMykgICAgICAgICAgICAgICAgICAgICAgICArPSBjZG5zMy5vDQo+
-PiA+PiAgb2JqLSQoQ09ORklHX1VTQl9DRE5TM19QQ0lfV1JBUCkgICAgICAgKz0gY2RuczMtcGNp
-Lm8NCj4+ID4+DQo+PiA+PiArY2RuczMteSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICA6PSBjb3JlLm8NCj4+ID4+ICBjZG5zMy1wY2kteSAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICA6PSBjZG5zMy1wY2ktd3JhcC5vDQo+PiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91
-c2IvY2RuczMvY29yZS5jIGIvZHJpdmVycy91c2IvY2RuczMvY29yZS5jDQo+PiA+PiBuZXcgZmls
-ZSBtb2RlIDEwMDY0NA0KPj4gPj4gaW5kZXggMDAwMDAwMDAwMDAwLi5mOTA1NWQ0ZGE2N2YNCj4+
-ID4+IC0tLSAvZGV2L251bGwNCj4+ID4+ICsrKyBiL2RyaXZlcnMvdXNiL2NkbnMzL2NvcmUuYw0K
-Pj4gPj4gQEAgLTAsMCArMSw0MTMgQEANCj4+ID4+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmll
-cjogR1BMLTIuMA0KPj4gPj4gKy8qDQo+PiA+PiArICogQ2FkZW5jZSBVU0JTUyBEUkQgRHJpdmVy
-Lg0KPj4gPj4gKyAqDQo+PiA+PiArICogQ29weXJpZ2h0IChDKSAyMDE4IENhZGVuY2UuDQo+PiA+
-PiArICoNCj4+ID4NCj4+ID5QbGVhc2UgYWRkIE5YUCBjb3B5cmlnaHQgdG9vLg0KPj4NCj4+IE9r
-LCBJIGRvbid0IGtub3cgd2h5IEkgb21pdHRlZCB0aGlzLg0KPj4gSSBrbm93IHRoYXQgeW91IGFy
-ZSB0aGUgbWFpbiBhdXRob3Igb2YgdGhpcyBmaWxlDQo+PiBTb3JyeSBmb3IgdGhhdC4NCj4+DQo+
-PiBPbmUgYWRkaXRpb25hbCBxdWVzdGlvbi4gV2hhdCB5ZWFyIEkgc2hvdWxkIGFkZCBpbiBDb3B5
-cmlnaHQgZm9yIE5YUD8uDQo+PiBUaGUgb3JpZ2luYWwgeWVhciAyMDE3IG9yIEkgc2hvdWxkIG1v
-ZGlmaWVkIGFsbCB0byAyMDE4Lg0KPj4NCj5QbGVhc2UgdXNlIGJlbG93IGNvcHlyaWdodCwgdGhh
-bmtzLg0KPg0KPkNvcHlyaWdodCAyMDE3LTIwMTggTlhQDQoNCkkgYWRkIHRoaXMgaW4gYWxsIGZp
-bGVzICBtb2RpZmllZCBvciBjcmVhdGVkIGJ5IHlvdS4NCj4NCj4NCj4NCj4+ID4+ICsgICAgICAg
-bXV0ZXhfaW5pdCgmY2Rucy0+bXV0ZXgpOw0KPj4gPj4gKw0KPj4gPj4gKyAgICAgICBjZG5zLT5w
-aHkgPSBkZXZtX3BoeV9nZXQoZGV2LCAiY2RuczMsdXNicGh5Iik7DQo+PiA+PiArICAgICAgIGlm
-IChJU19FUlIoY2Rucy0+cGh5KSkgew0KPj4gPj4gKyAgICAgICAgICAgICAgIGRldl9pbmZvKGRl
-diwgIm5vIGdlbmVyaWMgcGh5IGZvdW5kXG4iKTsNCj4+ID4+ICsgICAgICAgICAgICAgICBjZG5z
-LT5waHkgPSBOVUxMOw0KPj4gPj4gKyAgICAgICAgICAgICAgIC8qDQo+PiA+PiArICAgICAgICAg
-ICAgICAgICogZmFsbCB0aHJvdWdoIGhlcmUhDQo+PiA+PiArICAgICAgICAgICAgICAgICogaWYg
-bm8gZ2VuZXJpYyBwaHkgZm91bmQsIHBoeSBpbml0DQo+PiA+PiArICAgICAgICAgICAgICAgICog
-c2hvdWxkIGJlIGRvbmUgdW5kZXIgYm9vdCENCj4+ID4+ICsgICAgICAgICAgICAgICAgKi8NCj4+
-ID4NCj4+ID5JZiB0aGUgcGh5IGRyaXZlciBpcyBkZWZlci1wcm9iZWQsIGl0IHdpbGwgYmUgaGVy
-ZSwgaXQgaXMgbm90IGFuIGVycm9yLg0KPj4gPkkgdGhpbmsgeW91IGNvdWxkIGhhdmUgYSBnZW5l
-cmljIHBoeSBkcml2ZXIgb3IgdXNiIGdlbmVyaWMgcGh5IGRyaXZlcg0KPj4gPihkcml2ZXJzL3Vz
-Yi9waHkvcGh5LWdlbmVyaWMuYykgZXZlbiB5b3UgZG9uJ3QgbmVlZCBhbnkgb3BlcmF0aW9ucyBm
-b3INCj4+ID5QSFkuIEl0IHdpbGwgYmUgZWFzeSBmb3Igb3RoZXIgcGxhdGZvcm1zLg0KPj4NCj4+
-IFllcywgUm9nZXIgYXNrIG1lIHRvIG1vZGlmeSB0aGlzIGZyYWdtZW50LiBJbiBuZXh0IHZlcnNp
-b24gaXQgd2lsbCBsb29rIGxpa2U6DQo+PiAgICAgICAgIGNkbnMtPnBoeSA9IGRldm1fcGh5X2dl
-dChkZXYsICJjZG5zMyx1c2JwaHkiKTsNCj4+ICAgICAgICAgaWYgKElTX0VSUihjZG5zLT5waHkp
-KSB7DQo+PiAgICAgICAgICAgICAgICAgcmV0ID0gUFRSX0VSUihjZG5zLT5waHkpOw0KPj4gICAg
-ICAgICAgICAgICAgIGlmIChyZXQgPT0gLUVOT1NZUyB8fCByZXQgPT0gLUVOT0RFVikgew0KPj4g
-ICAgICAgICAgICAgICAgICAgICAgICAgY2Rucy0+cGh5ID0gTlVMTDsNCj4+ICAgICAgICAgICAg
-ICAgICB9IGVsc2UgaWYgKHJldCA9PSAtRVBST0JFX0RFRkVSKSB7DQo+PiAgICAgICAgICAgICAg
-ICAgICAgICAgICByZXR1cm4gcmV0Ow0KPj4gICAgICAgICAgICAgICAgIH0gZWxzZSB7DQo+PiAg
-ICAgICAgICAgICAgICAgICAgICAgICBkZXZfZXJyKGRldiwgIm5vIHBoeSBmb3VuZFxuIik7DQo+
-PiAgICAgICAgICAgICAgICAgICAgICAgICBnb3RvIGVycjA7DQo+PiAgICAgICAgICAgICAgICAg
-fQ0KPj4gICAgICAgICB9DQo+Pg0KPj4gICAgICAgICBwaHlfaW5pdChjZG5zLT5waHkpOw0KPj4N
-Cj4+IFdlIGFyZSBnb2luZyB0byB1c2UgcGh5IGRyaXZlci4gSSBkb24ndCBrbm93IGlmIGl0IGNv
-cnJlY3QuDQo+PiBJIGRvbid0IGhhdmUgZXhwZXJpZW5jZSBpbiB0aGlzIGZpbGVkLg0KPj4gV2Ug
-bmVlZCBwaHkgaW5pdGlhbGl6YXRpb24gYnV0IEkgZG9uJ3QgaGF2ZSB0ZXN0aW5nIHBsYXRmb3Jt
-IG5vdy4NCj4+IEluIG1vc3QgdXNiIGRyaXZlcnMgSSBzZWUgdGhhdCB0aGVyZSBhcmUgdXNlZCB1
-c2IgcGh5IGRyaXZlcmQgaW5zdGVhZCBwaHkgZGlydmVyZC4NCj4+DQo+DQo+QXQgbXkgQ0ROUzMg
-cGxhdGZvcm0sIHRoZXJlIGFyZSBzb21lIFVTQiBQSFkgaW5pdGlhbGl6YXRpb24gZm9yIHJlZ2lz
-dGVyIHNldHRpbmcNCj5hbmQgY2xvY2sgZW5hYmxlLiBZb3UgY291bGQgYWRkIGdlbmVyaWMgUEhZ
-IGRyaXZlciB1bmRlcjogZHJpdmVycy9waHkvY2FkZW5jZS8uDQo+DQo+QWJvdmUgUEhZIGluaXRp
-YWxpemF0aW9uIGNvZGUgaXMgT0sgZm9yIG1lLg0KDQpJdCB3aWxsIGJlIGFkZGVkIGFzIHNlcGFy
-YXRlIGRyaXZlci4gDQpJIHRoaW5rIHRoYXQgQWxsYW4gRG91Z2xhcyB3b3JraW5nIG9uIGl0LiAN
-CkkgYXNrIGhpbSB0byBhZGQgeW91IHRvIC1jYyBpbiBwYXRjaCBmb3IgcGh5Lg0KDQo+DQo+DQo+
-PiA+PiArc3RhdGljIHZvaWQgX19leGl0IGNkbnMzX2RyaXZlcl9wbGF0Zm9ybV91bnJlZ2lzdGVy
-KHZvaWQpDQo+PiA+PiArew0KPj4gPj4gKyAgICAgICBwbGF0Zm9ybV9kcml2ZXJfdW5yZWdpc3Rl
-cigmY2RuczNfZHJpdmVyKTsNCj4+ID4+ICt9DQo+PiA+PiArbW9kdWxlX2V4aXQoY2RuczNfZHJp
-dmVyX3BsYXRmb3JtX3VucmVnaXN0ZXIpOw0KPj4gPj4gKw0KPj4gPj4gK01PRFVMRV9BTElBUygi
-cGxhdGZvcm06Y2RuczMiKTsNCj4+ID4+ICtNT0RVTEVfQVVUSE9SKCJQYXdlbCBMYXN6Y3phayA8
-cGF3ZWxsQGNhZGVuY2UuY29tPiIpOw0KPj4gPj4gK01PRFVMRV9MSUNFTlNFKCJHUEwgdjIiKTsN
-Cj4+ID4+ICtNT0RVTEVfREVTQ1JJUFRJT04oIkNhZGVuY2UgVVNCMyBEUkQgQ29udHJvbGxlciBE
-cml2ZXIiKTsNCj4+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9jZG5zMy9jb3JlLmggYi9k
-cml2ZXJzL3VzYi9jZG5zMy9jb3JlLmgNCj4+ID4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+PiA+
-PiBpbmRleCAwMDAwMDAwMDAwMDAuLjdjODIwNGZlNGQzZA0KPj4gPj4gLS0tIC9kZXYvbnVsbA0K
-Pj4gPj4gKysrIGIvZHJpdmVycy91c2IvY2RuczMvY29yZS5oDQo+PiA+PiBAQCAtMCwwICsxLDEw
-MCBAQA0KPj4gPj4gKy8qIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wICovDQo+PiA+
-PiArLyoNCj4+ID4+ICsgKiBDYWRlbmNlIFVTQlNTIERSRCBEcml2ZXIuDQo+PiA+PiArICoNCj4+
-ID4NCj4+ID5IZWFkZXIgZmlsZQ0KPj4gSSBkb24ndCB1bmRlcnN0YW5kLiBXaGF0IGlzIHdyb25n
-ID8NCj4+ID4NCj4NCj5UaGUgY29tbWVudCBmb3IgdGhpcyBmaWxlDQo+DQo+Q2FkZW5jZSBVU0JT
-UyBEUkQgQ29yZSBIZWFkZXIgRmlsZQ0KDQpPaywgdGhhbmtzIA0KQ2hlZXJzLCANClBhd2VsDQo=
+On Fri, Nov 30, 2018 at 10:44:52PM -0200, Fabio Estevam wrote:
+> Boards based on vf500/vf600 have duplicate memory nodes:
+> 
+> - One coming from the board dts file: memory@
+> 
+> - One coming from the vf500.dtsi/vf610m4.dtsi files.
+> 
+> Fix the duplication by removing the memory node from the dtsi file
+> and by adding 'device_type = "memory";' in the board dts.
+> 
+> Reported-by: Rob Herring <robh@kernel.org>
+
+Applied, thanks.
