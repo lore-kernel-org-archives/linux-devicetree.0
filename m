@@ -1,53 +1,43 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] powerpc: pseries: pmem: Convert to using %pOFn instead of device_node.name
-Date: Wed,  5 Dec 2018 13:50:17 -0600
-Message-ID: <20181205195050.4759-1-robh@kernel.org>
+Subject: [PATCH] drm: imx: Use of_node_name_eq for node name comparisons
+Date: Wed,  5 Dec 2018 13:50:23 -0600
+Message-ID: <20181205195050.4759-7-robh@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org
+Cc: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-In preparation to remove the node name pointer from struct device_node,
-convert printf users to use the %pOFn format specifier. pmem.c was
-recently added and missed the initial conversion.
-
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- arch/powerpc/platforms/pseries/pmem.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/powerpc/platforms/pseries/pmem.c b/arch/powerpc/platforms/pseries/pmem.c
-index a27f40eb57b1..27f0a915c8a9 100644
---- a/arch/powerpc/platforms/pseries/pmem.c
-+++ b/arch/powerpc/platforms/pseries/pmem.c
-@@ -52,8 +52,8 @@ static ssize_t pmem_drc_add_node(u32 drc_index)
- 	/* NB: The of reconfig notifier creates platform device from the node */
- 	rc = dlpar_attach_node(dn, pmem_node);
- 	if (rc) {
--		pr_err("Failed to attach node %s, rc: %d, drc index: %x\n",
--			dn->name, rc, drc_index);
-+		pr_err("Failed to attach node %pOF, rc: %d, drc index: %x\n",
-+			dn, rc, drc_index);
- 
- 		if (dlpar_release_drc(drc_index))
- 			dlpar_free_cc_nodes(dn);
-@@ -93,8 +93,8 @@ static ssize_t pmem_drc_remove_node(u32 drc_index)
- 
- 	rc = dlpar_release_drc(drc_index);
- 	if (rc) {
--		pr_err("Failed to release drc (%x) for CPU %s, rc: %d\n",
--			drc_index, dn->name, rc);
-+		pr_err("Failed to release drc (%x) for CPU %pOFn, rc: %d\n",
-+			drc_index, dn, rc);
- 		dlpar_attach_node(dn, pmem_node);
- 		return rc;
- 	}
--- 
-2.19.1
+Q29udmVydCBzdHJpbmcgY29tcGFyZXMgb2YgRFQgbm9kZSBuYW1lcyB0byB1c2Ugb2Zfbm9kZV9u
+YW1lX2VxIGhlbHBlcgppbnN0ZWFkLiBUaGlzIHJlbW92ZXMgZGlyZWN0IGFjY2VzcyB0byB0aGUg
+bm9kZSBuYW1lIHBvaW50ZXIuCgpGb3IgaW5zdGFuY2VzIHVzaW5nIG9mX25vZGVfY21wLCB0aGlz
+IGhhcyB0aGUgc2lkZSBlZmZlY3Qgb2Ygbm93IHVzaW5nCmNhc2Ugc2Vuc2l0aXZlIGNvbXBhcmlz
+b25zLiBUaGlzIHNob3VsZCBub3QgbWF0dGVyIGZvciBhbnkgRkRUIGJhc2VkCnN5c3RlbSB3aGlj
+aCB0aGlzIGlzLgoKQ2M6IFBoaWxpcHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+CkNj
+OiBEYXZpZCBBaXJsaWUgPGFpcmxpZWRAbGludXguaWU+CkNjOiBkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnClNpZ25lZC1vZmYtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+
+Ci0tLQogZHJpdmVycy9ncHUvZHJtL2lteC9pbXgtZHJtLWNvcmUuYyB8IDIgKy0KIDEgZmlsZSBj
+aGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZ3B1L2RybS9pbXgvaW14LWRybS1jb3JlLmMgYi9kcml2ZXJzL2dwdS9kcm0vaW14L2lteC1k
+cm0tY29yZS5jCmluZGV4IDBlNjk0MmYyMWE0ZS4uOTllYzZlNWY4OWRjIDEwMDY0NAotLS0gYS9k
+cml2ZXJzL2dwdS9kcm0vaW14L2lteC1kcm0tY29yZS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9p
+bXgvaW14LWRybS1jb3JlLmMKQEAgLTE5OCw3ICsxOTgsNyBAQCBzdGF0aWMgaW50IGNvbXBhcmVf
+b2Yoc3RydWN0IGRldmljZSAqZGV2LCB2b2lkICpkYXRhKQogCX0KIAogCS8qIFNwZWNpYWwgY2Fz
+ZSBmb3IgTERCLCBvbmUgZGV2aWNlIGZvciB0d28gY2hhbm5lbHMgKi8KLQlpZiAob2Zfbm9kZV9j
+bXAobnAtPm5hbWUsICJsdmRzLWNoYW5uZWwiKSA9PSAwKSB7CisJaWYgKG9mX25vZGVfbmFtZV9l
+cShucCwgImx2ZHMtY2hhbm5lbCIpKSB7CiAJCW5wID0gb2ZfZ2V0X3BhcmVudChucCk7CiAJCW9m
+X25vZGVfcHV0KG5wKTsKIAl9Ci0tIAoyLjE5LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbAo=
