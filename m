@@ -1,15 +1,14 @@
-From: <Nicolas.Ferre@microchip.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 Subject: Re: Moving ARM dts files
-Date: Wed, 5 Dec 2018 08:13:37 +0000
-Message-ID: <392c9399-83c8-a74a-a849-748225802851@microchip.com>
+Date: Wed, 5 Dec 2018 09:19:49 +0100
+Message-ID: <CACRpkdYs_s9m=fUuOcfqcvP5BMXity5GH17RSMyvHzdZ9aFNzA@mail.gmail.com>
 References: <20181204183649.GA5716@bogus>
+ <20181205135726.70badac7@xhacker.debian>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181204183649.GA5716@bogus>
-Content-Language: en-US
-Content-ID: <860E0E98F3268844A88BC71619279FEA@namprd11.prod.outlook.com>
+In-Reply-To: <20181205135726.70badac7@xhacker.debian>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,68 +18,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh@kernel.org, arm@kernel.org
-Cc: andrew@lunn.ch, alexandre.belloni@bootlin.com, tony@atomide.com, linus.walleij@linaro.org, liviu.dudau@arm.com, yamada.masahiro@socionext.com, thierry.reding@gmail.com, f.fainelli@gmail.com, khilman@kernel.org, gregory.clement@bootlin.com, michal.simek@xilinx.com, krzk@kernel.org, Ludovic.Desroches@microchip.com, joel@jms.id.au, andy.gross@linaro.org, devicetree@vger.kernel.org, jason@lakedaemon.net, horms@verge.net.au, linux-arm-kernel@lists.infradead.org, mcoquelin.stm32@gmail.com, shawnguo@kernel.org, afaerber@suse.de, daniel@zonque.org
+To: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre Belloni <alexandre.belloni@bootlin.com>, ext Tony Lindgren <tony@atomide.com>, Liviu Dudau <liviu.dudau@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Rob Herring <robh@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory Clement <gregory.clement@bootlin.com>, Michal Simek <michal.simek@xilinx.com>, Krzysztof Kozlowski <krzk@kernel.org>, arm-soc <arm@kernel.org>, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Shawn Guo <shawnguo@kernel.org>, =?UTF
 List-Id: devicetree@vger.kernel.org
 
-On 04/12/2018 at 19:36, Rob Herring wrote:
-> Olof, Arnd,
-> 
-> I've put together a script to move the dts files and update the
-> makefiles. It doesn't handle files not following a common prefix which
-> isn't many and some includes within the dts files will need some fixups
-> by hand.
-> 
-> MAINTAINERS will also need updating.
-> 
-> A few questions:
-> 
-> Do we want to move absolutely everything to subdirs? There's quite a
-> few platforms with only 1-2 platforms. I haven't added these to the
-> list yet, but can.
-> 
-> Do any vendors need another level of directories? davinci, omap, nspire,
-> etc. for TI for example.
-> 
-> What to do with armv7m.dtsi? I guess it should remain and we just fixup
-> the include. There may be a few other cross vendor things.
-> 
-> 
-> Sub-arch maintainers,
-> 'vendor_map' below is the mapping of file prefix to new subdirectory
-> (the SoC vendor prefix). Please comment if there are any issues.
+On Wed, Dec 5, 2018 at 7:02 AM Jisheng Zhang
+<Jisheng.Zhang@synaptics.com> wrote:
+> Rob Herring <robh@kernel.org> wrote:
 
-It'll certainly break some of our scripts (CI, building scripts, overlay 
-makefiles, etc.). We already experienced it when adding the "dts" 
-directory. But if it's needed...
+> >     'armada' : 'marvell',
+> >     'berlin' : 'marvell',
+>
+> Now, berlin SoC is synaptics' SoC ;)
 
-> 8<-----------------------------------------------------------
-> #!/usr/bin/env python3
-> 
-> import os
-> import re
-> from git import Git
-> import glob
-> 
-> vendor_map = {
+This illustrates perfectly the artificial nature of using vendor names
+as prefixes with DT properties, prefix names, directories etc.
 
-[..]
+Companies start out purporting to be some eternal entity and the
+next day they buy each other left and right and license their
+hardware IP to whoever wants it.
 
->      'integ' : 'arm',
->      've' : 'arm',
->      'aspeed' : 'aspeed',
->      'at91' : 'atmel',
+It actually makes much more sense to organize these files by
+the SoC family name, because that doesn't change when the
+SoC is sold to another company.
 
-As it's a new directory, what about creating a "microchip" one as it's 
-our vendor's name now.
+omap/* containing all OMAP platforms, msm/* for all Qualcomm
+SoCs etc. SoC names/codenames are at least eternal once they
+have been manufactured and we can keep them together
+no matter what vendor currently controls it.
 
->      'sama' : 'atmel',
+However I think there was a fork in the road ages ago when
+someone or something decided to use vendor prefixes for
+DT properties leading to this situation that we can no longer
+back out of.
 
-If desired, you can extend to sama5d for the current files.
+It has the side effect of splitting DTS files with the same SoC
+in two different folders marvell/* and synaptics/*
+it's a bit meh.
 
-Adding the entry 'sam9' : "microchip", can be future proof...
-
-
-Best regards,
--- 
-Nicolas Ferre
+Yours,
+Linus Walleij
