@@ -1,81 +1,27 @@
-Return-Path: <SRS0=ZHC+=OO=mediatek.com=jianjun.wang@kernel.org>
-From: Jianjun Wang <jianjun.wang@mediatek.com>
-Subject: [PATCH 1/2] dt-bindings: PCI: Add support for MT7629
-Date: Wed, 5 Dec 2018 15:30:45 +0800
-Message-ID: <1543995046-4988-2-git-send-email-jianjun.wang@mediatek.com>
-In-Reply-To: <1543995046-4988-1-git-send-email-jianjun.wang@mediatek.com>
-References: <1543995046-4988-1-git-send-email-jianjun.wang@mediatek.com>
+Return-Path: <SRS0=wIoc=OO=verge.net.au=horms@kernel.org>
+Date: Wed, 5 Dec 2018 11:53:44 -0800
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 1/5] ARM: dts: iwg20d-q7-common: Move cmt/rwdt node
+ out of RZ/G1M SOM
+Message-ID: <20181205195344.yz6sj53ulddp3tpp@verge.net.au>
+References: <1544000815-28069-1-git-send-email-biju.das@bp.renesas.com>
+ <1544000815-28069-2-git-send-email-biju.das@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_009_164180298.2052009810"
-To: ryder.lee@mediatek.com, bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, matthias.bgg@gmail.com, linux-pci@vger.kernel.org
-Cc: mark.rutland@arm.com, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, honghui.zhang@mediatek.com, youlin.pei@mediatek.com, Jianjun Wang <jianjun.wang@mediatek.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1544000815-28069-2-git-send-email-biju.das@bp.renesas.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_009_164180298.2052009810
-Content-Transfer-Encoding: base64
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_001_1618694559.172801949"
+On Wed, Dec 05, 2018 at 09:06:51AM +0000, Biju Das wrote:
+> The iWave RZ/G1N board is almost identical to RZ/G1M. cmt and rwdt modules
+> are SoC specific and should be part of board dts rather than SoM dtsi. By
+> moving these nodes to the common dtsi it allows cmt and rwdt to be enabled
+> on both of these boards with less lines of code.
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
---__=_Part_Boundary_001_1618694559.172801949
-Content-Type: text/html
-Content-Transfer-Encoding: base64
-
-PHByZT4NCk1UNzYyOSBpcyBhbiBhcm0gcGxhdGZvcm0gU29jIHdoaWNoIGhhcyB0aGUgc2FtZSBQ
-Q0llIElQIHdpdGggTVQ3NjIyLg0KDQpTaWduZWQtb2ZmLWJ5OiBKaWFuanVuIFdhbmcgJmx0O2pp
-YW5qdW4ud2FuZ0BtZWRpYXRlay5jb20mZ3Q7DQotLS0NCiBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvcGNpL21lZGlhdGVrLXBjaWUudHh0IHwgMSArDQogMSBmaWxlIGNoYW5nZWQs
-IDEgaW5zZXJ0aW9uKCspDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvcGNpL21lZGlhdGVrLXBjaWUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLnR4dA0KaW5kZXggMjAyMjdhODc1YWM4Li4zNzkw
-YzZjYzEwOGYgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cGNpL21lZGlhdGVrLXBjaWUudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvcGNpL21lZGlhdGVrLXBjaWUudHh0DQpAQCAtNiw2ICs2LDcgQEAgUmVxdWlyZWQgcHJv
-cGVydGllczoNCiAJJnF1b3Q7bWVkaWF0ZWssbXQyNzEyLXBjaWUmcXVvdDsNCiAJJnF1b3Q7bWVk
-aWF0ZWssbXQ3NjIyLXBjaWUmcXVvdDsNCiAJJnF1b3Q7bWVkaWF0ZWssbXQ3NjIzLXBjaWUmcXVv
-dDsNCisJJnF1b3Q7bWVkaWF0ZWssbXQ3NjI5LXBjaWUmcXVvdDsNCiAtIGRldmljZV90eXBlOiBN
-dXN0IGJlICZxdW90O3BjaSZxdW90Ow0KIC0gcmVnOiBCYXNlIGFkZHJlc3NlcyBhbmQgbGVuZ3Ro
-cyBvZiB0aGUgUENJZSBzdWJzeXMgYW5kIHJvb3QgcG9ydHMuDQogLSByZWctbmFtZXM6IE5hbWVz
-IG9mIHRoZSBhYm92ZSBhcmVhcyB0byB1c2UgZHVyaW5nIHJlc291cmNlIGxvb2t1cC4NCi0tIA0K
-Mi4xOS4xDQoNCjwvcHJlPjwhLS10eXBlOnRleHQtLT48IS0tey0tPjxwcmU+KioqKioqKioqKioq
-KiBFbWFpbCBDb25maWRlbnRpYWxpdHkgTm90aWNlICoqKioqKioqKioqKioqKioqKioqDQpUaGUg
-aW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgZS1tYWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBh
-bnkgDQphdHRhY2htZW50cykgbWF5IGJlIGNvbmZpZGVudGlhbCwgcHJvcHJpZXRhcnksIHByaXZp
-bGVnZWQsIG9yIG90aGVyd2lzZQ0KZXhlbXB0IGZyb20gZGlzY2xvc3VyZSB1bmRlciBhcHBsaWNh
-YmxlIGxhd3MuIEl0IGlzIGludGVuZGVkIHRvIGJlIA0KY29udmV5ZWQgb25seSB0byB0aGUgZGVz
-aWduYXRlZCByZWNpcGllbnQocykuIEFueSB1c2UsIGRpc3NlbWluYXRpb24sIA0KZGlzdHJpYnV0
-aW9uLCBwcmludGluZywgcmV0YWluaW5nIG9yIGNvcHlpbmcgb2YgdGhpcyBlLW1haWwgKGluY2x1
-ZGluZyBpdHMgDQphdHRhY2htZW50cykgYnkgdW5pbnRlbmRlZCByZWNpcGllbnQocykgaXMgc3Ry
-aWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5IA0KYmUgdW5sYXdmdWwuIElmIHlvdSBhcmUgbm90IGFu
-IGludGVuZGVkIHJlY2lwaWVudCBvZiB0aGlzIGUtbWFpbCwgb3IgYmVsaWV2ZSANCnRoYXQgeW91
-IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1haWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNl
-bmRlciANCmltbWVkaWF0ZWx5IChieSByZXBseWluZyB0byB0aGlzIGUtbWFpbCksIGRlbGV0ZSBh
-bnkgYW5kIGFsbCBjb3BpZXMgb2YgDQp0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGFueSBhdHRhY2ht
-ZW50cykgZnJvbSB5b3VyIHN5c3RlbSwgYW5kIGRvIG5vdA0KZGlzY2xvc2UgdGhlIGNvbnRlbnQg
-b2YgdGhpcyBlLW1haWwgdG8gYW55IG90aGVyIHBlcnNvbi4gVGhhbmsgeW91ITwvcHJlPjwhLS19
-LS0+
-
---__=_Part_Boundary_001_1618694559.172801949
-Content-Type: text/plain
-Content-Transfer-Encoding: base64
-
-TVQ3NjI5IGlzIGFuIGFybSBwbGF0Zm9ybSBTb2Mgd2hpY2ggaGFzIHRoZSBzYW1lIFBDSWUgSVAg
-d2l0aCBNVDc2MjIuDQoNClNpZ25lZC1vZmYtYnk6IEppYW5qdW4gV2FuZyA8amlhbmp1bi53YW5n
-QG1lZGlhdGVrLmNvbT4NCi0tLQ0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9w
-Y2kvbWVkaWF0ZWstcGNpZS50eHQgfCAxICsNCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24o
-KykNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kv
-bWVkaWF0ZWstcGNpZS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNp
-L21lZGlhdGVrLXBjaWUudHh0DQppbmRleCAyMDIyN2E4NzVhYzguLjM3OTBjNmNjMTA4ZiAxMDA2
-NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbWVkaWF0ZWst
-cGNpZS50eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbWVk
-aWF0ZWstcGNpZS50eHQNCkBAIC02LDYgKzYsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KIAki
-bWVkaWF0ZWssbXQyNzEyLXBjaWUiDQogCSJtZWRpYXRlayxtdDc2MjItcGNpZSINCiAJIm1lZGlh
-dGVrLG10NzYyMy1wY2llIg0KKwkibWVkaWF0ZWssbXQ3NjI5LXBjaWUiDQogLSBkZXZpY2VfdHlw
-ZTogTXVzdCBiZSAicGNpIg0KIC0gcmVnOiBCYXNlIGFkZHJlc3NlcyBhbmQgbGVuZ3RocyBvZiB0
-aGUgUENJZSBzdWJzeXMgYW5kIHJvb3QgcG9ydHMuDQogLSByZWctbmFtZXM6IE5hbWVzIG9mIHRo
-ZSBhYm92ZSBhcmVhcyB0byB1c2UgZHVyaW5nIHJlc291cmNlIGxvb2t1cC4NCi0tIA0KMi4xOS4x
-DQo=
-
---__=_Part_Boundary_001_1618694559.172801949--
-
---__=_Part_Boundary_009_164180298.2052009810--
+Thanks, I have this in my tree for v4.21.
