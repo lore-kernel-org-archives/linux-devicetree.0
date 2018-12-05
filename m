@@ -1,21 +1,83 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/1] ARM: dts: ls1021a: add nodes for PWMs
-Date: Wed, 5 Dec 2018 09:15:26 +0800
-Message-ID: <20181205011524.GC3987@dragon>
-References: <20181127140944.31018-1-patrick.havelange@essensium.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: Moving ARM dts files
+Date: Wed, 5 Dec 2018 02:22:14 +0100
+Message-ID: <9c2b5528-679a-928e-3150-aa383a4f0405@suse.de>
+References: <20181204183649.GA5716@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181127140944.31018-1-patrick.havelange@essensium.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Patrick Havelange <patrick.havelange@essensium.com>
-Cc: Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, matthew.weber@rockwellcollins.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <20181204183649.GA5716@bogus>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linaro.org/mailman/options/boot-architecture>,
+ <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/boot-architecture/>
+List-Post: <mailto:boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linaro.org/mailman/listinfo/boot-architecture>,
+ <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Errors-To: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Sender: "boot-architecture" <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory Clement <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Architecture Mailman List <boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Grant Likely <Grant.Likely-AbSShOkvfpQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 27, 2018 at 03:09:44PM +0100, Patrick Havelange wrote:
-> The LS1021A has 8 possible PWMs, so adding them (disabled by default)
-> 
-> Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
-
-Applied, thanks.
+Um9iLAoKQW0gMDQuMTIuMTggdW0gMTk6MzYgc2NocmllYiBSb2IgSGVycmluZzoKPiBJJ3ZlIHB1
+dCB0b2dldGhlciBhIHNjcmlwdCB0byBtb3ZlIHRoZSBkdHMgZmlsZXMgYW5kIHVwZGF0ZSB0aGUg
+Cj4gbWFrZWZpbGVzLiBJdCBkb2Vzbid0IGhhbmRsZSBmaWxlcyBub3QgZm9sbG93aW5nIGEgY29t
+bW9uIHByZWZpeCB3aGljaCAKPiBpc24ndCBtYW55IGFuZCBzb21lIGluY2x1ZGVzIHdpdGhpbiB0
+aGUgZHRzIGZpbGVzIHdpbGwgbmVlZCBzb21lIGZpeHVwcyAKPiBieSBoYW5kLgo+IAo+IE1BSU5U
+QUlORVJTIHdpbGwgYWxzbyBuZWVkIHVwZGF0aW5nLgo+IAo+IEEgZmV3IHF1ZXN0aW9uczoKPiAK
+PiBEbyB3ZSB3YW50IHRvIG1vdmUgYWJzb2x1dGVseSBldmVyeXRoaW5nIHRvIHN1YmRpcnM/CgpU
+aGlzIHJlZmFjdG9yaW5nIGlzIGEgdGVycmlibGUgaWRlYSEKCldoaWxlIGl0IHdvdWxkJ3ZlIGJl
+ZW4gbmljZSB0byBoYXZlIG1vcmUgc3RydWN0dXJlIGZyb20gdGhlIHN0YXJ0LApib290bG9hZGVy
+cyBsaWtlIFUtQm9vdCBleHBlY3QgYSBmbGF0IHN0cnVjdHVyZSBmb3IgYXJtIC5kdGIgZmlsZXMg
+bm93LgpJZiB5b3Ugc3RhcnQgaW5zdGFsbGluZyB0aGVtIGludG8gc3ViZGlycyBpbnN0ZWFkLCB0
+aGV5IHdvbid0IGZpbmQgdGhlCmZpbGVzIGFueW1vcmUgdW5kZXIgdGhlIGhhcmRjb2RlZCBuYW1l
+LgoKRG9pbmcgdGhpcyBvbmx5IGZvciBuZXcgcGxhdGZvcm1zIHdvdWxkIGJlIG11Y2ggbGVzcyBp
+bnZhc2l2ZSBhbmQgYWxsb3cKdG8gcHJlcGFyZSBib290bG9hZGVycyBhY2NvcmRpbmdseS4gQWx0
+ZXJuYXRpdmVseSwgd2hpdGUtbGlzdCB3aGljaCBvbmVzCmFyZSBzYWZlIHRvIG1vdmUgYXJvdW5k
+LiBCdXQgZG9uJ3QganVzdCBzY3JpcHQgYSByZWZhY3RvcmluZyBiZWNhdXNlIGl0Cmxvb2tzIG5p
+Y2VyIGluIHRoZSBzb3VyY2UgdHJlZSwgd2l0aG91dCB0ZXN0aW5nIHdoYXQgc2lkZSBlZmZlY3Rz
+IHRoaXMKY2FuIGhhdmUgZm9yIGJvYXJkL2Rpc3RybyB1c2VycyBvZiB0aGUgY29tcGlsZWQgZmls
+ZXMgaW4gcHJhY3RpY2UuCldlIGFscmVhZHkgaGFkIHRoYXQgZGlzY3Vzc2lvbiBmb3IgYXJtNjQg
+YmVjYXVzZSBEZWJpYW4gY2hvc2UgdG8gaWdub3JlCnRoZSBrZXJuZWwtaW5zdGFsbGVkIHN1YmRp
+cmVjdG9yaWVzIGFuZCBpbnN0YWxsZWQgLmR0YiBmaWxlcyBpbnRvIGEgZmxhdApkaXJlY3Rvcnks
+IHdoaWNoIGNvbGxpZGVkIHdpdGggb3BlblNVU0Ugc3RpY2tpbmcgdG8gdGhlIGtlcm5lbCBjaG9p
+Y2UuCgpUaGlzIHRvcGljIGJlY29tZXMgZXZlbiBtb3JlIGltcG9ydGFudCB3aXRoIEVCQlI6IFRo
+ZXJlIGlzIG5laXRoZXIgYQptZWNoYW5pc20gaW4gcGxhY2UgdG8gc3luYyAuZHRzIGZpbGVzIGlu
+dG8gVS1Cb290IG9yIEVESzIgc291cmNlIHRyZWVzLApub3IgYXJlIGNhcHN1bGUgdXBkYXRlcyBp
+bXBsZW1lbnRlZCBpbiBVLUJvb3QgZm9yIGVhc2lseSBkZXBsb3lpbmcgc3VjaApib290bG9hZGVy
+cyB3aXRoIG5ldyAuZHRzIHNvdXJjZXMgb3IgcGF0aHMgeWV0LiBBbmQgSSBjYW4gYXNzdXJlIHlv
+dQp0aGF0IGp1c3QgZ2V0dGluZyB1c2VycyB0byBkZCB0aGUgcmlnaHQgYm9vdGxvYWRlciBjYW4g
+YmUgZGlmZmljdWx0Li4uClNpbmNlIERUIGZvcndhcmQgYW5kIGJhY2t3YXJkIGNvbXBhdGliaWxp
+dHkgaXMgb2Z0ZW4gYmVpbmcgbmVnbGVjdGVkLApmb3IgZXhhbXBsZSB3aXRoIG9wdGlvbmFsIHBy
+b3BlcnRpZXMgb3IgcmVuYW1lZCBjb21wYXRpYmxlcyB0aGF0IGJyZWFrCmJvb3Rpbmcgd2l0aCBw
+cmV2aW91cyBkcml2ZXJzLCBuZXcga2VybmVsIHZlcnNpb25zIG9mdGVuIG5lZWQgdXBkYXRlZApE
+ZXZpY2UgVHJlZXMgdG8gbWFrZSB1c2Ugb2YgbmV3L2VuaGFuY2VkIGRyaXZlcnMuIFRoZXJlZm9y
+ZSBpdCBpcwp1bmZvcnR1bmF0ZWx5IG9mdGVuIGVub3VnaCBhIG5lY2Vzc2l0eSB0byBsb2FkIG5l
+d2VyIGtlcm5lbC1iYXNlZCAuZHRiCmZpbGVzIG1hdGNoaW5nIHRoZSBrZXJuZWwgKGFzIG9wcG9z
+ZWQgdG8gdGhlIGRyZWFtIG9mIGtlcm5lbC1pbmRlcGVuZGVudApoYXJkd2FyZSBkZXNjcmlwdGlv
+bnMpIHdoZW4gd29ya2luZyB3aXRoIHRoZSBsYXRlc3QgLXJjIG9yIC1uZXh0IGtlcm5lbHMKYXQg
+bGVhc3QuIEZvciBleGFtcGxlcyBvZiBEVHMgbmVlZGluZyB1cGRhdGVzLCBsb29rIG5vIGZ1cnRo
+ZXIgdGhhbgpMaW5hcm8ncyA5NmJvYXJkcyAtIGluIGNhc2Ugb2YgaGlrZXk5NjAvRURLMiBHUlVC
+IGlzIGFub3RoZXIgbGF5ZXIgd2hlcmUKLmR0YiBwYXRocyBtYXkgYmUgaGFyZGNvZGVkLCBkaXR0
+byBmb3IgYXJtOyBhbmQgQXJtYWRhIHdhcyBhbiBleGFtcGxlCndoZXJlIHRoZSB1cHN0cmVhbSBi
+aW5kaW5ncyBmb3IgdGhlIG5ldHdvcmsgSVAgY2hhbmdlZCBpbmNvbXBhdGlibHkuCgpEVCBvdmVy
+bGF5cyBhcmUgYW5vdGhlciB0b3BpYyB0aGF0IGlzIG5vdCBtYWtpbmcgYW55IHByb2dyZXNzIHVw
+c3RyZWFtCmFjY29yZGluZyB0byB0aGUgRUxDRSBCb0YsIHNvIGJleW9uZCB0aGUgUmFzcGJlcnJ5
+IFBpIHRoZSBvbmx5IGtub3duCndvcmtpbmcgd2F5IHRvIGFwcGx5IHRoZW0gaXMgdG8gd3JpdGUg
+YSBVLUJvb3QgYm9vdC5zY3Igc2NyaXB0LCB3aGljaApjYW4gZWl0aGVyIHJldXNlICRmZHRjb250
+cm9sYWRkciBEVCBvciB1c2UgdGhlIGZpbGVuYW1lICRmZHRmaWxlIG9yCmhhcmRjb2RlIG9uZSwg
+dGhlIGxhdHRlciB0d28gb2Ygd2hpY2ggd291bGQgYnJlYWsgd2l0aCB5b3VyIHJlbmFtaW5nLgoK
+U28gZXhwZWN0IHBlb3BsZSB0byBiZSB1c2luZyAuZHRiIGZpbGVzLCBleHBlY3QgdGhlbSB0byBi
+ZSBhZmZlY3RlZCBieQpmaWxlIG1vdmVtZW50cyB0byBzdWJkaXJlY3RvcmllcyBoZXJlLCBhbmQg
+ZG9uJ3QgZXhwZWN0IGVhY2ggdXNlciB0bwp1bmRlcnN0YW5kIG9yIGJlIGFibGUgdG8gZml4IHRo
+aW5ncyB0aGVtc2VsdmVzIGlmIHRoZXkgZmFsbCBhcGFydCBhcwpyZXN1bHQgb2YgeW91ciBjaGFu
+Z2VzIGFuZCB0aGV5IHN1ZGRlbmx5IG5vIGxvbmdlciBoYXZlIEV0aGVybmV0L1dpZmkuCgpSZWdh
+cmRzLApBbmRyZWFzCgotLSAKU1VTRSBMaW51eCBHbWJILCBNYXhmZWxkc3RyLiA1LCA5MDQwOSBO
+w7xybmJlcmcsIEdlcm1hbnkKR0Y6IEZlbGl4IEltZW5kw7ZyZmZlciwgSmFuZSBTbWl0aGFyZCwg
+R3JhaGFtIE5vcnRvbgpIUkIgMjEyODQgKEFHIE7DvHJuYmVyZykKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KYm9vdC1hcmNoaXRlY3R1cmUgbWFpbGluZyBs
+aXN0CmJvb3QtYXJjaGl0ZWN0dXJlQGxpc3RzLmxpbmFyby5vcmcKaHR0cHM6Ly9saXN0cy5saW5h
+cm8ub3JnL21haWxtYW4vbGlzdGluZm8vYm9vdC1hcmNoaXRlY3R1cmUK
