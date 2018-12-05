@@ -1,23 +1,23 @@
 Return-Path: <SRS0=ZHC+=OO=mediatek.com=jianjun.wang@kernel.org>
 From: Jianjun Wang <jianjun.wang@mediatek.com>
 Subject: [PATCH 2/2] PCI: mediatek: Add controller support for MT7629
-Date: Wed, 5 Dec 2018 15:57:21 +0800
-Message-ID: <1543996641-6280-3-git-send-email-jianjun.wang@mediatek.com>
-In-Reply-To: <1543996641-6280-1-git-send-email-jianjun.wang@mediatek.com>
-References: <1543996641-6280-1-git-send-email-jianjun.wang@mediatek.com>
+Date: Wed, 5 Dec 2018 15:30:46 +0800
+Message-ID: <1543995046-4988-3-git-send-email-jianjun.wang@mediatek.com>
+In-Reply-To: <1543995046-4988-1-git-send-email-jianjun.wang@mediatek.com>
+References: <1543995046-4988-1-git-send-email-jianjun.wang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_003_1243220215.1472071207"
+	boundary="__=_Part_Boundary_001_2010371207.1229293253"
 To: ryder.lee@mediatek.com, bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, matthias.bgg@gmail.com, linux-pci@vger.kernel.org
 Cc: mark.rutland@arm.com, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, honghui.zhang@mediatek.com, youlin.pei@mediatek.com, Jianjun Wang <jianjun.wang@mediatek.com>
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_003_1243220215.1472071207
+--__=_Part_Boundary_001_2010371207.1229293253
 Content-Transfer-Encoding: base64
 Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_004_1127969169.1906646807"
+	boundary="__=_Part_Boundary_002_1811233503.486756862"
 
---__=_Part_Boundary_004_1127969169.1906646807
+--__=_Part_Boundary_002_1811233503.486756862
 Content-Type: text/html
 Content-Transfer-Encoding: base64
 
@@ -107,7 +107,7 @@ eSBhdHRhY2htZW50cykgZnJvbSB5b3VyIHN5c3RlbSwgYW5kIGRvIG5vdA0KZGlzY2xvc2UgdGhl
 IGNvbnRlbnQgb2YgdGhpcyBlLW1haWwgdG8gYW55IG90aGVyIHBlcnNvbi4gVGhhbmsgeW91ITwv
 cHJlPjwhLS19LS0+
 
---__=_Part_Boundary_004_1127969169.1906646807
+--__=_Part_Boundary_002_1811233503.486756862
 Content-Type: text/plain
 Content-Transfer-Encoding: base64
 
@@ -178,6 +178,6 @@ VkVORE9SX0lEX01FRElBVEVLCQkweDE0YzMNCisjZGVmaW5lIFBDSV9ERVZJQ0VfSURfTUVESUFU
 RUtfNzYyOQkweDc2MjkNCiANCiAjZGVmaW5lIFBDSV9WRU5ET1JfSURfVElUQU4JCTB4MTREMg0K
 ICNkZWZpbmUgUENJX0RFVklDRV9JRF9USVRBTl8wMTBMCTB4ODAwMQ0KLS0gDQoyLjE5LjENCg==
 
---__=_Part_Boundary_004_1127969169.1906646807--
+--__=_Part_Boundary_002_1811233503.486756862--
 
---__=_Part_Boundary_003_1243220215.1472071207--
+--__=_Part_Boundary_001_2010371207.1229293253--
