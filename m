@@ -1,106 +1,39 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v4 4/6] nfc: pn533: add UART phy driver
-Date: Wed, 5 Dec 2018 16:29:52 +0100
-Message-ID: <20181205152952.GK15689@localhost>
-References: <20181101100216.613-1-poeschel@lemonage.de>
- <20181101100216.613-4-poeschel@lemonage.de>
- <20181114153517.GB19900@localhost>
- <20181203142622.GA8057@lem-wkst-02.lemonage>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH 4/6] dt-bindings: update mvneta binding document
+Date: Wed, 5 Dec 2018 09:30:26 -0600
+Message-ID: <CAL_JsqJXMDqQVQJoq0sXn0VEA1iFpcsK+Hjsxwt-7aWNreAkPw@mail.gmail.com>
+References: <20181112122933.GD30658@n2100.armlinux.org.uk> <E1gMBMs-00089t-Fd@rmk-PC.armlinux.org.uk>
+ <20181203235455.GA5851@bogus> <20181205110009.GQ30658@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181203142622.GA8057@lem-wkst-02.lemonage>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lars Poeschel <poeschel@lemonage.de>
-Cc: Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, open list <linux-kernel@vger.kernel.org>, "open list:NFC SUBSYSTEM" <linux-wireless@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20181205110009.GQ30658@n2100.armlinux.org.uk>
+Sender: netdev-owner@vger.kernel.org
+To: Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 03, 2018 at 03:26:22PM +0100, Lars Poeschel wrote:
-> On Wed, Nov 14, 2018 at 04:35:17PM +0100, Johan Hovold wrote:
-> > On Thu, Nov 01, 2018 at 11:02:12AM +0100, Lars Poeschel wrote:
-> > > This adds the UART phy interface for the pn533 driver.
-> > > The pn533 driver can be used through UART interface this way.
-> > > It is implemented as a serdev device.
-> > > 
-> > > Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
-> > 
-> > Please make sure to include reviewers on CC.
-> 
-> It's hard to do all things right, about how to correctly email patches,
-> patch sets and follow ups and send what to whom.
-> I am still learning. Sorry about that.
+On Wed, Dec 5, 2018 at 5:00 AM Russell King - ARM Linux
+<linux@armlinux.org.uk> wrote:
+>
+> On Mon, Dec 03, 2018 at 05:54:55PM -0600, Rob Herring wrote:
+> > On Mon, Nov 12, 2018 at 12:31:02PM +0000, Russell King wrote:
+> > > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> >
+> > Needs a better subject and a commit msg.
+>
+> Hmm, not sure why it didn't contain:
+>
+> "dt-bindings: net: mvneta: add phys property
+>
+> Add an optional phys property to the mvneta binding documentation for
+> the common phy.
+>
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>"
+>
+> as the commit message.  With the correct commit message, are you happy
+> with it?
 
-No problem, I fully understand that.
+Yes.
 
-> > > +	err = serdev_device_open(serdev);
-> > > +	if (err) {
-> > > +		dev_err(&serdev->dev, "Unable to open device\n");
-> > > +		goto err_skb;
-> > > +	}
-> > > +
-> > > +	err = serdev_device_set_baudrate(serdev, 115200);
-> > > +	if (err != 115200) {
-> > > +		err = -EINVAL;
-> > > +		goto err_serdev;
-> > > +	}
-> > > +
-> > > +	serdev_device_set_flow_control(serdev, false);
-> > > +	pn532->send_wakeup = PN532_SEND_WAKEUP;
-> > > +	timer_setup(&pn532->cmd_timeout, pn532_cmd_timeout, 0);
-> > > +	priv = pn533_register_device(PN533_DEVICE_PN532,
-> > > +				     PN533_NO_TYPE_B_PROTOCOLS,
-> > > +				     PN533_PROTO_REQ_ACK_RESP,
-> > > +				     pn532, &uart_phy_ops, NULL,
-> > > +				     &pn532->serdev->dev,
-> > > +				     &serdev->dev);
-> > > +	if (IS_ERR(priv)) {
-> > > +		err = PTR_ERR(priv);
-> > > +		goto err_serdev;
-> > > +	}
-> > > +
-> > > +	pn532->priv = priv;
-> > > +	err = pn533_finalize_setup(pn532->priv);
-> > > +	if (err)
-> > > +		goto err_unregister;
-> > > +
-> > > +	serdev_device_close(serdev);
-> > 
-> > This looks broken; what if the NFC interface is brought up before this
-> > point? You'd get a double open, which is likely to crash things, but
-> > even if you survive that, the port would not be closed despite the
-> > interface being up.
-> 
-> I understand the problem and would like to solve it with a mutex. I will
-> not have time to work on that until next year. Please be patient. I will
-> send a new patchset.
-
-I'm in no hurry here. :)
-
-But I still think doing that setup before registering the device might
-be preferred if it's possible as you wouldn't need a mutex then.
-
-> > Can't you finalise your setup before registering the interface?
-> 
-> Well, propably I can do that. But I did it the way the other drivers
-> (usb and i2c) are already doing and reusing the code of the pn533 core
-> driver. Since their probe works very similar to mine, I suspect them to
-> have the same problems.
-
-Quite possibly.
-
-> I can rewrite the probe for my driver, but not for the other two. I can
-> not test them.
-> Would you prefer that I rewrite my own _register_device and
-> _finalize_setup functions, not using the ones from the core driver ?
-
-If you add common paths that you can test using your driver I think it
-should be fine to convert the others unless it ends up being really
-complicated. Perhaps the authors of those driver can help out with
-testing too.
-
-> Thank you for your very valuable feedback.
-
-You're welcome.
-
-Johan
+Reviewed-by: Rob Herring <robh@kernel.org>
