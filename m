@@ -1,106 +1,45 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH v3 3/5] devfreq: add devfreq_suspend/resume() functions
-Date: Wed,  5 Dec 2018 12:05:54 +0100
-Message-ID: <1544007956-28889-4-git-send-email-l.luba@partner.samsung.com>
-References: <1544007956-28889-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20181205110622eucas1p23d788afd54ad34c0a2663efac8734648@eucas1p2.samsung.com>
+From: <Andrei.Stefanescu@microchip.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: add SAMA5D2 PIOBU support
+Date: Wed, 5 Dec 2018 11:06:35 +0000
+Message-ID: <2600b55c-f8fd-ab82-6372-a75f22e382f8@microchip.com>
+References: <1542701330-23466-1-git-send-email-andrei.stefanescu@microchip.com>
+ <1542701330-23466-2-git-send-email-andrei.stefanescu@microchip.com>
+ <20181204232237.GA16883@bogus>
+Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544007956-28889-1-git-send-email-l.luba@partner.samsung.com>
+In-Reply-To: <20181204232237.GA16883@bogus>
+Content-Language: en-US
+Content-ID: <8784F2D07FE7FA4895DD596BA0F854A9@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, cw00.choi@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com, Lukasz Luba <l.luba@partner.samsung.com>
+To: robh@kernel.org
+Cc: linus.walleij@linaro.org, gregkh@linuxfoundation.org, Nicolas.Ferre@microchip.com, mark.rutland@arm.com, Ludovic.Desroches@microchip.com, Cristian.Birsan@microchip.com, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds implementation for global suspend/resume for
-devfreq framework. System suspend will next use these functions.
-
-Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
----
- drivers/devfreq/devfreq.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/devfreq.h   |  6 ++++++
- 2 files changed, 50 insertions(+)
-
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index 46517b6..0ae3de7 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -935,6 +935,50 @@ int devfreq_resume_device(struct devfreq *devfreq)
- EXPORT_SYMBOL(devfreq_resume_device);
- 
- /**
-+ * devfreq_suspend() - Suspend devfreq governors and devices
-+ *
-+ * Called during system wide Suspend/Hibernate cycles for suspending governors
-+ * and devices preserving the state for resume. On some platforms the devfreq
-+ * device must have precise state (frequency) after resume in order to provide
-+ * fully operating setup.
-+ */
-+void devfreq_suspend(void)
-+{
-+	struct devfreq *devfreq;
-+	int ret;
-+
-+	mutex_lock(&devfreq_list_lock);
-+	list_for_each_entry(devfreq, &devfreq_list, node) {
-+		ret = devfreq_suspend_device(devfreq);
-+		if (ret)
-+			dev_err(&devfreq->dev,
-+				"failed to suspend devfreq device\n");
-+	}
-+	mutex_unlock(&devfreq_list_lock);
-+}
-+
-+/**
-+ * devfreq_resume() - Resume devfreq governors and devices
-+ *
-+ * Called during system wide Suspend/Hibernate cycle for resuming governors and
-+ * devices that are suspended with devfreq_suspend().
-+ */
-+void devfreq_resume(void)
-+{
-+	struct devfreq *devfreq;
-+	int ret;
-+
-+	mutex_lock(&devfreq_list_lock);
-+	list_for_each_entry(devfreq, &devfreq_list, node) {
-+		ret = devfreq_resume_device(devfreq);
-+		if (ret)
-+			dev_warn(&devfreq->dev,
-+				 "failed to resume devfreq device\n");
-+	}
-+	mutex_unlock(&devfreq_list_lock);
-+}
-+
-+/**
-  * devfreq_add_governor() - Add devfreq governor
-  * @governor:	the devfreq governor to be added
-  */
-diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
-index d985199..fbffa74 100644
---- a/include/linux/devfreq.h
-+++ b/include/linux/devfreq.h
-@@ -205,6 +205,9 @@ extern void devm_devfreq_remove_device(struct device *dev,
- extern int devfreq_suspend_device(struct devfreq *devfreq);
- extern int devfreq_resume_device(struct devfreq *devfreq);
- 
-+extern void devfreq_suspend(void);
-+extern void devfreq_resume(void);
-+
- /**
-  * update_devfreq() - Reevaluate the device and configure frequency
-  * @devfreq:	the devfreq device
-@@ -331,6 +334,9 @@ static inline int devfreq_resume_device(struct devfreq *devfreq)
- 	return 0;
- }
- 
-+static inline void devfreq_suspend(void) {}
-+static inline void devfreq_resume(void) {}
-+
- static inline struct dev_pm_opp *devfreq_recommended_opp(struct device *dev,
- 					   unsigned long *freq, u32 flags)
- {
--- 
-2.7.4
+SGVsbG8gUm9iLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgZmVlZGJhY2suDQoNCkkgd2lsbCBhZGQg
+YSBiaXQgb2YgY29udGV4dCByZWdhcmRpbmcgdGhlIHNlY3Vtb2QuIFRoZSANCiJhdG1lbCxzYW1h
+NWQyLXNlY3Vtb2QiDQpjb21wYXRpYmxlIHN0cmluZyBpcyBub3QgdXNlZCBmb3IgbG9hZGluZyBh
+IGRyaXZlci4gSXQgaXMgdXNlZCBieSBhdG1lbCANCnNlY3VyYW0NCmRyaXZlciAoZHJpdmVycy9t
+aXNjL3NyYW0uYykgd2hpY2ggaGFzIGFjY2VzcyB0byBzZWN1bW9kJ3MgcmVnaXN0ZXJzIHZpYToN
+Cg0KIMKgwqDCoCBzeXNjb25fcmVnbWFwX2xvb2t1cF9ieV9jb21wYXRpYmxlKCJhdG1lbCxzYW1h
+NWQyLXNlY3Vtb2QiKQ0KDQpTbyB0aGUgc2VjdW1vZCBleHBvcnRzIG11bHRpcGxlIGhhcmR3YXJl
+IGZ1bmN0aW9ucywgZWc6IHRoZSBzZWN1cmFtLCB0aGUgDQpQSU9CVQ0KcGlucyB3aGljaCBjYW4g
+YmUgdXNlZCBhcyBHUElPIHBpbnMuDQoNCk15IGluaXRpYWwgcGF0Y2ggaGFkIHRoZSAibWljcm9j
+aGlwLHNhbWE1ZDItcGlvYnUiIGNvbXBhdGlibGUgYXBwZW5kZWQgDQp0byB0aGUNCnNlY3Vtb2Qn
+cyBjb21wYXRpYmxlIGUuZy46DQoNCnNlY3Vtb2RAZmMwNDAwMDAgew0KIMKgwqDCoCBjb21wYXRp
+YmxlID0gInN5c2NvbiIsICJtaWNyb2NoaXAsc2FtYTVkMi1waW9idSI7DQouLi4NCg0KVGFraW5n
+IGludG8gY29uc2lkZXJhdGlvbiBMaW51cyBXYWxsZWlqJ3MgYWR2aWNlIEkgYXJyaXZlZCB0byB0
+aGUgY3VycmVudA0KdmVyc2lvbi4gSSB0aG91Z2h0IHRoaXMgd2FzIGEgZ29vZCBpZGVhIGJlY2F1
+c2UgaXQgc2VwYXJhdGVzIHRoZSBzZWN1bW9kIA0Kbm9kZQ0KZnJvbSB0aGUgR1BJTyBjb250cm9s
+bGVyIG5vZGUuIFBsZWFzZSBub3RpY2UgdGhhdCBzZWN1cmFtIG5vZGUgaXMgYWxyZWFkeQ0Kc2Vw
+YXJhdGVkIGZyb20gc2VjdW1vZCBub2RlIChpdCBpcyBhIHNlcGFyYXRlIG5vZGUgaW4gdGhlIGRl
+dmljZSB0cmVlKS4NCg0KSSBoYXZlIGEgZmV3IHF1ZXN0aW9ucyBiZWNhdXNlIEkgYW0gbm90IHN1
+cmUgb2YgdGhlIGJlc3QgYXBwcm9hY2g6DQoNCjEuIElzIGl0IG9rIHRvIGhhdmUgdGhlIEdQSU8g
+Y29udHJvbGxlciBhcyBhIGNoaWxkIG5vZGU/DQoyLiBJIHVzZWQgc2ltcGxlLW1mZCBiZWNhdXNl
+IGl0IHdhcyB0aGUgb25seSB3YXkgSSBjb3VsZCB0aGluayBvZiBpbiANCm9yZGVyIHRvDQogwqDC
+oCBnZXQgdGhlIGRyaXZlciBwcm9iZWQuDQozLiBTaG91bGQgSSBhZGQgYSByZWdpc3RlciByYW5n
+ZT8gSSB0aG91Z2h0IHRoYXQgYmVjYXVzZSB0aGUgZHJpdmVyIHVzZXMgDQpzeXNjb24NCiDCoMKg
+IGl0IGlzIG5vdCBuZWNlc3NhcnkgdG8gYWRkIHRoZSByZWdpc3RlciByYW5nZS4gQWxzbywgdGhl
+IHJlZ2lzdGVyIA0KcmFuZ2Ugd291bGQNCiDCoMKgIGhhdmUgYmVlbiBhIHN1YnNldCBvZiB0aGUg
+c2VjdW1vZCdzIHJlZ2lzdGVyIHJhbmdlLg0KDQo=
