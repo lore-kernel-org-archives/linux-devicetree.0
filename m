@@ -1,61 +1,93 @@
-From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH 07/14] clock: milbeaut: Add Milbeaut M10V clock control
-Date: Wed, 5 Dec 2018 20:42:41 +0900
-Message-ID: <c0b37449-1221-9849-8014-13b3eeb43382@socionext.com>
-References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
- <1542589274-13878-8-git-send-email-sugaya.taichi@socionext.com>
- <154356669840.88331.4455990896653868594@swboyd.mtv.corp.google.com>
- <298cd5a5-66cf-0936-405e-59bcc7c396ed@socionext.com>
- <154394734173.88331.18352656286616172689@swboyd.mtv.corp.google.com>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v3 5/5] arm: dts: exynos4: opp-suspend in DMC and
+ leftbus
+Date: Wed, 5 Dec 2018 12:45:58 +0100
+Message-ID: <33ad7c21-c36c-d879-c3d7-592e8231f8a6@partner.samsung.com>
+References: <CGME20181205110625eucas1p10c7b3137fb77ae51a211c4f040c4eb6f@eucas1p1.samsung.com>
+        <1544007956-28889-1-git-send-email-l.luba@partner.samsung.com>
+        <1544007956-28889-6-git-send-email-l.luba@partner.samsung.com>
+        <CAJKOXPd8eErBf4a4x2bAQUnCenOsM+omJoVJ3FrakcTT6KWedg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154394734173.88331.18352656286616172689@swboyd.mtv.corp.google.com>
+In-Reply-To: <CAJKOXPd8eErBf4a4x2bAQUnCenOsM+omJoVJ3FrakcTT6KWedg@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi
 
-On 2018/12/05 3:15, Stephen Boyd wrote:
-> Quoting Sugaya, Taichi (2018-12-04 00:26:16)
->> On 2018/11/30 17:31, Stephen Boyd wrote:
->>> Quoting Sugaya Taichi (2018-11-18 17:01:12)
->>>> +void __init m10v_clk_mux_setup(struct device_node *node)
->>>> +{
->>>> +       const char *clk_name = node->name;
->>>> +       struct clk_init_data init;
->>>> +       const char **parent_names;
->>>> +       struct m10v_mux *mcm;
->>>> +       struct clk *clk;
->>>> +       int i, parents;
->>>> +
->>>> +       if (!m10v_clk_iomap())
->>>> +               return;
->>>> +
->>>> +       of_property_read_string(node, "clock-output-names", &clk_name);
->>>> +
->>>> +       parents = of_clk_get_parent_count(node);
->>>> +       if (parents < 2) {
->>>> +               pr_err("%s: not a mux\n", clk_name);
->>>
->>> How is this possible?
+
+On 12/5/18 12:12 PM, Krzysztof Kozlowski wrote:
+> On Wed, 5 Dec 2018 at 12:06, Lukasz Luba <l.luba@partner.samsung.com> wrote:
 >>
->> When the node has more than 1 clks...
->> Or I am misunderstanding your question?
+>> Mark the state for devfreq device while entring suspend/resume process.
+>>
+>> Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+>> Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
 > 
-> This looks like code that's checking DT for correctness. We don't
-> typically do that in the kernel because the kernel isn't a DT validator.
-> That's all I'm saying. I think this comment is not useful if the driver
-> design is done to specify parent linkages in C code instead of DT, so
-> don't worry about this too much.
+> I already applied v2:
+> https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git/commit/?h=next/dt
 
-I understand.
-Thank you for additional information.
+Thank you!
 
-Sugaya Taichi
-
+Regards,
+Lukasz
+> 
+> Best regards,
+> Krzysztof
+> 
+>> ---
+>>   arch/arm/boot/dts/exynos4210.dtsi | 2 ++
+>>   arch/arm/boot/dts/exynos4412.dtsi | 2 ++
+>>   2 files changed, 4 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
+>> index b6091c2..4429b72 100644
+>> --- a/arch/arm/boot/dts/exynos4210.dtsi
+>> +++ b/arch/arm/boot/dts/exynos4210.dtsi
+>> @@ -298,6 +298,7 @@
+>>                          opp-400000000 {
+>>                                  opp-hz = /bits/ 64 <400000000>;
+>>                                  opp-microvolt = <1150000>;
+>> +                               opp-suspend;
+>>                          };
+>>                  };
+>>
+>> @@ -367,6 +368,7 @@
+>>                          };
+>>                          opp-200000000 {
+>>                                  opp-hz = /bits/ 64 <200000000>;
+>> +                               opp-suspend;
+>>                          };
+>>                  };
+>>          };
+>> diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
+>> index 51f72f0..908c0c4 100644
+>> --- a/arch/arm/boot/dts/exynos4412.dtsi
+>> +++ b/arch/arm/boot/dts/exynos4412.dtsi
+>> @@ -432,6 +432,7 @@
+>>                          opp-400000000 {
+>>                                  opp-hz = /bits/ 64 <400000000>;
+>>                                  opp-microvolt = <1050000>;
+>> +                               opp-suspend;
+>>                          };
+>>                  };
+>>
+>> @@ -520,6 +521,7 @@
+>>                          opp-200000000 {
+>>                                  opp-hz = /bits/ 64 <200000000>;
+>>                                  opp-microvolt = <1000000>;
+>> +                               opp-suspend;
+>>                          };
+>>                  };
+>>
+>> --
+>> 2.7.4
+>>
+> 
 > 
