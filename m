@@ -1,35 +1,26 @@
-Return-Path: <SRS0=nQ6t=OO=fpond.eu=uli+renesas@kernel.org>
-From: Ulrich Hecht <uli+renesas@fpond.eu>
-Subject: [PATCH v3 0/2] dt-bindings: can: rcar_can*: add R-Car D3
-Date: Wed,  5 Dec 2018 09:17:03 +0800
-Message-Id: <1543972625-11267-1-git-send-email-uli+renesas@fpond.eu>
-To: linux-renesas-soc@vger.kernel.org, wsa@the-dreams.de
-Cc: devicetree@vger.kernel.org, linux-can@vger.kernel.org, robh@kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, Ulrich Hecht <uli+renesas@fpond.eu>
+Return-Path: <SRS0=wIoc=OO=verge.net.au=horms@kernel.org>
+Date: Wed, 5 Dec 2018 11:53:55 -0800
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 2/5] ARM: dts: r8a7744-iwg20m: Add SPI NOR support
+Message-ID: <20181205195355.nb6dticyzvr3kv3w@verge.net.au>
+References: <1544000815-28069-1-git-send-email-biju.das@bp.renesas.com>
+ <1544000815-28069-3-git-send-email-biju.das@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1544000815-28069-3-git-send-email-biju.das@bp.renesas.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi!
+On Wed, Dec 05, 2018 at 09:06:52AM +0000, Biju Das wrote:
+> Add support for the SPI NOR device used to boot up the system
+> to the iWave RZ/G1N Qseven System On Module DT.
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> V1-->V2
+>      * Removed compatible string "sst,sst25vf016b".
 
-These are the bindings for CAN and CAN FD controllers on R-Car D3
-(R8A77995).
-
-Changes since v2:
-- rebased
-- made wording less redundant in rcar_canfd.txt
-- added dt-bindings prefix to subjects
-
-CU
-Uli
-
-
-Ulrich Hecht (2):
-  dt-bindings: can: rcar_can: add r8a77995 (R-Car D3) compatibility
-    strings
-  dt-bindings: can: rcar_canfd: add r8a77995 (R-Car D3) compatibility
-    strings
-
- Documentation/devicetree/bindings/net/can/rcar_can.txt   | 3 ++-
- Documentation/devicetree/bindings/net/can/rcar_canfd.txt | 8 ++++----
- 2 files changed, 6 insertions(+), 5 deletions(-)
-
--- 
-2.7.4
+Thanks, applied for v4.21.
