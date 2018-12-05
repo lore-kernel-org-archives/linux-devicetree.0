@@ -1,116 +1,46 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] regulator: Use of_node_name_eq for node name comparisons
-Date: Wed,  5 Dec 2018 13:50:37 -0600
-Message-ID: <20181205195050.4759-21-robh@kernel.org>
+Subject: [PATCH] video/backlight: Use of_node_name_eq for node name comparisons
+Date: Wed,  5 Dec 2018 13:50:44 -0600
+Message-ID: <20181205195050.4759-28-robh@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Sangbeom Kim <sbkim73@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-samsung-soc@vger.kernel.org
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert string compares of DT node names to use of_node_name_eq helper
-instead. This removes direct access to the node name pointer.
-
-For instances using of_node_cmp, this has the side effect of now using
-case sensitive comparisons. This should not matter for any FDT based
-system which all of these are.
-
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Support Opensource <support.opensource@diasemi.com>
-Cc: Sangbeom Kim <sbkim73@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- drivers/regulator/88pm8607.c               | 2 +-
- drivers/regulator/da9052-regulator.c       | 2 +-
- drivers/regulator/max8997-regulator.c      | 2 +-
- drivers/regulator/mc13xxx-regulator-core.c | 2 +-
- drivers/regulator/qcom-rpmh-regulator.c    | 2 +-
- drivers/regulator/s5m8767.c                | 2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/regulator/88pm8607.c b/drivers/regulator/88pm8607.c
-index fd86446e499b..28f55248eb90 100644
---- a/drivers/regulator/88pm8607.c
-+++ b/drivers/regulator/88pm8607.c
-@@ -328,7 +328,7 @@ static int pm8607_regulator_dt_init(struct platform_device *pdev,
- 		return -ENODEV;
- 	}
- 	for_each_child_of_node(nproot, np) {
--		if (!of_node_cmp(np->name, info->desc.name)) {
-+		if (of_node_name_eq(np, info->desc.name)) {
- 			config->init_data =
- 				of_get_regulator_init_data(&pdev->dev, np,
- 							   &info->desc);
-diff --git a/drivers/regulator/da9052-regulator.c b/drivers/regulator/da9052-regulator.c
-index 37e4025203e3..207cb3859dcc 100644
---- a/drivers/regulator/da9052-regulator.c
-+++ b/drivers/regulator/da9052-regulator.c
-@@ -435,7 +435,7 @@ static int da9052_regulator_probe(struct platform_device *pdev)
- 			return -ENODEV;
- 
- 		for_each_child_of_node(nproot, np) {
--			if (!of_node_cmp(np->name,
-+			if (of_node_name_eq(np,
- 					 regulator->info->reg_desc.name)) {
- 				config.init_data = of_get_regulator_init_data(
- 					&pdev->dev, np,
-diff --git a/drivers/regulator/max8997-regulator.c b/drivers/regulator/max8997-regulator.c
-index 3bf5ddfaaea8..4d2487279a0a 100644
---- a/drivers/regulator/max8997-regulator.c
-+++ b/drivers/regulator/max8997-regulator.c
-@@ -925,7 +925,7 @@ static int max8997_pmic_dt_parse_pdata(struct platform_device *pdev,
- 	pdata->regulators = rdata;
- 	for_each_child_of_node(regulators_np, reg_np) {
- 		for (i = 0; i < ARRAY_SIZE(regulators); i++)
--			if (!of_node_cmp(reg_np->name, regulators[i].name))
-+			if (of_node_name_eq(reg_np, regulators[i].name))
- 				break;
- 
- 		if (i == ARRAY_SIZE(regulators)) {
-diff --git a/drivers/regulator/mc13xxx-regulator-core.c b/drivers/regulator/mc13xxx-regulator-core.c
-index 65eb1e0350cf..2243138d8a58 100644
---- a/drivers/regulator/mc13xxx-regulator-core.c
-+++ b/drivers/regulator/mc13xxx-regulator-core.c
-@@ -186,7 +186,7 @@ struct mc13xxx_regulator_init_data *mc13xxx_parse_regulators_dt(
- 		for (i = 0; i < num_regulators; i++) {
- 			if (!regulators[i].desc.name)
- 				continue;
--			if (!of_node_cmp(child->name,
-+			if (of_node_name_eq(child,
- 					 regulators[i].desc.name)) {
- 				p->id = i;
- 				p->init_data = of_get_regulator_init_data(
-diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
-index 39ccf53fdeb3..b2c2d01d1637 100644
---- a/drivers/regulator/qcom-rpmh-regulator.c
-+++ b/drivers/regulator/qcom-rpmh-regulator.c
-@@ -410,7 +410,7 @@ static int rpmh_regulator_init_vreg(struct rpmh_vreg *vreg, struct device *dev,
- 	vreg->dev = dev;
- 
- 	for (rpmh_data = pmic_rpmh_data; rpmh_data->name; rpmh_data++)
--		if (!strcmp(rpmh_data->name, node->name))
-+		if (of_node_name_eq(node, rpmh_data->name))
- 			break;
- 
- 	if (!rpmh_data->name) {
-diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
-index 219b9afda0cb..654f65abcb5a 100644
---- a/drivers/regulator/s5m8767.c
-+++ b/drivers/regulator/s5m8767.c
-@@ -561,7 +561,7 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
- 	pdata->opmode = rmode;
- 	for_each_child_of_node(regulators_np, reg_np) {
- 		for (i = 0; i < ARRAY_SIZE(regulators); i++)
--			if (!of_node_cmp(reg_np->name, regulators[i].name))
-+			if (of_node_name_eq(reg_np, regulators[i].name))
- 				break;
- 
- 		if (i == ARRAY_SIZE(regulators)) {
--- 
-2.19.1
+Q29udmVydCBzdHJpbmcgY29tcGFyZXMgb2YgRFQgbm9kZSBuYW1lcyB0byB1c2Ugb2Zfbm9kZV9u
+YW1lX2VxIGhlbHBlcgppbnN0ZWFkLiBUaGlzIHJlbW92ZXMgZGlyZWN0IGFjY2VzcyB0byB0aGUg
+bm9kZSBuYW1lIHBvaW50ZXIuCgpGb3IgaW5zdGFuY2VzIHVzaW5nIG9mX25vZGVfY21wLCB0aGlz
+IGhhcyB0aGUgc2lkZSBlZmZlY3Qgb2Ygbm93IHVzaW5nCmNhc2Ugc2Vuc2l0aXZlIGNvbXBhcmlz
+b25zLiBUaGlzIHNob3VsZCBub3QgbWF0dGVyIGZvciBhbnkgRkRUIGJhc2VkCnN5c3RlbSB3aGlj
+aCB0aGlzIGlzLgoKQ2M6IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+CkNjOiBEYW5p
+ZWwgVGhvbXBzb24gPGRhbmllbC50aG9tcHNvbkBsaW5hcm8ub3JnPgpDYzogSmluZ29vIEhhbiA8
+amluZ29vaGFuMUBnbWFpbC5jb20+CkNjOiBCYXJ0bG9taWVqIFpvbG5pZXJraWV3aWN6IDxiLnpv
+bG5pZXJraWVAc2Ftc3VuZy5jb20+CkNjOiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+CkNjOiBsaW51eC1mYmRldkB2Z2VyLmtlcm5lbC5vcmcKU2lnbmVkLW9mZi1ieTogUm9iIEhlcnJp
+bmcgPHJvYmhAa2VybmVsLm9yZz4KLS0tCiBkcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC84OHBtODYw
+eF9ibC5jIHwgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9u
+KC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvODhwbTg2MHhfYmwuYyBi
+L2RyaXZlcnMvdmlkZW8vYmFja2xpZ2h0Lzg4cG04NjB4X2JsLmMKaW5kZXggNmQ4ZGMyYzc3NTIw
+Li41MWUwYzRiZTA4ZGYgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvdmlkZW8vYmFja2xpZ2h0Lzg4cG04
+NjB4X2JsLmMKKysrIGIvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvODhwbTg2MHhfYmwuYwpAQCAt
+MTc0LDcgKzE3NCw3IEBAIHN0YXRpYyBpbnQgcG04NjB4X2JhY2tsaWdodF9kdF9pbml0KHN0cnVj
+dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsCiAJCXJldHVybiAtRU5PREVWOwogCX0KIAlmb3JfZWFj
+aF9jaGlsZF9vZl9ub2RlKG5wcm9vdCwgbnApIHsKLQkJaWYgKCFvZl9ub2RlX2NtcChucC0+bmFt
+ZSwgbmFtZSkpIHsKKwkJaWYgKG9mX25vZGVfbmFtZV9lcShucCwgbmFtZSkpIHsKIAkJCW9mX3By
+b3BlcnR5X3JlYWRfdTMyKG5wLCAibWFydmVsbCw4OHBtODYweC1pc2V0IiwKIAkJCQkJICAgICAm
+aXNldCk7CiAJCQlkYXRhLT5pc2V0ID0gUE04NjA2X1dMRURfQ1VSUkVOVChpc2V0KTsKLS0gCjIu
+MTkuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
