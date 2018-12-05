@@ -1,121 +1,52 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: Re: [PATCH v2] power: supply: bq24190_charger: add support for
- bq24196 variant
-Date: Wed, 5 Dec 2018 23:03:40 +0100
-Message-ID: <20181205220340.soejl65puivnwhz7@earth.universe>
-References: <20181113124753.29948-1-heiko@sntech.de>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH RFC 0/2] input: driver for RPi's official 7" touchscreen
+Date: Wed,  5 Dec 2018 23:09:01 +0100
+Message-ID: <20181205220902.27682-1-nsaenzjulienne@suse.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="djcjq7k5hkgqkwzd"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181113124753.29948-1-heiko@sntech.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mdf@kernel.org, Heiko Stuebner <heiko.stuebner@bq.com>
+To: linux-input@vger.kernel.org
+Cc: linux-rpi-kernel@lists.infradead.org, stefan.wahren@i2se.com, eric@anholt.net, agraf@suse.de, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, Eugen Hristev <eugen.hristev@microchip.com>, Hans de Goede <hdegoede@redhat.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Masanari Iida <standby24x7@gmail.com>, Zhu Yi <yi.zhu5@cn.bosch.com>, Corentin Labbe <clabbe.montjoie@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This small series adds support for Raspberry pi's 7" touchscreen. Which
+alongside with the backlight driver are the last devices needed to have
+a functional touchscreen upstream.
 
---djcjq7k5hkgqkwzd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+With this setup the board's VC4 firmware takes care of communicating
+with the touch chip and provides data though a shared memory area
+provided by the driver. The driver takes care of polling the firmware
+whenever at around 60Hz since there is no interrupt line available.
 
-Hi,
+The 1.0 revision of the touchscreen is based on the ft5426 chip.
+Technically, with some changes in edt-ft54x4.c we should be able to
+access the data directly through I2C. Yet this bus is meant to be owned
+by RPi's firmware and might access it anytime. For example, to
+configure RPi's camera device. As sharing the bus master interface is
+not possible a series of alternatives have been tested unsuccessfully
+[1]. It seems that we'll be unable to access the chip directly in a
+"clean" way which leaves us with this firmware based solution.
 
-On Tue, Nov 13, 2018 at 01:47:53PM +0100, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@bq.com>
->=20
-> The bq24196 is another variant of the bq24190 charger ic.
-> Its register set is identical to the bq24192 and it even reuses
-> the same part number (0x5).
->=20
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
-> ---
+The driver was rewritten based on the one available on the downstream
+Raspberry Pi kernel tree: https://github.com/raspberrypi/linux/.
 
-Thanks, queued.
+This series is based on v4.20-rc5 and was tested on a RPi 3 B+.
 
--- Sebastian
+[1] https://lists.infradead.org/pipermail/linux-rpi-kernel/2018-December/008444.html
+===
 
-> This should go on top of the bq24192 support patches from Brian Masney /
-> Jonathan Marek [0]
->=20
-> [0] https://patchwork.kernel.org/patch/10663409/
->=20
-> changes in v2:
-> - add missing compatible to dt-binding
->=20
->  Documentation/devicetree/bindings/power/supply/bq24190.txt | 1 +
->  drivers/power/supply/bq24190_charger.c                     | 4 +++-
->  2 files changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/bq24190.txt b=
-/Documentation/devicetree/bindings/power/supply/bq24190.txt
-> index c8ac028bd3c7..ffe2be408bb6 100644
-> --- a/Documentation/devicetree/bindings/power/supply/bq24190.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/bq24190.txt
-> @@ -5,6 +5,7 @@ Required properties:
->      * "ti,bq24190"
->      * "ti,bq24192"
->      * "ti,bq24192i"
-> +    * "ti,bq24196"
->  - reg: integer, I2C address of the charger.
->  - interrupts[-extended]: configuration for charger INT pin.
-> =20
-> diff --git a/drivers/power/supply/bq24190_charger.c b/drivers/power/suppl=
-y/bq24190_charger.c
-> index 4e64e6ac95c5..effa7c3c21e6 100644
-> --- a/drivers/power/supply/bq24190_charger.c
-> +++ b/drivers/power/supply/bq24190_charger.c
-> @@ -143,7 +143,7 @@
->  #define BQ24190_REG_VPRS_PN_MASK		(BIT(5) | BIT(4) | BIT(3))
->  #define BQ24190_REG_VPRS_PN_SHIFT		3
->  #define BQ24190_REG_VPRS_PN_24190			0x4
-> -#define BQ24190_REG_VPRS_PN_24192			0x5 /* Also 24193 */
-> +#define BQ24190_REG_VPRS_PN_24192			0x5 /* Also 24193, 24196 */
->  #define BQ24190_REG_VPRS_PN_24192I			0x3
->  #define BQ24190_REG_VPRS_TS_PROFILE_MASK	BIT(2)
->  #define BQ24190_REG_VPRS_TS_PROFILE_SHIFT	2
-> @@ -1973,6 +1973,7 @@ static const struct i2c_device_id bq24190_i2c_ids[]=
- =3D {
->  	{ "bq24190" },
->  	{ "bq24192" },
->  	{ "bq24192i" },
-> +	{ "bq24196" },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(i2c, bq24190_i2c_ids);
-> @@ -1982,6 +1983,7 @@ static const struct of_device_id bq24190_of_match[]=
- =3D {
->  	{ .compatible =3D "ti,bq24190", },
->  	{ .compatible =3D "ti,bq24192", },
->  	{ .compatible =3D "ti,bq24192i", },
-> +	{ .compatible =3D "ti,bq24196", },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(of, bq24190_of_match);
-> --=20
-> 2.18.0
->=20
+Nicolas Saenz Julienne (2):
+  input: add official Raspberry Pi's 7" touchscreen driver
+  Input: raspberrypi-ts - add devicetree binding documentation
 
---djcjq7k5hkgqkwzd
-Content-Type: application/pgp-signature; name="signature.asc"
+ .../touchscreen/raspberrypi,firmware-ts.txt   |  25 ++
+ drivers/input/touchscreen/Kconfig             |  12 +
+ drivers/input/touchscreen/Makefile            |   1 +
+ drivers/input/touchscreen/raspberrypi-ts.c    | 252 ++++++++++++++++++
+ 4 files changed, 290 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/raspberrypi,firmware-ts.txt
+ create mode 100644 drivers/input/touchscreen/raspberrypi-ts.c
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlwISzsACgkQ2O7X88g7
-+pp9MA/9GEAMpunDV0xEdz9AtlAi76d7vg9nJYtONi1lKe65JJaPTWnZq2O2sl+r
-6aDZ/z3O68iZDN8AoFtVLijXNNNnN2Y6K3hEJQt6XxSNUE5NI4upeis/uFhbpreU
-0mThrwHyhlHJ0jzGAakKHNmj92LAcle7hMj9hd0znbYy5bLWi6K2rfT0D8g+dR08
-sbwwunnIK0VAvHutmcBjwvduoglyn0wCSCqYOqyKx8VZvU7Ii2Of8/Y8bK53VHbE
-O3vu2f/KFdkEwWjdGzGh2JSkiqGnv6txTxRtcFPwSXKTTpofciRK4cnsx9FNZsa+
-6T6+k4FeGHgL0X2uw9FrVsXeO+jxkKIIRsjl6F05FbpIw41HBgvhL1IBOD84R0s3
-uZIeVKz2zk1TOqDlLYCzqQackSmeMMIBJxfXD7fTkSPyvoX3Bql/CUHFUkhyLiPa
-pJ6hp1lGqhOA3y1RASxEFwtQs36BhwgkQiJ/EkYeLFAEjGhTs6nYMhDf8Bfn1syf
-d9jitXPPDAougC2Ad+GNYghbUmK5f0VjULxTDw092A8oQsBtzTui9kuNYrtfhPwP
-ho/5QpScPdRJTrwhszhd7Bpn3FrM3afzsmdHFtEHgTiHeQHN2QOPYfvnjlUoS+jn
-+BNVEUdBmAyer2uAHJ05XzwLzCEam9CPjo3L5IZHf0xl1D32xLc=
-=4VUa
------END PGP SIGNATURE-----
-
---djcjq7k5hkgqkwzd--
+-- 
+2.19.2
