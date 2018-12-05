@@ -1,53 +1,29 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 1/5] gnss: sirf: write data to gnss only when the gnss
- device is open
-Date: Wed, 5 Dec 2018 15:47:39 +0100
-Message-ID: <20181205144739.GE15689@localhost>
-References: <20181118215801.12280-1-andreas@kemnade.info>
- <20181118215801.12280-2-andreas@kemnade.info>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH v2] arm64: dts: meson-axg: Enable GPIO interrupt controller
+Date: Wed, 05 Dec 2018 15:50:31 +0100
+Message-ID: <809e8f9945d55cb8b9583f0a50f502c6922b35fe.camel@baylibre.com>
+References: <20181201164301.17274-1-ccaione@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181118215801.12280-2-andreas@kemnade.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: johan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181201164301.17274-1-ccaione@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Carlo Caione <ccaione@baylibre.com>, robh+dt@kernel.org, khilman@baylibre.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 18, 2018 at 10:57:57PM +0100, Andreas Kemnade wrote:
-> The api forbids writing data there otherwise. Prepare for the
-> serdev_open()/close() being a part of runtime pm.
+On Sat, 2018-12-01 at 16:43 +0000, Carlo Caione wrote:
+> Enable the GPIO interrupt controller for the AXG SoCs.
 > 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> ---
->  drivers/gnss/sirf.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
- 
-> @@ -73,6 +76,7 @@ static void sirf_close(struct gnss_device *gdev)
->  	serdev_device_close(serdev);
->  
->  	pm_runtime_put(&serdev->dev);
-> +	data->opened = false;
->  }
->  
->  static int sirf_write_raw(struct gnss_device *gdev, const unsigned char *buf,
-> @@ -105,7 +109,17 @@ static int sirf_receive_buf(struct serdev_device *serdev,
->  	struct sirf_data *data = serdev_device_get_drvdata(serdev);
->  	struct gnss_device *gdev = data->gdev;
->  
-> -	return gnss_insert_raw(gdev, buf, count);
-> +	/*
-> +	 * we might come here everytime when runtime is resumed
-> +	 * and data is received. Two cases are possible
-> +	 * 1. device is opened during initialisation
-> +	 * 2. kernel is compiled without runtime pm
-> +	 *    and device is opened all the time
-> +	 */
-> +	if (data->opened)
-> +		return gnss_insert_raw(gdev, buf, count);
+> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
 
-This can race with sirf_close() when you move serdev handling out of
-sirf_open()/close(). Not sure how best to handle that yet.
-
-Johan
+Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+Tested-by: Jerome Brunet <jbrunet@baylibre.com>
