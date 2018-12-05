@@ -1,37 +1,50 @@
 From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH 0/5] media: radio-si470x-i2c: Add device tree and reset gpio support
-Date: Wed,  5 Dec 2018 16:47:45 +0100
-Message-ID: <20181205154750.17996-1-pawel.mikolaj.chmiel@gmail.com>
+Subject: [PATCH 1/5] si470x-i2c: Add device tree support
+Date: Wed,  5 Dec 2018 16:47:46 +0100
+Message-ID: <20181205154750.17996-2-pawel.mikolaj.chmiel@gmail.com>
+References: <20181205154750.17996-1-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181205154750.17996-1-pawel.mikolaj.chmiel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: hverkuil@xs4all.nl, fischerdouglasc@gmail.com, keescook@chromium.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds support for device tree and reset-gpios
-to si470x i2c radio driver.
+This commit enables device tree support adding simple of_match table.
 
-First two patches adds and documents device tree support.
-Third patch simplifies code by using managed resource helpers.
-Last two patches adds and documents new optional reset gpios support.
+Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+---
+ drivers/media/radio/si470x/radio-si470x-i2c.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-It was tested on Samsung Galaxy S (i9000) phone.
-
-Paweł Chmiel (5):
-  si470x-i2c: Add device tree support
-  media: dt-bindings: Add binding for si470x radio
-  si470x-i2c: Use managed resource helpers
-  si470x-i2c: Add optional reset-gpio support
-  media: dt-bindings: si470x: Document new reset-gpios property
-
- .../devicetree/bindings/media/si470x.txt      | 26 ++++++++++
- drivers/media/radio/si470x/radio-si470x-i2c.c | 52 ++++++++++++-------
- drivers/media/radio/si470x/radio-si470x.h     |  1 +
- 3 files changed, 61 insertions(+), 18 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/si470x.txt
-
+diff --git a/drivers/media/radio/si470x/radio-si470x-i2c.c b/drivers/media/radio/si470x/radio-si470x-i2c.c
+index 9751ea1d80be..250828ddb5fa 100644
+--- a/drivers/media/radio/si470x/radio-si470x-i2c.c
++++ b/drivers/media/radio/si470x/radio-si470x-i2c.c
+@@ -527,6 +527,13 @@ static int si470x_i2c_resume(struct device *dev)
+ static SIMPLE_DEV_PM_OPS(si470x_i2c_pm, si470x_i2c_suspend, si470x_i2c_resume);
+ #endif
+ 
++#if IS_ENABLED(CONFIG_OF)
++static const struct of_device_id si470x_of_match[] = {
++	{ .compatible = "silabs,si470x" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, si470x_of_match);
++#endif
+ 
+ /*
+  * si470x_i2c_driver - i2c driver interface
+@@ -534,6 +541,7 @@ static SIMPLE_DEV_PM_OPS(si470x_i2c_pm, si470x_i2c_suspend, si470x_i2c_resume);
+ static struct i2c_driver si470x_i2c_driver = {
+ 	.driver = {
+ 		.name		= "si470x",
++		.of_match_table = of_match_ptr(si470x_of_match),
+ #ifdef CONFIG_PM_SLEEP
+ 		.pm		= &si470x_i2c_pm,
+ #endif
 -- 
 2.17.1
