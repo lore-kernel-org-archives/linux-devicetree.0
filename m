@@ -1,46 +1,65 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 13/15] media: cedrus: Add device-tree
- compatible and variant for A64 support
-Date: Wed, 5 Dec 2018 12:01:03 +0100
-Message-ID: <20181205110103.eq4pqscbvjfj6zec@flea>
-References: <20181205092444.29497-1-paul.kocialkowski@bootlin.com>
- <20181205092444.29497-14-paul.kocialkowski@bootlin.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="o6xnrun6kihfzgt4"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6W7T3QAKGQEWLMHE3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20181205092444.29497-14-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v3 0/5] devfreq: handle suspend/resume
+Date: Wed,  5 Dec 2018 12:05:51 +0100
+Message-ID: <1544007956-28889-1-git-send-email-l.luba@partner.samsung.com>
+References: <CGME20181205110616eucas1p1e0e17b0c6a96c3b6d77516d4b02de8b1@eucas1p1.samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, cw00.choi@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com, Lukasz Luba <l.luba@partner.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi all,
 
---o6xnrun6kihfzgt4
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+This v3 patch set aims to address the issue with devfreq devices' frequency
+during suspend/resume. It extends suspend/resume by calls to Devfreq
+framework. In the devfreq framework there is a small refactoring to avoid
+code duplication in changging frequency (patch 1) and there are extensions
+for suspending devices. The suspending device has now chance to set proper
+state when the system is going for suspend. This phase is the right place
+to set needed frequences for the next resume process.
 
-65;5402;1c
-On Wed, Dec 05, 2018 at 10:24:42AM +0100, Paul Kocialkowski wrote:
-> Add the necessary compatible for supporting the A64 SoC along with a
-> description of the capabilities of this variant.
-> 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+It has been tested on Odroid u3 with Exynos 4412.
 
-Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+The patch set draws on Tobias Jakobi's work posted ~2 years ago, who tried
+to solve issue with devfreq device's frequency during suspend/resume.
+During the discussion on LKML some corner cases and comments appeared
+related to the design. This patch set address them keeping in mind
+suggestions from Chanwoo Choi.
+Tobias's paches:
+https://www.spinics.net/lists/linux-samsung-soc/msg56602.html 
 
-Maxime
+Changes:
+v3:
+- cleaned commit messages according to Chanwoo's comments
+- moved atomic operation to beggining of function in
+  devfreq_{suspend|resume}_device()
+- changed dev_warn() to dev_err() with also new error message,
+  when devfreq_{suspend|resume}() failed
+v2:
+- refactored patchset and merget patch 1 and 3 as suggested by Chanwoo Choi,
+- changed devfreq_{susped|resume}_device functions,
+- added doxygen information for new entres in 'struct devfreq',
+- devfreq_set_target skipped one argument, now resume_freq is set inside,
+- minor changes addresing comments from maintainers regarding the style,
+
+Regards,
+Lukasz Luba
+
+Lukasz Luba (5):
+  devfreq: refactor set_target frequency function
+  devfreq: add support for suspend/resume of a devfreq device
+  devfreq: add devfreq_suspend/resume() functions
+  drivers: power: suspend: call devfreq suspend/resume
+  arm: dts: exynos4: opp-suspend in DMC and leftbus
+
+ arch/arm/boot/dts/exynos4210.dtsi |   2 +
+ arch/arm/boot/dts/exynos4412.dtsi |   2 +
+ drivers/base/power/main.c         |   3 +
+ drivers/devfreq/devfreq.c         | 153 ++++++++++++++++++++++++++++++--------
+ include/linux/devfreq.h           |  13 ++++
+ 5 files changed, 141 insertions(+), 32 deletions(-)
 
 -- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---o6xnrun6kihfzgt4--
+2.7.4
