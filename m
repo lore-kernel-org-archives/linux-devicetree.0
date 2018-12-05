@@ -1,23 +1,23 @@
 Return-Path: <SRS0=ZHC+=OO=mediatek.com=jianjun.wang@kernel.org>
 From: Jianjun Wang <jianjun.wang@mediatek.com>
 Subject: [PATCH 1/2] dt-bindings: PCI: Add support for MT7629
-Date: Wed, 5 Dec 2018 15:57:20 +0800
-Message-ID: <1543996641-6280-2-git-send-email-jianjun.wang@mediatek.com>
-In-Reply-To: <1543996641-6280-1-git-send-email-jianjun.wang@mediatek.com>
-References: <1543996641-6280-1-git-send-email-jianjun.wang@mediatek.com>
+Date: Wed, 5 Dec 2018 15:30:45 +0800
+Message-ID: <1543995046-4988-2-git-send-email-jianjun.wang@mediatek.com>
+In-Reply-To: <1543995046-4988-1-git-send-email-jianjun.wang@mediatek.com>
+References: <1543995046-4988-1-git-send-email-jianjun.wang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_002_971363966.297263787"
+	boundary="__=_Part_Boundary_009_164180298.2052009810"
 To: ryder.lee@mediatek.com, bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, matthias.bgg@gmail.com, linux-pci@vger.kernel.org
 Cc: mark.rutland@arm.com, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, honghui.zhang@mediatek.com, youlin.pei@mediatek.com, Jianjun Wang <jianjun.wang@mediatek.com>
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_002_971363966.297263787
+--__=_Part_Boundary_009_164180298.2052009810
 Content-Transfer-Encoding: base64
 Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_003_1956197869.1094529024"
+	boundary="__=_Part_Boundary_001_1618694559.172801949"
 
---__=_Part_Boundary_003_1956197869.1094529024
+--__=_Part_Boundary_001_1618694559.172801949
 Content-Type: text/html
 Content-Transfer-Encoding: base64
 
@@ -55,7 +55,7 @@ ZW50cykgZnJvbSB5b3VyIHN5c3RlbSwgYW5kIGRvIG5vdA0KZGlzY2xvc2UgdGhlIGNvbnRlbnQg
 b2YgdGhpcyBlLW1haWwgdG8gYW55IG90aGVyIHBlcnNvbi4gVGhhbmsgeW91ITwvcHJlPjwhLS19
 LS0+
 
---__=_Part_Boundary_003_1956197869.1094529024
+--__=_Part_Boundary_001_1618694559.172801949
 Content-Type: text/plain
 Content-Transfer-Encoding: base64
 
@@ -76,6 +76,6 @@ aGUgUENJZSBzdWJzeXMgYW5kIHJvb3QgcG9ydHMuDQogLSByZWctbmFtZXM6IE5hbWVzIG9mIHRo
 ZSBhYm92ZSBhcmVhcyB0byB1c2UgZHVyaW5nIHJlc291cmNlIGxvb2t1cC4NCi0tIA0KMi4xOS4x
 DQo=
 
---__=_Part_Boundary_003_1956197869.1094529024--
+--__=_Part_Boundary_001_1618694559.172801949--
 
---__=_Part_Boundary_002_971363966.297263787--
+--__=_Part_Boundary_009_164180298.2052009810--
