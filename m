@@ -1,39 +1,31 @@
-Return-Path: <robherring2@gmail.com>
-Date: Tue, 4 Dec 2018 17:13:47 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: input: touchscreen: iqs5xx: Add
- bindings
-Message-ID: <20181204231347.GA13500@bogus>
-References: <1542604455-26332-1-git-send-email-jeff@labundy.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1542604455-26332-1-git-send-email-jeff@labundy.com>
-To: Jeff LaBundy <jeff@labundy.com>
-Cc: dmitry.torokhov@gmail.com, jikos@jikos.cz, devicetree@vger.kernel.org, linux-input@vger.kernel.org, rydberg@bitmath.org, robh+dt@kernel.org, mark.rutland@arm.com
+Return-Path: <SRS0=DI9s=OO=airmail.cc=jakobwuhrer@kernel.org>
+From: Jakob Wuhrer <jakobwuhrer@airmail.cc>
+Subject: [PATCH 1/2] arm64: dts: qcom: Correct "gpiio" typo in msm8996-pins
+Date: Wed,  5 Dec 2018 19:51:59 +0100
+Message-Id: <1544035920-28329-1-git-send-email-jakobwuhrer@airmail.cc>
+To: andy.gross@linaro.org, david.brown@linaro.org
+Cc: Jakob Wuhrer <jakobwuhrer@airmail.cc>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Sun, 18 Nov 2018 23:14:14 -0600, Jeff LaBundy wrote:
-> This patch adds binding documentation for the Azoteq IQS550/572/525
-> family of trackpad/touchscreen controllers.
-> 
-> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-> ---
-> Changes in v2:
-> 
->   - Separated each valid "compatible" property with a line break
-> 
->   - Specified the polarity of the RDY and NRST pins
-> 
->   - Replaced duplicate definitions of common touchscreen properties with a
->     reference to touchscreen.txt
-> 
->   - Specified the example node as "touchscreen@74"
-> 
->  .../bindings/input/touchscreen/iqs5xx.txt          | 109 +++++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->  2 files changed, 110 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt
-> 
+gpiio5 is missspelt in msm8996-pins.dtsi, fix that.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jakob Wuhrer <jakobwuhrer@airmail.cc>
+---
+ arch/arm64/boot/dts/qcom/msm8996-pins.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
+index c5c42e9..1d1f7f9 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
+@@ -139,7 +139,7 @@
+ 		};
+ 
+ 		pinconf {
+-			pins = "gpio4", "gpiio5", "gpio6", "gpio7";
++			pins = "gpio4", "gpio5", "gpio6", "gpio7";
+ 			drive-strength = <2>;
+ 			bias-disable;
+ 		};
+-- 
+1.8.3.1
