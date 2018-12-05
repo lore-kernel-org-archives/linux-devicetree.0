@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 12/15] media: cedrus: Add device-tree
- compatible and variant for H5 support
-Date: Wed, 5 Dec 2018 12:00:35 +0100
-Message-ID: <20181205110035.6jmicsjwynonjugw@flea>
+Subject: Re: [PATCH v2 13/15] media: cedrus: Add device-tree
+ compatible and variant for A64 support
+Date: Wed, 5 Dec 2018 12:01:03 +0100
+Message-ID: <20181205110103.eq4pqscbvjfj6zec@flea>
 References: <20181205092444.29497-1-paul.kocialkowski@bootlin.com>
- <20181205092444.29497-13-paul.kocialkowski@bootlin.com>
+ <20181205092444.29497-14-paul.kocialkowski@bootlin.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="52lkl4inyv75mrxa"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB3G7T3QAKGQEFXEF7JY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="o6xnrun6kihfzgt4"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6W7T3QAKGQEWLMHE3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20181205092444.29497-13-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20181205092444.29497-14-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,12 +24,13 @@ Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY7
 List-Id: devicetree@vger.kernel.org
 
 
---52lkl4inyv75mrxa
+--o6xnrun6kihfzgt4
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Wed, Dec 05, 2018 at 10:24:41AM +0100, Paul Kocialkowski wrote:
-> Add the necessary compatible for supporting the H5 SoC along with a
+65;5402;1c
+On Wed, Dec 05, 2018 at 10:24:42AM +0100, Paul Kocialkowski wrote:
+> Add the necessary compatible for supporting the A64 SoC along with a
 > description of the capabilities of this variant.
 > 
 > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
@@ -42,4 +43,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---52lkl4inyv75mrxa--
+--o6xnrun6kihfzgt4--
