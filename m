@@ -1,81 +1,81 @@
-Return-Path: <SRS0=p22N=ON=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:53924 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727185AbeLDQxT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Dec 2018 11:53:19 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20181204165318euoutp019f925ef85544a62eff09bee93477dee2~tL25w5ybc0189101891euoutp01C
-        for <devicetree@vger.kernel.org>; Tue,  4 Dec 2018 16:53:18 +0000 (GMT)
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: [PATCH v3 3/5] dt-bindings: clk: exynos5433: document imem clock
-Date: Tue,  4 Dec 2018 17:52:46 +0100
-Message-Id: <20181204165248.17572-4-k.konieczny@partner.samsung.com>
-In-Reply-To: <20181204165248.17572-1-k.konieczny@partner.samsung.com>
+Return-Path: <SRS0=ZHC+=OO=mediatek.com=jianjun.wang@kernel.org>
+From: Jianjun Wang <jianjun.wang@mediatek.com>
+Subject: [PATCH 1/2] dt-bindings: PCI: Add support for MT7629
+Date: Wed, 5 Dec 2018 15:57:20 +0800
+Message-ID: <1543996641-6280-2-git-send-email-jianjun.wang@mediatek.com>
+In-Reply-To: <1543996641-6280-1-git-send-email-jianjun.wang@mediatek.com>
+References: <1543996641-6280-1-git-send-email-jianjun.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-References: <20181204165248.17572-1-k.konieczny@partner.samsung.com>
-        <CGME20181204165317eucas1p10bef0207ee57a9420911410ed2a22453@eucas1p1.samsung.com>
-Sender: devicetree-owner@vger.kernel.org
-To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
-Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_002_971363966.297263787"
+To: ryder.lee@mediatek.com, bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, matthias.bgg@gmail.com, linux-pci@vger.kernel.org
+Cc: mark.rutland@arm.com, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, honghui.zhang@mediatek.com, youlin.pei@mediatek.com, Jianjun Wang <jianjun.wang@mediatek.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document DT bindings for imem clock of the Samsung Exynos5433 SSS (Security
-SubSystem) and SlimSSS IPs.
+--__=_Part_Boundary_002_971363966.297263787
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_003_1956197869.1094529024"
 
-Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
----
- .../bindings/clock/exynos5433-clock.txt       | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
+--__=_Part_Boundary_003_1956197869.1094529024
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
-diff --git a/Documentation/devicetree/bindings/clock/exynos5433-clock.txt b/Documentation/devicetree/bindings/clock/exynos5433-clock.txt
-index 50d5897c9849..183c327a7d6b 100644
---- a/Documentation/devicetree/bindings/clock/exynos5433-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/exynos5433-clock.txt
-@@ -50,6 +50,8 @@ Required Properties:
-     IPs.
-   - "samsung,exynos5433-cmu-cam1" - clock controller compatible for CMU_CAM1
-     which generates clocks for Cortex-A5/MIPI_CSIS2/FIMC-LITE_C/FIMC-FD IPs.
-+  - "samsung,exynos5433-cmu-imem"   - clock controller compatible for CMU_IMEM
-+    which generates clocks for SSS (Security SubSystem) and SlimSSS IPs.
- 
- - reg: physical base address of the controller and length of memory mapped
-   region.
-@@ -168,6 +170,12 @@ Required Properties:
- 		- aclk_cam1_400
- 		- aclk_cam1_552
- 
-+	Input clocks for imem clock controller:
-+		- oscclk
-+		- aclk_imem_sssx_266
-+		- aclk_imem_266
-+		- aclk_imem_200
-+
- Optional properties:
-   - power-domains: a phandle to respective power domain node as described by
- 	generic PM domain bindings (see power/power_domain.txt for more
-@@ -469,6 +477,21 @@ Example 2: Examples of clock controller nodes are listed below.
- 		power-domains = <&pd_cam1>;
- 	};
- 
-+	cmu_imem: clock-controller@11060000 {
-+		compatible = "samsung,exynos5433-cmu-imem";
-+		reg = <0x11060000 0x1000>;
-+		#clock-cells = <1>;
-+
-+		clock-names = "oscclk",
-+			"aclk_imem_sssx_266",
-+			"aclk_imem_266",
-+			"aclk_imem_200";
-+		clocks = <&xxti>,
-+			<&cmu_top CLK_DIV_ACLK_IMEM_SSSX_266>,
-+			<&cmu_top CLK_DIV_ACLK_IMEM_266>,
-+			<&cmu_top CLK_DIV_ACLK_IMEM_200>;
-+	};
-+
- Example 3: UART controller node that consumes the clock generated by the clock
- 	   controller.
- 
--- 
-2.19.1
+PHByZT4NCk1UNzYyOSBpcyBhbiBhcm0gcGxhdGZvcm0gU29jIHdoaWNoIGhhcyB0aGUgc2FtZSBQ
+Q0llIElQIHdpdGggTVQ3NjIyLg0KDQpTaWduZWQtb2ZmLWJ5OiBKaWFuanVuIFdhbmcgJmx0O2pp
+YW5qdW4ud2FuZ0BtZWRpYXRlay5jb20mZ3Q7DQotLS0NCiBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvcGNpL21lZGlhdGVrLXBjaWUudHh0IHwgMSArDQogMSBmaWxlIGNoYW5nZWQs
+IDEgaW5zZXJ0aW9uKCspDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvcGNpL21lZGlhdGVrLXBjaWUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLnR4dA0KaW5kZXggMjAyMjdhODc1YWM4Li4zNzkw
+YzZjYzEwOGYgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+cGNpL21lZGlhdGVrLXBjaWUudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvcGNpL21lZGlhdGVrLXBjaWUudHh0DQpAQCAtNiw2ICs2LDcgQEAgUmVxdWlyZWQgcHJv
+cGVydGllczoNCiAJJnF1b3Q7bWVkaWF0ZWssbXQyNzEyLXBjaWUmcXVvdDsNCiAJJnF1b3Q7bWVk
+aWF0ZWssbXQ3NjIyLXBjaWUmcXVvdDsNCiAJJnF1b3Q7bWVkaWF0ZWssbXQ3NjIzLXBjaWUmcXVv
+dDsNCisJJnF1b3Q7bWVkaWF0ZWssbXQ3NjI5LXBjaWUmcXVvdDsNCiAtIGRldmljZV90eXBlOiBN
+dXN0IGJlICZxdW90O3BjaSZxdW90Ow0KIC0gcmVnOiBCYXNlIGFkZHJlc3NlcyBhbmQgbGVuZ3Ro
+cyBvZiB0aGUgUENJZSBzdWJzeXMgYW5kIHJvb3QgcG9ydHMuDQogLSByZWctbmFtZXM6IE5hbWVz
+IG9mIHRoZSBhYm92ZSBhcmVhcyB0byB1c2UgZHVyaW5nIHJlc291cmNlIGxvb2t1cC4NCi0tIA0K
+Mi4xOS4xDQoNCjwvcHJlPjwhLS10eXBlOnRleHQtLT48IS0tey0tPjxwcmU+KioqKioqKioqKioq
+KiBFbWFpbCBDb25maWRlbnRpYWxpdHkgTm90aWNlICoqKioqKioqKioqKioqKioqKioqDQpUaGUg
+aW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgZS1tYWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBh
+bnkgDQphdHRhY2htZW50cykgbWF5IGJlIGNvbmZpZGVudGlhbCwgcHJvcHJpZXRhcnksIHByaXZp
+bGVnZWQsIG9yIG90aGVyd2lzZQ0KZXhlbXB0IGZyb20gZGlzY2xvc3VyZSB1bmRlciBhcHBsaWNh
+YmxlIGxhd3MuIEl0IGlzIGludGVuZGVkIHRvIGJlIA0KY29udmV5ZWQgb25seSB0byB0aGUgZGVz
+aWduYXRlZCByZWNpcGllbnQocykuIEFueSB1c2UsIGRpc3NlbWluYXRpb24sIA0KZGlzdHJpYnV0
+aW9uLCBwcmludGluZywgcmV0YWluaW5nIG9yIGNvcHlpbmcgb2YgdGhpcyBlLW1haWwgKGluY2x1
+ZGluZyBpdHMgDQphdHRhY2htZW50cykgYnkgdW5pbnRlbmRlZCByZWNpcGllbnQocykgaXMgc3Ry
+aWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5IA0KYmUgdW5sYXdmdWwuIElmIHlvdSBhcmUgbm90IGFu
+IGludGVuZGVkIHJlY2lwaWVudCBvZiB0aGlzIGUtbWFpbCwgb3IgYmVsaWV2ZSANCnRoYXQgeW91
+IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1haWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNl
+bmRlciANCmltbWVkaWF0ZWx5IChieSByZXBseWluZyB0byB0aGlzIGUtbWFpbCksIGRlbGV0ZSBh
+bnkgYW5kIGFsbCBjb3BpZXMgb2YgDQp0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGFueSBhdHRhY2ht
+ZW50cykgZnJvbSB5b3VyIHN5c3RlbSwgYW5kIGRvIG5vdA0KZGlzY2xvc2UgdGhlIGNvbnRlbnQg
+b2YgdGhpcyBlLW1haWwgdG8gYW55IG90aGVyIHBlcnNvbi4gVGhhbmsgeW91ITwvcHJlPjwhLS19
+LS0+
+
+--__=_Part_Boundary_003_1956197869.1094529024
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
+
+TVQ3NjI5IGlzIGFuIGFybSBwbGF0Zm9ybSBTb2Mgd2hpY2ggaGFzIHRoZSBzYW1lIFBDSWUgSVAg
+d2l0aCBNVDc2MjIuDQoNClNpZ25lZC1vZmYtYnk6IEppYW5qdW4gV2FuZyA8amlhbmp1bi53YW5n
+QG1lZGlhdGVrLmNvbT4NCi0tLQ0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9w
+Y2kvbWVkaWF0ZWstcGNpZS50eHQgfCAxICsNCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24o
+KykNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kv
+bWVkaWF0ZWstcGNpZS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNp
+L21lZGlhdGVrLXBjaWUudHh0DQppbmRleCAyMDIyN2E4NzVhYzguLjM3OTBjNmNjMTA4ZiAxMDA2
+NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbWVkaWF0ZWst
+cGNpZS50eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbWVk
+aWF0ZWstcGNpZS50eHQNCkBAIC02LDYgKzYsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KIAki
+bWVkaWF0ZWssbXQyNzEyLXBjaWUiDQogCSJtZWRpYXRlayxtdDc2MjItcGNpZSINCiAJIm1lZGlh
+dGVrLG10NzYyMy1wY2llIg0KKwkibWVkaWF0ZWssbXQ3NjI5LXBjaWUiDQogLSBkZXZpY2VfdHlw
+ZTogTXVzdCBiZSAicGNpIg0KIC0gcmVnOiBCYXNlIGFkZHJlc3NlcyBhbmQgbGVuZ3RocyBvZiB0
+aGUgUENJZSBzdWJzeXMgYW5kIHJvb3QgcG9ydHMuDQogLSByZWctbmFtZXM6IE5hbWVzIG9mIHRo
+ZSBhYm92ZSBhcmVhcyB0byB1c2UgZHVyaW5nIHJlc291cmNlIGxvb2t1cC4NCi0tIA0KMi4xOS4x
+DQo=
+
+--__=_Part_Boundary_003_1956197869.1094529024--
+
+--__=_Part_Boundary_002_971363966.297263787--
