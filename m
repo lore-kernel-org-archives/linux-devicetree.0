@@ -1,125 +1,86 @@
-From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH 11/14] pinctrl: milbeaut: Add Milbeaut M10V pinctrl
-Date: Wed, 5 Dec 2018 14:03:48 +0900
-Message-ID: <5dcbde7f-8458-8630-9f7e-115a9c8364e4@socionext.com>
-References: <1542589336-13925-1-git-send-email-sugaya.taichi@socionext.com>
- <1542589336-13925-2-git-send-email-sugaya.taichi@socionext.com>
- <CAK7LNASnBobLm51VL=EVt+97-KBX3vEqXGjTH-L-q1Qn8_GUQA@mail.gmail.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Subject: Re: Moving ARM dts files
+Date: Wed, 5 Dec 2018 06:02:39 +0000
+Message-ID: <20181205135726.70badac7@xhacker.debian>
+References: <20181204183649.GA5716@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNASnBobLm51VL=EVt+97-KBX3vEqXGjTH-L-q1Qn8_GUQA@mail.gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181204183649.GA5716@bogus>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-clk <linux-clk@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+Content-ID: <0749FD24A27D70418492C967C58C578D@namprd03.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thierry Reding <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory Clement <gregory.clement@bootlin.com>, Michal Simek <michal.simek@xilinx.com>, Krzysztof Kozlowski <krzk@kernel.org>, "arm@kernel.org" <arm@kernel.org>, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Shawn Guo <shawnguo@kernel.org>, =?iso
 List-Id: devicetree@vger.kernel.org
 
-Hi
+Hi Rob,
 
-Thank you for your comments.
+On Tue, 4 Dec 2018 12:36:49 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-On 2018/12/04 20:23, Masahiro Yamada wrote:
-> Hi Sugaya-san
+> Olof, Arnd,
 > 
-> On Mon, Nov 19, 2018 at 10:01 AM Sugaya Taichi
-> <sugaya.taichi@socionext.com> wrote:
->>
->> Add Milbeaut M10V pinctrl.
->> The M10V has the pins that can be used GPIOs or take multiple other
->> functions.
->>
->> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
+> I've put together a script to move the dts files and update the 
+> makefiles. It doesn't handle files not following a common prefix which 
+> isn't many and some includes within the dts files will need some fixups 
+> by hand.
 > 
+> MAINTAINERS will also need updating.
 > 
-> This patch was sent to:
+> A few questions:
 > 
-> linux-clk@vger.kernel.org,
-> devicetree@vger.kernel.org,
-> linux-arm-kernel@lists.infradead.org,
-> linux-kernel@vger.kernel.org,
-> linux-serial@vger.kernel.org
+> Do we want to move absolutely everything to subdirs? There's quite a 
+> few platforms with only 1-2 platforms. I haven't added these to the 
+> list yet, but can.
 > 
+> Do any vendors need another level of directories? davinci, omap, nspire, 
+> etc. for TI for example.
 > 
+> What to do with armv7m.dtsi? I guess it should remain and we just fixup 
+> the include. There may be a few other cross vendor things.
 > 
 > 
-> Unfortunately, the most important ML
+> Sub-arch maintainers, 
+> 'vendor_map' below is the mapping of file prefix to new subdirectory 
+> (the SoC vendor prefix). Please comment if there are any issues.
 > 
->    linux-gpio@vger.kernel.org
+> Rob
 > 
-> was not addressed.
+> 8<-----------------------------------------------------------
+> #!/usr/bin/env python3
 > 
+> import os
+> import re
+> from git import Git
+> import glob
 > 
-> The pinctrl maintainer may not notice this patch.
+> vendor_map = {
+>     'imx': 'fsl',
+>     'ls': 'fsl',
+>     'vf': 'fsl',
+>     'qcom': 'qcom',
+>     'am3' : 'ti',
+>     'am4' : 'ti',
+>     'am5' : 'ti',
+>     'da' : 'ti',
+>     'dm' : 'ti',
+>     'dra' : 'ti',
+>     'keystone' : 'ti',
+>     'omap' : 'ti',
+>     'nspire' : 'ti',
+>     'armada' : 'marvell',
+>     'berlin' : 'marvell',
 
-Ah I took a critical mistake...
-
-> 
-> 
-> 
-> 
-> 
-> 
-> 
->> diff --git a/drivers/pinctrl/pinctrl-m10v.c b/drivers/pinctrl/pinctrl-m10v.c
->> new file mode 100644
->> index 0000000..d4ca713
->> --- /dev/null
->> +++ b/drivers/pinctrl/pinctrl-m10v.c
->> @@ -0,0 +1,765 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (C) 2018 Socionext Ltd.
->> + * Copyright (C) 2015 Linaro Ltd.
->> + * Author: Jassi Brar <jaswinder.singh@linaro.org>
-> 
-> 
-> My company name is "Socionext Inc." instead of "Socionext Ltd."
-
-Yes, modify it.
-
-> 
-> 
-> 
-> 
-> 
-> 
-> 
->> +static struct platform_driver m10v_pinctrl_driver = {
->> +       .probe  = m10v_pinctrl_probe,
->> +       .driver = {
->> +               .name           = "m10v-pinctrl",
->> +               .of_match_table = m10v_pmatch,
->> +       },
->> +};
->> +
->> +static int __init m10v_pinctrl_init(void)
->> +{
->> +       return platform_driver_register(&m10v_pinctrl_driver);
->> +}
->> +arch_initcall(m10v_pinctrl_init);
-> 
-> 
-> Can't it be builtin_platform_driver()?
-
-I think using builtin_platform_driver() is no problem.
-
-> 
-> Which device requires this to be arch_initcall()?
-
-This driver was originally a module, so no need to be arch_initcall().
-I will use arch_initcall() instead.
+Now, berlin SoC is synaptics' SoC ;)
 
 Thanks
-Sugaya Taichi
-
-> 
-> 
-> 
-> 
-> 
-> --
-> Best Regards
-> Masahiro Yamada
-> 
