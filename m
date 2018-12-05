@@ -1,300 +1,52 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] ARM: dts: exynos: Add proper regulator states for
- suspend-to-mem for odroid-u3
-Date: Wed, 5 Dec 2018 15:06:42 +0100
-Message-ID: <CAJKOXPcT-x0JWVw2CaxHzSthxbp3sDRcsa4Nc5gHYqUy98b_yw@mail.gmail.com>
-References: <20181204194025.2719-1-linux.amoon@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 0/7] spi: add support for octal mode
+Date: Wed, 5 Dec 2018 14:18:03 +0000
+Message-ID: <20181205141803.GD6205@sirena.org.uk>
+References: <1543826226-30898-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <20181203101937.7b01a0ad@bbrezillon>
+ <214dadd9-859c-ca88-1aff-1c83fcfa3c0b@ti.com>
+ <20181205134618.56223758@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mSxgbZZZvrAyzONB"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181204194025.2719-1-linux.amoon@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20181205134618.56223758@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux.amoon@gmail.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Vignesh R <vigneshr@ti.com>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 4 Dec 2018 at 20:40, Anand Moon <linux.amoon@gmail.com> wrote:
->
-> Add suspend-to-mem node to regulator core to be enabled or disabled
-> during system suspend and also support changing the regulator operating
-> mode during runtime and when the system enter sleep mode.
->
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> Tested on Odroid U3+
-> ---
->  .../boot/dts/exynos4412-odroid-common.dtsi    | 72 +++++++++++++++++++
->  1 file changed, 72 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> index 2caa3132f34e..837713a2ec3b 100644
-> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> @@ -285,6 +285,9 @@
->                                 regulator-min-microvolt = <1800000>;
->                                 regulator-max-microvolt = <1800000>;
->                                 regulator-always-on;
-> +                               regulator-state-mem {
-> +                                       regulator-on-in-suspend;
-> +                               };
 
-Driver does not support suspend_enable so this will be noop. We could
-add this for DT-correctness (and full description of HW) but then I
-need explanation why this regulator has to stay on during suspend.
+--mSxgbZZZvrAyzONB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->                         };
->
->                         ldo3_reg: LDO3 {
-> @@ -292,6 +295,9 @@
->                                 regulator-min-microvolt = <1800000>;
->                                 regulator-max-microvolt = <1800000>;
->                                 regulator-always-on;
-> +                               regulator-state-mem {
-> +                                       regulator-off-in-suspend;
-> +                               };
+On Wed, Dec 05, 2018 at 01:46:18PM +0100, Boris Brezillon wrote:
+> Vignesh R <vigneshr@ti.com> wrote:
 
-The same but with suspend_disable.
+> > >>   spi: nxp-fspi: add octal mode flag bit for octal support =20
 
-I am not saying that these are wrong but I would be happy to see
-explanations why you chosen these particular properties.
+> Mark, I think you can pick this one too.
 
->                         };
->
->                         ldo4_reg: LDO4 {
-> @@ -299,6 +305,9 @@
->                                 regulator-min-microvolt = <2800000>;
->                                 regulator-max-microvolt = <2800000>;
->                                 regulator-boot-on;
-> +                               regulator-state-mem {
-> +                                       regulator-on-in-suspend;
-> +                               };
->                         };
->
->                         ldo5_reg: LDO5 {
-> @@ -307,6 +316,9 @@
->                                 regulator-max-microvolt = <1800000>;
->                                 regulator-always-on;
->                                 regulator-boot-on;
-> +                               regulator-state-mem {
-> +                                       regulator-on-in-suspend;
-> +                               };
->                         };
->
->                         ldo6_reg: LDO6 {
-> @@ -314,6 +326,9 @@
->                                 regulator-min-microvolt = <1000000>;
->                                 regulator-max-microvolt = <1000000>;
->                                 regulator-always-on;
-> +                               regulator-state-mem {
-> +                                       regulator-on-in-suspend;
-> +                               };
->                         };
->
->                         ldo7_reg: LDO7 {
-> @@ -321,18 +336,27 @@
->                                 regulator-min-microvolt = <1000000>;
->                                 regulator-max-microvolt = <1000000>;
->                                 regulator-always-on;
-> +                               regulator-state-mem {
-> +                                       regulator-on-in-suspend;
-> +                               };
->                         };
->
->                         ldo8_reg: LDO8 {
->                                 regulator-name = "VDD10_HDMI_1.0V";
->                                 regulator-min-microvolt = <1000000>;
->                                 regulator-max-microvolt = <1000000>;
-> +                               regulator-state-mem {
-> +                                       regulator-off-in-suspend;
-> +                               };
->                         };
->
->                         ldo10_reg: LDO10 {
->                                 regulator-name = "VDDQ_MIPIHSI_1.8V";
->                                 regulator-min-microvolt = <1800000>;
->                                 regulator-max-microvolt = <1800000>;
-> +                               regulator-state-mem {
-> +                                       regulator-off-in-suspend;
-> +                               };
->                         };
->
->                         ldo11_reg: LDO11 {
-> @@ -340,6 +364,9 @@
->                                 regulator-min-microvolt = <1800000>;
->                                 regulator-max-microvolt = <1800000>;
->                                 regulator-always-on;
-> +                               regulator-state-mem {
-> +                                       regulator-off-in-suspend;
-> +                               };
->                         };
->
->                         ldo12_reg: LDO12 {
-> @@ -348,6 +375,9 @@
->                                 regulator-max-microvolt = <3300000>;
->                                 regulator-always-on;
->                                 regulator-boot-on;
-> +                               regulator-state-mem {
-> +                                       regulator-off-in-suspend;
-> +                               };
->                         };
->
->                         ldo13_reg: LDO13 {
-> @@ -356,6 +386,9 @@
->                                 regulator-max-microvolt = <1800000>;
->                                 regulator-always-on;
->                                 regulator-boot-on;
-> +                               regulator-state-mem {
-> +                                       regulator-off-in-suspend;
-> +                               };
->                         };
->
->                         ldo14_reg: LDO14 {
-> @@ -364,6 +397,9 @@
->                                 regulator-max-microvolt = <1800000>;
->                                 regulator-always-on;
->                                 regulator-boot-on;
-> +                               regulator-state-mem {
-> +                                       regulator-off-in-suspend;
-> +                               };
->                         };
->
->                         ldo15_reg: LDO15 {
-> @@ -372,6 +408,9 @@
->                                 regulator-max-microvolt = <1000000>;
->                                 regulator-always-on;
->                                 regulator-boot-on;
-> +                               regulator-state-mem {
-> +                                       regulator-off-in-suspend;
-> +                               };
->                         };
->
->                         ldo16_reg: LDO16 {
-> @@ -380,6 +419,9 @@
->                                 regulator-max-microvolt = <1800000>;
->                                 regulator-always-on;
->                                 regulator-boot-on;
-> +                               regulator-state-mem {
-> +                                       regulator-on-in-suspend;
-> +                               };
->                         };
->
->                         ldo20_reg: LDO20 {
-> @@ -387,6 +429,9 @@
->                                 regulator-min-microvolt = <1800000>;
->                                 regulator-max-microvolt = <1800000>;
->                                 regulator-boot-on;
-> +                               regulator-state-mem {
-> +                                       regulator-off-in-suspend;
-> +                               };
->                         };
->
->                         ldo21_reg: LDO21 {
-> @@ -394,6 +439,9 @@
->                                 regulator-min-microvolt = <2800000>;
->                                 regulator-max-microvolt = <2800000>;
->                                 regulator-boot-on;
-> +                               regulator-state-mem {
-> +                                       regulator-on-in-suspend;
+I don't have this any more, it looked like this was stuck behind the
+otehr MTD changes which seemed to have problems.  If someone could
+resend?
 
-That's unusual setting... enabled in suspend but not necessarily
-during work (no always-on).
+--mSxgbZZZvrAyzONB
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +                               };
->                         };
->
->                         ldo22_reg: LDO22 {
-> @@ -411,6 +459,9 @@
->                                 regulator-max-microvolt = <1800000>;
->                                 regulator-always-on;
->                                 regulator-boot-on;
-> +                               regulator-state-mem {
-> +                                       regulator-off-in-suspend;
-> +                               };
->                         };
->
->                         buck1_reg: BUCK1 {
-> @@ -419,6 +470,9 @@
->                                 regulator-max-microvolt = <1100000>;
->                                 regulator-always-on;
->                                 regulator-boot-on;
-> +                               regulator-state-mem {
-> +                                       regulator-off-in-suspend;
-> +                               };
+-----BEGIN PGP SIGNATURE-----
 
-This is seriously wrong so I have doubts whether you tested the
-changes or you know what is happening with them. If you turn off
-memory bus regulator off, how the memory will work in
-Suspend-to-Memory mode?
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwH3hsACgkQJNaLcl1U
+h9AQ7gf/aJLlaDvMy6aZuK7FrotyfySX7CJt+US7KUsb63DCSjupYyNQDjrU+hY+
+MkA22EG1ml0RP1q5rOL+fgDnWtogzWGPApXwhT/R2prcgyK0YKqhk8eM2dAhzT6L
+JfO+E9rGSM3rBYu5XaGZ7h++3H8mgH9GwkK/GQhgdSc/rOsUJtFZWpBr0+9AYlgi
+UvQunc+4z95nlS73u7ZB+LOvC4L+h8vSp6yPIeN+TIpWc7pwSpbbCcYc3Rv81Usw
+KqmpkRh9/rgai7zX844+tqa9KqPIZ++29cZHd2vmItMO0PMLcG+fk3S0jps5q27x
+ZdLFbvdUupJ3Klk6uxPk8REewVaDog==
+=6Sez
+-----END PGP SIGNATURE-----
 
->                         };
->
->                         buck2_reg: BUCK2 {
-> @@ -427,6 +481,9 @@
->                                 regulator-max-microvolt = <1350000>;
->                                 regulator-always-on;
->                                 regulator-boot-on;
-> +                               regulator-state-mem {
-> +                                       regulator-on-in-suspend;
-> +                               };
->                         };
->
->                         buck3_reg: BUCK3 {
-> @@ -435,6 +492,9 @@
->                                 regulator-max-microvolt = <1050000>;
->                                 regulator-always-on;
->                                 regulator-boot-on;
-> +                               regulator-state-mem {
-> +                                       regulator-off-in-suspend;
-
-Looks suspicious as well.
-
-Best regards,
-Krzysztof
-
-> +                               };
->                         };
->
->                         buck4_reg: BUCK4 {
-> @@ -442,6 +502,9 @@
->                                 regulator-min-microvolt = <900000>;
->                                 regulator-max-microvolt = <1100000>;
->                                 regulator-microvolt-offset = <50000>;
-> +                               regulator-state-mem {
-> +                                       regulator-off-in-suspend;
-> +                               };
->                         };
->
->                         buck5_reg: BUCK5 {
-> @@ -450,6 +513,9 @@
->                                 regulator-max-microvolt = <1200000>;
->                                 regulator-always-on;
->                                 regulator-boot-on;
-> +                               regulator-state-mem {
-> +                                       regulator-off-in-suspend;
-> +                               };
->                         };
->
->                         buck6_reg: BUCK6 {
-> @@ -458,6 +524,9 @@
->                                 regulator-max-microvolt = <1350000>;
->                                 regulator-always-on;
->                                 regulator-boot-on;
-> +                               regulator-state-mem {
-> +                                       regulator-off-in-suspend;
-> +                               };
->                         };
->
->                         buck7_reg: BUCK7 {
-> @@ -465,6 +534,9 @@
->                                 regulator-min-microvolt = <2000000>;
->                                 regulator-max-microvolt = <2000000>;
->                                 regulator-always-on;
-> +                               regulator-state-mem {
-> +                                       regulator-off-in-suspend;
-> +                               };
->                         };
->
->                         buck8_reg: BUCK8 {
-> --
-> 2.19.2
->
+--mSxgbZZZvrAyzONB--
