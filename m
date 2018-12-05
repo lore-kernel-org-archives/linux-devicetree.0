@@ -1,32 +1,42 @@
-From: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH v11 4/4] media: add Rockchip VPU JPEG encoder driver
-Date: Wed, 05 Dec 2018 12:09:09 -0300
-Message-ID: <967929d49095bf376119ec6ad2f9aae494daeaec.camel@collabora.com>
-References: <20181130173433.24185-1-ezequiel@collabora.com>
- <20181130173433.24185-5-ezequiel@collabora.com>
- <07aed803-0e2f-c7c1-7f1c-752b82ffad7c@xs4all.nl>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH RFC 5/5] dt-bindings: gnss: add lna-supply property
+Date: Wed, 5 Dec 2018 16:09:39 +0100
+Message-ID: <20181205150939.GI15689@localhost>
+References: <20181118215801.12280-1-andreas@kemnade.info>
+ <20181118215801.12280-6-andreas@kemnade.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <07aed803-0e2f-c7c1-7f1c-752b82ffad7c-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181118215801.12280-6-andreas@kemnade.info>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: johan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-12-05 at 16:01 +0100, Hans Verkuil wrote:
-> Unless something unexpected happens, then v12 should be the final
-> version and I'll make a pull request for it. Note that it will
-> probably won't make 4.20, unless you manage to do it within the next
-> hour :-)
+On Sun, Nov 18, 2018 at 10:58:01PM +0100, Andreas Kemnade wrote:
+> Add lna-supply property.
+> 
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+>  Documentation/devicetree/bindings/gnss/sirfstar.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/gnss/sirfstar.txt b/Documentation/devicetree/bindings/gnss/sirfstar.txt
+> index 1be7597ae884..9614774d14bc 100644
+> --- a/Documentation/devicetree/bindings/gnss/sirfstar.txt
+> +++ b/Documentation/devicetree/bindings/gnss/sirfstar.txt
+> @@ -30,6 +30,7 @@ Optional properties:
+>  - sirf,wakeup-gpios	: GPIO used to determine device power state
+>  			  (pin name: RFPWRUP, WAKEUP)
+>  - timepulse-gpios	: Time pulse GPIO (pin name: 1PPS, TM)
+> +- lna-supply		: Separate supply for a LNA
 
-Challenge accepted!
+"Supply for external LNA"?
+
+And please keep the entries sorted.
+
+>  
+>  Example:
+
+Johan
