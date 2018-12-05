@@ -1,44 +1,67 @@
-Return-Path: <SRS0=5aJp=PE=linaro.org=sumit.garg@kernel.org>
-From: Sumit Garg <sumit.garg@linaro.org>
-Subject: [PATCH v1 1/2] dt/bindings: add bindings for optional optee rng-uuid property
-Date: Thu, 27 Dec 2018 16:37:10 +0530
-Message-Id: <1545908831-25910-2-git-send-email-sumit.garg@linaro.org>
-In-Reply-To: <1545908831-25910-1-git-send-email-sumit.garg@linaro.org>
-References: <1545908831-25910-1-git-send-email-sumit.garg@linaro.org>
-To: linux-crypto@vger.kernel.org, devicetree@vger.kernel.org
-Cc: mpm@selenic.com, herbert@gondor.apana.org.au, robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, jens.wiklander@linaro.org, daniel.thompson@linaro.org, ard.biesheuvel@linaro.org, bhsharma@redhat.com, tee-dev@lists.linaro.org, Sumit Garg <sumit.garg@linaro.org>
+Return-Path: <SRS0=wIoc=OO=verge.net.au=horms@kernel.org>
+Date: Wed, 5 Dec 2018 11:56:24 -0800
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 3/5] ARM: dts: r8a7744: Add DU support
+Message-ID: <20181205195624.upiljxcwo6zu4bcz@verge.net.au>
+References: <1544000815-28069-1-git-send-email-biju.das@bp.renesas.com>
+ <1544000815-28069-4-git-send-email-biju.das@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1544000815-28069-4-git-send-email-biju.das@bp.renesas.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add bindings for OP-TEE based optional hardware random number
-generator identifier property. It could be used on ARM based devices
-where entropy source is not accessible to normal world (linux in this
-case).
+On Wed, Dec 05, 2018 at 09:06:53AM +0000, Biju Das wrote:
+> Add du node to r8a7744 SoC DT. Boards that want to enable the DU
+> need to specify the output topology.
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> ---
+> V1-->V2
+> 	* Removed LVDS encoder definition from DU node.
 
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
----
- Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+I would like this and the remaining patches in this series to
+receive some review before I apply them. This likely means they
+will be accepted for v4.22 as I am planning to close the
+renesas tree for non-bugfixes for v4.21 later today.
 
-diff --git a/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt b/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
-index d38834c..e3a4c35 100644
---- a/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
-+++ b/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
-@@ -20,6 +20,9 @@ the reference implementation maintained by Linaro.
-                    "hvc" : HVC #0, with the register assignments specified
- 		           in drivers/tee/optee/optee_smc.h
- 
-+- rng-uuid       : Optional OP-TEE based RNG service identifier in case
-+                   hardware entropy source is not accesible to normal world
-+                   (Linux).
- 
- 
- Example:
-@@ -27,5 +30,6 @@ Example:
- 		optee {
- 			compatible = "linaro,optee-tz";
- 			method = "smc";
-+			rng-uuid = "ab7a617c-b8e7-4d8f-8301-d09b61036b64";
- 		};
- 	};
--- 
-2.7.4
+b
+
+> ---
+>  arch/arm/boot/dts/r8a7744.dtsi | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
+> index 04148d6..6a51b16 100644
+> --- a/arch/arm/boot/dts/r8a7744.dtsi
+> +++ b/arch/arm/boot/dts/r8a7744.dtsi
+> @@ -1645,8 +1645,14 @@
+>  		};
+>  
+>  		du: display@feb00000 {
+> -			reg = <0 0xfeb00000 0 0x40000>,
+> -			      <0 0xfeb90000 0 0x1c>;
+> +			compatible = "renesas,du-r8a7744";
+> +			reg = <0 0xfeb00000 0 0x40000>;
+> +			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 724>,
+> +				 <&cpg CPG_MOD 723>;
+> +			clock-names = "du.0", "du.1";
+> +			status = "disabled";
+>  
+>  			ports {
+>  				#address-cells = <1>;
+> @@ -1663,7 +1669,6 @@
+>  					};
+>  				};
+>  			};
+> -			/* placeholder */
+>  		};
+>  
+>  		prr: chipid@ff000044 {
+> -- 
+> 2.7.4
+> 
