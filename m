@@ -1,46 +1,61 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 11/15] dt-bindings: media: cedrus: Add
- compatibles for the A64 and H5
-Date: Wed, 5 Dec 2018 12:00:09 +0100
-Message-ID: <20181205110009.f4st7fspaxiphnmn@flea>
-References: <20181205092444.29497-1-paul.kocialkowski@bootlin.com>
- <20181205092444.29497-12-paul.kocialkowski@bootlin.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [RFC PATCH 4/6] dt-bindings: update mvneta binding document
+Date: Wed, 5 Dec 2018 11:00:09 +0000
+Message-ID: <20181205110009.GQ30658@n2100.armlinux.org.uk>
+References: <20181112122933.GD30658@n2100.armlinux.org.uk>
+ <E1gMBMs-00089t-Fd@rmk-PC.armlinux.org.uk>
+ <20181203235455.GA5851@bogus>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lzx3jafuwqktgjoq"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBTG7T3QAKGQEJRLFZWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181205092444.29497-12-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+In-Reply-To: <20181203235455.GA5851@bogus>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-
---lzx3jafuwqktgjoq
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Wed, Dec 05, 2018 at 10:24:40AM +0100, Paul Kocialkowski wrote:
-> This introduces two new compatibles for the cedrus driver, for the
-> A64 and H5 platforms.
+On Mon, Dec 03, 2018 at 05:54:55PM -0600, Rob Herring wrote:
+> On Mon, Nov 12, 2018 at 12:31:02PM +0000, Russell King wrote:
+> > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 > 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Needs a better subject and a commit msg.
 
-Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Hmm, not sure why it didn't contain:
 
-Maxime
+"dt-bindings: net: mvneta: add phys property
+
+Add an optional phys property to the mvneta binding documentation for
+the common phy.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>"
+
+as the commit message.  With the correct commit message, are you happy
+with it?
+
+> 
+> > ---
+> >  Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt b/Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt
+> > index bedcfd5a52cd..691f886cfc4a 100644
+> > --- a/Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt
+> > +++ b/Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt
+> > @@ -19,7 +19,7 @@
+> >    "marvell,armada-370-neta" and 9800B for others.
+> >  - clock-names: List of names corresponding to clocks property; shall be
+> >    "core" for core clock and "bus" for the optional bus clock.
+> > -
+> > +- phys: comphy for the ethernet port, see ../phy/phy-bindings.txt
+> >  
+> >  Optional properties (valid only for Armada XP/38x):
+> >  
+> > -- 
+> > 2.7.4
+> > 
 
 -- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---lzx3jafuwqktgjoq--
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
