@@ -1,13 +1,13 @@
 From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 02/15] ARM: dts: sun8i: a33: Remove
- unnecessary reserved memory node
-Date: Wed,  5 Dec 2018 10:24:31 +0100
-Message-ID: <20181205092444.29497-3-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v2 04/15] soc: sunxi: sram: Enable EMAC clock
+ access for H3 variant
+Date: Wed,  5 Dec 2018 10:24:33 +0100
+Message-ID: <20181205092444.29497-5-paul.kocialkowski@bootlin.com>
 References: <20181205092444.29497-1-paul.kocialkowski@bootlin.com>
 Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRB65ST3QAKGQECSXJ7JI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRB7FST3QAKGQECQZGVDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181205092444.29497-1-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,43 +20,42 @@ To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY7
 Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-While we believed that the memory for the video engine had to be kept
-in the first 256 MiBs of DRAM, this is no longer true starting with the
-A33 and any address can be mapped.
+Just like the A64 and H5, the H3 SoC uses the system control block
+to enable the EMAC clock.
 
-As a result, remove the reserved memory node and let the kernel allocate
-the CMA pool wherever it sees fit.
+Add a variant structure definition for the H3 and use it over the A10
+one. This will allow using the H3-specific binding for the syscon node
+attached to the EMAC instead of the generic syscon binding.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a33.dtsi | 15 ---------------
- 1 file changed, 15 deletions(-)
+ drivers/soc/sunxi/sunxi_sram.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
-index c2c10cd4a210..9ac4fae6c10d 100644
---- a/arch/arm/boot/dts/sun8i-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a33.dtsi
-@@ -186,21 +186,6 @@
- 		};
- 	};
+diff --git a/drivers/soc/sunxi/sunxi_sram.c b/drivers/soc/sunxi/sunxi_sram.c
+index 71e3ee4a3f19..fd81a3c0db45 100644
+--- a/drivers/soc/sunxi/sunxi_sram.c
++++ b/drivers/soc/sunxi/sunxi_sram.c
+@@ -290,6 +290,10 @@ static const struct sunxi_sramc_variant sun4i_a10_sramc_variant = {
+ 	/* Nothing special */
+ };
  
--	reserved-memory {
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges;
--
--		/* Address must be kept in the lower 256 MiBs of DRAM for VE. */
--		default-pool {
--			compatible = "shared-dma-pool";
--			size = <0x6000000>;
--			alloc-ranges = <0x4a000000 0x6000000>;
--			reusable;
--			linux,cma-default;
--		};
--	};
--
- 	sound: sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,name = "sun8i-a33-audio";
++static const struct sunxi_sramc_variant sun8i_h3_sramc_variant = {
++	.has_emac_clock = true,
++};
++
+ static const struct sunxi_sramc_variant sun50i_a64_sramc_variant = {
+ 	.has_emac_clock = true,
+ };
+@@ -369,7 +373,7 @@ static const struct of_device_id sunxi_sram_dt_match[] = {
+ 	},
+ 	{
+ 		.compatible = "allwinner,sun8i-h3-system-control",
+-		.data = &sun4i_a10_sramc_variant,
++		.data = &sun8i_h3_sramc_variant,
+ 	},
+ 	{
+ 		.compatible = "allwinner,sun50i-a64-sram-controller",
 -- 
 2.19.2
