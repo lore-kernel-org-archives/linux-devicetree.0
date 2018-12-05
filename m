@@ -1,39 +1,36 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH 2/3] dt-bindings: crypto: ccree: add dt bindings for
- ccree 703
-Date: Wed, 5 Dec 2018 09:40:09 +0800
-Message-ID: <20181205014009.m7sggymqeh3jjkle@gondor.apana.org.au>
-References: <1542102039-22256-1-git-send-email-gilad@benyossef.com>
- <1542102039-22256-3-git-send-email-gilad@benyossef.com>
- <20181129064218.53qc33vus5anla76@gondor.apana.org.au>
- <20181204201419.GA13304@bogus>
+From: Chen Yu <chenyu56@huawei.com>
+Subject: Re: [PATCH v1 10/12] hikey960: Support usb functionality of Hikey960
+Date: Wed, 5 Dec 2018 09:57:06 +0800
+Message-ID: <a1168f88-5679-6245-41d8-5ef4be5493b2@huawei.com>
+References: <20181203034515.91412-1-chenyu56@huawei.com>
+ <20181203034515.91412-11-chenyu56@huawei.com>
+ <CAHp75VdSowHk4meQqqUamSjJJoVT59+pMZ1qjmmWd-W5nWBcUw@mail.gmail.com>
+ <6810012e-9a77-dfdf-a738-14ce77a3027a@huawei.com>
+ <CAHp75Vf_nemtPuMZV-1ezyYaB_BuuDM6uqaBf9DLBWLdCnm4Gg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181204201419.GA13304@bogus>
+In-Reply-To: <CAHp75Vf_nemtPuMZV-1ezyYaB_BuuDM6uqaBf9DLBWLdCnm4Gg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Gilad Ben-Yossef <gilad@benyossef.com>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Yael Chemla <yael.chemla@foss.arm.com>, Ofir Drang <Ofir.Drang@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: liuyu712@hisilicon.com, Wangbinghui <wangbinghui@hisilicon.com>, USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 04, 2018 at 02:14:19PM -0600, Rob Herring wrote:
-> On Thu, Nov 29, 2018 at 02:42:18PM +0800, Herbert Xu wrote:
-> > On Tue, Nov 13, 2018 at 09:40:36AM +0000, Gilad Ben-Yossef wrote:
-> > > Add device tree bindings associating Arm TrustZone CryptoCell 703 with the
-> > > ccree driver.
-> > > 
-> > > Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/crypto/arm-cryptocell.txt | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > 
-> > Which tree is this patch meant to go through?
-> 
-> You should take it as it is part of a series.
+Hi,
 
-Thanks Rob!
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+On 2018/12/5 1:47, Andy Shevchenko wrote:
+> On Tue, Dec 4, 2018 at 3:40 AM Chen Yu <chenyu56@huawei.com> wrote:
+>> On 2018/12/3 17:23, Andy Shevchenko wrote:
+>>> On Mon, Dec 3, 2018 at 5:47 AM Yu Chen <chenyu56@huawei.com> wrote:
+> 
+>>>> +               .of_match_table = of_match_ptr(id_table_hisi_hikey_usb),
+>>>
+>>> Does it compiles for non-OF case? Why macro is in use?
+> 
+>> OK. I will add the "CONFIG_OF".
+> Why? Is this driver supposed to work without DT?
+> 
+No. This driver should depend on OF.
+Can I solve this by add "dpends on OF" in Kconfig?
