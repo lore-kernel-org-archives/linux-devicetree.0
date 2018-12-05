@@ -1,83 +1,186 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH v2 12/34] dt-bindings: arm: Convert Altera board/soc
- bindings to json-schema
-Date: Wed, 5 Dec 2018 09:13:51 -0600
-Message-ID: <0dd69104-4370-61c3-d7ca-e09121a16366@kernel.org>
-References: <20181203213223.16986-1-robh@kernel.org>
- <20181203213223.16986-13-robh@kernel.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: Moving ARM dts files
+Date: Wed, 5 Dec 2018 16:14:01 +0100
+Message-ID: <a2178561-ca34-438b-89c3-278b26e194d9@baylibre.com>
+References: <20181204183649.GA5716@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181203213223.16986-13-robh@kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181204183649.GA5716@bogus>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, arm@kernel.org, Mark Rutland <mark.rutland@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, arm@kernel.org
+Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thierry Reding <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory Clement <gregory.clement@bootlin.com>, Michal Simek <michal.simek@xilinx.com>, Krzysztof Kozlowski <krzk@kernel.org>, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Shawn Guo <shawnguo@kernel.org>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
+On 04/12/2018 19:36, Rob Herring wrote:
+> Olof, Arnd,
+> 
+> I've put together a script to move the dts files and update the 
+> makefiles. It doesn't handle files not following a common prefix which 
+> isn't many and some includes within the dts files will need some fixups 
+> by hand.
+> 
+> MAINTAINERS will also need updating.
+> 
+> A few questions:
+> 
+> Do we want to move absolutely everything to subdirs? There's quite a 
+> few platforms with only 1-2 platforms. I haven't added these to the 
+> list yet, but can.
+> 
+> Do any vendors need another level of directories? davinci, omap, nspire, 
+> etc. for TI for example.
+> 
+> What to do with armv7m.dtsi? I guess it should remain and we just fixup 
+> the include. There may be a few other cross vendor things.
+> 
+> 
+> Sub-arch maintainers, 
+> 'vendor_map' below is the mapping of file prefix to new subdirectory 
+> (the SoC vendor prefix). Please comment if there are any issues.
+> 
+> Rob
+> 
+> 8<-----------------------------------------------------------
+> #!/usr/bin/env python3
+> 
+> import os
+> import re
+> from git import Git
+> import glob
+> 
+> vendor_map = {
+>     'imx': 'fsl',
+>     'ls': 'fsl',
+>     'vf': 'fsl',
+>     'qcom': 'qcom',
+>     'am3' : 'ti',
+>     'am4' : 'ti',
+>     'am5' : 'ti',
+>     'da' : 'ti',
+>     'dm' : 'ti',
+>     'dra' : 'ti',
+>     'keystone' : 'ti',
+>     'omap' : 'ti',
+>     'nspire' : 'ti',
+>     'armada' : 'marvell',
+>     'berlin' : 'marvell',
+>     'dove' : 'marvell',
+>     'kirkwood' : 'marvell',
+>     'orion' : 'marvell',
+>     'pxa' : 'marvell',
+>     'mvebu' : 'marvell',
+>     'mmp2' : 'marvell',
+>     'arm-' : 'arm',
+>     'integ' : 'arm',
+>     've' : 'arm',
+>     'aspeed' : 'aspeed',
+>     'at91' : 'atmel',
+>     'sama' : 'atmel',
+>     'bcm' : 'brcm',
+>     'exynos' : 'samsung',
+>     's3c' : 'samsung',
+>     's5p' : 'samsung',
+>     'gemini' : 'cortina',
+>     'hi3' : 'hisilicon',
+>     'hip' : 'hisilicon',
+>     'hisi' : 'hisilicon',
+>     'mt' : 'mediatek',
+>     'meson' : 'amlogic',
+>     'owl' : 'actions',
+>     'r7' : 'renesas',
+>     'r8' : 'renesas',
+>     'r9' : 'renesas',
+>     'rk' : 'rockchip',
+>     'socfpga' : 'altera',
+>     'st' : 'st',
+>     'spear' : 'st',
+>     'sun' : 'allwinner',
+>     'tegra' : 'nvidia',
+>     'zynq' : 'xilinx',
+>     'wm' : 'wm',
+>     'uniph' : 'socionext',
+>     'zx' : 'zte',
+      'ox8' : 'oxsemi',
 
 
-On 12/3/18 3:32 PM, Rob Herring wrote:
-> Convert Altera SoC bindings to DT schema format using json-schema.
-> 
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Dinh Nguyen <dinguyen@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/arm/altera.txt        | 14 -------------
->  .../devicetree/bindings/arm/altera.yaml       | 20 +++++++++++++++++++
->  2 files changed, 20 insertions(+), 14 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/altera.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/altera.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/altera.txt b/Documentation/devicetree/bindings/arm/altera.txt
-> deleted file mode 100644
-> index 558735aacca8..000000000000
-> --- a/Documentation/devicetree/bindings/arm/altera.txt
-> +++ /dev/null
-> @@ -1,14 +0,0 @@
-> -Altera's SoCFPGA platform device tree bindings
-> ----------------------------------------------
-> -
-> -Boards with Cyclone 5 SoC:
-> -Required root node properties:
-> -compatible = "altr,socfpga-cyclone5", "altr,socfpga";
-> -
-> -Boards with Arria 5 SoC:
-> -Required root node properties:
-> -compatible = "altr,socfpga-arria5", "altr,socfpga";
-> -
-> -Boards with Arria 10 SoC:
-> -Required root node properties:
-> -compatible = "altr,socfpga-arria10", "altr,socfpga";
-> diff --git a/Documentation/devicetree/bindings/arm/altera.yaml b/Documentation/devicetree/bindings/arm/altera.yaml
-> new file mode 100644
-> index 000000000000..49e0362ddc11
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/altera.yaml
-> @@ -0,0 +1,20 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/altera.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Altera's SoCFPGA platform device tree bindings
-> +
-> +maintainers:
-> +  - Dinh Nguyen <dinguyen@kernel.org>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +        - altr,socfpga-cyclone5
-> +        - altr,socfpga-arria5
-> +        - altr,socfpga-arria10
-> +      - const: altr,socfpga
-> +...
-> 
+I volunteer as a tribute !
 
-Acked-by: Dinh Nguyen <dinguyen@kernel.org>
+This is a low-priority platform, you can move them in a separate directory if you want.
+
+Neil
+
+
+> }
+> 
+> if __name__ == "__main__":
+>     g = Git('.')
+> 
+>     g.checkout("HEAD", "arch/arm/boot/dts/Makefile")
+>     dts_make = open("arch/arm/boot/dts/Makefile", "r").read()
+> 
+>     # make entries 1 line
+>     make2 = re.sub(r'\\\n', '', dts_make)
+> 
+>     for k,v in vendor_map.items():
+>         for f in glob.iglob("arch/arm/boot/dts/" + k + "*.*"):
+>             new_dir = "arch/arm/boot/dts/" + v + "/"
+>             base = os.path.splitext(os.path.basename(f))[0]
+> 
+>             os.makedirs(new_dir, exist_ok=True)
+>             g.mv(f, new_dir)
+> 
+>             # Remove the file from the makefile
+>             dts_make = re.sub('.*' + base + r'\.dtb.*\\\n', '', dts_make)
+>             dts_make = re.sub('.*' + base + r'\.dtb', '', dts_make)
+> 
+>             # extract the matching makefile entry
+>             reg = re.search(r'.*' + base + r'.*', make2)
+>             if not reg:
+>                 continue
+> 
+>             entry = reg.group(0)
+>             make2 = re.sub(r'.*' + base + r'.*', '', make2)
+>             if entry:
+>                 makefile = open(new_dir + 'Makefile', 'a+')
+>                 print(entry, file=makefile)
+>                 makefile.close()
+> 
+> 
+>     for d in sorted(glob.iglob("arch/arm/boot/dts/*/")):
+>         dts_make += 'subdir-y += ' + d.split(os.path.sep)[-2] + '\n'
+> 
+>         # Add license and sort entries of sub-dir makefile
+>         vendor_make = '# SPDX-License-Identifier: GPL-2.0\n'
+>         make_lines = open(d + 'Makefile', 'r').readlines()
+>         for l in sorted(make_lines):
+>             vendor_make += l
+> 
+>         vendor_make = re.sub(r'\t', r'\\\n\t', vendor_make)
+> 
+>         f = open(d + 'Makefile', 'w')
+>         f.write(vendor_make)
+>         f.close()
+>         g.add(d + 'Makefile')
+> 
+>     # Remove entries with no dtbs left
+>     dts_make = re.sub(r'.*\+= \\\n\n', '', dts_make)
+> 
+>     open("arch/arm/boot/dts/Makefile", "w").write(dts_make)
+>     g.add("arch/arm/boot/dts/Makefile")
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
