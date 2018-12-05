@@ -1,118 +1,46 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 05/12] PCI: aardvark: add suspend to RAM support
-Date: Wed, 5 Dec 2018 11:00:02 +0000
-Message-ID: <20181205110002.GA12435@e107981-ln.cambridge.arm.com>
-References: <20181123141831.8214-1-miquel.raynal@bootlin.com>
- <1999610.6DN9RK2Tt3@aspire.rjw.lan>
- <20181204094558.GA24588@e107981-ln.cambridge.arm.com>
- <1966692.fVZYlVgWHv@aspire.rjw.lan>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 11/15] dt-bindings: media: cedrus: Add
+ compatibles for the A64 and H5
+Date: Wed, 5 Dec 2018 12:00:09 +0100
+Message-ID: <20181205110009.f4st7fspaxiphnmn@flea>
+References: <20181205092444.29497-1-paul.kocialkowski@bootlin.com>
+ <20181205092444.29497-12-paul.kocialkowski@bootlin.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lzx3jafuwqktgjoq"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBTG7T3QAKGQEJRLFZWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1966692.fVZYlVgWHv@aspire.rjw.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, sudeep.holla@arm.com, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
+In-Reply-To: <20181205092444.29497-12-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 04, 2018 at 10:42:19PM +0100, Rafael J. Wysocki wrote:
-> On Tuesday, December 4, 2018 10:45:58 AM CET Lorenzo Pieralisi wrote:
-> > On Mon, Dec 03, 2018 at 11:00:20PM +0100, Rafael J. Wysocki wrote:
-> > > On Monday, December 3, 2018 4:38:46 PM CET Miquel Raynal wrote:
-> > > > Hi Lorenzo,
-> > > > 
-> > > > Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote on Mon, 3 Dec 2018
-> > > > 10:27:08 +0000:
-> > > > 
-> > > > > [+Rafael, Sudeep]
-> > > > > 
-> > > > > On Fri, Nov 23, 2018 at 03:18:24PM +0100, Miquel Raynal wrote:
-> > > > > > Add suspend and resume callbacks. The priority of these are
-> > > > > > "_noirq()", to workaround early access to the registers done by the
-> > > > > > PCI core through the ->read()/->write() callbacks at resume time.
-> > > > > > 
-> > > > > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > > > > > ---
-> > > > > >  drivers/pci/controller/pci-aardvark.c | 52 +++++++++++++++++++++++++++
-> > > > > >  1 file changed, 52 insertions(+)
-> > > > > > 
-> > > > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > > > > index 108b3f15c410..7ecf1ac4036b 100644
-> > > > > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > > > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > > > > @@ -1108,6 +1108,55 @@ static int advk_pcie_setup_clk(struct advk_pcie *pci
-> > > > > >  	return ret;
-> > > > > >  }
-> > > > > >  
-> > > > > > +static int __maybe_unused advk_pcie_suspend(struct device *dev)
-> > > > > > +{
-> > > > > > +	struct advk_pcie *pcie = dev_get_drvdata(dev);
-> > > > > > +
-> > > > > > +	advk_pcie_disable_phy(pcie);
-> > > > > > +
-> > > > > > +	clk_disable_unprepare(pcie->clk);  
-> > > > > 
-> > > > > I have noticed it is common practice, still, I would like to check whether
-> > > > > it is allowed to call functions that may sleep in a NOIRQ suspend/resume
-> > > > > callback ?
-> > > > 
-> > > > You are right this is weird. I double checked and for instance,
-> > > > pcie-mediatek.c, pci-tegra.c and pci-imx6.c do the exact same thing. There are
-> > > > probably other cases where drivers call functions that may sleep from a NOIRQ
-> > > > context. I am interested to know if this is valid and if not, what is the
-> > > > alternative?
-> > > > 
-> > > 
-> > > Yes, it is valid.  _noirq means that the high-level action handlers
-> > > will not be invoked for interrupts occurring during that period, but
-> > > that doesn't apply to timer interrupts.
-> > > 
-> > > IOW, don't expect *your* IRQ handler to be invoked then (if this is
-> > > not a timer IRQ), but you can sleep.
-> > 
-> > Hi Rafael, all,
-> > 
-> > I did not ask my question (that may be silly) properly apologies. I know
-> > that the S2R context allows sleeping the question is, in case
-> > clk_disable_unprepare() (and resume counterparts) sleeps,
+
+--lzx3jafuwqktgjoq
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Wed, Dec 05, 2018 at 10:24:40AM +0100, Paul Kocialkowski wrote:
+> This introduces two new compatibles for the cedrus driver, for the
+> A64 and H5 platforms.
 > 
-> If it just sleeps, then this is not a problem, but if it actually *waits*
-> for something meaningful to happen (which I guess is what you really mean),
-> then things may go awry.
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-That's what I meant and I assume that's reason why the
-*_prepare/unprepare() API are allowed to sleep, waiting for
-an event to trigger.
+Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
-> > what is going to wake it up, given that we are in the S2R NOIRQ phase and as
-> > you said the action handlers (that are possibly required to wake up the eg
-> > clk_disable_unprepare() caller) are disabled (unless, AFAIK,
-> > IRQF_NO_SUSPEND is passed at IRQ request time in the respective driver).
-> 
-> So if it waits for an action handler to do something and wake it up, it may
-> very well deadlock.  I have no idea if that really happens, though.
+Maxime
 
-I have no idea either, that's why I asked the clock maintainers too,
-the point is, the clk API allows this behaviour, I do not think it is safe
-to rely on a non-blocking clk back-end, that's why I raised the question
-in the first place.
-
-> > The clk API implementations back-ends are beyond my depth, I just wanted
-> > to make sure I understand how the S2R flow is expected to work in this
-> > specific case.
-> 
-> Action handlers won't run unless the IRQs are marked as IRQF_NO_SUSPEND
-> (well, there are a few more complications I don't recall exactly, but
-> that's the basic rule).  If anything depends on them to run, it will block.
-
-It looks like this patch (and more code in the kernel) expects either
-the clk calls not to block or the action handler implemented in the
-clock back-ends to run in S2R-NOIRQ (possibly by using the
-IRQF_NO_SUSPEND flag).
-
-I would appreciate if the clock maintainers can shed some light on
-this.
-
-Thanks,
-Lorenzo
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--lzx3jafuwqktgjoq--
