@@ -1,41 +1,72 @@
-From: Jian Hu <jian.hu@amlogic.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: clk: meson-g12a: Add G12A EE Clock
- Bindings
-Date: Wed, 5 Dec 2018 11:10:51 +0800
-Message-ID: <5d181208-1d51-fb1d-da8f-d8e1f55709ac@amlogic.com>
-References: <1543498917-98605-1-git-send-email-jian.hu@amlogic.com>
- <1543498917-98605-2-git-send-email-jian.hu@amlogic.com>
- <20181203230645.GA14522@bogus>
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: Re: [PATCH v5 0/3] Stingray thermal driver support
+Date: Wed, 5 Dec 2018 08:47:52 +0530
+Message-ID: <CABe79T4mpnbkaTCerYegmc1+uY4idOVOxCVDqHramk3fYipiCA@mail.gmail.com>
+References: <1539702680-3746-1-git-send-email-srinath.mannam@broadcom.com> <b6e02875-784f-4908-a985-5ee7e3df3ac6@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181203230645.GA14522@bogus>
-Content-Language: en-US
+In-Reply-To: <b6e02875-784f-4908-a985-5ee7e3df3ac6@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Yixun Lan <yixun.lan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Rob
+Hi,
 
-I will add it in next version, thanks.
+Could you please provide your feedback to this patch series?
 
-On 2018/12/4 7:06, Rob Herring wrote:
-> On Thu, Nov 29, 2018 at 09:41:56PM +0800, Jian Hu wrote:
->> Add new clock controller compatible and dt-bingdings headers
->> for the Everything-Else domain of the g12a SoC
->>
->> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->> ---
->>   .../bindings/clock/amlogic,gxbb-clkc.txt           |  1 +
->>   include/dt-bindings/clock/g12a-clkc.h              | 93 ++++++++++++++++++++++
->>   2 files changed, 94 insertions(+)
->>   create mode 100644 include/dt-bindings/clock/g12a-clkc.h
-> 
-> Please add acks/reviewed-bys when posting new versions.
-> 
-> Rob
-> 
-> .
-> 
+Regards,
+Srinath.
+On Thu, Nov 8, 2018 at 3:45 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+>
+>
+> On 10/16/2018 8:11 AM, Srinath Mannam wrote:
+> > These patches adds the stingray thermal driver and its
+> > corresponding DT nodes with documentation.
+>
+> Can we get feedback from the thermal maintains whether this is
+> acceptable or not?
+>
+> >
+> > Changes from v4
+> >   - Addressed Rob Herring comments on DT parameters and
+> >     thermal driver architecture.
+> >   - Removed brcm,max-crit-temp DT parameter
+> >   - Changed driver to thermal sensor registration model.
+> >   - Added trip DT properties.
+> >
+> > Changes from v3
+> >   - Addressed Daniel lezcano comments.
+> >   - Elaborated commit description of thermal driver patch.
+> >   - Added brcm,max-crit-temp DT parameter.
+> >
+> > Changes from v2:
+> >   - All stingray TMON DT nodes are combine together into single.
+> >     Temperature registers are combined into one mem resource.
+> >     brcm,tmon-mask parameter has available TMONs mask value.
+> >   - All available TMONs are initialized together in single
+> >     instance of driver probe call.
+> >
+> > Changes from v1:
+> >   - Fixed auto build sparce warning.
+> >
+> > Pramod Kumar (3):
+> >   dt-bindings: thermal: Add binding document for SR thermal
+> >   thermal: broadcom: Add Stingray thermal driver
+> >   arm64: dts: stingray: Add Stingray Thermal DT support.
+> >
+> >  .../bindings/thermal/brcm,sr-thermal.txt           | 105 ++++++++++++++++
+> >  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  89 +++++++++++++
+> >  drivers/thermal/Kconfig                            |   3 +-
+> >  drivers/thermal/broadcom/Kconfig                   |   9 ++
+> >  drivers/thermal/broadcom/Makefile                  |   1 +
+> >  drivers/thermal/broadcom/sr-thermal.c              | 138 +++++++++++++++++++++
+> >  6 files changed, 344 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+> >  create mode 100644 drivers/thermal/broadcom/sr-thermal.c
+> >
+>
+> --
+> Florian
