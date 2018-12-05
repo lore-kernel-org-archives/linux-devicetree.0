@@ -1,43 +1,42 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] drm: imx: Use of_node_name_eq for node name comparisons
-Date: Wed,  5 Dec 2018 13:50:23 -0600
-Message-ID: <20181205195050.4759-7-robh@kernel.org>
+Subject: [PATCH] char/rtc: Use of_node_name_eq for node name comparisons
+Date: Wed,  5 Dec 2018 13:50:19 -0600
+Message-ID: <20181205195050.4759-3-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-Q29udmVydCBzdHJpbmcgY29tcGFyZXMgb2YgRFQgbm9kZSBuYW1lcyB0byB1c2Ugb2Zfbm9kZV9u
-YW1lX2VxIGhlbHBlcgppbnN0ZWFkLiBUaGlzIHJlbW92ZXMgZGlyZWN0IGFjY2VzcyB0byB0aGUg
-bm9kZSBuYW1lIHBvaW50ZXIuCgpGb3IgaW5zdGFuY2VzIHVzaW5nIG9mX25vZGVfY21wLCB0aGlz
-IGhhcyB0aGUgc2lkZSBlZmZlY3Qgb2Ygbm93IHVzaW5nCmNhc2Ugc2Vuc2l0aXZlIGNvbXBhcmlz
-b25zLiBUaGlzIHNob3VsZCBub3QgbWF0dGVyIGZvciBhbnkgRkRUIGJhc2VkCnN5c3RlbSB3aGlj
-aCB0aGlzIGlzLgoKQ2M6IFBoaWxpcHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+CkNj
-OiBEYXZpZCBBaXJsaWUgPGFpcmxpZWRAbGludXguaWU+CkNjOiBkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnClNpZ25lZC1vZmYtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+
-Ci0tLQogZHJpdmVycy9ncHUvZHJtL2lteC9pbXgtZHJtLWNvcmUuYyB8IDIgKy0KIDEgZmlsZSBj
-aGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS9pbXgvaW14LWRybS1jb3JlLmMgYi9kcml2ZXJzL2dwdS9kcm0vaW14L2lteC1k
-cm0tY29yZS5jCmluZGV4IDBlNjk0MmYyMWE0ZS4uOTllYzZlNWY4OWRjIDEwMDY0NAotLS0gYS9k
-cml2ZXJzL2dwdS9kcm0vaW14L2lteC1kcm0tY29yZS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9p
-bXgvaW14LWRybS1jb3JlLmMKQEAgLTE5OCw3ICsxOTgsNyBAQCBzdGF0aWMgaW50IGNvbXBhcmVf
-b2Yoc3RydWN0IGRldmljZSAqZGV2LCB2b2lkICpkYXRhKQogCX0KIAogCS8qIFNwZWNpYWwgY2Fz
-ZSBmb3IgTERCLCBvbmUgZGV2aWNlIGZvciB0d28gY2hhbm5lbHMgKi8KLQlpZiAob2Zfbm9kZV9j
-bXAobnAtPm5hbWUsICJsdmRzLWNoYW5uZWwiKSA9PSAwKSB7CisJaWYgKG9mX25vZGVfbmFtZV9l
-cShucCwgImx2ZHMtY2hhbm5lbCIpKSB7CiAJCW5wID0gb2ZfZ2V0X3BhcmVudChucCk7CiAJCW9m
-X25vZGVfcHV0KG5wKTsKIAl9Ci0tIAoyLjE5LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Convert string compares of DT node names to use of_node_name_eq helper
+instead. This removes direct access to the node name pointer.
+
+The open coded iterating thru the child node names is converted to use
+for_each_child_of_node() instead.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ drivers/char/rtc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/char/rtc.c b/drivers/char/rtc.c
+index 4948c8bda6b1..62b7c721c732 100644
+--- a/drivers/char/rtc.c
++++ b/drivers/char/rtc.c
+@@ -866,8 +866,8 @@ static int __init rtc_init(void)
+ #ifdef CONFIG_SPARC32
+ 	for_each_node_by_name(ebus_dp, "ebus") {
+ 		struct device_node *dp;
+-		for (dp = ebus_dp; dp; dp = dp->sibling) {
+-			if (!strcmp(dp->name, "rtc")) {
++		for_each_child_of_node(ebus_dp, dp) {
++			if (of_node_name_eq(dp, "rtc")) {
+ 				op = of_find_device_by_node(dp);
+ 				if (op) {
+ 					rtc_port = op->resource[0].start;
+-- 
+2.19.1
