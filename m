@@ -1,52 +1,67 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 0/7] spi: add support for octal mode
-Date: Wed, 5 Dec 2018 14:18:03 +0000
-Message-ID: <20181205141803.GD6205@sirena.org.uk>
-References: <1543826226-30898-1-git-send-email-yogeshnarayan.gaur@nxp.com>
- <20181203101937.7b01a0ad@bbrezillon>
- <214dadd9-859c-ca88-1aff-1c83fcfa3c0b@ti.com>
- <20181205134618.56223758@bbrezillon>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V2 1/2] mmc: mmci: send stop command if sbc error issue
+Date: Wed, 5 Dec 2018 15:23:33 +0100
+Message-ID: <CAPDyKFp06tiMVgKyKLLKKwGtDPkAKuGWo=NaS+j=3oWGq-UV_A@mail.gmail.com>
+References: <1541583041-17461-1-git-send-email-ludovic.Barre@st.com>
+ <1541583041-17461-2-git-send-email-ludovic.Barre@st.com> <CAPDyKFpLTEwrBagJrd98Zyrd_pwJa9Zkgsi+geZainQV+OgpOQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mSxgbZZZvrAyzONB"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181205134618.56223758@bbrezillon>
+In-Reply-To: <CAPDyKFpLTEwrBagJrd98Zyrd_pwJa9Zkgsi+geZainQV+OgpOQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Vignesh R <vigneshr@ti.com>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Ludovic Barre <ludovic.Barre@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 20 Nov 2018 at 10:42, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On 7 November 2018 at 10:30, Ludovic Barre <ludovic.Barre@st.com> wrote:
+> > From: Ludovic Barre <ludovic.barre@st.com>
+> >
+> > Refer to "4.15 set block count command" of sd specification:
+> > Host needs to issue CMD12 if any error is detected in
+> > the CMD18 and CMD25 operations.
+> >
+> > In sbc case, the data->stop is fill by framework.
+> >
+> > Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> > ---
+> >  drivers/mmc/host/mmci.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> > index 82bab35..13fa640 100644
+> > --- a/drivers/mmc/host/mmci.c
+> > +++ b/drivers/mmc/host/mmci.c
+> > @@ -1190,11 +1190,10 @@ mmci_data_irq(struct mmci_host *host, struct mmc_data *data,
+> >                         /* The error clause is handled above, success! */
+> >                         data->bytes_xfered = data->blksz * data->blocks;
+> >
+> > -               if (!data->stop || host->mrq->sbc) {
+> > +               if (!data->stop || (host->mrq->sbc && !data->error))
+> >                         mmci_request_end(host, data->mrq);
+> > -               } else {
+> > +               else
+> >                         mmci_start_command(host, data->stop, 0);
+>
+> This looks correct to me!
+>
+> Although, just wanted to double check that you tested this for a case
+> where we have host->mrq->sbc set and got an error in data->error? I
+> guess it can be tricky, so I was thinking of manually trying to
+> instruct the code, to set an error in data->error, at some point to
+> trigger this code. That would at least give us some confidence that it
+> works as expected.
 
---mSxgbZZZvrAyzONB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I did some manual tests to trigger the error path. As far as I can
+tell, it works as expected and I observes that the core is able to
+recover and re-send the request.
 
-On Wed, Dec 05, 2018 at 01:46:18PM +0100, Boris Brezillon wrote:
-> Vignesh R <vigneshr@ti.com> wrote:
+[...]
 
-> > >>   spi: nxp-fspi: add octal mode flag bit for octal support =20
+So, I have added my tested-by tag and applied this for next. Thanks!
 
-> Mark, I think you can pick this one too.
+In regards to patch2/2 I am awaiting your update.
 
-I don't have this any more, it looked like this was stuck behind the
-otehr MTD changes which seemed to have problems.  If someone could
-resend?
-
---mSxgbZZZvrAyzONB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwH3hsACgkQJNaLcl1U
-h9AQ7gf/aJLlaDvMy6aZuK7FrotyfySX7CJt+US7KUsb63DCSjupYyNQDjrU+hY+
-MkA22EG1ml0RP1q5rOL+fgDnWtogzWGPApXwhT/R2prcgyK0YKqhk8eM2dAhzT6L
-JfO+E9rGSM3rBYu5XaGZ7h++3H8mgH9GwkK/GQhgdSc/rOsUJtFZWpBr0+9AYlgi
-UvQunc+4z95nlS73u7ZB+LOvC4L+h8vSp6yPIeN+TIpWc7pwSpbbCcYc3Rv81Usw
-KqmpkRh9/rgai7zX844+tqa9KqPIZ++29cZHd2vmItMO0PMLcG+fk3S0jps5q27x
-ZdLFbvdUupJ3Klk6uxPk8REewVaDog==
-=6Sez
------END PGP SIGNATURE-----
-
---mSxgbZZZvrAyzONB--
+Kind regards
+Uffe
