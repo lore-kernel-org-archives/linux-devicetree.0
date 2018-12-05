@@ -1,62 +1,45 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 002/123] spi: uniphier: fix incorrect property items
-Date: Wed,  5 Dec 2018 04:33:54 -0500
-Message-ID: <20181205093555.5386-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 008/123] ARM: dts: am3517: Fix pinmuxing for CD on MMC1
+Date: Wed,  5 Dec 2018 04:34:00 -0500
+Message-ID: <20181205093555.5386-8-sashal@kernel.org>
 References: <20181205093555.5386-1-sashal@kernel.org>
-Return-path: <stable-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181205093555.5386-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Keiji Hayashibara <hayashibara.keiji@socionext.com>, Mark Brown <broonie@kernel.org>, Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Adam Ford <aford173@gmail.com>, Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+From: Adam Ford <aford173@gmail.com>
 
-[ Upstream commit 3511ba7d4ca6f39e2d060bb94e42a41ad1fee7bf ]
+[ Upstream commit e7f4ffffa972db4820c23ff9831a6a4f3f6d8cc5 ]
 
-This commit fixes incorrect property because it was different
-from the actual.
-The parameters of '#address-cells' and '#size-cells' were removed,
-and 'interrupts', 'pinctrl-names' and 'pinctrl-0' were added.
+The MMC1 is active low, not active high.  For some reason,
+this worked with different combination of U-Boot and kernels,
+but it's supposed to be active low and is currently broken.
 
-Fixes: 4dcd5c2781f3 ("spi: add DT bindings for UniPhier SPI controller")
-Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: cfaa856a2510 ("ARM: dts: am3517: Add pinmuxing, CD and
+WP for MMC1") #kernel 4.18+
+
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../devicetree/bindings/spi/spi-uniphier.txt       | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/am3517-evm.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-uniphier.txt b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
-index 504a4ecfc7b1..b04e66a52de5 100644
---- a/Documentation/devicetree/bindings/spi/spi-uniphier.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
-@@ -5,18 +5,20 @@ UniPhier SoCs have SCSSI which supports SPI single channel.
- Required properties:
-  - compatible: should be "socionext,uniphier-scssi"
-  - reg: address and length of the spi master registers
-- - #address-cells: must be <1>, see spi-bus.txt
-- - #size-cells: must be <0>, see spi-bus.txt
-- - clocks: A phandle to the clock for the device.
-- - resets: A phandle to the reset control for the device.
-+ - interrupts: a single interrupt specifier
-+ - pinctrl-names: should be "default"
-+ - pinctrl-0: pin control state for the default mode
-+ - clocks: a phandle to the clock for the device
-+ - resets: a phandle to the reset control for the device
- 
- Example:
- 
- spi0: spi@54006000 {
- 	compatible = "socionext,uniphier-scssi";
- 	reg = <0x54006000 0x100>;
--	#address-cells = <1>;
--	#size-cells = <0>;
-+	interrupts = <0 39 4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spi0>;
- 	clocks = <&peri_clk 11>;
- 	resets = <&peri_rst 11>;
+diff --git a/arch/arm/boot/dts/am3517-evm.dts b/arch/arm/boot/dts/am3517-evm.dts
+index 1d158cfda15f..c45aef806870 100644
+--- a/arch/arm/boot/dts/am3517-evm.dts
++++ b/arch/arm/boot/dts/am3517-evm.dts
+@@ -227,7 +227,7 @@
+ 	vmmc-supply = <&vmmc_fixed>;
+ 	bus-width = <4>;
+ 	wp-gpios = <&gpio4 30 GPIO_ACTIVE_HIGH>; /* gpio_126 */
+-	cd-gpios = <&gpio4 31 GPIO_ACTIVE_HIGH>; /* gpio_127 */
++	cd-gpios = <&gpio4 31 GPIO_ACTIVE_LOW>; /* gpio_127 */
  };
+ 
+ &mmc3 {
 -- 
 2.17.1
