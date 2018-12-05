@@ -1,42 +1,55 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v1 2/3] arm64: dts: qcom: sdm845: Add SD nodes
-Date: Wed, 5 Dec 2018 13:07:35 -0800
-Message-ID: <CAD=FV=Wqrje73K+o0NvHSriVatnDu44jGqvc_nB7PMhjH6-cvA@mail.gmail.com>
-References: <20181128223428.177313-1-evgreen@chromium.org> <20181128223428.177313-3-evgreen@chromium.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] clk: Use of_node_name_eq for node name comparisons
+Date: Wed, 5 Dec 2018 22:16:45 +0100
+Message-ID: <CAMuHMdXqww7c26SAc52b8Uum5cUfYm9dQEkQ3SYmhgCDOSn_xQ@mail.gmail.com>
+References: <20181205195050.4759-5-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181128223428.177313-3-evgreen@chromium.org>
+In-Reply-To: <20181205195050.4759-5-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Evan Green <evgreen@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:TI ETHERNET SWITCH DRIVER (CPSW)" <linux-omap@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Dec 5, 2018 at 8:50 PM Rob Herring <robh@kernel.org> wrote:
+> Convert string compares of DT node names to use of_node_name_eq helper
+> instead. This removes direct access to the node name pointer.
+>
+> For instances using of_node_cmp, this has the side effect of now using
+> case sensitive comparisons. This should not matter for any FDT based
+> system which all of these are.
+>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Tero Kristo <t-kristo@ti.com>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: linux-renesas-soc@vger.kernel.org
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-omap@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-On Wed, Nov 28, 2018 at 2:34 PM Evan Green <evgreen@chromium.org> wrote:
->
-> Add the SD controller to SDM845.
->
-> Signed-off-by: Evan Green <evgreen@chromium.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
 > ---
->
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+>  drivers/clk/renesas/clk-mstp.c   |  2 +-
+>  drivers/clk/ti/clkctrl.c         |  2 +-
+>  drivers/clk/ti/dpll.c            |  2 +-
+>  drivers/clk/ux500/u8500_of_clk.c | 10 +++++-----
+>  4 files changed, 8 insertions(+), 8 deletions(-)
 
-Looks right to me.  Possibly you might want to make it known in the
-subject and description that this is only sdhc_2 since there are two
-SD controllers in SDM845 (oddly numbered sdc2 and sdc4 in the
-documentation).  sdc2 (the one you're supporting here) is the
-dual-voltage one (supports higher speeds) and also the only one hooked
-up on MTP I think.  ...so maybe nobody will ever use sdhc_4, but it
-might be worth mentioning anyway.  ;-)
+For drivers/clk/renesas/clk-mstp.c :
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Other than that suggestion this looks good to me.
+Gr{oetje,eeting}s,
 
-[note to Andy: please double-check that this ends up in the right sort
-order when applying.  If you happen to apply the Quad SPI patch first
-then "git am" might end up putting the SDHC_2 node _after_ the Quad
-SPI but it should sort numerically before it]
+                        Geert
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
