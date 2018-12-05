@@ -1,68 +1,112 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH] ARM: dts: Provide support for reading ID code from MVB
- device (BK4)
-Date: Wed, 5 Dec 2018 17:40:04 +0100
-Message-ID: <20181205174004.71f54042@jawa>
-References: <20181113121213.14296-1-lukma@denx.de>
-        <20181126143619.GB31334@dragon>
-        <20181203103333.111c2463@jawa>
-        <CAOMZO5AJPiexbvHUq+vsz5zz6gNwL3O1KJ9ka_XPFotac2Sb=A@mail.gmail.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH 0/7] microblaze: fix various problems in building boot
+ images
+Date: Wed, 5 Dec 2018 17:41:01 +0100
+Message-ID: <dd726c23-7c37-2b38-5b9f-a4edc391511d@monstr.eu>
+References: <1543823457-32478-1-git-send-email-yamada.masahiro@socionext.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/zBu5tezDSu05=agJwMr.Hrn"; protocol="application/pgp-signature"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="svNOVL13q6FxCdhSHHW6hgLU8MdLu4uy6"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5AJPiexbvHUq+vsz5zz6gNwL3O1KJ9ka_XPFotac2Sb=A@mail.gmail.com>
+In-Reply-To: <1543823457-32478-1-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Fabio Estevam <fabio.estevam@nxp.com>
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-kbuild@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/zBu5tezDSu05=agJwMr.Hrn
-Content-Type: text/plain; charset=US-ASCII
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--svNOVL13q6FxCdhSHHW6hgLU8MdLu4uy6
+Content-Type: multipart/mixed; boundary="MSVYFBXQIqseltohcSuoSjzf0VJrIOtDM";
+ protected-headers="v1"
+From: Michal Simek <monstr@monstr.eu>
+Reply-To: monstr@monstr.eu
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-kbuild@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>
+Message-ID: <dd726c23-7c37-2b38-5b9f-a4edc391511d@monstr.eu>
+Subject: Re: [PATCH 0/7] microblaze: fix various problems in building boot
+ images
+References: <1543823457-32478-1-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <1543823457-32478-1-git-send-email-yamada.masahiro@socionext.com>
+
+--MSVYFBXQIqseltohcSuoSjzf0VJrIOtDM
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-Hi Fabio,
-
-> Hi Lukasz,
+On 03. 12. 18 8:50, Masahiro Yamada wrote:
+> This patch set fixes various issues in microblaze Makefiles.
 >=20
-> On Mon, Dec 3, 2018 at 7:33 AM Lukasz Majewski <lukma@denx.de> wrote:
+> BTW, "simpleImage.<dt>" works like a phony target to generate the
+> following four images, where the first three are just aliases.
 >=20
-> > > > +           72xx165@0 { =20
-> > >
-> > > Please use a generic name for the node. =20
-> >
-> > This is a bit tricky. =20
+>  - arch/microblaze/boot/simpleImage.<dt>:
+>          identical to arch/microblaze/boot/linux.bin
+
+It is not - fdt section should be empty.
+simpleImage has this section filled.
+
 >=20
-> What about using 'gpio@0' like described in
-> Documentation/devicetree/bindings/gpio/gpio-pisosr.txt ?
+>  - arch/microblaze/boot/simpleImage.<dt>.unstrip:
+>          identical to vmlinux
 
-Seems like a good idea. Thanks.
+The same here with filled section.
+
+>=20
+>  - arch/microblaze/boot/simpleImage.<dt>.ub:
+>          identical to arch/microblaze/boot/linux.bin.ub
+
+as above.
+
+>=20
+>  - arch/microblaze/boot/simpleImage.<dt>.strip:
+>          stripped vmlinux
+
+And this is there because unstrip version is quite huge and for early
+issues you need to know only some symbols that's why debugger is not
+overflow with stuff which none needs.
+Maybe this is not an issue now but that strip version is used a lot.
 
 
-Best regards,
+>=20
+> I am not sure how much useful those copies are,
+> but, I tried my best to keep the same behavior.
+>=20
+> IMHO, I guess DTB=3D<dt> would be more sensible,
+> but it is up to Michal.
 
-Lukasz Majewski
+What do you mean by this exactly?
 
---
+Definitely thanks for looking at this.
+Michal
 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
 
---Sig_/zBu5tezDSu05=agJwMr.Hrn
-Content-Type: application/pgp-signature
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
+
+
+
+--MSVYFBXQIqseltohcSuoSjzf0VJrIOtDM--
+
+--svNOVL13q6FxCdhSHHW6hgLU8MdLu4uy6
+Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlwH/2QACgkQAR8vZIA0
-zr0WLwgAvK6HXDHE6u5f/QF28kmiVcuLqopfyHnLPnGs/EMn/jrcq0Mfpjn9FJ7/
-hlmmga8W+4W6bMb7mrdEkfTRRkeORISNn1Y5VXXTnfqFrbRw74L/ooxWcAE+cu0t
-KidkntQwMxr6msaLQUy/bJKSHKmDT5YF720dusi3B6lJccmiqckV/23X1v45qE2j
-yJL65GpaD3Yyx7eHlYekbipj58GkUYE16s/SxOBr9AyhIkUxWr2ZvtoChohI5ZBp
-Xq1uo8mFSqLKmY4Ane1PWQeh3K+6g1jtP5ySa8pNs/VK55xXpkQe/nDuIi5fDT3Y
-rYNee+BQ2vaaMbh4O9Hq67GCcx1cRg==
-=4+TV
+iEYEARECAAYFAlwH/54ACgkQykllyylKDCEAqgCfR9/DxCsXl6NlRGgU9JZ31euK
+5zoAn17ir1wuoX67oPoeL52wjTf5mTXt
+=jAbi
 -----END PGP SIGNATURE-----
 
---Sig_/zBu5tezDSu05=agJwMr.Hrn--
+--svNOVL13q6FxCdhSHHW6hgLU8MdLu4uy6--
