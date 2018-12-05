@@ -1,27 +1,83 @@
-Return-Path: <SRS0=wIoc=OO=verge.net.au=horms@kernel.org>
-Date: Wed, 5 Dec 2018 11:53:44 -0800
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 1/5] ARM: dts: iwg20d-q7-common: Move cmt/rwdt node
- out of RZ/G1M SOM
-Message-ID: <20181205195344.yz6sj53ulddp3tpp@verge.net.au>
+Return-Path: <SRS0=5gDw=OO=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v2 1/5] ARM: dts: iwg20d-q7-common: Move cmt/rwdt node out of RZ/G1M SOM
+Date: Wed,  5 Dec 2018 09:06:51 +0000
+Message-Id: <1544000815-28069-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1544000815-28069-1-git-send-email-biju.das@bp.renesas.com>
 References: <1544000815-28069-1-git-send-email-biju.das@bp.renesas.com>
- <1544000815-28069-2-git-send-email-biju.das@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1544000815-28069-2-git-send-email-biju.das@bp.renesas.com>
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Dec 05, 2018 at 09:06:51AM +0000, Biju Das wrote:
-> The iWave RZ/G1N board is almost identical to RZ/G1M. cmt and rwdt modules
-> are SoC specific and should be part of board dts rather than SoM dtsi. By
-> moving these nodes to the common dtsi it allows cmt and rwdt to be enabled
-> on both of these boards with less lines of code.
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+The iWave RZ/G1N board is almost identical to RZ/G1M. cmt and rwdt modules
+are SoC specific and should be part of board dts rather than SoM dtsi. By
+moving these nodes to the common dtsi it allows cmt and rwdt to be enabled
+on both of these boards with less lines of code.
 
-Thanks, I have this in my tree for v4.21.
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+V1-->v2 
+	* No change
+---
+ arch/arm/boot/dts/iwg20d-q7-common.dtsi | 9 +++++++++
+ arch/arm/boot/dts/r8a7743-iwg20m.dtsi   | 9 ---------
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm/boot/dts/iwg20d-q7-common.dtsi b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+index ca9154dd..e2b1ab9 100644
+--- a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
++++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+@@ -116,6 +116,10 @@
+ 	status = "okay";
+ };
+ 
++&cmt0 {
++	status = "okay";
++};
++
+ &hsusb {
+ 	status = "okay";
+ 	pinctrl-0 = <&usb0_pins>;
+@@ -230,6 +234,11 @@
+ 	};
+ };
+ 
++&rwdt {
++	timeout-sec = <60>;
++	status = "okay";
++};
++
+ &scif0 {
+ 	pinctrl-0 = <&scif0_pins>;
+ 	pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/r8a7743-iwg20m.dtsi b/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
+index 0e2e033..b3fee1d 100644
+--- a/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
++++ b/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
+@@ -31,10 +31,6 @@
+ 	};
+ };
+ 
+-&cmt0 {
+-	status = "okay";
+-};
+-
+ &extal_clk {
+ 	clock-frequency = <20000000>;
+ };
+@@ -88,11 +84,6 @@
+ 	};
+ };
+ 
+-&rwdt {
+-	timeout-sec = <60>;
+-	status = "okay";
+-};
+-
+ &sdhi0 {
+ 	pinctrl-0 = <&sdhi0_pins>;
+ 	pinctrl-names = "default";
+-- 
+2.7.4
