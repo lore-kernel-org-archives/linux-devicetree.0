@@ -1,83 +1,49 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH 03/19] dt-bindings: cpufreq: tegra124: remove
- vdd-cpu-supply from required properties
-Date: Wed, 5 Dec 2018 11:37:50 +0200
-Message-ID: <20181205093750.GG26056@pdeschrijver-desktop.Nvidia.com>
-References: <20181204092548.3038-1-josephl@nvidia.com>
- <20181204092548.3038-4-josephl@nvidia.com>
- <20181204153600.GA26056@pdeschrijver-desktop.Nvidia.com>
- <3a6f4512-db3f-4cba-21da-572edf14c5dc@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <3a6f4512-db3f-4cba-21da-572edf14c5dc@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joseph Lo <josephl@nvidia.com>
-Cc: devicetree@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 051/123] ARM: dts: at91: sama5d2: use the divided clock for SMC
+Date: Wed,  5 Dec 2018 04:34:43 -0500
+Message-ID: <20181205093555.5386-51-sashal@kernel.org>
+References: <20181205093555.5386-1-sashal@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181205093555.5386-1-sashal@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Romain Izard <romain.izard.pro@gmail.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 05, 2018 at 11:05:58AM +0800, Joseph Lo wrote:
-> On 12/4/18 11:36 PM, Peter De Schrijver wrote:
-> > On Tue, Dec 04, 2018 at 05:25:32PM +0800, Joseph Lo wrote:
-> > > The Tegra124 cpufreq driver works only with DFLL clock, which is a
-> > > hardware-based frequency/voltage controller. The driver doesn't need to
-> > > control the regulator itself. Hence remove that.
-> > > 
-> > 
-> > I think this is required for DFLL controlled I2C regulators because the
-> > regulator is queried for voltage selectors and I2C slave ID?
-> > 
-> 
-> Hi Peter,
-> 
-> Yes, it's required for DFLL-I2C mode and defined in DFLL node. It's not
-> needed here in the CPU node for CPU freq driver to handle that. Hence remove
-> that.
-> 
+From: Romain Izard <romain.izard.pro@gmail.com>
 
-Ah right. So yes, this is fine then.
+[ Upstream commit 4ab7ca092c3c7ac8b16aa28eba723a8868f82f14 ]
 
-Peter.
+The SAMA5D2 is different from SAMA5D3 and SAMA5D4, as there are two
+different clocks for the peripherals in the SoC. The Static Memory
+controller is connected to the divided master clock.
 
-> Thanks,
-> Joseph
-> 
-> 
-> > 
-> > > Cc: devicetree@vger.kernel.org
-> > > Signed-off-by: Joseph Lo <josephl@nvidia.com>
-> > > ---
-> > >   .../devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt     | 2 --
-> > >   1 file changed, 2 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
-> > > index b1669fbfb740..031545a29caf 100644
-> > > --- a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
-> > > +++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
-> > > @@ -13,7 +13,6 @@ Required properties:
-> > >     - pll_x: Fast PLL clocksource.
-> > >     - pll_p: Auxiliary PLL used during fast PLL rate changes.
-> > >     - dfll: Fast DFLL clocksource that also automatically scales CPU voltage.
-> > > -- vdd-cpu-supply: Regulator for CPU voltage
-> > >   Optional properties:
-> > >   - clock-latency: Specify the possible maximum transition latency for clock,
-> > > @@ -37,7 +36,6 @@ cpus {
-> > >   			 <&dfll>;
-> > >   		clock-names = "cpu_g", "cpu_lp", "pll_x", "pll_p", "dfll";
-> > >   		clock-latency = <300000>;
-> > > -		vdd-cpu-supply: <&vdd_cpu>;
-> > >   	};
-> > >   	<...>
-> > > -- 
-> > > 2.19.2
-> > > 
+Unfortunately, the device tree does not correctly show this and uses the
+master clock directly. This clock is then used by the code for the NAND
+controller to calculate the timings for the controller, and we end up with
+slow NAND Flash access.
+
+Fix the device tree, and the performance of Flash access is improved.
+
+Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/sama5d2.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+index 61f68e5c48e9..b405992eb601 100644
+--- a/arch/arm/boot/dts/sama5d2.dtsi
++++ b/arch/arm/boot/dts/sama5d2.dtsi
+@@ -308,7 +308,7 @@
+ 				  0x1 0x0 0x60000000 0x10000000
+ 				  0x2 0x0 0x70000000 0x10000000
+ 				  0x3 0x0 0x80000000 0x10000000>;
+-			clocks = <&mck>;
++			clocks = <&h32ck>;
+ 			status = "disabled";
+ 
+ 			nand_controller: nand-controller {
+-- 
+2.17.1
