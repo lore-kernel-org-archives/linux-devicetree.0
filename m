@@ -1,58 +1,53 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 2/4] ARM: dts: am437x: Move l4 child devices to probe
- them with ti-sysc
-Date: Wed, 5 Dec 2018 11:00:19 -0800
-Message-ID: <20181205190019.GG6707@atomide.com>
-References: <20180925000545.22931-1-tony@atomide.com>
- <20180925000545.22931-3-tony@atomide.com>
- <f890f989-bfd0-47eb-66e0-5a8573e398b7@ti.com>
- <20181204181121.GC6707@atomide.com>
- <20181204231833.GF6707@atomide.com>
- <3feb7078-5690-abf6-2a9d-a65807ee701a@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH v2] misc: cxl: Use device_type helpers to access the node type
+Date: Wed,  5 Dec 2018 13:16:55 -0600
+Message-ID: <20181205191655.14612-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <3feb7078-5690-abf6-2a9d-a65807ee701a@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>, Tero Kristo <t-kristo@ti.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org, Andrew Donnellan <andrew.donnellan@au1.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [181205 06:12]:
-> On 05/12/2018 1.18, Tony Lindgren wrote:
-> > After applying " drm/omap: fix bus_flags for panel-dpi" LCD
-> > works again. But modprobe of snd-soc-davinci-mcasp and
-> > snd-soc-tlv320aic3x still does not show anything with aplay -l.
-> 
-> Hrm, why they are not loaded automatically?
+Remove directly accessing device_type property and use the
+of_node_is_type accessor instead. While not using it here, this is
+part of eventually removing the struct device_node.type pointer.
 
-Hmm I guess I'm missing some piece of software I've
-removed from my system years ago already? :)
+Cc: Frederic Barrat <fbarrat@linux.vnet.ibm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linuxppc-dev@lists.ozlabs.org
+Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+v2:
+- Reword commit message as this change was using the .type ptr.
 
-> > Do I need some other patch or codec driver?
-> 
-> snd-soc-edma
-> snd-soc-davinci-mcasp
-> snd-soc-tlv320aic3x
-> snd-soc-simple-card
+ drivers/misc/cxl/pci.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Oh I thought I tried that but maybe I tried with graph card.
-Got it working now thanks.
-
-I think we're missing the top level ranges for mcasp l3 port
-and the translation goes wrong there, I'll fix it hopefully
-today.
-
-Regards,
-
-Tony
+diff --git a/drivers/misc/cxl/pci.c b/drivers/misc/cxl/pci.c
+index b66d832d3233..c79ba1c699ad 100644
+--- a/drivers/misc/cxl/pci.c
++++ b/drivers/misc/cxl/pci.c
+@@ -1718,7 +1718,6 @@ int cxl_slot_is_switched(struct pci_dev *dev)
+ {
+ 	struct device_node *np;
+ 	int depth = 0;
+-	const __be32 *prop;
+ 
+ 	if (!(np = pci_device_to_OF_node(dev))) {
+ 		pr_err("cxl: np = NULL\n");
+@@ -1727,8 +1726,7 @@ int cxl_slot_is_switched(struct pci_dev *dev)
+ 	of_node_get(np);
+ 	while (np) {
+ 		np = of_get_next_parent(np);
+-		prop = of_get_property(np, "device_type", NULL);
+-		if (!prop || strcmp((char *)prop, "pciex"))
++		if (!of_node_is_type(np, "pciex"))
+ 			break;
+ 		depth++;
+ 	}
+-- 
+2.19.1
