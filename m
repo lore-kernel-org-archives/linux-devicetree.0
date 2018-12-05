@@ -1,81 +1,41 @@
-From: Joseph Lo <josephl@nvidia.com>
-Subject: Re: [PATCH 04/19] dt-bindings: cpufreq: tegra124: remove cpu_lp clock
- from required properties
-Date: Wed, 5 Dec 2018 11:10:08 +0800
-Message-ID: <d74b8cf3-a072-a53c-2408-9f479998f5d3@nvidia.com>
-References: <20181204092548.3038-1-josephl@nvidia.com>
- <20181204092548.3038-5-josephl@nvidia.com>
- <20181204153707.GB26056@pdeschrijver-desktop.Nvidia.com>
+From: Jian Hu <jian.hu@amlogic.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: clk: meson-g12a: Add G12A EE Clock
+ Bindings
+Date: Wed, 5 Dec 2018 11:10:51 +0800
+Message-ID: <5d181208-1d51-fb1d-da8f-d8e1f55709ac@amlogic.com>
+References: <1543498917-98605-1-git-send-email-jian.hu@amlogic.com>
+ <1543498917-98605-2-git-send-email-jian.hu@amlogic.com>
+ <20181203230645.GA14522@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181204153707.GB26056@pdeschrijver-desktop.Nvidia.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181203230645.GA14522@bogus>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: devicetree@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Yixun Lan <yixun.lan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/4/18 11:37 PM, Peter De Schrijver wrote:
-> On Tue, Dec 04, 2018 at 05:25:33PM +0800, Joseph Lo wrote:
->> The cpu_lp clock property is only needed when the CPUfreq driver
->> supports CPU cluster switching. But it was not a design for this driver
->> and it didn't handle that as well. So removing this property.
+Hi, Rob
+
+I will add it in next version, thanks.
+
+On 2018/12/4 7:06, Rob Herring wrote:
+> On Thu, Nov 29, 2018 at 09:41:56PM +0800, Jian Hu wrote:
+>> Add new clock controller compatible and dt-bingdings headers
+>> for the Everything-Else domain of the g12a SoC
 >>
-> 
-> I would mark it optional. This means current DTs will still be
-> technically compatible with this binding doc.
-
-Hi Peter,
-
-There is no compatible issue of this property. Because the driver 
-doesn't use this clock at all. Removing this won't cause any 
-backward-compatible issue.
-
-Same as previous patch for removing vdd-cpu-supply property once we fix 
-that in the driver. The old dt binding still works with the new driver.
-
-> 
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Joseph Lo <josephl@nvidia.com>
+>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
 >> ---
->>   .../devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt   | 4 +---
->>   1 file changed, 1 insertion(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
->> index 031545a29caf..03196d5ea515 100644
->> --- a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
->> +++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
->> @@ -9,7 +9,6 @@ Required properties:
->>     See ../clocks/clock-bindings.txt for details.
->>   - clock-names: Must include the following entries:
->>     - cpu_g: Clock mux for the fast CPU cluster.
->> -  - cpu_lp: Clock mux for the low-power CPU cluster.
->>     - pll_x: Fast PLL clocksource.
->>     - pll_p: Auxiliary PLL used during fast PLL rate changes.
->>     - dfll: Fast DFLL clocksource that also automatically scales CPU voltage.
->> @@ -30,11 +29,10 @@ cpus {
->>   		reg = <0>;
->>   
->>   		clocks = <&tegra_car TEGRA124_CLK_CCLK_G>,
->> -			 <&tegra_car TEGRA124_CLK_CCLK_LP>,
->>   			 <&tegra_car TEGRA124_CLK_PLL_X>,
->>   			 <&tegra_car TEGRA124_CLK_PLL_P>,
->>   			 <&dfll>;
->> -		clock-names = "cpu_g", "cpu_lp", "pll_x", "pll_p", "dfll";
->> +		clock-names = "cpu_g", "pll_x", "pll_p", "dfll";
->>   		clock-latency = <300000>;
->>   	};
->>   
->> -- 
->> 2.19.2
->>
+>>   .../bindings/clock/amlogic,gxbb-clkc.txt           |  1 +
+>>   include/dt-bindings/clock/g12a-clkc.h              | 93 ++++++++++++++++++++++
+>>   2 files changed, 94 insertions(+)
+>>   create mode 100644 include/dt-bindings/clock/g12a-clkc.h
+> 
+> Please add acks/reviewed-bys when posting new versions.
+> 
+> Rob
+> 
+> .
+> 
