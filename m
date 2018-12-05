@@ -1,44 +1,25 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 03/45] ARM: dts: logicpd-somlv: Fix interrupt on mmc3_dat1
-Date: Wed,  5 Dec 2018 04:46:24 -0500
-Message-ID: <20181205094706.7225-3-sashal@kernel.org>
-References: <20181205094706.7225-1-sashal@kernel.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 0/4] add uart DMA function
+Date: Wed, 5 Dec 2018 11:03:06 +0100
+Message-ID: <20181205100306.GA12106@kroah.com>
+References: <1543999380-7946-1-git-send-email-long.cheng@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181205094706.7225-1-sashal@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1543999380-7946-1-git-send-email-long.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Adam Ford <aford173@gmail.com>, Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+To: Long Cheng <long.cheng@mediatek.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, YT Shen <yt.shen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+On Wed, Dec 05, 2018 at 04:42:56PM +0800, Long Cheng wrote:
+> In Mediatek SOCs, the uart can support DMA function.
+> Base on DMA engine formwork, we add the DMA code to support uart. And put the code under drivers/dma.
+> 
+> This series contains document bindings, Kconfig to control the function enable or not,
+> device tree including interrupt and dma device node, the code of UART DM
 
-[ Upstream commit 3d8b804bc528d3720ec0c39c212af92dafaf6e84 ]
+I've queued up patches 1 and 3 from this series in my tty tree, thanks.
 
-The interrupt on mmc3_dat1 is wrong which prevents this from
-appearing in /proc/interrupts.
-
-Fixes: ab8dd3aed011 ("ARM: DTS: Add minimal Support for Logic PD
-DM3730 SOM-LV") #Kernel 4.9+
-
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/logicpd-som-lv.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/logicpd-som-lv.dtsi b/arch/arm/boot/dts/logicpd-som-lv.dtsi
-index e262fa9ef334..876ed5f2922c 100644
---- a/arch/arm/boot/dts/logicpd-som-lv.dtsi
-+++ b/arch/arm/boot/dts/logicpd-som-lv.dtsi
-@@ -122,7 +122,7 @@
- };
- 
- &mmc3 {
--	interrupts-extended = <&intc 94 &omap3_pmx_core2 0x46>;
-+	interrupts-extended = <&intc 94 &omap3_pmx_core 0x136>;
- 	pinctrl-0 = <&mmc3_pins &wl127x_gpio>;
- 	pinctrl-names = "default";
- 	vmmc-supply = <&wl12xx_vmmc>;
--- 
-2.17.1
+greg k-h
