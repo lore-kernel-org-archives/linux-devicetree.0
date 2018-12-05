@@ -1,101 +1,153 @@
-From: Alan Douglas <adouglas@cadence.com>
-Subject: RE: [RFC PATCH v2 04/15] usb:cdns3: Driver initialization code.
-Date: Wed, 5 Dec 2018 08:55:28 +0000
-Message-ID: <MWHPR07MB3502A7A07AD114D6343BD6C0D8A80@MWHPR07MB3502.namprd07.prod.outlook.com>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [RFC PATCH v2 04/15] usb:cdns3: Driver initialization code.
+Date: Wed, 5 Dec 2018 16:57:12 +0800
+Message-ID: <CAL411-rdMjjWBB0sKV690kpGdqiTPpMTaKsJ6aEaABgzig=cFw@mail.gmail.com>
 References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
- <1542535751-16079-5-git-send-email-pawell@cadence.com>
- <CAL411-rWbQ6yj1r_aaLP8UagVRJhsn7xdznQwXS9enkxXTs2LA@mail.gmail.com>
- <BYAPR07MB4709A8E4B0B0CC05A842B708DDAD0@BYAPR07MB4709.namprd07.prod.outlook.com>
- <CAL411-rzhH+y-b0-xze4-WmeVtey4bXt4Jc6TWYyfw6E8x-5Eg@mail.gmail.com>
- <BYAPR07MB47090A16A7A8A85C6C3FD46ADDA80@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <1542535751-16079-5-git-send-email-pawell@cadence.com> <5BF7E5E8.3090406@ti.com>
+ <CAL411-rWc23fbP0Ny9Kfdpe9ESUSVt5X00G1uFjJf+rj-2jWzg@mail.gmail.com> <5C065AEE.4010205@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR07MB47090A16A7A8A85C6C3FD46ADDA80@BYAPR07MB4709.namprd07.prod.outlook.com>
-Content-Language: en-US
+In-Reply-To: <5C065AEE.4010205@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, Peter Chen <hzpeterchen@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, lkml <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: rogerq@ti.com
+Cc: pawell@cadence.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, adouglas@cadence.com, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGV0ZXIsDQoNCk9uIDA1IERlY2VtYmVyIDIwMTggMDc6MjAsIFBhd2VsIExhc3pjemFrIHdy
-b3RlOg0KPiBIaSwNCj4gDQo+ID4+ID4+DQo+ID4+ID4+IFBhdGNoIGFkZHMgY29yZS5jIGFuZCBj
-b3JlLmggZmlsZSB0aGF0IGltcGxlbWVudHMgaW5pdGlhbGl6YXRpb24NCj4gPj4gPj4gb2YgcGxh
-dGZvcm0gZHJpdmVyIGFuZCBhZGRzIGZ1bmN0aW9uIHJlc3BvbnNpYmxlIGZvciBzZWxlY3Rpbmcs
-DQo+ID4+ID4+IHN3aXRjaGluZyBhbmQgcnVubmluZyBhcHByb3ByaWF0ZSBEZXZpY2UvSG9zdCBt
-b2RlLg0KPiA+PiA+Pg0KPiA+PiA+PiBTaWduZWQtb2ZmLWJ5OiBQYXdlbCBMYXN6Y3phayA8cGF3
-ZWxsQGNhZGVuY2UuY29tPg0KPiA+PiA+PiAtLS0NCj4gPj4gPj4gIGRyaXZlcnMvdXNiL2NkbnMz
-L01ha2VmaWxlIHwgICAyICsNCj4gPj4gPj4gIGRyaXZlcnMvdXNiL2NkbnMzL2NvcmUuYyAgIHwg
-NDEzICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPj4gPj4gIGRyaXZl
-cnMvdXNiL2NkbnMzL2NvcmUuaCAgIHwgMTAwICsrKysrKysrKw0KPiA+PiA+PiAgMyBmaWxlcyBj
-aGFuZ2VkLCA1MTUgaW5zZXJ0aW9ucygrKQ0KPiA+PiA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
-aXZlcnMvdXNiL2NkbnMzL2NvcmUuYw0KPiA+PiA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
-cnMvdXNiL2NkbnMzL2NvcmUuaA0KPiA+PiA+Pg0KPiA+PiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy91c2IvY2RuczMvTWFrZWZpbGUgYi9kcml2ZXJzL3VzYi9jZG5zMy9NYWtlZmlsZQ0KPiA+PiA+
-PiBpbmRleCBkY2RkNjIwMDNjNmEuLjAyZDI1YjIzYzVkMyAxMDA2NDQNCj4gPj4gPj4gLS0tIGEv
-ZHJpdmVycy91c2IvY2RuczMvTWFrZWZpbGUNCj4gPj4gPj4gKysrIGIvZHJpdmVycy91c2IvY2Ru
-czMvTWFrZWZpbGUNCj4gPj4gPj4gQEAgLTEsMyArMSw1IEBADQo+ID4+ID4+ICtvYmotJChDT05G
-SUdfVVNCX0NETlMzKSAgICAgICAgICAgICAgICAgICAgICAgICs9IGNkbnMzLm8NCj4gPj4gPj4g
-IG9iai0kKENPTkZJR19VU0JfQ0ROUzNfUENJX1dSQVApICAgICAgICs9IGNkbnMzLXBjaS5vDQo+
-ID4+ID4+DQo+ID4+ID4+ICtjZG5zMy15ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIDo9IGNvcmUubw0KPiA+PiA+PiAgY2RuczMtcGNpLXkgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgOj0gY2RuczMtcGNpLXdyYXAubw0KPiA+PiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy91c2IvY2RuczMvY29yZS5jIGIvZHJpdmVycy91c2IvY2RuczMvY29yZS5jDQo+ID4+ID4+IG5l
-dyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4+ID4+IGluZGV4IDAwMDAwMDAwMDAwMC4uZjkwNTVkNGRh
-NjdmDQo+ID4+ID4+IC0tLSAvZGV2L251bGwNCj4gPj4gPj4gKysrIGIvZHJpdmVycy91c2IvY2Ru
-czMvY29yZS5jDQo+ID4+ID4+IEBAIC0wLDAgKzEsNDEzIEBADQo+ID4+ID4+ICsvLyBTUERYLUxp
-Y2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiA+PiA+PiArLyoNCj4gPj4gPj4gKyAqIENhZGVu
-Y2UgVVNCU1MgRFJEIERyaXZlci4NCj4gPj4gPj4gKyAqDQo+ID4+ID4+ICsgKiBDb3B5cmlnaHQg
-KEMpIDIwMTggQ2FkZW5jZS4NCj4gPj4gPj4gKyAqDQo+ID4+ID4NCj4gPj4gPlBsZWFzZSBhZGQg
-TlhQIGNvcHlyaWdodCB0b28uDQo+ID4+DQo+ID4+IE9rLCBJIGRvbid0IGtub3cgd2h5IEkgb21p
-dHRlZCB0aGlzLg0KPiA+PiBJIGtub3cgdGhhdCB5b3UgYXJlIHRoZSBtYWluIGF1dGhvciBvZiB0
-aGlzIGZpbGUNCj4gPj4gU29ycnkgZm9yIHRoYXQuDQo+ID4+DQo+ID4+IE9uZSBhZGRpdGlvbmFs
-IHF1ZXN0aW9uLiBXaGF0IHllYXIgSSBzaG91bGQgYWRkIGluIENvcHlyaWdodCBmb3IgTlhQPy4N
-Cj4gPj4gVGhlIG9yaWdpbmFsIHllYXIgMjAxNyBvciBJIHNob3VsZCBtb2RpZmllZCBhbGwgdG8g
-MjAxOC4NCj4gPj4NCj4gPlBsZWFzZSB1c2UgYmVsb3cgY29weXJpZ2h0LCB0aGFua3MuDQo+ID4N
-Cj4gPkNvcHlyaWdodCAyMDE3LTIwMTggTlhQDQo+IA0KPiBJIGFkZCB0aGlzIGluIGFsbCBmaWxl
-cyAgbW9kaWZpZWQgb3IgY3JlYXRlZCBieSB5b3UuDQo+ID4NCj4gPg0KPiA+DQo+ID4+ID4+ICsg
-ICAgICAgbXV0ZXhfaW5pdCgmY2Rucy0+bXV0ZXgpOw0KPiA+PiA+PiArDQo+ID4+ID4+ICsgICAg
-ICAgY2Rucy0+cGh5ID0gZGV2bV9waHlfZ2V0KGRldiwgImNkbnMzLHVzYnBoeSIpOw0KPiA+PiA+
-PiArICAgICAgIGlmIChJU19FUlIoY2Rucy0+cGh5KSkgew0KPiA+PiA+PiArICAgICAgICAgICAg
-ICAgZGV2X2luZm8oZGV2LCAibm8gZ2VuZXJpYyBwaHkgZm91bmRcbiIpOw0KPiA+PiA+PiArICAg
-ICAgICAgICAgICAgY2Rucy0+cGh5ID0gTlVMTDsNCj4gPj4gPj4gKyAgICAgICAgICAgICAgIC8q
-DQo+ID4+ID4+ICsgICAgICAgICAgICAgICAgKiBmYWxsIHRocm91Z2ggaGVyZSENCj4gPj4gPj4g
-KyAgICAgICAgICAgICAgICAqIGlmIG5vIGdlbmVyaWMgcGh5IGZvdW5kLCBwaHkgaW5pdA0KPiA+
-PiA+PiArICAgICAgICAgICAgICAgICogc2hvdWxkIGJlIGRvbmUgdW5kZXIgYm9vdCENCj4gPj4g
-Pj4gKyAgICAgICAgICAgICAgICAqLw0KPiA+PiA+DQo+ID4+ID5JZiB0aGUgcGh5IGRyaXZlciBp
-cyBkZWZlci1wcm9iZWQsIGl0IHdpbGwgYmUgaGVyZSwgaXQgaXMgbm90IGFuIGVycm9yLg0KPiA+
-PiA+SSB0aGluayB5b3UgY291bGQgaGF2ZSBhIGdlbmVyaWMgcGh5IGRyaXZlciBvciB1c2IgZ2Vu
-ZXJpYyBwaHkgZHJpdmVyDQo+ID4+ID4oZHJpdmVycy91c2IvcGh5L3BoeS1nZW5lcmljLmMpIGV2
-ZW4geW91IGRvbid0IG5lZWQgYW55IG9wZXJhdGlvbnMgZm9yDQo+ID4+ID5QSFkuIEl0IHdpbGwg
-YmUgZWFzeSBmb3Igb3RoZXIgcGxhdGZvcm1zLg0KPiA+Pg0KPiA+PiBZZXMsIFJvZ2VyIGFzayBt
-ZSB0byBtb2RpZnkgdGhpcyBmcmFnbWVudC4gSW4gbmV4dCB2ZXJzaW9uIGl0IHdpbGwgbG9vayBs
-aWtlOg0KPiA+PiAgICAgICAgIGNkbnMtPnBoeSA9IGRldm1fcGh5X2dldChkZXYsICJjZG5zMyx1
-c2JwaHkiKTsNCj4gPj4gICAgICAgICBpZiAoSVNfRVJSKGNkbnMtPnBoeSkpIHsNCj4gPj4gICAg
-ICAgICAgICAgICAgIHJldCA9IFBUUl9FUlIoY2Rucy0+cGh5KTsNCj4gPj4gICAgICAgICAgICAg
-ICAgIGlmIChyZXQgPT0gLUVOT1NZUyB8fCByZXQgPT0gLUVOT0RFVikgew0KPiA+PiAgICAgICAg
-ICAgICAgICAgICAgICAgICBjZG5zLT5waHkgPSBOVUxMOw0KPiA+PiAgICAgICAgICAgICAgICAg
-fSBlbHNlIGlmIChyZXQgPT0gLUVQUk9CRV9ERUZFUikgew0KPiA+PiAgICAgICAgICAgICAgICAg
-ICAgICAgICByZXR1cm4gcmV0Ow0KPiA+PiAgICAgICAgICAgICAgICAgfSBlbHNlIHsNCj4gPj4g
-ICAgICAgICAgICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJubyBwaHkgZm91bmRcbiIpOw0K
-PiA+PiAgICAgICAgICAgICAgICAgICAgICAgICBnb3RvIGVycjA7DQo+ID4+ICAgICAgICAgICAg
-ICAgICB9DQo+ID4+ICAgICAgICAgfQ0KPiA+Pg0KPiA+PiAgICAgICAgIHBoeV9pbml0KGNkbnMt
-PnBoeSk7DQo+ID4+DQo+ID4+IFdlIGFyZSBnb2luZyB0byB1c2UgcGh5IGRyaXZlci4gSSBkb24n
-dCBrbm93IGlmIGl0IGNvcnJlY3QuDQo+ID4+IEkgZG9uJ3QgaGF2ZSBleHBlcmllbmNlIGluIHRo
-aXMgZmlsZWQuDQo+ID4+IFdlIG5lZWQgcGh5IGluaXRpYWxpemF0aW9uIGJ1dCBJIGRvbid0IGhh
-dmUgdGVzdGluZyBwbGF0Zm9ybSBub3cuDQo+ID4+IEluIG1vc3QgdXNiIGRyaXZlcnMgSSBzZWUg
-dGhhdCB0aGVyZSBhcmUgdXNlZCB1c2IgcGh5IGRyaXZlcmQgaW5zdGVhZCBwaHkgZGlydmVyZC4N
-Cj4gPj4NCj4gPg0KPiA+QXQgbXkgQ0ROUzMgcGxhdGZvcm0sIHRoZXJlIGFyZSBzb21lIFVTQiBQ
-SFkgaW5pdGlhbGl6YXRpb24gZm9yIHJlZ2lzdGVyIHNldHRpbmcNCj4gPmFuZCBjbG9jayBlbmFi
-bGUuIFlvdSBjb3VsZCBhZGQgZ2VuZXJpYyBQSFkgZHJpdmVyIHVuZGVyOiBkcml2ZXJzL3BoeS9j
-YWRlbmNlLy4NCj4gPg0KPiA+QWJvdmUgUEhZIGluaXRpYWxpemF0aW9uIGNvZGUgaXMgT0sgZm9y
-IG1lLg0KPiANCj4gSXQgd2lsbCBiZSBhZGRlZCBhcyBzZXBhcmF0ZSBkcml2ZXIuDQo+IEkgdGhp
-bmsgdGhhdCBBbGxhbiBEb3VnbGFzIHdvcmtpbmcgb24gaXQuDQo+IEkgYXNrIGhpbSB0byBhZGQg
-eW91IHRvIC1jYyBpbiBwYXRjaCBmb3IgcGh5Lg0KUGF0Y2ggc2VyaWVzIGZvciB0aGUgY2FkZW5j
-ZSBTaWVycmEgZ2VuZXJpYyBQSFkgZHJpdmVyIGNhbiBiZSBmb3VuZCBoZXJlOg0KaHR0cHM6Ly9s
-b3JlLmtlcm5lbC5vcmcvcGF0Y2h3b3JrL2NvdmVyLzEwMTE0ODYvDQoNCkl0IGNhbiBhbHNvIGJl
-IGZvdW5kIGluIEtpc2hvbidzIGxpbnV4LXBoeSBnaXQgdHJlZSBhdA0KICAgIGdpdDovL2dpdC5r
-ZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9raXNob24vbGludXgtcGh5LmdpdA0K
-aW4gdGhlICduZXh0JyBicmFuY2guDQoNCkl0IHdpbGwgYmUgZ3JlYXQgaWYgeW91IGFyZSBhYmxl
-IHRvIHRha2UgYSBsb29rIGF0IGl0Lg0KDQpSZWdhcmRzLA0KQWxhbg0K
+>
+>
+>
+> On 04/12/18 10:50, Peter Chen wrote:
+> >>> + * Cadence USBSS DRD Driver.
+> >>> + *
+> >>> + * Copyright (C) 2018 Cadence.
+> >>> + *
+> >>> + * Author: Peter Chen <peter.chen@nxp.com>
+> >>> + *         Pawel Laszczak <pawell@cadence.com>
+> >>> + */
+> >>> +
+> >>> +#include <linux/module.h>
+> >>> +#include <linux/kernel.h>
+> >>> +#include <linux/platform_device.h>
+> >>> +#include <linux/interrupt.h>
+> >>> +#include <linux/io.h>
+> >>> +#include <linux/pm_runtime.h>
+> >>> +
+> >>> +#include "gadget.h"
+> >>> +#include "core.h"
+> >>> +
+> >>> +static inline struct cdns3_role_driver *cdns3_get_current_role_driver(struct cdns3 *cdns)
+> >>> +{
+> >>> +     WARN_ON(cdns->role >= CDNS3_ROLE_END || !cdns->roles[cdns->role]);
+> >>> +     return cdns->roles[cdns->role];
+> >>> +}
+> >>> +
+> >>> +static inline int cdns3_role_start(struct cdns3 *cdns, enum cdns3_roles role)
+> >>> +{
+> >>> +     int ret;
+> >>> +
+> >>> +     if (role >= CDNS3_ROLE_END)
+> >>
+> >> WARN_ON()?
+> >>
+> >>> +             return 0;
+> >>> +
+> >>> +     if (!cdns->roles[role])
+> >>> +             return -ENXIO;
+> >>> +
+> >>> +     mutex_lock(&cdns->mutex);
+> >>> +     cdns->role = role;
+> >>> +     ret = cdns->roles[role]->start(cdns);
+> >>> +     mutex_unlock(&cdns->mutex);
+> >>> +     return ret;
+> >>> +}
+> >>> +
+> >>> +static inline void cdns3_role_stop(struct cdns3 *cdns)
+> >>> +{
+> >>> +     enum cdns3_roles role = cdns->role;
+> >>> +
+> >>> +     if (role == CDNS3_ROLE_END)
+> >>
+> >> WARN_ON(role >= CNDS3_ROLE_END) ?
+> >>
+> >>> +             return;
+> >>> +
+> >>> +     mutex_lock(&cdns->mutex);
+> >>> +     cdns->roles[role]->stop(cdns);
+> >>> +     cdns->role = CDNS3_ROLE_END;
+> >>
+> >> Why change the role here? You are just stopping the role not changing it.
+> >> I think cdns->role should remain unchanged, so we can call cdns3_role_start()
+> >> if required without error.
+> >>
+> >
+> > The current version of this IP has some issues to detect vbus status correctly,
+> > we have to force vbus status accordingly, so we need a status to indicate
+> > vbus disconnection, and add some code to let controller know vbus
+> > removal, in that case, the controller's state machine can be correct.
+> > So, we increase one role 'CDNS3_ROLE_END' to for this purpose.
+> >
+> > CDNS3_ROLE_GADGET: gadget mode and VBUS on
+> > CDNS3_ROLE_HOST: host mode and VBUS on
+> > CDNS3_ROLE_END: VBUS off, eg either host or device cable on the port.
+> >
+> > So, we may start role from CDNS3_ROLE_END at probe when nothing is connected,
+> > and need to set role as CDNS3_ROLE_END at ->stop for further handling at
+> > role switch routine.
+>
+> OK. but still this (changing to ROLE_END) must be moved to the role switch routine
+> and the explanation you just mentioned must be added there.
+>
+
+If we use host part as separate driver, something may need to change.
+The ROLE_END
+may need to add at role switch routine as your said.
+
+> >
+> >>> +     mutex_unlock(&cdns->mutex);
+> >>> +}
+> >>> +
+> >>> +static enum cdns3_roles cdns3_get_role(struct cdns3 *cdns)
+> >>> +{
+> >>> +     if (cdns->roles[CDNS3_ROLE_HOST] && cdns->roles[CDNS3_ROLE_GADGET]) {
+> >>> +             //TODO: implements selecting device/host mode
+> >>> +             return CDNS3_ROLE_HOST;
+> >>> +     }
+> >>> +     return cdns->roles[CDNS3_ROLE_HOST]
+> >>> +             ? CDNS3_ROLE_HOST
+> >>> +             : CDNS3_ROLE_GADGET;
+> >>
+> >> Why not just
+> >>         return cdns->role;
+> >>
+> >> I'm wondering if we really need this function.
+> >
+> > cdns->role gets from cdns3_get_role, and this API tells role at the runtime.
+> > If both roles are supported, the role is decided by external
+> > conditions, eg, vbus/id
+> > or external connector. If only single role is supported, only one role structure
+> > is allocated, cdns->roles[CDNS3_ROLE_HOST] or cdns->roles[CDNS3_ROLE_GADGET]
+> >
+>
+> How about adding this description in function documentation.
+>
+
+Sure, but may need to redesign it due to host part as a standalone driver.
+
+
+> >>
+> >> Then you can move cdns3_role_start() as well to core_init_role().
+> >>
+> >
+> > Usually, we request irq after hardware initialization has finished, if not,
+> > there may unexpected interrupt.
+>
+> Doesn't kernel warn if interrupt happens and there is no handler?
+> To avoid that I was suggesting to request_irq first.
+>
+
+The interrupt will not happen (related bit at GIC is masked) until we
+call request_irq.
+And we don't want to handle interrupts until hardware initialization, don't we?
+
+Peter
