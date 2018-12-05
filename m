@@ -1,53 +1,61 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH AUTOSEL 4.19 002/123] spi: uniphier: fix incorrect
- property items
-Date: Wed, 5 Dec 2018 11:38:20 +0000
-Message-ID: <20181205113820.GB6205@sirena.org.uk>
-References: <20181205093555.5386-1-sashal@kernel.org>
- <20181205093555.5386-2-sashal@kernel.org>
+From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
+Subject: Re: [PATCH 07/14] clock: milbeaut: Add Milbeaut M10V clock control
+Date: Wed, 5 Dec 2018 20:42:41 +0900
+Message-ID: <c0b37449-1221-9849-8014-13b3eeb43382@socionext.com>
+References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
+ <1542589274-13878-8-git-send-email-sugaya.taichi@socionext.com>
+ <154356669840.88331.4455990896653868594@swboyd.mtv.corp.google.com>
+ <298cd5a5-66cf-0936-405e-59bcc7c396ed@socionext.com>
+ <154394734173.88331.18352656286616172689@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="OwLcNYc0lM97+oe1"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181205093555.5386-2-sashal@kernel.org>
+In-Reply-To: <154394734173.88331.18352656286616172689@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sasha Levin <sashal@kernel.org>
-Cc: stable@vger.kernel.org, linux-kernel@vger.kernel.org, Keiji Hayashibara <hayashibara.keiji@socionext.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi
 
---OwLcNYc0lM97+oe1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2018/12/05 3:15, Stephen Boyd wrote:
+> Quoting Sugaya, Taichi (2018-12-04 00:26:16)
+>> On 2018/11/30 17:31, Stephen Boyd wrote:
+>>> Quoting Sugaya Taichi (2018-11-18 17:01:12)
+>>>> +void __init m10v_clk_mux_setup(struct device_node *node)
+>>>> +{
+>>>> +       const char *clk_name = node->name;
+>>>> +       struct clk_init_data init;
+>>>> +       const char **parent_names;
+>>>> +       struct m10v_mux *mcm;
+>>>> +       struct clk *clk;
+>>>> +       int i, parents;
+>>>> +
+>>>> +       if (!m10v_clk_iomap())
+>>>> +               return;
+>>>> +
+>>>> +       of_property_read_string(node, "clock-output-names", &clk_name);
+>>>> +
+>>>> +       parents = of_clk_get_parent_count(node);
+>>>> +       if (parents < 2) {
+>>>> +               pr_err("%s: not a mux\n", clk_name);
+>>>
+>>> How is this possible?
+>>
+>> When the node has more than 1 clks...
+>> Or I am misunderstanding your question?
+> 
+> This looks like code that's checking DT for correctness. We don't
+> typically do that in the kernel because the kernel isn't a DT validator.
+> That's all I'm saying. I think this comment is not useful if the driver
+> design is done to specify parent linkages in C code instead of DT, so
+> don't worry about this too much.
 
-On Wed, Dec 05, 2018 at 04:33:54AM -0500, Sasha Levin wrote:
-> From: Keiji Hayashibara <hayashibara.keiji@socionext.com>
->=20
-> [ Upstream commit 3511ba7d4ca6f39e2d060bb94e42a41ad1fee7bf ]
->=20
-> This commit fixes incorrect property because it was different
-> from the actual.
-> The parameters of '#address-cells' and '#size-cells' were removed,
-> and 'interrupts', 'pinctrl-names' and 'pinctrl-0' were added.
+I understand.
+Thank you for additional information.
 
-Not sure we should be backporting documentation changes like this to
-stable, especially not without accompanying code changes...
+Sugaya Taichi
 
---OwLcNYc0lM97+oe1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwHuKsACgkQJNaLcl1U
-h9BdGQf/cVEzlCz8LauxdMkpmxd0zk92aQB/jLXrj3Pj09j/PoB86dqeUI1VB7Q3
-yGMxw6fC9Zir4cVF/r3J5I3js+BkF8F+5qCBsw2oa2v6oM8Laqat8l0U36zUulyR
-Qr53SzOSGC64SH8tiXju/jRVAFAeTF07eNlSHg2Q4+cNdOqrdnn/tIDWvpC8Fqvf
-9HlSLMnT19FHWm3U9f/nkzqm+UmxirUKyg2sJl1CSApMgoRqNDiMn7vkTArYXISs
-V97WQ+CUSCJIca6/Etko7By+ky8wTpodYSi40uZTomzM8HoHunoxRaVGRa9vAXto
-2j1FDIiwmilt8t6WBNlGI9GZ5i8p7Q==
-=/7CJ
------END PGP SIGNATURE-----
-
---OwLcNYc0lM97+oe1--
+> 
