@@ -1,248 +1,117 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] macintosh: Use of_node_name_{eq,prefix} for node name comparisons
-Date: Wed,  5 Dec 2018 13:50:28 -0600
-Message-ID: <20181205195050.4759-12-robh@kernel.org>
+Subject: [PATCH] clk: Use of_node_name_eq for node name comparisons
+Date: Wed,  5 Dec 2018 13:50:21 -0600
+Message-ID: <20181205195050.4759-5-robh@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, linuxppc-dev@lists.ozlabs.org
+Cc: linux-renesas-soc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Convert string compares of DT node names to use of_node_name_{eq,prefix}
-helpers instead. This removes direct access to the node name pointer.
+Convert string compares of DT node names to use of_node_name_eq helper
+instead. This removes direct access to the node name pointer.
 
-This changes a single case insensitive node name comparison to case
-sensitive for "ata4". This is the only instance of a case insensitive
-comparison for all the open coded node name comparisons on powerpc.
-Searching the commit history, there doesn't appear to be any reason for
-it to be case insensitive.
+For instances using of_node_cmp, this has the side effect of now using
+case sensitive comparisons. This should not matter for any FDT based
+system which all of these are.
 
-A couple of open coded iterating thru the child node names are converted
-to use for_each_child_of_node() instead.
-
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: linuxppc-dev@lists.ozlabs.org
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Tero Kristo <t-kristo@ti.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-renesas-soc@vger.kernel.org
+Cc: linux-clk@vger.kernel.org
+Cc: linux-omap@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/macintosh/ans-lcd.c               |  2 +-
- drivers/macintosh/macio_asic.c            | 33 +++++++++++------------
- drivers/macintosh/rack-meter.c            | 13 ++++-----
- drivers/macintosh/via-pmu.c               |  4 +--
- drivers/macintosh/windfarm_lm87_sensor.c  |  4 +--
- drivers/macintosh/windfarm_smu_controls.c |  4 +--
- drivers/macintosh/windfarm_smu_sensors.c  |  2 +-
- 7 files changed, 30 insertions(+), 32 deletions(-)
+ drivers/clk/renesas/clk-mstp.c   |  2 +-
+ drivers/clk/ti/clkctrl.c         |  2 +-
+ drivers/clk/ti/dpll.c            |  2 +-
+ drivers/clk/ux500/u8500_of_clk.c | 10 +++++-----
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/macintosh/ans-lcd.c b/drivers/macintosh/ans-lcd.c
-index c8e078b911c7..ef0c2366cf59 100644
---- a/drivers/macintosh/ans-lcd.c
-+++ b/drivers/macintosh/ans-lcd.c
-@@ -160,7 +160,7 @@ anslcd_init(void)
- 	struct device_node* node;
+diff --git a/drivers/clk/renesas/clk-mstp.c b/drivers/clk/renesas/clk-mstp.c
+index 1c1768c2cc82..765175d1148a 100644
+--- a/drivers/clk/renesas/clk-mstp.c
++++ b/drivers/clk/renesas/clk-mstp.c
+@@ -280,7 +280,7 @@ int cpg_mstp_attach_dev(struct generic_pm_domain *unused, struct device *dev)
+ 			goto found;
  
- 	node = of_find_node_by_name(NULL, "lcd");
--	if (!node || !node->parent || strcmp(node->parent->name, "gc")) {
-+	if (!node || !of_node_name_eq(node->parent, "gc")) {
- 		of_node_put(node);
- 		return -ENODEV;
+ 		/* BSC on r8a73a4/sh73a0 uses zb_clk instead of an mstp clock */
+-		if (!strcmp(clkspec.np->name, "zb_clk"))
++		if (of_node_name_eq(clkspec.np, "zb_clk"))
+ 			goto found;
+ 
+ 		of_node_put(clkspec.np);
+diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
+index 469f560ae1cf..40630eb950fc 100644
+--- a/drivers/clk/ti/clkctrl.c
++++ b/drivers/clk/ti/clkctrl.c
+@@ -448,7 +448,7 @@ static void __init _ti_omap4_clkctrl_setup(struct device_node *node)
+ 	char *c;
+ 
+ 	if (!(ti_clk_get_features()->flags & TI_CLK_CLKCTRL_COMPAT) &&
+-	    !strcmp(node->name, "clk"))
++	    of_node_name_eq(node, "clk"))
+ 		ti_clk_features.flags |= TI_CLK_CLKCTRL_COMPAT;
+ 
+ 	addrp = of_get_address(node, 0, NULL, NULL);
+diff --git a/drivers/clk/ti/dpll.c b/drivers/clk/ti/dpll.c
+index 92e28af7afba..6c3329bc116f 100644
+--- a/drivers/clk/ti/dpll.c
++++ b/drivers/clk/ti/dpll.c
+@@ -410,7 +410,7 @@ static void __init of_ti_omap3_dpll_setup(struct device_node *node)
+ 
+ 	if ((of_machine_is_compatible("ti,omap3630") ||
+ 	     of_machine_is_compatible("ti,omap36xx")) &&
+-	    !strcmp(node->name, "dpll5_ck"))
++	     of_node_name_eq(node, "dpll5_ck"))
+ 		of_ti_dpll_setup(node, &omap3_dpll5_ck_ops, &dd);
+ 	else
+ 		of_ti_dpll_setup(node, &omap3_dpll_ck_ops, &dd);
+diff --git a/drivers/clk/ux500/u8500_of_clk.c b/drivers/clk/ux500/u8500_of_clk.c
+index d5888591e1a9..18a3c4522831 100644
+--- a/drivers/clk/ux500/u8500_of_clk.c
++++ b/drivers/clk/ux500/u8500_of_clk.c
+@@ -545,21 +545,21 @@ static void u8500_clk_init(struct device_node *np)
+ 	for_each_child_of_node(np, child) {
+ 		static struct clk_onecell_data clk_data;
+ 
+-		if (!of_node_cmp(child->name, "prcmu-clock")) {
++		if (of_node_name_eq(child, "prcmu-clock")) {
+ 			clk_data.clks = prcmu_clk;
+ 			clk_data.clk_num = ARRAY_SIZE(prcmu_clk);
+ 			of_clk_add_provider(child, of_clk_src_onecell_get, &clk_data);
+ 		}
+-		if (!of_node_cmp(child->name, "prcc-periph-clock"))
++		if (of_node_name_eq(child, "prcc-periph-clock"))
+ 			of_clk_add_provider(child, ux500_twocell_get, prcc_pclk);
+ 
+-		if (!of_node_cmp(child->name, "prcc-kernel-clock"))
++		if (of_node_name_eq(child, "prcc-kernel-clock"))
+ 			of_clk_add_provider(child, ux500_twocell_get, prcc_kclk);
+ 
+-		if (!of_node_cmp(child->name, "rtc32k-clock"))
++		if (of_node_name_eq(child, "rtc32k-clock"))
+ 			of_clk_add_provider(child, of_clk_src_simple_get, rtc_clk);
+ 
+-		if (!of_node_cmp(child->name, "smp-twd-clock"))
++		if (of_node_name_eq(child, "smp-twd-clock"))
+ 			of_clk_add_provider(child, of_clk_src_simple_get, twd_clk);
  	}
-diff --git a/drivers/macintosh/macio_asic.c b/drivers/macintosh/macio_asic.c
-index bc8418801224..3543a82081de 100644
---- a/drivers/macintosh/macio_asic.c
-+++ b/drivers/macintosh/macio_asic.c
-@@ -190,11 +190,11 @@ static int macio_resource_quirks(struct device_node *np, struct resource *res,
- 		return 0;
- 
- 	/* Grand Central has too large resource 0 on some machines */
--	if (index == 0 && !strcmp(np->name, "gc"))
-+	if (index == 0 && of_node_name_eq(np, "gc"))
- 		res->end = res->start + 0x1ffff;
- 
- 	/* Airport has bogus resource 2 */
--	if (index >= 2 && !strcmp(np->name, "radio"))
-+	if (index >= 2 && of_node_name_eq(np, "radio"))
- 		return 1;
- 
- #ifndef CONFIG_PPC64
-@@ -207,20 +207,20 @@ static int macio_resource_quirks(struct device_node *np, struct resource *res,
- 	 * level of hierarchy, but I don't really feel the need
- 	 * for it
- 	 */
--	if (!strcmp(np->name, "escc"))
-+	if (of_node_name_eq(np, "escc"))
- 		return 1;
- 
- 	/* ESCC has bogus resources >= 3 */
--	if (index >= 3 && !(strcmp(np->name, "ch-a") &&
--			    strcmp(np->name, "ch-b")))
-+	if (index >= 3 && (of_node_name_eq(np, "ch-a") ||
-+			   of_node_name_eq(np, "ch-b")))
- 		return 1;
- 
- 	/* Media bay has too many resources, keep only first one */
--	if (index > 0 && !strcmp(np->name, "media-bay"))
-+	if (index > 0 && of_node_name_eq(np, "media-bay"))
- 		return 1;
- 
- 	/* Some older IDE resources have bogus sizes */
--	if (!strcmp(np->name, "IDE") || !strcmp(np->name, "ATA") ||
-+	if (of_node_name_eq(np, "IDE") || of_node_name_eq(np, "ATA") ||
- 	    of_node_is_type(np, "ide") || of_node_is_type(np, "ata")) {
- 		if (index == 0 && (res->end - res->start) > 0xfff)
- 			res->end = res->start + 0xfff;
-@@ -260,7 +260,7 @@ static void macio_add_missing_resources(struct macio_dev *dev)
- 	irq_base = 64;
- 
- 	/* Fix SCC */
--	if (strcmp(np->name, "ch-a") == 0) {
-+	if (of_node_name_eq(np, "ch-a")) {
- 		macio_create_fixup_irq(dev, 0, 15 + irq_base);
- 		macio_create_fixup_irq(dev, 1,  4 + irq_base);
- 		macio_create_fixup_irq(dev, 2,  5 + irq_base);
-@@ -268,18 +268,18 @@ static void macio_add_missing_resources(struct macio_dev *dev)
- 	}
- 
- 	/* Fix media-bay */
--	if (strcmp(np->name, "media-bay") == 0) {
-+	if (of_node_name_eq(np, "media-bay")) {
- 		macio_create_fixup_irq(dev, 0, 29 + irq_base);
- 		printk(KERN_INFO "macio: fixed media-bay irq on gatwick\n");
- 	}
- 
- 	/* Fix left media bay childs */
--	if (dev->media_bay != NULL && strcmp(np->name, "floppy") == 0) {
-+	if (dev->media_bay != NULL && of_node_name_eq(np, "floppy")) {
- 		macio_create_fixup_irq(dev, 0, 19 + irq_base);
- 		macio_create_fixup_irq(dev, 1,  1 + irq_base);
- 		printk(KERN_INFO "macio: fixed left floppy irqs\n");
- 	}
--	if (dev->media_bay != NULL && strcasecmp(np->name, "ata4") == 0) {
-+	if (dev->media_bay != NULL && of_node_name_eq(np, "ata4")) {
- 		macio_create_fixup_irq(dev, 0, 14 + irq_base);
- 		macio_create_fixup_irq(dev, 0,  3 + irq_base);
- 		printk(KERN_INFO "macio: fixed left ide irqs\n");
-@@ -438,11 +438,8 @@ static struct macio_dev * macio_add_one_device(struct macio_chip *chip,
- 
- static int macio_skip_device(struct device_node *np)
- {
--	if (strncmp(np->name, "battery", 7) == 0)
--		return 1;
--	if (strncmp(np->name, "escc-legacy", 11) == 0)
--		return 1;
--	return 0;
-+	return of_node_name_prefix(np, "battery") ||
-+	       of_node_name_prefix(np, "escc-legacy");
  }
- 
- /**
-@@ -489,9 +486,9 @@ static void macio_pci_add_devices(struct macio_chip *chip)
- 					    root_res);
- 		if (mdev == NULL)
- 			of_node_put(np);
--		else if (strncmp(np->name, "media-bay", 9) == 0)
-+		else if (of_node_name_prefix(np, "media-bay"))
- 			mbdev = mdev;
--		else if (strncmp(np->name, "escc", 4) == 0)
-+		else if (of_node_name_prefix(np, "escc"))
- 			sdev = mdev;
- 	}
- 
-diff --git a/drivers/macintosh/rack-meter.c b/drivers/macintosh/rack-meter.c
-index 1f29d2413c74..3940e2a032f7 100644
---- a/drivers/macintosh/rack-meter.c
-+++ b/drivers/macintosh/rack-meter.c
-@@ -376,18 +376,19 @@ static int rackmeter_probe(struct macio_dev* mdev,
- 	pr_debug("rackmeter_probe()\n");
- 
- 	/* Get i2s-a node */
--	while ((i2s = of_get_next_child(mdev->ofdev.dev.of_node, i2s)) != NULL)
--	       if (strcmp(i2s->name, "i2s-a") == 0)
--		       break;
-+	for_each_child_of_node(mdev->ofdev.dev.of_node, i2s)
-+		if (of_node_name_eq(i2s, "i2s-a"))
-+			break;
-+
- 	if (i2s == NULL) {
- 		pr_debug("  i2s-a child not found\n");
- 		goto bail;
- 	}
- 	/* Get lightshow or virtual sound */
--	while ((np = of_get_next_child(i2s, np)) != NULL) {
--	       if (strcmp(np->name, "lightshow") == 0)
-+	for_each_child_of_node(i2s, np) {
-+	       if (of_node_name_eq(np, "lightshow"))
- 		       break;
--	       if ((strcmp(np->name, "sound") == 0) &&
-+	       if (of_node_name_eq(np, "sound") &&
- 		   of_get_property(np, "virtual", NULL) != NULL)
- 		       break;
- 	}
-diff --git a/drivers/macintosh/via-pmu.c b/drivers/macintosh/via-pmu.c
-index 60f57e2abf21..ac0cf37d6239 100644
---- a/drivers/macintosh/via-pmu.c
-+++ b/drivers/macintosh/via-pmu.c
-@@ -318,8 +318,8 @@ int __init find_via_pmu(void)
- 			PMU_INT_ADB |
- 			PMU_INT_TICK;
- 	
--	if (vias->parent->name && ((strcmp(vias->parent->name, "ohare") == 0)
--	    || of_device_is_compatible(vias->parent, "ohare")))
-+	if (of_node_name_eq(vias->parent, "ohare") ||
-+	    of_device_is_compatible(vias->parent, "ohare"))
- 		pmu_kind = PMU_OHARE_BASED;
- 	else if (of_device_is_compatible(vias->parent, "paddington"))
- 		pmu_kind = PMU_PADDINGTON_BASED;
-diff --git a/drivers/macintosh/windfarm_lm87_sensor.c b/drivers/macintosh/windfarm_lm87_sensor.c
-index 35aa571d498a..09724acd70b6 100644
---- a/drivers/macintosh/windfarm_lm87_sensor.c
-+++ b/drivers/macintosh/windfarm_lm87_sensor.c
-@@ -110,8 +110,8 @@ static int wf_lm87_probe(struct i2c_client *client,
- 	 * the Xserve G5 has several lm87's. However, for now we only
- 	 * care about the internal temperature sensor
- 	 */
--	while ((np = of_get_next_child(client->dev.of_node, np)) != NULL) {
--		if (strcmp(np->name, "int-temp"))
-+	for_each_child_of_node(client->dev.of_node, np) {
-+		if (!of_node_name_eq(np, "int-temp"))
- 			continue;
- 		loc = of_get_property(np, "location", NULL);
- 		if (!loc)
-diff --git a/drivers/macintosh/windfarm_smu_controls.c b/drivers/macintosh/windfarm_smu_controls.c
-index 86d65462a61c..2cb9652a9998 100644
---- a/drivers/macintosh/windfarm_smu_controls.c
-+++ b/drivers/macintosh/windfarm_smu_controls.c
-@@ -267,7 +267,7 @@ static int __init smu_controls_init(void)
- 
- 	/* Look for RPM fans */
- 	for (fans = NULL; (fans = of_get_next_child(smu, fans)) != NULL;)
--		if (!strcmp(fans->name, "rpm-fans") ||
-+		if (of_node_name_eq(fans, "rpm-fans") ||
- 		    of_device_is_compatible(fans, "smu-rpm-fans"))
- 			break;
- 	for (fan = NULL;
-@@ -287,7 +287,7 @@ static int __init smu_controls_init(void)
- 
- 	/* Look for PWM fans */
- 	for (fans = NULL; (fans = of_get_next_child(smu, fans)) != NULL;)
--		if (!strcmp(fans->name, "pwm-fans"))
-+		if (of_node_name_eq(fans, "pwm-fans"))
- 			break;
- 	for (fan = NULL;
- 	     fans && (fan = of_get_next_child(fans, fan)) != NULL;) {
-diff --git a/drivers/macintosh/windfarm_smu_sensors.c b/drivers/macintosh/windfarm_smu_sensors.c
-index 1ba86de93f92..a58f6733381a 100644
---- a/drivers/macintosh/windfarm_smu_sensors.c
-+++ b/drivers/macintosh/windfarm_smu_sensors.c
-@@ -424,7 +424,7 @@ static int __init smu_sensors_init(void)
- 	/* Look for sensors subdir */
- 	for (sensors = NULL;
- 	     (sensors = of_get_next_child(smu, sensors)) != NULL;)
--		if (!strcmp(sensors->name, "sensors"))
-+		if (of_node_name_eq(sensors, "sensors"))
- 			break;
- 
- 	of_node_put(smu);
 -- 
 2.19.1
