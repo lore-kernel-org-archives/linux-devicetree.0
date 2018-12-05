@@ -1,8 +1,8 @@
 From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 12/15] media: cedrus: Add device-tree
- compatible and variant for H5 support
-Date: Wed,  5 Dec 2018 10:24:41 +0100
-Message-ID: <20181205092444.29497-13-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v2 07/15] arm64: dts: allwinner: h5: Add
+ system-control node with SRAM C1
+Date: Wed,  5 Dec 2018 10:24:36 +0100
+Message-ID: <20181205092444.29497-8-paul.kocialkowski@bootlin.com>
 References: <20181205092444.29497-1-paul.kocialkowski@bootlin.com>
 Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
@@ -20,39 +20,50 @@ To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY7
 Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the necessary compatible for supporting the H5 SoC along with a
-description of the capabilities of this variant.
+Add the H5-specific system control node description to its device-tree
+with support for the SRAM C1 section, that will be used by the video
+codec node later on.
+
+The CPU-side SRAM address was obtained empirically while the size was
+taken from the documentation. They may not be entirely accurate.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/staging/media/sunxi/cedrus/cedrus.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 22 ++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
-index 82558455384a..f04b9bf23774 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
-@@ -388,6 +388,10 @@ static const struct cedrus_variant sun8i_h3_cedrus_variant = {
- 	.capabilities	= CEDRUS_CAPABILITY_UNTILED,
- };
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+index b41dc1aab67d..42bfb560b367 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+@@ -94,6 +94,28 @@
+ 	};
  
-+static const struct cedrus_variant sun50i_h5_cedrus_variant = {
-+	.capabilities	= CEDRUS_CAPABILITY_UNTILED,
-+};
+ 	soc {
++		system-control@1c00000 {
++			compatible = "allwinner,sun50i-h5-system-control";
++			reg = <0x01c00000 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
 +
- static const struct of_device_id cedrus_dt_match[] = {
- 	{
- 		.compatible = "allwinner,sun4i-a10-video-engine",
-@@ -409,6 +413,10 @@ static const struct of_device_id cedrus_dt_match[] = {
- 		.compatible = "allwinner,sun8i-h3-video-engine",
- 		.data = &sun8i_h3_cedrus_variant,
- 	},
-+	{
-+		.compatible = "allwinner,sun50i-h5-video-engine",
-+		.data = &sun50i_h5_cedrus_variant,
-+	},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, cedrus_dt_match);
++			sram_c1: sram@1d00000 {
++				compatible = "mmio-sram";
++				reg = <0x00018000 0x1c000>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++				ranges = <0 0x00018000 0x1c000>;
++
++				ve_sram: sram-section@0 {
++					compatible = "allwinner,sun50i-h5-sram-c1",
++						     "allwinner,sun4i-a10-sram-c1";
++					reg = <0x000000 0x1c000>;
++				};
++			};
++		};
++
+ 		mali: gpu@1e80000 {
+ 			compatible = "allwinner,sun50i-h5-mali", "arm,mali-450";
+ 			reg = <0x01e80000 0x30000>;
 -- 
 2.19.2
