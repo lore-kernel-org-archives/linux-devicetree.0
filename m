@@ -1,67 +1,37 @@
-From: Pascal PAILLET-LME <p.paillet@st.com>
-Subject: Re: [PATCH v7 0/7] Introduce STPMIC1 PMIC Driver
-Date: Wed, 5 Dec 2018 15:36:43 +0000
-Message-ID: <5C07F08B.2010701@st.com>
-References: <1543571742-17995-1-git-send-email-p.paillet@st.com>
- <20181203071145.GA26661@dell> <5C069C47.6080305@st.com>
- <20181205093604.GZ26661@dell>
+From: Sven Van Asbroeck <thesven73@gmail.com>
+Subject: Re: [PATCH v5 1/6] fieldbus_dev: add Fieldbus Device subsystem.
+Date: Wed, 5 Dec 2018 10:39:56 -0500
+Message-ID: <CAGngYiXXrrqGxTt339EP53tschLgZ82eRGvGifHQw6pg=C88+Q@mail.gmail.com>
+References: <20181204220224.27324-1-TheSven73@googlemail.com>
+ <20181204220224.27324-2-TheSven73@googlemail.com> <20181205101659.GA27058@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181205093604.GZ26661@dell>
-Content-Language: en-US
-Content-ID: <817148D5BE30EA4E85D250CA2CFDBDB4@st.com>
+In-Reply-To: <20181205101659.GA27058@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
+To: gregkh@linuxfoundation.org
+Cc: Sven Van Asbroeck <svendev@arcx.com>, robh+dt@kernel.org, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, treding@nvidia.com, David Lechner <david@lechnology.com>, noralf@tronnes.org, johan@kernel.org, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, Arnd Bergmann <arnd@arndb.de>, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-DQpwYXNjYWwgcGFpbGxldCAocC5wYWlsbGV0QHN0LmNvbSkgTGUgTWFucyAvIEZyYW5jZQ0KTWlj
-cm9jb250cm9sbGVycyBhbmQgRGlnaXRhbCBJQ3MgR3JvdXAgfCBBcHBsaWNhdGlvbiBEZXZlbG9w
-bWVudA0KVEVMOiArMzMuKDApMi40NC4wMi43NC42OSB8IFRJTkE6IDE2NiA3NDY5DQoNCkxlIDEy
-LzA1LzIwMTggMTA6MzYgQU0sIExlZSBKb25lcyBhIMOpY3JpdCA6DQo+IE9uIFR1ZSwgMDQgRGVj
-IDIwMTgsIFBhc2NhbCBQQUlMTEVULUxNRSB3cm90ZToNCj4+IExlIDEyLzAzLzIwMTggMDg6MTEg
-QU0sIExlZSBKb25lcyBhIMOpY3JpdCA6DQo+Pj4gT24gRnJpLCAzMCBOb3YgMjAxOCwgUGFzY2Fs
-IFBBSUxMRVQtTE1FIHdyb3RlOg0KPj4+DQo+Pj4+IFRoZSBnb2FsIG9mIHRoaXMgcGF0Y2gtc2V0
-IGlzIHRvIHByb3Bvc2UgYSBkcml2ZXIgZm9yIHRoZSBTVFBNSUMxIFBNSUMgZnJvbQ0KPj4+PiBT
-VE1pY3JvZWxlY3Ryb25pY3MuDQo+Pj4+IFRoZSBTVFBNSUMxIHJlZ3VsYXRvcnMgc3VwcGx5IHBv
-d2VyIHRvIGFuIGFwcGxpY2F0aW9uIHByb2Nlc3NvciBhcyB3ZWxsIGFzDQo+Pj4+IHRvIGV4dGVy
-bmFsIHN5c3RlbSBwZXJpcGhlcmFscyBzdWNoIGFzIEREUiwgRmxhc2ggbWVtb3JpZXMgYW5kIHN5
-c3RlbQ0KPj4+PiBkZXZpY2VzLiBJdCBhbHNvIGZlYXR1cmVzIG9ua2V5IGJ1dHRvbiBpbnB1dCBh
-bmQgYW4gaGFyZHdhcmUgd2F0Y2hkb2cuDQo+Pj4+IFRoZSBTVFBNSUMxIGlzIGNvbnRyb2xsZWQg
-dmlhIEkyQy4NCj4+Pj4NCj4+Pj4gTWFpbiBkcml2ZXIgaXMgZHJpdmVycy9tZmQvc3RwbWljMSB0
-aGF0IGhhbmRsZSBJMkMgcmVnbWFwIGNvbmZpZ3VyYXRpb24gYW5kDQo+Pj4+IGlycWNoaXAuIHN0
-cG1pYzFfcmVndWxhdG9yLCBzdHBtaWMxX29ua2V5IGFuZCBzdHBtaWMxX3dkdCBuZWVkIHN0cG1p
-YzEgbWZkDQo+Pj4+IGFzIHBhcmVudC4NCj4+Pj4NCj4+Pj4gU1RQTUlDMSBNRkQgYW5kIHJlZ3Vs
-YXRvciBkcml2ZXJzIG1heWJlIG1hbmRhdG9yeSBhdCBib290IHRpbWUuDQo+Pj4+DQo+Pj4+IFBh
-c2NhbCBQYWlsbGV0ICg3KToNCj4+Pj4gY2hhbmdlcyBpbiB2NzoNCj4+Pj4gKiByZWJhc2Ugb24g
-cmVndWwvZm9yLW5leHQNCj4+Pj4NCj4+Pj4gICAgIGR0LWJpbmRpbmdzOiBtZmQ6IGRvY3VtZW50
-IHN0cG1pYzENCj4+Pj4gICAgIG1mZDogc3RwbWljMTogYWRkIHN0cG1pYzEgZHJpdmVyDQo+Pj4+
-ICAgICBkdC1iaW5kaW5nczogaW5wdXQ6IGRvY3VtZW50IHN0cG1pYzEgcG1pYyBvbmtleQ0KPj4+
-PiAgICAgaW5wdXQ6IHN0cG1pYzE6IGFkZCBzdHBtaWMxIG9ua2V5IGRyaXZlcg0KPj4+PiAgICAg
-ZHQtYmluZGluZ3M6IHdhdGNoZG9nOiBkb2N1bWVudCBzdHBtaWMxIHBtaWMgd2F0Y2hkb2cNCj4+
-Pj4gICAgIHdhdGNoZG9nOiBzdHBtaWMxOiBhZGQgc3RwbWljMSB3YXRjaGRvZyBkcml2ZXINCj4+
-Pj4gICAgIHJlZ3VsYXRvcjogc3RwbWljMTogZml4IHJlZ3VsYXRvcl9sb2NrIHVzYWdlDQo+Pj4+
-DQo+Pj4+ICAgIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0L3N0LHN0cG1pYzEtb25rZXku
-dHh0IHwgIDI4ICsrKw0KPj4+PiAgICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvc3Qsc3Rw
-bWljMS50eHQgICAgICAgICB8ICA2MSArKysrKysNCj4+Pj4gICAgLi4uL2JpbmRpbmdzL3dhdGNo
-ZG9nL3N0LHN0cG1pYzEtd2R0LnR4dCAgICAgICAgICAgfCAgMTEgKysNCj4+Pj4gICAgZHJpdmVy
-cy9pbnB1dC9taXNjL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTEgKysNCj4+
-Pj4gICAgZHJpdmVycy9pbnB1dC9taXNjL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAg
-fCAgIDIgKw0KPj4+PiAgICBkcml2ZXJzL2lucHV0L21pc2Mvc3RwbWljMV9vbmtleS5jICAgICAg
-ICAgICAgICAgICB8IDE5OCArKysrKysrKysrKysrKysrKysrDQo+Pj4+ICAgIGRyaXZlcnMvbWZk
-L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDE2ICsrDQo+Pj4+ICAg
-IGRyaXZlcnMvbWZkL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAx
-ICsNCj4+Pj4gICAgZHJpdmVycy9tZmQvc3RwbWljMS5jICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgfCAyMTMgKysrKysrKysrKysrKysrKysrKysrDQo+Pj4+ICAgIGRyaXZlcnMvcmVndWxh
-dG9yL3N0cG1pYzFfcmVndWxhdG9yLmMgICAgICAgICAgICAgIHwgICAyICstDQo+Pj4gSXMgaXQg
-anVzdCBNYXJrIHlvdSdyZSB3YWl0aW5nIG9uIG5vdz8NCj4+IEl0IGlzIG9rIG5vdywgTWFyayBo
-YXMgYXBwbGllZCB0aGUgcGF0Y2guDQo+PiBFdnJleSB0aGluZyBoYXMgYmVlbiBhY2tlZCBub3cu
-IFdoYXQgaXMgdGhlIG5leCBzdGVwID8NCj4gTWFyayBoYXMgYXBwbGllZCBwYXRjaCA3Pw0KPg0K
-PiBXaHkgZG9uJ3QgSSBzZWUgdGhhdD8gIFNob3VsZCB5b3UgaGF2ZSByZW1vdmVkIGl0IGZyb20g
-dGhpcyBzZXQ/DQpIaSBMZWUsIEkgaGF2ZSByZWNlaXZlZCBhbiBlbWFpbCBmcm9tIE1hcmsgdGVs
-bGlpbmcgdGhhdCB0aGUgcmVndWxhdG9yIA0KcGF0Y2ggaXMgYXBwbGllZCBvbg0KDQogIGh0dHBz
-Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2Jyb29uaWUvcmVndWxh
-dG9yLmdpdCAgDQoNCkkgY2FuIHNlZSBpdCBvbiB0aGUgYnJhbmNoIHJlZ3VsL2Zvci1uZXh0Lg0K
-DQoNCnRoYW5rIHlvdSwNCnBhc2NhbA0KDQoNCj4NCg==
+Hello Greg, thanks for the feedback!
+
+On Wed, Dec 5, 2018 at 5:17 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> And why is this a class and not just a "normal" device and bus?  Devices
+> live on busses, not generally as a class.  Can your devices live on
+> different types of busses (USB, PCI, etc.)?
+
+This patchset can be a bit confusing, because it doesn't just add support for a
+single fieldbus device - it proposes a general fieldbus subsystem.
+
+Fieldbus devices from different vendors can sit on the usb, i2c, pci, etc.
+buse, but they all register as a fieldbus device, via fieldbus_dev_register(),
+and show up as a fieldbus class member.
+
+Userspace can then enumerate all fieldbus devices connected to the system by
+looking at the class. Without having to know which bus they happen to be
+connected to.
+
+If there is an abstraction in Linux that's a better fit, I'm very open to
+making changes.
+
+Sven
