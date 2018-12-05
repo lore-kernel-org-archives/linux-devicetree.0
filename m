@@ -1,46 +1,44 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] video/backlight: Use of_node_name_eq for node name comparisons
-Date: Wed,  5 Dec 2018 13:50:44 -0600
-Message-ID: <20181205195050.4759-28-robh@kernel.org>
+Subject: [PATCH] scsi: Use of_node_name_eq for node name comparisons
+Date: Wed,  5 Dec 2018 13:50:39 -0600
+Message-ID: <20181205195050.4759-23-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Daniel Thompson <daniel.thompson@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Lee Jones <lee.jones@linaro.org>
+Cc: "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Q29udmVydCBzdHJpbmcgY29tcGFyZXMgb2YgRFQgbm9kZSBuYW1lcyB0byB1c2Ugb2Zfbm9kZV9u
-YW1lX2VxIGhlbHBlcgppbnN0ZWFkLiBUaGlzIHJlbW92ZXMgZGlyZWN0IGFjY2VzcyB0byB0aGUg
-bm9kZSBuYW1lIHBvaW50ZXIuCgpGb3IgaW5zdGFuY2VzIHVzaW5nIG9mX25vZGVfY21wLCB0aGlz
-IGhhcyB0aGUgc2lkZSBlZmZlY3Qgb2Ygbm93IHVzaW5nCmNhc2Ugc2Vuc2l0aXZlIGNvbXBhcmlz
-b25zLiBUaGlzIHNob3VsZCBub3QgbWF0dGVyIGZvciBhbnkgRkRUIGJhc2VkCnN5c3RlbSB3aGlj
-aCB0aGlzIGlzLgoKQ2M6IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+CkNjOiBEYW5p
-ZWwgVGhvbXBzb24gPGRhbmllbC50aG9tcHNvbkBsaW5hcm8ub3JnPgpDYzogSmluZ29vIEhhbiA8
-amluZ29vaGFuMUBnbWFpbC5jb20+CkNjOiBCYXJ0bG9taWVqIFpvbG5pZXJraWV3aWN6IDxiLnpv
-bG5pZXJraWVAc2Ftc3VuZy5jb20+CkNjOiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-CkNjOiBsaW51eC1mYmRldkB2Z2VyLmtlcm5lbC5vcmcKU2lnbmVkLW9mZi1ieTogUm9iIEhlcnJp
-bmcgPHJvYmhAa2VybmVsLm9yZz4KLS0tCiBkcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC84OHBtODYw
-eF9ibC5jIHwgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9u
-KC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvODhwbTg2MHhfYmwuYyBi
-L2RyaXZlcnMvdmlkZW8vYmFja2xpZ2h0Lzg4cG04NjB4X2JsLmMKaW5kZXggNmQ4ZGMyYzc3NTIw
-Li41MWUwYzRiZTA4ZGYgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvdmlkZW8vYmFja2xpZ2h0Lzg4cG04
-NjB4X2JsLmMKKysrIGIvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvODhwbTg2MHhfYmwuYwpAQCAt
-MTc0LDcgKzE3NCw3IEBAIHN0YXRpYyBpbnQgcG04NjB4X2JhY2tsaWdodF9kdF9pbml0KHN0cnVj
-dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsCiAJCXJldHVybiAtRU5PREVWOwogCX0KIAlmb3JfZWFj
-aF9jaGlsZF9vZl9ub2RlKG5wcm9vdCwgbnApIHsKLQkJaWYgKCFvZl9ub2RlX2NtcChucC0+bmFt
-ZSwgbmFtZSkpIHsKKwkJaWYgKG9mX25vZGVfbmFtZV9lcShucCwgbmFtZSkpIHsKIAkJCW9mX3By
-b3BlcnR5X3JlYWRfdTMyKG5wLCAibWFydmVsbCw4OHBtODYweC1pc2V0IiwKIAkJCQkJICAgICAm
-aXNldCk7CiAJCQlkYXRhLT5pc2V0ID0gUE04NjA2X1dMRURfQ1VSUkVOVChpc2V0KTsKLS0gCjIu
-MTkuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Convert string compares of DT node names to use of_node_name_eq helper
+instead. This removes direct access to the node name pointer.
+
+Cc: "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ drivers/scsi/sun_esp.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/scsi/sun_esp.c b/drivers/scsi/sun_esp.c
+index a11efbcb7f8b..c71bd01fef94 100644
+--- a/drivers/scsi/sun_esp.c
++++ b/drivers/scsi/sun_esp.c
+@@ -529,11 +529,10 @@ static int esp_sbus_probe(struct platform_device *op)
+ 	int hme = 0;
+ 	int ret;
+ 
+-	if (dp->parent &&
+-	    (!strcmp(dp->parent->name, "espdma") ||
+-	     !strcmp(dp->parent->name, "dma")))
++	if (of_node_name_eq(dp->parent, "espdma") ||
++	    of_node_name_eq(dp->parent, "dma"))
+ 		dma_node = dp->parent;
+-	else if (!strcmp(dp->name, "SUNW,fas")) {
++	else if (of_node_name_eq(dp, "SUNW,fas")) {
+ 		dma_node = op->dev.of_node;
+ 		hme = 1;
+ 	}
+-- 
+2.19.1
