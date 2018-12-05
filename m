@@ -1,137 +1,107 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: Moving ARM dts files
-Date: Wed, 5 Dec 2018 10:48:20 +0100
-Message-ID: <f6c266ad-6279-a8cd-0d77-df5a0f834038@xilinx.com>
-References: <20181204183649.GA5716@bogus>
- <CAK7LNAQ-O0Xnkb3egp-B8+0hFaeBM_pzn0f0XQJ3+FLgBwNCaQ@mail.gmail.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v2 07/15] arm64: dts: allwinner: h5: Add system-control
+ node with SRAM C1
+Date: Wed, 5 Dec 2018 17:49:57 +0800
+Message-ID: <CAGb2v67tgp_tD_Pkx1Qkc=d__saZUMwwmE44uCCeLgVM2HWmUQ@mail.gmail.com>
+References: <20181205092444.29497-1-paul.kocialkowski@bootlin.com>
+ <20181205092444.29497-8-paul.kocialkowski@bootlin.com>
+ <CAGb2v66JwZ_RkEdk6sz-0Z7EJx7ieG3zBT6yr-95X6guxUkKTg@mail.gmail.com>
+ <edf44a24633ecaf59a7d5bea1f4acffdd0ae01a3.camel@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAK7LNAQ-O0Xnkb3egp-B8+0hFaeBM_pzn0f0XQJ3+FLgBwNCaQ@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, gregory.clement@bootlin.com, Michal Simek <michal.simek@xilinx.com>, Krzysztof Kozlowski <krzk@kernel.org>, arm-soc <arm@kernel.org>, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, DTML <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Shawn Guo <shawnguo@kernel.org>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Daniel Mack <daniel@zonque.org>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <edf44a24633ecaf59a7d5bea1f4acffdd0ae01a3.camel@bootlin.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc: devel@driverdev.osuosl.org, devicetree <devicetree@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel <linux-kernel@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05. 12. 18 5:18, Masahiro Yamada wrote:
-> On Wed, Dec 5, 2018 at 3:37 AM Rob Herring <robh@kernel.org> wrote:
->>
->> Olof, Arnd,
->>
->> I've put together a script to move the dts files and update the
->> makefiles. It doesn't handle files not following a common prefix which
->> isn't many and some includes within the dts files will need some fixups
->> by hand.
->>
->> MAINTAINERS will also need updating.
->>
->> A few questions:
->>
->> Do we want to move absolutely everything to subdirs? There's quite a
->> few platforms with only 1-2 platforms. I haven't added these to the
->> list yet, but can.
->>
->> Do any vendors need another level of directories? davinci, omap, nspire,
->> etc. for TI for example.
->>
->> What to do with armv7m.dtsi? I guess it should remain and we just fixup
->> the include. There may be a few other cross vendor things.
->>
->>
->> Sub-arch maintainers,
->> 'vendor_map' below is the mapping of file prefix to new subdirectory
->> (the SoC vendor prefix). Please comment if there are any issues.
->>
->> Rob
->>
->> 8<-----------------------------------------------------------
->> #!/usr/bin/env python3
->>
->> import os
->> import re
->> from git import Git
->> import glob
->>
->> vendor_map = {
->>     'imx': 'fsl',
->>     'ls': 'fsl',
->>     'vf': 'fsl',
->>     'qcom': 'qcom',
->>     'am3' : 'ti',
->>     'am4' : 'ti',
->>     'am5' : 'ti',
->>     'da' : 'ti',
->>     'dm' : 'ti',
->>     'dra' : 'ti',
->>     'keystone' : 'ti',
->>     'omap' : 'ti',
->>     'nspire' : 'ti',
->>     'armada' : 'marvell',
->>     'berlin' : 'marvell',
->>     'dove' : 'marvell',
->>     'kirkwood' : 'marvell',
->>     'orion' : 'marvell',
->>     'pxa' : 'marvell',
->>     'mvebu' : 'marvell',
->>     'mmp2' : 'marvell',
->>     'arm-' : 'arm',
->>     'integ' : 'arm',
->>     've' : 'arm',
->>     'aspeed' : 'aspeed',
->>     'at91' : 'atmel',
->>     'sama' : 'atmel',
->>     'bcm' : 'brcm',
->>     'exynos' : 'samsung',
->>     's3c' : 'samsung',
->>     's5p' : 'samsung',
->>     'gemini' : 'cortina',
->>     'hi3' : 'hisilicon',
->>     'hip' : 'hisilicon',
->>     'hisi' : 'hisilicon',
->>     'mt' : 'mediatek',
->>     'meson' : 'amlogic',
->>     'owl' : 'actions',
->>     'r7' : 'renesas',
->>     'r8' : 'renesas',
->>     'r9' : 'renesas',
->>     'rk' : 'rockchip',
->>     'socfpga' : 'altera',
->>     'st' : 'st',
->>     'spear' : 'st',
->>     'sun' : 'allwinner',
->>     'tegra' : 'nvidia',
->>     'zynq' : 'xilinx',
->>     'wm' : 'wm',
->>     'uniph' : 'socionext',
-> 
-> 
-> I tested this script, and
-> I confirmed all of my DT files were moved to the socionext subdirectory.
-> 
-> However, this would break arm64 build
-> because some of my arm64 DT files include arm32 ones.
-> 
-> I think it is common to share base platform boards between arm and arm64.
+On Wed, Dec 5, 2018 at 5:48 PM Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
+>
+> Hi,
+>
+> On Wed, 2018-12-05 at 17:45 +0800, Chen-Yu Tsai wrote:
+> > On Wed, Dec 5, 2018 at 5:25 PM Paul Kocialkowski
+> > <paul.kocialkowski@bootlin.com> wrote:
+> > > Add the H5-specific system control node description to its device-tree
+> > > with support for the SRAM C1 section, that will be used by the video
+> > > codec node later on.
+> > >
+> > > The CPU-side SRAM address was obtained empirically while the size was
+> > > taken from the documentation. They may not be entirely accurate.
+> > >
+> > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > ---
+> > >  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 22 ++++++++++++++++++++
+> > >  1 file changed, 22 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+> > > index b41dc1aab67d..42bfb560b367 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+> > > @@ -94,6 +94,28 @@
+> > >         };
+> > >
+> > >         soc {
+> > > +               system-control@1c00000 {
+> > > +                       compatible = "allwinner,sun50i-h5-system-control";
+> > > +                       reg = <0x01c00000 0x1000>;
+> > > +                       #address-cells = <1>;
+> > > +                       #size-cells = <1>;
+> > > +                       ranges;
+> > > +
+> > > +                       sram_c1: sram@1d00000 {
+> > > +                               compatible = "mmio-sram";
+> > > +                               reg = <0x00018000 0x1c000>;
+> >
+> > 0x1d00000 or 0x18000?
+>
+> For the H5, I found the VE SRAM area to be mapped to 0x18000 on the CPU
+> side (when testing with devmem), unlike the A64, H3 and others. I was
+> rather surprised about this as well!
 
-+1
+I'm actually referring to the node name that still says 1d00000.
 
-Just a note here that for Zynq and ZynqMP there should be doable to run
-Microblaze in programmable logic with reusing fixed IPs.
-There could be also other soft core CPUs which could do this on Xilinx
-devices.
+ChenYu
 
-It means maybe moving this out of arm/arm64 to more generic location
-would be one more step to consider as the part of this move.
-
-Thanks,
-Michal
+>
+> > > +                               #address-cells = <1>;
+> > > +                               #size-cells = <1>;
+> > > +                               ranges = <0 0x00018000 0x1c000>;
+> >
+> > Same here.
+> >
+> > > +
+> > > +                               ve_sram: sram-section@0 {
+> > > +                                       compatible = "allwinner,sun50i-h5-sram-c1",
+> > > +                                                    "allwinner,sun4i-a10-sram-c1";
+> > > +                                       reg = <0x000000 0x1c000>;
+> > > +                               };
+> > > +                       };
+> > > +               };
+> > > +
+> > >                 mali: gpu@1e80000 {
+> > >                         compatible = "allwinner,sun50i-h5-mali", "arm,mali-450";
+> > >                         reg = <0x01e80000 0x30000>;
+> > > --
+> > > 2.19.2
+>
+> Cheers,
+>
+> Paul
+>
+> --
+> Paul Kocialkowski, Bootlin (formerly Free Electrons)
+> Embedded Linux and kernel engineering
+> https://bootlin.com
+>
