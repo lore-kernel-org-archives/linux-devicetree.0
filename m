@@ -1,73 +1,36 @@
-Return-Path: <SRS0=BW64=OQ=mentor.com=Vladimir_Zapolskiy@kernel.org>
-Subject: Re: [PATCH v1 1/4] dt-bindings: sc16is7xx: Add alternative
- clock-frequence property
-References: <20181205141133.9305-1-andriy.shevchenko@linux.intel.com>
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Message-ID: <ff94d003-6636-169b-7a89-fdc4bf9c39b5@mentor.com>
-Date: Fri, 7 Dec 2018 10:18:26 +0200
+Return-Path: <SRS0=O9KN=OO=linux.intel.com=andriy.shevchenko@kernel.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/4] dt-bindings: sc16is7xx: Add alternative clock-frequence property
+Date: Wed,  5 Dec 2018 16:11:30 +0200
+Message-Id: <20181205141133.9305-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20181205141133.9305-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org, Georgii Staroselskii <georgii.staroselskii@emlid.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org, Georgii Staroselskii <georgii.staroselskii@emlid.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Andy,
+For the platforms which have no clock provider for the sc16is7xx type of UART,
+introduce an alternative clock-frequency property which would be used instead.
 
-On 12/05/2018 04:11 PM, Andy Shevchenko wrote:
-> For the platforms which have no clock provider for the sc16is7xx type of UART,
-> introduce an alternative clock-frequency property which would be used instead.
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-the subject has a typo in 'clock-frequence', then can you please tell me more,
-how is it possible that an SC16IS7xx IC has no clock provider connected to it?
-
-And if there is one, then please just describe it in device tree as well.
-
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
-> index e7921a8e276b..b8cf38a1e43c 100644
-> --- a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
-> +++ b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
-> @@ -12,6 +12,8 @@ Required properties:
->  - reg: I2C address of the SC16IS7xx device.
->  - interrupts: Should contain the UART interrupt
->  - clocks: Reference to the IC source clock.
-> +	OR
-> +- clock-frequency: The source clock frequency for the IC.
->  
-
-I strongly dislike this change, I'm inclined to cast a NAK to the series.
-
-1. 'clock-frequency' is a very specific device tree property, in my opinion
-    its presence is justified on sort of clock provider devices only (like I2C
-    controllers), unfortunately the property was added to a number of device
-    tree bindings improperly, mainly it was done before introduction of
-    "assigned-clocks" and "assigned-clock-parents" properties in CCF, and then
-    it was blindly copied.
-
-2. SC16IS7xx type of UARTs is a regular clock consumer, ICs always have a valid
-   clock provider connected to XTAL1 (and XTAL2 in case of a connected
-   crystal oscillator), thus, if needed, the driver can get input clock rate
-   by calling standard clk_get_rate(), so the presence of the required 'clocks'
-   property is sufficient.
-
-3. In some very specific corner cases it might be needed to add another
-   "assigned-clocks" and "assigned-clock-parents" properties to a particular
-   device node on a particular board, but their explicit description in device
-   tree bindings is not needed.
-
---
-Best wishes,
-Vladimir
-
->  Optional properties:
->  - gpio-controller: Marks the device node as a GPIO controller.
-> 
+diff --git a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
+index e7921a8e276b..b8cf38a1e43c 100644
+--- a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
++++ b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
+@@ -12,6 +12,8 @@ Required properties:
+ - reg: I2C address of the SC16IS7xx device.
+ - interrupts: Should contain the UART interrupt
+ - clocks: Reference to the IC source clock.
++	OR
++- clock-frequency: The source clock frequency for the IC.
+ 
+ Optional properties:
+ - gpio-controller: Marks the device node as a GPIO controller.
+-- 
+2.19.2
