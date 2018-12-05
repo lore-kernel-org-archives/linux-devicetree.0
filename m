@@ -1,35 +1,46 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v5 4/8] soc: qcom: rpmpd: Add support for get/set
- performance state
-Date: Wed, 5 Dec 2018 15:41:22 +0530
-Message-ID: <c1676ab0-5981-52be-18f3-44ee266e195d@codeaurora.org>
-References: <20181204052119.806-1-rnayak@codeaurora.org>
- <20181204052119.806-5-rnayak@codeaurora.org>
- <154396526967.88331.13652897075952274639@swboyd.mtv.corp.google.com>
- <d9317471-fb81-482a-22c1-4a7b466a1df4@codeaurora.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 3/3] ARM: dts: sun8i: a33: Drop audio codec oversampling rate to 128 fs
+Date: Wed,  5 Dec 2018 18:11:52 +0800
+Message-ID: <20181205101152.22983-4-wens@csie.org>
+References: <20181205101152.22983-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d9317471-fb81-482a-22c1-4a7b466a1df4@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <20181205101152.22983-1-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, andy.gross@linaro.org, collinsd@codeaurora.org, mka@chromium.org, robh@kernel.org, ulf.hansson@linaro.org, viresh.kumar@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
+The current oversampling rate of 512 means that for 48 kHz 16 bit
+stereo, the MCLK is running at the same rate as the module clock,
+so there is no head room to support higher sampling rates. The codec
+however supports up to 192 kHz for playback.
 
-On 12/5/2018 12:33 PM, Rajendra Nayak wrote:
->>
->>> +               return 0;
->>> +       }
->>> +
->>> +       of_node_put(np);
->>
->> This same code exists twice. Perhaps a helper needs to exist for
->> qcom_rpm_get_performance() to pull the number out of the DT.
-> 
-> Sure I can make both drivers use a common helper instead of duplicating it.
+This patch drops the oversampling rate from 512 to 128, so that 192 kHz
+audio can be played back directly without downsampling. Ideally we
+should be using different oversampling rates for different sampling
+rates, but that's not possible without a platform-specific machine
+driver.
 
-which would mean I will need to create a new file just to define the
-common helper. Does that seem like an overkill?
+Fixes: 870f1bd1f5e9 ("ARM: dts: sun8i: Add audio codec, dai and card for A33")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ arch/arm/boot/dts/sun8i-a33.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
+index c2c10cd4a210..11f58893678d 100644
+--- a/arch/arm/boot/dts/sun8i-a33.dtsi
++++ b/arch/arm/boot/dts/sun8i-a33.dtsi
+@@ -207,7 +207,7 @@
+ 		simple-audio-card,format = "i2s";
+ 		simple-audio-card,frame-master = <&link_codec>;
+ 		simple-audio-card,bitclock-master = <&link_codec>;
+-		simple-audio-card,mclk-fs = <512>;
++		simple-audio-card,mclk-fs = <128>;
+ 		simple-audio-card,aux-devs = <&codec_analog>;
+ 		simple-audio-card,routing =
+ 			"Left DAC", "AIF1 Slot 0 Left",
+-- 
+2.20.0.rc1
