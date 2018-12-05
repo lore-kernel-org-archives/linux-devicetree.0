@@ -1,124 +1,105 @@
 From: Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: Re: [PATCH] power: reset: gpio-poweroff: add ability to specific
- active and inactive delays
-Date: Wed, 5 Dec 2018 22:45:56 +0100
-Message-ID: <20181205214556.vb2ssgkubdtgj5fx@earth.universe>
-References: <20181111214538.32477-1-heiko@sntech.de>
+Subject: Re: [PATCH v2 1/7] dt-bindings: power: supply: bq24190_charger: add
+ bq24192 and usb-otg-vbus
+Date: Wed, 5 Dec 2018 22:55:43 +0100
+Message-ID: <20181205215543.voo7lvdngyhbcpwz@earth.universe>
+References: <20181101001149.13453-1-masneyb@onstation.org>
+ <20181101001149.13453-2-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qqvzxmalnkykoqhl"
+        protocol="application/pgp-signature"; boundary="upvwbs3og7fcr6a7"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181111214538.32477-1-heiko@sntech.de>
+In-Reply-To: <20181101001149.13453-2-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mdf@kernel.org, Heiko Stuebner <heiko.stuebner@bq.com>
+To: Brian Masney <masneyb@onstation.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, bjorn.andersson@linaro.org, linus.walleij@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-gpio@vger.kernel.org, jonathan@marek.ca
 List-Id: devicetree@vger.kernel.org
 
 
---qqvzxmalnkykoqhl
+--upvwbs3og7fcr6a7
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Sun, Nov 11, 2018 at 10:45:38PM +0100, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@bq.com>
+On Wed, Oct 31, 2018 at 08:11:43PM -0400, Brian Masney wrote:
+> Add support for the ti,bq24192 variant and a child node for the
+> usb-otg-vbus regulator.
 >=20
-> Similar to gpio-reset allow to specify active and inactive delays
-> while keeping the 100ms defaults that were used previously all the time.
->=20
-> The dt-properties are named the same as in gpio-reset but get an "-ms"
-> suffix as properties should contain such a suffix specifying its unit.
->=20
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
 > ---
 
 Thanks, queued.
 
 -- Sebastian
 
->  .../devicetree/bindings/power/reset/gpio-poweroff.txt  |  2 ++
->  drivers/power/reset/gpio-poweroff.c                    | 10 ++++++++--
->  2 files changed, 10 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/power/supply/bq24190.txt         | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 >=20
-> diff --git a/Documentation/devicetree/bindings/power/reset/gpio-poweroff.=
-txt b/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
-> index 6d8980c18c34..3e56c1b34a4c 100644
-> --- a/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
-> +++ b/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
-> @@ -27,6 +27,8 @@ Optional properties:
->    it to an output when the power-off handler is called. If this optional
->    property is not specified, the GPIO is initialized as an output in its
->    inactive state.
-> +- active-delay-ms: Delay (default 100) to wait after driving gpio active
-> +- inactive-delay-ms: Delay (default 100) to wait after driving gpio inac=
-tive
->  - timeout-ms: Time to wait before asserting a WARN_ON(1). If nothing is
->                specified, 3000 ms is used.
+> diff --git a/Documentation/devicetree/bindings/power/supply/bq24190.txt b=
+/Documentation/devicetree/bindings/power/supply/bq24190.txt
+> index 9e517d307070..c8ac028bd3c7 100644
+> --- a/Documentation/devicetree/bindings/power/supply/bq24190.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/bq24190.txt
+> @@ -3,6 +3,7 @@ TI BQ24190 Li-Ion Battery Charger
+>  Required properties:
+>  - compatible: contains one of the following:
+>      * "ti,bq24190"
+> +    * "ti,bq24192"
+>      * "ti,bq24192i"
+>  - reg: integer, I2C address of the charger.
+>  - interrupts[-extended]: configuration for charger INT pin.
+> @@ -19,6 +20,12 @@ Optional properties:
+>  - ti,system-minimum-microvolt: when power is connected and the battery i=
+s below
+>    minimum system voltage, the system will be regulated above this settin=
+g.
 > =20
-> diff --git a/drivers/power/reset/gpio-poweroff.c b/drivers/power/reset/gp=
-io-poweroff.c
-> index 38206c39b3bf..52525b6c18db 100644
-> --- a/drivers/power/reset/gpio-poweroff.c
-> +++ b/drivers/power/reset/gpio-poweroff.c
-> @@ -26,6 +26,8 @@
->   */
->  static struct gpio_desc *reset_gpio;
->  static u32 timeout =3D DEFAULT_TIMEOUT_MS;
-> +static u32 active_delay =3D 100;
-> +static u32 inactive_delay =3D 100;
-> =20
->  static void gpio_poweroff_do_poweroff(void)
->  {
-> @@ -33,10 +35,11 @@ static void gpio_poweroff_do_poweroff(void)
-> =20
->  	/* drive it active, also inactive->active edge */
->  	gpiod_direction_output(reset_gpio, 1);
-> -	mdelay(100);
-> +	mdelay(active_delay);
+> +child nodes:
+> +- usb-otg-vbus:
+> +  Usage: optional
+> +  Description: Regulator that is used to control the VBUS voltage direct=
+ion for
+> +               either USB host mode or for charging on the OTG port.
 > +
->  	/* drive inactive, also active->inactive edge */
->  	gpiod_set_value_cansleep(reset_gpio, 0);
-> -	mdelay(100);
-> +	mdelay(inactive_delay);
+>  Notes:
+>  - Some circuit boards wire the chip's "OTG" pin high (enabling 500mA def=
+ault
+>    charge current on USB SDP ports, among other features). To simulate th=
+is on
+> @@ -39,6 +46,8 @@ Example:
+>  		interrupts-extended =3D <&gpiochip 10 IRQ_TYPE_EDGE_FALLING>;
+>  		monitored-battery =3D <&bat>;
+>  		ti,system-minimum-microvolt =3D <3200000>;
+> +
+> +		usb_otg_vbus: usb-otg-vbus { };
+>  	};
 > =20
->  	/* drive it active, also inactive->active edge */
->  	gpiod_set_value_cansleep(reset_gpio, 1);
-> @@ -66,6 +69,9 @@ static int gpio_poweroff_probe(struct platform_device *=
-pdev)
->  	else
->  		flags =3D GPIOD_OUT_LOW;
-> =20
-> +	device_property_read_u32(&pdev->dev, "active-delay-ms", &active_delay);
-> +	device_property_read_u32(&pdev->dev, "inactive-delay-ms",
-> +				 &inactive_delay);
->  	device_property_read_u32(&pdev->dev, "timeout-ms", &timeout);
-> =20
->  	reset_gpio =3D devm_gpiod_get(&pdev->dev, NULL, flags);
+>  	&twl_gpio {
 > --=20
-> 2.18.0
+> 2.17.2
 >=20
 
---qqvzxmalnkykoqhl
+--upvwbs3og7fcr6a7
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlwIRxEACgkQ2O7X88g7
-+po/chAAj9WAvSKB5fCxfb/ay63NwY/Z0ukx6mORLwKoUmWMuNnRgIYJCgVPywG9
-OFQq/G+jEZqHfoO+AlVqCUvIDVx8RdCj5SGzCna8rvnUfrVxmyDTi12atOPWoSIT
-VPewQ5WWcOPbCBh3P6LbqBMhW2XIUBzYDW3OraKj2TplTWxFE5CnC258Ale+kw3a
-7jiXAF5v071m4jYt6D7JwApK150kfKABmxjySrYe58KJ7y/4Q3ke2+MeHQBLjK92
-xUOJfnGLdEj4K5W6a47fhG7/LewV1aWbLTr2WB5LBdEOpgdu2OwMder6BHlMz+23
-NeUKJwM3Ff5CGNO7tDkg0u7gZmeXhxctHctnFBXYjYVax5YDr1pUlGQF0dJxpECd
-7YxkqFfRopL/qvI/hpnMed9Bf1LZyZPvuzK1DKjryWS8WFEAljUR1dhFXVaV69EF
-Rb7pyNrJQFYIG7T2aFjekqslpCGy79Jl6oK51vSaXRmGeHXJERiLhE6Gu716hVvp
-EKjYTdT2dDbzO4fdBIDxcfBr/E+aG8GTb3vFNFaBcYAG8aXWQpL5HSxUorMFUOlL
-DWxcPCC8+gOk0p6AMdCWWdeIT0V8a3HWg2Ig01j2NXWHTusLsbkYKHt1iWNunrMv
-8lUDVnxAy1hvPSn7F/DXZyDKIJotk56yWJSDWLwBiHFGlw3sHmA=
-=HNvj
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlwISV8ACgkQ2O7X88g7
++poG9A/+NZpnXe0j0oS+VthaxBzcOEdztGXAO5n++Rmi6G7dYZU4v+K+ww0Hg1LD
+Vr2FkEW3b3ujiMB6QsxY5iWIyjs96bm6P+ej8EA7Uf5eFW8LgGcWHd5GW7mEP6+J
+uRV+n2YERnF07rNEBXd41agRC7f1uZDzR/xa4HfD/CJ523oFU32KaKLulaqPPjK7
++6lagKYBcN+a1ojgiPoJrA0QzO6mi8wAfbU3oo49X+YV9PYJA/fNEZYrnz8ql/6Q
+8H+ZEsa90fUquq4DjNLqZ1DGqA1gr7E6Ktt5+n+pAhWx4I3sgd5JUQS3jpocwO9z
+Ux0Q9UF/tfddpY3edIaGNzpDkAr93o7uTdCoeFx5h8LP0kyzFHK437lz1pwcId20
+UuZ1Hk17wruvp9+SGf+2P0bm6mFbQbYXjCYhUbez6kW3xtLtO5yCd+BU3j/15Lxz
+dEXZjrfhnc9tQyNtAzHHrEfLv3YyUSbTEcWkd1PvpSjiGbgOBhU/3cpOMKXAGdgW
+TEeNDG9fNG5il8P10+ahcwF5zve9l4rfhHYYLHLMcVRSe0A+0ZVRduzWeRRY+klo
+dhz/aJytsRZpdzF1BI17PcBDoTcygugLbkWgtgy8Q3YX1RgPX6XQBJ0TCbLAkp7p
+s8ZIW2t1i7U5aLqtN5SK6Wk/noBbnOi+sSPXULpb5dS2z1BvDAg=
+=f0o3
 -----END PGP SIGNATURE-----
 
---qqvzxmalnkykoqhl--
+--upvwbs3og7fcr6a7--
