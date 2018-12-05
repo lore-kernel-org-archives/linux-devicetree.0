@@ -1,55 +1,50 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH] ARM: dts: Fix hsi gdd range for omap4
-Date: Wed,  5 Dec 2018 15:05:53 -0800
-Message-ID: <20181205230553.39171-1-tony@atomide.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v3] ARM: dts: Add support for Liebherr's BK4 device (vf610 based)
+Date: Wed, 5 Dec 2018 21:12:46 -0200
+Message-ID: <CAOMZO5BN5KJ+s6F9CJXQPX=Ta0Ow0PaV_AmFHYSDNr78jLjziQ@mail.gmail.com>
+References: <20180921152726.31742-1-lukma@denx.de> <20181009105028.17971-1-lukma@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-omap@vger.kernel.org
-Cc: devicetree@vger.kernel.org, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, linux-arm-kernel@lists.infradead.org, Sebastian Reichel <sre@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181009105028.17971-1-lukma@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lukasz Majewski <lukma@denx.de>, Rob Herring <robh+dt@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Fabio Estevam <fabio.estevam@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-While reviewing the missing mcasp ranges I noticed omap4 hsi range
-for gdd is wrong so let's fix it.
+Hi Lukasz/Rob,
 
-I'm not aware of any omap4 devices in mainline kernel though that use
-hsi though.
+On Tue, Oct 9, 2018 at 7:50 AM Lukasz Majewski <lukma@denx.de> wrote:
 
-Cc: Sebastian Reichel <sre@kernel.org>
-Fixes: 84badc5ec5fc ("ARM: dts: omap4: Move l4 child devices to probe
-them with ti-sysc")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/omap4-l4.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> +&dspi3 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_dspi3>;
+> +       bus-num = <3>;
+> +       status = "okay";
+> +       spi-slave;
+> +
+> +       slave@0 {
+> +               compatible = "lwn,bk4";
+> +               spi-max-frequency = <30000000>;
+> +               reg = <0>;
+> +       };
+> +};
 
-diff --git a/arch/arm/boot/dts/omap4-l4.dtsi b/arch/arm/boot/dts/omap4-l4.dtsi
---- a/arch/arm/boot/dts/omap4-l4.dtsi
-+++ b/arch/arm/boot/dts/omap4-l4.dtsi
-@@ -196,12 +196,12 @@
- 			clock-names = "fck";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--			ranges = <0x0 0x58000 0x4000>;
-+			ranges = <0x0 0x58000 0x5000>;
- 
- 			hsi: hsi@0 {
- 				compatible = "ti,omap4-hsi";
- 				reg = <0x0 0x4000>,
--				      <0x4a05c000 0x1000>;
-+				      <0x5000 0x1000>;
- 				reg-names = "sys", "gdd";
- 
- 				clocks = <&l3_init_clkctrl OMAP4_HSI_CLKCTRL 0>;
--- 
-2.19.2
+This is causing the following dtc warning in linux-next:
+
+  DTC     arch/arm/boot/dts/vf610-bk4.dtb
+arch/arm/boot/dts/vfxxx.dtsi:550.24-563.6: Warning (spi_bus_bridge):
+/soc/aips-bus@40080000/spi@400ad000: incorrect #address-cells for SPI
+bus
+  also defined at arch/arm/boot/dts/vf610-bk4.dts:106.8-118.3
+arch/arm/boot/dts/vf610-bk4.dtb: Warning (spi_bus_reg): Failed
+prerequisite 'spi_bus_bridge'
+
+If spi-slave property is removed the warning is gone.
+
+Looking at drivers/spi/spi-fsl-dspi.c I don't see the "spi-slave"
+property being handled there.
+
+Any ideas on how to fix this?
+
+Thanks
