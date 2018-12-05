@@ -1,112 +1,81 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH 0/7] microblaze: fix various problems in building boot
- images
-Date: Wed, 5 Dec 2018 17:41:01 +0100
-Message-ID: <dd726c23-7c37-2b38-5b9f-a4edc391511d@monstr.eu>
-References: <1543823457-32478-1-git-send-email-yamada.masahiro@socionext.com>
-Reply-To: monstr@monstr.eu
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77965: Add CAN controller
+ nodes
+Date: Wed, 5 Dec 2018 17:50:06 +0100
+Message-ID: <a685e1ab-4d00-2214-9339-3b57a537f6c2@gmail.com>
+References: <20181118173327.4704-1-marek.vasut+renesas@gmail.com>
+ <20181118230250.GA2553@kunai>
+ <6ffce819-4d8e-e54a-ba82-0845c36a6ec4@gmail.com>
+ <CAMuHMdUjONJYypV0a5wnxyBx+sUMHzRwZObQ=d7xFG2ZSCM3Ag@mail.gmail.com>
+ <8808d836-2454-4166-fbe0-02849e52792b@gmail.com>
+ <CAMuHMdWrNjmCmAuKjp=J2bUhXtXCNbNE2QHyT0df3AYF8ua9JA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="svNOVL13q6FxCdhSHHW6hgLU8MdLu4uy6"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543823457-32478-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-kbuild@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAMuHMdWrNjmCmAuKjp=J2bUhXtXCNbNE2QHyT0df3AYF8ua9JA@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---svNOVL13q6FxCdhSHHW6hgLU8MdLu4uy6
-Content-Type: multipart/mixed; boundary="MSVYFBXQIqseltohcSuoSjzf0VJrIOtDM";
- protected-headers="v1"
-From: Michal Simek <monstr@monstr.eu>
-Reply-To: monstr@monstr.eu
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-kbuild@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>
-Message-ID: <dd726c23-7c37-2b38-5b9f-a4edc391511d@monstr.eu>
-Subject: Re: [PATCH 0/7] microblaze: fix various problems in building boot
- images
-References: <1543823457-32478-1-git-send-email-yamada.masahiro@socionext.com>
-In-Reply-To: <1543823457-32478-1-git-send-email-yamada.masahiro@socionext.com>
+On 11/21/2018 08:37 AM, Geert Uytterhoeven wrote:
+> Hi Marek,
 
---MSVYFBXQIqseltohcSuoSjzf0VJrIOtDM
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On 03. 12. 18 8:50, Masahiro Yamada wrote:
-> This patch set fixes various issues in microblaze Makefiles.
->=20
-> BTW, "simpleImage.<dt>" works like a phony target to generate the
-> following four images, where the first three are just aliases.
->=20
->  - arch/microblaze/boot/simpleImage.<dt>:
->          identical to arch/microblaze/boot/linux.bin
+> On Wed, Nov 21, 2018 at 12:33 AM Marek Vasut <marek.vasut@gmail.com> wrote:
+>> On 11/19/2018 10:00 AM, Geert Uytterhoeven wrote:
+>>> On Mon, Nov 19, 2018 at 12:46 AM Marek Vasut <marek.vasut@gmail.com> wrote:
+>>>> On 11/19/2018 12:02 AM, Wolfram Sang wrote:
+>>>>> On Sun, Nov 18, 2018 at 06:33:26PM +0100, Marek Vasut wrote:
+>>>>>> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>>>>>>
+>>>>>> This patch adds CAN{0,1} controller nodes for the R8A77965 SoC.
+>>>>>>
+>>>>>> Based on several similar patches of the R8A7795 device tree
+>>>>>> by Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+>>>>>> and Geert Uytterhoeven <geert+renesas@glider.be>.
+>>>>>>
+>>>>>> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>>>>>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+>>>>>> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>>>> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+>>>>>> Cc: Rob Herring <robh@kernel.org>
+>>>>>> Cc: Simon Horman <horms+renesas@verge.net.au>
+>>>>>> Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>>>>>> Cc: linux-renesas-soc@vger.kernel.org
+>>>>>> Cc: linux-arm-kernel@lists.infradead.org
+>>>>>
+>>>>> Were you able to do some testing using EXIO connectors? Would be nice to
+>>>>> know what was tested.
+>>>>
+>>>> Not on the M3N, since I don't see it broken out on the EXIO ; is it
+>>>> really there ? It'd be easy to test on M3NSK with KF, but I don't have
+>>>> either KF or M3NSK.
+>>>
+>>> Please have a look at EXIO Connector D, pins 13/14/15.
+>>
+>> That's LBSC WE1n/WE0n/CS0n on S-XS . Is there something I obviously
+>> don't see ?
+> 
+> Unless you connect an expansion card to the Ex Memory Connector,
+> these signals are free to use, and can be pinmuxed to a CAN function.
 
-It is not - fdt section should be empty.
-simpleImage has this section filled.
+Tested-by: Marek Vasut <marek.vasut@gmail.com>
 
->=20
->  - arch/microblaze/boot/simpleImage.<dt>.unstrip:
->          identical to vmlinux
+on M3N Salvator-XS with a rats-nest MCP2551 setup on EXIO-D and Peak
+CANFD USB.
 
-The same here with filled section.
-
->=20
->  - arch/microblaze/boot/simpleImage.<dt>.ub:
->          identical to arch/microblaze/boot/linux.bin.ub
-
-as above.
-
->=20
->  - arch/microblaze/boot/simpleImage.<dt>.strip:
->          stripped vmlinux
-
-And this is there because unstrip version is quite huge and for early
-issues you need to know only some symbols that's why debugger is not
-overflow with stuff which none needs.
-Maybe this is not an issue now but that strip version is used a lot.
-
-
->=20
-> I am not sure how much useful those copies are,
-> but, I tried my best to keep the same behavior.
->=20
-> IMHO, I guess DTB=3D<dt> would be more sensible,
-> but it is up to Michal.
-
-What do you mean by this exactly?
-
-Definitely thanks for looking at this.
-Michal
-
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
-
-
-
---MSVYFBXQIqseltohcSuoSjzf0VJrIOtDM--
-
---svNOVL13q6FxCdhSHHW6hgLU8MdLu4uy6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iEYEARECAAYFAlwH/54ACgkQykllyylKDCEAqgCfR9/DxCsXl6NlRGgU9JZ31euK
-5zoAn17ir1wuoX67oPoeL52wjTf5mTXt
-=jAbi
------END PGP SIGNATURE-----
-
---svNOVL13q6FxCdhSHHW6hgLU8MdLu4uy6--
+-- 
+Best regards,
+Marek Vasut
