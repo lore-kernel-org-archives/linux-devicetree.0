@@ -1,55 +1,105 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] staging: media: imx: Use of_node_name_eq for node name
- comparisons
-Date: Wed,  5 Dec 2018 13:50:42 -0600
-Message-ID: <20181205195050.4759-26-robh@kernel.org>
+Subject: [PATCH] ALSA: soundbus: Remove direct OF name and type accesses
+Date: Wed,  5 Dec 2018 13:50:48 -0600
+Message-ID: <20181205195050.4759-32-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org
+Cc: Johannes Berg <johannes@sipsolutions.net>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Convert string compares of DT node names to use of_node_name_eq helper
-instead. This removes direct access to the node name pointer.
+Convert soundbus uevent and sysfs OF node name and device type usage to
+use printf specifier and helper functions instead of directly accessing
+the name and type pointers. This will allow the eventual removal of the
+pointers.
 
-For instances using of_node_cmp, this has the side effect of now using
-case sensitive comparisons. This should not matter for any FDT based
-system which this is.
-
-Cc: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-media@vger.kernel.org
-Cc: devel@driverdev.osuosl.org
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: alsa-devel@alsa-project.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/staging/media/imx/imx-media-of.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/aoa/soundbus/core.c  |  2 +-
+ sound/aoa/soundbus/sysfs.c | 34 +++++++++++++++++++++-------------
+ 2 files changed, 22 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/staging/media/imx/imx-media-of.c b/drivers/staging/media/imx/imx-media-of.c
-index b2e840f96c50..a01327f6e045 100644
---- a/drivers/staging/media/imx/imx-media-of.c
-+++ b/drivers/staging/media/imx/imx-media-of.c
-@@ -162,7 +162,7 @@ int imx_media_create_csi_of_links(struct imx_media_dev *imxmd,
- 		fwnode_property_read_u32(fwnode, "reg", &link.remote_port);
- 		fwnode = fwnode_get_next_parent(fwnode);
- 		if (is_of_node(fwnode) &&
--		    of_node_cmp(to_of_node(fwnode)->name, "ports") == 0)
-+		    of_node_name_eq(to_of_node(fwnode), "ports"))
- 			fwnode = fwnode_get_next_parent(fwnode);
- 		link.remote_node = fwnode;
+diff --git a/sound/aoa/soundbus/core.c b/sound/aoa/soundbus/core.c
+index f3076a3f7f2f..065d3a55725e 100644
+--- a/sound/aoa/soundbus/core.c
++++ b/sound/aoa/soundbus/core.c
+@@ -74,7 +74,7 @@ static int soundbus_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 	of = &soundbus_dev->ofdev;
  
+ 	/* stuff we want to pass to /sbin/hotplug */
+-	retval = add_uevent_var(env, "OF_NAME=%s", of->dev.of_node->name);
++	retval = add_uevent_var(env, "OF_NAME=%pOFn", of->dev.of_node);
+ 	if (retval)
+ 		return retval;
+ 
+diff --git a/sound/aoa/soundbus/sysfs.c b/sound/aoa/soundbus/sysfs.c
+index 81da020bddef..a2d55e15afbb 100644
+--- a/sound/aoa/soundbus/sysfs.c
++++ b/sound/aoa/soundbus/sysfs.c
+@@ -1,18 +1,10 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/kernel.h>
++#include <linux/of.h>
+ #include <linux/stat.h>
+ /* FIX UP */
+ #include "soundbus.h"
+ 
+-#define soundbus_config_of_attr(field, format_string)			\
+-static ssize_t								\
+-field##_show (struct device *dev, struct device_attribute *attr,	\
+-              char *buf)						\
+-{									\
+-	struct soundbus_dev *mdev = to_soundbus_device (dev);		\
+-	return sprintf (buf, format_string, mdev->ofdev.dev.of_node->field); \
+-}
+-
+ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+ 			     char *buf)
+ {
+@@ -25,17 +17,33 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+ 		strcat(buf, "\n");
+ 		length = strlen(buf);
+ 	} else {
+-		length = sprintf(buf, "of:N%sT%s\n",
+-				 of->dev.of_node->name, of->dev.of_node->type);
++		length = sprintf(buf, "of:N%pOFn%c%s\n",
++				 of->dev.of_node, 'T',
++                                 of_node_get_device_type(of->dev.of_node));
+ 	}
+ 
+ 	return length;
+ }
+ static DEVICE_ATTR_RO(modalias);
+ 
+-soundbus_config_of_attr (name, "%s\n");
++static ssize_t name_show(struct device *dev,
++			 struct device_attribute *attr, char *buf)
++{
++	struct soundbus_dev *sdev = to_soundbus_device(dev);
++	struct platform_device *of = &sdev->ofdev;
++
++	return sprintf(buf, "%pOFn\n", of->dev.of_node);
++}
+ static DEVICE_ATTR_RO(name);
+-soundbus_config_of_attr (type, "%s\n");
++
++static ssize_t type_show(struct device *dev,
++			 struct device_attribute *attr, char *buf)
++{
++	struct soundbus_dev *sdev = to_soundbus_device(dev);
++	struct platform_device *of = &sdev->ofdev;
++
++	return sprintf(buf, "%s\n", of_node_get_device_type(of->dev.of_node));
++}
+ static DEVICE_ATTR_RO(type);
+ 
+ struct attribute *soundbus_dev_attrs[] = {
 -- 
 2.19.1
