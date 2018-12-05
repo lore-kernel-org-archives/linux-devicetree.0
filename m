@@ -1,109 +1,100 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH v2 00/11] thermal: add new flag irq-mode for trip point
-Date: Wed, 05 Dec 2018 23:08:06 +0800
-Message-ID: <1544022486.2841.42.camel@intel.com>
-References: <CGME20181107171019eucas1p1fcb1f44e00265434548d901479f2ea94@eucas1p1.samsung.com>
-         <1541610593-28542-1-git-send-email-l.luba@partner.samsung.com>
+From: Sven Van Asbroeck <thesven73@gmail.com>
+Subject: Re: [PATCH v2 1/2] bus: imx-weim: support multiple address ranges per
+ child node
+Date: Wed, 5 Dec 2018 10:08:16 -0500
+Message-ID: <CAGngYiUvYHTRMvsS_4s8PVyPg5_sg4DhZZU4_k8US871oAWSvQ@mail.gmail.com>
+References: <20181130205624.16227-1-TheSven73@googlemail.com>
+ <20181130205624.16227-2-TheSven73@googlemail.com> <20181205075145.GN3987@dragon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541610593-28542-1-git-send-email-l.luba@partner.samsung.com>
+In-Reply-To: <20181205075145.GN3987@dragon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, b.zolnierkie@samsung.com, krzk@kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 三, 2018-11-07 at 18:09 +0100, Lukasz Luba wrote:
-> Hi all,
-> 
-> This patch set adds a new flag and mechanism in thermal trip points
-> in
-> DT.  The old implementation in thermal zone in DT sets the same
-> configuration for all internal trip points. It does not work for all
-> HW.  There are SoCs which support IRQs for some trip points (i.e.
-> Exynos 4 has 4 trip points with IRQs). For additional one defined
-> inside the thermal zone there is a need of 'polling'. When developer
-> adds polling mode settings inside the thermal zone, all the trip
-> points will be registered for polling, even those supporting IRQs,
-> which does not make sense.
+Hello Shawn, many thanks for the patch review, I really appreciate it !
 
-we have two timers, one for polling, and one for passive cooling.
-I think we are talking about passive cooling timer only, right?
-And the real problem is that we have multiple passive trip points and
-only part of them support irq_mode, and we don't want to start the
-passive polling timer for all of the passive trip points.
+On Wed, Dec 5, 2018 at 2:52 AM Shawn Guo <shawnguo@kernel.org> wrote:
+>
+> On Fri, Nov 30, 2018 at 03:56:23PM -0500, thesven73@gmail.com wrote:
+> > From: Sven Van Asbroeck <TheSven73@googlemail.com>
+> >
+> > Ensure that timing values for the child node are applied to
+> > all chip selects in the child's address ranges.
+> >
+>
+> I'm not sure about that.  Shouldn't we have another child node for
+> different chip select, something like below?
+>
+> &weim {
+>         acme@0,0 {
+>                 compatible = "acme,whatever";
+>                 reg = <0 0 0x100>, <0 0x400000 0x800>;
+>                 fsl,weim-cs-timing = <0x024400b1 0x00001010 0x20081100
+>                                       0x00000000 0xa0000240 0x00000000>;
+>         };
+>
+>         acme@1,400000 {
+>                 compatible = "acme,whatever";
+>                 reg = <1 0x400000 0x800>;
+>                 fsl,weim-cs-timing = <0x024400b1 0x00001010 0x20081100
+>                                       0x00000000 0xa0000240 0x00000000>;
+>         };
+>
+> Shawn
 
-thanks,
-rui
+I am submitting patches for a device that spans chip selects :(
+And such a device needs multiple address changes with different chip selects.
 
->  Thus, developers create workarounds, which
-> are confusing for some other developers.  To workaround, 
-> people declare some trip points as 'active' (those with IRQ support).
-> It allows to bypass polling mode in thermal framework applied for 
-> all thermal zone's trip points.
-> 
-> Thermal framework defines 4 types of trip points. The 'passive' means
-> passive cooling using DVFS, 'active' is designed for fan and other
-> devices actively changing the outside conditions. Therefore, a
-> workaround
-> mentioned earlier is confusing when someone does not know about the
-> framework limitations.
-> 
-> This patch set tries to solve the issue by adding one flag inside the
-> trip point: 'irq-mode;'.  The trip point 'passive' declared in DT
-> with
-> explicit flag 'irq-mode;' will not register itself as polling mode.
-> Thermal framework will skip it during scheduling next read out work.
-> The old global-polling-mode-configuration-inside-thermal-zone is
-> still
-> valid.  Patch set does not break existing design for trip points
-> which
-> do not have 'irq-mode' flag - they will use polling.
-> 
-> As an example please check patch #10 for Exynos4 SoC family, where
-> there
-> is 4 HW supported trip points and there is a need of 6. The rest 2
-> are
-> declared as 'passive' without 'irq-mode;' flag, which means polling
-> mode needed for them.
-> 
-> Patch #1 is a small cleanup in thermal framework.
-> 
-> Change log:
-> v2
-> - changed description in cover letter
-> - change commit messages according to Krzysztof comments
-> - rebase on top of current mainline (v4.20-rc1)
-> 
-> Regards,
-> Lukasz Luba
-> 
-> Lukasz Luba (11):
->   thermal: remove unused function parameter
->   thermal: add irq-mode configuration for trip point
->   thermal: add new sysfs file for irq-mode
->   Doc: thermal: new irq-mode for trip point
->   Doc: DT: thermal: new irq-mode for trip point
->   arm64: dts: exynos5433: add support for thermal trip irq-mode
->   arm64: dts: exynos7: add support for thermal trip irq-mode
->   arm: dts: exynos4: add support for thermal trip irq-mode
->   arm: dts: exynos5420: add support for thermal trip irq-mode
->   arm: dts: exynos5422: add support for thermal trip irq-mode
->   arm: dts: exynos5410: add support for thermal trip irq-mode
-> 
->  .../devicetree/bindings/thermal/thermal.txt        |   7 ++
->  Documentation/thermal/sysfs-api.txt                |   9 ++
->  arch/arm/boot/dts/exynos4-cpu-thermal.dtsi         |  10 +-
->  arch/arm/boot/dts/exynos5410-odroidxu.dts          |  10 +-
->  arch/arm/boot/dts/exynos5420-trip-points.dtsi      |  10 +-
->  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |  40 +++++---
->  arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi     | 105
-> ++++++++++++++-------
->  .../arm64/boot/dts/exynos/exynos7-trip-points.dtsi |   8 ++
->  drivers/thermal/of-thermal.c                       |  17 ++++
->  drivers/thermal/thermal_core.c                     |  16 ++--
->  drivers/thermal/thermal_sysfs.c                    |  53 ++++++++++-
->  include/linux/thermal.h                            |   5 +
->  12 files changed, 226 insertions(+), 64 deletions(-)
-> 
+Imagine we have an acme device, which contains a control and a fifo region,
+on different chip selects:
+
+&weim {
+        acme@0 {
+                compatible = "acme";
+                reg = <0 0x0 0x100>, <1 0x0 0x100>;
+        };
+};
+
+Now in probe we can access both regions:
+int acme_probe(struct platform_device *pdev)
+{
+        control_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+        fifo_res =    platform_get_resource(pdev, IORESOURCE_MEM, 1);
+        /* all ok */
+}
+
+But, if we have two separate child nodes, we also get two calls to probe(),
+which assumes two devices on the bus, and that is incorrect:
+
+&weim {
+        acme@0 {
+                compatible = "acme";
+                reg = <0 0x0 0x100>;
+        };
+        acme@1 {
+                compatible = "acme";
+                reg = <1 0x0 0x100>;
+        };
+};
+
+int acme_probe(struct platform_device *pdev)
+{
+        control_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+        /* next call always fails */
+        fifo_res =    platform_get_resource(pdev, IORESOURCE_MEM, 1);
+}
+
+For my patchset, Rob Herring suggested I made changes to the imx-weim driver
+to accommodate multi-chipselect devices.
+
+See the conversation below between Rob Herring and myself:
+https://lkml.org/lkml/2018/11/30/390
+
+If you are not entirely satisfied with my patch, then perhaps you
+could think of another way to support multi-chipselect devices?
+
+Many thanks,
+Sven
