@@ -1,80 +1,56 @@
-From: Ludovic BARRE <ludovic.barre@st.com>
-Subject: Re: [PATCH V2 1/2] mmc: mmci: send stop command if sbc error issue
-Date: Wed, 5 Dec 2018 17:00:28 +0100
-Message-ID: <4d5b86fa-aa89-5b19-1fee-ecdbc57f6d20@st.com>
-References: <1541583041-17461-1-git-send-email-ludovic.Barre@st.com>
- <1541583041-17461-2-git-send-email-ludovic.Barre@st.com>
- <CAPDyKFpLTEwrBagJrd98Zyrd_pwJa9Zkgsi+geZainQV+OgpOQ@mail.gmail.com>
- <CAPDyKFp06tiMVgKyKLLKKwGtDPkAKuGWo=NaS+j=3oWGq-UV_A@mail.gmail.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH v10 6/7] arm64: dts: sdm845: Add interconnect provider DT
+ nodes
+Date: Wed, 5 Dec 2018 18:01:02 +0200
+Message-ID: <9db2cd8c-62ad-1029-c1f5-7db272abc8de@linaro.org>
+References: <20181127180349.29997-1-georgi.djakov@linaro.org>
+ <20181127180349.29997-7-georgi.djakov@linaro.org>
+ <CAE=gft4XEqkL4oON=Q1oji=AoYeEdL5DFjy3h6hN6uFR9oRA4A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFp06tiMVgKyKLLKKwGtDPkAKuGWo=NaS+j=3oWGq-UV_A@mail.gmail.com>
+In-Reply-To: <CAE=gft4XEqkL4oON=Q1oji=AoYeEdL5DFjy3h6hN6uFR9oRA4A@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+To: Evan Green <evgreen@chromium.org>
+Cc: linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, rjw@rjwysocki.net, robh+dt@kernel.org, Michael Turquette <mturquette@baylibre.com>, khilman@baylibre.com, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, Alexandre Bailon <abailon@baylibre.com>, maxime.ripard@bootlin.com, Arnd Bergmann <arnd@arndb.de>, thierry.reding@gmail.com, ksitaraman@nvidia.com, sanjayc@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Evan,
 
-
-On 12/5/18 3:23 PM, Ulf Hansson wrote:
-> On Tue, 20 Nov 2018 at 10:42, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+On 12/1/18 02:39, Evan Green wrote:
+> On Tue, Nov 27, 2018 at 10:04 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
 >>
->> On 7 November 2018 at 10:30, Ludovic Barre <ludovic.Barre@st.com> wrote:
->>> From: Ludovic Barre <ludovic.barre@st.com>
->>>
->>> Refer to "4.15 set block count command" of sd specification:
->>> Host needs to issue CMD12 if any error is detected in
->>> the CMD18 and CMD25 operations.
->>>
->>> In sbc case, the data->stop is fill by framework.
->>>
->>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->>> ---
->>>   drivers/mmc/host/mmci.c | 5 ++---
->>>   1 file changed, 2 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
->>> index 82bab35..13fa640 100644
->>> --- a/drivers/mmc/host/mmci.c
->>> +++ b/drivers/mmc/host/mmci.c
->>> @@ -1190,11 +1190,10 @@ mmci_data_irq(struct mmci_host *host, struct mmc_data *data,
->>>                          /* The error clause is handled above, success! */
->>>                          data->bytes_xfered = data->blksz * data->blocks;
->>>
->>> -               if (!data->stop || host->mrq->sbc) {
->>> +               if (!data->stop || (host->mrq->sbc && !data->error))
->>>                          mmci_request_end(host, data->mrq);
->>> -               } else {
->>> +               else
->>>                          mmci_start_command(host, data->stop, 0);
+>> From: David Dai <daidavid1@codeaurora.org>
 >>
->> This looks correct to me!
+>> Add RSC (Resource State Coordinator) provider
+>> dictating network-on-chip interconnect bus performance
+>> found on SDM845-based platforms.
 >>
->> Although, just wanted to double check that you tested this for a case
->> where we have host->mrq->sbc set and got an error in data->error? I
->> guess it can be tricky, so I was thinking of manually trying to
->> instruct the code, to set an error in data->error, at some point to
->> trigger this code. That would at least give us some confidence that it
->> works as expected.
+>> Signed-off-by: David Dai <daidavid1@codeaurora.org>
+>> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> index b72bdb0a31a5..856d33604e9c 100644
+>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> @@ -1324,6 +1324,11 @@
+>>                                 compatible = "qcom,sdm845-rpmh-clk";
+>>                                 #clock-cells = <1>;
+>>                         };
+>> +
+>> +                       qnoc: qnoc {
+>> +                               compatible = "qcom,sdm845-rsc-hlos";
+>> +                               #interconnect-cells = <1>;
+>> +                       };
 > 
-> I did some manual tests to trigger the error path. As far as I can
-> tell, it works as expected and I observes that the core is able to
-> recover and re-send the request.
+> Should we alphabetize this node above rpmhcc?
 
-Ulf, very thanks for the tests, and sorry for my busy status.
-I will send as soon as possible the 2/2 with your recommendation (I will 
-more spare time for upstream)
+Sure!
 
-> 
-> [...]
-> 
-> So, I have added my tested-by tag and applied this for next. Thanks!
-> 
-> In regards to patch2/2 I am awaiting your update.
-> 
-> Kind regards
-> Uffe
-> 
+Thanks,
+Georgi
