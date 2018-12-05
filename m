@@ -1,109 +1,99 @@
-From: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH v11 4/4] media: add Rockchip VPU JPEG encoder driver
-Date: Wed, 05 Dec 2018 13:04:03 -0300
-Message-ID: <92f2751675e0f2be95cbf8bb1181a2c92437daed.camel@collabora.com>
-References: <20181130173433.24185-1-ezequiel@collabora.com>
- <20181130173433.24185-5-ezequiel@collabora.com>
- <07aed803-0e2f-c7c1-7f1c-752b82ffad7c@xs4all.nl>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 5/5] clk: samsung: exynos5433: add imem clocks
+Date: Wed, 05 Dec 2018 08:08:00 -0800
+Message-ID: <154402608077.88331.684195407604647728@swboyd.mtv.corp.google.com>
+References: <20181204165248.17572-1-k.konieczny@partner.samsung.com>
+ <CGME20181204165318eucas1p2dccd5382ee8b9f4da8c3076fb56607ee@eucas1p2.samsung.com>
+ <20181204165248.17572-6-k.konieczny@partner.samsung.com>
+ <154394884525.88331.3007383362383800806@swboyd.mtv.corp.google.com>
+ <3bb9f4b5-e069-79fe-6ab3-2750c6191e57@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <07aed803-0e2f-c7c1-7f1c-752b82ffad7c-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3bb9f4b5-e069-79fe-6ab3-2750c6191e57@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Quoting Sylwester Nawrocki (2018-12-05 02:57:32)
+> On 12/4/18 19:40, Stephen Boyd wrote:
+> > Quoting Kamil Konieczny (2018-12-04 08:52:48)
+> >> +
+> >> +static const unsigned long imem_clk_regs[] __initconst =3D {
+> >> +       ENABLE_ACLK_IMEM,
+> >> +       ENABLE_ACLK_IMEM_INT_MEM,
+> >> +       ENABLE_ACLK_IMEM_SSS,
+> >> +       ENABLE_ACLK_IMEM_SLIMSSS,
+> >> +       ENABLE_ACLK_IMEM_RTIC,
+> >> +       ENABLE_ACLK_IMEM_SMMU_SSS,
+> >> +       ENABLE_ACLK_IMEM_SMMU_SLIMSSS,
+> >> +       ENABLE_ACLK_IMEM_SMMU_RTIC,
+> >> +       ENABLE_ACLK_IMEM_ARBG_TX,
+> >> +       ENABLE_ACLK_IMEM_SMMU_ARBG_TX,
+> >> +       ENABLE_PCLK_IMEM,
+> >> +       ENABLE_PCLK_IMEM_SSS,
+> >> +       ENABLE_PCLK_IMEM_SLIMSSS,
+> >> +       ENABLE_PCLK_IMEM_RTIC,
+> >> +       ENABLE_PCLK_IMEM_SMMU_SSS,
+> >> +       ENABLE_PCLK_IMEM_SMMU_SLIMSSS,
+> >> +       ENABLE_PCLK_IMEM_SMMU_RTIC,
+> >> +       ENABLE_PCLK_IMEM_SMMU_ARGB_TX,
+> >> +};
+> >> +
+> >> +static const struct samsung_gate_clock imem_gate_clks[] __initconst =
+=3D {
+> >> +       /* ENABLE_ACLK_IMEM */
+> >> +       GATE(CLK_ACLK_AXI2AHB_IMEMH, "aclk_axi2ahb_imemh", "aclk_imem_=
+200",
+> >> +                       ENABLE_ACLK_IMEM, 24, 0, 0),
+> =
 
-On Wed, 2018-12-05 at 16:01 +0100, Hans Verkuil wrote:
-> On 11/30/18 18:34, Ezequiel Garcia wrote:
-> > Add a mem2mem driver for the VPU available on Rockchip SoCs.
-> > Currently only JPEG encoding is supported, for RK3399 and RK3288
-> > platforms.
-> > 
-> > Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> > ---
-> 
-> <snip>
-> 
-[..]
-> 
-> 
-> Unless something unexpected happens, then v12 should be the final
-> version and I'll make a pull request for it. Note that it will
-> probably won't make 4.20, unless you manage to do it within the next
-> hour :-)
-> 
+> I don't think that clock will ever need to be disabled/enabled, so I would
+> drop this definition. The clock will remain in its default state after re=
+set
+> (enabled).
+> =
 
-Thanks for the review. Here are the changes that will be on v12.
+> >> +       GATE(CLK_ACLK_AXIDS_SROMC, "aclk_axids_sromc", "aclk_imem_200",
+> >> +                       ENABLE_ACLK_IMEM, 23, CLK_IGNORE_UNUSED, 0),
+> > =
 
-Besides your feedback, I found a missing parenthesis issue,
-which seems to have sneaked into v11! Apparently, v11 had
-last minute changes and I failed to run v4l2-compliance.  
+> > Why is there so much use of CLK_IGNORE_UNUSED in this file?
+> =
 
-diff --git a/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c b/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c
-index f2752a0c71c0..962412c79b91 100644
---- a/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c
-+++ b/drivers/staging/media/rockchip/vpu/rockchip_vpu_drv.c
-@@ -60,11 +60,13 @@ static void rockchip_vpu_job_finish(struct rockchip_vpu_dev *vpu,
- 	dst->sequence = ctx->sequence_cap++;
- 
- 	dst->field = src->field;
--	if (dst->flags & V4L2_BUF_FLAG_TIMECODE)
-+	if (src->flags & V4L2_BUF_FLAG_TIMECODE)
- 		dst->timecode = src->timecode;
- 	dst->vb2_buf.timestamp = src->vb2_buf.timestamp;
--	dst->flags &= ~V4L2_BUF_FLAG_TSTAMP_SRC_MASK;
--	dst->flags |= src->flags & V4L2_BUF_FLAG_TSTAMP_SRC_MASK;
-+	dst->flags &= ~(V4L2_BUF_FLAG_TSTAMP_SRC_MASK |
-+			V4L2_BUF_FLAG_TIMECODE);
-+	dst->flags |= src->flags & (V4L2_BUF_FLAG_TSTAMP_SRC_MASK |
-+				    V4L2_BUF_FLAG_TIMECODE);
- 
- 	avail_size = vb2_plane_size(&dst->vb2_buf, 0) -
- 		     ctx->vpu_dst_fmt->header_size;
-@@ -151,6 +153,12 @@ enc_queue_init(void *priv, struct vb2_queue *src_vq, struct vb2_queue *dst_vq)
- 	src_vq->drv_priv = ctx;
- 	src_vq->ops = &rockchip_vpu_enc_queue_ops;
- 	src_vq->mem_ops = &vb2_dma_contig_memops;
-+
-+	/*
-+	 * Driver does mostly sequential access, so sacrifice TLB efficiency
-+	 * for faster allocation. Also, no CPU access on the source queue,
-+	 * so no kernel mapping needed.
-+	 */
- 	src_vq->dma_attrs = DMA_ATTR_ALLOC_SINGLE_PAGES |
- 			    DMA_ATTR_NO_KERNEL_MAPPING;
- 	src_vq->buf_struct_size = sizeof(struct v4l2_m2m_buffer);
-@@ -197,8 +205,6 @@ static int rockchip_vpu_s_ctrl(struct v4l2_ctrl *ctrl)
- 		ctx->jpeg_quality = ctrl->val;
- 		break;
- 	default:
--		vpu_err("Invalid control id = %d, val = %d\n",
--			ctrl->id, ctrl->val);
- 		return -EINVAL;
- 	}
- 
-diff --git a/drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c b/drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c
-index 6aadd194e999..3dbd15d5fabe 100644
---- a/drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c
-+++ b/drivers/staging/media/rockchip/vpu/rockchip_vpu_enc.c
-@@ -142,7 +142,7 @@ rockchip_vpu_get_default_fmt(struct rockchip_vpu_ctx *ctx, bool bitstream)
- 	formats = dev->variant->enc_fmts;
- 	num_fmts = dev->variant->num_enc_fmts;
- 	for (i = 0; i < num_fmts; i++) {
--		if (bitstream == formats[i].codec_mode != RK_VPU_MODE_NONE)
-+		if (bitstream == (formats[i].codec_mode != RK_VPU_MODE_NONE))
- 			return &formats[i];
- 	}
- 	return NULL;
+> I suppose CLK_IGNORE_UNUSED is needed because there is no drivers that
+> would enable required clocks. For some clocks the flag could probably
+> indeed just be omitted, e.g. SLIMSSS clocks. =
+
+> =
+
+> I'm inclined to just define clocks that we are confident about and which
+> are needed now. i.e. the SSS IP block clocks. So in include/dt-bindings/
+> clock/exynos5433.h we would have something like:
+
+Agreed, it doesn't make much sense to add clk support for clks that
+you'll never need to modify one way or the other.
+
+>  =
+
+> +/* CMU_IMEM */
+> +#define CLK_ACLK_SSS                   1
+> +#define CLK_PCLK_SSS                   40
+> =
+
+> +#define IMEM_NR_CLK                    41
+> =
+
+> The other clocks could be added later as needed by someone who has =
+
+> detailed knowledge about respective peripheral blocks.
+> =
+
+
+The slow addition of new clks to the binding header file makes for an
+integration problem, so can we try to expose any clks that we know about
+now as defines and make them not work if the driver isn't implementing
+support for those clks? That way the binding is not changing but the
+implementation can decide to support or not support certain clks.
