@@ -1,148 +1,653 @@
-Return-Path: <SRS0=so6l=OM=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr10062.outbound.protection.outlook.com ([40.107.1.62]:25184
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725790AbeLCEe5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 2 Dec 2018 23:34:57 -0500
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: [PATCH] ARM: dts: imx6ul: add flexcan support
-Date: Mon, 3 Dec 2018 04:34:50 +0000
-Message-ID: <20181203043230.32385-1-qiangqing.zhang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "mkl@pengutronix.de" <mkl@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng DONG <aisheng.dong@nxp.com>, Joakim Zhang <qiangqing.zhang@nxp.com>
+Return-Path: <SRS0=DI9s=OO=airmail.cc=jakobwuhrer@kernel.org>
+From: Jakob Wuhrer <jakobwuhrer@airmail.cc>
+Subject: [PATCH 2/2] arm64: dts: qcom: Add more msm8996 uarts
+Date: Wed,  5 Dec 2018 19:52:00 +0100
+Message-Id: <1544035920-28329-2-git-send-email-jakobwuhrer@airmail.cc>
+In-Reply-To: <1544035920-28329-1-git-send-email-jakobwuhrer@airmail.cc>
+References: <1544035920-28329-1-git-send-email-jakobwuhrer@airmail.cc>
+To: andy.gross@linaro.org, david.brown@linaro.org
+Cc: Jakob Wuhrer <jakobwuhrer@airmail.cc>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Aisheng Dong <aisheng.dong@nxp.com>
+msm8996 has 12 uarts, but the devicetree only lists 3. Add the
+pinmuxing and the main devicetree entries for the others.
 
-Add flexcan support for i.MX6UL and i.MX6ULL boards.
-
-Signed-off-by: Aisheng Dong <aisheng.dong@nxp.com>
-Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+Signed-off-by: Jakob Wuhrer <jakobwuhrer@airmail.cc>
 ---
- arch/arm/boot/dts/imx6ul-14x14-evk.dtsi | 54 +++++++++++++++++++++++++
- arch/arm/boot/dts/imx6ulz-14x14-evk.dts |  2 +
- arch/arm/boot/dts/imx6ulz.dtsi          |  2 -
- 3 files changed, 56 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8996-pins.dtsi | 524 +++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8996.dtsi      |  80 +++++
+ 2 files changed, 604 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/im=
-x6ul-14x14-evk.dtsi
-index 095568b30d30..ae29c059d627 100644
---- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-@@ -30,6 +30,14 @@
- 		enable-active-high;
- 	};
-=20
-+	reg_can_3v3: regulator-can-3v3 {
-+		compatible =3D "regulator-fixed";
-+		regulator-name =3D "can-3v3";
-+		regulator-min-microvolt =3D <3300000>;
-+		regulator-max-microvolt =3D <3300000>;
-+		gpios =3D <&gpio_spi 3 GPIO_ACTIVE_LOW>;
-+	};
-+
- 	sound {
- 		compatible =3D "simple-audio-card";
- 		simple-audio-card,name =3D "mx6ul-wm8960";
-@@ -64,6 +72,29 @@
+diff --git a/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
+index 1d1f7f9..99056b6 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
+@@ -495,4 +495,528 @@
+ 			bias-disable;
  		};
  	};
-=20
-+	spi4 {
-+		compatible =3D "spi-gpio";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_spi4>;
-+		status =3D "okay";
-+		gpio-sck =3D <&gpio5 11 0>;
-+		gpio-mosi =3D <&gpio5 10 0>;
-+		cs-gpios =3D <&gpio5 7 0>;
-+		num-chipselects =3D <1>;
-+		#address-cells =3D <1>;
-+		#size-cells =3D <0>;
 +
-+		gpio_spi: gpio_spi@0 {
-+			compatible =3D "fairchild,74hc595";
-+			gpio-controller;
-+			#gpio-cells =3D <2>;
-+			reg =3D <0>;
-+			registers-number =3D <1>;
-+			registers-default =3D /bits/ 8 <0x57>;
-+			spi-max-frequency =3D <100000>;
++	blsp1_uart0_2pins_default: blsp1_uart0_2pins {
++		pinmux {
++			function = "blsp_uart1";
++			pins = "gpio0", "gpio1";
++		};
++		pinconf {
++			pins = "gpio0", "gpio1";
++			drive-strength = <16>;
++			bias-disable;
 +		};
 +	};
 +
- 	panel {
- 		compatible =3D "innolux,at043tn24";
- 		backlight =3D <&backlight_display>;
-@@ -130,6 +161,20 @@
- 	};
- };
-=20
-+&can1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_flexcan1>;
-+	xceiver-supply =3D <&reg_can_3v3>;
-+	status =3D "okay";
-+};
-+
-+&can2 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_flexcan2>;
-+	xceiver-supply =3D <&reg_can_3v3>;
-+	status =3D "okay";
-+};
-+
- &i2c1 {
- 	clock-frequency =3D <100000>;
- 	pinctrl-names =3D "default";
-@@ -415,6 +460,15 @@
- 		>;
- 	};
-=20
-+	pinctrl_spi4: spi4grp {
-+		fsl,pins =3D <
-+			MX6UL_PAD_BOOT_MODE0__GPIO5_IO10	0x70a1
-+			MX6UL_PAD_BOOT_MODE1__GPIO5_IO11	0x70a1
-+			MX6UL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x70a1
-+			MX6UL_PAD_SNVS_TAMPER8__GPIO5_IO08	0x80000000
-+		>;
++	blsp1_uart0_2pins_sleep: blsp1_uart0_2pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio0", "gpio1";
++		};
++		pinconf {
++			pins = "gpio0", "gpio1";
++			drive-strength = <2>;
++			bias-disable;
++		};
 +	};
 +
- 	pinctrl_tsc: tscgrp {
- 		fsl,pins =3D <
- 			MX6UL_PAD_GPIO1_IO01__GPIO1_IO01		0xb0
-diff --git a/arch/arm/boot/dts/imx6ulz-14x14-evk.dts b/arch/arm/boot/dts/im=
-x6ulz-14x14-evk.dts
-index 6f1af240e0ce..483d9732c002 100644
---- a/arch/arm/boot/dts/imx6ulz-14x14-evk.dts
-+++ b/arch/arm/boot/dts/imx6ulz-14x14-evk.dts
-@@ -9,6 +9,8 @@
-=20
- /delete-node/ &fec1;
- /delete-node/ &fec2;
-+/delete-node/ &can1;
-+/delete-node/ &can2;
- /delete-node/ &lcdif;
- /delete-node/ &tsc;
-=20
-diff --git a/arch/arm/boot/dts/imx6ulz.dtsi b/arch/arm/boot/dts/imx6ulz.dts=
-i
-index ae6d7e593769..0b5f1a763567 100644
---- a/arch/arm/boot/dts/imx6ulz.dtsi
-+++ b/arch/arm/boot/dts/imx6ulz.dtsi
-@@ -20,8 +20,6 @@
++	blsp1_uart0_4pins_default: blsp1_uart0_4pins {
++		pinmux {
++			function = "blsp_uart1";
++			pins = "gpio0", "gpio1", "gpio2", "gpio3";
++		};
++
++		pinconf {
++			pins = "gpio0", "gpio1", "gpio2", "gpio3";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart0_4pins_sleep: blsp1_uart0_4pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio0", "gpio1", "gpio2", "gpio3";
++		};
++
++		pinconf {
++			pins = "gpio0", "gpio1", "gpio2", "gpio3";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart1_2pins_default: blsp1_uart1_2pins {
++		pinmux {
++			function = "blsp_uart2";
++			pins = "gpio41", "gpio42";
++		};
++		pinconf {
++			pins = "gpio41", "gpio42";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart1_2pins_sleep: blsp1_uart1_2pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio41", "gpio42";
++		};
++		pinconf {
++			pins = "gpio41", "gpio42";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart1_4pins_default: blsp1_uart1_4pins {
++		pinmux {
++			function = "blsp_uart2";
++			pins = "gpio41", "gpio42", "gpio43", "gpio44";
++		};
++
++		pinconf {
++			pins = "gpio41", "gpio42", "gpio43", "gpio44";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart1_4pins_sleep: blsp1_uart1_4pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio41", "gpio42", "gpio43", "gpio44";
++		};
++
++		pinconf {
++			pins = "gpio41", "gpio42", "gpio43", "gpio44";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart2_2pins_default: blsp1_uart2_2pins {
++		pinmux {
++			function = "blsp_uart3";
++			pins = "gpio45", "gpio46";
++		};
++		pinconf {
++			pins = "gpio45", "gpio46";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart2_2pins_sleep: blsp1_uart2_2pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio45", "gpio46";
++		};
++		pinconf {
++			pins = "gpio45", "gpio46";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart2_4pins_default: blsp1_uart2_4pins {
++		pinmux {
++			function = "blsp_uart3";
++			pins = "gpio45", "gpio46", "gpio47", "gpio48";
++		};
++
++		pinconf {
++			pins = "gpio45", "gpio46", "gpio47", "gpio48";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart2_4pins_sleep: blsp1_uart2_4pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio45", "gpio46", "gpio47", "gpio48";
++		};
++
++		pinconf {
++			pins = "gpio45", "gpio46", "gpio47", "gpio48";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart3_2pins_default: blsp1_uart3_2pins {
++		pinmux {
++			function = "blsp_uart4";
++			pins = "gpio65", "gpio66";
++		};
++		pinconf {
++			pins = "gpio65", "gpio66";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart3_2pins_sleep: blsp1_uart3_2pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio65", "gpio66";
++		};
++		pinconf {
++			pins = "gpio65", "gpio66";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart3_4pins_default: blsp1_uart3_4pins {
++		pinmux {
++			function = "blsp_uart4";
++			pins = "gpio65", "gpio66", "gpio67", "gpio68";
++		};
++
++		pinconf {
++			pins = "gpio65", "gpio66", "gpio67", "gpio68";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart3_4pins_sleep: blsp1_uart3_4pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio65", "gpio66", "gpio67", "gpio68";
++		};
++
++		pinconf {
++			pins = "gpio65", "gpio66", "gpio67", "gpio68";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart4_2pins_default: blsp1_uart4_2pins {
++		pinmux {
++			function = "blsp_uart5";
++			pins = "gpio81", "gpio82";
++		};
++		pinconf {
++			pins = "gpio81", "gpio82";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart4_2pins_sleep: blsp1_uart4_2pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio81", "gpio82";
++		};
++		pinconf {
++			pins = "gpio81", "gpio82";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart4_4pins_default: blsp1_uart4_4pins {
++		pinmux {
++			function = "blsp_uart5";
++			pins = "gpio81", "gpio82", "gpio83", "gpio84";
++		};
++
++		pinconf {
++			pins = "gpio81", "gpio82", "gpio83", "gpio84";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart4_4pins_sleep: blsp1_uart4_4pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio81", "gpio82", "gpio83", "gpio84";
++		};
++
++		pinconf {
++			pins = "gpio81", "gpio82", "gpio83", "gpio84";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart5_2pins_default: blsp1_uart5_2pins {
++		pinmux {
++			function = "blsp_uart6";
++			pins = "gpio25", "gpio26";
++		};
++		pinconf {
++			pins = "gpio25", "gpio26";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart5_2pins_sleep: blsp1_uart5_2pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio25", "gpio26";
++		};
++		pinconf {
++			pins = "gpio25", "gpio26";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart5_4pins_default: blsp1_uart5_4pins {
++		pinmux {
++			function = "blsp_uart6";
++			pins = "gpio25", "gpio26", "gpio27", "gpio28";
++		};
++
++		pinconf {
++			pins = "gpio25", "gpio26", "gpio27", "gpio28";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp1_uart5_4pins_sleep: blsp1_uart5_4pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio25", "gpio26", "gpio27", "gpio28";
++		};
++
++		pinconf {
++			pins = "gpio25", "gpio26", "gpio27", "gpio28";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	blsp2_uart0_2pins_default: blsp2_uart0_2pins {
++		pinmux {
++			function = "blsp_uart7";
++			pins = "gpio53", "gpio54";
++		};
++		pinconf {
++			pins = "gpio53", "gpio54";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp2_uart0_2pins_sleep: blsp2_uart0_2pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio53", "gpio54";
++		};
++		pinconf {
++			pins = "gpio53", "gpio54";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	blsp2_uart0_4pins_default: blsp2_uart0_4pins {
++		pinmux {
++			function = "blsp_uart7";
++			pins = "gpio53", "gpio54", "gpio55", "gpio56";
++		};
++
++		pinconf {
++			pins = "gpio53", "gpio54", "gpio55", "gpio56";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp2_uart0_4pins_sleep: blsp2_uart0_4pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio53", "gpio54", "gpio55", "gpio56";
++		};
++
++		pinconf {
++			pins = "gpio53", "gpio54", "gpio55", "gpio56";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	blsp2_uart3_2pins_default: blsp2_uart3_2pins {
++		pinmux {
++			function = "blsp_uart10";
++			pins = "gpio8", "gpio9";
++		};
++		pinconf {
++			pins = "gpio8", "gpio9";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp2_uart3_2pins_sleep: blsp2_uart3_2pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio8", "gpio9";
++		};
++		pinconf {
++			pins = "gpio8", "gpio9";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	blsp2_uart3_4pins_default: blsp2_uart3_4pins {
++		pinmux {
++			function = "blsp_uart10";
++			pins = "gpio8", "gpio9", "gpio10", "gpio11";
++		};
++
++		pinconf {
++			pins = "gpio8", "gpio9", "gpio10", "gpio11";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp2_uart3_4pins_sleep: blsp2_uart3_4pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio8", "gpio9", "gpio10", "gpio11";
++		};
++
++		pinconf {
++			pins = "gpio8", "gpio9", "gpio10", "gpio11";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	blsp2_uart4_2pins_alt_default: blsp2_uart4_2pins_alt {
++		pinmux {
++			function = "blsp_uart11";
++			pins = "gpio100", "gpio101";
++		};
++		pinconf {
++			pins = "gpio100", "gpio101";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp2_uart4_2pins_alt_sleep: blsp2_uart4_2pins_alt_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio100", "gpio101";
++		};
++		pinconf {
++			pins = "gpio100", "gpio101";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	blsp2_uart4_2pins_default: blsp2_uart4_2pins {
++		pinmux {
++			function = "blsp_uart11";
++			pins = "gpio58", "gpio59";
++		};
++		pinconf {
++			pins = "gpio58", "gpio59";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp2_uart4_2pins_sleep: blsp2_uart4_2pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio58", "gpio59";
++		};
++		pinconf {
++			pins = "gpio58", "gpio59";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	blsp2_uart4_4pins_default: blsp2_uart4_4pins {
++		pinmux {
++			function = "blsp_uart11";
++			pins = "gpio58", "gpio59", "gpio60", "gpio61";
++		};
++
++		pinconf {
++			pins = "gpio58", "gpio59", "gpio60", "gpio61";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp2_uart4_4pins_sleep: blsp2_uart4_4pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio58", "gpio59", "gpio60", "gpio61";
++		};
++
++		pinconf {
++			pins = "gpio58", "gpio59", "gpio60", "gpio61";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	blsp2_uart5_2pins_default: blsp2_uart5_2pins {
++		pinmux {
++			function = "blsp_uart12";
++			pins = "gpio85", "gpio86";
++		};
++		pinconf {
++			pins = "gpio85", "gpio86";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp2_uart5_2pins_sleep: blsp2_uart5_2pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio85", "gpio86";
++		};
++		pinconf {
++			pins = "gpio85", "gpio86";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	blsp2_uart5_4pins_default: blsp2_uart5_4pins {
++		pinmux {
++			function = "blsp_uart12";
++			pins = "gpio85", "gpio86", "gpio87", "gpio88";
++		};
++
++		pinconf {
++			pins = "gpio85", "gpio86", "gpio87", "gpio88";
++			drive-strength = <16>;
++			bias-disable;
++		};
++	};
++
++	blsp2_uart5_4pins_sleep: blsp2_uart5_4pins_sleep {
++		pinmux {
++			function = "gpio";
++			pins = "gpio85", "gpio86", "gpio87", "gpio88";
++		};
++
++		pinconf {
++			pins = "gpio85", "gpio86", "gpio87", "gpio88";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
  };
-=20
- /delete-node/ &adc1;
--/delete-node/ &can1;
--/delete-node/ &can2;
- /delete-node/ &ecspi3;
- /delete-node/ &ecspi4;
- /delete-node/ &epit2;
---=20
-2.17.1
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 13bb964..c2a5062 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -435,6 +435,16 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		blsp1_uart0: serial@756f000 {
++			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++			reg = <0x0756f000 0x1000>;
++			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_UART1_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			status = "disabled";
++		};
++
+ 		blsp1_uart1: serial@7570000 {
+ 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+ 			reg = <0x07570000 0x1000>;
+@@ -445,6 +455,76 @@
+ 			status = "disabled";
+ 		};
+ 
++		blsp1_uart2: serial@7571000 {
++			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++			reg = <0x07571000 0x1000>;
++			interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_UART3_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			status = "disabled";
++		};
++
++		blsp1_uart3: serial@7572000 {
++			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++			reg = <0x07572000 0x1000>;
++			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_UART4_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			status = "disabled";
++		};
++
++		blsp1_uart4: serial@7573000 {
++			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++			reg = <0x07573000 0x1000>;
++			interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_UART5_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			status = "disabled";
++		};
++
++		blsp1_uart5: serial@7574000 {
++			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++			reg = <0x07574000 0x1000>;
++			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_UART6_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			status = "disabled";
++		};
++
++		blsp2_uart3: serial@75b2000 {
++			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++			reg = <0x075b2000 0x1000>;
++			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP2_UART4_APPS_CLK>,
++				 <&gcc GCC_BLSP2_AHB_CLK>;
++			clock-names = "core", "iface";
++			status = "disabled";
++		};
++
++		blsp2_uart4: serial@75b3000 {
++			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++			reg = <0x075b3000 0x1000>;
++			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP2_UART5_APPS_CLK>,
++				 <&gcc GCC_BLSP2_AHB_CLK>;
++			clock-names = "core", "iface";
++			status = "disabled";
++		};
++
++		blsp2_uart5: serial@75b4000 {
++			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++			reg = <0x075b4000 0x1000>;
++			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP2_UART6_APPS_CLK>,
++				 <&gcc GCC_BLSP2_AHB_CLK>;
++			clock-names = "core", "iface";
++			status = "disabled";
++		};
++
+ 		blsp1_spi0: spi@7575000 {
+ 			compatible = "qcom,spi-qup-v2.2.1";
+ 			reg = <0x07575000 0x600>;
+-- 
+1.8.3.1
