@@ -1,8 +1,8 @@
 From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v2 08/15] ARM/arm64: sunxi: Move H3/H5 syscon label over to
- soc-specific nodes
-Date: Wed,  5 Dec 2018 10:24:37 +0100
-Message-ID: <20181205092444.29497-9-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v2 05/15] dt-bindings: sram: sunxi: Add bindings for the H5
+ with SRAM C1
+Date: Wed,  5 Dec 2018 10:24:34 +0100
+Message-ID: <20181205092444.29497-6-paul.kocialkowski@bootlin.com>
 References: <20181205092444.29497-1-paul.kocialkowski@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,70 +22,40 @@ To: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.k
 Cc: Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-sunxi@googlegroups.com, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The EMAC driver requires a syscon node to access the EMAC clock
-configuration register (that is part of the system-control register
-range and controlled). For this purpose, a dummy syscon node was
-introduced to let the driver access the register freely.
+This introduces new bindings for the H5 SoC in the SRAM controller.
+Because the SRAM layout is different from other SoCs, no backward
+compatibility is assumed with any of them.
 
-Recently, the EMAC driver was tuned to get access to the register when
-the SRAM driver is registered (as used on the A64). As a result, it is
-no longer necessary to have a dummy syscon node for that purpose.
-
-Now that we have a proper system-control node for both the H3 and H5,
-we can get rid of that dummy syscon node and have the EMAC driver use
-the node corresponding to the proper SRAM driver (by switching the
-syscon label over to each dtsi). This way, we no longer have two
-separate nodes for the same register space.
+However, the C1 SRAM section alone looks similar to previous SoCs,
+so it is compatible with the initial A10 binding.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-h3.dtsi              | 2 +-
- arch/arm/boot/dts/sunxi-h3-h5.dtsi           | 6 ------
- arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 2 +-
- 3 files changed, 2 insertions(+), 8 deletions(-)
+ Documentation/devicetree/bindings/sram/sunxi-sram.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index e438e54580e1..a858d91dd4c6 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -120,7 +120,7 @@
- 	};
+diff --git a/Documentation/devicetree/bindings/sram/sunxi-sram.txt b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
+index 5c84850dd0df..5c9a54ad3b53 100644
+--- a/Documentation/devicetree/bindings/sram/sunxi-sram.txt
++++ b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
+@@ -18,6 +18,7 @@ Required properties:
+     - "allwinner,sun8i-h3-system-control"
+     - "allwinner,sun50i-a64-sram-controller" (deprecated)
+     - "allwinner,sun50i-a64-system-control"
++    - "allwinner,sun50i-h5-system-control"
+     - "allwinner,sun50i-h6-system-control", "allwinner,sun50i-a64-system-control"
+     - "allwinner,suniv-f1c100s-system-control", "allwinner,sun4i-a10-system-control"
+ - reg : sram controller register offset + length
+@@ -56,6 +57,9 @@ The valid sections compatible for H3 are:
+ The valid sections compatible for A64 are:
+     - allwinner,sun50i-a64-sram-c
  
- 	soc {
--		system-control@1c00000 {
-+		syscon: system-control@1c00000 {
- 			compatible = "allwinner,sun8i-h3-system-control";
- 			reg = <0x01c00000 0x1000>;
- 			#address-cells = <1>;
-diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index 0d9e9eac518c..ed5846982685 100644
---- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-+++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -152,12 +152,6 @@
- 			};
- 		};
++The valid sections compatible for H5 are:
++    - allwinner,sun50i-h5-sram-c1, allwinner,sun4i-a10-sram-c1
++
+ The valid sections compatible for H6 are:
+     - allwinner,sun50i-h6-sram-c, allwinner,sun50i-a64-sram-c
  
--		syscon: syscon@1c00000 {
--			compatible = "allwinner,sun8i-h3-system-controller",
--				"syscon";
--			reg = <0x01c00000 0x1000>;
--		};
--
- 		dma: dma-controller@1c02000 {
- 			compatible = "allwinner,sun8i-h3-dma";
- 			reg = <0x01c02000 0x1000>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-index 42bfb560b367..4e9025431e9f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-@@ -94,7 +94,7 @@
- 	};
- 
- 	soc {
--		system-control@1c00000 {
-+		syscon: system-control@1c00000 {
- 			compatible = "allwinner,sun50i-h5-system-control";
- 			reg = <0x01c00000 0x1000>;
- 			#address-cells = <1>;
 -- 
 2.19.2
