@@ -1,159 +1,276 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 0/7] microblaze: fix various problems in building boot images
-Date: Thu, 6 Dec 2018 14:08:48 +0900
-Message-ID: <CAK7LNARtiP2xnB3hK92QJ_GadnViCG7kxXW73RmjzQAxJM4GKQ@mail.gmail.com>
-References: <1543823457-32478-1-git-send-email-yamada.masahiro@socionext.com> <dd726c23-7c37-2b38-5b9f-a4edc391511d@monstr.eu>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 5/6] power: supply: charger-manager: Remove deprecated
+ extcon APIs
+Date: Thu, 6 Dec 2018 13:21:53 +0800
+Message-ID: <CAMz4kuLTPumBBRxaF2XAs4RLAQFD7bjyX+9Z=564kvdpPZ=+Ow@mail.gmail.com>
+References: <4ea9eaf85d780afb190cb45da2df8ff5fd86d449.1542362262.git.baolin.wang@linaro.org>
+ <a41e3aad0147b25c4c22189dd7af0d68c5587b92.1542362262.git.baolin.wang@linaro.org>
+ <20181204215219.GA14502@bogus> <CAMz4ku+5ELZ9sXz+1RzkgHnOFz_XfObwCdyixhvPN+Q0aovgUQ@mail.gmail.com>
+ <20181205203455.cbochpqw5zwnn3uu@earth.universe>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <dd726c23-7c37-2b38-5b9f-a4edc391511d@monstr.eu>
+In-Reply-To: <20181205203455.cbochpqw5zwnn3uu@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Michal,
+Hi Sebastian,
 
-On Thu, Dec 6, 2018 at 1:41 AM Michal Simek <monstr@monstr.eu> wrote:
+On Thu, 6 Dec 2018 at 04:34, Sebastian Reichel
+<sebastian.reichel@collabora.com> wrote:
 >
-> On 03. 12. 18 8:50, Masahiro Yamada wrote:
-> > This patch set fixes various issues in microblaze Makefiles.
+> Hi,
+>
+> On Wed, Dec 05, 2018 at 10:57:12AM +0800, Baolin Wang wrote:
+> > Hi Rob=EF=BC=8C
+> > On Wed, 5 Dec 2018 at 05:52, Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Fri, Nov 16, 2018 at 07:01:12PM +0800, Baolin Wang wrote:
+> > > > The struct extcon_specific_cable_nb and related APIs are deprecated=
+ now,
+> > > > so we should use new method to get one extcon device and register e=
+xtcon
+> > > > notifier.
+> > > >
+> > > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > > > ---
+> > > >  .../bindings/power/supply/charger-manager.txt      |    6 +--
+> > >
+> > > Bindings should be a separate patch.
 > >
-> > BTW, "simpleImage.<dt>" works like a phony target to generate the
-> > following four images, where the first three are just aliases.
+> > Sure.
 > >
-> >  - arch/microblaze/boot/simpleImage.<dt>:
-> >          identical to arch/microblaze/boot/linux.bin
+> > >
+> > > >  drivers/power/supply/charger-manager.c             |   51 ++++++++=
+------------
+> > > >  include/linux/power/charger-manager.h              |    2 +-
+> > > >  3 files changed, 23 insertions(+), 36 deletions(-)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/power/supply/charger=
+-manager.txt b/Documentation/devicetree/bindings/power/supply/charger-manag=
+er.txt
+> > > > index ec4fe9d..315b0cb 100644
+> > > > --- a/Documentation/devicetree/bindings/power/supply/charger-manage=
+r.txt
+> > > > +++ b/Documentation/devicetree/bindings/power/supply/charger-manage=
+r.txt
+> > > > @@ -11,7 +11,7 @@ Required properties :
+> > > >       - cm-regulator-name : name of charger regulator
+> > > >       - subnode <cable> :
+> > > >               - cm-cable-name : name of charger cable
+> > > > -             - cm-cable-extcon : name of extcon dev
+> > > > +             - extcon : phandles to external connector devices
+> > >
+> > > Somewhat less terrible, but not really. I consider extcon binding its=
+elf
+> > > deprecated. I suspect 'charger-manager' as a whole probably needs to =
+be
+> > > reworked. This also is not a backwards compatible change.
 >
-> It is not - fdt section should be empty.
-> simpleImage has this section filled.
+> Right, charger-manager is a big hack. The DT node does not represent
+> any hardware. The feature should be integrated into the power-supply
+> core and work without any special DT bindings. I don't have the time
+> to work on this, though.
+
+Now we are trying to use charger manager to monitor our charging and
+battery. So what you mean here is you want to remove the charger
+manager driver and implement them in power_supply_core.c file, right?
+If this is the future plan for charger manager, then we will stop to
+optimize the charger manger driver.
+
+I can help to implement or test the charger manager thing in power
+supply core, so I am curious what's your thoughts if we try to
+implement it in power supply core, could you explicit on? Thanks.
+
 >
+> > We are do some optimization for 'charger-manager', like this patch
+> > did, we are trying to remove the deprecated extcon API.
+> > And now no one use the incorrect 'cm-cable-extcon' property on
+> > mainline, so no need worry backwards compatibility.
+>
+> As far as I can see there is no charger-manager user in mainline at
+> all.
+>
+> -- Sebastian
+>
+> > > >  (optional)   - cm-cable-min : minimum current of cable
+> > > >  (optional)   - cm-cable-max : maximum current of cable
+> > > >
+> > > > @@ -66,13 +66,13 @@ Example :
+> > > >                       cm-regulator-name =3D "chg-reg";
+> > > >                       cable@0 {
+> > > >                               cm-cable-name =3D "USB";
+> > > > -                             cm-cable-extcon =3D "extcon-dev.0";
+> > > > +                             extcon =3D <&extcon_usb>;
+> > > >                               cm-cable-min =3D <475000>;
+> > > >                               cm-cable-max =3D <500000>;
+> > > >                       };
+> > > >                       cable@1 {
+> > > >                               cm-cable-name =3D "TA";
+> > > > -                             cm-cable-extcon =3D "extcon-dev.0";
+> > > > +                             extcon =3D <&extcon_usb>;
+> > > >                               cm-cable-min =3D <650000>;
+> > > >                               cm-cable-max =3D <675000>;
+> > > >                       };
+> > > > diff --git a/drivers/power/supply/charger-manager.c b/drivers/power=
+/supply/charger-manager.c
+> > > > index dc0c9a6..4f28c03 100644
+> > > > --- a/drivers/power/supply/charger-manager.c
+> > > > +++ b/drivers/power/supply/charger-manager.c
+> > > > @@ -1207,12 +1207,11 @@ static int charger_extcon_init(struct charg=
+er_manager *cm,
+> > > >        */
+> > > >       INIT_WORK(&cable->wq, charger_extcon_work);
+> > > >       cable->nb.notifier_call =3D charger_extcon_notifier;
+> > > > -     ret =3D extcon_register_interest(&cable->extcon_dev,
+> > > > -                     cable->extcon_name, cable->name, &cable->nb);
+> > > > -     if (ret < 0) {
+> > > > -             pr_info("Cannot register extcon_dev for %s(cable: %s)=
+\n",
+> > > > -                     cable->extcon_name, cable->name);
+> > > > -     }
+> > > > +     ret =3D devm_extcon_register_notifier(cm->dev, cable->extcon_=
+dev,
+> > > > +                                         EXTCON_USB, &cable->nb);
+> > > > +     if (ret < 0)
+> > > > +             dev_err(cm->dev, "Cannot register extcon_dev for (cab=
+le: %s)\n",
+> > > > +                     cable->name);
+> > > >
+> > > >       return ret;
+> > > >  }
+> > > > @@ -1589,15 +1588,25 @@ static struct charger_desc *of_cm_parse_des=
+c(struct device *dev)
+> > > >                               for_each_child_of_node(child, _child)=
+ {
+> > > >                                       of_property_read_string(_chil=
+d,
+> > > >                                       "cm-cable-name", &cables->nam=
+e);
+> > > > -                                     of_property_read_string(_chil=
+d,
+> > > > -                                     "cm-cable-extcon",
+> > > > -                                     &cables->extcon_name);
+> > > >                                       of_property_read_u32(_child,
+> > > >                                       "cm-cable-min",
+> > > >                                       &cables->min_uA);
+> > > >                                       of_property_read_u32(_child,
+> > > >                                       "cm-cable-max",
+> > > >                                       &cables->max_uA);
+> > > > +
+> > > > +                                     if (of_property_read_bool(_ch=
+ild, "extcon")) {
+> > > > +                                             struct device_node *n=
+p;
+> > > > +
+> > > > +                                             np =3D of_parse_phand=
+le(_child, "extcon", 0);
+> > > > +                                             if (!np)
+> > > > +                                                     return ERR_PT=
+R(-ENODEV);
+> > > > +
+> > > > +                                             cables->extcon_dev =
+=3D extcon_find_edev_by_node(np);
+> > > > +                                             of_node_put(np);
+> > > > +                                             if (IS_ERR(cables->ex=
+tcon_dev))
+> > > > +                                                     return ERR_PT=
+R(PTR_ERR(cables->extcon_dev));
+> > > > +                                     }
+> > > >                                       cables++;
+> > > >                               }
+> > > >                       }
+> > > > @@ -1625,7 +1634,6 @@ static int charger_manager_probe(struct platf=
+orm_device *pdev)
+> > > >       struct charger_desc *desc =3D cm_get_drv_data(pdev);
+> > > >       struct charger_manager *cm;
+> > > >       int ret, i =3D 0;
+> > > > -     int j =3D 0;
+> > > >       union power_supply_propval val;
+> > > >       struct power_supply *fuel_gauge;
+> > > >       struct power_supply_config psy_cfg =3D {};
+> > > > @@ -1823,19 +1831,8 @@ static int charger_manager_probe(struct plat=
+form_device *pdev)
+> > > >                               &charger->attr_g);
+> > > >       }
+> > > >  err_reg_extcon:
+> > > > -     for (i =3D 0; i < desc->num_charger_regulators; i++) {
+> > > > -             struct charger_regulator *charger;
+> > > > -
+> > > > -             charger =3D &desc->charger_regulators[i];
+> > > > -             for (j =3D 0; j < charger->num_cables; j++) {
+> > > > -                     struct charger_cable *cable =3D &charger->cab=
+les[j];
+> > > > -                     /* Remove notifier block if only edev exists =
+*/
+> > > > -                     if (cable->extcon_dev.edev)
+> > > > -                             extcon_unregister_interest(&cable->ex=
+tcon_dev);
+> > > > -             }
+> > > > -
+> > > > +     for (i =3D 0; i < desc->num_charger_regulators; i++)
+> > > >               regulator_put(desc->charger_regulators[i].consumer);
+> > > > -     }
+> > > >
+> > > >       power_supply_unregister(cm->charger_psy);
+> > > >
+> > > > @@ -1847,7 +1844,6 @@ static int charger_manager_remove(struct plat=
+form_device *pdev)
+> > > >       struct charger_manager *cm =3D platform_get_drvdata(pdev);
+> > > >       struct charger_desc *desc =3D cm->desc;
+> > > >       int i =3D 0;
+> > > > -     int j =3D 0;
+> > > >
+> > > >       /* Remove from the list */
+> > > >       mutex_lock(&cm_list_mtx);
+> > > > @@ -1857,15 +1853,6 @@ static int charger_manager_remove(struct pla=
+tform_device *pdev)
+> > > >       cancel_work_sync(&setup_polling);
+> > > >       cancel_delayed_work_sync(&cm_monitor_work);
+> > > >
+> > > > -     for (i =3D 0 ; i < desc->num_charger_regulators ; i++) {
+> > > > -             struct charger_regulator *charger
+> > > > -                             =3D &desc->charger_regulators[i];
+> > > > -             for (j =3D 0 ; j < charger->num_cables ; j++) {
+> > > > -                     struct charger_cable *cable =3D &charger->cab=
+les[j];
+> > > > -                     extcon_unregister_interest(&cable->extcon_dev=
+);
+> > > > -             }
+> > > > -     }
+> > > > -
+> > > >       for (i =3D 0 ; i < desc->num_charger_regulators ; i++)
+> > > >               regulator_put(desc->charger_regulators[i].consumer);
+> > > >
+> > > > diff --git a/include/linux/power/charger-manager.h b/include/linux/=
+power/charger-manager.h
+> > > > index c4fa907..e4d0269 100644
+> > > > --- a/include/linux/power/charger-manager.h
+> > > > +++ b/include/linux/power/charger-manager.h
+> > > > @@ -66,7 +66,7 @@ struct charger_cable {
+> > > >       const char *name;
+> > > >
+> > > >       /* The charger-manager use Extcon framework */
+> > > > -     struct extcon_specific_cable_nb extcon_dev;
+> > > > +     struct extcon_dev *extcon_dev;
+> > > >       struct work_struct wq;
+> > > >       struct notifier_block nb;
+> > > >
+> > > > --
+> > > > 1.7.9.5
+> > > >
 > >
-> >  - arch/microblaze/boot/simpleImage.<dt>.unstrip:
-> >          identical to vmlinux
->
-> The same here with filled section.
-
-
-vmlinux is built anyway
-for whatever target you are building.
-
-What is the point of making a copy of vmlinux?
-They are the same.
-You can confirm it by 'diff'
-
-$ export CROSS_COMPILE=microblaze-linux-
-$ make ARCH=microblaze  defconfig
-$ make -j8 ARCH=microblaze   simpleImage.system
-$ diff arch/microblaze/boot/simpleImage.system.unstrip  vmlinux
-
-
-
-
-
-
 > >
-> >  - arch/microblaze/boot/simpleImage.<dt>.ub:
-> >          identical to arch/microblaze/boot/linux.bin.ub
->
-> as above.
->
 > >
-> >  - arch/microblaze/boot/simpleImage.<dt>.strip:
-> >          stripped vmlinux
->
-> And this is there because unstrip version is quite huge and for early
-> issues you need to know only some symbols that's why debugger is not
-> overflow with stuff which none needs.
-> Maybe this is not an issue now but that strip version is used a lot.
->
->
-> >
-> > I am not sure how much useful those copies are,
-> > but, I tried my best to keep the same behavior.
-> >
-> > IMHO, I guess DTB=<dt> would be more sensible,
-> > but it is up to Michal.
->
-> What do you mean by this exactly?
-
-
-As I showed above,
-arch/microblaze/boot/simpleImage.system.unstrip
-is exactly the same as vmlinux.
+> > --
+> > Baolin Wang
+> > Best Regards
 
 
 
-arch/microblaze/boot/simpleImage.<dt>
-is objcopy'ed binary of vmlinux.
-
-arch/microblaze/boot/simpleImage.<dt>.ub
-is objcopy'ed binary of vmlinux, with u-boot header prepended.
-
-You have already build-rules for them.
-
-
-
-It is true that the stripped image only exist in simpleImage,
-but I think "arch/microblaze/boot/vmlinux.strip"
-is a more sensible name.
-
-
-
-What I want to point out is:
-    "Which file should be compiled in",
-    is a part of the configuration.
-    We generally do not change the final
-    target name just for the difference of
-    configuration.
-    For example, ARM just uses "vmlinux", "Image", "zImage", etc.
-    Never duplicate target-specific copies depending on configuration.
-
-
-Why does microblaze create copies for each DT
-instead of using generic image like linux.bin, linux.bin.ub, etc. ?
-
-If using generic image names is acceptable,
-"make simpleImage.<dt>" is just a shorthand of
-"make DTB=<dt> vmlinux linux.bin linux.bin.ub vmlinux.strip"
-
-
-Only the benefit of this approach is,
-you can keep all images for multiple boards at the same time.
-
-$ make ARCH=microblaze simpleImage.board1
-$ make ARCH=microblaze simpleImage.board2
-$ make ARCH=microblaze simpleImage.board3
-
-
-
-
-Since I do not know how many users rely on this usage,
-I said "it is up to you".
-
-
-
-
-
-
-
-
-
-> Definitely thanks for looking at this.
-> Michal
->
->
->
-> --
-> Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-> w: www.monstr.eu p: +42-0-721842854
-> Maintainer of Linux kernel - Xilinx Microblaze
-> Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-> U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
->
->
-
-
--- 
+--=20
+Baolin Wang
 Best Regards
-Masahiro Yamada
