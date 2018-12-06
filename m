@@ -1,22 +1,34 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: Update NPCM PSPI controller documentation" to the spi tree
-Date: Thu,  6 Dec 2018 20:26:21 +0000 (GMT)
-Message-ID: <20181206202621.6D6ED11252F7@debutante.sirena.org.uk>
-References: <20181204135442.125269-1-tmaimon77@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181204135442.125269-1-tmaimon77@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, yuenn@google.com, venture@google.com, brendanhiggins@google.com, avifishman70@gmail.com, joel@jms.id.au, linux-spi@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.orglinux-spi@vger.kernel.org
+Subject: Applied "ASoC: dt-bindings: ak4104: use 'reset-gpios'
+	rather than 'reset-gpio'" to the asoc tree
+Date: Thu,  6 Dec 2018 20:25:56 +0000 (GMT)
+Message-ID: <20181206202556.E314D11252F7@debutante.sirena.org.uk>
+References: <20181206122457.28269-1-daniel@zonque.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20181206122457.28269-1-daniel@zonque.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Daniel Mack <daniel@zonque.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   spi: Update NPCM PSPI controller documentation
+   ASoC: dt-bindings: ak4104: use 'reset-gpios' rather than 'reset-gpio'
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -37,40 +49,35 @@ to this mail.
 Thanks,
 Mark
 
->From 6ab4a3502923c20c5a6921868e787e5fd033409b Mon Sep 17 00:00:00 2001
-From: Tomer Maimon <tmaimon77@gmail.com>
-Date: Tue, 4 Dec 2018 15:54:42 +0200
-Subject: [PATCH] spi: Update NPCM PSPI controller documentation
+>From db097f95b4b81c5371928449706fabfa576cd65c Mon Sep 17 00:00:00 2001
+From: Daniel Mack <daniel@zonque.org>
+Date: Thu, 6 Dec 2018 13:24:56 +0100
+Subject: [PATCH] ASoC: dt-bindings: ak4104: use 'reset-gpios' rather than
+ 'reset-gpio'
 
-Update the PSPI NPCM binding document of the spi aliases use
-to define the spi ID number.
+Bindings should use 'reset-gpios', not 'reset-gpio'. The driver needs to
+switch to the gpiod consume API to handle this correctly.
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+Signed-off-by: Daniel Mack <daniel@zonque.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../devicetree/bindings/spi/nuvoton,npcm-pspi.txt         | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ Documentation/devicetree/bindings/sound/ak4104.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/nuvoton,npcm-pspi.txt b/Documentation/devicetree/bindings/spi/nuvoton,npcm-pspi.txt
-index 99606b22e5c2..1fd9a4406a1d 100644
---- a/Documentation/devicetree/bindings/spi/nuvoton,npcm-pspi.txt
-+++ b/Documentation/devicetree/bindings/spi/nuvoton,npcm-pspi.txt
-@@ -19,8 +19,16 @@ Optional properties:
- - clock-frequency : Input clock frequency to the PSPI block in Hz.
- 		    Default is 25000000 Hz.
+diff --git a/Documentation/devicetree/bindings/sound/ak4104.txt b/Documentation/devicetree/bindings/sound/ak4104.txt
+index deca5e18f304..ae5f7f057dc3 100644
+--- a/Documentation/devicetree/bindings/sound/ak4104.txt
++++ b/Documentation/devicetree/bindings/sound/ak4104.txt
+@@ -12,8 +12,8 @@ Required properties:
  
-+Aliases:
-+- All the SPI controller nodes should be represented in the aliases node using
-+  the following format 'spi{n}' withe the correct numbered in "aliases" node.
-+
+ Optional properties:
+ 
+-  - reset-gpio : a GPIO spec for the reset pin. If specified, it will be
+-		 deasserted before communication to the device starts.
++  - reset-gpios : a GPIO spec for the reset pin. If specified, it will be
++		  deasserted before communication to the device starts.
+ 
  Example:
  
-+aliases {
-+	spi0 = &spi0;
-+};
-+
- spi0: spi@f0200000 {
- 	compatible = "nuvoton,npcm750-pspi";
- 	reg = <0xf0200000 0x1000>;
 -- 
 2.19.0.rc2
