@@ -1,7 +1,7 @@
 From: Otavio Salvador <otavio@ossystems.com.br>
-Subject: [PATCH v2 5/9] ARM: dts: imx7d-pico: Pass the Ethernet PHY reset GPIO
-Date: Thu,  6 Dec 2018 08:09:01 -0200
-Message-ID: <20181206100905.15053-6-otavio@ossystems.com.br>
+Subject: [PATCH v2 6/9] ARM: dts: imx7d-pico: Improve WiFi regulator name
+Date: Thu,  6 Dec 2018 08:09:02 -0200
+Message-ID: <20181206100905.15053-7-otavio@ossystems.com.br>
 References: <20181206100905.15053-1-otavio@ossystems.com.br>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,42 +9,57 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181206100905.15053-1-otavio@ossystems.com.br>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Fabio Estevam <festevam@gmail.com>, Otavio Salvador <otavio@ossystems.com.br>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, NXP Linux Team <linux-imx@nxp.com>
+Cc: Otavio Salvador <otavio@ossystems.com.br>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+There are different models of WiFi being used in the SoM and the
+handle name was too restrictive. This reworks it to a more generic and
+meaningful name.
 
-Pass the "phy-reset-gpios" property in order to describe the GPIO
-that performs the Ethernet PHY reset.
-
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
 Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
 ---
 
 Changes in v2: None
 
- arch/arm/boot/dts/imx7d-pico.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/imx7d-pico.dtsi | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx7d-pico.dtsi b/arch/arm/boot/dts/imx7d-pico.dtsi
-index cb30bded1e4a..35791a1adabf 100644
+index 35791a1adabf..417f034fb354 100644
 --- a/arch/arm/boot/dts/imx7d-pico.dtsi
 +++ b/arch/arm/boot/dts/imx7d-pico.dtsi
-@@ -88,6 +88,7 @@
- 	phy-mode = "rgmii";
- 	phy-handle = <&ethphy0>;
- 	fsl,magic-packet;
-+	phy-reset-gpios = <&gpio6 11 GPIO_ACTIVE_LOW>;
- 	status = "okay";
+@@ -13,11 +13,11 @@
+ 		reg = <0x80000000 0>;
+ 	};
  
- 	mdio {
-@@ -290,6 +291,7 @@
- 			MX7D_PAD_ENET1_RGMII_RD2__ENET1_RGMII_RD2	0x1
- 			MX7D_PAD_ENET1_RGMII_RD3__ENET1_RGMII_RD3	0x1
- 			MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL	0x1
-+			MX7D_PAD_SD3_RESET_B__GPIO6_IO11                0x1  /* Ethernet reset */
+-	reg_ap6212: regulator-ap6212 {
++	reg_wlreg_on: regulator-wlreg_on {
+ 		compatible = "regulator-fixed";
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_reg_ap6212>;
+-		regulator-name = "AP6212";
++		pinctrl-0 = <&pinctrl_reg_wlreg_on>;
++		regulator-name = "wlreg_on";
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 		gpio = <&gpio4 16 GPIO_ACTIVE_HIGH>;
+@@ -241,7 +241,7 @@
+ 	non-removable;
+ 	keep-power-in-suspend;
+ 	wakeup-source;
+-	vmmc-supply = <&reg_ap6212>;
++	vmmc-supply = <&reg_wlreg_on>;
+ 	mmc-pwrseq = <&usdhc2_pwrseq>;
+ 	status = "okay";
+ };
+@@ -302,7 +302,7 @@
  		>;
  	};
  
+-	pinctrl_reg_ap6212: regap6212grp {
++	pinctrl_reg_wlreg_on: regregongrp {
+ 		fsl,pins = <
+ 			MX7D_PAD_ECSPI1_SCLK__GPIO4_IO16	0x59
+ 		>;
 -- 
 2.19.2
