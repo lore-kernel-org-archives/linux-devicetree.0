@@ -1,29 +1,38 @@
-From: Jianjun Wang <jianjun.wang@mediatek.com>
-Subject: [PATCH 0/2] PCI: mediatek: Add support for MT7629
-Date: Thu, 6 Dec 2018 09:09:11 +0800
-Message-ID: <1544058553-10936-1-git-send-email-jianjun.wang@mediatek.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 0/4] Add support of STM32 hwspinlock
+Date: Wed, 5 Dec 2018 17:10:45 -0800
+Message-ID: <20181206011045.GA23336@builder>
+References: <20181114090027.7580-1-benjamin.gaignard@linaro.org>
+ <CA+M3ks5m1=gsGqB55T4xSGtAQW9Ct3Fxqx-gbYg=GoNwoX6B-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CA+M3ks5m1=gsGqB55T4xSGtAQW9Ct3Fxqx-gbYg=GoNwoX6B-w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ryder.lee@mediatek.com, bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, matthias.bgg@gmail.com, linux-pci@vger.kernel.org
-Cc: mark.rutland@arm.com, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, honghui.zhang@mediatek.com, youlin.pei@mediatek.com, Jianjun Wang <jianjun.wang@mediatek.com>
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: Ohad Ben Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-These series patches modify pcie-mediatek.c and dt-bindings compatible
-string to support MT7629 PCIe host.
+On Fri 30 Nov 06:45 PST 2018, Benjamin Gaignard wrote:
 
-There was something wrong with the mail server's permission setting, sorry
-for sent these mails repeatedly.
+> Le mer. 14 nov. 2018 à 10:00, Benjamin Gaignard
+> <benjamin.gaignard@linaro.org> a écrit :
+> >
+> > This serie adds the support of the hardware semaphore block for stm32mp1 SoC.
+> >
+> > version 4:
+> > - add Linaro SoB
+> 
+> Gentle ping on this series
+> 
 
-Jianjun Wang (2):
-  dt-bindings: PCI: Add support for MT7629
-  PCI: mediatek: Add controller support for MT7629
+Sorry about that Benjamin, I was convinced that I picked your patches
+already. Applied first two patches to hwspinlock tree.
 
- .../devicetree/bindings/pci/mediatek-pcie.txt |  1 +
- drivers/pci/controller/pcie-mediatek.c        | 26 +++++++++++++++++++
- include/linux/pci_ids.h                       |  1 +
- 3 files changed, 28 insertions(+)
+I expect the dts update to go through the ST tree, and I guess the
+complaint from 0day tells us they already are?
 
--- 
-2.19.1
+Regards,
+Bjorn
