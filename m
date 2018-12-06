@@ -1,7 +1,7 @@
 From: Otavio Salvador <otavio@ossystems.com.br>
-Subject: [PATCH v2 7/9] ARM: dts: imx7d-pico: Extend peripherals support
-Date: Thu,  6 Dec 2018 08:09:03 -0200
-Message-ID: <20181206100905.15053-8-otavio@ossystems.com.br>
+Subject: [PATCH v2 8/9] ARM: dts: imx7d-pico-pi: Extend peripherals support
+Date: Thu,  6 Dec 2018 08:09:04 -0200
+Message-ID: <20181206100905.15053-9-otavio@ossystems.com.br>
 References: <20181206100905.15053-1-otavio@ossystems.com.br>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,295 +14,91 @@ List-Id: devicetree@vger.kernel.org
 
 From: Fabio Estevam <festevam@gmail.com>
 
-This extends the peripherals supported by the imx7d-pico.dtsi. It
-adds:
+This adds following peripherals for the imx7d-pico-pi as:
 
- - I2C2
- - Flexcan (flexcan1 and flexcan2 ports)
- - USDHC1
- - UART (6 and 7 ports)
- - PWM (4 ports)
- - eCSPI3
+ - LED
+ - Touchscreen
+ - GPIO
 
 Signed-off-by: Fabio Estevam <festevam@gmail.com>
 Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
 ---
 
-Changes in v2:
-- replace fsl,uart-has-rtscts with uart-has-rtscts
+Changes in v2: None
 
- arch/arm/boot/dts/imx7d-pico.dtsi | 183 ++++++++++++++++++++++++++++++
- 1 file changed, 183 insertions(+)
+ arch/arm/boot/dts/imx7d-pico-pi.dts | 56 +++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx7d-pico.dtsi b/arch/arm/boot/dts/imx7d-pico.dtsi
-index 417f034fb354..3fd595a71202 100644
---- a/arch/arm/boot/dts/imx7d-pico.dtsi
-+++ b/arch/arm/boot/dts/imx7d-pico.dtsi
-@@ -78,6 +78,13 @@
- 	assigned-clock-rates = <0>, <32768>;
- };
+diff --git a/arch/arm/boot/dts/imx7d-pico-pi.dts b/arch/arm/boot/dts/imx7d-pico-pi.dts
+index 039c17066fe0..70bea95c06d8 100644
+--- a/arch/arm/boot/dts/imx7d-pico-pi.dts
++++ b/arch/arm/boot/dts/imx7d-pico-pi.dts
+@@ -8,6 +8,17 @@
+ 	model = "TechNexion PICO-IMX7D Board and PI baseboard";
+ 	compatible = "technexion,imx7d-pico-pi", "fsl,imx7d";
  
-+&ecspi3 {
-+	cs-gpios = <&gpio4 11 GPIO_ACTIVE_LOW>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi3>;
-+	status = "okay";
-+};
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_leds>;
 +
- &fec1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet1>;
-@@ -103,6 +110,18 @@
++		led {
++			label = "gpio-led";
++			gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
+ 	sound {
+ 		compatible = "simple-audio-card";
+ 		simple-audio-card,name = "imx7-sgtl5000";
+@@ -35,3 +46,48 @@
+ 		VDDIO-supply = <&reg_vref_1v8>;
  	};
  };
- 
-+&flexcan1 {
++
++&i2c4 {
++	polytouch: touchscreen@38 {
++		compatible = "edt,edt-ft5x06";
++		reg = <0x38>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_touchscreen>;
++		interrupt-parent = <&gpio2>;
++		interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
++		reset-gpios = <&gpio2 4 GPIO_ACTIVE_LOW>;
++		touchscreen-size-x = <800>;
++		touchscreen-size-y = <480>;
++	};
++};
++
++&iomuxc {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_can1>;
-+	status = "okay";
++	pinctrl-0 = <&pinctrl_hog>;
++
++	pinctrl_hog: hoggrp {
++		fsl,pins = <
++			MX7D_PAD_EPDC_DATA00__GPIO2_IO0		0x14
++			MX7D_PAD_EPDC_DATA01__GPIO2_IO1		0x14
++			MX7D_PAD_EPDC_DATA02__GPIO2_IO2		0x14
++			MX7D_PAD_EPDC_DATA03__GPIO2_IO3		0x14
++			MX7D_PAD_EPDC_DATA05__GPIO2_IO5		0x14
++			MX7D_PAD_EPDC_DATA12__GPIO2_IO12	0x14
++			MX7D_PAD_EPDC_DATA07__GPIO2_IO7		0x14
++		>;
++	};
++
++	pinctrl_gpio_leds: gpioledsgrp {
++		fsl,pins = <
++			MX7D_PAD_EPDC_DATA06__GPIO2_IO6		0x14
++		>;
++	};
++
++	pinctrl_touchscreen: touchscreengrp {
++		fsl,pins = <
++			MX7D_PAD_EPDC_DATA04__GPIO2_IO4		0x14
++			MX7D_PAD_EPDC_DATA13__GPIO2_IO13	0x14
++		>;
++	};
++
 +};
-+
-+&flexcan2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_can2>;
-+	status = "okay";
-+};
-+
- &i2c1 {
- 	clock-frequency = <100000>;
- 	pinctrl-names = "default";
-@@ -110,6 +129,12 @@
- 	status = "okay";
- };
- 
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+};
-+
- &i2c4 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c4>;
-@@ -215,6 +240,29 @@
- 	status = "okay";
- };
- 
-+
-+&pwm1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm1>;
-+	status = "okay";
-+};
-+
-+&pwm2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm2>;
-+	status = "okay";
-+};
-+
-+&pwm3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm3>;
-+	status = "okay";
-+};
-+
-+&pwm4 { /* Backlight */
-+	status = "okay";
-+};
-+
- &uart5 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart5>;
-@@ -223,6 +271,24 @@
- 	status = "okay";
- };
- 
-+&uart6 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart6>;
-+	assigned-clocks = <&clks IMX7D_UART6_ROOT_SRC>;
-+	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&uart7 { /* Bluetooth */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart7>;
-+	assigned-clocks = <&clks IMX7D_UART7_ROOT_SRC>;
-+	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
- &usbotg1 {
- 	vbus-supply = <&reg_usb_otg1_vbus>;
- 	status = "okay";
-@@ -234,6 +300,21 @@
- 	status = "okay";
- };
- 
-+&usdhc1 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
-+	cd-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
-+	bus-width = <4>;
-+	tuning-step = <2>;
-+	vmmc-supply = <&reg_3p3v>;
-+	wakeup-source;
-+	no-1-8-v;
-+	keep-power-in-suspend;
-+	status = "okay";
-+};
-+
- &usdhc2 { /* Wifi SDIO */
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usdhc2 &pinctrl_wifi_clk>;
-@@ -268,6 +349,15 @@
- };
- 
- &iomuxc {
-+	pinctrl_ecspi3: ecspi3grp {
-+		fsl,pins = <
-+			MX7D_PAD_I2C1_SCL__ECSPI3_MISO		0x2
-+			MX7D_PAD_I2C1_SDA__ECSPI3_MOSI		0x2
-+			MX7D_PAD_I2C2_SCL__ECSPI3_SCLK		0x2
-+			MX7D_PAD_I2C2_SDA__GPIO4_IO11		0x14
-+		>;
-+	};
-+
- 	pinctrl_i2c1: i2c1grp {
- 		fsl,pins = <
- 			MX7D_PAD_UART1_TX_DATA__I2C1_SDA	0x4000007f
-@@ -275,6 +365,13 @@
- 		>;
- 	};
- 
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX7D_PAD_UART2_TX_DATA__I2C2_SDA	0x4000007f
-+			MX7D_PAD_UART2_RX_DATA__I2C2_SCL	0x4000007f
-+		>;
-+	};
-+
- 	pinctrl_enet1: enet1grp {
- 		fsl,pins = <
- 			MX7D_PAD_SD2_CD_B__ENET1_MDIO			0x3
-@@ -295,6 +392,20 @@
- 		>;
- 	};
- 
-+	pinctrl_can1: can1frp {
-+		fsl,pins = <
-+			MX7D_PAD_SAI1_RX_DATA__FLEXCAN1_RX	0x59
-+			MX7D_PAD_SAI1_TX_BCLK__FLEXCAN1_TX	0x59
-+		>;
-+	};
-+
-+	pinctrl_can2: can2frp {
-+		fsl,pins = <
-+			MX7D_PAD_SAI1_TX_SYNC__FLEXCAN2_RX	0x59
-+			MX7D_PAD_SAI1_TX_DATA__FLEXCAN2_TX	0x59
-+		>;
-+	};
-+
- 	pinctrl_i2c4: i2c4grp {
- 		fsl,pins = <
- 			MX7D_PAD_SAI1_RX_BCLK__I2C4_SDA		0x4000007f
-@@ -302,6 +413,24 @@
- 		>;
- 	};
- 
-+	pinctrl_pwm1: pwm1 {
-+		fsl,pins = <
-+			MX7D_PAD_GPIO1_IO08__PWM1_OUT   0x7f
-+		>;
-+	};
-+
-+	pinctrl_pwm2: pwm2 {
-+		fsl,pins = <
-+			MX7D_PAD_GPIO1_IO09__PWM2_OUT   0x7f
-+		>;
-+	};
-+
-+	pinctrl_pwm3: pwm3 {
-+		fsl,pins = <
-+			MX7D_PAD_GPIO1_IO10__PWM3_OUT   0x7f
-+		>;
-+	};
-+
- 	pinctrl_reg_wlreg_on: regregongrp {
- 		fsl,pins = <
- 			MX7D_PAD_ECSPI1_SCLK__GPIO4_IO16	0x59
-@@ -324,12 +453,66 @@
- 		>;
- 	};
- 
-+	pinctrl_uart6: uart6grp {
-+		fsl,pins = <
-+			MX7D_PAD_EPDC_DATA08__UART6_DCE_RX	0x79
-+			MX7D_PAD_EPDC_DATA09__UART6_DCE_TX	0x79
-+			MX7D_PAD_EPDC_DATA10__UART6_DCE_RTS	0x79
-+			MX7D_PAD_EPDC_DATA11__UART6_DCE_CTS	0x79
-+		>;
-+	};
-+
-+	pinctrl_uart7: uart7grp {
-+		fsl,pins = <
-+			MX7D_PAD_ECSPI2_MOSI__UART7_DCE_TX	0x79
-+			MX7D_PAD_ECSPI2_SCLK__UART7_DCE_RX	0x79
-+			MX7D_PAD_ECSPI2_SS0__UART7_DCE_CTS	0x79
-+			MX7D_PAD_ECSPI2_MISO__UART7_DCE_RTS	0x79
-+		>;
-+	};
-+
- 	pinctrl_usbotg1_pwr: usbotg_pwr {
- 		fsl,pins = <
- 			MX7D_PAD_UART3_TX_DATA__GPIO4_IO5	0x14
- 		>;
- 	};
- 
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			MX7D_PAD_SD1_CMD__SD1_CMD		0x59
-+			MX7D_PAD_SD1_CLK__SD1_CLK		0x19
-+			MX7D_PAD_SD1_DATA0__SD1_DATA0		0x59
-+			MX7D_PAD_SD1_DATA1__SD1_DATA1		0x59
-+			MX7D_PAD_SD1_DATA2__SD1_DATA2		0x59
-+			MX7D_PAD_SD1_DATA3__SD1_DATA3		0x59
-+			MX7D_PAD_SD1_CD_B__GPIO5_IO0		0x15
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_100mhz: usdhc1grp_100mhz {
-+		fsl,pins = <
-+			MX7D_PAD_SD1_CMD__SD1_CMD		0x5a
-+			MX7D_PAD_SD1_CLK__SD1_CLK		0x1a
-+			MX7D_PAD_SD1_DATA0__SD1_DATA0		0x5a
-+			MX7D_PAD_SD1_DATA1__SD1_DATA1		0x5a
-+			MX7D_PAD_SD1_DATA2__SD1_DATA2		0x5a
-+			MX7D_PAD_SD1_DATA3__SD1_DATA3		0x5a
-+			MX7D_PAD_SD1_CD_B__GPIO5_IO0		0x15
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_200mhz: usdhc1grp_200mhz {
-+		fsl,pins = <
-+			MX7D_PAD_SD1_CMD__SD1_CMD		0x5b
-+			MX7D_PAD_SD1_CLK__SD1_CLK		0x1b
-+			MX7D_PAD_SD1_DATA0__SD1_DATA0		0x5b
-+			MX7D_PAD_SD1_DATA1__SD1_DATA1		0x5b
-+			MX7D_PAD_SD1_DATA2__SD1_DATA2		0x5b
-+			MX7D_PAD_SD1_DATA3__SD1_DATA3		0x5b
-+			MX7D_PAD_SD1_CD_B__GPIO5_IO0		0x15
-+		>;
-+	};
-+
- 	pinctrl_usdhc2: usdhc2grp {
- 		fsl,pins = <
- 			MX7D_PAD_SD2_CMD__SD2_CMD		0x59
 -- 
 2.19.2
