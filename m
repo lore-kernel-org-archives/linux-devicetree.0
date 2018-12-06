@@ -1,67 +1,63 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH V5 5/6] dts: fsl: add imx7ulp evk support
-Date: Thu, 6 Dec 2018 22:54:31 +0800
-Message-ID: <20181206145426.GF12929@dragon>
-References: <1541862478-7839-1-git-send-email-aisheng.dong@nxp.com>
- <1541862478-7839-6-git-send-email-aisheng.dong@nxp.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v10 0/8] Introduce on-chip interconnect API
+Date: Thu, 6 Dec 2018 15:55:47 +0100
+Message-ID: <20181206145547.GA7884@kroah.com>
+References: <20181127180349.29997-1-georgi.djakov@linaro.org>
+ <CAE=gft4jUjr3oDAZrM=-orLM-YoVAwa+e=crDDC_p9ArGE1dig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1541862478-7839-6-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <CAE=gft4jUjr3oDAZrM=-orLM-YoVAwa+e=crDDC_p9ArGE1dig@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Evan Green <evgreen@chromium.org>
+Cc: georgi.djakov@linaro.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, robh+dt@kernel.org, Michael Turquette <mturquette@baylibre.com>, khilman@baylibre.com, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, Alexandre Bailon <abailon@baylibre.com>, maxime.ripard@bootlin.com, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <thierry.reding@gmail.com>, ksitaraman@nvidia.com, sanjayc@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.orgDoug Anderson <di>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 10, 2018 at 03:13:12PM +0000, A.s. Dong wrote:
-> The NXP i.MX 7ULP Evaluation Kit (EVK) provides a platform for rapid
-> evaluation of the i.MX 7ULP, which features NXP's advanced implementation
-> of the Arm Cortex-A7 core, the Arm Cortex-M4 core, as well as a 3D and
-> 2D Graphics Processing Units (GPUs).
+On Wed, Dec 05, 2018 at 12:41:35PM -0800, Evan Green wrote:
+> On Tue, Nov 27, 2018 at 10:03 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+> >
+> > Modern SoCs have multiple processors and various dedicated cores (video, gpu,
+> > graphics, modem). These cores are talking to each other and can generate a
+> > lot of data flowing through the on-chip interconnects. These interconnect
+> > buses could form different topologies such as crossbar, point to point buses,
+> > hierarchical buses or use the network-on-chip concept.
+> >
+> > These buses have been sized usually to handle use cases with high data
+> > throughput but it is not necessary all the time and consume a lot of power.
+> > Furthermore, the priority between masters can vary depending on the running
+> > use case like video playback or CPU intensive tasks.
+> >
+> > Having an API to control the requirement of the system in terms of bandwidth
+> > and QoS, so we can adapt the interconnect configuration to match those by
+> > scaling the frequencies, setting link priority and tuning QoS parameters.
+> > This configuration can be a static, one-time operation done at boot for some
+> > platforms or a dynamic set of operations that happen at run-time.
+> >
+> > This patchset introduce a new API to get the requirement and configure the
+> > interconnect buses across the entire chipset to fit with the current demand.
+> > The API is NOT for changing the performance of the endpoint devices, but only
+> > the interconnect path in between them.
 > 
-> The EVK enables HDMI output for simple out-of-the-box to bring up but
-> allows reconfiguration for MIPI displays. The EVK is designed as a
-> System-On-Module(SOM) board that connects to an associated baseboard.
-> The SOM provides 1 GB LPDDR3, 8 MB Quad SPI flash, Micro SD 3.0 card
-> socket, WiFi/ Bluetooth capability, USB 2.0 OTG with Type C connector
-> and an NXP PF1550 power management IC (PMIC). The baseboard provides
-> additional capabilities including a full SD/MMC 3.0 card socket, audio
-> codec, multiple sensors, an HDMI connector, and an alternate MIPI display
-> connector. Additionally, the EVK facilitates software development with the
-> ultimate goal of faster time to market through the support of both
-> Linux OS and AndroidTM rich operating systems, as well as FreeRTOS.
+> For what it's worth, we are ready to land this in Chrome OS. I think
+> this series has been very well discussed and reviewed, hasn't changed
+> much in the last few spins, and is in good enough shape to use as a
+> base for future patches. Georgi's also done a great job reaching out
+> to other SoC vendors, and there appears to be enough consensus that
+> this framework will be usable by more than just Qualcomm. There are
+> also several drivers out on the list trying to add patches to use this
+> framework, with more to come, so it made sense (to us) to get this
+> base framework nailed down. In my experiments this is an important
+> piece of the overall power management story, especially on systems
+> that are mostly idle.
 > 
-> This patch aims to support the preliminary booting up features
-> as follows:
-> GPIO
-> LPUART
-> FEC
-> SD/MMC
-> 
-> See more board details:
-> https://www.nxp.com/products/processors-and-microcontrollers/
-> arm-based-processors-and-mcus/i.mx-applications-processors/
-> i.mx-7-processors/evaluation-kit-for-the-i.mx-7ulp-applications
-> -processor:MCIMX7ULP-EVK
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> I'll continue to track changes to this series and we will ultimately
+> reconcile with whatever happens upstream, but I thought it was worth
+> sending this note to express our "thumbs up" towards this framework.
 
-Changed the subject prefix like 'ARM: dts: imx: ...', and applied the
-patch.
+Looks like a v11 will be forthcoming, so I'll wait for that one to apply
+it to the tree if all looks good.
 
-Shawn
+thanks,
+
+greg k-h
