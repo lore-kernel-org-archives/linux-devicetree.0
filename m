@@ -1,139 +1,139 @@
-From: Sven Van Asbroeck <thesven73@gmail.com>
-Subject: [PATCH v3 3/3] bus: imx-weim: guard against timing configuration conflicts
-Date: Thu,  6 Dec 2018 14:26:33 -0500
-Message-ID: <20181206192633.25319-4-TheSven73@googlemail.com>
-References: <20181206192633.25319-1-TheSven73@googlemail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH v2] media: Use of_node_name_eq for node name comparisons
+Date: Thu,  6 Dec 2018 13:35:19 -0600
+Message-ID: <20181206193519.13367-1-robh@kernel.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181206192633.25319-1-TheSven73@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: TheSven73@googlemail.com, Shawn Guo <shawnguo@kernel.org>, Kees Cook <keescook@chromium.org>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Hyun Kwon <hyun.kwon@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-When specifying weim child devices, there is a risk that more than
-one timing setting is specified for the same chip select.
+Convert string compares of DT node names to use of_node_name_eq helper
+instead. This removes direct access to the node name pointer.
 
-The driver cannot support such a configuration.
-
-In case of conflict, this patch will print a warning to the log,
-and will ignore the child node in question.
-
-In this example, node acme@1 will be ignored, as it tries to modify
-timing settings for CS0:
-
-&weim {
-	acme@0 {
-		compatible = "acme,whatever";
-		reg = <0 0 0x100>;
-		fsl,weim-cs-timing = <something>;
-	};
-	acme@1 {
-		compatible = "acme,whatnot";
-		reg = <0 0x500 0x100>;
-		fsl,weim-cs-timing = <something else>;
-	};
-};
-
-However in this example, the driver will be happy:
-
-&weim {
-        acme@0 {
-                compatible = "acme,whatever";
-                reg = <0 0 0x100>;
-                fsl,weim-cs-timing = <something>;
-        };
-        acme@1 {
-                compatible = "acme,whatnot";
-                reg = <0 0x500 0x100>;
-                fsl,weim-cs-timing = <something>;
-        };
-};
-
-Signed-off-by: Sven Van Asbroeck <TheSven73@googlemail.com>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Kukjin Kim <kgene@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Hyun Kwon <hyun.kwon@xilinx.com>
+Cc: Michal Simek <michal.simek@xilinx.com>
+Cc: linux-media@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/bus/imx-weim.c | 33 ++++++++++++++++++++++++++++++---
- 1 file changed, 30 insertions(+), 3 deletions(-)
+v2:
+- Also convert tabs to spaces between the 'if' and '('
 
-diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
-index 5452d22d1bd8..dfe74b8c512a 100644
---- a/drivers/bus/imx-weim.c
-+++ b/drivers/bus/imx-weim.c
-@@ -46,8 +46,18 @@ static const struct imx_weim_devtype imx51_weim_devtype = {
- };
+ drivers/media/platform/exynos4-is/media-dev.c | 12 ++++++------
+ drivers/media/platform/ti-vpe/cal.c           |  4 ++--
+ drivers/media/platform/xilinx/xilinx-tpg.c    |  2 +-
+ drivers/media/v4l2-core/v4l2-fwnode.c         |  6 ++----
+ 4 files changed, 11 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+index 870501b0f351..463f2d84553e 100644
+--- a/drivers/media/platform/exynos4-is/media-dev.c
++++ b/drivers/media/platform/exynos4-is/media-dev.c
+@@ -445,7 +445,7 @@ static int fimc_md_parse_port_node(struct fimc_md *fmd,
+ 	 */
+ 	np = of_get_parent(rem);
  
- #define MAX_CS_REGS_COUNT	6
-+#define MAX_CS_REGS		6
- #define OF_REG_SIZE		3
+-	if (np && !of_node_cmp(np->name, "i2c-isp"))
++	if (of_node_name_eq(np, "i2c-isp"))
+ 		pd->fimc_bus_type = FIMC_BUS_TYPE_ISP_WRITEBACK;
+ 	else
+ 		pd->fimc_bus_type = pd->sensor_bus_type;
+@@ -495,7 +495,7 @@ static int fimc_md_register_sensor_entities(struct fimc_md *fmd)
+ 	for_each_available_child_of_node(parent, node) {
+ 		struct device_node *port;
  
-+struct cs_timing {
-+	bool is_applied;
-+	u32 regs[MAX_CS_REGS_COUNT];
-+};
-+
-+struct cs_timing_state {
-+	struct cs_timing cs[MAX_CS_REGS];
-+};
-+
- static const struct of_device_id weim_id_table[] = {
- 	/* i.MX1/21 */
- 	{ .compatible = "fsl,imx1-weim", .data = &imx1_weim_devtype, },
-@@ -112,11 +122,14 @@ static int __init imx_weim_gpr_setup(struct platform_device *pdev)
+-		if (of_node_cmp(node->name, "csis"))
++		if (!of_node_name_eq(node, "csis"))
+ 			continue;
+ 		/* The csis node can have only port subnode. */
+ 		port = of_get_next_child(node, NULL);
+@@ -720,13 +720,13 @@ static int fimc_md_register_platform_entities(struct fimc_md *fmd,
+ 			continue;
+ 
+ 		/* If driver of any entity isn't ready try all again later. */
+-		if (!strcmp(node->name, CSIS_OF_NODE_NAME))
++		if (of_node_name_eq(node, CSIS_OF_NODE_NAME))
+ 			plat_entity = IDX_CSIS;
+-		else if	(!strcmp(node->name, FIMC_IS_OF_NODE_NAME))
++		else if (of_node_name_eq(node, FIMC_IS_OF_NODE_NAME))
+ 			plat_entity = IDX_IS_ISP;
+-		else if (!strcmp(node->name, FIMC_LITE_OF_NODE_NAME))
++		else if (of_node_name_eq(node, FIMC_LITE_OF_NODE_NAME))
+ 			plat_entity = IDX_FLITE;
+-		else if	(!strcmp(node->name, FIMC_OF_NODE_NAME) &&
++		else if (of_node_name_eq(node, FIMC_OF_NODE_NAME) &&
+ 			 !of_property_read_bool(node, "samsung,lcd-wb"))
+ 			plat_entity = IDX_FIMC;
+ 
+diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
+index 95a093f41905..fc3c212b96e1 100644
+--- a/drivers/media/platform/ti-vpe/cal.c
++++ b/drivers/media/platform/ti-vpe/cal.c
+@@ -1615,7 +1615,7 @@ of_get_next_port(const struct device_node *parent,
+ 				return NULL;
+ 			}
+ 			prev = port;
+-		} while (of_node_cmp(port->name, "port") != 0);
++		} while (!of_node_name_eq(port, "port"));
+ 	}
+ 
+ 	return port;
+@@ -1635,7 +1635,7 @@ of_get_next_endpoint(const struct device_node *parent,
+ 		if (!ep)
+ 			return NULL;
+ 		prev = ep;
+-	} while (of_node_cmp(ep->name, "endpoint") != 0);
++	} while (!of_node_name_eq(ep, "endpoint"));
+ 
+ 	return ep;
  }
+diff --git a/drivers/media/platform/xilinx/xilinx-tpg.c b/drivers/media/platform/xilinx/xilinx-tpg.c
+index 851d20dcd550..ce686b8d6cff 100644
+--- a/drivers/media/platform/xilinx/xilinx-tpg.c
++++ b/drivers/media/platform/xilinx/xilinx-tpg.c
+@@ -725,7 +725,7 @@ static int xtpg_parse_of(struct xtpg_device *xtpg)
+ 		const struct xvip_video_format *format;
+ 		struct device_node *endpoint;
  
- /* Parse and set the timing for this device. */
--static int __init weim_timing_setup(struct device_node *np, void __iomem *base,
--				    const struct imx_weim_devtype *devtype)
-+static int __init weim_timing_setup(struct device *dev,
-+				    struct device_node *np, void __iomem *base,
-+				    const struct imx_weim_devtype *devtype,
-+				    struct cs_timing_state *ts)
- {
- 	u32 cs_idx, value[MAX_CS_REGS_COUNT];
- 	int i, ret, reg_idx, num_regs;
-+	struct cs_timing *cst;
+-		if (!port->name || of_node_cmp(port->name, "port"))
++		if (!of_node_name_eq(port, "port"))
+ 			continue;
  
- 	if (WARN_ON(devtype->cs_regs_count > MAX_CS_REGS_COUNT))
- 		return -EINVAL;
-@@ -145,10 +158,23 @@ static int __init weim_timing_setup(struct device_node *np, void __iomem *base,
- 		if (cs_idx >= devtype->cs_count)
- 			return -EINVAL;
+ 		format = xvip_of_get_format(port);
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index 218f0da0ce76..849326241b17 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -564,8 +564,7 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *__fwnode,
+ 	fwnode = fwnode_get_parent(__fwnode);
+ 	fwnode_property_read_u32(fwnode, port_prop, &link->local_port);
+ 	fwnode = fwnode_get_next_parent(fwnode);
+-	if (is_of_node(fwnode) &&
+-	    of_node_cmp(to_of_node(fwnode)->name, "ports") == 0)
++	if (is_of_node(fwnode) && of_node_name_eq(to_of_node(fwnode), "ports"))
+ 		fwnode = fwnode_get_next_parent(fwnode);
+ 	link->local_node = fwnode;
  
-+		/* prevent re-configuring a CS that's already been configured */
-+		cst = &ts->cs[cs_idx];
-+		if (cst->is_applied && memcmp(value, cst->regs,
-+					devtype->cs_regs_count*sizeof(u32))) {
-+			dev_err(dev, "fsl,weim-cs-timing conflict on %pOF", np);
-+			return -EINVAL;
-+		}
-+
- 		/* set the timing for WEIM */
- 		for (i = 0; i < devtype->cs_regs_count; i++)
- 			writel(value[i],
- 				base + cs_idx * devtype->cs_stride + i * 4);
-+		if (!cst->is_applied) {
-+			cst->is_applied = true;
-+			memcpy(cst->regs, value,
-+				devtype->cs_regs_count*sizeof(u32));
-+		}
- 	}
+@@ -578,8 +577,7 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *__fwnode,
+ 	fwnode = fwnode_get_parent(fwnode);
+ 	fwnode_property_read_u32(fwnode, port_prop, &link->remote_port);
+ 	fwnode = fwnode_get_next_parent(fwnode);
+-	if (is_of_node(fwnode) &&
+-	    of_node_cmp(to_of_node(fwnode)->name, "ports") == 0)
++	if (is_of_node(fwnode) && of_node_name_eq(to_of_node(fwnode), "ports"))
+ 		fwnode = fwnode_get_next_parent(fwnode);
+ 	link->remote_node = fwnode;
  
- 	return 0;
-@@ -162,6 +188,7 @@ static int __init weim_parse_dt(struct platform_device *pdev,
- 	const struct imx_weim_devtype *devtype = of_id->data;
- 	struct device_node *child;
- 	int ret, have_child = 0;
-+	struct cs_timing_state ts = {};
- 
- 	if (devtype == &imx50_weim_devtype) {
- 		ret = imx_weim_gpr_setup(pdev);
-@@ -170,7 +197,7 @@ static int __init weim_parse_dt(struct platform_device *pdev,
- 	}
- 
- 	for_each_available_child_of_node(pdev->dev.of_node, child) {
--		ret = weim_timing_setup(child, base, devtype);
-+		ret = weim_timing_setup(&pdev->dev, child, base, devtype, &ts);
- 		if (ret)
- 			dev_warn(&pdev->dev, "%pOF set timing failed.\n",
- 				child);
 -- 
-2.17.1
+2.19.1
