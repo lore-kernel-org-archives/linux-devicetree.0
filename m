@@ -1,43 +1,34 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 7/9] ARM: dts: imx7d-pico: Extend peripherals support
-Date: Thu, 6 Dec 2018 09:38:19 +0800
-Message-ID: <20181206013818.GU3987@dragon>
-References: <20181202212520.16650-1-otavio@ossystems.com.br>
- <20181202212520.16650-8-otavio@ossystems.com.br>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH 0/2] PCI: mediatek: Add support for MT7629
+Date: Thu, 6 Dec 2018 09:40:18 +0800
+Message-ID: <1544060418.20681.0.camel@mtkswgap22>
+References: <1544058553-10936-1-git-send-email-jianjun.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181202212520.16650-8-otavio@ossystems.com.br>
+In-Reply-To: <1544058553-10936-1-git-send-email-jianjun.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Otavio Salvador <otavio@ossystems.com.br>
-Cc: linux-arm-kernel@lists.infradead.org, Fabio Estevam <festevam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>
+To: Jianjun Wang <jianjun.wang@mediatek.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, mark.rutland@arm.com, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, honghui.zhang@mediatek.com, youlin.pei@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 02, 2018 at 07:25:18PM -0200, Otavio Salvador wrote:
-...
-> +&uart6 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart6>;
-> +	assigned-clocks = <&clks IMX7D_UART6_ROOT_SRC>;
-> +	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
-> +	fsl,uart-has-rtscts;
+On Thu, 2018-12-06 at 09:09 +0800, Jianjun Wang wrote:
+> These series patches modify pcie-mediatek.c and dt-bindings compatible
+> string to support MT7629 PCIe host.
+> 
+> There was something wrong with the mail server's permission setting, sorry
+> for sent these mails repeatedly.
+> 
+> Jianjun Wang (2):
+>   dt-bindings: PCI: Add support for MT7629
+>   PCI: mediatek: Add controller support for MT7629
+> 
+>  .../devicetree/bindings/pci/mediatek-pcie.txt |  1 +
+>  drivers/pci/controller/pcie-mediatek.c        | 26 +++++++++++++++++++
+>  include/linux/pci_ids.h                       |  1 +
+>  3 files changed, 28 insertions(+)
+> 
 
-Use uart-has-rtscts instead.
 
-> +	status = "okay";
-> +};
-> +
-> +&uart7 { /* Bluetooth */
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart7>;
-> +	assigned-clocks = <&clks IMX7D_UART7_ROOT_SRC>;
-> +	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
-> +	fsl,uart-has-rtscts;
-
-Ditto
-
-> +	status = "okay";
-> +};
-
-Shawn
+Acked-by: Ryder Lee <ryder.lee@mediatek.com> for the series.
