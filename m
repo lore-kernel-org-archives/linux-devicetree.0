@@ -1,37 +1,43 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 1/2] arm64: dts: rockchip: rockpro64 fix regulator gpios
-Date: Thu, 06 Dec 2018 13:48:09 +0100
-Message-ID: <1745654.q3GSn5YZ1a@phil>
-References: <20181201100817.20688-1-oskari@lemmela.net> <20181201100817.20688-2-oskari@lemmela.net>
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: rockpro64 fix video output chain
+Date: Thu, 06 Dec 2018 14:03:27 +0100
+Message-ID: <3141294.pN5WgFrMoD@phil>
+References: <20181201100817.20688-1-oskari@lemmela.net> <20181201100817.20688-3-oskari@lemmela.net> <09287391-d541-cddb-4168-55ca6fee3f16@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181201100817.20688-2-oskari@lemmela.net>
+In-Reply-To: <09287391-d541-cddb-4168-55ca6fee3f16@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Oskari Lemmela <oskari@lemmela.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Akash Gajjar <Akash_Gajjar@mentor.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+To: agajjar <Akash_Gajjar@mentor.com>
+Cc: Oskari Lemmela <oskari@lemmela.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 1. Dezember 2018, 11:08:16 CET schrieb Oskari Lemmela:
-> Rockpro64 is not able boot if GPIO1_C1 pin is pulled high
-> before loading linux kernel.
+Am Mittwoch, 5. Dezember 2018, 14:03:29 CET schrieb agajjar:
 > 
-> In rockpro64 GPIO1_C1 pin is connected vdd_cpu_b regulator
-> VSEL pin. Pin should be pulled down in normal operation and
-> pulled high in suspend.
+> On 12/1/2018 3:38 PM, Oskari Lemmela wrote:
+> > Rockpro64 is not able boot if kernel is compiled with
+> > CONFIG_DRM_ROCKCHIP=m
+> >
+> > Enable Rockpro64 board HDMI output to fix issue.
 > 
-> PMIC LDO_REG2 is connected to touch panel connector.
-> Rename regulator and set it to correct voltage.
+> Hi Oskari,
 > 
-> PCIe power is controller by GPIO1_D0.
+> Could you please describe this issue in detail.
 > 
-> Schematics can be downloaded from:
-> http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
-> 
-> Signed-off-by: Oskari Lemmela <oskari@lemmela.net>
+> I am not able to reproduce this issue if CONFIG_DRM_ROCKCHIP is compile 
+> in or as a loadable module at the same time hdmi node is present or not.
 
-applied as fix for 4.20
+I've now simply adjusted the commit message to:
+"arm64: dts: rockchip: enable hdmi output on rk3399-rockpro64
+    
+The rockpro64 does have hdmi support, so add the necessary
+devicetree node to enable it."
 
-Thanks
+and applied it for 4.21.
+
+While it still would be good to find out where the issue comes from Oskari
+is seeing, the rockpro64 does have hdmi, so we can just enable it ;-)
+
+
 Heiko
