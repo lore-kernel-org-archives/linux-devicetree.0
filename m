@@ -1,12 +1,14 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH 1/2] dt-bindings: iio: accel: mma8452: add optional vcc-supply
- property
-Date: Thu, 6 Dec 2018 06:23:28 +0000
-Message-ID: <1544077059-4471-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 2/2] iio: accell: mma8452: add optional vcc regulator
+ operation support
+Date: Thu, 6 Dec 2018 06:23:33 +0000
+Message-ID: <1544077059-4471-2-git-send-email-Anson.Huang@nxp.com>
+References: <1544077059-4471-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1544077059-4471-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "harinath922@gmail.com" <harinath922@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "martink@posteo.de" <martink@posteo.de>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
@@ -14,29 +16,173 @@ Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
 The accelerometer's power supply could be controlled by regulator
-on some platforms, add optional property "vcc-supply" to let device
-tree to pass phandle to the regulator to driver.
+on some platforms, such as i.MX6Q-SABRESD board, the mma8451's
+power supply is controlled by a GPIO fixed regulator, need to make
+sure the regulator is enabled before any communication with mma8451,
+this patch adds optional vcc regulator operation support.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- Documentation/devicetree/bindings/iio/accel/mma8452.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iio/accel/mma8452.c | 88 +++++++++++++++++++++++++++++++++++++++++=
+++--
+ 1 file changed, 86 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Docu=
-mentation/devicetree/bindings/iio/accel/mma8452.txt
-index 2100e9a..410279a 100644
---- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-+++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-@@ -20,6 +20,8 @@ Optional properties:
-   - interrupt-names: should contain "INT1" and/or "INT2", the acceleromete=
-r's
- 		     interrupt line in use.
+diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+index 421a0a8..8f6123f 100644
+--- a/drivers/iio/accel/mma8452.c
++++ b/drivers/iio/accel/mma8452.c
+@@ -31,6 +31,7 @@
+ #include <linux/of_device.h>
+ #include <linux/of_irq.h>
+ #include <linux/pm_runtime.h>
++#include <linux/regulator/consumer.h>
 =20
-+  - vcc-supply: phandle to the regulator that provides power to the accele=
-rometer.
+ #define MMA8452_STATUS				0x00
+ #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
+@@ -107,6 +108,7 @@ struct mma8452_data {
+ 	u8 data_cfg;
+ 	const struct mma_chip_info *chip_info;
+ 	int sleep_val;
++	struct regulator *vcc_reg;
+ };
+=20
+  /**
+@@ -1533,6 +1535,14 @@ static int mma8452_probe(struct i2c_client *client,
+ 	data->client =3D client;
+ 	mutex_init(&data->lock);
+ 	data->chip_info =3D match->data;
++	data->vcc_reg =3D devm_regulator_get_optional(&client->dev, "vcc");
++	if (!IS_ERR(data->vcc_reg)) {
++		ret =3D regulator_enable(data->vcc_reg);
++		if (ret) {
++			dev_err(&client->dev, "failed to enable VCC regulator\n");
++			return ret;
++		}
++	}
+=20
+ 	ret =3D i2c_smbus_read_byte_data(client, MMA8452_WHO_AM_I);
+ 	if (ret < 0)
+@@ -1667,6 +1677,8 @@ static int mma8452_probe(struct i2c_client *client,
+ static int mma8452_remove(struct i2c_client *client)
+ {
+ 	struct iio_dev *indio_dev =3D i2c_get_clientdata(client);
++	struct mma8452_data *data =3D iio_priv(indio_dev);
++	int ret;
+=20
+ 	iio_device_unregister(indio_dev);
+=20
+@@ -1678,6 +1690,14 @@ static int mma8452_remove(struct i2c_client *client)
+ 	mma8452_trigger_cleanup(indio_dev);
+ 	mma8452_standby(iio_priv(indio_dev));
+=20
++	if (!IS_ERR(data->vcc_reg)) {
++		ret =3D regulator_disable(data->vcc_reg);
++		if (ret) {
++			dev_err(&client->dev, "failed to disable VCC regulator\n");
++			return ret;
++		}
++	}
 +
- Example:
+ 	return 0;
+ }
 =20
- 	mma8453fc@1d {
+@@ -1696,6 +1716,14 @@ static int mma8452_runtime_suspend(struct device *de=
+v)
+ 		return -EAGAIN;
+ 	}
+=20
++	if (!IS_ERR(data->vcc_reg)) {
++		ret =3D regulator_disable(data->vcc_reg);
++		if (ret) {
++			dev_err(dev, "failed to disable VCC regulator\n");
++			return ret;
++		}
++	}
++
+ 	return 0;
+ }
+=20
+@@ -1705,6 +1733,14 @@ static int mma8452_runtime_resume(struct device *dev=
+)
+ 	struct mma8452_data *data =3D iio_priv(indio_dev);
+ 	int ret, sleep_val;
+=20
++	if (!IS_ERR(data->vcc_reg)) {
++		ret =3D regulator_enable(data->vcc_reg);
++		if (ret) {
++			dev_err(dev, "failed to enable VCC regulator\n");
++			return ret;
++		}
++	}
++
+ 	ret =3D mma8452_active(data);
+ 	if (ret < 0)
+ 		return ret;
+@@ -1723,14 +1759,62 @@ static int mma8452_runtime_resume(struct device *de=
+v)
+ #ifdef CONFIG_PM_SLEEP
+ static int mma8452_suspend(struct device *dev)
+ {
+-	return mma8452_standby(iio_priv(i2c_get_clientdata(
++	struct iio_dev *indio_dev =3D i2c_get_clientdata(to_i2c_client(dev));
++	struct mma8452_data *data =3D iio_priv(indio_dev);
++	int ret;
++
++	if (!IS_ERR(data->vcc_reg)) {
++		ret =3D regulator_enable(data->vcc_reg);
++		if (ret) {
++			dev_err(dev, "failed to enable VCC regulator\n");
++			return ret;
++		}
++	}
++
++	ret =3D mma8452_standby(iio_priv(i2c_get_clientdata(
+ 		to_i2c_client(dev))));
++	if (ret)
++		return ret;
++
++	if (!IS_ERR(data->vcc_reg)) {
++		ret =3D regulator_disable(data->vcc_reg);
++		if (ret) {
++			dev_err(dev, "failed to disable VCC regulator\n");
++			return ret;
++		}
++	}
++
++	return 0;
+ }
+=20
+ static int mma8452_resume(struct device *dev)
+ {
+-	return mma8452_active(iio_priv(i2c_get_clientdata(
++	struct iio_dev *indio_dev =3D i2c_get_clientdata(to_i2c_client(dev));
++	struct mma8452_data *data =3D iio_priv(indio_dev);
++	int ret;
++
++	if (!IS_ERR(data->vcc_reg)) {
++		ret =3D regulator_enable(data->vcc_reg);
++		if (ret) {
++			dev_err(dev, "failed to enable VCC regulator\n");
++			return ret;
++		}
++	}
++
++	ret =3D mma8452_active(iio_priv(i2c_get_clientdata(
+ 		to_i2c_client(dev))));
++	if (ret)
++		return ret;
++
++	if (!IS_ERR(data->vcc_reg)) {
++		ret =3D regulator_disable(data->vcc_reg);
++		if (ret) {
++			dev_err(dev, "failed to disable VCC regulator\n");
++			return ret;
++		}
++	}
++
++	return 0;
+ }
+ #endif
+=20
 --=20
 2.7.4
