@@ -1,151 +1,145 @@
-From: David Dai <daidavid1@codeaurora.org>
-Subject: Re: [PATCH v10 5/7] interconnect: qcom: Add sdm845 interconnect
- provider driver
-Date: Thu, 6 Dec 2018 13:53:21 -0800
-Message-ID: <266c7bf9-18c1-8255-eca2-814aab3850c6@codeaurora.org>
-References: <20181127180349.29997-1-georgi.djakov@linaro.org>
- <20181127180349.29997-6-georgi.djakov@linaro.org>
- <CAE=gft4tO96n0vAubo1_vvcTO4yarDcTNOTuL6cLpmLDDNxrfA@mail.gmail.com>
- <cfcb39ba-860c-5a3f-911f-ab52b5250390@linaro.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] clk: qcom: smd: Add support for MSM8998 rpm clocks
+Date: Thu, 06 Dec 2018 13:55:16 -0800
+Message-ID: <154413331679.88331.15909045605070653326@swboyd.mtv.corp.google.com>
+References: <1544130666-32252-1-git-send-email-jhugo@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cfcb39ba-860c-5a3f-911f-ab52b5250390@linaro.org>
-Content-Language: en-US
+In-Reply-To: <1544130666-32252-1-git-send-email-jhugo@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>, Evan Green <evgreen@chromium.org>
-Cc: linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, rjw@rjwysocki.net, robh+dt@kernel.org, Michael Turquette <mturquette@baylibre.com>, khilman@baylibre.com, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, Alexandre Bailon <abailon@baylibre.com>, maxime.ripard@bootlin.com, Arnd Bergmann <arnd@arndb.de>, thierry.reding@gmail.com, ksitaraman@nvidia.com, sanjayc@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
+To: mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org
+Cc: bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Quoting Jeffrey Hugo (2018-12-06 13:11:06)
+> Add rpm smd clocks, PMIC and bus clocks which are required on MSM8998
+> for clients to vote on.
+> =
+
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,rpmcc.txt       |  1 +
+>  drivers/clk/qcom/clk-smd-rpm.c                     | 62 ++++++++++++++++=
+++++++
+>  include/dt-bindings/clock/qcom,rpmcc.h             |  6 +++
+>  3 files changed, 69 insertions(+)
+> =
+
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Doc=
+umentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> index 87b4949..16c4293 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> @@ -17,6 +17,7 @@ Required properties :
+>                         "qcom,rpmcc-apq8064", "qcom,rpmcc"
+>                         "qcom,rpmcc-msm8996", "qcom,rpmcc"
+>                         "qcom,rpmcc-qcs404", "qcom,rpmcc"
+> +                       "qcom,rpmcc-msm8998", "qcom,rpmcc"
+
+Can you keep this sorted on the first compatible?
+
+>  =
+
+>  - #clock-cells : shall contain 1
+>  =
 
 
-On 12/5/2018 8:00 AM, Georgi Djakov wrote:
-> Hi Evan,
->
-> On 12/1/18 02:39, Evan Green wrote:
->> On Tue, Nov 27, 2018 at 10:04 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
->>> From: David Dai <daidavid1@codeaurora.org>
->>>
->>> Introduce Qualcomm SDM845 specific provider driver using the
->>> interconnect framework.
->>>
->>> Signed-off-by: David Dai <daidavid1@codeaurora.org>
->>> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
->>> ---
->>>   .../bindings/interconnect/qcom,sdm845.txt     |  24 +
->>>   drivers/interconnect/Kconfig                  |   5 +
->>>   drivers/interconnect/Makefile                 |   1 +
->>>   drivers/interconnect/qcom/Kconfig             |  13 +
->>>   drivers/interconnect/qcom/Makefile            |   5 +
->>>   drivers/interconnect/qcom/sdm845.c            | 836 ++++++++++++++++++
->>>   .../dt-bindings/interconnect/qcom,sdm845.h    | 143 +++
->>>   7 files changed, 1027 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
->>>   create mode 100644 drivers/interconnect/qcom/Kconfig
->>>   create mode 100644 drivers/interconnect/qcom/Makefile
->>>   create mode 100644 drivers/interconnect/qcom/sdm845.c
->>>   create mode 100644 include/dt-bindings/interconnect/qcom,sdm845.h
->>>
->>> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
->>> new file mode 100644
->>> index 000000000000..d45150e99665
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
->>> @@ -0,0 +1,24 @@
->>> +Qualcomm SDM845 Network-On-Chip interconnect driver binding
->>> +-----------------------------------------------------------
->>> +
->>> +SDM845 interconnect providers support system bandwidth requirements through
->>> +RPMh hardware accelerators known as Bus Clock Manager(BCM). The provider is able
->>> +to communicate with the BCM through the Resource State Coordinator(RSC)
->>> +associated with each execution environment. Provider nodes must reside within
->>> +an RPMh device node pertaining to their RSC and each provider maps to
->>> +a single RPMh resource.
->>> +
->>> +Required properties :
->>> +- compatible : shall contain only one of the following:
->>> +                       "qcom,sdm845-rsc-hlos"
->> I wonder if maybe hlos isn't necessary. Unless you somehow imagine
->> secure mode would have a device tree entry in here as well? Probably
->> not.
-> Ok, will remove it. David, please chime in if you have any concerns with
-> this.
+Rob may prefer this file is split from the driver part into a different
+patch.
 
-No strong preferences in terms of naming, but need to make the 
-distinction between this and potential other rsc types if we're to add 
-additional provider drivers.
+> diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rp=
+m.c
+> index d3aadae..269304e 100644
+> --- a/drivers/clk/qcom/clk-smd-rpm.c
+> +++ b/drivers/clk/qcom/clk-smd-rpm.c
+> @@ -655,11 +655,73 @@ static int clk_smd_rpm_enable_scaling(struct qcom_s=
+md_rpm *rpm)
+>         .num_clks =3D ARRAY_SIZE(qcs404_clks),
+>  };
+>  =
 
->>> +- #interconnect-cells : should contain 1
->>> +
->>> +Examples:
->>> +
->>> +apps_rsc: rsc {
->>> +               qnoc: qnoc-rsc-hlos {
->>> +                       compatible = "qcom,sdm845-rsc-hlos";
->>> +                       #interconnect-cells = <1>;
->>> +               };
->>> +};
->>> +
->> ...
->>> diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
->>> new file mode 100644
->>> index 000000000000..1678de91ca52
->>> --- /dev/null
->>> +++ b/drivers/interconnect/qcom/sdm845.c
->>> @@ -0,0 +1,836 @@
->> ...
->>> +
->>> +static void tcs_list_gen(struct list_head *bcm_list,
->>> +                        struct tcs_cmd *tcs_list, int *n)
->> We could make the prototype of this function be:
->>
->> static void tcs_list_gen(struct list_head *bcm_list,
->>          struct tcs_cmd tcs_list[SDM845_MAX_VCD], int n[SDM845_MAX_VCD])
->>
->> which would catch errors if somebody later passed in an array that
->> wasn't the right size, since we blindly memset below.
-> Yes, sounds good. I will try to optimize it.
->
-> Thanks,
-> Georgi
->
->>> +{
->>> +       struct qcom_icc_bcm *bcm;
->>> +       bool commit;
->>> +       size_t idx = 0, batch = 0, cur_vcd_size = 0;
->>> +
->>> +       memset(n, 0, sizeof(int) * SDM845_MAX_VCD);
->>> +
->>> +       list_for_each_entry(bcm, bcm_list, list) {
->>> +               commit = false;
->>> +               cur_vcd_size++;
->>> +               if ((list_is_last(&bcm->list, bcm_list)) ||
->>> +                   bcm->aux_data.vcd != list_next_entry(bcm, list)->aux_data.vcd) {
->>> +                       commit = true;
->>> +                       cur_vcd_size = 0;
->>> +               }
->>> +               tcs_cmd_gen(&tcs_list[idx], bcm->vote_x, bcm->vote_y,
->>> +                           bcm->addr, commit);
->>> +               idx++;
->>> +               n[batch]++;
->>> +               /*
->>> +                * Batch the BCMs in such a way that we do not split them in
->>> +                * multiple payloads when they are under the same VCD. This is
->>> +                * to ensure that every BCM is committed since we only set the
->>> +                * commit bit on the last BCM request of every VCD.
->>> +                */
->>> +               if (n[batch] >= MAX_RPMH_PAYLOAD) {
->>> +                       if (!commit) {
->>> +                               n[batch] -= cur_vcd_size;
->>> +                               n[batch + 1] = cur_vcd_size;
->>> +                       }
->>> +                       batch++;
->>> +               }
->>> +       }
->>> +}
->>> +
+> +/* msm8998 */
+> +DEFINE_CLK_SMD_RPM(msm8998, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, =
+1);
+> +DEFINE_CLK_SMD_RPM(msm8998, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, =
+2);
+> +DEFINE_CLK_SMD_RPM(msm8998, ce1_clk, ce1_a_clk, QCOM_SMD_RPM_CE_CLK, 0);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, div_clk1, div_clk1_a, 0xb);
+> +DEFINE_CLK_SMD_RPM(msm8998, ipa_clk, ipa_a_clk, QCOM_SMD_RPM_IPA_CLK, 0);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, bb_clk1, bb_clk1_a, 1);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, bb_clk2, bb_clk2_a, 2);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, bb_clk3_pin, bb_clk3_a_pin=
+, 3);
+> +DEFINE_CLK_SMD_RPM(msm8998, mmssnoc_axi_rpm_clk, mmssnoc_axi_rpm_a_clk,
+> +                  QCOM_SMD_RPM_MMAXI_CLK, 0);
+> +DEFINE_CLK_SMD_RPM(msm8998, aggre1_noc_clk, aggre1_noc_a_clk,
+> +                  QCOM_SMD_RPM_AGGR_CLK, 1);
+> +DEFINE_CLK_SMD_RPM(msm8998, aggre2_noc_clk, aggre2_noc_a_clk,
+> +                  QCOM_SMD_RPM_AGGR_CLK, 2);
+> +DEFINE_CLK_SMD_RPM_QDSS(msm8998, qdss_clk, qdss_a_clk,
+> +                       QCOM_SMD_RPM_MISC_CLK, 1);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, rf_clk1, rf_clk1_a, 4);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk2_pin, rf_clk2_a_pin=
+, 5);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, rf_clk3, rf_clk3_a, 6);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk3_pin, rf_clk3_a_pin=
+, 6);
+> +static struct clk_smd_rpm *msm8998_clks[] =3D {
+> +       [RPM_SMD_SNOC_CLK] =3D &msm8998_snoc_clk,
+> +       [RPM_SMD_SNOC_A_CLK] =3D &msm8998_snoc_a_clk,
+> +       [RPM_SMD_CNOC_CLK] =3D &msm8998_cnoc_clk,
+> +       [RPM_SMD_CNOC_A_CLK] =3D &msm8998_cnoc_a_clk,
+> +       [RPM_SMD_CE1_CLK] =3D &msm8998_ce1_clk,
+> +       [RPM_SMD_CE1_A_CLK] =3D &msm8998_ce1_a_clk,
+> +       [RPM_SMD_DIV_CLK1] =3D &msm8998_div_clk1,
+> +       [RPM_SMD_DIV_A_CLK1] =3D &msm8998_div_clk1_a,
+> +       [RPM_SMD_IPA_CLK] =3D &msm8998_ipa_clk,
+> +       [RPM_SMD_IPA_A_CLK] =3D &msm8998_ipa_a_clk,
+> +       [RPM_SMD_BB_CLK1] =3D &msm8998_bb_clk1,
+> +       [RPM_SMD_BB_CLK1_A] =3D &msm8998_bb_clk1_a,
+> +       [RPM_SMD_BB_CLK2] =3D &msm8998_bb_clk2,
+> +       [RPM_SMD_BB_CLK2_A] =3D &msm8998_bb_clk2_a,
+> +       [RPM_SMD_BB_CLK3_PIN] =3D &msm8998_bb_clk3_pin,
+> +       [RPM_SMD_BB_CLK3_A_PIN] =3D &msm8998_bb_clk3_a_pin,
+> +       [RPM_SMD_MMAXI_CLK] =3D &msm8998_mmssnoc_axi_rpm_clk,
+> +       [RPM_SMD_MMAXI_A_CLK] =3D &msm8998_mmssnoc_axi_rpm_a_clk,
+> +       [RPM_SMD_AGGR1_NOC_CLK] =3D &msm8998_aggre1_noc_clk,
+> +       [RPM_SMD_AGGR1_NOC_A_CLK] =3D &msm8998_aggre1_noc_a_clk,
+> +       [RPM_SMD_AGGR2_NOC_CLK] =3D &msm8998_aggre2_noc_clk,
+> +       [RPM_SMD_AGGR2_NOC_A_CLK] =3D &msm8998_aggre2_noc_a_clk,
+> +       [RPM_SMD_QDSS_CLK] =3D &msm8998_qdss_clk,
+> +       [RPM_SMD_QDSS_A_CLK] =3D &msm8998_qdss_a_clk,
+> +       [RPM_SMD_RF_CLK1] =3D &msm8998_rf_clk1,
+> +       [RPM_SMD_RF_CLK1_A] =3D &msm8998_rf_clk1_a,
+> +       [RPM_SMD_RF_CLK2_PIN] =3D &msm8998_rf_clk2_pin,
+> +       [RPM_SMD_RF_CLK2_A_PIN] =3D &msm8998_rf_clk2_a_pin,
+> +       [RPM_SMD_RF_CLK3] =3D &msm8998_rf_clk3,
+> +       [RPM_SMD_RF_CLK3_A] =3D &msm8998_rf_clk3_a,
+> +       [RPM_SMD_RF_CLK3_PIN] =3D &msm8998_rf_clk3_pin,
+> +       [RPM_SMD_RF_CLK3_A_PIN] =3D &msm8998_rf_clk3_a_pin,
+> +};
+> +
+> +static const struct rpm_smd_clk_desc rpm_clk_msm8998 =3D {
+> +       .clks =3D msm8998_clks,
+> +       .num_clks =3D ARRAY_SIZE(msm8998_clks),
+> +};
+> +
+>  static const struct of_device_id rpm_smd_clk_match_table[] =3D {
+>         { .compatible =3D "qcom,rpmcc-msm8916", .data =3D &rpm_clk_msm891=
+6 },
+>         { .compatible =3D "qcom,rpmcc-msm8974", .data =3D &rpm_clk_msm897=
+4 },
+>         { .compatible =3D "qcom,rpmcc-msm8996", .data =3D &rpm_clk_msm899=
+6 },
+>         { .compatible =3D "qcom,rpmcc-qcs404",  .data =3D &rpm_clk_qcs404=
+  },
+> +       { .compatible =3D "qcom,rpmcc-msm8998", .data =3D &rpm_clk_msm899=
+8 },
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+And this sorted too.
+
+>         { }
+>  };
+>  MODULE_DEVICE_TABLE(of, rpm_smd_clk_match_table);
