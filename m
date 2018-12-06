@@ -1,14 +1,15 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: Re: [PATCH] media: Use of_node_name_eq for node name comparisons
-Date: Thu, 6 Dec 2018 07:15:03 -0600
-Message-ID: <20181206131503.n543jp3ock3jzrzq@ti.com>
-References: <20181205195050.4759-13-robh@kernel.org>
+From: Carlo Caione <ccaione@baylibre.com>
+Subject: Re: [PATCH 0/2] meson: Fix IRQ trigger type
+Date: Thu, 06 Dec 2018 13:17:58 +0000
+Message-ID: <85973a9cd43c677ffa5c80853e86d79f36a9eb3a.camel@baylibre.com>
+References: <20181204160447.27869-1-ccaione@baylibre.com>
+ <CAFBinCDCE7RP4vgs25bqSZ8vBjrmcuB=qb3U92X6QfpmzeqrBg@mail.gmail.com>
+ <20181206124347.GA10676@ingrassia.epigenesys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20181205195050.4759-13-robh@kernel.org>
+In-Reply-To: <20181206124347.GA10676@ingrassia.epigenesys.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,142 +19,81 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Hyun Kwon <hyun.kwon@xilinx.com>, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Michal Simek <michal.simek@xilinx.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+To: Emiliano Ingrassia <ingrassia@epigenesys.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@baylibre.com, robh+dt@kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, 2018-12-06 at 13:43 +0100, Emiliano Ingrassia wrote:
+> Hi all,
 
-For ti-vpe/cal.c,
+Hi Emiliano,
 
-Reviewed-by: Benoit Parrot <bparrot@ti.com>
-
-Regards,
-Benoit
-
-Rob Herring <robh@kernel.org> wrote on Wed [2018-Dec-05 13:50:29 -0600]:
-> Convert string compares of DT node names to use of_node_name_eq helper
-> instead. This removes direct access to the node name pointer.
+> thank you for involving me.
 > 
-> Cc: Kyungmin Park <kyungmin.park@samsung.com>
-> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Benoit Parrot <bparrot@ti.com>
-> Cc: Hyun Kwon <hyun.kwon@xilinx.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Michal Simek <michal.simek@xilinx.com>
-> Cc: linux-media@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-samsung-soc@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  drivers/media/platform/exynos4-is/media-dev.c | 12 ++++++------
->  drivers/media/platform/ti-vpe/cal.c           |  4 ++--
->  drivers/media/platform/xilinx/xilinx-tpg.c    |  2 +-
->  drivers/media/v4l2-core/v4l2-fwnode.c         |  6 ++----
->  4 files changed, 11 insertions(+), 13 deletions(-)
+> I applied Carlo's patches[0] on a kernel vanilla 4.19.6
+> and tested it with kernel packet generator, monitoring
+> bandwidth usage with "nload".
 > 
-> diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
-> index 870501b0f351..ced14af56606 100644
-> --- a/drivers/media/platform/exynos4-is/media-dev.c
-> +++ b/drivers/media/platform/exynos4-is/media-dev.c
-> @@ -445,7 +445,7 @@ static int fimc_md_parse_port_node(struct fimc_md *fmd,
->  	 */
->  	np = of_get_parent(rem);
->  
-> -	if (np && !of_node_cmp(np->name, "i2c-isp"))
-> +	if (of_node_name_eq(np, "i2c-isp"))
->  		pd->fimc_bus_type = FIMC_BUS_TYPE_ISP_WRITEBACK;
->  	else
->  		pd->fimc_bus_type = pd->sensor_bus_type;
-> @@ -495,7 +495,7 @@ static int fimc_md_register_sensor_entities(struct fimc_md *fmd)
->  	for_each_available_child_of_node(parent, node) {
->  		struct device_node *port;
->  
-> -		if (of_node_cmp(node->name, "csis"))
-> +		if (!of_node_name_eq(node, "csis"))
->  			continue;
->  		/* The csis node can have only port subnode. */
->  		port = of_get_next_child(node, NULL);
-> @@ -720,13 +720,13 @@ static int fimc_md_register_platform_entities(struct fimc_md *fmd,
->  			continue;
->  
->  		/* If driver of any entity isn't ready try all again later. */
-> -		if (!strcmp(node->name, CSIS_OF_NODE_NAME))
-> +		if (of_node_name_eq(node, CSIS_OF_NODE_NAME))
->  			plat_entity = IDX_CSIS;
-> -		else if	(!strcmp(node->name, FIMC_IS_OF_NODE_NAME))
-> +		else if	(of_node_name_eq(node, FIMC_IS_OF_NODE_NAME))
->  			plat_entity = IDX_IS_ISP;
-> -		else if (!strcmp(node->name, FIMC_LITE_OF_NODE_NAME))
-> +		else if (of_node_name_eq(node, FIMC_LITE_OF_NODE_NAME))
->  			plat_entity = IDX_FLITE;
-> -		else if	(!strcmp(node->name, FIMC_OF_NODE_NAME) &&
-> +		else if	(of_node_name_eq(node, FIMC_OF_NODE_NAME) &&
->  			 !of_property_read_bool(node, "samsung,lcd-wb"))
->  			plat_entity = IDX_FIMC;
->  
-> diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-> index 95a093f41905..fc3c212b96e1 100644
-> --- a/drivers/media/platform/ti-vpe/cal.c
-> +++ b/drivers/media/platform/ti-vpe/cal.c
-> @@ -1615,7 +1615,7 @@ of_get_next_port(const struct device_node *parent,
->  				return NULL;
->  			}
->  			prev = port;
-> -		} while (of_node_cmp(port->name, "port") != 0);
-> +		} while (!of_node_name_eq(port, "port"));
->  	}
->  
->  	return port;
-> @@ -1635,7 +1635,7 @@ of_get_next_endpoint(const struct device_node *parent,
->  		if (!ep)
->  			return NULL;
->  		prev = ep;
-> -	} while (of_node_cmp(ep->name, "endpoint") != 0);
-> +	} while (!of_node_name_eq(ep, "endpoint"));
->  
->  	return ep;
->  }
-> diff --git a/drivers/media/platform/xilinx/xilinx-tpg.c b/drivers/media/platform/xilinx/xilinx-tpg.c
-> index 851d20dcd550..ce686b8d6cff 100644
-> --- a/drivers/media/platform/xilinx/xilinx-tpg.c
-> +++ b/drivers/media/platform/xilinx/xilinx-tpg.c
-> @@ -725,7 +725,7 @@ static int xtpg_parse_of(struct xtpg_device *xtpg)
->  		const struct xvip_video_format *format;
->  		struct device_node *endpoint;
->  
-> -		if (!port->name || of_node_cmp(port->name, "port"))
-> +		if (!of_node_name_eq(port, "port"))
->  			continue;
->  
->  		format = xvip_of_get_format(port);
-> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-> index 218f0da0ce76..849326241b17 100644
-> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> @@ -564,8 +564,7 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *__fwnode,
->  	fwnode = fwnode_get_parent(__fwnode);
->  	fwnode_property_read_u32(fwnode, port_prop, &link->local_port);
->  	fwnode = fwnode_get_next_parent(fwnode);
-> -	if (is_of_node(fwnode) &&
-> -	    of_node_cmp(to_of_node(fwnode)->name, "ports") == 0)
-> +	if (is_of_node(fwnode) && of_node_name_eq(to_of_node(fwnode), "ports"))
->  		fwnode = fwnode_get_next_parent(fwnode);
->  	link->local_node = fwnode;
->  
-> @@ -578,8 +577,7 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *__fwnode,
->  	fwnode = fwnode_get_parent(fwnode);
->  	fwnode_property_read_u32(fwnode, port_prop, &link->remote_port);
->  	fwnode = fwnode_get_next_parent(fwnode);
-> -	if (is_of_node(fwnode) &&
-> -	    of_node_cmp(to_of_node(fwnode)->name, "ports") == 0)
-> +	if (is_of_node(fwnode) && of_node_name_eq(to_of_node(fwnode), "ports"))
->  		fwnode = fwnode_get_next_parent(fwnode);
->  	link->remote_node = fwnode;
->  
-> -- 
-> 2.19.1
+> All tests were conducted on an Odroid-C1+ Rev. 0.4-20150930 board
+> with a short ethernet cable directly attached to a laptop with
+> 1G ethernet interface, with "nload" running on the board.
 > 
+> The tests I performed are composed by the following steps:
+> 
+> 1) Start packet generator with "rate 1000M" on laptop;
+> 
+> 2) Keep packet generator active on the laptop and
+>    start the packet generator on the board with "rate 1000M";
+> 
+> 3) Stop both packet generators;
+> 
+> 4) Start packet generator on the board;
+> 
+> 5) Keep packet generator active on the board and
+>    start the packet generator on the laptop.
+
+out of curiosity: why do you expect to see something different from
+point (2)?
+
+> Test results without Carlo's patches applied:
+> 
+> 1) "nload" shows an incoming traffic of ~950Mbps;
+> 
+> 2) "nload" shows an incoming traffic of ~400Mbps
+>    and an outgoing traffic of ~250Mbps;
+> 
+> 3) "nload" shows 0Mbps both for incoming and outgoing traffic;
+> 
+> 4) "nload" shows an outgoing traffic of ~950Mbps from the board;
+> 
+> 5) "nload" shows incoming traffic of 0Mbps
+>    and an outgoing traffic of ~950Mbps.
+> 
+> Applying only the first patch (change mac IRQ type) I got the same
+> results.
+
+This is expected. The change in the IRQ type is solving an issue that
+you can see if the run a stress test involving multiple components for
+several hours.
+
+> Applying only the second patch (drop eee-broken-1000t) I got the same
+> results!
+
+I am a bit confused here. Wasn't the eee-broken-1000t added to fix a
+problem with the ethernet? Are you suggesting that for some reason you
+cannot reproduce anymore the problem for which the quirk was
+introduced?
+
+> With both patches applied I got the same results but with an incoming
+> traffic
+> of ~3Mbps on the board.
+
+On all the tests and immediately from the start of the tests?
+
+When you hit the problem con you check in /proc/interrupts if you see
+the IRQ counter for the eth0 incrementing or not?
+
+Cheers,
+
+--
+Carlo Caione
