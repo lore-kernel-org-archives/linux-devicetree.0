@@ -1,70 +1,130 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH] thermal: stm32: read factory settings inside
- stm_thermal_prepare
-Date: Thu, 6 Dec 2018 14:32:20 +0100
-Message-ID: <7999967d-6f6e-635c-4d43-c0e1cd58ec4b@linaro.org>
-References: <1544102603-14899-1-git-send-email-david.hernandezsanchez@st.com>
- <1544102603-14899-2-git-send-email-david.hernandezsanchez@st.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: Moving ARM dts files
+Date: Thu, 6 Dec 2018 14:32:27 +0100
+Message-ID: <2474284e-8a55-639f-2cfa-f811741099f3@suse.de>
+References: <20181204183649.GA5716@bogus>
+ <9c2b5528-679a-928e-3150-aa383a4f0405@suse.de>
+ <CAL_JsqKO3v0pgVfNhVNOkpZ4sePrybDgZG0riN-tutvwOZ4zYg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544102603-14899-2-git-send-email-david.hernandezsanchez@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqKO3v0pgVfNhVNOkpZ4sePrybDgZG0riN-tutvwOZ4zYg@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: David HERNANDEZ SANCHEZ <david.hernandezsanchez@st.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Tom Rini <trini@konsulko.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Alexander Graf <agraf@suse.de>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thierry Reding <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory CLEMENT <gregory.clement@bootlin.com>, Michal Simek <michal.simek@xilinx.com>, Krzysztof Kozlowski <krzk@kernel.org>, ARM-SoC Maintainers <arm@kernel.org>, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, Architecture Mailman List <boot-architecture@lists.linaro.org>, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, LAKML <linux-arm-kernel@lists.infradead.org>, Grant Likely <Grant.Likely@arm.com>, Maxime
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/2018 14:23, David HERNANDEZ SANCHEZ wrote:
-> Calling stm_thermal_read_factory_settings before clocking
-> internal peripheral causes bad register values and makes
-> temperature computation wrong.
-> 
-> Calling stm_thermal_read_factory_settings inside
-> stm_thermal_prepare fixes this problem as internal
-> peripheral is well clocked at this stage.
-> 
-> Signed-off-by: David Hernandez Sanchez <david.hernandezsanchez@st.com>
-> Fixes: 1d693155 ("thermal: add stm32 thermal driver")
-
-Same comment as the first patch.
-
-Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-
-> diff --git a/drivers/thermal/st/stm_thermal.c b/drivers/thermal/st/stm_thermal.c
-> index 47623da..daa1257 100644
-> --- a/drivers/thermal/st/stm_thermal.c
-> +++ b/drivers/thermal/st/stm_thermal.c
-> @@ -532,6 +532,10 @@ static int stm_thermal_prepare(struct stm_thermal_sensor *sensor)
->  	if (ret)
->  		return ret;
->  
-> +	ret = stm_thermal_read_factory_settings(sensor);
-> +	if (ret)
-> +		goto thermal_unprepare;
-> +
->  	ret = stm_thermal_calibration(sensor);
->  	if (ret)
->  		goto thermal_unprepare;
-> @@ -636,10 +640,6 @@ static int stm_thermal_probe(struct platform_device *pdev)
->  	/* Populate sensor */
->  	sensor->base = base;
->  
-> -	ret = stm_thermal_read_factory_settings(sensor);
-> -	if (ret)
-> -		return ret;
-> -
->  	sensor->clk = devm_clk_get(&pdev->dev, "pclk");
->  	if (IS_ERR(sensor->clk)) {
->  		dev_err(&pdev->dev, "%s: failed to fetch PCLK clock\n",
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+QW0gMDUuMTIuMTggdW0gMDU6MTcgc2NocmllYiBSb2IgSGVycmluZzoKPiBPbiBUdWUsIERlYyA0
+LCAyMDE4IGF0IDc6MjIgUE0gQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPiB3cm90
+ZToKPj4KPj4gUm9iLAo+Pgo+PiBBbSAwNC4xMi4xOCB1bSAxOTozNiBzY2hyaWViIFJvYiBIZXJy
+aW5nOgo+Pj4gSSd2ZSBwdXQgdG9nZXRoZXIgYSBzY3JpcHQgdG8gbW92ZSB0aGUgZHRzIGZpbGVz
+IGFuZCB1cGRhdGUgdGhlCj4+PiBtYWtlZmlsZXMuIEl0IGRvZXNuJ3QgaGFuZGxlIGZpbGVzIG5v
+dCBmb2xsb3dpbmcgYSBjb21tb24gcHJlZml4IHdoaWNoCj4+PiBpc24ndCBtYW55IGFuZCBzb21l
+IGluY2x1ZGVzIHdpdGhpbiB0aGUgZHRzIGZpbGVzIHdpbGwgbmVlZCBzb21lIGZpeHVwcwo+Pj4g
+YnkgaGFuZC4KPj4+Cj4+PiBNQUlOVEFJTkVSUyB3aWxsIGFsc28gbmVlZCB1cGRhdGluZy4KPj4+
+Cj4+PiBBIGZldyBxdWVzdGlvbnM6Cj4+Pgo+Pj4gRG8gd2Ugd2FudCB0byBtb3ZlIGFic29sdXRl
+bHkgZXZlcnl0aGluZyB0byBzdWJkaXJzPwo+Pgo+PiBUaGlzIHJlZmFjdG9yaW5nIGlzIGEgdGVy
+cmlibGUgaWRlYSEKPiAKPiBIb3cgZG8geW91IHJlYWxseSBmZWVsPwo+IAo+PiBXaGlsZSBpdCB3
+b3VsZCd2ZSBiZWVuIG5pY2UgdG8gaGF2ZSBtb3JlIHN0cnVjdHVyZSBmcm9tIHRoZSBzdGFydCwK
+Pj4gYm9vdGxvYWRlcnMgbGlrZSBVLUJvb3QgZXhwZWN0IGEgZmxhdCBzdHJ1Y3R1cmUgZm9yIGFy
+bSAuZHRiIGZpbGVzIG5vdy4KPj4gSWYgeW91IHN0YXJ0IGluc3RhbGxpbmcgdGhlbSBpbnRvIHN1
+YmRpcnMgaW5zdGVhZCwgdGhleSB3b24ndCBmaW5kIHRoZQo+PiBmaWxlcyBhbnltb3JlIHVuZGVy
+IHRoZSBoYXJkY29kZWQgbmFtZS4KPj4KPj4gRG9pbmcgdGhpcyBvbmx5IGZvciBuZXcgcGxhdGZv
+cm1zIHdvdWxkIGJlIG11Y2ggbGVzcyBpbnZhc2l2ZSBhbmQgYWxsb3cKPj4gdG8gcHJlcGFyZSBi
+b290bG9hZGVycyBhY2NvcmRpbmdseS4KPiAKPiBUaGF0IHdhcyBteSBzdWdnZXN0aW9uIHdoZXJl
+IHRoaXMgc3RhcnRlZCBmb3IgdGhlIG5ldyBSREEgcGxhdGZvcm0uCj4gT2xvZiBwcmVmZXJyZWQg
+dG8gbW92ZSBldmVyeXRoaW5nIGFuZCB0aGF0J3MgbXkgZGVzaXJlIHRvby4KPiAKPj4gQWx0ZXJu
+YXRpdmVseSwgd2hpdGUtbGlzdCB3aGljaCBvbmVzCj4+IGFyZSBzYWZlIHRvIG1vdmUgYXJvdW5k
+Lgo+IAo+IEknZCBwcmVmZXIgdG8ga25vdyB3aGljaCBvbmVzIHRoZSBkaXN0cm9zIGRvbid0IHdh
+bnQgbW92ZWQuIFRoYXQKPiBzaG91bGQgYmUgZWFzaWVyIHRvIGZpZ3VyZSBvdXQuIFdlIGFsc28g
+bmVlZCB0aGF0IGFueXdheXMgaW4gY29udGV4dAo+IG9mIHdoYXQgcGxhdGZvcm1zIHdlIGNhcmUg
+YWJvdXQgY29tcGF0aWJpbGl0eS4KPiAKPiBBbm90aGVyIG9wdGlvbiBpcyBkdGJzX2luc3RhbGwg
+dGFyZ2V0IGNvdWxkIGZsYXR0ZW4gdGhlIGluc3RhbGxlZAo+IGR0YnMuIFRoYXQgaXMgdGhlIG9u
+bHkgcGFydCB0aGUgZGlzdHJvcyBzaG91bGQgZGVwZW5kIG9uLgoKSSdkIGJlIG9rYXkgd2l0aCBk
+aXN0aW5ndWlzaGluZyBzb3VyY2UgdnMuIGluc3RhbGwgbG9jYXRpb24uIER1ZSB0byB0aGUKaXNz
+dWUgSSBtZW50aW9uIGJlbG93IChhbmQgbW9yZSkgd2UgY2FuJ3QgdXNlIGluc3RhbGxfZHRicyBm
+b3Igb3BlblNVU0UKYW5kIGhhZCB0byByZWltcGxlbWVudCBpdCwgd2hpY2ggd2UnZCBuZWVkIHRv
+IChhbmQgY2FuKSBhZGp1c3QuCgo+PiBCdXQgZG9uJ3QganVzdCBzY3JpcHQgYSByZWZhY3Rvcmlu
+ZyBiZWNhdXNlIGl0Cj4+IGxvb2tzIG5pY2VyIGluIHRoZSBzb3VyY2UgdHJlZSwgd2l0aG91dCB0
+ZXN0aW5nIHdoYXQgc2lkZSBlZmZlY3RzIHRoaXMKPj4gY2FuIGhhdmUgZm9yIGJvYXJkL2Rpc3Ry
+byB1c2VycyBvZiB0aGUgY29tcGlsZWQgZmlsZXMgaW4gcHJhY3RpY2UuCj4+IFdlIGFscmVhZHkg
+aGFkIHRoYXQgZGlzY3Vzc2lvbiBmb3IgYXJtNjQgYmVjYXVzZSBEZWJpYW4gY2hvc2UgdG8gaWdu
+b3JlCj4+IHRoZSBrZXJuZWwtaW5zdGFsbGVkIHN1YmRpcmVjdG9yaWVzIGFuZCBpbnN0YWxsZWQg
+LmR0YiBmaWxlcyBpbnRvIGEgZmxhdAo+PiBkaXJlY3RvcnksIHdoaWNoIGNvbGxpZGVkIHdpdGgg
+b3BlblNVU0Ugc3RpY2tpbmcgdG8gdGhlIGtlcm5lbCBjaG9pY2UuCj4gCj4gU28gZXZlcnlvbmUg
+YWxyZWFkeSBkZWFscyB3aXRoIHN1YmRpcnMgb3Igbm90IHdpdGggYXJtIGFuZCBhcm02NAo+IGFs
+cmVhZHksIHNlZW1zIGxpa2UgdGhleSBjYW4gZGVhbCB3aXRoIHRoaXMuIEkgd2lsbCByYWlzZSB0
+aGUgdG9waWMgb24KPiB0aGUgY3Jvc3MtZGlzdHJvIGxpc3QgdGhvdWdoLgoKU291bmRzIGxpa2Ug
+eW91J3JlIHR3aXN0aW5nIHdvcmRzLi4uIFRoZSBrZXl3b3JkIHdhcyAiaGFyZGNvZGVkIiBwYXRo
+cyAtCm9uZSB3YXkgb3IgYW5vdGhlciAobm90ICJhbmQiKSBkZXBlbmRpbmcgb24gdGhlIGtlcm5l
+bCBjaG9pY2VzIGJlaW5nCmZsYXQgZm9yIGFybSwgdmVuZG9yIHN1YmRpciBmb3IgYXJtNjQuCgo+
+PiBUaGlzIHRvcGljIGJlY29tZXMgZXZlbiBtb3JlIGltcG9ydGFudCB3aXRoIEVCQlI6IFRoZXJl
+IGlzIG5laXRoZXIgYQo+PiBtZWNoYW5pc20gaW4gcGxhY2UgdG8gc3luYyAuZHRzIGZpbGVzIGlu
+dG8gVS1Cb290IG9yIEVESzIgc291cmNlIHRyZWVzLAo+PiBub3IgYXJlIGNhcHN1bGUgdXBkYXRl
+cyBpbXBsZW1lbnRlZCBpbiBVLUJvb3QgZm9yIGVhc2lseSBkZXBsb3lpbmcgc3VjaAo+PiBib290
+bG9hZGVycyB3aXRoIG5ldyAuZHRzIHNvdXJjZXMgb3IgcGF0aHMgeWV0Lgo+IAo+IEVCQlIgYWN0
+dWFsbHkgc2F5cyBmaXJtd2FyZSAoaW5jbHVkaW5nIGR0YnMpIGdvZXMgaW4gZGlyZWN0b3JpZXMg
+bmFtZWQKPiBieSB2ZW5kb3IuCgpGaW5lLCBidXQgdW5yZWxhdGVkLgoKPj4gQW5kIEkgY2FuIGFz
+c3VyZSB5b3UKPj4gdGhhdCBqdXN0IGdldHRpbmcgdXNlcnMgdG8gZGQgdGhlIHJpZ2h0IGJvb3Rs
+b2FkZXIgY2FuIGJlIGRpZmZpY3VsdC4uLgo+PiBTaW5jZSBEVCBmb3J3YXJkIGFuZCBiYWNrd2Fy
+ZCBjb21wYXRpYmlsaXR5IGlzIG9mdGVuIGJlaW5nIG5lZ2xlY3RlZCwKPj4gZm9yIGV4YW1wbGUg
+d2l0aCBvcHRpb25hbCBwcm9wZXJ0aWVzIG9yIHJlbmFtZWQgY29tcGF0aWJsZXMgdGhhdCBicmVh
+awo+PiBib290aW5nIHdpdGggcHJldmlvdXMgZHJpdmVycywgbmV3IGtlcm5lbCB2ZXJzaW9ucyBv
+ZnRlbiBuZWVkIHVwZGF0ZWQKPj4gRGV2aWNlIFRyZWVzIHRvIG1ha2UgdXNlIG9mIG5ldy9lbmhh
+bmNlZCBkcml2ZXJzLiBUaGVyZWZvcmUgaXQgaXMKPj4gdW5mb3J0dW5hdGVseSBvZnRlbiBlbm91
+Z2ggYSBuZWNlc3NpdHkgdG8gbG9hZCBuZXdlciBrZXJuZWwtYmFzZWQgLmR0Ygo+PiBmaWxlcyBt
+YXRjaGluZyB0aGUga2VybmVsIChhcyBvcHBvc2VkIHRvIHRoZSBkcmVhbSBvZiBrZXJuZWwtaW5k
+ZXBlbmRlbnQKPj4gaGFyZHdhcmUgZGVzY3JpcHRpb25zKSB3aGVuIHdvcmtpbmcgd2l0aCB0aGUg
+bGF0ZXN0IC1yYyBvciAtbmV4dCBrZXJuZWxzCj4+IGF0IGxlYXN0LiBGb3IgZXhhbXBsZXMgb2Yg
+RFRzIG5lZWRpbmcgdXBkYXRlcywgbG9vayBubyBmdXJ0aGVyIHRoYW4KPj4gTGluYXJvJ3MgOTZi
+b2FyZHMgLSBpbiBjYXNlIG9mIGhpa2V5OTYwL0VESzIgR1JVQiBpcyBhbm90aGVyIGxheWVyIHdo
+ZXJlCj4+IC5kdGIgcGF0aHMgbWF5IGJlIGhhcmRjb2RlZCwgZGl0dG8gZm9yIGFybTsgYW5kIEFy
+bWFkYSB3YXMgYW4gZXhhbXBsZQo+PiB3aGVyZSB0aGUgdXBzdHJlYW0gYmluZGluZ3MgZm9yIHRo
+ZSBuZXR3b3JrIElQIGNoYW5nZWQgaW5jb21wYXRpYmx5Lgo+IAo+IENvbXBhdGliaWxpdHkgaXMg
+YW4gaXNzdWUsIHllcywgYnV0IHRoYXQgcmVhbGx5IGhhcyBub3RoaW5nIHRvIGRvIHdpdGggdGhp
+cy4KPiAKPj4gRFQgb3ZlcmxheXMgYXJlIGFub3RoZXIgdG9waWMgdGhhdCBpcyBub3QgbWFraW5n
+IGFueSBwcm9ncmVzcyB1cHN0cmVhbQo+PiBhY2NvcmRpbmcgdG8gdGhlIEVMQ0UgQm9GLCBzbyBi
+ZXlvbmQgdGhlIFJhc3BiZXJyeSBQaSB0aGUgb25seSBrbm93bgo+PiB3b3JraW5nIHdheSB0byBh
+cHBseSB0aGVtIGlzIHRvIHdyaXRlIGEgVS1Cb290IGJvb3Quc2NyIHNjcmlwdCwgd2hpY2gKPj4g
+Y2FuIGVpdGhlciByZXVzZSAkZmR0Y29udHJvbGFkZHIgRFQgb3IgdXNlIHRoZSBmaWxlbmFtZSAk
+ZmR0ZmlsZSBvcgo+PiBoYXJkY29kZSBvbmUsIHRoZSBsYXR0ZXIgdHdvIG9mIHdoaWNoIHdvdWxk
+IGJyZWFrIHdpdGggeW91ciByZW5hbWluZy4KPiAKPiBEVCBvdmVybGF5cyBhbHNvIGhhdmUgbm90
+aGluZyB0byBkbyB3aXRoIHRoaXMgYXMgdGhlcmUgYXJlbid0IGFueSBpbgo+IHRoZSBrZXJuZWwu
+IEknbSBub3QgaW5jbGluZWQgdG8gdGFrZSBhbnkgZWl0aGVyIHdpdGggYSBmbGF0IHRyZWUuCj4g
+V2UncmUgYWxyZWFkeSBhdCAxODAwKyBmaWxlcy4KClJlYWQgYWdhaW46IGEpIEJyZWFraW5nIERU
+IGNoYW5nZXMgYW5kIGIpIHRoZSBkZXNpcmUgdG8gdXNlIE92ZXJsYXlzCmluc3RlYWQgb2YgcmVw
+bGFjaW5nIHRoZSBib290bG9hZGVycyBmb3IgZWFjaCBjaGFuZ2UgYXJlIF9yZWFzb25zXyB3aHkK
+cGVvcGxlIGRlcGVuZCBvbiAuZHRiIGZpbGVuYW1lcyBmcm9tIHRoZSBrZXJuZWwgc291cmNlIHRy
+ZWUgZm9yIHRoZWlyCmJvb3QgZmxvdyB0b2RheS4gTm90aGluZyB0byBkbyB3aXRoIGRvd25zdHJl
+YW0gLmR0Ym8gZmlsZXMuCgpGb3IgZXhhbXBsZSwgcmVtZW1iZXIgd2hlbiBJIHJlcG9ydGVkIHRo
+YXQgdGhlIGtlcm5lbCBkaWRuJ3QgY29tcGlsZSBEVHMKd2l0aCAtQD8gTm8gcmVhY3Rpb24gZXhj
+ZXB0IGZvciBGcmFuayBhc2tpbmcgdG8gYmUgQ0MnZWQgLSB3YXMgaXQgZXZlcgpmaXhlZD8/PyBE
+byBFREsyJ3Mgb3IgVS1Cb290J3MgYnVpbHQtaW4gRFRzIGNvbXBpbGUgd2l0aCAtQCB0b2RheT8K
+UmFzcGJlcnJ5IFBpIG92ZXJsYXlzIGluIFUtQm9vdCB3b3JrIGJlY2F1c2UgaXQgc3dpdGNoZWQg
+dG8gcGFzc2luZyB0aGUKRFQgdGhyb3VnaCBmcm9tIHRoZSBwcm9wcmlldGFyeSBmaXJtd2FyZS4K
+UG9pbnQgYmVpbmcgdGhhdCB3aGlsZSBpdCB3b3VsZCBiZSBuaWNlIHRvIGdldCBhIGN1cnJlbnQs
+IGNvbXBhdGlibGUgRFQKdmlhIFVFRkkgdGFibGVzIGFuZCBpZ25vcmUgLmR0YiBmaWxlbmFtZXMg
+b3V0c2lkZSBvZiBhIGZldyBib290bG9hZGVycywKaW4gcmVhbGl0eSB3ZSdyZSBub3QgcXVpdGUg
+dGhlcmUgeWV0IGZvciBhbGwgcGxhdGZvcm1zLgoKSSBzZWUgbm8gcHJvYmxlbSAoZXhjZXB0IGZv
+ciBuYW1pbmcgY2hvaWNlcykgbW92aW5nIG5ldyB0YXJnZXRzIGxpa2UgUkRBCnRvIHN1YmZvbGRl
+cnMgYmVjYXVzZSB3ZSBjYW4gdGhlbiBoYXJkY29kZSBpdCB0aGUgbmV3IHdheTsgSSBhbHNvIGFz
+c3VtZQpkZWVwbHkgZW1iZWRkZWQgdGFyZ2V0cyBsaWtlIHN0bTMyZjQgb3IgdGFyZ2V0cyB3aXRo
+IG5vIG1haW5saW5lCmJvb3Rsb2FkZXJzIHlldCBsaWtlIG93bC1zNTAwIGNvdWxkIGJlIHJlZmFj
+dG9yZWQuCkkgZG8gc2VlIHByb2JsZW1zIHJlZmFjdG9yaW5nIHdpZGVseSB1c2VkIFNCQyB0YXJn
+ZXRzIGxpa2Ugc3VuWGkgdGhvdWdoLgoKUmVnYXJkcywKQW5kcmVhcwoKLS0gClNVU0UgTGludXgg
+R21iSCwgTWF4ZmVsZHN0ci4gNSwgOTA0MDkgTsO8cm5iZXJnLCBHZXJtYW55CkdGOiBGZWxpeCBJ
+bWVuZMO2cmZmZXIsIEphbmUgU21pdGhhcmQsIEdyYWhhbSBOb3J0b24KSFJCIDIxMjg0IChBRyBO
+w7xybmJlcmcpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
+aW51eC1hcm0ta2VybmVsCg==
