@@ -1,80 +1,97 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH V3 1/2] mmc: mmci: add variant property to set command stop bit
-Date: Thu, 6 Dec 2018 16:13:31 +0100
-Message-ID: <1544109212-12621-2-git-send-email-ludovic.Barre@st.com>
-References: <1544109212-12621-1-git-send-email-ludovic.Barre@st.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 2/3] arm64: dts: allwinner: a64: Add A64 CSI controller
+Date: Thu, 6 Dec 2018 16:34:45 +0100
+Message-ID: <20181206153445.kqu2pep5orktr6yv@flea>
+References: <20181206132306.11843-1-jagan@amarulasolutions.com>
+ <20181206132306.11843-2-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="z4k7eddmoxp7uc66"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544109212-12621-1-git-send-email-ludovic.Barre@st.com>
+Content-Disposition: inline
+In-Reply-To: <20181206132306.11843-2-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: srinivas.kandagatla@linaro.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Ludovic Barre <ludovic.barre@st.com>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, Michael Trimarchi <michael@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
 
-On cmd12 (STOP_TRANSMISSION), STM32 sdmmc variant needs to set
-cmdstop bit in command register. The CPSM ("Command Path State Machine")
-treats the command as a Stop Transmission command and signals
-abort to the DPSM ("Data Path State Machine").
+--z4k7eddmoxp7uc66
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- drivers/mmc/host/mmci.c | 6 ++++++
- drivers/mmc/host/mmci.h | 2 ++
- 2 files changed, 8 insertions(+)
+On Thu, Dec 06, 2018 at 06:53:05PM +0530, Jagan Teki wrote:
+> Allwinner A64 CSI controller has similar features as like in
+> H3, So add support for A64 via H3 fallback.
+>=20
+> Also updated CSI_SCLK to use 300MHz via assigned-clocks, since
+> the default clock 600MHz seems unable to drive the sensor(ov5640)
+> to capture the image.
+>=20
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+> Changes for v2:
+> - Use CSI_SCLK to 300MHz=20
+>=20
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 23 +++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/b=
+oot/dts/allwinner/sun50i-a64.dtsi
+> index 384c417cb7a2..d7ab0006ebce 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -532,6 +532,12 @@
+>  			interrupt-controller;
+>  			#interrupt-cells =3D <3>;
+> =20
+> +			csi_pins: csi-pins {
+> +				pins =3D "PE0", "PE2", "PE3", "PE4", "PE5", "PE6",
+> +				       "PE7", "PE8", "PE9", "PE10", "PE11";
+> +				function =3D "csi0";
+> +			};
+> +
+>  			i2c0_pins: i2c0_pins {
+>  				pins =3D "PH0", "PH1";
+>  				function =3D "i2c0";
+> @@ -899,6 +905,23 @@
+>  			status =3D "disabled";
+>  		};
+> =20
+> +		csi: csi@1cb0000 {
+> +			compatible =3D "allwinner,sun50i-a64-csi",
+> +				     "allwinner,sun8i-h3-csi";
+> +			reg =3D <0x01cb0000 0x1000>;
+> +			interrupts =3D <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks =3D <&ccu CLK_BUS_CSI>,
+> +				 <&ccu CLK_CSI_SCLK>,
+> +				 <&ccu CLK_DRAM_CSI>;
+> +			clock-names =3D "bus", "mod", "ram";
+> +			resets =3D <&ccu RST_BUS_CSI>;
+> +			pinctrl-names =3D "default";
+> +			pinctrl-0 =3D <&csi_pins>;
+> +			assigned-clocks =3D <&ccu CLK_CSI_SCLK>;
+> +			assigned-clock-rates =3D <300000000>;
 
-diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-index 13fa640..e352f5a 100644
---- a/drivers/mmc/host/mmci.c
-+++ b/drivers/mmc/host/mmci.c
-@@ -21,6 +21,7 @@
- #include <linux/err.h>
- #include <linux/highmem.h>
- #include <linux/log2.h>
-+#include <linux/mmc/mmc.h>
- #include <linux/mmc/pm.h>
- #include <linux/mmc/host.h>
- #include <linux/mmc/card.h>
-@@ -274,6 +275,7 @@ static struct variant_data variant_stm32_sdmmc = {
- 	.cmdreg_lrsp_crc	= MCI_CPSM_STM32_LRSP_CRC,
- 	.cmdreg_srsp_crc	= MCI_CPSM_STM32_SRSP_CRC,
- 	.cmdreg_srsp		= MCI_CPSM_STM32_SRSP,
-+	.cmdreg_stop		= MCI_CPSM_STM32_CMDSTOP,
- 	.data_cmd_enable	= MCI_CPSM_STM32_CMDTRANS,
- 	.irq_pio_mask		= MCI_IRQ_PIO_STM32_MASK,
- 	.datactrl_first		= true,
-@@ -1100,6 +1102,10 @@ mmci_start_command(struct mmci_host *host, struct mmc_command *cmd, u32 c)
- 		mmci_reg_delay(host);
- 	}
- 
-+	if (host->variant->cmdreg_stop &&
-+	    cmd->opcode == MMC_STOP_TRANSMISSION)
-+		c |= host->variant->cmdreg_stop;
-+
- 	c |= cmd->opcode | host->variant->cmdreg_cpsm_enable;
- 	if (cmd->flags & MMC_RSP_PRESENT) {
- 		if (cmd->flags & MMC_RSP_136)
-diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-index 550dd39..2422909 100644
---- a/drivers/mmc/host/mmci.h
-+++ b/drivers/mmc/host/mmci.h
-@@ -264,6 +264,7 @@ struct mmci_host;
-  * @cmdreg_lrsp_crc: enable value for long response with crc
-  * @cmdreg_srsp_crc: enable value for short response with crc
-  * @cmdreg_srsp: enable value for short response without crc
-+ * @cmdreg_stop: enable value for stop and abort transmission
-  * @datalength_bits: number of bits in the MMCIDATALENGTH register
-  * @fifosize: number of bytes that can be written when MMCI_TXFIFOEMPTY
-  *	      is asserted (likewise for RX)
-@@ -316,6 +317,7 @@ struct variant_data {
- 	unsigned int		cmdreg_lrsp_crc;
- 	unsigned int		cmdreg_srsp_crc;
- 	unsigned int		cmdreg_srsp;
-+	unsigned int		cmdreg_stop;
- 	unsigned int		datalength_bits;
- 	unsigned int		fifosize;
- 	unsigned int		fifohalfsize;
--- 
-2.7.4
+That should be enforced in the driver.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--z4k7eddmoxp7uc66
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXAlBlQAKCRDj7w1vZxhR
+xRZyAP0fG+DOaicKez44BPE0nW3YvdHUKfgjkF3Jg+u1yCGtKgEAyT7BeXKWmDBc
+Ol0gT/QcSIUnzn4VtbhMFlmQH6GncAI=
+=No1S
+-----END PGP SIGNATURE-----
+
+--z4k7eddmoxp7uc66--
