@@ -1,145 +1,140 @@
-From: Stephen Boyd <sboyd@kernel.org>
+From: Jeffrey Hugo <jhugo@codeaurora.org>
 Subject: Re: [PATCH] clk: qcom: smd: Add support for MSM8998 rpm clocks
-Date: Thu, 06 Dec 2018 13:55:16 -0800
-Message-ID: <154413331679.88331.15909045605070653326@swboyd.mtv.corp.google.com>
+Date: Thu, 6 Dec 2018 15:08:05 -0700
+Message-ID: <05485272-a117-b8e5-e7c5-d0dd8cc8fef4@codeaurora.org>
 References: <1544130666-32252-1-git-send-email-jhugo@codeaurora.org>
+ <154413331679.88331.15909045605070653326@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544130666-32252-1-git-send-email-jhugo@codeaurora.org>
+In-Reply-To: <154413331679.88331.15909045605070653326@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org
-Cc: bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+To: Stephen Boyd <sboyd@kernel.org>, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org
+Cc: bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jeffrey Hugo (2018-12-06 13:11:06)
-> Add rpm smd clocks, PMIC and bus clocks which are required on MSM8998
-> for clients to vote on.
-> =
+On 12/6/2018 2:55 PM, Stephen Boyd wrote:
+> Quoting Jeffrey Hugo (2018-12-06 13:11:06)
+>> Add rpm smd clocks, PMIC and bus clocks which are required on MSM8998
+>> for clients to vote on.
+>>
+>> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/clock/qcom,rpmcc.txt       |  1 +
+>>   drivers/clk/qcom/clk-smd-rpm.c                     | 62 ++++++++++++++++++++++
+>>   include/dt-bindings/clock/qcom,rpmcc.h             |  6 +++
+>>   3 files changed, 69 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+>> index 87b4949..16c4293 100644
+>> --- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+>> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+>> @@ -17,6 +17,7 @@ Required properties :
+>>                          "qcom,rpmcc-apq8064", "qcom,rpmcc"
+>>                          "qcom,rpmcc-msm8996", "qcom,rpmcc"
+>>                          "qcom,rpmcc-qcs404", "qcom,rpmcc"
+>> +                       "qcom,rpmcc-msm8998", "qcom,rpmcc"
+> 
+> Can you keep this sorted on the first compatible?
 
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> ---
->  .../devicetree/bindings/clock/qcom,rpmcc.txt       |  1 +
->  drivers/clk/qcom/clk-smd-rpm.c                     | 62 ++++++++++++++++=
-++++++
->  include/dt-bindings/clock/qcom,rpmcc.h             |  6 +++
->  3 files changed, 69 insertions(+)
-> =
+No problem, that's a quick fix.  Same with the ordering nit below.
 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Doc=
-umentation/devicetree/bindings/clock/qcom,rpmcc.txt
-> index 87b4949..16c4293 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-> @@ -17,6 +17,7 @@ Required properties :
->                         "qcom,rpmcc-apq8064", "qcom,rpmcc"
->                         "qcom,rpmcc-msm8996", "qcom,rpmcc"
->                         "qcom,rpmcc-qcs404", "qcom,rpmcc"
-> +                       "qcom,rpmcc-msm8998", "qcom,rpmcc"
+> 
+>>   
+>>   - #clock-cells : shall contain 1
+>>   
+> 
+> Rob may prefer this file is split from the driver part into a different
+> patch.
+> 
+>> diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
+>> index d3aadae..269304e 100644
+>> --- a/drivers/clk/qcom/clk-smd-rpm.c
+>> +++ b/drivers/clk/qcom/clk-smd-rpm.c
+>> @@ -655,11 +655,73 @@ static int clk_smd_rpm_enable_scaling(struct qcom_smd_rpm *rpm)
+>>          .num_clks = ARRAY_SIZE(qcs404_clks),
+>>   };
+>>   
+>> +/* msm8998 */
+>> +DEFINE_CLK_SMD_RPM(msm8998, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
+>> +DEFINE_CLK_SMD_RPM(msm8998, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
+>> +DEFINE_CLK_SMD_RPM(msm8998, ce1_clk, ce1_a_clk, QCOM_SMD_RPM_CE_CLK, 0);
+>> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, div_clk1, div_clk1_a, 0xb);
+>> +DEFINE_CLK_SMD_RPM(msm8998, ipa_clk, ipa_a_clk, QCOM_SMD_RPM_IPA_CLK, 0);
+>> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, bb_clk1, bb_clk1_a, 1);
+>> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, bb_clk2, bb_clk2_a, 2);
+>> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, bb_clk3_pin, bb_clk3_a_pin, 3);
+>> +DEFINE_CLK_SMD_RPM(msm8998, mmssnoc_axi_rpm_clk, mmssnoc_axi_rpm_a_clk,
+>> +                  QCOM_SMD_RPM_MMAXI_CLK, 0);
+>> +DEFINE_CLK_SMD_RPM(msm8998, aggre1_noc_clk, aggre1_noc_a_clk,
+>> +                  QCOM_SMD_RPM_AGGR_CLK, 1);
+>> +DEFINE_CLK_SMD_RPM(msm8998, aggre2_noc_clk, aggre2_noc_a_clk,
+>> +                  QCOM_SMD_RPM_AGGR_CLK, 2);
+>> +DEFINE_CLK_SMD_RPM_QDSS(msm8998, qdss_clk, qdss_a_clk,
+>> +                       QCOM_SMD_RPM_MISC_CLK, 1);
+>> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, rf_clk1, rf_clk1_a, 4);
+>> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk2_pin, rf_clk2_a_pin, 5);
+>> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, rf_clk3, rf_clk3_a, 6);
+>> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk3_pin, rf_clk3_a_pin, 6);
+>> +static struct clk_smd_rpm *msm8998_clks[] = {
+>> +       [RPM_SMD_SNOC_CLK] = &msm8998_snoc_clk,
+>> +       [RPM_SMD_SNOC_A_CLK] = &msm8998_snoc_a_clk,
+>> +       [RPM_SMD_CNOC_CLK] = &msm8998_cnoc_clk,
+>> +       [RPM_SMD_CNOC_A_CLK] = &msm8998_cnoc_a_clk,
+>> +       [RPM_SMD_CE1_CLK] = &msm8998_ce1_clk,
+>> +       [RPM_SMD_CE1_A_CLK] = &msm8998_ce1_a_clk,
+>> +       [RPM_SMD_DIV_CLK1] = &msm8998_div_clk1,
+>> +       [RPM_SMD_DIV_A_CLK1] = &msm8998_div_clk1_a,
+>> +       [RPM_SMD_IPA_CLK] = &msm8998_ipa_clk,
+>> +       [RPM_SMD_IPA_A_CLK] = &msm8998_ipa_a_clk,
+>> +       [RPM_SMD_BB_CLK1] = &msm8998_bb_clk1,
+>> +       [RPM_SMD_BB_CLK1_A] = &msm8998_bb_clk1_a,
+>> +       [RPM_SMD_BB_CLK2] = &msm8998_bb_clk2,
+>> +       [RPM_SMD_BB_CLK2_A] = &msm8998_bb_clk2_a,
+>> +       [RPM_SMD_BB_CLK3_PIN] = &msm8998_bb_clk3_pin,
+>> +       [RPM_SMD_BB_CLK3_A_PIN] = &msm8998_bb_clk3_a_pin,
+>> +       [RPM_SMD_MMAXI_CLK] = &msm8998_mmssnoc_axi_rpm_clk,
+>> +       [RPM_SMD_MMAXI_A_CLK] = &msm8998_mmssnoc_axi_rpm_a_clk,
+>> +       [RPM_SMD_AGGR1_NOC_CLK] = &msm8998_aggre1_noc_clk,
+>> +       [RPM_SMD_AGGR1_NOC_A_CLK] = &msm8998_aggre1_noc_a_clk,
+>> +       [RPM_SMD_AGGR2_NOC_CLK] = &msm8998_aggre2_noc_clk,
+>> +       [RPM_SMD_AGGR2_NOC_A_CLK] = &msm8998_aggre2_noc_a_clk,
+>> +       [RPM_SMD_QDSS_CLK] = &msm8998_qdss_clk,
+>> +       [RPM_SMD_QDSS_A_CLK] = &msm8998_qdss_a_clk,
+>> +       [RPM_SMD_RF_CLK1] = &msm8998_rf_clk1,
+>> +       [RPM_SMD_RF_CLK1_A] = &msm8998_rf_clk1_a,
+>> +       [RPM_SMD_RF_CLK2_PIN] = &msm8998_rf_clk2_pin,
+>> +       [RPM_SMD_RF_CLK2_A_PIN] = &msm8998_rf_clk2_a_pin,
+>> +       [RPM_SMD_RF_CLK3] = &msm8998_rf_clk3,
+>> +       [RPM_SMD_RF_CLK3_A] = &msm8998_rf_clk3_a,
+>> +       [RPM_SMD_RF_CLK3_PIN] = &msm8998_rf_clk3_pin,
+>> +       [RPM_SMD_RF_CLK3_A_PIN] = &msm8998_rf_clk3_a_pin,
+>> +};
+>> +
+>> +static const struct rpm_smd_clk_desc rpm_clk_msm8998 = {
+>> +       .clks = msm8998_clks,
+>> +       .num_clks = ARRAY_SIZE(msm8998_clks),
+>> +};
+>> +
+>>   static const struct of_device_id rpm_smd_clk_match_table[] = {
+>>          { .compatible = "qcom,rpmcc-msm8916", .data = &rpm_clk_msm8916 },
+>>          { .compatible = "qcom,rpmcc-msm8974", .data = &rpm_clk_msm8974 },
+>>          { .compatible = "qcom,rpmcc-msm8996", .data = &rpm_clk_msm8996 },
+>>          { .compatible = "qcom,rpmcc-qcs404",  .data = &rpm_clk_qcs404  },
+>> +       { .compatible = "qcom,rpmcc-msm8998", .data = &rpm_clk_msm8998 },
+> 
+> And this sorted too.
+> 
+>>          { }
+>>   };
+>>   MODULE_DEVICE_TABLE(of, rpm_smd_clk_match_table);
 
-Can you keep this sorted on the first compatible?
 
->  =
-
->  - #clock-cells : shall contain 1
->  =
-
-
-Rob may prefer this file is split from the driver part into a different
-patch.
-
-> diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rp=
-m.c
-> index d3aadae..269304e 100644
-> --- a/drivers/clk/qcom/clk-smd-rpm.c
-> +++ b/drivers/clk/qcom/clk-smd-rpm.c
-> @@ -655,11 +655,73 @@ static int clk_smd_rpm_enable_scaling(struct qcom_s=
-md_rpm *rpm)
->         .num_clks =3D ARRAY_SIZE(qcs404_clks),
->  };
->  =
-
-> +/* msm8998 */
-> +DEFINE_CLK_SMD_RPM(msm8998, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, =
-1);
-> +DEFINE_CLK_SMD_RPM(msm8998, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, =
-2);
-> +DEFINE_CLK_SMD_RPM(msm8998, ce1_clk, ce1_a_clk, QCOM_SMD_RPM_CE_CLK, 0);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, div_clk1, div_clk1_a, 0xb);
-> +DEFINE_CLK_SMD_RPM(msm8998, ipa_clk, ipa_a_clk, QCOM_SMD_RPM_IPA_CLK, 0);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, bb_clk1, bb_clk1_a, 1);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, bb_clk2, bb_clk2_a, 2);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, bb_clk3_pin, bb_clk3_a_pin=
-, 3);
-> +DEFINE_CLK_SMD_RPM(msm8998, mmssnoc_axi_rpm_clk, mmssnoc_axi_rpm_a_clk,
-> +                  QCOM_SMD_RPM_MMAXI_CLK, 0);
-> +DEFINE_CLK_SMD_RPM(msm8998, aggre1_noc_clk, aggre1_noc_a_clk,
-> +                  QCOM_SMD_RPM_AGGR_CLK, 1);
-> +DEFINE_CLK_SMD_RPM(msm8998, aggre2_noc_clk, aggre2_noc_a_clk,
-> +                  QCOM_SMD_RPM_AGGR_CLK, 2);
-> +DEFINE_CLK_SMD_RPM_QDSS(msm8998, qdss_clk, qdss_a_clk,
-> +                       QCOM_SMD_RPM_MISC_CLK, 1);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, rf_clk1, rf_clk1_a, 4);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk2_pin, rf_clk2_a_pin=
-, 5);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, rf_clk3, rf_clk3_a, 6);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk3_pin, rf_clk3_a_pin=
-, 6);
-> +static struct clk_smd_rpm *msm8998_clks[] =3D {
-> +       [RPM_SMD_SNOC_CLK] =3D &msm8998_snoc_clk,
-> +       [RPM_SMD_SNOC_A_CLK] =3D &msm8998_snoc_a_clk,
-> +       [RPM_SMD_CNOC_CLK] =3D &msm8998_cnoc_clk,
-> +       [RPM_SMD_CNOC_A_CLK] =3D &msm8998_cnoc_a_clk,
-> +       [RPM_SMD_CE1_CLK] =3D &msm8998_ce1_clk,
-> +       [RPM_SMD_CE1_A_CLK] =3D &msm8998_ce1_a_clk,
-> +       [RPM_SMD_DIV_CLK1] =3D &msm8998_div_clk1,
-> +       [RPM_SMD_DIV_A_CLK1] =3D &msm8998_div_clk1_a,
-> +       [RPM_SMD_IPA_CLK] =3D &msm8998_ipa_clk,
-> +       [RPM_SMD_IPA_A_CLK] =3D &msm8998_ipa_a_clk,
-> +       [RPM_SMD_BB_CLK1] =3D &msm8998_bb_clk1,
-> +       [RPM_SMD_BB_CLK1_A] =3D &msm8998_bb_clk1_a,
-> +       [RPM_SMD_BB_CLK2] =3D &msm8998_bb_clk2,
-> +       [RPM_SMD_BB_CLK2_A] =3D &msm8998_bb_clk2_a,
-> +       [RPM_SMD_BB_CLK3_PIN] =3D &msm8998_bb_clk3_pin,
-> +       [RPM_SMD_BB_CLK3_A_PIN] =3D &msm8998_bb_clk3_a_pin,
-> +       [RPM_SMD_MMAXI_CLK] =3D &msm8998_mmssnoc_axi_rpm_clk,
-> +       [RPM_SMD_MMAXI_A_CLK] =3D &msm8998_mmssnoc_axi_rpm_a_clk,
-> +       [RPM_SMD_AGGR1_NOC_CLK] =3D &msm8998_aggre1_noc_clk,
-> +       [RPM_SMD_AGGR1_NOC_A_CLK] =3D &msm8998_aggre1_noc_a_clk,
-> +       [RPM_SMD_AGGR2_NOC_CLK] =3D &msm8998_aggre2_noc_clk,
-> +       [RPM_SMD_AGGR2_NOC_A_CLK] =3D &msm8998_aggre2_noc_a_clk,
-> +       [RPM_SMD_QDSS_CLK] =3D &msm8998_qdss_clk,
-> +       [RPM_SMD_QDSS_A_CLK] =3D &msm8998_qdss_a_clk,
-> +       [RPM_SMD_RF_CLK1] =3D &msm8998_rf_clk1,
-> +       [RPM_SMD_RF_CLK1_A] =3D &msm8998_rf_clk1_a,
-> +       [RPM_SMD_RF_CLK2_PIN] =3D &msm8998_rf_clk2_pin,
-> +       [RPM_SMD_RF_CLK2_A_PIN] =3D &msm8998_rf_clk2_a_pin,
-> +       [RPM_SMD_RF_CLK3] =3D &msm8998_rf_clk3,
-> +       [RPM_SMD_RF_CLK3_A] =3D &msm8998_rf_clk3_a,
-> +       [RPM_SMD_RF_CLK3_PIN] =3D &msm8998_rf_clk3_pin,
-> +       [RPM_SMD_RF_CLK3_A_PIN] =3D &msm8998_rf_clk3_a_pin,
-> +};
-> +
-> +static const struct rpm_smd_clk_desc rpm_clk_msm8998 =3D {
-> +       .clks =3D msm8998_clks,
-> +       .num_clks =3D ARRAY_SIZE(msm8998_clks),
-> +};
-> +
->  static const struct of_device_id rpm_smd_clk_match_table[] =3D {
->         { .compatible =3D "qcom,rpmcc-msm8916", .data =3D &rpm_clk_msm891=
-6 },
->         { .compatible =3D "qcom,rpmcc-msm8974", .data =3D &rpm_clk_msm897=
-4 },
->         { .compatible =3D "qcom,rpmcc-msm8996", .data =3D &rpm_clk_msm899=
-6 },
->         { .compatible =3D "qcom,rpmcc-qcs404",  .data =3D &rpm_clk_qcs404=
-  },
-> +       { .compatible =3D "qcom,rpmcc-msm8998", .data =3D &rpm_clk_msm899=
-8 },
-
-And this sorted too.
-
->         { }
->  };
->  MODULE_DEVICE_TABLE(of, rpm_smd_clk_match_table);
+-- 
+Jeffrey Hugo
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
