@@ -1,51 +1,35 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 0/4] imx7 sbc board support extensions
-Date: Thu, 6 Dec 2018 12:36:35 +0800
-Message-ID: <20181206043630.GG3987@dragon>
-References: <20181204110741.6943-1-hohatzel@jusst.de>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] net: Use of_node_name_eq for node name comparisons
+Date: Wed, 05 Dec 2018 20:51:27 -0800 (PST)
+Message-ID: <20181205.205127.959001731251775241.davem@davemloft.net>
+References: <20181205195050.4759-16-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20181204110741.6943-1-hohatzel@jusst.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans Ole Hatzel <hohatzel@jusst.de>
-Cc: fabio.estevam@nxp.com, devicetree@vger.kernel.org, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181205195050.4759-16-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, claudiu.manoil@nxp.com, grygorii.strashko@ti.com, w-kwok2@ti.com, m-karicheri2@ti.com, netdev@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The address <ilya@compulab.co.il> bounces.  Please drop it if you send
-new versions.
+From: Rob Herring <robh@kernel.org>
+Date: Wed,  5 Dec 2018 13:50:32 -0600
 
-Shawn
+> Convert string compares of DT node names to use of_node_name_eq helper
+> instead. This removes direct access to the node name pointer.
+> 
+> For instances using of_node_cmp, this has the side effect of now using
+> case sensitive comparisons. This should not matter for any FDT based
+> system which all of these are.
+> 
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Claudiu Manoil <claudiu.manoil@nxp.com>
+> Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+> Cc: Wingman Kwok <w-kwok2@ti.com>
+> Cc: Murali Karicheri <m-karicheri2@ti.com>
+> Cc: netdev@vger.kernel.org
+> Cc: linux-omap@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-On Tue, Dec 04, 2018 at 12:07:37PM +0100, Hans Ole Hatzel wrote:
-> The following patch series contains a number of extensions and fixes to
-> the board support for the imx7 sbc.
-> 
-> Hans Ole Hatzel (4):
->   ARM: dts: imx7d: cl-som-imx7: fix pinctrl for i2c2
->   ARM: dts: imx7d: cl-som-imx7: WiLink8 WLAN support
->   ARM: dts: imx7d: sbc imx7: add uart2
->   ARM: dts: imx7d: sbc imx7: add uart5
-> 
->  arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 100 +++++++++++++++++++++++-
->  arch/arm/boot/dts/imx7d-sbc-imx7.dts    |   8 ++
->  2 files changed, 106 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 2.19.2
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Applied to net-next, thanks Rob.
