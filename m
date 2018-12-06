@@ -1,33 +1,46 @@
-From: Peng Ma <peng.ma@nxp.com>
-Subject: RE: [v11 1/7] dmaengine: fsldma: Replace DMA_IN/OUT by FSL_DMA_IN/OUT
-Date: Thu, 6 Dec 2018 11:24:29 +0000
-Message-ID: <VI1PR04MB44316BBB8821ACD7F9A348EEEDA90@VI1PR04MB4431.eurprd04.prod.outlook.com>
-References: <20181030023604.34027-1-peng.ma@nxp.com>
- <20181205174923.GU2847@vkoul-mobl>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: add ASoC maintainers for sound dt-bindings
+Date: Thu, 6 Dec 2018 12:45:34 +0100
+Message-ID: <CAJiuCceKdd4P_Bih138cUZWLRrXkmvysgmrneQ+2w4oduhbuOA@mail.gmail.com>
+References: <20181117121452.6101-1-peron.clem@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181205174923.GU2847@vkoul-mobl>
-Content-Language: en-US
+In-Reply-To: <20181117121452.6101-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "zw@zh-kernel.org" <zw@zh-kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Wen He <wen.he_1@nxp.com>
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S . Miller" <davem@davemloft.net>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgVmlub2QsDQoJDQoJVGhhbmtzIGZvciB5b3VyIGFwcGx5LCBJIGhhdmUgZmluaXNoZWQgdXBk
-YXRlIERUUyBwYXRjaCwgcGxlYXNlIHJldmlldy4NCg0KQmVzdCBSZWdhcmRzLA0KCVBlbmcNCg0K
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogVmlub2QgS291bCA8dmtvdWxAa2Vy
-bmVsLm9yZz4NCj5TZW50OiAyMDE4xOoxMtTCNsjVIDE6NDkNCj5UbzogUGVuZyBNYSA8cGVuZy5t
-YUBueHAuY29tPg0KPkNjOiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29t
-OyBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8NCj5MaSA8bGVveWFuZy5saUBueHAuY29tPjsgZGFu
-Lmoud2lsbGlhbXNAaW50ZWwuY29tOyB6d0B6aC1rZXJuZWwub3JnOw0KPmRtYWVuZ2luZUB2Z2Vy
-Lmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPmxpbnV4LWtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj5s
-aW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgV2VuIEhlIDx3ZW4uaGVfMUBueHAuY29tPg0K
-PlN1YmplY3Q6IFJlOiBbdjExIDEvN10gZG1hZW5naW5lOiBmc2xkbWE6IFJlcGxhY2UgRE1BX0lO
-L09VVCBieQ0KPkZTTF9ETUFfSU4vT1VUDQo+DQo+T24gMzAtMTAtMTgsIDEwOjM1LCBQZW5nIE1h
-IHdyb3RlOg0KPj4gRnJvbTogV2VuIEhlIDx3ZW4uaGVfMUBueHAuY29tPg0KPj4NCj4+IFRoaXMg
-cGF0Y2ggaW1wbGVtZW50IGEgc3RhbmRhcmQgbWFjcm8gY2FsbCBmdW5jdGlvbnMgaXMgdXNlZCB0
-byBOWFANCj4+IGRtYSBkcml2ZXJzLg0KPg0KPkFwcGxpZWQgYWxsIGV4Y2VwdCBEVFMgcGF0Y2hl
-cywgdGhhbmtzDQo+LS0NCj5+Vmlub2QNCg==
+Gentle up,
+
+Thanks
+On Sat, 17 Nov 2018 at 13:15, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
+> wrote:
+>
+> Sound dt-bindings are applied by ASoC maintainers and should be
+> submit to ASoC list in addition to the devicetree list.
+>
+> Hence, add this information into the MAINTAINERS file.
+>
+> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0abecc528dac..62701e0135af 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13930,6 +13930,7 @@ S:      Supported
+>  F:     Documentation/devicetree/bindings/sound/
+>  F:     Documentation/sound/soc/
+>  F:     sound/soc/
+> +F:     include/dt-bindings/sound/
+>  F:     include/sound/soc*
+>
+>  SOUNDWIRE SUBSYSTEM
+> --
+> 2.19.1
+>
