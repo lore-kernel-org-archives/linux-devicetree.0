@@ -1,45 +1,53 @@
-From: David HERNANDEZ SANCHEZ <david.hernandezsanchez@st.com>
-Subject: [PATCH] thermal: stm32: read factory settings properly
-Date: Thu, 6 Dec 2018 09:12:56 +0000
-Message-ID: <1544087575-22242-1-git-send-email-david.hernandezsanchez@st.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH] ARM: dts: exynos: Add proper regulator states for
+ suspend-to-mem for odroid-u3
+Date: Thu, 6 Dec 2018 10:18:41 +0100
+Message-ID: <bb894ff5-0fe7-7532-3b73-018038cad855@samsung.com>
+References: <20181204194025.2719-1-linux.amoon@gmail.com>
+        <CAJKOXPcT-x0JWVw2CaxHzSthxbp3sDRcsa4Nc5gHYqUy98b_yw@mail.gmail.com>
+        <CGME20181205161223epcas2p24aca718c0d68056140f8430ee8219356@epcas2p2.samsung.com>
+        <CANAwSgSSOmTbqS4WUYZHXdB8XL5fjoiGbrh3unxufQ0gZXBPkQ@mail.gmail.com>
+        <ee0d71cd-a3e0-fbb0-3af8-0ecca1d53ec0@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ee0d71cd-a3e0-fbb0-3af8-0ecca1d53ec0@samsung.com>
 Content-Language: en-US
-Content-ID: <1CBBC0193CA97B4DAA00046551B7631A@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
+To: Anand Moon <linux.amoon@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Q2FsbCBzdG1fdGhlcm1hbF9yZWFkX2ZhY3Rvcnlfc2V0dGluZ3Mgb25jZQ0KaW50ZXJuYWwgcGVy
-aXBoZXJhbCBpcyBwcm9wZXJseSBjbG9ja2VkLg0KDQpUbyBhdm9pZCB3cm9uZyBpbml0aWFsaXph
-dGlvbiBvZiBmbXQwDQooc3RtX3RoZXJtYWxfc2Vuc29yIHN0cnVjdCkgbWVtYmVyIGFkZA0KYnJh
-Y2tldHMgcHJvcGVybHkuDQoNCkNoYW5nZS1JZDogSTE1MGQwMGZkNTBlMzgyZGYwNGJmYWQxMmYw
-NjUzYjFlZDZhMWRiMWINClNpZ25lZC1vZmYtYnk6IERhdmlkIEhlcm5hbmRleiBTYW5jaGV6IDxk
-YXZpZC5oZXJuYW5kZXpzYW5jaGV6QHN0LmNvbT4NCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvdGhl
-cm1hbC9zdC9zdG1fdGhlcm1hbC5jIGIvZHJpdmVycy90aGVybWFsL3N0L3N0bV90aGVybWFsLmMN
-CmluZGV4IDQ3NjIzZGEuLmJiZDczYzUgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3RoZXJtYWwvc3Qv
-c3RtX3RoZXJtYWwuYw0KKysrIGIvZHJpdmVycy90aGVybWFsL3N0L3N0bV90aGVybWFsLmMNCkBA
-IC0yNDEsOCArMjQxLDggQEAgc3RhdGljIGludCBzdG1fdGhlcm1hbF9yZWFkX2ZhY3Rvcnlfc2V0
-dGluZ3Moc3RydWN0IHN0bV90aGVybWFsX3NlbnNvciAqc2Vuc29yKQ0KIAkJc2Vuc29yLT50MCA9
-IFRTMV9UMF9WQUwxOw0KIA0KIAkvKiBSZXRyaWV2ZSBmbXQwIGFuZCBwdXQgaXQgb24gSHogKi8N
-Ci0Jc2Vuc29yLT5mbXQwID0gQURKVVNUICogcmVhZGxfcmVsYXhlZChzZW5zb3ItPmJhc2UgKyBE
-VFNfVDBWQUxSMV9PRkZTRVQpDQotCQkJCQkgICAgICAmIFRTMV9GTVQwX01BU0s7DQorCXNlbnNv
-ci0+Zm10MCA9IEFESlVTVCAqIChyZWFkbF9yZWxheGVkKHNlbnNvci0+YmFzZSArDQorCQkJCSBE
-VFNfVDBWQUxSMV9PRkZTRVQpICYgVFMxX0ZNVDBfTUFTSyk7DQogDQogCS8qIFJldHJpZXZlIHJh
-bXAgY29lZmZpY2llbnQgKi8NCiAJc2Vuc29yLT5yYW1wX2NvZWZmID0gcmVhZGxfcmVsYXhlZChz
-ZW5zb3ItPmJhc2UgKyBEVFNfUkFNUFZBTFJfT0ZGU0VUKSAmDQpAQCAtNTMyLDYgKzUzMiwxMCBA
-QCBzdGF0aWMgaW50IHN0bV90aGVybWFsX3ByZXBhcmUoc3RydWN0IHN0bV90aGVybWFsX3NlbnNv
-ciAqc2Vuc29yKQ0KIAlpZiAocmV0KQ0KIAkJcmV0dXJuIHJldDsNCiANCisJcmV0ID0gc3RtX3Ro
-ZXJtYWxfcmVhZF9mYWN0b3J5X3NldHRpbmdzKHNlbnNvcik7DQorCWlmIChyZXQpDQorCQlnb3Rv
-IHRoZXJtYWxfdW5wcmVwYXJlOw0KKw0KIAlyZXQgPSBzdG1fdGhlcm1hbF9jYWxpYnJhdGlvbihz
-ZW5zb3IpOw0KIAlpZiAocmV0KQ0KIAkJZ290byB0aGVybWFsX3VucHJlcGFyZTsNCkBAIC02MzYs
-MTAgKzY0MCw2IEBAIHN0YXRpYyBpbnQgc3RtX3RoZXJtYWxfcHJvYmUoc3RydWN0IHBsYXRmb3Jt
-X2RldmljZSAqcGRldikNCiAJLyogUG9wdWxhdGUgc2Vuc29yICovDQogCXNlbnNvci0+YmFzZSA9
-IGJhc2U7DQogDQotCXJldCA9IHN0bV90aGVybWFsX3JlYWRfZmFjdG9yeV9zZXR0aW5ncyhzZW5z
-b3IpOw0KLQlpZiAocmV0KQ0KLQkJcmV0dXJuIHJldDsNCi0NCiAJc2Vuc29yLT5jbGsgPSBkZXZt
-X2Nsa19nZXQoJnBkZXYtPmRldiwgInBjbGsiKTsNCiAJaWYgKElTX0VSUihzZW5zb3ItPmNsaykp
-IHsNCiAJCWRldl9lcnIoJnBkZXYtPmRldiwgIiVzOiBmYWlsZWQgdG8gZmV0Y2ggUENMSyBjbG9j
-a1xuIiwNCi0tIA0KMi43LjQNCg==
+Hi All,
+
+On 2018-12-06 09:25, Marek Szyprowski wrote:
+> On 2018-12-05 17:11, Anand Moon wrote:
+>> On Wed, 5 Dec 2018 at 19:36, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>> On Tue, 4 Dec 2018 at 20:40, Anand Moon <linux.amoon@gmail.com> wrote:
+>>>> Add suspend-to-mem node to regulator core to be enabled or disabled
+>>>> during system suspend and also support changing the regulator operating
+>>>> mode during runtime and when the system enter sleep mode.
+>>>>
+>>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>>>> ---
+>>>> Tested on Odroid U3+
+>>>>
+>>>> ...
+>> Well I have tested this patch as following
+>> with only one issue, before enable suspend number of On-line cpu is 4
+>> after resume number of On-line cpu is 1.
+> This seems to be a regression in v4.20-rc1, not related to dts changes
+> at all. I'm investigating this now...
+
+
+Okay, I mixed kernel versions a bit. To be precise, this regression is
+between v4.20-rc2 and v4.20-rc3. Bisecting pointed commit 383fb3ee8024
+("ARM: spectre-v2: per-CPU vtables to work around big.Little systems").
+I will post a bug report about the regression.
+
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
