@@ -1,17 +1,20 @@
-From: Emiliano Ingrassia <ingrassia@epigenesys.com>
-Subject: Re: [PATCH 0/2] meson: Fix IRQ trigger type
-Date: Thu, 6 Dec 2018 17:24:14 +0100
-Message-ID: <20181206162414.GA17048@ingrassia.epigenesys.com>
-References: <20181204160447.27869-1-ccaione@baylibre.com>
- <CAFBinCDCE7RP4vgs25bqSZ8vBjrmcuB=qb3U92X6QfpmzeqrBg@mail.gmail.com>
- <20181206124347.GA10676@ingrassia.epigenesys.com>
- <8dd5d9da52d799f5b87272d276754e21a5e93464.camel@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: Moving ARM dts files
+Date: Thu, 6 Dec 2018 10:57:26 -0600
+Message-ID: <CAL_JsqL7Rnb5Tt5ZAm9TDqgcenkkMEzM6STfwKXMDMKkkxqQvg@mail.gmail.com>
+References: <20181204183649.GA5716@bogus>
+ <20181205135726.70badac7@xhacker.debian>
+ <CACRpkdYs_s9m=fUuOcfqcvP5BMXity5GH17RSMyvHzdZ9aFNzA@mail.gmail.com>
+ <CAL_JsqJWnB+EAoXk9a1M_D-kH8kZcwD6gTj0yVa_hBCGapB4RQ@mail.gmail.com>
+ <20181206133922.4y4qnrqcjtog3ukt@pengutronix.de>
+ <CAL_Jsq+PB3Pmg1RmNqj0whapbcqRBXDNWi4LpjPqqCKeLHbR=A@mail.gmail.com>
+ <20181206140531.GX8952@piout.net>
+ <CACRpkdbzyZD23JapAxEKc24jSwmZws5LqWS8O2Y4-VA3smgYyQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <8dd5d9da52d799f5b87272d276754e21a5e93464.camel@baylibre.com>
+In-Reply-To: <CACRpkdbzyZD23JapAxEKc24jSwmZws5LqWS8O2Y4-VA3smgYyQ@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,234 +24,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <ccaione@baylibre.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@baylibre.com, robh+dt@kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Tony Lindgren <tony@atomide.com>, Liviu Dudau <liviu.dudau@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thierry Reding <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory CLEMENT <gregory.clement@bootlin.com>, Michal Simek <michal.simek@xilinx.com>, Krzysztof Kozlowski <krzk@kernel.org>, ARM-SoC Maintainers <arm@kernel.org>, Joel Stanley <joel@jms.id.au>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Jisheng Zhang <Jisheng.Zhang@synaptics.com>, Maxime Coquelin <mc>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jerome,
-
-On Thu, Dec 06, 2018 at 02:26:34PM +0100, Jerome Brunet wrote:
-> On Thu, 2018-12-06 at 13:43 +0100, Emiliano Ingrassia wrote:
-> > Hi all,
-> >
-> > thank you for involving me.
-> >
-> > I applied Carlo's patches[0] on a kernel vanilla 4.19.6
-> > and tested it with kernel packet generator, monitoring
-> > bandwidth usage with "nload".
-> >
-> > All tests were conducted on an Odroid-C1+ Rev. 0.4-20150930 board
-> > with a short ethernet cable directly attached to a laptop with
-> > 1G ethernet interface, with "nload" running on the board.
-> >
-> > The tests I performed are composed by the following steps:
-> >
-> > 1) Start packet generator with "rate 1000M" on laptop;
-> >
-> > 2) Keep packet generator active on the laptop and
-> >    start the packet generator on the board with "rate 1000M";
-> >
-> > 3) Stop both packet generators;
-> >
-> > 4) Start packet generator on the board;
-> >
-> > 5) Keep packet generator active on the board and
-> >    start the packet generator on the laptop.
-> >
-> >
-> > Test results without Carlo's patches applied:
-> >
-> > 1) "nload" shows an incoming traffic of ~950Mbps;
-> >
-> > 2) "nload" shows an incoming traffic of ~400Mbps
-> >    and an outgoing traffic of ~250Mbps;
-> >
-> > 3) "nload" shows 0Mbps both for incoming and outgoing traffic;
-> >
-> > 4) "nload" shows an outgoing traffic of ~950Mbps from the board;
-> >
-> > 5) "nload" shows incoming traffic of 0Mbps
-> >    and an outgoing traffic of ~950Mbps.
-> >
-> > Applying only the first patch (change mac IRQ type) I got the same results.
-> >
-> > Applying only the second patch (drop eee-broken-1000t) I got the same
-> > results!
-> >
-> > With both patches applied I got the same results but with an incoming
-> > traffic
-> > of ~3Mbps on the board.
->
-> Are you sure you did not mix up the result ?
-> I would expect this kind of drop when only the eee patch is applied.
-
-Yes, I'm sure.
-
->
-> >
-> > Consider that the described tests were performed for a few minutes.
-> >
-> >
-> > The tests I performed clearly show that currently the MAC does not
-> > perform as 1G full-duplex.
->
-> Do you really get 1G full duplex w/o any of these patch ?
-> I would be surprised if they had any meaningful impact on throughput
-
-As I wrote in the previous mail, without the two patches applied
-I see an incoming traffic on the board of about 460 Mbps and an outgoing
-of 256 Mbps.
-On the laptop side I see an outgoing of about 940 Mbps and an incoming
-of about 256 Mbps.
-So it seems that the board (without the Carlo's patches) is losing traffic.
-I'll keep investigating to see if they can solve this problem.
-
->
-> > I can't say if this depends on the hardware, the driver or
-> > the IP description in the board's device tree.
-> >
-> > From the results shown above I think that the patches regarding 32 bit
-> > Meson SoCs should NOT be applied together, but you can consider to apply
-> > only the second one which remove the "eee-broken-1000t" flag
-> > from the board MAC IP description.
->
-> I would defenitely advise against that.
->
-> > In particular, I think that more tests are needed to better understand
-> > what's happening in the case of Meson8b SoC.
-> >
-> > To better investigate the MAC behaviour on Odroid-C1+, should I use
-> > the Amlogic development kernel[1]? If yes, what branch should I use?
->
-> And bit of background:
-> The MAC found in all Amlogic SoC we have seen so far comes from Synopsys
-> (dwmac).
-
-Yes, I know. I was referring to the patches regarding Meson8b SoCs
-currently not in mainline that possibly can impact this problem.
-
->
-> The kernel provided by the vendor use the IRQ type 'EDGE_RISING' for this IP
-> This means that the HW block is supposed to generate a rising edge on the irq
-> line every time there is an event. This is opposed to the Type "LEVEL_HIGH"
-> with keep the irq line high as long as their pending IRQs
->
-> Of course, when adding mainline support, we did the same as the vendor without
-> thinking about it
->
-> We started to investigate the network because, after a while, we noticed
-> severe performance drops on the AXG family: the throughput would drop from
-> 900MBps to 30MBps after somethings 12+ hours of iperf tests.
->
-> We noticed that irqs were not triggered anymore. Manually acking the IRQ in
-> the register would revive the interface. Since the IRQ is supposed to be acked
-> in the ISR, we were clearly missing IRQs and as a consequence, never acking
-> them.
->
-> All HW using the dwmac out there are using "LEVEL_HIGH", except amlogic.
-> Changing this fixes the problem.
->
-> Now regarding EEE: about 2 years ago, the network would break on the OC-2. We
-> noticed the EEE was generating a *LOT* of IRQs. Deactivating EEE solved the
-> problem ... or so we thought. Fact is, it was an un-acked IRQ as well, and we
-> just made it harder to trigger by disabling EEE.
->
-> So applying the EEE patch without the IRQ_LEVEL would clearly be a mistake,
-> you would be back in the situation we investigated 2 years, with a very
-> unstable ethernet connection.
->
-> Anyways, I have been able to test it on S905 and A113 and I think this series
-> should applied, at least for the arm64 family ... most likely of all.
->
-> If issues persist on meson8, maybe there is something else ? soemthing hidden
-> before ?
->
-> >
-> >
-> > On Tue, Dec 04, 2018 at 08:59:20PM +0100, Martin Blumenstingl wrote:
-> > > adding Emiliano because he experienced high packet loss on Odroid-C1
-> > > without "eee-broken-1000t"
-> > >
-> > > On Tue, Dec 4, 2018 at 5:05 PM Carlo Caione <ccaione@baylibre.com> wrote:
-> > > > The wrong IRQ trigger type for the macirq was causing the connection
-> > > > speed to drop after a few hours when stress testing the DUT. The fix
-> > > > seems also to fix another long standing issue with EEE.
-> >
-> > Carlo, can you describe precisely the tests you conducted
-> > on your board and the tools used?
-> >
-> >
-> > > the other two DesignWare controllers (2x dwc2) are also using
-> > > IRQ_TYPE_LEVEL_HIGH
-> > > so this is not unlikely - good job detective!
-> > >
-> >
-> > Consider that currently the USB ports do not work correctly.
-> > In particular, USB pendrive insertion is not recognized at runtime.
-> >
-> >
-> > > > The fixes are tested on a AXG board but we think that the same fix is
-> > > > valid also for all the others Amlogic SoC families.
-> > > I checked Amlogic's 3.10 kernel for the 32-bit SoCs and it seems they
-> > > are setting all IRQs to be edge triggered: [0]
-> > > however, Emiliano reported an issue with IRQ_TYPE_EDGE_RISING for the
-> > > dwc2 controllers as well. 291f45dd6da5fa6 "ARM: dts: meson: fixing USB
-> > > support on Meson6, Meson8 and Meson8b" fixed it for him whereas it
-> > > worked for me with IRQ_TYPE_EDGE_RISING
-> > >
-> > > I find it strange though that Amlogic's buildroot kernel (even the
-> > > latest buildroot_openlinux_kernel_4.9_fbdev_20180706) uses:
-> > >   interrupts = <0 8 1>
-> > > which translates to:
-> > >   interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>
-> > >
-> > > does the datasheet give a hint that this IRQ should be level triggered
-> > > or did you find out by trial and error?
-> > >
-> > > > Carlo Caione (2):
-> > > >   arm64: dts: meson: Fix IRQ trigger type for macirq
-> > > >   arm64: dts: meson: Remove eee-broken-1000t quirk
-> > > >
-> > > >  arch/arm/boot/dts/meson.dtsi                        | 2 +-
-> > > >  arch/arm/boot/dts/meson8b-odroidc1.dts              | 1 -
-> > > these two should be in separate patches with "ARM: dts: " as prefix
-> > >
-> > > >  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts      | 1 -
-> > > >  arch/arm64/boot/dts/amlogic/meson-axg.dtsi          | 2 +-
-> > > >  arch/arm64/boot/dts/amlogic/meson-gx.dtsi           | 2 +-
-> > > >  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 1 -
-> > > >  arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi   | 1 -
-> > > >  7 files changed, 3 insertions(+), 7 deletions(-)
-> > > >
-> > > > --
-> > > > 2.19.1
-> > > >
-> > >
-> > > Regards
-> > > Martin
-> > >
-> > > [0]
-> > > https://github.com/endlessm/linux-meson/blob/cd4096c3ff4eb5b8a8a5581bb46508601c5470dc/drivers/irqchip/irq-gic.c#L400
-> > >
-> > > _______________________________________________
-> > > linux-amlogic mailing list
-> > > linux-amlogic@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-amlogic
-> >
-> > Best regards,
-> >
-> > Emiliano
-> >
-> > [0]
-> > http://lists.infradead.org/pipermail/linux-amlogic/2018-December/009325.html
-> > [1]
-> > https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic.git/
-> >
-> > _______________________________________________
-> > linux-amlogic mailing list
-> > linux-amlogic@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-amlogic
->
->
-
-Emiliano
+T24gVGh1LCBEZWMgNiwgMjAxOCBhdCA4OjMwIEFNIExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxl
+aWpAbGluYXJvLm9yZz4gd3JvdGU6Cj4KPiBPbiBUaHUsIERlYyA2LCAyMDE4IGF0IDM6MDUgUE0g
+QWxleGFuZHJlIEJlbGxvbmkKPiA8YWxleGFuZHJlLmJlbGxvbmlAYm9vdGxpbi5jb20+IHdyb3Rl
+Ogo+ID4gT24gMDYvMTIvMjAxOCAwNzo1ODoyNC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToKPiA+
+ID4gT24gVGh1LCBEZWMgNiwgMjAxOCBhdCA3OjM5IEFNIFV3ZSBLbGVpbmUtS8O2bmlnCj4gPiA+
+IDx1LmtsZWluZS1rb2VuaWdAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOgo+ID4gPiA+Cj4gPiA+ID4g
+SGVsbG8sCj4gPiA+ID4KPiA+ID4gPiBPbiBXZWQsIERlYyAwNSwgMjAxOCBhdCAwOTowMTo1OUFN
+IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToKPiA+ID4gPiA+IGkuTVgyMyBpcyBhIFNpZ21hdGVs
+IGNoaXAgU1RNUD8/Cj4gPiA+ID4KPiA+ID4gPiBJIHRoaW5rIHRoZSBGcmVlc2NhbGUgaS5NWDIz
+IGRpZG4ndCBleGlzdCBhdCBTaWdtYXRlbCBiYWNrIHRoZW4uIEFGQUlLCj4gPiA+ID4gdGhpcyBp
+cyBhIG5ldyBkZXNpZ24gdXNpbmcgSVAgZnJvbSBTaWdtYXRlbCBhZnRlciB0aGUgYXF1aXNpdGlv
+bi4KPiA+ID4KPiA+ID4gSXQgaXMgbm90LiBJIHdhcyBpbiB0aGUgaS5NWCBncm91cCB3aGljaCBT
+aWdtYXRlbCB3YXMgbWVyZ2VkIGludG8gYXQKPiA+ID4gdGhlIHRpbWUuIFB1cmVseSBtYXJrZXRp
+bmcgcmVicmFuZGluZy4KPiA+ID4KPiA+Cj4gPiBXb3VsZG4ndCBpdCBiZSBlYXNpZXIgdG8gbmFt
+ZSB0aGUgZGlyZWN0b3J5IHRvIHRoZSBjb3JyZXNwb25kaW5nIG1hY2gtKgo+ID4gZW50cnk/Cj4g
+Pgo+ID4gU28sIGlteDIzIGFuZCBpbXgyOCB3b3VsZCBnbyB0byBteHMvLCBvdGhlciBpbXggaW4g
+aW14Ly4gQW5kIHRoaXMgYWxzbwo+ID4gc29sdmVzIHRoZSBNYXJ2ZWxsIG1lc3Mgd2l0aCB0aGUg
+U3luYXB0aWNzIFNvY3MgZ29pbmcgaW4gYmVybGluLyBhbmQgdGhlCj4gPiBvdGhlciBvbmVzIGlu
+IG12ZWJ1Ly4KPgo+IEkgbGlrZSB0aGlzIGlkZWEuCgpGaW5lIGJ5IG1lIHRob3VnaCBJIHRoaW5r
+IG1hcnZlbGwgZ2V0cyBtb3JlIGNvbXBsaWNhdGVkIHRoYW4gdGhhdC4KSSdsbCB0cnkgYSBwYXNz
+IGF0IHRoYXQgYXQgbGVhc3QgZm9yIHRoZSBjYXNlcyB3aXRoIGEgbWl4dHVyZSBvZgpmYW1pbGll
+cy4KCj4gV2UgZGlzY3Vzc2VkIG1lcmdpbmcgYWxsIEFSTSByZWZlcmVuY2UgZGVzaWduIG1hY2gt
+KiB0byBvbmUgZGlyCj4gaWYgSSBqdXN0IG5hbWUgdGhhdCBtYWNoLWFybSB0aGVuIHdlIGdldCBh
+IGNvbnZlcmdlbmNlIHRvIHRoZQo+IHZlbmRvciBuYW1lIGluIHNvbWUgb3JnYW5pYyB3YXkuCgpU
+QkMsIHlvdSB3YW50IC4uLi9ib290L2R0cy9hcm0vKiBmb3IgYWxsIHRoZSBBUk0sIEx0ZCBib2Fy
+ZHM/IEp1c3QKbWFraW5nIHN1cmUgYXMgeW91IHdlcmUgYXJndWluZyBhZ2FpbnN0IHZlbmRvciBu
+YW1lcy4gOikKClJvYgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtYXJtLWtlcm5lbAo=
