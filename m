@@ -1,35 +1,41 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH V5 2/6] dt-bindings: fsl: add imx7ulp pm related
- components bindings
-Date: Thu, 6 Dec 2018 22:45:55 +0800
-Message-ID: <20181206144551.GC12929@dragon>
-References: <1541862478-7839-1-git-send-email-aisheng.dong@nxp.com>
- <1541862478-7839-3-git-send-email-aisheng.dong@nxp.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v16 06/16] lib: fdt: add a helper function for handling
+ memory range property
+Date: Thu, 6 Dec 2018 08:47:04 -0600
+Message-ID: <CAL_JsqL4_Z5pVfoB3opjL7eTzZvhBJW7_aQS443quAAR0gGH1w@mail.gmail.com>
+References: <20181115055254.2812-1-takahiro.akashi@linaro.org> <20181115055254.2812-7-takahiro.akashi@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1541862478-7839-3-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181115055254.2812-7-takahiro.akashi@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.or
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 10, 2018 at 03:13:00PM +0000, A.s. Dong wrote:
-> Add imx7ulp pm related components bindings
-> 
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+On Wed, Nov 14, 2018 at 11:52 PM AKASHI Takahiro
+<takahiro.akashi@linaro.org> wrote:
+>
+> Added function, fdt_setprop_reg(), will be used later to handle
+> kexec-specific property in arm64's kexec_file implementation.
+> It will possibly be merged into libfdt in the future.
 
-Applied, thanks.
+You generally can't modify libfdt files. Any changes will be blown
+away with the next dtc sync (there's one in -next now). Though here
+you are creating a new location with fdt code. lib/ is just a shim to
+the actual libfdt code. Don't put any implementation there. You can
+add this to drivers/of/fdt_address.c for the short term, but it still
+needs to go upstream.
+
+Otherwise, the implementation looks fine to me.
+
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  include/linux/libfdt.h | 26 ++++++++++++++++++++
+>  lib/Makefile           |  2 +-
+>  lib/fdt_addresses.c    | 56 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 83 insertions(+), 1 deletion(-)
+>  create mode 100644 lib/fdt_addresses.c
