@@ -1,226 +1,55 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [RFC PATCH v3 2/2] pwm: imx: Configure output to GPIO in
- disabled state
-Date: Thu, 6 Dec 2018 14:59:02 +0100
-Message-ID: <20181206135902.un2nbreqfmi6mpd6@pengutronix.de>
-References: <1544103655-104466-1-git-send-email-michal.vokac@ysoft.com>
- <1544103655-104466-3-git-send-email-michal.vokac@ysoft.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH] video/backlight: Use of_node_name_eq for node name
+ comparisons
+Date: Thu, 6 Dec 2018 14:02:21 +0000
+Message-ID: <20181206140221.rq4zp74olghzipxu@holly.lan>
+References: <20181205195050.4759-28-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1544103655-104466-3-git-send-email-michal.vokac@ysoft.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, Fabio Estevam <fabio.estevam@nxp.com>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@karo-electronics.de>, Linus Walleij <linus.walleij@linaro.org>
+In-Reply-To: <20181205195050.4759-28-robh@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 06, 2018 at 01:41:31PM +0000, Vokáč Michal wrote:
-> Normally the PWM output is held LOW when PWM is disabled. This can cause
-> problems when inverted PWM signal polarity is needed. With this behavior
-> the connected circuit is fed by 100% duty cycle instead of being shut-off.
-> 
-> Allow users to define a "pwm" and a "gpio" pinctrl states. The pwm pinctrl
-> state is selected when PWM is enabled and the gpio pinctrl state is
-> selected when PWM is disabled. In the gpio state the new pwm-gpios GPIO is
-> configured as input and the internal pull-up resistor is used to pull the
-> output level high.
-> 
-> If all the pinctrl states and the pwm-gpios GPIO are not correctly
-> specified in DT the PWM work as usual.
-> 
-> As an example, with this patch a PWM controlled backlight with inversed
-> signal polarity can be used in full brightness range. Without this patch
-> the backlight can not be turned off as brightness = 0 disables the PWM
-> and that in turn set PWM output LOW, that is full brightness.
-> 
-> Inverted output of the PWM with "default" and with "pwm"+"gpio" pinctrl:
-> 
-> +--------------+------------+---------------+----------- +-------------+
-> | After reset  | Bootloader |   PWM probe   |     PWM    |     PWM     |
-> | 100k pull-up |            |               | enable 30% |   disable   |
-> +--------------+------------+---------------+------------+-------------+
-> | pinctrl      |    none    |    default    |   default  |   default   |
-> | out H   __________________                   __   __                 |
-> | out L                     \_________________/  \_/  \_/\____________ |
-> |                                           ^    ^    ^                |
-> +--------------+------------+---------------+------------+-------------+
-> | pinctrl      |    none    |      gpio     |     pwm    |     gpio    |
-> | out H   __________________________________   __   __   _____________ |
-> | out L                                     \_/  \_/  \_/              |
-> |                                           ^    ^    ^                |
-> +----------------------------------------------------------------------+
-> 
-> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-> ---
-> Changes in v3:
->  - Commit message update.
->  - Minor fix in code comment (Uwe)
->  - Align function arguments to the opening parentheses. (Uwe)
->  - Do not test devm_pinctrl_get for NULL. (Thierry)
->  - Convert all messages to dev_dbg() (Thierry)
->  - Do not actively drive the pin in gpio state. Configure it as input
->    and rely solely on the internal pull-up. (Thierry)
-> 
-> Changes in v2:
->  - Utilize the "pwm" and "gpio" pinctrl states.
->  - Use the pwm-gpios signal to drive the output in "gpio" pinctrl state.
->  - Select the right pinctrl state in probe.
-> 
->  drivers/pwm/pwm-imx.c | 77 +++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 77 insertions(+)
-> 
-> diff --git a/drivers/pwm/pwm-imx.c b/drivers/pwm/pwm-imx.c
-> index 1d5242c..84eaec8 100644
-> --- a/drivers/pwm/pwm-imx.c
-> +++ b/drivers/pwm/pwm-imx.c
-> @@ -12,10 +12,12 @@
->  #include <linux/err.h>
->  #include <linux/clk.h>
->  #include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/io.h>
->  #include <linux/pwm.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
-> +#include <linux/pinctrl/consumer.h>
->  
->  /* i.MX1 and i.MX21 share the same PWM function block: */
->  
-> @@ -52,10 +54,44 @@ struct imx_chip {
->  	void __iomem	*mmio_base;
->  
->  	struct pwm_chip	chip;
-> +
-> +	struct pinctrl *pinctrl;
-> +	struct pinctrl_state *pinctrl_pins_gpio;
-> +	struct pinctrl_state *pinctrl_pins_pwm;
-> +	struct gpio_desc *pwm_gpiod;
->  };
->  
->  #define to_imx_chip(chip)	container_of(chip, struct imx_chip, chip)
->  
-> +static int imx_pwm_init_pinctrl_info(struct imx_chip *imx_chip,
-> +		struct platform_device *pdev)
-
-Please indent the follow up line to the opening parenthesis.
-
-> +{
-> +	imx_chip->pinctrl = devm_pinctrl_get(&pdev->dev);
-> +	if (IS_ERR(imx_chip->pinctrl)) {
-> +		dev_dbg(&pdev->dev, "can not get pinctrl\n");
-> +		return PTR_ERR(imx_chip->pinctrl);
-> +	}
-> +
-> +	imx_chip->pinctrl_pins_pwm = pinctrl_lookup_state(imx_chip->pinctrl,
-> +							  "pwm");
-> +	imx_chip->pinctrl_pins_gpio = pinctrl_lookup_state(imx_chip->pinctrl,
-> +							   "gpio");
-> +	imx_chip->pwm_gpiod = devm_gpiod_get_optional(&pdev->dev, "pwm",
-> +						      GPIOD_IN);
-> +
-> +	if (PTR_ERR(imx_chip->pwm_gpiod) == -EPROBE_DEFER) {
-> +		return -EPROBE_DEFER;
-> +	} else if (IS_ERR(imx_chip->pwm_gpiod) ||
-> +		   IS_ERR(imx_chip->pinctrl_pins_pwm) ||
-> +		   IS_ERR(imx_chip->pinctrl_pins_gpio)) {
-> +		dev_dbg(&pdev->dev, "PWM pinctrl information incomplete\n");
-> +		devm_pinctrl_put(imx_chip->pinctrl);
-> +		imx_chip->pinctrl = NULL;
-
-Can it happen, that pinctrl_pins_pwm is PTR_ERR(-EPROBE_DEFER)?
-Maybe you only want to ignore PTR_ERR(-ENODEV) and for example propagate
--EIO? I think you want to put the gpio if the failure is because there
-is a pinctrl related error.
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int imx_pwm_config_v1(struct pwm_chip *chip,
->  		struct pwm_device *pwm, int duty_ns, int period_ns)
->  {
-> @@ -216,7 +252,25 @@ static int imx_pwm_apply_v2(struct pwm_chip *chip, struct pwm_device *pwm,
->  			cr |= MX3_PWMCR_POUTC;
->  
->  		writel(cr, imx->mmio_base + MX3_PWMCR);
-> +
-> +		/*
-> +		 * If we are in charge of pinctrl then switch output to
-> +		 * the PWM signal.
-> +		 */
-> +		if (imx->pinctrl)
-> +			pinctrl_select_state(imx->pinctrl,
-> +					     imx->pinctrl_pins_pwm);
->  	} else if (cstate.enabled) {
-> +		/*
-> +		 * PWM block will be disabled. Normally its output will be set
-> +		 * low no matter what output polarity is configured. Let's use
-> +		 * pinctrl to switch the output pin to GPIO functon and keep
-> +		 * the output at the same level as for duty-cycle = 0.
-> +		 */
-> +		if (imx->pinctrl)
-> +			pinctrl_select_state(imx->pinctrl,
-> +					     imx->pinctrl_pins_gpio);
-> +
->  		writel(0, imx->mmio_base + MX3_PWMCR);
->  
->  		clk_disable_unprepare(imx->clk_per);
-> @@ -263,6 +317,7 @@ static int imx_pwm_probe(struct platform_device *pdev)
->  	const struct of_device_id *of_id =
->  			of_match_device(imx_pwm_dt_ids, &pdev->dev);
->  	const struct imx_pwm_data *data;
-> +	struct pwm_state cstate;
->  	struct imx_chip *imx;
->  	struct resource *r;
->  	int ret = 0;
-> @@ -294,6 +349,10 @@ static int imx_pwm_probe(struct platform_device *pdev)
->  		imx->chip.of_pwm_n_cells = 3;
->  	}
->  
-> +	ret = imx_pwm_init_pinctrl_info(imx, pdev);
-> +	if (ret)
-> +		return ret;
-> +
->  	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	imx->mmio_base = devm_ioremap_resource(&pdev->dev, r);
->  	if (IS_ERR(imx->mmio_base))
-> @@ -303,6 +362,24 @@ static int imx_pwm_probe(struct platform_device *pdev)
->  	if (ret < 0)
->  		return ret;
->  
-> +	if (imx->pinctrl) {
-> +		/*
-> +		 * Update cstate after pwmchip_add() call as the core might
-> +		 * call the get_state() function to read the PWM registers
-> +		 * to get the actual HW state.
-> +		 */
-> +		pwm_get_state(imx->chip.pwms, &cstate);
-> +		if (cstate.enabled) {
-> +			dev_dbg(&pdev->dev,
-> +				"PWM entered probe in enabled state\n");
-> +			pinctrl_select_state(imx->pinctrl,
-> +					     imx->pinctrl_pins_pwm);
-> +		} else {
-> +			pinctrl_select_state(imx->pinctrl,
-> +					     imx->pinctrl_pins_gpio);
-> +		}
-> +	}
-> +
-
-ISTR that there was a patch that implements get_state for imx. Is there
-a dependency on that one? Otherwise the state returned by
-pwm_get_state() might not be what is actually configured.
-
-Do you know if this is required for the old i.MX pwm, e.g. on i.MX21?
-I ask because of https://patchwork.ozlabs.org/patch/1000071/
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+T24gV2VkLCBEZWMgMDUsIDIwMTggYXQgMDE6NTA6NDRQTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3Jv
+dGU6Cj4gQ29udmVydCBzdHJpbmcgY29tcGFyZXMgb2YgRFQgbm9kZSBuYW1lcyB0byB1c2Ugb2Zf
+bm9kZV9uYW1lX2VxIGhlbHBlcgo+IGluc3RlYWQuIFRoaXMgcmVtb3ZlcyBkaXJlY3QgYWNjZXNz
+IHRvIHRoZSBub2RlIG5hbWUgcG9pbnRlci4KPiAKPiBGb3IgaW5zdGFuY2VzIHVzaW5nIG9mX25v
+ZGVfY21wLCB0aGlzIGhhcyB0aGUgc2lkZSBlZmZlY3Qgb2Ygbm93IHVzaW5nCj4gY2FzZSBzZW5z
+aXRpdmUgY29tcGFyaXNvbnMuIFRoaXMgc2hvdWxkIG5vdCBtYXR0ZXIgZm9yIGFueSBGRFQgYmFz
+ZWQKPiBzeXN0ZW0gd2hpY2ggdGhpcyBpcy4KPiAKPiBDYzogTGVlIEpvbmVzIDxsZWUuam9uZXNA
+bGluYXJvLm9yZz4KPiBDYzogRGFuaWVsIFRob21wc29uIDxkYW5pZWwudGhvbXBzb25AbGluYXJv
+Lm9yZz4KPiBDYzogSmluZ29vIEhhbiA8amluZ29vaGFuMUBnbWFpbC5jb20+Cj4gQ2M6IEJhcnRs
+b21pZWogWm9sbmllcmtpZXdpY3ogPGIuem9sbmllcmtpZUBzYW1zdW5nLmNvbT4KPiBDYzogZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IENjOiBsaW51eC1mYmRldkB2Z2VyLmtlcm5l
+bC5vcmcKPiBTaWduZWQtb2ZmLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKQWNr
+ZWQtYnk6IERhbmllbCBUaG9tcHNvbiA8ZGFuaWVsLnRob21wc29uQGxpbmFyby5vcmc+CgpbdGhp
+cyBpcyBGQU8gTGVlIEouIHJhdGhlciB0aGFuIHJlY29tbWVuZGluZyB5b3UgdGFrZSBpdCB2aWEg
+eW91IHRyZWVdCgo+IC0tLQo+ICBkcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC84OHBtODYweF9ibC5j
+IHwgMiArLQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkK
+PiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvODhwbTg2MHhfYmwuYyBi
+L2RyaXZlcnMvdmlkZW8vYmFja2xpZ2h0Lzg4cG04NjB4X2JsLmMKPiBpbmRleCA2ZDhkYzJjNzc1
+MjAuLjUxZTBjNGJlMDhkZiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC84
+OHBtODYweF9ibC5jCj4gKysrIGIvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvODhwbTg2MHhfYmwu
+Ywo+IEBAIC0xNzQsNyArMTc0LDcgQEAgc3RhdGljIGludCBwbTg2MHhfYmFja2xpZ2h0X2R0X2lu
+aXQoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwKPiAgCQlyZXR1cm4gLUVOT0RFVjsKPiAg
+CX0KPiAgCWZvcl9lYWNoX2NoaWxkX29mX25vZGUobnByb290LCBucCkgewo+IC0JCWlmICghb2Zf
+bm9kZV9jbXAobnAtPm5hbWUsIG5hbWUpKSB7Cj4gKwkJaWYgKG9mX25vZGVfbmFtZV9lcShucCwg
+bmFtZSkpIHsKPiAgCQkJb2ZfcHJvcGVydHlfcmVhZF91MzIobnAsICJtYXJ2ZWxsLDg4cG04NjB4
+LWlzZXQiLAo+ICAJCQkJCSAgICAgJmlzZXQpOwo+ICAJCQlkYXRhLT5pc2V0ID0gUE04NjA2X1dM
+RURfQ1VSUkVOVChpc2V0KTsKPiAtLSAKPiAyLjE5LjEKPiAKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
