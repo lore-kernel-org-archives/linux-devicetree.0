@@ -1,227 +1,91 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v2 02/11] thermal: add irq-mode configuration for trip
- point
-Date: Thu, 6 Dec 2018 20:55:05 +0100
-Message-ID: <3314da31-1b8b-ec19-4aee-38d98aa8adbf@partner.samsung.com>
-References: <1541610593-28542-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20181107171036eucas1p13253d56b463c8f888ab8f8e418635297@eucas1p1.samsung.com>
-        <1541610593-28542-3-git-send-email-l.luba@partner.samsung.com>
-        <1544022595.2841.45.camel@intel.com>
-        <2ac425fc-7c32-6e2f-7086-c14f85b0bbfd@partner.samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: Moving ARM dts files
+Date: Thu, 6 Dec 2018 20:06:52 +0000
+Message-ID: <20181206200652.GB3084@sirena.org.uk>
+References: <20181204183649.GA5716@bogus>
+ <9c2b5528-679a-928e-3150-aa383a4f0405@suse.de>
+ <CAL_JsqKO3v0pgVfNhVNOkpZ4sePrybDgZG0riN-tutvwOZ4zYg@mail.gmail.com>
+ <2474284e-8a55-639f-2cfa-f811741099f3@suse.de>
+ <CAL_JsqL4WoMqFCQ0vFd6z_i=9imnfVsQjeKOG8zxNwi5caneRQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2ac425fc-7c32-6e2f-7086-c14f85b0bbfd@partner.samsung.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, b.zolnierkie@samsung.com, krzk@kernel.org
+Content-Type: multipart/mixed; boundary="===============3299395466157933977=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqL4WoMqFCQ0vFd6z_i=9imnfVsQjeKOG8zxNwi5caneRQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Michal Simek <michal.simek@xilinx.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thierry Reding <thierry.reding@gmail.com>, Tom Rini <trini@konsulko.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory CLEMENT <gregory.clement@bootlin.com>, Alexander Graf <agraf@suse.de>, Krzysztof Kozlowski <krzk@kernel.org>, ARM-SoC Maintainers <arm@kernel.org>, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, Architecture Mailman List <boot-architecture@lists.linaro.org>, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux>
 List-Id: devicetree@vger.kernel.org
 
 
+--===============3299395466157933977==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="s/l3CgOIzMHHjg/5"
+Content-Disposition: inline
 
-On 12/6/18 8:18 PM, Lukasz Luba wrote:
-> Hi Rui,
-> 
-> On 12/5/18 4:09 PM, Zhang Rui wrote:
->> On 三, 2018-11-07 at 18:09 +0100, Lukasz Luba wrote:
->>> This patch adds support irq mode in trip point.
->>> When that flag is set in DT, there is no need for polling
->>> in thermal framework. Crossing the trip point will rise an IRQ.
->>> The naming convention for tip point 'type' can be confussing
->>> and 'passive' (whic is passive cooling) might be interpretted
->>> wrongly.
->>>
->>> This mechanism prevents from missue and adds explicit setting
->>> for hardware which support interrupts for pre-configured temperature
->>> threshold.
->>>
->>> Cc: Zhang Rui <rui.zhang@intel.com>
->>> Cc: Eduardo Valentin <edubezval@gmail.com>
->>> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
->>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->>> ---
->>>   drivers/thermal/of-thermal.c   | 17 +++++++++++++++++
->>>   drivers/thermal/thermal_core.c | 10 ++++++++--
->>>   include/linux/thermal.h        |  5 +++++
->>>   3 files changed, 30 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-
->>> thermal.c
->>> index 4bfdb4a..1a75946a 100644
->>> --- a/drivers/thermal/of-thermal.c
->>> +++ b/drivers/thermal/of-thermal.c
->>> @@ -312,6 +312,20 @@ static int of_thermal_get_trip_type(struct
->>> thermal_zone_device *tz, int trip,
->>>       return 0;
->>>   }
->>> +static int
->>> +of_thermal_get_trip_irq_mode(struct thermal_zone_device *tz, int
->>> trip,
->>> +                 bool *mode)
->>> +{
->>> +    struct __thermal_zone *data = tz->devdata;
->>> +
->>> +    if (trip >= data->ntrips || trip < 0)
->>> +        return -EDOM;
->>> +
->>> +    *mode = data->trips[trip].irq_mode;
->>> +
->>> +    return 0;
->>> +}
->>> +
->>>   static int of_thermal_get_trip_temp(struct thermal_zone_device *tz,
->>> int trip,
->>>                       int *temp)
->>>   {
->>> @@ -394,6 +408,7 @@ static struct thermal_zone_device_ops
->>> of_thermal_ops = {
->>>       .set_mode = of_thermal_set_mode,
->>>       .get_trip_type = of_thermal_get_trip_type,
->>> +    .get_trip_irq_mode = of_thermal_get_trip_irq_mode,
->>>       .get_trip_temp = of_thermal_get_trip_temp,
->>>       .set_trip_temp = of_thermal_set_trip_temp,
->>>       .get_trip_hyst = of_thermal_get_trip_hyst,
->>> @@ -827,6 +842,8 @@ static int thermal_of_populate_trip(struct
->>> device_node *np,
->>>           return ret;
->>>       }
->>> +    trip->irq_mode = of_property_read_bool(np, "irq-mode");
->>> +
->>>       /* Required for cooling map matching */
->>>       trip->np = np;
->>>       of_node_get(np);
->>> diff --git a/drivers/thermal/thermal_core.c
->>> b/drivers/thermal/thermal_core.c
->>> index 39fc812..6d41e08 100644
->>> --- a/drivers/thermal/thermal_core.c
->>> +++ b/drivers/thermal/thermal_core.c
->>> @@ -406,6 +406,7 @@ static void handle_critical_trips(struct
->>> thermal_zone_device *tz,
->>>   static void handle_thermal_trip(struct thermal_zone_device *tz, int
->>> trip)
->>>   {
->>>       enum thermal_trip_type type;
->>> +    bool irq_mode = false;
->>>       /* Ignore disabled trip points */
->>>       if (test_bit(trip, &tz->trips_disabled))
->>> @@ -419,9 +420,14 @@ static void handle_thermal_trip(struct
->>> thermal_zone_device *tz, int trip)
->>>           handle_non_critical_trips(tz, trip);
->>>       /*
->>>        * Alright, we handled this trip successfully.
->>> -     * So, start monitoring again.
->>> +     * So, start monitoring in polling mode if
->>> +     * trip is not using irq HW support.
->>>        */
->>> -    monitor_thermal_zone(tz);
->>> +    if (tz->ops->get_trip_irq_mode)
->>> +        tz->ops->get_trip_irq_mode(tz, trip, &irq_mode);
->>> +
->>> +    if (!irq_mode)
->>> +        monitor_thermal_zone(tz);
->>>   }
->> handle_thermal_trip() is called from thermal_zone_device_update(), and
->> it is invoked for every trip points.
->> say, you have a passive trip point 1 that supports irq_mode, and
->> another passive trip point 2 that does not support irq_mode,
->> monitor_thermal_zone() is still called in handle_thermal_trip(tz, 2),
->> and the passive timer will be activated anyway, do I miss something?
-> Yes, the passive timer will be activated in your example. It is correct
-> behavior and does not break anything.
-> case 1: there is 'k' passive trip points which have irq_mode and 1
-> additional which does not have 'irq_mode', the framework will start
-> polling but skip check for those 'k' trip points.
-> case 2: all of the passive trip points have irq_mode set, the framework
-> will not register 'scheduled_work' because it will not call 
-> 'monitor_thermal_zone()'.
-> This is the case of most Exynos platforms, but there is one exception 
-> which has 'case 1' with 2 trip points not supporting irq_mode.
-Do you suggest to cover the 'case 1'?
-It would be possible after adding a new enum THERMAL_FRAMEWORK_POLL, 
-then function:
-thermal_zone_device_check() will call
-thermal_zone_device_update(tz, THERMAL_FRAMEWORK_POLL)
-and in handle_thermal_trip() implement something like:
---------------8<----------------
-static void handle_thermal_trip(struct thermal_zone_device *tz, int trip)
-{
-	enum thermal_trip_type type;
-	bool irq_mode = false;
 
-	/* Ignore disabled trip points */
-	if (test_bit(trip, &tz->trips_disabled))
-		return;
+--s/l3CgOIzMHHjg/5
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	if (tz->ops->get_trip_irq_mode)
-		tz->ops->get_trip_irq_mode(tz, trip, &irq_mode)
+On Thu, Dec 06, 2018 at 01:06:43PM -0600, Rob Herring wrote:
+> On Thu, Dec 6, 2018 at 7:32 AM Andreas F=E4rber <afaerber@suse.de> wrote:
 
-	if (tz->notify_event == THERMAL_FRAMEWORK_POLL && irq_mode)
-		return;
-...
+> > I'd be okay with distinguishing source vs. install location. Due to the
+> > issue I mention below (and more) we can't use install_dtbs for openSUSE
+> > and had to reimplement it, which we'd need to (and can) adjust.
 
-	if (!irq_mode)
-		monitor_thermal_zone(tz);
-}
+> What would be needed for dtbs_install to work? arm64 needs to support
+> a flat install? If it doesn't work for Debian or openSUSE, I'm not
+> sure why we have it. So I'd like to make it work.
 
----------->8-----------------------
+Correct me if I'm wrong but as far as the flat vs directory thing goes
+isn't the issue that this winds up being a rename for an existing 32 bit
+system?  If you just install the dtbs in the default location then a
+bootloader or whatever that is hard coded to look for foo-bar.dtb won't
+see the new foo/foo-bar.dtb (or whatever) and will continue to use the
+old binary.  It's not the fact that that it's in a directory, it's the
+fact that the bootloader sees the name it needs to look for change (if
+it's looking on a filesystem at all).  This isn't a problem for arm64 as
+the location isn't changing, it's used directories from day one.
 
-I could implement it in v3 if you don't see that it add too much of mess 
-and agree for this approach.
+The issues with the existing install_dtbs sounded unrelated to this.
 
-Regards,
-Lukasz
+--s/l3CgOIzMHHjg/5
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> Regards,
-> Lukasz
-> 
->>
->> thanks,
->> rui
->>
->>>   static void update_temperature(struct thermal_zone_device *tz)
->>> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
->>> index 5f4705f..b064565 100644
->>> --- a/include/linux/thermal.h
->>> +++ b/include/linux/thermal.h
->>> @@ -103,6 +103,7 @@ struct thermal_zone_device_ops {
->>>           enum thermal_device_mode);
->>>       int (*get_trip_type) (struct thermal_zone_device *, int,
->>>           enum thermal_trip_type *);
->>> +    int (*get_trip_irq_mode) (struct thermal_zone_device *, int,
->>> bool *);
->>>       int (*get_trip_temp) (struct thermal_zone_device *, int, int
->>> *);
->>>       int (*set_trip_temp) (struct thermal_zone_device *, int,
->>> int);
->>>       int (*get_trip_hyst) (struct thermal_zone_device *, int, int
->>> *);
->>> @@ -196,6 +197,7 @@ struct thermal_zone_device {
->>>       struct thermal_attr *trip_temp_attrs;
->>>       struct thermal_attr *trip_type_attrs;
->>>       struct thermal_attr *trip_hyst_attrs;
->>> +    struct thermal_attr *trip_irq_mode_attrs;
->>>       void *devdata;
->>>       int trips;
->>>       unsigned long trips_disabled;    /* bitmap for disabled
->>> trips */
->>> @@ -364,6 +366,8 @@ struct thermal_zone_of_device_ops {
->>>    * @temperature: temperature value in miliCelsius
->>>    * @hysteresis: relative hysteresis in miliCelsius
->>>    * @type: trip point type
->>> + * @irq_mode: to not use polling in framework set support of HW irq
->>> (which will
->>> + *          be triggered when temperature reaches this level).
->>>    */
->>>   struct thermal_trip {
->>> @@ -371,6 +375,7 @@ struct thermal_trip {
->>>       int temperature;
->>>       int hysteresis;
->>>       enum thermal_trip_type type;
->>> +    bool irq_mode;
->>>   };
->>>   /* Function declarations */
->>
->>
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwJgVsACgkQJNaLcl1U
+h9CqNwf9Gd73ZBcBjAwmF4saOk7WmzgGXQCXdhUUOnAY1Jo8QsooXGgxUqlWuzd8
+TVYX6Cyd4QmOYYKZ/X50+s/JTKlKcR2NfAL003qLVxFCuxC2U4xN3O2qytr9PiQU
+t+EA7r991KUdwehZKtovl4xahmZX+D+AkXPJJTFZ7cClXzgvTtskN9uECqUdqF+Z
+0zwde297uq3FzgYgmLD3AXHqKMThXYM5gdF/D3ttL1tqRIESyJUGPsjVPPZz/pxm
+nmHwWzUT5TAjSGCo1dDia+yrpAoeh6qpiWSYuW811jJBJrX1CcphlBYK6BHTZXc8
+8q44jLd5ZlvOjJKxcAcyqTB1FhmW7w==
+=3s4t
+-----END PGP SIGNATURE-----
+
+--s/l3CgOIzMHHjg/5--
+
+
+--===============3299395466157933977==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3299395466157933977==--
