@@ -1,82 +1,27 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 1/3] ARM: dts: imx6qdl-sabresd: add light sensor support
-Date: Thu, 6 Dec 2018 01:46:10 +0000
-Message-ID: <DB3PR0402MB3916BEACB5693F50A41A8A04F5A90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1544001240-18622-1-git-send-email-Anson.Huang@nxp.com>
- <CAOMZO5ACrqY9FusUG7E-vMWJ4pKpVgw-yLOYqJncOJ+H9A5k5w@mail.gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH V2 2/4] ARM: dts: imx6qdl-sabresd: add light sensor support
+Date: Wed, 5 Dec 2018 23:48:24 -0200
+Message-ID: <CAOMZO5BUPAWJBb8XQrYF7dTfSdoBNbK85d10QN0e4+X=tUPbQg@mail.gmail.com>
+References: <1544060203-22163-1-git-send-email-Anson.Huang@nxp.com> <1544060203-22163-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5ACrqY9FusUG7E-vMWJ4pKpVgw-yLOYqJncOJ+H9A5k5w@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1544060203-22163-2-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Yongcai Huang <anson.huang@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIEZhYmlvDQoNCkJlc3QgUmVnYXJkcyENCkFuc29uIEh1YW5nDQoNCj4gLS0tLS1PcmlnaW5h
-bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRmFiaW8gRXN0ZXZhbSBbbWFpbHRvOmZlc3RldmFtQGdt
-YWlsLmNvbV0NCj4gU2VudDogMjAxOOW5tDEy5pyINeaXpSAyMDoxNQ0KPiBUbzogQW5zb24gSHVh
-bmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IENjOiBTaGF3biBHdW8gPHNoYXduZ3VvQGtlcm5l
-bC5vcmc+OyBTYXNjaGEgSGF1ZXINCj4gPHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU+OyBTYXNjaGEg
-SGF1ZXIgPGtlcm5lbEBwZW5ndXRyb25peC5kZT47IEZhYmlvDQo+IEVzdGV2YW0gPGZhYmlvLmVz
-dGV2YW1AbnhwLmNvbT47IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Ow0KPiBNYXJr
-IFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgbW9kZXJhdGVkIGxpc3Q6QVJNL0ZSRUVT
-Q0FMRSBJTVgNCj4gLyBNWEMgQVJNIEFSQ0hJVEVDVFVSRSA8bGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnPjsgb3Blbg0KPiBsaXN0Ok9QRU4gRklSTVdBUkUgQU5EIEZMQVRURU5F
-RCBERVZJQ0UgVFJFRSBCSU5ESU5HUw0KPiA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBs
-aW51eC1rZXJuZWwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+Ow0KPiBkbC1saW51eC1p
-bXggPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvM10gQVJNOiBk
-dHM6IGlteDZxZGwtc2FicmVzZDogYWRkIGxpZ2h0IHNlbnNvciBzdXBwb3J0DQo+IA0KPiBIaSBB
-bnNvbiwNCj4gDQo+IE9uIFdlZCwgRGVjIDUsIDIwMTggYXQgNzoyMCBBTSBBbnNvbiBIdWFuZyA8
-YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gd3JvdGU6DQo+ID4NCj4gPiBBZGQgaXNsMjkwMjMgbGln
-aHQgc2Vuc29yIHN1cHBvcnQgb24gaTJjMyBidXMsIHRoZSBsaWdodCBzZW5zb3Incw0KPiA+IHBv
-d2VyIGlzIGNvbnRyb2xsZWQgYnkgYSBmaXhlZCByZWd1bGF0b3IsIHNpbmNlIHRoZSBpc2wyOTAy
-MyBkcml2ZXINCj4gPiBhbmQgbW9zdCBvZiBvdGhlciBzZW5zb3JzIG9uIHNhbWUgYm9hcmQgbGlr
-ZSBtYWczMTEwIGFuZCBtbWE4NDUxIGRvDQo+ID4gTk9UIHN1cHBvcnQgcmVndWxhdG9yIG9wZXJh
-dGlvbiBjdXJyZW50bHksIHRoZXkgYXJlIGFsbCBjb250cm9sbGVkIGJ5DQo+ID4gdGhpcyByZWd1
-bGF0b3IsIHNvIHRoaXMgcGF0Y2ggYWxzbyBhZGRzIHRoZSBmaXhlZCByZWd1bGF0b3Igc3VwcG9y
-dA0KPiA+IGFuZCBtYWtlIGl0IGFsd2F5cyBvbi4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFu
-c29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBhcmNoL2FybS9i
-b290L2R0cy9pbXg2cWRsLXNhYnJlc2QuZHRzaSB8IDM0DQo+ID4gKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMzQgaW5zZXJ0aW9ucygrKQ0K
-PiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtc2FicmVzZC5k
-dHNpDQo+ID4gYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLXNhYnJlc2QuZHRzaQ0KPiA+IGlu
-ZGV4IGQ3Mzg5YjUuLmY5NmFlNTQgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMv
-aW14NnFkbC1zYWJyZXNkLmR0c2kNCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRs
-LXNhYnJlc2QuZHRzaQ0KPiA+IEBAIC02Miw2ICs2MiwxOSBAQA0KPiA+ICAgICAgICAgICAgICAg
-ICAgICAgICAgIGdwaW8gPSA8JmdwaW8zIDE5IDA+Ow0KPiA+ICAgICAgICAgICAgICAgICAgICAg
-ICAgIGVuYWJsZS1hY3RpdmUtaGlnaDsNCj4gPiAgICAgICAgICAgICAgICAgfTsNCj4gPiArDQo+
-ID4gKyAgICAgICAgICAgICAgIHJlZ19zZW5zb3I6IHJlZ3VsYXRvckA0IHsNCj4gDQo+IEkga25v
-dyB0aGF0IHlvdSBmb2xsb3dlZCB0aGUgZXhpc3RpbmcgcGF0dGVybiBmb3IgcmVndWxhdG9ycyBp
-biB0aGlzIGZpbGUsIGJ1dCBpdCBpcw0KPiBub3QgcmVjb21tZW5kZWQgdG8gcHV0IHJlZ3VsYXRv
-cnMgdW5kZXIgInNpbXBsZS1idXMiLg0KPiANCj4gSSB3b3VsZCBzdWdnZXN0IHlvdSB0byBtYWtl
-IGEgZmlyc3QgcGF0Y2ggb2YgdGhlIHNlcmllcyB0aGF0IHJlbW92ZXMgYWxsIG9mIHRoZQ0KPiBl
-eGlzdGluZyByZWd1bGF0b3JzIGZyb20gInNpbXBsZS1idXMiLCB0aGVuIHlvdSBhZGQgdGhpcyBz
-ZXJpZXMgb24gdG9wLg0KPiANCj4gVGhlbiB0aGlzIHJlZ3VsYXRvciBiZWNvbWVzOg0KPiANCj4g
-cmVnX2xpZ2h0X3NlbnNvcjogcmVndWxhdG9yLWxpZ2h0LXNlbnNvciB7DQo+IA0KPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicmVndWxhdG9yLWZpeGVkIjsNCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8ND47DQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICBwaW5jdHJsLTAgPSA8JnBpbmN0cmxfc2Vuc29yX3JlZz47DQo+IA0KPiBwaW5jdHJsX3Nl
-bnNvcl9yZWcgaXMgdG9vIGdlbmVyaWMuIFlvdSBjb3VsZCB1c2UgcGluY3RybF9saWdodF9zZW5z
-b3JfcmVnDQoNCkFzIHRoaXMgcmVndWxhdG9yIGNvbnRyb2xzIGFsbCB0aGUgc2Vuc29ycyBwb3dl
-ciBvbiBib2FyZCwgaW5jbHVkaW5nIGxpZ2h0IHNlbnNvciwNCm1hZ25ldG9tZXRlciBzZW5zb3Ig
-YW5kIGFjY2VsZXJvbWV0ZXIgc2Vuc29ycywgc28gSSB0aGluayBpdCBpcyBiZXR0ZXIgdG8NCnVz
-ZSAicGluY3RybF9zZW5zb3JzX3JlZyIgaW5zdGVhZCBvZiAicGluY3RybF9saWdodF9zZW5zb3Jf
-cmVnIiwgc28gSSB1c2UNCiIgcGluY3RybF9zZW5zb3JzX3JlZyIgaW4gVjIgcGF0Y2guDQoNCj4g
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW5hbWUgPSAic2Vuc29yLXN1
-cHBseSI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW1pbi1taWNyb3Zv
-bHQgPSA8MzMwMDAwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVndWxhdG9yLW1h
-eC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZ3Bp
-byA9IDwmZ3BpbzIgMzEgR1BJT19BQ1RJVkVfSElHSD47DQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgZW5hYmxlLWFjdGl2ZS1oaWdoOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJl
-Z3VsYXRvci1hbHdheXMtb247DQo+ID4gKyAgICAgICAgICAgICAgIH07DQo+ID4gICAgICAgICB9
-Ow0KPiA+DQo+ID4gICAgICAgICBncGlvLWtleXMgew0KPiA+IEBAIC00MjAsNiArNDMzLDE1IEBA
-DQo+ID4gICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8NyAyPjsNCj4gPiAgICAgICAgICAg
-ICAgICAgd2FrZXVwLWdwaW9zID0gPCZncGlvNiA3IDA+Ow0KPiA+ICAgICAgICAgfTsNCj4gPiAr
-DQo+ID4gKyAgICAgICBpc2wyOTAyM0A0NCB7DQo+IA0KPiBOb2RlIG5hbWVzIHNob3VsZCBiZSBn
-ZW5lcmljLCBzbzogbGlnaHQtc2Vuc29yQDQ0DQoNCkltcHJvdmVkIGl0IGluIFYyIHBhdGNoLCBh
-bmQgYWxzbyBhcHBseSB0aGUgcGF0Y2ggeW91IHNlbnQgbWUgYXMNCnRoZSBmaXJzdCBwYXRjaCwg
-cGxlYXNlIGhlbHAgcmV2aWV3IHRoZW0sIHRoYW5rcy4NCg0KQW5zb24uDQoNCg==
+On Wed, Dec 5, 2018 at 11:43 PM Anson Huang <anson.huang@nxp.com> wrote:
+>
+> Add isl29023 light sensor support on i2c3 bus, the light
+> sensor's power is controlled by a fixed regulator, since
+> the isl29023 driver and most of other sensors on same
+> board like mag3110 and mma8451 do NOT support regulator
+> operation currently, they are all controlled by this
+> regulator, so this patch also adds the fixed regulator
+> support and make it always on.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
