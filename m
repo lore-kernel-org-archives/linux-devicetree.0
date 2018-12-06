@@ -1,34 +1,58 @@
-From: Otavio Salvador <otavio.salvador@ossystems.com.br>
-Subject: Re: [PATCH v2 0/9] Improvements for i.MX7D PICO SoM and its baseboards
-Date: Thu, 6 Dec 2018 08:44:16 -0200
-Message-ID: <CAP9ODKoG-XRSOekKJWkD3Wg_dPsS2baRzPhuuJmmoT7-omBOtA@mail.gmail.com>
-References: <20181206100905.15053-1-otavio@ossystems.com.br>
+From: Peng Ma <peng.ma@nxp.com>
+Subject: RE: [v11 6/7] arm64: dts: ls1046a: add qdma device tree nodes
+Date: Thu, 6 Dec 2018 11:04:10 +0000
+Message-ID: <VI1PR04MB4431982D0AB333C4AC252D08EDA90@VI1PR04MB4431.eurprd04.prod.outlook.com>
+References: <20181030023604.34027-1-peng.ma@nxp.com>
+ <20181030023604.34027-6-peng.ma@nxp.com> <20181206010531.GR3987@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181206100905.15053-1-otavio@ossystems.com.br>
+In-Reply-To: <20181206010531.GR3987@dragon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Otavio Salvador <otavio@ossystems.com.br>
-Cc: linux-arm-kernel@lists.infradead.org, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Kernel development list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, NXP Linux Team <linux-imx@nxp.com>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "vkoul@kernel.org" <vkoul@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Leo Li <leoyang.li@nxp.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "zw@zh-kernel.org" <zw@zh-kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Wen He <wen.he_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 6, 2018 at 8:09 AM Otavio Salvador <otavio@ossystems.com.br> wrote:
->
-> This patchset rework the imx7d-pico SoM, its Pi baseboard
-> and add the Hobbit baseboard support as well.
->
-> Changes in v2:
-> - replace fsl,uart-has-rtscts with uart-has-rtscts
->
-> Fabio Estevam (8):
->   ARM: dts: imx7d-pico: Do not harcode the memory size
->   ARM: dts: imx7d-pico: Switch to SPDX identifier
->   ARM: dts: imx7d-pico-pi: Move SoM related part to imx7d-pico.dtsi
-
-I did the rebase; one thing worth mentioning is that I have "ARM: dts:
-imx7d-pico: Describe the Wifi clock" which is in your fixes tree.
-
--- 
-Otavio Salvador                             O.S. Systems
-http://www.ossystems.com.br        http://code.ossystems.com.br
-Mobile: +55 (53) 9 9981-7854          Mobile: +1 (347) 903-9750
+SGkgU2hhd24sDQoNCglUaGFua3MgZm9yIHlvdXIgcmV2aWV3ICwgSSBoYXZlIHVzZWQgR0lDX1NQ
+SSBhbmQgSVJRX1RZUEVfeHh4IHRvIG15IGR0c2ksIHBsZWFzZSBjaGVjayBhbmQgcmV2aWV3Lg0K
+DQpCZXN0IFJlZ2FyZCwNCglQZW5nDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZy
+b206IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj5TZW50OiAyMDE4xOoxMtTCNsjV
+IDk6MDYNCj5UbzogUGVuZyBNYSA8cGVuZy5tYUBueHAuY29tPg0KPkNjOiB2a291bEBrZXJuZWwu
+b3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBMZW8gTGkNCj48
+bGVveWFuZy5saUBueHAuY29tPjsgZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tOyB6d0B6aC1rZXJu
+ZWwub3JnOw0KPmRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJu
+ZWwub3JnOw0KPmxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZzsNCj5saW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgV2Vu
+IEhlIDx3ZW4uaGVfMUBueHAuY29tPg0KPlN1YmplY3Q6IFJlOiBbdjExIDYvN10gYXJtNjQ6IGR0
+czogbHMxMDQ2YTogYWRkIHFkbWEgZGV2aWNlIHRyZWUgbm9kZXMNCj4NCj5PbiBUdWUsIE9jdCAz
+MCwgMjAxOCBhdCAxMDozNjowM0FNICswODAwLCBQZW5nIE1hIHdyb3RlOg0KPj4gYWRkIHRoZSBx
+RE1BIGRldmljZSB0cmVlIG5vZGVzIGZvciBMUzEwNDZBIGRldmljZXMuDQo+Pg0KPj4gU2lnbmVk
+LW9mZi1ieTogV2VuIEhlIDx3ZW4uaGVfMUBueHAuY29tPg0KPj4gU2lnbmVkLW9mZi1ieTogUGVu
+ZyBNYSA8cGVuZy5tYUBueHAuY29tPg0KPj4gLS0tDQo+PiBjaGFuZ2UgaW4gdjExOg0KPj4gCS0g
+bm8NCj4+DQo+PiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0NmEuZHRz
+aSB8ICAgMjENCj4rKysrKysrKysrKysrKysrKysrKysNCj4+ICAxIGZpbGVzIGNoYW5nZWQsIDIx
+IGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2FyY2gv
+YXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLmR0c2kNCj5iL2FyY2gvYXJtNjQv
+Ym9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLmR0c2kNCj4+IGluZGV4IGVmODM3ODYuLmRj
+NjUzMTggMTAwNjQ0DQo+PiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wt
+bHMxMDQ2YS5kdHNpDQo+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wt
+bHMxMDQ2YS5kdHNpDQo+PiBAQCAtNzA0LDYgKzcwNCwyNyBAQA0KPj4gIAkJCQkJPDAwMDAgMCAw
+IDQgJmdpYyBHSUNfU1BJIDE1NA0KPklSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPj4gIAkJfTsNCj4+
+DQo+PiArCQlxZG1hOiBkbWEtY29udHJvbGxlckA4MzgwMDAwIHsNCj4+ICsJCQljb21wYXRpYmxl
+ID0gImZzbCxsczEwNDZhLXFkbWEiLCAiZnNsLGxzMTAyMWEtcWRtYSI7DQo+PiArCQkJcmVnID0g
+PDB4MCAweDgzODAwMDAgMHgwIDB4MTAwMD4sIC8qIENvbnRyb2xsZXIgcmVncyAqLw0KPj4gKwkJ
+CSAgICAgIDwweDAgMHg4MzkwMDAwIDB4MCAweDEwMDAwPiwgLyogU3RhdHVzIHJlZ3MgKi8NCj4+
+ICsJCQkgICAgICA8MHgwIDB4ODNhMDAwMCAweDAgMHg0MDAwMD47IC8qIEJsb2NrIHJlZ3MgKi8N
+Cj4+ICsJCQlpbnRlcnJ1cHRzID0gPDAgMTUzIDB4ND4sDQo+PiArCQkJCSAgICAgPDAgMzkgMHg0
+PiwNCj4+ICsJCQkJICAgICA8MCA0MCAweDQ+LA0KPj4gKwkJCQkgICAgIDwwIDQxIDB4ND4sDQo+
+PiArCQkJCSAgICAgPDAgNDIgMHg0PjsNCj4NCj5Vc2UgR0lDX1NQSSBhbmQgSVJRX1RZUEVfeHh4
+IGRlZmluZXMuDQo+DQo+U2hhd24NCj4NCj4+ICsJCQlpbnRlcnJ1cHQtbmFtZXMgPSAicWRtYS1l
+cnJvciIsICJxZG1hLXF1ZXVlMCIsDQo+PiArCQkJCSJxZG1hLXF1ZXVlMSIsICJxZG1hLXF1ZXVl
+MiIsICJxZG1hLXF1ZXVlMyI7DQo+PiArCQkJZG1hLWNoYW5uZWxzID0gPDg+Ow0KPj4gKwkJCWJs
+b2NrLW51bWJlciA9IDwxPjsNCj4+ICsJCQlibG9jay1vZmZzZXQgPSA8MHgxMDAwMD47DQo+PiAr
+CQkJZnNsLGRtYS1xdWV1ZXMgPSA8Mj47DQo+PiArCQkJc3RhdHVzLXNpemVzID0gPDY0PjsNCj4+
+ICsJCQlxdWV1ZS1zaXplcyA9IDw2NCA2ND47DQo+PiArCQkJYmlnLWVuZGlhbjsNCj4+ICsJCX07
+DQo+PiArDQo+PiAgCX07DQo+Pg0KPj4gIAlyZXNlcnZlZC1tZW1vcnkgew0KPj4gLS0NCj4+IDEu
+Ny4xDQo+Pg0K
