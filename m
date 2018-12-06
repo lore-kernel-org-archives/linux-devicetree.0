@@ -1,138 +1,56 @@
-From: Jolly Shah <JOLLYS@xilinx.com>
-Subject: RE: [PATCH 0/9] dt-bindings: Firmware node binding for ZynqMP core
-Date: Thu, 6 Dec 2018 23:08:33 +0000
-Message-ID: <DM5PR0201MB35254435007BB1A4272160A6B8A90@DM5PR0201MB3525.namprd02.prod.outlook.com>
-References: <1542412619-387-1-git-send-email-jollys@xilinx.com>
- <20181204220612.GA640@bogus>
- <SN4PR0201MB3536E825E836337D1535B812B8A80@SN4PR0201MB3536.namprd02.prod.outlook.com>
- <20181205222032.GA810@bogus>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Evan Green <evgreen@chromium.org>
+Subject: [PATCH v6 0/5] arm64: dts: qcom: sdm845: Add UFS DT nodes
+Date: Thu,  6 Dec 2018 15:31:59 -0800
+Message-ID: <20181206233205.193244-1-evgreen@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181205222032.GA810@bogus>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nava kishore Manne <navam@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rajan Vaja <RAJANV@xilinx.com>, Michal Simek <michals@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh@kernel.org>, Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Douglas Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, linux-arm-msm@vger.kernel.org, Can Guo <cang@codeaurora.org>, linux-kernel@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Manu Gautam <mgautam@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJy
-aW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3JnXQ0KPiBTZW50OiBXZWRuZXNkYXksIERlY2VtYmVy
-IDA1LCAyMDE4IDI6MjEgUE0NCj4gVG86IEpvbGx5IFNoYWggPEpPTExZU0B4aWxpbnguY29tPg0K
-PiBDYzogbWFyay5ydXRsYW5kQGFybS5jb207IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBO
-YXZhIGtpc2hvcmUgTWFubmUNCj4gPG5hdmFtQHhpbGlueC5jb20+OyBsaW51eC1rZXJuZWxAdmdl
-ci5rZXJuZWwub3JnOyBSYWphbiBWYWphDQo+IDxSQUpBTlZAeGlsaW54LmNvbT47IE1pY2hhbCBT
-aW1layA8bWljaGFsc0B4aWxpbnguY29tPjsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDAvOV0gZHQtYmluZGluZ3M6IEZpcm13
-YXJlIG5vZGUgYmluZGluZyBmb3IgWnlucU1QIGNvcmUNCj4gDQo+IE9uIFdlZCwgRGVjIDA1LCAy
-MDE4IGF0IDA4OjI5OjM2UE0gKzAwMDAsIEpvbGx5IFNoYWggd3JvdGU6DQo+ID4gSGkgUm9iLA0K
-PiA+DQo+ID4gVGhhbmtzIGZvciB0aGUgcmV2aWV3LiBQbGVhc2UgZmluZCBteSByZXNwb25zZXMg
-aW5saW5lLg0KPiANCj4gWW91IG5lZWQgdG8gZml4IHlvdXIgbWFpbCBjbGllbnQgdG8gd3JhcCBs
-aW5lcy4NCg0KVGhhbmtzIEkgd2lsbC4NCg0KPiANCj4gPiBUaGFua3MsDQo+ID4gSm9sbHkgU2hh
-aA0KPiA+DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogUm9i
-IEhlcnJpbmcgW21haWx0bzpyb2JoQGtlcm5lbC5vcmddDQo+ID4gPiBTZW50OiBUdWVzZGF5LCBE
-ZWNlbWJlciAwNCwgMjAxOCAyOjA2IFBNDQo+ID4gPiBUbzogSm9sbHkgU2hhaCA8Sk9MTFlTQHhp
-bGlueC5jb20+DQo+ID4gPiBDYzogbWFyay5ydXRsYW5kQGFybS5jb207IE1pY2hhbCBTaW1layA8
-bWljaGFsc0B4aWxpbnguY29tPjsgUmFqYW4gVmFqYQ0KPiA+ID4gPFJBSkFOVkB4aWxpbnguY29t
-PjsgTmF2YSBraXNob3JlIE1hbm5lIDxuYXZhbUB4aWxpbnguY29tPjsgbGludXgtDQo+IGFybS0N
-Cj4gPiA+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJu
-ZWwub3JnOw0KPiA+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IEpvbGx5IFNoYWggPEpP
-TExZU0B4aWxpbnguY29tPg0KPiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSCAwLzldIGR0LWJpbmRp
-bmdzOiBGaXJtd2FyZSBub2RlIGJpbmRpbmcgZm9yIFp5bnFNUA0KPiBjb3JlDQo+ID4gPg0KPiA+
-ID4gT24gRnJpLCBOb3YgMTYsIDIwMTggYXQgMDM6NTY6NTBQTSAtMDgwMCwgSm9sbHkgU2hhaCB3
-cm90ZToNCj4gPiA+ID4gQmFzZSBmaXJtd2FyZSBub2RlIGFuZCBjbG9jayBjaGlsZCBub2RlIGJp
-bmRpbmcgYXJlIHBhcnQgb2YgbWFpbmxpbmUNCj4ga2VybmVsLg0KPiA+ID4gVGhpcyBwYXRjaHNl
-dCBhZGRzIGRvY3VtZW50YXRpb24gdG8gZGVzY3JpYmUgcmVzdCBvZiB0aGUgZmlybXdhcmUgY2hp
-bGQNCj4gbm9kZQ0KPiA+ID4gYmluZGluZ3MuDQo+ID4gPiA+IENvbXBsZXRlIGZpcm13YXJlIERU
-IG5vZGUgZXhhbXBsZSBpcyBzaG93biBiZWxvdyBmb3IgZWFzZSBvZg0KPiA+ID4gdW5kZXJzdGFu
-ZGluZzoNCj4gPiA+DQo+ID4gPiBTaG91bGRuJ3QgdGhlcmUgYmUgYSBmcGdhIG1nciBub2RlIHRv
-bz8gQ2FsbGVkIHBjYXAgSUlSQy4NCj4gPiA+DQo+ID4gW0pvbGx5XSBBcyB5b3Ugc3VnZ2VzdGVk
-LCB3ZSBvbmx5IGFkZGVkIGNoaWxkIG5vZGVzIGlmIHRoZQ0KPiA+IHN1Yi1mdW5jdGlvbnMgaGF2
-ZSB0aGVpciBvd24gcmVzb3VyY2VzIChjbGtzLCBpcnFzLCBldGMuKS4gRlBHQSBkb2Vzbid0DQo+
-ID4gaGF2ZSBhbnkgcmVzb3VyY2VzIHNvIG5vdCBhZGRlZCAuIEZpcm13YXJlIGRyaXZlciB3b3Vs
-ZCBzdGlsbCByZWdpc3Rlcg0KPiA+IGl0IGFzIG1mZCBkZXZpY2UgdG8gaW5zdGFudGlhdGUgdGhl
-IGRyaXZlci4NCj4gDQo+IE9rYXksIGJ1dCB3b24ndCB0aGVpciBuZWVkIHRvIGJlIGNoaWxkIGRl
-dmljZXMgZm9yDQoNClRoZXJlIGFyZSBubyBmcGdhIGNoaWxkIGRldmljZXMuIFNob3VsZCBpdCBi
-ZSBtb3ZlZCBvdXQ/DQoNCj4gDQo+IA0KPiA+DQo+ID4gPiA+DQo+ID4gPiA+IGZpcm13YXJlIHsN
-Cj4gPiA+ID4gCXp5bnFtcF9maXJtd2FyZTogenlucW1wLWZpcm13YXJlIHsNCj4gPiA+ID4gCQlj
-b21wYXRpYmxlID0gInhsbngsenlucW1wLWZpcm13YXJlIjsNCj4gPiA+ID4gCQltZXRob2QgPSAi
-c21jIjsNCj4gPiA+ID4gCQkjcG93ZXItZG9tYWluLWNlbGxzID0gPDE+Ow0KPiA+ID4gPiAJCSNy
-ZXNldC1jZWxscyA9IDwxPjsNCj4gPiA+ID4NCj4gPiA+ID4gCQl6eW5xbXBfY2xrOiBjbG9jay1j
-b250cm9sbGVyIHsNCj4gPiA+ID4gCQkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0KPiA+ID4gPiAJCQlj
-b21wYXRpYmxlID0gInhsbngsenlucW1wLWNsayI7DQo+ID4gPiA+IAkJCWNsb2NrcyA9IDwmcHNz
-X3JlZl9jbGs+LCA8JnZpZGVvX2Nsaz4sDQo+ID4gPiA8JnBzc19hbHRfcmVmX2Nsaz4sIDwmYXV4
-X3JlZl9jbGs+LCA8Jmd0X2NyeF9yZWZfY2xrPjsNCj4gPiA+ID4gCQkJY2xvY2stbmFtZXMgPSAi
-cHNzX3JlZl9jbGsiLCAidmlkZW9fY2xrIiwNCj4gPiA+ICJwc3NfYWx0X3JlZl9jbGsiLCJhdXhf
-cmVmX2NsayIsICJndF9jcnhfcmVmX2NsayI7DQo+ID4gPiA+IAkJfTsNCj4gPiA+ID4NCj4gPiA+
-ID4gCQl6eW5xbXBfcG93ZXI6IHp5bnFtcC1wb3dlciB7DQo+ID4gPiA+IAkJCWNvbXBhdGlibGUg
-PSAieGxueCx6eW5xbXAtcG93ZXIiOw0KPiA+ID4gPiAJCQlpbnRlcnJ1cHRzID0gPDAgMzUgND47
-DQo+ID4gPiA+IAkJfTsNCj4gPiA+ID4NCj4gPiA+ID4gCQludm1lbV9maXJtd2FyZSB7DQo+ID4g
-PiA+IAkJCWNvbXBhdGlibGUgPSAieGxueCx6eW5xbXAtbnZtZW0tZnciOw0KPiA+ID4gPiAJCQkj
-YWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiA+ID4gCQkJI3NpemUtY2VsbHMgPSA8MT47DQo+ID4g
-PiA+DQo+ID4gPiA+IAkJCS8qIERhdGEgY2VsbHMgKi8NCj4gPiA+ID4gCQkJc29jX3JldmlzaW9u
-OiBzb2NfcmV2aXNpb24gew0KPiA+ID4gPiAJCQkJcmVnID0gPDB4MCAweDQ+Ow0KPiA+ID4gPiAJ
-CQl9Ow0KPiA+ID4gPiAJCX07DQo+ID4gPiA+DQo+ID4gPiA+IAkJYWZpMDogYWZpMCB7DQo+ID4g
-PiA+IAkJCWNvbXBhdGlibGUgPSAieGxueCxhZmktZnBnYSI7DQo+ID4gPiA+IAkJCWNvbmZpZy1h
-ZmkgPSA8MCAyPiwgPDEgMT4sIDwyIDE+Ow0KPiA+ID4gPiAJCX07DQo+ID4gPiA+DQo+ID4gPiA+
-IAkJcXNwaTogc3BpQGZmMGYwMDAwIHsNCj4gPiA+DQo+ID4gPiBXaHkgaXMgdGhpcyB1bmRlciBm
-aXJtd2FyZSBub2RlPw0KPiA+IFtKb2xseV0gUXNwaSBpcyBhIHVzZXIgb2YgZWVtaSBBUEkgcHJv
-dmlkZWQgYnkgZmlybXdhcmUgbm9kZSB0bw0KPiA+IHBlcmZvcm0gcHJpdmlsZWdlZCByZWdpc3Rl
-ciB3cml0ZXMuIEFsdGVybmF0aXZlbHksIHdlIGNhbiBrZWVwIHN1Y2gNCj4gPiB1c2VyIG5vZGVz
-IG91dHNpZGUgb2YgZmlybXdhcmUgbm9kZSBhbmQga2VlcCBub2RlcyB3aGljaCBmaXJtd2FyZSBp
-cw0KPiA+IHByb3ZpZGVyIGZvciBsaWtlIGNsb2NrLCByZXNldCwgcGlucyBhbmQgcG93ZXIuDQo+
-ID4gUGxlYXNlIHN1Z2dlc3QuDQo+IA0KPiBDaGlsZCBub2RlcyBvZiB0aGUgZmlybXdhcmUgc2hv
-dWxkIGJlIHByb3ZpZGVycywgbm90IGNvbnN1bWVycyAob2YgdGhlDQo+IGZpcm13YXJlKS4gSWYg
-eW91IGhhZCBhIGZpcm13YXJlIGludGVyZmFjZSB0byB0aGF0IHByb3ZpZGVkIGEgU1BJDQo+IGlu
-dGVyZmFjZSwgdGhlbiBpdCB3b3VsZCBiZSBoZXJlLiBCdXQganVzdCBoYXZpbmcgYSBzcGVjaWFs
-IG1lY2hhbmlzbSB0bw0KPiBhY2Nlc3MgdGhlIHJlZ2lzdGVycy4NCg0KT2sgZ290IGl0LiBTbyB3
-aWxsIG1vdmUgaXQgb3V0Lg0KDQo+IA0KPiA+ID4NCj4gPiA+ID4gCQkJY29tcGF0aWJsZSA9ICJ4
-bG54LHp5bnFtcC1xc3BpLTEuMCI7DQo+IA0KPiBJZiB0aGlzIHNhbWUgYmxvY2sgd29ya3Mgd2l0
-aCB1bnByaXZpbGVnZWQgYWNjZXNzZXMsIHRoZW4geW91IHdpbGwgbmVlZA0KPiBzb21lIHdheSB0
-byBkaXN0aW5ndWlzaCB0aGF0Lg0KPiANCj4gPiA+ID4gCQkJY2xvY2stbmFtZXMgPSAicmVmX2Ns
-ayIsICJwY2xrIjsNCj4gPiA+ID4gCQkJY2xvY2tzID0gPCZtaXNjX2NsayAmbWlzY19jbGs+Ow0K
-PiA+ID4gPiAJCQlpbnRlcnJ1cHRzID0gPDAgMTUgND47DQo+ID4gPiA+IAkJCWludGVycnVwdC1w
-YXJlbnQgPSA8JmdpYz47DQo+ID4gPiA+IAkJCW51bS1jcyA9IDwxPjsNCj4gPiA+ID4gCQkJcmVn
-ID0gPDB4MCAweGZmMGYwMDAwIDB4MTAwMD4sPDB4MCAweGMwMDAwMDAwDQo+ID4gPiAweDgwMDAw
-MDA+Ow0KPiA+ID4gPiAJCX07DQo+ID4gPiA+DQo+ID4gPiA+IAkJc2VyZGVzOiB6eW5xbXBfcGh5
-QGZkNDAwMDAwIHsNCj4gPiA+DQo+ID4gPiBBbmQgdGhpcz8NCj4gPg0KPiA+IFtKb2xseV0gU2Ft
-ZSBhcyBhYm92ZS4NCj4gPg0KPiA+ID4NCj4gPiA+ID4gCQkJY29tcGF0aWJsZSA9ICJ4bG54LHp5
-bnFtcC1wc2d0ciI7DQo+ID4gPiA+IAkJCXN0YXR1cyA9ICJva2F5IjsNCj4gPiA+ID4gCQkJcmVn
-ID0gPDB4MCAweGZkNDAwMDAwIDB4MCAweDQwMDAwPiwgPDB4MCAweGZkM2QwMDAwDQo+ID4gPiAw
-eDAgMHgxMDAwPiwNCj4gPiA+ID4gCQkJCTwweDAgMHhmZjVlMDAwMCAweDAgMHgxMDAwPjsNCj4g
-PiA+ID4gCQkJcmVnLW5hbWVzID0gInNlcmRlcyIsICJzaW91IiwgImxwZCI7DQo+ID4gPiA+DQo+
-ID4gPiA+IAkJCWxhbmUwOiBsYW5lQDAgew0KPiA+ID4gPiAJCQkJI3BoeS1jZWxscyA9IDw0PjsN
-Cj4gPiA+ID4gCQkJfTsNCj4gPiA+ID4gCQkJbGFuZTE6IGxhbmVAMSB7DQo+ID4gPiA+IAkJCQkj
-cGh5LWNlbGxzID0gPDQ+Ow0KPiA+ID4gPiAJCQl9Ow0KPiA+ID4gPiAJCQlsYW5lMjogbGFuZUAy
-IHsNCj4gPiA+ID4gCQkJCSNwaHktY2VsbHMgPSA8ND47DQo+ID4gPiA+IAkJCX07DQo+ID4gPiA+
-IAkJCWxhbmUzOiBsYW5lQDMgew0KPiA+ID4gPiAJCQkJI3BoeS1jZWxscyA9IDw0PjsNCj4gPiA+
-ID4gCQkJfTsNCj4gPiA+ID4gCQl9Ow0KPiA+ID4gPg0KPiA+ID4gPiAJCXBpbmN0cmxfdWFydDFf
-ZGVmYXVsdDogdWFydDEtZGVmYXVsdCB7DQo+ID4gPg0KPiA+ID4gVGhpcyBnb2VzIHVuZGVyIGEg
-cGluY3RybCBub2RlLg0KPiA+IFtKb2xseV0gUGluY29udHJvbCBub2RlIGlzIG5vdCBhZGRlZCBh
-cyBpdCBkb2Vzbid0IGhhdmUgYW55DQo+ID4gcmVzb3VyY2VzLiBBcyBJIHVuZGVyc3RhbmQsIHlv
-dSBzdWdnZXN0IHRvIHN0aWxsIGFkZCBwaW5jb250cm9sIG5vZGUNCj4gPiBhbmQgdGhpcyB1bmRl
-ciBwaW5jb250cm9sIG5vZGUuDQo+IA0KPiBUaGVzZSBub2RlcyBhcmUgcmVzb3VyY2VzLCBzbyB5
-ZXMgeW91IHNob3VsZCBoYXZlIGEgY2hpbGQgaGVyZS4NCg0KR290IGl0LiBXaWxsIGFkZCBwaW5j
-dHJsIG5vZGUgYWxvbmcgd2l0aCBiZWxvdyByZXNvdXJjZXMuDQoNCj4gPg0KPiA+ID4NCj4gPiA+
-ID4gCQkJbXV4IHsNCj4gPiA+ID4gCQkJCWdyb3VwcyA9ICJ1YXJ0MF80X2dycCI7DQo+ID4gPiA+
-IAkJCQlmdW5jdGlvbiA9ICJ1YXJ0MCI7DQo+ID4gPiA+IAkJCX07DQo+ID4gPiA+DQo+ID4gPiA+
-IAkJCWNvbmYgew0KPiA+ID4gPiAJCQkJZ3JvdXBzID0gInVhcnQwXzRfZ3JwIjsNCj4gPiA+ID4g
-CQkJCXNsZXctcmF0ZSA9IDxTTEVXX1JBVEVfU0xPVz47DQo+ID4gPiA+IAkJCQlpby1zdGFuZGFy
-ZCA9IDxJT19TVEFOREFSRF9MVkNNT1MxOD47DQo+ID4gPiA+IAkJCX07DQo+ID4gPiA+DQo+ID4g
-PiA+IAkJCWNvbmYtcnggew0KPiA+ID4gPiAJCQkJcGlucyA9ICJNSU8xOCI7DQo+ID4gPiA+IAkJ
-CQliaWFzLWhpZ2gtaW1wZWRhbmNlOw0KPiA+ID4gPiAJCQl9Ow0KPiA+ID4gPg0KPiA+ID4gPiAJ
-CQljb25mLXR4IHsNCj4gPiA+ID4gCQkJCXBpbnMgPSAiTUlPMTkiOw0KPiA+ID4gPiAJCQkJYmlh
-cy1kaXNhYmxlOw0KPiA+ID4gPiAJCQkJc2NobWl0dC1jbW9zID0gPFBJTl9JTlBVVF9UWVBFX0NN
-T1M+Ow0KPiA+ID4gPiAJCQl9Ow0KPiA+ID4gPiAJCX07DQo+ID4gPiA+IAkJenlucW1wLXI1LXJl
-bW90ZXByb2NAMCB7DQo+ID4gPg0KPiA+ID4gV3JvbmcgdW5pdC1hZGRyZXNzIGFuZCB0aGlzIGRv
-ZXNuJ3QgYmVsb25nIGhlcmUuDQo+ID4gW0pvbGx5XSAgQWdhaW4gYXMgaXQgaXMgb25lIG9mIHRo
-ZSB1c2VyIG9mIGZpcm13YXJlIEFQSXMsIGl0cyBrZXB0DQo+ID4gaGVyZS4gQWx0ZXJuYXRpdmVs
-eSwgd2UgY2FuIGtlZXAgc3VjaCB1c2VyIG5vZGVzIG91dHNpZGUgb2YgZmlybXdhcmUNCj4gPiBu
-b2RlIGFuZCBrZWVwIG5vZGVzIHdoaWNoIGZpcm13YXJlIGlzIHByb3ZpZGVyIGZvciBsaWtlIGNs
-b2NrLCByZXNldCwNCj4gPiBwaW5zIGFuZCBwb3dlci4NCj4gPiBQbGVhc2Ugc3VnZ2VzdC4NCj4g
-DQo+IFllcywgaXQgc2hvdWxkIGJlIG91dHNpZGUgdGhpcy4NCg0KT2suIA0KDQo+IA0KPiA+ID4N
-Cj4gPiA+ID4gCQkJY29tcGF0aWJsZSA9ICJ4bG54LHp5bnFtcC1yNS1yZW1vdGVwcm9jLTEuMCI7
-DQo+ID4gPg0KPiA+ID4gJ3JlbW90ZXByb2MnIGlzIHdoYXQgdGhlIGgvdyBibG9jayBpcyBjYWxs
-ZWQ/DQo+ID4NCj4gPiBbSm9sbHldIFRoZSBodyBibG9jayBpcyBjYWxsZWQgcnB1Lg0KPiANCj4g
-VGhlbiBjYWxsIGl0IHRoYXQgaW4gdGhlIERULg0KDQpPay4NCg0KVGhhbmtzLA0KSm9sbHkgU2hh
-aA0KDQo+IA0KPiBSb2INCg==
+Update the device tree bindings for the QMP PHY to properly
+specify the registers for dual-lane PHYs. Update the driver to use
+those new registers. Add the DT nodes for UFS on SDM845 and MTP.
+Finally, fix up the USB3 PHY on SDM845, which also has a dual-lane phy
+
+Andy/Kishon,
+Just a heads up that these changes stack on top of each other,
+and if taken through separate trees might break things a little until
+they come back together.
+
+Changes in v6:
+- Removed resets and reset-names (Bjorn)
+- Renamed nodes (Bjorn)
+- Fix renamed nodes in MTP (Bjorn)
+
+Changes in v5:
+- Fix incorrect register value in example, copied from real life!
+
+Changes in v4:
+- Remove "status" from DT binding example (Rob)
+
+Changes in v3:
+ - Removed erroneous fixup for USB UniPro PHY, which is not dual lane (Doug)
+
+Changes in v2:
+- Added dt bindings change, corresponding driver fixup, and USB PHY fixup
+- Renamed ufsphy to phy (Vivek)
+- Removed #clock-cells (Vivek)
+
+Can Guo (1):
+  arm64: dts: qcom: sdm845: Add UFS nodes for sdm845-mtp
+
+Evan Green (4):
+  dt-bindings: phy-qcom-qmp: Fix register underspecification
+  phy: qcom-qmp: Utilize fully-specified DT registers
+  arm64: dts: qcom: sdm845: add UFS controller
+  arm64: dts: qcom: sdm845: Add USB PHY lane two
+
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt  | 70 ++++++++++++++++---
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts       | 14 ++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 68 +++++++++++++++++-
+ drivers/phy/qualcomm/phy-qcom-qmp.c           | 51 ++++++++++----
+ 4 files changed, 181 insertions(+), 22 deletions(-)
+
+-- 
+2.18.1
