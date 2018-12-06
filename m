@@ -1,41 +1,48 @@
-From: David HERNANDEZ SANCHEZ <david.hernandezsanchez@st.com>
-Subject: [PATCH] thermal: stm32: read factory settings inside
- stm_thermal_prepare
-Date: Thu, 6 Dec 2018 13:23:32 +0000
-Message-ID: <1544102603-14899-2-git-send-email-david.hernandezsanchez@st.com>
-References: <1544102603-14899-1-git-send-email-david.hernandezsanchez@st.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 0/2] meson: Fix IRQ trigger type
+Date: Thu, 06 Dec 2018 14:26:41 +0100
+Message-ID: <b0b8a45b1c7189c3820064fee9e137a8d7cacf29.camel@baylibre.com>
+References: <20181204160447.27869-1-ccaione@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544102603-14899-1-git-send-email-david.hernandezsanchez@st.com>
-Content-Language: en-US
-Content-ID: <8A51B9C2EFA6614BAFFAA4D04E97DAB8@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181204160447.27869-1-ccaione@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Carlo Caione <ccaione@baylibre.com>, robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, martin.blumenstingl@googlemail.com
 List-Id: devicetree@vger.kernel.org
 
-Q2FsbGluZyBzdG1fdGhlcm1hbF9yZWFkX2ZhY3Rvcnlfc2V0dGluZ3MgYmVmb3JlIGNsb2NraW5n
-DQppbnRlcm5hbCBwZXJpcGhlcmFsIGNhdXNlcyBiYWQgcmVnaXN0ZXIgdmFsdWVzIGFuZCBtYWtl
-cw0KdGVtcGVyYXR1cmUgY29tcHV0YXRpb24gd3JvbmcuDQoNCkNhbGxpbmcgc3RtX3RoZXJtYWxf
-cmVhZF9mYWN0b3J5X3NldHRpbmdzIGluc2lkZQ0Kc3RtX3RoZXJtYWxfcHJlcGFyZSBmaXhlcyB0
-aGlzIHByb2JsZW0gYXMgaW50ZXJuYWwNCnBlcmlwaGVyYWwgaXMgd2VsbCBjbG9ja2VkIGF0IHRo
-aXMgc3RhZ2UuDQoNClNpZ25lZC1vZmYtYnk6IERhdmlkIEhlcm5hbmRleiBTYW5jaGV6IDxkYXZp
-ZC5oZXJuYW5kZXpzYW5jaGV6QHN0LmNvbT4NCkZpeGVzOiAxZDY5MzE1NSAoInRoZXJtYWw6IGFk
-ZCBzdG0zMiB0aGVybWFsIGRyaXZlciIpDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3RoZXJtYWwv
-c3Qvc3RtX3RoZXJtYWwuYyBiL2RyaXZlcnMvdGhlcm1hbC9zdC9zdG1fdGhlcm1hbC5jDQppbmRl
-eCA0NzYyM2RhLi5kYWExMjU3IDEwMDY0NA0KLS0tIGEvZHJpdmVycy90aGVybWFsL3N0L3N0bV90
-aGVybWFsLmMNCisrKyBiL2RyaXZlcnMvdGhlcm1hbC9zdC9zdG1fdGhlcm1hbC5jDQpAQCAtNTMy
-LDYgKzUzMiwxMCBAQCBzdGF0aWMgaW50IHN0bV90aGVybWFsX3ByZXBhcmUoc3RydWN0IHN0bV90
-aGVybWFsX3NlbnNvciAqc2Vuc29yKQ0KIAlpZiAocmV0KQ0KIAkJcmV0dXJuIHJldDsNCiANCisJ
-cmV0ID0gc3RtX3RoZXJtYWxfcmVhZF9mYWN0b3J5X3NldHRpbmdzKHNlbnNvcik7DQorCWlmIChy
-ZXQpDQorCQlnb3RvIHRoZXJtYWxfdW5wcmVwYXJlOw0KKw0KIAlyZXQgPSBzdG1fdGhlcm1hbF9j
-YWxpYnJhdGlvbihzZW5zb3IpOw0KIAlpZiAocmV0KQ0KIAkJZ290byB0aGVybWFsX3VucHJlcGFy
-ZTsNCkBAIC02MzYsMTAgKzY0MCw2IEBAIHN0YXRpYyBpbnQgc3RtX3RoZXJtYWxfcHJvYmUoc3Ry
-dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiAJLyogUG9wdWxhdGUgc2Vuc29yICovDQogCXNl
-bnNvci0+YmFzZSA9IGJhc2U7DQogDQotCXJldCA9IHN0bV90aGVybWFsX3JlYWRfZmFjdG9yeV9z
-ZXR0aW5ncyhzZW5zb3IpOw0KLQlpZiAocmV0KQ0KLQkJcmV0dXJuIHJldDsNCi0NCiAJc2Vuc29y
-LT5jbGsgPSBkZXZtX2Nsa19nZXQoJnBkZXYtPmRldiwgInBjbGsiKTsNCiAJaWYgKElTX0VSUihz
-ZW5zb3ItPmNsaykpIHsNCiAJCWRldl9lcnIoJnBkZXYtPmRldiwgIiVzOiBmYWlsZWQgdG8gZmV0
-Y2ggUENMSyBjbG9ja1xuIiwNCi0tIA0KMi43LjQNCg==
+On Tue, 2018-12-04 at 16:04 +0000, Carlo Caione wrote:
+> The wrong IRQ trigger type for the macirq was causing the connection
+> speed to drop after a few hours when stress testing the DUT. The fix
+> seems also to fix another long standing issue with EEE.
+> 
+> The fixes are tested on a AXG board but we think that the same fix is
+> valid also for all the others Amlogic SoC families.
+> 
+> Carlo Caione (2):
+>   arm64: dts: meson: Fix IRQ trigger type for macirq
+>   arm64: dts: meson: Remove eee-broken-1000t quirk
+> 
+>  arch/arm/boot/dts/meson.dtsi                        | 2 +-
+>  arch/arm/boot/dts/meson8b-odroidc1.dts              | 1 -
+>  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts      | 1 -
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi          | 2 +-
+>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi           | 2 +-
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 1 -
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi   | 1 -
+>  7 files changed, 3 insertions(+), 7 deletions(-)
+> 
+
+Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+
+on the S905 odroid-c2 and A113 s400
+Tested-by: Jerome Brunet <jbrunet@baylibre.com>
