@@ -1,156 +1,165 @@
-From: Otavio Salvador <otavio@ossystems.com.br>
-Subject: [PATCH v2 9/9] ARM: dts: imx7d-pico: Add the imx7d-pico-hobbit variant
-Date: Thu,  6 Dec 2018 08:09:05 -0200
-Message-ID: <20181206100905.15053-10-otavio@ossystems.com.br>
-References: <20181206100905.15053-1-otavio@ossystems.com.br>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v3 2/5] devfreq: add support for suspend/resume of a
+ devfreq device
+Date: Thu, 6 Dec 2018 11:13:58 +0100
+Message-ID: <d64d50db-375d-5fd5-5938-dcd0341ef2d7@partner.samsung.com>
+References: <1544007956-28889-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20181205110620eucas1p14de70dc092580b684a0304b5ce771605@eucas1p1.samsung.com>
+        <1544007956-28889-3-git-send-email-l.luba@partner.samsung.com>
+        <5C0878C0.4060500@samsung.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181206100905.15053-1-otavio@ossystems.com.br>
+In-Reply-To: <5C0878C0.4060500@samsung.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Fabio Estevam <festevam@gmail.com>, Otavio Salvador <otavio@ossystems.com.br>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, NXP Linux Team <linux-imx@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>
+To: Chanwoo Choi <cw00.choi@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+Hi Chanwoo,
 
-The imx7d-pico-hobbit contains a imx7d-pico SoM and a hobbit baseboard.
+On 12/6/18 2:17 AM, Chanwoo Choi wrote:
+> Hi Lukasz,
+> 
+> On 2018년 12월 05일 20:05, Lukasz Luba wrote:
+>> The patch prepares devfreq device for handling suspend/resume
+>> functionality. The new fields will store needed information during this
+>> process. Devfreq framework handles opp-suspend DT entry and there is no
+>> need of modyfications in the drivers code. It uses atomic variables to
+>> make sure no race condition affects the process.
+>>
+>> Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+>> Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   drivers/devfreq/devfreq.c | 47 +++++++++++++++++++++++++++++++++++++++++------
+>>   include/linux/devfreq.h   |  7 +++++++
+>>   2 files changed, 48 insertions(+), 6 deletions(-)
+> 
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Thank you for the review and comments for the whole patch series.
 
-Add support for it.
+Regards,
+Lukasz
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
----
-
-Changes in v2: None
-
- arch/arm/boot/dts/Makefile              |   1 +
- arch/arm/boot/dts/imx7d-pico-hobbit.dts | 105 ++++++++++++++++++++++++
- 2 files changed, 106 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx7d-pico-hobbit.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 1d6d916c2195..5c7dc0b4aaa8 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -572,6 +572,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
- 	imx7d-colibri-emmc-eval-v3.dtb \
- 	imx7d-colibri-eval-v3.dtb \
- 	imx7d-nitrogen7.dtb \
-+	imx7d-pico-hobbit.dtb \
- 	imx7d-pico-pi.dtb \
- 	imx7d-sbc-imx7.dtb \
- 	imx7d-sdb.dtb \
-diff --git a/arch/arm/boot/dts/imx7d-pico-hobbit.dts b/arch/arm/boot/dts/imx7d-pico-hobbit.dts
-new file mode 100644
-index 000000000000..7b2198a9372c
---- /dev/null
-+++ b/arch/arm/boot/dts/imx7d-pico-hobbit.dts
-@@ -0,0 +1,105 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+//
-+// Copyright 2017 NXP
-+
-+#include "imx7d-pico.dtsi"
-+
-+/ {
-+	model = "TechNexion PICO-IMX7D Board using Hobbit baseboard";
-+	compatible = "technexion,imx7d-pico-hobbit", "fsl,imx7d";
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_leds>;
-+
-+		led {
-+			label = "gpio-led";
-+			gpios = <&gpio2 13 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "imx7-sgtl5000";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&dailink_master>;
-+		simple-audio-card,frame-master = <&dailink_master>;
-+		simple-audio-card,cpu {
-+			sound-dai = <&sai1>;
-+		};
-+
-+		dailink_master: simple-audio-card,codec {
-+			sound-dai = <&sgtl5000>;
-+			clocks = <&clks IMX7D_AUDIO_MCLK_ROOT_CLK>;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	sgtl5000: codec@a {
-+		#sound-dai-cells = <0>;
-+		reg = <0x0a>;
-+		compatible = "fsl,sgtl5000";
-+		clocks = <&clks IMX7D_AUDIO_MCLK_ROOT_CLK>;
-+		VDDA-supply = <&reg_2p5v>;
-+		VDDIO-supply = <&reg_vref_1v8>;
-+	};
-+};
-+
-+&i2c4 {
-+	status = "okay";
-+
-+	adc081c: adc@50 {
-+		compatible = "ti,adc081c";
-+		reg = <0x50>;
-+		vref-supply = <&reg_3p3v>;
-+	};
-+};
-+
-+&ecspi3 {
-+	ads7846@0 {
-+		reg = <0>;
-+		compatible = "ti,ads7846";
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <7 0>;
-+		spi-max-frequency = <1000000>;
-+		pendown-gpio = <&gpio2 7 0>;
-+		vcc-supply = <&reg_3p3v>;
-+		ti,x-min = /bits/ 16 <0>;
-+		ti,x-max = /bits/ 16 <4095>;
-+		ti,y-min = /bits/ 16 <0>;
-+		ti,y-max = /bits/ 16 <4095>;
-+		ti,pressure-max = /bits/ 16 <1024>;
-+		ti,x-plate-ohms = /bits/ 16 <90>;
-+		ti,y-plate-ohms = /bits/ 16 <90>;
-+		ti,debounce-max = /bits/ 16 <70>;
-+		ti,debounce-tol = /bits/ 16 <3>;
-+		ti,debounce-rep = /bits/ 16 <2>;
-+		ti,settle-delay-usec = /bits/ 16 <150>;
-+		wakeup-source;
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog>;
-+
-+	pinctrl_hog: hoggrp {
-+		fsl,pins = <
-+			MX7D_PAD_EPDC_DATA00__GPIO2_IO0		0x14
-+			MX7D_PAD_EPDC_DATA01__GPIO2_IO1		0x14
-+			MX7D_PAD_EPDC_DATA02__GPIO2_IO2		0x14
-+			MX7D_PAD_EPDC_DATA03__GPIO2_IO3		0x14
-+			MX7D_PAD_EPDC_DATA05__GPIO2_IO5		0x14
-+			MX7D_PAD_EPDC_DATA12__GPIO2_IO12	0x14
-+			MX7D_PAD_EPDC_DATA07__GPIO2_IO7		0x14
-+		>;
-+	};
-+
-+	pinctrl_gpio_leds: gpioledsgrp {
-+		fsl,pins = <
-+			MX7D_PAD_EPDC_DATA13__GPIO2_IO13	0x14
-+		>;
-+	};
-+};
--- 
-2.19.2
+> 
+>>
+>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>> index a9fd61b..46517b6 100644
+>> --- a/drivers/devfreq/devfreq.c
+>> +++ b/drivers/devfreq/devfreq.c
+>> @@ -316,6 +316,10 @@ static int devfreq_set_target(struct devfreq *devfreq, unsigned long new_freq,
+>>   			"Couldn't update frequency transition information.\n");
+>>   
+>>   	devfreq->previous_freq = new_freq;
+>> +
+>> +	if (devfreq->suspend_freq)
+>> +		devfreq->resume_freq = cur_freq;
+>> +
+>>   	return err;
+>>   }
+>>   
+>> @@ -667,6 +671,9 @@ struct devfreq *devfreq_add_device(struct device *dev,
+>>   	}
+>>   	devfreq->max_freq = devfreq->scaling_max_freq;
+>>   
+>> +	devfreq->suspend_freq = dev_pm_opp_get_suspend_opp_freq(dev);
+>> +	atomic_set(&devfreq->suspend_count, 0);
+>> +
+>>   	dev_set_name(&devfreq->dev, "devfreq%d",
+>>   				atomic_inc_return(&devfreq_no));
+>>   	err = device_register(&devfreq->dev);
+>> @@ -867,14 +874,28 @@ EXPORT_SYMBOL(devm_devfreq_remove_device);
+>>    */
+>>   int devfreq_suspend_device(struct devfreq *devfreq)
+>>   {
+>> +	int ret;
+>> +
+>>   	if (!devfreq)
+>>   		return -EINVAL;
+>>   
+>> -	if (!devfreq->governor)
+>> +	if (atomic_inc_return(&devfreq->suspend_count) > 1)
+>>   		return 0;
+>>   
+>> -	return devfreq->governor->event_handler(devfreq,
+>> -				DEVFREQ_GOV_SUSPEND, NULL);
+>> +	if (devfreq->governor) {
+>> +		ret = devfreq->governor->event_handler(devfreq,
+>> +					DEVFREQ_GOV_SUSPEND, NULL);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +
+>> +	if (devfreq->suspend_freq) {
+>> +		ret = devfreq_set_target(devfreq, devfreq->suspend_freq, 0);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +
+>> +	return 0;
+>>   }
+>>   EXPORT_SYMBOL(devfreq_suspend_device);
+>>   
+>> @@ -888,14 +909,28 @@ EXPORT_SYMBOL(devfreq_suspend_device);
+>>    */
+>>   int devfreq_resume_device(struct devfreq *devfreq)
+>>   {
+>> +	int ret;
+>> +
+>>   	if (!devfreq)
+>>   		return -EINVAL;
+>>   
+>> -	if (!devfreq->governor)
+>> +	if (atomic_dec_return(&devfreq->suspend_count) >= 1)
+>>   		return 0;
+>>   
+>> -	return devfreq->governor->event_handler(devfreq,
+>> -				DEVFREQ_GOV_RESUME, NULL);
+>> +	if (devfreq->resume_freq) {
+>> +		ret = devfreq_set_target(devfreq, devfreq->resume_freq, 0);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +
+>> +	if (devfreq->governor) {
+>> +		ret = devfreq->governor->event_handler(devfreq,
+>> +					DEVFREQ_GOV_RESUME, NULL);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +
+>> +	return 0;
+>>   }
+>>   EXPORT_SYMBOL(devfreq_resume_device);
+>>   
+>> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
+>> index e4963b0..d985199 100644
+>> --- a/include/linux/devfreq.h
+>> +++ b/include/linux/devfreq.h
+>> @@ -131,6 +131,9 @@ struct devfreq_dev_profile {
+>>    * @scaling_min_freq:	Limit minimum frequency requested by OPP interface
+>>    * @scaling_max_freq:	Limit maximum frequency requested by OPP interface
+>>    * @stop_polling:	 devfreq polling status of a device.
+>> + * @suspend_freq:	 frequency of a device set during suspend phase.
+>> + * @resume_freq:	 frequency of a device set in resume phase.
+>> + * @suspend_count:	 suspend requests counter for a device.
+>>    * @total_trans:	Number of devfreq transitions
+>>    * @trans_table:	Statistics of devfreq transitions
+>>    * @time_in_state:	Statistics of devfreq states
+>> @@ -167,6 +170,10 @@ struct devfreq {
+>>   	unsigned long scaling_max_freq;
+>>   	bool stop_polling;
+>>   
+>> +	unsigned long suspend_freq;
+>> +	unsigned long resume_freq;
+>> +	atomic_t suspend_count;
+>> +
+>>   	/* information for device frequency transition */
+>>   	unsigned int total_trans;
+>>   	unsigned int *trans_table;
+>>
+> 
+> 
