@@ -1,39 +1,35 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: mmc: sdhci-msm: Clarify register requirements
-Date: Thu, 6 Dec 2018 15:39:00 -0800
-Message-ID: <CAE=gft7kmzB1p8uehzmzoSymdaT1vsGJhdy+jnNdP=BfNDbS6Q@mail.gmail.com>
-References: <20181206184522.118062-1-evgreen@chromium.org> <20181206184522.118062-2-evgreen@chromium.org>
- <CAD=FV=XWpLcevH72bchsKauqRpH3FSSKooQ7r6uoEgjN=4k_PQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 3/7] ASoC: dt-bindings: make enable-gpio
+ optional for simple amplifier
+Date: Thu, 6 Dec 2018 17:43:45 -0600
+Message-ID: <20181206234345.GA1842@bogus>
+References: <20181121051752.18387-1-anarsoul@gmail.com>
+ <20181121051752.18387-4-anarsoul@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=XWpLcevH72bchsKauqRpH3FSSKooQ7r6uoEgjN=4k_PQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, robh+dt@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, Ulf Hansson <ulf.hansson@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20181121051752.18387-4-anarsoul@gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Maxime Ripard <maxime.ripard@bootlin.com>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Vasily Khoruzhick <anarsoul@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 6, 2018 at 3:34 PM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
-> On Thu, Dec 6, 2018 at 10:45 AM Evan Green <evgreen@chromium.org> wrote:
-> >
-> > In sdhci-msm-v5 and beyond, the MCI registers are removed, so there is only
-> > one register region required.
-> >
-> > Signed-off-by: Evan Green <evgreen@chromium.org>
-> > ---
-> >
-> > Changes in v2: None
-> >
-> >  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> You probably should have skipped this patch from v2.  Ulf already
-> landed it.  It can be found at:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git/commit/?h=next&id=68fe87ac8a9309bbdc960cbd774725e44ea98b58
->
+On Tue, 20 Nov 2018 21:17:48 -0800, Vasily Khoruzhick wrote:
+> Amplifier may have no enable GPIO, so make this property optional
+> 
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/sound/simple-amplifier.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Oh, oops. Ignore this 1/3 patch then, but the other two are valid.
--Evan
+Reviewed-by: Rob Herring <robh@kernel.org>
