@@ -1,60 +1,69 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v5 1/6] fieldbus_dev: add Fieldbus Device subsystem.
-Date: Thu, 6 Dec 2018 15:07:50 +0100
-Message-ID: <20181206140750.GB18947@kroah.com>
-References: <20181204220224.27324-1-TheSven73@googlemail.com>
- <20181204220224.27324-2-TheSven73@googlemail.com>
- <20181205101659.GA27058@kroah.com>
- <CAGngYiXXrrqGxTt339EP53tschLgZ82eRGvGifHQw6pg=C88+Q@mail.gmail.com>
- <20181205191724.GA434@kroah.com>
- <CAGngYiWG74nDt1_hN0-bKCDRxm-f=N-Rnjtk02Vd7dgKtGRaBA@mail.gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: [PATCH] ARM: dts: exynos: remove display-port node from Arndale
+Date: Thu, 06 Dec 2018 15:16:35 +0100
+Message-ID: <20181206141635.15610-1-a.hajda@samsung.com>
+References: <CGME20181206141638eucas1p17743a2bf7d02fce13825007938e07340@eucas1p1.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGngYiWG74nDt1_hN0-bKCDRxm-f=N-Rnjtk02Vd7dgKtGRaBA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sven Van Asbroeck <thesven73@gmail.com>
-Cc: Sven Van Asbroeck <svendev@arcx.com>, robh+dt@kernel.org, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, treding@nvidia.com, David Lechner <david@lechnology.com>, noralf@tronnes.org, johan@kernel.org, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, Arnd Bergmann <arnd@arndb.de>, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 05, 2018 at 05:32:19PM -0500, Sven Van Asbroeck wrote:
-> Thanks :)
-> 
-> On Wed, Dec 5, 2018 at 2:17 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > Great, then call it a 'fieldbus' class, not "fieldbus_dev' class.
-> 
-> Small nit:
-> 
-> Hardware connected to a fieldbus comes in two distinct flavours:
-> - clients (e.g. thermometer, robotic arm) called "fieldbus devices"
-> - servers (e.g. a PLC) called "fieldbus controllers"
-> 
-> Their userspace APIs will probably differ quite a lot.
+Arndale boards have wires for DSI and eDP panels, but in-kernel support
+for eDP panels is broken for long time and breaks display support even on
+boards with DSI panels.
 
-But servers are going to be much more rare, and odds are userspace is
-not going to need to control anything with them, right?
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+---
+ arch/arm/boot/dts/exynos5250-arndale.dts | 25 ------------------------
+ 1 file changed, 25 deletions(-)
 
-> The userspace API created by the patch is only for clients a.k.a.
-> "fieldbus devices". That's why I'm writing 'fieldbus_dev' all over the place.
-> 
-> For simplicity, we could change that to just 'fieldbus'. But would this get
-> us in trouble when, at some point, we want to add a userspace API for
-> servers a.k.a. "fieldbus controllers" ?
-
-Ick, yeah, I guess so, but planning for future events is not something
-we do well at all.  Are you sure you will need fieldbus controllers as a
-class?
-
-And as these are really devices, why not make them a "device" and a bus?
-What type of topology do you have on these busses?  Are everything
-"flat" and connected directly to a PCI/USB/platform device?  Or are
-there multiple devices attached to a single controller?
-
-It really feels like you want to use 'struct device' and a bus_type and
-not a class here to me...
-
-thanks,
-
-greg k-h
+diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+index e2e5b3f28686..2ca9319f48f2 100644
+--- a/arch/arm/boot/dts/exynos5250-arndale.dts
++++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+@@ -181,31 +181,6 @@
+ 	};
+ };
+ 
+-&dp {
+-	status = "okay";
+-	samsung,color-space = <0>;
+-	samsung,color-depth = <1>;
+-	samsung,link-rate = <0x0a>;
+-	samsung,lane-count = <4>;
+-
+-	display-timings {
+-		native-mode = <&timing0>;
+-
+-		timing0: timing {
+-			/* 2560x1600 DP panel */
+-			clock-frequency = <50000>;
+-			hactive = <2560>;
+-			vactive = <1600>;
+-			hfront-porch = <48>;
+-			hback-porch = <80>;
+-			hsync-len = <32>;
+-			vback-porch = <16>;
+-			vfront-porch = <8>;
+-			vsync-len = <6>;
+-		};
+-	};
+-};
+-
+ &fimd {
+ 	status = "okay";
+ };
+-- 
+2.17.1
