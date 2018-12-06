@@ -1,39 +1,90 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] pinctrl: Use of_node_name_eq for node name comparisons
-Date: Thu, 6 Dec 2018 08:07:18 +0100
-Message-ID: <CAJKOXPfzAFqQX-WHkEmvhp4OGY_tFtouG7d1JOD+_SRjYzd3cA@mail.gmail.com>
-References: <20181205195050.4759-20-robh@kernel.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 2/2] remoteproc: sysmon: Wait for shutdown-ack/ind on
+ sysmon shutdown
+Date: Wed, 5 Dec 2018 23:16:08 -0800
+Message-ID: <20181206071608.GA31596@builder>
+References: <20181120210209.9029-1-sibis@codeaurora.org>
+ <20181120210209.9029-2-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181205195050.4759-20-robh@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181120210209.9029-2-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org
-Cc: robh@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>, s.nawrocki@samsung.com, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-gpio@vger.kernel.org
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, ohad@wizery.com, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 5 Dec 2018 at 20:51, Rob Herring <robh@kernel.org> wrote:
->
-> Convert string compares of DT node names to use of_node_name_eq helper
-> instead. This removes direct access to the node name pointer.
->
-> Cc: Tomasz Figa <tomasz.figa@gmail.com>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-samsung-soc@vger.kernel.org
-> Cc: linux-gpio@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+On Tue 20 Nov 13:02 PST 2018, Sibi Sankar wrote:
+
+> After sending a sysmon shutdown request to the SSCTL service on the
+> subsystem, wait for the service to send shutdown-ack interrupt or
+> an indication message back.
+> 
+
+So we get a reply immediate on the shutdown request, and then some time
+later we get either an indication or an interrupt to state that it's
+actually complete?
+
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
->  drivers/pinctrl/samsung/pinctrl-samsung.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/remoteproc/qcom_sysmon.c | 59 +++++++++++++++++++++++++++++++-
+>  1 file changed, 58 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/remoteproc/qcom_sysmon.c b/drivers/remoteproc/qcom_sysmon.c
+[..]
+> @@ -283,6 +311,14 @@ static void ssctl_request_shutdown(struct qcom_sysmon *sysmon)
+>  		dev_err(sysmon->dev, "shutdown request failed\n");
+>  	else
+>  		dev_dbg(sysmon->dev, "shutdown request completed\n");
+> +
+> +	if (sysmon->shutdown_irq > 0) {
+> +		ret = wait_for_completion_timeout(&sysmon->shutdown_comp,
+> +						  msecs_to_jiffies(5000));
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+5 * HZ
 
-Linus,
-I do not have anything queued in pinctrl samsung for next release, so
-maybe you could apply this directly?
+> +		if (!ret)
+> +			dev_err(sysmon->dev,
+> +				"timeout waiting for shutdown ack\n");
+> +	}
+>  }
+[..]
+> @@ -453,14 +499,25 @@ struct qcom_sysmon *qcom_add_sysmon_subdev(struct rproc *rproc,
+>  
+>  	sysmon->dev = rproc->dev.parent;
+>  	sysmon->rproc = rproc;
+> +	pdev = container_of(sysmon->dev, struct platform_device, dev);
+>  
+>  	sysmon->name = name;
+>  	sysmon->ssctl_instance = ssctl_instance;
+>  
+>  	init_completion(&sysmon->comp);
+> +	init_completion(&sysmon->shutdown_comp);
+>  	mutex_init(&sysmon->lock);
+>  
+> -	ret = qmi_handle_init(&sysmon->qmi, SSCTL_MAX_MSG_LEN, &ssctl_ops, NULL);
+> +	sysmon->shutdown_irq = platform_get_irq_byname(pdev, "shutdown-ack");
 
-Best regards,
-Krzysztof
+Use of_irq_get_byname() on sysmon->dev instead of relying on the fact
+that the remoteproc driver is a platform_device.
+
+Also, check and handle the return value - because an EPROBE_DEFER here
+will be turned into a -EINVAL by devm_request_threaded_irq().
+
+> +	ret = devm_request_threaded_irq(sysmon->dev, sysmon->shutdown_irq,
+> +					NULL, sysmon_shutdown_interrupt,
+> +					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+> +					"q6v5 shutdown-ack", sysmon);
+> +	if (ret)
+> +		dev_err(sysmon->dev, "failed to acquire shutdown-ack IRQ\n");
+
+In the event that sysmon->shutdown_irq is != -ENODATA, you should fail
+here.
+
+> +
+> +	ret = qmi_handle_init(&sysmon->qmi, SSCTL_MAX_MSG_LEN, &ssctl_ops,
+> +			      qmi_indication_handler);
+
+Regards,
+Bjorn
