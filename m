@@ -1,42 +1,81 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH] tty: Use of_node_name_{eq,prefix} for node name comparisons
-Date: Thu, 06 Dec 2018 14:34:56 +1100
-Message-ID: <87ftvbl44f.fsf@concordia.ellerman.id.au>
-References: <20181205195050.4759-27-robh@kernel.org>
+From: Abhinav Kumar <abhinavk@codeaurora.org>
+Subject: [PATCH v5] arm64: dts: sdm845: Add display nodes to MTP dts
+Date: Wed,  5 Dec 2018 19:35:10 -0800
+Message-ID: <1544067310-7306-1-git-send-email-abhinavk@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181205195050.4759-27-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, "David S. Miller" <davem@davemloft.net>, linuxppc-dev@lists.ozlabs.org, linux-serial@vger.kernel.org, sparclinux@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: dianders@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Abhinav Kumar <abhinavk@codeaurora.org>, bjorn.andersson@linaro.org, Sandeep Panda <spanda@codeaurora.org>, mka@chromium.org, seanpaul@chromium.org, hoegsberg@google.com
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh@kernel.org> writes:
-
-> Convert string compares of DT node names to use of_node_name_eq helper
-> instead. This removes direct access to the node name pointer.
->
-> For hvc, the code can also be simplified by using of_stdout pointer
-> instead of searching again for the stdout node.
->
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Jiri Slaby <jslaby@suse.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-serial@vger.kernel.org
-> Cc: sparclinux@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  drivers/tty/hvc/hvc_opal.c      |  2 +-
->  drivers/tty/hvc/hvc_vio.c       | 11 +----------
->  drivers/tty/serial/pmac_zilog.c |  4 ++--
-
-LGTM.
-
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-
-cheers
+QWRkIHRoZSBkaXNwbGF5IG5vZGVzIGNvbnRhaW5pbmcgaW5mb3JtYXRpb24gYWJvdXQgdGhlIHBh
+bmVsLApEU0kgY29uZmlndXJhdGlvbiBhbmQgYm9hcmQgc3BlY2lmaWMgcGluIGNvbmZpZ3VyYXRp
+b24gdG8gdGhlClNETTg0NSBNVFAgZGV2aWNlIHRyZWUgZmlsZS4KClRoaXMgcGF0Y2ggZGVwZW5k
+cyBvbiB0aGUgZm9sbG93aW5nOgoKaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Nl
+cmllcy81MTkwOS8KCkNoYW5nZXMgaW4gdjQ6CgktIHBhdGNoIGludHJvZHVjZWQgaW4gdGhlIHNl
+cmllcwoJLSBtb3ZlIGFyb3VuZCBhZGRlZCBub2RlcyB0byBwcmVzZXJ2ZSBhbHBoYWJldGljYWwg
+b3JkZXIgKERvdWcgQW5kZXJzb24pCgpDaGFuZ2VzIGluIHY1OgoJLSBpbmNsdWRlIGJvYXJkIHNw
+ZWNpZmljIHBpbiBjb25maWd1cmF0aW9uIChEb3VnIEFuZGVyc29uKQoJLSByZW1vdmUgZGlzcGxh
+eSB0aW1pbmcgZnJvbSB0aGUgcGFuZWwgbm9kZQoKU2lnbmVkLW9mZi1ieTogU2FuZGVlcCBQYW5k
+YSA8c3BhbmRhQGNvZGVhdXJvcmEub3JnPgpTaWduZWQtb2ZmLWJ5OiBKZXlrdW1hciBTYW5rYXJh
+biA8anNhbmthQGNvZGVhdXJvcmEub3JnPgpTaWduZWQtb2ZmLWJ5OiBBYmhpbmF2IEt1bWFyIDxh
+YmhpbmF2a0Bjb2RlYXVyb3JhLm9yZz4KLS0tCiBhcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2Rt
+ODQ1LW10cC5kdHMgfCAxMTggKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKIDEgZmls
+ZSBjaGFuZ2VkLCAxMTggaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9v
+dC9kdHMvcWNvbS9zZG04NDUtbXRwLmR0cyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04
+NDUtbXRwLmR0cwppbmRleCBkNjY3ZWVlLi5lZTYzNzgzIDEwMDY0NAotLS0gYS9hcmNoL2FybTY0
+L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LW10cC5kdHMKKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9x
+Y29tL3NkbTg0NS1tdHAuZHRzCkBAIC03LDYgKzcsNyBAQAogCiAvZHRzLXYxLzsKIAorI2luY2x1
+ZGUgPGR0LWJpbmRpbmdzL2dwaW8vZ3Bpby5oPgogI2luY2x1ZGUgPGR0LWJpbmRpbmdzL3JlZ3Vs
+YXRvci9xY29tLHJwbWgtcmVndWxhdG9yLmg+CiAjaW5jbHVkZSAic2RtODQ1LmR0c2kiCiAKQEAg
+LTM0MywxMSArMzQ0LDk4IEBACiAJfTsKIH07CiAKKyZkc2kwIHsKKwlzdGF0dXMgPSAib2theSI7
+CisJcWNvbSxkdWFsLWRzaS1tb2RlOworCXFjb20sbWFzdGVyLWRzaTsKKwlxY29tLHN5bmMtZHVh
+bC1kc2k7CisKKwl2ZGRhLXN1cHBseSA9IDwmdmRkYV9taXBpX2RzaTBfMXAyPjsKKworCXBhbmVs
+QDAgeworCQljb21wYXRpYmxlID0gInRydWx5LG50MzU1OTctMkstZGlzcGxheSI7CisJCXJlZyA9
+IDwwPjsKKworCQl2ZGRhLXN1cHBseSA9IDwmdnJlZ19sMTRhXzFwODg+OworCQl2ZGlzcHAtc3Vw
+cGx5ID0gPCZsYWJfcmVndWxhdG9yPjsKKwkJdmRpc3BuLXN1cHBseSA9IDwmaWJiX3JlZ3VsYXRv
+cj47CisKKwkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKKwkJcGluY3RybC0wID0gPCZkaXNw
+X21vZGVfc2VsICZsY2RfcmVzZXRfbj47CisKKwkJbW9kZS1ncGlvcyA9IDwmdGxtbSA1MiBHUElP
+X0FDVElWRV9ISUdIPjsKKwkJcmVzZXQtZ3Bpb3MgPSA8JnRsbW0gNiBHUElPX0FDVElWRV9MT1c+
+OworCisJCXBvcnRzIHsKKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJI3NpemUtY2VsbHMg
+PSA8MD47CisJCQlwb3J0QDAgeworCQkJCXJlZyA9IDwwPjsKKwkJCQlwYW5lbDBfaW46IGVuZHBv
+aW50IHsKKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkc2kwX291dD47CisJCQkJfTsKKwkJCX07
+CisKKwkJCXBvcnRAMSB7CisJCQkJcmVnID0gPDE+OworCQkJCXBhbmVsMV9pbjogZW5kcG9pbnQg
+eworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaTFfb3V0PjsKKwkJCQl9OworCQkJfTsKKwkJ
+fTsKKwl9OworCisJcG9ydHMgeworCQlwb3J0QDEgeworCQkJZW5kcG9pbnQgeworCQkJCXJlbW90
+ZS1lbmRwb2ludCA9IDwmcGFuZWwwX2luPjsKKwkJCQlkYXRhLWxhbmVzID0gPDAgMSAyIDM+Owor
+CQkJfTsKKwkJfTsKKwl9OworfTsKKworJmRzaTBfcGh5IHsKKwlzdGF0dXMgPSAib2theSI7CisJ
+dmRkcy1zdXBwbHkgPSA8JnZkZGFfbWlwaV9kc2kwX3BsbD47Cit9OworCismZHNpMSB7CisJc3Rh
+dHVzID0gIm9rYXkiOworCisJcWNvbSxkdWFsLWRzaS1tb2RlOworCXFjb20sc3luYy1kdWFsLWRz
+aTsKKworCXZkZGEtc3VwcGx5ID0gPCZ2ZGRhX21pcGlfZHNpMV8xcDI+OworCisJcG9ydHMgewor
+CQlwb3J0QDEgeworCQkJZW5kcG9pbnQgeworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmcGFuZWwx
+X2luPjsKKwkJCQlkYXRhLWxhbmVzID0gPDAgMSAyIDM+OworCQkJfTsKKwkJfTsKKwl9OworfTsK
+KworJmRzaTFfcGh5IHsKKwlzdGF0dXMgPSAib2theSI7CisJdmRkcy1zdXBwbHkgPSA8JnZkZGFf
+bWlwaV9kc2kxX3BsbD47Cit9OworCiAmaTJjMTAgewogCXN0YXR1cyA9ICJva2F5IjsKIAljbG9j
+ay1mcmVxdWVuY3kgPSA8NDAwMDAwPjsKIH07CiAKKyZtZHNzIHsKKwlzdGF0dXMgPSAib2theSI7
+Cit9OworCismbWRzc19tZHAgeworCXN0YXR1cyA9ICJva2F5IjsKK307CisKICZxdXB2M19pZF8x
+IHsKIAlzdGF0dXMgPSAib2theSI7CiB9OwpAQCAtNDQ0LDMgKzUzMiwzMyBAQAogCQliaWFzLXB1
+bGwtdXA7CiAJfTsKIH07CisKKyAvKiBQSU5DVFJMIC0gYm9hcmQtc3BlY2lmaWMgcGluY3RybCAq
+LworCismdGxtbSB7CisJZGlzcF9tb2RlX3NlbDogZGlzcC1tb2RlLXNlbCB7CisJCXBpbm11eCB7
+CisJCQlmdW5jdGlvbiA9ICJncGlvIjsKKwkJCXBpbnMgPSAiZ3BpbzUyIjsKKwkJfTsKKworCQlw
+aW5jb25mIHsKKwkJCXBpbnMgPSAiZ3BpbzUyIjsKKwkJCWRyaXZlLXN0cmVuZ3RoID0gPDg+Owor
+CQkJYmlhcy1kaXNhYmxlOworCQl9OworCX07CisKKwlsY2RfcmVzZXRfbjogbGNkLXJlc2V0LW4g
+eworCQlwaW5tdXggeworCQkJZnVuY3Rpb24gPSAiZ3BpbyI7CisJCQlwaW5zID0gImdwaW82IjsK
+KwkJfTsKKworCQlwaW5jb25mIHsKKwkJCXBpbnMgPSAiZ3BpbzYiOworCQkJZHJpdmUtc3RyZW5n
+dGggPSA8OD47CisJCQliaWFzLWRpc2FibGU7CisJCX07CisJfTsKK307Ci0tIApUaGUgUXVhbGNv
+bW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgdGhlIENvZGUgQXVyb3Jh
+IEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0CgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
