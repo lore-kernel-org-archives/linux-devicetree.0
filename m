@@ -1,46 +1,54 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH] dt-bindings: i2c: use correct vendor prefix for atmel's
- at24 EEPROMs
-Date: Thu, 6 Dec 2018 10:35:30 +0000
-Message-ID: <1007451d-fc3c-fdc6-f814-014673e7f1f4@axentia.se>
-References: <20181206094550.18082-1-brgl@bgdev.pl>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2] dt-bindings: rtc: add generic bindings
+Date: Thu, 6 Dec 2018 11:36:59 +0100
+Message-ID: <CAMuHMdX9xZgAiBeXCXxLRSJYMefsFwhH3NGC7=EYteFd6kODMQ@mail.gmail.com>
+References: <20181111193114.24307-1-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181206094550.18082-1-brgl@bgdev.pl>
-Content-Language: en-US
-Content-ID: <F27C24BDDB32A04FA22DE18D12612688@eurprd02.prod.outlook.com>
+In-Reply-To: <20181111193114.24307-1-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>
-Cc: "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-rtc@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0xMi0wNiAxMDo0NSwgQmFydG9zeiBHb2xhc3pld3NraSB3cm90ZToNCj4gVGhpcyBp
-cyBhIGZvbGxvdy11cCB0byBUaGllcnJ5J3MgcGF0Y2ggd2hpY2ggbWlzc2VkIGEgZmV3IG9jY3Vy
-ZW5jZXMuDQo+IA0KPiBDYzogVGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5nQGdtYWlsLmNv
-bT4NCj4gU2lnbmVkLW9mZi1ieTogQmFydG9zeiBHb2xhc3pld3NraSA8YnJnbEBiZ2Rldi5wbD4N
-Cg0KQWNrZWQtYnk6IFBldGVyIFJvc2luIDxwZWRhQGF4ZW50aWEuc2U+DQoNCldvbGZyYW0sIHlv
-dSBjYW4gdGFrZSB0aGlzIG9uZSBhcyB3ZWxsLCBvZiBjb3Vyc2UuDQoNCkNoZWVycywNClBldGVy
-DQoNCj4gLS0tDQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1h
-dDkxLnR4dCAgICAgICAgfCAyICstDQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvaTJjL2kyYy1tdXgtbHRjNDMwNi50eHQgfCAyICstDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDIg
-aW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1hdDkxLnR4dCBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLWF0OTEudHh0DQo+IGluZGV4IGVmOTczYTAz
-NDNjNy4uYjdjZWMxN2MzZGFmIDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvaTJjL2kyYy1hdDkxLnR4dA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1hdDkxLnR4dA0KPiBAQCAtMzMsNyArMzMsNyBAQCBpMmMw
-OiBpMmNAZmZmODQwMDAgew0KPiAgCWNsb2NrLWZyZXF1ZW5jeSA9IDw0MDAwMDA+Ow0KPiAgDQo+
-ICAJMjRjNTEyQDUwIHsNCj4gLQkJY29tcGF0aWJsZSA9ICIyNGM1MTIiOw0KPiArCQljb21wYXRp
-YmxlID0gImF0bWVsLDI0YzUxMiI7DQo+ICAJCXJlZyA9IDwweDUwPjsNCj4gIAkJcGFnZXNpemUg
-PSA8MTI4PjsNCj4gIAl9DQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvaTJjL2kyYy1tdXgtbHRjNDMwNi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvaTJjL2kyYy1tdXgtbHRjNDMwNi50eHQNCj4gaW5kZXggYzY2MWI5MDgzZWM2
-Li44YjFlNDljZGNlM2YgMTAwNjQ0DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9pMmMvaTJjLW11eC1sdGM0MzA2LnR4dA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1tdXgtbHRjNDMwNi50eHQNCj4gQEAgLTU0LDcgKzU0
-LDcgQEAgRXhhbXBsZToNCj4gIAkJCXJlZyA9IDwxPjsNCj4gIA0KPiAgCQkJZWVwcm9tQDUwIHsN
-Cj4gLQkJCQljb21wYXRpYmxlID0gImF0LDI0YzAyIjsNCj4gKwkJCQljb21wYXRpYmxlID0gImF0
-bWVsLDI0YzAyIjsNCj4gIAkJCQlyZWcgPSA8MHg1MD47DQo+ICAJCQl9Ow0KPiAgCQl9Ow0KPiAN
-Cg0K
+Hi Alexandre,
+
+On Sun, Nov 11, 2018 at 8:31 PM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+> Add generic binding documentation for the RTC subsystem.
+>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+
+Thanks for your patch!
+
+> new file mode 100644
+> index 000000000000..221b7da50aca
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/rtc.txt
+> @@ -0,0 +1,30 @@
+
+> +The following properties may not be supported by all drivers. However, if a
+> +driver wants to support one of the below features, it should adapt the bindings
+> +below.
+> +- trickle-resistor-ohms : Selected resistor for trickle charger. Should be given
+
+Can this resistor be less than 1 ohm?
+trickle-resistor-milli-ohms?
+
+> +                          if trickle charger should be enabled
+> +- trickle-diode-disable : Do not use internal trickle charger diode Should be
+> +                          given if internal trickle charger diode should be
+> +                          disabled
+> +- wakeup-source :         Enables wake up of host system on alarm
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
