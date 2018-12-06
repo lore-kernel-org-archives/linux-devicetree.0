@@ -1,122 +1,98 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V2 1/4] ARM: dts: imx6qdl-sabresd: Move regulators outside of
- "simple-bus"
-Date: Thu, 6 Dec 2018 01:42:30 +0000
-Message-ID: <1544060203-22163-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 2/4] ARM: dts: imx6qdl-sabresd: add light sensor support
+Date: Thu, 6 Dec 2018 01:42:34 +0000
+Message-ID: <1544060203-22163-2-git-send-email-Anson.Huang@nxp.com>
+References: <1544060203-22163-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1544060203-22163-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+Add isl29023 light sensor support on i2c3 bus, the light
+sensor's power is controlled by a fixed regulator, since
+the isl29023 driver and most of other sensors on same
+board like mag3110 and mma8451 do NOT support regulator
+operation currently, they are all controlled by this
+regulator, so this patch also adds the fixed regulator
+support and make it always on.
 
-It is not recommended to place regulators inside "simple-bus", so move
-them out to make it cleaner the addition of new regulators.
-
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 82 +++++++++++++++---------------=
-----
- 1 file changed, 36 insertions(+), 46 deletions(-)
+ arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 33 ++++++++++++++++++++++++++++++=
++++
+ 1 file changed, 33 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx=
 6qdl-sabresd.dtsi
-index d7389b5..66972e8 100644
+index 66972e8..d07c250 100644
 --- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-@@ -16,52 +16,42 @@
- 		reg =3D <0x10000000 0x40000000>;
+@@ -54,6 +54,18 @@
+ 		enable-active-high;
  	};
 =20
--	regulators {
--		compatible =3D "simple-bus";
--		#address-cells =3D <1>;
--		#size-cells =3D <0>;
--
--		reg_usb_otg_vbus: regulator@0 {
--			compatible =3D "regulator-fixed";
--			reg =3D <0>;
--			regulator-name =3D "usb_otg_vbus";
--			regulator-min-microvolt =3D <5000000>;
--			regulator-max-microvolt =3D <5000000>;
--			gpio =3D <&gpio3 22 0>;
--			enable-active-high;
--			vin-supply =3D <&swbst_reg>;
--		};
--
--		reg_usb_h1_vbus: regulator@1 {
--			compatible =3D "regulator-fixed";
--			reg =3D <1>;
--			regulator-name =3D "usb_h1_vbus";
--			regulator-min-microvolt =3D <5000000>;
--			regulator-max-microvolt =3D <5000000>;
--			gpio =3D <&gpio1 29 0>;
--			enable-active-high;
--			vin-supply =3D <&swbst_reg>;
--		};
--
--		reg_audio: regulator@2 {
--			compatible =3D "regulator-fixed";
--			reg =3D <2>;
--			regulator-name =3D "wm8962-supply";
--			gpio =3D <&gpio4 10 0>;
--			enable-active-high;
--		};
--
--		reg_pcie: regulator@3 {
--			compatible =3D "regulator-fixed";
--			reg =3D <3>;
--			pinctrl-names =3D "default";
--			pinctrl-0 =3D <&pinctrl_pcie_reg>;
--			regulator-name =3D "MPCIE_3V3";
--			regulator-min-microvolt =3D <3300000>;
--			regulator-max-microvolt =3D <3300000>;
--			gpio =3D <&gpio3 19 0>;
--			enable-active-high;
--		};
-+	reg_usb_otg_vbus: regulator-usb-otg-vbus {
-+		compatible =3D "regulator-fixed";
-+		regulator-name =3D "usb_otg_vbus";
-+		regulator-min-microvolt =3D <5000000>;
-+		regulator-max-microvolt =3D <5000000>;
-+		gpio =3D <&gpio3 22 0>;
-+		enable-active-high;
-+		vin-supply =3D <&swbst_reg>;
-+	};
-+
-+	reg_usb_h1_vbus: regulator-usb-h1-vbus {
-+		compatible =3D "regulator-fixed";
-+		regulator-name =3D "usb_h1_vbus";
-+		regulator-min-microvolt =3D <5000000>;
-+		regulator-max-microvolt =3D <5000000>;
-+		gpio =3D <&gpio1 29 0>;
-+		enable-active-high;
-+		vin-supply =3D <&swbst_reg>;
-+	};
-+
-+	reg_audio: regulator-audio {
-+		compatible =3D "regulator-fixed";
-+		regulator-name =3D "wm8962-supply";
-+		gpio =3D <&gpio4 10 0>;
-+		enable-active-high;
-+	};
-+
-+	reg_pcie: regulator-pcie {
++	reg_sensors: regulator-sensors {
 +		compatible =3D "regulator-fixed";
 +		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_pcie_reg>;
-+		regulator-name =3D "MPCIE_3V3";
++		pinctrl-0 =3D <&pinctrl_sensors_reg>;
++		regulator-name =3D "sensors-supply";
 +		regulator-min-microvolt =3D <3300000>;
 +		regulator-max-microvolt =3D <3300000>;
-+		gpio =3D <&gpio3 19 0>;
++		gpio =3D <&gpio2 31 GPIO_ACTIVE_HIGH>;
 +		enable-active-high;
- 	};
-=20
++		regulator-always-on;
++	};
++
  	gpio-keys {
+ 		compatible =3D "gpio-keys";
+ 		pinctrl-names =3D "default";
+@@ -410,6 +422,15 @@
+ 		interrupts =3D <7 2>;
+ 		wakeup-gpios =3D <&gpio6 7 0>;
+ 	};
++
++	light-sensor@44 {
++		compatible =3D "isil,isl29023";
++		reg =3D <0x44>;
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_i2c3_isl29023_int>;
++		interrupt-parent =3D <&gpio3>;
++		interrupts =3D <9 IRQ_TYPE_EDGE_FALLING>;
++	};
+ };
+=20
+ &iomuxc {
+@@ -511,6 +532,12 @@
+ 			>;
+ 		};
+=20
++		pinctrl_i2c3_isl29023_int: i2c3isl29023intgrp {
++			fsl,pins =3D <
++				MX6QDL_PAD_EIM_DA9__GPIO3_IO09		0xb0b1
++			>;
++		};
++
+ 		pinctrl_ipu1_csi0: ipu1csi0grp {
+ 			fsl,pins =3D <
+ 				MX6QDL_PAD_CSI0_DAT12__IPU1_CSI0_DATA12    0x1b0b0
+@@ -559,6 +586,12 @@
+ 			>;
+ 		};
+=20
++		pinctrl_sensors_reg: sensorsreggrp {
++			fsl,pins =3D <
++				MX6QDL_PAD_EIM_EB3__GPIO2_IO31		0x1b0b0
++			>;
++		};
++
+ 		pinctrl_uart1: uart1grp {
+ 			fsl,pins =3D <
+ 				MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
 --=20
 2.7.4
