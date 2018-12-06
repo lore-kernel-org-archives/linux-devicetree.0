@@ -1,55 +1,51 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v16 06/16] lib: fdt: add a helper function for handling
- memory range property
-Date: Thu, 6 Dec 2018 15:54:24 +0000
-Message-ID: <20181206155424.GA4422@arm.com>
-References: <20181115055254.2812-1-takahiro.akashi@linaro.org>
- <20181115055254.2812-7-takahiro.akashi@linaro.org>
- <CAL_JsqL4_Z5pVfoB3opjL7eTzZvhBJW7_aQS443quAAR0gGH1w@mail.gmail.com>
+From: Sean Paul <sean@poorly.run>
+Subject: Re: [DPU =?iso-8859-1?Q?PATCH=A0?= =?iso-8859-1?Q?=5D?= drm/msm/dpu:
+ Fix clock issue after bind failure
+Date: Thu, 6 Dec 2018 11:11:09 -0500
+Message-ID: <20181206161109.GZ154160@art_vandelay>
+References: <1544026907-24267-1-git-send-email-jshekhar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqL4_Z5pVfoB3opjL7eTzZvhBJW7_aQS443quAAR0gGH1w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@
+In-Reply-To: <1544026907-24267-1-git-send-email-jshekhar@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jayant Shekhar <jshekhar@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, seanpaul@chromium.org, abhinavk@codeaurora.org, hoegsberg@chromium.org, freedreno@lists.freedesktop.org, chandanu@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Thanks for reviewing this.
-
-On Thu, Dec 06, 2018 at 08:47:04AM -0600, Rob Herring wrote:
-> On Wed, Nov 14, 2018 at 11:52 PM AKASHI Takahiro
-> <takahiro.akashi@linaro.org> wrote:
-> >
-> > Added function, fdt_setprop_reg(), will be used later to handle
-> > kexec-specific property in arm64's kexec_file implementation.
-> > It will possibly be merged into libfdt in the future.
-> 
-> You generally can't modify libfdt files. Any changes will be blown
-> away with the next dtc sync (there's one in -next now). Though here
-> you are creating a new location with fdt code. lib/ is just a shim to
-> the actual libfdt code. Don't put any implementation there. You can
-> add this to drivers/of/fdt_address.c for the short term, but it still
-> needs to go upstream.
-> 
-> Otherwise, the implementation looks fine to me.
-
-I agree, but I don't think there's a real need for us to hack
-drivers/of/fdt_address.c in the meantime -- let's just target upstream
-and not carry this in the kernel.
-
-Akashi -- for now, I'll drop the kdump parts of this series which rely
-on this helper. The majority of the series is actually independent and
-can go in as-is.
-
-I've pushed out a kexec branch to the arm64 tree for you to take a look
-at:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=kexec
-
-Thanks,
-
-Will
+T24gV2VkLCBEZWMgMDUsIDIwMTggYXQgMDk6NTE6NDdQTSArMDUzMCwgSmF5YW50IFNoZWtoYXIg
+d3JvdGU6Cj4gSW4gY2FzZSBvZiBtc20gZHJtIGJpbmQgZmFpbHVyZSwgcG0gcnVudGltZSBwdXQg
+c3luYwo+IGlzIGNhbGxlZCBmcm9tIGRzaSBkcml2ZXIgd2hpY2ggaXNzdWVzIGFuIGFzeW5jaHJv
+bm91cwo+IHB1dCBvbiBtZHNzIGRldmljZS4gU3Vic2VxdWVudGx5IHdoZW4gZHB1X21kc3NfZGVz
+dHJveQo+IGlzIHRyaWdnZXJlZCB0aGUgY2hhbmdlIHdpbGwgbWFrZSBzdXJlIHRvIHB1dCB0aGUg
+bWRzcwo+IGRldmljZSBpbiBzdXNwZW5kIGFuZCBjbGVhcmluZyBwZW5kaW5nIHdvcmsgaWYgbm90
+Cj4gc2NoZWR1bGVkLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEpheWFudCBTaGVraGFyIDxqc2hla2hh
+ckBjb2RlYXVyb3JhLm9yZz4KClRoYW5rcyBmb3Igc2VuZGluZyB0aGlzLCBwdXNoZWQgdG8gZHB1
+LXN0YWdpbmcvZm9yLW5leHQKClNlYW4KCj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlz
+cC9kcHUxL2RwdV9tZHNzLmMgfCAxICsKPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCsp
+Cj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNz
+LmMgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jCj4gaW5kZXggMmQ2
+NjAyNS4uMDMwMjI5YSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1
+MS9kcHVfbWRzcy5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21k
+c3MuYwo+IEBAIC0xOTEsNiArMTkxLDcgQEAgc3RhdGljIHZvaWQgZHB1X21kc3NfZGVzdHJveShz
+dHJ1Y3QgZHJtX2RldmljZSAqZGV2KQo+ICAJc3RydWN0IGRzc19tb2R1bGVfcG93ZXIgKm1wID0g
+JmRwdV9tZHNzLT5tcDsKPiAgCWludCBpOwo+ICAKPiArCXBtX3J1bnRpbWVfc3VzcGVuZChkZXYt
+PmRldik7Cj4gIAlwbV9ydW50aW1lX2Rpc2FibGUoZGV2LT5kZXYpOwo+ICAJX2RwdV9tZHNzX2ly
+cV9kb21haW5fZmluaShkcHVfbWRzcyk7Cj4gIAlmcmVlX2lycShwbGF0Zm9ybV9nZXRfaXJxKHBk
+ZXYsIDApLCBkcHVfbWRzcyk7Cj4gLS0gCj4gVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVy
+LCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKPiBhIExpbnV4IEZv
+dW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cj4gCgotLSAKU2VhbiBQYXVsLCBTb2Z0d2Fy
+ZSBFbmdpbmVlciwgR29vZ2xlIC8gQ2hyb21pdW0gT1MKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
