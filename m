@@ -1,7 +1,7 @@
 From: Otavio Salvador <otavio@ossystems.com.br>
-Subject: [PATCH v2 4/9] ARM: dts: imx7d-pico: Pass the USBOTG1_PWR pinctrl
-Date: Thu,  6 Dec 2018 08:09:00 -0200
-Message-ID: <20181206100905.15053-5-otavio@ossystems.com.br>
+Subject: [PATCH v2 5/9] ARM: dts: imx7d-pico: Pass the Ethernet PHY reset GPIO
+Date: Thu,  6 Dec 2018 08:09:01 -0200
+Message-ID: <20181206100905.15053-6-otavio@ossystems.com.br>
 References: <20181206100905.15053-1-otavio@ossystems.com.br>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,8 @@ List-Id: devicetree@vger.kernel.org
 
 From: Fabio Estevam <festevam@gmail.com>
 
-Pass the USBOTG1_PWR pinctrl description in the USBOTG GPIO
-controlled regulator.
+Pass the "phy-reset-gpios" property in order to describe the GPIO
+that performs the Ethernet PHY reset.
 
 Signed-off-by: Fabio Estevam <festevam@gmail.com>
 Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
@@ -27,17 +27,24 @@ Changes in v2: None
  1 file changed, 2 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx7d-pico.dtsi b/arch/arm/boot/dts/imx7d-pico.dtsi
-index 7319e2ecec5c..cb30bded1e4a 100644
+index cb30bded1e4a..35791a1adabf 100644
 --- a/arch/arm/boot/dts/imx7d-pico.dtsi
 +++ b/arch/arm/boot/dts/imx7d-pico.dtsi
-@@ -41,6 +41,8 @@
+@@ -88,6 +88,7 @@
+ 	phy-mode = "rgmii";
+ 	phy-handle = <&ethphy0>;
+ 	fsl,magic-packet;
++	phy-reset-gpios = <&gpio6 11 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ 
+ 	mdio {
+@@ -290,6 +291,7 @@
+ 			MX7D_PAD_ENET1_RGMII_RD2__ENET1_RGMII_RD2	0x1
+ 			MX7D_PAD_ENET1_RGMII_RD3__ENET1_RGMII_RD3	0x1
+ 			MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL	0x1
++			MX7D_PAD_SD3_RESET_B__GPIO6_IO11                0x1  /* Ethernet reset */
+ 		>;
  	};
  
- 	reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usbotg1_pwr>;
- 		compatible = "regulator-fixed";
- 		regulator-name = "usb_otg1_vbus";
- 		regulator-min-microvolt = <5000000>;
 -- 
 2.19.2
