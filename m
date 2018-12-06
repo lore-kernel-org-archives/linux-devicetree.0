@@ -1,94 +1,160 @@
-From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH 10/14] dt-bindings: pinctrl: milbeaut: Add Milbeaut M10V
- pinctrl description
-Date: Thu, 6 Dec 2018 17:29:43 +0900
-Message-ID: <c71e44af-3a17-884c-78b4-686be8b293b1@socionext.com>
-References: <1542589336-13925-1-git-send-email-sugaya.taichi@socionext.com>
- <20181204231131.GA7366@bogus>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] media: Use of_node_name_eq for node name comparisons
+Date: Thu, 06 Dec 2018 11:06:53 +0200
+Message-ID: <11464259.SYJ8DM9ezq@avalon>
+References: <20181205195050.4759-13-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181204231131.GA7366@bogus>
-Content-Language: en-US
+In-Reply-To: <20181205195050.4759-13-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Benoit Parrot <bparrot@ti.com>, Hyun Kwon <hyun.kwon@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Rob,
 
-Thank you for your comments.
+Thank you for the patch.
 
-On 2018/12/05 8:11, Rob Herring wrote:
-> On Mon, Nov 19, 2018 at 10:02:12AM +0900, Sugaya Taichi wrote:
->> Add DT bindings document for Milbeaut M10V pinctrl.
->>
->> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
->> ---
->>   .../pinctrl/socionext,milbeaut-pinctrl.txt         | 33 ++++++++++++++++++++++
->>   1 file changed, 33 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pinctrl/socionext,milbeaut-pinctrl.txt
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/socionext,milbeaut-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/socionext,milbeaut-pinctrl.txt
->> new file mode 100644
->> index 0000000..7469189
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/socionext,milbeaut-pinctrl.txt
->> @@ -0,0 +1,33 @@
->> +Milbeaut SoCs pin controller
->> +
->> +Required properties:
->> +- compatible: should be one of the following:
->> +    "socionext,milbeaut-m10v-pinctrl"  - for m10v SoC
->> +- reg: offset and length of the register set.
->> +- reg-names: should be "pinctrl", "exiu".
->> +- gpio-cells; should be 2.
+On Wednesday, 5 December 2018 21:50:29 EET Rob Herring wrote:
+> Convert string compares of DT node names to use of_node_name_eq helper
+> instead. This removes direct access to the node name pointer.
 > 
-> #gpio-cells
+> Cc: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Kukjin Kim <kgene@kernel.org>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Cc: Benoit Parrot <bparrot@ti.com>
+> Cc: Hyun Kwon <hyun.kwon@xilinx.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Cc: linux-media@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-samsung-soc@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  drivers/media/platform/exynos4-is/media-dev.c | 12 ++++++------
+>  drivers/media/platform/ti-vpe/cal.c           |  4 ++--
+>  drivers/media/platform/xilinx/xilinx-tpg.c    |  2 +-
+>  drivers/media/v4l2-core/v4l2-fwnode.c         |  6 ++----
+>  4 files changed, 11 insertions(+), 13 deletions(-)
 > 
-> gpio-controller?
-
-Ah yes. I forgot to add it.
-Add it.
-
+> diff --git a/drivers/media/platform/exynos4-is/media-dev.c
+> b/drivers/media/platform/exynos4-is/media-dev.c index
+> 870501b0f351..ced14af56606 100644
+> --- a/drivers/media/platform/exynos4-is/media-dev.c
+> +++ b/drivers/media/platform/exynos4-is/media-dev.c
+> @@ -445,7 +445,7 @@ static int fimc_md_parse_port_node(struct fimc_md *fmd,
+>  	 */
+>  	np = of_get_parent(rem);
 > 
->> +- interrupt-cells: should be 2.
+> -	if (np && !of_node_cmp(np->name, "i2c-isp"))
+> +	if (of_node_name_eq(np, "i2c-isp"))
+>  		pd->fimc_bus_type = FIMC_BUS_TYPE_ISP_WRITEBACK;
+>  	else
+>  		pd->fimc_bus_type = pd->sensor_bus_type;
+> @@ -495,7 +495,7 @@ static int fimc_md_register_sensor_entities(struct
+> fimc_md *fmd) for_each_available_child_of_node(parent, node) {
+>  		struct device_node *port;
 > 
-> #interrupt-cells
+> -		if (of_node_cmp(node->name, "csis"))
+> +		if (!of_node_name_eq(node, "csis"))
+>  			continue;
+>  		/* The csis node can have only port subnode. */
+>  		port = of_get_next_child(node, NULL);
+> @@ -720,13 +720,13 @@ static int fimc_md_register_platform_entities(struct
+> fimc_md *fmd, continue;
 > 
-> interrupt-controller?
+>  		/* If driver of any entity isn't ready try all again later. */
+> -		if (!strcmp(node->name, CSIS_OF_NODE_NAME))
+> +		if (of_node_name_eq(node, CSIS_OF_NODE_NAME))
+>  			plat_entity = IDX_CSIS;
+> -		else if	(!strcmp(node->name, FIMC_IS_OF_NODE_NAME))
+> +		else if	(of_node_name_eq(node, FIMC_IS_OF_NODE_NAME))
 
-Add it also.
+You might want to s/if\t/if / while at it.
 
-Thanks,
-Sugaya Taichi
+>  			plat_entity = IDX_IS_ISP;
+> -		else if (!strcmp(node->name, FIMC_LITE_OF_NODE_NAME))
+> +		else if (of_node_name_eq(node, FIMC_LITE_OF_NODE_NAME))
+>  			plat_entity = IDX_FLITE;
+> -		else if	(!strcmp(node->name, FIMC_OF_NODE_NAME) &&
+> +		else if	(of_node_name_eq(node, FIMC_OF_NODE_NAME) &&
 
+And here too.
+
+Apart from that,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+>  			 !of_property_read_bool(node, "samsung,lcd-wb"))
+>  			plat_entity = IDX_FIMC;
 > 
->> +- clocks: phandle to the input clock.
->> +- interrupts: three interrupts specifer.
->> +- interrupt-names: corresponds "interrupts" factor.
->> +
->> +Example:
->> +	pinctrl: pinctrl@1d022000 {
->> +		compatible = "socionext,milbeaut-m10v-pinctrl";
->> +		reg = <0x1d022000 0x1000>,
->> +			<0x1c26f000 0x1000>;
->> +		reg-names = "pinctrl", "exiu";
->> +		gpio-controller;
->> +		#gpio-cells = <2>;
->> +		interrupt-controller;
->> +		#interrupt-cells = <2>;
->> +		clocks = <&dummy_clk>;
->> +		interrupts = <0 54 4>, <0 55 4>, <0 56 4>, <0 57 4>,
->> +				<0 58 4>, <0 59 4>, <0 60 4>, <0 61 4>,
->> +				<0 62 4>, <0 63 4>, <0 64 4>, <0 65 4>,
->> +				<0 66 4>, <0 67 4>, <0 68 4>, <0 69 4>;
->> +		interrupt-names = "pin-48", "pin-49", "pin-50", "pin-51",
->> +				"pin-52", "pin-53", "pin-54", "pin-55",
->> +				"pin-56", "pin-57", "pin-58", "pin-59",
->> +				"pin-60", "pin-61", "pin-62", "pin-63";
->> +	}
->> -- 
->> 1.9.1
->>
+> diff --git a/drivers/media/platform/ti-vpe/cal.c
+> b/drivers/media/platform/ti-vpe/cal.c index 95a093f41905..fc3c212b96e1
+> 100644
+> --- a/drivers/media/platform/ti-vpe/cal.c
+> +++ b/drivers/media/platform/ti-vpe/cal.c
+> @@ -1615,7 +1615,7 @@ of_get_next_port(const struct device_node *parent,
+>  				return NULL;
+>  			}
+>  			prev = port;
+> -		} while (of_node_cmp(port->name, "port") != 0);
+> +		} while (!of_node_name_eq(port, "port"));
+>  	}
+> 
+>  	return port;
+> @@ -1635,7 +1635,7 @@ of_get_next_endpoint(const struct device_node *parent,
+> if (!ep)
+>  			return NULL;
+>  		prev = ep;
+> -	} while (of_node_cmp(ep->name, "endpoint") != 0);
+> +	} while (!of_node_name_eq(ep, "endpoint"));
+> 
+>  	return ep;
+>  }
+> diff --git a/drivers/media/platform/xilinx/xilinx-tpg.c
+> b/drivers/media/platform/xilinx/xilinx-tpg.c index
+> 851d20dcd550..ce686b8d6cff 100644
+> --- a/drivers/media/platform/xilinx/xilinx-tpg.c
+> +++ b/drivers/media/platform/xilinx/xilinx-tpg.c
+> @@ -725,7 +725,7 @@ static int xtpg_parse_of(struct xtpg_device *xtpg)
+>  		const struct xvip_video_format *format;
+>  		struct device_node *endpoint;
+> 
+> -		if (!port->name || of_node_cmp(port->name, "port"))
+> +		if (!of_node_name_eq(port, "port"))
+>  			continue;
+> 
+>  		format = xvip_of_get_format(port);
+> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c
+> b/drivers/media/v4l2-core/v4l2-fwnode.c index 218f0da0ce76..849326241b17
+> 100644
+> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> @@ -564,8 +564,7 @@ int v4l2_fwnode_parse_link(struct fwnode_handle
+> *__fwnode, fwnode = fwnode_get_parent(__fwnode);
+>  	fwnode_property_read_u32(fwnode, port_prop, &link->local_port);
+>  	fwnode = fwnode_get_next_parent(fwnode);
+> -	if (is_of_node(fwnode) &&
+> -	    of_node_cmp(to_of_node(fwnode)->name, "ports") == 0)
+> +	if (is_of_node(fwnode) && of_node_name_eq(to_of_node(fwnode), "ports"))
+>  		fwnode = fwnode_get_next_parent(fwnode);
+>  	link->local_node = fwnode;
+> 
+> @@ -578,8 +577,7 @@ int v4l2_fwnode_parse_link(struct fwnode_handle
+> *__fwnode, fwnode = fwnode_get_parent(fwnode);
+>  	fwnode_property_read_u32(fwnode, port_prop, &link->remote_port);
+>  	fwnode = fwnode_get_next_parent(fwnode);
+> -	if (is_of_node(fwnode) &&
+> -	    of_node_cmp(to_of_node(fwnode)->name, "ports") == 0)
+> +	if (is_of_node(fwnode) && of_node_name_eq(to_of_node(fwnode), "ports"))
+>  		fwnode = fwnode_get_next_parent(fwnode);
+>  	link->remote_node = fwnode;
+
+-- 
+Regards,
+
+Laurent Pinchart
