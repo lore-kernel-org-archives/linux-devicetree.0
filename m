@@ -1,43 +1,72 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: rockpro64 fix video output chain
-Date: Thu, 06 Dec 2018 14:03:27 +0100
-Message-ID: <3141294.pN5WgFrMoD@phil>
-References: <20181201100817.20688-1-oskari@lemmela.net> <20181201100817.20688-3-oskari@lemmela.net> <09287391-d541-cddb-4168-55ca6fee3f16@mentor.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: [PATCH] dsa device tree bindings: fix typo and wrong example
+Date: Thu, 6 Dec 2018 14:05:13 +0100
+Message-ID: <20181206130513.GE22343@amd>
+References: <20181115195111.GA9946@amd>
+ <20181206130051.GA22343@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="Dzs2zDY0zgkG72+7"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <09287391-d541-cddb-4168-55ca6fee3f16@mentor.com>
+Content-Disposition: inline
+In-Reply-To: <20181206130051.GA22343@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: agajjar <Akash_Gajjar@mentor.com>
-Cc: Oskari Lemmela <oskari@lemmela.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+To: andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, netdev@vger.kernel.org, f.fainelli@gmail.com
+Cc: buytenh@marvell.com, buytenh@wantstofly.org, nico@marvell.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, kernel list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 5. Dezember 2018, 14:03:29 CET schrieb agajjar:
-> 
-> On 12/1/2018 3:38 PM, Oskari Lemmela wrote:
-> > Rockpro64 is not able boot if kernel is compiled with
-> > CONFIG_DRM_ROCKCHIP=m
-> >
-> > Enable Rockpro64 board HDMI output to fix issue.
-> 
-> Hi Oskari,
-> 
-> Could you please describe this issue in detail.
-> 
-> I am not able to reproduce this issue if CONFIG_DRM_ROCKCHIP is compile 
-> in or as a loadable module at the same time hdmi node is present or not.
 
-I've now simply adjusted the commit message to:
-"arm64: dts: rockchip: enable hdmi output on rk3399-rockpro64
-    
-The rockpro64 does have hdmi support, so add the necessary
-devicetree node to enable it."
+--Dzs2zDY0zgkG72+7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-and applied it for 4.21.
+   =20
+Fix typo and fix compatible value that is not actually permitted by the
+description in the example.
+  =20
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
 
-While it still would be good to find out where the issue comes from Oskari
-is seeing, the rockpro64 does have hdmi, so we can just enable it ;-)
+diff --git a/Documentation/devicetree/bindings/net/dsa/marvell.txt b/Docume=
+ntation/devicetree/bindings/net/dsa/marvell.txt
+index feb007af13cb..abf1be036ac5 100644
+--- a/Documentation/devicetree/bindings/net/dsa/marvell.txt
++++ b/Documentation/devicetree/bindings/net/dsa/marvell.txt
+@@ -41,7 +41,7 @@ Optional properties:
+ - mdio			: Container of PHY and devices on the switches MDIO
+ 			  bus.
+ - mdio?		: Container of PHYs and devices on the external MDIO
+-			  bus. The node must contains a compatible string of
++			  bus. The node must contain a compatible string of
+ 			  "marvell,mv88e6xxx-mdio-external"
+=20
+ Example:
+@@ -80,7 +80,7 @@ Example:
+ 		#interrupt-cells =3D <2>;
+=20
+ 		switch0: switch@0 {
+-			compatible =3D "marvell,mv88e6390";
++			compatible =3D "marvell,mv88e6190";
+ 			reg =3D <0>;
+ 			reset-gpios =3D <&gpio5 1 GPIO_ACTIVE_LOW>;
+=20
 
 
-Heiko
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--Dzs2zDY0zgkG72+7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlwJHokACgkQMOfwapXb+vLyigCeLkj/l6l1yqQPcXbuCB2AXFQ8
+upEAoL/9VzntmKoO2Ni1Y+ujCJXloBlo
+=L8yU
+-----END PGP SIGNATURE-----
+
+--Dzs2zDY0zgkG72+7--
