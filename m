@@ -1,54 +1,54 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/2] dt-bindings: rtc: add generic bindings
-Date: Thu, 6 Dec 2018 11:36:59 +0100
-Message-ID: <CAMuHMdX9xZgAiBeXCXxLRSJYMefsFwhH3NGC7=EYteFd6kODMQ@mail.gmail.com>
-References: <20181111193114.24307-1-alexandre.belloni@bootlin.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] dt-bindings: i2c: use correct vendor prefix for atmel's
+ at24 EEPROMs
+Date: Thu, 6 Dec 2018 11:44:21 +0100
+Message-ID: <20181206104421.a6njveg72dcguckp@katana>
+References: <20181206094550.18082-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="frabkcsks3ptsucc"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181111193114.24307-1-alexandre.belloni@bootlin.com>
+Content-Disposition: inline
+In-Reply-To: <20181206094550.18082-1-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-rtc@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Peter Rosin <peda@axentia.se>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre,
 
-On Sun, Nov 11, 2018 at 8:31 PM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
-> Add generic binding documentation for the RTC subsystem.
->
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+--frabkcsks3ptsucc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for your patch!
+On Thu, Dec 06, 2018 at 10:45:50AM +0100, Bartosz Golaszewski wrote:
+> This is a follow-up to Thierry's patch which missed a few occurences.
+>=20
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 
-> new file mode 100644
-> index 000000000000..221b7da50aca
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/rtc.txt
-> @@ -0,0 +1,30 @@
+Since I dropped Thierry's original patch, I wonder if it is okay with
+you to simply squash these hunks into it?
 
-> +The following properties may not be supported by all drivers. However, if a
-> +driver wants to support one of the below features, it should adapt the bindings
-> +below.
-> +- trickle-resistor-ohms : Selected resistor for trickle charger. Should be given
 
-Can this resistor be less than 1 ohm?
-trickle-resistor-milli-ohms?
+--frabkcsks3ptsucc
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +                          if trickle charger should be enabled
-> +- trickle-diode-disable : Do not use internal trickle charger diode Should be
-> +                          given if internal trickle charger diode should be
-> +                          disabled
-> +- wakeup-source :         Enables wake up of host system on alarm
+-----BEGIN PGP SIGNATURE-----
 
-Gr{oetje,eeting}s,
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlwI/YQACgkQFA3kzBSg
+KbYeQg//W8XFZYMc3vaOP7feUAcyLJvscCHna+LcDwfm+2obDWOX42aMuKHNzcYz
+fzoS1xIprZNAOBOfzA99qf5KQarbgK3dYO/rtdz4YD7v8Nqd+nFNIqUjlqqjPc9t
+8JHYbxcDvKNabLRpoKcXpvmWAnRKdsZE6fEQKfEUb9E4OYqpFqOp/+kYGiocBbhN
+i3lEwXDEv0bf5PLrBsZp8L2GQT64abRUoX8Z/05ioq5g9rlc/EnqQgzUwSPYA6iA
+LXfMtBW7QddHCG1+EUAPh4ezZwmhOrPdaTxUQ4vvJGs8qYYhasTrkEg1Dpf971kI
+FJ8mDfOfgZWRwuSgDWjgGASJEYnGLCTApo1F9zB84qTaVyxft1UiBNXDZ2VQutvl
+fdsbmK69MRPlIg44uxfYPHzU5gslXMpbNud0AYItGQ/M6rPu3JdKrMNCkPYQM8Uf
+WJBJWo8zptVpZ9dgW9Od695XWcZiMc528HLhnu8cHPmp2mXWQEWkvL4zEN3/hLRk
+Z4suJ21Q17Dlj8+XdUXgzt6w1o+/D7RJ8h8KrpM1ow6vebV/YdyGkGaTHur06R1U
+VUO6KPlsbgSP7TO5q+EAHMaLSmlkrKk4AeR37VnKr6bhAsjE0hoaIyMLOFQydlQP
+uAu8VmoW9VtbjrhcsBhE9XC63Nc88GU3a0H9gq4aJfdEP9vdCxA=
+=znMD
+-----END PGP SIGNATURE-----
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--frabkcsks3ptsucc--
