@@ -1,126 +1,42 @@
-From: Honghui Zhang <honghui.zhang@mediatek.com>
-Subject: Re: [PATCH 2/2] PCI: mediatek: Add controller support for MT7629
-Date: Thu, 6 Dec 2018 13:53:53 +0800
-Message-ID: <1544075633.3753.11.camel@mhfsdcap03>
-References: <1544058553-10936-1-git-send-email-jianjun.wang@mediatek.com>
-         <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH 1/2] dt-bindings: iio: accel: mma8452: add optional vcc-supply
+ property
+Date: Thu, 6 Dec 2018 06:23:28 +0000
+Message-ID: <1544077059-4471-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jianjun Wang <jianjun.wang@mediatek.com>
-Cc: ryder.lee@mediatek.com, bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, mark.rutland@arm.com, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, youlin.pei@mediatek.com
+To: "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "harinath922@gmail.com" <harinath922@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "martink@posteo.de" <martink@posteo.de>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-12-06 at 09:09 +0800, Jianjun Wang wrote:
-> MT7629 is an arm platform SoC which has the same PCIe IP with MT7622.
-> 
-> The read value of BAR0 is 0xffff_ffff, it's size will be calculated as 4GB
-> in arm64 but bogus alignment values at arm32, the pcie device and devices
+The accelerometer's power supply could be controlled by regulator
+on some platforms, add optional property "vcc-supply" to let device
+tree to pass phandle to the regulator to driver.
 
-:s /the pcie device /the bridge device
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ Documentation/devicetree/bindings/iio/accel/mma8452.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> behind this bridge will not be enabled. Fix it's BAR0 resource size to
-> guarantee the pcie devices will be enabled correctly.
-> 
-> The HW default value of its device id is invalid, fix it's device id to
-> match the hardware implementation.
-> 
-> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-> ---
->  drivers/pci/controller/pcie-mediatek.c | 26 ++++++++++++++++++++++++++
->  include/linux/pci_ids.h                |  1 +
->  2 files changed, 27 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> index d20cf461ba00..f8937cc3c87c 100644
-> --- a/drivers/pci/controller/pcie-mediatek.c
-> +++ b/drivers/pci/controller/pcie-mediatek.c
-> @@ -73,6 +73,7 @@
->  #define PCIE_MSI_VECTOR		0x0c0
->  
->  #define PCIE_CONF_VEND_ID	0x100
-> +#define PCIE_CONF_DEVICE_ID	0x102
->  #define PCIE_CONF_CLASS_ID	0x106
->  
->  #define PCIE_INT_MASK		0x420
-> @@ -135,12 +136,14 @@ struct mtk_pcie_port;
->  /**
->   * struct mtk_pcie_soc - differentiate between host generations
->   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-> + * @need_fix_device_id: whether this host's device ID needed to be fixed or not
->   * @ops: pointer to configuration access functions
->   * @startup: pointer to controller setting functions
->   * @setup_irq: pointer to initialize IRQ functions
->   */
->  struct mtk_pcie_soc {
->  	bool need_fix_class_id;
-> +	bool need_fix_device_id;
->  	struct pci_ops *ops;
->  	int (*startup)(struct mtk_pcie_port *port);
->  	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
-> @@ -692,6 +695,11 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
->  		writew(val, port->base + PCIE_CONF_CLASS_ID);
->  	}
->  
-> +	if (soc->need_fix_device_id) {
-> +		val = PCI_DEVICE_ID_MEDIATEK_7629;
-> +		writew(val, port->base + PCIE_CONF_DEVICE_ID);
-> +	}
-> +
->  	/* 100ms timeout value should be enough for Gen1/2 training */
->  	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
->  				 !!(val & PCIE_PORT_LINKUP_V2), 20,
-> @@ -1238,11 +1246,29 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
->  	.setup_irq = mtk_pcie_setup_irq,
->  };
->  
-> +static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
-> +	.need_fix_class_id = true,
-> +	.need_fix_device_id = true,
-> +	.ops = &mtk_pcie_ops_v2,
-> +	.startup = mtk_pcie_startup_port_v2,
-> +	.setup_irq = mtk_pcie_setup_irq,
-> +};
-> +
-> +static void mtk_fixup_bar_size(struct pci_dev *dev)
-> +{
-> +	struct resource *dev_res = &dev->resource[0];
-> +	/* 32bit resource length will calculate size to 0, set it smaller */
-> +	dev_res->end = 0xfffffffe;
-> +}
-
-I'm not sure assign the BAR0 size in driver to fit in the bogus
-alignment is a good idea. Seems the size value of 0xffff_fffe also is an
-arbitrary value.
-Do we have a chance to change the resource framework code to make it
-adopt this scenario?
-
-Thanks.
-
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MEDIATEK, PCI_DEVICE_ID_MEDIATEK_7629,
-> +			 mtk_fixup_bar_size);
-> +
->  static const struct of_device_id mtk_pcie_ids[] = {
->  	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
->  	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
->  	{ .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
->  	{ .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_mt7622 },
-> +	{ .compatible = "mediatek,mt7629-pcie", .data = &mtk_pcie_soc_mt7629 },
->  	{},
->  };
->  
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 69f0abe1ba1a..77b278bac3a8 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2126,6 +2126,7 @@
->  #define PCI_VENDOR_ID_MYRICOM		0x14c1
->  
->  #define PCI_VENDOR_ID_MEDIATEK		0x14c3
-> +#define PCI_DEVICE_ID_MEDIATEK_7629	0x7629
->  
->  #define PCI_VENDOR_ID_TITAN		0x14D2
->  #define PCI_DEVICE_ID_TITAN_010L	0x8001
+diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Docu=
+mentation/devicetree/bindings/iio/accel/mma8452.txt
+index 2100e9a..410279a 100644
+--- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
++++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+@@ -20,6 +20,8 @@ Optional properties:
+   - interrupt-names: should contain "INT1" and/or "INT2", the acceleromete=
+r's
+ 		     interrupt line in use.
+=20
++  - vcc-supply: phandle to the regulator that provides power to the accele=
+rometer.
++
+ Example:
+=20
+ 	mma8453fc@1d {
+--=20
+2.7.4
