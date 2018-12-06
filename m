@@ -1,130 +1,188 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH] clk: qcom: smd: Add support for MSM8998 rpm clocks
-Date: Thu,  6 Dec 2018 14:11:06 -0700
-Message-ID: <1544130666-32252-1-git-send-email-jhugo@codeaurora.org>
+From: Sean Wang <sean.wang@kernel.org>
+Subject: Re: [PATCH v2 2/4] dmaengine: mtk_uart_dma: add Mediatek uart DMA support
+Date: Thu, 6 Dec 2018 13:22:01 -0800
+Message-ID: <CAGp9LzpVuhWHBgL3qoXQKqoGAhCWY8FS7b_xVi2V=JeDAOz+8g@mail.gmail.com>
+References: <1543999380-7946-1-git-send-email-long.cheng@mediatek.com>
+ <1543999380-7946-3-git-send-email-long.cheng@mediatek.com>
+ <CAGp9LzqkOHPqVmAOR+YRotOb511BEDOpUWHc-YSjphF3Gpar=w@mail.gmail.com> <1544090140.28871.11.camel@mhfsdcap03>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1544090140.28871.11.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+To: long.cheng@mediatek.com
+Cc: vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org, jslaby@suse.com, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org, yt.shen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Add rpm smd clocks, PMIC and bus clocks which are required on MSM8998
-for clients to vote on.
+On Thu, Dec 6, 2018 at 1:55 AM Long Cheng <long.cheng@mediatek.com> wrote:
+>
+> On Wed, 2018-12-05 at 13:07 -0800, Sean Wang wrote:
+> > .
+> > On Wed, Dec 5, 2018 at 1:31 AM Long Cheng <long.cheng@mediatek.com> wrote:
+> > >
+> > > In DMA engine framework, add 8250 mtk dma to support it.
+> > >
+> > > Signed-off-by: Long Cheng <long.cheng@mediatek.com>
+> > > ---
+> > >  drivers/dma/mediatek/8250_mtk_dma.c |  894 +++++++++++++++++++++++++++++++++++
+> > >  drivers/dma/mediatek/Kconfig        |   11 +
+> > >  drivers/dma/mediatek/Makefile       |    1 +
+> > >  3 files changed, 906 insertions(+)
+> > >  create mode 100644 drivers/dma/mediatek/8250_mtk_dma.c
+> > >
+> > > diff --git a/drivers/dma/mediatek/8250_mtk_dma.c b/drivers/dma/mediatek/8250_mtk_dma.c
+> > > new file mode 100644
+> > > index 0000000..3454679
+> > > --- /dev/null
+> > > +++ b/drivers/dma/mediatek/8250_mtk_dma.c
+> > > @@ -0,0 +1,894 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Mediatek 8250 DMA driver.
+> > > + *
+> > > + * Copyright (c) 2018 MediaTek Inc.
+> > > + * Author: Long Cheng <long.cheng@mediatek.com>
+> > > + */
+> > > +
+> > > +#include <linux/clk.h>
+> > > +#include <linux/dmaengine.h>
+> > > +#include <linux/dma-mapping.h>
+> > > +#include <linux/err.h>
+> > > +#include <linux/init.h>
+> > > +#include <linux/interrupt.h>
+> > > +#include <linux/list.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of_dma.h>
+> > > +#include <linux/of_device.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/slab.h>
+> > > +#include <linux/spinlock.h>
+> > > +#include <linux/pm_runtime.h>
+> > > +#include <linux/iopoll.h>
+> > > +
+> > > +#include "../virt-dma.h"
+> > > +
+> > > +#define MTK_APDMA_DEFAULT_REQUESTS     127
+> > > +#define MTK_APDMA_CHANNELS             (CONFIG_SERIAL_8250_NR_UARTS * 2)
+> > > +
+> > > +#define VFF_EN_B               BIT(0)
+> > > +#define VFF_STOP_B             BIT(0)
+> > > +#define VFF_FLUSH_B            BIT(0)
+> > > +#define VFF_4G_SUPPORT_B       BIT(0)
+> > > +#define VFF_RX_INT_EN0_B       BIT(0)  /*rx valid size >=  vff thre*/
+> > > +#define VFF_RX_INT_EN1_B       BIT(1)
+> > > +#define VFF_TX_INT_EN_B                BIT(0)  /*tx left size >= vff thre*/
+> > > +#define VFF_WARM_RST_B         BIT(0)
+> > > +#define VFF_RX_INT_FLAG_CLR_B  (BIT(0) | BIT(1))
+> > > +#define VFF_TX_INT_FLAG_CLR_B  0
+> > > +#define VFF_STOP_CLR_B         0
+> > > +#define VFF_FLUSH_CLR_B                0
+> > > +#define VFF_INT_EN_CLR_B       0
+> > > +#define VFF_4G_SUPPORT_CLR_B   0
+> > > +
+> > > +/* interrupt trigger level for tx */
+> > > +#define VFF_TX_THRE(n)         ((n) * 7 / 8)
+> > > +/* interrupt trigger level for rx */
+> > > +#define VFF_RX_THRE(n)         ((n) * 3 / 4)
+> > > +
+> > > +#define MTK_DMA_RING_SIZE      0xffffU
+> > > +/* invert this bit when wrap ring head again*/
+> > > +#define MTK_DMA_RING_WRAP      0x10000U
+> > > +
+> > > +#define VFF_INT_FLAG           0x00
+> > > +#define VFF_INT_EN             0x04
+> > > +#define VFF_EN                 0x08
+> > > +#define VFF_RST                        0x0c
+> > > +#define VFF_STOP               0x10
+> > > +#define VFF_FLUSH              0x14
+> > > +#define VFF_ADDR               0x1c
+> > > +#define VFF_LEN                        0x24
+> > > +#define VFF_THRE               0x28
+> > > +#define VFF_WPT                        0x2c
+> > > +#define VFF_RPT                        0x30
+> > > +/*TX: the buffer size HW can read. RX: the buffer size SW can read.*/
+> > > +#define VFF_VALID_SIZE         0x3c
+> > > +/*TX: the buffer size SW can write. RX: the buffer size HW can write.*/
+> > > +#define VFF_LEFT_SIZE          0x40
+> > > +#define VFF_DEBUG_STATUS       0x50
+> > > +#define VFF_4G_SUPPORT         0x54
+> > > +
+> > > +struct mtk_dmadev {
+> > > +       struct dma_device ddev;
+> > > +       void __iomem *mem_base[MTK_APDMA_CHANNELS];
+> > > +       spinlock_t lock; /* dma dev lock */
+> > > +       struct tasklet_struct task;
+> > > +       struct list_head pending;
+> > > +       struct clk *clk;
+> > > +       unsigned int dma_requests;
+> > > +       bool support_33bits;
+> > > +       unsigned int dma_irq[MTK_APDMA_CHANNELS];
+> > > +       struct mtk_chan *ch[MTK_APDMA_CHANNELS];
+> > > +};
+> > > +
+> > > +struct mtk_chan {
+> > > +       struct virt_dma_chan vc;
+> > > +       struct list_head node;
+> > > +       struct dma_slave_config cfg;
+> > > +       void __iomem *base;
+> > > +       struct mtk_dma_desc *desc;
+> > > +
+> > > +       bool stop;
+> > > +       bool requested;
+> > > +
+> > > +       unsigned int dma_sig;
+> >
+> > the member can be removed as no real user would refer to it
+> >
+>
+> Ok, i will remove it at next patch
+>
+> > > +       unsigned int dma_ch;
+> >
+> > a chan_id is already included in struct dma_chan, we can reuse it
+> >
+>
+> chan_id is start from 0. but in this driver, dma info is stored to list.
+> if use port1, in filter_fn function, will set dma_ch to 2, 3(tx, rx). So
+> can't using chan_id
+>
 
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
----
- .../devicetree/bindings/clock/qcom,rpmcc.txt       |  1 +
- drivers/clk/qcom/clk-smd-rpm.c                     | 62 ++++++++++++++++++++++
- include/dt-bindings/clock/qcom,rpmcc.h             |  6 +++
- 3 files changed, 69 insertions(+)
+if you use of_dma_xlate_by_chan_id in of_dma_controller_register, the
+client device still can get the right channel with the appropriate
+chan_id expressed in dmas property in dts.
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-index 87b4949..16c4293 100644
---- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-+++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-@@ -17,6 +17,7 @@ Required properties :
- 			"qcom,rpmcc-apq8064", "qcom,rpmcc"
- 			"qcom,rpmcc-msm8996", "qcom,rpmcc"
- 			"qcom,rpmcc-qcs404", "qcom,rpmcc"
-+			"qcom,rpmcc-msm8998", "qcom,rpmcc"
- 
- - #clock-cells : shall contain 1
- 
-diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
-index d3aadae..269304e 100644
---- a/drivers/clk/qcom/clk-smd-rpm.c
-+++ b/drivers/clk/qcom/clk-smd-rpm.c
-@@ -655,11 +655,73 @@ static int clk_smd_rpm_enable_scaling(struct qcom_smd_rpm *rpm)
- 	.num_clks = ARRAY_SIZE(qcs404_clks),
- };
- 
-+/* msm8998 */
-+DEFINE_CLK_SMD_RPM(msm8998, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
-+DEFINE_CLK_SMD_RPM(msm8998, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
-+DEFINE_CLK_SMD_RPM(msm8998, ce1_clk, ce1_a_clk, QCOM_SMD_RPM_CE_CLK, 0);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, div_clk1, div_clk1_a, 0xb);
-+DEFINE_CLK_SMD_RPM(msm8998, ipa_clk, ipa_a_clk, QCOM_SMD_RPM_IPA_CLK, 0);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, bb_clk1, bb_clk1_a, 1);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, bb_clk2, bb_clk2_a, 2);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, bb_clk3_pin, bb_clk3_a_pin, 3);
-+DEFINE_CLK_SMD_RPM(msm8998, mmssnoc_axi_rpm_clk, mmssnoc_axi_rpm_a_clk,
-+		   QCOM_SMD_RPM_MMAXI_CLK, 0);
-+DEFINE_CLK_SMD_RPM(msm8998, aggre1_noc_clk, aggre1_noc_a_clk,
-+		   QCOM_SMD_RPM_AGGR_CLK, 1);
-+DEFINE_CLK_SMD_RPM(msm8998, aggre2_noc_clk, aggre2_noc_a_clk,
-+		   QCOM_SMD_RPM_AGGR_CLK, 2);
-+DEFINE_CLK_SMD_RPM_QDSS(msm8998, qdss_clk, qdss_a_clk,
-+			QCOM_SMD_RPM_MISC_CLK, 1);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, rf_clk1, rf_clk1_a, 4);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk2_pin, rf_clk2_a_pin, 5);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, rf_clk3, rf_clk3_a, 6);
-+DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk3_pin, rf_clk3_a_pin, 6);
-+static struct clk_smd_rpm *msm8998_clks[] = {
-+	[RPM_SMD_SNOC_CLK] = &msm8998_snoc_clk,
-+	[RPM_SMD_SNOC_A_CLK] = &msm8998_snoc_a_clk,
-+	[RPM_SMD_CNOC_CLK] = &msm8998_cnoc_clk,
-+	[RPM_SMD_CNOC_A_CLK] = &msm8998_cnoc_a_clk,
-+	[RPM_SMD_CE1_CLK] = &msm8998_ce1_clk,
-+	[RPM_SMD_CE1_A_CLK] = &msm8998_ce1_a_clk,
-+	[RPM_SMD_DIV_CLK1] = &msm8998_div_clk1,
-+	[RPM_SMD_DIV_A_CLK1] = &msm8998_div_clk1_a,
-+	[RPM_SMD_IPA_CLK] = &msm8998_ipa_clk,
-+	[RPM_SMD_IPA_A_CLK] = &msm8998_ipa_a_clk,
-+	[RPM_SMD_BB_CLK1] = &msm8998_bb_clk1,
-+	[RPM_SMD_BB_CLK1_A] = &msm8998_bb_clk1_a,
-+	[RPM_SMD_BB_CLK2] = &msm8998_bb_clk2,
-+	[RPM_SMD_BB_CLK2_A] = &msm8998_bb_clk2_a,
-+	[RPM_SMD_BB_CLK3_PIN] = &msm8998_bb_clk3_pin,
-+	[RPM_SMD_BB_CLK3_A_PIN] = &msm8998_bb_clk3_a_pin,
-+	[RPM_SMD_MMAXI_CLK] = &msm8998_mmssnoc_axi_rpm_clk,
-+	[RPM_SMD_MMAXI_A_CLK] = &msm8998_mmssnoc_axi_rpm_a_clk,
-+	[RPM_SMD_AGGR1_NOC_CLK] = &msm8998_aggre1_noc_clk,
-+	[RPM_SMD_AGGR1_NOC_A_CLK] = &msm8998_aggre1_noc_a_clk,
-+	[RPM_SMD_AGGR2_NOC_CLK] = &msm8998_aggre2_noc_clk,
-+	[RPM_SMD_AGGR2_NOC_A_CLK] = &msm8998_aggre2_noc_a_clk,
-+	[RPM_SMD_QDSS_CLK] = &msm8998_qdss_clk,
-+	[RPM_SMD_QDSS_A_CLK] = &msm8998_qdss_a_clk,
-+	[RPM_SMD_RF_CLK1] = &msm8998_rf_clk1,
-+	[RPM_SMD_RF_CLK1_A] = &msm8998_rf_clk1_a,
-+	[RPM_SMD_RF_CLK2_PIN] = &msm8998_rf_clk2_pin,
-+	[RPM_SMD_RF_CLK2_A_PIN] = &msm8998_rf_clk2_a_pin,
-+	[RPM_SMD_RF_CLK3] = &msm8998_rf_clk3,
-+	[RPM_SMD_RF_CLK3_A] = &msm8998_rf_clk3_a,
-+	[RPM_SMD_RF_CLK3_PIN] = &msm8998_rf_clk3_pin,
-+	[RPM_SMD_RF_CLK3_A_PIN] = &msm8998_rf_clk3_a_pin,
-+};
-+
-+static const struct rpm_smd_clk_desc rpm_clk_msm8998 = {
-+	.clks = msm8998_clks,
-+	.num_clks = ARRAY_SIZE(msm8998_clks),
-+};
-+
- static const struct of_device_id rpm_smd_clk_match_table[] = {
- 	{ .compatible = "qcom,rpmcc-msm8916", .data = &rpm_clk_msm8916 },
- 	{ .compatible = "qcom,rpmcc-msm8974", .data = &rpm_clk_msm8974 },
- 	{ .compatible = "qcom,rpmcc-msm8996", .data = &rpm_clk_msm8996 },
- 	{ .compatible = "qcom,rpmcc-qcs404",  .data = &rpm_clk_qcs404  },
-+	{ .compatible = "qcom,rpmcc-msm8998", .data = &rpm_clk_msm8998 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, rpm_smd_clk_match_table);
-diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
-index 3658b0c..81dbd1f 100644
---- a/include/dt-bindings/clock/qcom,rpmcc.h
-+++ b/include/dt-bindings/clock/qcom,rpmcc.h
-@@ -127,5 +127,11 @@
- #define RPM_SMD_BIMC_GPU_A_CLK			77
- #define RPM_SMD_QPIC_CLK			78
- #define RPM_SMD_QPIC_CLK_A			79
-+#define RPM_SMD_BB_CLK3_PIN			80
-+#define RPM_SMD_BB_CLK3_A_PIN			81
-+#define RPM_SMD_RF_CLK3				82
-+#define RPM_SMD_RF_CLK3_A			83
-+#define RPM_SMD_RF_CLK3_PIN			84
-+#define RPM_SMD_RF_CLK3_A_PIN			85
- 
- #endif
--- 
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+> > > +       unsigned int sgidx;
+> >
+
+[ ... ]
+
+> ok, i will modify it
+> > > +               wpt = mtk_dma_chan_read(c, VFF_WPT);
+> > > +               wrap = wpt & MTK_DMA_RING_WRAP ? 0U : MTK_DMA_RING_WRAP;
+> > > +
+> > > +               if ((wpt & (len - 1U)) + send < len)
+> > > +                       mtk_dma_chan_write(c, VFF_WPT, wpt + send);
+> > > +               else
+> > > +                       mtk_dma_chan_write(c, VFF_WPT,
+> > > +                                          ((wpt + send) & (len - 1U))
+> > > +                                          | wrap);
+> > > +
+> > > +               c->remain_size -= send;
+> >
+> > I'm curious why you don't need to set up the hardware from the
+> > descriptor information
+> >
+>
+> mtk_dma_chan_write is update the hardware. remain_size is length of TX
+> data.
+
+I thought it is not enough to be a full dmaengine. if the driver only
+supports single continuous data moving for device_prep_slave_sg
+callback.
+
+We could try to turn each sg item information such as source or
+destination address and data length to be one part of the descriptor.
+When a descriptor is being issued, and then program VFF_ADDR/LEN and
+issue the data move by other VFF_* registers rather than assuming the
+data portion is always the fixed as the user assignment at
+mtk_dma_slave_config.
