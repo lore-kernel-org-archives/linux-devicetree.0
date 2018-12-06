@@ -1,57 +1,55 @@
-From: =?iso-8859-2?Q?Vok=E1=E8_Michal?= <Michal.Vokac@ysoft.com>
-Subject: Re: [PATCH] dsa device tree bindings: fix typo and wrong example
-Date: Thu, 6 Dec 2018 13:28:56 +0000
-Message-ID: <819595ee-9f3e-b7a2-6139-1ba265137f62@ysoft.com>
-References: <20181115195111.GA9946@amd> <20181206130051.GA22343@amd>
- <20181206130513.GE22343@amd>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH] thermal: stm32: Fix stm_thermal_read_factory_settings
+Date: Thu, 6 Dec 2018 14:30:04 +0100
+Message-ID: <ecfc241e-7453-36dd-70ba-34b0f2e69dc8@linaro.org>
+References: <1544102603-14899-1-git-send-email-david.hernandezsanchez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181206130513.GE22343@amd>
+In-Reply-To: <1544102603-14899-1-git-send-email-david.hernandezsanchez@st.com>
 Content-Language: en-US
-Content-ID: <33BB954C3F89E8419D2B3D9B82071881@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, "andrew@lunn.ch" <andrew@lunn.ch>, "vivien.didelot@savoirfairelinux.com" <vivien.didelot@savoirfairelinux.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>
-Cc: "buytenh@marvell.com" <buytenh@marvell.com>, "buytenh@wantstofly.org" <buytenh@wantstofly.org>, "nico@marvell.com" <nico@marvell.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kernel list <linux-kernel@vger.kernel.org>
+To: David HERNANDEZ SANCHEZ <david.hernandezsanchez@st.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
 List-Id: devicetree@vger.kernel.org
 
-On 6.12.2018 14:05, Pavel Machek wrote:
->     =20
-> Fix typo and fix compatible value that is not actually permitted by the
-> description in the example.
+On 06/12/2018 14:23, David HERNANDEZ SANCHEZ wrote:
+> Adding brackets allows to multiply the register value,
+> masked by TS1_RAMP_COEFF_MASK, by an ADJUST value
+> properly and not to multiply ADJUST by register value and
+> then mask the whole.
+> 
+> Signed-off-by: David Hernandez Sanchez <david.hernandezsanchez@st.com>
+> Fixes: 1d693155 ("thermal: add stm32 thermal driver")
 
-Ahoj Pavle, I think the subject should be more like:
+Usually 'Fixes' comes first in the list.
 
-	"dt-bindings: net: dsa: ..."
+Other than that:
 
-BR, Michal
+Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
->    =20
-> Signed-off-by: Pavel Machek <pavel@ucw.cz>
->=20
-> diff --git a/Documentation/devicetree/bindings/net/dsa/marvell.txt b/Docu=
-mentation/devicetree/bindings/net/dsa/marvell.txt
-> index feb007af13cb..abf1be036ac5 100644
-> --- a/Documentation/devicetree/bindings/net/dsa/marvell.txt
-> +++ b/Documentation/devicetree/bindings/net/dsa/marvell.txt
-> @@ -41,7 +41,7 @@ Optional properties:
->   - mdio			: Container of PHY and devices on the switches MDIO
->   			  bus.
->   - mdio?		: Container of PHYs and devices on the external MDIO
-> -			  bus. The node must contains a compatible string of
-> +			  bus. The node must contain a compatible string of
->   			  "marvell,mv88e6xxx-mdio-external"
->  =20
->   Example:
-> @@ -80,7 +80,7 @@ Example:
->   		#interrupt-cells =3D <2>;
->  =20
->   		switch0: switch@0 {
-> -			compatible =3D "marvell,mv88e6390";
-> +			compatible =3D "marvell,mv88e6190";
->   			reg =3D <0>;
->   			reset-gpios =3D <&gpio5 1 GPIO_ACTIVE_LOW>;
->  =20
->=20
->=20
+> diff --git a/drivers/thermal/st/stm_thermal.c b/drivers/thermal/st/stm_thermal.c
+> index daa1257..bbd73c5 100644
+> --- a/drivers/thermal/st/stm_thermal.c
+> +++ b/drivers/thermal/st/stm_thermal.c
+> @@ -241,8 +241,8 @@ static int stm_thermal_read_factory_settings(struct stm_thermal_sensor *sensor)
+>  		sensor->t0 = TS1_T0_VAL1;
+>  
+>  	/* Retrieve fmt0 and put it on Hz */
+> -	sensor->fmt0 = ADJUST * readl_relaxed(sensor->base + DTS_T0VALR1_OFFSET)
+> -					      & TS1_FMT0_MASK;
+> +	sensor->fmt0 = ADJUST * (readl_relaxed(sensor->base +
+> +				 DTS_T0VALR1_OFFSET) & TS1_FMT0_MASK);
+>  
+>  	/* Retrieve ramp coefficient */
+>  	sensor->ramp_coeff = readl_relaxed(sensor->base + DTS_RAMPVALR_OFFSET) &
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
