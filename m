@@ -1,54 +1,94 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Add proper regulator states for
- suspend-to-mem for odroid-u3
-Date: Thu, 6 Dec 2018 09:25:39 +0100
-Message-ID: <ee0d71cd-a3e0-fbb0-3af8-0ecca1d53ec0@samsung.com>
-References: <20181204194025.2719-1-linux.amoon@gmail.com>
-        <CAJKOXPcT-x0JWVw2CaxHzSthxbp3sDRcsa4Nc5gHYqUy98b_yw@mail.gmail.com>
-        <CGME20181205161223epcas2p24aca718c0d68056140f8430ee8219356@epcas2p2.samsung.com>
-        <CANAwSgSSOmTbqS4WUYZHXdB8XL5fjoiGbrh3unxufQ0gZXBPkQ@mail.gmail.com>
+From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
+Subject: Re: [PATCH 10/14] dt-bindings: pinctrl: milbeaut: Add Milbeaut M10V
+ pinctrl description
+Date: Thu, 6 Dec 2018 17:29:43 +0900
+Message-ID: <c71e44af-3a17-884c-78b4-686be8b293b1@socionext.com>
+References: <1542589336-13925-1-git-send-email-sugaya.taichi@socionext.com>
+ <20181204231131.GA7366@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANAwSgSSOmTbqS4WUYZHXdB8XL5fjoiGbrh3unxufQ0gZXBPkQ@mail.gmail.com>
+In-Reply-To: <20181204231131.GA7366@bogus>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: Rob Herring <robh@kernel.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+Hi,
 
-On 2018-12-05 17:11, Anand Moon wrote:
-> Hi Krzysztof,
->
-> Thanks for your review.
-> .
-> On Wed, 5 Dec 2018 at 19:36, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->> On Tue, 4 Dec 2018 at 20:40, Anand Moon <linux.amoon@gmail.com> wrote:
->>> Add suspend-to-mem node to regulator core to be enabled or disabled
->>> during system suspend and also support changing the regulator operating
->>> mode during runtime and when the system enter sleep mode.
->>>
->>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
->>> ---
->>> Tested on Odroid U3+
+Thank you for your comments.
 
+On 2018/12/05 8:11, Rob Herring wrote:
+> On Mon, Nov 19, 2018 at 10:02:12AM +0900, Sugaya Taichi wrote:
+>> Add DT bindings document for Milbeaut M10V pinctrl.
+>>
+>> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
+>> ---
+>>   .../pinctrl/socionext,milbeaut-pinctrl.txt         | 33 ++++++++++++++++++++++
+>>   1 file changed, 33 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pinctrl/socionext,milbeaut-pinctrl.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/socionext,milbeaut-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/socionext,milbeaut-pinctrl.txt
+>> new file mode 100644
+>> index 0000000..7469189
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pinctrl/socionext,milbeaut-pinctrl.txt
+>> @@ -0,0 +1,33 @@
+>> +Milbeaut SoCs pin controller
+>> +
+>> +Required properties:
+>> +- compatible: should be one of the following:
+>> +    "socionext,milbeaut-m10v-pinctrl"  - for m10v SoC
+>> +- reg: offset and length of the register set.
+>> +- reg-names: should be "pinctrl", "exiu".
+>> +- gpio-cells; should be 2.
+> 
+> #gpio-cells
+> 
+> gpio-controller?
 
->>> ...
+Ah yes. I forgot to add it.
+Add it.
 
+> 
+>> +- interrupt-cells: should be 2.
+> 
+> #interrupt-cells
+> 
+> interrupt-controller?
 
-> Well I have tested this patch as following
-> with only one issue, before enable suspend number of On-line cpu is 4
-> after resume number of On-line cpu is 1.
+Add it also.
 
-This seems to be a regression in v4.20-rc1, not related to dts changes
-at all. I'm investigating this now...
+Thanks,
+Sugaya Taichi
 
-> ...
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+> 
+>> +- clocks: phandle to the input clock.
+>> +- interrupts: three interrupts specifer.
+>> +- interrupt-names: corresponds "interrupts" factor.
+>> +
+>> +Example:
+>> +	pinctrl: pinctrl@1d022000 {
+>> +		compatible = "socionext,milbeaut-m10v-pinctrl";
+>> +		reg = <0x1d022000 0x1000>,
+>> +			<0x1c26f000 0x1000>;
+>> +		reg-names = "pinctrl", "exiu";
+>> +		gpio-controller;
+>> +		#gpio-cells = <2>;
+>> +		interrupt-controller;
+>> +		#interrupt-cells = <2>;
+>> +		clocks = <&dummy_clk>;
+>> +		interrupts = <0 54 4>, <0 55 4>, <0 56 4>, <0 57 4>,
+>> +				<0 58 4>, <0 59 4>, <0 60 4>, <0 61 4>,
+>> +				<0 62 4>, <0 63 4>, <0 64 4>, <0 65 4>,
+>> +				<0 66 4>, <0 67 4>, <0 68 4>, <0 69 4>;
+>> +		interrupt-names = "pin-48", "pin-49", "pin-50", "pin-51",
+>> +				"pin-52", "pin-53", "pin-54", "pin-55",
+>> +				"pin-56", "pin-57", "pin-58", "pin-59",
+>> +				"pin-60", "pin-61", "pin-62", "pin-63";
+>> +	}
+>> -- 
+>> 1.9.1
+>>
