@@ -1,83 +1,56 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: dt-bindings: cs4270: use 'reset-gpios'
-	rather than 'reset-gpio'" to the asoc tree
-Date: Thu,  6 Dec 2018 20:26:00 +0000 (GMT)
-Message-ID: <20181206202600.8A63A11252F7@debutante.sirena.org.uk>
-References: <20181206122426.28194-1-daniel@zonque.org>
+Subject: Re: [PATCH v5 0/7] spi: add support for octal mode
+Date: Thu, 6 Dec 2018 20:29:56 +0000
+Message-ID: <20181206202956.GG3084@sirena.org.uk>
+References: <1543826226-30898-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <20181203101937.7b01a0ad@bbrezillon>
+ <214dadd9-859c-ca88-1aff-1c83fcfa3c0b@ti.com>
+ <20181205134618.56223758@bbrezillon>
+ <VI1PR04MB572646B71C6CB7BAAB4A1E1999A90@VI1PR04MB5726.eurprd04.prod.outlook.com>
+ <20181206074554.0ec0aecb@bbrezillon>
+ <VI1PR04MB572620BB57CB01A352904BB999A90@VI1PR04MB5726.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181206122426.28194-1-daniel@zonque.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Daniel Mack <daniel@zonque.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, broonie@kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Wtrm9ATX0sn6fFKv"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB572620BB57CB01A352904BB999A90@VI1PR04MB5726.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, Vignesh R <vigneshr@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
 
-   ASoC: dt-bindings: cs4270: use 'reset-gpios' rather than 'reset-gpio'
+--Wtrm9ATX0sn6fFKv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-has been applied to the asoc tree at
+On Thu, Dec 06, 2018 at 06:49:08AM +0000, Yogesh Narayan Gaur wrote:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+> Sorry for ignorance. Did patches needs to be applied by Mark Brown, should I resend the patch series again?
+> Also can you please review the series [1] and add your Reviewed-by tag.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+As I said in my reply earlier today in the same thread:
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+| I don't have this any more, it looked like this was stuck behind the
+| otehr MTD changes which seemed to have problems.  If someone could
+| resend?
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+so please resend.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+--Wtrm9ATX0sn6fFKv
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Mark
+-----BEGIN PGP SIGNATURE-----
 
->From eab8e354a8c7b4496cb68a6f5adc5ec3a1f59151 Mon Sep 17 00:00:00 2001
-From: Daniel Mack <daniel@zonque.org>
-Date: Thu, 6 Dec 2018 13:24:25 +0100
-Subject: [PATCH] ASoC: dt-bindings: cs4270: use 'reset-gpios' rather than
- 'reset-gpio'
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwJhsMACgkQJNaLcl1U
+h9BxUwf/VXXXtAILeX5fLDCHtNVLqX9fo3DPdIf/7DKJkI4KipztYRdwnXr1gyWL
+PR//PfTDevtSYPomTWiO4oFiJ6dq8AKfE9HZl4SYBvNVO5W5DQwfa070uPVc/jGh
+Il9aC3h1wwb1de9+Y2x+Nfy1YJ485Em7sboYr6Zqra4viyht3EqXRcNup9JKsSUN
+IU3/wVOq00MFhxhqdevBClFHBQ8O/YfDQeRRU/yUcrTnr3L+x1OGoGMtkQKb+1M5
+jhTQd97LgT0Unlh69N67ofameyu+nVtp1HkgU2JbgF9eKZUqDq3ANGpK7XFRzmpU
+hBp/WucrDVjytmprJvexzb4Fz8BDbw==
+=rcQD
+-----END PGP SIGNATURE-----
 
-Bindings should use 'reset-gpios', not 'reset-gpio'. The driver needs to
-switch to the gpiod consume API to handle this correctly.
-
-Signed-off-by: Daniel Mack <daniel@zonque.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/sound/cs4270.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/cs4270.txt b/Documentation/devicetree/bindings/sound/cs4270.txt
-index 6b222f9b8ef5..c33770ec4c3c 100644
---- a/Documentation/devicetree/bindings/sound/cs4270.txt
-+++ b/Documentation/devicetree/bindings/sound/cs4270.txt
-@@ -10,8 +10,8 @@ Required properties:
- 
- Optional properties:
- 
--  - reset-gpio : a GPIO spec for the reset pin. If specified, it will be
--		 deasserted before communication to the codec starts.
-+  - reset-gpios : a GPIO spec for the reset pin. If specified, it will be
-+		  deasserted before communication to the codec starts.
- 
- Example:
- 
--- 
-2.19.0.rc2
+--Wtrm9ATX0sn6fFKv--
