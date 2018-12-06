@@ -1,188 +1,55 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH 2/2] iio: accell: mma8452: add optional vcc regulator
- operation support
-Date: Thu, 6 Dec 2018 06:23:33 +0000
-Message-ID: <1544077059-4471-2-git-send-email-Anson.Huang@nxp.com>
-References: <1544077059-4471-1-git-send-email-Anson.Huang@nxp.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v5 0/7] spi: add support for octal mode
+Date: Thu, 6 Dec 2018 07:45:54 +0100
+Message-ID: <20181206074554.0ec0aecb@bbrezillon>
+References: <1543826226-30898-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+        <20181203101937.7b01a0ad@bbrezillon>
+        <214dadd9-859c-ca88-1aff-1c83fcfa3c0b@ti.com>
+        <20181205134618.56223758@bbrezillon>
+        <VI1PR04MB572646B71C6CB7BAAB4A1E1999A90@VI1PR04MB5726.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544077059-4471-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
+In-Reply-To: <VI1PR04MB572646B71C6CB7BAAB4A1E1999A90@VI1PR04MB5726.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "harinath922@gmail.com" <harinath922@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "martink@posteo.de" <martink@posteo.de>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Cc: Vignesh R <vigneshr@ti.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The accelerometer's power supply could be controlled by regulator
-on some platforms, such as i.MX6Q-SABRESD board, the mma8451's
-power supply is controlled by a GPIO fixed regulator, need to make
-sure the regulator is enabled before any communication with mma8451,
-this patch adds optional vcc regulator operation support.
+On Thu, 6 Dec 2018 04:20:26 +0000
+Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/iio/accel/mma8452.c | 88 +++++++++++++++++++++++++++++++++++++++++=
-++--
- 1 file changed, 86 insertions(+), 2 deletions(-)
+> Hi Boris,
+> 
+> > -----Original Message-----
+> > From: Boris Brezillon [mailto:boris.brezillon@bootlin.com]
+> > Sent: Wednesday, December 5, 2018 6:16 PM
+> > To: Vignesh R <vigneshr@ti.com>; broonie@kernel.org
+> > Cc: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>; linux-
+> > mtd@lists.infradead.org; marek.vasut@gmail.com; linux-spi@vger.kernel.org;
+> > devicetree@vger.kernel.org; robh@kernel.org; mark.rutland@arm.com;
+> > shawnguo@kernel.org; linux-arm-kernel@lists.infradead.org;
+> > computersforpeace@gmail.com; frieder.schrempf@exceet.de; linux-
+> > kernel@vger.kernel.org
+> > Subject: Re: [PATCH v5 0/7] spi: add support for octal mode
+> > 
+> > On Wed, 5 Dec 2018 17:25:12 +0530
+> > Vignesh R <vigneshr@ti.com> wrote:
+> >   
+> > > >>   mtd: spi-nor: add opcodes for octal Read/Write commands
+> > > >>   mtd: spi-nor: add octal read flag for flash mt35xu512aba  
+> > >
+> > > Could you consider merging these two patches alone for v4.21?
+> > > These can be applied independent of other patches in the series and
+> > > would allow supporting OSPI flash at SPI NOR level with Cadence QSPI driver.  
+> > 
+> > Yep, I'll queue them to spi-nor/next.
+> >   
+> > > >>   spi: nxp-fspi: add octal mode flag bit for octal support  
+> > 
+> > Mark, I think you can pick this one too.  
+> 
+> This patch is dependent on the series [1] which is yet to be applied by you, please apply.
 
-diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-index 421a0a8..8f6123f 100644
---- a/drivers/iio/accel/mma8452.c
-+++ b/drivers/iio/accel/mma8452.c
-@@ -31,6 +31,7 @@
- #include <linux/of_device.h>
- #include <linux/of_irq.h>
- #include <linux/pm_runtime.h>
-+#include <linux/regulator/consumer.h>
-=20
- #define MMA8452_STATUS				0x00
- #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
-@@ -107,6 +108,7 @@ struct mma8452_data {
- 	u8 data_cfg;
- 	const struct mma_chip_info *chip_info;
- 	int sleep_val;
-+	struct regulator *vcc_reg;
- };
-=20
-  /**
-@@ -1533,6 +1535,14 @@ static int mma8452_probe(struct i2c_client *client,
- 	data->client =3D client;
- 	mutex_init(&data->lock);
- 	data->chip_info =3D match->data;
-+	data->vcc_reg =3D devm_regulator_get_optional(&client->dev, "vcc");
-+	if (!IS_ERR(data->vcc_reg)) {
-+		ret =3D regulator_enable(data->vcc_reg);
-+		if (ret) {
-+			dev_err(&client->dev, "failed to enable VCC regulator\n");
-+			return ret;
-+		}
-+	}
-=20
- 	ret =3D i2c_smbus_read_byte_data(client, MMA8452_WHO_AM_I);
- 	if (ret < 0)
-@@ -1667,6 +1677,8 @@ static int mma8452_probe(struct i2c_client *client,
- static int mma8452_remove(struct i2c_client *client)
- {
- 	struct iio_dev *indio_dev =3D i2c_get_clientdata(client);
-+	struct mma8452_data *data =3D iio_priv(indio_dev);
-+	int ret;
-=20
- 	iio_device_unregister(indio_dev);
-=20
-@@ -1678,6 +1690,14 @@ static int mma8452_remove(struct i2c_client *client)
- 	mma8452_trigger_cleanup(indio_dev);
- 	mma8452_standby(iio_priv(indio_dev));
-=20
-+	if (!IS_ERR(data->vcc_reg)) {
-+		ret =3D regulator_disable(data->vcc_reg);
-+		if (ret) {
-+			dev_err(&client->dev, "failed to disable VCC regulator\n");
-+			return ret;
-+		}
-+	}
-+
- 	return 0;
- }
-=20
-@@ -1696,6 +1716,14 @@ static int mma8452_runtime_suspend(struct device *de=
-v)
- 		return -EAGAIN;
- 	}
-=20
-+	if (!IS_ERR(data->vcc_reg)) {
-+		ret =3D regulator_disable(data->vcc_reg);
-+		if (ret) {
-+			dev_err(dev, "failed to disable VCC regulator\n");
-+			return ret;
-+		}
-+	}
-+
- 	return 0;
- }
-=20
-@@ -1705,6 +1733,14 @@ static int mma8452_runtime_resume(struct device *dev=
-)
- 	struct mma8452_data *data =3D iio_priv(indio_dev);
- 	int ret, sleep_val;
-=20
-+	if (!IS_ERR(data->vcc_reg)) {
-+		ret =3D regulator_enable(data->vcc_reg);
-+		if (ret) {
-+			dev_err(dev, "failed to enable VCC regulator\n");
-+			return ret;
-+		}
-+	}
-+
- 	ret =3D mma8452_active(data);
- 	if (ret < 0)
- 		return ret;
-@@ -1723,14 +1759,62 @@ static int mma8452_runtime_resume(struct device *de=
-v)
- #ifdef CONFIG_PM_SLEEP
- static int mma8452_suspend(struct device *dev)
- {
--	return mma8452_standby(iio_priv(i2c_get_clientdata(
-+	struct iio_dev *indio_dev =3D i2c_get_clientdata(to_i2c_client(dev));
-+	struct mma8452_data *data =3D iio_priv(indio_dev);
-+	int ret;
-+
-+	if (!IS_ERR(data->vcc_reg)) {
-+		ret =3D regulator_enable(data->vcc_reg);
-+		if (ret) {
-+			dev_err(dev, "failed to enable VCC regulator\n");
-+			return ret;
-+		}
-+	}
-+
-+	ret =3D mma8452_standby(iio_priv(i2c_get_clientdata(
- 		to_i2c_client(dev))));
-+	if (ret)
-+		return ret;
-+
-+	if (!IS_ERR(data->vcc_reg)) {
-+		ret =3D regulator_disable(data->vcc_reg);
-+		if (ret) {
-+			dev_err(dev, "failed to disable VCC regulator\n");
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
- }
-=20
- static int mma8452_resume(struct device *dev)
- {
--	return mma8452_active(iio_priv(i2c_get_clientdata(
-+	struct iio_dev *indio_dev =3D i2c_get_clientdata(to_i2c_client(dev));
-+	struct mma8452_data *data =3D iio_priv(indio_dev);
-+	int ret;
-+
-+	if (!IS_ERR(data->vcc_reg)) {
-+		ret =3D regulator_enable(data->vcc_reg);
-+		if (ret) {
-+			dev_err(dev, "failed to enable VCC regulator\n");
-+			return ret;
-+		}
-+	}
-+
-+	ret =3D mma8452_active(iio_priv(i2c_get_clientdata(
- 		to_i2c_client(dev))));
-+	if (ret)
-+		return ret;
-+
-+	if (!IS_ERR(data->vcc_reg)) {
-+		ret =3D regulator_disable(data->vcc_reg);
-+		if (ret) {
-+			dev_err(dev, "failed to disable VCC regulator\n");
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
- }
- #endif
-=20
---=20
-2.7.4
+By me? I can't apply SPI patches.
