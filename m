@@ -1,14 +1,14 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: codecs: cs4270: move to GPIO consumer
-	API" to the asoc tree
-Date: Thu,  6 Dec 2018 20:25:58 +0000 (GMT)
-Message-ID: <20181206202558.B6A8311252F7@debutante.sirena.org.uk>
-References: <20181206122426.28194-2-daniel@zonque.org>
+Subject: Applied "ASoC: dt-bindings: cs4270: use 'reset-gpios'
+	rather than 'reset-gpio'" to the asoc tree
+Date: Thu,  6 Dec 2018 20:26:00 +0000 (GMT)
+Message-ID: <20181206202600.8A63A11252F7@debutante.sirena.org.uk>
+References: <20181206122426.28194-1-daniel@zonque.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181206122426.28194-2-daniel@zonque.org>
+In-Reply-To: <20181206122426.28194-1-daniel@zonque.org>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
 List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
@@ -24,7 +24,7 @@ List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: codecs: cs4270: move to GPIO consumer API
+   ASoC: dt-bindings: cs4270: use 'reset-gpios' rather than 'reset-gpio'
 
 has been applied to the asoc tree at
 
@@ -49,69 +49,35 @@ to this mail.
 Thanks,
 Mark
 
->From f98acd8a3115e1de780083ced42039522075d155 Mon Sep 17 00:00:00 2001
+>From eab8e354a8c7b4496cb68a6f5adc5ec3a1f59151 Mon Sep 17 00:00:00 2001
 From: Daniel Mack <daniel@zonque.org>
-Date: Thu, 6 Dec 2018 13:24:26 +0100
-Subject: [PATCH] ASoC: codecs: cs4270: move to GPIO consumer API
+Date: Thu, 6 Dec 2018 13:24:25 +0100
+Subject: [PATCH] ASoC: dt-bindings: cs4270: use 'reset-gpios' rather than
+ 'reset-gpio'
 
-Get the reset GPIO through the GPIO consumer API. This allows specifying the
-DT property as "reset-gpios" without breaking existing DT users.
+Bindings should use 'reset-gpios', not 'reset-gpio'. The driver needs to
+switch to the gpiod consume API to handle this correctly.
 
 Signed-off-by: Daniel Mack <daniel@zonque.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/cs4270.c | 23 +++++++----------------
- 1 file changed, 7 insertions(+), 16 deletions(-)
+ Documentation/devicetree/bindings/sound/cs4270.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/cs4270.c b/sound/soc/codecs/cs4270.c
-index 3c266eeb89bf..33d74f163bd7 100644
---- a/sound/soc/codecs/cs4270.c
-+++ b/sound/soc/codecs/cs4270.c
-@@ -29,8 +29,8 @@
- #include <linux/i2c.h>
- #include <linux/delay.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/of_device.h>
--#include <linux/of_gpio.h>
+diff --git a/Documentation/devicetree/bindings/sound/cs4270.txt b/Documentation/devicetree/bindings/sound/cs4270.txt
+index 6b222f9b8ef5..c33770ec4c3c 100644
+--- a/Documentation/devicetree/bindings/sound/cs4270.txt
++++ b/Documentation/devicetree/bindings/sound/cs4270.txt
+@@ -10,8 +10,8 @@ Required properties:
  
- /*
-  * The codec isn't really big-endian or little-endian, since the I2S
-@@ -658,8 +658,8 @@ static const struct regmap_config cs4270_regmap = {
- static int cs4270_i2c_probe(struct i2c_client *i2c_client,
- 	const struct i2c_device_id *id)
- {
--	struct device_node *np = i2c_client->dev.of_node;
- 	struct cs4270_private *cs4270;
-+	struct gpio_desc *reset_gpiod;
- 	unsigned int val;
- 	int ret, i;
+ Optional properties:
  
-@@ -678,20 +678,11 @@ static int cs4270_i2c_probe(struct i2c_client *i2c_client,
- 	if (ret < 0)
- 		return ret;
+-  - reset-gpio : a GPIO spec for the reset pin. If specified, it will be
+-		 deasserted before communication to the codec starts.
++  - reset-gpios : a GPIO spec for the reset pin. If specified, it will be
++		  deasserted before communication to the codec starts.
  
--	/* See if we have a way to bring the codec out of reset */
--	if (np) {
--		enum of_gpio_flags flags;
--		int gpio = of_get_named_gpio_flags(np, "reset-gpio", 0, &flags);
--
--		if (gpio_is_valid(gpio)) {
--			ret = devm_gpio_request_one(&i2c_client->dev, gpio,
--				     flags & OF_GPIO_ACTIVE_LOW ?
--					GPIOF_OUT_INIT_LOW : GPIOF_OUT_INIT_HIGH,
--				     "cs4270 reset");
--			if (ret < 0)
--				return ret;
--		}
--	}
-+	reset_gpiod = devm_gpiod_get_optional(&i2c_client->dev, "reset",
-+					      GPIOD_OUT_HIGH);
-+	if (IS_ERR(reset_gpiod) &&
-+	    PTR_ERR(reset_gpiod) == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
+ Example:
  
- 	cs4270->regmap = devm_regmap_init_i2c(i2c_client, &cs4270_regmap);
- 	if (IS_ERR(cs4270->regmap))
 -- 
 2.19.0.rc2
