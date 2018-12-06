@@ -1,66 +1,68 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [PATCH v4 3/4] ARM: dts: stm32: Add hwspinlock node for
- stm32mp157 SoC
-Date: Thu, 6 Dec 2018 10:59:25 +0100
-Message-ID: <CA+M3ks6Qk9rjnBHUkPRT8KNnBaG-wBAMOQek0Du39OhYYoDUfg@mail.gmail.com>
-References: <20181114090027.7580-1-benjamin.gaignard@linaro.org> <20181114090027.7580-4-benjamin.gaignard@linaro.org>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [RFC PATCH v2 04/15] usb:cdns3: Driver initialization code.
+Date: Thu, 6 Dec 2018 10:02:41 +0000
+Message-ID: <BYAPR07MB4709FF5D9C15A27288997C29DDA90@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
+ <1542535751-16079-5-git-send-email-pawell@cadence.com>
+ <5BF7E5E8.3090406@ti.com>
+ <CAL411-rWc23fbP0Ny9Kfdpe9ESUSVt5X00G1uFjJf+rj-2jWzg@mail.gmail.com>
+ <BYAPR07MB47095578C205570DD97EBFE0DDA80@BYAPR07MB4709.namprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181114090027.7580-4-benjamin.gaignard@linaro.org>
+In-Reply-To: <BYAPR07MB47095578C205570DD97EBFE0DDA80@BYAPR07MB4709.namprd07.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ohad Ben Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>
-Cc: linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To: Peter Chen <hzpeterchen@gmail.com>, "rogerq@ti.com" <rogerq@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>, Tomasz Klimek <tklimek@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-Le mer. 14 nov. 2018 =C3=A0 10:00, Benjamin Gaignard
-<benjamin.gaignard@linaro.org> a =C3=A9crit :
->
-> From: Benjamin Gaignard <benjamin.gaignard@st.com>
->
-> Declare hwspinlock device for stm32mp157 SoC
-
-I abandon this patch and I will send a one that fixes the issues.
-
->
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> ---
->  arch/arm/boot/dts/stm32mp157c.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32=
-mp157c.dtsi
-> index 185541a5b69f..98f824d8b0f0 100644
-> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-> @@ -803,6 +803,15 @@
->                         status =3D "disabled";
->                 };
->
-> +               hsem: hwspinlock@4c000000 {
-> +                       compatible =3D "st,stm32-hwspinlock";
-> +                       #hwlock-cells =3D <1>;
-> +                       reg =3D <0x4c000000 0x400>;
-> +                       clocks =3D <&rcc HSEM>;
-> +                       clock-names =3D "hwsem";
-> +                       status =3D "disabled";
-> +               };
-> +
->                 rcc: rcc@50000000 {
->                         compatible =3D "st,stm32mp1-rcc", "syscon";
->                         reg =3D <0x50000000 0x1000>;
-> --
-> 2.15.0
->
-
-
---=20
-Benjamin Gaignard
-
-Graphic Study Group
-
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-
-Follow Linaro: Facebook | Twitter | Blog
+SGksDQoNCj4+PiA+ICsNCj4+PiA+ICtzdGF0aWMgaW5saW5lIHZvaWQgY2RuczNfcm9sZV9zdG9w
+KHN0cnVjdCBjZG5zMyAqY2RucykNCj4+PiA+ICt7DQo+Pj4gPiArICAgICBlbnVtIGNkbnMzX3Jv
+bGVzIHJvbGUgPSBjZG5zLT5yb2xlOw0KPj4+ID4gKw0KPj4+ID4gKyAgICAgaWYgKHJvbGUgPT0g
+Q0ROUzNfUk9MRV9FTkQpDQo+Pj4NCj4+PiBXQVJOX09OKHJvbGUgPj0gQ05EUzNfUk9MRV9FTkQp
+ID8NCj4+Pg0KPj4+ID4gKyAgICAgICAgICAgICByZXR1cm47DQo+Pj4gPiArDQo+Pj4gPiArICAg
+ICBtdXRleF9sb2NrKCZjZG5zLT5tdXRleCk7DQo+Pj4gPiArICAgICBjZG5zLT5yb2xlc1tyb2xl
+XS0+c3RvcChjZG5zKTsNCj4+PiA+ICsgICAgIGNkbnMtPnJvbGUgPSBDRE5TM19ST0xFX0VORDsN
+Cj4+Pg0KPj4+IFdoeSBjaGFuZ2UgdGhlIHJvbGUgaGVyZT8gWW91IGFyZSBqdXN0IHN0b3BwaW5n
+IHRoZSByb2xlIG5vdCBjaGFuZ2luZyBpdC4NCj4+PiBJIHRoaW5rIGNkbnMtPnJvbGUgc2hvdWxk
+IHJlbWFpbiB1bmNoYW5nZWQsIHNvIHdlIGNhbiBjYWxsIGNkbnMzX3JvbGVfc3RhcnQoKQ0KPj4+
+IGlmIHJlcXVpcmVkIHdpdGhvdXQgZXJyb3IuDQo+Pj4NCj4+DQo+PlRoZSBjdXJyZW50IHZlcnNp
+b24gb2YgdGhpcyBJUCBoYXMgc29tZSBpc3N1ZXMgdG8gZGV0ZWN0IHZidXMgc3RhdHVzIGNvcnJl
+Y3RseSwNCj4+d2UgaGF2ZSB0byBmb3JjZSB2YnVzIHN0YXR1cyBhY2NvcmRpbmdseSwgc28gd2Ug
+bmVlZCBhIHN0YXR1cyB0byBpbmRpY2F0ZQ0KPj52YnVzIGRpc2Nvbm5lY3Rpb24sIGFuZCBhZGQg
+c29tZSBjb2RlIHRvIGxldCBjb250cm9sbGVyIGtub3cgdmJ1cw0KPj5yZW1vdmFsLCBpbiB0aGF0
+IGNhc2UsIHRoZSBjb250cm9sbGVyJ3Mgc3RhdGUgbWFjaGluZSBjYW4gYmUgY29ycmVjdC4NCj4+
+U28sIHdlIGluY3JlYXNlIG9uZSByb2xlICdDRE5TM19ST0xFX0VORCcgdG8gZm9yIHRoaXMgcHVy
+cG9zZS4NCj4NCj5IaSwgVG9tZWsgZG8geW91IGhhdmUgYW55IGNvbW1lbnQgZm9yIHRoaXMuDQo+
+V2UgaGF2ZSBpbiBSVEwgd2hvbGUgT1RHIG1hY2hpbmUgYW5kIHdlIGNhbiByZWFkIGFsbCBzdGF0
+ZXMuDQoNCkl0J3Mgbm90IHRoZSBJUCBpc3N1ZSwgYnV0IHdpdGggUEhZLiBJIHRvbGQgd2l0aCBU
+b21layBhbmQgaGUgY29uZmlybWVkIHRoaXMgaXNzdWUuDQpJbiBteSB0ZXN0aW5nIHBsYXRmb3Jt
+IEkgdXNlIGRpZmZlcmVudCBwaHkgdmVyc2lvbiBhbmQgSSBkb24ndCBoYXZlIHN1Y2ggaXNzdWUu
+IA0KDQpDRE5TM19ST0xFX0VORCBzdGF5IGluIGRyaXZlciBmb3IgY29tcGF0aWJpbGl0eSB3aXRo
+IFBldGVyIFBIWSB2ZXJzaW9uLiANCg0KPkZyb20gb3RnIHNwZWNpZmljYXRpb24gd2UgaGF2ZSBp
+biBvdGdfc3RhdGUgc3VjaCBiaXRzOg0KPjU6Mwlob3N0X290Z19zdGF0ZQkiQ3VycmVudCBzdGF0
+ZSBvZiB0aGUgT1RHIEhvc3QgRlNNLg0KPjMnYjAwMCA6IEhfSURMRQ0KPjMnYjAwMSA6IEhfVkJV
+U19PTg0KPjMnYjAxMCA6IEhfVkJVU19GQUlMRUQNCj4zJ2IwMTEgOiBIX09UR19IT1NUX01PREUN
+Cj4zJ2IxMDAgOiBIX0hPU1RfTU9ERQ0KPjMnYjEwMSA6IEhfU1dJVENIX1RPX0RFVklDRQ0KPjMn
+YjExMCA6IEhfQV9TVVNQRU5EDQo+MydiMTExIDogSF9XQUlUX1ZCVVNfRkFMTCIJUk8JMHgwDQo+
+MjowCWRldl9vdGdfc3RhdGUJIkN1cnJlbnQgc3RhdGUgb2YgdGhlIE9URyBEZXZpY2UgRlNNLg0K
+PjMnYjAwMCA6IERFVl9JRExFDQo+MydiMDAxIDogREVWX01PREUNCj4zJ2IwMTAgOiBERVZfU1JQ
+DQo+MydiMDExIDogREVWX1dBSVRfVkJVU19GQUxMDQo+MydiMTAwIDogREVWX1NXSVRDSF9UT19I
+T1NUDQo+MydiMTAxIDogREVWX1dBSVRfRk9SX0NPTk4iDQo+DQo+Pg0KPj5DRE5TM19ST0xFX0dB
+REdFVDogZ2FkZ2V0IG1vZGUgYW5kIFZCVVMgb24NCj4+Q0ROUzNfUk9MRV9IT1NUOiBob3N0IG1v
+ZGUgYW5kIFZCVVMgb24NCj4+Q0ROUzNfUk9MRV9FTkQ6IFZCVVMgb2ZmLCBlZyBlaXRoZXIgaG9z
+dCBvciBkZXZpY2UgY2FibGUgb24gdGhlIHBvcnQuDQo+Pg0KPj5Tbywgd2UgbWF5IHN0YXJ0IHJv
+bGUgZnJvbSBDRE5TM19ST0xFX0VORCBhdCBwcm9iZSB3aGVuIG5vdGhpbmcgaXMgY29ubmVjdGVk
+LA0KPj5hbmQgbmVlZCB0byBzZXQgcm9sZSBhcyBDRE5TM19ST0xFX0VORCBhdCAtPnN0b3AgZm9y
+IGZ1cnRoZXIgaGFuZGxpbmcgYXQNCj4+cm9sZSBzd2l0Y2ggcm91dGluZS4NCj4+DQo+DQo+Pj4g
+PiArICAgICBtdXRleF91bmxvY2soJmNkbnMtPm11dGV4KTsNCj4+PiA+ICt9DQo+Pj4gPiArDQo+
+Pj4gPiArc3RhdGljIGVudW0gY2RuczNfcm9sZXMgY2RuczNfZ2V0X3JvbGUoc3RydWN0IGNkbnMz
+ICpjZG5zKQ0KPj4+ID4gK3sNCj4+PiA+ICsgICAgIGlmIChjZG5zLT5yb2xlc1tDRE5TM19ST0xF
+X0hPU1RdICYmIGNkbnMtPnJvbGVzW0NETlMzX1JPTEVfR0FER0VUXSkgew0KPj4+ID4gKyAgICAg
+ICAgICAgICAvL1RPRE86IGltcGxlbWVudHMgc2VsZWN0aW5nIGRldmljZS9ob3N0IG1vZGUNCj4+
+PiA+ICsgICAgICAgICAgICAgcmV0dXJuIENETlMzX1JPTEVfSE9TVDsNCj4+PiA+ICsgICAgIH0N
+Cj4+PiA+ICsgICAgIHJldHVybiBjZG5zLT5yb2xlc1tDRE5TM19ST0xFX0hPU1RdDQo+Pj4gPiAr
+ICAgICAgICAgICAgID8gQ0ROUzNfUk9MRV9IT1NUDQo+Pj4gPiArICAgICAgICAgICAgIDogQ0RO
+UzNfUk9MRV9HQURHRVQ7DQoNCkNoZWVycyANClBhd2VsIA0KDQoNCg==
