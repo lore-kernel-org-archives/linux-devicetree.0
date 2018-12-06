@@ -1,68 +1,40 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [RFC PATCH v2 04/15] usb:cdns3: Driver initialization code.
-Date: Thu, 6 Dec 2018 10:02:41 +0000
-Message-ID: <BYAPR07MB4709FF5D9C15A27288997C29DDA90@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
- <1542535751-16079-5-git-send-email-pawell@cadence.com>
- <5BF7E5E8.3090406@ti.com>
- <CAL411-rWc23fbP0Ny9Kfdpe9ESUSVt5X00G1uFjJf+rj-2jWzg@mail.gmail.com>
- <BYAPR07MB47095578C205570DD97EBFE0DDA80@BYAPR07MB4709.namprd07.prod.outlook.com>
+From: Otavio Salvador <otavio@ossystems.com.br>
+Subject: [PATCH v2 0/9] Improvements for i.MX7D PICO SoM and its baseboards
+Date: Thu,  6 Dec 2018 08:08:56 -0200
+Message-ID: <20181206100905.15053-1-otavio@ossystems.com.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR07MB47095578C205570DD97EBFE0DDA80@BYAPR07MB4709.namprd07.prod.outlook.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Chen <hzpeterchen@gmail.com>, "rogerq@ti.com" <rogerq@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>, Tomasz Klimek <tklimek@cadence.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Otavio Salvador <otavio@ossystems.com.br>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCj4+PiA+ICsNCj4+PiA+ICtzdGF0aWMgaW5saW5lIHZvaWQgY2RuczNfcm9sZV9zdG9w
-KHN0cnVjdCBjZG5zMyAqY2RucykNCj4+PiA+ICt7DQo+Pj4gPiArICAgICBlbnVtIGNkbnMzX3Jv
-bGVzIHJvbGUgPSBjZG5zLT5yb2xlOw0KPj4+ID4gKw0KPj4+ID4gKyAgICAgaWYgKHJvbGUgPT0g
-Q0ROUzNfUk9MRV9FTkQpDQo+Pj4NCj4+PiBXQVJOX09OKHJvbGUgPj0gQ05EUzNfUk9MRV9FTkQp
-ID8NCj4+Pg0KPj4+ID4gKyAgICAgICAgICAgICByZXR1cm47DQo+Pj4gPiArDQo+Pj4gPiArICAg
-ICBtdXRleF9sb2NrKCZjZG5zLT5tdXRleCk7DQo+Pj4gPiArICAgICBjZG5zLT5yb2xlc1tyb2xl
-XS0+c3RvcChjZG5zKTsNCj4+PiA+ICsgICAgIGNkbnMtPnJvbGUgPSBDRE5TM19ST0xFX0VORDsN
-Cj4+Pg0KPj4+IFdoeSBjaGFuZ2UgdGhlIHJvbGUgaGVyZT8gWW91IGFyZSBqdXN0IHN0b3BwaW5n
-IHRoZSByb2xlIG5vdCBjaGFuZ2luZyBpdC4NCj4+PiBJIHRoaW5rIGNkbnMtPnJvbGUgc2hvdWxk
-IHJlbWFpbiB1bmNoYW5nZWQsIHNvIHdlIGNhbiBjYWxsIGNkbnMzX3JvbGVfc3RhcnQoKQ0KPj4+
-IGlmIHJlcXVpcmVkIHdpdGhvdXQgZXJyb3IuDQo+Pj4NCj4+DQo+PlRoZSBjdXJyZW50IHZlcnNp
-b24gb2YgdGhpcyBJUCBoYXMgc29tZSBpc3N1ZXMgdG8gZGV0ZWN0IHZidXMgc3RhdHVzIGNvcnJl
-Y3RseSwNCj4+d2UgaGF2ZSB0byBmb3JjZSB2YnVzIHN0YXR1cyBhY2NvcmRpbmdseSwgc28gd2Ug
-bmVlZCBhIHN0YXR1cyB0byBpbmRpY2F0ZQ0KPj52YnVzIGRpc2Nvbm5lY3Rpb24sIGFuZCBhZGQg
-c29tZSBjb2RlIHRvIGxldCBjb250cm9sbGVyIGtub3cgdmJ1cw0KPj5yZW1vdmFsLCBpbiB0aGF0
-IGNhc2UsIHRoZSBjb250cm9sbGVyJ3Mgc3RhdGUgbWFjaGluZSBjYW4gYmUgY29ycmVjdC4NCj4+
-U28sIHdlIGluY3JlYXNlIG9uZSByb2xlICdDRE5TM19ST0xFX0VORCcgdG8gZm9yIHRoaXMgcHVy
-cG9zZS4NCj4NCj5IaSwgVG9tZWsgZG8geW91IGhhdmUgYW55IGNvbW1lbnQgZm9yIHRoaXMuDQo+
-V2UgaGF2ZSBpbiBSVEwgd2hvbGUgT1RHIG1hY2hpbmUgYW5kIHdlIGNhbiByZWFkIGFsbCBzdGF0
-ZXMuDQoNCkl0J3Mgbm90IHRoZSBJUCBpc3N1ZSwgYnV0IHdpdGggUEhZLiBJIHRvbGQgd2l0aCBU
-b21layBhbmQgaGUgY29uZmlybWVkIHRoaXMgaXNzdWUuDQpJbiBteSB0ZXN0aW5nIHBsYXRmb3Jt
-IEkgdXNlIGRpZmZlcmVudCBwaHkgdmVyc2lvbiBhbmQgSSBkb24ndCBoYXZlIHN1Y2ggaXNzdWUu
-IA0KDQpDRE5TM19ST0xFX0VORCBzdGF5IGluIGRyaXZlciBmb3IgY29tcGF0aWJpbGl0eSB3aXRo
-IFBldGVyIFBIWSB2ZXJzaW9uLiANCg0KPkZyb20gb3RnIHNwZWNpZmljYXRpb24gd2UgaGF2ZSBp
-biBvdGdfc3RhdGUgc3VjaCBiaXRzOg0KPjU6Mwlob3N0X290Z19zdGF0ZQkiQ3VycmVudCBzdGF0
-ZSBvZiB0aGUgT1RHIEhvc3QgRlNNLg0KPjMnYjAwMCA6IEhfSURMRQ0KPjMnYjAwMSA6IEhfVkJV
-U19PTg0KPjMnYjAxMCA6IEhfVkJVU19GQUlMRUQNCj4zJ2IwMTEgOiBIX09UR19IT1NUX01PREUN
-Cj4zJ2IxMDAgOiBIX0hPU1RfTU9ERQ0KPjMnYjEwMSA6IEhfU1dJVENIX1RPX0RFVklDRQ0KPjMn
-YjExMCA6IEhfQV9TVVNQRU5EDQo+MydiMTExIDogSF9XQUlUX1ZCVVNfRkFMTCIJUk8JMHgwDQo+
-MjowCWRldl9vdGdfc3RhdGUJIkN1cnJlbnQgc3RhdGUgb2YgdGhlIE9URyBEZXZpY2UgRlNNLg0K
-PjMnYjAwMCA6IERFVl9JRExFDQo+MydiMDAxIDogREVWX01PREUNCj4zJ2IwMTAgOiBERVZfU1JQ
-DQo+MydiMDExIDogREVWX1dBSVRfVkJVU19GQUxMDQo+MydiMTAwIDogREVWX1NXSVRDSF9UT19I
-T1NUDQo+MydiMTAxIDogREVWX1dBSVRfRk9SX0NPTk4iDQo+DQo+Pg0KPj5DRE5TM19ST0xFX0dB
-REdFVDogZ2FkZ2V0IG1vZGUgYW5kIFZCVVMgb24NCj4+Q0ROUzNfUk9MRV9IT1NUOiBob3N0IG1v
-ZGUgYW5kIFZCVVMgb24NCj4+Q0ROUzNfUk9MRV9FTkQ6IFZCVVMgb2ZmLCBlZyBlaXRoZXIgaG9z
-dCBvciBkZXZpY2UgY2FibGUgb24gdGhlIHBvcnQuDQo+Pg0KPj5Tbywgd2UgbWF5IHN0YXJ0IHJv
-bGUgZnJvbSBDRE5TM19ST0xFX0VORCBhdCBwcm9iZSB3aGVuIG5vdGhpbmcgaXMgY29ubmVjdGVk
-LA0KPj5hbmQgbmVlZCB0byBzZXQgcm9sZSBhcyBDRE5TM19ST0xFX0VORCBhdCAtPnN0b3AgZm9y
-IGZ1cnRoZXIgaGFuZGxpbmcgYXQNCj4+cm9sZSBzd2l0Y2ggcm91dGluZS4NCj4+DQo+DQo+Pj4g
-PiArICAgICBtdXRleF91bmxvY2soJmNkbnMtPm11dGV4KTsNCj4+PiA+ICt9DQo+Pj4gPiArDQo+
-Pj4gPiArc3RhdGljIGVudW0gY2RuczNfcm9sZXMgY2RuczNfZ2V0X3JvbGUoc3RydWN0IGNkbnMz
-ICpjZG5zKQ0KPj4+ID4gK3sNCj4+PiA+ICsgICAgIGlmIChjZG5zLT5yb2xlc1tDRE5TM19ST0xF
-X0hPU1RdICYmIGNkbnMtPnJvbGVzW0NETlMzX1JPTEVfR0FER0VUXSkgew0KPj4+ID4gKyAgICAg
-ICAgICAgICAvL1RPRE86IGltcGxlbWVudHMgc2VsZWN0aW5nIGRldmljZS9ob3N0IG1vZGUNCj4+
-PiA+ICsgICAgICAgICAgICAgcmV0dXJuIENETlMzX1JPTEVfSE9TVDsNCj4+PiA+ICsgICAgIH0N
-Cj4+PiA+ICsgICAgIHJldHVybiBjZG5zLT5yb2xlc1tDRE5TM19ST0xFX0hPU1RdDQo+Pj4gPiAr
-ICAgICAgICAgICAgID8gQ0ROUzNfUk9MRV9IT1NUDQo+Pj4gPiArICAgICAgICAgICAgIDogQ0RO
-UzNfUk9MRV9HQURHRVQ7DQoNCkNoZWVycyANClBhd2VsIA0KDQoNCg==
+This patchset rework the imx7d-pico SoM, its Pi baseboard
+and add the Hobbit baseboard support as well.
+
+Changes in v2:
+- replace fsl,uart-has-rtscts with uart-has-rtscts
+
+Fabio Estevam (8):
+  ARM: dts: imx7d-pico: Do not harcode the memory size
+  ARM: dts: imx7d-pico: Switch to SPDX identifier
+  ARM: dts: imx7d-pico-pi: Move SoM related part to imx7d-pico.dtsi
+  ARM: dts: imx7d-pico: Pass the USBOTG1_PWR pinctrl
+  ARM: dts: imx7d-pico: Pass the Ethernet PHY reset GPIO
+  ARM: dts: imx7d-pico: Extend peripherals support
+  ARM: dts: imx7d-pico-pi: Extend peripherals support
+  ARM: dts: imx7d-pico: Add the imx7d-pico-hobbit variant
+
+Otavio Salvador (1):
+  ARM: dts: imx7d-pico: Improve WiFi regulator name
+
+ arch/arm/boot/dts/Makefile              |   1 +
+ arch/arm/boot/dts/imx7d-pico-hobbit.dts | 105 +++++++
+ arch/arm/boot/dts/imx7d-pico-pi.dts     | 180 +++---------
+ arch/arm/boot/dts/imx7d-pico.dtsi       | 355 ++++++++++++++++++++----
+ 4 files changed, 457 insertions(+), 184 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx7d-pico-hobbit.dts
+
+-- 
+2.19.2
