@@ -1,47 +1,33 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 3/3] arm64: dts: allwinner: a64: Add pinmux setting for CSI MCLK on PE1
-Date: Thu,  6 Dec 2018 18:53:06 +0530
-Message-ID: <20181206132306.11843-3-jagan@amarulasolutions.com>
-References: <20181206132306.11843-1-jagan@amarulasolutions.com>
+From: David HERNANDEZ SANCHEZ <david.hernandezsanchez@st.com>
+Subject: [PATCH] thermal: stm32: Fix stm_thermal_read_factory_settings
+Date: Thu, 6 Dec 2018 13:23:32 +0000
+Message-ID: <1544102603-14899-1-git-send-email-david.hernandezsanchez@st.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181206132306.11843-1-jagan@amarulasolutions.com>
+Content-Language: en-US
+Content-ID: <902B145001845D4A86B32CFF0A0C3EEE@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, Michael Trimarchi <michael@amarulasolutions.com>
-Cc: Jagan Teki <jagan@amarulasolutions.com>
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
 List-Id: devicetree@vger.kernel.org
 
-Some camera modules have the SoC feeding a master clock to the sensor
-instead of having a standalone crystal. This clock signal is generated
-from the clock control unit and output from the CSI MCLK function of
-pin PE1.
-
-Add a pinmux setting for it for camera sensors to reference.
-
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v2:
-- new patch
-
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index d7ab0006ebce..902b5238f1dd 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -538,6 +538,11 @@
- 				function = "csi0";
- 			};
- 
-+			csi_mclk_pin: csi-mclk {
-+				pins = "PE1";
-+				function = "csi0";
-+			};
-+
- 			i2c0_pins: i2c0_pins {
- 				pins = "PH0", "PH1";
- 				function = "i2c0";
--- 
-2.18.0.321.gffc6fa0e3
+QWRkaW5nIGJyYWNrZXRzIGFsbG93cyB0byBtdWx0aXBseSB0aGUgcmVnaXN0ZXIgdmFsdWUsDQpt
+YXNrZWQgYnkgVFMxX1JBTVBfQ09FRkZfTUFTSywgYnkgYW4gQURKVVNUIHZhbHVlDQpwcm9wZXJs
+eSBhbmQgbm90IHRvIG11bHRpcGx5IEFESlVTVCBieSByZWdpc3RlciB2YWx1ZSBhbmQNCnRoZW4g
+bWFzayB0aGUgd2hvbGUuDQoNClNpZ25lZC1vZmYtYnk6IERhdmlkIEhlcm5hbmRleiBTYW5jaGV6
+IDxkYXZpZC5oZXJuYW5kZXpzYW5jaGV6QHN0LmNvbT4NCkZpeGVzOiAxZDY5MzE1NSAoInRoZXJt
+YWw6IGFkZCBzdG0zMiB0aGVybWFsIGRyaXZlciIpDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3Ro
+ZXJtYWwvc3Qvc3RtX3RoZXJtYWwuYyBiL2RyaXZlcnMvdGhlcm1hbC9zdC9zdG1fdGhlcm1hbC5j
+DQppbmRleCBkYWExMjU3Li5iYmQ3M2M1IDEwMDY0NA0KLS0tIGEvZHJpdmVycy90aGVybWFsL3N0
+L3N0bV90aGVybWFsLmMNCisrKyBiL2RyaXZlcnMvdGhlcm1hbC9zdC9zdG1fdGhlcm1hbC5jDQpA
+QCAtMjQxLDggKzI0MSw4IEBAIHN0YXRpYyBpbnQgc3RtX3RoZXJtYWxfcmVhZF9mYWN0b3J5X3Nl
+dHRpbmdzKHN0cnVjdCBzdG1fdGhlcm1hbF9zZW5zb3IgKnNlbnNvcikNCiAJCXNlbnNvci0+dDAg
+PSBUUzFfVDBfVkFMMTsNCiANCiAJLyogUmV0cmlldmUgZm10MCBhbmQgcHV0IGl0IG9uIEh6ICov
+DQotCXNlbnNvci0+Zm10MCA9IEFESlVTVCAqIHJlYWRsX3JlbGF4ZWQoc2Vuc29yLT5iYXNlICsg
+RFRTX1QwVkFMUjFfT0ZGU0VUKQ0KLQkJCQkJICAgICAgJiBUUzFfRk1UMF9NQVNLOw0KKwlzZW5z
+b3ItPmZtdDAgPSBBREpVU1QgKiAocmVhZGxfcmVsYXhlZChzZW5zb3ItPmJhc2UgKw0KKwkJCQkg
+RFRTX1QwVkFMUjFfT0ZGU0VUKSAmIFRTMV9GTVQwX01BU0spOw0KIA0KIAkvKiBSZXRyaWV2ZSBy
+YW1wIGNvZWZmaWNpZW50ICovDQogCXNlbnNvci0+cmFtcF9jb2VmZiA9IHJlYWRsX3JlbGF4ZWQo
+c2Vuc29yLT5iYXNlICsgRFRTX1JBTVBWQUxSX09GRlNFVCkgJg0KLS0gDQoyLjcuNA0K
