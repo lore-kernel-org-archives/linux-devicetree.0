@@ -1,86 +1,44 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v2 08/34] dt-bindings: arm: Convert PMU binding to
- json-schema
-Date: Thu, 6 Dec 2018 14:37:23 +0000
-Message-ID: <20181206143722.GA14887@arm.com>
-References: <20181203213223.16986-1-robh@kernel.org>
- <20181203213223.16986-9-robh@kernel.org>
- <20181205100858.GA14619@arm.com>
- <CAL_Jsq+YsVB8Ew=cb5W54eirMpAAOR7ApahCbHOtp2m3wpJYSg@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH V5 1/6] dt-bindings: fsl: add compatible for imx7ulp evk
+Date: Thu, 6 Dec 2018 22:45:11 +0800
+Message-ID: <20181206144508.GB12929@dragon>
+References: <1541862478-7839-1-git-send-email-aisheng.dong@nxp.com>
+ <1541862478-7839-2-git-send-email-aisheng.dong@nxp.com>
+ <CAOMZO5Cv4+s7xxibCYFQTJ=1bwshfQQ17GBmKYDu-w3cFbxLDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+YsVB8Ew=cb5W54eirMpAAOR7ApahCbHOtp2m3wpJYSg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <CAOMZO5Cv4+s7xxibCYFQTJ=1bwshfQQ17GBmKYDu-w3cFbxLDQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Dong Aisheng <aisheng.dong@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Dong Aisheng <dongas86@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 05, 2018 at 09:42:04AM -0600, Rob Herring wrote:
-> On Wed, Dec 5, 2018 at 4:08 AM Will Deacon <will.deacon@arm.com> wrote:
-> > On Mon, Dec 03, 2018 at 03:31:57PM -0600, Rob Herring wrote:
-> > > +properties:
-> > > +  compatible:
-> > > +    oneOf:
-> > > +      - items:
-> > > +          - enum:
-> > > +              - apm,potenza-pmu
-> > > +              - arm,armv8-pmuv3
-> > > +              - arm,cortex-a73-pmu
-> > > +              - arm,cortex-a72-pmu
-> > > +              - arm,cortex-a57-pmu
-> > > +              - arm,cortex-a53-pmu
-> > > +              - arm,cortex-a35-pmu
-> > > +              - arm,cortex-a17-pmu
-> > > +              - arm,cortex-a15-pmu
-> > > +              - arm,cortex-a12-pmu
-> > > +              - arm,cortex-a9-pmu
-> > > +              - arm,cortex-a8-pmu
-> > > +              - arm,cortex-a7-pmu
-> > > +              - arm,cortex-a5-pmu
-> > > +              - arm,arm11mpcore-pmu
-> > > +              - arm,arm1176-pmu
-> > > +              - arm,arm1136-pmu
-> > > +              - brcm,vulcan-pmu
-> > > +              - cavium,thunder-pmu
-> > > +              - qcom,scorpion-pmu
-> > > +              - qcom,scorpion-mp-pmu
-> > > +              - qcom,krait-pmu
-> > > +      - items:
-> > > +          - const: arm,cortex-a7-pmu
-> > > +          - const: arm,cortex-a15-pmu
-> >
-> > What do these last two mean?
+On Sat, Nov 10, 2018 at 01:50:13PM -0200, Fabio Estevam wrote:
+> On Sat, Nov 10, 2018 at 1:13 PM A.s. Dong <aisheng.dong@nxp.com> wrote:
 > 
-> The first list only allows a single compatible string. This list says
-> there are 2 and that the compatible property should be:
-> compatible = "arm,cortex-a7-pmu", "arm,cortex-a15-pmu";
+> Even a single line commit log would be better here.
+
++1
+
+I added a simple commit log and applied the patch.
+
+Shawn
+
 > 
-> Which shows up here:
-> arch/arm/boot/dts/sun6i-a31.dtsi:               compatible =
-> "arm,cortex-a7-pmu", "arm,cortex-a15-pmu";
-> arch/arm/boot/dts/sun7i-a20.dtsi:               compatible =
-> "arm,cortex-a7-pmu", "arm,cortex-a15-pmu";
+> > Cc: devicetree@vger.kernel.org
+> > Cc: Shawn Guo <shawnguo@kernel.org>
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 > 
-> Maybe the dts is wrong and should be fixed?
-
-Yes, that's wrong and you could end up with the kernel exposing the wrong
-events to userspace. So I think we can fix the .dts and leave the binding
-without this.
-
-> > > +required:
-> > > +  - compatible
-> >
-> > I probably said this before, but I do think that it's a shame to lose the
-> > example binding, especially for something like the PMU where you can
-> > pretty much take an example and bang in your own IRQ numbers to get it
-> > up and running.
-> 
-> I just thought it is so trivial that it didn't add much. I think most
-> folks would copy-n-paste from an actual dts file which has all the
-> other nodes you just need to update addresses and irq nums.
-
-True... even more of a reason to fix thise sun* .dts files then!
-
-Will
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
