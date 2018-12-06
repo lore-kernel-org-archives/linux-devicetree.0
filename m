@@ -1,47 +1,45 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [PATCH v4 0/4] Add support of STM32 hwspinlock
-Date: Thu, 6 Dec 2018 10:10:48 +0100
-Message-ID: <CA+M3ks5-5OWPz7Dan5fO6vTp74NpgCNxRhj1CL14hHSaTwrouQ@mail.gmail.com>
-References: <20181114090027.7580-1-benjamin.gaignard@linaro.org>
- <CA+M3ks5m1=gsGqB55T4xSGtAQW9Ct3Fxqx-gbYg=GoNwoX6B-w@mail.gmail.com> <20181206011045.GA23336@builder>
+From: David HERNANDEZ SANCHEZ <david.hernandezsanchez@st.com>
+Subject: [PATCH] thermal: stm32: read factory settings properly
+Date: Thu, 6 Dec 2018 09:12:56 +0000
+Message-ID: <1544087575-22242-1-git-send-email-david.hernandezsanchez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181206011045.GA23336@builder>
+Content-Language: en-US
+Content-ID: <1CBBC0193CA97B4DAA00046551B7631A@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Ohad Ben Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
 List-Id: devicetree@vger.kernel.org
 
-Le jeu. 6 d=C3=A9c. 2018 =C3=A0 02:12, Bjorn Andersson
-<bjorn.andersson@linaro.org> a =C3=A9crit :
->
-> On Fri 30 Nov 06:45 PST 2018, Benjamin Gaignard wrote:
->
-> > Le mer. 14 nov. 2018 =C4=85 10:00, Benjamin Gaignard
-> > <benjamin.gaignard@linaro.org> a =C3=A9crit :
-> > >
-> > > This serie adds the support of the hardware semaphore block for stm32=
-mp1 SoC.
-> > >
-> > > version 4:
-> > > - add Linaro SoB
-> >
-> > Gentle ping on this series
-> >
->
-> Sorry about that Benjamin, I was convinced that I picked your patches
-> already. Applied first two patches to hwspinlock tree.
-
-Thanks.
-
->
-> I expect the dts update to go through the ST tree, and I guess the
-> complaint from 0day tells us they already are?
-
-Yes I will send fixed dts patches for stm32 tree
-
->
-> Regards,
-> Bjorn
+Q2FsbCBzdG1fdGhlcm1hbF9yZWFkX2ZhY3Rvcnlfc2V0dGluZ3Mgb25jZQ0KaW50ZXJuYWwgcGVy
+aXBoZXJhbCBpcyBwcm9wZXJseSBjbG9ja2VkLg0KDQpUbyBhdm9pZCB3cm9uZyBpbml0aWFsaXph
+dGlvbiBvZiBmbXQwDQooc3RtX3RoZXJtYWxfc2Vuc29yIHN0cnVjdCkgbWVtYmVyIGFkZA0KYnJh
+Y2tldHMgcHJvcGVybHkuDQoNCkNoYW5nZS1JZDogSTE1MGQwMGZkNTBlMzgyZGYwNGJmYWQxMmYw
+NjUzYjFlZDZhMWRiMWINClNpZ25lZC1vZmYtYnk6IERhdmlkIEhlcm5hbmRleiBTYW5jaGV6IDxk
+YXZpZC5oZXJuYW5kZXpzYW5jaGV6QHN0LmNvbT4NCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvdGhl
+cm1hbC9zdC9zdG1fdGhlcm1hbC5jIGIvZHJpdmVycy90aGVybWFsL3N0L3N0bV90aGVybWFsLmMN
+CmluZGV4IDQ3NjIzZGEuLmJiZDczYzUgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3RoZXJtYWwvc3Qv
+c3RtX3RoZXJtYWwuYw0KKysrIGIvZHJpdmVycy90aGVybWFsL3N0L3N0bV90aGVybWFsLmMNCkBA
+IC0yNDEsOCArMjQxLDggQEAgc3RhdGljIGludCBzdG1fdGhlcm1hbF9yZWFkX2ZhY3Rvcnlfc2V0
+dGluZ3Moc3RydWN0IHN0bV90aGVybWFsX3NlbnNvciAqc2Vuc29yKQ0KIAkJc2Vuc29yLT50MCA9
+IFRTMV9UMF9WQUwxOw0KIA0KIAkvKiBSZXRyaWV2ZSBmbXQwIGFuZCBwdXQgaXQgb24gSHogKi8N
+Ci0Jc2Vuc29yLT5mbXQwID0gQURKVVNUICogcmVhZGxfcmVsYXhlZChzZW5zb3ItPmJhc2UgKyBE
+VFNfVDBWQUxSMV9PRkZTRVQpDQotCQkJCQkgICAgICAmIFRTMV9GTVQwX01BU0s7DQorCXNlbnNv
+ci0+Zm10MCA9IEFESlVTVCAqIChyZWFkbF9yZWxheGVkKHNlbnNvci0+YmFzZSArDQorCQkJCSBE
+VFNfVDBWQUxSMV9PRkZTRVQpICYgVFMxX0ZNVDBfTUFTSyk7DQogDQogCS8qIFJldHJpZXZlIHJh
+bXAgY29lZmZpY2llbnQgKi8NCiAJc2Vuc29yLT5yYW1wX2NvZWZmID0gcmVhZGxfcmVsYXhlZChz
+ZW5zb3ItPmJhc2UgKyBEVFNfUkFNUFZBTFJfT0ZGU0VUKSAmDQpAQCAtNTMyLDYgKzUzMiwxMCBA
+QCBzdGF0aWMgaW50IHN0bV90aGVybWFsX3ByZXBhcmUoc3RydWN0IHN0bV90aGVybWFsX3NlbnNv
+ciAqc2Vuc29yKQ0KIAlpZiAocmV0KQ0KIAkJcmV0dXJuIHJldDsNCiANCisJcmV0ID0gc3RtX3Ro
+ZXJtYWxfcmVhZF9mYWN0b3J5X3NldHRpbmdzKHNlbnNvcik7DQorCWlmIChyZXQpDQorCQlnb3Rv
+IHRoZXJtYWxfdW5wcmVwYXJlOw0KKw0KIAlyZXQgPSBzdG1fdGhlcm1hbF9jYWxpYnJhdGlvbihz
+ZW5zb3IpOw0KIAlpZiAocmV0KQ0KIAkJZ290byB0aGVybWFsX3VucHJlcGFyZTsNCkBAIC02MzYs
+MTAgKzY0MCw2IEBAIHN0YXRpYyBpbnQgc3RtX3RoZXJtYWxfcHJvYmUoc3RydWN0IHBsYXRmb3Jt
+X2RldmljZSAqcGRldikNCiAJLyogUG9wdWxhdGUgc2Vuc29yICovDQogCXNlbnNvci0+YmFzZSA9
+IGJhc2U7DQogDQotCXJldCA9IHN0bV90aGVybWFsX3JlYWRfZmFjdG9yeV9zZXR0aW5ncyhzZW5z
+b3IpOw0KLQlpZiAocmV0KQ0KLQkJcmV0dXJuIHJldDsNCi0NCiAJc2Vuc29yLT5jbGsgPSBkZXZt
+X2Nsa19nZXQoJnBkZXYtPmRldiwgInBjbGsiKTsNCiAJaWYgKElTX0VSUihzZW5zb3ItPmNsaykp
+IHsNCiAJCWRldl9lcnIoJnBkZXYtPmRldiwgIiVzOiBmYWlsZWQgdG8gZmV0Y2ggUENMSyBjbG9j
+a1xuIiwNCi0tIA0KMi43LjQNCg==
