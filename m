@@ -1,59 +1,36 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v5 0/6] Add Fieldbus subsystem + support HMS Profinet card
-Date: Wed, 5 Dec 2018 20:05:33 -0600
-Message-ID: <3b0b4c5c-23a6-428c-6060-3e5c314bd9e7@lechnology.com>
-References: <20181204220224.27324-1-TheSven73@googlemail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH RESEND V2 0/4] ARM: dts: imx: Add flexcan stop mode wake
+Date: Thu, 6 Dec 2018 10:21:09 +0800
+Message-ID: <20181206022108.GY3987@dragon>
+References: <20181203051753.1532-1-qiangqing.zhang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181204220224.27324-1-TheSven73@googlemail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181203051753.1532-1-qiangqing.zhang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sven Van Asbroeck <thesven73@gmail.com>, svendev@arcx.com, robh+dt@kernel.org, linus.walleij@linaro.org
-Cc: lee.jones@linaro.org, mark.rutland@arm.com, afaerber@suse.de, treding@nvidia.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, stuyoder@gmail.com, maxime.ripard@bootlin.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc: "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/4/18 4:02 PM, Sven Van Asbroeck wrote:
-> This patch:
->    1. adds a Fieldbus subsystem
->    2. adds support for the HMS Industrial Networks AB Profinet card.
+On Mon, Dec 03, 2018 at 05:20:16AM +0000, Joakim Zhang wrote:
+> This patchset intends to add flexcan stop mode wakeup support on IMX6/7 platforms.
+> 
+> ChangeLog:
+> V1->V2:
+> 	*update stop mode property(stop-mode -> fsl,stop-mode).
+> 
+> Hi Shawn,
+>    This property has been merged both flexcan bindings doc and kernel
+>    driver.
+> 
+> Best Regards,
+> Joakim Zhang
+> 
+> Aisheng Dong (4):
+>   ARM: dts: imx6sx: Add flexcan stop mode wakeup support
+>   ARM: dts: imx6qdl: Add flexcan stop mode wakeup support
+>   ARM: dts: imx6ul: Add flexcan stop mode wakeup support
+>   ARM: dts: imx7s: Add flexcan stop mode wakeup support
 
-Does this actually need a new fieldbus subsystem or could it just be
-implemented as a new network protocol?
-
-> 
-> 1. Fieldbus subsystem
-> ---------------------
-> 
-> Fieldbus device (client) adapters allow data exchange with a PLC aka.
-> "Fieldbus Controller" over a fieldbus (Profinet, FLNet, etc.)
-> They are typically used when a Linux device wants to expose itself
-> as an actuator, motor, console light, switch, etc. over the fieldbus.
-> The framework is designed to provide a generic interface to Fieldbus
-> Devices from both the Linux Kernel and the userspace.
-
-Then this generic interface to a fieldbus device could just be a socket.
-
-> 
-> 2. Add support for HMS Profinet Card
-> ------------------------------------
-> 
-> Profinet is an industry technical standard for data communication over
-> Industrial Ethernet, designed for collecting data from, and controlling,
-> equipment in industrial systems, with a particular strength in delivering data
-> under tight time constraints (on the order of 1ms or less).
-> 
-> The profinet card itself is connected to the system via an industrial bus
-> called 'anybus'.
-> 
-> I have followed the bus driver/client driver pattern, and created an anybus
-> bus driver, plus a client driver for the profinet card.
-> 
-> In case this patch set gets (eventually) accepted, drivers for other anybus
-> client cards may follow: flnet, cc-link, ...
-> 
-> The anybus slot on the host is located on an 'anybus controller', which is
-> custom h/w designed by arcx. It exposes a dual anybus host implementation,
-> plus a power readout unrelated to the anybus.
-> 
+Applied all, thanks.
