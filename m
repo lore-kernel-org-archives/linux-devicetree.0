@@ -1,119 +1,58 @@
-From: Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 00/14] rtc: sun6i: clock rework and
- pre-H6 SoC support
-Date: Thu, 6 Dec 2018 21:34:19 +0100
-Message-ID: <20181206203419.GD8952@piout.net>
-References: <20181203145825.20511-1-wens@csie.org>
- <CAGb2v65GwzEHZnRJysp=qE4HjrTa+TzCeyQ_j_Q=RrwtnC617g@mail.gmail.com>
-Reply-To: alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: Moving ARM dts files
+Date: Thu, 6 Dec 2018 12:49:42 -0800
+Message-ID: <CAOesGMgTVHakL+m004Wu2gtHETAXuO8kV9jByaX4XQq_W3QAxA@mail.gmail.com>
+References: <20181204183649.GA5716@bogus>
+ <9c2b5528-679a-928e-3150-aa383a4f0405@suse.de>
+ <CAL_JsqKO3v0pgVfNhVNOkpZ4sePrybDgZG0riN-tutvwOZ4zYg@mail.gmail.com>
+ <2474284e-8a55-639f-2cfa-f811741099f3@suse.de>
+ <CAL_JsqL4WoMqFCQ0vFd6z_i=9imnfVsQjeKOG8zxNwi5caneRQ@mail.gmail.com>
+ <20181206200652.GB3084@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCKYNX7Y3IMBBTEPU3QAKGQELSOYF7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAGb2v65GwzEHZnRJysp=qE4HjrTa+TzCeyQ_j_Q=RrwtnC617g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <20181206200652.GB3084-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Unsubscribe: <https://lists.linaro.org/mailman/options/boot-architecture>,
+ <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/boot-architecture/>
+List-Post: <mailto:boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linaro.org/mailman/listinfo/boot-architecture>,
+ <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Errors-To: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Sender: "boot-architecture" <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, LinusW <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory CLEMENT <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ARM-SoC Maintainers <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boot Architecture <boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel@>
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/2018 13:49:10+0800, Chen-Yu Tsai wrote:
-> Hi,
-> 
-> On Mon, Dec 3, 2018 at 10:58 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> >
-> > Hi everyone,
-> >
-> > This is v2 of my rtc-sun6i clean-up series.
-> >
-> > Changes since v1:
-> >
-> >   - Collected tags
-> >   - Dropped patch "clk: sunxi-ng: r40: Force LOSC parent to RTC LOSC
-> >     output"; already merged
-> >   - Removed H6 compatible CLK_OF_DECLARE_DRIVER entry that wasn't
-> >     overlooked
-> >   - Only export IOSC clock for A64/H3/H5
-> >
-> > Original cover letter, with patch numbers corrected, follows:
-> >
-> > This series was started as part of enabling Bluetooth on various
-> > Allwinner SBCs. The bluetooth controller requires a precise 32.768 kHz
-> > clock fed to it to correctly detect the frequency of its main oscillator.
-> > This clock signal is provided by the RTC, either directly from a special
-> > pin on the SoC, or some clock output function from the clock controllers.
-> > I found that the clock-related properties of the RTC on later SoCs were
-> > incorrect or missing.
-> >
-> > This series reworks the compatible strings and clock parts of the device
-> > tree bindings for sun6i-rtc. Currently we assume most Allwinner SoCs use
-> > the same sun6i-rtc variant, when in fact they do not. The differences
-> > that matter with regards to clocks are a) the A31 does not have an extra
-> > external output for the RTC 32K clock, while most of the others do;
-> > b) the clock frequency of the internal RC oscillator is different on
-> > some SoCs; c) on the H6 the RTC also handles the 24 MHz DCXO, which
-> > feeds the system HOSC. The last difference, and by extension the H6, are
-> > not covered in this series.
-> >
-> > Patch 1 cleans up the clock-related section of the RTC device tree
-> > binding. This would make it easier to read and easier to add additional
-> > clocks.
-> >
-> > Patch 2 adds compatible strings for all identified variants introduced
-> > prior to the H6.
-> >
-> > Patch 3 deprecates the external clock output for the A31. The A31 does
-> > not have this output, so it's introduction and usage was an error.
-> >
-> > Patch 4 adds a clock output for the RTC's internal oscillator to the
-> > device tree binding. This feeds the PRCM in some SoCs.
-> >
-> > Patch 5 adds a default clock name for the LOSC to the RTC driver.
-> >
-> > Patch 6 adds support for different hardware variants to the RTC driver.
-> >
-> > Patch 7 adds support for all known pre-H6 variants.
-> >
-> > Patch 8 exposes the RTC's internal oscillator through the device tree.
-> >
-> > Patch 9 through 14 adds an RTC node or fixes up the RTC device node
-> > address ranges, clock properties, names of existing clocks, and adds
-> > accuracy properties for the external fixed oscillators.
-> >
-> > The clock names require fixing because the sunxi clock driver implicitly
-> > depends on the HOSC and LOSC being named "osc24M" and "osc32k". The
-> > "fixes" to the clock hierarchy introduced in this series means the names
-> > must also be shuffled around or the in kernel representation would be
-> > incorrect. This has been the case since the sunxi-ng drivers were
-> > introduced. There are plans to address this, but the code is still in its
-> > early stages.
-> >
-> > Please have a look.
-> >
-> > Thanks
-> > ChenYu
-> >
-> > Chen-Yu Tsai (14):
-> >   dt-bindings: rtc: sun6i-rtc: Rewrite clock outputs as a list
-> >   dt-bindings: rtc: sun6i-rtc: Add compatible strings for pre-H6
-> >     variants
-> >   dt-bindings: rtc: sun6i-rtc: Deprecate external clock output for A31
-> >   dt-bindings: rtc: sun6i-rtc: Export internal RC oscillator
-> >   rtc: sun6i: Add default clock name for LOSC
-> >   rtc: sun6i: Add support for different variants
-> >   rtc: sun6i: Add support for all known pre-H6 variants
-> >   rtc: sun6i: Expose internal oscillator through device tree
-
-I've applied the above patches. However, for whatever reason, patch 3
-didn't apply without some fuzz, please check.
-
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+T24gVGh1LCBEZWMgNiwgMjAxOCBhdCAxMjowNyBQTSBNYXJrIEJyb3duIDxicm9vbmllQGtlcm5l
+bC5vcmc+IHdyb3RlOgo+Cj4gT24gVGh1LCBEZWMgMDYsIDIwMTggYXQgMDE6MDY6NDNQTSAtMDYw
+MCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPiBPbiBUaHUsIERlYyA2LCAyMDE4IGF0IDc6MzIgQU0g
+QW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPiB3cm90ZToKPgo+ID4gPiBJJ2QgYmUg
+b2theSB3aXRoIGRpc3Rpbmd1aXNoaW5nIHNvdXJjZSB2cy4gaW5zdGFsbCBsb2NhdGlvbi4gRHVl
+IHRvIHRoZQo+ID4gPiBpc3N1ZSBJIG1lbnRpb24gYmVsb3cgKGFuZCBtb3JlKSB3ZSBjYW4ndCB1
+c2UgaW5zdGFsbF9kdGJzIGZvciBvcGVuU1VTRQo+ID4gPiBhbmQgaGFkIHRvIHJlaW1wbGVtZW50
+IGl0LCB3aGljaCB3ZSdkIG5lZWQgdG8gKGFuZCBjYW4pIGFkanVzdC4KPgo+ID4gV2hhdCB3b3Vs
+ZCBiZSBuZWVkZWQgZm9yIGR0YnNfaW5zdGFsbCB0byB3b3JrPyBhcm02NCBuZWVkcyB0byBzdXBw
+b3J0Cj4gPiBhIGZsYXQgaW5zdGFsbD8gSWYgaXQgZG9lc24ndCB3b3JrIGZvciBEZWJpYW4gb3Ig
+b3BlblNVU0UsIEknbSBub3QKPiA+IHN1cmUgd2h5IHdlIGhhdmUgaXQuIFNvIEknZCBsaWtlIHRv
+IG1ha2UgaXQgd29yay4KPgo+IENvcnJlY3QgbWUgaWYgSSdtIHdyb25nIGJ1dCBhcyBmYXIgYXMg
+dGhlIGZsYXQgdnMgZGlyZWN0b3J5IHRoaW5nIGdvZXMKPiBpc24ndCB0aGUgaXNzdWUgdGhhdCB0
+aGlzIHdpbmRzIHVwIGJlaW5nIGEgcmVuYW1lIGZvciBhbiBleGlzdGluZyAzMiBiaXQKPiBzeXN0
+ZW0/ICBJZiB5b3UganVzdCBpbnN0YWxsIHRoZSBkdGJzIGluIHRoZSBkZWZhdWx0IGxvY2F0aW9u
+IHRoZW4gYQo+IGJvb3Rsb2FkZXIgb3Igd2hhdGV2ZXIgdGhhdCBpcyBoYXJkIGNvZGVkIHRvIGxv
+b2sgZm9yIGZvby1iYXIuZHRiIHdvbid0Cj4gc2VlIHRoZSBuZXcgZm9vL2Zvby1iYXIuZHRiIChv
+ciB3aGF0ZXZlcikgYW5kIHdpbGwgY29udGludWUgdG8gdXNlIHRoZQo+IG9sZCBiaW5hcnkuICBJ
+dCdzIG5vdCB0aGUgZmFjdCB0aGF0IHRoYXQgaXQncyBpbiBhIGRpcmVjdG9yeSwgaXQncyB0aGUK
+PiBmYWN0IHRoYXQgdGhlIGJvb3Rsb2FkZXIgc2VlcyB0aGUgbmFtZSBpdCBuZWVkcyB0byBsb29r
+IGZvciBjaGFuZ2UgKGlmCj4gaXQncyBsb29raW5nIG9uIGEgZmlsZXN5c3RlbSBhdCBhbGwpLiAg
+VGhpcyBpc24ndCBhIHByb2JsZW0gZm9yIGFybTY0IGFzCj4gdGhlIGxvY2F0aW9uIGlzbid0IGNo
+YW5naW5nLCBpdCdzIHVzZWQgZGlyZWN0b3JpZXMgZnJvbSBkYXkgb25lLgoKWWVhaCwgaW5zdGFs
+bCBuZWVkcyB0byByZW1haW4gZmxhdCBldmVuIGlmIHRoZSBkdHMgZmlsZXMgbW92ZSBpbnRvCnN1
+YmRpcmVjdG9yaWVzLiBJdCB3aWxsIGJlIHBhaW5mdWwgZm9yIGV2ZXJ5Ym9keSBpZiB0aGUgaW5z
+dGFsbApsb2NhdGlvbiBtb3Zlcy4KCj4gVGhlIGlzc3VlcyB3aXRoIHRoZSBleGlzdGluZyBpbnN0
+YWxsX2R0YnMgc291bmRlZCB1bnJlbGF0ZWQgdG8gdGhpcy4KCkFncmVlZC4KCgotT2xvZgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpib290LWFyY2hpdGVj
+dHVyZSBtYWlsaW5nIGxpc3QKYm9vdC1hcmNoaXRlY3R1cmVAbGlzdHMubGluYXJvLm9yZwpodHRw
+czovL2xpc3RzLmxpbmFyby5vcmcvbWFpbG1hbi9saXN0aW5mby9ib290LWFyY2hpdGVjdHVyZQo=
