@@ -1,76 +1,64 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 3/3] arm64: dts: allwinner: a64: Add pinmux setting
- for CSI MCLK on PE1
-Date: Thu, 6 Dec 2018 16:35:32 +0100
-Message-ID: <20181206153532.6c756gccmpuj4wdw@flea>
-References: <20181206132306.11843-1-jagan@amarulasolutions.com>
- <20181206132306.11843-3-jagan@amarulasolutions.com>
+From: Frederic Barrat <fbarrat@linux.ibm.com>
+Subject: Re: [PATCH v2] misc: cxl: Use device_type helpers to access the node
+ type
+Date: Thu, 6 Dec 2018 16:36:56 +0100
+Message-ID: <dcc44aac-8ee4-4f9c-4016-f29f6a4f8c23@linux.ibm.com>
+References: <20181205191655.14612-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cbvttiq36vayljpk"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181206132306.11843-3-jagan@amarulasolutions.com>
+In-Reply-To: <20181205191655.14612-1-robh@kernel.org>
+Content-Language: fr
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, Michael Trimarchi <michael@amarulasolutions.com>
+To: Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org, Andrew Donnellan <andrew.donnellan@au1.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
 
---cbvttiq36vayljpk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 06, 2018 at 06:53:06PM +0530, Jagan Teki wrote:
-> Some camera modules have the SoC feeding a master clock to the sensor
-> instead of having a standalone crystal. This clock signal is generated
-> from the clock control unit and output from the CSI MCLK function of
-> pin PE1.
->=20
-> Add a pinmux setting for it for camera sensors to reference.
->=20
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Le 05/12/2018 à 20:16, Rob Herring a écrit :
+> Remove directly accessing device_type property and use the
+> of_node_is_type accessor instead. While not using it here, this is
+> part of eventually removing the struct device_node.type pointer.
+> 
+> Cc: Frederic Barrat <fbarrat@linux.vnet.ibm.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
-> Changes for v2:
-> - new patch
->=20
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/b=
-oot/dts/allwinner/sun50i-a64.dtsi
-> index d7ab0006ebce..902b5238f1dd 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -538,6 +538,11 @@
->  				function =3D "csi0";
->  			};
-> =20
-> +			csi_mclk_pin: csi-mclk {
-> +				pins =3D "PE1";
-> +				function =3D "csi0";
-> +			};
-> +
+> v2:
+> - Reword commit message as this change was using the .type ptr.
 
-We're not merging nodes that have no users.
+Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
 
-Maxime
 
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---cbvttiq36vayljpk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXAlBxAAKCRDj7w1vZxhR
-xQMnAPoCXJz4177Z0gPYi1tab7dXUbO0+S8NzlYsHPdhoM9eMwEArRInznK0aoTF
-epDN7HgXYeTlO3/290Hr/ZcarCUC5AM=
-=AP9r
------END PGP SIGNATURE-----
-
---cbvttiq36vayljpk--
+> 
+>   drivers/misc/cxl/pci.c | 4 +---
+>   1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/misc/cxl/pci.c b/drivers/misc/cxl/pci.c
+> index b66d832d3233..c79ba1c699ad 100644
+> --- a/drivers/misc/cxl/pci.c
+> +++ b/drivers/misc/cxl/pci.c
+> @@ -1718,7 +1718,6 @@ int cxl_slot_is_switched(struct pci_dev *dev)
+>   {
+>   	struct device_node *np;
+>   	int depth = 0;
+> -	const __be32 *prop;
+> 
+>   	if (!(np = pci_device_to_OF_node(dev))) {
+>   		pr_err("cxl: np = NULL\n");
+> @@ -1727,8 +1726,7 @@ int cxl_slot_is_switched(struct pci_dev *dev)
+>   	of_node_get(np);
+>   	while (np) {
+>   		np = of_get_next_parent(np);
+> -		prop = of_get_property(np, "device_type", NULL);
+> -		if (!prop || strcmp((char *)prop, "pciex"))
+> +		if (!of_node_is_type(np, "pciex"))
+>   			break;
+>   		depth++;
+>   	}
+> 
