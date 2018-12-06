@@ -1,313 +1,161 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Add proper regulator states for
- suspend-to-mem for odroid-u3
-Date: Thu, 6 Dec 2018 08:42:00 +0530
-Message-ID: <CANAwSgQPcfAjyZEXfkWc6E4+N_k4nC3EPs96BpFkaTuQQ3FC6Q@mail.gmail.com>
-References: <20181204194025.2719-1-linux.amoon@gmail.com> <CAJKOXPcT-x0JWVw2CaxHzSthxbp3sDRcsa4Nc5gHYqUy98b_yw@mail.gmail.com>
- <CANAwSgSSOmTbqS4WUYZHXdB8XL5fjoiGbrh3unxufQ0gZXBPkQ@mail.gmail.com> <CAJKOXPdvk0Kip-RrFF3cwTpuXnFFL2PEi1U57=vMzNY7HVjTGw@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 2/4] ARM: dts: imx7d: cl-som-imx7: WiLink8 WLAN support
+Date: Thu, 6 Dec 2018 11:11:36 +0800
+Message-ID: <20181206031134.GC3987@dragon>
+References: <20181204110741.6943-1-hohatzel@jusst.de>
+ <20181204110741.6943-3-hohatzel@jusst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPdvk0Kip-RrFF3cwTpuXnFFL2PEi1U57=vMzNY7HVjTGw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20181204110741.6943-3-hohatzel@jusst.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans Ole Hatzel <hohatzel@jusst.de>
+Cc: devicetree@vger.kernel.org, Julian Scheel <jscheel@jusst.de>, linux-arm-kernel@lists.infradead.org, fabio.estevam@nxp.com, ilya@compulab.co.il, linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+On Tue, Dec 04, 2018 at 12:07:39PM +0100, Hans Ole Hatzel wrote:
+> Add support for WiLink8 module which is connected via USDHC 2.
+> 
+> Signed-off-by: Hans Ole Hatzel <hohatzel@jusst.de>
+> Signed-off-by: Julian Scheel <jscheel@jusst.de>
+> ---
+>  arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 64 +++++++++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+> index 11bd713b540f..e77e0cc7de39 100644
+> --- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+> +++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+> @@ -30,6 +30,28 @@
+>  		gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
+>  		enable-active-high;
+>  	};
+> +
+> +	rf_pwr_en_reg: regulator-rf-pwr-en {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "rf-pwr-en-regulator";
 
-On Wed, 5 Dec 2018 at 21:49, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Wed, 5 Dec 2018 at 17:11, Anand Moon <linux.amoon@gmail.com> wrote:
-> >
-> > Hi Krzysztof,
-> >
-> > Thanks for your review.
-> > .
-> > On Wed, 5 Dec 2018 at 19:36, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > >
-> > > On Tue, 4 Dec 2018 at 20:40, Anand Moon <linux.amoon@gmail.com> wrote:
-> > > >
-> > > > Add suspend-to-mem node to regulator core to be enabled or disabled
-> > > > during system suspend and also support changing the regulator operating
-> > > > mode during runtime and when the system enter sleep mode.
-> > > >
-> > > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > > > ---
-> > > > Tested on Odroid U3+
-> > > > ---
-> > > >  .../boot/dts/exynos4412-odroid-common.dtsi    | 72 +++++++++++++++++++
-> > > >  1 file changed, 72 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> > > > index 2caa3132f34e..837713a2ec3b 100644
-> > > > --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> > > > +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> > > > @@ -285,6 +285,9 @@
-> > > >                                 regulator-min-microvolt = <1800000>;
-> > > >                                 regulator-max-microvolt = <1800000>;
-> > > >                                 regulator-always-on;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-on-in-suspend;
-> > > > +                               };
-> > >
-> > > Driver does not support suspend_enable so this will be noop. We could
-> > > add this for DT-correctness (and full description of HW) but then I
-> > > need explanation why this regulator has to stay on during suspend.
-> > >
-> >
-> > Well I tried to study the suspend/resume feature from
-> > *arch/arm/boot/dts/exynos4412-midas.dtsi*
-> > and them I tried to apply the same with this on Odroid-U3 boards and
-> > test these changes.
->
-> Midas DTSI clearly has bugs then.
->
-> >
-> > > >                         };
-> > > >
-> > > >                         ldo3_reg: LDO3 {
-> > > > @@ -292,6 +295,9 @@
-> > > >                                 regulator-min-microvolt = <1800000>;
-> > > >                                 regulator-max-microvolt = <1800000>;
-> > > >                                 regulator-always-on;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-off-in-suspend;
-> > > > +                               };
-> > >
-> > > The same but with suspend_disable.
-> > >
-> > > I am not saying that these are wrong but I would be happy to see
-> > > explanations why you chosen these particular properties.
-> > >
-> >
-> > Well I was not aware on the regulator-always-on cannot be set to off
-> > in suspend mode.
-> > Will drop this in the future patch where regulator-always-on; is set.
-> >
-> > > >                         };
-> > > >
-> > > >                         ldo4_reg: LDO4 {
-> > > > @@ -299,6 +305,9 @@
-> > > >                                 regulator-min-microvolt = <2800000>;
-> > > >                                 regulator-max-microvolt = <2800000>;
-> > > >                                 regulator-boot-on;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-on-in-suspend;
-> > > > +                               };
-> > > >                         };
-> > > >
-> > > >                         ldo5_reg: LDO5 {
-> > > > @@ -307,6 +316,9 @@
-> > > >                                 regulator-max-microvolt = <1800000>;
-> > > >                                 regulator-always-on;
-> > > >                                 regulator-boot-on;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-on-in-suspend;
-> > > > +                               };
-> > > >                         };
-> > > >
-> > > >                         ldo6_reg: LDO6 {
-> > > > @@ -314,6 +326,9 @@
-> > > >                                 regulator-min-microvolt = <1000000>;
-> > > >                                 regulator-max-microvolt = <1000000>;
-> > > >                                 regulator-always-on;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-on-in-suspend;
-> > > > +                               };
-> > > >                         };
-> > > >
-> > > >                         ldo7_reg: LDO7 {
-> > > > @@ -321,18 +336,27 @@
-> > > >                                 regulator-min-microvolt = <1000000>;
-> > > >                                 regulator-max-microvolt = <1000000>;
-> > > >                                 regulator-always-on;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-on-in-suspend;
-> > > > +                               };
-> > > >                         };
-> > > >
-> > > >                         ldo8_reg: LDO8 {
-> > > >                                 regulator-name = "VDD10_HDMI_1.0V";
-> > > >                                 regulator-min-microvolt = <1000000>;
-> > > >                                 regulator-max-microvolt = <1000000>;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-off-in-suspend;
-> > > > +                               };
-> > > >                         };
-> > > >
-> > > >                         ldo10_reg: LDO10 {
-> > > >                                 regulator-name = "VDDQ_MIPIHSI_1.8V";
-> > > >                                 regulator-min-microvolt = <1800000>;
-> > > >                                 regulator-max-microvolt = <1800000>;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-off-in-suspend;
-> > > > +                               };
-> > > >                         };
-> > > >
-> > > >                         ldo11_reg: LDO11 {
-> > > > @@ -340,6 +364,9 @@
-> > > >                                 regulator-min-microvolt = <1800000>;
-> > > >                                 regulator-max-microvolt = <1800000>;
-> > > >                                 regulator-always-on;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-off-in-suspend;
-> > > > +                               };
-> > > >                         };
-> > > >
-> > > >                         ldo12_reg: LDO12 {
-> > > > @@ -348,6 +375,9 @@
-> > > >                                 regulator-max-microvolt = <3300000>;
-> > > >                                 regulator-always-on;
-> > > >                                 regulator-boot-on;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-off-in-suspend;
-> > > > +                               };
-> > > >                         };
-> > > >
-> > > >                         ldo13_reg: LDO13 {
-> > > > @@ -356,6 +386,9 @@
-> > > >                                 regulator-max-microvolt = <1800000>;
-> > > >                                 regulator-always-on;
-> > > >                                 regulator-boot-on;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-off-in-suspend;
-> > > > +                               };
-> > > >                         };
-> > > >
-> > > >                         ldo14_reg: LDO14 {
-> > > > @@ -364,6 +397,9 @@
-> > > >                                 regulator-max-microvolt = <1800000>;
-> > > >                                 regulator-always-on;
-> > > >                                 regulator-boot-on;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-off-in-suspend;
-> > > > +                               };
-> > > >                         };
-> > > >
-> > > >                         ldo15_reg: LDO15 {
-> > > > @@ -372,6 +408,9 @@
-> > > >                                 regulator-max-microvolt = <1000000>;
-> > > >                                 regulator-always-on;
-> > > >                                 regulator-boot-on;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-off-in-suspend;
-> > > > +                               };
-> > > >                         };
-> > > >
-> > > >                         ldo16_reg: LDO16 {
-> > > > @@ -380,6 +419,9 @@
-> > > >                                 regulator-max-microvolt = <1800000>;
-> > > >                                 regulator-always-on;
-> > > >                                 regulator-boot-on;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-on-in-suspend;
-> > > > +                               };
-> > > >                         };
-> > > >
-> > > >                         ldo20_reg: LDO20 {
-> > > > @@ -387,6 +429,9 @@
-> > > >                                 regulator-min-microvolt = <1800000>;
-> > > >                                 regulator-max-microvolt = <1800000>;
-> > > >                                 regulator-boot-on;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-off-in-suspend;
-> > > > +                               };
-> > > >                         };
-> > > >
-> > > >                         ldo21_reg: LDO21 {
-> > > > @@ -394,6 +439,9 @@
-> > > >                                 regulator-min-microvolt = <2800000>;
-> > > >                                 regulator-max-microvolt = <2800000>;
-> > > >                                 regulator-boot-on;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-on-in-suspend;
-> > >
-> > > That's unusual setting... enabled in suspend but not necessarily
-> > > during work (no always-on).
-> > >
-> >
-> > I kept the regulator required for emmc/sd card in
-> > regulator-on-in-suspend in suspend mode.
-> >
-> > > > +                               };
-> > > >                         };
-> > > >
-> > > >                         ldo22_reg: LDO22 {
-> > > > @@ -411,6 +459,9 @@
-> > > >                                 regulator-max-microvolt = <1800000>;
-> > > >                                 regulator-always-on;
-> > > >                                 regulator-boot-on;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-off-in-suspend;
-> > > > +                               };
-> > > >                         };
-> > > >
-> > > >                         buck1_reg: BUCK1 {
-> > > > @@ -419,6 +470,9 @@
-> > > >                                 regulator-max-microvolt = <1100000>;
-> > > >                                 regulator-always-on;
-> > > >                                 regulator-boot-on;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-off-in-suspend;
-> > > > +                               };
-> > >
-> > > This is seriously wrong so I have doubts whether you tested the
-> > > changes or you know what is happening with them. If you turn off
-> > > memory bus regulator off, how the memory will work in
-> > > Suspend-to-Memory mode?
-> > >
-> >
-> > Well I did not find any issue in my testing but I might be wrong.
-> > Ok I will drop this changes in the next version of the patch where
-> > regulator-always-on is set.
->
-> It worked fine because regulator-off-in-suspend is noop for buck1 but
-> it is clearly wrong from logical point of view. Do you think that
-> memory should be off in Suspend to RAM?
->
-My bad setting this for buck setting I will drop this in the future patch.
-> > > >                         };
-> > > >
-> > > >                         buck2_reg: BUCK2 {
-> > > > @@ -427,6 +481,9 @@
-> > > >                                 regulator-max-microvolt = <1350000>;
-> > > >                                 regulator-always-on;
-> > > >                                 regulator-boot-on;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-on-in-suspend;
-> > > > +                               };
-> > > >                         };
-> > > >
-> > > >                         buck3_reg: BUCK3 {
-> > > > @@ -435,6 +492,9 @@
-> > > >                                 regulator-max-microvolt = <1050000>;
-> > > >                                 regulator-always-on;
-> > > >                                 regulator-boot-on;
-> > > > +                               regulator-state-mem {
-> > > > +                                       regulator-off-in-suspend;
-> > >
-> > > Looks suspicious as well.
-> >
-> > Ok I will drop this changes in the next version of the patch where
-> > regulator-always-on is set.
-> >
-> > >
-> > > Best regards,
-> > > Krzysztof
-> > >
-> >
-> > Well I have tested this patch as following
-> > with only one issue, before enable suspend number of On-line cpu is 4
-> > after resume number of On-line cpu is 1.
->
-> If before your change number of resumed CPUs was 4, then you
-> apparently break some things.
->
-> Best regards,
-> Krzysztof
+I think "rf-pwr-en" is good enough.
 
-Ok I will double check that I do not break any feature.
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&pca9555 9 GPIO_ACTIVE_HIGH>;
+> +		startup-delay-us = <70000>;
+> +		enable-active-high;
+> +		regulator-always-on;
+> +	};
+> +
+> +	wlan_en_reg: regulator-wlan-en {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "wlan-en-regulator";
 
-Best Regards
--Anand
+"wlan-en"
+
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&pca9555 0 GPIO_ACTIVE_HIGH>;
+> +		/* WLAN card specific delay */
+> +		startup-delay-us = <70000>;
+> +		enable-active-high;
+> +	};
+>  };
+>  
+>  &cpu0 {
+> @@ -199,6 +221,28 @@
+>  	status = "okay";
+>  };
+>  
+> +&usdhc2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc2>;
+> +	cd-gpios = <>;
+> +	wp-gpios = <>;
+
+What do these mean?
+
+> +	no-1-8-v;
+> +	keep-power-in-suspend;
+> +	enable-sdio-wakeup;
+
+The property is deprecated.  Use "wakeup-source" instead.
+
+> +	vmmc-supply = <&wlan_en_reg>;
+> +	non-removable;
+> +	cap-power-off-card;
+> +	status = "okay";
+
+Put 'status' at bottom of property list.
+
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+
+Have a newline between properties and child node.
+
+> +	wlcore: wlcore@0 {
+> +		compatible = "ti,wl1835";
+> +		reg = <2>;
+
+The 'reg' property should match unit-address in node name.
+
+Shawn
+
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <15 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> +};
+> +
+>  &usdhc3 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_usdhc3>;
+> @@ -211,6 +255,15 @@
+>  };
+>  
+>  &iomuxc {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hog>;
+> +
+> +	pinctrl_hog: hoggrp {
+> +		fsl,pins = <
+> +			MX7D_PAD_GPIO1_IO15__GPIO1_IO15			0x34 /* WLAN IRQ */
+> +		>;
+> +	};
+> +
+>  	pinctrl_enet1: enet1grp {
+>  		fsl,pins = <
+>  			MX7D_PAD_SD2_CD_B__ENET1_MDIO			0x30
+> @@ -261,6 +314,17 @@
+>  		>;
+>  	};
+>  
+> +	pinctrl_usdhc2: usdhc2grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_SD2_CMD__SD2_CMD			0x59
+> +			MX7D_PAD_SD2_CLK__SD2_CLK			0x19
+> +			MX7D_PAD_SD2_DATA0__SD2_DATA0			0x59
+> +			MX7D_PAD_SD2_DATA1__SD2_DATA1			0x59
+> +			MX7D_PAD_SD2_DATA2__SD2_DATA2			0x59
+> +			MX7D_PAD_SD2_DATA3__SD2_DATA3			0x59
+> +		>;
+> +	};
+> +
+>  	pinctrl_usdhc3: usdhc3grp {
+>  		fsl,pins = <
+>  			MX7D_PAD_SD3_CMD__SD3_CMD		0x59
+> -- 
+> 2.19.2
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
