@@ -1,61 +1,75 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Subject: Re: [PATCH v2] ASoC: imx-audmux: complete dt-bindings for i.MX6
-Date: Thu, 6 Dec 2018 12:45:54 +0100
-Message-ID: <CAJiuCceQCGDY6hdPw50_=WyH-DaiAXTAmdy80FDHee8DTD5ywg@mail.gmail.com>
-References: <20181119104718.18716-1-peron.clem@gmail.com>
+From: Hanjie Lin <hanjie.lin@amlogic.com>
+Subject: [PATCH v7 0/2] add the Amlogic Meson PCIe controller driver
+Date: Thu, 6 Dec 2018 20:02:36 +0800
+Message-ID: <1544097760-85834-1-git-send-email-hanjie.lin@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181119104718.18716-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, NXP Linux Team <linux-imx@nxp.com>
-Cc: linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Colin Didier <colin.didier@devialet.com>
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Hanjie Lin <hanjie.lin@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh@kernel.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Shawn Lin <shawn.lin@rock-chips.com>, Philippe Ombredanne <pombredanne@nexb.com>, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Gentle up,
+The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
+PCI core. This patchset add the driver and dt-bindings of the controller.
+Changes since v6: [5]
+ - fix bad usage of ERR_PTR(ENXIO)
+ - fix meson_pcie_rd_own_conf() when read PCI_CLASS_DEVICE reg 
 
-Thanks
-On Mon, 19 Nov 2018 at 11:47, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
-> wrote:
->
-> From: Colin Didier <colin.didier@devialet.com>
->
-> The i.MX6 audmux differs from i.MX51.
->
-> This patch adds the audmux for i.MX6 family.
->
-> Signed-off-by: Colin Didier <colin.didier@devialet.com>
-> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->
-> v2:
->         Repost with ASoC maintainer and list
->
->  include/dt-bindings/sound/fsl-imx-audmux.h | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/include/dt-bindings/sound/fsl-imx-audmux.h b/include/dt-bind=
-ings/sound/fsl-imx-audmux.h
-> index 15f138bebe16..a1d0741d9ed1 100644
-> --- a/include/dt-bindings/sound/fsl-imx-audmux.h
-> +++ b/include/dt-bindings/sound/fsl-imx-audmux.h
-> @@ -25,6 +25,14 @@
->  #define MX51_AUDMUX_PORT6              5
->  #define MX51_AUDMUX_PORT7              6
->
-> +#define MX6_AUDMUX_PORT1_SSI1          0
-> +#define MX6_AUDMUX_PORT2_SSI2          1
-> +#define MX6_AUDMUX_PORT3               2
-> +#define MX6_AUDMUX_PORT4               3
-> +#define MX6_AUDMUX_PORT5               4
-> +#define MX6_AUDMUX_PORT6               5
-> +#define MX6_AUDMUX_PORT7_SSI3          6
-> +
->  /*
->   * TFCSEL/RFCSEL (i.MX27) or TFSEL/TCSEL/RFSEL/RCSEL (i.MX31/51/53/6Q)
->   * can be sourced from Rx/Tx.
-> --
-> 2.19.1
->
+Changes since v5: [4]
+ - update MAINTAINER file in alphabetical order
+ - remove meaningless comment
+ - use ERR_PTR function instead of (void *) cast
+ - use is_power_of_2(size) instead of size & (size - 1)
+ - add comment for PCI_CLASS_REVISION register operation
+ 
+Changes since v4: [3]
+ - fix kbuild test robot and compile warnings
+
+Changes since v3: [2]
+ - modify subject format
+ - update Kconfig
+ - update MAINTAINER file
+ - add comment and error handle for meson_pcie_get_mem_shared()
+ - drop useless initialization code
+ - add comment for meson_size_to_payload()
+ - optimize meson_pcie_establish_link() return code
+ - optimize meson_pcie_enable_interrupts() redundant function
+ - drop device_attch related code
+ - drop dw_pcie_ops read_dbi and write_dbi function
+ - add error handle for meson_add_pcie_port() when probe
+
+Changes since v2: [1]
+ - abandon phy driver, move reset to the controller
+ - use devm_add_action_or_reset() to use clock res
+ - format correcting
+
+Changes since v1: [0]
+ - use gpio lib instead open code
+ - move 'apb' and 'port' reset from phy driver
+ - format correcting
+
+[0] : https://lkml.kernel.org/r/1534227522-186798-1-git-send-email-hanjie.lin@amlogic.com
+[1] : https://lkml.kernel.org/r/1535096165-45827-1-git-send-email-hanjie.lin@amlogic.com
+[2] : https://lkml.kernel.org/r/1537509820-52040-1-git-send-email-hanjie.lin@amlogic.com 
+[3] : https://lkml.kernel.org/r/1538999834-156423-3-git-send-email-hanjie.lin@amlogic.com
+[4] : https://lkml.kernel.org/r/1539049990-30810-1-git-send-email-hanjie.lin@amlogic.com
+[5] : https://lkml.kernel.org/r/1542876836-191355-1-git-send-email-hanjie.lin@amlogic.com
+
+
+Yue Wang (2):
+  dt-bindings: PCI: meson: add DT bindings for Amlogic Meson PCIe
+    controller
+  PCI: amlogic: Add the Amlogic Meson PCIe controller driver
+
+ .../devicetree/bindings/pci/amlogic,meson-pcie.txt |  70 +++
+ MAINTAINERS                                        |   7 +
+ drivers/pci/controller/dwc/Kconfig                 |  10 +
+ drivers/pci/controller/dwc/Makefile                |   1 +
+ drivers/pci/controller/dwc/pci-meson.c             | 603 +++++++++++++++++++++
+ 5 files changed, 691 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+ create mode 100644 drivers/pci/controller/dwc/pci-meson.c
+
+-- 
+2.7.4
