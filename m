@@ -1,55 +1,60 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH] video/backlight: Use of_node_name_eq for node name
- comparisons
-Date: Thu, 6 Dec 2018 14:02:21 +0000
-Message-ID: <20181206140221.rq4zp74olghzipxu@holly.lan>
-References: <20181205195050.4759-28-robh@kernel.org>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: Moving ARM dts files
+Date: Thu, 6 Dec 2018 15:05:31 +0100
+Message-ID: <20181206140531.GX8952@piout.net>
+References: <20181204183649.GA5716@bogus>
+ <20181205135726.70badac7@xhacker.debian>
+ <CACRpkdYs_s9m=fUuOcfqcvP5BMXity5GH17RSMyvHzdZ9aFNzA@mail.gmail.com>
+ <CAL_JsqJWnB+EAoXk9a1M_D-kH8kZcwD6gTj0yVa_hBCGapB4RQ@mail.gmail.com>
+ <20181206133922.4y4qnrqcjtog3ukt@pengutronix.de>
+ <CAL_Jsq+PB3Pmg1RmNqj0whapbcqRBXDNWi4LpjPqqCKeLHbR=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20181205195050.4759-28-robh@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_Jsq+PB3Pmg1RmNqj0whapbcqRBXDNWi4LpjPqqCKeLHbR=A@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Lee Jones <lee.jones@linaro.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thierry Reding <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory CLEMENT <gregory.clement@bootlin.com>, Michal Simek <michal.simek@xilinx.com>, Krzysztof Kozlowski <krzk@kernel.org>, ARM-SoC Maintainers <arm@kernel.org>, Joel Stanley <joel@jms.id.au>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Jisheng Zhang <Jisheng.Zhang@synaptics.com>, Maxime Coquelin <mcoquelin.st>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBEZWMgMDUsIDIwMTggYXQgMDE6NTA6NDRQTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3Jv
-dGU6Cj4gQ29udmVydCBzdHJpbmcgY29tcGFyZXMgb2YgRFQgbm9kZSBuYW1lcyB0byB1c2Ugb2Zf
-bm9kZV9uYW1lX2VxIGhlbHBlcgo+IGluc3RlYWQuIFRoaXMgcmVtb3ZlcyBkaXJlY3QgYWNjZXNz
-IHRvIHRoZSBub2RlIG5hbWUgcG9pbnRlci4KPiAKPiBGb3IgaW5zdGFuY2VzIHVzaW5nIG9mX25v
-ZGVfY21wLCB0aGlzIGhhcyB0aGUgc2lkZSBlZmZlY3Qgb2Ygbm93IHVzaW5nCj4gY2FzZSBzZW5z
-aXRpdmUgY29tcGFyaXNvbnMuIFRoaXMgc2hvdWxkIG5vdCBtYXR0ZXIgZm9yIGFueSBGRFQgYmFz
-ZWQKPiBzeXN0ZW0gd2hpY2ggdGhpcyBpcy4KPiAKPiBDYzogTGVlIEpvbmVzIDxsZWUuam9uZXNA
-bGluYXJvLm9yZz4KPiBDYzogRGFuaWVsIFRob21wc29uIDxkYW5pZWwudGhvbXBzb25AbGluYXJv
-Lm9yZz4KPiBDYzogSmluZ29vIEhhbiA8amluZ29vaGFuMUBnbWFpbC5jb20+Cj4gQ2M6IEJhcnRs
-b21pZWogWm9sbmllcmtpZXdpY3ogPGIuem9sbmllcmtpZUBzYW1zdW5nLmNvbT4KPiBDYzogZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IENjOiBsaW51eC1mYmRldkB2Z2VyLmtlcm5l
-bC5vcmcKPiBTaWduZWQtb2ZmLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKQWNr
-ZWQtYnk6IERhbmllbCBUaG9tcHNvbiA8ZGFuaWVsLnRob21wc29uQGxpbmFyby5vcmc+CgpbdGhp
-cyBpcyBGQU8gTGVlIEouIHJhdGhlciB0aGFuIHJlY29tbWVuZGluZyB5b3UgdGFrZSBpdCB2aWEg
-eW91IHRyZWVdCgo+IC0tLQo+ICBkcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC84OHBtODYweF9ibC5j
-IHwgMiArLQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkK
-PiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvODhwbTg2MHhfYmwuYyBi
-L2RyaXZlcnMvdmlkZW8vYmFja2xpZ2h0Lzg4cG04NjB4X2JsLmMKPiBpbmRleCA2ZDhkYzJjNzc1
-MjAuLjUxZTBjNGJlMDhkZiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC84
-OHBtODYweF9ibC5jCj4gKysrIGIvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvODhwbTg2MHhfYmwu
-Ywo+IEBAIC0xNzQsNyArMTc0LDcgQEAgc3RhdGljIGludCBwbTg2MHhfYmFja2xpZ2h0X2R0X2lu
-aXQoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwKPiAgCQlyZXR1cm4gLUVOT0RFVjsKPiAg
-CX0KPiAgCWZvcl9lYWNoX2NoaWxkX29mX25vZGUobnByb290LCBucCkgewo+IC0JCWlmICghb2Zf
-bm9kZV9jbXAobnAtPm5hbWUsIG5hbWUpKSB7Cj4gKwkJaWYgKG9mX25vZGVfbmFtZV9lcShucCwg
-bmFtZSkpIHsKPiAgCQkJb2ZfcHJvcGVydHlfcmVhZF91MzIobnAsICJtYXJ2ZWxsLDg4cG04NjB4
-LWlzZXQiLAo+ICAJCQkJCSAgICAgJmlzZXQpOwo+ICAJCQlkYXRhLT5pc2V0ID0gUE04NjA2X1dM
-RURfQ1VSUkVOVChpc2V0KTsKPiAtLSAKPiAyLjE5LjEKPiAKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 06/12/2018 07:58:24-0600, Rob Herring wrote:
+> On Thu, Dec 6, 2018 at 7:39 AM Uwe Kleine-K=F6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+> >
+> > Hello,
+> >
+> > On Wed, Dec 05, 2018 at 09:01:59AM -0600, Rob Herring wrote:
+> > > i.MX23 is a Sigmatel chip STMP??
+> >
+> > I think the Freescale i.MX23 didn't exist at Sigmatel back then. AFAIK
+> > this is a new design using IP from Sigmatel after the aquisition.
+> =
+
+> It is not. I was in the i.MX group which Sigmatel was merged into at
+> the time. Purely marketing rebranding.
+> =
+
+
+Wouldn't it be easier to name the directory to the corresponding mach-*
+entry?
+
+So, imx23 and imx28 would go to mxs/, other imx in imx/. And this also
+solves the Marvell mess with the Synaptics Socs going in berlin/ and the
+other ones in mvebu/.
+
+
+-- =
+
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
