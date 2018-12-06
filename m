@@ -1,71 +1,66 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/5] dt-bindings: nvmem: add binding for Raspberry Pi OTP
-Date: Thu, 6 Dec 2018 17:49:41 -0600
-Message-ID: <20181206234941.GA6340@bogus>
-References: <1542805904-6446-1-git-send-email-stefan.wahren@i2se.com>
- <1542805904-6446-2-git-send-email-stefan.wahren@i2se.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 2/3] arm64: dts: qcom: sdm845: Add SD node
+Date: Thu, 6 Dec 2018 15:56:10 -0800
+Message-ID: <20181206235610.GG12886@minitux>
+References: <20181206184522.118062-1-evgreen@chromium.org>
+ <20181206184522.118062-3-evgreen@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1542805904-6446-2-git-send-email-stefan.wahren@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Eric Anholt <eric@anholt.net>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-rpi-kernel@lists.infradead.org, gregkh@linuxfoundation.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20181206184522.118062-3-evgreen@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Evan Green <evgreen@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 21, 2018 at 02:11:40PM +0100, Stefan Wahren wrote:
-> This patch adds the devicetree binding for Raspberry Pi customer OTP
-> driver.
+On Thu 06 Dec 10:45 PST 2018, Evan Green wrote:
+
+> Add one of the two SD controllers to SDM845.
 > 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Signed-off-by: Evan Green <evgreen@chromium.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
 > ---
->  .../nvmem/raspberrypi,bcm2835-customer-otp.txt     | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvmem/raspberrypi,bcm2835-customer-otp.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/nvmem/raspberrypi,bcm2835-customer-otp.txt b/Documentation/devicetree/bindings/nvmem/raspberrypi,bcm2835-customer-otp.txt
-> new file mode 100644
-> index 0000000..041ff17
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/raspberrypi,bcm2835-customer-otp.txt
-> @@ -0,0 +1,22 @@
-> +Customer OTP Memory for Raspberry Pi
+> Changes in v2:
+>  - Reworded commit message to note that there are multiple SD
+>  controllers.
+> 
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 1419b0098cb38..bb8eacdf40910 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -1078,6 +1078,21 @@
+>  			};
+>  		};
+>  
+> +		sdhc_2: sdhci@8804000 {
+> +			compatible = "qcom,sdm845-sdhci", "qcom,sdhci-msm-v5";
+> +			reg = <0x8804000 0x1000>;
 > +
-> +The VC4 firmware exposes a mailbox interface that allows the ARM core
-> +to access the customer part of the OTP memory.
+> +			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "hc_irq", "pwr_irq";
 > +
-> +The OTP node must be a child node of the Raspberry Pi firmware node.
+> +			clocks = <&gcc GCC_SDCC2_AHB_CLK>,
+> +				 <&gcc GCC_SDCC2_APPS_CLK>;
+> +			clock-names = "iface", "core";
 > +
-> +Required properties :
-> +- compatible     : Should be "raspberrypi,bcm2835-customer-otp"
-
-Why do we need this child node? Can't the parent instantiate this?
-
-Are there OTP fields you want to expose in DT?
-
+> +			status = "disabled";
+> +		};
 > +
-> +See nvmem.txt for more information.
-> +
-> +Example:
-> +
-> +firmware: firmware-rpi {
-> +	compatible = "raspberrypi,bcm2835-firmware";
-> +	mboxes = <&mailbox>;
-> +
-> +	customer_otp: otp {
-> +		compatible = "raspberrypi,bcm2835-customer-otp";
-> +	};
-> +};
+>  		usb_1_hsphy: phy@88e2000 {
+>  			compatible = "qcom,sdm845-qusb2-phy";
+>  			reg = <0x88e2000 0x400>;
 > -- 
-> 2.7.4
+> 2.18.1
 > 
