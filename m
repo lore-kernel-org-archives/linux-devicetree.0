@@ -1,108 +1,100 @@
-From: Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>
-Subject: Re: [DPU PATCH] drm/msm/dpu: Fix vblank refcount
- mismatch
-Date: Thu, 6 Dec 2018 11:14:31 -0500
-Message-ID: <20181206161431.GA154160@art_vandelay>
-References: <1544078813-10945-1-git-send-email-jshekhar@codeaurora.org>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [RFC PATCH v3 2/2] pwm: imx: Configure output to GPIO in
+ disabled state
+Date: Thu, 6 Dec 2018 17:16:22 +0100
+Message-ID: <20181206161622.okpfiecfphar77jk@pengutronix.de>
+References: <1544103655-104466-1-git-send-email-michal.vokac@ysoft.com>
+ <1544103655-104466-3-git-send-email-michal.vokac@ysoft.com>
+ <20181206135902.un2nbreqfmi6mpd6@pengutronix.de>
+ <01aaa6ff-fb3e-37a7-0e72-099ad013ee2a@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1544078813-10945-1-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+In-Reply-To: <01aaa6ff-fb3e-37a7-0e72-099ad013ee2a@ysoft.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, Fabio Estevam <fabio.estevam@nxp.com>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@karo-electronics.de>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBEZWMgMDYsIDIwMTggYXQgMTI6MTY6NTNQTSArMDUzMCwgSmF5YW50IFNoZWtoYXIg
-d3JvdGU6Cj4gX2RwdV9jcnRjX3ZibGFua19lbmFibGVfbm9fbG9jayByZWxlYXNlcyBjcnRjX2xv
-Y2sgYXMKPiBpdHMgbmVlZGVkIGZvciBwb3dlciBoYW5kbGUgb3BlcmF0aW9ucy4gVGhpcyBvcGVu
-cyB1cCBhCj4gd2luZG93IHdoZXJlIGluIGEgdGhyZWFkIHJ1bm5pbmcgZHB1X2NydGNfZGlzYWJs
-ZSBhbmQgYSB0aHJlYWQKPiBydW5uaW5nIGRwdV9jcnRjX3ZibGFuayBjYW4gcmFjZSBpbiB1c2lu
-ZyBkcHVfY3J0Yy0+ZW5hYmxlZC4KCkxvb2tzIGxpa2UgeW91J3JlIHVzaW5nIGFuIG9sZCBrZXJu
-ZWwuIEJvdGggcG93ZXJfaGFuZGxlIGFuZAp2YmxhbmtfZW5hYmxlX25vX2xvY2sgd2VyZSByZW1v
-dmVkLgoKSWYgeW91IHdhbnQgc29tZXRoaW5nIG1vcmUgdXAtdG8tZGF0ZSBmb3IgdGVzdGluZywg
-Z3JhYiB0aGUgbXRwLXRlc3RpbmcKYnJhbmNoIGZyb20gbXkgZHB1LXN0YWdpbmcgdHJlZSBbMV0K
-ClNlYW4KClsxXS0gaHR0cHM6Ly9naXRsYWIuZnJlZWRlc2t0b3Aub3JnL3NlYW5wYXVsL2RwdS1z
-dGFnaW5nLmdpdAoKPiAKPiBkcHVfY3J0Y19kaXNhYmxlIHdpbGwgY2hhbmdlIHRoZSBzdGF0ZSwg
-d2hlcmUgYXMgZHB1X2NydGNfdmJsYW5rCj4gdXNlIHRoZSB2YXJpYWJsZS4gVGhlIGZpeCBpcyB0
-byBjYWNoZSB0aGUgY3J0YyBlbmFibGVkIHN0YXRlCj4gd2hpbGUgaG9sZGluZyB0aGUgbG9jayBh
-bmQgdXNlIGl0IGFzIGEgZ2F0ZSBpbiBjYWxsaW5nCj4gX2RwdV9jcnRjX3ZibGFua19lbmFibGVf
-bm9fbG9jay4KPiAKPiBUaGlzIGlzc3VlIHdhcyBpbnRyb2R1Y2VkIHdpdGggdGhlIGNvbW1pdCBj
-Zjg3MWM0OAo+IChkcm0vbXNtL2RwdTogUmVtb3ZlIHN1c3BlbmQgc3RhdGUgdHJhY2tpbmcgZnJv
-bSBjcnRjKS4KPiAKPiBCZWxvdyBhcmUgc3RhY2sgdHJhY2VzIG9mIHRocmVhZCAxIGFuZCB0aHJl
-YWQgMiBpbiBnb29kIGNhc2UKPiBhbmQgYmFkIGNhc2U6Cj4gCj4gQmFkIGNhc2U6Cj4gLS0tLS0t
-LS0tLS0tLQo+IFRocmVhZCAxCj4gZHB1X2VuY29kZXJfcGh5c192aWRfY29udHJvbF92Ymxhbmtf
-aXJxKzB4ZDAvMHgxNzAKPiBkcHVfZW5jb2Rlcl9yZWdpc3Rlcl92YmxhbmtfY2FsbGJhY2srMHhi
-OC8weDEwMAo+IF9kcHVfY3J0Y192YmxhbmtfZW5hYmxlX25vX2xvY2srMHgyNDAvMHgyODgKPiBk
-cHVfY3J0Y19kaXNhYmxlKzB4YzQvMHgyODgKPiBkcm1fYXRvbWljX2hlbHBlcl9jb21taXRfbW9k
-ZXNldF9kaXNhYmxlcysweDE5Yy8weDM1MAo+IG1zbV9hdG9taWNfY29tbWl0X3RhaWwrMHg0OC8w
-eDE0NAo+IGNvbW1pdF90YWlsKzB4NDQvMHg3MAo+IGRybV9hdG9taWNfaGVscGVyX2NvbW1pdCsw
-eGYwLzB4ZjgKPiBkcm1fYXRvbWljX2NvbW1pdCsweDQwLzB4NGMKPiBkcm1fbW9kZV9hdG9taWNf
-aW9jdGwrMHgzNzQvMHg5MGMKPiBkcm1faW9jdGxfa2VybmVsKzB4YWMvMHhlYwo+IGRybV9pb2N0
-bCsweDIxOC8weDM4NAo+IGRybV9jb21wYXRfaW9jdGwrMHhkOC8weGU4Cj4gCj4gVGhyZWFkIDI6
-Cj4gZHB1X2VuY29kZXJfcGh5c192aWRfY29udHJvbF92YmxhbmtfaXJxKzB4NzQvMHgxNzAKPiBk
-cHVfZW5jb2Rlcl9yZWdpc3Rlcl92YmxhbmtfY2FsbGJhY2srMHhiOC8weDEwMAo+IF9kcHVfY3J0
-Y192YmxhbmtfZW5hYmxlX25vX2xvY2srMHgyNDAvMHgyODgKPiBkcHVfY3J0Y192YmxhbmsrMHhh
-OC8weDExOAo+IGRwdV9rbXNfZGlzYWJsZV92YmxhbmsrMHgyMC8weDJjCj4gdmJsYW5rX2N0cmxf
-d29ya2VyKzB4YTAvMHhlMAo+IGt0aHJlYWRfd29ya2VyX2ZuKzB4ZTQvMHgxYTQKPiBrdGhyZWFk
-KzB4MTFjLzB4MTJjCj4gcmV0X2Zyb21fZm9yaysweDEwLzB4MTgKPiAKPiBHb29kIGNhc2U6Cj4g
-LS0tLS0tLS0tLS0tLS0KPiBUaHJlYWQgMToKPiBkcHVfZW5jb2Rlcl9waHlzX3ZpZF9jb250cm9s
-X3ZibGFua19pcnErMHhkMC8weDE3MAo+IGRwdV9lbmNvZGVyX3BoeXNfdmlkX2lycV9jb250cm9s
-KzB4YzgvMHgxMTAKPiBfZHB1X2VuY29kZXJfaXJxX2NvbnRyb2wrMHg0OC8weGEwCj4gX2RwdV9l
-bmNvZGVyX3Jlc291cmNlX2NvbnRyb2xfaGVscGVyKzB4YjQvMHgxMGMKPiBkcHVfZW5jb2Rlcl9y
-ZXNvdXJjZV9jb250cm9sKzB4NGUwLzB4NjY0Cj4gZHB1X2VuY29kZXJfdmlydF9lbmFibGUrMHhi
-OC8weDEyMAo+IGRwdV9rbXNfZW5jb2Rlcl9lbmFibGUrMHgzNC8weGNjCj4gZHJtX2F0b21pY19o
-ZWxwZXJfY29tbWl0X21vZGVzZXRfZW5hYmxlcysweDEyMC8weDFiOAo+IG1zbV9hdG9taWNfY29t
-bWl0X3RhaWwrMHg1Yy8weDE0NAo+IGNvbW1pdF90YWlsKzB4NDQvMHg3MAo+IGRybV9hdG9taWNf
-aGVscGVyX2NvbW1pdCsweGYwLzB4ZjgKPiBkcm1fYXRvbWljX2NvbW1pdCsweDQwLzB4NGMKPiBk
-cm1fbW9kZV9hdG9taWNfaW9jdGwrMHgzNzQvMHg5MGMKPiAKPiBUaHJlYWQgMjoKPiBkcHVfY3J0
-Y192YmxhbmsrMHhjOC8weDExOAo+IGRwdV9rbXNfZGlzYWJsZV92YmxhbmsrMHgyMC8weDJjCj4g
-dmJsYW5rX2N0cmxfd29ya2VyKzB4YTAvMHhlMAo+IGt0aHJlYWRfd29ya2VyX2ZuKzB4ZTQvMHgx
-YTQKPiBrdGhyZWFkKzB4MTFjLzB4MTJjCj4gCj4gU2lnbmVkLW9mZi1ieTogSmF5YW50IFNoZWto
-YXIgPGpzaGVraGFyQGNvZGVhdXJvcmEub3JnPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbXNt
-L2Rpc3AvZHB1MS9kcHVfY3J0Yy5jIHwgMTcgKysrKysrKysrKysrKystLS0KPiAgMSBmaWxlIGNo
-YW5nZWQsIDE0IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9jcnRjLmMgYi9kcml2ZXJzL2dwdS9k
-cm0vbXNtL2Rpc3AvZHB1MS9kcHVfY3J0Yy5jCj4gaW5kZXggNjMwY2JhYS4uZTgxYWQ4YyAxMDA2
-NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfY3J0Yy5jCj4gKysr
-IGIvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2NydGMuYwo+IEBAIC04NzcsNiAr
-ODc3LDcgQEAgc3RhdGljIHZvaWQgZHB1X2NydGNfZGlzYWJsZShzdHJ1Y3QgZHJtX2NydGMgKmNy
-dGMpCj4gIAlzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXI7Cj4gIAlzdHJ1Y3QgbXNtX2RybV9w
-cml2YXRlICpwcml2Owo+ICAJdW5zaWduZWQgbG9uZyBmbGFnczsKPiArCWJvb2wgY3J0Y19lbjsK
-PiAgCj4gIAlpZiAoIWNydGMgfHwgIWNydGMtPmRldiB8fCAhY3J0Yy0+ZGV2LT5kZXZfcHJpdmF0
-ZSB8fCAhY3J0Yy0+c3RhdGUpIHsKPiAgCQlEUFVfRVJST1IoImludmFsaWQgY3J0Y1xuIik7Cj4g
-QEAgLTkwMSwxMSArOTAyLDIxIEBAIHN0YXRpYyB2b2lkIGRwdV9jcnRjX2Rpc2FibGUoc3RydWN0
-IGRybV9jcnRjICpjcnRjKQo+ICAJCQkJYXRvbWljX3JlYWQoJmRwdV9jcnRjLT5mcmFtZV9wZW5k
-aW5nKSk7Cj4gIAo+ICAJdHJhY2VfZHB1X2NydGNfZGlzYWJsZShEUk1JRChjcnRjKSwgZmFsc2Us
-IGRwdV9jcnRjKTsKPiAtCWlmIChkcHVfY3J0Yy0+ZW5hYmxlZCAmJiBkcHVfY3J0Yy0+dmJsYW5r
-X3JlcXVlc3RlZCkgewo+IC0JCV9kcHVfY3J0Y192YmxhbmtfZW5hYmxlX25vX2xvY2soZHB1X2Ny
-dGMsIGZhbHNlKTsKPiAtCX0KPiArCj4gKwkvKgo+ICsJICogQ2FjaGUgdmJsYW5rIGVuYWJsZWQg
-YmVmb3JlIGNhbGxpbmcgX2RwdV9jcnRjX3ZibGFua19lbmFibGVfbm9fbG9jaywKPiArCSAqIGJl
-Y2F1c2Ugd2UgcmVsZWFzZSBjcnRjX2xvY2sgaW5zaWRlIGFuZCBhY3F1aXJlIGl0IGJhY2suIFdo
-aWxlIGxvY2sKPiArCSAqIGlzIHJlbGVhc2VkLCB0aGVyZSBhcmUgY2FzZXMgd2hlcmUgZHB1X2Ny
-dGNfdmJsYW5rIGNvbWVzIGluIGJldHdlZW4KPiArCSAqIHdoaWxlIGRpc2FibGUgaXMgZ29pbmcg
-b24uIGRwdV9jcnRjX3ZibGFuayBmdXJ0aGVyIGNhbGxzCj4gKwkgKiBfZHB1X2NydGNfdmJsYW5r
-X2VuYWJsZV9ub19sb2NrIHdoaWNoIHRyaWVzIHZibGFuayBkaXNhYmxlIGFnYWluCj4gKwkgKiBy
-ZXN1bHRpbmcgaW4gcmVmY291bnQgbWlzbWF0Y2guCj4gKwkgKi8KPiArCWNydGNfZW4gPSBkcHVf
-Y3J0Yy0+ZW5hYmxlZDsKPiAgCWRwdV9jcnRjLT5lbmFibGVkID0gZmFsc2U7Cj4gIAo+ICsJaWYg
-KGNydGNfZW4gJiYgZHB1X2NydGMtPnZibGFua19yZXF1ZXN0ZWQpCj4gKwkJX2RwdV9jcnRjX3Zi
-bGFua19lbmFibGVfbm9fbG9jayhkcHVfY3J0YywgZmFsc2UpOwo+ICsKPiAgCWlmIChhdG9taWNf
-cmVhZCgmZHB1X2NydGMtPmZyYW1lX3BlbmRpbmcpKSB7Cj4gIAkJdHJhY2VfZHB1X2NydGNfZGlz
-YWJsZV9mcmFtZV9wZW5kaW5nKERSTUlEKGNydGMpLAo+ICAJCQkJICAgICBhdG9taWNfcmVhZCgm
-ZHB1X2NydGMtPmZyYW1lX3BlbmRpbmcpKTsKPiAtLSAKPiBUaGUgUXVhbGNvbW0gSW5ub3ZhdGlv
-biBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgdGhlIENvZGUgQXVyb3JhIEZvcnVtLAo+IGEg
-TGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2plY3QKPiAKCi0tIApTZWFuIFBhdWws
-IFNvZnR3YXJlIEVuZ2luZWVyLCBHb29nbGUgLyBDaHJvbWl1bSBPUwpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZy
-ZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+On Thu, Dec 06, 2018 at 03:37:55PM +0000, Vokáč Michal wrote:
+> On 6.12.2018 14:59, Uwe Kleine-König wrote:
+> > On Thu, Dec 06, 2018 at 01:41:31PM +0000, Vokáč Michal wrote:
+> >> +{
+> >> +	imx_chip->pinctrl = devm_pinctrl_get(&pdev->dev);
+> >> +	if (IS_ERR(imx_chip->pinctrl)) {
+> >> +		dev_dbg(&pdev->dev, "can not get pinctrl\n");
+> >> +		return PTR_ERR(imx_chip->pinctrl);
+> >> +	}
+> >> +
+> >> +	imx_chip->pinctrl_pins_pwm = pinctrl_lookup_state(imx_chip->pinctrl,
+> >> +							  "pwm");
+> >> +	imx_chip->pinctrl_pins_gpio = pinctrl_lookup_state(imx_chip->pinctrl,
+> >> +							   "gpio");
+> >> +	imx_chip->pwm_gpiod = devm_gpiod_get_optional(&pdev->dev, "pwm",
+> >> +						      GPIOD_IN);
+> >> +
+> >> +	if (PTR_ERR(imx_chip->pwm_gpiod) == -EPROBE_DEFER) {
+> >> +		return -EPROBE_DEFER;
+> >> +	} else if (IS_ERR(imx_chip->pwm_gpiod) ||
+> >> +		   IS_ERR(imx_chip->pinctrl_pins_pwm) ||
+> >> +		   IS_ERR(imx_chip->pinctrl_pins_gpio)) {
+> >> +		dev_dbg(&pdev->dev, "PWM pinctrl information incomplete\n");
+> >> +		devm_pinctrl_put(imx_chip->pinctrl);
+> >> +		imx_chip->pinctrl = NULL;
+> > 
+> > Can it happen, that pinctrl_pins_pwm is PTR_ERR(-EPROBE_DEFER)?
+> 
+> No. The pinctrl_lookup_state either returns pointer to the pinctrl state
+> or ERR_PTR(-ENODEV). But I do not explicitly test the pinctrl_pins_pwm
+> for PTR_ERR(-EPROBE_DEFER), or do I?
+
+You don't, I just wondered if this could happen and the function should
+return -EPROBE_DEFER in this case, too.
+
+> > Maybe you only want to ignore PTR_ERR(-ENODEV) and for example propagate
+> > -EIO? I think you want to put the gpio if the failure is because there
+> > is a pinctrl related error.
+> 
+> I think that is what I am doing. In case the GPIO is not ready the probe
+> is deferred. In case of any other error with the GPIO or pinctrl failure
+> I put the pinctrl. Or maybe I do not really understand what you mean.
+
+Yes, you put the pinctrl, but not the GPIO. I.e. you're not undoing
+devm_gpiod_get_optional(). Maybe only do this if the pinctrl stuff
+succeeded to not touch the GPIO if it won't be used?
+
+> > ISTR that there was a patch that implements get_state for imx. Is there
+> > a dependency on that one? Otherwise the state returned by
+> > pwm_get_state() might not be what is actually configured.
+> 
+> No, it should be independent. One can go without the other. I tested all
+> three combinations (mainline with .get_state, mainline with this series,
+> mainline with .get_state AND this series) and got the expected results.
+> Without the .get_state() patch the core always returns the default which
+> is disabled state so the gpio pinctrl state is selected in probe.
+
+Without .get_state it won't be possible to smoothly take over a running
+PWM. It doesn't hurt if the PWM isn't running though. Still I'd like to
+see the .get_state patch to go in first to not get this (admittedly
+small) regression.
+
+> > Do you know if this is required for the old i.MX pwm, e.g. on i.MX21?
+> > I ask because of https://patchwork.ozlabs.org/patch/1000071/
+> 
+> Yep, I am aware of that patch. IMHO this is not needed for the v1 on
+> older i.MX SoCs but I do not have a hands-on experience with those.
+
+OK. If you agree with my split and as you have to rework your patch
+anyhow: Would you mind to rebase on top of my patch series? (Unless
+Thierry disagrees with my patches, but unfortunately he didn't comment
+yet.)
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
