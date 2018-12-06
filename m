@@ -1,59 +1,57 @@
-Return-Path: <SRS0=gYJ/=OP=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr1400103.outbound.protection.outlook.com ([40.107.140.103]:28960
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727832AbeLFMlP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 6 Dec 2018 07:41:15 -0500
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH v3 4/4] ARM: dts: iwg23s-sbc: Enable RTC
-Date: Thu, 6 Dec 2018 12:40:45 +0000
-Message-ID: <OSBPR01MB210383AE5748C0E18A370C96B8A90@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-References: <1544086559-47141-1-git-send-email-biju.das@bp.renesas.com>
- <1544086559-47141-5-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdUp2yOiMFFqT5MWhbK=O4fEuTMzH21Wp7HqYBdaruJ1nw@mail.gmail.com>
-In-Reply-To: <CAMuHMdUp2yOiMFFqT5MWhbK=O4fEuTMzH21Wp7HqYBdaruJ1nw@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=OUWO=OP=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+References: <1544086559-47141-1-git-send-email-biju.das@bp.renesas.com> <1544086559-47141-5-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1544086559-47141-5-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 6 Dec 2018 10:55:04 +0100
+Message-ID: <CAMuHMdUp2yOiMFFqT5MWhbK=O4fEuTMzH21Wp7HqYBdaruJ1nw@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] ARM: dts: iwg23s-sbc: Enable RTC
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-rtc@vger.kernel.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IFN1YmplY3Q6IFJlOiBb
-UEFUQ0ggdjMgNC80XSBBUk06IGR0czogaXdnMjNzLXNiYzogRW5hYmxlIFJUQw0KPg0KPiBIaSBC
-aWp1LA0KPg0KPiBPbiBUaHUsIERlYyA2LCAyMDE4IGF0IDEwOjA0IEFNIEJpanUgRGFzIDxiaWp1
-LmRhc0BicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gRW5hYmxlIE5YUCBwY2Y4NTI2MyByZWFs
-IHRpbWUgY2xvY2sgZm9yIHRoZSBpV2F2ZSBTQkMgYmFzZWQgb24gUlovRzFDLg0KPiA+DQo+ID4g
-U2lnbmVkLW9mZi1ieTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPg0KPiBS
-ZXZpZXdlZC1ieTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4N
-Cj4NCj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9yOGE3NzQ3MC1pd2cyM3Mtc2JjLmR0cw0K
-PiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3NDcwLWl3ZzIzcy1zYmMuZHRzDQo+ID4g
-QEAgLTg0LDEyICs4NCwzMCBAQA0KPiA+ICAgICAgICAgY2xvY2stZnJlcXVlbmN5ID0gPDIwMDAw
-MDAwPjsNCj4gPiAgfTsNCj4gPg0KPiA+ICsmaTJjMyB7DQo+ID4gKyAgICAgICBwaW5jdHJsLTAg
-PSA8JmkyYzNfcGlucz47DQo+ID4gKyAgICAgICBwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0K
-PiA+ICsNCj4gPiArICAgICAgIHN0YXR1cyA9ICJva2F5IjsNCj4gPiArICAgICAgIGNsb2NrLWZy
-ZXF1ZW5jeSA9IDw0MDAwMDA+Ow0KPiA+ICsNCj4gPiArICAgICAgIHJ0Y0A1MSB7DQo+ID4gKyAg
-ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAibnhwLHBjZjg1MjYzIjsNCj4gPiArICAgICAgICAg
-ICAgICAgcmVnID0gPDB4NTE+Ow0KPg0KPiBZb3UgbWlnaHQgd2FudCB0byBlbmFibGUgdGhlIG9w
-dGlvbmFsIGludGVycnVwdDoNCg0KSSBoYXZlIGVuYWJsZWQgdGhpcyBidXQgdW5mb3J0dW5hdGVs
-eSBpdCBpcyBnZW5lcmF0aW5nIDEwMDAwMCBvZiBncGlvIGludGVycnVwdHMgZHVyaW5nIGJvb3Qu
-DQoNClRoZSByZWFzb24gaXMsIGJ5IGRlZmF1bHQgdGhpcyBwaW4gaXMgY29uZmlndXJlZCBhcyBm
-dW5jdGlvbihQb3dlciBvbiByZXNldC9hdCB1LWJvb3QpLg0KQ3VycmVudGx5IHRoZXJlIGlzIG5v
-IGZ1bmN0aW9uIGF2YWlsYWJsZSBpbiBrZXJuZWwgdG8gY29udmVydCBhIHBpbiBmcm9tIGZ1bmN0
-aW9uIHRvIGdwaW8gKFNpbWlsYXIgdG8gdGhlIGlzc3VlIEZhYiBpcyBmYWNpbmcgZm9yIGRpc3Bs
-YXkgaG90IHBsdWcgaW50ZXJydXB0KQ0KDQpNYXkgYmUgd2UgY2FuIGFkZCBvcHRpb25hbCBpbnRl
-cnJ1cHQgYXQgYSBsYXRlciBzdGFnZSwgb25jZSB3ZSBoYXZlIGEgc29sdXRpb24gZm9yIGNvbnZl
-cnRpbmcgIHBpbiBmcm9tIGZ1bmN0aW9uIHRvIGdwaW8uDQoNClBsZWFzZSBzaGFyZSB5b3VyIG9w
-aW5pb24gb24gdGhpcy4NCg0KUmVnYXJkcywNCkJpanUNCg0KDQoNCg0KDQpbaHR0cHM6Ly93d3cy
-LnJlbmVzYXMuZXUvbWVkaWEvZW1haWwvdW5pY2VmLmpwZ10NCg0KVGhpcyBDaHJpc3RtYXMsIGlu
-c3RlYWQgb2Ygc2VuZGluZyBvdXQgY2FyZHMsIFJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIGhh
-dmUgZGVjaWRlZCB0byBzdXBwb3J0IFVuaWNlZiB3aXRoIGEgZG9uYXRpb24uIEZvciBmdXJ0aGVy
-IGRldGFpbHMgY2xpY2sgaGVyZTxodHRwczovL3d3dy51bmljZWYub3JnLz4gdG8gZmluZCBvdXQg
-YWJvdXQgdGhlIHZhbHVhYmxlIHdvcmsgdGhleSBkbywgaGVscGluZyBjaGlsZHJlbiBhbGwgb3Zl
-ciB0aGUgd29ybGQuDQpXZSB3b3VsZCBsaWtlIHRvIHRha2UgdGhpcyBvcHBvcnR1bml0eSB0byB3
-aXNoIHlvdSBhIE1lcnJ5IENocmlzdG1hcyBhbmQgYSBwcm9zcGVyb3VzIE5ldyBZZWFyLg0KDQoN
-Cg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTHRkLCBEdWtlcyBNZWFkb3csIE1pbGxib2Fy
-ZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5naGFtc2hpcmUsIFNMOCA1RkgsIFVLLiBSZWdpc3Rl
-cmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRlciBSZWdpc3RlcmVkIE5vLiAwNDU4NjcwOS4NCg==
+Hi Biju,
+
+On Thu, Dec 6, 2018 at 10:04 AM Biju Das <biju.das@bp.renesas.com> wrote:
+> Enable NXP pcf85263 real time clock for the iWave SBC based on RZ/G1C.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+> --- a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
+> +++ b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
+> @@ -84,12 +84,30 @@
+>         clock-frequency = <20000000>;
+>  };
+>
+> +&i2c3 {
+> +       pinctrl-0 = <&i2c3_pins>;
+> +       pinctrl-names = "default";
+> +
+> +       status = "okay";
+> +       clock-frequency = <400000>;
+> +
+> +       rtc@51 {
+> +               compatible = "nxp,pcf85263";
+> +               reg = <0x51>;
+
+You might want to enable the optional interrupt:
+
+    interrupt-parent = <&gpio0>;
+    interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+
+> +       };
+
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
