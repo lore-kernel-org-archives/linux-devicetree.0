@@ -1,50 +1,73 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v3] ARM: dts: Add support for Liebherr's BK4 device (vf610 based)
-Date: Wed, 5 Dec 2018 21:12:46 -0200
-Message-ID: <CAOMZO5BN5KJ+s6F9CJXQPX=Ta0Ow0PaV_AmFHYSDNr78jLjziQ@mail.gmail.com>
-References: <20180921152726.31742-1-lukma@denx.de> <20181009105028.17971-1-lukma@denx.de>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: Re: [PATCH 0/5] Add new features for SC27XX fuel gauge driver
+Date: Thu, 6 Dec 2018 01:10:48 +0100
+Message-ID: <20181206001048.awfhmigouztqs6td@earth.universe>
+References: <cover.1542185618.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6fkbibezpeowkax5"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181009105028.17971-1-lukma@denx.de>
+Content-Disposition: inline
+In-Reply-To: <cover.1542185618.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <lukma@denx.de>, Rob Herring <robh+dt@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Fabio Estevam <fabio.estevam@nxp.com>
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz/Rob,
 
-On Tue, Oct 9, 2018 at 7:50 AM Lukasz Majewski <lukma@denx.de> wrote:
+--6fkbibezpeowkax5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +&dspi3 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_dspi3>;
-> +       bus-num = <3>;
-> +       status = "okay";
-> +       spi-slave;
-> +
-> +       slave@0 {
-> +               compatible = "lwn,bk4";
-> +               spi-max-frequency = <30000000>;
-> +               reg = <0>;
-> +       };
-> +};
+Hi,
 
-This is causing the following dtc warning in linux-next:
+On Wed, Nov 14, 2018 at 05:07:03PM +0800, Baolin Wang wrote:
+> This patch set adds some new features for SC27XX fuel gauge driver.
+>=20
+> 1. Read calibration data from eFuse device to calibrate fuel gauge.
+> 2. Add low voltage alarm to adjust the battery capacity in lower
+> voltage stage.
+> 3. Add power management interfaces
+> 4. Save last optimized battery capacity to be used as the initial
+> battery capacity if system is not first power-on.
+>=20
+> Baolin Wang (2):
+>   dt-bindings: power: supply: Add nvmem properties to calibrate FGU
+>   power: supply: sc27xx: Add fuel gauge calibration
+>=20
+> Yuanjiang Yu (3):
+>   power: supply: sc27xx: Add fuel gauge low voltage alarm
+>   power: supply: sc27xx: Add suspend/resume interfaces
+>   power: supply: sc27xx: Save last battery capacity
+>=20
+>  .../devicetree/bindings/power/supply/sc27xx-fg.txt |    4 +
+>  drivers/power/supply/sc27xx_fuel_gauge.c           |  453 ++++++++++++++=
++++++-
+>  2 files changed, 444 insertions(+), 13 deletions(-)
 
-  DTC     arch/arm/boot/dts/vf610-bk4.dtb
-arch/arm/boot/dts/vfxxx.dtsi:550.24-563.6: Warning (spi_bus_bridge):
-/soc/aips-bus@40080000/spi@400ad000: incorrect #address-cells for SPI
-bus
-  also defined at arch/arm/boot/dts/vf610-bk4.dts:106.8-118.3
-arch/arm/boot/dts/vf610-bk4.dtb: Warning (spi_bus_reg): Failed
-prerequisite 'spi_bus_bridge'
+I applied patches 1-4 and skipped patch 5 due to pending changes.
 
-If spi-slave property is removed the warning is gone.
+-- Sebastian
 
-Looking at drivers/spi/spi-fsl-dspi.c I don't see the "spi-slave"
-property being handled there.
+--6fkbibezpeowkax5
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Any ideas on how to fix this?
+-----BEGIN PGP SIGNATURE-----
 
-Thanks
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlwIaQUACgkQ2O7X88g7
++pqLKw/+IlpcbeCdt+0onz8HK1cf8vvuwgBApnTWGQftNy46FEcy+pmQQSUCs05N
+CEG6FAyhp/d2BmHhpeGvAXgDGtKWzW2kRl4J8anQH/tiiE0lep8Mmjtjr2iuYzgr
+5nEYPQgj/hGDlJPt4T6KDq+dpvtbrSYsxW9+r2USzfpH3xfvus+Ka9E/psX84oAV
+xb8iB4qPTqGKbsGeJZs1Mmuo+Ml1QacQ6KFE8MnfiOLMaE1ynpjOhvYgzdLTqvwW
+MaUbsLz4zk3mQIgqi7MCcNRngOBsDmtmKAOlOMuwQL0G5X65u9jbVPDi9PgyrSKf
+OSwFfcWI42qXv6eL94xkfjiWdXjl5hTkfdlbtuRmLGZbvKNICREtd4R0cVNne9lv
+IgouR2D8W2gdkSgx/euisA5xRpLlSaU8tt3WFMnvZ4+SCatDVKGiUbtXvZIDKI7G
+ABrGcduf9tO8UUPNEAyypBuC+DX6DeAUt3VmvudRwNnS3iWRbapMNW3D3f/l8c3a
+QsNx+bsGf5HCN2kKdhh804mWFgDC9nBUWntANwUiLbexyluSH9LrBYBDiIlFNbkW
+6Mk/wqwNw7Hxcy5U5RR1aesN4WCpupglAWeuB3MQPFwgRFBBP6oK8AG2Pudwkefx
+i/Q2SjpD6GUKK5g6Foo548qv3SnhtLbq/jImgViQdDesdrqNkq8=
+=/pqc
+-----END PGP SIGNATURE-----
+
+--6fkbibezpeowkax5--
