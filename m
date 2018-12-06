@@ -1,60 +1,60 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: Moving ARM dts files
-Date: Thu, 6 Dec 2018 15:05:31 +0100
-Message-ID: <20181206140531.GX8952@piout.net>
-References: <20181204183649.GA5716@bogus>
- <20181205135726.70badac7@xhacker.debian>
- <CACRpkdYs_s9m=fUuOcfqcvP5BMXity5GH17RSMyvHzdZ9aFNzA@mail.gmail.com>
- <CAL_JsqJWnB+EAoXk9a1M_D-kH8kZcwD6gTj0yVa_hBCGapB4RQ@mail.gmail.com>
- <20181206133922.4y4qnrqcjtog3ukt@pengutronix.de>
- <CAL_Jsq+PB3Pmg1RmNqj0whapbcqRBXDNWi4LpjPqqCKeLHbR=A@mail.gmail.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v5 1/6] fieldbus_dev: add Fieldbus Device subsystem.
+Date: Thu, 6 Dec 2018 15:07:50 +0100
+Message-ID: <20181206140750.GB18947@kroah.com>
+References: <20181204220224.27324-1-TheSven73@googlemail.com>
+ <20181204220224.27324-2-TheSven73@googlemail.com>
+ <20181205101659.GA27058@kroah.com>
+ <CAGngYiXXrrqGxTt339EP53tschLgZ82eRGvGifHQw6pg=C88+Q@mail.gmail.com>
+ <20181205191724.GA434@kroah.com>
+ <CAGngYiWG74nDt1_hN0-bKCDRxm-f=N-Rnjtk02Vd7dgKtGRaBA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+PB3Pmg1RmNqj0whapbcqRBXDNWi4LpjPqqCKeLHbR=A@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thierry Reding <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory CLEMENT <gregory.clement@bootlin.com>, Michal Simek <michal.simek@xilinx.com>, Krzysztof Kozlowski <krzk@kernel.org>, ARM-SoC Maintainers <arm@kernel.org>, Joel Stanley <joel@jms.id.au>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Jisheng Zhang <Jisheng.Zhang@synaptics.com>, Maxime Coquelin <mcoquelin.st>
+In-Reply-To: <CAGngYiWG74nDt1_hN0-bKCDRxm-f=N-Rnjtk02Vd7dgKtGRaBA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sven Van Asbroeck <thesven73@gmail.com>
+Cc: Sven Van Asbroeck <svendev@arcx.com>, robh+dt@kernel.org, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, treding@nvidia.com, David Lechner <david@lechnology.com>, noralf@tronnes.org, johan@kernel.org, Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com, Arnd Bergmann <arnd@arndb.de>, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/2018 07:58:24-0600, Rob Herring wrote:
-> On Thu, Dec 6, 2018 at 7:39 AM Uwe Kleine-K=F6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
+On Wed, Dec 05, 2018 at 05:32:19PM -0500, Sven Van Asbroeck wrote:
+> Thanks :)
+> 
+> On Wed, Dec 5, 2018 at 2:17 PM Greg KH <gregkh@linuxfoundation.org> wrote:
 > >
-> > Hello,
-> >
-> > On Wed, Dec 05, 2018 at 09:01:59AM -0600, Rob Herring wrote:
-> > > i.MX23 is a Sigmatel chip STMP??
-> >
-> > I think the Freescale i.MX23 didn't exist at Sigmatel back then. AFAIK
-> > this is a new design using IP from Sigmatel after the aquisition.
-> =
+> > Great, then call it a 'fieldbus' class, not "fieldbus_dev' class.
+> 
+> Small nit:
+> 
+> Hardware connected to a fieldbus comes in two distinct flavours:
+> - clients (e.g. thermometer, robotic arm) called "fieldbus devices"
+> - servers (e.g. a PLC) called "fieldbus controllers"
+> 
+> Their userspace APIs will probably differ quite a lot.
 
-> It is not. I was in the i.MX group which Sigmatel was merged into at
-> the time. Purely marketing rebranding.
-> =
+But servers are going to be much more rare, and odds are userspace is
+not going to need to control anything with them, right?
 
+> The userspace API created by the patch is only for clients a.k.a.
+> "fieldbus devices". That's why I'm writing 'fieldbus_dev' all over the place.
+> 
+> For simplicity, we could change that to just 'fieldbus'. But would this get
+> us in trouble when, at some point, we want to add a userspace API for
+> servers a.k.a. "fieldbus controllers" ?
 
-Wouldn't it be easier to name the directory to the corresponding mach-*
-entry?
+Ick, yeah, I guess so, but planning for future events is not something
+we do well at all.  Are you sure you will need fieldbus controllers as a
+class?
 
-So, imx23 and imx28 would go to mxs/, other imx in imx/. And this also
-solves the Marvell mess with the Synaptics Socs going in berlin/ and the
-other ones in mvebu/.
+And as these are really devices, why not make them a "device" and a bus?
+What type of topology do you have on these busses?  Are everything
+"flat" and connected directly to a PCI/USB/platform device?  Or are
+there multiple devices attached to a single controller?
 
+It really feels like you want to use 'struct device' and a bus_type and
+not a class here to me...
 
--- =
+thanks,
 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+greg k-h
