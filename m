@@ -1,96 +1,59 @@
-From: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
-Subject: Re: [PATCH v2 2/3] arm64: dts: allwinner: a64: Add A64 CSI controller
-Date: Thu, 6 Dec 2018 18:07:59 +0100
-Message-ID: <CAOf5uwk_k-Y8ZZFbtjUup5U27wN_E+fvqEDs5m3csnzdneN1KQ@mail.gmail.com>
-References: <20181206132306.11843-1-jagan@amarulasolutions.com>
- <20181206132306.11843-2-jagan@amarulasolutions.com> <20181206153445.kqu2pep5orktr6yv@flea>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: [PATCH v2 0/5] Add CPU clock support for Armada 7K/8K
+Date: Thu,  6 Dec 2018 18:15:11 +0100
+Message-ID: <20181206171516.15891-1-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181206153445.kqu2pep5orktr6yv@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Jagan Teki <jagan@amarulasolutions.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-amarula@amarulasolutions.com
+To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime
+Hello,
 
-On Thu, Dec 6, 2018 at 4:34 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Thu, Dec 06, 2018 at 06:53:05PM +0530, Jagan Teki wrote:
-> > Allwinner A64 CSI controller has similar features as like in
-> > H3, So add support for A64 via H3 fallback.
-> >
-> > Also updated CSI_SCLK to use 300MHz via assigned-clocks, since
-> > the default clock 600MHz seems unable to drive the sensor(ov5640)
-> > to capture the image.
-> >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> > Changes for v2:
-> > - Use CSI_SCLK to 300MHz
-> >
-> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 23 +++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > index 384c417cb7a2..d7ab0006ebce 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > @@ -532,6 +532,12 @@
-> >                       interrupt-controller;
-> >                       #interrupt-cells = <3>;
-> >
-> > +                     csi_pins: csi-pins {
-> > +                             pins = "PE0", "PE2", "PE3", "PE4", "PE5", "PE6",
-> > +                                    "PE7", "PE8", "PE9", "PE10", "PE11";
-> > +                             function = "csi0";
-> > +                     };
-> > +
-> >                       i2c0_pins: i2c0_pins {
-> >                               pins = "PH0", "PH1";
-> >                               function = "i2c0";
-> > @@ -899,6 +905,23 @@
-> >                       status = "disabled";
-> >               };
-> >
-> > +             csi: csi@1cb0000 {
-> > +                     compatible = "allwinner,sun50i-a64-csi",
-> > +                                  "allwinner,sun8i-h3-csi";
-> > +                     reg = <0x01cb0000 0x1000>;
-> > +                     interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> > +                     clocks = <&ccu CLK_BUS_CSI>,
-> > +                              <&ccu CLK_CSI_SCLK>,
-> > +                              <&ccu CLK_DRAM_CSI>;
-> > +                     clock-names = "bus", "mod", "ram";
-> > +                     resets = <&ccu RST_BUS_CSI>;
-> > +                     pinctrl-names = "default";
-> > +                     pinctrl-0 = <&csi_pins>;
-> > +                     assigned-clocks = <&ccu CLK_CSI_SCLK>;
-> > +                     assigned-clock-rates = <300000000>;
->
-> That should be enforced in the driver.
->
+This is the second version of a series allowing to manage the cpu
+clock for Armada 7K/8K. For these SoCs, the CPUs share the same clock
+by cluster, so actually the clock management is done at cluster level.
 
-We are not really sure what is the best here. Our first idea was to
-put in the board file and then Jagan
-decide to put in dtsi. We don't have enough coverage of camera on this
-CPU and I prefer to stay with this
-minimal change that does not impact the driver.
+As for the other Armada 7K/8K clocks it is possible to have multiple
+AP so here again we need to have unique name: the purpose of the second
+patch is to share a common code which will be used in 3 drivers.
 
-Michael
+The last 2 patch enable the driver at dt and platform level and will
+be applied through the mvebu subsystem.
 
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+Changelog v1->v2:
+ - Header cleanup
+ - Use unsigned int instead of it for cluster member of the ap_cpu_clk struct
+ - Use clk_hw instead of clk
+ - Use regmap_read_poll_timeout
+ - Use for_each_of_cpu_node
+ - Remove unnecessary WARN_ON()
+ - Remove headers from armada_ap_cp_helper.h
+ - Few other minor cleanup
 
+Gregory CLEMENT (5):
+  clk: mvebu: add helper file for Armada AP and CP clocks
+  clk: mvebu: add CPU clock driver for Armada 7K/8K
+  clk: mvebu: ap806: Fix clock name for the cluster
+  arm64: marvell: enable the  Armada 7K/8K CPU clk driver
+  arm64: dts: marvell: Add cpu clock node on Armada 7K/8K
 
+ arch/arm64/Kconfig.platforms                  |   1 +
+ .../boot/dts/marvell/armada-ap806-quad.dtsi   |   4 +
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi |   6 +
+ drivers/clk/mvebu/Kconfig                     |   8 +
+ drivers/clk/mvebu/Makefile                    |   2 +
+ drivers/clk/mvebu/ap-cpu-clk.c                | 259 ++++++++++++++++++
+ drivers/clk/mvebu/ap806-system-controller.c   |  24 +-
+ drivers/clk/mvebu/armada_ap_cp_helper.c       |  30 ++
+ drivers/clk/mvebu/armada_ap_cp_helper.h       |  11 +
+ drivers/clk/mvebu/cp110-system-controller.c   |  32 +--
+ 10 files changed, 335 insertions(+), 42 deletions(-)
+ create mode 100644 drivers/clk/mvebu/ap-cpu-clk.c
+ create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.c
+ create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.h
 
 -- 
-| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
-| COO  -  Founder                                      Cruquiuskade 47 |
-| +31(0)851119172                                 Amsterdam 1018 AM NL |
-|                  [`as] http://www.amarulasolutions.com               |
+2.19.2
