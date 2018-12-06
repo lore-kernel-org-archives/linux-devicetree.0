@@ -1,42 +1,96 @@
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Subject: Re: [alsa-devel] [PATCH] ASoC: Use of_node_name_eq for node name
-        comparisons
-Date: Thu, 6 Dec 2018 01:30:48 +0000
-Message-ID: <875zw7jvr1.wl-kuninori.morimoto.gx@renesas.com>
-References: <20181205195050.4759-33-robh@kernel.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 4/5] ARM: dts: imx6ul-pico-hobbit: Extend peripherals
+ support
+Date: Thu, 6 Dec 2018 09:34:20 +0800
+Message-ID: <20181206013419.GT3987@dragon>
+References: <20181202211809.11621-1-otavio@ossystems.com.br>
+ <20181202211809.11621-5-otavio@ossystems.com.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181205195050.4759-33-robh@kernel.org>
-Content-Language: en-US
-Content-ID: <FFD6A0F1D3827746B1DACBD7F8675846@jpnprd01.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <20181202211809.11621-5-otavio@ossystems.com.br>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Nicolin Chen <nicoleotsuka@gmail.com>, Mark Brown <broonie@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+To: Otavio Salvador <otavio@ossystems.com.br>
+Cc: linux-arm-kernel@lists.infradead.org, Fabio Estevam <festevam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-
-Hi Rob
-
-> Convert string compares of DT node names to use of_node_name_eq helper
-> instead. This removes direct access to the node name pointer.
->=20
-> For the FSL ASoC card, the full node names appear to be "ssi", "esai",
-> and "sai", so there's not any reason to use strstr and of_node_name_eq
-> can be used instead.
-
-I guess this patch is for FSL ?
-
+On Sun, Dec 02, 2018 at 07:18:08PM -0200, Otavio Salvador wrote:
+> From: Fabio Estevam <festevam@gmail.com>
+> 
+> This adds following peripherals support:
+> 
+>  - ADC
+>  - GPIO LED
+>  - GPIOs
+> 
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
 > ---
->  sound/soc/fsl/fsl-asoc-card.c       | 6 +++---
->  sound/soc/generic/simple-scu-card.c | 2 +-
->  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+>  arch/arm/boot/dts/imx6ul-pico-hobbit.dts | 30 ++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
+> index 8656ccbb5a06..f2dd6945e98c 100644
+> --- a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
+> +++ b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
+> @@ -14,6 +14,8 @@
+>  
+>  	leds {
+>  		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_gpio_leds>;
+>  
+>  		led {
+>  			label = "gpio-led";
+> @@ -58,6 +60,12 @@
+>  &i2c3 {
+>  	status = "okay";
+>  
+> +	adc081c: adc@50 {
+> +		compatible = "ti,adc081c";
+> +		reg = <0x50>;
+> +		vref-supply = <&reg_3p3v>;
+> +	};
+> +
 
-But, this patch is including simple-scu-card.
-Is this miss ?
+The child nodes should be sorted in order of unit-address.  That said,
+it should go after touchscreen@38 below.
 
+I fixed it up and applied the series.
 
-Best regards
----
-Kuninori Morimoto
+Shawn
+
+>  	polytouch: touchscreen@38 {
+>  		compatible = "edt,edt-ft5x06";
+>  		reg = <0x38>;
+> @@ -68,3 +76,25 @@
+>  		touchscreen-size-y = <480>;
+>  	};
+>  };
+> +
+> +&iomuxc {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hog>;
+> +
+> +	pinctrl_hog: hoggrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_CSI_VSYNC__GPIO4_IO19		0x10b0
+> +			MX6UL_PAD_CSI_DATA00__GPIO4_IO21	0x10b0
+> +			MX6UL_PAD_CSI_DATA01__GPIO4_IO22	0x10b0
+> +			MX6UL_PAD_CSI_DATA02__GPIO4_IO23	0x10b0
+> +			MX6UL_PAD_UART1_CTS_B__GPIO1_IO18	0x10b0
+> +			MX6UL_PAD_SNVS_TAMPER2__GPIO5_IO02	0x10b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_gpio_leds: gpioledsgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART4_RX_DATA__GPIO1_IO29	0x10b0
+> +		>;
+> +	};
+> +};
+> -- 
+> 2.19.2
+> 
