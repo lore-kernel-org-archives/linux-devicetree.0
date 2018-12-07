@@ -1,64 +1,92 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 1/5] dt-bindings: nvmem: add binding for Raspberry Pi OTP
-Date: Fri, 7 Dec 2018 09:10:56 +0100
-Message-ID: <894cfae3-43f4-f201-9b54-41114ce8107e@i2se.com>
-References: <1542805904-6446-1-git-send-email-stefan.wahren@i2se.com>
- <1542805904-6446-2-git-send-email-stefan.wahren@i2se.com>
- <20181206234941.GA6340@bogus>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v1 2/4] arm64: dts: qcom: msm8996: Fix QMP PHY #clock-cells
+Date: Fri, 7 Dec 2018 14:02:06 +0530
+Message-ID: <CAFp+6iF5mVAdKn3FxodoEp9DAbtDYbsNFVFbwsiSP0fsAMom1w@mail.gmail.com>
+References: <20181129221357.67417-1-evgreen@chromium.org> <20181129221357.67417-3-evgreen@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181206234941.GA6340@bogus>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Eric Anholt <eric@anholt.net>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-rpi-kernel@lists.infradead.org, gregkh@linuxfoundation.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181129221357.67417-3-evgreen@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: evgreen@chromium.org
+Cc: kishon <kishon@ti.com>, robh+dt <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Doug Anderson <dianders@chromium.org>, swboyd@chromium.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKQW0gMDcuMTIuMTggdW0gMDA6NDkgc2NocmllYiBSb2IgSGVycmluZzoKPiBPbiBX
-ZWQsIE5vdiAyMSwgMjAxOCBhdCAwMjoxMTo0MFBNICswMTAwLCBTdGVmYW4gV2FocmVuIHdyb3Rl
-Ogo+PiBUaGlzIHBhdGNoIGFkZHMgdGhlIGRldmljZXRyZWUgYmluZGluZyBmb3IgUmFzcGJlcnJ5
-IFBpIGN1c3RvbWVyIE9UUAo+PiBkcml2ZXIuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBX
-YWhyZW4gPHN0ZWZhbi53YWhyZW5AaTJzZS5jb20+Cj4+IC0tLQo+PiAgLi4uL252bWVtL3Jhc3Bi
-ZXJyeXBpLGJjbTI4MzUtY3VzdG9tZXItb3RwLnR4dCAgICAgfCAyMiArKysrKysrKysrKysrKysr
-KysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgMjIgaW5zZXJ0aW9ucygrKQo+PiAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9udm1lbS9yYXNwYmVy
-cnlwaSxiY20yODM1LWN1c3RvbWVyLW90cC50eHQKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9udm1lbS9yYXNwYmVycnlwaSxiY20yODM1LWN1c3Rv
-bWVyLW90cC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbnZtZW0vcmFz
-cGJlcnJ5cGksYmNtMjgzNS1jdXN0b21lci1vdHAudHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0
-Cj4+IGluZGV4IDAwMDAwMDAuLjA0MWZmMTcKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbnZtZW0vcmFzcGJlcnJ5cGksYmNtMjgzNS1j
-dXN0b21lci1vdHAudHh0Cj4+IEBAIC0wLDAgKzEsMjIgQEAKPj4gK0N1c3RvbWVyIE9UUCBNZW1v
-cnkgZm9yIFJhc3BiZXJyeSBQaQo+PiArCj4+ICtUaGUgVkM0IGZpcm13YXJlIGV4cG9zZXMgYSBt
-YWlsYm94IGludGVyZmFjZSB0aGF0IGFsbG93cyB0aGUgQVJNIGNvcmUKPj4gK3RvIGFjY2VzcyB0
-aGUgY3VzdG9tZXIgcGFydCBvZiB0aGUgT1RQIG1lbW9yeS4KPj4gKwo+PiArVGhlIE9UUCBub2Rl
-IG11c3QgYmUgYSBjaGlsZCBub2RlIG9mIHRoZSBSYXNwYmVycnkgUGkgZmlybXdhcmUgbm9kZS4K
-Pj4gKwo+PiArUmVxdWlyZWQgcHJvcGVydGllcyA6Cj4+ICstIGNvbXBhdGlibGUgICAgIDogU2hv
-dWxkIGJlICJyYXNwYmVycnlwaSxiY20yODM1LWN1c3RvbWVyLW90cCIKPiBXaHkgZG8gd2UgbmVl
-ZCB0aGlzIGNoaWxkIG5vZGU/IENhbid0IHRoZSBwYXJlbnQgaW5zdGFudGlhdGUgdGhpcz8KPgo+
-IEFyZSB0aGVyZSBPVFAgZmllbGRzIHlvdSB3YW50IHRvIGV4cG9zZSBpbiBEVD8KCnRoZSBjdXN0
-b21lciBwYXJ0IG9mIHRoZSBPVFAgaXMgcmVzZXJ2ZWQgKGluaXRpYWxpemVkIHdpdGggemVybykg
-Zm9yCnVzZXIgd2hvIHdhbnRzIHRvIHVzZSB0aGUgUmFzcGJlcnJ5IFBpIChtb3N0bHkgdGhlIENv
-bXB1dGUgTW9kdWxlKSBpbgp0aGVpciBjdXN0b20gZGVzaWducy4gU28gaSBjYW5ub3QgcHJvdmlk
-ZSBhbnkgbnZtZW0gY2VsbHMgeWV0IGJlY2F1c2UgaXQKaXMgdXAgdG8gdGhlIHVzZXIgdG8gZGVm
-aW5lIHRoZW0gKGUuZy4gaGFyZHdhcmUgcmVsYXRlZCB2YWx1ZXMgbGlrZQpzZXJpYWwgbnVtYmVy
-cywgTUFDIGFkZHJlc3NlcyBmb3IgYWRkaXRpb25hbCBuZXR3b3JrIGludGVyZmFjZXMgb3IKY2Fs
-aWJyYXRpb24gdmFsdWVzKS4gQnV0IHllcyBpIGNvbnNpZGVyIHRoZSBiaW5kaW5nIGFuZCB0aGUg
-YWJpbGl0eSB0bwpkZWZpbmUgbnZtZW0gY2VsbHMgdmlhIGRldmljZXRyZWUgYXMgYSBncmVhdCBm
-ZWF0dXJlLgoKQ3VycmVudGx5IHRoZSBGb3VuZGF0aW9uIHN1Z2dlc3RzIHRvIHVzZSB0aGUgbWFp
-bGJveCBpbnRlcmZhY2UgZnJvbQp1c2Vyc3BhY2UgWzFdLCBidXQgaSBwcmVmZXIgYSBtb3JlIGNv
-bW1vbiB3YXkgbGlrZSBudm1lbS4KClsxXSAtwqAKaHR0cHM6Ly93d3cucmFzcGJlcnJ5cGkub3Jn
-L2RvY3VtZW50YXRpb24vaGFyZHdhcmUvaW5kdXN0cmlhbC9SRUFETUUubWQKCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Fri, Nov 30, 2018 at 3:45 AM Evan Green <evgreen@chromium.org> wrote:
+>
+> Move #clock-cells into the child node and set it to 0 to conform to the
+> proper binding specification.
+>
+> Signed-off-by: Evan Green <evgreen@chromium.org>
+> ---
+>
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> index 13bb96444df00..4af740ca0880f 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> @@ -767,7 +767,6 @@
+>                 phy@34000 {
+>                         compatible = "qcom,msm8996-qmp-pcie-phy";
+>                         reg = <0x34000 0x488>;
+> -                       #clock-cells = <1>;
+>                         #address-cells = <1>;
+>                         #size-cells = <1>;
+>                         ranges;
+> @@ -790,6 +789,7 @@
+>                                 reg = <0x035000 0x130>,
+>                                         <0x035200 0x200>,
+>                                         <0x035400 0x1dc>;
+> +                               #clock-cells = <0>;
+>                                 #phy-cells = <0>;
+>
+>                                 clock-output-names = "pcie_0_pipe_clk_src";
+> @@ -803,6 +803,7 @@
+>                                 reg = <0x036000 0x130>,
+>                                         <0x036200 0x200>,
+>                                         <0x036400 0x1dc>;
+> +                               #clock-cells = <0>;
+>                                 #phy-cells = <0>;
+>
+>                                 clock-output-names = "pcie_1_pipe_clk_src";
+> @@ -816,6 +817,7 @@
+>                                 reg = <0x037000 0x130>,
+>                                         <0x037200 0x200>,
+>                                         <0x037400 0x1dc>;
+> +                               #clock-cells = <0>;
+>                                 #phy-cells = <0>;
+>
+>                                 clock-output-names = "pcie_2_pipe_clk_src";
+> @@ -829,7 +831,6 @@
+>                 phy@7410000 {
+>                         compatible = "qcom,msm8996-qmp-usb3-phy";
+>                         reg = <0x7410000 0x1c4>;
+> -                       #clock-cells = <1>;
+>                         #address-cells = <1>;
+>                         #size-cells = <1>;
+>                         ranges;
+> @@ -851,6 +852,7 @@
+>                                 reg = <0x7410200 0x200>,
+>                                         <0x7410400 0x130>,
+>                                         <0x7410600 0x1a8>;
+> +                               #clock-cells = <0>;
+>                                 #phy-cells = <0>;
+>
+>                                 clock-output-names = "usb3_phy_pipe_clk_src";
+> --
+> 2.18.1
+>
+
+Tested on db820c [1]
+Tested-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+
+[1] https://github.com/vivekgautam1/linux/tree/origin/v4.20-rc5/db820c
+
+BRs
+Vivek
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
