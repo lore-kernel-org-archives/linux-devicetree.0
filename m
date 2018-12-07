@@ -1,58 +1,87 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v5] arm64: dts: sdm845: Add display nodes to MTP dts
-Date: Fri, 7 Dec 2018 12:59:33 -0800
-Message-ID: <CAD=FV=WPj66cLFqCMOt0A=rjAPov8SkLWcR7e9jT4uZK644imw@mail.gmail.com>
-References: <1544067310-7306-1-git-send-email-abhinavk@codeaurora.org>
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: Re: [PATCH v4 2/6] arm64: add basic DTS for i.MX8MQ
+Date: Fri, 7 Dec 2018 21:07:19 +0000
+Message-ID: <20181207210718.ueg2uw6tfniniscl@fsr-ub1664-175>
+References: <20181114175242.12468-1-l.stach@pengutronix.de>
+ <20181114175242.12468-2-l.stach@pengutronix.de> <20181116232524.GA2013@bogus>
+ <20181207161723.2u5z3sdobbpop4kz@fsr-ub1664-175>
+ <1544200612.3709.111.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1544067310-7306-1-git-send-email-abhinavk@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Abhinav Kumar <abhinavk@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Sandeep Panda <spanda@codeaurora.org>, Matthias Kaehlcke <mka@chromium.org>, Sean Paul <seanpaul@chromium.org>, Kristian Kristensen <hoegsberg@google.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1544200612.3709.111.camel@pengutronix.de>
+Content-Language: en-US
+Content-ID: <AB1EAF748FF8104C805D9F69BFDDC2FA@eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBXZWQsIERlYyA1LCAyMDE4IGF0IDc6MzUgUE0gQWJoaW5hdiBLdW1hciA8YWJoaW5h
-dmtAY29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+ICsmZHNpMCB7Cj4gKyAgICAgICBzdGF0dXMgPSAi
-b2theSI7Cj4gKyAgICAgICBxY29tLGR1YWwtZHNpLW1vZGU7Cj4gKyAgICAgICBxY29tLG1hc3Rl
-ci1kc2k7Cj4gKyAgICAgICBxY29tLHN5bmMtZHVhbC1kc2k7Cj4gKwo+ICsgICAgICAgdmRkYS1z
-dXBwbHkgPSA8JnZkZGFfbWlwaV9kc2kwXzFwMj47Cj4gKwo+ICsgICAgICAgcGFuZWxAMCB7Cj4g
-KyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAidHJ1bHksbnQzNTU5Ny0ySy1kaXNwbGF5IjsK
-PiArICAgICAgICAgICAgICAgcmVnID0gPDA+Owo+ICsKPiArICAgICAgICAgICAgICAgdmRkYS1z
-dXBwbHkgPSA8JnZyZWdfbDE0YV8xcDg4PjsKPiArICAgICAgICAgICAgICAgdmRpc3BwLXN1cHBs
-eSA9IDwmbGFiX3JlZ3VsYXRvcj47Cj4gKyAgICAgICAgICAgICAgIHZkaXNwbi1zdXBwbHkgPSA8
-JmliYl9yZWd1bGF0b3I+OwoKQ2FuIHlvdSBwbGVhc2UgcG9pbnQgdG8gdGhlIHBhdGNoIHBvc3Rl
-ZCB1cHN0cmVhbSB0aGF0IHByb3ZpZGVzIHRoZQpub2RlcyBmb3IgbGFiX3JlZ3VsYXRvciBhbmQg
-aWJiX3JlZ3VsYXRvcj8gIEkgc2VhcmNoZWQgYW5kIEkgY291bGRuJ3QKZmluZCBpdCwgYnV0IEkg
-Y2VydGFpbmx5IGNvdWxkIGhhdmUgbWlzc2VkIGl0Li4uICBUaGVyZSB3YXMgYW4KSU5URVJOQUwg
-cGF0Y2ggaW4gc29tZSBkb3duc3RyZWFtIHRyZWVzIHByb3ZpZGluZyB0aGVzZSBidXQgbm90aGlu
-Zwp1cHN0cmVhbS4gIFRoaXMgY2FuJ3QgbGFuZCB1cHN0cmVhbSB1bnRpbCBzdWNoIGEgcGF0Y2gg
-aXMgcG9zdGVkIGFuZAp3b3Jrcy4uLgoKCj4gKyZkc2kxX3BoeSB7Cj4gKyAgICAgICBzdGF0dXMg
-PSAib2theSI7Cj4gKyAgICAgICB2ZGRzLXN1cHBseSA9IDwmdmRkYV9taXBpX2RzaTFfcGxsPjsK
-PiArfTsKPiArCgpSaWdodCBub3cgdGhpcyBjYXVzZXMgYSBtZXJnZSBjb25mbGljdCB3aGVuIEkg
-cGljayBpdCBpbiBteSB0cmVlIGJ1dAp0aGF0J3MgYmVjYXVzZSBJIGhhdmUgdGhlICZnY2Mgbm9k
-ZSBmb3IgcHJvdGVjdGVkLWNsb2NrcyAoc2VlCmxpbnV4LW5leHQpLiAgRGVwZW5kaW5nIG9uIEFu
-ZHkgeW91IG1pZ2h0IG5lZWQgdG8gcmVwb3N0IGF0b3AgdGhhdApvbmUuCgoKPiArCj4gKyAvKiBQ
-SU5DVFJMIC0gYm9hcmQtc3BlY2lmaWMgcGluY3RybCAqLwo+ICsKPiArJnRsbW0gewo+ICsgICAg
-ICAgZGlzcF9tb2RlX3NlbDogZGlzcC1tb2RlLXNlbCB7CgpJIGFsc28gZ2V0IGEgbWVyZ2UgY29u
-ZmxpY3QgaGVyZSwgYnV0IHRoYXQncyBiZWNhdXNlIEkgaGF2ZSBFdmFuJ3MKU0RIQ0kgcGF0Y2hl
-cyBpbiBteSB0cmVlIHdoaWNoIGFsc28gYWRkcyB0aGUgdGxtbSBub2RlIChhY3R1YWxseSwgaXQK
-bW92ZXMgaXQgdG8gdGhlIHJpZ2h0IHBsYWNlKS4gIElmIEFuZHkgY2FuIGxhbmQgdGhlIFNESENJ
-IGRldmljZSB0cmVlCnRoZW4geW91IGNvdWxkIGJhc2Ugb2ZmIG9mIGhpcyBwYXRjaGVzIGFuZCBh
-dm9pZCB0aGUgbWVyZ2UgY29uZmxpY3QuCgoKT3ZlcmFsbDogZm9yIHRoZSBtZXJnZSBjb25mbGlj
-dHMgSSBkb24ndCB0aGluayBpdCdzIGEgYmlnIGRlYWwtLUFuZHkKY2FuIHByb2JhYmx5IHJlc29s
-dmUgdGhlbS4gIC4uLmJ1dCB5b3UgZGVmaW5pdGVseSBuZWVkIHRvIGV4cGxhaW4Kd2hlcmUgImxh
-Yl9yZWd1bGF0b3IiIGFuZCAiaWJiX3JlZ3VsYXRvciIgY29tZSBmcm9tIGFuZCB0aGlzIGNhbid0
-CmxhbmQgdW50aWwgdGhvc2Ugbm9kZXMgYXJlIHByb3ZpZGVkLgoKLURvdWcKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
-dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Fri, Dec 07, 2018 at 05:36:52PM +0100, Lucas Stach wrote:
+> Hi Abel,
+> 
+> Am Freitag, den 07.12.2018, 16:17 +0000 schrieb Abel Vesa:
+> > On Fri, Nov 16, 2018 at 05:25:24PM -0600, Rob Herring wrote:
+> > 
+> > > > +
+> > > > +	clk_ext1: clock-ext1 {
+> > > > +		compatible = "fixed-clock";
+> > > > +		#clock-cells = <0>;
+> > > > +		clock-frequency = <133000000>;
+> > > > +		clock-output-names = "clk_ext1";
+> > > > +	};
+> > > > +
+> > > > +	clk_ext2: clock-ext2 {
+> > > > +		compatible = "fixed-clock";
+> > > > +		#clock-cells = <0>;
+> > > > +		clock-frequency = <133000000>;
+> > > > +		clock-output-names = "clk_ext2";
+> > > > +	};
+> > > > +
+> > > > +	clk_ext3: clock-ext3 {
+> > > > +		compatible = "fixed-clock";
+> > > > +		#clock-cells = <0>;
+> > > > +		clock-frequency = <133000000>;
+> > > > +		clock-output-names = "clk_ext3";
+> > > > +	};
+> > > > +
+> > > > +	clk_ext4: clock-ext4 {
+> > > > +		compatible = "fixed-clock";
+> > > > +		#clock-cells = <0>;
+> > > > +		clock-frequency= <133000000>;
+> > > > +		clock-output-names = "clk_ext4";
+> > > > +	};
+> > > 
+> > > This is really 4 independent clocks or is 1 clock connected to 4
+> > > sinks?
+> > 
+> > According to the RM, yes, there are 4 independent clocks. Here is a
+> > link to the rm:
+> > 
+> > https://emea01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.nxp.com%2Fwebapp%2FDownload%3FcolCode%3DIMX8MEVKBHUG&amp;data=02%7C01%7Cabel.vesa%40nxp.com%7C303f3053feb94a3c1c9f08d65c623255%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C636797974154936811&amp;sdata=CuJSqDl1WiL%2Bc%2B4wYnr3ssDDpH3DorYIzLN87PNHVh4%3D&amp;reserved=0 (page 829)
+> > 
+> > Unfortunately, the old link (which worked without login) does not
+> > work anymore.
+> 
+> It's really 4 clock inputs to the SoC, but they may actually be
+> connected to the same clock source on the board. So I really wonder if
+> we should even put this into the base SoC DT, but rather push this into
+> individual board DTs.
+
+Hmm, it's part of the SoC, right ? So I would keep it in the dtsi rather than
+having it duplicated into every new dts.
+
+> 
+> Regards,
+> Lucas
+
+-- 
