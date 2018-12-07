@@ -1,72 +1,256 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 04/19] dt-bindings: cpufreq: tegra124: remove cpu_lp clock
- from required properties
-Date: Fri, 7 Dec 2018 13:53:37 +0000
-Message-ID: <c8934ef1-5ada-ad9a-1b32-9b9860eccdc9@nvidia.com>
-References: <20181204092548.3038-1-josephl@nvidia.com>
- <20181204092548.3038-5-josephl@nvidia.com>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: Re: [PATCH v9 05/13] media: dt-bindings: add bindings for i.MX7 media
+ driver
+Date: Fri, 07 Dec 2018 13:54:05 +0000
+Message-ID: <m35zw530jm.fsf@linaro.org>
+References: <20181122151834.6194-1-rui.silva@linaro.org>
+ <20181122151834.6194-6-rui.silva@linaro.org>
+ <5bc1ad92-4d84-62af-396c-9ba8b3be424b@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181204092548.3038-5-josephl@nvidia.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-reply-to: <5bc1ad92-4d84-62af-396c-9ba8b3be424b@xs4all.nl>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Hans,
 
-On 04/12/2018 09:25, Joseph Lo wrote:
-> The cpu_lp clock property is only needed when the CPUfreq driver
-> supports CPU cluster switching. But it was not a design for this driver
-> and it didn't handle that as well. So removing this property.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Joseph Lo <josephl@nvidia.com>
-> ---
->  .../devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt   | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
-> index 031545a29caf..03196d5ea515 100644
-> --- a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
-> +++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
-> @@ -9,7 +9,6 @@ Required properties:
->    See ../clocks/clock-bindings.txt for details.
->  - clock-names: Must include the following entries:
->    - cpu_g: Clock mux for the fast CPU cluster.
-> -  - cpu_lp: Clock mux for the low-power CPU cluster.
->    - pll_x: Fast PLL clocksource.
->    - pll_p: Auxiliary PLL used during fast PLL rate changes.
->    - dfll: Fast DFLL clocksource that also automatically scales CPU voltage.
-> @@ -30,11 +29,10 @@ cpus {
->  		reg = <0>;
->  
->  		clocks = <&tegra_car TEGRA124_CLK_CCLK_G>,
-> -			 <&tegra_car TEGRA124_CLK_CCLK_LP>,
->  			 <&tegra_car TEGRA124_CLK_PLL_X>,
->  			 <&tegra_car TEGRA124_CLK_PLL_P>,
->  			 <&dfll>;
-> -		clock-names = "cpu_g", "cpu_lp", "pll_x", "pll_p", "dfll";
-> +		clock-names = "cpu_g", "pll_x", "pll_p", "dfll";
->  		clock-latency = <300000>;
->  	};
->  
-> 
+On Fri 07 Dec 2018 at 12:39, Hans Verkuil wrote:
+> On 11/22/2018 04:18 PM, Rui Miguel Silva wrote:
+>> Add bindings documentation for i.MX7 media drivers.
+>> The imx7 MIPI CSI2 and imx7 CMOS Sensor Interface.
+>> 
+>> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>
+> Please move this patch to the beginning of the series to avoid
+> checkpatch warnings:
+>
+> WARNING: DT compatible string "fsl,imx7-csi" appears 
+> un-documented -- check ./Documentation/devicetree/bindings/
+> #1378: FILE: drivers/staging/media/imx/imx7-media-csi.c:1336:
+> +       { .compatible = "fsl,imx7-csi" },
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Will do, thanks for catching this one.
 
-Cheers
-Jon
+---
+Cheers,
+	Rui
 
--- 
-nvpublic
+>
+> Thanks!
+>
+> 	Hans
+>
+>
+>> ---
+>>  .../devicetree/bindings/media/imx7-csi.txt    | 45 ++++++++++
+>>  .../bindings/media/imx7-mipi-csi2.txt         | 90 
+>>  +++++++++++++++++++
+>>  2 files changed, 135 insertions(+)
+>>  create mode 100644 
+>>  Documentation/devicetree/bindings/media/imx7-csi.txt
+>>  create mode 100644 
+>>  Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/media/imx7-csi.txt 
+>> b/Documentation/devicetree/bindings/media/imx7-csi.txt
+>> new file mode 100644
+>> index 000000000000..3c07bc676bc3
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/imx7-csi.txt
+>> @@ -0,0 +1,45 @@
+>> +Freescale i.MX7 CMOS Sensor Interface
+>> +=====================================
+>> +
+>> +csi node
+>> +--------
+>> +
+>> +This is device node for the CMOS Sensor Interface (CSI) which 
+>> enables the chip
+>> +to connect directly to external CMOS image sensors.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible    : "fsl,imx7-csi";
+>> +- reg           : base address and length of the register set 
+>> for the device;
+>> +- interrupts    : should contain CSI interrupt;
+>> +- clocks        : list of clock specifiers, see
+>> + 
+>> Documentation/devicetree/bindings/clock/clock-bindings.txt for 
+>> details;
+>> +- clock-names   : must contain "axi", "mclk" and "dcic" 
+>> entries, matching
+>> +                 entries in the clock property;
+>> +
+>> +The device node shall contain one 'port' child node with one 
+>> child 'endpoint'
+>> +node, according to the bindings defined in:
+>> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+>> +
+>> +In the following example a remote endpoint is a video 
+>> multiplexer.
+>> +
+>> +example:
+>> +
+>> +                csi: csi@30710000 {
+>> +                        #address-cells = <1>;
+>> +                        #size-cells = <0>;
+>> +
+>> +                        compatible = "fsl,imx7-csi";
+>> +                        reg = <0x30710000 0x10000>;
+>> +                        interrupts = <GIC_SPI 7 
+>> IRQ_TYPE_LEVEL_HIGH>;
+>> +                        clocks = <&clks IMX7D_CLK_DUMMY>,
+>> +                                        <&clks 
+>> IMX7D_CSI_MCLK_ROOT_CLK>,
+>> +                                        <&clks 
+>> IMX7D_CLK_DUMMY>;
+>> +                        clock-names = "axi", "mclk", "dcic";
+>> +
+>> +                        port {
+>> +                                csi_from_csi_mux: endpoint {
+>> +                                        remote-endpoint = 
+>> <&csi_mux_to_csi>;
+>> +                                };
+>> +                        };
+>> +                };
+>> diff --git 
+>> a/Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt 
+>> b/Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
+>> new file mode 100644
+>> index 000000000000..71fd74ed3ec8
+>> --- /dev/null
+>> +++ 
+>> b/Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
+>> @@ -0,0 +1,90 @@
+>> +Freescale i.MX7 Mipi CSI2
+>> +=========================
+>> +
+>> +mipi_csi2 node
+>> +--------------
+>> +
+>> +This is the device node for the MIPI CSI-2 receiver core in 
+>> i.MX7 SoC. It is
+>> +compatible with previous version of Samsung D-phy.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible    : "fsl,imx7-mipi-csi2";
+>> +- reg           : base address and length of the register set 
+>> for the device;
+>> +- interrupts    : should contain MIPI CSIS interrupt;
+>> +- clocks        : list of clock specifiers, see
+>> + 
+>> Documentation/devicetree/bindings/clock/clock-bindings.txt for 
+>> details;
+>> +- clock-names   : must contain "pclk", "wrap" and "phy" 
+>> entries, matching
+>> +                  entries in the clock property;
+>> +- power-domains : a phandle to the power domain, see
+>> + 
+>> Documentation/devicetree/bindings/power/power_domain.txt for 
+>> details.
+>> +- reset-names   : should include following entry "mrst";
+>> +- resets        : a list of phandle, should contain reset 
+>> entry of
+>> +                  reset-names;
+>> +- phy-supply    : from the generic phy bindings, a phandle to 
+>> a regulator that
+>> +	          provides power to MIPI CSIS core;
+>> +
+>> +Optional properties:
+>> +
+>> +- clock-frequency : The IP's main (system bus) clock frequency 
+>> in Hz, default
+>> +		    value when this property is not specified is 
+>> 166 MHz;
+>> +- fsl,csis-hs-settle : differential receiver (HS-RX) settle 
+>> time;
+>> +
+>> +The device node should contain two 'port' child nodes with one 
+>> child 'endpoint'
+>> +node, according to the bindings defined in:
+>> + Documentation/devicetree/bindings/ 
+>> media/video-interfaces.txt.
+>> + The following are properties specific to those nodes.
+>> +
+>> +port node
+>> +---------
+>> +
+>> +- reg		  : (required) can take the values 0 or 1, 
+>> where 0 shall be
+>> +                     related to the sink port and port 1 shall 
+>> be the source
+>> +                     one;
+>> +
+>> +endpoint node
+>> +-------------
+>> +
+>> +- data-lanes    : (required) an array specifying active 
+>> physical MIPI-CSI2
+>> +		    data input lanes and their mapping to logical 
+>> lanes; this
+>> +                    shall only be applied to port 0 (sink 
+>> port), the array's
+>> +                    content is unused only its length is 
+>> meaningful,
+>> +                    in this case the maximum length supported 
+>> is 2;
+>> +
+>> +example:
+>> +
+>> +        mipi_csi: mipi-csi@30750000 {
+>> +                #address-cells = <1>;
+>> +                #size-cells = <0>;
+>> +
+>> +                compatible = "fsl,imx7-mipi-csi2";
+>> +                reg = <0x30750000 0x10000>;
+>> +                interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+>> +                clocks = <&clks IMX7D_IPG_ROOT_CLK>,
+>> +                                <&clks 
+>> IMX7D_MIPI_CSI_ROOT_CLK>,
+>> +                                <&clks 
+>> IMX7D_MIPI_DPHY_ROOT_CLK>;
+>> +                clock-names = "pclk", "wrap", "phy";
+>> +                clock-frequency = <166000000>;
+>> +                power-domains = <&pgc_mipi_phy>;
+>> +                phy-supply = <&reg_1p0d>;
+>> +                resets = <&src IMX7_RESET_MIPI_PHY_MRST>;
+>> +                reset-names = "mrst";
+>> +                fsl,csis-hs-settle = <3>;
+>> +
+>> +                port@0 {
+>> +                        reg = <0>;
+>> +
+>> +                        mipi_from_sensor: endpoint {
+>> +                                remote-endpoint = 
+>> <&ov2680_to_mipi>;
+>> +                                data-lanes = <1>;
+>> +                        };
+>> +                };
+>> +
+>> +                port@1 {
+>> +                        reg = <1>;
+>> +
+>> +                        mipi_vc0_to_csi_mux: endpoint {
+>> +                                remote-endpoint = 
+>> <&csi_mux_from_mipi_vc0>;
+>> +                        };
+>> +                };
+>> +        };
+>> 
