@@ -1,28 +1,26 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 2/2] iio: accell: mma8452: add optional vcc regulator
- operation support
-Date: Fri, 7 Dec 2018 08:23:24 -0200
-Message-ID: <CAOMZO5AoJ4rxu31gQTLQcVwhuqJdhUOVRsTig0oE2a5vF2QESg@mail.gmail.com>
-References: <1544077059-4471-1-git-send-email-Anson.Huang@nxp.com> <1544077059-4471-2-git-send-email-Anson.Huang@nxp.com>
+From: David HERNANDEZ SANCHEZ <david.hernandezsanchez@st.com>
+Subject: [PATCH] ARM: dts: stm32: Enable thermal sensor support on
+ STM32MP157c-ed1
+Date: Fri, 7 Dec 2018 10:28:04 +0000
+Message-ID: <1544178482-30494-1-git-send-email-david.hernandezsanchez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544077059-4471-2-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-ID: <64AE5F7BD18D6941882D819B88A0C866@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yongcai Huang <anson.huang@nxp.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, harinath922@gmail.com, Leonard Crestez <leonard.crestez@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, martink@posteo.de, rtresidd@electromag.com.au, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, linux-iio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Anson,
-
-On Thu, Dec 6, 2018 at 4:25 AM Anson Huang <anson.huang@nxp.com> wrote:
-
-> @@ -1533,6 +1535,14 @@ static int mma8452_probe(struct i2c_client *client,
->         data->client = client;
->         mutex_init(&data->lock);
->         data->chip_info = match->data;
-> +       data->vcc_reg = devm_regulator_get_optional(&client->dev, "vcc");
-
-MMA8452 datasheet shows two power supplies: VDD and VDDIO, so if you
-are adding support for the regulators, IMHO it is better to represent
-both supplies and with the same name they appear in the datasheet.
+RW5hYmxlIFNUTTMyIERpZ2l0YWwgVGhlcm1hbCBTZW5zb3IgKGR0cykgZHJpdmVyIGZvcg0KU1RN
+MzJNUDE1N2MtZWQxIGJvYXJkLg0KDQpTaWduZWQtb2ZmLWJ5OiBEYXZpZCBIZXJuYW5kZXogU2Fu
+Y2hleiA8ZGF2aWQuaGVybmFuZGV6c2FuY2hlekBzdC5jb20+DQoNCmRpZmYgLS1naXQgYS9hcmNo
+L2FybS9ib290L2R0cy9zdG0zMm1wMTU3Yy1lZDEuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3Rt
+MzJtcDE1N2MtZWQxLmR0cw0KaW5kZXggYzNlY2IxZS4uOThlZjdhMCAxMDA2NDQNCi0tLSBhL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAxNTdjLWVkMS5kdHMNCisrKyBiL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL3N0bTMybXAxNTdjLWVkMS5kdHMNCkBAIC00OSw2ICs0OSwxMCBAQA0KIAl9Ow0KIH07DQog
+DQorJmR0cyB7DQorCXN0YXR1cyA9ICJva2F5IjsNCit9Ow0KKw0KICZpMmM0IHsNCiAJcGluY3Ry
+bC1uYW1lcyA9ICJkZWZhdWx0IjsNCiAJcGluY3RybC0wID0gPCZpMmM0X3BpbnNfYT47DQotLSAN
+CjIuNy40DQo=
