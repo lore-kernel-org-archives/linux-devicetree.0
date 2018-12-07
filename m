@@ -1,33 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/8] dt-bindings: opp: Introduce qcom-opp bindings
-Date: Fri, 7 Dec 2018 11:29:48 -0600
-Message-ID: <20181207172948.GA4284@bogus>
-References: <20181204052119.806-1-rnayak@codeaurora.org>
- <20181204052119.806-2-rnayak@codeaurora.org>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH] coresight: Use of_node_name_eq for node name comparisons
+Date: Fri, 7 Dec 2018 10:36:13 -0700
+Message-ID: <20181207173613.GA27493@xps15>
+References: <20181205195050.4759-34-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181204052119.806-2-rnayak@codeaurora.org>
+In-Reply-To: <20181205195050.4759-34-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: robh@kernel.org, viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  4 Dec 2018 10:51:12 +0530, Rajendra Nayak wrote:
-> On Qualcomm Technologies, Inc. platforms, an OPP node needs
-> to describe an additional level/corner value that is then communicated
-> to a remote microprocessor by the CPU, which then takes some
-> actions (like adjusting voltage values across various rails)
-> based on the value passed.
+On Wed, Dec 05, 2018 at 01:50:50PM -0600, Rob Herring wrote:
+> Convert string compares of DT node names to use of_node_name_eq helper
+> instead. This removes direct access to the node name pointer.
 > 
-> Describe these bindings in the qcom-opp bindings document.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
->  .../devicetree/bindings/opp/qcom-opp.txt      | 25 +++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/opp/qcom-opp.txt
+>  drivers/hwtracing/coresight/of_coresight.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
+> diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
+> index 89092f83567e..7045930fc958 100644
+> --- a/drivers/hwtracing/coresight/of_coresight.c
+> +++ b/drivers/hwtracing/coresight/of_coresight.c
+> @@ -80,8 +80,8 @@ static struct device_node *of_coresight_get_port_parent(struct device_node *ep)
+>  	 * Skip one-level up to the real device node, if we
+>  	 * are using the new bindings.
+>  	 */
+> -	if (!of_node_cmp(parent->name, "in-ports") ||
+> -	    !of_node_cmp(parent->name, "out-ports"))
+> +	if (of_node_name_eq(parent, "in-ports") ||
+> +	    of_node_name_eq(parent, "out-ports"))
+>  		parent = of_get_next_parent(parent);
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied - thanks.
+
+>  
+>  	return parent;
+> -- 
+> 2.19.1
+> 
