@@ -1,49 +1,63 @@
-Return-Path: <SRS0=so6l=OM=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from albert.telenet-ops.be ([195.130.137.90]:43132 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726609AbeLCPMw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Dec 2018 10:12:52 -0500
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/2] arm64: dts: renesas: r8a7796: salvator-xs: Convert to new LVDS DT bindings
-Date: Mon,  3 Dec 2018 16:12:42 +0100
-Message-Id: <20181203151242.25875-3-geert+renesas@glider.be>
-In-Reply-To: <20181203151242.25875-1-geert+renesas@glider.be>
-References: <20181203151242.25875-1-geert+renesas@glider.be>
-Sender: devicetree-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Marek Vasut <marek.vasut@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-Path: <robherring2@gmail.com>
+Date: Fri, 7 Dec 2018 17:32:34 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 4/4] doc: usb: ci-hdrc-usb2: Add pinctrl properties
+ for HSIC pin groups
+Message-ID: <20181207233234.GA1419@bogus>
+References: <20181127092824.22756-1-peter.chen@nxp.com>
+ <20181127092824.22756-5-peter.chen@nxp.com>
+ <CAOMZO5CV9Hk5ORnmjOLSZv5bk61nc2Ljq_4vKvRvAvO_F=Fzxg@mail.gmail.com>
+ <VI1PR04MB5327E51B366724706028E07E8BD30@VI1PR04MB5327.eurprd04.prod.outlook.com>
+ <a081eb16-920a-0ff4-2ae7-7c9efd28668a@kontron.de>
+ <CAOMZO5BdzvSNovd15jcijGBMzS_G+5xnmyNBXMH7S3cmwCfKMA@mail.gmail.com>
+ <0215e99c-c024-42f6-9dad-4bab70bae193@kontron.de>
+ <VI1PR04MB532787E6EF89EBFAAE052A0C8BA80@VI1PR04MB5327.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB532787E6EF89EBFAAE052A0C8BA80@VI1PR04MB5327.eurprd04.prod.outlook.com>
+To: PETER CHEN <peter.chen@nxp.com>
+Cc: Schrempf Frieder <frieder.schrempf@kontron.de>, Fabio Estevam <festevam@gmail.com>, USB list <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Schrempf Frieder <frieder.schrempf@exceet.de>
 List-ID: <devicetree@vger.kernel.org>
 
-As of commit 6d2ca85279becdff ("dt-bindings: display: renesas: Deprecate
-LVDS support in the DU bindings"), the internal LVDS encoder has DT
-bindings separate from the DU.  The device trees for all R-Car H3 and
-M3-W development boards were ported over to the new model, but
-Salvator-XS boards equipped with an R-Car M3-W SoC were forgotten.
+On Wed, Dec 05, 2018 at 07:57:37AM +0000, PETER CHEN wrote:
+>  
+> > On 04.12.18 21:01, Fabio Estevam wrote:
+> > > Hi Frieder,
+> > >
+> > > On Tue, Dec 4, 2018 at 12:31 PM Schrempf Frieder
+> > > <frieder.schrempf@kontron.de> wrote:
+> > >
+> > >> There are many other optional properties for this driver and a lot of
+> > >> them are not in the given example. Maybe we should just keep the
+> > >> pinctrls for HSIC-mode out of the example, too?
+> > >
+> > > I am just trying to make life easier for those who want to use HSIC
+> > > support with chipidea.
+> > >
+> > > Can we just add a real dts snippet example of your board into the
+> > > binding document?
+> > 
+> > Sure, here is what I have in my dts:
+> > 
+> > &usbh2 {
+> > 	pinctrl-names = "idle", "active";
+> > 	pinctrl-0 = <&pinctrl_usbh2_idle>;
+> > 	pinctrl-1 = <&pinctrl_usbh2_active>;
+> > 	status = "okay";
+> > 	#address-cells = <1>;
+> > 	#size-cells = <0>;
+> > 
+> > 	usbnet: smsc@1 {
+> > 		compatible = "usb424,9730";
+> > 		reg = <1>;
+> > 	};
+> > };
+> > 
+> > @Peter: Can you add this as a second example to the binding documentation?
+> > 
+> 
+> So, there are two examples at binding-doc, one for normal, one for HSIC? Fabio, do you
+> mean that? If DT maintainer agrees it too, I will add it.
 
-Fixes: 58e8ed2ee9abe718 ("arm64: dts: renesas: Convert to new LVDS DT bindings")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Compile-tested only.
----
- arch/arm64/boot/dts/renesas/r8a7796-salvator-xs.dts | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a7796-salvator-xs.dts b/arch/arm64/boot/dts/renesas/r8a7796-salvator-xs.dts
-index 8860be65342e4f38..31f12059355ee02b 100644
---- a/arch/arm64/boot/dts/renesas/r8a7796-salvator-xs.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a7796-salvator-xs.dts
-@@ -29,11 +29,10 @@
- 	clocks = <&cpg CPG_MOD 724>,
- 		 <&cpg CPG_MOD 723>,
- 		 <&cpg CPG_MOD 722>,
--		 <&cpg CPG_MOD 727>,
- 		 <&versaclock6 1>,
- 		 <&x21_clk>,
- 		 <&versaclock6 2>;
--	clock-names = "du.0", "du.1", "du.2", "lvds.0",
-+	clock-names = "du.0", "du.1", "du.2",
- 		      "dclkin.0", "dclkin.1", "dclkin.2";
- };
- 
--- 
-2.17.1
+Okay.
