@@ -1,19 +1,19 @@
-From: Carlo Caione <ccaione@baylibre.com>
-Subject: Re: [PATCH 0/2] meson: Fix IRQ trigger type
-Date: Fri, 07 Dec 2018 11:03:20 +0000
-Message-ID: <463139583299c0099c812ad12017fe6d32662db4.camel@baylibre.com>
-References: <20181204160447.27869-1-ccaione@baylibre.com>
- <CAFBinCDCE7RP4vgs25bqSZ8vBjrmcuB=qb3U92X6QfpmzeqrBg@mail.gmail.com>
- <20181206124347.GA10676@ingrassia.epigenesys.com>
- <85973a9cd43c677ffa5c80853e86d79f36a9eb3a.camel@baylibre.com>
- <20181206155228.GA15225@ingrassia.epigenesys.com>
- <20181206185158.GA19901@ingrassia.epigenesys.com>
- <44c9eedf4dc2616645c2a49b080f42a493fe03fd.camel@baylibre.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [RFC PATCH 4/6] dt-bindings: update mvneta binding document
+Date: Fri, 7 Dec 2018 16:43:27 +0530
+Message-ID: <2ac6488c-a060-6875-bc92-c14fe2dbf8af@ti.com>
+References: <20181112122933.GD30658@n2100.armlinux.org.uk>
+ <E1gMBMs-00089t-Fd@rmk-PC.armlinux.org.uk> <20181203235455.GA5851@bogus>
+ <20181205110009.GQ30658@n2100.armlinux.org.uk>
+ <CAL_JsqJXMDqQVQJoq0sXn0VEA1iFpcsK+Hjsxwt-7aWNreAkPw@mail.gmail.com>
+ <2b832258-0b8f-a8f9-2907-878d0e4d6ee7@ti.com>
+ <20181207104142.GY30658@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <44c9eedf4dc2616645c2a49b080f42a493fe03fd.camel@baylibre.com>
+In-Reply-To: <20181207104142.GY30658@n2100.armlinux.org.uk>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,37 +23,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Emiliano Ingrassia <ingrassia@epigenesys.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@baylibre.com, robh+dt@kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, netdev <netdev@vger.kernel.org>, Gregory CLEMENT <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "moderated
+ list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-12-07 at 11:49 +0100, Jerome Brunet wrote:
-> On Thu, 2018-12-06 at 19:51 +0100, Emiliano Ingrassia wrote:
-> > Hi Carlo,
-> > 
-> > I keep running tests with packet generator,
-> > using nload to show bandwidth usage.
-> > 
-> > Here is my test results with packet generators
-> > both running on laptop and board with rate 1 Gbps.
+Russell,
+
+On 07/12/18 4:11 PM, Russell King - ARM Linux wrote:
+> On Fri, Dec 07, 2018 at 09:37:54AM +0530, Kishon Vijay Abraham I wrote:
+>> Hi Russell,
+>>
+>> On 05/12/18 9:00 PM, Rob Herring wrote:
+>>> On Wed, Dec 5, 2018 at 5:00 AM Russell King - ARM Linux
+>>> <linux@armlinux.org.uk> wrote:
+>>>>
+>>>> On Mon, Dec 03, 2018 at 05:54:55PM -0600, Rob Herring wrote:
+>>>>> On Mon, Nov 12, 2018 at 12:31:02PM +0000, Russell King wrote:
+>>>>>> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+>>>>>
+>>>>> Needs a better subject and a commit msg.
+>>>>
+>>>> Hmm, not sure why it didn't contain:
+>>>>
+>>>> "dt-bindings: net: mvneta: add phys property
+>>>>
+>>>> Add an optional phys property to the mvneta binding documentation for
+>>>> the common phy.
+>>>>
+>>>> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>"
+>>>>
+>>>> as the commit message.  With the correct commit message, are you happy
+>>>> with it?
+>>>
+>>> Yes.
+>>>
+>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>
+>> Are you planning to resend this series?
 > 
-> Testing in UDP is unlikely to give us clear picture of anything for
-> this sort
-> of fixes.
-> 
-> All your test seems in show it the fact the Amlogic SoC usually
-> prioritize the
-> TX traffic over RX, which is something we've known about for a while.
-> 
-> It would be helpful if you could provide TCP figures with a traffic
-> generator
-> we can all share an inspect, such as iperf3
+> I'm not - you said previously that you had merged the first three
+> patches into the phy tree, which are fine.  The next two could be
 
-For reference you can use something like:
+No, I haven't merged patches from this series. That would have failed
+compilation since Grygorii modified enum phy_mode which is used in this series.
+You have also noted this in your cover letter.
 
-iperf3 -c ${IP} -i ${IPERF_LOGPERIOD} -w 400k -p ${PORT} -t ${DURATION}
-
-Cheers,
-
---
-Carlo Caione
+Thanks
+Kishon
