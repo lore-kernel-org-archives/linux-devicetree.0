@@ -1,47 +1,69 @@
-From: James Morse <james.morse@arm.com>
-Subject: [PATCH arm64/kexec] arm64: kexec_file: forbid kdump via kexec_file_load()
-Date: Fri,  7 Dec 2018 10:14:39 +0000
-Message-ID: <20181207101439.190918-1-james.morse@arm.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [ v3 2/3] mtd: rawnand: stm32_fmc2: add STM32 FMC2 NAND flash
+ controller driver
+Date: Fri, 7 Dec 2018 11:18:08 +0100
+Message-ID: <20181207111808.144fc3f0@xps13>
+References: <1543509663-26128-1-git-send-email-christophe.kerello@st.com>
+        <1543509663-26128-3-git-send-email-christophe.kerello@st.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1543509663-26128-3-git-send-email-christophe.kerello@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, bhsharma@redhat.com, Frank Rowand <frowand.list@gmail.com>, James Morse <james.morse@arm.com>
+To: Christophe Kerello <christophe.kerello@st.com>
+Cc: boris.brezillon@bootlin.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-Now that kexec_walk_memblock() can do the crash-kernel placement itself
-architectures that don't support kdump via kexe_file_load() need to
-explicitly forbid it.
+Hi Christophe,
 
-We don't support this on arm64 until the kernel can add the elfcorehdr
-and usable-memory-range fields to the DT. Without these the crash-kernel
-overwrites the previous kernel's memory during startup.
+Christophe Kerello <christophe.kerello@st.com> wrote on Thu, 29 Nov
+2018 17:41:02 +0100:
 
-Add a check to refuse crash image loading.
+> The driver adds the support for the STMicroelectronics FMC2 NAND
+> Controller found on STM32MP SOCs.
+> 
+> This patch is based on FMC2 command sequencer.
+> The purpose of the command sequencer is to facilitate the programming
+> and the reading of NAND flash pages with the ECC and to free the CPU
+> of sequencing tasks.
+> It requires one DMA channel for write and two DMA channels for read
+> operations.
+> 
+> Only NAND_ECC_HW mode is actually supported.
+> The driver supports a maximum 8k page size.
+> The following ECC strength and step size are currently supported:
+>  - nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8)
+>  - nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
+>  - nand-ecc-strength = <1>, nand-ecc-step-size = <512> (Extended ECC
+>    based on Hamming)
+> 
+> This patch has been tested on Micron MT29F8G08ABACAH4 and
+> MT29F8G16ABACAH4
+> 
+> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> ---
 
-Signed-off-by: James Morse <james.morse@arm.com>
----
+The driver look's good to me. However, Boris contributed new
+cleanups that I would like you to take into account before doing
+another 'deep' review. Please rebase on top of nand/next and have
+a look at the followingcommits. For the ->select_chip() hook, it
+should not be exposed anymore and switches should be handled
+locally by the driver (you have examples).
 
-Context: http://lore.kernel.org/r/20181206155424.GA4422@arm.com
+7a08dbaedd36 mtd: rawnand: Move ->setup_data_interface() to nand_controller_ops
+f2abfeb2078b mtd: rawnand: Move the ->exec_op() method to nand_controller_ops
+7d6c37e90cf9 mtd: rawnand: Deprecate the ->select_chip() hook
+1770022ffa85 mtd: rawnand: ams-delta: Stop implementing ->select_chip()
+653c57c7da08 mtd: rawnand: vf610: Stop implementing ->select_chip()
+2ace451cae22 mtd: rawnand: tegra: Stop implementing ->select_chip()
+b25251414f6e mtd: rawnand: marvell: Stop implementing ->select_chip()
+550b9fc4e3af mtd: rawnand: fsmc: Stop implementing ->select_chip()
+02b4a52604a4 mtd: rawnand: Make ->select_chip() optional when ->exec_op() is implemented
+ae2294b10b0f mtd: rawnand: Pass the CS line to be selected in struct nand_operation
+1d0178593d14 mtd: rawnand: Add nand_[de]select_target() helpers
 
- arch/arm64/kernel/kexec_image.c | 4 ++++
- 1 file changed, 4 insertions(+)
+While at it, could you also address Linus W. comments.
 
-diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-index 1ad1d5f8f024..07bf740bea91 100644
---- a/arch/arm64/kernel/kexec_image.c
-+++ b/arch/arm64/kernel/kexec_image.c
-@@ -47,6 +47,10 @@ static void *image_load(struct kimage *image,
- 	struct kexec_segment *kernel_segment;
- 	int ret;
- 
-+	/* We don't support crash kernels yet. */
-+	if (image->type == KEXEC_TYPE_CRASH)
-+		return ERR_PTR(-EOPNOTSUPP);
-+
- 	/*
- 	 * We require a kernel with an unambiguous Image header. Per
- 	 * Documentation/booting.txt, this is the case when image_size
--- 
-2.19.2
+Thanks,
+Miquèl
