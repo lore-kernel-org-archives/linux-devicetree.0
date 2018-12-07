@@ -1,70 +1,67 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 4/4] leds: trigger: Add pattern initialization from Device Tree
-Date: Fri,  7 Dec 2018 13:32:54 +0100
-Message-ID: <1544185974-5932-4-git-send-email-krzk@kernel.org>
-References: <1544185974-5932-1-git-send-email-krzk@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544185974-5932-1-git-send-email-krzk@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Baolin Wang <baolin.wang@linaro.org>, Krzysztof Kozlowski <krzk@kernel.org>, Raphael Teysseyre <rteysseyre@gmail.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v9 01/13] media: staging/imx: refactor imx media device
+ probe
+Date: Fri, 7 Dec 2018 13:38:25 +0100
+Message-ID: <b0fffeef-439b-e3a7-67d1-900a7ea1664f@xs4all.nl>
+References: <20181122151834.6194-1-rui.silva@linaro.org>
+ <20181122151834.6194-2-rui.silva@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20181122151834.6194-2-rui.silva@linaro.org>
+Content-Language: en-US
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Allow initialization of pattern used in pattern trigger from Device Tree
-property.
+On 11/22/2018 04:18 PM, Rui Miguel Silva wrote:
+> Refactor and move media device initialization code to a new common
+> module, so it can be used by other devices, this will allow for example
+> a near to introduce imx7 CSI driver, to use this media device.
+> 
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+> ---
+>  drivers/staging/media/imx/Makefile            |   1 +
+>  .../staging/media/imx/imx-media-dev-common.c  | 102 ++++++++++++++++++
+>  drivers/staging/media/imx/imx-media-dev.c     |  88 ++++-----------
+>  drivers/staging/media/imx/imx-media-of.c      |   6 +-
+>  drivers/staging/media/imx/imx-media.h         |  15 +++
+>  5 files changed, 141 insertions(+), 71 deletions(-)
+>  create mode 100644 drivers/staging/media/imx/imx-media-dev-common.c
+> 
+> diff --git a/drivers/staging/media/imx/Makefile b/drivers/staging/media/imx/Makefile
+> index 698a4210316e..a30b3033f9a3 100644
+> --- a/drivers/staging/media/imx/Makefile
+> +++ b/drivers/staging/media/imx/Makefile
+> @@ -1,5 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  imx-media-objs := imx-media-dev.o imx-media-internal-sd.o imx-media-of.o
+> +imx-media-objs += imx-media-dev-common.o
+>  imx-media-common-objs := imx-media-utils.o imx-media-fim.o
+>  imx-media-ic-objs := imx-ic-common.o imx-ic-prp.o imx-ic-prpencvf.o
+>  
+> diff --git a/drivers/staging/media/imx/imx-media-dev-common.c b/drivers/staging/media/imx/imx-media-dev-common.c
+> new file mode 100644
+> index 000000000000..55fe94fb72f2
+> --- /dev/null
+> +++ b/drivers/staging/media/imx/imx-media-dev-common.c
+> @@ -0,0 +1,102 @@
+> +// SPDX-License-Identifier: GPL
 
-This is especially useful for embedded systems where the pattern trigger
-would be used to indicate the process of boot status in a nice,
-user-friendly blinking way.  This initialization pattern will be used
-till user-space is brought up and sets its own pattern, indicating the
-boot status is for example finished.
+This is an invalid SPDX license identifier. You probably want to use GPL-2.0.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/leds/trigger/ledtrig-pattern.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+This happens in more patches, please check!
 
-diff --git a/drivers/leds/trigger/ledtrig-pattern.c b/drivers/leds/trigger/ledtrig-pattern.c
-index 1870cf87afe1..96309d3bc43c 100644
---- a/drivers/leds/trigger/ledtrig-pattern.c
-+++ b/drivers/leds/trigger/ledtrig-pattern.c
-@@ -11,6 +11,7 @@
- #include <linux/leds.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-+#include <linux/of.h>
- #include <linux/slab.h>
- #include <linux/timer.h>
- 
-@@ -331,6 +332,21 @@ static const struct attribute_group *pattern_trig_groups[] = {
- 	NULL,
- };
- 
-+static void pattern_init(struct led_classdev *led_cdev)
-+{
-+	struct device_node *np = dev_of_node(led_cdev->dev);
-+	const char *pattern;
-+
-+	if (!np)
-+		return;
-+
-+	if (!of_property_read_string(np, "linux,trigger-pattern", &pattern)) {
-+		if (strlen(pattern))
-+			pattern_trig_store_patterns(led_cdev, pattern,
-+						    strlen(pattern), false);
-+	}
-+}
-+
- static int pattern_trig_activate(struct led_classdev *led_cdev)
- {
- 	struct pattern_trig_data *data;
-@@ -354,6 +370,8 @@ static int pattern_trig_activate(struct led_classdev *led_cdev)
- 	timer_setup(&data->timer, pattern_trig_timer_function, 0);
- 	led_cdev->activated = true;
- 
-+	pattern_init(led_cdev);
-+
- 	return 0;
- }
- 
--- 
-2.7.4
+Regards,
+
+	Hans
