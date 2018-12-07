@@ -1,254 +1,101 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 4/6] misc: fastrpc: Add support for create remote init process
-Date: Fri,  7 Dec 2018 16:35:11 +0000
-Message-ID: <20181207163513.16412-5-srinivas.kandagatla@linaro.org>
-References: <20181207163513.16412-1-srinivas.kandagatla@linaro.org>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH v2 2/3] arm64: dts: allwinner: a64: Add A64 CSI controller
+Date: Fri, 7 Dec 2018 22:06:34 +0530
+Message-ID: <CAMty3ZDTGen-QnQ=urtaO2H8UxEX=ANH20rL-xFzGhtYWjHJ=w@mail.gmail.com>
+References: <20181206132306.11843-1-jagan@amarulasolutions.com>
+ <20181206132306.11843-2-jagan@amarulasolutions.com> <20181206153445.kqu2pep5orktr6yv@flea>
+ <CAOf5uwk_k-Y8ZZFbtjUup5U27wN_E+fvqEDs5m3csnzdneN1KQ@mail.gmail.com> <20181207074723.l3ykhqojfkd4y4ie@flea>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181207163513.16412-1-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20181207074723.l3ykhqojfkd4y4ie@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, bkumar@qti.qualcomm.com, thierry.escande@linaro.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Michael Trimarchi <michael@amarulasolutions.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-amarula@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support to create or attach remote shell process.
-The shell process called fastrpc_shell_0 is usually loaded on the DSP
-when a user process is spawned.
+On Fri, Dec 7, 2018 at 1:17 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Thu, Dec 06, 2018 at 06:07:59PM +0100, Michael Nazzareno Trimarchi wrote:
+> > On Thu, Dec 6, 2018 at 4:34 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > On Thu, Dec 06, 2018 at 06:53:05PM +0530, Jagan Teki wrote:
+> > > > Allwinner A64 CSI controller has similar features as like in
+> > > > H3, So add support for A64 via H3 fallback.
+> > > >
+> > > > Also updated CSI_SCLK to use 300MHz via assigned-clocks, since
+> > > > the default clock 600MHz seems unable to drive the sensor(ov5640)
+> > > > to capture the image.
+> > > >
+> > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > ---
+> > > > Changes for v2:
+> > > > - Use CSI_SCLK to 300MHz
+> > > >
+> > > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 23 +++++++++++++++++++
+> > > >  1 file changed, 23 insertions(+)
+> > > >
+> > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > index 384c417cb7a2..d7ab0006ebce 100644
+> > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> > > > @@ -532,6 +532,12 @@
+> > > >                       interrupt-controller;
+> > > >                       #interrupt-cells = <3>;
+> > > >
+> > > > +                     csi_pins: csi-pins {
+> > > > +                             pins = "PE0", "PE2", "PE3", "PE4", "PE5", "PE6",
+> > > > +                                    "PE7", "PE8", "PE9", "PE10", "PE11";
+> > > > +                             function = "csi0";
+> > > > +                     };
+> > > > +
+> > > >                       i2c0_pins: i2c0_pins {
+> > > >                               pins = "PH0", "PH1";
+> > > >                               function = "i2c0";
+> > > > @@ -899,6 +905,23 @@
+> > > >                       status = "disabled";
+> > > >               };
+> > > >
+> > > > +             csi: csi@1cb0000 {
+> > > > +                     compatible = "allwinner,sun50i-a64-csi",
+> > > > +                                  "allwinner,sun8i-h3-csi";
+> > > > +                     reg = <0x01cb0000 0x1000>;
+> > > > +                     interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> > > > +                     clocks = <&ccu CLK_BUS_CSI>,
+> > > > +                              <&ccu CLK_CSI_SCLK>,
+> > > > +                              <&ccu CLK_DRAM_CSI>;
+> > > > +                     clock-names = "bus", "mod", "ram";
+> > > > +                     resets = <&ccu RST_BUS_CSI>;
+> > > > +                     pinctrl-names = "default";
+> > > > +                     pinctrl-0 = <&csi_pins>;
+> > > > +                     assigned-clocks = <&ccu CLK_CSI_SCLK>;
+> > > > +                     assigned-clock-rates = <300000000>;
+> > >
+> > > That should be enforced in the driver.
+> > >
+> >
+> > We are not really sure what is the best here. Our first idea was to
+> > put in the board file and then Jagan
+> > decide to put in dtsi. We don't have enough coverage of camera on this
+> > CPU and I prefer to stay with this
+> > minimal change that does not impact the driver.
+>
+> The thing is that:
+>   - in this commit log, you're stating that it depends on the sensor,
+>     which indicates that this would be a board level addition
+>   - In another patch series, Jagan reported IIRC that it actually
+>     depends on the resolution, so it doesn't belong in the DT at all
+>   - And then, you don't even have any guarantee on the clock rate. The
+>     sole guarantee you have is that when your driver will probe, the
+>     rate will be close to those 300MHz. That's it. It might completely
+>     change after the driver has probed, or be rounded to something
+>     else entirely, who knows.
 
-Most of the work is derived from various downstream Qualcomm kernels.
-Credits to various Qualcomm authors who have contributed to this code.
-Specially Tharun Kumar Merugu <mtharu@codeaurora.org>
+Let's to be clear.
 
-Co-developed-by: Thierry Escande <thierry.escande@linaro.org>
-Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/misc/fastrpc.c      | 140 ++++++++++++++++++++++++++++++++++++
- include/uapi/misc/fastrpc.h |  12 ++++
- 2 files changed, 152 insertions(+)
-
-diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index 46435813785d..fda674e9efe2 100644
---- a/drivers/misc/fastrpc.c
-+++ b/drivers/misc/fastrpc.c
-@@ -29,7 +29,10 @@
- #define FASTRPC_MAX_CRCLIST	64
- #define FASTRPC_PHYS(p)	((p) & 0xffffffff)
- #define FASTRPC_CTX_MAX (256)
-+#define FASTRPC_INIT_HANDLE	1
- #define FASTRPC_CTXID_MASK (0xFF0)
-+#define INIT_FILELEN_MAX (2 * 1024 * 1024)
-+#define INIT_MEMLEN_MAX  (8 * 1024 * 1024)
- #define FASTRPC_DEVICE_NAME	"fastrpc"
- 
- /* Retrives number of input buffers from the scalars parameter */
-@@ -60,6 +63,13 @@
- #define FASTRPC_SCALARS(method, in, out) \
- 		FASTRPC_BUILD_SCALARS(0, method, in, out, 0, 0)
- 
-+/* Remote Method id table */
-+#define FASTRPC_RMID_INIT_ATTACH	0
-+#define FASTRPC_RMID_INIT_RELEASE	1
-+#define FASTRPC_RMID_INIT_CREATE	6
-+#define FASTRPC_RMID_INIT_CREATE_ATTR	7
-+#define FASTRPC_RMID_INIT_CREATE_STATIC	8
-+
- #define miscdev_to_cctx(d) container_of(d, struct fastrpc_channel_ctx, miscdev)
- 
- static const char *domains[FASTRPC_DEV_MAX] = { "adsp", "mdsp",
-@@ -676,6 +686,94 @@ static int fastrpc_internal_invoke(struct fastrpc_user *fl,
- 	return err;
- }
- 
-+static long fastrpc_init_create_process(struct fastrpc_user *fl,
-+					char __user *argp)
-+{
-+	struct fastrpc_init_create init;
-+	struct fastrpc_invoke_args args[6];
-+	struct fastrpc_phy_page pages[1];
-+	struct fastrpc_invoke inv;
-+	struct fastrpc_map *map = NULL;
-+	struct fastrpc_buf *imem = NULL;
-+	int err, memlen;
-+	struct {
-+		int pgid;
-+		unsigned int namelen;
-+		unsigned int filelen;
-+		unsigned int pageslen;
-+		int attrs;
-+		int siglen;
-+	} inbuf;
-+
-+	err = copy_from_user(&init, argp, sizeof(init));
-+	if (err)
-+		goto bail;
-+
-+	if (init.filelen > INIT_FILELEN_MAX ||
-+	    init.memlen > INIT_MEMLEN_MAX)
-+		goto bail;
-+
-+	inbuf.pgid = fl->tgid;
-+	inbuf.namelen = strlen(current->comm) + 1;
-+	inbuf.filelen = init.filelen;
-+	inbuf.pageslen = 1;
-+	inbuf.attrs = init.attrs;
-+	inbuf.siglen = init.siglen;
-+	fl->pd = 1;
-+
-+	if (init.filelen && init.filefd) {
-+		err = fastrpc_map_create(fl, init.filefd, init.filelen, &map);
-+		if (err)
-+			goto bail;
-+	}
-+	memlen = ALIGN(max(INIT_FILELEN_MAX, (int)init.filelen * 4),
-+		       1024 * 1024);
-+	err = fastrpc_buf_alloc(fl, fl->sctx->dev, memlen,
-+				&imem);
-+	if (err)
-+		goto bail;
-+
-+	fl->init_mem = imem;
-+	args[0].ptr = &inbuf;
-+	args[0].length = sizeof(inbuf);
-+	args[0].fd = -1;
-+
-+	args[1].ptr = current->comm;
-+	args[1].length = inbuf.namelen;
-+	args[1].fd = -1;
-+
-+	args[2].ptr = (void *)init.file;
-+	args[2].length = inbuf.filelen;
-+	args[2].fd = init.filefd;
-+
-+	pages[0].addr = imem->phys;
-+	pages[0].size = imem->size;
-+
-+	args[3].ptr = pages;
-+	args[3].length = 1 * sizeof(*pages);
-+	args[3].fd = -1;
-+
-+	args[4].ptr = &inbuf.attrs;
-+	args[4].length = sizeof(inbuf.attrs);
-+	args[4].fd = -1;
-+
-+	args[5].ptr = &inbuf.siglen;
-+	args[5].length = sizeof(inbuf.siglen);
-+	args[5].fd = -1;
-+
-+	inv.handle = 1;
-+	inv.sc = FASTRPC_SCALARS(FASTRPC_RMID_INIT_CREATE, 4, 0);
-+	if (init.attrs)
-+		inv.sc = FASTRPC_SCALARS(FASTRPC_RMID_INIT_CREATE_ATTR, 6, 0);
-+	inv.args = &args[0];
-+	err = fastrpc_internal_invoke(fl, 1, &inv);
-+bail:
-+	if (map)
-+		fastrpc_map_put(map);
-+
-+	return err;
-+}
-+
- static struct fastrpc_session_ctx *fastrpc_session_alloc(
- 					struct fastrpc_channel_ctx *cctx,
- 					int secure)
-@@ -705,6 +803,23 @@ static void fastrpc_session_free(struct fastrpc_channel_ctx *cctx,
- 	spin_unlock(&cctx->lock);
- }
- 
-+static int fastrpc_release_current_dsp_process(struct fastrpc_user *fl)
-+{
-+	struct fastrpc_invoke inv;
-+	struct fastrpc_invoke_args args[1];
-+	int tgid = 0;
-+
-+	tgid = fl->tgid;
-+	args[0].ptr = &tgid;
-+	args[0].length = sizeof(tgid);
-+	args[0].fd = -1;
-+	inv.handle = 1;
-+	inv.sc = FASTRPC_SCALARS(FASTRPC_RMID_INIT_RELEASE, 1, 0);
-+	inv.args = &args[0];
-+
-+	return fastrpc_internal_invoke(fl, 1, &inv);
-+}
-+
- static int fastrpc_device_release(struct inode *inode, struct file *file)
- {
- 	struct fastrpc_user *fl = (struct fastrpc_user *)file->private_data;
-@@ -712,6 +827,8 @@ static int fastrpc_device_release(struct inode *inode, struct file *file)
- 	struct fastrpc_invoke_ctx *ctx, *n;
- 	struct fastrpc_map *map, *m;
- 
-+	fastrpc_release_current_dsp_process(fl);
-+
- 	spin_lock(&cctx->lock);
- 	list_del(&fl->user);
- 	spin_unlock(&cctx->lock);
-@@ -759,6 +876,23 @@ static int fastrpc_device_open(struct inode *inode, struct file *filp)
- 	return 0;
- }
- 
-+static long fastrpc_init_attach(struct fastrpc_user *fl)
-+{
-+	struct fastrpc_invoke_args args[1];
-+	struct fastrpc_invoke inv;
-+	int tgid = fl->tgid;
-+
-+	args[0].ptr = &tgid;
-+	args[0].length = sizeof(tgid);
-+	args[0].fd = -1;
-+	inv.handle = FASTRPC_INIT_HANDLE;
-+	inv.sc = FASTRPC_SCALARS(FASTRPC_RMID_INIT_ATTACH, 1, 0);
-+	inv.args = &args[0];
-+	fl->pd = 0;
-+
-+	return fastrpc_internal_invoke(fl, 1, &inv);
-+}
-+
- static long fastrpc_invoke(struct fastrpc_user *fl, char __user *argp)
- {
- 	struct fastrpc_invoke_args *args = NULL;
-@@ -799,6 +933,12 @@ static long fastrpc_device_ioctl(struct file *file, unsigned int cmd,
- 	case FASTRPC_IOCTL_INVOKE:
- 		err = fastrpc_invoke(fl, argp);
- 		break;
-+	case FASTRPC_IOCTL_INIT_ATTACH:
-+		err = fastrpc_init_attach(fl);
-+		break;
-+	case FASTRPC_IOCTL_INIT_CREATE:
-+		err = fastrpc_init_create_process(fl, argp);
-+		break;
- 	default:
- 		err = -ENOTTY;
- 		dev_err(fl->sctx->dev, "bad ioctl: %d\n", cmd);
-diff --git a/include/uapi/misc/fastrpc.h b/include/uapi/misc/fastrpc.h
-index 0b408ba62482..2f0afa5dab1f 100644
---- a/include/uapi/misc/fastrpc.h
-+++ b/include/uapi/misc/fastrpc.h
-@@ -6,6 +6,8 @@
- #include <linux/types.h>
- 
- #define FASTRPC_IOCTL_INVOKE		_IOWR('R', 3, struct fastrpc_invoke)
-+#define FASTRPC_IOCTL_INIT_ATTACH	_IO('R', 4)
-+#define FASTRPC_IOCTL_INIT_CREATE	_IOWR('R', 5, struct fastrpc_init_create)
- 
- struct fastrpc_invoke_args {
- 	__s32 fd;
-@@ -19,4 +21,14 @@ struct fastrpc_invoke {
- 	struct fastrpc_invoke_args *args;
- };
- 
-+struct fastrpc_init_create {
-+	__u32 filelen;	/* elf file length */
-+	__u32 filefd;	/* fd for the file */
-+	__u32 memlen;	/* mem length */
-+	__u32 memfd;	/* fd for the mem */
-+	__u32 attrs;
-+	__u32 siglen;
-+	__u64 file;	/* pointer to elf file */
-+};
-+
- #endif /* __QCOM_FASTRPC_H__ */
--- 
-2.19.2
+- with default clock(600MHz) the sensor get probed but image capture
+has an issue.
+- with 300MHz the image capture working with 320x240@30, 640x480@30,
+640x480@60, 1280x720@30 with UYVY8_2X8 and YUYV8_2X8 formats but
+1080p@30 seems broken (the same I have mentioned in another mail)
+- since all this is verified on ov5640, I have mentioned the same
+thing on commit message for future reference.
