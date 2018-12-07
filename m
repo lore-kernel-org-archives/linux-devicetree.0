@@ -1,124 +1,103 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: sdm845: Add SD nodes for
- sdm845-mtp
-Date: Thu, 6 Dec 2018 15:57:37 -0800
-Message-ID: <20181206235737.GH12886@minitux>
-References: <20181206184522.118062-1-evgreen@chromium.org>
- <20181206184522.118062-4-evgreen@chromium.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: sifive: describe sifive-blocks versioning
+Date: Thu, 6 Dec 2018 18:01:04 -0600
+Message-ID: <20181207000104.GA10814@bogus>
+References: <alpine.DEB.2.21.9999.1811211704520.16271@viisi.sifive.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181206184522.118062-4-evgreen@chromium.org>
+In-Reply-To: <alpine.DEB.2.21.9999.1811211704520.16271@viisi.sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Evan Green <evgreen@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Megan Wachs <megan@sifive.com>, Wesley Terpstra <wesley@sifive.com>, Mark Rutland <mark.rutland@arm.com>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, paul@pwsan.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu 06 Dec 10:45 PST 2018, Evan Green wrote:
-
-> Enable support for one of the micro SD slots on the MTP.
+On Wed, Nov 21, 2018 at 05:06:56PM -0800, Paul Walmsley wrote:
 > 
-> Signed-off-by: Evan Green <evgreen@chromium.org>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
+> For IP blocks that are generated from the public, open-source
+> sifive-blocks repository, describe the version numbering policy
+> that its maintainers intend to use, upon request from Rob
+> Herring <robh@kernel.org>.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Palmer Dabbelt <palmer@sifive.com>
+> Cc: Megan Wachs <megan@sifive.com>
+> Cc: Wesley Terpstra <wesley@sifive.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-riscv@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Signed-off-by: Paul Walmsley <paul@pwsan.com>
 > ---
 > 
-> Changes in v2:
->  - Fixed alphabetization of node placement in sdm845-mtp.dtsi (Doug)
->  - Fixed card detect name to match schematics (Doug).
->  - Moved comment about drive strength next to the drive-strength entry
->  (Doug)
->  - Removed drive-strength from card detect input pin (Doug).
->  - Consolidated tlmm nodes in MTP.
-> 
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 58 ++++++++++++++++++++++++-
->  1 file changed, 56 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> index b3def03581775..cde76da42cbb7 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> @@ -7,6 +7,7 @@
->  
->  /dts-v1/;
->  
-> +#include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
->  #include "sdm845.dtsi"
->  
-> @@ -358,8 +359,16 @@
->  	status = "okay";
->  };
->  
-> -&tlmm {
-> -	gpio-reserved-ranges = <0 4>, <81 4>;
-> +&sdhc_2 {
-> +	status = "okay";
+> Hi Rob, please let me know if this document works with your
+> requirements, or if some changes are needed.  - Paul
+
+Looks pretty good to me.
+
+>  .../sifive/sifive-blocks-ip-versioning.txt    | 38 +++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
+
+Use the path that was suggested.
+
+> diff --git a/Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt b/Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
+> new file mode 100644
+> index 000000000000..b899e5c6e00c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
+> @@ -0,0 +1,38 @@
+> +DT compatible string versioning for SiFive open-source IP blocks
 > +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sdc2_clk &sdc2_cmd &sdc2_data &sd_card_det_n>;
+> +This document describes the version specification for DT "compatible"
+> +strings for open-source SiFive IP blocks.  HDL for these IP blocks
+> +can be found in this public repository:
 > +
-> +	vmmc-supply = <&vreg_l21a_2p95>;
-> +	vqmmc-supply = <&vddpx_2>;
+> +https://github.com/sifive/sifive-blocks
 > +
-> +	cd-gpios = <&tlmm 126 GPIO_ACTIVE_LOW>;
->  };
->  
->  &uart9 {
-> @@ -450,3 +459,48 @@
->  		bias-pull-up;
->  	};
->  };
+> +IP block-specific DT compatible strings are contained within the HDL,
+> +in the form "sifive,<ip-block-name><integer version number>".
+
+Really, my preference would be to add a '-v' in this:
+
+sifive,<ip-block-name>-v<integer version number>
+
+But given this ship has already sailed, I guess it is fine as is.
+
 > +
-> +&tlmm {
-> +	gpio-reserved-ranges = <0 4>, <81 4>;
+> +An example is "sifive,uart0" from:
 > +
-> +	sdc2_clk: sdc2-clk {
-> +		pinconf {
-> +			pins = "sdc2_clk";
-> +			bias-disable;
+> +https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/devices/uart/UART.scala#L43
+
+That's nice, but will be out of date as soon as someone adds or removes 
+a line above it. Can you point to a tagged version?
+
 > +
-> +			/*
-> +			 * It seems that mmc_test reports errors if drive
-> +			 * strength is not 16 on clk, cmd, and data pins.
-> +			 */
-> +			drive-strength = <16>;
-> +		};
-> +	};
+> +Until these IP blocks (or IP integration) support version
+> +autodiscovery, the maintainers of these IP blocks intend to increment
+> +the suffixed number in the compatible string whenever the software
+> +interface to these IP blocks changes, or when the functionality of the
+> +underlying IP blocks changes in a way that software should be aware of.
 > +
-> +	sdc2_cmd: sdc2-cmd {
-> +		pinconf {
-> +			pins = "sdc2_cmd";
-> +			bias-pull-up;
-> +			drive-strength = <16>;
-> +		};
-> +	};
+> +Driver developers can use compatible string "match" values such as
+> +"sifive,uart0" to indicate that their driver is compatible with the
+> +register interface and functionality associated with the relevant
+> +upstream sifive-blocks commits.  It is expected that most drivers will
+> +match on these IP block-specific compatible strings.
 > +
-> +	sdc2_data: sdc2-data {
-> +		pinconf {
-> +			pins = "sdc2_data";
-> +			bias-pull-up;
-> +			drive-strength = <16>;
-> +		};
-> +	};
+> +DT data authors, when writing data for a particular SoC, should
+> +continue to specify an SoC-specific compatible string value, such as
+> +"sifive,fu540-c000-uart".  This way, if SoC-specific
+> +integration-specific bug fixes or workarounds are needed, the kernel
+> +or other system software can match on this string to apply them.  The
+> +IP block-specific compatible string (such as "sifive,uart0") should
+> +then be specified as a subsequent value.
 > +
-> +	sd_card_det_n: sd-card-det-n {
-> +		pinmux {
-> +			pins = "gpio126";
-> +			function = "gpio";
-> +		};
+> +An example of this style:
 > +
-> +		pinconf {
-> +			pins = "gpio126";
-> +			bias-pull-up;
-> +		};
-> +	};
-> +};
+> +    compatible = "sifive,fu540-c000-uart", "sifive,uart0";
 > -- 
-> 2.18.1
+> 2.19.1
 > 
