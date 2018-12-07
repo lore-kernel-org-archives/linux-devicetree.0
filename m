@@ -1,74 +1,44 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/3] device property: Introduce fwnode_get_name()
-Date: Fri, 7 Dec 2018 11:24:27 -0600
-Message-ID: <20181207172427.GA6642@bogus>
-References: <20181128115952.80890-1-heikki.krogerus@linux.intel.com>
- <20181128115952.80890-2-heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v5] devicetree, xen: add xen,
+ shared-memory binding
+Date: Fri, 7 Dec 2018 11:27:54 -0600
+Message-ID: <20181207172754.GA623@bogus>
+References: <1543875969-10472-1-git-send-email-sstabellini@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xenproject.org>
 Content-Disposition: inline
-In-Reply-To: <20181128115952.80890-2-heikki.krogerus@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1543875969-10472-1-git-send-email-sstabellini@kernel.org>
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
+To: Stefano Stabellini <sstabellini@kernel.org>
+Cc: mark.rutland@arm.com, Stefano Stabellini <stefanos@xilinx.com>, julien.grall@arm.com, devicetree@vger.kernel.org, xen-devel@lists.xen.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 28, 2018 at 02:59:50PM +0300, Heikki Krogerus wrote:
-> This helper returns the name of the node. The name is
-> primarily expected to be returned from a new fwnode
-> operation meant for this purpose, but when no name is
-> returned, the helper will also attempt to read a device
-> property "name".
-> 
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> ---
->  drivers/base/property.c  | 36 ++++++++++++++++++++++++++++++++++++
->  include/linux/fwnode.h   |  3 +++
->  include/linux/property.h |  2 ++
->  3 files changed, 41 insertions(+)
-> 
-> diff --git a/drivers/base/property.c b/drivers/base/property.c
-> index 240ab5230ff6..8bd35b44d9ec 100644
-> --- a/drivers/base/property.c
-> +++ b/drivers/base/property.c
-> @@ -1156,6 +1156,42 @@ void fwnode_handle_put(struct fwnode_handle *fwnode)
->  }
->  EXPORT_SYMBOL_GPL(fwnode_handle_put);
->  
-> +/**
-> + * fwnode_get_name - Copy the name of an fwnode to a buffer
-> + * @fwnode: Pointer to the node
-> + * @buf: Buffer where the name is copied to
-> + * @len: Size of the buffer
-> + *
-> + * Copies the node name of @fwnode to @buf. The routine attempts to first use
-> + * the get_name fwnode op of @fwnode, and if it fails, the routine attempts to
-> + * read a property "name".
-> + *
-> + * NOTE: @buf must be large enough to accommodate the name and trailing '\0'.
-> + *
-> + * Returns 0 on success or errno in case of an error.
-> + */
-> +int fwnode_get_name(const struct fwnode_handle *fwnode, char *buf, size_t len)
-> +{
-> +	const char *name;
-> +	int ret;
-> +
-> +	ret = fwnode_call_int_op(fwnode, get_name, buf, len);
-> +	if (ret == 0 || ret == -EOVERFLOW)
-> +		return ret;
-> +
-> +	ret = fwnode_call_int_op(fwnode, property_read_string_array,
-> +				 "name", &name, 1);
-
-Do you expect this to work on DT? It does today, but I plan to change 
-that. 'name' is a fake property on FDT.
-
-Again, I think this is all working at too low of a level. Name is used 
-either for matching or an informational string. For matching, this 
-should remain firmware specific. For imformational strings, 
-device_node.full_name works.
-
-Rob
+T24gTW9uLCBEZWMgMDMsIDIwMTggYXQgMDI6MjY6MDlQTSAtMDgwMCwgU3RlZmFubyBTdGFiZWxs
+aW5pIHdyb3RlOgo+IEZyb206IFN0ZWZhbm8gU3RhYmVsbGluaSA8c3RlZmFub3NAeGlsaW54LmNv
+bT4KPiAKPiBJbnRyb2R1Y2UgYSBkZXZpY2UgdHJlZSBiaW5kaW5nIGZvciBYZW4gcmVzZXJ2ZWQt
+bWVtb3J5IHJlZ2lvbnMuIFRoZXkKPiBhcmUgdXNlZCB0byBzaGFyZSBtZW1vcnkgYWNyb3NzIFZN
+cyBmcm9tIHRoZSBWTSBjb25maWcgZmlsZXMuIChTZWUKPiBzdGF0aWNfc2htIGNvbmZpZyBvcHRp
+b24uKQo+IAo+IFNpZ25lZC1vZmYtYnk6IFN0ZWZhbm8gU3RhYmVsbGluaSA8c3RlZmFub3NAeGls
+aW54LmNvbT4KPiBDYzoganVsaWVuLmdyYWxsQGFybS5jb20KPiBDYzogZGV2aWNldHJlZUB2Z2Vy
+Lmtlcm5lbC5vcmcKPiBDYzogcm9iaCtkdEBrZXJuZWwub3JnCj4gQ2M6IG1hcmsucnV0bGFuZEBh
+cm0uY29tCj4gQ2M6IHhlbi1kZXZlbEBsaXN0cy54ZW4ub3JnCj4gLS0tCj4gQ2hhbmdlcyBpbiB2
+NToKPiAtcmVuYW1lIG9mZnNldCB0byB4ZW4sb2Zmc2V0Cj4gCj4gQ2hhbmdlcyBpbiB2NDoKPiAt
+IGFkZCBvZmZzZXQgcHJvcGVydHkKPiAKPiBDaGFuZ2VzIGluIHYzOgo+IC0gcmVtb3ZlIGZhbGxi
+YWNrIHZlcnNpb24KPiAKPiBDaGFuZ2VzIGluIHYyOgo+IC0gZml4IEF1dGhvciBsaW5lCj4gLSBh
+ZGQgdmVyc2lvbmluZwo+IC0geGVuLGlkIGluc3RlYWQgb2YgaWQKPiAtLS0KPiAgLi4uL2JpbmRp
+bmdzL3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50eHQgfCAyNCArKysrKysrKysr
+KysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAyNCBpbnNlcnRpb25zKCspCj4gIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQt
+bWVtb3J5L3hlbixzaGFyZWQtbWVtb3J5LnR4dAoKQXBwbGllZCwgdGhhbmtzLgoKUm9iCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpYZW4tZGV2ZWwgbWFp
+bGluZyBsaXN0Clhlbi1kZXZlbEBsaXN0cy54ZW5wcm9qZWN0Lm9yZwpodHRwczovL2xpc3RzLnhl
+bnByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8veGVuLWRldmVs
