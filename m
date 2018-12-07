@@ -1,50 +1,43 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] ARM: dts: sunxi: Fix PMU compatible strings
-Date: Fri, 7 Dec 2018 15:08:43 +0100
-Message-ID: <20181207140842.kkqaqefrmgcx6nkw@flea>
-References: <20181206191142.14118-1-robh@kernel.org>
+From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Subject: [PATCH v4 0/3] Input: atmel_mxt_ts: Add support for optional regulators
+Date: Fri,  7 Dec 2018 15:28:54 +0100
+Message-ID: <20181207142857.15818-1-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cjloinzbxygaj26u"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181206191142.14118-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Chen-Yu Tsai <wens@csie.org>
+To: nick@shmanahar.org
+Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch series adds optional regulator support to atmel_mxt_ts.
+First patch adds regulators to driver.
+Second patch ensures that device is ready for communication.
+Third patch updates documentation.
 
---cjloinzbxygaj26u
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes from v3:
+  - Checkpatch fixes
+  - Drop punctuation from subject of one of patches
 
-On Thu, Dec 06, 2018 at 01:11:42PM -0600, Rob Herring wrote:
-> "arm,cortex-a15-pmu" is not a valid fallback compatible string for an
-> Cortex-A7 PMU, so drop it.
->=20
-> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+Changes from v2:
+  - Add reviewed-by to one patch
+  - Move code for enabling regulators into separate method,
+    to make code more readable.
+  - Add wait code, to ensure that device is ready for communication.
 
-Applied, thanks!
-Maxime
+Changes from v1:
+  - Enable regulators only if reset_gpio is present.
+  - Switch from devm_regulator_get_optional to devm_regulator_get.
 
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Paweł Chmiel (3):
+  Input: atmel_mxt_ts: Add support for  optional regulators
+  Input: atmel_mxt_ts: Wait for device be ready for communication
+  Input: atmel_mxt_ts: Document optional voltage regulators
 
---cjloinzbxygaj26u
-Content-Type: application/pgp-signature; name="signature.asc"
+ .../bindings/input/atmel,maxtouch.txt         |  8 ++
+ drivers/input/touchscreen/atmel_mxt_ts.c      | 76 +++++++++++++++++--
+ 2 files changed, 78 insertions(+), 6 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXAp+6gAKCRDj7w1vZxhR
-xdcWAP0SfKjQg2htIHVLOTja6/XP9vJlADsV5ayhochHcLEEPAD/Vo3ihG4M2T73
-QOllzOlRh+1G+OZIeKwzgVgx9IGtugI=
-=HuER
------END PGP SIGNATURE-----
-
---cjloinzbxygaj26u--
+-- 
+2.17.1
