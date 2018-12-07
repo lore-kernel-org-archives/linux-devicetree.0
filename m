@@ -1,43 +1,69 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH] dt-bindings: sifive: describe sifive-blocks versioning
-Date: Fri, 7 Dec 2018 06:31:33 -0800 (PST)
-Message-ID: <alpine.DEB.2.21.9999.1812070624180.16511@viisi.sifive.com>
-References: <alpine.DEB.2.21.9999.1811211704520.16271@viisi.sifive.com> <20181207000104.GA10814@bogus> <alpine.DEB.2.21.9999.1812061645070.29609@viisi.sifive.com> <CAL_JsqJgt3VxHLcxY54Ojpqz_bLwGSySZ9meowgy6pnLPdXuLQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: Moving ARM dts files
+Date: Fri, 7 Dec 2018 08:57:06 -0600
+Message-ID: <CAL_JsqJuH4=Bq9ok3Trz4GgLam7gqWW5-gyHpG1XbShtQQuSJg@mail.gmail.com>
+References: <20181204183649.GA5716@bogus>
+ <9c2b5528-679a-928e-3150-aa383a4f0405@suse.de>
+ <CAL_JsqKO3v0pgVfNhVNOkpZ4sePrybDgZG0riN-tutvwOZ4zYg@mail.gmail.com>
+ <2474284e-8a55-639f-2cfa-f811741099f3@suse.de>
+ <CAL_JsqL4WoMqFCQ0vFd6z_i=9imnfVsQjeKOG8zxNwi5caneRQ@mail.gmail.com>
+ <20181206200652.GB3084@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJgt3VxHLcxY54Ojpqz_bLwGSySZ9meowgy6pnLPdXuLQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Megan Wachs <megan@sifive.com>, Wesley Terpstra <wesley@sifive.com>, Mark Rutland <mark.rutland@arm.com>, linux-riscv@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181206200652.GB3084@sirena.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Michal Simek <michal.simek@xilinx.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thierry Reding <thierry.reding@gmail.com>, Tom Rini <trini@konsulko.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory CLEMENT <gregory.clement@bootlin.com>, Alexander Graf <agraf@suse.de>, Krzysztof Kozlowski <krzk@kernel.org>, ARM-SoC Maintainers <arm@kernel.org>, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, Architecture Mailman List <boot-architecture@lists.linaro.org>, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux>
 List-Id: devicetree@vger.kernel.org
 
-
-On Fri, 7 Dec 2018, Rob Herring wrote:
-
-> On Thu, Dec 6, 2018 at 6:46 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
-> > On Thu, 6 Dec 2018, Rob Herring wrote:
-> > > On Wed, Nov 21, 2018 at 05:06:56PM -0800, Paul Walmsley wrote:
-> > >
-> > > >  .../sifive/sifive-blocks-ip-versioning.txt    | 38 +++++++++++++++++++
-> > > >  1 file changed, 38 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
-> > >
-> > > Use the path that was suggested.
-> >
-> > Could you remind me which one that is?
-> 
-> In this thread: bindings/riscv/sifive/
-
-SiFive also produces ARM-based SoCs.  Some of those ARM SoCs may use these 
-IP blocks from sifive-blocks as well.  As far as I know, there's nothing 
-RISC-V-specific about most of these IP blocks.  (As an example, there's 
-nothing CPU architecture-specific about a UART.)
-
-I'm fine with putting these bindings under bindings/riscv/, if that's 
-where you need them to go.  But I'd like to understand the rationale 
-better - could you describe that?
-
-thanks,
-
-- Paul
+T24gVGh1LCBEZWMgNiwgMjAxOCBhdCAyOjA3IFBNIE1hcmsgQnJvd24gPGJyb29uaWVAa2VybmVs
+Lm9yZz4gd3JvdGU6Cj4KPiBPbiBUaHUsIERlYyAwNiwgMjAxOCBhdCAwMTowNjo0M1BNIC0wNjAw
+LCBSb2IgSGVycmluZyB3cm90ZToKPiA+IE9uIFRodSwgRGVjIDYsIDIwMTggYXQgNzozMiBBTSBB
+bmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+IHdyb3RlOgo+Cj4gPiA+IEknZCBiZSBv
+a2F5IHdpdGggZGlzdGluZ3Vpc2hpbmcgc291cmNlIHZzLiBpbnN0YWxsIGxvY2F0aW9uLiBEdWUg
+dG8gdGhlCj4gPiA+IGlzc3VlIEkgbWVudGlvbiBiZWxvdyAoYW5kIG1vcmUpIHdlIGNhbid0IHVz
+ZSBpbnN0YWxsX2R0YnMgZm9yIG9wZW5TVVNFCj4gPiA+IGFuZCBoYWQgdG8gcmVpbXBsZW1lbnQg
+aXQsIHdoaWNoIHdlJ2QgbmVlZCB0byAoYW5kIGNhbikgYWRqdXN0Lgo+Cj4gPiBXaGF0IHdvdWxk
+IGJlIG5lZWRlZCBmb3IgZHRic19pbnN0YWxsIHRvIHdvcms/IGFybTY0IG5lZWRzIHRvIHN1cHBv
+cnQKPiA+IGEgZmxhdCBpbnN0YWxsPyBJZiBpdCBkb2Vzbid0IHdvcmsgZm9yIERlYmlhbiBvciBv
+cGVuU1VTRSwgSSdtIG5vdAo+ID4gc3VyZSB3aHkgd2UgaGF2ZSBpdC4gU28gSSdkIGxpa2UgdG8g
+bWFrZSBpdCB3b3JrLgo+Cj4gQ29ycmVjdCBtZSBpZiBJJ20gd3JvbmcgYnV0IGFzIGZhciBhcyB0
+aGUgZmxhdCB2cyBkaXJlY3RvcnkgdGhpbmcgZ29lcwo+IGlzbid0IHRoZSBpc3N1ZSB0aGF0IHRo
+aXMgd2luZHMgdXAgYmVpbmcgYSByZW5hbWUgZm9yIGFuIGV4aXN0aW5nIDMyIGJpdAo+IHN5c3Rl
+bT8gIElmIHlvdSBqdXN0IGluc3RhbGwgdGhlIGR0YnMgaW4gdGhlIGRlZmF1bHQgbG9jYXRpb24g
+dGhlbiBhCj4gYm9vdGxvYWRlciBvciB3aGF0ZXZlciB0aGF0IGlzIGhhcmQgY29kZWQgdG8gbG9v
+ayBmb3IgZm9vLWJhci5kdGIgd29uJ3QKPiBzZWUgdGhlIG5ldyBmb28vZm9vLWJhci5kdGIgKG9y
+IHdoYXRldmVyKSBhbmQgd2lsbCBjb250aW51ZSB0byB1c2UgdGhlCj4gb2xkIGJpbmFyeS4gIEl0
+J3Mgbm90IHRoZSBmYWN0IHRoYXQgdGhhdCBpdCdzIGluIGEgZGlyZWN0b3J5LCBpdCdzIHRoZQo+
+IGZhY3QgdGhhdCB0aGUgYm9vdGxvYWRlciBzZWVzIHRoZSBuYW1lIGl0IG5lZWRzIHRvIGxvb2sg
+Zm9yIGNoYW5nZSAoaWYKPiBpdCdzIGxvb2tpbmcgb24gYSBmaWxlc3lzdGVtIGF0IGFsbCkuCgpD
+b3JyZWN0LgoKPiBUaGlzIGlzbid0IGEgcHJvYmxlbSBmb3IgYXJtNjQgYXMKPiB0aGUgbG9jYXRp
+b24gaXNuJ3QgY2hhbmdpbmcsIGl0J3MgdXNlZCBkaXJlY3RvcmllcyBmcm9tIGRheSBvbmUuCgpU
+aGUga2VybmVsIG1heSBoYXZlIHVzZWQgZGlyZWN0b3JpZXMsIGJ1dCB0aGF0J3Mgbm90IHdoYXQg
+dGhlIGRpc3Ryb3MKZGlkIGFjY29yZGluZyB0byBBbmRyZWFzOgoKPiBXZSBhbHJlYWR5IGhhZCB0
+aGF0IGRpc2N1c3Npb24gZm9yIGFybTY0IGJlY2F1c2UgRGViaWFuIGNob3NlIHRvIGlnbm9yZQo+
+IHRoZSBrZXJuZWwtaW5zdGFsbGVkIHN1YmRpcmVjdG9yaWVzIGFuZCBpbnN0YWxsZWQgLmR0YiBm
+aWxlcyBpbnRvIGEgZmxhdAo+IGRpcmVjdG9yeSwgd2hpY2ggY29sbGlkZWQgd2l0aCBvcGVuU1VT
+RSBzdGlja2luZyB0byB0aGUga2VybmVsIGNob2ljZS4KClNvIGFyZSB0aGUgZGlzdHJvcyBkaWZm
+ZXJlbnQgb3Igd2hvIGNoYW5nZWQgdG8gYWxpZ24/IFRoYXQncyBub3QgY2xlYXIKZnJvbSB0aGlz
+IHRocmVhZC4KCj4gVGhlIGlzc3VlcyB3aXRoIHRoZSBleGlzdGluZyBpbnN0YWxsX2R0YnMgc291
+bmRlZCB1bnJlbGF0ZWQgdG8gdGhpcy4KCk1heWJlLCB3aGF0IGFyZSB0aGUgaXNzdWVzPyBXZSBj
+YW4ndCBjaGFuZ2UgdGhlIHNvdXJjZSBsYXlvdXQKdHJhbnNwYXJlbnRseSBpZiBkdGJzX2luc3Rh
+bGwgaXMgbm90IGJlaW5nIHVzZWQuCgpNeSBxdWVzdGlvbiBoZXJlIGlzIHdoZXRoZXIgYSBmbGF0
+IGluc3RhbGwgaXMgdXNlZnVsIG9uIGFybTY0LiBXZSBjYW4KZWl0aGVyIGhhdmUgYSBrY29uZmln
+IHZhcmlhYmxlIHRoYXQgYXJtMzIgc2V0cyB0byBkbyBmbGF0IGluc3RhbGxzIG9yCml0IGNvdWxk
+IGJlIHNvbWUgY29tbWFuZCBsaW5lIG1ha2UgdmFyaWFibGUgYW5kIHRoZW4gYW55IHVzZXIgY2Fu
+IHBpY2sKd2hhdCB0aGV5IHdhbnQgZm9yIGFueSBhcmNoLgoKUm9iCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
+bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
