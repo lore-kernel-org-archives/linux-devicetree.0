@@ -1,70 +1,65 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v10 1/7] interconnect: Add generic on-chip interconnect
- API
-Date: Fri, 7 Dec 2018 17:24:17 +0200
-Message-ID: <b4fdf5eb-2bd1-834d-fb2b-6b86a74dd6fc@linaro.org>
-References: <20181127180349.29997-1-georgi.djakov@linaro.org>
- <20181127180349.29997-2-georgi.djakov@linaro.org>
- <CAL_JsqJyPH9WVw2VqGTjUvhxoq3+KGpfqtAMf9iH07N7m3P4yw@mail.gmail.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Subject: Re: [PATCH arm64/kexec] arm64: kexec_file: forbid kdump via kexec_file_load()
+Date: Fri, 7 Dec 2018 20:56:53 +0530
+Message-ID: <CACi5LpM9_bQnx+YqBcFqFbMWAmZoYtDwopuSq+NpOaX8tjak=g@mail.gmail.com>
+References: <20181207101439.190918-1-james.morse@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJyPH9WVw2VqGTjUvhxoq3+KGpfqtAMf9iH07N7m3P4yw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181207101439.190918-1-james.morse@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "open list:THERMAL" <linux-pm@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Michael Turquette <mturquette@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Evan Green <evgreen@chromium.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Alexandre Bailon <abailon@baylibre.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <thierry.reding@gmail.com>, ksitaraman@nvidia.com, sanjayc@nvidi
+To: James Morse <james.morse@arm.com>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, kexec mailing list <kexec@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, robh+dt@kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, dhowells@redhat.com, Vivek Goyal <vgoyal@redhat.com>, herbert@gondor.apana.org.au, davem@davemloft.net, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi James,
 
-On 12/5/18 18:16, Rob Herring wrote:
-> On Tue, Nov 27, 2018 at 12:03 PM Georgi Djakov <georgi.djakov@linaro.org> wrote:
->>
->> This patch introduces a new API to get requirements and configure the
->> interconnect buses across the entire chipset to fit with the current
->> demand.
->>
->> The API is using a consumer/provider-based model, where the providers are
->> the interconnect buses and the consumers could be various drivers.
->> The consumers request interconnect resources (path) between endpoints and
->> set the desired constraints on this data flow path. The providers receive
->> requests from consumers and aggregate these requests for all master-slave
->> pairs on that path. Then the providers configure each participating in the
->> topology node according to the requested data flow path, physical links and
->> constraints. The topology could be complicated and multi-tiered and is SoC
->> specific.
->>
->> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
->> Reviewed-by: Evan Green <evgreen@chromium.org>
-> 
-> [...]
-> 
->> +struct icc_path *icc_get(struct device *dev, const int src_id,
->> +                        const int dst_id);
->> +void icc_put(struct icc_path *path);
->> +int icc_set(struct icc_path *path, u32 avg_bw, u32 peak_bw);
-> 
-> icc_set() is very generic, but this function isn't easily extended to
-> other parameters than bandwidth. Perhaps icc_set_bandwidth() instead.
-> Then when you add some other setting, you just add a new function. Of
-> course, if you wind up with a bunch of different parameters, then
-> you'll probably need an atomic type interface where you test all the
-> settings together and then commit them separately in one call. But
+On Fri, Dec 7, 2018 at 3:44 PM James Morse <james.morse@arm.com> wrote:
+>
+> Now that kexec_walk_memblock() can do the crash-kernel placement itself
+> architectures that don't support kdump via kexe_file_load() need to
+> explicitly forbid it.
+>
+> We don't support this on arm64 until the kernel can add the elfcorehdr
+> and usable-memory-range fields to the DT. Without these the crash-kernel
+> overwrites the previous kernel's memory during startup.
+>
+> Add a check to refuse crash image loading.
+>
+> Signed-off-by: James Morse <james.morse@arm.com>
+> ---
+>
+> Context: http://lore.kernel.org/r/20181206155424.GA4422@arm.com
+>
+>  arch/arm64/kernel/kexec_image.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
+> index 1ad1d5f8f024..07bf740bea91 100644
+> --- a/arch/arm64/kernel/kexec_image.c
+> +++ b/arch/arm64/kernel/kexec_image.c
+> @@ -47,6 +47,10 @@ static void *image_load(struct kimage *image,
+>         struct kexec_segment *kernel_segment;
+>         int ret;
+>
+> +       /* We don't support crash kernels yet. */
+> +       if (image->type == KEXEC_TYPE_CRASH)
+> +               return ERR_PTR(-EOPNOTSUPP);
+> +
+>         /*
+>          * We require a kernel with an unambiguous Image header. Per
+>          * Documentation/booting.txt, this is the case when image_size
+> --
+> 2.19.2
+>
 
-Thanks for the comment. We have already started some discussion with the
-Nvidia guys about supporting also latency and priority. We can do a
-structure based approach and pass a struct with all the bandwidth /
-latency / priority stuff to a function like icc_set_extended(); It's
-very early for any conclusions yet and for now we support only
-bandwidth. The function name still can be easy changed with a follow-up
-patch until one is using it yet. Let me think again.
+TBH, I would have loved the complete 'kexec_file_load' support to have
+made way upstream for arm64 as well, but I understand that it is stuck
+till we have an agreement on the DT side of things. So, refusing a
+crash image loading in such a case makes sense for now.
 
-> from a DT perspective, I certainly hope there are not lots of new
-> settings folks want to add. 
-Regarding DT, all settings should go into the drivers for now and
-later we can decide if something makes sense to be really in device-tree.
+So, please feel free to add:
+Reviewed-by: Bhupesh Sharma <bhsharma@redhat.com>
 
 Thanks,
-Georgi
+Bhupesh
