@@ -1,63 +1,69 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 15/15] arm64: dts: allwinner: a64: Add
- Video Engine node
-Date: Fri, 07 Dec 2018 22:22:30 +0100
-Message-ID: <2823800.C4zEU5jiS7@jernej-laptop>
-References: <20181205092444.29497-1-paul.kocialkowski@bootlin.com> <20181205092444.29497-16-paul.kocialkowski@bootlin.com>
-Reply-To: jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Abhinav Kumar <abhinavk@codeaurora.org>
+Subject: Re: [PATCH v5] arm64: dts: sdm845: Add display nodes to MTP dts
+Date: Fri, 07 Dec 2018 13:23:55 -0800
+Message-ID: <2cd490a5e6ecf4b07899ad7c7c0691e5@codeaurora.org>
+References: <1544067310-7306-1-git-send-email-abhinavk@codeaurora.org>
+ <CAD=FV=WPj66cLFqCMOt0A=rjAPov8SkLWcR7e9jT4uZK644imw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDP4JJM5QYGRBG6JVPQAKGQEFZPJC5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181205092444.29497-16-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAD=FV=WPj66cLFqCMOt0A=rjAPov8SkLWcR7e9jT4uZK644imw@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sandeep Panda <spanda@codeaurora.org>, dri-devel <dri-devel@lists.freedesktop.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Matthias Kaehlcke <mka@chromium.org>, Sean Paul <seanpaul@chromium.org>, Kristian Kristensen <hoegsberg@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-Dne sreda, 05. december 2018 ob 10:24:44 CET je Paul Kocialkowski napisal(a):
-> This adds the Video Engine node for the A64. Since it can map the whole
-> DRAM range, there is no particular need for a reserved memory node
-> (unlike platforms preceding the A33).
-> 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi index
-> 8557d52c7c99..8d024c10d7cb 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -397,6 +397,17 @@
->  			};
->  		};
-> 
-> +		video-codec@1c0e000 {
-> +			compatible = "allwinner,sun50i-h5-video-engine";
-
-You meant A64 instead of H5, right?
-
-Best regards,
-Jernej
-
-> +			reg = <0x01c0e000 0x1000>;
-> +			clocks = <&ccu CLK_BUS_VE>, <&ccu CLK_VE>,
-> +				 <&ccu CLK_DRAM_VE>;
-> +			clock-names = "ahb", "mod", "ram";
-> +			resets = <&ccu RST_BUS_VE>;
-> +			interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
-> +			allwinner,sram = <&ve_sram 1>;
-> +		};
-> +
->  		mmc0: mmc@1c0f000 {
->  			compatible = "allwinner,sun50i-a64-mmc";
->  			reg = <0x01c0f000 0x1000>;
+T24gMjAxOC0xMi0wNyAxMjo1OSwgRG91ZyBBbmRlcnNvbiB3cm90ZToKPiBIaSwKPiAKPiBPbiBX
+ZWQsIERlYyA1LCAyMDE4IGF0IDc6MzUgUE0gQWJoaW5hdiBLdW1hciA8YWJoaW5hdmtAY29kZWF1
+cm9yYS5vcmc+IAo+IHdyb3RlOgo+PiArJmRzaTAgewo+PiArICAgICAgIHN0YXR1cyA9ICJva2F5
+IjsKPj4gKyAgICAgICBxY29tLGR1YWwtZHNpLW1vZGU7Cj4+ICsgICAgICAgcWNvbSxtYXN0ZXIt
+ZHNpOwo+PiArICAgICAgIHFjb20sc3luYy1kdWFsLWRzaTsKPj4gKwo+PiArICAgICAgIHZkZGEt
+c3VwcGx5ID0gPCZ2ZGRhX21pcGlfZHNpMF8xcDI+Owo+PiArCj4+ICsgICAgICAgcGFuZWxAMCB7
+Cj4+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInRydWx5LG50MzU1OTctMkstZGlzcGxh
+eSI7Cj4+ICsgICAgICAgICAgICAgICByZWcgPSA8MD47Cj4+ICsKPj4gKyAgICAgICAgICAgICAg
+IHZkZGEtc3VwcGx5ID0gPCZ2cmVnX2wxNGFfMXA4OD47Cj4+ICsgICAgICAgICAgICAgICB2ZGlz
+cHAtc3VwcGx5ID0gPCZsYWJfcmVndWxhdG9yPjsKPj4gKyAgICAgICAgICAgICAgIHZkaXNwbi1z
+dXBwbHkgPSA8JmliYl9yZWd1bGF0b3I+Owo+IAo+IENhbiB5b3UgcGxlYXNlIHBvaW50IHRvIHRo
+ZSBwYXRjaCBwb3N0ZWQgdXBzdHJlYW0gdGhhdCBwcm92aWRlcyB0aGUKPiBub2RlcyBmb3IgbGFi
+X3JlZ3VsYXRvciBhbmQgaWJiX3JlZ3VsYXRvcj8gIEkgc2VhcmNoZWQgYW5kIEkgY291bGRuJ3QK
+PiBmaW5kIGl0LCBidXQgSSBjZXJ0YWlubHkgY291bGQgaGF2ZSBtaXNzZWQgaXQuLi4gIFRoZXJl
+IHdhcyBhbgo+IElOVEVSTkFMIHBhdGNoIGluIHNvbWUgZG93bnN0cmVhbSB0cmVlcyBwcm92aWRp
+bmcgdGhlc2UgYnV0IG5vdGhpbmcKPiB1cHN0cmVhbS4gIFRoaXMgY2FuJ3QgbGFuZCB1cHN0cmVh
+bSB1bnRpbCBzdWNoIGEgcGF0Y2ggaXMgcG9zdGVkIGFuZAo+IHdvcmtzLi4uCj4gCj4gCj4+ICsm
+ZHNpMV9waHkgewo+PiArICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPj4gKyAgICAgICB2ZGRzLXN1
+cHBseSA9IDwmdmRkYV9taXBpX2RzaTFfcGxsPjsKPj4gK307Cj4+ICsKPiAKPiBSaWdodCBub3cg
+dGhpcyBjYXVzZXMgYSBtZXJnZSBjb25mbGljdCB3aGVuIEkgcGljayBpdCBpbiBteSB0cmVlIGJ1
+dAo+IHRoYXQncyBiZWNhdXNlIEkgaGF2ZSB0aGUgJmdjYyBub2RlIGZvciBwcm90ZWN0ZWQtY2xv
+Y2tzIChzZWUKPiBsaW51eC1uZXh0KS4gIERlcGVuZGluZyBvbiBBbmR5IHlvdSBtaWdodCBuZWVk
+IHRvIHJlcG9zdCBhdG9wIHRoYXQKPiBvbmUuCj4gCj4gCj4+ICsKPj4gKyAvKiBQSU5DVFJMIC0g
+Ym9hcmQtc3BlY2lmaWMgcGluY3RybCAqLwo+PiArCj4+ICsmdGxtbSB7Cj4+ICsgICAgICAgZGlz
+cF9tb2RlX3NlbDogZGlzcC1tb2RlLXNlbCB7Cj4gCj4gSSBhbHNvIGdldCBhIG1lcmdlIGNvbmZs
+aWN0IGhlcmUsIGJ1dCB0aGF0J3MgYmVjYXVzZSBJIGhhdmUgRXZhbidzCj4gU0RIQ0kgcGF0Y2hl
+cyBpbiBteSB0cmVlIHdoaWNoIGFsc28gYWRkcyB0aGUgdGxtbSBub2RlIChhY3R1YWxseSwgaXQK
+PiBtb3ZlcyBpdCB0byB0aGUgcmlnaHQgcGxhY2UpLiAgSWYgQW5keSBjYW4gbGFuZCB0aGUgU0RI
+Q0kgZGV2aWNlIHRyZWUKPiB0aGVuIHlvdSBjb3VsZCBiYXNlIG9mZiBvZiBoaXMgcGF0Y2hlcyBh
+bmQgYXZvaWQgdGhlIG1lcmdlIGNvbmZsaWN0Lgo+IAo+IAo+IE92ZXJhbGw6IGZvciB0aGUgbWVy
+Z2UgY29uZmxpY3RzIEkgZG9uJ3QgdGhpbmsgaXQncyBhIGJpZyBkZWFsLS1BbmR5Cj4gY2FuIHBy
+b2JhYmx5IHJlc29sdmUgdGhlbS4gIC4uLmJ1dCB5b3UgZGVmaW5pdGVseSBuZWVkIHRvIGV4cGxh
+aW4KPiB3aGVyZSAibGFiX3JlZ3VsYXRvciIgYW5kICJpYmJfcmVndWxhdG9yIiBjb21lIGZyb20g
+YW5kIHRoaXMgY2FuJ3QKPiBsYW5kIHVudGlsIHRob3NlIG5vZGVzIGFyZSBwcm92aWRlZC4KPiAK
+PiAtRG91ZwpIaSBEb3VnLAoKV2UgcG9zdGVkIHRoaXMgcGF0Y2ggb24gdG9wIG9mIEFuZHkncyB0
+cmVlIHdoaWNoIHdlIGhhZCBhbmQgdGhpcyBjb3VsZCAKaGF2ZSBjaGFuZ2VkLgoKV2Ugd2lsbCB3
+YWl0IGZvciBoaXMgcmVzcG9uc2UgaWYgd2UgbmVlZCB0byByZXBvc3QgaXQgYWZ0ZXIgcmViYXNp
+bmcuCgpSZWdhcmRpbmcgbGFiL2liYiwgdGhhdCBjaGFuZ2UgbmVlZHMgdG8gY29tZSBmcm9tIG91
+ciBQTUlDIHRlYW0uCgpJIHdpbGwgY2hlY2sgYWJvdXQgdGhhdCBhbmQgZ2V0IGJhY2suCgpUaGFu
+a3MKCkFiaGluYXYKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwo+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKPiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
