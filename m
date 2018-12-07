@@ -1,95 +1,53 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH v3] ARM: dts: Add support for Liebherr's BK4 device
- (vf610 based)
-Date: Fri, 7 Dec 2018 10:29:50 +0100
-Message-ID: <20181207102950.68796cf0@jawa>
-References: <20180921152726.31742-1-lukma@denx.de>
-        <20181009105028.17971-1-lukma@denx.de>
-        <CAOMZO5BN5KJ+s6F9CJXQPX=Ta0Ow0PaV_AmFHYSDNr78jLjziQ@mail.gmail.com>
-        <20181206092255.2359f7e6@jawa>
-        <CAOMZO5CE2ei-Pu-85zpYHTg-MamMT3DahLxBHNFjX4uLEi1XWg@mail.gmail.com>
-        <20181206140840.53d49cd6@jawa>
-        <CAOMZO5CUfN7uLf7bsw6Xg4+TNrRYodw11Ekg5ypqyXU6q-UFtg@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 1/2] dt-bindings: rtc: add generic bindings
+Date: Fri, 7 Dec 2018 10:33:56 +0100
+Message-ID: <20181207093356.GG8952@piout.net>
+References: <20181111193114.24307-1-alexandre.belloni@bootlin.com>
+ <CAMuHMdX9xZgAiBeXCXxLRSJYMefsFwhH3NGC7=EYteFd6kODMQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/eOd0DIfTyV7kvaKrSrv+R8x"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5CUfN7uLf7bsw6Xg4+TNrRYodw11Ekg5ypqyXU6q-UFtg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdX9xZgAiBeXCXxLRSJYMefsFwhH3NGC7=EYteFd6kODMQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Fabio Estevam <fabio.estevam@nxp.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-rtc@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/eOd0DIfTyV7kvaKrSrv+R8x
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 06/12/2018 11:36:59+0100, Geert Uytterhoeven wrote:
+> > +The following properties may not be supported by all drivers. However, if a
+> > +driver wants to support one of the below features, it should adapt the bindings
+> > +below.
+> > +- trickle-resistor-ohms : Selected resistor for trickle charger. Should be given
+> 
+> Can this resistor be less than 1 ohm?
+> trickle-resistor-milli-ohms?
+> 
 
-Hi Fabio,
+Well, this is what current drivers already use so we are stuck with that
+for now.
 
-> Hi Lukasz,
->=20
-> On Thu, Dec 6, 2018 at 11:08 AM Lukasz Majewski <lukma@denx.de> wrote:
->=20
-> > I will check this latter this week... =20
->=20
-> Reading the spi dt-binding it states that the spi slave node is
-> optional.
->=20
-> If I remove it like this, then the warning is gone:
+The value should be a few kOhm anyway. I think the lowest I know about
+is 250 Ohm.
 
-Unfortunately, the "slave" node is necessary - the "lwn,bk4" compatible
-causes the spidev driver to be bound.=20
+> > +                          if trickle charger should be enabled
+> > +- trickle-diode-disable : Do not use internal trickle charger diode Should be
+> > +                          given if internal trickle charger diode should be
+> > +                          disabled
+> > +- wakeup-source :         Enables wake up of host system on alarm
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 
-Use space applications on this system use it to perform SPI
-transmission.
-
-IMHO, removing the node is not a solution - we shall discover why on
-current next we do see such errors.
-
->=20
-> --- a/arch/arm/boot/dts/vf610-bk4.dts
-> +++ b/arch/arm/boot/dts/vf610-bk4.dts
-> @@ -109,12 +109,6 @@
->         bus-num =3D <3>;
->         status =3D "okay";
->         spi-slave;
-> -
-> -       slave@0 {
-> -               compatible =3D "lwn,bk4";
-> -               spi-max-frequency =3D <30000000>;
-> -               reg =3D <0>;
-> -       };
->  };
->=20
->  &edma0 {
->=20
-> Does spi slave still work without it?
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/eOd0DIfTyV7kvaKrSrv+R8x
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlwKPY4ACgkQAR8vZIA0
-zr2RUgf/YnEIV68dKxAVESsSbAZT8jOZkqAz/boXBXrfzYkXZRBbygWJwH0DpW1Y
-KXADq+lujl2DIWo+Ip4usgcOoRteRv8yTzJEGGzN8Xkpufm10l9+bheJr2vJDF0q
-vmwdpFqhd5zo5L9gJBkQDh06GD10zTVWjN+FdvivEw5b8Je04HZtbqyDAirPB4FH
-kRxRZjxSAQHEEoU3tkzjCxG/36qt44ZXJwmP62L/qOYzPdO82UpCXQAlQlOhXzO4
-aXSMf/BmM0i9M5LfCNRZw6isYM7diTVZnkhtVI0OcBKeNpqZSGEcEO8B9eQyOeml
-bksQDEKef00es8wxCu3IpG5ezd9VlQ==
-=weB6
------END PGP SIGNATURE-----
-
---Sig_/eOd0DIfTyV7kvaKrSrv+R8x--
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
