@@ -1,42 +1,97 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v9 00/13] media: staging/imx7: add i.MX7 media driver
-Date: Fri, 7 Dec 2018 16:38:49 +0300
-Message-ID: <20181207133849.GK3095@unbuntlaptop>
-References: <20181122151834.6194-1-rui.silva@linaro.org>
- <757f8c52-7c23-7cf7-32ee-75ddba767ff8@xs4all.nl>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 01/19] dt-bindings: clock: tegra124-dfll: Update DFLL
+ binding for PWM regulator
+Date: Fri, 7 Dec 2018 13:41:57 +0000
+Message-ID: <af1211f0-dda0-bdde-f320-03e54f82d7e1@nvidia.com>
+References: <20181204092548.3038-1-josephl@nvidia.com>
+ <20181204092548.3038-2-josephl@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <757f8c52-7c23-7cf7-32ee-75ddba767ff8@xs4all.nl>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rui Miguel Silva <rui.silva@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181204092548.3038-2-josephl@nvidia.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 07, 2018 at 01:44:00PM +0100, Hans Verkuil wrote:
-> CHECK: Alignment should match open parenthesis
-> #936: FILE: drivers/staging/media/imx/imx7-mipi-csis.c:921:
-> +       ret = v4l2_async_register_fwnode_subdev(mipi_sd,
-> +                               sizeof(struct v4l2_async_subdev), &sink_port, 1,
+
+On 04/12/2018 09:25, Joseph Lo wrote:
+> From: Peter De Schrijver <pdeschrijver@nvidia.com>
 > 
-> Apparently the latest coding style is that alignment is more important than
-> line length, although I personally do not agree. But since you need to
-> respin in any case due to the wrong SPDX identifier you used you might as
-> well take this into account.
+> Add new properties to configure the DFLL PWM regulator support. Also
+> add an example and make the I2C clock only required when I2C support is
+> used.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Signed-off-by: Joseph Lo <josephl@nvidia.com>
+> ---
+>  .../bindings/clock/nvidia,tegra124-dfll.txt   | 73 ++++++++++++++++++-
+>  1 file changed, 71 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+> index dff236f524a7..8c97600d2bad 100644
+> --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+> +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+> @@ -8,7 +8,6 @@ the fast CPU cluster. It consists of a free-running voltage controlled
+>  oscillator connected to the CPU voltage rail (VDD_CPU), and a closed loop
+>  control module that will automatically adjust the VDD_CPU voltage by
+>  communicating with an off-chip PMIC either via an I2C bus or via PWM signals.
+> -Currently only the I2C mode is supported by these bindings.
+>  
+>  Required properties:
+>  - compatible : should be "nvidia,tegra124-dfll"
+> @@ -45,10 +44,28 @@ Required properties for the control loop parameters:
+>  Optional properties for the control loop parameters:
+>  - nvidia,cg-scale: Boolean value, see the field DFLL_PARAMS_CG_SCALE in the TRM.
+>  
+> +Optional properties for mode selection:
+> +- nvidia,pwm-to-pmic: Use PWM to control regulator rather then I2C.
+> +
+>  Required properties for I2C mode:
+>  - nvidia,i2c-fs-rate: I2C transfer rate, if using full speed mode.
+>  
+> -Example:
+> +Required properties for PWM mode:
+> +- nvidia,pwm-period: period of PWM square wave in microseconds.
+> +- nvidia,init-uv: Regulator voltage in micro volts when PWM control is disabled.
 
-I'm pretty sure it complains about both equally.  If you make fix one
-warning it will complain about the other.  So you just have to pick
-which warning to not care about.
+Maybe consider 'pwm-inactive-voltage-microvolt'.
 
-regards,
-dan carpenter
+> +- nvidia,align-offset-uv: Regulator voltage in micro volts when PWM control is
+> +			  enabled and PWM output is low.
+
+Would this be considered the minimum pwm active voltage?
+
+> +- nvidia,align-step-uv: Voltage increase in micro volts corresponding to a
+> +			1/33th increase in duty cycle. Eg the voltage for 2/33th
+> +			duty cycle would be:
+
+Maybe consider 'pwm-voltage-step-microvolt'.
+
+> +			nvidia,align-offset-uv + nvidia,align-step-uv * 2.
+> +- pinctrl-0: I/O pad configuration when PWM control is enabled.
+> +- pinctrl-1: I/O pad configuration when PWM control is disabled.
+> +- pinctrl-names: must include the following entries:
+> +  - dvfs_pwm_enable: I/O pad configuration when PWM control is enabled.
+> +  - dvfs_pwm_disable: I/O pad configuration when PWM control is disabled.
+
+Please see Rob's feedback on the above [0].
+
+Cheers
+Jon
+
+[0] https://lore.kernel.org/patchwork/patch/885328/
+
+-- 
+nvpublic
