@@ -1,103 +1,80 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: sifive: describe sifive-blocks versioning
-Date: Thu, 6 Dec 2018 18:01:04 -0600
-Message-ID: <20181207000104.GA10814@bogus>
-References: <alpine.DEB.2.21.9999.1811211704520.16271@viisi.sifive.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add lpasscc node
+Date: Thu, 6 Dec 2018 16:08:36 -0800
+Message-ID: <CAD=FV=UA3zyjr_VqUcyekWhSOo7rtjEbbcU-E=SZ1e9HNhOyrQ@mail.gmail.com>
+References: <1543996836-16717-1-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.9999.1811211704520.16271@viisi.sifive.com>
+In-Reply-To: <1543996836-16717-1-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Megan Wachs <megan@sifive.com>, Wesley Terpstra <wesley@sifive.com>, Mark Rutland <mark.rutland@arm.com>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, paul@pwsan.com
+To: Taniya Das <tdas@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 21, 2018 at 05:06:56PM -0800, Paul Walmsley wrote:
-> 
-> For IP blocks that are generated from the public, open-source
-> sifive-blocks repository, describe the version numbering policy
-> that its maintainers intend to use, upon request from Rob
-> Herring <robh@kernel.org>.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: Megan Wachs <megan@sifive.com>
-> Cc: Wesley Terpstra <wesley@sifive.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Paul Walmsley <paul@pwsan.com>
+Hi,
+
+On Wed, Dec 5, 2018 at 12:00 AM Taniya Das <tdas@codeaurora.org> wrote:
+>
+> This adds the low pass audio clock controller node to sdm845 based on
+> the example in the bindings.
+>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
 > ---
-> 
-> Hi Rob, please let me know if this document works with your
-> requirements, or if some changes are needed.  - Paul
-
-Looks pretty good to me.
-
->  .../sifive/sifive-blocks-ip-versioning.txt    | 38 +++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
-
-Use the path that was suggested.
-
-> diff --git a/Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt b/Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
-> new file mode 100644
-> index 000000000000..b899e5c6e00c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
-> @@ -0,0 +1,38 @@
-> +DT compatible string versioning for SiFive open-source IP blocks
+>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 4 +++-
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi    | 8 ++++++++
+>  2 files changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> index b3def03..cf73f3c 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> @@ -346,7 +346,9 @@
+>  &gcc {
+>         protected-clocks = <GCC_QSPI_CORE_CLK>,
+>                            <GCC_QSPI_CORE_CLK_SRC>,
+> -                          <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
+> +                          <GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
+> +                          <GCC_LPASS_Q6_AXI_CLK>,
+> +                          <GCC_LPASS_SWAY_CLK>;
+>  };
+>
+>  &i2c10 {
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 1419b00..a3db089 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -7,6 +7,7 @@
+>
+>  #include <dt-bindings/clock/qcom,dispcc-sdm845.h>
+>  #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+> +#include <dt-bindings/clock/qcom,lpass-sdm845.h>
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/phy/phy-qcom-qusb2.h>
+> @@ -1264,6 +1265,13 @@
+>                         #power-domain-cells = <1>;
+>                 };
+>
+> +               lpasscc: clock-controller@17014000 {
+> +                       compatible = "qcom,sdm845-lpasscc";
+> +                       reg = <0x17014000 0x1f004>, <0x17300000 0x200>;
+> +                       reg-names = "cc", "qdsp6ss";
+> +                       #clock-cells = <1>;
+> +               };
 > +
-> +This document describes the version specification for DT "compatible"
-> +strings for open-source SiFive IP blocks.  HDL for these IP blocks
-> +can be found in this public repository:
-> +
-> +https://github.com/sifive/sifive-blocks
-> +
-> +IP block-specific DT compatible strings are contained within the HDL,
-> +in the form "sifive,<ip-block-name><integer version number>".
+>                 tsens0: thermal-sensor@c263000 {
 
-Really, my preference would be to add a '-v' in this:
+Please keep nodes with a unit address sorted numerically by unit
+address.  0x17014000 should not come before 0xc263000
 
-sifive,<ip-block-name>-v<integer version number>
+Presumably this is the kind of thing that Andy can fix himself when he
+lands stuff (often dts stuff ends up conflicting a bunch anyway), so I
+wouldn't personally post another patch unless I hear from him that he
+wants you to repost.  ...but please keep it in mind for the future.
 
-But given this ship has already sailed, I guess it is fine as is.
+In any case:
 
-> +
-> +An example is "sifive,uart0" from:
-> +
-> +https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/devices/uart/UART.scala#L43
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
-That's nice, but will be out of date as soon as someone adds or removes 
-a line above it. Can you point to a tagged version?
-
-> +
-> +Until these IP blocks (or IP integration) support version
-> +autodiscovery, the maintainers of these IP blocks intend to increment
-> +the suffixed number in the compatible string whenever the software
-> +interface to these IP blocks changes, or when the functionality of the
-> +underlying IP blocks changes in a way that software should be aware of.
-> +
-> +Driver developers can use compatible string "match" values such as
-> +"sifive,uart0" to indicate that their driver is compatible with the
-> +register interface and functionality associated with the relevant
-> +upstream sifive-blocks commits.  It is expected that most drivers will
-> +match on these IP block-specific compatible strings.
-> +
-> +DT data authors, when writing data for a particular SoC, should
-> +continue to specify an SoC-specific compatible string value, such as
-> +"sifive,fu540-c000-uart".  This way, if SoC-specific
-> +integration-specific bug fixes or workarounds are needed, the kernel
-> +or other system software can match on this string to apply them.  The
-> +IP block-specific compatible string (such as "sifive,uart0") should
-> +then be specified as a subsequent value.
-> +
-> +An example of this style:
-> +
-> +    compatible = "sifive,fu540-c000-uart", "sifive,uart0";
-> -- 
-> 2.19.1
-> 
+-Doug
