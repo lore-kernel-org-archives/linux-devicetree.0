@@ -1,29 +1,54 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v2] media: Use of_node_name_eq for node name comparisons
-Date: Fri, 07 Dec 2018 11:02:05 +0100
-Message-ID: <63971417-f761-e891-f410-9efa26dd2c6d@samsung.com>
-References: <20181206193519.13367-1-robh@kernel.org>
-        <CGME20181207100211epcas1p2caa3a1da5152bd7c1476d795e788e776@epcas1p2.samsung.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH 1/3] dt-bindings: clock: imx7ulp: add HSRUN mode related
+ clocks
+Date: Fri, 7 Dec 2018 10:03:29 +0000
+Message-ID: <1544176659-32022-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20181206193519.13367-1-robh@kernel.org>
-Content-language: en-GB
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Hyun Kwon <hyun.kwon@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Benoit Parrot <bparrot@ti.com>
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/6/18 20:35, Rob Herring wrote:
-> Convert string compares of DT node names to use of_node_name_eq helper
-> instead. This removes direct access to the node name pointer.
+There are HSRUN mode clock mux and divider in SCG1 module,
+and SMC1 can control i.MX7ULP CPU to run in RUN mode or
+HSRUN mode, the mode switch bits are actually a clock mux,
+add these clocks for clock driver and dtb to use.
 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Reviewed-by: Benoit Parrot <bparrot@ti.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> v2:
-> - Also convert tabs to spaces between the 'if' and '('
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ include/dt-bindings/clock/imx7ulp-clock.h | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+diff --git a/include/dt-bindings/clock/imx7ulp-clock.h b/include/dt-binding=
+s/clock/imx7ulp-clock.h
+index 008c5ee..21d872e 100644
+--- a/include/dt-bindings/clock/imx7ulp-clock.h
++++ b/include/dt-bindings/clock/imx7ulp-clock.h
+@@ -54,8 +54,10 @@
+ #define IMX7ULP_CLK_SOSC_BUS_CLK	41
+ #define IMX7ULP_CLK_FIRC_BUS_CLK	42
+ #define IMX7ULP_CLK_SPLL_BUS_CLK	43
++#define IMX7ULP_CLK_HSRUN_SYS_SEL	44
++#define IMX7ULP_CLK_HSRUN_CORE_DIV	45
+=20
+-#define IMX7ULP_CLK_SCG1_END		44
++#define IMX7ULP_CLK_SCG1_END		46
+=20
+ /* PCC2 */
+ #define IMX7ULP_CLK_DMA1		0
+@@ -106,4 +108,9 @@
+=20
+ #define IMX7ULP_CLK_PCC3_END		16
+=20
++/* SMC1 */
++#define IMX7ULP_CLK_ARM			0
++
++#define IMX7ULP_CLK_SMC1_END		1
++
+ #endif /* __DT_BINDINGS_CLOCK_IMX7ULP_H */
+--=20
+2.7.4
