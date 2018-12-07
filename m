@@ -1,52 +1,63 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [RFC PATCH 4/6] dt-bindings: update mvneta binding document
-Date: Fri, 7 Dec 2018 12:17:58 +0000
-Message-ID: <20181207121758.GA30658@n2100.armlinux.org.uk>
-References: <20181112122933.GD30658@n2100.armlinux.org.uk>
- <E1gMBMs-00089t-Fd@rmk-PC.armlinux.org.uk>
- <20181203235455.GA5851@bogus>
- <20181205110009.GQ30658@n2100.armlinux.org.uk>
- <CAL_JsqJXMDqQVQJoq0sXn0VEA1iFpcsK+Hjsxwt-7aWNreAkPw@mail.gmail.com>
- <2b832258-0b8f-a8f9-2907-878d0e4d6ee7@ti.com>
- <20181207104142.GY30658@n2100.armlinux.org.uk>
- <2ac6488c-a060-6875-bc92-c14fe2dbf8af@ti.com>
- <20181207113301.GZ30658@n2100.armlinux.org.uk>
- <0dc0916f-2654-53fe-226d-f75c9498bb39@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v7 0/7] Introduce STPMIC1 PMIC Driver
+Date: Fri, 7 Dec 2018 12:19:55 +0000
+Message-ID: <20181207121955.GA6510@sirena.org.uk>
+References: <1543571742-17995-1-git-send-email-p.paillet@st.com>
+ <20181203071145.GA26661@dell>
+ <5C069C47.6080305@st.com>
+ <20181205093604.GZ26661@dell>
+ <5C07F08B.2010701@st.com>
+ <20181207073132.GH26661@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <0dc0916f-2654-53fe-226d-f75c9498bb39@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
+In-Reply-To: <20181207073132.GH26661@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Pascal PAILLET-LME <p.paillet@st.com>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 07, 2018 at 05:30:52PM +0530, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On 07/12/18 5:03 PM, Russell King - ARM Linux wrote:
-> > On Fri, Dec 07, 2018 at 04:43:27PM +0530, Kishon Vijay Abraham I wrote:
-> >> Russell,
-> >>
-> >> No, I haven't merged patches from this series. That would have failed
-> >> compilation since Grygorii modified enum phy_mode which is used in this series.
-> >> You have also noted this in your cover letter.
-> > 
-> > Ok, but in any case, given the complexities of modifying the patch
-> > and properly testing it, I think I'll wait until those changes have
-> > hit mainline before re-spinning this series.  Alternatively, if
-> > you're happy to take just build-tested version, I could re-spin
-> > with that so at least we can get the phy bits queued for the merge
-> > window.
-> 
-> I'd prefer we test it before merging.
 
-Okay, expect it sometime after Christmas.  In any case, waiting for
-the upheaval in the phy API to hit mainline will need to happen to
-that netdev is in sync with the revised phy API.
+--T4sUOijqQbZv57TR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+On Fri, Dec 07, 2018 at 07:31:32AM +0000, Lee Jones wrote:
+> On Wed, 05 Dec 2018, Pascal PAILLET-LME wrote:
+
+> > Hi Lee, I have received an email from Mark telliing that the regulator=
+=20
+> > patch is applied on
+
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git=
+ =20
+
+> > I can see it on the branch regul/for-next.
+
+> Does your patch tracker only reply to the author?
+
+> Any reason why I don't see it?
+
+It gets sent to anyone in patchwork.  It is possible there was some
+problem talking to patchwork, or that your mail system has filtered the
+mail.
+
+--T4sUOijqQbZv57TR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwKZWgACgkQJNaLcl1U
+h9AqYQf/fPoVMFiBpJfNs61lytyuCMioJQadwRdtqBibh0un2085zKHfasON6BKV
+kFClkPGK0IVumMf0oAFEgUKCnq7cdAYKw9lIUs9n1cceblbjGDbKaTJlarP7SVWT
+EI6seMHKTYM3k6+CLwYY9EplerQ+1uDZ1wrMCB7THjElUPwFIgk2ITxOmqwQsbqa
+4H8vGI9SKmcRFj/Rf23oFlb541cSI+/QXSvQTlzaidz2EZxs8tQoNP8p0JVMoieh
+BSSnNwP7EBWxYYJoa0U6grg9yZ26Q5fz24/w0KY42DDEskdB8k36YYoTtPeYReLR
+Ig0Y7rO4nP2vuK4U14OofITZiDspWg==
+=+5Lu
+-----END PGP SIGNATURE-----
+
+--T4sUOijqQbZv57TR--
