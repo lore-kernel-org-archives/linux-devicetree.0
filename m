@@ -1,50 +1,59 @@
-From: Morten Rasmussen <morten.rasmussen@arm.com>
-Subject: Re: [RFT PATCH v1 0/4] Unify CPU topology across ARM64 & RISC-V
-Date: Fri, 7 Dec 2018 13:45:21 +0000
-Message-ID: <20181207134509.GA5913@e105550-lin.cambridge.arm.com>
-References: <1543534100-3654-1-git-send-email-atish.patra@wdc.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 02/19] dt-bindings: clock: tegra124-dfll: add Tegra210
+ support
+Date: Fri, 7 Dec 2018 13:50:37 +0000
+Message-ID: <0c3e8844-45af-dc45-f082-8693907dd83b@nvidia.com>
+References: <20181204092548.3038-1-josephl@nvidia.com>
+ <20181204092548.3038-3-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1543534100-3654-1-git-send-email-atish.patra@wdc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Dmitriy Cherkasov <dmitriy@oss-tech.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Juri Lelli <juri.lelli@arm.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181204092548.3038-3-josephl@nvidia.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Thu, Nov 29, 2018 at 03:28:16PM -0800, Atish Patra wrote:
-> The cpu-map DT entry in ARM64 can describe the CPU topology in
-> much better way compared to other existing approaches. RISC-V can
-> easily adopt this binding to represent it's own CPU topology.
-> Thus, both cpu-map DT binding and topology parsing code can be
-> moved to a common location so that RISC-V or any other
-> architecture can leverage that.
+On 04/12/2018 09:25, Joseph Lo wrote:
+> Add Tegra210 support for DFLL clock.
 > 
-> The relevant discussion regarding unifying cpu topology can be
-> found in [1].
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Joseph Lo <josephl@nvidia.com>
+> ---
+>  .../devicetree/bindings/clock/nvidia,tegra124-dfll.txt        | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> arch_topology seems to be a perfect place to move the common
-> code. I have not introduced any functional changes in the moved
-> code. The only downside in this approach is that the capacity
-> code will be executed for RISC-V as well. But, it will exit
-> immediately after not able to find the appropriate DT node. If
-> the overhead is considered too much, we can always compile out
-> capacity related functions under a different config for the
-> architectures that do not support them.
-> 
-> The patches have been tested for RISC-V and compile tested for
-> ARM64 & x86.
+> diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+> index 8c97600d2bad..4bd44dd7ec1e 100644
+> --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+> +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+> @@ -10,7 +10,9 @@ control module that will automatically adjust the VDD_CPU voltage by
+>  communicating with an off-chip PMIC either via an I2C bus or via PWM signals.
+>  
+>  Required properties:
+> -- compatible : should be "nvidia,tegra124-dfll"
+> +- compatible : should be one of:
+> +  - "nvidia,tegra124-dfll": for Tegra124
+> +  - "nvidia,tegra210-dfll": for Tegra210
+>  - reg : Defines the following set of registers, in the order listed:
+>          - registers for the DFLL control logic.
+>          - registers for the I2C output logic.
 
-The cpu-map bindings are used for arch/arm too, and so is
-arch_topology.c. In fact, it was introduced to allow code-sharing
-between arm and arm64. Applying patch three breaks arm.
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 
-Moving the DT parsing to arch_topology.c we have to unify all three
-architectures. Be aware that arm and arm64 have some differences in how
-they detect cpu capacities. I think we might have to look at the split
-of code between arch/* and arch_topology.c again :-/
+Cheers
+Jon
 
-Morten
+-- 
+nvpublic
