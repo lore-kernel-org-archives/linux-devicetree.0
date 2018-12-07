@@ -1,72 +1,64 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v10 0/8] Introduce on-chip interconnect API
-Date: Fri, 7 Dec 2018 12:06:21 +0200
-Message-ID: <bdc4bad1-d613-4144-2e5b-2657e170affa@linaro.org>
-References: <20181127180349.29997-1-georgi.djakov@linaro.org>
- <CAE=gft4jUjr3oDAZrM=-orLM-YoVAwa+e=crDDC_p9ArGE1dig@mail.gmail.com>
- <20181206145547.GA7884@kroah.com>
+From: James Morse <james.morse@arm.com>
+Subject: Re: [PATCH v16 06/16] lib: fdt: add a helper function for handling
+ memory range property
+Date: Fri, 7 Dec 2018 10:12:47 +0000
+Message-ID: <681e1265-2f0c-2a62-3778-09911b2be7fc@arm.com>
+References: <20181115055254.2812-1-takahiro.akashi@linaro.org>
+ <20181115055254.2812-7-takahiro.akashi@linaro.org>
+ <CAL_JsqL4_Z5pVfoB3opjL7eTzZvhBJW7_aQS443quAAR0gGH1w@mail.gmail.com>
+ <20181206155424.GA4422@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181206145547.GA7884@kroah.com>
-Content-Language: en-US
+In-Reply-To: <20181206155424.GA4422@arm.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>, Evan Green <evgreen@chromium.org>
-Cc: linux-pm@vger.kernel.org, rjw@rjwysocki.net, robh+dt@kernel.org, Michael Turquette <mturquette@baylibre.com>, khilman@baylibre.com, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, Alexandre Bailon <abailon@baylibre.com>, maxime.ripard@bootlin.com, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <thierry.reding@gmail.com>, ksitaraman@nvidia.com, sanjayc@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org, Doug Anderson <dianders@chromium.org>
+To: Will Deacon <will.deacon@arm.com>, "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, bhsharma@redhat.com, kexec@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg and Evan,
+Hi Akashi, Will,
 
-On 12/6/18 16:55, Greg KH wrote:
-> On Wed, Dec 05, 2018 at 12:41:35PM -0800, Evan Green wrote:
->> On Tue, Nov 27, 2018 at 10:03 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+On 06/12/2018 15:54, Will Deacon wrote:
+> On Thu, Dec 06, 2018 at 08:47:04AM -0600, Rob Herring wrote:
+>> On Wed, Nov 14, 2018 at 11:52 PM AKASHI Takahiro
+>> <takahiro.akashi@linaro.org> wrote:
 >>>
->>> Modern SoCs have multiple processors and various dedicated cores (video, gpu,
->>> graphics, modem). These cores are talking to each other and can generate a
->>> lot of data flowing through the on-chip interconnects. These interconnect
->>> buses could form different topologies such as crossbar, point to point buses,
->>> hierarchical buses or use the network-on-chip concept.
->>>
->>> These buses have been sized usually to handle use cases with high data
->>> throughput but it is not necessary all the time and consume a lot of power.
->>> Furthermore, the priority between masters can vary depending on the running
->>> use case like video playback or CPU intensive tasks.
->>>
->>> Having an API to control the requirement of the system in terms of bandwidth
->>> and QoS, so we can adapt the interconnect configuration to match those by
->>> scaling the frequencies, setting link priority and tuning QoS parameters.
->>> This configuration can be a static, one-time operation done at boot for some
->>> platforms or a dynamic set of operations that happen at run-time.
->>>
->>> This patchset introduce a new API to get the requirement and configure the
->>> interconnect buses across the entire chipset to fit with the current demand.
->>> The API is NOT for changing the performance of the endpoint devices, but only
->>> the interconnect path in between them.
+>>> Added function, fdt_setprop_reg(), will be used later to handle
+>>> kexec-specific property in arm64's kexec_file implementation.
+>>> It will possibly be merged into libfdt in the future.
 >>
->> For what it's worth, we are ready to land this in Chrome OS. I think
->> this series has been very well discussed and reviewed, hasn't changed
->> much in the last few spins, and is in good enough shape to use as a
->> base for future patches. Georgi's also done a great job reaching out
->> to other SoC vendors, and there appears to be enough consensus that
->> this framework will be usable by more than just Qualcomm. There are
->> also several drivers out on the list trying to add patches to use this
->> framework, with more to come, so it made sense (to us) to get this
->> base framework nailed down. In my experiments this is an important
->> piece of the overall power management story, especially on systems
->> that are mostly idle.
+>> You generally can't modify libfdt files. Any changes will be blown
+>> away with the next dtc sync (there's one in -next now). Though here
+>> you are creating a new location with fdt code. lib/ is just a shim to
+>> the actual libfdt code. Don't put any implementation there. You can
+>> add this to drivers/of/fdt_address.c for the short term, but it still
+>> needs to go upstream.
 >>
->> I'll continue to track changes to this series and we will ultimately
->> reconcile with whatever happens upstream, but I thought it was worth
->> sending this note to express our "thumbs up" towards this framework.
+>> Otherwise, the implementation looks fine to me.
 > 
-> Looks like a v11 will be forthcoming, so I'll wait for that one to apply
-> it to the tree if all looks good.
+> I agree, but I don't think there's a real need for us to hack
+> drivers/of/fdt_address.c in the meantime -- let's just target upstream
+> and not carry this in the kernel.
 > 
+> Akashi -- for now, I'll drop the kdump parts of this series which rely
+> on this helper. The majority of the series is actually independent and
+> can go in as-is.
+> 
+> I've pushed out a kexec branch to the arm64 tree for you to take a look
+> at:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=kexec
 
-Yes, it's coming. I will also include an additional fixup patch, as the
-sdm845 provider driver will fail to build in linux-next, due to a recent
-change in the cmd_db API.
+I gave this a quick spin. Without the elfcorehdr/usable-memory-range arm64 needs
+to explicitly forbid kdump via kexec_file_load. (like powerpc does already).
+Without this kdump works, but the second kernel overwrites the first as those DT
+properties are missing.
+
+I'll post a patch momentarily,
+
 
 Thanks,
-Georgi
+
+James
