@@ -1,62 +1,36 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: [PATCH 1/2] arm64: dts: ti: k3-am654: Add Support for MMC/SD
-Date: Fri, 7 Dec 2018 14:12:32 +0530
-Message-ID: <20181207084233.13700-2-faiz_abbas@ti.com>
-References: <20181207084233.13700-1-faiz_abbas@ti.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH] dt-bindings: rtc: sun6i-rtc: Fix register range in example
+Date: Fri,  7 Dec 2018 16:47:19 +0800
+Message-ID: <20181207084719.2009-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181207084233.13700-1-faiz_abbas@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, robh+dt@kernel.org, nm@ti.com, t-kristo@ti.com, kishon@ti.com, ulf.hansson@linaro.org, adrian.hunter@intel.com, michal.simek@xilinx.com, faiz_abbas@ti.com
+To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-There are two MMC host controller instances present on the TI's
-Am654 SOCs. Add device tree nodes for the same.
+The register range for the RTC extends beyond 0x54.
+Use the size from the user manual's memory map instead.
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+Fixes: 9765d2d94309 ("rtc: sun6i: Add sun6i RTC driver")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 28 ++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ Documentation/devicetree/bindings/rtc/sun6i-rtc.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 916434839603..d07212f16a81 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -129,4 +129,32 @@
- 		clocks = <&k3_clks 113 1>;
- 		power-domains = <&k3_pds 113>;
- 	};
-+
-+	sdhci0: sdhci@4f80000 {
-+		compatible = "ti,am654-sdhci-5.1";
-+		reg = <0x0 0x4f80000 0x0 0x260>, <0x0 0x4f90000 0x0 0x134>;
-+		power-domains = <&k3_pds 47>;
-+		clocks = <&k3_clks 47 0>, <&k3_clks 47 1>;
-+		clock-names = "clk_ahb", "clk_xin";
-+		interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
-+		sdhci-caps-mask = <0x80000007 0x0>;
-+		mmc-ddr-1_8v;
-+		ti,otap-del-sel = <0x2>;
-+		ti,trm-icp = <0x8>;
-+		status = "disabled";
-+	};
-+
-+	sdhci1: sdhci@4fa0000 {
-+		compatible = "ti,am654-sdhci-5.1";
-+		reg = <0x0 0x4fa0000 0x0 0x260>, <0x0 0x4fb0000 0x0 0x134>;
-+		power-domains = <&k3_pds 48>;
-+		clocks = <&k3_clks 48 0>, <&k3_clks 48 1>;
-+		clock-names = "clk_ahb", "clk_xin";
-+		interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
-+		sdhci-caps-mask = <0x80000007 0x0>;
-+		mmc-ddr-1_8v;
-+		ti,otap-del-sel = <0x2>;
-+		ti,trm-icp = <0x8>;
-+		status = "disabled";
-+	};
- };
+diff --git a/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt b/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
+index ceb38abf1ea2..6b732c41392b 100644
+--- a/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
++++ b/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
+@@ -38,7 +38,7 @@ Example:
+ 
+ rtc: rtc@1f00000 {
+ 	compatible = "allwinner,sun6i-a31-rtc";
+-	reg = <0x01f00000 0x54>;
++	reg = <0x01f00000 0x400>;
+ 	interrupts = <0 40 4>, <0 41 4>;
+ 	clock-output-names = "osc32k";
+ 	clocks = <&ext_osc32k>;
 -- 
-2.19.2
+2.20.0.rc1
