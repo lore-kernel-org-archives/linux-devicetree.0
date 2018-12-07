@@ -1,256 +1,66 @@
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: Re: [PATCH v9 05/13] media: dt-bindings: add bindings for i.MX7 media
- driver
-Date: Fri, 07 Dec 2018 13:54:05 +0000
-Message-ID: <m35zw530jm.fsf@linaro.org>
-References: <20181122151834.6194-1-rui.silva@linaro.org>
- <20181122151834.6194-6-rui.silva@linaro.org>
- <5bc1ad92-4d84-62af-396c-9ba8b3be424b@xs4all.nl>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: sifive: describe sifive-blocks versioning
+Date: Fri, 7 Dec 2018 07:55:52 -0600
+Message-ID: <CAL_JsqJgt3VxHLcxY54Ojpqz_bLwGSySZ9meowgy6pnLPdXuLQ@mail.gmail.com>
+References: <alpine.DEB.2.21.9999.1811211704520.16271@viisi.sifive.com>
+ <20181207000104.GA10814@bogus> <alpine.DEB.2.21.9999.1812061645070.29609@viisi.sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-reply-to: <5bc1ad92-4d84-62af-396c-9ba8b3be424b@xs4all.nl>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.21.9999.1812061645070.29609@viisi.sifive.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Megan Wachs <megan@sifive.com>, Wesley Terpstra <wesley@sifive.com>, Mark Rutland <mark.rutland@arm.com>, linux-riscv@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+On Thu, Dec 6, 2018 at 6:46 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+>
+>
+>
+> On Thu, 6 Dec 2018, Rob Herring wrote:
+>
+> > On Wed, Nov 21, 2018 at 05:06:56PM -0800, Paul Walmsley wrote:
+> > >
+> > > For IP blocks that are generated from the public, open-source
+> > > sifive-blocks repository, describe the version numbering policy
+> > > that its maintainers intend to use, upon request from Rob
+> > > Herring <robh@kernel.org>.
+> > >
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: Palmer Dabbelt <palmer@sifive.com>
+> > > Cc: Megan Wachs <megan@sifive.com>
+> > > Cc: Wesley Terpstra <wesley@sifive.com>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: devicetree@vger.kernel.org
+> > > Cc: linux-riscv@lists.infradead.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > > Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> > > Signed-off-by: Paul Walmsley <paul@pwsan.com>
+> > > ---
+> > >
+> > > Hi Rob, please let me know if this document works with your
+> > > requirements, or if some changes are needed.  - Paul
+> >
+> > Looks pretty good to me.
+> >
+> > >  .../sifive/sifive-blocks-ip-versioning.txt    | 38 +++++++++++++++++++
+> > >  1 file changed, 38 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
+> >
+> > Use the path that was suggested.
+>
+> Could you remind me which one that is?
 
-On Fri 07 Dec 2018 at 12:39, Hans Verkuil wrote:
-> On 11/22/2018 04:18 PM, Rui Miguel Silva wrote:
->> Add bindings documentation for i.MX7 media drivers.
->> The imx7 MIPI CSI2 and imx7 CMOS Sensor Interface.
->> 
->> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->
-> Please move this patch to the beginning of the series to avoid
-> checkpatch warnings:
->
-> WARNING: DT compatible string "fsl,imx7-csi" appears 
-> un-documented -- check ./Documentation/devicetree/bindings/
-> #1378: FILE: drivers/staging/media/imx/imx7-media-csi.c:1336:
-> +       { .compatible = "fsl,imx7-csi" },
+In this thread: bindings/riscv/sifive/
 
-Will do, thanks for catching this one.
-
----
-Cheers,
-	Rui
-
+> > > +
+> > > +An example is "sifive,uart0" from:
+> > > +
+> > > +https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/devices/uart/UART.scala#L43
+> >
+> > That's nice, but will be out of date as soon as someone adds or removes
+> > a line above it. Can you point to a tagged version?
 >
-> Thanks!
+> Will do
 >
-> 	Hans
->
->
->> ---
->>  .../devicetree/bindings/media/imx7-csi.txt    | 45 ++++++++++
->>  .../bindings/media/imx7-mipi-csi2.txt         | 90 
->>  +++++++++++++++++++
->>  2 files changed, 135 insertions(+)
->>  create mode 100644 
->>  Documentation/devicetree/bindings/media/imx7-csi.txt
->>  create mode 100644 
->>  Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/media/imx7-csi.txt 
->> b/Documentation/devicetree/bindings/media/imx7-csi.txt
->> new file mode 100644
->> index 000000000000..3c07bc676bc3
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/imx7-csi.txt
->> @@ -0,0 +1,45 @@
->> +Freescale i.MX7 CMOS Sensor Interface
->> +=====================================
->> +
->> +csi node
->> +--------
->> +
->> +This is device node for the CMOS Sensor Interface (CSI) which 
->> enables the chip
->> +to connect directly to external CMOS image sensors.
->> +
->> +Required properties:
->> +
->> +- compatible    : "fsl,imx7-csi";
->> +- reg           : base address and length of the register set 
->> for the device;
->> +- interrupts    : should contain CSI interrupt;
->> +- clocks        : list of clock specifiers, see
->> + 
->> Documentation/devicetree/bindings/clock/clock-bindings.txt for 
->> details;
->> +- clock-names   : must contain "axi", "mclk" and "dcic" 
->> entries, matching
->> +                 entries in the clock property;
->> +
->> +The device node shall contain one 'port' child node with one 
->> child 'endpoint'
->> +node, according to the bindings defined in:
->> +Documentation/devicetree/bindings/media/video-interfaces.txt.
->> +
->> +In the following example a remote endpoint is a video 
->> multiplexer.
->> +
->> +example:
->> +
->> +                csi: csi@30710000 {
->> +                        #address-cells = <1>;
->> +                        #size-cells = <0>;
->> +
->> +                        compatible = "fsl,imx7-csi";
->> +                        reg = <0x30710000 0x10000>;
->> +                        interrupts = <GIC_SPI 7 
->> IRQ_TYPE_LEVEL_HIGH>;
->> +                        clocks = <&clks IMX7D_CLK_DUMMY>,
->> +                                        <&clks 
->> IMX7D_CSI_MCLK_ROOT_CLK>,
->> +                                        <&clks 
->> IMX7D_CLK_DUMMY>;
->> +                        clock-names = "axi", "mclk", "dcic";
->> +
->> +                        port {
->> +                                csi_from_csi_mux: endpoint {
->> +                                        remote-endpoint = 
->> <&csi_mux_to_csi>;
->> +                                };
->> +                        };
->> +                };
->> diff --git 
->> a/Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt 
->> b/Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
->> new file mode 100644
->> index 000000000000..71fd74ed3ec8
->> --- /dev/null
->> +++ 
->> b/Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
->> @@ -0,0 +1,90 @@
->> +Freescale i.MX7 Mipi CSI2
->> +=========================
->> +
->> +mipi_csi2 node
->> +--------------
->> +
->> +This is the device node for the MIPI CSI-2 receiver core in 
->> i.MX7 SoC. It is
->> +compatible with previous version of Samsung D-phy.
->> +
->> +Required properties:
->> +
->> +- compatible    : "fsl,imx7-mipi-csi2";
->> +- reg           : base address and length of the register set 
->> for the device;
->> +- interrupts    : should contain MIPI CSIS interrupt;
->> +- clocks        : list of clock specifiers, see
->> + 
->> Documentation/devicetree/bindings/clock/clock-bindings.txt for 
->> details;
->> +- clock-names   : must contain "pclk", "wrap" and "phy" 
->> entries, matching
->> +                  entries in the clock property;
->> +- power-domains : a phandle to the power domain, see
->> + 
->> Documentation/devicetree/bindings/power/power_domain.txt for 
->> details.
->> +- reset-names   : should include following entry "mrst";
->> +- resets        : a list of phandle, should contain reset 
->> entry of
->> +                  reset-names;
->> +- phy-supply    : from the generic phy bindings, a phandle to 
->> a regulator that
->> +	          provides power to MIPI CSIS core;
->> +
->> +Optional properties:
->> +
->> +- clock-frequency : The IP's main (system bus) clock frequency 
->> in Hz, default
->> +		    value when this property is not specified is 
->> 166 MHz;
->> +- fsl,csis-hs-settle : differential receiver (HS-RX) settle 
->> time;
->> +
->> +The device node should contain two 'port' child nodes with one 
->> child 'endpoint'
->> +node, according to the bindings defined in:
->> + Documentation/devicetree/bindings/ 
->> media/video-interfaces.txt.
->> + The following are properties specific to those nodes.
->> +
->> +port node
->> +---------
->> +
->> +- reg		  : (required) can take the values 0 or 1, 
->> where 0 shall be
->> +                     related to the sink port and port 1 shall 
->> be the source
->> +                     one;
->> +
->> +endpoint node
->> +-------------
->> +
->> +- data-lanes    : (required) an array specifying active 
->> physical MIPI-CSI2
->> +		    data input lanes and their mapping to logical 
->> lanes; this
->> +                    shall only be applied to port 0 (sink 
->> port), the array's
->> +                    content is unused only its length is 
->> meaningful,
->> +                    in this case the maximum length supported 
->> is 2;
->> +
->> +example:
->> +
->> +        mipi_csi: mipi-csi@30750000 {
->> +                #address-cells = <1>;
->> +                #size-cells = <0>;
->> +
->> +                compatible = "fsl,imx7-mipi-csi2";
->> +                reg = <0x30750000 0x10000>;
->> +                interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
->> +                clocks = <&clks IMX7D_IPG_ROOT_CLK>,
->> +                                <&clks 
->> IMX7D_MIPI_CSI_ROOT_CLK>,
->> +                                <&clks 
->> IMX7D_MIPI_DPHY_ROOT_CLK>;
->> +                clock-names = "pclk", "wrap", "phy";
->> +                clock-frequency = <166000000>;
->> +                power-domains = <&pgc_mipi_phy>;
->> +                phy-supply = <&reg_1p0d>;
->> +                resets = <&src IMX7_RESET_MIPI_PHY_MRST>;
->> +                reset-names = "mrst";
->> +                fsl,csis-hs-settle = <3>;
->> +
->> +                port@0 {
->> +                        reg = <0>;
->> +
->> +                        mipi_from_sensor: endpoint {
->> +                                remote-endpoint = 
->> <&ov2680_to_mipi>;
->> +                                data-lanes = <1>;
->> +                        };
->> +                };
->> +
->> +                port@1 {
->> +                        reg = <1>;
->> +
->> +                        mipi_vc0_to_csi_mux: endpoint {
->> +                                remote-endpoint = 
->> <&csi_mux_from_mipi_vc0>;
->> +                        };
->> +                };
->> +        };
->> 
+> - Paul
