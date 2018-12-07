@@ -1,16 +1,15 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 5/5] dt-bindings: display: msm/gpu: document
- amd,imageon compatible
-Date: Fri, 7 Dec 2018 17:18:28 -0600
-Message-ID: <20181207231828.GA17290@bogus>
-References: <20181204151702.8514-1-jonathan@marek.ca>
- <20181204151702.8514-5-jonathan@marek.ca>
+Subject: Re: [PATCH v4 1/8] dt-bindings: msm/dsi: Add ref clock for PHYs
+Date: Fri, 7 Dec 2018 17:18:53 -0600
+Message-ID: <20181207231853.GA18012@bogus>
+References: <20181204224234.62619-1-mka@chromium.org>
+ <20181204224234.62619-2-mka@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20181204151702.8514-5-jonathan@marek.ca>
+In-Reply-To: <20181204224234.62619-2-mka@chromium.org>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -20,17 +19,22 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jonathan Marek <jonathan@marek.ca>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, freedreno@lists.freedesktop.org, open list <linux-kernel@vger.kernel.org>, "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>, Chris.Healy@zii.aero, "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rajesh Yadav <ryadav@codeaurora.org>, David Airlie <airlied@linux.ie>, linux-arm-msm@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, Stephen Boyd <swboyd@chromium.org>, David Brown <david.brown@linaro.org>, Matthias Kaehlcke <mka@chromium.org>, Sean Paul <seanpaul@chromium.org>, Andy Gross <andy.gross@linaro.org>, freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAgNCBEZWMgMjAxOCAxMDoxNzowMSAtMDUwMCwgSm9uYXRoYW4gTWFyZWsgd3JvdGU6
-Cj4gRG9jdW1lbnQgdGhlIG5ldyBhbWQsaW1hZ2VvbiBjb21wYXRpYmxlLCB1c2VkIGZvciBub24t
-cWNvbSBoYXJkd2FyZSB0aGF0Cj4gdXNlcyB0aGUgZHJtL21zbSBkcml2ZXIgKGlNWDUpLgo+IAo+
-IFNpZ25lZC1vZmYtYnk6IEpvbmF0aGFuIE1hcmVrIDxqb25hdGhhbkBtYXJlay5jYT4KPiAtLS0K
-PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dwdS50eHQg
-fCA0ICsrKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
-KQo+IAoKUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
-IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+T24gVHVlLCAgNCBEZWMgMjAxOCAxNDo0MjoyNyAtMDgwMCwgTWF0dGhpYXMgS2FlaGxja2Ugd3Jv
+dGU6Cj4gQWxsb3cgdGhlIFBIWSBkcml2ZXJzIHRvIGdldCB0aGUgcmVmIGNsb2NrIGZyb20gdGhl
+IERULgo+IAo+IFNpZ25lZC1vZmYtYnk6IE1hdHRoaWFzIEthZWhsY2tlIDxta2FAY2hyb21pdW0u
+b3JnPgo+IFJldmlld2VkLWJ5OiBTdGVwaGVuIEJveWQgPHN3Ym95ZEBjaHJvbWl1bS5vcmc+Cj4g
+UmV2aWV3ZWQtYnk6IERvdWdsYXMgQW5kZXJzb24gPGRpYW5kZXJzQGNocm9taXVtLm9yZz4KPiAt
+LS0KPiBDaG5hZ2VzIGluIHY0Ogo+IC0gYWRkZWQgIlJldmlld2VkLWJ5IiB0YWdzIGZyb20gU3Rl
+cGhlbiBhbmQgRG91Zwo+IAo+IENoYW5nZXMgaW4gdjM6Cj4gLSBhZGRlZCBub3RlIHRoYXQgdGhl
+IHJlZiBjbG9jayBpcyBvbmx5IHJlcXVpcmVkIGZvciBuZXcgRFRTCj4gICBmaWxlcy9lbnRyaWVz
+Cj4gCj4gQ2hhbmdlcyBpbiB2MjoKPiAtIGFkZCB0aGUgcmVmIGNsb2NrIGZvciBhbGwgUEhZcywg
+bm90IG9ubHkgdGhlIDEwbm0gb25lCj4gLSB1cGRhdGVkIGNvbW1pdCBtZXNzYWdlCj4gLS0tCj4g
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0IHwg
+MSArCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+IAoKUmV2aWV3ZWQtYnk6IFJv
+YiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
