@@ -1,48 +1,53 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH] coresight: Use of_node_name_eq for node name comparisons
-Date: Fri, 7 Dec 2018 10:36:13 -0700
-Message-ID: <20181207173613.GA27493@xps15>
-References: <20181205195050.4759-34-robh@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 7/8] arm64: dts: sdm845: Add rpmh powercontroller node
+Date: Fri, 7 Dec 2018 11:36:29 -0600
+Message-ID: <20181207173629.GA4443@bogus>
+References: <20181204052119.806-1-rnayak@codeaurora.org>
+ <20181204052119.806-8-rnayak@codeaurora.org>
+ <154396536335.88331.9265777410326926096@swboyd.mtv.corp.google.com>
+ <f6c6f238-0d5e-e47c-caf7-7e45bd1327dc@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181205195050.4759-34-robh@kernel.org>
+In-Reply-To: <f6c6f238-0d5e-e47c-caf7-7e45bd1327dc@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-arm-kernel@lists.infradead.org
+To: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, andy.gross@linaro.org, collinsd@codeaurora.org, mka@chromium.org, ulf.hansson@linaro.org, viresh.kumar@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 05, 2018 at 01:50:50PM -0600, Rob Herring wrote:
-> Convert string compares of DT node names to use of_node_name_eq helper
-> instead. This removes direct access to the node name pointer.
+On Wed, Dec 05, 2018 at 12:37:29PM +0530, Rajendra Nayak wrote:
 > 
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  drivers/hwtracing/coresight/of_coresight.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
-> index 89092f83567e..7045930fc958 100644
-> --- a/drivers/hwtracing/coresight/of_coresight.c
-> +++ b/drivers/hwtracing/coresight/of_coresight.c
-> @@ -80,8 +80,8 @@ static struct device_node *of_coresight_get_port_parent(struct device_node *ep)
->  	 * Skip one-level up to the real device node, if we
->  	 * are using the new bindings.
->  	 */
-> -	if (!of_node_cmp(parent->name, "in-ports") ||
-> -	    !of_node_cmp(parent->name, "out-ports"))
-> +	if (of_node_name_eq(parent, "in-ports") ||
-> +	    of_node_name_eq(parent, "out-ports"))
->  		parent = of_get_next_parent(parent);
+> On 12/5/2018 4:46 AM, Stephen Boyd wrote:
+> > Quoting Rajendra Nayak (2018-12-03 21:21:18)
+> > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > index b72bdb0a31a5..a6d0cd8d17b0 100644
+> > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > @@ -1324,6 +1325,56 @@
+> > >                                  compatible = "qcom,sdm845-rpmh-clk";
+> > >                                  #clock-cells = <1>;
+> > >                          };
+> > > +
+> > > +                       rpmhpd: power-controller {
+> > > +                               compatible = "qcom,sdm845-rpmhpd";
+> > > +                               #power-domain-cells = <1>;
+> > > +                               operating-points-v2 = <&rpmhpd_opp_table>;
+> > > +                       };
+> > > +
+> > > +                       rpmhpd_opp_table: opp-table {
+> > 
+> > This table should go somewhere else? I don't understand why it's in the
+> > rpmh node because it's not an rpmh device. Does it go to the root? Or
+> > does it go under rpmhpd itself? I'm not sure.
+> 
+> I could move it to root perhaps, we seem to do that atleast in the case of
+> GPU. The power domain bindings (Documentation/devicetree/bindings/power/power_domain.txt)
+> seem to suggest it can't be under the power-controller node itself.
 
-Applied - thanks.
+Why not? I don't see anything forbidding that like already having some 
+other type of child nodes. It's a little weird to have 
+operating-points-v2 point to a child node, but that will still work.
 
->  
->  	return parent;
-> -- 
-> 2.19.1
-> 
+Rob
