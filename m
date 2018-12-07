@@ -1,81 +1,72 @@
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: Re: [PATCH v9 01/13] media: staging/imx: refactor imx media device
- probe
-Date: Fri, 07 Dec 2018 13:53:01 +0000
-Message-ID: <m37egl30le.fsf@linaro.org>
-References: <20181122151834.6194-1-rui.silva@linaro.org>
- <20181122151834.6194-2-rui.silva@linaro.org>
- <b0fffeef-439b-e3a7-67d1-900a7ea1664f@xs4all.nl>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 04/19] dt-bindings: cpufreq: tegra124: remove cpu_lp clock
+ from required properties
+Date: Fri, 7 Dec 2018 13:53:37 +0000
+Message-ID: <c8934ef1-5ada-ad9a-1b32-9b9860eccdc9@nvidia.com>
+References: <20181204092548.3038-1-josephl@nvidia.com>
+ <20181204092548.3038-5-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-reply-to: <b0fffeef-439b-e3a7-67d1-900a7ea1664f@xs4all.nl>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181204092548.3038-5-josephl@nvidia.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
-Thanks for the review.
 
-On Fri 07 Dec 2018 at 12:38, Hans Verkuil wrote:
-> On 11/22/2018 04:18 PM, Rui Miguel Silva wrote:
->> Refactor and move media device initialization code to a new 
->> common
->> module, so it can be used by other devices, this will allow for 
->> example
->> a near to introduce imx7 CSI driver, to use this media device.
->> 
->> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
->> ---
->>  drivers/staging/media/imx/Makefile            |   1 +
->>  .../staging/media/imx/imx-media-dev-common.c  | 102 
->>  ++++++++++++++++++
->>  drivers/staging/media/imx/imx-media-dev.c     |  88 
->>  ++++-----------
->>  drivers/staging/media/imx/imx-media-of.c      |   6 +-
->>  drivers/staging/media/imx/imx-media.h         |  15 +++
->>  5 files changed, 141 insertions(+), 71 deletions(-)
->>  create mode 100644 
->>  drivers/staging/media/imx/imx-media-dev-common.c
->> 
->> diff --git a/drivers/staging/media/imx/Makefile 
->> b/drivers/staging/media/imx/Makefile
->> index 698a4210316e..a30b3033f9a3 100644
->> --- a/drivers/staging/media/imx/Makefile
->> +++ b/drivers/staging/media/imx/Makefile
->> @@ -1,5 +1,6 @@
->>  # SPDX-License-Identifier: GPL-2.0
->>  imx-media-objs := imx-media-dev.o imx-media-internal-sd.o 
->>  imx-media-of.o
->> +imx-media-objs += imx-media-dev-common.o
->>  imx-media-common-objs := imx-media-utils.o imx-media-fim.o
->>  imx-media-ic-objs := imx-ic-common.o imx-ic-prp.o 
->>  imx-ic-prpencvf.o
->>  
->> diff --git a/drivers/staging/media/imx/imx-media-dev-common.c 
->> b/drivers/staging/media/imx/imx-media-dev-common.c
->> new file mode 100644
->> index 000000000000..55fe94fb72f2
->> --- /dev/null
->> +++ b/drivers/staging/media/imx/imx-media-dev-common.c
->> @@ -0,0 +1,102 @@
->> +// SPDX-License-Identifier: GPL
->
-> This is an invalid SPDX license identifier. You probably want to 
-> use GPL-2.0.
+On 04/12/2018 09:25, Joseph Lo wrote:
+> The cpu_lp clock property is only needed when the CPUfreq driver
+> supports CPU cluster switching. But it was not a design for this driver
+> and it didn't handle that as well. So removing this property.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Joseph Lo <josephl@nvidia.com>
+> ---
+>  .../devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt   | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
+> index 031545a29caf..03196d5ea515 100644
+> --- a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
+> +++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
+> @@ -9,7 +9,6 @@ Required properties:
+>    See ../clocks/clock-bindings.txt for details.
+>  - clock-names: Must include the following entries:
+>    - cpu_g: Clock mux for the fast CPU cluster.
+> -  - cpu_lp: Clock mux for the low-power CPU cluster.
+>    - pll_x: Fast PLL clocksource.
+>    - pll_p: Auxiliary PLL used during fast PLL rate changes.
+>    - dfll: Fast DFLL clocksource that also automatically scales CPU voltage.
+> @@ -30,11 +29,10 @@ cpus {
+>  		reg = <0>;
+>  
+>  		clocks = <&tegra_car TEGRA124_CLK_CCLK_G>,
+> -			 <&tegra_car TEGRA124_CLK_CCLK_LP>,
+>  			 <&tegra_car TEGRA124_CLK_PLL_X>,
+>  			 <&tegra_car TEGRA124_CLK_PLL_P>,
+>  			 <&dfll>;
+> -		clock-names = "cpu_g", "cpu_lp", "pll_x", "pll_p", "dfll";
+> +		clock-names = "cpu_g", "pll_x", "pll_p", "dfll";
+>  		clock-latency = <300000>;
+>  	};
+>  
+> 
 
-hrr... you are right, I will update it here and others.
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 
----
-Cheers,
-	Rui
+Cheers
+Jon
+
+-- 
+nvpublic
