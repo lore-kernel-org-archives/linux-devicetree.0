@@ -1,57 +1,43 @@
-From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH v4 2/3] Input: atmel_mxt_ts: Wait for device be ready for communication
-Date: Fri,  7 Dec 2018 15:28:56 +0100
-Message-ID: <20181207142857.15818-3-pawel.mikolaj.chmiel@gmail.com>
-References: <20181207142857.15818-1-pawel.mikolaj.chmiel@gmail.com>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH] dt-bindings: sifive: describe sifive-blocks versioning
+Date: Fri, 7 Dec 2018 06:31:33 -0800 (PST)
+Message-ID: <alpine.DEB.2.21.9999.1812070624180.16511@viisi.sifive.com>
+References: <alpine.DEB.2.21.9999.1811211704520.16271@viisi.sifive.com> <20181207000104.GA10814@bogus> <alpine.DEB.2.21.9999.1812061645070.29609@viisi.sifive.com> <CAL_JsqJgt3VxHLcxY54Ojpqz_bLwGSySZ9meowgy6pnLPdXuLQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181207142857.15818-1-pawel.mikolaj.chmiel@gmail.com>
+In-Reply-To: <CAL_JsqJgt3VxHLcxY54Ojpqz_bLwGSySZ9meowgy6pnLPdXuLQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: nick@shmanahar.org
-Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Megan Wachs <megan@sifive.com>, Wesley Terpstra <wesley@sifive.com>, Mark Rutland <mark.rutland@arm.com>, linux-riscv@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-According to documentation, device isn't ready for communication,
-until firmware asserts the CHG line. Add missing wait for this.
 
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
----
-Changes from v3:
-  - Fix checkpatch issues
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+On Fri, 7 Dec 2018, Rob Herring wrote:
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 1dc8ad0da5af..3f956d07d09e 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -202,6 +202,7 @@ enum t100_type {
- #define MXT_CRC_TIMEOUT		1000	/* msec */
- #define MXT_FW_RESET_TIME	3000	/* msec */
- #define MXT_FW_CHG_TIMEOUT	300	/* msec */
-+#define MXT_POWERON_DELAY	150	/* msec */
- 
- /* Command to unlock bootloader */
- #define MXT_UNLOCK_CMD_MSB	0xaa
-@@ -3068,6 +3069,16 @@ static int mxt_regulator_enable(struct mxt_data *data)
- 		msleep(MXT_REGULATOR_DELAY);
- 		gpiod_set_value(data->reset_gpio, 1);
- 		msleep(MXT_RESET_INVALID_CHG);
-+
-+retry_wait:
-+		reinit_completion(&data->bl_completion);
-+		data->in_bootloader = true;
-+		error = mxt_wait_for_completion(data, &data->bl_completion,
-+						MXT_POWERON_DELAY);
-+		if (error == -EINTR)
-+			goto retry_wait;
-+
-+		data->in_bootloader = false;
- 	}
- 
- 	return 0;
--- 
-2.17.1
+> On Thu, Dec 6, 2018 at 6:46 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+> > On Thu, 6 Dec 2018, Rob Herring wrote:
+> > > On Wed, Nov 21, 2018 at 05:06:56PM -0800, Paul Walmsley wrote:
+> > >
+> > > >  .../sifive/sifive-blocks-ip-versioning.txt    | 38 +++++++++++++++++++
+> > > >  1 file changed, 38 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
+> > >
+> > > Use the path that was suggested.
+> >
+> > Could you remind me which one that is?
+> 
+> In this thread: bindings/riscv/sifive/
+
+SiFive also produces ARM-based SoCs.  Some of those ARM SoCs may use these 
+IP blocks from sifive-blocks as well.  As far as I know, there's nothing 
+RISC-V-specific about most of these IP blocks.  (As an example, there's 
+nothing CPU architecture-specific about a UART.)
+
+I'm fine with putting these bindings under bindings/riscv/, if that's 
+where you need them to go.  But I'd like to understand the rationale 
+better - could you describe that?
+
+thanks,
+
+- Paul
