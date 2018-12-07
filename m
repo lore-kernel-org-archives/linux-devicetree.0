@@ -1,350 +1,217 @@
-From: Emiliano Ingrassia <ingrassia@epigenesys.com>
-Subject: Re: [PATCH 0/2] meson: Fix IRQ trigger type
-Date: Fri, 7 Dec 2018 19:28:45 +0100
-Message-ID: <20181207182845.GA3779@ingrassia.epigenesys.com>
-References: <20181204160447.27869-1-ccaione@baylibre.com>
- <CAFBinCDCE7RP4vgs25bqSZ8vBjrmcuB=qb3U92X6QfpmzeqrBg@mail.gmail.com>
- <20181206124347.GA10676@ingrassia.epigenesys.com>
- <85973a9cd43c677ffa5c80853e86d79f36a9eb3a.camel@baylibre.com>
- <20181206155228.GA15225@ingrassia.epigenesys.com>
- <20181206185158.GA19901@ingrassia.epigenesys.com>
- <44c9eedf4dc2616645c2a49b080f42a493fe03fd.camel@baylibre.com>
+From: Maruthi Srinivas Bayyavarapu
+        <maruthi.srinivas.bayyavarapu@xilinx.com>
+Subject: [PATCH 2/3] ASoC: xlnx: Add i2s driver
+Date: Sat, 8 Dec 2018 00:02:37 +0530
+Message-ID: <1544207558-72508-3-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
+References: <1544207558-72508-1-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <44c9eedf4dc2616645c2a49b080f42a493fe03fd.camel@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <ccaione@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@baylibre.com, robh+dt@kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1544207558-72508-1-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vishal Sagar <vsagar@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 07, 2018 at 11:49:15AM +0100, Jerome Brunet wrote:
-> On Thu, 2018-12-06 at 19:51 +0100, Emiliano Ingrassia wrote:
-> > Hi Carlo,
-> >
-> > I keep running tests with packet generator,
-> > using nload to show bandwidth usage.
-> >
-> > Here is my test results with packet generators
-> > both running on laptop and board with rate 1 Gbps.
->
-> Testing in UDP is unlikely to give us clear picture of anything for this sort
-> of fixes.
->
+I2S IP instance can work in transmitter/playback or receiver/capture mode
+exclusively. The patch registers corresponding instance as ASoC component
+with audio framework.
 
-Why? Would you mind to explain your reasoning?
+Signed-off-by: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
+---
+ sound/soc/xilinx/xlnx_i2s.c | 185 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 185 insertions(+)
+ create mode 100644 sound/soc/xilinx/xlnx_i2s.c
 
-> All your test seems in show it the fact the Amlogic SoC usually prioritize the
-> TX traffic over RX, which is something we've known about for a while.
->
-
-Is that normal and/or acceptable?
-
-> It would be helpful if you could provide TCP figures with a traffic generator
-> we can all share an inspect, such as iperf3
->
-> Finally, Your test do not show the original issue regarding EEE. So the work
-> around we put (yes, it was never considered a solution) for it should not be
-> kept IHMO. Your numbers for EEE may be due to the way the traffic is generated
-> and the PHY entering LPI and taking a bit of time to exit it. Again UDP is not
-> very helpful to characterize this.
->
-
-Did you read my email entirely or just kidding me?
-
-TEST 3 clearly shows that the issue regarding EEE is still there
-with both patches applied.
-
-My comment about TEST 3 (same results as TEST 2):
-"Simple ping test from laptop to board shows a packet loss
- of 90% and more while no packet loss achieved pinging
- the laptop from the board."
-
-I definitively advice against the second patch (the part regarding
-32 bit Meson SoC).
-
-About the first one, still no evidence that is needed on Meson8b SoC.
-And I'm saying it because I tested both patches on real hardware,
-not just guessing!
-
-Furthermore, as Martin reported in one of the previous mail,
-even Amlogic's buildroot kernel uses an edge rising IRQ type
-for the Meson8b MAC. Other evidence that is not so clear
-the need for the first patch on 32 bit Meson SoC.
-
-> >
-> > TEST 0: no patch applied.
-> >
-> > 1) Start packet generator on laptop:
-> >
-> >               | incoming traffic | outgoing traffic
-> > =====================================================
-> > nload (board) |     ~940 Mbps    |       0 Mbps
-> > -----------------------------------------------------
-> > nload (laptop)|       0 Mbps     |     ~940 Mbps
-> > =====================================================
-> >
-> > 2) Start packet generator on board:
-> >
-> >               | incoming traffic  | outgoing traffic
-> > ==============+===================+==================
-> > nload (board) |     ~460 Mbps     |     ~256 Mbps
-> > --------------+-------------------+------------------
-> > nload (laptop)|     ~256 Mbps     |     ~940 Mbps
-> > =====================================================
-> >
-> > 3) Stop packet generator on laptop:
-> >
-> >               | incoming traffic | outgoing traffic
-> > =====================================================
-> > nload (board) |       0 Mbps     |    ~940 Mbps
-> > -----------------------------------------------------
-> > nload (laptop)|       ~940 Mbps  |      0 Mbps
-> > =====================================================
-> >
-> > 4) Restart packet generator on laptop:
-> >
-> >               | incoming traffic | outgoing traffic
-> > =====================================================
-> > nload (board) |     ~0 Mbps      |     ~940 Mbps
-> > -----------------------------------------------------
-> > nload (laptop)|     ~940 Mbps    |     ~940 Mbps
-> > =====================================================
-> >
-> > In the last case the "ifconfig" statistics about RX packets
-> > remain fixed which probably indicates that the incoming traffic
-> > to the board is effectively being dropped.
-> >
-> > The eth0 interrupt counter keeps incrementing.
-> > Simple ping test works correctly.
-> >
-> >
-> > TEST 1: IRQ type patch applied
-> >
-> > Same results as TEST 0.
-> >
-> >
-> > TEST 2: eee-broken-1000t flag removed
-> >
-> > 1) Start packet generator on laptop:
-> >
-> >               | incoming traffic | outgoing traffic
-> > =====================================================
-> > nload (board) |      ~3Mbps      |       0 Mbps
-> > -----------------------------------------------------
-> > nload (laptop)|       0 Mbps     |     ~940 Mbps
-> > =====================================================
-> >
-> > 2) Start packet generator on board:
-> >
-> >               | incoming traffic  | outgoing traffic
-> > ==============+===================+==================
-> > nload (board) |     ~0 Mbps       |     ~940 Mbps
-> > --------------+-------------------+------------------
-> > nload (laptop)|     ~940 Mbps     |     ~940 Mbps
-> > =====================================================
-> >
-> > 3) Stop packet generator on laptop:
-> >
-> >               | incoming traffic | outgoing traffic
-> > =====================================================
-> > nload (board) |       0 Mbps     |    ~940 Mbps
-> > -----------------------------------------------------
-> > nload (laptop)|       ~940 Mbps  |      0 Mbps
-> > =====================================================
-> >
-> > 4) Restart packet generator on laptop:
-> >
-> >               | incoming traffic | outgoing traffic
-> > =====================================================
-> > nload (board) |     ~0 Mbps      |     ~940 Mbps
-> > -----------------------------------------------------
-> > nload (laptop)|     ~940 Mbps    |     ~940 Mbps
-> > =====================================================
-> >
-> > In the first case the "ifconfig" statistics about RX packets
-> > are incremented consistently with the incoming traffic value
-> > showed by the nload (board side).
-> >
-> > In the last case the "ifconfig" statistics about RX packets
-> > remain fixed which probably indicates that the incoming traffic
-> > to the board is effectively being dropped.
-> >
-> > The eth0 interrupt counter keeps incrementing.
-> > Simple ping test from laptop to board shows a packet loss
-> > of 90% and more while no packet loss achieved pinging
-> > the laptop from the board.
-> >
-> >
-> > TEST 3: both patches applied.
-> >
-> > Same results as TEST 2.
-> >
-> >
-> > From the results obtained from these tests,
-> > which are more accurate than the previous one,
-> > I can say that the second patch (remove eee-broken-1000t flag)
-> > should NOT be applied.
-> >
-> > About the first one (change MAC IRQ type), I would like
-> > to do other tests with other tools like iperf3.
-> > With these results only, I would say to not apply it
-> > because nothing changed but if your stress test failed on
-> > long running and this patch fix it I would like to test it more deeply.
-> >
-> > As final thought, the conducted tests clearly show that if the board
-> > transmits at full rate, all the incoming traffic is dropped.
-> > I think that this behaviour should be fixed but don't know if
-> > it depends on the driver or device tree description.
-> > I'll keep investigating.
-> >
-> > Regards,
-> >
-> > Emiliano
-> >
-> > On Thu, Dec 06, 2018 at 04:52:28PM +0100, Emiliano Ingrassia wrote:
-> > > Hi Carlo,
-> > >
-> > > thanks for the answer.
-> > >
-> > > On Thu, Dec 06, 2018 at 01:17:58PM +0000, Carlo Caione wrote:
-> > > > On Thu, 2018-12-06 at 13:43 +0100, Emiliano Ingrassia wrote:
-> > > > > Hi all,
-> > > >
-> > > > Hi Emiliano,
-> > > >
-> > > > > thank you for involving me.
-> > > > >
-> > > > > I applied Carlo's patches[0] on a kernel vanilla 4.19.6
-> > > > > and tested it with kernel packet generator, monitoring
-> > > > > bandwidth usage with "nload".
-> > > > >
-> > > > > All tests were conducted on an Odroid-C1+ Rev. 0.4-20150930 board
-> > > > > with a short ethernet cable directly attached to a laptop with
-> > > > > 1G ethernet interface, with "nload" running on the board.
-> > > > >
-> > > > > The tests I performed are composed by the following steps:
-> > > > >
-> > > > > 1) Start packet generator with "rate 1000M" on laptop;
-> > > > >
-> > > > > 2) Keep packet generator active on the laptop and
-> > > > >    start the packet generator on the board with "rate 1000M";
-> > > > >
-> > > > > 3) Stop both packet generators;
-> > > > >
-> > > > > 4) Start packet generator on the board;
-> > > > >
-> > > > > 5) Keep packet generator active on the board and
-> > > > >    start the packet generator on the laptop.
-> > > >
-> > > > out of curiosity: why do you expect to see something different from
-> > > > point (2)?
-> > > >
-> > >
-> > > I did not expect it indeed, I tried and got different results.
-> > >
-> > > > > Test results without Carlo's patches applied:
-> > > > >
-> > > > > 1) "nload" shows an incoming traffic of ~950Mbps;
-> > > > >
-> > > > > 2) "nload" shows an incoming traffic of ~400Mbps
-> > > > >    and an outgoing traffic of ~250Mbps;
-> > > > >
-> > > > > 3) "nload" shows 0Mbps both for incoming and outgoing traffic;
-> > > > >
-> > > > > 4) "nload" shows an outgoing traffic of ~950Mbps from the board;
-> > > > >
-> > > > > 5) "nload" shows incoming traffic of 0Mbps
-> > > > >    and an outgoing traffic of ~950Mbps.
-> > > > >
-> > > > > Applying only the first patch (change mac IRQ type) I got the same
-> > > > > results.
-> > > >
-> > > > This is expected. The change in the IRQ type is solving an issue that
-> > > > you can see if the run a stress test involving multiple components for
-> > > > several hours.
-> > > >
-> > >
-> > > OK, did you use "stress-ng" tool for tests?
-> > >
-> > > > > Applying only the second patch (drop eee-broken-1000t) I got the same
-> > > > > results!
-> > > >
-> > > > I am a bit confused here. Wasn't the eee-broken-1000t added to fix a
-> > > > problem with the ethernet? Are you suggesting that for some reason you
-> > > > cannot reproduce anymore the problem for which the quirk was
-> > > > introduced?
-> > > >
-> > >
-> > > Problems without the "eee-broken-1000t" flags were experimented
-> > > one and a half years ago on a Amlogic development kernel from [0],
-> > > probably a 4.14 version.
-> > > Many patches about Meson8b SoC, dwmac-meson8b and dwmac driver
-> > > were introduced so yes, the "eee-broken-1000t" was added
-> > > to fix a problem with the ethernet (one and a half years ago),
-> > > but new tests are needed to say if it still necessary.
-> > >
-> > > > > With both patches applied I got the same results but with an incoming
-> > > > > traffic
-> > > > > of ~3Mbps on the board.
-> > > >
-> > > > On all the tests and immediately from the start of the tests?
-> > > >
-> > >
-> > > Yes, in all the 5 steps immediately from the start.
-> > >
-> > > I also tried to execute "nload" on both sides to see the bandwidth
-> > > usage.
-> > >
-> > > With bot patches applied, after starting kernel packet generator
-> > > on my laptop with 1Gbps rate, "nload" on the laptop side shows me
-> > > an outgoing traffic of ~940Mbps while "nload" on the board side shows
-> > > me an incoming traffic of ~3Mbps.
-> > >
-> > > Also consider that a pinging test from my laptop to the board shows
-> > > a packet loss of about 90%.
-> > >
-> > > > When you hit the problem con you check in /proc/interrupts if you see
-> > > > the IRQ counter for the eth0 incrementing or not?
-> > > >
-> > >
-> > > The eth0 IRQ counter is incremented during the test.
-> > >
-> > > > Cheers,
-> > > >
-> > > > --
-> > > > Carlo Caione
-> > > >
-> > > >
-> > >
-> > > I would like to conduct other tests with iperf3 to be sure about
-> > > the obtained results. What do you think?
-> > > Should I apply your patches on the latest Amlogic development kernel?
-> > >
-> > > Regards,
-> > >
-> > > Emiliano
-> > >
-> > > [0]
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic.git/
-> >
-> > Cheers,
-> >
-> > Emiliano
-> >
-> > _______________________________________________
-> > linux-amlogic mailing list
-> > linux-amlogic@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-amlogic
->
->
+diff --git a/sound/soc/xilinx/xlnx_i2s.c b/sound/soc/xilinx/xlnx_i2s.c
+new file mode 100644
+index 0000000..d4ae9ef
+--- /dev/null
++++ b/sound/soc/xilinx/xlnx_i2s.c
+@@ -0,0 +1,185 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Xilinx ASoC I2S audio support
++ *
++ * Copyright (C) 2018 Xilinx, Inc.
++ *
++ * Author: Praveen Vuppala <praveenv@xilinx.com>
++ * Author: Maruthi Srinivas Bayyavarapu <maruthis@xilinx.com>
++ */
++
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <sound/pcm_params.h>
++#include <sound/soc.h>
++
++#define DRV_NAME "xlnx_i2s"
++
++#define I2S_CORE_CTRL_OFFSET		0x08
++#define I2S_I2STIM_OFFSET		0x20
++#define I2S_CH0_OFFSET			0x30
++#define I2S_I2STIM_VALID_MASK		GENMASK(7, 0)
++
++static int xlnx_i2s_set_sclkout_div(struct snd_soc_dai *cpu_dai,
++				    int div_id, int div)
++{
++	void __iomem *base = snd_soc_dai_get_drvdata(cpu_dai);
++
++	if (!div || (div & ~I2S_I2STIM_VALID_MASK))
++		return -EINVAL;
++
++	writel(div, base + I2S_I2STIM_OFFSET);
++
++	return 0;
++}
++
++static int xlnx_i2s_hw_params(struct snd_pcm_substream *substream,
++			      struct snd_pcm_hw_params *params,
++			      struct snd_soc_dai *i2s_dai)
++{
++	u32 reg_off, chan_id;
++	void __iomem *base = snd_soc_dai_get_drvdata(i2s_dai);
++
++	chan_id = params_channels(params) / 2;
++
++	while (chan_id > 0) {
++		reg_off = I2S_CH0_OFFSET + ((chan_id - 1) * 4);
++		writel(chan_id, base + reg_off);
++		chan_id--;
++	}
++
++	return 0;
++}
++
++static int xlnx_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
++			    struct snd_soc_dai *i2s_dai)
++{
++	void __iomem *base = snd_soc_dai_get_drvdata(i2s_dai);
++
++	switch (cmd) {
++	case SNDRV_PCM_TRIGGER_START:
++	case SNDRV_PCM_TRIGGER_RESUME:
++	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
++		writel(1, base + I2S_CORE_CTRL_OFFSET);
++		break;
++	case SNDRV_PCM_TRIGGER_STOP:
++	case SNDRV_PCM_TRIGGER_SUSPEND:
++	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
++		writel(0, base + I2S_CORE_CTRL_OFFSET);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static const struct snd_soc_dai_ops xlnx_i2s_dai_ops = {
++	.trigger = xlnx_i2s_trigger,
++	.set_clkdiv = xlnx_i2s_set_sclkout_div,
++	.hw_params = xlnx_i2s_hw_params
++};
++
++static const struct snd_soc_component_driver xlnx_i2s_component = {
++	.name = DRV_NAME,
++};
++
++static const struct of_device_id xlnx_i2s_of_match[] = {
++	{ .compatible = "xlnx,i2s-transmitter-1.0", },
++	{ .compatible = "xlnx,i2s-receiver-1.0", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, xlnx_i2s_of_match);
++
++static int xlnx_i2s_probe(struct platform_device *pdev)
++{
++	struct resource *res;
++	void __iomem *base;
++	struct snd_soc_dai_driver *dai_drv;
++	int ret;
++	u32 ch, format, data_width;
++	struct device *dev = &pdev->dev;
++	struct device_node *node = dev->of_node;
++
++	dai_drv = devm_kzalloc(&pdev->dev, sizeof(*dai_drv), GFP_KERNEL);
++	if (!dai_drv)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	ret = of_property_read_u32(node, "xlnx,num-channels", &ch);
++	if (ret < 0) {
++		dev_err(dev, "cannot get supported channels\n");
++		return ret;
++	}
++	ch = ch * 2;
++
++	ret = of_property_read_u32(node, "xlnx,dwidth", &data_width);
++	if (ret < 0) {
++		dev_err(dev, "cannot get data width\n");
++		return ret;
++	}
++	switch (data_width) {
++	case 16:
++		format = SNDRV_PCM_FMTBIT_S16_LE;
++		break;
++	case 24:
++		format = SNDRV_PCM_FMTBIT_S24_LE;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	if (of_device_is_compatible(node, "xlnx,i2s-transmitter-1.0")) {
++		dai_drv->name = "xlnx_i2s_playback";
++		dai_drv->playback.stream_name = "Playback";
++		dai_drv->playback.formats = format;
++		dai_drv->playback.channels_min = ch;
++		dai_drv->playback.channels_max = ch;
++		dai_drv->playback.rates	= SNDRV_PCM_RATE_8000_192000;
++		dai_drv->ops = &xlnx_i2s_dai_ops;
++	} else if (of_device_is_compatible(node, "xlnx,i2s-receiver-1.0")) {
++		dai_drv->name = "xlnx_i2s_capture";
++		dai_drv->capture.stream_name = "Capture";
++		dai_drv->capture.formats = format;
++		dai_drv->capture.channels_min = ch;
++		dai_drv->capture.channels_max = ch;
++		dai_drv->capture.rates = SNDRV_PCM_RATE_8000_192000;
++		dai_drv->ops = &xlnx_i2s_dai_ops;
++	} else {
++		return -ENODEV;
++	}
++
++	dev_set_drvdata(&pdev->dev, base);
++
++	ret = devm_snd_soc_register_component(&pdev->dev, &xlnx_i2s_component,
++					      dai_drv, 1);
++	if (ret) {
++		dev_err(&pdev->dev, "i2s component registration failed\n");
++		return ret;
++	}
++
++	dev_info(&pdev->dev, "%s DAI registered\n", dai_drv->name);
++
++	return ret;
++}
++
++static struct platform_driver xlnx_i2s_aud_driver = {
++	.driver = {
++		.name = DRV_NAME,
++		.of_match_table = xlnx_i2s_of_match,
++	},
++	.probe = xlnx_i2s_probe,
++};
++
++module_platform_driver(xlnx_i2s_aud_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Praveen Vuppala  <praveenv@xilinx.com>");
++MODULE_AUTHOR("Maruthi Srinivas Bayyavarapu <maruthis@xilinx.com>");
+-- 
+2.7.4
