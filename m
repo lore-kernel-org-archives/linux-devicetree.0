@@ -1,161 +1,70 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH 0/7] microblaze: fix various problems in building boot
- images
-Date: Fri, 7 Dec 2018 16:19:41 +0100
-Message-ID: <18fb7c8b-2b47-eb39-d80b-7137e7db466b@xilinx.com>
-References: <1543823457-32478-1-git-send-email-yamada.masahiro@socionext.com>
- <19c7bdab-8df8-f7c6-7921-9a4d43dbca64@monstr.eu>
- <CAK7LNATWSNqZ8uE+teMW+uvDCLXfq6zMTqh_7=ssrPquCLJz8A@mail.gmail.com>
- <938f1368-5e07-0178-5b99-d8331ce216f8@xilinx.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH v10 1/7] interconnect: Add generic on-chip interconnect
+ API
+Date: Fri, 7 Dec 2018 17:24:17 +0200
+Message-ID: <b4fdf5eb-2bd1-834d-fb2b-6b86a74dd6fc@linaro.org>
+References: <20181127180349.29997-1-georgi.djakov@linaro.org>
+ <20181127180349.29997-2-georgi.djakov@linaro.org>
+ <CAL_JsqJyPH9WVw2VqGTjUvhxoq3+KGpfqtAMf9iH07N7m3P4yw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <938f1368-5e07-0178-5b99-d8331ce216f8@xilinx.com>
+In-Reply-To: <CAL_JsqJyPH9WVw2VqGTjUvhxoq3+KGpfqtAMf9iH07N7m3P4yw@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Simek <monstr@monstr.eu>
-Cc: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "open list:THERMAL" <linux-pm@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Michael Turquette <mturquette@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Evan Green <evgreen@chromium.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Alexandre Bailon <abailon@baylibre.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <thierry.reding@gmail.com>, ksitaraman@nvidia.com, sanjayc@nvidi
 List-Id: devicetree@vger.kernel.org
 
-On 07. 12. 18 14:29, Michal Simek wrote:
-> On 07. 12. 18 12:29, Masahiro Yamada wrote:
->> On Thu, Dec 6, 2018 at 11:55 PM Michal Simek <monstr@monstr.eu> wrote:
->>>
->>> On 03. 12. 18 8:50, Masahiro Yamada wrote:
->>>> This patch set fixes various issues in microblaze Makefiles.
->>>>
->>>> BTW, "simpleImage.<dt>" works like a phony target to generate the
->>>> following four images, where the first three are just aliases.
->>>>
->>>>  - arch/microblaze/boot/simpleImage.<dt>:
->>>>          identical to arch/microblaze/boot/linux.bin
->>>>
->>>>  - arch/microblaze/boot/simpleImage.<dt>.unstrip:
->>>>          identical to vmlinux
->>>>
->>>>  - arch/microblaze/boot/simpleImage.<dt>.ub:
->>>>          identical to arch/microblaze/boot/linux.bin.ub
->>>>
->>>>  - arch/microblaze/boot/simpleImage.<dt>.strip:
->>>>          stripped vmlinux
->>>>
->>>> I am not sure how much useful those copies are,
->>>> but, I tried my best to keep the same behavior.
->>>>
->>>> IMHO, I guess DTB=<dt> would be more sensible,
->>>> but it is up to Michal.
->>>>
->>>>
->>>>
->>>> Masahiro Yamada (7):
->>>>   microblaze: fix cleaning of boot images
->>>>   microblaze: adjust the help to the real behavior
->>>>   microblaze: move "... is ready" message to arch/microblaze/Makefile
->>>>   microblaze: fix multiple bugs in arch/microblaze/boot/Makefile
->>>>   microblaze: add linux.bin* and simpleImage.* to PHONY
->>>>   microblaze: fix race condition in building boot images
->>>>   microblaze: remove the unneeded code just in case file copy fails
->>>>
->>>>  arch/microblaze/Makefile          | 14 +++++++++-----
->>>>  arch/microblaze/boot/Makefile     | 33 +++++++++++++++++----------------
->>>>  arch/microblaze/boot/dts/Makefile |  5 +----
->>>>  3 files changed, 27 insertions(+), 25 deletions(-)
->>>>
->>>
->>> One more thing I have in my mind for a while is that will be good to
->>> configure kernel build flags from DT and completely get rid of these
->>> symbols.
->>>
->>> XILINX_MICROBLAZE0_USE_MSR_INSTR
->>> XILINX_MICROBLAZE0_USE_PCMP_INSTR
->>> XILINX_MICROBLAZE0_USE_BARREL
->>> XILINX_MICROBLAZE0_USE_DIV
->>> XILINX_MICROBLAZE0_USE_HW_MUL
->>> XILINX_MICROBLAZE0_USE_FPU
->>>
->>> It means setup CPUFLAGS based on extracting that values from DT that it
->>> all the time match the hardware.
->>> It will also simplify all the CPUFLAGS logic which is in
->>> arch/microblaze/Makefile.
->>>
->>> Do you have any idea how this can be done?
->>
->>
->> I have no idea.
->>
->> Parsing DTS with sed or something would be possible, but ugly.
->>
->> In my opinion, the kernel should be multi platform image,
->> in other words, it is the least common denominator
->> of supported platforms.
->>
->> So, the kernel should enable all features that may or may not be used
->> depending on platform.
->>
->> I do not know if this works for MB.
-> 
-> Microblaze is soft core CPU where you can select if you want to have it
-> with multiplier, divider, barrel shifter, etc.
-> You can of course say that you don't have them and you have "universal"
-> kernel but very slow.
-> That's why user has to setup these configs which are converted to cflags
-> to say GCC what can be used.
-> And these configs can be simply parsed from dt.
-> 
-> For example like this based on dtb (quick hack)
-> 
-> for i in `echo use-msr-instr use-pcmp-instr use-barrel use-div
-> use-hw-mul use-fpu`; do
-> 	UPPER=`echo $i | tr '-' '_' | tr '[a-z]' '[A-Z}'`
-> 	echo $i $UPPER;
-> 
-> 	VAR=`fdtget -t i $FILE/arch/microblaze/boot/dts/system.dtb /cpus/cpu@0/
-> xlnx,$i`
-> 	FLAGS+="CONFIG_XILINX_MICROBLAZE0_${UPPER}=${VAR} "
-> done
-> 
-> make $FLAGS
-> 
-> 
-> When simpleImage is requested dt could be parsed to setup proper build
-> flags.
+Hi Rob,
 
-One more thing I found is that I have done these changes
+On 12/5/18 18:16, Rob Herring wrote:
+> On Tue, Nov 27, 2018 at 12:03 PM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+>>
+>> This patch introduces a new API to get requirements and configure the
+>> interconnect buses across the entire chipset to fit with the current
+>> demand.
+>>
+>> The API is using a consumer/provider-based model, where the providers are
+>> the interconnect buses and the consumers could be various drivers.
+>> The consumers request interconnect resources (path) between endpoints and
+>> set the desired constraints on this data flow path. The providers receive
+>> requests from consumers and aggregate these requests for all master-slave
+>> pairs on that path. Then the providers configure each participating in the
+>> topology node according to the requested data flow path, physical links and
+>> constraints. The topology could be complicated and multi-tiered and is SoC
+>> specific.
+>>
+>> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+>> Reviewed-by: Evan Green <evgreen@chromium.org>
+> 
+> [...]
+> 
+>> +struct icc_path *icc_get(struct device *dev, const int src_id,
+>> +                        const int dst_id);
+>> +void icc_put(struct icc_path *path);
+>> +int icc_set(struct icc_path *path, u32 avg_bw, u32 peak_bw);
+> 
+> icc_set() is very generic, but this function isn't easily extended to
+> other parameters than bandwidth. Perhaps icc_set_bandwidth() instead.
+> Then when you add some other setting, you just add a new function. Of
+> course, if you wind up with a bunch of different parameters, then
+> you'll probably need an atomic type interface where you test all the
+> settings together and then commit them separately in one call. But
 
-diff --git a/arch/microblaze/kernel/setup.c b/arch/microblaze/kernel/setup.c
-index bbd6968ce55b..dc6a6fee3ae2 100644
---- a/arch/microblaze/kernel/setup.c
-+++ b/arch/microblaze/kernel/setup.c
-@@ -153,11 +153,13 @@ void __init machine_early_init(const char
-*cmdline, unsigned int ram,
- #endif
+Thanks for the comment. We have already started some discussion with the
+Nvidia guys about supporting also latency and priority. We can do a
+structure based approach and pass a struct with all the bandwidth /
+latency / priority stuff to a function like icc_set_extended(); It's
+very early for any conclusions yet and for now we support only
+bandwidth. The function name still can be easy changed with a follow-up
+patch until one is using it yet. Let me think again.
 
- #if CONFIG_XILINX_MICROBLAZE0_USE_MSR_INSTR
-+#error MSR is enabled
-        if (msr) {
-                pr_info("!!!Your kernel has setup MSR instruction but ");
-                pr_cont("CPU don't have it %x\n", msr);
-        }
- #else
-+#error MSR is not enabled
-        if (!msr) {
-                pr_info("!!!Your kernel not setup MSR instruction but ");
-                pr_cont("CPU have it %x\n", msr);
-
-and run MSR with 1
-make defconfig && make CONFIG_XILINX_MICROBLAZE0_USE_MSR_INSTR=1
-arch/microblaze/kernel/setup.o
-it errors #error MSR is enabled
-and all is good.
-
-And when I run MSR with 0
-make defconfig && make CONFIG_XILINX_MICROBLAZE0_USE_MSR_INSTR=0
-arch/microblaze/kernel/setup.o
-also getting #error MSR is enabled
-which is wrong.
-
-Is there any rule what can be setup at compilation time?
+> from a DT perspective, I certainly hope there are not lots of new
+> settings folks want to add. 
+Regarding DT, all settings should go into the drivers for now and
+later we can decide if something makes sense to be really in device-tree.
 
 Thanks,
-Michal
+Georgi
