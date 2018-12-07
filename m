@@ -1,21 +1,16 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 01/10] mailbox: Support blocking transfers in atomic
- context
-Date: Fri, 7 Dec 2018 16:39:01 +0100
-Message-ID: <20181207153901.GA29185@kroah.com>
-References: <20181112151853.29289-1-thierry.reding@gmail.com>
- <20181112151853.29289-2-thierry.reding@gmail.com>
- <0545f5e1-1740-2129-9d0e-5c950bd9bf74@nvidia.com>
- <CABb+yY1u24JYO68f74qSJ1RpqidJ4H7cnP1Sy=RdqcBHru5XQg@mail.gmail.com>
- <20181129152312.GB23750@ulmo>
- <CABb+yY1G+6MQmrSeZvOXnuREB87+DYHGxNu1tBb9W6apizLtGw@mail.gmail.com>
- <20181207113245.GA30719@ulmo>
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: Re: [PATCH v4 2/6] arm64: add basic DTS for i.MX8MQ
+Date: Fri, 7 Dec 2018 16:17:24 +0000
+Message-ID: <20181207161723.2u5z3sdobbpop4kz@fsr-ub1664-175>
+References: <20181114175242.12468-1-l.stach@pengutronix.de>
+ <20181114175242.12468-2-l.stach@pengutronix.de> <20181116232524.GA2013@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20181207113245.GA30719@ulmo>
+In-Reply-To: <20181116232524.GA2013@bogus>
+Content-Language: en-US
+Content-ID: <43241D4E8C10614A9FA91C524C802F09@eurprd04.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,37 +20,47 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, mliljeberg@nvidia.com, Mikko Perttunen <mperttunen@nvidia.com>, talho@nvidia.com, linux-serial@vger.kernel.org, jslaby@suse.com, linux-tegra@vger.kernel.org, ppessi@nvidia.com, Jon Hunter <jonathanh@nvidia.com>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 07, 2018 at 12:32:45PM +0100, Thierry Reding wrote:
-> Greg,
+On Fri, Nov 16, 2018 at 05:25:24PM -0600, Rob Herring wrote:
+
+> > +
+> > +	clk_ext1: clock-ext1 {
+> > +		compatible = "fixed-clock";
+> > +		#clock-cells = <0>;
+> > +		clock-frequency = <133000000>;
+> > +		clock-output-names = "clk_ext1";
+> > +	};
+> > +
+> > +	clk_ext2: clock-ext2 {
+> > +		compatible = "fixed-clock";
+> > +		#clock-cells = <0>;
+> > +		clock-frequency = <133000000>;
+> > +		clock-output-names = "clk_ext2";
+> > +	};
+> > +
+> > +	clk_ext3: clock-ext3 {
+> > +		compatible = "fixed-clock";
+> > +		#clock-cells = <0>;
+> > +		clock-frequency = <133000000>;
+> > +		clock-output-names = "clk_ext3";
+> > +	};
+> > +
+> > +	clk_ext4: clock-ext4 {
+> > +		compatible = "fixed-clock";
+> > +		#clock-cells = <0>;
+> > +		clock-frequency= <133000000>;
+> > +		clock-output-names = "clk_ext4";
+> > +	};
 > 
-> any ideas on how we can move forward here? For reasons given elsewhere
-> in this thread I understand that there is no way to make the console
-> code run in non-atomic context. Have you ever run into a case where the
-> console driver couldn't busy-loop? Were there any solutions to this?
+> This is really 4 independent clocks or is 1 clock connected to 4 sinks?
 
-I don't know of any such cases, hardware sucks at times, and we just
-have to deal with getting it to work by doing stuff like this :(
+According to the RM, yes, there are 4 independent clocks. Here is a link to the rm:
 
-> I've looked through quite a few drivers and they all end up with a busy
-> loop, waiting for the transmission FIFO to become empty. There are also
-> a few implementations for hypervisors that call back into some firmware
-> in order to send the characters, but I expect those to do the busy
-> looping in the firmware.
+https://www.nxp.com/webapp/Download?colCode=IMX8MEVKBHUG (page 829)
 
-busy loops are ok here, as you point out.
+Unfortunately, the old link (which worked without login) does not work anymore.
 
-> Perhaps the most prominent case that I came across and that is quite
-> similar to this discussion is netconsole. There's a lot of code in the
-> network layer that exists only to allow using a network device for
-> outputting a console. I don't think the changes to the mailbox
-> framework are anywhere near as complicated.
-
-Neither do I, I have no objection to your changes at all.
-
-thanks,
-
-greg k-h
+-- 
