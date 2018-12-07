@@ -1,56 +1,62 @@
 From: <Andrei.Stefanescu@microchip.com>
-Subject: [PATCH v3 0/2] add SAMA5D2 PIOBU GPIO driver
-Date: Fri, 7 Dec 2018 06:46:24 +0000
-Message-ID: <1544165160-13653-1-git-send-email-andrei.stefanescu@microchip.com>
+Subject: [PATCH v3 1/2] dt-bindings: arm: atmel: describe SECUMOD usage as a
+ GPIO controller
+Date: Fri, 7 Dec 2018 06:46:30 +0000
+Message-ID: <1544165160-13653-2-git-send-email-andrei.stefanescu@microchip.com>
+References: <1544165160-13653-1-git-send-email-andrei.stefanescu@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1544165160-13653-1-git-send-email-andrei.stefanescu@microchip.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: linus.walleij@linaro.org, gregkh@linuxfoundation.org, Nicolas.Ferre@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: Ludovic.Desroches@microchip.com, Cristian.Birsan@microchip.com, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrei.Stefanescu@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On SAMA5D2 SoC the PIOBU pins do not lose their
-voltage during Backup/Self-refresh mode. This can
-be useful, for example, when the voltage must remain
-positive for a peripheral during Backup/Self-refresh
-mode (suspend-to ram is the Linux equivalent state).
+This patch describes the Security Module's usage as a GPIO
+controller for its PIOBU pins. These pins have the special
+property of maintaining their voltage during suspend-to-mem.
 
-v3:
-- change driver's compatible to atmel,sama5d2-secumod
-- get syscon using syscon_node_to_regmap(pdev->dev.of_node)
-- document how to use SECUMOD as a gpio-controller
+Signed-off-by: Andrei Stefanescu <andrei.stefanescu@microchip.com>
+---
+ Documentation/devicetree/bindings/arm/atmel-sysregs.txt | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-v2:
-- make driver be a subnode of the syscon node
-- change Kconfig to depend on MFD_SYSCON and select GPIO_SYSCON
-- change include header from linux/gpio.h to linux/gpio/driver.h
-- include linux/bits.h header
-- change intrusion in comment to tamper
-- fix kerneldoc of functions
-- replace GPIOF_DIR_* flags with 0/1
-- replace ?: statement with if-else
-- remove the use of sama5d2_piobu_template_chip
-- retrieve syscon via syscon_node_to_regmap(pdev->dev.parent->of_node);
-
-Note that PIOBU_REG_SIZE is used to determine the register to write to
-with regmap:
-	reg =3D PIOBU_BASE + pin * PIOBU_REG_SIZE;
-
-Also, no irq capability implemented.
-
-Andrei Stefanescu (2):
-  dt-bindings: arm: atmel: describe SECUMOD usage as a GPIO controller
-  gpio: add driver for SAMA5D2 PIOBU pins
-
- .../devicetree/bindings/arm/atmel-sysregs.txt      |  12 +-
- MAINTAINERS                                        |   6 +
- drivers/gpio/gpio-sama5d2-piobu.c                  | 253 +++++++++++++++++=
-++++
- 3 files changed, 270 insertions(+), 1 deletion(-)
- create mode 100644 drivers/gpio/gpio-sama5d2-piobu.c
-
+diff --git a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt b/Docu=
+mentation/devicetree/bindings/arm/atmel-sysregs.txt
+index 4b96608..c89db84 100644
+--- a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
++++ b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
+@@ -158,14 +158,24 @@ Security Module (SECUMOD)
+=20
+ The Security Module macrocell provides all necessary secure functions to a=
+void
+ voltage, temperature, frequency and mechanical attacks on the chip. It als=
+o
+-embeds secure memories that can be scrambled
++embeds secure memories that can be scrambled.
++
++The Security Module also offers the PIOBU pins which can be used as GPIO p=
+ins.
++Note that they maintain their voltage during Backup/Self-refresh.=20
+=20
+ required properties:
+ - compatible: Should be "atmel,<chip>-secumod", "syscon".
+   <chip> can be "sama5d2".
+ - reg: Should contain registers location and length
++- gpio-controller:	Marks the port as GPIO controller.
++- #gpio-cells:		There are 2. The pin number is the
++			first, the second represents additional
++			parameters such as GPIO_ACTIVE_HIGH/LOW.
++
+=20
+ 	secumod@fc040000 {
+ 		compatible =3D "atmel,sama5d2-secumod", "syscon";
+ 		reg =3D <0xfc040000 0x100>;
++		gpio-controller;
++		#gpio-cells =3D <2>;
+ 	};
 --=20
 2.7.4
