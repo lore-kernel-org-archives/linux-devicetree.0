@@ -1,69 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: Moving ARM dts files
-Date: Fri, 7 Dec 2018 08:57:06 -0600
-Message-ID: <CAL_JsqJuH4=Bq9ok3Trz4GgLam7gqWW5-gyHpG1XbShtQQuSJg@mail.gmail.com>
-References: <20181204183649.GA5716@bogus>
- <9c2b5528-679a-928e-3150-aa383a4f0405@suse.de>
- <CAL_JsqKO3v0pgVfNhVNOkpZ4sePrybDgZG0riN-tutvwOZ4zYg@mail.gmail.com>
- <2474284e-8a55-639f-2cfa-f811741099f3@suse.de>
- <CAL_JsqL4WoMqFCQ0vFd6z_i=9imnfVsQjeKOG8zxNwi5caneRQ@mail.gmail.com>
- <20181206200652.GB3084@sirena.org.uk>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [RFT PATCH v1 0/4] Unify CPU topology across ARM64 & RISC-V
+Date: Fri, 7 Dec 2018 15:04:32 +0000
+Message-ID: <20181207150432.GB4100@e107155-lin>
+References: <1543534100-3654-1-git-send-email-atish.patra@wdc.com>
+ <20181207134509.GA5913@e105550-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181206200652.GB3084@sirena.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Michal Simek <michal.simek@xilinx.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thierry Reding <thierry.reding@gmail.com>, Tom Rini <trini@konsulko.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory CLEMENT <gregory.clement@bootlin.com>, Alexander Graf <agraf@suse.de>, Krzysztof Kozlowski <krzk@kernel.org>, ARM-SoC Maintainers <arm@kernel.org>, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, Architecture Mailman List <boot-architecture@lists.linaro.org>, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181207134509.GA5913@e105550-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Morten Rasmussen <morten.rasmussen@arm.com>
+Cc: Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Dmitriy Cherkasov <dmitriy@oss-tech.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Juri Lelli <juri.lelli@arm.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBEZWMgNiwgMjAxOCBhdCAyOjA3IFBNIE1hcmsgQnJvd24gPGJyb29uaWVAa2VybmVs
-Lm9yZz4gd3JvdGU6Cj4KPiBPbiBUaHUsIERlYyAwNiwgMjAxOCBhdCAwMTowNjo0M1BNIC0wNjAw
-LCBSb2IgSGVycmluZyB3cm90ZToKPiA+IE9uIFRodSwgRGVjIDYsIDIwMTggYXQgNzozMiBBTSBB
-bmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+IHdyb3RlOgo+Cj4gPiA+IEknZCBiZSBv
-a2F5IHdpdGggZGlzdGluZ3Vpc2hpbmcgc291cmNlIHZzLiBpbnN0YWxsIGxvY2F0aW9uLiBEdWUg
-dG8gdGhlCj4gPiA+IGlzc3VlIEkgbWVudGlvbiBiZWxvdyAoYW5kIG1vcmUpIHdlIGNhbid0IHVz
-ZSBpbnN0YWxsX2R0YnMgZm9yIG9wZW5TVVNFCj4gPiA+IGFuZCBoYWQgdG8gcmVpbXBsZW1lbnQg
-aXQsIHdoaWNoIHdlJ2QgbmVlZCB0byAoYW5kIGNhbikgYWRqdXN0Lgo+Cj4gPiBXaGF0IHdvdWxk
-IGJlIG5lZWRlZCBmb3IgZHRic19pbnN0YWxsIHRvIHdvcms/IGFybTY0IG5lZWRzIHRvIHN1cHBv
-cnQKPiA+IGEgZmxhdCBpbnN0YWxsPyBJZiBpdCBkb2Vzbid0IHdvcmsgZm9yIERlYmlhbiBvciBv
-cGVuU1VTRSwgSSdtIG5vdAo+ID4gc3VyZSB3aHkgd2UgaGF2ZSBpdC4gU28gSSdkIGxpa2UgdG8g
-bWFrZSBpdCB3b3JrLgo+Cj4gQ29ycmVjdCBtZSBpZiBJJ20gd3JvbmcgYnV0IGFzIGZhciBhcyB0
-aGUgZmxhdCB2cyBkaXJlY3RvcnkgdGhpbmcgZ29lcwo+IGlzbid0IHRoZSBpc3N1ZSB0aGF0IHRo
-aXMgd2luZHMgdXAgYmVpbmcgYSByZW5hbWUgZm9yIGFuIGV4aXN0aW5nIDMyIGJpdAo+IHN5c3Rl
-bT8gIElmIHlvdSBqdXN0IGluc3RhbGwgdGhlIGR0YnMgaW4gdGhlIGRlZmF1bHQgbG9jYXRpb24g
-dGhlbiBhCj4gYm9vdGxvYWRlciBvciB3aGF0ZXZlciB0aGF0IGlzIGhhcmQgY29kZWQgdG8gbG9v
-ayBmb3IgZm9vLWJhci5kdGIgd29uJ3QKPiBzZWUgdGhlIG5ldyBmb28vZm9vLWJhci5kdGIgKG9y
-IHdoYXRldmVyKSBhbmQgd2lsbCBjb250aW51ZSB0byB1c2UgdGhlCj4gb2xkIGJpbmFyeS4gIEl0
-J3Mgbm90IHRoZSBmYWN0IHRoYXQgdGhhdCBpdCdzIGluIGEgZGlyZWN0b3J5LCBpdCdzIHRoZQo+
-IGZhY3QgdGhhdCB0aGUgYm9vdGxvYWRlciBzZWVzIHRoZSBuYW1lIGl0IG5lZWRzIHRvIGxvb2sg
-Zm9yIGNoYW5nZSAoaWYKPiBpdCdzIGxvb2tpbmcgb24gYSBmaWxlc3lzdGVtIGF0IGFsbCkuCgpD
-b3JyZWN0LgoKPiBUaGlzIGlzbid0IGEgcHJvYmxlbSBmb3IgYXJtNjQgYXMKPiB0aGUgbG9jYXRp
-b24gaXNuJ3QgY2hhbmdpbmcsIGl0J3MgdXNlZCBkaXJlY3RvcmllcyBmcm9tIGRheSBvbmUuCgpU
-aGUga2VybmVsIG1heSBoYXZlIHVzZWQgZGlyZWN0b3JpZXMsIGJ1dCB0aGF0J3Mgbm90IHdoYXQg
-dGhlIGRpc3Ryb3MKZGlkIGFjY29yZGluZyB0byBBbmRyZWFzOgoKPiBXZSBhbHJlYWR5IGhhZCB0
-aGF0IGRpc2N1c3Npb24gZm9yIGFybTY0IGJlY2F1c2UgRGViaWFuIGNob3NlIHRvIGlnbm9yZQo+
-IHRoZSBrZXJuZWwtaW5zdGFsbGVkIHN1YmRpcmVjdG9yaWVzIGFuZCBpbnN0YWxsZWQgLmR0YiBm
-aWxlcyBpbnRvIGEgZmxhdAo+IGRpcmVjdG9yeSwgd2hpY2ggY29sbGlkZWQgd2l0aCBvcGVuU1VT
-RSBzdGlja2luZyB0byB0aGUga2VybmVsIGNob2ljZS4KClNvIGFyZSB0aGUgZGlzdHJvcyBkaWZm
-ZXJlbnQgb3Igd2hvIGNoYW5nZWQgdG8gYWxpZ24/IFRoYXQncyBub3QgY2xlYXIKZnJvbSB0aGlz
-IHRocmVhZC4KCj4gVGhlIGlzc3VlcyB3aXRoIHRoZSBleGlzdGluZyBpbnN0YWxsX2R0YnMgc291
-bmRlZCB1bnJlbGF0ZWQgdG8gdGhpcy4KCk1heWJlLCB3aGF0IGFyZSB0aGUgaXNzdWVzPyBXZSBj
-YW4ndCBjaGFuZ2UgdGhlIHNvdXJjZSBsYXlvdXQKdHJhbnNwYXJlbnRseSBpZiBkdGJzX2luc3Rh
-bGwgaXMgbm90IGJlaW5nIHVzZWQuCgpNeSBxdWVzdGlvbiBoZXJlIGlzIHdoZXRoZXIgYSBmbGF0
-IGluc3RhbGwgaXMgdXNlZnVsIG9uIGFybTY0LiBXZSBjYW4KZWl0aGVyIGhhdmUgYSBrY29uZmln
-IHZhcmlhYmxlIHRoYXQgYXJtMzIgc2V0cyB0byBkbyBmbGF0IGluc3RhbGxzIG9yCml0IGNvdWxk
-IGJlIHNvbWUgY29tbWFuZCBsaW5lIG1ha2UgdmFyaWFibGUgYW5kIHRoZW4gYW55IHVzZXIgY2Fu
-IHBpY2sKd2hhdCB0aGV5IHdhbnQgZm9yIGFueSBhcmNoLgoKUm9iCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Fri, Dec 07, 2018 at 01:45:21PM +0000, Morten Rasmussen wrote:
+> Hi,
+>
+> On Thu, Nov 29, 2018 at 03:28:16PM -0800, Atish Patra wrote:
+> > The cpu-map DT entry in ARM64 can describe the CPU topology in
+> > much better way compared to other existing approaches. RISC-V can
+> > easily adopt this binding to represent it's own CPU topology.
+> > Thus, both cpu-map DT binding and topology parsing code can be
+> > moved to a common location so that RISC-V or any other
+> > architecture can leverage that.
+> >
+> > The relevant discussion regarding unifying cpu topology can be
+> > found in [1].
+> >
+> > arch_topology seems to be a perfect place to move the common
+> > code. I have not introduced any functional changes in the moved
+> > code. The only downside in this approach is that the capacity
+> > code will be executed for RISC-V as well. But, it will exit
+> > immediately after not able to find the appropriate DT node. If
+> > the overhead is considered too much, we can always compile out
+> > capacity related functions under a different config for the
+> > architectures that do not support them.
+> >
+> > The patches have been tested for RISC-V and compile tested for
+> > ARM64 & x86.
+>
+> The cpu-map bindings are used for arch/arm too, and so is
+> arch_topology.c. In fact, it was introduced to allow code-sharing
+> between arm and arm64. Applying patch three breaks arm.
+>
+
+Ah right. Though I remember the whole point of moving these to arch_topology
+was to share between ARM and ARM64, I completely forgot to check the
+impact of this for ARM platforms.
+
+> Moving the DT parsing to arch_topology.c we have to unify all three
+> architectures. Be aware that arm and arm64 have some differences in how
+> they detect cpu capacities. I think we might have to look at the split
+> of code between arch/* and arch_topology.c again :-/
+>
+
+Thanks for pointing this out. I completely agree and apologies for
+forgetting about arm32.
+
+Regards,
+Sudeep
