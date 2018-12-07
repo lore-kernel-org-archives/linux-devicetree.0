@@ -1,34 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 4/6] dt-bindings: anybus-controller: document
- devicetree binding
-Date: Fri, 7 Dec 2018 11:44:45 -0600
-Message-ID: <20181207174445.GA13582@bogus>
-References: <20181204220224.27324-1-TheSven73@googlemail.com>
- <20181204220224.27324-5-TheSven73@googlemail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/3] Add UFS controller support for HI3670 SoC
+Date: Fri,  7 Dec 2018 23:21:48 +0530
+Message-ID: <20181207175151.8969-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181204220224.27324-5-TheSven73@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sven Van Asbroeck <thesven73@gmail.com>
-Cc: svendev@arcx.com, linus.walleij@linaro.org, lee.jones@linaro.org, mark.rutland@arm.com, afaerber@suse.de, treding@nvidia.com, david@lechnology.com, noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com, arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com, geert+renesas@glider.be, robin.murphy@arm.com, paul.gortmaker@windriver.com, sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io, stuyoder@gmail.com, maxime.ripard@bootlin.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, liwei213@huawei.com, robh+dt@kernel.org
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, john.stultz@linaro.org, amit.kucheria@linaro.org, guodong.xu@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 04, 2018 at 05:02:22PM -0500, Sven Van Asbroeck wrote:
-> From: Sven Van Asbroeck <svendev@arcx.com>
-> 
-> This patch adds devicetree binding documentation for the
-> Arcx anybus controller.
-> 
-> Signed-off-by: Sven Van Asbroeck <svendev@arcx.com>
-> ---
->  .../fieldbus/arcx,anybus-controller.txt       | 71 +++++++++++++++++++
->  1 file changed, 71 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fieldbus/arcx,anybus-controller.txt
+Hello,
 
-This looks fine to me now, but still seems the rest of the series has 
-some discussion. In theory, all that should have no impact on the 
-bindings.
+This patchset adds UFS controller support for HiSilicon HI3670 SoC.
+HI3760 SoC is very similar to HI3660 SoC with almost same IPs, hence
+the same driver is extended to provide UFS support. Only major difference
+is the PHY. HI3670 has 10nm PHY, hence that parameter is used to
+distinguish the difference between two in driver.
 
-Rob
+Thanks,
+Mani
+
+Manivannan Sadhasivam (3):
+  dt-bindings: ufs: Add HI3670 UFS controller binding
+  arm64: dts: hisilicon: hi3670: Add UFS controller support
+  scsi: ufs: Add HI3670 SoC UFS driver support
+
+ .../devicetree/bindings/ufs/ufs-hisi.txt      |   4 +-
+ arch/arm64/boot/dts/hisilicon/hi3670.dtsi     |  18 +++
+ drivers/scsi/ufs/ufs-hisi.c                   | 127 +++++++++++++++---
+ drivers/scsi/ufs/ufs-hisi.h                   |   4 +
+ 4 files changed, 130 insertions(+), 23 deletions(-)
+
+-- 
+2.17.1
