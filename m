@@ -1,34 +1,86 @@
-From: Quentin Perret <quentin.perret@arm.com>
-Subject: Re: [PATCH v11 8/8] interconnect: sdm845: Fix build failure after
- cmd_db API change
-Date: Fri, 7 Dec 2018 16:27:34 +0000
-Message-ID: <20181207162733.pdd62qvqzd6xk4nr@queper01-lin>
-References: <20181207152917.4862-1-georgi.djakov@linaro.org>
- <20181207152917.4862-9-georgi.djakov@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Palmer Dabbelt <palmer@sifive.com>
+Subject: Re: [PATCH 1/4] dt-bindings: Correct RISC-V's timebase-frequency
+Date: Fri, 07 Dec 2018 08:29:23 -0800 (PST)
+Message-ID: <mhng-a15b587e-3bfe-4568-8262-dc421585bc36@palmer-si-x1c4>
+References: <1543870651-16669-2-git-send-email-atish.patra@wdc.com>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181207152917.4862-9-georgi.djakov@linaro.org>
+In-Reply-To: <1543870651-16669-2-git-send-email-atish.patra@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: gregkh@linuxfoundation.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, robh+dt@kernel.org, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, dianders@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, arnd@arndb.de, thierry.reding@gmail.com, ksitaraman@nvidia.com, sanjayc@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>, aou@eecs.berkeley.edu, atish.patra@wdc.com, daniel.lezcano@linaro.org, devicetree@vger.kernel.org, dmitriy@oss-tech.org, linux-riscv@lists.infradead.org, mark.rutland@arm.com, robh+dt@kernel.org, tglx@linutronix.de, anup@brainfault.org, Damien.LeMoal@wdc.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Georgi,
+On Mon, 03 Dec 2018 12:57:28 PST (-0800), atish.patra@wdc.com wrote:
+> From: Palmer Dabbelt <palmer@sifive.com>
+>
+> Someone must have read the device tree specification incorrectly,
+> because we were putting timebase-frequency in the wrong place.  This
+> corrects the issue, moving it from
+>
+> / {
+>         cpus {
+>                 timebase-frequency = X;
+>         }
+> }
+>
+> to
+>
+> / {
+>         cpus {
+>                 cpu@0 {
+>                         timebase-frequency = X;
+>                 }
+>         }
+> }
+>
+> This is great, because the timer's frequency should really be a per-cpu
+> quantity on RISC-V systems since there's a timer per CPU.  This should
+> lead to some cleanups in our timer driver.
 
-On Friday 07 Dec 2018 at 17:29:17 (+0200), Georgi Djakov wrote:
-> Recently the cmd_db_read_aux_data() function was changed to avoid using
-> memcpy and return a pointer instead. Update the code to the new API and
-> fix the build failure.
-> 
-> Fixes: ed3cafa79ea7 ("soc: qcom: cmd-db: Stop memcpy()ing in cmd_db_read_aux_data()")
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+I think I was actually wrong here: the top version is preferred if 
+timebase-frequency is the same between all CPUs, while the bottom is if it's 
+different.
+
+Updating the documentation is still good, because it matches the hardware, but 
+the commit message should be a bit less assertive... :)
+
+> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
->  drivers/interconnect/qcom/sdm845.c | 26 ++++++++++++++------------
-
-IIUC this file is introduced by patch 5. Should the fix be squashed
-into patch 5 directly ? Just to keep things bisectable.
-
-Thanks,
-Quentin
+>  Documentation/devicetree/bindings/riscv/cpus.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/riscv/cpus.txt b/Documentation/devicetree/bindings/riscv/cpus.txt
+> index adf7b7af..b0b038d6 100644
+> --- a/Documentation/devicetree/bindings/riscv/cpus.txt
+> +++ b/Documentation/devicetree/bindings/riscv/cpus.txt
+> @@ -93,9 +93,9 @@ Linux is allowed to run on.
+>          cpus {
+>                  #address-cells = <1>;
+>                  #size-cells = <0>;
+> -                timebase-frequency = <1000000>;
+>                  cpu@0 {
+>                          clock-frequency = <1600000000>;
+> +                        timebase-frequency = <1000000>;
+>                          compatible = "sifive,rocket0", "riscv";
+>                          device_type = "cpu";
+>                          i-cache-block-size = <64>;
+> @@ -113,6 +113,7 @@ Linux is allowed to run on.
+>                  };
+>                  cpu@1 {
+>                          clock-frequency = <1600000000>;
+> +                        timebase-frequency = <1000000>;
+>                          compatible = "sifive,rocket0", "riscv";
+>                          d-cache-block-size = <64>;
+>                          d-cache-sets = <64>;
+> @@ -145,6 +146,7 @@ Example: Spike ISA Simulator with 1 Hart
+>  This device tree matches the Spike ISA golden model as run with `spike -p1`.
+>
+>          cpus {
+> +                timebase-frequency = <1000000>;
+>                  cpu@0 {
+>                          device_type = "cpu";
+>                          reg = <0x00000000>;
