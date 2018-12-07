@@ -1,55 +1,41 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 6/6] microblaze: remove the explicit removal of system.dtb
-Date: Fri,  7 Dec 2018 20:33:57 +0900
-Message-ID: <1544182437-26660-7-git-send-email-yamada.masahiro@socionext.com>
-References: <1544182437-26660-1-git-send-email-yamada.masahiro@socionext.com>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH v2 6/7] ARM: dts: qcom: msm8974: add gpio-ranges
+Date: Fri, 7 Dec 2018 06:41:17 -0500
+Message-ID: <20181207114117.GA30737@basecamp>
+References: <20181101001149.13453-1-masneyb@onstation.org>
+ <20181101001149.13453-7-masneyb@onstation.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544182437-26660-1-git-send-email-yamada.masahiro@socionext.com>
+Content-Disposition: inline
+In-Reply-To: <20181101001149.13453-7-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-gpio@vger.kernel.org, jonathan@marek.ca, sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, bjorn.andersson@linaro.org, linus.walleij@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-I guess
+On Wed, Oct 31, 2018 at 08:11:48PM -0400, Brian Masney wrote:
+> This adds the gpio-ranges property to pm8941_gpios so that the GPIO
+> pins are initialized by the GPIO framework and not pinctrl. This fixes
+> a circular dependency so GPIO hogging can be used on this board.
+> 
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
 
-    || (rm -f $@ && echo false)
+Hi Andy,
 
-... should be
+All of the dependencies for USB have been merged into their respective
+trees. Patches 6 and 7 in this series are the only two that are
+outstanding for your consideration.
 
-    || (rm -f $@ && false)
+I know that I'm still waiting for a review from Dmitry regarding the new
+vibrator driver [1] and we're nearing the end of the development cycle.
+In case he runs into an issue with that driver, I verified that I can use
+git am to apply patches 6 and 7 in this series for USB, and the patch
+for WiFi [2] without the bindings for the vibrator. I'm hoping to get as
+much of this merged into this kernel development cycle as possible.
 
-In fact, no Makefile needs to delete a target explicitly on error.
+[1] https://lore.kernel.org/lkml/20181025012937.2154-1-masneyb@onstation.org/
+[2] https://lore.kernel.org/lkml/20181104215034.3677-1-masneyb@onstation.org/
 
-It is automatically done since commit 9c2af1c7377a ("kbuild: add
-.DELETE_ON_ERROR special target").
+Thanks,
 
-I also reused equivalent cmd_shipped from scripts/Makefile.lib.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
-Changes in v2: None
-
- arch/microblaze/boot/dts/Makefile | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/arch/microblaze/boot/dts/Makefile b/arch/microblaze/boot/dts/Makefile
-index c7324e7..ef00dd3 100644
---- a/arch/microblaze/boot/dts/Makefile
-+++ b/arch/microblaze/boot/dts/Makefile
-@@ -12,12 +12,9 @@ $(obj)/linked_dtb.o: $(obj)/system.dtb
- # Generate system.dtb from $(DTB).dtb
- ifneq ($(DTB),system)
- $(obj)/system.dtb: $(obj)/$(DTB).dtb
--	$(call if_changed,cp)
-+	$(call if_changed,shipped)
- endif
- endif
- 
--quiet_cmd_cp = CP      $< $@$2
--	cmd_cp = cat $< >$@$2 || (rm -f $@ && echo false)
--
- # Rule to build device tree blobs
- DTC_FLAGS := -p 1024
--- 
-2.7.4
+Brian
