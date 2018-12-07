@@ -1,36 +1,34 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: omap5: Fix dual-role mode on Super-Speed port
-Date: Fri, 7 Dec 2018 08:25:37 -0800
-Message-ID: <20181207162537.GO6707@atomide.com>
-References: <1544030864-22842-1-git-send-email-rogerq@ti.com>
+From: Quentin Perret <quentin.perret@arm.com>
+Subject: Re: [PATCH v11 8/8] interconnect: sdm845: Fix build failure after
+ cmd_db API change
+Date: Fri, 7 Dec 2018 16:27:34 +0000
+Message-ID: <20181207162733.pdd62qvqzd6xk4nr@queper01-lin>
+References: <20181207152917.4862-1-georgi.djakov@linaro.org>
+ <20181207152917.4862-9-georgi.djakov@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1544030864-22842-1-git-send-email-rogerq@ti.com>
+In-Reply-To: <20181207152917.4862-9-georgi.djakov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: robh+dt@kernel.org, hns@goldelico.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: gregkh@linuxfoundation.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, robh+dt@kernel.org, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, dianders@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, arnd@arndb.de, thierry.reding@gmail.com, ksitaraman@nvidia.com, sanjayc@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [181205 17:28]:
-> OMAP5's Super-Speed USB port has a software mailbox register
-> that needs to be fed with VBUS and ID events from an external
-> VBUS/ID comparator.
-> 
-> Without this, Host role will not work correctly.
-> 
-> Fixes: 656c1a65ab55 ("ARM: dts: omap5: enable OTG role for DWC3 controller")
-> Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
-> 
-> Tony,
-> 
-> Please included this in v4.20-rc cycle. Thanks.
+Hi Georgi,
 
-Applying into omap-for-v4.20/fixes.
+On Friday 07 Dec 2018 at 17:29:17 (+0200), Georgi Djakov wrote:
+> Recently the cmd_db_read_aux_data() function was changed to avoid using
+> memcpy and return a pointer instead. Update the code to the new API and
+> fix the build failure.
+> 
+> Fixes: ed3cafa79ea7 ("soc: qcom: cmd-db: Stop memcpy()ing in cmd_db_read_aux_data()")
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+>  drivers/interconnect/qcom/sdm845.c | 26 ++++++++++++++------------
+
+IIUC this file is introduced by patch 5. Should the fix be squashed
+into patch 5 directly ? Just to keep things bisectable.
 
 Thanks,
-
-Tony
+Quentin
