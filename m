@@ -1,112 +1,81 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: interrupt-controller: Actions
- external interrupt controller
-Date: Fri, 7 Dec 2018 17:29:34 -0600
-Message-ID: <20181207232934.GA28201@bogus>
-References: <20181126100356.2840578-1-pn@denx.de>
- <20181126100356.2840578-2-pn@denx.de>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v11 5/8] interconnect: qcom: Add sdm845 interconnect
+ provider driver
+Date: Fri, 7 Dec 2018 15:30:10 -0800
+Message-ID: <20181207233010.GE14307@google.com>
+References: <20181207152917.4862-1-georgi.djakov@linaro.org>
+ <20181207152917.4862-6-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181126100356.2840578-2-pn@denx.de>
+In-Reply-To: <20181207152917.4862-6-georgi.djakov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Parthiban Nallathambi <pn@denx.de>
-Cc: marc.zyngier@arm.com, tglx@linutronix.de, jason@lakedaemon.net, mark.rutland@arm.com, afaerber@suse.de, catalin.marinas@arm.com, will.deacon@arm.com, manivannan.sadhasivam@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, thomas.liau@actions-semi.com, mp-cs@actions-semi.com, linux@cubietech.com, edgar.righi@lsitec.org.br, laisa.costa@lsitec.org.br, guilherme.simoes@lsitec.org.br, mkzuffo@lsi.usp.br, Saravanan Sekar <sravanhome@gmail.com>
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: gregkh@linuxfoundation.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, robh+dt@kernel.org, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, dianders@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, arnd@arndb.de, thierry.reding@gmail.com, ksitaraman@nvidia.com, sanjayc@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 26, 2018 at 11:03:53AM +0100, Parthiban Nallathambi wrote:
-> Actions Semi OWL family SoC's provides support for external interrupt
-> controller to be connected and controlled using SIRQ pins. S500, S700
-> and S900 provides 3 SIRQ lines and works independently for 3 external
-> interrupt controllers.
+Hi Georgi,
+
+not a full review, only one thing I just stumbled across:
+
+On Fri, Dec 07, 2018 at 05:29:14PM +0200, Georgi Djakov wrote:
+> From: David Dai <daidavid1@codeaurora.org>
 > 
-> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> Introduce Qualcomm SDM845 specific provider driver using the
+> interconnect framework.
+> 
+> Signed-off-by: David Dai <daidavid1@codeaurora.org>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 > ---
->  .../interrupt-controller/actions,owl-sirq.txt | 57 +++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.txt
+>  .../bindings/interconnect/qcom,sdm845.txt     |  24 +
+>  drivers/interconnect/Kconfig                  |   5 +
+>  drivers/interconnect/Makefile                 |   1 +
+>  drivers/interconnect/qcom/Kconfig             |  13 +
+>  drivers/interconnect/qcom/Makefile            |   5 +
+>  drivers/interconnect/qcom/sdm845.c            | 836 ++++++++++++++++++
+>  .../dt-bindings/interconnect/qcom,sdm845.h    | 143 +++
+>  7 files changed, 1027 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
+>  create mode 100644 drivers/interconnect/qcom/Kconfig
+>  create mode 100644 drivers/interconnect/qcom/Makefile
+>  create mode 100644 drivers/interconnect/qcom/sdm845.c
+>  create mode 100644 include/dt-bindings/interconnect/qcom,sdm845.h
+>
+> ...
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.txt b/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.txt
+> diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
 > new file mode 100644
-> index 000000000000..b3adc4bddf40
+> index 000000000000..f594dd6f500f
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.txt
-> @@ -0,0 +1,57 @@
-> +Actions Semi Owl SoCs SIRQ interrupt controller
-> +
-> +S500, S700 and S900 SoC's from Actions provides 3 SPI's from GIC,
-
-Listing SoCs here means you have to update this line for every new SoC.
-
-> +in which external interrupt controller can be connected. 3 SPI's
-> +45, 46, 47 from GIC are directly exposed as SIRQ. It has
-> +the following properties:
-> +
-> +- inputs three interrupt signal from external interrupt controller
-> +
-> +Required properties:
-> +
-> +- compatible: should be "actions,owl-sirq"
-
-SoC specific compatibles needed.
-
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +- interrupt-controller: identifies the node as an interrupt controller
-> +- #interrupt-cells: specifies the number of cells needed to encode an interrupt
-> +  source, should be 2.
-> +- actions,sirq-shared-reg: Applicable for S500 and S700 where SIRQ register
-> +  details are maintained at same offset/register.
-> +- actions,sirq-reg-offset: register offset for SIRQ interrupts. When registers are
-> +  shared, all the three offsets will be same (S500 and S700).
-
-These properties should be implied by the compatible string.
-
-> +- actions,ext-irq-range: Identifies external irq number range in different SoCs.
-
-Why is this needed? It appears to always be the same.
-
-> +
-> +Example for S900:
-> +
-> +sirq: interrupt-controller@e01b0000 {
-> +	compatible = "actions,owl-sirq";
-> +	reg = <0x0 0xe01b0000 0x0 0x1000>;
-> +	interrupt-controller;
-> +	#interrupt-cells = <3>;
-> +	actions,sirq-offset = <0x200 0x528 0x52c>;
-> +	actions,ext-irq-range = <13 15>;
-> +};
-> +
-> +Example for S700:
-
-Examples are examples, not an enumeration of all possible dts entries. 
-So 1 should be sufficient.
-
-> +
-> +sirq: interrupt-controller@e01b0000 {
-> +	compatible = "actions,owl-sirq";
-> +	reg = <0x0 0xe01b0000 0x0 0x1000>;
-> +	interrupt-controller;
-> +	#interrupt-cells = <3>;
-> +	actions,sirq-shared-reg;
-> +	actions,sirq-reg-offset = <0x200 0x200 0x200>;
-> +	actions,ext-irq-range = <13 15>;
-> +};
-> +
-> +Example for S500:
-> +
-> +sirq: interrupt-controller@b01b0000 {
-> +	compatible = "actions,owl-sirq";
-> +	reg = <0x0 0xb01b0000 0x0 0x1000>;
-> +	interrupt-controller;
-> +	#interrupt-cells = <3>;
-> +	actions,sirq-shared-reg;
-> +	actions,sirq-offset = <0x200 0x200 0x200>;
-> +	actions,ext-irq-range = <13 15>;
-> +};
-> -- 
-> 2.17.2
+> +++ b/drivers/interconnect/qcom/sdm845.c
 > 
+> ...
+> 
+> +static int qcom_icc_bcm_init(struct qcom_icc_bcm *bcm, struct device *dev)
+> +{
+> +	struct qcom_icc_node *qn;
+> +	int ret, i;
+> +
+> +	bcm->addr = cmd_db_read_addr(bcm->name);
+> +	if (!bcm->addr) {
+> +		dev_err(dev, "%s could not find RPMh address\n",
+> +			bcm->name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (cmd_db_read_aux_data_len(bcm->name) < sizeof(struct bcm_db)) {
+> +		dev_err(dev, "%s command db missing or partial aux data\n",
+> +			bcm->name);
+> +		return -EINVAL;
+> +	}
+
+cmd_db_read_aux_data_len() is in the process of being removed, see
+ed3cafa79ea7 ("soc: qcom: cmd-db: Stop memcpy()ing in
+cmd_db_read_aux_data()") in arm-soc/for-next
+
+https://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git/commit/?h=for-next&id=ed3cafa79ea756be653d22087c017af95ea78a49
+
+Cheers
+
+Matthias
