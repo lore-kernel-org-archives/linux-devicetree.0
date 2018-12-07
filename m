@@ -1,81 +1,74 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v11 5/8] interconnect: qcom: Add sdm845 interconnect
- provider driver
-Date: Fri, 7 Dec 2018 15:30:10 -0800
-Message-ID: <20181207233010.GE14307@google.com>
-References: <20181207152917.4862-1-georgi.djakov@linaro.org>
- <20181207152917.4862-6-georgi.djakov@linaro.org>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [PATCH 4/4] RISC-V: Fix non-smp kernel boot on SMP systems
+Date: Fri, 7 Dec 2018 15:31:23 -0800
+Message-ID: <74dcf9b4-2343-0f56-1b56-80cc064728fb@wdc.com>
+References: <mhng-4a071ea7-ddf5-4204-8343-790f9bbb3a09@palmer-si-x1c4>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181207152917.4862-6-georgi.djakov@linaro.org>
+In-Reply-To: <mhng-4a071ea7-ddf5-4204-8343-790f9bbb3a09@palmer-si-x1c4>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: gregkh@linuxfoundation.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, robh+dt@kernel.org, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, dianders@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, arnd@arndb.de, thierry.reding@gmail.com, ksitaraman@nvidia.com, sanjayc@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
+To: Palmer Dabbelt <palmer@sifive.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dmitriy@oss-tech.org" <dmitriy@oss-tech.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "anup@brainfault.org" <anup@brainfault.org>, Damien Le Moal <Damien.LeMoal@wdc.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Georgi,
-
-not a full review, only one thing I just stumbled across:
-
-On Fri, Dec 07, 2018 at 05:29:14PM +0200, Georgi Djakov wrote:
-> From: David Dai <daidavid1@codeaurora.org>
+On 12/7/18 9:00 AM, Palmer Dabbelt wrote:
+> On Mon, 03 Dec 2018 12:57:31 PST (-0800), atish.patra@wdc.com wrote:
+>> Currently, clocksource registration happens for an invalid cpu
+>> for non-smp kernels. This lead to kernel panic as cpu hotplug
+>> registration will fail for those cpus.
+>>
+>> Do not proceed if hartid is invalid. Take this opprtunity to
+>> print appropriate error strings for different failure cases.
+>>
+>> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+>> ---
+>>   drivers/clocksource/riscv_timer.c | 13 ++++++++++---
+>>   1 file changed, 10 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/clocksource/riscv_timer.c b/drivers/clocksource/riscv_timer.c
+>> index 39de6e49..4af4af47 100644
+>> --- a/drivers/clocksource/riscv_timer.c
+>> +++ b/drivers/clocksource/riscv_timer.c
+>> @@ -108,6 +108,8 @@ static int __init riscv_timer_init_dt(struct device_node *n)
+>>   	int cpuid, hartid, error;
+>>
+>>   	hartid = riscv_of_processor_hartid(n);
+>> +	if (hartid < 0)
+>> +		return hartid;
 > 
-> Introduce Qualcomm SDM845 specific provider driver using the
-> interconnect framework.
+> This seems like it's just hiding a bug somewhere else.  We should at least put
+> out a WARN here, as I'm not sure the error will propagate anywhere useful.
 > 
-> Signed-off-by: David Dai <daidavid1@codeaurora.org>
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
->  .../bindings/interconnect/qcom,sdm845.txt     |  24 +
->  drivers/interconnect/Kconfig                  |   5 +
->  drivers/interconnect/Makefile                 |   1 +
->  drivers/interconnect/qcom/Kconfig             |  13 +
->  drivers/interconnect/qcom/Makefile            |   5 +
->  drivers/interconnect/qcom/sdm845.c            | 836 ++++++++++++++++++
->  .../dt-bindings/interconnect/qcom,sdm845.h    | 143 +++
->  7 files changed, 1027 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
->  create mode 100644 drivers/interconnect/qcom/Kconfig
->  create mode 100644 drivers/interconnect/qcom/Makefile
->  create mode 100644 drivers/interconnect/qcom/sdm845.c
->  create mode 100644 include/dt-bindings/interconnect/qcom,sdm845.h
->
-> ...
+ok. I will add a warning here. That's what we are doing in plic as well.
+
+Regards,
+Atish
+>>   	cpuid = riscv_hartid_to_cpuid(hartid);
+>>
+>>   	if (cpuid != smp_processor_id())
+>> @@ -115,14 +117,19 @@ static int __init riscv_timer_init_dt(struct device_node *n)
+>>
+>>   	/* This should be called only for boot cpu */
+>>   	riscv_timebase = riscv_timebase_frequency(n);
+>> -	clocksource_register_hz(&riscv_clocksource, riscv_timebase);
+>> +	error = clocksource_register_hz(&riscv_clocksource, riscv_timebase);
+>>
+>> +	if (error) {
+>> +		pr_err("RISCV timer register failed [%d] for cpu = [%d]\n",
+>> +		       error, cpuid);
+>> +		return error;
+>> +	}
+>>   	error = cpuhp_setup_state(CPUHP_AP_RISCV_TIMER_STARTING,
+>>   			 "clockevents/riscv/timer:starting",
+>>   			 riscv_timer_starting_cpu, riscv_timer_dying_cpu);
+>>   	if (error)
+>> -		pr_err("RISCV timer register failed [%d] for cpu = [%d]\n",
+>> -		       error, cpuid);
+>> +		pr_err("cpu hp setup state failed for RISCV timer [%d]\n",
+>> +		       error);
+>>   	return error;
+>>   }
 > 
-> diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
-> new file mode 100644
-> index 000000000000..f594dd6f500f
-> --- /dev/null
-> +++ b/drivers/interconnect/qcom/sdm845.c
-> 
-> ...
-> 
-> +static int qcom_icc_bcm_init(struct qcom_icc_bcm *bcm, struct device *dev)
-> +{
-> +	struct qcom_icc_node *qn;
-> +	int ret, i;
-> +
-> +	bcm->addr = cmd_db_read_addr(bcm->name);
-> +	if (!bcm->addr) {
-> +		dev_err(dev, "%s could not find RPMh address\n",
-> +			bcm->name);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (cmd_db_read_aux_data_len(bcm->name) < sizeof(struct bcm_db)) {
-> +		dev_err(dev, "%s command db missing or partial aux data\n",
-> +			bcm->name);
-> +		return -EINVAL;
-> +	}
-
-cmd_db_read_aux_data_len() is in the process of being removed, see
-ed3cafa79ea7 ("soc: qcom: cmd-db: Stop memcpy()ing in
-cmd_db_read_aux_data()") in arm-soc/for-next
-
-https://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git/commit/?h=for-next&id=ed3cafa79ea756be653d22087c017af95ea78a49
-
-Cheers
-
-Matthias
