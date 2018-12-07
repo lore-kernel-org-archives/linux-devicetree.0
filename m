@@ -1,67 +1,81 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 03/19] dt-bindings: cpufreq: tegra124: remove
- vdd-cpu-supply from required properties
-Date: Fri, 7 Dec 2018 13:52:40 +0000
-Message-ID: <cfcaa547-a28a-ea7c-5f1e-8e1c4f32b023@nvidia.com>
-References: <20181204092548.3038-1-josephl@nvidia.com>
- <20181204092548.3038-4-josephl@nvidia.com>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: Re: [PATCH v9 01/13] media: staging/imx: refactor imx media device
+ probe
+Date: Fri, 07 Dec 2018 13:53:01 +0000
+Message-ID: <m37egl30le.fsf@linaro.org>
+References: <20181122151834.6194-1-rui.silva@linaro.org>
+ <20181122151834.6194-2-rui.silva@linaro.org>
+ <b0fffeef-439b-e3a7-67d1-900a7ea1664f@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181204092548.3038-4-josephl@nvidia.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-reply-to: <b0fffeef-439b-e3a7-67d1-900a7ea1664f@xs4all.nl>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Hans,
+Thanks for the review.
 
-On 04/12/2018 09:25, Joseph Lo wrote:
-> The Tegra124 cpufreq driver works only with DFLL clock, which is a
-> hardware-based frequency/voltage controller. The driver doesn't need to
-> control the regulator itself. Hence remove that.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Joseph Lo <josephl@nvidia.com>
-> ---
->  .../devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt     | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
-> index b1669fbfb740..031545a29caf 100644
-> --- a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
-> +++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
-> @@ -13,7 +13,6 @@ Required properties:
->    - pll_x: Fast PLL clocksource.
->    - pll_p: Auxiliary PLL used during fast PLL rate changes.
->    - dfll: Fast DFLL clocksource that also automatically scales CPU voltage.
-> -- vdd-cpu-supply: Regulator for CPU voltage
->  
->  Optional properties:
->  - clock-latency: Specify the possible maximum transition latency for clock,
-> @@ -37,7 +36,6 @@ cpus {
->  			 <&dfll>;
->  		clock-names = "cpu_g", "cpu_lp", "pll_x", "pll_p", "dfll";
->  		clock-latency = <300000>;
-> -		vdd-cpu-supply: <&vdd_cpu>;
->  	};
->  
->  	<...>
-> 
+On Fri 07 Dec 2018 at 12:38, Hans Verkuil wrote:
+> On 11/22/2018 04:18 PM, Rui Miguel Silva wrote:
+>> Refactor and move media device initialization code to a new 
+>> common
+>> module, so it can be used by other devices, this will allow for 
+>> example
+>> a near to introduce imx7 CSI driver, to use this media device.
+>> 
+>> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+>> ---
+>>  drivers/staging/media/imx/Makefile            |   1 +
+>>  .../staging/media/imx/imx-media-dev-common.c  | 102 
+>>  ++++++++++++++++++
+>>  drivers/staging/media/imx/imx-media-dev.c     |  88 
+>>  ++++-----------
+>>  drivers/staging/media/imx/imx-media-of.c      |   6 +-
+>>  drivers/staging/media/imx/imx-media.h         |  15 +++
+>>  5 files changed, 141 insertions(+), 71 deletions(-)
+>>  create mode 100644 
+>>  drivers/staging/media/imx/imx-media-dev-common.c
+>> 
+>> diff --git a/drivers/staging/media/imx/Makefile 
+>> b/drivers/staging/media/imx/Makefile
+>> index 698a4210316e..a30b3033f9a3 100644
+>> --- a/drivers/staging/media/imx/Makefile
+>> +++ b/drivers/staging/media/imx/Makefile
+>> @@ -1,5 +1,6 @@
+>>  # SPDX-License-Identifier: GPL-2.0
+>>  imx-media-objs := imx-media-dev.o imx-media-internal-sd.o 
+>>  imx-media-of.o
+>> +imx-media-objs += imx-media-dev-common.o
+>>  imx-media-common-objs := imx-media-utils.o imx-media-fim.o
+>>  imx-media-ic-objs := imx-ic-common.o imx-ic-prp.o 
+>>  imx-ic-prpencvf.o
+>>  
+>> diff --git a/drivers/staging/media/imx/imx-media-dev-common.c 
+>> b/drivers/staging/media/imx/imx-media-dev-common.c
+>> new file mode 100644
+>> index 000000000000..55fe94fb72f2
+>> --- /dev/null
+>> +++ b/drivers/staging/media/imx/imx-media-dev-common.c
+>> @@ -0,0 +1,102 @@
+>> +// SPDX-License-Identifier: GPL
+>
+> This is an invalid SPDX license identifier. You probably want to 
+> use GPL-2.0.
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
+hrr... you are right, I will update it here and others.
 
-Cheers
-Jon
-
--- 
-nvpublic
+---
+Cheers,
+	Rui
