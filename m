@@ -1,62 +1,79 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFT PATCH v1 0/4] Unify CPU topology across ARM64 & RISC-V
-Date: Fri, 7 Dec 2018 15:04:32 +0000
-Message-ID: <20181207150432.GB4100@e107155-lin>
-References: <1543534100-3654-1-git-send-email-atish.patra@wdc.com>
- <20181207134509.GA5913@e105550-lin.cambridge.arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: Moving ARM dts files
+Date: Fri, 7 Dec 2018 15:16:25 +0000
+Message-ID: <20181207151625.GC6510@sirena.org.uk>
+References: <20181204183649.GA5716@bogus>
+ <9c2b5528-679a-928e-3150-aa383a4f0405@suse.de>
+ <CAL_JsqKO3v0pgVfNhVNOkpZ4sePrybDgZG0riN-tutvwOZ4zYg@mail.gmail.com>
+ <2474284e-8a55-639f-2cfa-f811741099f3@suse.de>
+ <CAL_JsqL4WoMqFCQ0vFd6z_i=9imnfVsQjeKOG8zxNwi5caneRQ@mail.gmail.com>
+ <20181206200652.GB3084@sirena.org.uk>
+ <CAL_JsqJuH4=Bq9ok3Trz4GgLam7gqWW5-gyHpG1XbShtQQuSJg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181207134509.GA5913@e105550-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Morten Rasmussen <morten.rasmussen@arm.com>
-Cc: Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Dmitriy Cherkasov <dmitriy@oss-tech.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Juri Lelli <juri.lelli@arm.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt>
+Content-Type: multipart/mixed; boundary="===============6119980347678048259=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqJuH4=Bq9ok3Trz4GgLam7gqWW5-gyHpG1XbShtQQuSJg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Michal Simek <michal.simek@xilinx.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Thierry Reding <thierry.reding@gmail.com>, Tom Rini <trini@konsulko.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory CLEMENT <gregory.clement@bootlin.com>, Alexander Graf <agraf@suse.de>, Krzysztof Kozlowski <krzk@kernel.org>, ARM-SoC Maintainers <arm@kernel.org>, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, Architecture Mailman List <boot-architecture@lists.linaro.org>, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 07, 2018 at 01:45:21PM +0000, Morten Rasmussen wrote:
-> Hi,
->
-> On Thu, Nov 29, 2018 at 03:28:16PM -0800, Atish Patra wrote:
-> > The cpu-map DT entry in ARM64 can describe the CPU topology in
-> > much better way compared to other existing approaches. RISC-V can
-> > easily adopt this binding to represent it's own CPU topology.
-> > Thus, both cpu-map DT binding and topology parsing code can be
-> > moved to a common location so that RISC-V or any other
-> > architecture can leverage that.
-> >
-> > The relevant discussion regarding unifying cpu topology can be
-> > found in [1].
-> >
-> > arch_topology seems to be a perfect place to move the common
-> > code. I have not introduced any functional changes in the moved
-> > code. The only downside in this approach is that the capacity
-> > code will be executed for RISC-V as well. But, it will exit
-> > immediately after not able to find the appropriate DT node. If
-> > the overhead is considered too much, we can always compile out
-> > capacity related functions under a different config for the
-> > architectures that do not support them.
-> >
-> > The patches have been tested for RISC-V and compile tested for
-> > ARM64 & x86.
->
-> The cpu-map bindings are used for arch/arm too, and so is
-> arch_topology.c. In fact, it was introduced to allow code-sharing
-> between arm and arm64. Applying patch three breaks arm.
->
 
-Ah right. Though I remember the whole point of moving these to arch_topology
-was to share between ARM and ARM64, I completely forgot to check the
-impact of this for ARM platforms.
+--===============6119980347678048259==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hYooF8G/hrfVAmum"
+Content-Disposition: inline
 
-> Moving the DT parsing to arch_topology.c we have to unify all three
-> architectures. Be aware that arm and arm64 have some differences in how
-> they detect cpu capacities. I think we might have to look at the split
-> of code between arch/* and arch_topology.c again :-/
->
 
-Thanks for pointing this out. I completely agree and apologies for
-forgetting about arm32.
+--hYooF8G/hrfVAmum
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Regards,
-Sudeep
+On Fri, Dec 07, 2018 at 08:57:06AM -0600, Rob Herring wrote:
+> On Thu, Dec 6, 2018 at 2:07 PM Mark Brown <broonie@kernel.org> wrote:
+
+> > The issues with the existing install_dtbs sounded unrelated to this.
+
+> Maybe, what are the issues? We can't change the source layout
+> transparently if dtbs_install is not being used.
+
+I thought that was the thing with adding -@ so overlays could be used?
+
+--hYooF8G/hrfVAmum
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwKjsgACgkQJNaLcl1U
+h9C6CQf8C0xpFJ5MgnYqKRIbk06eno0tDKs+W/eqttr5a380po4jWe2yGP1NAlhZ
+BYPVRnISkn0qZzHxN7PitOKbYFmJm97wg3cYbrr/xyH2BILZhDyQFWPA5w/Knnwd
+/lPJz7JB3GeiVR/MdFQScwB7O+097zVAdTwLDogQXgKZ+sxIutNAY4Jz27K03Scc
+B3VioyMAKpxbcfipt612U5bE5HYqIfG/q9zBj24WRHSRuC6o1n1UYqPxrzsA/IhI
+Sc74JmYmSNT+NTZbB6Np3iPMqwp0nqPvkZlkK7LFOqHDViCUFZ26hmK9mAVGOWWF
+QayC1zgsdxfG9OlQWrxhM9NCR/rigg==
+=w1n+
+-----END PGP SIGNATURE-----
+
+--hYooF8G/hrfVAmum--
+
+
+--===============6119980347678048259==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============6119980347678048259==--
