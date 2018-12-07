@@ -1,49 +1,54 @@
-From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH 3/3] dt-bindings: iio: adc: exynos-adc: Add S5PV210 variant
-Date: Fri,  7 Dec 2018 20:11:36 +0100
-Message-ID: <20181207191136.5464-4-pawel.mikolaj.chmiel@gmail.com>
-References: <20181207191136.5464-1-pawel.mikolaj.chmiel@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v6 8/8] mfd: axp20x: Add supported cells for AXP803
+Date: Fri, 7 Dec 2018 19:22:37 +0000
+Message-ID: <20181207192237.GK26661@dell>
+References: <20181120175211.3913-1-oskari@lemmela.net>
+ <20181120175211.3913-9-oskari@lemmela.net>
+ <20181207164011.GI26661@dell>
+ <CA+E=qVe5gau_9A6WsdqDaEJwdJ7EyQ=UcNu0JJV3v=hKAFU7GQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181207191136.5464-1-pawel.mikolaj.chmiel@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CA+E=qVe5gau_9A6WsdqDaEJwdJ7EyQ=UcNu0JJV3v=hKAFU7GQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, kgene@kernel.org, krzk@kernel.org, xc-racer2@live.ca, pawel.mikolaj.chmiel@gmail.com, broonie@kernel.org, arnaud.pouliquen@st.com, baolin.wang@linaro.org, smohanad@codeaurora.org, eugen.hristev@microchip.com, rdunlap@infradead.org, vilhelm.gray@gmail.com, freeman.liu@spreadtrum.com, marcus.folkesson@gmail.com, geert@linux-m68k.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: Oskari Lemmela <oskari@lemmela.net>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, quentin.schulz@bootlin.com, linux-pm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jonathan Bakker <xc-racer2@live.ca>
+On Fri, 07 Dec 2018, Vasily Khoruzhick wrote:
 
-Add information about new compatible for S5PV210
+> On Fri, Dec 7, 2018 at 8:40 AM Lee Jones <lee.jones@linaro.org> wrote:
+> 
+> > My OCD-dar is going crazy.
+> >
+> > Why haven't you used the same alignment as is already there?
+> >
+> > If it starts to run over 80-chars then bring the others back.
+> >
+> > Also why is there a single liner shoved in the middle of the
+> > multi-line entries?  Please move the singles to the top or the
+> > bottom.
+> 
+> Hi Lee,
+> 
+> Could you please reformat it in the way that makes your OCD-dar happy?
+> It would be really nice to get
 
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
----
- .../devicetree/bindings/iio/adc/samsung,exynos-adc.txt        | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I'm afraid not, for a multitude of reasons.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt
-index 6c49db7f8ad2..a10c1f89037d 100644
---- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt
-@@ -11,7 +11,7 @@ New driver handles the following
- 
- Required properties:
- - compatible:		Must be "samsung,exynos-adc-v1"
--				for exynos4412/5250 and s5pv210 controllers.
-+				for exynos4412/5250 controllers.
- 			Must be "samsung,exynos-adc-v2" for
- 				future controllers.
- 			Must be "samsung,exynos3250-adc" for
-@@ -28,6 +28,8 @@ Required properties:
- 				the ADC in s3c2443 and compatibles
- 			Must be "samsung,s3c6410-adc" for
- 				the ADC in s3c6410 and compatibles
-+			Must be "samsung,s5pv210-adc" for
-+				the ADC in s5pv210 and compatibles
- - reg:			List of ADC register address range
- 			- The base address and range of ADC register
- 			- The base address and range of ADC_PHY register (every
+The most important of which surround testing.
+
+> AC and battery support for APX8x3 merged -- it'll make Pinebook and
+> Teres-I pretty well supported by mainline kernel.
+
+That's great.  A worthy cause indeed.  So I'm sure you guys will want
+to turn the patch around in short order so that it's applied in time
+for the next merge window.
+
 -- 
-2.17.1
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
