@@ -1,266 +1,247 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 3/3] scsi: ufs: Add HI3670 SoC UFS driver support
-Date: Fri,  7 Dec 2018 23:21:51 +0530
-Message-ID: <20181207175151.8969-4-manivannan.sadhasivam@linaro.org>
-References: <20181207175151.8969-1-manivannan.sadhasivam@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4] arm64: dts: rockchip: Add DT for nanopc-t4
+Date: Fri, 7 Dec 2018 11:56:11 -0600
+Message-ID: <20181207175611.GA25227@bogus>
+References: <20181123073120.6250-1-tomeu.vizoso@collabora.com>
+ <20181127091235.50351-1-tomeu.vizoso@collabora.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181207175151.8969-1-manivannan.sadhasivam@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20181127091235.50351-1-tomeu.vizoso@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, liwei213@huawei.com, robh+dt@kernel.org
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, john.stultz@linaro.org, amit.kucheria@linaro.org, guodong.xu@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: heiko@sntech.de, Mark Rutland <mark.rutland@arm.com>, Ezequiel Garcia <ezequiel@collabora.com>, Liang Chen <cl@rock-chips.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add HI3670 SoC UFS driver support by extending the common ufs-hisi
-driver. One major difference between HI3660 ad HI3670 SoCs interms of
-UFS is the PHY. HI3670 has a 10nm variant PHY and hence this parameter is
-used to distinguish the configuration.
+On Tue, Nov 27, 2018 at 10:07:03AM +0100, Tomeu Vizoso wrote:
+> This adds a device tree for the NanoPC-T4 SBC, which is based on the
+> Rockchip RK3399 SoC and marketed by FriendlyELEC.
+> 
+> Known working:
+> 
+> - Serial
+> - Ethernet
+> - HDMI
+> - USB 2.0
+> 
+> All of the interesting stuff is in a .dtsi because there are at least
+> two other boards that share most of it: NanoPi M4 and NanoPi NEO4.
+> 
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+> 
+> ---
+> 
+> v2: - Rename compatible from friendlyelec to friendlyarm, to match
+>       existing bindings
+>     - Remove superfluous node spi1
+> 
+> v3: - Rewrite regulator tree to match the schematics (Heiko)
+>     - Sort top-level nodes alphabetically (Heiko)
+>     - Used defines for GPIO numbers (Heiko)
+>     - Enabled rga (Heiko)
+>     - Removed cdn_dp node (Heiko)
+>     - Removed dependencies to fusb0 as extcon (Heiko)
+>     - Removed superfluous properties (Heiko)
+> 
+> v4: - Replace underscores in node names (Heiko)
+>     - Reorder entry in makefile (Heiko)
+>     - Remove superfluous properties and nodes (Heiko and Shawn)
+>     - Use xin32k as one of the clock outputs of the RK808 (Heiko)
+> ---
+>  .../devicetree/bindings/arm/rockchip.txt      |   4 +
+>  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>  .../boot/dts/rockchip/rk3399-nanopc-t4.dts    |  18 +
+>  .../boot/dts/rockchip/rk3399-nanopi4.dtsi     | 732 ++++++++++++++++++
+>  4 files changed, 755 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+> index 0cc71236d639..e907d309486e 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+> @@ -71,6 +71,10 @@ Rockchip platforms device tree bindings
+>      Required root node properties:
+>        - compatible = "firefly,roc-rk3399-pc", "rockchip,rk3399";
+>  
+> +- FriendlyElec NanoPC-T4 board:
+> +    Required root node properties:
+> +      - compatible = "friendlyarm,nanopc-t4", "rockchip,rk3399";
+> +
+>  - ChipSPARK PopMetal-RK3288 board:
+>      Required root node properties:
+>        - compatible = "chipspark,popmetal-rk3288", "rockchip,rk3288";
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+> index 49042c477870..19c129702e06 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -14,6 +14,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-ficus.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-firefly.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-bob.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-kevin.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopc-t4.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock960.dtb
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
+> new file mode 100644
+> index 000000000000..0965712b4464
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
+> @@ -0,0 +1,18 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * FriendlyElec NanoPC-T4 board device tree source
+> + *
+> + * Copyright (c) 2018 FriendlyElec Computer Tech. Co., Ltd.
+> + * (http://www.friendlyarm.com)
+> + *
+> + * Copyright (c) 2018 Collabora Ltd.
+> + */
+> +
+> +/dts-v1/;
+> +#include "rk3399-nanopi4.dtsi"
+> +
+> +/ {
+> +	model = "FriendlyElec NanoPC-T4";
+> +	compatible = "friendlyarm,nanopc-t4", "rockchip,rk3399";
+> +};
+> +
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
+> new file mode 100644
+> index 000000000000..e10b98d637d3
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
+> @@ -0,0 +1,732 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * RK3399-based FriendlyElec boards device tree source
+> + *
+> + * Copyright (c) 2016 Fuzhou Rockchip Electronics Co., Ltd
+> + *
+> + * Copyright (c) 2018 FriendlyElec Computer Tech. Co., Ltd.
+> + * (http://www.friendlyarm.com)
+> + *
+> + * Copyright (c) 2018 Collabora Ltd.
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/input/linux-event-codes.h>
+> +#include "rk3399.dtsi"
+> +#include "rk3399-opp.dtsi"
+> +
+> +/ {
+> +	chosen {
+> +		stdout-path = "serial2:1500000n8";
+> +	};
+> +
+> +	clkin_gmac: external-gmac-clock {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <125000000>;
+> +		clock-output-names = "clkin_gmac";
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	vdd_5v: vdd-5v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vdd_5v";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +
+> +	vcc5v0_core: vcc5v0-core {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc5v0_core";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply = <&vdd_5v>;
+> +	};
+> +
+> +	vcc3v3_sys: vcc3v3-sys {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc3v3_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		vin-supply = <&vcc5v0_core>;
+> +	};
+> +
+> +	vcc5v0_sys: vcc5v0-sys {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc5v0_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		vin-supply = <&vdd_5v>;
+> +	};
+> +
+> +	vcc5v0_usb1: vcc5v0-usb1 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc5v0_usb1";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply = <&vcc5v0_sys>;
+> +	};
+> +
+> +	vcc5v0_usb2: vcc5v0-usb2 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc5v0_usb2";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vin-supply = <&vcc5v0_sys>;
+> +	};
+> +
+> +	/* switched by pmic_sleep */
+> +	vcc1v8_s3: vcca1v8_s3: vcc1v8-s3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc1v8_s3";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		vin-supply = <&vcc_1v8>;
+> +	};
+> +
+> +	vcc3v0_sd: vcc3v0-sd {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio0 RK_PA1 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&sdmmc0_pwr_h>;
+> +		regulator-always-on;
+> +		regulator-max-microvolt = <3000000>;
+> +		regulator-min-microvolt = <3000000>;
+> +		regulator-name = "vcc3v0_sd";
+> +		vin-supply = <&vcc3v3_sys>;
+> +	};
+> +
+> +	vbus_typec: vbus-typec {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpios = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
+> +		regulator-name = "vbus_typec";
+> +		regulator-always-on;
+> +		vin-supply = <&vdd_5v>;
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		autorepeat;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&power_key>;
+> +
+> +		button@0 {
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/scsi/ufs/ufs-hisi.c | 127 +++++++++++++++++++++++++++++-------
- drivers/scsi/ufs/ufs-hisi.h |   4 ++
- 2 files changed, 109 insertions(+), 22 deletions(-)
+Build your dtb with W=1 and fix any warnings at least not in the SoC 
+dtsi file. This line will warn about a unit-address without a reg 
+property. Just use 'power' for the node name.
 
-diff --git a/drivers/scsi/ufs/ufs-hisi.c b/drivers/scsi/ufs/ufs-hisi.c
-index 452e19f8fb47..f2d3df357a97 100644
---- a/drivers/scsi/ufs/ufs-hisi.c
-+++ b/drivers/scsi/ufs/ufs-hisi.c
-@@ -66,7 +66,7 @@ static int ufs_hisi_check_hibern8(struct ufs_hba *hba)
- 	return err;
- }
- 
--static void ufs_hi3660_clk_init(struct ufs_hba *hba)
-+static void ufs_hisi_clk_init(struct ufs_hba *hba)
- {
- 	struct ufs_hisi_host *host = ufshcd_get_variant(hba);
- 
-@@ -80,7 +80,7 @@ static void ufs_hi3660_clk_init(struct ufs_hba *hba)
- 	ufs_sys_ctrl_set_bits(host, BIT_SYSCTRL_REF_CLOCK_EN, PHY_CLK_CTRL);
- }
- 
--static void ufs_hi3660_soc_init(struct ufs_hba *hba)
-+static void ufs_hisi_soc_init(struct ufs_hba *hba)
- {
- 	struct ufs_hisi_host *host = ufshcd_get_variant(hba);
- 	u32 reg;
-@@ -139,6 +139,7 @@ static void ufs_hi3660_soc_init(struct ufs_hba *hba)
- 
- static int ufs_hisi_link_startup_pre_change(struct ufs_hba *hba)
- {
-+	struct ufs_hisi_host *host = ufshcd_get_variant(hba);
- 	int err;
- 	uint32_t value;
- 	uint32_t reg;
-@@ -153,6 +154,14 @@ static int ufs_hisi_link_startup_pre_change(struct ufs_hba *hba)
- 	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x8121, 0x0), 0x2D);
- 	/* MPHY CBOVRCTRL3 */
- 	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x8122, 0x0), 0x1);
-+
-+	if (host->caps & UFS_HISI_CAP_PHY10nm) {
-+		/* MPHY CBOVRCTRL4 */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x8127, 0x0), 0x98);
-+		/* MPHY CBOVRCTRL5 */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x8128, 0x0), 0x1);
-+	}
-+
- 	/* Unipro VS_MphyCfgUpdt */
- 	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0xD085, 0x0), 0x1);
- 	/* MPHY RXOVRCTRL4 rx0 */
-@@ -173,10 +182,21 @@ static int ufs_hisi_link_startup_pre_change(struct ufs_hba *hba)
- 	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x8113, 0x0), 0x1);
- 	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0xD085, 0x0), 0x1);
- 
--	/* Tactive RX */
--	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x008F, 0x4), 0x7);
--	/* Tactive RX */
--	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x008F, 0x5), 0x7);
-+	if (host->caps & UFS_HISI_CAP_PHY10nm) {
-+		/* RX_Hibern8Time_Capability*/
-+		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x0092, 0x4), 0xA);
-+		/* RX_Hibern8Time_Capability*/
-+		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x0092, 0x5), 0xA);
-+		/* RX_Min_ActivateTime */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x008f, 0x4), 0xA);
-+		/* RX_Min_ActivateTime*/
-+		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x008f, 0x5), 0xA);
-+	} else {
-+		/* Tactive RX */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x008F, 0x4), 0x7);
-+		/* Tactive RX */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x008F, 0x5), 0x7);
-+	}
- 
- 	/* Gear3 Synclength */
- 	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x0095, 0x4), 0x4F);
-@@ -208,7 +228,8 @@ static int ufs_hisi_link_startup_pre_change(struct ufs_hba *hba)
- 	if (err)
- 		dev_err(hba->dev, "ufs_hisi_check_hibern8 error\n");
- 
--	ufshcd_writel(hba, UFS_HCLKDIV_NORMAL_VALUE, UFS_REG_HCLKDIV);
-+	if (!(host->caps & UFS_HISI_CAP_PHY10nm))
-+		ufshcd_writel(hba, UFS_HCLKDIV_NORMAL_VALUE, UFS_REG_HCLKDIV);
- 
- 	/* disable auto H8 */
- 	reg = ufshcd_readl(hba, REG_AUTO_HIBERNATE_IDLE_TIMER);
-@@ -253,7 +274,7 @@ static int ufs_hisi_link_startup_post_change(struct ufs_hba *hba)
- 	return 0;
- }
- 
--static int ufs_hi3660_link_startup_notify(struct ufs_hba *hba,
-+static int ufs_hisi_link_startup_notify(struct ufs_hba *hba,
- 					  enum ufs_notify_change_status status)
- {
- 	int err = 0;
-@@ -391,6 +412,28 @@ static void ufs_hisi_set_dev_cap(struct ufs_hisi_dev_params *hisi_param)
- 
- static void ufs_hisi_pwr_change_pre_change(struct ufs_hba *hba)
- {
-+	struct ufs_hisi_host *host = ufshcd_get_variant(hba);
-+
-+	if (host->caps & UFS_HISI_CAP_PHY10nm) {
-+		/*
-+		 * Boston platform need to set SaveConfigTime to 0x13,
-+		 * and change sync length to maximum value
-+		 */
-+		/* VS_DebugSaveConfigTime */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB((u32)0xD0A0), 0x13);
-+		/* g1 sync length */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB((u32)0x1552), 0x4f);
-+		/* g2 sync length */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB((u32)0x1554), 0x4f);
-+		/* g3 sync length */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB((u32)0x1556), 0x4f);
-+		/* PA_Hibern8Time */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB((u32)0x15a7), 0xA);
-+		/* PA_Tactivate */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB((u32)0x15a8), 0xA);
-+		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0xd085, 0x0), 0x01);
-+	}
-+
- 	if (hba->dev_quirks & UFS_DEVICE_QUIRK_HOST_VS_DEBUGSAVECONFIGTIME) {
- 		pr_info("ufs flash device must set VS_DebugSaveConfigTime 0x10\n");
- 		/* VS_DebugSaveConfigTime */
-@@ -429,7 +472,7 @@ static void ufs_hisi_pwr_change_pre_change(struct ufs_hba *hba)
- 	ufshcd_dme_set(hba, UIC_ARG_MIB(0xd046), 32767);
- }
- 
--static int ufs_hi3660_pwr_change_notify(struct ufs_hba *hba,
-+static int ufs_hisi_pwr_change_notify(struct ufs_hba *hba,
- 				       enum ufs_notify_change_status status,
- 				       struct ufs_pa_layer_attr *dev_max_params,
- 				       struct ufs_pa_layer_attr *dev_req_params)
-@@ -567,25 +610,72 @@ static int ufs_hi3660_init(struct ufs_hba *hba)
- 		return ret;
- 	}
- 
--	ufs_hi3660_clk_init(hba);
-+	ufs_hisi_clk_init(hba);
-+
-+	ufs_hisi_soc_init(hba);
-+
-+	return 0;
-+}
-+
-+static int ufs_hi3670_init(struct ufs_hba *hba)
-+{
-+	int ret = 0;
-+	struct device *dev = hba->dev;
-+	struct ufs_hisi_host *host;
-+
-+	ret = ufs_hisi_init_common(hba);
-+	if (ret) {
-+		dev_err(dev, "%s: ufs common init fail\n", __func__);
-+		return ret;
-+	}
-+
-+	ufs_hisi_clk_init(hba);
-+
-+	ufs_hisi_soc_init(hba);
- 
--	ufs_hi3660_soc_init(hba);
-+	/* Add cap for 10nm PHY variant on HI3670 SoC */
-+	host = ufshcd_get_variant(hba);
-+	host->caps |= UFS_HISI_CAP_PHY10nm;
- 
- 	return 0;
- }
- 
--static struct ufs_hba_variant_ops ufs_hba_hisi_vops = {
-+static struct ufs_hba_variant_ops ufs_hba_hi3660_vops = {
- 	.name = "hi3660",
- 	.init = ufs_hi3660_init,
--	.link_startup_notify = ufs_hi3660_link_startup_notify,
--	.pwr_change_notify = ufs_hi3660_pwr_change_notify,
-+	.link_startup_notify = ufs_hisi_link_startup_notify,
-+	.pwr_change_notify = ufs_hisi_pwr_change_notify,
- 	.suspend = ufs_hisi_suspend,
- 	.resume = ufs_hisi_resume,
- };
- 
-+static struct ufs_hba_variant_ops ufs_hba_hi3670_vops = {
-+	.name = "hi3670",
-+	.init = ufs_hi3670_init,
-+	.link_startup_notify = ufs_hisi_link_startup_notify,
-+	.pwr_change_notify = ufs_hisi_pwr_change_notify,
-+	.suspend = ufs_hisi_suspend,
-+	.resume = ufs_hisi_resume,
-+};
-+
-+static const struct of_device_id ufs_hisi_of_match[] = {
-+	{ .compatible = "hisilicon,hi3660-ufs", .data = &ufs_hba_hi3660_vops },
-+	{ .compatible = "hisilicon,hi3670-ufs", .data = &ufs_hba_hi3670_vops },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, ufs_hisi_of_match);
-+
- static int ufs_hisi_probe(struct platform_device *pdev)
- {
--	return ufshcd_pltfrm_init(pdev, &ufs_hba_hisi_vops);
-+	const struct of_device_id *of_id;
-+	struct ufs_hba_variant_ops *vops;
-+	struct device *dev = &pdev->dev;
-+
-+	of_id = of_match_node(ufs_hisi_of_match, dev->of_node);
-+	vops = (struct ufs_hba_variant_ops *)of_id->data;
-+
-+	return ufshcd_pltfrm_init(pdev, vops);
- }
- 
- static int ufs_hisi_remove(struct platform_device *pdev)
-@@ -596,13 +686,6 @@ static int ufs_hisi_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id ufs_hisi_of_match[] = {
--	{ .compatible = "hisilicon,hi3660-ufs" },
--	{},
--};
--
--MODULE_DEVICE_TABLE(of, ufs_hisi_of_match);
--
- static const struct dev_pm_ops ufs_hisi_pm_ops = {
- 	.suspend	= ufshcd_pltfrm_suspend,
- 	.resume		= ufshcd_pltfrm_resume,
-diff --git a/drivers/scsi/ufs/ufs-hisi.h b/drivers/scsi/ufs/ufs-hisi.h
-index 3df9cd7acc29..667dfe39b57e 100644
---- a/drivers/scsi/ufs/ufs-hisi.h
-+++ b/drivers/scsi/ufs/ufs-hisi.h
-@@ -91,6 +91,9 @@ enum {
- #define UFS_HISI_LIMIT_HS_RATE	PA_HS_MODE_B
- #define UFS_HISI_LIMIT_DESIRED_MODE	FAST
- 
-+#define UFS_HISI_CAP_RESERVED		BIT(0)
-+#define UFS_HISI_CAP_PHY10nm		BIT(1)
-+
- struct ufs_hisi_host {
- 	struct ufs_hba *hba;
- 	void __iomem *ufs_sys_ctrl;
-@@ -112,4 +115,5 @@ struct ufs_hisi_host {
- 	ufs_sys_ctrl_writel((host),                                            \
- 			    ((~(mask)) & (ufs_sys_ctrl_readl((host), (reg)))), \
- 			    (reg))
-+
- #endif /* UFS_HISI_H_ */
--- 
-2.17.1
+Otherwise,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
