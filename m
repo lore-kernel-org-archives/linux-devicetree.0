@@ -1,36 +1,88 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v6 7/8] mfd: axp20x: Add AC power supply cell for AXP813
-Date: Fri, 7 Dec 2018 16:40:44 +0000
-Message-ID: <20181207164044.GJ26661@dell>
-References: <20181120175211.3913-1-oskari@lemmela.net>
- <20181120175211.3913-8-oskari@lemmela.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: Palmer Dabbelt <palmer@sifive.com>
+Subject: Re: [PATCH 2/4] RISC-V: Support per-hart timebase-frequency
+Date: Fri, 07 Dec 2018 08:42:30 -0800 (PST)
+Message-ID: <mhng-531f9ae3-9ab2-48cb-9f1f-4e6814498753@palmer-si-x1c4>
+References: <1543870651-16669-3-git-send-email-atish.patra@wdc.com>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181120175211.3913-8-oskari@lemmela.net>
+In-Reply-To: <1543870651-16669-3-git-send-email-atish.patra@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Oskari Lemmela <oskari@lemmela.net>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Quentin Schulz <quentin.schulz@bootlin.com>, Vasily Khoruzhick <anarsoul@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, atish.patra@wdc.com, aou@eecs.berkeley.edu, daniel.lezcano@linaro.org, devicetree@vger.kernel.org, dmitriy@oss-tech.org, linux-riscv@lists.infradead.org, mark.rutland@arm.com, robh+dt@kernel.org, tglx@linutronix.de, anup@brainfault.org, Damien.LeMoal@wdc.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 Nov 2018, Oskari Lemmela wrote:
-
-> As axp20x-ac-power-supply now supports AXP813, add a cell for it.
-> 
-> Signed-off-by: Oskari Lemmela <oskari@lemmela.net>
-> Reviewed-by: Quentin Schulz <quentin.schulz@bootlin.com>
-> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-> Tested-by: Vasily Khoruzhick <anarsoul@gmail.com>
+On Mon, 03 Dec 2018 12:57:29 PST (-0800), atish.patra@wdc.com wrote:
+> Follow the updated DT specs and read the timebase-frequency
+> from the boot cpu. Keep the old DT reading as well for backward
+> compatibility. This patch is rework of old patch from Palmer.
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
 > ---
->  drivers/mfd/axp20x.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  arch/riscv/kernel/time.c          |  9 +--------
+>  drivers/clocksource/riscv_timer.c | 22 ++++++++++++++++++++++
+>  2 files changed, 23 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/riscv/kernel/time.c b/arch/riscv/kernel/time.c
+> index 1911c8f6..225fe743 100644
+> --- a/arch/riscv/kernel/time.c
+> +++ b/arch/riscv/kernel/time.c
+> @@ -20,14 +20,7 @@ unsigned long riscv_timebase;
+>
+>  void __init time_init(void)
+>  {
+> -	struct device_node *cpu;
+> -	u32 prop;
+> -
+> -	cpu = of_find_node_by_path("/cpus");
+> -	if (!cpu || of_property_read_u32(cpu, "timebase-frequency", &prop))
+> -		panic(KERN_WARNING "RISC-V system with no 'timebase-frequency' in DTS\n");
+> -	riscv_timebase = prop;
+> +	timer_probe();
+>
+>  	lpj_fine = riscv_timebase / HZ;
+> -	timer_probe();
+>  }
+> diff --git a/drivers/clocksource/riscv_timer.c b/drivers/clocksource/riscv_timer.c
+> index 084e97dc..96af7058 100644
+> --- a/drivers/clocksource/riscv_timer.c
+> +++ b/drivers/clocksource/riscv_timer.c
+> @@ -83,6 +83,26 @@ void riscv_timer_interrupt(void)
+>  	evdev->event_handler(evdev);
+>  }
+>
+> +static long __init riscv_timebase_frequency(struct device_node *node)
+> +{
+> +	u32 timebase;
+> +
+> +	if (!of_property_read_u32(node, "timebase-frequency", &timebase))
+> +		return timebase;
+> +
+> +	/*
+> +	 * As per the DT specification, timebase-frequency should be present
+> +	 * under individual cpu node. Unfortunately, there are already available
+> +	 * HiFive Unleashed devices where the timebase-frequency entry is under
+> +	 * CPUs. check under parent "cpus" node to cover those devices.
+> +	 */
+> +	if (!of_property_read_u32(node->parent, "timebase-frequency",
+> +				  &timebase))
+> +		return timebase;
+> +
+> +	panic("RISC-V system with no 'timebase-frequency' in DTS\n");
+> +}
+> +
+>  static int __init riscv_timer_init_dt(struct device_node *n)
+>  {
+>  	int cpuid, hartid, error;
+> @@ -94,6 +114,8 @@ static int __init riscv_timer_init_dt(struct device_node *n)
+>  	if (cpuid != smp_processor_id())
+>  		return 0;
+>
+> +	/* This should be called only for boot cpu */
+> +	riscv_timebase = riscv_timebase_frequency(n);
+>  	cs = per_cpu_ptr(&riscv_clocksource, cpuid);
+>  	clocksource_register_hz(cs, riscv_timebase);
 
-Applied, thanks.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+We need to check to make sure the timebase-frequency of each hart is the same.  
+This is mandated by the RISC-V ISA specification but should be checked in the 
+code.
