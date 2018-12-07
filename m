@@ -1,50 +1,46 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH 2/2] arm64: dts: ti: k3-am654-base-board: Enable ECAP PWM
-Date: Fri, 7 Dec 2018 15:05:35 +0530
-Message-ID: <20181207093535.5497-3-vigneshr@ti.com>
-References: <20181207093535.5497-1-vigneshr@ti.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2] dt-bindings: rtc: add generic bindings
+Date: Fri, 7 Dec 2018 10:47:35 +0100
+Message-ID: <CAMuHMdXHtUPKEFrWMrtDSZ1_n7c73L-g7t+OPnN7ctq9Cm8Nvw@mail.gmail.com>
+References: <20181111193114.24307-1-alexandre.belloni@bootlin.com>
+ <CAMuHMdX9xZgAiBeXCXxLRSJYMefsFwhH3NGC7=EYteFd6kODMQ@mail.gmail.com> <20181207093356.GG8952@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181207093535.5497-1-vigneshr@ti.com>
+In-Reply-To: <20181207093356.GG8952@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vignesh R <vigneshr@ti.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-rtc@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable ECAP PWM which is used for LCD backlight.
+Hi Alexandre,
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am654-base-board.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+On Fri, Dec 7, 2018 at 10:34 AM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+> On 06/12/2018 11:36:59+0100, Geert Uytterhoeven wrote:
+> > > +The following properties may not be supported by all drivers. However, if a
+> > > +driver wants to support one of the below features, it should adapt the bindings
+> > > +below.
+> > > +- trickle-resistor-ohms : Selected resistor for trickle charger. Should be given
+> >
+> > Can this resistor be less than 1 ohm?
+> > trickle-resistor-milli-ohms?
+>
+> Well, this is what current drivers already use so we are stuck with that
+> for now.
+>
+> The value should be a few kOhm anyway. I think the lowest I know about
+> is 250 Ohm.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-index bd5a0069191d..49ec2c3f5ef1 100644
---- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-@@ -76,6 +76,12 @@
- 			AM65X_IOPAD(0x000c, PIN_INPUT, 0) /* (E21) I2C1_SDA */
- 		>;
- 	};
-+
-+	ecap0_pins_default: ecap0-pins-default {
-+		pinctrl-single,pins = <
-+			AM65X_IOPAD(0x0010, PIN_INPUT, 0) /* (D21) ECAP0_IN_APWM_OUT */
-+		>;
-+	};
- };
- 
- &wkup_uart0 {
-@@ -125,3 +131,8 @@
- 	pinctrl-0 = <&main_i2c2_pins_default>;
- 	clock-frequency = <400000>;
- };
-+
-+&ecap0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ecap0_pins_default>;
-+};
+OK, good to know. Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.19.2
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
