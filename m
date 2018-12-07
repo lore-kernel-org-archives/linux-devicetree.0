@@ -1,117 +1,91 @@
-From: Carlo Caione <ccaione@baylibre.com>
-Subject: [PATCH v2 1/2] arm64: dts: meson: Fix IRQ trigger type for macirq
-Date: Fri,  7 Dec 2018 10:52:30 +0000
-Message-ID: <20181207105231.25593-2-ccaione@baylibre.com>
-References: <20181207105231.25593-1-ccaione@baylibre.com>
+From: Christophe Kerello <christophe.kerello@st.com>
+Subject: Re: [ v3 2/3] mtd: rawnand: stm32_fmc2: add STM32 FMC2 NAND flash
+ controller driver
+Date: Fri, 7 Dec 2018 11:53:10 +0100
+Message-ID: <cb694a48-9b81-1d7d-08ea-910f37772aed@st.com>
+References: <1543509663-26128-1-git-send-email-christophe.kerello@st.com>
+ <1543509663-26128-3-git-send-email-christophe.kerello@st.com>
+ <20181207111808.144fc3f0@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181207105231.25593-1-ccaione@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, khilman@baylibre.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, martin.blumenstingl@googlemail.com, ingrassia@epigenesys.com
-Cc: Carlo Caione <ccaione@baylibre.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181207111808.144fc3f0@xps13>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: boris.brezillon@bootlin.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-A long running stress test on a custom board shipping an AXG SoCs and a
-Realtek RTL8211F PHY revealed that after a few hours the connection
-speed would drop drastically, from ~1000Mbps to ~3Mbps. At the same time
-the 'macirq' (eth0) IRQ would stop being triggered at all and as
-consequence the GMAC IRQs never ACKed.
+Hi Miquèl,
 
-After a painful investigation the problem seemed to be due to a wrong
-defined IRQ type for the GMAC IRQ that should be LEVEL_HIGH instead of
-EDGE_RISING.
+This patchset already takes into account new framework modifications 
+done by Boris (3rd batch of cleanups).
 
-The change in the macirq IRQ type also solved another long standing
-issue affecting this SoC/PHY where EEE was causing the network
-connection to die after stressing it with iperf3 (even though much
-sooner). It's now possible to remove the 'eee-broken-1000t' quirk as
-well.
+The select_chip hook is not used any more in this patchset and 
+exec_op/setup_data_interface hooks have been moved to 
+nand_controller_ops structure.
 
-Fixes: feb3cbea0946 ("ARM64: dts: meson-gxbb-odroidc2: fix GbE tx link breakage")
-Fixes: 6d28d577510f ("ARM64: dts: meson-axg: fix ethernet stability issue")
-Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-Tested-by: Jerome Brunet <jbrunet@baylibre.com>
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Carlo Caione <ccaione@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-axg-s400.dts      | 1 -
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi          | 2 +-
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi           | 2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi   | 1 -
- 5 files changed, 2 insertions(+), 5 deletions(-)
+static const struct nand_controller_ops stm32_fmc2_nand_controller_ops = {
+	.attach_chip = stm32_fmc2_attach_chip,
+	.exec_op = stm32_fmc2_exec_op,
+	.setup_data_interface = stm32_fmc2_setup_interface,
+};
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-index 18778ada7bd3..4d57363ac536 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-@@ -357,7 +357,6 @@
- 		eth_phy0: ethernet-phy@0 {
- 			/* Realtek RTL8211F (0x001cc916) */
- 			reg = <0>;
--			eee-broken-1000t;
- 		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index df017dbd2e57..b1a42e99cb67 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -143,7 +143,7 @@
- 			compatible = "amlogic,meson-axg-dwmac", "snps,dwmac";
- 			reg = <0x0 0xff3f0000 0x0 0x10000
- 			       0x0 0xff634540 0x0 0x8>;
--			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "macirq";
- 			clocks = <&clkc CLKID_ETH>,
- 				 <&clkc CLKID_FCLK_DIV2>,
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index f1e5cdbade5e..58e6bcaac1d8 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -462,7 +462,7 @@
- 			compatible = "amlogic,meson-gx-dwmac", "amlogic,meson-gxbb-dwmac", "snps,dwmac";
- 			reg = <0x0 0xc9410000 0x0 0x10000
- 			       0x0 0xc8834540 0x0 0x4>;
--			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "macirq";
- 			status = "disabled";
- 		};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index 54954b314a45..f8d1cedbe600 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -143,7 +143,6 @@
- 			interrupt-parent = <&gpio_intc>;
- 			/* MAC_INTR on GPIOZ_15 */
- 			interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
--			eee-broken-1000t;
- 		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-index 70325b273bd2..ec09bb5792b7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-@@ -142,7 +142,6 @@
- 		eth_phy0: ethernet-phy@0 {
- 			/* Realtek RTL8211F (0x001cc916) */
- 			reg = <0>;
--			eee-broken-1000t;
- 		};
- 	};
- };
--- 
-2.19.1
+Regards,
+Christophe Kerello.
+
+On 12/7/18 11:18 AM, Miquel Raynal wrote:
+> Hi Christophe,
+> 
+> Christophe Kerello <christophe.kerello@st.com> wrote on Thu, 29 Nov
+> 2018 17:41:02 +0100:
+> 
+>> The driver adds the support for the STMicroelectronics FMC2 NAND
+>> Controller found on STM32MP SOCs.
+>>
+>> This patch is based on FMC2 command sequencer.
+>> The purpose of the command sequencer is to facilitate the programming
+>> and the reading of NAND flash pages with the ECC and to free the CPU
+>> of sequencing tasks.
+>> It requires one DMA channel for write and two DMA channels for read
+>> operations.
+>>
+>> Only NAND_ECC_HW mode is actually supported.
+>> The driver supports a maximum 8k page size.
+>> The following ECC strength and step size are currently supported:
+>>   - nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8)
+>>   - nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
+>>   - nand-ecc-strength = <1>, nand-ecc-step-size = <512> (Extended ECC
+>>     based on Hamming)
+>>
+>> This patch has been tested on Micron MT29F8G08ABACAH4 and
+>> MT29F8G16ABACAH4
+>>
+>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+>> ---
+> 
+> The driver look's good to me. However, Boris contributed new
+> cleanups that I would like you to take into account before doing
+> another 'deep' review. Please rebase on top of nand/next and have
+> a look at the followingcommits. For the ->select_chip() hook, it
+> should not be exposed anymore and switches should be handled
+> locally by the driver (you have examples).
+> 
+> 7a08dbaedd36 mtd: rawnand: Move ->setup_data_interface() to nand_controller_ops
+> f2abfeb2078b mtd: rawnand: Move the ->exec_op() method to nand_controller_ops
+> 7d6c37e90cf9 mtd: rawnand: Deprecate the ->select_chip() hook
+> 1770022ffa85 mtd: rawnand: ams-delta: Stop implementing ->select_chip()
+> 653c57c7da08 mtd: rawnand: vf610: Stop implementing ->select_chip()
+> 2ace451cae22 mtd: rawnand: tegra: Stop implementing ->select_chip()
+> b25251414f6e mtd: rawnand: marvell: Stop implementing ->select_chip()
+> 550b9fc4e3af mtd: rawnand: fsmc: Stop implementing ->select_chip()
+> 02b4a52604a4 mtd: rawnand: Make ->select_chip() optional when ->exec_op() is implemented
+> ae2294b10b0f mtd: rawnand: Pass the CS line to be selected in struct nand_operation
+> 1d0178593d14 mtd: rawnand: Add nand_[de]select_target() helpers
+> 
+> While at it, could you also address Linus W. comments.
+> 
+> Thanks,
+> Miquèl
+> 
