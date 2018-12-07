@@ -1,109 +1,88 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v6 0/8] AXP8x3 AC and battery power supply support
-Date: Fri, 7 Dec 2018 07:28:03 +0000
-Message-ID: <20181207072803.GG26661@dell>
-References: <20181120175211.3913-1-oskari@lemmela.net>
- <CAGb2v65Bwve25jwdGHHK9j03RxQ3tKwme51762DjyQK2femG6g@mail.gmail.com>
- <20181205180042.fr5npvtwuvt2c6q3@earth.universe>
+Subject: Re: [PATCH v7 0/7] Introduce STPMIC1 PMIC Driver
+Date: Fri, 7 Dec 2018 07:31:32 +0000
+Message-ID: <20181207073132.GH26661@dell>
+References: <1543571742-17995-1-git-send-email-p.paillet@st.com>
+ <20181203071145.GA26661@dell>
+ <5C069C47.6080305@st.com>
+ <20181205093604.GZ26661@dell>
+ <5C07F08B.2010701@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181205180042.fr5npvtwuvt2c6q3@earth.universe>
+In-Reply-To: <5C07F08B.2010701@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, oskari@lemmela.net, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Quentin Schulz <quentin.schulz@bootlin.com>, Vasily Khoruzhick <anarsoul@gmail.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Pascal PAILLET-LME <p.paillet@st.com>
+Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 05 Dec 2018, Sebastian Reichel wrote:
+On Wed, 05 Dec 2018, Pascal PAILLET-LME wrote:
 
-> Hi,
 > 
-> On Fri, Nov 30, 2018 at 04:31:28PM +0800, Chen-Yu Tsai wrote:
-> > On Wed, Nov 21, 2018 at 1:52 AM Oskari Lemmela <oskari@lemmela.net> wrote:
-> > >
-> > > AXP813 AC power supply support with input current and
-> > > voltage limiting support.
-> > >
-> > > AXP803 AC and battery power supply support.
-> > >
-> > > Changes in v6:
-> > > * Collected tags
-> > > * Rebase to master
-> > > * Dropped AXP803 compatible patches
-> > >
-> > > Changes in v5:
-> > > * Return correct input current limit for values 0x6 and 0x7
-> > > * Add specific compatibles for AXP803
-> > > * Change commit messages
-> > > * Add Vasily Khoruzhick Pinebook DTS patch
-> > >
-> > > Changes in v4:
-> > > * Change order of axp20x-gpio in axp20x.c
-> > > * Fix indentation and spaces to tabs in axp20x.c
-> > >
-> > > Changes in v3:
-> > > * Reorder ac_power_supply DT node
-> > > * Rename axp20x_ac_power_set_property function
-> > > * Split mfd commit
-> > >
-> > > Changes in v2:
-> > > * Reuse axp813 compatibles for axp803
-> > > * Refactor axp20x_ac_power.c
-> > >
-> > >
-> > > Oskari Lemmela (7):
-> > >   dt-bindings: power: supply: axp20x: add AXP813 AC power DT binding
-> > >   ARM: dts: axp81x: add AC power supply subnode
-> > >   arm64: dts: allwinner: axp803: add AC and battery power supplies
-> > >   arm64: dts: allwinner: a64: sopine-baseboard: enable power supplies
-> > >   power: supply: add AC power supply driver for AXP813
-> > >   mfd: axp20x: Add AC power supply cell for AXP813
-> > >   mfd: axp20x: Add supported cells for AXP803
-> > >
-> > > Vasily Khoruzhick (1):
-> > >   arm64: dts: allwinner: a64: pinebook: enable power supplies
-> > 
-> > Since this series has been fully reviewed, and the devices it
-> > adds/enables aren't critical, i.e. won't cause the system to fail
-> > if the drivers are missing, I've merged the dts patches for 4.21.
-> > 
-> > Hopefully Sebastian and Lee will get around to merging the driver
-> > patches.
+> pascal paillet (p.paillet@st.com) Le Mans / France
+> Microcontrollers and Digital ICs Group | Application Development
+> TEL: +33.(0)2.44.02.74.69 | TINA: 166 7469
 > 
-> I queued the power-supply driver changes and prepared a signed
-> immutable tag for Lee:
+> Le 12/05/2018 10:36 AM, Lee Jones a écrit :
+> > On Tue, 04 Dec 2018, Pascal PAILLET-LME wrote:
+> >> Le 12/03/2018 08:11 AM, Lee Jones a écrit :
+> >>> On Fri, 30 Nov 2018, Pascal PAILLET-LME wrote:
+> >>>
+> >>>> The goal of this patch-set is to propose a driver for the STPMIC1 PMIC from
+> >>>> STMicroelectronics.
+> >>>> The STPMIC1 regulators supply power to an application processor as well as
+> >>>> to external system peripherals such as DDR, Flash memories and system
+> >>>> devices. It also features onkey button input and an hardware watchdog.
+> >>>> The STPMIC1 is controlled via I2C.
+> >>>>
+> >>>> Main driver is drivers/mfd/stpmic1 that handle I2C regmap configuration and
+> >>>> irqchip. stpmic1_regulator, stpmic1_onkey and stpmic1_wdt need stpmic1 mfd
+> >>>> as parent.
+> >>>>
+> >>>> STPMIC1 MFD and regulator drivers maybe mandatory at boot time.
+> >>>>
+> >>>> Pascal Paillet (7):
+> >>>> changes in v7:
+> >>>> * rebase on regul/for-next
+> >>>>
+> >>>>     dt-bindings: mfd: document stpmic1
+> >>>>     mfd: stpmic1: add stpmic1 driver
+> >>>>     dt-bindings: input: document stpmic1 pmic onkey
+> >>>>     input: stpmic1: add stpmic1 onkey driver
+> >>>>     dt-bindings: watchdog: document stpmic1 pmic watchdog
+> >>>>     watchdog: stpmic1: add stpmic1 watchdog driver
+> >>>>     regulator: stpmic1: fix regulator_lock usage
+> >>>>
+> >>>>    .../devicetree/bindings/input/st,stpmic1-onkey.txt |  28 +++
+> >>>>    .../devicetree/bindings/mfd/st,stpmic1.txt         |  61 ++++++
+> >>>>    .../bindings/watchdog/st,stpmic1-wdt.txt           |  11 ++
+> >>>>    drivers/input/misc/Kconfig                         |  11 ++
+> >>>>    drivers/input/misc/Makefile                        |   2 +
+> >>>>    drivers/input/misc/stpmic1_onkey.c                 | 198 +++++++++++++++++++
+> >>>>    drivers/mfd/Kconfig                                |  16 ++
+> >>>>    drivers/mfd/Makefile                               |   1 +
+> >>>>    drivers/mfd/stpmic1.c                              | 213 +++++++++++++++++++++
+> >>>>    drivers/regulator/stpmic1_regulator.c              |   2 +-
+> >>> Is it just Mark you're waiting on now?
+> >> It is ok now, Mark has applied the patch.
+> >> Evrey thing has been acked now. What is the nex step ?
+> > Mark has applied patch 7?
+> >
+> > Why don't I see that?  Should you have removed it from this set?
+> Hi Lee, I have received an email from Mark telliing that the regulator 
+> patch is applied on
 > 
-> The following changes since commit 651022382c7f8da46cb4872a545ee1da6d097d2a:
+>   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git  
 > 
->   Linux 4.20-rc1 (2018-11-04 15:37:52 -0800)
-> 
-> are available in the Git repository at:
-> 
->   ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git tags/psy-mfd-axp813-immutable-for-v4.21-signed
-> 
-> for you to fetch changes up to 7693b5643fd2d682de90733b67fc8032b9646911:
-> 
->   power: supply: add AC power supply driver for AXP813 (2018-12-05 18:49:32 +0100)
-> 
-> ----------------------------------------------------------------
-> Immutable branch between mfd and power-supply for driver
-> changes related to axp813.
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> 
-> ----------------------------------------------------------------
-> Oskari Lemmela (2):
->       dt-bindings: power: supply: axp20x: add AXP813 AC power DT binding
->       power: supply: add AC power supply driver for AXP813
-> 
->  .../bindings/power/supply/axp20x_ac_power.txt      |  3 +
->  drivers/power/supply/axp20x_ac_power.c             | 94 ++++++++++++++++++++++
->  include/linux/mfd/axp20x.h                         |  1 +
->  3 files changed, 98 insertions(+)
+> I can see it on the branch regul/for-next.
 
-What patches are left now?  Just 7 and 8?
+Mark,
+
+Does your patch tracker only reply to the author?
+
+Any reason why I don't see it?
 
 -- 
 Lee Jones [李琼斯]
