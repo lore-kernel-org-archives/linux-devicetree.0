@@ -1,113 +1,84 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v10 0/6] Support for Qualcomm UFS QMP PHY on SDM845
-Date: Fri, 7 Dec 2018 10:01:43 +0530
-Message-ID: <2835270c-79aa-81fc-574a-5cb48a542260@ti.com>
-References: <1540269361-28185-1-git-send-email-cang@codeaurora.org>
- <CAFp+6iH9sz3NsejvxLdgAy+E-6Rff9RDA74EtnSidWOuZN=q9w@mail.gmail.com>
+Subject: Re: [PATCH v1 0/4] phy: qcom-qmp: Fix clock-cells binding and
+ provider
+Date: Fri, 7 Dec 2018 10:13:09 +0530
+Message-ID: <df0a0a62-0f5f-31d3-4d8a-fd0d3b21e5b2@ti.com>
+References: <20181129221357.67417-1-evgreen@chromium.org>
+ <62461d1d-2269-37f7-8d08-a116e470ad89@ti.com>
+ <CAFp+6iHmPDWyU1GVe0ZvYLh4vzEkgy1UqDp3rEM3D4gHNitGkg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iH9sz3NsejvxLdgAy+E-6Rff9RDA74EtnSidWOuZN=q9w@mail.gmail.com>
+In-Reply-To: <CAFp+6iHmPDWyU1GVe0ZvYLh4vzEkgy1UqDp3rEM3D4gHNitGkg@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>, Can Guo <cang@codeaurora.org>
-Cc: Subhash Jadavani <subhashj@codeaurora.org>, asutoshd@codeaurora.org, evgreen@chromium.org, Manu Gautam <mgautam@codeaurora.org>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: evgreen@chromium.org, robh+dt <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Doug Anderson <dianders@chromium.org>, swboyd@chromium.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Can Guo <cang@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, Manu Gautam <mgautam@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Vivek,
 
-On 05/12/18 12:31 PM, Vivek Gautam wrote:
-> On Tue, Oct 23, 2018 at 10:07 AM Can Guo <cang@codeaurora.org> wrote:
->>
->> This patch series adds support for UFS QMP PHY on SDM845 and the
->> compatible string for it. This patch series depends on the current
->> proposed QMP V3 USB3 UNI PHY support for sdm845 driver [1], on
->> the DT bindings for the QMP V3 USB3 PHYs based dirver [2], and also
->> rebased on updated pipe_clk initialization sequence [3]. This series
->> can only be merged once the dependent patches do.
->> [1] http://lists-archives.com/linux-kernel/29071659-dt-bindings-phy-qcom-qmp-update-bindings-for-sdm845.html
->> [2] http://lists-archives.com/linux-kernel/29071660-phy-qcom-qmp-add-qmp-v3-usb3-uni-phy-support-for-sdm845.html
->> [3] https://patchwork.kernel.org/patch/10376551/
+On 04/12/18 6:07 PM, Vivek Gautam wrote:
+> Hi Kishon,
 > 
-> Besides my comment for PATCH 4/6, I have already reviewed the entire series,
-> and it looks good.
-> If adding new bindings for sdm845 needs a further review, can you separate out
-> just the phy patches from this series (patch 1, 2, 3 & 6), and re-send them.
-> We can ask Kishon if he can pull them in for this merge window.
-> Thanks.
+> On Tue, Dec 4, 2018 at 1:44 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>
+>> Hi Andy Gross, David Brown, Vivek,
+>>
+>> On 30/11/18 3:43 AM, Evan Green wrote:
+>>> This series fixes the QMP PHY bindings, which had specified #clock-cells
+>>> in the parent node, and had set it to 1. Putting it in the parent node is
+>>> wrong because the clock providers are the child nodes, so this change
+>>> moves it there. Having it set to 1 is also wrong, since nothing is ever
+>>> specified as to what should go in that cell. So this changes it to zero.
+>>> Finally, this change completes a little bit of code to actually allow these
+>>> exposed clocks to be pointed at in DT.
+>>>
+>>> I had no idea how to fix up ipq8074.dtsi. It seems to be completely wrong in
+>>> that it doesn't specify #clock-cells at all, has no child nodes, and
+>>> specifies clock-output-names in the parent node. As far as I can tell this
+>>> doesn't work at all. But I can't add the child nodes myself because I don't know
+>>> 1) how many there are, and 2) the registers in them. I also have no way to test it.
+>>>
+>>> Speaking of testing, I was able to test this on sdm845, but haven't tested msm8996.
+>>
+>> Can someone help test this series in msm8996?
+> 
+> Sure, will give it a try tomorrow.
 
-Looks like the PHY patches has gone in the previous merge window itself. If
-there are any changes, please post only the diff as a separate patch.
+I'm planning to close the merge by today. Can you test this series please?
 
 Thanks
 Kishon
+
 > 
-> best regards
+> Thanks
 > Vivek
 > 
 >>
->> Changes since v9:
->> - Incorporated review comments from Rob.
+>> Thanks
+>> Kishon
 >>
->> Changes since v8:
->> - Add one new change to support ufs core reset.
->> - Incorporated review comments from Evan, Vivek.
->>
->> Changes since v7:
->> - Add one new change to update UFS PHY power on sequence
->> - Incorporated review comments from Evan, Vivek and Manu.
->>
->> Changes since v6:
->> - Add one new change to clean up some structs and field
->> - Updates the PHY power control sequence.
->> - Incorporated review comments from Vivek and Manu.
->>
->> Changes since v5:
->> - Updates the PHY power control sequence.
->> - Updates UFS PHY power on condition check.
->>
->> Changes since v4:
->> - Adds 'ref_aux' clock back to SDM845 UFS PHY clock list.
->> - Power on PHY before serdes configuration starts.
->> - Updates the UFS PHY initialization sequence.
->> - Updates a few UFS PHY registers.
->> - Incorporated review comments from Vivek and Manu.
->>
->> Changes since v3:
->> - Incorporated review comments from Vivek and Rob.
->>
->> Changes since v2:
->> - Incorporated review comments from Vivek and Rob.
->> - Remove "ref_aux" from sdm845 ufs phy clock list structure.
->>
->> Changes since v1:
->> - Incorporated review comments from Vivek and Manu.
->> - Update the commit title of patch 2.
->>
->> Can Guo (5):
->>   phy: Update PHY power control sequence
->>   phy: General struct and field cleanup
->>   phy: Add QMP phy based UFS phy support for sdm845
->>   scsi: ufs: Power on phy after it is initialized
->>   dt-bindings: phy-qcom-qmp: Add UFS phy compatible string for sdm845
->>
->> Dov Levenglick (1):
->>   scsi: ufs: Add core reset support
->>
->>  .../devicetree/bindings/phy/qcom-qmp-phy.txt       |   4 +-
->>  drivers/phy/qualcomm/phy-qcom-qmp.c                | 216 +++++++++++++++++++--
->>  drivers/phy/qualcomm/phy-qcom-qmp.h                |  15 ++
->>  drivers/scsi/ufs/ufs-qcom.c                        |  34 +++-
->>  drivers/scsi/ufs/ufs-qcom.h                        |   1 +
->>  drivers/scsi/ufs/ufshcd-pltfrm.c                   |  22 +++
->>  drivers/scsi/ufs/ufshcd.c                          |  13 ++
->>  drivers/scsi/ufs/ufshcd.h                          |  12 ++
->>  8 files changed, 296 insertions(+), 21 deletions(-)
->>
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
->>
+>>>
+>>> This patch sits atop the UFS device nodes series [1].
+>>>
+>>> [1] https://lore.kernel.org/lkml/20181026173544.136037-1-evgreen@chromium.org/
+>>>
+>>>
+>>>
+>>> Evan Green (4):
+>>>   dt-bindings: phy-qcom-qmp: Move #clock-cells to child
+>>>   arm64: dts: qcom: msm8996: Fix QMP PHY #clock-cells
+>>>   arm64: dts: qcom: sdm845: Fix QMP PHY #clock-cells
+>>>   phy: qcom-qmp: Expose provided clocks to DT
+>>>
+>>>  .../devicetree/bindings/phy/qcom-qmp-phy.txt  | 11 ++++-----
+>>>  arch/arm64/boot/dts/qcom/msm8996.dtsi         |  6 +++--
+>>>  arch/arm64/boot/dts/qcom/sdm845.dtsi          |  4 ++--
+>>>  drivers/phy/qualcomm/phy-qcom-qmp.c           | 23 ++++++++++++++++++-
+>>>  4 files changed, 33 insertions(+), 11 deletions(-)
+>>>
+> 
 > 
 > 
