@@ -1,56 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 12/15] dt-bindings: serial: Document RDA Micro UART
-Date: Fri, 7 Dec 2018 17:41:18 -0600
-Message-ID: <20181207234118.GA16289@bogus>
-References: <20181128135106.9255-1-manivannan.sadhasivam@linaro.org>
- <20181128135106.9255-13-manivannan.sadhasivam@linaro.org>
+Subject: Re: [ v3 1/3] dt-bindings: mtd: stm32_fmc2: add STM32 FMC2 NAND
+ controller documentation
+Date: Fri, 7 Dec 2018 17:42:44 -0600
+Message-ID: <20181207234244.GA19886@bogus>
+References: <1543509663-26128-1-git-send-email-christophe.kerello@st.com>
+ <1543509663-26128-2-git-send-email-christophe.kerello@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181128135106.9255-13-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <1543509663-26128-2-git-send-email-christophe.kerello@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: olof@lixom.net, arnd@arndb.de, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, daniel.lezcano@linaro.org, gregkh@linuxfoundation.org, jslaby@suse.com, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, overseas.sales@unisoc.com
+Cc: boris.brezillon@bootlin.com, miquel.raynal@bootlin.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Christophe Kerello <christophe.kerello@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 28, 2018 at 07:21:03PM +0530, Manivannan Sadhasivam wrote:
-> From: Andreas Färber <afaerber@suse.de>
+On Thu, 29 Nov 2018 17:41:01 +0100, Christophe Kerello wrote:
+> This patch adds the documentation of the device tree bindings for the STM32
+> FMC2 NAND controller.
 > 
-> Add an initial binding for the UART in RDA Micro RDA8810PL SoC.
-> 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
 > ---
->  .../bindings/serial/rda,8810pl-uart.txt           | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/rda,8810pl-uart.txt
+>  .../devicetree/bindings/mtd/stm32-fmc2-nand.txt    | 61 ++++++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/serial/rda,8810pl-uart.txt b/Documentation/devicetree/bindings/serial/rda,8810pl-uart.txt
-> new file mode 100644
-> index 000000000000..ee03116d7415
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/rda,8810pl-uart.txt
-> @@ -0,0 +1,15 @@
-> +RDA Micro UART
-> +
-> +Required properties:
-> +- compatible :  "rda,8810pl-uart" for RDA8810PL SoCs.
-> +- reg        :  Offset and length of the register set for the device.
-> +- interrupts :  Should contain UART interrupt.
 
-Uarts generally need a clock.
-
-> +
-> +
-> +Example:
-> +
-> +		uart2: serial@20a90000 {
-> +			compatible = "rda,8810pl-uart";
-> +			reg = <0x20a90000 0x1000>;
-> +			interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> -- 
-> 2.17.1
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
