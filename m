@@ -1,97 +1,50 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 01/19] dt-bindings: clock: tegra124-dfll: Update DFLL
- binding for PWM regulator
-Date: Fri, 7 Dec 2018 13:41:57 +0000
-Message-ID: <af1211f0-dda0-bdde-f320-03e54f82d7e1@nvidia.com>
-References: <20181204092548.3038-1-josephl@nvidia.com>
- <20181204092548.3038-2-josephl@nvidia.com>
+From: Morten Rasmussen <morten.rasmussen@arm.com>
+Subject: Re: [RFT PATCH v1 0/4] Unify CPU topology across ARM64 & RISC-V
+Date: Fri, 7 Dec 2018 13:45:21 +0000
+Message-ID: <20181207134509.GA5913@e105550-lin.cambridge.arm.com>
+References: <1543534100-3654-1-git-send-email-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181204092548.3038-2-josephl@nvidia.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1543534100-3654-1-git-send-email-atish.patra@wdc.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Atish Patra <atish.patra@wdc.com>
+Cc: linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Dmitriy Cherkasov <dmitriy@oss-tech.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Juri Lelli <juri.lelli@arm.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-On 04/12/2018 09:25, Joseph Lo wrote:
-> From: Peter De Schrijver <pdeschrijver@nvidia.com>
+On Thu, Nov 29, 2018 at 03:28:16PM -0800, Atish Patra wrote:
+> The cpu-map DT entry in ARM64 can describe the CPU topology in
+> much better way compared to other existing approaches. RISC-V can
+> easily adopt this binding to represent it's own CPU topology.
+> Thus, both cpu-map DT binding and topology parsing code can be
+> moved to a common location so that RISC-V or any other
+> architecture can leverage that.
 > 
-> Add new properties to configure the DFLL PWM regulator support. Also
-> add an example and make the I2C clock only required when I2C support is
-> used.
+> The relevant discussion regarding unifying cpu topology can be
+> found in [1].
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> Signed-off-by: Joseph Lo <josephl@nvidia.com>
-> ---
->  .../bindings/clock/nvidia,tegra124-dfll.txt   | 73 ++++++++++++++++++-
->  1 file changed, 71 insertions(+), 2 deletions(-)
+> arch_topology seems to be a perfect place to move the common
+> code. I have not introduced any functional changes in the moved
+> code. The only downside in this approach is that the capacity
+> code will be executed for RISC-V as well. But, it will exit
+> immediately after not able to find the appropriate DT node. If
+> the overhead is considered too much, we can always compile out
+> capacity related functions under a different config for the
+> architectures that do not support them.
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
-> index dff236f524a7..8c97600d2bad 100644
-> --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
-> +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
-> @@ -8,7 +8,6 @@ the fast CPU cluster. It consists of a free-running voltage controlled
->  oscillator connected to the CPU voltage rail (VDD_CPU), and a closed loop
->  control module that will automatically adjust the VDD_CPU voltage by
->  communicating with an off-chip PMIC either via an I2C bus or via PWM signals.
-> -Currently only the I2C mode is supported by these bindings.
->  
->  Required properties:
->  - compatible : should be "nvidia,tegra124-dfll"
-> @@ -45,10 +44,28 @@ Required properties for the control loop parameters:
->  Optional properties for the control loop parameters:
->  - nvidia,cg-scale: Boolean value, see the field DFLL_PARAMS_CG_SCALE in the TRM.
->  
-> +Optional properties for mode selection:
-> +- nvidia,pwm-to-pmic: Use PWM to control regulator rather then I2C.
-> +
->  Required properties for I2C mode:
->  - nvidia,i2c-fs-rate: I2C transfer rate, if using full speed mode.
->  
-> -Example:
-> +Required properties for PWM mode:
-> +- nvidia,pwm-period: period of PWM square wave in microseconds.
-> +- nvidia,init-uv: Regulator voltage in micro volts when PWM control is disabled.
+> The patches have been tested for RISC-V and compile tested for
+> ARM64 & x86.
 
-Maybe consider 'pwm-inactive-voltage-microvolt'.
+The cpu-map bindings are used for arch/arm too, and so is
+arch_topology.c. In fact, it was introduced to allow code-sharing
+between arm and arm64. Applying patch three breaks arm.
 
-> +- nvidia,align-offset-uv: Regulator voltage in micro volts when PWM control is
-> +			  enabled and PWM output is low.
+Moving the DT parsing to arch_topology.c we have to unify all three
+architectures. Be aware that arm and arm64 have some differences in how
+they detect cpu capacities. I think we might have to look at the split
+of code between arch/* and arch_topology.c again :-/
 
-Would this be considered the minimum pwm active voltage?
-
-> +- nvidia,align-step-uv: Voltage increase in micro volts corresponding to a
-> +			1/33th increase in duty cycle. Eg the voltage for 2/33th
-> +			duty cycle would be:
-
-Maybe consider 'pwm-voltage-step-microvolt'.
-
-> +			nvidia,align-offset-uv + nvidia,align-step-uv * 2.
-> +- pinctrl-0: I/O pad configuration when PWM control is enabled.
-> +- pinctrl-1: I/O pad configuration when PWM control is disabled.
-> +- pinctrl-names: must include the following entries:
-> +  - dvfs_pwm_enable: I/O pad configuration when PWM control is enabled.
-> +  - dvfs_pwm_disable: I/O pad configuration when PWM control is disabled.
-
-Please see Rob's feedback on the above [0].
-
-Cheers
-Jon
-
-[0] https://lore.kernel.org/patchwork/patch/885328/
-
--- 
-nvpublic
+Morten
