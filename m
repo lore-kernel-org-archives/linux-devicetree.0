@@ -1,104 +1,190 @@
-From: Abel Vesa <abel.vesa@nxp.com>
-Subject: Re: [PATCH v4 2/6] arm64: add basic DTS for i.MX8MQ
-Date: Sat, 8 Dec 2018 11:52:03 +0000
-Message-ID: <20181208115202.uxgbvc2kmjnowisj@fsr-ub1664-175>
-References: <20181114175242.12468-1-l.stach@pengutronix.de>
- <20181114175242.12468-2-l.stach@pengutronix.de> <20181116232524.GA2013@bogus>
- <20181207161723.2u5z3sdobbpop4kz@fsr-ub1664-175>
- <1544200612.3709.111.camel@pengutronix.de>
- <20181207210718.ueg2uw6tfniniscl@fsr-ub1664-175>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 2/2] iio: accell: mma8452: add optional vcc regulator
+ operation support
+Date: Sat, 8 Dec 2018 12:10:30 +0000
+Message-ID: <20181208121030.57e081dc@archlinux>
+References: <1544077059-4471-1-git-send-email-Anson.Huang@nxp.com>
+        <1544077059-4471-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181207210718.ueg2uw6tfniniscl@fsr-ub1664-175>
-Content-Language: en-US
-Content-ID: <4D2975C01CA10D4E8F2991BB756FA8C4@eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1544077059-4471-2-git-send-email-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "harinath922@gmail.com" <harinath922@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "martink@posteo.de" <martink@posteo.de>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 07, 2018 at 09:07:19PM +0000, Abel Vesa wrote:
-> On Fri, Dec 07, 2018 at 05:36:52PM +0100, Lucas Stach wrote:
-> > Hi Abel,
-> > 
-> > Am Freitag, den 07.12.2018, 16:17 +0000 schrieb Abel Vesa:
-> > > On Fri, Nov 16, 2018 at 05:25:24PM -0600, Rob Herring wrote:
-> > > 
-> > > > > +
-> > > > > +	clk_ext1: clock-ext1 {
-> > > > > +		compatible = "fixed-clock";
-> > > > > +		#clock-cells = <0>;
-> > > > > +		clock-frequency = <133000000>;
-> > > > > +		clock-output-names = "clk_ext1";
-> > > > > +	};
-> > > > > +
-> > > > > +	clk_ext2: clock-ext2 {
-> > > > > +		compatible = "fixed-clock";
-> > > > > +		#clock-cells = <0>;
-> > > > > +		clock-frequency = <133000000>;
-> > > > > +		clock-output-names = "clk_ext2";
-> > > > > +	};
-> > > > > +
-> > > > > +	clk_ext3: clock-ext3 {
-> > > > > +		compatible = "fixed-clock";
-> > > > > +		#clock-cells = <0>;
-> > > > > +		clock-frequency = <133000000>;
-> > > > > +		clock-output-names = "clk_ext3";
-> > > > > +	};
-> > > > > +
-> > > > > +	clk_ext4: clock-ext4 {
-> > > > > +		compatible = "fixed-clock";
-> > > > > +		#clock-cells = <0>;
-> > > > > +		clock-frequency= <133000000>;
-> > > > > +		clock-output-names = "clk_ext4";
-> > > > > +	};
-> > > > 
-> > > > This is really 4 independent clocks or is 1 clock connected to 4
-> > > > sinks?
-> > > 
-> > > According to the RM, yes, there are 4 independent clocks. Here is a
-> > > link to the rm:
-> > > 
-> > > https://emea01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.nxp.com%2Fwebapp%2FDownload%3FcolCode%3DIMX8MEVKBHUG&amp;data=02%7C01%7Cabel.vesa%40nxp.com%7C303f3053feb94a3c1c9f08d65c623255%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C636797974154936811&amp;sdata=CuJSqDl1WiL%2Bc%2B4wYnr3ssDDpH3DorYIzLN87PNHVh4%3D&amp;reserved=0 (page 829)
-> > > 
-> > > Unfortunately, the old link (which worked without login) does not
-> > > work anymore.
-> > 
-> > It's really 4 clock inputs to the SoC, but they may actually be
-> > connected to the same clock source on the board. So I really wonder if
-> > we should even put this into the base SoC DT, but rather push this into
-> > individual board DTs.
+On Thu, 6 Dec 2018 06:23:33 +0000
+Anson Huang <anson.huang@nxp.com> wrote:
+
+> The accelerometer's power supply could be controlled by regulator
+> on some platforms, such as i.MX6Q-SABRESD board, the mma8451's
+> power supply is controlled by a GPIO fixed regulator, need to make
+> sure the regulator is enabled before any communication with mma8451,
+> this patch adds optional vcc regulator operation support.
 > 
-> Hmm, it's part of the SoC, right ? So I would keep it in the dtsi rather than
-> having it duplicated into every new dts.
->
-
-On a second thought, you're right, they seem to be input from the board and
-would make sense to be in the board specific dts file.
-
-Though, one problem with that is that the imx8mq CCM driver expects them to
-be available.
-
-One solution would be to keep as is since there is only one board (evk)
-that is supported.
-
-Later on, when another board comes around (and if it doesn't provide all the ext
-clocks) we can rework the CCM driver to supoort that. 
- 
-> > 
-> > Regards,
-> > Lucas
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/iio/accel/mma8452.c | 88 +++++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 86 insertions(+), 2 deletions(-)
 > 
-> -- 
+> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+> index 421a0a8..8f6123f 100644
+> --- a/drivers/iio/accel/mma8452.c
+> +++ b/drivers/iio/accel/mma8452.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/of_device.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/regulator/consumer.h>
+>  
+>  #define MMA8452_STATUS				0x00
+>  #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
+> @@ -107,6 +108,7 @@ struct mma8452_data {
+>  	u8 data_cfg;
+>  	const struct mma_chip_info *chip_info;
+>  	int sleep_val;
+> +	struct regulator *vcc_reg;
+>  };
+>  
+>   /**
+> @@ -1533,6 +1535,14 @@ static int mma8452_probe(struct i2c_client *client,
+>  	data->client = client;
+>  	mutex_init(&data->lock);
+>  	data->chip_info = match->data;
+> +	data->vcc_reg = devm_regulator_get_optional(&client->dev, "vcc");
+> +	if (!IS_ERR(data->vcc_reg)) {
 
--- 
+Make sure it's the 'right' error to indicate there isn't a regulator
+rather than a deferred response for example.
+
+
+> +		ret = regulator_enable(data->vcc_reg);
+> +		if (ret) {
+> +			dev_err(&client->dev, "failed to enable VCC regulator\n");
+> +			return ret;
+> +		}
+> +	}
+>  
+>  	ret = i2c_smbus_read_byte_data(client, MMA8452_WHO_AM_I);
+>  	if (ret < 0)
+> @@ -1667,6 +1677,8 @@ static int mma8452_probe(struct i2c_client *client,
+>  static int mma8452_remove(struct i2c_client *client)
+>  {
+>  	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+> +	struct mma8452_data *data = iio_priv(indio_dev);
+> +	int ret;
+>  
+>  	iio_device_unregister(indio_dev);
+>  
+> @@ -1678,6 +1690,14 @@ static int mma8452_remove(struct i2c_client *client)
+>  	mma8452_trigger_cleanup(indio_dev);
+>  	mma8452_standby(iio_priv(indio_dev));
+>  
+> +	if (!IS_ERR(data->vcc_reg)) {
+> +		ret = regulator_disable(data->vcc_reg);
+> +		if (ret) {
+> +			dev_err(&client->dev, "failed to disable VCC regulator\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -1696,6 +1716,14 @@ static int mma8452_runtime_suspend(struct device *dev)
+>  		return -EAGAIN;
+>  	}
+>  
+> +	if (!IS_ERR(data->vcc_reg)) {
+> +		ret = regulator_disable(data->vcc_reg);
+> +		if (ret) {
+> +			dev_err(dev, "failed to disable VCC regulator\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -1705,6 +1733,14 @@ static int mma8452_runtime_resume(struct device *dev)
+>  	struct mma8452_data *data = iio_priv(indio_dev);
+>  	int ret, sleep_val;
+>  
+> +	if (!IS_ERR(data->vcc_reg)) {
+> +		ret = regulator_enable(data->vcc_reg);
+> +		if (ret) {
+> +			dev_err(dev, "failed to enable VCC regulator\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	ret = mma8452_active(data);
+>  	if (ret < 0)
+>  		return ret;
+> @@ -1723,14 +1759,62 @@ static int mma8452_runtime_resume(struct device *dev)
+>  #ifdef CONFIG_PM_SLEEP
+>  static int mma8452_suspend(struct device *dev)
+>  {
+> -	return mma8452_standby(iio_priv(i2c_get_clientdata(
+> +	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
+> +	struct mma8452_data *data = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	if (!IS_ERR(data->vcc_reg)) {
+> +		ret = regulator_enable(data->vcc_reg);
+> +		if (ret) {
+> +			dev_err(dev, "failed to enable VCC regulator\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	ret = mma8452_standby(iio_priv(i2c_get_clientdata(
+>  		to_i2c_client(dev))));
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!IS_ERR(data->vcc_reg)) {
+> +		ret = regulator_disable(data->vcc_reg);
+> +		if (ret) {
+> +			dev_err(dev, "failed to disable VCC regulator\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+>  }
+>  
+>  static int mma8452_resume(struct device *dev)
+>  {
+> -	return mma8452_active(iio_priv(i2c_get_clientdata(
+> +	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
+> +	struct mma8452_data *data = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	if (!IS_ERR(data->vcc_reg)) {
+> +		ret = regulator_enable(data->vcc_reg);
+> +		if (ret) {
+> +			dev_err(dev, "failed to enable VCC regulator\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	ret = mma8452_active(iio_priv(i2c_get_clientdata(
+>  		to_i2c_client(dev))));
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!IS_ERR(data->vcc_reg)) {
+> +		ret = regulator_disable(data->vcc_reg);
+> +		if (ret) {
+> +			dev_err(dev, "failed to disable VCC regulator\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+>  }
+>  #endif
+>  
