@@ -1,205 +1,127 @@
-Return-Path: <SRS0=5gDw=OO=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 5/5] ARM: dts: r8a7744: Fix sorting of vsp and msiof nodes
-Date: Wed,  5 Dec 2018 09:06:55 +0000
-Message-Id: <1544000815-28069-6-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1544000815-28069-1-git-send-email-biju.das@bp.renesas.com>
-References: <1544000815-28069-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=Q85b=OR=synopsys.com=thinh.nguyen@kernel.org>
+From: Thinh Nguyen <thinh.nguyen@synopsys.com>
+Subject: Re: [PATCH 1/3] usb: dwc3: Add reference clock properties
+Date: Sat, 8 Dec 2018 02:25:35 +0000
+Message-ID: <30102591E157244384E984126FC3CB4F639A8805@us01wembx1.internal.synopsys.com>
+References: <cover.1541208283.git.thinhn@synopsys.com>
+ <ca0957e58d1d7c1ed49b53345a5c4ed9209c0968.1541208283.git.thinhn@synopsys.com>
+ <877ehqv44p.fsf@linux.intel.com>
+ <30102591E157244384E984126FC3CB4F639A080E@us01wembx1.internal.synopsys.com>
+ <871s7xv1et.fsf@linux.intel.com>
+ <30102591E157244384E984126FC3CB4F639A0ACE@us01wembx1.internal.synopsys.com>
+ <874lcst4wg.fsf@linux.intel.com>
+ <30102591E157244384E984126FC3CB4F639A0FB0@us01wembx1.internal.synopsys.com>
+ <87muqisoxg.fsf@linux.intel.com>
+ <30102591E157244384E984126FC3CB4F639A114E@us01wembx1.internal.synopsys.com>
+ <87k1lmska2.fsf@linux.intel.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+To: Felipe Balbi <balbi@kernel.org>, Thinh Nguyen <thinh.nguyen@synopsys.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: John Youn <john.youn@synopsys.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch fixes sorting of vsp and msiof nodes.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-V1-->V2
-  * No change. It is a new patch.
----
- arch/arm/boot/dts/r8a7744.dtsi | 150 ++++++++++++++++++++---------------------
- 1 file changed, 75 insertions(+), 75 deletions(-)
-
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index 6a51b16..83804aa 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -998,6 +998,54 @@
- 			status = "disabled";
- 		};
- 
-+		msiof0: spi@e6e20000 {
-+			compatible = "renesas,msiof-r8a7744",
-+				     "renesas,rcar-gen2-msiof";
-+			reg = <0 0xe6e20000 0 0x0064>;
-+			interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 000>;
-+			dmas = <&dmac0 0x51>, <&dmac0 0x52>,
-+			       <&dmac1 0x51>, <&dmac1 0x52>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			resets = <&cpg 000>;
-+			status = "disabled";
-+		};
-+
-+		msiof1: spi@e6e10000 {
-+			compatible = "renesas,msiof-r8a7744",
-+				     "renesas,rcar-gen2-msiof";
-+			reg = <0 0xe6e10000 0 0x0064>;
-+			interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 208>;
-+			dmas = <&dmac0 0x55>, <&dmac0 0x56>,
-+			       <&dmac1 0x55>, <&dmac1 0x56>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			resets = <&cpg 208>;
-+			status = "disabled";
-+		};
-+
-+		msiof2: spi@e6e00000 {
-+			compatible = "renesas,msiof-r8a7744",
-+				     "renesas,rcar-gen2-msiof";
-+			reg = <0 0xe6e00000 0 0x0064>;
-+			interrupts = <GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 205>;
-+			dmas = <&dmac0 0x41>, <&dmac0 0x42>,
-+			       <&dmac1 0x41>, <&dmac1 0x42>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			resets = <&cpg 205>;
-+			status = "disabled";
-+		};
-+
- 		pwm0: pwm@e6e30000 {
- 			compatible = "renesas,pwm-r8a7744", "renesas,pwm-rcar";
- 			reg = <0 0xe6e30000 0 0x8>;
-@@ -1068,54 +1116,6 @@
- 			status = "disabled";
- 		};
- 
--		msiof0: spi@e6e20000 {
--			compatible = "renesas,msiof-r8a7744",
--				     "renesas,rcar-gen2-msiof";
--			reg = <0 0xe6e20000 0 0x0064>;
--			interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&cpg CPG_MOD 000>;
--			dmas = <&dmac0 0x51>, <&dmac0 0x52>,
--			       <&dmac1 0x51>, <&dmac1 0x52>;
--			dma-names = "tx", "rx", "tx", "rx";
--			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--			resets = <&cpg 000>;
--			status = "disabled";
--		};
--
--		msiof1: spi@e6e10000 {
--			compatible = "renesas,msiof-r8a7744",
--				     "renesas,rcar-gen2-msiof";
--			reg = <0 0xe6e10000 0 0x0064>;
--			interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&cpg CPG_MOD 208>;
--			dmas = <&dmac0 0x55>, <&dmac0 0x56>,
--			       <&dmac1 0x55>, <&dmac1 0x56>;
--			dma-names = "tx", "rx", "tx", "rx";
--			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--			resets = <&cpg 208>;
--			status = "disabled";
--		};
--
--		msiof2: spi@e6e00000 {
--			compatible = "renesas,msiof-r8a7744",
--				     "renesas,rcar-gen2-msiof";
--			reg = <0 0xe6e00000 0 0x0064>;
--			interrupts = <GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&cpg CPG_MOD 205>;
--			dmas = <&dmac0 0x41>, <&dmac0 0x42>,
--			       <&dmac1 0x41>, <&dmac1 0x42>;
--			dma-names = "tx", "rx", "tx", "rx";
--			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--			resets = <&cpg 205>;
--			status = "disabled";
--		};
--
- 		can0: can@e6e80000 {
- 			compatible = "renesas,can-r8a7744",
- 				     "renesas,rcar-gen2-can";
-@@ -1589,33 +1589,6 @@
- 			resets = <&cpg 408>;
- 		};
- 
--		vsp@fe928000 {
--			compatible = "renesas,vsp1";
--			reg = <0 0xfe928000 0 0x8000>;
--			interrupts = <GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&cpg CPG_MOD 131>;
--			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
--			resets = <&cpg 131>;
--		};
--
--		vsp@fe930000 {
--			compatible = "renesas,vsp1";
--			reg = <0 0xfe930000 0 0x8000>;
--			interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&cpg CPG_MOD 128>;
--			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
--			resets = <&cpg 128>;
--		};
--
--		vsp@fe938000 {
--			compatible = "renesas,vsp1";
--			reg = <0 0xfe938000 0 0x8000>;
--			interrupts = <GIC_SPI 247 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&cpg CPG_MOD 127>;
--			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
--			resets = <&cpg 127>;
--		};
--
- 		pciec: pcie@fe000000 {
- 			compatible = "renesas,pcie-r8a7744",
- 				     "renesas,pcie-rcar-gen2";
-@@ -1644,6 +1617,33 @@
- 			status = "disabled";
- 		};
- 
-+		vsp@fe928000 {
-+			compatible = "renesas,vsp1";
-+			reg = <0 0xfe928000 0 0x8000>;
-+			interrupts = <GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 131>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 131>;
-+		};
-+
-+		vsp@fe930000 {
-+			compatible = "renesas,vsp1";
-+			reg = <0 0xfe930000 0 0x8000>;
-+			interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 128>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 128>;
-+		};
-+
-+		vsp@fe938000 {
-+			compatible = "renesas,vsp1";
-+			reg = <0 0xfe938000 0 0x8000>;
-+			interrupts = <GIC_SPI 247 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 127>;
-+			power-domains = <&sysc R8A7744_PD_ALWAYS_ON>;
-+			resets = <&cpg 127>;
-+		};
-+
- 		du: display@feb00000 {
- 			compatible = "renesas,du-r8a7744";
- 			reg = <0 0xfeb00000 0 0x40000>;
--- 
-2.7.4
+Hi Felipe,=0A=
+=0A=
+On 11/9/2018 12:54 AM, Felipe Balbi wrote:=0A=
+> Hi,=0A=
+>=0A=
+> Thinh Nguyen <thinh.nguyen@synopsys.com> writes:=0A=
+>>> Thinh Nguyen <thinh.nguyen@synopsys.com> writes:=0A=
+>>>>> Thinh Nguyen <thinh.nguyen@synopsys.com> writes:=0A=
+>>>>>>>>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Do=
+cumentation/devicetree/bindings/usb/dwc3.txt=0A=
+>>>>>>>>>> index 636630fb92d7..712b344c3a31 100644=0A=
+>>>>>>>>>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt=0A=
+>>>>>>>>>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt=0A=
+>>>>>>>>>> @@ -95,6 +95,24 @@ Optional properties:=0A=
+>>>>>>>>>>  			this and tx-thr-num-pkt-prd to a valid, non-zero value=0A=
+>>>>>>>>>>  			1-16 (DWC_usb31 programming guide section 1.2.3) to=0A=
+>>>>>>>>>>  			enable periodic ESS TX threshold.=0A=
+>>>>>>>>>> + - snps,refclk-period-ns: set to program the reference clock pe=
+riod. The valid=0A=
+>>>>>>>>>> +   			input periods are as follow:=0A=
+>>>>>>>>>> +			+-------------+-----------------+=0A=
+>>>>>>>>>> +			| Period (ns) | Freq (MHz)      |=0A=
+>>>>>>>>>> +			+-------------+-----------------+=0A=
+>>>>>>>>>> +			| 25          | 39.7/40         |=0A=
+>>>>>>>>>> +			| 41          | 24.4            |=0A=
+>>>>>>>>>> +			| 50          | 20              |=0A=
+>>>>>>>>>> +			| 52          | 19.2            |=0A=
+>>>>>>>>>> +			| 58          | 17.2            |=0A=
+>>>>>>>>>> +			| 62          | 16.1            |=0A=
+>>>>>>>>>> +			+-------------+-----------------+=0A=
+>>>>>>>>>> + - snps,enable-refclk-lpm: set to enable low power scheduling o=
+f isochronous=0A=
+>>>>>>>>>> +			transfers by running SOF/ITP counters using the=0A=
+>>>>>>>>>> +			reference clock. Only valid for DWC_usb31 peripheral=0A=
+>>>>>>>>>> +			controller v1.80a and higher. Both=0A=
+>>>>>>>>>> +			"snps,dis_u2_susphy_quirk" and=0A=
+>>>>>>>>>> +			"snps,dis_enblslpm_quirk" must not be set.=0A=
+>>>>>>>>> sounds like you should rely on clk API here. Then on driver call=
+=0A=
+>>>>>>>>> clk_get_rate() to computer whatever you need to compute.=0A=
+>>>>>>>>>=0A=
+>>>>>>>> There's nothing to compute here. We can simply enable this feature=
+ with=0A=
+>>>>>>>> "snps, enable-refclk-lpm" and the controller will use the default =
+refclk=0A=
+>>>>>>>> settings.=0A=
+>>>>>>> Right, right. What I'm saying, though, is that we have a clock API =
+for=0A=
+>>>>>>> describing a clock. So why wouldn't we rely on that API for this? I=
+=0A=
+>>>>>>> think both of these new properties can be replaced with standard cl=
+ock=0A=
+>>>>>>> API properties:=0A=
+>>>>>>>=0A=
+>>>>>>> 	clocks =3D <&clk1>, ..., <&lpm_clk>=0A=
+>>>>>>>         clock-names =3D "clock1", ...., "lpm";=0A=
+>>>>>>>=0A=
+>>>>>>> Then dwc3 core could, simply, check if we have a clock named "lpm" =
+and=0A=
+>>>>>>> if there is, use NSECS_PER_SEC / clk_get_rate() to get its period a=
+nd=0A=
+>>>>>>> write it to the register that needs the information.=0A=
+>>>>>> There's no new clock here. We are using the ref_clk for SOF and ITP=
+=0A=
+>>>>>> counter for this feature. Also, clocks are optional on non-DT platfo=
+rms.=0A=
+>>>>>> To use the clock API, then we need to update the driver to allow som=
+e=0A=
+>>>>>> optional clock such as "ref" clock for non-DT platforms. Do you want=
+ to=0A=
+>>>>>> do it like this?=0A=
+>>>>> I can't think of a problem that would arise from that. Can you? Mark,=
+=0A=
+>>>>> Rob, what do you think?=0A=
+>>>>>=0A=
+>>>> No problem. That can be done. This will remove the=0A=
+>>>> "snps,refclk-period-ns" property. But we should have=0A=
+>>>> "snps,enable-refclk-lpm" to enable this feature.=0A=
+>>> not really. Just check if you have a clock named lpm. If you do, then=
+=0A=
+>>> you enable the feature.=0A=
+>>>=0A=
+>> But this clock name should be "ref".  The new name "lpm" would make it=
+=0A=
+>> seem like it's a different clock.=0A=
+> now I understand. There's no special LPM clock, this is just the regular=
+=0A=
+> old reference clock being used for LPM. I agree with you, only=0A=
+> refclk-period-ns will be replaced.=0A=
+>=0A=
+=0A=
+I had some misunderstanding with the purpose of GUCTL.REFCLKPER. After a=0A=
+discussion with the RTL engineers, it's not to control the reference=0A=
+clock. Setting this register field does not control the reference clock=0A=
+rate. The controller uses this value to perform internal timing=0A=
+calculations that are based on the reference clock. So, we will still=0A=
+need this property to set this value. I will resend the patch series=0A=
+with some changes and correct the commit messages with the proper=0A=
+definition of this feature.=0A=
+=0A=
+Thanks,=0A=
+Thinh=0A=
+=0A=
