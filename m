@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 3/3] ARM: dts: meson8b: add the APB bus
-Date: Sat,  8 Dec 2018 17:45:55 +0100
-Message-ID: <20181208164555.26527-7-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 3/3] ARM: dts: meson8b: add the ABP bus
+Date: Sat,  8 Dec 2018 17:45:54 +0100
+Message-ID: <20181208164555.26527-6-martin.blumenstingl@googlemail.com>
 References: <20181208164555.26527-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -13,7 +13,7 @@ Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetr
 List-Id: devicetree@vger.kernel.org
 
 Various peripherals (Mali GPU, NAND controller, VPU; etc.) are located
-in the APB bus. Describe this bus so we can add devices to it.
+in the ABP bus. Describe this bus so we can add devices to it.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
