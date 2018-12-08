@@ -1,15 +1,20 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH 1/2] arm64: dts: ti: k3-am654: Add Support for MMC/SD
-Date: Sat, 8 Dec 2018 10:56:16 +0530
-Message-ID: <a6aacd53-e1c4-fce0-7712-f276c80bbffc@ti.com>
-References: <20181207084233.13700-1-faiz_abbas@ti.com>
- <20181207084233.13700-2-faiz_abbas@ti.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v2 01/10] mailbox: Support blocking transfers in atomic
+ context
+Date: Sat, 8 Dec 2018 11:21:41 +0530
+Message-ID: <CABb+yY3_uWv1YVxXxjgygPemBZraCTAXNyXT9G4aTMZv1t7d0g@mail.gmail.com>
+References: <20181112151853.29289-1-thierry.reding@gmail.com>
+ <20181112151853.29289-2-thierry.reding@gmail.com>
+ <0545f5e1-1740-2129-9d0e-5c950bd9bf74@nvidia.com>
+ <CABb+yY1u24JYO68f74qSJ1RpqidJ4H7cnP1Sy=RdqcBHru5XQg@mail.gmail.com>
+ <20181129152312.GB23750@ulmo>
+ <CABb+yY1G+6MQmrSeZvOXnuREB87+DYHGxNu1tBb9W6apizLtGw@mail.gmail.com>
+ <4f7a4211-47ee-1114-0974-a3b402178106@kapsi.fi>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181207084233.13700-2-faiz_abbas@ti.com>
-Content-Language: en-US
+In-Reply-To: <4f7a4211-47ee-1114-0974-a3b402178106@kapsi.fi>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,64 +24,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Faiz Abbas <faiz_abbas@ti.com>, linux-arm-kernel@lists.infradead.org, nm@ti.com, t-kristo@ti.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-kernel@vger.kernel.org, kishon@ti.com, robh+dt@kernel.org, adrian.hunter@intel.com, michal.simek@xilinx.com
+To: Mikko Perttunen <cyndis@kapsi.fi>
+Cc: Devicetree List <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, mliljeberg@nvidia.com, Mikko Perttunen <mperttunen@nvidia.com>, talho@nvidia.com, Thierry Reding <thierry.reding@gmail.com>, linux-serial@vger.kernel.org, jslaby@suse.com, linux-tegra@vger.kernel.org, ppessi@nvidia.com, Jon Hunter <jonathanh@nvidia.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Dec 7, 2018 at 11:50 AM Mikko Perttunen <cyndis@kapsi.fi> wrote:
+>
+> On 07/12/2018 11.26, Jassi Brar wrote:
+> >> I thought that I could also mitigate 2) by busy looping in the TCU driver,
+> >> but it turns out that that doesn't work. The reason is that since we are
+> >> in atomic context with all interrupts disabled, the mailbox won't ever
+> >> consume any new characters, so the read pointer in the circular buffer
+> >> won't increment, leaving me with no condition upon which to loop that
+> >> would work.
+> >>
+> > So you want to be able to rely on an emulated console (running on a
+> > totally different subsystem) to dump development-phase early-boot
+> > logs? At the cost of legitimizing busy looping in atomic context - one
+> > random driver messing up the api for ever. Maybe you could have the
+> > ring buffer in some shmem and only pass the number of valid characters
+> > in it, to the remote?
+> >
+>
+> I would like to note that this is the one and only console interface
+> that exists on these systems, for both development phase and production.
+> Other UARTs are not externally accessible on the systems, or they are
+> comparatively difficult to access as they aren't intended to be used as
+> consoles in the system design.
 
-
-On 07/12/18 2:12 PM, Faiz Abbas wrote:
-> There are two MMC host controller instances present on the TI's
-> Am654 SOCs. Add device tree nodes for the same.
-> 
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 28 ++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> index 916434839603..d07212f16a81 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> @@ -129,4 +129,32 @@
->  		clocks = <&k3_clks 113 1>;
->  		power-domains = <&k3_pds 113>;
->  	};
-> +
-> +	sdhci0: sdhci@4f80000 {
-> +		compatible = "ti,am654-sdhci-5.1";
-> +		reg = <0x0 0x4f80000 0x0 0x260>, <0x0 0x4f90000 0x0 0x134>;
-> +		power-domains = <&k3_pds 47>;
-> +		clocks = <&k3_clks 47 0>, <&k3_clks 47 1>;
-> +		clock-names = "clk_ahb", "clk_xin";
-> +		interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
-> +		sdhci-caps-mask = <0x80000007 0x0>;
-> +		mmc-ddr-1_8v;
-> +		ti,otap-del-sel = <0x2>;
-> +		ti,trm-icp = <0x8>;
-> +		status = "disabled";
-> +	};
-
-Please drop "status=disabled" from dtsi. Can be disabled as required in
-the board dts.
-
-> +
-> +	sdhci1: sdhci@4fa0000 {
-> +		compatible = "ti,am654-sdhci-5.1";
-> +		reg = <0x0 0x4fa0000 0x0 0x260>, <0x0 0x4fb0000 0x0 0x134>;
-> +		power-domains = <&k3_pds 48>;
-> +		clocks = <&k3_clks 48 0>, <&k3_clks 48 1>;
-> +		clock-names = "clk_ahb", "clk_xin";
-> +		interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
-> +		sdhci-caps-mask = <0x80000007 0x0>;
-> +		mmc-ddr-1_8v;
-> +		ti,otap-del-sel = <0x2>;
-> +		ti,trm-icp = <0x8>;
-> +		status = "disabled";
-> +	};
->  };
-> 
-
--- 
-Regards
-Vignesh
+> The combination of hardware and firmware
+> implementing the console is black box from software's point of view
+> (similarly to any other UART HW). The interface has also been fixed at
+> an early system design phase, as there are many operating systems
+> running on these boards, each with their own drivers.
+>
+That is the saddest part - someone, who writes test cases for the h/w
+team and with almost no knowledge of how OSes work, decides how the
+firmware is going to work and calls it done. Then the Linux is left to
+deal with the mess as we "can't do anything about it".
