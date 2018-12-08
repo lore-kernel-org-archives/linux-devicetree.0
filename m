@@ -1,15 +1,16 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: Add compatible string for LS1028A-QDS
-Date: Sat, 8 Dec 2018 10:14:08 +0800
-Message-ID: <20181208021407.GN3987@dragon>
-References: <1542156591-3224-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
- <20181128024149.GC20643@dragon>
+Subject: Re: [PATCH v2] dt-bindings: ls1012a: Add FRWY-LS1012A device tree
+ binding
+Date: Sat, 8 Dec 2018 10:22:53 +0800
+Message-ID: <20181208022252.GO3987@dragon>
+References: <20181026084554.32290-1-pramod.kumar_1@nxp.com>
+ <20181031064809.GF10386@tiger>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20181128024149.GC20643@dragon>
+In-Reply-To: <20181031064809.GF10386@tiger>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,25 +20,21 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudhanshu Gupta <sudhanshu.gupta@nxp.com>, Harninder Rai <harninder.rai@nxp.com>, Rajesh Bhagat <rajesh.bhagat@nxp.com>, Leo Li <leoyang.li@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Pramod Kumar <pramod.kumar_1@nxp.com>, Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 28, 2018 at 10:41:50AM +0800, Shawn Guo wrote:
-> On Wed, Nov 14, 2018 at 05:30:50AM +0000, Bhaskar Upadhaya wrote:
-> > Signed-off-by: Sudhanshu Gupta <sudhanshu.gupta@nxp.com>
-> > Signed-off-by: Rai Harninder <harninder.rai@nxp.com>
-> > Signed-off-by: Rajesh Bhagat <rajesh.bhagat@nxp.com>
-> > Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  changes in v3:
-> >   no change
+On Wed, Oct 31, 2018 at 02:48:12PM +0800, Shawn Guo wrote:
+> On Fri, Oct 26, 2018 at 08:45:26AM +0000, Pramod Kumar wrote:
+> > LS1012A-FRWY is an ls1012a based SoC board
+> > Add device tree binding for LS1012A-FRWY board
 > > 
-> >  Documentation/devicetree/bindings/arm/fsl.txt | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
+> > Signed-off-by: Pramod Kumar <pramod.kumar_1@nxp.com>
 > 
-> Applied both, thanks.
+> It should really be sent together with "arm64: dts: ls1012a: Add
+> FRWY-LS1012A board support" as a patch series.
+> 
+> Applied, thanks.
 
 I dropped this patch from my 4.21 queue for now, as Rob is moving the
 bindings to json-schema during this development cycle.  I will add the
