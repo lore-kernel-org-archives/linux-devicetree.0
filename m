@@ -1,190 +1,36 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 2/2] iio: accell: mma8452: add optional vcc regulator
- operation support
-Date: Sat, 8 Dec 2018 12:10:30 +0000
-Message-ID: <20181208121030.57e081dc@archlinux>
-References: <1544077059-4471-1-git-send-email-Anson.Huang@nxp.com>
-        <1544077059-4471-2-git-send-email-Anson.Huang@nxp.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [v2,1/3] mtd: spi-nor: Add support for is25lp016d
+Date: Sat,  8 Dec 2018 13:30:31 +0100
+Message-ID: <20181208123031.9847-1-boris.brezillon@bootlin.com>
+References: <1541696684-21235-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544077059-4471-2-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "harinath922@gmail.com" <harinath922@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "martink@posteo.de" <martink@posteo.de>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1541696684-21235-2-git-send-email-fabrizio.castro@bp.renesas.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Vasut <marek.vasut@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Richard Weinberger <richard@nod.at>
+Cc: devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-spi@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-mtd@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 6 Dec 2018 06:23:33 +0000
-Anson Huang <anson.huang@nxp.com> wrote:
-
-> The accelerometer's power supply could be controlled by regulator
-> on some platforms, such as i.MX6Q-SABRESD board, the mma8451's
-> power supply is controlled by a GPIO fixed regulator, need to make
-> sure the regulator is enabled before any communication with mma8451,
-> this patch adds optional vcc regulator operation support.
+On Thu, 2018-11-08 at 17:04:41 UTC, Fabrizio Castro wrote:
+> The is25lp016d is found on the iwg23s from iWave, therefore
+> add driver support for it so that we can upstream board support.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  drivers/iio/accel/mma8452.c | 88 +++++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 86 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-> index 421a0a8..8f6123f 100644
-> --- a/drivers/iio/accel/mma8452.c
-> +++ b/drivers/iio/accel/mma8452.c
-> @@ -31,6 +31,7 @@
->  #include <linux/of_device.h>
->  #include <linux/of_irq.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/regulator/consumer.h>
->  
->  #define MMA8452_STATUS				0x00
->  #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
-> @@ -107,6 +108,7 @@ struct mma8452_data {
->  	u8 data_cfg;
->  	const struct mma_chip_info *chip_info;
->  	int sleep_val;
-> +	struct regulator *vcc_reg;
->  };
->  
->   /**
-> @@ -1533,6 +1535,14 @@ static int mma8452_probe(struct i2c_client *client,
->  	data->client = client;
->  	mutex_init(&data->lock);
->  	data->chip_info = match->data;
-> +	data->vcc_reg = devm_regulator_get_optional(&client->dev, "vcc");
-> +	if (!IS_ERR(data->vcc_reg)) {
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Make sure it's the 'right' error to indicate there isn't a regulator
-rather than a deferred response for example.
+Applied to http://git.infradead.org/linux-mtd.git spi-nor/next, thanks.
 
+Boris
 
-> +		ret = regulator_enable(data->vcc_reg);
-> +		if (ret) {
-> +			dev_err(&client->dev, "failed to enable VCC regulator\n");
-> +			return ret;
-> +		}
-> +	}
->  
->  	ret = i2c_smbus_read_byte_data(client, MMA8452_WHO_AM_I);
->  	if (ret < 0)
-> @@ -1667,6 +1677,8 @@ static int mma8452_probe(struct i2c_client *client,
->  static int mma8452_remove(struct i2c_client *client)
->  {
->  	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-> +	struct mma8452_data *data = iio_priv(indio_dev);
-> +	int ret;
->  
->  	iio_device_unregister(indio_dev);
->  
-> @@ -1678,6 +1690,14 @@ static int mma8452_remove(struct i2c_client *client)
->  	mma8452_trigger_cleanup(indio_dev);
->  	mma8452_standby(iio_priv(indio_dev));
->  
-> +	if (!IS_ERR(data->vcc_reg)) {
-> +		ret = regulator_disable(data->vcc_reg);
-> +		if (ret) {
-> +			dev_err(&client->dev, "failed to disable VCC regulator\n");
-> +			return ret;
-> +		}
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -1696,6 +1716,14 @@ static int mma8452_runtime_suspend(struct device *dev)
->  		return -EAGAIN;
->  	}
->  
-> +	if (!IS_ERR(data->vcc_reg)) {
-> +		ret = regulator_disable(data->vcc_reg);
-> +		if (ret) {
-> +			dev_err(dev, "failed to disable VCC regulator\n");
-> +			return ret;
-> +		}
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -1705,6 +1733,14 @@ static int mma8452_runtime_resume(struct device *dev)
->  	struct mma8452_data *data = iio_priv(indio_dev);
->  	int ret, sleep_val;
->  
-> +	if (!IS_ERR(data->vcc_reg)) {
-> +		ret = regulator_enable(data->vcc_reg);
-> +		if (ret) {
-> +			dev_err(dev, "failed to enable VCC regulator\n");
-> +			return ret;
-> +		}
-> +	}
-> +
->  	ret = mma8452_active(data);
->  	if (ret < 0)
->  		return ret;
-> @@ -1723,14 +1759,62 @@ static int mma8452_runtime_resume(struct device *dev)
->  #ifdef CONFIG_PM_SLEEP
->  static int mma8452_suspend(struct device *dev)
->  {
-> -	return mma8452_standby(iio_priv(i2c_get_clientdata(
-> +	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
-> +	struct mma8452_data *data = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	if (!IS_ERR(data->vcc_reg)) {
-> +		ret = regulator_enable(data->vcc_reg);
-> +		if (ret) {
-> +			dev_err(dev, "failed to enable VCC regulator\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	ret = mma8452_standby(iio_priv(i2c_get_clientdata(
->  		to_i2c_client(dev))));
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!IS_ERR(data->vcc_reg)) {
-> +		ret = regulator_disable(data->vcc_reg);
-> +		if (ret) {
-> +			dev_err(dev, "failed to disable VCC regulator\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
->  }
->  
->  static int mma8452_resume(struct device *dev)
->  {
-> -	return mma8452_active(iio_priv(i2c_get_clientdata(
-> +	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
-> +	struct mma8452_data *data = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	if (!IS_ERR(data->vcc_reg)) {
-> +		ret = regulator_enable(data->vcc_reg);
-> +		if (ret) {
-> +			dev_err(dev, "failed to enable VCC regulator\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	ret = mma8452_active(iio_priv(i2c_get_clientdata(
->  		to_i2c_client(dev))));
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!IS_ERR(data->vcc_reg)) {
-> +		ret = regulator_disable(data->vcc_reg);
-> +		if (ret) {
-> +			dev_err(dev, "failed to disable VCC regulator\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
->  }
->  #endif
->  
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
