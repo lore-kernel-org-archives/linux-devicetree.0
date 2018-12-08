@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/3] ARM: dts: meson6: add the APB2 bus
-Date: Sat,  8 Dec 2018 17:45:51 +0100
-Message-ID: <20181208164555.26527-3-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 2/3] ARM: dts: meson8: add the APB bus
+Date: Sat,  8 Dec 2018 17:45:53 +0100
+Message-ID: <20181208164555.26527-5-martin.blumenstingl@googlemail.com>
 References: <20181208164555.26527-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,32 +12,32 @@ To: linux-amlogic@lists.infradead.org, khilman@baylibre.com
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-The Mali GPU and the DVB demulator are located in the APB2 bus. Describe
-this bus so we can add devices to it.
+Various peripherals (Mali GPU, NAND controller, VPU, etc.) are located
+in the APB bus. Describe this bus so we can add devices to it.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm/boot/dts/meson6.dtsi | 8 ++++++++
+ arch/arm/boot/dts/meson8.dtsi | 8 ++++++++
  1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/meson6.dtsi b/arch/arm/boot/dts/meson6.dtsi
-index ca978ab952cd..65585255910a 100644
---- a/arch/arm/boot/dts/meson6.dtsi
-+++ b/arch/arm/boot/dts/meson6.dtsi
-@@ -70,6 +70,14 @@
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index e5cd325d7ea8..3fd8260eba92 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -201,6 +201,14 @@
+ 			no-map;
  		};
  	};
- 
-+	apb2: bus@d0000000 {
++
++	apb: bus@d0000000 {
 +		compatible = "simple-bus";
-+		reg = <0xd0000000 0x40000>;
++		reg = <0xd0000000 0x200000>;
 +		#address-cells = <1>;
 +		#size-cells = <1>;
-+		ranges = <0x0 0xd0000000 0x40000>;
++		ranges = <0x0 0xd0000000 0x200000>;
 +	};
-+
- 	xtal: xtal-clk {
- 		compatible = "fixed-clock";
- 		clock-frequency = <24000000>;
+ }; /* end of / */
+ 
+ &aobus {
 -- 
 2.19.2
