@@ -1,56 +1,89 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 1/2] arm64: dts: meson: Fix IRQ trigger type for macirq
-Date: Fri, 07 Dec 2018 16:20:02 -0800
-Message-ID: <7hftv8yiml.fsf@baylibre.com>
-References: <20181207105231.25593-1-ccaione@baylibre.com>
- <20181207105231.25593-2-ccaione@baylibre.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH v11 5/8] interconnect: qcom: Add sdm845 interconnect
+ provider driver
+Date: Sat, 8 Dec 2018 02:24:03 +0200
+Message-ID: <ee392578-2dbc-7e60-be37-483729e922d1@linaro.org>
+References: <20181207152917.4862-1-georgi.djakov@linaro.org>
+ <20181207152917.4862-6-georgi.djakov@linaro.org>
+ <20181207233010.GE14307@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181207105231.25593-2-ccaione@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, martin.blumenstingl@googlemail.com, ingrassia@epigenesys.com
-Cc: Carlo Caione <ccaione@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181207233010.GE14307@google.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: gregkh@linuxfoundation.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, robh+dt@kernel.org, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, dianders@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, arnd@arndb.de, thierry.reding@gmail.com, ksitaraman@nvidia.com, sanjayc@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Carlo Caione <ccaione@baylibre.com> writes:
+Hi Matthias,
 
-> A long running stress test on a custom board shipping an AXG SoCs and a
-> Realtek RTL8211F PHY revealed that after a few hours the connection
-> speed would drop drastically, from ~1000Mbps to ~3Mbps. At the same time
-> the 'macirq' (eth0) IRQ would stop being triggered at all and as
-> consequence the GMAC IRQs never ACKed.
->
-> After a painful investigation the problem seemed to be due to a wrong
-> defined IRQ type for the GMAC IRQ that should be LEVEL_HIGH instead of
-> EDGE_RISING.
->
-> The change in the macirq IRQ type also solved another long standing
-> issue affecting this SoC/PHY where EEE was causing the network
-> connection to die after stressing it with iperf3 (even though much
-> sooner). It's now possible to remove the 'eee-broken-1000t' quirk as
-> well.
->
-> Fixes: feb3cbea0946 ("ARM64: dts: meson-gxbb-odroidc2: fix GbE tx link breakage")
-> Fixes: 6d28d577510f ("ARM64: dts: meson-axg: fix ethernet stability issue")
-> Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-> Tested-by: Jerome Brunet <jbrunet@baylibre.com>
-> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+Thanks for looking into this.
 
-Queuing this one for v4.21 (dt64 branch)
+On 8.12.18 1:30, Matthias Kaehlcke wrote:
+> Hi Georgi,
+> 
+> not a full review, only one thing I just stumbled across:
+> 
+> On Fri, Dec 07, 2018 at 05:29:14PM +0200, Georgi Djakov wrote:
+>> From: David Dai <daidavid1@codeaurora.org>
+>>
+>> Introduce Qualcomm SDM845 specific provider driver using the
+>> interconnect framework.
+>>
+>> Signed-off-by: David Dai <daidavid1@codeaurora.org>
+>> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+>> ---
+>>  .../bindings/interconnect/qcom,sdm845.txt     |  24 +
+>>  drivers/interconnect/Kconfig                  |   5 +
+>>  drivers/interconnect/Makefile                 |   1 +
+>>  drivers/interconnect/qcom/Kconfig             |  13 +
+>>  drivers/interconnect/qcom/Makefile            |   5 +
+>>  drivers/interconnect/qcom/sdm845.c            | 836 ++++++++++++++++++
+>>  .../dt-bindings/interconnect/qcom,sdm845.h    | 143 +++
+>>  7 files changed, 1027 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
+>>  create mode 100644 drivers/interconnect/qcom/Kconfig
+>>  create mode 100644 drivers/interconnect/qcom/Makefile
+>>  create mode 100644 drivers/interconnect/qcom/sdm845.c
+>>  create mode 100644 include/dt-bindings/interconnect/qcom,sdm845.h
+>>
+>> ...
+>>
+>> diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
+>> new file mode 100644
+>> index 000000000000..f594dd6f500f
+>> --- /dev/null
+>> +++ b/drivers/interconnect/qcom/sdm845.c
+>>
+>> ...
+>>
+>> +static int qcom_icc_bcm_init(struct qcom_icc_bcm *bcm, struct device *dev)
+>> +{
+>> +	struct qcom_icc_node *qn;
+>> +	int ret, i;
+>> +
+>> +	bcm->addr = cmd_db_read_addr(bcm->name);
+>> +	if (!bcm->addr) {
+>> +		dev_err(dev, "%s could not find RPMh address\n",
+>> +			bcm->name);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (cmd_db_read_aux_data_len(bcm->name) < sizeof(struct bcm_db)) {
+>> +		dev_err(dev, "%s command db missing or partial aux data\n",
+>> +			bcm->name);
+>> +		return -EINVAL;
+>> +	}
+> 
+> cmd_db_read_aux_data_len() is in the process of being removed, see
+> ed3cafa79ea7 ("soc: qcom: cmd-db: Stop memcpy()ing in
+> cmd_db_read_aux_data()") in arm-soc/for-next
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git/commit/?h=for-next&id=ed3cafa79ea756be653d22087c017af95ea78a49
 
-I'm going to wait for the dust to settle on 'PATCH v2 2/2' for the
-32-bit SoCs (and will rely on Martin's recommendation for the final
-decision there.)
+Yes, exactly. I have a fix that lives as a separate patch [8/8] and will squash it here.
 
-Kevin
+BR,
+Georgi
