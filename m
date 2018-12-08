@@ -1,43 +1,47 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/3] ARM: dts: meson6: add the ABP2 bus
-Date: Sat,  8 Dec 2018 17:45:50 +0100
-Message-ID: <20181208164555.26527-2-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 0/3] ARM: dts: meson: add the APB/APB2 busses
+Date: Sat, 8 Dec 2018 17:49:16 +0100
+Message-ID: <CAFBinCDuFCrJHrzY_98REiwnZMcezxUbth8Sd+Bz0jxipPhyWQ@mail.gmail.com>
 References: <20181208164555.26527-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181208164555.26527-1-martin.blumenstingl@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-amlogic@lists.infradead.org, khilman@baylibre.com
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Mali GPU and the DVB demulator are located in the ABP2 bus. Describe
-this bus so we can add devices to it.
+On Sat, Dec 8, 2018 at 5:46 PM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> This adds the APB bus on Meson8 and Meson8b as well as the APB2 bus on
+> Meson6. This is preparation work for adding the Mali GPU which is
+> located on theses busses.
+>
+> Meson6 seems to have it's APB at 0xc8000000 instead of 0xd0000000. The
+> region at 0xd0000000 is called APB2 or A9_APB and it has a different
+> size (256k) compared to Meson8 and Meson8b (2M).
+>
+> Addresses and sizes are taken from the Amlogic 3.10 kernel sources:
+> - Meson6: [0]
+> - Meson8: [1]
+> - Meson8b: [2]
+>
+>
+> [0] https://github.com/endlessm/linux-meson/blob/cd4096c3ff4eb5b8a8a5581bb46508601c5470dc/arch/arm/mach-meson6/include/mach/io.h#L61
+> [1] https://github.com/endlessm/linux-meson/blob/cd4096c3ff4eb5b8a8a5581bb46508601c5470dc/arch/arm/mach-meson8/include/mach/io.h#L53
+> [2] https://github.com/endlessm/linux-meson/blob/cd4096c3ff4eb5b8a8a5581bb46508601c5470dc/arch/arm/mach-meson8b/include/mach/io.h#L53
+>
+>
+> Martin Blumenstingl (3):
+>   ARM: dts: meson6: add the APB2 bus
+>   ARM: dts: meson8: add the APB bus
+>   ARM: dts: meson8b: add the APB bus
+I incorrectly sent this series with the patches twice (once with a
+typo in APB and once without the typo).
+I'll re-send a fixed v2 - sorry for the noise
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm/boot/dts/meson6.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/meson6.dtsi b/arch/arm/boot/dts/meson6.dtsi
-index ca978ab952cd..65585255910a 100644
---- a/arch/arm/boot/dts/meson6.dtsi
-+++ b/arch/arm/boot/dts/meson6.dtsi
-@@ -70,6 +70,14 @@
- 		};
- 	};
- 
-+	apb2: bus@d0000000 {
-+		compatible = "simple-bus";
-+		reg = <0xd0000000 0x40000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0xd0000000 0x40000>;
-+	};
-+
- 	xtal: xtal-clk {
- 		compatible = "fixed-clock";
- 		clock-frequency = <24000000>;
--- 
-2.19.2
+Regards
+Martin
