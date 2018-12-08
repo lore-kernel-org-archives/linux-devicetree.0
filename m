@@ -1,169 +1,163 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 0/7] microblaze: fix various problems in building boot images
-Date: Sat, 8 Dec 2018 15:14:02 +0900
-Message-ID: <CAK7LNAT-RuvvwGy5Tf01_rWk4EtD0H+y4UPF=aa7B3YB8v692g@mail.gmail.com>
-References: <1543823457-32478-1-git-send-email-yamada.masahiro@socionext.com>
- <19c7bdab-8df8-f7c6-7921-9a4d43dbca64@monstr.eu> <CAK7LNATWSNqZ8uE+teMW+uvDCLXfq6zMTqh_7=ssrPquCLJz8A@mail.gmail.com>
- <938f1368-5e07-0178-5b99-d8331ce216f8@xilinx.com> <18fb7c8b-2b47-eb39-d80b-7137e7db466b@xilinx.com>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 00/18] MT8183 IOMMU SUPPORT
+Date: Sat, 8 Dec 2018 16:39:13 +0800
+Message-ID: <1544258371-4600-1-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <18fb7c8b-2b47-eb39-d80b-7137e7db466b@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Michal Simek <monstr@monstr.eu>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arvind Yadav <arvind.yadav.cs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 8, 2018 at 12:20 AM Michal Simek <michal.simek@xilinx.com> wrote:
->
-> On 07. 12. 18 14:29, Michal Simek wrote:
-> > On 07. 12. 18 12:29, Masahiro Yamada wrote:
-> >> On Thu, Dec 6, 2018 at 11:55 PM Michal Simek <monstr@monstr.eu> wrote:
-> >>>
-> >>> On 03. 12. 18 8:50, Masahiro Yamada wrote:
-> >>>> This patch set fixes various issues in microblaze Makefiles.
-> >>>>
-> >>>> BTW, "simpleImage.<dt>" works like a phony target to generate the
-> >>>> following four images, where the first three are just aliases.
-> >>>>
-> >>>>  - arch/microblaze/boot/simpleImage.<dt>:
-> >>>>          identical to arch/microblaze/boot/linux.bin
-> >>>>
-> >>>>  - arch/microblaze/boot/simpleImage.<dt>.unstrip:
-> >>>>          identical to vmlinux
-> >>>>
-> >>>>  - arch/microblaze/boot/simpleImage.<dt>.ub:
-> >>>>          identical to arch/microblaze/boot/linux.bin.ub
-> >>>>
-> >>>>  - arch/microblaze/boot/simpleImage.<dt>.strip:
-> >>>>          stripped vmlinux
-> >>>>
-> >>>> I am not sure how much useful those copies are,
-> >>>> but, I tried my best to keep the same behavior.
-> >>>>
-> >>>> IMHO, I guess DTB=<dt> would be more sensible,
-> >>>> but it is up to Michal.
-> >>>>
-> >>>>
-> >>>>
-> >>>> Masahiro Yamada (7):
-> >>>>   microblaze: fix cleaning of boot images
-> >>>>   microblaze: adjust the help to the real behavior
-> >>>>   microblaze: move "... is ready" message to arch/microblaze/Makefile
-> >>>>   microblaze: fix multiple bugs in arch/microblaze/boot/Makefile
-> >>>>   microblaze: add linux.bin* and simpleImage.* to PHONY
-> >>>>   microblaze: fix race condition in building boot images
-> >>>>   microblaze: remove the unneeded code just in case file copy fails
-> >>>>
-> >>>>  arch/microblaze/Makefile          | 14 +++++++++-----
-> >>>>  arch/microblaze/boot/Makefile     | 33 +++++++++++++++++----------------
-> >>>>  arch/microblaze/boot/dts/Makefile |  5 +----
-> >>>>  3 files changed, 27 insertions(+), 25 deletions(-)
-> >>>>
-> >>>
-> >>> One more thing I have in my mind for a while is that will be good to
-> >>> configure kernel build flags from DT and completely get rid of these
-> >>> symbols.
-> >>>
-> >>> XILINX_MICROBLAZE0_USE_MSR_INSTR
-> >>> XILINX_MICROBLAZE0_USE_PCMP_INSTR
-> >>> XILINX_MICROBLAZE0_USE_BARREL
-> >>> XILINX_MICROBLAZE0_USE_DIV
-> >>> XILINX_MICROBLAZE0_USE_HW_MUL
-> >>> XILINX_MICROBLAZE0_USE_FPU
-> >>>
-> >>> It means setup CPUFLAGS based on extracting that values from DT that it
-> >>> all the time match the hardware.
-> >>> It will also simplify all the CPUFLAGS logic which is in
-> >>> arch/microblaze/Makefile.
-> >>>
-> >>> Do you have any idea how this can be done?
-> >>
-> >>
-> >> I have no idea.
-> >>
-> >> Parsing DTS with sed or something would be possible, but ugly.
-> >>
-> >> In my opinion, the kernel should be multi platform image,
-> >> in other words, it is the least common denominator
-> >> of supported platforms.
-> >>
-> >> So, the kernel should enable all features that may or may not be used
-> >> depending on platform.
-> >>
-> >> I do not know if this works for MB.
-> >
-> > Microblaze is soft core CPU where you can select if you want to have it
-> > with multiplier, divider, barrel shifter, etc.
-> > You can of course say that you don't have them and you have "universal"
-> > kernel but very slow.
-> > That's why user has to setup these configs which are converted to cflags
-> > to say GCC what can be used.
-> > And these configs can be simply parsed from dt.
-> >
-> > For example like this based on dtb (quick hack)
-> >
-> > for i in `echo use-msr-instr use-pcmp-instr use-barrel use-div
-> > use-hw-mul use-fpu`; do
-> >       UPPER=`echo $i | tr '-' '_' | tr '[a-z]' '[A-Z}'`
-> >       echo $i $UPPER;
-> >
-> >       VAR=`fdtget -t i $FILE/arch/microblaze/boot/dts/system.dtb /cpus/cpu@0/
-> > xlnx,$i`
-> >       FLAGS+="CONFIG_XILINX_MICROBLAZE0_${UPPER}=${VAR} "
-> > done
-> >
-> > make $FLAGS
-> >
-> >
-> > When simpleImage is requested dt could be parsed to setup proper build
-> > flags.
->
-> One more thing I found is that I have done these changes
->
-> diff --git a/arch/microblaze/kernel/setup.c b/arch/microblaze/kernel/setup.c
-> index bbd6968ce55b..dc6a6fee3ae2 100644
-> --- a/arch/microblaze/kernel/setup.c
-> +++ b/arch/microblaze/kernel/setup.c
-> @@ -153,11 +153,13 @@ void __init machine_early_init(const char
-> *cmdline, unsigned int ram,
->  #endif
->
->  #if CONFIG_XILINX_MICROBLAZE0_USE_MSR_INSTR
-> +#error MSR is enabled
->         if (msr) {
->                 pr_info("!!!Your kernel has setup MSR instruction but ");
->                 pr_cont("CPU don't have it %x\n", msr);
->         }
->  #else
-> +#error MSR is not enabled
->         if (!msr) {
->                 pr_info("!!!Your kernel not setup MSR instruction but ");
->                 pr_cont("CPU have it %x\n", msr);
->
-> and run MSR with 1
-> make defconfig && make CONFIG_XILINX_MICROBLAZE0_USE_MSR_INSTR=1
-> arch/microblaze/kernel/setup.o
-> it errors #error MSR is enabled
-> and all is good.
->
-> And when I run MSR with 0
-> make defconfig && make CONFIG_XILINX_MICROBLAZE0_USE_MSR_INSTR=0
-> arch/microblaze/kernel/setup.o
-> also getting #error MSR is enabled
-> which is wrong.
->
-> Is there any rule what can be setup at compilation time?
+This patchset mainly adds support for mt8183 IOMMU and SMI.
 
-You are trying to do very specific things,
-I do not have a clean solution.
+mt8183 has only one M4U like mt8173 and is also MTK IOMMU gen2 which
+uses ARM Short-Descriptor translation table format.
 
-I do not mind whatever you do in arch-Makefile.
+The mt8183 M4U-SMI HW diagram is as below:
 
-If you look at stack_protector_prepare in arch/powerpc/Makefile,
-it is parsing a file with awk to setup compiler flags.
+                          EMI
+                           |
+                          M4U
+                           |
+                       ----------
+                       |        |
+                   gals0-rx   gals1-rx
+                       |        |
+                       |        |
+                   gals0-tx   gals1-tx
+                       |        |
+                      ------------
+                       SMI Common
+                      ------------
+                           |
+  +-----+-----+--------+-----+-----+-------+-------+
+  |     |     |        |     |     |       |       |
+  |     |  gals-rx  gals-rx  |   gals-rx gals-rx gals-rx
+  |     |     |        |     |     |       |       |
+  |     |     |        |     |     |       |       |
+  |     |  gals-tx  gals-tx  |   gals-tx gals-tx gals-tx
+  |     |     |        |     |     |       |       |
+larb0 larb1  IPU0    IPU1  larb4  larb5  larb6    CCU
+disp  vdec   img     cam    venc   img    cam
 
+All the connections are HW fixed, SW can NOT adjust it.
+
+Compared with mt8173, we add a GALS(Global Async Local Sync) module
+between SMI-common and M4U, and additional GALS between larb2/3/5/6
+and SMI-common. GALS can help synchronize for the modules in different
+clock frequency, it can be seen as a "asynchronous fifo".
+
+GALS can only help transfer the command/data while it doesn't have
+the configuring register, thus it has the special "smi" clock and it
+doesn't have the "apb" clock. From the diagram above, we add "gals0"
+and "gals1" clocks for smi-common and add a "gals" clock for smi-larb.
+
+>From the diagram above, IPU0/IPU1(Image Processor Unit) and CCU(Camera
+Control Unit) is connected with smi-common directly, we can take them
+as "larb2", "larb3" and "larb7", and their register spaces are
+different with the normal larb.
+
+This is the general purpose of each patch in this patchset:
+the patch 1..10 add the iommu/smi support for mt8183;
+the patch 11/12/13 add mmu1 support;
+the last patches contain some minor changes:
+   -patch 14 fix a issue.
+   -patch 15 improve the code flow(add shutdown).
+   -patch 16 cleanup some smi codes(delete need_larbid).
+   -patch 17 switch to SPDX license.
+   -patch 18 Constify iommu_ops from Arvind.
+this patchset don't contain the dtsi part since it need depend on the
+ccf and power-domain nodes which has not been accepted.
+
+Change notes:
+
+v4: 1) Add 3 preparing patches. Seperate some minor meaningful code into
+       a new patch according to Matthias's suggestion.
+       memory: mtk-smi: Add gals support         
+       iommu/mediatek: Add larb-id remapped support 
+       iommu/mediatek: Add bclk can be supported optionally       
+    2) rebase on "iommu/mediatek: Make it explicitly non-modular"
+       which was applied.
+       https://lore.kernel.org/patchwork/patch/1020125/
+    3) add some comment about "mediatek,larb-id" in the commit message of
+       the patch "mtk-smi: Get rid of need_larbid".
+    4) Fix bus_sel value.
+
+v3: https://lists.linuxfoundation.org/pipermail/iommu/2018-November/031121.html
+    1) rebase on v4.20-rc1.
+    2) In the dt-binding, add a minor string "mt7623" which also use gen1
+       since Matthias added it in v4.20.
+    3) About v7s:
+       a) for paddr_to_pte, change the param from "arm_v7s_io_pgtable" to
+          "arm_pgtable_cfg", according to Robin suggestion.
+       b) Don't use CONFIG_PHYS_ADDR_T_64BIT.
+       c) add a little comment(pgtable address still don't over 4GB) in the
+          commit message of the patch "Extend MediaTek 4GB Mode".
+    4) add "iommu/mediatek: Constify iommu_ops" into this patchset. this may
+       be helpful for review and merge.
+       https://lists.linuxfoundation.org/pipermail/iommu/2018-October/030637.html
+
+v2: https://lists.linuxfoundation.org/pipermail/iommu/2018-September/030164.html
+    1) Fix typo in the commit message of dt-binding.
+    2) Change larb2/larb3 to the special larbs.
+    3) Refactor the larb-id remapped array(larbid_remapped), then we
+    don't need add the new function(mtk_iommu_get_larbid).
+    4) Add a new patch for v7s two helpers(paddr_to_iopte and
+    iopte_to_paddr).
+    5) Change some comment for MTK 4GB mode.
+
+v1: base on v4.19-rc1.
+http://lists.infradead.org/pipermail/linux-mediatek/2018-September/014881.html
+
+Arvind Yadav (1):
+  iommu/mediatek: Constify iommu_ops
+
+Yong Wu (17):
+  dt-bindings: mediatek: Add binding for mt8183 IOMMU and SMI
+  iommu/mediatek: Use a struct as the platform data
+  memory: mtk-smi: Use a general config_port interface
+  memory: mtk-smi: Use a struct for the platform data for smi-common
+  iommu/io-pgtable-arm-v7s: Add paddr_to_iopte and iopte_to_paddr
+    helpers
+  iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB Mode
+  iommu/mediatek: Add bclk can be supported optionally
+  iommu/mediatek: Add larb-id remapped support
+  memory: mtk-smi: Add gals support
+  iommu/mediatek: Add mt8183 IOMMU support
+  iommu/mediatek: Add mmu1 support
+  memory: mtk-smi: Invoke pm runtime_callback to enable clocks
+  memory: mtk-smi: Add bus_sel for mt8183
+  iommu/mediatek: Fix VLD_PA_RANGE register backup when suspend
+  iommu/mediatek: Add shutdown callback
+  memory: mtk-smi: Get rid of need_larbid
+  iommu/mediatek: Switch to SPDX license identifier
+
+ .../devicetree/bindings/iommu/mediatek,iommu.txt   |  15 +-
+ .../memory-controllers/mediatek,smi-common.txt     |  11 +-
+ .../memory-controllers/mediatek,smi-larb.txt       |   3 +
+ drivers/iommu/io-pgtable-arm-v7s.c                 |  72 ++++--
+ drivers/iommu/io-pgtable.h                         |   7 +-
+ drivers/iommu/mtk_iommu.c                          | 141 +++++++----
+ drivers/iommu/mtk_iommu.h                          |  26 +-
+ drivers/iommu/mtk_iommu_v1.c                       |  14 +-
+ drivers/memory/mtk-smi.c                           | 269 ++++++++++++++-------
+ include/dt-bindings/memory/mt2701-larb-port.h      |  10 +-
+ include/dt-bindings/memory/mt8173-larb-port.h      |  10 +-
+ include/dt-bindings/memory/mt8183-larb-port.h      | 130 ++++++++++
+ include/soc/mediatek/smi.h                         |  10 +-
+ 13 files changed, 501 insertions(+), 217 deletions(-)
+ create mode 100644 include/dt-bindings/memory/mt8183-larb-port.h
 
 -- 
-Best Regards
-Masahiro Yamada
+1.9.1
