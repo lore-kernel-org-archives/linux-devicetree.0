@@ -1,41 +1,56 @@
-From: Otavio Salvador <otavio.salvador@ossystems.com.br>
-Subject: Re: [PATCH v2 0/9] Improvements for i.MX7D PICO SoM and its baseboards
-Date: Fri, 7 Dec 2018 22:01:18 -0200
-Message-ID: <CAP9ODKpJdGhwN8FHzEZUihWsUu=iig56o0uQQ75kmHeVCRyB9Q@mail.gmail.com>
-References: <20181206100905.15053-1-otavio@ossystems.com.br> <CAP9ODKoG-XRSOekKJWkD3Wg_dPsS2baRzPhuuJmmoT7-omBOtA@mail.gmail.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 1/2] arm64: dts: meson: Fix IRQ trigger type for macirq
+Date: Fri, 07 Dec 2018 16:20:02 -0800
+Message-ID: <7hftv8yiml.fsf@baylibre.com>
+References: <20181207105231.25593-1-ccaione@baylibre.com>
+ <20181207105231.25593-2-ccaione@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAP9ODKoG-XRSOekKJWkD3Wg_dPsS2baRzPhuuJmmoT7-omBOtA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Otavio Salvador <otavio@ossystems.com.br>
-Cc: linux-arm-kernel@lists.infradead.org, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Kernel development list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, NXP Linux Team <linux-imx@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181207105231.25593-2-ccaione@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, martin.blumenstingl@googlemail.com, ingrassia@epigenesys.com
+Cc: Carlo Caione <ccaione@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Shawn,
+Carlo Caione <ccaione@baylibre.com> writes:
 
-On Thu, Dec 6, 2018 at 8:44 AM Otavio Salvador <otavio@ossystems.com.br> wrote:
-> On Thu, Dec 6, 2018 at 8:09 AM Otavio Salvador <otavio@ossystems.com.br> wrote:
-> > This patchset rework the imx7d-pico SoM, its Pi baseboard
-> > and add the Hobbit baseboard support as well.
-> >
-> > Changes in v2:
-> > - replace fsl,uart-has-rtscts with uart-has-rtscts
-> >
-> > Fabio Estevam (8):
-> >   ARM: dts: imx7d-pico: Do not harcode the memory size
-> >   ARM: dts: imx7d-pico: Switch to SPDX identifier
-> >   ARM: dts: imx7d-pico-pi: Move SoM related part to imx7d-pico.dtsi
+> A long running stress test on a custom board shipping an AXG SoCs and a
+> Realtek RTL8211F PHY revealed that after a few hours the connection
+> speed would drop drastically, from ~1000Mbps to ~3Mbps. At the same time
+> the 'macirq' (eth0) IRQ would stop being triggered at all and as
+> consequence the GMAC IRQs never ACKed.
 >
-> I did the rebase; one thing worth mentioning is that I have "ARM: dts:
-> imx7d-pico: Describe the Wifi clock" which is in your fixes tree.
+> After a painful investigation the problem seemed to be due to a wrong
+> defined IRQ type for the GMAC IRQ that should be LEVEL_HIGH instead of
+> EDGE_RISING.
+>
+> The change in the macirq IRQ type also solved another long standing
+> issue affecting this SoC/PHY where EEE was causing the network
+> connection to die after stressing it with iperf3 (even though much
+> sooner). It's now possible to remove the 'eee-broken-1000t' quirk as
+> well.
+>
+> Fixes: feb3cbea0946 ("ARM64: dts: meson-gxbb-odroidc2: fix GbE tx link breakage")
+> Fixes: 6d28d577510f ("ARM64: dts: meson-axg: fix ethernet stability issue")
+> Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+> Tested-by: Jerome Brunet <jbrunet@baylibre.com>
+> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
 
-Do you wish me to resent this now that the "ARM: dts: imx7d-pico:
-Describe the Wifi clock" is on linux-next? If so I can rebase and
-resend. Just let me know how to make it more convenient for you,
-please?
+Queuing this one for v4.21 (dt64 branch)
 
--- 
-Otavio Salvador                             O.S. Systems
-http://www.ossystems.com.br        http://code.ossystems.com.br
-Mobile: +55 (53) 9 9981-7854          Mobile: +1 (347) 903-9750
+I'm going to wait for the dust to settle on 'PATCH v2 2/2' for the
+32-bit SoCs (and will rely on Martin's recommendation for the final
+decision there.)
+
+Kevin
