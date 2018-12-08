@@ -1,92 +1,76 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH v12 2/7] dt-bindings: Introduce interconnect binding
-Date: Sat,  8 Dec 2018 19:02:11 +0200
-Message-ID: <20181208170216.32555-3-georgi.djakov@linaro.org>
-References: <20181208170216.32555-1-georgi.djakov@linaro.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/5] Meson (32-bit): add support for the Mali GPU
+Date: Sat,  8 Dec 2018 18:12:42 +0100
+Message-ID: <20181208171247.22238-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181208170216.32555-1-georgi.djakov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, andy.gross@linaro.org, olof@lixom.net, arnd@arndb.de, linux-pm@vger.kernel.org
-Cc: rjw@rjwysocki.net, robh+dt@kernel.org, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, dianders@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, thierry.reding@gmail.com, ksitaraman@nvidia.com, sanjayc@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org, georgi.djakov@linaro.org
+To: linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, jbrunet@baylibre.com, narmstrong@baylibre.com, khilman@baylibre.com, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, sboyd@kernel.org, mturquette@baylibre.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-This binding is intended to represent the relations between interconnect
-controllers (providers) and consumer device nodes. It will allow creating
-links between consumers and interconnect paths (exposed by interconnect
-providers).
+This series adds support for the Mali-450 GPU on Meson8 and Meson8b.
+Meson6 uses a Mali-400 GPU but since we don't have a clock driver (and
+I don't have a device for testing) Meson6 is left out in this series.
 
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- .../bindings/interconnect/interconnect.txt    | 60 +++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interconnect/interconnect.txt
+Meson8 uses a Mali-450 MP6 with six pixel processors. Meson8b (as
+cost-reduced SoC) uses a Mali-450 MP2 with two pixel processors.
+I tested both using the open source lima driver and a patched mesa
+from the lima project as well. Since we don't have display support
+on the 32-bit SoCs I used off-screen rendering as described in [0].
+The result is (for example): [1]
 
-diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-new file mode 100644
-index 000000000000..5a3c575b387a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-@@ -0,0 +1,60 @@
-+Interconnect Provider Device Tree Bindings
-+=========================================
-+
-+The purpose of this document is to define a common set of generic interconnect
-+providers/consumers properties.
-+
-+
-+= interconnect providers =
-+
-+The interconnect provider binding is intended to represent the interconnect
-+controllers in the system. Each provider registers a set of interconnect
-+nodes, which expose the interconnect related capabilities of the interconnect
-+to consumer drivers. These capabilities can be throughput, latency, priority
-+etc. The consumer drivers set constraints on interconnect path (or endpoints)
-+depending on the use case. Interconnect providers can also be interconnect
-+consumers, such as in the case where two network-on-chip fabrics interface
-+directly.
-+
-+Required properties:
-+- compatible : contains the interconnect provider compatible string
-+- #interconnect-cells : number of cells in a interconnect specifier needed to
-+			encode the interconnect node id
-+
-+Example:
-+
-+		snoc: interconnect@580000 {
-+			compatible = "qcom,msm8916-snoc";
-+			#interconnect-cells = <1>;
-+			reg = <0x580000 0x14000>;
-+			clock-names = "bus_clk", "bus_a_clk";
-+			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
-+				 <&rpmcc RPM_SMD_SNOC_A_CLK>;
-+		};
-+
-+
-+= interconnect consumers =
-+
-+The interconnect consumers are device nodes which dynamically express their
-+bandwidth requirements along interconnect paths they are connected to. There
-+can be multiple interconnect providers on a SoC and the consumer may consume
-+multiple paths from different providers depending on use case and the
-+components it has to interact with.
-+
-+Required properties:
-+interconnects : Pairs of phandles and interconnect provider specifier to denote
-+	        the edge source and destination ports of the interconnect path.
-+
-+Optional properties:
-+interconnect-names : List of interconnect path name strings sorted in the same
-+		     order as the interconnects property. Consumers drivers will use
-+		     interconnect-names to match interconnect paths with interconnect
-+		     specifier pairs.
-+
-+Example:
-+
-+	sdhci@7864000 {
-+		...
-+		interconnects = <&pnoc MASTER_SDCC_1 &bimc SLAVE_EBI_CH0>;
-+		interconnect-names = "sdhc-mem";
-+	};
+The bootloader (at least on my boards) leaves the Mali clock disabled
+by default. The board crashes when trying to access the Mali registers
+with the "core" clock disabled.
+Thus this series also implements the required clock driver changes. The
+Mali clock tree on Meson8b and Meson8m2 is almost identical to the one
+on GXBB (see the description of patch #3 for more details). Only Meson8
+is slightly different as it doesn't have a glitch-free mux. Patch #2
+prepares the meson8b clock driver so we can have different clocks per
+SoC.
+
+Dependencies:
+- the .dts changes depend on my other series "ARM: dts: meson: add the
+  APB/APB2 busses" from [2]
+- the .dts changes from this series have no compile-time dependency on
+  the clock driver changes because CLKID_MALI was defined in the
+  dt-bindings since the first version of the clock driver (but it was
+  not used until now).
+- the .dts changes from this series have a runtime dependency on the
+  clock driver changes (also from this series) if you have a kernel
+  patched with the lima driver (without the lima driver there's no
+  runtime dependency)
+
+Other notes:
+By default the GPU runs off the XTAL clock (24MHz). The lima driver
+currently does not update the GPU clock rate. Different frequencies
+have to be requested by adding the following properties to the Mali
+GPU node (to run it at 510MHz for example):
+  assigned-clocks = <&clkc CLKID_MALI>;
+  assigned-clock-rates = <510000000>;
+
+
+[0] https://gitlab.freedesktop.org/lima/web/wikis/home
+[1] https://abload.de/img/dump0myic0.png
+[2] https://patchwork.kernel.org/cover/10719445/
+
+
+Martin Blumenstingl (5):
+  dt-bindings: gpu: mali-utgard: add Amlogic Meson8 and Meson8b
+    compatible
+  clk: meson: meson8b: use a separate clock table for Meson8
+  clk: meson: meson8b: add the GPU clock tree
+  ARM: dts: meson8: add the Mali-450 MP6 GPU
+  ARM: dts: meson8b: add the Mali-450 MP2 GPU
+
+ .../bindings/gpu/arm,mali-utgard.txt          |   6 +
+ arch/arm/boot/dts/meson8.dtsi                 |  58 +++
+ arch/arm/boot/dts/meson8b.dtsi                |  46 +++
+ drivers/clk/meson/meson8b.c                   | 349 +++++++++++++++++-
+ drivers/clk/meson/meson8b.h                   |   9 +-
+ 5 files changed, 461 insertions(+), 7 deletions(-)
+
+-- 
+2.19.2
