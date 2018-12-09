@@ -1,111 +1,98 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v12 0/7] Introduce on-chip interconnect API
-Date: Sun, 9 Dec 2018 07:15:35 +0200
-Message-ID: <19e55a84-08d9-8cfa-02cb-be963f08ca61@linaro.org>
-References: <20181208170216.32555-1-georgi.djakov@linaro.org>
- <CAOesGMgZYheG77L_nuNtTA8xY-PtDpseHOKf8kCjusiYsv5Mmw@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 4/4] leds: trigger: Add pattern initialization from
+ Device Tree
+Date: Sun, 9 Dec 2018 09:17:23 +0100
+Message-ID: <20181209081722.GB7561@amd>
+References: <1544185974-5932-1-git-send-email-krzk@kernel.org>
+ <1544185974-5932-4-git-send-email-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOesGMgZYheG77L_nuNtTA8xY-PtDpseHOKf8kCjusiYsv5Mmw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, sanjayc@nvidia.com, Maxime Ripard <maxime.ripard@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, daidavid1@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, Alexandre Bailon <abailon@baylibre.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, seansw@qti.qualcomm.com, Kevin Hilman <khilman@baylibre.com>, evgreen@chromium.org, ksitaraman@nvidia.com, DTML <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-pm@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwys>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="dc+cDN39EJAMEtIO"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1544185974-5932-4-git-send-email-krzk@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Baolin Wang <baolin.wang@linaro.org>, Raphael Teysseyre <rteysseyre@gmail.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
 
-On 9.12.18 2:33, Olof Johansson wrote:
-> Hi Georgi,
-> 
-> On Sat, Dec 8, 2018 at 9:02 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
->>
->> Modern SoCs have multiple processors and various dedicated cores (video, gpu,
->> graphics, modem). These cores are talking to each other and can generate a
->> lot of data flowing through the on-chip interconnects. These interconnect
->> buses could form different topologies such as crossbar, point to point buses,
->> hierarchical buses or use the network-on-chip concept.
->>
->> These buses have been sized usually to handle use cases with high data
->> throughput but it is not necessary all the time and consume a lot of power.
->> Furthermore, the priority between masters can vary depending on the running
->> use case like video playback or CPU intensive tasks.
->>
->> Having an API to control the requirement of the system in terms of bandwidth
->> and QoS, so we can adapt the interconnect configuration to match those by
->> scaling the frequencies, setting link priority and tuning QoS parameters.
->> This configuration can be a static, one-time operation done at boot for some
->> platforms or a dynamic set of operations that happen at run-time.
->>
->> This patchset introduce a new API to get the requirement and configure the
->> interconnect buses across the entire chipset to fit with the current demand.
->> The API is NOT for changing the performance of the endpoint devices, but only
->> the interconnect path in between them.
->>
->> The API is using a consumer/provider-based model, where the providers are
->> the interconnect buses and the consumers could be various drivers.
->> The consumers request interconnect resources (path) to an endpoint and set
->> the desired constraints on this data flow path. The provider(s) receive
->> requests from consumers and aggregate these requests for all master-slave
->> pairs on that path. Then the providers configure each participating in the
->> topology node according to the requested data flow path, physical links and
->> constraints. The topology could be complicated and multi-tiered and is SoC
->> specific.
-> 
-> This patch series description fails to describe why you need a brand
-> new subsystem for this instead of either using one of the current
-> ones, or adapting it to fit the needs you have.
-> 
-> Primarily, I'm wondering what's missing from drivers/devfreq to fit your needs?
+--dc+cDN39EJAMEtIO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The devfreq subsystem seems to be more oriented towards a device (like GPU or CPU) that controls the power/performance characteristics by itself and not the performance of other devices. The main problem of using it is that it's using a reactive approach - for example monitor some performance counters and then reconfigure bandwidth after some bottleneck has already occurred. This is suboptimal and might not work well. The new solution does the opposite by allowing drivers to express their needs in advance and be proactive. Devfreq also does not seem suitable for configuring complex, multi-tiered bus topologies and aggregating constraints provided by drivers.
+On Fri 2018-12-07 13:32:54, Krzysztof Kozlowski wrote:
+> Allow initialization of pattern used in pattern trigger from Device Tree
+> property.
+>=20
+> This is especially useful for embedded systems where the pattern trigger
+> would be used to indicate the process of boot status in a nice,
+> user-friendly blinking way.  This initialization pattern will be used
+> till user-space is brought up and sets its own pattern, indicating the
+> boot status is for example finished.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/leds/trigger/ledtrig-pattern.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>=20
+> diff --git a/drivers/leds/trigger/ledtrig-pattern.c b/drivers/leds/trigge=
+r/ledtrig-pattern.c
+> index 1870cf87afe1..96309d3bc43c 100644
+> --- a/drivers/leds/trigger/ledtrig-pattern.c
+> +++ b/drivers/leds/trigger/ledtrig-pattern.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/leds.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> +#include <linux/of.h>
+>  #include <linux/slab.h>
+>  #include <linux/timer.h>
+> =20
+> @@ -331,6 +332,21 @@ static const struct attribute_group *pattern_trig_gr=
+oups[] =3D {
+>  	NULL,
+>  };
+> =20
+> +static void pattern_init(struct led_classdev *led_cdev)
+> +{
+> +	struct device_node *np =3D dev_of_node(led_cdev->dev);
+> +	const char *pattern;
+> +
+> +	if (!np)
+> +		return;
+> +
+> +	if (!of_property_read_string(np, "linux,trigger-pattern", &pattern)) {
+> +		if (strlen(pattern))
+> +			pattern_trig_store_patterns(led_cdev, pattern,
+> +						    strlen(pattern), false);
+> +	}
+> +}
 
-> The series also doesn't seem to provide any kind of indication how
-> this will be used by end points. You have one driver for one SoC that
-> just contains large tables that are parsed at probe time, but no
-> driver hooks anywhere that will actually change any settings depending
-> on use cases. Also, the bindings as posted don't seem to include any
-> of this kind of information. So it's hard to get a picture of how this
-> is going to be used in reality, which makes it hard to judge whether
-> it is a good solution or not.
+"  if (of_...())
+      return;
 
-Here are links to some of the examples that are on the mailing list already. I really should have  included them in the cover letter. 
-https://lkml.org/lkml/2018/12/7/584
-https://lkml.org/lkml/2018/10/11/499
-https://lkml.org/lkml/2018/9/20/986
-https://lkml.org/lkml/2018/11/22/772
+   if (!strlen())
+       return"
 
-Platforms drivers for different SoCs are available:
-https://lkml.org/lkml/2018/11/17/368
-https://lkml.org/lkml/2018/8/10/380
-There is a discussion on linux-pm about supporting also Tegra platforms in addition to NXP and Qualcomm.
+Check return value of pattern_trig_store_patterns().
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-> Overall, exposing all of this to software is obviously a nightmare
-> from a complexity point of view, and one in which it will surely be
-> very very hard to make the system behave properly for generic
-> workloads beyond benchmark tuning.
+--dc+cDN39EJAMEtIO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-It allows the consumer drivers to dynamically express their performance needs in the system in a more fine grained way (if they want/need to) and this helps the system to keep the lowest power profile. This has already been done for a long time in various different kernels shipping with Android devices, for example, and basically every vendor uses a different custom approach. So I believe that this is doing the generalization that was needed.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-> Having more information about the above would definitely help tell if
-> this whole effort is a step in the right direction, or if it is
-> needless complexity that is better solved in other ways.
+iEYEARECAAYFAlwMz5IACgkQMOfwapXb+vKt0gCfRJ7ayW23MMx0p+3b3Q04WCQT
+SYkAnjG0ho7SbuWAkTPa2GD8Ps1q2Prh
+=hXws
+-----END PGP SIGNATURE-----
 
-Sure, hope that this answers your questions.
-
-Thanks,
-Georgi
-
-> 
-> -Olof
-> 
+--dc+cDN39EJAMEtIO--
