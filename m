@@ -1,58 +1,66 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH 0/3] spi-nor: Add Octal SPI support
-Date: Sun, 9 Dec 2018 14:17:18 +0530
-Message-ID: <0e4286ea-85d1-a909-17c0-47f9506b3e5a@ti.com>
-References: <20181003165603.2579-1-vigneshr@ti.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 2/5] devfreq: add support for suspend/resume of a
+ devfreq device
+Date: Sun, 9 Dec 2018 10:00:07 +0100
+Message-ID: <20181209090007.GD7561@amd>
+References: <1543847475-7600-1-git-send-email-l.luba@partner.samsung.com>
+ <CGME20181203143131eucas1p217f22ac6d19682a54a57658a06980914@eucas1p2.samsung.com>
+ <1543847475-7600-3-git-send-email-l.luba@partner.samsung.com>
+ <5C06124B.5030409@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181003165603.2579-1-vigneshr@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>
-Cc: devicetree@vger.kernel.org, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="0/kgSOzhNoDC5T3a"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5C06124B.5030409@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Lukasz Luba <l.luba@partner.samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
 
-On 03/10/18 10:26 PM, Vignesh R wrote:
-> This series adds support for octal mode of mt35x flash. Also, adds
-> support for OSPI version of Cadence QSPI controller.
-> 
-> Based on top of patches adding basic support for mt35xu512aba here:
-> https://patchwork.ozlabs.org/cover/971437/
-> 
-> Vignesh R (3):
->   mtd: spi-nor: Add Octal mode support for mt35xu512aba
+--0/kgSOzhNoDC5T3a
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Tue 2018-12-04 14:36:11, Chanwoo Choi wrote:
+> Hi Lukasz,
+>=20
+> Looks good to me. But, I add the some comments.
+> If you will fix it, feel free to add my tag:
+> Reviewed-by: Chanwoo choi <cw00.choi@samsung.com>
+>=20
+> On 2018=EB=85=84 12=EC=9B=94 03=EC=9D=BC 23:31, Lukasz Luba wrote:
+> > The patch prepares devfreq device for handling suspend/resume
+> > functionality.  The new fields will store needed information during this
+>=20
+> nitpick. Remove unneeded space. There are two spaces between '.' and 'The=
+ new'.=20
 
->   dt-bindings: cadence-quadspi: Add new compatible for AM654 SoC
->   mtd: spi-nor: cadence-quadspi: Add support for Octal SPI controller
+Yes. And that's because two spaces are okay at that place.
 
-Could you consider above two patches for v4.21 once [1][2] are merged?
+https://www.writersdigest.com/online-editor/how-many-spaces-after-a-period
 
-[1] https://patchwork.ozlabs.org/patch/1006717/
-[2] https://patchwork.ozlabs.org/patch/1006715/
+Please don't cause unneeded noise on the list with trivial
+comments. If the patch is okay, apply the patch, no need to find
+trivial nit everywhere.
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Let me know if this needs to be re-posted.
+--0/kgSOzhNoDC5T3a
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> 
->  .../devicetree/bindings/mtd/cadence-quadspi.txt       |  1 +
->  drivers/mtd/spi-nor/cadence-quadspi.c                 |  9 +++++++++
->  drivers/mtd/spi-nor/spi-nor.c                         | 11 ++++++++++-
->  include/linux/mtd/spi-nor.h                           |  2 ++
->  4 files changed, 22 insertions(+), 1 deletion(-)
-> 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
--- 
-Regards
-Vignesh
+iEYEARECAAYFAlwM2ZcACgkQMOfwapXb+vKjzQCcCsUqmaYo8aPuD0m/JrfCBl2z
+ZaUAnjMt+1X+vuWarQhgVM/LXGeYdeLw
+=2woN
+-----END PGP SIGNATURE-----
+
+--0/kgSOzhNoDC5T3a--
