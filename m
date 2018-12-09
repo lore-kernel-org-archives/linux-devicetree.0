@@ -1,96 +1,188 @@
-From: tom burkart <tom@aussec.com>
-Subject: Re: [PATCH v9 3/4] dt-bindings: pps: pps-gpio PPS ECHO
- implementation
-Date: Sun, 09 Dec 2018 14:07:59 +1100
-Message-ID: <20181209140759.18342zz66oeo3767@www.aussec.com>
-References: <20181122094602.5156-1-tom@aussec.com>
- <20181122094602.5156-2-tom@aussec.com>
- <20181122094602.5156-3-tom@aussec.com>
- <20181122094602.5156-4-tom@aussec.com>
- <CAL_JsqJ6fM3+pcC3b-eXEex=j_ft6Z=vukhLK9wULfWJqOTN-A@mail.gmail.com>
- <20181127150629.10795h1esqtc53ut@aussec.com>
- <CAL_JsqJmuDbPgc3WYRU8y3hbDL5A4_Luj0FfAiSvJ2+J-TM9_g@mail.gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 1/8] Input: tm2-touchkey: Add support for midas touchkey
+Date: Sat, 8 Dec 2018 20:22:34 -0800
+Message-ID: <20181209042234.GB211094@dtor-ws>
+References: <20181207105811.1831-1-pawel.mikolaj.chmiel@gmail.com>
+ <20181207105811.1831-2-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8;
- DelSp="Yes";
- format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJmuDbPgc3WYRU8y3hbDL5A4_Luj0FfAiSvJ2+J-TM9_g@mail.gmail.com>
 Content-Disposition: inline
+In-Reply-To: <20181207105811.1831-2-pawel.mikolaj.chmiel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, lukas@fridolin.com
+To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, xc-racer2@live.ca, simon@lineageos.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rob Herring <robh@kernel.org>:
+Hi Paweł,
 
-> On Mon, Nov 26, 2018 at 10:06 PM tom burkart <tom@aussec.com> wrote:
->>
->> Hi Rob,
->>
->> Quoting Rob Herring <robh@kernel.org>:
->>
->> > On Thu, Nov 22, 2018 at 3:49 AM Tom Burkart <tom@aussec.com> wrote:
->> >>
->> >> This patch implements the device tree changes required for the pps
->> >> echo functionality for pps-gpio, that sysfs claims is available
->> >> already.
->> >>
->> >> This patch was originally written by Lukas Senger as part of a masters
->> >> thesis project and modified for inclusion into the linux kernel by Tom
->> >> Burkart.
->> >>
->> >> Signed-off-by: Lukas Senger <lukas@fridolin.com>
->> >> Signed-off-by: Tom Burkart <tom@aussec.com>
->> >> ---
->> >>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 9 +++++++++
->> >>  1 file changed, 9 insertions(+)
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> b/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> index 1155d49c2699..e09f6f2405c5 100644
->> >> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> @@ -7,10 +7,15 @@ Required properties:
->> >>  - compatible: should be "pps-gpio"
->> >>  - gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
->> >>
->> >> +Additional required properties for the PPS ECHO functionality:
->> >> +- echo-gpios: one PPS ECHO GPIO in the format described by  
->> ../gpio/gpio.txt
->> >> +- echo-active-ms: duration in ms of the active portion of the echo pulse
->> >> +
->> >>  Optional properties:
->> >>  - assert-falling-edge: when present, assert is indicated by a  
->> falling edge
->> >>                         (instead of by a rising edge)
->> >>  - capture-clear: when present, also capture the PPS clear event
->> >> +- invert-pps-echo: when present, invert the PPS ECHO pulse
->> >
->> > Why do you need this? Can't you just make the echo gpio GPIO_ACTIVE_LOW?
->> >
->> > BTW, using the flag probably should have been done for
->> > 'assert-falling-edge' as well.
->>
->> The hardware I use expects a positive-going echo pulse, however, it
->> was really easy to give users the option to have it inverted in case
->> they use different hardware that expects a negative-going edge.
->
-> It will be even easier to implement if you use GPIO_ACTIVE_LOW or
-> GPIO_ACTIVE_HIGH as appropriate. If the flag is set appropriately,
-> then gpiod_set_value(gpio, 1) asserts the pulse and
-> gpiod_set_value(gpio, 0) deasserts it no matter which way the h/w is
-> wired. You can then get rid of invert_pps_echo in the driver.
+On Fri, Dec 07, 2018 at 11:58:04AM +0100, Paweł Chmiel wrote:
+> From: Simon Shields <simon@lineageos.org>
+> 
+> The touchkey on midas boards is almost identical.
+> The only real difference is that it uses the same register for both
+> keycode and base.
+> 
+> Signed-off-by: Simon Shields <simon@lineageos.org>
+> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> ---
+>  drivers/input/keyboard/tm2-touchkey.c | 48 ++++++++++++++++++++++-----
+>  1 file changed, 39 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/tm2-touchkey.c b/drivers/input/keyboard/tm2-touchkey.c
+> index abc266e40e17..37a5ced24009 100644
+> --- a/drivers/input/keyboard/tm2-touchkey.c
+> +++ b/drivers/input/keyboard/tm2-touchkey.c
+> @@ -22,12 +22,13 @@
+>  #include <linux/leds.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <linux/pm.h>
+>  #include <linux/regulator/consumer.h>
+>  
+> -#define TM2_TOUCHKEY_DEV_NAME		"tm2-touchkey"
+> -#define TM2_TOUCHKEY_KEYCODE_REG	0x03
+> -#define TM2_TOUCHKEY_BASE_REG		0x00
+> +#define TM2_TOUCHKEY_DEV_NAME "tm2-touchkey"
+> +#define MIDAS_TOUCHKEY_DEV_NAME "midas-touchkey"
 
-Hi Rob,
-sure we can do that, however, a hardware change will need a recompile  
-of the kernel, rather than setting a flag.
-You still need something to help decide whether to use GPIO_ACTIVE_LOW  
-or GPIO_ACTIVE_HIGH depending on what hardware is currently connected  
-to the system.
+I am not sure why we need to bother with name changes... We can get to
+compatible if it is that interesting, but other than that it seems
+only complicate things. Also, you use MIDAS_TOUCHKEY_DEV_NAME in only
+one place and open-code it in others.
 
-I am happy to delete that code as well, if it makes you happy.
+> +
+>  #define TM2_TOUCHKEY_CMD_LED_ON		0x10
+>  #define TM2_TOUCHKEY_CMD_LED_OFF	0x20
+>  #define TM2_TOUCHKEY_BIT_PRESS_EV	BIT(3)
+> @@ -40,12 +41,31 @@ enum {
+>  	TM2_TOUCHKEY_KEY_BACK,
+>  };
+>  
+> +struct touchkey_variant {
+> +	const char *name;
+> +	u8 keycode_reg;
+> +	u8 base_reg;
+> +};
+> +
+>  struct tm2_touchkey_data {
+>  	struct i2c_client *client;
+>  	struct input_dev *input_dev;
+>  	struct led_classdev led_dev;
+>  	struct regulator *vdd;
+>  	struct regulator_bulk_data regulators[2];
+> +	struct touchkey_variant *variant;
 
-Tom
+	const struct touchkey_variant *variant;
+
+> +};
+> +
+> +static struct touchkey_variant tm2_touchkey_variant = {
+
+static const
+
+> +	.name = "tm2-touchkey",
+> +	.keycode_reg = 0x03,
+> +	.base_reg = 0x00,
+> +};
+> +
+> +static struct touchkey_variant midas_touchkey_variant = {
+
+static const
+
+> +	.name = "midas-touchkey",
+> +	.keycode_reg = 0x00,
+> +	.base_reg = 0x00,
+>  };
+>  
+>  static void tm2_touchkey_led_brightness_set(struct led_classdev *led_dev,
+> @@ -66,7 +86,7 @@ static void tm2_touchkey_led_brightness_set(struct led_classdev *led_dev,
+>  
+>  	regulator_set_voltage(touchkey->vdd, volt, volt);
+>  	i2c_smbus_write_byte_data(touchkey->client,
+> -				  TM2_TOUCHKEY_BASE_REG, data);
+> +				  touchkey->variant->base_reg, data);
+>  }
+>  
+>  static int tm2_touchkey_power_enable(struct tm2_touchkey_data *touchkey)
+> @@ -99,7 +119,7 @@ static irqreturn_t tm2_touchkey_irq_handler(int irq, void *devid)
+>  	int key;
+>  
+>  	data = i2c_smbus_read_byte_data(touchkey->client,
+> -					TM2_TOUCHKEY_KEYCODE_REG);
+> +					touchkey->variant->keycode_reg);
+>  	if (data < 0) {
+>  		dev_err(&touchkey->client->dev,
+>  			"failed to read i2c data: %d\n", data);
+> @@ -153,6 +173,9 @@ static int tm2_touchkey_probe(struct i2c_client *client,
+>  	touchkey->client = client;
+>  	i2c_set_clientdata(client, touchkey);
+>  
+> +	touchkey->variant = (struct touchkey_variant *)
+
+
+Is cast really needed?
+
+> +		of_device_get_match_data(&client->dev);
+> +
+>  	touchkey->regulators[0].supply = "vcc";
+>  	touchkey->regulators[1].supply = "vdd";
+>  	error = devm_regulator_bulk_get(&client->dev,
+> @@ -187,7 +210,7 @@ static int tm2_touchkey_probe(struct i2c_client *client,
+>  		return -ENOMEM;
+>  	}
+>  
+> -	touchkey->input_dev->name = TM2_TOUCHKEY_DEV_NAME;
+> +	touchkey->input_dev->name = touchkey->variant->name;
+>  	touchkey->input_dev->id.bustype = BUS_I2C;
+>  
+>  	input_set_capability(touchkey->input_dev, EV_KEY, KEY_PHONE);
+> @@ -203,7 +226,7 @@ static int tm2_touchkey_probe(struct i2c_client *client,
+>  	error = devm_request_threaded_irq(&client->dev, client->irq,
+>  					  NULL, tm2_touchkey_irq_handler,
+>  					  IRQF_ONESHOT,
+> -					  TM2_TOUCHKEY_DEV_NAME, touchkey);
+> +					  touchkey->variant->name, touchkey);
+>  	if (error) {
+>  		dev_err(&client->dev,
+>  			"failed to request threaded irq: %d\n", error);
+> @@ -211,7 +234,7 @@ static int tm2_touchkey_probe(struct i2c_client *client,
+>  	}
+>  
+>  	/* led device */
+> -	touchkey->led_dev.name = TM2_TOUCHKEY_DEV_NAME;
+> +	touchkey->led_dev.name = touchkey->variant->name;
+>  	touchkey->led_dev.brightness = LED_FULL;
+>  	touchkey->led_dev.max_brightness = LED_ON;
+>  	touchkey->led_dev.brightness_set = tm2_touchkey_led_brightness_set;
+> @@ -257,12 +280,19 @@ static SIMPLE_DEV_PM_OPS(tm2_touchkey_pm_ops,
+>  
+>  static const struct i2c_device_id tm2_touchkey_id_table[] = {
+>  	{ TM2_TOUCHKEY_DEV_NAME, 0 },
+> +	{ MIDAS_TOUCHKEY_DEV_NAME, 0 },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(i2c, tm2_touchkey_id_table);
+>  
+>  static const struct of_device_id tm2_touchkey_of_match[] = {
+> -	{ .compatible = "cypress,tm2-touchkey", },
+> +	{
+> +		.compatible = "cypress,tm2-touchkey",
+> +		.data = &tm2_touchkey_variant,
+> +	}, {
+> +		.compatible = "cypress,midas-touchkey",
+> +		.data = &midas_touchkey_variant,
+> +	},
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, tm2_touchkey_of_match);
+> -- 
+> 2.17.1
+> 
+
+Thanks.
+
+-- 
+Dmitry
