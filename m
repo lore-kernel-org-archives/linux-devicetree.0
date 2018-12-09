@@ -1,7 +1,7 @@
 From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v5 5/6] arm64: dts: imx8mq: add watchdog devices
-Date: Sun, 9 Dec 2018 14:26:10 +0000
-Message-ID: <1544365552-30270-6-git-send-email-abel.vesa@nxp.com>
+Subject: [PATCH v5 6/6] arm64: dts: imx8mq-evk: enable watchdog
+Date: Sun, 9 Dec 2018 14:26:11 +0000
+Message-ID: <1544365552-30270-7-git-send-email-abel.vesa@nxp.com>
 References: <1544365552-30270-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -16,47 +16,45 @@ List-Id: devicetree@vger.kernel.org
 
 From: Baruch Siach <baruch@tkos.co.il>
 
+The external nWDOG signal connects to the EVK board reset circuit.
+
+Tested on the i.MX8MQ EVK rev B3.
+
 Signed-off-by: Baruch Siach <baruch@tkos.co.il>
 Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 ---
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dt=
-s/freescale/imx8mq.dtsi
-index 3703bca..8e9d6d5 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -228,6 +228,30 @@
- 				              "clk_ext1", "clk_ext2",
- 				              "clk_ext3", "clk_ext4";
- 			};
-+
-+			wdog1: watchdog@30280000 {
-+				compatible =3D "fsl,imx8mq-wdt", "fsl,imx21-wdt";
-+				reg =3D <0x30280000 0x10000>;
-+				interrupts =3D <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clk IMX8MQ_CLK_WDOG1_ROOT>;
-+				status =3D "disabled";
-+			};
-+
-+			wdog2: watchdog@30290000 {
-+				compatible =3D "fsl,imx8mq-wdt", "fsl,imx21-wdt";
-+				reg =3D <0x30290000 0x10000>;
-+				interrupts =3D <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clk IMX8MQ_CLK_WDOG2_ROOT>;
-+				status =3D "disabled";
-+			};
-+
-+			wdog3: watchdog@302a0000 {
-+				compatible =3D "fsl,imx8mq-wdt", "fsl,imx21-wdt";
-+				reg =3D <0x302a0000 0x10000>;
-+				interrupts =3D <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clk IMX8MQ_CLK_WDOG3_ROOT>;
-+				status =3D "disabled";
-+			};
- 		};
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot=
+/dts/freescale/imx8mq-evk.dts
+index 04ce13f..64acccc 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+@@ -160,6 +160,13 @@
+ 	status =3D "okay";
+ };
 =20
- 		bus@30400000 { /* AIPS2 */
++&wdog1 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_wdog>;
++	fsl,ext-reset-output;
++	status =3D "okay";
++};
++
+ &iomuxc {
+ 	pinctrl_fec1: fec1grp {
+ 		fsl,pins =3D <
+@@ -287,4 +294,10 @@
+ 			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
+ 		>;
+ 	};
++
++	pinctrl_wdog: wdog1grp {
++		fsl,pins =3D <
++			MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B		0xc6
++		>;
++	};
+ };
 --=20
 2.7.4
