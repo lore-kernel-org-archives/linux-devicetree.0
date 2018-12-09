@@ -1,46 +1,76 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: Moving ARM dts files
-Date: Sat, 8 Dec 2018 23:40:46 +0100
-Message-ID: <CACRpkdbVdVyOBMDsqHxFuONVo6qD20OGecVjpAv_LtnX1QOqPA@mail.gmail.com>
-References: <20181204183649.GA5716@bogus>
- <CAL_JsqKK4F7QX=B-CcQkMsgN--r3xv6PS4JabzOb4kqfATwtsQ@mail.gmail.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v12 0/7] Introduce on-chip interconnect API
+Date: Sat, 8 Dec 2018 16:33:46 -0800
+Message-ID: <CAOesGMgZYheG77L_nuNtTA8xY-PtDpseHOKf8kCjusiYsv5Mmw@mail.gmail.com>
+References: <20181208170216.32555-1-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqKK4F7QX=B-CcQkMsgN--r3xv6PS4JabzOb4kqfATwtsQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Alexandre Belloni <alexandre.belloni@bootlin.com>, ext Tony Lindgren <tony@atomide.com>, Liviu Dudau <liviu.dudau@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Gregory Clement <gregory.clement@bootlin.com>, Michal Simek <michal.simek@xilinx.com>, Krzysztof Kozlowski <krzk@kernel.org>, arm-soc <arm@kernel.org>, Joel Stanley <joel@jms.id.au>, Andy Gross <andy.gross@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Shawn Guo <shawnguo@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afae>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181208170216.32555-1-georgi.djakov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, Arnd Bergmann <arnd@arndb.de>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, Doug Anderson <dianders@chromium.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Alexandre Bailon <abailon@baylibre.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Thier
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 7, 2018 at 11:33 PM Rob Herring <robh@kernel.org> wrote:
+Hi Georgi,
 
-> Here's an updated mapping filled out with the rest of the platforms
-> and using SoC family names in some cases as discussed.
+On Sat, Dec 8, 2018 at 9:02 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+>
+> Modern SoCs have multiple processors and various dedicated cores (video, gpu,
+> graphics, modem). These cores are talking to each other and can generate a
+> lot of data flowing through the on-chip interconnects. These interconnect
+> buses could form different topologies such as crossbar, point to point buses,
+> hierarchical buses or use the network-on-chip concept.
+>
+> These buses have been sized usually to handle use cases with high data
+> throughput but it is not necessary all the time and consume a lot of power.
+> Furthermore, the priority between masters can vary depending on the running
+> use case like video playback or CPU intensive tasks.
+>
+> Having an API to control the requirement of the system in terms of bandwidth
+> and QoS, so we can adapt the interconnect configuration to match those by
+> scaling the frequencies, setting link priority and tuning QoS parameters.
+> This configuration can be a static, one-time operation done at boot for some
+> platforms or a dynamic set of operations that happen at run-time.
+>
+> This patchset introduce a new API to get the requirement and configure the
+> interconnect buses across the entire chipset to fit with the current demand.
+> The API is NOT for changing the performance of the endpoint devices, but only
+> the interconnect path in between them.
+>
+> The API is using a consumer/provider-based model, where the providers are
+> the interconnect buses and the consumers could be various drivers.
+> The consumers request interconnect resources (path) to an endpoint and set
+> the desired constraints on this data flow path. The provider(s) receive
+> requests from consumers and aggregate these requests for all master-slave
+> pairs on that path. Then the providers configure each participating in the
+> topology node according to the requested data flow path, physical links and
+> constraints. The topology could be complicated and multi-tiered and is SoC
+> specific.
 
-This looks really good to me!
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+This patch series description fails to describe why you need a brand
+new subsystem for this instead of either using one of the current
+ones, or adapting it to fit the needs you have.
 
->The move is
-> completely scripted now including include fixups (though any new
-> includes could break things). So mainly just need to bikeshed the
-> directory mapping.
+Primarily, I'm wondering what's missing from drivers/devfreq to fit your needs?
 
-I did have a serious minute to think over whether this was a
-bikeshedding type discussion and the outcome is as unimportant
-as the color of some bikeshed. Went as far as to re-read Parsons
-(hilarious!) original essay and the first chapter of Wittgensteins
-Tractatus. I concluded it was more profound than that for several
-reasons.
+The series also doesn't seem to provide any kind of indication how
+this will be used by end points. You have one driver for one SoC that
+just contains large tables that are parsed at probe time, but no
+driver hooks anywhere that will actually change any settings depending
+on use cases. Also, the bindings as posted don't seem to include any
+of this kind of information. So it's hard to get a picture of how this
+is going to be used in reality, which makes it hard to judge whether
+it is a good solution or not.
 
-Yours,
-Linus Walleij
+Overall, exposing all of this to software is obviously a nightmare
+from a complexity point of view, and one in which it will surely be
+very very hard to make the system behave properly for generic
+workloads beyond benchmark tuning.
+
+Having more information about the above would definitely help tell if
+this whole effort is a step in the right direction, or if it is
+needless complexity that is better solved in other ways.
+
+
+-Olof
