@@ -1,77 +1,155 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [PATCH RFC 5/5] dt-bindings: gnss: add lna-supply property
-Date: Sun, 9 Dec 2018 20:11:34 +0100
-Message-ID: <20181209201134.52c16a71@aktux>
-References: <20181118215801.12280-1-andreas@kemnade.info>
-        <20181118215801.12280-6-andreas@kemnade.info>
-        <20181205150939.GI15689@localhost>
+From: Parthiban Nallathambi <pn@denx.de>
+Subject: Re: [PATCH v3 1/4] dt-bindings: interrupt-controller: Actions
+ external interrupt controller
+Date: Sun, 9 Dec 2018 20:26:40 +0100
+Message-ID: <49bb60b8-a51b-a4e8-da29-52f0a951c37b@denx.de>
+References: <20181126100356.2840578-1-pn@denx.de>
+ <20181126100356.2840578-2-pn@denx.de> <20181207232934.GA28201@bogus>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/3qDgqbcb4MN5ObIRVUBdrTh"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181205150939.GI15689@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181207232934.GA28201@bogus>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@cubietech.com, jason@lakedaemon.net, marc.zyngier@arm.com, catalin.marinas@arm.com, pn@denx.de, laisa.costa@lsitec.org.br, will.deacon@arm.com, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, edgar.righi@lsitec.org.br, guilherme.simoes@lsitec.org.br, mp-cs@actions-semi.com, manivannan.sadhasivam@linaro.org, tglx@linutronix.de, mkzuffo@lsi.usp.br, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, Saravanan Sekar <sravanhome@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/3qDgqbcb4MN5ObIRVUBdrTh
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello Rob,
 
-On Wed, 5 Dec 2018 16:09:39 +0100
-Johan Hovold <johan@kernel.org> wrote:
+On 12/8/18 12:29 AM, Rob Herring wrote:
+> On Mon, Nov 26, 2018 at 11:03:53AM +0100, Parthiban Nallathambi wrote:
+>> Actions Semi OWL family SoC's provides support for external interrupt
+>> controller to be connected and controlled using SIRQ pins. S500, S700
+>> and S900 provides 3 SIRQ lines and works independently for 3 external
+>> interrupt controllers.
+>>
+>> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+>> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+>> ---
+>>  .../interrupt-controller/actions,owl-sirq.txt | 57 +++++++++++++++++++
+>>  1 file changed, 57 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.txt b/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.txt
+>> new file mode 100644
+>> index 000000000000..b3adc4bddf40
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.txt
+>> @@ -0,0 +1,57 @@
+>> +Actions Semi Owl SoCs SIRQ interrupt controller
+>> +
+>> +S500, S700 and S900 SoC's from Actions provides 3 SPI's from GIC,
+> 
+> Listing SoCs here means you have to update this line for every new SoC.
 
-> On Sun, Nov 18, 2018 at 10:58:01PM +0100, Andreas Kemnade wrote:
-> > Add lna-supply property.
-> >=20
-> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > ---
-> >  Documentation/devicetree/bindings/gnss/sirfstar.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/gnss/sirfstar.txt b/Docu=
-mentation/devicetree/bindings/gnss/sirfstar.txt
-> > index 1be7597ae884..9614774d14bc 100644
-> > --- a/Documentation/devicetree/bindings/gnss/sirfstar.txt
-> > +++ b/Documentation/devicetree/bindings/gnss/sirfstar.txt
-> > @@ -30,6 +30,7 @@ Optional properties:
-> >  - sirf,wakeup-gpios	: GPIO used to determine device power state
-> >  			  (pin name: RFPWRUP, WAKEUP)
-> >  - timepulse-gpios	: Time pulse GPIO (pin name: 1PPS, TM)
-> > +- lna-supply		: Separate supply for a LNA =20
->=20
-> "Supply for external LNA"?
->=20
-"External" might be misleading:
-- not part of the gps chip itself: yes
-- but might also be inside of the device.
+Ok, I will mark it as OWL SoC's here.
 
-In case of the GTA04 this includes power supply for an antenna switch
-(operates by plug detection) + internal or external antenna.
+> 
+>> +in which external interrupt controller can be connected. 3 SPI's
+>> +45, 46, 47 from GIC are directly exposed as SIRQ. It has
+>> +the following properties:
+>> +
+>> +- inputs three interrupt signal from external interrupt controller
+>> +
+>> +Required properties:
+>> +
+>> +- compatible: should be "actions,owl-sirq"
+> 
+> SoC specific compatibles needed.
 
-Regards,
-Andreas
+Ok, I will change this into "actions,s700-sirq"
 
---Sig_/3qDgqbcb4MN5ObIRVUBdrTh
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> 
+>> +- reg: physical base address of the controller and length of memory mapped
+>> +  region.
+>> +- interrupt-controller: identifies the node as an interrupt controller
+>> +- #interrupt-cells: specifies the number of cells needed to encode an interrupt
+>> +  source, should be 2.
+>> +- actions,sirq-shared-reg: Applicable for S500 and S700 where SIRQ register
+>> +  details are maintained at same offset/register.
+>> +- actions,sirq-reg-offset: register offset for SIRQ interrupts. When registers are
+>> +  shared, all the three offsets will be same (S500 and S700).
+> 
+> These properties should be implied by the compatible string.
 
------BEGIN PGP SIGNATURE-----
+Agreed for sirq-shared-reg.
 
-iQIzBAEBCAAdFiEE7sDbhY5mwNpwYgrAfb1qx03ikyQFAlwNaOYACgkQfb1qx03i
-kyRcmhAAuC7k3S9ti4oqnnu8eO00xAeL9wp66vofIRmQbMb6ONYcoJkMQRuPw1Nn
-6F0mCiLwSKqWOMoST/Wk2MFiwTjhwQK4ZBjm5S+VHhIBhVAL17fU/wIluiwM/+1R
-4RDJdFL7Qhy7f2lofdlbe2UpQzp2cxXVDHkzK/BYGBuXZM8qRMm4hikYRIUqqsxo
-1Z13LhaYtsq4mbwMJh/AFvQBN6/3mcBXQ1fgNRJR9dyXQTtlSWTco0Uhs1dskwOQ
-CKaA8vAKzM+THL3y4+N43AZIN4LPDqKESkHTRbHZ84OCHbkJiqWn7SBh9S++OR9h
-NKXe5WVmjeLoxcEpCqV5V3j2EQyDTaP3PwEN/sO56pboiG1OKtFs5bycxT2ih+8i
-LIk1zPxdcQ1s2aM/RckBznkUDdL2OvT79r1y/Dc35VAfK2qxG6H60OdUbdNvP4WO
-9cbyMuNmX4NLQmFAPbPOpO9o/3MxSYWA0SmxodIpVM0/bVgzMla98cJi/gkICxQ/
-mez8wvDeFUAkMdN7Nv/0WM2+TsqM7ry4FtONoE9rYMzZDyaQA09jjQ//VqknrsJL
-QCZJQ/SKdFDdmZ4+6KLPPBYls1WtF6Bbo55ULtGvleeKFhxiUGHChWsOSRoZAUbP
-eSfPITAojXKS8GnbwEVFv0lyshLIcXDMKiZnfJwk21lAN5Ssh6E=
-=Wbat
------END PGP SIGNATURE-----
+But for s900 sirq-reg-offset, the register offset will have different values.
+So this shall not be removed.
 
---Sig_/3qDgqbcb4MN5ObIRVUBdrTh--
+> 
+>> +- actions,ext-irq-range: Identifies external irq number range in different SoCs.
+> 
+> Why is this needed? It appears to always be the same.
+
+Yes, I agree for all the existing Owl SoC's this remains same.
+
+In the previous version we defined this as constant in the code. But based on Marc's
+feedback I understood that this value should come from Device Tree instead on hard
+coding in the code.
+
+> 
+>> +
+>> +Example for S900:
+>> +
+>> +sirq: interrupt-controller@e01b0000 {
+>> +	compatible = "actions,owl-sirq";
+>> +	reg = <0x0 0xe01b0000 0x0 0x1000>;
+>> +	interrupt-controller;
+>> +	#interrupt-cells = <3>;
+>> +	actions,sirq-offset = <0x200 0x528 0x52c>;
+>> +	actions,ext-irq-range = <13 15>;
+>> +};
+>> +
+>> +Example for S700:
+> 
+> Examples are examples, not an enumeration of all possible dts entries. 
+> So 1 should be sufficient.
+
+Sure, I will maintain only s700 here.
+
+> 
+>> +
+>> +sirq: interrupt-controller@e01b0000 {
+>> +	compatible = "actions,owl-sirq";
+>> +	reg = <0x0 0xe01b0000 0x0 0x1000>;
+>> +	interrupt-controller;
+>> +	#interrupt-cells = <3>;
+>> +	actions,sirq-shared-reg;
+>> +	actions,sirq-reg-offset = <0x200 0x200 0x200>;
+>> +	actions,ext-irq-range = <13 15>;
+>> +};
+>> +
+>> +Example for S500:
+>> +
+>> +sirq: interrupt-controller@b01b0000 {
+>> +	compatible = "actions,owl-sirq";
+>> +	reg = <0x0 0xb01b0000 0x0 0x1000>;
+>> +	interrupt-controller;
+>> +	#interrupt-cells = <3>;
+>> +	actions,sirq-shared-reg;
+>> +	actions,sirq-offset = <0x200 0x200 0x200>;
+>> +	actions,ext-irq-range = <13 15>;
+>> +};
+>> -- 
+>> 2.17.2
+>>
+> 
+
+-- 
+Thanks,
+Parthiban N
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-22 Fax: (+49)-8142-66989-80 Email: pn@denx.de
