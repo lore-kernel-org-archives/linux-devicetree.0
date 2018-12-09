@@ -1,126 +1,93 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH 1/2] arm64: dts: ti: k3-am654: Add McSPI DT nodes
-Date: Sun, 9 Dec 2018 15:52:21 +0530
-Message-ID: <20181209102222.7624-2-vigneshr@ti.com>
-References: <20181209102222.7624-1-vigneshr@ti.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v3 1/5] dt-bindings: soc: Add a new binding for the
+ BCM2835 PM node.
+Date: Sun, 9 Dec 2018 13:14:01 +0100 (CET)
+Message-ID: <53380420.68255.1544357641824@email.ionos.de>
+References: <20181130202743.20585-1-eric@anholt.net>
+ <20181130202743.20585-2-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181209102222.7624-1-vigneshr@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vignesh R <vigneshr@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181130202743.20585-2-eric@anholt.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-There are 3 instances of McSPI in MCU domain and 4 instances in Main domain.
-Add DT nodes for all McSPI instances present on AM654 SoC.
+Hi Eric,
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 52 ++++++++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi  | 30 ++++++++++++++
- 2 files changed, 82 insertions(+)
+[add Sebastian]
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 0a0a8fc5df64..6c71e67b8988 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -138,4 +138,56 @@
- 		clocks = <&k3_clks 39 0>;
- 		clock-names = "fck";
- 	};
-+
-+	main_spi0: spi@2100000 {
-+		compatible = "ti,am654-mcspi","ti,omap4-mcspi";
-+		reg = <0x0 0x2100000 0x0 0x400>;
-+		interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&k3_clks 137 1>;
-+		power-domains = <&k3_pds 137>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+
-+	main_spi1: spi@2110000 {
-+		compatible = "ti,am654-mcspi","ti,omap4-mcspi";
-+		reg = <0x0 0x2110000 0x0 0x400>;
-+		interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&k3_clks 138 1>;
-+		power-domains = <&k3_pds 138>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		assigned-clocks = <&k3_clks 137 1>;
-+		assigned-clock-rates = <48000000>;
-+	};
-+
-+	main_spi2: spi@2120000 {
-+		compatible = "ti,am654-mcspi","ti,omap4-mcspi";
-+		reg = <0x0 0x2120000 0x0 0x400>;
-+		interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&k3_clks 139 1>;
-+		power-domains = <&k3_pds 139>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+
-+	main_spi3: spi@2130000 {
-+		compatible = "ti,am654-mcspi","ti,omap4-mcspi";
-+		reg = <0x0 0x2130000 0x0 0x400>;
-+		interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&k3_clks 140 1>;
-+		power-domains = <&k3_pds 140>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+
-+	main_spi4: spi@2140000 {
-+		compatible = "ti,am654-mcspi","ti,omap4-mcspi";
-+		reg = <0x0 0x2140000 0x0 0x400>;
-+		interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&k3_clks 141 1>;
-+		power-domains = <&k3_pds 141>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
- };
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-index 1fd027748e1f..1aeae52fb239 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-@@ -26,4 +26,34 @@
- 		clocks = <&k3_clks 114 1>;
- 		power-domains = <&k3_pds 114>;
- 	};
-+
-+	mcu_spi0: spi@40300000 {
-+		compatible = "ti,am654-mcspi","ti,omap4-mcspi";
-+		reg = <0x0 0x40300000 0x0 0x400>;
-+		interrupts = <GIC_SPI 560 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&k3_clks 142 1>;
-+		power-domains = <&k3_pds 142>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+
-+	mcu_spi1: spi@40310000 {
-+		compatible = "ti,am654-mcspi","ti,omap4-mcspi";
-+		reg = <0x0 0x40310000 0x0 0x400>;
-+		interrupts = <GIC_SPI 561 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&k3_clks 143 1>;
-+		power-domains = <&k3_pds 143>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+
-+	mcu_spi2: spi@40320000 {
-+		compatible = "ti,am654-mcspi","ti,omap4-mcspi";
-+		reg = <0x0 0x40320000 0x0 0x400>;
-+		interrupts = <GIC_SPI 562 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&k3_clks 144 1>;
-+		power-domains = <&k3_pds 144>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
- };
--- 
-2.19.2
+> Eric Anholt <eric@anholt.net> hat am 30. November 2018 um 21:27 geschrieben:
+> 
+> 
+> This binding supersedes the bcm2835-pm-wdt binding which only covered
+> enough to provide a watchdog, but the HW block is actually mostly
+> about power domains.
+> 
+> Signed-off-by: Eric Anholt <eric@anholt.net>
+> ---
+>  .../bindings/soc/bcm/brcm,bcm2835-pm.txt      | 42 +++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-pm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-pm.txt b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-pm.txt
+> new file mode 100644
+> index 000000000000..7818d33a158f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-pm.txt
+> @@ -0,0 +1,42 @@
+> +BCM2835 PM (Power domains, watchdog)
+> +
+> +The PM block controls power domains and some reset lines, and includes
+> +a watchdog timer.  This binding supersedes the brcm,bcm2835-pm-wdt
+> +binding which covered some of PM's register range and functionality.
+> +
+> +Required properties:
+> +
+> +- compatible:		Should be "brcm,bcm2835-pm"
+> +- reg:			Specifies base physical address and size of the two
+> +			  register ranges ("PM" and "ASYNC_BRIDGE" in that
+> +			  order)
+> +- clocks:		a) v3d: The V3D clock from CPRMAN
+> +			b) peri_image: The PERI_IMAGE clock from CPRMAN
+> +			c) h264: The H264 clock from CPRMAN
+> +			d) isp: The ISP clock from CPRMAN
+> +- #reset-cells: 	Should be 1.  This property follows the reset controller
+> +			  bindings[1].
+> +- #power-domain-cells:	Should be 1.  This property follows the power domain
+> +			  bindings[2].
+> +
+> +Optional properties:
+> +
+> +- timeout-sec:	Contains the watchdog timeout in seconds
+> +
+> +[1] Documentation/devicetree/bindings/reset/reset.txt
+> +[2] Documentation/devicetree/bindings/power/power_domain.txt
+> +
+
+sorry for my late reply. I hope we can take the opportunity of a new binding to fix an old issue of the bcm2835-wdt driver. The watchdog driver sets the pm_power_off callback without checking for "system-power-controller" property [3]. As a result we can't use another poweroff controller like e.g. gpio-poweroff. In downstream this has been workarounded by an additional devicetree property for the gpio-poweroff driver [4]. But this isn't the right way because the issue is in the bcm2835 watchdog driver not in all the other reset controller.
+
+Suggested pseudo code:
+
+if (!pm_power_off) {
+    /* Preserve the old behavior of watchdog driver in case of old DTB */
+    if (!of_device_is_compatible(dev->of.node, "brcm,bcm2835-pm") ||
+        of_device_is_system_power_controller(dev->of.node))
+        pm_power_off = bcm2835_power_off;
+}
+
+Best regards
+Stefan
+
+[3] - https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/power/power-controller.txt
+[4] - https://github.com/raspberrypi/linux/commit/f86dcfac0a4e478fee40b5a3729ff1b159ae91ee
