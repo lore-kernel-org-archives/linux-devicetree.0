@@ -1,66 +1,67 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 2/5] devfreq: add support for suspend/resume of a
- devfreq device
-Date: Sun, 9 Dec 2018 10:00:07 +0100
-Message-ID: <20181209090007.GD7561@amd>
-References: <1543847475-7600-1-git-send-email-l.luba@partner.samsung.com>
- <CGME20181203143131eucas1p217f22ac6d19682a54a57658a06980914@eucas1p2.samsung.com>
- <1543847475-7600-3-git-send-email-l.luba@partner.samsung.com>
- <5C06124B.5030409@samsung.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH 2/2] arm64: dts: ti: k3-am654: Enable main domain McSPI0
+Date: Sun, 9 Dec 2018 15:52:22 +0530
+Message-ID: <20181209102222.7624-3-vigneshr@ti.com>
+References: <20181209102222.7624-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="0/kgSOzhNoDC5T3a"
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5C06124B.5030409@samsung.com>
+In-Reply-To: <20181209102222.7624-1-vigneshr@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Lukasz Luba <l.luba@partner.samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vignesh R <vigneshr@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Enable McSPI0 of main domain and add DT node for the SPI NOR flash
+connected to CS0.
 
---0/kgSOzhNoDC5T3a
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+---
+ .../arm64/boot/dts/ti/k3-am654-base-board.dts | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-On Tue 2018-12-04 14:36:11, Chanwoo Choi wrote:
-> Hi Lukasz,
->=20
-> Looks good to me. But, I add the some comments.
-> If you will fix it, feel free to add my tag:
-> Reviewed-by: Chanwoo choi <cw00.choi@samsung.com>
->=20
-> On 2018=EB=85=84 12=EC=9B=94 03=EC=9D=BC 23:31, Lukasz Luba wrote:
-> > The patch prepares devfreq device for handling suspend/resume
-> > functionality.  The new fields will store needed information during this
->=20
-> nitpick. Remove unneeded space. There are two spaces between '.' and 'The=
- new'.=20
-
-Yes. And that's because two spaces are okay at that place.
-
-https://www.writersdigest.com/online-editor/how-many-spaces-after-a-period
-
-Please don't cause unneeded noise on the list with trivial
-comments. If the patch is okay, apply the patch, no need to find
-trivial nit everywhere.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---0/kgSOzhNoDC5T3a
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlwM2ZcACgkQMOfwapXb+vKjzQCcCsUqmaYo8aPuD0m/JrfCBl2z
-ZaUAnjMt+1X+vuWarQhgVM/LXGeYdeLw
-=2woN
------END PGP SIGNATURE-----
-
---0/kgSOzhNoDC5T3a--
+diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+index 49ec2c3f5ef1..e41fc3a5987b 100644
+--- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+@@ -60,6 +60,15 @@
+ 			AM65X_IOPAD(0x0070, PIN_INPUT, 5) /* (R25) GPMC0_CSn2.I2C2_SDA */
+ 		>;
+ 	};
++
++	main_spi0_pins_default: main-spi0-pins-default {
++		pinctrl-single,pins = <
++			AM65X_IOPAD(0x01c4, PIN_INPUT, 0) /* (AH13) SPI0_CLK */
++			AM65X_IOPAD(0x01c8, PIN_INPUT, 0) /* (AE13) SPI0_D0 */
++			AM65X_IOPAD(0x01cc, PIN_INPUT, 0) /* (AD13) SPI0_D1 */
++			AM65X_IOPAD(0x01bc, PIN_OUTPUT, 0) /* (AG13) SPI0_CS0 */
++		>;
++	};
+ };
+ 
+ &main_pmx1 {
+@@ -136,3 +145,21 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&ecap0_pins_default>;
+ };
++
++&main_spi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&main_spi0_pins_default>;
++	#address-cells = <1>;
++	#size-cells= <0>;
++	ti,pindir-d0-out-d1-in = <1>;
++
++	flash@0{
++		compatible = "jedec,spi-nor";
++		reg = <0x0>;
++		spi-tx-bus-width = <1>;
++		spi-rx-bus-width = <1>;
++		spi-max-frequency = <48000000>;
++		#address-cells = <1>;
++		#size-cells= <1>;
++	};
++};
+-- 
+2.19.2
