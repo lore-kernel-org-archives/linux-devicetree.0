@@ -1,60 +1,109 @@
-From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v5 6/6] arm64: dts: imx8mq-evk: enable watchdog
-Date: Sun, 9 Dec 2018 14:26:11 +0000
-Message-ID: <1544365552-30270-7-git-send-email-abel.vesa@nxp.com>
-References: <1544365552-30270-1-git-send-email-abel.vesa@nxp.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 4/4] leds: trigger: Add pattern initialization from Device
+ Tree
+Date: Sun, 9 Dec 2018 19:55:26 +0100
+Message-ID: <fcb28be6-7d6a-1216-5a22-339f30366fd1@gmail.com>
+References: <1544185974-5932-1-git-send-email-krzk@kernel.org>
+ <1544185974-5932-4-git-send-email-krzk@kernel.org>
+ <8222f85b-4e61-69c4-6d31-ba559de02829@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544365552-30270-1-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <8222f85b-4e61-69c4-6d31-ba559de02829@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>, Baruch Siach <baruch@tkos.co.il>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Baolin Wang <baolin.wang@linaro.org>, Raphael Teysseyre <rteysseyre@gmail.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Baruch Siach <baruch@tkos.co.il>
+On 12/8/18 7:44 PM, Jacek Anaszewski wrote:
+> Hi Krzysztof,
+> 
+> Thank you for the patch set.
+> 
+> Applied 1/4 and 2/4.
+> 
+> I'll hold on merging 3/4 until we sort out the issues
+> I have with this one. Please refer to my comment below.
+> 
+> On 12/7/18 1:32 PM, Krzysztof Kozlowski wrote:
+>> Allow initialization of pattern used in pattern trigger from Device Tree
+>> property.
+>>
+>> This is especially useful for embedded systems where the pattern trigger
+>> would be used to indicate the process of boot status in a nice,
+>> user-friendly blinking way.  This initialization pattern will be used
+>> till user-space is brought up and sets its own pattern, indicating the
+>> boot status is for example finished.
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>> ---
+>>   drivers/leds/trigger/ledtrig-pattern.c | 18 ++++++++++++++++++
+>>   1 file changed, 18 insertions(+)
+>>
+>> diff --git a/drivers/leds/trigger/ledtrig-pattern.c 
+>> b/drivers/leds/trigger/ledtrig-pattern.c
+>> index 1870cf87afe1..96309d3bc43c 100644
+>> --- a/drivers/leds/trigger/ledtrig-pattern.c
+>> +++ b/drivers/leds/trigger/ledtrig-pattern.c
+>> @@ -11,6 +11,7 @@
+>>   #include <linux/leds.h>
+>>   #include <linux/module.h>
+>>   #include <linux/mutex.h>
+>> +#include <linux/of.h>
+>>   #include <linux/slab.h>
+>>   #include <linux/timer.h>
+>> @@ -331,6 +332,21 @@ static const struct attribute_group 
+>> *pattern_trig_groups[] = {
+>>       NULL,
+>>   };
+>> +static void pattern_init(struct led_classdev *led_cdev)
+>> +{
+>> +    struct device_node *np = dev_of_node(led_cdev->dev);
+>> +    const char *pattern;
+>> +
+>> +    if (!np)
+>> +        return;
+>> +
+>> +    if (!of_property_read_string(np, "linux,trigger-pattern", 
+>> &pattern)) {
+>> +        if (strlen(pattern))
+>> +            pattern_trig_store_patterns(led_cdev, pattern,
+>> +                            strlen(pattern), false);
+>> +    }
+>> +}
+>> +
+>>   static int pattern_trig_activate(struct led_classdev *led_cdev)
+>>   {
+>>       struct pattern_trig_data *data;
+>> @@ -354,6 +370,8 @@ static int pattern_trig_activate(struct 
+>> led_classdev *led_cdev)
+>>       timer_setup(&data->timer, pattern_trig_timer_function, 0);
+>>       led_cdev->activated = true;
+>> +    pattern_init(led_cdev);
 
-The external nWDOG signal connects to the EVK board reset circuit.
+With my recent patches it would suffice to replace above line with:
 
-Tested on the i.MX8MQ EVK rev B3.
+if (led_cdev->flags & LED_INIT_DEFAULT_TRIGGER) {
+	pattern_init(led_cdev);
+	led_cdev->flags &= ~LED_INIT_DEFAULT_TRIGGER;
+}
 
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
----
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+> It means that the pattern defined in DT would be applied
+> whenever the pattern trigger is set for a LED class device,
+> whereas it should happen only on LED class device initialization,
+> if linux,default-trigger is set to "pattern".
+> 
+> What we would need for making that work is a generic support for
+> parsing trigger specific initialization data in the
+> of_led_classdev_register().
+> 
+>> +
+>>       return 0;
+>>   }
+>>
+> 
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot=
-/dts/freescale/imx8mq-evk.dts
-index 04ce13f..64acccc 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-@@ -160,6 +160,13 @@
- 	status =3D "okay";
- };
-=20
-+&wdog1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+	status =3D "okay";
-+};
-+
- &iomuxc {
- 	pinctrl_fec1: fec1grp {
- 		fsl,pins =3D <
-@@ -287,4 +294,10 @@
- 			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
- 		>;
- 	};
-+
-+	pinctrl_wdog: wdog1grp {
-+		fsl,pins =3D <
-+			MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B		0xc6
-+		>;
-+	};
- };
---=20
-2.7.4
+-- 
+Best regards,
+Jacek Anaszewski
