@@ -1,87 +1,96 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v2 01/10] mailbox: Support blocking transfers in atomic
- context
-Date: Sat, 8 Dec 2018 19:20:55 -0600
-Message-ID: <CABb+yY0QfSGei96RtCc4A2EYhYuKZDc5kM51s4vSureNgs_Xtw@mail.gmail.com>
-References: <20181112151853.29289-1-thierry.reding@gmail.com>
- <20181112151853.29289-2-thierry.reding@gmail.com>
- <0545f5e1-1740-2129-9d0e-5c950bd9bf74@nvidia.com>
- <CABb+yY1u24JYO68f74qSJ1RpqidJ4H7cnP1Sy=RdqcBHru5XQg@mail.gmail.com>
- <20181129152312.GB23750@ulmo>
- <CABb+yY1G+6MQmrSeZvOXnuREB87+DYHGxNu1tBb9W6apizLtGw@mail.gmail.com>
- <4f7a4211-47ee-1114-0974-a3b402178106@kapsi.fi>
- <CABb+yY3_uWv1YVxXxjgygPemBZraCTAXNyXT9G4aTMZv1t7d0g@mail.gmail.com>
- <20181208085016.GA20795@kroah.com>
+From: tom burkart <tom@aussec.com>
+Subject: Re: [PATCH v9 3/4] dt-bindings: pps: pps-gpio PPS ECHO
+ implementation
+Date: Sun, 09 Dec 2018 14:07:59 +1100
+Message-ID: <20181209140759.18342zz66oeo3767@www.aussec.com>
+References: <20181122094602.5156-1-tom@aussec.com>
+ <20181122094602.5156-2-tom@aussec.com>
+ <20181122094602.5156-3-tom@aussec.com>
+ <20181122094602.5156-4-tom@aussec.com>
+ <CAL_JsqJ6fM3+pcC3b-eXEex=j_ft6Z=vukhLK9wULfWJqOTN-A@mail.gmail.com>
+ <20181127150629.10795h1esqtc53ut@aussec.com>
+ <CAL_JsqJmuDbPgc3WYRU8y3hbDL5A4_Luj0FfAiSvJ2+J-TM9_g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain;
+ charset=UTF-8;
+ DelSp="Yes";
+ format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181208085016.GA20795@kroah.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Mikko Perttunen <cyndis@kapsi.fi>, mliljeberg@nvidia.com, Mikko Perttunen <mperttunen@nvidia.com>, talho@nvidia.com, Thierry Reding <thierry.reding@gmail.com>, linux-serial@vger.kernel.org, jslaby@suse.com, linux-tegra@vger.kernel.org, ppessi@nvidia.com, Jon Hunter <jonathanh@nvidia.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJmuDbPgc3WYRU8y3hbDL5A4_Luj0FfAiSvJ2+J-TM9_g@mail.gmail.com>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, lukas@fridolin.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 8, 2018 at 2:50 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Sat, Dec 08, 2018 at 11:21:41AM +0530, Jassi Brar wrote:
-> > On Fri, Dec 7, 2018 at 11:50 AM Mikko Perttunen <cyndis@kapsi.fi> wrote:
-> > >
-> > > On 07/12/2018 11.26, Jassi Brar wrote:
-> > > >> I thought that I could also mitigate 2) by busy looping in the TCU driver,
-> > > >> but it turns out that that doesn't work. The reason is that since we are
-> > > >> in atomic context with all interrupts disabled, the mailbox won't ever
-> > > >> consume any new characters, so the read pointer in the circular buffer
-> > > >> won't increment, leaving me with no condition upon which to loop that
-> > > >> would work.
-> > > >>
-> > > > So you want to be able to rely on an emulated console (running on a
-> > > > totally different subsystem) to dump development-phase early-boot
-> > > > logs? At the cost of legitimizing busy looping in atomic context - one
-> > > > random driver messing up the api for ever. Maybe you could have the
-> > > > ring buffer in some shmem and only pass the number of valid characters
-> > > > in it, to the remote?
-> > > >
-> > >
-> > > I would like to note that this is the one and only console interface
-> > > that exists on these systems, for both development phase and production.
-> > > Other UARTs are not externally accessible on the systems, or they are
-> > > comparatively difficult to access as they aren't intended to be used as
-> > > consoles in the system design.
-> >
-> > > The combination of hardware and firmware
-> > > implementing the console is black box from software's point of view
-> > > (similarly to any other UART HW). The interface has also been fixed at
-> > > an early system design phase, as there are many operating systems
-> > > running on these boards, each with their own drivers.
-> > >
-> > That is the saddest part - someone, who writes test cases for the h/w
-> > team and with almost no knowledge of how OSes work, decides how the
-> > firmware is going to work and calls it done. Then the Linux is left to
-> > deal with the mess as we "can't do anything about it".
->
-> That is totally normal, and is how hardware has been almost _always_
-> been designed and implemented.  Nothing new here at all, it's just the
-> life us kernel developers get used to very quickly as it is our job to
-> make that hardware work and appear to userspace as something sane and
-> universal.
->
-Hardware yes, we can't really change much after the fact.
-In this case the issue arises from the firmware - TCU's mailbox
-protocol implementation. Which usually is just another image loaded
-onto the remote master during cold-boot, and should actually be not
-that hard to fix/change. Even if other OSes (really?) have adapted, a
-pushback right now will help fix atleast the next version, otherwise
-the api designer will never know what s/he is doing wrong.
+Quoting Rob Herring <robh@kernel.org>:
 
-Anyways, thanks for chiming in. I will pull the patchset.
+> On Mon, Nov 26, 2018 at 10:06 PM tom burkart <tom@aussec.com> wrote:
+>>
+>> Hi Rob,
+>>
+>> Quoting Rob Herring <robh@kernel.org>:
+>>
+>> > On Thu, Nov 22, 2018 at 3:49 AM Tom Burkart <tom@aussec.com> wrote:
+>> >>
+>> >> This patch implements the device tree changes required for the pps
+>> >> echo functionality for pps-gpio, that sysfs claims is available
+>> >> already.
+>> >>
+>> >> This patch was originally written by Lukas Senger as part of a masters
+>> >> thesis project and modified for inclusion into the linux kernel by Tom
+>> >> Burkart.
+>> >>
+>> >> Signed-off-by: Lukas Senger <lukas@fridolin.com>
+>> >> Signed-off-by: Tom Burkart <tom@aussec.com>
+>> >> ---
+>> >>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 9 +++++++++
+>> >>  1 file changed, 9 insertions(+)
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> index 1155d49c2699..e09f6f2405c5 100644
+>> >> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> @@ -7,10 +7,15 @@ Required properties:
+>> >>  - compatible: should be "pps-gpio"
+>> >>  - gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
+>> >>
+>> >> +Additional required properties for the PPS ECHO functionality:
+>> >> +- echo-gpios: one PPS ECHO GPIO in the format described by  
+>> ../gpio/gpio.txt
+>> >> +- echo-active-ms: duration in ms of the active portion of the echo pulse
+>> >> +
+>> >>  Optional properties:
+>> >>  - assert-falling-edge: when present, assert is indicated by a  
+>> falling edge
+>> >>                         (instead of by a rising edge)
+>> >>  - capture-clear: when present, also capture the PPS clear event
+>> >> +- invert-pps-echo: when present, invert the PPS ECHO pulse
+>> >
+>> > Why do you need this? Can't you just make the echo gpio GPIO_ACTIVE_LOW?
+>> >
+>> > BTW, using the flag probably should have been done for
+>> > 'assert-falling-edge' as well.
+>>
+>> The hardware I use expects a positive-going echo pulse, however, it
+>> was really easy to give users the option to have it inverted in case
+>> they use different hardware that expects a negative-going edge.
+>
+> It will be even easier to implement if you use GPIO_ACTIVE_LOW or
+> GPIO_ACTIVE_HIGH as appropriate. If the flag is set appropriately,
+> then gpiod_set_value(gpio, 1) asserts the pulse and
+> gpiod_set_value(gpio, 0) deasserts it no matter which way the h/w is
+> wired. You can then get rid of invert_pps_echo in the driver.
 
-Thanks.
+Hi Rob,
+sure we can do that, however, a hardware change will need a recompile  
+of the kernel, rather than setting a flag.
+You still need something to help decide whether to use GPIO_ACTIVE_LOW  
+or GPIO_ACTIVE_HIGH depending on what hardware is currently connected  
+to the system.
+
+I am happy to delete that code as well, if it makes you happy.
+
+Tom
