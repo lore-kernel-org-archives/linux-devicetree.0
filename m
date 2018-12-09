@@ -1,93 +1,164 @@
-Return-Path: <SRS0=9MhD=OS=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr80051.outbound.protection.outlook.com ([40.107.8.51]:16469
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726097AbeLIFkU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 9 Dec 2018 00:40:20 -0500
-From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH v4 1/4] usb: chipidea: add flag for imx hsic implementation
-Date: Sun, 9 Dec 2018 05:40:15 +0000
-Message-ID: <20181209053746.24967-2-peter.chen@nxp.com>
-References: <20181209053746.24967-1-peter.chen@nxp.com>
-In-Reply-To: <20181209053746.24967-1-peter.chen@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>, Peter Chen <peter.chen@nxp.com>
+Return-Path: <SRS0=Md2F=OS=labundy.com=jeff@kernel.org>
+From: Jeff LaBundy <jeff@labundy.com>
+Subject: [PATCH v3 1/2] dt-bindings: input: touchscreen: iqs5xx: Add bindings
+Date: Sun,  9 Dec 2018 13:07:29 -0600
+Message-Id: <1544382450-568-1-git-send-email-jeff@labundy.com>
+To: dmitry.torokhov@gmail.com, jikos@jikos.cz, devicetree@vger.kernel.org
+Cc: linux-input@vger.kernel.org, rydberg@bitmath.org, robh+dt@kernel.org, mark.rutland@arm.com, Jeff LaBundy <jeff@labundy.com>
 List-ID: <devicetree@vger.kernel.org>
 
-NXP (Freecale) imx HSIC design has some special requirements, add
-some flags at host code to handle them.
+This patch adds binding documentation for the Azoteq IQS550/572/525
+family of trackpad/touchscreen controllers.
 
-Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Tested-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/usb/chipidea/host.c  | 17 +++++++++++++++++
- include/linux/usb/chipidea.h |  3 +++
- 2 files changed, 20 insertions(+)
+Changes in v3:
 
-diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
-index d858a82c4f44..028a3574266a 100644
---- a/drivers/usb/chipidea/host.c
-+++ b/drivers/usb/chipidea/host.c
-@@ -170,6 +170,11 @@ static int host_start(struct ci_hdrc *ci)
- 			otg->host =3D &hcd->self;
- 			hcd->self.otg_port =3D 1;
- 		}
+  - Added Reviewed-by trailer
+
+Changes in v2:
+
+  - Separated each valid "compatible" property with a line break
+
+  - Specified the polarity of the RDY and NRST pins
+
+  - Replaced duplicate definitions of common touchscreen properties with a
+    reference to touchscreen.txt
+
+  - Specified the example node as "touchscreen@74"
+
+ .../bindings/input/touchscreen/iqs5xx.txt          | 109 +++++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ 2 files changed, 110 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt
+
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt b/Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt
+new file mode 100644
+index 0000000..25ee2a0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt
+@@ -0,0 +1,109 @@
++Azoteq IQS550/572/525 Trackpad/Touchscreen Controller
 +
-+		if (ci->platdata->notify_event &&
-+			(ci->platdata->flags & CI_HDRC_IMX_IS_HSIC))
-+			ci->platdata->notify_event
-+				(ci, CI_HDRC_IMX_HSIC_ACTIVE_EVENT);
- 	}
-=20
- 	return ret;
-@@ -218,6 +223,8 @@ void ci_hdrc_host_destroy(struct ci_hdrc *ci)
- static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
- {
- 	struct ehci_hcd *ehci =3D hcd_to_ehci(hcd);
-+	struct device *dev =3D hcd->self.controller;
-+	struct ci_hdrc *ci =3D dev_get_drvdata(dev);
- 	int port;
- 	u32 tmp;
-=20
-@@ -249,6 +256,16 @@ static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
- 			 * It needs a short delay between set RS bit and PHCD.
- 			 */
- 			usleep_range(150, 200);
-+			/*
-+			 * Need to clear WKCN and WKOC for imx HSIC,
-+			 * otherwise, there will be wakeup event.
-+			 */
-+			if (ci->platdata->flags & CI_HDRC_IMX_IS_HSIC) {
-+				tmp =3D ehci_readl(ehci, reg);
-+				tmp &=3D ~(PORT_WKDISC_E | PORT_WKCONN_E);
-+				ehci_writel(ehci, tmp, reg);
-+			}
++Required properties:
 +
- 			break;
- 		}
- 	}
-diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-index 63758c399e4e..911e05af671e 100644
---- a/include/linux/usb/chipidea.h
-+++ b/include/linux/usb/chipidea.h
-@@ -60,9 +60,12 @@ struct ci_hdrc_platform_data {
- #define CI_HDRC_OVERRIDE_RX_BURST	BIT(11)
- #define CI_HDRC_OVERRIDE_PHY_CONTROL	BIT(12) /* Glue layer manages phy */
- #define CI_HDRC_REQUIRES_ALIGNED_DMA	BIT(13)
-+#define CI_HDRC_IMX_IS_HSIC		BIT(14)
- 	enum usb_dr_mode	dr_mode;
- #define CI_HDRC_CONTROLLER_RESET_EVENT		0
- #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
-+#define CI_HDRC_IMX_HSIC_ACTIVE_EVENT		2
-+#define CI_HDRC_IMX_HSIC_SUSPEND_EVENT		3
- 	int	(*notify_event) (struct ci_hdrc *ci, unsigned event);
- 	struct regulator	*reg_vbus;
- 	struct usb_otg_caps	ci_otg_caps;
---=20
-2.14.1
++- compatible			: Must be equal to one of the following:
++				  "azoteq,iqs550"
++				  "azoteq,iqs572"
++				  "azoteq,iqs525"
++
++- reg				: I2C slave address for the device.
++
++- interrupts			: GPIO to which the device's active-high RDY
++				  output is connected (see [0]).
++
++- reset-gpios			: GPIO to which the device's active-low NRST
++				  input is connected (see [1]). Hardware reset
++				  access is required in order to to facilitate
++				  in-system firmware replacement.
++
++Optional properties:
++
++- azoteq,exp-ver-major		: Major field of the export file version number
++				  (0 through 255 inclusive). This property must
++				  be specified as a '/bits/ 8' value.
++
++- azoteq,exp-ver-minor		: Minor field of the export file version number
++				  (0 through 255 inclusive). This property must
++				  be specified as a '/bits/ 8' value.
++
++				  The export file version number is a customer-
++				  assigned parameter embedded in the device's
++				  firmware at the time it is exported from the
++				  manufacturer's PC-based configuration tool.
++
++				  If the export file version number stored in
++				  the device's nonvolatile memory does not match
++				  the number specified here, the driver replaces
++				  the firmware on the device with that which is
++				  stored on the local filesystem (for which the
++				  export file version number must match).
++
++				  If both major and minor fields are omitted or
++				  specified as zero, the driver does not query
++				  the device's export file version number.
++
++- touchscreen-min-x		: See [2].
++
++- touchscreen-min-y		: See [2].
++
++- touchscreen-size-x		: See [2]. If this property is omitted, the
++				  maximum x-coordinate is specified by the
++				  device's "X Resolution" register.
++
++- touchscreen-size-y		: See [2]. If this property is omitted, the
++				  maximum y-coordinate is specified by the
++				  device's "Y Resolution" register.
++
++- touchscreen-max-pressure	: See [2]. Pressure is expressed as the sum of
++				  the deltas across all channels impacted by a
++				  touch event. A channel's delta is calculated
++				  as its count value minus a reference, where
++				  the count value is inversely proportional to
++				  the channel's capacitance.
++
++- touchscreen-fuzz-x		: See [2].
++
++- touchscreen-fuzz-y		: See [2].
++
++- touchscreen-fuzz-pressure	: See [2].
++
++- touchscreen-inverted-x	: See [2]. Inversion is applied relative to that
++				  which may already be specified by the device's
++				  FLIP_X and FLIP_Y register fields.
++
++- touchscreen-inverted-y	: See [2]. Inversion is applied relative to that
++				  which may already be specified by the device's
++				  FLIP_X and FLIP_Y register fields.
++
++- touchscreen-swapped-x-y	: See [2]. Swapping is applied relative to that
++				  which may already be specified by the device's
++				  SWITCH_XY_AXIS register fields.
++
++[0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++[1]: Documentation/devicetree/bindings/gpio/gpio.txt
++[2]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
++
++Example:
++
++	&i2c1 {
++		/* ... */
++
++		touchscreen@74 {
++			compatible = "azoteq,iqs550";
++			reg = <0x74>;
++			interrupt-parent = <&gpio>;
++			interrupts = <17 1>;
++			reset-gpios = <&gpio 27 0>;
++
++			azoteq,exp-ver-major = /bits/ 8 <1>;
++			azoteq,exp-ver-minor = /bits/ 8 <0>;
++
++			touchscreen-size-x = <640>;
++			touchscreen-size-y = <480>;
++
++			touchscreen-max-pressure = <16000>;
++		};
++
++		/* ... */
++	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index a38d8bf..d2ed740 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -49,6 +49,7 @@ avia	avia semiconductor
+ avic	Shanghai AVIC Optoelectronics Co., Ltd.
+ axentia	Axentia Technologies AB
+ axis	Axis Communications AB
++azoteq	Azoteq (Pty) Ltd
+ bananapi BIPAI KEJI LIMITED
+ bhf	Beckhoff Automation GmbH & Co. KG
+ boe	BOE Technology Group Co., Ltd.
+--
+2.7.4
