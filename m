@@ -1,231 +1,93 @@
-Return-Path: <SRS0=Ijj/=OT=mobiveil.co.in=l.subrahmanya@kernel.org>
+Return-Path: <SRS0=9MhD=OS=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr80051.outbound.protection.outlook.com ([40.107.8.51]:16469
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726097AbeLIFkU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 9 Dec 2018 00:40:20 -0500
+From: Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH v4 1/4] usb: chipidea: add flag for imx hsic implementation
+Date: Sun, 9 Dec 2018 05:40:15 +0000
+Message-ID: <20181209053746.24967-2-peter.chen@nxp.com>
+References: <20181209053746.24967-1-peter.chen@nxp.com>
+In-Reply-To: <20181209053746.24967-1-peter.chen@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20181106131807.29951-1-Zhiqiang.Hou@nxp.com> <20181203115850.GB8040@e107981-ln.cambridge.arm.com>
-In-Reply-To: <20181203115850.GB8040@e107981-ln.cambridge.arm.com>
-From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Date: Mon, 10 Dec 2018 07:13:43 -0300
-Message-ID: <CAFZiPx2tjhwkgOccPLGXrcR6=Qh2EAai7aiPiH5vEZw46-Hjnw@mail.gmail.com>
-Subject: Re: [PATCH 00/23] PCI: refactor the Mobiveil driver and add PCIe
- support for NXP LX SoCs
-Content-Type: multipart/alternative; boundary="0000000000002dae9d057ca381b6"
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, Leo Li <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, xiaowei.bao@nxp.com
+Sender: devicetree-owner@vger.kernel.org
+To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>, Peter Chen <peter.chen@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
---0000000000002dae9d057ca381b6
-Content-Type: text/plain; charset="UTF-8"
+NXP (Freecale) imx HSIC design has some special requirements, add
+some flags at host code to handle them.
 
-Lorenzo,
-You are right, I reviewed few DT files, will need some time to review this
-train.
-I will start doing it in a while.
+Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Tested-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+---
+ drivers/usb/chipidea/host.c  | 17 +++++++++++++++++
+ include/linux/usb/chipidea.h |  3 +++
+ 2 files changed, 20 insertions(+)
 
-Thanks for pitching in.
-
-Thanks.
-
-On Mon, Dec 3, 2018 at 8:58 AM Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-wrote:
-
-> On Tue, Nov 06, 2018 at 01:19:03PM +0000, Z.q. Hou wrote:
-> > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> >
-> > This patch set is aim to refactor the Mobiveil driver and add
-> > PCIe support for NXP LX series SoCs.
-> >
-> > Hou Zhiqiang (23):
-> >   PCI: mobiveil: uniform the register accessors
-> >   PCI: mobiveil: format the code without function change
-> >   PCI: mobiveil: correct the returned error number
-> >   PCI: mobiveil: remove flag MSI_FLAG_MULTI_PCI_MSI
-> >   PCI: mobiveil: correct PCI base address in MEM/IO outbound windows
-> >   PCI: mobiveil: replace the resource list iteration function
-> >   PCI: mobiveil: use WIN_NUM_0 explicitly for CFG outbound window
-> >   PCI: mobiveil: use the 1st inbound window for MEM inbound transactions
-> >   PCI: mobiveil: correct the inbound/outbound window setup routine
-> >   PCI: mobiveil: fix the INTx process error
-> >   PCI: mobiveil: only fixup the Class Code field
-> >   PCI: mobiveil: move out the link up waiting from mobiveil_host_init
-> >   PCI: mobiveil: move irq chained handler setup out of DT parse
-> >   PCI: mobiveil: initialize Primary/Secondary/Subordinate bus number
-> >   dt-bindings: pci: mobiveil: change gpio_slave and apb_csr to optional
-> >   PCI: mobiveil: refactor the Mobiveil driver
-> >   PCI: mobiveil: continue to initialize the host upon no PCIe link
-> >   PCI: mobiveil: disabled IB and OB windows set by bootloader
-> >   PCI: mobiveil: add Byte and Half-Word width register accessors
-> >   PCI: mobiveil: change prototype of function mobiveil_host_init
-> >   dt-bindings: pci: Add NXP LX SoCs PCIe controller
-> >   PCI: mobiveil: add PCIe RC driver for NXP LX series SoCs
-> >   arm64: dts: freescale: lx2160a: add pcie DT nodes
-> >
-> >  .../devicetree/bindings/pci/lx-pci.txt        |  52 ++
-> >  .../devicetree/bindings/pci/mobiveil-pcie.txt |   2 +
-> >  MAINTAINERS                                   |  10 +-
-> >  .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 157 ++++
-> >  drivers/pci/controller/Kconfig                |  11 +-
-> >  drivers/pci/controller/Makefile               |   2 +-
-> >  drivers/pci/controller/mobiveil/Kconfig       |  34 +
-> >  drivers/pci/controller/mobiveil/Makefile      |   5 +
-> >  drivers/pci/controller/mobiveil/pci-lx.c      | 222 +++++
-> >  .../controller/mobiveil/pcie-mobiveil-host.c  | 622 +++++++++++++
-> >  .../controller/mobiveil/pcie-mobiveil-plat.c  |  54 ++
-> >  .../pci/controller/mobiveil/pcie-mobiveil.c   | 245 +++++
-> >  .../pci/controller/mobiveil/pcie-mobiveil.h   | 221 +++++
-> >  drivers/pci/controller/pcie-mobiveil.c        | 861 ------------------
-> >  14 files changed, 1625 insertions(+), 873 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/lx-pci.txt
-> >  create mode 100644 drivers/pci/controller/mobiveil/Kconfig
-> >  create mode 100644 drivers/pci/controller/mobiveil/Makefile
-> >  create mode 100644 drivers/pci/controller/mobiveil/pci-lx.c
-> >  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-> >  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-plat.c
-> >  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.c
-> >  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> >  delete mode 100644 drivers/pci/controller/pcie-mobiveil.c
->
-> Subrahmanya,
->
-> for the records, this is the driver *you* are maintaining, aren't you ?
->
-> We ask developers to be added to the MAINTAINERS list in order to hold
-> them accountable, merging a driver upstream means that you need to
-> actively maintain it, which in turn means reviewing series affecting
-> its code, like this one.
->
-> I will have a look too but it is your responsibility to review these
-> patches and ACK them accordingly.
->
-> So I strongly suggest you start doing it please.
->
-> Thanks,
-> Lorenzo
->
-
---0000000000002dae9d057ca381b6
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-family:verdana,=
-sans-serif;color:rgb(7,55,99)">Lorenzo,<br></div><div class=3D"gmail_defaul=
-t" style=3D"font-family:verdana,sans-serif;color:rgb(7,55,99)">You are righ=
-t, I reviewed few DT files, will need some time to review this train.<br></=
-div><div class=3D"gmail_default" style=3D"font-family:verdana,sans-serif;co=
-lor:rgb(7,55,99)">I will start doing it in a while.<br><br></div><div class=
-=3D"gmail_default" style=3D"font-family:verdana,sans-serif;color:rgb(7,55,9=
-9)">Thanks for pitching in.<br><br></div><div class=3D"gmail_default" style=
-=3D"font-family:verdana,sans-serif;color:rgb(7,55,99)">Thanks.</div></div><=
-br><div class=3D"gmail_quote"><div dir=3D"ltr">On Mon, Dec 3, 2018 at 8:58 =
-AM Lorenzo Pieralisi &lt;<a href=3D"mailto:lorenzo.pieralisi@arm.com">loren=
-zo.pieralisi@arm.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quo=
-te" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204=
-);padding-left:1ex">On Tue, Nov 06, 2018 at 01:19:03PM +0000, Z.q. Hou wrot=
-e:<br>
-&gt; From: Hou Zhiqiang &lt;<a href=3D"mailto:Zhiqiang.Hou@nxp.com" target=
-=3D"_blank">Zhiqiang.Hou@nxp.com</a>&gt;<br>
-&gt; <br>
-&gt; This patch set is aim to refactor the Mobiveil driver and add<br>
-&gt; PCIe support for NXP LX series SoCs.<br>
-&gt; <br>
-&gt; Hou Zhiqiang (23):<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: uniform the register accessors<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: format the code without function change<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: correct the returned error number<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: remove flag MSI_FLAG_MULTI_PCI_MSI<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: correct PCI base address in MEM/IO outbound=
- windows<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: replace the resource list iteration functio=
-n<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: use WIN_NUM_0 explicitly for CFG outbound w=
-indow<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: use the 1st inbound window for MEM inbound =
-transactions<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: correct the inbound/outbound window setup r=
-outine<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: fix the INTx process error<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: only fixup the Class Code field<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: move out the link up waiting from mobiveil_=
-host_init<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: move irq chained handler setup out of DT pa=
-rse<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: initialize Primary/Secondary/Subordinate bu=
-s number<br>
-&gt;=C2=A0 =C2=A0dt-bindings: pci: mobiveil: change gpio_slave and apb_csr =
-to optional<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: refactor the Mobiveil driver<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: continue to initialize the host upon no PCI=
-e link<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: disabled IB and OB windows set by bootloade=
-r<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: add Byte and Half-Word width register acces=
-sors<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: change prototype of function mobiveil_host_=
-init<br>
-&gt;=C2=A0 =C2=A0dt-bindings: pci: Add NXP LX SoCs PCIe controller<br>
-&gt;=C2=A0 =C2=A0PCI: mobiveil: add PCIe RC driver for NXP LX series SoCs<b=
-r>
-&gt;=C2=A0 =C2=A0arm64: dts: freescale: lx2160a: add pcie DT nodes<br>
-&gt; <br>
-&gt;=C2=A0 .../devicetree/bindings/pci/lx-pci.txt=C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 |=C2=A0 52 ++<br>
-&gt;=C2=A0 .../devicetree/bindings/pci/mobiveil-pcie.txt |=C2=A0 =C2=A02 +<=
-br>
-&gt;=C2=A0 MAINTAINERS=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=
-=C2=A0 10 +-<br>
-&gt;=C2=A0 .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 157 ++++<br>
-&gt;=C2=A0 drivers/pci/controller/Kconfig=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 |=C2=A0 11 +-<br>
-&gt;=C2=A0 drivers/pci/controller/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A02 +-<br>
-&gt;=C2=A0 drivers/pci/controller/mobiveil/Kconfig=C2=A0 =C2=A0 =C2=A0 =C2=
-=A0|=C2=A0 34 +<br>
-&gt;=C2=A0 drivers/pci/controller/mobiveil/Makefile=C2=A0 =C2=A0 =C2=A0 |=
-=C2=A0 =C2=A05 +<br>
-&gt;=C2=A0 drivers/pci/controller/mobiveil/pci-lx.c=C2=A0 =C2=A0 =C2=A0 | 2=
-22 +++++<br>
-&gt;=C2=A0 .../controller/mobiveil/pcie-mobiveil-host.c=C2=A0 | 622 +++++++=
-++++++<br>
-&gt;=C2=A0 .../controller/mobiveil/pcie-mobiveil-plat.c=C2=A0 |=C2=A0 54 ++=
-<br>
-&gt;=C2=A0 .../pci/controller/mobiveil/pcie-mobiveil.c=C2=A0 =C2=A0| 245 ++=
-+++<br>
-&gt;=C2=A0 .../pci/controller/mobiveil/pcie-mobiveil.h=C2=A0 =C2=A0| 221 ++=
-+++<br>
-&gt;=C2=A0 drivers/pci/controller/pcie-mobiveil.c=C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 | 861 ------------------<br>
-&gt;=C2=A0 14 files changed, 1625 insertions(+), 873 deletions(-)<br>
-&gt;=C2=A0 create mode 100644 Documentation/devicetree/bindings/pci/lx-pci.=
-txt<br>
-&gt;=C2=A0 create mode 100644 drivers/pci/controller/mobiveil/Kconfig<br>
-&gt;=C2=A0 create mode 100644 drivers/pci/controller/mobiveil/Makefile<br>
-&gt;=C2=A0 create mode 100644 drivers/pci/controller/mobiveil/pci-lx.c<br>
-&gt;=C2=A0 create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil=
--host.c<br>
-&gt;=C2=A0 create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil=
--plat.c<br>
-&gt;=C2=A0 create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil=
-.c<br>
-&gt;=C2=A0 create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil=
-.h<br>
-&gt;=C2=A0 delete mode 100644 drivers/pci/controller/pcie-mobiveil.c<br>
-<br>
-Subrahmanya,<br>
-<br>
-for the records, this is the driver *you* are maintaining, aren&#39;t you ?=
-<br>
-<br>
-We ask developers to be added to the MAINTAINERS list in order to hold<br>
-them accountable, merging a driver upstream means that you need to<br>
-actively maintain it, which in turn means reviewing series affecting<br>
-its code, like this one.<br>
-<br>
-I will have a look too but it is your responsibility to review these<br>
-patches and ACK them accordingly.<br>
-<br>
-So I strongly suggest you start doing it please.<br>
-<br>
-Thanks,<br>
-Lorenzo<br>
-</blockquote></div>
-
---0000000000002dae9d057ca381b6--
+diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+index d858a82c4f44..028a3574266a 100644
+--- a/drivers/usb/chipidea/host.c
++++ b/drivers/usb/chipidea/host.c
+@@ -170,6 +170,11 @@ static int host_start(struct ci_hdrc *ci)
+ 			otg->host =3D &hcd->self;
+ 			hcd->self.otg_port =3D 1;
+ 		}
++
++		if (ci->platdata->notify_event &&
++			(ci->platdata->flags & CI_HDRC_IMX_IS_HSIC))
++			ci->platdata->notify_event
++				(ci, CI_HDRC_IMX_HSIC_ACTIVE_EVENT);
+ 	}
+=20
+ 	return ret;
+@@ -218,6 +223,8 @@ void ci_hdrc_host_destroy(struct ci_hdrc *ci)
+ static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
+ {
+ 	struct ehci_hcd *ehci =3D hcd_to_ehci(hcd);
++	struct device *dev =3D hcd->self.controller;
++	struct ci_hdrc *ci =3D dev_get_drvdata(dev);
+ 	int port;
+ 	u32 tmp;
+=20
+@@ -249,6 +256,16 @@ static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
+ 			 * It needs a short delay between set RS bit and PHCD.
+ 			 */
+ 			usleep_range(150, 200);
++			/*
++			 * Need to clear WKCN and WKOC for imx HSIC,
++			 * otherwise, there will be wakeup event.
++			 */
++			if (ci->platdata->flags & CI_HDRC_IMX_IS_HSIC) {
++				tmp =3D ehci_readl(ehci, reg);
++				tmp &=3D ~(PORT_WKDISC_E | PORT_WKCONN_E);
++				ehci_writel(ehci, tmp, reg);
++			}
++
+ 			break;
+ 		}
+ 	}
+diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+index 63758c399e4e..911e05af671e 100644
+--- a/include/linux/usb/chipidea.h
++++ b/include/linux/usb/chipidea.h
+@@ -60,9 +60,12 @@ struct ci_hdrc_platform_data {
+ #define CI_HDRC_OVERRIDE_RX_BURST	BIT(11)
+ #define CI_HDRC_OVERRIDE_PHY_CONTROL	BIT(12) /* Glue layer manages phy */
+ #define CI_HDRC_REQUIRES_ALIGNED_DMA	BIT(13)
++#define CI_HDRC_IMX_IS_HSIC		BIT(14)
+ 	enum usb_dr_mode	dr_mode;
+ #define CI_HDRC_CONTROLLER_RESET_EVENT		0
+ #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
++#define CI_HDRC_IMX_HSIC_ACTIVE_EVENT		2
++#define CI_HDRC_IMX_HSIC_SUSPEND_EVENT		3
+ 	int	(*notify_event) (struct ci_hdrc *ci, unsigned event);
+ 	struct regulator	*reg_vbus;
+ 	struct usb_otg_caps	ci_otg_caps;
+--=20
+2.14.1
