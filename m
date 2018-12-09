@@ -1,98 +1,58 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 4/4] leds: trigger: Add pattern initialization from
- Device Tree
-Date: Sun, 9 Dec 2018 09:17:23 +0100
-Message-ID: <20181209081722.GB7561@amd>
-References: <1544185974-5932-1-git-send-email-krzk@kernel.org>
- <1544185974-5932-4-git-send-email-krzk@kernel.org>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH 0/3] spi-nor: Add Octal SPI support
+Date: Sun, 9 Dec 2018 14:17:18 +0530
+Message-ID: <0e4286ea-85d1-a909-17c0-47f9506b3e5a@ti.com>
+References: <20181003165603.2579-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="dc+cDN39EJAMEtIO"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1544185974-5932-4-git-send-email-krzk@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Baolin Wang <baolin.wang@linaro.org>, Raphael Teysseyre <rteysseyre@gmail.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181003165603.2579-1-vigneshr@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>
+Cc: devicetree@vger.kernel.org, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Boris,
 
---dc+cDN39EJAMEtIO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 03/10/18 10:26 PM, Vignesh R wrote:
+> This series adds support for octal mode of mt35x flash. Also, adds
+> support for OSPI version of Cadence QSPI controller.
+> 
+> Based on top of patches adding basic support for mt35xu512aba here:
+> https://patchwork.ozlabs.org/cover/971437/
+> 
+> Vignesh R (3):
+>   mtd: spi-nor: Add Octal mode support for mt35xu512aba
 
-On Fri 2018-12-07 13:32:54, Krzysztof Kozlowski wrote:
-> Allow initialization of pattern used in pattern trigger from Device Tree
-> property.
->=20
-> This is especially useful for embedded systems where the pattern trigger
-> would be used to indicate the process of boot status in a nice,
-> user-friendly blinking way.  This initialization pattern will be used
-> till user-space is brought up and sets its own pattern, indicating the
-> boot status is for example finished.
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/leds/trigger/ledtrig-pattern.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->=20
-> diff --git a/drivers/leds/trigger/ledtrig-pattern.c b/drivers/leds/trigge=
-r/ledtrig-pattern.c
-> index 1870cf87afe1..96309d3bc43c 100644
-> --- a/drivers/leds/trigger/ledtrig-pattern.c
-> +++ b/drivers/leds/trigger/ledtrig-pattern.c
-> @@ -11,6 +11,7 @@
->  #include <linux/leds.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> +#include <linux/of.h>
->  #include <linux/slab.h>
->  #include <linux/timer.h>
-> =20
-> @@ -331,6 +332,21 @@ static const struct attribute_group *pattern_trig_gr=
-oups[] =3D {
->  	NULL,
->  };
-> =20
-> +static void pattern_init(struct led_classdev *led_cdev)
-> +{
-> +	struct device_node *np =3D dev_of_node(led_cdev->dev);
-> +	const char *pattern;
-> +
-> +	if (!np)
-> +		return;
-> +
-> +	if (!of_property_read_string(np, "linux,trigger-pattern", &pattern)) {
-> +		if (strlen(pattern))
-> +			pattern_trig_store_patterns(led_cdev, pattern,
-> +						    strlen(pattern), false);
-> +	}
-> +}
 
-"  if (of_...())
-      return;
+>   dt-bindings: cadence-quadspi: Add new compatible for AM654 SoC
+>   mtd: spi-nor: cadence-quadspi: Add support for Octal SPI controller
 
-   if (!strlen())
-       return"
+Could you consider above two patches for v4.21 once [1][2] are merged?
 
-Check return value of pattern_trig_store_patterns().
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+[1] https://patchwork.ozlabs.org/patch/1006717/
+[2] https://patchwork.ozlabs.org/patch/1006715/
 
---dc+cDN39EJAMEtIO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Let me know if this needs to be re-posted.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> 
+>  .../devicetree/bindings/mtd/cadence-quadspi.txt       |  1 +
+>  drivers/mtd/spi-nor/cadence-quadspi.c                 |  9 +++++++++
+>  drivers/mtd/spi-nor/spi-nor.c                         | 11 ++++++++++-
+>  include/linux/mtd/spi-nor.h                           |  2 ++
+>  4 files changed, 22 insertions(+), 1 deletion(-)
+> 
 
-iEYEARECAAYFAlwMz5IACgkQMOfwapXb+vKt0gCfRJ7ayW23MMx0p+3b3Q04WCQT
-SYkAnjG0ho7SbuWAkTPa2GD8Ps1q2Prh
-=hXws
------END PGP SIGNATURE-----
-
---dc+cDN39EJAMEtIO--
+-- 
+Regards
+Vignesh
