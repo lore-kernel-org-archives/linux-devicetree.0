@@ -1,105 +1,75 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [linux-sunxi] Re: [PATCH v4 08/26] drm/sun4i: sun6i_mipi_dsi: Fix
- VBP size calculation
-Date: Mon, 10 Dec 2018 21:37:23 +0530
-Message-ID: <CAMty3ZB4uSxMETSrGbod54N++rimTmv1jNnCPKCy0PRa2e9WFw@mail.gmail.com>
-References: <20181113111633.20189-1-jagan@amarulasolutions.com>
- <20181113111633.20189-9-jagan@amarulasolutions.com> <20181115095551.uctdkfmuwlnzhjnn@flea>
- <CAMty3ZAEHiovm6OF6JvJVQR4aqpG1Q3ML5YqxJkF2ntwRkUO=A@mail.gmail.com>
- <20181120155715.andrjp5kg6ugcv72@flea> <CAMty3ZCUOJmvekupOwh281g5HaazTpBbukWQY2Pv2OYypAwciw@mail.gmail.com>
- <20181127102450.b65jzhrdpxn5rxmk@flea> <CAMty3ZDTvn4VF_oOvEi2jCw9Rw5WPd1LQT3SZ5X1K0fJAFg2cQ@mail.gmail.com>
- <20181207132136.oa4nzpczytzxhl2d@flea>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v2 11/12] drm/panel: Add Feiyang
+ FY07024DI26A30-D MIPI-DSI LCD panel
+Date: Mon, 10 Dec 2018 21:42:38 +0530
+Message-ID: <CAMty3ZBNJ07v7jWq9s8KyvitGaJ5e_igPoP=9X9wN=PAyfOU0A@mail.gmail.com>
+References: <20181116163916.29621-1-jagan@amarulasolutions.com> <20181116163916.29621-12-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181207132136.oa4nzpczytzxhl2d@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula@amarulasolutions.com
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBA5BXLQAKGQEPYPBS2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181116163916.29621-12-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Cc: Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, TL Lim <tllim-F7SikzrIcFYdnm+yROfE0A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 7, 2018 at 6:51 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Tue, Nov 27, 2018 at 04:34:35PM +0530, Jagan Teki wrote:
-> > On Tue, Nov 27, 2018 at 3:55 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > On Tue, Nov 20, 2018 at 09:55:42PM +0530, Jagan Teki wrote:
-> > > > On Tue, Nov 20, 2018 at 9:27 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > >
-> > > > > On Thu, Nov 15, 2018 at 11:19:53PM +0530, Jagan Teki wrote:
-> > > > > > On Thu, Nov 15, 2018 at 3:26 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > > > >
-> > > > > > > Hi,
-> > > > > > >
-> > > > > > > On Tue, Nov 13, 2018 at 04:46:15PM +0530, Jagan Teki wrote:
-> > > > > > > > The horizontal and vertical back porch calculation in BSP
-> > > > > > > > code is simply following the Linux drm comment diagram, in
-> > > > > > > > include/drm/drm_modes.h which is
-> > > > > > > >
-> > > > > > > > [hv]back porch = [hv]total - [hv]sync_end
-> > > > > > > >
-> > > > > > > > BSP code form BPI-M64-bsp is calculating vertical back porch as
-> > > > > > > > (from linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c)
-> > > > > > > >
-> > > > > > > > timmings->ver_sync_time= panel_info->lcd_vspw;
-> > > > > > > > timmings->ver_back_porch= panel_info->lcd_vbp-panel_info->lcd_vspw;
-> > > > > > > >
-> > > > > > > > vbp = panel->lcd_vbp;
-> > > > > > > > vspw = panel->lcd_vspw;
-> > > > > > > > dsi_dev[sel]->dsi_basic_size0.bits.vbp = vbp-vspw;
-> > > > > > > > dsi_dev[sel]->dsi_basic_size0.bits.vbp = panel->lcd_vbp - panel->lcd_vspw;
-> > > > > > > > =>  timmings->ver_back_porch + panel_info->lcd_vspw - panel_info->lcd_vspw
-> > > > > > > > =>  timmings->ver_back_porch
-> > > > > > > > =>  mode->vtotal - mode->end
-> > > > > > > >
-> > > > > > > > Which evatually same as mode->vtotal - mode->vsync_end so update the
-> > > > > > > > same in SUN6I_DSI_BASIC_SIZE0_VBP
-> > > > > > > >
-> > > > > > > > On the information note, existing SUN6I_DSI_BASIC_SIZE0_VSA is proper
-> > > > > > > > value.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > > > > >
-> > > > > > > I've tested your changes on my A33 board, and this commit will break
-> > > > > > > it.
-> > > > > > >
-> > > > > > > It creates vblank timeouts, and visual artifacts at the bottom of the
-> > > > > > > display.
-> > > > > >
-> > > > > > Strange, VBP is earlier gives front porch which is anyway wrong.
-> > > > > >
-> > > > > > >
-> > > > > > > Later commits seem to fix the issue, but will create some blanking on
-> > > > > > > the upper third of the display.
-> > > > > > >
-> > > > > > > Since the documentation is quite sparse, and a MIPI-DSI analyzer is
-> > > > > > > way too expensive, I'd really like to have at least what each of these
-> > > > > > > commits are actually fixing, and what symptoms each of these were
-> > > > > > > causing, and not just "the BSP does it".
-> > > > > >
-> > > > > > W/o this 2-lane panel is breaking, same vblank timeout and visual
-> > > > > > artifacts at the bottom of the panel. though the commits may reference
-> > > > > > BSP, I have at-least tested on 3 different panels for us to prove its
-> > > > > > working.
-> > > > > >
-> > > > > > > Having some datasheet for the panels you had working would help too.
-> > > > > >
-> > > > > > Unfortunately datasheet doesn't have any required information what we
-> > > > > > actually looking for.
-> > > > >
-> > > > > Not even the timings? How did you get that information then?
-> > > >
-> > > > datasheet has timing values, but this changes need controller
-> > > > information about VBP register that I don't have. But again existing
-> > > > VBP is not back porch for real, it's front porch.
-> > >
-> > > Yet, this breaks the existing setup. So again:
-> >
-> > Was it with 4-lane or 2-lane panel? can you test it with 2-lane panel?
-> > I can see the issue on 2-lane but the 4-lane working fine with this
-> > patch even.
->
-> It's a 4 lane display.
+Hi Thierry and David,
 
-Thanks, look like my panel timings seems reverse b/w BP and FP. It
-work irrespective of this change after proper update.
+On Fri, Nov 16, 2018 at 10:10 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+>
+> Feiyang FY07024DI26A30-D is 1024x600, 4-lane MIPI-DSI LCD panel.
+>
+> Add panel driver for it.
+>
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> ---
+>  MAINTAINERS                                   |   6 +
+>  drivers/gpu/drm/panel/Kconfig                 |   9 +
+>  drivers/gpu/drm/panel/Makefile                |   1 +
+>  .../drm/panel/panel-feiyang-fy07024di26a30d.c | 286 ++++++++++++++++++
+>  4 files changed, 302 insertions(+)
+>  create mode 100644 drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3dac08d0b3cb..40c8bfc974f4 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4620,6 +4620,12 @@ T:       git git://anongit.freedesktop.org/drm/drm-misc
+>  S:     Maintained
+>  F:     drivers/gpu/drm/tve200/
+>
+> +DRM DRIVER FOR FEIYANG FY07024DI26A30-D MIPI-DSI LCD PANELS
+> +M:     Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> +S:     Maintained
+> +F:     drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
+> +F:     Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
+> +
+>  DRM DRIVER FOR ILITEK ILI9225 PANELS
+>  M:     David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+>  S:     Maintained
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index d0d4e60f5153..bc70896fe43c 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -47,6 +47,15 @@ config DRM_PANEL_SIMPLE
+>           that it can be automatically turned off when the panel goes into a
+>           low power state.
+>
+> +config DRM_PANEL_FEIYANG_FY07024DI26A30D
+> +       tristate "Feiyang FY07024DI26A30-D MIPI-DSI LCD panel"
+> +       depends on OF
+> +       depends on DRM_MIPI_DSI
+> +       depends on BACKLIGHT_CLASS_DEVICE
+> +       help
+> +         Say Y if you want to enable support for panels based on the
+> +         Feiyang FY07024DI26A30-D MIPI-DSI interface.
+> +
+
+Any comments on this?
