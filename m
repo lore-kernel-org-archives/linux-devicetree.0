@@ -1,13 +1,15 @@
 From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Subject: [PATCH 0/8] This is a second edition of a series that
- implements voltage
-Date: Mon, 10 Dec 2018 20:42:11 +0200
-Message-ID: <cover.4110554ae84987dedb8b58888a8a63d6b7f98c72.1544466940.git-series.plaes@plaes.org>
+Subject: [PATCH 3/8] dt-bindings: mfd: axp20x: add support for
+ regulator-ramp-delay for AXP209
+Date: Mon, 10 Dec 2018 20:42:14 +0200
+Message-ID: <78eafc64831c50005fe5d186c174440d48a865e3.1544466940.git-series.plaes@plaes.org>
+References: <cover.4110554ae84987dedb8b58888a8a63d6b7f98c72.1544466940.git-series.plaes@plaes.org>
 Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDB4J47M7YERBEPHXLQAKGQEBI7DMTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDB4J47M7YERBE7HXLQAKGQEFGF2BYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <cover.4110554ae84987dedb8b58888a8a63d6b7f98c72.1544466940.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -18,43 +20,45 @@ To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <
 Cc: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-ramping for AXP209 DCDC2 and LDO3 regulators and software
-based soft-start for AXP209 LDO3 regulator.
+From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 
-Both features are needed to work around a PMIC shutdown when
-toggling LDO3 on certain boards with high capacitance on the
-LDO3 output.
+The AXP209 supports ramping up voltages on several regulators such as
+DCDC2 and LDO3, therefore we can use the standard 'regulator-ramp-delay'
+property for those 2 regulators.
 
-Similar features (or workarounds) have been also implemented
-on u-boot side [1].
+Note that the voltage ramp only works when the regulator is already
+enabled. E.g. when going from say 0.7 V to 3.6 V.
 
-Changes since v1:
-- Rebased on top of next and dropped already merged patches.
-- Dropped LDO4 full range devicetree change for Lime2 (prev patch 9)
-  in favor of general pin-bank regulator dependency [2].
-- Fixed paths in devicetree bindings (patch 3)
-- Added note about software based soft-start for LDO3 (patch 5)
+When turning on the regulator, no voltage ramp is performed in hardware.
 
-[1] https://lists.denx.de/pipermail/u-boot/2018-November/348612.html
-[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-December/618459.html
+What this means, is that if the bootloader brings up the voltage at 0.7 V,
+the ramp delay property is properly applied. If however, the bootloader
+leaves the power off, no ramp delay is applied when the power is
+enabled by the regulator framework.
 
-Olliver Schinagl (8):
-  mfd: axp20x: name voltage ramping define properly
-  regulator: axp20x: add support for set_ramp_delay for AXP209
-  dt-bindings: mfd: axp20x: add support for regulator-ramp-delay for AXP209
-  regulator: axp20x: add software based soft_start for AXP209 LDO3
-  dt-bindings: mfd: axp20x: Add software based soft_start for AXP209 LDO3
-  regulator: dts: enable soft-start and ramp delay for the OLinuXino Lime2
-  mfd: axp20x: Clean up included headers
-  mfd: axp20x: use explicit bit defines
+Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mfd/axp20x.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
- Documentation/devicetree/bindings/mfd/axp20x.txt |   9 +-
- arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts  |   2 +-
- drivers/mfd/axp20x.c                             |  13 +-
- drivers/regulator/axp20x-regulator.c             | 142 +++++++++++++++-
- include/linux/mfd/axp20x.h                       |   4 +-
- 5 files changed, 161 insertions(+), 9 deletions(-)
-
-base-commit: 14cf8c1d5b90a0cf6a8ba51ef59db8da8c7a2622
+diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+index 188f037..c626605 100644
+--- a/Documentation/devicetree/bindings/mfd/axp20x.txt
++++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+@@ -32,6 +32,12 @@ Required properties:
+ - interrupt-controller: The PMIC has its own internal IRQs
+ - #interrupt-cells: Should be set to 1
+ 
++Supported common regulator properties, see ../regulator/regulator.txt for
++more information:
++- regulator-ramp-delay: sets the ramp up delay in uV/us
++			AXP20x/DCDC2: 1600, 800
++			AXP20x/LDO3:  1600, 800
++
+ Optional properties:
+ - x-powers,dcdc-freq: defines the work frequency of DC-DC in KHz
+ 		      AXP152/20X: range:  750-1875, Default: 1.5 MHz
 -- 
 git-series 0.9.1
