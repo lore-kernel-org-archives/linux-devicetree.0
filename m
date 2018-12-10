@@ -1,104 +1,127 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-am654-base-board: Add MMC/SD
- support
-Date: Mon, 10 Dec 2018 06:06:48 -0600
-Message-ID: <20181210120647.i3ply3p7umvedb3u@akan>
-References: <20181207084233.13700-1-faiz_abbas@ti.com>
- <20181207084233.13700-3-faiz_abbas@ti.com>
- <20181208155427.jmidz4vsw4k4qj36@akan>
- <c1dd9783-84dc-9dad-ea94-9a14a4ad814d@ti.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v5 1/5] spi: spi-mem: Add driver for NXP FlexSPI
+ controller
+Date: Mon, 10 Dec 2018 13:11:00 +0100
+Message-ID: <20181210131100.6e4801e2@bbrezillon>
+References: <1542366701-16065-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+        <1542366701-16065-2-git-send-email-yogeshnarayan.gaur@nxp.com>
+        <eb8a31d8-2ba6-f27c-addf-545c77921b77@kontron.de>
+        <VI1PR04MB57267D9F69719B4BEF38BF8699A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
+        <20181210111909.35384eee@bbrezillon>
+        <VI1PR04MB57268740CA806FFB164780EB99A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
+        <20181210115001.6c7af1d7@bbrezillon>
+        <VI1PR04MB5726F0DDAC84F1AEC20B56DF99A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
+        <20181210120925.3c6336f6@bbrezillon>
+        <VI1PR04MB57269A32C1FF1592F117B97799A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c1dd9783-84dc-9dad-ea94-9a14a4ad814d@ti.com>
+In-Reply-To: <VI1PR04MB57269A32C1FF1592F117B97799A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, robh+dt@kernel.org, t-kristo@ti.com, kishon@ti.com, ulf.hansson@linaro.org, adrian.hunter@intel.com, michal.simek@xilinx.com, Tony Lindgren <tony@atomide.com>, Arnd Bergmann <arnd@arndb.de>
+To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Cc: Schrempf Frieder <frieder.schrempf@kontron.de>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13:33-20181210, Sekhar Nori wrote:
-> On 08/12/18 9:24 PM, Nishanth Menon wrote:
-> > On 14:12-20181207, Faiz Abbas wrote:
-> > 
-> >> +
-> >> +&sdhci0 {
-> >> +	status = "okay";
-> >> +	pinctrl-names = "default";
-> >> +	pinctrl-0 = <&main_mmc0_pins_default>;
-> >> +	bus-width = <8>;
-> >> +	non-removable;
-> >> +	ti,driver-strength-ohm = <50>;
-> > 
-> > ^^
-> > 
-> >> +};
-> >> +
-> >> +&sdhci1 {
-> >> +	status = "okay";
-> >> +	pinctrl-names = "default";
-> >> +	pinctrl-0 = <&main_mmc1_pins_default>;
-> >> +	ti,driver-strength-ohm = <50>;
-> > 
-> > NAK.
-> > 
-> > $ git checkout next-20181207
-> > $ git grep ti,driver-strength-ohm Documentation
-> > $
-> > 
-> > Nada.. And.. I think "new phy binding" probably introduces this.
-> > [1] https://patchwork.kernel.org/project/linux-mmc/list/?series=53185
-> > 
-> > If your patches are'nt really ready, please send them as RFC, I am not
-> > really in a mood to track the status of every single driver subsystem.
-> > 
-> > If your binding is not in linux next at the baremin, as far as I am
-> > concerned, this is not ready, and should be RFC.
+On Mon, 10 Dec 2018 11:25:55 +0000
+Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
+
+> Hi Boris,
 > 
-> No, RFC does not say "do not merge" or "this has dependencies". RFC is
-> used to invite a stronger review when introducing a new concept. Its
-> fair game to apply patches marked RFC if maintainer is okay with the
-> content.
-
-True, fair enough.. RFC is request for comments. Anyways, that is
-besides the point.
+> > -----Original Message-----
+> > From: Boris Brezillon [mailto:boris.brezillon@bootlin.com]
+> > Sent: Monday, December 10, 2018 4:39 PM
+> > To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+> > Cc: Schrempf Frieder <frieder.schrempf@kontron.de>; linux-
+> > mtd@lists.infradead.org; marek.vasut@gmail.com; broonie@kernel.org; linux-
+> > spi@vger.kernel.org; devicetree@vger.kernel.org; robh@kernel.org;
+> > mark.rutland@arm.com; shawnguo@kernel.org; linux-arm-
+> > kernel@lists.infradead.org; computersforpeace@gmail.com; linux-
+> > kernel@vger.kernel.org
+> > Subject: Re: [PATCH v5 1/5] spi: spi-mem: Add driver for NXP FlexSPI controller
+> > 
+> > On Mon, 10 Dec 2018 10:59:54 +0000
+> > Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
+> >   
+> > > Hi Boris,
+> > >  
+> > > > -----Original Message-----
+> > > > From: Boris Brezillon [mailto:boris.brezillon@bootlin.com]
+> > > > Sent: Monday, December 10, 2018 4:20 PM
+> > > > To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+> > > > Cc: Schrempf Frieder <frieder.schrempf@kontron.de>; linux-
+> > > > mtd@lists.infradead.org; marek.vasut@gmail.com; broonie@kernel.org;
+> > > > linux- spi@vger.kernel.org; devicetree@vger.kernel.org;
+> > > > robh@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org;
+> > > > linux-arm- kernel@lists.infradead.org; computersforpeace@gmail.com;
+> > > > linux- kernel@vger.kernel.org
+> > > > Subject: Re: [PATCH v5 1/5] spi: spi-mem: Add driver for NXP FlexSPI
+> > > > controller
+> > > >
+> > > > On Mon, 10 Dec 2018 10:43:56 +0000
+> > > > Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
+> > > >  
+> > > > > > > Thus, in LUT preparation we have assigned only the base address.
+> > > > > > > Now if I have assigned ahb_buf_size to FSPI_FLSHXXCR0 register
+> > > > > > > then for  
+> > > > > > read/write data beyond limit of ahb_buf_size offset I get data corruption.
+> > > > > >
+> > > > > > Why would you do that? We have the ->adjust_op_size() exactly
+> > > > > > for this reason, so, if someone tries to do a spi_mem_op with
+> > > > > > data.nbytes > ahb_buf_size you should return an error.
+> > > > > >  
+> > > > > Let me explain my implementation with example. If I have to write
+> > > > > data of size  
+> > > > 0x100 bytes at offset 0x1200 for CS1, I would program as below:  
+> > > > > In func nxp_fspi_select_mem(), would set value of controller
+> > > > > address space  
+> > > > size, memmap_phy_size, to FSPI_FLSHA2CR0 and rest all FSPI_FLSHXXCR0 as  
+> > 0.  
+> > > > > Value of memmap_phy_size is 0x10000000 i.e. 256 MB for my
+> > > > > LX2160ARDB  
+> > > > target.  
+> > > > > Then in nxp_fspi_prepare_lut(), I would prepare LUT ADDR with
+> > > > > address length  
+> > > > requirement 3/4 byte for NOR or 1/2/3/4 bytes for NAND flash.  
+> > > > > Also for LUT_NXP_WRITE would program data bytes as 0.
+> > > > >
+> > > > > Then inside func nxp_fspi_do_op(), set register FSPI_IPCR0 as the
+> > > > > address offset i.e. 0x1200 and in register FSPI_IPCR1 program the
+> > > > > data size to write i.e. 0x100
+> > > > >
+> > > > > If, as suggested if I tries to mark value of register
+> > > > > FSPI_FLSHA2CR0 equal to  
+> > > > ahb_buf_size (0x800), then access for address 0x1200 gives me wrong
+> > > > data. This is because as per the controller specification access to
+> > > > flash connected at CS1 can be performed under range of FSPI_ FLSHA1CR0  
+> > and FSPI_ FLSHA2CR0.  
+> > > >
+> > > > Don't you have a way to set an offset to apply to the address
+> > > > accessed through the AHB? And if you don't, how will it work if your
+> > > > mapping is smaller than the flash size?  
+> > >
+> > > Write operations are triggered using IP commands instead of AHB command.
+> > > For Read AHB command is used and in this we are adding the offset when  
+> > performing memcpy_fromIO operation  
+> > >       memcpy_fromio(op->data.buf.in, (f->ahb_addr + op->addr.val),
+> > > len);
+> > >
+> > > AHB/IP operations are independent of the way how CS got selected. CS  
+> > selection depends, e.g. CS1 on the value of register FSPI_FLSHA1CR0 and
+> > FSPI_FLSHA2CR0.  
+> > >
+> > > Mapping can never going to be smaller than the connected flash size as per  
+> > discussion with the Board design team and if it's possible by user manually
+> > changes the non-soldered part then flash area beyond complete mapping is not
+> > accessible.  
+> > > On LX2160ARDB, with mapping of 256MB, for now we are having 4 flash  
+> > devices connected with size as 64 MB. If user wants he can have only one single
+> > flash with flash size of 256MB.
+> > 
+> > Given that the dirmap interface has now been merged and the MTD side of
+> > things is soon to be merged, I'd recommend you to implement it in your
+> > v6 and only use non-AHB accesses for the ->exec_op() implementation.  
 > 
-> Dependencies are either noted in cover-letter or below the patch
-> tear-line. With what you are asking, looks like patches need to be
-> resubmitted once dependencies are cleared, even if there is no change in
-> the content itself. This will be additional work.
+> This would going to be performance hit if I would use non-AHB accesses for ->exec_op().
 
-Yes please. There would be other dts changes that are probably ready and
-I really wont be tracking everything happening on other drivers. If the
-binding is present at least in next, it is a good indication of things
-clean and ready to go.
-
-> 
-> That said, if it makes life convenient for you, you can impose such a
-> rule for patches you need to handle. But I think it will take some
-> getting used for developers who send patches to you as I don't think
-> this is a norm elsewhere.
-> 
-> Adding Tony and Arnd as well, in case I have missed some recently
-> accepted convention.
-
-
-I have'nt looked at any conventions, The style I prefer to follow when I do
-submissions: It is my job to get the bindings in, until then my actual
-dts is just "request for comments". Only after the bindings are merged
-do I formally submit dts - simply because I dont expect dts maintainer
-to track what happened to my driver's binding and discussions there of.
-
-Seriously, is'nt it really reasonable for dts maintainer to check every
-single driver's development status in 15 different mailing lists?
-Because, it sounds like what you are asking. At least I wont have time
-for it..
-
-
-I really am curious how Arnd / Tony actually pull this one off.. If they
-have continous cron job for checking if your patch is ready... I doubt
-it..
-
--- 
-Regards,
-Nishanth Menon
+Not if you implement the dirmap hooks.
