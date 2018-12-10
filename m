@@ -1,119 +1,71 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH v5 5/7] iommu: Add virtio-iommu driver
-Date: Mon, 10 Dec 2018 15:06:47 +0000
-Message-ID: <29bdf062-06cb-4b7d-1753-33fac609ddc3@arm.com>
-References: <20181122193801.50510-1-jean-philippe.brucker@arm.com>
- <20181122193801.50510-6-jean-philippe.brucker@arm.com>
- <20181123165742-mutt-send-email-mst@kernel.org>
- <fd221210-7e12-1d15-0c80-52a761f6893d@arm.com>
- <20181127125424-mutt-send-email-mst@kernel.org>
- <ef97313f-4795-9537-e0b8-8bf6751db6a6@arm.com>
- <20181127131455-mutt-send-email-mst@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2.1 24/34] dt-bindings: arm: Convert Rockchip board/soc
+ bindings to json-schema
+Date: Mon, 10 Dec 2018 09:13:01 -0600
+Message-ID: <CAL_JsqL9PyD=0jy+GF5g8ee-FO_ijvArnzEohuvqK5Od3yr7fg@mail.gmail.com>
+References: <20181203213223.16986-1-robh@kernel.org> <3170130.k0DT9deCHj@phil>
+ <CAL_JsqLwSg=CWQYzvfCq9WVexU5donsF6ugib2ONNN3vvjzZXw@mail.gmail.com> <2386212.ILKoqq0Ivo@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <virtio-dev-return-5152-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
-Sender: <virtio-dev@lists.oasis-open.org>
-List-Post: <mailto:virtio-dev@lists.oasis-open.org>
-List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
-List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
-List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
-In-Reply-To: <20181127131455-mutt-send-email-mst@kernel.org>
-Content-Language: en-US
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "virtio-dev@lists.oasis-open.org" <virtio-dev@lists.oasis-open.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "tnowicki@caviumnetworks.com" <tnowicki@caviumnetworks.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "joro@8bytes.org" <joro@8bytes.org>, Will Deacon <Will.Deacon@arm.com>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, "eric.auger@redhat.com" <eric.auger@redhat.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, Robin Murphy <Robin.Murphy@arm.com>, "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2386212.ILKoqq0Ivo@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "heiko@sntech.de" <heiko@sntech.de>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27/11/2018 18:53, Michael S. Tsirkin wrote:
-> On Tue, Nov 27, 2018 at 06:10:46PM +0000, Jean-Philippe Brucker wrote:
->> On 27/11/2018 18:04, Michael S. Tsirkin wrote:
->>> On Tue, Nov 27, 2018 at 05:50:50PM +0000, Jean-Philippe Brucker wrote:
->>>> On 23/11/2018 22:02, Michael S. Tsirkin wrote:
->>>>>> +/*
->>>>>> + * __viommu_sync_req - Complete all in-flight requests
->>>>>> + *
->>>>>> + * Wait for all added requests to complete. When this function returns, all
->>>>>> + * requests that were in-flight at the time of the call have completed.
->>>>>> + */
->>>>>> +static int __viommu_sync_req(struct viommu_dev *viommu)
->>>>>> +{
->>>>>> +	int ret = 0;
->>>>>> +	unsigned int len;
->>>>>> +	size_t write_len;
->>>>>> +	struct viommu_request *req;
->>>>>> +	struct virtqueue *vq = viommu->vqs[VIOMMU_REQUEST_VQ];
->>>>>> +
->>>>>> +	assert_spin_locked(&viommu->request_lock);
->>>>>> +
->>>>>> +	virtqueue_kick(vq);
->>>>>> +
->>>>>> +	while (!list_empty(&viommu->requests)) {
->>>>>> +		len = 0;
->>>>>> +		req = virtqueue_get_buf(vq, &len);
->>>>>> +		if (!req)
->>>>>> +			continue;
->>>>>> +
->>>>>> +		if (!len)
->>>>>> +			viommu_set_req_status(req->buf, req->len,
->>>>>> +					      VIRTIO_IOMMU_S_IOERR);
->>>>>> +
->>>>>> +		write_len = req->len - req->write_offset;
->>>>>> +		if (req->writeback && len == write_len)
->>>>>> +			memcpy(req->writeback, req->buf + req->write_offset,
->>>>>> +			       write_len);
->>>>>> +
->>>>>> +		list_del(&req->list);
->>>>>> +		kfree(req);
->>>>>> +	}
->>>>>
->>>>> I didn't notice this in the past but it seems this will spin
->>>>> with interrupts disabled until host handles the request.
->>>>> Please do not do this - host execution can be another
->>>>> task that needs the same host CPU. This will then disable
->>>>> interrupts for a very very long time.
->>>>
->>>> In the guest yes, but that doesn't prevent the host from running another
->>>> task right?
->>>
->>> Doesn't prevent it but it will delay it significantly
->>> until scheduler decides to kick the VCPU task out.
->>>
->>>> My tests run fine when QEMU is bound to a single CPU, even
->>>> though vcpu and viommu run in different threads
->>>>
->>>>> What to do then? Queue in software and wake up task.
->>>>
->>>> Unfortunately I can't do anything here, because IOMMU drivers can't
->>>> sleep in the iommu_map() or iommu_unmap() path.
->>>>
->>>> The problem is the same
->>>> for all IOMMU drivers. That's because the DMA API allows drivers to call
->>>> some functions with interrupts disabled. For example
->>>> Documentation/DMA-API-HOWTO.txt allows dma_alloc_coherent() and
->>>> dma_unmap_single() to be called in interrupt context.
->>>
->>> In fact I don't really understand how it's supposed to
->>> work at all: you only sync when ring is full.
->>> So host may not have seen your map request if ring
->>> is not full.
->>> Why is it safe to use the address with a device then?
->>
->> viommu_map() calls viommu_send_req_sync(), which does the sync
->> immediately after adding the MAP request.
->>
->> Thanks,
->> Jean
-> 
-> I see. So it happens on every request. Maybe you should clear
-> event index then. This way if exits are disabled you know that
-> host is processing the ring. Event index is good for when
-> you don't care when it will be processed, you just want
-> to reduce number of exits as much as possible.
-> 
+On Sun, Dec 9, 2018 at 4:14 PM Heiko Stuebner <heiko@sntech.de> wrote:
+>
+> Convert Rockchip SoC bindings to DT schema format using json-schema.
+>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-rockchip@lists.infradead.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> [move to per-board entries and added recently added boards]
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+> Hi Rob,
+>
+> there are boards where the description adds much value and on others
+> it is maybe less, but personally I'd like to keep things uniform,
+> as that makes reading these things easier if the format stays the
+> same all the time, so I've gone forward and just did the conversion
+>
+> make dtbs_check did not complain about the schema it seems but I
+> did end up with an error later on:
+>
+> FATAL ERROR: Unknown output format "yaml"
+> make[2]: *** [scripts/Makefile.lib:313: arch/arm/boot/dts/rk3036-evb.dt.yaml] Fehler 1
 
-I think that's already the case: since we don't attach a callback to the
-request queue, VRING_AVAIL_F_NO_INTERRUPT is set in avail_flags_shadow,
-which causes the used event index to stay clear.
+You need libyaml and its headers installed so dtc can output yaml, but
+that's not needed for checking the schema against the meta-schema.
 
-Thanks,
-Jean
+> But I guess I did not mess up the schema yet.
+>
+> So does it look ok that way?
+
+Yes, but one comment...
+
+> +      - description: Firefly Firefly-RK3288
+> +        items:
+> +          - const: firefly,firefly-rk3288
+> +          - const: rockchip,rk3288
+> +
+> +      - description: Firefly Firefly-RK3288 (beta board)
+> +        items:
+> +          - const: firefly,firefly-rk3288-beta
+> +          - const: rockchip,rk3288
+> +
+> +      - description: Firefly Firefly-RK3288 Reload
+
+Seems like combining these 3 (or first 2?) would make sense if this is
+just revs of the same board.
+
+But either way is fine.
+
+> +        items:
+> +          - const: firefly,firefly-rk3288-reload
+> +          - const: rockchip,rk3288
