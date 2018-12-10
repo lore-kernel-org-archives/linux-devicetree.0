@@ -1,13 +1,13 @@
 From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Subject: [PATCH 2/8] regulator: axp20x: add support for
- set_ramp_delay for AXP209
-Date: Mon, 10 Dec 2018 20:42:13 +0200
-Message-ID: <2bfe47f173fe72a30b0036dcdeebc2123962ff33.1544466940.git-series.plaes@plaes.org>
+Subject: [PATCH 4/8] regulator: axp20x: add software based
+ soft_start for AXP209 LDO3
+Date: Mon, 10 Dec 2018 20:42:15 +0200
+Message-ID: <c77b37b68b18a299cafd282ef1edf3434eabeb2d.1544466940.git-series.plaes@plaes.org>
 References: <cover.4110554ae84987dedb8b58888a8a63d6b7f98c72.1544466940.git-series.plaes@plaes.org>
 Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDB4J47M7YERBMHHXLQAKGQEYKJLCNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDB4J47M7YERBMXHXLQAKGQE3T5PYQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <cover.4110554ae84987dedb8b58888a8a63d6b7f98c72.1544466940.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -22,135 +22,123 @@ List-Id: devicetree@vger.kernel.org
 
 From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 
-The AXP209 supports ramping up voltages on several regulators such as
-DCDC2 and LDO3.
+In the past, there have been words on various lists that if LDO3 is
+disabled in u-boot, but enabled in the DTS, the axp209 driver would
+fail to continue/hang. Several enable/disable patches have been
+issues to devicetree's in both the kernel and u-boot to address
+this issue.
 
-This patch adds preliminary support for the regulator-ramp-delay property
-for these 2 regulators. Note that the voltage ramp only works when
-regulator is already enabled. E.g. when going from say 0.7 V to 3.6 V.
+What really happened however, was that the AXP209 shuts down without
+a notice and without setting an interrupt. This is caused when LDO3
+gets overloaded, for example with large capacitors on the LDO3 output.
 
-When turning on the regulator, no voltage ramp is performed in hardware.
+Normally, we would expect that AXP209 would source 200 mA as per
+datasheet and set and trigger an interrupt when being overloaded.
+For some reason however, this does not happen.
 
-What this means, is that if the bootloader brings up the voltage at 0.7 V,
-the ramp delay property is properly applied. If however, the bootloader
-leaves the power off, no ramp delay is applied when the power is
-enabled by the regulator framework.
+As a work-around, we use the soft-start constraint of the regulator
+node to first bring up the LDO3 to the lowest possible voltage and
+then enable the LDO. After that, we can set the requested voltage
+as usual.
+
+Combining this setting with the regulator-ramp-delay allows LDO3 to
+enable voltage slowly and staggered, potentially reducing overall
+inrush current.
 
 Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 ---
- drivers/regulator/axp20x-regulator.c | 85 +++++++++++++++++++++++++++++-
- 1 file changed, 85 insertions(+)
+ drivers/regulator/axp20x-regulator.c | 57 ++++++++++++++++++++++++++++-
+ 1 file changed, 56 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index 9a2db28..1d9fa62 100644
+index 1d9fa62..e8a895b 100644
 --- a/drivers/regulator/axp20x-regulator.c
 +++ b/drivers/regulator/axp20x-regulator.c
-@@ -51,6 +51,17 @@
- #define AXP20X_PWR_OUT_DCDC2_MASK	BIT_MASK(4)
- #define AXP20X_PWR_OUT_LDO3_MASK	BIT_MASK(6)
+@@ -14,6 +14,7 @@
+  */
  
-+#define AXP20X_DCDC2_LDO3_V_RAMP_DCDC2_RATE_MASK	BIT_MASK(0)
-+#define AXP20X_DCDC2_LDO3_V_RAMP_DCDC2_RATE(x) \
-+	((x) << 0)
-+#define AXP20X_DCDC2_LDO3_V_RAMP_LDO3_RATE_MASK		BIT_MASK(1)
-+#define AXP20X_DCDC2_LDO3_V_RAMP_LDO3_RATE(x) \
-+	((x) << 1)
-+#define AXP20X_DCDC2_LDO3_V_RAMP_DCDC2_EN_MASK		BIT_MASK(2)
-+#define AXP20X_DCDC2_LDO3_V_RAMP_DCDC2_EN		BIT(2)
-+#define AXP20X_DCDC2_LDO3_V_RAMP_LDO3_EN_MASK		BIT_MASK(3)
-+#define AXP20X_DCDC2_LDO3_V_RAMP_LDO3_EN		BIT(3)
-+
- #define AXP20X_LDO4_V_OUT_1250mV_START	0x0
- #define AXP20X_LDO4_V_OUT_1250mV_STEPS	0
- #define AXP20X_LDO4_V_OUT_1250mV_END	\
-@@ -346,6 +357,79 @@
- 		.ops		= &axp20x_ops_range,				\
- 	}
+ #include <linux/bitops.h>
++#include <linux/delay.h>
+ #include <linux/err.h>
+ #include <linux/init.h>
+ #include <linux/mfd/axp20x.h>
+@@ -23,6 +24,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
+ #include <linux/regulator/of_regulator.h>
  
-+static const int axp209_dcdc2_ldo3_slew_rates[] = {
-+	1600,
-+	 800,
-+};
-+
-+static int axp20x_set_ramp_delay(struct regulator_dev *rdev, int ramp)
+ #define AXP20X_GPIO0_FUNC_MASK		GENMASK(3, 0)
+@@ -430,6 +432,59 @@ static int axp20x_set_ramp_delay(struct regulator_dev *rdev, int ramp)
+ 	return regmap_update_bits(axp20x->regmap, reg, mask, cfg);
+ }
+ 
++static int axp20x_regulator_enable_regmap(struct regulator_dev *rdev)
 +{
 +	struct axp20x_dev *axp20x = rdev_get_drvdata(rdev);
 +	const struct regulator_desc *desc = rdev->desc;
-+	u8 reg, mask, enable, cfg = 0xff;
-+	const int *slew_rates;
-+	int rate_count = 0;
 +
 +	if (!rdev)
 +		return -EINVAL;
 +
 +	switch (axp20x->variant) {
 +	case AXP209_ID:
-+		if (desc->id == AXP20X_DCDC2) {
-+			rate_count = ARRAY_SIZE(axp209_dcdc2_ldo3_slew_rates);
-+			reg = AXP20X_DCDC2_LDO3_V_RAMP;
-+			mask = AXP20X_DCDC2_LDO3_V_RAMP_DCDC2_RATE_MASK |
-+			       AXP20X_DCDC2_LDO3_V_RAMP_DCDC2_EN_MASK;
-+			enable = (ramp > 0) ?
-+				 AXP20X_DCDC2_LDO3_V_RAMP_DCDC2_EN :
-+				 !AXP20X_DCDC2_LDO3_V_RAMP_DCDC2_EN;
-+			break;
-+		}
++		if ((desc->id == AXP20X_LDO3) &&
++		    rdev->constraints && rdev->constraints->soft_start) {
++			int v_out;
++			int ret;
 +
-+		if (desc->id == AXP20X_LDO3) {
-+			slew_rates = axp209_dcdc2_ldo3_slew_rates;
-+			rate_count = ARRAY_SIZE(axp209_dcdc2_ldo3_slew_rates);
-+			reg = AXP20X_DCDC2_LDO3_V_RAMP;
-+			mask = AXP20X_DCDC2_LDO3_V_RAMP_LDO3_RATE_MASK |
-+			       AXP20X_DCDC2_LDO3_V_RAMP_LDO3_EN_MASK;
-+			enable = (ramp > 0) ?
-+				 AXP20X_DCDC2_LDO3_V_RAMP_LDO3_EN :
-+				 !AXP20X_DCDC2_LDO3_V_RAMP_LDO3_EN;
-+			break;
-+		}
-+
-+		if (rate_count > 0)
-+			break;
-+
-+		/* fall through */
-+	default:
-+		/* Not supported for this regulator */
-+		return -ENOTSUPP;
-+	}
-+
-+	if (ramp == 0) {
-+		cfg = enable;
-+	} else {
-+		int i;
-+
-+		for (i = 0; i < rate_count; i++) {
-+			if (ramp <= slew_rates[i])
-+				cfg = AXP20X_DCDC2_LDO3_V_RAMP_LDO3_RATE(i);
-+			else
++			/*
++			 * On some boards, the LDO3 can be overloaded when
++			 * turning on, causing the entire PMIC to shutdown
++			 * without warning. Turning it on at the minimal voltage
++			 * and then setting the voltage to the requested value
++			 * works reliably.
++			 */
++			if (regulator_is_enabled_regmap(rdev))
 +				break;
-+		}
 +
-+		if (cfg == 0xff) {
-+			dev_err(axp20x->dev, "unsupported ramp value %d", ramp);
-+			return -EINVAL;
-+		}
++			v_out = regulator_get_voltage_sel_regmap(rdev);
++			if (v_out < 0)
++				return v_out;
 +
-+		cfg |= enable;
++			if (v_out == 0)
++				break;
++
++			ret = regulator_set_voltage_sel_regmap(rdev, 0x00);
++			/*
++			 * A small pause is needed between
++			 * setting the voltage and enabling the LDO to give the
++			 * internal state machine time to process the request.
++			 */
++			usleep_range(1000, 5000);
++			ret |= regulator_enable_regmap(rdev);
++			ret |= regulator_set_voltage_sel_regmap(rdev, v_out);
++
++			return ret;
++		}
++		break;
++	default:
++		/* No quirks */
++		break;
 +	}
 +
-+	return regmap_update_bits(axp20x->regmap, reg, mask, cfg);
-+}
++	return regulator_enable_regmap(rdev);
++};
 +
  static const struct regulator_ops axp20x_ops_fixed = {
  	.list_voltage		= regulator_list_voltage_linear,
  };
-@@ -366,6 +450,7 @@ static const struct regulator_ops axp20x_ops = {
- 	.enable			= regulator_enable_regmap,
+@@ -447,7 +502,7 @@ static const struct regulator_ops axp20x_ops = {
+ 	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
+ 	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
+ 	.list_voltage		= regulator_list_voltage_linear,
+-	.enable			= regulator_enable_regmap,
++	.enable			= axp20x_regulator_enable_regmap,
  	.disable		= regulator_disable_regmap,
  	.is_enabled		= regulator_is_enabled_regmap,
-+	.set_ramp_delay		= axp20x_set_ramp_delay,
- };
- 
- static const struct regulator_ops axp20x_ops_sw = {
+ 	.set_ramp_delay		= axp20x_set_ramp_delay,
 -- 
 git-series 0.9.1
