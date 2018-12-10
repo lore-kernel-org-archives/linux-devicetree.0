@@ -1,54 +1,131 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH 0/3] spi-nor: Add Octal SPI support
-Date: Mon, 10 Dec 2018 09:45:44 +0100
-Message-ID: <20181210094544.3843e782@bbrezillon>
-References: <20181003165603.2579-1-vigneshr@ti.com>
-        <0e4286ea-85d1-a909-17c0-47f9506b3e5a@ti.com>
+From: Joseph Lo <josephl@nvidia.com>
+Subject: Re: [PATCH 01/19] dt-bindings: clock: tegra124-dfll: Update DFLL
+ binding for PWM regulator
+Date: Mon, 10 Dec 2018 16:49:34 +0800
+Message-ID: <46b5eafa-00a0-1d91-1f4d-97ab119fcf21@nvidia.com>
+References: <20181204092548.3038-1-josephl@nvidia.com>
+ <20181204092548.3038-2-josephl@nvidia.com>
+ <af1211f0-dda0-bdde-f320-03e54f82d7e1@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0e4286ea-85d1-a909-17c0-47f9506b3e5a@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tudor Ambarus <tudor.ambarus@microchip.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <af1211f0-dda0-bdde-f320-03e54f82d7e1@nvidia.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jon Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 9 Dec 2018 14:17:18 +0530
-Vignesh R <vigneshr@ti.com> wrote:
+Hi Jon,
 
-> Hi Boris,
-> 
-> On 03/10/18 10:26 PM, Vignesh R wrote:
-> > This series adds support for octal mode of mt35x flash. Also, adds
-> > support for OSPI version of Cadence QSPI controller.
-> > 
-> > Based on top of patches adding basic support for mt35xu512aba here:
-> > https://patchwork.ozlabs.org/cover/971437/
-> > 
-> > Vignesh R (3):
-> >   mtd: spi-nor: Add Octal mode support for mt35xu512aba  
-> 
-> 
-> >   dt-bindings: cadence-quadspi: Add new compatible for AM654 SoC
-> >   mtd: spi-nor: cadence-quadspi: Add support for Octal SPI controller  
-> 
-> Could you consider above two patches for v4.21 once [1][2] are merged?
-> 
-> [1] https://patchwork.ozlabs.org/patch/1006717/
-> [2] https://patchwork.ozlabs.org/patch/1006715/
+Thanks for reviewing this series.
 
-I asked Tudor to have a look at those patches. I'll apply them once I
-have his R-b.
+On 12/7/18 9:41 PM, Jon Hunter wrote:
+> 
+> On 04/12/2018 09:25, Joseph Lo wrote:
+>> From: Peter De Schrijver <pdeschrijver@nvidia.com>
+>>
+>> Add new properties to configure the DFLL PWM regulator support. Also
+>> add an example and make the I2C clock only required when I2C support is
+>> used.
+>>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+>> Signed-off-by: Joseph Lo <josephl@nvidia.com>
+>> ---
+>>   .../bindings/clock/nvidia,tegra124-dfll.txt   | 73 ++++++++++++++++++-
+>>   1 file changed, 71 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+>> index dff236f524a7..8c97600d2bad 100644
+>> --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+>> +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+>> @@ -8,7 +8,6 @@ the fast CPU cluster. It consists of a free-running voltage controlled
+>>   oscillator connected to the CPU voltage rail (VDD_CPU), and a closed loop
+>>   control module that will automatically adjust the VDD_CPU voltage by
+>>   communicating with an off-chip PMIC either via an I2C bus or via PWM signals.
+>> -Currently only the I2C mode is supported by these bindings.
+>>   
+>>   Required properties:
+>>   - compatible : should be "nvidia,tegra124-dfll"
+>> @@ -45,10 +44,28 @@ Required properties for the control loop parameters:
+>>   Optional properties for the control loop parameters:
+>>   - nvidia,cg-scale: Boolean value, see the field DFLL_PARAMS_CG_SCALE in the TRM.
+>>   
+>> +Optional properties for mode selection:
+>> +- nvidia,pwm-to-pmic: Use PWM to control regulator rather then I2C.
+>> +
+>>   Required properties for I2C mode:
+>>   - nvidia,i2c-fs-rate: I2C transfer rate, if using full speed mode.
+>>   
+>> -Example:
+>> +Required properties for PWM mode:
+>> +- nvidia,pwm-period: period of PWM square wave in microseconds.
+>> +- nvidia,init-uv: Regulator voltage in micro volts when PWM control is disabled.
+> 
+> Maybe consider 'pwm-inactive-voltage-microvolt'.
+Ah, I think I need to refine the description here. It should be 
+something like below.
+  - nvidia,pwm-init-microvolt : Regulator voltage in micro volts when 
+PWM control is initialized
+
+This is the initial voltage that when we just initialize the DFLL 
+hardware for PWM output. And before we switch the CPU clock from PLLX to 
+DFLL, we will enable DFLL hardware in closed loop mode which will aplly 
+the DVFS table that was calculated from CVB table.
+
+The original description maybe make you think that it's the working 
+voltage when it's under open-loop mode. But it's not. Sorry.
+
+When we working on open-loop mode which will switch to low voltage range 
+which also follows the DVFS table. Not this one.
 
 > 
-> Let me know if this needs to be re-posted.
+>> +- nvidia,align-offset-uv: Regulator voltage in micro volts when PWM control is
+>> +			  enabled and PWM output is low.
 > 
-> > 
-> >  .../devicetree/bindings/mtd/cadence-quadspi.txt       |  1 +
-> >  drivers/mtd/spi-nor/cadence-quadspi.c                 |  9 +++++++++
-> >  drivers/mtd/spi-nor/spi-nor.c                         | 11 ++++++++++-
-> >  include/linux/mtd/spi-nor.h                           |  2 ++
-> >  4 files changed, 22 insertions(+), 1 deletion(-)
-> >   
+> Would this be considered the minimum pwm active voltage?
+This would be used for minimum voltage for LUT table, which is the table 
+that PMIC can output. The real minimum voltage in PWM mode still depends 
+on the CVB table.
+
+So maybe change this one to 'nvidia,pwm-offset-uv'.
+
+> 
+>> +- nvidia,align-step-uv: Voltage increase in micro volts corresponding to a
+>> +			1/33th increase in duty cycle. Eg the voltage for 2/33th
+>> +			duty cycle would be:
+> 
+> Maybe consider 'pwm-voltage-step-microvolt'.
+Okay.
+
+> 
+>> +			nvidia,align-offset-uv + nvidia,align-step-uv * 2.
+>> +- pinctrl-0: I/O pad configuration when PWM control is enabled.
+>> +- pinctrl-1: I/O pad configuration when PWM control is disabled.
+>> +- pinctrl-names: must include the following entries:
+>> +  - dvfs_pwm_enable: I/O pad configuration when PWM control is enabled.
+>> +  - dvfs_pwm_disable: I/O pad configuration when PWM control is disabled.
+> 
+> Please see Rob's feedback on the above [0].
+Yes, I did refer that comments in this patch. And fixed that in 
+description but missed for bindings ...
+
+Thanks,
+Joseph
+
+> 
+> Cheers
+> Jon
+> 
+> [0] https://lore.kernel.org/patchwork/patch/885328/
 > 
