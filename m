@@ -1,25 +1,65 @@
-Return-Path: <SRS0=N3yL=OT=gmail.com=festevam@kernel.org>
-MIME-Version: 1.0
-References: <20181209053746.24967-1-peter.chen@nxp.com> <20181209053746.24967-5-peter.chen@nxp.com>
- <d1d68113-21e9-2b74-6904-ec5564171d3f@kontron.de>
-In-Reply-To: <d1d68113-21e9-2b74-6904-ec5564171d3f@kontron.de>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Mon, 10 Dec 2018 08:01:52 -0200
-Message-ID: <CAOMZO5D5=CGxmHUDXWHFBehwCc6Ek=ghbf7A67TUzKyKvKtuTA@mail.gmail.com>
+Return-Path: <SRS0=LWJL=OT=kontron.de=frieder.schrempf@kernel.org>
+From: Schrempf Frieder <frieder.schrempf@kontron.de>
 Subject: Re: [PATCH v4 4/4] doc: usb: ci-hdrc-usb2: Add pinctrl properties for
  HSIC pin groups
-Content-Type: text/plain; charset="UTF-8"
-To: frieder.schrempf@kontron.de
-Cc: Peter Chen <peter.chen@nxp.com>, USB list <linux-usb@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Schrempf Frieder <frieder.schrempf@exceet.de>
+Date: Mon, 10 Dec 2018 08:09:50 +0000
+Message-ID: <d1d68113-21e9-2b74-6904-ec5564171d3f@kontron.de>
+References: <20181209053746.24967-1-peter.chen@nxp.com>
+ <20181209053746.24967-5-peter.chen@nxp.com>
+In-Reply-To: <20181209053746.24967-5-peter.chen@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9362B8D5B71D6A41AB8FB4DC2798A3A4@snt-world.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Peter Chen <peter.chen@nxp.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Dec 10, 2018 at 6:09 AM Schrempf Frieder
-<frieder.schrempf@kontron.de> wrote:
-
-> With a separate example for HSIC, we should probably leave the standard
-> example unchanged (I think that was one of the reasons for adding a
-> separate example).
-
-Yes, I agree. That would make the binding doc clearer.
-
-Thanks
+SGkgUGV0ZXIsDQoNCk9uIDA5LjEyLjE4IDA2OjQwLCBQZXRlciBDaGVuIHdyb3RlOg0KPiBGb3Ig
+VVNCIEhTSUMsIHRoZSBkYXRhIGFuZCBzdHJvYmUgcGluIG5lZWRzIHRvIGJlIHB1bGxlZCBkb3du
+DQo+IGF0IGRlZmF1bHQsIHdlIGNvbnNpZGVyIGl0IGFzICJpZGxlIiBzdGF0ZS4gV2hlbiB0aGUg
+VVNCIGhvc3QNCj4gaXMgcmVhZHkgdG8gYmUgdXNlZCwgdGhlIHN0cm9iZSBwaW4gbmVlZHMgdG8g
+YmUgcHVsbGVkIHVwLA0KPiB3ZSBjb25zaWRlciBpdCBhcyAiYWN0aXZlIiBzdGF0ZS4NCj4gDQo+
+IFNpZ25lZC1vZmYtYnk6IFBldGVyIENoZW4gPHBldGVyLmNoZW5AbnhwLmNvbT4NCj4gLS0tDQo+
+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2NpLWhkcmMtdXNiMi50eHQgICAgICAgfCAz
+NCArKysrKysrKysrKysrKysrKysrKystDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDMzIGluc2VydGlv
+bnMoKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvdXNiL2NpLWhkcmMtdXNiMi50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvdXNiL2NpLWhkcmMtdXNiMi50eHQNCj4gaW5kZXggNTI5ZTUxODc5
+ZmIyLi5hNmM2NmYwNTYwMWMgMTAwNjQ0DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy91c2IvY2ktaGRyYy11c2IyLnR4dA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvdXNiL2NpLWhkcmMtdXNiMi50eHQNCj4gQEAgLTgwLDcgKzgwLDEw
+IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+ICAgICBjb250cm9sbGVyLiBJdCdzIGV4cGVjdGVk
+IHRoYXQgYSBtdXggc3RhdGUgb2YgMCBpbmRpY2F0ZXMgZGV2aWNlIG1vZGUgYW5kIGENCj4gICAg
+IG11eCBzdGF0ZSBvZiAxIGluZGljYXRlcyBob3N0IG1vZGUuDQo+ICAgLSBtdXgtY29udHJvbC1u
+YW1lczogU2hhbGwgYmUgInVzYl9zd2l0Y2giIGlmIG11eC1jb250cm9scyBpcyBzcGVjaWZpZWQu
+DQo+IC0tIHBpbmN0cmwtbmFtZXM6IE5hbWVzIGZvciBvcHRpb25hbCBwaW4gbW9kZXMgaW4gImRl
+ZmF1bHQiLCAiaG9zdCIsICJkZXZpY2UiDQo+ICstIHBpbmN0cmwtbmFtZXM6IE5hbWVzIGZvciBv
+cHRpb25hbCBwaW4gbW9kZXMgaW4gImRlZmF1bHQiLCAiaG9zdCIsICJkZXZpY2UiLg0KPiArICBJ
+biBjYXNlIG9mIEhTSUMtbW9kZSwgImlkbGUiIGFuZCAiYWN0aXZlIiBwaW4gbW9kZXMgYXJlIG1h
+bmRhdG9yeS4gSW4gdGhpcw0KPiArICBjYXNlLCB0aGUgImlkbGUiIHN0YXRlIG5lZWRzIHRvIHB1
+bGwgZG93biB0aGUgZGF0YSBhbmQgc3Ryb2JlIHBpbg0KPiArICBhbmQgdGhlICJhY3RpdmUiIHN0
+YXRlIG5lZWRzIHRvIHB1bGwgdXAgdGhlIHN0cm9iZSBwaW4uDQo+ICAgLSBwaW5jdHJsLW46IGFs
+dGVybmF0ZSBwaW4gbW9kZXMNCj4gICANCj4gICBpLm14IHNwZWNpZmljIHByb3BlcnRpZXMNCj4g
+QEAgLTExMCw0ICsxMTMsMzMgQEAgRXhhbXBsZToNCj4gICAJCXBoeS1jbGtnYXRlLWRlbGF5LXVz
+ID0gPDQwMD47DQo+ICAgCQltdXgtY29udHJvbHMgPSA8JnVzYl9zd2l0Y2g+Ow0KPiAgIAkJbXV4
+LWNvbnRyb2wtbmFtZXMgPSAidXNiX3N3aXRjaCI7DQo+ICsJCXBpbmN0cmwtbmFtZXMgPSAiaWRs
+ZSIsICJhY3RpdmUiOw0KPiArCQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfdXNiaDJfMT47DQo+ICsJ
+CXBpbmN0cmwtMSA9IDwmcGluY3RybF91c2JoMl8yPjsNCj4gKwl9Ow0KDQpXaXRoIGEgc2VwYXJh
+dGUgZXhhbXBsZSBmb3IgSFNJQywgd2Ugc2hvdWxkIHByb2JhYmx5IGxlYXZlIHRoZSBzdGFuZGFy
+ZCANCmV4YW1wbGUgdW5jaGFuZ2VkIChJIHRoaW5rIHRoYXQgd2FzIG9uZSBvZiB0aGUgcmVhc29u
+cyBmb3IgYWRkaW5nIGEgDQpzZXBhcmF0ZSBleGFtcGxlKS4NCg0KUmVnYXJkcywNCkZyaWVkZXIN
+Cg0KPiArDQo+ICtFeGFtcGxlIGZvciBIU0lDOg0KPiArDQo+ICsJdXNiQDIxODQ0MDAgew0KPiAr
+CQljb21wYXRpYmxlID0gImZzbCxpbXg2cS11c2IiLCAiZnNsLGlteDI3LXVzYiI7DQo+ICsJCXJl
+ZyA9IDwweDAyMTg0NDAwIDB4MjAwPjsNCj4gKwkJaW50ZXJydXB0cyA9IDwwIDQxIElSUV9UWVBF
+X0xFVkVMX0hJR0g+Ow0KPiArCQljbG9ja3MgPSA8JmNsa3MgSU1YNlFETF9DTEtfVVNCT0gzPjsN
+Cj4gKwkJZnNsLHVzYnBoeSA9IDwmdXNicGh5bm9wMT47DQo+ICsJCWZzbCx1c2JtaXNjID0gPCZ1
+c2JtaXNjIDI+Ow0KPiArCQlwaHlfdHlwZSA9ICJoc2ljIjsNCj4gKwkJZHJfbW9kZSA9ICJob3N0
+IjsNCj4gKwkJYWhiLWJ1cnN0LWNvbmZpZyA9IDwweDA+Ow0KPiArCQl0eC1idXJzdC1zaXplLWR3
+b3JkID0gPDB4MTA+Ow0KPiArCQlyeC1idXJzdC1zaXplLWR3b3JkID0gPDB4MTA+Ow0KPiArCQlw
+aW5jdHJsLW5hbWVzID0gImlkbGUiLCAiYWN0aXZlIjsNCj4gKwkJcGluY3RybC0wID0gPCZwaW5j
+dHJsX3VzYmgyX2lkbGU+Ow0KPiArCQlwaW5jdHJsLTEgPSA8JnBpbmN0cmxfdXNiaDJfYWN0aXZl
+PjsNCj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsJCSNzaXplLWNlbGxzID0gPDA+Ow0K
+PiArDQo+ICsJCXVzYm5ldDogc21zY0AxIHsNCj4gKwkJCWNvbXBhdGlibGUgPSAidXNiNDI0LDk3
+MzAiOw0KPiArCQkJcmVnID0gPDE+Ow0KPiArCQl9Ow0KPiAgIAl9Ow0KPiA=
