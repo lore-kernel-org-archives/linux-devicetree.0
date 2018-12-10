@@ -1,149 +1,93 @@
 Return-Path: <SRS0=EUt7=OT=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:57102 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727313AbeLJPoa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Dec 2018 10:44:30 -0500
-Date: Mon, 10 Dec 2018 07:44:26 -0800
-From: Tony Lindgren <tony@atomide.com>
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:34456 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbeLJP0r (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Dec 2018 10:26:47 -0500
 Subject: Re: [PATCH] ARM: dts: Add am335x mcasp with l3 data port ranges
-Message-ID: <20181210154426.GB6707@atomide.com>
 References: <20181205230356.38855-1-tony@atomide.com>
  <3f44b350-17a9-bdf7-33b4-130b6eeae5f0@ti.com>
  <48ee14e0-1361-4840-42c6-f676f2911ce6@ti.com>
- <20181210144851.GZ6707@atomide.com>
+ <45fc55d2-8c8c-e831-cdaa-970d382a432f@ti.com>
+ <20181210145054.GA6707@atomide.com>
+ <d4511eaf-95c4-f48a-2a1b-bce53f782fd8@ti.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <5e934139-3b83-feb2-78c1-f8f6d405a041@ti.com>
+Date: Mon, 10 Dec 2018 17:28:24 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20181210144851.GZ6707@atomide.com>
+In-Reply-To: <d4511eaf-95c4-f48a-2a1b-bce53f782fd8@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: linux-omap@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-* Tony Lindgren <tony@atomide.com> [181210 14:49]:
-> * Peter Ujfalusi <peter.ujfalusi@ti.com> [181210 09:52]:
-> > On 10/12/2018 9.05, Peter Ujfalusi wrote:
-> > > Works fine on bbb + audio cape.
-> > > For some reason my am335x-evm-sk is not booting up at all w/ linux-next,
-> > > but I believe it is not related to this (disabled audio and still not
-> > > booting).
-> > 
-> > bisect on next-20181207 (am335x-evm-sk) points to:
-> > Author: Tony Lindgren <tony@atomide.com>
-> > 87fc89ced3a78f7f0845afab1934d509ef4ad0f2
-> > ARM: dts: am335x: Move l4 child devices to probe them with ti-sysc
-> > 
-> > when looking for the non booting of am335x-evm-sk (nothing printed on
-> > serial after stating kernel).
+
+
+On 10/12/2018 17.12, Tero Kristo wrote:
+> On 10/12/2018 16:50, Tony Lindgren wrote:
+>> * Peter Ujfalusi <peter.ujfalusi@ti.com> [181210 13:45]:
+>>> On 10/12/2018 11.53, Peter Ujfalusi wrote:
+>>>> On 10/12/2018 9.05, Peter Ujfalusi wrote:
+>>>> when looking for the non booting of am335x-evm-sk (nothing printed on
+>>>> serial after stating kernel).
+>>>>
+>>>> However there is another issue: the kernel boots, but ethernet is not
+>>>> working in the kernel. That is pointing to:
+>>>> Author: Tero Kristo <t-kristo@ti.com>
+>>>> 69fd70c7ff31d3f00833c472c3994a02bb0ab287
+>>>> ARM: dts: am33xx: convert to use new clkctrl layout
+>>>>
+>>>> any idea what might causes these?
+>>>
+>>> Things definitely go wrong at 69fd70c7ff31d3f00833c472c3994a02bb0ab287:
+>>>
+>>> git checkout -b blah 69fd70c7ff31d3f00833c472c3994a02bb0ab287
+>>> # can not mount the rootfs via nfs
+>>>
+>>> git revert 69fd70c7ff31d3f00833c472c3994a02bb0ab287
+>>> # boots up via nfs rootfs.
+>>>
+>>> At commit 69fd70c7ff31d3f00833c472c3994a02bb0ab287 the bbb is not
+>>> booting via nfs rootfs either.
+>>>
+>>> Can not find where the ethernet started to work after these on bbb, but
+>>> it does work on top of next-20181207.
+>>
+>> Tero do you have any ideas on this one? Maybe a missing optional clock
+>> somewhere?
 > 
-> OK I'm pretty sure this is because we now need to move the gpio1
-> ti,no-reset-on-init up to the module level because of the DDR being
-> GPIO controlled. I'll send a patch out shortly for that.
+> No initial ideas, do we have any error logs for this?
 > 
-> It might be also worth adding a check for having ti,no-reset-on-init
-> at the child level to ti-sysc driver too.
+> Did you bisect the issue to 69fd70c7ff31d3?
 
-Looks like we have quite a few boards variants with probably
-DDR powered by a gpio1 pin. So let's fix the ti-sysc driver first,
-care to try the following patch?
+Yep, I did.
 
-Regards,
+> It is possible this is
+> actually caused by something else, as there are some interesting
+> dependencies between the patches that are being queued at the same point
+> to the kernel now.
 
-Tony
+Could be, but:
+git checkout -b blah 69fd70c7ff31d3f00833c472c3994a02bb0ab287
+# can not mount the rootfs via nfs
+git revert 69fd70c7ff31d3f00833c472c3994a02bb0ab287
+# boots up via nfs rootfs.
 
-8< ---------------------------
->From tony Mon Sep 17 00:00:00 2001
-From: Tony Lindgren <tony@atomide.com>
-Date: Mon, 10 Dec 2018 07:26:04 -0800
-Subject: [PATCH] bus: ti-sysc: Check for no-reset and no-idle flags at the
- child level
+When my HEAD is 69fd70c7ff31d3 and I revert only the topmost commit
+(69fd70c7ff31d3), the board boots.
 
-With ti-sysc, we need to now have the device tree properties for
-ti,no-reset-on-idle and ti,no-idle-on-init at the module level instead
-of the child device level.
+It could be that the ethernet not working is just a side effect of
+something else going wrong, but this is the indication I have.
 
-Let's check for these properties at the child device level to enable
-quirks, and warn about moving the properties to the module level.
+Nothing special in the logs, I can share the two bootlogs:
+1. HEAD at 69fd70c7ff31d3
+2. HEAD at 69fd70c7ff31d3 and reverting 69fd70c7ff31d3
 
-Otherwise am335x-evm based boards tagging gpio1 with ti,no-reset-on-init
-will have their DDR power disabled if wired up in such a tricky way.
+But only tomorrow.
 
-Note that this should not be an issue for earlier kernels as we don't
-rely on this until the dts files have been updated to probe with ti-sysc
-interconnect target driver.
+- Péter
 
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reported-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/bus/ti-sysc.c | 32 +++++++++++++++++++++++++-------
- 1 file changed, 25 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -91,6 +91,9 @@ struct sysc {
- 	struct delayed_work idle_work;
- };
- 
-+static void sysc_parse_dts_quirks(struct sysc *ddata, struct device_node *np,
-+				  bool is_child);
-+
- void sysc_write(struct sysc *ddata, int offset, u32 value)
- {
- 	writel_relaxed(value, ddata->module_va + offset);
-@@ -379,6 +382,7 @@ static int sysc_check_one_child(struct sysc *ddata,
- 		dev_warn(ddata->dev, "really a child ti,hwmods property?");
- 
- 	sysc_check_quirk_stdout(ddata, np);
-+	sysc_parse_dts_quirks(ddata, np, true);
- 
- 	return 0;
- }
-@@ -1279,23 +1283,37 @@ static const struct sysc_dts_quirk sysc_dts_quirks[] = {
- 	  .mask = SYSC_QUIRK_NO_RESET_ON_INIT, },
- };
- 
--static int sysc_init_dts_quirks(struct sysc *ddata)
-+static void sysc_parse_dts_quirks(struct sysc *ddata, struct device_node *np,
-+				  bool is_child)
- {
--	struct device_node *np = ddata->dev->of_node;
- 	const struct property *prop;
--	int i, len, error;
--	u32 val;
--
--	ddata->legacy_mode = of_get_property(np, "ti,hwmods", NULL);
-+	int i, len;
- 
- 	for (i = 0; i < ARRAY_SIZE(sysc_dts_quirks); i++) {
--		prop = of_get_property(np, sysc_dts_quirks[i].name, &len);
-+		const char *name = sysc_dts_quirks[i].name;
-+
-+		prop = of_get_property(np, name, &len);
- 		if (!prop)
- 			continue;
- 
- 		ddata->cfg.quirks |= sysc_dts_quirks[i].mask;
-+		if (is_child) {
-+			dev_warn(ddata->dev,
-+				 "dts flag should be at module level for %s\n",
-+				 name);
-+		}
- 	}
-+}
-+
-+static int sysc_init_dts_quirks(struct sysc *ddata)
-+{
-+	struct device_node *np = ddata->dev->of_node;
-+	int error;
-+	u32 val;
-+
-+	ddata->legacy_mode = of_get_property(np, "ti,hwmods", NULL);
- 
-+	sysc_parse_dts_quirks(ddata, np, false);
- 	error = of_property_read_u32(np, "ti,sysc-delay-us", &val);
- 	if (!error) {
- 		if (val > 255) {
--- 
-2.19.2
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
