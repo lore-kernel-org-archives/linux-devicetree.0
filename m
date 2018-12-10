@@ -1,49 +1,29 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: net: ath10k: fix node name and
- device type in qcom ath10k example
-Date: Mon, 10 Dec 2018 17:25:23 -0600
-Message-ID: <20181210232523.GA14192@bogus>
-References: <1544466691-11821-1-git-send-email-bperumal@codeaurora.org>
- <1544466691-11821-2-git-send-email-bperumal@codeaurora.org>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH] dt-bindings: rtc: use a generic node name for ds1307
+Date: Tue, 11 Dec 2018 00:35:46 +0100
+Message-ID: <20181210233546.GL8952@piout.net>
+References: <20181203114736.637012-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1544466691-11821-2-git-send-email-bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20181203114736.637012-1-lkundrak@v3.sk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 11, 2018 at 12:01:29AM +0530, Bhagavathi Perumal S wrote:
-> In qcom,ath10k documentation, ath10k is used as node name in the example of
-> pci based device. Normally, node name shoud be class of device and not the model
-
-s/shoud/should/
-
-> name, so fix it to node name "wifi". And remove the property device_type pci
-> since only pci bridges should have this property.
+On 03/12/2018 12:47:36+0100, Lubomir Rintel wrote:
+> The example should follow the practice or using a generic node name
+> instead of the precise programming model, as recommended by the DTSpec.
 > 
-> Signed-off-by: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 > ---
->  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> index 2196d1a..ef60f25 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> @@ -74,9 +74,8 @@ pci {
->  		#address-cells = <3>;
->  		device_type = "pci";
->  
-> -		ath10k@0,0 {
-> +		wifi@0,0 {
->  			reg = <0 0 0 0 0>;
-> -			device_type = "pci";
->  			qcom,ath10k-calibration-data = [ 01 02 03 ... ];
->  		};
->  	};
-> -- 
-> 1.9.1
-> 
+>  Documentation/devicetree/bindings/rtc/rtc-ds1307.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+Applied, thanks.
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
