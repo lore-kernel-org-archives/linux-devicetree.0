@@ -1,43 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 1/2] dt-bindings: iio: light: isl29018: update power
- supply name
-Date: Mon, 10 Dec 2018 17:23:58 -0600
-Message-ID: <20181210232358.GA11621@bogus>
-References: <1544425521-775-1-git-send-email-Anson.Huang@nxp.com>
+Subject: Re: [PATCH v3 1/6] dt-bindings: media: sun6i: Add A64 CSI compatible
+Date: Mon, 10 Dec 2018 17:24:23 -0600
+Message-ID: <20181210232423.GA13891@bogus>
+References: <20181210115246.8188-1-jagan@amarulasolutions.com>
+ <20181210115246.8188-2-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1544425521-775-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20181210115246.8188-2-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Cc: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula@amarulasolutions.com, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 10, 2018 at 07:11:19AM +0000, Anson Huang wrote:
-> According to datasheet, the isl29018 has "vddd/vdda" power
-> supply, and isl29023/isl29035 ONLY has "vdd" power supply,
-> update the power supply name with "vdd" and "vdda" according
-> to datasheet to cover all devices and avoid confusion.
+On Mon, 10 Dec 2018 17:22:41 +0530, Jagan Teki wrote:
+> Allwinner A64 CSI has single channel time-multiplexed BT.656
+> CMOS sensor interface like H3 but work by lowering clock than
+> default mod clock.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Add a compatible string for it.
+> 
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 > ---
->  Documentation/devicetree/bindings/iio/light/isl29018.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/media/sun6i-csi.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/light/isl29018.txt b/Documentation/devicetree/bindings/iio/light/isl29018.txt
-> index b9bbde3..36f737d 100644
-> --- a/Documentation/devicetree/bindings/iio/light/isl29018.txt
-> +++ b/Documentation/devicetree/bindings/iio/light/isl29018.txt
-> @@ -15,7 +15,9 @@ Optional properties:
->    Refer to interrupt-controller/interrupts.txt for generic interrupt client
->    node bindings.
->  
-> -  - vcc-supply: phandle to the regulator that provides power to the sensor.
-> +  - vdd-supply: phandle to the regulator that provides vdd power to the sensor.
-> +
-> +  - vdda-supply: phandle to the regulator that provides vdda power to the sensor.
 
-Is this in use? You can't just change things if it is.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
