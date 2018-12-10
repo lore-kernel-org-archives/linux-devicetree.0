@@ -1,13 +1,13 @@
 From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Subject: [PATCH 3/8] dt-bindings: mfd: axp20x: add support for
- regulator-ramp-delay for AXP209
-Date: Mon, 10 Dec 2018 20:42:14 +0200
-Message-ID: <78eafc64831c50005fe5d186c174440d48a865e3.1544466940.git-series.plaes@plaes.org>
+Subject: [PATCH 6/8] regulator: dts: enable soft-start and ramp
+ delay for the OLinuXino Lime2
+Date: Mon, 10 Dec 2018 20:42:17 +0200
+Message-ID: <b76e1964fee095164ed9313e9f57d4d4318c083f.1544466940.git-series.plaes@plaes.org>
 References: <cover.4110554ae84987dedb8b58888a8a63d6b7f98c72.1544466940.git-series.plaes@plaes.org>
 Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDB4J47M7YERBE7HXLQAKGQEFGF2BYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDB4J47M7YERBFHHXLQAKGQEETFPL4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <cover.4110554ae84987dedb8b58888a8a63d6b7f98c72.1544466940.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -22,43 +22,30 @@ List-Id: devicetree@vger.kernel.org
 
 From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 
-The AXP209 supports ramping up voltages on several regulators such as
-DCDC2 and LDO3, therefore we can use the standard 'regulator-ramp-delay'
-property for those 2 regulators.
+The OLinuXino Lime2 has a big capacitor on its LDO3 output. It is
+actually too large, causing the PMIC to shutdown when toggling the LDO3.
 
-Note that the voltage ramp only works when the regulator is already
-enabled. E.g. when going from say 0.7 V to 3.6 V.
-
-When turning on the regulator, no voltage ramp is performed in hardware.
-
-What this means, is that if the bootloader brings up the voltage at 0.7 V,
-the ramp delay property is properly applied. If however, the bootloader
-leaves the power off, no ramp delay is applied when the power is
-enabled by the regulator framework.
+By enabling soft-start and ramp delay we increase the time for the
+capacitor to charge lowering the current drain on the power regulator.
 
 Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mfd/axp20x.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
-index 188f037..c626605 100644
---- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-+++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-@@ -32,6 +32,12 @@ Required properties:
- - interrupt-controller: The PMIC has its own internal IRQs
- - #interrupt-cells: Should be set to 1
+diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+index 55c9086..4e1c590 100644
+--- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
++++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+@@ -232,6 +232,8 @@
+ 	regulator-min-microvolt = <2800000>;
+ 	regulator-max-microvolt = <2800000>;
+ 	regulator-name = "vddio-csi0";
++	regulator-soft-start;
++	regulator-ramp-delay = <1600>;
+ };
  
-+Supported common regulator properties, see ../regulator/regulator.txt for
-+more information:
-+- regulator-ramp-delay: sets the ramp up delay in uV/us
-+			AXP20x/DCDC2: 1600, 800
-+			AXP20x/LDO3:  1600, 800
-+
- Optional properties:
- - x-powers,dcdc-freq: defines the work frequency of DC-DC in KHz
- 		      AXP152/20X: range:  750-1875, Default: 1.5 MHz
+ &reg_ldo4 {
 -- 
 git-series 0.9.1
