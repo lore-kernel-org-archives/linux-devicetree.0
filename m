@@ -1,112 +1,84 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [Letux-kernel] [PATCH v2 4/5] gnss: sirf: add a separate supply for a lna
-Date: Mon, 10 Dec 2018 08:42:48 +0100
-Message-ID: <918A20A2-30F4-45C8-9883-038DE57716C3@goldelico.com>
-References: <20181209195150.5192-1-andreas@kemnade.info> <20181209195150.5192-5-andreas@kemnade.info>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181209195150.5192-5-andreas@kemnade.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-am654-base-board: Add MMC/SD
+ support
+Date: Mon, 10 Dec 2018 13:33:56 +0530
+Message-ID: <c1dd9783-84dc-9dad-ea94-9a14a4ad814d@ti.com>
+References: <20181207084233.13700-1-faiz_abbas@ti.com>
+ <20181207084233.13700-3-faiz_abbas@ti.com>
+ <20181208155427.jmidz4vsw4k4qj36@akan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181208155427.jmidz4vsw4k4qj36@akan>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nishanth Menon <nm@ti.com>, Faiz Abbas <faiz_abbas@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, kishon@ti.com, t-kristo@ti.com, robh+dt@kernel.org, adrian.hunter@intel.com, michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 08/12/18 9:24 PM, Nishanth Menon wrote:
+> On 14:12-20181207, Faiz Abbas wrote:
+> 
+>> +
+>> +&sdhci0 {
+>> +	status = "okay";
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&main_mmc0_pins_default>;
+>> +	bus-width = <8>;
+>> +	non-removable;
+>> +	ti,driver-strength-ohm = <50>;
+> 
+> ^^
+> 
+>> +};
+>> +
+>> +&sdhci1 {
+>> +	status = "okay";
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&main_mmc1_pins_default>;
+>> +	ti,driver-strength-ohm = <50>;
+> 
+> NAK.
+> 
+> $ git checkout next-20181207
+> $ git grep ti,driver-strength-ohm Documentation
+> $
+> 
+> Nada.. And.. I think "new phy binding" probably introduces this.
+> [1] https://patchwork.kernel.org/project/linux-mmc/list/?series=53185
+> 
+> If your patches are'nt really ready, please send them as RFC, I am not
+> really in a mood to track the status of every single driver subsystem.
+> 
+> If your binding is not in linux next at the baremin, as far as I am
+> concerned, this is not ready, and should be RFC.
 
-> Am 09.12.2018 um 20:51 schrieb Andreas Kemnade <andreas@kemnade.info>:
-> 
-> Devices might have a separate lna between antenna output of the gps
+No, RFC does not say "do not merge" or "this has dependencies". RFC is
+used to invite a stronger review when introducing a new concept. Its
+fair game to apply patches marked RFC if maintainer is okay with the
+content.
 
-some nitpicking: the LNA (low noise amplifier) is between the antenna
-and the GPS receiver. Therefore:
+Dependencies are either noted in cover-letter or below the patch
+tear-line. With what you are asking, looks like patches need to be
+resubmitted once dependencies are cleared, even if there is no change in
+the content itself. This will be additional work.
 
-s/between antenna output of the gps/between antenna input of the gps/
+That said, if it makes life convenient for you, you can impose such a
+rule for patches you need to handle. But I think it will take some
+getting used for developers who send patches to you as I don't think
+this is a norm elsewhere.
 
-Otherwise fine!
+Adding Tony and Arnd as well, in case I have missed some recently
+accepted convention.
 
-BR and thanks,
-Nikolaus
-
-> chip and the antenna which might have a separate supply.
-> 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> ---
-> Changes in v2:
-> - handle lna also if there is no on-off gpio
-> - rebase on changed 2/5
-> 
-> drivers/gnss/sirf.c | 26 ++++++++++++++++++++++----
-> 1 file changed, 22 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gnss/sirf.c b/drivers/gnss/sirf.c
-> index c64369494afb..d339e8ef2508 100644
-> --- a/drivers/gnss/sirf.c
-> +++ b/drivers/gnss/sirf.c
-> @@ -36,6 +36,7 @@ struct sirf_data {
-> 	struct serdev_device *serdev;
-> 	speed_t	speed;
-> 	struct regulator *vcc;
-> +	struct regulator *lna;
-> 	struct gpio_desc *on_off;
-> 	struct gpio_desc *wakeup;
-> 	int irq;
-> @@ -282,21 +283,32 @@ static int sirf_set_active(struct sirf_data *data, bool active)
-> static int sirf_runtime_suspend(struct device *dev)
-> {
-> 	struct sirf_data *data = dev_get_drvdata(dev);
-> +	int ret = 0;
-> 
-> 	if (!data->on_off)
-> -		return regulator_disable(data->vcc);
-> +		ret = regulator_disable(data->vcc);
-> +	else
-> +		ret = sirf_set_active(data, false);
-> 
-> -	return sirf_set_active(data, false);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regulator_disable(data->lna);
-> }
-> 
-> static int sirf_runtime_resume(struct device *dev)
-> {
-> 	struct sirf_data *data = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = regulator_enable(data->lna);
-> +	if (ret)
-> +		return ret;
-> 
-> 	if (!data->on_off)
-> 		return regulator_enable(data->vcc);
-> -
-> -	return sirf_set_active(data, true);
-> +	else
-> +		return sirf_set_active(data, true);
-> }
-> 
-> static int __maybe_unused sirf_suspend(struct device *dev)
-> @@ -384,6 +396,12 @@ static int sirf_probe(struct serdev_device *serdev)
-> 		goto err_put_device;
-> 	}
-> 
-> +	data->lna = devm_regulator_get(dev, "lna");
-> +	if (IS_ERR(data->lna)) {
-> +		ret = PTR_ERR(data->lna);
-> +		goto err_put_device;
-> +	}
-> +
-> 	data->on_off = devm_gpiod_get_optional(dev, "sirf,onoff",
-> 			GPIOD_OUT_LOW);
-> 	if (IS_ERR(data->on_off))
-> -- 
-> 2.11.0
-> 
-> _______________________________________________
-> http://projects.goldelico.com/p/gta04-kernel/
-> Letux-kernel mailing list
-> Letux-kernel@openphoenux.org
-> http://lists.goldelico.com/mailman/listinfo.cgi/letux-kernel
+Thanks,
+Sekhar
