@@ -1,52 +1,56 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v5 0/7] spi: add support for octal mode
-Date: Mon, 10 Dec 2018 09:22:08 +0100
-Message-ID: <20181210092208.0971c3be@bbrezillon>
-References: <1543826226-30898-1-git-send-email-yogeshnarayan.gaur@nxp.com>
- <20181203101937.7b01a0ad@bbrezillon>
- <214dadd9-859c-ca88-1aff-1c83fcfa3c0b@ti.com>
- <20181205134618.56223758@bbrezillon>
- <VI1PR04MB572646B71C6CB7BAAB4A1E1999A90@VI1PR04MB5726.eurprd04.prod.outlook.com>
- <20181206074554.0ec0aecb@bbrezillon>
- <VI1PR04MB572620BB57CB01A352904BB999A90@VI1PR04MB5726.eurprd04.prod.outlook.com>
- <20181206202956.GG3084@sirena.org.uk>
- <VI1PR04MB572641541BB83E587541BBD099A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
+From: Phil Reid <preid@electromag.com.au>
+Subject: Re: [PATCH V2] iio: magnetometer: mag3110: add optional vdd/vddio
+ regulator operation support
+Date: Mon, 10 Dec 2018 16:19:14 +0800
+Message-ID: <71e3e6b1-0821-aff9-df58-7f4425c3c75a@electromag.com.au>
+References: <1544425869-8188-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <VI1PR04MB572641541BB83E587541BBD099A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vignesh R <vigneshr@ti.com>, "robh@kernel.org" <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, Mark Brown <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1544425869-8188-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-AU
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>, "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Yogesh,
+G'day Anson,
 
-On Mon, 10 Dec 2018 04:13:28 +0000
-Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
-
-> Hi Mark,
+On 10/12/2018 3:17 PM, Anson Huang wrote:
+> The magnetometer's power supply could be controlled by regulator
+> on some platforms, such as i.MX6Q-SABRESD board, the mag3110's
+> power supply is controlled by a GPIO fixed regulator, need to make
+> sure the regulator is enabled before any communication with mag3110,
+> this patch adds optional vdd/vddio regulator operation support.
 > 
-> Patch has been resend [1], this patch is depends on the series of patch[2] and this series has been applied by Boris already.
 
-You're still not asking the right person. Every patches touching
-things in drivers/mtd/ should be taken by me (or another MTD
-maintainer), and patches touching things in drivers/spi/ should be
-taken by Mark. So, the patch you're pointing to should be applied by
-me. Plus, I told you I would apply it after 4.21-rc1 because I don't
-want to deal with the mtd -> spi dependency.
+[snip]
 
-Please be patient.
+> +
+> +	data->vdd_reg = devm_regulator_get_optional(&client->dev, "vdd");
+> +	if (!IS_ERR(data->vdd_reg)) {
+> +		ret = regulator_enable(data->vdd_reg);
+> +		if (ret) {
+> +			dev_err(&client->dev, "failed to enable VDD regulator\n");
+> +			return ret;
+> +		}
+> +	} else if (data->vdd_reg == ERR_PTR(-EPROBE_DEFER)) {
+> +		return -EPROBE_DEFER;
+> +	}
+> +
+IANAE, but normally the return pattern for devm_regulator_get_optional
 
-Regards,
+if (!IS_ERR(reg)) {
+     regulator_enable ...
+} else {
+     ret = PTR_ERR(reg);
+     if (ret != -ENODEV)
+         return ret;
+}
 
-Boris
+
+
+-- 
+Regards
+Phil
