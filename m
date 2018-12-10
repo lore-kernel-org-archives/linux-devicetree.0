@@ -1,95 +1,28 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v5 2/4] irqchip/gic: common: add support to device tree based quirks
-Date: Mon, 10 Dec 2018 13:56:31 +0000
-Message-ID: <20181210135633.30283-3-srinivas.kandagatla@linaro.org>
-References: <20181210135633.30283-1-srinivas.kandagatla@linaro.org>
+From: Martin Kepplinger <martink@posteo.de>
+Subject: Re: [PATCH V2 2/2] iio: accell: mma8452: add optional vdd/vddio
+ regulator operation support
+Date: Mon, 10 Dec 2018 15:30:31 +0100
+Message-ID: <0412034a-989b-1d57-a356-1fc3e87a0a91@posteo.de>
+References: <1544426368-16415-1-git-send-email-Anson.Huang@nxp.com>
+ <1544426368-16415-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181210135633.30283-1-srinivas.kandagatla@linaro.org>
+In-Reply-To: <1544426368-16415-2-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: marc.zyngier@arm.com
-Cc: sudeep.holla@arm.com, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org, bjorn.andersson@linaro.org, nicolas.dechesne@linaro.org, ctatlor97@gmail.com, vkoul@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Anson Huang <anson.huang@nxp.com>, "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Leonard Crestez <leonard.crestez@nxp.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support to device tree based quirks based on
-device tree compatible string.
+On 10.12.18 08:25, Anson Huang wrote:
+> The accelerometer's power supply could be controlled by regulator
+> on some platforms, such as i.MX6Q-SABRESD board, the mma8451's
+> power supply is controlled by a GPIO fixed regulator, need to make
+> sure the regulator is enabled before any communication with mma8451,
+> this patch adds optional vdd/vddio regulator operation support.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/irqchip/irq-gic-common.c | 12 ++++++++++++
- drivers/irqchip/irq-gic-common.h |  3 +++
- drivers/irqchip/irq-gic-v3.c     |  7 +++++++
- 3 files changed, 22 insertions(+)
-
-diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
-index 01e673c680cd..3c93c6f4d1f1 100644
---- a/drivers/irqchip/irq-gic-common.c
-+++ b/drivers/irqchip/irq-gic-common.c
-@@ -36,6 +36,18 @@ void gic_set_kvm_info(const struct gic_kvm_info *info)
- 	gic_kvm_info = info;
- }
- 
-+void gic_enable_of_quirks(const struct device_node *np,
-+			  const struct gic_quirk *quirks, void *data)
-+{
-+	for (; quirks->desc; quirks++) {
-+		if (!of_device_is_compatible(np, quirks->compatible))
-+			continue;
-+		if (quirks->init(data))
-+			pr_info("GIC: enabling workaround for %s\n",
-+				quirks->desc);
-+	}
-+}
-+
- void gic_enable_quirks(u32 iidr, const struct gic_quirk *quirks,
- 		void *data)
- {
-diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-gic-common.h
-index 3919cd7c5285..97e58fb6c232 100644
---- a/drivers/irqchip/irq-gic-common.h
-+++ b/drivers/irqchip/irq-gic-common.h
-@@ -23,6 +23,7 @@
- 
- struct gic_quirk {
- 	const char *desc;
-+	const char *compatible;
- 	bool (*init)(void *data);
- 	u32 iidr;
- 	u32 mask;
-@@ -35,6 +36,8 @@ void gic_dist_config(void __iomem *base, int gic_irqs,
- void gic_cpu_config(void __iomem *base, void (*sync_access)(void));
- void gic_enable_quirks(u32 iidr, const struct gic_quirk *quirks,
- 		void *data);
-+void gic_enable_of_quirks(const struct device_node *np,
-+			  const struct gic_quirk *quirks, void *data);
- 
- void gic_set_kvm_info(const struct gic_kvm_info *info);
- 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 29e9d47be97d..df1ff3b5836a 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -1271,6 +1271,11 @@ static void __init gic_of_setup_kvm_info(struct device_node *node)
- 	gic_set_kvm_info(&gic_v3_kvm_info);
- }
- 
-+static const struct gic_quirk gic_quirks[] = {
-+	{
-+	}
-+};
-+
- static int __init gic_of_init(struct device_node *node, struct device_node *parent)
- {
- 	void __iomem *dist_base;
-@@ -1318,6 +1323,8 @@ static int __init gic_of_init(struct device_node *node, struct device_node *pare
- 	if (of_property_read_u64(node, "redistributor-stride", &redist_stride))
- 		redist_stride = 0;
- 
-+	gic_enable_of_quirks(node, gic_quirks, &gic_data);
-+
- 	err = gic_init_bases(dist_base, rdist_regs, nr_redist_regions,
- 			     redist_stride, &node->fwnode);
- 	if (err)
--- 
-2.19.2
+Acked-by: Martin Kepplinger <martink@posteo.de>
