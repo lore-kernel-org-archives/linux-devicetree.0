@@ -1,91 +1,35 @@
-From: Vijay Khemka <vijaykhemka@fb.com>
-Subject: [PATCH] ARM: dts: aspeed: Add sensors devices for Facebook
-Date: Mon, 10 Dec 2018 14:41:16 -0800
-Message-ID: <20181210224116.3396252-1-vijaykhemka@fb.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V3 1/3] dt-bindings: bcm: Add Raspberry Pi 3 A+
+Date: Mon, 10 Dec 2018 16:42:48 -0600
+Message-ID: <20181210224248.GA1313@bogus>
+References: <1543949899-13380-1-git-send-email-stefan.wahren@i2se.com>
+ <1543949899-13380-2-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc: vijaykhemka@fb.com, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1543949899-13380-2-git-send-email-stefan.wahren@i2se.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Arnd Bergmann <arnd@arndb.de>, Ray Jui <rjui@broadcom.com>, Stefan Wahren <stefan.wahren@i2se.com>, Eric Anholt <eric@anholt.net>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Added ADC and other sensor devices in Facebook Tiogapass device tree.
+On Tue,  4 Dec 2018 19:58:17 +0100, Stefan Wahren wrote:
+> This adds the root properties for the Raspberry Pi 3 A+ .
+> 
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Reviewed-by: Eric Anholt <eric@anholt.net>
+> ---
+>  Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
 
-Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
----
- .../dts/aspeed-bmc-facebook-tiogapass.dts     | 33 +++++++++++++++++--
- 1 file changed, 31 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-index f8e7b71af7e6..d9d7f208788a 100644
---- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-@@ -21,6 +21,25 @@
- 	memory@80000000 {
- 		reg = <0x80000000 0x20000000>;
- 	};
-+	iio-hwmon {
-+		compatible = "iio-hwmon";
-+		oemname0 = "MB_P3V3";
-+		oemname1 = "MB_P5V";
-+		oemname2 = "MB_P12V";
-+		oemname3 = "MB_P1V05";
-+		oemname4 = "MB_PVNN_PCH_STBY";
-+		oemname5 = "MB_P3V3_STBY";
-+		oemname6 = "MB_P5V_STBY";
-+		io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>,
-+					<&adc 4>, <&adc 5>, <&adc 6>;
-+	};
-+
-+	iio-hwmon-battery {
-+		oemname0 = "MB_P3V_BAT";
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 7>;
-+	};
-+
- };
- 
- &fmc {
-@@ -64,6 +83,10 @@
- 	use-ncsi;
- };
- 
-+&adc {
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	status = "okay";
- 	//Airmax Conn B, CPU0 PIROM, CPU1 PIROM
-@@ -122,6 +145,10 @@
- 
- &i2c8 {
- 	status = "okay";
-+	tmp421@1f {
-+		compatible = "ti,tmp421";
-+		reg = <0x1f>;
-+	};
- 	//Mezz Sensor SMBus
- };
- 
-@@ -134,13 +161,15 @@
- 	status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-+	oemname0 = "System_Fan_Connector_1";
-+	oemname1 = "System_Fan_Connector_3";
- 	fan@0 {
- 		reg = <0x00>;
- 		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
- 	};
- 
- 	fan@1 {
--		reg = <0x00>;
--		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
-+		reg = <0x01>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
- 	};
- };
--- 
-2.17.1
+Reviewed-by: Rob Herring <robh@kernel.org>
