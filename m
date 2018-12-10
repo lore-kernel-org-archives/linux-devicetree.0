@@ -1,63 +1,36 @@
-From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Subject: RE: [PATCH v5 0/7] spi: add support for octal mode
-Date: Mon, 10 Dec 2018 04:13:28 +0000
-Message-ID: <VI1PR04MB572641541BB83E587541BBD099A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
-References: <1543826226-30898-1-git-send-email-yogeshnarayan.gaur@nxp.com>
- <20181203101937.7b01a0ad@bbrezillon>
- <214dadd9-859c-ca88-1aff-1c83fcfa3c0b@ti.com>
- <20181205134618.56223758@bbrezillon>
- <VI1PR04MB572646B71C6CB7BAAB4A1E1999A90@VI1PR04MB5726.eurprd04.prod.outlook.com>
- <20181206074554.0ec0aecb@bbrezillon>
- <VI1PR04MB572620BB57CB01A352904BB999A90@VI1PR04MB5726.eurprd04.prod.outlook.com>
- <20181206202956.GG3084@sirena.org.uk>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v2 2/3] iio: chemical: add support for Sensirion SPS30
+ sensor
+Date: Mon, 10 Dec 2018 12:23:12 +0800
+Message-ID: <201812101217.mLlmhLgt%fengguang.wu@intel.com>
+References: <20181206210443.21052-3-tduszyns@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181206202956.GG3084@sirena.org.uk>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181206210443.21052-3-tduszyns@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Boris Brezillon <boris.brezillon@bootlin.com>, Vignesh R <vigneshr@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: kbuild-all@01.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, jic23@jic23.retrosnub.co.uk, a.brauchli@elementarea.net, Tomasz Duszynski <tduszyns@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Hi Tomasz,
 
-Patch has been resend [1], this patch is depends on the series of patch[2] =
-and this series has been applied by Boris already.
+Thank you for the patch! Perhaps something to improve:
 
-[1] https://patchwork.ozlabs.org/patch/1010253/
-[2] https://patchwork.ozlabs.org/project/linux-mtd/list/?series=3D70384&sta=
-te=3D*
+[auto build test WARNING on iio/togreg]
+[also build test WARNING on v4.20-rc6 next-20181207]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
---
-Regards
-Yogesh Gaur
+url:    https://github.com/0day-ci/linux/commits/Tomasz-Duszynski/add-support-for-Sensirion-SPS30-PM-sensor/20181209-204432
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
 
-> -----Original Message-----
-> From: Mark Brown [mailto:broonie@kernel.org]
-> Sent: Friday, December 7, 2018 2:00 AM
-> To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-> Cc: Boris Brezillon <boris.brezillon@bootlin.com>; Vignesh R <vigneshr@ti=
-.com>;
-> linux-mtd@lists.infradead.org; marek.vasut@gmail.com; linux-
-> spi@vger.kernel.org; devicetree@vger.kernel.org; robh@kernel.org;
-> mark.rutland@arm.com; shawnguo@kernel.org; linux-arm-
-> kernel@lists.infradead.org; computersforpeace@gmail.com;
-> frieder.schrempf@exceet.de; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v5 0/7] spi: add support for octal mode
->=20
-> On Thu, Dec 06, 2018 at 06:49:08AM +0000, Yogesh Narayan Gaur wrote:
->=20
-> > Sorry for ignorance. Did patches needs to be applied by Mark Brown, sho=
-uld I
-> resend the patch series again?
-> > Also can you please review the series [1] and add your Reviewed-by tag.
->=20
-> As I said in my reply earlier today in the same thread:
->=20
-> | I don't have this any more, it looked like this was stuck behind the
-> | otehr MTD changes which seemed to have problems.  If someone could
-> | resend?
->=20
-> so please resend.
+
+coccinelle warnings: (new ones prefixed by >>)
+
+>> drivers/iio/chemical/sps30.c:115:2-3: Unneeded semicolon
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
