@@ -1,37 +1,28 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-am654-base-board: Add MMC/SD
- support
-Date: Mon, 10 Dec 2018 15:47:30 -0800
-Message-ID: <20181210234730.GH6707@atomide.com>
-References: <20181207084233.13700-1-faiz_abbas@ti.com>
- <20181207084233.13700-3-faiz_abbas@ti.com>
- <20181208155427.jmidz4vsw4k4qj36@akan>
- <c1dd9783-84dc-9dad-ea94-9a14a4ad814d@ti.com>
- <20181210120647.i3ply3p7umvedb3u@akan>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 1/3] dt-bindings: soc: qcom: Add AOSS QMP binding
+Date: Mon, 10 Dec 2018 15:56:48 -0800
+Message-ID: <CAD=FV=Ugz1PhLL6NqhYyjOsRc=JwZT-jJzfr=3LHxo6zT5zypA@mail.gmail.com>
+References: <20181112080557.22698-1-bjorn.andersson@linaro.org> <20181112080557.22698-2-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181210120647.i3ply3p7umvedb3u@akan>
+In-Reply-To: <20181112080557.22698-2-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, robh+dt@kernel.org, t-kristo@ti.com, kishon@ti.com, ulf.hansson@linaro.org, adrian.hunter@intel.com, michal.simek@xilinx.com, Arnd Bergmann <arnd@arndb.de>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Nishanth Menon <nm@ti.com> [181210 12:07]:
-> I really am curious how Arnd / Tony actually pull this one off.. If they
-> have continous cron job for checking if your patch is ready... I doubt
-> it..
+Hi,
 
-The only way that works in a distributed manner is for the patch
-authors to resend after the dependencies have cleared.
+On Mon, Nov 12, 2018 at 12:02 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+> +  aoss_qmp: qmp@c300000 {
+> +          compatible = "qcom,sdm845-aoss-qmp";
+> +          reg = <0x0c300000 0x100000>;
 
-As some people don't know this, at least I try to reply with
-something about tagging patch as read and assuming it will get
-resent after dependencies have cleard.
+drive-by nit: s/0x0c300000/0xc300000
 
-Otherwise the todo list just keeps growing eternally :)
+...another random suggestion is that I think Rob H. has been
+requesting that examples have the #include in them...
 
-Regards,
-
-Tony
+-Doug
