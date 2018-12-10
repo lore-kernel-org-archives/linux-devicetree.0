@@ -1,28 +1,59 @@
-Return-Path: <SRS0=+yaY=OT=verge.net.au=horms@kernel.org>
-Date: Mon, 10 Dec 2018 13:24:59 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: dts: r8a7743: Fix sorting of rwdt node
-Message-ID: <20181210122458.hnwle4jfui5lnwon@verge.net.au>
-References: <1544442750-39442-1-git-send-email-biju.das@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1544442750-39442-1-git-send-email-biju.das@bp.renesas.com>
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=cC9Q=OT=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH] ARM: dts: r8a7743: Fix sorting of rwdt node
+Date: Mon, 10 Dec 2018 11:52:30 +0000
+Message-Id: <1544442750-39442-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Dec 10, 2018 at 11:52:30AM +0000, Biju Das wrote:
-> Watchdog node is incorrectly placed on r8a7743 SoC dtsi. This patch fixes
-> the sorting order.
-> 
-> Fixes: b5beb5d4c81c358f50a8310108 ("ARM: dts: r8a7743: Add watchdog support to SoC dtsi")
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Watchdog node is incorrectly placed on r8a7743 SoC dtsi. This patch fixes
+the sorting order.
 
-Thanks,
+Fixes: b5beb5d4c81c358f50a8310108 ("ARM: dts: r8a7743: Add watchdog support to SoC dtsi")
 
-This looks fine to me but I will wait to see if there are other reviews
-before applying.
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+---
+ arch/arm/boot/dts/r8a7743.dtsi | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
+index 3cc33f7..7b731c7 100644
+--- a/arch/arm/boot/dts/r8a7743.dtsi
++++ b/arch/arm/boot/dts/r8a7743.dtsi
+@@ -154,6 +154,16 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 
++		rwdt: watchdog@e6020000 {
++			compatible = "renesas,r8a7743-wdt",
++				     "renesas,rcar-gen2-wdt";
++			reg = <0 0xe6020000 0 0x0c>;
++			clocks = <&cpg CPG_MOD 402>;
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			resets = <&cpg 402>;
++			status = "disabled";
++		};
++
+ 		gpio0: gpio@e6050000 {
+ 			compatible = "renesas,gpio-r8a7743",
+ 				     "renesas,rcar-gen2-gpio";
+@@ -310,16 +320,6 @@
+ 			reg = <0 0xe6160000 0 0x100>;
+ 		};
+ 
+-		rwdt: watchdog@e6020000 {
+-			compatible = "renesas,r8a7743-wdt",
+-				     "renesas,rcar-gen2-wdt";
+-			reg = <0 0xe6020000 0 0x0c>;
+-			clocks = <&cpg CPG_MOD 402>;
+-			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
+-			resets = <&cpg 402>;
+-			status = "disabled";
+-		};
+-
+ 		sysc: system-controller@e6180000 {
+ 			compatible = "renesas,r8a7743-sysc";
+ 			reg = <0 0xe6180000 0 0x200>;
+-- 
+2.7.4
