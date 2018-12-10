@@ -1,52 +1,99 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-am654-base-board: Add MMC/SD
- support
-Date: Mon, 10 Dec 2018 07:49:38 -0600
-Message-ID: <20181210134938.hh4543yig6fngyrj@kahuna>
-References: <20181207084233.13700-1-faiz_abbas@ti.com>
- <20181207084233.13700-3-faiz_abbas@ti.com>
- <20181208155427.jmidz4vsw4k4qj36@akan>
- <c1dd9783-84dc-9dad-ea94-9a14a4ad814d@ti.com>
- <20181210120647.i3ply3p7umvedb3u@akan>
- <66f9d53b-abec-0a28-8eae-ecb99b075db4@ti.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v2 4/4] arm64: dts: actions: s700-cubieboard7: Enable
+ I2C0 and I2C1
+Date: Mon, 10 Dec 2018 19:20:44 +0530
+Message-ID: <20181210135044.GC25368@Mani-XPS-13-9360>
+References: <20181126185821.2480449-1-pn@denx.de>
+ <20181126185821.2480449-5-pn@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <66f9d53b-abec-0a28-8eae-ecb99b075db4@ti.com>
+In-Reply-To: <20181126185821.2480449-5-pn@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, robh+dt@kernel.org, t-kristo@ti.com, kishon@ti.com, ulf.hansson@linaro.org, adrian.hunter@intel.com, michal.simek@xilinx.com, Tony Lindgren <tony@atomide.com>, Arnd Bergmann <arnd@arndb.de>
+To: Parthiban Nallathambi <pn@denx.de>
+Cc: afaerber@suse.de, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux@cubietech.com, thomas.liau@actions-semi.com
 List-Id: devicetree@vger.kernel.org
 
-On 18:10-20181210, Sekhar Nori wrote:
+Hi Parthiban,
+
+On Mon, Nov 26, 2018 at 07:58:21PM +0100, Parthiban Nallathambi wrote:
+> Add pinctrl definitions for Actions Semiconductor S700 I2C controllers.
+> Pinctrl definitions are only available for I2C0, I2C1 and I2C2.
+> Enable I2C0 (PMIC), I2C1 (gyro, touchscreen) in cubieboard7.
 > 
-> I think you can rely on the author to tell you when something is
-> actually ready to be merged (and you can tell him/her to remind you).
+> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+> ---
+>  .../boot/dts/actions/s700-cubieboard7.dts     | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
 > 
-> For the review itself, doing it by having a look at the dependencies
-> mentioned in the cover letter (like available for this series) should be
-> good enough (I feel).
+> diff --git a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
+> index 28f3f4a0f7f0..6a75fdd7ab42 100644
+> --- a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
+> +++ b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
+> @@ -37,3 +37,56 @@
+>  &uart3 {
+>  	status = "okay";
+>  };
+> +
+> +&i2c0 {
 
-Dependencies can be for multiple things.. anyways, Sigh..
+On the board DTS, node names should be sorted alphabetically!
 
-> I am not sure if there is a need to post an "RFC version", and then
-> follow it up with an actual "PATCH version" once dependencies are
-> cleared though.
-Heads up for the maintainers will be useful. For example:
-
-Will be good to state in cover-letter instead of just stating
-https://patchwork.kernel.org/cover/10717641/
-
-State:
-
-Bindings are in discussion[2], will confirm if approved and will
-check if rebase is necessary.
-
-This will indicate to the maintainer that patches are preliminary and
-subject to change depending on bindings discussion and developer has
-taken ownership of maintaining patch sanity.
-
--- 
 Regards,
-Nishanth Menon
+Mani
+
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c0_default>;
+> +};
+> +
+> +&i2c1 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c1_default>;
+> +};
+> +
+> +&i2c2 {
+> +	status = "disabled";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c2_default>;
+> +};
+> +
+> +&pinctrl {
+> +	i2c0_default: i2c0_default {
+> +		pinmux {
+> +			groups = "i2c0_mfp";
+> +			function = "i2c0";
+> +		};
+> +		pinconf {
+> +			pins = "i2c0_sclk", "i2c0_sdata";
+> +			bias-pull-up;
+> +		};
+> +	};
+> +
+> +	i2c1_default: i2c1_default {
+> +		pinmux {
+> +			groups = "i2c1_dummy";
+> +			function = "i2c1";
+> +		};
+> +		pinconf {
+> +			pins = "i2c1_sclk", "i2c1_sdata";
+> +			bias-pull-up;
+> +		};
+> +	};
+> +
+> +	i2c2_default: i2c2_default {
+> +		pinmux {
+> +			groups = "i2c2_dummy";
+> +			function = "i2c2";
+> +		};
+> +		pinconf {
+> +			pins = "i2c2_sclk", "i2c2_sdata";
+> +			bias-pull-up;
+> +		};
+> +	};
+> +};
+> -- 
+> 2.17.2
+> 
