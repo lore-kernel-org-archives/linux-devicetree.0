@@ -1,57 +1,90 @@
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH 2/2] Input: raspberrypi-ts - add devicetree binding documentation
-Date: Mon, 10 Dec 2018 17:30:21 +0100
-Message-ID: <20181210163036.24813-3-nsaenzjulienne@suse.de>
-References: <20181210163036.24813-1-nsaenzjulienne@suse.de>
+From: <Tudor.Ambarus@microchip.com>
+Subject: [PATCH] ARM: dts: at91: sama5d2 Xplained: add QSPI0 + SPI NOR memory
+ nodes
+Date: Mon, 10 Dec 2018 17:15:29 +0000
+Message-ID: <20181210171511.21002-1-tudor.ambarus@microchip.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181210163036.24813-1-nsaenzjulienne@suse.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-rpi-kernel@lists.infradead.org, stefan.wahren@i2se.com, eric@anholt.net, agraf@suse.de, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+To: Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com, Cyrille.Pitchen@microchip.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, boris.brezillon@bootlin.com, linux-mtd@lists.infradead.org, broonie@kernel.org, linux-spi@vger.kernel.org, Tudor.Ambarus@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-Adds device tree documentation for Raspberry Pi's official 7"
-touchscreen.
+From: Cyrille Pitchen <cyrille.pitchen@microchip.com>
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+This patch configures the QSPI0 controller pin muxing and declares
+a jedec,spi-nor memory.
+
+sama5d2 Xplained RevB and RevC use the Macronix MX25L25673G flash
+memory which advertises a maximum frequency of 80MHz for Quad IO
+Fast Read. Set the spi-max-frequency to 80MHz knowing that actually
+the QSPI drver will set the SPI bus clock to 166MHz / 3 =3D 55.3MHz.
+
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen@microchip.com>
+[tudor.ambarus@microchip.com:
+- drop partitions,
+- add spi-rx/tx-bus-width
+- change spi-max-frequency to match the 80MHz limit advertised by
+  MX25L25673G for Quad IO Fast Read,
+- reword commit message and subject.]
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 ---
- .../touchscreen/raspberrypi,firmware-ts.txt   | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/raspberrypi,firmware-ts.txt
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts | 31 +++++++++++++++++++++++++=
+++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/raspberrypi,firmware-ts.txt b/Documentation/devicetree/bindings/input/touchscreen/raspberrypi,firmware-ts.txt
-new file mode 100644
-index 000000000000..38e22eb222e9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/raspberrypi,firmware-ts.txt
-@@ -0,0 +1,26 @@
-+Raspberry Pi 3 firmware based 7" touchscreen
-+=====================================
+diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dt=
+s/at91-sama5d2_xplained.dts
+index 518e2b095ccf..171bc82cfbbf 100644
+--- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
++++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+@@ -108,6 +108,21 @@
+ 		};
+=20
+ 		apb {
++			qspi0: spi@f0020000 {
++				pinctrl-names =3D "default";
++				pinctrl-0 =3D <&pinctrl_qspi0_default>;
++				/* status =3D "okay"; */ /* conflict with sdmmc1 */
 +
-+Required properties:
-+ - compatible: "raspberrypi,firmware-ts"
++				flash@0 {
++					compatible =3D "jedec,spi-nor";
++					reg =3D <0>;
++					spi-max-frequency =3D <80000000>;
++					spi-tx-bus-width =3D <4>;
++					spi-rx-bus-width =3D <4>;
++					m25p,fast-read;
++				};
++			};
 +
-+Optional properties:
-+ - firmware: Reference to RPi's firmware device node
-+ - touchscreen-size-x: See touchscreen.txt
-+ - touchscreen-size-y: See touchscreen.txt
-+ - touchscreen-inverted-x: See touchscreen.txt
-+ - touchscreen-inverted-y: See touchscreen.txt
-+ - touchscreen-swapped-x-y: See touchscreen.txt
+ 			spi0: spi@f8000000 {
+ 				pinctrl-names =3D "default";
+ 				pinctrl-0 =3D <&pinctrl_spi0_default>;
+@@ -485,6 +500,22 @@
+ 					bias-disable;
+ 				};
+=20
++				pinctrl_qspi0_default: qspi0_default {
++					sck_cs {
++						pinmux =3D <PIN_PA22__QSPI0_SCK>,
++							 <PIN_PA23__QSPI0_CS>;
++						bias-disable;
++					};
 +
-+Example:
++					data {
++						pinmux =3D <PIN_PA24__QSPI0_IO0>,
++							 <PIN_PA25__QSPI0_IO1>,
++							 <PIN_PA26__QSPI0_IO2>,
++							 <PIN_PA27__QSPI0_IO3>;
++						bias-pull-up;
++					};
++				};
 +
-+firmware: firmware-rpi {
-+	compatible = "raspberrypi,bcm2835-firmware";
-+	mboxes = <&mailbox>;
-+
-+	ts: touchscreen {
-+		compatible = "raspberrypi,firmware-ts";
-+		touchscreen-size-x = <800>;
-+		touchscreen-size-y = <480>;
-+	};
-+};
--- 
-2.19.2
+ 				pinctrl_sdmmc0_default: sdmmc0_default {
+ 					cmd_data {
+ 						pinmux =3D <PIN_PA1__SDMMC0_CMD>,
+--=20
+2.9.4
