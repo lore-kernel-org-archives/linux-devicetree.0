@@ -1,70 +1,99 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 3/3] staging: iio: ad5933: add binding doc for ad5933
-Date: Mon, 10 Dec 2018 21:27:02 +0000
-Message-ID: <20181210212702.4160ff1f@archlinux>
-References: <cover.1544292845.git.marcelo.schmitt1@gmail.com>
-        <348cbe2abbe256b66ed830bd1abb9fc50bf4d10e.1544292845.git.marcelo.schmitt1@gmail.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v2 01/10] mailbox: Support blocking transfers in atomic
+ context
+Date: Tue, 11 Dec 2018 03:02:20 +0530
+Message-ID: <CABb+yY3vhKYM31M+shhZzt_mDX=vRP4_upP2swvFLgyptWw5EQ@mail.gmail.com>
+References: <20181112151853.29289-1-thierry.reding@gmail.com>
+ <20181112151853.29289-2-thierry.reding@gmail.com>
+ <0545f5e1-1740-2129-9d0e-5c950bd9bf74@nvidia.com>
+ <CABb+yY1u24JYO68f74qSJ1RpqidJ4H7cnP1Sy=RdqcBHru5XQg@mail.gmail.com>
+ <20181129152312.GB23750@ulmo>
+ <CABb+yY1G+6MQmrSeZvOXnuREB87+DYHGxNu1tBb9W6apizLtGw@mail.gmail.com>
+ <20181207113245.GA30719@ulmo>
+ <CABb+yY2jVmzxFR7iqSyMMyE+XZtyHrAPAxM_KMEa7c2zzpSwCA@mail.gmail.com>
+ <20181210095229.GA15154@ulmo>
+ <CABb+yY2fNYYjh4cY69M5p0Yc-Z-wusDMQhjTgqb1Ag1QEm=T9Q@mail.gmail.com>
+ <20181210204522.GA325@mithrandir>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <348cbe2abbe256b66ed830bd1abb9fc50bf4d10e.1544292845.git.marcelo.schmitt1@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, stefan.popa@analog.com, alexandru.Ardelean@analog.com, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181210204522.GA325@mithrandir>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Devicetree List <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, mliljeberg@nvidia.com, Mikko Perttunen <mperttunen@nvidia.com>, talho@nvidia.com, linux-serial@vger.kernel.org, jslaby@suse.com, linux-tegra@vger.kernel.org, ppessi@nvidia.com, Jon Hunter <jonathanh@nvidia.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 8 Dec 2018 16:19:59 -0200
-Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
+On Tue, Dec 11, 2018 at 2:15 AM Thierry Reding <thierry.reding@gmail.com> wrote:
+>
+> On Tue, Dec 11, 2018 at 02:00:48AM +0530, Jassi Brar wrote:
+> > On Mon, Dec 10, 2018 at 3:22 PM Thierry Reding <thierry.reding@gmail.com> wrote:
 
-> Add a devicetree documentation for the ad5933 and ad5934 impedance
-> converter, network analyzer.
-> 
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> Signed-off-by: Gabriel Capella <gabriel@capella.pro>
-> Co-Developed-by: Gabriel Capella <gabriel@capella.pro>
-Device tree binding patches need to also go to the DT maintainers and list
-for review.
+> > > >
+> > > > The 'flush' api is going to have no use other than implement
+> > > > busy-waits. I am afraid people are simply going to take it easy and
+> > > > copy the busy-waits from the test/verification codes.
+> > > > "discouraging" seldom works because the developer comes with the
+> > > > failproof excuse "the h/w doesn't provide any other way". Frankly I
+> > > > would like to push back on such designs.
+> > >
+> > > I certainly approve of that stance.
+> > >
+> > > However, I'd like to reiterate that the TCU design does in fact support
+> > > "another way". If you look at the mailbox driver implementation (in the
+> > > drivers/mailbox/tegra-hsp.c driver), you'll see that it does support an
+> > > interrupt driven mode. After you had reviewed Mikko's earliest proposal
+> > > that was indeed implementing busy looping exclusively we both set out
+> > > to properly implement interrupt support. This took quite a while to do
+> > > because of some gaps in the documentation, but we eventually got it to
+> > > work properly. And then it was discovered that it was all a waste of
+> > > effort because the console driver couldn't make use of it anyway. Well,
+> > > I should say "waste of effort" because I'm still happy that the proper
+> > > implementation exists and we can use it under the right circumstances.
+> > >
+> > > So, at least in this particular case, it is not the hardware or firmware
+> > > design that's flawed or was taking any shortcuts. It's really just the
+> > > particular use-case of the console that doesn't allow us to make use of
+> > > the right implementation, which is why we have to resort to the inferior
+> > > method of busy-looping.
+> > >
+> > I am not complaining about the hardware, but the firmware.
+> > It is essential we dump logs during early boot but the platform(Linux)
+> > doesn't have access to serial port. All the firmware allows is 24bits
+> > per transfer!! We could do better.
+>
+> Hardware UARTs don't usually have much more FIFO space than that either.
+>
+> > A smarter option could have been Linux simply placing characters in
+> > the shmem ring-buffer, while the remote consuming (and then poisoning)
+> > the ring buffer upon 'hint' from Linux.
+>
+> I don't think that would've been much smarter, especially not in this
+> case. As we discussed earlier, no matter how large you make the ring-
+> buffer you can always run into situations where you overflow it. The
+> ring-buffer implementation is also a lot more complicated and error-
+> prone.
+>
+Please think about it again.
+The ring buffer becomes the effective h/w fifo. And you don't have to
+wait at all for the mailbox register to clear .... you could simply
+overwrite it when Linux puts some data in the ring-buffer (the data
+written will just be a 'hint' command for remote to go look into the
+ring-buffer for new data).
 
-This looks fine to me but they are the specialists in these!
+> Plus there is the fact that in this particular case we actually
+> don't want buffering because the buffer may hide important information
+> in case of a crash.
+>
+Even if the Linux crashes, whatever data is placed in the ring-buffer
+will eventually be printed by the still-alive remote.
 
-+cc Rob, Mark and DT list.
-
-Jonathan
-> ---
->  .../iio/impedance-analyzer/ad5933.txt         | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/impedance-analyzer/ad5933.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/impedance-analyzer/ad5933.txt b/Documentation/devicetree/bindings/iio/impedance-analyzer/ad5933.txt
-> new file mode 100644
-> index 000000000000..5ff38728ff91
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/impedance-analyzer/ad5933.txt
-> @@ -0,0 +1,26 @@
-> +Analog Devices AD5933/AD5934 Impedance Converter, Network Analyzer
-> +
-> +https://www.analog.com/media/en/technical-documentation/data-sheets/AD5933.pdf
-> +https://www.analog.com/media/en/technical-documentation/data-sheets/AD5934.pdf
-> +
-> +Required properties:
-> + - compatible : should be one of
-> +		"adi,ad5933"
-> +		"adi,ad5934"
-> + - reg : the I2C address.
-> + - vdd-supply : The regulator supply for DVDD, AVDD1 and AVDD2 when they
-> +   are connected together.
-> +
-> +Optional properties:
-> +- clocks : external clock reference.
-> +- clock-names : must be "mclk" if clocks is set.
-> +
-> +Example for a I2C device node:
-> +
-> +	impedance-analyzer@0d {
-> +		compatible = "adi,adxl345";
-> +		reg = <0x0d>;
-> +		vdd-supply = <&vdd_supply>;
-> +		clocks = <&ref_clk>;
-> +		clock-names = "mclk";
-> +	};
+Anyways once we have the flush api, I don't really care how broken your f/w is.
