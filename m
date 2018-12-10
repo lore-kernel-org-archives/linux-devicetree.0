@@ -1,115 +1,43 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v4 2/4] irqchip/gic: common: add support to device tree
- based quirks
-Date: Mon, 10 Dec 2018 10:55:15 +0000
-Message-ID: <da39d3af-b8e4-1b5e-cdf4-54dd9e955a0b@arm.com>
-References: <20181210102309.8207-1-srinivas.kandagatla@linaro.org>
- <20181210102309.8207-3-srinivas.kandagatla@linaro.org>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v5 3/7] mtd: spi-nor: add opcodes for octal Read/Write
+ commands
+Date: Mon, 10 Dec 2018 11:57:17 +0100
+Message-ID: <20181210115717.01ad2e60@bbrezillon>
+References: <1543826226-30898-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+        <1543826226-30898-4-git-send-email-yogeshnarayan.gaur@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181210102309.8207-3-srinivas.kandagatla@linaro.org>
-Content-Language: en-US
+In-Reply-To: <1543826226-30898-4-git-send-email-yogeshnarayan.gaur@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: sudeep.holla@arm.com, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org, bjorn.andersson@linaro.org, nicolas.dechesne@linaro.org, ctatlor97@gmail.com, vkoul@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "broonie@kernel.org" <broonie@kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/12/2018 10:23, Srinivas Kandagatla wrote:
-> This patch adds support to device tree based quirks based on
-> device tree compatible string.
+On Mon, 3 Dec 2018 08:39:18 +0000
+Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
+
+> - Add opcodes for octal I/O commands
+>   * Read  : 1-1-8 and 1-8-8 protocol
+>   * Write : 1-1-8 and 1-8-8 protocol
+>   * opcodes for 4-byte address mode command
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  drivers/irqchip/irq-gic-common.c | 12 ++++++++++++
->  drivers/irqchip/irq-gic-common.h |  3 +++
->  drivers/irqchip/irq-gic-v3.c     |  5 +++++
->  3 files changed, 20 insertions(+)
+> - Entry of macros in _convert_3to4_xxx function
 > 
-> diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
-> index 01e673c680cd..3c93c6f4d1f1 100644
-> --- a/drivers/irqchip/irq-gic-common.c
-> +++ b/drivers/irqchip/irq-gic-common.c
-> @@ -36,6 +36,18 @@ void gic_set_kvm_info(const struct gic_kvm_info *info)
->  	gic_kvm_info = info;
->  }
->  
-> +void gic_enable_of_quirks(const struct device_node *np,
-> +			  const struct gic_quirk *quirks, void *data)
-> +{
-> +	for (; quirks->desc; quirks++) {
-
-So you expect quirks->desc to be NULL at some point, just like for any
-other quirk table we have.
-
-> +		if (!of_device_is_compatible(np, quirks->compatible))
-> +			continue;
-> +		if (quirks->init(data))
-> +			pr_info("GIC: enabling workaround for %s\n",
-> +				quirks->desc);
-> +	}
-> +}
-> +
->  void gic_enable_quirks(u32 iidr, const struct gic_quirk *quirks,
->  		void *data)
->  {
-> diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-gic-common.h
-> index 3919cd7c5285..97e58fb6c232 100644
-> --- a/drivers/irqchip/irq-gic-common.h
-> +++ b/drivers/irqchip/irq-gic-common.h
-> @@ -23,6 +23,7 @@
->  
->  struct gic_quirk {
->  	const char *desc;
-> +	const char *compatible;
->  	bool (*init)(void *data);
->  	u32 iidr;
->  	u32 mask;
-> @@ -35,6 +36,8 @@ void gic_dist_config(void __iomem *base, int gic_irqs,
->  void gic_cpu_config(void __iomem *base, void (*sync_access)(void));
->  void gic_enable_quirks(u32 iidr, const struct gic_quirk *quirks,
->  		void *data);
-> +void gic_enable_of_quirks(const struct device_node *np,
-> +			  const struct gic_quirk *quirks, void *data);
->  
->  void gic_set_kvm_info(const struct gic_kvm_info *info);
->  
-> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-> index 29e9d47be97d..c95796fa4de6 100644
-> --- a/drivers/irqchip/irq-gic-v3.c
-> +++ b/drivers/irqchip/irq-gic-v3.c
-> @@ -1271,6 +1271,9 @@ static void __init gic_of_setup_kvm_info(struct device_node *node)
->  	gic_set_kvm_info(&gic_v3_kvm_info);
->  }
->  
-> +static const struct gic_quirk gic_quirks[] = {
-> +};
-
-... and yet here you provide an empty table. That's not going to work
-very well. You definitely need to have an empty entry at the end of the
-array, always.
-
-I guess you want to test your code on a non affected platform, and I'm
-pretty sure you'll see it exploding.
-
-> +
->  static int __init gic_of_init(struct device_node *node, struct device_node *parent)
->  {
->  	void __iomem *dist_base;
-> @@ -1318,6 +1321,8 @@ static int __init gic_of_init(struct device_node *node, struct device_node *pare
->  	if (of_property_read_u64(node, "redistributor-stride", &redist_stride))
->  		redist_stride = 0;
->  
-> +	gic_enable_of_quirks(node, gic_quirks, &gic_data);
-> +
->  	err = gic_init_bases(dist_base, rdist_regs, nr_redist_regions,
->  			     redist_stride, &node->fwnode);
->  	if (err)
+> - Add flag specifying flash support octal read commands.
 > 
+> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+
+Looks like the SoB and Author lines do not match
+
+Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+vs
+Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+
+Can you find a way to make them match?
 
 Thanks,
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Boris
