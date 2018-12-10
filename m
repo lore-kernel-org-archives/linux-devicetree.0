@@ -1,33 +1,78 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 3/3] clk: imx6q: handle ENET PLL bypass
-Date: Mon, 10 Dec 2018 11:41:14 -0800
-Message-ID: <154447087417.17204.15229374543848791608@swboyd.mtv.corp.google.com>
-References: <20181115143028.19087-1-l.stach@pengutronix.de>
- <20181115143028.19087-3-l.stach@pengutronix.de>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 2/2] Input: raspberrypi-ts - add devicetree binding
+ documentation
+Date: Mon, 10 Dec 2018 20:57:06 +0100 (CET)
+Message-ID: <591400583.99086.1544471826205@email.ionos.de>
+References: <20181210163036.24813-1-nsaenzjulienne@suse.de>
+ <20181210163036.24813-3-nsaenzjulienne@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181115143028.19087-3-l.stach@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>
-Cc: devicetree@vger.kernel.org, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181210163036.24813-3-nsaenzjulienne@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, linux-kernel@vger.kernel.org
+Cc: linux-rpi-kernel@lists.infradead.org, eric@anholt.net, agraf@suse.de, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Lucas Stach (2018-11-15 06:30:28)
-> The ENET PLL is different from the other i.MX6 PLLs, as it has
-> multiple outputs with different post-dividers, which are all
-> bypassed if the single bypass bit is activated. The hardware setup
-> looks something like this:
->                                 _
-> refclk-o---PLL---o----DIV1-----| \
+Hi Nicolas,
 
-Applied to clk-next
+please change your subject to something like this:
+
+dt-bindings: input: Add Raspberry Pi Touchscreen
+
+and also change the order of your patches. The binding always comes first.
+
+> Nicolas Saenz Julienne <nsaenzjulienne@suse.de> hat am 10. Dezember 2018 um 17:30 geschrieben:
+> 
+> 
+> Adds device tree documentation for Raspberry Pi's official 7"
+> touchscreen.
+
+Maybe you should mention that we need this binding for an overlay.
+
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>  .../touchscreen/raspberrypi,firmware-ts.txt   | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/raspberrypi,firmware-ts.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/raspberrypi,firmware-ts.txt b/Documentation/devicetree/bindings/input/touchscreen/raspberrypi,firmware-ts.txt
+> new file mode 100644
+> index 000000000000..38e22eb222e9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/raspberrypi,firmware-ts.txt
+> @@ -0,0 +1,26 @@
+> +Raspberry Pi 3 firmware based 7" touchscreen
+
+Please drop the 3 here
+
+> +=====================================
+> +
+> +Required properties:
+> + - compatible: "raspberrypi,firmware-ts"
+> +
+> +Optional properties:
+> + - firmware: Reference to RPi's firmware device node
+> + - touchscreen-size-x: See touchscreen.txt
+> + - touchscreen-size-y: See touchscreen.txt
+> + - touchscreen-inverted-x: See touchscreen.txt
+> + - touchscreen-inverted-y: See touchscreen.txt
+> + - touchscreen-swapped-x-y: See touchscreen.txt
+> +
+> +Example:
+> +
+> +firmware: firmware-rpi {
+> +	compatible = "raspberrypi,bcm2835-firmware";
+> +	mboxes = <&mailbox>;
+> +
+> +	ts: touchscreen {
+> +		compatible = "raspberrypi,firmware-ts";
+> +		touchscreen-size-x = <800>;
+> +		touchscreen-size-y = <480>;
+> +	};
+> +};
+> -- 
+> 2.19.2
+>
