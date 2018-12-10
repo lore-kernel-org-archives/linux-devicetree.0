@@ -1,77 +1,43 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: [PATCH v3 1/3] dt-bindings: mmc: sdhci-am654: Document bindings for
- the host controllers on TI's AM654 SOCs
-Date: Tue, 11 Dec 2018 00:05:05 +0530
-Message-ID: <20181210183507.9617-2-faiz_abbas@ti.com>
-References: <20181210183507.9617-1-faiz_abbas@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181210183507.9617-1-faiz_abbas@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
-Cc: mark.rutland@arm.com, ulf.hansson@linaro.org, adrian.hunter@intel.com, kishon@ti.com, robh+dt@kernel.org, faiz_abbas@ti.com, michal.simek@xilinx.com
+From: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v3 0/3] ath10k: Add support to configure BB timing for external FEM
+Date: Tue, 11 Dec 2018 00:01:28 +0530
+Message-ID: <1544466691-11821-1-git-send-email-bperumal@codeaurora.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for mmc host controllers present on TI's AM654
-SOCs.
+This adds support to choose correct Base Band(BB) timing values based on
+the input Front End Module(FEM) hardware name from Device Tree entry and
+configure it in hardware through WMI interface. Since the BB timing values
+can vary between FEM hardwares and not same as default value used
+in reference hardware.
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- .../devicetree/bindings/mmc/sdhci-am654.txt   | 36 +++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-am654.txt
+Bhagavathi Perumal S (3):
+  dt-bindings: net: ath10k: fix node name and device type in qcom ath10k
+    example
+  dt-bindings: net: ath10k: add new dt entry to identify external FEM
+  ath10k: Add support to configure BB timing over wmi
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-am654.txt b/Documentation/devicetree/bindings/mmc/sdhci-am654.txt
-new file mode 100644
-index 000000000000..15dbbbace27e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-am654.txt
-@@ -0,0 +1,36 @@
-+Device Tree Bindings for the SDHCI Controllers present on TI's AM654 SOCs
-+
-+The bindings follow the mmc[1], clock[2] and interrupt[3] bindings.
-+Only deviations are documented here.
-+
-+  [1] Documentation/devicetree/bindings/mmc/mmc.txt
-+  [2] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+  [3] Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+
-+Required Properties:
-+	- compatible: should be "ti,am654-sdhci-5.1"
-+	- reg: Must be two entries.
-+		- The first should be the sdhci register space
-+		- The second should the subsystem/phy register space
-+	- clocks: Handles to the clock inputs.
-+	- clock-names: Tuple including "clk_xin" and "clk_ahb"
-+	- interrupts: Interrupt specifiers
-+	- ti,otap-del-sel: Output Tap Delay select
-+	- ti,trm-icp: DLL trim select
-+	- ti,driver-strength-ohm: driver strength in ohms.
-+				  Valid values are 33, 40, 50, 66 and 100 ohms.
-+
-+Example:
-+
-+	sdhci0: sdhci@4f80000 {
-+		compatible = "ti,am654-sdhci-5.1";
-+		reg = <0x0 0x4f80000 0x0 0x260>, <0x0 0x4f90000 0x0 0x134>;
-+		power-domains = <&k3_pds 47>;
-+		clocks = <&k3_clks 47 0>, <&k3_clks 47 1>;
-+		clock-names = "clk_ahb", "clk_xin";
-+		interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
-+		sdhci-caps-mask = <0x80000007 0x0>;
-+		mmc-ddr-1_8v;
-+		ti,otap-del-sel = <0x2>;
-+		ti,trm-icp = <0x8>;
-+	};
+v2:
+ Addressed review comments in dt:
+  * Fixed node name and device type with new dt patch "dt-bindings: net: ath10k:
+     fix node name and device type in qcom ath10k example".
+  * Changed the dt patch subject to "dt-bindings: net: ath10k: add new dt entry
+    to identify external FEM".
+  * Added new property in existing example.
+  * Enumarated some valid FEM names.
+
+v3:
+ Addressed review comments in valid fem names.
+
+ .../bindings/net/wireless/qcom,ath10k.txt          | 12 ++++--
+ drivers/net/wireless/ath/ath10k/mac.c              | 47 ++++++++++++++++++++++
+ drivers/net/wireless/ath/ath10k/wmi-ops.h          | 20 +++++++++
+ drivers/net/wireless/ath/ath10k/wmi.c              | 23 +++++++++++
+ drivers/net/wireless/ath/ath10k/wmi.h              | 26 ++++++++++++
+ 5 files changed, 125 insertions(+), 3 deletions(-)
+
 -- 
-2.19.2
+1.9.1
