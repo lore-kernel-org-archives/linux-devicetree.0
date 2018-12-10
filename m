@@ -1,134 +1,86 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-am654-base-board: Add MMC/SD
- support
-Date: Mon, 10 Dec 2018 18:10:17 +0530
-Message-ID: <66f9d53b-abec-0a28-8eae-ecb99b075db4@ti.com>
-References: <20181207084233.13700-1-faiz_abbas@ti.com>
- <20181207084233.13700-3-faiz_abbas@ti.com>
- <20181208155427.jmidz4vsw4k4qj36@akan>
- <c1dd9783-84dc-9dad-ea94-9a14a4ad814d@ti.com>
- <20181210120647.i3ply3p7umvedb3u@akan>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v4 2/4] irqchip/gic: common: add support to device tree
+ based quirks
+Date: Mon, 10 Dec 2018 13:19:52 +0000
+Message-ID: <50b81a24-ecf1-b36f-86e5-1ec4a476cbfd@linaro.org>
+References: <20181210102309.8207-1-srinivas.kandagatla@linaro.org>
+ <20181210102309.8207-3-srinivas.kandagatla@linaro.org>
+ <da39d3af-b8e4-1b5e-cdf4-54dd9e955a0b@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181210120647.i3ply3p7umvedb3u@akan>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <da39d3af-b8e4-1b5e-cdf4-54dd9e955a0b@arm.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nishanth Menon <nm@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kishon@ti.com, t-kristo@ti.com, Faiz Abbas <faiz_abbas@ti.com>, adrian.hunter@intel.com, michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: sudeep.holla@arm.com, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org, bjorn.andersson@linaro.org, nicolas.dechesne@linaro.org, ctatlor97@gmail.com, vkoul@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Nishanth,
 
-On 10/12/18 5:36 PM, Nishanth Menon wrote:
-> On 13:33-20181210, Sekhar Nori wrote:
->> On 08/12/18 9:24 PM, Nishanth Menon wrote:
->>> On 14:12-20181207, Faiz Abbas wrote:
->>>
->>>> +
->>>> +&sdhci0 {
->>>> +	status = "okay";
->>>> +	pinctrl-names = "default";
->>>> +	pinctrl-0 = <&main_mmc0_pins_default>;
->>>> +	bus-width = <8>;
->>>> +	non-removable;
->>>> +	ti,driver-strength-ohm = <50>;
->>>
->>> ^^
->>>
->>>> +};
->>>> +
->>>> +&sdhci1 {
->>>> +	status = "okay";
->>>> +	pinctrl-names = "default";
->>>> +	pinctrl-0 = <&main_mmc1_pins_default>;
->>>> +	ti,driver-strength-ohm = <50>;
->>>
->>> NAK.
->>>
->>> $ git checkout next-20181207
->>> $ git grep ti,driver-strength-ohm Documentation
->>> $
->>>
->>> Nada.. And.. I think "new phy binding" probably introduces this.
->>> [1] https://patchwork.kernel.org/project/linux-mmc/list/?series=53185
->>>
->>> If your patches are'nt really ready, please send them as RFC, I am not
->>> really in a mood to track the status of every single driver subsystem.
->>>
->>> If your binding is not in linux next at the baremin, as far as I am
->>> concerned, this is not ready, and should be RFC.
->>
->> No, RFC does not say "do not merge" or "this has dependencies". RFC is
->> used to invite a stronger review when introducing a new concept. Its
->> fair game to apply patches marked RFC if maintainer is okay with the
->> content.
-> 
-> True, fair enough.. RFC is request for comments. Anyways, that is
-> besides the point.
->>
->> Dependencies are either noted in cover-letter or below the patch
->> tear-line. With what you are asking, looks like patches need to be
->> resubmitted once dependencies are cleared, even if there is no change in
->> the content itself. This will be additional work.
-> 
-> Yes please. There would be other dts changes that are probably ready and
-> I really wont be tracking everything happening on other drivers. If the
-> binding is present at least in next, it is a good indication of things
-> clean and ready to go.
 
-Agree that bindings should be in linux-next before device-tree files are
-merged.
-
+On 10/12/18 10:55, Marc Zyngier wrote:
+>>   
+>> +void gic_enable_of_quirks(const struct device_node *np,
+>> +			  const struct gic_quirk *quirks, void *data)
+>> +{
+>> +	for (; quirks->desc; quirks++) {
+> So you expect quirks->desc to be NULL at some point, just like for any
+> other quirk table we have.
 > 
->>
->> That said, if it makes life convenient for you, you can impose such a
->> rule for patches you need to handle. But I think it will take some
->> getting used for developers who send patches to you as I don't think
->> this is a norm elsewhere.
->>
->> Adding Tony and Arnd as well, in case I have missed some recently
->> accepted convention.
+>> +		if (!of_device_is_compatible(np, quirks->compatible))
+>> +			continue;
+>> +		if (quirks->init(data))
+>> +			pr_info("GIC: enabling workaround for %s\n",
+>> +				quirks->desc);
+>> +	}
+>> +}
+>> +
+>>   void gic_enable_quirks(u32 iidr, const struct gic_quirk *quirks,
+>>   		void *data)
+>>   {
+>> diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-gic-common.h
+>> index 3919cd7c5285..97e58fb6c232 100644
+>> --- a/drivers/irqchip/irq-gic-common.h
+>> +++ b/drivers/irqchip/irq-gic-common.h
+>> @@ -23,6 +23,7 @@
+>>   
+>>   struct gic_quirk {
+>>   	const char *desc;
+>> +	const char *compatible;
+>>   	bool (*init)(void *data);
+>>   	u32 iidr;
+>>   	u32 mask;
+>> @@ -35,6 +36,8 @@ void gic_dist_config(void __iomem *base, int gic_irqs,
+>>   void gic_cpu_config(void __iomem *base, void (*sync_access)(void));
+>>   void gic_enable_quirks(u32 iidr, const struct gic_quirk *quirks,
+>>   		void *data);
+>> +void gic_enable_of_quirks(const struct device_node *np,
+>> +			  const struct gic_quirk *quirks, void *data);
+>>   
+>>   void gic_set_kvm_info(const struct gic_kvm_info *info);
+>>   
+>> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+>> index 29e9d47be97d..c95796fa4de6 100644
+>> --- a/drivers/irqchip/irq-gic-v3.c
+>> +++ b/drivers/irqchip/irq-gic-v3.c
+>> @@ -1271,6 +1271,9 @@ static void __init gic_of_setup_kvm_info(struct device_node *node)
+>>   	gic_set_kvm_info(&gic_v3_kvm_info);
+>>   }
+>>   
+>> +static const struct gic_quirk gic_quirks[] = {
+>> +};
+> ... and yet here you provide an empty table. That's not going to work
+> very well. You definitely need to have an empty entry at the end of the
+> array, always.
 > 
-> 
-> I have'nt looked at any conventions, The style I prefer to follow when I do
-> submissions: It is my job to get the bindings in, until then my actual
-> dts is just "request for comments". Only after the bindings are merged
-> do I formally submit dts - simply because I dont expect dts maintainer
-> to track what happened to my driver's binding and discussions there of.
+> I guess you want to test your code on a non affected platform, and I'm
+> pretty sure you'll see it exploding.
 
-Ok.
-
-> 
-> Seriously, is'nt it really reasonable for dts maintainer to check every
-> single driver's development status in 15 different mailing lists?
-> Because, it sounds like what you are asking. At least I wont have time
-> for it..
-> 
-> 
-> I really am curious how Arnd / Tony actually pull this one off.. If they
-> have continous cron job for checking if your patch is ready... I doubt
-> it..
-
-I think you can rely on the author to tell you when something is
-actually ready to be merged (and you can tell him/her to remind you).
-
-For the review itself, doing it by having a look at the dependencies
-mentioned in the cover letter (like available for this series) should be
-good enough (I feel).
-
-I am not sure if there is a need to post an "RFC version", and then
-follow it up with an actual "PATCH version" once dependencies are
-cleared though.
+Yes, Should have carefully looked at this!!
+We need an empty entry at the end!
+I will fix it and send a new version!
 
 Thanks,
-Sekhar
+srini
+> 
