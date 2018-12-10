@@ -1,65 +1,66 @@
-Return-Path: <SRS0=31ju=ON=kontron.de=frieder.schrempf@kernel.org>
-From: Schrempf Frieder <frieder.schrempf@kontron.de>
-Subject: Re: [PATCH v3 4/4] doc: usb: ci-hdrc-usb2: Add pinctrl properties for
- HSIC pin groups
-Date: Tue, 4 Dec 2018 14:31:24 +0000
-Message-ID: <a081eb16-920a-0ff4-2ae7-7c9efd28668a@kontron.de>
-References: <20181127092824.22756-1-peter.chen@nxp.com>
- <20181127092824.22756-5-peter.chen@nxp.com>
- <CAOMZO5CV9Hk5ORnmjOLSZv5bk61nc2Ljq_4vKvRvAvO_F=Fzxg@mail.gmail.com>
- <VI1PR04MB5327E51B366724706028E07E8BD30@VI1PR04MB5327.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB5327E51B366724706028E07E8BD30@VI1PR04MB5327.eurprd04.prod.outlook.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <86DACF90413B1E4CA3AE0D255DDC86EB@snt-world.com>
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=+yaY=OT=verge.net.au=horms@kernel.org>
+Date: Mon, 10 Dec 2018 14:01:50 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: dts: r8a7743: Remove generic compatible string from
+ iic3
+Message-ID: <20181210130149.bgvw2a64g2sgm7qz@verge.net.au>
+References: <1544443077-49827-1-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdWN37sVO+4QxsrP+_6FGbvMnC39W=t1cYsT0RG_rjFx5Q@mail.gmail.com>
 MIME-Version: 1.0
-To: PETER CHEN <peter.chen@nxp.com>, Fabio Estevam <festevam@gmail.com>
-Cc: USB list <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Schrempf Frieder" <frieder.schrempf@exceet.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWN37sVO+4QxsrP+_6FGbvMnC39W=t1cYsT0RG_rjFx5Q@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgUGV0ZXIsIGhpIEZhYmlvLA0KDQpPbiAzMC4xMS4xOCAwMzozMywgUEVURVIgQ0hFTiB3cm90
-ZToNCj4gICANCj4+DQo+PiBPbiBUdWUsIE5vdiAyNywgMjAxOCBhdCA3OjMxIEFNIFBFVEVSIENI
-RU4gPHBldGVyLmNoZW5AbnhwLmNvbT4gd3JvdGU6DQo+Pj4NCj4+PiBGb3IgVVNCIEhTSUMsIHRo
-ZSBkYXRhIGFuZCBzdHJvYmUgcGluIG5lZWRzIHRvIGJlIHB1bGxlZCBkb3duIGF0DQo+Pj4gZGVm
-YXVsdCwgd2UgY29uc2lkZXIgaXQgYXMgImlkbGUiIHN0YXRlLiBXaGVuIHRoZSBVU0IgaG9zdCBp
-cyByZWFkeSB0bw0KPj4+IGJlIHVzZWQsIHRoZSBzdHJvYmUgcGluIG5lZWRzIHRvIGJlIHB1bGxl
-ZCB1cCwgd2UgY29uc2lkZXIgaXQgYXMNCj4+PiAiYWN0aXZlIiBzdGF0ZS4NCj4+Pg0KPj4+IFNp
-Z25lZC1vZmYtYnk6IFBldGVyIENoZW4gPHBldGVyLmNoZW5AbnhwLmNvbT4NCj4+PiAtLS0NCj4+
-PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvY2ktaGRyYy11c2IyLnR4
-dCB8IDggKysrKysrKy0NCj4+PiAgIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDEg
-ZGVsZXRpb24oLSkNCj4+Pg0KPj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvdXNiL2NpLWhkcmMtdXNiMi50eHQNCj4+PiBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy91c2IvY2ktaGRyYy11c2IyLnR4dA0KPj4+IGluZGV4IDUyOWU1MTg3
-OWZiMi4uMWU1ZTdkZGZiMWE1IDEwMDY0NA0KPj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy91c2IvY2ktaGRyYy11c2IyLnR4dA0KPj4+ICsrKyBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvY2ktaGRyYy11c2IyLnR4dA0KPj4+IEBAIC04MCw3
-ICs4MCwxMCBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPj4+ICAgICBjb250cm9sbGVyLiBJdCdz
-IGV4cGVjdGVkIHRoYXQgYSBtdXggc3RhdGUgb2YgMCBpbmRpY2F0ZXMgZGV2aWNlIG1vZGUgYW5k
-IGENCj4+PiAgICAgbXV4IHN0YXRlIG9mIDEgaW5kaWNhdGVzIGhvc3QgbW9kZS4NCj4+PiAgIC0g
-bXV4LWNvbnRyb2wtbmFtZXM6IFNoYWxsIGJlICJ1c2Jfc3dpdGNoIiBpZiBtdXgtY29udHJvbHMg
-aXMgc3BlY2lmaWVkLg0KPj4+IC0tIHBpbmN0cmwtbmFtZXM6IE5hbWVzIGZvciBvcHRpb25hbCBw
-aW4gbW9kZXMgaW4gImRlZmF1bHQiLCAiaG9zdCIsICJkZXZpY2UiDQo+Pj4gKy0gcGluY3RybC1u
-YW1lczogTmFtZXMgZm9yIG9wdGlvbmFsIHBpbiBtb2RlcyBpbiAiZGVmYXVsdCIsICJob3N0Iiwg
-ImRldmljZSIuDQo+Pj4gKyAgSW4gY2FzZSBvZiBIU0lDLW1vZGUsICJpZGxlIiBhbmQgImFjdGl2
-ZSIgcGluIG1vZGVzIGFyZSBtYW5kYXRvcnkuDQo+Pj4gK0luIHRoaXMNCj4+PiArICBjYXNlLCB0
-aGUgImlkbGUiIHN0YXRlIG5lZWRzIHRvIHB1bGwgZG93biB0aGUgZGF0YSBhbmQgc3Ryb2JlIHBp
-bg0KPj4+ICsgIGFuZCB0aGUgImFjdGl2ZSIgc3RhdGUgbmVlZHMgdG8gcHVsbCB1cCB0aGUgc3Ry
-b2JlIHBpbi4NCj4+PiAgIC0gcGluY3RybC1uOiBhbHRlcm5hdGUgcGluIG1vZGVzDQo+Pj4NCj4+
-PiAgIGkubXggc3BlY2lmaWMgcHJvcGVydGllcw0KPj4+IEBAIC0xMTAsNCArMTEzLDcgQEAgRXhh
-bXBsZToNCj4+PiAgICAgICAgICAgICAgICAgIHBoeS1jbGtnYXRlLWRlbGF5LXVzID0gPDQwMD47
-DQo+Pj4gICAgICAgICAgICAgICAgICBtdXgtY29udHJvbHMgPSA8JnVzYl9zd2l0Y2g+Ow0KPj4+
-ICAgICAgICAgICAgICAgICAgbXV4LWNvbnRyb2wtbmFtZXMgPSAidXNiX3N3aXRjaCI7DQo+Pj4g
-KyAgICAgICAgICAgICAgIHBpbmN0cmwtbmFtZXMgPSAiaWRsZSIsICJhY3RpdmUiOw0KPj4+ICsg
-ICAgICAgICAgICAgICBwaW5jdHJsLTAgPSA8JnBpbmN0cmxfdXNiaDJfMT47DQo+Pj4gKyAgICAg
-ICAgICAgICAgIHBpbmN0cmwtMSA9IDwmcGluY3RybF91c2JoMl8yPjsNCj4+DQo+PiBJIHdvdWxk
-IHB1dCB0aGUgImlkbGUiIGFuZCAiYWN0aXZlIiBlbnRyaWVzIGluc2lkZSBhIGV4cGxpY2l0IHNl
-Y3Rpb24gZm9yIEhTSUMuDQo+Pg0KPj4gT3RoZXJ3aXNlLCBpdCBtYXkgY29uZnVzZSBwZW9wbGUg
-dXNpbmcgbm9uLUhTSUMgYmluZGluZ3MuDQo+IA0KPiBJdCBpcyBqdXN0IGFuIGV4YW1wbGU7IHRo
-ZSB1c2VyIHNob3VsZCBjaGVjayB0aGUgbWVhbmluZyBmb3Igb3B0aW9uYWwgcHJvcGVydGllcyBi
-ZWZvcmUNCj4gdXNpbmcgaXQsIGxpa2UgdGhlIHByb3BlcnR5ICJwaHktY2xrZ2F0ZS1kZWxheS11
-cyIsIG9ubHkgaW14N2QvN3MgbmVlZHMgaXQuDQoNClRoZXJlIGFyZSBtYW55IG90aGVyIG9wdGlv
-bmFsIHByb3BlcnRpZXMgZm9yIHRoaXMgZHJpdmVyIGFuZCBhIGxvdCBvZiANCnRoZW0gYXJlIG5v
-dCBpbiB0aGUgZ2l2ZW4gZXhhbXBsZS4gTWF5YmUgd2Ugc2hvdWxkIGp1c3Qga2VlcCB0aGUgDQpw
-aW5jdHJscyBmb3IgSFNJQy1tb2RlIG91dCBvZiB0aGUgZXhhbXBsZSwgdG9vPw0KDQpSZWdhcmRz
-LA0KRnJpZWRlcg==
+On Mon, Dec 10, 2018 at 01:13:53PM +0100, Geert Uytterhoeven wrote:
+> Hi Biju,
+> 
+> On Mon, Dec 10, 2018 at 1:06 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> > The iic3 block on RZ/G1M does not support automatic transmission, unlike
+> > other R-Car SoC's. So dropping the compatibility with the generic version.
+> >
+> > Fixes: f523405f2a22cc0c307 ("ARM: dts: r8a7743: Add IIC cores to dtsi")
+> 
+> Thanks for going through the other affected SoCs!
+> 
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Thanks, applied for v4.22.
+
+> > --- a/arch/arm/boot/dts/r8a7743.dtsi
+> > +++ b/arch/arm/boot/dts/r8a7743.dtsi
+> > @@ -564,9 +564,7 @@
+> >                         /* doesn't need pinmux */
+> >                         #address-cells = <1>;
+> >                         #size-cells = <0>;
+> > -                       compatible = "renesas,iic-r8a7743",
+> > -                                    "renesas,rcar-gen2-iic",
+> > -                                    "renesas,rmobile-iic";
+> > +                       compatible = "renesas,iic-r8a7743";
+> >                         reg = <0 0xe60b0000 0 0x425>;
+> >                         interrupts = <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
+> >                         clocks = <&cpg CPG_MOD 926>;
+> 
+> Note that this is still a bit odd, as there are other iic nodes that do declare
+> compatibility with the generic version, as they do support automatic
+> transmission.  But at least we'll have an easier job to support this in the
+> driver[*], if ever needed.
+> 
+> [*] The code handling r8a7743 (and r8a7744) can call of_device_is_compatible()
+>     to find out if the instance is compatible with the generic version.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> 
