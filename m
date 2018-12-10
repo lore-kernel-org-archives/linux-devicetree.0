@@ -1,54 +1,249 @@
-From: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 5/8] drm/msm/dsi: 10nm PHY: Get ref clock
- from the DT
-Date: Mon, 10 Dec 2018 07:52:34 -0800
-Message-ID: <154445715454.17204.5993193179251214562@swboyd.mtv.corp.google.com>
-References: <20181204224234.62619-1-mka@chromium.org>
- <20181204224234.62619-6-mka@chromium.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 01/34] kbuild: Add support for DT binding schema checks
+Date: Mon, 10 Dec 2018 09:55:08 -0600
+Message-ID: <CAL_JsqLhNq2LWffT5XK9nd+p_7oYacMmsQidP_cmjkd7DsNmNQ@mail.gmail.com>
+References: <20181203213223.16986-1-robh@kernel.org> <20181203213223.16986-2-robh@kernel.org>
+ <CAK7LNARgyL+Pq+SCkUUKnMny4nDw1L4zEevdzqbyGGAoE+BXUA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181204224234.62619-6-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNARgyL+Pq+SCkUUKnMny4nDw1L4zEevdzqbyGGAoE+BXUA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, ARM-SoC Maintainers <arm@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Michal Marek <michal.lkml@markovi.net>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBNYXR0aGlhcyBLYWVobGNrZSAoMjAxOC0xMi0wNCAxNDo0MjozMSkKPiBHZXQgdGhl
-IHJlZiBjbG9jayBvZiB0aGUgUEhZIGZyb20gdGhlIGRldmljZSB0cmVlIGluc3RlYWQgb2YKPiBo
-YXJkY29kaW5nIGl0cyBuYW1lIGFuZCByYXRlLgo+IAo+IE5vdGU6IFRoaXMgY2hhbmdlIGNvdWxk
-IGJyZWFrIG9sZCBvdXQtb2YtdHJlZSBEVFMgZmlsZXMgdGhhdAo+IHVzZSB0aGUgMTBubSBQSFkK
-PiAKPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aGlhcyBLYWVobGNrZSA8bWthQGNocm9taXVtLm9yZz4K
-PiBSZXZpZXdlZC1ieTogRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPgo+
-IC0tLQo+IENoYW5nZXMgaW4gdjQ6Cj4gLSBub25lCj4gCj4gQ2hhbmdlcyBpbiB2MzoKPiAtIGZp
-eGVkIGNoZWNrIGZvciBFUFJPQkVfREVGRVIKPiAtIGFkZGVkIG5vdGUgdG8gY29tbWl0IG1lc3Nh
-Z2UgYWJvdXQgYnJlYWtpbmcgb2xkIERUUyBmaWxlcwo+IC0gYWRkZWQgJ1Jldmlld2VkLWJ5OiBE
-b3VnbGFzIEFuZGVyc29uIDxkaWFuZGVyc0BjaHJvbWl1bS5vcmc+JyB0YWcKPiAKPiBDaGFuZ2Vz
-IGluIHYyOgo+IC0gcmVtb3ZlIGFub255bW91cyBhcnJheSBpbiBjbGtfaW5pdF9kYXRhIGFzc2ln
-bm1lbnQKPiAtIGxvZyBlcnJvciBjb2RlIGlmIGRldm1fY2xrX2dldCgpIGZhaWxzCj4gLSBkb24n
-dCBsb2cgZGV2bV9jbGtfZ2V0KCkgZmFpbHVyZXMgZm9yIC1FUFJPQkVfREVGRVIKPiAtIHVwZGF0
-ZWQgY29tbWl0IG1lc3NhZ2UKPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvcGxsL2Rz
-aV9wbGxfMTBubS5jIHwgMTMgKysrKysrKysrKysrLQo+ICAxIGZpbGUgY2hhbmdlZCwgMTIgaW5z
-ZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
-cm0vbXNtL2RzaS9wbGwvZHNpX3BsbF8xMG5tLmMgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9w
-bGwvZHNpX3BsbF8xMG5tLmMKPiBpbmRleCA0YzAzZjBiNzM0M2VkLi4yZDIzMzcyYWNkMjBkIDEw
-MDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZHNpL3BsbC9kc2lfcGxsXzEwbm0uYwo+
-ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZHNpL3BsbC9kc2lfcGxsXzEwbm0uYwo+IEBAIC05
-MSw2ICs5MSw3IEBAIHN0cnVjdCBkc2lfcGxsXzEwbm0gewo+ICAgICAgICAgdm9pZCBfX2lvbWVt
-ICpwaHlfY21uX21taW87Cj4gICAgICAgICB2b2lkIF9faW9tZW0gKm1taW87Cj4gIAo+ICsgICAg
-ICAgc3RydWN0IGNsayAqdmNvX3JlZl9jbGs7CgpTYW1lIGNvbW1lbnQsIGFuZCBhbHNvIGdldCB0
-aGUgbmFtZSBpbiBwcm9iZSBvciBwYXNzIHRoZSBjbGsgcG9pbnRlcgphcm91bmQgaW5zdGVhZCBv
-ZiBzdG9yaW5nIGl0IGZvcmV2ZXIuCgo+ICAgICAgICAgdTY0IHZjb19yZWZfY2xrX3JhdGU7Cj4g
-ICAgICAgICB1NjQgdmNvX2N1cnJlbnRfcmF0ZTsKPiAgCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5v
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+On Fri, Dec 7, 2018 at 10:47 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Hi Rob,
+>
+>
+> On Tue, Dec 4, 2018 at 6:32 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > This adds the build infrastructure for checking DT binding schema
+> > documents and validating dts files using the binding schema.
+> >
+> > Check DT binding schema documents:
+> > make dt_binding_check
+> >
+> > Build dts files and check using DT binding schema:
+> > make dtbs_check
+> >
+> > Optionally, DT_SCHEMA_FILES can passed in with a schema file(s) to use
+> > for validation. This makes it easier to find and fix errors generated by
+> > a specific schema.
+> >
+> > Currently, the validation targets are separate from a normal build to
+> > avoid a hard dependency on the external DT schema project and because
+> > there are lots of warnings generated.
+> >
+> > Cc: Jonathan Corbet <corbet@lwn.net>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Cc: Michal Marek <michal.lkml@markovi.net>
+> > Cc: linux-doc@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-kbuild@vger.kernel.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .gitignore                                   |  1 +
+> >  Documentation/Makefile                       |  2 +-
+> >  Documentation/devicetree/bindings/.gitignore |  1 +
+> >  Documentation/devicetree/bindings/Makefile   | 33 ++++++++++++++++++++
+> >  Makefile                                     | 11 +++++--
+> >  scripts/Makefile.lib                         | 24 ++++++++++++--
+> >  6 files changed, 67 insertions(+), 5 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/.gitignore
+> >  create mode 100644 Documentation/devicetree/bindings/Makefile
+> >
+> > diff --git a/.gitignore b/.gitignore
+> > index 97ba6b79834c..a20ac26aa2f5 100644
+> > --- a/.gitignore
+> > +++ b/.gitignore
+> > @@ -15,6 +15,7 @@
+> >  *.bin
+> >  *.bz2
+> >  *.c.[012]*.*
+> > +*.dt.yaml
+> >  *.dtb
+> >  *.dtb.S
+> >  *.dwo
+> > diff --git a/Documentation/Makefile b/Documentation/Makefile
+> > index 2ca77ad0f238..9786957c6a35 100644
+> > --- a/Documentation/Makefile
+> > +++ b/Documentation/Makefile
+> > @@ -2,7 +2,7 @@
+> >  # Makefile for Sphinx documentation
+> >  #
+> >
+> > -subdir-y :=
+> > +subdir-y := devicetree/bindings/
+> >
+> >  # You can set these variables from the command line.
+> >  SPHINXBUILD   = sphinx-build
+> > diff --git a/Documentation/devicetree/bindings/.gitignore b/Documentation/devicetree/bindings/.gitignore
+> > new file mode 100644
+> > index 000000000000..d9194c02dd08
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/.gitignore
+> > @@ -0,0 +1 @@
+> > +*.example.dts
+> > diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
+> > new file mode 100644
+> > index 000000000000..ee0110dd8131
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/Makefile
+> > @@ -0,0 +1,33 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +DT_DOC_CHECKER ?= dt-doc-validate
+> > +DT_EXTRACT_EX ?= dt-extract-example
+> > +DT_MK_SCHEMA ?= dt-mk-schema
+> > +DT_MK_SCHEMA_FLAGS := $(if $(DT_SCHEMA_FILES), -u)
+> > +
+> > +quiet_cmd_chk_binding = CHKDT   $<
+> > +      cmd_chk_binding = (set -e; \
+> > +                         $(DT_DOC_CHECKER) $< ; \
+> > +                         mkdir -p $(dir $@) ; \
+> > +                         $(DT_EXTRACT_EX) $< > $@ )
+> > +
+> > +$(obj)/%.example.dts: $(src)/%.yaml FORCE
+> > +       $(call if_changed,chk_binding)
+> > +
+> > +DT_TMP_SCHEMA := .schema.yaml.tmp
+> > +extra-y += $(DT_TMP_SCHEMA)
+> > +
+> > +quiet_cmd_mk_schema = SCHEMA  $@
+> > +      cmd_mk_schema = mkdir -p $(obj); \
+> > +                      rm -f $@; \
+> > +                      $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $<
+>
+>
+> I think '$<' is wrong.
+>
+> '$<' is replaced with the first prerequisite.
+
+Indeed.
+
+> You can easily check what is happening here.
+>
+> $ cat   Documentation/devicetree/bindings/..schema.yaml.tmp.cmd
+> cmd_Documentation/devicetree/bindings/.schema.yaml.tmp := mkdir -p
+> Documentation/devicetree/bindings; rm -f
+> Documentation/devicetree/bindings/.schema.yaml.tmp; dt-mk-schema  -o
+> Documentation/devicetree/bindings/.schema.yaml.tmp
+> Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml
+>
+>
+> So, the dt-validater will check only binding from ti,davinci.yaml,
+> which is almost useless.
+>
+>
+>
+> If I understand it correctly,
+> .schema.yaml.tmp should contain all binding yaml.
+>
+>
+> I fixed it up like follows:
+>
+> diff --git a/Documentation/devicetree/bindings/Makefile
+> b/Documentation/devicetree/bindings/Makefile
+> index ee0110d..267458f 100644
+> --- a/Documentation/devicetree/bindings/Makefile
+> +++ b/Documentation/devicetree/bindings/Makefile
+> @@ -19,7 +19,7 @@ extra-y += $(DT_TMP_SCHEMA)
+>  quiet_cmd_mk_schema = SCHEMA  $@
+>        cmd_mk_schema = mkdir -p $(obj); \
+>                        rm -f $@; \
+> -                      $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $<
+> +                      $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
+> $(filter-out FORCE, $^)
+
+Thanks, I incorporated this fix.
+
+>
+>  DT_DOCS = $(shell cd $(srctree)/$(src) && find * -name '*.yaml')
+>  DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
+>
+>
+>
+> Then, I see another error.
+
+I fixed this with this change:
+
+@@ -27,7 +27,7 @@ DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
+ extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
+ extra-y += $(patsubst $(src)/%.yaml,%.example.dtb, $(DT_SCHEMA_FILES))
+
+-$(obj)/$(DT_TMP_SCHEMA): $(addprefix $(obj)/,$(patsubst
+$(src)/%.yaml,%.example.dtb, $(DT_SCHEMA_FILES)))
++$(obj)/$(DT_TMP_SCHEMA): | $(addprefix $(obj)/,$(patsubst
+$(src)/%.yaml,%.example.dtb, $(DT_SCHEMA_FILES)))
+
+ $(obj)/$(DT_TMP_SCHEMA): $(addprefix $(srctree)/, $(DT_SCHEMA_FILES)) FORCE
+        $(call if_changed,mk_schema)
+
+>
+>
+>   SCHEMA  Documentation/devicetree/bindings/.schema.yaml.tmp
+> Traceback (most recent call last):
+>   File "/home/masahiro/ref/yaml-bindings/tools/dt-mk-schema", line 32,
+> in <module>
+>     schemas = dtschema.process_schemas(args.schemas, core_schema=(not
+> args.useronly))
+>   File "/usr/local/lib/python3.5/dist-packages/dtschema-0.0.1-py3.5.egg/dtschema/lib.py",
+> line 359, in process_schemas
+>     sch = process_schema(os.path.abspath(filename))
+>   File "/usr/local/lib/python3.5/dist-packages/dtschema-0.0.1-py3.5.egg/dtschema/lib.py",
+> line 314, in process_schema
+>     schema = load_schema(filename)
+>   File "/usr/local/lib/python3.5/dist-packages/dtschema-0.0.1-py3.5.egg/dtschema/lib.py",
+> line 80, in load_schema
+>     return yaml.load(f.read())
+>   File "/usr/lib/python3.5/codecs.py", line 321, in decode
+>     (result, consumed) = self._buffer_decode(data, self.errors, final)
+> UnicodeDecodeError: 'utf-8' codec can't decode byte 0xd0 in position
+> 0: invalid continuation byte
+> Documentation/devicetree/bindings/Makefile:33: recipe for target
+> 'Documentation/devicetree/bindings/.schema.yaml.tmp' failed
+> make[1]: *** [Documentation/devicetree/bindings/.schema.yaml.tmp] Error 1
+> Makefile:1278: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+>
+>
+>
+>
+>
+>
+>
+> BTW, I cannot build *.dt.yaml
+>
+>
+>
+>   DTC     arch/arm/boot/dts/alpine-db.dt.yaml
+> FATAL ERROR: Unknown output format "yaml"
+> scripts/Makefile.lib:313: recipe for target
+> 'arch/arm/boot/dts/alpine-db.dt.yaml' failed
+> make[1]: *** [arch/arm/boot/dts/alpine-db.dt.yaml] Error 1
+> make[1]: *** Deleting file 'arch/arm/boot/dts/alpine-db.dt.yaml'
+> Makefile:1262: recipe for target 'dtbs_check' failed
+>
+>
+>
+>
+> I use linux-next.
+>
+>
+> script/dtc/dtc does not understand '-O yaml'
+>
+>
+> I also tried the upstream DTC project with no success.
+>
+>
+> Where can I get dtc with yaml support?
+
+You need libyaml and its headers. I'll try to make this a better error
+message. For now, libyaml is optional so we don't break everyone just
+building dtbs.
+
+Rob
