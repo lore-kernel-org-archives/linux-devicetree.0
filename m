@@ -1,111 +1,115 @@
-From: Hans Ole Hatzel <hohatzel@jusst.de>
-Subject: Re: [PATCH 4/4] ARM: dts: imx7d: sbc imx7: add uart5
-Date: Mon, 10 Dec 2018 11:51:53 +0100
-Message-ID: <58a84012-73b8-1679-0c5b-981fd2a0acd6@jusst.de>
-References: <20181204110741.6943-1-hohatzel@jusst.de>
- <20181204110741.6943-5-hohatzel@jusst.de> <20181206031520.GE3987@dragon>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v4 2/4] irqchip/gic: common: add support to device tree
+ based quirks
+Date: Mon, 10 Dec 2018 10:55:15 +0000
+Message-ID: <da39d3af-b8e4-1b5e-cdf4-54dd9e955a0b@arm.com>
+References: <20181210102309.8207-1-srinivas.kandagatla@linaro.org>
+ <20181210102309.8207-3-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181206031520.GE3987@dragon>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181210102309.8207-3-srinivas.kandagatla@linaro.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: fabio.estevam@nxp.com, devicetree@vger.kernel.org, Julian Scheel <jscheel@jusst.de>, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: sudeep.holla@arm.com, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org, bjorn.andersson@linaro.org, nicolas.dechesne@linaro.org, ctatlor97@gmail.com, vkoul@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 12/6/18 4:15 AM, Shawn Guo wrote:
-> On Tue, Dec 04, 2018 at 12:07:41PM +0100, Hans Ole Hatzel wrote:
->> Adds uart5 connections as used on the sbc.
->> In the sbc's reference material this is known as uart1, it does however
->> connect to the som as uart5. This uart is connected via the soc's
->> pins 11 (TX) and 13 (RX). On the sbc it is pinned out on P5
->> using pins 15 (TX) and 17 (RX).
->>
->> Signed-off-by: Hans Ole Hatzel <hohatzel@jusst.de>
->> Signed-off-by: Julian Scheel <jscheel@jusst.de>
->> ---
->>   arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 16 ++++++++++++++++
->>   arch/arm/boot/dts/imx7d-sbc-imx7.dts    |  4 ++++
->>   2 files changed, 20 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
->> index 6c2c844dc052..f7c002093c67 100644
->> --- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
->> +++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
->> @@ -223,6 +223,15 @@
->>   	fsl;
->>   };
->>   
->> +&uart5 {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&pinctrl_uart5>;
->> +	assigned-clocks = <&clks IMX7D_UART5_ROOT_SRC>;
->> +	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
+On 10/12/2018 10:23, Srinivas Kandagatla wrote:
+> This patch adds support to device tree based quirks based on
+> device tree compatible string.
 > 
-> Can we have some comments in the commit log on why we have to use this
-> particular clock source?
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  drivers/irqchip/irq-gic-common.c | 12 ++++++++++++
+>  drivers/irqchip/irq-gic-common.h |  3 +++
+>  drivers/irqchip/irq-gic-v3.c     |  5 +++++
+>  3 files changed, 20 insertions(+)
 > 
-> Shawn
+> diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
+> index 01e673c680cd..3c93c6f4d1f1 100644
+> --- a/drivers/irqchip/irq-gic-common.c
+> +++ b/drivers/irqchip/irq-gic-common.c
+> @@ -36,6 +36,18 @@ void gic_set_kvm_info(const struct gic_kvm_info *info)
+>  	gic_kvm_info = info;
+>  }
+>  
+> +void gic_enable_of_quirks(const struct device_node *np,
+> +			  const struct gic_quirk *quirks, void *data)
+> +{
+> +	for (; quirks->desc; quirks++) {
+
+So you expect quirks->desc to be NULL at some point, just like for any
+other quirk table we have.
+
+> +		if (!of_device_is_compatible(np, quirks->compatible))
+> +			continue;
+> +		if (quirks->init(data))
+> +			pr_info("GIC: enabling workaround for %s\n",
+> +				quirks->desc);
+> +	}
+> +}
+> +
+>  void gic_enable_quirks(u32 iidr, const struct gic_quirk *quirks,
+>  		void *data)
+>  {
+> diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-gic-common.h
+> index 3919cd7c5285..97e58fb6c232 100644
+> --- a/drivers/irqchip/irq-gic-common.h
+> +++ b/drivers/irqchip/irq-gic-common.h
+> @@ -23,6 +23,7 @@
+>  
+>  struct gic_quirk {
+>  	const char *desc;
+> +	const char *compatible;
+>  	bool (*init)(void *data);
+>  	u32 iidr;
+>  	u32 mask;
+> @@ -35,6 +36,8 @@ void gic_dist_config(void __iomem *base, int gic_irqs,
+>  void gic_cpu_config(void __iomem *base, void (*sync_access)(void));
+>  void gic_enable_quirks(u32 iidr, const struct gic_quirk *quirks,
+>  		void *data);
+> +void gic_enable_of_quirks(const struct device_node *np,
+> +			  const struct gic_quirk *quirks, void *data);
+>  
+>  void gic_set_kvm_info(const struct gic_kvm_info *info);
+>  
+> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+> index 29e9d47be97d..c95796fa4de6 100644
+> --- a/drivers/irqchip/irq-gic-v3.c
+> +++ b/drivers/irqchip/irq-gic-v3.c
+> @@ -1271,6 +1271,9 @@ static void __init gic_of_setup_kvm_info(struct device_node *node)
+>  	gic_set_kvm_info(&gic_v3_kvm_info);
+>  }
+>  
+> +static const struct gic_quirk gic_quirks[] = {
+> +};
+
+... and yet here you provide an empty table. That's not going to work
+very well. You definitely need to have an empty entry at the end of the
+array, always.
+
+I guess you want to test your code on a non affected platform, and I'm
+pretty sure you'll see it exploding.
+
+> +
+>  static int __init gic_of_init(struct device_node *node, struct device_node *parent)
+>  {
+>  	void __iomem *dist_base;
+> @@ -1318,6 +1321,8 @@ static int __init gic_of_init(struct device_node *node, struct device_node *pare
+>  	if (of_property_read_u64(node, "redistributor-stride", &redist_stride))
+>  		redist_stride = 0;
+>  
+> +	gic_enable_of_quirks(node, gic_quirks, &gic_data);
+> +
+>  	err = gic_init_bases(dist_base, rdist_regs, nr_redist_regions,
+>  			     redist_stride, &node->fwnode);
+>  	if (err)
 > 
 
-imx7d-pico.dts does this the same way. Is that good enough of a reason? 
-If so, should it be included in the commit message?
+Thanks,
 
-Hans
-
->> +	status = "okay";
->> +	fsl;
->> +};
->> +
->>   &usbotg1 {
->>   	pinctrl-names = "default";
->>   	pinctrl-0 = <&pinctrl_usbotg1>;
->> @@ -330,6 +339,13 @@
->>   		>;
->>   	};
->>   
->> +	pinctrl_uart5: uart5grp {
->> +		fsl,pins = <
->> +			MX7D_PAD_I2C4_SCL__UART5_DCE_RX		0x79
->> +			MX7D_PAD_I2C4_SDA__UART5_DCE_TX		0x79
->> +		>;
->> +	};
->> +
->>   	pinctrl_usdhc2: usdhc2grp {
->>   		fsl,pins = <
->>   			MX7D_PAD_SD2_CMD__SD2_CMD			0x59
->> diff --git a/arch/arm/boot/dts/imx7d-sbc-imx7.dts b/arch/arm/boot/dts/imx7d-sbc-imx7.dts
->> index 74904127fbc6..d23d62aceb82 100644
->> --- a/arch/arm/boot/dts/imx7d-sbc-imx7.dts
->> +++ b/arch/arm/boot/dts/imx7d-sbc-imx7.dts
->> @@ -30,6 +30,10 @@
->>   	status = "okay";
->>   };
->>   
->> +&uart5 {
->> +	status = "okay";
->> +};
->> +
->>   &iomuxc {
->>   	pinctrl_usdhc1: usdhc1grp {
->>   		fsl,pins = <
->> -- 
->> 2.19.2
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+	M.
+-- 
+Jazz is not dead. It just smells funny...
