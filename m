@@ -1,96 +1,78 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 4/4] leds: trigger: Add pattern initialization from Device Tree
-Date: Mon, 10 Dec 2018 09:35:32 +0100
-Message-ID: <CAJKOXPdWkkLhR7YPT1tajVR=8B+5SK+yc6oqqgzgLiYvbLp7+w@mail.gmail.com>
-References: <1544185974-5932-1-git-send-email-krzk@kernel.org>
- <1544185974-5932-4-git-send-email-krzk@kernel.org> <8222f85b-4e61-69c4-6d31-ba559de02829@gmail.com>
- <fcb28be6-7d6a-1216-5a22-339f30366fd1@gmail.com>
+From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: RE: [PATCH v5 0/7] spi: add support for octal mode
+Date: Mon, 10 Dec 2018 08:39:20 +0000
+Message-ID: <VI1PR04MB572609DBC52F7496A656915E99A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
+References: <1543826226-30898-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+        <20181203101937.7b01a0ad@bbrezillon>
+        <214dadd9-859c-ca88-1aff-1c83fcfa3c0b@ti.com>
+        <20181205134618.56223758@bbrezillon>
+        <VI1PR04MB572646B71C6CB7BAAB4A1E1999A90@VI1PR04MB5726.eurprd04.prod.outlook.com>
+        <20181206074554.0ec0aecb@bbrezillon>
+        <VI1PR04MB572620BB57CB01A352904BB999A90@VI1PR04MB5726.eurprd04.prod.outlook.com>
+        <20181206202956.GG3084@sirena.org.uk>
+        <VI1PR04MB572641541BB83E587541BBD099A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
+ <20181210092208.0971c3be@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fcb28be6-7d6a-1216-5a22-339f30366fd1@gmail.com>
+In-Reply-To: <20181210092208.0971c3be@bbrezillon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: jacek.anaszewski@gmail.com
-Cc: pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, baolin.wang@linaro.org, rteysseyre@gmail.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Mark Brown <broonie@kernel.org>, Vignesh R <vigneshr@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 9 Dec 2018 at 19:55, Jacek Anaszewski
-<jacek.anaszewski@gmail.com> wrote:
->
-> On 12/8/18 7:44 PM, Jacek Anaszewski wrote:
-> > Hi Krzysztof,
-> >
-> > Thank you for the patch set.
-> >
-> > Applied 1/4 and 2/4.
-> >
-> > I'll hold on merging 3/4 until we sort out the issues
-> > I have with this one. Please refer to my comment below.
-> >
-> > On 12/7/18 1:32 PM, Krzysztof Kozlowski wrote:
-> >> Allow initialization of pattern used in pattern trigger from Device Tree
-> >> property.
-> >>
-> >> This is especially useful for embedded systems where the pattern trigger
-> >> would be used to indicate the process of boot status in a nice,
-> >> user-friendly blinking way.  This initialization pattern will be used
-> >> till user-space is brought up and sets its own pattern, indicating the
-> >> boot status is for example finished.
-> >>
-> >> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >> ---
-> >>   drivers/leds/trigger/ledtrig-pattern.c | 18 ++++++++++++++++++
-> >>   1 file changed, 18 insertions(+)
-> >>
-> >> diff --git a/drivers/leds/trigger/ledtrig-pattern.c
-> >> b/drivers/leds/trigger/ledtrig-pattern.c
-> >> index 1870cf87afe1..96309d3bc43c 100644
-> >> --- a/drivers/leds/trigger/ledtrig-pattern.c
-> >> +++ b/drivers/leds/trigger/ledtrig-pattern.c
-> >> @@ -11,6 +11,7 @@
-> >>   #include <linux/leds.h>
-> >>   #include <linux/module.h>
-> >>   #include <linux/mutex.h>
-> >> +#include <linux/of.h>
-> >>   #include <linux/slab.h>
-> >>   #include <linux/timer.h>
-> >> @@ -331,6 +332,21 @@ static const struct attribute_group
-> >> *pattern_trig_groups[] = {
-> >>       NULL,
-> >>   };
-> >> +static void pattern_init(struct led_classdev *led_cdev)
-> >> +{
-> >> +    struct device_node *np = dev_of_node(led_cdev->dev);
-> >> +    const char *pattern;
-> >> +
-> >> +    if (!np)
-> >> +        return;
-> >> +
-> >> +    if (!of_property_read_string(np, "linux,trigger-pattern",
-> >> &pattern)) {
-> >> +        if (strlen(pattern))
-> >> +            pattern_trig_store_patterns(led_cdev, pattern,
-> >> +                            strlen(pattern), false);
-> >> +    }
-> >> +}
-> >> +
-> >>   static int pattern_trig_activate(struct led_classdev *led_cdev)
-> >>   {
-> >>       struct pattern_trig_data *data;
-> >> @@ -354,6 +370,8 @@ static int pattern_trig_activate(struct
-> >> led_classdev *led_cdev)
-> >>       timer_setup(&data->timer, pattern_trig_timer_function, 0);
-> >>       led_cdev->activated = true;
-> >> +    pattern_init(led_cdev);
->
-> With my recent patches it would suffice to replace above line with:
->
-> if (led_cdev->flags & LED_INIT_DEFAULT_TRIGGER) {
->         pattern_init(led_cdev);
->         led_cdev->flags &= ~LED_INIT_DEFAULT_TRIGGER;
-> }
+Hi Boris,
 
-Right, I see the problem. I'll rebase on top of it.
+Sorry for confusion.
 
-Best regards,
-Krzysztof
+My intention was just to point to the correct patch number only. Earlier yo=
+u have asked Mark to pick the patch [1] but that patch number was not corre=
+ct.
+
+[1] https://lkml.org/lkml/2018/12/5/758
+
+--
+Regards
+Yogesh Gaur
+
+> -----Original Message-----
+> From: Boris Brezillon [mailto:boris.brezillon@bootlin.com]
+> Sent: Monday, December 10, 2018 1:52 PM
+> To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+> Cc: Mark Brown <broonie@kernel.org>; Vignesh R <vigneshr@ti.com>; linux-
+> mtd@lists.infradead.org; marek.vasut@gmail.com; linux-spi@vger.kernel.org=
+;
+> devicetree@vger.kernel.org; robh@kernel.org; mark.rutland@arm.com;
+> shawnguo@kernel.org; linux-arm-kernel@lists.infradead.org;
+> computersforpeace@gmail.com; frieder.schrempf@exceet.de; linux-
+> kernel@vger.kernel.org
+> Subject: Re: [PATCH v5 0/7] spi: add support for octal mode
+>=20
+> Hi Yogesh,
+>=20
+> On Mon, 10 Dec 2018 04:13:28 +0000
+> Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
+>=20
+> > Hi Mark,
+> >
+> > Patch has been resend [1], this patch is depends on the series of patch=
+[2] and
+> this series has been applied by Boris already.
+>=20
+> You're still not asking the right person. Every patches touching things i=
+n
+> drivers/mtd/ should be taken by me (or another MTD maintainer), and patch=
+es
+> touching things in drivers/spi/ should be taken by Mark. So, the patch yo=
+u're
+> pointing to should be applied by me. Plus, I told you I would apply it af=
+ter 4.21-
+> rc1 because I don't want to deal with the mtd -> spi dependency.
+>=20
+> Please be patient.
+>=20
+> Regards,
+>=20
+> Boris
