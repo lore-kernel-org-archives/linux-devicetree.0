@@ -1,55 +1,138 @@
-From: Parthiban Nallathambi <pn@denx.de>
-Subject: Re: [PATCH v2 0/4] Add Actions Semi Owl family S700 I2C support
-Date: Mon, 10 Dec 2018 12:25:37 +0100
-Message-ID: <5434a04c-a492-a7a5-9783-383947b6d1fb@denx.de>
-References: <20181126185821.2480449-1-pn@denx.de>
+From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: RE: [PATCH v5 1/5] spi: spi-mem: Add driver for NXP FlexSPI controller
+Date: Mon, 10 Dec 2018 11:25:55 +0000
+Message-ID: <VI1PR04MB57269A32C1FF1592F117B97799A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
+References: <1542366701-16065-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <1542366701-16065-2-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <eb8a31d8-2ba6-f27c-addf-545c77921b77@kontron.de>
+ <VI1PR04MB57267D9F69719B4BEF38BF8699A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
+ <20181210111909.35384eee@bbrezillon>
+ <VI1PR04MB57268740CA806FFB164780EB99A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
+ <20181210115001.6c7af1d7@bbrezillon>
+ <VI1PR04MB5726F0DDAC84F1AEC20B56DF99A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
+ <20181210120925.3c6336f6@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181126185821.2480449-1-pn@denx.de>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20181210120925.3c6336f6@bbrezillon>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: afaerber@suse.de, manivannan.sadhasivam@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de
-Cc: pn@denx.de, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux@cubietech.com, thomas.liau@actions-semi.com, linux-actions@lists.infradead.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Schrempf Frieder <frieder.schrempf@kontron.de>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Ping on this patch series!
+Hi Boris,
 
-On 11/26/18 7:58 PM, Parthiban Nallathambi wrote:
-> This patch series adds support for Actions Semi Owl SoC family S700
-> I2C controller. S700 provides 4 I2C masters and with cubieboard7
-> 2 (I2C0 and I2C1) are exposed.
+> -----Original Message-----
+> From: Boris Brezillon [mailto:boris.brezillon@bootlin.com]
+> Sent: Monday, December 10, 2018 4:39 PM
+> To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+> Cc: Schrempf Frieder <frieder.schrempf@kontron.de>; linux-
+> mtd@lists.infradead.org; marek.vasut@gmail.com; broonie@kernel.org; linux-
+> spi@vger.kernel.org; devicetree@vger.kernel.org; robh@kernel.org;
+> mark.rutland@arm.com; shawnguo@kernel.org; linux-arm-
+> kernel@lists.infradead.org; computersforpeace@gmail.com; linux-
+> kernel@vger.kernel.org
+> Subject: Re: [PATCH v5 1/5] spi: spi-mem: Add driver for NXP FlexSPI controller
 > 
-> Added pinctrl definition for I2C controllers in cubieboard7. This patch
-> depends on s700 pinctrl driver support (yet to be merged),
-> https://lkml.org/lkml/2018/11/19/514
-> https://lore.kernel.org/patchwork/patch/1012859/
+> On Mon, 10 Dec 2018 10:59:54 +0000
+> Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
 > 
-> Changelog in v2:
-> - Initial version https://lore.kernel.org/patchwork/patch/1011911/ only
-> added the I2C nodes using s900 compatible property. Now, new s700
-> compatiable string is added and used for S700
-> - Device tree bindings added with s700 compatible string
-> - pinctrl definition for cubieboard7
+> > Hi Boris,
+> >
+> > > -----Original Message-----
+> > > From: Boris Brezillon [mailto:boris.brezillon@bootlin.com]
+> > > Sent: Monday, December 10, 2018 4:20 PM
+> > > To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+> > > Cc: Schrempf Frieder <frieder.schrempf@kontron.de>; linux-
+> > > mtd@lists.infradead.org; marek.vasut@gmail.com; broonie@kernel.org;
+> > > linux- spi@vger.kernel.org; devicetree@vger.kernel.org;
+> > > robh@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org;
+> > > linux-arm- kernel@lists.infradead.org; computersforpeace@gmail.com;
+> > > linux- kernel@vger.kernel.org
+> > > Subject: Re: [PATCH v5 1/5] spi: spi-mem: Add driver for NXP FlexSPI
+> > > controller
+> > >
+> > > On Mon, 10 Dec 2018 10:43:56 +0000
+> > > Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
+> > >
+> > > > > > Thus, in LUT preparation we have assigned only the base address.
+> > > > > > Now if I have assigned ahb_buf_size to FSPI_FLSHXXCR0 register
+> > > > > > then for
+> > > > > read/write data beyond limit of ahb_buf_size offset I get data corruption.
+> > > > >
+> > > > > Why would you do that? We have the ->adjust_op_size() exactly
+> > > > > for this reason, so, if someone tries to do a spi_mem_op with
+> > > > > data.nbytes > ahb_buf_size you should return an error.
+> > > > >
+> > > > Let me explain my implementation with example. If I have to write
+> > > > data of size
+> > > 0x100 bytes at offset 0x1200 for CS1, I would program as below:
+> > > > In func nxp_fspi_select_mem(), would set value of controller
+> > > > address space
+> > > size, memmap_phy_size, to FSPI_FLSHA2CR0 and rest all FSPI_FLSHXXCR0 as
+> 0.
+> > > > Value of memmap_phy_size is 0x10000000 i.e. 256 MB for my
+> > > > LX2160ARDB
+> > > target.
+> > > > Then in nxp_fspi_prepare_lut(), I would prepare LUT ADDR with
+> > > > address length
+> > > requirement 3/4 byte for NOR or 1/2/3/4 bytes for NAND flash.
+> > > > Also for LUT_NXP_WRITE would program data bytes as 0.
+> > > >
+> > > > Then inside func nxp_fspi_do_op(), set register FSPI_IPCR0 as the
+> > > > address offset i.e. 0x1200 and in register FSPI_IPCR1 program the
+> > > > data size to write i.e. 0x100
+> > > >
+> > > > If, as suggested if I tries to mark value of register
+> > > > FSPI_FLSHA2CR0 equal to
+> > > ahb_buf_size (0x800), then access for address 0x1200 gives me wrong
+> > > data. This is because as per the controller specification access to
+> > > flash connected at CS1 can be performed under range of FSPI_ FLSHA1CR0
+> and FSPI_ FLSHA2CR0.
+> > >
+> > > Don't you have a way to set an offset to apply to the address
+> > > accessed through the AHB? And if you don't, how will it work if your
+> > > mapping is smaller than the flash size?
+> >
+> > Write operations are triggered using IP commands instead of AHB command.
+> > For Read AHB command is used and in this we are adding the offset when
+> performing memcpy_fromIO operation
+> >       memcpy_fromio(op->data.buf.in, (f->ahb_addr + op->addr.val),
+> > len);
+> >
+> > AHB/IP operations are independent of the way how CS got selected. CS
+> selection depends, e.g. CS1 on the value of register FSPI_FLSHA1CR0 and
+> FSPI_FLSHA2CR0.
+> >
+> > Mapping can never going to be smaller than the connected flash size as per
+> discussion with the Board design team and if it's possible by user manually
+> changes the non-soldered part then flash area beyond complete mapping is not
+> accessible.
+> > On LX2160ARDB, with mapping of 256MB, for now we are having 4 flash
+> devices connected with size as 64 MB. If user wants he can have only one single
+> flash with flash size of 256MB.
 > 
-> Parthiban Nallathambi (4):
->    dt-bindings: i2c: Add S700 support for Actions Semi Soc's
->    i2c: Add Actions Semiconductor Owl family S700 I2C support
->    arm64: dts: actions: s700: Add I2C controller nodes
->    arm64: dts: actions: s700-cubieboard7: Enable I2C0 and I2C1
-> 
->   .../devicetree/bindings/i2c/i2c-owl.txt       |  2 +-
->   .../boot/dts/actions/s700-cubieboard7.dts     | 53 +++++++++++++++++++
->   arch/arm64/boot/dts/actions/s700.dtsi         | 40 ++++++++++++++
->   drivers/i2c/busses/i2c-owl.c                  |  1 +
->   4 files changed, 95 insertions(+), 1 deletion(-)
-> 
+> Given that the dirmap interface has now been merged and the MTD side of
+> things is soon to be merged, I'd recommend you to implement it in your
+> v6 and only use non-AHB accesses for the ->exec_op() implementation.
 
--- 
-Thanks,
-Parthiban N
+This would going to be performance hit if I would use non-AHB accesses for ->exec_op().
+In read in v5 I am using AHB mode for read if read data size is greater than rxfifo size and if its less than rxfifo then use IP mode for read.
 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-22 Fax: (+49)-8142-66989-80 Email: pn@denx.de
+--
+Regards
+Yogesh Gaur
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
