@@ -1,143 +1,105 @@
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: [PATCH RESEND v7 1/4] clk: meson: add emmc sub clock phase delay driver
-Date: Tue, 11 Dec 2018 00:04:33 +0800
-Message-ID: <1544457877-51301-2-git-send-email-jianxin.pan@amlogic.com>
-References: <1544457877-51301-1-git-send-email-jianxin.pan@amlogic.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v4 08/26] drm/sun4i: sun6i_mipi_dsi: Fix
+ VBP size calculation
+Date: Mon, 10 Dec 2018 21:37:23 +0530
+Message-ID: <CAMty3ZB4uSxMETSrGbod54N++rimTmv1jNnCPKCy0PRa2e9WFw@mail.gmail.com>
+References: <20181113111633.20189-1-jagan@amarulasolutions.com>
+ <20181113111633.20189-9-jagan@amarulasolutions.com> <20181115095551.uctdkfmuwlnzhjnn@flea>
+ <CAMty3ZAEHiovm6OF6JvJVQR4aqpG1Q3ML5YqxJkF2ntwRkUO=A@mail.gmail.com>
+ <20181120155715.andrjp5kg6ugcv72@flea> <CAMty3ZCUOJmvekupOwh281g5HaazTpBbukWQY2Pv2OYypAwciw@mail.gmail.com>
+ <20181127102450.b65jzhrdpxn5rxmk@flea> <CAMty3ZDTvn4VF_oOvEi2jCw9Rw5WPd1LQT3SZ5X1K0fJAFg2cQ@mail.gmail.com>
+ <20181207132136.oa4nzpczytzxhl2d@flea>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544457877-51301-1-git-send-email-jianxin.pan@amlogic.com>
+In-Reply-To: <20181207132136.oa4nzpczytzxhl2d@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Yixun Lan <yixun.lan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
-From: Yixun Lan <yixun.lan@amlogic.com>
+On Fri, Dec 7, 2018 at 6:51 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Tue, Nov 27, 2018 at 04:34:35PM +0530, Jagan Teki wrote:
+> > On Tue, Nov 27, 2018 at 3:55 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > On Tue, Nov 20, 2018 at 09:55:42PM +0530, Jagan Teki wrote:
+> > > > On Tue, Nov 20, 2018 at 9:27 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > >
+> > > > > On Thu, Nov 15, 2018 at 11:19:53PM +0530, Jagan Teki wrote:
+> > > > > > On Thu, Nov 15, 2018 at 3:26 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > > > >
+> > > > > > > Hi,
+> > > > > > >
+> > > > > > > On Tue, Nov 13, 2018 at 04:46:15PM +0530, Jagan Teki wrote:
+> > > > > > > > The horizontal and vertical back porch calculation in BSP
+> > > > > > > > code is simply following the Linux drm comment diagram, in
+> > > > > > > > include/drm/drm_modes.h which is
+> > > > > > > >
+> > > > > > > > [hv]back porch = [hv]total - [hv]sync_end
+> > > > > > > >
+> > > > > > > > BSP code form BPI-M64-bsp is calculating vertical back porch as
+> > > > > > > > (from linux-sunxi/drivers/video/sunxi/disp2/disp/de/disp_lcd.c)
+> > > > > > > >
+> > > > > > > > timmings->ver_sync_time= panel_info->lcd_vspw;
+> > > > > > > > timmings->ver_back_porch= panel_info->lcd_vbp-panel_info->lcd_vspw;
+> > > > > > > >
+> > > > > > > > vbp = panel->lcd_vbp;
+> > > > > > > > vspw = panel->lcd_vspw;
+> > > > > > > > dsi_dev[sel]->dsi_basic_size0.bits.vbp = vbp-vspw;
+> > > > > > > > dsi_dev[sel]->dsi_basic_size0.bits.vbp = panel->lcd_vbp - panel->lcd_vspw;
+> > > > > > > > =>  timmings->ver_back_porch + panel_info->lcd_vspw - panel_info->lcd_vspw
+> > > > > > > > =>  timmings->ver_back_porch
+> > > > > > > > =>  mode->vtotal - mode->end
+> > > > > > > >
+> > > > > > > > Which evatually same as mode->vtotal - mode->vsync_end so update the
+> > > > > > > > same in SUN6I_DSI_BASIC_SIZE0_VBP
+> > > > > > > >
+> > > > > > > > On the information note, existing SUN6I_DSI_BASIC_SIZE0_VSA is proper
+> > > > > > > > value.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > > >
+> > > > > > > I've tested your changes on my A33 board, and this commit will break
+> > > > > > > it.
+> > > > > > >
+> > > > > > > It creates vblank timeouts, and visual artifacts at the bottom of the
+> > > > > > > display.
+> > > > > >
+> > > > > > Strange, VBP is earlier gives front porch which is anyway wrong.
+> > > > > >
+> > > > > > >
+> > > > > > > Later commits seem to fix the issue, but will create some blanking on
+> > > > > > > the upper third of the display.
+> > > > > > >
+> > > > > > > Since the documentation is quite sparse, and a MIPI-DSI analyzer is
+> > > > > > > way too expensive, I'd really like to have at least what each of these
+> > > > > > > commits are actually fixing, and what symptoms each of these were
+> > > > > > > causing, and not just "the BSP does it".
+> > > > > >
+> > > > > > W/o this 2-lane panel is breaking, same vblank timeout and visual
+> > > > > > artifacts at the bottom of the panel. though the commits may reference
+> > > > > > BSP, I have at-least tested on 3 different panels for us to prove its
+> > > > > > working.
+> > > > > >
+> > > > > > > Having some datasheet for the panels you had working would help too.
+> > > > > >
+> > > > > > Unfortunately datasheet doesn't have any required information what we
+> > > > > > actually looking for.
+> > > > >
+> > > > > Not even the timings? How did you get that information then?
+> > > >
+> > > > datasheet has timing values, but this changes need controller
+> > > > information about VBP register that I don't have. But again existing
+> > > > VBP is not back porch for real, it's front porch.
+> > >
+> > > Yet, this breaks the existing setup. So again:
+> >
+> > Was it with 4-lane or 2-lane panel? can you test it with 2-lane panel?
+> > I can see the issue on 2-lane but the 4-lane working fine with this
+> > patch even.
+>
+> It's a 4 lane display.
 
-Export the emmc sub clock phase delay ops which will be used
-by the emmc sub clock driver itself.
-
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
----
- drivers/clk/meson/Makefile          |  2 +-
- drivers/clk/meson/clk-phase-delay.c | 64 +++++++++++++++++++++++++++++++++++++
- drivers/clk/meson/clkc.h            | 13 ++++++++
- 3 files changed, 78 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/meson/clk-phase-delay.c
-
-diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
-index 72ec8c4..39ce566 100644
---- a/drivers/clk/meson/Makefile
-+++ b/drivers/clk/meson/Makefile
-@@ -2,7 +2,7 @@
- # Makefile for Meson specific clk
- #
- 
--obj-$(CONFIG_COMMON_CLK_AMLOGIC) += clk-pll.o clk-mpll.o clk-phase.o
-+obj-$(CONFIG_COMMON_CLK_AMLOGIC) += clk-pll.o clk-mpll.o clk-phase.o clk-phase-delay.o
- obj-$(CONFIG_COMMON_CLK_AMLOGIC_AUDIO)	+= clk-triphase.o sclk-div.o
- obj-$(CONFIG_COMMON_CLK_MESON_AO) += meson-aoclk.o
- obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o
-diff --git a/drivers/clk/meson/clk-phase-delay.c b/drivers/clk/meson/clk-phase-delay.c
-new file mode 100644
-index 0000000..84e7b63
---- /dev/null
-+++ b/drivers/clk/meson/clk-phase-delay.c
-@@ -0,0 +1,64 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Amlogic Meson MMC Sub Clock Controller Driver
-+ *
-+ * Copyright (c) 2017 Baylibre SAS.
-+ * Author: Jerome Brunet <jbrunet@baylibre.com>
-+ *
-+ * Copyright (c) 2018 Amlogic, inc.
-+ * Author: Yixun Lan <yixun.lan@amlogic.com>
-+ * Author: Jianxin Pan <jianxin.pan@amlogic.com>
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include "clkc.h"
-+
-+static int meson_clk_phase_delay_get_phase(struct clk_hw *hw)
-+{
-+	struct clk_regmap *clk = to_clk_regmap(hw);
-+	struct meson_clk_phase_delay_data *ph;
-+	unsigned long period_ps, p, d;
-+	int degrees;
-+
-+	ph = meson_clk_get_phase_delay_data(clk);
-+	p = meson_parm_read(clk->map, &ph->phase);
-+	degrees = p * 360 / (1 << (ph->phase.width));
-+
-+	period_ps = DIV_ROUND_UP(NSEC_PER_SEC * 1000,
-+				 clk_hw_get_rate(hw));
-+
-+	d = meson_parm_read(clk->map, &ph->delay);
-+	degrees += d * ph->delay_step_ps * 360 / period_ps;
-+	degrees %= 360;
-+
-+	return degrees;
-+}
-+
-+static int meson_clk_phase_delay_set_phase(struct clk_hw *hw, int degrees)
-+{
-+	struct clk_regmap *clk = to_clk_regmap(hw);
-+	struct meson_clk_phase_delay_data *ph;
-+	unsigned long period_ps, d = 0, r;
-+
-+	ph = meson_clk_get_phase_delay_data(clk);
-+	period_ps = DIV_ROUND_UP(NSEC_PER_SEC * 1000, clk_hw_get_rate(hw));
-+
-+	/*
-+	 * First compute the phase index (p), the remainder (r) is the
-+	 * part we'll try to acheive using the delays (d).
-+	 */
-+	r = do_div(degrees, 360 / 1 << (ph->phase.width));
-+	d = DIV_ROUND_CLOSEST(r * period_ps,
-+			      360 * ph->delay_step_ps);
-+	d = min(d, PMASK(ph->delay.width));
-+
-+	meson_parm_write(clk->map, &ph->phase, degrees);
-+	meson_parm_write(clk->map, &ph->delay, d);
-+	return 0;
-+}
-+
-+const struct clk_ops meson_clk_phase_delay_ops = {
-+	.get_phase = meson_clk_phase_delay_get_phase,
-+	.set_phase = meson_clk_phase_delay_set_phase,
-+};
-+EXPORT_SYMBOL_GPL(meson_clk_phase_delay_ops);
-diff --git a/drivers/clk/meson/clkc.h b/drivers/clk/meson/clkc.h
-index 6b96d55..30470c6 100644
---- a/drivers/clk/meson/clkc.h
-+++ b/drivers/clk/meson/clkc.h
-@@ -105,6 +105,18 @@ struct clk_regmap _name = {						\
- 	},								\
- };
- 
-+struct meson_clk_phase_delay_data {
-+	struct parm			phase;
-+	struct parm			delay;
-+	unsigned int			delay_step_ps;
-+};
-+
-+static inline struct meson_clk_phase_delay_data *
-+meson_clk_get_phase_delay_data(struct clk_regmap *clk)
-+{
-+	return clk->data;
-+}
-+
- /* clk_ops */
- extern const struct clk_ops meson_clk_pll_ro_ops;
- extern const struct clk_ops meson_clk_pll_ops;
-@@ -112,5 +124,6 @@ struct clk_regmap _name = {						\
- extern const struct clk_ops meson_clk_mpll_ro_ops;
- extern const struct clk_ops meson_clk_mpll_ops;
- extern const struct clk_ops meson_clk_phase_ops;
-+extern const struct clk_ops meson_clk_phase_delay_ops;
- 
- #endif /* __CLKC_H */
--- 
-1.9.1
+Thanks, look like my panel timings seems reverse b/w BP and FP. It
+work irrespective of this change after proper update.
