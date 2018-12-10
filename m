@@ -1,29 +1,37 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH] dt-bindings: rtc: use a generic node name for ds1307
-Date: Tue, 11 Dec 2018 00:35:46 +0100
-Message-ID: <20181210233546.GL8952@piout.net>
-References: <20181203114736.637012-1-lkundrak@v3.sk>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-am654-base-board: Add MMC/SD
+ support
+Date: Mon, 10 Dec 2018 15:47:30 -0800
+Message-ID: <20181210234730.GH6707@atomide.com>
+References: <20181207084233.13700-1-faiz_abbas@ti.com>
+ <20181207084233.13700-3-faiz_abbas@ti.com>
+ <20181208155427.jmidz4vsw4k4qj36@akan>
+ <c1dd9783-84dc-9dad-ea94-9a14a4ad814d@ti.com>
+ <20181210120647.i3ply3p7umvedb3u@akan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181203114736.637012-1-lkundrak@v3.sk>
+In-Reply-To: <20181210120647.i3ply3p7umvedb3u@akan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, robh+dt@kernel.org, t-kristo@ti.com, kishon@ti.com, ulf.hansson@linaro.org, adrian.hunter@intel.com, michal.simek@xilinx.com, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 03/12/2018 12:47:36+0100, Lubomir Rintel wrote:
-> The example should follow the practice or using a generic node name
-> instead of the precise programming model, as recommended by the DTSpec.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
->  Documentation/devicetree/bindings/rtc/rtc-ds1307.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-Applied, thanks.
+* Nishanth Menon <nm@ti.com> [181210 12:07]:
+> I really am curious how Arnd / Tony actually pull this one off.. If they
+> have continous cron job for checking if your patch is ready... I doubt
+> it..
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+The only way that works in a distributed manner is for the patch
+authors to resend after the dependencies have cleared.
+
+As some people don't know this, at least I try to reply with
+something about tagging patch as read and assuming it will get
+resent after dependencies have cleard.
+
+Otherwise the todo list just keeps growing eternally :)
+
+Regards,
+
+Tony
