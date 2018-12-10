@@ -1,71 +1,74 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v10 0/8] Introduce on-chip interconnect API
-Date: Mon, 10 Dec 2018 10:04:14 +0100
-Message-ID: <CAJZ5v0gP50tmq4ZzB7LLSaWGWjGjK31y=qFg5PS9B7c2XQ+DyQ@mail.gmail.com>
-References: <20181127180349.29997-1-georgi.djakov@linaro.org>
- <CAE=gft4jUjr3oDAZrM=-orLM-YoVAwa+e=crDDC_p9ArGE1dig@mail.gmail.com> <20181206145547.GA7884@kroah.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 2/3] dt-bindings: usb: keystone-usb: Add ti,am654-dwc3
+ support
+Date: Mon, 10 Dec 2018 11:05:18 +0200
+Message-ID: <5C0E2C4E.7030302@ti.com>
+References: <1544023171-5796-1-git-send-email-rogerq@ti.com>
+ <1544023171-5796-3-git-send-email-rogerq@ti.com>
+ <ec72e316-46c1-69f6-ae5b-0fbf297a9327@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181206145547.GA7884@kroah.com>
+In-Reply-To: <ec72e316-46c1-69f6-ae5b-0fbf297a9327@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: evgreen@chromium.org, Georgi Djakov <georgi.djakov@linaro.org>, Linux PM <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, bjorn.andersson@linaro.org, Amit Kucheria <amit.kucheria@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, abailon@baylibre.com, maxime.ripard@bootlin.com, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <thierry.reding@gmail.com>, ksitaraman@nvidia.com, sanjayc@nvidia.com, "devicetree@vger.kernel.org" <devicetree@vg>
+To: Vignesh R <vigneshr@ti.com>
+Cc: balbi@kernel.org, tony@atomide.com, robh+dt@kernel.org, nsekhar@ti.com, t-kristo@ti.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 6, 2018 at 3:55 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Dec 05, 2018 at 12:41:35PM -0800, Evan Green wrote:
-> > On Tue, Nov 27, 2018 at 10:03 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
-> > >
-> > > Modern SoCs have multiple processors and various dedicated cores (video, gpu,
-> > > graphics, modem). These cores are talking to each other and can generate a
-> > > lot of data flowing through the on-chip interconnects. These interconnect
-> > > buses could form different topologies such as crossbar, point to point buses,
-> > > hierarchical buses or use the network-on-chip concept.
-> > >
-> > > These buses have been sized usually to handle use cases with high data
-> > > throughput but it is not necessary all the time and consume a lot of power.
-> > > Furthermore, the priority between masters can vary depending on the running
-> > > use case like video playback or CPU intensive tasks.
-> > >
-> > > Having an API to control the requirement of the system in terms of bandwidth
-> > > and QoS, so we can adapt the interconnect configuration to match those by
-> > > scaling the frequencies, setting link priority and tuning QoS parameters.
-> > > This configuration can be a static, one-time operation done at boot for some
-> > > platforms or a dynamic set of operations that happen at run-time.
-> > >
-> > > This patchset introduce a new API to get the requirement and configure the
-> > > interconnect buses across the entire chipset to fit with the current demand.
-> > > The API is NOT for changing the performance of the endpoint devices, but only
-> > > the interconnect path in between them.
-> >
-> > For what it's worth, we are ready to land this in Chrome OS. I think
-> > this series has been very well discussed and reviewed, hasn't changed
-> > much in the last few spins, and is in good enough shape to use as a
-> > base for future patches. Georgi's also done a great job reaching out
-> > to other SoC vendors, and there appears to be enough consensus that
-> > this framework will be usable by more than just Qualcomm. There are
-> > also several drivers out on the list trying to add patches to use this
-> > framework, with more to come, so it made sense (to us) to get this
-> > base framework nailed down. In my experiments this is an important
-> > piece of the overall power management story, especially on systems
-> > that are mostly idle.
-> >
-> > I'll continue to track changes to this series and we will ultimately
-> > reconcile with whatever happens upstream, but I thought it was worth
-> > sending this note to express our "thumbs up" towards this framework.
->
-> Looks like a v11 will be forthcoming, so I'll wait for that one to apply
-> it to the tree if all looks good.
+Hi Vignesh,
 
-I'm honestly not sure if it is ready yet.
+On 06/12/18 12:32, Vignesh R wrote:
+> Hi Roger,
+> 
+> On 05/12/18 8:49 PM, Roger Quadros wrote:
+>> The AM654 SoC from TI contains a DWC3 controller. Add
+>> support for it.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/usb/keystone-usb.txt | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/keystone-usb.txt b/Documentation/devicetree/bindings/usb/keystone-usb.txt
+>> index f96e09f..fa29ff8 100644
+>> --- a/Documentation/devicetree/bindings/usb/keystone-usb.txt
+>> +++ b/Documentation/devicetree/bindings/usb/keystone-usb.txt
+>> @@ -3,7 +3,7 @@ TI Keystone Soc USB Controller
+>>  DWC3 GLUE
+>>  
+>>  Required properties:
+>> - - compatible: should be "ti,keystone-dwc3".
+>> + - compatible: should be "ti,keystone-dwc3" or "ti,am654-dwc3".
+> 
+> Convention is to have one compatible per line:
+>  compatible: Should be
+> 	"ti,am654-dwc3" for AM654 SoCs
+> 	"ti,keystone-dwc3" for K2 SoCs
+> 
 
-New versions are coming on and on, which may make such an impression,
-but we had some discussion on it at the LPC and some serious questions
-were asked during it, for instance regarding the DT binding introduced
-here.  I'm not sure how this particular issue has been addressed here,
-for example.
+OK. Will fix it up. Thanks.
 
-Thanks,
-Rafael
+cheers,
+-roger
+
+> 
+> 
+>>   - #address-cells, #size-cells : should be '1' if the device has sub-nodes
+>>     with 'reg' property.
+>>   - reg : Address and length of the register set for the USB subsystem on
+>> @@ -21,7 +21,7 @@ SoCs only:
+>>  - clock-names:		Must be "usb".
+>>  
+>>  
+>> -The following are mandatory properties for Keystone 2 66AK2G SoCs only:
+>> +The following are mandatory properties for 66AK2G and AM654:
+>>  
+>>  - power-domains:	Should contain a phandle to a PM domain provider node
+>>  			and an args specifier containing the USB device id
+>>
+> 
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
