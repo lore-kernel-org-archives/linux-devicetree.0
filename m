@@ -1,52 +1,22 @@
-Return-Path: <SRS0=e0GZ=ON=partner.samsung.com=k.konieczny@kernel.org>
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: [PATCH v3 2/5] clk: samsung: exynos5433: fix name typo in sssx
-Date: Tue,  4 Dec 2018 17:52:45 +0100
-Message-Id: <20181204165248.17572-3-k.konieczny@partner.samsung.com>
-In-Reply-To: <20181204165248.17572-1-k.konieczny@partner.samsung.com>
+Return-Path: <SRS0=+yaY=OT=verge.net.au=horms@kernel.org>
+Date: Mon, 10 Dec 2018 13:15:08 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4 5/5] ARM: dts: iwg23s-sbc: Enable RTC
+Message-ID: <20181210121508.cj7s7tj2zcqsrox7@verge.net.au>
+References: <1544182066-31528-1-git-send-email-biju.das@bp.renesas.com>
+ <1544182066-31528-6-git-send-email-biju.das@bp.renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-References: <20181204165248.17572-1-k.konieczny@partner.samsung.com>
-	<CGME20181204165316eucas1p2ba063b96e83d2d2be93ca067d32d7926@eucas1p2.samsung.com>
-To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
-Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1544182066-31528-6-git-send-email-biju.das@bp.renesas.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-rtc@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Fix typo in sssx name, there should be three letters 's'.
+On Fri, Dec 07, 2018 at 11:27:46AM +0000, Biju Das wrote:
+> Enable NXP pcf85263 real time clock for the iWave SBC based on RZ/G1C.
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
----
- drivers/clk/samsung/clk-exynos5433.c   | 2 +-
- include/dt-bindings/clock/exynos5433.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
-index ea47f49abc7f..24c3360db65b 100644
---- a/drivers/clk/samsung/clk-exynos5433.c
-+++ b/drivers/clk/samsung/clk-exynos5433.c
-@@ -559,7 +559,7 @@ static const struct samsung_gate_clock top_gate_clks[] __initconst = {
- 	/* ENABLE_ACLK_TOP */
- 	GATE(CLK_ACLK_G3D_400, "aclk_g3d_400", "div_aclk_g3d_400",
- 			ENABLE_ACLK_TOP, 30, CLK_IS_CRITICAL, 0),
--	GATE(CLK_ACLK_IMEM_SSX_266, "aclk_imem_ssx_266",
-+	GATE(CLK_ACLK_IMEM_SSSX_266, "aclk_imem_sssx_266",
- 			"div_aclk_imem_sssx_266", ENABLE_ACLK_TOP,
- 			29, CLK_IGNORE_UNUSED, 0),
- 	GATE(CLK_ACLK_BUS0_400, "aclk_bus0_400", "div_aclk_bus0_400",
-diff --git a/include/dt-bindings/clock/exynos5433.h b/include/dt-bindings/clock/exynos5433.h
-index 98bd85ce1e45..87bb2b017143 100644
---- a/include/dt-bindings/clock/exynos5433.h
-+++ b/include/dt-bindings/clock/exynos5433.h
-@@ -156,7 +156,7 @@
- #define CLK_ACLK_G2D_266		220
- #define CLK_ACLK_G2D_400		221
- #define CLK_ACLK_G3D_400		222
--#define CLK_ACLK_IMEM_SSX_266		223
-+#define CLK_ACLK_IMEM_SSSX_266		223
- #define CLK_ACLK_BUS0_400		224
- #define CLK_ACLK_BUS1_400		225
- #define CLK_ACLK_IMEM_200		226
--- 
-2.19.1
+Thanks, applied for v4.22.
