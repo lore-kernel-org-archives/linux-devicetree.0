@@ -1,87 +1,72 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v5 1/5] spi: spi-mem: Add driver for NXP FlexSPI
- controller
-Date: Mon, 10 Dec 2018 12:09:25 +0100
-Message-ID: <20181210120925.3c6336f6@bbrezillon>
-References: <1542366701-16065-1-git-send-email-yogeshnarayan.gaur@nxp.com>
-        <1542366701-16065-2-git-send-email-yogeshnarayan.gaur@nxp.com>
-        <eb8a31d8-2ba6-f27c-addf-545c77921b77@kontron.de>
-        <VI1PR04MB57267D9F69719B4BEF38BF8699A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
-        <20181210111909.35384eee@bbrezillon>
-        <VI1PR04MB57268740CA806FFB164780EB99A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
-        <20181210115001.6c7af1d7@bbrezillon>
-        <VI1PR04MB5726F0DDAC84F1AEC20B56DF99A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 26/34] dt-bindings: arm: Convert Renesas board/soc
+ bindings to json-schema
+Date: Mon, 10 Dec 2018 12:12:23 +0100
+Message-ID: <20181210111223.fstjmazyo3vof7kc@verge.net.au>
+References: <20181203213223.16986-1-robh@kernel.org>
+ <20181203213223.16986-27-robh@kernel.org>
+ <20181204144822.uqonsto45u7ysdu5@verge.net.au>
+ <CAMuHMdV5brJyAmP0Bj7Bp7wruLNM1tSWkj_AyN5HCx4vdg-nrg@mail.gmail.com>
+ <CAL_JsqJX9eb58piavQayXM5j5GXxsGxmy93m5oRKtghMFvkhuA@mail.gmail.com>
+ <20181205194419.p6u56h57yk63xshj@verge.net.au>
+ <CAL_JsqKHwYhHSb7GNFgOtBCqEeMshbRnU+0ONe_yW8OOiRC=SA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB5726F0DDAC84F1AEC20B56DF99A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKHwYhHSb7GNFgOtBCqEeMshbRnU+0ONe_yW8OOiRC=SA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Cc: Schrempf Frieder <frieder.schrempf@kontron.de>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kumar Gala <kumar.gala@linaro.org>, ARM-SoC Maintainers <arm@kernel.org>, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Grant Likely <grant.likely@arm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Dec 2018 10:59:54 +0000
-Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
-
-> Hi Boris,
-> 
-> > -----Original Message-----
-> > From: Boris Brezillon [mailto:boris.brezillon@bootlin.com]
-> > Sent: Monday, December 10, 2018 4:20 PM
-> > To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-> > Cc: Schrempf Frieder <frieder.schrempf@kontron.de>; linux-
-> > mtd@lists.infradead.org; marek.vasut@gmail.com; broonie@kernel.org; linux-
-> > spi@vger.kernel.org; devicetree@vger.kernel.org; robh@kernel.org;
-> > mark.rutland@arm.com; shawnguo@kernel.org; linux-arm-
-> > kernel@lists.infradead.org; computersforpeace@gmail.com; linux-
-> > kernel@vger.kernel.org
-> > Subject: Re: [PATCH v5 1/5] spi: spi-mem: Add driver for NXP FlexSPI controller
-> > 
-> > On Mon, 10 Dec 2018 10:43:56 +0000
-> > Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
-> >   
-> > > > > Thus, in LUT preparation we have assigned only the base address.
-> > > > > Now if I have assigned ahb_buf_size to FSPI_FLSHXXCR0 register
-> > > > > then for  
-> > > > read/write data beyond limit of ahb_buf_size offset I get data corruption.
+On Thu, Dec 06, 2018 at 01:38:42PM -0600, Rob Herring wrote:
+> On Wed, Dec 5, 2018 at 1:44 PM Simon Horman <horms@verge.net.au> wrote:
+> >
+> > On Tue, Dec 04, 2018 at 09:08:57AM -0600, Rob Herring wrote:
+> > > On Tue, Dec 4, 2018 at 8:57 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 > > > >
-> > > > Why would you do that? We have the ->adjust_op_size() exactly for
-> > > > this reason, so, if someone tries to do a spi_mem_op with
-> > > > data.nbytes > ahb_buf_size you should return an error.
-> > > >  
-> > > Let me explain my implementation with example. If I have to write data of size  
-> > 0x100 bytes at offset 0x1200 for CS1, I would program as below:  
-> > > In func nxp_fspi_select_mem(), would set value of controller address space  
-> > size, memmap_phy_size, to FSPI_FLSHA2CR0 and rest all FSPI_FLSHXXCR0 as 0.  
-> > > Value of memmap_phy_size is 0x10000000 i.e. 256 MB for my LX2160ARDB  
-> > target.  
-> > > Then in nxp_fspi_prepare_lut(), I would prepare LUT ADDR with address length  
-> > requirement 3/4 byte for NOR or 1/2/3/4 bytes for NAND flash.  
-> > > Also for LUT_NXP_WRITE would program data bytes as 0.
+> > > > Hi Simon,
+> > > >
+> > > > On Tue, Dec 4, 2018 at 3:48 PM Simon Horman <horms@verge.net.au> wrote:
+> > > > > On Mon, Dec 03, 2018 at 03:32:15PM -0600, Rob Herring wrote:
+> > > > > > Convert Renesas SoC bindings to DT schema format using json-schema.
+> > > > > >
+> > > > > > Cc: Simon Horman <horms@verge.net.au>
+> > > > > > Cc: Magnus Damm <magnus.damm@gmail.com>
+> > > > > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > > > > Cc: linux-renesas-soc@vger.kernel.org
+> > > > > > Cc: devicetree@vger.kernel.org
+> > > > > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > > > > ---
+> > > > > >  .../devicetree/bindings/arm/shmobile.txt      | 151 ------------
+> > > > > >  .../devicetree/bindings/arm/shmobile.yaml     | 218 ++++++++++++++++++
+> > > > > >  2 files changed, 218 insertions(+), 151 deletions(-)
+> > > > > >  delete mode 100644 Documentation/devicetree/bindings/arm/shmobile.txt
+> > > > > >  create mode 100644 Documentation/devicetree/bindings/arm/shmobile.yaml
+> > > > >
+> > > > > Hi Rob,
+> > > > >
+> > > > > what is this based on? I get a conflict when applying the .txt change
+> > > > > and if I knew the base for this patch it would be rather easy to work
+> > > > > out what has changed.
 > > >
-> > > Then inside func nxp_fspi_do_op(), set register FSPI_IPCR0 as the
-> > > address offset i.e. 0x1200 and in register FSPI_IPCR1 program the data
-> > > size to write i.e. 0x100
+> > > 4.20-rc2
 > > >
-> > > If, as suggested if I tries to mark value of register FSPI_FLSHA2CR0 equal to  
-> > ahb_buf_size (0x800), then access for address 0x1200 gives me wrong data. This
-> > is because as per the controller specification access to flash connected at CS1
-> > can be performed under range of FSPI_ FLSHA1CR0 and FSPI_ FLSHA2CR0.
-> > 
-> > Don't you have a way to set an offset to apply to the address accessed through
-> > the AHB? And if you don't, how will it work if your mapping is smaller than the
-> > flash size?  
+> > > > >
+> > > > > Also, should we do an s/shmobile.txt/shmobile.yaml/ in MAINTAINERS?
+> > >
+> > > Yes. Though it was pointed out that get_maintainers.pl can pull emails
+> > > out of this file. We'd need to get that to work by default though.
+> > >
+> > > > Probably even s/shmobile.yaml/renesas.yaml/, while at it?
+> > >
+> > > Sure, if that's what you all want.
+> >
+> > How about this?
 > 
-> Write operations are triggered using IP commands instead of AHB command.
-> For Read AHB command is used and in this we are adding the offset when performing memcpy_fromIO operation
->       memcpy_fromio(op->data.buf.in, (f->ahb_addr + op->addr.val), len);
-> 
-> AHB/IP operations are independent of the way how CS got selected. CS selection depends, e.g. CS1 on the value of register FSPI_FLSHA1CR0 and FSPI_FLSHA2CR0.
-> 
-> Mapping can never going to be smaller than the connected flash size as per discussion with the Board design team and if it's possible by user manually changes the non-soldered part then flash area beyond complete mapping is not accessible.
-> On LX2160ARDB, with mapping of 256MB, for now we are having 4 flash devices connected with size as 64 MB. If user wants he can have only one single flash with flash size of 256MB.
+> LGTM
 
-Given that the dirmap interface has now been merged and the MTD side of
-things is soon to be merged, I'd recommend you to implement it in your
-v6 and only use non-AHB accesses for the ->exec_op() implementation.
+Thanks.
+
+As my tree is already closed for v4.21 I have applied this for v4.22.
