@@ -1,97 +1,263 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v10 0/8] Introduce on-chip interconnect API
-Date: Mon, 10 Dec 2018 12:18:17 +0200
-Message-ID: <6923d6ed-e357-b083-1830-8396d788efe5@linaro.org>
-References: <20181127180349.29997-1-georgi.djakov@linaro.org>
- <CAE=gft4jUjr3oDAZrM=-orLM-YoVAwa+e=crDDC_p9ArGE1dig@mail.gmail.com>
- <20181206145547.GA7884@kroah.com>
- <CAJZ5v0gP50tmq4ZzB7LLSaWGWjGjK31y=qFg5PS9B7c2XQ+DyQ@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v5 1/5] spi: spi-mem: Add driver for NXP FlexSPI
+ controller
+Date: Mon, 10 Dec 2018 11:19:09 +0100
+Message-ID: <20181210111909.35384eee@bbrezillon>
+References: <1542366701-16065-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+        <1542366701-16065-2-git-send-email-yogeshnarayan.gaur@nxp.com>
+        <eb8a31d8-2ba6-f27c-addf-545c77921b77@kontron.de>
+        <VI1PR04MB57267D9F69719B4BEF38BF8699A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJZ5v0gP50tmq4ZzB7LLSaWGWjGjK31y=qFg5PS9B7c2XQ+DyQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <VI1PR04MB57267D9F69719B4BEF38BF8699A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: evgreen@chromium.org, Linux PM <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, bjorn.andersson@linaro.org, Amit Kucheria <amit.kucheria@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, abailon@baylibre.com, maxime.ripard@bootlin.com, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <thierry.reding@gmail.com>, ksitaraman@nvidia.com, sanjayc@nvidia.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>Linux
+To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Cc: Schrempf Frieder <frieder.schrempf@kontron.de>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafael,
+On Mon, 10 Dec 2018 09:41:51 +0000
+Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
 
-On 12/10/18 11:04, Rafael J. Wysocki wrote:
-> On Thu, Dec 6, 2018 at 3:55 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->>
->> On Wed, Dec 05, 2018 at 12:41:35PM -0800, Evan Green wrote:
->>> On Tue, Nov 27, 2018 at 10:03 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
->>>>
->>>> Modern SoCs have multiple processors and various dedicated cores (video, gpu,
->>>> graphics, modem). These cores are talking to each other and can generate a
->>>> lot of data flowing through the on-chip interconnects. These interconnect
->>>> buses could form different topologies such as crossbar, point to point buses,
->>>> hierarchical buses or use the network-on-chip concept.
->>>>
->>>> These buses have been sized usually to handle use cases with high data
->>>> throughput but it is not necessary all the time and consume a lot of power.
->>>> Furthermore, the priority between masters can vary depending on the running
->>>> use case like video playback or CPU intensive tasks.
->>>>
->>>> Having an API to control the requirement of the system in terms of bandwidth
->>>> and QoS, so we can adapt the interconnect configuration to match those by
->>>> scaling the frequencies, setting link priority and tuning QoS parameters.
->>>> This configuration can be a static, one-time operation done at boot for some
->>>> platforms or a dynamic set of operations that happen at run-time.
->>>>
->>>> This patchset introduce a new API to get the requirement and configure the
->>>> interconnect buses across the entire chipset to fit with the current demand.
->>>> The API is NOT for changing the performance of the endpoint devices, but only
->>>> the interconnect path in between them.
->>>
->>> For what it's worth, we are ready to land this in Chrome OS. I think
->>> this series has been very well discussed and reviewed, hasn't changed
->>> much in the last few spins, and is in good enough shape to use as a
->>> base for future patches. Georgi's also done a great job reaching out
->>> to other SoC vendors, and there appears to be enough consensus that
->>> this framework will be usable by more than just Qualcomm. There are
->>> also several drivers out on the list trying to add patches to use this
->>> framework, with more to come, so it made sense (to us) to get this
->>> base framework nailed down. In my experiments this is an important
->>> piece of the overall power management story, especially on systems
->>> that are mostly idle.
->>>
->>> I'll continue to track changes to this series and we will ultimately
->>> reconcile with whatever happens upstream, but I thought it was worth
->>> sending this note to express our "thumbs up" towards this framework.
->>
->> Looks like a v11 will be forthcoming, so I'll wait for that one to apply
->> it to the tree if all looks good.
+> > > +/* Instead of busy looping invoke readl_poll_timeout functionality.
+> > > +*/ static int fspi_readl_poll_tout(struct nxp_fspi *f, void __iomem *base,
+> > > +				u32 mask, u32 delay_us,
+> > > +				u32 timeout_us, bool condition)
+> > > +{
+> > > +	u32 reg;
+> > > +
+> > > +	if (!f->devtype_data->little_endian)
+> > > +		mask = (u32)cpu_to_be32(mask);
+> > > +
+> > > +	if (condition)
+> > > +		return readl_poll_timeout(base, reg, (reg & mask),
+> > > +					  delay_us, timeout_us);
+> > > +	else
+> > > +		return readl_poll_timeout(base, reg, !(reg & mask),
+> > > +					  delay_us, timeout_us);  
+> > 
+> > I would rather use a local variable to store the condition:
+> > 
+> > bool c = condition ? (reg & mask):!(reg & mask);
+> >   
+> With these type of usage getting below warning messages.
+>  
+> drivers/spi/spi-nxp-fspi.c: In function ‘fspi_readl_poll_tout.isra.10.constprop’:
+> drivers/spi/spi-nxp-fspi.c:446:21: warning: ‘reg’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+>   bool cn = c ? (reg & mask) : !(reg & mask);
 > 
-> I'm honestly not sure if it is ready yet.
+> If assign value to reg = 0xffffffff then timeout is start getting hit for False case and if assign value 0 then start getting timeout hit for true case.
 > 
-> New versions are coming on and on, which may make such an impression,
-> but we had some discussion on it at the LPC and some serious questions
-> were asked during it, for instance regarding the DT binding introduced
-> here.  I'm not sure how this particular issue has been addressed here,
-> for example.
+> I would rather not try to modify this function.
 
-There have been no changes in bindings since v4 (other than squashing
-consumer and provider bindings into a single patch and fixing typos).
+I agree. Let's keep this function readable even if this implies
+duplicating a few lines of code.
 
-The last DT comment was on v9 [1] where Rob wanted confirmation from
-other SoC vendors that this works for them too. And now we have that
-confirmation and there are patches posted on the list [2].
+> 
+> > return readl_poll_timeout(base, reg, c, delay_us, timeout_us);
+> >   
+> > > +}
+> > > +
+> > > +/*
+> > > + * If the slave device content being changed by Write/Erase, need to
+> > > + * invalidate the AHB buffer. This can be achieved by doing the reset
+> > > + * of controller after setting MCR0[SWRESET] bit.
+> > > + */
+> > > +static inline void nxp_fspi_invalid(struct nxp_fspi *f) {
+> > > +	u32 reg;
+> > > +	int ret;
+> > > +
+> > > +	reg = fspi_readl(f, f->iobase + FSPI_MCR0);
+> > > +	fspi_writel(f, reg | FSPI_MCR0_SWRST, f->iobase + FSPI_MCR0);
+> > > +
+> > > +	/* w1c register, wait unit clear */
+> > > +	ret = fspi_readl_poll_tout(f, f->iobase + FSPI_MCR0,
+> > > +				   FSPI_MCR0_SWRST, 0, POLL_TOUT, false);
+> > > +	WARN_ON(ret);
+> > > +}
+> > > +
+> > > +static void nxp_fspi_prepare_lut(struct nxp_fspi *f,
+> > > +				 const struct spi_mem_op *op)
+> > > +{
+> > > +	void __iomem *base = f->iobase;
+> > > +	u32 lutval[4] = {};
+> > > +	int lutidx = 1, i;
+> > > +
+> > > +	/* cmd */
+> > > +	lutval[0] |= LUT_DEF(0, LUT_CMD, LUT_PAD(op->cmd.buswidth),
+> > > +			     op->cmd.opcode);
+> > > +
+> > > +	/* addr bus width */
+> > > +	if (op->addr.nbytes) {
+> > > +		u32 addrlen = 0;
+> > > +
+> > > +		switch (op->addr.nbytes) {
+> > > +		case 1:
+> > > +			addrlen = ADDR8BIT;
+> > > +			break;
+> > > +		case 2:
+> > > +			addrlen = ADDR16BIT;
+> > > +			break;
+> > > +		case 3:
+> > > +			addrlen = ADDR24BIT;
+> > > +			break;
+> > > +		case 4:
+> > > +			addrlen = ADDR32BIT;
+> > > +			break;
+> > > +		default:
+> > > +			dev_err(f->dev, "In-correct address length\n");
+> > > +			return;
+> > > +		}  
+> > 
+> > You don't need to validate op->addr.nbytes here, this is already done in
+> > nxp_fspi_supports_op().  
+> 
+> Yes, I need to validate op->addr.nbytes else LUT would going to be programmed for 0 addrlen.
+> I have checked this on the target.
 
-The second thing (also discussed at LPC) was about possible cases where
-some consumer drivers can't calculate how much bandwidth they actually
-need and how to address that. The proposal was to extend the OPP
-bindings with one more property, but this is not part of this patchset.
-It is a future step that needs more discussion on the mailing list. If a
-driver really needs some bandwidth data now, it should be put into the
-driver and not in DT. After we have enough consumers, we can discuss
-again if it makes sense to extract something into DT or not.
+Also agree there. Some operations have 0 address bytes. We could also
+test addr.buswidth, but I'm fine with the addr.nbytes test too.
 
-Thanks,
-Georgi
 
-[1] https://lkml.org/lkml/2018/9/25/939
-[2] https://lkml.org/lkml/2018/11/28/12
+> > > +static void nxp_fspi_select_mem(struct nxp_fspi *f, struct spi_device
+> > > +*spi) {
+> > > +	unsigned long rate = spi->max_speed_hz;
+> > > +	int ret;
+> > > +	uint64_t size_kb;
+> > > +
+> > > +	/*
+> > > +	 * Return, if previously selected slave device is same as current
+> > > +	 * requested slave device.
+> > > +	 */
+> > > +	if (f->selected == spi->chip_select)
+> > > +		return;
+> > > +
+> > > +	/* Reset FLSHxxCR0 registers */
+> > > +	fspi_writel(f, 0, f->iobase + FSPI_FLSHA1CR0);
+> > > +	fspi_writel(f, 0, f->iobase + FSPI_FLSHA2CR0);
+> > > +	fspi_writel(f, 0, f->iobase + FSPI_FLSHB1CR0);
+> > > +	fspi_writel(f, 0, f->iobase + FSPI_FLSHB2CR0);
+> > > +
+> > > +	/* Assign controller memory mapped space as size, KBytes, of flash. */
+> > > +	size_kb = FSPI_FLSHXCR0_SZ(f->memmap_phy_size);  
+> >   
+> Above description of this function, explains the reason for using memmap_phy_size.
+> This is not the arbitrary size, but the memory mapped size being assigned to the controller.
+> 
+> > You are still using memory of arbitrary size (memmap_phy_size) for mapping the
+> > flash. Why not use the same approach as in the QSPI driver and just map
+> > ahb_buf_size until we implement the dirmap API?  
+> The approach which being used in QSPI driver didn't work here, I have tried with that.
+> In QSPI driver, while preparing LUT we are assigning read/write address in the LUT preparation and have to for some unknown hack have to provide macro for LUT_MODE instead of LUT_ADDR.
+> But this thing didn't work for FlexSPI.
+> I discussed with HW IP owner and they suggested only to use LUT_ADDR for specifying the address length of the command i.e. 3-byte or 4-byte address command (NOR) or 1-2 byte address command for NAND.
+
+Actually, we would have used a LUT_ADDR too if the QSPI IP was support
+ADDR instructions with a number of bytes < 3, but for some unknown
+reasons it does not work. 
+
+> 
+> Thus, in LUT preparation we have assigned only the base address.
+> Now if I have assigned ahb_buf_size to FSPI_FLSHXXCR0 register then for read/write data beyond limit of ahb_buf_size offset I get data corruption.
+
+Why would you do that? We have the ->adjust_op_size() exactly for this
+reason, so, if someone tries to do a spi_mem_op with data.nbytes >
+ahb_buf_size you should return an error.
+
+> 
+> Thus, for generic approach have assigned FSPI_FLSHXXCR0 equal to the memory mapped size to the controller. This would also not going to depend on the number of CS present on the target.
+
+I kind of agree with Frieder on that one, I think it's preferable to
+limit the per-read-op size to ahb_buf_size and let the upper layer
+split the request in several sub-requests. On the controller side of
+things, you just have to have a mapping of ahb_buf_size per-CS. If you
+want to further optimize things, implement the dirmap hooks.
+
+> 
+> > You are already aligning the AHB reads for this in nxp_fspi_adjust_op_size().
+> >   
+> Yes, max read data size can be ahb_buf_size. Thus we need to check max read size with ahb_buf_size.
+
+Well, it's never a bad thing to check it twice, just in case the
+spi-mem user is misusing the API.
+
+> > > +static void nxp_fspi_fill_txfifo(struct nxp_fspi *f,
+> > > +				 const struct spi_mem_op *op)
+> > > +{
+> > > +	void __iomem *base = f->iobase;
+> > > +	int i, j, ret;
+> > > +	int size, tmp_size, wm_size;
+> > > +	u32 data = 0;
+> > > +	u32 *txbuf = (u32 *) op->data.buf.out;
+> > > +
+> > > +	/* clear the TX FIFO. */
+> > > +	fspi_writel(f, FSPI_IPTXFCR_CLR, base + FSPI_IPTXFCR);
+> > > +
+> > > +	/* Default value of water mark level is 8 bytes. */
+> > > +	wm_size = 8;
+> > > +	size = op->data.nbytes / wm_size;
+> > > +	for (i = 0; i < size; i++) {
+> > > +		/* Wait for TXFIFO empty */
+> > > +		ret = fspi_readl_poll_tout(f, f->iobase + FSPI_INTR,
+> > > +					   FSPI_INTR_IPTXWE, 0,
+> > > +					   POLL_TOUT, true);
+> > > +		WARN_ON(ret);
+> > > +
+> > > +		j = 0;
+> > > +		tmp_size = wm_size;
+> > > +		while (tmp_size > 0) {
+> > > +			data = 0;
+> > > +			memcpy(&data, txbuf, 4);
+> > > +			fspi_writel(f, data, base + FSPI_TFDR + j * 4);
+> > > +			tmp_size -= 4;
+> > > +			j++;
+> > > +			txbuf += 1;
+> > > +		}
+> > > +		fspi_writel(f, FSPI_INTR_IPTXWE, base + FSPI_INTR);
+> > > +	}
+> > > +
+> > > +	size = op->data.nbytes % wm_size;
+> > > +	if (size) {
+> > > +		/* Wait for TXFIFO empty */
+> > > +		ret = fspi_readl_poll_tout(f, f->iobase + FSPI_INTR,
+> > > +					   FSPI_INTR_IPTXWE, 0,
+> > > +					   POLL_TOUT, true);
+> > > +		WARN_ON(ret);
+> > > +
+> > > +		j = 0;
+> > > +		tmp_size = 0;
+> > > +		while (size > 0) {
+> > > +			data = 0;
+> > > +			tmp_size = (size < 4) ? size : 4;
+> > > +			memcpy(&data, txbuf, tmp_size);
+> > > +			fspi_writel(f, data, base + FSPI_TFDR + j * 4);
+> > > +			size -= tmp_size;
+> > > +			j++;
+> > > +			txbuf += 1;
+> > > +		}
+> > > +		fspi_writel(f, FSPI_INTR_IPTXWE, base + FSPI_INTR);
+> > > +	}  
+> > 
+> > All these nested loops to fill the TX buffer and also the ones below to read the
+> > RX buffer look much more complicated than they should really be. Can you try to
+> > make this more readable?  
+> Yes
+> > 
+> > Maybe something like this would work:
+> > 
+> > for (i = 0; i < ALIGN_DOWN(op->data.nbytes, 8); i += 8) {
+> > 	/* Wait for TXFIFO empty */
+> > 	ret = fspi_readl_poll_tout(f, f->iobase + FSPI_INTR,
+> > 				   FSPI_INTR_IPTXWE, 0,
+> > 				   POLL_TOUT, true);
+> > 
+> > 	fspi_writel(f, op->data.buf.out + i, base + FSPI_TFDR);
+> > 	fspi_writel(f, op->data.buf.out + i + 4, base + FSPI_TFDR + 4);
+> > 	fspi_writel(f, FSPI_INTR_IPTXWE, base + FSPI_INTR); }  
+> With this above 2 lines we are hardcoding it for read/write with watermark size as 8 bytes.
+> Watermark size can be variable and depends on the value of IPRXFCR/IPTXFCR register with default value as 8 bytes
+> Thus, I would still prefer to use the internal for loop instead of 2 fspi_writel(...) for FSPI_TFDR and FSPI_TFDR + 4 register write commands.
+
+Just like you're hardcoding wm_size to 8, so I don't see a difference
+here. And I indeed prefer Frieder's version.
