@@ -1,13 +1,12 @@
 From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Subject: [PATCH 6/8] regulator: dts: enable soft-start and ramp
- delay for the OLinuXino Lime2
-Date: Mon, 10 Dec 2018 20:42:17 +0200
-Message-ID: <b76e1964fee095164ed9313e9f57d4d4318c083f.1544466940.git-series.plaes@plaes.org>
+Subject: [PATCH 7/8] mfd: axp20x: Clean up included headers
+Date: Mon, 10 Dec 2018 20:42:18 +0200
+Message-ID: <0cd6a4f334a84bfcbbdd805ccabe132611517ba3.1544466940.git-series.plaes@plaes.org>
 References: <cover.4110554ae84987dedb8b58888a8a63d6b7f98c72.1544466940.git-series.plaes@plaes.org>
 Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDB4J47M7YERBFHHXLQAKGQEETFPL4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDB4J47M7YERBFPHXLQAKGQEWLDGJEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <cover.4110554ae84987dedb8b58888a8a63d6b7f98c72.1544466940.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -22,30 +21,43 @@ List-Id: devicetree@vger.kernel.org
 
 From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 
-The OLinuXino Lime2 has a big capacitor on its LDO3 output. It is
-actually too large, causing the PMIC to shutdown when toggling the LDO3.
-
-By enabling soft-start and ramp delay we increase the time for the
-capacitor to charge lowering the current drain on the power regulator.
+Add the bitops.h header as we need it, alphabetize header order.
 
 Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mfd/axp20x.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-index 55c9086..4e1c590 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-@@ -232,6 +232,8 @@
- 	regulator-min-microvolt = <2800000>;
- 	regulator-max-microvolt = <2800000>;
- 	regulator-name = "vddio-csi0";
-+	regulator-soft-start;
-+	regulator-ramp-delay = <1600>;
- };
+diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+index dfc3cff..c3f3dbd 100644
+--- a/drivers/mfd/axp20x.c
++++ b/drivers/mfd/axp20x.c
+@@ -16,18 +16,19 @@
+  * published by the Free Software Foundation.
+  */
  
- &reg_ldo4 {
+-#include <linux/err.h>
++#include <linux/acpi.h>
++#include <linux/bitops.h>
+ #include <linux/delay.h>
++#include <linux/err.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
++#include <linux/mfd/axp20x.h>
++#include <linux/mfd/core.h>
+ #include <linux/module.h>
++#include <linux/of_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+-#include <linux/mfd/axp20x.h>
+-#include <linux/mfd/core.h>
+-#include <linux/of_device.h>
+-#include <linux/acpi.h>
+ 
+ #define AXP20X_OFF	0x80
+ 
 -- 
 git-series 0.9.1
