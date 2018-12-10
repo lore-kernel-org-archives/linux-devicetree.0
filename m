@@ -1,37 +1,26 @@
-Return-Path: <SRS0=QIJi=OO=gmail.com=edubezval@kernel.org>
-Date: Tue, 4 Dec 2018 22:12:23 -0800
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH/RFT 0/2] thermal: add suport for R8A77990
-Message-ID: <20181205061221.GA21626@localhost.localdomain>
-References: <1539612719-9650-1-git-send-email-ykaneko0929@gmail.com>
+Return-Path: <SRS0=+yaY=OT=verge.net.au=horms@kernel.org>
+Date: Mon, 10 Dec 2018 14:16:10 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: dts: r8a7743: Remove aliases from SoC dtsi
+Message-ID: <20181210131609.526zy73r7eedgl6y@verge.net.au>
+References: <1544443624-65471-1-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdXGmCdHhuQ303Nc4DZ5yPKs+vJN3Zxx2HKGomW4AenvRw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1539612719-9650-1-git-send-email-ykaneko0929@gmail.com>
-To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <CAMuHMdXGmCdHhuQ303Nc4DZ5yPKs+vJN3Zxx2HKGomW4AenvRw@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hello Yoshihiro,
+On Mon, Dec 10, 2018 at 01:19:42PM +0100, Geert Uytterhoeven wrote:
+> On Mon, Dec 10, 2018 at 1:15 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> > This patch removes aliases from SoC dtsi tree. Device aliases are
+> > board-specific, if needed define it in board dts rather than SoC
+> > dtsi.
+> >
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On Mon, Oct 15, 2018 at 11:11:57PM +0900, Yoshihiro Kaneko wrote:
-> This series adds thermal support for R-Car E3 (R8A77990).
-> 
-> This series is based on the next branch of Eduardo Valentin's linux-soc-thermal
-> tree.
-
-Sorry for the late response, but would you be able to refresh your
-series to latest linus master branch?
-
-> 
-> Yoshihiro Kaneko (2):
->   dt-bindings: thermal: rcar-thermal: add R8A77990 support
->   thermal: rcar_thermal: add R8A77990 support
-> 
->  Documentation/devicetree/bindings/thermal/rcar-thermal.txt | 5 +++--
->  drivers/thermal/rcar_thermal.c                             | 4 ++++
->  2 files changed, 7 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 1.9.1
-> 
+Thanks, applied for v4.22.
