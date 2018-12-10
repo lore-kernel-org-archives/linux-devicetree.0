@@ -1,12 +1,14 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v3 0/6] media/sun6i: Allwinner A64 CSI support
-Date: Mon, 10 Dec 2018 17:22:40 +0530
-Message-ID: <20181210115246.8188-1-jagan@amarulasolutions.com>
+Subject: [PATCH v3 1/6] dt-bindings: media: sun6i: Add A64 CSI compatible
+Date: Mon, 10 Dec 2018 17:22:41 +0530
+Message-ID: <20181210115246.8188-2-jagan@amarulasolutions.com>
+References: <20181210115246.8188-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBONHXHQAKGQEIHUJT4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBO5HXHQAKGQEIDDGHDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181210115246.8188-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -17,40 +19,28 @@ To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalh
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series support CSI on Allwinner A64.
-
 Allwinner A64 CSI has single channel time-multiplexed BT.656
 CMOS sensor interface like H3 but work by lowering clock than
 default mod clock.
 
-Changes for v3:
-- update dt-bindings for A64
-- set mod clock via csi driver
-- remove assign clocks from dtsi
-- remove i2c-gpio opendrian
-- fix avdd and dovdd supplies
-- remove vcc-csi pin group supply
+Add a compatible string for it.
 
-Note: This series created on top of H3 changes [1]
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+ Documentation/devicetree/bindings/media/sun6i-csi.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-[1] https://patchwork.kernel.org/cover/10705905/
-
-Any inputs,
-Jagan. 
-
-Jagan Teki (6):
-  dt-bindings: media: sun6i: Add A64 CSI compatible
-  media: sun6i: Add A64 compatible support
-  media: sun6i: Set 300MHz mod clock for A64
-  arm64: dts: allwinner: a64: Add A64 CSI controller
-  arm64: dts: allwinner: a64: Add pinmux setting for CSI MCLK on PE1
-  arm64: dts: allwinner: a64-amarula-relic: Add OV5640 camera node
-
- .../devicetree/bindings/media/sun6i-csi.txt   |  1 +
- .../allwinner/sun50i-a64-amarula-relic.dts    | 53 +++++++++++++++++++
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 25 +++++++++
- .../platform/sunxi/sun6i-csi/sun6i_csi.c      |  6 +++
- 4 files changed, 85 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt b/Documentation/devicetree/bindings/media/sun6i-csi.txt
+index cc37cf7fd051..376aade669a1 100644
+--- a/Documentation/devicetree/bindings/media/sun6i-csi.txt
++++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
+@@ -7,6 +7,7 @@ Required properties:
+   - compatible: value must be one of:
+     * "allwinner,sun6i-a31-csi"
+     * "allwinner,sun8i-h3-csi"
++    * "allwinner,sun50i-a64-csi"
+     * "allwinner,sun8i-v3s-csi"
+   - reg: base address and size of the memory-mapped region.
+   - interrupts: interrupt associated to this IP
 -- 
 2.18.0.321.gffc6fa0e3
