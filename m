@@ -1,29 +1,49 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/6] dt-bindings: media: sun6i: Add A64 CSI compatible
-Date: Mon, 10 Dec 2018 17:24:23 -0600
-Message-ID: <20181210232423.GA13891@bogus>
-References: <20181210115246.8188-1-jagan@amarulasolutions.com>
- <20181210115246.8188-2-jagan@amarulasolutions.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: net: ath10k: fix node name and
+ device type in qcom ath10k example
+Date: Mon, 10 Dec 2018 17:25:23 -0600
+Message-ID: <20181210232523.GA14192@bogus>
+References: <1544466691-11821-1-git-send-email-bperumal@codeaurora.org>
+ <1544466691-11821-2-git-send-email-bperumal@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20181210115246.8188-2-jagan@amarulasolutions.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula@amarulasolutions.com, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
+In-Reply-To: <1544466691-11821-2-git-send-email-bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Dec 2018 17:22:41 +0530, Jagan Teki wrote:
-> Allwinner A64 CSI has single channel time-multiplexed BT.656
-> CMOS sensor interface like H3 but work by lowering clock than
-> default mod clock.
-> 
-> Add a compatible string for it.
-> 
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
->  Documentation/devicetree/bindings/media/sun6i-csi.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+On Tue, Dec 11, 2018 at 12:01:29AM +0530, Bhagavathi Perumal S wrote:
+> In qcom,ath10k documentation, ath10k is used as node name in the example of
+> pci based device. Normally, node name shoud be class of device and not the model
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+s/shoud/should/
+
+> name, so fix it to node name "wifi". And remove the property device_type pci
+> since only pci bridges should have this property.
+> 
+> Signed-off-by: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> index 2196d1a..ef60f25 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> @@ -74,9 +74,8 @@ pci {
+>  		#address-cells = <3>;
+>  		device_type = "pci";
+>  
+> -		ath10k@0,0 {
+> +		wifi@0,0 {
+>  			reg = <0 0 0 0 0>;
+> -			device_type = "pci";
+>  			qcom,ath10k-calibration-data = [ 01 02 03 ... ];
+>  		};
+>  	};
+> -- 
+> 1.9.1
+> 
