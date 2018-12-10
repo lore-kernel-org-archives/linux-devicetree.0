@@ -1,118 +1,87 @@
-From: Stefan Popa <stefan.popa@analog.com>
-Subject: [PATCH v4 2/2] dt-bindings: iio: adc: Add docs for AD7606 ADC
-Date: Mon, 10 Dec 2018 13:04:25 +0200
-Message-ID: <1544439865-22967-1-git-send-email-stefan.popa@analog.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v5 1/5] spi: spi-mem: Add driver for NXP FlexSPI
+ controller
+Date: Mon, 10 Dec 2018 12:09:25 +0100
+Message-ID: <20181210120925.3c6336f6@bbrezillon>
+References: <1542366701-16065-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+        <1542366701-16065-2-git-send-email-yogeshnarayan.gaur@nxp.com>
+        <eb8a31d8-2ba6-f27c-addf-545c77921b77@kontron.de>
+        <VI1PR04MB57267D9F69719B4BEF38BF8699A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
+        <20181210111909.35384eee@bbrezillon>
+        <VI1PR04MB57268740CA806FFB164780EB99A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
+        <20181210115001.6c7af1d7@bbrezillon>
+        <VI1PR04MB5726F0DDAC84F1AEC20B56DF99A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <VI1PR04MB5726F0DDAC84F1AEC20B56DF99A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
+To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Cc: Schrempf Frieder <frieder.schrempf@kontron.de>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Document support for AD7606 Analog to Digital Converter.
+On Mon, 10 Dec 2018 10:59:54 +0000
+Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
----
-Changes in v2:
-	- fixed indentation issues.
-	- used gpios instead of gpio.
-	- added vendor prefix for conversion-start-gpios, first-data-gpios,
-	and range-gpios.
-Changes in v3:
-	- Added adi,oversampling-ratio-gpios.
-Changes in v4:
-	- Specified if the gpios are active high or low and set the flag
-	appropriately.
+> Hi Boris,
+> 
+> > -----Original Message-----
+> > From: Boris Brezillon [mailto:boris.brezillon@bootlin.com]
+> > Sent: Monday, December 10, 2018 4:20 PM
+> > To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+> > Cc: Schrempf Frieder <frieder.schrempf@kontron.de>; linux-
+> > mtd@lists.infradead.org; marek.vasut@gmail.com; broonie@kernel.org; linux-
+> > spi@vger.kernel.org; devicetree@vger.kernel.org; robh@kernel.org;
+> > mark.rutland@arm.com; shawnguo@kernel.org; linux-arm-
+> > kernel@lists.infradead.org; computersforpeace@gmail.com; linux-
+> > kernel@vger.kernel.org
+> > Subject: Re: [PATCH v5 1/5] spi: spi-mem: Add driver for NXP FlexSPI controller
+> > 
+> > On Mon, 10 Dec 2018 10:43:56 +0000
+> > Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
+> >   
+> > > > > Thus, in LUT preparation we have assigned only the base address.
+> > > > > Now if I have assigned ahb_buf_size to FSPI_FLSHXXCR0 register
+> > > > > then for  
+> > > > read/write data beyond limit of ahb_buf_size offset I get data corruption.
+> > > >
+> > > > Why would you do that? We have the ->adjust_op_size() exactly for
+> > > > this reason, so, if someone tries to do a spi_mem_op with
+> > > > data.nbytes > ahb_buf_size you should return an error.
+> > > >  
+> > > Let me explain my implementation with example. If I have to write data of size  
+> > 0x100 bytes at offset 0x1200 for CS1, I would program as below:  
+> > > In func nxp_fspi_select_mem(), would set value of controller address space  
+> > size, memmap_phy_size, to FSPI_FLSHA2CR0 and rest all FSPI_FLSHXXCR0 as 0.  
+> > > Value of memmap_phy_size is 0x10000000 i.e. 256 MB for my LX2160ARDB  
+> > target.  
+> > > Then in nxp_fspi_prepare_lut(), I would prepare LUT ADDR with address length  
+> > requirement 3/4 byte for NOR or 1/2/3/4 bytes for NAND flash.  
+> > > Also for LUT_NXP_WRITE would program data bytes as 0.
+> > >
+> > > Then inside func nxp_fspi_do_op(), set register FSPI_IPCR0 as the
+> > > address offset i.e. 0x1200 and in register FSPI_IPCR1 program the data
+> > > size to write i.e. 0x100
+> > >
+> > > If, as suggested if I tries to mark value of register FSPI_FLSHA2CR0 equal to  
+> > ahb_buf_size (0x800), then access for address 0x1200 gives me wrong data. This
+> > is because as per the controller specification access to flash connected at CS1
+> > can be performed under range of FSPI_ FLSHA1CR0 and FSPI_ FLSHA2CR0.
+> > 
+> > Don't you have a way to set an offset to apply to the address accessed through
+> > the AHB? And if you don't, how will it work if your mapping is smaller than the
+> > flash size?  
+> 
+> Write operations are triggered using IP commands instead of AHB command.
+> For Read AHB command is used and in this we are adding the offset when performing memcpy_fromIO operation
+>       memcpy_fromio(op->data.buf.in, (f->ahb_addr + op->addr.val), len);
+> 
+> AHB/IP operations are independent of the way how CS got selected. CS selection depends, e.g. CS1 on the value of register FSPI_FLSHA1CR0 and FSPI_FLSHA2CR0.
+> 
+> Mapping can never going to be smaller than the connected flash size as per discussion with the Board design team and if it's possible by user manually changes the non-soldered part then flash area beyond complete mapping is not accessible.
+> On LX2160ARDB, with mapping of 256MB, for now we are having 4 flash devices connected with size as 64 MB. If user wants he can have only one single flash with flash size of 256MB.
 
- .../devicetree/bindings/iio/adc/adi,ad7606.txt     | 65 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 66 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
-new file mode 100644
-index 0000000..d7b6241
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
-@@ -0,0 +1,65 @@
-+Analog Devices AD7606 Simultaneous Sampling ADC
-+
-+Required properties for the AD7606:
-+
-+- compatible: Must be one of
-+	* "adi,ad7605-4"
-+	* "adi,ad7606-8"
-+	* "adi,ad7606-6"
-+	* "adi,ad7606-4"
-+- reg: SPI chip select number for the device
-+- spi-max-frequency: Max SPI frequency to use
-+	see: Documentation/devicetree/bindings/spi/spi-bus.txt
-+- spi-cpha: See Documentation/devicetree/bindings/spi/spi-bus.txt
-+- avcc-supply: phandle to the Avcc power supply
-+- interrupts: IRQ line for the ADC
-+	see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+- adi,conversion-start-gpios: must be the device tree identifier of the CONVST pin.
-+		  This logic input is used to initiate conversions on the analog
-+		  input channels. As the line is active high, it should be marked
-+		  GPIO_ACTIVE_HIGH.
-+
-+Optional properties:
-+
-+- reset-gpios: must be the device tree identifier of the RESET pin. If specified,
-+	       it will be asserted during driver probe. As the line is active high,
-+	       it should be marked GPIO_ACTIVE_HIGH.
-+- standby-gpios: must be the device tree identifier of the STBY pin. This pin is used
-+		to place the AD7606 into one of two power-down modes, Standby mode or
-+		Shutdown mode. As the line is active low, it should be marked
-+		GPIO_ACTIVE_LOW.
-+- adi,first-data-gpios: must be the device tree identifier of the FRSTDATA pin.
-+		    The FRSTDATA output indicates when the first channel, V1, is
-+		    being read back on either the parallel, byte or serial interface.
-+		    As the line is active high, it should be marked GPIO_ACTIVE_HIGH.
-+- adi,range-gpios: must be the device tree identifier of the RANGE pin. The polarity on
-+	      this pin determines the input range of the analog input channels. If
-+	      this pin is tied to a logic high, the analog input range is ±10V for
-+	      all channels. If this pin is tied to a logic low, the analog input range
-+	      is ±5V for all channels. As the line is active high, it should be marked
-+	      GPIO_ACTIVE_HIGH.
-+- adi,oversampling-ratio-gpios: must be the device tree identifier of the over-sampling
-+				mode pins. As the line is active high, it should be marked
-+				GPIO_ACTIVE_HIGH.
-+
-+Example:
-+
-+	adc@0 {
-+		compatible = "adi,ad7606-8";
-+		reg = <0>;
-+		spi-max-frequency = <1000000>;
-+		spi-cpol;
-+
-+		avcc-supply = <&adc_vref>;
-+
-+		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-parent = <&gpio>;
-+
-+		adi,conversion-start-gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpio 27 GPIO_ACTIVE_HIGH>;
-+		adi,first-data-gpios = <&gpio 22 GPIO_ACTIVE_HIGH>;
-+		adi,oversampling-ratio-gpios = <&gpio 18 GPIO_ACTIVE_HIGH
-+						&gpio 23 GPIO_ACTIVE_HIGH
-+						&gpio 26 GPIO_ACTIVE_HIGH>;
-+		standby-gpios = <&gpio 24 GPIO_ACTIVE_LOW>;
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 843545d..6d63db4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -845,6 +845,7 @@ L:	linux-iio@vger.kernel.org
- W:	http://ez.analog.com/community/linux-device-drivers
- S:	Supported
- F:	drivers/iio/adc/ad7606.c
-+F:	Documentation/devicetree/bindings/iio/adc/ad7606.txt
- 
- ANALOG DEVICES INC AD9389B DRIVER
- M:	Hans Verkuil <hans.verkuil@cisco.com>
--- 
-2.7.4
+Given that the dirmap interface has now been merged and the MTD side of
+things is soon to be merged, I'd recommend you to implement it in your
+v6 and only use non-AHB accesses for the ->exec_op() implementation.
