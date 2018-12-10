@@ -1,30 +1,188 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 12/15] dt-bindings: serial: Document RDA Micro UART
-Date: Mon, 10 Dec 2018 16:25:37 -0600
-Message-ID: <20181210222537.GA2223@bogus>
-References: <20181210173550.29643-1-manivannan.sadhasivam@linaro.org>
- <20181210173550.29643-13-manivannan.sadhasivam@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Eddie James <eajames@linux.ibm.com>
+Subject: [PATCH v7 0/2] media: platform: Add Aspeed Video Engine driver
+Date: Mon, 10 Dec 2018 16:26:29 -0600
+Message-ID: <1544480791-92746-1-git-send-email-eajames@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181210173550.29643-13-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, daniel.lezcano@linaro.org, gregkh@linuxfoundation.org, jslaby@suse.com, linux-unisoc@lists.infradead.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, hverkuil@xs4all.nl, Eddie James <eajames@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Dec 2018 23:05:47 +0530, Manivannan Sadhasivam wrote:
-> From: Andreas Färber <afaerber@suse.de>
-> 
-> Add an initial binding for the UART in RDA Micro RDA8810PL SoC.
-> 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  .../bindings/serial/rda,8810pl-uart.txt         | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/rda,8810pl-uart.txt
-> 
+From: Eddie James <eajames@linux.vnet.ibm.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
+can capture and compress video data from digital or analog sources. With
+the Aspeed chip acting as a service processor, the Video Engine can
+capture the host processor graphics output.
+
+This series adds a V4L2 driver for the VE, providing the usual V4L2 streaming
+interface by way of videobuf2. Each frame, the driver triggers the hardware to
+capture the host graphics output and compress it to JPEG format.
+
+v4l2-compliance SHA: d039b47a108596ca004b11e52989054882d45888, 32 bits
+
+Compliance test for device /dev/video0:
+
+Driver Info:
+	Driver name      : aspeed-video
+	Card type        : Aspeed Video Engine
+	Bus info         : platform:aspeed-video
+	Driver version   : 4.19.6
+	Capabilities     : 0x85200001
+		Video Capture
+		Read/Write
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x05200001
+		Video Capture
+		Read/Write
+		Streaming
+		Extended Pix Format
+
+Required ioctls:
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video0 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK
+	test VIDIOC_DV_TIMINGS_CAP: OK
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls (Input 0):
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+	test VIDIOC_QUERYCTRL: OK
+	test VIDIOC_G/S_CTRL: OK
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+		warn: v4l2-test-controls.cpp(853): V4L2_CID_DV_RX_POWER_PRESENT not found for input 0
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 3 Private Controls: 0
+
+Format ioctls (Input 0):
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
+
+Codec ioctls (Input 0):
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls (Input 0):
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK (Not Supported)
+
+Test input 0:
+
+Streaming ioctls:
+	test read/write: OK
+	test blocking wait: OK
+	test MMAP: OK                                     
+	test USERPTR: OK (Not Supported)
+	test DMABUF: Cannot test, specify --expbuf-device
+
+Total: 48, Succeeded: 48, Failed: 0, Warnings: 1
+
+I'm unable to run linux-next or the media tree as our system doesn't boot
+without quite a few patches that aren't yet upstreamed, so I can't grab the
+fix for that warning Hans mentioned.
+
+Changes since v6:
+ - Refactor open/start process such that the file handle can be opened without
+   a video signal present
+ - Added standards and capabilities
+ - Removed used of VB2_BUF_FLAG_LAST
+ - Added a few comments
+ - Removed a couple of functions that were only used once
+ - Removed client counter
+
+Changes since v5:
+ - Rework resolution change and v4l2 timings functions again with active and
+   detected timings.
+ - Renamed a few things.
+ - Fixed polarities in the timings.
+
+Changes since v4:
+ - Set real min and max resolution in enum_dv_timings
+ - Add check for vb2_is_busy before settings the timings
+ - Set max frame rate to the actual max rather than max + 1
+ - Correct the input status to 0.
+ - Rework resolution change to only set the relevant h/w regs during startup or
+   when set_timings is called.
+
+Changes since v3:
+ - Switch update reg function to use u32 clear rather than unsigned long mask
+ - Add timing information from host VGA signal
+ - Fix binding documentation mispelling
+ - Fix upper case hex values
+ - Add wait_prepare and wait_finish
+ - Set buffer state to queued (rather than error) if streaming fails to start
+ - Switch engine busy print statement to error
+ - Removed a couple unecessary type assignments in v4l2 ioctls
+ - Added query_dv_timings, fixed get_dv_timings
+ - Corrected source change event to fire if and only if size actually changes
+ - Locked open and release
+
+Changes since v2:
+ - Switch to streaming interface. This involved a lot of changes.
+ - Rework memory allocation due to using videobuf2 buffers, but also only
+   allocate the necessary size of source buffer rather than the max size
+
+Changes since v1:
+ - Removed le32_to_cpu calls for JPEG header data
+ - Reworked v4l2 ioctls to be compliant.
+ - Added JPEG controls
+ - Updated devicetree docs according to Rob's suggestions.
+ - Added myself to MAINTAINERS
+
+Eddie James (2):
+  dt-bindings: media: Add Aspeed Video Engine binding documentation
+  media: platform: Add Aspeed Video Engine driver
+
+ .../devicetree/bindings/media/aspeed-video.txt     |   26 +
+ MAINTAINERS                                        |    8 +
+ drivers/media/platform/Kconfig                     |    9 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/aspeed-video.c              | 1717 ++++++++++++++++++++
+ 5 files changed, 1761 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
+ create mode 100644 drivers/media/platform/aspeed-video.c
+
+-- 
+1.8.3.1
