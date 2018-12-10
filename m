@@ -1,45 +1,111 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v5 1/5] spi: spi-mem: Add driver for NXP FlexSPI
- controller
-Date: Mon, 10 Dec 2018 11:50:01 +0100
-Message-ID: <20181210115001.6c7af1d7@bbrezillon>
-References: <1542366701-16065-1-git-send-email-yogeshnarayan.gaur@nxp.com>
-        <1542366701-16065-2-git-send-email-yogeshnarayan.gaur@nxp.com>
-        <eb8a31d8-2ba6-f27c-addf-545c77921b77@kontron.de>
-        <VI1PR04MB57267D9F69719B4BEF38BF8699A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
-        <20181210111909.35384eee@bbrezillon>
-        <VI1PR04MB57268740CA806FFB164780EB99A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
+From: Hans Ole Hatzel <hohatzel@jusst.de>
+Subject: Re: [PATCH 4/4] ARM: dts: imx7d: sbc imx7: add uart5
+Date: Mon, 10 Dec 2018 11:51:53 +0100
+Message-ID: <58a84012-73b8-1679-0c5b-981fd2a0acd6@jusst.de>
+References: <20181204110741.6943-1-hohatzel@jusst.de>
+ <20181204110741.6943-5-hohatzel@jusst.de> <20181206031520.GE3987@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB57268740CA806FFB164780EB99A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Cc: Schrempf Frieder <frieder.schrempf@kontron.de>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181206031520.GE3987@dragon>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: fabio.estevam@nxp.com, devicetree@vger.kernel.org, Julian Scheel <jscheel@jusst.de>, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Dec 2018 10:43:56 +0000
-Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
 
-> > > Thus, in LUT preparation we have assigned only the base address.
-> > > Now if I have assigned ahb_buf_size to FSPI_FLSHXXCR0 register then for  
-> > read/write data beyond limit of ahb_buf_size offset I get data corruption.
-> > 
-> > Why would you do that? We have the ->adjust_op_size() exactly for this reason,
-> > so, if someone tries to do a spi_mem_op with data.nbytes > ahb_buf_size you
-> > should return an error.
-> >   
-> Let me explain my implementation with example. If I have to write data of size 0x100 bytes at offset 0x1200 for CS1, I would program as below:
-> In func nxp_fspi_select_mem(), would set value of controller address space size, memmap_phy_size, to FSPI_FLSHA2CR0 and rest all FSPI_FLSHXXCR0 as 0. 
-> Value of memmap_phy_size is 0x10000000 i.e. 256 MB for my LX2160ARDB target.
-> Then in nxp_fspi_prepare_lut(), I would prepare LUT ADDR with address length requirement 3/4 byte for NOR or 1/2/3/4 bytes for NAND flash.
-> Also for LUT_NXP_WRITE would program data bytes as 0.
-> 
-> Then inside func nxp_fspi_do_op(), set register FSPI_IPCR0 as the address offset i.e. 0x1200 and in register FSPI_IPCR1 program the data size to write i.e. 0x100
-> 
-> If, as suggested if I tries to mark value of register FSPI_FLSHA2CR0 equal to ahb_buf_size (0x800), then access for address 0x1200 gives me wrong data. This is because as per the controller specification access to flash connected at CS1 can be performed under range of FSPI_ FLSHA1CR0 and FSPI_ FLSHA2CR0.
 
-Don't you have a way to set an offset to apply to the address accessed
-through the AHB? And if you don't, how will it work if your mapping
-is smaller than the flash size?
+On 12/6/18 4:15 AM, Shawn Guo wrote:
+> On Tue, Dec 04, 2018 at 12:07:41PM +0100, Hans Ole Hatzel wrote:
+>> Adds uart5 connections as used on the sbc.
+>> In the sbc's reference material this is known as uart1, it does however
+>> connect to the som as uart5. This uart is connected via the soc's
+>> pins 11 (TX) and 13 (RX). On the sbc it is pinned out on P5
+>> using pins 15 (TX) and 17 (RX).
+>>
+>> Signed-off-by: Hans Ole Hatzel <hohatzel@jusst.de>
+>> Signed-off-by: Julian Scheel <jscheel@jusst.de>
+>> ---
+>>   arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 16 ++++++++++++++++
+>>   arch/arm/boot/dts/imx7d-sbc-imx7.dts    |  4 ++++
+>>   2 files changed, 20 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+>> index 6c2c844dc052..f7c002093c67 100644
+>> --- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+>> +++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+>> @@ -223,6 +223,15 @@
+>>   	fsl;
+>>   };
+>>   
+>> +&uart5 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_uart5>;
+>> +	assigned-clocks = <&clks IMX7D_UART5_ROOT_SRC>;
+>> +	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
+> 
+> Can we have some comments in the commit log on why we have to use this
+> particular clock source?
+> 
+> Shawn
+> 
+
+imx7d-pico.dts does this the same way. Is that good enough of a reason? 
+If so, should it be included in the commit message?
+
+Hans
+
+>> +	status = "okay";
+>> +	fsl;
+>> +};
+>> +
+>>   &usbotg1 {
+>>   	pinctrl-names = "default";
+>>   	pinctrl-0 = <&pinctrl_usbotg1>;
+>> @@ -330,6 +339,13 @@
+>>   		>;
+>>   	};
+>>   
+>> +	pinctrl_uart5: uart5grp {
+>> +		fsl,pins = <
+>> +			MX7D_PAD_I2C4_SCL__UART5_DCE_RX		0x79
+>> +			MX7D_PAD_I2C4_SDA__UART5_DCE_TX		0x79
+>> +		>;
+>> +	};
+>> +
+>>   	pinctrl_usdhc2: usdhc2grp {
+>>   		fsl,pins = <
+>>   			MX7D_PAD_SD2_CMD__SD2_CMD			0x59
+>> diff --git a/arch/arm/boot/dts/imx7d-sbc-imx7.dts b/arch/arm/boot/dts/imx7d-sbc-imx7.dts
+>> index 74904127fbc6..d23d62aceb82 100644
+>> --- a/arch/arm/boot/dts/imx7d-sbc-imx7.dts
+>> +++ b/arch/arm/boot/dts/imx7d-sbc-imx7.dts
+>> @@ -30,6 +30,10 @@
+>>   	status = "okay";
+>>   };
+>>   
+>> +&uart5 {
+>> +	status = "okay";
+>> +};
+>> +
+>>   &iomuxc {
+>>   	pinctrl_usdhc1: usdhc1grp {
+>>   		fsl,pins = <
+>> -- 
+>> 2.19.2
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
