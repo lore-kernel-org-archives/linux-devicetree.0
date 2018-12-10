@@ -1,66 +1,104 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: Re: [PATCH 3/3] mmc: sdhci_am654: Add Initial Support for AM654 SDHCI
- driver
-Date: Mon, 10 Dec 2018 17:34:20 +0530
-Message-ID: <94794998-2c22-1b7f-946c-7887116ee55b@ti.com>
-References: <20181129161513.31734-1-faiz_abbas@ti.com>
- <20181129161513.31734-4-faiz_abbas@ti.com>
- <2618ec91-09d1-26f3-361e-34a073b1e5ea@intel.com>
- <dfe6c97a-6383-c697-88e5-279f6ca8136e@ti.com>
- <970c3531-5d7d-fe94-55c1-13603735b43a@intel.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-am654-base-board: Add MMC/SD
+ support
+Date: Mon, 10 Dec 2018 06:06:48 -0600
+Message-ID: <20181210120647.i3ply3p7umvedb3u@akan>
+References: <20181207084233.13700-1-faiz_abbas@ti.com>
+ <20181207084233.13700-3-faiz_abbas@ti.com>
+ <20181208155427.jmidz4vsw4k4qj36@akan>
+ <c1dd9783-84dc-9dad-ea94-9a14a4ad814d@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <970c3531-5d7d-fe94-55c1-13603735b43a@intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <c1dd9783-84dc-9dad-ea94-9a14a4ad814d@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
-Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, kishon@ti.com
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, robh+dt@kernel.org, t-kristo@ti.com, kishon@ti.com, ulf.hansson@linaro.org, adrian.hunter@intel.com, michal.simek@xilinx.com, Tony Lindgren <tony@atomide.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Adrian,
-
-On 07/12/18 7:02 PM, Adrian Hunter wrote:
-> On 5/12/18 5:07 PM, Faiz Abbas wrote:
->> Hi Adrian,
->>
->> On 05/12/18 7:12 PM, Adrian Hunter wrote:
->>> On 29/11/18 6:15 PM, Faiz Abbas wrote:
->>>> The host controllers on TI's AM654 SOCs are not compatible with
->>>> the phy and consumer model of the sdhci-of-arasan driver. It turns out
->>>> that for optimal operation at higher speeds, a special tuning procedure
->>>> needs to be implemented which involves configuration of platform
->>>> specific phy registers.
->>>>
->>>> Therefore, branch out to a new sdhci_am654 driver and add the phy
->>>> register space with all phy configurations to it. Populate AM654
->>>> specific callbacks to sdhci_ops and add SDHCI_QUIRKS wherever
->>>> applicable.
->>>>
->>>> Only add support for upto High Speed for SD card and upto DDR52 speed
->>>> mode for eMMC. Higher speeds will be added in subsequent patches.
->>>>
-...
->>>> +
->>>> +	sdhci_am654->clk_ahb = devm_clk_get(dev, "clk_ahb");
->>>> +	if (IS_ERR(sdhci_am654->clk_ahb)) {
->>>> +		dev_err(dev, "clk_ahb clock not found.\n");
->>>> +		ret = PTR_ERR(sdhci_am654->clk_ahb);
->>>> +		goto err_pltfm_free;
->>>> +	}
->>>
->>> Did you intend not to enable clks?
->>
->> Yes. Clocks get enabled as a part of pm_runtime calls.
+On 13:33-20181210, Sekhar Nori wrote:
+> On 08/12/18 9:24 PM, Nishanth Menon wrote:
+> > On 14:12-20181207, Faiz Abbas wrote:
+> > 
+> >> +
+> >> +&sdhci0 {
+> >> +	status = "okay";
+> >> +	pinctrl-names = "default";
+> >> +	pinctrl-0 = <&main_mmc0_pins_default>;
+> >> +	bus-width = <8>;
+> >> +	non-removable;
+> >> +	ti,driver-strength-ohm = <50>;
+> > 
+> > ^^
+> > 
+> >> +};
+> >> +
+> >> +&sdhci1 {
+> >> +	status = "okay";
+> >> +	pinctrl-names = "default";
+> >> +	pinctrl-0 = <&main_mmc1_pins_default>;
+> >> +	ti,driver-strength-ohm = <50>;
+> > 
+> > NAK.
+> > 
+> > $ git checkout next-20181207
+> > $ git grep ti,driver-strength-ohm Documentation
+> > $
+> > 
+> > Nada.. And.. I think "new phy binding" probably introduces this.
+> > [1] https://patchwork.kernel.org/project/linux-mmc/list/?series=53185
+> > 
+> > If your patches are'nt really ready, please send them as RFC, I am not
+> > really in a mood to track the status of every single driver subsystem.
+> > 
+> > If your binding is not in linux next at the baremin, as far as I am
+> > concerned, this is not ready, and should be RFC.
 > 
-> Ok, but that could use an explanatory comment.  Also why get a reference to
-> clk_ahb if that reference is never used?
+> No, RFC does not say "do not merge" or "this has dependencies". RFC is
+> used to invite a stronger review when introducing a new concept. Its
+> fair game to apply patches marked RFC if maintainer is okay with the
+> content.
+
+True, fair enough.. RFC is request for comments. Anyways, that is
+besides the point.
 > 
+> Dependencies are either noted in cover-letter or below the patch
+> tear-line. With what you are asking, looks like patches need to be
+> resubmitted once dependencies are cleared, even if there is no change in
+> the content itself. This will be additional work.
 
-You're right. It was being used in sdhci-of-arasan because other users
-needed to call enable() and disable(). I missed out on removing it when
-porting over. Will remove it and add the comment.
+Yes please. There would be other dts changes that are probably ready and
+I really wont be tracking everything happening on other drivers. If the
+binding is present at least in next, it is a good indication of things
+clean and ready to go.
 
-Thanks,
-Faiz
+> 
+> That said, if it makes life convenient for you, you can impose such a
+> rule for patches you need to handle. But I think it will take some
+> getting used for developers who send patches to you as I don't think
+> this is a norm elsewhere.
+> 
+> Adding Tony and Arnd as well, in case I have missed some recently
+> accepted convention.
+
+
+I have'nt looked at any conventions, The style I prefer to follow when I do
+submissions: It is my job to get the bindings in, until then my actual
+dts is just "request for comments". Only after the bindings are merged
+do I formally submit dts - simply because I dont expect dts maintainer
+to track what happened to my driver's binding and discussions there of.
+
+Seriously, is'nt it really reasonable for dts maintainer to check every
+single driver's development status in 15 different mailing lists?
+Because, it sounds like what you are asking. At least I wont have time
+for it..
+
+
+I really am curious how Arnd / Tony actually pull this one off.. If they
+have continous cron job for checking if your patch is ready... I doubt
+it..
+
+-- 
+Regards,
+Nishanth Menon
