@@ -1,258 +1,81 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V2 2/2] iio: accell: mma8452: add optional vdd/vddio regulator
- operation support
-Date: Mon, 10 Dec 2018 07:25:28 +0000
-Message-ID: <1544426368-16415-2-git-send-email-Anson.Huang@nxp.com>
-References: <1544426368-16415-1-git-send-email-Anson.Huang@nxp.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v5 1/3] device property: Introduce fwnode_get_name()
+Date: Mon, 10 Dec 2018 09:36:05 +0200
+Message-ID: <20181210073605.GA24718@kuha.fi.intel.com>
+References: <20181128115952.80890-1-heikki.krogerus@linux.intel.com>
+ <20181128115952.80890-2-heikki.krogerus@linux.intel.com>
+ <20181207172427.GA6642@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544426368-16415-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181207172427.GA6642@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Leonard Crestez <leonard.crestez@nxp.com>, "martink@posteo.de" <martink@posteo.de>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Rob Herring <robh@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The accelerometer's power supply could be controlled by regulator
-on some platforms, such as i.MX6Q-SABRESD board, the mma8451's
-power supply is controlled by a GPIO fixed regulator, need to make
-sure the regulator is enabled before any communication with mma8451,
-this patch adds optional vdd/vddio regulator operation support.
+On Fri, Dec 07, 2018 at 11:24:27AM -0600, Rob Herring wrote:
+> On Wed, Nov 28, 2018 at 02:59:50PM +0300, Heikki Krogerus wrote:
+> > This helper returns the name of the node. The name is
+> > primarily expected to be returned from a new fwnode
+> > operation meant for this purpose, but when no name is
+> > returned, the helper will also attempt to read a device
+> > property "name".
+> > 
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > ---
+> >  drivers/base/property.c  | 36 ++++++++++++++++++++++++++++++++++++
+> >  include/linux/fwnode.h   |  3 +++
+> >  include/linux/property.h |  2 ++
+> >  3 files changed, 41 insertions(+)
+> > 
+> > diff --git a/drivers/base/property.c b/drivers/base/property.c
+> > index 240ab5230ff6..8bd35b44d9ec 100644
+> > --- a/drivers/base/property.c
+> > +++ b/drivers/base/property.c
+> > @@ -1156,6 +1156,42 @@ void fwnode_handle_put(struct fwnode_handle *fwnode)
+> >  }
+> >  EXPORT_SYMBOL_GPL(fwnode_handle_put);
+> >  
+> > +/**
+> > + * fwnode_get_name - Copy the name of an fwnode to a buffer
+> > + * @fwnode: Pointer to the node
+> > + * @buf: Buffer where the name is copied to
+> > + * @len: Size of the buffer
+> > + *
+> > + * Copies the node name of @fwnode to @buf. The routine attempts to first use
+> > + * the get_name fwnode op of @fwnode, and if it fails, the routine attempts to
+> > + * read a property "name".
+> > + *
+> > + * NOTE: @buf must be large enough to accommodate the name and trailing '\0'.
+> > + *
+> > + * Returns 0 on success or errno in case of an error.
+> > + */
+> > +int fwnode_get_name(const struct fwnode_handle *fwnode, char *buf, size_t len)
+> > +{
+> > +	const char *name;
+> > +	int ret;
+> > +
+> > +	ret = fwnode_call_int_op(fwnode, get_name, buf, len);
+> > +	if (ret == 0 || ret == -EOVERFLOW)
+> > +		return ret;
+> > +
+> > +	ret = fwnode_call_int_op(fwnode, property_read_string_array,
+> > +				 "name", &name, 1);
+> 
+> Do you expect this to work on DT? It does today, but I plan to change 
+> that. 'name' is a fake property on FDT.
+> 
+> Again, I think this is all working at too low of a level. Name is used 
+> either for matching or an informational string. For matching, this 
+> should remain firmware specific. For imformational strings, 
+> device_node.full_name works.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-ChangeLog since V1:
-    - Add defer_probe check if the return value from devm_regulator_get_opt=
-ional is ERR_PTR(-EPROBE_DEFER);
-    - Replace the "vcc" with "vdd" according to datasheet, and add optional=
- "vddio" supply as well since
-      mma8452 also has a vddio supply.
----
- drivers/iio/accel/mma8452.c | 151 ++++++++++++++++++++++++++++++++++++++++=
-+++-
- 1 file changed, 149 insertions(+), 2 deletions(-)
+OK, I'll remove call.
 
-diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-index 421a0a8..18dcf33 100644
---- a/drivers/iio/accel/mma8452.c
-+++ b/drivers/iio/accel/mma8452.c
-@@ -31,6 +31,7 @@
- #include <linux/of_device.h>
- #include <linux/of_irq.h>
- #include <linux/pm_runtime.h>
-+#include <linux/regulator/consumer.h>
-=20
- #define MMA8452_STATUS				0x00
- #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
-@@ -107,6 +108,8 @@ struct mma8452_data {
- 	u8 data_cfg;
- 	const struct mma_chip_info *chip_info;
- 	int sleep_val;
-+	struct regulator *vdd_reg;
-+	struct regulator *vddio_reg;
- };
-=20
-  /**
-@@ -1533,6 +1536,27 @@ static int mma8452_probe(struct i2c_client *client,
- 	data->client =3D client;
- 	mutex_init(&data->lock);
- 	data->chip_info =3D match->data;
-+	data->vdd_reg =3D devm_regulator_get_optional(&client->dev, "vdd");
-+	if (!IS_ERR(data->vdd_reg)) {
-+		ret =3D regulator_enable(data->vdd_reg);
-+		if (ret) {
-+			dev_err(&client->dev, "failed to enable VDD regulator\n");
-+			return ret;
-+		}
-+	} else if (data->vdd_reg =3D=3D ERR_PTR(-EPROBE_DEFER)) {
-+		return -EPROBE_DEFER;
-+	}
-+
-+	data->vddio_reg =3D devm_regulator_get_optional(&client->dev, "vddio");
-+	if (!IS_ERR(data->vddio_reg)) {
-+		ret =3D regulator_enable(data->vddio_reg);
-+		if (ret) {
-+			dev_err(&client->dev, "failed to enable VDDIO regulator\n");
-+			return ret;
-+		}
-+	} else if (data->vddio_reg =3D=3D ERR_PTR(-EPROBE_DEFER)) {
-+		return -EPROBE_DEFER;
-+	}
-=20
- 	ret =3D i2c_smbus_read_byte_data(client, MMA8452_WHO_AM_I);
- 	if (ret < 0)
-@@ -1667,6 +1691,8 @@ static int mma8452_probe(struct i2c_client *client,
- static int mma8452_remove(struct i2c_client *client)
- {
- 	struct iio_dev *indio_dev =3D i2c_get_clientdata(client);
-+	struct mma8452_data *data =3D iio_priv(indio_dev);
-+	int ret;
-=20
- 	iio_device_unregister(indio_dev);
-=20
-@@ -1678,6 +1704,21 @@ static int mma8452_remove(struct i2c_client *client)
- 	mma8452_trigger_cleanup(indio_dev);
- 	mma8452_standby(iio_priv(indio_dev));
-=20
-+	if (!IS_ERR(data->vdd_reg)) {
-+		ret =3D regulator_disable(data->vdd_reg);
-+		if (ret) {
-+			dev_err(&client->dev, "failed to disable VDD regulator\n");
-+			return ret;
-+		}
-+	}
-+	if (!IS_ERR(data->vddio_reg)) {
-+		ret =3D regulator_disable(data->vddio_reg);
-+		if (ret) {
-+			dev_err(&client->dev, "failed to disable VDDIO regulator\n");
-+			return ret;
-+		}
-+	}
-+
- 	return 0;
- }
-=20
-@@ -1696,6 +1737,21 @@ static int mma8452_runtime_suspend(struct device *de=
-v)
- 		return -EAGAIN;
- 	}
-=20
-+	if (!IS_ERR(data->vdd_reg)) {
-+		ret =3D regulator_disable(data->vdd_reg);
-+		if (ret) {
-+			dev_err(dev, "failed to disable VDD regulator\n");
-+			return ret;
-+		}
-+	}
-+	if (!IS_ERR(data->vddio_reg)) {
-+		ret =3D regulator_disable(data->vddio_reg);
-+		if (ret) {
-+			dev_err(dev, "failed to disable VDDIO regulator\n");
-+			return ret;
-+		}
-+	}
-+
- 	return 0;
- }
-=20
-@@ -1705,6 +1761,21 @@ static int mma8452_runtime_resume(struct device *dev=
-)
- 	struct mma8452_data *data =3D iio_priv(indio_dev);
- 	int ret, sleep_val;
-=20
-+	if (!IS_ERR(data->vdd_reg)) {
-+		ret =3D regulator_enable(data->vdd_reg);
-+		if (ret) {
-+			dev_err(dev, "failed to enable VDD regulator\n");
-+			return ret;
-+		}
-+	}
-+	if (!IS_ERR(data->vddio_reg)) {
-+		ret =3D regulator_enable(data->vddio_reg);
-+		if (ret) {
-+			dev_err(dev, "failed to enable VDDIO regulator\n");
-+			return ret;
-+		}
-+	}
-+
- 	ret =3D mma8452_active(data);
- 	if (ret < 0)
- 		return ret;
-@@ -1723,14 +1794,90 @@ static int mma8452_runtime_resume(struct device *de=
-v)
- #ifdef CONFIG_PM_SLEEP
- static int mma8452_suspend(struct device *dev)
- {
--	return mma8452_standby(iio_priv(i2c_get_clientdata(
-+	struct iio_dev *indio_dev =3D i2c_get_clientdata(to_i2c_client(dev));
-+	struct mma8452_data *data =3D iio_priv(indio_dev);
-+	int ret;
-+
-+	if (!IS_ERR(data->vdd_reg)) {
-+		ret =3D regulator_enable(data->vdd_reg);
-+		if (ret) {
-+			dev_err(dev, "failed to enable VDD regulator\n");
-+			return ret;
-+		}
-+	}
-+	if (!IS_ERR(data->vddio_reg)) {
-+		ret =3D regulator_enable(data->vddio_reg);
-+		if (ret) {
-+			dev_err(dev, "failed to enable VDDIO regulator\n");
-+			return ret;
-+		}
-+	}
-+
-+	ret =3D mma8452_standby(iio_priv(i2c_get_clientdata(
- 		to_i2c_client(dev))));
-+	if (ret)
-+		return ret;
-+
-+	if (!IS_ERR(data->vdd_reg)) {
-+		ret =3D regulator_disable(data->vdd_reg);
-+		if (ret) {
-+			dev_err(dev, "failed to disable VDD regulator\n");
-+			return ret;
-+		}
-+	}
-+	if (!IS_ERR(data->vddio_reg)) {
-+		ret =3D regulator_disable(data->vddio_reg);
-+		if (ret) {
-+			dev_err(dev, "failed to disable VDDIO regulator\n");
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
- }
-=20
- static int mma8452_resume(struct device *dev)
- {
--	return mma8452_active(iio_priv(i2c_get_clientdata(
-+	struct iio_dev *indio_dev =3D i2c_get_clientdata(to_i2c_client(dev));
-+	struct mma8452_data *data =3D iio_priv(indio_dev);
-+	int ret;
-+
-+	if (!IS_ERR(data->vdd_reg)) {
-+		ret =3D regulator_enable(data->vdd_reg);
-+		if (ret) {
-+			dev_err(dev, "failed to enable VDD regulator\n");
-+			return ret;
-+		}
-+	}
-+	if (!IS_ERR(data->vddio_reg)) {
-+		ret =3D regulator_enable(data->vddio_reg);
-+		if (ret) {
-+			dev_err(dev, "failed to enable VDDIO regulator\n");
-+			return ret;
-+		}
-+	}
-+
-+	ret =3D mma8452_active(iio_priv(i2c_get_clientdata(
- 		to_i2c_client(dev))));
-+	if (ret)
-+		return ret;
-+
-+	if (!IS_ERR(data->vdd_reg)) {
-+		ret =3D regulator_disable(data->vdd_reg);
-+		if (ret) {
-+			dev_err(dev, "failed to disable VDD regulator\n");
-+			return ret;
-+		}
-+	}
-+	if (!IS_ERR(data->vddio_reg)) {
-+		ret =3D regulator_disable(data->vddio_reg);
-+		if (ret) {
-+			dev_err(dev, "failed to disable VDDIO regulator\n");
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
- }
- #endif
-=20
---=20
-2.7.4
+thanks,
+
+-- 
+heikki
