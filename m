@@ -1,90 +1,55 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH 3/3] mtd: spi-nor: cadence-quadspi: Add support for Octal
- SPI controller
-Date: Mon, 10 Dec 2018 16:49:29 +0530
-Message-ID: <f6c3a649-f580-513d-644d-5010b3b5cf0b@ti.com>
-References: <20181003165603.2579-1-vigneshr@ti.com>
- <20181003165603.2579-4-vigneshr@ti.com> <20181210094513.6282d55e@bbrezillon>
+From: Parthiban Nallathambi <pn@denx.de>
+Subject: Re: [PATCH v2 0/4] Add Actions Semi Owl family S700 I2C support
+Date: Mon, 10 Dec 2018 12:25:37 +0100
+Message-ID: <5434a04c-a492-a7a5-9783-383947b6d1fb@denx.de>
+References: <20181126185821.2480449-1-pn@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181210094513.6282d55e@bbrezillon>
+In-Reply-To: <20181126185821.2480449-1-pn@denx.de>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: afaerber@suse.de, manivannan.sadhasivam@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de
+Cc: pn@denx.de, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux@cubietech.com, thomas.liau@actions-semi.com, linux-actions@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/12/18 2:15 PM, Boris Brezillon wrote:
-> On Wed, 3 Oct 2018 22:26:03 +0530
-> Vignesh R <vigneshr@ti.com> wrote:
-> 
->> Cadence OSPI controller IP supports Octal IO (x8 IO lines),
->> It also has an integrated PHY. IP register layout is very
->> similar to existing QSPI IP except for additional bits to support Octal
->> and Octal DDR mode. Therefore, extend current driver to support Octal
->> mode.
->>
->> Signed-off-by: Vignesh R <vigneshr@ti.com>
->> ---
->>  drivers/mtd/spi-nor/cadence-quadspi.c | 9 +++++++++
->>  1 file changed, 9 insertions(+)
->>
->> diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
->> index e24db817154e..48b00e75a879 100644
->> --- a/drivers/mtd/spi-nor/cadence-quadspi.c
->> +++ b/drivers/mtd/spi-nor/cadence-quadspi.c
->> @@ -101,6 +101,7 @@ struct cqspi_st {
->>  #define CQSPI_INST_TYPE_SINGLE			0
->>  #define CQSPI_INST_TYPE_DUAL			1
->>  #define CQSPI_INST_TYPE_QUAD			2
->> +#define CQSPI_INST_TYPE_OCTAL			3
->>  
->>  #define CQSPI_DUMMY_CLKS_PER_BYTE		8
->>  #define CQSPI_DUMMY_BYTES_MAX			4
->> @@ -898,6 +899,9 @@ static int cqspi_set_protocol(struct spi_nor *nor, const int read)
->>  		case SNOR_PROTO_1_1_4:
->>  			f_pdata->data_width = CQSPI_INST_TYPE_QUAD;
->>  			break;
->> +		case SNOR_PROTO_1_1_8:
->> +			f_pdata->data_width = CQSPI_INST_TYPE_OCTAL;
->> +			break;
->>  		default:
->>  			return -EINVAL;
->>  		}
->> @@ -1205,6 +1209,7 @@ static int cqspi_setup_flash(struct cqspi_st *cqspi, struct device_node *np)
->>  			SNOR_HWCAPS_READ_FAST |
->>  			SNOR_HWCAPS_READ_1_1_2 |
->>  			SNOR_HWCAPS_READ_1_1_4 |
->> +			SNOR_HWCAPS_READ_1_1_8 |
-> 
-> Is this really supported on qspi versions of this IP? I guess not given
-> the description in the commit message and the name of the new
-> compatible (ospi instead of qspi).
+Ping on this patch series!
 
-No, qspi version does not support Octal mode. I guess you are pointing
-out its logically wrong for driver with "*-qspi" compatible to declare
-SNOR_HWCAPS_READ_1_1_8 capability.
-Will update patch to declare SNOR_HWCAPS_READ_1_1_8 based on compatible.
-
+On 11/26/18 7:58 PM, Parthiban Nallathambi wrote:
+> This patch series adds support for Actions Semi Owl SoC family S700
+> I2C controller. S700 provides 4 I2C masters and with cubieboard7
+> 2 (I2C0 and I2C1) are exposed.
 > 
->>  			SNOR_HWCAPS_PP,
->>  	};
->>  	struct platform_device *pdev = cqspi->pdev;
->> @@ -1456,6 +1461,10 @@ static const struct of_device_id cqspi_dt_ids[] = {
->>  		.compatible = "ti,k2g-qspi",
->>  		.data = (void *)CQSPI_NEEDS_WR_DELAY,
->>  	},
->> +	{
->> +		.compatible = "ti,am654-ospi",
->> +		.data = (void *)CQSPI_NEEDS_WR_DELAY,
->> +	},
->>  	{ /* end of table */ }
->>  };
->>  
+> Added pinctrl definition for I2C controllers in cubieboard7. This patch
+> depends on s700 pinctrl driver support (yet to be merged),
+> https://lkml.org/lkml/2018/11/19/514
+> https://lore.kernel.org/patchwork/patch/1012859/
+> 
+> Changelog in v2:
+> - Initial version https://lore.kernel.org/patchwork/patch/1011911/ only
+> added the I2C nodes using s900 compatible property. Now, new s700
+> compatiable string is added and used for S700
+> - Device tree bindings added with s700 compatible string
+> - pinctrl definition for cubieboard7
+> 
+> Parthiban Nallathambi (4):
+>    dt-bindings: i2c: Add S700 support for Actions Semi Soc's
+>    i2c: Add Actions Semiconductor Owl family S700 I2C support
+>    arm64: dts: actions: s700: Add I2C controller nodes
+>    arm64: dts: actions: s700-cubieboard7: Enable I2C0 and I2C1
+> 
+>   .../devicetree/bindings/i2c/i2c-owl.txt       |  2 +-
+>   .../boot/dts/actions/s700-cubieboard7.dts     | 53 +++++++++++++++++++
+>   arch/arm64/boot/dts/actions/s700.dtsi         | 40 ++++++++++++++
+>   drivers/i2c/busses/i2c-owl.c                  |  1 +
+>   4 files changed, 95 insertions(+), 1 deletion(-)
 > 
 
 -- 
-Regards
-Vignesh
+Thanks,
+Parthiban N
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-22 Fax: (+49)-8142-66989-80 Email: pn@denx.de
