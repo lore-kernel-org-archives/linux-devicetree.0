@@ -1,51 +1,46 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v4 15/15] MAINTAINERS: Add entry for RDA Micro SoC architecture
-Date: Mon, 10 Dec 2018 23:05:50 +0530
-Message-ID: <20181210173550.29643-16-manivannan.sadhasivam@linaro.org>
-References: <20181210173550.29643-1-manivannan.sadhasivam@linaro.org>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: [PATCH v3 2/3] dt-bindings: mmc: sdhci-of-arasan: Add deprecated message for AM65
+Date: Tue, 11 Dec 2018 00:05:06 +0530
+Message-ID: <20181210183507.9617-3-faiz_abbas@ti.com>
+References: <20181210183507.9617-1-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181210173550.29643-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20181210183507.9617-1-faiz_abbas@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, daniel.lezcano@linaro.org, gregkh@linuxfoundation.org, jslaby@suse.com
-Cc: linux-unisoc@lists.infradead.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
+Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, adrian.hunter@intel.com, michal.simek@xilinx.com, kishon@ti.com, faiz_abbas@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Add MAINTAINERS entry for RDA Micro SoC architecture with myself
-and Andreas Färber as the maintainers.
+Commit 26a4f38d1316 ("dt-bindings: mmc: sdhci-of-arasan: Add new
+compatible for AM654 MMC PHY") added a new compatible for supporting
+controllers on TI's AM65x SOCs. It turns out that the controller is
+not compatible with the arasan driver's phy and consumer model as it
+requires some phy registers for core sdhci functionality. This calls
+for the binding to branch out to a new driver.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Therefore, add a deprecated message for the ti,am654-sdhci-5.1 binding.
+
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
 ---
- MAINTAINERS | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6c3fbbb361f8..6411fb222590 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1945,6 +1945,21 @@ M:	Lennert Buytenhek <kernel@wantstofly.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- 
-+ARM/RDA MICRO ARCHITECTURE
-+M:	Andreas Färber <afaerber@suse.de>
-+M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+L:	linux-unisoc@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	arch/arm/boot/dts/rda8810pl-*
-+F:	drivers/clocksource/timer-rda.c
-+F:	drivers/irqchip/irq-rda-intc.c
-+F:	drivers/tty/serial/rda-uart.c
-+F:	Documentation/devicetree/bindings/arm/rda.txt
-+F:	Documentation/devicetree/bindings/interrupt-controller/rda,8810pl-intc.txt
-+F:	Documentation/devicetree/bindings/serial/rda,8810pl-uart.txt
-+F:	Documentation/devicetree/bindings/timer/rda,8810pl-timer.txt
+diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+index e2effe17f05e..1edbb049cccb 100644
+--- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
++++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+@@ -16,6 +16,10 @@ Required Properties:
+     - "rockchip,rk3399-sdhci-5.1", "arasan,sdhci-5.1": rk3399 eMMC PHY
+       For this device it is strongly suggested to include arasan,soc-ctl-syscon.
+     - "ti,am654-sdhci-5.1", "arasan,sdhci-5.1": TI AM654 MMC PHY
++	Note: This binding has been deprecated and moved to [5].
 +
- ARM/REALTEK ARCHITECTURE
- M:	Andreas Färber <afaerber@suse.de>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++  [5] Documentation/devicetree/bindings/mmc/sdhci-am654.txt
++
+   - reg: From mmc bindings: Register location and length.
+   - clocks: From clock bindings: Handles to clock inputs.
+   - clock-names: From clock bindings: Tuple including "clk_xin" and "clk_ahb"
 -- 
-2.17.1
+2.19.2
