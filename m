@@ -1,61 +1,91 @@
 From: Vijay Khemka <vijaykhemka@fb.com>
-Subject: Re: [PATCH] ARM: dts: aspeed: Add KCS support for LPC BMC
-Date: Mon, 10 Dec 2018 22:39:50 +0000
-Message-ID: <6061E60A-78CD-4C4C-A35C-0AD90BFC4286@fb.com>
-References: <20181210200753.3018124-1-vijaykhemka@fb.com>
- <20181210200753.3018124-2-vijaykhemka@fb.com>
+Subject: [PATCH] ARM: dts: aspeed: Add sensors devices for Facebook
+Date: Mon, 10 Dec 2018 14:41:16 -0800
+Message-ID: <20181210224116.3396252-1-vijaykhemka@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181210200753.3018124-2-vijaykhemka@fb.com>
-Content-Language: en-US
-Content-ID: <0F4591F69C67AF44A489EAB211C247F5@namprd15.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: vijaykhemka@fb.com, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-UGxlYXNlIGlnbm9yZSB0aGlzIHBhdGNoIGFzIGl0IGlzIGR1cGxpY2F0ZS4gSXQgaXMgaW5jbHVk
-ZWQgaW4gbGlzdCBvZiAyIHBhdGNoZXMgSSBoYXZlIHNlbnQganVzdCBiZWZvcmUuDQoNCu+7v09u
-IDEyLzEwLzE4LCAxMjowOCBQTSwgIlZpamF5IEtoZW1rYSIgPHZpamF5a2hlbWthQGZiLmNvbT4g
-d3JvdGU6DQoNCiAgICBBZGRlZCBrY3MgZGV2aWNlIHN1cHBvcnQgZm9yIGxwYyBCTUMuDQogICAg
-DQogICAgU2lnbmVkLW9mZi1ieTogVmlqYXkgS2hlbWthIDx2aWpheWtoZW1rYUBmYi5jb20+DQog
-ICAgLS0tDQogICAgIGFyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1nNS5kdHNpIHwgMjkgKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKy0NCiAgICAgMSBmaWxlIGNoYW5nZWQsIDI4IGluc2VydGlv
-bnMoKyksIDEgZGVsZXRpb24oLSkNCiAgICANCiAgICBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
-dC9kdHMvYXNwZWVkLWc1LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtZzUuZHRzaQ0K
-ICAgIGluZGV4IGQxMDc0NTlmYzBmOC4uMWJkNDg2NTViYWNiIDEwMDY0NA0KICAgIC0tLSBhL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1nNS5kdHNpDQogICAgKysrIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvYXNwZWVkLWc1LmR0c2kNCiAgICBAQCAtMzMwLDggKzMzMCwzNSBAQA0KICAgICAJCQkJcmFu
-Z2VzID0gPDB4MCAweDFlNzg5MDAwIDB4MTAwMD47DQogICAgIA0KICAgICAJCQkJbHBjX2JtYzog
-bHBjLWJtY0AwIHsNCiAgICAtCQkJCQljb21wYXRpYmxlID0gImFzcGVlZCxhc3QyNTAwLWxwYy1i
-bWMiOw0KICAgICsJCQkJCWNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI1MDAtbHBjLWJtYywgInNp
-bXBsZS1tZmQiLCAic3lzY29uIiI7DQogICAgIAkJCQkJcmVnID0gPDB4MCAweDgwPjsNCiAgICAr
-CQkJCQlyZWctaW8td2lkdGggPSA8ND47DQogICAgKw0KICAgICsJCQkJCSNhZGRyZXNzLWNlbGxz
-ID0gPDE+Ow0KICAgICsJCQkJCSNzaXplLWNlbGxzID0gPDE+Ow0KICAgICsJCQkJCXJhbmdlcyA9
-IDwweDAgMHgwIDB4ODA+Ow0KICAgICsNCiAgICArCQkJCQlrY3MxOiBrY3MxQDAgew0KICAgICsJ
-CQkJCQljb21wYXRpYmxlID0gImFzcGVlZCxhc3QyNTAwLWtjcy1ibWMiOw0KICAgICsJCQkJCQly
-ZWcgPSA8MHgwIDB4ODA+Ow0KICAgICsJCQkJCQlpbnRlcnJ1cHRzID0gPDg+Ow0KICAgICsJCQkJ
-CQlrY3NfY2hhbiA9IDwxPjsNCiAgICArCQkJCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCiAgICAr
-CQkJCQl9Ow0KICAgICsJCQkJCWtjczI6IGtjczJAMCB7DQogICAgKwkJCQkJCWNvbXBhdGlibGUg
-PSAiYXNwZWVkLGFzdDI1MDAta2NzLWJtYyI7DQogICAgKwkJCQkJCXJlZyA9IDwweDAgMHg4MD47
-DQogICAgKwkJCQkJCWludGVycnVwdHMgPSA8OD47DQogICAgKwkJCQkJCWtjc19jaGFuID0gPDI+
-Ow0KICAgICsJCQkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KICAgICsJCQkJCX07DQogICAgKwkJ
-CQkJa2NzMzoga2NzM0AwIHsNCiAgICArCQkJCQkJY29tcGF0aWJsZSA9ICJhc3BlZWQsYXN0MjUw
-MC1rY3MtYm1jIjsNCiAgICArCQkJCQkJcmVnID0gPDB4MCAweDgwPjsNCiAgICArCQkJCQkJaW50
-ZXJydXB0cyA9IDw4PjsNCiAgICArCQkJCQkJa2NzX2NoYW4gPSA8Mz47DQogICAgKwkJCQkJCXN0
-YXR1cyA9ICJkaXNhYmxlZCI7DQogICAgKwkJCQkJfTsNCiAgICAgCQkJCX07DQogICAgIA0KICAg
-ICAJCQkJbHBjX2hvc3Q6IGxwYy1ob3N0QDgwIHsNCiAgICAtLSANCiAgICAyLjE3LjENCiAgICAN
-CiAgICANCg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+Added ADC and other sensor devices in Facebook Tiogapass device tree.
+
+Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+---
+ .../dts/aspeed-bmc-facebook-tiogapass.dts     | 33 +++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+index f8e7b71af7e6..d9d7f208788a 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+@@ -21,6 +21,25 @@
+ 	memory@80000000 {
+ 		reg = <0x80000000 0x20000000>;
+ 	};
++	iio-hwmon {
++		compatible = "iio-hwmon";
++		oemname0 = "MB_P3V3";
++		oemname1 = "MB_P5V";
++		oemname2 = "MB_P12V";
++		oemname3 = "MB_P1V05";
++		oemname4 = "MB_PVNN_PCH_STBY";
++		oemname5 = "MB_P3V3_STBY";
++		oemname6 = "MB_P5V_STBY";
++		io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>,
++					<&adc 4>, <&adc 5>, <&adc 6>;
++	};
++
++	iio-hwmon-battery {
++		oemname0 = "MB_P3V_BAT";
++		compatible = "iio-hwmon";
++		io-channels = <&adc 7>;
++	};
++
+ };
+ 
+ &fmc {
+@@ -64,6 +83,10 @@
+ 	use-ncsi;
+ };
+ 
++&adc {
++	status = "okay";
++};
++
+ &i2c0 {
+ 	status = "okay";
+ 	//Airmax Conn B, CPU0 PIROM, CPU1 PIROM
+@@ -122,6 +145,10 @@
+ 
+ &i2c8 {
+ 	status = "okay";
++	tmp421@1f {
++		compatible = "ti,tmp421";
++		reg = <0x1f>;
++	};
+ 	//Mezz Sensor SMBus
+ };
+ 
+@@ -134,13 +161,15 @@
+ 	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
++	oemname0 = "System_Fan_Connector_1";
++	oemname1 = "System_Fan_Connector_3";
+ 	fan@0 {
+ 		reg = <0x00>;
+ 		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
+ 	};
+ 
+ 	fan@1 {
+-		reg = <0x00>;
+-		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
++		reg = <0x01>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
+ 	};
+ };
+-- 
+2.17.1
