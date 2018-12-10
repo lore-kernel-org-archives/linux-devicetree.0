@@ -1,81 +1,112 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v5 1/3] device property: Introduce fwnode_get_name()
-Date: Mon, 10 Dec 2018 09:36:05 +0200
-Message-ID: <20181210073605.GA24718@kuha.fi.intel.com>
-References: <20181128115952.80890-1-heikki.krogerus@linux.intel.com>
- <20181128115952.80890-2-heikki.krogerus@linux.intel.com>
- <20181207172427.GA6642@bogus>
-Mime-Version: 1.0
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [Letux-kernel] [PATCH v2 4/5] gnss: sirf: add a separate supply for a lna
+Date: Mon, 10 Dec 2018 08:42:48 +0100
+Message-ID: <918A20A2-30F4-45C8-9883-038DE57716C3@goldelico.com>
+References: <20181209195150.5192-1-andreas@kemnade.info> <20181209195150.5192-5-andreas@kemnade.info>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181207172427.GA6642@bogus>
+In-Reply-To: <20181209195150.5192-5-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 07, 2018 at 11:24:27AM -0600, Rob Herring wrote:
-> On Wed, Nov 28, 2018 at 02:59:50PM +0300, Heikki Krogerus wrote:
-> > This helper returns the name of the node. The name is
-> > primarily expected to be returned from a new fwnode
-> > operation meant for this purpose, but when no name is
-> > returned, the helper will also attempt to read a device
-> > property "name".
-> > 
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > ---
-> >  drivers/base/property.c  | 36 ++++++++++++++++++++++++++++++++++++
-> >  include/linux/fwnode.h   |  3 +++
-> >  include/linux/property.h |  2 ++
-> >  3 files changed, 41 insertions(+)
-> > 
-> > diff --git a/drivers/base/property.c b/drivers/base/property.c
-> > index 240ab5230ff6..8bd35b44d9ec 100644
-> > --- a/drivers/base/property.c
-> > +++ b/drivers/base/property.c
-> > @@ -1156,6 +1156,42 @@ void fwnode_handle_put(struct fwnode_handle *fwnode)
-> >  }
-> >  EXPORT_SYMBOL_GPL(fwnode_handle_put);
-> >  
-> > +/**
-> > + * fwnode_get_name - Copy the name of an fwnode to a buffer
-> > + * @fwnode: Pointer to the node
-> > + * @buf: Buffer where the name is copied to
-> > + * @len: Size of the buffer
-> > + *
-> > + * Copies the node name of @fwnode to @buf. The routine attempts to first use
-> > + * the get_name fwnode op of @fwnode, and if it fails, the routine attempts to
-> > + * read a property "name".
-> > + *
-> > + * NOTE: @buf must be large enough to accommodate the name and trailing '\0'.
-> > + *
-> > + * Returns 0 on success or errno in case of an error.
-> > + */
-> > +int fwnode_get_name(const struct fwnode_handle *fwnode, char *buf, size_t len)
-> > +{
-> > +	const char *name;
-> > +	int ret;
-> > +
-> > +	ret = fwnode_call_int_op(fwnode, get_name, buf, len);
-> > +	if (ret == 0 || ret == -EOVERFLOW)
-> > +		return ret;
-> > +
-> > +	ret = fwnode_call_int_op(fwnode, property_read_string_array,
-> > +				 "name", &name, 1);
+Hi,
+
+> Am 09.12.2018 um 20:51 schrieb Andreas Kemnade <andreas@kemnade.info>:
 > 
-> Do you expect this to work on DT? It does today, but I plan to change 
-> that. 'name' is a fake property on FDT.
+> Devices might have a separate lna between antenna output of the gps
+
+some nitpicking: the LNA (low noise amplifier) is between the antenna
+and the GPS receiver. Therefore:
+
+s/between antenna output of the gps/between antenna input of the gps/
+
+Otherwise fine!
+
+BR and thanks,
+Nikolaus
+
+> chip and the antenna which might have a separate supply.
 > 
-> Again, I think this is all working at too low of a level. Name is used 
-> either for matching or an informational string. For matching, this 
-> should remain firmware specific. For imformational strings, 
-> device_node.full_name works.
-
-OK, I'll remove call.
-
-thanks,
-
--- 
-heikki
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+> Changes in v2:
+> - handle lna also if there is no on-off gpio
+> - rebase on changed 2/5
+> 
+> drivers/gnss/sirf.c | 26 ++++++++++++++++++++++----
+> 1 file changed, 22 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gnss/sirf.c b/drivers/gnss/sirf.c
+> index c64369494afb..d339e8ef2508 100644
+> --- a/drivers/gnss/sirf.c
+> +++ b/drivers/gnss/sirf.c
+> @@ -36,6 +36,7 @@ struct sirf_data {
+> 	struct serdev_device *serdev;
+> 	speed_t	speed;
+> 	struct regulator *vcc;
+> +	struct regulator *lna;
+> 	struct gpio_desc *on_off;
+> 	struct gpio_desc *wakeup;
+> 	int irq;
+> @@ -282,21 +283,32 @@ static int sirf_set_active(struct sirf_data *data, bool active)
+> static int sirf_runtime_suspend(struct device *dev)
+> {
+> 	struct sirf_data *data = dev_get_drvdata(dev);
+> +	int ret = 0;
+> 
+> 	if (!data->on_off)
+> -		return regulator_disable(data->vcc);
+> +		ret = regulator_disable(data->vcc);
+> +	else
+> +		ret = sirf_set_active(data, false);
+> 
+> -	return sirf_set_active(data, false);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regulator_disable(data->lna);
+> }
+> 
+> static int sirf_runtime_resume(struct device *dev)
+> {
+> 	struct sirf_data *data = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = regulator_enable(data->lna);
+> +	if (ret)
+> +		return ret;
+> 
+> 	if (!data->on_off)
+> 		return regulator_enable(data->vcc);
+> -
+> -	return sirf_set_active(data, true);
+> +	else
+> +		return sirf_set_active(data, true);
+> }
+> 
+> static int __maybe_unused sirf_suspend(struct device *dev)
+> @@ -384,6 +396,12 @@ static int sirf_probe(struct serdev_device *serdev)
+> 		goto err_put_device;
+> 	}
+> 
+> +	data->lna = devm_regulator_get(dev, "lna");
+> +	if (IS_ERR(data->lna)) {
+> +		ret = PTR_ERR(data->lna);
+> +		goto err_put_device;
+> +	}
+> +
+> 	data->on_off = devm_gpiod_get_optional(dev, "sirf,onoff",
+> 			GPIOD_OUT_LOW);
+> 	if (IS_ERR(data->on_off))
+> -- 
+> 2.11.0
+> 
+> _______________________________________________
+> http://projects.goldelico.com/p/gta04-kernel/
+> Letux-kernel mailing list
+> Letux-kernel@openphoenux.org
+> http://lists.goldelico.com/mailman/listinfo.cgi/letux-kernel
