@@ -1,53 +1,34 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v2 2/4] i2c: Add Actions Semiconductor Owl family S700
- I2C support
-Date: Mon, 10 Dec 2018 19:23:09 +0530
-Message-ID: <20181210135309.GD25368@Mani-XPS-13-9360>
-References: <20181126185821.2480449-1-pn@denx.de>
- <20181126185821.2480449-3-pn@denx.de>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-am654-base-board: Add MMC/SD
+ support
+Date: Mon, 10 Dec 2018 07:52:33 -0600
+Message-ID: <20181210135233.66qbbnmzpz3mwuwu@kahuna>
+References: <20181207084233.13700-1-faiz_abbas@ti.com>
+ <20181207084233.13700-3-faiz_abbas@ti.com>
+ <20181208155427.jmidz4vsw4k4qj36@akan>
+ <c1dd9783-84dc-9dad-ea94-9a14a4ad814d@ti.com>
+ <20181210120647.i3ply3p7umvedb3u@akan>
+ <66f9d53b-abec-0a28-8eae-ecb99b075db4@ti.com>
+ <a73337c2-977c-c9a8-141e-cf91a4591cbc@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181126185821.2480449-3-pn@denx.de>
+In-Reply-To: <a73337c2-977c-c9a8-141e-cf91a4591cbc@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Parthiban Nallathambi <pn@denx.de>
-Cc: afaerber@suse.de, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux@cubietech.com, thomas.liau@actions-semi.com
+To: Faiz Abbas <faiz_abbas@ti.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, robh+dt@kernel.org, t-kristo@ti.com, kishon@ti.com, ulf.hansson@linaro.org, adrian.hunter@intel.com, michal.simek@xilinx.com, Tony Lindgren <tony@atomide.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 26, 2018 at 07:58:19PM +0100, Parthiban Nallathambi wrote:
-> Add S700 to the list of devices supported by Owl I2C driver.
+On 19:03-20181210, Faiz Abbas wrote:
+> > I think you can rely on the author to tell you when something is> actually ready to be merged (and you can tell him/her to remind you).
 > 
-> Add Actions Semiconductor Owl family S900 I2C driver.
+> Yes. I will ping Nishanth once the bindings are in next.
 
-S700 ;-)
+In addition, when you are ready, please also check if the patches
+need rebase on top of Tero's next branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/kristo/linux.git/log/?h=4.20-rc1-am65x-queue
 
-> 
-> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
-
-With the change in subject,
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Cheers,
-Mani
-
-> ---
->  drivers/i2c/busses/i2c-owl.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/i2c/busses/i2c-owl.c b/drivers/i2c/busses/i2c-owl.c
-> index 96b4572e6d9c..b6b5a495118b 100644
-> --- a/drivers/i2c/busses/i2c-owl.c
-> +++ b/drivers/i2c/busses/i2c-owl.c
-> @@ -475,6 +475,7 @@ static int owl_i2c_probe(struct platform_device *pdev)
->  }
->  
->  static const struct of_device_id owl_i2c_of_match[] = {
-> +	{ .compatible = "actions,s700-i2c" },
->  	{ .compatible = "actions,s900-i2c" },
->  	{ /* sentinel */ }
->  };
-> -- 
-> 2.17.2
-> 
+-- 
+Regards,
+Nishanth Menon
