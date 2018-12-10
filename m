@@ -1,74 +1,65 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 2/3] dt-bindings: usb: keystone-usb: Add ti,am654-dwc3
- support
-Date: Mon, 10 Dec 2018 11:05:18 +0200
-Message-ID: <5C0E2C4E.7030302@ti.com>
-References: <1544023171-5796-1-git-send-email-rogerq@ti.com>
- <1544023171-5796-3-git-send-email-rogerq@ti.com>
- <ec72e316-46c1-69f6-ae5b-0fbf297a9327@ti.com>
+From: Maxime Jourdan <mjourdan@baylibre.com>
+Subject: [PATCH 1/2] dt-bindings: meson: add specific simplefb bindings
+Date: Mon, 10 Dec 2018 10:06:39 +0100
+Message-ID: <20181210090640.4495-1-mjourdan@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ec72e316-46c1-69f6-ae5b-0fbf297a9327@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: balbi@kernel.org, tony@atomide.com, robh+dt@kernel.org, nsekhar@ti.com, t-kristo@ti.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vignesh,
+Similar to simple-framebuffer-sunxi, we support different display pipelines
+that the firmware is free to choose from.
 
-On 06/12/18 12:32, Vignesh R wrote:
-> Hi Roger,
-> 
-> On 05/12/18 8:49 PM, Roger Quadros wrote:
->> The AM654 SoC from TI contains a DWC3 controller. Add
->> support for it.
->>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->>  Documentation/devicetree/bindings/usb/keystone-usb.txt | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/keystone-usb.txt b/Documentation/devicetree/bindings/usb/keystone-usb.txt
->> index f96e09f..fa29ff8 100644
->> --- a/Documentation/devicetree/bindings/usb/keystone-usb.txt
->> +++ b/Documentation/devicetree/bindings/usb/keystone-usb.txt
->> @@ -3,7 +3,7 @@ TI Keystone Soc USB Controller
->>  DWC3 GLUE
->>  
->>  Required properties:
->> - - compatible: should be "ti,keystone-dwc3".
->> + - compatible: should be "ti,keystone-dwc3" or "ti,am654-dwc3".
-> 
-> Convention is to have one compatible per line:
->  compatible: Should be
-> 	"ti,am654-dwc3" for AM654 SoCs
-> 	"ti,keystone-dwc3" for K2 SoCs
-> 
+This documents the "amlogic,simple-framebuffer" compatible and the
+"amlogic,pipeline" extension.
 
-OK. Will fix it up. Thanks.
+Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+---
+ .../display/simple-framebuffer-meson.txt      | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/simple-framebuffer-meson.txt
 
-cheers,
--roger
-
-> 
-> 
->>   - #address-cells, #size-cells : should be '1' if the device has sub-nodes
->>     with 'reg' property.
->>   - reg : Address and length of the register set for the USB subsystem on
->> @@ -21,7 +21,7 @@ SoCs only:
->>  - clock-names:		Must be "usb".
->>  
->>  
->> -The following are mandatory properties for Keystone 2 66AK2G SoCs only:
->> +The following are mandatory properties for 66AK2G and AM654:
->>  
->>  - power-domains:	Should contain a phandle to a PM domain provider node
->>  			and an args specifier containing the USB device id
->>
-> 
-
+diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer-meson.txt b/Documentation/devicetree/bindings/display/simple-framebuffer-meson.txt
+new file mode 100644
+index 000000000000..122a5c005cd9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/simple-framebuffer-meson.txt
+@@ -0,0 +1,33 @@
++Meson specific Simple Framebuffer bindings
++
++This binding documents meson specific extensions to the simple-framebuffer
++bindings. The meson simplefb u-boot code relies on the devicetree containing
++pre-populated simplefb nodes.
++
++These extensions are intended so that u-boot can select the right node based
++on which pipeline is being used. As such they are solely intended for
++firmware / bootloader use, and the OS should ignore them.
++
++Required properties:
++- compatible: "amlogic,simple-framebuffer"
++- amlogic,pipeline, one of:
++  "vpu-cvbs"
++  "vpu-hdmi"
++
++Example:
++
++chosen {
++	#address-cells = <2>;
++	#size-cells = <2>;
++	ranges;
++
++	framebuffer@0 {
++		compatible = "amlogic,simple-framebuffer",
++			     "simple-framebuffer";
++		amlogic,pipeline = "vpu-hdmi";
++		clocks = <&clkc CLKID_HDMI_PCLK>,
++			 <&clkc CLKID_CLK81>,
++			 <&clkc CLKID_GCLK_VENCI_INT0>;
++		power-domains = <&pwrc_vpu>;
++	};
++};
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.19.2
