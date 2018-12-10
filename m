@@ -1,46 +1,43 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: serial: 8250: Add rate limit for
- serial port input overruns
-Date: Mon, 10 Dec 2018 17:23:05 -0600
-Message-ID: <20181210232305.GA11474@bogus>
-References: <20181209222739.15866-1-darwin.dingel@alliedtelesis.co.nz>
+Subject: Re: [PATCH V3 1/2] dt-bindings: iio: light: isl29018: update power
+ supply name
+Date: Mon, 10 Dec 2018 17:23:58 -0600
+Message-ID: <20181210232358.GA11621@bogus>
+References: <1544425521-775-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181209222739.15866-1-darwin.dingel@alliedtelesis.co.nz>
+In-Reply-To: <1544425521-775-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, chris.packham@alliedtelesis.co.nz, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Dec 2018 11:27:39 +1300, Darwin Dingel wrote:
-> When a serial port continuously experiences input overrun from
-> (1) continuous receive characters from remote and or (2) hardware
-> issues, its interrupt handler can preempt other tasks especially
-> when the system is busy (ie. boot up period). This can cause other
-> tasks to get starved of processing time from the CPU.
+On Mon, Dec 10, 2018 at 07:11:19AM +0000, Anson Huang wrote:
+> According to datasheet, the isl29018 has "vddd/vdda" power
+> supply, and isl29023/isl29035 ONLY has "vdd" power supply,
+> update the power supply name with "vdd" and "vdda" according
+> to datasheet to cover all devices and avoid confusion.
 > 
-> When this dts binding is enabled and input overrun on the serial port
-> is detected, serial port receive will be throttled to give some breathing
-> room for processing other tasks. Value provided will be in milliseconds.
-> 
-> &serial0{
-> 	overrun-throttle-ms = <500>;
-> };
-> 
-> Signed-off-by: Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
+>  Documentation/devicetree/bindings/iio/light/isl29018.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> Notes:
->     Changelog
->     v1->v2:
->     - Separated dts binding to another patch
->     
->     v2->v3:
->     - Fixed commit message and reviewed-by fields
-> 
->  Documentation/devicetree/bindings/serial/8250.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+> diff --git a/Documentation/devicetree/bindings/iio/light/isl29018.txt b/Documentation/devicetree/bindings/iio/light/isl29018.txt
+> index b9bbde3..36f737d 100644
+> --- a/Documentation/devicetree/bindings/iio/light/isl29018.txt
+> +++ b/Documentation/devicetree/bindings/iio/light/isl29018.txt
+> @@ -15,7 +15,9 @@ Optional properties:
+>    Refer to interrupt-controller/interrupts.txt for generic interrupt client
+>    node bindings.
+>  
+> -  - vcc-supply: phandle to the regulator that provides power to the sensor.
+> +  - vdd-supply: phandle to the regulator that provides vdd power to the sensor.
+> +
+> +  - vdda-supply: phandle to the regulator that provides vdda power to the sensor.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Is this in use? You can't just change things if it is.
+
+Rob
