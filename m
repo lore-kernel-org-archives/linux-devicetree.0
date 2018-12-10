@@ -1,7 +1,7 @@
 From: Vijay Khemka <vijaykhemka@fb.com>
-Subject: [PATCH] ARM: dts: aspeed: Add KCS support for LPC BMC
-Date: Mon, 10 Dec 2018 12:07:52 -0800
-Message-ID: <20181210200753.3018124-2-vijaykhemka@fb.com>
+Subject: [PATCH 2/2] ARM: dts: aspeed: Add KCS support for LPC BMC
+Date: Mon, 10 Dec 2018 12:07:53 -0800
+Message-ID: <20181210200753.3018124-3-vijaykhemka@fb.com>
 References: <20181210200753.3018124-1-vijaykhemka@fb.com>
 Mime-Version: 1.0
 Content-Type: text/plain
