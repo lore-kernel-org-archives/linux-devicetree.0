@@ -1,58 +1,63 @@
-From: Schrempf Frieder <frieder.schrempf@kontron.de>
-Subject: Re: [PATCH 0/5] Prepare devicetrees for the new FSL QSPI driver
-Date: Mon, 10 Dec 2018 16:31:03 +0000
-Message-ID: <ce1442f3-357b-d647-958e-cc4a89282b79@kontron.de>
-References: <1544459182-23655-1-git-send-email-frieder.schrempf@kontron.de>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH 0/2] input: driver for RPi's official 7" touchscreen
+Date: Mon, 10 Dec 2018 17:30:19 +0100
+Message-ID: <20181210163036.24813-1-nsaenzjulienne@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544459182-23655-1-git-send-email-frieder.schrempf@kontron.de>
-Content-Language: en-US
-Content-ID: <BCFF43A4956638429CD7C267D0D3E012@snt-world.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "broonie@kernel.org" <broonie@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: linux-input@vger.kernel.org
+Cc: linux-rpi-kernel@lists.infradead.org, stefan.wahren@i2se.com, eric@anholt.net, agraf@suse.de, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, Mark Jonas <mark.jonas@de.bosch.com>, Hans-Christian Noren Egtvedt <egtvedt@samfundet.no>, Zhu Yi <yi.zhu5@cn.bosch.com>, Masanari Iida <standby24x7@gmail.com>, Corentin Labbe <clabbe.montjoie@gmail.com>, Eugen Hristev <eugen.hristev@microchip.com>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRlNML0FSTSBtYWludGFpbmVycywNCg0KT24gMTAuMTIuMTggMTc6MjYsIFNjaHJlbXBmIEZy
-aWVkZXIgd3JvdGU6DQo+IEZyb206IEZyaWVkZXIgU2NocmVtcGYgPGZyaWVkZXIuc2NocmVtcGZA
-a29udHJvbi5kZT4NCj4gDQo+IFdlIGhhdmUgcHJlcGFyZWQgYSBuZXcgZHJpdmVyIGZvciB0aGUg
-RlNMIFFTUEkgY29udHJvbGxlciB0aGF0IHdvcmtzIHVuZGVyDQo+IHRoZSBTUEkgZnJhbWV3b3Jr
-LiBUaGUgY3VycmVudCBkZXZpY2V0cmVlcyBhcmUgYnJva2VuIGJlY2F1c2UgdGhleSB1c2UgYW4N
-Cj4gaW5jb25zaXN0ZW50IHNjaGVtZSBmb3IgYXNzaWduaW5nIHRoZSByZWcgcHJvcGVydGllcy4N
-Cj4gDQo+IEFzLCBpbiBjb250cmFzdCB0byB0aGUgY3VycmVudCBkcml2ZXIsIHRoZSBuZXcgZHJp
-dmVyIHdpbGwgdXNlIHRoZSByZWcNCj4gcHJvcGVydGllcyB0byBzZWxlY3QgdGhlIGNvcnJlY3Qg
-Y2hpcCwgd2UgbmVlZCB0byBmaXggdGhlbS4NCj4gDQo+IFdlIGFsc28gYWRkIHNwaS1bdHgvcnhd
-LWJ1cy13aWR0aCB0byBtYWtlIHN1cmUgdGhlIGZ1bGwgYnVzd2lkdGggd2lsbCBiZSB1c2VkDQo+
-IGFuZCB3aGlsZSBhdCBpdCBjbGVhbiB1cCBhbmQgcmVtb3ZlIHNvbWUgdW51c2VkIHByb3BlcnRp
-ZXMuDQoNCmNvdWxkIHlvdSBwbGVhc2UgY29uc2lkZXIgdGhlc2UgZGV2aWNldHJlZSBwYXRjaGVz
-IGZvciB2NC4yMT8NCg0KV2UgaGF2ZSB0aGUgbmV3IEZTTCBRU1BJIGRyaXZlciB1bmRlciB0aGUg
-U1BJIGZyYW1ld29yayAoWzFdKSByZWFkeSwgYnV0IA0Kd2UgbmVlZCBzb21lIHNtYWxsIGZpeGVz
-IHRvIHRoZSBkZXZpY2V0cmVlcyB0aGF0IGFyZSBjdXJyZW50bHkgYnJva2VuLg0KDQpBcyB0aGUg
-bmV3IGRyaXZlciBkZXBlbmRzIG9uIHRoZXNlIGNoYW5nZXMgKG1haW5seSB0aGUgY2hhbmdlIHRv
-IHRoZSByZWcgDQpwcm9wZXJ0aWVzKSBhbmQgaXQgaXMgbm90IHBvc3NpYmxlIHRvIGFkZCBjb21w
-YXRpYmlsaXR5IGZvciB0aGUgb2xkIA0KYmluZGluZ3MsIGl0IHdvdWxkIGJlIHJlYWxseSBuaWNl
-IHRvIGhhdmUgdGhlbSBpbiB2NC4yMSwgc28gd2UgY2FuIHF1ZXVlIA0KdGhlIGRyaXZlciBmb3Ig
-djQuMjIgb3Igd2hhdGV2ZXIgdGhlIG5leHQgcmVsZWFzZSB3aWxsIGJlIGNhbGxlZC4NCg0KUGxl
-YXNlIGFsc28gc2VlIFsyXSBmb3Igc29tZSBtb3JlIGV4cGxhbmF0aW9uLg0KDQpUaGFua3MsDQpG
-cmllZGVyDQoNClsxXSBodHRwczovL3BhdGNod29yay5vemxhYnMub3JnL2NvdmVyLzEwMDc2NDEv
-DQpbMl0gaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC85MjI4MTcvIzE5MjU0NDUN
-Cg0KPiANCj4gRnJpZWRlciBTY2hyZW1wZiAoNSk6DQo+ICAgIGFybTY0OiBkdHM6IFJlbW92ZSB1
-bnVzZWQgcHJvcGVydGllcyBmcm9tIEZTTCBRU1BJIGRyaXZlciBub2Rlcw0KPiAgICBBUk06IGR0
-czogUmVtb3ZlIHVudXNlZCBwcm9wZXJ0aWVzIGZyb20gRlNMIFFTUEkgZHJpdmVyIG5vZGVzDQo+
-ICAgIEFSTTogZHRzOiBpbXg2c3gtc2RiOiBGaXggdGhlIHJlZyBwcm9wZXJ0aWVzIGZvciB0aGUg
-RlNMIFFTUEkgbm9kZXMNCj4gICAgYXJtNjQ6IGR0czogQWRkIHNwaS1bdHgvcnhdLWJ1cy13aWR0
-aCBmb3IgdGhlIEZTTCBRU1BJIGNvbnRyb2xsZXINCj4gICAgQVJNOiBkdHM6IEFkZCBzcGktW3R4
-L3J4XS1idXMtd2lkdGggZm9yIHRoZSBGU0wgUVNQSSBjb250cm9sbGVyDQo+IA0KPiAgIGFyY2gv
-YXJtL2Jvb3QvZHRzL2lteDZzeC1zZGItcmV2YS5kdHMgICAgICAgICAgICAgIHwgOCArKysrKyst
-LQ0KPiAgIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZzeC1zZGIuZHRzICAgICAgICAgICAgICAgICAg
-IHwgOCArKysrKystLQ0KPiAgIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC0xNHgxNC1ldmsuZHRz
-aSAgICAgICAgICAgIHwgMiArKw0KPiAgIGFyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEtbW94YS11
-Yy04NDEwYS5kdHMgICAgICAgIHwgNSArKy0tLQ0KPiAgIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
-ZXNjYWxlL2ZzbC1sczEwNDNhLXFkcy5kdHMgIHwgMyArKy0NCj4gICBhcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDQ2YS1xZHMuZHRzICB8IDQgKystLQ0KPiAgIGFyY2gvYXJt
-NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLXJkYi5kdHMgIHwgNiArKysrLS0NCj4g
-ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDh4YS1xZHMuZHRzaSB8IDQg
-KysrKw0KPiAgIDggZmlsZXMgY2hhbmdlZCwgMjggaW5zZXJ0aW9ucygrKSwgMTIgZGVsZXRpb25z
-KC0pDQo+IA==
+This small series adds support for Raspberry pi's 7" touchscreen. Which
+alongside with the backlight driver are the last devices needed to have
+a functional touchscreen upstream.
+
+With this setup the board's VC4 firmware takes care of communicating
+with the touch chip and provides data though a shared memory area
+provided by the driver. The driver takes care of polling the firmware
+whenever at around 60Hz since there is no interrupt line available.
+
+The 1.0 revision of the touchscreen is based on the ft5426 chip.
+Technically, with some changes in edt-ft54x4.c we should be able to
+access the data directly through I2C. Yet this bus is meant to be owned
+by RPi's firmware and might access it anytime. For example, to
+configure RPi's camera device. As sharing the bus master interface is
+not possible a series of alternatives have been tested unsuccessfully
+[1]. It seems that we'll be unable to access the chip directly in a
+"clean" way which leaves us with this firmware based solution.
+
+The driver was rewritten based on the one available on the downstream
+Raspberry Pi kernel tree: https://github.com/raspberrypi/linux/.
+
+This series is based on v4.20-rc6 and was tested on a RPi 3 B+.
+
+Changelog
+
+RFC -> PATCH:
+  - Better dependencies check in Kconfig
+  - Add SPDX tag
+  - Use polled input device API
+  - Use input_mt_sync_frame()
+  - Drop reference from dt node in probe
+  - Use devm where possible
+  - Small cosmetic changes
+
+[1] https://lists.infradead.org/pipermail/linux-rpi-kernel/2018-December/008444.html
+===
+
+Nicolas Saenz Julienne (2):
+  input: add official Raspberry Pi's touchscreen driver
+  Input: raspberrypi-ts - add devicetree binding documentation
+
+ .../touchscreen/raspberrypi,firmware-ts.txt   |  26 ++
+ drivers/input/touchscreen/Kconfig             |  12 +
+ drivers/input/touchscreen/Makefile            |   1 +
+ drivers/input/touchscreen/raspberrypi-ts.c    | 223 ++++++++++++++++++
+ 4 files changed, 262 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/raspberrypi,firmware-ts.txt
+ create mode 100644 drivers/input/touchscreen/raspberrypi-ts.c
+
+-- 
+2.19.2
