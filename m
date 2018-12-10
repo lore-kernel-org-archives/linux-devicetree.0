@@ -1,50 +1,28 @@
-Return-Path: <SRS0=cC9Q=OT=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH] ARM: dts: r8a7743: Remove aliases from SoC dtsi
-Date: Mon, 10 Dec 2018 12:07:03 +0000
-Message-Id: <1544443624-65471-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 10 Dec 2018 16:29:37 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/5] clk: samsung: exynos5433: fix name typo in sssx
+Message-ID: <20181210222937.GA9739@bogus>
+References: <20181204165248.17572-1-k.konieczny@partner.samsung.com>
+ <CGME20181204165316eucas1p2ba063b96e83d2d2be93ca067d32d7926@eucas1p2.samsung.com>
+ <20181204165248.17572-3-k.konieczny@partner.samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181204165248.17572-3-k.konieczny@partner.samsung.com>
+To: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch removes aliases from SoC dtsi tree. Device aliases are
-board-specific, if needed define it in board dts rather than SoC
-dtsi.
+On Tue, Dec 04, 2018 at 05:52:45PM +0100, Kamil Konieczny wrote:
+> Fix typo in sssx name, there should be three letters 's'.
+> 
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+> ---
+>  drivers/clk/samsung/clk-exynos5433.c   | 2 +-
+>  include/dt-bindings/clock/exynos5433.h | 2 +-
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm/boot/dts/r8a7743.dtsi | 19 -------------------
- 1 file changed, 19 deletions(-)
+Acked-by: Rob Herring <robh@kernel.org>
 
-diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-index 182464d..24e6c2b 100644
---- a/arch/arm/boot/dts/r8a7743.dtsi
-+++ b/arch/arm/boot/dts/r8a7743.dtsi
-@@ -15,25 +15,6 @@
- 	#address-cells = <2>;
- 	#size-cells = <2>;
- 
--	aliases {
--		i2c0 = &i2c0;
--		i2c1 = &i2c1;
--		i2c2 = &i2c2;
--		i2c3 = &i2c3;
--		i2c4 = &i2c4;
--		i2c5 = &i2c5;
--		i2c6 = &iic0;
--		i2c7 = &iic1;
--		i2c8 = &iic3;
--		spi0 = &qspi;
--		spi1 = &msiof0;
--		spi2 = &msiof1;
--		spi3 = &msiof2;
--		vin0 = &vin0;
--		vin1 = &vin1;
--		vin2 = &vin2;
--	};
--
- 	/*
- 	 * The external audio clocks are configured as 0 Hz fixed frequency
- 	 * clocks by default.
--- 
-2.7.4
+>  2 files changed, 2 insertions(+), 2 deletions(-)
