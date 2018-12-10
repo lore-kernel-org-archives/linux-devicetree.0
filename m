@@ -1,11 +1,22 @@
-From: Vijay Khemka <vijaykhemka@fb.com>
-Subject: [PATCH 1/2] ARM: dts: aspeed: Add KCS & lpc ctrl for Facebook
-Date: Mon, 10 Dec 2018 12:07:51 -0800
-Message-ID: <20181210200753.3018124-1-vijaykhemka@fb.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v2 01/10] mailbox: Support blocking transfers in atomic
+ context
+Date: Tue, 11 Dec 2018 02:00:48 +0530
+Message-ID: <CABb+yY2fNYYjh4cY69M5p0Yc-Z-wusDMQhjTgqb1Ag1QEm=T9Q@mail.gmail.com>
+References: <20181112151853.29289-1-thierry.reding@gmail.com>
+ <20181112151853.29289-2-thierry.reding@gmail.com>
+ <0545f5e1-1740-2129-9d0e-5c950bd9bf74@nvidia.com>
+ <CABb+yY1u24JYO68f74qSJ1RpqidJ4H7cnP1Sy=RdqcBHru5XQg@mail.gmail.com>
+ <20181129152312.GB23750@ulmo>
+ <CABb+yY1G+6MQmrSeZvOXnuREB87+DYHGxNu1tBb9W6apizLtGw@mail.gmail.com>
+ <20181207113245.GA30719@ulmo>
+ <CABb+yY2jVmzxFR7iqSyMMyE+XZtyHrAPAxM_KMEa7c2zzpSwCA@mail.gmail.com>
+ <20181210095229.GA15154@ulmo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181210095229.GA15154@ulmo>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,72 +26,63 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, vijaykhemka@fb.com
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Devicetree List <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, mliljeberg@nvidia.com, Mikko Perttunen <mperttunen@nvidia.com>, talho@nvidia.com, linux-serial@vger.kernel.org, jslaby@suse.com, linux-tegra@vger.kernel.org, ppessi@nvidia.com, Jon Hunter <jonathanh@nvidia.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Added kcs device and lpc ctrl device to enable LPC clock in Facebook
-Tiogapass device tree.
+On Mon, Dec 10, 2018 at 3:22 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+> On Sat, Dec 08, 2018 at 11:39:05AM +0530, Jassi Brar wrote:
+> > On Fri, Dec 7, 2018 at 5:02 PM Thierry Reding <thierry.reding@gmail.com> wrote:
 
-Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
----
- .../dts/aspeed-bmc-facebook-tiogapass.dts     | 30 +++++++++++++++++++
- 1 file changed, 30 insertions(+)
+> > >
+> > >
+> > > Secondly, I don't understand why you think this is an emulated console.
+> > >
+> > It is emulated/virtual because Linux doesn't put characters on a
+> > physical bus. The data is simply handed forward to a remote entity.
+>
+> Okay, I understand. However, from a kernel point of view there's no
+> difference between the TCU and any physical UART. Once the data is
+> handed to the TCU TX mailbox, it's out of control of the TCU driver.
+> Whether there's a real UART behind that or some remote processor that
+> reads the data isn't really relevant.
+>
+That way there can be no virtual/emulated device ?
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-index d9d7f208788a..9544fa2c1822 100644
---- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-@@ -21,6 +21,18 @@
- 	memory@80000000 {
- 		reg = <0x80000000 0x20000000>;
- 	};
-+
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		flash_memory: region@98000000 {
-+			no-map;
-+			reg = <0x98000000 0x04000000>; /* 64M */
-+		};
-+	};
-+
- 	iio-hwmon {
- 		compatible = "iio-hwmon";
- 		oemname0 = "MB_P3V3";
-@@ -62,6 +74,12 @@
- 	};
- };
- 
-+&lpc_ctrl {
-+	status = "okay";
-+	memory-region = <&flash_memory>;
-+	flash = <&spi1>;
-+};
-+
- &uart1 {
- 	// Host Console
- 	status = "okay";
-@@ -75,6 +93,18 @@
- 	status = "okay";
- };
- 
-+&kcs2 {
-+	// BMC KCS channel 2
-+	status = "okay";
-+	kcs_addr = <0xca8>;
-+};
-+
-+&kcs3 {
-+	// BMC KCS channel 3
-+	status = "okay";
-+	kcs_addr = <0xca2>;
-+};
-+
- &mac0 {
- 	status = "okay";
- 
--- 
-2.17.1
+> >
+> > The 'flush' api is going to have no use other than implement
+> > busy-waits. I am afraid people are simply going to take it easy and
+> > copy the busy-waits from the test/verification codes.
+> > "discouraging" seldom works because the developer comes with the
+> > failproof excuse "the h/w doesn't provide any other way". Frankly I
+> > would like to push back on such designs.
+>
+> I certainly approve of that stance.
+>
+> However, I'd like to reiterate that the TCU design does in fact support
+> "another way". If you look at the mailbox driver implementation (in the
+> drivers/mailbox/tegra-hsp.c driver), you'll see that it does support an
+> interrupt driven mode. After you had reviewed Mikko's earliest proposal
+> that was indeed implementing busy looping exclusively we both set out
+> to properly implement interrupt support. This took quite a while to do
+> because of some gaps in the documentation, but we eventually got it to
+> work properly. And then it was discovered that it was all a waste of
+> effort because the console driver couldn't make use of it anyway. Well,
+> I should say "waste of effort" because I'm still happy that the proper
+> implementation exists and we can use it under the right circumstances.
+>
+> So, at least in this particular case, it is not the hardware or firmware
+> design that's flawed or was taking any shortcuts. It's really just the
+> particular use-case of the console that doesn't allow us to make use of
+> the right implementation, which is why we have to resort to the inferior
+> method of busy-looping.
+>
+I am not complaining about the hardware, but the firmware.
+It is essential we dump logs during early boot but the platform(Linux)
+doesn't have access to serial port. All the firmware allows is 24bits
+per transfer!! We could do better.
+A smarter option could have been Linux simply placing characters in
+the shmem ring-buffer, while the remote consuming (and then poisoning)
+the ring buffer upon 'hint' from Linux.
+
+-Jassi
