@@ -1,127 +1,75 @@
-Return-Path: <SRS0=9MhD=OS=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr80051.outbound.protection.outlook.com ([40.107.8.51]:16469
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726097AbeLIFk1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 9 Dec 2018 00:40:27 -0500
-From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH v4 3/4] usb: chipidea: host: override ehci->hub_control
-Date: Sun, 9 Dec 2018 05:40:21 +0000
-Message-ID: <20181209053746.24967-4-peter.chen@nxp.com>
-References: <20181209053746.24967-1-peter.chen@nxp.com>
-In-Reply-To: <20181209053746.24967-1-peter.chen@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=1lUL=OT=gmail.com=thierry.reding@kernel.org>
+Date: Mon, 10 Dec 2018 11:56:23 +0100
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] dt-bindings: tegra186-gpio: Add Tegra186 specific prefix
+Message-ID: <20181210105623.GK15154@ulmo>
+References: <20181123124341.21431-1-thierry.reding@gmail.com>
+ <CACRpkdYGnQNGePViRz-M6Ku=MP063as2G_vJqNx2HDgGdW1UQQ@mail.gmail.com>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>, Peter Chen <peter.chen@nxp.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vbzKE9fGfpHIBC6T"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYGnQNGePViRz-M6Ku=MP063as2G_vJqNx2HDgGdW1UQQ@mail.gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Jon Hunter <jonathanh@nvidia.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-tegra@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The chipidea controller has some special requirements during
-suspend/resume, override common ehci->hub_control to implement
-it.
 
-Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Tested-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
----
- drivers/usb/chipidea/host.c | 75 +++++++++++++++++++++++++++++++++++++++++=
-++++
- 1 file changed, 75 insertions(+)
+--vbzKE9fGfpHIBC6T
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
-index 028a3574266a..b45ceb91c735 100644
---- a/drivers/usb/chipidea/host.c
-+++ b/drivers/usb/chipidea/host.c
-@@ -220,6 +220,80 @@ void ci_hdrc_host_destroy(struct ci_hdrc *ci)
- 		host_stop(ci);
- }
-=20
-+/* The below code is based on tegra ehci driver */
-+static int ci_ehci_hub_control(
-+	struct usb_hcd	*hcd,
-+	u16		typeReq,
-+	u16		wValue,
-+	u16		wIndex,
-+	char		*buf,
-+	u16		wLength
-+)
-+{
-+	struct ehci_hcd	*ehci =3D hcd_to_ehci(hcd);
-+	u32 __iomem	*status_reg;
-+	u32		temp;
-+	unsigned long	flags;
-+	int		retval =3D 0;
-+	struct device *dev =3D hcd->self.controller;
-+	struct ci_hdrc *ci =3D dev_get_drvdata(dev);
-+
-+	status_reg =3D &ehci->regs->port_status[(wIndex & 0xff) - 1];
-+
-+	spin_lock_irqsave(&ehci->lock, flags);
-+
-+	if (typeReq =3D=3D SetPortFeature && wValue =3D=3D USB_PORT_FEAT_SUSPEND)=
- {
-+		temp =3D ehci_readl(ehci, status_reg);
-+		if ((temp & PORT_PE) =3D=3D 0 || (temp & PORT_RESET) !=3D 0) {
-+			retval =3D -EPIPE;
-+			goto done;
-+		}
-+
-+		temp &=3D ~(PORT_RWC_BITS | PORT_WKCONN_E);
-+		temp |=3D PORT_WKDISC_E | PORT_WKOC_E;
-+		ehci_writel(ehci, temp | PORT_SUSPEND, status_reg);
-+
-+		/*
-+		 * If a transaction is in progress, there may be a delay in
-+		 * suspending the port. Poll until the port is suspended.
-+		 */
-+		if (ehci_handshake(ehci, status_reg, PORT_SUSPEND,
-+			PORT_SUSPEND, 5000))
-+			ehci_err(ehci, "timeout waiting for SUSPEND\n");
-+
-+		if (ci->platdata->flags & CI_HDRC_IMX_IS_HSIC) {
-+			if (ci->platdata->notify_event)
-+				ci->platdata->notify_event(ci,
-+					CI_HDRC_IMX_HSIC_SUSPEND_EVENT);
-+
-+			temp =3D ehci_readl(ehci, status_reg);
-+			temp &=3D ~(PORT_WKDISC_E | PORT_WKCONN_E);
-+			ehci_writel(ehci, temp, status_reg);
-+		}
-+
-+		set_bit((wIndex & 0xff) - 1, &ehci->suspended_ports);
-+		goto done;
-+	}
-+
-+	/*
-+	 * After resume has finished, it needs do some post resume
-+	 * operation for some SoCs.
-+	 */
-+	else if (typeReq =3D=3D ClearPortFeature &&
-+		wValue =3D=3D USB_PORT_FEAT_C_SUSPEND) {
-+		/* Make sure the resume has finished, it should be finished */
-+		if (ehci_handshake(ehci, status_reg, PORT_RESUME, 0, 25000))
-+			ehci_err(ehci, "timeout waiting for resume\n");
-+	}
-+
-+	spin_unlock_irqrestore(&ehci->lock, flags);
-+
-+	/* Handle the hub control events here */
-+	return ehci_hub_control(hcd, typeReq, wValue, wIndex, buf, wLength);
-+done:
-+	spin_unlock_irqrestore(&ehci->lock, flags);
-+	return retval;
-+}
- static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
- {
- 	struct ehci_hcd *ehci =3D hcd_to_ehci(hcd);
-@@ -298,4 +372,5 @@ void ci_hdrc_host_driver_init(void)
- 	ehci_init_driver(&ci_ehci_hc_driver, &ehci_ci_overrides);
- 	orig_bus_suspend =3D ci_ehci_hc_driver.bus_suspend;
- 	ci_ehci_hc_driver.bus_suspend =3D ci_ehci_bus_suspend;
-+	ci_ehci_hc_driver.hub_control =3D ci_ehci_hub_control;
- }
---=20
-2.14.1
+On Fri, Dec 07, 2018 at 11:08:28AM +0100, Linus Walleij wrote:
+> On Fri, Nov 23, 2018 at 1:43 PM Thierry Reding <thierry.reding@gmail.com>=
+ wrote:
+>=20
+> > From: Thierry Reding <treding@nvidia.com>
+> >
+> > Subsequent generations of Tegra, such as Tegra194, contain a completely
+> > different set of GPIOs. In order to clarify that the Tegra186 defines
+> > are indeed specific to Tegra186, change the prefix from TEGRA_ to
+> > TEGRA186_.
+> >
+> > Note that for now we need to keep the old definitions in place to avoid
+> > breaking compilation in file that use this header. Once all users have
+> > been converted to use the new defines, the old ones can be removed.
+> >
+> > Also note that this is only a naming change and doesn't affect device
+> > tree ABI.
+> >
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+>=20
+> Patch applied for v4.21 with Jon's ACK.
+>=20
+> I assume this is not something that needs coordinating with
+> some other git tree but part of some long term plan, so just
+> optimistically applied it.
+
+You're right. The idea is to introduce these definitions for v4.21, then
+convert all usage of the old definitions in v4.22 and finally remove the
+old definitions in v4.23. So no need for special coordination.
+
+Thierry
+
+--vbzKE9fGfpHIBC6T
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlwORlcACgkQ3SOs138+
+s6EAQQ//drIfB7DZCsa19dbVt5O24ccse/2YrkB5es9Kt9MT0679YRS6Asu2bEuH
+q3X+zbxs0N/AOf2pzghWAT6kTcJeTt1gxH6QF0DIaUHVQKG5gTkrylnoNVlpSz9H
+4YXRLvYFjNdfyHz7SRtRXi8I771KI40f7bj+CS2HOU3LRKaC5hFXRtE7ePaXGOOi
+dFk5C20b2LDryl8u+nsn8vPQzt52+r6RykDpx4/NOZ8pGzM3Soc5vnmj7WqG44c9
+hBx5OlQ2ibRMeIXjtzG2MidU6o+2V/NrfByZ0wdio8cRy2bWQ1n7bOiqrf6zMko3
+tMQePDlMV/Cj2v53nRwvesx5aHEjycfMmYh6CUwBT4hLvKmgBM0CKaXkQ+6vzBui
+iif9bjSPUS5xkHv+tTidObhrkLZu/2zvFnT/hL/2u1HCGntlEGQIOjgwtZuPGyAY
+2ebhBLd2Yx+iaa0UquN2DqCOjo68nVVco58T0qf8yqyLK+gBDnKvlSmLTTAteS0Z
+AoFT3LnMpMYCC3QWcBr+4JPsqLbzTZ13I3YRFboX/EflXgXTHNWwtSN6EPVb8CG3
+w8gI9GPH5yKEKYKpHmkXGZ1vlUKb9k6RWZ6vHiKQgM+8RxIVvm/fGuc8DCNbDx/S
+MaeMI4UQsY6KnHzUYwd0LpxUvBos/71p3TewB5edoXgnoKPRxIg=
+=cGzn
+-----END PGP SIGNATURE-----
+
+--vbzKE9fGfpHIBC6T--
