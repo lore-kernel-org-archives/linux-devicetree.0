@@ -1,144 +1,119 @@
-From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Subject: [PATCH 4/8] regulator: axp20x: add software based
- soft_start for AXP209 LDO3
-Date: Mon, 10 Dec 2018 20:42:15 +0200
-Message-ID: <c77b37b68b18a299cafd282ef1edf3434eabeb2d.1544466940.git-series.plaes@plaes.org>
-References: <cover.4110554ae84987dedb8b58888a8a63d6b7f98c72.1544466940.git-series.plaes@plaes.org>
-Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
+From: Cezary =?UTF-8?Q?Gapi=C5=84ski?= <cezary.gapinski@gmail.com>
+Subject: Re: [PATCH 0/5] Add support for STM32F4 SPI
+Date: Mon, 10 Dec 2018 20:05:22 +0100
+Message-ID: <1544468722.17722.45.camel@gmail.com>
+References: <1544363636-12161-1-git-send-email-cezary.gapinski@gmail.com>
+         <ede8544f-c71d-0901-5522-e97215d23f85@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDB4J47M7YERBMXHXLQAKGQE3T5PYQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <cover.4110554ae84987dedb8b58888a8a63d6b7f98c72.1544466940.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ede8544f-c71d-0901-5522-e97215d23f85@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Amelie DELAUNAY <amelie.delaunay@st.com>, Mark Brown <broonie@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Hi Amelie,
 
-In the past, there have been words on various lists that if LDO3 is
-disabled in u-boot, but enabled in the DTS, the axp209 driver would
-fail to continue/hang. Several enable/disable patches have been
-issues to devicetree's in both the kernel and u-boot to address
-this issue.
+On Mon, 2018-12-10 at 12:37 +0000, Amelie DELAUNAY wrote:
+> Hi Cezary,
+> 
+> On 12/9/18 2:53 PM, cezary.gapinski@gmail.com wrote:
+> > 
+> > From: Cezary Gapinski <cezary.gapinski@gmail.com>
+> > 
+> > This series of patches adds support for first generation of SPI
+> > interface
+> > for STM32F4 family.
+> > 
+> First of all, thanks for adding STM32F4 SPI support.
 
-What really happened however, was that the AXP209 shuts down without
-a notice and without setting an interrupt. This is caused when LDO3
-gets overloaded, for example with large capacitors on the LDO3 output.
+Thanks for your answer and hints for correct approach to this driver.
 
-Normally, we would expect that AXP209 would source 200 mA as per
-datasheet and set and trigger an interrupt when being overloaded.
-For some reason however, this does not happen.
+> > 
+> > This version of driver is mostly different to STM32H7 one. Based on
+> > linux
+> > kernel I2C drivers for STM32 where drivers were splited into
+> > STM32F4 and
+> > STM32F7 family the same approach seems to be sufficient for SPI
+> > STM32
+> > drivers. Therefore STM32H7 driver was moved to spi-stm32h7.c file
+> > and
+> > register and functions were renamed to be more specific to STM32H7.
+> > 
+> You're right, STM32F4 SPI is slightly different from STM32H7 one: 
+> register map/bits offsets are different and STM32H7 has an RX and TX
+> FIFO.
+> But if you have a look on STM32F7 SPI [1], you'll see that STM32F7
+> SPI 
+> is based on STM32F4 SPI with new features (data frames & FIFOs) also 
+> available on STM32H7 SPI.
+> 
+> That's why STM32H7 SPI driver was called spi-stm32. The goal was to
+> use 
+> compatible & match data to differentiate each STM32Fx specificities.
+> 
+> You can have a look on how it is managed in drivers/rtc/rtc-stm32.c
+> (the 
+> same driver covers 2 HW version of STM32 RTC), or in 
+> drivers/iio/dac/stm32-dac-core.c and stm32-dac.c (the same driver
+> also 
+> covers 2 HW version of STM32 DAC).
+> As your spi-stm32f4.c file is highly based on the existing spi-
+> stm32.c 
+> file, I think that common code could be factored and specificities
+> could 
+> be handled with compatible and match data.
 
-As a work-around, we use the soft-start constraint of the regulator
-node to first bring up the LDO3 to the lowest possible voltage and
-then enable the LDO. After that, we can set the requested voltage
-as usual.
+I have seen these drivers before. I have been trying to do this for my
+previous approach and it is still on my second branch. There was not
+too much common parts and I have stuck with complex compatible data
+configurations. I thought that was too verbose, therefore I resigned
+for it and have gone into idea with two totally different files. I
+think I need to get down again to idea you proposed. 
 
-Combining this setting with the regulator-ramp-delay allows LDO3 to
-enable voltage slowly and staggered, potentially reducing overall
-inrush current.
+It seems to be more difficult approach and it is gonna take a while
+before I send second version of these patches.
 
-Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
----
- drivers/regulator/axp20x-regulator.c | 57 ++++++++++++++++++++++++++++-
- 1 file changed, 56 insertions(+), 1 deletion(-)
+Regards,
+Cezary
 
-diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index 1d9fa62..e8a895b 100644
---- a/drivers/regulator/axp20x-regulator.c
-+++ b/drivers/regulator/axp20x-regulator.c
-@@ -14,6 +14,7 @@
-  */
- 
- #include <linux/bitops.h>
-+#include <linux/delay.h>
- #include <linux/err.h>
- #include <linux/init.h>
- #include <linux/mfd/axp20x.h>
-@@ -23,6 +24,7 @@
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
- #include <linux/regulator/of_regulator.h>
- 
- #define AXP20X_GPIO0_FUNC_MASK		GENMASK(3, 0)
-@@ -430,6 +432,59 @@ static int axp20x_set_ramp_delay(struct regulator_dev *rdev, int ramp)
- 	return regmap_update_bits(axp20x->regmap, reg, mask, cfg);
- }
- 
-+static int axp20x_regulator_enable_regmap(struct regulator_dev *rdev)
-+{
-+	struct axp20x_dev *axp20x = rdev_get_drvdata(rdev);
-+	const struct regulator_desc *desc = rdev->desc;
-+
-+	if (!rdev)
-+		return -EINVAL;
-+
-+	switch (axp20x->variant) {
-+	case AXP209_ID:
-+		if ((desc->id == AXP20X_LDO3) &&
-+		    rdev->constraints && rdev->constraints->soft_start) {
-+			int v_out;
-+			int ret;
-+
-+			/*
-+			 * On some boards, the LDO3 can be overloaded when
-+			 * turning on, causing the entire PMIC to shutdown
-+			 * without warning. Turning it on at the minimal voltage
-+			 * and then setting the voltage to the requested value
-+			 * works reliably.
-+			 */
-+			if (regulator_is_enabled_regmap(rdev))
-+				break;
-+
-+			v_out = regulator_get_voltage_sel_regmap(rdev);
-+			if (v_out < 0)
-+				return v_out;
-+
-+			if (v_out == 0)
-+				break;
-+
-+			ret = regulator_set_voltage_sel_regmap(rdev, 0x00);
-+			/*
-+			 * A small pause is needed between
-+			 * setting the voltage and enabling the LDO to give the
-+			 * internal state machine time to process the request.
-+			 */
-+			usleep_range(1000, 5000);
-+			ret |= regulator_enable_regmap(rdev);
-+			ret |= regulator_set_voltage_sel_regmap(rdev, v_out);
-+
-+			return ret;
-+		}
-+		break;
-+	default:
-+		/* No quirks */
-+		break;
-+	}
-+
-+	return regulator_enable_regmap(rdev);
-+};
-+
- static const struct regulator_ops axp20x_ops_fixed = {
- 	.list_voltage		= regulator_list_voltage_linear,
- };
-@@ -447,7 +502,7 @@ static const struct regulator_ops axp20x_ops = {
- 	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
- 	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
- 	.list_voltage		= regulator_list_voltage_linear,
--	.enable			= regulator_enable_regmap,
-+	.enable			= axp20x_regulator_enable_regmap,
- 	.disable		= regulator_disable_regmap,
- 	.is_enabled		= regulator_is_enabled_regmap,
- 	.set_ramp_delay		= axp20x_set_ramp_delay,
--- 
-git-series 0.9.1
+> Regards,
+> Amelie
+> [1] 
+> https://www.st.com/content/ccc/resource/technical/document/reference_
+> manual/c5/cf/ef/52/c0/f1/4b/fa/DM00124865.pdf/files/DM00124865.pdf/jc
+> r:content/translations/en.DM00124865.pdf
+> 
+> > 
+> > For current version master mode with full-duplex and 8/16 bit data
+> > frame
+> > format are supported. There is no TX and RX FIFOs like in STM32H7.
+> > DMA capabilility is supported for messages longer than arbitrary
+> > number
+> > of bytes (that is set already to 16 bytes) when TX and RX channels
+> > are
+> > set at the same time.
+> > 
+> > Cezary Gapinski (5):
+> >    spi: stm32: rename STM32 SPI registers and functions to STM32H7
+> >    spi: stm32: rename spi-stm32 to spi-stm32h7
+> >    spi: stm32: add driver for STM32F4 controller
+> >    ARM: dts: stm32: add SPI support on STM32F429 SoC
+> >    spi: stm32: add description about STM32F4 bindings
+> > 
+> >   .../devicetree/bindings/spi/spi-stm32.txt          |    9 +-
+> >   arch/arm/boot/dts/stm32f429.dtsi                   |   60 +
+> >   drivers/spi/Kconfig                                |   18 +-
+> >   drivers/spi/Makefile                               |    3 +-
+> >   drivers/spi/spi-stm32.c                            | 1322 -----
+> > --------------
+> >   drivers/spi/spi-stm32f4.c                          | 1002
+> > +++++++++++++++
+> >   drivers/spi/spi-stm32h7.c                          | 1340
+> > ++++++++++++++++++++
+> >   7 files changed, 2424 insertions(+), 1330 deletions(-)
+> >   delete mode 100644 drivers/spi/spi-stm32.c
+> >   create mode 100644 drivers/spi/spi-stm32f4.c
+> >   create mode 100644 drivers/spi/spi-stm32h7.c
