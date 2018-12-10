@@ -1,37 +1,33 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 1/2] dt-bindings: gpu: mali-midgard: Add resets property
-Date: Mon, 10 Dec 2018 14:22:26 +0100
-Message-ID: <20181210132227.29262-2-narmstrong@baylibre.com>
-References: <20181210132227.29262-1-narmstrong@baylibre.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Felix Brack <fb@ltec.ch>
+Subject: [PATCH] ARM: dts: am33xx: Remove unnecessary properties
+Date: Mon, 10 Dec 2018 14:24:48 +0100
+Message-ID: <20181210132448.7865-1-fb@ltec.ch>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181210132227.29262-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, khilman@baylibre.com
-Cc: Neil Armstrong <narmstrong@baylibre.com>, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Cc: tony@atomide.com, bcousson@baylibre.com, mpfj@newflow.co.uk, mark.rutland@arm.com, robh+dt@kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, Felix Brack <fb@ltec.ch>
 List-Id: devicetree@vger.kernel.org
 
-The Amlogic ARM Mali Midgard requires reset controls to power on and
-software reset the GPU, adds these as optional in the bindings.
+Remove the unnecessary properties #address-cells and #size-cells
+of node pinmux as there are no child-nodes with property reg.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Felix Brack <fb@ltec.ch>
 ---
- Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/am33xx.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-index 18a2cde2e5f3..24d83ec952f1 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-@@ -37,6 +37,8 @@ Optional properties:
- - operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
-   for details.
- 
-+- resets : Phandle to the reset controls for the Mali Midgard device.
-+
- 
- Example for a Mali-T760:
- 
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index d3dd6a16e70a..d640cdffe355 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -208,8 +208,6 @@
+ 				am33xx_pinmux: pinmux@800 {
+ 					compatible = "pinctrl-single";
+ 					reg = <0x800 0x238>;
+-					#address-cells = <1>;
+-					#size-cells = <0>;
+ 					#pinctrl-cells = <1>;
+ 					pinctrl-single,register-width = <32>;
+ 					pinctrl-single,function-mask = <0x7f>;
 -- 
-2.19.2
+2.17.1
