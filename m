@@ -1,49 +1,44 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V2] iio: magnetometer: mag3110: add optional vdd/vddio
- regulator operation support
-Date: Mon, 10 Dec 2018 07:55:19 -0200
-Message-ID: <CAOMZO5AJv=DtqSsKKQLX10GQC64NNoWkmYKSs+sM0Jjb8ugFVQ@mail.gmail.com>
-References: <1544425869-8188-1-git-send-email-Anson.Huang@nxp.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v3 08/15] irqchip: Add RDA8810PL interrupt driver
+Date: Mon, 10 Dec 2018 15:26:50 +0530
+Message-ID: <20181210095650.GA12397@Mani-XPS-13-9360>
+References: <20181128135106.9255-1-manivannan.sadhasivam@linaro.org>
+ <20181128135106.9255-9-manivannan.sadhasivam@linaro.org>
+ <9debdd34-0c4a-a0a3-a284-b6372c2f7fd5@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544425869-8188-1-git-send-email-Anson.Huang@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <9debdd34-0c4a-a0a3-a284-b6372c2f7fd5@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yongcai Huang <anson.huang@nxp.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, daniel.lezcano@linaro.org, gregkh@linuxfoundation.org, jslaby@suse.com, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, overseas.sales@unisoc.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Anson,
+Hi Marc,
 
-On Mon, Dec 10, 2018 at 5:17 AM Anson Huang <anson.huang@nxp.com> wrote:
+On Mon, Dec 10, 2018 at 09:39:13AM +0000, Marc Zyngier wrote:
+> On 28/11/2018 13:50, Manivannan Sadhasivam wrote:
+> > Add interrupt driver for RDA Micro RDA8810PL SoC.
+> > 
+> > Signed-off-by: Andreas Färber <afaerber@suse.de>
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+> 
+> Given the dependency on the platform Kconfig entry, how do you want this
+> to be merged?
+> 
 
-> +       data->vdd_reg = devm_regulator_get_optional(&client->dev, "vdd");
-> +       if (!IS_ERR(data->vdd_reg)) {
-> +               ret = regulator_enable(data->vdd_reg);
-> +               if (ret) {
-> +                       dev_err(&client->dev, "failed to enable VDD regulator\n");
-> +                       return ret;
-> +               }
-> +       } else if (data->vdd_reg == ERR_PTR(-EPROBE_DEFER)) {
-> +               return -EPROBE_DEFER;
-> +       }
-> +
-> +       data->vddio_reg = devm_regulator_get_optional(&client->dev, "vddio");
-> +       if (!IS_ERR(data->vddio_reg)) {
-> +               ret = regulator_enable(data->vddio_reg);
-> +               if (ret) {
-> +                       dev_err(&client->dev, "failed to enable VDDIO regulator\n");
-> +                       return ret;
+Hmmm, I think I can just move the platform Kconfig change to SoC changes
+in next revision so that you can apply the driver independently.
 
-In the case of error you should disable the vdd_reg regulator.
+Regards,
+Mani
 
-> +               }
-> +       } else if (data->vddio_reg == ERR_PTR(-EPROBE_DEFER)) {
-> +               return -EPROBE_DEFER;
-> +       }
-> +
->         ret = i2c_smbus_read_byte_data(client, MAG3110_WHO_AM_I);
->         if (ret < 0)
->                 return ret;
-
-and here you should disable vddio_reg.
+> Thanks,
+> 
+> 	M.
+> -- 
+> Jazz is not dead. It just smells funny...
