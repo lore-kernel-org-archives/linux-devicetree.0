@@ -1,96 +1,58 @@
-From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
-Subject: Re: [RFC PATCH v3 2/2] pwm: imx: Configure output to GPIO in disabled
- state
-Date: Mon, 10 Dec 2018 11:38:25 +0000
-Message-ID: <8295c13f-9381-d994-71d4-f4fc350804fd@ysoft.com>
-References: <1544103655-104466-1-git-send-email-michal.vokac@ysoft.com>
- <1544103655-104466-3-git-send-email-michal.vokac@ysoft.com>
- <20181206135902.un2nbreqfmi6mpd6@pengutronix.de>
- <01aaa6ff-fb3e-37a7-0e72-099ad013ee2a@ysoft.com>
- <20181206161622.okpfiecfphar77jk@pengutronix.de>
- <8b88d225-efc7-623a-d1a6-8b3cfcfd5e07@ysoft.com>
- <20181210111746.36zyedeaajfcdfeh@pengutronix.de>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 4/4] ARM: dts: imx7d: sbc imx7: add uart5
+Date: Mon, 10 Dec 2018 09:43:12 -0200
+Message-ID: <CAOMZO5At5oSv0MCpsuYj4nEd26Y4h9hj-shadq3477fNz8A+HA@mail.gmail.com>
+References: <20181204110741.6943-1-hohatzel@jusst.de>
+ <20181204110741.6943-5-hohatzel@jusst.de>
+ <20181206031520.GE3987@dragon> <58a84012-73b8-1679-0c5b-981fd2a0acd6@jusst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181210111746.36zyedeaajfcdfeh@pengutronix.de>
-Content-Language: en-US
-Content-ID: <B7D44DB7A2FCAC41ABA898D8F749031D@eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, Fabio Estevam <fabio.estevam@nxp.com>, =?utf-8?B?TG90aGFyIFdhw59tYW5u?= <LW@karo-electronics.de>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <58a84012-73b8-1679-0c5b-981fd2a0acd6@jusst.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: hohatzel@jusst.de
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, jscheel@jusst.de, NXP Linux Team <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAuMTIuMjAxOCAxMjoxNywgVXdlIEtsZWluZS1Lw7ZuaWcgd3JvdGU6DQo+IE9uIE1vbiwg
-RGVjIDEwLCAyMDE4IGF0IDExOjE1OjA1QU0gKzAwMDAsIFZva8OhxI0gTWljaGFsIHdyb3RlOg0K
-Pj4gT24gNi4xMi4yMDE4IDE3OjE2LCBVd2UgS2xlaW5lLUvDtm5pZyB3cm90ZToNCj4+PiBPbiBU
-aHUsIERlYyAwNiwgMjAxOCBhdCAwMzozNzo1NVBNICswMDAwLCBWb2vDocSNIE1pY2hhbCB3cm90
-ZToNCj4+Pj4gT24gNi4xMi4yMDE4IDE0OjU5LCBVd2UgS2xlaW5lLUvDtm5pZyB3cm90ZToNCj4+
-Pj4+IE9uIFRodSwgRGVjIDA2LCAyMDE4IGF0IDAxOjQxOjMxUE0gKzAwMDAsIFZva8OhxI0gTWlj
-aGFsIHdyb3RlOg0KPj4+Pj4NCj4+Pj4+IENhbiBpdCBoYXBwZW4sIHRoYXQgcGluY3RybF9waW5z
-X3B3bSBpcyBQVFJfRVJSKC1FUFJPQkVfREVGRVIpPw0KPj4+Pg0KPj4+PiBOby4gVGhlIHBpbmN0
-cmxfbG9va3VwX3N0YXRlIGVpdGhlciByZXR1cm5zIHBvaW50ZXIgdG8gdGhlIHBpbmN0cmwgc3Rh
-dGUNCj4+Pj4gb3IgRVJSX1BUUigtRU5PREVWKS4gQnV0IEkgZG8gbm90IGV4cGxpY2l0bHkgdGVz
-dCB0aGUgcGluY3RybF9waW5zX3B3bQ0KPj4+PiBmb3IgUFRSX0VSUigtRVBST0JFX0RFRkVSKSwg
-b3IgZG8gST8NCj4+Pg0KPj4+IFlvdSBkb24ndCwgSSBqdXN0IHdvbmRlcmVkIGlmIHRoaXMgY291
-bGQgaGFwcGVuIGFuZCB0aGUgZnVuY3Rpb24gc2hvdWxkDQo+Pj4gcmV0dXJuIC1FUFJPQkVfREVG
-RVIgaW4gdGhpcyBjYXNlLCB0b28uDQo+Pg0KPj4gT0suDQo+Pg0KPj4+Pj4gTWF5YmUgeW91IG9u
-bHkgd2FudCB0byBpZ25vcmUgUFRSX0VSUigtRU5PREVWKSBhbmQgZm9yIGV4YW1wbGUgcHJvcGFn
-YXRlDQo+Pj4+PiAtRUlPPyBJIHRoaW5rIHlvdSB3YW50IHRvIHB1dCB0aGUgZ3BpbyBpZiB0aGUg
-ZmFpbHVyZSBpcyBiZWNhdXNlIHRoZXJlDQo+Pj4+PiBpcyBhIHBpbmN0cmwgcmVsYXRlZCBlcnJv
-ci4NCj4+Pj4NCj4+Pj4gSSB0aGluayB0aGF0IGlzIHdoYXQgSSBhbSBkb2luZy4gSW4gY2FzZSB0
-aGUgR1BJTyBpcyBub3QgcmVhZHkgdGhlIHByb2JlDQo+Pj4+IGlzIGRlZmVycmVkLiBJbiBjYXNl
-IG9mIGFueSBvdGhlciBlcnJvciB3aXRoIHRoZSBHUElPIG9yIHBpbmN0cmwgZmFpbHVyZQ0KPj4+
-PiBJIHB1dCB0aGUgcGluY3RybC4gT3IgbWF5YmUgSSBkbyBub3QgcmVhbGx5IHVuZGVyc3RhbmQg
-d2hhdCB5b3UgbWVhbi4NCj4+Pg0KPj4+IFllcywgeW91IHB1dCB0aGUgcGluY3RybCwgYnV0IG5v
-dCB0aGUgR1BJTy4gSS5lLiB5b3UncmUgbm90IHVuZG9pbmcNCj4+PiBkZXZtX2dwaW9kX2dldF9v
-cHRpb25hbCgpLiBNYXliZSBvbmx5IGRvIHRoaXMgaWYgdGhlIHBpbmN0cmwgc3R1ZmYNCj4+PiBz
-dWNjZWVkZWQgdG8gbm90IHRvdWNoIHRoZSBHUElPIGlmIGl0IHdvbid0IGJlIHVzZWQ/DQo+Pg0K
-Pj4gT0ssIEkgYWdyZWUgaXQgc2VlbXMgYmV0dGVyIHRvIGdldCB0aGUgcGluY3RybCBmaXJzdCBh
-bmQgaWYgaXQgc3VjY2VlZHMNCj4+IG9ubHkgdGhlbiB0cnkgdG8gZ2V0IHRoZSBHUElPLiBJbiB0
-aGF0IGNhc2UgSSBuZWVkIHRvIHVzZSB0aGUgbm9uLW9wdGlvbmFsDQo+PiB2YXJpYW50IG9mIGRl
-dm1fZ3Bpb19nZXQoKS4gTm90ZSB0aGF0IHRoZW4gSSBkbyBub3QgcmVhbGx5IG5lZWQgdG8gcHV0
-IHRoZQ0KPj4gR1BJTyBpbiB0aGUgZXJyb3IgcGF0aCBhcyBpdCBtZWFucyBJIGRpZCBub3QgZ2V0
-IGl0Lg0KPj4gVGhlIGNvZGUgd291bGQgbG9vayBsaWtlOg0KPj4NCj4+ICtzdGF0aWMgaW50IGlt
-eF9wd21faW5pdF9waW5jdHJsX2luZm8oc3RydWN0IGlteF9jaGlwICppbXhfY2hpcCwNCj4+ICsJ
-CQkJICAgICAgc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4+ICt7DQo+PiArCWlteF9j
-aGlwLT5waW5jdHJsID0gZGV2bV9waW5jdHJsX2dldCgmcGRldi0+ZGV2KTsNCj4+ICsJaWYgKElT
-X0VSUihpbXhfY2hpcC0+cGluY3RybCkpIHsNCj4+ICsJCWRldl9kYmcoJnBkZXYtPmRldiwgImNh
-biBub3QgZ2V0IHBpbmN0cmxcbiIpOw0KPj4gKwkJcmV0dXJuIFBUUl9FUlIoaW14X2NoaXAtPnBp
-bmN0cmwpOw0KPj4gKwl9DQo+PiArDQo+PiArCWlteF9jaGlwLT5waW5jdHJsX3BpbnNfcHdtID0g
-cGluY3RybF9sb29rdXBfc3RhdGUoaW14X2NoaXAtPnBpbmN0cmwsDQo+PiArCQkJCQkJCSAgInB3
-bSIpOw0KPj4gKwlpbXhfY2hpcC0+cGluY3RybF9waW5zX2dwaW8gPSBwaW5jdHJsX2xvb2t1cF9z
-dGF0ZShpbXhfY2hpcC0+cGluY3RybCwNCj4+ICsJCQkJCQkJICAgImdwaW8iKTsNCj4+ICsNCj4+
-ICsJaWYgKElTX0VSUihpbXhfY2hpcC0+cGluY3RybF9waW5zX3B3bSkgfHwNCj4+ICsJICAgIElT
-X0VSUihpbXhfY2hpcC0+cGluY3RybF9waW5zX2dwaW8pKSB7DQo+PiArCQlkZXZfZGJnKCZwZGV2
-LT5kZXYsICJwaW5jdHJsIGluZm9ybWF0aW9uIGluY29tcGxldGVcbiIpOw0KPj4gKwkJZ290byBv
-dXQ7DQo+PiArCX0NCj4+ICsNCj4+ICsJaW14X2NoaXAtPnB3bV9ncGlvZCA9IGRldm1fZ3Bpb2Rf
-Z2V0KCZwZGV2LT5kZXYsICJwd20iLCBHUElPRF9JTik7DQo+PiArCWlmIChQVFJfRVJSKGlteF9j
-aGlwLT5wd21fZ3Bpb2QpID09IC1FUFJPQkVfREVGRVIpIHsNCj4+ICsJCXJldHVybiAtRVBST0JF
-X0RFRkVSOw0KPj4gKwl9IGVsc2UgaWYgKElTX0VSUihpbXhfY2hpcC0+cHdtX2dwaW9kKSkgew0K
-Pj4gKwkJZGV2X2RiZygmcGRldi0+ZGV2LCAiR1BJTyBpbmZvcm1hdGlvbiBpbmNvbXBsZXRlXG4i
-KTsNCj4+ICsJCWdvdG8gb3V0Ow0KPj4gKwl9DQo+PiArDQo+PiArCXJldHVybiAwOw0KPj4gKw0K
-Pj4gK291dDoNCj4+ICsJZGV2bV9waW5jdHJsX3B1dChpbXhfY2hpcC0+cGluY3RybCk7DQo+PiAr
-CWlteF9jaGlwLT5waW5jdHJsID0gTlVMTDsNCj4+ICsNCj4+ICsJcmV0dXJuIDA7DQo+PiArfQ0K
-PiANCj4gVGhpcyBsb29rcyByaWdodC4NCg0KV293LCB5b3UncmUgcXVpY2shIE9LLCB0aGFua3Mu
-DQoNCj4+Pj4+IElTVFIgdGhhdCB0aGVyZSB3YXMgYSBwYXRjaCB0aGF0IGltcGxlbWVudHMgZ2V0
-X3N0YXRlIGZvciBpbXguIElzIHRoZXJlDQo+Pj4+PiBhIGRlcGVuZGVuY3kgb24gdGhhdCBvbmU/
-IE90aGVyd2lzZSB0aGUgc3RhdGUgcmV0dXJuZWQgYnkNCj4+Pj4+IHB3bV9nZXRfc3RhdGUoKSBt
-aWdodCBub3QgYmUgd2hhdCBpcyBhY3R1YWxseSBjb25maWd1cmVkLg0KPj4+Pg0KPj4+PiBObywg
-aXQgc2hvdWxkIGJlIGluZGVwZW5kZW50LiBPbmUgY2FuIGdvIHdpdGhvdXQgdGhlIG90aGVyLiBJ
-IHRlc3RlZCBhbGwNCj4+Pj4gdGhyZWUgY29tYmluYXRpb25zIChtYWlubGluZSB3aXRoIC5nZXRf
-c3RhdGUsIG1haW5saW5lIHdpdGggdGhpcyBzZXJpZXMsDQo+Pj4+IG1haW5saW5lIHdpdGggLmdl
-dF9zdGF0ZSBBTkQgdGhpcyBzZXJpZXMpIGFuZCBnb3QgdGhlIGV4cGVjdGVkIHJlc3VsdHMuDQo+
-Pj4+IFdpdGhvdXQgdGhlIC5nZXRfc3RhdGUoKSBwYXRjaCB0aGUgY29yZSBhbHdheXMgcmV0dXJu
-cyB0aGUgZGVmYXVsdCB3aGljaA0KPj4+PiBpcyBkaXNhYmxlZCBzdGF0ZSBzbyB0aGUgZ3BpbyBw
-aW5jdHJsIHN0YXRlIGlzIHNlbGVjdGVkIGluIHByb2JlLg0KPj4+DQo+Pj4gV2l0aG91dCAuZ2V0
-X3N0YXRlIGl0IHdvbid0IGJlIHBvc3NpYmxlIHRvIHNtb290aGx5IHRha2Ugb3ZlciBhIHJ1bm5p
-bmcNCj4+PiBQV00uDQo+Pg0KPj4gQnV0IHRoYXQgaXMgZXhhY3RseSBob3cgdGhlIGN1cnJlbnQg
-cHdtLWlteCBjb2RlIHdvcmtzLCByaWdodD8NCj4gDQo+IEJ1dCB0aGVuIGF0IGxlYXN0IHRoZSBw
-d20gd291bGQgcnVuIHVudGlsIHRoZSBmaXJzdCBjb25zdW1lcg0KPiByZWNvbmZpZ3VyZXMgaXQu
-DQoNClRoYXQgaXMgcmlnaHQuIEkgdGhpbmsgaXQgaXMgYWN0dWFsbHkgcG9zc2libGUgKGFuZCBt
-YXliZSBnb29kIGlkZWE/KQ0KdG8gZHJvcCB0aGUgcHJvYmUgcGFydCBmcm9tIHRoaXMgcGluY3Ry
-bC9HUElPIHNlcmllcyBhbmQgcHV0IGl0IGludG8NCnRoZSAuZ2V0X3N0YXRlIHNlcmllcyBpZiB0
-aGUgLmdldF9zdGF0ZSBzZXJpZXMgd291bGQgbGFuZCBpbiBsYXRlci4NCldoYXQgZG8geW91IHRo
-aW5rPw0KDQpNaWNoYWwNCg==
+Hi Hans,
+
+On Mon, Dec 10, 2018 at 8:52 AM Hans Ole Hatzel <hohatzel@jusst.de> wrote:
+
+> imx7d-pico.dts does this the same way. Is that good enough of a reason?
+> If so, should it be included in the commit message?
+
+The UART clock parent initialization has been removed from the imx7d
+clock driver since commit (in linux-next):
+
+commit ea662d2f804ad13c3c92c75c7dc1abad30e31c31
+Author: Anson Huang <anson.huang@nxp.com>
+Date:   Fri Oct 19 01:05:36 2018 +0000
+
+    clk: imx7d: remove UART1 clock setting
+
+    There are clock assignments in all i.MX7D dtb files for UART1,
+    below is the example in imx7d-sdb.dts, so setting UART1 clock
+    in clock driver is NOT necessary, actually, module clocks setting
+    should be done in module driver.
+
+    &uart1 {
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_uart1>;
+        assigned-clocks = <&clks IMX7D_UART1_ROOT_SRC>;
+        assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
+        status = "okay";
+    };
+
+    Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+    Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+
+So the UART clock parent should be set in the device tree.
