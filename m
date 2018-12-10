@@ -1,42 +1,102 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v5 0/7] spi: add support for octal mode
-Date: Mon, 10 Dec 2018 09:50:42 +0100
-Message-ID: <20181210095042.354d422f@bbrezillon>
-References: <1543826226-30898-1-git-send-email-yogeshnarayan.gaur@nxp.com>
-        <20181203101937.7b01a0ad@bbrezillon>
-        <214dadd9-859c-ca88-1aff-1c83fcfa3c0b@ti.com>
-        <20181205134618.56223758@bbrezillon>
-        <VI1PR04MB572646B71C6CB7BAAB4A1E1999A90@VI1PR04MB5726.eurprd04.prod.outlook.com>
-        <20181206074554.0ec0aecb@bbrezillon>
-        <VI1PR04MB572620BB57CB01A352904BB999A90@VI1PR04MB5726.eurprd04.prod.outlook.com>
-        <20181206202956.GG3084@sirena.org.uk>
-        <VI1PR04MB572641541BB83E587541BBD099A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
-        <20181210092208.0971c3be@bbrezillon>
-        <VI1PR04MB572609DBC52F7496A656915E99A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 01/19] dt-bindings: clock: tegra124-dfll: Update DFLL
+ binding for PWM regulator
+Date: Mon, 10 Dec 2018 08:59:10 +0000
+Message-ID: <e61b1da8-78cd-c3d4-9878-c25fd9c89ba3@nvidia.com>
+References: <20181204092548.3038-1-josephl@nvidia.com>
+ <20181204092548.3038-2-josephl@nvidia.com>
+ <af1211f0-dda0-bdde-f320-03e54f82d7e1@nvidia.com>
+ <46b5eafa-00a0-1d91-1f4d-97ab119fcf21@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB572609DBC52F7496A656915E99A50@VI1PR04MB5726.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Cc: Mark Brown <broonie@kernel.org>, Vignesh R <vigneshr@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <46b5eafa-00a0-1d91-1f4d-97ab119fcf21@nvidia.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Dec 2018 08:39:20 +0000
-Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
-
-> Hi Boris,
-> 
-> Sorry for confusion.
-> 
-> My intention was just to point to the correct patch number only. Earlier you have asked Mark to pick the patch [1] but that patch number was not correct.
-
-Look at the context in [1] (we have good reasons to reply inline instead
-of top-posting). I asked Mark to pick "spi: nxp-fspi: add octal mode
-flag bit for octal support", not the m25p80 changes. I was wrong
-though, as the patch I pointed to depends on your nxp-fspi patchset
-which as not been merged yet.
-
-> 
-> [1] https://lkml.org/lkml/2018/12/5/758
+Ck9uIDEwLzEyLzIwMTggMDg6NDksIEpvc2VwaCBMbyB3cm90ZToKPiBIaSBKb24sCj4gCj4gVGhh
+bmtzIGZvciByZXZpZXdpbmcgdGhpcyBzZXJpZXMuCj4gCj4gT24gMTIvNy8xOCA5OjQxIFBNLCBK
+b24gSHVudGVyIHdyb3RlOgo+Pgo+PiBPbiAwNC8xMi8yMDE4IDA5OjI1LCBKb3NlcGggTG8gd3Jv
+dGU6Cj4+PiBGcm9tOiBQZXRlciBEZSBTY2hyaWp2ZXIgPHBkZXNjaHJpanZlckBudmlkaWEuY29t
+Pgo+Pj4KPj4+IEFkZCBuZXcgcHJvcGVydGllcyB0byBjb25maWd1cmUgdGhlIERGTEwgUFdNIHJl
+Z3VsYXRvciBzdXBwb3J0LiBBbHNvCj4+PiBhZGQgYW4gZXhhbXBsZSBhbmQgbWFrZSB0aGUgSTJD
+IGNsb2NrIG9ubHkgcmVxdWlyZWQgd2hlbiBJMkMgc3VwcG9ydCBpcwo+Pj4gdXNlZC4KPj4+Cj4+
+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPj4+IFNpZ25lZC1vZmYtYnk6IFBldGVy
+IERlIFNjaHJpanZlciA8cGRlc2NocmlqdmVyQG52aWRpYS5jb20+Cj4+PiBTaWduZWQtb2ZmLWJ5
+OiBKb3NlcGggTG8gPGpvc2VwaGxAbnZpZGlhLmNvbT4KPj4+IC0tLQo+Pj4gwqAgLi4uL2JpbmRp
+bmdzL2Nsb2NrL252aWRpYSx0ZWdyYTEyNC1kZmxsLnR4dMKgwqAgfCA3MyArKysrKysrKysrKysr
+KysrKystCj4+PiDCoCAxIGZpbGUgY2hhbmdlZCwgNzEgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlv
+bnMoLSkKPj4+Cj4+PiBkaWZmIC0tZ2l0Cj4+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9jbG9jay9udmlkaWEsdGVncmExMjQtZGZsbC50eHQKPj4+IGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL252aWRpYSx0ZWdyYTEyNC1kZmxsLnR4dAo+Pj4g
+aW5kZXggZGZmMjM2ZjUyNGE3Li44Yzk3NjAwZDJiYWQgMTAwNjQ0Cj4+PiAtLS0gYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svbnZpZGlhLHRlZ3JhMTI0LWRmbGwudHh0
+Cj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svbnZpZGlh
+LHRlZ3JhMTI0LWRmbGwudHh0Cj4+PiBAQCAtOCw3ICs4LDYgQEAgdGhlIGZhc3QgQ1BVIGNsdXN0
+ZXIuIEl0IGNvbnNpc3RzIG9mIGEgZnJlZS1ydW5uaW5nCj4+PiB2b2x0YWdlIGNvbnRyb2xsZWQK
+Pj4+IMKgIG9zY2lsbGF0b3IgY29ubmVjdGVkIHRvIHRoZSBDUFUgdm9sdGFnZSByYWlsIChWRERf
+Q1BVKSwgYW5kIGEKPj4+IGNsb3NlZCBsb29wCj4+PiDCoCBjb250cm9sIG1vZHVsZSB0aGF0IHdp
+bGwgYXV0b21hdGljYWxseSBhZGp1c3QgdGhlIFZERF9DUFUgdm9sdGFnZSBieQo+Pj4gwqAgY29t
+bXVuaWNhdGluZyB3aXRoIGFuIG9mZi1jaGlwIFBNSUMgZWl0aGVyIHZpYSBhbiBJMkMgYnVzIG9y
+IHZpYQo+Pj4gUFdNIHNpZ25hbHMuCj4+PiAtQ3VycmVudGx5IG9ubHkgdGhlIEkyQyBtb2RlIGlz
+IHN1cHBvcnRlZCBieSB0aGVzZSBiaW5kaW5ncy4KPj4+IMKgIMKgIFJlcXVpcmVkIHByb3BlcnRp
+ZXM6Cj4+PiDCoCAtIGNvbXBhdGlibGUgOiBzaG91bGQgYmUgIm52aWRpYSx0ZWdyYTEyNC1kZmxs
+Igo+Pj4gQEAgLTQ1LDEwICs0NCwyOCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciB0aGUgY29u
+dHJvbCBsb29wIHBhcmFtZXRlcnM6Cj4+PiDCoCBPcHRpb25hbCBwcm9wZXJ0aWVzIGZvciB0aGUg
+Y29udHJvbCBsb29wIHBhcmFtZXRlcnM6Cj4+PiDCoCAtIG52aWRpYSxjZy1zY2FsZTogQm9vbGVh
+biB2YWx1ZSwgc2VlIHRoZSBmaWVsZAo+Pj4gREZMTF9QQVJBTVNfQ0dfU0NBTEUgaW4gdGhlIFRS
+TS4KPj4+IMKgICtPcHRpb25hbCBwcm9wZXJ0aWVzIGZvciBtb2RlIHNlbGVjdGlvbjoKPj4+ICst
+IG52aWRpYSxwd20tdG8tcG1pYzogVXNlIFBXTSB0byBjb250cm9sIHJlZ3VsYXRvciByYXRoZXIg
+dGhlbiBJMkMuCj4+PiArCj4+PiDCoCBSZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciBJMkMgbW9kZToK
+Pj4+IMKgIC0gbnZpZGlhLGkyYy1mcy1yYXRlOiBJMkMgdHJhbnNmZXIgcmF0ZSwgaWYgdXNpbmcg
+ZnVsbCBzcGVlZCBtb2RlLgo+Pj4gwqAgLUV4YW1wbGU6Cj4+PiArUmVxdWlyZWQgcHJvcGVydGll
+cyBmb3IgUFdNIG1vZGU6Cj4+PiArLSBudmlkaWEscHdtLXBlcmlvZDogcGVyaW9kIG9mIFBXTSBz
+cXVhcmUgd2F2ZSBpbiBtaWNyb3NlY29uZHMuCj4+PiArLSBudmlkaWEsaW5pdC11djogUmVndWxh
+dG9yIHZvbHRhZ2UgaW4gbWljcm8gdm9sdHMgd2hlbiBQV00gY29udHJvbAo+Pj4gaXMgZGlzYWJs
+ZWQuCj4+Cj4+IE1heWJlIGNvbnNpZGVyICdwd20taW5hY3RpdmUtdm9sdGFnZS1taWNyb3ZvbHQn
+Lgo+IEFoLCBJIHRoaW5rIEkgbmVlZCB0byByZWZpbmUgdGhlIGRlc2NyaXB0aW9uIGhlcmUuIEl0
+IHNob3VsZCBiZQo+IHNvbWV0aGluZyBsaWtlIGJlbG93Lgo+IMKgLSBudmlkaWEscHdtLWluaXQt
+bWljcm92b2x0IDogUmVndWxhdG9yIHZvbHRhZ2UgaW4gbWljcm8gdm9sdHMgd2hlbiBQV00KPiBj
+b250cm9sIGlzIGluaXRpYWxpemVkCj4gCj4gVGhpcyBpcyB0aGUgaW5pdGlhbCB2b2x0YWdlIHRo
+YXQgd2hlbiB3ZSBqdXN0IGluaXRpYWxpemUgdGhlIERGTEwKPiBoYXJkd2FyZSBmb3IgUFdNIG91
+dHB1dC4gQW5kIGJlZm9yZSB3ZSBzd2l0Y2ggdGhlIENQVSBjbG9jayBmcm9tIFBMTFggdG8KPiBE
+RkxMLCB3ZSB3aWxsIGVuYWJsZSBERkxMIGhhcmR3YXJlIGluIGNsb3NlZCBsb29wIG1vZGUgd2hp
+Y2ggd2lsbCBhcGxseQo+IHRoZSBEVkZTIHRhYmxlIHRoYXQgd2FzIGNhbGN1bGF0ZWQgZnJvbSBD
+VkIgdGFibGUuCj4gCj4gVGhlIG9yaWdpbmFsIGRlc2NyaXB0aW9uIG1heWJlIG1ha2UgeW91IHRo
+aW5rIHRoYXQgaXQncyB0aGUgd29ya2luZwo+IHZvbHRhZ2Ugd2hlbiBpdCdzIHVuZGVyIG9wZW4t
+bG9vcCBtb2RlLiBCdXQgaXQncyBub3QuIFNvcnJ5Lgo+IAo+IFdoZW4gd2Ugd29ya2luZyBvbiBv
+cGVuLWxvb3AgbW9kZSB3aGljaCB3aWxsIHN3aXRjaCB0byBsb3cgdm9sdGFnZSByYW5nZQo+IHdo
+aWNoIGFsc28gZm9sbG93cyB0aGUgRFZGUyB0YWJsZS4gTm90IHRoaXMgb25lLgoKT0ssIGJ1dCBJ
+IGFtIHN0aWxsIG5vdCBzdXJlIHdoYXQgdGhpcyB2b2x0YWdlIGlzLiBJIG1lYW4gdGhhdCBJCnVu
+ZGVyc3RhbmQgaXQgaXMgdGhlIGluaXRpYWwgdm9sdGFnZSwgYnV0IGhvdyBleGFjdGx5IGRvIHdl
+IGRlZmluZSB0aGlzCm51bWJlcj8gV2hlcmUgZG9lcyBpdCBjb21lIGZyb20sIGhvdyBpcyB0aGlz
+IGRldGVybWluZWQ/Cgo+Pgo+Pj4gKy0gbnZpZGlhLGFsaWduLW9mZnNldC11djogUmVndWxhdG9y
+IHZvbHRhZ2UgaW4gbWljcm8gdm9sdHMgd2hlbiBQV00KPj4+IGNvbnRyb2wgaXMKPj4+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBlbmFibGVkIGFuZCBQV00gb3V0cHV0IGlzIGxvdy4KPj4K
+Pj4gV291bGQgdGhpcyBiZSBjb25zaWRlcmVkIHRoZSBtaW5pbXVtIHB3bSBhY3RpdmUgdm9sdGFn
+ZT8KPiBUaGlzIHdvdWxkIGJlIHVzZWQgZm9yIG1pbmltdW0gdm9sdGFnZSBmb3IgTFVUIHRhYmxl
+LCB3aGljaCBpcyB0aGUgdGFibGUKPiB0aGF0IFBNSUMgY2FuIG91dHB1dC4gVGhlIHJlYWwgbWlu
+aW11bSB2b2x0YWdlIGluIFBXTSBtb2RlIHN0aWxsIGRlcGVuZHMKPiBvbiB0aGUgQ1ZCIHRhYmxl
+Lgo+IAo+IFNvIG1heWJlIGNoYW5nZSB0aGlzIG9uZSB0byAnbnZpZGlhLHB3bS1vZmZzZXQtdXYn
+LgoKU28gaXMgdGhpcyB0aGUgbWluIHN1cHBvcnRlZCBieSB0aGUgUE1JQz8gTWF5YmUgdGhlIG5h
+bWUgc2hvdWxkIHJlZmxlY3QKdGhhdCBiZWNhdXNlIHRoZSBhYm92ZSBuYW1lIGRvZXMgbm90IHJl
+ZmxlY3QgdGhpcy4gRnVydGhlcm1vcmUsIGlmIHRoaXMKaXMgYSBtaW4gdGhlbiBtYXliZSB0aGUg
+bmFtZSBzaG91bGQgdXNlICdtaW4nIGFzIG9wcG9zZWQgdG8gJ29mZnNldCcuCmZvciBleGFtcGxl
+LCAnbnZpZGlhLHB3bS1wbWljLW1pbi1taWNyb3ZvbHRzJy4KCkRvZXMgdGhpcyBuZWVkIHRvIGJl
+IGRlc2NyaWJlZCBpbiBEVCwgY2FuIGl0IG5vdCBiZSBxdWVyaWVkIGZyb20gdGhlIFBNSUM/CgpD
+aGVlcnMKSm9uCgotLSAKbnZwdWJsaWMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
+ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
