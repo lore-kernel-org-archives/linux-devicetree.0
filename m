@@ -1,37 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/2] dt-bindings: iio: adc: Add docs for AD7606 ADC
-Date: Mon, 10 Dec 2018 16:23:12 -0600
-Message-ID: <20181210222312.GA30114@bogus>
-References: <1544439865-22967-1-git-send-email-stefan.popa@analog.com>
+Subject: Re: [PATCH v4 09/15] dt-bindings: timer: Document RDA8810PL SoC timer
+Date: Mon, 10 Dec 2018 16:25:13 -0600
+Message-ID: <20181210222513.GA1326@bogus>
+References: <20181210173550.29643-1-manivannan.sadhasivam@linaro.org>
+ <20181210173550.29643-10-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1544439865-22967-1-git-send-email-stefan.popa@analog.com>
+In-Reply-To: <20181210173550.29643-10-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
+Cc: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, daniel.lezcano@linaro.org, gregkh@linuxfoundation.org, jslaby@suse.com, linux-unisoc@lists.infradead.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Dec 2018 13:04:25 +0200, Stefan Popa wrote:
-> Document support for AD7606 Analog to Digital Converter.
+On Mon, 10 Dec 2018 23:05:44 +0530, Manivannan Sadhasivam wrote:
+> Document RDA Micro RDA8810PL SoC timer.
 > 
-> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
-> Changes in v2:
-> 	- fixed indentation issues.
-> 	- used gpios instead of gpio.
-> 	- added vendor prefix for conversion-start-gpios, first-data-gpios,
-> 	and range-gpios.
-> Changes in v3:
-> 	- Added adi,oversampling-ratio-gpios.
-> Changes in v4:
-> 	- Specified if the gpios are active high or low and set the flag
-> 	appropriately.
-> 
->  .../devicetree/bindings/iio/adc/adi,ad7606.txt     | 65 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+>  .../bindings/timer/rda,8810pl-timer.txt       | 20 +++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/rda,8810pl-timer.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
