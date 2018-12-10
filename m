@@ -1,28 +1,61 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 5/5] clk: samsung: exynos5433: add imem clocks
-Date: Mon, 10 Dec 2018 16:33:22 -0600
-Message-ID: <20181210223322.GA16266@bogus>
-References: <20181204165248.17572-1-k.konieczny@partner.samsung.com>
- <CGME20181204165318eucas1p2dccd5382ee8b9f4da8c3076fb56607ee@eucas1p2.samsung.com>
- <20181204165248.17572-6-k.konieczny@partner.samsung.com>
+From: Vijay Khemka <vijaykhemka@fb.com>
+Subject: Re: [PATCH] ARM: dts: aspeed: Add KCS support for LPC BMC
+Date: Mon, 10 Dec 2018 22:39:50 +0000
+Message-ID: <6061E60A-78CD-4C4C-A35C-0AD90BFC4286@fb.com>
+References: <20181210200753.3018124-1-vijaykhemka@fb.com>
+ <20181210200753.3018124-2-vijaykhemka@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181204165248.17572-6-k.konieczny@partner.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181210200753.3018124-2-vijaykhemka@fb.com>
+Content-Language: en-US
+Content-ID: <0F4591F69C67AF44A489EAB211C247F5@namprd15.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 04, 2018 at 05:52:48PM +0100, Kamil Konieczny wrote:
-> Add imem clocks for exynos5433. This will enable to use crypto Security
-> SubSystem (in short SSS) and SlimSSS IP blocks.
-> 
-> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
-> ---
->  drivers/clk/samsung/clk-exynos5433.c   | 193 +++++++++++++++++++++++++
->  include/dt-bindings/clock/exynos5433.h |  55 +++++++
->  2 files changed, 248 insertions(+)
-
-Lots of trailing whitespace checkpatch errors...
+UGxlYXNlIGlnbm9yZSB0aGlzIHBhdGNoIGFzIGl0IGlzIGR1cGxpY2F0ZS4gSXQgaXMgaW5jbHVk
+ZWQgaW4gbGlzdCBvZiAyIHBhdGNoZXMgSSBoYXZlIHNlbnQganVzdCBiZWZvcmUuDQoNCu+7v09u
+IDEyLzEwLzE4LCAxMjowOCBQTSwgIlZpamF5IEtoZW1rYSIgPHZpamF5a2hlbWthQGZiLmNvbT4g
+d3JvdGU6DQoNCiAgICBBZGRlZCBrY3MgZGV2aWNlIHN1cHBvcnQgZm9yIGxwYyBCTUMuDQogICAg
+DQogICAgU2lnbmVkLW9mZi1ieTogVmlqYXkgS2hlbWthIDx2aWpheWtoZW1rYUBmYi5jb20+DQog
+ICAgLS0tDQogICAgIGFyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1nNS5kdHNpIHwgMjkgKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKy0NCiAgICAgMSBmaWxlIGNoYW5nZWQsIDI4IGluc2VydGlv
+bnMoKyksIDEgZGVsZXRpb24oLSkNCiAgICANCiAgICBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
+dC9kdHMvYXNwZWVkLWc1LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtZzUuZHRzaQ0K
+ICAgIGluZGV4IGQxMDc0NTlmYzBmOC4uMWJkNDg2NTViYWNiIDEwMDY0NA0KICAgIC0tLSBhL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1nNS5kdHNpDQogICAgKysrIGIvYXJjaC9hcm0vYm9vdC9k
+dHMvYXNwZWVkLWc1LmR0c2kNCiAgICBAQCAtMzMwLDggKzMzMCwzNSBAQA0KICAgICAJCQkJcmFu
+Z2VzID0gPDB4MCAweDFlNzg5MDAwIDB4MTAwMD47DQogICAgIA0KICAgICAJCQkJbHBjX2JtYzog
+bHBjLWJtY0AwIHsNCiAgICAtCQkJCQljb21wYXRpYmxlID0gImFzcGVlZCxhc3QyNTAwLWxwYy1i
+bWMiOw0KICAgICsJCQkJCWNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI1MDAtbHBjLWJtYywgInNp
+bXBsZS1tZmQiLCAic3lzY29uIiI7DQogICAgIAkJCQkJcmVnID0gPDB4MCAweDgwPjsNCiAgICAr
+CQkJCQlyZWctaW8td2lkdGggPSA8ND47DQogICAgKw0KICAgICsJCQkJCSNhZGRyZXNzLWNlbGxz
+ID0gPDE+Ow0KICAgICsJCQkJCSNzaXplLWNlbGxzID0gPDE+Ow0KICAgICsJCQkJCXJhbmdlcyA9
+IDwweDAgMHgwIDB4ODA+Ow0KICAgICsNCiAgICArCQkJCQlrY3MxOiBrY3MxQDAgew0KICAgICsJ
+CQkJCQljb21wYXRpYmxlID0gImFzcGVlZCxhc3QyNTAwLWtjcy1ibWMiOw0KICAgICsJCQkJCQly
+ZWcgPSA8MHgwIDB4ODA+Ow0KICAgICsJCQkJCQlpbnRlcnJ1cHRzID0gPDg+Ow0KICAgICsJCQkJ
+CQlrY3NfY2hhbiA9IDwxPjsNCiAgICArCQkJCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCiAgICAr
+CQkJCQl9Ow0KICAgICsJCQkJCWtjczI6IGtjczJAMCB7DQogICAgKwkJCQkJCWNvbXBhdGlibGUg
+PSAiYXNwZWVkLGFzdDI1MDAta2NzLWJtYyI7DQogICAgKwkJCQkJCXJlZyA9IDwweDAgMHg4MD47
+DQogICAgKwkJCQkJCWludGVycnVwdHMgPSA8OD47DQogICAgKwkJCQkJCWtjc19jaGFuID0gPDI+
+Ow0KICAgICsJCQkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KICAgICsJCQkJCX07DQogICAgKwkJ
+CQkJa2NzMzoga2NzM0AwIHsNCiAgICArCQkJCQkJY29tcGF0aWJsZSA9ICJhc3BlZWQsYXN0MjUw
+MC1rY3MtYm1jIjsNCiAgICArCQkJCQkJcmVnID0gPDB4MCAweDgwPjsNCiAgICArCQkJCQkJaW50
+ZXJydXB0cyA9IDw4PjsNCiAgICArCQkJCQkJa2NzX2NoYW4gPSA8Mz47DQogICAgKwkJCQkJCXN0
+YXR1cyA9ICJkaXNhYmxlZCI7DQogICAgKwkJCQkJfTsNCiAgICAgCQkJCX07DQogICAgIA0KICAg
+ICAJCQkJbHBjX2hvc3Q6IGxwYy1ob3N0QDgwIHsNCiAgICAtLSANCiAgICAyLjE3LjENCiAgICAN
+CiAgICANCg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
