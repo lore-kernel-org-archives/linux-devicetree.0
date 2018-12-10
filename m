@@ -1,12 +1,12 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v3 1/6] dt-bindings: media: sun6i: Add A64 CSI compatible
-Date: Mon, 10 Dec 2018 17:22:41 +0530
-Message-ID: <20181210115246.8188-2-jagan@amarulasolutions.com>
+Subject: [PATCH v3 2/6] media: sun6i: Add A64 compatible support
+Date: Mon, 10 Dec 2018 17:22:42 +0530
+Message-ID: <20181210115246.8188-3-jagan@amarulasolutions.com>
 References: <20181210115246.8188-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBO5HXHQAKGQEIDDGHDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBPFHXHQAKGQEG6LVYZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181210115246.8188-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -23,24 +23,24 @@ Allwinner A64 CSI has single channel time-multiplexed BT.656
 CMOS sensor interface like H3 but work by lowering clock than
 default mod clock.
 
-Add a compatible string for it.
+So use separate compatibe to support it.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- Documentation/devicetree/bindings/media/sun6i-csi.txt | 1 +
+ drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-index cc37cf7fd051..376aade669a1 100644
---- a/Documentation/devicetree/bindings/media/sun6i-csi.txt
-+++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-@@ -7,6 +7,7 @@ Required properties:
-   - compatible: value must be one of:
-     * "allwinner,sun6i-a31-csi"
-     * "allwinner,sun8i-h3-csi"
-+    * "allwinner,sun50i-a64-csi"
-     * "allwinner,sun8i-v3s-csi"
-   - reg: base address and size of the memory-mapped region.
-   - interrupts: interrupt associated to this IP
+diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+index ee882b66a5ea..bbe45e893722 100644
+--- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
++++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+@@ -892,6 +892,7 @@ static int sun6i_csi_remove(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id sun6i_csi_of_match[] = {
++	{ .compatible = "allwinner,sun50i-a64-csi", },
+ 	{ .compatible = "allwinner,sun6i-a31-csi", },
+ 	{ .compatible = "allwinner,sun8i-h3-csi", },
+ 	{ .compatible = "allwinner,sun8i-v3s-csi", },
 -- 
 2.18.0.321.gffc6fa0e3
