@@ -1,7 +1,7 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v5 1/4] dt-bindings/gic-v3: Add msm8996 compatible string
-Date: Mon, 10 Dec 2018 13:56:30 +0000
-Message-ID: <20181210135633.30283-2-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v5 4/4] arm64: dts: add msm8996 compatible to gicv3
+Date: Mon, 10 Dec 2018 13:56:33 +0000
+Message-ID: <20181210135633.30283-5-srinivas.kandagatla@linaro.org>
 References: <20181210135633.30283-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,36 +12,31 @@ To: marc.zyngier@arm.com
 Cc: sudeep.holla@arm.com, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, sboyd@kernel.org, bjorn.andersson@linaro.org, nicolas.dechesne@linaro.org, ctatlor97@gmail.com, vkoul@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Access to GICR_WAKER is restricted on msm8996 SoC in Hypervisor.
-There are many devices out there with this restriction in place
-and there has been no update to this firmware since last few years,
-making those devices totally unusable for upstream development.
+Add compatible to gicv3 node to enable quirk required to restrict writing
+to GICR_WAKER register which is restricted on msm8996 SoC in Hypervisor.
 
-IIDR register value conflicts with other SoCs, using compatible seems
-to be the only way to apply quirks required for msm8996 based SoCs.
+With this quirk MSM8996 can at least boot out of mainline, which can help
+community to work with boards based on MSM8996.
 
-Without this quirk many qcom SoCs (atleast 3 that I know) are
-unable to boot mainline.
+Without this patch Qualcomm DB820c board reboots on mainline.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- .../devicetree/bindings/interrupt-controller/arm,gic-v3.txt   | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-index 3ea78c4ef887..b83bb8249074 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-@@ -7,7 +7,9 @@ Interrupts (LPI).
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 8585c61e32ef..cd9650cea05d 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -404,7 +404,7 @@
+ 		};
  
- Main node required properties:
- 
--- compatible : should at least contain  "arm,gic-v3".
-+- compatible : should at least contain  "arm,gic-v3" or either
-+		"qcom,msm8996-gic-v3", "arm,gic-v3" for msm8996 SoCs
-+		to address SoC specific bugs/quirks
- - interrupt-controller : Identifies the node as an interrupt controller
- - #interrupt-cells : Specifies the number of cells needed to encode an
-   interrupt source. Must be a single cell with a value of at least 3.
+ 		intc: interrupt-controller@9bc0000 {
+-			compatible = "arm,gic-v3";
++			compatible = "qcom,msm8996-gic-v3", "arm,gic-v3";
+ 			#interrupt-cells = <3>;
+ 			interrupt-controller;
+ 			#redistributor-regions = <1>;
 -- 
 2.19.2
