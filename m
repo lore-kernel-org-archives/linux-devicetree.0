@@ -1,95 +1,71 @@
-From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 15/15] arm64: dts: allwinner: a64: Add
- Video Engine node
-Date: Mon, 10 Dec 2018 10:00:34 +0100
-Message-ID: <c276fb045ab285c0907c4831f3b71a31f09cd4a5.camel@bootlin.com>
-References: <20181205092444.29497-1-paul.kocialkowski@bootlin.com>
-	 <20181205092444.29497-16-paul.kocialkowski@bootlin.com>
-	 <2823800.C4zEU5jiS7@jernej-laptop>
-Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v10 0/8] Introduce on-chip interconnect API
+Date: Mon, 10 Dec 2018 10:04:14 +0100
+Message-ID: <CAJZ5v0gP50tmq4ZzB7LLSaWGWjGjK31y=qFg5PS9B7c2XQ+DyQ@mail.gmail.com>
+References: <20181127180349.29997-1-georgi.djakov@linaro.org>
+ <CAE=gft4jUjr3oDAZrM=-orLM-YoVAwa+e=crDDC_p9ArGE1dig@mail.gmail.com> <20181206145547.GA7884@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBROWXDQAKGQEOAEY6IQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <2823800.C4zEU5jiS7@jernej-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej =?UTF-8?Q?=C5=A0krabec?= <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181206145547.GA7884@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: evgreen@chromium.org, Georgi Djakov <georgi.djakov@linaro.org>, Linux PM <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, bjorn.andersson@linaro.org, Amit Kucheria <amit.kucheria@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, abailon@baylibre.com, maxime.ripard@bootlin.com, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <thierry.reding@gmail.com>, ksitaraman@nvidia.com, sanjayc@nvidia.com, "devicetree@vger.kernel.org" <devicetree@vg>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Dec 6, 2018 at 3:55 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Dec 05, 2018 at 12:41:35PM -0800, Evan Green wrote:
+> > On Tue, Nov 27, 2018 at 10:03 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+> > >
+> > > Modern SoCs have multiple processors and various dedicated cores (video, gpu,
+> > > graphics, modem). These cores are talking to each other and can generate a
+> > > lot of data flowing through the on-chip interconnects. These interconnect
+> > > buses could form different topologies such as crossbar, point to point buses,
+> > > hierarchical buses or use the network-on-chip concept.
+> > >
+> > > These buses have been sized usually to handle use cases with high data
+> > > throughput but it is not necessary all the time and consume a lot of power.
+> > > Furthermore, the priority between masters can vary depending on the running
+> > > use case like video playback or CPU intensive tasks.
+> > >
+> > > Having an API to control the requirement of the system in terms of bandwidth
+> > > and QoS, so we can adapt the interconnect configuration to match those by
+> > > scaling the frequencies, setting link priority and tuning QoS parameters.
+> > > This configuration can be a static, one-time operation done at boot for some
+> > > platforms or a dynamic set of operations that happen at run-time.
+> > >
+> > > This patchset introduce a new API to get the requirement and configure the
+> > > interconnect buses across the entire chipset to fit with the current demand.
+> > > The API is NOT for changing the performance of the endpoint devices, but only
+> > > the interconnect path in between them.
+> >
+> > For what it's worth, we are ready to land this in Chrome OS. I think
+> > this series has been very well discussed and reviewed, hasn't changed
+> > much in the last few spins, and is in good enough shape to use as a
+> > base for future patches. Georgi's also done a great job reaching out
+> > to other SoC vendors, and there appears to be enough consensus that
+> > this framework will be usable by more than just Qualcomm. There are
+> > also several drivers out on the list trying to add patches to use this
+> > framework, with more to come, so it made sense (to us) to get this
+> > base framework nailed down. In my experiments this is an important
+> > piece of the overall power management story, especially on systems
+> > that are mostly idle.
+> >
+> > I'll continue to track changes to this series and we will ultimately
+> > reconcile with whatever happens upstream, but I thought it was worth
+> > sending this note to express our "thumbs up" towards this framework.
+>
+> Looks like a v11 will be forthcoming, so I'll wait for that one to apply
+> it to the tree if all looks good.
 
-On Fri, 2018-12-07 at 22:22 +0100, Jernej =C5=A0krabec wrote:
-> Hi!
->=20
-> Dne sreda, 05. december 2018 ob 10:24:44 CET je Paul Kocialkowski napisal=
-(a):
-> > This adds the Video Engine node for the A64. Since it can map the whole
-> > DRAM range, there is no particular need for a reserved memory node
-> > (unlike platforms preceding the A33).
-> >=20
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> >=20
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi index
-> > 8557d52c7c99..8d024c10d7cb 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > @@ -397,6 +397,17 @@
-> >  			};
-> >  		};
-> >=20
-> > +		video-codec@1c0e000 {
-> > +			compatible =3D "allwinner,sun50i-h5-video-engine";
->=20
-> You meant A64 instead of H5, right?
+I'm honestly not sure if it is ready yet.
 
-Ah yes definitely, that's a mistake right here.
+New versions are coming on and on, which may make such an impression,
+but we had some discussion on it at the LPC and some serious questions
+were asked during it, for instance regarding the DT binding introduced
+here.  I'm not sure how this particular issue has been addressed here,
+for example.
 
-I'll send a follow-up patch for switching the compatible to describe
-the a64 instead of the h5. In practice, having the a64 use the h5
-compatible doesn't cause any issue, but it should be fixed
-nevertheless.
-
-Cheers,
-
-Paul
-
-> Best regards,
-> Jernej
->=20
-> > +			reg =3D <0x01c0e000 0x1000>;
-> > +			clocks =3D <&ccu CLK_BUS_VE>, <&ccu CLK_VE>,
-> > +				 <&ccu CLK_DRAM_VE>;
-> > +			clock-names =3D "ahb", "mod", "ram";
-> > +			resets =3D <&ccu RST_BUS_VE>;
-> > +			interrupts =3D <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
-> > +			allwinner,sram =3D <&ve_sram 1>;
-> > +		};
-> > +
-> >  		mmc0: mmc@1c0f000 {
-> >  			compatible =3D "allwinner,sun50i-a64-mmc";
-> >  			reg =3D <0x01c0f000 0x1000>;
->=20
->=20
->=20
---=20
-Paul Kocialkowski, Bootlin (formerly Free Electrons)
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Thanks,
+Rafael
