@@ -1,28 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/3] regulator: dt-bindings: add MCP16502 regulator
-  bindings
-Date: Mon, 10 Dec 2018 16:28:45 -0600
-Message-ID: <20181210222845.GA9114@bogus>
-References: <1543917126-32572-1-git-send-email-andrei.stefanescu@microchip.com>
- <1543917126-32572-2-git-send-email-andrei.stefanescu@microchip.com>
+Subject: Re: [PATCH v3 5/5] clk: samsung: exynos5433: add imem clocks
+Date: Mon, 10 Dec 2018 16:33:22 -0600
+Message-ID: <20181210223322.GA16266@bogus>
+References: <20181204165248.17572-1-k.konieczny@partner.samsung.com>
+ <CGME20181204165318eucas1p2dccd5382ee8b9f4da8c3076fb56607ee@eucas1p2.samsung.com>
+ <20181204165248.17572-6-k.konieczny@partner.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1543917126-32572-2-git-send-email-andrei.stefanescu@microchip.com>
+In-Reply-To: <20181204165248.17572-6-k.konieczny@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, Nicolas.Ferre@microchip.com, Cristian.Birsan@microchip.com, Claudiu.Beznea@microchip.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrei.Stefanescu@microchip.com
+To: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 4 Dec 2018 09:52:28 +0000, <Andrei.Stefanescu@microchip.com> wrote:
-> This patch describes the compatible and the device tree
-> bindings necessary for the MCP16502 PMIC.
+On Tue, Dec 04, 2018 at 05:52:48PM +0100, Kamil Konieczny wrote:
+> Add imem clocks for exynos5433. This will enable to use crypto Security
+> SubSystem (in short SSS) and SlimSSS IP blocks.
 > 
-> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@microchip.com>
+> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
 > ---
->  .../bindings/regulator/mcp16502-regulator.txt      | 143 +++++++++++++++++++++
->  1 file changed, 143 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/mcp16502-regulator.txt
-> 
+>  drivers/clk/samsung/clk-exynos5433.c   | 193 +++++++++++++++++++++++++
+>  include/dt-bindings/clock/exynos5433.h |  55 +++++++
+>  2 files changed, 248 insertions(+)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Lots of trailing whitespace checkpatch errors...
