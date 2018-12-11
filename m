@@ -1,95 +1,75 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+From: Vijay Khemka <vijaykhemka@fb.com>
 Subject: Re: [PATCH 2/2] ARM: dts: aspeed: Add KCS support for LPC BMC
-Date: Tue, 11 Dec 2018 10:39:40 -0800
-Message-ID: <584ddf6f-2e0c-5c1c-df06-bdd37ecd2489@linux.intel.com>
+Date: Tue, 11 Dec 2018 18:55:40 +0000
+Message-ID: <CA2566BA-428C-4D5A-8B37-835638252B0C@fb.com>
 References: <20181210200753.3018124-1-vijaykhemka@fb.com>
  <20181210200753.3018124-3-vijaykhemka@fb.com>
+ <584ddf6f-2e0c-5c1c-df06-bdd37ecd2489@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181210200753.3018124-3-vijaykhemka@fb.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <584ddf6f-2e0c-5c1c-df06-bdd37ecd2489@linux.intel.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vijay Khemka <vijaykhemka@fb.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-ID: <1E0B8371460E964098B5D00D6F51865E@namprd15.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vijay,
-
-On 12/10/2018 12:07 PM, Vijay Khemka wrote:
-> Added kcs device support for lpc BMC.
-> 
-> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
-> ---
->   arch/arm/boot/dts/aspeed-g5.dtsi | 29 ++++++++++++++++++++++++++++-
->   1 file changed, 28 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-> index d107459fc0f8..1bd48655bacb 100644
-> --- a/arch/arm/boot/dts/aspeed-g5.dtsi
-> +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-> @@ -330,8 +330,35 @@
->   				ranges = <0x0 0x1e789000 0x1000>;
->   
->   				lpc_bmc: lpc-bmc@0 {
-> -					compatible = "aspeed,ast2500-lpc-bmc";
-> +					compatible = "aspeed,ast2500-lpc-bmc, "simple-mfd", "syscon"";
->   					reg = <0x0 0x80>;
-> +					reg-io-width = <4>;
-> +
-> +					#address-cells = <1>;
-> +					#size-cells = <1>;
-> +					ranges = <0x0 0x0 0x80>;
-> +
-> +					kcs1: kcs1@0 {
-> +						compatible = "aspeed,ast2500-kcs-bmc";
-> +						reg = <0x0 0x80>;
-
-This reg property isn't needed at here because kcs_bmc_aspeed module
-reads regmap from the parent node. Please check below code in the
-driver code.
-
-priv->map = syscon_node_to_regmap(dev->parent->of_node);
-
-> +						interrupts = <8>;
-> +						kcs_chan = <1>;
-> +						status = "disabled";
-> +					};
-> +					kcs2: kcs2@0 {
-> +						compatible = "aspeed,ast2500-kcs-bmc";
-> +						reg = <0x0 0x80>;
-
-ditto.
-
-> +						interrupts = <8>;
-> +						kcs_chan = <2>;
-> +						status = "disabled";
-> +					};
-> +					kcs3: kcs3@0 {
-> +						compatible = "aspeed,ast2500-kcs-bmc";
-> +						reg = <0x0 0x80>;
-
-ditto.
-
-> +						interrupts = <8>;
-> +						kcs_chan = <3>;
-> +						status = "disabled";
-> +					};
->   				};
->   
->   				lpc_host: lpc-host@80 {
-> 
-
-You might need to add kcs4 as a sub-node under lpc_host like below:
-
-kcs4: kcs4@0 {
-	compatible = "aspeed,ast2500-kcs-bmc";
-	interrupts = <8>;
-	kcs_chan = <4>;
-	status = "disabled";
-};
-
-This would be uses as an SMM channel.
-
--Jae
+VGhhbmtzIEpheSwNCkkgd2lsbCB0YWtlIGNhcmUgb2YgeW91ciBjb21tZW50cyBhbmQgc2VuZCBu
+ZXh0IHZlcnNpb24uDQoNClJlZ2FyZHMNCi1WaWpheQ0KDQrvu79PbiAxMi8xMS8xOCwgMTA6NDAg
+QU0sICJKYWUgSHl1biBZb28iIDxqYWUuaHl1bi55b29AbGludXguaW50ZWwuY29tPiB3cm90ZToN
+Cg0KICAgIEhpIFZpamF5LA0KICAgIA0KICAgIE9uIDEyLzEwLzIwMTggMTI6MDcgUE0sIFZpamF5
+IEtoZW1rYSB3cm90ZToNCiAgICA+IEFkZGVkIGtjcyBkZXZpY2Ugc3VwcG9ydCBmb3IgbHBjIEJN
+Qy4NCiAgICA+IA0KICAgID4gU2lnbmVkLW9mZi1ieTogVmlqYXkgS2hlbWthIDx2aWpheWtoZW1r
+YUBmYi5jb20+DQogICAgPiAtLS0NCiAgICA+ICAgYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWc1
+LmR0c2kgfCAyOSArKysrKysrKysrKysrKysrKysrKysrKysrKysrLQ0KICAgID4gICAxIGZpbGUg
+Y2hhbmdlZCwgMjggaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KICAgID4gDQogICAgPiBk
+aWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWc1LmR0c2kgYi9hcmNoL2FybS9i
+b290L2R0cy9hc3BlZWQtZzUuZHRzaQ0KICAgID4gaW5kZXggZDEwNzQ1OWZjMGY4Li4xYmQ0ODY1
+NWJhY2IgMTAwNjQ0DQogICAgPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtZzUuZHRz
+aQ0KICAgID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWc1LmR0c2kNCiAgICA+IEBA
+IC0zMzAsOCArMzMwLDM1IEBADQogICAgPiAgIAkJCQlyYW5nZXMgPSA8MHgwIDB4MWU3ODkwMDAg
+MHgxMDAwPjsNCiAgICA+ICAgDQogICAgPiAgIAkJCQlscGNfYm1jOiBscGMtYm1jQDAgew0KICAg
+ID4gLQkJCQkJY29tcGF0aWJsZSA9ICJhc3BlZWQsYXN0MjUwMC1scGMtYm1jIjsNCiAgICA+ICsJ
+CQkJCWNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI1MDAtbHBjLWJtYywgInNpbXBsZS1tZmQiLCAi
+c3lzY29uIiI7DQogICAgPiAgIAkJCQkJcmVnID0gPDB4MCAweDgwPjsNCiAgICA+ICsJCQkJCXJl
+Zy1pby13aWR0aCA9IDw0PjsNCiAgICA+ICsNCiAgICA+ICsJCQkJCSNhZGRyZXNzLWNlbGxzID0g
+PDE+Ow0KICAgID4gKwkJCQkJI3NpemUtY2VsbHMgPSA8MT47DQogICAgPiArCQkJCQlyYW5nZXMg
+PSA8MHgwIDB4MCAweDgwPjsNCiAgICA+ICsNCiAgICA+ICsJCQkJCWtjczE6IGtjczFAMCB7DQog
+ICAgPiArCQkJCQkJY29tcGF0aWJsZSA9ICJhc3BlZWQsYXN0MjUwMC1rY3MtYm1jIjsNCiAgICA+
+ICsJCQkJCQlyZWcgPSA8MHgwIDB4ODA+Ow0KICAgIA0KICAgIFRoaXMgcmVnIHByb3BlcnR5IGlz
+bid0IG5lZWRlZCBhdCBoZXJlIGJlY2F1c2Uga2NzX2JtY19hc3BlZWQgbW9kdWxlDQogICAgcmVh
+ZHMgcmVnbWFwIGZyb20gdGhlIHBhcmVudCBub2RlLiBQbGVhc2UgY2hlY2sgYmVsb3cgY29kZSBp
+biB0aGUNCiAgICBkcml2ZXIgY29kZS4NCiAgICANCiAgICBwcml2LT5tYXAgPSBzeXNjb25fbm9k
+ZV90b19yZWdtYXAoZGV2LT5wYXJlbnQtPm9mX25vZGUpOw0KICAgIA0KICAgID4gKwkJCQkJCWlu
+dGVycnVwdHMgPSA8OD47DQogICAgPiArCQkJCQkJa2NzX2NoYW4gPSA8MT47DQogICAgPiArCQkJ
+CQkJc3RhdHVzID0gImRpc2FibGVkIjsNCiAgICA+ICsJCQkJCX07DQogICAgPiArCQkJCQlrY3My
+OiBrY3MyQDAgew0KICAgID4gKwkJCQkJCWNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI1MDAta2Nz
+LWJtYyI7DQogICAgPiArCQkJCQkJcmVnID0gPDB4MCAweDgwPjsNCiAgICANCiAgICBkaXR0by4N
+CiAgICANCiAgICA+ICsJCQkJCQlpbnRlcnJ1cHRzID0gPDg+Ow0KICAgID4gKwkJCQkJCWtjc19j
+aGFuID0gPDI+Ow0KICAgID4gKwkJCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQogICAgPiArCQkJ
+CQl9Ow0KICAgID4gKwkJCQkJa2NzMzoga2NzM0AwIHsNCiAgICA+ICsJCQkJCQljb21wYXRpYmxl
+ID0gImFzcGVlZCxhc3QyNTAwLWtjcy1ibWMiOw0KICAgID4gKwkJCQkJCXJlZyA9IDwweDAgMHg4
+MD47DQogICAgDQogICAgZGl0dG8uDQogICAgDQogICAgPiArCQkJCQkJaW50ZXJydXB0cyA9IDw4
+PjsNCiAgICA+ICsJCQkJCQlrY3NfY2hhbiA9IDwzPjsNCiAgICA+ICsJCQkJCQlzdGF0dXMgPSAi
+ZGlzYWJsZWQiOw0KICAgID4gKwkJCQkJfTsNCiAgICA+ICAgCQkJCX07DQogICAgPiAgIA0KICAg
+ID4gICAJCQkJbHBjX2hvc3Q6IGxwYy1ob3N0QDgwIHsNCiAgICA+IA0KICAgIA0KICAgIFlvdSBt
+aWdodCBuZWVkIHRvIGFkZCBrY3M0IGFzIGEgc3ViLW5vZGUgdW5kZXIgbHBjX2hvc3QgbGlrZSBi
+ZWxvdzoNCiAgICANCiAgICBrY3M0OiBrY3M0QDAgew0KICAgIAljb21wYXRpYmxlID0gImFzcGVl
+ZCxhc3QyNTAwLWtjcy1ibWMiOw0KICAgIAlpbnRlcnJ1cHRzID0gPDg+Ow0KICAgIAlrY3NfY2hh
+biA9IDw0PjsNCiAgICAJc3RhdHVzID0gImRpc2FibGVkIjsNCiAgICB9Ow0KICAgIA0KICAgIFRo
+aXMgd291bGQgYmUgdXNlcyBhcyBhbiBTTU0gY2hhbm5lbC4NCiAgICANCiAgICAtSmFlDQogICAg
+DQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
+LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
+bS1rZXJuZWwK
