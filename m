@@ -1,51 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: define vendor prefix for whwave, Inc.
-Date: Tue, 11 Dec 2018 15:41:47 -0600
-Message-ID: <20181211214147.GA22533@bogus>
-References: <1542968084-3982-1-git-send-email-long17.cool@163.com>
- <20181211213708.GA15257@bogus>
+Subject: Re: [PATCH 06/12] dt-bindings: PCI: aardvark: describe the
+ reset-gpios property
+Date: Tue, 11 Dec 2018 15:44:32 -0600
+Message-ID: <20181211214432.GA30246@bogus>
+References: <20181123141831.8214-1-miquel.raynal@bootlin.com>
+ <20181123141831.8214-7-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181211213708.GA15257@bogus>
+In-Reply-To: <20181123141831.8214-7-miquel.raynal@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: zoro <long17.cool@163.com>
-Cc: alexandre.belloni@bootlin.com, a.zummo@towertech.it, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 11, 2018 at 03:37:08PM -0600, Rob Herring wrote:
-> On Fri, Nov 23, 2018 at 06:14:42PM +0800, zoro wrote:
-> > Introduce vendor prefix for whwave, Inc.
-> > for SD3078 rtc device.
-> > 
-> > Signed-off-by: zoro <long17.cool@163.com>
+On Fri, 23 Nov 2018 15:18:25 +0100, Miquel Raynal wrote:
+> A GPIO might be used to reset the PCI IP. Describe the property needed
+> in this case.
 > 
-> Need a full name.
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  Documentation/devicetree/bindings/pci/aardvark-pci.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> > ---
-> >  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > index 4b1a2a8..7d2e9b01 100644
-> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > @@ -423,6 +423,7 @@ vot	Vision Optical Technology Co., Ltd.
-> >  wd	Western Digital Corp.
-> >  wetek	WeTek Electronics, limited.
-> >  wexler	Wexler
-> > +whwave	Shenzhen whwave Electronics crop
-> 
-> crop or Corp?
 
-Or Inc as the subject and commit msg say?
-
-> 
-> >  wi2wi	Wi2Wi, Inc.
-> >  winbond Winbond Electronics corp.
-> >  winstar	Winstar Display Corp.
-> > -- 
-> > 1.7.9.5
-> > 
-> > 
+Reviewed-by: Rob Herring <robh@kernel.org>
