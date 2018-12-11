@@ -1,130 +1,72 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv2 22/25] dt-bindings: pci: Add NXP Layerscape SoCs PCIe
- Gen4 controller
-Date: Tue, 11 Dec 2018 09:50:08 +0000
-Message-ID: <AM6PR04MB57811FC96D79D5FEBDFA2A7F84A60@AM6PR04MB5781.eurprd04.prod.outlook.com>
-References: <20181120092615.11680-1-Zhiqiang.Hou@nxp.com>
- <20181120092615.11680-23-Zhiqiang.Hou@nxp.com> <20181205223843.GA2125@bogus>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v6 09/10] soc: qcom: rpmpd: Use simple_opp_to_performance_state() helper
+Date: Tue, 11 Dec 2018 15:19:37 +0530
+Message-ID: <20181211094938.25086-10-rnayak@codeaurora.org>
+References: <20181211094938.25086-1-rnayak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181205223843.GA2125@bogus>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181211094938.25086-1-rnayak@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: andy.gross@linaro.org, robh@kernel.org, viresh.kumar@linaro.org, sboyd@kernel.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpUaGFua3MgYSBsb3QgZm9yIHlvdXIgY29tbWVudHMhDQoNCj4gLS0tLS1Pcmln
-aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4N
-Cj4gU2VudDogMjAxOMTqMTLUwjbI1SA2OjM5DQo+IFRvOiBaLnEuIEhvdSA8emhpcWlhbmcuaG91
-QG54cC5jb20+DQo+IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyBtYXJr
-LnJ1dGxhbmRAYXJtLmNvbTsNCj4gbC5zdWJyYWhtYW55YUBtb2JpdmVpbC5jby5pbjsgc2hhd25n
-dW9Aa2VybmVsLm9yZzsgTGVvIExpDQo+IDxsZW95YW5nLmxpQG54cC5jb20+OyBsb3JlbnpvLnBp
-ZXJhbGlzaUBhcm0uY29tOw0KPiBjYXRhbGluLm1hcmluYXNAYXJtLmNvbTsgd2lsbC5kZWFjb25A
-YXJtLmNvbTsgTWluZ2thaSBIdQ0KPiA8bWluZ2thaS5odUBueHAuY29tPjsgTS5oLiBMaWFuIDxt
-aW5naHVhbi5saWFuQG54cC5jb20+OyBYaWFvd2VpIEJhbw0KPiA8eGlhb3dlaS5iYW9AbnhwLmNv
-bT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSHYyIDIyLzI1XSBkdC1iaW5kaW5nczogcGNpOiBBZGQg
-TlhQIExheWVyc2NhcGUgU29DcyBQQ0llDQo+IEdlbjQgY29udHJvbGxlcg0KPiANCj4gT24gVHVl
-LCBOb3YgMjAsIDIwMTggYXQgMDk6Mjc6NTFBTSArMDAwMCwgWi5xLiBIb3Ugd3JvdGU6DQo+ID4g
-RnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPg0KPiA+IEFkZCBQ
-Q0llIEdlbjQgY29udHJvbGxlciBEVCBiaW5kaW5ncyBvZiBOWFAgTGF5ZXJzY2FwZSBTb0NzLg0K
-PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNv
-bT4NCj4gPiAtLS0NCj4gPiBWMjoNCj4gPiAgLSBDaGFuZ2UgdG8gdXNlIHRoZSBsYXllcnNjYXBl
-LXBjaS50eHQgZm9yIFBDSWUgR2VuNCBjb250cm9sbGVyDQo+ID4gICAgZHQtYmluZGluZ3MNCj4g
-DQo+IFNvcnJ5IHNvbWVvbmUgc3VnZ2VzdGVkIHRoaXMsIGJ1dCBpdCBzZWVtcyB0aGVyZSdzIG5v
-IHBvaW50IGluIGhhdmluZyB0aGVzZSBpbg0KPiB0aGUgc2FtZSBmaWxlLiBOZXcgSVAgYmxvY2ss
-IGRvIGEgbmV3IGZpbGUuDQoNCkxlbywgY2FuIHlvdSBoZWxwIGNvbW1lbnQgb24gdGhpcz8gSSdt
-IG5vdCBzdXJlIHdoaWNoIG9uZSBpcyBiZXR0ZXIuDQoNCj4gDQo+ID4NCj4gPiAgLi4uL2JpbmRp
-bmdzL3BjaS9sYXllcnNjYXBlLXBjaS50eHQgICAgICAgICAgIHwgNTcNCj4gKysrKysrKysrKysr
-KysrKysrKw0KPiA+ICBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgfCAgOCArKysNCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA2NSBpbnNlcnRpb25zKCspDQo+ID4N
-Cj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9s
-YXllcnNjYXBlLXBjaS50eHQNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+ID4gaW5kZXggNjZkZjFlODFlMGI4Li4zZWY4ODM2
-YjZlOTcgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3BjaS9sYXllcnNjYXBlLXBjaS50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLnR4dA0KPiA+IEBAIC0xLDQgKzEsNiBAQA0K
-PiA+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4gPiAgRnJlZXNjYWxl
-IExheWVyc2NhcGUgUENJZSBjb250cm9sbGVyDQo+ID4gKz09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PQ0KPiA+DQo+ID4gIFRoaXMgUENJZSBob3N0IGNvbnRyb2xsZXIgaXMgYmFz
-ZWQgb24gdGhlIFN5bm9wc3lzIERlc2lnbldhcmUgUENJZSBJUA0KPiA+IGFuZCB0aHVzIGluaGVy
-aXRzIGFsbCB0aGUgY29tbW9uIHByb3BlcnRpZXMgZGVmaW5lZCBpbiBkZXNpZ253YXJlLXBjaWUu
-dHh0Lg0KPiA+IEBAIC01OCwzICs2MCw1OCBAQCBFeGFtcGxlOg0KPiA+ICAJCQkJPDAwMDAgMCAw
-IDMgJmdpYyBHSUNfU1BJIDE5MCBJUlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4gPiAgCQkJCTwwMDAw
-IDAgMCA0ICZnaWMgR0lDX1NQSSAxOTIgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gIAl9Ow0K
-PiA+ICsNCj4gPiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4gPiArTlhQ
-IExheWVyc2NhcGUgUENJZSBHZW40IGNvbnRyb2xsZXINCj4gPiArPT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT0NCj4gPiArDQo+ID4gK1RoaXMgUENJZSBjb250cm9sbGVyIGlzIGJh
-c2VkIG9uIHRoZSBNb2JpdmVpbCBQQ0llIElQIGFuZCB0aHVzDQo+ID4gK2luaGVyaXRzIGFsbCB0
-aGUgY29tbW9uIHByb3BlcnRpZXMgZGVmaW5lZCBpbiBtb2JpdmVpbC1wY2llLnR4dC4NCj4gPiAr
-DQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGNv
-bnRhaW4gdGhlIHBsYXRmb3JtIGlkZW50aWZpZXIgc3VjaCBhczoNCj4gPiArICAiZnNsLGx4MjE2
-MGEtcGNpZSINCj4gPiArLSByZWc6IGJhc2UgYWRkcmVzc2VzIGFuZCBsZW5ndGhzIG9mIHRoZSBQ
-Q0llIGNvbnRyb2xsZXIgcmVnaXN0ZXIgYmxvY2tzLg0KPiA+ICsgICJjb25maWdfYXhpX3NsYXZl
-IjogUENJZSBjb250cm9sbGVyIHJlZ2lzdGVycw0KPiA+ICsgICJjc3JfYXhpX3NsYXZlIjogQnJp
-ZGdlIGNvbmZpZyByZWdpc3RlcnMNCj4gDQo+IFdvdWxkbid0ICdjb25maWcnIGFuZCAnY3NyJyBi
-ZSBzdWZmaWNpZW50PyBBbmQgdGhlc2Ugc2hvdWxkIGJlIGxpc3RlZCB1bmRlcg0KPiByZWctbmFt
-ZXMuDQo+IA0KPiA+ICstIGludGVycnVwdHM6IEEgbGlzdCBvZiBpbnRlcnJ1cHQgb3V0cHV0cyBv
-ZiB0aGUgY29udHJvbGxlci4gTXVzdA0KPiA+ICtjb250YWluIGFuDQo+ID4gKyAgZW50cnkgZm9y
-IGVhY2ggZW50cnkgaW4gdGhlIGludGVycnVwdC1uYW1lcyBwcm9wZXJ0eS4NCj4gPiArLSBpbnRl
-cnJ1cHQtbmFtZXM6IEl0IGNvdWxkIGluY2x1ZGUgdGhlIGZvbGxvd2luZyBlbnRyaWVzOg0KPiA+
-ICsgICJpbnRyIjogVGhlIGludGVycnVwdCB0aGF0IGlzIGFzc2VydGVkIGZvciBjb250cm9sbGVy
-IGludGVycnVwdHMNCj4gPiArICAiYWVyIjogQXNzZXJ0ZWQgZm9yIGFlciBpbnRlcnJ1cHQgd2hl
-biBjaGlwIHN1cHBvcnQgdGhlIGFlciBpbnRlcnJ1cHQNCj4gd2l0aA0KPiA+ICsJIG5vbmUgTVNJ
-L01TSS1YL0lOVHggbW9kZSxidXQgdGhlcmUgaXMgaW50ZXJydXB0IGxpbmUgZm9yIGFlci4NCj4g
-PiArICAicG1lIjogQXNzZXJ0ZWQgZm9yIHBtZSBpbnRlcnJ1cHQgd2hlbiBjaGlwIHN1cHBvcnQg
-dGhlIHBtZSBpbnRlcnJ1cHQNCj4gd2l0aA0KPiA+ICsJIG5vbmUgTVNJL01TSS1YL0lOVHggbW9k
-ZSxidXQgdGhlcmUgaXMgaW50ZXJydXB0IGxpbmUgZm9yIHBtZS4NCj4gPiArLSBkbWEtY29oZXJl
-bnQ6IEluZGljYXRlcyB0aGF0IHRoZSBoYXJkd2FyZSBJUCBibG9jayBjYW4gZW5zdXJlIHRoZQ0K
-PiA+ICtjb2hlcmVuY3kNCj4gPiArICBvZiB0aGUgZGF0YSB0cmFuc2ZlcnJlZCBmcm9tL3RvIHRo
-ZSBJUCBibG9jay4gVGhpcyBjYW4gYXZvaWQgdGhlDQo+ID4gK3NvZnR3YXJlDQo+ID4gKyAgY2Fj
-aGUgZmx1c2gvaW52YWxpZCBhY3Rpb25zLCBhbmQgaW1wcm92ZSB0aGUgcGVyZm9ybWFuY2Ugc2ln
-bmlmaWNhbnRseS4NCj4gPiArLSBtc2ktcGFyZW50IDogU2VlIHRoZSBnZW5lcmljIE1TSSBiaW5k
-aW5nIGRlc2NyaWJlZCBpbg0KPiA+ICsgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9pbnRlcnJ1cHQtY29udHJvbGxlci9tc2kudHh0Lg0KPiA+ICsNCj4gPiArRXhhbXBsZToNCj4g
-PiArDQo+ID4gKwlwY2llQDM0MDAwMDAgew0KPiA+ICsJCWNvbXBhdGlibGUgPSAiZnNsLGx4MjE2
-MGEtcGNpZSI7DQo+ID4gKwkJcmVnID0gPDB4MDAgMHgwMzQwMDAwMCAweDAgMHgwMDEwMDAwMCAg
-IC8qIGNvbnRyb2xsZXIgcmVnaXN0ZXJzDQo+ICovDQo+ID4gKwkJICAgICAgIDB4ODAgMHgwMDAw
-MDAwMCAweDAgMHgwMDAwMTAwMD47IC8qIGNvbmZpZ3VyYXRpb24gc3BhY2UNCj4gKi8NCj4gPiAr
-CQlyZWctbmFtZXMgPSAiY3NyX2F4aV9zbGF2ZSIsICJjb25maWdfYXhpX3NsYXZlIjsNCj4gDQo+
-IFRoZSBvcmRlciBzaG91bGQgbWF0Y2ggd2hhdCdzIGRlZmluZWQgYWJvdmUuDQoNClllcywgd2ls
-bCBjaGFuZ2UgdGhlIG9yZGVyIGFib3ZlIGluIG5leHQgdmVyc2lvbi4NCg0KPiANCj4gQWxzbywg
-bm9ybWFsbHkgdGhlIGNvbmZpZyBzcGFjZSB3b3VsZCBiZSB0aGUgYmlnZ2VyIHJlZ2lvbiB1bmxl
-c3MgY29uZmlnDQo+IGFjY2Vzc2VzIGFyZSB3aW5kb3dlZC4NCg0KWWVzLCBjb25maWcgYWNjZXNz
-ZXMgYXJlIHdpbmRvd2VkLg0KDQo+IA0KPiA+ICsJCWludGVycnVwdHMgPSA8R0lDX1NQSSAxMDgg
-SVJRX1RZUEVfTEVWRUxfSElHSD4sIC8qIEFFUg0KPiBpbnRlcnJ1cHQgKi8NCj4gPiArCQkJICAg
-ICA8R0lDX1NQSSAxMDggSVJRX1RZUEVfTEVWRUxfSElHSD4sIC8qIFBNRSBpbnRlcnJ1cHQNCj4g
-Ki8NCj4gPiArCQkJICAgICA8R0lDX1NQSSAxMDggSVJRX1RZUEVfTEVWRUxfSElHSD47IC8qIGNv
-bnRyb2xsZXINCj4gaW50ZXJydXB0ICovDQo+ID4gKwkJaW50ZXJydXB0LW5hbWVzID0gImFlciIs
-ICJwbWUiLCAiaW50ciI7DQo+ID4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8Mz47DQo+ID4gKwkJI3Np
-emUtY2VsbHMgPSA8Mj47DQo+ID4gKwkJZGV2aWNlX3R5cGUgPSAicGNpIjsNCj4gPiArCQlhcGlv
-LXdpbnMgPSA8OD47DQo+ID4gKwkJcHBpby13aW5zID0gPDg+Ow0KPiANCj4gSWYgdGhlc2UgaGF2
-ZSBzcGVjaWZpYyB2YWx1ZXMgb24geW91ciBoL3csIHBsZWFzZSBzcGVjaWZ5IGFib3ZlLg0KDQpD
-b25maXJtZWQgd2l0aCBvdXIgSFcgdGVhbSB0aGF0IFBDSWVAMzYwMDAwMCBhbmQgUENJZUAzODAw
-MDAwIGhhdmUgZGlmZmVyZW50IHdpbmRvdyBudW1iZXIsIHdpbGwgdXBkYXRlIHRoZSB3aW5kb3cg
-bnVtYmVyIGluIG5leHQgdmVyc2lvbi4NCg0KPiANCj4gPiArCQlkbWEtY29oZXJlbnQ7DQo+ID4g
-KwkJYnVzLXJhbmdlID0gPDB4MCAweGZmPjsNCj4gPiArCQltc2ktcGFyZW50ID0gPCZpdHM+Ow0K
-PiA+ICsJCXJhbmdlcyA9IDwweDgyMDAwMDAwIDB4MCAweDQwMDAwMDAwIDB4ODAgMHg0MDAwMDAw
-MCAweDANCj4gMHg0MDAwMDAwMD47DQo+ID4gKwkJI2ludGVycnVwdC1jZWxscyA9IDwxPjsNCj4g
-PiArCQlpbnRlcnJ1cHQtbWFwLW1hc2sgPSA8MCAwIDAgNz47DQo+ID4gKwkJaW50ZXJydXB0LW1h
-cCA9IDwwMDAwIDAgMCAxICZnaWMgMCAwIEdJQ19TUEkgMTA5DQo+IElSUV9UWVBFX0xFVkVMX0hJ
-R0g+LA0KPiA+ICsJCQkJPDAwMDAgMCAwIDIgJmdpYyAwIDAgR0lDX1NQSSAxMTANCj4gSVJRX1RZ
-UEVfTEVWRUxfSElHSD4sDQo+ID4gKwkJCQk8MDAwMCAwIDAgMyAmZ2ljIDAgMCBHSUNfU1BJIDEx
-MQ0KPiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4gPiArCQkJCTwwMDAwIDAgMCA0ICZnaWMgMCAw
-IEdJQ19TUEkgMTEyDQo+IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ICsJfTsNCg0KVGhhbmtz
-LA0KWmhpcWlhbmcNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LWFybS1rZXJuZWwK
+Get rid of the duplicate code across rpmpd and rpmhpd to read the
+performance state value from Device tree and use the
+simple_opp_to_performance_state() helper instead.
+
+Suggested-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+---
+ drivers/soc/qcom/rpmhpd.c | 11 +----------
+ drivers/soc/qcom/rpmpd.c  | 11 +----------
+ 2 files changed, 2 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
+index f993a86be48c..1ce86f0cc9fa 100644
+--- a/drivers/soc/qcom/rpmhpd.c
++++ b/drivers/soc/qcom/rpmhpd.c
+@@ -281,16 +281,7 @@ static int rpmhpd_set_performance_state(struct generic_pm_domain *domain,
+ static unsigned int rpmhpd_get_performance_state(struct generic_pm_domain *genpd,
+ 						 struct dev_pm_opp *opp)
+ {
+-	struct device_node *np;
+-	unsigned int level = 0;
+-
+-	np = dev_pm_opp_get_of_node(opp);
+-	if (of_property_read_u32(np, "qcom,level", &level))
+-		pr_err("%s: missing 'qcom,level' property\n", __func__);
+-
+-	of_node_put(np);
+-
+-	return level;
++	return simple_opp_to_performance_state(genpd, opp, "qcom,level");
+ }
+ 
+ static int rpmhpd_update_level_mapping(struct rpmhpd *rpmhpd)
+diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
+index 59e21c88a144..29288af502b0 100644
+--- a/drivers/soc/qcom/rpmpd.c
++++ b/drivers/soc/qcom/rpmpd.c
+@@ -248,16 +248,7 @@ static int rpmpd_set_performance(struct generic_pm_domain *domain,
+ static unsigned int rpmpd_get_performance(struct generic_pm_domain *genpd,
+ 					  struct dev_pm_opp *opp)
+ {
+-	struct device_node *np;
+-	unsigned int corner = 0;
+-
+-	np = dev_pm_opp_get_of_node(opp);
+-	if (of_property_read_u32(np, "qcom,level", &corner))
+-		pr_err("%s: missing 'qcom,level' property\n", __func__);
+-
+-	of_node_put(np);
+-
+-	return corner;
++	return simple_opp_to_performance_state(genpd, opp, "qcom,level");
+ }
+ 
+ static int rpmpd_probe(struct platform_device *pdev)
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
