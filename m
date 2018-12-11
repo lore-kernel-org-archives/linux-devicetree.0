@@ -1,11 +1,13 @@
 From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 0/3] nvmem: imx-ocotp: Implement i.MX6ULL/ULZ support
-Date: Tue, 11 Dec 2018 14:51:10 +0100
-Message-ID: <1544536273-17909-1-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH 2/3] nvmem: imx-ocotp: Implement i.MX6ULL/ULZ support
+Date: Tue, 11 Dec 2018 14:51:12 +0100
+Message-ID: <1544536273-17909-3-git-send-email-stefan.wahren@i2se.com>
+References: <1544536273-17909-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1544536273-17909-1-git-send-email-stefan.wahren@i2se.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,19 +21,38 @@ To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@k
 Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-imx@nxp.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-According to the reference manuals for i.MX6ULL and i.MX6ULZ both SoCs
-only support 8 OTP banks instead of 16. So we can't use the compatible
-string of i.MX6UL.
+In comparision to the i.MX6UL the lower cost variants i.MX6ULL/ULZ only
+supports 8 OTP banks a 8 words.
 
-Stefan Wahren (3):
-  dt-bindings: imx-ocotp: Add i.MX6ULL/ULZ support
-  nvmem: imx-ocotp: Implement i.MX6ULL/ULZ support
-  ARM: dts: imx6ull: Fix i.MX6ULL/ULZ ocotp compatible
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+---
+ drivers/nvmem/imx-ocotp.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
- Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 3 ++-
- arch/arm/boot/dts/imx6ull.dtsi                        | 4 ++++
- drivers/nvmem/imx-ocotp.c                             | 7 +++++++
- 3 files changed, 13 insertions(+), 1 deletion(-)
-
+diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
+index afb429a..a433a41 100644
+--- a/drivers/nvmem/imx-ocotp.c
++++ b/drivers/nvmem/imx-ocotp.c
+@@ -427,6 +427,12 @@ static const struct ocotp_params imx6ul_params = {
+ 	.set_timing = imx_ocotp_set_imx6_timing,
+ };
+ 
++static const struct ocotp_params imx6ull_params = {
++	.nregs = 64,
++	.bank_address_words = 0,
++	.set_timing = imx_ocotp_set_imx6_timing,
++};
++
+ static const struct ocotp_params imx7d_params = {
+ 	.nregs = 64,
+ 	.bank_address_words = 4,
+@@ -438,6 +444,7 @@ static const struct of_device_id imx_ocotp_dt_ids[] = {
+ 	{ .compatible = "fsl,imx6sl-ocotp", .data = &imx6sl_params },
+ 	{ .compatible = "fsl,imx6sx-ocotp", .data = &imx6sx_params },
+ 	{ .compatible = "fsl,imx6ul-ocotp", .data = &imx6ul_params },
++	{ .compatible = "fsl,imx6ull-ocotp", .data = &imx6ull_params },
+ 	{ .compatible = "fsl,imx7d-ocotp",  .data = &imx7d_params },
+ 	{ .compatible = "fsl,imx6sll-ocotp", .data = &imx6sll_params },
+ 	{ },
 -- 
 2.7.4
