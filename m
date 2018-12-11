@@ -1,29 +1,92 @@
-From: MyungJoo Ham <myungjoo.ham@samsung.com>
-Subject: RE: [PATCH v3 1/5] devfreq: refactor set_target frequency function
-Date: Tue, 11 Dec 2018 11:08:42 +0900
-Message-ID: <20181211020842epcms1p759449289d0574d47847d2df4a1f8d482@epcms1p7>
-References: <1544007956-28889-2-git-send-email-l.luba@partner.samsung.com>
-        <1544007956-28889-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20181205110619eucas1p2eb8553c60b4e23b07c76f02b3867827c@epcms1p7>
-Reply-To: myungjoo.ham@samsung.com
+From: tom burkart <tom@aussec.com>
+Subject: Re: [PATCH v9 3/4] dt-bindings: pps: pps-gpio PPS ECHO
+ implementation
+Date: Tue, 11 Dec 2018 13:17:16 +1100
+Message-ID: <20181211131716.931947v9gya4ajos@www.aussec.com>
+References: <20181122094602.5156-1-tom@aussec.com>
+ <20181122094602.5156-2-tom@aussec.com>
+ <20181122094602.5156-3-tom@aussec.com>
+ <20181122094602.5156-4-tom@aussec.com>
+ <CAL_JsqJ6fM3+pcC3b-eXEex=j_ft6Z=vukhLK9wULfWJqOTN-A@mail.gmail.com>
+ <20181127150629.10795h1esqtc53ut@aussec.com>
+ <CAL_JsqJmuDbPgc3WYRU8y3hbDL5A4_Luj0FfAiSvJ2+J-TM9_g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain;
+ charset=UTF-8;
+ DelSp="Yes";
+ format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544007956-28889-2-git-send-email-l.luba@partner.samsung.com>
+In-Reply-To: <CAL_JsqJmuDbPgc3WYRU8y3hbDL5A4_Luj0FfAiSvJ2+J-TM9_g@mail.gmail.com>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "tjakobi@math.uni-bielefeld.de" <tjakobi@math.uni-bielefeld.de>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "len.brown@intel.com" <len.brown@intel.com>, "pavel@ucw.cz" <pavel@ucw.cz>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "keescook@chromium.org" <keescook@chromium.org>, "anton@enomsg.org" <anton@enomsg.org>, "ccross@android.com" <ccross@android.com>, "tony.luck@intel.com" <tony.luck@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kgene@kernel.org" <kgene@kernel.org>, "krzk@kernel.org" <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, lukas@fridolin.com
 List-Id: devicetree@vger.kernel.org
 
-> The refactoring is needed for the new client in devfreq: suspend.
-> To avoid code duplication, move it to the new local function
-> devfreq_set_target.
-> 
-> Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-> Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
+Quoting Rob Herring <robh@kernel.org>:
 
-Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+> On Mon, Nov 26, 2018 at 10:06 PM tom burkart <tom@aussec.com> wrote:
+>>
+>> Quoting Rob Herring <robh@kernel.org>:
+>>
+>> > On Thu, Nov 22, 2018 at 3:49 AM Tom Burkart <tom@aussec.com> wrote:
+>> >>
+>> >> This patch implements the device tree changes required for the pps
+>> >> echo functionality for pps-gpio, that sysfs claims is available
+>> >> already.
+>> >>
+>> >> This patch was originally written by Lukas Senger as part of a masters
+>> >> thesis project and modified for inclusion into the linux kernel by Tom
+>> >> Burkart.
+>> >>
+>> >> Signed-off-by: Lukas Senger <lukas@fridolin.com>
+>> >> Signed-off-by: Tom Burkart <tom@aussec.com>
+>> >> ---
+>> >>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 9 +++++++++
+>> >>  1 file changed, 9 insertions(+)
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> index 1155d49c2699..e09f6f2405c5 100644
+>> >> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> @@ -7,10 +7,15 @@ Required properties:
+>> >>  - compatible: should be "pps-gpio"
+>> >>  - gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
+>> >>
+>> >> +Additional required properties for the PPS ECHO functionality:
+>> >> +- echo-gpios: one PPS ECHO GPIO in the format described by  
+>> ../gpio/gpio.txt
+>> >> +- echo-active-ms: duration in ms of the active portion of the echo pulse
+>> >> +
+>> >>  Optional properties:
+>> >>  - assert-falling-edge: when present, assert is indicated by a  
+>> falling edge
+>> >>                         (instead of by a rising edge)
+>> >>  - capture-clear: when present, also capture the PPS clear event
+>> >> +- invert-pps-echo: when present, invert the PPS ECHO pulse
+>> >
+>> > Why do you need this? Can't you just make the echo gpio GPIO_ACTIVE_LOW?
+>> >
+>> > BTW, using the flag probably should have been done for
+>> > 'assert-falling-edge' as well.
+>>
+>> The hardware I use expects a positive-going echo pulse, however, it
+>> was really easy to give users the option to have it inverted in case
+>> they use different hardware that expects a negative-going edge.
+>
+> It will be even easier to implement if you use GPIO_ACTIVE_LOW or
+> GPIO_ACTIVE_HIGH as appropriate. If the flag is set appropriately,
+> then gpiod_set_value(gpio, 1) asserts the pulse and
+> gpiod_set_value(gpio, 0) deasserts it no matter which way the h/w is
+> wired. You can then get rid of invert_pps_echo in the driver.
+
+Hi Rob,
+I have looked at the appropriate changes to my code to implement the  
+above.  However, there is no GPIO_ACTIVE_* as part of the gpiod_flags  
+enum (include/linux/gpio/consumer.h).
+
+What am I missing?
+
+Tom
