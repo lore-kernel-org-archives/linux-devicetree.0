@@ -1,95 +1,66 @@
-From: Michael Bringmann <mwb@linux.vnet.ibm.com>
-Subject: Re: [PATCH v03] powerpc/mobility: Fix node detach/rename problem
-Date: Tue, 11 Dec 2018 10:43:37 -0600
-Message-ID: <6026321f-5818-26ff-f21f-375fa2dca51d@linux.vnet.ibm.com>
-References: <a2d46622-a957-dffe-04d1-8087bbf0f8b5@linux.vnet.ibm.com>
- <871s6oxkdf.fsf@concordia.ellerman.id.au>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v7 2/2] media: platform: Add Aspeed Video Engine driver
+Date: Tue, 11 Dec 2018 17:45:02 +0100
+Message-ID: <828d274c-8a0f-d90f-d383-178360f9ac30@xs4all.nl>
+References: <1544480791-92746-1-git-send-email-eajames@linux.ibm.com>
+ <1544480791-92746-3-git-send-email-eajames@linux.ibm.com>
+ <6567e0a4-ad58-1340-199e-e5d5b267f3ac@xs4all.nl>
+ <08ffe734-7c08-370e-0a10-09f3924f24c0@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <871s6oxkdf.fsf@concordia.ellerman.id.au>
+In-Reply-To: <08ffe734-7c08-370e-0a10-09f3924f24c0@linux.vnet.ibm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org
-Cc: devicetree@vger.kernel.org, Thomas Falcon <tlfalcon@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Juliet Kim <minkim@us.ibm.com>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, frowand.list@gmail.com
+To: Eddie James <eajames@linux.vnet.ibm.com>, Eddie James <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---- Snip ---
+On 12/11/18 5:41 PM, Eddie James wrote:
 
+<snip>
+
+>> Running checkpatch.pl --strict over the patch gives me three 'CHECK' items
+>> they you should also address:
 >>
->> The mobility.c code continues on during the second migration, accepts
->> the definitions of the new nodes from the PHYP and ends up renaming
->> the new properties e.g.
+>> CHECK: struct mutex definition without comment
+>> #312: FILE: drivers/media/platform/aspeed-video.c:222:
+>> +       struct mutex video_lock;
 >>
->> [ 4565.827296] Duplicate name in base, renamed to "ibm,platform-facilities#1"
+>> CHECK: spinlock_t definition without comment
+>> #315: FILE: drivers/media/platform/aspeed-video.c:225:
+>> +       spinlock_t lock;
 >>
->> There is no check like 'of_node_check_flag(np, OF_DETACHED)' within
->> of_find_node_by_phandle to skip nodes that are detached, but still
->> present due to caching or use count considerations.  Also, note that
->> of_find_node_by_phandle also uses a 'phandle_cache' which does not
->> appear to be updated when of_detach_node() is invoked.
+>> CHECK: usleep_range is preferred over udelay; see Documentation/timers/timers-howto.txt
+>> #580: FILE: drivers/media/platform/aspeed-video.c:490:
+>> +       udelay(100);
 > 
-> This seems like the real bug. Since the phandle cache was added we can
-> now find detached nodes when we shouldn't be able to.
-> 
-> Does the patch below work?
-> 
-> cheers
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 09692c9b32a7..d8e4534c0686 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1190,6 +1190,10 @@ struct device_node *of_find_node_by_phandle(phandle handle)
->  		if (phandle_cache[masked_handle] &&
->  		    handle == phandle_cache[masked_handle]->phandle)
->  			np = phandle_cache[masked_handle];
-> +
-> +		/* If we find a detached node, remove it */
-> +		if (of_node_check_flag(np, OF_DETACHED))
-> +			np = phandle_cache[masked_handle] = NULL;
->  	}
-> 
->  	if (!np) {
-> 
-> 
+> This one has to be udelay due to possibly being called in the interrupt handler...
 
-I think this would be a bit better for cases where masked values overlap:
+Please add a comment for that.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 09692c9..ec79129 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1188,8 +1188,13 @@ struct device_node *of_find_node_by_phandle(phandle handle)
- 
- 	if (phandle_cache) {
- 		if (phandle_cache[masked_handle] &&
--		    handle == phandle_cache[masked_handle]->phandle)
--			np = phandle_cache[masked_handle];
-+		    handle == phandle_cache[masked_handle]->phandle) {
-+				np = phandle_cache[masked_handle];
-+
-+			/* If we find a detached node, remove it */
-+			if (of_node_check_flag(np, OF_DETACHED))
-+				np = phandle_cache[masked_handle] = NULL;
-+		}
- 	}
- 
- 	if (!np) {
+> 
+>>
+>> I think v8 can be the final version. It probably won't make 4.21, though.
+>> If I'll get a v8 today, then there is a small chance it might still make it.
+>> If not, then it'll be merged early in the 4.22 cycle.
+> 
+> OK, no worries either way. Will send v8 in a few.
 
+Looking forward to that.
 
-Will try it out.  Wouldn't it be better to do this when the node is detached
-in drivers/of/dynamic.c:__of_detach_node()?
+Regards,
 
-Thanks.
-Michael
+	Hans
 
--- 
-Michael W. Bringmann
-Linux Technology Center
-IBM Corporation
-Tie-Line  363-5196
-External: (512) 286-5196
-Cell:       (512) 466-0650
-mwb@linux.vnet.ibm.com
+> 
+> Thanks for all the review!
+> Eddie
+> 
+>>
+>> Regards,
+>>
+>>     Hans
+>>
+> 
