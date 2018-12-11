@@ -1,73 +1,104 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: gpu: add Allwinner H6 Mali
- Midgard binding
-Date: Tue, 11 Dec 2018 16:11:26 -0600
-Message-ID: <20181211221126.GA12250@bogus>
-References: <20181127074249.15204-1-icenowy@aosc.io>
- <20181127074249.15204-2-icenowy@aosc.io>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 5/5] regulator: add documentation for regulator modes
+ and suspend states
+Date: Tue, 11 Dec 2018 16:13:24 -0600
+Message-ID: <20181211221324.GA14658@bogus>
+References: <1543319801-19100-1-git-send-email-claudiu.beznea@microchip.com>
+ <1543319801-19100-6-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBEHMYDQAKGQECSPS64Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181127074249.15204-2-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1543319801-19100-6-git-send-email-claudiu.beznea@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Claudiu.Beznea@microchip.com
+Cc: lgirdwood@gmail.com, broonie@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 27, 2018 at 03:42:49PM +0800, Icenowy Zheng wrote:
-> Allwinner H6 SoC uses a Mali T720 GPU, which is one of the GPUs in the
-> Midgard GPU product line.
+On Tue, Nov 27, 2018 at 11:57:25AM +0000, Claudiu.Beznea@microchip.com wrote:
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
 > 
-> Add binding for the H6 Mali Midgard GPU.
+> Add documentation for regulator modes and suspend states.
 > 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 > ---
->  .../devicetree/bindings/gpu/arm,mali-midgard.txt    | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+>  .../bindings/regulator/act8945a-regulator.txt      | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-> index 02f870cd60e6..c897dd7be48f 100644
-> --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-> @@ -18,6 +18,7 @@ Required properties:
->      + "amlogic,meson-gxm-mali"
->      + "rockchip,rk3288-mali"
->      + "rockchip,rk3399-mali"
-> +    + "allwinner,sun50i-h6-mali"
+> diff --git a/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt b/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
+> index ac955dea00d1..4017527619ab 100644
+> --- a/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
+> +++ b/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
+> @@ -15,11 +15,17 @@ Optional input supply properties:
+>    - inl67-supply: The input supply for REG_LDO3 and REG_LDO4
 >  
->  - reg : Physical base address of the device and length of the register area.
+>  Any standard regulator properties can be used to configure the single regulator.
+> +regulator-initial-mode, regulator-allowed-modes and regulator-mode could be
+> +specified using mode values from dt-bindings/regulator/active-semi,8945a-regulator.h
+> +file.
 >  
-> @@ -44,6 +45,18 @@ Optional properties:
->    for details.
+>  The valid names for regulators are:
+>  	REG_DCDC1, REG_DCDC2, REG_DCDC3, REG_LDO1, REG_LDO2, REG_LDO3, REG_LDO4.
 >  
->  
-> +Vendor-specific bindings
-> +------------------------
+>  Example:
 > +
-> +The Mali GPU is integrated very differently from one SoC to
-> +another. In order to accomodate those differences, you have the option
+> +#include <dt-bindings/regulator/active-semi,8945a-regulator.h>
 
-WARNING: 'accomodate' may be misspelled - perhaps 'accommodate'?                                                      
-#50: FILE: Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt:52:                                             
+This file belongs in this patch.
 
-> +to specify one more vendor-specific compatible, among:
 > +
-> +  - allwinner,sun50i-h6-mali
-> +    Required properties:
-> +      * resets: phandle to the reset line for the GPU
+>  	pmic@5b {
+>  		compatible = "active-semi,act8945a";
+>  		reg = <0x5b>;
+> @@ -32,6 +38,18 @@ Example:
+>  				regulator-min-microvolt = <1350000>;
+>  				regulator-max-microvolt = <1350000>;
+>  				regulator-always-on;
 > +
+> +				regulator-allowed-modes = <ACT8945A_REGULATOR_MODE_FIXED>,
+> +							  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
+> +				regulator-initial-mode = <ACT8945A_REGULATOR_MODE_FIXED>;
 > +
->  Example for a Mali-T760:
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-min-microvolt=<1400000>;
+> +					regulator-suspend-max-microvolt=<1400000>;
+> +					regulator-changeable-in-suspend;
+> +					regulator-mode=<ACT8945A_REGULATOR_MODE_LOWPOWER>;
+> +				};
+>  			};
 >  
->  gpu@ffa30000 {
+>  			vdd_1v2_reg: REG_DCDC2 {
+> @@ -39,6 +57,14 @@ Example:
+>  				regulator-min-microvolt = <1100000>;
+>  				regulator-max-microvolt = <1300000>;
+>  				regulator-always-on;
+> +
+> +				regulator-allowed-modes = <ACT8945A_REGULATOR_MODE_FIXED>,
+> +							  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
+> +				regulator-initial-mode = <ACT8945A_REGULATOR_MODE_FIXED>;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>  			};
+>  
+>  			vdd_3v3_reg: REG_DCDC3 {
+> @@ -53,6 +79,14 @@ Example:
+>  				regulator-min-microvolt = <2500000>;
+>  				regulator-max-microvolt = <2500000>;
+>  				regulator-always-on;
+> +
+> +				regulator-allowed-modes = <ACT8945A_REGULATOR_MODE_NORMAL>,
+> +							  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
+> +				regulator-initial-mode = <ACT8945A_REGULATOR_MODE_NORMAL>;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+>  			};
+>  
+>  			vdd_3v3_lp_reg: REG_LDO2 {
 > -- 
-> 2.18.1
+> 2.7.4
 > 
