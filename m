@@ -1,73 +1,36 @@
-From: Parthiban Nallathambi <pn@denx.de>
-Subject: [PATCH v3 2/4] arm64: dts: actions: s700: Add I2C controller nodes
-Date: Tue, 11 Dec 2018 09:04:46 +0100
-Message-ID: <20181211080448.24007-3-pn@denx.de>
-References: <20181211080448.24007-1-pn@denx.de>
+From: <Tudor.Ambarus@microchip.com>
+Subject: Re: [PATCH v5 3/7] mtd: spi-nor: add opcodes for octal Read/Write
+ commands
+Date: Tue, 11 Dec 2018 08:09:40 +0000
+Message-ID: <141c6d79-ae7a-60aa-865a-f6b6997f8da9@microchip.com>
+References: <1543826226-30898-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <1543826226-30898-4-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <ac569071-3c69-ebc8-2c18-ea1399210549@microchip.com>
+ <VI1PR04MB57264CBB25E2984DF221ED2E99A60@VI1PR04MB5726.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181211080448.24007-1-pn@denx.de>
+In-Reply-To: <VI1PR04MB57264CBB25E2984DF221ED2E99A60@VI1PR04MB5726.eurprd04.prod.outlook.com>
+Content-Language: en-US
+Content-ID: <1348CB47DA43624A9189A93FFB3DF89A@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: manivannan.sadhasivam@linaro.org, afaerber@suse.de, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de
-Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux@cubietech.com, thomas.liau@actions-semi.com, linux-actions@lists.infradead.org, Parthiban Nallathambi <pn@denx.de>
+To: yogeshnarayan.gaur@nxp.com, linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com, broonie@kernel.org, marek.vasut@gmail.com, vigneshr@ti.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, computersforpeace@gmail.com, frieder.schrempf@exceet.de, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add I2C controller nodes for Actions Semiconductor S700 SoC.
-
-Signed-off-by: Parthiban Nallathambi <pn@denx.de>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm64/boot/dts/actions/s700.dtsi | 40 +++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-index 192c7b39c8c1..35fddba2af1c 100644
---- a/arch/arm64/boot/dts/actions/s700.dtsi
-+++ b/arch/arm64/boot/dts/actions/s700.dtsi
-@@ -174,6 +174,46 @@
- 			#clock-cells = <1>;
- 		};
- 
-+		i2c0: i2c@e0170000 {
-+			compatible = "actions,s700-i2c";
-+			reg = <0 0xe0170000 0 0x1000>;
-+			clocks = <&cmu CLK_I2C0>;
-+			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c1: i2c@e0174000 {
-+			compatible = "actions,s700-i2c";
-+			reg = <0 0xe0174000 0 0x1000>;
-+			clocks = <&cmu CLK_I2C1>;
-+			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c2: i2c@e0178000 {
-+			compatible = "actions,s700-i2c";
-+			reg = <0 0xe0178000 0 0x1000>;
-+			clocks = <&cmu CLK_I2C2>;
-+			interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c3: i2c@e017c000 {
-+			compatible = "actions,s700-i2c";
-+			reg = <0 0xe017c000 0 0x1000>;
-+			clocks = <&cmu CLK_I2C3>;
-+			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		sps: power-controller@e01b0100 {
- 			compatible = "actions,s700-sps";
- 			reg = <0x0 0xe01b0100 0x0 0x100>;
--- 
-2.17.2
+SGksDQoNCk9uIDEyLzExLzIwMTggMDY6NTUgQU0sIFlvZ2VzaCBOYXJheWFuIEdhdXIgd3JvdGU6
+DQo+IFRodXMgd291bGQgZ29pbmcgdG8gbW9kaWZ5IHRoZSBjb25kaXRpb24gY2hlY2sgYXMgYmVs
+b3csIHNvIHRoYXQgU0ZEUCBwYXJzaW5nIHdvdWxkIGFsc28gYmUgcGVyZm9ybWVkIHdoZW4gU1BJ
+X05PUl9PQ1RBTF9SRUFEIGlzIHNldC4gQ29ycmVjdD8NCj4gDQo+ICAgICAgICAgaWYgKChpbmZv
+LT5mbGFncyAmIChTUElfTk9SX0RVQUxfUkVBRCB8IFNQSV9OT1JfUVVBRF9SRUFEIHwNCj4gICAg
+ICAgICAgICAgIFNQSV9OT1JfT0NUQUxfUkVBRCkpICYmICEoaW5mby0+ZmxhZ3MgJiBTUElfTk9S
+X1NLSVBfU0ZEUCkpIHsNCg0KWWVzLCB0aGlzIGlzIHdoYXQgSSB3YXMgc3VnZ2VzdGluZy4gT24g
+YSBzZWNvbmQgdGhvdWdodCwgd2UgaGF2ZW4ndCBhZGRlZCB5ZXQNCnN1cHBvcnQgZm9yIHBhcnNp
+bmcgc2ZkcCB0byBnZXQgdGhlIG9jdGFsIG1vZGUgaW5mbywgc28gdGhlIHBhcnNpbmcgd2lsbCBi
+ZSBkb25lDQpncmF0dWl0b3VzbHkuIExldCdzIGRyb3AgdGhpcyBjaGFuZ2UgYW5kIGFkZCBpdCB3
+aGVuIGFkZGluZyBzdXBwb3J0IGZvciBwYXJzaW5nDQpvY3RhbCBtb2RlIGluZm8gZnJvbSBzZmRw
+LiBJJ2xsIHByZXBhcmUgYSBwYXRjaCBmb3IgdGhpcy4NCg0KUGxlYXNlIHJlYmFzZSBvbiB0b3Ag
+b2Ygc3BpLW5vci9uZXh0LCBzL29jdG8vb2N0YWwgaW4gc3BpLW5vci5oIGFuZCBjb3JyZWN0IHlv
+dXINClMtby1iIHRhZyBhbmQgeW91J2xsIGhhdmUgbXkgUi1iIHRhZy4NCg0KVGhhbmtzIFlvZ2Vz
+aCwNCnRhDQo=
