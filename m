@@ -1,97 +1,42 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 1/2] dt-bindings: iio: light: isl29018: update power
- supply name
-Date: Tue, 11 Dec 2018 09:18:33 -0600
-Message-ID: <CAL_Jsq+sP_fsQaoT6FpZNRxjhPAhCcE8e-0xffUUxShcC2LuHw@mail.gmail.com>
-References: <1544425521-775-1-git-send-email-Anson.Huang@nxp.com>
- <20181210232358.GA11621@bogus> <DB3PR0402MB3916E1651ABC07F6F788B265F5A60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Subject: Re: [PATCH v2.2 24/34] dt-bindings: arm: Convert Rockchip board/soc
+ bindings to json-schema
+Date: Tue, 11 Dec 2018 09:21:09 -0600
+Message-ID: <CAL_Jsq+0+-yzB8mAodaK75Es6RPn=L5SCkFD7wgC-ZxaJtb3mg@mail.gmail.com>
+References: <20181203213223.16986-1-robh@kernel.org> <2386212.ILKoqq0Ivo@phil>
+ <CAL_JsqL9PyD=0jy+GF5g8ee-FO_ijvArnzEohuvqK5Od3yr7fg@mail.gmail.com> <30286035.tdc4tAKEPf@phil>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB3PR0402MB3916E1651ABC07F6F788B265F5A60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <30286035.tdc4tAKEPf@phil>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>
+To: "heiko@sntech.de" <heiko@sntech.de>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 10, 2018 at 7:40 PM Anson Huang <anson.huang@nxp.com> wrote:
+On Mon, Dec 10, 2018 at 4:45 PM Heiko Stuebner <heiko@sntech.de> wrote:
 >
-> Hi, Rob
+> From: Rob Herring <robh@kernel.org>
 >
-> Best Regards!
-> Anson Huang
+> Convert Rockchip SoC bindings to DT schema format using json-schema.
 >
-> > -----Original Message-----
-> > From: Rob Herring [mailto:robh@kernel.org]
-> > Sent: 2018=E5=B9=B412=E6=9C=8811=E6=97=A5 7:24
-> > To: Anson Huang <anson.huang@nxp.com>
-> > Cc: jic23@kernel.org; knaack.h@gmx.de; lars@metafoo.de;
-> > pmeerw@pmeerw.net; mark.rutland@arm.com; linux-iio@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; dl-linux-imx
-> > <linux-imx@nxp.com>
-> > Subject: Re: [PATCH V3 1/2] dt-bindings: iio: light: isl29018: update p=
-ower
-> > supply name
-> >
-> > On Mon, Dec 10, 2018 at 07:11:19AM +0000, Anson Huang wrote:
-> > > According to datasheet, the isl29018 has "vddd/vdda" power supply, an=
-d
-> > > isl29023/isl29035 ONLY has "vdd" power supply, update the power suppl=
-y
-> > > name with "vdd" and "vdda" according to datasheet to cover all device=
-s
-> > > and avoid confusion.
-> > >
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/iio/light/isl29018.txt | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/iio/light/isl29018.txt
-> > > b/Documentation/devicetree/bindings/iio/light/isl29018.txt
-> > > index b9bbde3..36f737d 100644
-> > > --- a/Documentation/devicetree/bindings/iio/light/isl29018.txt
-> > > +++ b/Documentation/devicetree/bindings/iio/light/isl29018.txt
-> > > @@ -15,7 +15,9 @@ Optional properties:
-> > >    Refer to interrupt-controller/interrupts.txt for generic interrupt=
- client
-> > >    node bindings.
-> > >
-> > > -  - vcc-supply: phandle to the regulator that provides power to the =
-sensor.
-> > > +  - vdd-supply: phandle to the regulator that provides vdd power to =
-the
-> > sensor.
-> > > +
-> > > +  - vdda-supply: phandle to the regulator that provides vdda power t=
-o the
-> > sensor.
-> >
-> > Is this in use? You can't just change things if it is.
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-rockchip@lists.infradead.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> [move to per-board entries and added recently added boards]
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+> Hi Rob,
 >
-> I did NOT see any "vcc" in folder drivers/iio/light/, so I think it is NO=
-T used at all,
-> so I take this chance to update it according to datasheet. Thanks.
+> thanks for the libyaml hint, now dtc does check my dts nicely and
+> emits quite a number of little complaints ;-) .
+>
+> Also that suggestion to move the original firefly release+beta boards
+> together was great and I just did that.
+>
+> Should look ok now, if so I'll apply it tomorrow.
 
-arch/arm/boot/dts/exynos5420-peach-pit.dts-629- light-sensor@44 {
-arch/arm/boot/dts/exynos5420-peach-pit.dts:630:         compatible =3D
-"isil,isl29018";
-arch/arm/boot/dts/exynos5420-peach-pit.dts-631-         reg =3D <0x44>;
-arch/arm/boot/dts/exynos5420-peach-pit.dts-632-         vcc-supply =3D
-<&tps65090_fet5>;
-arch/arm/boot/dts/exynos5420-peach-pit.dts-633- };
-
-arch/arm/boot/dts/exynos5800-peach-pi.dts-629-  light-sensor@44 {
-arch/arm/boot/dts/exynos5800-peach-pi.dts:630:          compatible =3D
-"isil,isl29018";
-arch/arm/boot/dts/exynos5800-peach-pi.dts-631-          reg =3D <0x44>;
-arch/arm/boot/dts/exynos5800-peach-pi.dts-632-          vcc-supply =3D
-<&tps65090_fet5>;
-arch/arm/boot/dts/exynos5800-peach-pi.dts-633-  };
-
-The rest of the dts files using this don't have a supply it seems. So
-you need permission from the Exynos folks if you want to just drop
-this. And also update their dts files.
-
-Rob
+LGTM
