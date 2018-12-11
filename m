@@ -1,123 +1,65 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v10 0/8] Introduce on-chip interconnect API
-Date: Tue, 11 Dec 2018 07:58:08 +0100
-Message-ID: <20181211065808.GB5161@kroah.com>
-References: <20181127180349.29997-1-georgi.djakov@linaro.org>
- <CAE=gft4jUjr3oDAZrM=-orLM-YoVAwa+e=crDDC_p9ArGE1dig@mail.gmail.com>
- <20181206145547.GA7884@kroah.com>
- <CAJZ5v0gP50tmq4ZzB7LLSaWGWjGjK31y=qFg5PS9B7c2XQ+DyQ@mail.gmail.com>
- <6923d6ed-e357-b083-1830-8396d788efe5@linaro.org>
- <CAJZ5v0jZMqFwYgnfRz04ELLRk=0U8Uv=acw0t9Azxk_HYL0gSQ@mail.gmail.com>
- <9a3aae02-c7e0-97e3-2330-af4fccee6c14@linaro.org>
+From: Priit Laes <plaes@plaes.org>
+Subject: Re: [linux-sunxi] [PATCH 0/8] This is a second edition of a series
+ that implements voltage
+Date: Tue, 11 Dec 2018 07:11:37 +0000
+Message-ID: <20181211071137.k3rqwctnibg6tyc2@plaes.org>
+References: <cover.4110554ae84987dedb8b58888a8a63d6b7f98c72.1544466940.git-series.plaes@plaes.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <9a3aae02-c7e0-97e3-2330-af4fccee6c14@linaro.org>
+In-Reply-To: <cover.4110554ae84987dedb8b58888a8a63d6b7f98c72.1544466940.git-series.plaes@plaes.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, evgreen@chromium.org, Linux PM <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, bjorn.andersson@linaro.org, Amit Kucheria <amit.kucheria@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, abailon@baylibre.com, maxime.ripard@bootlin.com, Thierry Reding <thierry.reding@gmail.com>, ksitaraman@nvidia.com, sanjayc@nvidia.com, devicetree
+To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Olliver Schinagl <oliver@schinagl.nl>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 10, 2018 at 04:50:00PM +0200, Georgi Djakov wrote:
-> On 12/10/18 13:00, Rafael J. Wysocki wrote:
-> > On Mon, Dec 10, 2018 at 11:18 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
-> >>
-> >> Hi Rafael,
-> >>
-> >> On 12/10/18 11:04, Rafael J. Wysocki wrote:
-> >>> On Thu, Dec 6, 2018 at 3:55 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >>>>
-> >>>> On Wed, Dec 05, 2018 at 12:41:35PM -0800, Evan Green wrote:
-> >>>>> On Tue, Nov 27, 2018 at 10:03 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
-> >>>>>>
-> >>>>>> Modern SoCs have multiple processors and various dedicated cores (video, gpu,
-> >>>>>> graphics, modem). These cores are talking to each other and can generate a
-> >>>>>> lot of data flowing through the on-chip interconnects. These interconnect
-> >>>>>> buses could form different topologies such as crossbar, point to point buses,
-> >>>>>> hierarchical buses or use the network-on-chip concept.
-> >>>>>>
-> >>>>>> These buses have been sized usually to handle use cases with high data
-> >>>>>> throughput but it is not necessary all the time and consume a lot of power.
-> >>>>>> Furthermore, the priority between masters can vary depending on the running
-> >>>>>> use case like video playback or CPU intensive tasks.
-> >>>>>>
-> >>>>>> Having an API to control the requirement of the system in terms of bandwidth
-> >>>>>> and QoS, so we can adapt the interconnect configuration to match those by
-> >>>>>> scaling the frequencies, setting link priority and tuning QoS parameters.
-> >>>>>> This configuration can be a static, one-time operation done at boot for some
-> >>>>>> platforms or a dynamic set of operations that happen at run-time.
-> >>>>>>
-> >>>>>> This patchset introduce a new API to get the requirement and configure the
-> >>>>>> interconnect buses across the entire chipset to fit with the current demand.
-> >>>>>> The API is NOT for changing the performance of the endpoint devices, but only
-> >>>>>> the interconnect path in between them.
-> >>>>>
-> >>>>> For what it's worth, we are ready to land this in Chrome OS. I think
-> >>>>> this series has been very well discussed and reviewed, hasn't changed
-> >>>>> much in the last few spins, and is in good enough shape to use as a
-> >>>>> base for future patches. Georgi's also done a great job reaching out
-> >>>>> to other SoC vendors, and there appears to be enough consensus that
-> >>>>> this framework will be usable by more than just Qualcomm. There are
-> >>>>> also several drivers out on the list trying to add patches to use this
-> >>>>> framework, with more to come, so it made sense (to us) to get this
-> >>>>> base framework nailed down. In my experiments this is an important
-> >>>>> piece of the overall power management story, especially on systems
-> >>>>> that are mostly idle.
-> >>>>>
-> >>>>> I'll continue to track changes to this series and we will ultimately
-> >>>>> reconcile with whatever happens upstream, but I thought it was worth
-> >>>>> sending this note to express our "thumbs up" towards this framework.
-> >>>>
-> >>>> Looks like a v11 will be forthcoming, so I'll wait for that one to apply
-> >>>> it to the tree if all looks good.
-> >>>
-> >>> I'm honestly not sure if it is ready yet.
-> >>>
-> >>> New versions are coming on and on, which may make such an impression,
-> >>> but we had some discussion on it at the LPC and some serious questions
-> >>> were asked during it, for instance regarding the DT binding introduced
-> >>> here.  I'm not sure how this particular issue has been addressed here,
-> >>> for example.
-> >>
-> >> There have been no changes in bindings since v4 (other than squashing
-> >> consumer and provider bindings into a single patch and fixing typos).
-> >>
-> >> The last DT comment was on v9 [1] where Rob wanted confirmation from
-> >> other SoC vendors that this works for them too. And now we have that
-> >> confirmation and there are patches posted on the list [2].
-> > 
-> > OK
-> > 
-> >> The second thing (also discussed at LPC) was about possible cases where
-> >> some consumer drivers can't calculate how much bandwidth they actually
-> >> need and how to address that. The proposal was to extend the OPP
-> >> bindings with one more property, but this is not part of this patchset.
-> >> It is a future step that needs more discussion on the mailing list. If a
-> >> driver really needs some bandwidth data now, it should be put into the
-> >> driver and not in DT. After we have enough consumers, we can discuss
-> >> again if it makes sense to extract something into DT or not.
-> > 
-> > That's fine by me.
-> > 
-> > Admittedly, I have some reservations regarding the extent to which
-> > this approach will turn out to be useful in practice, but I guess as
-> > long as there is enough traction, the best way to find out it to try
-> > and see. :-)
-> > 
-> > From now on I will assume that this series is going to be applied by Greg.
+On Mon, Dec 10, 2018 at 08:42:11PM +0200, Priit Laes wrote:
+> ramping for AXP209 DCDC2 and LDO3 regulators and software
+> based soft-start for AXP209 LDO3 regulator.
+
+Ugh.. managed to botch this series. I'll send a fixed one
+today.
+
 > 
-> That was the initial idea, but the problem is that there is a recent
-> change in the cmd_db API (needed by the sdm845 provider driver), which
-> is going through arm-soc/qcom/drivers. So either Greg pulls also the
-> qcom-drivers-for-4.21 tag from Andy or the whole series goes via Olof
-> and Arnd. Maybe there are other options. I don't have any preference and
-> don't want to put extra burden on any maintainers, so i am ok with what
-> they prefer.
-
-Let me take the time later this week to review the code, which I haven't
-done in a while...
-
-thanks,
-
-greg k-h
+> Both features are needed to work around a PMIC shutdown when
+> toggling LDO3 on certain boards with high capacitance on the
+> LDO3 output.
+> 
+> Similar features (or workarounds) have been also implemented
+> on u-boot side [1].
+> 
+> Changes since v1:
+> - Rebased on top of next and dropped already merged patches.
+> - Dropped LDO4 full range devicetree change for Lime2 (prev patch 9)
+>   in favor of general pin-bank regulator dependency [2].
+> - Fixed paths in devicetree bindings (patch 3)
+> - Added note about software based soft-start for LDO3 (patch 5)
+> 
+> [1] https://lists.denx.de/pipermail/u-boot/2018-November/348612.html
+> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-December/618459.html
+> 
+> Olliver Schinagl (8):
+>   mfd: axp20x: name voltage ramping define properly
+>   regulator: axp20x: add support for set_ramp_delay for AXP209
+>   dt-bindings: mfd: axp20x: add support for regulator-ramp-delay for AXP209
+>   regulator: axp20x: add software based soft_start for AXP209 LDO3
+>   dt-bindings: mfd: axp20x: Add software based soft_start for AXP209 LDO3
+>   regulator: dts: enable soft-start and ramp delay for the OLinuXino Lime2
+>   mfd: axp20x: Clean up included headers
+>   mfd: axp20x: use explicit bit defines
+> 
+>  Documentation/devicetree/bindings/mfd/axp20x.txt |   9 +-
+>  arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts  |   2 +-
+>  drivers/mfd/axp20x.c                             |  13 +-
+>  drivers/regulator/axp20x-regulator.c             | 142 +++++++++++++++-
+>  include/linux/mfd/axp20x.h                       |   4 +-
+>  5 files changed, 161 insertions(+), 9 deletions(-)
+> 
+> base-commit: 14cf8c1d5b90a0cf6a8ba51ef59db8da8c7a2622
+> -- 
+> git-series 0.9.1
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> For more options, visit https://groups.google.com/d/optout.
