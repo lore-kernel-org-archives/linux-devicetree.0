@@ -1,76 +1,95 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v3 3/4] i2c: Add Actions Semiconductor Owl family S700
- I2C support
-Date: Tue, 11 Dec 2018 21:54:44 +0100
-Message-ID: <20181211205444.rpfn5cmsndy4y2lv@ninjato>
-References: <20181211080448.24007-1-pn@denx.de>
- <20181211080448.24007-4-pn@denx.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 3/5 v8] regulator: fixed/gpio: Update device tree bindings
+Date: Tue, 11 Dec 2018 22:24:26 +0100
+Message-ID: <20181211212428.28327-4-linus.walleij@linaro.org>
+References: <20181211212428.28327-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="45isqxjr4vjntdmi"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181211080448.24007-4-pn@denx.de>
+In-Reply-To: <20181211212428.28327-1-linus.walleij@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Parthiban Nallathambi <pn@denx.de>
-Cc: manivannan.sadhasivam@linaro.org, afaerber@suse.de, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux@cubietech.com, thomas.liau@actions-semi.com, linux-actions@lists.infradead.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Charles Keepax <ckeepax@opensource.cirrus.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Deprecate the open drain binding for fixed regulator and indicate
+that we prefer this to be passed in the GPIO phandle flags.
 
---45isqxjr4vjntdmi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Clarify that the line inversion semantics for fixed and GPIO
+regulators completely overrides the active low flags in the
+phandle flags.
 
-On Tue, Dec 11, 2018 at 09:04:47AM +0100, Parthiban Nallathambi wrote:
-> Add S700 to the list of devices supported by Owl I2C driver.
->=20
-> Add Actions Semiconductor Owl family S700 I2C driver.
->=20
-> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Unfortunately this can not be changed to prefer that we pass
+the flags in the phandle: the bindings have been specified and
+deployed such that the presence/absence of this flag and only
+that controls the line inversion semantics. The crucial semantic
+is that the absence of the flag means the core will assume
+the line is active low, which in GPIO terms is an exception,
+as GPIO lines are normally assumed to be active high.
 
-Rob, is this okay or should we drop this patch and update the DT to
-contain first the s700 compatible and then s900 as fallback?
+This special device tree semantic cannot be changed without
+introducing a whole new compatible string for the fixed and
+GPIO regulators, so we just contain the situation.
 
-> ---
->  drivers/i2c/busses/i2c-owl.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/i2c/busses/i2c-owl.c b/drivers/i2c/busses/i2c-owl.c
-> index 96b4572e6d9c..b6b5a495118b 100644
-> --- a/drivers/i2c/busses/i2c-owl.c
-> +++ b/drivers/i2c/busses/i2c-owl.c
-> @@ -475,6 +475,7 @@ static int owl_i2c_probe(struct platform_device *pdev)
->  }
-> =20
->  static const struct of_device_id owl_i2c_of_match[] =3D {
-> +	{ .compatible =3D "actions,s700-i2c" },
->  	{ .compatible =3D "actions,s900-i2c" },
->  	{ /* sentinel */ }
->  };
-> --=20
-> 2.17.2
->=20
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v7->v8:
+- Rebase on recent fixes on the for-4.21 branch.
+ChangeLog v6->v7:
+- Resend with the rest.
+ChangeLog v3->v6:
+- Resending.
+ChangeLog v2->v3:
+- Resending.
+ChangeLog v1->v2:
+- Collect Rob's ACK.
+---
+ .../bindings/regulator/fixed-regulator.txt          | 13 +++++++++++--
+ .../bindings/regulator/gpio-regulator.txt           |  4 ++++
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
---45isqxjr4vjntdmi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlwQJA8ACgkQFA3kzBSg
-KbYC5w//aduy+YzaN8BUpjKgg9R2sXqoXAc22xC6MfkvASLpCMVL2mdw7eNnUgOr
-nkTSKS633l8l1yDzzFdreOMwk0LTYnJzEFwKKAUr/zDHmGZYfWjpx/cS8MhCHv+K
-48V+gniY04EpacNvTmQssPGEIF6KDmdCxmacqBISLwVe1Npx5AF3IUxyosoyysv4
-+ANDuF+Z3S6yOWnQcoXLHJ8iViSSSPXqoaJ0Jm+bUgZB+5osQbSL+viKsPze2aLA
-30wTLJmm4qG3fHewozjO3qxkTTu1JTlvAPZmNB0g8jYRoZ/zlgr1FYC5I1B1ET/K
-L8MKvLQfqPjczCJ/4joyl1TyVoikaTg98LYTghcnBe0P/pxSQknz+QHTAXwfsJU+
-4xKOPyMpEPSjfIdmcWiWVhd1zXW3/R/lU33Tiw8VumMhK/oan9GHuef9IVmtFMbE
-wRf9eR9JXJgIjNObQJ8c/EKy3PnGjwLOFCt6bSPJ7llGstE6JvcUYlZXbxQp4kNa
-IdLiOUFxwykCOxrnS0ZuMUSwJaKRxQQrteD+dEuH/lQEiOcD8iAPDYTRxdajoOPB
-Ga5Uw4VvM4oShExTlxKfPkhO4tv7NZ503SEFBEnpMo0SFFny+MVCIAERJmB2QkL2
-QZdp7gZpsfNxzrNueaUtL92mLNrmrfmhDwQ8rE6tTl8Jb+cHMxI=
-=cRo4
------END PGP SIGNATURE-----
-
---45isqxjr4vjntdmi--
+diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+index 0c2a6c8a1536..a7a1cd0dfa6e 100644
+--- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+@@ -8,10 +8,19 @@ Optional properties:
+ - gpio: gpio to use for enable control
+ - startup-delay-us: startup time in microseconds
+ - enable-active-high: Polarity of GPIO is Active high
+-If this property is missing, the default assumed is Active low.
++  If this property is missing, the default assumed is Active low.
++  If the phandle flags to the GPIO handle also flag the line as active
++  low or high, that will be ignored for fixed regulators and the
++  presence or absence of this flag solely controls the inversion
++  semantics.
++-vin-supply: Input supply name.
++
++Deprecated properties:
+ - gpio-open-drain: GPIO is open drain type.
+   If this property is missing then default assumption is false.
+--vin-supply: Input supply name.
++  Do not use this property in new device trees: instead use the
++  phandle flag to indicate to the GPIO provider that the line
++  should be handled as open drain.
+ 
+ Any property defined as part of the core regulator
+ binding, defined in regulator.txt, can also be used.
+diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+index 1f496159e2bb..8fef3e5358a2 100644
+--- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+@@ -14,6 +14,10 @@ Optional properties:
+ 			  defualt is LOW if nothing is specified.
+ - startup-delay-us	: Startup time in microseconds.
+ - enable-active-high	: Polarity of GPIO is active high (default is low).
++			  If the phandle flags to the GPIO handle also flag the line as
++			  active low or high, that will be ignored for fixed regulators
++			  and the presence or absence of this flag solely controls the
++			  inversion semantics.
+ - regulator-type	: Specifies what is being regulated, must be either
+ 			  "voltage" or "current", defaults to voltage.
+ 
+-- 
+2.19.2
