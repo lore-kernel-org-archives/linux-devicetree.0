@@ -1,54 +1,68 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 1/3] dt-bindings: imx-ocotp: Add i.MX6ULL/ULZ support
-Date: Tue, 11 Dec 2018 14:51:11 +0100
-Message-ID: <1544536273-17909-2-git-send-email-stefan.wahren@i2se.com>
-References: <1544536273-17909-1-git-send-email-stefan.wahren@i2se.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v6 0/3] device property: Add fwnode_get_name() helper
+Date: Tue, 11 Dec 2018 15:59:25 +0200
+Message-ID: <20181211135925.GD10650@smile.fi.intel.com>
+References: <20181211131451.52832-1-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1544536273-17909-1-git-send-email-stefan.wahren@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-imx@nxp.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181211131451.52832-1-heikki.krogerus@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Since the i.MX6ULL/ULZ only supports 8 OTP banks we need to introduce a new
-compatible.
+On Tue, Dec 11, 2018 at 04:14:48PM +0300, Heikki Krogerus wrote:
+> Hi,
+> 
+> Andy, I dropped you Reviewed-by tag because of the last change to this
+> series, so if you could check these again I would much appreciate.
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+They all looks fine,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-index 792bc5f..455ebbb 100644
---- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-+++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-@@ -1,7 +1,7 @@
- Freescale i.MX6 On-Chip OTP Controller (OCOTP) device tree bindings
- 
- This binding represents the on-chip eFuse OTP controller found on
--i.MX6Q/D, i.MX6DL/S, i.MX6SL, i.MX6SX, i.MX6UL and i.MX6SLL SoCs.
-+i.MX6Q/D, i.MX6DL/S, i.MX6SL, i.MX6SX, i.MX6UL, i.MX6ULL/ULZ and i.MX6SLL SoCs.
- 
- Required properties:
- - compatible: should be one of
-@@ -9,6 +9,7 @@ Required properties:
- 	"fsl,imx6sl-ocotp" (i.MX6SL), or
- 	"fsl,imx6sx-ocotp" (i.MX6SX),
- 	"fsl,imx6ul-ocotp" (i.MX6UL),
-+	"fsl,imx6ull-ocotp" (i.MX6ULL/ULZ),
- 	"fsl,imx7d-ocotp" (i.MX7D/S),
- 	"fsl,imx6sll-ocotp" (i.MX6SLL),
- 	followed by "syscon".
+> 
+> Changes since v5:
+> - No longer reading "name" device property as fallback.
+> 
+> Changes since v4:
+> - No changes. There was an extra patch in v3. This was just a resend
+>   of v3 without that extra patch.
+> 
+> Changes since v3:
+> - I'm now returning -EOVERFLOW if the buffer is not big enough as
+>   proposed by Andy.
+> 
+> This is the cover letter from v3:
+> 
+> This is the third version of my proposal for this helper. The
+> second version can be checked here:
+> https://lkml.org/lkml/2018/11/8/1005
+> 
+> I'm now passing the length as proposed by both Rob and Andy. I'm also
+> leaving the .get_named_child_node fwnode op untouched.
+> 
+> --
+> heikki
+> 
+> 
+> Heikki Krogerus (3):
+>   device property: Introduce fwnode_get_name()
+>   ACPI: property: Add acpi_fwnode_name()
+>   of/property: Add of_fwnode_name()
+> 
+>  drivers/acpi/property.c  | 28 ++++++++++++++++++++++++++++
+>  drivers/base/property.c  | 17 +++++++++++++++++
+>  drivers/of/property.c    | 13 +++++++++++++
+>  include/linux/fwnode.h   |  3 +++
+>  include/linux/property.h |  2 ++
+>  5 files changed, 63 insertions(+)
+> 
+> -- 
+> 2.19.2
+> 
+
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
