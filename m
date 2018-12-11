@@ -1,194 +1,49 @@
-From: Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH v8 0/2] media: platform: Add Aspeed Video Engine driver
-Date: Tue, 11 Dec 2018 10:56:59 -0600
-Message-ID: <1544547421-25724-1-git-send-email-eajames@linux.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, hverkuil@xs4all.nl, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, Eddie James <eajames@linux.vnet.ibm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: gpu: mali-midgard: Add resets property
+Date: Tue, 11 Dec 2018 10:58:23 -0600
+Message-ID: <CAL_JsqK9nDaOOe3yjHAdaH92ds=_cudbq-wQee+YBPaCHEE-HQ@mail.gmail.com>
+References: <20181210132227.29262-1-narmstrong@baylibre.com>
+ <20181210132227.29262-2-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20181210132227.29262-2-narmstrong@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-amlogic@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Eddie James <eajames@linux.vnet.ibm.com>
-
-The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
-can capture and compress video data from digital or analog sources. With
-the Aspeed chip acting as a service processor, the Video Engine can
-capture the host processor graphics output.
-
-This series adds a V4L2 driver for the VE, providing the usual V4L2 streaming
-interface by way of videobuf2. Each frame, the driver triggers the hardware to
-capture the host graphics output and compress it to JPEG format.
-
-v4l2-compliance SHA: d039b47a108596ca004b11e52989054882d45888, 32 bits
-
-Compliance test for device /dev/video0:
-
-Driver Info:
-	Driver name      : aspeed-video
-	Card type        : Aspeed Video Engine
-	Bus info         : platform:aspeed-video
-	Driver version   : 4.19.6
-	Capabilities     : 0x85200001
-		Video Capture
-		Read/Write
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps      : 0x05200001
-		Video Capture
-		Read/Write
-		Streaming
-		Extended Pix Format
-
-Required ioctls:
-	test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-	test second /dev/video0 open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 1 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK
-	test VIDIOC_DV_TIMINGS_CAP: OK
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls (Input 0):
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-	test VIDIOC_QUERYCTRL: OK
-	test VIDIOC_G/S_CTRL: OK
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-		warn: v4l2-test-controls.cpp(853): V4L2_CID_DV_RX_POWER_PRESENT not found for input 0
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 3 Private Controls: 0
-
-Format ioctls (Input 0):
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-	test VIDIOC_G/S_PARM: OK
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK
-	test VIDIOC_TRY_FMT: OK
-	test VIDIOC_S_FMT: OK
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK (Not Supported)
-
-Codec ioctls (Input 0):
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls (Input 0):
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-	test VIDIOC_EXPBUF: OK
-	test Requests: OK (Not Supported)
-
-Test input 0:
-
-Streaming ioctls:
-	test read/write: OK
-	test blocking wait: OK
-	test MMAP: OK                                     
-	test USERPTR: OK (Not Supported)
-	test DMABUF: Cannot test, specify --expbuf-device
-
-Total: 48, Succeeded: 48, Failed: 0, Warnings: 1
-
-I'm unable to run linux-next or the media tree as our system doesn't boot
-without quite a few patches that aren't yet upstreamed, so I can't grab the
-fix for that warning Hans mentioned.
-
-Changes since v7:
- - Fix the check for sending the source change event to include acquiring or
-   losing a signal without changing resolution
- - Fix return value of query_timings to reflect signal status
- - Added and improved a few comments
-
-Changes since v6:
- - Refactor open/start process such that the file handle can be opened without
-   a video signal present
- - Added standards and capabilities
- - Removed used of VB2_BUF_FLAG_LAST
- - Added a few comments
- - Removed a couple of functions that were only used once
- - Removed client counter
-
-Changes since v5:
- - Rework resolution change and v4l2 timings functions again with active and
-   detected timings.
- - Renamed a few things.
- - Fixed polarities in the timings.
-
-Changes since v4:
- - Set real min and max resolution in enum_dv_timings
- - Add check for vb2_is_busy before settings the timings
- - Set max frame rate to the actual max rather than max + 1
- - Correct the input status to 0.
- - Rework resolution change to only set the relevant h/w regs during startup or
-   when set_timings is called.
-
-Changes since v3:
- - Switch update reg function to use u32 clear rather than unsigned long mask
- - Add timing information from host VGA signal
- - Fix binding documentation mispelling
- - Fix upper case hex values
- - Add wait_prepare and wait_finish
- - Set buffer state to queued (rather than error) if streaming fails to start
- - Switch engine busy print statement to error
- - Removed a couple unecessary type assignments in v4l2 ioctls
- - Added query_dv_timings, fixed get_dv_timings
- - Corrected source change event to fire if and only if size actually changes
- - Locked open and release
-
-Changes since v2:
- - Switch to streaming interface. This involved a lot of changes.
- - Rework memory allocation due to using videobuf2 buffers, but also only
-   allocate the necessary size of source buffer rather than the max size
-
-Changes since v1:
- - Removed le32_to_cpu calls for JPEG header data
- - Reworked v4l2 ioctls to be compliant.
- - Added JPEG controls
- - Updated devicetree docs according to Rob's suggestions.
- - Added myself to MAINTAINERS
-
-Eddie James (2):
-  dt-bindings: media: Add Aspeed Video Engine binding documentation
-  media: platform: Add Aspeed Video Engine driver
-
- .../devicetree/bindings/media/aspeed-video.txt     |   26 +
- MAINTAINERS                                        |    8 +
- drivers/media/platform/Kconfig                     |    9 +
- drivers/media/platform/Makefile                    |    1 +
- drivers/media/platform/aspeed-video.c              | 1729 ++++++++++++++++++++
- 5 files changed, 1773 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
- create mode 100644 drivers/media/platform/aspeed-video.c
-
--- 
-1.8.3.1
+T24gTW9uLCBEZWMgMTAsIDIwMTggYXQgNzoyMiBBTSBOZWlsIEFybXN0cm9uZyA8bmFybXN0cm9u
+Z0BiYXlsaWJyZS5jb20+IHdyb3RlOgo+Cj4gVGhlIEFtbG9naWMgQVJNIE1hbGkgTWlkZ2FyZCBy
+ZXF1aXJlcyByZXNldCBjb250cm9scyB0byBwb3dlciBvbiBhbmQKPiBzb2Z0d2FyZSByZXNldCB0
+aGUgR1BVLCBhZGRzIHRoZXNlIGFzIG9wdGlvbmFsIGluIHRoZSBiaW5kaW5ncy4KPgo+IFNpZ25l
+ZC1vZmYtYnk6IE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT4KPiAtLS0K
+PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJk
+LnR4dCB8IDIgKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQo+Cj4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJtLG1hbGktbWlk
+Z2FyZC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FybSxtYWxp
+LW1pZGdhcmQudHh0Cj4gaW5kZXggMThhMmNkZTJlNWYzLi4yNGQ4M2VjOTUyZjEgMTAwNjQ0Cj4g
+LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRn
+YXJkLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJt
+LG1hbGktbWlkZ2FyZC50eHQKPiBAQCAtMzcsNiArMzcsOCBAQCBPcHRpb25hbCBwcm9wZXJ0aWVz
+Ogo+ICAtIG9wZXJhdGluZy1wb2ludHMtdjIgOiBSZWZlciB0byBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3Mvb3BwL29wcC50eHQKPiAgICBmb3IgZGV0YWlscy4KPgo+ICstIHJlc2V0
+cyA6IFBoYW5kbGUgdG8gdGhlIHJlc2V0IGNvbnRyb2xzIGZvciB0aGUgTWFsaSBNaWRnYXJkIGRl
+dmljZS4KCkhvdyBtYW55PyBTb3VuZHMgbGlrZSAxLCBidXQgdGhlIGR0cyBoYXMgMi4gVGhlcmUn
+cyBhbHNvIGEgc2ltaWxhcgpwYXRjaCBmb3IgQWxsd2lubmVyWzFdLiBJIGRvbid0IHdhbnQgdG8g
+c2VlIGEgZGlmZmVyZW50IG51bWJlciBvZgpyZXNldHMgYW5kIGRpZmZlcmVudCBuYW1lcyBmb3Ig
+ZWFjaCB2ZW5kb3IuIFNvIGZpcnN0IGZpZ3VyZSBvdXQgaG93Cm1hbnkgcmVzZXRzIHRoZSBJUCBi
+bG9jayBoYXMuIFlvdSdsbCBoYXZlIHRvIGZpbmQgc29tZW9uZSB3aXRoIGFjY2Vzcwp0byB0aGUg
+VFJNLgoKUm9iCgpbMV0gaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8xMDAzNjU0
+LwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
