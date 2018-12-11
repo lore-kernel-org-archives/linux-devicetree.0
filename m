@@ -1,150 +1,95 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] kbuild: Add support for DT binding schema checks
-Date: Tue, 11 Dec 2018 12:35:26 -0600
-Message-ID: <CAL_JsqJ_1RukAZx5tCpp+X8mdNuOT6LTAdYOzN5UyhRK6SAo2Q@mail.gmail.com>
-References: <20181210203225.11179-1-robh@kernel.org> <CAK7LNAThtAOy4PQiYZ2X0oWrHdcLi7on8ctSXJ=bfT0HNh7NFQ@mail.gmail.com>
- <CAL_JsqL7n2sjLbJVieVDQ4YtKMi2COCaijO9ZNu7ggzmXXxLEg@mail.gmail.com> <CAK7LNARkr-g9ae+74QE6GMuxLM0JPgEqYOkwb0njXcb9-=nBdQ@mail.gmail.com>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH 2/2] ARM: dts: aspeed: Add KCS support for LPC BMC
+Date: Tue, 11 Dec 2018 10:39:40 -0800
+Message-ID: <584ddf6f-2e0c-5c1c-df06-bdd37ecd2489@linux.intel.com>
+References: <20181210200753.3018124-1-vijaykhemka@fb.com>
+ <20181210200753.3018124-3-vijaykhemka@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNARkr-g9ae+74QE6GMuxLM0JPgEqYOkwb0njXcb9-=nBdQ@mail.gmail.com>
+In-Reply-To: <20181210200753.3018124-3-vijaykhemka@fb.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, ARM-SoC Maintainers <arm@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Michal Marek <michal.lkml@markovi.net>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+To: Vijay Khemka <vijaykhemka@fb.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 11, 2018 at 10:03 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> On Wed, Dec 12, 2018 at 12:13 AM Rob Herring <robh@kernel.org> wrote:
->
-> >
-> > > > +$(obj)/%.example.dts: $(src)/%.yaml FORCE
-> > > > +       $(call if_changed,chk_binding)
-> > > > +
-> > > > +DT_TMP_SCHEMA := .schema.yaml.tmp
-> > >
-> > >
-> > > BTW, why does this file start with a period?
-> > > What is the meaning of '.tmp' extension?
-> >
-> > Nothing really. Just named it something so it gets cleaned and ignored by git.
->
->
-> It is cleaned whatever file name you use.
->
->
-> See scripts/Makefile.clean
->
-> __clean-files   := $(extra-y) $(extra-m) $(extra-)       \
->                    $(always) $(targets) $(clean-files)   \
->                    $(hostprogs-y) $(hostprogs-m) $(hostprogs-) \
->                    $(hostlibs-y) $(hostlibs-m) $(hostlibs-) \
->                    $(hostcxxlibs-y) $(hostcxxlibs-m)
->
->
-> $(extra-y) is cleaned.
+Hi Vijay,
 
-True.
+On 12/10/2018 12:07 PM, Vijay Khemka wrote:
+> Added kcs device support for lpc BMC.
+> 
+> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+> ---
+>   arch/arm/boot/dts/aspeed-g5.dtsi | 29 ++++++++++++++++++++++++++++-
+>   1 file changed, 28 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+> index d107459fc0f8..1bd48655bacb 100644
+> --- a/arch/arm/boot/dts/aspeed-g5.dtsi
+> +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+> @@ -330,8 +330,35 @@
+>   				ranges = <0x0 0x1e789000 0x1000>;
+>   
+>   				lpc_bmc: lpc-bmc@0 {
+> -					compatible = "aspeed,ast2500-lpc-bmc";
+> +					compatible = "aspeed,ast2500-lpc-bmc, "simple-mfd", "syscon"";
+>   					reg = <0x0 0x80>;
+> +					reg-io-width = <4>;
+> +
+> +					#address-cells = <1>;
+> +					#size-cells = <1>;
+> +					ranges = <0x0 0x0 0x80>;
+> +
+> +					kcs1: kcs1@0 {
+> +						compatible = "aspeed,ast2500-kcs-bmc";
+> +						reg = <0x0 0x80>;
 
->
->
-> You are adding *.example.dts to .gitignore
->
-> Why not "schema.yaml" ?
+This reg property isn't needed at here because kcs_bmc_aspeed module
+reads regmap from the parent node. Please check below code in the
+driver code.
 
-Okay. I'll do "processed-schema.yaml" to give a bit better name of
-what it contains.
+priv->map = syscon_node_to_regmap(dev->parent->of_node);
 
->
-> > > > +extra-y += $(DT_TMP_SCHEMA)
-> > > > +
-> > > > +quiet_cmd_mk_schema = SCHEMA  $@
-> > > > +      cmd_mk_schema = mkdir -p $(obj); \
-> > > > +                      rm -f $@; \
-> > > > +                      $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(filter-out FORCE, $^)
-> > >
-> > >
-> > > "mkdir -p $(obj)" is redundant.
-> > >
-> > >
-> > > Why is 'rm -f $@' necessary ?
-> > > Can't dt-mk-schema overwrite the output file?
-> >
-> > It is for error case when the output file is not generated. I can
-> > handle this within dt-mk-schema instead.
-> > > > +DT_DOCS = $(shell cd $(srctree)/$(src) && find * -name '*.yaml')
-> > > > +DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
-> > > > +
-> > > > +extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
-> > > > +extra-y += $(patsubst $(src)/%.yaml,%.example.dtb, $(DT_SCHEMA_FILES))
-> > >
-> > >
-> > >
-> > > I assume you intentionally did not do like this:
-> > >
-> > > extra-y += $(patsubst %.yaml,%.example.dtb, $(DT_DOCS))
-> > >
-> > > From the commit description, DT_SCHEMA_FILES might be overridden by a user.
-> > > So, I think this is OK.
-> > >
-> > >
-> > >
-> > >
-> > > > +$(obj)/$(DT_TMP_SCHEMA): | $(addprefix $(obj)/,$(patsubst $(src)/%.yaml,%.example.dtb, $(DT_SCHEMA_FILES)))
-> > >
-> > > I do not understand this line.
-> > > Why is it necessary?
-> > >
-> > > *.example.dtb files are generated anyway
-> > > since they are listed in extra-y.
-> >
-> > It is enforcing the ordering. Without it, the binding checks and
-> > building .schema.yaml.tmp happen in parallel because both only have
-> > the source files as dependencies. The '|' keeps the dependencies out
-> > of the dependency list($^).
->
->
-> What kind problem would you see if
-> the binding checks and building .schema.yaml.tmp
-> happen in parallel?
+> +						interrupts = <8>;
+> +						kcs_chan = <1>;
+> +						status = "disabled";
+> +					};
+> +					kcs2: kcs2@0 {
+> +						compatible = "aspeed,ast2500-kcs-bmc";
+> +						reg = <0x0 0x80>;
 
-In case of no errors in the binding docs, it doesn't matter. If there
-are errors, I don't want the dtbs validation to run if any schema
-doesn't validate. However, I played around with this a bit more and it
-seems like having the examples' dts/dtb in extra-y prevents that from
-happening. Does that match your expections? If so, then I think we can
-remove the dependency.
+ditto.
 
-Here's an example.
+> +						interrupts = <8>;
+> +						kcs_chan = <2>;
+> +						status = "disabled";
+> +					};
+> +					kcs3: kcs3@0 {
+> +						compatible = "aspeed,ast2500-kcs-bmc";
+> +						reg = <0x0 0x80>;
 
-  SCHEMA  Documentation/devicetree/bindings/.schema.yaml.tmp
-  CHKDT   Documentation/devicetree/bindings/arm/vt8500.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/zte.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/ti/nspire.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/spear.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/altera.yaml
-warning: no schema found in file:
-../Documentation/devicetree/bindings/arm/xilinx.yaml
-/home/rob/proj/git/linux-2.6/Documentation/devicetree/bindings/arm/xilinx.yaml:
-ignoring, error in schema 'onOf'
-  CHKDT   Documentation/devicetree/bindings/arm/sti.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/qcom.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/primecell.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/cpus.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/sirf.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/calxeda.yaml
-  CHKDT   Documentation/devicetree/bindings/arm/xilinx.yaml
-  CHKDT   Documentation/devicetree/bindings/example-schema.yaml
-/home/rob/proj/git/linux-2.6/Documentation/devicetree/bindings/arm/xilinx.yaml:
-properties:compatible:onOf: 'onOf' is not one of ['$ref',
-'additionalItems', 'allOf', 'const', 'contains', 'default',
-'dependencies', 'description', 'enum', 'items', 'minItems', 'minimum',
-'maxItems', 'maximum', 'not', 'oneOf', 'pattern', 'patternProperties',
-'properties', 'required', 'type', 'typeSize']
-make[2]: *** [../Documentation/devicetree/bindings/Makefile:12:
-Documentation/devicetree/bindings/arm/xilinx.example.dts] Error 1
+ditto.
 
-Rob
+> +						interrupts = <8>;
+> +						kcs_chan = <3>;
+> +						status = "disabled";
+> +					};
+>   				};
+>   
+>   				lpc_host: lpc-host@80 {
+> 
+
+You might need to add kcs4 as a sub-node under lpc_host like below:
+
+kcs4: kcs4@0 {
+	compatible = "aspeed,ast2500-kcs-bmc";
+	interrupts = <8>;
+	kcs_chan = <4>;
+	status = "disabled";
+};
+
+This would be uses as an SMM channel.
+
+-Jae
