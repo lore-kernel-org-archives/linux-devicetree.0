@@ -1,103 +1,103 @@
-From: Felipe Balbi <balbi@kernel.org>
-Subject: Re: [PATCH v1 2/2] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Tue, 11 Dec 2018 13:46:51 +0200
-Message-ID: <87k1kgmgk4.fsf@linux.intel.com>
-References: <1544445555-17325-1-git-send-email-pawell@cadence.com> <1544445555-17325-3-git-send-email-pawell@cadence.com> <5C0F85E4.10609@ti.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 01/19] dt-bindings: clock: tegra124-dfll: Update DFLL
+ binding for PWM regulator
+Date: Tue, 11 Dec 2018 11:52:04 +0000
+Message-ID: <7c5f6f34-43ba-e696-5cbc-2bd4d5303d91@nvidia.com>
+References: <20181204092548.3038-1-josephl@nvidia.com>
+ <20181204092548.3038-2-josephl@nvidia.com>
+ <af1211f0-dda0-bdde-f320-03e54f82d7e1@nvidia.com>
+ <20181211091514.GA29064@pdeschrijver-desktop.Nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5C0F85E4.10609@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, Pawel Laszczak <pawell@cadence.com>, devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, adouglas@cadence.com, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181211091514.GA29064@pdeschrijver-desktop.Nvidia.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
 
+On 11/12/2018 09:15, Peter De Schrijver wrote:
+> On Fri, Dec 07, 2018 at 01:41:57PM +0000, Jon Hunter wrote:
+>>
+>> On 04/12/2018 09:25, Joseph Lo wrote:
+>>> From: Peter De Schrijver <pdeschrijver@nvidia.com>
+>>>
+>>> Add new properties to configure the DFLL PWM regulator support. Also
+>>> add an example and make the I2C clock only required when I2C support is
+>>> used.
+>>>
+>>> Cc: devicetree@vger.kernel.org
+>>> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+>>> Signed-off-by: Joseph Lo <josephl@nvidia.com>
+>>> ---
+>>>  .../bindings/clock/nvidia,tegra124-dfll.txt   | 73 ++++++++++++++++++-
+>>>  1 file changed, 71 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+>>> index dff236f524a7..8c97600d2bad 100644
+>>> --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+>>> +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+>>> @@ -8,7 +8,6 @@ the fast CPU cluster. It consists of a free-running voltage controlled
+>>>  oscillator connected to the CPU voltage rail (VDD_CPU), and a closed loop
+>>>  control module that will automatically adjust the VDD_CPU voltage by
+>>>  communicating with an off-chip PMIC either via an I2C bus or via PWM signals.
+>>> -Currently only the I2C mode is supported by these bindings.
+>>>  
+>>>  Required properties:
+>>>  - compatible : should be "nvidia,tegra124-dfll"
+>>> @@ -45,10 +44,28 @@ Required properties for the control loop parameters:
+>>>  Optional properties for the control loop parameters:
+>>>  - nvidia,cg-scale: Boolean value, see the field DFLL_PARAMS_CG_SCALE in the TRM.
+>>>  
+>>> +Optional properties for mode selection:
+>>> +- nvidia,pwm-to-pmic: Use PWM to control regulator rather then I2C.
+>>> +
+>>>  Required properties for I2C mode:
+>>>  - nvidia,i2c-fs-rate: I2C transfer rate, if using full speed mode.
+>>>  
+>>> -Example:
+>>> +Required properties for PWM mode:
+>>> +- nvidia,pwm-period: period of PWM square wave in microseconds.
+>>> +- nvidia,init-uv: Regulator voltage in micro volts when PWM control is disabled.
+>>
+>> Maybe consider 'pwm-inactive-voltage-microvolt'.
+>>
+> 
+> Inactive is not very accurate. The OVR regulator will output
+> nvidia,align-offset-uv when the PWM input is driven low but will output
+> nvidia,init-uv when the PWM input is in tristate mode.
 
-Hi,
+Maybe but I really don't find 'nvidia,align-offset-uv' and
+'nvidia,init-uv' very descriptive either. We need to make sure that the
+names and description make it clear what these are and where they come
+from to anyone reading that documentation that has never laid eyes on
+this before.
 
-Roger Quadros <rogerq@ti.com> writes:
->> This patch introduce new Cadence USBSS DRD driver
->> to linux kernel.
->>=20
->> The Cadence USBSS DRD Driver is a highly
->> configurable IP Core which can be
->> instantiated as Dual-Role Device (DRD),
->> Peripheral Only and Host Only (XHCI)
->> configurations.
->>=20
->> The current driver has been validated with
->> FPGA burned. We have support for PCIe
->> bus, which is used on FPGA prototyping.
->>=20
->> The host side of USBSS-DRD controller is compliance
->> with XHCI specification, so it works with
->> standard XHCI linux driver.
->>=20
->> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
->> ---
->>  drivers/usb/Kconfig                |    2 +
->>  drivers/usb/Makefile               |    2 +
->>  drivers/usb/cdns3/Kconfig          |   44 +
->>  drivers/usb/cdns3/Makefile         |   16 +
->>  drivers/usb/cdns3/cdns3-pci-wrap.c |  157 +++
->>  drivers/usb/cdns3/core.c           |  451 +++++++
->>  drivers/usb/cdns3/core.h           |  108 ++
->>  drivers/usb/cdns3/debug.h          |  346 ++++++
->>  drivers/usb/cdns3/debugfs.c        |  168 +++
->>  drivers/usb/cdns3/drd.c            |  315 +++++
->>  drivers/usb/cdns3/drd.h            |  129 ++
->>  drivers/usb/cdns3/ep0.c            |  864 +++++++++++++
->>  drivers/usb/cdns3/gadget-export.h  |   28 +
->>  drivers/usb/cdns3/gadget.c         | 1802 ++++++++++++++++++++++++++++
->>  drivers/usb/cdns3/gadget.h         | 1177 ++++++++++++++++++
->>  drivers/usb/cdns3/host-export.h    |   28 +
->>  drivers/usb/cdns3/host.c           |   74 ++
->>  drivers/usb/cdns3/trace.c          |   11 +
->>  drivers/usb/cdns3/trace.h          |  343 ++++++
->
-> You went to the other extreme of combining everything (host/gadget/drd) t=
-ogether
-> which again makes this very hard to review.
->
-> I think what Felipe meant was to only combine the gadget driver code
-> into one patch.
->
-> The series could be split into 6 patches like so.
-> -dt binding
-> -pci glue
-> -core driver
-> -host driver
-> -gadget driver
-> -drd driver
+Sounds like the align-offset-uv is the minimum voltage when PWM is
+active/enabled and init-uv is the default voltage the regulator outputs
+when PWM control is disabled. Would the following be any better ...
 
-no, no. This is fine. We _could_ split out PCI glue to its own patch,
-but it's rather pointless seing as it's so small.
+- nvidia,pwm-tristate-microvolts: Regulator voltage in micro volts when
+  PWM control is disabled and the PWM output is tristated. Note that
+  this voltage is configured in hardware, typically via a resistor
+  divider.
+- nvidia,pwm-min-microvolts: Regulator voltage in micro volts when PWM
+  control is enabled and PWM output is low. Hence, this is the minimum
+  output voltage that the regulator supports when PWM control is
+  enabled.
 
-=2D-=20
-balbi
+Jon
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlwPo60ACgkQzL64meEa
-mQYVaQ//SWD7ik1bFKOvm13A8mLphPuwef4FHi75UJ26VKbdTqfoUwMyYzxH1Qn/
-nIePbHRunPNhonrNGpzKM0t6qfd5h9DYhGp2t6Vp0rQxacHHhFPG5GXlYTXbbeqW
-y7A2A+PMmDhfmgU1+4ywVUC3dyFTGVeETu9WDa+oemw5LMlMDSgr/5518lzE9zqW
-oxqRqNe1ucXwGoYLN5MjCsco+ojL3Km/FWBsrbXQfg1DSNLXXLW6FJu+8uMsunMC
-EvCTKk9VxUtgtrQoIbkTo1+DBfK26tfvKN2v01Yi8xrxMrvMc8JHtYBpis4O+jcw
-By8flXBvvI3tYJ/fFgqJlkRFdmu8UXyyi59oEyEj7QEklBwVg3ePtsDkJwBNWhS4
-cAyySDe2MZB922fP3lA2s0AQxq5Sgc9DvA0zskqax1eqHC2AJpjvhxvbf8utnl+Q
-LZdXBjNaJ7uQEtQEd8e4R8cZSeQmmKDOuy3+4e6ZV4jbR95Xz1CGEJaK+2bvRj/x
-odAULfkl93p+oGjwYAEEOCptkaCH6aMv9bUt7eaX9hMMgkY3Mg46KIjmg4WoPtq3
-DqTgr3ajXzUyL5OxsowBqzc5s7dZoi60PJcSoeeU7NUFqkqyEH7w89iiMbxuDdtv
-z3bB+r5rWd8I9Vq7vyLibnBioa/7rq6KE+VKiKfZQnRmf9RRhwc=
-=qvrM
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+nvpublic
