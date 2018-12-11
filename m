@@ -1,70 +1,97 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v7 0/5] arm64: dts: qcom: sdm845: Add UFS DT nodes
-Date: Tue, 11 Dec 2018 15:56:16 +0530
-Message-ID: <1d00081d-7ef5-20fb-b04b-3b51ca9cd6da@ti.com>
-References: <20181210192826.241350-1-evgreen@chromium.org>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH v6 10/10] soc: qcom: rpmhpd: Mark mx as a parent for cx
+Date: Tue, 11 Dec 2018 16:03:23 +0530
+Message-ID: <00d91f90-ccf1-3486-0d42-0c4105058e61@codeaurora.org>
+References: <20181211094938.25086-1-rnayak@codeaurora.org>
+ <20181211094938.25086-11-rnayak@codeaurora.org>
+ <CAPDyKFof-rkzmzibWOrAhDFysU=y+C8Bp0cK=_iht4=vmv-0vw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181210192826.241350-1-evgreen@chromium.org>
+In-Reply-To: <CAPDyKFof-rkzmzibWOrAhDFysU=y+C8Bp0cK=_iht4=vmv-0vw@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Evan Green <evgreen@chromium.org>, Andy Gross <andy.gross@linaro.org>
-Cc: Douglas Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, linux-arm-msm@vger.kernel.org, Can Guo <cang@codeaurora.org>, linux-kernel@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Manu Gautam <mgautam@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, David Collins <collinsd@codeaurora.org>, Matthias Kaehlcke <mka@chromium.org>, DTML <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 11/12/18 12:58 AM, Evan Green wrote:
-> Update the device tree bindings for the QMP PHY to properly
-> specify the registers for dual-lane PHYs. Update the driver to use
-> those new registers. Add the DT nodes for UFS on SDM845 and MTP.
-> Finally, fix up the USB3 PHY on SDM845, which also has a dual-lane phy
+On 12/11/2018 3:52 PM, Ulf Hansson wrote:
+> On Tue, 11 Dec 2018 at 10:50, Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>>
+>> Specify the active + sleep and active-only MX power domains as
+>> the parents of the corresponding CX power domains. This will ensure that
+>> performance state requests on CX automatically generate equivalent requests
+>> on MX power domains.
+>>
+>> This is used to enforce a requirement that exists for various
+>> hardware blocks on SDM845 that MX performance state >= CX performance
+>> state for a given operating frequency.
 > 
-> This series is now based on phy/next, and given that the changes stack,
-> I guess that means Kishon will take the whole thing?
+> I assume that also means the MX power domain must not be power off as
+> long as the CX power domain is powered on?
 
-No. I'll take only the phy changes. The dts changes can probably be taken by
-Andy during the early 4.21 -rc cycle.
+So with rpmh, there's really no separate on/off control, we just put
+it in the lowest perf state at off.
 
-Thanks
-Kishon
 > 
-> Changes in v7:
->  - Rebased on top of phy/next
+> Just to make sure there are no conflicting hierarchical constraints
+> between idle management and performance state management!?
 > 
-> Changes in v6:
-> - Removed resets and reset-names (Bjorn)
-> - Renamed nodes (Bjorn)
-> - Fix renamed nodes in MTP (Bjorn)
+> Kind regards
+> Uffe
 > 
-> Changes in v5:
-> - Fix incorrect register value in example, copied from real life!
-> 
-> Changes in v4:
-> - Remove "status" from DT binding example (Rob)
-> 
-> Changes in v3:
->  - Removed erroneous fixup for USB UniPro PHY, which is not dual lane (Doug)
-> 
-> Changes in v2:
-> - Added dt bindings change, corresponding driver fixup, and USB PHY fixup
-> - Renamed ufsphy to phy (Vivek)
-> - Removed #clock-cells (Vivek)
-> 
-> Can Guo (1):
->   arm64: dts: qcom: sdm845: Add UFS nodes for sdm845-mtp
-> 
-> Evan Green (4):
->   dt-bindings: phy-qcom-qmp: Fix register underspecification
->   phy: qcom-qmp: Utilize fully-specified DT registers
->   arm64: dts: qcom: sdm845: add UFS controller
->   arm64: dts: qcom: sdm845: Add USB PHY lane two
-> 
->  .../devicetree/bindings/phy/qcom-qmp-phy.txt  | 69 +++++++++++++++++--
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts       | 14 ++++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi          | 68 +++++++++++++++++-
->  drivers/phy/qualcomm/phy-qcom-qmp.c           | 51 ++++++++++----
->  4 files changed, 181 insertions(+), 21 deletions(-)
-> 
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+>> ---
+>> This patch is dependent on the series from
+>> Viresh [1] which adds support to propogate performance states across the
+>> power domain hierarchy which is still being reviewed.
+>>
+>> [1] https://lkml.org/lkml/2018/11/26/333
+>>
+>>   drivers/soc/qcom/rpmhpd.c | 11 +++++++++++
+>>   1 file changed, 11 insertions(+)
+>>
+>> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
+>> index 1ce86f0cc9fa..af7b07d49e4f 100644
+>> --- a/drivers/soc/qcom/rpmhpd.c
+>> +++ b/drivers/soc/qcom/rpmhpd.c
+>> @@ -102,12 +102,14 @@ static struct rpmhpd sdm845_cx_ao;
+>>   static struct rpmhpd sdm845_cx = {
+>>          .pd = { .name = "cx", },
+>>          .peer = &sdm845_cx_ao,
+>> +       .parent = &sdm845_mx.pd,
+>>          .res_name = "cx.lvl",
+>>   };
+>>
+>>   static struct rpmhpd sdm845_cx_ao = {
+>>          .pd = { .name = "cx_ao", },
+>>          .peer = &sdm845_cx,
+>> +       .parent = &sdm845_mx_ao.pd,
+>>          .res_name = "cx.lvl",
+>>   };
+>>
+>> @@ -389,6 +391,15 @@ static int rpmhpd_probe(struct platform_device *pdev)
+>>                  data->domains[i] = &rpmhpds[i]->pd;
+>>          }
+>>
+>> +       /* Add subdomains */
+>> +       for (i = 0; i < num_pds; i++) {
+>> +               if (!rpmhpds[i])
+>> +                       continue;
+>> +               if (rpmhpds[i]->parent)
+>> +                       pm_genpd_add_subdomain(rpmhpds[i]->parent,
+>> +                                              &rpmhpds[i]->pd);
+>> +       }
+>> +
+>>          return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
+>>   }
+>>
+>> --
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>> of Code Aurora Forum, hosted by The Linux Foundation
+>>
