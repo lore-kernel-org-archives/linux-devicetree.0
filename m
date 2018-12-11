@@ -1,59 +1,75 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH] MAINTAINERS: add maintainers for ChromeOS EC sub-drivers
-Date: Tue, 11 Dec 2018 20:00:53 +0100
-Message-ID: <20181211190053.9997-1-enric.balletbo@collabora.com>
+From: Vijay Khemka <vijaykhemka@fb.com>
+Subject: [PATCH v2 2/2] ARM: dts: aspeed: Add KCS support for LPC BMC
+Date: Tue, 11 Dec 2018 11:02:46 -0800
+Message-ID: <20181211190246.2134590-2-vijaykhemka@fb.com>
+References: <20181211190246.2134590-1-vijaykhemka@fb.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181211190246.2134590-1-vijaykhemka@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Alessandro Zummo <a.zummo@towertech.it>, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-i2c@vger.kernel.org, groeck@chromium.org, kernel@collabora.com, linux-rtc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Sebastian Reichel <sre@kernel.org>, linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, Benson Leung <bleung@chromiumg.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Lee Jones <lee.jones@linaro.org>, Hartmut Knaack <knaack.h@gmx.de>, Rob Herring <robh+dt@kernel.org>, Lar
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: vijaykhemka@fb.com, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-There are multiple ChromeOS EC sub-drivers spread in different
-subsystems, as all of them are related to the Chrome stuff add
-Benson and myself as a maintainers for all these sub-drivers.
+Added kcs device support for lpc BMC.
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
 ---
+ arch/arm/boot/dts/aspeed-g5.dtsi | 33 +++++++++++++++++++++++++++++++-
+ 1 file changed, 32 insertions(+), 1 deletion(-)
 
- MAINTAINERS | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a24129b0b043..2f24f5c977ca 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3625,6 +3625,30 @@ S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/bleung/chrome-platform.git
- F:	drivers/platform/chrome/
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index d107459fc0f8..cb35a3ab580a 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -330,8 +330,32 @@
+ 				ranges = <0x0 0x1e789000 0x1000>;
  
-+CHROMEOS EC SUBDRIVERS
-+M:	Benson Leung <bleung@chromiumg.org>
-+M:	Enric Balletbo i Serra <enric.balletbo@collabora.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
-+F:	Documentation/devicetree/bindings/input/cros-ec-keyb.txt
-+F:	Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.txt
-+F:	Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
-+F:	Documentation/devicetree/bindings/mfd/cros-ec.txt
-+F:	Documentation/ABI/testing/sysfs-bus-iio-cros-ec
-+F:	drivers/extcon/extcon-usbc-cros-ec.c
-+F:	drivers/i2c/busses/i2c-cros-ec-tunnel.c
-+F:	drivers/iio/accel/cros_ec*
-+F:	drivers/iio/common/cros_ec_sensors/
-+F:	drivers/iio/light/cros_ec*
-+F:	drivers/iio/pressure/cros_ec*
-+F:	drivers/input/keyboard/cros_ec*
-+F:	drivers/mfd/cros_ec*
-+F:	drivers/power/supply/cros_usbpd-charger.c
-+F:	drivers/pwm/pwm-cros-ec.c
-+F:	drivers/rtc/rtc-cros-ec.c
-+F:	include/linux/iio/common/cros_ec_sensors_core.h
-+F:	include/linux/mfd/cros_ec*
+ 				lpc_bmc: lpc-bmc@0 {
+-					compatible = "aspeed,ast2500-lpc-bmc";
++					compatible = "aspeed,ast2500-lpc-bmc, "simple-mfd", "syscon"";
+ 					reg = <0x0 0x80>;
++					reg-io-width = <4>;
 +
- CIRRUS LOGIC AUDIO CODEC DRIVERS
- M:	Brian Austin <brian.austin@cirrus.com>
- M:	Paul Handrigan <Paul.Handrigan@cirrus.com>
++					#address-cells = <1>;
++					#size-cells = <1>;
++					ranges = <0x0 0x0 0x80>;
++
++					kcs1: kcs1@0 {
++						compatible = "aspeed,ast2500-kcs-bmc";
++						interrupts = <8>;
++						kcs_chan = <1>;
++						status = "disabled";
++					};
++					kcs2: kcs2@0 {
++						compatible = "aspeed,ast2500-kcs-bmc";
++						interrupts = <8>;
++						kcs_chan = <2>;
++						status = "disabled";
++					};
++					kcs3: kcs3@0 {
++						compatible = "aspeed,ast2500-kcs-bmc";
++						interrupts = <8>;
++						kcs_chan = <3>;
++						status = "disabled";
++					};
+ 				};
+ 
+ 				lpc_host: lpc-host@80 {
+@@ -343,6 +367,13 @@
+ 					#size-cells = <1>;
+ 					ranges = <0x0 0x80 0x1e0>;
+ 
++				kcs4: kcs4@0 {
++						compatible = "aspeed,ast2500-kcs-bmc";
++						interrupts = <8>;
++						kcs_chan = <4>;
++						status = "disabled";
++					};
++
+ 					lpc_ctrl: lpc-ctrl@0 {
+ 						compatible = "aspeed,ast2500-lpc-ctrl";
+ 						reg = <0x0 0x80>;
 -- 
-2.19.2
+2.17.1
