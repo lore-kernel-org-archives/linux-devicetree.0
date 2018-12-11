@@ -1,88 +1,64 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [RFC PATCH v2 08/15] usb:cdns3: Implements device operations part
- of the API
-Date: Tue, 11 Dec 2018 19:49:16 +0000
-Message-ID: <BYAPR07MB470972A525D85B03C3037D3BDDA60@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
- <1542535751-16079-9-git-send-email-pawell@cadence.com>
- <5BFE8883.7090802@ti.com>
- <CAL411-oKvu3EADStit=JtbcxVzM_fFGF2uPn67-wmXxPzUK6GQ@mail.gmail.com>
- <6b19b55c-66d7-439e-df8f-7b311b45af5e@ti.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] dt-bindings: i2c: use correct vendor prefix for atmel's
+ at24 EEPROMs
+Date: Tue, 11 Dec 2018 20:49:40 +0100
+Message-ID: <20181211194940.u6ru27qfvrxc3xey@ninjato>
+References: <20181206094550.18082-1-brgl@bgdev.pl>
+ <20181206104421.a6njveg72dcguckp@katana>
+ <CAMRc=MfRBgF9CSzGb=VMUGiCsFc1B_y=d5yMgPJ3xc0GyytATA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hp3uq3uf7plgsilw"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6b19b55c-66d7-439e-df8f-7b311b45af5e@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MfRBgF9CSzGb=VMUGiCsFc1B_y=d5yMgPJ3xc0GyytATA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Peter Chen <hzpeterchen@gmail.com>, "rogerq@ti.com" <rogerq@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>, "balbi@kernel.org" <balbi@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Peter Rosin <peda@axentia.se>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCj5PbiAxMC8xMi8xOCA3OjQyIEFNLCBQZXRlciBDaGVuIHdyb3RlOg0KPj4+PiArc3Rh
-dGljIHN0cnVjdCB1c2JfZXAgKmNkbnMzX2dhZGdldF9tYXRjaF9lcChzdHJ1Y3QgdXNiX2dhZGdl
-dCAqZ2FkZ2V0LA0KPj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICBzdHJ1Y3QgdXNiX2VuZHBvaW50X2Rlc2NyaXB0b3IgKmRlc2MsDQo+Pj4+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCB1c2Jfc3NfZXBfY29tcF9kZXNj
-cmlwdG9yICpjb21wX2Rlc2MpDQo+Pj4+ICt7DQo+Pj4+ICsgICAgIHN0cnVjdCBjZG5zM19kZXZp
-Y2UgKnByaXZfZGV2ID0gZ2FkZ2V0X3RvX2NkbnMzX2RldmljZShnYWRnZXQpOw0KPj4+PiArICAg
-ICBzdHJ1Y3QgY2RuczNfZW5kcG9pbnQgKnByaXZfZXA7DQo+Pj4+ICsgICAgIHVuc2lnbmVkIGxv
-bmcgZmxhZ3M7DQo+Pj4+ICsNCj4+Pj4gKyAgICAgcHJpdl9lcCA9IGNkbnMzX2ZpbmRfYXZhaWxh
-YmxlX3NzX2VwKHByaXZfZGV2LCBkZXNjKTsNCj4+Pj4gKyAgICAgaWYgKElTX0VSUihwcml2X2Vw
-KSkgew0KPj4+PiArICAgICAgICAgICAgIGRldl9lcnIoJnByaXZfZGV2LT5kZXYsICJubyBhdmFp
-bGFibGUgZXBcbiIpOw0KPj4+PiArICAgICAgICAgICAgIHJldHVybiBOVUxMOw0KPj4+PiArICAg
-ICB9DQo+Pj4+ICsNCj4+Pj4gKyAgICAgZGV2X2RiZygmcHJpdl9kZXYtPmRldiwgIm1hdGNoIGVu
-ZHBvaW50OiAlc1xuIiwgcHJpdl9lcC0+bmFtZSk7DQo+Pj4+ICsNCj4+Pj4gKyAgICAgc3Bpbl9s
-b2NrX2lycXNhdmUoJnByaXZfZGV2LT5sb2NrLCBmbGFncyk7DQo+Pj4+ICsgICAgIHByaXZfZXAt
-PmVuZHBvaW50LmRlc2MgPSBkZXNjOw0KPj4+PiArICAgICBwcml2X2VwLT5kaXIgID0gdXNiX2Vu
-ZHBvaW50X2Rpcl9pbihkZXNjKSA/IFVTQl9ESVJfSU4gOiBVU0JfRElSX09VVDsNCj4+Pj4gKyAg
-ICAgcHJpdl9lcC0+dHlwZSA9IHVzYl9lbmRwb2ludF90eXBlKGRlc2MpOw0KPj4+PiArDQo+Pj4+
-ICsgICAgIGxpc3RfYWRkX3RhaWwoJnByaXZfZXAtPmVwX21hdGNoX3BlbmRpbmdfbGlzdCwNCj4+
-Pj4gKyAgICAgICAgICAgICAgICAgICAmcHJpdl9kZXYtPmVwX21hdGNoX2xpc3QpOw0KPj4+PiAr
-ICAgICBzcGluX3VubG9ja19pcnFyZXN0b3JlKCZwcml2X2Rldi0+bG9jaywgZmxhZ3MpOw0KPj4+
-PiArICAgICByZXR1cm4gJnByaXZfZXAtPmVuZHBvaW50Ow0KPj4+PiArfQ0KPj4+IFdoeSBkbyB5
-b3UgbmVlZCBhIGN1c3RvbSBtYXRjaF9lcD8NCj4+PiBkb2Vzbid0IHVzYl9lcF9hdXRvY29uZmln
-IHN1ZmZpY2U/DQo+Pj4NCj4+PiBZb3UgY2FuIGNoZWNrIGlmIEVQIGlzIGNsYWltZWQgb3Igbm90
-IGJ5IGNoZWNraW5nIHRoZSBlcC0+Y2xhaW1lZCBmbGFnLg0KPj4+DQo+PiBJdCBpcyBhIHNwZWNp
-YWwgcmVxdWlyZW1lbnQgZm9yIHRoaXMgSVAsIHRoZSBFUCB0eXBlIGFuZCBNYXhQYWNrZXRTaXpl
-DQo+PiBjaGFuZ2luZyBjYW4ndCBiZSBkb25lIGF0IHJ1bnRpbWUsIGVnLCBhdCBlcC0+ZW5hYmxl
-LiBTZWUgYmVsb3cgY29tbWl0DQo+PiBmb3IgZGV0YWlsLg0KPj4NCj4+ICAgICB1c2I6IGNkbnMz
-OiBnYWRnZXQ6IGNvbmZpZ3VyZSBhbGwgZW5kcG9pbnRzIGJlZm9yZSBzZXQgY29uZmlndXJhdGlv
-bg0KPj4NCj4+ICAgICBDYWRlbmNlIElQIGhhcyBvbmUgbGltaXRhdGlvbiB0aGF0IGFsbCBlbmRw
-b2ludHMgbXVzdCBiZSBjb25maWd1cmVkDQo+PiAgICAgKFR5cGUgJiBNYXhQYWNrZXRTaXplKSBi
-ZWZvcmUgc2V0dGluZyBjb25maWd1cmF0aW9uIHRocm91Z2ggaGFyZHdhcmUNCj4+ICAgICByZWdp
-c3RlciwgaXQgbWVhbnMgd2UgY2FuJ3QgY2hhbmdlIGVuZHBvaW50cyBjb25maWd1cmF0aW9uIGFm
-dGVyDQo+PiAgICAgc2V0X2NvbmZpZ3VyYXRpb24uDQo+Pg0KPj4gICAgIEluIHRoaXMgcGF0Y2gs
-IHdlIGFkZCBub24tY29udHJvbCBlbmRwb2ludCB0aHJvdWdoIHVzYl9zcy0+ZXBfbWF0Y2hfbGlz
-dCwNCj4+ICAgICB3aGljaCBpcyBhZGRlZCB3aGVuIHRoZSBnYWRnZXQgZHJpdmVyIHVzZXMgdXNi
-X2VwX2F1dG9jb25maWcgdG8gY29uZmlndXJlDQo+PiAgICAgc3BlY2lmaWMgZW5kcG9pbnQ7IFdo
-ZW4gdGhlIHVkYyBkcml2ZXIgcmVjZWl2ZXMgc2V0X2NvbmZpZ3VyaW9uIHJlcXVlc3QsDQo+PiAg
-ICAgaXQgZ29lcyB0aHJvdWdoIHVzYl9zcy0+ZXBfbWF0Y2hfbGlzdCwgYW5kIGNvbmZpZ3VyZSBh
-bGwgZW5kcG9pbnRzDQo+PiAgICAgYWNjb3JkaW5nbHkuDQo+Pg0KPj4gICAgIEF0IHVzYl9lcF9v
-cHMuZW5hYmxlL2Rpc2FibGUsIHdlIG9ubHkgZW5hYmxlIGFuZCBkaXNhYmxlIGVuZHBvaW50IHRo
-cm91Z2gNCj4+ICAgICBlcF9jZmcgcmVnaXN0ZXIgd2hpY2ggY2FuIGJlIGNoYW5nZWQgYWZ0ZXIg
-c2V0X2NvbmZpZ3VyYXRpb24sIGFuZCBkbw0KPj4gICAgIHNvbWUgc29mdHdhcmUgb3BlcmF0aW9u
-IGFjY29yZGluZ2x5Lg0KPg0KPkFsbCB0aGlzIHNob3VsZCBiZSBwYXJ0IG9mIGNvbW1lbnRzIGlu
-IGNvZGUgYWxvbmcgd2l0aCBpbmZvcm1hdGlvbiBhYm91dA0KPmNvbnRyb2xsZXIgdmVyc2lvbnMg
-d2hpY2ggc3VmZmVyIGZyb20gdGhlIGVycmF0YS4NCj4NCj5JcyB0aGVyZSBhIHZlcnNpb24gb2Yg
-Y29udHJvbGxlciBhdmFpbGFibGUgd2hpY2ggZG9lcyBub3QgaGF2ZSB0aGUNCj5kZWZlY3Q/IElz
-IHRoZXJlIGEgZnV0dXJlIHBsYW4gdG8gZml4IHRoaXM/DQo+DQo+SWYgYW55IG9mIHRoYXQgaXMg
-eWVzLCB5b3UgcHJvYmFibHkgd2FudCB0byBoYW5kbGUgdGhpcyB3aXRoIHJ1bnRpbWUNCj5kZXRl
-Y3Rpb24gb2YgdmVyc2lvbiAobGlrZSBkb25lIHdpdGggRFdDM19SRVZJU0lPTl9YWFggbWFjcm9z
-KS4NCj5Tb21ldGltZXMgdGhlIGhhcmR3YXJlLXJlYWQgdmVyc2lvbnMgdGhlbXNlbHZlcyBhcmUg
-aW5jb3JyZWN0LCBzbyBpdHMNCj5iZXR0ZXIgdG8gaW50cm9kdWNlIGEgdmVyc2lvbiBzcGVjaWZp
-YyBjb21wYXRpYmxlIHRvbyBsaWtlDQo+ImNkbnMsdXNiLTEuMC4wIiAoYXMgaGludGVkIHRvIGJ5
-IFJvYiBIZXJyaW5nIGFzIHdlbGwpLg0KPg0KDQpjdXN0b20gbWF0Y2hfZXAgaXMgdXNlZCBhbmQg
-d29ya3Mgd2l0aCBhbGwgdmVyc2lvbnMgb2YgdGhlIGdlbjEgDQpjb250cm9sbGVyLiBGdXR1cmUg
-KGdlbjIpIHJlbGVhc2VzIG9mIHRoZSBjb250cm9sbGVyIHdvbuKAmXQgaGF2ZSBzdWNoIA0KbGlt
-aXRhdGlvbiBidXQgdGhlcmUgaXMgbm8gcGxhbiB0byBjaGFuZ2UgY3VycmVudCAoZ2VuMSkgZnVu
-Y3Rpb25hbGl0eSANCm9mIHRoZSBjb250cm9sbGVyLg0KDQpJIHdpbGwgYWRkIGNvbW1lbnQgYmVm
-b3JlIGNkbnMzX2dhZGdldF9tYXRjaF9lcCBmdW5jdGlvbi4NCkFsc28gSSB3aWxsIGNoYW5nZSBj
-ZG5zLHVzYjMgdG8gY2Rucyx1c2IzLTEuMC4wIGFuZCBhZGQgYWRkaXRpb25hbA0KY2Rucyx1c2Iz
-LTEuMC4xIGNvbXBhdGlibGUuIA0KDQpjZG5zLHVzYjMtMS4wLjEgd2lsbCBiZSBmb3IgY3VycmVu
-dCB2ZXJzaW9uIG9mIGNvbnRyb2xsZXIgd2hpY2ggSSB1c2UuDQpjZG5zLHVzYjMtMS4wLjAgd2ls
-bCBiZSBmb3Igb2xkZXIgdmVyc2lvbiAtIFBldGVyIENoYW4gcGxhdGZvcm0uIA0KSSBub3cgdGhh
-dCBJIGhhdmUgc29tZSBjaGFuZ2VzIGluIGNvbnRyb2xsZXIsIGFuZCBvbmUgb2YgdGhlbSByZXF1
-aXJlIA0Kc29tZSBjaGFuZ2VzIGluIERSRCBkcml2ZXIuIEl0IHdpbGwgYmUgc2FmZXIgdG8gYWRk
-IHR3byBzZXBhcmF0ZSANCnZlcnNpb24gaW4gY29tcGF0aWJsZXMuDQoNClRoYW5rcw0KIFBhd2Vs
-DQo=
+
+--hp3uq3uf7plgsilw
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Dec 07, 2018 at 02:18:15PM +0100, Bartosz Golaszewski wrote:
+> czw., 6 gru 2018 o 11:44 Wolfram Sang <wsa@the-dreams.de> napisa=C5=82(a):
+> >
+> > On Thu, Dec 06, 2018 at 10:45:50AM +0100, Bartosz Golaszewski wrote:
+> > > This is a follow-up to Thierry's patch which missed a few occurences.
+> > >
+> > > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> >
+> > Since I dropped Thierry's original patch, I wonder if it is okay with
+> > you to simply squash these hunks into it?
+> >
+>=20
+> Yes, feel free to squash those two with my Signed-off-by tag.
+
+Done now, thanks!
+
+
+--hp3uq3uf7plgsilw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlwQFNQACgkQFA3kzBSg
+KbaKUxAApaFbz8HNFCpbawjy/bW1uuTvKOdoPdLY9+KiygbTLqqVAfaKxscKpmA+
+IpKiVyT1UpYFarePvzZ37z5m3+r3Qk72Sy04bK/eJk2dMZ8PYFEaQrCYlTDBOxEu
+Qu3YedaF95i9V1nCZ5JUOOopH03zPYSlSjQRUZfZpBjY9CnYRyV9BVlKmzw8hXH+
+ztOu7omw2EQVB7Xu6qPyX5HL6Yy6qK8SwFbZJca6oezlVnphUoy9kYSSMSSTSLAZ
+yEHzP2oDFQIyKSWy+crCg0kVYm+vjxkCxGtvhuGwCSfMHHuU8X/BWpZx5ObqIe9F
+bMCDmZO4FAq/FRQGGRFN0J/N49d1vklFzy0azGD4o5yTlWDCdJ5kE1y3xHhcn7M3
+7EZIiozo2MBFBqg+ifPlepEysE7WYvw/6KNJCSoeeBs2jILElFbyZbNKqmRb5US/
+x6nU1ZG+BExn+5yGKEiCss5h+0UyDHjYZt4lC3pazhOFsvRP7VgMNYy9/z9+Ui8s
+KhB+fmnRHqKptnQe85SThlD38Ghw5BB5c4sr2rW8yZQO7m5rnGUcRyBxinLziwu/
+DM8gDaR/FzqrMkzZ+BkUjEoymdf3tgAZKdmzAJ+jWxdEhFaJc4sF+wH50K8hUSKx
+o1LK+nmb63WVCygOog9alOpY5b7Sns9Pf/tja5Y5a31PCkmK/oA=
+=Y9uK
+-----END PGP SIGNATURE-----
+
+--hp3uq3uf7plgsilw--
