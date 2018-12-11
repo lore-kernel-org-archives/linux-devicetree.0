@@ -1,87 +1,103 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [RFC PATCH v2 08/15] usb:cdns3: Implements device operations part
- of the API
-Date: Tue, 11 Dec 2018 16:56:57 +0530
-Message-ID: <6b19b55c-66d7-439e-df8f-7b311b45af5e@ti.com>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
- <1542535751-16079-9-git-send-email-pawell@cadence.com>
- <5BFE8883.7090802@ti.com>
- <CAL411-oKvu3EADStit=JtbcxVzM_fFGF2uPn67-wmXxPzUK6GQ@mail.gmail.com>
+From: Felipe Balbi <balbi@kernel.org>
+Subject: Re: [PATCH v1 2/2] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Tue, 11 Dec 2018 13:46:51 +0200
+Message-ID: <87k1kgmgk4.fsf@linux.intel.com>
+References: <1544445555-17325-1-git-send-email-pawell@cadence.com> <1544445555-17325-3-git-send-email-pawell@cadence.com> <5C0F85E4.10609@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL411-oKvu3EADStit=JtbcxVzM_fFGF2uPn67-wmXxPzUK6GQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <5C0F85E4.10609@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Chen <hzpeterchen@gmail.com>, rogerq@ti.com
-Cc: pawell@cadence.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, adouglas@cadence.com, jbergsagel@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com, balbi@kernel.org
+To: Roger Quadros <rogerq@ti.com>, Pawel Laszczak <pawell@cadence.com>, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, adouglas@cadence.com, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/12/18 7:42 AM, Peter Chen wrote:
->>> +static struct usb_ep *cdns3_gadget_match_ep(struct usb_gadget *gadget,
->>> +                                         struct usb_endpoint_descriptor *desc,
->>> +                                         struct usb_ss_ep_comp_descriptor *comp_desc)
->>> +{
->>> +     struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
->>> +     struct cdns3_endpoint *priv_ep;
->>> +     unsigned long flags;
->>> +
->>> +     priv_ep = cdns3_find_available_ss_ep(priv_dev, desc);
->>> +     if (IS_ERR(priv_ep)) {
->>> +             dev_err(&priv_dev->dev, "no available ep\n");
->>> +             return NULL;
->>> +     }
->>> +
->>> +     dev_dbg(&priv_dev->dev, "match endpoint: %s\n", priv_ep->name);
->>> +
->>> +     spin_lock_irqsave(&priv_dev->lock, flags);
->>> +     priv_ep->endpoint.desc = desc;
->>> +     priv_ep->dir  = usb_endpoint_dir_in(desc) ? USB_DIR_IN : USB_DIR_OUT;
->>> +     priv_ep->type = usb_endpoint_type(desc);
->>> +
->>> +     list_add_tail(&priv_ep->ep_match_pending_list,
->>> +                   &priv_dev->ep_match_list);
->>> +     spin_unlock_irqrestore(&priv_dev->lock, flags);
->>> +     return &priv_ep->endpoint;
->>> +}
->> Why do you need a custom match_ep?
->> doesn't usb_ep_autoconfig suffice?
->>
->> You can check if EP is claimed or not by checking the ep->claimed flag.
->>
-> It is a special requirement for this IP, the EP type and MaxPacketSize
-> changing can't be done at runtime, eg, at ep->enable. See below commit
-> for detail.
-> 
->     usb: cdns3: gadget: configure all endpoints before set configuration
-> 
->     Cadence IP has one limitation that all endpoints must be configured
->     (Type & MaxPacketSize) before setting configuration through hardware
->     register, it means we can't change endpoints configuration after
->     set_configuration.
-> 
->     In this patch, we add non-control endpoint through usb_ss->ep_match_list,
->     which is added when the gadget driver uses usb_ep_autoconfig to configure
->     specific endpoint; When the udc driver receives set_configurion request,
->     it goes through usb_ss->ep_match_list, and configure all endpoints
->     accordingly.
-> 
->     At usb_ep_ops.enable/disable, we only enable and disable endpoint through
->     ep_cfg register which can be changed after set_configuration, and do
->     some software operation accordingly.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-All this should be part of comments in code along with information about
-controller versions which suffer from the errata.
 
-Is there a version of controller available which does not have the
-defect? Is there a future plan to fix this?
+Hi,
 
-If any of that is yes, you probably want to handle this with runtime
-detection of version (like done with DWC3_REVISION_XXX macros).
-Sometimes the hardware-read versions themselves are incorrect, so its
-better to introduce a version specific compatible too like
-"cdns,usb-1.0.0" (as hinted to by Rob Herring as well).
+Roger Quadros <rogerq@ti.com> writes:
+>> This patch introduce new Cadence USBSS DRD driver
+>> to linux kernel.
+>>=20
+>> The Cadence USBSS DRD Driver is a highly
+>> configurable IP Core which can be
+>> instantiated as Dual-Role Device (DRD),
+>> Peripheral Only and Host Only (XHCI)
+>> configurations.
+>>=20
+>> The current driver has been validated with
+>> FPGA burned. We have support for PCIe
+>> bus, which is used on FPGA prototyping.
+>>=20
+>> The host side of USBSS-DRD controller is compliance
+>> with XHCI specification, so it works with
+>> standard XHCI linux driver.
+>>=20
+>> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+>> ---
+>>  drivers/usb/Kconfig                |    2 +
+>>  drivers/usb/Makefile               |    2 +
+>>  drivers/usb/cdns3/Kconfig          |   44 +
+>>  drivers/usb/cdns3/Makefile         |   16 +
+>>  drivers/usb/cdns3/cdns3-pci-wrap.c |  157 +++
+>>  drivers/usb/cdns3/core.c           |  451 +++++++
+>>  drivers/usb/cdns3/core.h           |  108 ++
+>>  drivers/usb/cdns3/debug.h          |  346 ++++++
+>>  drivers/usb/cdns3/debugfs.c        |  168 +++
+>>  drivers/usb/cdns3/drd.c            |  315 +++++
+>>  drivers/usb/cdns3/drd.h            |  129 ++
+>>  drivers/usb/cdns3/ep0.c            |  864 +++++++++++++
+>>  drivers/usb/cdns3/gadget-export.h  |   28 +
+>>  drivers/usb/cdns3/gadget.c         | 1802 ++++++++++++++++++++++++++++
+>>  drivers/usb/cdns3/gadget.h         | 1177 ++++++++++++++++++
+>>  drivers/usb/cdns3/host-export.h    |   28 +
+>>  drivers/usb/cdns3/host.c           |   74 ++
+>>  drivers/usb/cdns3/trace.c          |   11 +
+>>  drivers/usb/cdns3/trace.h          |  343 ++++++
+>
+> You went to the other extreme of combining everything (host/gadget/drd) t=
+ogether
+> which again makes this very hard to review.
+>
+> I think what Felipe meant was to only combine the gadget driver code
+> into one patch.
+>
+> The series could be split into 6 patches like so.
+> -dt binding
+> -pci glue
+> -core driver
+> -host driver
+> -gadget driver
+> -drd driver
 
-Thanks,
-Sekhar
+no, no. This is fine. We _could_ split out PCI glue to its own patch,
+but it's rather pointless seing as it's so small.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlwPo60ACgkQzL64meEa
+mQYVaQ//SWD7ik1bFKOvm13A8mLphPuwef4FHi75UJ26VKbdTqfoUwMyYzxH1Qn/
+nIePbHRunPNhonrNGpzKM0t6qfd5h9DYhGp2t6Vp0rQxacHHhFPG5GXlYTXbbeqW
+y7A2A+PMmDhfmgU1+4ywVUC3dyFTGVeETu9WDa+oemw5LMlMDSgr/5518lzE9zqW
+oxqRqNe1ucXwGoYLN5MjCsco+ojL3Km/FWBsrbXQfg1DSNLXXLW6FJu+8uMsunMC
+EvCTKk9VxUtgtrQoIbkTo1+DBfK26tfvKN2v01Yi8xrxMrvMc8JHtYBpis4O+jcw
+By8flXBvvI3tYJ/fFgqJlkRFdmu8UXyyi59oEyEj7QEklBwVg3ePtsDkJwBNWhS4
+cAyySDe2MZB922fP3lA2s0AQxq5Sgc9DvA0zskqax1eqHC2AJpjvhxvbf8utnl+Q
+LZdXBjNaJ7uQEtQEd8e4R8cZSeQmmKDOuy3+4e6ZV4jbR95Xz1CGEJaK+2bvRj/x
+odAULfkl93p+oGjwYAEEOCptkaCH6aMv9bUt7eaX9hMMgkY3Mg46KIjmg4WoPtq3
+DqTgr3ajXzUyL5OxsowBqzc5s7dZoi60PJcSoeeU7NUFqkqyEH7w89iiMbxuDdtv
+z3bB+r5rWd8I9Vq7vyLibnBioa/7rq6KE+VKiKfZQnRmf9RRhwc=
+=qvrM
+-----END PGP SIGNATURE-----
+--=-=-=--
