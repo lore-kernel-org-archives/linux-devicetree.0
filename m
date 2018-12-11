@@ -1,47 +1,43 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH] ARM: dts: imx: Add Y Soft IOTA Draco, Hydra and Ursa
- boards
-Date: Tue, 11 Dec 2018 13:36:40 +0100
-Message-ID: <20181211123640.GC4632@lunn.ch>
-References: <1541086962-52626-1-git-send-email-michal.vokac@ysoft.com>
- <5bea0e99.1c69fb81.18be0.5162@mx.google.com>
- <42ffee3e-7c2a-aab9-547f-2064a77339a8@ysoft.com>
- <a61683a2-30aa-e387-2170-3d79e0043739@ysoft.com>
- <18065d41-4ae0-ada2-35f1-00d8a8489397@ysoft.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] clk: meson: axg-audio: fix input clock name
+Date: Tue, 11 Dec 2018 13:47:51 +0100
+Message-ID: <20181211124751.30108-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <18065d41-4ae0-ada2-35f1-00d8a8489397@ysoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
-Cc: Rob Herring <robh@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> > Hi Rob, gentle ping on this.
-> > 
-> > I would like to be sure how to proceed with this. Do you really want me
-> > to move *all* nodes that are disabled in this common dtsi into the per
-> > board dts?
-> > 
-> > All the boards use identical PCB. Anything that is disabled here is not
-> > present on at least one of the boards. It means it is routed on the
-> > board and the SoC has the capability but the parts are not populated.
-> > 
-> > So it is not only about the LED controller. What about the LCD, OLED,
-> > backlight, USB..?
-> 
-> Can anybody advice how to split these dts/dtsi files, please?
-> I am not sure what should reside in the common dtsi and what should
-> be moved into the per board dts in case my current solution is not
-> appropriate.
+The name of input clock is not aligned with the rest of the tree
+Because of this, the audio peripheral clocks are orphaned.
 
-The kirkwood-synology.dtsi might be of interest? There are a lot of
-Synology NAS boxes which share a lot in common. So all the common
-parts are in that .dtsi. The .dbs file for each individual model then
-enables the parts its needs.
+Fixes: 1222ab89328f ("clk: meson: axg-audio: use the clk input helper function")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ Neil,
 
-Although you have one PCB, or the different population options
-considered different products, each with there own name?
+ Feel free to squash this with commit 1222ab89328f if you prefer
 
-	   Andrew
+ Cheers
+ Jerome
+
+ drivers/clk/meson/axg-audio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/clk/meson/axg-audio.c b/drivers/clk/meson/axg-audio.c
+index 72b717e61a68..8ac3a2295473 100644
+--- a/drivers/clk/meson/axg-audio.c
++++ b/drivers/clk/meson/axg-audio.c
+@@ -752,7 +752,7 @@ static int axg_audio_clkc_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* Register the peripheral input clock */
+-	hw = meson_clk_hw_register_input(dev, "pclk", "audio_pclk", 0);
++	hw = meson_clk_hw_register_input(dev, "pclk", "axg_audio_pclk", 0);
+ 	if (IS_ERR(hw))
+ 		return PTR_ERR(hw);
+ 
+-- 
+2.19.2
