@@ -1,35 +1,41 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: Re: [PATCH] MAINTAINERS: add maintainers for ChromeOS EC sub-drivers
-Date: Tue, 11 Dec 2018 20:05:44 +0100
-Message-ID: <2a01fb14-342e-7210-7861-f1fab277c8c5@collabora.com>
-References: <20181211190053.9997-1-enric.balletbo@collabora.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [PATCH v6 0/7] Add virtio-iommu driver
+Date: Tue, 11 Dec 2018 19:07:41 +0000
+Message-ID: <f9cb0ebe-4d9f-50f1-9f61-89d0e55ceddc@arm.com>
+References: <20181211182104.18241-1-jean-philippe.brucker@arm.com>
+ <20181211183101.GA31936@infradead.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181211190053.9997-1-enric.balletbo@collabora.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Alessandro Zummo <a.zummo@towertech.it>, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-i2c@vger.kernel.org, groeck@chromium.org, kernel@collabora.com, linux-rtc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Sebastian Reichel <sre@kernel.org>, linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, Lee Jones <lee.jones@linaro.org>, Hartmut Knaack <knaack.h@gmx.de>, Rob Herring <robh+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Ma
+Return-path: <virtio-dev-return-5185-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
+Sender: <virtio-dev@lists.oasis-open.org>
+List-Post: <mailto:virtio-dev@lists.oasis-open.org>
+List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
+List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
+List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
+In-Reply-To: <20181211183101.GA31936@infradead.org>
+Content-Language: en-US
+To: Christoph Hellwig <hch@infradead.org>
+Cc: mark.rutland@arm.com, virtio-dev@lists.oasis-open.org, kevin.tian@intel.com, tnowicki@caviumnetworks.com, devicetree@vger.kernel.org, marc.zyngier@arm.com, linux-pci@vger.kernel.org, mst@redhat.com, will.deacon@arm.com, frowand.list@gmail.com, virtualization@lists.linux-foundation.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, kvmarm@lists.cs.columbia.edu, bhelgaas@google.com, robin.murphy@arm.com, jasowang@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/12/18 20:00, Enric Balletbo i Serra wrote:
-> There are multiple ChromeOS EC sub-drivers spread in different
-> subsystems, as all of them are related to the Chrome stuff add
-> Benson and myself as a maintainers for all these sub-drivers.
+On 11/12/2018 18:31, Christoph Hellwig wrote:
+> On Tue, Dec 11, 2018 at 06:20:57PM +0000, Jean-Philippe Brucker wrote:
+>> Implement the virtio-iommu driver, following specification v0.9 [1].
+>>
+>> Only minor changes since v5 [2]. I fixed issues reported by Michael and
+>> added tags from Eric and Bharat. Thanks!
+>>
+>> You can find Linux driver and kvmtool device on v0.9 branches [3],
+>> module and x86 support on virtio-iommu/devel. Also tested with Eric's
+>> QEMU device [4].
 > 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> ---
-> 
->  MAINTAINERS | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
+> Just curious, what is the use case for it?
 
-Sorry, I'll send a second version right now, there is a typo in Benson address.
-Sorry for the noise.
+The main use case is assigning a device to guest userspace, using VFIO
+both in the host and in the guest (the most cited example being DPDK).
+There are others, and I wrote a little more about them last week:
+https://www.spinics.net/lists/linux-pci/msg78529.html
 
 Thanks,
- Enric
+Jean
