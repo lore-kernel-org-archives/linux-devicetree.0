@@ -1,130 +1,100 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: Re: [PATCH V4 2/2] iio: light: isl29018: add optional vdd/vdda
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V4 2/2] iio: light: isl29018: add optional vdd/vdda
  regulator operation support
-Date: Tue, 11 Dec 2018 11:36:12 +0800
-Message-ID: <d07b5970-5825-2ea6-9e27-538386927923@electromag.com.au>
+Date: Tue, 11 Dec 2018 03:43:46 +0000
+Message-ID: <DB3PR0402MB39161ED492C863BB48D48E2FF5A60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 References: <1544498291-2716-1-git-send-email-Anson.Huang@nxp.com>
  <1544498291-2716-2-git-send-email-Anson.Huang@nxp.com>
+ <d07b5970-5825-2ea6-9e27-538386927923@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544498291-2716-2-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-AU
+In-Reply-To: <d07b5970-5825-2ea6-9e27-538386927923@electromag.com.au>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>, "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>
+To: Phil Reid <preid@electromag.com.au>, "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/12/2018 11:24 am, Anson Huang wrote:
-> The light sensor's power supply could be controlled by regulator
-> on some platforms, such as i.MX6Q-SABRESD board, the light sensor
-> isl29023's power supply is controlled by a GPIO fixed regulator,
-> need to make sure the regulator is enabled before any operation of
-> sensor, this patch adds optional vdd/vdda regulator operation support.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> ChangeLog since V3:
-> 	- improve the error handling of devm_regulator_get_optional;
-> 	- make sure regulators are disabled in error path.
-> ---
->   drivers/iio/light/isl29018.c | 83 ++++++++++++++++++++++++++++++++++++++++++--
->   1 file changed, 80 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iio/light/isl29018.c b/drivers/iio/light/isl29018.c
-> index b45400f..a21652b 100644
-> --- a/drivers/iio/light/isl29018.c
-> +++ b/drivers/iio/light/isl29018.c
-> @@ -23,6 +23,7 @@
->   #include <linux/mutex.h>
->   #include <linux/delay.h>
->   #include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
->   #include <linux/slab.h>
->   #include <linux/iio/iio.h>
->   #include <linux/iio/sysfs.h>
-> @@ -95,6 +96,8 @@ struct isl29018_chip {
->   	struct isl29018_scale	scale;
->   	int			prox_scheme;
->   	bool			suspended;
-> +	struct regulator	*vdd_reg;
-> +	struct regulator	*vdda_reg;
->   };
->   
->   static int isl29018_set_integration_time(struct isl29018_chip *chip,
-> @@ -735,6 +738,34 @@ static int isl29018_probe(struct i2c_client *client,
->   
->   	mutex_init(&chip->lock);
->   
-> +	chip->vdd_reg = devm_regulator_get_optional(&client->dev, "vdd");
-> +	if (!IS_ERR(chip->vdd_reg)) {
-> +		err = regulator_enable(chip->vdd_reg);
-> +		if (err) {
-> +			dev_err(&client->dev, "failed to enable VDD regulator\n");
-> +			return err;
-> +		}
-> +	} else {
-> +		err = PTR_ERR(chip->vdd_reg);
-> +		if (err != -ENODEV)
-> +			return err;
-> +	}
-> +
-> +	chip->vdda_reg = devm_regulator_get_optional(&client->dev, "vdda");
-> +	if (!IS_ERR(chip->vdda_reg)) {
-> +		err = regulator_enable(chip->vdda_reg);
-> +		if (err) {
-> +			dev_err(&client->dev, "failed to enable VDDA regulator\n");
-> +			if (!IS_ERR(chip->vdd_reg))
-> +				regulator_disable(chip->vdd_reg);
-> +			return err;
-> +		}
-> +	} else {
-> +		err = PTR_ERR(chip->vdda_reg);
-> +		if (err != -ENODEV)
-> +			return err;
-maybe goto disable_regulators; to disable vdd.
-
-> +	}
-> +
->   	chip->type = dev_id;
->   	chip->calibscale = 1;
->   	chip->ucalibscale = 0;
-> @@ -747,12 +778,12 @@ static int isl29018_probe(struct i2c_client *client,
->   	if (IS_ERR(chip->regmap)) {
->   		err = PTR_ERR(chip->regmap);
->   		dev_err(&client->dev, "regmap initialization fails: %d\n", err);
-> -		return err;
-> +		goto disable_regulators;
->   	}
->   
->   	err = isl29018_chip_init(chip);
->   	if (err)
-> -		return err;
-> +		goto disable_regulators;
->   
->   	indio_dev->info = isl29018_chip_info_tbl[dev_id].indio_info;
->   	indio_dev->channels = isl29018_chip_info_tbl[dev_id].channels;
-> @@ -761,13 +792,24 @@ static int isl29018_probe(struct i2c_client *client,
->   	indio_dev->dev.parent = &client->dev;
->   	indio_dev->modes = INDIO_DIRECT_MODE;
->   
-> -	return devm_iio_device_register(&client->dev, indio_dev);
-> +	err = devm_iio_device_register(&client->dev, indio_dev);
-> +	if (!err)
-> +		return 0;
-> +
-> +disable_regulators:
-> +	if (!IS_ERR(chip->vdd_reg))
-> +		regulator_disable(chip->vdd_reg);
-> +	if (!IS_ERR(chip->vdda_reg))
-> +		regulator_disable(chip->vdda_reg);
-> +
-> +	return err;
->   }
->   
-[snip]
-
--- 
-Regards
-Phil
+SGksIFBoaWwNCg0KQmVzdCBSZWdhcmRzIQ0KQW5zb24gSHVhbmcNCg0KPiAtLS0tLU9yaWdpbmFs
+IE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQaGlsIFJlaWQgW21haWx0bzpwcmVpZEBlbGVjdHJvbWFn
+LmNvbS5hdV0NCj4gU2VudDogMjAxOOW5tDEy5pyIMTHml6UgMTE6MzYNCj4gVG86IEFuc29uIEh1
+YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPjsgamljMjNAa2VybmVsLm9yZzsNCj4ga25hYWNrLmhA
+Z214LmRlOyBsYXJzQG1ldGFmb28uZGU7IHBtZWVyd0BwbWVlcncubmV0Ow0KPiByb2JoK2R0QGtl
+cm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBsaW51eC1paW9Admdlci5rZXJuZWwub3Jn
+Ow0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVs
+Lm9yZzsNCj4gZmVzdGV2YW1AZ21haWwuY29tDQo+IENjOiBkbC1saW51eC1pbXggPGxpbnV4LWlt
+eEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFY0IDIvMl0gaWlvOiBsaWdodDogaXNs
+MjkwMTg6IGFkZCBvcHRpb25hbCB2ZGQvdmRkYQ0KPiByZWd1bGF0b3Igb3BlcmF0aW9uIHN1cHBv
+cnQNCj4gDQo+IE9uIDExLzEyLzIwMTggMTE6MjQgYW0sIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+
+IFRoZSBsaWdodCBzZW5zb3IncyBwb3dlciBzdXBwbHkgY291bGQgYmUgY29udHJvbGxlZCBieSBy
+ZWd1bGF0b3Igb24NCj4gPiBzb21lIHBsYXRmb3Jtcywgc3VjaCBhcyBpLk1YNlEtU0FCUkVTRCBi
+b2FyZCwgdGhlIGxpZ2h0IHNlbnNvcg0KPiA+IGlzbDI5MDIzJ3MgcG93ZXIgc3VwcGx5IGlzIGNv
+bnRyb2xsZWQgYnkgYSBHUElPIGZpeGVkIHJlZ3VsYXRvciwgbmVlZA0KPiA+IHRvIG1ha2Ugc3Vy
+ZSB0aGUgcmVndWxhdG9yIGlzIGVuYWJsZWQgYmVmb3JlIGFueSBvcGVyYXRpb24gb2Ygc2Vuc29y
+LA0KPiA+IHRoaXMgcGF0Y2ggYWRkcyBvcHRpb25hbCB2ZGQvdmRkYSByZWd1bGF0b3Igb3BlcmF0
+aW9uIHN1cHBvcnQuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24u
+SHVhbmdAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiBDaGFuZ2VMb2cgc2luY2UgVjM6DQo+ID4gCS0g
+aW1wcm92ZSB0aGUgZXJyb3IgaGFuZGxpbmcgb2YgZGV2bV9yZWd1bGF0b3JfZ2V0X29wdGlvbmFs
+Ow0KPiA+IAktIG1ha2Ugc3VyZSByZWd1bGF0b3JzIGFyZSBkaXNhYmxlZCBpbiBlcnJvciBwYXRo
+Lg0KPiA+IC0tLQ0KPiA+ICAgZHJpdmVycy9paW8vbGlnaHQvaXNsMjkwMTguYyB8IDgzDQo+ICsr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tDQo+ID4gICAxIGZpbGUg
+Y2hhbmdlZCwgODAgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL2lpby9saWdodC9pc2wyOTAxOC5jDQo+ID4gYi9kcml2ZXJzL2lpby9s
+aWdodC9pc2wyOTAxOC5jIGluZGV4IGI0NTQwMGYuLmEyMTY1MmIgMTAwNjQ0DQo+ID4gLS0tIGEv
+ZHJpdmVycy9paW8vbGlnaHQvaXNsMjkwMTguYw0KPiA+ICsrKyBiL2RyaXZlcnMvaWlvL2xpZ2h0
+L2lzbDI5MDE4LmMNCj4gPiBAQCAtMjMsNiArMjMsNyBAQA0KPiA+ICAgI2luY2x1ZGUgPGxpbnV4
+L211dGV4Lmg+DQo+ID4gICAjaW5jbHVkZSA8bGludXgvZGVsYXkuaD4NCj4gPiAgICNpbmNsdWRl
+IDxsaW51eC9yZWdtYXAuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1l
+ci5oPg0KPiA+ICAgI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCj4gPiAgICNpbmNsdWRlIDxsaW51
+eC9paW8vaWlvLmg+DQo+ID4gICAjaW5jbHVkZSA8bGludXgvaWlvL3N5c2ZzLmg+DQo+ID4gQEAg
+LTk1LDYgKzk2LDggQEAgc3RydWN0IGlzbDI5MDE4X2NoaXAgew0KPiA+ICAgCXN0cnVjdCBpc2wy
+OTAxOF9zY2FsZQlzY2FsZTsNCj4gPiAgIAlpbnQJCQlwcm94X3NjaGVtZTsNCj4gPiAgIAlib29s
+CQkJc3VzcGVuZGVkOw0KPiA+ICsJc3RydWN0IHJlZ3VsYXRvcgkqdmRkX3JlZzsNCj4gPiArCXN0
+cnVjdCByZWd1bGF0b3IJKnZkZGFfcmVnOw0KPiA+ICAgfTsNCj4gPg0KPiA+ICAgc3RhdGljIGlu
+dCBpc2wyOTAxOF9zZXRfaW50ZWdyYXRpb25fdGltZShzdHJ1Y3QgaXNsMjkwMThfY2hpcCAqY2hp
+cCwNCj4gPiBAQCAtNzM1LDYgKzczOCwzNCBAQCBzdGF0aWMgaW50IGlzbDI5MDE4X3Byb2JlKHN0
+cnVjdCBpMmNfY2xpZW50DQo+ID4gKmNsaWVudCwNCj4gPg0KPiA+ICAgCW11dGV4X2luaXQoJmNo
+aXAtPmxvY2spOw0KPiA+DQo+ID4gKwljaGlwLT52ZGRfcmVnID0gZGV2bV9yZWd1bGF0b3JfZ2V0
+X29wdGlvbmFsKCZjbGllbnQtPmRldiwgInZkZCIpOw0KPiA+ICsJaWYgKCFJU19FUlIoY2hpcC0+
+dmRkX3JlZykpIHsNCj4gPiArCQllcnIgPSByZWd1bGF0b3JfZW5hYmxlKGNoaXAtPnZkZF9yZWcp
+Ow0KPiA+ICsJCWlmIChlcnIpIHsNCj4gPiArCQkJZGV2X2VycigmY2xpZW50LT5kZXYsICJmYWls
+ZWQgdG8gZW5hYmxlIFZERCByZWd1bGF0b3JcbiIpOw0KPiA+ICsJCQlyZXR1cm4gZXJyOw0KPiA+
+ICsJCX0NCj4gPiArCX0gZWxzZSB7DQo+ID4gKwkJZXJyID0gUFRSX0VSUihjaGlwLT52ZGRfcmVn
+KTsNCj4gPiArCQlpZiAoZXJyICE9IC1FTk9ERVYpDQo+ID4gKwkJCXJldHVybiBlcnI7DQo+ID4g
+Kwl9DQo+ID4gKw0KPiA+ICsJY2hpcC0+dmRkYV9yZWcgPSBkZXZtX3JlZ3VsYXRvcl9nZXRfb3B0
+aW9uYWwoJmNsaWVudC0+ZGV2LCAidmRkYSIpOw0KPiA+ICsJaWYgKCFJU19FUlIoY2hpcC0+dmRk
+YV9yZWcpKSB7DQo+ID4gKwkJZXJyID0gcmVndWxhdG9yX2VuYWJsZShjaGlwLT52ZGRhX3JlZyk7
+DQo+ID4gKwkJaWYgKGVycikgew0KPiA+ICsJCQlkZXZfZXJyKCZjbGllbnQtPmRldiwgImZhaWxl
+ZCB0byBlbmFibGUgVkREQSByZWd1bGF0b3JcbiIpOw0KPiA+ICsJCQlpZiAoIUlTX0VSUihjaGlw
+LT52ZGRfcmVnKSkNCj4gPiArCQkJCXJlZ3VsYXRvcl9kaXNhYmxlKGNoaXAtPnZkZF9yZWcpOw0K
+PiA+ICsJCQlyZXR1cm4gZXJyOw0KPiA+ICsJCX0NCj4gPiArCX0gZWxzZSB7DQo+ID4gKwkJZXJy
+ID0gUFRSX0VSUihjaGlwLT52ZGRhX3JlZyk7DQo+ID4gKwkJaWYgKGVyciAhPSAtRU5PREVWKQ0K
+PiA+ICsJCQlyZXR1cm4gZXJyOw0KPiBtYXliZSBnb3RvIGRpc2FibGVfcmVndWxhdG9yczsgdG8g
+ZGlzYWJsZSB2ZGQuDQoNCkFncmVlLCBJIHdpbGwgdXNlICIgZ290byBkaXNhYmxlX3JlZ3VsYXRv
+cnM7IiBpbiBib3RoIGhlcmUgYW5kIHVwcGVyIHJlZ3VsYXRvciBlbmFibGUgZmFpbCBjYXNlLg0K
+UGxlYXNlIGhlbHAgcmV2aWV3IFY1LCB0aGFua3MuDQoNCkFuc29uDQoNCj4gDQo+ID4gKwl9DQo+
+ID4gKw0KPiA+ICAgCWNoaXAtPnR5cGUgPSBkZXZfaWQ7DQo+ID4gICAJY2hpcC0+Y2FsaWJzY2Fs
+ZSA9IDE7DQo+ID4gICAJY2hpcC0+dWNhbGlic2NhbGUgPSAwOw0KPiA+IEBAIC03NDcsMTIgKzc3
+OCwxMiBAQCBzdGF0aWMgaW50IGlzbDI5MDE4X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGll
+bnQsDQo+ID4gICAJaWYgKElTX0VSUihjaGlwLT5yZWdtYXApKSB7DQo+ID4gICAJCWVyciA9IFBU
+Ul9FUlIoY2hpcC0+cmVnbWFwKTsNCj4gPiAgIAkJZGV2X2VycigmY2xpZW50LT5kZXYsICJyZWdt
+YXAgaW5pdGlhbGl6YXRpb24gZmFpbHM6ICVkXG4iLCBlcnIpOw0KPiA+IC0JCXJldHVybiBlcnI7
+DQo+ID4gKwkJZ290byBkaXNhYmxlX3JlZ3VsYXRvcnM7DQo+ID4gICAJfQ0KPiA+DQo+ID4gICAJ
+ZXJyID0gaXNsMjkwMThfY2hpcF9pbml0KGNoaXApOw0KPiA+ICAgCWlmIChlcnIpDQo+ID4gLQkJ
+cmV0dXJuIGVycjsNCj4gPiArCQlnb3RvIGRpc2FibGVfcmVndWxhdG9yczsNCj4gPg0KPiA+ICAg
+CWluZGlvX2Rldi0+aW5mbyA9IGlzbDI5MDE4X2NoaXBfaW5mb190YmxbZGV2X2lkXS5pbmRpb19p
+bmZvOw0KPiA+ICAgCWluZGlvX2Rldi0+Y2hhbm5lbHMgPSBpc2wyOTAxOF9jaGlwX2luZm9fdGJs
+W2Rldl9pZF0uY2hhbm5lbHM7DQo+ID4gQEAgLTc2MSwxMyArNzkyLDI0IEBAIHN0YXRpYyBpbnQg
+aXNsMjkwMThfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwNCj4gPiAgIAlpbmRpb19k
+ZXYtPmRldi5wYXJlbnQgPSAmY2xpZW50LT5kZXY7DQo+ID4gICAJaW5kaW9fZGV2LT5tb2RlcyA9
+IElORElPX0RJUkVDVF9NT0RFOw0KPiA+DQo+ID4gLQlyZXR1cm4gZGV2bV9paW9fZGV2aWNlX3Jl
+Z2lzdGVyKCZjbGllbnQtPmRldiwgaW5kaW9fZGV2KTsNCj4gPiArCWVyciA9IGRldm1faWlvX2Rl
+dmljZV9yZWdpc3RlcigmY2xpZW50LT5kZXYsIGluZGlvX2Rldik7DQo+ID4gKwlpZiAoIWVycikN
+Cj4gPiArCQlyZXR1cm4gMDsNCj4gPiArDQo+ID4gK2Rpc2FibGVfcmVndWxhdG9yczoNCj4gPiAr
+CWlmICghSVNfRVJSKGNoaXAtPnZkZF9yZWcpKQ0KPiA+ICsJCXJlZ3VsYXRvcl9kaXNhYmxlKGNo
+aXAtPnZkZF9yZWcpOw0KPiA+ICsJaWYgKCFJU19FUlIoY2hpcC0+dmRkYV9yZWcpKQ0KPiA+ICsJ
+CXJlZ3VsYXRvcl9kaXNhYmxlKGNoaXAtPnZkZGFfcmVnKTsNCj4gPiArDQo+ID4gKwlyZXR1cm4g
+ZXJyOw0KPiA+ICAgfQ0KPiA+DQo+IFtzbmlwXQ0KPiANCj4gLS0NCj4gUmVnYXJkcw0KPiBQaGls
+DQo=
