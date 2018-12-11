@@ -1,62 +1,32 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH v2] MAINTAINERS: add maintainers for ChromeOS EC sub-drivers
-Date: Tue, 11 Dec 2018 20:09:52 +0100
-Message-ID: <20181211190953.13626-1-enric.balletbo@collabora.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v3 1/7] arm64: dts: rockchip: ficus: Add on-board LED support
+Date: Tue, 11 Dec 2018 20:11:13 +0100
+Message-ID: <44132232.o28PC2y76u@phil>
+References: <20181029094245.7886-1-manivannan.sadhasivam@linaro.org> <20181029094245.7886-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181029094245.7886-2-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Alessandro Zummo <a.zummo@towertech.it>, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-i2c@vger.kernel.org, groeck@chromium.org, kernel@collabora.com, linux-rtc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Benson Leung <bleung@chromium.org>, Sebastian Reichel <sre@kernel.org>, linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, Lee Jones <lee.jones@linaro.org>, Hartmut Knaack <knaack.h@gmx.de>, Rob Herring <robh+dt@kernel.org>, Lars
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: robh@kernel.org, ezequiel@collabora.com, xuwei5@hisilicon.com, michal.simek@xilinx.com, pavel@ucw.cz, andy.gross@linaro.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, koen.kooi@linaro.org, nicolas.dechesne@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-There are multiple ChromeOS EC sub-drivers spread in different
-subsystems, as all of them are related to the Chrome stuff add
-Benson and myself as a maintainers for all these sub-drivers.
+Am Montag, 29. Oktober 2018, 10:42:39 CET schrieb Manivannan Sadhasivam:
+> Add on-board LED support for Ficus board based on the following
+> standard used by other 96Boards:
+> 
+> red:user1  default-trigger: heartbeat
+> red:user2  default-trigger: mmc0/disk-activity (onboard-storage)
+> red:user3  default-trigger: mmc1 (SD-card)
+> red:user4  default-trigger: none, panic-indicator
+> red:wlan   default-trigger: phy0tx
+> red:bt     default-trigger: hci0-power
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+applied for 4.21
 
-Changes in v2:
-- Fix typo in Benson email address.
-
- MAINTAINERS | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a24129b0b043..bbe7180e2851 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3625,6 +3625,30 @@ S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/bleung/chrome-platform.git
- F:	drivers/platform/chrome/
- 
-+CHROMEOS EC SUBDRIVERS
-+M:	Benson Leung <bleung@chromium.org>
-+M:	Enric Balletbo i Serra <enric.balletbo@collabora.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
-+F:	Documentation/devicetree/bindings/input/cros-ec-keyb.txt
-+F:	Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.txt
-+F:	Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
-+F:	Documentation/devicetree/bindings/mfd/cros-ec.txt
-+F:	Documentation/ABI/testing/sysfs-bus-iio-cros-ec
-+F:	drivers/extcon/extcon-usbc-cros-ec.c
-+F:	drivers/i2c/busses/i2c-cros-ec-tunnel.c
-+F:	drivers/iio/accel/cros_ec*
-+F:	drivers/iio/common/cros_ec_sensors/
-+F:	drivers/iio/light/cros_ec*
-+F:	drivers/iio/pressure/cros_ec*
-+F:	drivers/input/keyboard/cros_ec*
-+F:	drivers/mfd/cros_ec*
-+F:	drivers/power/supply/cros_usbpd-charger.c
-+F:	drivers/pwm/pwm-cros-ec.c
-+F:	drivers/rtc/rtc-cros-ec.c
-+F:	include/linux/iio/common/cros_ec_sensors_core.h
-+F:	include/linux/mfd/cros_ec*
-+
- CIRRUS LOGIC AUDIO CODEC DRIVERS
- M:	Brian Austin <brian.austin@cirrus.com>
- M:	Paul Handrigan <Paul.Handrigan@cirrus.com>
--- 
-2.19.2
+Thanks
+Heiko
