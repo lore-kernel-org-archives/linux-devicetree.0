@@ -1,70 +1,151 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH] ARM: dts: at91: sama5d2 Xplained: add QSPI0 + SPI NOR
- memory nodes
-Date: Tue, 11 Dec 2018 15:35:45 +0100
-Message-ID: <20181211143545.GR8952@piout.net>
-References: <20181210171511.21002-1-tudor.ambarus@microchip.com>
- <20181210213553.GK8952@piout.net>
- <22730de3-55f0-df21-312a-560a02f02dc7@microchip.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: clk: meson-g12a: Add G12A EE Clock
+ Bindings
+Date: Tue, 11 Dec 2018 15:39:19 +0100
+Message-ID: <48899a9beb0c32103ae7edea14cec890779d498e.camel@baylibre.com>
+References: <1543498917-98605-1-git-send-email-jian.hu@amlogic.com>
+         <1543498917-98605-2-git-send-email-jian.hu@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <22730de3-55f0-df21-312a-560a02f02dc7@microchip.com>
+In-Reply-To: <1543498917-98605-2-git-send-email-jian.hu@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tudor.Ambarus@microchip.com
-Cc: Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com, Cyrille.Pitchen@microchip.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, boris.brezillon@bootlin.com, linux-mtd@lists.infradead.org, broonie@kernel.org, linux-spi@vger.kernel.org
+To: Jian Hu <jian.hu@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Yixun Lan <yixun.lan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/12/2018 12:32:40+0000, Tudor.Ambarus@microchip.com wrote:
-> Hi, Alexandre,
+On Thu, 2018-11-29 at 21:41 +0800, Jian Hu wrote:
+> Add new clock controller compatible and dt-bingdings headers
+> for the Everything-Else domain of the g12a SoC
 > 
-> On 12/10/2018 11:35 PM, Alexandre Belloni wrote:
-> > Hi,
-> > 
-> > On 10/12/2018 17:15:29+0000, Tudor.Ambarus@microchip.com wrote:
-> >> From: Cyrille Pitchen <cyrille.pitchen@microchip.com>
-> >>
-> >> This patch configures the QSPI0 controller pin muxing and declares
-> >> a jedec,spi-nor memory.
-> >>
-> >> sama5d2 Xplained RevB and RevC use the Macronix MX25L25673G flash
-> >> memory which advertises a maximum frequency of 80MHz for Quad IO
-> >> Fast Read. Set the spi-max-frequency to 80MHz knowing that actually
-> >> the QSPI drver will set the SPI bus clock to 166MHz / 3 = 55.3MHz.
-> >>
-> >> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@microchip.com>
-> >> [tudor.ambarus@microchip.com:
-> >> - drop partitions,
-> >> - add spi-rx/tx-bus-width
-> >> - change spi-max-frequency to match the 80MHz limit advertised by
-> >>   MX25L25673G for Quad IO Fast Read,
-> >> - reword commit message and subject.]
-> >> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-> >> ---
-> >>  arch/arm/boot/dts/at91-sama5d2_xplained.dts | 31 +++++++++++++++++++++++++++++
-> >>  1 file changed, 31 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> >> index 518e2b095ccf..171bc82cfbbf 100644
-> >> --- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> >> +++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> >> @@ -108,6 +108,21 @@
-> >>  		};
-> >>  
-> >>  		apb {
-> >> +			qspi0: spi@f0020000 {
-> >> +				pinctrl-names = "default";
-> >> +				pinctrl-0 = <&pinctrl_qspi0_default>;
-> >> +				/* status = "okay"; */ /* conflict with sdmmc1 */
-> > 
-> > Isn't that conflicting then because I think the default is okay.
-> qspi0 is disabled in sama5d2.dtsi.
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+> ---
+>  .../bindings/clock/amlogic,gxbb-clkc.txt           |  1 +
+>  include/dt-bindings/clock/g12a-clkc.h              | 93
+> ++++++++++++++++++++++
+>  2 files changed, 94 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/g12a-clkc.h
 > 
+> diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+> b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+> index e950599..0833006 100644
+> --- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+> +++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+> @@ -9,6 +9,7 @@ Required Properties:
+>  		"amlogic,gxbb-clkc" for GXBB SoC,
+>  		"amlogic,gxl-clkc" for GXL and GXM SoC,
+>  		"amlogic,axg-clkc" for AXG SoC.
+> +		"amlogic,g12a-clkc" for G12A SoC.
 
-Ok, then maybe that comment is not necessary at all.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Binding description is not aligned with what the driver does.
+If you are going take clock input from DT, it needs to be documented.
+
+In the meantime this has been done [0] for you but you'll have to rebase.
+
+[0]: 20181203171640.12110-3-jbrunet@baylibre.com
+
+>  
+>  - #clock-cells: should be 1.
+>  
+> diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-
+> bindings/clock/g12a-clkc.h
+> new file mode 100644
+> index 0000000..b55e6e1
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/g12a-clkc.h
+> @@ -0,0 +1,93 @@
+> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+> +/*
+> + * Meson-G12A clock tree IDs
+> + *
+> + * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
+> + */
+> +
+> +#ifndef __G12A_CLKC_H
+> +#define __G12A_CLKC_H
+> +
+> +#define CLKID_SYS_PLL				0
+> +#define CLKID_FIXED_PLL				1
+> +#define CLKID_FCLK_DIV2				2
+> +#define CLKID_FCLK_DIV3				3
+> +#define CLKID_FCLK_DIV4				4
+> +#define CLKID_FCLK_DIV5				5
+> +#define CLKID_FCLK_DIV7				6
+> +#define CLKID_GP0_PLL				7
+> +#define CLKID_CLK81				10
+> +#define CLKID_MPLL0				11
+> +#define CLKID_MPLL1				12
+> +#define CLKID_MPLL2				13
+> +#define CLKID_MPLL3				14
+> +#define CLKID_DDR				15
+> +#define CLKID_DOS				16
+> +#define CLKID_AUDIO_LOCKER			17
+> +#define CLKID_MIPI_DSI_HOST			18
+> +#define CLKID_ETH_PHY				19
+> +#define CLKID_ISA				20
+> +#define CLKID_PL301				21
+> +#define CLKID_PERIPHS				22
+> +#define CLKID_SPICC0				23
+> +#define CLKID_I2C				24
+> +#define CLKID_SANA				25
+> +#define CLKID_SD				26
+> +#define CLKID_RNG0				27
+> +#define CLKID_UART0				28
+> +#define CLKID_SPICC1				29
+> +#define CLKID_HIU_IFACE				30
+> +#define CLKID_MIPI_DSI_PHY			31
+> +#define CLKID_ASSIST_MISC			32
+> +#define CLKID_SD_EMMC_A				33
+> +#define CLKID_SD_EMMC_B				34
+> +#define CLKID_SD_EMMC_C				35
+> +#define CLKID_AUDIO_CODEC			36
+> +#define CLKID_AUDIO				37
+> +#define CLKID_ETH				38
+> +#define CLKID_DEMUX				39
+> +#define CLKID_AUDIO_IFIFO			40
+> +#define CLKID_ADC				41
+> +#define CLKID_UART1				42
+> +#define CLKID_G2D				43
+> +#define CLKID_RESET				44
+> +#define CLKID_PCIE_COMB				45
+> +#define CLKID_PARSER				46
+> +#define CLKID_USB				47
+> +#define CLKID_PCIE_PHY				48
+> +#define CLKID_AHB_ARB0				49
+> +#define CLKID_AHB_DATA_BUS			50
+> +#define CLKID_AHB_CTRL_BUS			51
+> +#define CLKID_HTX_HDCP22			52
+> +#define CLKID_HTX_PCLK				53
+> +#define CLKID_BT656				54
+> +#define CLKID_USB1_DDR_BRIDGE			55
+> +#define CLKID_MMC_PCLK				56
+> +#define CLKID_UART2				57
+> +#define CLKID_VPU_INTR				58
+> +#define CLKID_GIC				59
+> +#define CLKID_SD_EMMC_B_CLK0			60
+> +#define CLKID_SD_EMMC_C_CLK0			61
+> +#define CLKID_HIFI_PLL				71
+> +#define CLKID_VCLK2_VENCI0			77
+> +#define CLKID_VCLK2_VENCI1			78
+> +#define CLKID_VCLK2_VENCP0			79
+> +#define CLKID_VCLK2_VENCP1			80
+> +#define CLKID_VCLK2_VENCT0			81
+> +#define CLKID_VCLK2_VENCT1			82
+> +#define CLKID_VCLK2_OTHER			83
+> +#define CLKID_VCLK2_ENCI			84
+> +#define CLKID_VCLK2_ENCP			85
+> +#define CLKID_DAC_CLK				86
+> +#define CLKID_AOCLK				87
+> +#define CLKID_IEC958				88
+> +#define CLKID_ENC480P				89
+> +#define CLKID_RNG1				90
+> +#define CLKID_VCLK2_ENCT			91
+> +#define CLKID_VCLK2_ENCL			92
+> +#define CLKID_VCLK2_VENCLMMC			93
+> +#define CLKID_VCLK2_VENCL			94
+> +#define CLKID_VCLK2_OTHER1			95
+> +#define CLKID_FCLK_DIV2P5			96
+> +
+> +#endif /* __G12A_CLKC_H */
