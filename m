@@ -1,74 +1,50 @@
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH] ARM: dts: at91: sama5d2 Xplained: add QSPI0 + SPI NOR
- memory nodes
-Date: Tue, 11 Dec 2018 15:50:03 +0100
-Message-ID: <20181211145003.7bwd5yknm5cegtdj@M43218.corp.atmel.com>
-References: <20181210171511.21002-1-tudor.ambarus@microchip.com>
- <20181210213553.GK8952@piout.net>
- <22730de3-55f0-df21-312a-560a02f02dc7@microchip.com>
- <20181211143545.GR8952@piout.net>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH] clk: meson: axg-audio: fix input clock name
+Date: Tue, 11 Dec 2018 16:06:00 +0100
+Message-ID: <79f49d43-7eb0-d056-158c-c6c78db9cdef@baylibre.com>
+References: <20181211124751.30108-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181211143545.GR8952@piout.net>
+In-Reply-To: <20181211124751.30108-1-jbrunet@baylibre.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Tudor.Ambarus@microchip.com, Nicolas.Ferre@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com, Cyrille.Pitchen@microchip.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, boris.brezillon@bootlin.com, linux-mtd@lists.infradead.org, broonie@kernel.org, linux-spi@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 11, 2018 at 03:35:45PM +0100, Alexandre Belloni wrote:
-> On 11/12/2018 12:32:40+0000, Tudor.Ambarus@microchip.com wrote:
-> > Hi, Alexandre,
-> > 
-> > On 12/10/2018 11:35 PM, Alexandre Belloni wrote:
-> > > Hi,
-> > > 
-> > > On 10/12/2018 17:15:29+0000, Tudor.Ambarus@microchip.com wrote:
-> > >> From: Cyrille Pitchen <cyrille.pitchen@microchip.com>
-> > >>
-> > >> This patch configures the QSPI0 controller pin muxing and declares
-> > >> a jedec,spi-nor memory.
-> > >>
-> > >> sama5d2 Xplained RevB and RevC use the Macronix MX25L25673G flash
-> > >> memory which advertises a maximum frequency of 80MHz for Quad IO
-> > >> Fast Read. Set the spi-max-frequency to 80MHz knowing that actually
-> > >> the QSPI drver will set the SPI bus clock to 166MHz / 3 = 55.3MHz.
-> > >>
-> > >> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@microchip.com>
-> > >> [tudor.ambarus@microchip.com:
-> > >> - drop partitions,
-> > >> - add spi-rx/tx-bus-width
-> > >> - change spi-max-frequency to match the 80MHz limit advertised by
-> > >>   MX25L25673G for Quad IO Fast Read,
-> > >> - reword commit message and subject.]
-> > >> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-> > >> ---
-> > >>  arch/arm/boot/dts/at91-sama5d2_xplained.dts | 31 +++++++++++++++++++++++++++++
-> > >>  1 file changed, 31 insertions(+)
-> > >>
-> > >> diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> > >> index 518e2b095ccf..171bc82cfbbf 100644
-> > >> --- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> > >> +++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> > >> @@ -108,6 +108,21 @@
-> > >>  		};
-> > >>  
-> > >>  		apb {
-> > >> +			qspi0: spi@f0020000 {
-> > >> +				pinctrl-names = "default";
-> > >> +				pinctrl-0 = <&pinctrl_qspi0_default>;
-> > >> +				/* status = "okay"; */ /* conflict with sdmmc1 */
-> > > 
-> > > Isn't that conflicting then because I think the default is okay.
-> > qspi0 is disabled in sama5d2.dtsi.
-> > 
+On 11/12/2018 13:47, Jerome Brunet wrote:
+> The name of input clock is not aligned with the rest of the tree
+> Because of this, the audio peripheral clocks are orphaned.
 > 
-> Ok, then maybe that comment is not necessary at all.
+> Fixes: 1222ab89328f ("clk: meson: axg-audio: use the clk input helper function")
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  Neil,
+> 
+>  Feel free to squash this with commit 1222ab89328f if you prefer
 
-Usually we do it the other way around:
-status = "disabled"; /* conflict with ... */
+Well, I'm lazy so I squashed it :-)
 
-Regards
-
-Ludovic
+> 
+>  Cheers
+>  Jerome
+> 
+>  drivers/clk/meson/axg-audio.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/meson/axg-audio.c b/drivers/clk/meson/axg-audio.c
+> index 72b717e61a68..8ac3a2295473 100644
+> --- a/drivers/clk/meson/axg-audio.c
+> +++ b/drivers/clk/meson/axg-audio.c
+> @@ -752,7 +752,7 @@ static int axg_audio_clkc_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	/* Register the peripheral input clock */
+> -	hw = meson_clk_hw_register_input(dev, "pclk", "audio_pclk", 0);
+> +	hw = meson_clk_hw_register_input(dev, "pclk", "axg_audio_pclk", 0);
+>  	if (IS_ERR(hw))
+>  		return PTR_ERR(hw);
+>  
+> 
