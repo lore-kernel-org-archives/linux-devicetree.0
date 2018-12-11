@@ -1,92 +1,100 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V3 1/2] mmc: mmci: add variant property to set command
- stop bit
-Date: Tue, 11 Dec 2018 10:47:07 +0100
-Message-ID: <CAPDyKFq7TZMKWMqmoDR0yfr2N2cf2nr4-BuEs5DPgJSGy-nvAA@mail.gmail.com>
-References: <1544109212-12621-1-git-send-email-ludovic.Barre@st.com> <1544109212-12621-2-git-send-email-ludovic.Barre@st.com>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v6 00/10] Add power domain driver for corners on msm8996/sdm845
+Date: Tue, 11 Dec 2018 15:19:28 +0530
+Message-ID: <20181211094938.25086-1-rnayak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544109212-12621-2-git-send-email-ludovic.Barre@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+To: andy.gross@linaro.org, robh@kernel.org, viresh.kumar@linaro.org, sboyd@kernel.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 6 Dec 2018 at 16:13, Ludovic Barre <ludovic.Barre@st.com> wrote:
->
-> From: Ludovic Barre <ludovic.barre@st.com>
->
-> On cmd12 (STOP_TRANSMISSION), STM32 sdmmc variant needs to set
-> cmdstop bit in command register. The CPSM ("Command Path State Machine")
-> treats the command as a Stop Transmission command and signals
-> abort to the DPSM ("Data Path State Machine").
->
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Changes in v6:
+* OPP binding updates for qcom,level reviewed by Rob
+* DT bindings for rpmpd and rpmhpd updated to specify the
+OPP tables as child nodes of the power-controller itself
+* Removed some module specific remains from the drivers,
+now that they can only be built-in
+* Added a simple_opp_to_performance_state() helper
 
-Applied for next, thanks!
+Changes in v5:
+* First 6 patches are unchanged
+* Patch 7/8 adds the DT node for rpmh power-controller on sdm845 and the
+corresponding OPP tables for it to describe the performance states
+* Patch 8/8 adds a parent/child relationship across mx/cx and mx_ao/cx_ao
+as needed on sdm845 platform. This patch is dependent on the series from
+Viresh [1] which adds support to propogate performance states across the
+power domain hierarchy which is still being reviewed
 
-Withholding patch2 for a while, as I need some more time to review it.
+Changes in v4:
+* Included the patch to add qcom-opp bindings (dropped accidentally in v3)
+* merged the patches to add bindings for rpm and rpmh, added consumer binding example
+* Made the drivers built in, removed .remove
+* Added better description in changelog for PATCH 6/6
+* Updated rpmhpd_aggregate_corner() based on Davids feedback
+* rpmhpd_set_performance_state() returns max corner, in cases where its called
+with an INT_MAX
+* Dropped the patch to max vote on all corners at init, the patch did not
+work anyway, and it shouldn't be needed now
 
-Kind regards
-Uffe
+Changes in v3:
+* Bindings split into seperate patches
+* Bindings updated to remove duplicate OPP table phandles
+* DT headers defining macros for Power domain indexes and OPP levels
+* Optimisations to use rpmh_write_async() whereever applicable
+* Fixed up handling of ACTIVE_ONLY/WAKE_ONLY/SLEEP voting for RPMh
+* Fixed the vlvl to hlvl conversions in set_performance
+* Other minor fixes based on review of v2
+* TODO: This series does not handle the case where all VDD_MX votes
+should be higher than VDD_CX from APPs, as pointed out
+by David Collins in v2. This needs support at genpd to propogate performance
+state up the parents, if we model these as Parent/Child to handle the
+interdependency.
 
-> ---
->  drivers/mmc/host/mmci.c | 6 ++++++
->  drivers/mmc/host/mmci.h | 2 ++
->  2 files changed, 8 insertions(+)
->
-> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> index 13fa640..e352f5a 100644
-> --- a/drivers/mmc/host/mmci.c
-> +++ b/drivers/mmc/host/mmci.c
-> @@ -21,6 +21,7 @@
->  #include <linux/err.h>
->  #include <linux/highmem.h>
->  #include <linux/log2.h>
-> +#include <linux/mmc/mmc.h>
->  #include <linux/mmc/pm.h>
->  #include <linux/mmc/host.h>
->  #include <linux/mmc/card.h>
-> @@ -274,6 +275,7 @@ static struct variant_data variant_stm32_sdmmc = {
->         .cmdreg_lrsp_crc        = MCI_CPSM_STM32_LRSP_CRC,
->         .cmdreg_srsp_crc        = MCI_CPSM_STM32_SRSP_CRC,
->         .cmdreg_srsp            = MCI_CPSM_STM32_SRSP,
-> +       .cmdreg_stop            = MCI_CPSM_STM32_CMDSTOP,
->         .data_cmd_enable        = MCI_CPSM_STM32_CMDTRANS,
->         .irq_pio_mask           = MCI_IRQ_PIO_STM32_MASK,
->         .datactrl_first         = true,
-> @@ -1100,6 +1102,10 @@ mmci_start_command(struct mmci_host *host, struct mmc_command *cmd, u32 c)
->                 mmci_reg_delay(host);
->         }
->
-> +       if (host->variant->cmdreg_stop &&
-> +           cmd->opcode == MMC_STOP_TRANSMISSION)
-> +               c |= host->variant->cmdreg_stop;
-> +
->         c |= cmd->opcode | host->variant->cmdreg_cpsm_enable;
->         if (cmd->flags & MMC_RSP_PRESENT) {
->                 if (cmd->flags & MMC_RSP_136)
-> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-> index 550dd39..2422909 100644
-> --- a/drivers/mmc/host/mmci.h
-> +++ b/drivers/mmc/host/mmci.h
-> @@ -264,6 +264,7 @@ struct mmci_host;
->   * @cmdreg_lrsp_crc: enable value for long response with crc
->   * @cmdreg_srsp_crc: enable value for short response with crc
->   * @cmdreg_srsp: enable value for short response without crc
-> + * @cmdreg_stop: enable value for stop and abort transmission
->   * @datalength_bits: number of bits in the MMCIDATALENGTH register
->   * @fifosize: number of bytes that can be written when MMCI_TXFIFOEMPTY
->   *           is asserted (likewise for RX)
-> @@ -316,6 +317,7 @@ struct variant_data {
->         unsigned int            cmdreg_lrsp_crc;
->         unsigned int            cmdreg_srsp_crc;
->         unsigned int            cmdreg_srsp;
-> +       unsigned int            cmdreg_stop;
->         unsigned int            datalength_bits;
->         unsigned int            fifosize;
->         unsigned int            fifohalfsize;
-> --
-> 2.7.4
->
+Changes in v2:
+* added a power domain driver for sdm845 which supports communicating to RPMh
+* dropped the changes to sdhc driver to move over to using OPP
+as there is active discussion on using OPP as the interface vs
+handling all of it in clock drivers
+* Other minor binding updates based on review of v1
+
+With performance state support for genpd/OPP merged, this is an effort
+to model a power domain driver to communicate corner/level
+values for qualcomm platforms to RPM (Remote Power Manager) and RPMh.
+
+[1] https://lkml.org/lkml/2018/11/26/333
+
+Rajendra Nayak (10):
+  dt-bindings: opp: Introduce qcom-opp bindings
+  dt-bindings: power: Add qcom rpm power domain driver bindings
+  soc: qcom: rpmpd: Add a Power domain driver to model corners
+  soc: qcom: rpmpd: Add support for get/set performance state
+  arm64: dts: msm8996: Add rpmpd device node
+  soc: qcom: rpmhpd: Add RPMh power domain driver
+  arm64: dts: sdm845: Add rpmh powercontroller node
+  PM / Domains: Add a simple_opp_to_performance_state() helper
+  soc: qcom: rpmpd: Use simple_opp_to_performance_state() helper
+  soc: qcom: rpmhpd: Mark mx as a parent for cx
+
+ .../devicetree/bindings/opp/qcom-opp.txt      |  25 ++
+ .../devicetree/bindings/power/qcom,rpmpd.txt  | 146 ++++++
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         |  34 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  51 +++
+ drivers/base/power/domain.c                   |  17 +
+ drivers/soc/qcom/Kconfig                      |  18 +
+ drivers/soc/qcom/Makefile                     |   2 +
+ drivers/soc/qcom/rpmhpd.c                     | 419 ++++++++++++++++++
+ drivers/soc/qcom/rpmpd.c                      | 317 +++++++++++++
+ include/dt-bindings/power/qcom-rpmpd.h        |  39 ++
+ include/linux/pm_domain.h                     |   9 +
+ 11 files changed, 1077 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/opp/qcom-opp.txt
+ create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+ create mode 100644 drivers/soc/qcom/rpmhpd.c
+ create mode 100644 drivers/soc/qcom/rpmpd.c
+ create mode 100644 include/dt-bindings/power/qcom-rpmpd.h
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
