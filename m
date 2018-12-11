@@ -1,84 +1,77 @@
 From: Vijay Khemka <vijaykhemka@fb.com>
-Subject: [PATCH v3 2/2] ARM: dts: aspeed: Add KCS support for LPC BMC
-Date: Tue, 11 Dec 2018 11:37:19 -0800
-Message-ID: <20181211193719.2232084-2-vijaykhemka@fb.com>
-References: <20181211193719.2232084-1-vijaykhemka@fb.com>
+Subject: [PATCH v3 1/2] ARM: dts: aspeed: Add KCS & lpc ctrl for Facebook
+Date: Tue, 11 Dec 2018 11:37:18 -0800
+Message-ID: <20181211193719.2232084-1-vijaykhemka@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181211193719.2232084-1-vijaykhemka@fb.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, vijaykhemka@fb.com
+Cc: vijaykhemka@fb.com, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Added kcs device support for lpc BMC.
+Added kcs device and lpc ctrl device to enable LPC clock in Facebook
+Tiogapass device tree.
 
 Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
 ---
- arch/arm/boot/dts/aspeed-g5.dtsi | 33 +++++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+ .../dts/aspeed-bmc-facebook-tiogapass.dts     | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index d107459fc0f8..53e6ce4092dd 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -330,8 +330,32 @@
- 				ranges = <0x0 0x1e789000 0x1000>;
- 
- 				lpc_bmc: lpc-bmc@0 {
--					compatible = "aspeed,ast2500-lpc-bmc";
-+					compatible = "aspeed,ast2500-lpc-bmc, "simple-mfd", "syscon"";
- 					reg = <0x0 0x80>;
-+					reg-io-width = <4>;
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+index d9d7f208788a..9544fa2c1822 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+@@ -21,6 +21,18 @@
+ 	memory@80000000 {
+ 		reg = <0x80000000 0x20000000>;
+ 	};
 +
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+					ranges = <0x0 0x0 0x80>;
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
 +
-+					kcs1: kcs1@0 {
-+						compatible = "aspeed,ast2500-kcs-bmc";
-+						interrupts = <8>;
-+						kcs_chan = <1>;
-+						status = "disabled";
-+					};
-+					kcs2: kcs2@0 {
-+						compatible = "aspeed,ast2500-kcs-bmc";
-+						interrupts = <8>;
-+						kcs_chan = <2>;
-+						status = "disabled";
-+					};
-+					kcs3: kcs3@0 {
-+						compatible = "aspeed,ast2500-kcs-bmc";
-+						interrupts = <8>;
-+						kcs_chan = <3>;
-+						status = "disabled";
-+					};
- 				};
- 
- 				lpc_host: lpc-host@80 {
-@@ -343,6 +367,13 @@
- 					#size-cells = <1>;
- 					ranges = <0x0 0x80 0x1e0>;
- 
-+					kcs4: kcs4@0 {
-+						compatible = "aspeed,ast2500-kcs-bmc";
-+						interrupts = <8>;
-+						kcs_chan = <4>;
-+						status = "disabled";
-+					};
++		flash_memory: region@98000000 {
++			no-map;
++			reg = <0x98000000 0x04000000>; /* 64M */
++		};
++	};
 +
- 					lpc_ctrl: lpc-ctrl@0 {
- 						compatible = "aspeed,ast2500-lpc-ctrl";
- 						reg = <0x0 0x80>;
+ 	iio-hwmon {
+ 		compatible = "iio-hwmon";
+ 		oemname0 = "MB_P3V3";
+@@ -62,6 +74,12 @@
+ 	};
+ };
+ 
++&lpc_ctrl {
++	status = "okay";
++	memory-region = <&flash_memory>;
++	flash = <&spi1>;
++};
++
+ &uart1 {
+ 	// Host Console
+ 	status = "okay";
+@@ -75,6 +93,18 @@
+ 	status = "okay";
+ };
+ 
++&kcs2 {
++	// BMC KCS channel 2
++	status = "okay";
++	kcs_addr = <0xca8>;
++};
++
++&kcs3 {
++	// BMC KCS channel 3
++	status = "okay";
++	kcs_addr = <0xca2>;
++};
++
+ &mac0 {
+ 	status = "okay";
+ 
 -- 
 2.17.1
