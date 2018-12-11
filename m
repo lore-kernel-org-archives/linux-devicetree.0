@@ -1,92 +1,36 @@
-From: tom burkart <tom@aussec.com>
-Subject: Re: [PATCH v9 3/4] dt-bindings: pps: pps-gpio PPS ECHO
- implementation
-Date: Tue, 11 Dec 2018 13:17:16 +1100
-Message-ID: <20181211131716.931947v9gya4ajos@www.aussec.com>
-References: <20181122094602.5156-1-tom@aussec.com>
- <20181122094602.5156-2-tom@aussec.com>
- <20181122094602.5156-3-tom@aussec.com>
- <20181122094602.5156-4-tom@aussec.com>
- <CAL_JsqJ6fM3+pcC3b-eXEex=j_ft6Z=vukhLK9wULfWJqOTN-A@mail.gmail.com>
- <20181127150629.10795h1esqtc53ut@aussec.com>
- <CAL_JsqJmuDbPgc3WYRU8y3hbDL5A4_Luj0FfAiSvJ2+J-TM9_g@mail.gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 4/4] ARM: dts: imx7d: sbc imx7: add uart5
+Date: Tue, 11 Dec 2018 00:35:36 -0200
+Message-ID: <CAOMZO5ADmamd6rsUKKPmYPE9wfaRQmSUc7r4m+cYKxCKwsRLhA@mail.gmail.com>
+References: <20181204110741.6943-1-hohatzel@jusst.de>
+ <20181204110741.6943-5-hohatzel@jusst.de>
+ <20181206031520.GE3987@dragon> <58a84012-73b8-1679-0c5b-981fd2a0acd6@jusst.de>
+ <CAOMZO5At5oSv0MCpsuYj4nEd26Y4h9hj-shadq3477fNz8A+HA@mail.gmail.com>
+ <20181211020613.GR3987@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8;
- DelSp="Yes";
- format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJmuDbPgc3WYRU8y3hbDL5A4_Luj0FfAiSvJ2+J-TM9_g@mail.gmail.com>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, lukas@fridolin.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181211020613.GR3987@dragon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, jscheel@jusst.de, NXP Linux Team <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, hohatzel@jusst.de, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rob Herring <robh@kernel.org>:
+Hi Shawn,
 
-> On Mon, Nov 26, 2018 at 10:06 PM tom burkart <tom@aussec.com> wrote:
->>
->> Quoting Rob Herring <robh@kernel.org>:
->>
->> > On Thu, Nov 22, 2018 at 3:49 AM Tom Burkart <tom@aussec.com> wrote:
->> >>
->> >> This patch implements the device tree changes required for the pps
->> >> echo functionality for pps-gpio, that sysfs claims is available
->> >> already.
->> >>
->> >> This patch was originally written by Lukas Senger as part of a masters
->> >> thesis project and modified for inclusion into the linux kernel by Tom
->> >> Burkart.
->> >>
->> >> Signed-off-by: Lukas Senger <lukas@fridolin.com>
->> >> Signed-off-by: Tom Burkart <tom@aussec.com>
->> >> ---
->> >>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 9 +++++++++
->> >>  1 file changed, 9 insertions(+)
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> b/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> index 1155d49c2699..e09f6f2405c5 100644
->> >> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
->> >> @@ -7,10 +7,15 @@ Required properties:
->> >>  - compatible: should be "pps-gpio"
->> >>  - gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
->> >>
->> >> +Additional required properties for the PPS ECHO functionality:
->> >> +- echo-gpios: one PPS ECHO GPIO in the format described by  
->> ../gpio/gpio.txt
->> >> +- echo-active-ms: duration in ms of the active portion of the echo pulse
->> >> +
->> >>  Optional properties:
->> >>  - assert-falling-edge: when present, assert is indicated by a  
->> falling edge
->> >>                         (instead of by a rising edge)
->> >>  - capture-clear: when present, also capture the PPS clear event
->> >> +- invert-pps-echo: when present, invert the PPS ECHO pulse
->> >
->> > Why do you need this? Can't you just make the echo gpio GPIO_ACTIVE_LOW?
->> >
->> > BTW, using the flag probably should have been done for
->> > 'assert-falling-edge' as well.
->>
->> The hardware I use expects a positive-going echo pulse, however, it
->> was really easy to give users the option to have it inverted in case
->> they use different hardware that expects a negative-going edge.
->
-> It will be even easier to implement if you use GPIO_ACTIVE_LOW or
-> GPIO_ACTIVE_HIGH as appropriate. If the flag is set appropriately,
-> then gpiod_set_value(gpio, 1) asserts the pulse and
-> gpiod_set_value(gpio, 0) deasserts it no matter which way the h/w is
-> wired. You can then get rid of invert_pps_echo in the driver.
+On Tue, Dec 11, 2018 at 12:07 AM Shawn Guo <shawnguo@kernel.org> wrote:
 
-Hi Rob,
-I have looked at the appropriate changes to my code to implement the  
-above.  However, there is no GPIO_ACTIVE_* as part of the gpiod_flags  
-enum (include/linux/gpio/consumer.h).
+> Okay, but would it be better to set the default parent clock in soc
+> level of dtsi, since the configuration doesn't seem to be board
+> specific?
 
-What am I missing?
-
-Tom
+Yes, I think this is a good idea.
