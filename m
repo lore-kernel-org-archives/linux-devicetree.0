@@ -1,7 +1,7 @@
 From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 2/3] nvmem: imx-ocotp: Implement i.MX6ULL/ULZ support
-Date: Tue, 11 Dec 2018 14:51:12 +0100
-Message-ID: <1544536273-17909-3-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH 3/3] ARM: dts: imx6ull: Fix i.MX6ULL/ULZ ocotp compatible
+Date: Tue, 11 Dec 2018 14:51:13 +0100
+Message-ID: <1544536273-17909-4-git-send-email-stefan.wahren@i2se.com>
 References: <1544536273-17909-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,38 +21,28 @@ To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@k
 Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-imx@nxp.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In comparision to the i.MX6UL the lower cost variants i.MX6ULL/ULZ only
-supports 8 OTP banks a 8 words.
+Since imx6ulz.dtsi includes imx6ull.dtsi, we only need to fix the compatible
+string here to achieve the correct OTP size for both SoCs.
 
 Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 ---
- drivers/nvmem/imx-ocotp.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/imx6ull.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-index afb429a..a433a41 100644
---- a/drivers/nvmem/imx-ocotp.c
-+++ b/drivers/nvmem/imx-ocotp.c
-@@ -427,6 +427,12 @@ static const struct ocotp_params imx6ul_params = {
- 	.set_timing = imx_ocotp_set_imx6_timing,
+diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
+index f3668fe..9cd1a48 100644
+--- a/arch/arm/boot/dts/imx6ull.dtsi
++++ b/arch/arm/boot/dts/imx6ull.dtsi
+@@ -30,6 +30,10 @@
+ 	>;
  };
  
-+static const struct ocotp_params imx6ull_params = {
-+	.nregs = 64,
-+	.bank_address_words = 0,
-+	.set_timing = imx_ocotp_set_imx6_timing,
++&ocotp {
++	compatible = "fsl,imx6ull-ocotp", "syscon";
 +};
 +
- static const struct ocotp_params imx7d_params = {
- 	.nregs = 64,
- 	.bank_address_words = 4,
-@@ -438,6 +444,7 @@ static const struct of_device_id imx_ocotp_dt_ids[] = {
- 	{ .compatible = "fsl,imx6sl-ocotp", .data = &imx6sl_params },
- 	{ .compatible = "fsl,imx6sx-ocotp", .data = &imx6sx_params },
- 	{ .compatible = "fsl,imx6ul-ocotp", .data = &imx6ul_params },
-+	{ .compatible = "fsl,imx6ull-ocotp", .data = &imx6ull_params },
- 	{ .compatible = "fsl,imx7d-ocotp",  .data = &imx7d_params },
- 	{ .compatible = "fsl,imx6sll-ocotp", .data = &imx6sll_params },
- 	{ },
+ / {
+ 	soc {
+ 		aips3: aips-bus@2200000 {
 -- 
 2.7.4
