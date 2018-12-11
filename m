@@ -1,35 +1,150 @@
-From: Christoph Hellwig <hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: Re: [PATCH v6 0/7] Add virtio-iommu driver
-Date: Tue, 11 Dec 2018 10:31:01 -0800
-Message-ID: <20181211183101.GA31936@infradead.org>
-References: <20181211182104.18241-1-jean-philippe.brucker@arm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3] kbuild: Add support for DT binding schema checks
+Date: Tue, 11 Dec 2018 12:35:26 -0600
+Message-ID: <CAL_JsqJ_1RukAZx5tCpp+X8mdNuOT6LTAdYOzN5UyhRK6SAo2Q@mail.gmail.com>
+References: <20181210203225.11179-1-robh@kernel.org> <CAK7LNAThtAOy4PQiYZ2X0oWrHdcLi7on8ctSXJ=bfT0HNh7NFQ@mail.gmail.com>
+ <CAL_JsqL7n2sjLbJVieVDQ4YtKMi2COCaijO9ZNu7ggzmXXxLEg@mail.gmail.com> <CAK7LNARkr-g9ae+74QE6GMuxLM0JPgEqYOkwb0njXcb9-=nBdQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20181211182104.18241-1-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, virtio-dev-sDuHXQ4OtrM4h7I2RyI4rWD2FQJk+8+b@public.gmane.org, kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, tnowicki-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNARkr-g9ae+74QE6GMuxLM0JPgEqYOkwb0njXcb9-=nBdQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, ARM-SoC Maintainers <arm@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Michal Marek <michal.lkml@markovi.net>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 11, 2018 at 06:20:57PM +0000, Jean-Philippe Brucker wrote:
-> Implement the virtio-iommu driver, following specification v0.9 [1].
-> 
-> Only minor changes since v5 [2]. I fixed issues reported by Michael and
-> added tags from Eric and Bharat. Thanks!
-> 
-> You can find Linux driver and kvmtool device on v0.9 branches [3],
-> module and x86 support on virtio-iommu/devel. Also tested with Eric's
-> QEMU device [4].
+On Tue, Dec 11, 2018 at 10:03 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> On Wed, Dec 12, 2018 at 12:13 AM Rob Herring <robh@kernel.org> wrote:
+>
+> >
+> > > > +$(obj)/%.example.dts: $(src)/%.yaml FORCE
+> > > > +       $(call if_changed,chk_binding)
+> > > > +
+> > > > +DT_TMP_SCHEMA := .schema.yaml.tmp
+> > >
+> > >
+> > > BTW, why does this file start with a period?
+> > > What is the meaning of '.tmp' extension?
+> >
+> > Nothing really. Just named it something so it gets cleaned and ignored by git.
+>
+>
+> It is cleaned whatever file name you use.
+>
+>
+> See scripts/Makefile.clean
+>
+> __clean-files   := $(extra-y) $(extra-m) $(extra-)       \
+>                    $(always) $(targets) $(clean-files)   \
+>                    $(hostprogs-y) $(hostprogs-m) $(hostprogs-) \
+>                    $(hostlibs-y) $(hostlibs-m) $(hostlibs-) \
+>                    $(hostcxxlibs-y) $(hostcxxlibs-m)
+>
+>
+> $(extra-y) is cleaned.
 
-Just curious, what is the use case for it?
+True.
+
+>
+>
+> You are adding *.example.dts to .gitignore
+>
+> Why not "schema.yaml" ?
+
+Okay. I'll do "processed-schema.yaml" to give a bit better name of
+what it contains.
+
+>
+> > > > +extra-y += $(DT_TMP_SCHEMA)
+> > > > +
+> > > > +quiet_cmd_mk_schema = SCHEMA  $@
+> > > > +      cmd_mk_schema = mkdir -p $(obj); \
+> > > > +                      rm -f $@; \
+> > > > +                      $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(filter-out FORCE, $^)
+> > >
+> > >
+> > > "mkdir -p $(obj)" is redundant.
+> > >
+> > >
+> > > Why is 'rm -f $@' necessary ?
+> > > Can't dt-mk-schema overwrite the output file?
+> >
+> > It is for error case when the output file is not generated. I can
+> > handle this within dt-mk-schema instead.
+> > > > +DT_DOCS = $(shell cd $(srctree)/$(src) && find * -name '*.yaml')
+> > > > +DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
+> > > > +
+> > > > +extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
+> > > > +extra-y += $(patsubst $(src)/%.yaml,%.example.dtb, $(DT_SCHEMA_FILES))
+> > >
+> > >
+> > >
+> > > I assume you intentionally did not do like this:
+> > >
+> > > extra-y += $(patsubst %.yaml,%.example.dtb, $(DT_DOCS))
+> > >
+> > > From the commit description, DT_SCHEMA_FILES might be overridden by a user.
+> > > So, I think this is OK.
+> > >
+> > >
+> > >
+> > >
+> > > > +$(obj)/$(DT_TMP_SCHEMA): | $(addprefix $(obj)/,$(patsubst $(src)/%.yaml,%.example.dtb, $(DT_SCHEMA_FILES)))
+> > >
+> > > I do not understand this line.
+> > > Why is it necessary?
+> > >
+> > > *.example.dtb files are generated anyway
+> > > since they are listed in extra-y.
+> >
+> > It is enforcing the ordering. Without it, the binding checks and
+> > building .schema.yaml.tmp happen in parallel because both only have
+> > the source files as dependencies. The '|' keeps the dependencies out
+> > of the dependency list($^).
+>
+>
+> What kind problem would you see if
+> the binding checks and building .schema.yaml.tmp
+> happen in parallel?
+
+In case of no errors in the binding docs, it doesn't matter. If there
+are errors, I don't want the dtbs validation to run if any schema
+doesn't validate. However, I played around with this a bit more and it
+seems like having the examples' dts/dtb in extra-y prevents that from
+happening. Does that match your expections? If so, then I think we can
+remove the dependency.
+
+Here's an example.
+
+  SCHEMA  Documentation/devicetree/bindings/.schema.yaml.tmp
+  CHKDT   Documentation/devicetree/bindings/arm/vt8500.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/zte.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/ti/nspire.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/spear.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/altera.yaml
+warning: no schema found in file:
+../Documentation/devicetree/bindings/arm/xilinx.yaml
+/home/rob/proj/git/linux-2.6/Documentation/devicetree/bindings/arm/xilinx.yaml:
+ignoring, error in schema 'onOf'
+  CHKDT   Documentation/devicetree/bindings/arm/sti.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/qcom.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/primecell.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/cpus.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/sirf.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/calxeda.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/xilinx.yaml
+  CHKDT   Documentation/devicetree/bindings/example-schema.yaml
+/home/rob/proj/git/linux-2.6/Documentation/devicetree/bindings/arm/xilinx.yaml:
+properties:compatible:onOf: 'onOf' is not one of ['$ref',
+'additionalItems', 'allOf', 'const', 'contains', 'default',
+'dependencies', 'description', 'enum', 'items', 'minItems', 'minimum',
+'maxItems', 'maximum', 'not', 'oneOf', 'pattern', 'patternProperties',
+'properties', 'required', 'type', 'typeSize']
+make[2]: *** [../Documentation/devicetree/bindings/Makefile:12:
+Documentation/devicetree/bindings/arm/xilinx.example.dts] Error 1
+
+Rob
