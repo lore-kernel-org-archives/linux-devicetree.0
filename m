@@ -1,38 +1,39 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: drm/panel: simple: Fix typo in EDT
- etm-series compatible
-Date: Tue, 11 Dec 2018 16:14:40 -0600
-Message-ID: <20181211221440.GA17962@bogus>
-References: <20180831121842.GA23617@bogus>
- <20181127152804.16652-1-jan.tuerk@emtrion.com>
+Subject: Re: [PATCH 1/3] dt-bindings: mfd: syscon: Add optional clock support
+Date: Tue, 11 Dec 2018 16:16:53 -0600
+Message-ID: <20181211221653.GA18104@bogus>
+References: <1543337297-21873-1-git-send-email-fabrice.gasnier@st.com>
+ <1543337297-21873-2-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181127152804.16652-1-jan.tuerk@emtrion.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jan Tuerk <jan.tuerk@emtrion.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>
+In-Reply-To: <1543337297-21873-2-git-send-email-fabrice.gasnier@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: lee.jones@linaro.org, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, arnd@arndb.de, mark.rutland@arm.com, gabriel.fernandez@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyNyBOb3YgMjAxOCAxNjoyODowMyArMDEwMCwgSmFuIFR1ZXJrIHdyb3RlOgo+IFRo
-aXMgZml4ZXMgdGhlIGVycm9yIGluIHRoZSBjb21wYXRpYmxlIGRvY3VtZW50YXRpb24gZm9yIHRo
-ZSBFRFQKPiBldG0wNzAwW2ddLi4gcGFuZWxzIHdoaWNoIGhhdmUgYWNjaWRlbnRhbGx5IGRvY3Vt
-ZW50ZWQgYXMgZXRtMDcwMFs4XTAuLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEphbiBUdWVyayA8amFu
-LnR1ZXJrQGVtdHJpb24uY29tPgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L3BhbmVsL2VkdCxldC1zZXJpZXMudHh0ICAgICB8IDYgKysrLS0tCj4gIDEgZmlsZSBjaGFu
-Z2VkLCAzIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCj4gCj4gQ2hhbmdlcyB2MjoKPiAg
-LSBVcGRhdGVkIHN1YmplY3QgbGluZQo+IAoKUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2Jo
-QGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+On Tue, Nov 27, 2018 at 05:48:15PM +0100, Fabrice Gasnier wrote:
+> Some system control registers need to be clocked, so the registers can
+> be accessed. Add an optional clock.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/syscon.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
+> index 25d9e9c..a9aaa51 100644
+> --- a/Documentation/devicetree/bindings/mfd/syscon.txt
+> +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+> @@ -17,6 +17,7 @@ Optional property:
+>  - reg-io-width: the size (in bytes) of the IO accesses that should be
+>    performed on the device.
+>  - hwlocks: reference to a phandle of a hardware spinlock provider node.
+> +- clocks: phandle to the syscon clock
+
+No. Add clocks to specific bindings using syscon. If you have a node 
+with only 'syscon', then that should be fixed.
+
+Rob
