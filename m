@@ -1,104 +1,58 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH 01/19] dt-bindings: clock: tegra124-dfll: Update DFLL
- binding for PWM regulator
-Date: Tue, 11 Dec 2018 11:15:14 +0200
-Message-ID: <20181211091514.GA29064@pdeschrijver-desktop.Nvidia.com>
-References: <20181204092548.3038-1-josephl@nvidia.com>
- <20181204092548.3038-2-josephl@nvidia.com>
- <af1211f0-dda0-bdde-f320-03e54f82d7e1@nvidia.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 0/3] ARM: dts: meson: add the APB/APB2 busses
+Date: Tue, 11 Dec 2018 10:16:33 +0100
+Message-ID: <ba3e4fef-7a18-8c7d-e0ea-05c541b29913@baylibre.com>
+References: <20181208165025.27689-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <af1211f0-dda0-bdde-f320-03e54f82d7e1@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181208165025.27689-1-martin.blumenstingl@googlemail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, khilman@baylibre.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 07, 2018 at 01:41:57PM +0000, Jon Hunter wrote:
+On 08/12/2018 17:50, Martin Blumenstingl wrote:
+> This adds the APB bus on Meson8 and Meson8b as well as the APB2 bus on
+> Meson6. This is preparation work for adding the Mali GPU which is
+> located on theses busses.
 > 
-> On 04/12/2018 09:25, Joseph Lo wrote:
-> > From: Peter De Schrijver <pdeschrijver@nvidia.com>
-> > 
-> > Add new properties to configure the DFLL PWM regulator support. Also
-> > add an example and make the I2C clock only required when I2C support is
-> > used.
-> > 
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> > Signed-off-by: Joseph Lo <josephl@nvidia.com>
-> > ---
-> >  .../bindings/clock/nvidia,tegra124-dfll.txt   | 73 ++++++++++++++++++-
-> >  1 file changed, 71 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
-> > index dff236f524a7..8c97600d2bad 100644
-> > --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
-> > +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
-> > @@ -8,7 +8,6 @@ the fast CPU cluster. It consists of a free-running voltage controlled
-> >  oscillator connected to the CPU voltage rail (VDD_CPU), and a closed loop
-> >  control module that will automatically adjust the VDD_CPU voltage by
-> >  communicating with an off-chip PMIC either via an I2C bus or via PWM signals.
-> > -Currently only the I2C mode is supported by these bindings.
-> >  
-> >  Required properties:
-> >  - compatible : should be "nvidia,tegra124-dfll"
-> > @@ -45,10 +44,28 @@ Required properties for the control loop parameters:
-> >  Optional properties for the control loop parameters:
-> >  - nvidia,cg-scale: Boolean value, see the field DFLL_PARAMS_CG_SCALE in the TRM.
-> >  
-> > +Optional properties for mode selection:
-> > +- nvidia,pwm-to-pmic: Use PWM to control regulator rather then I2C.
-> > +
-> >  Required properties for I2C mode:
-> >  - nvidia,i2c-fs-rate: I2C transfer rate, if using full speed mode.
-> >  
-> > -Example:
-> > +Required properties for PWM mode:
-> > +- nvidia,pwm-period: period of PWM square wave in microseconds.
-> > +- nvidia,init-uv: Regulator voltage in micro volts when PWM control is disabled.
+> Meson6 seems to have it's APB at 0xc8000000 instead of 0xd0000000. The
+> region at 0xd0000000 is called APB2 or A9_APB and it has a different
+> size (256k) compared to Meson8 and Meson8b (2M).
 > 
-> Maybe consider 'pwm-inactive-voltage-microvolt'.
+> Addresses and sizes are taken from the Amlogic 3.10 kernel sources:
+> - Meson6: [0]
+> - Meson8: [1]
+> - Meson8b: [2]
+> 
+> 
+> Changes since v1 at [3]:
+> - re-send the patches but this time don't include the old patches
+>   which still had a typo in the patch description (ABP vs APB)
+> 
+> 
+> [0] https://github.com/endlessm/linux-meson/blob/cd4096c3ff4eb5b8a8a5581bb46508601c5470dc/arch/arm/mach-meson6/include/mach/io.h#L61
+> [1] https://github.com/endlessm/linux-meson/blob/cd4096c3ff4eb5b8a8a5581bb46508601c5470dc/arch/arm/mach-meson8/include/mach/io.h#L53
+> [2] https://github.com/endlessm/linux-meson/blob/cd4096c3ff4eb5b8a8a5581bb46508601c5470dc/arch/arm/mach-meson8b/include/mach/io.h#L53
+> [3] http://lists.infradead.org/pipermail/linux-amlogic/2018-December/009424.html
+> 
+> 
+> Martin Blumenstingl (3):
+>   ARM: dts: meson6: add the APB2 bus
+>   ARM: dts: meson8: add the APB bus
+>   ARM: dts: meson8b: add the APB bus
+> 
+>  arch/arm/boot/dts/meson6.dtsi  | 8 ++++++++
+>  arch/arm/boot/dts/meson8.dtsi  | 8 ++++++++
+>  arch/arm/boot/dts/meson8b.dtsi | 8 ++++++++
+>  3 files changed, 24 insertions(+)
 > 
 
-Inactive is not very accurate. The OVR regulator will output
-nvidia,align-offset-uv when the PWM input is driven low but will output
-nvidia,init-uv when the PWM input is in tristate mode.
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 
-> > +- nvidia,align-offset-uv: Regulator voltage in micro volts when PWM control is
-> > +			  enabled and PWM output is low.
-> 
-> Would this be considered the minimum pwm active voltage?
-> 
-> > +- nvidia,align-step-uv: Voltage increase in micro volts corresponding to a
-> > +			1/33th increase in duty cycle. Eg the voltage for 2/33th
-> > +			duty cycle would be:
-> 
-> Maybe consider 'pwm-voltage-step-microvolt'.
-> 
-> > +			nvidia,align-offset-uv + nvidia,align-step-uv * 2.
-> > +- pinctrl-0: I/O pad configuration when PWM control is enabled.
-> > +- pinctrl-1: I/O pad configuration when PWM control is disabled.
-> > +- pinctrl-names: must include the following entries:
-> > +  - dvfs_pwm_enable: I/O pad configuration when PWM control is enabled.
-> > +  - dvfs_pwm_disable: I/O pad configuration when PWM control is disabled.
-> 
-> Please see Rob's feedback on the above [0].
-> 
-> Cheers
-> Jon
-> 
-> [0] https://lore.kernel.org/patchwork/patch/885328/
-> 
-> -- 
-> nvpublic
+But frankly I'll squash the meson8/meson8b patches with the mali node patches !
+
+Neil
