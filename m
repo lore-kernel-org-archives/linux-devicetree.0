@@ -1,28 +1,44 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 1/3] dt-bindings: soc: qcom: Add AOSS QMP binding
-Date: Mon, 10 Dec 2018 15:56:48 -0800
-Message-ID: <CAD=FV=Ugz1PhLL6NqhYyjOsRc=JwZT-jJzfr=3LHxo6zT5zypA@mail.gmail.com>
-References: <20181112080557.22698-1-bjorn.andersson@linaro.org> <20181112080557.22698-2-bjorn.andersson@linaro.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 1/6] misc: dt-bindings: Add Qualcomm Fastrpc bindings
+Date: Mon, 10 Dec 2018 16:10:50 -0800
+Message-ID: <20181211001050.GA1578@tuxbook-pro>
+References: <20181207163513.16412-1-srinivas.kandagatla@linaro.org>
+ <20181207163513.16412-2-srinivas.kandagatla@linaro.org>
+ <20181207182327.64mtkfx6v4wlwccz@lakrids.cambridge.arm.com>
+ <afdeecc4-4ee9-e933-9917-9930ece85b00@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181112080557.22698-2-bjorn.andersson@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <afdeecc4-4ee9-e933-9917-9930ece85b00@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, robh+dt@kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bkumar@qti.qualcomm.com, thierry.escande@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon 10 Dec 03:17 PST 2018, Srinivas Kandagatla wrote:
+> On 07/12/18 18:23, Mark Rutland wrote:
+> > On Fri, Dec 07, 2018 at 04:35:08PM +0000, Srinivas Kandagatla wrote:
+> > > diff --git a/Documentation/devicetree/bindings/misc/qcom,fastrpc.txt b/Documentation/devicetree/bindings/misc/qcom,fastrpc.txt
+[..]
+> > > +- reg
+> > > +	Usage: required
+> > > +	Value type: <u32>
+> > > +	Definition: DSP Processor ID.
+> > > +	Possible values are :
+> > > +			0 - ADSP
+> > > +			1 - MDSP
+> > > +			2 - SDSP
+> > > +			3 - CDSP
+> > 
+> > Why is this in a reg?
+> 
+> This is to identify which type of dsp(Audio/Modem/Sensor/Compute) it is,
+> This information is used to create device nodes for user-space access.
+> 
 
-On Mon, Nov 12, 2018 at 12:02 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> +  aoss_qmp: qmp@c300000 {
-> +          compatible = "qcom,sdm845-aoss-qmp";
-> +          reg = <0x0c300000 0x100000>;
+But it does not represent FastRPC's address on the rpmsg bus. How about
+replacing it with a "label" (or "qcom,domain" perhaps?) of type string?
 
-drive-by nit: s/0x0c300000/0xc300000
-
-...another random suggestion is that I think Rob H. has been
-requesting that examples have the #include in them...
-
--Doug
+Regards,
+Bjorn
