@@ -1,54 +1,46 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V3 1/2] dt-bindings: iio: light: isl29018: update power
- supply name
-Date: Tue, 11 Dec 2018 01:38:53 +0000
-Message-ID: <DB3PR0402MB3916E1651ABC07F6F788B265F5A60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1544425521-775-1-git-send-email-Anson.Huang@nxp.com>
- <20181210232358.GA11621@bogus>
+From: MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: RE: Re: [PATCH v3 2/5] devfreq: add support for suspend/resume of a
+ devfreq device
+Date: Tue, 11 Dec 2018 10:43:15 +0900
+Message-ID: <20181211014315epcms1p153a54217e587fd76a8198db77762699a@epcms1p1>
+References: <5C0878C0.4060500@samsung.com>
+        <1544007956-28889-1-git-send-email-l.luba@partner.samsung.com>
+        <1544007956-28889-3-git-send-email-l.luba@partner.samsung.com>
+        <CGME20181205110620eucas1p14de70dc092580b684a0304b5ce771605@epcms1p1>
+Reply-To: myungjoo.ham@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181210232358.GA11621@bogus>
-Content-Language: en-US
+In-Reply-To: <5C0878C0.4060500@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Chanwoo Choi <cw00.choi@samsung.com>, Lukasz Luba <l.luba@partner.samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "tjakobi@math.uni-bielefeld.de" <tjakobi@math.uni-bielefeld.de>, Kyungmin Park <kyungmin.park@samsung.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "len.brown@intel.com" <len.brown@intel.com>, "pavel@ucw.cz" <pavel@ucw.cz>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "keescook@chromium.org" <keescook@chromium.org>, "anton@enomsg.org" <anton@enomsg.org>, "ccross@android.com" <ccross@android.com>, "tony.luck@intel.com" <tony.luck@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kgene@kernel.org" <kgene@kernel.org>, "krzk@kernel.org" <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFJvYg0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3Jn
-XQ0KPiBTZW50OiAyMDE4xOoxMtTCMTHI1SA3OjI0DQo+IFRvOiBBbnNvbiBIdWFuZyA8YW5zb24u
-aHVhbmdAbnhwLmNvbT4NCj4gQ2M6IGppYzIzQGtlcm5lbC5vcmc7IGtuYWFjay5oQGdteC5kZTsg
-bGFyc0BtZXRhZm9vLmRlOw0KPiBwbWVlcndAcG1lZXJ3Lm5ldDsgbWFyay5ydXRsYW5kQGFybS5j
-b207IGxpbnV4LWlpb0B2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXgNCj4gPGxpbnV4
-LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFYzIDEvMl0gZHQtYmluZGluZ3M6
-IGlpbzogbGlnaHQ6IGlzbDI5MDE4OiB1cGRhdGUgcG93ZXINCj4gc3VwcGx5IG5hbWUNCj4gDQo+
-IE9uIE1vbiwgRGVjIDEwLCAyMDE4IGF0IDA3OjExOjE5QU0gKzAwMDAsIEFuc29uIEh1YW5nIHdy
-b3RlOg0KPiA+IEFjY29yZGluZyB0byBkYXRhc2hlZXQsIHRoZSBpc2wyOTAxOCBoYXMgInZkZGQv
-dmRkYSIgcG93ZXIgc3VwcGx5LCBhbmQNCj4gPiBpc2wyOTAyMy9pc2wyOTAzNSBPTkxZIGhhcyAi
-dmRkIiBwb3dlciBzdXBwbHksIHVwZGF0ZSB0aGUgcG93ZXIgc3VwcGx5DQo+ID4gbmFtZSB3aXRo
-ICJ2ZGQiIGFuZCAidmRkYSIgYWNjb3JkaW5nIHRvIGRhdGFzaGVldCB0byBjb3ZlciBhbGwgZGV2
-aWNlcw0KPiA+IGFuZCBhdm9pZCBjb25mdXNpb24uDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBB
-bnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9saWdodC9pc2wyOTAxOC50eHQgfCA0ICsrKy0N
-Cj4gPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+
-DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8v
-bGlnaHQvaXNsMjkwMTgudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvaWlvL2xpZ2h0L2lzbDI5MDE4LnR4dA0KPiA+IGluZGV4IGI5YmJkZTMuLjM2ZjczN2QgMTAw
-NjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9saWdo
-dC9pc2wyOTAxOC50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvaWlvL2xpZ2h0L2lzbDI5MDE4LnR4dA0KPiA+IEBAIC0xNSw3ICsxNSw5IEBAIE9wdGlvbmFs
-IHByb3BlcnRpZXM6DQo+ID4gICAgUmVmZXIgdG8gaW50ZXJydXB0LWNvbnRyb2xsZXIvaW50ZXJy
-dXB0cy50eHQgZm9yIGdlbmVyaWMgaW50ZXJydXB0IGNsaWVudA0KPiA+ICAgIG5vZGUgYmluZGlu
-Z3MuDQo+ID4NCj4gPiAtICAtIHZjYy1zdXBwbHk6IHBoYW5kbGUgdG8gdGhlIHJlZ3VsYXRvciB0
-aGF0IHByb3ZpZGVzIHBvd2VyIHRvIHRoZSBzZW5zb3IuDQo+ID4gKyAgLSB2ZGQtc3VwcGx5OiBw
-aGFuZGxlIHRvIHRoZSByZWd1bGF0b3IgdGhhdCBwcm92aWRlcyB2ZGQgcG93ZXIgdG8gdGhlDQo+
-IHNlbnNvci4NCj4gPiArDQo+ID4gKyAgLSB2ZGRhLXN1cHBseTogcGhhbmRsZSB0byB0aGUgcmVn
-dWxhdG9yIHRoYXQgcHJvdmlkZXMgdmRkYSBwb3dlciB0byB0aGUNCj4gc2Vuc29yLg0KPiANCj4g
-SXMgdGhpcyBpbiB1c2U/IFlvdSBjYW4ndCBqdXN0IGNoYW5nZSB0aGluZ3MgaWYgaXQgaXMuDQoN
-CkkgZGlkIE5PVCBzZWUgYW55ICJ2Y2MiIGluIGZvbGRlciBkcml2ZXJzL2lpby9saWdodC8sIHNv
-IEkgdGhpbmsgaXQgaXMgTk9UIHVzZWQgYXQgYWxsLA0Kc28gSSB0YWtlIHRoaXMgY2hhbmNlIHRv
-IHVwZGF0ZSBpdCBhY2NvcmRpbmcgdG8gZGF0YXNoZWV0LiBUaGFua3MuDQoNCkFuc29uDQoNCg0K
-PiANCj4gUm9iDQo=
+> Hi Lukasz,
+>=20
+> On 2018=EB=85=84=2012=EC=9B=94=2005=EC=9D=BC=2020:05,=20Lukasz=20Luba=20w=
+rote:=0D=0A>=20>=20The=20patch=20prepares=20devfreq=20device=20for=20handli=
+ng=20suspend/resume=0D=0A>=20>=20functionality.=20The=20new=20fields=20will=
+=20store=20needed=20information=20during=20this=0D=0A>=20>=20process.=20Dev=
+freq=20framework=20handles=20opp-suspend=20DT=20entry=20and=20there=20is=20=
+no=0D=0A>=20>=20need=20of=20modyfications=20in=20the=20drivers=20code.=20It=
+=20uses=20atomic=20variables=20to=0D=0A>=20>=20make=20sure=20no=20race=20co=
+ndition=20affects=20the=20process.=0D=0A>=20>=20=0D=0A>=20>=20Suggested-by:=
+=20Tobias=20Jakobi=20<tjakobi=40math.uni-bielefeld.de>=0D=0A>=20>=20Suggest=
+ed-by:=20Chanwoo=20Choi=20<cw00.choi=40samsung.com>=0D=0A>=20>=20Signed-off=
+-by:=20Lukasz=20Luba=20<l.luba=40partner.samsung.com>=0D=0A>=20>=20---=0D=
+=0A>=20>=20=20drivers/devfreq/devfreq.c=20=7C=2047=20++++++++++++++++++++++=
++++++++++++++++++++------=0D=0A>=20>=20=20include/linux/devfreq.h=20=20=20=
+=7C=20=207=20+++++++=0D=0A>=20>=20=202=20files=20changed,=2048=20insertions=
+(+),=206=20deletions(-)=0D=0A>=20=0D=0A>=20Reviewed-by:=20Chanwoo=20Choi=20=
+<cw00.choi=40samsung.com>=0D=0A>=20=0D=0A=0D=0ALooks=20goot=20do=20me=20as=
+=20well.=0D=0A=0D=0AAcked-by:=20MyungJoo=20Ham=20<myungjoo.ham=40samsung.co=
+m>=0D=0A=0D=0A=0D=0AAnyway,=20for=20the=20sake=20of=20curiosity...=0D=0A=0D=
+=0AHaving=20suspend-frequency=20is=20usually=20required=20when=0D=0Athe=20f=
+requency=20configuration=20is=20reset=20with=20suspend-resume=0D=0Aas=20old=
+er=20Exynos's=20CPU=20did=20(I=20don't=20know=20whether=20it=20still=20does=
+).=0D=0A=0D=0ADoes=20GPU=20do=20this=20as=20well?=0D=0A(memory-bus=20won't=
+=20do=20this=20because=20they=20are=20kept=20turned=20on=20during=20suspend=
+)=0D=0A=0D=0A=0D=0ACheers,=0D=0AMyungJoo=0D=0A
