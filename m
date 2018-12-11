@@ -1,70 +1,73 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v2 0/3] ARM: dts: meson: add the APB/APB2 busses
-Date: Tue, 11 Dec 2018 23:09:30 +0100
-Message-ID: <CAFBinCBYBAqtKp_edgs6b44MpOhc-iN_FwR425bkU4xirGQKvA@mail.gmail.com>
-References: <20181208165025.27689-1-martin.blumenstingl@googlemail.com> <ba3e4fef-7a18-8c7d-e0ea-05c541b29913@baylibre.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: gpu: add Allwinner H6 Mali
+ Midgard binding
+Date: Tue, 11 Dec 2018 16:11:26 -0600
+Message-ID: <20181211221126.GA12250@bogus>
+References: <20181127074249.15204-1-icenowy@aosc.io>
+ <20181127074249.15204-2-icenowy@aosc.io>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ba3e4fef-7a18-8c7d-e0ea-05c541b29913@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, khilman@baylibre.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-sunxi+bncBDJIP47K7MERBEHMYDQAKGQECSPS64Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20181127074249.15204-2-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
+On Tue, Nov 27, 2018 at 03:42:49PM +0800, Icenowy Zheng wrote:
+> Allwinner H6 SoC uses a Mali T720 GPU, which is one of the GPUs in the
+> Midgard GPU product line.
+> 
+> Add binding for the H6 Mali Midgard GPU.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  .../devicetree/bindings/gpu/arm,mali-midgard.txt    | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> index 02f870cd60e6..c897dd7be48f 100644
+> --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> @@ -18,6 +18,7 @@ Required properties:
+>      + "amlogic,meson-gxm-mali"
+>      + "rockchip,rk3288-mali"
+>      + "rockchip,rk3399-mali"
+> +    + "allwinner,sun50i-h6-mali"
+>  
+>  - reg : Physical base address of the device and length of the register area.
+>  
+> @@ -44,6 +45,18 @@ Optional properties:
+>    for details.
+>  
+>  
+> +Vendor-specific bindings
+> +------------------------
+> +
+> +The Mali GPU is integrated very differently from one SoC to
+> +another. In order to accomodate those differences, you have the option
 
-On Tue, Dec 11, 2018 at 10:16 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> On 08/12/2018 17:50, Martin Blumenstingl wrote:
-> > This adds the APB bus on Meson8 and Meson8b as well as the APB2 bus on
-> > Meson6. This is preparation work for adding the Mali GPU which is
-> > located on theses busses.
-> >
-> > Meson6 seems to have it's APB at 0xc8000000 instead of 0xd0000000. The
-> > region at 0xd0000000 is called APB2 or A9_APB and it has a different
-> > size (256k) compared to Meson8 and Meson8b (2M).
-> >
-> > Addresses and sizes are taken from the Amlogic 3.10 kernel sources:
-> > - Meson6: [0]
-> > - Meson8: [1]
-> > - Meson8b: [2]
-> >
-> >
-> > Changes since v1 at [3]:
-> > - re-send the patches but this time don't include the old patches
-> >   which still had a typo in the patch description (ABP vs APB)
-> >
-> >
-> > [0] https://github.com/endlessm/linux-meson/blob/cd4096c3ff4eb5b8a8a5581bb46508601c5470dc/arch/arm/mach-meson6/include/mach/io.h#L61
-> > [1] https://github.com/endlessm/linux-meson/blob/cd4096c3ff4eb5b8a8a5581bb46508601c5470dc/arch/arm/mach-meson8/include/mach/io.h#L53
-> > [2] https://github.com/endlessm/linux-meson/blob/cd4096c3ff4eb5b8a8a5581bb46508601c5470dc/arch/arm/mach-meson8b/include/mach/io.h#L53
-> > [3] http://lists.infradead.org/pipermail/linux-amlogic/2018-December/009424.html
-> >
-> >
-> > Martin Blumenstingl (3):
-> >   ARM: dts: meson6: add the APB2 bus
-> >   ARM: dts: meson8: add the APB bus
-> >   ARM: dts: meson8b: add the APB bus
-> >
-> >  arch/arm/boot/dts/meson6.dtsi  | 8 ++++++++
-> >  arch/arm/boot/dts/meson8.dtsi  | 8 ++++++++
-> >  arch/arm/boot/dts/meson8b.dtsi | 8 ++++++++
-> >  3 files changed, 24 insertions(+)
-> >
->
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-thank you for taking the time to review this!
+WARNING: 'accomodate' may be misspelled - perhaps 'accommodate'?                                                      
+#50: FILE: Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt:52:                                             
 
-> But frankly I'll squash the meson8/meson8b patches with the mali node patches !
-I didn't do this because I realized that there are different busses
-between Meson6 and Meson8/Meson8b. so I wanted to have a commit
-message which describes this.
-if you prefer I can still squash the Meson8 and Meson8b patches into
-their corresponding GPU .dts patch but I would like to keep the Meson6
-patch (as I'm not planning to add the Mali GPU until someone can
-actually test it on that SoC)
-
-
-Regards
-Martin
+> +to specify one more vendor-specific compatible, among:
+> +
+> +  - allwinner,sun50i-h6-mali
+> +    Required properties:
+> +      * resets: phandle to the reset line for the GPU
+> +
+> +
+>  Example for a Mali-T760:
+>  
+>  gpu@ffa30000 {
+> -- 
+> 2.18.1
+> 
