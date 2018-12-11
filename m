@@ -1,44 +1,59 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-am654-base-board: Add MMC/SD
- support
-Date: Tue, 11 Dec 2018 19:02:34 +0530
-Message-ID: <f2f31347-3aa3-8dda-84a3-bd112aa3ff9d@ti.com>
-References: <20181207084233.13700-1-faiz_abbas@ti.com>
- <20181207084233.13700-3-faiz_abbas@ti.com>
- <20181208155427.jmidz4vsw4k4qj36@akan>
- <c1dd9783-84dc-9dad-ea94-9a14a4ad814d@ti.com>
- <20181210120647.i3ply3p7umvedb3u@akan> <20181210234730.GH6707@atomide.com>
+From: Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v11 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
+ driver
+Date: Tue, 11 Dec 2018 19:05:43 +0530
+Message-ID: <82b168d1-79bc-f454-8e19-4f7630a34069@codeaurora.org>
+References: <1543722903-10989-1-git-send-email-tdas@codeaurora.org>
+ <1543722903-10989-3-git-send-email-tdas@codeaurora.org>
+ <20181204051231.mm5ixli7ckpfzvd4@vireshk-i7>
+ <154396249199.88331.1800559141437859959@swboyd.mtv.corp.google.com>
+ <154396472692.88331.13742924031474269133@swboyd.mtv.corp.google.com>
+ <49139ae4-4373-9e70-02ad-80f7bbc4494c@codeaurora.org>
+ <20181205061600.7zglbpkgbktn27am@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181210234730.GH6707@atomide.com>
+In-Reply-To: <20181205061600.7zglbpkgbktn27am@vireshk-i7>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>
-Cc: Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, robh+dt@kernel.org, t-kristo@ti.com, kishon@ti.com, ulf.hansson@linaro.org, adrian.hunter@intel.com, michal.simek@xilinx.com, Arnd Bergmann <arnd@arndb.de>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+Hi Viresh,
 
-On 11/12/18 5:17 AM, Tony Lindgren wrote:
-> * Nishanth Menon <nm@ti.com> [181210 12:07]:
->> I really am curious how Arnd / Tony actually pull this one off.. If they
->> have continous cron job for checking if your patch is ready... I doubt
->> it..
-> 
-> The only way that works in a distributed manner is for the patch
-> authors to resend after the dependencies have cleared.
-> 
-> As some people don't know this, at least I try to reply with
-> something about tagging patch as read and assuming it will get
-> resent after dependencies have cleard.
-> 
-> Otherwise the todo list just keeps growing eternally :)
+Sorry for the delayed response. Thanks for the patch.
 
-Alright, if the preference is to resend patches after dependencies are
-cleared, I think it will also be better to mark the initial review-only
-version as "RFC" (as Nishanth requested).
+On 12/5/2018 11:46 AM, Viresh Kumar wrote:
+> On 05-12-18, 09:07, Taniya Das wrote:
+>> Hello Stephen, Viresh
+>>
+>> Thanks for the code and suggestions.
+>>
+>> Having a NR_DOMAINS '2' makes the driver not scalable for re-use.
+> 
+> Sure, I didn't like it either and that wasn't really what I was suggesting in
+> the first place. I didn't wanted to write the code myself and pass it on, but I
+> have it now anyway :)
+> 
+> It may have a bug or two in there, but compiles just fine and is rebased over
+> your patch Taniya.
+> 
 
-Thanks,
-Sekhar
+The design here assumes that there would not be any per-cpu/per-cluster 
+based SW requirement for the HW during frequency transitions, which 
+again makes me think that we would require to re-introduce these 
+structures again in case we have such requirements in near future.
+
+Also I think leaving the structures also helps us debug any boot up 
+issues looking at the ram contents of the per-(cpu/cluster) structures 
+with the contents from the firmware.
+
+Hope these above helps us to go ahead with the current SW design.
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
