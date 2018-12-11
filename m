@@ -1,68 +1,104 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3] reset: Exclusive resets must be dedicated to a single
- hardware block
-Date: Tue, 11 Dec 2018 09:42:16 +0100
-Message-ID: <CAMuHMdWVFUGPgaChSn2K3schA0uJJVjxs2Z4FB2hb1_UdW3FiA@mail.gmail.com>
-References: <20181113133520.20889-1-geert+renesas@glider.be> <CAMuHMdX-X6dTJi6WgRKYVs-w+rxO3cJP8kX5AZwOXNO4qpgcqQ@mail.gmail.com>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: Re: [PATCH 01/19] dt-bindings: clock: tegra124-dfll: Update DFLL
+ binding for PWM regulator
+Date: Tue, 11 Dec 2018 11:15:14 +0200
+Message-ID: <20181211091514.GA29064@pdeschrijver-desktop.Nvidia.com>
+References: <20181204092548.3038-1-josephl@nvidia.com>
+ <20181204092548.3038-2-josephl@nvidia.com>
+ <af1211f0-dda0-bdde-f320-03e54f82d7e1@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdX-X6dTJi6WgRKYVs-w+rxO3cJP8kX5AZwOXNO4qpgcqQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Auger Eric <eric.auger@redhat.com>, Alex Williamson <alex.williamson@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <af1211f0-dda0-bdde-f320-03e54f82d7e1@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark, Rob, Frank,
-
-On Wed, Nov 28, 2018 at 10:28 AM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> On Tue, Nov 13, 2018 at 2:35 PM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> > In some SoCs multiple hardware blocks may share a reset control.
-> > The reset control API for shared resets will only assert such a reset
-> > when the drivers for all hardware blocks agree.
-> > The exclusive reset control API still allows to assert such a reset, but
-> > that impacts all other hardware blocks sharing the reset.
-> >
-> > While the kernel doc comments clearly state that the API for shared
-> > resets applies to reset controls which are shared between hardware
-> > blocks, the exact meaning of exclusive resets is not documented.
-> > Fix the semantic ambiguity with respect to exclusive access vs.
-> > exclusive reset lines by:
-> >   1. Clarifying that exclusive resets really are intended for use with
-> >      reset controls which are dedicated to a single hardware block,
-> >   2. Ensuring that obtaining an exclusive reset control will fail if the
-> >      reset is shared by multiple hardware blocks, for both DT-based and
-> >      lookup-based reset controls.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Fri, Dec 07, 2018 at 01:41:57PM +0000, Jon Hunter wrote:
+> 
+> On 04/12/2018 09:25, Joseph Lo wrote:
+> > From: Peter De Schrijver <pdeschrijver@nvidia.com>
+> > 
+> > Add new properties to configure the DFLL PWM regulator support. Also
+> > add an example and make the I2C clock only required when I2C support is
+> > used.
+> > 
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> > Signed-off-by: Joseph Lo <josephl@nvidia.com>
 > > ---
-> > Question from Philipp for the DT maintainers:
-> >
-> >    "I'd still like to hear the device tree maintainers' opinion on
-> >     parsing the whole DT for "resets" phandle properties to find shared
-> >     resets like this."
->
-> Mark, Rob: Ping?
+> >  .../bindings/clock/nvidia,tegra124-dfll.txt   | 73 ++++++++++++++++++-
+> >  1 file changed, 71 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+> > index dff236f524a7..8c97600d2bad 100644
+> > --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+> > +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+> > @@ -8,7 +8,6 @@ the fast CPU cluster. It consists of a free-running voltage controlled
+> >  oscillator connected to the CPU voltage rail (VDD_CPU), and a closed loop
+> >  control module that will automatically adjust the VDD_CPU voltage by
+> >  communicating with an off-chip PMIC either via an I2C bus or via PWM signals.
+> > -Currently only the I2C mode is supported by these bindings.
+> >  
+> >  Required properties:
+> >  - compatible : should be "nvidia,tegra124-dfll"
+> > @@ -45,10 +44,28 @@ Required properties for the control loop parameters:
+> >  Optional properties for the control loop parameters:
+> >  - nvidia,cg-scale: Boolean value, see the field DFLL_PARAMS_CG_SCALE in the TRM.
+> >  
+> > +Optional properties for mode selection:
+> > +- nvidia,pwm-to-pmic: Use PWM to control regulator rather then I2C.
+> > +
+> >  Required properties for I2C mode:
+> >  - nvidia,i2c-fs-rate: I2C transfer rate, if using full speed mode.
+> >  
+> > -Example:
+> > +Required properties for PWM mode:
+> > +- nvidia,pwm-period: period of PWM square wave in microseconds.
+> > +- nvidia,init-uv: Regulator voltage in micro volts when PWM control is disabled.
+> 
+> Maybe consider 'pwm-inactive-voltage-microvolt'.
+> 
 
-Do you have any comments about this?
-(In case you lost the link to the original patch:
- https://lore.kernel.org/lkml/20181113133520.20889-1-geert+renesas@glider.be/).
+Inactive is not very accurate. The OVR regulator will output
+nvidia,align-offset-uv when the PWM input is driven low but will output
+nvidia,init-uv when the PWM input is in tristate mode.
 
-This is a safeguard dependency for "[PATCH v5] vfio: platform: Add
-generic reset controller support"
-(https://lore.kernel.org/lkml/20181113131508.18246-1-geert+renesas@glider.be/).
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> > +- nvidia,align-offset-uv: Regulator voltage in micro volts when PWM control is
+> > +			  enabled and PWM output is low.
+> 
+> Would this be considered the minimum pwm active voltage?
+> 
+> > +- nvidia,align-step-uv: Voltage increase in micro volts corresponding to a
+> > +			1/33th increase in duty cycle. Eg the voltage for 2/33th
+> > +			duty cycle would be:
+> 
+> Maybe consider 'pwm-voltage-step-microvolt'.
+> 
+> > +			nvidia,align-offset-uv + nvidia,align-step-uv * 2.
+> > +- pinctrl-0: I/O pad configuration when PWM control is enabled.
+> > +- pinctrl-1: I/O pad configuration when PWM control is disabled.
+> > +- pinctrl-names: must include the following entries:
+> > +  - dvfs_pwm_enable: I/O pad configuration when PWM control is enabled.
+> > +  - dvfs_pwm_disable: I/O pad configuration when PWM control is disabled.
+> 
+> Please see Rob's feedback on the above [0].
+> 
+> Cheers
+> Jon
+> 
+> [0] https://lore.kernel.org/patchwork/patch/885328/
+> 
+> -- 
+> nvpublic
