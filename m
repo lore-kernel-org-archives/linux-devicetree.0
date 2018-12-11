@@ -1,97 +1,48 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 12/16] dt-bindings: remoteproc: ti-pruss: Document
- application node bindings
-Date: Tue, 11 Dec 2018 16:06:37 -0600
-Message-ID: <20181211220637.GA32460@bogus>
-References: <1543218769-5507-1-git-send-email-rogerq@ti.com>
- <1543218769-5507-13-git-send-email-rogerq@ti.com>
+Subject: Re: [PATCH 1/2] dt-bindings: gpu: add bus clock for Mali Midgard GPUs
+Date: Tue, 11 Dec 2018 16:09:08 -0600
+Message-ID: <20181211220908.GA7630@bogus>
+References: <20181127074249.15204-1-icenowy@aosc.io>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1543218769-5507-13-git-send-email-rogerq@ti.com>
+In-Reply-To: <20181127074249.15204-1-icenowy@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: ohad@wizery.com, bjorn.andersson@linaro.org, tony@atomide.com, bcousson@baylibre.com, ssantosh@kernel.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Jernej Skrabec <jernej.skrabec@siol.net>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 26, 2018 at 09:52:45AM +0200, Roger Quadros wrote:
-> From: Tero Kristo <t-kristo@ti.com>
+On Tue, Nov 27, 2018 at 03:42:48PM +0800, Icenowy Zheng wrote:
+> Some SoCs adds a bus clock gate to the Mali Midgard GPU.
 > 
-> Add documentation for the Texas Instruments PRU application nodes.
-> These are used to configure specific user applications for PRU instances.
+> Add the binding for the bus clock.
 > 
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> [s-anna@ti.com: some binding updates]
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 > ---
->  .../devicetree/bindings/soc/ti/ti,pruss.txt        | 43 ++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
+>  Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt b/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
-> index 3e5f32f..94c91ee 100644
-> --- a/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
-> +++ b/Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
-> @@ -210,6 +210,38 @@ used in TI Davinci SoCs. Please refer to the corresponding binding document,
->  Documentation/devicetree/bindings/net/davinci-mdio.txt for details.
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> index 18a2cde2e5f3..02f870cd60e6 100644
+> --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> @@ -31,6 +31,12 @@ Optional properties:
 >  
+>  - clocks : Phandle to clock for the Mali Midgard device.
 >  
-> +Application/User Nodes
-> +=======================
-> +A PRU application/user node typically uses one or more PRU device nodes to
-> +implement a PRU application/functionality. Each application/client node would
-> +need a reference to at least a PRU node, and optionally pass some configuration
-> +parameters.
-> +
-> +Required Properties:
-> +--------------------
-> +- prus                 : phandles to the PRU nodes used
-> +
-> +Optional Properties:
-> +--------------------
-> +- firmware-name        : firmwares for the PRU cores, the default firmware
-> +                         for the core from the PRU node will be used if not
-> +                         provided. The firmware names should correspond to
-> +                         the PRU cores listed in the 'prus' property
-> +- ti,pruss-gp-mux-sel  : array of values for the GP_MUX_SEL under PRUSS_GPCFG
-> +                         register for a PRU. This selects the internal muxing
-> +                         scheme for the PRU instance. If not provided, the
-> +                         default out-of-reset value (0) for the PRU core is
-> +                         used. Values should correspond to the PRU cores listed
-> +                         in the 'prus' property
-> +- ti,pru-interrupt-map : PRU interrupt mappings, containing an array of entries
-> +                         with each entry consisting of 4 cell-values. First one
-> +                         is an index towards the "prus" property to identify the
-> +                         PRU core for the interrupt map, second is the PRU
-> +                         System Event id, third is the PRU interrupt channel id
-> +                         and fourth is the PRU host interrupt id. If provided,
-> +                         this map will supercede any other configuration
-> +                         provided through firmware
+> +- clock-names : Specify the names of the clocks specified in clocks
+> +  when multiple clocks are present.
+> +    * bus: bus clock for the GPU
+> +    * core: clock driving the GPU itself (When only one clock is present,
+> +      assume it's this clock.)
 
-Can't you use 'interrupt-map' or use more cells for the PRU intc cells. 
-Or use interrupts-extended if you need more than 1 parent.
+'core' should be first since it already exists.
 
 > +
->  Example:
->  ========
->  1.	/* AM33xx PRU-ICSS */
-> @@ -397,3 +429,14 @@ Example:
->  			...
->  		};
->  	};
-> +
-> +3:	/* PRU application node example */
-> +	app_node: app_node {
-> +		prus = <&pru1_0>, <&pru1_1>;
-> +		firmware-name = "pruss-app-fw", "pruss-app-fw-2";
-> +		ti,pruss-gp-mux-sel = <2>, <1>;
-> +		/* setup interrupts for prus:
-> +		   prus[0] => pru1_0: ev=16, chnl=2, host-irq=7,
-> +		   prus[1] => pru1_1: ev=19, chnl=1, host-irq=3 */
-> +		ti,pru-interrupt-map = <0 16 2 7 >, <1 19 1 3>;
-> +	}
+>  - mali-supply : Phandle to regulator for the Mali device. Refer to
+>    Documentation/devicetree/bindings/regulator/regulator.txt for details.
+>  
 > -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 2.18.1
 > 
