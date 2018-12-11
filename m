@@ -1,59 +1,106 @@
-From: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: net: ath10k: fix node name and device
- type in qcom ath10k example
-Date: Tue, 11 Dec 2018 11:26:57 +0530
-Message-ID: <266a1bec89b88abe4637c33b080d85bb@codeaurora.org>
-References: <1544466691-11821-1-git-send-email-bperumal@codeaurora.org>
- <1544466691-11821-2-git-send-email-bperumal@codeaurora.org>
- <20181210232523.GA14192@bogus>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-am654-base-board: Add MMC/SD
+ support
+Date: Tue, 11 Dec 2018 11:28:13 +0530
+Message-ID: <f549d2ef-d038-4976-620e-a32c6bd15dbf@ti.com>
+References: <20181207084233.13700-1-faiz_abbas@ti.com>
+ <20181207084233.13700-3-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20181210232523.GA14192@bogus>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181207084233.13700-3-faiz_abbas@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, nm@ti.com, ulf.hansson@linaro.org, adrian.hunter@intel.com, kishon@ti.com, t-kristo@ti.com, robh+dt@kernel.org, michal.simek@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-On 2018-12-11 04:55, Rob Herring wrote:
-> On Tue, Dec 11, 2018 at 12:01:29AM +0530, Bhagavathi Perumal S wrote:
->> In qcom,ath10k documentation, ath10k is used as node name in the 
->> example of
->> pci based device. Normally, node name shoud be class of device and not 
->> the model
+
+On 07/12/18 2:12 PM, Faiz Abbas wrote:
+> On the am654x-evm, sdhci0 node is connected to an eMMC while sdhci1
+> is connected to an SD card slot. Add nodes and pinmuxes for the same.
 > 
-> s/shoud/should/
-Thanks, Will correct typo error and send v4 patch.
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> ---
+>  .../arm64/boot/dts/ti/k3-am654-base-board.dts | 46 +++++++++++++++++++
+>  1 file changed, 46 insertions(+)
 > 
->> name, so fix it to node name "wifi". And remove the property 
->> device_type pci
->> since only pci bridges should have this property.
->> 
->> Signed-off-by: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 3 
->> +--
->>  1 file changed, 1 insertion(+), 2 deletions(-)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt 
->> b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> index 2196d1a..ef60f25 100644
->> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> @@ -74,9 +74,8 @@ pci {
->>  		#address-cells = <3>;
->>  		device_type = "pci";
->> 
->> -		ath10k@0,0 {
->> +		wifi@0,0 {
->>  			reg = <0 0 0 0 0>;
->> -			device_type = "pci";
->>  			qcom,ath10k-calibration-data = [ 01 02 03 ... ];
->>  		};
->>  	};
->> --
->> 1.9.1
->> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+> index bd5a0069191d..5dcd16b787eb 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+> @@ -60,6 +60,36 @@
+>  			AM65X_IOPAD(0x0070, PIN_INPUT, 5) /* (R25) GPMC0_CSn2.I2C2_SDA */
+>  		>;
+>  	};
+> +
+> +	main_mmc0_pins_default: main_mmc0_pins_default {
+
+
+make dtbs W=12 will warn you:
+Character '_' not recommended in node name
+
+
+> +		pinctrl-single,pins = <
+> +			AM65X_IOPAD(0x01a8, PIN_INPUT_PULLDOWN, 0) /* (B25) MMC0_CLK */
+> +			AM65X_IOPAD(0x01ac, PIN_INPUT_PULLUP, 0) /* (B27) MMC0_CMD */
+> +			AM65X_IOPAD(0x01a4, PIN_INPUT_PULLUP, 0) /* (A26) MMC0_DAT0 */
+> +			AM65X_IOPAD(0x01a0, PIN_INPUT_PULLUP, 0) /* (E25) MMC0_DAT1 */
+> +			AM65X_IOPAD(0x019c, PIN_INPUT_PULLUP, 0) /* (C26) MMC0_DAT2 */
+> +			AM65X_IOPAD(0x0198, PIN_INPUT_PULLUP, 0) /* (A25) MMC0_DAT3 */
+> +			AM65X_IOPAD(0x0194, PIN_INPUT_PULLUP, 0) /* (E24) MMC0_DAT4 */
+> +			AM65X_IOPAD(0x0190, PIN_INPUT_PULLUP, 0) /* (A24) MMC0_DAT5 */
+> +			AM65X_IOPAD(0x018c, PIN_INPUT_PULLUP, 0) /* (B26) MMC0_DAT6 */
+> +			AM65X_IOPAD(0x0188, PIN_INPUT_PULLUP, 0) /* (D25) MMC0_DAT7 */
+> +			AM65X_IOPAD(0x01b4, PIN_INPUT_PULLUP, 0) /* (A23) MMC0_SDCD */
+> +			AM65X_IOPAD(0x01b0, PIN_INPUT, 0) /* (C25) MMC0_DS */
+> +		>;
+> +	};
+> +
+> +	main_mmc1_pins_default: main_mmc1_pins_default {
+
+Same here
+
+Regards
+Vignesh
+
+> +		pinctrl-single,pins = <
+> +			AM65X_IOPAD(0x02d4, PIN_INPUT_PULLDOWN, 0) /* (C27) MMC1_CLK */
+> +			AM65X_IOPAD(0x02d8, PIN_INPUT_PULLUP, 0) /* (C28) MMC1_CMD */
+> +			AM65X_IOPAD(0x02d0, PIN_INPUT_PULLUP, 0) /* (D28) MMC1_DAT0 */
+> +			AM65X_IOPAD(0x02cc, PIN_INPUT_PULLUP, 0) /* (E27) MMC1_DAT1 */
+> +			AM65X_IOPAD(0x02c8, PIN_INPUT_PULLUP, 0) /* (D26) MMC1_DAT2 */
+> +			AM65X_IOPAD(0x02c4, PIN_INPUT_PULLUP, 0) /* (D27) MMC1_DAT3 */
+> +			AM65X_IOPAD(0x02dc, PIN_INPUT_PULLUP, 0) /* (B24) MMC1_SDCD */
+> +			AM65X_IOPAD(0x02e0, PIN_INPUT, 0) /* (C24) MMC1_SDWP */
+> +		>;
+> +	};
+>  };
+>  
+>  &main_pmx1 {
+> @@ -125,3 +155,19 @@
+>  	pinctrl-0 = <&main_i2c2_pins_default>;
+>  	clock-frequency = <400000>;
+>  };
+> +
+> +&sdhci0 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&main_mmc0_pins_default>;
+> +	bus-width = <8>;
+> +	non-removable;
+> +	ti,driver-strength-ohm = <50>;
+> +};
+> +
+> +&sdhci1 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&main_mmc1_pins_default>;
+> +	ti,driver-strength-ohm = <50>;
+> +};
+> 
+
+-- 
+Regards
+Vignesh
