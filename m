@@ -1,44 +1,60 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 1/6] misc: dt-bindings: Add Qualcomm Fastrpc bindings
-Date: Mon, 10 Dec 2018 16:10:50 -0800
-Message-ID: <20181211001050.GA1578@tuxbook-pro>
-References: <20181207163513.16412-1-srinivas.kandagatla@linaro.org>
- <20181207163513.16412-2-srinivas.kandagatla@linaro.org>
- <20181207182327.64mtkfx6v4wlwccz@lakrids.cambridge.arm.com>
- <afdeecc4-4ee9-e933-9917-9930ece85b00@linaro.org>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [RFT PATCH v1 0/4] Unify CPU topology across ARM64 & RISC-V
+Date: Mon, 10 Dec 2018 16:11:21 -0800
+Message-ID: <dffd0d6e-bebe-ae31-548b-1778d08a3285@wdc.com>
+References: <1543534100-3654-1-git-send-email-atish.patra@wdc.com>
+ <20181207134509.GA5913@e105550-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <afdeecc4-4ee9-e933-9917-9930ece85b00@linaro.org>
+In-Reply-To: <20181207134509.GA5913@e105550-lin.cambridge.arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, robh+dt@kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bkumar@qti.qualcomm.com, thierry.escande@linaro.org
+To: Morten Rasmussen <morten.rasmussen@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitriy Cherkasov <dmitriy@oss-tech.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Juri Lelli <juri.lelli@arm.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Raf
 List-Id: devicetree@vger.kernel.org
 
-On Mon 10 Dec 03:17 PST 2018, Srinivas Kandagatla wrote:
-> On 07/12/18 18:23, Mark Rutland wrote:
-> > On Fri, Dec 07, 2018 at 04:35:08PM +0000, Srinivas Kandagatla wrote:
-> > > diff --git a/Documentation/devicetree/bindings/misc/qcom,fastrpc.txt b/Documentation/devicetree/bindings/misc/qcom,fastrpc.txt
-[..]
-> > > +- reg
-> > > +	Usage: required
-> > > +	Value type: <u32>
-> > > +	Definition: DSP Processor ID.
-> > > +	Possible values are :
-> > > +			0 - ADSP
-> > > +			1 - MDSP
-> > > +			2 - SDSP
-> > > +			3 - CDSP
-> > 
-> > Why is this in a reg?
+On 12/7/18 5:45 AM, Morten Rasmussen wrote:
+> Hi,
 > 
-> This is to identify which type of dsp(Audio/Modem/Sensor/Compute) it is,
-> This information is used to create device nodes for user-space access.
+> On Thu, Nov 29, 2018 at 03:28:16PM -0800, Atish Patra wrote:
+>> The cpu-map DT entry in ARM64 can describe the CPU topology in
+>> much better way compared to other existing approaches. RISC-V can
+>> easily adopt this binding to represent it's own CPU topology.
+>> Thus, both cpu-map DT binding and topology parsing code can be
+>> moved to a common location so that RISC-V or any other
+>> architecture can leverage that.
+>>
+>> The relevant discussion regarding unifying cpu topology can be
+>> found in [1].
+>>
+>> arch_topology seems to be a perfect place to move the common
+>> code. I have not introduced any functional changes in the moved
+>> code. The only downside in this approach is that the capacity
+>> code will be executed for RISC-V as well. But, it will exit
+>> immediately after not able to find the appropriate DT node. If
+>> the overhead is considered too much, we can always compile out
+>> capacity related functions under a different config for the
+>> architectures that do not support them.
+>>
+>> The patches have been tested for RISC-V and compile tested for
+>> ARM64 & x86.
 > 
+> The cpu-map bindings are used for arch/arm too, and so is
+> arch_topology.c. In fact, it was introduced to allow code-sharing
+> between arm and arm64. Applying patch three breaks arm.
+> 
+> Moving the DT parsing to arch_topology.c we have to unify all three
+> architectures. Be aware that arm and arm64 have some differences in how
+> they detect cpu capacities. I think we might have to look at the split
+> of code between arch/* and arch_topology.c again :-/
+> 
+> Morten
+> 
+Thank you for bringing this up. I will send a new version and make sure 
+that it works on arm32 as well.
 
-But it does not represent FastRPC's address on the rpmsg bus. How about
-replacing it with a "label" (or "qcom,domain" perhaps?) of type string?
 
 Regards,
-Bjorn
+Atish
