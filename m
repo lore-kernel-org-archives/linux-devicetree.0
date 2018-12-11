@@ -1,129 +1,93 @@
 Return-Path: <SRS0=IqaF=OU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41476 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbeLKKwz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Dec 2018 05:52:55 -0500
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH] ARM: dts: am33xx-l4: Fix epwmssX/ecapX/ehrpwmX ranges and reg
-Date: Tue, 11 Dec 2018 12:54:30 +0200
-Message-ID: <20181211105430.4359-1-peter.ujfalusi@ti.com>
+Received: from mail-eopbgr00088.outbound.protection.outlook.com ([40.107.0.88]:11072
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729474AbeLKCI6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 10 Dec 2018 21:08:58 -0500
+From: Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH v5 1/4] usb: chipidea: add flag for imx hsic implementation
+Date: Tue, 11 Dec 2018 02:08:54 +0000
+Message-ID: <20181211020624.9433-2-peter.chen@nxp.com>
+References: <20181211020624.9433-1-peter.chen@nxp.com>
+In-Reply-To: <20181211020624.9433-1-peter.chen@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, t-kristo@ti.com, jsarha@ti.com
+To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>, Peter Chen <peter.chen@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Correct the ranges for epwmsX nodes and the reg for the subnodes.
+NXP (Freecale) imx HSIC design has some special requirements, add
+some flags at host code to handle them.
 
-Fixes: 87fc89ced3a78 ("ARM: dts: am335x: Move l4 child devices to probe them with ti-sysc")
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Tested-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
 ---
-Hi Tony,
+ drivers/usb/chipidea/host.c  | 17 +++++++++++++++++
+ include/linux/usb/chipidea.h |  3 +++
+ 2 files changed, 20 insertions(+)
 
-with this patch am335x-evmsk LCD is working.
-
-Regards,
-Peter
-
- arch/arm/boot/dts/am33xx-l4.dtsi | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-index 7c7876ecae14..85366f287a22 100644
---- a/arch/arm/boot/dts/am33xx-l4.dtsi
-+++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-@@ -1899,15 +1899,15 @@
- 				#address-cells = <1>;
- 				#size-cells = <1>;
- 				status = "disabled";
--				ranges = <0x48300100 0x48300100 0x80   /* ECAP */
--					  0x48300180 0x48300180 0x80   /* EQEP */
--					  0x48300200 0x48300200 0x80>; /* EHRPWM */
-+				ranges = <0x100 0x100 0x80   /* ECAP */
-+					  0x180 0x180 0x80   /* EQEP */
-+					  0x200 0x200 0x80>; /* EHRPWM */
- 
- 				ecap0: ecap@48300100 {
- 					compatible = "ti,am3352-ecap",
- 						     "ti,am33xx-ecap";
- 					#pwm-cells = <3>;
--					reg = <0x48300100 0x80>;
-+					reg = <0x100 0x80>;
- 					clocks = <&l4ls_gclk>;
- 					clock-names = "fck";
- 					interrupts = <31>;
-@@ -1919,7 +1919,7 @@
- 					compatible = "ti,am3352-ehrpwm",
- 						     "ti,am33xx-ehrpwm";
- 					#pwm-cells = <3>;
--					reg = <0x48300200 0x80>;
-+					reg = <0x200 0x80>;
- 					clocks = <&ehrpwm0_tbclk>, <&l4ls_gclk>;
- 					clock-names = "tbclk", "fck";
- 					status = "disabled";
-@@ -1954,15 +1954,15 @@
- 				#address-cells = <1>;
- 				#size-cells = <1>;
- 				status = "disabled";
--				ranges = <0x48302100 0x48302100 0x80   /* ECAP */
--					  0x48302180 0x48302180 0x80   /* EQEP */
--					  0x48302200 0x48302200 0x80>; /* EHRPWM */
-+				ranges = <0x100 0x100 0x80   /* ECAP */
-+					  0x180 0x180 0x80   /* EQEP */
-+					  0x200 0x200 0x80>; /* EHRPWM */
- 
- 				ecap1: ecap@48302100 {
- 					compatible = "ti,am3352-ecap",
- 						     "ti,am33xx-ecap";
- 					#pwm-cells = <3>;
--					reg = <0x48302100 0x80>;
-+					reg = <0x100 0x80>;
- 					clocks = <&l4ls_gclk>;
- 					clock-names = "fck";
- 					interrupts = <47>;
-@@ -1974,7 +1974,7 @@
- 					compatible = "ti,am3352-ehrpwm",
- 						     "ti,am33xx-ehrpwm";
- 					#pwm-cells = <3>;
--					reg = <0x48302200 0x80>;
-+					reg = <0x200 0x80>;
- 					clocks = <&ehrpwm1_tbclk>, <&l4ls_gclk>;
- 					clock-names = "tbclk", "fck";
- 					status = "disabled";
-@@ -2009,15 +2009,15 @@
- 				#address-cells = <1>;
- 				#size-cells = <1>;
- 				status = "disabled";
--				ranges = <0x48304100 0x48304100 0x80   /* ECAP */
--					  0x48304180 0x48304180 0x80   /* EQEP */
--					  0x48304200 0x48304200 0x80>; /* EHRPWM */
-+				ranges = <0x100 0x100 0x80   /* ECAP */
-+					  0x180 0x180 0x80   /* EQEP */
-+					  0x200 0x200 0x80>; /* EHRPWM */
- 
- 				ecap2: ecap@48304100 {
- 					compatible = "ti,am3352-ecap",
- 						     "ti,am33xx-ecap";
- 					#pwm-cells = <3>;
--					reg = <0x48304100 0x80>;
-+					reg = <0x100 0x80>;
- 					clocks = <&l4ls_gclk>;
- 					clock-names = "fck";
- 					interrupts = <61>;
-@@ -2029,7 +2029,7 @@
- 					compatible = "ti,am3352-ehrpwm",
- 						     "ti,am33xx-ehrpwm";
- 					#pwm-cells = <3>;
--					reg = <0x48304200 0x80>;
-+					reg = <0x200 0x80>;
- 					clocks = <&ehrpwm2_tbclk>, <&l4ls_gclk>;
- 					clock-names = "tbclk", "fck";
- 					status = "disabled";
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+index d858a82c4f44..028a3574266a 100644
+--- a/drivers/usb/chipidea/host.c
++++ b/drivers/usb/chipidea/host.c
+@@ -170,6 +170,11 @@ static int host_start(struct ci_hdrc *ci)
+ 			otg->host =3D &hcd->self;
+ 			hcd->self.otg_port =3D 1;
+ 		}
++
++		if (ci->platdata->notify_event &&
++			(ci->platdata->flags & CI_HDRC_IMX_IS_HSIC))
++			ci->platdata->notify_event
++				(ci, CI_HDRC_IMX_HSIC_ACTIVE_EVENT);
+ 	}
+=20
+ 	return ret;
+@@ -218,6 +223,8 @@ void ci_hdrc_host_destroy(struct ci_hdrc *ci)
+ static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
+ {
+ 	struct ehci_hcd *ehci =3D hcd_to_ehci(hcd);
++	struct device *dev =3D hcd->self.controller;
++	struct ci_hdrc *ci =3D dev_get_drvdata(dev);
+ 	int port;
+ 	u32 tmp;
+=20
+@@ -249,6 +256,16 @@ static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
+ 			 * It needs a short delay between set RS bit and PHCD.
+ 			 */
+ 			usleep_range(150, 200);
++			/*
++			 * Need to clear WKCN and WKOC for imx HSIC,
++			 * otherwise, there will be wakeup event.
++			 */
++			if (ci->platdata->flags & CI_HDRC_IMX_IS_HSIC) {
++				tmp =3D ehci_readl(ehci, reg);
++				tmp &=3D ~(PORT_WKDISC_E | PORT_WKCONN_E);
++				ehci_writel(ehci, tmp, reg);
++			}
++
+ 			break;
+ 		}
+ 	}
+diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+index 63758c399e4e..911e05af671e 100644
+--- a/include/linux/usb/chipidea.h
++++ b/include/linux/usb/chipidea.h
+@@ -60,9 +60,12 @@ struct ci_hdrc_platform_data {
+ #define CI_HDRC_OVERRIDE_RX_BURST	BIT(11)
+ #define CI_HDRC_OVERRIDE_PHY_CONTROL	BIT(12) /* Glue layer manages phy */
+ #define CI_HDRC_REQUIRES_ALIGNED_DMA	BIT(13)
++#define CI_HDRC_IMX_IS_HSIC		BIT(14)
+ 	enum usb_dr_mode	dr_mode;
+ #define CI_HDRC_CONTROLLER_RESET_EVENT		0
+ #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
++#define CI_HDRC_IMX_HSIC_ACTIVE_EVENT		2
++#define CI_HDRC_IMX_HSIC_SUSPEND_EVENT		3
+ 	int	(*notify_event) (struct ci_hdrc *ci, unsigned event);
+ 	struct regulator	*reg_vbus;
+ 	struct usb_otg_caps	ci_otg_caps;
+--=20
+2.14.1
