@@ -1,62 +1,37 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 2/4] ASoC: meson: add axg spdif input DT
-	binding documentation
-Date: Tue, 11 Dec 2018 14:47:11 +0100
-Message-ID: <20181211134713.4908-3-jbrunet@baylibre.com>
-References: <20181211134713.4908-1-jbrunet@baylibre.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH 0/3] nvmem: imx-ocotp: Implement i.MX6ULL/ULZ support
+Date: Tue, 11 Dec 2018 14:51:10 +0100
+Message-ID: <1544536273-17909-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181211134713.4908-1-jbrunet@baylibre.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-imx@nxp.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the DT binding documentation for axg's SPDIF input.
+According to the reference manuals for i.MX6ULL and i.MX6ULZ both SoCs
+only support 8 OTP banks instead of 16. So we can't use the compatible
+string of i.MX6UL.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- .../bindings/sound/amlogic,axg-spdifin.txt    | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
+Stefan Wahren (3):
+  dt-bindings: imx-ocotp: Add i.MX6ULL/ULZ support
+  nvmem: imx-ocotp: Implement i.MX6ULL/ULZ support
+  ARM: dts: imx6ull: Fix i.MX6ULL/ULZ ocotp compatible
 
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
-new file mode 100644
-index 000000000000..2e6cb7d9b202
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
-@@ -0,0 +1,22 @@
-+* Amlogic Audio SPDIF Input
-+
-+Required properties:
-+- compatible: 'amlogic,axg-spdifin'
-+- interrupts: interrupt specifier for the spdif input.
-+- clocks: list of clock phandle, one for each entry clock-names.
-+- clock-names: should contain the following:
-+  * "pclk" : peripheral clock.
-+  * "refclk" : spdif input reference clock
-+- #sound-dai-cells: must be 0.
-+
-+Example on the A113 SoC:
-+
-+spdifin: audio-controller@400 {
-+	compatible = "amlogic,axg-spdifin";
-+	reg = <0x0 0x400 0x0 0x30>;
-+	#sound-dai-cells = <0>;
-+	interrupts = <GIC_SPI 87 IRQ_TYPE_EDGE_RISING>;
-+	clocks = <&clkc_audio AUD_CLKID_SPDIFIN>,
-+		 <&clkc_audio AUD_CLKID_SPDIFIN_CLK>;
-+	clock-names = "pclk", "refclk";
-+};
+ Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 3 ++-
+ arch/arm/boot/dts/imx6ull.dtsi                        | 4 ++++
+ drivers/nvmem/imx-ocotp.c                             | 7 +++++++
+ 3 files changed, 13 insertions(+), 1 deletion(-)
+
 -- 
-2.19.2
+2.7.4
