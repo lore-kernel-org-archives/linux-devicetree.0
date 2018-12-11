@@ -1,61 +1,46 @@
-Return-Path: <SRS0=B+vV=OP=vger.kernel.org=devicetree-compiler-owner@kernel.org>
+Return-Path: <SRS0=IqaF=OU=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:57344 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726444AbeLKOSR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Dec 2018 09:18:17 -0500
+Date: Tue, 11 Dec 2018 06:18:14 -0800
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: Add am335x mcasp with l3 data port ranges
+Message-ID: <20181211141814.GM6707@atomide.com>
+References: <20181210144851.GZ6707@atomide.com>
+ <20181210154426.GB6707@atomide.com>
+ <7e50de23-10d3-511b-a16d-4c32ba58a842@ti.com>
+ <20181210162123.GC6707@atomide.com>
+ <20181210163830.GD6707@atomide.com>
+ <2b736366-7d16-3cd5-0216-1072784a5d36@ti.com>
+ <20181210172327.GE6707@atomide.com>
+ <7ac1fd56-d8c9-d622-a53c-ce6e9da862e5@ti.com>
+ <404d06a3-c2b4-d287-8776-b09c9eb52d9d@ti.com>
+ <2db7b1c5-87aa-a3ec-3b66-882adedeb717@ti.com>
 MIME-Version: 1.0
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 6 Dec 2018 13:56:45 +0100
-Message-ID: <CAMuHMdUgYFkYrpnpOdrE5ce-pHSUqLPPs=gheitp5sAnu=srEQ@mail.gmail.com>
-Subject: phandles using absolute paths in DT overlays
-Content-Type: text/plain; charset="UTF-8"
-Sender: devicetree-compiler-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Devicetree Compiler <devicetree-compiler@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2db7b1c5-87aa-a3ec-3b66-882adedeb717@ti.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: linux-omap@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+* Peter Ujfalusi <peter.ujfalusi@ti.com> [181211 10:53]:
+> > It looks like there is a bug in tilcdc as well, but the display is not
+> > coming up because the backlight is not proping:
+> > [    0.618627] ecap 48304000.epwmss:ecap@48304100: invalid resource
+> > [    0.618822] ecap: probe of 48304000.epwmss:ecap@48304100 failed with
+> > error -22
+> 
+> Sent a patch to fix the ecap:
+> ARM: dts: am33xx-l4: Fix epwmssX/ecapX/ehrpwmX ranges and reg
+> 
+> Now LCD is working.
 
-Some early revisions of SoCs may have hardware bugs that need to be
-fixed up in DT.  Currently we are handling this by including DTS files
-and fixing up nodes and properties, to create different DTB files for
-different SoC revisons (see arch/arm64/boot/dts/renesas/*es1*).
+OK good to hear. I did not get LCD enabled on am335x-evm even with
+adding 800x600 EDID file.
 
-As an alternative, I'm envisioning the use of DT overlays and the
-fdtoverlay tool, in the hope of simplifying the generation of DTBs for
-the various SoC/board combinations.
+Regards,
 
-Ideally, such DTBs would not contain symbols, to avoid inflating DTB
-size.  Hence if fixup overlays would not contain symbolic references,
-there would be no need for symbols.
-
-For anchors, the "&{/path/to/node@address}" syntax is working fine.
-For phandles, while documented on
-https://elinux.org/Device_Tree_Mysteries, and while working fine for the
-non-overlay case, dtc seems to have issues interpreting the DTB:
-
-    $ scripts/dtc/dtc -I dtb -O dts my.dtb  | less
-    <stdout>: ERROR (property_name_chars):
-/__fixups__:/path/to/node@deadbeef: Bad     character '/' in property
-name
-    ERROR: Input tree has errors, aborting (use -f to force output)
-
-With -f, the fixup generated seems to contain the expected value, though:
-
-    __fixups__ {
-        /path/to/node@deadbeef = "/fragment@0/__overlay__:power-domains:0";
-    };
-
-When using ftdoverlay, the situation is worse:
-
-    Failed to apply my.dtb (-1)
-
-Are these known issues?
-Thanks for your comments!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Tony
