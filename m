@@ -1,77 +1,159 @@
-From: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v16 06/16] lib: fdt: add a helper function for handling
- memory range property
-Date: Tue, 11 Dec 2018 15:17:16 +0900
-Message-ID: <20181211061715.GF21466@linaro.org>
-References: <20181115055254.2812-1-takahiro.akashi@linaro.org>
- <20181115055254.2812-7-takahiro.akashi@linaro.org>
- <CAL_JsqL4_Z5pVfoB3opjL7eTzZvhBJW7_aQS443quAAR0gGH1w@mail.gmail.com>
- <20181206155424.GA4422@arm.com>
- <681e1265-2f0c-2a62-3778-09911b2be7fc@arm.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3 3/3] bus: imx-weim: guard against timing configuration
+ conflicts
+Date: Tue, 11 Dec 2018 14:19:43 +0800
+Message-ID: <20181211061942.GX3987@dragon>
+References: <20181206192633.25319-1-TheSven73@googlemail.com>
+ <20181206192633.25319-4-TheSven73@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <681e1265-2f0c-2a62-3778-09911b2be7fc@arm.com>
+In-Reply-To: <20181206192633.25319-4-TheSven73@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: James Morse <james.morse@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, bhsharma@redhat.com, kexec@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
+To: Sven Van Asbroeck <thesven73@gmail.com>
+Cc: TheSven73@googlemail.com, Kees Cook <keescook@chromium.org>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-James,
-
-On Fri, Dec 07, 2018 at 10:12:47AM +0000, James Morse wrote:
-> Hi Akashi, Will,
+On Thu, Dec 06, 2018 at 02:26:33PM -0500, Sven Van Asbroeck wrote:
+> When specifying weim child devices, there is a risk that more than
+> one timing setting is specified for the same chip select.
 > 
-> On 06/12/2018 15:54, Will Deacon wrote:
-> > On Thu, Dec 06, 2018 at 08:47:04AM -0600, Rob Herring wrote:
-> >> On Wed, Nov 14, 2018 at 11:52 PM AKASHI Takahiro
-> >> <takahiro.akashi@linaro.org> wrote:
-> >>>
-> >>> Added function, fdt_setprop_reg(), will be used later to handle
-> >>> kexec-specific property in arm64's kexec_file implementation.
-> >>> It will possibly be merged into libfdt in the future.
-> >>
-> >> You generally can't modify libfdt files. Any changes will be blown
-> >> away with the next dtc sync (there's one in -next now). Though here
-> >> you are creating a new location with fdt code. lib/ is just a shim to
-> >> the actual libfdt code. Don't put any implementation there. You can
-> >> add this to drivers/of/fdt_address.c for the short term, but it still
-> >> needs to go upstream.
-> >>
-> >> Otherwise, the implementation looks fine to me.
-> > 
-> > I agree, but I don't think there's a real need for us to hack
-> > drivers/of/fdt_address.c in the meantime -- let's just target upstream
-> > and not carry this in the kernel.
-> > 
-> > Akashi -- for now, I'll drop the kdump parts of this series which rely
-> > on this helper. The majority of the series is actually independent and
-> > can go in as-is.
-> > 
-> > I've pushed out a kexec branch to the arm64 tree for you to take a look
-> > at:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=kexec
+> The driver cannot support such a configuration.
 > 
-> I gave this a quick spin. Without the elfcorehdr/usable-memory-range arm64 needs
-> to explicitly forbid kdump via kexec_file_load. (like powerpc does already).
-
-Thank you for pointing this out.
-
-> Without this kdump works, but the second kernel overwrites the first as those DT
-> properties are missing.
+> In case of conflict, this patch will print a warning to the log,
+> and will ignore the child node in question.
 > 
-> I'll post a patch momentarily,
-
-Fine, but anyhow I'm going to submit a new version (*without* kdump),
-I will fix the issue along with others.
-
--Takahiro Akashi
-
-
+> In this example, node acme@1 will be ignored, as it tries to modify
+> timing settings for CS0:
 > 
-> Thanks,
+> &weim {
+> 	acme@0 {
+> 		compatible = "acme,whatever";
+> 		reg = <0 0 0x100>;
+> 		fsl,weim-cs-timing = <something>;
+> 	};
+> 	acme@1 {
+> 		compatible = "acme,whatnot";
+> 		reg = <0 0x500 0x100>;
+> 		fsl,weim-cs-timing = <something else>;
+> 	};
+> };
 > 
-> James
+> However in this example, the driver will be happy:
+> 
+> &weim {
+>         acme@0 {
+>                 compatible = "acme,whatever";
+>                 reg = <0 0 0x100>;
+>                 fsl,weim-cs-timing = <something>;
+>         };
+>         acme@1 {
+>                 compatible = "acme,whatnot";
+>                 reg = <0 0x500 0x100>;
+>                 fsl,weim-cs-timing = <something>;
+>         };
+> };
+> 
+> Signed-off-by: Sven Van Asbroeck <TheSven73@googlemail.com>
+> ---
+>  drivers/bus/imx-weim.c | 33 ++++++++++++++++++++++++++++++---
+>  1 file changed, 30 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
+> index 5452d22d1bd8..dfe74b8c512a 100644
+> --- a/drivers/bus/imx-weim.c
+> +++ b/drivers/bus/imx-weim.c
+> @@ -46,8 +46,18 @@ static const struct imx_weim_devtype imx51_weim_devtype = {
+>  };
+>  
+>  #define MAX_CS_REGS_COUNT	6
+> +#define MAX_CS_REGS		6
+
+The macro name can easily confuse people with existing
+MAX_CS_REGS_COUNT.  By its meaning, I guess MAX_CS_COUNT should be more
+accurate?
+
+>  #define OF_REG_SIZE		3
+>  
+> +struct cs_timing {
+> +	bool is_applied;
+> +	u32 regs[MAX_CS_REGS_COUNT];
+> +};
+> +
+> +struct cs_timing_state {
+> +	struct cs_timing cs[MAX_CS_REGS];
+> +};
+> +
+>  static const struct of_device_id weim_id_table[] = {
+>  	/* i.MX1/21 */
+>  	{ .compatible = "fsl,imx1-weim", .data = &imx1_weim_devtype, },
+> @@ -112,11 +122,14 @@ static int __init imx_weim_gpr_setup(struct platform_device *pdev)
+>  }
+>  
+>  /* Parse and set the timing for this device. */
+> -static int __init weim_timing_setup(struct device_node *np, void __iomem *base,
+> -				    const struct imx_weim_devtype *devtype)
+> +static int __init weim_timing_setup(struct device *dev,
+> +				    struct device_node *np, void __iomem *base,
+> +				    const struct imx_weim_devtype *devtype,
+> +				    struct cs_timing_state *ts)
+>  {
+>  	u32 cs_idx, value[MAX_CS_REGS_COUNT];
+>  	int i, ret, reg_idx, num_regs;
+> +	struct cs_timing *cst;
+>  
+>  	if (WARN_ON(devtype->cs_regs_count > MAX_CS_REGS_COUNT))
+>  		return -EINVAL;
+> @@ -145,10 +158,23 @@ static int __init weim_timing_setup(struct device_node *np, void __iomem *base,
+>  		if (cs_idx >= devtype->cs_count)
+>  			return -EINVAL;
+>  
+> +		/* prevent re-configuring a CS that's already been configured */
+> +		cst = &ts->cs[cs_idx];
+> +		if (cst->is_applied && memcmp(value, cst->regs,
+> +					devtype->cs_regs_count*sizeof(u32))) {
+
+There should be space around *.
+
+> +			dev_err(dev, "fsl,weim-cs-timing conflict on %pOF", np);
+> +			return -EINVAL;
+> +		}
+> +
+>  		/* set the timing for WEIM */
+>  		for (i = 0; i < devtype->cs_regs_count; i++)
+>  			writel(value[i],
+>  				base + cs_idx * devtype->cs_stride + i * 4);
+> +		if (!cst->is_applied) {
+> +			cst->is_applied = true;
+> +			memcpy(cst->regs, value,
+> +				devtype->cs_regs_count*sizeof(u32));
+
+Ditto.
+
+Shawn
+
+> +		}
+>  	}
+>  
+>  	return 0;
+> @@ -162,6 +188,7 @@ static int __init weim_parse_dt(struct platform_device *pdev,
+>  	const struct imx_weim_devtype *devtype = of_id->data;
+>  	struct device_node *child;
+>  	int ret, have_child = 0;
+> +	struct cs_timing_state ts = {};
+>  
+>  	if (devtype == &imx50_weim_devtype) {
+>  		ret = imx_weim_gpr_setup(pdev);
+> @@ -170,7 +197,7 @@ static int __init weim_parse_dt(struct platform_device *pdev,
+>  	}
+>  
+>  	for_each_available_child_of_node(pdev->dev.of_node, child) {
+> -		ret = weim_timing_setup(child, base, devtype);
+> +		ret = weim_timing_setup(&pdev->dev, child, base, devtype, &ts);
+>  		if (ret)
+>  			dev_warn(&pdev->dev, "%pOF set timing failed.\n",
+>  				child);
+> -- 
+> 2.17.1
 > 
