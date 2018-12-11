@@ -1,53 +1,47 @@
-From: Priit Laes <plaes@plaes.org>
-Subject: [PATCH v2 0/8] regulator: axp20x: Stop AXP209 from crashing when enabling LDO3
-Date: Tue, 11 Dec 2018 17:17:04 +0200
-Message-ID: <cover.923997dd7d7396bb4d71f8967698b58ca956b929.1544512919.git-series.plaes@plaes.org>
+From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Subject: [PATCH v2 8/8] mfd: axp20x: use explicit bit defines
+Date: Tue, 11 Dec 2018 17:17:12 +0200
+Message-ID: <2098c0aece09761bf975e72eaa75cba92a4e463d.1544512919.git-series.plaes@plaes.org>
+References: <cover.923997dd7d7396bb4d71f8967698b58ca956b929.1544512919.git-series.plaes@plaes.org>
+Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Olliver Schinagl <oliver@schinagl.nl>, linux-sunxi <linux-sunxi@googlegroups.com>
-Cc: Priit Laes <plaes@plaes.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDB4J47M7YERBBFKX7QAKGQEITUTTXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <cover.923997dd7d7396bb4d71f8967698b58ca956b929.1544512919.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a second edition of a series that implements voltage
-ramping for AXP209 DCDC2 and LDO3 regulators and software
-based soft-start for AXP209 LDO3 regulator.
+From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 
-Both features are needed to work around a PMIC shutdown when
-toggling LDO3 on certain boards with high capacitance on the
-LDO3 output.
+The AXP20X_OFF define is an actual specific bit, define it as such.
 
-Similar features (or workarounds) have been also implemented
-on u-boot side [1].
+Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/mfd/axp20x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes since v1:
-- Rebased on top of next and dropped already merged patches.
-- Dropped LDO4 full range devicetree change for Lime2 (prev patch 9)
-  in favor of general pin-bank regulator dependency [2].
-- Fixed paths in devicetree bindings (patch 3)
-- Added note about software based soft-start for LDO3 (patch 5)
-
-[1] https://lists.denx.de/pipermail/u-boot/2018-November/348612.html
-[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-December/618459.html
-
-Olliver Schinagl (8):
-  mfd: axp20x: name voltage ramping define properly
-  regulator: axp20x: add support for set_ramp_delay for AXP209
-  dt-bindings: mfd: axp20x: add support for regulator-ramp-delay for AXP209
-  regulator: axp20x: add software based soft_start for AXP209 LDO3
-  dt-bindings: mfd: axp20x: Add software based soft_start for AXP209 LDO3
-  regulator: dts: enable soft-start and ramp delay for the OLinuXino Lime2
-  mfd: axp20x: Clean up included headers
-  mfd: axp20x: use explicit bit defines
-
- Documentation/devicetree/bindings/mfd/axp20x.txt |   9 +-
- arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts  |   2 +-
- drivers/mfd/axp20x.c                             |  13 +-
- drivers/regulator/axp20x-regulator.c             | 142 +++++++++++++++-
- include/linux/mfd/axp20x.h                       |   4 +-
- 5 files changed, 161 insertions(+), 9 deletions(-)
-
-base-commit: 14cf8c1d5b90a0cf6a8ba51ef59db8da8c7a2622
+diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+index c3f3dbd..d183ed8 100644
+--- a/drivers/mfd/axp20x.c
++++ b/drivers/mfd/axp20x.c
+@@ -30,7 +30,7 @@
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+ 
+-#define AXP20X_OFF	0x80
++#define AXP20X_OFF	BIT(7)
+ 
+ #define AXP806_REG_ADDR_EXT_ADDR_MASTER_MODE	0
+ #define AXP806_REG_ADDR_EXT_ADDR_SLAVE_MODE	BIT(4)
 -- 
 git-series 0.9.1
