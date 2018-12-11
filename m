@@ -1,56 +1,84 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v2] MAINTAINERS: add maintainers for ChromeOS EC
- sub-drivers
-Date: Tue, 11 Dec 2018 20:13:16 +0100
-Message-ID: <20181211191316.asshpucnnhkd43mc@ninjato>
-References: <20181211190953.13626-1-enric.balletbo@collabora.com>
+From: Vijay Khemka <vijaykhemka@fb.com>
+Subject: [PATCH v3 2/2] ARM: dts: aspeed: Add KCS support for LPC BMC
+Date: Tue, 11 Dec 2018 11:37:19 -0800
+Message-ID: <20181211193719.2232084-2-vijaykhemka@fb.com>
+References: <20181211193719.2232084-1-vijaykhemka@fb.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rlh4qplpe7ewwylv"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181211190953.13626-1-enric.balletbo@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: linux-kernel@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-i2c@vger.kernel.org, groeck@chromium.org, kernel@collabora.com, linux-rtc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Benson Leung <bleung@chromium.org>, Sebastian Reichel <sre@kernel.org>, linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, Lee Jones <lee.jones@linaro.org>, Hartmut Knaack <knaack.h@gmx.de>, Rob
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181211193719.2232084-1-vijaykhemka@fb.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, vijaykhemka@fb.com
 List-Id: devicetree@vger.kernel.org
 
+Added kcs device support for lpc BMC.
 
---rlh4qplpe7ewwylv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+---
+ arch/arm/boot/dts/aspeed-g5.dtsi | 33 +++++++++++++++++++++++++++++++-
+ 1 file changed, 32 insertions(+), 1 deletion(-)
 
-On Tue, Dec 11, 2018 at 08:09:52PM +0100, Enric Balletbo i Serra wrote:
-> There are multiple ChromeOS EC sub-drivers spread in different
-> subsystems, as all of them are related to the Chrome stuff add
-> Benson and myself as a maintainers for all these sub-drivers.
->=20
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
-Great, thanks!
-
-Acked-by: Wolfram Sang <wsa@the-dreams.de>
-
-
---rlh4qplpe7ewwylv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlwQDEgACgkQFA3kzBSg
-Kbbujw//Rmg6CpKq42FYw7tg/uyJ56KZ1p403nkc1fz9EFCBV3sN2AoGGKBPp23Q
-dXwKE41n7jE8IJLMTBC5AcNWZ2YeZL53V38cnaQEn4wiKxuh8H5V51QyBlhAwa9B
-/C4Ch3fwmEpI1gkIm11EaV/1jpSeTVPZh86bVlk2iC1gwChpIai2eU5kqu4jl0oo
-sNeU3eBS6zYvP9Af7FIstAWSfiXX23dAdI9rYq3flE/UdjGYuJnN8/HrrRyvhXWt
-Hv+LYeY3MATPs7nBbu6z6ujqc+RGu8Jku+SAzK9fHk9mWn1RB6y5nI07flEuHs2U
-Hzhqa5ohTZpdb0Jda0hhBW8+IEo9WYPTAWf8ATFx7KlCt4Xdbk05kb6l8javuwS1
-+k5vAiIglMgJqEnFcnW0uUqukcmvJrtF9bKet5LvTN0mIAjP6/FGmAU78tJuT1bd
-CwBcV+HmUjry9XIE/jQC0aAgse5/2x4uY5MN6veISFPBj06AMvb9sIk0zK7d+P/g
-KV6dJbxYhkNBXYYunx80ThNT6WPSxsL0+xNJutwmPefpoD5+T+N6G8O66kC6qCrF
-aulUu2E2He4Ed7D55XUMBibD4ykKyI7L43b1aZbQi8iXf+T7rW3Hwcd7709pLGB/
-l4ekPPCzAHZjf9lbbcyX7ltwHuJ/fTjHESO2DTPDRUdZT/Jy6cQ=
-=A/iL
------END PGP SIGNATURE-----
-
---rlh4qplpe7ewwylv--
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index d107459fc0f8..53e6ce4092dd 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -330,8 +330,32 @@
+ 				ranges = <0x0 0x1e789000 0x1000>;
+ 
+ 				lpc_bmc: lpc-bmc@0 {
+-					compatible = "aspeed,ast2500-lpc-bmc";
++					compatible = "aspeed,ast2500-lpc-bmc, "simple-mfd", "syscon"";
+ 					reg = <0x0 0x80>;
++					reg-io-width = <4>;
++
++					#address-cells = <1>;
++					#size-cells = <1>;
++					ranges = <0x0 0x0 0x80>;
++
++					kcs1: kcs1@0 {
++						compatible = "aspeed,ast2500-kcs-bmc";
++						interrupts = <8>;
++						kcs_chan = <1>;
++						status = "disabled";
++					};
++					kcs2: kcs2@0 {
++						compatible = "aspeed,ast2500-kcs-bmc";
++						interrupts = <8>;
++						kcs_chan = <2>;
++						status = "disabled";
++					};
++					kcs3: kcs3@0 {
++						compatible = "aspeed,ast2500-kcs-bmc";
++						interrupts = <8>;
++						kcs_chan = <3>;
++						status = "disabled";
++					};
+ 				};
+ 
+ 				lpc_host: lpc-host@80 {
+@@ -343,6 +367,13 @@
+ 					#size-cells = <1>;
+ 					ranges = <0x0 0x80 0x1e0>;
+ 
++					kcs4: kcs4@0 {
++						compatible = "aspeed,ast2500-kcs-bmc";
++						interrupts = <8>;
++						kcs_chan = <4>;
++						status = "disabled";
++					};
++
+ 					lpc_ctrl: lpc-ctrl@0 {
+ 						compatible = "aspeed,ast2500-lpc-ctrl";
+ 						reg = <0x0 0x80>;
+-- 
+2.17.1
