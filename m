@@ -1,157 +1,110 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: [PATCH v3 5/6] ARM: dts: at91: sama5d2_xplained: Add proper regulator
- states for suspend-to-mem
-Date: Tue, 11 Dec 2018 15:56:54 +0000
-Message-ID: <1544543768-2066-6-git-send-email-claudiu.beznea@microchip.com>
-References: <1544543768-2066-1-git-send-email-claudiu.beznea@microchip.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v3] kbuild: Add support for DT binding schema checks
+Date: Wed, 12 Dec 2018 01:02:58 +0900
+Message-ID: <CAK7LNARkr-g9ae+74QE6GMuxLM0JPgEqYOkwb0njXcb9-=nBdQ@mail.gmail.com>
+References: <20181210203225.11179-1-robh@kernel.org> <CAK7LNAThtAOy4PQiYZ2X0oWrHdcLi7on8ctSXJ=bfT0HNh7NFQ@mail.gmail.com>
+ <CAL_JsqL7n2sjLbJVieVDQ4YtKMi2COCaijO9ZNu7ggzmXXxLEg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1544543768-2066-1-git-send-email-claudiu.beznea@microchip.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, Claudiu.Beznea@microchip.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, boris.brezillon@bootlin.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqL7n2sjLbJVieVDQ4YtKMi2COCaijO9ZNu7ggzmXXxLEg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, darknighte@darknighte.com, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, grant.likely@arm.com, Kumar Gala <kumar.gala@linaro.org>, arm-soc <arm@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Michal Marek <michal.lkml@markovi.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@bootlin.com>
+On Wed, Dec 12, 2018 at 12:13 AM Rob Herring <robh@kernel.org> wrote:
 
-When entering suspend-to-mem, all PMIC outputs are disabled except
-VDDIODDR which is put in power saving mode, and whose voltage is
-increased (probably to counter the poor accuracy of power saving mode).
+>
+> > > +$(obj)/%.example.dts: $(src)/%.yaml FORCE
+> > > +       $(call if_changed,chk_binding)
+> > > +
+> > > +DT_TMP_SCHEMA := .schema.yaml.tmp
+> >
+> >
+> > BTW, why does this file start with a period?
+> > What is the meaning of '.tmp' extension?
+>
+> Nothing really. Just named it something so it gets cleaned and ignored by git.
 
-Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-[claudiu.beznea@microchip.com: use regulator-changeable-in-suspend,
- regulator-suspend-max-microvolt, regulator-suspend-max-microvolt,
- use macros for regulators' states, add regulator-inital-state]
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 54 +++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
 
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-index 518e2b095ccf..438e6576cf7c 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -47,6 +47,7 @@
- #include "sama5d2-pinfunc.h"
- #include <dt-bindings/mfd/atmel-flexcom.h>
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/regulator/active-semi,8945a-regulator.h>
- 
- / {
- 	model = "Atmel SAMA5D2 Xplained";
-@@ -181,49 +182,102 @@
- 							regulator-name = "VDD_1V35";
- 							regulator-min-microvolt = <1350000>;
- 							regulator-max-microvolt = <1350000>;
-+							regulator-allowed-modes = <ACT8945A_REGULATOR_MODE_FIXED>,
-+										  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+							regulator-initial-mode = <ACT8945A_REGULATOR_MODE_FIXED>;
- 							regulator-always-on;
-+
-+							regulator-state-mem {
-+								regulator-on-in-suspend;
-+								regulator-suspend-min-microvolt=<1400000>;
-+								regulator-suspend-max-microvolt=<1400000>;
-+								regulator-changeable-in-suspend;
-+								regulator-mode=<ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+							};
- 						};
- 
- 						vdd_1v2_reg: REG_DCDC2 {
- 							regulator-name = "VDD_1V2";
- 							regulator-min-microvolt = <1100000>;
- 							regulator-max-microvolt = <1300000>;
-+							regulator-allowed-modes = <ACT8945A_REGULATOR_MODE_FIXED>,
-+										  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+							regulator-initial-mode = <ACT8945A_REGULATOR_MODE_FIXED>;
- 							regulator-always-on;
-+
-+							regulator-state-mem {
-+								regulator-off-in-suspend;
-+							};
- 						};
- 
- 						vdd_3v3_reg: REG_DCDC3 {
- 							regulator-name = "VDD_3V3";
- 							regulator-min-microvolt = <3300000>;
- 							regulator-max-microvolt = <3300000>;
-+							regulator-allowed-modes = <ACT8945A_REGULATOR_MODE_FIXED>,
-+										  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+							regulator-initial-mode = <ACT8945A_REGULATOR_MODE_FIXED>;
- 							regulator-always-on;
-+
-+							regulator-state-mem {
-+								regulator-off-in-suspend;
-+							};
- 						};
- 
- 						vdd_fuse_reg: REG_LDO1 {
- 							regulator-name = "VDD_FUSE";
- 							regulator-min-microvolt = <2500000>;
- 							regulator-max-microvolt = <2500000>;
-+							regulator-allowed-modes = <ACT8945A_REGULATOR_MODE_NORMAL>,
-+										  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+							regulator-initial-mode = <ACT8945A_REGULATOR_MODE_NORMAL>;
- 							regulator-always-on;
-+
-+							regulator-state-mem {
-+								regulator-off-in-suspend;
-+							};
- 						};
- 
- 						vdd_3v3_lp_reg: REG_LDO2 {
- 							regulator-name = "VDD_3V3_LP";
- 							regulator-min-microvolt = <3300000>;
- 							regulator-max-microvolt = <3300000>;
-+							regulator-allowed-modes = <ACT8945A_REGULATOR_MODE_NORMAL>,
-+										  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+							regulator-initial-mode = <ACT8945A_REGULATOR_MODE_NORMAL>;
- 							regulator-always-on;
-+
-+							regulator-state-mem {
-+								regulator-off-in-suspend;
-+							};
- 						};
- 
- 						vdd_led_reg: REG_LDO3 {
- 							regulator-name = "VDD_LED";
- 							regulator-min-microvolt = <3300000>;
- 							regulator-max-microvolt = <3300000>;
-+							regulator-allowed-modes = <ACT8945A_REGULATOR_MODE_NORMAL>,
-+										  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+							regulator-initial-mode = <ACT8945A_REGULATOR_MODE_NORMAL>;
- 							regulator-always-on;
-+
-+							regulator-state-mem {
-+								regulator-off-in-suspend;
-+							};
- 						};
- 
- 						vdd_sdhc_1v8_reg: REG_LDO4 {
- 							regulator-name = "VDD_SDHC_1V8";
- 							regulator-min-microvolt = <1800000>;
- 							regulator-max-microvolt = <1800000>;
-+							regulator-allowed-modes = <ACT8945A_REGULATOR_MODE_NORMAL>,
-+										  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+							regulator-initial-mode = <ACT8945A_REGULATOR_MODE_NORMAL>;
- 							regulator-always-on;
-+
-+							regulator-state-mem {
-+								regulator-off-in-suspend;
-+							};
- 						};
- 					};
- 
+It is cleaned whatever file name you use.
+
+
+See scripts/Makefile.clean
+
+__clean-files   := $(extra-y) $(extra-m) $(extra-)       \
+                   $(always) $(targets) $(clean-files)   \
+                   $(hostprogs-y) $(hostprogs-m) $(hostprogs-) \
+                   $(hostlibs-y) $(hostlibs-m) $(hostlibs-) \
+                   $(hostcxxlibs-y) $(hostcxxlibs-m)
+
+
+$(extra-y) is cleaned.
+
+
+
+You are adding *.example.dts to .gitignore
+
+Why not "schema.yaml" ?
+
+
+
+
+> > > +extra-y += $(DT_TMP_SCHEMA)
+> > > +
+> > > +quiet_cmd_mk_schema = SCHEMA  $@
+> > > +      cmd_mk_schema = mkdir -p $(obj); \
+> > > +                      rm -f $@; \
+> > > +                      $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(filter-out FORCE, $^)
+> >
+> >
+> > "mkdir -p $(obj)" is redundant.
+> >
+> >
+> > Why is 'rm -f $@' necessary ?
+> > Can't dt-mk-schema overwrite the output file?
+>
+> It is for error case when the output file is not generated. I can
+> handle this within dt-mk-schema instead.
+> > > +DT_DOCS = $(shell cd $(srctree)/$(src) && find * -name '*.yaml')
+> > > +DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
+> > > +
+> > > +extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
+> > > +extra-y += $(patsubst $(src)/%.yaml,%.example.dtb, $(DT_SCHEMA_FILES))
+> >
+> >
+> >
+> > I assume you intentionally did not do like this:
+> >
+> > extra-y += $(patsubst %.yaml,%.example.dtb, $(DT_DOCS))
+> >
+> > From the commit description, DT_SCHEMA_FILES might be overridden by a user.
+> > So, I think this is OK.
+> >
+> >
+> >
+> >
+> > > +$(obj)/$(DT_TMP_SCHEMA): | $(addprefix $(obj)/,$(patsubst $(src)/%.yaml,%.example.dtb, $(DT_SCHEMA_FILES)))
+> >
+> > I do not understand this line.
+> > Why is it necessary?
+> >
+> > *.example.dtb files are generated anyway
+> > since they are listed in extra-y.
+>
+> It is enforcing the ordering. Without it, the binding checks and
+> building .schema.yaml.tmp happen in parallel because both only have
+> the source files as dependencies. The '|' keeps the dependencies out
+> of the dependency list($^).
+
+
+What kind problem would you see if
+the binding checks and building .schema.yaml.tmp
+happen in parallel?
+
+
+
 -- 
-2.7.4
+Best Regards
+Masahiro Yamada
