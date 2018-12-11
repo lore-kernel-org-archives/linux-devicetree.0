@@ -1,75 +1,59 @@
-From: Vijay Khemka <vijaykhemka@fb.com>
-Subject: Re: [PATCH 2/2] ARM: dts: aspeed: Add KCS support for LPC BMC
-Date: Tue, 11 Dec 2018 18:55:40 +0000
-Message-ID: <CA2566BA-428C-4D5A-8B37-835638252B0C@fb.com>
-References: <20181210200753.3018124-1-vijaykhemka@fb.com>
- <20181210200753.3018124-3-vijaykhemka@fb.com>
- <584ddf6f-2e0c-5c1c-df06-bdd37ecd2489@linux.intel.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH] MAINTAINERS: add maintainers for ChromeOS EC sub-drivers
+Date: Tue, 11 Dec 2018 20:00:53 +0100
+Message-ID: <20181211190053.9997-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <584ddf6f-2e0c-5c1c-df06-bdd37ecd2489@linux.intel.com>
-Content-Language: en-US
-Content-ID: <1E0B8371460E964098B5D00D6F51865E@namprd15.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Alessandro Zummo <a.zummo@towertech.it>, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-i2c@vger.kernel.org, groeck@chromium.org, kernel@collabora.com, linux-rtc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Sebastian Reichel <sre@kernel.org>, linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, Benson Leung <bleung@chromiumg.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Lee Jones <lee.jones@linaro.org>, Hartmut Knaack <knaack.h@gmx.de>, Rob Herring <robh+dt@kernel.org>, Lar
 List-Id: devicetree@vger.kernel.org
 
-VGhhbmtzIEpheSwNCkkgd2lsbCB0YWtlIGNhcmUgb2YgeW91ciBjb21tZW50cyBhbmQgc2VuZCBu
-ZXh0IHZlcnNpb24uDQoNClJlZ2FyZHMNCi1WaWpheQ0KDQrvu79PbiAxMi8xMS8xOCwgMTA6NDAg
-QU0sICJKYWUgSHl1biBZb28iIDxqYWUuaHl1bi55b29AbGludXguaW50ZWwuY29tPiB3cm90ZToN
-Cg0KICAgIEhpIFZpamF5LA0KICAgIA0KICAgIE9uIDEyLzEwLzIwMTggMTI6MDcgUE0sIFZpamF5
-IEtoZW1rYSB3cm90ZToNCiAgICA+IEFkZGVkIGtjcyBkZXZpY2Ugc3VwcG9ydCBmb3IgbHBjIEJN
-Qy4NCiAgICA+IA0KICAgID4gU2lnbmVkLW9mZi1ieTogVmlqYXkgS2hlbWthIDx2aWpheWtoZW1r
-YUBmYi5jb20+DQogICAgPiAtLS0NCiAgICA+ICAgYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWc1
-LmR0c2kgfCAyOSArKysrKysrKysrKysrKysrKysrKysrKysrKysrLQ0KICAgID4gICAxIGZpbGUg
-Y2hhbmdlZCwgMjggaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KICAgID4gDQogICAgPiBk
-aWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWc1LmR0c2kgYi9hcmNoL2FybS9i
-b290L2R0cy9hc3BlZWQtZzUuZHRzaQ0KICAgID4gaW5kZXggZDEwNzQ1OWZjMGY4Li4xYmQ0ODY1
-NWJhY2IgMTAwNjQ0DQogICAgPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtZzUuZHRz
-aQ0KICAgID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWc1LmR0c2kNCiAgICA+IEBA
-IC0zMzAsOCArMzMwLDM1IEBADQogICAgPiAgIAkJCQlyYW5nZXMgPSA8MHgwIDB4MWU3ODkwMDAg
-MHgxMDAwPjsNCiAgICA+ICAgDQogICAgPiAgIAkJCQlscGNfYm1jOiBscGMtYm1jQDAgew0KICAg
-ID4gLQkJCQkJY29tcGF0aWJsZSA9ICJhc3BlZWQsYXN0MjUwMC1scGMtYm1jIjsNCiAgICA+ICsJ
-CQkJCWNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI1MDAtbHBjLWJtYywgInNpbXBsZS1tZmQiLCAi
-c3lzY29uIiI7DQogICAgPiAgIAkJCQkJcmVnID0gPDB4MCAweDgwPjsNCiAgICA+ICsJCQkJCXJl
-Zy1pby13aWR0aCA9IDw0PjsNCiAgICA+ICsNCiAgICA+ICsJCQkJCSNhZGRyZXNzLWNlbGxzID0g
-PDE+Ow0KICAgID4gKwkJCQkJI3NpemUtY2VsbHMgPSA8MT47DQogICAgPiArCQkJCQlyYW5nZXMg
-PSA8MHgwIDB4MCAweDgwPjsNCiAgICA+ICsNCiAgICA+ICsJCQkJCWtjczE6IGtjczFAMCB7DQog
-ICAgPiArCQkJCQkJY29tcGF0aWJsZSA9ICJhc3BlZWQsYXN0MjUwMC1rY3MtYm1jIjsNCiAgICA+
-ICsJCQkJCQlyZWcgPSA8MHgwIDB4ODA+Ow0KICAgIA0KICAgIFRoaXMgcmVnIHByb3BlcnR5IGlz
-bid0IG5lZWRlZCBhdCBoZXJlIGJlY2F1c2Uga2NzX2JtY19hc3BlZWQgbW9kdWxlDQogICAgcmVh
-ZHMgcmVnbWFwIGZyb20gdGhlIHBhcmVudCBub2RlLiBQbGVhc2UgY2hlY2sgYmVsb3cgY29kZSBp
-biB0aGUNCiAgICBkcml2ZXIgY29kZS4NCiAgICANCiAgICBwcml2LT5tYXAgPSBzeXNjb25fbm9k
-ZV90b19yZWdtYXAoZGV2LT5wYXJlbnQtPm9mX25vZGUpOw0KICAgIA0KICAgID4gKwkJCQkJCWlu
-dGVycnVwdHMgPSA8OD47DQogICAgPiArCQkJCQkJa2NzX2NoYW4gPSA8MT47DQogICAgPiArCQkJ
-CQkJc3RhdHVzID0gImRpc2FibGVkIjsNCiAgICA+ICsJCQkJCX07DQogICAgPiArCQkJCQlrY3My
-OiBrY3MyQDAgew0KICAgID4gKwkJCQkJCWNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI1MDAta2Nz
-LWJtYyI7DQogICAgPiArCQkJCQkJcmVnID0gPDB4MCAweDgwPjsNCiAgICANCiAgICBkaXR0by4N
-CiAgICANCiAgICA+ICsJCQkJCQlpbnRlcnJ1cHRzID0gPDg+Ow0KICAgID4gKwkJCQkJCWtjc19j
-aGFuID0gPDI+Ow0KICAgID4gKwkJCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQogICAgPiArCQkJ
-CQl9Ow0KICAgID4gKwkJCQkJa2NzMzoga2NzM0AwIHsNCiAgICA+ICsJCQkJCQljb21wYXRpYmxl
-ID0gImFzcGVlZCxhc3QyNTAwLWtjcy1ibWMiOw0KICAgID4gKwkJCQkJCXJlZyA9IDwweDAgMHg4
-MD47DQogICAgDQogICAgZGl0dG8uDQogICAgDQogICAgPiArCQkJCQkJaW50ZXJydXB0cyA9IDw4
-PjsNCiAgICA+ICsJCQkJCQlrY3NfY2hhbiA9IDwzPjsNCiAgICA+ICsJCQkJCQlzdGF0dXMgPSAi
-ZGlzYWJsZWQiOw0KICAgID4gKwkJCQkJfTsNCiAgICA+ICAgCQkJCX07DQogICAgPiAgIA0KICAg
-ID4gICAJCQkJbHBjX2hvc3Q6IGxwYy1ob3N0QDgwIHsNCiAgICA+IA0KICAgIA0KICAgIFlvdSBt
-aWdodCBuZWVkIHRvIGFkZCBrY3M0IGFzIGEgc3ViLW5vZGUgdW5kZXIgbHBjX2hvc3QgbGlrZSBi
-ZWxvdzoNCiAgICANCiAgICBrY3M0OiBrY3M0QDAgew0KICAgIAljb21wYXRpYmxlID0gImFzcGVl
-ZCxhc3QyNTAwLWtjcy1ibWMiOw0KICAgIAlpbnRlcnJ1cHRzID0gPDg+Ow0KICAgIAlrY3NfY2hh
-biA9IDw0PjsNCiAgICAJc3RhdHVzID0gImRpc2FibGVkIjsNCiAgICB9Ow0KICAgIA0KICAgIFRo
-aXMgd291bGQgYmUgdXNlcyBhcyBhbiBTTU0gY2hhbm5lbC4NCiAgICANCiAgICAtSmFlDQogICAg
-DQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
-LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
-bS1rZXJuZWwK
+There are multiple ChromeOS EC sub-drivers spread in different
+subsystems, as all of them are related to the Chrome stuff add
+Benson and myself as a maintainers for all these sub-drivers.
+
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
+
+ MAINTAINERS | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a24129b0b043..2f24f5c977ca 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3625,6 +3625,30 @@ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/bleung/chrome-platform.git
+ F:	drivers/platform/chrome/
+ 
++CHROMEOS EC SUBDRIVERS
++M:	Benson Leung <bleung@chromiumg.org>
++M:	Enric Balletbo i Serra <enric.balletbo@collabora.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
++F:	Documentation/devicetree/bindings/input/cros-ec-keyb.txt
++F:	Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.txt
++F:	Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
++F:	Documentation/devicetree/bindings/mfd/cros-ec.txt
++F:	Documentation/ABI/testing/sysfs-bus-iio-cros-ec
++F:	drivers/extcon/extcon-usbc-cros-ec.c
++F:	drivers/i2c/busses/i2c-cros-ec-tunnel.c
++F:	drivers/iio/accel/cros_ec*
++F:	drivers/iio/common/cros_ec_sensors/
++F:	drivers/iio/light/cros_ec*
++F:	drivers/iio/pressure/cros_ec*
++F:	drivers/input/keyboard/cros_ec*
++F:	drivers/mfd/cros_ec*
++F:	drivers/power/supply/cros_usbpd-charger.c
++F:	drivers/pwm/pwm-cros-ec.c
++F:	drivers/rtc/rtc-cros-ec.c
++F:	include/linux/iio/common/cros_ec_sensors_core.h
++F:	include/linux/mfd/cros_ec*
++
+ CIRRUS LOGIC AUDIO CODEC DRIVERS
+ M:	Brian Austin <brian.austin@cirrus.com>
+ M:	Paul Handrigan <Paul.Handrigan@cirrus.com>
+-- 
+2.19.2
