@@ -1,68 +1,48 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v6 0/3] device property: Add fwnode_get_name() helper
-Date: Tue, 11 Dec 2018 15:59:25 +0200
-Message-ID: <20181211135925.GD10650@smile.fi.intel.com>
-References: <20181211131451.52832-1-heikki.krogerus@linux.intel.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 0/5] add PM functionality for act8945a PMIC
+Date: Tue, 11 Dec 2018 14:08:41 +0000
+Message-ID: <20181211140841.GE6686@sirena.org.uk>
+References: <1543319801-19100-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="HeFlAV5LIbMFYYuh"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181211131451.52832-1-heikki.krogerus@linux.intel.com>
+In-Reply-To: <1543319801-19100-1-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+To: Claudiu.Beznea@microchip.com
+Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 11, 2018 at 04:14:48PM +0300, Heikki Krogerus wrote:
-> Hi,
-> 
-> Andy, I dropped you Reviewed-by tag because of the last change to this
-> series, so if you could check these again I would much appreciate.
 
-They all looks fine,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+--HeFlAV5LIbMFYYuh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Changes since v5:
-> - No longer reading "name" device property as fallback.
-> 
-> Changes since v4:
-> - No changes. There was an extra patch in v3. This was just a resend
->   of v3 without that extra patch.
-> 
-> Changes since v3:
-> - I'm now returning -EOVERFLOW if the buffer is not big enough as
->   proposed by Andy.
-> 
-> This is the cover letter from v3:
-> 
-> This is the third version of my proposal for this helper. The
-> second version can be checked here:
-> https://lkml.org/lkml/2018/11/8/1005
-> 
-> I'm now passing the length as proposed by both Rob and Andy. I'm also
-> leaving the .get_named_child_node fwnode op untouched.
-> 
-> --
-> heikki
-> 
-> 
-> Heikki Krogerus (3):
->   device property: Introduce fwnode_get_name()
->   ACPI: property: Add acpi_fwnode_name()
->   of/property: Add of_fwnode_name()
-> 
->  drivers/acpi/property.c  | 28 ++++++++++++++++++++++++++++
->  drivers/base/property.c  | 17 +++++++++++++++++
->  drivers/of/property.c    | 13 +++++++++++++
->  include/linux/fwnode.h   |  3 +++
->  include/linux/property.h |  2 ++
->  5 files changed, 63 insertions(+)
-> 
-> -- 
-> 2.19.2
-> 
+On Tue, Nov 27, 2018 at 11:57:06AM +0000, Claudiu.Beznea@microchip.com wrot=
+e:
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+>=20
+> This series implements PM functionality for act8945a PMIC and use that su=
+pport
+> on SAMA5D2 Xplained board.
 
--- 
-With Best Regards,
-Andy Shevchenko
+This doesn't apply against current code, please check and resend.
+
+--HeFlAV5LIbMFYYuh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwPxOgACgkQJNaLcl1U
+h9AZaggAg505D8Xn+NVX6TOio7dzQKgtGEcOGq1ELTca1YDIqxRkcrZXN20OkbOu
+FGbA3VzRfqQgzyQN/giexD32gQE3IOsN6/IX46z9mgJKVnWLyPf7DXp1Pd+mjdzM
+aRQSgTQF6+/2iZfqLQU4kXZKMcgwwfURZCWqQgKlZfmtOV7ZYdMYBcjhskej1Avg
+LWytAL54VzJtKhgBGFXHQZb45D3cKczTHfU87NJyvSl+75/BbZ57kesTfkvapZgb
+oiYtmMaXeHJeDneHiQYy66G9MrAN9R1H/9donQaUI1R6i+hvchHF0jcbT62rVH43
+o8gUvui0EsTbuO9AcdPlaUFcDXcNyQ==
+=J34S
+-----END PGP SIGNATURE-----
+
+--HeFlAV5LIbMFYYuh--
