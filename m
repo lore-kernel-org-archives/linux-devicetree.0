@@ -1,104 +1,86 @@
 From: <Claudiu.Beznea@microchip.com>
-Subject: [PATCH v3 6/6] regulator: add documentation for regulator modes and
- suspend states
-Date: Tue, 11 Dec 2018 15:56:59 +0000
-Message-ID: <1544543768-2066-7-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH v3 1/6] regulator: act8945a-regulator: unlock expert registers
+Date: Tue, 11 Dec 2018 15:56:36 +0000
+Message-ID: <1544543768-2066-2-git-send-email-claudiu.beznea@microchip.com>
 References: <1544543768-2066-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1544543768-2066-1-git-send-email-claudiu.beznea@microchip.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Claudiu.Beznea@microchip.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Claudiu.Beznea@microchip.com
 List-Id: devicetree@vger.kernel.org
 
 From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-Add documentation for regulator modes and suspend states.
+Unlock expert registers for act8945a.
+This is based on orginal work of Boris Brezillon at [1].
+
+[1] https://www.spinics.net/lists/kernel/msg2942960.html
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- .../bindings/regulator/act8945a-regulator.txt      | 34 ++++++++++++++++++=
-++++
- 1 file changed, 34 insertions(+)
+ drivers/regulator/act8945a-regulator.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/act8945a-regulator=
-.txt b/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
-index ac955dea00d1..4017527619ab 100644
---- a/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
-@@ -15,11 +15,17 @@ Optional input supply properties:
-   - inl67-supply: The input supply for REG_LDO3 and REG_LDO4
-=20
- Any standard regulator properties can be used to configure the single regu=
-lator.
-+regulator-initial-mode, regulator-allowed-modes and regulator-mode could b=
-e
-+specified using mode values from dt-bindings/regulator/active-semi,8945a-r=
-egulator.h
-+file.
-=20
- The valid names for regulators are:
- 	REG_DCDC1, REG_DCDC2, REG_DCDC3, REG_LDO1, REG_LDO2, REG_LDO3, REG_LDO4.
-=20
- Example:
+diff --git a/drivers/regulator/act8945a-regulator.c b/drivers/regulator/act8945a-regulator.c
+index 43fda8b4455a..8d71d9893d0d 100644
+--- a/drivers/regulator/act8945a-regulator.c
++++ b/drivers/regulator/act8945a-regulator.c
+@@ -15,6 +15,7 @@
+ #include <linux/module.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
++#include <linux/regmap.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
+ 
+@@ -23,6 +24,7 @@
+  */
+ #define ACT8945A_SYS_MODE	0x00
+ #define ACT8945A_SYS_CTRL	0x01
++#define ACT8945A_SYS_UNLK_REGS	0x0b
+ #define ACT8945A_DCDC1_VSET1	0x20
+ #define ACT8945A_DCDC1_VSET2	0x21
+ #define ACT8945A_DCDC1_CTRL	0x22
+@@ -123,9 +125,17 @@ static int act8945a_pmic_probe(struct platform_device *pdev)
+ 	struct regulator_config config = { };
+ 	const struct regulator_desc *regulators;
+ 	struct regulator_dev *rdev;
++	struct regmap *regmap;
+ 	int i, num_regulators;
+ 	bool voltage_select;
+ 
++	regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	if (!regmap) {
++		dev_err(&pdev->dev,
++			"could not retrieve regmap from parent device\n");
++		return -EINVAL;
++	}
 +
-+#include <dt-bindings/regulator/active-semi,8945a-regulator.h>
-+
- 	pmic@5b {
- 		compatible =3D "active-semi,act8945a";
- 		reg =3D <0x5b>;
-@@ -32,6 +38,18 @@ Example:
- 				regulator-min-microvolt =3D <1350000>;
- 				regulator-max-microvolt =3D <1350000>;
- 				regulator-always-on;
-+
-+				regulator-allowed-modes =3D <ACT8945A_REGULATOR_MODE_FIXED>,
-+							  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+				regulator-initial-mode =3D <ACT8945A_REGULATOR_MODE_FIXED>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-min-microvolt=3D<1400000>;
-+					regulator-suspend-max-microvolt=3D<1400000>;
-+					regulator-changeable-in-suspend;
-+					regulator-mode=3D<ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+				};
- 			};
-=20
- 			vdd_1v2_reg: REG_DCDC2 {
-@@ -39,6 +57,14 @@ Example:
- 				regulator-min-microvolt =3D <1100000>;
- 				regulator-max-microvolt =3D <1300000>;
- 				regulator-always-on;
-+
-+				regulator-allowed-modes =3D <ACT8945A_REGULATOR_MODE_FIXED>,
-+							  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+				regulator-initial-mode =3D <ACT8945A_REGULATOR_MODE_FIXED>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
-=20
- 			vdd_3v3_reg: REG_DCDC3 {
-@@ -53,6 +79,14 @@ Example:
- 				regulator-min-microvolt =3D <2500000>;
- 				regulator-max-microvolt =3D <2500000>;
- 				regulator-always-on;
-+
-+				regulator-allowed-modes =3D <ACT8945A_REGULATOR_MODE_NORMAL>,
-+							  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-+				regulator-initial-mode =3D <ACT8945A_REGULATOR_MODE_NORMAL>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
- 			};
-=20
- 			vdd_3v3_lp_reg: REG_LDO2 {
---=20
+ 	voltage_select = of_property_read_bool(pdev->dev.parent->of_node,
+ 					       "active-semi,vsel-high");
+ 
+@@ -149,7 +159,8 @@ static int act8945a_pmic_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	return 0;
++	/* Unlock expert registers. */
++	return regmap_write(regmap, ACT8945A_SYS_UNLK_REGS, 0xef);
+ }
+ 
+ static struct platform_driver act8945a_pmic_driver = {
+-- 
 2.7.4
