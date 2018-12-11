@@ -1,747 +1,127 @@
-Return-Path: <SRS0=W32e=OW=gmail.com=dwesterg@kernel.org>
-From: dwesterg@gmail.com
-Subject: [PATCH v2 net-next 09/10] net: eth: altera: add msgdma prefetcher
-Date: Thu, 13 Dec 2018 09:52:51 -0800
-Message-Id: <20181213175252.21143-10-dalon.westergreen@linux.intel.com>
-In-Reply-To: <20181213175252.21143-1-dalon.westergreen@linux.intel.com>
-References: <20181213175252.21143-1-dalon.westergreen@linux.intel.com>
+Return-Path: <SRS0=IqaF=OU=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr00074.outbound.protection.outlook.com ([40.107.0.74]:49632
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729474AbeLKCJE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 10 Dec 2018 21:09:04 -0500
+From: Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH v5 3/4] usb: chipidea: host: override ehci->hub_control
+Date: Tue, 11 Dec 2018 02:09:00 +0000
+Message-ID: <20181211020624.9433-4-peter.chen@nxp.com>
+References: <20181211020624.9433-1-peter.chen@nxp.com>
+In-Reply-To: <20181211020624.9433-1-peter.chen@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: netdev@vger.kernel.org, dinguyen@kernel.org, thor.thayer@linux.intel.com, richardcochran@gmail.com, davem@davemloft.net, vbridger@opensource.altera.com, robh+dt@kernel.org, mark.rutland@arm.commark.rutland@arm.com, devicetree@vger.kernel.org, hean.loong.ong@intel.com
-Cc: Dalon Westergreen <dalon.westergreen@intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>, Peter Chen <peter.chen@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Dalon Westergreen <dalon.westergreen@intel.com>
+The chipidea controller has some special requirements during
+suspend/resume, override common ehci->hub_control to implement
+it.
 
-Add support for the mSGDMA prefetcher.  The prefetcher adds support
-for a linked list of descriptors in system memory.  The prefetcher
-feeds these to the mSGDMA dispatcher.
-
-The prefetcher is configured to poll for the next descriptor in the
-list to be owned by hardware, then pass the descriptor to the
-dispatcher.  It will then poll the next descriptor until it is
-owned by hardware.
-
-The dispatcher responses are written back to the appropriate
-descriptor, and the owned by hardware bit is cleared.
-
-The driver sets up a linked list twice the tx and rx ring sizes,
-with the last descriptor pointing back to the first.  This ensures
-that the ring of descriptors will always have inactive descriptors
-preventing the prefetcher from looping over and reusing descriptors
-inappropriately.  The prefetcher will continuously loop over these
-descriptors.  The driver modifies descriptors as required to update
-the skb address and length as well as the owned by hardware bit.
-
-In addition to the above, the mSGDMA prefetcher can be used to
-handle rx and tx timestamps coming from the ethernet ip.  These
-can be included in the prefetcher response in the descriptor.
-
-Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
-
+Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Tested-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
 ---
-Changes from v1:
- -> Alphabatize includes
- -> update xmit function to return type net_tx_t
- -> Cleanup msgdms descriptor ring by making is more apparent
-    that the msgdma descriptor ring is 2 * ring_size
----
- drivers/net/ethernet/altera/Makefile          |   2 +-
- .../altera/altera_msgdma_prefetcher.c         | 432 ++++++++++++++++++
- .../altera/altera_msgdma_prefetcher.h         |  30 ++
- .../altera/altera_msgdmahw_prefetcher.h       |  87 ++++
- drivers/net/ethernet/altera/altera_tse.h      |  14 +
- drivers/net/ethernet/altera/altera_tse_main.c |  51 +++
- 6 files changed, 615 insertions(+), 1 deletion(-)
- create mode 100644 drivers/net/ethernet/altera/altera_msgdma_prefetcher.c
- create mode 100644 drivers/net/ethernet/altera/altera_msgdma_prefetcher.h
- create mode 100644 drivers/net/ethernet/altera/altera_msgdmahw_prefetcher.h
+ drivers/usb/chipidea/host.c | 75 +++++++++++++++++++++++++++++++++++++++++=
+++++
+ 1 file changed, 75 insertions(+)
 
-diff --git a/drivers/net/ethernet/altera/Makefile b/drivers/net/ethernet/altera/Makefile
-index 3e622b4c105a..f6627615c6c1 100644
---- a/drivers/net/ethernet/altera/Makefile
-+++ b/drivers/net/ethernet/altera/Makefile
-@@ -5,4 +5,4 @@
- obj-$(CONFIG_ALTERA_TSE) += altera_tse.o
- altera_tse-objs := altera_tse_main.o altera_tse_ethtool.o \
- 		   altera_msgdma.o altera_sgdma.o altera_utils.o \
--		   intel_fpga_tod.o
-+		   intel_fpga_tod.o altera_msgdma_prefetcher.o
-diff --git a/drivers/net/ethernet/altera/altera_msgdma_prefetcher.c b/drivers/net/ethernet/altera/altera_msgdma_prefetcher.c
-new file mode 100644
-index 000000000000..f50ea62f687d
---- /dev/null
-+++ b/drivers/net/ethernet/altera/altera_msgdma_prefetcher.c
-@@ -0,0 +1,432 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* MSGDMA Prefetcher driver for Altera ethernet devices
-+ *
-+ * Copyright (C) 2018 Intel Corporation. All rights reserved.
-+ * Author(s):
-+ *   Dalon Westergreen <dalon.westergreen@intel.com>
-+ */
-+
-+#include <linux/list.h>
-+#include <linux/netdevice.h>
-+#include <linux/net_tstamp.h>
-+#include "altera_tse.h"
-+#include "altera_msgdma.h"
-+#include "altera_msgdmahw.h"
-+#include "altera_msgdma_prefetcher.h"
-+#include "altera_msgdmahw_prefetcher.h"
-+#include "altera_utils.h"
-+
-+int msgdma_pref_initialize(struct altera_tse_private *priv)
+diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+index 028a3574266a..b45ceb91c735 100644
+--- a/drivers/usb/chipidea/host.c
++++ b/drivers/usb/chipidea/host.c
+@@ -220,6 +220,80 @@ void ci_hdrc_host_destroy(struct ci_hdrc *ci)
+ 		host_stop(ci);
+ }
+=20
++/* The below code is based on tegra ehci driver */
++static int ci_ehci_hub_control(
++	struct usb_hcd	*hcd,
++	u16		typeReq,
++	u16		wValue,
++	u16		wIndex,
++	char		*buf,
++	u16		wLength
++)
 +{
-+	int i;
-+	struct msgdma_pref_extended_desc *rx_descs;
-+	struct msgdma_pref_extended_desc *tx_descs;
-+	dma_addr_t rx_descsphys;
-+	dma_addr_t tx_descsphys;
++	struct ehci_hcd	*ehci =3D hcd_to_ehci(hcd);
++	u32 __iomem	*status_reg;
++	u32		temp;
++	unsigned long	flags;
++	int		retval =3D 0;
++	struct device *dev =3D hcd->self.controller;
++	struct ci_hdrc *ci =3D dev_get_drvdata(dev);
 +
-+	priv->pref_rxdescphys = (dma_addr_t)0;
-+	priv->pref_txdescphys = (dma_addr_t)0;
++	status_reg =3D &ehci->regs->port_status[(wIndex & 0xff) - 1];
 +
-+	/* we need to allocate more pref descriptors than ringsize to
-+	 * prevent all of the descriptors being owned by hw.  To do this
-+	 * we just allocate twice ring_size descriptors.
-+	 * rx_ring_size = priv->rx_ring_size * 2
-+	 * tx_ring_size = priv->tx_ring_size * 2
++	spin_lock_irqsave(&ehci->lock, flags);
++
++	if (typeReq =3D=3D SetPortFeature && wValue =3D=3D USB_PORT_FEAT_SUSPEND)=
+ {
++		temp =3D ehci_readl(ehci, status_reg);
++		if ((temp & PORT_PE) =3D=3D 0 || (temp & PORT_RESET) !=3D 0) {
++			retval =3D -EPIPE;
++			goto done;
++		}
++
++		temp &=3D ~(PORT_RWC_BITS | PORT_WKCONN_E);
++		temp |=3D PORT_WKDISC_E | PORT_WKOC_E;
++		ehci_writel(ehci, temp | PORT_SUSPEND, status_reg);
++
++		/*
++		 * If a transaction is in progress, there may be a delay in
++		 * suspending the port. Poll until the port is suspended.
++		 */
++		if (ehci_handshake(ehci, status_reg, PORT_SUSPEND,
++			PORT_SUSPEND, 5000))
++			ehci_err(ehci, "timeout waiting for SUSPEND\n");
++
++		if (ci->platdata->flags & CI_HDRC_IMX_IS_HSIC) {
++			if (ci->platdata->notify_event)
++				ci->platdata->notify_event(ci,
++					CI_HDRC_IMX_HSIC_SUSPEND_EVENT);
++
++			temp =3D ehci_readl(ehci, status_reg);
++			temp &=3D ~(PORT_WKDISC_E | PORT_WKCONN_E);
++			ehci_writel(ehci, temp, status_reg);
++		}
++
++		set_bit((wIndex & 0xff) - 1, &ehci->suspended_ports);
++		goto done;
++	}
++
++	/*
++	 * After resume has finished, it needs do some post resume
++	 * operation for some SoCs.
 +	 */
-+
-+	/* The prefetcher requires the descriptors to be aligned to the
-+	 * descriptor read/write master's data width which worst case is
-+	 * 512 bits.  Currently we DO NOT CHECK THIS and only support 32-bit
-+	 * prefetcher masters.
-+	 */
-+
-+	/* allocate memory for rx descriptors */
-+	priv->pref_rxdesc =
-+		dma_zalloc_coherent(priv->device,
-+				    sizeof(struct msgdma_pref_extended_desc)
-+				    * priv->rx_ring_size * 2,
-+				    &priv->pref_rxdescphys, GFP_KERNEL);
-+
-+	if (!priv->pref_rxdesc)
-+		goto err_rx;
-+
-+	/* allocate memory for tx descriptors */
-+	priv->pref_txdesc =
-+		dma_zalloc_coherent(priv->device,
-+				    sizeof(struct msgdma_pref_extended_desc)
-+				    * priv->tx_ring_size * 2,
-+				    &priv->pref_txdescphys, GFP_KERNEL);
-+
-+	if (!priv->pref_txdesc)
-+		goto err_tx;
-+
-+	/* setup base descriptor ring for tx & rx */
-+	rx_descs = (struct msgdma_pref_extended_desc *)priv->pref_rxdesc;
-+	tx_descs = (struct msgdma_pref_extended_desc *)priv->pref_txdesc;
-+	tx_descsphys = priv->pref_txdescphys;
-+	rx_descsphys = priv->pref_rxdescphys;
-+
-+	/* setup RX descriptors */
-+	priv->pref_rx_prod = 0;
-+	for (i = 0; i < priv->rx_ring_size * 2; i++) {
-+		rx_descsphys = priv->pref_rxdescphys +
-+			(((i + 1) % (priv->rx_ring_size * 2)) *
-+			sizeof(struct msgdma_pref_extended_desc));
-+		rx_descs[i].next_desc_lo = lower_32_bits(rx_descsphys);
-+		rx_descs[i].next_desc_hi = upper_32_bits(rx_descsphys);
-+		rx_descs[i].stride = MSGDMA_DESC_RX_STRIDE;
-+		/* burst set to 0 so it defaults to max configured */
-+		/* set seq number to desc number */
-+		rx_descs[i].burst_seq_num = i;
++	else if (typeReq =3D=3D ClearPortFeature &&
++		wValue =3D=3D USB_PORT_FEAT_C_SUSPEND) {
++		/* Make sure the resume has finished, it should be finished */
++		if (ehci_handshake(ehci, status_reg, PORT_RESUME, 0, 25000))
++			ehci_err(ehci, "timeout waiting for resume\n");
 +	}
 +
-+	/* setup TX descriptors */
-+	for (i = 0; i < priv->tx_ring_size * 2; i++) {
-+		tx_descsphys = priv->pref_txdescphys +
-+			(((i + 1) % (priv->tx_ring_size * 2)) *
-+			sizeof(struct msgdma_pref_extended_desc));
-+		tx_descs[i].next_desc_lo = lower_32_bits(tx_descsphys);
-+		tx_descs[i].next_desc_hi = upper_32_bits(tx_descsphys);
-+		tx_descs[i].stride = MSGDMA_DESC_TX_STRIDE;
-+		/* burst set to 0 so it defaults to max configured */
-+		/* set seq number to desc number */
-+		tx_descs[i].burst_seq_num = i;
-+	}
++	spin_unlock_irqrestore(&ehci->lock, flags);
 +
-+	if (netif_msg_ifup(priv))
-+		netdev_info(priv->dev, "%s: RX Desc mem at 0x%x\n", __func__,
-+			    priv->pref_rxdescphys);
-+
-+	if (netif_msg_ifup(priv))
-+		netdev_info(priv->dev, "%s: TX Desc mem at 0x%x\n", __func__,
-+			    priv->pref_txdescphys);
-+
-+	return 0;
-+
-+err_tx:
-+	dma_free_coherent(priv->device,
-+			  sizeof(struct msgdma_pref_extended_desc)
-+			  * priv->rx_ring_size * 2,
-+			  priv->pref_rxdesc, priv->pref_rxdescphys);
-+err_rx:
-+	return -ENOMEM;
++	/* Handle the hub control events here */
++	return ehci_hub_control(hcd, typeReq, wValue, wIndex, buf, wLength);
++done:
++	spin_unlock_irqrestore(&ehci->lock, flags);
++	return retval;
 +}
-+
-+void msgdma_pref_uninitialize(struct altera_tse_private *priv)
-+{
-+	if (priv->pref_rxdesc)
-+		dma_free_coherent(priv->device,
-+				  sizeof(struct msgdma_pref_extended_desc)
-+				  * priv->rx_ring_size * 2,
-+				  priv->pref_rxdesc, priv->pref_rxdescphys);
-+
-+	if (priv->pref_txdesc)
-+		dma_free_coherent(priv->device,
-+				  sizeof(struct msgdma_pref_extended_desc)
-+				  * priv->rx_ring_size * 2,
-+				  priv->pref_txdesc, priv->pref_txdescphys);
-+}
-+
-+void msgdma_pref_enable_txirq(struct altera_tse_private *priv)
-+{
-+	tse_set_bit(priv->tx_pref_csr, msgdma_pref_csroffs(control),
-+		    MSGDMA_PREF_CTL_GLOBAL_INTR);
-+}
-+
-+void msgdma_pref_disable_txirq(struct altera_tse_private *priv)
-+{
-+	tse_clear_bit(priv->tx_pref_csr, msgdma_pref_csroffs(control),
-+		      MSGDMA_PREF_CTL_GLOBAL_INTR);
-+}
-+
-+void msgdma_pref_clear_txirq(struct altera_tse_private *priv)
-+{
-+	csrwr32(MSGDMA_PREF_STAT_IRQ, priv->tx_pref_csr,
-+		msgdma_pref_csroffs(status));
-+}
-+
-+void msgdma_pref_enable_rxirq(struct altera_tse_private *priv)
-+{
-+	tse_set_bit(priv->rx_pref_csr, msgdma_pref_csroffs(control),
-+		    MSGDMA_PREF_CTL_GLOBAL_INTR);
-+}
-+
-+void msgdma_pref_disable_rxirq(struct altera_tse_private *priv)
-+{
-+	tse_clear_bit(priv->rx_pref_csr, msgdma_pref_csroffs(control),
-+		      MSGDMA_PREF_CTL_GLOBAL_INTR);
-+}
-+
-+void msgdma_pref_clear_rxirq(struct altera_tse_private *priv)
-+{
-+	csrwr32(MSGDMA_PREF_STAT_IRQ, priv->rx_pref_csr,
-+		msgdma_pref_csroffs(status));
-+}
-+
-+static u64 timestamp_to_ns(struct msgdma_pref_extended_desc *desc)
-+{
-+	u64 ns = 0;
-+	u64 second;
-+	u32 tmp;
-+
-+	tmp = desc->timestamp_96b[0] >> 16;
-+	tmp |= (desc->timestamp_96b[1] << 16);
-+
-+	second = desc->timestamp_96b[2];
-+	second <<= 16;
-+	second |= ((desc->timestamp_96b[1] & 0xffff0000) >> 16);
-+
-+	ns = second * NSEC_PER_SEC + tmp;
-+
-+	return ns;
-+}
-+
-+/* Setup TX descriptor
-+ *   -> this should never be called when a descriptor isn't available
-+ */
-+
-+netdev_tx_t msgdma_pref_tx_buffer(struct altera_tse_private *priv,
-+				  struct tse_buffer *buffer)
-+{
-+	u32 desc_entry = priv->tx_prod % (priv->tx_ring_size * 2);
-+	struct msgdma_pref_extended_desc *tx_descs = priv->pref_txdesc;
-+
-+	/* if for some reason the descriptor is still owned by hardware */
-+	if (unlikely(tx_descs[desc_entry].desc_control
-+		     & MSGDMA_PREF_DESC_CTL_OWNED_BY_HW))
-+		return NETDEV_TX_BUSY;
-+
-+	/* write descriptor entries */
-+	tx_descs[desc_entry].len = buffer->len;
-+	tx_descs[desc_entry].read_addr_lo = lower_32_bits(buffer->dma_addr);
-+	tx_descs[desc_entry].read_addr_hi = upper_32_bits(buffer->dma_addr);
-+
-+	/* set the control bits and set owned by hw */
-+	tx_descs[desc_entry].desc_control = (MSGDMA_DESC_CTL_TX_SINGLE
-+			| MSGDMA_PREF_DESC_CTL_OWNED_BY_HW);
-+
-+	if (netif_msg_tx_queued(priv))
-+		netdev_info(priv->dev, "%s: cons: %d prod: %d",
-+			    __func__, priv->tx_cons, priv->tx_prod);
-+
-+	return NETDEV_TX_OK;
-+}
-+
-+u32 msgdma_pref_tx_completions(struct altera_tse_private *priv)
-+{
-+	u32 control;
-+	u32 ready = 0;
-+	u32 cons = priv->tx_cons;
-+	u32 desc_ringsize = priv->tx_ring_size * 2;
-+	u32 ringsize = priv->tx_ring_size;
-+	u64 ns = 0;
-+	struct msgdma_pref_extended_desc *cur;
-+	struct tse_buffer *tx_buff;
-+	struct skb_shared_hwtstamps shhwtstamp;
-+	int i;
-+
-+	if (netif_msg_tx_done(priv))
-+		for (i = 0; i < desc_ringsize; i++)
-+			netdev_info(priv->dev, "%s: desc: %d control 0x%x\n",
-+				    __func__, i,
-+				    priv->pref_txdesc[i].desc_control);
-+
-+	cur = &priv->pref_txdesc[cons % desc_ringsize];
-+	control = cur->desc_control;
-+	tx_buff = &priv->tx_ring[cons % ringsize];
-+
-+	while (!(control & MSGDMA_PREF_DESC_CTL_OWNED_BY_HW) &&
-+	       (priv->tx_prod != (cons + ready)) && control) {
-+		if (skb_shinfo(tx_buff->skb)->tx_flags & SKBTX_IN_PROGRESS) {
-+			/* Timestamping is enabled, pass timestamp back */
-+			ns = timestamp_to_ns(cur);
-+			memset(&shhwtstamp, 0,
-+			       sizeof(struct skb_shared_hwtstamps));
-+			shhwtstamp.hwtstamp = ns_to_ktime(ns);
-+			skb_tstamp_tx(tx_buff->skb, &shhwtstamp);
-+		}
-+
-+		if (netif_msg_tx_done(priv))
-+			netdev_info(priv->dev, "%s: cur: %d ts: %lld ns\n",
-+				    __func__,
-+				    ((cons + ready) % desc_ringsize), ns);
-+
-+		/* clear data */
-+		cur->desc_control = 0;
-+		cur->timestamp_96b[0] = 0;
-+		cur->timestamp_96b[1] = 0;
-+		cur->timestamp_96b[2] = 0;
-+
-+		ready++;
-+		cur = &priv->pref_txdesc[(cons + ready) % desc_ringsize];
-+		tx_buff = &priv->tx_ring[(cons + ready) % ringsize];
-+		control = cur->desc_control;
-+	}
-+
-+	return ready;
-+}
-+
-+void msgdma_pref_reset(struct altera_tse_private *priv)
-+{
-+	int counter;
-+
-+	/* turn off polling */
-+	tse_clear_bit(priv->rx_pref_csr, msgdma_pref_csroffs(control),
-+		      MSGDMA_PREF_CTL_DESC_POLL_EN);
-+	tse_clear_bit(priv->tx_pref_csr, msgdma_pref_csroffs(control),
-+		      MSGDMA_PREF_CTL_DESC_POLL_EN);
-+
-+	/* Reset the RX Prefetcher */
-+	csrwr32(MSGDMA_PREF_STAT_IRQ, priv->rx_pref_csr,
-+		msgdma_pref_csroffs(status));
-+	csrwr32(MSGDMA_PREF_CTL_RESET, priv->rx_pref_csr,
-+		msgdma_pref_csroffs(control));
-+
-+	counter = 0;
-+	while (counter++ < ALTERA_TSE_SW_RESET_WATCHDOG_CNTR) {
-+		if (tse_bit_is_clear(priv->rx_pref_csr,
-+				     msgdma_pref_csroffs(control),
-+				     MSGDMA_PREF_CTL_RESET))
-+			break;
-+		udelay(1);
-+	}
-+
-+	if (counter >= ALTERA_TSE_SW_RESET_WATCHDOG_CNTR)
-+		netif_warn(priv, drv, priv->dev,
-+			   "TSE Rx Prefetcher reset bit never cleared!\n");
-+
-+	/* clear all status bits */
-+	csrwr32(MSGDMA_PREF_STAT_IRQ, priv->tx_pref_csr,
-+		msgdma_pref_csroffs(status));
-+
-+	/* Reset the TX Prefetcher */
-+	csrwr32(MSGDMA_PREF_STAT_IRQ, priv->tx_pref_csr,
-+		msgdma_pref_csroffs(status));
-+	csrwr32(MSGDMA_PREF_CTL_RESET, priv->tx_pref_csr,
-+		msgdma_pref_csroffs(control));
-+
-+	counter = 0;
-+	while (counter++ < ALTERA_TSE_SW_RESET_WATCHDOG_CNTR) {
-+		if (tse_bit_is_clear(priv->tx_pref_csr,
-+				     msgdma_pref_csroffs(control),
-+				     MSGDMA_PREF_CTL_RESET))
-+			break;
-+		udelay(1);
-+	}
-+
-+	if (counter >= ALTERA_TSE_SW_RESET_WATCHDOG_CNTR)
-+		netif_warn(priv, drv, priv->dev,
-+			   "TSE Tx Prefetcher reset bit never cleared!\n");
-+
-+	/* clear all status bits */
-+	csrwr32(MSGDMA_PREF_STAT_IRQ, priv->tx_pref_csr,
-+		msgdma_pref_csroffs(status));
-+
-+	/* Reset mSGDMA dispatchers*/
-+	msgdma_reset(priv);
-+}
-+
-+/* Setup the RX and TX prefetchers to poll the descriptor chain */
-+void msgdma_pref_start_rxdma(struct altera_tse_private *priv)
-+{
-+	csrwr32(priv->rx_poll_freq, priv->rx_pref_csr,
-+		msgdma_pref_csroffs(desc_poll_freq));
-+	csrwr32(lower_32_bits(priv->pref_rxdescphys), priv->rx_pref_csr,
-+		msgdma_pref_csroffs(next_desc_lo));
-+	csrwr32(upper_32_bits(priv->pref_rxdescphys), priv->rx_pref_csr,
-+		msgdma_pref_csroffs(next_desc_hi));
-+	tse_set_bit(priv->rx_pref_csr, msgdma_pref_csroffs(control),
-+		    MSGDMA_PREF_CTL_DESC_POLL_EN | MSGDMA_PREF_CTL_RUN);
-+}
-+
-+void msgdma_pref_start_txdma(struct altera_tse_private *priv)
-+{
-+	csrwr32(priv->tx_poll_freq, priv->tx_pref_csr,
-+		msgdma_pref_csroffs(desc_poll_freq));
-+	csrwr32(lower_32_bits(priv->pref_txdescphys), priv->tx_pref_csr,
-+		msgdma_pref_csroffs(next_desc_lo));
-+	csrwr32(upper_32_bits(priv->pref_txdescphys), priv->tx_pref_csr,
-+		msgdma_pref_csroffs(next_desc_hi));
-+	tse_set_bit(priv->tx_pref_csr, msgdma_pref_csroffs(control),
-+		    MSGDMA_PREF_CTL_DESC_POLL_EN | MSGDMA_PREF_CTL_RUN);
-+}
-+
-+/* Add MSGDMA Prefetcher Descriptor to descriptor list
-+ *   -> This should never be called when a descriptor isn't available
-+ */
-+void msgdma_pref_add_rx_desc(struct altera_tse_private *priv,
-+			     struct tse_buffer *rxbuffer)
-+{
-+	struct msgdma_pref_extended_desc *rx_descs = priv->pref_rxdesc;
-+	u32 desc_entry = priv->pref_rx_prod % (priv->rx_ring_size * 2);
-+
-+	/* write descriptor entries */
-+	rx_descs[desc_entry].len = priv->rx_dma_buf_sz;
-+	rx_descs[desc_entry].write_addr_lo = lower_32_bits(rxbuffer->dma_addr);
-+	rx_descs[desc_entry].write_addr_hi = upper_32_bits(rxbuffer->dma_addr);
-+
-+	/* set the control bits and set owned by hw */
-+	rx_descs[desc_entry].desc_control = (MSGDMA_DESC_CTL_END_ON_EOP
-+			| MSGDMA_DESC_CTL_END_ON_LEN
-+			| MSGDMA_DESC_CTL_TR_COMP_IRQ
-+			| MSGDMA_DESC_CTL_EARLY_IRQ
-+			| MSGDMA_DESC_CTL_TR_ERR_IRQ
-+			| MSGDMA_DESC_CTL_GO
-+			| MSGDMA_PREF_DESC_CTL_OWNED_BY_HW);
-+
-+	/* we need to keep a separate one for rx as RX_DESCRIPTORS are
-+	 * pre-configured at startup
-+	 */
-+	priv->pref_rx_prod++;
-+
-+	if (netif_msg_rx_status(priv)) {
-+		netdev_info(priv->dev, "%s: desc: %d buf: %d control 0x%x\n",
-+			    __func__, desc_entry,
-+			    priv->rx_prod % priv->rx_ring_size,
-+			    priv->pref_rxdesc[desc_entry].desc_control);
-+	}
-+}
-+
-+u32 msgdma_pref_rx_status(struct altera_tse_private *priv)
-+{
-+	u32 rxstatus = 0;
-+	u32 pktlength;
-+	u32 pktstatus;
-+	u64 ns = 0;
-+	u32 entry = priv->rx_cons % priv->rx_ring_size;
-+	u32 desc_entry = priv->rx_prod % (priv->rx_ring_size * 2);
-+	struct msgdma_pref_extended_desc *rx_descs = priv->pref_rxdesc;
-+	struct skb_shared_hwtstamps *shhwtstamp = NULL;
-+	struct tse_buffer *rx_buff = priv->rx_ring;
-+
-+	/* if the current entry is not owned by hardware, process it */
-+	if (!(rx_descs[desc_entry].desc_control
-+	      & MSGDMA_PREF_DESC_CTL_OWNED_BY_HW) &&
-+	      rx_descs[desc_entry].desc_control) {
-+		pktlength = rx_descs[desc_entry].bytes_transferred;
-+		pktstatus = rx_descs[desc_entry].desc_status;
-+		rxstatus = pktstatus;
-+		rxstatus = rxstatus << 16;
-+		rxstatus |= (pktlength & 0xffff);
-+
-+		/* get the timestamp */
-+		if (priv->hwts_rx_en) {
-+			ns = timestamp_to_ns(&rx_descs[desc_entry]);
-+			shhwtstamp = skb_hwtstamps(rx_buff[entry].skb);
-+			memset(shhwtstamp, 0,
-+			       sizeof(struct skb_shared_hwtstamps));
-+			shhwtstamp->hwtstamp = ns_to_ktime(ns);
-+		}
-+
-+		/* clear data */
-+		rx_descs[desc_entry].desc_control = 0;
-+		rx_descs[desc_entry].timestamp_96b[0] = 0;
-+		rx_descs[desc_entry].timestamp_96b[1] = 0;
-+		rx_descs[desc_entry].timestamp_96b[2] = 0;
-+
-+		if (netif_msg_rx_status(priv))
-+			netdev_info(priv->dev, "%s: desc: %d buf: %d ts: %lld ns",
-+				    __func__, desc_entry, entry, ns);
-+	}
-+	return rxstatus;
-+}
-diff --git a/drivers/net/ethernet/altera/altera_msgdma_prefetcher.h b/drivers/net/ethernet/altera/altera_msgdma_prefetcher.h
-new file mode 100644
-index 000000000000..b520b1eb85c0
---- /dev/null
-+++ b/drivers/net/ethernet/altera/altera_msgdma_prefetcher.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* MSGDMA Prefetcher driver for Altera ethernet devices
-+ *
-+ * Copyright (C) 2018 Intel Corporation. All rights reserved.
-+ * Author(s):
-+ *   Dalon Westergreen <dalon.westergreen@intel.com>
-+ */
-+
-+#ifndef __ALTERA_PREF_MSGDMA_H__
-+#define __ALTERA_PREF_MSGDMA_H__
-+
-+void msgdma_pref_reset(struct altera_tse_private *priv);
-+void msgdma_pref_enable_txirq(struct altera_tse_private *priv);
-+void msgdma_pref_enable_rxirq(struct altera_tse_private *priv);
-+void msgdma_pref_disable_rxirq(struct altera_tse_private *priv);
-+void msgdma_pref_disable_txirq(struct altera_tse_private *priv);
-+void msgdma_pref_clear_rxirq(struct altera_tse_private *priv);
-+void msgdma_pref_clear_txirq(struct altera_tse_private *priv);
-+u32 msgdma_pref_tx_completions(struct altera_tse_private *priv);
-+void msgdma_pref_add_rx_desc(struct altera_tse_private *priv,
-+			     struct tse_buffer *buffer);
-+netdev_tx_t msgdma_pref_tx_buffer(struct altera_tse_private *priv,
-+				  struct tse_buffer *buffer);
-+u32 msgdma_pref_rx_status(struct altera_tse_private *priv);
-+int msgdma_pref_initialize(struct altera_tse_private *priv);
-+void msgdma_pref_uninitialize(struct altera_tse_private *priv);
-+void msgdma_pref_start_rxdma(struct altera_tse_private *priv);
-+void msgdma_pref_start_txdma(struct altera_tse_private *priv);
-+
-+#endif /*  __ALTERA_PREF_MSGDMA_H__ */
-diff --git a/drivers/net/ethernet/altera/altera_msgdmahw_prefetcher.h b/drivers/net/ethernet/altera/altera_msgdmahw_prefetcher.h
-new file mode 100644
-index 000000000000..e0484a3dc66e
---- /dev/null
-+++ b/drivers/net/ethernet/altera/altera_msgdmahw_prefetcher.h
-@@ -0,0 +1,87 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* MSGDMA Prefetcher driver for Altera ethernet devices
-+ *
-+ * Copyright (C) 2018 Intel Corporation.
-+ * Contributors:
-+ *   Dalon Westergreen
-+ *   Thomas Chou
-+ *   Ian Abbott
-+ *   Yuriy Kozlov
-+ *   Tobias Klauser
-+ *   Andriy Smolskyy
-+ *   Roman Bulgakov
-+ *   Dmytro Mytarchuk
-+ *   Matthew Gerlach
-+ */
-+
-+#ifndef __ALTERA_MSGDMAHW_PREFETCHER_H__
-+#define __ALTERA_MSGDMAHW_PREFETCHER_H__
-+
-+/* mSGDMA prefetcher extended prefectcher descriptor format
-+ */
-+struct msgdma_pref_extended_desc {
-+	/* data buffer source address low bits */
-+	u32 read_addr_lo;
-+	/* data buffer destination address low bits */
-+	u32 write_addr_lo;
-+	/* the number of bytes to transfer */
-+	u32 len;
-+	/* next descriptor low address */
-+	u32 next_desc_lo;
-+	/* number of bytes transferred */
-+	u32 bytes_transferred;
-+	u32 desc_status;
-+	u32 reserved_18;
-+	/* bit 31:24 write burst */
-+	/* bit 23:16 read burst */
-+	/* bit 15:0  sequence number */
-+	u32 burst_seq_num;
-+	/* bit 31:16 write stride */
-+	/* bit 15:0  read stride */
-+	u32 stride;
-+	/* data buffer source address high bits */
-+	u32 read_addr_hi;
-+	/* data buffer destination address high bits */
-+	u32 write_addr_hi;
-+	/* next descriptor high address */
-+	u32 next_desc_hi;
-+	/* prefetcher mod now writes these reserved bits*/
-+	/* Response bits [191:160] */
-+	u32 timestamp_96b[3];
-+	/* desc_control */
-+	u32 desc_control;
-+};
-+
-+/* mSGDMA Prefetcher Descriptor Status bits */
-+#define MSGDMA_PREF_DESC_STAT_STOPPED_ON_EARLY		BIT(8)
-+#define MSGDMA_PREF_DESC_STAT_MASK			0xFF
-+
-+/* mSGDMA Prefetcher Descriptor Control bits */
-+/* bit 31 and bits 29-0 are the same as the normal dispatcher ctl flags */
-+#define MSGDMA_PREF_DESC_CTL_OWNED_BY_HW		BIT(30)
-+
-+/* mSGDMA Prefetcher CSR */
-+struct msgdma_prefetcher_csr {
-+	u32 control;
-+	u32 next_desc_lo;
-+	u32 next_desc_hi;
-+	u32 desc_poll_freq;
-+	u32 status;
-+};
-+
-+/* mSGDMA Prefetcher Control */
-+#define MSGDMA_PREF_CTL_PARK				BIT(4)
-+#define MSGDMA_PREF_CTL_GLOBAL_INTR			BIT(3)
-+#define MSGDMA_PREF_CTL_RESET				BIT(2)
-+#define MSGDMA_PREF_CTL_DESC_POLL_EN			BIT(1)
-+#define MSGDMA_PREF_CTL_RUN				BIT(0)
-+
-+#define MSGDMA_PREF_POLL_FREQ_MASK			0xFFFF
-+
-+/* mSGDMA Prefetcher Status */
-+#define MSGDMA_PREF_STAT_IRQ				BIT(0)
-+
-+#define msgdma_pref_csroffs(a) (offsetof(struct msgdma_prefetcher_csr, a))
-+#define msgdma_pref_descroffs(a) (offsetof(struct msgdma_pref_extended_desc, a))
-+
-+#endif /* __ALTERA_MSGDMAHW_PREFETCHER_H__*/
-diff --git a/drivers/net/ethernet/altera/altera_tse.h b/drivers/net/ethernet/altera/altera_tse.h
-index 14515a76d634..31f11fdc94b4 100644
---- a/drivers/net/ethernet/altera/altera_tse.h
-+++ b/drivers/net/ethernet/altera/altera_tse.h
-@@ -393,6 +393,7 @@ struct altera_tse_private;
- 
- #define ALTERA_DTYPE_SGDMA 1
- #define ALTERA_DTYPE_MSGDMA 2
-+#define ALTERA_DTYPE_MSGDMA_PREF 3
- 
- /* standard DMA interface for SGDMA and MSGDMA */
- struct altera_dmaops {
-@@ -445,6 +446,19 @@ struct altera_tse_private {
- 	void __iomem *tx_dma_csr;
- 	void __iomem *tx_dma_desc;
- 
-+	/* mSGDMA Rx Prefecher address space */
-+	void __iomem *rx_pref_csr;
-+	struct msgdma_pref_extended_desc *pref_rxdesc;
-+	dma_addr_t pref_rxdescphys;
-+	u32 pref_rx_prod;
-+
-+	/* mSGDMA Tx Prefecher address space */
-+	void __iomem *tx_pref_csr;
-+	struct msgdma_pref_extended_desc *pref_txdesc;
-+	dma_addr_t pref_txdescphys;
-+	u32 rx_poll_freq;
-+	u32 tx_poll_freq;
-+
- 	/* Rx buffers queue */
- 	struct tse_buffer *rx_ring;
- 	u32 rx_cons;
-diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
-index 60f0c43a9334..5cb3ea4314f2 100644
---- a/drivers/net/ethernet/altera/altera_tse_main.c
-+++ b/drivers/net/ethernet/altera/altera_tse_main.c
-@@ -55,6 +55,7 @@
- #include "altera_sgdma.h"
- #include "altera_msgdma.h"
- #include "intel_fpga_tod.h"
-+#include "altera_msgdma_prefetcher.h"
- 
- static atomic_t instance_count = ATOMIC_INIT(~0);
- /* Module parameters */
-@@ -1515,6 +1516,34 @@ static int altera_tse_probe(struct platform_device *pdev)
- 		priv->rxdescmem = resource_size(dma_res);
- 		priv->rxdescmem_busaddr = dma_res->start;
- 
-+	} else if (priv->dmaops &&
-+			   priv->dmaops->altera_dtype ==
-+			   ALTERA_DTYPE_MSGDMA_PREF) {
-+		/* mSGDMA Rx Prefetcher address space */
-+		ret = request_and_map(pdev, "rx_pref", &dma_res,
-+				      &priv->rx_pref_csr);
-+		if (ret)
-+			goto err_free_netdev;
-+
-+		/* mSGDMA Tx Prefetcher address space */
-+		ret = request_and_map(pdev, "tx_pref", &dma_res,
-+				      &priv->tx_pref_csr);
-+		if (ret)
-+			goto err_free_netdev;
-+
-+		/* get prefetcher rx poll frequency from device tree */
-+		if (of_property_read_u32(pdev->dev.of_node, "rx-poll-freq",
-+					 &priv->rx_poll_freq)) {
-+			dev_info(&pdev->dev, "Defaulting RX Poll Frequency to 128\n");
-+			priv->rx_poll_freq = 128;
-+		}
-+
-+		/* get prefetcher rx poll frequency from device tree */
-+		if (of_property_read_u32(pdev->dev.of_node, "tx-poll-freq",
-+					 &priv->tx_poll_freq)) {
-+			dev_info(&pdev->dev, "Defaulting TX Poll Frequency to 128\n");
-+			priv->tx_poll_freq = 128;
-+		}
- 	} else {
- 		goto err_free_netdev;
- 	}
-@@ -1773,7 +1802,29 @@ static const struct altera_dmaops altera_dtype_msgdma = {
- 	.start_txdma = NULL,
- };
- 
-+static const struct altera_dmaops altera_dtype_prefetcher = {
-+	.altera_dtype = ALTERA_DTYPE_MSGDMA_PREF,
-+	.dmamask = 64,
-+	.reset_dma = msgdma_pref_reset,
-+	.enable_txirq = msgdma_pref_enable_txirq,
-+	.enable_rxirq = msgdma_pref_enable_rxirq,
-+	.disable_txirq = msgdma_pref_disable_txirq,
-+	.disable_rxirq = msgdma_pref_disable_rxirq,
-+	.clear_txirq = msgdma_pref_clear_txirq,
-+	.clear_rxirq = msgdma_pref_clear_rxirq,
-+	.tx_buffer = msgdma_pref_tx_buffer,
-+	.tx_completions = msgdma_pref_tx_completions,
-+	.add_rx_desc = msgdma_pref_add_rx_desc,
-+	.get_rx_status = msgdma_pref_rx_status,
-+	.init_dma = msgdma_pref_initialize,
-+	.uninit_dma = msgdma_pref_uninitialize,
-+	.start_rxdma = msgdma_pref_start_rxdma,
-+	.start_txdma = msgdma_pref_start_txdma,
-+};
-+
- static const struct of_device_id altera_tse_ids[] = {
-+	{ .compatible = "altr,tse-msgdma-2.0",
-+		.data = &altera_dtype_prefetcher, },
- 	{ .compatible = "altr,tse-msgdma-1.0", .data = &altera_dtype_msgdma, },
- 	{ .compatible = "altr,tse-1.0", .data = &altera_dtype_sgdma, },
- 	{ .compatible = "ALTR,tse-1.0", .data = &altera_dtype_sgdma, },
--- 
-2.19.2
+ static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
+ {
+ 	struct ehci_hcd *ehci =3D hcd_to_ehci(hcd);
+@@ -298,4 +372,5 @@ void ci_hdrc_host_driver_init(void)
+ 	ehci_init_driver(&ci_ehci_hc_driver, &ehci_ci_overrides);
+ 	orig_bus_suspend =3D ci_ehci_hc_driver.bus_suspend;
+ 	ci_ehci_hc_driver.bus_suspend =3D ci_ehci_bus_suspend;
++	ci_ehci_hc_driver.hub_control =3D ci_ehci_hub_control;
+ }
+--=20
+2.14.1
