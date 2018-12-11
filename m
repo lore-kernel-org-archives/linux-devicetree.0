@@ -1,101 +1,66 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: Re: [RFT PATCH v1 0/4] Unify CPU topology across ARM64 & RISC-V
-Date: Mon, 10 Dec 2018 16:26:48 -0800
-Message-ID: <131ba08d-a31f-601d-eb40-9d2e8007d948@wdc.com>
-References: <1543534100-3654-1-git-send-email-atish.patra@wdc.com>
- <d72a87f4-8dc1-2ec7-b602-0135c5e4c3a7@codeaurora.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC 2/2] ASoC: Add MICFIL SoC Digital Audio
+	Interface driver.
+Date: Tue, 11 Dec 2018 01:08:55 +0000
+Message-ID: <20181211010855.GF3004@sirena.org.uk>
+References: <1544433661-32496-1-git-send-email-cosmin.samoila@nxp.com>
+ <1544433661-32496-3-git-send-email-cosmin.samoila@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d72a87f4-8dc1-2ec7-b602-0135c5e4c3a7@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jhugo@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Will Deacon <will.deacon@arm.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Morten Rasmussen <morten.rasmussen@arm.com>, Juri Lelli <juri.lelli@arm.com>, Dmitriy Cherkasov <dmitriy@oss-tech.org>, Anup Patel <anup@brainfault.org>, Ingo Molnar <mingo@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "moderated list:ARM64 PORT AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============0292848368163291906=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1544433661-32496-3-git-send-email-cosmin.samoila@nxp.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Cosmin Samoila <cosmin.samoila@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "robh@kernel.org" <robh@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "gabrielcsmo@gmail.com" <gabrielcsmo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/5/18 9:53 AM, Jeffrey Hugo wrote:
-> On 11/29/2018 4:28 PM, Atish Patra wrote:
->> The cpu-map DT entry in ARM64 can describe the CPU topology in
->> much better way compared to other existing approaches. RISC-V can
->> easily adopt this binding to represent it's own CPU topology.
->> Thus, both cpu-map DT binding and topology parsing code can be
->> moved to a common location so that RISC-V or any other
->> architecture can leverage that.
->>
->> The relevant discussion regarding unifying cpu topology can be
->> found in [1].
->>
->> arch_topology seems to be a perfect place to move the common
->> code. I have not introduced any functional changes in the moved
->> code. The only downside in this approach is that the capacity
->> code will be executed for RISC-V as well. But, it will exit
->> immediately after not able to find the appropriate DT node. If
->> the overhead is considered too much, we can always compile out
->> capacity related functions under a different config for the
->> architectures that do not support them.
->>
->> The patches have been tested for RISC-V and compile tested for
->> ARM64 & x86.
->>
->> The socket change[2] is also now part of this series.
->>
->> [1] https://lkml.org/lkml/2018/11/6/19
->> [2] https://lkml.org/lkml/2018/11/7/918
->>
->> QEMU changes for RISC-V topology are available at
->>
->> https://github.com/atishp04/riscv-qemu/tree/cpu_topo
->>
->> Apologies for the previous patch series with incorrect title and
->> was sent only to kernel mailing list due to a bug in my config.
->> Please ignore that.
->>
->> Atish Patra (3):
->> dt-binding: cpu-topology: Move cpu-map to a common binding.
->> cpu-topology: Move cpu topology code to common code.
->> RISC-V: Parse cpu topology during boot.
->>
->> Sudeep Holla (1):
->> Documentation: DT: arm: add support for sockets defining package
->> boundaries
->>
->> .../{arm/topology.txt => cpu/cpu-topology.txt}     | 133 +++++++--
->> arch/arm64/include/asm/topology.h                  |  22 --
->> arch/arm64/kernel/topology.c                       | 303 +--------------------
->> arch/riscv/Kconfig                                 |   1 +
->> arch/riscv/kernel/smpboot.c                        |   3 +
->> drivers/base/arch_topology.c                       | 294 ++++++++++++++++++++
->> include/linux/arch_topology.h                      |  26 ++
->> include/linux/topology.h                           |   1 +
->> 8 files changed, 435 insertions(+), 348 deletions(-)
->> rename Documentation/devicetree/bindings/{arm/topology.txt => cpu/cpu-topology.txt} (66%)
->>
->> --
->> 2.7.4
->>
-> 
-> Seems to test fine on QDF2400.
-> 
-> Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
->
+
+--===============0292848368163291906==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="QXO0/MSS4VvK6f+D"
+Content-Disposition: inline
 
 
-Thanks for verifying the patches.
+--QXO0/MSS4VvK6f+D
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> I did see that git am complained about patch #2 -
-> 
-> patch:103: space before tab in indent.
->                           };
-> patch:114: space before tab in indent.
->           };
-> warning: 2 lines add whitespace errors.
-> 
-> 
+On Mon, Dec 10, 2018 at 09:21:15AM +0000, Cosmin Samoila wrote:
+> Add Digital Audio Interface driver that convers PDM bitstream to PCM
+> format.
 
-Thanks for pointing it out. For some reason, cherry-pick did not 
-complain about these. I will fix them.
+I'm missing patch 1/2 here - what's going on with dependencies?
 
-Regards,
-Atish
+--QXO0/MSS4VvK6f+D
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwPDiYACgkQJNaLcl1U
+h9Bs7gf/UU8JbgSuLvWPFOxZnCqiRw5Sw1GPXJb7V4d3sVKXbJTendN615yEPKkm
+RiAXF1M3j709zvVHALZ6fN9RU5Mc55t3uzDzzOwCwLuX15olRsa1/zRDiyZJkzND
+gdFMulEOQmLqLNLRfOvtRPsmjMdf52yHeyczkz1A8yR6NT160Ey1fqEWNKfkvjN+
+Eqb0mOkyMk+5vwct6rJB+3KHFCiPILETFhDmPTeM9afQWrk1MBLD9Htrsnh1PKnj
+BKJiAg00cVJprcOGDNCmBSUppu74VYOXN6/mXsQbNnWVROqTYloR9PqXb/oNQbj/
+jRUoeTJk7tdh8kEgGwZjU5eipWDXqg==
+=lXVQ
+-----END PGP SIGNATURE-----
+
+--QXO0/MSS4VvK6f+D--
+
+--===============0292848368163291906==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0292848368163291906==--
