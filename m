@@ -1,56 +1,116 @@
-From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 00/21] IOMMU: Tegra GART driver clean up and
-	optimization
-Date: Tue, 11 Dec 2018 10:53:17 +0100
-Message-ID: <20181211095317.tv43aaefnsezmic7@8bytes.org>
-References: <20181209202950.31486-1-digetx@gmail.com>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH V3 1/2] mmc: mmci: add variant property to set command
+ stop bit
+Date: Tue, 11 Dec 2018 10:53:04 +0100
+Message-ID: <35f22c1a-888d-5abd-7ffe-ecf47a74b69a@st.com>
+References: <1544109212-12621-1-git-send-email-ludovic.Barre@st.com>
+ <1544109212-12621-2-git-send-email-ludovic.Barre@st.com>
+ <CAPDyKFq7TZMKWMqmoDR0yfr2N2cf2nr4-BuEs5DPgJSGy-nvAA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20181209202950.31486-1-digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPDyKFq7TZMKWMqmoDR0yfr2N2cf2nr4-BuEs5DPgJSGy-nvAA@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: DTML <devicetree@vger.kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 09, 2018 at 11:29:29PM +0300, Dmitry Osipenko wrote:
-> Dmitry Osipenko (21):
->   iommu/tegra: gart: Remove pr_fmt and clean up includes
->   iommu/tegra: gart: Clean up driver probe errors handling
->   iommu/tegra: gart: Ignore devices without IOMMU phandle in DT
->   iommu: Introduce iotlb_sync_map callback
->   iommu/tegra: gart: Optimize mapping / unmapping performance
->   dt-bindings: memory: tegra: Squash tegra20-gart into tegra20-mc
->   ARM: dts: tegra20: Update Memory Controller node to the new binding
->   memory: tegra: Don't invoke Tegra30+ specific memory timing setup on
->     Tegra20
->   memory: tegra: Adapt to Tegra20 device-tree binding changes
->   memory: tegra: Read client ID on GART page fault
->   memory: tegra: Use of_device_get_match_data()
->   memory: tegra: Use relaxed versions of readl/writel
->   iommu/tegra: gart: Integrate with Memory Controller driver
->   iommu/tegra: gart: Fix spinlock recursion
->   iommu/tegra: gart: Fix NULL pointer dereference
->   iommu/tegra: gart: Allow only one active domain at a time
->   iommu/tegra: gart: Don't use managed resources
->   iommu/tegra: gart: Prepend error/debug messages with "gart:"
->   iommu/tegra: gart: Don't detach devices from inactive domains
->   iommu/tegra: gart: Simplify clients-tracking code
->   iommu/tegra: gart: Perform code refactoring
 
-This is making progress, but some parts have no Ack or Review yet, I'll
-wait for Thierry before applying these patches into the iommu tree.
 
-Regards,
+On 12/11/18 10:47 AM, Ulf Hansson wrote:
+> On Thu, 6 Dec 2018 at 16:13, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>>
+>> From: Ludovic Barre <ludovic.barre@st.com>
+>>
+>> On cmd12 (STOP_TRANSMISSION), STM32 sdmmc variant needs to set
+>> cmdstop bit in command register. The CPSM ("Command Path State Machine")
+>> treats the command as a Stop Transmission command and signals
+>> abort to the DPSM ("Data Path State Machine").
+>>
+>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> 
+> Applied for next, thanks!
 
-	Joerg
+thanks
+
+> 
+> Withholding patch2 for a while, as I need some more time to review it.
+
+No problem,
+
+Regards
+Ludo
+
+> 
+> Kind regards
+> Uffe
+> 
+>> ---
+>>   drivers/mmc/host/mmci.c | 6 ++++++
+>>   drivers/mmc/host/mmci.h | 2 ++
+>>   2 files changed, 8 insertions(+)
+>>
+>> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+>> index 13fa640..e352f5a 100644
+>> --- a/drivers/mmc/host/mmci.c
+>> +++ b/drivers/mmc/host/mmci.c
+>> @@ -21,6 +21,7 @@
+>>   #include <linux/err.h>
+>>   #include <linux/highmem.h>
+>>   #include <linux/log2.h>
+>> +#include <linux/mmc/mmc.h>
+>>   #include <linux/mmc/pm.h>
+>>   #include <linux/mmc/host.h>
+>>   #include <linux/mmc/card.h>
+>> @@ -274,6 +275,7 @@ static struct variant_data variant_stm32_sdmmc = {
+>>          .cmdreg_lrsp_crc        = MCI_CPSM_STM32_LRSP_CRC,
+>>          .cmdreg_srsp_crc        = MCI_CPSM_STM32_SRSP_CRC,
+>>          .cmdreg_srsp            = MCI_CPSM_STM32_SRSP,
+>> +       .cmdreg_stop            = MCI_CPSM_STM32_CMDSTOP,
+>>          .data_cmd_enable        = MCI_CPSM_STM32_CMDTRANS,
+>>          .irq_pio_mask           = MCI_IRQ_PIO_STM32_MASK,
+>>          .datactrl_first         = true,
+>> @@ -1100,6 +1102,10 @@ mmci_start_command(struct mmci_host *host, struct mmc_command *cmd, u32 c)
+>>                  mmci_reg_delay(host);
+>>          }
+>>
+>> +       if (host->variant->cmdreg_stop &&
+>> +           cmd->opcode == MMC_STOP_TRANSMISSION)
+>> +               c |= host->variant->cmdreg_stop;
+>> +
+>>          c |= cmd->opcode | host->variant->cmdreg_cpsm_enable;
+>>          if (cmd->flags & MMC_RSP_PRESENT) {
+>>                  if (cmd->flags & MMC_RSP_136)
+>> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+>> index 550dd39..2422909 100644
+>> --- a/drivers/mmc/host/mmci.h
+>> +++ b/drivers/mmc/host/mmci.h
+>> @@ -264,6 +264,7 @@ struct mmci_host;
+>>    * @cmdreg_lrsp_crc: enable value for long response with crc
+>>    * @cmdreg_srsp_crc: enable value for short response with crc
+>>    * @cmdreg_srsp: enable value for short response without crc
+>> + * @cmdreg_stop: enable value for stop and abort transmission
+>>    * @datalength_bits: number of bits in the MMCIDATALENGTH register
+>>    * @fifosize: number of bytes that can be written when MMCI_TXFIFOEMPTY
+>>    *           is asserted (likewise for RX)
+>> @@ -316,6 +317,7 @@ struct variant_data {
+>>          unsigned int            cmdreg_lrsp_crc;
+>>          unsigned int            cmdreg_srsp_crc;
+>>          unsigned int            cmdreg_srsp;
+>> +       unsigned int            cmdreg_stop;
+>>          unsigned int            datalength_bits;
+>>          unsigned int            fifosize;
+>>          unsigned int            fifohalfsize;
+>> --
+>> 2.7.4
+>>
