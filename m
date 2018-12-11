@@ -1,68 +1,51 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: gpu: add Allwinner H6 Mali Midgard
- binding
-Date: Tue, 11 Dec 2018 11:04:59 -0600
-Message-ID: <CAL_Jsq+FjW3WEEPkefN_d3K7z=vrz3GfYdWQCY0PHs_+gtAigw@mail.gmail.com>
-References: <20181127074249.15204-1-icenowy@aosc.io>
- <20181127074249.15204-2-icenowy@aosc.io> <11894938.HOUtrQJeEF@phil>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 4/5] dt-bindings: leds: Add pattern initialization from
+ Device Tree
+Date: Tue, 11 Dec 2018 11:23:29 -0600
+Message-ID: <CABGGiszi3cgkQy0+h4q6nEY0V1Td2x3eR_kZ50cu3awrSGscMQ@mail.gmail.com>
+References: <1544434201-14190-1-git-send-email-krzk@kernel.org> <1544434201-14190-5-git-send-email-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <11894938.HOUtrQJeEF@phil>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: "heiko@sntech.de" <heiko@sntech.de>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>, Maxime Ripard <maxime.ripard@bootlin.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, linux-sunxi <linux-sunxi@googlegroups.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1544434201-14190-5-git-send-email-krzk@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: krzk@kernel.org
+Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Baolin Wang <baolin.wang@linaro.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBEZWMgMywgMjAxOCBhdCA2OjI1IEFNIEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRl
-Y2guZGU+IHdyb3RlOgo+Cj4gQW0gRGllbnN0YWcsIDI3LiBOb3ZlbWJlciAyMDE4LCAwODo0Mjo0
-OSBDRVQgc2NocmllYiBJY2Vub3d5IFpoZW5nOgo+ID4gQWxsd2lubmVyIEg2IFNvQyB1c2VzIGEg
-TWFsaSBUNzIwIEdQVSwgd2hpY2ggaXMgb25lIG9mIHRoZSBHUFVzIGluIHRoZQo+ID4gTWlkZ2Fy
-ZCBHUFUgcHJvZHVjdCBsaW5lLgo+ID4KPiA+IEFkZCBiaW5kaW5nIGZvciB0aGUgSDYgTWFsaSBN
-aWRnYXJkIEdQVS4KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5
-QGFvc2MuaW8+Cj4gPiAtLS0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJtLG1h
-bGktbWlkZ2FyZC50eHQgICAgfCAxMyArKysrKysrKysrKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQs
-IDEzIGluc2VydGlvbnMoKykKPiA+Cj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnR4dCBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJtLG1hbGktbWlkZ2FyZC50eHQKPiA+IGluZGV4IDAy
-Zjg3MGNkNjBlNi4uYzg5N2RkN2JlNDhmIDEwMDY0NAo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnR4dAo+ID4gKysrIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnR4dAo+
-ID4gQEAgLTE4LDYgKzE4LDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ICAgICAgKyAiYW1s
-b2dpYyxtZXNvbi1neG0tbWFsaSIKPiA+ICAgICAgKyAicm9ja2NoaXAscmszMjg4LW1hbGkiCj4g
-PiAgICAgICsgInJvY2tjaGlwLHJrMzM5OS1tYWxpIgo+ID4gKyAgICArICJhbGx3aW5uZXIsc3Vu
-NTBpLWg2LW1hbGkiCj4KPiBJJ2QgdGhpbmsgeW91IG1pZ2h0IHdhbnQgdG8ga2VlcCBhbiBhbHBo
-YWJldGljYWwgc29ydGluZyBoZXJlLCBha2EKPiBhYm92ZSBhbWxvZ2ljLCBvdGhlcndpc2UgdGhl
-IGxpc3Qgd2lsbCBwcm9iYWJseSBiZWNvbWUgaGFyZCB0byByZWFkCj4gYXQgc29tZSBsYXRlciBw
-b2ludC4KPgo+Cj4gPiAgLSByZWcgOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3Mgb2YgdGhlIGRldmlj
-ZSBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBhcmVhLgo+ID4KPiA+IEBAIC00NCw2ICs0NSwx
-OCBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ID4gICAgZm9yIGRldGFpbHMuCj4gPgo+ID4KPiA+
-ICtWZW5kb3Itc3BlY2lmaWMgYmluZGluZ3MKPiA+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0K
-PiA+ICsKPiA+ICtUaGUgTWFsaSBHUFUgaXMgaW50ZWdyYXRlZCB2ZXJ5IGRpZmZlcmVudGx5IGZy
-b20gb25lIFNvQyB0bwo+ID4gK2Fub3RoZXIuIEluIG9yZGVyIHRvIGFjY29tb2RhdGUgdGhvc2Ug
-ZGlmZmVyZW5jZXMsIHlvdSBoYXZlIHRoZSBvcHRpb24KPiA+ICt0byBzcGVjaWZ5IG9uZSBtb3Jl
-IHZlbmRvci1zcGVjaWZpYyBjb21wYXRpYmxlLCBhbW9uZzoKPiA+ICsKPiA+ICsgIC0gYWxsd2lu
-bmVyLHN1bjUwaS1oNi1tYWxpCj4gPiArICAgIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiArICAg
-ICAgKiByZXNldHM6IHBoYW5kbGUgdG8gdGhlIHJlc2V0IGxpbmUgZm9yIHRoZSBHUFUKPgo+IFdo
-aWxlIHRoaXMgcGFyYWdyYXBoIGlzIHNpbWlsYXIgdG8gaG93IGl0IGlzIGRvbmUgaW4gVXRnYXJk
-LCBJJ20KPiB3b25kZXJpbmcgd2h5IHdlIGNhbm5vdCBqdXN0IGRlc2NyaWJlIHRoZSAicmVzZXRz
-IiBhcyByZWd1bGFyCj4gb3B0aW9uYWwgcHJvcGVydHkgYWJvdmUgdGhhdC4KCk9wdGlvbmFsIGlz
-IGZpbmUsIGJ1dCBJIGRvbid0IHdhbnQgdG8gc2VlIGV2ZXJ5IHZlbmRvciBkb2luZyB0aGVpciBv
-d24KZGVmaW5pdGlvbiAodGhlcmUncyBhIHNpbWlsYXIgcGF0Y2ggZm9yIG1lc29uWzFdKS4gUGxl
-YXNlIGZpcnN0IGZpZ3VyZQpvdXQgaG93IG1hbnkgcmVzZXRzIHRoZSBJUCBibG9jayBoYXMuIEFS
-TSBzaG91bGQgaGVscCBhcyB0aGV5IHdlcmUKZWFnZXIgZm9yIG1lIHRvIGFjY2VwdCB0aGlzIGJp
-bmRpbmcgaW4gdGhlIGZpcnN0IHBsYWNlLiBUaGVuIHdlIGNhbgpzZWUgaWYgdmVuZG9ycyBoYXZl
-IGV4dHJhIHJlc2V0cy4KClJvYgoKWzFdIGh0dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0
-Y2gvMTAxMDQwNi8KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+On Mon, Dec 10, 2018 at 3:30 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Document new linux,trigger-pattern property for initialization of LED
+> pattern trigger.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/leds/common.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index aa1399814a2a..4c65e854bb91 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -37,6 +37,13 @@ Optional properties for child nodes:
+>       "ide-disk" - LED indicates IDE disk activity (deprecated),
+>                    in new implementations use "disk-activity"
+>       "timer" - LED flashes at a fixed, configurable rate
+> +     "pattern" - LED alters the brightness for the specified duration with one
+> +                 software timer (see
+> +                 Documentation/ABI/testing/sysfs-class-led-trigger-pattern)
+> +
+> +- linux,trigger-pattern : Default pattern for "pattern" trigger (see
+> +                          Documentation/ABI/testing/sysfs-class-led-trigger-pattern
+> +                          for description of format)
+
+Binding documents should generally not refer to kernel docs and need
+to stand on their own.
+
+I don't think this needs to be linux specific. I'd just call it
+'led-pattern'. I don't think this should be tied to the trigger types.
+Isn't possible you would want to tie a pattern to different triggers.
+IOW, when event X happens, run the pattern. And you could have
+one-shot versus continuous.
+
+Rob
