@@ -1,46 +1,68 @@
-From: MyungJoo Ham <myungjoo.ham@samsung.com>
-Subject: RE: Re: [PATCH v3 2/5] devfreq: add support for suspend/resume of a
- devfreq device
-Date: Tue, 11 Dec 2018 10:43:15 +0900
-Message-ID: <20181211014315epcms1p153a54217e587fd76a8198db77762699a@epcms1p1>
-References: <5C0878C0.4060500@samsung.com>
-        <1544007956-28889-1-git-send-email-l.luba@partner.samsung.com>
-        <1544007956-28889-3-git-send-email-l.luba@partner.samsung.com>
-        <CGME20181205110620eucas1p14de70dc092580b684a0304b5ce771605@epcms1p1>
-Reply-To: myungjoo.ham@samsung.com
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 4/4] ARM: dts: imx7d: sbc imx7: add uart5
+Date: Tue, 11 Dec 2018 10:06:16 +0800
+Message-ID: <20181211020613.GR3987@dragon>
+References: <20181204110741.6943-1-hohatzel@jusst.de>
+ <20181204110741.6943-5-hohatzel@jusst.de>
+ <20181206031520.GE3987@dragon>
+ <58a84012-73b8-1679-0c5b-981fd2a0acd6@jusst.de>
+ <CAOMZO5At5oSv0MCpsuYj4nEd26Y4h9hj-shadq3477fNz8A+HA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5C0878C0.4060500@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, Lukasz Luba <l.luba@partner.samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "tjakobi@math.uni-bielefeld.de" <tjakobi@math.uni-bielefeld.de>, Kyungmin Park <kyungmin.park@samsung.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "len.brown@intel.com" <len.brown@intel.com>, "pavel@ucw.cz" <pavel@ucw.cz>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "keescook@chromium.org" <keescook@chromium.org>, "anton@enomsg.org" <anton@enomsg.org>, "ccross@android.com" <ccross@android.com>, "tony.luck@intel.com" <tony.luck@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kgene@kernel.org" <kgene@kernel.org>, "krzk@kernel.org" <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5At5oSv0MCpsuYj4nEd26Y4h9hj-shadq3477fNz8A+HA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, jscheel@jusst.de, NXP Linux Team <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, hohatzel@jusst.de, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> Hi Lukasz,
->=20
-> On 2018=EB=85=84=2012=EC=9B=94=2005=EC=9D=BC=2020:05,=20Lukasz=20Luba=20w=
-rote:=0D=0A>=20>=20The=20patch=20prepares=20devfreq=20device=20for=20handli=
-ng=20suspend/resume=0D=0A>=20>=20functionality.=20The=20new=20fields=20will=
-=20store=20needed=20information=20during=20this=0D=0A>=20>=20process.=20Dev=
-freq=20framework=20handles=20opp-suspend=20DT=20entry=20and=20there=20is=20=
-no=0D=0A>=20>=20need=20of=20modyfications=20in=20the=20drivers=20code.=20It=
-=20uses=20atomic=20variables=20to=0D=0A>=20>=20make=20sure=20no=20race=20co=
-ndition=20affects=20the=20process.=0D=0A>=20>=20=0D=0A>=20>=20Suggested-by:=
-=20Tobias=20Jakobi=20<tjakobi=40math.uni-bielefeld.de>=0D=0A>=20>=20Suggest=
-ed-by:=20Chanwoo=20Choi=20<cw00.choi=40samsung.com>=0D=0A>=20>=20Signed-off=
--by:=20Lukasz=20Luba=20<l.luba=40partner.samsung.com>=0D=0A>=20>=20---=0D=
-=0A>=20>=20=20drivers/devfreq/devfreq.c=20=7C=2047=20++++++++++++++++++++++=
-+++++++++++++++++++------=0D=0A>=20>=20=20include/linux/devfreq.h=20=20=20=
-=7C=20=207=20+++++++=0D=0A>=20>=20=202=20files=20changed,=2048=20insertions=
-(+),=206=20deletions(-)=0D=0A>=20=0D=0A>=20Reviewed-by:=20Chanwoo=20Choi=20=
-<cw00.choi=40samsung.com>=0D=0A>=20=0D=0A=0D=0ALooks=20goot=20do=20me=20as=
-=20well.=0D=0A=0D=0AAcked-by:=20MyungJoo=20Ham=20<myungjoo.ham=40samsung.co=
-m>=0D=0A=0D=0A=0D=0AAnyway,=20for=20the=20sake=20of=20curiosity...=0D=0A=0D=
-=0AHaving=20suspend-frequency=20is=20usually=20required=20when=0D=0Athe=20f=
-requency=20configuration=20is=20reset=20with=20suspend-resume=0D=0Aas=20old=
-er=20Exynos's=20CPU=20did=20(I=20don't=20know=20whether=20it=20still=20does=
-).=0D=0A=0D=0ADoes=20GPU=20do=20this=20as=20well?=0D=0A(memory-bus=20won't=
-=20do=20this=20because=20they=20are=20kept=20turned=20on=20during=20suspend=
-)=0D=0A=0D=0A=0D=0ACheers,=0D=0AMyungJoo=0D=0A
+On Mon, Dec 10, 2018 at 09:43:12AM -0200, Fabio Estevam wrote:
+> Hi Hans,
+> 
+> On Mon, Dec 10, 2018 at 8:52 AM Hans Ole Hatzel <hohatzel@jusst.de> wrote:
+> 
+> > imx7d-pico.dts does this the same way. Is that good enough of a reason?
+> > If so, should it be included in the commit message?
+> 
+> The UART clock parent initialization has been removed from the imx7d
+> clock driver since commit (in linux-next):
+> 
+> commit ea662d2f804ad13c3c92c75c7dc1abad30e31c31
+> Author: Anson Huang <anson.huang@nxp.com>
+> Date:   Fri Oct 19 01:05:36 2018 +0000
+> 
+>     clk: imx7d: remove UART1 clock setting
+> 
+>     There are clock assignments in all i.MX7D dtb files for UART1,
+>     below is the example in imx7d-sdb.dts, so setting UART1 clock
+>     in clock driver is NOT necessary, actually, module clocks setting
+>     should be done in module driver.
+> 
+>     &uart1 {
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&pinctrl_uart1>;
+>         assigned-clocks = <&clks IMX7D_UART1_ROOT_SRC>;
+>         assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
+>         status = "okay";
+>     };
+> 
+>     Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+>     Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> 
+> So the UART clock parent should be set in the device tree.
+
+Okay, but would it be better to set the default parent clock in soc
+level of dtsi, since the configuration doesn't seem to be board
+specific?
+
+Shawn
