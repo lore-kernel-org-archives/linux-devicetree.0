@@ -1,104 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 5/5] regulator: add documentation for regulator modes
- and suspend states
-Date: Tue, 11 Dec 2018 16:13:24 -0600
-Message-ID: <20181211221324.GA14658@bogus>
-References: <1543319801-19100-1-git-send-email-claudiu.beznea@microchip.com>
- <1543319801-19100-6-git-send-email-claudiu.beznea@microchip.com>
+Subject: Re: [PATCH v2] dt-bindings: drm/panel: simple: Fix typo in EDT
+ etm-series compatible
+Date: Tue, 11 Dec 2018 16:14:40 -0600
+Message-ID: <20181211221440.GA17962@bogus>
+References: <20180831121842.GA23617@bogus>
+ <20181127152804.16652-1-jan.tuerk@emtrion.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1543319801-19100-6-git-send-email-claudiu.beznea@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu.Beznea@microchip.com
-Cc: lgirdwood@gmail.com, broonie@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20181127152804.16652-1-jan.tuerk@emtrion.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jan Tuerk <jan.tuerk@emtrion.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 27, 2018 at 11:57:25AM +0000, Claudiu.Beznea@microchip.com wrote:
-> From: Claudiu Beznea <claudiu.beznea@microchip.com>
-> 
-> Add documentation for regulator modes and suspend states.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  .../bindings/regulator/act8945a-regulator.txt      | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt b/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
-> index ac955dea00d1..4017527619ab 100644
-> --- a/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
-> +++ b/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
-> @@ -15,11 +15,17 @@ Optional input supply properties:
->    - inl67-supply: The input supply for REG_LDO3 and REG_LDO4
->  
->  Any standard regulator properties can be used to configure the single regulator.
-> +regulator-initial-mode, regulator-allowed-modes and regulator-mode could be
-> +specified using mode values from dt-bindings/regulator/active-semi,8945a-regulator.h
-> +file.
->  
->  The valid names for regulators are:
->  	REG_DCDC1, REG_DCDC2, REG_DCDC3, REG_LDO1, REG_LDO2, REG_LDO3, REG_LDO4.
->  
->  Example:
-> +
-> +#include <dt-bindings/regulator/active-semi,8945a-regulator.h>
-
-This file belongs in this patch.
-
-> +
->  	pmic@5b {
->  		compatible = "active-semi,act8945a";
->  		reg = <0x5b>;
-> @@ -32,6 +38,18 @@ Example:
->  				regulator-min-microvolt = <1350000>;
->  				regulator-max-microvolt = <1350000>;
->  				regulator-always-on;
-> +
-> +				regulator-allowed-modes = <ACT8945A_REGULATOR_MODE_FIXED>,
-> +							  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-> +				regulator-initial-mode = <ACT8945A_REGULATOR_MODE_FIXED>;
-> +
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-min-microvolt=<1400000>;
-> +					regulator-suspend-max-microvolt=<1400000>;
-> +					regulator-changeable-in-suspend;
-> +					regulator-mode=<ACT8945A_REGULATOR_MODE_LOWPOWER>;
-> +				};
->  			};
->  
->  			vdd_1v2_reg: REG_DCDC2 {
-> @@ -39,6 +57,14 @@ Example:
->  				regulator-min-microvolt = <1100000>;
->  				regulator-max-microvolt = <1300000>;
->  				regulator-always-on;
-> +
-> +				regulator-allowed-modes = <ACT8945A_REGULATOR_MODE_FIXED>,
-> +							  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-> +				regulator-initial-mode = <ACT8945A_REGULATOR_MODE_FIXED>;
-> +
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
->  			};
->  
->  			vdd_3v3_reg: REG_DCDC3 {
-> @@ -53,6 +79,14 @@ Example:
->  				regulator-min-microvolt = <2500000>;
->  				regulator-max-microvolt = <2500000>;
->  				regulator-always-on;
-> +
-> +				regulator-allowed-modes = <ACT8945A_REGULATOR_MODE_NORMAL>,
-> +							  <ACT8945A_REGULATOR_MODE_LOWPOWER>;
-> +				regulator-initial-mode = <ACT8945A_REGULATOR_MODE_NORMAL>;
-> +
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
->  			};
->  
->  			vdd_3v3_lp_reg: REG_LDO2 {
-> -- 
-> 2.7.4
-> 
+T24gVHVlLCAyNyBOb3YgMjAxOCAxNjoyODowMyArMDEwMCwgSmFuIFR1ZXJrIHdyb3RlOgo+IFRo
+aXMgZml4ZXMgdGhlIGVycm9yIGluIHRoZSBjb21wYXRpYmxlIGRvY3VtZW50YXRpb24gZm9yIHRo
+ZSBFRFQKPiBldG0wNzAwW2ddLi4gcGFuZWxzIHdoaWNoIGhhdmUgYWNjaWRlbnRhbGx5IGRvY3Vt
+ZW50ZWQgYXMgZXRtMDcwMFs4XTAuLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEphbiBUdWVyayA8amFu
+LnR1ZXJrQGVtdHJpb24uY29tPgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L3BhbmVsL2VkdCxldC1zZXJpZXMudHh0ICAgICB8IDYgKysrLS0tCj4gIDEgZmlsZSBjaGFu
+Z2VkLCAzIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCj4gCj4gQ2hhbmdlcyB2MjoKPiAg
+LSBVcGRhdGVkIHN1YmplY3QgbGluZQo+IAoKUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2Jo
+QGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
