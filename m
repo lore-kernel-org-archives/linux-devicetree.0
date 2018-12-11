@@ -1,73 +1,55 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RESEND PATCH v3 3/3] regulator: mcp16502: add regulator driver
- for MCP16502
-Date: Tue, 11 Dec 2018 16:47:06 +0000
-Message-ID: <20181211164706.GL6686@sirena.org.uk>
-References: <1544522876-15967-1-git-send-email-andrei.stefanescu@microchip.com>
- <1544522876-15967-4-git-send-email-andrei.stefanescu@microchip.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="umrsQkkrw7viUWFs"
+From: Eddie James <eajames@linux.ibm.com>
+Subject: [PATCH v8 1/2] dt-bindings: media: Add Aspeed Video Engine binding documentation
+Date: Tue, 11 Dec 2018 10:57:00 -0600
+Message-ID: <1544547421-25724-2-git-send-email-eajames@linux.ibm.com>
+References: <1544547421-25724-1-git-send-email-eajames@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1544522876-15967-4-git-send-email-andrei.stefanescu@microchip.com>
+In-Reply-To: <1544547421-25724-1-git-send-email-eajames@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrei.Stefanescu@microchip.com
-Cc: robh+dt@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, gregkh@linuxfoundation.org, Cristian.Birsan@microchip.com, Nicolas.Ferre@microchip.com, Claudiu.Beznea@microchip.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, hverkuil@xs4all.nl, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, Eddie James <eajames@linux.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
+Document the bindings.
 
---umrsQkkrw7viUWFs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/media/aspeed-video.txt     | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
 
-On Tue, Dec 11, 2018 at 10:09:15AM +0000, Andrei.Stefanescu@microchip.com wrote:
-> This patch adds a regulator driver for the MCP16502 PMIC.
-> This drivers supports basic operations through the
-> regulator interface such as:
-
-Overall this looks really good, just a couple of comments:
-
-> +++ b/drivers/regulator/mcp16502.c
-> @@ -0,0 +1,555 @@
-> +/* SPDX-License-Identifier: GPL-2.0
-> + *
-> + * MCP16502 PMIC driver
-
-SPDX headers need to be C++ comments - please make the entire comment
-block a C++ one so it looks more intentional.
-
-> +#ifdef CONFIG_SUSPEND
-> +static int mcp16502_suspend(struct device *dev)
-> +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	struct mcp16502 *mcp = i2c_get_clientdata(client);
-> +
-> +	mcp16502_gpio_set_mode(mcp, MCP16502_OPMODE_LPM);
-> +
-> +	return 0;
-> +}
-
-This puts the device into low power mode when the suspend function gets
-called but this might not be safe - devices using the regulator may not
-be suspended yet so could still need full regulation.  Normally a GPIO
-triggered transition like this would be being done by hardware as part
-of the process of suspending the SoC.  Is there some reason to do this
-manually?
-
---umrsQkkrw7viUWFs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwP6gkACgkQJNaLcl1U
-h9BHwwf/cHsTUWUp5ToG+Kb4Fuv/H6ZxHsx3rArRbP6RrZs8AcV8P59bDdcVWgjQ
-Jvrzl5wA1njl0bXYYCyNXWAsApqj5396NAHrZJhzpjYDTZu8rLQnqpJoyHsc6nUJ
-UptK/vhhmZEH78iiEqBIUcQY/JzYxz4cC3iVl24+O3l30AvbrHiXeMALUGr1fJ80
-RutTjPkvA67Gq1ogrfhy8IALDzFDGM7bX+Xe4jha//+23lf1f8HRTCXf3dMydP0A
-Lk3z/8C4Dz2p4c7GZZMzwhjKrsp7AVGIH29SX0BAvM9cp6EnTv0B2l1xLQv3oXV3
-OAviYfR1XwagJG5wcHyko6KGnNSjtQ==
-=9bae
------END PGP SIGNATURE-----
-
---umrsQkkrw7viUWFs--
+diff --git a/Documentation/devicetree/bindings/media/aspeed-video.txt b/Documentation/devicetree/bindings/media/aspeed-video.txt
+new file mode 100644
+index 0000000..78b464a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/aspeed-video.txt
+@@ -0,0 +1,26 @@
++* Device tree bindings for Aspeed Video Engine
++
++The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs can
++capture and compress video data from digital or analog sources.
++
++Required properties:
++ - compatible:		"aspeed,ast2400-video-engine" or
++			"aspeed,ast2500-video-engine"
++ - reg:			contains the offset and length of the VE memory region
++ - clocks:		clock specifiers for the syscon clocks associated with
++			the VE (ordering must match the clock-names property)
++ - clock-names:		"vclk" and "eclk"
++ - resets:		reset specifier for the syscon reset associated with
++			the VE
++ - interrupts:		the interrupt associated with the VE on this platform
++
++Example:
++
++video-engine@1e700000 {
++    compatible = "aspeed,ast2500-video-engine";
++    reg = <0x1e700000 0x20000>;
++    clocks = <&syscon ASPEED_CLK_GATE_VCLK>, <&syscon ASPEED_CLK_GATE_ECLK>;
++    clock-names = "vclk", "eclk";
++    resets = <&syscon ASPEED_RESET_VIDEO>;
++    interrupts = <7>;
++};
+-- 
+1.8.3.1
