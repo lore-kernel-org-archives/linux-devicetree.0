@@ -1,7 +1,7 @@
 From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v6 09/10] soc: qcom: rpmpd: Use simple_opp_to_performance_state() helper
-Date: Tue, 11 Dec 2018 15:19:37 +0530
-Message-ID: <20181211094938.25086-10-rnayak@codeaurora.org>
+Subject: [PATCH v6 10/10] soc: qcom: rpmhpd: Mark mx as a parent for cx
+Date: Tue, 11 Dec 2018 15:19:38 +0530
+Message-ID: <20181211094938.25086-11-rnayak@codeaurora.org>
 References: <20181211094938.25086-1-rnayak@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,61 +12,62 @@ To: andy.gross@linaro.org, robh@kernel.org, viresh.kumar@linaro.org, sboyd@kerne
 Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Get rid of the duplicate code across rpmpd and rpmhpd to read the
-performance state value from Device tree and use the
-simple_opp_to_performance_state() helper instead.
+Specify the active + sleep and active-only MX power domains as
+the parents of the corresponding CX power domains. This will ensure that
+performance state requests on CX automatically generate equivalent requests
+on MX power domains.
 
-Suggested-by: Stephen Boyd <sboyd@kernel.org>
+This is used to enforce a requirement that exists for various
+hardware blocks on SDM845 that MX performance state >= CX performance
+state for a given operating frequency.
+
 Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- drivers/soc/qcom/rpmhpd.c | 11 +----------
- drivers/soc/qcom/rpmpd.c  | 11 +----------
- 2 files changed, 2 insertions(+), 20 deletions(-)
+This patch is dependent on the series from
+Viresh [1] which adds support to propogate performance states across the
+power domain hierarchy which is still being reviewed.
+
+[1] https://lkml.org/lkml/2018/11/26/333
+
+ drivers/soc/qcom/rpmhpd.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-index f993a86be48c..1ce86f0cc9fa 100644
+index 1ce86f0cc9fa..af7b07d49e4f 100644
 --- a/drivers/soc/qcom/rpmhpd.c
 +++ b/drivers/soc/qcom/rpmhpd.c
-@@ -281,16 +281,7 @@ static int rpmhpd_set_performance_state(struct generic_pm_domain *domain,
- static unsigned int rpmhpd_get_performance_state(struct generic_pm_domain *genpd,
- 						 struct dev_pm_opp *opp)
- {
--	struct device_node *np;
--	unsigned int level = 0;
--
--	np = dev_pm_opp_get_of_node(opp);
--	if (of_property_read_u32(np, "qcom,level", &level))
--		pr_err("%s: missing 'qcom,level' property\n", __func__);
--
--	of_node_put(np);
--
--	return level;
-+	return simple_opp_to_performance_state(genpd, opp, "qcom,level");
+@@ -102,12 +102,14 @@ static struct rpmhpd sdm845_cx_ao;
+ static struct rpmhpd sdm845_cx = {
+ 	.pd = { .name = "cx", },
+ 	.peer = &sdm845_cx_ao,
++	.parent = &sdm845_mx.pd,
+ 	.res_name = "cx.lvl",
+ };
+ 
+ static struct rpmhpd sdm845_cx_ao = {
+ 	.pd = { .name = "cx_ao", },
+ 	.peer = &sdm845_cx,
++	.parent = &sdm845_mx_ao.pd,
+ 	.res_name = "cx.lvl",
+ };
+ 
+@@ -389,6 +391,15 @@ static int rpmhpd_probe(struct platform_device *pdev)
+ 		data->domains[i] = &rpmhpds[i]->pd;
+ 	}
+ 
++	/* Add subdomains */
++	for (i = 0; i < num_pds; i++) {
++		if (!rpmhpds[i])
++			continue;
++		if (rpmhpds[i]->parent)
++			pm_genpd_add_subdomain(rpmhpds[i]->parent,
++					       &rpmhpds[i]->pd);
++	}
++
+ 	return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
  }
  
- static int rpmhpd_update_level_mapping(struct rpmhpd *rpmhpd)
-diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
-index 59e21c88a144..29288af502b0 100644
---- a/drivers/soc/qcom/rpmpd.c
-+++ b/drivers/soc/qcom/rpmpd.c
-@@ -248,16 +248,7 @@ static int rpmpd_set_performance(struct generic_pm_domain *domain,
- static unsigned int rpmpd_get_performance(struct generic_pm_domain *genpd,
- 					  struct dev_pm_opp *opp)
- {
--	struct device_node *np;
--	unsigned int corner = 0;
--
--	np = dev_pm_opp_get_of_node(opp);
--	if (of_property_read_u32(np, "qcom,level", &corner))
--		pr_err("%s: missing 'qcom,level' property\n", __func__);
--
--	of_node_put(np);
--
--	return corner;
-+	return simple_opp_to_performance_state(genpd, opp, "qcom,level");
- }
- 
- static int rpmpd_probe(struct platform_device *pdev)
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
