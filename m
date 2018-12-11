@@ -1,183 +1,188 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] kbuild: Add support for DT binding schema checks
-Date: Tue, 11 Dec 2018 09:12:15 -0600
-Message-ID: <CAL_JsqL7n2sjLbJVieVDQ4YtKMi2COCaijO9ZNu7ggzmXXxLEg@mail.gmail.com>
-References: <20181210203225.11179-1-robh@kernel.org> <CAK7LNAThtAOy4PQiYZ2X0oWrHdcLi7on8ctSXJ=bfT0HNh7NFQ@mail.gmail.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: [PATCH V10 3/7] dt-bindings: clock: imx8qxp: add SCU clock IDs
+Date: Tue, 11 Dec 2018 15:13:30 +0000
+Message-ID: <1544540867-6342-4-git-send-email-aisheng.dong@nxp.com>
+References: <1544540867-6342-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNAThtAOy4PQiYZ2X0oWrHdcLi7on8ctSXJ=bfT0HNh7NFQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, ARM-SoC Maintainers <arm@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Michal Marek <michal.lkml@markovi.net>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1544540867-6342-1-git-send-email-aisheng.dong@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 10, 2018 at 10:39 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Hi Rob,
->
-> On Tue, Dec 11, 2018 at 5:50 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > This adds the build infrastructure for checking DT binding schema
-> > documents and validating dts files using the binding schema.
-> >
-> > Check DT binding schema documents:
-> > make dt_binding_check
-> >
-> > Build dts files and check using DT binding schema:
-> > make dtbs_check
-> >
-> > Optionally, DT_SCHEMA_FILES can passed in with a schema file(s) to use
->
->
-> Perhaps, "can be passed" ?
+Add IMX8QXP SCU clock IDs.
 
-Yes.
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>
+Cc: devicetree@vger.kernel.org
+Cc: linux-clk@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+v6->v10:
+ * no changes
+v6: new patch, separate from driver changes to avoid a checkpatch warning
+    IDs are changed a lot due to SCU divider/gate/mux are merged into
+    one general SCU clock and LPCG clocks are moved out.
+---
+ include/dt-bindings/clock/imx8qxp-clock.h | 136 ++++++++++++++++++++++++++++++
+ 1 file changed, 136 insertions(+)
+ create mode 100644 include/dt-bindings/clock/imx8qxp-clock.h
 
-[...]
-
-> > +quiet_cmd_chk_binding = CHKDT   $<
->
->
-> In convention, the short log displays the target name
-> instead of the prerequisite.
-
-Yes, but here there is no target. We're just running a check on the source.
-
-
-> If O=foo/bar is given, $< shows the full path,
-> then log will look like follows:
->
->
->   CHKDT   /home/masahiro/ref/linux-devicetree/Documentation/devicetree/bindings/arm/calxeda.yaml
->   DTC     Documentation/devicetree/bindings/arm/calxeda.example.dtb
->   CHKDT   /home/masahiro/ref/linux-devicetree/Documentation/devicetree/bindings/arm/qcom.yaml
->   DTC     Documentation/devicetree/bindings/arm/qcom.example.dtb
->   CHKDT   /home/masahiro/ref/linux-devicetree/Documentation/devicetree/bindings/arm/xilinx.yaml
->   DTC     Documentation/devicetree/bindings/arm/xilinx.example.dtb
->   CHKDT   /home/masahiro/ref/linux-devicetree/Documentation/devicetree/bindings/arm/ti/nspire.yaml
->   DTC     Documentation/devicetree/bindings/arm/ti/nspire.example.dtb
->   CHKDT   /home/masahiro/ref/linux-devicetree/Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml
->   DTC     Documentation/devicetree/bindings/arm/ti/ti,davinci.example.dtb
->   CHKDT   /home/masahiro/ref/linux-devicetree/Documentation/devicetree/bindings/arm/altera.yaml
->
-> You might think it is ugly.
-
-I've changed it to this:
-
-quiet_cmd_chk_binding = CHKDT   $(patsubst $(srctree)/%,%,$<)
-
-[...]
-
-> > +$(obj)/%.example.dts: $(src)/%.yaml FORCE
-> > +       $(call if_changed,chk_binding)
-> > +
-> > +DT_TMP_SCHEMA := .schema.yaml.tmp
->
->
-> BTW, why does this file start with a period?
-> What is the meaning of '.tmp' extension?
-
-Nothing really. Just named it something so it gets cleaned and ignored by git.
-
-> > +extra-y += $(DT_TMP_SCHEMA)
-> > +
-> > +quiet_cmd_mk_schema = SCHEMA  $@
-> > +      cmd_mk_schema = mkdir -p $(obj); \
-> > +                      rm -f $@; \
-> > +                      $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(filter-out FORCE, $^)
->
->
-> "mkdir -p $(obj)" is redundant.
->
->
-> Why is 'rm -f $@' necessary ?
-> Can't dt-mk-schema overwrite the output file?
-
-It is for error case when the output file is not generated. I can
-handle this within dt-mk-schema instead.
-
-> > +DT_DOCS = $(shell cd $(srctree)/$(src) && find * -name '*.yaml')
-> > +DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
-> > +
-> > +extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
-> > +extra-y += $(patsubst $(src)/%.yaml,%.example.dtb, $(DT_SCHEMA_FILES))
->
->
->
-> I assume you intentionally did not do like this:
->
-> extra-y += $(patsubst %.yaml,%.example.dtb, $(DT_DOCS))
->
-> From the commit description, DT_SCHEMA_FILES might be overridden by a user.
-> So, I think this is OK.
->
->
->
->
-> > +$(obj)/$(DT_TMP_SCHEMA): | $(addprefix $(obj)/,$(patsubst $(src)/%.yaml,%.example.dtb, $(DT_SCHEMA_FILES)))
->
-> I do not understand this line.
-> Why is it necessary?
->
-> *.example.dtb files are generated anyway
-> since they are listed in extra-y.
-
-It is enforcing the ordering. Without it, the binding checks and
-building .schema.yaml.tmp happen in parallel because both only have
-the source files as dependencies. The '|' keeps the dependencies out
-of the dependency list($^).
-
-[...]
-
-> > +cmd_dtc_yaml_chk = \
-> > +       if ! echo "/dts-v1/; /{};" | $(DTC) -I dts -O yaml > /dev/null ; then \
-> > +               echo "*"; \
-> > +               echo "* dtc needs libyaml for DT schema validation support."; \
-> > +               echo "* Install the necessary libyaml development package from your distro."; \
-> > +               echo "*"; \
-> > +               false; \
-> > +       fi; \
-> > +       touch $@
-> > +
-> > +$(objtree)/scripts/dtc/.dtc-yaml-chk.tmp: $(DTC) FORCE
-> > +       $(call if_changed,dtc_yaml_chk)
->
->
-> Hmm, this is kind of ugly.
->
-> I'd rather check this in scripts/dtc/Makefile
->
->
->
-> How about something like below?
-
-Looks good.
-
->  ifeq ($(wildcard /usr/include/yaml.h),)
-> +ifeq ($(CHECK_DTBS),1)
-
-I'm going to change this to "ifneq ($CHECK_DTBS),)" in case we start
-supporting more than 1 value such as warning levels.
-
-> +$(error dtc needs libyaml for DT schema validation support. \
-> +        Install the necessary libyaml development package.)
-> +endif
->  HOST_EXTRACFLAGS += -DNO_YAML
->  else
->  dtc-objs       += yamltree.o
->
->
->
->
->
-> One drawback of this approach is,
-> this is not checked if you are using out-of-tree DTC.
-> Probably, Rob is the only person that overrides DTC.
-
-Sadly, that's probably true.
-
-Thanks for your thorough review.
-
-Rob
+diff --git a/include/dt-bindings/clock/imx8qxp-clock.h b/include/dt-bindings/clock/imx8qxp-clock.h
+new file mode 100644
+index 0000000..d72a39c
+--- /dev/null
++++ b/include/dt-bindings/clock/imx8qxp-clock.h
+@@ -0,0 +1,136 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * Copyright 2018 NXP
++ *   Dong Aisheng <aisheng.dong@nxp.com>
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_IMX8QXP_H
++#define __DT_BINDINGS_CLOCK_IMX8QXP_H
++
++/* SCU Clocks */
++
++#define IMX8QXP_CLK_DUMMY				0
++
++/* CPU */
++#define IMX8QXP_A35_CLK					1
++
++/* LSIO SS */
++#define IMX8QXP_LSIO_MEM_CLK				2
++#define IMX8QXP_LSIO_BUS_CLK				3
++#define IMX8QXP_LSIO_PWM0_CLK				10
++#define IMX8QXP_LSIO_PWM1_CLK				11
++#define IMX8QXP_LSIO_PWM2_CLK				12
++#define IMX8QXP_LSIO_PWM3_CLK				13
++#define IMX8QXP_LSIO_PWM4_CLK				14
++#define IMX8QXP_LSIO_PWM5_CLK				15
++#define IMX8QXP_LSIO_PWM6_CLK				16
++#define IMX8QXP_LSIO_PWM7_CLK				17
++#define IMX8QXP_LSIO_GPT0_CLK				18
++#define IMX8QXP_LSIO_GPT1_CLK				19
++#define IMX8QXP_LSIO_GPT2_CLK				20
++#define IMX8QXP_LSIO_GPT3_CLK				21
++#define IMX8QXP_LSIO_GPT4_CLK				22
++#define IMX8QXP_LSIO_FSPI0_CLK				23
++#define IMX8QXP_LSIO_FSPI1_CLK				24
++
++/* Connectivity SS */
++#define IMX8QXP_CONN_AXI_CLK_ROOT			30
++#define IMX8QXP_CONN_AHB_CLK_ROOT			31
++#define IMX8QXP_CONN_IPG_CLK_ROOT			32
++#define IMX8QXP_CONN_SDHC0_CLK				40
++#define IMX8QXP_CONN_SDHC1_CLK				41
++#define IMX8QXP_CONN_SDHC2_CLK				42
++#define IMX8QXP_CONN_ENET0_ROOT_CLK			43
++#define IMX8QXP_CONN_ENET0_BYPASS_CLK			44
++#define IMX8QXP_CONN_ENET0_RGMII_CLK			45
++#define IMX8QXP_CONN_ENET1_ROOT_CLK			46
++#define IMX8QXP_CONN_ENET1_BYPASS_CLK			47
++#define IMX8QXP_CONN_ENET1_RGMII_CLK			48
++#define IMX8QXP_CONN_GPMI_BCH_IO_CLK			49
++#define IMX8QXP_CONN_GPMI_BCH_CLK			50
++#define IMX8QXP_CONN_USB2_ACLK				51
++#define IMX8QXP_CONN_USB2_BUS_CLK			52
++#define IMX8QXP_CONN_USB2_LPM_CLK			53
++
++/* HSIO SS */
++#define IMX8QXP_HSIO_AXI_CLK				60
++#define IMX8QXP_HSIO_PER_CLK				61
++
++/* Display controller SS */
++#define IMX8QXP_DC_AXI_EXT_CLK				70
++#define IMX8QXP_DC_AXI_INT_CLK				71
++#define IMX8QXP_DC_CFG_CLK				72
++#define IMX8QXP_DC0_PLL0_CLK				80
++#define IMX8QXP_DC0_PLL1_CLK				81
++#define IMX8QXP_DC0_DISP0_CLK				82
++#define IMX8QXP_DC0_DISP1_CLK				83
++
++/* MIPI-LVDS SS */
++#define IMX8QXP_MIPI_IPG_CLK				90
++#define IMX8QXP_MIPI0_PIXEL_CLK				100
++#define IMX8QXP_MIPI0_BYPASS_CLK			101
++#define IMX8QXP_MIPI0_LVDS_PIXEL_CLK			102
++#define IMX8QXP_MIPI0_LVDS_BYPASS_CLK			103
++#define IMX8QXP_MIPI0_LVDS_PHY_CLK			104
++#define IMX8QXP_MIPI0_I2C0_CLK				105
++#define IMX8QXP_MIPI0_I2C1_CLK				106
++#define IMX8QXP_MIPI0_PWM0_CLK				107
++#define IMX8QXP_MIPI1_PIXEL_CLK				108
++#define IMX8QXP_MIPI1_BYPASS_CLK			109
++#define IMX8QXP_MIPI1_LVDS_PIXEL_CLK			110
++#define IMX8QXP_MIPI1_LVDS_BYPASS_CLK			111
++#define IMX8QXP_MIPI1_LVDS_PHY_CLK			112
++#define IMX8QXP_MIPI1_I2C0_CLK				113
++#define IMX8QXP_MIPI1_I2C1_CLK				114
++#define IMX8QXP_MIPI1_PWM0_CLK				115
++
++/* IMG SS */
++#define IMX8QXP_IMG_AXI_CLK				120
++#define IMX8QXP_IMG_IPG_CLK				121
++#define IMX8QXP_IMG_PXL_CLK				122
++
++/* MIPI-CSI SS */
++#define IMX8QXP_CSI0_CORE_CLK				130
++#define IMX8QXP_CSI0_ESC_CLK				131
++#define IMX8QXP_CSI0_PWM0_CLK				132
++#define IMX8QXP_CSI0_I2C0_CLK				133
++
++/* PARALLER CSI SS */
++#define IMX8QXP_PARALLEL_CSI_DPLL_CLK			140
++#define IMX8QXP_PARALLEL_CSI_PIXEL_CLK			141
++#define IMX8QXP_PARALLEL_CSI_MCLK_CLK			142
++
++/* VPU SS */
++#define IMX8QXP_VPU_ENC_CLK				150
++#define IMX8QXP_VPU_DEC_CLK				151
++
++/* GPU SS */
++#define IMX8QXP_GPU0_CORE_CLK				160
++#define IMX8QXP_GPU0_SHADER_CLK				161
++
++/* ADMA SS */
++#define IMX8QXP_ADMA_IPG_CLK_ROOT			165
++#define IMX8QXP_ADMA_UART0_CLK				170
++#define IMX8QXP_ADMA_UART1_CLK				171
++#define IMX8QXP_ADMA_UART2_CLK				172
++#define IMX8QXP_ADMA_UART3_CLK				173
++#define IMX8QXP_ADMA_SPI0_CLK				174
++#define IMX8QXP_ADMA_SPI1_CLK				175
++#define IMX8QXP_ADMA_SPI2_CLK				176
++#define IMX8QXP_ADMA_SPI3_CLK				177
++#define IMX8QXP_ADMA_CAN0_CLK				178
++#define IMX8QXP_ADMA_CAN1_CLK				179
++#define IMX8QXP_ADMA_CAN2_CLK				180
++#define IMX8QXP_ADMA_I2C0_CLK				181
++#define IMX8QXP_ADMA_I2C1_CLK				182
++#define IMX8QXP_ADMA_I2C2_CLK				183
++#define IMX8QXP_ADMA_I2C3_CLK				184
++#define IMX8QXP_ADMA_FTM0_CLK				185
++#define IMX8QXP_ADMA_FTM1_CLK				186
++#define IMX8QXP_ADMA_ADC0_CLK				187
++#define IMX8QXP_ADMA_PWM_CLK				188
++#define IMX8QXP_ADMA_LCD_CLK				189
++
++#define IMX8QXP_SCU_CLK_END				190
++
++#endif /* __DT_BINDINGS_CLOCK_IMX8QXP_H */
+-- 
+2.7.4
