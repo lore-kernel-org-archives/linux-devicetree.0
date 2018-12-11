@@ -1,59 +1,87 @@
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v2 1/2] dt-bindings: input: Add Raspberry Pi Touchscreen
-Date: Tue, 11 Dec 2018 12:23:53 +0100
-Message-ID: <20181211112408.9524-2-nsaenzjulienne@suse.de>
-References: <20181211112408.9524-1-nsaenzjulienne@suse.de>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [RFC PATCH v2 08/15] usb:cdns3: Implements device operations part
+ of the API
+Date: Tue, 11 Dec 2018 16:56:57 +0530
+Message-ID: <6b19b55c-66d7-439e-df8f-7b311b45af5e@ti.com>
+References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
+ <1542535751-16079-9-git-send-email-pawell@cadence.com>
+ <5BFE8883.7090802@ti.com>
+ <CAL411-oKvu3EADStit=JtbcxVzM_fFGF2uPn67-wmXxPzUK6GQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181211112408.9524-1-nsaenzjulienne@suse.de>
+In-Reply-To: <CAL411-oKvu3EADStit=JtbcxVzM_fFGF2uPn67-wmXxPzUK6GQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-rpi-kernel@lists.infradead.org, stefan.wahren@i2se.com, eric@anholt.net, agraf@suse.de, afaerber@suse.com, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+To: Peter Chen <hzpeterchen@gmail.com>, rogerq@ti.com
+Cc: pawell@cadence.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, adouglas@cadence.com, jbergsagel@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com, balbi@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Adds device tree documentation for Raspberry Pi's official 7"
-touchscreen.
+On 10/12/18 7:42 AM, Peter Chen wrote:
+>>> +static struct usb_ep *cdns3_gadget_match_ep(struct usb_gadget *gadget,
+>>> +                                         struct usb_endpoint_descriptor *desc,
+>>> +                                         struct usb_ss_ep_comp_descriptor *comp_desc)
+>>> +{
+>>> +     struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
+>>> +     struct cdns3_endpoint *priv_ep;
+>>> +     unsigned long flags;
+>>> +
+>>> +     priv_ep = cdns3_find_available_ss_ep(priv_dev, desc);
+>>> +     if (IS_ERR(priv_ep)) {
+>>> +             dev_err(&priv_dev->dev, "no available ep\n");
+>>> +             return NULL;
+>>> +     }
+>>> +
+>>> +     dev_dbg(&priv_dev->dev, "match endpoint: %s\n", priv_ep->name);
+>>> +
+>>> +     spin_lock_irqsave(&priv_dev->lock, flags);
+>>> +     priv_ep->endpoint.desc = desc;
+>>> +     priv_ep->dir  = usb_endpoint_dir_in(desc) ? USB_DIR_IN : USB_DIR_OUT;
+>>> +     priv_ep->type = usb_endpoint_type(desc);
+>>> +
+>>> +     list_add_tail(&priv_ep->ep_match_pending_list,
+>>> +                   &priv_dev->ep_match_list);
+>>> +     spin_unlock_irqrestore(&priv_dev->lock, flags);
+>>> +     return &priv_ep->endpoint;
+>>> +}
+>> Why do you need a custom match_ep?
+>> doesn't usb_ep_autoconfig suffice?
+>>
+>> You can check if EP is claimed or not by checking the ep->claimed flag.
+>>
+> It is a special requirement for this IP, the EP type and MaxPacketSize
+> changing can't be done at runtime, eg, at ep->enable. See below commit
+> for detail.
+> 
+>     usb: cdns3: gadget: configure all endpoints before set configuration
+> 
+>     Cadence IP has one limitation that all endpoints must be configured
+>     (Type & MaxPacketSize) before setting configuration through hardware
+>     register, it means we can't change endpoints configuration after
+>     set_configuration.
+> 
+>     In this patch, we add non-control endpoint through usb_ss->ep_match_list,
+>     which is added when the gadget driver uses usb_ep_autoconfig to configure
+>     specific endpoint; When the udc driver receives set_configurion request,
+>     it goes through usb_ss->ep_match_list, and configure all endpoints
+>     accordingly.
+> 
+>     At usb_ep_ops.enable/disable, we only enable and disable endpoint through
+>     ep_cfg register which can be changed after set_configuration, and do
+>     some software operation accordingly.
 
-This binding is meant to be used as an overlay.
+All this should be part of comments in code along with information about
+controller versions which suffer from the errata.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- .../touchscreen/raspberrypi,firmware-ts.txt   | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/raspberrypi,firmware-ts.txt
+Is there a version of controller available which does not have the
+defect? Is there a future plan to fix this?
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/raspberrypi,firmware-ts.txt b/Documentation/devicetree/bindings/input/touchscreen/raspberrypi,firmware-ts.txt
-new file mode 100644
-index 000000000000..2a1af240ccc3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/raspberrypi,firmware-ts.txt
-@@ -0,0 +1,26 @@
-+Raspberry Pi firmware based 7" touchscreen
-+=====================================
-+
-+Required properties:
-+ - compatible: "raspberrypi,firmware-ts"
-+
-+Optional properties:
-+ - firmware: Reference to RPi's firmware device node
-+ - touchscreen-size-x: See touchscreen.txt
-+ - touchscreen-size-y: See touchscreen.txt
-+ - touchscreen-inverted-x: See touchscreen.txt
-+ - touchscreen-inverted-y: See touchscreen.txt
-+ - touchscreen-swapped-x-y: See touchscreen.txt
-+
-+Example:
-+
-+firmware: firmware-rpi {
-+	compatible = "raspberrypi,bcm2835-firmware";
-+	mboxes = <&mailbox>;
-+
-+	ts: touchscreen {
-+		compatible = "raspberrypi,firmware-ts";
-+		touchscreen-size-x = <800>;
-+		touchscreen-size-y = <480>;
-+	};
-+};
--- 
-2.19.2
+If any of that is yes, you probably want to handle this with runtime
+detection of version (like done with DWC3_REVISION_XXX macros).
+Sometimes the hardware-read versions themselves are incorrect, so its
+better to introduce a version specific compatible too like
+"cdns,usb-1.0.0" (as hinted to by Rob Herring as well).
+
+Thanks,
+Sekhar
