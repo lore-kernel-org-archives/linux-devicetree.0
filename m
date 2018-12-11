@@ -1,59 +1,73 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v11 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
- driver
-Date: Tue, 11 Dec 2018 19:05:43 +0530
-Message-ID: <82b168d1-79bc-f454-8e19-4f7630a34069@codeaurora.org>
-References: <1543722903-10989-1-git-send-email-tdas@codeaurora.org>
- <1543722903-10989-3-git-send-email-tdas@codeaurora.org>
- <20181204051231.mm5ixli7ckpfzvd4@vireshk-i7>
- <154396249199.88331.1800559141437859959@swboyd.mtv.corp.google.com>
- <154396472692.88331.13742924031474269133@swboyd.mtv.corp.google.com>
- <49139ae4-4373-9e70-02ad-80f7bbc4494c@codeaurora.org>
- <20181205061600.7zglbpkgbktn27am@vireshk-i7>
+From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
+Subject: Re: [PATCH] ARM: dts: imx: Add Y Soft IOTA Draco, Hydra and Ursa
+ boards
+Date: Tue, 11 Dec 2018 13:46:30 +0000
+Message-ID: <dc1db0e2-b9a6-8624-4be5-8b3719d99f4b@ysoft.com>
+References: <1541086962-52626-1-git-send-email-michal.vokac@ysoft.com>
+ <5bea0e99.1c69fb81.18be0.5162@mx.google.com>
+ <42ffee3e-7c2a-aab9-547f-2064a77339a8@ysoft.com>
+ <a61683a2-30aa-e387-2170-3d79e0043739@ysoft.com>
+ <18065d41-4ae0-ada2-35f1-00d8a8489397@ysoft.com>
+ <20181211123640.GC4632@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181205061600.7zglbpkgbktn27am@vireshk-i7>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181211123640.GC4632@lunn.ch>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, evgreen@google.com
+Content-ID: <06C7763841A75A4B8F7B7956CF721C8D@eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Viresh,
-
-Sorry for the delayed response. Thanks for the patch.
-
-On 12/5/2018 11:46 AM, Viresh Kumar wrote:
-> On 05-12-18, 09:07, Taniya Das wrote:
->> Hello Stephen, Viresh
+On 11.12.2018 13:36, Andrew Lunn wrote:
+>>> Hi Rob, gentle ping on this.
+>>>
+>>> I would like to be sure how to proceed with this. Do you really want me
+>>> to move *all* nodes that are disabled in this common dtsi into the per
+>>> board dts?
+>>>
+>>> All the boards use identical PCB. Anything that is disabled here is not
+>>> present on at least one of the boards. It means it is routed on the
+>>> board and the SoC has the capability but the parts are not populated.
+>>>
+>>> So it is not only about the LED controller. What about the LCD, OLED,
+>>> backlight, USB..?
 >>
->> Thanks for the code and suggestions.
->>
->> Having a NR_DOMAINS '2' makes the driver not scalable for re-use.
+>> Can anybody advice how to split these dts/dtsi files, please?
+>> I am not sure what should reside in the common dtsi and what should
+>> be moved into the per board dts in case my current solution is not
+>> appropriate.
 > 
-> Sure, I didn't like it either and that wasn't really what I was suggesting in
-> the first place. I didn't wanted to write the code myself and pass it on, but I
-> have it now anyway :)
-> 
-> It may have a bug or two in there, but compiles just fine and is rebased over
-> your patch Taniya.
-> 
+> The kirkwood-synology.dtsi might be of interest? There are a lot of
+> Synology NAS boxes which share a lot in common. So all the common
+> parts are in that .dtsi. The .dbs file for each individual model then
+> enables the parts its needs.
 
-The design here assumes that there would not be any per-cpu/per-cluster 
-based SW requirement for the HW during frequency transitions, which 
-again makes me think that we would require to re-introduce these 
-structures again in case we have such requirements in near future.
+That is a great example Andrew, thank you! That is exactly what I am
+doing. Everything that is supported by the PCB/platform is specified
+in the common file. Only parts that are populated on all products are
+enabled there, the other stuff is disabled. The .dts files then enable
+additional stuff they need.
 
-Also I think leaving the structures also helps us debug any boot up 
-issues looking at the ram contents of the per-(cpu/cluster) structures 
-with the contents from the firmware.
+To me it seems reasonable to do it that way and maybe I only
+misunderstood what Rob actually meant by his comment? I still do not
+have his reply to that though.
 
-Hope these above helps us to go ahead with the current SW design.
+> Although you have one PCB, or the different population options
+> considered different products, each with there own name?
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+Yes, each of the three population options can be considered a different
+product with different name. That is still the same as the Synology
+NAS boxes, right?
 
---
+Michal
