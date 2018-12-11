@@ -1,236 +1,539 @@
-Return-Path: <SRS0=UQXi=OK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr760087.outbound.protection.outlook.com ([40.107.76.87]:27323
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+Return-Path: <SRS0=IqaF=OU=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr00074.outbound.protection.outlook.com ([40.107.0.74]:49632
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725867AbeLAL1G (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 1 Dec 2018 06:27:06 -0500
-From: Jolly Shah <JOLLYS@xilinx.com>
-Subject: FW: [PATCH 0/9] dt-bindings: Firmware node binding for ZynqMP core
-Date: Sat, 1 Dec 2018 00:15:53 +0000
-Message-ID: <SN4PR0201MB35369DC2171EC7744096EDA5B8AC0@SN4PR0201MB3536.namprd02.prod.outlook.com>
-References: <1542412619-387-1-git-send-email-jollys@xilinx.com>
- <DM5PR0201MB35255E725459B3CE05A7402DB8D70@DM5PR0201MB3525.namprd02.prod.outlook.com>
-In-Reply-To: <DM5PR0201MB35255E725459B3CE05A7402DB8D70@DM5PR0201MB3525.namprd02.prod.outlook.com>
+        id S1729474AbeLKCJC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 10 Dec 2018 21:09:02 -0500
+From: Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH v5 2/4] usb: chipidea: imx: add HSIC support
+Date: Tue, 11 Dec 2018 02:08:57 +0000
+Message-ID: <20181211020624.9433-3-peter.chen@nxp.com>
+References: <20181211020624.9433-1-peter.chen@nxp.com>
+In-Reply-To: <20181211020624.9433-1-peter.chen@nxp.com>
 Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>, Peter Chen <peter.chen@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Rob,
+To support imx HSIC, there are some special requirement:
+- The HSIC pad is 1.2v, it may need to supply from external
+- The data/strobe pin needs to be pulled down first, and after
+  host mode is initialized, the strobe pin needs to be pulled up
+- During the USB suspend/resume, special setting is needed
 
-Below patchset shows complete firmware binding as you suggested. It has all=
- firmware API users as child nodes to firmware node
-In this case, firmware driver needs to take care of probing of dependent dr=
-ivers. We have thought of MFD approach to probe dependent drivers. Firmware=
- driver would register
-dependent drivers as MFD child devices from firmware probe.  Let me know if=
- that is fine.
+Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Tested-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+---
+ drivers/usb/chipidea/ci_hdrc_imx.c | 140 ++++++++++++++++++++++++++++++++-=
+----
+ drivers/usb/chipidea/ci_hdrc_imx.h |   9 ++-
+ drivers/usb/chipidea/usbmisc_imx.c | 140 +++++++++++++++++++++++++++++++++=
+++++
+ 3 files changed, 270 insertions(+), 19 deletions(-)
 
-Optionally other way is to keep separate node for each device outside (in p=
-arallel to) zynqmp-firmware node.
-In this case, each firmware driver consumer is independent driver/binding. =
-Order of probe can be taken care by -EPROBE defer mechanism.
-
-Please review and let us know your feedback.
-
-Thanks,
-Jolly Shah
-
------Original Message-----
-From: Jolly Shah=20
-Sent: Monday, November 26, 2018 1:40 PM
-To: 'Jolly Shah' <jolly.shah@xilinx.com>; robh+dt@kernel.org; mark.rutland@=
-arm.com
-Cc: Michal Simek <michals@xilinx.com>; Rajan Vaja <RAJANV@xilinx.com>; Nava=
- kishore Manne <navam@xilinx.com>; linux-arm-kernel@lists.infradead.org; li=
-nux-kernel@vger.kernel.org; devicetree@vger.kernel.org
-Subject: RE: [PATCH 0/9] dt-bindings: Firmware node binding for ZynqMP core
-
-Ping for comments
-
-> -----Original Message-----
-> From: Jolly Shah [mailto:jolly.shah@xilinx.com]
-> Sent: Friday, November 16, 2018 3:57 PM
-> To: robh+dt@kernel.org; mark.rutland@arm.com
-> Cc: Michal Simek <michals@xilinx.com>; Rajan Vaja <RAJANV@xilinx.com>;=20
-> Nava kishore Manne <navam@xilinx.com>; linux-arm-=20
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org;=20
-> devicetree@vger.kernel.org; Jolly Shah <JOLLYS@xilinx.com>
-> Subject: [PATCH 0/9] dt-bindings: Firmware node binding for ZynqMP=20
-> core
->=20
-> Base firmware node and clock child node binding are part of mainline kern=
-el.
-> This patchset adds documentation to describe rest of the firmware=20
-> child node bindings.
-> Complete firmware DT node example is shown below for ease of understandin=
-g:
->=20
-> firmware {
-> 	zynqmp_firmware: zynqmp-firmware {
-> 		compatible =3D "xlnx,zynqmp-firmware";
-> 		method =3D "smc";
-> 		#power-domain-cells =3D <1>;
-> 		#reset-cells =3D <1>;
->=20
-> 		zynqmp_clk: clock-controller {
-> 			#clock-cells =3D <1>;
-> 			compatible =3D "xlnx,zynqmp-clk";
-> 			clocks =3D <&pss_ref_clk>, <&video_clk>, <&pss_alt_ref_clk>,=20
-> <&aux_ref_clk>, <&gt_crx_ref_clk>;
-> 			clock-names =3D "pss_ref_clk", "video_clk",=20
-> "pss_alt_ref_clk","aux_ref_clk", "gt_crx_ref_clk";
-> 		};
->=20
-> 		zynqmp_power: zynqmp-power {
-> 			compatible =3D "xlnx,zynqmp-power";
-> 			interrupts =3D <0 35 4>;
-> 		};
->=20
-> 		nvmem_firmware {
-> 			compatible =3D "xlnx,zynqmp-nvmem-fw";
-> 			#address-cells =3D <1>;
-> 			#size-cells =3D <1>;
->=20
-> 			/* Data cells */
-> 			soc_revision: soc_revision {
-> 				reg =3D <0x0 0x4>;
-> 			};
-> 		};
->=20
-> 		afi0: afi0 {
-> 			compatible =3D "xlnx,afi-fpga";
-> 			config-afi =3D <0 2>, <1 1>, <2 1>;
-> 		};
->=20
-> 		qspi: spi@ff0f0000 {
-> 			compatible =3D "xlnx,zynqmp-qspi-1.0";
-> 			clock-names =3D "ref_clk", "pclk";
-> 			clocks =3D <&misc_clk &misc_clk>;
-> 			interrupts =3D <0 15 4>;
-> 			interrupt-parent =3D <&gic>;
-> 			num-cs =3D <1>;
-> 			reg =3D <0x0 0xff0f0000 0x1000>,<0x0 0xc0000000
-> 0x8000000>;
-> 		};
->=20
-> 		serdes: zynqmp_phy@fd400000 {
-> 			compatible =3D "xlnx,zynqmp-psgtr";
-> 			status =3D "okay";
-> 			reg =3D <0x0 0xfd400000 0x0 0x40000>, <0x0 0xfd3d0000
-> 0x0 0x1000>,
-> 				<0x0 0xff5e0000 0x0 0x1000>;
-> 			reg-names =3D "serdes", "siou", "lpd";
->=20
-> 			lane0: lane@0 {
-> 				#phy-cells =3D <4>;
-> 			};
-> 			lane1: lane@1 {
-> 				#phy-cells =3D <4>;
-> 			};
-> 			lane2: lane@2 {
-> 				#phy-cells =3D <4>;
-> 			};
-> 			lane3: lane@3 {
-> 				#phy-cells =3D <4>;
-> 			};
-> 		};
->=20
-> 		pinctrl_uart1_default: uart1-default {
-> 			mux {
-> 				groups =3D "uart0_4_grp";
-> 				function =3D "uart0";
-> 			};
->=20
-> 			conf {
-> 				groups =3D "uart0_4_grp";
-> 				slew-rate =3D <SLEW_RATE_SLOW>;
-> 				io-standard =3D <IO_STANDARD_LVCMOS18>;
-> 			};
->=20
-> 			conf-rx {
-> 				pins =3D "MIO18";
-> 				bias-high-impedance;
-> 			};
->=20
-> 			conf-tx {
-> 				pins =3D "MIO19";
-> 				bias-disable;
-> 				schmitt-cmos =3D <PIN_INPUT_TYPE_CMOS>;
-> 			};
-> 		};
-> 		zynqmp-r5-remoteproc@0 {
-> 			compatible =3D "xlnx,zynqmp-r5-remoteproc-1.0";
-> 			reg =3D <0x0 0xFFE00000 0x0 0x10000>,
-> 				<0x0 0xFFE20000 0x0 0x10000>,
-> 				<0x0 0xff340000 0x0 0x100>;
-> 			reg-names =3D "tcm_a", "tcm_b", "ipi";
-> 			dma-ranges;
-> 			core_conf =3D "split0";
-> 			memory-region =3D <&rproc_0_fw_reserved>,
-> 					<&rproc_0_dma_reserved>;
-> 			tcm-pnode-id =3D <0xf>, <0x10>;
-> 			rpu-pnode-id =3D <0x7>;
-> 			interrupt-parent =3D <&gic>;
-> 			interrupts =3D <0 29 4>;
-> 		};
-> 	};
-> };
->=20
-> Jolly Shah (2):
->   dt-bindings: phy: Add dt bindings for ZynqMP PHY
->   dt-bindings: fpga: Add binding doc for the afi config driver
->=20
-> Nava kishore Manne (2):
->   dt-bindings: reset: Add bindings for ZynqMP reset driver
->   dt-bindings: nvmem: Add bindings for ZynqMP nvmem driver
->=20
-> Rajan Vaja (4):
->   dt-bindings: power: Add ZynqMP power domain bindings
->   dt-bindings: soc: Add ZynqMP PM bindings
->   dt-bindings: pinctrl: Add ZynqMP pin controller bindings
->   dt-bindings: spi: zynqmp: Move SPI node under zynqmp firmware
->=20
-> Wendy Liang (1):
->   dt-bindings: remoteproc: Add Xilinx R5 rproc binding
->=20
->  .../devicetree/bindings/fpga/xlnx,afi-fpga.txt     |  67 +++++
->  .../bindings/nvmem/xlnx,zynqmp-nvmem.txt           |  44 ++++
->  .../devicetree/bindings/phy/phy-zynqmp.txt         | 126 ++++++++++
->  .../bindings/pinctrl/xlnx,zynqmp-pinctrl.txt       | 272 +++++++++++++++=
-++++++
->  .../bindings/power/reset/xlnx,zynqmp-power.txt     |  25 ++
->  .../bindings/power/xlnx,zynqmp-genpd.txt           |  34 +++
->  .../remoteproc/xlnx,zynqmp-r5-remoteproc.txt       |  81 ++++++
->  .../bindings/reset/xlnx,zynqmp-reset.txt           | 148 +++++++++++
->  .../devicetree/bindings/spi/spi-zynqmp-qspi.txt    |  22 +-
->  include/dt-bindings/power/xlnx-zynqmp-power.h      |  39 +++
->  10 files changed, 850 insertions(+), 8 deletions(-)  create mode=20
-> 100644 Documentation/devicetree/bindings/fpga/xlnx,afi-fpga.txt
->  create mode 100644=20
-> Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-
-> nvmem.txt
->  create mode 100644=20
-> Documentation/devicetree/bindings/phy/phy-zynqmp.txt
->  create mode 100644=20
-> Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-
-> pinctrl.txt
->  create mode 100644
-> Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
->  create mode 100644=20
-> Documentation/devicetree/bindings/power/xlnx,zynqmp-
-> genpd.txt
->  create mode 100644
-> Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5-
-> remoteproc.txt
->  create mode 100644=20
-> Documentation/devicetree/bindings/reset/xlnx,zynqmp-
-> reset.txt
->  create mode 100644 include/dt-bindings/power/xlnx-zynqmp-power.h
->=20
-> --
-> 2.7.4
+diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_h=
+drc_imx.c
+index 09b37c0d075d..56781c329db0 100644
+--- a/drivers/usb/chipidea/ci_hdrc_imx.c
++++ b/drivers/usb/chipidea/ci_hdrc_imx.c
+@@ -14,6 +14,7 @@
+ #include <linux/usb/chipidea.h>
+ #include <linux/usb/of.h>
+ #include <linux/clk.h>
++#include <linux/pinctrl/consumer.h>
+=20
+ #include "ci.h"
+ #include "ci_hdrc_imx.h"
+@@ -85,6 +86,9 @@ struct ci_hdrc_imx_data {
+ 	bool supports_runtime_pm;
+ 	bool override_phy_control;
+ 	bool in_lpm;
++	struct pinctrl *pinctrl;
++	struct pinctrl_state *pinctrl_hsic_active;
++	struct regulator *hsic_pad_regulator;
+ 	/* SoC before i.mx6 (except imx23/imx28) needs three clks */
+ 	bool need_three_clks;
+ 	struct clk *clk_ipg;
+@@ -245,19 +249,49 @@ static void imx_disable_unprepare_clks(struct device =
+*dev)
+ 	}
+ }
+=20
++static int ci_hdrc_imx_notify_event(struct ci_hdrc *ci, unsigned int event=
+)
++{
++	struct device *dev =3D ci->dev->parent;
++	struct ci_hdrc_imx_data *data =3D dev_get_drvdata(dev);
++	int ret =3D 0;
++
++	switch (event) {
++	case CI_HDRC_IMX_HSIC_ACTIVE_EVENT:
++		ret =3D pinctrl_select_state(data->pinctrl,
++				data->pinctrl_hsic_active);
++		if (ret)
++			dev_err(dev, "hsic_active select failed, err=3D%d\n",
++				ret);
++		break;
++	case CI_HDRC_IMX_HSIC_SUSPEND_EVENT:
++		ret =3D imx_usbmisc_hsic_set_connect(data->usbmisc_data);
++		if (ret)
++			dev_err(dev,
++				"hsic_set_connect failed, err=3D%d\n", ret);
++		break;
++	default:
++		break;
++	}
++
++	return ret;
++}
++
+ static int ci_hdrc_imx_probe(struct platform_device *pdev)
+ {
+ 	struct ci_hdrc_imx_data *data;
+ 	struct ci_hdrc_platform_data pdata =3D {
+ 		.name		=3D dev_name(&pdev->dev),
+ 		.capoffset	=3D DEF_CAPOFFSET,
++		.notify_event	=3D ci_hdrc_imx_notify_event,
+ 	};
+ 	int ret;
+ 	const struct of_device_id *of_id;
+ 	const struct ci_hdrc_imx_platform_flag *imx_platform_flag;
+ 	struct device_node *np =3D pdev->dev.of_node;
++	struct device *dev =3D &pdev->dev;
++	struct pinctrl_state *pinctrl_hsic_idle;
+=20
+-	of_id =3D of_match_device(ci_hdrc_imx_dt_ids, &pdev->dev);
++	of_id =3D of_match_device(ci_hdrc_imx_dt_ids, dev);
+ 	if (!of_id)
+ 		return -ENODEV;
+=20
+@@ -268,19 +302,73 @@ static int ci_hdrc_imx_probe(struct platform_device *=
+pdev)
+ 		return -ENOMEM;
+=20
+ 	platform_set_drvdata(pdev, data);
+-	data->usbmisc_data =3D usbmisc_get_init_data(&pdev->dev);
++	data->usbmisc_data =3D usbmisc_get_init_data(dev);
+ 	if (IS_ERR(data->usbmisc_data))
+ 		return PTR_ERR(data->usbmisc_data);
+=20
+-	ret =3D imx_get_clks(&pdev->dev);
++	if (of_usb_get_phy_mode(dev->of_node) =3D=3D USBPHY_INTERFACE_MODE_HSIC) =
+{
++		pdata.flags |=3D CI_HDRC_IMX_IS_HSIC;
++		data->usbmisc_data->hsic =3D 1;
++		data->pinctrl =3D devm_pinctrl_get(dev);
++		if (IS_ERR(data->pinctrl)) {
++			dev_err(dev, "pinctrl get failed, err=3D%ld\n",
++					PTR_ERR(data->pinctrl));
++			return PTR_ERR(data->pinctrl);
++		}
++
++		pinctrl_hsic_idle =3D pinctrl_lookup_state(data->pinctrl, "idle");
++		if (IS_ERR(pinctrl_hsic_idle)) {
++			dev_err(dev,
++				"pinctrl_hsic_idle lookup failed, err=3D%ld\n",
++					PTR_ERR(pinctrl_hsic_idle));
++			return PTR_ERR(pinctrl_hsic_idle);
++		}
++
++		ret =3D pinctrl_select_state(data->pinctrl, pinctrl_hsic_idle);
++		if (ret) {
++			dev_err(dev, "hsic_idle select failed, err=3D%d\n", ret);
++			return ret;
++		}
++
++		data->pinctrl_hsic_active =3D pinctrl_lookup_state(data->pinctrl,
++								"active");
++		if (IS_ERR(data->pinctrl_hsic_active)) {
++			dev_err(dev,
++				"pinctrl_hsic_active lookup failed, err=3D%ld\n",
++					PTR_ERR(data->pinctrl_hsic_active));
++			return PTR_ERR(data->pinctrl_hsic_active);
++		}
++
++		data->hsic_pad_regulator =3D devm_regulator_get(dev, "hsic");
++		if (PTR_ERR(data->hsic_pad_regulator) =3D=3D -EPROBE_DEFER) {
++			return -EPROBE_DEFER;
++		} else if (PTR_ERR(data->hsic_pad_regulator) =3D=3D -ENODEV) {
++			/* no pad regualator is needed */
++			data->hsic_pad_regulator =3D NULL;
++		} else if (IS_ERR(data->hsic_pad_regulator)) {
++			dev_err(dev, "Get HSIC pad regulator error: %ld\n",
++					PTR_ERR(data->hsic_pad_regulator));
++			return PTR_ERR(data->hsic_pad_regulator);
++		}
++
++		if (data->hsic_pad_regulator) {
++			ret =3D regulator_enable(data->hsic_pad_regulator);
++			if (ret) {
++				dev_err(dev,
++					"Failed to enable HSIC pad regulator\n");
++				return ret;
++			}
++		}
++	}
++	ret =3D imx_get_clks(dev);
+ 	if (ret)
+-		return ret;
++		goto disable_hsic_regulator;
+=20
+-	ret =3D imx_prepare_enable_clks(&pdev->dev);
++	ret =3D imx_prepare_enable_clks(dev);
+ 	if (ret)
+-		return ret;
++		goto disable_hsic_regulator;
+=20
+-	data->phy =3D devm_usb_get_phy_by_phandle(&pdev->dev, "fsl,usbphy", 0);
++	data->phy =3D devm_usb_get_phy_by_phandle(dev, "fsl,usbphy", 0);
+ 	if (IS_ERR(data->phy)) {
+ 		ret =3D PTR_ERR(data->phy);
+ 		/* Return -EINVAL if no usbphy is available */
+@@ -305,40 +393,43 @@ static int ci_hdrc_imx_probe(struct platform_device *=
+pdev)
+=20
+ 	ret =3D imx_usbmisc_init(data->usbmisc_data);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "usbmisc init failed, ret=3D%d\n", ret);
++		dev_err(dev, "usbmisc init failed, ret=3D%d\n", ret);
+ 		goto err_clk;
+ 	}
+=20
+-	data->ci_pdev =3D ci_hdrc_add_device(&pdev->dev,
++	data->ci_pdev =3D ci_hdrc_add_device(dev,
+ 				pdev->resource, pdev->num_resources,
+ 				&pdata);
+ 	if (IS_ERR(data->ci_pdev)) {
+ 		ret =3D PTR_ERR(data->ci_pdev);
+ 		if (ret !=3D -EPROBE_DEFER)
+-			dev_err(&pdev->dev,
+-				"ci_hdrc_add_device failed, err=3D%d\n", ret);
++			dev_err(dev, "ci_hdrc_add_device failed, err=3D%d\n",
++					ret);
+ 		goto err_clk;
+ 	}
+=20
+ 	ret =3D imx_usbmisc_init_post(data->usbmisc_data);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "usbmisc post failed, ret=3D%d\n", ret);
++		dev_err(dev, "usbmisc post failed, ret=3D%d\n", ret);
+ 		goto disable_device;
+ 	}
+=20
+ 	if (data->supports_runtime_pm) {
+-		pm_runtime_set_active(&pdev->dev);
+-		pm_runtime_enable(&pdev->dev);
++		pm_runtime_set_active(dev);
++		pm_runtime_enable(dev);
+ 	}
+=20
+-	device_set_wakeup_capable(&pdev->dev, true);
++	device_set_wakeup_capable(dev, true);
+=20
+ 	return 0;
+=20
+ disable_device:
+ 	ci_hdrc_remove_device(data->ci_pdev);
+ err_clk:
+-	imx_disable_unprepare_clks(&pdev->dev);
++	imx_disable_unprepare_clks(dev);
++disable_hsic_regulator:
++	if (data->hsic_pad_regulator)
++		ret =3D regulator_disable(data->hsic_pad_regulator);
+ 	return ret;
+ }
+=20
+@@ -355,6 +446,8 @@ static int ci_hdrc_imx_remove(struct platform_device *p=
+dev)
+ 	if (data->override_phy_control)
+ 		usb_phy_shutdown(data->phy);
+ 	imx_disable_unprepare_clks(&pdev->dev);
++	if (data->hsic_pad_regulator)
++		regulator_disable(data->hsic_pad_regulator);
+=20
+ 	return 0;
+ }
+@@ -367,9 +460,16 @@ static void ci_hdrc_imx_shutdown(struct platform_devic=
+e *pdev)
+ static int __maybe_unused imx_controller_suspend(struct device *dev)
+ {
+ 	struct ci_hdrc_imx_data *data =3D dev_get_drvdata(dev);
++	int ret =3D 0;
+=20
+ 	dev_dbg(dev, "at %s\n", __func__);
+=20
++	ret =3D imx_usbmisc_hsic_set_clk(data->usbmisc_data, false);
++	if (ret) {
++		dev_err(dev, "usbmisc hsic_set_clk failed, ret=3D%d\n", ret);
++		return ret;
++	}
++
+ 	imx_disable_unprepare_clks(dev);
+ 	data->in_lpm =3D true;
+=20
+@@ -400,8 +500,16 @@ static int __maybe_unused imx_controller_resume(struct=
+ device *dev)
+ 		goto clk_disable;
+ 	}
+=20
++	ret =3D imx_usbmisc_hsic_set_clk(data->usbmisc_data, true);
++	if (ret) {
++		dev_err(dev, "usbmisc hsic_set_clk failed, ret=3D%d\n", ret);
++		goto hsic_set_clk_fail;
++	}
++
+ 	return 0;
+=20
++hsic_set_clk_fail:
++	imx_usbmisc_set_wakeup(data->usbmisc_data, true);
+ clk_disable:
+ 	imx_disable_unprepare_clks(dev);
+ 	return ret;
+diff --git a/drivers/usb/chipidea/ci_hdrc_imx.h b/drivers/usb/chipidea/ci_h=
+drc_imx.h
+index 204275f47573..fcecab478934 100644
+--- a/drivers/usb/chipidea/ci_hdrc_imx.h
++++ b/drivers/usb/chipidea/ci_hdrc_imx.h
+@@ -14,10 +14,13 @@ struct imx_usbmisc_data {
+ 	unsigned int oc_polarity:1; /* over current polarity if oc enabled */
+ 	unsigned int evdo:1; /* set external vbus divider option */
+ 	unsigned int ulpi:1; /* connected to an ULPI phy */
++	unsigned int hsic:1; /* HSIC controlller */
+ };
+=20
+-int imx_usbmisc_init(struct imx_usbmisc_data *);
+-int imx_usbmisc_init_post(struct imx_usbmisc_data *);
+-int imx_usbmisc_set_wakeup(struct imx_usbmisc_data *, bool);
++int imx_usbmisc_init(struct imx_usbmisc_data *data);
++int imx_usbmisc_init_post(struct imx_usbmisc_data *data);
++int imx_usbmisc_set_wakeup(struct imx_usbmisc_data *data, bool enabled);
++int imx_usbmisc_hsic_set_connect(struct imx_usbmisc_data *data);
++int imx_usbmisc_hsic_set_clk(struct imx_usbmisc_data *data, bool on);
+=20
+ #endif /* __DRIVER_USB_CHIPIDEA_CI_HDRC_IMX_H */
+diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbm=
+isc_imx.c
+index def80ff547e4..43a15a6e86f5 100644
+--- a/drivers/usb/chipidea/usbmisc_imx.c
++++ b/drivers/usb/chipidea/usbmisc_imx.c
+@@ -64,10 +64,22 @@
+ #define MX6_BM_OVER_CUR_DIS		BIT(7)
+ #define MX6_BM_OVER_CUR_POLARITY	BIT(8)
+ #define MX6_BM_WAKEUP_ENABLE		BIT(10)
++#define MX6_BM_UTMI_ON_CLOCK		BIT(13)
+ #define MX6_BM_ID_WAKEUP		BIT(16)
+ #define MX6_BM_VBUS_WAKEUP		BIT(17)
+ #define MX6SX_BM_DPDM_WAKEUP_EN		BIT(29)
+ #define MX6_BM_WAKEUP_INTR		BIT(31)
++
++#define MX6_USB_HSIC_CTRL_OFFSET	0x10
++/* Send resume signal without 480Mhz PHY clock */
++#define MX6SX_BM_HSIC_AUTO_RESUME	BIT(23)
++/* set before portsc.suspendM =3D 1 */
++#define MX6_BM_HSIC_DEV_CONN		BIT(21)
++/* HSIC enable */
++#define MX6_BM_HSIC_EN			BIT(12)
++/* Force HSIC module 480M clock on, even when in Host is in suspend mode *=
+/
++#define MX6_BM_HSIC_CLK_ON		BIT(11)
++
+ #define MX6_USB_OTG1_PHY_CTRL		0x18
+ /* For imx6dql, it is host-only controller, for later imx6, it is otg's */
+ #define MX6_USB_OTG2_PHY_CTRL		0x1c
+@@ -94,6 +106,10 @@ struct usbmisc_ops {
+ 	int (*post)(struct imx_usbmisc_data *data);
+ 	/* It's called when we need to enable/disable usb wakeup */
+ 	int (*set_wakeup)(struct imx_usbmisc_data *data, bool enabled);
++	/* It's called before setting portsc.suspendM */
++	int (*hsic_set_connect)(struct imx_usbmisc_data *data);
++	/* It's called during suspend/resume */
++	int (*hsic_set_clk)(struct imx_usbmisc_data *data, bool enabled);
+ };
+=20
+ struct imx_usbmisc {
+@@ -353,6 +369,18 @@ static int usbmisc_imx6q_init(struct imx_usbmisc_data =
+*data)
+ 	writel(reg | MX6_BM_NON_BURST_SETTING,
+ 			usbmisc->base + data->index * 4);
+=20
++	/* For HSIC controller */
++	if (data->hsic) {
++		reg =3D readl(usbmisc->base + data->index * 4);
++		writel(reg | MX6_BM_UTMI_ON_CLOCK,
++			usbmisc->base + data->index * 4);
++		reg =3D readl(usbmisc->base + MX6_USB_HSIC_CTRL_OFFSET
++			+ (data->index - 2) * 4);
++		reg |=3D MX6_BM_HSIC_EN | MX6_BM_HSIC_CLK_ON;
++		writel(reg, usbmisc->base + MX6_USB_HSIC_CTRL_OFFSET
++			+ (data->index - 2) * 4);
++	}
++
+ 	spin_unlock_irqrestore(&usbmisc->lock, flags);
+=20
+ 	usbmisc_imx6q_set_wakeup(data, false);
+@@ -360,6 +388,79 @@ static int usbmisc_imx6q_init(struct imx_usbmisc_data =
+*data)
+ 	return 0;
+ }
+=20
++static int usbmisc_imx6_hsic_get_reg_offset(struct imx_usbmisc_data *data)
++{
++	int offset, ret =3D 0;
++
++	if (data->index =3D=3D 2 || data->index =3D=3D 3) {
++		offset =3D (data->index - 2) * 4;
++	} else if (data->index =3D=3D 0) {
++		/*
++		 * For SoCs like i.MX7D and later, each USB controller has
++		 * its own non-core register region. For SoCs before i.MX7D,
++		 * the first two USB controllers are non-HSIC controllers.
++		 */
++		offset =3D 0;
++	} else {
++		dev_err(data->dev, "index is error for usbmisc\n");
++		ret =3D -EINVAL;
++	}
++
++	return ret ? ret : offset;
++}
++
++static int usbmisc_imx6_hsic_set_connect(struct imx_usbmisc_data *data)
++{
++	unsigned long flags;
++	u32 val;
++	struct imx_usbmisc *usbmisc =3D dev_get_drvdata(data->dev);
++	int offset;
++
++	spin_lock_irqsave(&usbmisc->lock, flags);
++	offset =3D usbmisc_imx6_hsic_get_reg_offset(data);
++	if (offset < 0) {
++		spin_unlock_irqrestore(&usbmisc->lock, flags);
++		return offset;
++	}
++
++	val =3D readl(usbmisc->base + MX6_USB_HSIC_CTRL_OFFSET + offset);
++	if (!(val & MX6_BM_HSIC_DEV_CONN))
++		writel(val | MX6_BM_HSIC_DEV_CONN,
++			usbmisc->base + MX6_USB_HSIC_CTRL_OFFSET + offset);
++
++	spin_unlock_irqrestore(&usbmisc->lock, flags);
++
++	return 0;
++}
++
++static int usbmisc_imx6_hsic_set_clk(struct imx_usbmisc_data *data, bool o=
+n)
++{
++	unsigned long flags;
++	u32 val;
++	struct imx_usbmisc *usbmisc =3D dev_get_drvdata(data->dev);
++	int offset;
++
++	spin_lock_irqsave(&usbmisc->lock, flags);
++	offset =3D usbmisc_imx6_hsic_get_reg_offset(data);
++	if (offset < 0) {
++		spin_unlock_irqrestore(&usbmisc->lock, flags);
++		return offset;
++	}
++
++	val =3D readl(usbmisc->base + MX6_USB_HSIC_CTRL_OFFSET + offset);
++	val |=3D MX6_BM_HSIC_EN | MX6_BM_HSIC_CLK_ON;
++	if (on)
++		val |=3D MX6_BM_HSIC_CLK_ON;
++	else
++		val &=3D ~MX6_BM_HSIC_CLK_ON;
++
++	writel(val, usbmisc->base + MX6_USB_HSIC_CTRL_OFFSET + offset);
++	spin_unlock_irqrestore(&usbmisc->lock, flags);
++
++	return 0;
++}
++
++
+ static int usbmisc_imx6sx_init(struct imx_usbmisc_data *data)
+ {
+ 	void __iomem *reg =3D NULL;
+@@ -385,6 +486,13 @@ static int usbmisc_imx6sx_init(struct imx_usbmisc_data=
+ *data)
+ 		spin_unlock_irqrestore(&usbmisc->lock, flags);
+ 	}
+=20
++	/* For HSIC controller */
++	if (data->hsic) {
++		val =3D readl(usbmisc->base + MX6_USB_HSIC_CTRL_OFFSET);
++		val |=3D MX6SX_BM_HSIC_AUTO_RESUME;
++		writel(val, usbmisc->base + MX6_USB_HSIC_CTRL_OFFSET);
++	}
++
+ 	return 0;
+ }
+=20
+@@ -454,6 +562,7 @@ static int usbmisc_imx7d_init(struct imx_usbmisc_data *=
+data)
+ 	reg &=3D ~MX7D_USB_VBUS_WAKEUP_SOURCE_MASK;
+ 	writel(reg | MX7D_USB_VBUS_WAKEUP_SOURCE_BVALID,
+ 		 usbmisc->base + MX7D_USBNC_USB_CTRL2);
++
+ 	spin_unlock_irqrestore(&usbmisc->lock, flags);
+=20
+ 	usbmisc_imx7d_set_wakeup(data, false);
+@@ -481,6 +590,8 @@ static const struct usbmisc_ops imx53_usbmisc_ops =3D {
+ static const struct usbmisc_ops imx6q_usbmisc_ops =3D {
+ 	.set_wakeup =3D usbmisc_imx6q_set_wakeup,
+ 	.init =3D usbmisc_imx6q_init,
++	.hsic_set_connect =3D usbmisc_imx6_hsic_set_connect,
++	.hsic_set_clk   =3D usbmisc_imx6_hsic_set_clk,
+ };
+=20
+ static const struct usbmisc_ops vf610_usbmisc_ops =3D {
+@@ -490,6 +601,8 @@ static const struct usbmisc_ops vf610_usbmisc_ops =3D {
+ static const struct usbmisc_ops imx6sx_usbmisc_ops =3D {
+ 	.set_wakeup =3D usbmisc_imx6q_set_wakeup,
+ 	.init =3D usbmisc_imx6sx_init,
++	.hsic_set_connect =3D usbmisc_imx6_hsic_set_connect,
++	.hsic_set_clk =3D usbmisc_imx6_hsic_set_clk,
+ };
+=20
+ static const struct usbmisc_ops imx7d_usbmisc_ops =3D {
+@@ -546,6 +659,33 @@ int imx_usbmisc_set_wakeup(struct imx_usbmisc_data *da=
+ta, bool enabled)
+ }
+ EXPORT_SYMBOL_GPL(imx_usbmisc_set_wakeup);
+=20
++int imx_usbmisc_hsic_set_connect(struct imx_usbmisc_data *data)
++{
++	struct imx_usbmisc *usbmisc;
++
++	if (!data)
++		return 0;
++
++	usbmisc =3D dev_get_drvdata(data->dev);
++	if (!usbmisc->ops->hsic_set_connect || !data->hsic)
++		return 0;
++	return usbmisc->ops->hsic_set_connect(data);
++}
++EXPORT_SYMBOL_GPL(imx_usbmisc_hsic_set_connect);
++
++int imx_usbmisc_hsic_set_clk(struct imx_usbmisc_data *data, bool on)
++{
++	struct imx_usbmisc *usbmisc;
++
++	if (!data)
++		return 0;
++
++	usbmisc =3D dev_get_drvdata(data->dev);
++	if (!usbmisc->ops->hsic_set_clk || !data->hsic)
++		return 0;
++	return usbmisc->ops->hsic_set_clk(data, on);
++}
++EXPORT_SYMBOL_GPL(imx_usbmisc_hsic_set_clk);
+ static const struct of_device_id usbmisc_imx_dt_ids[] =3D {
+ 	{
+ 		.compatible =3D "fsl,imx25-usbmisc",
+--=20
+2.14.1
