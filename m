@@ -1,73 +1,51 @@
-From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
-Subject: Re: [PATCH] ARM: dts: imx: Add Y Soft IOTA Draco, Hydra and Ursa
- boards
-Date: Tue, 11 Dec 2018 13:46:30 +0000
-Message-ID: <dc1db0e2-b9a6-8624-4be5-8b3719d99f4b@ysoft.com>
-References: <1541086962-52626-1-git-send-email-michal.vokac@ysoft.com>
- <5bea0e99.1c69fb81.18be0.5162@mx.google.com>
- <42ffee3e-7c2a-aab9-547f-2064a77339a8@ysoft.com>
- <a61683a2-30aa-e387-2170-3d79e0043739@ysoft.com>
- <18065d41-4ae0-ada2-35f1-00d8a8489397@ysoft.com>
- <20181211123640.GC4632@lunn.ch>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/4] ASoC: meson: add axg spdif input support
+Date: Tue, 11 Dec 2018 14:47:09 +0100
+Message-ID: <20181211134713.4908-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181211123640.GC4632@lunn.ch>
-Content-Language: en-US
-Content-ID: <06C7763841A75A4B8F7B7956CF721C8D@eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11.12.2018 13:36, Andrew Lunn wrote:
->>> Hi Rob, gentle ping on this.
->>>
->>> I would like to be sure how to proceed with this. Do you really want me
->>> to move *all* nodes that are disabled in this common dtsi into the per
->>> board dts?
->>>
->>> All the boards use identical PCB. Anything that is disabled here is not
->>> present on at least one of the boards. It means it is routed on the
->>> board and the SoC has the capability but the parts are not populated.
->>>
->>> So it is not only about the LED controller. What about the LCD, OLED,
->>> backlight, USB..?
->>
->> Can anybody advice how to split these dts/dtsi files, please?
->> I am not sure what should reside in the common dtsi and what should
->> be moved into the per board dts in case my current solution is not
->> appropriate.
-> 
-> The kirkwood-synology.dtsi might be of interest? There are a lot of
-> Synology NAS boxes which share a lot in common. So all the common
-> parts are in that .dtsi. The .dbs file for each individual model then
-> enables the parts its needs.
+This patchset adds the initial support the spdif input found on the
+axg SoC family.
 
-That is a great example Andrew, thank you! That is exactly what I am
-doing. Everything that is supported by the PCB/platform is specified
-in the common file. Only parts that are populated on all products are
-enabled there, the other stuff is disabled. The .dts files then enable
-additional stuff they need.
+The capture itself works well but the rate detection could be enhanced in
+the future.
 
-To me it seems reasonable to do it that way and maybe I only
-misunderstood what Rob actually meant by his comment? I still do not
-have his reply to that though.
+Like several other drivers of this type, no check is done to verify if the
+rate of the input stream is consistent with the rate requested in
+hw_params()
 
-> Although you have one PCB, or the different population options
-> considered different products, each with there own name?
+The automatic rate detection mechanism of this device and the related IRQ
+proved difficult to work with, as documented in the driver. Several
+approaches to work around this minor issue have been tried but none
+provided a complete and reliable solution so far. Hopefully more eyes on
+this will help figure this out.
 
-Yes, each of the three population options can be considered a different
-product with different name. That is still the same as the Synology
-NAS boxes, right?
+Since I authored all Amlogic ASoC drivers (and the related bugs) merged
+so far, I have added myself as maintainer of them in the last patch of this
+series.
 
-Michal
+Jerome Brunet (4):
+  ASoC: meson: axg-toddr: add support for spdifin backend
+  ASoC: meson: add axg spdif input DT binding documentation
+  ASoC: meson: add axg spdif input
+  MAINTAINERS: Add Amlogic sound drivers entry
+
+ .../bindings/sound/amlogic,axg-spdifin.txt    |  22 +
+ MAINTAINERS                                   |   7 +
+ sound/soc/meson/Kconfig                       |   9 +-
+ sound/soc/meson/Makefile                      |   2 +
+ sound/soc/meson/axg-fifo.h                    |   3 +-
+ sound/soc/meson/axg-spdifin.c                 | 521 ++++++++++++++++++
+ sound/soc/meson/axg-toddr.c                   |  15 +-
+ 7 files changed, 567 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
+ create mode 100644 sound/soc/meson/axg-spdifin.c
+
+-- 
+2.19.2
