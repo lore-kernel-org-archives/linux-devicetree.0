@@ -1,39 +1,51 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 0/2] i2c: meson: add support for Meson G12A SoC i2c controller
-Date: Tue, 11 Dec 2018 13:41:25 -0800
-Message-ID: <7hsgz3u4fu.fsf@baylibre.com>
-References: <1543489197-183181-1-git-send-email-jian.hu@amlogic.com> <8a6a204b28523e5a181f9e85dda18fade76a26a3.camel@baylibre.com> <b2bceaf4-92ce-92a4-c382-713d29ae3b70@amlogic.com> <20181211203652.rogajl4ajwu7cs6f@ninjato>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: define vendor prefix for whwave, Inc.
+Date: Tue, 11 Dec 2018 15:41:47 -0600
+Message-ID: <20181211214147.GA22533@bogus>
+References: <1542968084-3982-1-git-send-email-long17.cool@163.com>
+ <20181211213708.GA15257@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181211203652.rogajl4ajwu7cs6f@ninjato>
+Content-Disposition: inline
+In-Reply-To: <20181211213708.GA15257@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Jian Hu <jian.hu@amlogic.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, linux-amlogic@lists.infradead.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: zoro <long17.cool@163.com>
+Cc: alexandre.belloni@bootlin.com, a.zummo@towertech.it, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Wolfram Sang <wsa@the-dreams.de> writes:
+On Tue, Dec 11, 2018 at 03:37:08PM -0600, Rob Herring wrote:
+> On Fri, Nov 23, 2018 at 06:14:42PM +0800, zoro wrote:
+> > Introduce vendor prefix for whwave, Inc.
+> > for SD3078 rtc device.
+> > 
+> > Signed-off-by: zoro <long17.cool@163.com>
+> 
+> Need a full name.
+> 
+> > ---
+> >  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > index 4b1a2a8..7d2e9b01 100644
+> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > @@ -423,6 +423,7 @@ vot	Vision Optical Technology Co., Ltd.
+> >  wd	Western Digital Corp.
+> >  wetek	WeTek Electronics, limited.
+> >  wexler	Wexler
+> > +whwave	Shenzhen whwave Electronics crop
+> 
+> crop or Corp?
 
->> I am okay if it is reasonable below in file
->> arch/arm64/boot/dts/amlogic/meson-g12a.dtsi. I2c controller node just uses
->> axg's compatible.
->> 
->> 			i2c0: i2c@1f000 {
->> 				compatible = "amlogic,meson-axg-i2c";
->
-> Actually, you should have
->
-> 	compatible = "amlogic,meson-g12a-i2c", "amlogic,meson-axg-i2c";
->
-> in the DT to have support for future SoC specific additions. And then,
-> patch 1 is needed.
->
-> Or do you handle this differently? I'd think this is DT standard.
+Or Inc as the subject and commit msg say?
 
-It's a DT standard *if* there are actual hardware differences.  In this
-case, the IP block is identical, so there are no driver changes.
-
-We prefer to add a new compatible if and when there are actual
-driver/hardware changes.
-
-Kevin
+> 
+> >  wi2wi	Wi2Wi, Inc.
+> >  winbond Winbond Electronics corp.
+> >  winstar	Winstar Display Corp.
+> > -- 
+> > 1.7.9.5
+> > 
+> > 
