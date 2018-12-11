@@ -1,113 +1,98 @@
-From: Joseph Lo <josephl@nvidia.com>
-Subject: Re: [PATCH 01/19] dt-bindings: clock: tegra124-dfll: Update DFLL
- binding for PWM regulator
-Date: Tue, 11 Dec 2018 17:36:27 +0800
-Message-ID: <1293c1a9-a39b-6193-99a1-cdf1d67d2ca8@nvidia.com>
-References: <20181204092548.3038-1-josephl@nvidia.com>
- <20181204092548.3038-2-josephl@nvidia.com>
- <af1211f0-dda0-bdde-f320-03e54f82d7e1@nvidia.com>
- <46b5eafa-00a0-1d91-1f4d-97ab119fcf21@nvidia.com>
- <e61b1da8-78cd-c3d4-9878-c25fd9c89ba3@nvidia.com>
- <20181211091641.GB29064@pdeschrijver-desktop.Nvidia.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v1 2/2] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Tue, 11 Dec 2018 11:39:48 +0200
+Message-ID: <5C0F85E4.10609@ti.com>
+References: <1544445555-17325-1-git-send-email-pawell@cadence.com>
+ <1544445555-17325-3-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181211091641.GB29064@pdeschrijver-desktop.Nvidia.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1544445555-17325-3-git-send-email-pawell@cadence.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pawel Laszczak <pawell@cadence.com>, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, balbi@kernel.org, linux-kernel@vger.kernel.org, adouglas@cadence.com, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMTIvMTEvMTggNToxNiBQTSwgUGV0ZXIgRGUgU2NocmlqdmVyIHdyb3RlOgo+IE9uIE1vbiwg
-RGVjIDEwLCAyMDE4IGF0IDA4OjU5OjEwQU0gKzAwMDAsIEpvbiBIdW50ZXIgd3JvdGU6Cj4+Cj4+
-IE9uIDEwLzEyLzIwMTggMDg6NDksIEpvc2VwaCBMbyB3cm90ZToKPj4+IEhpIEpvbiwKPj4+Cj4+
-PiBUaGFua3MgZm9yIHJldmlld2luZyB0aGlzIHNlcmllcy4KPj4+Cj4+PiBPbiAxMi83LzE4IDk6
-NDEgUE0sIEpvbiBIdW50ZXIgd3JvdGU6Cj4+Pj4KPj4+PiBPbiAwNC8xMi8yMDE4IDA5OjI1LCBK
-b3NlcGggTG8gd3JvdGU6Cj4+Pj4+IEZyb206IFBldGVyIERlIFNjaHJpanZlciA8cGRlc2Nocmlq
-dmVyQG52aWRpYS5jb20+Cj4+Pj4+Cj4+Pj4+IEFkZCBuZXcgcHJvcGVydGllcyB0byBjb25maWd1
-cmUgdGhlIERGTEwgUFdNIHJlZ3VsYXRvciBzdXBwb3J0LiBBbHNvCj4+Pj4+IGFkZCBhbiBleGFt
-cGxlIGFuZCBtYWtlIHRoZSBJMkMgY2xvY2sgb25seSByZXF1aXJlZCB3aGVuIEkyQyBzdXBwb3J0
-IGlzCj4+Pj4+IHVzZWQuCj4+Pj4+Cj4+Pj4+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-Zwo+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBEZSBTY2hyaWp2ZXIgPHBkZXNjaHJpanZlckBu
-dmlkaWEuY29tPgo+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBKb3NlcGggTG8gPGpvc2VwaGxAbnZpZGlh
-LmNvbT4KPj4+Pj4gLS0tCj4+Pj4+ICDCoCAuLi4vYmluZGluZ3MvY2xvY2svbnZpZGlhLHRlZ3Jh
-MTI0LWRmbGwudHh0wqDCoCB8IDczICsrKysrKysrKysrKysrKysrKy0KPj4+Pj4gIMKgIDEgZmls
-ZSBjaGFuZ2VkLCA3MSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+Pj4+Pgo+Pj4+PiBk
-aWZmIC0tZ2l0Cj4+Pj4+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2Nr
-L252aWRpYSx0ZWdyYTEyNC1kZmxsLnR4dAo+Pj4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9jbG9jay9udmlkaWEsdGVncmExMjQtZGZsbC50eHQKPj4+Pj4gaW5kZXggZGZm
-MjM2ZjUyNGE3Li44Yzk3NjAwZDJiYWQgMTAwNjQ0Cj4+Pj4+IC0tLSBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9udmlkaWEsdGVncmExMjQtZGZsbC50eHQKPj4+Pj4g
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL252aWRpYSx0ZWdy
-YTEyNC1kZmxsLnR4dAo+Pj4+PiBAQCAtOCw3ICs4LDYgQEAgdGhlIGZhc3QgQ1BVIGNsdXN0ZXIu
-IEl0IGNvbnNpc3RzIG9mIGEgZnJlZS1ydW5uaW5nCj4+Pj4+IHZvbHRhZ2UgY29udHJvbGxlZAo+
-Pj4+PiAgwqAgb3NjaWxsYXRvciBjb25uZWN0ZWQgdG8gdGhlIENQVSB2b2x0YWdlIHJhaWwgKFZE
-RF9DUFUpLCBhbmQgYQo+Pj4+PiBjbG9zZWQgbG9vcAo+Pj4+PiAgwqAgY29udHJvbCBtb2R1bGUg
-dGhhdCB3aWxsIGF1dG9tYXRpY2FsbHkgYWRqdXN0IHRoZSBWRERfQ1BVIHZvbHRhZ2UgYnkKPj4+
-Pj4gIMKgIGNvbW11bmljYXRpbmcgd2l0aCBhbiBvZmYtY2hpcCBQTUlDIGVpdGhlciB2aWEgYW4g
-STJDIGJ1cyBvciB2aWEKPj4+Pj4gUFdNIHNpZ25hbHMuCj4+Pj4+IC1DdXJyZW50bHkgb25seSB0
-aGUgSTJDIG1vZGUgaXMgc3VwcG9ydGVkIGJ5IHRoZXNlIGJpbmRpbmdzLgo+Pj4+PiAgwqAgwqAg
-UmVxdWlyZWQgcHJvcGVydGllczoKPj4+Pj4gIMKgIC0gY29tcGF0aWJsZSA6IHNob3VsZCBiZSAi
-bnZpZGlhLHRlZ3JhMTI0LWRmbGwiCj4+Pj4+IEBAIC00NSwxMCArNDQsMjggQEAgUmVxdWlyZWQg
-cHJvcGVydGllcyBmb3IgdGhlIGNvbnRyb2wgbG9vcCBwYXJhbWV0ZXJzOgo+Pj4+PiAgwqAgT3B0
-aW9uYWwgcHJvcGVydGllcyBmb3IgdGhlIGNvbnRyb2wgbG9vcCBwYXJhbWV0ZXJzOgo+Pj4+PiAg
-wqAgLSBudmlkaWEsY2ctc2NhbGU6IEJvb2xlYW4gdmFsdWUsIHNlZSB0aGUgZmllbGQKPj4+Pj4g
-REZMTF9QQVJBTVNfQ0dfU0NBTEUgaW4gdGhlIFRSTS4KPj4+Pj4gIMKgICtPcHRpb25hbCBwcm9w
-ZXJ0aWVzIGZvciBtb2RlIHNlbGVjdGlvbjoKPj4+Pj4gKy0gbnZpZGlhLHB3bS10by1wbWljOiBV
-c2UgUFdNIHRvIGNvbnRyb2wgcmVndWxhdG9yIHJhdGhlciB0aGVuIEkyQy4KPj4+Pj4gKwo+Pj4+
-PiAgwqAgUmVxdWlyZWQgcHJvcGVydGllcyBmb3IgSTJDIG1vZGU6Cj4+Pj4+ICDCoCAtIG52aWRp
-YSxpMmMtZnMtcmF0ZTogSTJDIHRyYW5zZmVyIHJhdGUsIGlmIHVzaW5nIGZ1bGwgc3BlZWQgbW9k
-ZS4KPj4+Pj4gIMKgIC1FeGFtcGxlOgo+Pj4+PiArUmVxdWlyZWQgcHJvcGVydGllcyBmb3IgUFdN
-IG1vZGU6Cj4+Pj4+ICstIG52aWRpYSxwd20tcGVyaW9kOiBwZXJpb2Qgb2YgUFdNIHNxdWFyZSB3
-YXZlIGluIG1pY3Jvc2Vjb25kcy4KPj4+Pj4gKy0gbnZpZGlhLGluaXQtdXY6IFJlZ3VsYXRvciB2
-b2x0YWdlIGluIG1pY3JvIHZvbHRzIHdoZW4gUFdNIGNvbnRyb2wKPj4+Pj4gaXMgZGlzYWJsZWQu
-Cj4+Pj4KPj4+PiBNYXliZSBjb25zaWRlciAncHdtLWluYWN0aXZlLXZvbHRhZ2UtbWljcm92b2x0
-Jy4KPj4+IEFoLCBJIHRoaW5rIEkgbmVlZCB0byByZWZpbmUgdGhlIGRlc2NyaXB0aW9uIGhlcmUu
-IEl0IHNob3VsZCBiZQo+Pj4gc29tZXRoaW5nIGxpa2UgYmVsb3cuCj4+PiAgwqAtIG52aWRpYSxw
-d20taW5pdC1taWNyb3ZvbHQgOiBSZWd1bGF0b3Igdm9sdGFnZSBpbiBtaWNybyB2b2x0cyB3aGVu
-IFBXTQo+Pj4gY29udHJvbCBpcyBpbml0aWFsaXplZAo+Pj4KPj4+IFRoaXMgaXMgdGhlIGluaXRp
-YWwgdm9sdGFnZSB0aGF0IHdoZW4gd2UganVzdCBpbml0aWFsaXplIHRoZSBERkxMCj4+PiBoYXJk
-d2FyZSBmb3IgUFdNIG91dHB1dC4gQW5kIGJlZm9yZSB3ZSBzd2l0Y2ggdGhlIENQVSBjbG9jayBm
-cm9tIFBMTFggdG8KPj4+IERGTEwsIHdlIHdpbGwgZW5hYmxlIERGTEwgaGFyZHdhcmUgaW4gY2xv
-c2VkIGxvb3AgbW9kZSB3aGljaCB3aWxsIGFwbGx5Cj4+PiB0aGUgRFZGUyB0YWJsZSB0aGF0IHdh
-cyBjYWxjdWxhdGVkIGZyb20gQ1ZCIHRhYmxlLgo+Pj4KPj4+IFRoZSBvcmlnaW5hbCBkZXNjcmlw
-dGlvbiBtYXliZSBtYWtlIHlvdSB0aGluayB0aGF0IGl0J3MgdGhlIHdvcmtpbmcKPj4+IHZvbHRh
-Z2Ugd2hlbiBpdCdzIHVuZGVyIG9wZW4tbG9vcCBtb2RlLiBCdXQgaXQncyBub3QuIFNvcnJ5Lgo+
-Pj4KPj4+IFdoZW4gd2Ugd29ya2luZyBvbiBvcGVuLWxvb3AgbW9kZSB3aGljaCB3aWxsIHN3aXRj
-aCB0byBsb3cgdm9sdGFnZSByYW5nZQo+Pj4gd2hpY2ggYWxzbyBmb2xsb3dzIHRoZSBEVkZTIHRh
-YmxlLiBOb3QgdGhpcyBvbmUuCj4+Cj4+IE9LLCBidXQgSSBhbSBzdGlsbCBub3Qgc3VyZSB3aGF0
-IHRoaXMgdm9sdGFnZSBpcy4gSSBtZWFuIHRoYXQgSQo+PiB1bmRlcnN0YW5kIGl0IGlzIHRoZSBp
-bml0aWFsIHZvbHRhZ2UsIGJ1dCBob3cgZXhhY3RseSBkbyB3ZSBkZWZpbmUgdGhpcwo+PiBudW1i
-ZXI/IFdoZXJlIGRvZXMgaXQgY29tZSBmcm9tLCBob3cgaXMgdGhpcyBkZXRlcm1pbmVkPwo+Pgo+
-IAo+IEl0IGlzIHNldCBieSBhIHJlc2lzdGl2ZSBkaXZpZGVyIG9uIHRoZSBib2FyZCBpaXJjLgoK
-WWVzLCBjb3JyZWN0LiBUaGUgcHJldmlvdXMgcmVwbHkgSSBkaWQgd2FzIHRoZSBjYXNlIG9mIEky
-QyByZWd1bGF0b3IuIApTb3JyeSwgSSBtYWRlIHRoZSBjb25mdXNpb24gaGVyZS4KCj4gCj4+Pj4K
-Pj4+Pj4gKy0gbnZpZGlhLGFsaWduLW9mZnNldC11djogUmVndWxhdG9yIHZvbHRhZ2UgaW4gbWlj
-cm8gdm9sdHMgd2hlbiBQV00KPj4+Pj4gY29udHJvbCBpcwo+Pj4+PiArwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgZW5hYmxlZCBhbmQgUFdNIG91dHB1dCBpcyBsb3cuCj4+Pj4KPj4+PiBXb3Vs
-ZCB0aGlzIGJlIGNvbnNpZGVyZWQgdGhlIG1pbmltdW0gcHdtIGFjdGl2ZSB2b2x0YWdlPwo+Pj4g
-VGhpcyB3b3VsZCBiZSB1c2VkIGZvciBtaW5pbXVtIHZvbHRhZ2UgZm9yIExVVCB0YWJsZSwgd2hp
-Y2ggaXMgdGhlIHRhYmxlCj4+PiB0aGF0IFBNSUMgY2FuIG91dHB1dC4gVGhlIHJlYWwgbWluaW11
-bSB2b2x0YWdlIGluIFBXTSBtb2RlIHN0aWxsIGRlcGVuZHMKPj4+IG9uIHRoZSBDVkIgdGFibGUu
-Cj4+Pgo+Pj4gU28gbWF5YmUgY2hhbmdlIHRoaXMgb25lIHRvICdudmlkaWEscHdtLW9mZnNldC11
-dicuCj4+Cj4+IFNvIGlzIHRoaXMgdGhlIG1pbiBzdXBwb3J0ZWQgYnkgdGhlIFBNSUM/IE1heWJl
-IHRoZSBuYW1lIHNob3VsZCByZWZsZWN0Cj4+IHRoYXQgYmVjYXVzZSB0aGUgYWJvdmUgbmFtZSBk
-b2VzIG5vdCByZWZsZWN0IHRoaXMuIEZ1cnRoZXJtb3JlLCBpZiB0aGlzCj4+IGlzIGEgbWluIHRo
-ZW4gbWF5YmUgdGhlIG5hbWUgc2hvdWxkIHVzZSAnbWluJyBhcyBvcHBvc2VkIHRvICdvZmZzZXQn
-Lgo+PiBmb3IgZXhhbXBsZSwgJ252aWRpYSxwd20tcG1pYy1taW4tbWljcm92b2x0cycuCj4+Cj4+
-IERvZXMgdGhpcyBuZWVkIHRvIGJlIGRlc2NyaWJlZCBpbiBEVCwgY2FuIGl0IG5vdCBiZSBxdWVy
-aWVkIGZyb20gdGhlIFBNSUM/Cj4+Cj4gCj4gVGhlcmUgaXMgbm8gaW50ZXJmYWNlIHRvIHF1ZXJ5
-IGFueXRoaW5nIGZyb20gdGhlIE9WUiByZWd1bGF0b3IuCj4gCj4gUGV0ZXIuCj4gCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
-IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Pawel,
+
+On 10/12/18 14:39, Pawel Laszczak wrote:
+> This patch introduce new Cadence USBSS DRD driver
+> to linux kernel.
+> 
+> The Cadence USBSS DRD Driver is a highly
+> configurable IP Core which can be
+> instantiated as Dual-Role Device (DRD),
+> Peripheral Only and Host Only (XHCI)
+> configurations.
+> 
+> The current driver has been validated with
+> FPGA burned. We have support for PCIe
+> bus, which is used on FPGA prototyping.
+> 
+> The host side of USBSS-DRD controller is compliance
+> with XHCI specification, so it works with
+> standard XHCI linux driver.
+> 
+> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+> ---
+>  drivers/usb/Kconfig                |    2 +
+>  drivers/usb/Makefile               |    2 +
+>  drivers/usb/cdns3/Kconfig          |   44 +
+>  drivers/usb/cdns3/Makefile         |   16 +
+>  drivers/usb/cdns3/cdns3-pci-wrap.c |  157 +++
+>  drivers/usb/cdns3/core.c           |  451 +++++++
+>  drivers/usb/cdns3/core.h           |  108 ++
+>  drivers/usb/cdns3/debug.h          |  346 ++++++
+>  drivers/usb/cdns3/debugfs.c        |  168 +++
+>  drivers/usb/cdns3/drd.c            |  315 +++++
+>  drivers/usb/cdns3/drd.h            |  129 ++
+>  drivers/usb/cdns3/ep0.c            |  864 +++++++++++++
+>  drivers/usb/cdns3/gadget-export.h  |   28 +
+>  drivers/usb/cdns3/gadget.c         | 1802 ++++++++++++++++++++++++++++
+>  drivers/usb/cdns3/gadget.h         | 1177 ++++++++++++++++++
+>  drivers/usb/cdns3/host-export.h    |   28 +
+>  drivers/usb/cdns3/host.c           |   74 ++
+>  drivers/usb/cdns3/trace.c          |   11 +
+>  drivers/usb/cdns3/trace.h          |  343 ++++++
+
+You went to the other extreme of combining everything (host/gadget/drd) together
+which again makes this very hard to review.
+
+I think what Felipe meant was to only combine the gadget driver code into one patch.
+
+The series could be split into 6 patches like so.
+-dt binding
+-pci glue
+-core driver
+-host driver
+-gadget driver
+-drd driver
+
+>  19 files changed, 6065 insertions(+)
+>  create mode 100644 drivers/usb/cdns3/Kconfig
+>  create mode 100644 drivers/usb/cdns3/Makefile
+>  create mode 100644 drivers/usb/cdns3/cdns3-pci-wrap.c
+>  create mode 100644 drivers/usb/cdns3/core.c
+>  create mode 100644 drivers/usb/cdns3/core.h
+>  create mode 100644 drivers/usb/cdns3/debug.h
+>  create mode 100644 drivers/usb/cdns3/debugfs.c
+>  create mode 100644 drivers/usb/cdns3/drd.c
+>  create mode 100644 drivers/usb/cdns3/drd.h
+>  create mode 100644 drivers/usb/cdns3/ep0.c
+>  create mode 100644 drivers/usb/cdns3/gadget-export.h
+>  create mode 100644 drivers/usb/cdns3/gadget.c
+>  create mode 100644 drivers/usb/cdns3/gadget.h
+>  create mode 100644 drivers/usb/cdns3/host-export.h
+>  create mode 100644 drivers/usb/cdns3/host.c
+>  create mode 100644 drivers/usb/cdns3/trace.c
+>  create mode 100644 drivers/usb/cdns3/trace.h
+> 
+<snip>
+
+cheers,
+-roger
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
