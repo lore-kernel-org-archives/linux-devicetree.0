@@ -1,127 +1,51 @@
 Return-Path: <SRS0=IqaF=OU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr00074.outbound.protection.outlook.com ([40.107.0.74]:49632
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729474AbeLKCJE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Dec 2018 21:09:04 -0500
-From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH v5 3/4] usb: chipidea: host: override ehci->hub_control
-Date: Tue, 11 Dec 2018 02:09:00 +0000
-Message-ID: <20181211020624.9433-4-peter.chen@nxp.com>
-References: <20181211020624.9433-1-peter.chen@nxp.com>
-In-Reply-To: <20181211020624.9433-1-peter.chen@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Received: from muru.com ([72.249.23.125]:57358 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726690AbeLKOUv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Dec 2018 09:20:51 -0500
+Date: Tue, 11 Dec 2018 06:20:47 -0800
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: am33xx-l4: Fix epwmssX/ecapX/ehrpwmX ranges
+ and reg
+Message-ID: <20181211142047.GN6707@atomide.com>
+References: <20181211105430.4359-1-peter.ujfalusi@ti.com>
+ <d460a896-660a-abf0-90e4-4ced81fd7aba@ti.com>
+ <dea21560-3e1f-5158-9fb0-3fedd0044a0a@ti.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dea21560-3e1f-5158-9fb0-3fedd0044a0a@ti.com>
 Sender: devicetree-owner@vger.kernel.org
-To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>, Peter Chen <peter.chen@nxp.com>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Vignesh R <vigneshr@ti.com>, bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, t-kristo@ti.com, jsarha@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-The chipidea controller has some special requirements during
-suspend/resume, override common ehci->hub_control to implement
-it.
+* Peter Ujfalusi <peter.ujfalusi@ti.com> [181211 11:00]:
+> 
+> 
+> On 11/12/2018 13.00, Vignesh R wrote:
+> > 
+> > 
+> > On 11/12/18 4:24 PM, Peter Ujfalusi wrote:
+> >> Correct the ranges for epwmsX nodes and the reg for the subnodes.
+> >>
+> >> Fixes: 87fc89ced3a78 ("ARM: dts: am335x: Move l4 child devices to probe them with ti-sysc")
+> >>
+> >> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> >> ---
+> >> Hi Tony,
+> >>
+> >> with this patch am335x-evmsk LCD is working.
+> >>
+> > 
+> > I guess Tony has already posted a patch: https://patchwork.kernel.org/patch/10722671/
+> 
+> Yep, I just noticed it, this can be ignored.
 
-Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Tested-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
----
- drivers/usb/chipidea/host.c | 75 +++++++++++++++++++++++++++++++++++++++++=
-++++
- 1 file changed, 75 insertions(+)
+OK. In the long run we can just leave out the extra parent module
+for epwmss as it just probes the children. But let's do that later
+for v4.22 as clean-up, I did some initial patches for that yesterday.
 
-diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
-index 028a3574266a..b45ceb91c735 100644
---- a/drivers/usb/chipidea/host.c
-+++ b/drivers/usb/chipidea/host.c
-@@ -220,6 +220,80 @@ void ci_hdrc_host_destroy(struct ci_hdrc *ci)
- 		host_stop(ci);
- }
-=20
-+/* The below code is based on tegra ehci driver */
-+static int ci_ehci_hub_control(
-+	struct usb_hcd	*hcd,
-+	u16		typeReq,
-+	u16		wValue,
-+	u16		wIndex,
-+	char		*buf,
-+	u16		wLength
-+)
-+{
-+	struct ehci_hcd	*ehci =3D hcd_to_ehci(hcd);
-+	u32 __iomem	*status_reg;
-+	u32		temp;
-+	unsigned long	flags;
-+	int		retval =3D 0;
-+	struct device *dev =3D hcd->self.controller;
-+	struct ci_hdrc *ci =3D dev_get_drvdata(dev);
-+
-+	status_reg =3D &ehci->regs->port_status[(wIndex & 0xff) - 1];
-+
-+	spin_lock_irqsave(&ehci->lock, flags);
-+
-+	if (typeReq =3D=3D SetPortFeature && wValue =3D=3D USB_PORT_FEAT_SUSPEND)=
- {
-+		temp =3D ehci_readl(ehci, status_reg);
-+		if ((temp & PORT_PE) =3D=3D 0 || (temp & PORT_RESET) !=3D 0) {
-+			retval =3D -EPIPE;
-+			goto done;
-+		}
-+
-+		temp &=3D ~(PORT_RWC_BITS | PORT_WKCONN_E);
-+		temp |=3D PORT_WKDISC_E | PORT_WKOC_E;
-+		ehci_writel(ehci, temp | PORT_SUSPEND, status_reg);
-+
-+		/*
-+		 * If a transaction is in progress, there may be a delay in
-+		 * suspending the port. Poll until the port is suspended.
-+		 */
-+		if (ehci_handshake(ehci, status_reg, PORT_SUSPEND,
-+			PORT_SUSPEND, 5000))
-+			ehci_err(ehci, "timeout waiting for SUSPEND\n");
-+
-+		if (ci->platdata->flags & CI_HDRC_IMX_IS_HSIC) {
-+			if (ci->platdata->notify_event)
-+				ci->platdata->notify_event(ci,
-+					CI_HDRC_IMX_HSIC_SUSPEND_EVENT);
-+
-+			temp =3D ehci_readl(ehci, status_reg);
-+			temp &=3D ~(PORT_WKDISC_E | PORT_WKCONN_E);
-+			ehci_writel(ehci, temp, status_reg);
-+		}
-+
-+		set_bit((wIndex & 0xff) - 1, &ehci->suspended_ports);
-+		goto done;
-+	}
-+
-+	/*
-+	 * After resume has finished, it needs do some post resume
-+	 * operation for some SoCs.
-+	 */
-+	else if (typeReq =3D=3D ClearPortFeature &&
-+		wValue =3D=3D USB_PORT_FEAT_C_SUSPEND) {
-+		/* Make sure the resume has finished, it should be finished */
-+		if (ehci_handshake(ehci, status_reg, PORT_RESUME, 0, 25000))
-+			ehci_err(ehci, "timeout waiting for resume\n");
-+	}
-+
-+	spin_unlock_irqrestore(&ehci->lock, flags);
-+
-+	/* Handle the hub control events here */
-+	return ehci_hub_control(hcd, typeReq, wValue, wIndex, buf, wLength);
-+done:
-+	spin_unlock_irqrestore(&ehci->lock, flags);
-+	return retval;
-+}
- static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
- {
- 	struct ehci_hcd *ehci =3D hcd_to_ehci(hcd);
-@@ -298,4 +372,5 @@ void ci_hdrc_host_driver_init(void)
- 	ehci_init_driver(&ci_ehci_hc_driver, &ehci_ci_overrides);
- 	orig_bus_suspend =3D ci_ehci_hc_driver.bus_suspend;
- 	ci_ehci_hc_driver.bus_suspend =3D ci_ehci_bus_suspend;
-+	ci_ehci_hc_driver.hub_control =3D ci_ehci_hub_control;
- }
---=20
-2.14.1
+Regards,
+
+Tony
