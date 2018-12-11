@@ -1,93 +1,61 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v9 3/4] dt-bindings: pps: pps-gpio PPS ECHO implementation
-Date: Tue, 11 Dec 2018 09:29:04 -0600
-Message-ID: <CAL_JsqK877WtcFDEVc-fqRu0nSJwpgGBNjuxH0yiN7uy1BBRbw@mail.gmail.com>
-References: <20181122094602.5156-1-tom@aussec.com> <20181122094602.5156-2-tom@aussec.com>
- <20181122094602.5156-3-tom@aussec.com> <20181122094602.5156-4-tom@aussec.com>
- <CAL_JsqJ6fM3+pcC3b-eXEex=j_ft6Z=vukhLK9wULfWJqOTN-A@mail.gmail.com>
- <20181127150629.10795h1esqtc53ut@aussec.com> <CAL_JsqJmuDbPgc3WYRU8y3hbDL5A4_Luj0FfAiSvJ2+J-TM9_g@mail.gmail.com>
- <20181211131716.931947v9gya4ajos@www.aussec.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/6] media: sun6i: Add A64 compatible support
+Date: Tue, 11 Dec 2018 16:43:11 +0100
+Message-ID: <20181211154311.bq4zwt44vlxa6vzb@flea>
+References: <20181210115246.8188-1-jagan@amarulasolutions.com>
+ <20181210115246.8188-3-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181211131716.931947v9gya4ajos@www.aussec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tom Burkart <tom@aussec.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, lukas@fridolin.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="sqb6ne2soszzc2qd"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBEFWX7QAKGQEKODKVVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20181210115246.8188-3-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 10, 2018 at 8:17 PM tom burkart <tom@aussec.com> wrote:
->
-> Quoting Rob Herring <robh@kernel.org>:
->
-> > On Mon, Nov 26, 2018 at 10:06 PM tom burkart <tom@aussec.com> wrote:
-> >>
-> >> Quoting Rob Herring <robh@kernel.org>:
-> >>
-> >> > On Thu, Nov 22, 2018 at 3:49 AM Tom Burkart <tom@aussec.com> wrote:
-> >> >>
-> >> >> This patch implements the device tree changes required for the pps
-> >> >> echo functionality for pps-gpio, that sysfs claims is available
-> >> >> already.
-> >> >>
-> >> >> This patch was originally written by Lukas Senger as part of a masters
-> >> >> thesis project and modified for inclusion into the linux kernel by Tom
-> >> >> Burkart.
-> >> >>
-> >> >> Signed-off-by: Lukas Senger <lukas@fridolin.com>
-> >> >> Signed-off-by: Tom Burkart <tom@aussec.com>
-> >> >> ---
-> >> >>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 9 +++++++++
-> >> >>  1 file changed, 9 insertions(+)
-> >> >>
-> >> >> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt
-> >> >> b/Documentation/devicetree/bindings/pps/pps-gpio.txt
-> >> >> index 1155d49c2699..e09f6f2405c5 100644
-> >> >> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
-> >> >> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
-> >> >> @@ -7,10 +7,15 @@ Required properties:
-> >> >>  - compatible: should be "pps-gpio"
-> >> >>  - gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
-> >> >>
-> >> >> +Additional required properties for the PPS ECHO functionality:
-> >> >> +- echo-gpios: one PPS ECHO GPIO in the format described by
-> >> ../gpio/gpio.txt
-> >> >> +- echo-active-ms: duration in ms of the active portion of the echo pulse
-> >> >> +
-> >> >>  Optional properties:
-> >> >>  - assert-falling-edge: when present, assert is indicated by a
-> >> falling edge
-> >> >>                         (instead of by a rising edge)
-> >> >>  - capture-clear: when present, also capture the PPS clear event
-> >> >> +- invert-pps-echo: when present, invert the PPS ECHO pulse
-> >> >
-> >> > Why do you need this? Can't you just make the echo gpio GPIO_ACTIVE_LOW?
-> >> >
-> >> > BTW, using the flag probably should have been done for
-> >> > 'assert-falling-edge' as well.
-> >>
-> >> The hardware I use expects a positive-going echo pulse, however, it
-> >> was really easy to give users the option to have it inverted in case
-> >> they use different hardware that expects a negative-going edge.
-> >
-> > It will be even easier to implement if you use GPIO_ACTIVE_LOW or
-> > GPIO_ACTIVE_HIGH as appropriate. If the flag is set appropriately,
-> > then gpiod_set_value(gpio, 1) asserts the pulse and
-> > gpiod_set_value(gpio, 0) deasserts it no matter which way the h/w is
-> > wired. You can then get rid of invert_pps_echo in the driver.
->
-> Hi Rob,
-> I have looked at the appropriate changes to my code to implement the
-> above.  However, there is no GPIO_ACTIVE_* as part of the gpiod_flags
-> enum (include/linux/gpio/consumer.h).
->
-> What am I missing?
 
-You don't need to know in the driver. You set the gpio state to 1 for
-active, 0 for inactive and that does the right thing based on the flag
-in the DT. IOW, if the DT defines the GPIO as active low, then setting
-the gpio state to 1 will result in the GPIO being 0V. It's a bit
-annoying and confusing at first until you realize the driver can just
-handle either polarity transparently.
+--sqb6ne2soszzc2qd
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Rob
+On Mon, Dec 10, 2018 at 05:22:42PM +0530, Jagan Teki wrote:
+> Allwinner A64 CSI has single channel time-multiplexed BT.656
+> CMOS sensor interface like H3 but work by lowering clock than
+> default mod clock.
+> 
+> So use separate compatibe to support it.
+> 
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> ---
+>  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> index ee882b66a5ea..bbe45e893722 100644
+> --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> @@ -892,6 +892,7 @@ static int sun6i_csi_remove(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id sun6i_csi_of_match[] = {
+> +	{ .compatible = "allwinner,sun50i-a64-csi", },
+
+Even though it's not strictly alphabetical, we usually order the 50
+after the 8.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--sqb6ne2soszzc2qd--
