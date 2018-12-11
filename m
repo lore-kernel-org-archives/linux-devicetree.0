@@ -1,98 +1,121 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v1 2/2] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Tue, 11 Dec 2018 11:39:48 +0200
-Message-ID: <5C0F85E4.10609@ti.com>
-References: <1544445555-17325-1-git-send-email-pawell@cadence.com>
- <1544445555-17325-3-git-send-email-pawell@cadence.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] clk: Use of_node_name_eq for node name comparisons
+Date: Tue, 11 Dec 2018 10:42:35 +0100
+Message-ID: <CAPDyKFq2x=BKVc36xqyjjjh5xMZa_Ws=-wv9bwadiNkBEgmsdA@mail.gmail.com>
+References: <20181205195050.4759-5-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544445555-17325-3-git-send-email-pawell@cadence.com>
+In-Reply-To: <20181205195050.4759-5-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, balbi@kernel.org, linux-kernel@vger.kernel.org, adouglas@cadence.com, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
+To: Rob Herring <robh@kernel.org>
+Cc: DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Pawel,
+On Wed, 5 Dec 2018 at 20:50, Rob Herring <robh@kernel.org> wrote:
+>
+> Convert string compares of DT node names to use of_node_name_eq helper
+> instead. This removes direct access to the node name pointer.
+>
+> For instances using of_node_cmp, this has the side effect of now using
+> case sensitive comparisons. This should not matter for any FDT based
+> system which all of these are.
+>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Tero Kristo <t-kristo@ti.com>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: linux-renesas-soc@vger.kernel.org
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-omap@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-On 10/12/18 14:39, Pawel Laszczak wrote:
-> This patch introduce new Cadence USBSS DRD driver
-> to linux kernel.
-> 
-> The Cadence USBSS DRD Driver is a highly
-> configurable IP Core which can be
-> instantiated as Dual-Role Device (DRD),
-> Peripheral Only and Host Only (XHCI)
-> configurations.
-> 
-> The current driver has been validated with
-> FPGA burned. We have support for PCIe
-> bus, which is used on FPGA prototyping.
-> 
-> The host side of USBSS-DRD controller is compliance
-> with XHCI specification, so it works with
-> standard XHCI linux driver.
-> 
-> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+For the ux500 part:
+
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+Kind regards
+Uffe
+
 > ---
->  drivers/usb/Kconfig                |    2 +
->  drivers/usb/Makefile               |    2 +
->  drivers/usb/cdns3/Kconfig          |   44 +
->  drivers/usb/cdns3/Makefile         |   16 +
->  drivers/usb/cdns3/cdns3-pci-wrap.c |  157 +++
->  drivers/usb/cdns3/core.c           |  451 +++++++
->  drivers/usb/cdns3/core.h           |  108 ++
->  drivers/usb/cdns3/debug.h          |  346 ++++++
->  drivers/usb/cdns3/debugfs.c        |  168 +++
->  drivers/usb/cdns3/drd.c            |  315 +++++
->  drivers/usb/cdns3/drd.h            |  129 ++
->  drivers/usb/cdns3/ep0.c            |  864 +++++++++++++
->  drivers/usb/cdns3/gadget-export.h  |   28 +
->  drivers/usb/cdns3/gadget.c         | 1802 ++++++++++++++++++++++++++++
->  drivers/usb/cdns3/gadget.h         | 1177 ++++++++++++++++++
->  drivers/usb/cdns3/host-export.h    |   28 +
->  drivers/usb/cdns3/host.c           |   74 ++
->  drivers/usb/cdns3/trace.c          |   11 +
->  drivers/usb/cdns3/trace.h          |  343 ++++++
-
-You went to the other extreme of combining everything (host/gadget/drd) together
-which again makes this very hard to review.
-
-I think what Felipe meant was to only combine the gadget driver code into one patch.
-
-The series could be split into 6 patches like so.
--dt binding
--pci glue
--core driver
--host driver
--gadget driver
--drd driver
-
->  19 files changed, 6065 insertions(+)
->  create mode 100644 drivers/usb/cdns3/Kconfig
->  create mode 100644 drivers/usb/cdns3/Makefile
->  create mode 100644 drivers/usb/cdns3/cdns3-pci-wrap.c
->  create mode 100644 drivers/usb/cdns3/core.c
->  create mode 100644 drivers/usb/cdns3/core.h
->  create mode 100644 drivers/usb/cdns3/debug.h
->  create mode 100644 drivers/usb/cdns3/debugfs.c
->  create mode 100644 drivers/usb/cdns3/drd.c
->  create mode 100644 drivers/usb/cdns3/drd.h
->  create mode 100644 drivers/usb/cdns3/ep0.c
->  create mode 100644 drivers/usb/cdns3/gadget-export.h
->  create mode 100644 drivers/usb/cdns3/gadget.c
->  create mode 100644 drivers/usb/cdns3/gadget.h
->  create mode 100644 drivers/usb/cdns3/host-export.h
->  create mode 100644 drivers/usb/cdns3/host.c
->  create mode 100644 drivers/usb/cdns3/trace.c
->  create mode 100644 drivers/usb/cdns3/trace.h
-> 
-<snip>
-
-cheers,
--roger
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>  drivers/clk/renesas/clk-mstp.c   |  2 +-
+>  drivers/clk/ti/clkctrl.c         |  2 +-
+>  drivers/clk/ti/dpll.c            |  2 +-
+>  drivers/clk/ux500/u8500_of_clk.c | 10 +++++-----
+>  4 files changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/clk/renesas/clk-mstp.c b/drivers/clk/renesas/clk-mstp.c
+> index 1c1768c2cc82..765175d1148a 100644
+> --- a/drivers/clk/renesas/clk-mstp.c
+> +++ b/drivers/clk/renesas/clk-mstp.c
+> @@ -280,7 +280,7 @@ int cpg_mstp_attach_dev(struct generic_pm_domain *unused, struct device *dev)
+>                         goto found;
+>
+>                 /* BSC on r8a73a4/sh73a0 uses zb_clk instead of an mstp clock */
+> -               if (!strcmp(clkspec.np->name, "zb_clk"))
+> +               if (of_node_name_eq(clkspec.np, "zb_clk"))
+>                         goto found;
+>
+>                 of_node_put(clkspec.np);
+> diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
+> index 469f560ae1cf..40630eb950fc 100644
+> --- a/drivers/clk/ti/clkctrl.c
+> +++ b/drivers/clk/ti/clkctrl.c
+> @@ -448,7 +448,7 @@ static void __init _ti_omap4_clkctrl_setup(struct device_node *node)
+>         char *c;
+>
+>         if (!(ti_clk_get_features()->flags & TI_CLK_CLKCTRL_COMPAT) &&
+> -           !strcmp(node->name, "clk"))
+> +           of_node_name_eq(node, "clk"))
+>                 ti_clk_features.flags |= TI_CLK_CLKCTRL_COMPAT;
+>
+>         addrp = of_get_address(node, 0, NULL, NULL);
+> diff --git a/drivers/clk/ti/dpll.c b/drivers/clk/ti/dpll.c
+> index 92e28af7afba..6c3329bc116f 100644
+> --- a/drivers/clk/ti/dpll.c
+> +++ b/drivers/clk/ti/dpll.c
+> @@ -410,7 +410,7 @@ static void __init of_ti_omap3_dpll_setup(struct device_node *node)
+>
+>         if ((of_machine_is_compatible("ti,omap3630") ||
+>              of_machine_is_compatible("ti,omap36xx")) &&
+> -           !strcmp(node->name, "dpll5_ck"))
+> +            of_node_name_eq(node, "dpll5_ck"))
+>                 of_ti_dpll_setup(node, &omap3_dpll5_ck_ops, &dd);
+>         else
+>                 of_ti_dpll_setup(node, &omap3_dpll_ck_ops, &dd);
+> diff --git a/drivers/clk/ux500/u8500_of_clk.c b/drivers/clk/ux500/u8500_of_clk.c
+> index d5888591e1a9..18a3c4522831 100644
+> --- a/drivers/clk/ux500/u8500_of_clk.c
+> +++ b/drivers/clk/ux500/u8500_of_clk.c
+> @@ -545,21 +545,21 @@ static void u8500_clk_init(struct device_node *np)
+>         for_each_child_of_node(np, child) {
+>                 static struct clk_onecell_data clk_data;
+>
+> -               if (!of_node_cmp(child->name, "prcmu-clock")) {
+> +               if (of_node_name_eq(child, "prcmu-clock")) {
+>                         clk_data.clks = prcmu_clk;
+>                         clk_data.clk_num = ARRAY_SIZE(prcmu_clk);
+>                         of_clk_add_provider(child, of_clk_src_onecell_get, &clk_data);
+>                 }
+> -               if (!of_node_cmp(child->name, "prcc-periph-clock"))
+> +               if (of_node_name_eq(child, "prcc-periph-clock"))
+>                         of_clk_add_provider(child, ux500_twocell_get, prcc_pclk);
+>
+> -               if (!of_node_cmp(child->name, "prcc-kernel-clock"))
+> +               if (of_node_name_eq(child, "prcc-kernel-clock"))
+>                         of_clk_add_provider(child, ux500_twocell_get, prcc_kclk);
+>
+> -               if (!of_node_cmp(child->name, "rtc32k-clock"))
+> +               if (of_node_name_eq(child, "rtc32k-clock"))
+>                         of_clk_add_provider(child, of_clk_src_simple_get, rtc_clk);
+>
+> -               if (!of_node_cmp(child->name, "smp-twd-clock"))
+> +               if (of_node_name_eq(child, "smp-twd-clock"))
+>                         of_clk_add_provider(child, of_clk_src_simple_get, twd_clk);
+>         }
+>  }
+> --
+> 2.19.1
+>
