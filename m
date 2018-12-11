@@ -1,33 +1,45 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: net: ath10k: add new dt entry to
- identify external FEM
-Date: Mon, 10 Dec 2018 21:27:08 -0600
-Message-ID: <20181211032708.GA14508@bogus>
-References: <1544466691-11821-1-git-send-email-bperumal@codeaurora.org>
- <1544466691-11821-3-git-send-email-bperumal@codeaurora.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V3 1/2] dt-bindings: iio: accel: mma8452: add optional power
+ supply property
+Date: Tue, 11 Dec 2018 03:34:17 +0000
+Message-ID: <1544498901-8744-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1544466691-11821-3-git-send-email-bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "martink@posteo.de" <martink@posteo.de>, Leonard Crestez <leonard.crestez@nxp.com>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "preid@electromag.com.au" <preid@electromag.com.au>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Dec 2018 00:01:30 +0530, Bhagavathi Perumal S wrote:
-> This adds new dt entry ext-fem-name, it is used by ath10k driver
-> to select correct timing parameters and configure it in target wifi hardware.
-> The Front End Module(FEM) normally includes tx power amplifier(PA) and
-> rx low noise amplifier(LNA). The default timing parameters like tx end to
-> PA off timing values were fine tuned for internal FEM used in reference
-> design. And these timing values can not be same if ODM modifies hardware
-> design with different external FEM. This DT entry helps to choose correct
-> timing values in driver if different external FEM hardware used.
-> 
-> Signed-off-by: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
+The accelerometer's power supply could be controlled by regulator
+on some platforms, add optional property "vdd/vddio" power supply
+to let device tree to pass phandles to the regulators to driver.
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ Documentation/devicetree/bindings/iio/accel/mma8452.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Docu=
+mentation/devicetree/bindings/iio/accel/mma8452.txt
+index 2100e9a..e132394 100644
+--- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
++++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+@@ -20,6 +20,10 @@ Optional properties:
+   - interrupt-names: should contain "INT1" and/or "INT2", the acceleromete=
+r's
+ 		     interrupt line in use.
+=20
++  - vdd-supply: phandle to the regulator that provides vdd power to the ac=
+celerometer.
++
++  - vddio-supply: phandle to the regulator that provides vddio power to th=
+e accelerometer.
++
+ Example:
+=20
+ 	mma8453fc@1d {
+--=20
+2.7.4
