@@ -1,155 +1,118 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v03] powerpc/mobility: Fix node detach/rename problem
-Date: Wed, 12 Dec 2018 14:00:27 -0800
-Message-ID: <48aa028d-b786-7704-70ff-75a6d2321474@gmail.com>
-References: <a2d46622-a957-dffe-04d1-8087bbf0f8b5@linux.vnet.ibm.com>
- <871s6oxkdf.fsf@concordia.ellerman.id.au>
- <CAL_Jsq+t--486MiSsHnKcVy=q2wVvJgUmtAV6Vy2WwSNKymELA@mail.gmail.com>
+From: Niklas Cassel <niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 3/8] drm/msm/dsi: 28nm PHY: Get ref clock
+ from the DT
+Date: Wed, 12 Dec 2018 23:07:17 +0100
+Message-ID: <20181212220717.GA16710@centauri.lan>
+References: <20181204224234.62619-1-mka@chromium.org>
+ <20181204224234.62619-4-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+t--486MiSsHnKcVy=q2wVvJgUmtAV6Vy2WwSNKymELA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>
-Cc: mwb@linux.vnet.ibm.com, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, tlfalcon@linux.vnet.ibm.com, minkim@us.ibm.com, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20181204224234.62619-4-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Michael Bringmann,
-
-On 12/11/18 8:07 AM, Rob Herring wrote:
-> On Tue, Dec 11, 2018 at 7:29 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
->>
->> Hi Michael,
->>
->> Please Cc the device tree folks on device tree patches, and also the
->> original author of the patch that added the code you're modifying.
->>
->> So I've added:
->>   robh+dt@kernel.org
->>   frowand.list@gmail.com
->>   devicetree@vger.kernel.org
->>   linux-kernel@vger.kernel.org
->>
->> Michael Bringmann <mwb@linux.vnet.ibm.com> writes:
->>> The PPC mobility code receives RTAS requests to delete nodes with
->>> platform-/hardware-specific attributes when restarting the kernel
->>> after a migration.  My example is for migration between a P8 Alpine
->>> and a P8 Brazos.   Nodes to be deleted include 'ibm,random-v1',
->>> 'ibm,platform-facilities', 'ibm,sym-encryption-v1', and,
->>> 'ibm,compression-v1'.
->>>
->>> The mobility.c code calls 'of_detach_node' for the nodes and their
->>> children.  This makes calls to detach the properties and to remove
->>> the associated sysfs/kernfs files.
->>>
->>> Then new copies of the same nodes are next provided by the PHYP,
->>> local copies are built, and a pointer to the 'struct device_node'
->>> is passed to of_attach_node.  Before the call to of_attach_node,
->>> the phandle is initialized to 0 when the data structure is alloced.
->>> During the call to of_attach_node, it calls __of_attach_node which
->>> pulls the actual name and phandle from just created sub-properties
->>> named something like 'name' and 'ibm,phandle'.
->>>
->>> This is all fine for the first migration.  The problem occurs with
->>> the second and subsequent migrations when the PHYP on the new system
->>> wants to replace the same set of nodes again, referenced with the
->>> same names and phandle values.
->>>
->>> On the second and subsequent migrations, the PHYP tells the system
->>> to again delete the nodes 'ibm,platform-facilities', 'ibm,random-v1',
->>> 'ibm,compression-v1', 'ibm,sym-encryption-v1'.  It specifies these
->>> nodes by its known set of phandle values -- the same handles used
->>> by the PHYP on the source system are known on the target system.
->>> The mobility.c code calls of_find_node_by_phandle() with these values
->>> and ends up locating the first instance of each node that was added
->>> during the original boot, instead of the second instance of each node
->>> created after the first migration.  The detach during the second
->>> migration fails with errors like,
->>>
->>> [ 4565.030704] WARNING: CPU: 3 PID: 4787 at drivers/of/dynamic.c:252 __of_detach_node+0x8/0xa0
->>> [ 4565.030708] Modules linked in: nfsv3 nfs_acl nfs tcp_diag udp_diag inet_diag unix_diag af_packet_diag netlink_diag lockd grace fscache sunrpc xts vmx_crypto sg pseries_rng binfmt_misc ip_tables xfs libcrc32c sd_mod ibmveth ibmvscsi scsi_transport_srp dm_mirror dm_region_hash dm_log dm_mod
->>> [ 4565.030733] CPU: 3 PID: 4787 Comm: drmgr Tainted: G        W         4.18.0-rc1-wi107836-v05-120+ #201
->>> [ 4565.030737] NIP:  c0000000007c1ea8 LR: c0000000007c1fb4 CTR: 0000000000655170
->>> [ 4565.030741] REGS: c0000003f302b690 TRAP: 0700   Tainted: G        W          (4.18.0-rc1-wi107836-v05-120+)
->>> [ 4565.030745] MSR:  800000010282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 22288822  XER: 0000000a
->>> [ 4565.030757] CFAR: c0000000007c1fb0 IRQMASK: 1
->>> [ 4565.030757] GPR00: c0000000007c1fa4 c0000003f302b910 c00000000114bf00 c0000003ffff8e68
->>> [ 4565.030757] GPR04: 0000000000000001 ffffffffffffffff 800000c008e0b4b8 ffffffffffffffff
->>> [ 4565.030757] GPR08: 0000000000000000 0000000000000001 0000000080000003 0000000000002843
->>> [ 4565.030757] GPR12: 0000000000008800 c00000001ec9ae00 0000000040000000 0000000000000000
->>> [ 4565.030757] GPR16: 0000000000000000 0000000000000008 0000000000000000 00000000f6ffffff
->>> [ 4565.030757] GPR20: 0000000000000007 0000000000000000 c0000003e9f1f034 0000000000000001
->>> [ 4565.030757] GPR24: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
->>> [ 4565.030757] GPR28: c000000001549d28 c000000001134828 c0000003ffff8e68 c0000003f302b930
->>> [ 4565.030804] NIP [c0000000007c1ea8] __of_detach_node+0x8/0xa0
->>> [ 4565.030808] LR [c0000000007c1fb4] of_detach_node+0x74/0xd0
->>> [ 4565.030811] Call Trace:
->>> [ 4565.030815] [c0000003f302b910] [c0000000007c1fa4] of_detach_node+0x64/0xd0 (unreliable)
->>> [ 4565.030821] [c0000003f302b980] [c0000000000c33c4] dlpar_detach_node+0xb4/0x150
->>> [ 4565.030826] [c0000003f302ba10] [c0000000000c3ffc] delete_dt_node+0x3c/0x80
->>> [ 4565.030831] [c0000003f302ba40] [c0000000000c4380] pseries_devicetree_update+0x150/0x4f0
->>> [ 4565.030836] [c0000003f302bb70] [c0000000000c479c] post_mobility_fixup+0x7c/0xf0
->>> [ 4565.030841] [c0000003f302bbe0] [c0000000000c4908] migration_store+0xf8/0x130
->>> [ 4565.030847] [c0000003f302bc70] [c000000000998160] kobj_attr_store+0x30/0x60
->>> [ 4565.030852] [c0000003f302bc90] [c000000000412f14] sysfs_kf_write+0x64/0xa0
->>> [ 4565.030857] [c0000003f302bcb0] [c000000000411cac] kernfs_fop_write+0x16c/0x240
->>> [ 4565.030862] [c0000003f302bd00] [c000000000355f20] __vfs_write+0x40/0x220
->>> [ 4565.030867] [c0000003f302bd90] [c000000000356358] vfs_write+0xc8/0x240
->>> [ 4565.030872] [c0000003f302bde0] [c0000000003566cc] ksys_write+0x5c/0x100
->>> [ 4565.030880] [c0000003f302be30] [c00000000000b288] system_call+0x5c/0x70
->>> [ 4565.030884] Instruction dump:
->>> [ 4565.030887] 38210070 38600000 e8010010 eb61ffd8 eb81ffe0 eba1ffe8 ebc1fff0 ebe1fff8
->>> [ 4565.030895] 7c0803a6 4e800020 e9230098 7929f7e2 <0b090000> 2f890000 4cde0020 e9030040
->>> [ 4565.030903] ---[ end trace 5bd54cb1df9d2976 ]---
->>>
->>> The mobility.c code continues on during the second migration, accepts
->>> the definitions of the new nodes from the PHYP and ends up renaming
->>> the new properties e.g.
->>>
->>> [ 4565.827296] Duplicate name in base, renamed to "ibm,platform-facilities#1"
->>>
->>> There is no check like 'of_node_check_flag(np, OF_DETACHED)' within
->>> of_find_node_by_phandle to skip nodes that are detached, but still
->>> present due to caching or use count considerations.  Also, note that
->>> of_find_node_by_phandle also uses a 'phandle_cache' which does not
->>> appear to be updated when of_detach_node() is invoked.
->>
->> This seems like the real bug. Since the phandle cache was added we can
->> now find detached nodes when we shouldn't be able to.
->>
->> Does the patch below work?
->>
->> cheers
->>
->> diff --git a/drivers/of/base.c b/drivers/of/base.c
->> index 09692c9b32a7..d8e4534c0686 100644
->> --- a/drivers/of/base.c
->> +++ b/drivers/of/base.c
->> @@ -1190,6 +1190,10 @@ struct device_node *of_find_node_by_phandle(phandle handle)
->>                 if (phandle_cache[masked_handle] &&
->>                     handle == phandle_cache[masked_handle]->phandle)
->>                         np = phandle_cache[masked_handle];
->> +
->> +               /* If we find a detached node, remove it */
->> +               if (of_node_check_flag(np, OF_DETACHED))
->> +                       np = phandle_cache[masked_handle] = NULL;
-
-The bug you found exposes a couple of different issues, a little bit
-deeper than the proposed fix.  I'll work on a fuller fix tonight or
-tomorrow.
-
-
-> I'm wondering if we should explicitly remove the node from the cache
-> when we set OF_DETACHED. Otherwise, it could be possible that the node
-> pointer has been freed already. Or maybe we need both?
-
-Yes, it should be explicitly removed.  I may also add in a paranoia check in
-of_find_node_by_phandle().
-
--Frank
-
-> 
-> Rob
-> 
+T24gVHVlLCBEZWMgMDQsIDIwMTggYXQgMDI6NDI6MjlQTSAtMDgwMCwgTWF0dGhpYXMgS2FlaGxj
+a2Ugd3JvdGU6Cj4gR2V0IHRoZSByZWYgY2xvY2sgb2YgdGhlIFBIWSBmcm9tIHRoZSBkZXZpY2Ug
+dHJlZSBpbnN0ZWFkIG9mCj4gaGFyZGNvZGluZyBpdHMgbmFtZSBhbmQgcmF0ZS4KPiAKPiBTaWdu
+ZWQtb2ZmLWJ5OiBNYXR0aGlhcyBLYWVobGNrZSA8bWthQGNocm9taXVtLm9yZz4KPiAtLS0KPiBD
+aGFuZ2VzIGluIHY0Ogo+IC0gYWx3YXlzIHVzZSBwYXJlbnQgcmF0ZSBpbiBkc2lfcGxsXzI4bm1f
+Y2xrX3NldF9yYXRlKCkgYW5kCj4gICAgZHNpX3BsbF8yOG5tX2Nsa19yZWNhbGNfcmF0ZSgpCj4g
+LSBwYXNzIG5hbWUgb2YgVkNPIHJlZiBjbG9jayB0byBwbGxfMjhubV9yZWdpc3RlcigpIGluc3Rl
+YWQgb2YKPiAgIHN0b3JpbmcgaXQgaW4gYSBzdHJ1Y3QgZmllbGQKPiAtIHVwZGF0ZWQgY29tbWl0
+IG1lc3NhZ2UKPiAKPiBDaGFuZ2VzIGluIHYzOgo+IC0gdXNlIGRlZmF1bHQgbmFtZSBhbmQgcmF0
+ZSBpZiB0aGUgcmVmIGNsb2NrIGlzIG5vdCBzcGVjaWZpZWQKPiAgIGluIHRoZSBEVAo+IC0gc3Rv
+cmUgdmNvX3JlZl9jbGtfbmFtZSBpbnN0ZWFkIG9mIHZjb19yZWZfY2xrCj4gLSBkc2lfcGxsXzI4
+bm1fY2xrX3NldF9yYXRlOiBjaGFuZ2VkIGRhdGEgdHlwZSBvZiByZWZfY2xrX3JhdGUgdG8KPiAg
+IHVuc2lnbmVkIGxvbmcKPiAtIGZpeGVkIGNoZWNrIGZvciBFUFJPQkVfREVGRVIKPiAtIHJlbmFt
+ZWQgVkNPX1JFRl9DTEtfUkFURSB0byBWQ09fUkVGX0NMS19ERUZBVUxUX1JBVEUKPiAKPiBDaGFu
+Z2VzIGluIHYyOgo+IC0gcGF0Y2ggYWRkZWQgdG8gdGhlIHNlcmllcwo+IC0tLQo+ICBkcml2ZXJz
+L2dwdS9kcm0vbXNtL2RzaS9wbGwvZHNpX3BsbF8yOG5tLmMgfCAzNiArKysrKysrKysrKysrKyst
+LS0tLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCspLCAxMSBkZWxldGlvbnMo
+LSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvcGxsL2RzaV9wbGxf
+MjhubS5jIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kc2kvcGxsL2RzaV9wbGxfMjhubS5jCj4gaW5k
+ZXggMjZlM2EwMWE5OWMyYi4uNzc3NzM0MGIwM2U4ZCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dw
+dS9kcm0vbXNtL2RzaS9wbGwvZHNpX3BsbF8yOG5tLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0v
+bXNtL2RzaS9wbGwvZHNpX3BsbF8yOG5tLmMKPiBAQCAtNDAsNyArNDAsNiBAQAo+ICAKPiAgI2Rl
+ZmluZSBOVU1fUFJPVklERURfQ0xLUwkJMgo+ICAKPiAtI2RlZmluZSBWQ09fUkVGX0NMS19SQVRF
+CQkxOTIwMDAwMAo+ICAjZGVmaW5lIFZDT19NSU5fUkFURQkJCTM1MDAwMDAwMAo+ICAjZGVmaW5l
+IFZDT19NQVhfUkFURQkJCTc1MDAwMDAwMAo+ICAKPiBAQCAtMTY2LDE3ICsxNjUsMTcgQEAgc3Rh
+dGljIGludCBkc2lfcGxsXzI4bm1fY2xrX3NldF9yYXRlKHN0cnVjdCBjbGtfaHcgKmh3LCB1bnNp
+Z25lZCBsb25nIHJhdGUsCj4gIAlwbGxfd3JpdGUoYmFzZSArIFJFR19EU0lfMjhubV9QSFlfUExM
+X0xQRkMxX0NGRywgMHg3MCk7Cj4gIAlwbGxfd3JpdGUoYmFzZSArIFJFR19EU0lfMjhubV9QSFlf
+UExMX0xQRkMyX0NGRywgMHgxNSk7Cj4gIAo+IC0JcmVtID0gcmF0ZSAlIFZDT19SRUZfQ0xLX1JB
+VEU7Cj4gKwlyZW0gPSByYXRlICUgcGFyZW50X3JhdGU7Cj4gIAlpZiAocmVtKSB7Cj4gIAkJcmVm
+Y2xrX2NmZyA9IERTSV8yOG5tX1BIWV9QTExfUkVGQ0xLX0NGR19EQkxSOwo+ICAJCWZyYWNfbl9t
+b2RlID0gMTsKPiAtCQlkaXZfZmJ4MTAwMCA9IHJhdGUgLyAoVkNPX1JFRl9DTEtfUkFURSAvIDUw
+MCk7Cj4gLQkJZ2VuX3Zjb19jbGsgPSBkaXZfZmJ4MTAwMCAqIChWQ09fUkVGX0NMS19SQVRFIC8g
+NTAwKTsKPiArCQlkaXZfZmJ4MTAwMCA9IHJhdGUgLyAocGFyZW50X3JhdGUgLyA1MDApOwo+ICsJ
+CWdlbl92Y29fY2xrID0gZGl2X2ZieDEwMDAgKiAocGFyZW50X3JhdGUgLyA1MDApOwo+ICAJfSBl
+bHNlIHsKPiAgCQlyZWZjbGtfY2ZnID0gMHgwOwo+ICAJCWZyYWNfbl9tb2RlID0gMDsKPiAtCQlk
+aXZfZmJ4MTAwMCA9IHJhdGUgLyAoVkNPX1JFRl9DTEtfUkFURSAvIDEwMDApOwo+IC0JCWdlbl92
+Y29fY2xrID0gZGl2X2ZieDEwMDAgKiAoVkNPX1JFRl9DTEtfUkFURSAvIDEwMDApOwo+ICsJCWRp
+dl9mYngxMDAwID0gcmF0ZSAvIChwYXJlbnRfcmF0ZSAvIDEwMDApOwo+ICsJCWdlbl92Y29fY2xr
+ID0gZGl2X2ZieDEwMDAgKiAocGFyZW50X3JhdGUgLyAxMDAwKTsKPiAgCX0KPiAgCj4gIAlEQkco
+InJlZmNsa19jZmcgPSAlZCIsIHJlZmNsa19jZmcpOwo+IEBAIC0yNjUsNyArMjY0LDcgQEAgc3Rh
+dGljIHVuc2lnbmVkIGxvbmcgZHNpX3BsbF8yOG5tX2Nsa19yZWNhbGNfcmF0ZShzdHJ1Y3QgY2xr
+X2h3ICpodywKPiAgCXZvaWQgX19pb21lbSAqYmFzZSA9IHBsbF8yOG5tLT5tbWlvOwo+ICAJdTMy
+IHNkbTAsIGRvdWJsZXIsIHNkbV9ieXBfZGl2Owo+ICAJdTMyIHNkbV9kY19vZmYsIHNkbV9mcmVx
+X3NlZWQsIHNkbTIsIHNkbTM7Cj4gLQl1MzIgcmVmX2NsayA9IFZDT19SRUZfQ0xLX1JBVEU7Cj4g
+Kwl1MzIgcmVmX2NsayA9IHBhcmVudF9yYXRlOwo+ICAJdW5zaWduZWQgbG9uZyB2Y29fcmF0ZTsK
+PiAgCj4gIAlWRVJCKCJwYXJlbnRfcmF0ZT0lbHUiLCBwYXJlbnRfcmF0ZSk7Cj4gQEAgLTI3Myw3
+ICsyNzIsNyBAQCBzdGF0aWMgdW5zaWduZWQgbG9uZyBkc2lfcGxsXzI4bm1fY2xrX3JlY2FsY19y
+YXRlKHN0cnVjdCBjbGtfaHcgKmh3LAo+ICAJLyogQ2hlY2sgdG8gc2VlIGlmIHRoZSByZWYgY2xr
+IGRvdWJsZXIgaXMgZW5hYmxlZCAqLwo+ICAJZG91YmxlciA9IHBsbF9yZWFkKGJhc2UgKyBSRUdf
+RFNJXzI4bm1fUEhZX1BMTF9SRUZDTEtfQ0ZHKSAmCj4gIAkJCURTSV8yOG5tX1BIWV9QTExfUkVG
+Q0xLX0NGR19EQkxSOwo+IC0JcmVmX2NsayArPSAoZG91YmxlciAqIFZDT19SRUZfQ0xLX1JBVEUp
+Owo+ICsJcmVmX2NsayArPSAoZG91YmxlciAqIHJlZl9jbGspOwo+ICAKPiAgCS8qIHNlZSBpZiBp
+dCBpcyBpbnRlZ2VyIG1vZGUgb3Igc2RtIG1vZGUgKi8KPiAgCXNkbTAgPSBwbGxfcmVhZChiYXNl
+ICsgUkVHX0RTSV8yOG5tX1BIWV9QTExfU0RNX0NGRzApOwo+IEBAIC01MTQsMTEgKzUxMywxMiBA
+QCBzdGF0aWMgdm9pZCBkc2lfcGxsXzI4bm1fZGVzdHJveShzdHJ1Y3QgbXNtX2RzaV9wbGwgKnBs
+bCkKPiAgCXBsbF8yOG5tLT5jbGtfZGF0YS5jbGtfbnVtID0gMDsKPiAgfQo+ICAKPiAtc3RhdGlj
+IGludCBwbGxfMjhubV9yZWdpc3RlcihzdHJ1Y3QgZHNpX3BsbF8yOG5tICpwbGxfMjhubSkKPiAr
+c3RhdGljIGludCBwbGxfMjhubV9yZWdpc3RlcihzdHJ1Y3QgZHNpX3BsbF8yOG5tICpwbGxfMjhu
+bSwKPiArCQkJICAgICBjb25zdCBjaGFyICpyZWZfY2xrX25hbWUpCj4gIHsKPiAgCWNoYXIgY2xr
+X25hbWVbMzJdLCBwYXJlbnQxWzMyXSwgcGFyZW50MlszMl0sIHZjb19uYW1lWzMyXTsKPiAgCXN0
+cnVjdCBjbGtfaW5pdF9kYXRhIHZjb19pbml0ID0gewo+IC0JCS5wYXJlbnRfbmFtZXMgPSAoY29u
+c3QgY2hhciAqW10peyAieG8iIH0sCj4gKwkJLnBhcmVudF9uYW1lcyA9ICZyZWZfY2xrX25hbWUs
+Cj4gIAkJLm51bV9wYXJlbnRzID0gMSwKPiAgCQkubmFtZSA9IHZjb19uYW1lLAo+ICAJCS5mbGFn
+cyA9IENMS19JR05PUkVfVU5VU0VELAo+IEBAIC01OTMsNiArNTkzLDggQEAgc3RydWN0IG1zbV9k
+c2lfcGxsICptc21fZHNpX3BsbF8yOG5tX2luaXQoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
+diwKPiAgewo+ICAJc3RydWN0IGRzaV9wbGxfMjhubSAqcGxsXzI4bm07Cj4gIAlzdHJ1Y3QgbXNt
+X2RzaV9wbGwgKnBsbDsKPiArCXN0cnVjdCBjbGsgKnZjb19yZWZfY2xrOwo+ICsJY29uc3QgY2hh
+ciAqdmNvX3JlZl9jbGtfbmFtZTsKPiAgCWludCByZXQ7Cj4gIAo+ICAJaWYgKCFwZGV2KQo+IEBA
+IC02MDUsNiArNjA3LDE4IEBAIHN0cnVjdCBtc21fZHNpX3BsbCAqbXNtX2RzaV9wbGxfMjhubV9p
+bml0KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsCj4gIAlwbGxfMjhubS0+cGRldiA9IHBk
+ZXY7Cj4gIAlwbGxfMjhubS0+aWQgPSBpZDsKPiAgCj4gKwl2Y29fcmVmX2NsayA9IGRldm1fY2xr
+X2dldCgmcGRldi0+ZGV2LCAicmVmIik7Cj4gKwlpZiAoIUlTX0VSUih2Y29fcmVmX2NsaykpIHsK
+PiArCQl2Y29fcmVmX2Nsa19uYW1lID0gX19jbGtfZ2V0X25hbWUodmNvX3JlZl9jbGspOwo+ICsJ
+fSBlbHNlIHsKPiArCQlyZXQgPSBQVFJfRVJSKHZjb19yZWZfY2xrKTsKPiArCQlpZiAocmV0ID09
+IC1FUFJPQkVfREVGRVIpCj4gKwkJCUVSUl9QVFIocmV0KTsKCkl0IGxvb2tzIGxpa2UgeW91IGFy
+ZSBtaXNzaW5nIHRoZSByZXR1cm4ga2V5d29yZCBoZXJlLgoKPiArCj4gKwkJZGV2X3dhcm4oJnBk
+ZXYtPmRldiwgIidyZWYnIGNsb2NrIGlzIG5vdCBzcGVjaWZpZWQsIHVzaW5nIGRlZmF1bHQgbmFt
+ZVxuIik7Cj4gKwkJdmNvX3JlZl9jbGtfbmFtZSA9ICJ4byI7Cj4gKwl9Cj4gKwo+ICAJcGxsXzI4
+bm0tPm1taW8gPSBtc21faW9yZW1hcChwZGV2LCAiZHNpX3BsbCIsICJEU0lfUExMIik7Cj4gIAlp
+ZiAoSVNfRVJSX09SX05VTEwocGxsXzI4bm0tPm1taW8pKSB7Cj4gIAkJZGV2X2VycigmcGRldi0+
+ZGV2LCAiJXM6IGZhaWxlZCB0byBtYXAgcGxsIGJhc2VcbiIsIF9fZnVuY19fKTsKPiBAQCAtNjM3
+LDcgKzY1MSw3IEBAIHN0cnVjdCBtc21fZHNpX3BsbCAqbXNtX2RzaV9wbGxfMjhubV9pbml0KHN0
+cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsCj4gIAkJcmV0dXJuIEVSUl9QVFIoLUVJTlZBTCk7
+Cj4gIAl9Cj4gIAo+IC0JcmV0ID0gcGxsXzI4bm1fcmVnaXN0ZXIocGxsXzI4bm0pOwo+ICsJcmV0
+ID0gcGxsXzI4bm1fcmVnaXN0ZXIocGxsXzI4bm0sIHZjb19yZWZfY2xrX25hbWUpOwo+ICAJaWYg
+KHJldCkgewo+ICAJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byByZWdpc3RlciBQTEw6
+ICVkXG4iLCByZXQpOwo+ICAJCXJldHVybiBFUlJfUFRSKHJldCk7Cj4gLS0gCj4gMi4yMC4wLnJj
+MS4zODcuZ2Y4NTA1NzYyZTMtZ29vZwo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9mcmVlZHJlbm8K
