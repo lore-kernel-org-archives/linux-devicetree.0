@@ -1,57 +1,90 @@
-From: Andy Tang <andy.tang@nxp.com>
-Subject: RE: [PATCH 1/2 v3] powerpc/fsl: Use new clockgen binding
-Date: Wed, 12 Dec 2018 01:57:10 +0000
-Message-ID: <VI1PR04MB43332FE4914896FCBE8E997FF3A70@VI1PR04MB4333.eurprd04.prod.outlook.com>
-References: <20181031065736.32719-1-andy.tang@nxp.com>
- <09ee2f91765add47e628e0ab03776d468cec0914.camel@buserror.net>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v1 2/2] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Wed, 12 Dec 2018 10:04:25 +0800
+Message-ID: <CAL411-ryK2LLZVg5_sLkCYOuhwdHLVm5XavSyC9nbEXZah_43w@mail.gmail.com>
+References: <1544445555-17325-1-git-send-email-pawell@cadence.com>
+ <1544445555-17325-3-git-send-email-pawell@cadence.com> <87h8fkmfar.fsf@linux.intel.com>
+ <BYAPR07MB47095110AF28CC11B4C9E144DDA60@BYAPR07MB4709.namprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <09ee2f91765add47e628e0ab03776d468cec0914.camel@buserror.net>
-Content-Language: en-US
+In-Reply-To: <BYAPR07MB47095110AF28CC11B4C9E144DDA60@BYAPR07MB4709.namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Wood <oss@buserror.net>
-Cc: "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "paulus@samba.org" <paulus@samba.org>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+To: pawell@cadence.com
+Cc: balbi@kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, rogerq@ti.com, lkml <linux-kernel@vger.kernel.org>, adouglas@cadence.com, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2NvdHQgV29vZCA8b3Nz
-QGJ1c2Vycm9yLm5ldD4NCj4gU2VudDogMjAxOOW5tDEx5pyIMjbml6UgOToxOQ0KPiBUbzogQW5k
-eSBUYW5nIDxhbmR5LnRhbmdAbnhwLmNvbT4NCj4gQ2M6IG10dXJxdWV0dGVAYmF5bGlicmUuY29t
-OyBzYm95ZEBrZXJuZWwub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IG1hcmsucnV0bGFuZEBh
-cm0uY29tOyBiZW5oQGtlcm5lbC5jcmFzaGluZy5vcmc7IHBhdWx1c0BzYW1iYS5vcmc7DQo+IG1w
-ZUBlbGxlcm1hbi5pZC5hdTsgbGludXgtY2xrQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJl
-ZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4
-cHBjLWRldkBsaXN0cy5vemxhYnMub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8yIHYzXSBw
-b3dlcnBjL2ZzbDogVXNlIG5ldyBjbG9ja2dlbiBiaW5kaW5nDQo+IA0KPiBPbiBXZWQsIDIwMTgt
-MTAtMzEgYXQgMTQ6NTcgKzA4MDAsIFl1YW50aWFuIFRhbmcgd3JvdGU6DQo+ID4gRnJvbTogU2Nv
-dHQgV29vZCA8b3NzQGJ1c2Vycm9yLm5ldD4NCj4gPg0KPiA+IFRoZSBkcml2ZXIgcmV0YWlucyBj
-b21wYXRpYmlsaXR5IHdpdGggb2xkIGRldmljZSB0cmVlcywgYnV0IHdlIGRvbid0DQo+ID4gd2Fu
-dCB0aGUgb2xkIG5vZGVzIGx5aW5nIGFyb3VuZCB0byBiZSBjb3BpZWQsIG9yIHVzZWQgYXMgYSBy
-ZWZlcmVuY2UNCj4gPiAoc29tZSBvZiB0aGUgbXV4IG9wdGlvbnMgYXJlIGluY29ycmVjdCksIG9y
-IGV2ZW4ganVzdCBiZWluZyBjbHV0dGVyLg0KPiA+DQo+ID4NCj4gPiArc3lzY2xrOiBzeXNjbGsg
-ew0KPiA+ICsJY29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7DQo+ID4gKwkjY2xvY2stY2VsbHMg
-PSA8MD47DQo+ID4gKwljbG9jay1mcmVxdWVuY3kgPSA8MTAwMDAwMDAwPjsNCj4gPiArCWNsb2Nr
-LW91dHB1dC1uYW1lcyA9ICJzeXNjbGsiOw0KPiA+ICt9Ow0KPiA+ICsNCj4gPiAgY2xvY2tnZW46
-IGdsb2JhbC11dGlsaXRpZXNAZTEwMDAgew0KPiANCj4gVGhlIFUtQm9vdCBmaXh1cCB3b24ndCB3
-b3JrIHdpdGggdGhpcy4gIFUtQm9vdCBwYXRjaGVzIHRoZSBmcmVxdWVuY3kNCj4gZGlyZWN0bHkg
-aW50byB0aGUgY2xvY2tnZW4gbm9kZSAoQlRXLCB0aGlzIGlzIGFub3RoZXIgcmVhc29uIHRvIHBy
-ZXNlcnZlDQo+IHRoZSBnZW5lcmljDQo+IDEuMC8yLjAgY29tcGF0aWJsZSBzdHJpbmcpLiAgVGhl
-IG5ldyBiaW5kaW5nIGRvZXMgbm90IHJlcXVpcmUgYW4gaW5wdXQNCj4gY2xvY2sgbm9kZSB3aGVu
-IGl0IGlzIHByb3ZpZGVkIGFzIGNsb2NrLWZyZXF1ZW5jeSBkaXJlY3RseSBpbiB0aGUgY2xvY2tn
-ZW4NCj4gbm9kZSAtLSBhbmQgdGhlIHN5c2NsayBub2RlIHdhcyBub3QgaW4gbXkgb3JpZ2luYWwg
-cGF0Y2ggKG5vciBkaWQgeW91IG5vdGUNCj4gdGhhdCB5b3UgbWFkZSBjaGFuZ2VzIGZyb20gdGhh
-dCBvcmlnaW5hbCkuICBXaHkgZGlkIHlvdSBhZGQgaXQ/DQo+IA0KPiBJIHdvdWxkIGp1c3QgcmVt
-b3ZlIGl0IHdoZW4gYXBwbHlpbmcsIGJ1dCBJJ20gY29uY2VybmVkIHRoYXQgdGhpcyBpbmRpY2F0
-ZXMNCj4gYSBsYWNrIG9mIHRlc3RpbmcgKGFuZCBJIGRvbid0IGhhdmUgdGhlIGhhcmR3YXJlIGFj
-Y2VzcyB0byB0ZXN0IGl0IG15c2VsZiwNCj4gZXhjZXB0IG9uIHQ0MjQwKSAtLSB1bmxlc3MgdGhl
-IDEwMCBNSHogc3lzY2xrIGp1c3QgaGFwcGVuZWQgdG8gYmUgY29ycmVjdA0KPiBvbiB0aGUgbWFj
-aGluZXMgeW91IHRlc3RlZCAod2hpY2ggd291bGQgYWxzbyBiZSBhIHRlc3QgY292ZXJhZ2UNCj4g
-cHJvYmxlbSk/DQpbQW5keV0gWW91IGFyZSByaWdodC4gU3lzY2xrIG1heSBub3QgYmUgdXNlZnVs
-IGFueW1vcmUuIA0KVWJvb3Qgd2lsbCBmaXh1cCB0aGUgY2xvY2tnZW4gbm9kZSBjb3JyZWN0bHku
-IFBsZWFzZSBhcHBseSB0aGlzIHBhdGNoIHdpdGhvdXQgc3lzY2xrLiBXZSB3aWxsDQp0ZXN0IGl0
-IGFuZCBjYXRjaCB0aGUgZXJyb3IgaWYgdGhlIGNsb2NrIGlzIG5vdCBmaXhlZCBjb3JyZWN0bHku
-DQoNCkJUVywgd2hpY2ggZ2l0IHRyZWUgYXJlIHlvdSBnb2luZyB0byBhcHBseSBpdCBvbj8gVGhp
-cyBvbmU/DQpodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9z
-Y290dHdvb2QvbGludXguZ2l0L2xvZy8/aD1uZXh0DQoNCkJSLA0KQW5keQ0KPiANCj4gLVNjb3R0
-DQo+IA0KDQo=
+> >> +            tmode = le16_to_cpu(ctrl->wIndex);
+> >> +
+> >> +            if (!set || (tmode & 0xff) != 0)
+> >> +                    return -EINVAL;
+> >> +
+> >> +            switch (tmode >> 8) {
+> >> +            case TEST_J:
+> >> +            case TEST_K:
+> >> +            case TEST_SE0_NAK:
+> >> +            case TEST_PACKET:
+> >> +                    cdns3_set_register_bit(&priv_dev->regs->usb_cmd,
+> >> +                                           USB_CMD_STMODE |
+> >> +                                           USB_STS_TMODE_SEL(tmode - 1));
+> >
+> >I'm 90% sure this won't work. There's a reason why we only enter the
+> >requested test mode from status stage. How have you tested this?
+>
+
+What's the reason?
+It can work although the code is a little different with above, I
+tested it using USBxHSETT tool at Windows.
+
+> From USB spec:
+> "The transition to test mode must be complete no later than 3 ms after the completion of the status stage of the
+> request."
+> But I don't remember any issues with this test on other ours drivers. Maybe status stage
+> is armed in this case by controller. I have to confirm how it works with hardware team.
+> Driver doesn't know when status stage was completed. We don't have
+> any event on status stage completion.  I haven't checked it yet with tester on this driver.
+>
+
+> >> +    irqreturn_t ret = IRQ_NONE;
+> >> +    unsigned long flags;
+> >> +    u32 reg;
+> >> +
+> >> +    priv_dev = cdns->gadget_dev;
+> >> +    spin_lock_irqsave(&priv_dev->lock, flags);
+> >
+> >you're already running in hardirq context. Why do you need this lock at
+> >all? I would be better to use the hardirq handler to mask your
+> >interrupts, so they don't fire again, then used the top-half (softirq)
+> >handler to actually handle the interrupts.
+>
+
+This controller may be ran at SMP environment, register and flag access
+needs to be protected among CPUs running.
+
+> Yes, spin_lock_irqsave is not necessary here.
+>
+> Do you mean replacing devm_request_irq with a request_threaded_irq ?
+> I have single interrupt line shared between  Host, Driver, DRD/OTG.
+> I'm not sure if it will work more efficiently.
+>
+> >
+> >> +    /* check USB device interrupt */
+> >> +    reg = readl(&priv_dev->regs->usb_ists);
+> >> +    writel(reg, &priv_dev->regs->usb_ists);
+> >> +
+> >> +    if (reg) {
+> >> +            dev_dbg(priv_dev->dev, "IRQ: usb_ists: %08X\n", reg);
+> >
+> >I strongly advise against using dev_dbg() for debugging. Even more so
+> >inside your IRQ handler.
+
+Felipe, I use Dynamic Debug for debugging, and show debug messages with
+"dmesg" after testing/debugging. I see dwc3 using trace,  any benefits
+for switching
+to trace?
+
+> Ok, It's not necessary in this place, especially, that there is invoked trace point
+> inside cdns3_check_usb_interrupt_proceed which makes the same.
+>
+
+Peter
