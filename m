@@ -1,61 +1,47 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: iio: adc: exynos-adc: Add S5PV210
- variant
-Date: Wed, 12 Dec 2018 17:26:04 +0000
-Message-ID: <20181212172604.6336779e@archlinux>
-References: <20181207191136.5464-1-pawel.mikolaj.chmiel@gmail.com>
-        <20181207191136.5464-4-pawel.mikolaj.chmiel@gmail.com>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v5 0/2] arm64: dts: Add sdm845 GPU/GMU and SMMU
+Date: Wed, 12 Dec 2018 10:31:04 -0700
+Message-ID: <20181212173106.29618-1-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181207191136.5464-4-pawel.mikolaj.chmiel@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, kgene@kernel.org, krzk@kernel.org, xc-racer2@live.ca, broonie@kernel.org, arnaud.pouliquen@st.com, baolin.wang@linaro.org, smohanad@codeaurora.org, eugen.hristev@microchip.com, rdunlap@infradead.org, vilhelm.gray@gmail.com, freeman.liu@spreadtrum.com, marcus.folkesson@gmail.com, geert@linux-m68k.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  7 Dec 2018 20:11:36 +0100
-Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com> wrote:
-
-> From: Jonathan Bakker <xc-racer2@live.ca>
->=20
-> Add information about new compatible for S5PV210
->=20
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
-
-Applied to the togreg branch of iio.git and pushed out as
-testing for the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
-> ---
->  .../devicetree/bindings/iio/adc/samsung,exynos-adc.txt        | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc=
-.txt b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt
-> index 6c49db7f8ad2..a10c1f89037d 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt
-> @@ -11,7 +11,7 @@ New driver handles the following
-> =20
->  Required properties:
->  - compatible:		Must be "samsung,exynos-adc-v1"
-> -				for exynos4412/5250 and s5pv210 controllers.
-> +				for exynos4412/5250 controllers.
->  			Must be "samsung,exynos-adc-v2" for
->  				future controllers.
->  			Must be "samsung,exynos3250-adc" for
-> @@ -28,6 +28,8 @@ Required properties:
->  				the ADC in s3c2443 and compatibles
->  			Must be "samsung,s3c6410-adc" for
->  				the ADC in s3c6410 and compatibles
-> +			Must be "samsung,s5pv210-adc" for
-> +				the ADC in s5pv210 and compatibles
->  - reg:			List of ADC register address range
->  			- The base address and range of ADC register
->  			- The base address and range of ADC_PHY register (every
+Tm93IHRoYXQgbW9yZSBvZiB0aGUgZGVwZW5kZW50IGJpbmRpbmdzIGFyZSBoZWFkZWQgdXBzdHJl
+YW0gdGhpcyBhIHJlZnJlc2ggb2YgCm9mIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9y
+Zy9zZXJpZXMvMzkzMDgvIHRvIGFkZCBiaW5kaW5ncyBhbmQgbm9kZXMKZm9yIHRoZSBHUFUvR01V
+IGFuZCBHUFUgU01NVSBmb3Igc2RtODQ1LgoKVGhpcyBjaGFuZ2UgcmVxdWlyZXMgdGhlIGZvbGxv
+d2luZyBkZXBlbmRlbmNpZXM6CgpncHVjYzoKZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9s
+aW51eC9rZXJuZWwvZ2l0L2Nsay9saW51eC5naXQgZTQzMWM5MjE4OGE5CgppbmNsdWRlL2R0LWJp
+bmRpbmdzL3Bvd2VyL3Fjb20tcnBtcGQuaDoKaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
+YXRjaC8xMDcxMTExOS8KCnFjb20sc21tdS12MiBiaW5kaW5nOgpodHRwczovL3BhdGNod29yay5r
+ZXJuZWwub3JnL3BhdGNoLzEwNTgxOTExLwoKdjU6IFVzZSBzeW1ib2xpYyBuYW1lcyBmb3IgdGhl
+IFJQTUggcG93ZXIgbGV2ZWxzIGRlZmluZWQgaW4gT1BQIHRhYmxlLAogbW92ZSB0aGUgb3BwIHRh
+YmxlcyBhcyBjaGlsZHJlbiBvZiB0aGVpciByZXNwZWN0aXZlIG5vZGVzIGFuZCByZW5hbWUKIHRo
+ZSBpb21tdSBkZXZpY2UuCnY0OiBSZWJhc2UKdjM6IFNwbGl0IEdNVSBQREMgcmVnaW9uIGludG8g
+dHdvIEdQVSBzcGVjaWZpYyBzZWN0aW9ucywgZml4IGluZGVudGF0aW9uLAogIHJlYWxseSB1c2Ug
+cWNvbSxnbXUgZm9yIHRoZSBwaGFuZGxlIG5hbWUKdjI6IGNoYW5nZWQgcWNvbSxhcmMtbGV2ZWwg
+dG8gcWNvbSxsZXZlbCBmb2xsb3dpbmcgZGlzY3Vzc2lvbiB3aXRoIFZpcmVzaDsKICBjaGFuZ2Ug
+Z211IHBoYW5kbGUgdG8gcWNvbSxnbXUgcGVyIFJvYgoKSm9yZGFuIENyb3VzZSAoMik6CiAgZHQt
+YmluZGluZ3M6IERvY3VtZW50LHFjb20sYWRyZW5vLWdtdQogIGFybTY0OiBkdHM6IHNkbTg0NTog
+QWRkIGdwdSBhbmQgZ211IGRldmljZSBub2RlcwoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvbXNtL2dtdS50eHQgICB8ICA1NCArKysrKysrKwogLi4uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9tc20vZ3B1LnR4dCAgIHwgICAyICsKIGFyY2gvYXJtNjQvYm9vdC9kdHMvcWNv
+bS9zZG04NDUuZHRzaSAgICAgICAgICB8IDEyMyArKysrKysrKysrKysrKysrKysKIDMgZmlsZXMg
+Y2hhbmdlZCwgMTc5IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4dAoKLS0gCjIuMTguMAoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5v
+IG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
