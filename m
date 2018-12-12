@@ -1,91 +1,62 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 6/6] misc: fastrpc: Add support for compat ioctls
-Date: Wed, 12 Dec 2018 12:50:37 +0100
-Message-ID: <20181212115037.GA31075@kroah.com>
-References: <20181207163513.16412-1-srinivas.kandagatla@linaro.org>
- <20181207163513.16412-7-srinivas.kandagatla@linaro.org>
- <20181212105932.GA1990@kroah.com>
- <864aaef3-8d60-3beb-ce20-a9f41f78a32f@linaro.org>
+From: <Andrei.Stefanescu@microchip.com>
+Subject: [PATCH v4 1/2] dt-bindings: arm: atmel: describe SECUMOD usage as a
+ GPIO controller
+Date: Wed, 12 Dec 2018 11:57:11 +0000
+Message-ID: <1544615784-29331-2-git-send-email-andrei.stefanescu@microchip.com>
+References: <1544615784-29331-1-git-send-email-andrei.stefanescu@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <864aaef3-8d60-3beb-ce20-a9f41f78a32f@linaro.org>
+In-Reply-To: <1544615784-29331-1-git-send-email-andrei.stefanescu@microchip.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: robh+dt@kernel.org, arnd@arndb.de, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, bkumar@qti.qualcomm.com, thierry.escande@linaro.org
+To: linus.walleij@linaro.org, robh+dt@kernel.org, gregkh@linuxfoundation.org, Nicolas.Ferre@microchip.com, mark.rutland@arm.com
+Cc: Ludovic.Desroches@microchip.com, Cristian.Birsan@microchip.com, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrei.Stefanescu@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 12, 2018 at 11:44:05AM +0000, Srinivas Kandagatla wrote:
-> Thanks for the comments,
-> 
-> On 12/12/18 10:59, Greg KH wrote:
-> > > This patch adds support for compat ioctl from 32 bits userland to
-> > > Qualcomm fastrpc driver.
-> > Ick, why?
-> > 
-> > Why not just fix up your ioctl structures to not need that at all?  For
-> > new code being added to the kernel, there's no excuse to have to have
-> > compat structures anymore, just make your api sane and all should be
-> > fine.
-> 
-> Yes, I did try that after comments from Arnd,
-> 
-> 
-> > 
-> > What prevents you from doing that and requiring compat support?
-> > 
-> I removed most of the compat IOCTLS except this one.
-> The reason is that this ioctl takes arguments which can vary in number for
-> each call.
+This patch describes the Security Module's usage as a GPIO
+controller for its PIOBU pins. These pins have the special
+property of maintaining their voltage during suspend-to-mem.
 
-Then do not do that :)
+Signed-off-by: Andrei Stefanescu <andrei.stefanescu@microchip.com>
+---
+ Documentation/devicetree/bindings/arm/atmel-sysregs.txt | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-Remember, you get to design the api, fix the structure size to work
-properly everywhere.
-
-> So args are passed as pointer to structure, rather than fixed
-> size. I could not find better way to rearrange this to give a fixed size
-> data structure. In theory number of arguments can vary from 0-255 for both
-> in & out.
-> 
-> current data structure looks like this:
-> 
-> struct fastrpc_invoke_args {
-> 	__s32 fd;
-> 	size_t length;
-> 	void *ptr;
-> };
-
-Make length and ptr both __u64 and you should be fine, right?  If you do
-that, might as well make fd __u64 as well to align things better.
-
-> struct fastrpc_invoke {
-> 	__u32 handle;
-> 	__u32 sc;
-> 	struct fastrpc_invoke_args *args;
-> };
-> 
-> Other option is to split this IOCTL into 3 parts
-> SET_INVOKE_METHOD, SET_INVOKE_ARGS and INVOKE
-> with some kinda handle to bind these three.
-> 
-> with below structures:
-> struct fastrpc_invoke {
-> 	__u32 handle;
-> 	__u32 sc;
-> };
-> 
-> struct fastrpc_invoke_arg {
-> 	__s32 fd;
-> 	__u64 length;
-> 	__u64 ptr;
-> };
-> I can try this and see how this works before I send next version of patch!
-
-No need to have 3 calls, just change your one structure and you should
-be fine.
-
-thanks,
-
-greg k-h
+diff --git a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt b/Docu=
+mentation/devicetree/bindings/arm/atmel-sysregs.txt
+index 4b96608..c89db84 100644
+--- a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
++++ b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
+@@ -158,14 +158,24 @@ Security Module (SECUMOD)
+=20
+ The Security Module macrocell provides all necessary secure functions to a=
+void
+ voltage, temperature, frequency and mechanical attacks on the chip. It als=
+o
+-embeds secure memories that can be scrambled
++embeds secure memories that can be scrambled.
++
++The Security Module also offers the PIOBU pins which can be used as GPIO p=
+ins.
++Note that they maintain their voltage during Backup/Self-refresh.=20
+=20
+ required properties:
+ - compatible: Should be "atmel,<chip>-secumod", "syscon".
+   <chip> can be "sama5d2".
+ - reg: Should contain registers location and length
++- gpio-controller:	Marks the port as GPIO controller.
++- #gpio-cells:		There are 2. The pin number is the
++			first, the second represents additional
++			parameters such as GPIO_ACTIVE_HIGH/LOW.
++
+=20
+ 	secumod@fc040000 {
+ 		compatible =3D "atmel,sama5d2-secumod", "syscon";
+ 		reg =3D <0xfc040000 0x100>;
++		gpio-controller;
++		#gpio-cells =3D <2>;
+ 	};
+--=20
+2.7.4
