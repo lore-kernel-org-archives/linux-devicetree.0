@@ -1,92 +1,66 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH] arm64: dts: ti: k3-am654: Populate power-domain property for
- UART nodes
-Date: Wed, 12 Dec 2018 10:48:06 +0530
-Message-ID: <20181212051806.21879-1-vigneshr@ti.com>
+From: Jacky Bai <ping.bai@nxp.com>
+Subject: [PATCH v2 1/2] Doc: bindings: Add binding doc for nxp system counter
+ timer
+Date: Wed, 12 Dec 2018 05:28:23 +0000
+Message-ID: <1544592770-19996-1-git-send-email-ping.bai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Vignesh R <vigneshr@ti.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Populate power-domain property for UART nodes, this is required for
-Linux to enable UART clocks via PM calls. Without this UART instances
-not initialized by bootloader (like main_uart1) fails to work in Linux.
-Also, drop current-speed property from main_uart1 and main_uart2 nodes
-as these UARTs are not initialized before Linux boots up and current
-speed is unknown.
+Add the binding doc for nxp system counter timer module.
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Bai Ping <ping.bai@nxp.com>
 ---
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi   | 5 +++--
- arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi    | 1 +
- arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi | 1 +
- 3 files changed, 5 insertions(+), 2 deletions(-)
+change v1->v2
+ - remove the blank line at EOF
+---
+ .../devicetree/bindings/timer/nxp,sysctr_timer.txt | 26 ++++++++++++++++++=
+++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/nxp,sysctr_time=
+r.txt
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 6c71e67b8988..272cf8fc8d30 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -48,6 +48,7 @@
- 		interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
- 		current-speed = <115200>;
-+		power-domains = <&k3_pds 146>;
- 	};
- 
- 	main_uart1: serial@2810000 {
-@@ -57,7 +58,7 @@
- 		reg-io-width = <4>;
- 		interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
--		current-speed = <115200>;
-+		power-domains = <&k3_pds 147>;
- 	};
- 
- 	main_uart2: serial@2820000 {
-@@ -67,7 +68,7 @@
- 		reg-io-width = <4>;
- 		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
--		current-speed = <115200>;
-+		power-domains = <&k3_pds 148>;
- 	};
- 
- 	main_pmx0: pinmux@11c000 {
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-index 1aeae52fb239..593f718e8fb5 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-@@ -14,6 +14,7 @@
- 			interrupts = <GIC_SPI 565 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-frequency = <96000000>;
- 			current-speed = <115200>;
-+			power-domains = <&k3_pds 149>;
- 	};
- 
- 	mcu_i2c0: i2c@40b00000 {
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-index 9e8467ce7ad8..7cbdc0912ab7 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-@@ -50,6 +50,7 @@
- 		interrupts = <GIC_SPI 697 IRQ_TYPE_LEVEL_HIGH>;
- 		clock-frequency = <48000000>;
- 		current-speed = <115200>;
-+		power-domains = <&k3_pds 150>;
- 	};
- 
- 	wkup_i2c0: i2c@42120000 {
--- 
-2.19.2
+diff --git a/Documentation/devicetree/bindings/timer/nxp,sysctr_timer.txt b=
+/Documentation/devicetree/bindings/timer/nxp,sysctr_timer.txt
+new file mode 100644
+index 0000000..21f1527
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/nxp,sysctr_timer.txt
+@@ -0,0 +1,26 @@
++NXP System Counter Module(sys_ctr)
++
++The system counter(sys_ctr) is a programmable system counter which provide=
+s
++a shared time base to Cortex A15, A7, A53, A73, etc. it is intended for us=
+e in
++applications where the counter is always powered and support multiple,
++unrelated clocks.
++
++Required properties:
++
++- compatible :      should be "nxp,sysctr-timer"
++- reg :             Specifies the base physical address and size of the co=
+mapre
++                    frame and the counter control, read & compare.
++- interrupts :      should be the compare frames' interrupt
++- clock-frequency : Specifies the counter clock frequency.
++
++Example:
++
++	system_counter: timer@306a0000 {
++		compatible =3D "nxp,sysctr-timer";
++		reg =3D <0x0 0x306a0000 0x0 0x10000>, /* system-counter-rd base */
++		      <0x0 0x306b0000 0x0 0x10000>, /* system-counter-cmp base */
++		      <0x0 0x306c0000 0x0 0x10000>; /* system-counter-ctrl base */
++		clock-frequency =3D <8000000>;
++		interrupts =3D <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++	};
+--=20
+1.9.1
