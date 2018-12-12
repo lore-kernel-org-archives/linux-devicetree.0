@@ -1,62 +1,69 @@
-From: Peter Chen <peter.chen@nxp.com>
-Subject: RE: [PATCH v1 2/2] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Wed, 12 Dec 2018 07:38:11 +0000
-Message-ID: <VI1PR04MB5327B1CB6C6BC7D293701F1D8BA70@VI1PR04MB5327.eurprd04.prod.outlook.com>
-References: <1544445555-17325-1-git-send-email-pawell@cadence.com>
- <1544445555-17325-3-git-send-email-pawell@cadence.com>
- <87h8fkmfar.fsf@linux.intel.com>
- <BYAPR07MB47095110AF28CC11B4C9E144DDA60@BYAPR07MB4709.namprd07.prod.outlook.com>
- <CAL411-ryK2LLZVg5_sLkCYOuhwdHLVm5XavSyC9nbEXZah_43w@mail.gmail.com>
- <877egfmdxk.fsf@linux.intel.com>
+From: <Andrei.Stefanescu@microchip.com>
+Subject: [PATCH v4 0/3] add support for MCP16502 PMIC
+Date: Wed, 12 Dec 2018 07:41:58 +0000
+Message-ID: <1544600485-17586-1-git-send-email-andrei.stefanescu@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <877egfmdxk.fsf@linux.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@kernel.org>, Peter Chen <hzpeterchen@gmail.com>, "pawell@cadence.com" <pawell@cadence.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, lkml <linux-kernel@vger.kernel.org>, "adouglas@cadence.com" <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, "sureshp@cadence.com" <sureshp@cadence.com>, "pjez@cadence.com" <pjez@cadence.com>, "kurahul@cadence.com" <kurahul@cadence.com>
+To: broonie@kernel.org, robh+dt@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, gregkh@linuxfoundation.org
+Cc: Cristian.Birsan@microchip.com, Nicolas.Ferre@microchip.com, Claudiu.Beznea@microchip.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrei.Stefanescu@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-=20
-> >> >> +                                           USB_CMD_STMODE |
-> >> >> +
-> >> >> + USB_STS_TMODE_SEL(tmode - 1));
-> >> >
-> >> >I'm 90% sure this won't work. There's a reason why we only enter the
-> >> >requested test mode from status stage. How have you tested this?
-> >>
-> >
-> > What's the reason?
-> > It can work although the code is a little different with above, I
-> > tested it using USBxHSETT tool at Windows.
->=20
-> put a sniffer. Status stage won't complete
->=20
+MCP16502 is a Power Management IC from Microchip.
+It has 4 Buck outputs and 2 LDOs. The buck regulators
+can be used in two modes: normal(FPWM) and low-power(Auto PFM).
 
-Ok, you mean sending test packet during the status completion handler?
-I will see whether the status stage can complete next time when doing test.
+This patch series adds support for the MCP16502 PMIC.
 
-> >> >> +    irqreturn_t ret =3D IRQ_NONE;
-> >> >> +    unsigned long flags;
-> >> >> +    u32 reg;
-> >> >> +
-> >> >> +    priv_dev =3D cdns->gadget_dev;
-> >> >> +    spin_lock_irqsave(&priv_dev->lock, flags);
-> >> >
-> >> >you're already running in hardirq context. Why do you need this lock
-> >> >at all? I would be better to use the hardirq handler to mask your
-> >> >interrupts, so they don't fire again, then used the top-half
-> >> >(softirq) handler to actually handle the interrupts.
-> >>
-> >
-> > This controller may be ran at SMP environment, register and flag
-> > access needs to be protected among CPUs running.
->=20
-> in hardirq context? When interrupts are already disabled?
+v4:
+- make entire intial comment a C++ comment
 
-Interrupt handler (hardirq context) at CPU0, and process at CPU1, eg role s=
-witch, unload module, etc.
+v3:
+- use CONFIG_SUSPEND and CONFIG_PM to fix compile errors for some configs
 
-Peter
+v2:
+- use lpm-gpios instead of lpm-gpio in devicetree bindings documentation
+- describe the regulators present on the PMIC in the devicetree bindings
+  documentation
+- add SPDX license inside a C++ comment
+- prefix macro
+- remove mcp16502_update_regulator and mcp16502_read
+- replace ?: with if-else
+- change some if-else with switch statements for legibility
+- use regmap helpers for regultor settings during runtime
+- make mcp16502_get_status read the status from the PMIC STS registers
+- use module_i2c_driver
+- use the PMIC's Hibernate registers for suspend-to-mem, the PMIC's
+  Low-power registers for standby and the PMIC's Active registers for
+  normal runtime
+
+Note about mcp16502_suspend:
+- mcp16502_gpio_set_mode(mcp, MCP16502_OPMODE_HIB) has now been changed to
+  mcp16502_gpio_set_mode(mcp, MCP16502_OPMODE_LPM) for legibility.
+
+Note that the function call only sets the LPM pin of the PMIC to high.
+This puts the PMIC in Low-power operating mode. Hibernate operating mode
+is reached when the MPU sets the PWRHLD line to zero (typically when
+entering suspend-to-ram).
+
+Andrei Stefanescu (3):
+  regulator: dt-bindings: add MCP16502 regulator bindings
+  MAINTAINERS: add maintainer for MCP16502 PMIC driver
+  regulator: mcp16502: add regulator driver for MCP16502
+
+ .../bindings/regulator/mcp16502-regulator.txt      | 143 ++++++
+ MAINTAINERS                                        |   7 +
+ drivers/regulator/Kconfig                          |   9 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/mcp16502.c                       | 553 +++++++++++++++++=
+++++
+ 5 files changed, 713 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mcp16502-re=
+gulator.txt
+ create mode 100644 drivers/regulator/mcp16502.c
+
+--=20
+2.7.4
