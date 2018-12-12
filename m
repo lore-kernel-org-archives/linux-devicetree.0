@@ -1,52 +1,56 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 08/17] soc: ti: pruss: Add a PRUSS irqchip driver for
- PRUSS interrupts
-Date: Wed, 12 Dec 2018 17:48:06 +0200
-Message-ID: <5C112DB6.9090605@ti.com>
-References: <1542886753-17625-1-git-send-email-rogerq@ti.com>
- <1542886753-17625-9-git-send-email-rogerq@ti.com>
- <20181123163742.GC53235@atomide.com> <5BFBAA24.1070503@ti.com>
- <20181126193332.GO53235@atomide.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v4 11/15] clocksource: Add clock driver for RDA8810PL SoC
+Date: Wed, 12 Dec 2018 16:52:58 +0100
+Message-ID: <affe5ffd-66de-526a-f568-52ad5f0c0083@linaro.org>
+References: <20181210173550.29643-1-manivannan.sadhasivam@linaro.org>
+ <20181210173550.29643-12-manivannan.sadhasivam@linaro.org>
+ <0b90a179-aa4b-57f7-0874-996d5c535ea9@linaro.org>
+ <20181212154748.GA28130@Mani-XPS-13-9360>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181126193332.GO53235@atomide.com>
+In-Reply-To: <20181212154748.GA28130@Mani-XPS-13-9360>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, gregkh@linuxfoundation.org, jslaby@suse.com, linux-unisoc@lists.infradead.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net
 List-Id: devicetree@vger.kernel.org
 
-Tony,
-
-On 26/11/18 21:33, Tony Lindgren wrote:
-> * Roger Quadros <rogerq@ti.com> [181126 08:09]:
->> Tony,
->>
->> On 23/11/18 18:37, Tony Lindgren wrote:
->>> * Roger Quadros <rogerq@ti.com> [181122 11:39]:
->>>> The PRUSS INTC module is reference counted during the interrupt
->>>> setup phase through the irqchip's irq_request_resources() and
->>>> irq_release_resources() ops. This restricts the module from being
->>>> removed as long as there are active interrupt users.
+On 12/12/2018 16:47, Manivannan Sadhasivam wrote:
+> Hi Daniel,
+> 
+> On Wed, Dec 12, 2018 at 04:07:53PM +0100, Daniel Lezcano wrote:
+>> On 10/12/2018 18:35, Manivannan Sadhasivam wrote:
+>>> Add clock driver for RDA Micro RDA8810PL SoC supporting OSTIMER
+>>> and HWTIMER.
 >>>
->>> So are there any reasons why this could not be just a regular
->>> drivers/irqchip driver nowadays?
+>>> RDA8810PL has two independent timers: OSTIMER (56 bit) and HWTIMER
+>>> (64 bit). Each timer provides optional interrupt support. In this
+>>> driver, OSTIMER is used for clockevents and HWTIMER is used for
+>>> clocksource.
+>>>
+>>> Signed-off-by: Andreas Färber <afaerber@suse.de>
+>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 >>
->> This is a reqular irqchip driver. Do you mean it should be moved
->> to drivers/irqchip directory?
+>> The driver looks good to me. Do you want me to pick it up via my tree?
+>>
 > 
-> I think so, is there something preventing doing it?
-> 
-No.
+> Yes, please do. Marc is going to pick up the irqchip driver but I'm not
+> sure about the serial driver. The rest of the patches can be picked up
+> by the ARM maintainers (I need to send another version for dropping
+> Andreas from MAINTAINERS).
 
-> Also, is this maybe the same INTC that we already have a
-> driver for in drivers/irqchip/irq-omap-intc.c?
+Ok, applied.
 
-No, it is completely different.
+Thanks
 
-cheers,
--roger
+  -- Daniel
+
+
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
