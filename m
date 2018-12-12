@@ -1,280 +1,112 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC 2/2] ASoC: Add MICFIL SoC Digital Audio
-	Interface driver.
-Date: Wed, 12 Dec 2018 18:14:14 +0000
-Message-ID: <20181212181414.GE6920@sirena.org.uk>
-References: <1544433661-32496-1-git-send-email-cosmin.samoila@nxp.com>
- <1544433661-32496-3-git-send-email-cosmin.samoila@nxp.com>
+From: Benson Leung <bleung@google.com>
+Subject: Re: [PATCH v2] MAINTAINERS: add maintainers for ChromeOS EC
+ sub-drivers
+Date: Wed, 12 Dec 2018 10:21:26 -0800
+Message-ID: <20181212182126.GA32052@google.com>
+References: <20181211190953.13626-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============9051674029748310174=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1544433661-32496-3-git-send-email-cosmin.samoila@nxp.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Cosmin Samoila <cosmin.samoila@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "robh@kernel.org" <robh@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "gabrielcsmo@gmail.com" <gabrielcsmo@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181211190953.13626-1-enric.balletbo@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: linux-kernel@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-i2c@vger.kernel.org, groeck@chromium.org, kernel@collabora.com, linux-rtc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Benson Leung <bleung@chromium.org>, Sebastian Reichel <sre@kernel.org>, linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, Lee Jones <lee.jones@linaro.org>, Hartmut Knaack <knaack.h@gmx.de>, Rob
 List-Id: devicetree@vger.kernel.org
 
 
---===============9051674029748310174==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="h56sxpGKRmy85csR"
-Content-Disposition: inline
-
-
---h56sxpGKRmy85csR
+--tThc/1wpZn/ma/RB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 10, 2018 at 09:21:15AM +0000, Cosmin Samoila wrote:
+On Tue, Dec 11, 2018 at 08:09:52PM +0100, Enric Balletbo i Serra wrote:
+> There are multiple ChromeOS EC sub-drivers spread in different
+> subsystems, as all of them are related to the Chrome stuff add
+> Benson and myself as a maintainers for all these sub-drivers.
+>=20
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-> +static char *envp[] = {
-> +		"EVENT=PDM_VOICE_DETECT",
-> +		NULL,
-> +	};
+Signed-off-by: Benson Leung <bleung@chromium.org>
 
-The indentation here is weird.
+Thanks for sending this, Enric.
 
-> +static const char * const micfil_hwvad_zcd_enable[] = {
-> +	"OFF", "ON",
-> +};
-
-Simple on/off switches should just be regular controls with "Switch" at
-the end of their name so userspace can handle them.
-
-> +static const char * const micfil_hwvad_noise_decimation[] = {
-> +	"Disabled", "Enabled",
-> +};
-
-Same here.
-
-> +/* when adding new rate text, also add it to the
-> + * micfil_hwvad_rate_ints
-> + */
-> +static const char * const micfil_hwvad_rate[] = {
-> +	"48KHz", "44.1KHz",
-> +};
+> ---
+>=20
+> Changes in v2:
+> - Fix typo in Benson email address.
+>=20
+>  MAINTAINERS | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a24129b0b043..bbe7180e2851 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3625,6 +3625,30 @@ S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/bleung/chrome-platf=
+orm.git
+>  F:	drivers/platform/chrome/
+> =20
+> +CHROMEOS EC SUBDRIVERS
+> +M:	Benson Leung <bleung@chromium.org>
+> +M:	Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+> +F:	Documentation/devicetree/bindings/input/cros-ec-keyb.txt
+> +F:	Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.txt
+> +F:	Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
+> +F:	Documentation/devicetree/bindings/mfd/cros-ec.txt
+> +F:	Documentation/ABI/testing/sysfs-bus-iio-cros-ec
+> +F:	drivers/extcon/extcon-usbc-cros-ec.c
+> +F:	drivers/i2c/busses/i2c-cros-ec-tunnel.c
+> +F:	drivers/iio/accel/cros_ec*
+> +F:	drivers/iio/common/cros_ec_sensors/
+> +F:	drivers/iio/light/cros_ec*
+> +F:	drivers/iio/pressure/cros_ec*
+> +F:	drivers/input/keyboard/cros_ec*
+> +F:	drivers/mfd/cros_ec*
+> +F:	drivers/power/supply/cros_usbpd-charger.c
+> +F:	drivers/pwm/pwm-cros-ec.c
+> +F:	drivers/rtc/rtc-cros-ec.c
+> +F:	include/linux/iio/common/cros_ec_sensors_core.h
+> +F:	include/linux/mfd/cros_ec*
 > +
-> +static const int micfil_hwvad_rate_ints[] = {
-> +	48000, 44100,
-> +};
+>  CIRRUS LOGIC AUDIO CODEC DRIVERS
+>  M:	Brian Austin <brian.austin@cirrus.com>
+>  M:	Paul Handrigan <Paul.Handrigan@cirrus.com>
+> --=20
+> 2.19.2
+>=20
 
-Can the driver not determine this automatically from sample rates?
+--=20
+Benson Leung
+Staff Software Engineer
+Chrome OS Kernel
+Google Inc.
+bleung@google.com
+Chromium OS Project
+bleung@chromium.org
 
-> +static const char * const micfil_clk_src_texts[] = {
-> +	"Auto", "AudioPLL1", "AudioPLL2", "ExtClk3",
-> +};
-
-Is this something that should be user selectable or is it going to be
-controlled by the board design?
-
-> +static int hwvad_put_hpf(struct snd_kcontrol *kcontrol,
-> +			 struct snd_ctl_elem_value *ucontrol)
-> +{
-> +	struct snd_soc_component *comp = snd_kcontrol_chip(kcontrol);
-> +	struct soc_enum *e = (struct soc_enum *)kcontrol->private_value;
-> +	unsigned int *item = ucontrol->value.enumerated.item;
-> +	struct fsl_micfil *micfil = snd_soc_component_get_drvdata(comp);
-> +	int val = snd_soc_enum_item_to_val(e, item[0]);
-> +
-> +	/* 00 - HPF Bypass
-> +	 * 01 - Cut-off frequency 1750Hz
-> +	 * 10 - Cut-off frequency 215Hz
-> +	 * 11 - Cut-off frequency 102Hz
-> +	 */
-> +	micfil->vad_hpf = val;
-> +
-> +	return 0;
-> +}
-
-What happens if this gets changed while a stream is active - the user
-will think they changed the configuration but it won't take effect until
-the next stream is started AFAICT?
-
-> +	/* a value remapping must be done since the gain field have
-> +	 * the following meaning:
-> +	 * * 0 : no gain
-> +	 * * 1 - 7 : +1 to +7 bits gain
-> +	 * * 8 - 15 : -8 to -1 bits gain
-> +	 * After the remapp, the scale should start from -8 to +7
-> +	 */
-
-This looks like a signed value so one of the _S_VALUE macros should
-handle things I think?
-
-> +static const struct snd_kcontrol_new fsl_micfil_snd_controls[] = {
-> +	SOC_SINGLE_RANGE_EXT_TLV("CH0 Gain", -1, MICFIL_OUTGAIN_CHX_SHIFT(0),
-> +				 0x0, 0xF, 0,
-> +				 get_channel_gain, put_channel_gain, gain_tlv),
-
-All volume controls should have names ending in Volume so userspace
-knows how to handle them.
-
-> +/* Hardware Voice Active Detection: The HWVAD takes data from the input
-> + * of a selected PDM microphone to detect if there is any
-> + * voice activity. When a voice activity is detected, an interrupt could
-> + * be delivered to the system. Initialization in section 8.4:
-> + * Can work in two modes:
-> + *  -> Eneveope-based mode (section 8.4.1)
-> + *  -> Energy-based mode (section 8.4.2)
-> + *
-> + * It is important to remark that the HWVAD detector could be enabled
-> + * or reset only when the MICFIL isn't running i.e. when the BSY_FIL
-> + * bit in STAT register is cleared
-> + */
-> +static int __maybe_unused init_hwvad(struct device *dev)
-
-Why is this annotated __maybey_unused?
-
-> +static int fsl_micfil_hw_free(struct snd_pcm_substream *substream,
-> +			      struct snd_soc_dai *dai)
-> +{
-> +	struct fsl_micfil *micfil = snd_soc_dai_get_drvdata(dai);
-> +
-> +	atomic_set(&micfil->recording_state, MICFIL_RECORDING_OFF);
-> +
-> +	return 0;
-> +}
-
-Are you *sure* you need to and want to use atomic_set() here and that
-there's no race conditions resulting from trying to use an atomic
-variable?  It's much simpler and clearer to use mutexes, if for some
-reason atomic variables make sense then the reasoning needs to be
-clearly documented as they're quite tricky and easy to break or
-misunderstand.
-
-> +static int fsl_micfil_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
-> +{
-> +	struct fsl_micfil *micfil = snd_soc_dai_get_drvdata(dai);
-> +
-> +	/* DAI MODE */
-> +	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-> +	case SND_SOC_DAIFMT_I2S:
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-
-Is this actually an I2S controller?  It looks like a PDM controller to
-me and that's what your cover letter said.  Just omit this entirely if
-the DAI format isn't configurable in the hardware.
-
-> +	/* set default gain to max_gain */
-> +	regmap_write(micfil->regmap, REG_MICFIL_OUT_CTRL, 0x77777777);
-> +	for (i = 0; i < 8; i++)
-> +		micfil->channel_gain[i] = 0xF;
-
-I'm assuming the hardware has no defaults here but if we've got to pick
-a gain wouldn't a low gain be less likely to blast out someone's
-eardrums than a maximum gain?
-
-> +static irqreturn_t voice_detected_fn(int irq, void *devid)
-> +{
-> +	struct fsl_micfil *micfil = (struct fsl_micfil *)devid;
-> +	struct device *dev = &micfil->pdev->dev;
-> +	int ret;
-> +
-> +	/* disable hwvad */
-> +	ret = disable_hwvad(dev, true);
-> +	if (ret)
-> +		dev_err(dev, "Failed to disable HWVAD module\n");
-> +
-> +	/* notify userspace that voice was detected */
-> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
-> +
-> +	return IRQ_HANDLED;
-> +}
-
-So, this looks like it's intended to be used for keyword detection type
-applications (though without the offload DSP that those tend to have).
-What the other implementations I've seen have ended up doing is using a
-compressed audio stream to return the audio data to userspace, allowing
-the audion stream to be paused when no audio is detected.  Your approach
-here is a bit more manual and may be more sensible for systems without
-the offload DSP however the decision to go outside ALSA and use a
-kobject needs to be thought about a bit, we'd want to ensure that
-there's a standard way of handling hardware like this so applications
-can work as consistently as possible with them.
-
-It's probably best to split all this VAD handling code out into a
-separate patch so that the basic support can get merged and this can be
-reviewed separately.  The rest of the driver has some minor issues but
-it looks like all the complexity is in this VAD code.
-
-> +static irqreturn_t micfil_err_isr(int irq, void *devid)
-> +{
-> +	struct fsl_micfil *micfil = (struct fsl_micfil *)devid;
-> +	struct platform_device *pdev = micfil->pdev;
-> +	u32 stat_reg;
-> +
-> +	regmap_read(micfil->regmap, REG_MICFIL_STAT, &stat_reg);
-> +
-> +	if (stat_reg & MICFIL_STAT_BSY_FIL_MASK)
-> +		dev_dbg(&pdev->dev, "isr: Decimation Filter is running\n");
-> +
-> +	if (stat_reg & MICFIL_STAT_FIR_RDY_MASK)
-> +		dev_dbg(&pdev->dev, "isr: FIR Filter Data ready\n");
-> +
-> +	if (stat_reg & MICFIL_STAT_LOWFREQF_MASK) {
-> +		dev_dbg(&pdev->dev, "isr: ipg_clk_app is too low\n");
-> +		regmap_write_bits(micfil->regmap, REG_MICFIL_STAT,
-> +				  MICFIL_STAT_LOWFREQF_MASK, 1);
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-
-This will uncondtionally report the interrupt as handled but if it sees
-an error it doesn't recognize it won't log anything - that seems not
-ideal, it'd be better to log the value we read in case there's something
-else goes wrong to aid debug.
-
-> +static int enable_hwvad(struct device *dev, bool sync)
-> +{
-> +	struct fsl_micfil *micfil = dev_get_drvdata(dev);
-> +	int ret;
-> +	int rate;
-> +	u32 state;
-> +
-> +	if (sync)
-> +		pm_runtime_get_sync(dev);
-> +
-> +	state = atomic_cmpxchg(&micfil->hwvad_state,
-> +			       MICFIL_HWVAD_OFF,
-> +			       MICFIL_HWVAD_ON);
-
-This *really* needs some documentation about what's going on for
-concurrency here.
-
---h56sxpGKRmy85csR
+--tThc/1wpZn/ma/RB
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwRT/UACgkQJNaLcl1U
-h9CXAAf/TLvrTCqAhSUC6kR5+PB1LKLprsCdNJUOQgq2U4WIJ14/Rx83WdjAXzXy
-zTVrn0jJkeoxpqB2KH5dFOO2FfIynSG1JWcyneOd1eoC7NknmkJKfOsbMMpJpSI7
-7LNKbk4DP4erZfo7oi6B7BxTDK7+qTNCUS4KnHV0lpytg0ifAUHkUYYnCU1pidPu
-6apqgxR9RvAVtUlXTadUdR42dJ1DCpRrE8X3EEFqlT8mckPVqDaGS71MogimaLwG
-V1pdVroWELVSlo5GkpucBnQnTaY9WO2IAbaKS/P1kE5O42/bKJXPXuTzEUJI32/U
-QS8/EVgCwl4DKI8qiYFoSYiqbKZypw==
-=M5wL
+iQIzBAABCgAdFiEE6gYDF28Li+nEiKLaHwn1ewov5lgFAlwRUaYACgkQHwn1ewov
+5ljVzA/+LrEt1Rm2OOw/34K53k7jK/9/Y8LDf9Wp9RZ/BeOeZScECxRYkfKN9XL6
+LUzgBp+z/BgBOy4BYOjAeH5rknXpVieJkH/3I8AIi33oEpeWC0KxkyyNJIWjj7D1
+fq5Cz+DI9GKF4a/onTVsMYRoYftRLYTm+L/z3hJzLAYkqcwShs9ak15M/qDeFlZ8
+KF/Im4yeInCBHg6giScg72tMV7zh40pBOTopcMbzXAHch56OzXE4i0PueJJFhhCb
+BHesObxRHQEe+2TiijJRE1aoXKqKCwLwhz2uqo7qhnX+OItMUI2FQLkO0H8GrvZh
++9ZrENqy1rpLjYRWF92nHfv1FSXRhYHbidXHh045nSMdOElQqSQXDYa1JX9MNAZ5
+IU1LXMkNRwOz717JgSe2SszlkOw9fQK2mHhxkbqhwzvxh50TX2QHIfcSDW3wiSQT
+BW4sxqv8+DWKsOO2yPnq2wsG/AmaKDBSCUTif1U7e12G33etvychk1eN+4Dv8Fni
+fGu416RC9xcUe8vqXi8fDfFEpgqu5NyIiVnZQ/MTnoyFjV7u1nut38FQQmfRbOUM
+NMKLgGirJrY+ar4P/uyZvuakHpXEb0rZ7QGlWDcdtuoqMLlvSM8m35y9XTzhsVC3
+B0NfMIoxmuw7FQiGK7tI8eCdF8/+aCPxmpcM49SQWF9SUu+tmPk=
+=WY6c
 -----END PGP SIGNATURE-----
 
---h56sxpGKRmy85csR--
-
---===============9051674029748310174==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============9051674029748310174==--
+--tThc/1wpZn/ma/RB--
