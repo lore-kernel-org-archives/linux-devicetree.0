@@ -1,66 +1,80 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH v2 5/5] regulator: add documentation for regulator modes
- and suspend states
-Date: Wed, 12 Dec 2018 16:24:41 +0000
-Message-ID: <8500c9f1-bfdf-d1ae-4a14-e42e1ee85585@microchip.com>
-References: <1543319801-19100-1-git-send-email-claudiu.beznea@microchip.com>
- <1543319801-19100-6-git-send-email-claudiu.beznea@microchip.com>
- <20181211221324.GA14658@bogus>
- <442be9e4-621f-c668-c627-264084ef975a@microchip.com>
- <CAL_JsqKk99GrQaqVyXSr_ZwQd_nnuMOWnz_0ehS1dHZoEmxDCw@mail.gmail.com>
+From: <Tudor.Ambarus@microchip.com>
+Subject: [PATCH 1/2] ARM: dts: at91: at91-sama5d27_som1: add QSPI1 + SPI NOR
+ memory nodes
+Date: Wed, 12 Dec 2018 16:31:08 +0000
+Message-ID: <20181212163057.22183-1-tudor.ambarus@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKk99GrQaqVyXSr_ZwQd_nnuMOWnz_0ehS1dHZoEmxDCw@mail.gmail.com>
 Content-Language: en-US
-Content-ID: <4819D54C0784CB46A0623F3A112B20DA@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, Ludovic.Desroches@microchip.com, broonie@kernel.org, linux-arm-kernel@lists.infradead.org
+To: Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com, Claudiu.Beznea@microchip.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, boris.brezillon@bootlin.com, linux-mtd@lists.infradead.org, broonie@kernel.org, linux-spi@vger.kernel.org, Tudor.Ambarus@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDEyLjEyLjIwMTggMTU6MzIsIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBXZWQsIERl
-YyAxMiwgMjAxOCBhdCAzOjEzIEFNIDxDbGF1ZGl1LkJlem5lYUBtaWNyb2NoaXAuY29tPiB3cm90
-ZToNCj4+DQo+Pg0KPj4NCj4+IE9uIDEyLjEyLjIwMTggMDA6MTMsIFJvYiBIZXJyaW5nIHdyb3Rl
-Og0KPj4+IE9uIFR1ZSwgTm92IDI3LCAyMDE4IGF0IDExOjU3OjI1QU0gKzAwMDAsIENsYXVkaXUu
-QmV6bmVhQG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+Pj4+IEZyb206IENsYXVkaXUgQmV6bmVhIDxj
-bGF1ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tPg0KPj4+Pg0KPj4+PiBBZGQgZG9jdW1lbnRhdGlv
-biBmb3IgcmVndWxhdG9yIG1vZGVzIGFuZCBzdXNwZW5kIHN0YXRlcy4NCj4+Pj4NCj4+Pj4gU2ln
-bmVkLW9mZi1ieTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+
-DQo+Pj4+IC0tLQ0KPj4+PiAgLi4uL2JpbmRpbmdzL3JlZ3VsYXRvci9hY3Q4OTQ1YS1yZWd1bGF0
-b3IudHh0ICAgICAgfCAzNCArKysrKysrKysrKysrKysrKysrKysrDQo+Pj4+ICAxIGZpbGUgY2hh
-bmdlZCwgMzQgaW5zZXJ0aW9ucygrKQ0KPj4+Pg0KPj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9hY3Q4OTQ1YS1yZWd1bGF0b3IudHh0
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9hY3Q4OTQ1YS1y
-ZWd1bGF0b3IudHh0DQo+Pj4+IGluZGV4IGFjOTU1ZGVhMDBkMS4uNDAxNzUyNzYxOWFiIDEwMDY0
-NA0KPj4+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9y
-L2FjdDg5NDVhLXJlZ3VsYXRvci50eHQNCj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9hY3Q4OTQ1YS1yZWd1bGF0b3IudHh0DQo+Pj4+IEBAIC0x
-NSwxMSArMTUsMTcgQEAgT3B0aW9uYWwgaW5wdXQgc3VwcGx5IHByb3BlcnRpZXM6DQo+Pj4+ICAg
-IC0gaW5sNjctc3VwcGx5OiBUaGUgaW5wdXQgc3VwcGx5IGZvciBSRUdfTERPMyBhbmQgUkVHX0xE
-TzQNCj4+Pj4NCj4+Pj4gIEFueSBzdGFuZGFyZCByZWd1bGF0b3IgcHJvcGVydGllcyBjYW4gYmUg
-dXNlZCB0byBjb25maWd1cmUgdGhlIHNpbmdsZSByZWd1bGF0b3IuDQo+Pj4+ICtyZWd1bGF0b3It
-aW5pdGlhbC1tb2RlLCByZWd1bGF0b3ItYWxsb3dlZC1tb2RlcyBhbmQgcmVndWxhdG9yLW1vZGUg
-Y291bGQgYmUNCj4+Pj4gK3NwZWNpZmllZCB1c2luZyBtb2RlIHZhbHVlcyBmcm9tIGR0LWJpbmRp
-bmdzL3JlZ3VsYXRvci9hY3RpdmUtc2VtaSw4OTQ1YS1yZWd1bGF0b3IuaA0KPj4+PiArZmlsZS4N
-Cj4+Pj4NCj4+Pj4gIFRoZSB2YWxpZCBuYW1lcyBmb3IgcmVndWxhdG9ycyBhcmU6DQo+Pj4+ICAg
-ICAgUkVHX0RDREMxLCBSRUdfRENEQzIsIFJFR19EQ0RDMywgUkVHX0xETzEsIFJFR19MRE8yLCBS
-RUdfTERPMywgUkVHX0xETzQuDQo+Pj4+DQo+Pj4+ICBFeGFtcGxlOg0KPj4+PiArDQo+Pj4+ICsj
-aW5jbHVkZSA8ZHQtYmluZGluZ3MvcmVndWxhdG9yL2FjdGl2ZS1zZW1pLDg5NDVhLXJlZ3VsYXRv
-ci5oPg0KPj4+DQo+Pj4gVGhpcyBmaWxlIGJlbG9uZ3MgaW4gdGhpcyBwYXRjaC4NCj4+DQo+PiBJ
-J20gdXNpbmcgdGhlIGRlZmluZXMgaW4gdGhpcyBmaWxlIGFsc28gaW4gZHJpdmVyLiBJIHdhcyB0
-aGlua2luZyB0aGF0IGlmIEkNCj4+IHdvdWxkIGluY2x1ZGUgdGhpcyBmaWxlIGluIHRoaXMgcGF0
-Y2ggdGhlIGRyaXZlciBjb21waWxhdGlvbiB3b3VsZCBmYWlsIGlmDQo+PiB0aGUgcGF0Y2hlcyB3
-b3VsZCBiZSBhY2NlcHRlZCB2aWEgZGlmZmVyZW50IHRyZWVzLg0KPiANCj4gVGhleSB3b24ndCBi
-ZS4NCg0KVGhhbmsgeW91ISBJJ2xsIHNlbmQgYSBuZXcgdmVyc2lvbiB3aXRoIHRoZSBwcm9wb3Nl
-ZCBjaGFuZ2UuDQoNCj4gDQo+PiBXb3VsZCB5b3UgbGlrZSBtZSB0byBoYXZlIGRpZmZlcmVudCBk
-ZWZpbmVzIGluIGRyaXZlciBhbmQgdGhpcyBuZXcgaGVhZGVyDQo+PiBvciBjb3VsZCBoYXBwZW4g
-dGhhdCB0aGVzZSBwYXRjaGVzIHRvIGJlIGluY2x1ZGVkIGluIHRoZSBtYWluIHRyZWUgdmlhIHRo
-ZQ0KPj4gc2FtZSB0cmVlIChlLmcuIHJlZ3VsYXRvciB0cmVlKT8NCj4gDQo+IE5vIG5lZWQgZm9y
-IGRpZmZlcmVudCBkZWZpbmVzLiBUaGUgc3Vic3lzdGVtIG1haW50YWluZXIgd2lsbCB0YWtlDQo+
-IGV2ZXJ5dGhpbmcgaW4gdGhpcyBjYXNlLg0KPiANCj4gUm9iDQo+IA0KPiBfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiBsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdA0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
-DQo+IA0K
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
+
+Configure the QSPI1 controller pin muxing and declare the
+jedec,spi-nor memory (SST26VF064).
+
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+[tudor.ambarus@microchip.com: add spi-rx/tx-bus-width, drop partitions,
+reword commit.]
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+---
+ arch/arm/boot/dts/at91-sama5d27_som1.dtsi | 30 +++++++++++++++++++++++++++=
++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/arch/arm/boot/dts/at91-sama5d27_som1.dtsi b/arch/arm/boot/dts/=
+at91-sama5d27_som1.dtsi
+index cf0087b4c9e1..33a159c0163f 100644
+--- a/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
++++ b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
+@@ -62,6 +62,20 @@
+=20
+ 	ahb {
+ 		apb {
++			qspi1: spi@f0024000 {
++				pinctrl-names =3D "default";
++				pinctrl-0 =3D <&pinctrl_qspi1_default>;
++
++				flash@0 {
++					compatible =3D "jedec,spi-nor";
++					reg =3D <0>;
++					spi-max-frequency =3D <80000000>;
++					spi-tx-bus-width =3D <4>;
++					spi-rx-bus-width =3D <4>;
++					m25p,fast-read;
++				};
++			};
++
+ 			macb0: ethernet@f8008000 {
+ 				pinctrl-names =3D "default";
+ 				pinctrl-0 =3D <&pinctrl_macb0_default>;
+@@ -78,6 +92,22 @@
+=20
+ 			pinctrl@fc038000 {
+=20
++				pinctrl_qspi1_default: qspi1_default {
++					sck_cs {
++						pinmux =3D <PIN_PB5__QSPI1_SCK>,
++							 <PIN_PB6__QSPI1_CS>;
++						bias-disable;
++					};
++
++					data {
++						pinmux =3D <PIN_PB7__QSPI1_IO0>,
++							 <PIN_PB8__QSPI1_IO1>,
++							 <PIN_PB9__QSPI1_IO2>,
++							 <PIN_PB10__QSPI1_IO3>;
++						bias-pull-up;
++					};
++				};
++
+ 				pinctrl_macb0_default: macb0_default {
+ 					pinmux =3D <PIN_PD9__GTXCK>,
+ 						 <PIN_PD10__GTXEN>,
+--=20
+2.9.4
