@@ -1,94 +1,289 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V3 1/2] dt-bindings: iio: light: isl29018: update power
- supply name
-Date: Wed, 12 Dec 2018 06:16:58 +0000
-Message-ID: <DB3PR0402MB39164538D3969FE51C649B65F5A70@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1544425521-775-1-git-send-email-Anson.Huang@nxp.com>
- <20181210232358.GA11621@bogus>
- <DB3PR0402MB3916E1651ABC07F6F788B265F5A60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAL_Jsq+sP_fsQaoT6FpZNRxjhPAhCcE8e-0xffUUxShcC2LuHw@mail.gmail.com>
+From: Felipe Balbi <balbi@kernel.org>
+Subject: RE: [PATCH v1 2/2] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Wed, 12 Dec 2018 08:52:13 +0200
+Message-ID: <87a7lbme3m.fsf@linux.intel.com>
+References: <1544445555-17325-1-git-send-email-pawell@cadence.com> <1544445555-17325-3-git-send-email-pawell@cadence.com> <87h8fkmfar.fsf@linux.intel.com> <BYAPR07MB47095110AF28CC11B4C9E144DDA60@BYAPR07MB4709.namprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+sP_fsQaoT6FpZNRxjhPAhCcE8e-0xffUUxShcC2LuHw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <BYAPR07MB47095110AF28CC11B4C9E144DDA60@BYAPR07MB4709.namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Fabio Estevam <festevam@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIEZhYmlvDQoJT2J2aW91c2x5LCBzb21lIG9mIHRoZSBkdHMgZmlsZXMgKHN1Y2ggYXMgYXJj
-aC9hcm0vYm9vdC9kdHMvZXh5bm9zNTQyMC1wZWFjaC1waXQuZHRzKSB1c2luZyAidmNjIiBhcyBp
-c2wyOTAxOCdzIHBvd2VyIHN1cHBseSBuYW1lLCB0aGV5IGFyZSBOT1QgbWF0Y2hlZCB3aXRoIGRh
-dGFzaGVldCwgc28gc2hvdWxkIHdlIHVwZGF0ZSB0aG9zZSBkdHMgZmlsZXMgd2l0aCAidmRkIiBh
-cyB3ZWxsIG9yIGp1c3QgdXNpbmcgdGhlICJ2Y2MiIGluIGlzbDI5MDE4IGRyaXZlcj8gV2hpY2gg
-c29sdXRpb24gaXMgYmV0dGVyPw0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0t
-LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9i
-aEBrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE45bm0MTLmnIgxMeaXpSAyMzoxOQ0KPiBUbzogQW5z
-b24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IENjOiBKb25hdGhhbiBDYW1lcm9uIDxq
-aWMyM0BrZXJuZWwub3JnPjsgSGFydG11dCBLbmFhY2sNCj4gPGtuYWFjay5oQGdteC5kZT47IExh
-cnMtUGV0ZXIgQ2xhdXNlbiA8bGFyc0BtZXRhZm9vLmRlPjsgUGV0ZXIgTWVlcndhbGQNCj4gPHBt
-ZWVyd0BwbWVlcncubmV0PjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47DQo+
-IGxpbnV4LWlpb0B2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0K
-PiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBu
-eHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFYzIDEvMl0gZHQtYmluZGluZ3M6IGlpbzog
-bGlnaHQ6IGlzbDI5MDE4OiB1cGRhdGUgcG93ZXINCj4gc3VwcGx5IG5hbWUNCj4gDQo+IE9uIE1v
-biwgRGVjIDEwLCAyMDE4IGF0IDc6NDAgUE0gQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5j
-b20+DQo+IHdyb3RlOg0KPiA+DQo+ID4gSGksIFJvYg0KPiA+DQo+ID4gQmVzdCBSZWdhcmRzIQ0K
-PiA+IEFuc29uIEh1YW5nDQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
-ID4gPiBGcm9tOiBSb2IgSGVycmluZyBbbWFpbHRvOnJvYmhAa2VybmVsLm9yZ10NCj4gPiA+IFNl
-bnQ6IDIwMTjlubQxMuaciDEx5pelIDc6MjQNCj4gPiA+IFRvOiBBbnNvbiBIdWFuZyA8YW5zb24u
-aHVhbmdAbnhwLmNvbT4NCj4gPiA+IENjOiBqaWMyM0BrZXJuZWwub3JnOyBrbmFhY2suaEBnbXgu
-ZGU7IGxhcnNAbWV0YWZvby5kZTsNCj4gPiA+IHBtZWVyd0BwbWVlcncubmV0OyBtYXJrLnJ1dGxh
-bmRAYXJtLmNvbTsgbGludXgtaWlvQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gZGwt
-bGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
-VjMgMS8yXSBkdC1iaW5kaW5nczogaWlvOiBsaWdodDogaXNsMjkwMTg6DQo+ID4gPiB1cGRhdGUg
-cG93ZXIgc3VwcGx5IG5hbWUNCj4gPiA+DQo+ID4gPiBPbiBNb24sIERlYyAxMCwgMjAxOCBhdCAw
-NzoxMToxOUFNICswMDAwLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gPiA+ID4gQWNjb3JkaW5nIHRv
-IGRhdGFzaGVldCwgdGhlIGlzbDI5MDE4IGhhcyAidmRkZC92ZGRhIiBwb3dlciBzdXBwbHksDQo+
-ID4gPiA+IGFuZA0KPiA+ID4gPiBpc2wyOTAyMy9pc2wyOTAzNSBPTkxZIGhhcyAidmRkIiBwb3dl
-ciBzdXBwbHksIHVwZGF0ZSB0aGUgcG93ZXINCj4gPiA+ID4gc3VwcGx5IG5hbWUgd2l0aCAidmRk
-IiBhbmQgInZkZGEiIGFjY29yZGluZyB0byBkYXRhc2hlZXQgdG8gY292ZXINCj4gPiA+ID4gYWxs
-IGRldmljZXMgYW5kIGF2b2lkIGNvbmZ1c2lvbi4NCj4gPiA+ID4NCj4gPiA+ID4gU2lnbmVkLW9m
-Zi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+
-ID4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9saWdodC9pc2wyOTAx
-OC50eHQgfCA0ICsrKy0NCj4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyks
-IDEgZGVsZXRpb24oLSkNCj4gPiA+ID4NCj4gPiA+ID4gZGlmZiAtLWdpdA0KPiA+ID4gPiBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vbGlnaHQvaXNsMjkwMTgudHh0DQo+
-ID4gPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9saWdodC9pc2wy
-OTAxOC50eHQNCj4gPiA+ID4gaW5kZXggYjliYmRlMy4uMzZmNzM3ZCAxMDA2NDQNCj4gPiA+ID4g
-LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9saWdodC9pc2wyOTAx
-OC50eHQNCj4gPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lp
-by9saWdodC9pc2wyOTAxOC50eHQNCj4gPiA+ID4gQEAgLTE1LDcgKzE1LDkgQEAgT3B0aW9uYWwg
-cHJvcGVydGllczoNCj4gPiA+ID4gICAgUmVmZXIgdG8gaW50ZXJydXB0LWNvbnRyb2xsZXIvaW50
-ZXJydXB0cy50eHQgZm9yIGdlbmVyaWMgaW50ZXJydXB0IGNsaWVudA0KPiA+ID4gPiAgICBub2Rl
-IGJpbmRpbmdzLg0KPiA+ID4gPg0KPiA+ID4gPiAtICAtIHZjYy1zdXBwbHk6IHBoYW5kbGUgdG8g
-dGhlIHJlZ3VsYXRvciB0aGF0IHByb3ZpZGVzIHBvd2VyIHRvIHRoZQ0KPiBzZW5zb3IuDQo+ID4g
-PiA+ICsgIC0gdmRkLXN1cHBseTogcGhhbmRsZSB0byB0aGUgcmVndWxhdG9yIHRoYXQgcHJvdmlk
-ZXMgdmRkIHBvd2VyDQo+ID4gPiA+ICsgdG8gdGhlDQo+ID4gPiBzZW5zb3IuDQo+ID4gPiA+ICsN
-Cj4gPiA+ID4gKyAgLSB2ZGRhLXN1cHBseTogcGhhbmRsZSB0byB0aGUgcmVndWxhdG9yIHRoYXQg
-cHJvdmlkZXMgdmRkYQ0KPiA+ID4gPiArIHBvd2VyIHRvIHRoZQ0KPiA+ID4gc2Vuc29yLg0KPiA+
-ID4NCj4gPiA+IElzIHRoaXMgaW4gdXNlPyBZb3UgY2FuJ3QganVzdCBjaGFuZ2UgdGhpbmdzIGlm
-IGl0IGlzLg0KPiA+DQo+ID4gSSBkaWQgTk9UIHNlZSBhbnkgInZjYyIgaW4gZm9sZGVyIGRyaXZl
-cnMvaWlvL2xpZ2h0Lywgc28gSSB0aGluayBpdCBpcw0KPiA+IE5PVCB1c2VkIGF0IGFsbCwgc28g
-SSB0YWtlIHRoaXMgY2hhbmNlIHRvIHVwZGF0ZSBpdCBhY2NvcmRpbmcgdG8gZGF0YXNoZWV0Lg0K
-PiBUaGFua3MuDQo+IA0KPiBhcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIwLXBlYWNoLXBpdC5k
-dHMtNjI5LSBsaWdodC1zZW5zb3JANDQgew0KPiBhcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIw
-LXBlYWNoLXBpdC5kdHM6NjMwOiAgICAgICAgIGNvbXBhdGlibGUgPQ0KPiAiaXNpbCxpc2wyOTAx
-OCI7DQo+IGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MjAtcGVhY2gtcGl0LmR0cy02MzEtICAg
-ICAgICAgcmVnID0gPDB4NDQ+Ow0KPiBhcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIwLXBlYWNo
-LXBpdC5kdHMtNjMyLSAgICAgICAgIHZjYy1zdXBwbHkgPQ0KPiA8JnRwczY1MDkwX2ZldDU+Ow0K
-PiBhcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIwLXBlYWNoLXBpdC5kdHMtNjMzLSB9Ow0KPiAN
-Cj4gYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTgwMC1wZWFjaC1waS5kdHMtNjI5LSAgbGlnaHQt
-c2Vuc29yQDQ0IHsNCj4gYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTgwMC1wZWFjaC1waS5kdHM6
-NjMwOiAgICAgICAgICBjb21wYXRpYmxlID0NCj4gImlzaWwsaXNsMjkwMTgiOw0KPiBhcmNoL2Fy
-bS9ib290L2R0cy9leHlub3M1ODAwLXBlYWNoLXBpLmR0cy02MzEtICAgICAgICAgIHJlZyA9IDww
-eDQ0PjsNCj4gYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTgwMC1wZWFjaC1waS5kdHMtNjMyLSAg
-ICAgICAgICB2Y2Mtc3VwcGx5ID0NCj4gPCZ0cHM2NTA5MF9mZXQ1PjsNCj4gYXJjaC9hcm0vYm9v
-dC9kdHMvZXh5bm9zNTgwMC1wZWFjaC1waS5kdHMtNjMzLSAgfTsNCj4gDQo+IFRoZSByZXN0IG9m
-IHRoZSBkdHMgZmlsZXMgdXNpbmcgdGhpcyBkb24ndCBoYXZlIGEgc3VwcGx5IGl0IHNlZW1zLiBT
-byB5b3UgbmVlZA0KPiBwZXJtaXNzaW9uIGZyb20gdGhlIEV4eW5vcyBmb2xrcyBpZiB5b3Ugd2Fu
-dCB0byBqdXN0IGRyb3AgdGhpcy4gQW5kIGFsc28gdXBkYXRlDQo+IHRoZWlyIGR0cyBmaWxlcy4N
-Cj4gDQo+IFJvYg0K
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+
+Hi
+
+Pawel Laszczak <pawell@cadence.com> writes:
+>>> +	cdns->phy =3D devm_phy_get(dev, "cdns3,usbphy");
+>>> +	if (IS_ERR(cdns->phy)) {
+>>> +		ret =3D PTR_ERR(cdns->phy);
+>>> +		if (ret =3D=3D -ENOSYS || ret =3D=3D -ENODEV) {
+>>
+>>Are you sure you can get ENOSYS here? Have you checked output of
+>>checkpatch --strict?
+>>-:852: WARNING: ENOSYS means 'invalid syscall nr' and nothing else
+>
+> Yes this error code can be returned by related to phy function if
+> CONFIG_GENERIC_PHY is disabled.
+>
+> I have seen this warning in output of checkpatch --strict .
+
+Kishon, seems like you shouldn't be using that error value.
+
+<snip>
+
+>>> +	case USB_REQ_SET_ISOCH_DELAY:
+>>> +		sprintf(str, "Set Isochronous Delay Delay: %d ns", wValue);
+>>> +		break;
+>>> +	default:
+>>> +		sprintf(str,
+>>> +			"SETUP BRT: %02x BR: %02x V: %04x I: %04x L: %04x\n",
+>>> +			bRequestType, bRequest,
+>>> +			wValue, wIndex, wLength);
+>>> +	}
+>>> +
+>>> +	return str;
+>>> +}
+>>
+>>All of these are a flat out copy of dwc3's implementation. It's much,
+>>much better to turn dwc3's implementation into a generic, reusable
+>>library function then spinning your own as a duplicated effort.
+> I agree,=20
+> It would be nice to have a set of decoding function  in some generic libr=
+ary. It could be used=20
+> also by other drivers.
+> Who should do this ?
+
+since you're the first to reuse it, then it should be you :-)
+
+>>> +static int cdns3_req_ep0_set_configuration(struct cdns3_device *priv_d=
+ev,
+>>> +					   struct usb_ctrlrequest *ctrl_req)
+>>> +{
+>>> +	enum usb_device_state device_state =3D priv_dev->gadget.state;
+>>> +	struct cdns3_endpoint *priv_ep;
+>>> +	u32 config =3D le16_to_cpu(ctrl_req->wValue);
+>>> +	int result =3D 0;
+>>> +	int i;
+>>> +
+>>> +	switch (device_state) {
+>>> +	case USB_STATE_ADDRESS:
+>>> +		/* Configure non-control EPs */
+>>> +		for (i =3D 0; i < CDNS3_ENDPOINTS_MAX_COUNT; i++) {
+>>> +			priv_ep =3D priv_dev->eps[i];
+>>> +			if (!priv_ep)
+>>> +				continue;
+>>> +
+>>> +			if (priv_ep->flags & EP_CLAIMED)
+>>> +				cdns3_ep_config(priv_ep);
+>>> +		}
+>>> +
+>>> +		result =3D cdns3_ep0_delegate_req(priv_dev, ctrl_req);
+>>> +
+>>> +		if (result)
+>>> +			return result;
+>>> +
+>>> +		if (config) {
+>>> +			cdns3_set_hw_configuration(priv_dev);
+>>> +		} else {
+>>> +			cdns3_gadget_unconfig(priv_dev);
+>>> +			usb_gadget_set_state(&priv_dev->gadget,
+>>> +					     USB_STATE_ADDRESS);
+>>
+>>this is wrong. If address is zero, state should be default, not
+>>addressed. Addressed would be used on the other branch here, when you
+>>have a non-zero address
+>
+> If address is zero then state should be USB_STATE_DEFAULT. Driver
+> enters to this branch only if gadget.state =3D USB_STATE_ADDRESS
+> (address !=3D 0). This state can be changed in composite.c file after
+> delegating request to gadget driver. Because this state could be
+> changed driver simple restore USB_STATE_ADDRESS if config =3D 0.
+
+nevermind, I read this as being the handler for Set Address. This is Set
+Config, instead.
+
+>>> +		}
+>>> +		break;
+>>> +	case USB_STATE_CONFIGURED:
+>>
+>>where do you set this state?
+> It's set in set_config in composite.c file.=20
+
+indeed
+
+>>> +	case USB_DEVICE_TEST_MODE:
+>>> +		if (state !=3D USB_STATE_CONFIGURED || speed > USB_SPEED_HIGH)
+>>> +			return -EINVAL;
+>>> +
+>>> +		tmode =3D le16_to_cpu(ctrl->wIndex);
+>>> +
+>>> +		if (!set || (tmode & 0xff) !=3D 0)
+>>> +			return -EINVAL;
+>>> +
+>>> +		switch (tmode >> 8) {
+>>> +		case TEST_J:
+>>> +		case TEST_K:
+>>> +		case TEST_SE0_NAK:
+>>> +		case TEST_PACKET:
+>>> +			cdns3_set_register_bit(&priv_dev->regs->usb_cmd,
+>>> +					       USB_CMD_STMODE |
+>>> +					       USB_STS_TMODE_SEL(tmode - 1));
+>>
+>>I'm 90% sure this won't work. There's a reason why we only enter the
+>>requested test mode from status stage. How have you tested this?
+>
+> From USB spec:
+> "The transition to test mode must be complete no later than 3 ms after th=
+e completion of the status stage of the
+> request."
+
+exactly, _after_ completion of status stage :-)
+
+> But I don't remember any issues with this test on other ours
+> drivers. Maybe status stage is armed in this case by controller. I
+> have to confirm how it works with hardware team.  Driver doesn't know
+> when status stage was completed. We don't have any event on status
+> stage completion.  I haven't checked it yet with tester on this
+> driver.
+
+Let's consider the scenario where you're requesting Test_Packet mode. If
+you start transmitting the test pattern from setup stage, how can you
+even transmit status stage?
+
+>>> +void cdns3_gadget_unconfig(struct cdns3_device *priv_dev)
+>>> +{
+>>> +	/* RESET CONFIGURATION */
+>>> +	writel(USB_CONF_CFGRST, &priv_dev->regs->usb_conf);
+>>> +
+>>> +	cdns3_allow_enable_l1(priv_dev, 0);
+>>> +	priv_dev->hw_configured_flag =3D 0;
+>>> +	priv_dev->onchip_mem_allocated_size =3D 0;
+>>
+>>clear all test modes? Reset ep0 max_packet_size to 512?
+> Test mode should be reset automatically on exit.=20
+
+on exit? Which exit? Did you test this on USB Reset? Did you run USBCV
+on Super and High speed with any gadget?
+
+> W can't clear this mode in register. It's WAC (write only and auto clear)=
+  bit.
+> This function only reset endpoint configuration in controller register.=20
+> Ep0 max_packet_size should be unchanged here.  Ep0 max_packet it's update=
+d on=20
+> Connect/Disconnect/Reset events.=20=20
+
+right, and this is called for both reset and disconnect (see below). If
+you're telling me that test mode and ep0 wMaxPacketSize is handled
+elsewhere, that's fine.
+
++	/* Disconnection detected */
++	if (usb_ists & (USB_ISTS_DIS2I | USB_ISTS_DISI)) {
++		if (priv_dev->gadget_driver &&
++		    priv_dev->gadget_driver->disconnect) {
++			spin_unlock(&priv_dev->lock);
++			priv_dev->gadget_driver->disconnect(&priv_dev->gadget);
++			spin_lock(&priv_dev->lock);
++		}
++
++		priv_dev->gadget.speed =3D USB_SPEED_UNKNOWN;
++		usb_gadget_set_state(&priv_dev->gadget, USB_STATE_NOTATTACHED);
++		cdns3_gadget_unconfig(priv_dev);
++	}
++
++	/* reset*/
++	if (usb_ists & (USB_ISTS_UWRESI | USB_ISTS_UHRESI | USB_ISTS_U2RESI)) {
++		/*read again to check the actuall speed*/
++		speed =3D cdns3_get_speed(priv_dev);
++		usb_gadget_set_state(&priv_dev->gadget, USB_STATE_DEFAULT);
++		priv_dev->gadget.speed =3D speed;
++		cdns3_gadget_unconfig(priv_dev);
++		cdns3_ep0_config(priv_dev);
++	}
+
+
+> Maybe this function should be called cdns3_hw_reset_eps_config.=20
+
+perhaps
+
+> It doesn't unconfigure whole gadget but only reset endpoints configuratio=
+n kept by=20
+> controller.
+> I will change this function.=20
+
+ok
+
+>>> +static irqreturn_t cdns3_device_irq_handler(int irq, void *data)
+>>> +{
+>>> +	struct cdns3_device *priv_dev;
+>>> +	struct cdns3 *cdns =3D data;
+>>> +	irqreturn_t ret =3D IRQ_NONE;
+>>> +	unsigned long flags;
+>>> +	u32 reg;
+>>> +
+>>> +	priv_dev =3D cdns->gadget_dev;
+>>> +	spin_lock_irqsave(&priv_dev->lock, flags);
+>>
+>>you're already running in hardirq context. Why do you need this lock at
+>>all? I would be better to use the hardirq handler to mask your
+>>interrupts, so they don't fire again, then used the top-half (softirq)
+>>handler to actually handle the interrupts.
+>
+> Yes, spin_lock_irqsave is not necessary here.=20
+>
+> Do you mean replacing devm_request_irq with a request_threaded_irq ?
+> I have single interrupt line shared between  Host, Driver, DRD/OTG.=20
+> I'm not sure if it will work more efficiently.=20
+
+The whole idea for running very little in hardirq context is to give the
+scheduler a chance to decide what should run. This is important to
+reduce latency when running with RT patchset applied, for
+example. However, I'll give you that, it's a minor requirement. It's
+just that, to me, it's a small detail that's easy to implement.
+
+>>> +	/* check USB device interrupt */
+>>> +	reg =3D readl(&priv_dev->regs->usb_ists);
+>>> +	writel(reg, &priv_dev->regs->usb_ists);
+>>> +
+>>> +	if (reg) {
+>>> +		dev_dbg(priv_dev->dev, "IRQ: usb_ists: %08X\n", reg);
+>>
+>>I strongly advise against using dev_dbg() for debugging. Even more so
+>>inside your IRQ handler.
+> Ok, It's not necessary in this place, especially, that there is invoked t=
+race point=20
+> inside cdns3_check_usb_interrupt_proceed which makes the same.
+
+overhead. Tracepoints are really, really low overhead. The string
+decoding doesn't happen until you read the trace file.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlwQsB8ACgkQzL64meEa
+mQZTFBAAzCz5Xjms6g/VgCfwqihk5jT43+4N333dW+KzDW9DpW7FMhEDcMhRt2eO
+E39KB6wIKE9on6XiNppRkYG9XNzp7MBgLfF74/0NWEfmorsNUUrh1d3xRjXMJMGt
+woETX8vC10MNq4naAjJMEBqvnFJ3qbjoTZcAVUosVXgVO3F2pxT+lprRg/nN3Uge
+NEj0tHoFquHUIilw4ySQk4TtJM4+4w5bgusjbOLFqZdnNdpeLrwzksXvjP5Quyir
+PTYWeP7uFfws/qI2LZW+2igwz/MSNW8cAG7eR28cr+chZaOdogqFoj+6mBlljTJG
+XQd5jNvZQp4dlD98ZuYkoNVCprGf7O6tgU/Hc7/4Nls9TK1wVzUWj3Vzyep20pEg
+PRTrA83Qv63zTgIPYntMZ0bmP1i48Vj2gmSrMKjbQ0FlGgEP84pGwJ3SrsuKTPPV
+HVzi0HfJxGhZKaorKBB3B/isazgBGhxUegM3Jj5P4Cezb2nF2mMRp0ASu8n5jVMy
+jJN1RHHtqCwSUGxYN7f9BFfrUiLl41ususK5LDGqn07gBRXWq/XM+6SMPWQopGng
+KRjOEt2pTYsp24eFIBXdTo/49hO9s+JXYiMTI1fUJC8FK4x8Ug/pl+CUyrDArQtE
+3JsUi55d83LWtKg9f799oYtx9dV28/aFRCFlJbM34uGmahnodu8=
+=JcCE
+-----END PGP SIGNATURE-----
+--=-=-=--
