@@ -1,58 +1,81 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/2] dt-bindings: gpu: mali-midgard: Add resets property
-Date: Wed, 12 Dec 2018 10:48:26 +0100
-Message-ID: <de78b995-59a2-99b2-b47f-44275964cb0c@baylibre.com>
-References: <20181210132227.29262-1-narmstrong@baylibre.com>
- <20181210132227.29262-2-narmstrong@baylibre.com>
- <CAL_JsqK9nDaOOe3yjHAdaH92ds=_cudbq-wQee+YBPaCHEE-HQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] ARM: dts: meson: add the APB/APB2 busses
+Date: Wed, 12 Dec 2018 10:52:32 +0100
+Message-ID: <3aad3554-9320-e356-c78d-5dec0cccb380@baylibre.com>
+References: <20181208165025.27689-1-martin.blumenstingl@googlemail.com>
+ <ba3e4fef-7a18-8c7d-e0ea-05c541b29913@baylibre.com>
+ <CAFBinCBYBAqtKp_edgs6b44MpOhc-iN_FwR425bkU4xirGQKvA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqK9nDaOOe3yjHAdaH92ds=_cudbq-wQee+YBPaCHEE-HQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFBinCBYBAqtKp_edgs6b44MpOhc-iN_FwR425bkU4xirGQKvA@mail.gmail.com>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-amlogic@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-amlogic@lists.infradead.org, khilman@baylibre.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTEvMTIvMjAxOCAxNzo1OCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gTW9uLCBEZWMgMTAs
-IDIwMTggYXQgNzoyMiBBTSBOZWlsIEFybXN0cm9uZyA8bmFybXN0cm9uZ0BiYXlsaWJyZS5jb20+
-IHdyb3RlOgo+Pgo+PiBUaGUgQW1sb2dpYyBBUk0gTWFsaSBNaWRnYXJkIHJlcXVpcmVzIHJlc2V0
-IGNvbnRyb2xzIHRvIHBvd2VyIG9uIGFuZAo+PiBzb2Z0d2FyZSByZXNldCB0aGUgR1BVLCBhZGRz
-IHRoZXNlIGFzIG9wdGlvbmFsIGluIHRoZSBiaW5kaW5ncy4KPj4KPj4gU2lnbmVkLW9mZi1ieTog
-TmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJvbmdAYmF5bGlicmUuY29tPgo+PiAtLS0KPj4gIERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJtLG1hbGktbWlkZ2FyZC50eHQgfCAy
-ICsrCj4+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCj4+Cj4+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FybSxtYWxpLW1pZGdhcmQu
-dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRn
-YXJkLnR4dAo+PiBpbmRleCAxOGEyY2RlMmU1ZjMuLjI0ZDgzZWM5NTJmMSAxMDA2NDQKPj4gLS0t
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJk
-LnR4dAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FybSxt
-YWxpLW1pZGdhcmQudHh0Cj4+IEBAIC0zNyw2ICszNyw4IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6
-Cj4+ICAtIG9wZXJhdGluZy1wb2ludHMtdjIgOiBSZWZlciB0byBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3Mvb3BwL29wcC50eHQKPj4gICAgZm9yIGRldGFpbHMuCj4+Cj4+ICstIHJl
-c2V0cyA6IFBoYW5kbGUgdG8gdGhlIHJlc2V0IGNvbnRyb2xzIGZvciB0aGUgTWFsaSBNaWRnYXJk
-IGRldmljZS4KPiAKPiBIb3cgbWFueT8gU291bmRzIGxpa2UgMSwgYnV0IHRoZSBkdHMgaGFzIDIu
-IFRoZXJlJ3MgYWxzbyBhIHNpbWlsYXIKPiBwYXRjaCBmb3IgQWxsd2lubmVyWzFdLiBJIGRvbid0
-IHdhbnQgdG8gc2VlIGEgZGlmZmVyZW50IG51bWJlciBvZgo+IHJlc2V0cyBhbmQgZGlmZmVyZW50
-IG5hbWVzIGZvciBlYWNoIHZlbmRvci4gU28gZmlyc3QgZmlndXJlIG91dCBob3cKPiBtYW55IHJl
-c2V0cyB0aGUgSVAgYmxvY2sgaGFzLiBZb3UnbGwgaGF2ZSB0byBmaW5kIHNvbWVvbmUgd2l0aCBh
-Y2Nlc3MKPiB0byB0aGUgVFJNLgoKSSBjYW4gYW5zd2VyIGZvciBBbWxvZ2ljLCB0aGV5IGhhdmUg
-YSByZXNldCBmb3IgdGhlIGJ1cyBpbnRlcmZhY2UgYW5kIHRoZSBHUFUgSVAgaXRzZWxmLgoKWW91
-IGFyZSBhc2tpbmcgc29tZXRoaW5nIGltcG9zc2libGUgOy0pIFdlIGNhbiBhc3N1bWUgaXQgaGFz
-IGEgc2luZ2xlIHJlc2V0IGludGVyZmFjZSwKYnV0IHZlbmRvcnMgY2FuIGFkZCBtb3JlIHRvIHJl
-c2V0IHNvbWUgZ2x1ZSBIVy4gU28gd2Ugd2lsbCBuZWVkIHNvbWUgdmFyaWFudCBwZXItdmVuZG9y
-LApzb3JyeSB0byBhbm5veSB5b3UgIQoKTmVpbAoKPiAKPiBSb2IKPiAKPiBbMV0gaHR0cHM6Ly9w
-YXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8xMDAzNjU0Lwo+IAoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 11/12/2018 23:09, Martin Blumenstingl wrote:
+> Hi Neil,
+> 
+> On Tue, Dec 11, 2018 at 10:16 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> On 08/12/2018 17:50, Martin Blumenstingl wrote:
+>>> This adds the APB bus on Meson8 and Meson8b as well as the APB2 bus on
+>>> Meson6. This is preparation work for adding the Mali GPU which is
+>>> located on theses busses.
+>>>
+>>> Meson6 seems to have it's APB at 0xc8000000 instead of 0xd0000000. The
+>>> region at 0xd0000000 is called APB2 or A9_APB and it has a different
+>>> size (256k) compared to Meson8 and Meson8b (2M).
+>>>
+>>> Addresses and sizes are taken from the Amlogic 3.10 kernel sources:
+>>> - Meson6: [0]
+>>> - Meson8: [1]
+>>> - Meson8b: [2]
+>>>
+>>>
+>>> Changes since v1 at [3]:
+>>> - re-send the patches but this time don't include the old patches
+>>>   which still had a typo in the patch description (ABP vs APB)
+>>>
+>>>
+>>> [0] https://github.com/endlessm/linux-meson/blob/cd4096c3ff4eb5b8a8a5581bb46508601c5470dc/arch/arm/mach-meson6/include/mach/io.h#L61
+>>> [1] https://github.com/endlessm/linux-meson/blob/cd4096c3ff4eb5b8a8a5581bb46508601c5470dc/arch/arm/mach-meson8/include/mach/io.h#L53
+>>> [2] https://github.com/endlessm/linux-meson/blob/cd4096c3ff4eb5b8a8a5581bb46508601c5470dc/arch/arm/mach-meson8b/include/mach/io.h#L53
+>>> [3] http://lists.infradead.org/pipermail/linux-amlogic/2018-December/009424.html
+>>>
+>>>
+>>> Martin Blumenstingl (3):
+>>>   ARM: dts: meson6: add the APB2 bus
+>>>   ARM: dts: meson8: add the APB bus
+>>>   ARM: dts: meson8b: add the APB bus
+>>>
+>>>  arch/arm/boot/dts/meson6.dtsi  | 8 ++++++++
+>>>  arch/arm/boot/dts/meson8.dtsi  | 8 ++++++++
+>>>  arch/arm/boot/dts/meson8b.dtsi | 8 ++++++++
+>>>  3 files changed, 24 insertions(+)
+>>>
+>>
+>> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> thank you for taking the time to review this!
+> 
+>> But frankly I'll squash the meson8/meson8b patches with the mali node patches !
+> I didn't do this because I realized that there are different busses
+> between Meson6 and Meson8/Meson8b. so I wanted to have a commit
+> message which describes this.
+> if you prefer I can still squash the Meson8 and Meson8b patches into
+> their corresponding GPU .dts patch but I would like to keep the Meson6
+> patch (as I'm not planning to add the Mali GPU until someone can
+> actually test it on that SoC)
+
+Yes this is what I was thinking actually !
+
+Neil
+
+> 
+> 
+> Regards
+> Martin
+> 
