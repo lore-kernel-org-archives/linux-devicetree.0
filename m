@@ -1,41 +1,39 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: [RFC][PATCH] arm64: dts: hikey: Add DMA entries for Bluetooth UART
-Date: Tue, 11 Dec 2018 16:11:05 -0800
-Message-ID: <1544573465-32314-1-git-send-email-john.stultz@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lkml <linux-kernel@vger.kernel.org>
-Cc: John Stultz <john.stultz@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Ryan Grachek <ryan@edited.us>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH v6 0/7] Add virtio-iommu driver
+Date: Tue, 11 Dec 2018 19:39:28 -0500
+Message-ID: <20181211193249-mutt-send-email-mst@kernel.org>
+References: <20181211182104.18241-1-jean-philippe.brucker@arm.com>
+ <20181211183101.GA31936@infradead.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <virtio-dev-return-5186-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
+Sender: <virtio-dev@lists.oasis-open.org>
+List-Post: <mailto:virtio-dev@lists.oasis-open.org>
+List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
+List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
+List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
+Content-Disposition: inline
+In-Reply-To: <20181211183101.GA31936@infradead.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, virtualization@lists.linux-foundation.org, virtio-dev@lists.oasis-open.org, joro@8bytes.org, mark.rutland@arm.com, kevin.tian@intel.com, tnowicki@caviumnetworks.com, marc.zyngier@arm.com, robin.murphy@arm.com, jasowang@redhat.com, will.deacon@arm.com, robh+dt@kernel.org, bhelgaas@google.com, frowand.list@gmail.com, kvmarm@lists.cs.columbia.edu
 List-Id: devicetree@vger.kernel.org
 
-Add dma0 references for bluetooth uart to enable dma
-for bt transfers.
+On Tue, Dec 11, 2018 at 10:31:01AM -0800, Christoph Hellwig wrote:
+> On Tue, Dec 11, 2018 at 06:20:57PM +0000, Jean-Philippe Brucker wrote:
+> > Implement the virtio-iommu driver, following specification v0.9 [1].
+> > 
+> > Only minor changes since v5 [2]. I fixed issues reported by Michael and
+> > added tags from Eric and Bharat. Thanks!
+> > 
+> > You can find Linux driver and kvmtool device on v0.9 branches [3],
+> > module and x86 support on virtio-iommu/devel. Also tested with Eric's
+> > QEMU device [4].
+> 
+> Just curious, what is the use case for it?
 
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Ryan Grachek <ryan@edited.us>
-Cc: Wei Xu <xuwei5@hisilicon.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Change-Id: I85d36cc492a5f392cde214b144b19469e951585a
----
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+If what I saw is any indication, it allows a very simple implementation
+of page table shadowing on the host, at the cost of not being able to
+accelerate with a hardware nested page tables support when available.
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index 97d5bf2..c3b17dd 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -319,6 +319,8 @@
- 			clock-names = "uartclk", "apb_pclk";
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&uart1_pmx_func &uart1_cfg_func1 &uart1_cfg_func2>;
-+			dmas = <&dma0 8 &dma0 9>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
- 
 -- 
-2.7.4
+MST
