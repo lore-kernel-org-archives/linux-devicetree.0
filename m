@@ -1,85 +1,41 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH v2 5/5] regulator: add documentation for regulator modes
- and suspend states
-Date: Wed, 12 Dec 2018 09:12:58 +0000
-Message-ID: <442be9e4-621f-c668-c627-264084ef975a@microchip.com>
-References: <1543319801-19100-1-git-send-email-claudiu.beznea@microchip.com>
- <1543319801-19100-6-git-send-email-claudiu.beznea@microchip.com>
- <20181211221324.GA14658@bogus>
+From: Peter Chen <peter.chen@nxp.com>
+Subject: RE: [PATCH v1 2/2] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Wed, 12 Dec 2018 09:24:59 +0000
+Message-ID: <VI1PR04MB532701CEDE94C068759987688BA70@VI1PR04MB5327.eurprd04.prod.outlook.com>
+References: <1544445555-17325-1-git-send-email-pawell@cadence.com>
+ <1544445555-17325-3-git-send-email-pawell@cadence.com>
+ <87h8fkmfar.fsf@linux.intel.com>
+ <BYAPR07MB47095110AF28CC11B4C9E144DDA60@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <CAL411-ryK2LLZVg5_sLkCYOuhwdHLVm5XavSyC9nbEXZah_43w@mail.gmail.com>
+ <877egfmdxk.fsf@linux.intel.com>
+ <VI1PR04MB5327B1CB6C6BC7D293701F1D8BA70@VI1PR04MB5327.eurprd04.prod.outlook.com>
+ <871s6nm9db.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181211221324.GA14658@bogus>
+In-Reply-To: <871s6nm9db.fsf@linux.intel.com>
 Content-Language: en-US
-Content-ID: <DE533817C65E354FB65DEFCEAD0647DE@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org
-Cc: lgirdwood@gmail.com, broonie@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Felipe Balbi <balbi@kernel.org>, Peter Chen <hzpeterchen@gmail.com>, "pawell@cadence.com" <pawell@cadence.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, lkml <linux-kernel@vger.kernel.org>, "adouglas@cadence.com" <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, "sureshp@cadence.com" <sureshp@cadence.com>, "pjez@cadence.com" <pjez@cadence.com>, "kurahul@cadence.com" <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDEyLjEyLjIwMTggMDA6MTMsIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBUdWUsIE5v
-diAyNywgMjAxOCBhdCAxMTo1NzoyNUFNICswMDAwLCBDbGF1ZGl1LkJlem5lYUBtaWNyb2NoaXAu
-Y29tIHdyb3RlOg0KPj4gRnJvbTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3Jv
-Y2hpcC5jb20+DQo+Pg0KPj4gQWRkIGRvY3VtZW50YXRpb24gZm9yIHJlZ3VsYXRvciBtb2RlcyBh
-bmQgc3VzcGVuZCBzdGF0ZXMuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogQ2xhdWRpdSBCZXpuZWEg
-PGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQo+PiAtLS0NCj4+ICAuLi4vYmluZGluZ3Mv
-cmVndWxhdG9yL2FjdDg5NDVhLXJlZ3VsYXRvci50eHQgICAgICB8IDM0ICsrKysrKysrKysrKysr
-KysrKysrKysNCj4+ICAxIGZpbGUgY2hhbmdlZCwgMzQgaW5zZXJ0aW9ucygrKQ0KPj4NCj4+IGRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL2Fj
-dDg5NDVhLXJlZ3VsYXRvci50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cmVndWxhdG9yL2FjdDg5NDVhLXJlZ3VsYXRvci50eHQNCj4+IGluZGV4IGFjOTU1ZGVhMDBkMS4u
-NDAxNzUyNzYxOWFiIDEwMDY0NA0KPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3JlZ3VsYXRvci9hY3Q4OTQ1YS1yZWd1bGF0b3IudHh0DQo+PiArKysgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL2FjdDg5NDVhLXJlZ3VsYXRvci50
-eHQNCj4+IEBAIC0xNSwxMSArMTUsMTcgQEAgT3B0aW9uYWwgaW5wdXQgc3VwcGx5IHByb3BlcnRp
-ZXM6DQo+PiAgICAtIGlubDY3LXN1cHBseTogVGhlIGlucHV0IHN1cHBseSBmb3IgUkVHX0xETzMg
-YW5kIFJFR19MRE80DQo+PiAgDQo+PiAgQW55IHN0YW5kYXJkIHJlZ3VsYXRvciBwcm9wZXJ0aWVz
-IGNhbiBiZSB1c2VkIHRvIGNvbmZpZ3VyZSB0aGUgc2luZ2xlIHJlZ3VsYXRvci4NCj4+ICtyZWd1
-bGF0b3ItaW5pdGlhbC1tb2RlLCByZWd1bGF0b3ItYWxsb3dlZC1tb2RlcyBhbmQgcmVndWxhdG9y
-LW1vZGUgY291bGQgYmUNCj4+ICtzcGVjaWZpZWQgdXNpbmcgbW9kZSB2YWx1ZXMgZnJvbSBkdC1i
-aW5kaW5ncy9yZWd1bGF0b3IvYWN0aXZlLXNlbWksODk0NWEtcmVndWxhdG9yLmgNCj4+ICtmaWxl
-Lg0KPj4gIA0KPj4gIFRoZSB2YWxpZCBuYW1lcyBmb3IgcmVndWxhdG9ycyBhcmU6DQo+PiAgCVJF
-R19EQ0RDMSwgUkVHX0RDREMyLCBSRUdfRENEQzMsIFJFR19MRE8xLCBSRUdfTERPMiwgUkVHX0xE
-TzMsIFJFR19MRE80Lg0KPj4gIA0KPj4gIEV4YW1wbGU6DQo+PiArDQo+PiArI2luY2x1ZGUgPGR0
-LWJpbmRpbmdzL3JlZ3VsYXRvci9hY3RpdmUtc2VtaSw4OTQ1YS1yZWd1bGF0b3IuaD4NCj4gDQo+
-IFRoaXMgZmlsZSBiZWxvbmdzIGluIHRoaXMgcGF0Y2guDQoNCkknbSB1c2luZyB0aGUgZGVmaW5l
-cyBpbiB0aGlzIGZpbGUgYWxzbyBpbiBkcml2ZXIuIEkgd2FzIHRoaW5raW5nIHRoYXQgaWYgSQ0K
-d291bGQgaW5jbHVkZSB0aGlzIGZpbGUgaW4gdGhpcyBwYXRjaCB0aGUgZHJpdmVyIGNvbXBpbGF0
-aW9uIHdvdWxkIGZhaWwgaWYNCnRoZSBwYXRjaGVzIHdvdWxkIGJlIGFjY2VwdGVkIHZpYSBkaWZm
-ZXJlbnQgdHJlZXMuDQoNCldvdWxkIHlvdSBsaWtlIG1lIHRvIGhhdmUgZGlmZmVyZW50IGRlZmlu
-ZXMgaW4gZHJpdmVyIGFuZCB0aGlzIG5ldyBoZWFkZXINCm9yIGNvdWxkIGhhcHBlbiB0aGF0IHRo
-ZXNlIHBhdGNoZXMgdG8gYmUgaW5jbHVkZWQgaW4gdGhlIG1haW4gdHJlZSB2aWEgdGhlDQpzYW1l
-IHRyZWUgKGUuZy4gcmVndWxhdG9yIHRyZWUpPw0KDQpQbGVhc2UsIGxldCBtZSBrbm93IHdoYXQg
-ZG8geW91IHRoaW5rLg0KDQpUaGFuayB5b3UsDQpDbGF1ZGl1IEJlem5lYQ0KDQo+IA0KPj4gKw0K
-Pj4gIAlwbWljQDViIHsNCj4+ICAJCWNvbXBhdGlibGUgPSAiYWN0aXZlLXNlbWksYWN0ODk0NWEi
-Ow0KPj4gIAkJcmVnID0gPDB4NWI+Ow0KPj4gQEAgLTMyLDYgKzM4LDE4IEBAIEV4YW1wbGU6DQo+
-PiAgCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDEzNTAwMDA+Ow0KPj4gIAkJCQlyZWd1
-bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxMzUwMDAwPjsNCj4+ICAJCQkJcmVndWxhdG9yLWFsd2F5
-cy1vbjsNCj4+ICsNCj4+ICsJCQkJcmVndWxhdG9yLWFsbG93ZWQtbW9kZXMgPSA8QUNUODk0NUFf
-UkVHVUxBVE9SX01PREVfRklYRUQ+LA0KPj4gKwkJCQkJCQkgIDxBQ1Q4OTQ1QV9SRUdVTEFUT1Jf
-TU9ERV9MT1dQT1dFUj47DQo+PiArCQkJCXJlZ3VsYXRvci1pbml0aWFsLW1vZGUgPSA8QUNUODk0
-NUFfUkVHVUxBVE9SX01PREVfRklYRUQ+Ow0KPj4gKw0KPj4gKwkJCQlyZWd1bGF0b3Itc3RhdGUt
-bWVtIHsNCj4+ICsJCQkJCXJlZ3VsYXRvci1vbi1pbi1zdXNwZW5kOw0KPj4gKwkJCQkJcmVndWxh
-dG9yLXN1c3BlbmQtbWluLW1pY3Jvdm9sdD08MTQwMDAwMD47DQo+PiArCQkJCQlyZWd1bGF0b3It
-c3VzcGVuZC1tYXgtbWljcm92b2x0PTwxNDAwMDAwPjsNCj4+ICsJCQkJCXJlZ3VsYXRvci1jaGFu
-Z2VhYmxlLWluLXN1c3BlbmQ7DQo+PiArCQkJCQlyZWd1bGF0b3ItbW9kZT08QUNUODk0NUFfUkVH
-VUxBVE9SX01PREVfTE9XUE9XRVI+Ow0KPj4gKwkJCQl9Ow0KPj4gIAkJCX07DQo+PiAgDQo+PiAg
-CQkJdmRkXzF2Ml9yZWc6IFJFR19EQ0RDMiB7DQo+PiBAQCAtMzksNiArNTcsMTQgQEAgRXhhbXBs
-ZToNCj4+ICAJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MTEwMDAwMD47DQo+PiAgCQkJ
-CXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDEzMDAwMDA+Ow0KPj4gIAkJCQlyZWd1bGF0b3It
-YWx3YXlzLW9uOw0KPj4gKw0KPj4gKwkJCQlyZWd1bGF0b3ItYWxsb3dlZC1tb2RlcyA9IDxBQ1Q4
-OTQ1QV9SRUdVTEFUT1JfTU9ERV9GSVhFRD4sDQo+PiArCQkJCQkJCSAgPEFDVDg5NDVBX1JFR1VM
-QVRPUl9NT0RFX0xPV1BPV0VSPjsNCj4+ICsJCQkJcmVndWxhdG9yLWluaXRpYWwtbW9kZSA9IDxB
-Q1Q4OTQ1QV9SRUdVTEFUT1JfTU9ERV9GSVhFRD47DQo+PiArDQo+PiArCQkJCXJlZ3VsYXRvci1z
-dGF0ZS1tZW0gew0KPj4gKwkJCQkJcmVndWxhdG9yLW9mZi1pbi1zdXNwZW5kOw0KPj4gKwkJCQl9
-Ow0KPj4gIAkJCX07DQo+PiAgDQo+PiAgCQkJdmRkXzN2M19yZWc6IFJFR19EQ0RDMyB7DQo+PiBA
-QCAtNTMsNiArNzksMTQgQEAgRXhhbXBsZToNCj4+ICAJCQkJcmVndWxhdG9yLW1pbi1taWNyb3Zv
-bHQgPSA8MjUwMDAwMD47DQo+PiAgCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDI1MDAw
-MDA+Ow0KPj4gIAkJCQlyZWd1bGF0b3ItYWx3YXlzLW9uOw0KPj4gKw0KPj4gKwkJCQlyZWd1bGF0
-b3ItYWxsb3dlZC1tb2RlcyA9IDxBQ1Q4OTQ1QV9SRUdVTEFUT1JfTU9ERV9OT1JNQUw+LA0KPj4g
-KwkJCQkJCQkgIDxBQ1Q4OTQ1QV9SRUdVTEFUT1JfTU9ERV9MT1dQT1dFUj47DQo+PiArCQkJCXJl
-Z3VsYXRvci1pbml0aWFsLW1vZGUgPSA8QUNUODk0NUFfUkVHVUxBVE9SX01PREVfTk9STUFMPjsN
-Cj4+ICsNCj4+ICsJCQkJcmVndWxhdG9yLXN0YXRlLW1lbSB7DQo+PiArCQkJCQlyZWd1bGF0b3It
-b2ZmLWluLXN1c3BlbmQ7DQo+PiArCQkJCX07DQo+PiAgCQkJfTsNCj4+ICANCj4+ICAJCQl2ZGRf
-M3YzX2xwX3JlZzogUkVHX0xETzIgew0KPj4gLS0gDQo+PiAyLjcuNA0KPj4NCj4gDQo=
+=20
+> >
+> > Interrupt handler (hardirq context) at CPU0, and process at CPU1, eg
+> > role switch, unload module, etc.
+>=20
+> the process at CPU1 would need to disable interrupts (spin_lock_irq() or
+> spin_lock_irqsave()), not the hardirq on CPU0 as that already runs with i=
+nterrrupts
+> disabled.
+>=20
+> https://www.kernel.org/doc/html/latest/kernel-hacking/locking.html#table-=
+of-
+> minimum-requirements
+>=20
+
+I see, thanks.
+
+Peter
