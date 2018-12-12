@@ -1,80 +1,67 @@
-From: Maxime Jourdan <mjourdan@baylibre.com>
-Subject: Re: [PATCH 1/2] dt-bindings: meson: add specific simplefb bindings
-Date: Wed, 12 Dec 2018 14:28:45 +0100
-Message-ID: <CAMO6nawq6XsmsucVHPDDc3nuYLEDa4U1QC_5v26jofNv+BKH1A@mail.gmail.com>
-References: <20181210090640.4495-1-mjourdan@baylibre.com> <434d1dc0-3c5e-5cb3-cc88-b565bfb74217@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 5/5] regulator: add documentation for regulator modes
+ and suspend states
+Date: Wed, 12 Dec 2018 07:32:52 -0600
+Message-ID: <CAL_JsqKk99GrQaqVyXSr_ZwQd_nnuMOWnz_0ehS1dHZoEmxDCw@mail.gmail.com>
+References: <1543319801-19100-1-git-send-email-claudiu.beznea@microchip.com>
+ <1543319801-19100-6-git-send-email-claudiu.beznea@microchip.com>
+ <20181211221324.GA14658@bogus> <442be9e4-621f-c668-c627-264084ef975a@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <434d1dc0-3c5e-5cb3-cc88-b565bfb74217@baylibre.com>
+In-Reply-To: <442be9e4-621f-c668-c627-264084ef975a@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
+To: Claudiu Beznea <Claudiu.Beznea@microchip.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <Nicolas.Ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Ludovic Desroches <Ludovic.Desroches@microchip.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
-On Wed, Dec 12, 2018 at 10:54 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Wed, Dec 12, 2018 at 3:13 AM <Claudiu.Beznea@microchip.com> wrote:
 >
-> Hi Maxime,
 >
-> On 10/12/2018 10:06, Maxime Jourdan wrote:
-> > Similar to simple-framebuffer-sunxi, we support different display pipelines
-> > that the firmware is free to choose from.
-> >
-> > This documents the "amlogic,simple-framebuffer" compatible and the
-> > "amlogic,pipeline" extension.
-> >
-> > Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
-> > ---
-> >  .../display/simple-framebuffer-meson.txt      | 33 +++++++++++++++++++
-> >  1 file changed, 33 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/simple-framebuffer-meson.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer-meson.txt b/Documentation/devicetree/bindings/display/simple-framebuffer-meson.txt
-> > new file mode 100644
-> > index 000000000000..122a5c005cd9
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/simple-framebuffer-meson.txt
-> > @@ -0,0 +1,33 @@
-> > +Meson specific Simple Framebuffer bindings
-> > +
-> > +This binding documents meson specific extensions to the simple-framebuffer
-> > +bindings. The meson simplefb u-boot code relies on the devicetree containing
-> > +pre-populated simplefb nodes.
-> > +
-> > +These extensions are intended so that u-boot can select the right node based
-> > +on which pipeline is being used. As such they are solely intended for
-> > +firmware / bootloader use, and the OS should ignore them.
-> > +
-> > +Required properties:
-> > +- compatible: "amlogic,simple-framebuffer"
-> > +- amlogic,pipeline, one of:
-> > +  "vpu-cvbs"
-> > +  "vpu-hdmi"
-> > +
-> > +Example:
-> > +
-> > +chosen {
-> > +     #address-cells = <2>;
-> > +     #size-cells = <2>;
-> > +     ranges;
-> > +
-> > +     framebuffer@0 {
-> > +             compatible = "amlogic,simple-framebuffer",
-> > +                          "simple-framebuffer";
-> > +             amlogic,pipeline = "vpu-hdmi";
-> > +             clocks = <&clkc CLKID_HDMI_PCLK>,
-> > +                      <&clkc CLKID_CLK81>,
-> > +                      <&clkc CLKID_GCLK_VENCI_INT0>;
-> > +             power-domains = <&pwrc_vpu>;
-> > +     };
-> > +};
-> >
 >
-> You should add a cover-letter for this patchset !
+> On 12.12.2018 00:13, Rob Herring wrote:
+> > On Tue, Nov 27, 2018 at 11:57:25AM +0000, Claudiu.Beznea@microchip.com wrote:
+> >> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+> >>
+> >> Add documentation for regulator modes and suspend states.
+> >>
+> >> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> >> ---
+> >>  .../bindings/regulator/act8945a-regulator.txt      | 34 ++++++++++++++++++++++
+> >>  1 file changed, 34 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt b/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
+> >> index ac955dea00d1..4017527619ab 100644
+> >> --- a/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
+> >> +++ b/Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
+> >> @@ -15,11 +15,17 @@ Optional input supply properties:
+> >>    - inl67-supply: The input supply for REG_LDO3 and REG_LDO4
+> >>
+> >>  Any standard regulator properties can be used to configure the single regulator.
+> >> +regulator-initial-mode, regulator-allowed-modes and regulator-mode could be
+> >> +specified using mode values from dt-bindings/regulator/active-semi,8945a-regulator.h
+> >> +file.
+> >>
+> >>  The valid names for regulators are:
+> >>      REG_DCDC1, REG_DCDC2, REG_DCDC3, REG_LDO1, REG_LDO2, REG_LDO3, REG_LDO4.
+> >>
+> >>  Example:
+> >> +
+> >> +#include <dt-bindings/regulator/active-semi,8945a-regulator.h>
+> >
+> > This file belongs in this patch.
 >
-> Neil
+> I'm using the defines in this file also in driver. I was thinking that if I
+> would include this file in this patch the driver compilation would fail if
+> the patches would be accepted via different trees.
 
-Sorry about that, I completely forgot. Thanks for the reminder, will repost.
+They won't be.
 
-Maxime
+> Would you like me to have different defines in driver and this new header
+> or could happen that these patches to be included in the main tree via the
+> same tree (e.g. regulator tree)?
+
+No need for different defines. The subsystem maintainer will take
+everything in this case.
+
+Rob
