@@ -1,84 +1,49 @@
-From: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v16 06/16] lib: fdt: add a helper function for handling
- memory range property
-Date: Wed, 12 Dec 2018 10:28:31 +0900
-Message-ID: <20181212012830.GJ21466@linaro.org>
-References: <20181115055254.2812-1-takahiro.akashi@linaro.org>
- <20181115055254.2812-7-takahiro.akashi@linaro.org>
- <CAL_JsqL4_Z5pVfoB3opjL7eTzZvhBJW7_aQS443quAAR0gGH1w@mail.gmail.com>
- <20181206155424.GA4422@arm.com>
- <681e1265-2f0c-2a62-3778-09911b2be7fc@arm.com>
- <20181211061715.GF21466@linaro.org>
- <654bffae-7edb-bda4-d01d-99a8b455b186@arm.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH v2 2/3] reset: imx7: Add support for i.MX8MQ IP block variant
+Date: Tue, 11 Dec 2018 17:35:15 -0800
+Message-ID: <CAHQ1cqHH5Vef1e7bXBXWQdSzmAOpwj1vdyG-t83PkRyLifVFuw@mail.gmail.com>
+References: <20181128043738.12714-1-andrew.smirnov@gmail.com>
+ <20181128043738.12714-3-andrew.smirnov@gmail.com> <20181211224349.GA30397@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <654bffae-7edb-bda4-d01d-99a8b455b186@arm.com>
+In-Reply-To: <20181211224349.GA30397@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: James Morse <james.morse@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, bhsharma@redhat.com, kexec@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-imx@nxp.com, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 11, 2018 at 10:09:07AM +0000, James Morse wrote:
-> Hi Akashi,
-> 
-> On 11/12/2018 06:17, AKASHI, Takahiro wrote:
-> > On Fri, Dec 07, 2018 at 10:12:47AM +0000, James Morse wrote:
-> >> On 06/12/2018 15:54, Will Deacon wrote:
-> >>> On Thu, Dec 06, 2018 at 08:47:04AM -0600, Rob Herring wrote:
-> >>>> On Wed, Nov 14, 2018 at 11:52 PM AKASHI Takahiro
-> >>>> <takahiro.akashi@linaro.org> wrote:
-> >>>>>
-> >>>>> Added function, fdt_setprop_reg(), will be used later to handle
-> >>>>> kexec-specific property in arm64's kexec_file implementation.
-> >>>>> It will possibly be merged into libfdt in the future.
-> >>>>
-> >>>> You generally can't modify libfdt files. Any changes will be blown
-> >>>> away with the next dtc sync (there's one in -next now). Though here
-> >>>> you are creating a new location with fdt code. lib/ is just a shim to
-> >>>> the actual libfdt code. Don't put any implementation there. You can
-> >>>> add this to drivers/of/fdt_address.c for the short term, but it still
-> >>>> needs to go upstream.
-> >>>>
-> >>>> Otherwise, the implementation looks fine to me.
-> >>>
-> >>> I agree, but I don't think there's a real need for us to hack
-> >>> drivers/of/fdt_address.c in the meantime -- let's just target upstream
-> >>> and not carry this in the kernel.
-> >>>
-> >>> Akashi -- for now, I'll drop the kdump parts of this series which rely
-> >>> on this helper. The majority of the series is actually independent and
-> >>> can go in as-is.
-> >>>
-> >>> I've pushed out a kexec branch to the arm64 tree for you to take a look
-> >>> at:
-> >>>
-> >>> https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=kexec
-> >>
-> >> I gave this a quick spin. Without the elfcorehdr/usable-memory-range arm64 needs
-> >> to explicitly forbid kdump via kexec_file_load. (like powerpc does already).
-> > 
-> > Thank you for pointing this out.
-> > 
-> >> Without this kdump works, but the second kernel overwrites the first as those DT
-> >> properties are missing.
-> >>
-> >> I'll post a patch momentarily,
-> > 
-> > Fine, but anyhow I'm going to submit a new version (*without* kdump),
-> > I will fix the issue along with others.
-> 
-> I had a quick look at the arm64 for-next/core branch. Will has queued the
-> non-kdump parts of this series.
-> 
-> If you have changes, they need to be against the arm64 tree.
+On Tue, Dec 11, 2018 at 2:43 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Nov 27, 2018 at 08:37:37PM -0800, Andrey Smirnov wrote:
+> > Add bits and pieces needed to support IP block variant found on
+> > i.MX8MQ SoCs.
+> >
+> > Cc: p.zabel@pengutronix.de
+> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > Cc: cphealy@gmail.com
+> > Cc: l.stach@pengutronix.de
+> > Cc: Leonard Crestez <leonard.crestez@nxp.com>
+> > Cc: "A.s. Dong" <aisheng.dong@nxp.com>
+> > Cc: Richard Zhu <hongxing.zhu@nxp.com>
+> > Cc: Rob Herring <robh@kernel.org>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-imx@nxp.com
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > ---
+> >  drivers/reset/Kconfig                    |   2 +-
+> >  drivers/reset/reset-imx7.c               | 106 +++++++++++++++++++++++
+> >  include/dt-bindings/reset/imx8mq-reset.h |  64 ++++++++++++++
+>
+> This goes in the binding patch.
 
-Okay!
+OK, I was following the precedent of the original submission:
 
--Takahiro Akashi
+https://lore.kernel.org/linux-arm-kernel/20170227205408.ajeu3stjpl45dnqf@rob-hp-laptop/
 
-> 
-> Thanks,
-> 
-> James
+Will split and submit v3.
+
+Thanks,
+Andrey Smirnov
