@@ -1,44 +1,54 @@
-From: <Tudor.Ambarus@microchip.com>
-Subject: [PATCH 2/2] ARM: dts: at91: at91-sama5d27_som1_ek: enable qspi1
- memory
-Date: Wed, 12 Dec 2018 16:31:11 +0000
-Message-ID: <20181212163057.22183-2-tudor.ambarus@microchip.com>
-References: <20181212163057.22183-1-tudor.ambarus@microchip.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH V5 1/2] dt-bindings: iio: light: isl29018: update power
+ supply name
+Date: Wed, 12 Dec 2018 17:04:25 +0000
+Message-ID: <20181212170425.49658e0c@archlinux>
+References: <1544504196-30277-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181212163057.22183-1-tudor.ambarus@microchip.com>
-Content-Language: en-US
+In-Reply-To: <1544504196-30277-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com, Claudiu.Beznea@microchip.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, boris.brezillon@bootlin.com, linux-mtd@lists.infradead.org, broonie@kernel.org, linux-spi@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "preid@electromag.com.au" <preid@electromag.com.au>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+On Tue, 11 Dec 2018 05:02:39 +0000
+Anson Huang <anson.huang@nxp.com> wrote:
 
-Enable qspi1.
+> According to datasheet, the isl29018 has "vddd/vdda" power
+> supply, the "vdda" and "vddd" MUST be shorted externally,
+> and isl29023/isl29035 ONLY has "vdd" power supply, so just
+> one regulator is needed for the driver, update the power
+> supply name with "vdd" according to datasheet to avoid
+> confusion.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Given the discussion on v4 I am assuming this should be dropped.
+Shout if I'm missing something.
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Jonathan
 
-diff --git a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts b/arch/arm/boot/dt=
-s/at91-sama5d27_som1_ek.dts
-index 363a43d77424..73d16d98bf9c 100644
---- a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-+++ b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-@@ -109,6 +109,10 @@
- 				status =3D "okay";
- 			};
-=20
-+			qspi1: spi@f0024000 {
-+				status =3D "okay";
-+			};
-+
- 			spi0: spi@f8000000 {
- 				pinctrl-names =3D "default";
- 				pinctrl-0 =3D <&pinctrl_spi0_default>;
---=20
-2.9.4
+> ---
+> ChangeLog since V4:
+> 	Since ONLY isl29018 has two power supplies and they are MUST shorted externally, so they can be
+> 	treated as one power supply as well, remove "vdda" power supply and ONLY update the "vcc" with
+> 	"vdd" according to datasheet.
+> ---
+>  Documentation/devicetree/bindings/iio/light/isl29018.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/light/isl29018.txt b/Documentation/devicetree/bindings/iio/light/isl29018.txt
+> index b9bbde3..c4c4e9e 100644
+> --- a/Documentation/devicetree/bindings/iio/light/isl29018.txt
+> +++ b/Documentation/devicetree/bindings/iio/light/isl29018.txt
+> @@ -15,7 +15,7 @@ Optional properties:
+>    Refer to interrupt-controller/interrupts.txt for generic interrupt client
+>    node bindings.
+>  
+> -  - vcc-supply: phandle to the regulator that provides power to the sensor.
+> +  - vdd-supply: phandle to the regulator that provides power to the sensor.
+>  
+>  Example:
+>  
