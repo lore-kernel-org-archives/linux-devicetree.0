@@ -1,117 +1,78 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [RFC PATCH v3 2/2] pwm: imx: Configure output to GPIO in
- disabled state
-Date: Wed, 12 Dec 2018 13:12:55 +0100
-Message-ID: <20181212121255.yg6b4pw7qord7ebi@pengutronix.de>
-References: <1544103655-104466-1-git-send-email-michal.vokac@ysoft.com>
- <1544103655-104466-3-git-send-email-michal.vokac@ysoft.com>
- <20181212080154.kcfh57mulypwuscu@pengutronix.de>
- <52ed0614-d1f5-81cb-3b17-8eb137967872@ysoft.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 0/5] leds: trigger: Add pattern initialization from
+ Device Tree
+Date: Wed, 12 Dec 2018 13:16:04 +0100
+Message-ID: <20181212121604.GA11088@amd>
+References: <1544434201-14190-1-git-send-email-krzk@kernel.org>
+ <be526095-5af9-38bb-7c72-629a82d318e0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <52ed0614-d1f5-81cb-3b17-8eb137967872@ysoft.com>
+In-Reply-To: <be526095-5af9-38bb-7c72-629a82d318e0@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, Fabio Estevam <fabio.estevam@nxp.com>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@karo-electronics.de>, Linus Walleij <linus.walleij@linaro.org>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Baolin Wang <baolin.wang@linaro.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 12, 2018 at 11:42:17AM +0000, Vokáč Michal wrote:
-> On 12.12.2018 09:01, Uwe Kleine-König wrote:
-> > On Thu, Dec 06, 2018 at 01:41:31PM +0000, Vokáč Michal wrote:
-> >> Normally the PWM output is held LOW when PWM is disabled. This can cause
-> >> problems when inverted PWM signal polarity is needed. With this behavior
-> >> the connected circuit is fed by 100% duty cycle instead of being shut-off.
-> >>
-> >> Allow users to define a "pwm" and a "gpio" pinctrl states. The pwm pinctrl
-> >> state is selected when PWM is enabled and the gpio pinctrl state is
-> >> selected when PWM is disabled. In the gpio state the new pwm-gpios GPIO is
-> >> configured as input and the internal pull-up resistor is used to pull the
-> >> output level high.
-> >>
-> >> If all the pinctrl states and the pwm-gpios GPIO are not correctly
-> >> specified in DT the PWM work as usual.
-> >>
-> >> As an example, with this patch a PWM controlled backlight with inversed
-> >> signal polarity can be used in full brightness range. Without this patch
-> >> the backlight can not be turned off as brightness = 0 disables the PWM
-> >> and that in turn set PWM output LOW, that is full brightness.
-> >>
-> >> Inverted output of the PWM with "default" and with "pwm"+"gpio" pinctrl:
-> >>
-> >> +--------------+------------+---------------+----------- +-------------+
-> >> | After reset  | Bootloader |   PWM probe   |     PWM    |     PWM     |
-> >> | 100k pull-up |            |               | enable 30% |   disable   |
-> >> +--------------+------------+---------------+------------+-------------+
-> >> | pinctrl      |    none    |    default    |   default  |   default   |
-> >> | out H   __________________                   __   __                 |
-> >> | out L                     \_________________/  \_/  \_/\____________ |
-> >> |                                           ^    ^    ^                |
-> >> +--------------+------------+---------------+------------+-------------+
-> >> | pinctrl      |    none    |      gpio     |     pwm    |     gpio    |
-> >> | out H   __________________________________   __   __   _____________ |
-> >> | out L                                     \_/  \_/  \_/              |
-> >> |                                           ^    ^    ^                |
-> >> +----------------------------------------------------------------------+
-> >>
-> >> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-> >> ---
-> >> Changes in v3:
-> >>   - Commit message update.
-> >>   - Minor fix in code comment (Uwe)
-> >>   - Align function arguments to the opening parentheses. (Uwe)
-> >>   - Do not test devm_pinctrl_get for NULL. (Thierry)
-> >>   - Convert all messages to dev_dbg() (Thierry)
-> >>   - Do not actively drive the pin in gpio state. Configure it as input
-> >>     and rely solely on the internal pull-up. (Thierry)
-> >>
-> >> Changes in v2:
-> >>   - Utilize the "pwm" and "gpio" pinctrl states.
-> >>   - Use the pwm-gpios signal to drive the output in "gpio" pinctrl state.
-> >>   - Select the right pinctrl state in probe.
-> >>
-> >>   drivers/pwm/pwm-imx.c | 77 +++++++++++++++++++++++++++++++++++++++++++++++++++
-> >>   1 file changed, 77 insertions(+)
-> >>
-> 
-> [ snip ]
-> 
-> > On thing I noticed while looking at the rcar driver is: This doesn't
-> > wait for the current period to end. Is this supposed to happen? Also for
-> > the enable case the hardware is configured for the desired duty cycle
-> > and only then the pinctrl is switched to pwm. Both might result in a
-> > spike that is not desired.
-> 
-> The behavior should not change from how imx-pwm was working before.
-> When PWM is disabled the output is immediately gated off (put into
-> the idle state) independently on the period. I measured this.
 
-Oh really, I wasn't aware of that. This is another bug in the imx pwm
-then (I think).
- 
-> For the enable case you would certainly not get any additional spikes.
+--7JfCtLOvnd9MIVvH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, there is a possibility for a spike: If you configure for say 40%:
-                   _    _
-pwm output   : ___/ \__/ \__
-muxing       : GPIO| PWM_
-actual output: ____/\__/ \__
+On Mon 2018-12-10 22:03:18, Jacek Anaszewski wrote:
+> Hi Krzysztof,
+>=20
+> Thank you for the update.
+>=20
+> On 12/10/18 10:29 AM, Krzysztof Kozlowski wrote:
+> >Hi,
+> >
+> >I rebased on top of Jacek's patches and, as I could not find them on git=
+ kernel
+> >tree, I included them here. Also with small fixup.
+> >
+> >Changes since v1:
+> >1. Rebase on Jacek's patches.
+>=20
+> Made following amendments to 2/5:
+>=20
+> - removed extra empty line
+> - fixed language in the commit message as proposed by Pavel
+>=20
+> >2. Add patch 3/5 for fixup of Jacek's solution.
+> >3. Drop first two patches from the series (applied).
+> >4. Patch 5/5: Use LED_INIT_DEFAULT_TRIGGER (suggested by Jacek Anaszewsk=
+i).
+> >5. Patch 5/5: Return-on-error and log warning (suggested by Pavel Machek)
+> Applied to the for-next branch of linux-leds.git, thanks.
+>=20
+> Pavel - I'm still awaiting your acks, just wanted to have
+> the patch set in linux-next quicker, taking into account that
+> merge window is imminent.
 
-> The worst thing that may happen is that the first period will be
-> slightly shorter depending on how long it takes to test the pinctrl
-> and switch the muxing. And this is unavoidable, it would happen even
-> if you wait for the start of a period. The test + muxing still takes
-> some time.
+Ok, let me take a look. But this really should have Rob's acknowledge,
+so...
 
-You could first configure for duty_cycle 0 and a short period, then mux
-to PWM and then configure the correct duty cycle. Ditto for disable.
+								Pavel
+							=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Best regards
-Uwe
+--7JfCtLOvnd9MIVvH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlwQ/AQACgkQMOfwapXb+vKCwgCfTQH49a52KNzJN45oXo7Z+s78
+oVAAni2YJQfVPZAUcHPe5tYJxsu6N8sL
+=mLtb
+-----END PGP SIGNATURE-----
+
+--7JfCtLOvnd9MIVvH--
