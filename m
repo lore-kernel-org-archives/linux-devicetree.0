@@ -1,73 +1,122 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v5 1/2] dt-bindings: Document,qcom,adreno-gmu
-Date: Wed, 12 Dec 2018 10:31:05 -0700
-Message-ID: <20181212173106.29618-2-jcrouse@codeaurora.org>
-References: <20181212173106.29618-1-jcrouse@codeaurora.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH] ARM: dts: exynos: Specify I2S assigned clocks in proper
+ node
+Date: Wed, 12 Dec 2018 18:57:44 +0100
+Message-ID: <20181212175744.8287-1-s.nawrocki@samsung.com>
+References: <CGME20181212175813epcas2p26f7ec0e0e5e90d1e9cb7aeccd273e0ab@epcas2p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181212173106.29618-1-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: krzk@kernel.org
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RG9jdW1lbnQgdGhlIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgQWRyZW5vIEdNVSBkZXZp
-Y2UKYXZhaWxhYmxlIG9uIEFkcmVubyBhNnh4IHRhcmdldHMuCgpSZXZpZXdlZC1ieTogUm9iIEhl
-cnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KU2lnbmVkLW9mZi1ieTogSm9yZGFuIENyb3VzZSA8amNy
-b3VzZUBjb2RlYXVyb3JhLm9yZz4KLS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L21zbS9nbXUudHh0ICAgfCA1NCArKysrKysrKysrKysrKysrKysrCiAuLi4vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L21zbS9ncHUudHh0ICAgfCAgMiArCiAyIGZpbGVzIGNoYW5nZWQsIDU2
-IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9nbXUudHh0IGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dtdS50eHQKbmV3IGZpbGUgbW9kZSAx
-MDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi5mNjViYjQ5ZmZmMzYKLS0tIC9kZXYvbnVsbAorKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4dApA
-QCAtMCwwICsxLDU0IEBACitRdWFsY29tbSBhZHJlbm8vc25hcGRyYWdvbiBHTVUgKEdyYXBoaWNz
-IG1hbmFnZW1lbnQgdW5pdCkKKworVGhlIEdNVSBpcyBhIHByb2dyYW1tYWJsZSBwb3dlciBjb250
-cm9sbGVyIGZvciB0aGUgR1BVLiB0aGUgQ1BVIGNvbnRyb2xzIHRoZQorR01VIHdoaWNoIGluIHR1
-cm4gaGFuZGxlcyBwb3dlciBjb250cm9scyBmb3IgdGhlIEdQVS4KKworUmVxdWlyZWQgcHJvcGVy
-dGllczoKKy0gY29tcGF0aWJsZToKKyAgKiAicWNvbSxhZHJlbm8tZ211IgorLSByZWc6IFBoeXNp
-Y2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBHTVUgcmVnaXN0ZXJzLgorLSByZWct
-bmFtZXM6IE1hdGNoaW5nIG5hbWVzIGZvciB0aGUgcmVnaXN0ZXIgcmVnaW9ucworICAqICJnbXUi
-CisgICogImdtdV9wZGMiCistIGludGVycnVwdHM6IFRoZSBpbnRlcnJ1cHQgc2lnbmFscyBmcm9t
-IHRoZSBHTVUuCistIGludGVycnVwdC1uYW1lczogTWF0Y2hpbmcgbmFtZXMgZm9yIHRoZSBpbnRl
-cnJ1cHRzCisgICogImhmaSIKKyAgKiAiZ211IgorLSBjbG9ja3M6IHBoYW5kbGVzIHRvIHRoZSBk
-ZXZpY2UgY2xvY2tzCistIGNsb2NrLW5hbWVzOiBNYXRjaGluZyBuYW1lcyBmb3IgdGhlIGNsb2Nr
-cworICAgKiAiZ211IgorICAgKiAiY3hvIgorICAgKiAiYXhpIgorICAgKiAibW5vYyIKKy0gcG93
-ZXItZG9tYWluczogc2hvdWxkIGJlIDwmY2xvY2tfZ3B1Y2MgR1BVX0NYX0dEU0M+CistIGlvbW11
-czogcGhhbmRsZSB0byB0aGUgYWRyZW5vIGlvbW11CistIG9wZXJhdGluZy1wb2ludHMtdjI6IHBo
-YW5kbGUgdG8gdGhlIE9QUCBvcGVyYXRpbmcgcG9pbnRzCisKK0V4YW1wbGU6CisKKy8geworCS4u
-LgorCisJZ211OiBnbXVANTA2YTAwMCB7CisJCWNvbXBhdGlibGU9InFjb20sYWRyZW5vLWdtdSI7
-CisKKwkJcmVnID0gPDB4NTA2YTAwMCAweDMwMDAwPiwKKwkJCTwweGIyMDAwMDAgMHgzMDAwMDA+
-OworCQlyZWctbmFtZXMgPSAiZ211IiwgImdtdV9wZGMiOworCisJCWludGVycnVwdHMgPSA8R0lD
-X1NQSSAzMDQgSVJRX1RZUEVfTEVWRUxfSElHSD4sCisJCQk8R0lDX1NQSSAzMDUgSVJRX1RZUEVf
-TEVWRUxfSElHSD47CisJCWludGVycnVwdC1uYW1lcyA9ICJoZmkiLCAiZ211IjsKKworCQljbG9j
-a3MgPSA8JmNsb2NrX2dwdWNjIEdQVV9DQ19DWF9HTVVfQ0xLPiwKKwkJCTwmY2xvY2tfZ3B1Y2Mg
-R1BVX0NDX0NYT19DTEs+LAorCQkJPCZjbG9ja19nY2MgR0NDX0REUlNTX0dQVV9BWElfQ0xLPiwK
-KwkJCTwmY2xvY2tfZ2NjIEdDQ19HUFVfTUVNTk9DX0dGWF9DTEs+OworCQljbG9jay1uYW1lcyA9
-ICJnbXUiLCAiY3hvIiwgImF4aSIsICJtZW1ub2MiOworCisJCXBvd2VyLWRvbWFpbnMgPSA8JmNs
-b2NrX2dwdWNjIEdQVV9DWF9HRFNDPjsKKwkJaW9tbXVzID0gPCZhZHJlbm9fc21tdSA1PjsKKwor
-CWkJb3BlcmF0aW5nLXBvaW50cy12MiA9IDwmZ211X29wcF90YWJsZT47CisJfTsKK307CmRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9ncHUu
-dHh0CmluZGV4IDQzZmFjMGZlMDliYi4uNzU0ZjZjNmYzNGU1IDEwMDY0NAotLS0gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dAorKysgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dApAQCAtMTQs
-NiArMTQsOCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgogICAqICJjb3JlIgogICAqICJpZmFjZSIK
-ICAgKiAibWVtX2lmYWNlIgorLSBxY29tLGdtdTogRm9yIGE2eHggYW5kIG5ld2VyIHRhcmdldHMg
-YSBwaGFuZGxlIHRvIHRoZSBHTVUgZGV2aWNlIHRoYXQgd2lsbAorICBjb250cm9sIHRoZSBwb3dl
-ciBmb3IgdGhlIEdQVQogCiBFeGFtcGxlOgogCi0tIAoyLjE4LjAKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJl
-ZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+The assigned parent clocks should be normally specified in the consumer
+device's DT node, this ensures respective driver always sees correct clock
+settings when required.
+
+This patch fixes regression in audio subsystem on Odroid XU3/XU4 boards
+that appeared after commits:
+
+'commit 647d04f8e07a ("ASoC: samsung: i2s: Ensure the RCLK rate is properly determined")'
+'commit 995e73e55f46 ("ASoC: samsung: i2s: Fix rclk_srcrate handling")'
+'commit 48279c53fd1d ("ASoC: samsung: i2s: Prevent external abort on exynos5433 I2S1 access")'
+
+Without this patch the driver gets wrong clock as the I2S function (op_clk)
+clock in probe() and effectively the clock which is finally assigned from DT
+is not being enabled/disabled in the runtime resume/suspend ops.
+
+Without the above listed commits the EXYNOS_I2S_BUS clock was always set
+as parent of CLK_I2S_RCLK_SRC regardless of DT settings so there was no issue
+with not enabled EXYNOS_SCLK_I2S.
+
+Cc: stable@vger.kernel.org # v4.17+
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+---
+ arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi | 9 ++++-----
+ arch/arm/boot/dts/exynos5422-odroidxu4.dts        | 9 ++++-----
+ 2 files changed, 8 insertions(+), 10 deletions(-)
+
+diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
+index 03611d50c5a9..e84544b220b9 100644
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
+@@ -26,8 +26,7 @@
+ 			"Speakers", "SPKL",
+ 			"Speakers", "SPKR";
+ 
+-		assigned-clocks = <&i2s0 CLK_I2S_RCLK_SRC>,
+-				<&clock CLK_MOUT_EPLL>,
++		assigned-clocks = <&clock CLK_MOUT_EPLL>,
+ 				<&clock CLK_MOUT_MAU_EPLL>,
+ 				<&clock CLK_MOUT_USER_MAU_EPLL>,
+ 				<&clock_audss EXYNOS_MOUT_AUDSS>,
+@@ -36,8 +35,7 @@
+ 				<&clock_audss EXYNOS_DOUT_AUD_BUS>,
+ 				<&clock_audss EXYNOS_DOUT_I2S>;
+ 
+-		assigned-clock-parents = <&clock_audss EXYNOS_SCLK_I2S>,
+-				<&clock CLK_FOUT_EPLL>,
++		assigned-clock-parents = <&clock CLK_FOUT_EPLL>,
+ 				<&clock CLK_MOUT_EPLL>,
+ 				<&clock CLK_MOUT_MAU_EPLL>,
+ 				<&clock CLK_MAU_EPLL>,
+@@ -48,7 +46,6 @@
+ 				<0>,
+ 				<0>,
+ 				<0>,
+-				<0>,
+ 				<196608001>,
+ 				<(196608002 / 2)>,
+ 				<196608000>;
+@@ -84,4 +81,6 @@
+ 
+ &i2s0 {
+ 	status = "okay";
++	assigned-clocks = <&i2s0 CLK_I2S_RCLK_SRC>;
++	assigned-clock-parents = <&clock_audss EXYNOS_SCLK_I2S>;
+ };
+diff --git a/arch/arm/boot/dts/exynos5422-odroidxu4.dts b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
+index 4a30cc849b00..122174ea9e0a 100644
+--- a/arch/arm/boot/dts/exynos5422-odroidxu4.dts
++++ b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
+@@ -33,8 +33,7 @@
+ 		compatible = "samsung,odroid-xu3-audio";
+ 		model = "Odroid-XU4";
+ 
+-		assigned-clocks = <&i2s0 CLK_I2S_RCLK_SRC>,
+-				<&clock CLK_MOUT_EPLL>,
++		assigned-clocks = <&clock CLK_MOUT_EPLL>,
+ 				<&clock CLK_MOUT_MAU_EPLL>,
+ 				<&clock CLK_MOUT_USER_MAU_EPLL>,
+ 				<&clock_audss EXYNOS_MOUT_AUDSS>,
+@@ -43,8 +42,7 @@
+ 				<&clock_audss EXYNOS_DOUT_AUD_BUS>,
+ 				<&clock_audss EXYNOS_DOUT_I2S>;
+ 
+-		assigned-clock-parents = <&clock_audss EXYNOS_SCLK_I2S>,
+-				<&clock CLK_FOUT_EPLL>,
++		assigned-clock-parents = <&clock CLK_FOUT_EPLL>,
+ 				<&clock CLK_MOUT_EPLL>,
+ 				<&clock CLK_MOUT_MAU_EPLL>,
+ 				<&clock CLK_MAU_EPLL>,
+@@ -55,7 +53,6 @@
+ 				<0>,
+ 				<0>,
+ 				<0>,
+-				<0>,
+ 				<196608001>,
+ 				<(196608002 / 2)>,
+ 				<196608000>;
+@@ -79,6 +76,8 @@
+ 
+ &i2s0 {
+ 	status = "okay";
++	assigned-clocks = <&i2s0 CLK_I2S_RCLK_SRC>;
++	assigned-clock-parents = <&clock_audss EXYNOS_SCLK_I2S>;
+ };
+ 
+ &pwm {
+-- 
+2.19.2
