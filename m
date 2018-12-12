@@ -1,77 +1,53 @@
-From: Vijay Khemka <vijaykhemka@fb.com>
-Subject: [PATCH v4 1/2] ARM: dts: aspeed: Add KCS & lpc ctrl for Facebook
-Date: Wed, 12 Dec 2018 13:03:51 -0800
-Message-ID: <20181212210352.1717617-1-vijaykhemka@fb.com>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v6 0/2] arm64: dts: Add sdm845 GPU/GMU and SMMU
+Date: Wed, 12 Dec 2018 14:18:46 -0700
+Message-ID: <20181212211848.26768-1-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc: vijaykhemka@fb.com, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Added kcs device and lpc ctrl device to enable LPC clock in Facebook
-Tiogapass device tree.
-
-Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
----
- .../dts/aspeed-bmc-facebook-tiogapass.dts     | 30 +++++++++++++++++++
- 1 file changed, 30 insertions(+)
-
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-index d9d7f208788a..9544fa2c1822 100644
---- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-@@ -21,6 +21,18 @@
- 	memory@80000000 {
- 		reg = <0x80000000 0x20000000>;
- 	};
-+
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		flash_memory: region@98000000 {
-+			no-map;
-+			reg = <0x98000000 0x04000000>; /* 64M */
-+		};
-+	};
-+
- 	iio-hwmon {
- 		compatible = "iio-hwmon";
- 		oemname0 = "MB_P3V3";
-@@ -62,6 +74,12 @@
- 	};
- };
- 
-+&lpc_ctrl {
-+	status = "okay";
-+	memory-region = <&flash_memory>;
-+	flash = <&spi1>;
-+};
-+
- &uart1 {
- 	// Host Console
- 	status = "okay";
-@@ -75,6 +93,18 @@
- 	status = "okay";
- };
- 
-+&kcs2 {
-+	// BMC KCS channel 2
-+	status = "okay";
-+	kcs_addr = <0xca8>;
-+};
-+
-+&kcs3 {
-+	// BMC KCS channel 3
-+	status = "okay";
-+	kcs_addr = <0xca2>;
-+};
-+
- &mac0 {
- 	status = "okay";
- 
--- 
-2.17.1
+Tm93IHRoYXQgbW9yZSBvZiB0aGUgc2RtODQ1IGJpbmRpbmdzIGFyZSBoZWFkZWQgdXBzdHJlYW0g
+dGhpcyBhIHJlZnJlc2ggb2YKb2YgaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Nl
+cmllcy8zOTMwOC8gdG8gYWRkIGJpbmRpbmdzIGFuZCBub2Rlcwpmb3IgdGhlIEdQVS9HTVUgYW5k
+IEdQVSBTTU1VIGZvciBzZG04NDUuCgpUaGlzIGlzIGJhc2VkIG9uIDoKZ2l0Oi8vZ2l0Lmtlcm5l
+bC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2Fncm9zcy9saW51eC5naXQgZm9yLW5leHQK
+CndpdGg6Cmh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3BhdGNod29yay9wYXRjaC8xMDE4MzY1LwoK
+VGhpcyBjaGFuZ2UgcmVxdWlyZXMgdGhlIGZvbGxvd2luZyBkZXBlbmRlbmNpZXM6CgppbmNsdWRl
+L2R0LWJpbmRpbmdzL3Bvd2VyL3Fjb20tcnBtcGQuaDoKaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
+Lm9yZy9wYXRjaC8xMDcxMTExOS8KCnFjb20sc21tdS12MiBiaW5kaW5nOgpodHRwczovL3BhdGNo
+d29yay5rZXJuZWwub3JnL3BhdGNoLzEwNTgxOTExLwoKdjY6IFVwZGF0ZSBHUFUgYmluZGluZ3Mg
+Zm9yIGE2eHggYW5kIG1ha2UgdGhlIGV4YW1wbGVzIG1hdGNoIHRoZSBub2RlcyBhbmQgdmljZQog
+dmVyc2EuICBDbGVhbiB1cCB0eXBlcyBhbmQgcmViYXNlIG9uCiBodHRwczovL2xvcmUua2VybmVs
+Lm9yZy9wYXRjaHdvcmsvcGF0Y2gvMTAxODM2NS8gdG8gaGVscCBmYWNpbGl0YXRlIG1lcmdpbmcu
+CnY1OiBVc2Ugc3ltYm9saWMgbmFtZXMgZm9yIHRoZSBSUE1IIHBvd2VyIGxldmVscyBkZWZpbmVk
+IGluIE9QUCB0YWJsZSwKIG1vdmUgdGhlIG9wcCB0YWJsZXMgYXMgY2hpbGRyZW4gb2YgdGhlaXIg
+cmVzcGVjdGl2ZSBub2RlcyBhbmQgcmVuYW1lCiB0aGUgaW9tbXUgZGV2aWNlLgp2NDogUmViYXNl
+CnYzOiBTcGxpdCBHTVUgUERDIHJlZ2lvbiBpbnRvIHR3byBHUFUgc3BlY2lmaWMgc2VjdGlvbnMs
+IGZpeCBpbmRlbnRhdGlvbiwKICByZWFsbHkgdXNlIHFjb20sZ211IGZvciB0aGUgcGhhbmRsZSBu
+YW1lCnYyOiBjaGFuZ2VkIHFjb20sYXJjLWxldmVsIHRvIHFjb20sbGV2ZWwgZm9sbG93aW5nIGRp
+c2N1c3Npb24gd2l0aCBWaXJlc2g7CiAgY2hhbmdlIGdtdSBwaGFuZGxlIHRvIHFjb20sZ211IHBl
+ciBSb2IKCioqKiBCTFVSQiBIRVJFICoqKgoKSm9yZGFuIENyb3VzZSAoMik6CiAgZHQtYmluZGlu
+Z3M6IGRybS9tc20vYTZ4eDogRG9jdW1lbnQgR01VIGFuZCB1cGRhdGUgR1BVIGJpbmRpbmdzCiAg
+YXJtNjQ6IGR0czogc2RtODQ1OiBBZGQgZ3B1IGFuZCBnbXUgZGV2aWNlIG5vZGVzCgogLi4uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4dCAgIHwgIDU2ICsrKysrKysrCiAu
+Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9ncHUudHh0ICAgfCAgNDEgKysrKyst
+CiBhcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kgICAgICAgICAgfCAxMjMgKysr
+KysrKysrKysrKysrKysrCiAzIGZpbGVzIGNoYW5nZWQsIDIxNyBpbnNlcnRpb25zKCspLCAzIGRl
+bGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L21zbS9nbXUudHh0CgotLSAKMi4xOC4wCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZy
+ZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
