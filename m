@@ -1,79 +1,91 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Greg KH <gregkh@linuxfoundation.org>
 Subject: Re: [PATCH v2 6/6] misc: fastrpc: Add support for compat ioctls
-Date: Wed, 12 Dec 2018 11:44:05 +0000
-Message-ID: <864aaef3-8d60-3beb-ce20-a9f41f78a32f@linaro.org>
+Date: Wed, 12 Dec 2018 12:50:37 +0100
+Message-ID: <20181212115037.GA31075@kroah.com>
 References: <20181207163513.16412-1-srinivas.kandagatla@linaro.org>
  <20181207163513.16412-7-srinivas.kandagatla@linaro.org>
  <20181212105932.GA1990@kroah.com>
+ <864aaef3-8d60-3beb-ce20-a9f41f78a32f@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181212105932.GA1990@kroah.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <864aaef3-8d60-3beb-ce20-a9f41f78a32f@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Cc: robh+dt@kernel.org, arnd@arndb.de, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, bkumar@qti.qualcomm.com, thierry.escande@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the comments,
-
-On 12/12/18 10:59, Greg KH wrote:
->> This patch adds support for compat ioctl from 32 bits userland to
->> Qualcomm fastrpc driver.
-> Ick, why?
+On Wed, Dec 12, 2018 at 11:44:05AM +0000, Srinivas Kandagatla wrote:
+> Thanks for the comments,
 > 
-> Why not just fix up your ioctl structures to not need that at all?  For
-> new code being added to the kernel, there's no excuse to have to have
-> compat structures anymore, just make your api sane and all should be
-> fine.
-
-Yes, I did try that after comments from Arnd,
-
-
+> On 12/12/18 10:59, Greg KH wrote:
+> > > This patch adds support for compat ioctl from 32 bits userland to
+> > > Qualcomm fastrpc driver.
+> > Ick, why?
+> > 
+> > Why not just fix up your ioctl structures to not need that at all?  For
+> > new code being added to the kernel, there's no excuse to have to have
+> > compat structures anymore, just make your api sane and all should be
+> > fine.
 > 
-> What prevents you from doing that and requiring compat support?
+> Yes, I did try that after comments from Arnd,
 > 
-I removed most of the compat IOCTLS except this one.
-The reason is that this ioctl takes arguments which can vary in number 
-for each call. So args are passed as pointer to structure, rather than 
-fixed size. I could not find better way to rearrange this to give a 
-fixed size data structure. In theory number of arguments can vary from 
-0-255 for both in & out.
-
-current data structure looks like this:
-
-struct fastrpc_invoke_args {
-	__s32 fd;
-	size_t length;
-	void *ptr;
-};
-
-struct fastrpc_invoke {
-	__u32 handle;
-	__u32 sc;
-	struct fastrpc_invoke_args *args;
-};
-
-Other option is to split this IOCTL into 3 parts
-SET_INVOKE_METHOD, SET_INVOKE_ARGS and INVOKE
-with some kinda handle to bind these three.
-
-with below structures:
-struct fastrpc_invoke {
-	__u32 handle;
-	__u32 sc;
-};
-
-struct fastrpc_invoke_arg {
-	__s32 fd;
-	__u64 length;
-	__u64 ptr;
-};
-I can try this and see how this works before I send next version of patch!
-
-
---srini
-> thanks,
 > 
-> greg k-h
+> > 
+> > What prevents you from doing that and requiring compat support?
+> > 
+> I removed most of the compat IOCTLS except this one.
+> The reason is that this ioctl takes arguments which can vary in number for
+> each call.
+
+Then do not do that :)
+
+Remember, you get to design the api, fix the structure size to work
+properly everywhere.
+
+> So args are passed as pointer to structure, rather than fixed
+> size. I could not find better way to rearrange this to give a fixed size
+> data structure. In theory number of arguments can vary from 0-255 for both
+> in & out.
+> 
+> current data structure looks like this:
+> 
+> struct fastrpc_invoke_args {
+> 	__s32 fd;
+> 	size_t length;
+> 	void *ptr;
+> };
+
+Make length and ptr both __u64 and you should be fine, right?  If you do
+that, might as well make fd __u64 as well to align things better.
+
+> struct fastrpc_invoke {
+> 	__u32 handle;
+> 	__u32 sc;
+> 	struct fastrpc_invoke_args *args;
+> };
+> 
+> Other option is to split this IOCTL into 3 parts
+> SET_INVOKE_METHOD, SET_INVOKE_ARGS and INVOKE
+> with some kinda handle to bind these three.
+> 
+> with below structures:
+> struct fastrpc_invoke {
+> 	__u32 handle;
+> 	__u32 sc;
+> };
+> 
+> struct fastrpc_invoke_arg {
+> 	__s32 fd;
+> 	__u64 length;
+> 	__u64 ptr;
+> };
+> I can try this and see how this works before I send next version of patch!
+
+No need to have 3 calls, just change your one structure and you should
+be fine.
+
+thanks,
+
+greg k-h
