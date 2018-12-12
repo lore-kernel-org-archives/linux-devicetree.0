@@ -1,83 +1,32 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 2/5] leds: Add helper for getting default pattern from Device Tree
-Date: Wed, 12 Dec 2018 12:16:43 +0100
-Message-ID: <1544613406-27026-3-git-send-email-krzk@kernel.org>
-References: <1544613406-27026-1-git-send-email-krzk@kernel.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH V3 1/2] dt-bindings: iio: light: isl29018: update power
+ supply name
+Date: Wed, 12 Dec 2018 09:19:57 -0200
+Message-ID: <CAOMZO5DXNpn18pzngmAt+hyiWNtfwckafxCzbJ17EgndjABwWg@mail.gmail.com>
+References: <1544425521-775-1-git-send-email-Anson.Huang@nxp.com>
+ <20181210232358.GA11621@bogus> <DB3PR0402MB3916E1651ABC07F6F788B265F5A60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAL_Jsq+sP_fsQaoT6FpZNRxjhPAhCcE8e-0xffUUxShcC2LuHw@mail.gmail.com> <DB3PR0402MB39164538D3969FE51C649B65F5A70@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544613406-27026-1-git-send-email-krzk@kernel.org>
+In-Reply-To: <DB3PR0402MB39164538D3969FE51C649B65F5A70@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, Baolin Wang <baolin.wang@linaro.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Yongcai Huang <anson.huang@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Multiple LED triggers might need to access default pattern so add a
-helper for that.
+Hi Anson,
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
+On Wed, Dec 12, 2018 at 4:17 AM Anson Huang <anson.huang@nxp.com> wrote:
+>
+> Hi, Fabio
+>         Obviously, some of the dts files (such as arch/arm/boot/dts/exyno=
+s5420-peach-pit.dts) using "vcc" as isl29018's power supply name, they are =
+NOT matched with datasheet, so should we update those dts files with "vdd" =
+as well or just using the "vcc" in isl29018 driver? Which solution is bette=
+r?
 
-New patch in the series
-
----
- drivers/leds/led-class.c | 25 +++++++++++++++++++++++++
- include/linux/leds.h     |  3 +++
- 2 files changed, 28 insertions(+)
-
-diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index 3c7e3487b373..44b95e6480f6 100644
---- a/drivers/leds/led-class.c
-+++ b/drivers/leds/led-class.c
-@@ -17,6 +17,7 @@
- #include <linux/leds.h>
- #include <linux/list.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/timer.h>
-@@ -244,6 +245,30 @@ static int led_classdev_next_name(const char *init_name, char *name,
- }
- 
- /**
-+ * led_classdev_get_default_pattern - return default pattern
-+ *
-+ * @led_cdev: the led_classdev structure for this device
-+ *
-+ * Return: Null terminated string with default pattern from DeviceTree or NULL
-+ */
-+const char *led_classdev_get_default_pattern(struct led_classdev *led_cdev)
-+{
-+	struct device_node *np = dev_of_node(led_cdev->dev);
-+	const char *pattern;
-+
-+	if (!np)
-+		return NULL;
-+
-+	if (of_property_read_string(np, "led-pattern", &pattern))
-+		return NULL;
-+
-+	if (!strlen(pattern))
-+		return NULL;
-+
-+	return pattern;
-+}
-+
-+/**
-  * of_led_classdev_register - register a new object of led_classdev class.
-  *
-  * @parent: parent of LED device
-diff --git a/include/linux/leds.h b/include/linux/leds.h
-index 5263f87e1d2c..9da2bfa183ea 100644
---- a/include/linux/leds.h
-+++ b/include/linux/leds.h
-@@ -129,6 +129,9 @@ struct led_classdev {
- 	struct mutex		led_access;
- };
- 
-+extern const char *
-+led_classdev_get_default_pattern(struct led_classdev *led_cdev);
-+
- extern int of_led_classdev_register(struct device *parent,
- 				    struct device_node *np,
- 				    struct led_classdev *led_cdev);
--- 
-2.7.4
+We should not break existing dtbs, so in this case just keep the
+existing supply name and you could add the new optional vdda supply as
+per the datasheet.
