@@ -1,60 +1,36 @@
-Return-Path: <SRS0=W32e=OW=gmail.com=dwesterg@kernel.org>
-From: dwesterg@gmail.com
-Subject: [PATCH v2 net-next 00/10] net: eth: altera: tse: Add PTP and mSGDMA prefetcher
-Date: Thu, 13 Dec 2018 09:52:42 -0800
-Message-Id: <20181213175252.21143-1-dalon.westergreen@linux.intel.com>
+Return-Path: <SRS0=dIfH=OV=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:1700 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbeLLV0w (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Dec 2018 16:26:52 -0500
+Date: Wed, 12 Dec 2018 13:26:50 -0800
+From: Sivaram Nair <sivaramn@nvidia.com>
+Subject: Re: [PATCH 2/4] firmware: tegra: refactor bpmp driver
+Message-ID: <20181212212650.GB3443@sdt>
+References: <1544643088-17678-1-git-send-email-talho@nvidia.com>
+ <1544643088-17678-3-git-send-email-talho@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: netdev@vger.kernel.org, dinguyen@kernel.org, thor.thayer@linux.intel.com, richardcochran@gmail.com, davem@davemloft.net, vbridger@opensource.altera.com, robh+dt@kernel.org, mark.rutland@arm.commark.rutland@arm.com, devicetree@vger.kernel.org, hean.loong.ong@intel.com
-Cc: Dalon Westergreen <dalon.westergreen@linux.intel.com>
+In-Reply-To: <1544643088-17678-3-git-send-email-talho@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+Sender: devicetree-owner@vger.kernel.org
+To: Timo Alho <talho@nvidia.com>
+Cc: treding@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Dalon Westergreen <dalon.westergreen@linux.intel.com>
+On Wed, Dec 12, 2018 at 09:31:26PM +0200, Timo Alho wrote:
+>  
+>  static bool tegra_bpmp_is_req_ready(struct tegra_bpmp_channel *channel)
+>  {
+> -	return tegra_bpmp_is_resp_ready(channel);
+> +	struct tegra_bpmp *bpmp = channel->bpmp;
+> +
+> +	return bpmp->soc->ops->is_req_ready(channel);
 
-This patch series cleans up the Altera TSE driver and adds support
-for the newer msgdma prefetcher as well as ptp support when using
-the msgdma prefetcher.
+Perhaps, write a helper function to return ops pointer from channel and
+use it here and below?
 
-Additions from v1:
- -> Addition of cleanup to altera_dmaops declarations
- -> Move xmit functions to return type netdev_tx_t
+>  
+> +extern struct tegra_bpmp_ops tegra186_bpmp_ops;
 
-Dalon Westergreen (10):
-  net: eth: altera: tse_start_xmit ignores tx_buffer call response
-  net: eth: altera: set rx and tx ring size before init_dma call
-  net: eth: altera: fix altera_dmaops declaration
-  net: eth: altera: add optional function to start tx dma
-  net: eth: altera: Move common functions to altera_utils
-  net: eth: altera: Add missing identifier names to function
-    declarations
-  net: eth: altera: change tx functions to type netdev_tx_t
-  net: eth: altera: add support for ptp and timestamping
-  net: eth: altera: add msgdma prefetcher
-  net: eth: altera: update devicetree bindings documentation
-
- .../devicetree/bindings/net/altera_tse.txt    |  98 +++-
- drivers/net/ethernet/altera/Kconfig           |   1 +
- drivers/net/ethernet/altera/Makefile          |   3 +-
- drivers/net/ethernet/altera/altera_msgdma.c   |   5 +-
- drivers/net/ethernet/altera/altera_msgdma.h   |  30 +-
- .../altera/altera_msgdma_prefetcher.c         | 432 ++++++++++++++++++
- .../altera/altera_msgdma_prefetcher.h         |  30 ++
- .../altera/altera_msgdmahw_prefetcher.h       |  87 ++++
- drivers/net/ethernet/altera/altera_sgdma.c    |  17 +-
- drivers/net/ethernet/altera/altera_sgdma.h    |  32 +-
- drivers/net/ethernet/altera/altera_tse.h      |  98 ++--
- .../net/ethernet/altera/altera_tse_ethtool.c  |  29 ++
- drivers/net/ethernet/altera/altera_tse_main.c | 221 +++++++--
- drivers/net/ethernet/altera/altera_utils.c    |  30 ++
- drivers/net/ethernet/altera/altera_utils.h    |  46 ++
- drivers/net/ethernet/altera/intel_fpga_tod.c  | 358 +++++++++++++++
- drivers/net/ethernet/altera/intel_fpga_tod.h  |  56 +++
- 17 files changed, 1420 insertions(+), 153 deletions(-)
- create mode 100644 drivers/net/ethernet/altera/altera_msgdma_prefetcher.c
- create mode 100644 drivers/net/ethernet/altera/altera_msgdma_prefetcher.h
- create mode 100644 drivers/net/ethernet/altera/altera_msgdmahw_prefetcher.h
- create mode 100644 drivers/net/ethernet/altera/intel_fpga_tod.c
- create mode 100644 drivers/net/ethernet/altera/intel_fpga_tod.h
-
--- 
-2.19.2
+Move this to bpmp-private.h?
