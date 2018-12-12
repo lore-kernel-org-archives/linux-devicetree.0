@@ -1,59 +1,80 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v6 18/21] iommu/tegra: gart: Prepend error/debug messages
- with "gart:"
-Date: Wed, 12 Dec 2018 11:20:58 +0100
-Message-ID: <20181212102058.GL15092@ulmo>
-References: <20181209202950.31486-1-digetx@gmail.com>
- <20181209202950.31486-19-digetx@gmail.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v2 00/12] Bring suspend to RAM support to PCIe Aardvark driver
+Date: Wed, 12 Dec 2018 11:21:30 +0100
+Message-ID: <20181212102142.16053-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="/jkxxxtAhYIHVDuh"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181209202950.31486-19-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---/jkxxxtAhYIHVDuh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+As part of an effort to bring suspend to RAM support to Armada 3700
+SoCs (main target: ESPRESSObin), this series handles the work around
+the PCIe IP.
 
-On Sun, Dec 09, 2018 at 11:29:47PM +0300, Dmitry Osipenko wrote:
-> GART became a part of Memory Controller, hence now the drivers device
-> is Memory Controller and not GART. As a result all printed messages are
-> prepended with the "tegra-mc 7000f000.memory-controller:", so let's
-> prepend GART's messages with "gart:" in order to differentiate them
-> from the MC.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/iommu/tegra-gart.c | 2 ++
->  1 file changed, 2 insertions(+)
+First, more configuration is done in the 'setup' helper as inspired
+from the U-Boot driver. This is needed to entirely initialize the IP
+during future resume operation (patch 1).
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+Then, reset GPIO, PHY and clock support are introduced (patch 2-4). As
+current device trees do not provide the corresponding properties, not
+finding one of these properties is not an error and just produces a
+warning. However, if the property is present, an error during PHY
+initialization will fail the probe of the driver.
 
---/jkxxxtAhYIHVDuh
-Content-Type: application/pgp-signature; name="signature.asc"
+Note: To be sure the clock will be resumed before this driver, a first
+series adding links between clocks and consumers has been submitted,
+see [1]. Anyway, having the clock series applied first is not needed.
 
------BEGIN PGP SIGNATURE-----
+Patch 5 adds suspend/resume hooks, re-using all the above.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlwQ4QoACgkQ3SOs138+
-s6FaAA//W+T5CGeUZoovs6Ol4TC4GKo1Ig1hAN32fYi6MLJecFSOJJQhh1klmk8b
-8pCoOOEkbr5tOTKgReveh8RRIXL4V68aNpQ0iuGgrutH9kNJSHiEdWS0/cq8yyei
-kobNf8pgjUiu8ZL/HKyN3PjQSXFeAeCmK+tYsJTMPxT+XxYZvNEntMqSKobH+Aa9
-9q1LeyJz6y7ALgHBluAAuds0eSNRY10oUcG+feIe9TOM89Znt+KbQirChbRerst0
-4cScjW0zr8RIYV1oYY9y784UAtRFp97264AMevYtzAffhMqDC9ycsg6DafAUC2ed
-8quEH8VTH+7VdoVSy0m2AikAMZZ0hVoLb3Ub7B2Q8TC+XFAcoQjgW4J376DIZDW8
-jL6HQoriN/9URyQo8fNjs0Toa9/pCnJtS4SXwMFL5CgGJs2+ToyNGYlduLjVcKT/
-fdLdydRmNpImRvNUuYcKwDrtIPCL52AswBwu0WNzZpZmAl2cEmvmzOc5sJ+3sEwW
-nHtotQHjmd69BqxkdLd4K4cVxptT/XPhW+FSlMf9BoKra/mMWvfNbxddDJxdB3VX
-a1oYtCI11P8LvaVn7K2yDtCSf5BWaCk2Gs9R28QBjdSVcLPFaHVDW3oobat/dwRx
-3EXh0r4DeQdtSs23JQDfXCJi1LAmyvTbi6USoxm18hcx9oscMnI=
-=ZNdi
------END PGP SIGNATURE-----
+Finally, bindings and device trees are updated to reflect the hardware
+(patch 6-12). While the clock depends on the SoC, the reset GPIO and
+the PHY depends on the board so the clock is added in the
+armada-37xx.dtsi file while the two other properties are added in
+armada-3720-espressobin.dts.
 
---/jkxxxtAhYIHVDuh--
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-November/614527.html
+
+Thanks,
+Miquèl
+
+Changes since v1:
+=================
+* Change the capitalization in commit titles to follow the PCI
+  subsystem rules.
+* Added Suggested-by tag to the patch adding PHY support and to the
+  patch adding the PHY property in the DT.
+* Added Rob's Reviewed-by tags on bindings.
+* I am following the discussion about calling functions that might
+  sleep in a NOIRQ context. As there is no real problem yet (as per my
+  understanding), I did not change anything on this regard.
+
+
+Miquel Raynal (12):
+  PCI: aardvark: Configure more registers in the configuration helper
+  PCI: aardvark: Add reset GPIO support
+  PCI: aardvark: Add PHY support
+  PCI: aardvark: Add clock support
+  PCI: aardvark: Add suspend to RAM support
+  dt-bindings: PCI: aardvark: Describe the reset-gpios property
+  dt-bindings: PCI: aardvark: Describe the clocks property
+  dt-bindings: PCI: aardvark: Describe the PHY property
+  ARM64: dts: marvell: armada-37xx: declare PCIe reset pin
+  ARM64: dts: marvell: armada-3720-espressobin: declare PCIe reset GPIO
+  ARM64: dts: marvell: armada-37xx: declare PCIe clock
+  ARM64: dts: marvell: armada-3720-espressobin: declare PCIe PHY
+
+ .../devicetree/bindings/pci/aardvark-pci.txt  |   9 +
+ .../dts/marvell/armada-3720-espressobin.dts   |   4 +
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |   5 +
+ drivers/pci/controller/pci-aardvark.c         | 214 ++++++++++++++++++
+ 4 files changed, 232 insertions(+)
+
+-- 
+2.19.1
