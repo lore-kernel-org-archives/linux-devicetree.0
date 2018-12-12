@@ -1,58 +1,84 @@
-From: "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH v6 0/7] Add virtio-iommu driver
-Date: Wed, 12 Dec 2018 09:35:19 -0500
-Message-ID: <20181212093413-mutt-send-email-mst@kernel.org>
-References: <20181211182104.18241-1-jean-philippe.brucker@arm.com>
- <20181212103545.GV16835@8bytes.org>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v4 15/15] MAINTAINERS: Add entry for RDA Micro SoC
+ architecture
+Date: Wed, 12 Dec 2018 20:16:46 +0530
+Message-ID: <20181212144646.GA27625@Mani-XPS-13-9360>
+References: <20181210173550.29643-1-manivannan.sadhasivam@linaro.org>
+ <20181210173550.29643-16-manivannan.sadhasivam@linaro.org>
+ <3e4b7143-6ed8-6006-cb07-d72bca40ce5f@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <virtio-dev-return-5188-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
-Sender: <virtio-dev@lists.oasis-open.org>
-List-Post: <mailto:virtio-dev@lists.oasis-open.org>
-List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
-List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
-List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181212103545.GV16835@8bytes.org>
-To: Joerg Roedel <joro@8bytes.org>
-Cc: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, virtualization@lists.linux-foundation.org, virtio-dev@lists.oasis-open.org, jasowang@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com, bhelgaas@google.com, frowand.list@gmail.com, kvmarm@lists.cs.columbia.edu, eric.auger@redhat.com, tnowicki@caviumnetworks.com, kevin.tian@intel.com, marc.zyngier@arm.com, robin.murphy@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, bharat.bhushan@nxp.com
+In-Reply-To: <3e4b7143-6ed8-6006-cb07-d72bca40ce5f@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, daniel.lezcano@linaro.org, gregkh@linuxfoundation.org, jslaby@suse.com, devicetree@vger.kernel.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, linux-unisoc@lists.infradead.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 12, 2018 at 11:35:45AM +0100, Joerg Roedel wrote:
-> Hi,
-> 
-> to make progress on this, we should first agree on the protocol used
-> between guest and host. I have a few points to discuss on the protocol
-> first.
-> 
-> On Tue, Dec 11, 2018 at 06:20:57PM +0000, Jean-Philippe Brucker wrote:
-> > [1] Virtio-iommu specification v0.9, sources and pdf
-> >     git://linux-arm.org/virtio-iommu.git virtio-iommu/v0.9
-> >     http://jpbrucker.net/virtio-iommu/spec/v0.9/virtio-iommu-v0.9.pdf
-> 
-> Looking at this I wonder why it doesn't make the IOTLB visible to the
-> guest. the UNMAP requests seem to require that the TLB is already
-> flushed to make the unmap visible.
-> 
-> I think that will cost significant performance for both, vfio and
-> dma-iommu use-cases which both do (vfio at least to some degree),
-> deferred flushing.
-> 
-> I also wonder whether the protocol should implement a
-> protocol version handshake
+Hi Andreas,
 
-virtio has a builtin version handshake so devices don't need to.
-
-> and iommu-feature set queries.
+On Wed, Dec 12, 2018 at 02:53:42PM +0100, Andreas Färber wrote:
+> Hi Mani,
 > 
-> > [3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.9.1
-> >     git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.9
+> Am 10.12.18 um 18:35 schrieb Manivannan Sadhasivam:
+> > Add MAINTAINERS entry for RDA Micro SoC architecture with myself
+> > and Andreas Färber as the maintainers.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  MAINTAINERS | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 6c3fbbb361f8..6411fb222590 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -1945,6 +1945,21 @@ M:	Lennert Buytenhek <kernel@wantstofly.org>
+> >  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> >  S:	Maintained
+> >  
+> > +ARM/RDA MICRO ARCHITECTURE
+> > +M:	Andreas Färber <afaerber@suse.de>
+> > +M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> Unfortunatly gitweb seems to be broken on linux-arm.org. What is missing
-> in this patch-set to make this work on x86?
+> I'd suggest you swap the two of us here, making you the primary
+> maintainer. Or drop me, as I should be copied via linux-unisoc anyway.
+> 
+> I won't realistically have the bandwidth to drive review and more pull
+> requests at the moment, with Realtek already stuck in irqchip regression
+> for too long and LoRa making only slow progress.
+> 
 
-And I wonder about pcc too.
+Okay, no issues. Will drop you from the MAINTAINERS entry so that you
+won't get bugged.
+
+Thanks,
+Mani
 
 > Regards,
+> Andreas
 > 
-> 	Joerg
+> > +L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> > +L:	linux-unisoc@lists.infradead.org (moderated for non-subscribers)
+> > +S:	Maintained
+> > +F:	arch/arm/boot/dts/rda8810pl-*
+> > +F:	drivers/clocksource/timer-rda.c
+> > +F:	drivers/irqchip/irq-rda-intc.c
+> > +F:	drivers/tty/serial/rda-uart.c
+> > +F:	Documentation/devicetree/bindings/arm/rda.txt
+> > +F:	Documentation/devicetree/bindings/interrupt-controller/rda,8810pl-intc.txt
+> > +F:	Documentation/devicetree/bindings/serial/rda,8810pl-uart.txt
+> > +F:	Documentation/devicetree/bindings/timer/rda,8810pl-timer.txt
+> > +
+> >  ARM/REALTEK ARCHITECTURE
+> >  M:	Andreas Färber <afaerber@suse.de>
+> >  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> > 
+> 
+> 
+> -- 
+> SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+> GF: Felix Imendörffer, Jane Smithard, Graham Norton
+> HRB 21284 (AG Nürnberg)
