@@ -1,121 +1,84 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 03/12] PCI: aardvark: Add PHY support
-Date: Wed, 12 Dec 2018 11:21:33 +0100
-Message-ID: <20181212102142.16053-4-miquel.raynal@bootlin.com>
-References: <20181212102142.16053-1-miquel.raynal@bootlin.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v6 00/21] IOMMU: Tegra GART driver clean up and
+ optimization
+Date: Wed, 12 Dec 2018 11:24:15 +0100
+Message-ID: <20181212102415.GM15092@ulmo>
+References: <20181209202950.31486-1-digetx@gmail.com>
+ <20181211095317.tv43aaefnsezmic7@8bytes.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="uwB7x3tnyrZQfZJI"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181212102142.16053-1-miquel.raynal@bootlin.com>
+Content-Disposition: inline
+In-Reply-To: <20181211095317.tv43aaefnsezmic7@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: Dmitry Osipenko <digetx@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The IP needs its PHY to be properly configured to work. While the PHY
-is usually already configured by the bootloader, we will need this
-feature when adding S2RAM support. Take care of registering and
-configuring the PHY from the driver itself.
 
-Suggested-by: Grzegorz Jaszczyk <jaz@semihalf.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/pci/controller/pci-aardvark.c | 62 +++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+--uwB7x3tnyrZQfZJI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 1d31d74ddab7..da695572a2ed 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -17,6 +17,7 @@
- #include <linux/pci.h>
- #include <linux/init.h>
- #include <linux/platform_device.h>
-+#include <linux/phy/phy.h>
- #include <linux/of_address.h>
- #include <linux/of_gpio.h>
- #include <linux/of_pci.h>
-@@ -204,6 +205,7 @@ struct advk_pcie {
- 	int root_bus_nr;
- 	struct pci_bridge_emul bridge;
- 	struct gpio_desc *reset_gpio;
-+	struct phy *phy;
- };
- 
- static inline void advk_writel(struct advk_pcie *pcie, u32 val, u64 reg)
-@@ -1025,6 +1027,62 @@ static int advk_pcie_setup_reset_gpio(struct advk_pcie *pcie)
- 	return 0;
- }
- 
-+static void advk_pcie_disable_phy(struct advk_pcie *pcie)
-+{
-+	phy_power_off(pcie->phy);
-+	phy_exit(pcie->phy);
-+}
-+
-+static int advk_pcie_enable_phy(struct advk_pcie *pcie)
-+{
-+	int ret;
-+
-+	if (!pcie->phy)
-+		return 0;
-+
-+	ret = phy_init(pcie->phy);
-+	if (ret)
-+		return ret;
-+
-+	ret = phy_set_mode(pcie->phy, PHY_MODE_PCIE);
-+	if (ret) {
-+		phy_exit(pcie->phy);
-+		return ret;
-+	}
-+
-+	ret = phy_power_on(pcie->phy);
-+	if (ret) {
-+		phy_exit(pcie->phy);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int advk_pcie_setup_phy(struct advk_pcie *pcie)
-+{
-+	struct device *dev = &pcie->pdev->dev;
-+	struct device_node *node = dev->of_node;
-+	int ret = 0;
-+
-+	pcie->phy = devm_of_phy_get(dev, node, NULL);
-+	if (IS_ERR(pcie->phy) && (PTR_ERR(pcie->phy) == -EPROBE_DEFER))
-+		return PTR_ERR(pcie->phy);
-+
-+	/* Old bindings miss the PHY handle */
-+	if (IS_ERR(pcie->phy)) {
-+		dev_warn(dev, "PHY unavailable (%ld)\n", PTR_ERR(pcie->phy));
-+		pcie->phy = NULL;
-+		return 0;
-+	}
-+
-+	ret = advk_pcie_enable_phy(pcie);
-+	if (ret)
-+		dev_err(dev, "Failed to initialize PHY (%d)\n", ret);
-+
-+	return ret;
-+}
-+
- static int advk_pcie_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -1060,6 +1118,10 @@ static int advk_pcie_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	ret = advk_pcie_setup_phy(pcie);
-+	if (ret)
-+		return ret;
-+
- 	ret = advk_pcie_setup_reset_gpio(pcie);
- 	if (ret)
- 		return ret;
--- 
-2.19.1
+On Tue, Dec 11, 2018 at 10:53:17AM +0100, Joerg Roedel wrote:
+> On Sun, Dec 09, 2018 at 11:29:29PM +0300, Dmitry Osipenko wrote:
+> > Dmitry Osipenko (21):
+> >   iommu/tegra: gart: Remove pr_fmt and clean up includes
+> >   iommu/tegra: gart: Clean up driver probe errors handling
+> >   iommu/tegra: gart: Ignore devices without IOMMU phandle in DT
+> >   iommu: Introduce iotlb_sync_map callback
+> >   iommu/tegra: gart: Optimize mapping / unmapping performance
+> >   dt-bindings: memory: tegra: Squash tegra20-gart into tegra20-mc
+> >   ARM: dts: tegra20: Update Memory Controller node to the new binding
+> >   memory: tegra: Don't invoke Tegra30+ specific memory timing setup on
+> >     Tegra20
+> >   memory: tegra: Adapt to Tegra20 device-tree binding changes
+> >   memory: tegra: Read client ID on GART page fault
+> >   memory: tegra: Use of_device_get_match_data()
+> >   memory: tegra: Use relaxed versions of readl/writel
+> >   iommu/tegra: gart: Integrate with Memory Controller driver
+> >   iommu/tegra: gart: Fix spinlock recursion
+> >   iommu/tegra: gart: Fix NULL pointer dereference
+> >   iommu/tegra: gart: Allow only one active domain at a time
+> >   iommu/tegra: gart: Don't use managed resources
+> >   iommu/tegra: gart: Prepend error/debug messages with "gart:"
+> >   iommu/tegra: gart: Don't detach devices from inactive domains
+> >   iommu/tegra: gart: Simplify clients-tracking code
+> >   iommu/tegra: gart: Perform code refactoring
+>=20
+> This is making progress, but some parts have no Ack or Review yet, I'll
+> wait for Thierry before applying these patches into the iommu tree.
+
+So appart from the one issue in the "memory controller integration"
+patch this looks good and I've acked the remaining patches. Once the one
+remaining issue is fixed I think this is ready to be merged.
+
+Joerg, given the dependencies between the various parts of the series, I
+think it may be better for you to merge everything through the IOMMU
+tree if you don't mind.
+
+Thierry
+
+--uwB7x3tnyrZQfZJI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlwQ4c8ACgkQ3SOs138+
+s6Ek+hAAm6Xaia2wnPAyQoDzIPdb1xFkdfVusp69nfAlVotjQ8HfB0arU+On09RB
+wXfGQH/vbKNgTHd1vRVcKItq4gMoF7GqMREK/thwWzoT20Bw3olIz7ZaG+3mIYIj
+u9NzPSujgklgdXyanA/OwXt8F1418zqj/wTi662xqE1ylkTjJQh2N6BSfwMLv0X8
+ZQWYTkYNCh8E7GzYHCS0jeE9Cqyd/eXTm5QK8Lfl7oUKH2XZVY9t/Te5nJERDNEs
+UTmtSuC+JsQYbxa2K9ogUvlOFAzB01Ovuc+mEzmek7MKVcNd36sllzcXWocbPTIE
+aMjSFs+eIQvQgkjNiO9oAWSQNoTha+iiPNEVEVtm9oHoVt+K/YWgn49ZySgzkG/X
+DjppZOBA3XHY5muFKDPYcTEw1K4OoI5FjwuRmaKwV+dBUY2k82/h/jMyVUZRqqO0
+NBO+NHk3k4zkxxN9pql/b+6UJ1yZiTb2/+djahQwiM6YK2soK6CEe3jaHKbvfsHV
+5Lm+FV3NfU9fqyafaSs/FMU59WU8vxb2vBJ4BAosgxRXyM/A8wXjHu4zIra+chtw
+c5a1dfFMWr829ZMaVJb9bqkekvadAkMwnJv/2rVUYOH7KrRHoL1/Rs52xfjz7tSs
+FrtQTnMfZK2muHlolT4HY7bBXW1LUwMEwby+RAYGX+SoTrAMY+U=
+=1/qQ
+-----END PGP SIGNATURE-----
+
+--uwB7x3tnyrZQfZJI--
