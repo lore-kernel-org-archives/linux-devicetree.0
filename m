@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 09/12] ARM64: dts: marvell: armada-37xx: declare PCIe reset pin
-Date: Wed, 12 Dec 2018 11:21:39 +0100
-Message-ID: <20181212102142.16053-10-miquel.raynal@bootlin.com>
+Subject: [PATCH v2 12/12] ARM64: dts: marvell: armada-3720-espressobin: declare PCIe PHY
+Date: Wed, 12 Dec 2018 11:21:42 +0100
+Message-ID: <20181212102142.16053-13-miquel.raynal@bootlin.com>
 References: <20181212102142.16053-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,27 +12,25 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-One GPIO can be muxed as PCIe reset.
+The PCIe node is wired to the second PHY of the COMPHY IP.
 
+Suggested-by: Grzegorz Jaszczyk <jaz@semihalf.com>
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index 65bf774516ec..9f7e932c8144 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -295,6 +295,10 @@
- 					function = "mii";
- 				};
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+index 76a508da80b9..43e8e1edc467 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
+@@ -49,6 +49,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pcie_pins>;
+ 	reset-gpios = <&gpiosb 3 GPIO_ACTIVE_HIGH>;
++	phys = <&comphy1 0>;
+ };
  
-+				pcie_pins: pcie-pins {
-+					groups = "pcie1";
-+					function = "gpio";
-+				};
- 			};
- 
- 			eth0: ethernet@30000 {
+ /* J6 */
 -- 
 2.19.1
