@@ -1,33 +1,36 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: Re: [PATCH V3 1/2] dt-bindings: iio: light: isl29018: update power
- supply name
-Date: Wed, 12 Dec 2018 12:49:11 +0000
-Message-ID: <96906A60-5318-46E5-B302-207C1FC7578B@nxp.com>
-References: <1544425521-775-1-git-send-email-Anson.Huang@nxp.com>
- <20181210232358.GA11621@bogus>
- <DB3PR0402MB3916E1651ABC07F6F788B265F5A60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAL_Jsq+sP_fsQaoT6FpZNRxjhPAhCcE8e-0xffUUxShcC2LuHw@mail.gmail.com>
- <DB3PR0402MB39164538D3969FE51C649B65F5A70@DB3PR0402MB3916.eurprd04.prod.outlook.com>,<CAOMZO5DXNpn18pzngmAt+hyiWNtfwckafxCzbJ17EgndjABwWg@mail.gmail.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v6 00/21] IOMMU: Tegra GART driver clean up and
+ optimization
+Date: Wed, 12 Dec 2018 15:49:35 +0300
+Message-ID: <e0eee0b5-5513-6f38-7b18-ca7a00255ff6@gmail.com>
+References: <20181209202950.31486-1-digetx@gmail.com>
+ <20181211095317.tv43aaefnsezmic7@8bytes.org> <20181212102415.GM15092@ulmo>
+ <20181212104331.GW16835@8bytes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5DXNpn18pzngmAt+hyiWNtfwckafxCzbJ17EgndjABwWg@mail.gmail.com>
-Content-Language: zh-CN
+In-Reply-To: <20181212104331.GW16835@8bytes.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Joerg Roedel <joro@8bytes.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>, Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIEZhYmlvDQoNCkZyb20gQW5zb24ncyBpUGhvbmUgNg0KDQo+IA0KPiBXZSBzaG91bGQgbm90
-IGJyZWFrIGV4aXN0aW5nIGR0YnMsIHNvIGluIHRoaXMgY2FzZSBqdXN0IGtlZXAgdGhlDQo+IGV4
-aXN0aW5nIHN1cHBseSBuYW1lIGFuZCB5b3UgY291bGQgYWRkIHRoZSBuZXcgb3B0aW9uYWwgdmRk
-YSBzdXBwbHkgYXMNCj4gcGVyIHRoZSBkYXRhc2hlZXQuDQoNCiAgICAgICAgU2luY2UgdGhlIGRh
-dGFzaGVldCBvZiBpc2wyOTAxOCBzdGF0ZXMgdGhlIHZkZGEgYW5kIHZkZGQgTVVTVCBiZSBzaG9y
-dGVkIGV4dGVybmFsbHksIGFuZCB0aGUgbGF0ZXIgY2hpcHMgZXZlbiByZW1vdmUgdmRkYSwgT05M
-WSBoYXMgdmRkIG9uZSBzdXBwbHksIHNvIEkgdGhpbmsgYWRkaW5nIHZkZGEgZG9lcyBOT1QgbWFr
-ZSBlbm91Z2ggc2Vuc2UuIExvb2tzIGxpa2UgdGhlIHZjYyB0aGV5IGFkZGVkIGlzIGp1c3QgZm9y
-IHByZXBhcmUsIHRoZSBkcml2ZXIgZGlkIE5PVCBzdXBwb3J0IHJlZ3VsYXRvciBvcGVyYXRpb24g
-YXQgdGhhdCB0aW1lLiBTbyBjYW4gd2UganVzdCB1c2UgdmNjIGluIGRyaXZlciBhY2NvcmRpbmds
-eT8gRG8gd2UgaGF2ZSB0byB1c2UgdGhlIG5hbWUg4oCcVkRE4oCdIGluIGRhdGFzaGVldCBmb3Ig
-cmVndWxhdG9yIG5hbWU/DQoNCkFuc29uLg==
+On 12.12.2018 13:43, Joerg Roedel wrote:
+> Hi Thierry, Hi Dmitry,
+> 
+> On Wed, Dec 12, 2018 at 11:24:15AM +0100, Thierry Reding wrote:
+>> So appart from the one issue in the "memory controller integration"
+>> patch this looks good and I've acked the remaining patches. Once the one
+>> remaining issue is fixed I think this is ready to be merged.
+>>
+>> Joerg, given the dependencies between the various parts of the series, I
+>> think it may be better for you to merge everything through the IOMMU
+>> tree if you don't mind.
+> 
+> Sounds good. Dmitry, can you please address Thierry's comments on patch
+> 13, add his Acks on the other patches and re-send? I'll queue it in the
+> iommu-tree then.
+
+Sure, thanks to you both!
