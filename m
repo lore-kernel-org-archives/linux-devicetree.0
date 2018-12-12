@@ -1,124 +1,84 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 04/24] dt-bindings: leds: Add function and color
- properties
-Date: Wed, 12 Dec 2018 19:32:53 +0100
-Message-ID: <20181212183253.GA16578@amd>
-References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
- <1541542052-10081-5-git-send-email-jacek.anaszewski@gmail.com>
- <5bea0eb8.1c69fb81.6b921.80e6@mx.google.com>
- <dfb5bd23-bcb9-7501-a608-969cb0464168@gmail.com>
- <0a0b176c-4eb4-4b0e-6c3c-b3c6c8f5fff5@gmail.com>
- <CAL_JsqKEpbJjExkQKSXwYma9wPPO+8E0QMTyWTPs1nkGSd49_g@mail.gmail.com>
- <20181212095929.GA13437@amd>
- <CAL_JsqJPMzwU9h2RSXeCfNTO5+zs7xTOb9jYcGivj+v_2RkG2A@mail.gmail.com>
+From: <Andrei.Stefanescu@microchip.com>
+Subject: [PATCH] regulator: mcp16502: add support for suspend
+Date: Wed, 12 Dec 2018 18:35:59 +0000
+Message-ID: <1544639735-17654-1-git-send-email-andrei.stefanescu@microchip.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="LQksG6bCIzRHxTLp"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJPMzwU9h2RSXeCfNTO5+zs7xTOb9jYcGivj+v_2RkG2A@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Linux LED Subsystem <linux-leds@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
+To: broonie@kernel.org, robh+dt@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, gregkh@linuxfoundation.org
+Cc: Cristian.Birsan@microchip.com, Nicolas.Ferre@microchip.com, Claudiu.Beznea@microchip.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, andr3i.stefanescu@gmail.com, Andrei.Stefanescu@microchip.com
 List-Id: devicetree@vger.kernel.org
 
+This patch adds support for entering/resuming suspend states.
+It does this by setting the LPM pin of the PMIC.
 
---LQksG6bCIzRHxTLp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+When suspending the PMIC will enter the Low-power mode
+when the LPM pin will be set to high. If the suspend target state
+is suspend-to-mem, the PMIC will transition to Hibernate mode,
+otherwise, if it is standby, it will remain in Low-power mode.
 
-On Wed 2018-12-12 07:56:20, Rob Herring wrote:
-> On Wed, Dec 12, 2018 at 3:59 AM Pavel Machek <pavel@ucw.cz> wrote:
-> >
-> > Hi!
-> >
-> > > > We would also probably need different DT properties for different
-> > > > types of devices, since e.g. for network case the network interface
-> > > > name would fit better for the LED name, than the phy name,
-> > > > and we would need to know what type of device name we're going
-> > > > to look for.
-> > > >
-> > > > Pavel gave following examples:
-> > > >
-> > > > eth0:green:link
-> > > > adsl0:green:link
-> > > > adsl0:red:error
-> > > >
-> > > > So we would have e.g.:
-> > > >
-> > > > associated-vl42-device =3D <&camera1>;
-> > > > associated-network-device =3D <&phy1>;
-> > > > associated-block-device =3D <&phy1>;
-> > >
-> > > Variable property names are kind of a pain to parse.
-> > >
-> > > Perhaps when LEDs are associated with a device, we shouldn't care
-> > > within the context of the LED subsystem what the name is. The
-> > > association is more important and if you have that exposed, then you
-> > > don't really need to care what the name is. You still have to deal
-> > > with a device with more than 1 LED, but that becomes a problem local
-> > > to that device.
-> > >
-> > > What I'm getting at is following a more standard binding pattern of
-> > > providers and consumers like we have for gpios, clocks, etc. So we'd
-> > > have something like this:
-> > >
-> > > ethernet {
-> > >   ...
-> > >   leds =3D <&green_led>, <&red_led>;
-> > >   led-names =3D "link", "err";
-> > > };
-> > >
-> > > We can still support defining LED names as we've done, but we don't
-> > > have to come up with some elaborate naming convention that covers
-> > > every single case.
-> >
-> > I see that it would be more consistent with how gpios work, but I'm
-> > afraid this does not fit LEDs properly.
-> >
-> > With power LED, you want to be able to say "this is just on". Some
-> > poeple like heartbeat, and have LED for that. There may be LED for
-> > "disk activity", meaning activity on any harddrive. And there may be
-> > activity LED for specific disk.
-> >
-> > Only in the last case it would be suitable to have LED reference as a
-> > child of an device...
->=20
-> Right. For all the other cases, why do you need any link with a
-> device? What we have today is sufficient and can continue to be
-> supported. A link to a device is only used if the led is associated
-> with a particular device.
-
-Right, so the link is only needed in some cases. So unlike your
-example, we would have:
-
-led1 { led-meaning =3D "heartbeat"; }
-led2 { led-meaning =3D "link"; }
-led3 { led-meaning =3D "err"; }
-led4 { led-meaning =3D "activity"; what-activity =3D "all_harddisks"; }
-ethernet { leds =3D < &led2, &led3 >; }
-
-Dunno. I'd expect all the LED description in the LED node, not part of
-the description there and back link from the device...
-									Pavel
+This patch depends on
+0b60c4deca1d regulator: mcp16502: add regulator driver for MCP16502
 
 
+Signed-off-by: Andrei Stefanescu <andrei.stefanescu@microchip.com>
+---
+ drivers/regulator/mcp16502.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+
+diff --git a/drivers/regulator/mcp16502.c b/drivers/regulator/mcp16502.c
+index 7cbc96f..bde3172 100644
+--- a/drivers/regulator/mcp16502.c
++++ b/drivers/regulator/mcp16502.c
+@@ -497,6 +497,36 @@ static int mcp16502_probe(struct i2c_client *client,
+ 	return 0;
+ }
+=20
++#ifdef CONFIG_SUSPEND
++static int mcp16502_suspend(struct device *dev)
++{
++	struct i2c_client *client =3D to_i2c_client(dev);
++	struct mcp16502 *mcp =3D i2c_get_clientdata(client);
++
++	mcp16502_gpio_set_mode(mcp, MCP16502_OPMODE_LPM);
++
++	return 0;
++}
++
++static int mcp16502_resume(struct device *dev)
++{
++	struct i2c_client *client =3D to_i2c_client(dev);
++	struct mcp16502 *mcp =3D i2c_get_clientdata(client);
++
++	mcp16502_gpio_set_mode(mcp, MCP16502_OPMODE_ACTIVE);
++
++	return 0;
++}
++#else /* !CONFIG_SUSPEND */
++#define mcp16502_suspend NULL
++#define mcp16502_resume NULL
++#endif /* !CONFIG_SUSPEND */
++
++#ifdef CONFIG_PM
++static const struct dev_pm_ops mcp16502_pm_ops =3D {
++	SET_SYSTEM_SLEEP_PM_OPS(mcp16502_suspend, mcp16502_resume)
++};
++#endif
+ static const struct i2c_device_id mcp16502_i2c_id[] =3D {
+ 	{ "mcp16502", 0 },
+ 	{ }
+@@ -508,6 +538,9 @@ static struct i2c_driver mcp16502_drv =3D {
+ 	.driver		=3D {
+ 		.name	=3D "mcp16502-regulator",
+ 		.of_match_table	=3D of_match_ptr(mcp16502_ids),
++#ifdef CONFIG_PM
++		.pm =3D &mcp16502_pm_ops,
++#endif
+ 	},
+ 	.id_table	=3D mcp16502_i2c_id,
+ };
 --=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---LQksG6bCIzRHxTLp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlwRVFUACgkQMOfwapXb+vIbZQCgt8YLRx2eloWKWKDuVk/pqwFO
-GFoAoLMT7OmBoasj+A1EwR1sG3/tNr/z
-=Qbpj
------END PGP SIGNATURE-----
-
---LQksG6bCIzRHxTLp--
+2.7.4
