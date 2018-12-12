@@ -1,113 +1,112 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFT PATCH v1 2/4] dt-binding: cpu-topology: Move cpu-map to a
- common binding.
-Date: Tue, 11 Dec 2018 20:21:12 -0600
-Message-ID: <20181212022112.GA14213@bogus>
-References: <1543534100-3654-1-git-send-email-atish.patra@wdc.com>
- <1543534100-3654-3-git-send-email-atish.patra@wdc.com>
- <20181203165521.GB17883@e107155-lin>
- <f902086b-09e1-ad85-d191-137708f5b105@wdc.com>
+From: tom burkart <tom@aussec.com>
+Subject: Re: [PATCH v9 3/4] dt-bindings: pps: pps-gpio PPS ECHO
+ implementation
+Date: Wed, 12 Dec 2018 13:25:51 +1100
+Message-ID: <20181212132551.48881ybb96b2pay7@www.aussec.com>
+References: <20181122094602.5156-1-tom@aussec.com>
+ <20181122094602.5156-2-tom@aussec.com>
+ <20181122094602.5156-3-tom@aussec.com>
+ <20181122094602.5156-4-tom@aussec.com>
+ <CAL_JsqJ6fM3+pcC3b-eXEex=j_ft6Z=vukhLK9wULfWJqOTN-A@mail.gmail.com>
+ <20181127150629.10795h1esqtc53ut@aussec.com>
+ <CAL_JsqJmuDbPgc3WYRU8y3hbDL5A4_Luj0FfAiSvJ2+J-TM9_g@mail.gmail.com>
+ <20181211131716.931947v9gya4ajos@www.aussec.com>
+ <CAL_JsqK877WtcFDEVc-fqRu0nSJwpgGBNjuxH0yiN7uy1BBRbw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain;
+ charset=UTF-8;
+ DelSp="Yes";
+ format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqK877WtcFDEVc-fqRu0nSJwpgGBNjuxH0yiN7uy1BBRbw@mail.gmail.com>
 Content-Disposition: inline
-In-Reply-To: <f902086b-09e1-ad85-d191-137708f5b105@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitriy Cherkasov <dmitriy@oss-tech.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Juri Lelli <juri.lelli@arm.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Palmer
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, lukas@fridolin.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 03, 2018 at 09:23:42AM -0800, Atish Patra wrote:
-> On 12/3/18 8:55 AM, Sudeep Holla wrote:
-> > On Thu, Nov 29, 2018 at 03:28:18PM -0800, Atish Patra wrote:
-> > > cpu-map binding can be used to described cpu topology for both
-> > > RISC-V & ARM. It makes more sense to move the binding to document
-> > > to a common place.
-> > > 
-> > > The relevant discussion can be found here.
-> > > https://lkml.org/lkml/2018/11/6/19
-> > > 
-> > 
-> > Looks good to me apart from a minor query below in the example.
-> > 
-> > Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-> > 
-> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > > ---
-> > >   .../{arm/topology.txt => cpu/cpu-topology.txt}     | 81 ++++++++++++++++++----
-> > >   1 file changed, 67 insertions(+), 14 deletions(-)
-> > >   rename Documentation/devicetree/bindings/{arm/topology.txt => cpu/cpu-topology.txt} (86%)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
-> > > similarity index 86%
-> > > rename from Documentation/devicetree/bindings/arm/topology.txt
-> > > rename to Documentation/devicetree/bindings/cpu/cpu-topology.txt
-> > > index 66848355..1de6fbce 100644
-> > > --- a/Documentation/devicetree/bindings/arm/topology.txt
-> > > +++ b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
-> > 
-> > [...]
-> > 
-> > > +Example 3: HiFive Unleashed (RISC-V 64 bit, 4 core system)
-> > > +
-> > > +cpus {
-> > > +	#address-cells = <2>;
-> > > +	#size-cells = <2>;
-> > > +	compatible = "sifive,fu540g", "sifive,fu500";
-> > > +	model = "sifive,hifive-unleashed-a00";
-> > > +
-> > > +	...
-> > > +
-> > > +	cpu-map {
-> > > +		cluster0 {
-> > > +			core0 {
-> > > +				cpu = <&L12>;
-> > > +		 	};
-> > > +			core1 {
-> > > +				cpu = <&L15>;
-> > > +			};
-> > > +			core2 {
-> > > +				cpu0 = <&L18>;
-> > > +			};
-> > > +			core3 {
-> > > +				cpu0 = <&L21>;
-> > > +			};
-> > > +		};
-> > > + 	};
-> > > +
-> > > +	L12: cpu@1 {
-> > > +		device_type = "cpu";
-> > > +		compatible = "sifive,rocket0", "riscv";
-> > > +		reg = <0x1>;
-> > > +	}
-> > > +
-> > > +	L15: cpu@2 {
-> > > +		device_type = "cpu";
-> > > +		compatible = "sifive,rocket0", "riscv";
-> > > +		reg = <0x2>;
-> > > +	}
-> > > +	L18: cpu@3 {
-> > > +		device_type = "cpu";
-> > > +		compatible = "sifive,rocket0", "riscv";
-> > > +		reg = <0x3>;
-> > > +	}
-> > > +	L21: cpu@4 {
-> > > +		device_type = "cpu";
-> > > +		compatible = "sifive,rocket0", "riscv";
-> > > +		reg = <0x4>;
-> > > +	}
-> > > +};
-> > 
-> > The labels for the CPUs drew my attention. Is it intentionally random
-> > (or even specific) or just chosen to show anything can be used as labels ?
-> 
-> SiFive generates the device tree from RTL directly. So I am not sure if they
-> assign random numbers or a particular algorithm chooses the label. I tried
-> to put the exact ones that is available publicly.
-> 
-> https://github.com/riscv/riscv-device-tree-doc/blob/master/examples/sifive-hifive_unleashed-microsemi.dts
+Quoting Rob Herring <robh@kernel.org>:
 
-Oh, that's really terrible. I wouldn't care as this was just source 
-level stuff, but labels are part of the ABI with overlays.
+> On Mon, Dec 10, 2018 at 8:17 PM tom burkart <tom@aussec.com> wrote:
+>>
+>> Quoting Rob Herring <robh@kernel.org>:
+>>
+>> > On Mon, Nov 26, 2018 at 10:06 PM tom burkart <tom@aussec.com> wrote:
+>> >>
+>> >> Quoting Rob Herring <robh@kernel.org>:
+>> >>
+>> >> > On Thu, Nov 22, 2018 at 3:49 AM Tom Burkart <tom@aussec.com> wrote:
+>> >> >>
+>> >> >> This patch implements the device tree changes required for the pps
+>> >> >> echo functionality for pps-gpio, that sysfs claims is available
+>> >> >> already.
+>> >> >>
+>> >> >> This patch was originally written by Lukas Senger as part of a masters
+>> >> >> thesis project and modified for inclusion into the linux kernel by Tom
+>> >> >> Burkart.
+>> >> >>
+>> >> >> Signed-off-by: Lukas Senger <lukas@fridolin.com>
+>> >> >> Signed-off-by: Tom Burkart <tom@aussec.com>
+>> >> >> ---
+>> >> >>  Documentation/devicetree/bindings/pps/pps-gpio.txt | 9 +++++++++
+>> >> >>  1 file changed, 9 insertions(+)
+>> >> >>
+>> >> >> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> >> b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> >> index 1155d49c2699..e09f6f2405c5 100644
+>> >> >> --- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> >> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+>> >> >> @@ -7,10 +7,15 @@ Required properties:
+>> >> >>  - compatible: should be "pps-gpio"
+>> >> >>  - gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
+>> >> >>
+>> >> >> +Additional required properties for the PPS ECHO functionality:
+>> >> >> +- echo-gpios: one PPS ECHO GPIO in the format described by
+>> >> ../gpio/gpio.txt
+>> >> >> +- echo-active-ms: duration in ms of the active portion of  
+>> the echo pulse
+>> >> >> +
+>> >> >>  Optional properties:
+>> >> >>  - assert-falling-edge: when present, assert is indicated by a
+>> >> falling edge
+>> >> >>                         (instead of by a rising edge)
+>> >> >>  - capture-clear: when present, also capture the PPS clear event
+>> >> >> +- invert-pps-echo: when present, invert the PPS ECHO pulse
+>> >> >
+>> >> > Why do you need this? Can't you just make the echo gpio  
+>> GPIO_ACTIVE_LOW?
+>> >> >
+>> >> > BTW, using the flag probably should have been done for
+>> >> > 'assert-falling-edge' as well.
+>> >>
+>> >> The hardware I use expects a positive-going echo pulse, however, it
+>> >> was really easy to give users the option to have it inverted in case
+>> >> they use different hardware that expects a negative-going edge.
+>> >
+>> > It will be even easier to implement if you use GPIO_ACTIVE_LOW or
+>> > GPIO_ACTIVE_HIGH as appropriate. If the flag is set appropriately,
+>> > then gpiod_set_value(gpio, 1) asserts the pulse and
+>> > gpiod_set_value(gpio, 0) deasserts it no matter which way the h/w is
+>> > wired. You can then get rid of invert_pps_echo in the driver.
+>>
+>> Hi Rob,
+>> I have looked at the appropriate changes to my code to implement the
+>> above.  However, there is no GPIO_ACTIVE_* as part of the gpiod_flags
+>> enum (include/linux/gpio/consumer.h).
+>>
+>> What am I missing?
+>
+> You don't need to know in the driver. You set the gpio state to 1 for
+> active, 0 for inactive and that does the right thing based on the flag
+> in the DT. IOW, if the DT defines the GPIO as active low, then setting
+> the gpio state to 1 will result in the GPIO being 0V. It's a bit
+> annoying and confusing at first until you realize the driver can just
+> handle either polarity transparently.
 
-Rob
+Hi Rob,
+thanks a lot!  The penny finally dropped.
+
+My patch v12 will have the changes implemented (no invert-pps-echo).
+
+Tom
