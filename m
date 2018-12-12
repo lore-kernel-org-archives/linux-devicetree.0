@@ -1,151 +1,94 @@
-From: Honghui Zhang <honghui.zhang@mediatek.com>
-Subject: Re: [PATCH 2/2] PCI: mediatek: Add controller support for MT7629
-Date: Wed, 12 Dec 2018 13:43:28 +0800
-Message-ID: <1544593408.3753.13.camel@mhfsdcap03>
-References: <1544058553-10936-1-git-send-email-jianjun.wang@mediatek.com>
-         <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
-         <1544075633.3753.11.camel@mhfsdcap03>
-         <1544187397.10946.27.camel@mhfsdcap03>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V3 1/2] dt-bindings: iio: light: isl29018: update power
+ supply name
+Date: Wed, 12 Dec 2018 06:16:58 +0000
+Message-ID: <DB3PR0402MB39164538D3969FE51C649B65F5A70@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1544425521-775-1-git-send-email-Anson.Huang@nxp.com>
+ <20181210232358.GA11621@bogus>
+ <DB3PR0402MB3916E1651ABC07F6F788B265F5A60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAL_Jsq+sP_fsQaoT6FpZNRxjhPAhCcE8e-0xffUUxShcC2LuHw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544187397.10946.27.camel@mhfsdcap03>
+In-Reply-To: <CAL_Jsq+sP_fsQaoT6FpZNRxjhPAhCcE8e-0xffUUxShcC2LuHw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jianjun Wang <jianjun.wang@mediatek.com>
-Cc: ryder.lee@mediatek.com, bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, mark.rutland@arm.com, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, youlin.pei@mediatek.com
+To: Rob Herring <robh@kernel.org>, Fabio Estevam <festevam@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-12-07 at 20:56 +0800, Jianjun Wang wrote:
-> On Thu, 2018-12-06 at 13:53 +0800, Honghui Zhang wrote:
-> > On Thu, 2018-12-06 at 09:09 +0800, Jianjun Wang wrote:
-> > > MT7629 is an arm platform SoC which has the same PCIe IP with MT7622.
-> > > 
-> > > The read value of BAR0 is 0xffff_ffff, it's size will be calculated as 4GB
-> > > in arm64 but bogus alignment values at arm32, the pcie device and devices
-> > 
-> > :s /the pcie device /the bridge device
-> > 
-> > > behind this bridge will not be enabled. Fix it's BAR0 resource size to
-> > > guarantee the pcie devices will be enabled correctly.
-> > > 
-> > > The HW default value of its device id is invalid, fix it's device id to
-> > > match the hardware implementation.
-> > > 
-> > > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-> > > ---
-> > >  drivers/pci/controller/pcie-mediatek.c | 26 ++++++++++++++++++++++++++
-> > >  include/linux/pci_ids.h                |  1 +
-> > >  2 files changed, 27 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> > > index d20cf461ba00..f8937cc3c87c 100644
-> > > --- a/drivers/pci/controller/pcie-mediatek.c
-> > > +++ b/drivers/pci/controller/pcie-mediatek.c
-> > > @@ -73,6 +73,7 @@
-> > >  #define PCIE_MSI_VECTOR		0x0c0
-> > >  
-> > >  #define PCIE_CONF_VEND_ID	0x100
-> > > +#define PCIE_CONF_DEVICE_ID	0x102
-> > >  #define PCIE_CONF_CLASS_ID	0x106
-> > >  
-> > >  #define PCIE_INT_MASK		0x420
-> > > @@ -135,12 +136,14 @@ struct mtk_pcie_port;
-> > >  /**
-> > >   * struct mtk_pcie_soc - differentiate between host generations
-> > >   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-> > > + * @need_fix_device_id: whether this host's device ID needed to be fixed or not
-> > >   * @ops: pointer to configuration access functions
-> > >   * @startup: pointer to controller setting functions
-> > >   * @setup_irq: pointer to initialize IRQ functions
-> > >   */
-> > >  struct mtk_pcie_soc {
-> > >  	bool need_fix_class_id;
-> > > +	bool need_fix_device_id;
-> > >  	struct pci_ops *ops;
-> > >  	int (*startup)(struct mtk_pcie_port *port);
-> > >  	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
-> > > @@ -692,6 +695,11 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
-> > >  		writew(val, port->base + PCIE_CONF_CLASS_ID);
-> > >  	}
-> > >  
-> > > +	if (soc->need_fix_device_id) {
-> > > +		val = PCI_DEVICE_ID_MEDIATEK_7629;
-> > > +		writew(val, port->base + PCIE_CONF_DEVICE_ID);
-> > > +	}
-> > > +
-> > >  	/* 100ms timeout value should be enough for Gen1/2 training */
-> > >  	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
-> > >  				 !!(val & PCIE_PORT_LINKUP_V2), 20,
-> > > @@ -1238,11 +1246,29 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
-> > >  	.setup_irq = mtk_pcie_setup_irq,
-> > >  };
-> > >  
-> > > +static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
-> > > +	.need_fix_class_id = true,
-> > > +	.need_fix_device_id = true,
-> > > +	.ops = &mtk_pcie_ops_v2,
-> > > +	.startup = mtk_pcie_startup_port_v2,
-> > > +	.setup_irq = mtk_pcie_setup_irq,
-> > > +};
-> > > +
-> > > +static void mtk_fixup_bar_size(struct pci_dev *dev)
-> > > +{
-> > > +	struct resource *dev_res = &dev->resource[0];
-> > > +	/* 32bit resource length will calculate size to 0, set it smaller */
-> > > +	dev_res->end = 0xfffffffe;
-> > > +}
-> > 
-> > I'm not sure assign the BAR0 size in driver to fit in the bogus
-> > alignment is a good idea. Seems the size value of 0xffff_fffe also is an
-> > arbitrary value.
-> > Do we have a chance to change the resource framework code to make it
-> > adopt this scenario?
-
-I have take a look at the resource assign routine, it's better keep it
-in current way.
-
-Thanks.
-
-> > 
-> > Thanks.
-> 
-> I'm afraid not, the resource size length defined by phys_addr_t, which
-> related to the hardware's physical address length. 
-> It will be much more better if the BAR0 size is not related with the
-> pcie to axi window, when we set the window to 4GB, the BAR0 size still
-> have initial value, and we can set the BAR0 size value or just disable
-> it independently.
-> The BAR0 size value need bigger than the MMIO space size, so the
-> software will think it's a invalid resource but not a bogus alignment
-> one, since we can't disable the BAR0 by hardware, and the flow of enable
-> devices will keep going. 
-> > 
-> > > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MEDIATEK, PCI_DEVICE_ID_MEDIATEK_7629,
-> > > +			 mtk_fixup_bar_size);
-> > > +
-> > >  static const struct of_device_id mtk_pcie_ids[] = {
-> > >  	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
-> > >  	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
-> > >  	{ .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
-> > >  	{ .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_mt7622 },
-> > > +	{ .compatible = "mediatek,mt7629-pcie", .data = &mtk_pcie_soc_mt7629 },
-> > >  	{},
-> > >  };
-> > >  
-> > > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> > > index 69f0abe1ba1a..77b278bac3a8 100644
-> > > --- a/include/linux/pci_ids.h
-> > > +++ b/include/linux/pci_ids.h
-> > > @@ -2126,6 +2126,7 @@
-> > >  #define PCI_VENDOR_ID_MYRICOM		0x14c1
-> > >  
-> > >  #define PCI_VENDOR_ID_MEDIATEK		0x14c3
-> > > +#define PCI_DEVICE_ID_MEDIATEK_7629	0x7629
-> > >  
-> > >  #define PCI_VENDOR_ID_TITAN		0x14D2
-> > >  #define PCI_DEVICE_ID_TITAN_010L	0x8001
-> > 
-> > 
-> 
-> 
+SGksIEZhYmlvDQoJT2J2aW91c2x5LCBzb21lIG9mIHRoZSBkdHMgZmlsZXMgKHN1Y2ggYXMgYXJj
+aC9hcm0vYm9vdC9kdHMvZXh5bm9zNTQyMC1wZWFjaC1waXQuZHRzKSB1c2luZyAidmNjIiBhcyBp
+c2wyOTAxOCdzIHBvd2VyIHN1cHBseSBuYW1lLCB0aGV5IGFyZSBOT1QgbWF0Y2hlZCB3aXRoIGRh
+dGFzaGVldCwgc28gc2hvdWxkIHdlIHVwZGF0ZSB0aG9zZSBkdHMgZmlsZXMgd2l0aCAidmRkIiBh
+cyB3ZWxsIG9yIGp1c3QgdXNpbmcgdGhlICJ2Y2MiIGluIGlzbDI5MDE4IGRyaXZlcj8gV2hpY2gg
+c29sdXRpb24gaXMgYmV0dGVyPw0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0t
+LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9i
+aEBrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE45bm0MTLmnIgxMeaXpSAyMzoxOQ0KPiBUbzogQW5z
+b24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+IENjOiBKb25hdGhhbiBDYW1lcm9uIDxq
+aWMyM0BrZXJuZWwub3JnPjsgSGFydG11dCBLbmFhY2sNCj4gPGtuYWFjay5oQGdteC5kZT47IExh
+cnMtUGV0ZXIgQ2xhdXNlbiA8bGFyc0BtZXRhZm9vLmRlPjsgUGV0ZXIgTWVlcndhbGQNCj4gPHBt
+ZWVyd0BwbWVlcncubmV0PjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47DQo+
+IGxpbnV4LWlpb0B2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0K
+PiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBu
+eHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFYzIDEvMl0gZHQtYmluZGluZ3M6IGlpbzog
+bGlnaHQ6IGlzbDI5MDE4OiB1cGRhdGUgcG93ZXINCj4gc3VwcGx5IG5hbWUNCj4gDQo+IE9uIE1v
+biwgRGVjIDEwLCAyMDE4IGF0IDc6NDAgUE0gQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5j
+b20+DQo+IHdyb3RlOg0KPiA+DQo+ID4gSGksIFJvYg0KPiA+DQo+ID4gQmVzdCBSZWdhcmRzIQ0K
+PiA+IEFuc29uIEh1YW5nDQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
+ID4gPiBGcm9tOiBSb2IgSGVycmluZyBbbWFpbHRvOnJvYmhAa2VybmVsLm9yZ10NCj4gPiA+IFNl
+bnQ6IDIwMTjlubQxMuaciDEx5pelIDc6MjQNCj4gPiA+IFRvOiBBbnNvbiBIdWFuZyA8YW5zb24u
+aHVhbmdAbnhwLmNvbT4NCj4gPiA+IENjOiBqaWMyM0BrZXJuZWwub3JnOyBrbmFhY2suaEBnbXgu
+ZGU7IGxhcnNAbWV0YWZvby5kZTsNCj4gPiA+IHBtZWVyd0BwbWVlcncubmV0OyBtYXJrLnJ1dGxh
+bmRAYXJtLmNvbTsgbGludXgtaWlvQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+IGRldmljZXRyZWVA
+dmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gZGwt
+bGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
+VjMgMS8yXSBkdC1iaW5kaW5nczogaWlvOiBsaWdodDogaXNsMjkwMTg6DQo+ID4gPiB1cGRhdGUg
+cG93ZXIgc3VwcGx5IG5hbWUNCj4gPiA+DQo+ID4gPiBPbiBNb24sIERlYyAxMCwgMjAxOCBhdCAw
+NzoxMToxOUFNICswMDAwLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gPiA+ID4gQWNjb3JkaW5nIHRv
+IGRhdGFzaGVldCwgdGhlIGlzbDI5MDE4IGhhcyAidmRkZC92ZGRhIiBwb3dlciBzdXBwbHksDQo+
+ID4gPiA+IGFuZA0KPiA+ID4gPiBpc2wyOTAyMy9pc2wyOTAzNSBPTkxZIGhhcyAidmRkIiBwb3dl
+ciBzdXBwbHksIHVwZGF0ZSB0aGUgcG93ZXINCj4gPiA+ID4gc3VwcGx5IG5hbWUgd2l0aCAidmRk
+IiBhbmQgInZkZGEiIGFjY29yZGluZyB0byBkYXRhc2hlZXQgdG8gY292ZXINCj4gPiA+ID4gYWxs
+IGRldmljZXMgYW5kIGF2b2lkIGNvbmZ1c2lvbi4NCj4gPiA+ID4NCj4gPiA+ID4gU2lnbmVkLW9m
+Zi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+
+ID4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9saWdodC9pc2wyOTAx
+OC50eHQgfCA0ICsrKy0NCj4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyks
+IDEgZGVsZXRpb24oLSkNCj4gPiA+ID4NCj4gPiA+ID4gZGlmZiAtLWdpdA0KPiA+ID4gPiBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vbGlnaHQvaXNsMjkwMTgudHh0DQo+
+ID4gPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9saWdodC9pc2wy
+OTAxOC50eHQNCj4gPiA+ID4gaW5kZXggYjliYmRlMy4uMzZmNzM3ZCAxMDA2NDQNCj4gPiA+ID4g
+LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9saWdodC9pc2wyOTAx
+OC50eHQNCj4gPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lp
+by9saWdodC9pc2wyOTAxOC50eHQNCj4gPiA+ID4gQEAgLTE1LDcgKzE1LDkgQEAgT3B0aW9uYWwg
+cHJvcGVydGllczoNCj4gPiA+ID4gICAgUmVmZXIgdG8gaW50ZXJydXB0LWNvbnRyb2xsZXIvaW50
+ZXJydXB0cy50eHQgZm9yIGdlbmVyaWMgaW50ZXJydXB0IGNsaWVudA0KPiA+ID4gPiAgICBub2Rl
+IGJpbmRpbmdzLg0KPiA+ID4gPg0KPiA+ID4gPiAtICAtIHZjYy1zdXBwbHk6IHBoYW5kbGUgdG8g
+dGhlIHJlZ3VsYXRvciB0aGF0IHByb3ZpZGVzIHBvd2VyIHRvIHRoZQ0KPiBzZW5zb3IuDQo+ID4g
+PiA+ICsgIC0gdmRkLXN1cHBseTogcGhhbmRsZSB0byB0aGUgcmVndWxhdG9yIHRoYXQgcHJvdmlk
+ZXMgdmRkIHBvd2VyDQo+ID4gPiA+ICsgdG8gdGhlDQo+ID4gPiBzZW5zb3IuDQo+ID4gPiA+ICsN
+Cj4gPiA+ID4gKyAgLSB2ZGRhLXN1cHBseTogcGhhbmRsZSB0byB0aGUgcmVndWxhdG9yIHRoYXQg
+cHJvdmlkZXMgdmRkYQ0KPiA+ID4gPiArIHBvd2VyIHRvIHRoZQ0KPiA+ID4gc2Vuc29yLg0KPiA+
+ID4NCj4gPiA+IElzIHRoaXMgaW4gdXNlPyBZb3UgY2FuJ3QganVzdCBjaGFuZ2UgdGhpbmdzIGlm
+IGl0IGlzLg0KPiA+DQo+ID4gSSBkaWQgTk9UIHNlZSBhbnkgInZjYyIgaW4gZm9sZGVyIGRyaXZl
+cnMvaWlvL2xpZ2h0Lywgc28gSSB0aGluayBpdCBpcw0KPiA+IE5PVCB1c2VkIGF0IGFsbCwgc28g
+SSB0YWtlIHRoaXMgY2hhbmNlIHRvIHVwZGF0ZSBpdCBhY2NvcmRpbmcgdG8gZGF0YXNoZWV0Lg0K
+PiBUaGFua3MuDQo+IA0KPiBhcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIwLXBlYWNoLXBpdC5k
+dHMtNjI5LSBsaWdodC1zZW5zb3JANDQgew0KPiBhcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIw
+LXBlYWNoLXBpdC5kdHM6NjMwOiAgICAgICAgIGNvbXBhdGlibGUgPQ0KPiAiaXNpbCxpc2wyOTAx
+OCI7DQo+IGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MjAtcGVhY2gtcGl0LmR0cy02MzEtICAg
+ICAgICAgcmVnID0gPDB4NDQ+Ow0KPiBhcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIwLXBlYWNo
+LXBpdC5kdHMtNjMyLSAgICAgICAgIHZjYy1zdXBwbHkgPQ0KPiA8JnRwczY1MDkwX2ZldDU+Ow0K
+PiBhcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIwLXBlYWNoLXBpdC5kdHMtNjMzLSB9Ow0KPiAN
+Cj4gYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTgwMC1wZWFjaC1waS5kdHMtNjI5LSAgbGlnaHQt
+c2Vuc29yQDQ0IHsNCj4gYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTgwMC1wZWFjaC1waS5kdHM6
+NjMwOiAgICAgICAgICBjb21wYXRpYmxlID0NCj4gImlzaWwsaXNsMjkwMTgiOw0KPiBhcmNoL2Fy
+bS9ib290L2R0cy9leHlub3M1ODAwLXBlYWNoLXBpLmR0cy02MzEtICAgICAgICAgIHJlZyA9IDww
+eDQ0PjsNCj4gYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTgwMC1wZWFjaC1waS5kdHMtNjMyLSAg
+ICAgICAgICB2Y2Mtc3VwcGx5ID0NCj4gPCZ0cHM2NTA5MF9mZXQ1PjsNCj4gYXJjaC9hcm0vYm9v
+dC9kdHMvZXh5bm9zNTgwMC1wZWFjaC1waS5kdHMtNjMzLSAgfTsNCj4gDQo+IFRoZSByZXN0IG9m
+IHRoZSBkdHMgZmlsZXMgdXNpbmcgdGhpcyBkb24ndCBoYXZlIGEgc3VwcGx5IGl0IHNlZW1zLiBT
+byB5b3UgbmVlZA0KPiBwZXJtaXNzaW9uIGZyb20gdGhlIEV4eW5vcyBmb2xrcyBpZiB5b3Ugd2Fu
+dCB0byBqdXN0IGRyb3AgdGhpcy4gQW5kIGFsc28gdXBkYXRlDQo+IHRoZWlyIGR0cyBmaWxlcy4N
+Cj4gDQo+IFJvYg0K
