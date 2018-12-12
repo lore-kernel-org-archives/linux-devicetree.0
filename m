@@ -1,87 +1,55 @@
-From: Felipe Balbi <balbi@kernel.org>
-Subject: Re: [PATCH v1 2/2] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Wed, 12 Dec 2018 08:55:51 +0200
-Message-ID: <877egfmdxk.fsf@linux.intel.com>
-References: <1544445555-17325-1-git-send-email-pawell@cadence.com> <1544445555-17325-3-git-send-email-pawell@cadence.com> <87h8fkmfar.fsf@linux.intel.com> <BYAPR07MB47095110AF28CC11B4C9E144DDA60@BYAPR07MB4709.namprd07.prod.outlook.com> <CAL411-ryK2LLZVg5_sLkCYOuhwdHLVm5XavSyC9nbEXZah_43w@mail.gmail.com>
+From: Pankaj Bansal <pankaj.bansal@nxp.com>
+Subject: [PATCH 0/3] dts: fsl: lsch2: dts modifications for chassis 2 devices
+Date: Wed, 12 Dec 2018 07:09:49 +0000
+Message-ID: <20181212123505.32415-1-pankaj.bansal@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL411-ryK2LLZVg5_sLkCYOuhwdHLVm5XavSyC9nbEXZah_43w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Chen <hzpeterchen@gmail.com>, pawell@cadence.com
-Cc: devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, rogerq@ti.com, lkml <linux-kernel@vger.kernel.org>, adouglas@cadence.com, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pankaj Bansal <pankaj.bansal@nxp.com>, Varun Sethi <V.Sethi@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+This patch series fixes some issues with the chassis 2 bases dts/dtsi
+files.
 
-Peter Chen <hzpeterchen@gmail.com> writes:
+The reference for patches is as follows:
+patch 1 : https://elinux.org/Device_Tree_Linux#disabled_nodes
+patch 2 : https://elixir.bootlin.com/linux/v4.19.8/source/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts#L121
+patch 3 : https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/common-properties.txt
 
->> >> +            tmode =3D le16_to_cpu(ctrl->wIndex);
->> >> +
->> >> +            if (!set || (tmode & 0xff) !=3D 0)
->> >> +                    return -EINVAL;
->> >> +
->> >> +            switch (tmode >> 8) {
->> >> +            case TEST_J:
->> >> +            case TEST_K:
->> >> +            case TEST_SE0_NAK:
->> >> +            case TEST_PACKET:
->> >> +                    cdns3_set_register_bit(&priv_dev->regs->usb_cmd,
->> >> +                                           USB_CMD_STMODE |
->> >> +                                           USB_STS_TMODE_SEL(tmode -=
- 1));
->> >
->> >I'm 90% sure this won't work. There's a reason why we only enter the
->> >requested test mode from status stage. How have you tested this?
->>
->
-> What's the reason?
-> It can work although the code is a little different with above, I
-> tested it using USBxHSETT tool at Windows.
+Cc: Varun Sethi <V.Sethi@nxp.com>
 
-put a sniffer. Status stage won't complete
+Pankaj Bansal (3):
+  dts: arm64: fsl: lsch2: fix status field of serdes controlled devices
+  dts: arm64: fsl: lsch2: fix the rgmii phy type
+  dts: arm64: fsl: lsch2: Fix the endianness property in nodes
 
->> >> +    irqreturn_t ret =3D IRQ_NONE;
->> >> +    unsigned long flags;
->> >> +    u32 reg;
->> >> +
->> >> +    priv_dev =3D cdns->gadget_dev;
->> >> +    spin_lock_irqsave(&priv_dev->lock, flags);
->> >
->> >you're already running in hardirq context. Why do you need this lock at
->> >all? I would be better to use the hardirq handler to mask your
->> >interrupts, so they don't fire again, then used the top-half (softirq)
->> >handler to actually handle the interrupts.
->>
->
-> This controller may be ran at SMP environment, register and flag access
-> needs to be protected among CPUs running.
+ .../boot/dts/freescale/fsl-ls1043a-qds.dts    | 18 ++++++++++++
+ .../boot/dts/freescale/fsl-ls1043a-rdb.dts    | 17 +++++++++++
+ .../arm64/boot/dts/freescale/fsl-ls1043a.dtsi |  4 +++
+ .../boot/dts/freescale/fsl-ls1046a-qds.dts    | 18 ++++++++++++
+ .../boot/dts/freescale/fsl-ls1046a-rdb.dts    | 28 +++++++++++++++++--
+ .../arm64/boot/dts/freescale/fsl-ls1046a.dtsi |  6 ++--
+ .../dts/freescale/qoriq-fman3-0-10g-0.dtsi    |  1 +
+ .../dts/freescale/qoriq-fman3-0-10g-1.dtsi    |  1 +
+ .../dts/freescale/qoriq-fman3-0-1g-0.dtsi     |  1 +
+ .../dts/freescale/qoriq-fman3-0-1g-1.dtsi     |  1 +
+ .../dts/freescale/qoriq-fman3-0-1g-2.dtsi     |  1 +
+ .../dts/freescale/qoriq-fman3-0-1g-3.dtsi     |  1 +
+ .../dts/freescale/qoriq-fman3-0-1g-4.dtsi     |  1 +
+ .../dts/freescale/qoriq-fman3-0-1g-5.dtsi     |  1 +
+ 14 files changed, 95 insertions(+), 4 deletions(-)
 
-in hardirq context? When interrupts are already disabled?
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlwQsPcACgkQzL64meEa
-mQaFMhAAivaFXmE5zk1145Lxf0qGZfICtUAOftRLhjxoE8QiyVaONzDrWmSfVZOV
-BFxf5p2YunTi5DEk2o/YVvDnmqmg5ctc5MASUeyuvBskEK8xAj5pcJ3zC4fGc10F
-roSp3Lh8VPvTy9p9Plzj6wqtCf6cGQGdmFhZU9m8uOBH+5venL7+l2Nr/i+YwFyN
-iq8s6YxT/qVNr311BZFokIH3ddfUNWRrizVfgfYORHU4NrSw5XV8185YvpRmZgbf
-Ji8F6PNxtwkdVDhYlBcdApxMTpwsz8ZksPuJ8g8NhRoyksxL4J02qQUykMcSEkDS
-h4H4+kMJWF+lC6a9Aj6KbaECK6IglZrkn7XLZURUmV6GxduvuiRWQ/FjAMbvrsYa
-DjSPCyrIH1SODNw26ij0N/EYtGMQqkM5voRYN1fDb+u1dTT8ZTYZAYbHMAUDX+Kv
-Fd3CZjeG7mQGWq7ctGWTKZAOA539rBczTN12YquxGneXa7xMjh4PuUfi6hqA9nxP
-4S/+yyu51P1qrdCFjKcbiSd/SrPnOLLtKmb2tppokczi2H51XubfZcSNLha2OCfs
-edcJQnY1XSbB+fHuZ3mKtwP+5RzhTnSEvAor96/hz6WPGh2W2xgySWieoRR2jauO
-oOawN3NoHxsj8MTILERYcMKE3mfTZclHEv7Q58KjZTlssnudmDo=
-=kGLu
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+2.17.1
