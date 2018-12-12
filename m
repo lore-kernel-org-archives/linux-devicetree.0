@@ -1,34 +1,49 @@
-From: Biao Huang <biao.huang@mediatek.com>
-Subject: [v6, PATCH 0/2] add Ethernet driver support for mt2712
-Date: Wed, 12 Dec 2018 17:35:30 +0800
-Message-ID: <1544607332-29921-1-git-send-email-biao.huang@mediatek.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v4 2/6] MAINTAINERS: thermal: add entry for Marvell MVEBU
+ thermal driver
+Date: Wed, 12 Dec 2018 10:36:41 +0100
+Message-ID: <20181212093645.14752-3-miquel.raynal@bootlin.com>
+References: <20181212093645.14752-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: davem@davemloft.net, robh+dt@kernel.org
-Cc: honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, biao.huang@mediatek.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, joabreu@synopsys.com, andrew@lunn.ch
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181212093645.14752-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Marc Zyngier <marc.zyngier@arm.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Changes in v6:
- modifications according to comments from Rob/Andrew/Sean:
- 1. use delay_ps instead of delay stage.
- 2. add comments in driver to avoid confusion.
- 2. rewrite set_delay function.
- 3. modify binding document for properties: tx-delay-ps/rx-delay-ps/pericfg etc.
+Add myself as Marvell MVEBU thermal driver maintainer.
 
-Biao Huang (2):
-  net:stmmac: dwmac-mediatek: add support for mt2712
-  dt-binding: mediatek-dwmac: add binding document for MediaTek MT2712
-    DWMAC
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ MAINTAINERS | 5 +++++
+ 1 file changed, 5 insertions(+)
 
- .../devicetree/bindings/net/mediatek-dwmac.txt     |   87 +++++
- drivers/net/ethernet/stmicro/stmmac/Kconfig        |    8 +
- drivers/net/ethernet/stmicro/stmmac/Makefile       |    1 +
- .../net/ethernet/stmicro/stmmac/dwmac-mediatek.c   |  408 ++++++++++++++++++++ 
- 4 files changed, 504 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/mediatek-dwmac.txt
- create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-
---
-1.7.9.5
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f4855974f325..42028c06e4e5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8902,6 +8902,11 @@ L:	netdev@vger.kernel.org
+ S:	Maintained
+ F:	drivers/net/phy/marvell10g.c
+ 
++MARVELL MVEBU THERMAL DRIVER
++M:	Miquel Raynal <miquel.raynal@bootlin.com>
++S:	Maintained
++F:	drivers/thermal/armada_thermal.c
++
+ MARVELL MVNETA ETHERNET DRIVER
+ M:	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+ L:	netdev@vger.kernel.org
+-- 
+2.19.1
