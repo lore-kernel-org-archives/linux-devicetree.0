@@ -1,81 +1,121 @@
-From: Sean Wang <sean.wang@kernel.org>
-Subject: Re: [PATCH] pinctrl: mediatek: improve dependencies for PINCTRL_MTK_MOORE
-Date: Wed, 12 Dec 2018 11:52:48 -0800
-Message-ID: <CAGp9Lzqz6ZpbZ+241HKGZxLA7EwBnw+6s2EgTy3VXaoh6Xo6Hg@mail.gmail.com>
-References: <d80dd05f6dbfc8fe7e85509cc00ebd8ec739b4d2.1544608681.git.ryder.lee@mediatek.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v7 00/24] Tegra GART driver clean up and optimization
+Date: Wed, 12 Dec 2018 23:38:43 +0300
+Message-ID: <20181212203907.23461-1-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d80dd05f6dbfc8fe7e85509cc00ebd8ec739b4d2.1544608681.git.ryder.lee@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?UnlkZXIgTGVlICjmnY7luproq7op?= <ryder.lee@mediatek.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, weijie.gao@mediatek.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 12, 2018 at 1:59 AM Ryder Lee <ryder.lee@mediatek.com> wrote:
->
-> Improve dependencies for the pinctrl drivers which select
-> PINCTRL_MTK_MOORE as its core layer.
-> ---
->  drivers/pinctrl/mediatek/Kconfig | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
-> index d8cb584..3a41dc8 100644
-> --- a/drivers/pinctrl/mediatek/Kconfig
-> +++ b/drivers/pinctrl/mediatek/Kconfig
-> @@ -23,6 +23,7 @@ config PINCTRL_MTK_MOORE
->         select GENERIC_PINCTRL_GROUPS
->         select GENERIC_PINMUX_FUNCTIONS
->         select GPIOLIB
-> +       select EINT_MTK
+Hello,
 
-The change can be taken away from the patch as the patch EINT_MTK is
-optional to the moore core.
+This patch-series integrates the GART (IOMMU) driver with the Memory
+Controller driver, that allows to report the name of a faulty memory
+client on GART page fault. A major code clean up and performance
+optimization is performed in this series as well.
 
->         select OF_GPIO
->
->  config PINCTRL_MTK_PARIS
-> @@ -45,14 +46,14 @@ config PINCTRL_MT2701
->  config PINCTRL_MT7623
->         bool "Mediatek MT7623 pin control with generic binding"
->         depends on MACH_MT7623 || COMPILE_TEST
-> -       depends on PINCTRL_MTK_MOORE
-> -       default y
-> +       default MACH_MT7623
-> +       select PINCTRL_MTK_MOORE
->
->  config PINCTRL_MT7629
->         bool "Mediatek MT7629 pin control"
->         depends on MACH_MT7629 || COMPILE_TEST
-> -       depends on PINCTRL_MTK_MOORE
-> -       default y
-> +       default MACH_MT7629
-> +       select PINCTRL_MTK_MOORE
->
->  config PINCTRL_MT8135
->         bool "Mediatek MT8135 pin control"
-> @@ -93,8 +94,8 @@ config PINCTRL_MT6797
->  config PINCTRL_MT7622
->         bool "MediaTek MT7622 pin control"
->         depends on ARM64 || COMPILE_TEST
-> -       depends on PINCTRL_MTK_MOORE
-> -       default y
-> +       default ARM64 && ARCH_MEDIATEK
-> +       select PINCTRL_MTK_MOORE
->
+Changelog:
 
-We can add a change allowing PINCTRL_MTK_MOORE to be a non-visible
-symbol in the same patch according to the general rules
-kconfig-language.txt defines. And also turn PINCTRL_MTK_PARIS to
-non-visible in another patch would be good.
+v7: Addressed review comments to v6 from Thierry Reding.
 
-Apart from that, the above three changes are fine with me, it helps to
-be more consistent with other driver and the target SoC would be
-coupled with the corresponding essential pinctrl driver.
+    Added three new (minor) patches that further prettifying the drivers
+    code.
 
->  config PINCTRL_MT8173
->         bool "Mediatek MT8173 pin control"
-> --
-> 1.9.1
->
+    New patches in v7:
+        1) "memory: tegra: Do not try to probe SMMU on Tegra20"
+        2) "memory: tegra: Do not ask for IRQ sharing"
+        3) "memory: tegra: Clean up error messages"
+
+    Incorporated another "one-line" change into the "perform code refactoring"
+    patch: now GART translation is kept disabled in HW while GART is suspended.
+
+v6: v5 that is re-based on the recent linux-next.
+
+v5: Addressed review comments from Thierry Reding to v4. Added WARN_ON() to
+    make sure that active domain isn't getting released, kept include headers
+    where necessary, etc.. All changes are quite minor.
+
+    Added new patch "memory: tegra: Use relaxed versions of readl/writel".
+
+v4: In the v3 Rob Herring requested to make device-tree binding changes
+    backwards-compatible with the older kernels, that is achieved by
+    changing the 'compatible' value of the DT node.
+
+    The code-refactoring patches got some more (minor) polish.
+
+    Added new patch "memory: tegra: Use of_device_get_match_data()".
+
+v3: Memory Controller integration part has been reworked and now GART's
+    device-tree binding is changed. Adding Rob Herring for the device-tree
+    changes reviewing.
+
+    GART now disallows more than one active domain at a time.
+
+    Fixed "spinlock recursion", "NULL pointer dereference" and "detaching
+    of all devices from inactive domains".
+
+    New code-refactoring patches.
+
+    The previously standalone patch "memory: tegra: Don't invoke Tegra30+
+    specific memory timing setup on Tegra20" is now included into this
+    series because there is a dependency on that patch and it wasn't applied
+    yet.
+
+v2: Addressed review comments from Robin Murphy to v1 by moving devices
+    iommu_fwspec check to gart_iommu_add_device().
+
+    Dropped the "Provide single domain and group for all devices" patch from
+    the series for now because after some more considering it became not
+    exactly apparent whether that is what we need, that was also suggested
+    by Robin Murphy in the review comment. Maybe something like a runtime
+    IOMMU usage for devices would be a better solution, allowing to implement
+    transparent context switching of virtual IOMMU domains.
+
+    Some very minor code cleanups, reworded commit messages.
+
+Dmitry Osipenko (24):
+  iommu/tegra: gart: Remove pr_fmt and clean up includes
+  iommu/tegra: gart: Clean up driver probe errors handling
+  iommu/tegra: gart: Ignore devices without IOMMU phandle in DT
+  iommu: Introduce iotlb_sync_map callback
+  iommu/tegra: gart: Optimize mapping / unmapping performance
+  dt-bindings: memory: tegra: Squash tegra20-gart into tegra20-mc
+  ARM: dts: tegra20: Update Memory Controller node to the new binding
+  memory: tegra: Don't invoke Tegra30+ specific memory timing setup on
+    Tegra20
+  memory: tegra: Adapt to Tegra20 device-tree binding changes
+  memory: tegra: Read client ID on GART page fault
+  memory: tegra: Use of_device_get_match_data()
+  memory: tegra: Use relaxed versions of readl/writel
+  iommu/tegra: gart: Integrate with Memory Controller driver
+  memory: tegra: Do not try to probe SMMU on Tegra20
+  memory: tegra: Do not ask for IRQ sharing
+  memory: tegra: Clean up error messages
+  iommu/tegra: gart: Fix spinlock recursion
+  iommu/tegra: gart: Fix NULL pointer dereference
+  iommu/tegra: gart: Allow only one active domain at a time
+  iommu/tegra: gart: Don't use managed resources
+  iommu/tegra: gart: Prepend error/debug messages with "gart:"
+  iommu/tegra: gart: Don't detach devices from inactive domains
+  iommu/tegra: gart: Simplify clients-tracking code
+  iommu/tegra: gart: Perform code refactoring
+
+ .../bindings/iommu/nvidia,tegra20-gart.txt    |  14 -
+ .../memory-controllers/nvidia,tegra20-mc.txt  |  27 +-
+ arch/arm/boot/dts/tegra20.dtsi                |  15 +-
+ drivers/iommu/Kconfig                         |   1 +
+ drivers/iommu/iommu.c                         |   8 +-
+ drivers/iommu/tegra-gart.c                    | 473 +++++++-----------
+ drivers/iommu/tegra-smmu.c                    |   4 -
+ drivers/memory/tegra/mc.c                     | 118 +++--
+ drivers/memory/tegra/mc.h                     |  10 +-
+ include/linux/iommu.h                         |   1 +
+ include/soc/tegra/mc.h                        |  27 +-
+ 11 files changed, 323 insertions(+), 375 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iommu/nvidia,tegra20-gart.txt
+
+-- 
+2.20.0
