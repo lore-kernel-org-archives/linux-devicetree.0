@@ -1,71 +1,64 @@
-From: Felipe Balbi <balbi@kernel.org>
-Subject: RE: [PATCH v1 2/2] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Wed, 12 Dec 2018 10:34:24 +0200
-Message-ID: <871s6nm9db.fsf@linux.intel.com>
-References: <1544445555-17325-1-git-send-email-pawell@cadence.com> <1544445555-17325-3-git-send-email-pawell@cadence.com> <87h8fkmfar.fsf@linux.intel.com> <BYAPR07MB47095110AF28CC11B4C9E144DDA60@BYAPR07MB4709.namprd07.prod.outlook.com> <CAL411-ryK2LLZVg5_sLkCYOuhwdHLVm5XavSyC9nbEXZah_43w@mail.gmail.com> <877egfmdxk.fsf@linux.intel.com> <VI1PR04MB5327B1CB6C6BC7D293701F1D8BA70@VI1PR04MB5327.eurprd04.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 4/5] dt-bindings: leds: Add pattern initialization from
+ Device Tree
+Date: Wed, 12 Dec 2018 09:42:30 +0100
+Message-ID: <CAJKOXPfrRKvvK0fq9SS5xOgeT-vS30z0JwFh=55bow4-tktSZQ@mail.gmail.com>
+References: <1544434201-14190-1-git-send-email-krzk@kernel.org>
+ <1544434201-14190-5-git-send-email-krzk@kernel.org> <CABGGiszi3cgkQy0+h4q6nEY0V1Td2x3eR_kZ50cu3awrSGscMQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB5327B1CB6C6BC7D293701F1D8BA70@VI1PR04MB5327.eurprd04.prod.outlook.com>
+In-Reply-To: <CABGGiszi3cgkQy0+h4q6nEY0V1Td2x3eR_kZ50cu3awrSGscMQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Chen <peter.chen@nxp.com>, Peter Chen <hzpeterchen@gmail.com>, "pawell@cadence.com" <pawell@cadence.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, lkml <linux-kernel@vger.kernel.org>, "adouglas@cadence.com" <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, "sureshp@cadence.com" <sureshp@cadence.com>, "pjez@cadence.com" <pjez@cadence.com>, "kurahul@cadence.com" <kurahul@cadence.com>
+To: robh@kernel.org
+Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, baolin.wang@linaro.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-Peter Chen <peter.chen@nxp.com> writes:
->> >> >> +    irqreturn_t ret =3D IRQ_NONE;
->> >> >> +    unsigned long flags;
->> >> >> +    u32 reg;
->> >> >> +
->> >> >> +    priv_dev =3D cdns->gadget_dev;
->> >> >> +    spin_lock_irqsave(&priv_dev->lock, flags);
->> >> >
->> >> >you're already running in hardirq context. Why do you need this lock
->> >> >at all? I would be better to use the hardirq handler to mask your
->> >> >interrupts, so they don't fire again, then used the top-half
->> >> >(softirq) handler to actually handle the interrupts.
->> >>
->> >
->> > This controller may be ran at SMP environment, register and flag
->> > access needs to be protected among CPUs running.
->>=20
->> in hardirq context? When interrupts are already disabled?
+On Tue, 11 Dec 2018 at 18:23, Rob Herring <robh@kernel.org> wrote:
 >
-> Interrupt handler (hardirq context) at CPU0, and process at CPU1, eg
-> role switch, unload module, etc.
+> On Mon, Dec 10, 2018 at 3:30 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > Document new linux,trigger-pattern property for initialization of LED
+> > pattern trigger.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/leds/common.txt | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> > index aa1399814a2a..4c65e854bb91 100644
+> > --- a/Documentation/devicetree/bindings/leds/common.txt
+> > +++ b/Documentation/devicetree/bindings/leds/common.txt
+> > @@ -37,6 +37,13 @@ Optional properties for child nodes:
+> >       "ide-disk" - LED indicates IDE disk activity (deprecated),
+> >                    in new implementations use "disk-activity"
+> >       "timer" - LED flashes at a fixed, configurable rate
+> > +     "pattern" - LED alters the brightness for the specified duration with one
+> > +                 software timer (see
+> > +                 Documentation/ABI/testing/sysfs-class-led-trigger-pattern)
+> > +
+> > +- linux,trigger-pattern : Default pattern for "pattern" trigger (see
+> > +                          Documentation/ABI/testing/sysfs-class-led-trigger-pattern
+> > +                          for description of format)
+>
+> Binding documents should generally not refer to kernel docs and need
+> to stand on their own.
 
-the process at CPU1 would need to disable interrupts (spin_lock_irq() or
-spin_lock_irqsave()), not the hardirq on CPU0 as that already runs with
-interrrupts disabled.
+I'll copy then the description of pattern.
 
-https://www.kernel.org/doc/html/latest/kernel-hacking/locking.html#table-of=
--minimum-requirements
+> I don't think this needs to be linux specific. I'd just call it
+> 'led-pattern'. I don't think this should be tied to the trigger types.
+> Isn't possible you would want to tie a pattern to different triggers.
+> IOW, when event X happens, run the pattern. And you could have
+> one-shot versus continuous.
 
-=2D-=20
-balbi
+In general pattern has trigger specific format. For pattern-trigger it
+would look like "0 1000 255 1000". For timer trigger it would be just
+a single number (period for blinks). Quite similar for the oneshot
+trigger. I can change it to "led-pattern" (or maybe
+"led-default-pattern" to match "linux,default-trigger" property?) and
+document that the pattern itself is trigger specific
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlwQyBAACgkQzL64meEa
-mQZ8CxAAvjH18/fOPM8pCR/Wu8JM3pC2RH0ACJcypp+6QdyCQrRBCrDHetCXgIBH
-INpwQzkJGW8+d4zkFAUgVtuWkKCkNyoMFw9jR1cQSVGyem+S9HN6AR78ufEeXJ61
-pCna4GCRwEFdzHLUnEaPEh+q3TUSO1n0zE/afibTkpW+Jh6u7wgtLdOL1m8HaG7R
-l5taWIvb/RL+pH2Gbbv/7SebacbpK/cf6gSGBbR6LgAvweCDUWdeJJluzY+m9uDp
-uhwZ3mXvgV0MiQbTRk9j1QclyGNBJrXOOzBW84v8Tnu4P9kCbXVJpwuPAsJZQS7T
-H8q9s3NUwDKHcAjExzuUdtOwmbdBgbd0IPkwSstuIsKvav3TwtNae0o39eAE5y8S
-Bx1ulfD9XRaQiWSHo6UTH7wOJNtkQCvcAIirEMnlomKSwwAQTQ6Tmrdh5/hd/OI/
-qY7LsmZfN8yZ+1KhKWlJyZJgabw9WIEaesmPwwFfS1dskDMAwoEegrK4azDprALC
-6IxDj6oQ05irTwEu8ICFvYkzuBZ5tGEwmNKtnVJxzvbmUQBgoGGlPppVLexBSXdP
-fRDLzuI4hX0g4vifRo4qcJS4U3yOuJpoIybY4ZSsOPefwA4DqHxG0M8Iqi1Qe84y
-+e20v5AQnLxxUrC+XnwcW37JoGA6uukzyYijQrvPfngpllTr+fc=
-=spIR
------END PGP SIGNATURE-----
---=-=-=--
+Best regards,
+Krzysztof
