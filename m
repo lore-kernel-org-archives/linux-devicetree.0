@@ -1,75 +1,62 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/2] dt-bindings: meson: add specific simplefb bindings
-Date: Wed, 12 Dec 2018 10:54:39 +0100
-Message-ID: <434d1dc0-3c5e-5cb3-cc88-b565bfb74217@baylibre.com>
-References: <20181210090640.4495-1-mjourdan@baylibre.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH] pinctrl: mediatek: improve dependencies for PINCTRL_MTK_MOORE
+Date: Wed, 12 Dec 2018 17:58:52 +0800
+Message-ID: <d80dd05f6dbfc8fe7e85509cc00ebd8ec739b4d2.1544608681.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181210090640.4495-1-mjourdan@baylibre.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Jourdan <mjourdan@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Sean Wang <sean.wang@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Weijie Gao <weijie.gao@mediatek.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+Improve dependencies for the pinctrl drivers which select
+PINCTRL_MTK_MOORE as its core layer.
+---
+ drivers/pinctrl/mediatek/Kconfig | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-On 10/12/2018 10:06, Maxime Jourdan wrote:
-> Similar to simple-framebuffer-sunxi, we support different display pipelines
-> that the firmware is free to choose from.
-> 
-> This documents the "amlogic,simple-framebuffer" compatible and the
-> "amlogic,pipeline" extension.
-> 
-> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
-> ---
->  .../display/simple-framebuffer-meson.txt      | 33 +++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/simple-framebuffer-meson.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer-meson.txt b/Documentation/devicetree/bindings/display/simple-framebuffer-meson.txt
-> new file mode 100644
-> index 000000000000..122a5c005cd9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/simple-framebuffer-meson.txt
-> @@ -0,0 +1,33 @@
-> +Meson specific Simple Framebuffer bindings
-> +
-> +This binding documents meson specific extensions to the simple-framebuffer
-> +bindings. The meson simplefb u-boot code relies on the devicetree containing
-> +pre-populated simplefb nodes.
-> +
-> +These extensions are intended so that u-boot can select the right node based
-> +on which pipeline is being used. As such they are solely intended for
-> +firmware / bootloader use, and the OS should ignore them.
-> +
-> +Required properties:
-> +- compatible: "amlogic,simple-framebuffer"
-> +- amlogic,pipeline, one of:
-> +  "vpu-cvbs"
-> +  "vpu-hdmi"
-> +
-> +Example:
-> +
-> +chosen {
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +	ranges;
-> +
-> +	framebuffer@0 {
-> +		compatible = "amlogic,simple-framebuffer",
-> +			     "simple-framebuffer";
-> +		amlogic,pipeline = "vpu-hdmi";
-> +		clocks = <&clkc CLKID_HDMI_PCLK>,
-> +			 <&clkc CLKID_CLK81>,
-> +			 <&clkc CLKID_GCLK_VENCI_INT0>;
-> +		power-domains = <&pwrc_vpu>;
-> +	};
-> +};
-> 
-
-You should add a cover-letter for this patchset !
-
-Neil
+diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
+index d8cb584..3a41dc8 100644
+--- a/drivers/pinctrl/mediatek/Kconfig
++++ b/drivers/pinctrl/mediatek/Kconfig
+@@ -23,6 +23,7 @@ config PINCTRL_MTK_MOORE
+ 	select GENERIC_PINCTRL_GROUPS
+ 	select GENERIC_PINMUX_FUNCTIONS
+ 	select GPIOLIB
++	select EINT_MTK
+ 	select OF_GPIO
+ 
+ config PINCTRL_MTK_PARIS
+@@ -45,14 +46,14 @@ config PINCTRL_MT2701
+ config PINCTRL_MT7623
+ 	bool "Mediatek MT7623 pin control with generic binding"
+ 	depends on MACH_MT7623 || COMPILE_TEST
+-	depends on PINCTRL_MTK_MOORE
+-	default y
++	default MACH_MT7623
++	select PINCTRL_MTK_MOORE
+ 
+ config PINCTRL_MT7629
+ 	bool "Mediatek MT7629 pin control"
+ 	depends on MACH_MT7629 || COMPILE_TEST
+-	depends on PINCTRL_MTK_MOORE
+-	default y
++	default MACH_MT7629
++	select PINCTRL_MTK_MOORE
+ 
+ config PINCTRL_MT8135
+ 	bool "Mediatek MT8135 pin control"
+@@ -93,8 +94,8 @@ config PINCTRL_MT6797
+ config PINCTRL_MT7622
+ 	bool "MediaTek MT7622 pin control"
+ 	depends on ARM64 || COMPILE_TEST
+-	depends on PINCTRL_MTK_MOORE
+-	default y
++	default ARM64 && ARCH_MEDIATEK
++	select PINCTRL_MTK_MOORE
+ 
+ config PINCTRL_MT8173
+ 	bool "Mediatek MT8173 pin control"
+-- 
+1.9.1
