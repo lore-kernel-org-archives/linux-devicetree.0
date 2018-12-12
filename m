@@ -1,31 +1,54 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v7 10/10] soc: qcom: rpmhpd: Mark mx as a parent for cx
-Date: Wed, 12 Dec 2018 10:25:29 -0800
-Message-ID: <154463912916.17204.12857180383621384088@swboyd.mtv.corp.google.com>
-References: <20181212092131.13046-1-rnayak@codeaurora.org> <20181212092131.13046-11-rnayak@codeaurora.org>
+From: Tomasz Duszynski <tduszyns@gmail.com>
+Subject: [PATCH v3 0/3] add support for Sensirion SPS30 PM sensor
+Date: Wed, 12 Dec 2018 19:30:08 +0100
+Message-ID: <20181212183011.16567-1-tduszyns@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181212092131.13046-11-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, collinsd@codeaurora.org, mka@chromium.org, robh@kernel.org, ulf.hansson@linaro.org, viresh.kumar@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>
+To: linux-iio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, jic23@jic23.retrosnub.co.uk, a.brauchli@elementarea.net, Tomasz Duszynski <tduszyns@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rajendra Nayak (2018-12-12 01:21:31)
-> Specify the active + sleep and active-only MX power domains as
-> the parents of the corresponding CX power domains. This will ensure that
-> performance state requests on CX automatically generate equivalent reques=
-ts
-> on MX power domains.
->=20
-> This is used to enforce a requirement that exists for various
-> hardware blocks on SDM845 that MX performance state >=3D CX performance
-> state for a given operating frequency.
->=20
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
+This patch series adds support for Sensirion SPS30 particulate matter
+sensor. Along with a driver itself, new channel type and modifiers
+for distinguishing between coarse and fine particles measurements are
+introduced.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Sensor datasheet can be downloaded from
+
+https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/0_Datasheets/Particulate_Matter/Sensirion_PM_Sensors_SPS30_Datasheet.pdf
+
+v3:
+ * convert be32 to cpu using predefined macro
+ * remove semicolon: reported by semicolon.cocci
+ * use capitalization consistently (particulate matter)
+
+v2:
+ * add support for PM1 and PM4 measurements
+ * get rid of variable length arrays
+ * do proper cleanup via devm_add_action_or_reset()
+ * add extra level of precision (two decimal places) while displaying
+   measurements
+ * improve comments a little bit
+ * slight refactoring and general improvements here and there
+
+Tomasz Duszynski (3):
+  iio: add IIO_MASSCONCENTRATION channel type
+  iio: chemical: add support for Sensirion SPS30 sensor
+  iio: chemical: sps30: add device tree support
+
+ Documentation/ABI/testing/sysfs-bus-iio       |  17 +-
+ .../bindings/iio/chemical/sensirion,sps30.txt |  12 +
+ drivers/iio/chemical/Kconfig                  |  11 +
+ drivers/iio/chemical/Makefile                 |   1 +
+ drivers/iio/chemical/sps30.c                  | 406 ++++++++++++++++++
+ drivers/iio/industrialio-core.c               |   5 +
+ include/uapi/linux/iio/types.h                |   5 +
+ tools/iio/iio_event_monitor.c                 |  10 +
+ 8 files changed, 466 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
+ create mode 100644 drivers/iio/chemical/sps30.c
+
+--
+2.19.2
