@@ -1,54 +1,68 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH V5 1/2] dt-bindings: iio: light: isl29018: update power
- supply name
-Date: Wed, 12 Dec 2018 17:04:25 +0000
-Message-ID: <20181212170425.49658e0c@archlinux>
-References: <1544504196-30277-1-git-send-email-Anson.Huang@nxp.com>
+Subject: Re: [PATCH v2] MAINTAINERS: add maintainers for ChromeOS EC
+ sub-drivers
+Date: Wed, 12 Dec 2018 17:06:35 +0000
+Message-ID: <20181212170635.09c3363d@archlinux>
+References: <20181211190953.13626-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544504196-30277-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20181211190953.13626-1-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "preid@electromag.com.au" <preid@electromag.com.au>, dl-linux-imx <linux-imx@nxp.com>
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: linux-kernel@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-i2c@vger.kernel.org, groeck@chromium.org, kernel@collabora.com, linux-rtc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Benson Leung <bleung@chromium.org>, Sebastian Reichel <sre@kernel.org>, linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, Lee Jones <lee.jones@linaro.org>, Hartmut Knaack <knaack.h@gmx.de>, Rob Herring <robh+dt@kernel.org>, Lars-Peter
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Dec 2018 05:02:39 +0000
-Anson Huang <anson.huang@nxp.com> wrote:
+On Tue, 11 Dec 2018 20:09:52 +0100
+Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
 
-> According to datasheet, the isl29018 has "vddd/vdda" power
-> supply, the "vdda" and "vddd" MUST be shorted externally,
-> and isl29023/isl29035 ONLY has "vdd" power supply, so just
-> one regulator is needed for the driver, update the power
-> supply name with "vdd" according to datasheet to avoid
-> confusion.
+> There are multiple ChromeOS EC sub-drivers spread in different
+> subsystems, as all of them are related to the Chrome stuff add
+> Benson and myself as a maintainers for all these sub-drivers.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Given the discussion on v4 I am assuming this should be dropped.
-Shout if I'm missing something.
-
-Jonathan
-
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> for iio parts.
 > ---
-> ChangeLog since V4:
-> 	Since ONLY isl29018 has two power supplies and they are MUST shorted externally, so they can be
-> 	treated as one power supply as well, remove "vdda" power supply and ONLY update the "vcc" with
-> 	"vdd" according to datasheet.
-> ---
->  Documentation/devicetree/bindings/iio/light/isl29018.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/light/isl29018.txt b/Documentation/devicetree/bindings/iio/light/isl29018.txt
-> index b9bbde3..c4c4e9e 100644
-> --- a/Documentation/devicetree/bindings/iio/light/isl29018.txt
-> +++ b/Documentation/devicetree/bindings/iio/light/isl29018.txt
-> @@ -15,7 +15,7 @@ Optional properties:
->    Refer to interrupt-controller/interrupts.txt for generic interrupt client
->    node bindings.
+> Changes in v2:
+> - Fix typo in Benson email address.
+> 
+>  MAINTAINERS | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a24129b0b043..bbe7180e2851 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3625,6 +3625,30 @@ S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/bleung/chrome-platform.git
+>  F:	drivers/platform/chrome/
 >  
-> -  - vcc-supply: phandle to the regulator that provides power to the sensor.
-> +  - vdd-supply: phandle to the regulator that provides power to the sensor.
->  
->  Example:
->  
+> +CHROMEOS EC SUBDRIVERS
+> +M:	Benson Leung <bleung@chromium.org>
+> +M:	Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+> +F:	Documentation/devicetree/bindings/input/cros-ec-keyb.txt
+> +F:	Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.txt
+> +F:	Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
+> +F:	Documentation/devicetree/bindings/mfd/cros-ec.txt
+> +F:	Documentation/ABI/testing/sysfs-bus-iio-cros-ec
+> +F:	drivers/extcon/extcon-usbc-cros-ec.c
+> +F:	drivers/i2c/busses/i2c-cros-ec-tunnel.c
+> +F:	drivers/iio/accel/cros_ec*
+> +F:	drivers/iio/common/cros_ec_sensors/
+> +F:	drivers/iio/light/cros_ec*
+> +F:	drivers/iio/pressure/cros_ec*
+> +F:	drivers/input/keyboard/cros_ec*
+> +F:	drivers/mfd/cros_ec*
+> +F:	drivers/power/supply/cros_usbpd-charger.c
+> +F:	drivers/pwm/pwm-cros-ec.c
+> +F:	drivers/rtc/rtc-cros-ec.c
+> +F:	include/linux/iio/common/cros_ec_sensors_core.h
+> +F:	include/linux/mfd/cros_ec*
+> +
+>  CIRRUS LOGIC AUDIO CODEC DRIVERS
+>  M:	Brian Austin <brian.austin@cirrus.com>
+>  M:	Paul Handrigan <Paul.Handrigan@cirrus.com>
