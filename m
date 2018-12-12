@@ -1,71 +1,58 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: arm-smmu: Add binding doc for Qcom
-	smmu-500
-Date: Wed, 12 Dec 2018 15:18:06 +0530
-Message-ID: <CAFp+6iF80P-o=Z-aNOMQwWMTcO4jcgSR0wOzd4GvmB3zTvWZLw@mail.gmail.com>
-References: <20181011094930.17010-1-vivek.gautam@codeaurora.org>
-	<20181011094930.17010-2-vivek.gautam@codeaurora.org>
-	<20181011221630.GA5841@bogus>
-	<9ca4bb4f-3e6e-21cc-819e-80b979b934d0@codeaurora.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/2] dt-bindings: gpu: mali-midgard: Add resets property
+Date: Wed, 12 Dec 2018 10:48:26 +0100
+Message-ID: <de78b995-59a2-99b2-b47f-44275964cb0c@baylibre.com>
+References: <20181210132227.29262-1-narmstrong@baylibre.com>
+ <20181210132227.29262-2-narmstrong@baylibre.com>
+ <CAL_JsqK9nDaOOe3yjHAdaH92ds=_cudbq-wQee+YBPaCHEE-HQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <9ca4bb4f-3e6e-21cc-819e-80b979b934d0-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
-	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqK9nDaOOe3yjHAdaH92ds=_cudbq-wQee+YBPaCHEE-HQ@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-amlogic@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Will,
-
-On Fri, Oct 12, 2018 at 11:37 AM Vivek Gautam
-<vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->
->
->
-> On 10/12/2018 3:46 AM, Rob Herring wrote:
-> > On Thu, 11 Oct 2018 15:19:29 +0530, Vivek Gautam wrote:
-> >> Qcom's implementation of arm,mmu-500 works well with current
-> >> arm-smmu driver implementation. Adding a soc specific compatible
-> >> along with arm,mmu-500 makes the bindings future safe.
-> >>
-> >> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> >> ---
-> >>
-> >> Changes since v3:
-> >>   - Refined language more to state things directly for the bindings
-> >>     description.
-> >>
-> >>   Documentation/devicetree/bindings/iommu/arm,smmu.txt | 4 ++++
-> >>   1 file changed, 4 insertions(+)
-> >>
-> > Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
-> Thank you Rob.
->
-
-Can you please pick this one as well to your tree? This goes on top of the
-bindings patch for "qcom,smmu-v2". So, it can't go through Andy's tree.
-Will ask Andy to pick the second patch of the series, that adds the dt node.
-
-I guess as I sent this one along with the dt patch, I would have
-mistakenly added
-you to 'cc' list rather than 'to' list.
-Let me know if you would like me to resend it.
-
-Thank
-Vivek
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+T24gMTEvMTIvMjAxOCAxNzo1OCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gTW9uLCBEZWMgMTAs
+IDIwMTggYXQgNzoyMiBBTSBOZWlsIEFybXN0cm9uZyA8bmFybXN0cm9uZ0BiYXlsaWJyZS5jb20+
+IHdyb3RlOgo+Pgo+PiBUaGUgQW1sb2dpYyBBUk0gTWFsaSBNaWRnYXJkIHJlcXVpcmVzIHJlc2V0
+IGNvbnRyb2xzIHRvIHBvd2VyIG9uIGFuZAo+PiBzb2Z0d2FyZSByZXNldCB0aGUgR1BVLCBhZGRz
+IHRoZXNlIGFzIG9wdGlvbmFsIGluIHRoZSBiaW5kaW5ncy4KPj4KPj4gU2lnbmVkLW9mZi1ieTog
+TmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJvbmdAYmF5bGlicmUuY29tPgo+PiAtLS0KPj4gIERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJtLG1hbGktbWlkZ2FyZC50eHQgfCAy
+ICsrCj4+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCj4+Cj4+IGRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FybSxtYWxpLW1pZGdhcmQu
+dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRn
+YXJkLnR4dAo+PiBpbmRleCAxOGEyY2RlMmU1ZjMuLjI0ZDgzZWM5NTJmMSAxMDA2NDQKPj4gLS0t
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJk
+LnR4dAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FybSxt
+YWxpLW1pZGdhcmQudHh0Cj4+IEBAIC0zNyw2ICszNyw4IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6
+Cj4+ICAtIG9wZXJhdGluZy1wb2ludHMtdjIgOiBSZWZlciB0byBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3Mvb3BwL29wcC50eHQKPj4gICAgZm9yIGRldGFpbHMuCj4+Cj4+ICstIHJl
+c2V0cyA6IFBoYW5kbGUgdG8gdGhlIHJlc2V0IGNvbnRyb2xzIGZvciB0aGUgTWFsaSBNaWRnYXJk
+IGRldmljZS4KPiAKPiBIb3cgbWFueT8gU291bmRzIGxpa2UgMSwgYnV0IHRoZSBkdHMgaGFzIDIu
+IFRoZXJlJ3MgYWxzbyBhIHNpbWlsYXIKPiBwYXRjaCBmb3IgQWxsd2lubmVyWzFdLiBJIGRvbid0
+IHdhbnQgdG8gc2VlIGEgZGlmZmVyZW50IG51bWJlciBvZgo+IHJlc2V0cyBhbmQgZGlmZmVyZW50
+IG5hbWVzIGZvciBlYWNoIHZlbmRvci4gU28gZmlyc3QgZmlndXJlIG91dCBob3cKPiBtYW55IHJl
+c2V0cyB0aGUgSVAgYmxvY2sgaGFzLiBZb3UnbGwgaGF2ZSB0byBmaW5kIHNvbWVvbmUgd2l0aCBh
+Y2Nlc3MKPiB0byB0aGUgVFJNLgoKSSBjYW4gYW5zd2VyIGZvciBBbWxvZ2ljLCB0aGV5IGhhdmUg
+YSByZXNldCBmb3IgdGhlIGJ1cyBpbnRlcmZhY2UgYW5kIHRoZSBHUFUgSVAgaXRzZWxmLgoKWW91
+IGFyZSBhc2tpbmcgc29tZXRoaW5nIGltcG9zc2libGUgOy0pIFdlIGNhbiBhc3N1bWUgaXQgaGFz
+IGEgc2luZ2xlIHJlc2V0IGludGVyZmFjZSwKYnV0IHZlbmRvcnMgY2FuIGFkZCBtb3JlIHRvIHJl
+c2V0IHNvbWUgZ2x1ZSBIVy4gU28gd2Ugd2lsbCBuZWVkIHNvbWUgdmFyaWFudCBwZXItdmVuZG9y
+LApzb3JyeSB0byBhbm5veSB5b3UgIQoKTmVpbAoKPiAKPiBSb2IKPiAKPiBbMV0gaHR0cHM6Ly9w
+YXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8xMDAzNjU0Lwo+IAoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
