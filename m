@@ -1,53 +1,130 @@
-From: Tom Burkart <tom@aussec.com>
-Subject: [PATCH v12 2/3] dt-bindings: pps: pps-gpio PPS ECHO implementation
-Date: Wed, 12 Dec 2018 13:52:13 +1100
-Message-ID: <20181212025214.29911-3-tom@aussec.com>
-References: <20181212025214.29911-1-tom@aussec.com>
- <20181212025214.29911-2-tom@aussec.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v3] kbuild: Add support for DT binding schema checks
+Date: Wed, 12 Dec 2018 12:04:37 +0900
+Message-ID: <CAK7LNATn+oTpHUj-BkMrmEYKTyL1yez1DYUhVib=t5NG3OejhQ@mail.gmail.com>
+References: <20181210203225.11179-1-robh@kernel.org> <CAK7LNAThtAOy4PQiYZ2X0oWrHdcLi7on8ctSXJ=bfT0HNh7NFQ@mail.gmail.com>
+ <CAL_JsqL7n2sjLbJVieVDQ4YtKMi2COCaijO9ZNu7ggzmXXxLEg@mail.gmail.com>
+ <CAK7LNARkr-g9ae+74QE6GMuxLM0JPgEqYOkwb0njXcb9-=nBdQ@mail.gmail.com> <CAL_JsqJ_1RukAZx5tCpp+X8mdNuOT6LTAdYOzN5UyhRK6SAo2Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181212025214.29911-2-tom@aussec.com>
+In-Reply-To: <CAL_JsqJ_1RukAZx5tCpp+X8mdNuOT6LTAdYOzN5UyhRK6SAo2Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Cc: Tom Burkart <tom@aussec.com>, devicetree@vger.kernel.org, Lukas Senger <lukas@fridolin.com>
+To: Rob Herring <robh@kernel.org>
+Cc: DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, darknighte@darknighte.com, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, grant.likely@arm.com, Kumar Gala <kumar.gala@linaro.org>, arm-soc <arm@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Michal Marek <michal.lkml@markovi.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch implements the device tree changes required for the pps
-echo functionality for pps-gpio, that sysfs claims is available
-already.
+On Wed, Dec 12, 2018 at 3:36 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Dec 11, 2018 at 10:03 AM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > On Wed, Dec 12, 2018 at 12:13 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > >
+> > > > > +$(obj)/%.example.dts: $(src)/%.yaml FORCE
+> > > > > +       $(call if_changed,chk_binding)
+> > > > > +
+> > > > > +DT_TMP_SCHEMA := .schema.yaml.tmp
+> > > >
+> > > >
+> > > > BTW, why does this file start with a period?
+> > > > What is the meaning of '.tmp' extension?
+> > >
+> > > Nothing really. Just named it something so it gets cleaned and ignored by git.
+> >
+> >
+> > It is cleaned whatever file name you use.
+> >
+> >
+> > See scripts/Makefile.clean
+> >
+> > __clean-files   := $(extra-y) $(extra-m) $(extra-)       \
+> >                    $(always) $(targets) $(clean-files)   \
+> >                    $(hostprogs-y) $(hostprogs-m) $(hostprogs-) \
+> >                    $(hostlibs-y) $(hostlibs-m) $(hostlibs-) \
+> >                    $(hostcxxlibs-y) $(hostcxxlibs-m)
+> >
+> >
+> > $(extra-y) is cleaned.
+>
+> True.
+>
+> >
+> >
+> > You are adding *.example.dts to .gitignore
+> >
+> > Why not "schema.yaml" ?
+>
+> Okay. I'll do "processed-schema.yaml" to give a bit better name of
+> what it contains.
+>
+> >
+> > > > > +extra-y += $(DT_TMP_SCHEMA)
+> > > > > +
+> > > > > +quiet_cmd_mk_schema = SCHEMA  $@
+> > > > > +      cmd_mk_schema = mkdir -p $(obj); \
+> > > > > +                      rm -f $@; \
+> > > > > +                      $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(filter-out FORCE, $^)
+> > > >
+> > > >
+> > > > "mkdir -p $(obj)" is redundant.
+> > > >
+> > > >
+> > > > Why is 'rm -f $@' necessary ?
+> > > > Can't dt-mk-schema overwrite the output file?
+> > >
+> > > It is for error case when the output file is not generated. I can
+> > > handle this within dt-mk-schema instead.
+> > > > > +DT_DOCS = $(shell cd $(srctree)/$(src) && find * -name '*.yaml')
+> > > > > +DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
+> > > > > +
+> > > > > +extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
+> > > > > +extra-y += $(patsubst $(src)/%.yaml,%.example.dtb, $(DT_SCHEMA_FILES))
+> > > >
+> > > >
+> > > >
+> > > > I assume you intentionally did not do like this:
+> > > >
+> > > > extra-y += $(patsubst %.yaml,%.example.dtb, $(DT_DOCS))
+> > > >
+> > > > From the commit description, DT_SCHEMA_FILES might be overridden by a user.
+> > > > So, I think this is OK.
+> > > >
+> > > >
+> > > >
+> > > >
+> > > > > +$(obj)/$(DT_TMP_SCHEMA): | $(addprefix $(obj)/,$(patsubst $(src)/%.yaml,%.example.dtb, $(DT_SCHEMA_FILES)))
+> > > >
+> > > > I do not understand this line.
+> > > > Why is it necessary?
+> > > >
+> > > > *.example.dtb files are generated anyway
+> > > > since they are listed in extra-y.
+> > >
+> > > It is enforcing the ordering. Without it, the binding checks and
+> > > building .schema.yaml.tmp happen in parallel because both only have
+> > > the source files as dependencies. The '|' keeps the dependencies out
+> > > of the dependency list($^).
+> >
+> >
+> > What kind problem would you see if
+> > the binding checks and building .schema.yaml.tmp
+> > happen in parallel?
+>
+> In case of no errors in the binding docs, it doesn't matter. If there
+> are errors, I don't want the dtbs validation to run if any schema
+> doesn't validate. However, I played around with this a bit more and it
+> seems like having the examples' dts/dtb in extra-y prevents that from
+> happening. Does that match your expections?
 
-This patch was originally written by Lukas Senger as part of a masters
-thesis project and modified for inclusion into the linux kernel by Tom
-Burkart.
+Exactly.
 
-Signed-off-by: Lukas Senger <lukas@fridolin.com>
-Signed-off-by: Tom Burkart <tom@aussec.com>
----
- Documentation/devicetree/bindings/pps/pps-gpio.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+If any error occurs in Documentation/devicetree/bindings/Makefile,
+Make terminates before proceeding to the dtbs_check stage.
 
-diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt b/Documentation/devicetree/bindings/pps/pps-gpio.txt
-index 3683874832ae..9012a2a02e14 100644
---- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
-+++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
-@@ -7,6 +7,10 @@ Required properties:
- - compatible: should be "pps-gpio"
- - gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
- 
-+Additional required properties for the PPS ECHO functionality:
-+- echo-gpios: one PPS ECHO GPIO in the format described by ../gpio/gpio.txt
-+- echo-active-ms: duration in ms of the active portion of the echo pulse
-+
- Optional properties:
- - assert-falling-edge: when present, assert is indicated by a falling edge
-                        (instead of by a rising edge)
-@@ -19,5 +23,8 @@ Example:
- 		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
- 		assert-falling-edge;
- 
-+		echo-gpios = <&gpio1 27 GPIO_ACTIVE_HIGH>;
-+		echo-active-ms = <100>;
-+
- 		compatible = "pps-gpio";
- 	};
+
+
 -- 
-2.12.3
+Best Regards
+Masahiro Yamada
