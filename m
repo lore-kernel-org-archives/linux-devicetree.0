@@ -1,73 +1,68 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v7 10/10] soc: qcom: rpmhpd: Mark mx as a parent for cx
-Date: Wed, 12 Dec 2018 14:51:31 +0530
-Message-ID: <20181212092131.13046-11-rnayak@codeaurora.org>
-References: <20181212092131.13046-1-rnayak@codeaurora.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 3/6] dt-bindings: ap806: document the thermal
+ interrupt capabilities
+Date: Wed, 12 Dec 2018 10:32:39 +0100
+Message-ID: <20181212103239.57532f17@xps13>
+References: <20181204190332.10351-1-miquel.raynal@bootlin.com>
+ <20181204190332.10351-4-miquel.raynal@bootlin.com>
+ <20181210230354.GA1503@bogus>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181212092131.13046-1-rnayak@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, robh@kernel.org, viresh.kumar@linaro.org, sboyd@kernel.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181210230354.GA1503@bogus>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Eduardo Valentin <edubezval@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, David Sniatkiwicz <davidsn@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Specify the active + sleep and active-only MX power domains as
-the parents of the corresponding CX power domains. This will ensure that
-performance state requests on CX automatically generate equivalent requests
-on MX power domains.
-
-This is used to enforce a requirement that exists for various
-hardware blocks on SDM845 that MX performance state >= CX performance
-state for a given operating frequency.
-
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
----
-This patch is dependent on the series from
-Viresh [1] which adds support to propogate performance states across the
-power domain hierarchy which is still being reviewed.
-
-[1] https://lkml.org/lkml/2018/11/26/333
-
- drivers/soc/qcom/rpmhpd.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-index f7fbe57f31ae..71d693c31e3b 100644
---- a/drivers/soc/qcom/rpmhpd.c
-+++ b/drivers/soc/qcom/rpmhpd.c
-@@ -97,12 +97,14 @@ static struct rpmhpd sdm845_cx_ao;
- static struct rpmhpd sdm845_cx = {
- 	.pd = { .name = "cx", },
- 	.peer = &sdm845_cx_ao,
-+	.parent = &sdm845_mx.pd,
- 	.res_name = "cx.lvl",
- };
- 
- static struct rpmhpd sdm845_cx_ao = {
- 	.pd = { .name = "cx_ao", },
- 	.peer = &sdm845_cx,
-+	.parent = &sdm845_mx_ao.pd,
- 	.res_name = "cx.lvl",
- };
- 
-@@ -372,6 +374,15 @@ static int rpmhpd_probe(struct platform_device *pdev)
- 		data->domains[i] = &rpmhpds[i]->pd;
- 	}
- 
-+	/* Add subdomains */
-+	for (i = 0; i < num_pds; i++) {
-+		if (!rpmhpds[i])
-+			continue;
-+		if (rpmhpds[i]->parent)
-+			pm_genpd_add_subdomain(rpmhpds[i]->parent,
-+					       &rpmhpds[i]->pd);
-+	}
-+
- 	return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
- }
- 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+SGkgUm9iLAoKUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGUgb24gTW9uLCAxMCBE
+ZWMgMjAxOCAxNzowMzo1NCAtMDYwMDoKCj4gT24gVHVlLCBEZWMgMDQsIDIwMTggYXQgMDg6MDM6
+MjlQTSArMDEwMCwgTWlxdWVsIFJheW5hbCB3cm90ZToKPiA+IFRoZSB0aGVybWFsIElQIGNhbiBw
+cm9kdWNlIGludGVycnVwdHMgb24gb3ZlcmhlYXQgc2l0dWF0aW9uLgo+ID4gRGVzY3JpYmUgdGhl
+bS4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogTWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBi
+b290bGluLmNvbT4KPiA+IC0tLQo+ID4gIC4uLi9iaW5kaW5ncy9hcm0vbWFydmVsbC9hcDgwNi1z
+eXN0ZW0tY29udHJvbGxlci50eHQgICAgICB8IDggKysrKysrKysKPiA+ICAxIGZpbGUgY2hhbmdl
+ZCwgOCBpbnNlcnRpb25zKCspCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvYXJtL21hcnZlbGwvYXA4MDYtc3lzdGVtLWNvbnRyb2xsZXIudHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tYXJ2ZWxsL2FwODA2LXN5
+c3RlbS1jb250cm9sbGVyLnR4dAo+ID4gaW5kZXggM2ZkMjFiYjdjYjM3Li4zNWU4ZGQyZWRmZDIg
+MTAwNjQ0Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL21h
+cnZlbGwvYXA4MDYtc3lzdGVtLWNvbnRyb2xsZXIudHh0Cj4gPiArKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvYXJtL21hcnZlbGwvYXA4MDYtc3lzdGVtLWNvbnRyb2xsZXIu
+dHh0Cj4gPiBAQCAtMTE0LDEyICsxMTQsMTggQEAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3RoZXJtYWwvdGhlcm1hbC50eHQKPiA+ICBUaGUgdGhlcm1hbCBJUCBjYW4gcHJvYmUg
+dGhlIHRlbXBlcmF0dXJlIGFsbCBhcm91bmQgdGhlIHByb2Nlc3Nvci4gSXQKPiA+ICBtYXkgZmVh
+dHVyZSBzZXZlcmFsIGNoYW5uZWxzLCBlYWNoIG9mIHRoZW0gd2lyZWQgdG8gb25lIHNlbnNvci4K
+PiA+ICAKPiA+ICtJdCBpcyBwb3NzaWJsZSB0byBzZXR1cCBhbiBvdmVyaGVhdCBpbnRlcnJ1cHQg
+YnkgZ2l2aW5nIGF0IGxlYXN0IG9uZQo+ID4gK2NyaXRpY2FsIHBvaW50IHRvIGFueSBzdWJub2Rl
+IG9mIHRoZSB0aGVybWFsLXpvbmUgbm9kZS4KPiA+ICsKPiA+ICBSZXF1aXJlZCBwcm9wZXJ0aWVz
+Ogo+ID4gIC0gY29tcGF0aWJsZTogbXVzdCBiZSBvbmUgb2Y6Cj4gPiAgICAqIG1hcnZlbGwsYXJt
+YWRhLWFwODA2LXRoZXJtYWwKPiA+ICAtIHJlZzogcmVnaXN0ZXIgcmFuZ2UgYXNzb2NpYXRlZCB3
+aXRoIHRoZSB0aGVybWFsIGZ1bmN0aW9ucy4KPiA+ICAKPiA+ICBPcHRpb25hbCBwcm9wZXJ0aWVz
+Ogo+ID4gKy0gaW50ZXJydXB0LXBhcmVudC9pbnRlcnJ1cHRzOiBvdmVyaGVhdCBpbnRlcnJ1cHQg
+aGFuZGxlLiBTaG91bGQgcG9pbnQgdG8KPiA+ICsgIGxpbmUgMTggb2YgdGhlIFNFSSBpcnFjaGlw
+Lgo+ID4gKyAgU2VlIGludGVycnVwdC1jb250cm9sbGVyL2ludGVycnVwdHMudHh0ICAKPiAKPiBE
+b24ndCBkb2N1bWVudCBpbnRlcnJ1cHQtcGFyZW50IGFzIGl0IGlzIGltcGxpZWQgYW5kIG1heSBi
+ZSBpbiBhIHBhcmVudCAKPiBub2RlLgoKU3VyZSwgSSB3aWxsIHNlbmQgYSB2NC4KCj4gCj4gPiAg
+LSAjdGhlcm1hbC1zZW5zb3ItY2VsbHM6IHNoYWxsIGJlIDwxPiB3aGVuIHRoZXJtYWwtem9uZXMg
+c3Vibm9kZXMgcmVmZXIKPiA+ICAgIHRvIHRoaXMgSVAgYW5kIHJlcHJlc2VudHMgdGhlIGNoYW5u
+ZWwgSUQuIFRoZXJlIGlzIG9uZSBzZW5zb3IgcGVyCj4gPiAgICBjaGFubmVsLiBPIHJlZmVycyB0
+byB0aGUgdGhlcm1hbCBJUCBpbnRlcm5hbCBjaGFubmVsLCB3aGlsZSBwb3NpdGl2ZQo+ID4gQEAg
+LTEzMyw2ICsxMzksOCBAQCBhcF9zeXNjb24xOiBzeXN0ZW0tY29udHJvbGxlckA2ZjgwMDAgewo+
+ID4gIAlhcF90aGVybWFsOiB0aGVybWFsLXNlbnNvckA4MCB7Cj4gPiAgCQljb21wYXRpYmxlID0g
+Im1hcnZlbGwsYXJtYWRhLWFwODA2LXRoZXJtYWwiOwo+ID4gIAkJcmVnID0gPDB4ODAgMHgxMD47
+Cj4gPiArCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZzZWk+Owo+ID4gKwkJaW50ZXJydXB0cyA9IDwx
+OD47Cj4gPiAgCQkjdGhlcm1hbC1zZW5zb3ItY2VsbHMgPSA8MT47Cj4gPiAgCX07Cj4gPiAgfTsK
+PiA+IC0tIAo+ID4gMi4xOS4xCj4gPiAgIAoKClRoYW5rcywKTWlxdcOobAoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
+aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
