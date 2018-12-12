@@ -1,72 +1,66 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RESEND PATCH v3 3/3] regulator: mcp16502: add regulator driver
- for MCP16502
-Date: Wed, 12 Dec 2018 15:55:02 +0000
-Message-ID: <20181212155502.GD6920@sirena.org.uk>
-References: <1544522876-15967-1-git-send-email-andrei.stefanescu@microchip.com>
- <1544522876-15967-4-git-send-email-andrei.stefanescu@microchip.com>
- <20181211164706.GL6686@sirena.org.uk>
- <6a35df06-1309-f069-9b22-8c2cc5cca56e@microchip.com>
+From: <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH v2 5/5] regulator: add documentation for regulator modes
+ and suspend states
+Date: Wed, 12 Dec 2018 16:24:41 +0000
+Message-ID: <8500c9f1-bfdf-d1ae-4a14-e42e1ee85585@microchip.com>
+References: <1543319801-19100-1-git-send-email-claudiu.beznea@microchip.com>
+ <1543319801-19100-6-git-send-email-claudiu.beznea@microchip.com>
+ <20181211221324.GA14658@bogus>
+ <442be9e4-621f-c668-c627-264084ef975a@microchip.com>
+ <CAL_JsqKk99GrQaqVyXSr_ZwQd_nnuMOWnz_0ehS1dHZoEmxDCw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yudcn1FV7Hsu/q59"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6a35df06-1309-f069-9b22-8c2cc5cca56e@microchip.com>
+In-Reply-To: <CAL_JsqKk99GrQaqVyXSr_ZwQd_nnuMOWnz_0ehS1dHZoEmxDCw@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <4819D54C0784CB46A0623F3A112B20DA@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrei.Stefanescu@microchip.com
-Cc: robh+dt@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, gregkh@linuxfoundation.org, Cristian.Birsan@microchip.com, Nicolas.Ferre@microchip.com, Claudiu.Beznea@microchip.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: robh@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, Ludovic.Desroches@microchip.com, broonie@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---yudcn1FV7Hsu/q59
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Dec 12, 2018 at 08:01:07AM +0000, Andrei.Stefanescu@microchip.com w=
-rote:
-
-> > This puts the device into low power mode when the suspend function gets
-> > called but this might not be safe - devices using the regulator may not
-> > be suspended yet so could still need full regulation.  Normally a GPIO
-> > triggered transition like this would be being done by hardware as part
-> > of the process of suspending the SoC.  Is there some reason to do this
-> > manually?
-
-> There is a line from the MPU (SHDN) which goes low only when the MPU
-> turns off. That line is already connected to the PMIC and it differentiat=
-es
-> between suspend-to-mem and standby. To switch to low-power, the PMIC must
-> be controlled by the GPIO pin LPM.
-
-> The suspend sequence is:
-> - LPM pin goes high (PMIC enters Low-Power <-> Linux standby)
-> - SHDN goes low (if target suspend state is mem) and then PMIC enters=20
-> HIBERNATE
-
-This feels like it should be being controlled somewhere else, if it's
-actually causing a change in the PMIC state it seems like it wants to be
-done as late as possible in suspend to minimize the risks.  At the very
-least suspend_late() for the driver seems appropriate.
-
-Could you submit a version with this feature at least split out into a
-separate patch please so we can apply the rest of the code while this is
-discussed?
-
---yudcn1FV7Hsu/q59
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwRL1UACgkQJNaLcl1U
-h9AOAwf+K8t0YPz/fYY45FbWktz2aoX3ECrcgy5r25ACJVOjG7tBhTelZLbGkitB
-314uampogG8tT6s8WObZbEJjQL+VUbyt7bgcpTI7YamUdPSwkXSJDsfjpPOVVLoa
-2iAHn+GBi7O63sKNUb9s+D4q7K1xbMs1vxcpQoV+I/SZx33z6GaoJPBUI8CcDes3
-UmC9aaIMUMva/RuKtPSEomI/+qAhiuMdZ1e4SQyZ/AZLxThOPyXJvh1hs8fa2IQg
-qC4heudi00SNdZj0dGl6GlyYLetqaYKamlZ8aYf++xJPwI6hH/bsSP/Tiq2iaWTE
-wnP4HNcX1dCaLvgGy84OxUTV9fmiOQ==
-=8c4e
------END PGP SIGNATURE-----
-
---yudcn1FV7Hsu/q59--
+DQoNCk9uIDEyLjEyLjIwMTggMTU6MzIsIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBXZWQsIERl
+YyAxMiwgMjAxOCBhdCAzOjEzIEFNIDxDbGF1ZGl1LkJlem5lYUBtaWNyb2NoaXAuY29tPiB3cm90
+ZToNCj4+DQo+Pg0KPj4NCj4+IE9uIDEyLjEyLjIwMTggMDA6MTMsIFJvYiBIZXJyaW5nIHdyb3Rl
+Og0KPj4+IE9uIFR1ZSwgTm92IDI3LCAyMDE4IGF0IDExOjU3OjI1QU0gKzAwMDAsIENsYXVkaXUu
+QmV6bmVhQG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+Pj4+IEZyb206IENsYXVkaXUgQmV6bmVhIDxj
+bGF1ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tPg0KPj4+Pg0KPj4+PiBBZGQgZG9jdW1lbnRhdGlv
+biBmb3IgcmVndWxhdG9yIG1vZGVzIGFuZCBzdXNwZW5kIHN0YXRlcy4NCj4+Pj4NCj4+Pj4gU2ln
+bmVkLW9mZi1ieTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+
+DQo+Pj4+IC0tLQ0KPj4+PiAgLi4uL2JpbmRpbmdzL3JlZ3VsYXRvci9hY3Q4OTQ1YS1yZWd1bGF0
+b3IudHh0ICAgICAgfCAzNCArKysrKysrKysrKysrKysrKysrKysrDQo+Pj4+ICAxIGZpbGUgY2hh
+bmdlZCwgMzQgaW5zZXJ0aW9ucygrKQ0KPj4+Pg0KPj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9hY3Q4OTQ1YS1yZWd1bGF0b3IudHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9hY3Q4OTQ1YS1y
+ZWd1bGF0b3IudHh0DQo+Pj4+IGluZGV4IGFjOTU1ZGVhMDBkMS4uNDAxNzUyNzYxOWFiIDEwMDY0
+NA0KPj4+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9y
+L2FjdDg5NDVhLXJlZ3VsYXRvci50eHQNCj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9hY3Q4OTQ1YS1yZWd1bGF0b3IudHh0DQo+Pj4+IEBAIC0x
+NSwxMSArMTUsMTcgQEAgT3B0aW9uYWwgaW5wdXQgc3VwcGx5IHByb3BlcnRpZXM6DQo+Pj4+ICAg
+IC0gaW5sNjctc3VwcGx5OiBUaGUgaW5wdXQgc3VwcGx5IGZvciBSRUdfTERPMyBhbmQgUkVHX0xE
+TzQNCj4+Pj4NCj4+Pj4gIEFueSBzdGFuZGFyZCByZWd1bGF0b3IgcHJvcGVydGllcyBjYW4gYmUg
+dXNlZCB0byBjb25maWd1cmUgdGhlIHNpbmdsZSByZWd1bGF0b3IuDQo+Pj4+ICtyZWd1bGF0b3It
+aW5pdGlhbC1tb2RlLCByZWd1bGF0b3ItYWxsb3dlZC1tb2RlcyBhbmQgcmVndWxhdG9yLW1vZGUg
+Y291bGQgYmUNCj4+Pj4gK3NwZWNpZmllZCB1c2luZyBtb2RlIHZhbHVlcyBmcm9tIGR0LWJpbmRp
+bmdzL3JlZ3VsYXRvci9hY3RpdmUtc2VtaSw4OTQ1YS1yZWd1bGF0b3IuaA0KPj4+PiArZmlsZS4N
+Cj4+Pj4NCj4+Pj4gIFRoZSB2YWxpZCBuYW1lcyBmb3IgcmVndWxhdG9ycyBhcmU6DQo+Pj4+ICAg
+ICAgUkVHX0RDREMxLCBSRUdfRENEQzIsIFJFR19EQ0RDMywgUkVHX0xETzEsIFJFR19MRE8yLCBS
+RUdfTERPMywgUkVHX0xETzQuDQo+Pj4+DQo+Pj4+ICBFeGFtcGxlOg0KPj4+PiArDQo+Pj4+ICsj
+aW5jbHVkZSA8ZHQtYmluZGluZ3MvcmVndWxhdG9yL2FjdGl2ZS1zZW1pLDg5NDVhLXJlZ3VsYXRv
+ci5oPg0KPj4+DQo+Pj4gVGhpcyBmaWxlIGJlbG9uZ3MgaW4gdGhpcyBwYXRjaC4NCj4+DQo+PiBJ
+J20gdXNpbmcgdGhlIGRlZmluZXMgaW4gdGhpcyBmaWxlIGFsc28gaW4gZHJpdmVyLiBJIHdhcyB0
+aGlua2luZyB0aGF0IGlmIEkNCj4+IHdvdWxkIGluY2x1ZGUgdGhpcyBmaWxlIGluIHRoaXMgcGF0
+Y2ggdGhlIGRyaXZlciBjb21waWxhdGlvbiB3b3VsZCBmYWlsIGlmDQo+PiB0aGUgcGF0Y2hlcyB3
+b3VsZCBiZSBhY2NlcHRlZCB2aWEgZGlmZmVyZW50IHRyZWVzLg0KPiANCj4gVGhleSB3b24ndCBi
+ZS4NCg0KVGhhbmsgeW91ISBJJ2xsIHNlbmQgYSBuZXcgdmVyc2lvbiB3aXRoIHRoZSBwcm9wb3Nl
+ZCBjaGFuZ2UuDQoNCj4gDQo+PiBXb3VsZCB5b3UgbGlrZSBtZSB0byBoYXZlIGRpZmZlcmVudCBk
+ZWZpbmVzIGluIGRyaXZlciBhbmQgdGhpcyBuZXcgaGVhZGVyDQo+PiBvciBjb3VsZCBoYXBwZW4g
+dGhhdCB0aGVzZSBwYXRjaGVzIHRvIGJlIGluY2x1ZGVkIGluIHRoZSBtYWluIHRyZWUgdmlhIHRo
+ZQ0KPj4gc2FtZSB0cmVlIChlLmcuIHJlZ3VsYXRvciB0cmVlKT8NCj4gDQo+IE5vIG5lZWQgZm9y
+IGRpZmZlcmVudCBkZWZpbmVzLiBUaGUgc3Vic3lzdGVtIG1haW50YWluZXIgd2lsbCB0YWtlDQo+
+IGV2ZXJ5dGhpbmcgaW4gdGhpcyBjYXNlLg0KPiANCj4gUm9iDQo+IA0KPiBfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiBsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdA0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
+DQo+IA0K
