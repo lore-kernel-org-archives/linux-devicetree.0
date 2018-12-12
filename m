@@ -1,81 +1,120 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v2] MAINTAINERS: add maintainers for ChromeOS EC
- sub-drivers
-Date: Wed, 12 Dec 2018 23:29:37 +0100
-Message-ID: <20181212222937.GL19816@piout.net>
-References: <20181211190953.13626-1-enric.balletbo@collabora.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v6 1/9] soc: Add TmFifo driver for Mellanox BlueField Soc
+Date: Thu, 13 Dec 2018 00:07:42 +0100
+Message-ID: <23fff14b-0e44-651c-1dfd-8f8e07c7eaee@gmail.com>
+References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+ <1541089431-175572-1-git-send-email-lsun@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181211190953.13626-1-enric.balletbo@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: linux-kernel@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, linux-i2c@vger.kernel.org, groeck@chromium.org, kernel@collabora.com, linux-rtc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Benson Leung <bleung@chromium.org>, Sebastian Reichel <sre@kernel.org>, linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, Lee Jones <lee.jones@linaro.org>, Hartmut Knaack <knaack.h@gmx.de>, Rob Herring <robh+dt@kernel.org>, Lars-Peter Clausen <lars@>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1541089431-175572-1-git-send-email-lsun@mellanox.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Liming Sun <lsun@mellanox.com>, y@bu-lab53.mtbu.labs.mlnx, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, David Woods <dwoods@mellanox.com>, Robin Murphy <robin.murphy@arm.com>, arm-soc <arm@kernel.org>
+Cc: devicetree@vger.kernel.org, "mbrugger@suse.com >> Matthias Brugger" <mbrugger@suse.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/12/2018 20:09:52+0100, Enric Balletbo i Serra wrote:
-> There are multiple ChromeOS EC sub-drivers spread in different
-> subsystems, as all of them are related to the Chrome stuff add
-> Benson and myself as a maintainers for all these sub-drivers.
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-You definitively don't need my ack to get that applied but anyway:
 
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-
-However, you should probably indicate which tree do you expect that to
-go through ;)
-
+On 01/11/2018 17:23, Liming Sun wrote:> This commit adds the TmFifo driver for
+Mellanox BlueField Soc.
+> TmFifo is a shared FIFO which enables external host machine to
+> exchange data with the SoC via USB or PCIe. The driver is based on
+> virtio framework and has console and network access enabled.
+>
+> Reviewed-by: David Woods <dwoods@mellanox.com>
+> Signed-off-by: Liming Sun <lsun@mellanox.com>
 > ---
-> 
-> Changes in v2:
-> - Fix typo in Benson email address.
-> 
->  MAINTAINERS | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a24129b0b043..bbe7180e2851 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3625,6 +3625,30 @@ S:	Maintained
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/bleung/chrome-platform.git
->  F:	drivers/platform/chrome/
->  
-> +CHROMEOS EC SUBDRIVERS
-> +M:	Benson Leung <bleung@chromium.org>
-> +M:	Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
-> +F:	Documentation/devicetree/bindings/input/cros-ec-keyb.txt
-> +F:	Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.txt
-> +F:	Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
-> +F:	Documentation/devicetree/bindings/mfd/cros-ec.txt
-> +F:	Documentation/ABI/testing/sysfs-bus-iio-cros-ec
-> +F:	drivers/extcon/extcon-usbc-cros-ec.c
-> +F:	drivers/i2c/busses/i2c-cros-ec-tunnel.c
-> +F:	drivers/iio/accel/cros_ec*
-> +F:	drivers/iio/common/cros_ec_sensors/
-> +F:	drivers/iio/light/cros_ec*
-> +F:	drivers/iio/pressure/cros_ec*
-> +F:	drivers/input/keyboard/cros_ec*
-> +F:	drivers/mfd/cros_ec*
-> +F:	drivers/power/supply/cros_usbpd-charger.c
-> +F:	drivers/pwm/pwm-cros-ec.c
-> +F:	drivers/rtc/rtc-cros-ec.c
-> +F:	include/linux/iio/common/cros_ec_sensors_core.h
-> +F:	include/linux/mfd/cros_ec*
-> +
->  CIRRUS LOGIC AUDIO CODEC DRIVERS
->  M:	Brian Austin <brian.austin@cirrus.com>
->  M:	Paul Handrigan <Paul.Handrigan@cirrus.com>
-> -- 
-> 2.19.2
-> 
+>  drivers/soc/Kconfig                |    1 +
+>  drivers/soc/Makefile               |    1 +
+>  drivers/soc/mellanox/Kconfig       |   18 +
+>  drivers/soc/mellanox/Makefile      |    5 +
+>  drivers/soc/mellanox/tmfifo.c      | 1236 ++++++++++++++++++++++++++++++++++++
+>  drivers/soc/mellanox/tmfifo_regs.h |   76 +++
+>  6 files changed, 1337 insertions(+)
+>  create mode 100644 drivers/soc/mellanox/Kconfig
+>  create mode 100644 drivers/soc/mellanox/Makefile
+>  create mode 100644 drivers/soc/mellanox/tmfifo.c
+>  create mode 100644 drivers/soc/mellanox/tmfifo_regs.h
+>
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+[...]
+
+> +
+> +/* Interrupt handler. */
+> +static irqreturn_t tmfifo_irq_handler(int irq, void *dev_id)
+> +{
+> +	int i = (uintptr_t)dev_id % sizeof(void *);
+> +	struct tmfifo *fifo = dev_id - i;
+> +
+> +	if (i < TM_IRQ_CNT && !test_and_set_bit(i, &fifo->pend_events))
+> +		schedule_work(&fifo->work);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+[...]
+> +
+> +/* Probe the TMFIFO. */
+> +static int tmfifo_probe(struct platform_device *pdev)
+> +{
+> +	u64 ctl;
+> +	struct tmfifo *fifo;
+> +	struct resource *rx_res, *tx_res;
+> +	struct virtio_net_config net_config;
+> +	int i, ret;
+> +
+> +	/* Get the resource of the Rx & Tx FIFO. */
+> +	rx_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	tx_res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	if (!rx_res || !tx_res) {
+> +		ret = -EINVAL;
+> +		goto err;
+> +	}
+> +
+> +	if (request_mem_region(rx_res->start,
+> +			       resource_size(rx_res), "bf-tmfifo") == NULL) {
+> +		ret = -EBUSY;
+> +		goto early_err;
+> +	}
+> +
+> +	if (request_mem_region(tx_res->start,
+> +			       resource_size(tx_res), "bf-tmfifo") == NULL) {
+> +		release_mem_region(rx_res->start, resource_size(rx_res));
+> +		ret = -EBUSY;
+> +		goto early_err;
+> +	}
+> +
+> +	ret = -ENOMEM;
+> +	fifo = kzalloc(sizeof(struct tmfifo), GFP_KERNEL);
+> +	if (!fifo)
+> +		goto err;
+> +
+> +	fifo->pdev = pdev;
+> +	platform_set_drvdata(pdev, fifo);
+> +
+> +	spin_lock_init(&fifo->spin_lock);
+> +	INIT_WORK(&fifo->work, tmfifo_work_handler);
+> +
+> +	timer_setup(&fifo->timer, tmfifo_timer, 0);
+> +	fifo->timer.function = tmfifo_timer;
+> +
+> +	for (i = 0; i < TM_IRQ_CNT; i++) {
+> +		fifo->irq[i] = platform_get_irq(pdev, i);
+> +		ret = request_irq(fifo->irq[i], tmfifo_irq_handler, 0,
+> +				  "tmfifo", (u8 *)fifo + i);
+
+I think it would be better if you create a struct that passes a pointer to fifo
+and the ID instead of "hiding" the ID inside the address.
+
+Regards,
+Matthias
