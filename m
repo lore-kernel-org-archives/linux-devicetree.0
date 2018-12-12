@@ -1,49 +1,93 @@
-Return-Path: <SRS0=kndj=O5=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr130049.outbound.protection.outlook.com ([40.107.13.49]:8248
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729276AbeLTI4j (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Dec 2018 03:56:39 -0500
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V5 4/4] ARM64: dts: imx: add i.MX8QXP system controller RTC
- support
-Date: Thu, 20 Dec 2018 08:56:33 +0000
-Message-ID: <1545295872-20169-5-git-send-email-Anson.Huang@nxp.com>
-References: <1545295872-20169-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1545295872-20169-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=G85Z=OV=google.com=bhelgaas@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, Aisheng Dong <aisheng.dong@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+References: <20181123094444.27956-1-miquel.raynal@bootlin.com>
+ <20181123094444.27956-3-miquel.raynal@bootlin.com> <154353827849.88331.12767996548874447262@swboyd.mtv.corp.google.com>
+ <20181130115821.255394d4@xps13>
+In-Reply-To: <20181130115821.255394d4@xps13>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Date: Wed, 12 Dec 2018 15:59:27 -0600
+Message-ID: <CAErSpo47e7m13KY=LxFwcMZx=K9Viin3=i53Qam79Cax8FY8BA@mail.gmail.com>
+Subject: Re: [PATCH 2/4] clk: mvebu: armada-37xx-periph: change suspend/resume time
+Content-Type: text/plain; charset="UTF-8"
+To: miquel.raynal@bootlin.com
+Cc: sboyd@kernel.org, Mark Rutland <mark.rutland@arm.com>, mturquette@baylibre.com, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com, gregory.clement@bootlin.com, maxime.chevallier@bootlin.com, Nadav Haklai <nadavh@marvell.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM list <linux-pm@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add i.MX8QXP system controller RTC support.
+[+cc Rafael, linux-pm, since they know a lot more about PCI PM than I
+do.  Sorry I didn't notice they weren't cc'd earlier]
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No change since V4.
----
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
-ts/freescale/imx8qxp.dtsi
-index da99b6f..9b08688 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -83,6 +83,10 @@
- 			compatible =3D "fsl,imx8qxp-scu-pd";
- 			#power-domain-cells =3D <1>;
- 		};
-+
-+		rtc: rtc {
-+			compatible =3D "fsl,imx8qxp-sc-rtc";
-+		};
- 	};
-=20
- 	adma_subsys: bus@59000000 {
---=20
-2.7.4
+On Fri, Nov 30, 2018 at 4:58 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> Stephen Boyd <sboyd@kernel.org> wrote on Thu, 29 Nov 2018 16:37:58
+> -0800:
+> > Quoting Miquel Raynal (2018-11-23 01:44:41)
+> > > Armada 3700 PCIe IP relies on the PCIe clock managed by this
+> > > driver. For reasons related to the PCI core's organization when
+> > > suspending/resuming, PCI host controller drivers must reconfigure
+> > > their register at suspend_noirq()/resume_noirq() which happens after
+> > > suspend()/suspend_late() and before resume_early()/resume().
+> > >
+> > > Device link support in the clock framework enforce that the clock
+> > > driver's resume() callback will be called before the PCIe
+> > > driver's. But, any resume_noirq() callback will be called before all
+> > > the registered resume() callbacks.
+> >
+> > I thought any device driver that provides something to another device
+> > driver will implicitly be probed before the driver that consumes said
+> > resources. And we actually reorder the dpm list on probe defer so that
+> > the order of devices is correct. Is it more that we want to parallelize
+> > suspend/resume of the PCIe chip so we need to have device links so that
+> > we know the dependency of the PCIe driver on the clock driver?
+>
+> I had the same idea of device links before testing. I hope I did
+> not make any mistake leading me to wrong observations, but indeed
+> this is what I think is happening:
+> * PM core call all suspend() callbacks
+> * then all suspend_late()
+> * then all suspend_noirq()
+> For me, the PM core does not care if a suspend_noirq() depends on the
+> suspend() of another driver.
+>
+> I hope I did not miss anything.
+>
+> > > The solution to support PCIe resume operation is to change the
+> > > "priority" of this clock driver PM callbacks to "_noirq()".
+> >
+> > This seems sad that the PM core can't "priority boost" any
+> > suspend/resume callbacks of a device that doesn't have noirq callbacks
+> > when a device that depends on it from the device link perspective does
+> > have noirq callbacks.
+>
+> I do agree on this but I'm not sure it would work. I suppose the
+> "noirq" state is a global state and thus code in regular suspend()
+> callbacks could probably fail to run in a "noirq" context?
+>
+> > And why does the PCIe device need to use noirq callbacks in general?
+>
+> I would like Bjorn to confirm this, but there is this commit that could
+> explain the situation:
+>
+> commit ab14d45ea58eae67c739e4ba01871cae7b6c4586
+> Author: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> Date:   Tue Mar 17 15:55:45 2015 +0100
+>
+>     PCI: mvebu: Add suspend/resume support
+>
+>     Add suspend/resume support for the mvebu PCIe host driver.  Without this
+>     commit, the system will panic at resume time when PCIe devices are
+>     connected.
+>
+>     Note that we have to use the ->suspend_noirq() and ->resume_noirq() hooks,
+>     because at resume time, the PCI fixups are done at ->resume_noirq() time,
+>     so the PCIe controller has to be ready at this point.
+>
+>     Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+>     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>     Acked-by: Jason Cooper <jason@lakedaemon.net>
+>
+> > I'm just saying this seems like a more fundamental problem with ordering
+> > of provider and consumer suspend/resume functions that isn't being
+> > solved in this patch. In fact, it's quite the opposite, this is working
+> > around the problem.
+>
+> I do agree with your point, but I would not be confident tweaking the PM
+> core's scheduling "alone" :)
