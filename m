@@ -1,43 +1,44 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v8 24/26] MIPS: GCW0: Reduce system timer and clocksource to 750 kHz
-Date: Wed, 12 Dec 2018 23:13:33 +0100
-Message-ID: <20181212221335.19404-1-paul@crapouillou.net>
-References: <20181212220922.18759-1-paul@crapouillou.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181212220922.18759-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: Mathieu Malaterre <malat@debian.org>, Ezequiel Garcia <ezequiel@collabora.co.uk>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [GIT PATCH 3/3] dt-bindings: arm: Convert Rockchip board/soc
+ bindings to json-schema
+Date: Wed, 12 Dec 2018 14:07:21 -0800
+Message-ID: <20181212220721.o5gde2yvjiyhovy5@localhost>
+References: <7153021.iXIDTOc0j0@phil> <20181212085011.14282-1-heiko@sntech.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20181212085011.14282-1-heiko@sntech.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, linux-rockchip@lists.infradead.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The default clock (12 MHz) is too fast for the system timer, which fails
-to report time accurately.
+On Wed, Dec 12, 2018 at 09:50:11AM +0100, Heiko Stuebner wrote:
+> From: Rob Herring <robh@kernel.org>
+> 
+> Convert Rockchip SoC bindings to DT schema format using json-schema.
+> 
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-rockchip@lists.infradead.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> [move to per-board entries after confirming with Rob
+>  and added recently added boards]
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+Applied, thanks!
 
-Notes:
-     v8: New patch
 
- arch/mips/boot/dts/ingenic/gcw0.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/mips/boot/dts/ingenic/gcw0.dts b/arch/mips/boot/dts/ingenic/gcw0.dts
-index 8abab14eb852..651c3f505fa5 100644
---- a/arch/mips/boot/dts/ingenic/gcw0.dts
-+++ b/arch/mips/boot/dts/ingenic/gcw0.dts
-@@ -61,6 +61,12 @@
- 	status = "okay";
- };
- 
-+&tcu {
-+	/* 750 kHz for the system timer and clocksource */
-+	assigned-clocks = <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER2>;
-+	assigned-clock-rates = <750000>, <750000>;
-+};
-+
- &pwm {
- 	/* Channels 1 and 3-7 are for PWM use */
- 	reg = <0x50 0x10>, <0x70 0x50>;
--- 
-2.11.0
+-Olof
