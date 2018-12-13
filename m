@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 2/4] usb: musb: jz4740: Add support for devicetree
-Date: Thu, 13 Dec 2018 15:45:53 +0100
-Message-ID: <20181213144555.24031-2-paul@crapouillou.net>
+Subject: [PATCH 4/4] usb: musb: jz4740: Drop dependency on USB_OTG_BLACKLIST_HUB
+Date: Thu, 13 Dec 2018 15:45:55 +0100
+Message-ID: <20181213144555.24031-4-paul@crapouillou.net>
 References: <20181213144555.24031-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181213144555.24031-1-paul@crapouillou.net>
@@ -10,42 +10,25 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel
 Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Add support for probing the driver from devicetree.
+The USB IP in the JZ4740 SoC does not support host mode, only gadget
+mode.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/usb/musb/jz4740.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/usb/musb/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/usb/musb/jz4740.c b/drivers/usb/musb/jz4740.c
-index 04d8b2bc205a..9a2cebcac260 100644
---- a/drivers/usb/musb/jz4740.c
-+++ b/drivers/usb/musb/jz4740.c
-@@ -10,6 +10,7 @@
- #include <linux/errno.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/usb/usb_phy_generic.h>
+diff --git a/drivers/usb/musb/Kconfig b/drivers/usb/musb/Kconfig
+index 6f5b0ed6a507..a884179bc3c0 100644
+--- a/drivers/usb/musb/Kconfig
++++ b/drivers/usb/musb/Kconfig
+@@ -113,7 +113,6 @@ config USB_MUSB_JZ4740
+ 	depends on NOP_USB_XCEIV
+ 	depends on MIPS || COMPILE_TEST
+ 	depends on USB_MUSB_GADGET
+-	depends on USB_OTG_BLACKLIST_HUB
  
-@@ -188,11 +189,17 @@ static int jz4740_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id jz4740_musb_of_match[] = {
-+	{ .compatible = "ingenic,jz4740-musb" },
-+	{},
-+};
-+
- static struct platform_driver jz4740_driver = {
- 	.probe		= jz4740_probe,
- 	.remove		= jz4740_remove,
- 	.driver		= {
- 		.name	= "musb-jz4740",
-+		.of_match_table = of_match_ptr(jz4740_musb_of_match),
- 	},
- };
- 
+ config USB_MUSB_AM335X_CHILD
+ 	tristate
 -- 
 2.11.0
