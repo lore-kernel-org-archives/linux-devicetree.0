@@ -1,53 +1,45 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH] arch: arm: socfpga: arria10: Add stmmac ptp_ref clock to
- socdk devicetree
-Date: Thu, 13 Dec 2018 15:56:50 -0600
-Message-ID: <c703c4d4-4442-19b1-8645-aa906b08f7e6@kernel.org>
-References: <20181213205910.26359-1-dalon.westergreen@linux.intel.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH] dt-bindings: i2c: sh_mobile: Add r8a774c0 support
+Date: Thu, 13 Dec 2018 21:57:59 +0000
+Message-ID: <c987f09c-689f-7e89-d496-f53b0ab6c2c1@axentia.se>
+References: <1544732352-6178-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181213205910.26359-1-dalon.westergreen@linux.intel.com>
+In-Reply-To: <1544732352-6178-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Content-Language: en-US
+Content-ID: <C00546CA5CA0A845865B43034AF88AF6@eurprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dwesterg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thor.thayer@intel.com
-Cc: Dalon Westergreen <dalon.westergreen@linux.intel.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa@the-dreams.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Biju Das <biju.das@bp.renesas.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 12/13/18 2:59 PM, dwesterg@gmail.com wrote:
-> From: Dalon Westergreen <dalon.westergreen@linux.intel.com>
-> 
-> Add the stmmac ptp_ref clock as it is configured in the arria10 socdk.
-> The stmmac driver defaults the ptp_ref clock to the main stmmac clock
-> if the ptp_ref clock is not set in the devicetree.  This is inapprotiate
-
-s/inapprotiate/inappropriate
-
-> for the arria10 socdk.
-> 
-> Signed-off-by: Dalon Westergreen <dalon.westergreen@linux.intel.com>
-> ---
->  arch/arm/boot/dts/socfpga_arria10_socdk.dtsi | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-> index 2a7466891d0e..58bfa84dcdb3 100644
-> --- a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-> +++ b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-> @@ -74,7 +74,8 @@
->  &gmac0 {
->  	phy-mode = "rgmii";
->  	phy-addr = <0xffffffff>; /* probe for phy addr */
-> -
-> +	clocks = <&l4_mp_clk>, <&peri_emac_ptp_clk>;
-> +	clock-names = "stmmaceth", "ptp_ref";
->  	
-These should go into the base arria10 dtsi at socfpga_arria10.dtsi?
-Should the other gmacs get the same updates?
-
-Also the patch header should be "ARM: dts: arria10:"
-
-Dinh
+T24gMjAxOC0xMi0xMyAyMToxOSwgRmFicml6aW8gQ2FzdHJvIHdyb3RlOg0KPiBEb2N1bWVudCBS
+Wi9HMkUgKFI4QTc3NEMwKSBTb0MgYmluZGluZ3MuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBGYWJy
+aXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gLS0tDQo+ICBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1zaF9tb2JpbGUudHh0IHwg
+MyArKy0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkN
+Cj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJj
+L2kyYy1zaF9tb2JpbGUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ky
+Yy9pMmMtc2hfbW9iaWxlLnR4dA0KPiBpbmRleCBiYzg3NmI3Li4zZGZmODlmIDEwMDY0NA0KPiAt
+LS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1zaF9tb2JpbGUu
+dHh0DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLXNo
+X21vYmlsZS50eHQNCj4gQEAgLTgsNiArOCw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ICAJ
+CQktICJyZW5lc2FzLGlpYy1yOGE3NzQ0IiAoUlovRzFOKQ0KPiAgCQkJLSAicmVuZXNhcyxpaWMt
+cjhhNzc0NSIgKFJaL0cxRSkNCj4gIAkJCS0gInJlbmVzYXMsaWljLXI4YTc3NGExIiAoUlovRzJN
+KQ0KPiArCQkJLSAicmVuZXNhcyxpaWMtcjhhNzc0YzAiIChSWi9HMkUpDQo+ICAJCQktICJyZW5l
+c2FzLGlpYy1yOGE3NzkwIiAoUi1DYXIgSDIpDQo+ICAJCQktICJyZW5lc2FzLGlpYy1yOGE3Nzkx
+IiAoUi1DYXIgTTItVykNCj4gIAkJCS0gInJlbmVzYXMsaWljLXI4YTc3OTIiIChSLUNhciBWMkgp
+DQo+IEBAIC0zMiw3ICszMyw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ICAJCQlXaGVuIGNv
+bXBhdGlibGUgd2l0aCAicmVuZXNhcyxybW9iaWxlLWlpYyIgaXQgc2hvdWxkDQo+ICAJCQliZSB0
+aGUgbGFzdCBjb21wYXRpYmlsaXR5IHN0cmluZyBsaXN0ZWQuDQo+ICANCj4gLQkJCVRoZSByOGE3
+Nzk5MCAoUi1DYXIgRTMpIGNvbnRyb2xsZXIgaXMgbm90DQo+ICsJCQlUaGUgcjhhNzc5OTAgKFIt
+Q2FyIEUzKSBhbmQgUlovRzJFIGNvbnRyb2xsZXJzIGFyZSBub3QNCg0KVGhlIHJlZmVyZW5jZXMg
+dG8gdGhlc2UgdHdvIGNvbnRyb2xsZXJzIGRvIG5vdCBmb2xsb3cgdGhlIHNhbWUgc3R5bGUuDQpJ
+J2QgZWl0aGVyIGRlbGV0ZSByOGE3Nzk5MCBhbmQgZ2V0ICJSLUNhciBFMyBhbmQgUlovRzJFIiBv
+ciBhZGQNCnI4YTc3NGMwIGluIGZyb250IG9mIFJaL0cyRSAoYnJhY2tldGVkKSwgd2l0aCBhIHNs
+aWdodCBwcmVmZXJlbmNlDQpmb3IgdGhlIGxhdHRlci4NCg0KQ2hlZXJzLA0KUGV0ZXINCg0KPiAg
+CQkJY29uc2lkZXJlZCBjb21wYXRpYmxlIHdpdGggInJlbmVzYXMscmNhci1nZW4zLWlpYyINCj4g
+IAkJCW9yICJyZW5lc2FzLHJtb2JpbGUtaWljIiBkdWUgdG8gdGhlIGFic2VuY2Ugb2YNCj4gIAkJ
+CWF1dG9tYXRpYyB0cmFuc21pc3Npb24gcmVnaXN0ZXJzLg0KPiANCg==
