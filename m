@@ -1,84 +1,80 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v8 12/26] pwm: jz4740: Allow selection of PWM channels 0
- and 1
-Date: Thu, 13 Dec 2018 10:18:22 +0100
-Message-ID: <20181213091822.r5ilpsllfhzaiqw4@pengutronix.de>
-References: <20181212220922.18759-1-paul@crapouillou.net>
- <20181212220922.18759-13-paul@crapouillou.net>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings: add binding for USBSS-DRD controller.
+Date: Thu, 13 Dec 2018 17:20:57 +0800
+Message-ID: <CAL411-qP3TAt1kz5Q1WcUejSbt4Agpmqry7JVE_6W+2MpCag4Q@mail.gmail.com>
+References: <1544445555-17325-1-git-send-email-pawell@cadence.com>
+ <1544445555-17325-2-git-send-email-pawell@cadence.com> <5C0F8E7B.3030601@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181212220922.18759-13-paul@crapouillou.net>
+In-Reply-To: <5C0F8E7B.3030601@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mathieu Malaterre <malat@debian.org>, Ezequiel Garcia <ezequiel@collabora.co.uk>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
+To: rogerq@ti.com
+Cc: pawell@cadence.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, balbi@kernel.org, lkml <linux-kernel@vger.kernel.org>, adouglas@cadence.com, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 12, 2018 at 11:09:07PM +0100, Paul Cercueil wrote:
-> The TCU channels 0 and 1 were previously reserved for system tasks, and
-> thus unavailable for PWM.
-> 
-> The driver will now only allow a PWM channel to be requested if memory
-> resources corresponding to the register area of the channel were
-> supplied to the driver. This allows the TCU channels to be reserved for
-> system tasks from within the devicetree.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+On Tue, Dec 11, 2018 at 6:19 PM Roger Quadros <rogerq@ti.com> wrote:
+>
+> Pawel,
+>
+> On 10/12/18 14:39, Pawel Laszczak wrote:
+> > This patch aim at documenting USB related dt-bindings for the
+> > Cadence USBSS-DRD controller.
+> >
+> > Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+> > ---
+> >  .../devicetree/bindings/usb/cdns3-usb.txt     | 31 +++++++++++++++++++
+> >  1 file changed, 31 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/usb/cdns3-usb.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/usb/cdns3-usb.txt b/Documentation/devicetree/bindings/usb/cdns3-usb.txt
+> > new file mode 100644
+> > index 000000000000..ae4a255f0b10
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/usb/cdns3-usb.txt
+> > @@ -0,0 +1,31 @@
+> > +Binding for the Cadence USBSS-DRD controller
+> > +
+> > +Required properties:
+> > +  - reg: Physical base address and size of the controller's register areas.
+> > +      Controller has 3 different regions:
+> > +      region 1 - HOST registers area
+> > +      region 2 - DEVICE registers area
+> > +      region 3 - OTG/DRD registers area
+> > +  - compatible: Should contain: "cdns,usb3"
+> > +  - interrupts: Interrupt specifier. Refer to interrupt bindings.
+> > +             Driver supports only single interrupt line.
+> > +                This single interrupt is shared between Device,
+> > +             host and OTG/DRD part of driver.
+> > +
+> > +Optional propertiesi:
+>
+> s/propertiesi/properties
+>
+> > + - maximum-speed : valid arguments are "super-speed", "high-speed" and
+> > +                   "full-speed"; refer to usb/generic.txt
+> > + - dr_mode: Should be one of "host", "peripheral" or "otg".
+> > + - phys: reference to the USB PHY
+> > + - phy-names: name of the USB PHY, should be "cdns3,usbphy"
+> > +
+> > +
+> > +Example:
+> > +     usb@f3000000 {
+> > +             compatible = "cdns,usb3";
+> > +             interrupts = <USB_IRQ  7 IRQ_TYPE_LEVEL_HIGH>;
+> > +             reg = <0xf3000000 0x10000       //memory area for HOST registers
+> > +                     0xf3010000 0x10000      //memory area for DEVICE registers
+> > +                     0xf3020000 0x10000>;    //memory area for OTG/DRD registers
+>
+> Use "/* <comment> */" instead.
+>
+> > +     };
+> > +
+> >
 
-While there is someone caring for this driver I'd like to complete (a
-bit) my picture about the different capabilities and specialities of the
-supported PWMs. So I have a few questions:
+When running git am to apply patch, it has below warning, please fix them.
 
-Is there a publicly available reference manual for this device? (If
-yes, adding a link to the driver would be great.)
-
-jz4740_pwm_config looks as if the currently running period isn't
-completed before the new config is in effect. Is that correct? If yes,
-can this be fixed? A similar question for set_polarity: Does setting the
-JZ_TIMER_CTRL_PWM_ACTIVE_LOW bit in the control register take effect
-immediately or is this shadowed until the next period starts?
-
-How does the device's output behave after the PWM is disabled?
-Does it complete the currently running period? How does the output
-behave then? (active/inactive/high/low/high-z?)
-
-> @@ -42,11 +68,7 @@ static int jz4740_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
->  	char clk_name[16];
->  	int ret;
->  
-> -	/*
-> -	 * Timers 0 and 1 are used for system tasks, so they are unavailable
-> -	 * for use as PWMs.
-> -	 */
-> -	if (pwm->hwpwm < 2)
-> +	if (!jz4740_pwm_can_use_chn(jz, pwm->hwpwm))
->  		return -EBUSY;
-
-Maybe EBUSY isn't the best choice here. If the needed register space for
-the requested pwm is not included in the memory resources provided to
-the device I'd prefer ENXIO or ENODEV.
-
->  	snprintf(clk_name, sizeof(clk_name), "timer%u", pwm->hwpwm);
-> @@ -208,6 +230,12 @@ static int jz4740_pwm_probe(struct platform_device *pdev)
->  		return -EINVAL;
->  	}
->  
-> +	jz4740->parent_res = platform_get_resource(
-> +				to_platform_device(dev->parent),
-> +				IORESOURCE_MEM, 0);
-> +	if (!jz4740->parent_res)
-> +		return -EINVAL;
-> +
->  	jz4740->chip.dev = dev;
->  	jz4740->chip.ops = &jz4740_pwm_ops;
->  	jz4740->chip.npwm = NUM_PWM;
-
-Thanks
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Applying: dt-bindings: add binding for USBSS-DRD controller.
+.git/rebase-apply/patch:42: new blank line at EOF.
++
+warning: 1 line adds whitespace errors.
