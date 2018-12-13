@@ -1,47 +1,66 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: omap5: Add l4 interconnect hierarchy and
- ti-sysc data
-Date: Wed, 12 Dec 2018 17:19:50 -0800
-Message-ID: <20181213011950.GM6707@atomide.com>
-References: <20181115224546.61475-1-tony@atomide.com>
- <9b7e07ae-66f9-cedf-937d-b1c5c510e018@ti.com>
- <ebc7e271-8717-fe9d-d24f-ae406860b913@ti.com>
- <20181212171143.GG6707@atomide.com>
+From: Peter Chen <peter.chen@nxp.com>
+Subject: RE: [PATCH v1 2/2] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Thu, 13 Dec 2018 01:21:29 +0000
+Message-ID: <VI1PR04MB53277D6C8BAFD2ABCD76DB9D8BA00@VI1PR04MB5327.eurprd04.prod.outlook.com>
+References: <1544445555-17325-1-git-send-email-pawell@cadence.com>
+ <1544445555-17325-3-git-send-email-pawell@cadence.com>
+ <87h8fkmfar.fsf@linux.intel.com>
+ <BYAPR07MB47095110AF28CC11B4C9E144DDA60@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <CAL411-ryK2LLZVg5_sLkCYOuhwdHLVm5XavSyC9nbEXZah_43w@mail.gmail.com>
+ <20181212155313.GA6502@uda0271908>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181212171143.GG6707@atomide.com>
+In-Reply-To: <20181212155313.GA6502@uda0271908>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: linux-omap@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Bin Liu <b-liu@ti.com>, Peter Chen <hzpeterchen@gmail.com>
+Cc: "pawell@cadence.com" <pawell@cadence.com>, "balbi@kernel.org" <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, lkml <linux-kernel@vger.kernel.org>, "adouglas@cadence.com" <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, "sureshp@cadence.com" <sureshp@cadence.com>, "pjez@cadence.com" <pjez@cadence.com>, "kurahul@cadence.com" <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [181212 17:12]:
-> * Peter Ujfalusi <peter.ujfalusi@ti.com> [181212 02:44]:
-> > On 12/12/2018 12.12, Peter Ujfalusi wrote:
-> > > Reverting this patch in linux-next-20181210 will make the ethernet
-> > > working again.
-> > > 
-> > > bootlog w/ revert: https://pastebin.com/dpRk1xWv
-> > > bootlog w/o revert: https://pastebin.com/PWrBttxd
-> > 
-> > on omap5-uevm.
-> 
-> Thanks for testing. Looks like it works for me with
-> loadable modules. And looks like changing just the phy to
-> use CONFIG_NOP_USB_XCEIV=y in my .config is not enough to
-> make it fail, I see it fail too with EHCI built-in.
-> 
-> It's probably some -EPROBE_DEFER type issues, but I need
-> to debug more.
+=20
+> >
+> > Felipe, I use Dynamic Debug for debugging, and show debug messages
+> > with "dmesg" after testing/debugging. I see dwc3 using trace,  any
+> > benefits for switching to trace?
+>=20
+> The benefits I see are
+>=20
 
-Yes there's an issue where nop_reset() for phy-generic is
-not called by ehci-omap. I'll post a fix for that separately.
+Thanks, bin.
 
-I also noticed that sata phy reg entries need fixing up
-for omap5, will also post a patch for that.
+> - *by default*, the debug log doesn't have to go through uart console,
+>   which is slow.
+>=20
+>   I typically 'cat trace_pipe' from a telnet which is much faster then
+>   uart. But Dynamic Debug log by default got printed on uart, I have to
+>   set printk level to not print them, which is an extra step.
+>=20
 
-Regards,
+It depends on the rootfs's setting. By default, the debug message level sho=
+uld be off (
+console level =3D 7)
 
-Tony
+> - tracepoint uses one place to decode the message vs DD has to repeat
+>   the similar print statement in the code; and tracepoint decodes it
+>   offline which reduce the kernel runtime overhead too.
+>=20
+
+offline? You mean when you run "cat trace_pipe"?
+
+> - with tracepoint, it is easier to turn on debug for a specific group of
+>   messages.
+>=20
+
+The DD can, but we don't do it often.
+
+https://www.kernel.org/doc/html/latest/admin-guide/dynamic-debug-howto.html=
+?highlight=3Ddynamic%20debug
+
+> - you can adjust the ftrace buffer size at runtime. can we do that for
+>   printk? I don't remember.
+
+It may can't. The log buf can only be changed by bootargs: log_buf_len
+
+Peter
