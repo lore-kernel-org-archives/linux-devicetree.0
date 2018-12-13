@@ -1,284 +1,381 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH v2 11/12] drm/panel: Add Feiyang FY07024DI26A30-D MIPI-DSI
- LCD panel
-Date: Fri, 14 Dec 2018 00:56:03 +0530
-Message-ID: <CAMty3ZAv1dHCRCShXYbxqMm4wV9WGDpAKPji+3G21eWq34ODaA@mail.gmail.com>
-References: <20181116163916.29621-1-jagan@amarulasolutions.com>
- <20181116163916.29621-12-jagan@amarulasolutions.com> <20181213150736.GL154160@art_vandelay>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v12 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq
+ HW driver
+Date: Thu, 13 Dec 2018 11:43:38 -0800
+Message-ID: <20181213194338.GF14307@google.com>
+References: <1544687394-331-1-git-send-email-tdas@codeaurora.org>
+ <1544687394-331-3-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181213150736.GL154160@art_vandelay>
+Content-Disposition: inline
+In-Reply-To: <1544687394-331-3-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Paul <sean@poorly.run>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Michael Trimarchi <michael@amarulasolutions.com>, TL Lim <tllim@pine64.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula@amarulasolutions.com
+To: Taniya Das <tdas@codeaurora.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, evgreen@google.com, Stephen Boyd <swboyd@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 13, 2018 at 8:37 PM Sean Paul <sean@poorly.run> wrote:
->
-> On Fri, Nov 16, 2018 at 10:09:15PM +0530, Jagan Teki wrote:
-> > Feiyang FY07024DI26A30-D is 1024x600, 4-lane MIPI-DSI LCD panel.
-> >
-> > Add panel driver for it.
-> >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> >  MAINTAINERS                                   |   6 +
-> >  drivers/gpu/drm/panel/Kconfig                 |   9 +
-> >  drivers/gpu/drm/panel/Makefile                |   1 +
-> >  .../drm/panel/panel-feiyang-fy07024di26a30d.c | 286 ++++++++++++++++++
-> >  4 files changed, 302 insertions(+)
-> >  create mode 100644 drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 3dac08d0b3cb..40c8bfc974f4 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -4620,6 +4620,12 @@ T:     git git://anongit.freedesktop.org/drm/drm-misc
-> >  S:   Maintained
-> >  F:   drivers/gpu/drm/tve200/
-> >
-> > +DRM DRIVER FOR FEIYANG FY07024DI26A30-D MIPI-DSI LCD PANELS
-> > +M:   Jagan Teki <jagan@amarulasolutions.com>
-> > +S:   Maintained
-> > +F:   drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
-> > +F:   Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
-> > +
-> >  DRM DRIVER FOR ILITEK ILI9225 PANELS
-> >  M:   David Lechner <david@lechnology.com>
-> >  S:   Maintained
-> > diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-> > index d0d4e60f5153..bc70896fe43c 100644
-> > --- a/drivers/gpu/drm/panel/Kconfig
-> > +++ b/drivers/gpu/drm/panel/Kconfig
-> > @@ -47,6 +47,15 @@ config DRM_PANEL_SIMPLE
-> >         that it can be automatically turned off when the panel goes into a
-> >         low power state.
-> >
-> > +config DRM_PANEL_FEIYANG_FY07024DI26A30D
-> > +     tristate "Feiyang FY07024DI26A30-D MIPI-DSI LCD panel"
-> > +     depends on OF
-> > +     depends on DRM_MIPI_DSI
-> > +     depends on BACKLIGHT_CLASS_DEVICE
-> > +     help
-> > +       Say Y if you want to enable support for panels based on the
-> > +       Feiyang FY07024DI26A30-D MIPI-DSI interface.
-> > +
-> >  config DRM_PANEL_ILITEK_IL9322
-> >       tristate "Ilitek ILI9322 320x240 QVGA panels"
-> >       depends on OF && SPI
-> > diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-> > index 88011f06edb8..e23c017639c7 100644
-> > --- a/drivers/gpu/drm/panel/Makefile
-> > +++ b/drivers/gpu/drm/panel/Makefile
-> > @@ -3,6 +3,7 @@ obj-$(CONFIG_DRM_PANEL_ARM_VERSATILE) += panel-arm-versatile.o
-> >  obj-$(CONFIG_DRM_PANEL_BANANAPI_S070WV20_ICN6211) += panel-bananapi-s070wv20-icn6211.o
-> >  obj-$(CONFIG_DRM_PANEL_LVDS) += panel-lvds.o
-> >  obj-$(CONFIG_DRM_PANEL_SIMPLE) += panel-simple.o
-> > +obj-$(CONFIG_DRM_PANEL_FEIYANG_FY07024DI26A30D) += panel-feiyang-fy07024di26a30d.o
-> >  obj-$(CONFIG_DRM_PANEL_ILITEK_IL9322) += panel-ilitek-ili9322.o
-> >  obj-$(CONFIG_DRM_PANEL_ILITEK_ILI9881C) += panel-ilitek-ili9881c.o
-> >  obj-$(CONFIG_DRM_PANEL_INNOLUX_P079ZCA) += panel-innolux-p079zca.o
-> > diff --git a/drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c b/drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
-> > new file mode 100644
-> > index 000000000000..a4b46bd8fdbe
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
-> > @@ -0,0 +1,286 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Copyright (C) 2018 Amarula Solutions
-> > + * Author: Jagan Teki <jagan@amarulasolutions.com>
-> > + */
-> > +
-> > +#include <linux/backlight.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_device.h>
-> > +
-> > +#include <linux/gpio/consumer.h>
-> > +#include <linux/regulator/consumer.h>
-> > +
-> > +#include <drm/drmP.h>
-> > +#include <drm/drm_mipi_dsi.h>
-> > +#include <drm/drm_panel.h>
-> > +
-> > +struct feiyang {
-> > +     struct drm_panel        panel;
-> > +     struct mipi_dsi_device  *dsi;
-> > +
-> > +     struct backlight_device *backlight;
-> > +     struct regulator        *dvdd;
-> > +     struct regulator        *avdd;
-> > +     struct gpio_desc        *reset;
-> > +};
-> > +
-> > +static inline struct feiyang *panel_to_feiyang(struct drm_panel *panel)
-> > +{
-> > +     return container_of(panel, struct feiyang, panel);
-> > +}
-> > +
-> > +struct feiyang_init_cmd {
-> > +     size_t len;
-> > +     const char *data;
-> > +};
-> > +
-> > +#define FY07024DI26A30D(...) { \
-> > +     .len = sizeof((char[]){__VA_ARGS__}), \
-> > +     .data = (char[]){__VA_ARGS__} }
-> > +
-> > +static const struct feiyang_init_cmd feiyang_init_cmds[] = {
-> > +     FY07024DI26A30D(0x80, 0x58),
-> > +     FY07024DI26A30D(0x81, 0x47),
-> > +     FY07024DI26A30D(0x82, 0xD4),
-> > +     FY07024DI26A30D(0x83, 0x88),
-> > +     FY07024DI26A30D(0x84, 0xA9),
-> > +     FY07024DI26A30D(0x85, 0xC3),
-> > +     FY07024DI26A30D(0x86, 0x82),
-> > +};
->
-> These init cmds don't have to be so complicated. You've only got len == 2, so
-> just hardcode it in and avoid the macro:
->
-> #define FEIYANG_INIT_CMD_LEN    2
->
-> struct feiyang_init_cmd {
->         u8 data[FEIYANG_INIT_CMD];
-> };
->
-> static const struct feiyang_init_cmd feiyang_init_cmds[] = {
->         { .data = { 0x80, 0x58 } },
->         ...
-> };
->
-> > +
-> > +static int feiyang_prepare(struct drm_panel *panel)
-> > +{
-> > +     struct feiyang *ctx = panel_to_feiyang(panel);
-> > +     struct mipi_dsi_device *dsi = ctx->dsi;
-> > +     unsigned int i;
-> > +     int ret;
-> > +
-> > +     ret = regulator_enable(ctx->dvdd);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     msleep(100);
->
-> nit: You should do your best to correlate the sleeps with the timing parameters
-> from the datasheet with a comment.
->
-> ie:
->         /* T1: > 100ms */
->         msleep(100);
+On Thu, Dec 13, 2018 at 01:19:54PM +0530, Taniya Das wrote:
+> The CPUfreq HW present in some QCOM chipsets offloads the steps necessary
+> for changing the frequency of CPUs. The driver implements the cpufreq
+> driver interface for this hardware engine.
+> 
+> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  drivers/cpufreq/Kconfig.arm       |  11 ++
+>  drivers/cpufreq/Makefile          |   1 +
+>  drivers/cpufreq/qcom-cpufreq-hw.c | 305 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 317 insertions(+)
+>  create mode 100644 drivers/cpufreq/qcom-cpufreq-hw.c
+> 
+> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> index 4e1131e..688f102 100644
+> --- a/drivers/cpufreq/Kconfig.arm
+> +++ b/drivers/cpufreq/Kconfig.arm
+> @@ -114,6 +114,17 @@ config ARM_QCOM_CPUFREQ_KRYO
+> 
+>  	  If in doubt, say N.
+> 
+> +config ARM_QCOM_CPUFREQ_HW
+> +	tristate "QCOM CPUFreq HW driver"
+> +	depends on ARCH_QCOM || COMPILE_TEST
+> +	help
+> +	  Support for the CPUFreq HW driver.
+> +	  Some QCOM chipsets have a HW engine to offload the steps
+> +	  necessary for changing the frequency of the CPUs. Firmware loaded
+> +	  in this engine exposes a programming interface to the OS.
+> +	  The driver implements the cpufreq interface for this HW engine.
+> +	  Say Y if you want to support CPUFreq HW.
+> +
+>  config ARM_S3C_CPUFREQ
+>  	bool
+>  	help
+> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+> index d5ee456..08c071b 100644
+> --- a/drivers/cpufreq/Makefile
+> +++ b/drivers/cpufreq/Makefile
+> @@ -61,6 +61,7 @@ obj-$(CONFIG_MACH_MVEBU_V7)		+= mvebu-cpufreq.o
+>  obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)	+= omap-cpufreq.o
+>  obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
+>  obj-$(CONFIG_PXA3xx)			+= pxa3xx-cpufreq.o
+> +obj-$(CONFIG_ARM_QCOM_CPUFREQ_HW)	+= qcom-cpufreq-hw.o
+>  obj-$(CONFIG_ARM_QCOM_CPUFREQ_KRYO)	+= qcom-cpufreq-kryo.o
+>  obj-$(CONFIG_ARM_S3C2410_CPUFREQ)	+= s3c2410-cpufreq.o
+>  obj-$(CONFIG_ARM_S3C2412_CPUFREQ)	+= s3c2412-cpufreq.o
+> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+> new file mode 100644
+> index 0000000..a65d0ae
+> --- /dev/null
+> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+> @@ -0,0 +1,305 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/cpufreq.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/slab.h>
+> +
+> +#define LUT_MAX_ENTRIES			40U
+> +#define LUT_SRC				GENMASK(31, 30)
+> +#define LUT_L_VAL			GENMASK(7, 0)
+> +#define LUT_CORE_COUNT			GENMASK(18, 16)
+> +#define LUT_ROW_SIZE			32
+> +#define CLK_HW_DIV			2
+> +
+> +/* Register offsets */
+> +#define REG_ENABLE			0x0
+> +#define REG_LUT_TABLE			0x110
+> +#define REG_PERF_STATE			0x920
+> +
+> +static unsigned long cpu_hw_rate, xo_rate;
+> +static struct platform_device *global_pdev;
+> +
+> +static int qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
+> +					unsigned int index)
+> +{
+> +	void __iomem *perf_state_reg = policy->driver_data;
+> +
+> +	writel_relaxed(index, perf_state_reg);
+> +
+> +	return 0;
+> +}
+> +
+> +static unsigned int qcom_cpufreq_hw_get(unsigned int cpu)
+> +{
+> +	void __iomem *perf_state_reg;
+> +	struct cpufreq_policy *policy;
+> +	unsigned int index;
+> +
+> +	policy = cpufreq_cpu_get_raw(cpu);
+> +	if (!policy)
+> +		return 0;
+> +
+> +	perf_state_reg = policy->driver_data;
+> +
+> +	index = readl_relaxed(perf_state_reg);
+> +	index = min(index, LUT_MAX_ENTRIES - 1);
+> +
+> +	return policy->freq_table[index].frequency;
+> +}
+> +
+> +static unsigned int qcom_cpufreq_hw_fast_switch(struct cpufreq_policy *policy,
+> +						unsigned int target_freq)
+> +{
+> +	void __iomem *perf_state_reg = policy->driver_data;
+> +	int index;
+> +
+> +	index = policy->cached_resolved_idx;
+> +	if (index < 0)
+> +		return 0;
+> +
+> +	writel_relaxed(index, perf_state_reg);
+> +
+> +	return policy->freq_table[index].frequency;
+> +}
+> +
+> +static int qcom_cpufreq_hw_read_lut(struct device *dev,
+> +				    struct cpufreq_policy *policy,
+> +				    void __iomem *base)
+> +{
+> +	u32 data, src, lval, i, core_count, prev_cc = 0, prev_freq = 0, freq;
+> +	unsigned int max_cores = cpumask_weight(policy->cpus);
+> +	struct cpufreq_frequency_table	*table;
+> +
+> +	table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
+> +	if (!table)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+> +		data = readl_relaxed(base + REG_LUT_TABLE + i * LUT_ROW_SIZE);
+> +		src = FIELD_GET(LUT_SRC, data);
+> +		lval = FIELD_GET(LUT_L_VAL, data);
+> +		core_count = FIELD_GET(LUT_CORE_COUNT, data);
+> +
+> +		if (src)
+> +			freq = xo_rate * lval / 1000;
+> +		else
+> +			freq = cpu_hw_rate / 1000;
+> +
+> +		/* Ignore boosts in the middle of the table */
+> +		if (core_count != max_cores) {
+> +			table[i].frequency = CPUFREQ_ENTRY_INVALID;
+> +		} else {
+> +			table[i].frequency = freq;
+> +			dev_dbg(dev, "index=%d freq=%d, core_count %d\n", i,
+> +				freq, core_count);
+> +		}
+> +
+> +		/*
+> +		 * Two of the same frequencies with the same core counts means
+> +		 * end of table
+> +		 */
+> +		if (i > 0 && prev_freq == freq && prev_cc == core_count) {
+> +			struct cpufreq_frequency_table *prev = &table[i - 1];
+> +
+> +			/*
+> +			 * Only treat the last frequency that might be a boost
+> +			 * as the boost frequency
+> +			 */
+> +			if (prev_cc != max_cores) {
+> +				prev->frequency = prev_freq;
+> +				prev->flags = CPUFREQ_BOOST_FREQ;
+> +			}
+> +
+> +			break;
+> +		}
+> +
+> +		prev_cc = core_count;
+> +		prev_freq = freq;
+> +	}
+> +
+> +	table[i].frequency = CPUFREQ_TABLE_END;
+> +	policy->freq_table = table;
+> +
+> +	return 0;
+> +}
+> +
+> +static void qcom_get_related_cpus(int index, struct cpumask *m)
+> +{
+> +	struct device_node *cpu_np;
+> +	struct of_phandle_args args;
+> +	int cpu, ret;
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		cpu_np = of_cpu_device_node_get(cpu);
+> +		if (!cpu_np)
+> +			continue;
+> +
+> +		ret = of_parse_phandle_with_args(cpu_np, "qcom,freq-domain",
+> +						 "#freq-domain-cells", 0,
+> +						 &args);
+> +		of_node_put(cpu_np);
+> +		if (ret < 0)
+> +			continue;
+> +
+> +		if (index == args.args[0])
+> +			cpumask_set_cpu(cpu, m);
+> +	}
+> +}
+> +
+> +static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
+> +{
+> +	struct device *dev = &global_pdev->dev;
+> +	struct of_phandle_args args;
+> +	struct device_node *cpu_np;
+> +	struct resource *res;
+> +	void __iomem *base;
+> +	int ret, index;
+> +
+> +	cpu_np = of_cpu_device_node_get(policy->cpu);
+> +	if (!cpu_np)
+> +		return -EINVAL;
+> +
+> +	ret = of_parse_phandle_with_args(cpu_np, "qcom,freq-domain",
+> +					 "#freq-domain-cells", 0, &args);
+> +	of_node_put(cpu_np);
+> +	if (ret)
+> +		return ret;
+> +
+> +	index = args.args[0];
+> +
+> +	res = platform_get_resource(global_pdev, IORESOURCE_MEM, index);
+> +	base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	/* HW should be in enabled state to proceed */
+> +	if (!(readl_relaxed(base + REG_ENABLE) & 0x1)) {
+> +		dev_err(dev, "Domain-%d cpufreq hardware not enabled\n", index);
+> +		ret = -ENODEV;
+> +		goto error;
+> +	}
+> +
+> +	qcom_get_related_cpus(index, policy->cpus);
+> +	if (!cpumask_weight(policy->cpus)) {
+> +		dev_err(dev, "Domain-%d failed to get related CPUs\n", index);
+> +		ret = -ENOENT;
+> +		goto error;
+> +	}
+> +
+> +	policy->driver_data = base + REG_PERF_STATE;
+> +
+> +	ret = qcom_cpufreq_hw_read_lut(dev, policy, base);
+> +	if (ret) {
+> +		dev_err(dev, "Domain-%d failed to read LUT\n", index);
+> +		goto error;
+> +	}
+> +
+> +	policy->fast_switch_possible = true;
+> +
+> +	return 0;
+> +error:
+> +	devm_iounmap(dev, base);
+> +	return ret;
+> +}
+> +
+> +static int qcom_cpufreq_hw_cpu_exit(struct cpufreq_policy *policy)
+> +{
+> +	void __iomem *base = policy->driver_data - REG_PERF_STATE;
+> +
+> +	kfree(policy->freq_table);
+> +	devm_iounmap(&global_pdev->dev, base);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct freq_attr *qcom_cpufreq_hw_attr[] = {
+> +	&cpufreq_freq_attr_scaling_available_freqs,
+> +	&cpufreq_freq_attr_scaling_boost_freqs,
+> +	NULL
+> +};
+> +
+> +static struct cpufreq_driver cpufreq_qcom_hw_driver = {
+> +	.flags		= CPUFREQ_STICKY | CPUFREQ_NEED_INITIAL_FREQ_CHECK |
+> +			  CPUFREQ_HAVE_GOVERNOR_PER_POLICY,
+> +	.verify		= cpufreq_generic_frequency_table_verify,
+> +	.target_index	= qcom_cpufreq_hw_target_index,
+> +	.get		= qcom_cpufreq_hw_get,
+> +	.init		= qcom_cpufreq_hw_cpu_init,
+> +	.exit		= qcom_cpufreq_hw_cpu_exit,
+> +	.fast_switch    = qcom_cpufreq_hw_fast_switch,
+> +	.name		= "qcom-cpufreq-hw",
+> +	.attr		= qcom_cpufreq_hw_attr,
+> +};
+> +
+> +static int qcom_cpufreq_hw_driver_probe(struct platform_device *pdev)
+> +{
+> +	struct clk *clk;
+> +	int ret;
+> +
+> +	clk = clk_get(&pdev->dev, "xo");
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
+> +
+> +	xo_rate = clk_get_rate(clk);
+> +	clk_put(clk);
+> +
+> +	clk = clk_get(&pdev->dev, "alternate");
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
+> +
+> +	cpu_hw_rate = clk_get_rate(clk) / CLK_HW_DIV;
+> +	clk_put(clk);
+> +
+> +	global_pdev = pdev;
+> +
+> +	ret = cpufreq_register_driver(&cpufreq_qcom_hw_driver);
+> +	if (ret)
+> +		dev_err(&pdev->dev, "CPUFreq HW driver failed to register\n");
+> +	else
+> +		dev_dbg(&pdev->dev, "QCOM CPUFreq HW driver initialized\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static int qcom_cpufreq_hw_driver_remove(struct platform_device *pdev)
+> +{
+> +	return cpufreq_unregister_driver(&cpufreq_qcom_hw_driver);
+> +}
+> +
+> +static const struct of_device_id qcom_cpufreq_hw_match[] = {
+> +	{ .compatible = "qcom,cpufreq-hw" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, qcom_cpufreq_hw_match);
+> +
+> +static struct platform_driver qcom_cpufreq_hw_driver = {
+> +	.probe = qcom_cpufreq_hw_driver_probe,
+> +	.remove = qcom_cpufreq_hw_driver_remove,
+> +	.driver = {
+> +		.name = "qcom-cpufreq-hw",
+> +		.of_match_table = qcom_cpufreq_hw_match,
+> +	},
+> +};
+> +
+> +static int __init qcom_cpufreq_hw_init(void)
+> +{
+> +	return platform_driver_register(&qcom_cpufreq_hw_driver);
+> +}
+> +subsys_initcall(qcom_cpufreq_hw_init);
+> +
+> +static void __exit qcom_cpufreq_hw_exit(void)
+> +{
+> +	platform_driver_unregister(&qcom_cpufreq_hw_driver);
+> +}
+> +module_exit(qcom_cpufreq_hw_exit);
+> +
+> +MODULE_DESCRIPTION("QCOM CPUFREQ HW Driver");
+> +MODULE_LICENSE("GPL v2");
 
-Sorry, what does this mean?
+FWIW:
 
->
-> > +
-> > +     ret = regulator_enable(ctx->avdd);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     msleep(20);
-> > +
-> > +     gpiod_set_value(ctx->reset, 1);
-> > +     msleep(50);
-> > +
-> > +     gpiod_set_value(ctx->reset, 0);
-> > +     msleep(20);
-> > +
-> > +     gpiod_set_value(ctx->reset, 1);
-> > +     msleep(200);
-> > +
-> > +     for (i = 0; i < ARRAY_SIZE(feiyang_init_cmds); i++) {
-> > +             const struct feiyang_init_cmd *cmd =
-> > +                                             &feiyang_init_cmds[i];
-> > +
-> > +             ret = mipi_dsi_dcs_write_buffer(dsi, cmd->data, cmd->len);
->
->                 ret = mipi_dsi_dcs_write_buffer(dsi, cmd->data,
->                                                 FEIYANG_INIT_CMD_LEN);
->
-> > +             if (ret < 0)
-> > +                     return ret;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int feiyang_enable(struct drm_panel *panel)
-> > +{
-> > +     struct feiyang *ctx = panel_to_feiyang(panel);
-> > +
-> > +     msleep(120);
-> > +
-> > +     mipi_dsi_dcs_set_display_on(ctx->dsi);
-> > +     backlight_enable(ctx->backlight);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int feiyang_disable(struct drm_panel *panel)
-> > +{
-> > +     struct feiyang *ctx = panel_to_feiyang(panel);
-> > +
-> > +     backlight_disable(ctx->backlight);
-> > +     return mipi_dsi_dcs_set_display_on(ctx->dsi);
->
-> set_display_on? You probably want set_display_off here :)
->
-> > +}
-> > +
-> > +static int feiyang_unprepare(struct drm_panel *panel)
-> > +{
-> > +     struct feiyang *ctx = panel_to_feiyang(panel);
-> > +     int ret;
-> > +
-> > +     ret = mipi_dsi_dcs_set_display_off(ctx->dsi);
-> > +     if (ret < 0)
-> > +             DRM_DEV_ERROR(panel->dev, "failed to set display off: %d\n",
-> > +                           ret);
-> > +
-> > +     ret = mipi_dsi_dcs_enter_sleep_mode(ctx->dsi);
-> > +     if (ret < 0)
-> > +             DRM_DEV_ERROR(panel->dev, "failed to enter sleep mode: %d\n",
-> > +                           ret);
-> > +
-> > +     msleep(100);
-> > +
-> > +     regulator_disable(ctx->avdd);
-> > +
-> > +     regulator_disable(ctx->dvdd);
-> > +
-> > +     gpiod_set_value(ctx->reset, 0);
-> > +
-> > +     gpiod_set_value(ctx->reset, 1);
-> > +
-> > +     gpiod_set_value(ctx->reset, 0);
->
-> Presumably this reset line toggle isn't needed since the rails are already
-> disabled?
-
-Yes, rails need to reset and turn off. will swap.
-
->
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct drm_display_mode feiyang_default_mode = {
-> > +     .clock = 55000,
-> > +     .vrefresh = 60,
->
-> This doesn't add up correctly. The pixel clock should be equal to:
->
->         (htotal * vtotal * vrefresh) / 1000
->
-> For this reason, we usually don't specify the refresh rate since it can be
-> misleading. Your actual refresh rate with the pixel clock you specified is
-> actually going to be 56.2Hz instead of the 60 you want.
-
-The actual BSP do work 55MHz[1], I do specify refresh rate unnecessarily.
-
-[1] https://gitlab.com/pine64-android/tools/blob/01b3d9388439106bdd9985cf738c1b876bd617d3/pack/chips/sun50iw1p1/configs/db1000_lcd/sys_config_rgmii.fex#L483
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
