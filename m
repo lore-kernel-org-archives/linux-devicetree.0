@@ -1,53 +1,31 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH] media: dt-bindings: rcar-vin: Add R8A774C0 support
-Date: Thu, 13 Dec 2018 20:21:59 +0000
-Message-ID: <1544732519-6956-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [PATCH] usb: gadget: udc: renesas_usb3: Add bindings for r8a774c0
+Date: Thu, 13 Dec 2018 20:22:18 +0000
+Message-ID: <1544732538-7049-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the compatible string for RZ/G2E (a.k.a. R8A774C0) to the list
-of SoCs supported by rcar-vin driver.
+Document RZ/G2E (R8A774C0) SoC bindings.
 
 Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 ---
- Documentation/devicetree/bindings/media/rcar_vin.txt | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/usb/renesas_usb3.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
-index 7c878ca..34dcd28 100644
---- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-+++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-@@ -7,12 +7,13 @@ family of devices.
- Each VIN instance has a single parallel input that supports RGB and YUV video,
- with both external synchronization and BT.656 synchronization for the latter.
- Depending on the instance the VIN input is connected to external SoC pins, or
--on Gen3 platforms to a CSI-2 receiver.
-+on Gen3 and RZ/G2 platforms to a CSI-2 receiver.
- 
-  - compatible: Must be one or more of the following
-    - "renesas,vin-r8a7743" for the R8A7743 device
-    - "renesas,vin-r8a7744" for the R8A7744 device
-    - "renesas,vin-r8a7745" for the R8A7745 device
-+   - "renesas,vin-r8a774c0" for the R8A774C0 device
-    - "renesas,vin-r8a7778" for the R8A7778 device
-    - "renesas,vin-r8a7779" for the R8A7779 device
-    - "renesas,vin-r8a7790" for the R8A7790 device
-@@ -60,10 +61,10 @@ The per-board settings Gen2 platforms:
-     - data-enable-active: polarity of CLKENB signal, see [1] for
-       description. Default is active high.
- 
--The per-board settings Gen3 platforms:
-+The per-board settings Gen3 and RZ/G2 platforms:
- 
--Gen3 platforms can support both a single connected parallel input source
--from external SoC pins (port@0) and/or multiple parallel input sources
-+Gen3 and RZ/G2 platforms can support both a single connected parallel input
-+source from external SoC pins (port@0) and/or multiple parallel input sources
- from local SoC CSI-2 receivers (port@1) depending on SoC.
- 
- - renesas,id - ID number of the VIN, VINx in the documentation.
+diff --git a/Documentation/devicetree/bindings/usb/renesas_usb3.txt b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+index d366555..35039e7 100644
+--- a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
++++ b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+@@ -3,6 +3,7 @@ Renesas Electronics USB3.0 Peripheral driver
+ Required properties:
+   - compatible: Must contain one of the following:
+ 	- "renesas,r8a774a1-usb3-peri"
++	- "renesas,r8a774c0-usb3-peri"
+ 	- "renesas,r8a7795-usb3-peri"
+ 	- "renesas,r8a7796-usb3-peri"
+ 	- "renesas,r8a77965-usb3-peri"
 -- 
 2.7.4
