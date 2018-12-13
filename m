@@ -1,8 +1,8 @@
 Return-Path: <SRS0=W32e=OW=gmail.com=dwesterg@kernel.org>
 From: dwesterg@gmail.com
-Subject: [PATCH v2 net-next 05/10] net: eth: altera: Move common functions to altera_utils
-Date: Thu, 13 Dec 2018 09:52:47 -0800
-Message-Id: <20181213175252.21143-6-dalon.westergreen@linux.intel.com>
+Subject: [PATCH v2 net-next 03/10] net: eth: altera: fix altera_dmaops declaration
+Date: Thu, 13 Dec 2018 09:52:45 -0800
+Message-Id: <20181213175252.21143-4-dalon.westergreen@linux.intel.com>
 In-Reply-To: <20181213175252.21143-1-dalon.westergreen@linux.intel.com>
 References: <20181213175252.21143-1-dalon.westergreen@linux.intel.com>
 MIME-Version: 1.0
@@ -13,243 +13,55 @@ List-ID: <devicetree@vger.kernel.org>
 
 From: Dalon Westergreen <dalon.westergreen@intel.com>
 
-Move request_and_map and other shared functions to altera_utils. This
-is the first step to moving common code out of tse specific code so
-that it can be shared with future altera ethernet ip.
+The declaration of struct altera_dmaops does not have
+identifier names.  Add identifier names to confrom with
+required coding styles.
 
 Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
 ---
- drivers/net/ethernet/altera/altera_tse.h      | 45 ------------------
- .../net/ethernet/altera/altera_tse_ethtool.c  |  1 +
- drivers/net/ethernet/altera/altera_tse_main.c | 32 +------------
- drivers/net/ethernet/altera/altera_utils.c    | 30 ++++++++++++
- drivers/net/ethernet/altera/altera_utils.h    | 46 +++++++++++++++++++
- 5 files changed, 78 insertions(+), 76 deletions(-)
+ drivers/net/ethernet/altera/altera_tse.h | 30 +++++++++++++-----------
+ 1 file changed, 16 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/net/ethernet/altera/altera_tse.h b/drivers/net/ethernet/altera/altera_tse.h
-index 7f246040135d..f435fb0eca90 100644
+index e2feee87180a..d5b97e02e6d6 100644
 --- a/drivers/net/ethernet/altera/altera_tse.h
 +++ b/drivers/net/ethernet/altera/altera_tse.h
-@@ -500,49 +500,4 @@ struct altera_tse_private {
-  */
- void altera_tse_set_ethtool_ops(struct net_device *);
- 
--static inline
--u32 csrrd32(void __iomem *mac, size_t offs)
--{
--	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
--	return readl(paddr);
--}
--
--static inline
--u16 csrrd16(void __iomem *mac, size_t offs)
--{
--	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
--	return readw(paddr);
--}
--
--static inline
--u8 csrrd8(void __iomem *mac, size_t offs)
--{
--	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
--	return readb(paddr);
--}
--
--static inline
--void csrwr32(u32 val, void __iomem *mac, size_t offs)
--{
--	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
--
--	writel(val, paddr);
--}
--
--static inline
--void csrwr16(u16 val, void __iomem *mac, size_t offs)
--{
--	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
--
--	writew(val, paddr);
--}
--
--static inline
--void csrwr8(u8 val, void __iomem *mac, size_t offs)
--{
--	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
--
--	writeb(val, paddr);
--}
--
- #endif /* __ALTERA_TSE_H__ */
-diff --git a/drivers/net/ethernet/altera/altera_tse_ethtool.c b/drivers/net/ethernet/altera/altera_tse_ethtool.c
-index 7c367713c3e6..2998655ab316 100644
---- a/drivers/net/ethernet/altera/altera_tse_ethtool.c
-+++ b/drivers/net/ethernet/altera/altera_tse_ethtool.c
-@@ -33,6 +33,7 @@
- #include <linux/phy.h>
- 
- #include "altera_tse.h"
-+#include "altera_utils.h"
- 
- #define TSE_STATS_LEN	31
- #define TSE_NUM_REGS	128
-diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
-index f6b6a14b1ce9..b25d03506470 100644
---- a/drivers/net/ethernet/altera/altera_tse_main.c
-+++ b/drivers/net/ethernet/altera/altera_tse_main.c
-@@ -34,7 +34,6 @@
- #include <linux/if_vlan.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
--#include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/mii.h>
-@@ -44,7 +43,7 @@
- #include <linux/of_net.h>
- #include <linux/of_platform.h>
- #include <linux/phy.h>
--#include <linux/platform_device.h>
-+#include <linux/ptp_classify.h>
- #include <linux/skbuff.h>
- #include <asm/cacheflush.h>
- 
-@@ -1332,35 +1331,6 @@ static struct net_device_ops altera_tse_netdev_ops = {
- 	.ndo_validate_addr	= eth_validate_addr,
+@@ -396,20 +396,22 @@ struct altera_tse_private;
+ struct altera_dmaops {
+ 	int altera_dtype;
+ 	int dmamask;
+-	void (*reset_dma)(struct altera_tse_private *);
+-	void (*enable_txirq)(struct altera_tse_private *);
+-	void (*enable_rxirq)(struct altera_tse_private *);
+-	void (*disable_txirq)(struct altera_tse_private *);
+-	void (*disable_rxirq)(struct altera_tse_private *);
+-	void (*clear_txirq)(struct altera_tse_private *);
+-	void (*clear_rxirq)(struct altera_tse_private *);
+-	int (*tx_buffer)(struct altera_tse_private *, struct tse_buffer *);
+-	u32 (*tx_completions)(struct altera_tse_private *);
+-	void (*add_rx_desc)(struct altera_tse_private *, struct tse_buffer *);
+-	u32 (*get_rx_status)(struct altera_tse_private *);
+-	int (*init_dma)(struct altera_tse_private *);
+-	void (*uninit_dma)(struct altera_tse_private *);
+-	void (*start_rxdma)(struct altera_tse_private *);
++	void (*reset_dma)(struct altera_tse_private *priv);
++	void (*enable_txirq)(struct altera_tse_private *priv);
++	void (*enable_rxirq)(struct altera_tse_private *priv);
++	void (*disable_txirq)(struct altera_tse_private *priv);
++	void (*disable_rxirq)(struct altera_tse_private *priv);
++	void (*clear_txirq)(struct altera_tse_private *priv);
++	void (*clear_rxirq)(struct altera_tse_private *priv);
++	int (*tx_buffer)(struct altera_tse_private *priv,
++			 struct tse_buffer *buffer);
++	u32 (*tx_completions)(struct altera_tse_private *priv);
++	void (*add_rx_desc)(struct altera_tse_private *priv,
++			    struct tse_buffer *buffer);
++	u32 (*get_rx_status)(struct altera_tse_private *priv);
++	int (*init_dma)(struct altera_tse_private *priv);
++	void (*uninit_dma)(struct altera_tse_private *priv);
++	void (*start_rxdma)(struct altera_tse_private *priv);
  };
  
--static int request_and_map(struct platform_device *pdev, const char *name,
--			   struct resource **res, void __iomem **ptr)
--{
--	struct resource *region;
--	struct device *device = &pdev->dev;
--
--	*res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
--	if (*res == NULL) {
--		dev_err(device, "resource %s not defined\n", name);
--		return -ENODEV;
--	}
--
--	region = devm_request_mem_region(device, (*res)->start,
--					 resource_size(*res), dev_name(device));
--	if (region == NULL) {
--		dev_err(device, "unable to request %s\n", name);
--		return -EBUSY;
--	}
--
--	*ptr = devm_ioremap_nocache(device, region->start,
--				    resource_size(region));
--	if (*ptr == NULL) {
--		dev_err(device, "ioremap_nocache of %s failed!", name);
--		return -ENOMEM;
--	}
--
--	return 0;
--}
--
- /* Probe Altera TSE MAC device
-  */
- static int altera_tse_probe(struct platform_device *pdev)
-diff --git a/drivers/net/ethernet/altera/altera_utils.c b/drivers/net/ethernet/altera/altera_utils.c
-index d7eeb1713ad2..bc33b7f0b0c5 100644
---- a/drivers/net/ethernet/altera/altera_utils.c
-+++ b/drivers/net/ethernet/altera/altera_utils.c
-@@ -42,3 +42,33 @@ int tse_bit_is_clear(void __iomem *ioaddr, size_t offs, u32 bit_mask)
- 	u32 value = csrrd32(ioaddr, offs);
- 	return (value & bit_mask) ? 0 : 1;
- }
-+
-+int request_and_map(struct platform_device *pdev, const char *name,
-+		    struct resource **res, void __iomem **ptr)
-+{
-+	struct resource *region;
-+	struct device *device = &pdev->dev;
-+
-+	*res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
-+	if (!*res) {
-+		dev_err(device, "resource %s not defined\n", name);
-+		return -ENODEV;
-+	}
-+
-+	region = devm_request_mem_region(device, (*res)->start,
-+					 resource_size(*res), dev_name(device));
-+	if (!region) {
-+		dev_err(device, "unable to request %s\n", name);
-+		return -EBUSY;
-+	}
-+
-+	*ptr = devm_ioremap_nocache(device, region->start,
-+				    resource_size(region));
-+	if (!*ptr) {
-+		dev_err(device, "ioremap_nocache of %s failed!", name);
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-diff --git a/drivers/net/ethernet/altera/altera_utils.h b/drivers/net/ethernet/altera/altera_utils.h
-index baf100ccf587..bb7eff792bb7 100644
---- a/drivers/net/ethernet/altera/altera_utils.h
-+++ b/drivers/net/ethernet/altera/altera_utils.h
-@@ -14,7 +14,9 @@
-  * this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
- 
-+#include <linux/io.h>
- #include <linux/kernel.h>
-+#include <linux/platform_device.h>
- 
- #ifndef __ALTERA_UTILS_H__
- #define __ALTERA_UTILS_H__
-@@ -23,5 +25,49 @@ void tse_set_bit(void __iomem *ioaddr, size_t offs, u32 bit_mask);
- void tse_clear_bit(void __iomem *ioaddr, size_t offs, u32 bit_mask);
- int tse_bit_is_set(void __iomem *ioaddr, size_t offs, u32 bit_mask);
- int tse_bit_is_clear(void __iomem *ioaddr, size_t offs, u32 bit_mask);
-+int request_and_map(struct platform_device *pdev, const char *name,
-+		    struct resource **res, void __iomem **ptr);
-+
-+static inline u32 csrrd32(void __iomem *mac, size_t offs)
-+{
-+	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
-+
-+	return readl(paddr);
-+}
-+
-+static inline u16 csrrd16(void __iomem *mac, size_t offs)
-+{
-+	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
-+
-+	return readw(paddr);
-+}
-+
-+static inline u8 csrrd8(void __iomem *mac, size_t offs)
-+{
-+	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
-+
-+	return readb(paddr);
-+}
-+
-+static inline void csrwr32(u32 val, void __iomem *mac, size_t offs)
-+{
-+	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
-+
-+	writel(val, paddr);
-+}
-+
-+static inline void csrwr16(u16 val, void __iomem *mac, size_t offs)
-+{
-+	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
-+
-+	writew(val, paddr);
-+}
-+
-+static inline void csrwr8(u8 val, void __iomem *mac, size_t offs)
-+{
-+	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
-+
-+	writeb(val, paddr);
-+}
- 
- #endif /* __ALTERA_UTILS_H__*/
+ /* This structure is private to each device.
 -- 
 2.19.2
