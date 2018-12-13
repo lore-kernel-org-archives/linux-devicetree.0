@@ -1,84 +1,96 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v4 5/5] ARM: bcm283x: Switch V3D over to using the PM driver
- instead of firmware.
-Date: Wed, 12 Dec 2018 15:51:50 -0800
-Message-ID: <20181212235150.6491-6-eric@anholt.net>
-References: <20181212235150.6491-1-eric@anholt.net>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH v4 1/2] ARM: dts: aspeed: Add KCS & lpc ctrl for Facebook
+Date: Thu, 13 Dec 2018 11:33:44 +1030
+Message-ID: <CACPK8Xea5Q1c9ygvT+WtbwJN9p2Nn-bLo8Ea6U4KuFvFZXvkNg@mail.gmail.com>
+References: <20181212210352.1717617-1-vijaykhemka@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181212235150.6491-1-eric@anholt.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>, Lee Jones <lee.jones@linaro.org>, Stefan Wahren <stefan.wahren@i2se.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Eric Anholt <eric@anholt.net>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181212210352.1717617-1-vijaykhemka@fb.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vijaykhemka@fb.com, Andrew Jeffery <andrew@aj.id.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-The GRAFX domain only contains V3D, and this driver should be the only
-accessor of V3D (firmware usage gets disabled when V3D is in the DT),
-so we can safely make Linux control the GRAFX and GRAFX_V3D power
-domains.
+On Thu, 13 Dec 2018 at 07:34, Vijay Khemka <vijaykhemka@fb.com> wrote:
+>
+> Added kcs device and lpc ctrl device to enable LPC clock in Facebook
+> Tiogapass device tree.
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
----
+As we're going to re-spin, it's a good idea to have the KCS and LPC
+changes in separate patches. I will take the KCS one straight away,
+but the LPC one might need more work (see my comments below).
 
-v4: no change
+>
+> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+> ---
+>  .../dts/aspeed-bmc-facebook-tiogapass.dts     | 30 +++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+> index d9d7f208788a..9544fa2c1822 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+> @@ -21,6 +21,18 @@
+>         memory@80000000 {
+>                 reg = <0x80000000 0x20000000>;
+>         };
+> +
+> +       reserved-memory {
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges;
+> +
+> +               flash_memory: region@98000000 {
+> +                       no-map;
+> +                       reg = <0x98000000 0x04000000>; /* 64M */
+> +               };
 
- arch/arm/boot/dts/bcm2835-rpi.dtsi | 4 ----
- arch/arm/boot/dts/bcm283x.dtsi     | 4 +++-
- 2 files changed, 3 insertions(+), 5 deletions(-)
+Are you using this to expose some RAM over LPC? If not, we don't want this here.
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-index cb2d6d78a7fb..21a930148709 100644
---- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-+++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-@@ -87,10 +87,6 @@
- 	power-domains = <&power RPI_POWER_DOMAIN_USB>;
- };
- 
--&v3d {
--	power-domains = <&power RPI_POWER_DOMAIN_V3D>;
--};
--
- &hdmi {
- 	power-domains = <&power RPI_POWER_DOMAIN_HDMI>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index 20ed8b1da11b..9777644c6c2b 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -3,6 +3,7 @@
- #include <dt-bindings/clock/bcm2835-aux.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/soc/bcm2835-pm.h>
- 
- /* firmware-provided startup stubs live here, where the secondary CPUs are
-  * spinning.
-@@ -120,7 +121,7 @@
- 			#interrupt-cells = <2>;
- 		};
- 
--		watchdog@7e100000 {
-+		pm: watchdog@7e100000 {
- 			compatible = "brcm,bcm2835-pm", "brcm,bcm2835-pm-wdt";
- 			#power-domain-cells = <1>;
- 			#reset-cells = <1>;
-@@ -638,6 +639,7 @@
- 			compatible = "brcm,bcm2835-v3d";
- 			reg = <0x7ec00000 0x1000>;
- 			interrupts = <1 10>;
-+			power-domains = <&pm BCM2835_POWER_DOMAIN_GRAFX_V3D>;
- 		};
- 
- 		vc4: gpu {
--- 
-2.20.0.rc1
+It is a flaw in the design of the driver that the reserved memory
+region is required. We should change the driver to make it optional.
+
+As a workaround, we could add this patch to the tiogapass device tree
+but make it smaller so you're not losing 64MB of RAM.
+
+> +       };
+> +
+>         iio-hwmon {
+>                 compatible = "iio-hwmon";
+>                 oemname0 = "MB_P3V3";
+> @@ -62,6 +74,12 @@
+>         };
+>  };
+>
+> +&lpc_ctrl {
+> +       status = "okay";
+> +       memory-region = <&flash_memory>;
+> +       flash = <&spi1>;
+> +};
+> +
+>  &uart1 {
+>         // Host Console
+>         status = "okay";
+> @@ -75,6 +93,18 @@
+>         status = "okay";
+>  };
+>
+> +&kcs2 {
+> +       // BMC KCS channel 2
+> +       status = "okay";
+> +       kcs_addr = <0xca8>;
+> +};
+> +
+> +&kcs3 {
+> +       // BMC KCS channel 3
+> +       status = "okay";
+> +       kcs_addr = <0xca2>;
+> +};
+> +
+>  &mac0 {
+>         status = "okay";
+>
+> --
+> 2.17.1
+>
