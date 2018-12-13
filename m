@@ -1,72 +1,70 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "MAINTAINERS: Add Amlogic sound drivers entry" to the asoc tree
-Date: Thu, 13 Dec 2018 12:08:39 +0000 (GMT)
-Message-ID: <20181213120839.D576C11254D1@debutante.sirena.org.uk>
-References: <20181211134713.4908-5-jbrunet@baylibre.com>
+From: <Andrei.Stefanescu@microchip.com>
+Subject: Re: [RESEND PATCH v3 3/3] regulator: mcp16502: add regulator driver
+ for MCP16502
+Date: Thu, 13 Dec 2018 12:19:16 +0000
+Message-ID: <2f24d81a-5271-6ea7-32a2-bc2e708521fa@microchip.com>
+References: <1544522876-15967-1-git-send-email-andrei.stefanescu@microchip.com>
+ <1544522876-15967-4-git-send-email-andrei.stefanescu@microchip.com>
+ <20181211164706.GL6686@sirena.org.uk>
+ <6a35df06-1309-f069-9b22-8c2cc5cca56e@microchip.com>
+ <20181212155502.GD6920@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181211134713.4908-5-jbrunet@baylibre.com>
+In-Reply-To: <20181212155502.GD6920@sirena.org.uk>
+Content-Language: en-US
+Content-ID: <FC19A310035B2F4FBA7E4FC6E3B9DA7D@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.orgalsa-devel@alsa-project.org
+To: broonie@kernel.org
+Cc: robh+dt@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com, gregkh@linuxfoundation.org, Cristian.Birsan@microchip.com, Nicolas.Ferre@microchip.com, Claudiu.Beznea@microchip.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, andr3i.stefanescu@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Hi Mark,
 
-   MAINTAINERS: Add Amlogic sound drivers entry
+On 12.12.2018 17:55, Mark Brown wrote:
+> On Wed, Dec 12, 2018 at 08:01:07AM +0000, Andrei.Stefanescu@microchip.com=
+ wrote:
+>
+>>> This puts the device into low power mode when the suspend function gets
+>>> called but this might not be safe - devices using the regulator may not
+>>> be suspended yet so could still need full regulation.  Normally a GPIO
+>>> triggered transition like this would be being done by hardware as part
+>>> of the process of suspending the SoC.  Is there some reason to do this
+>>> manually?
+>> There is a line from the MPU (SHDN) which goes low only when the MPU
+>> turns off. That line is already connected to the PMIC and it differentia=
+tes
+>> between suspend-to-mem and standby. To switch to low-power, the PMIC mus=
+t
+>> be controlled by the GPIO pin LPM.
+>> The suspend sequence is:
+>> - LPM pin goes high (PMIC enters Low-Power <-> Linux standby)
+>> - SHDN goes low (if target suspend state is mem) and then PMIC enters
+>> HIBERNATE
+> This feels like it should be being controlled somewhere else, if it's
+> actually causing a change in the PMIC state it seems like it wants to be
+> done as late as possible in suspend to minimize the risks.  At the very
+> least suspend_late() for the driver seems appropriate.
+I tried with both suspend_late/resume_early and suspend_noirq/resume_noirq.
+Everything seems to work ok.
 
-has been applied to the asoc tree at
+Which one do you think is more appropriate? I am guessing that during
+suspend_late some devices may still need to be turned on and that it would
+be the safest during suspend_noirq.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+Note: the GPIO pin used for LPM is a special one (it maintains its=20
+voltage during
+suspend-to-mem). It is part of the SoC and its methods for setting the=20
+values
+do not sleep.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+>
+> Could you submit a version with this feature at least split out into a
+> separate patch please so we can apply the rest of the code while this is
+> discussed?
+Sent one patch series and another patch with the current suspend/resume
+implementation.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 1b46ed96961db1a826b3e5cadac18c7c4857f054 Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Tue, 11 Dec 2018 14:47:13 +0100
-Subject: [PATCH] MAINTAINERS: Add Amlogic sound drivers entry
-
-Add sound/soc/meson drivers entry for Amlogic audio drivers.
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f4855974f325..637f6ce22626 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1309,6 +1309,13 @@ F:	drivers/pinctrl/meson/
- F:	drivers/mmc/host/meson*
- N:	meson
- 
-+ARM/Amlogic Meson SoC Sound Drivers
-+M:	Jerome Brunet <jbrunet@baylibre.com>
-+L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	sound/soc/meson/
-+F:	Documentation/devicetree/bindings/sound/amlogic*
-+
- ARM/Annapurna Labs ALPINE ARCHITECTURE
- M:	Tsahee Zidenberg <tsahee@annapurnalabs.com>
- M:	Antoine Tenart <antoine.tenart@bootlin.com>
--- 
-2.19.0.rc2
+Best regards,
+Andrei
