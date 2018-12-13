@@ -1,80 +1,73 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v1 1/2] dt-bindings: add binding for USBSS-DRD controller.
-Date: Thu, 13 Dec 2018 17:20:57 +0800
-Message-ID: <CAL411-qP3TAt1kz5Q1WcUejSbt4Agpmqry7JVE_6W+2MpCag4Q@mail.gmail.com>
-References: <1544445555-17325-1-git-send-email-pawell@cadence.com>
- <1544445555-17325-2-git-send-email-pawell@cadence.com> <5C0F8E7B.3030601@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2] MAINTAINERS: add maintainers for ChromeOS EC
+ sub-drivers
+Date: Thu, 13 Dec 2018 09:22:19 +0000
+Message-ID: <20181213092219.GM4497@dell>
+References: <20181211190953.13626-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5C0F8E7B.3030601@ti.com>
+Content-Disposition: inline
+In-Reply-To: <20181211190953.13626-1-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: rogerq@ti.com
-Cc: pawell@cadence.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, balbi@kernel.org, lkml <linux-kernel@vger.kernel.org>, adouglas@cadence.com, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: linux-kernel@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-i2c@vger.kernel.org, groeck@chromium.org, kernel@collabora.com, linux-rtc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Benson Leung <bleung@chromium.org>, Sebastian Reichel <sre@kernel.org>, linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, Hartmut Knaack <knaack.h@gmx.de>, Rob Herring <robh+dt@kernel.org>, Lars-Pet
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 11, 2018 at 6:19 PM Roger Quadros <rogerq@ti.com> wrote:
->
-> Pawel,
->
-> On 10/12/18 14:39, Pawel Laszczak wrote:
-> > This patch aim at documenting USB related dt-bindings for the
-> > Cadence USBSS-DRD controller.
-> >
-> > Signed-off-by: Pawel Laszczak <pawell@cadence.com>
-> > ---
-> >  .../devicetree/bindings/usb/cdns3-usb.txt     | 31 +++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/usb/cdns3-usb.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/usb/cdns3-usb.txt b/Documentation/devicetree/bindings/usb/cdns3-usb.txt
-> > new file mode 100644
-> > index 000000000000..ae4a255f0b10
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/usb/cdns3-usb.txt
-> > @@ -0,0 +1,31 @@
-> > +Binding for the Cadence USBSS-DRD controller
-> > +
-> > +Required properties:
-> > +  - reg: Physical base address and size of the controller's register areas.
-> > +      Controller has 3 different regions:
-> > +      region 1 - HOST registers area
-> > +      region 2 - DEVICE registers area
-> > +      region 3 - OTG/DRD registers area
-> > +  - compatible: Should contain: "cdns,usb3"
-> > +  - interrupts: Interrupt specifier. Refer to interrupt bindings.
-> > +             Driver supports only single interrupt line.
-> > +                This single interrupt is shared between Device,
-> > +             host and OTG/DRD part of driver.
-> > +
-> > +Optional propertiesi:
->
-> s/propertiesi/properties
->
-> > + - maximum-speed : valid arguments are "super-speed", "high-speed" and
-> > +                   "full-speed"; refer to usb/generic.txt
-> > + - dr_mode: Should be one of "host", "peripheral" or "otg".
-> > + - phys: reference to the USB PHY
-> > + - phy-names: name of the USB PHY, should be "cdns3,usbphy"
-> > +
-> > +
-> > +Example:
-> > +     usb@f3000000 {
-> > +             compatible = "cdns,usb3";
-> > +             interrupts = <USB_IRQ  7 IRQ_TYPE_LEVEL_HIGH>;
-> > +             reg = <0xf3000000 0x10000       //memory area for HOST registers
-> > +                     0xf3010000 0x10000      //memory area for DEVICE registers
-> > +                     0xf3020000 0x10000>;    //memory area for OTG/DRD registers
->
-> Use "/* <comment> */" instead.
->
-> > +     };
-> > +
-> >
+On Tue, 11 Dec 2018, Enric Balletbo i Serra wrote:
 
-When running git am to apply patch, it has below warning, please fix them.
+> There are multiple ChromeOS EC sub-drivers spread in different
+> subsystems, as all of them are related to the Chrome stuff add
+> Benson and myself as a maintainers for all these sub-drivers.
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+> 
+> Changes in v2:
+> - Fix typo in Benson email address.
+> 
+>  MAINTAINERS | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a24129b0b043..bbe7180e2851 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3625,6 +3625,30 @@ S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/bleung/chrome-platform.git
+>  F:	drivers/platform/chrome/
+>  
+> +CHROMEOS EC SUBDRIVERS
+> +M:	Benson Leung <bleung@chromium.org>
+> +M:	Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+> +F:	Documentation/devicetree/bindings/input/cros-ec-keyb.txt
+> +F:	Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.txt
+> +F:	Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
+> +F:	Documentation/ABI/testing/sysfs-bus-iio-cros-ec
+> +F:	drivers/extcon/extcon-usbc-cros-ec.c
+> +F:	drivers/i2c/busses/i2c-cros-ec-tunnel.c
+> +F:	drivers/iio/accel/cros_ec*
+> +F:	drivers/iio/common/cros_ec_sensors/
+> +F:	drivers/iio/light/cros_ec*
+> +F:	drivers/iio/pressure/cros_ec*
+> +F:	drivers/input/keyboard/cros_ec*
+> +F:	drivers/power/supply/cros_usbpd-charger.c
+> +F:	drivers/pwm/pwm-cros-ec.c
+> +F:	drivers/rtc/rtc-cros-ec.c
+> +F:	include/linux/iio/common/cros_ec_sensors_core.h
 
-Applying: dt-bindings: add binding for USBSS-DRD controller.
-.git/rebase-apply/patch:42: new blank line at EOF.
-+
-warning: 1 line adds whitespace errors.
+
+> +F:	Documentation/devicetree/bindings/mfd/cros-ec.txt
+> +F:	drivers/mfd/cros_ec*
+> +F:	include/linux/mfd/cros_ec*
+
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
