@@ -1,51 +1,52 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] dt-bindings: remoteproc: qcom: Add power-domain bindings
- for Q6V5
-Date: Thu, 13 Dec 2018 14:05:18 -0800
-Message-ID: <CAD=FV=WC7UQnNsbqwevhxML2Xmq3z4c7uiJ8ddn4tE2H3zAHZg@mail.gmail.com>
-References: <20181120210828.12590-1-sibis@codeaurora.org>
+From: sakari.ailus@iki.fi
+Subject: Re: [PATCH 0/6] media: sun6i: Separate H3 compatible from A31
+Date: Fri, 14 Dec 2018 00:10:31 +0200
+Message-ID: <20181213221030.f7c5mzuyke3ik43r@valkosipuli.retiisi.org.uk>
+References: <20181130075849.16941-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181120210828.12590-1-sibis@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20181130075849.16941-1-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sibis@codeaurora.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, Ohad Ben Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Chen-Yu,
 
-On Tue, Nov 20, 2018 at 1:08 PM Sibi Sankar <sibis@codeaurora.org> wrote:
-> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> index 14947562bc67..bd9f4882fcf0 100644
-> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> @@ -75,6 +75,17 @@ on the Qualcomm Hexagon core.
->         Definition: reference to the regulators to be held on behalf of the
->                     booting of the Hexagon core
->
-> +- power-domains:
-> +       Usage: required
+On Fri, Nov 30, 2018 at 03:58:43PM +0800, Chen-Yu Tsai wrote:
+> The CSI (camera sensor interface) controller found on the H3 (and H5)
+> is a reduced version of the one found on the A31. It only has 1 channel,
+> instead of 4 channels supporting time-multiplexed BT.656 on the A31.
+> Since the H3 is a reduced version, it cannot "fallback" to a compatible
+> that implements more features than it supports.
+> 
+> This series separates support for the H3 variant from the A31 variant.
+> 
+> Patches 1 ~ 3 separate H3 CSI from A31 CSI in the bindings, driver, and
+> device tree, respectively.
+> 
+> Patch 4 adds a pinmux setting for the MCLK (master clock). Some camera
+> sensors use the master clock from the SoC instead of a standalone
+> crystal.
 
-Assuming I understand correctly, presumably you want to say that it's
-required to list _either_ power-domains or supplies.  Right now you
-have the bindings saying that you need both regulators and
-power-domains on all boards.
+I've picked patches 1 and 2, but I presume patches 3 and 4 would go through
+another tree. Is that right?
 
-
-> +       Value type: <phandle>
-> +       Definition: reference to the cx, mx and mss power-domains to be held on
-> +                   behalf of the booting the Hexagon core
-> +
-> +- power-domain-names:
-> +       Usage: required
-> +       Value type: <stringlist>
-> +       Definition: must be "cx", "mx", "mss"
-
-Comparing to the patch you posted at
-<https://lkml.kernel.org/r/20181127085828.17908-1-sibis@codeaurora.org>,
-it seems like maybe you also need "aop" listed here?
-
+> 
+> Patches 5 and 6 are examples of using a camera sensor with an SBC.
+> Since the modules are detachable, these changes should not be merged.
+> They should be implemented as overlays instead.
+> 
+> Please have a look.
+> 
+> In addition, I found that the first frame captured seems to always be
+> incomplete, with either parts cropped, out of position, or missing
+> color components.
 
 
--Doug
+-- 
+Regards,
+
+Sakari Ailus
