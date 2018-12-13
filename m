@@ -1,273 +1,764 @@
-Return-Path: <SRS0=1AcU=O6=gmail.com=tmaimon77@kernel.org>
+Return-Path: <SRS0=W32e=OW=gmail.com=dwesterg@kernel.org>
+From: dwesterg@gmail.com
+Subject: [PATCH v2 net-next 08/10] net: eth: altera: add support for ptp and timestamping
+Date: Thu, 13 Dec 2018 09:52:50 -0800
+Message-Id: <20181213175252.21143-9-dalon.westergreen@linux.intel.com>
+In-Reply-To: <20181213175252.21143-1-dalon.westergreen@linux.intel.com>
+References: <20181213175252.21143-1-dalon.westergreen@linux.intel.com>
 MIME-Version: 1.0
-References: <20181203091456.454030-1-tmaimon77@gmail.com> <20181203091456.454030-2-tmaimon77@gmail.com>
- <20181219155410.GA3925@bogus>
-In-Reply-To: <20181219155410.GA3925@bogus>
-From: Tomer Maimon <tmaimon77@gmail.com>
-Date: Fri, 21 Dec 2018 10:19:57 +0200
-Message-ID: <CAP6Zq1gZrderV12sSr532P4VxbuG_ggDdt7p3jSAOBQ+gn3yVw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] dt-binding: mtd: add NPCM FIU controller
-Content-Type: multipart/alternative; boundary="000000000000b80f4f057d83d2c9"
-To: Rob Herring <robh@kernel.org>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, boris.brezillon@bootlin.com, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marek.vasut@gmail.com>, richard@nod.at, Mark Rutland <mark.rutland@arm.com>, Nancy Yuen <yuenn@google.com>, Patrick Venture <venture@google.com>, Brendan Higgins <brendanhiggins@google.com>, Avi Fishman <avifishman70@gmail.com>, Joel Stanley <joel@jms.id.au>, linux-mtd@lists.infradead.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+To: netdev@vger.kernel.org, dinguyen@kernel.org, thor.thayer@linux.intel.com, richardcochran@gmail.com, davem@davemloft.net, vbridger@opensource.altera.com, robh+dt@kernel.org, mark.rutland@arm.commark.rutland@arm.com, devicetree@vger.kernel.org, hean.loong.ong@intel.com
+Cc: Dalon Westergreen <dalon.westergreen@intel.com>
 List-ID: <devicetree@vger.kernel.org>
 
---000000000000b80f4f057d83d2c9
-Content-Type: text/plain; charset="UTF-8"
+From: Dalon Westergreen <dalon.westergreen@intel.com>
 
-Hi Rob,
+Add support for the ptp clock used with the tse, and update
+the driver to support timestamping when enabled.  We also
+enable debugfs entries for the ptp clock to allow some user
+control and interaction with the ptp clock.
 
-Thanks for your comments,
+Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
 
-The spi-nor drivers are moving to spi (spi-mem), I will make sure to modify
-the new SPI dt-binding document according your comments once I finish the
-work on the new SPI driver.
+---
+Changes from V1:
+ -> Remove debugfs for tod manipulation
+ -> Reorder variable declarations in functions to order
+    by length of declaration, largest to smallest
+ -> Rename altera_ptp to intel_fpga_tod
+ -> Rename functions in intel_fpga_tod so that they are not
+    generic
+ -> Use imply instead of select in Kconfig
+ -> Re-write adjust time function to remove while loop with
+    64 bit divide.
+---
+ drivers/net/ethernet/altera/Kconfig           |   1 +
+ drivers/net/ethernet/altera/Makefile          |   3 +-
+ drivers/net/ethernet/altera/altera_tse.h      |   8 +
+ .../net/ethernet/altera/altera_tse_ethtool.c  |  28 ++
+ drivers/net/ethernet/altera/altera_tse_main.c | 121 +++++-
+ drivers/net/ethernet/altera/intel_fpga_tod.c  | 358 ++++++++++++++++++
+ drivers/net/ethernet/altera/intel_fpga_tod.h  |  56 +++
+ 7 files changed, 573 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/net/ethernet/altera/intel_fpga_tod.c
+ create mode 100644 drivers/net/ethernet/altera/intel_fpga_tod.h
 
-https://lkml.org/lkml/2018/12/3/545
-
-Happy new year!
-
-Tomer
-
-On Wed, 19 Dec 2018 at 17:54, Rob Herring <robh@kernel.org> wrote:
-
-> On Mon, Dec 03, 2018 at 11:14:55AM +0200, Tomer Maimon wrote:
-> > Added device tree binding documentation for Nuvoton BMC
-> > NPCM Flash Interface Unit(FIU) SPI-NOR controller.
-> >
-> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> > ---
-> >  Documentation/devicetree/bindings/mtd/npcm-fiu.txt | 64
-> ++++++++++++++++++++++
-> >  1 file changed, 64 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mtd/npcm-fiu.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/mtd/npcm-fiu.txt
-> b/Documentation/devicetree/bindings/mtd/npcm-fiu.txt
-> > new file mode 100644
-> > index 000000000000..9746cb5b1ced
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mtd/npcm-fiu.txt
-> > @@ -0,0 +1,64 @@
-> > +* Nuvoton FLASH Interface Unit (FIU) SPI Controller
-> > +
-> > +NPCM FIU supports single, dual and quad communication interface.
-> > +
-> > +The NPCM7XX supports three FIU modules,
-> > +FIU0 and FIUx supports two chip selects,
-> > +FIU3 support four chip select.
-> > +
-> > +Required properties:
-> > +  - compatible : "nuvoton,npcm750-fiu" for the NPCM7XX BMC
-> > +  - #address-cells : should be 1.
-> > +  - #size-cells : should be 0.
-> > +  - reg : the first contains the register location and length,
-> > +          the second contains the memory mapping address and length
-> > +  - reg-names: Should contain the reg names "control" and "memory"
-> > +  - clocks : phandle of F reference clock.
-> > +
-> > +Required properties in case the pins can be muxed:
-> > +  - pinctrl-names : a pinctrl state named "default" must be defined.
-> > +  - pinctrl-0 : phandle referencing pin configuration of the device.
-> > +
-> > +Optional property:
-> > +  - spix-mode: enable spix-mode for an expansion bus to an ASIC or CPLD.
->
-> Needs a vendor prefix. Unless this is some standard SPI thing (which
-> I've never heard of).
->
-> > +
-> > +The SPI device must be a child of the FIU node and must have a
-> > +compatible property as specified in bindings/mtd/jedec,spi-nor.txt
-> > +
-> > +Required property:
-> > +- reg: chip select number.
-> > +
-> > +Optional property:
-> > +- spi-rx-bus-width: see ../spi/spi-bus.txt for the description.
-> > +
-> > +Aliases:
-> > +- All the FIU controller nodes should be represented in the aliases
-> node using
-> > +  the following format 'fiu{n}' where n is a unique number for the
-> alias.
-> > +  In the NPCM7XX BMC:
-> > +             fiu0 represent fiu 0 controller
-> > +             fiu1 represent fiu 3 controller
-> > +             fiu2 represent fiu x controller
->
-> Please don't make up your own aliases. Use 'spiX' if anything, but
-> really, why do you need aliases in the first place?
->
-> > +
-> > +Example:
-> > +fiu3: fiu@c00000000 {
->
-> spi@...
->
-> > +     compatible = "nuvoton,npcm750-fiu";
-> > +     #address-cells = <1>;
-> > +     #size-cells = <0>;
-> > +     reg = <0xfb000000 0x1000>, <0x80000000 0x10000000>;
-> > +     reg-names = "control", "memory";
-> > +     clocks = <&clk NPCM7XX_CLK_AHB>;
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&spi3_pins>;
-> > +     spi-nor@0 {
-> > +             compatible = "jedec,spi-nor";
-> > +             spi-rx-bus-width = <2>;
-> > +             #address-cells = <1>;
-> > +             #size-cells = <1>;
-> > +             reg = <0>;
-> > +             partition@0 {
-> > +                     label = "flash_data";
-> > +                     reg = <0x0 0x800000>;
-> > +             };
-> > +     };
-> > +};
-> > +
-> > --
-> > 2.14.1
-> >
->
-
---000000000000b80f4f057d83d2c9
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr">Hi Rob,<div><br></div><div>Thanks for you=
-r comments,</div><div><br></div><div>The spi-nor drivers are moving to spi =
-(spi-mem), I will make sure to modify the new SPI dt-binding document accor=
-ding your comments once I finish the work on the new SPI driver.</div><div>=
-<br></div><div><a href=3D"https://lkml.org/lkml/2018/12/3/545">https://lkml=
-.org/lkml/2018/12/3/545</a><br></div><div><br></div><div>Happy new year!</d=
-iv><div><br></div><div>Tomer</div></div></div><br><div class=3D"gmail_quote=
-"><div dir=3D"ltr">On Wed, 19 Dec 2018 at 17:54, Rob Herring &lt;<a href=3D=
-"mailto:robh@kernel.org">robh@kernel.org</a>&gt; wrote:<br></div><blockquot=
-e class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px s=
-olid rgb(204,204,204);padding-left:1ex">On Mon, Dec 03, 2018 at 11:14:55AM =
-+0200, Tomer Maimon wrote:<br>
-&gt; Added device tree binding documentation for Nuvoton BMC<br>
-&gt; NPCM Flash Interface Unit(FIU) SPI-NOR controller.<br>
-&gt; <br>
-&gt; Signed-off-by: Tomer Maimon &lt;<a href=3D"mailto:tmaimon77@gmail.com"=
- target=3D"_blank">tmaimon77@gmail.com</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 Documentation/devicetree/bindings/mtd/npcm-fiu.txt | 64 ++++++++=
-++++++++++++++<br>
-&gt;=C2=A0 1 file changed, 64 insertions(+)<br>
-&gt;=C2=A0 create mode 100644 Documentation/devicetree/bindings/mtd/npcm-fi=
-u.txt<br>
-&gt; <br>
-&gt; diff --git a/Documentation/devicetree/bindings/mtd/npcm-fiu.txt b/Docu=
-mentation/devicetree/bindings/mtd/npcm-fiu.txt<br>
-&gt; new file mode 100644<br>
-&gt; index 000000000000..9746cb5b1ced<br>
-&gt; --- /dev/null<br>
-&gt; +++ b/Documentation/devicetree/bindings/mtd/npcm-fiu.txt<br>
-&gt; @@ -0,0 +1,64 @@<br>
-&gt; +* Nuvoton FLASH Interface Unit (FIU) SPI Controller<br>
-&gt; +<br>
-&gt; +NPCM FIU supports single, dual and quad communication interface.<br>
-&gt; +<br>
-&gt; +The NPCM7XX supports three FIU modules,<br>
-&gt; +FIU0 and FIUx supports two chip selects,<br>
-&gt; +FIU3 support four chip select.<br>
-&gt; +<br>
-&gt; +Required properties:<br>
-&gt; +=C2=A0 - compatible : &quot;nuvoton,npcm750-fiu&quot; for the NPCM7XX=
- BMC<br>
-&gt; +=C2=A0 - #address-cells : should be 1.<br>
-&gt; +=C2=A0 - #size-cells : should be 0.<br>
-&gt; +=C2=A0 - reg : the first contains the register location and length,<b=
-r>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 the second contains the memory map=
-ping address and length<br>
-&gt; +=C2=A0 - reg-names: Should contain the reg names &quot;control&quot; =
-and &quot;memory&quot;<br>
-&gt; +=C2=A0 - clocks : phandle of F reference clock.<br>
-&gt; +<br>
-&gt; +Required properties in case the pins can be muxed:<br>
-&gt; +=C2=A0 - pinctrl-names : a pinctrl state named &quot;default&quot; mu=
-st be defined.<br>
-&gt; +=C2=A0 - pinctrl-0 : phandle referencing pin configuration of the dev=
-ice.<br>
-&gt; +<br>
-&gt; +Optional property:<br>
-&gt; +=C2=A0 - spix-mode: enable spix-mode for an expansion bus to an ASIC =
-or CPLD.<br>
-<br>
-Needs a vendor prefix. Unless this is some standard SPI thing (which <br>
-I&#39;ve never heard of).<br>
-<br>
-&gt; +<br>
-&gt; +The SPI device must be a child of the FIU node and must have a<br>
-&gt; +compatible property as specified in bindings/mtd/jedec,spi-nor.txt<br=
->
-&gt; +<br>
-&gt; +Required property:<br>
-&gt; +- reg: chip select number.<br>
-&gt; +<br>
-&gt; +Optional property:<br>
-&gt; +- spi-rx-bus-width: see ../spi/spi-bus.txt for the description.<br>
-&gt; +<br>
-&gt; +Aliases:<br>
-&gt; +- All the FIU controller nodes should be represented in the aliases n=
-ode using<br>
-&gt; +=C2=A0 the following format &#39;fiu{n}&#39; where n is a unique numb=
-er for the alias.<br>
-&gt; +=C2=A0 In the NPCM7XX BMC:<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0fiu0 represent fiu 0 =
-controller<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0fiu1 represent fiu 3 =
-controller<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0fiu2 represent fiu x =
-controller<br>
-<br>
-Please don&#39;t make up your own aliases. Use &#39;spiX&#39; if anything, =
-but <br>
-really, why do you need aliases in the first place?<br>
-<br>
-&gt; +<br>
-&gt; +Example:<br>
-&gt; +fiu3: fiu@c00000000 {<br>
-<br>
-spi@...<br>
-<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0compatible =3D &quot;nuvoton,npcm750-fiu&quot;;<b=
-r>
-&gt; +=C2=A0 =C2=A0 =C2=A0#address-cells =3D &lt;1&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0#size-cells =3D &lt;0&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0reg =3D &lt;0xfb000000 0x1000&gt;, &lt;0x80000000=
- 0x10000000&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0reg-names =3D &quot;control&quot;, &quot;memory&q=
-uot;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0clocks =3D &lt;&amp;clk NPCM7XX_CLK_AHB&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0pinctrl-names =3D &quot;default&quot;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0pinctrl-0 =3D &lt;&amp;spi3_pins&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0spi-nor@0 {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D &quot;=
-jedec,spi-nor&quot;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0spi-rx-bus-width =3D =
-&lt;2&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0#address-cells =3D &l=
-t;1&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0#size-cells =3D &lt;1=
-&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0reg =3D &lt;0&gt;;<br=
->
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0partition@0 {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0label =3D &quot;flash_data&quot;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0reg =3D &lt;0x0 0x800000&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0};<br>
-&gt; +};<br>
-&gt; +<br>
-&gt; -- <br>
-&gt; 2.14.1<br>
-&gt; <br>
-</blockquote></div>
-
---000000000000b80f4f057d83d2c9--
+diff --git a/drivers/net/ethernet/altera/Kconfig b/drivers/net/ethernet/altera/Kconfig
+index fdddba51473e..7aa05375601e 100644
+--- a/drivers/net/ethernet/altera/Kconfig
++++ b/drivers/net/ethernet/altera/Kconfig
+@@ -2,6 +2,7 @@ config ALTERA_TSE
+ 	tristate "Altera Triple-Speed Ethernet MAC support"
+ 	depends on HAS_DMA
+ 	select PHYLIB
++	imply PTP_1588_CLOCK
+ 	---help---
+ 	  This driver supports the Altera Triple-Speed (TSE) Ethernet MAC.
+ 
+diff --git a/drivers/net/ethernet/altera/Makefile b/drivers/net/ethernet/altera/Makefile
+index d4a187e45369..3e622b4c105a 100644
+--- a/drivers/net/ethernet/altera/Makefile
++++ b/drivers/net/ethernet/altera/Makefile
+@@ -4,4 +4,5 @@
+ 
+ obj-$(CONFIG_ALTERA_TSE) += altera_tse.o
+ altera_tse-objs := altera_tse_main.o altera_tse_ethtool.o \
+-altera_msgdma.o altera_sgdma.o altera_utils.o
++		   altera_msgdma.o altera_sgdma.o altera_utils.o \
++		   intel_fpga_tod.o
+diff --git a/drivers/net/ethernet/altera/altera_tse.h b/drivers/net/ethernet/altera/altera_tse.h
+index 6e7f92ebf3cf..14515a76d634 100644
+--- a/drivers/net/ethernet/altera/altera_tse.h
++++ b/drivers/net/ethernet/altera/altera_tse.h
+@@ -39,6 +39,8 @@
+ #include <linux/netdevice.h>
+ #include <linux/phy.h>
+ 
++#include "intel_fpga_tod.h"
++
+ #define ALTERA_TSE_SW_RESET_WATCHDOG_CNTR	10000
+ #define ALTERA_TSE_MAC_FIFO_WIDTH		4	/* TX/RX FIFO width in
+ 							 * bytes
+@@ -428,6 +430,12 @@ struct altera_tse_private {
+ 	/* TSE Revision */
+ 	u32	revision;
+ 
++	/* Shared PTP structure */
++	struct intel_fpga_tod_private ptp_priv;
++	int hwts_tx_en;
++	int hwts_rx_en;
++	u32 ptp_enable;
++
+ 	/* mSGDMA Rx Dispatcher address space */
+ 	void __iomem *rx_dma_csr;
+ 	void __iomem *rx_dma_desc;
+diff --git a/drivers/net/ethernet/altera/altera_tse_ethtool.c b/drivers/net/ethernet/altera/altera_tse_ethtool.c
+index 2998655ab316..eeb6e5558c6a 100644
+--- a/drivers/net/ethernet/altera/altera_tse_ethtool.c
++++ b/drivers/net/ethernet/altera/altera_tse_ethtool.c
+@@ -30,6 +30,7 @@
+ #include <linux/ethtool.h>
+ #include <linux/kernel.h>
+ #include <linux/netdevice.h>
++#include <linux/net_tstamp.h>
+ #include <linux/phy.h>
+ 
+ #include "altera_tse.h"
+@@ -234,6 +235,32 @@ static void tse_get_regs(struct net_device *dev, struct ethtool_regs *regs,
+ 		buf[i] = csrrd32(priv->mac_dev, i * 4);
+ }
+ 
++static int tse_get_ts_info(struct net_device *dev,
++			   struct ethtool_ts_info *info)
++{
++	struct altera_tse_private *priv = netdev_priv(dev);
++
++	if (priv->ptp_enable) {
++		if (priv->ptp_priv.ptp_clock)
++			info->phc_index =
++				ptp_clock_index(priv->ptp_priv.ptp_clock);
++
++		info->so_timestamping = SOF_TIMESTAMPING_TX_HARDWARE |
++					SOF_TIMESTAMPING_RX_HARDWARE |
++					SOF_TIMESTAMPING_RAW_HARDWARE;
++
++		info->tx_types = (1 << HWTSTAMP_TX_OFF) |
++						 (1 << HWTSTAMP_TX_ON);
++
++		info->rx_filters = (1 << HWTSTAMP_FILTER_NONE) |
++						   (1 << HWTSTAMP_FILTER_ALL);
++
++		return 0;
++	} else {
++		return ethtool_op_get_ts_info(dev, info);
++	}
++}
++
+ static const struct ethtool_ops tse_ethtool_ops = {
+ 	.get_drvinfo = tse_get_drvinfo,
+ 	.get_regs_len = tse_reglen,
+@@ -246,6 +273,7 @@ static const struct ethtool_ops tse_ethtool_ops = {
+ 	.set_msglevel = tse_set_msglevel,
+ 	.get_link_ksettings = phy_ethtool_get_link_ksettings,
+ 	.set_link_ksettings = phy_ethtool_set_link_ksettings,
++	.get_ts_info = tse_get_ts_info,
+ };
+ 
+ void altera_tse_set_ethtool_ops(struct net_device *netdev)
+diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
+index 24915f72e965..60f0c43a9334 100644
+--- a/drivers/net/ethernet/altera/altera_tse_main.c
++++ b/drivers/net/ethernet/altera/altera_tse_main.c
+@@ -29,14 +29,17 @@
+  */
+ 
+ #include <linux/atomic.h>
++#include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/etherdevice.h>
++#include <linux/if_ether.h>
+ #include <linux/if_vlan.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/mii.h>
++#include <linux/net_tstamp.h>
+ #include <linux/netdevice.h>
+ #include <linux/of_device.h>
+ #include <linux/of_mdio.h>
+@@ -51,6 +54,7 @@
+ #include "altera_tse.h"
+ #include "altera_sgdma.h"
+ #include "altera_msgdma.h"
++#include "intel_fpga_tod.h"
+ 
+ static atomic_t instance_count = ATOMIC_INIT(~0);
+ /* Module parameters */
+@@ -609,7 +613,14 @@ static netdev_tx_t tse_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	if (ret)
+ 		goto out;
+ 
+-	skb_tx_timestamp(skb);
++	/* Provide a hardware time stamp if requested.
++	 */
++	if (unlikely((skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
++		     priv->hwts_tx_en))
++		/* declare that device is doing timestamping */
++		skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
++	else
++		skb_tx_timestamp(skb);
+ 
+ 	priv->tx_prod++;
+ 	dev->stats.tx_bytes += skb->len;
+@@ -1250,6 +1261,13 @@ static int tse_open(struct net_device *dev)
+ 	if (dev->phydev)
+ 		phy_start(dev->phydev);
+ 
++	ret = intel_fpga_tod_init(&priv->ptp_priv);
++	if (ret)
++		netdev_warn(dev, "Failed PTP initialization\n");
++
++	priv->hwts_tx_en = 0;
++	priv->hwts_rx_en = 0;
++
+ 	napi_enable(&priv->napi);
+ 	netif_start_queue(dev);
+ 
+@@ -1321,6 +1339,83 @@ static int tse_shutdown(struct net_device *dev)
+ 	return 0;
+ }
+ 
++/* ioctl to configure timestamping */
++static int tse_do_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
++{
++	struct altera_tse_private *priv = netdev_priv(dev);
++	struct hwtstamp_config config;
++
++	if (!netif_running(dev))
++		return -EINVAL;
++
++	if (!priv->ptp_enable)	{
++		netdev_alert(priv->dev, "Timestamping not supported");
++		return -EOPNOTSUPP;
++	}
++
++	if (cmd == SIOCSHWTSTAMP) {
++		if (copy_from_user(&config, ifr->ifr_data,
++				   sizeof(struct hwtstamp_config)))
++			return -EFAULT;
++
++		if (config.flags)
++			return -EINVAL;
++
++		switch (config.tx_type) {
++		case HWTSTAMP_TX_OFF:
++			priv->hwts_tx_en = 0;
++			break;
++		case HWTSTAMP_TX_ON:
++			priv->hwts_tx_en = 1;
++			break;
++		default:
++			return -ERANGE;
++		}
++
++		switch (config.rx_filter) {
++		case HWTSTAMP_FILTER_NONE:
++			priv->hwts_rx_en = 0;
++			config.rx_filter = HWTSTAMP_FILTER_NONE;
++			break;
++		default:
++			priv->hwts_rx_en = 1;
++			config.rx_filter = HWTSTAMP_FILTER_ALL;
++			break;
++		}
++
++		if (copy_to_user(ifr->ifr_data, &config,
++				 sizeof(struct hwtstamp_config)))
++			return -EFAULT;
++		else
++			return 0;
++	}
++
++	if (cmd == SIOCGHWTSTAMP) {
++		config.flags = 0;
++
++		if (priv->hwts_tx_en)
++			config.tx_type = HWTSTAMP_TX_ON;
++		else
++			config.tx_type = HWTSTAMP_TX_OFF;
++
++		if (priv->hwts_rx_en)
++			config.rx_filter = HWTSTAMP_FILTER_ALL;
++		else
++			config.rx_filter = HWTSTAMP_FILTER_NONE;
++
++		if (copy_to_user(ifr->ifr_data, &config,
++				 sizeof(struct hwtstamp_config)))
++			return -EFAULT;
++		else
++			return 0;
++	}
++
++	if (!dev->phydev)
++		return -EINVAL;
++
++	return phy_mii_ioctl(dev->phydev, ifr, cmd);
++}
++
+ static struct net_device_ops altera_tse_netdev_ops = {
+ 	.ndo_open		= tse_open,
+ 	.ndo_stop		= tse_shutdown,
+@@ -1329,6 +1424,7 @@ static struct net_device_ops altera_tse_netdev_ops = {
+ 	.ndo_set_rx_mode	= tse_set_rx_mode,
+ 	.ndo_change_mtu		= tse_change_mtu,
+ 	.ndo_validate_addr	= eth_validate_addr,
++	.ndo_do_ioctl		= tse_do_ioctl,
+ };
+ 
+ /* Probe Altera TSE MAC device
+@@ -1580,6 +1676,27 @@ static int altera_tse_probe(struct platform_device *pdev)
+ 		netdev_err(ndev, "Cannot attach to PHY (error: %d)\n", ret);
+ 		goto err_init_phy;
+ 	}
++
++	priv->ptp_enable = of_property_read_bool(pdev->dev.of_node,
++						 "altr,has-ptp");
++	dev_info(&pdev->dev, "PTP Enable: %d\n", priv->ptp_enable);
++
++	if (priv->ptp_enable) {
++		/* MAP PTP */
++		ret = intel_fpga_tod_probe(pdev, &priv->ptp_priv);
++		if (ret) {
++			dev_err(&pdev->dev, "cannot map PTP\n");
++			goto err_init_phy;
++		}
++		ret = intel_fpga_tod_register(&priv->ptp_priv,
++					      priv->device);
++		if (ret) {
++			dev_err(&pdev->dev, "Failed to register PTP clock\n");
++			ret = -ENXIO;
++			goto err_init_phy;
++		}
++	}
++
+ 	return 0;
+ 
+ err_init_phy:
+@@ -1607,6 +1724,8 @@ static int altera_tse_remove(struct platform_device *pdev)
+ 	}
+ 
+ 	platform_set_drvdata(pdev, NULL);
++	if (priv->ptp_enable)
++		intel_fpga_tod_unregister(&priv->ptp_priv);
+ 	altera_tse_mdio_destroy(ndev);
+ 	unregister_netdev(ndev);
+ 	free_netdev(ndev);
+diff --git a/drivers/net/ethernet/altera/intel_fpga_tod.c b/drivers/net/ethernet/altera/intel_fpga_tod.c
+new file mode 100644
+index 000000000000..bf6fdbcf15b0
+--- /dev/null
++++ b/drivers/net/ethernet/altera/intel_fpga_tod.c
+@@ -0,0 +1,358 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Intel FPGA ToD PTP Hardware Clock (PHC) Linux driver
++ * Copyright (C) 2015-2016 Altera Corporation. All rights reserved.
++ * Copyright (C) 2017-2018 Intel Corporation. All rights reserved.
++ *
++ * Author(s):
++ *	Dalon Westergreen <dalon.westergreen@intel.com>
++ */
++
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/gcd.h>
++#include <linux/module.h>
++#include <linux/math64.h>
++#include <linux/net_tstamp.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++
++#include "altera_utils.h"
++#include "intel_fpga_tod.h"
++
++#define NOMINAL_PPB			1000000000ULL
++#define TOD_PERIOD_MAX			0xfffff
++#define TOD_PERIOD_MIN			0
++#define TOD_DRIFT_ADJUST_FNS_MAX	0xffff
++#define TOD_DRIFT_ADJUST_RATE_MAX	0xffff
++#define TOD_ADJUST_COUNT_MAX		0xfffff
++#define TOD_ADJUST_MS_MAX		(((((TOD_PERIOD_MAX) >> 16) + 1) * \
++					  ((TOD_ADJUST_COUNT_MAX) + 1)) /  \
++					 1000000UL)
++
++/* A fine ToD HW clock offset adjustment.
++ * To perform the fine offset adjustment the AdjustPeriod register is used
++ * to replace the Period register for AdjustCount clock cycles in hardware.
++ */
++static int fine_adjust_tod_clock(struct intel_fpga_tod_private *priv,
++				 u32 adjust_period, u32 adjust_count)
++{
++	int limit;
++
++	csrwr32(adjust_period, priv->tod_ctrl, tod_csroffs(adjust_period));
++	csrwr32(adjust_count, priv->tod_ctrl, tod_csroffs(adjust_count));
++
++	/* Wait for present offset adjustment update to complete */
++	limit = TOD_ADJUST_MS_MAX;
++	while (limit--) {
++		if (!csrrd32(priv->tod_ctrl, tod_csroffs(adjust_count)))
++			break;
++		mdelay(1);
++	}
++	if (limit < 0)
++		return -EBUSY;
++
++	return 0;
++}
++
++/* A coarse ToD HW clock offset adjustment.
++ * The coarse time adjustment performs by adding or subtracting the delta value
++ * from the current ToD HW clock time.
++ */
++static int coarse_adjust_tod_clock(struct intel_fpga_tod_private *priv,
++				   s64 delta)
++{
++	u32 seconds_msb, seconds_lsb, nanosec;
++	u64 seconds, now;
++
++	if (delta == 0)
++		goto out;
++
++	/* Get current time */
++	nanosec = csrrd32(priv->tod_ctrl, tod_csroffs(nanosec));
++	seconds_lsb = csrrd32(priv->tod_ctrl, tod_csroffs(seconds_lsb));
++	seconds_msb = csrrd32(priv->tod_ctrl, tod_csroffs(seconds_msb));
++
++	/* Calculate new time */
++	seconds = (((u64)(seconds_msb & 0x0000ffff)) << 32) | seconds_lsb;
++	now = seconds * NSEC_PER_SEC + nanosec + delta;
++
++	seconds = div_u64_rem(now, NSEC_PER_SEC, &nanosec);
++	seconds_msb = upper_32_bits(seconds) & 0x0000ffff;
++	seconds_lsb = lower_32_bits(seconds);
++
++	/* Set corrected time */
++	csrwr32(seconds_msb, priv->tod_ctrl, tod_csroffs(seconds_msb));
++	csrwr32(seconds_lsb, priv->tod_ctrl, tod_csroffs(seconds_lsb));
++	csrwr32(nanosec, priv->tod_ctrl, tod_csroffs(nanosec));
++
++out:
++	return 0;
++}
++
++static int intel_fpga_tod_adjust_fine(struct ptp_clock_info *ptp,
++				      long scaled_ppm)
++{
++	struct intel_fpga_tod_private *priv =
++		container_of(ptp, struct intel_fpga_tod_private, ptp_clock_ops);
++	u32 tod_period, tod_rem, tod_drift_adjust_fns, tod_drift_adjust_rate;
++	unsigned long flags;
++	unsigned long rate;
++	int ret = 0;
++	u64 ppb;
++
++	rate = clk_get_rate(priv->tod_clk);
++
++	/* From scaled_ppm_to_ppb */
++	ppb = 1 + scaled_ppm;
++	ppb *= 125;
++	ppb >>= 13;
++
++	ppb += NOMINAL_PPB;
++
++	tod_period = div_u64_rem(ppb << 16, rate, &tod_rem);
++	if (tod_period > TOD_PERIOD_MAX) {
++		ret = -ERANGE;
++		goto out;
++	}
++
++	/* The drift of ToD adjusted periodically by adding a drift_adjust_fns
++	 * correction value every drift_adjust_rate count of clock cycles.
++	 */
++	tod_drift_adjust_fns = tod_rem / gcd(tod_rem, rate);
++	tod_drift_adjust_rate = rate / gcd(tod_rem, rate);
++
++	while ((tod_drift_adjust_fns > TOD_DRIFT_ADJUST_FNS_MAX) |
++		(tod_drift_adjust_rate > TOD_DRIFT_ADJUST_RATE_MAX)) {
++		tod_drift_adjust_fns = tod_drift_adjust_fns >> 1;
++		tod_drift_adjust_rate = tod_drift_adjust_rate >> 1;
++	}
++
++	if (tod_drift_adjust_fns == 0)
++		tod_drift_adjust_rate = 0;
++
++	spin_lock_irqsave(&priv->tod_lock, flags);
++	csrwr32(tod_period, priv->tod_ctrl, tod_csroffs(period));
++	csrwr32(0, priv->tod_ctrl, tod_csroffs(adjust_period));
++	csrwr32(0, priv->tod_ctrl, tod_csroffs(adjust_count));
++	csrwr32(tod_drift_adjust_fns, priv->tod_ctrl,
++		tod_csroffs(drift_adjust));
++	csrwr32(tod_drift_adjust_rate, priv->tod_ctrl,
++		tod_csroffs(drift_adjust_rate));
++	spin_unlock_irqrestore(&priv->tod_lock, flags);
++
++out:
++	return ret;
++}
++
++static int intel_fpga_tod_adjust_time(struct ptp_clock_info *ptp, s64 delta)
++{
++	struct intel_fpga_tod_private *priv =
++		container_of(ptp, struct intel_fpga_tod_private, ptp_clock_ops);
++	unsigned long flags;
++	u32 period, diff, rem, rem_period, adj_period;
++	u64 count;
++	int neg_adj = 0, ret = 0;
++
++	if (delta < 0) {
++		neg_adj = 1;
++		delta = -delta;
++	}
++
++	spin_lock_irqsave(&priv->tod_lock, flags);
++
++	/* Get the maximum possible value of the Period register offset
++	 * adjustment in nanoseconds scale. This depends on the current
++	 * Period register setting and the maximum and minimum possible
++	 * values of the Period register.
++	 */
++	period = csrrd32(priv->tod_ctrl, tod_csroffs(period));
++
++	if (neg_adj)
++		diff = (period - TOD_PERIOD_MIN) >> 16;
++	else
++		diff = (TOD_PERIOD_MAX - period) >> 16;
++
++	/* Find the number of cycles required for the
++	 * time adjustment
++	 */
++	count = div_u64_rem(delta, diff, &rem);
++
++	if (neg_adj) {
++		adj_period = period - (diff << 16);
++		rem_period = period - (rem << 16);
++	} else {
++		adj_period = period + (diff << 16);
++		rem_period = period + (rem << 16);
++	}
++
++	/* If count is larger than the maximum count,
++	 * just set the time.
++	 */
++	if (count > TOD_ADJUST_COUNT_MAX) {
++		/* Perform the coarse time offset adjustment */
++		ret = coarse_adjust_tod_clock(priv, delta);
++	} else {
++		/* Adjust the period for count cycles to adjust
++		 * the time.
++		 */
++		if (count)
++			ret = fine_adjust_tod_clock(priv, adj_period, count);
++
++		/* If there is a remainder, adjust the period for an
++		 * additional cycle
++		 */
++		if (rem)
++			ret = fine_adjust_tod_clock(priv, rem_period, 1);
++	}
++
++	spin_unlock_irqrestore(&priv->tod_lock, flags);
++
++	return ret;
++}
++
++static int intel_fpga_tod_get_time(struct ptp_clock_info *ptp,
++				   struct timespec64 *ts)
++{
++	struct intel_fpga_tod_private *priv =
++		container_of(ptp, struct intel_fpga_tod_private, ptp_clock_ops);
++	u32 seconds_msb, seconds_lsb, nanosec;
++	unsigned long flags;
++	u64 seconds;
++
++	spin_lock_irqsave(&priv->tod_lock, flags);
++	nanosec = csrrd32(priv->tod_ctrl, tod_csroffs(nanosec));
++	seconds_lsb = csrrd32(priv->tod_ctrl, tod_csroffs(seconds_lsb));
++	seconds_msb = csrrd32(priv->tod_ctrl, tod_csroffs(seconds_msb));
++	spin_unlock_irqrestore(&priv->tod_lock, flags);
++
++	seconds = (((u64)(seconds_msb & 0x0000ffff)) << 32) | seconds_lsb;
++
++	ts->tv_nsec = nanosec;
++	ts->tv_sec = (__kernel_time_t)seconds;
++
++	return 0;
++}
++
++static int intel_fpga_tod_set_time(struct ptp_clock_info *ptp,
++				   const struct timespec64 *ts)
++{
++	struct intel_fpga_tod_private *priv =
++		container_of(ptp, struct intel_fpga_tod_private, ptp_clock_ops);
++	u32 seconds_msb = upper_32_bits(ts->tv_sec) & 0x0000ffff;
++	u32 seconds_lsb = lower_32_bits(ts->tv_sec);
++	u32 nanosec = lower_32_bits(ts->tv_nsec);
++	unsigned long flags;
++
++	spin_lock_irqsave(&priv->tod_lock, flags);
++	csrwr32(seconds_msb, priv->tod_ctrl, tod_csroffs(seconds_msb));
++	csrwr32(seconds_lsb, priv->tod_ctrl, tod_csroffs(seconds_lsb));
++	csrwr32(nanosec, priv->tod_ctrl, tod_csroffs(nanosec));
++	spin_unlock_irqrestore(&priv->tod_lock, flags);
++
++	return 0;
++}
++
++static int intel_fpga_tod_enable_feature(struct ptp_clock_info *ptp,
++					 struct ptp_clock_request *request,
++					 int on)
++{
++	return -EOPNOTSUPP;
++}
++
++static struct ptp_clock_info intel_fpga_tod_clock_ops = {
++	.owner = THIS_MODULE,
++	.name = "intel_fpga_tod",
++	.max_adj = 500000000,
++	.n_alarm = 0,
++	.n_ext_ts = 0,
++	.n_per_out = 0,
++	.pps = 0,
++	.adjfine = intel_fpga_tod_adjust_fine,
++	.adjtime = intel_fpga_tod_adjust_time,
++	.gettime64 = intel_fpga_tod_get_time,
++	.settime64 = intel_fpga_tod_set_time,
++	.enable = intel_fpga_tod_enable_feature,
++};
++
++/* Initialize PTP control block registers */
++int intel_fpga_tod_init(struct intel_fpga_tod_private *priv)
++{
++	struct timespec64 now;
++	int ret = 0;
++
++	ret = intel_fpga_tod_adjust_fine(&priv->ptp_clock_ops, 0l);
++	if (ret != 0)
++		goto out;
++
++	/* Initialize the hardware clock to the system time */
++	getnstimeofday64(&now);
++	intel_fpga_tod_set_time(&priv->ptp_clock_ops, &now);
++
++	spin_lock_init(&priv->tod_lock);
++
++out:
++	return ret;
++}
++
++/* Register the PTP clock driver to kernel */
++int intel_fpga_tod_register(struct intel_fpga_tod_private *priv,
++			    struct device *device)
++{
++	int ret = 0;
++
++	priv->ptp_clock_ops = intel_fpga_tod_clock_ops;
++
++	priv->ptp_clock = ptp_clock_register(&priv->ptp_clock_ops, device);
++	if (IS_ERR(priv->ptp_clock)) {
++		priv->ptp_clock = NULL;
++		ret = -ENODEV;
++	}
++
++	if (priv->tod_clk)
++		ret = clk_prepare_enable(priv->tod_clk);
++
++	return ret;
++}
++
++/* Remove/unregister the ptp clock driver from the kernel */
++void intel_fpga_tod_unregister(struct intel_fpga_tod_private *priv)
++{
++	if (priv->ptp_clock) {
++		ptp_clock_unregister(priv->ptp_clock);
++		priv->ptp_clock = NULL;
++	}
++
++	if (priv->tod_clk)
++		clk_disable_unprepare(priv->tod_clk);
++}
++
++/* Common PTP probe function */
++int intel_fpga_tod_probe(struct platform_device *pdev,
++			 struct intel_fpga_tod_private *priv)
++{
++	struct resource *ptp_res;
++	int ret = -ENODEV;
++
++	priv->dev = (struct net_device *)platform_get_drvdata(pdev);
++
++	/* Time-of-Day (ToD) Clock address space */
++	ret = request_and_map(pdev, "tod_ctrl", &ptp_res,
++			      (void __iomem **)&priv->tod_ctrl);
++	if (ret)
++		goto err;
++
++	dev_info(&pdev->dev, "\tTOD Ctrl at 0x%08lx\n",
++		 (unsigned long)ptp_res->start);
++
++	/* Time-of-Day (ToD) Clock period clock */
++	priv->tod_clk = devm_clk_get(&pdev->dev, "tod_clk");
++	if (IS_ERR(priv->tod_clk)) {
++		dev_err(&pdev->dev, "cannot obtain ToD period clock\n");
++		ret = -ENXIO;
++		goto err;
++	}
++err:
++	return ret;
++}
++
++MODULE_LICENSE("GPL");
+diff --git a/drivers/net/ethernet/altera/intel_fpga_tod.h b/drivers/net/ethernet/altera/intel_fpga_tod.h
+new file mode 100644
+index 000000000000..3a0cf05137ad
+--- /dev/null
++++ b/drivers/net/ethernet/altera/intel_fpga_tod.h
+@@ -0,0 +1,56 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Altera PTP Hardware Clock (PHC) Linux driver
++ * Copyright (C) 2015-2016 Altera Corporation. All rights reserved.
++ * Copyright (C) 2017-2018 Intel Corporation. All rights reserved.
++ *
++ * Author(s):
++ *	Dalon Westergreen <dalon.westergreen@intel.com>
++ */
++
++#ifndef __INTEL_FPGA_TOD_H__
++#define __INTEL_FPGA_TOD_H__
++
++#include <linux/debugfs.h>
++#include <linux/netdevice.h>
++#include <linux/ptp_clock_kernel.h>
++#include <linux/platform_device.h>
++#include <linux/mutex.h>
++
++/* Altera Time-of-Day (ToD) clock register space. */
++struct intel_fpga_tod {
++	u32 seconds_msb;
++	u32 seconds_lsb;
++	u32 nanosec;
++	u32 reserved1[0x1];
++	u32 period;
++	u32 adjust_period;
++	u32 adjust_count;
++	u32 drift_adjust;
++	u32 drift_adjust_rate;
++};
++
++#define tod_csroffs(a)	(offsetof(struct intel_fpga_tod, a))
++
++struct intel_fpga_tod_private {
++	struct net_device *dev;
++
++	struct ptp_clock_info ptp_clock_ops;
++	struct ptp_clock *ptp_clock;
++
++	/* Time-of-Day (ToD) Clock address space */
++	struct intel_fpga_tod __iomem *tod_ctrl;
++	struct clk *tod_clk;
++
++	/* ToD clock registers protection */
++	spinlock_t tod_lock;
++};
++
++int intel_fpga_tod_init(struct intel_fpga_tod_private *priv);
++void intel_fpga_tod_uinit(struct intel_fpga_tod_private *priv);
++int intel_fpga_tod_register(struct intel_fpga_tod_private *priv,
++			    struct device *device);
++void intel_fpga_tod_unregister(struct intel_fpga_tod_private *priv);
++int intel_fpga_tod_probe(struct platform_device *pdev,
++			 struct intel_fpga_tod_private *priv);
++
++#endif /* __INTEL_FPGA_TOD_H__ */
+-- 
+2.19.2
