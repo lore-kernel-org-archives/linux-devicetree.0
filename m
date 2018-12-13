@@ -1,104 +1,68 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v8 11/26] pwm: jz4740: Use regmap and clocks from TCU
- driver
-Date: Thu, 13 Dec 2018 15:34:48 +0100
-Message-ID: <1544711688.18952.2@crapouillou.net>
-References: <20181212220922.18759-1-paul@crapouillou.net>
-        <20181212220922.18759-12-paul@crapouillou.net>
-        <20181213093049.rxdvf6tip7iqdj3c@pengutronix.de>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v3 4/5] drivers: power: suspend: call devfreq
+ suspend/resume
+Date: Thu, 13 Dec 2018 15:35:25 +0100
+Message-ID: <ce1d415d-2a00-ef0e-6b58-23d16cffee4a@partner.samsung.com>
+References: <1544007956-28889-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20181205110623eucas1p120f9d8b38822bf856a5b7d427d00e49f@eucas1p1.samsung.com>
+        <1544007956-28889-5-git-send-email-l.luba@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181213093049.rxdvf6tip7iqdj3c@pengutronix.de>
+In-Reply-To: <1544007956-28889-5-git-send-email-l.luba@partner.samsung.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mathieu Malaterre <malat@debian.org>, Ezequiel Garcia <ezequiel@collabora.co.uk>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
+To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, cw00.choi@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Rafael,
 
-Le jeu. 13 d=E9c. 2018 =E0 10:30, Uwe Kleine-K=F6nig=20
-<u.kleine-koenig@pengutronix.de> a =E9crit :
-> Hello,
->=20
-> On Wed, Dec 12, 2018 at 11:09:06PM +0100, Paul Cercueil wrote:
->>  [...]
->>   static int jz4740_pwm_enable(struct pwm_chip *chip, struct=20
->> pwm_device *pwm)
->>   {
->>  -	uint32_t ctrl =3D jz4740_timer_get_ctrl(pwm->pwm);
->>  +	struct jz4740_pwm_chip *jz =3D to_jz4740(chip);
->>=20
->>  -	ctrl |=3D JZ_TIMER_CTRL_PWM_ENABLE;
->>  -	jz4740_timer_set_ctrl(pwm->hwpwm, ctrl);
->>  -	jz4740_timer_enable(pwm->hwpwm);
->>  +	/* Enable PWM output */
->>  +	regmap_update_bits(jz->map, TCU_REG_TCSRc(pwm->hwpwm),
->>  +				TCU_TCSR_PWM_EN, TCU_TCSR_PWM_EN);
->=20
-> Usually follow-up lines are indented to the matching parenthesis.
+I see that you have pulled 3 patches.
+Please take also this patch, which is actually enabling the feature.
 
-OK.
+Regards,
+Lukasz
 
->>  [...]
->>   static int jz4740_pwm_config(struct pwm_chip *chip, struct=20
->> pwm_device *pwm,
->>   			     int duty_ns, int period_ns)
->>   {
->>   	struct jz4740_pwm_chip *jz4740 =3D to_jz4740(pwm->chip);
->>  +	struct clk *clk =3D jz4740->clks[pwm->hwpwm];
->>  +	unsigned long rate, new_rate, period, duty;
->>   	unsigned long long tmp;
->>  -	unsigned long period, duty;
->>  -	unsigned int prescaler =3D 0;
->>  -	uint16_t ctrl;
->>  +	unsigned int tcsr;
->>   	bool is_enabled;
->>=20
->>  -	tmp =3D (unsigned long long)clk_get_rate(jz4740->clk) * period_ns;
->>  -	do_div(tmp, 1000000000);
->>  -	period =3D tmp;
->>  +	rate =3D clk_get_rate(clk);
->>  +
->>  +	for (;;) {
->>  +		tmp =3D (unsigned long long) rate * period_ns;
->>  +		do_div(tmp, 1000000000);
->>=20
->>  -	while (period > 0xffff && prescaler < 6) {
->>  -		period >>=3D 2;
->>  -		++prescaler;
->>  +		if (tmp <=3D 0xffff)
->>  +			break;
->>  +
->>  +		new_rate =3D clk_round_rate(clk, rate / 2);
->>  +
->>  +		if (new_rate < rate)
->>  +			rate =3D new_rate;
->>  +		else
->>  +			return -EINVAL;
->>   	}
->>=20
->>  -	if (prescaler =3D=3D 6)
->>  -		return -EINVAL;
->>  +	clk_set_rate(clk, rate);
->=20
-> Maybe this could better live in a separate patch. If you split still
-> further to have the conversion to regmap in a single patch, then the
-> conversion to the clk_* functions and then improve the algorithm for=20
-> the
-> clk settings each of the patches is easier to review than this one=20
-> patch
-> that does all three things at once.
-
-I can try.
-
-> Best regards
-> Uwe
->=20
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=F6nig       =20
->     |
-> Industrial Linux Solutions                 |=20
-> http://www.pengutronix.de/  |
-=
+On 12/5/18 12:05 PM, Lukasz Luba wrote:
+> Devfreq framework supports suspend of its devices.
+> Call the the devfreq interface and allow devfreq devices preserve/restore
+> their states during suspend/resume.
+> 
+> Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>   drivers/base/power/main.c | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+> index a690fd4..0992e67 100644
+> --- a/drivers/base/power/main.c
+> +++ b/drivers/base/power/main.c
+> @@ -32,6 +32,7 @@
+>   #include <trace/events/power.h>
+>   #include <linux/cpufreq.h>
+>   #include <linux/cpuidle.h>
+> +#include <linux/devfreq.h>
+>   #include <linux/timer.h>
+>   
+>   #include "../base.h"
+> @@ -1078,6 +1079,7 @@ void dpm_resume(pm_message_t state)
+>   	dpm_show_time(starttime, state, 0, NULL);
+>   
+>   	cpufreq_resume();
+> +	devfreq_resume();
+>   	trace_suspend_resume(TPS("dpm_resume"), state.event, false);
+>   }
+>   
+> @@ -1852,6 +1854,7 @@ int dpm_suspend(pm_message_t state)
+>   	trace_suspend_resume(TPS("dpm_suspend"), state.event, true);
+>   	might_sleep();
+>   
+> +	devfreq_suspend();
+>   	cpufreq_suspend();
+>   
+>   	mutex_lock(&dpm_list_mtx);
+> 
