@@ -1,57 +1,102 @@
-From: Dalon Westergreen <dwesterg@gmail.com>
-Subject: Re: [PATCH] arch: arm: socfpga: arria10: Add stmmac ptp_ref clock
- to socdk devicetree
-Date: Thu, 13 Dec 2018 14:30:58 -0800
-Message-ID: <cab060d31b36a6a8d2618ac8a65ddf193d338c5e.camel@gmail.com>
-References: <20181213205910.26359-1-dalon.westergreen@linux.intel.com>
-         <c703c4d4-4442-19b1-8645-aa906b08f7e6@kernel.org>
-Reply-To: dwesterg@gmail.com
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH 1/4] ARM: dts: aspeed: Add sensors devices for Facebook
+Date: Fri, 14 Dec 2018 09:26:05 +1030
+Message-ID: <CACPK8XfAXDHqWcD=OKm4UhCh-+-7GBxL02Fi9_jgdmo2ZQZSjg@mail.gmail.com>
+References: <20181213195319.1333402-1-vijaykhemka@fb.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c703c4d4-4442-19b1-8645-aa906b08f7e6@kernel.org>
+In-Reply-To: <20181213195319.1333402-1-vijaykhemka@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@kernel.org>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thor.thayer@intel.com
+To: vijaykhemka@fb.com, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-12-13 at 15:56 -0600, Dinh Nguyen wrote:
-> 
-> On 12/13/18 2:59 PM, dwesterg@gmail.com wrote:
-> > From: Dalon Westergreen <dalon.westergreen@linux.intel.com>
-> > 
-> > Add the stmmac ptp_ref clock as it is configured in the arria10 socdk.
-> > The stmmac driver defaults the ptp_ref clock to the main stmmac clock
-> > if the ptp_ref clock is not set in the devicetree.  This is inapprotiate
-> 
-> s/inapprotiate/inappropriate
-> 
-> > for the arria10 socdk.
-> > 
-> > Signed-off-by: Dalon Westergreen <dalon.westergreen@linux.intel.com>
-> > ---
-> >  arch/arm/boot/dts/socfpga_arria10_socdk.dtsi | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-> > b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-> > index 2a7466891d0e..58bfa84dcdb3 100644
-> > --- a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-> > +++ b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-> > @@ -74,7 +74,8 @@
-> >  &gmac0 {
-> >  	phy-mode = "rgmii";
-> >  	phy-addr = <0xffffffff>; /* probe for phy addr */
-> > -
-> > +	clocks = <&l4_mp_clk>, <&peri_emac_ptp_clk>;
-> > +	clock-names = "stmmaceth", "ptp_ref";
-> >  	
-> These should go into the base arria10 dtsi at socfpga_arria10.dtsi?
-> Should the other gmacs get the same updates?
+On Fri, 14 Dec 2018 at 06:23, Vijay Khemka <vijaykhemka@fb.com> wrote:
+>
+> Added ADC and other sensor devices in Facebook Tiogapass device tree.
+>
+> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+> ---
+>  .../dts/aspeed-bmc-facebook-tiogapass.dts     | 33 +++++++++++++++++--
+>  1 file changed, 31 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+> index f8e7b71af7e6..58bbe08d3ba7 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+> @@ -21,6 +21,25 @@
+>         memory@80000000 {
+>                 reg = <0x80000000 0x20000000>;
+>         };
+> +
+> +       iio-hwmon {
+> +               compatible = "iio-hwmon";
+> +               oemname0 = "MB_P3V3";
+> +               oemname1 = "MB_P5V";
+> +               oemname2 = "MB_P12V";
+> +               oemname3 = "MB_P1V05";
+> +               oemname4 = "MB_PVNN_PCH_STBY";
+> +               oemname5 = "MB_P3V3_STBY";
+> +               oemname6 = "MB_P5V_STBY";
 
-Agreed, I will send a new patch set that addresses cv/av, a10, and s10.
+"oemname" isn't part of the upstream bindings. Is this something you
+have patches for?
 
-> 
-> Also the patch header should be "ARM: dts: arria10:"
-> 
-> Dinh
+The other parts of the patch lgtm.
+
+> +               io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>,
+> +                                       <&adc 4>, <&adc 5>, <&adc 6>;
+> +       };
+> +
+> +       iio-hwmon-battery {
+> +               oemname0 = "MB_P3V_BAT";
+> +               compatible = "iio-hwmon";
+> +               io-channels = <&adc 7>;
+> +       };
+>  };
+>
+>  &fmc {
+> @@ -64,6 +83,10 @@
+>         use-ncsi;
+>  };
+>
+> +&adc {
+> +       status = "okay";
+> +};
+> +
+>  &i2c0 {
+>         status = "okay";
+>         //Airmax Conn B, CPU0 PIROM, CPU1 PIROM
+> @@ -122,6 +145,10 @@
+>
+>  &i2c8 {
+>         status = "okay";
+> +       tmp421@1f {
+> +               compatible = "ti,tmp421";
+> +               reg = <0x1f>;
+> +       };
+>         //Mezz Sensor SMBus
+>  };
+>
+> @@ -134,13 +161,15 @@
+>         status = "okay";
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
+> +       oemname0 = "System_Fan_Connector_1";
+> +       oemname1 = "System_Fan_Connector_3";
+>         fan@0 {
+>                 reg = <0x00>;
+>                 aspeed,fan-tach-ch = /bits/ 8 <0x00>;
+>         };
+>
+>         fan@1 {
+> -               reg = <0x00>;
+> -               aspeed,fan-tach-ch = /bits/ 8 <0x01>;
+> +               reg = <0x01>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x02>;
+>         };
+>  };
+> --
+> 2.17.1
+>
