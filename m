@@ -1,48 +1,71 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: sdm845: Add interconnect
- for GPU
-Date: Thu, 13 Dec 2018 10:29:57 -0800
-Message-ID: <CAD=FV=Uc8dga=E5Yz+Tz5H672Qk1pV3jTomgwrfwZLo+sHBJxg@mail.gmail.com>
-References: <20181213173149.6975-1-jcrouse@codeaurora.org>
- <20181213173149.6975-3-jcrouse@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181213173149.6975-3-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] arm64: dts: qcom: qcs404: Fix regulator supply names
+Date: Thu, 13 Dec 2018 10:32:00 -0800
+Message-ID: <20181213183200.3204-1-bjorn.andersson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nicolas Dechesne <nicolas.dechesne@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBUaHUsIERlYyAxMywgMjAxOCBhdCA5OjMyIEFNIEpvcmRhbiBDcm91c2UgPGpjcm91
-c2VAY29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+Cj4gRGVmaW5lIGFuIGludGVyY29ubmVjdCBwb3J0
-IGZvciB0aGUgR1BVIHRvIHNldCBidXMKPiBjYXBhYmlsaXRpZXMuCj4KPiBTaWduZWQtb2ZmLWJ5
-OiBKb3JkYW4gQ3JvdXNlIDxqY3JvdXNlQGNvZGVhdXJvcmEub3JnPgo+IC0tLQo+ICBhcmNoL2Fy
-bTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kgfCAzICsrKwo+ICAxIGZpbGUgY2hhbmdlZCwg
-MyBpbnNlcnRpb25zKCspCj4KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9xY29t
-L3NkbTg0NS5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpCj4gaW5k
-ZXggMGE1ZGRmYzRjNTliLi45MzIzZjIxMWNhNDAgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9i
-b290L2R0cy9xY29tL3NkbTg0NS5kdHNpCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9xY29t
-L3NkbTg0NS5kdHNpCj4gQEAgLTEzNzAsNiArMTM3MCw5IEBACj4KPiAgICAgICAgICAgICAgICAg
-ICAgICAgICBvcGVyYXRpbmctcG9pbnRzLXYyID0gPCZncHVfb3BwX3RhYmxlPjsKPgo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgIGludGVyY29ubmVjdHMgPSA8JnFub2MgTUFTVEVSX0dGWDNEICZx
-bm9jIFNMQVZFX0VCSTE+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIGludGVyY29ubmVjdC1u
-YW1lcyA9ICJnZngtbWVtIjsKClRoYW5rcyBmb3Igc2VuZGluZyB0aGlzIHBhdGNoLiAgVW5mb3J0
-dW5hdGVseSB0aGUgaW50ZXJjb25uZWN0IG5vZGUgaXMKbm90IGNhbGxlZCAicW5vYyIgYW55bW9y
-ZS4gIEl0J3MgY2FsbGVkICImcnNjX2hsb3MiIGluIHYxMiBvZiBHZW9yZ2kncwpwYXRjaHNldDoK
-Cmh0dHBzOi8vbGttbC5rZXJuZWwub3JnL3IvMjAxODEyMDgxNzAyMTYuMzI1NTUtNy1nZW9yZ2ku
-ZGpha292QGxpbmFyby5vcmcKCkNhbiB5b3UgcmVwb3N0IHdpdGggdGhhdCBmaXggKHRoZSBiaW5k
-aW5ncyBwYXRjaCBzaG91bGQgYmUgdXBkYXRlZAp0b28pPyAgT3RoZXIgdGhhbiB0aGF0IGZlZWwg
-ZmVlbCBmcmVlIHRvIGFkZCBteSBSZXZpZXdlZC1ieSB0byB0aGlzCnBhdGNoLgoKVGhhbmtzIQoK
-Ci1Eb3VnCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZy
-ZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+The regulator definition got their supply names cleaned up during
+upstreaming, so they no longer match the driver defined names. Update
+the supply names.
+
+Also fill out the missing voltage of SMPS 5.
+
+Fixes: 0b363f5b871c ("arm64: dts: qcom: qcs404: Add PMS405 RPM regulators")
+Reported-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 28 ++++++++++++------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+index a39924efebe4..d6cc3a96530e 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+@@ -37,18 +37,18 @@
+ 	pms405-regulators {
+ 		compatible = "qcom,rpm-pms405-regulators";
+ 
+-		vdd-s1-supply = <&vph_pwr>;
+-		vdd-s2-supply = <&vph_pwr>;
+-		vdd-s3-supply = <&vph_pwr>;
+-		vdd-s4-supply = <&vph_pwr>;
+-		vdd-s5-supply = <&vph_pwr>;
+-		vdd-l1-l2-supply = <&vreg_s5_1p35>;
+-		vdd-l3-l8-supply = <&vreg_s5_1p35>;
+-		vdd-l4-supply = <&vreg_s5_1p35>;
+-		vdd-l5-l6-supply = <&vreg_s4_1p8>;
+-		vdd-l7-supply = <&vph_pwr>;
+-		vdd-l9-supply = <&vreg_s5_1p35>;
+-		vdd-l10-l11-l12-l13-supply = <&vph_pwr>;
++		vdd_s1-supply = <&vph_pwr>;
++		vdd_s2-supply = <&vph_pwr>;
++		vdd_s3-supply = <&vph_pwr>;
++		vdd_s4-supply = <&vph_pwr>;
++		vdd_s5-supply = <&vph_pwr>;
++		vdd_l1_l2-supply = <&vreg_s5_1p35>;
++		vdd_l3_l8-supply = <&vreg_s5_1p35>;
++		vdd_l4-supply = <&vreg_s5_1p35>;
++		vdd_l5_l6-supply = <&vreg_s4_1p8>;
++		vdd_l7-supply = <&vph_pwr>;
++		vdd_l9-supply = <&vreg_s5_1p35>;
++		vdd_l10_l11_l12_l13-supply = <&vph_pwr>;
+ 
+ 		vreg_s4_1p8: s4 {
+ 			regulator-min-microvolt = <1728000>;
+@@ -56,8 +56,8 @@
+ 		};
+ 
+ 		vreg_s5_1p35: s5 {
+-			regulator-min-microvolt = <>;
+-			regulator-max-microvolt = <>;
++			regulator-min-microvolt = <1352000>;
++			regulator-max-microvolt = <1352000>;
+ 		};
+ 
+ 		vreg_l1_1p3: l1 {
+-- 
+2.18.0
