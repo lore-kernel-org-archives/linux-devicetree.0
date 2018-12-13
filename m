@@ -1,51 +1,39 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH] dt-bindings: PCI: rcar: Add device tree support for r8a774c0
-Date: Thu, 13 Dec 2018 20:21:40 +0000
-Message-ID: <1544732500-6866-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [PATCH] media: dt-bindings: rcar-csi2: Add r8a774c0
+Date: Thu, 13 Dec 2018 20:21:49 +0000
+Message-ID: <1544732509-6911-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Add PCIe support for the RZ/G2E (a.k.a. R8A774C0).
+Add the compatible string for RZ/G2E (a.k.a. R8A774C0) to the
+list of supported SoCs.
 
 Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 ---
- Documentation/devicetree/bindings/pci/rcar-pci.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-index 976ef7b..bb89fed 100644
---- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-@@ -3,6 +3,7 @@
- Required properties:
- compatible: "renesas,pcie-r8a7743" for the R8A7743 SoC;
- 	    "renesas,pcie-r8a7744" for the R8A7744 SoC;
-+	    "renesas,pcie-r8a774c0" for the R8A774C0 SoC;
- 	    "renesas,pcie-r8a7779" for the R8A7779 SoC;
- 	    "renesas,pcie-r8a7790" for the R8A7790 SoC;
- 	    "renesas,pcie-r8a7791" for the R8A7791 SoC;
-@@ -13,7 +14,8 @@ compatible: "renesas,pcie-r8a7743" for the R8A7743 SoC;
- 	    "renesas,pcie-r8a77990" for the R8A77990 SoC;
- 	    "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 or
- 				     RZ/G1 compatible device.
--	    "renesas,pcie-rcar-gen3" for a generic R-Car Gen3 compatible device.
-+	    "renesas,pcie-rcar-gen3" for a generic R-Car Gen3 or
-+				     RZ/G2 compatible device.
+diff --git a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+index 2824489..11cf38d 100644
+--- a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
++++ b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+@@ -2,12 +2,13 @@ Renesas R-Car MIPI CSI-2
+ ------------------------
  
- 	    When compatible with the generic version, nodes must list the
- 	    SoC-specific version corresponding to the platform first
-@@ -37,7 +39,8 @@ compatible: "renesas,pcie-r8a7743" for the R8A7743 SoC;
+ The R-Car CSI-2 receiver device provides MIPI CSI-2 capabilities for the
+-Renesas R-Car family of devices. It is used in conjunction with the
++Renesas R-Car and RZ/G2 family of devices. It is used in conjunction with the
+ R-Car VIN module, which provides the video capture capabilities.
  
- Optional properties:
- - phys: from common PHY binding: PHY phandle and specifier (only make sense
--	for R-Car gen3 SoCs where the PCIe PHYs have their own register blocks).
-+	for R-Car gen3 and RZ/G2 SoCs where the PCIe PHYs have their own
-+	register blocks).
- - phy-names: from common PHY binding: should be "pcie".
- 
- Example:
+ Mandatory properties
+ --------------------
+  - compatible: Must be one or more of the following
++   - "renesas,r8a774c0-csi2" for the R8A774C0 device.
+    - "renesas,r8a7795-csi2" for the R8A7795 device.
+    - "renesas,r8a7796-csi2" for the R8A7796 device.
+    - "renesas,r8a77965-csi2" for the R8A77965 device.
 -- 
 2.7.4
