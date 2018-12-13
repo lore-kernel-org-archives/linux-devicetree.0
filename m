@@ -1,43 +1,59 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/8] mfd: axp20x: name voltage ramping
- define properly
-Date: Thu, 13 Dec 2018 14:46:56 +0000
-Message-ID: <20181213144656.GJ10669@sirena.org.uk>
-References: <cover.4110554ae84987dedb8b58888a8a63d6b7f98c72.1544466940.git-series.plaes@plaes.org>
- <01367c4f4f1e174fefbef9aac645f6792bda07e5.1544466940.git-series.plaes@plaes.org>
- <20181213115506.GD10669@sirena.org.uk>
- <20181213132802.GQ4497@dell>
-Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 05/12] PCI: aardvark: add suspend to RAM support
+Date: Thu, 13 Dec 2018 14:52:25 +0000
+Message-ID: <20181213145225.GA28015@red-moon>
+References: <20181123141831.8214-1-miquel.raynal@bootlin.com>
+ <1999610.6DN9RK2Tt3@aspire.rjw.lan>
+ <20181204094558.GA24588@e107981-ln.cambridge.arm.com>
+ <1966692.fVZYlVgWHv@aspire.rjw.lan>
+ <20181211141627.GA526@e107981-ln.cambridge.arm.com>
+ <154469162632.19322.13092710881803732022@swboyd.mtv.corp.google.com>
+ <20181213105302.GA5330@e107981-ln.cambridge.arm.com>
+ <20181213153000.245d7d5f@xps13>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="F4+N/OgRSdC8YnqX"
-Return-path: <linux-sunxi+bncBDQ2L75W5QGBB2PBZHQAKGQESTOHKKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181213132802.GQ4497@dell>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20181213153000.245d7d5f@xps13>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, sudeep.holla@arm.com, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Dec 13, 2018 at 03:30:00PM +0100, Miquel Raynal wrote:
+> Hi Lorenzo,
+> 
+> > > If that's really the case, then I can see how one device and it's
+> > > children are suspended and the irq for it is disabled but the providing
+> > > devices (clk, regulator, bus controller, etc.) are still fully active
+> > > and not suspended but in fact completely usable and able to service
+> > > interrupts. If that all makes sense, then I would answer the question
+> > > with a definitive "yes it's all fine" because the clk consumer could be
+> > > in the NOIRQ phase of its suspend but the clk provider wouldn't have
+> > > even started suspending yet when clk_disable_unprepare() is called.  
+> > 
+> > That's a very good summary and address my concern, I still question this
+> > patch correctness (and many others that carry out clk operations in S2R
+> > NOIRQ phase), they may work but do not tell me they are rock solid given
+> > your accurate summary above.
+> 
+> I understand your concern but I don't see any alternative right now
+> and a deep rework of the PM core to respect such dependency is not
+> something that can be done in a reasonable amount of time. With
+> regard to this constraint, do you think it is worth blocking the
+> series?
 
---F4+N/OgRSdC8YnqX
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+I think we agree that, depending on what HW/SW driver manage
+this PCI controller clocks, this driver may well become broken,
+the driver itself has no idea what's behind the clock API and
+can end up waiting for an event forever.
 
-On Thu, Dec 13, 2018 at 01:28:02PM +0000, Lee Jones wrote:
-> On Thu, 13 Dec 2018, Mark Brown wrote:
+This does not leave me in a comfortable position to merge code that I
+know has flaws.
 
-> > What's going on with this patch?  Will you be applying it or is this an
-> > ack for it to be applied with the rest of the series?
+I won't merge it for v4.21, I need more time (and feedback) to
+understand what can be done to make this driver (and many others)
+more robust.
 
-> I don't have anything else queued for include/linux/mfd/axp20x.h, so
-> you can take it if you want.  Just make sure you 's/-for-MFD//'. 
-
-Great, thanks!
---F4+N/OgRSdC8YnqX--
+Thanks,
+Lorenzo
