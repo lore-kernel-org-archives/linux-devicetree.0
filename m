@@ -1,62 +1,60 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] dt-bindings: display: renesas: lvds: Document r8a774c0 bindings
-Date: Thu, 13 Dec 2018 23:38:05 +0200
-Message-ID: <16274213.zDsrymDxqi@avalon>
-References: <1544732454-6633-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: Re: [PATCH] dt-bindings: display: renesas: du: Document r8a774c0
+ bindings
+Date: Thu, 13 Dec 2018 23:38:07 +0200
+Message-ID: <2853413.TK89vclHxN@avalon>
+References: <1544732445-6588-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544732454-6633-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1544732445-6588-1-git-send-email-fabrizio.castro@bp.renesas.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, David Airlie <airlied@linux.ie>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio,
-
-Thank you for the patch.
-
-On Thursday, 13 December 2018 22:20:54 EET Fabrizio Castro wrote:
-> The RZ/G2E (r8a774c0) supports two LVDS channels. Extend the binding to
-> support them.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-and applied to my tree.
-
-> ---
->  Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-> b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt index
-> 3aeb0ec..cb7c328 100644
-> --- a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-> +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-> @@ -8,6 +8,7 @@ Required properties:
-> 
->  - compatible : Shall contain one of
->    - "renesas,r8a7743-lvds" for R8A7743 (RZ/G1M) compatible LVDS encoders
-> +  - "renesas,r8a774c0-lvds" for R8A774C0 (RZ/G2E) compatible LVDS encoders
->    - "renesas,r8a7790-lvds" for R8A7790 (R-Car H2) compatible LVDS encoders
->    - "renesas,r8a7791-lvds" for R8A7791 (R-Car M2-W) compatible LVDS
-> encoders - "renesas,r8a7793-lvds" for R8A7793 (R-Car M2-N) compatible LVDS
-> encoders @@ -24,7 +25,7 @@ Required properties:
->  - clock-names: Name of the clocks. This property is model-dependent.
->    - The functional clock, which mandatory for all models, shall be listed
->      first, and shall be named "fck".
-> -  - On R8A77990 and R8A77995, the LVDS encoder can use the EXTAL or
-> +  - On R8A77990, R8A77995 and R8A774C0, the LVDS encoder can use the EXTAL
-> or DU_DOTCLKINx clocks. Those clocks are optional. When supplied they must
-> be named "extal" and "dclkin.x" respectively, with "x" being the
-> DU_DOTCLKIN numerical index.
-
-
--- 
-Regards,
-
-Laurent Pinchart
+SGkgRmFicml6aW8sCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIFRodXJzZGF5LCAxMyBE
+ZWNlbWJlciAyMDE4IDIyOjIwOjQ1IEVFVCBGYWJyaXppbyBDYXN0cm8gd3JvdGU6Cj4gRG9jdW1l
+bnQgdGhlIFJaL0cyRSAoYS5rLmEuIHI4YTc3NGMwKSBTb0MgaW4gdGhlIFItQ2FyIERVIGJpbmRp
+bmdzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJv
+QGJwLnJlbmVzYXMuY29tPgoKUmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQu
+cGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4KCmFuZCBhcHBsaWVkIHRvIG15IHRyZWUuCgo+IC0t
+LQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1
+LnR4dCB8IDIgKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYg
+LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2Fz
+LGR1LnR4dAo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVu
+ZXNhcyxkdS50eHQgaW5kZXgKPiAzYzg1NWQ5Li5hZWRiMjJiIDEwMDY0NAo+IC0tLSBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JlbmVzYXMsZHUudHh0Cj4gKysr
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50
+eHQKPiBAQCAtNyw2ICs3LDcgQEAgUmVxdWlyZWQgUHJvcGVydGllczoKPiAgICAgIC0gInJlbmVz
+YXMsZHUtcjhhNzc0NCIgZm9yIFI4QTc3NDQgKFJaL0cxTikgY29tcGF0aWJsZSBEVQo+ICAgICAg
+LSAicmVuZXNhcyxkdS1yOGE3NzQ1IiBmb3IgUjhBNzc0NSAoUlovRzFFKSBjb21wYXRpYmxlIERV
+Cj4gICAgICAtICJyZW5lc2FzLGR1LXI4YTc3NDcwIiBmb3IgUjhBNzc0NzAgKFJaL0cxQykgY29t
+cGF0aWJsZSBEVQo+ICsgICAgLSAicmVuZXNhcyxkdS1yOGE3NzRjMCIgZm9yIFI4QTc3NEMwIChS
+Wi9HMkUpIGNvbXBhdGlibGUgRFUKPiAgICAgIC0gInJlbmVzYXMsZHUtcjhhNzc3OSIgZm9yIFI4
+QTc3NzkgKFItQ2FyIEgxKSBjb21wYXRpYmxlIERVCj4gICAgICAtICJyZW5lc2FzLGR1LXI4YTc3
+OTAiIGZvciBSOEE3NzkwIChSLUNhciBIMikgY29tcGF0aWJsZSBEVQo+ICAgICAgLSAicmVuZXNh
+cyxkdS1yOGE3NzkxIiBmb3IgUjhBNzc5MSAoUi1DYXIgTTItVykgY29tcGF0aWJsZSBEVQo+IEBA
+IC01Nyw2ICs1OCw3IEBAIGNvcnJlc3BvbmRpbmcgdG8gZWFjaCBEVSBvdXRwdXQuCj4gICBSOEE3
+NzQ0IChSWi9HMU4pICAgICAgIERQQUQgMCAgICAgICAgIExWRFMgMCAgICAgICAgIC0gICAgICAg
+ICAgICAgIC0KPiAgIFI4QTc3NDUgKFJaL0cxRSkgICAgICAgRFBBRCAwICAgICAgICAgRFBBRCAx
+ICAgICAgICAgLSAgICAgICAgICAgICAgLQo+ICAgUjhBNzc0NzAgKFJaL0cxQykgICAgICBEUEFE
+IDAgICAgICAgICBEUEFEIDEgICAgICAgICBMVkRTIDAgICAgICAgICAtCj4gKyBSOEE3NzRDMCAo
+UlovRzJFKSAgICAgIERQQUQgMCAgICAgICAgIExWRFMgMCAgICAgICAgIExWRFMgMSAgICAgICAg
+IC0KPiAgIFI4QTc3NzkgKFItQ2FyIEgxKSAgICAgRFBBRCAwICAgICAgICAgRFBBRCAxICAgICAg
+ICAgLSAgICAgICAgICAgICAgLQo+ICAgUjhBNzc5MCAoUi1DYXIgSDIpICAgICBEUEFEIDAgICAg
+ICAgICBMVkRTIDAgICAgICAgICBMVkRTIDEgICAgICAgICAtCj4gICBSOEE3NzkxIChSLUNhciBN
+Mi1XKSAgIERQQUQgMCAgICAgICAgIExWRFMgMCAgICAgICAgIC0gICAgICAgICAgICAgIC0KCgot
+LSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCgoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
