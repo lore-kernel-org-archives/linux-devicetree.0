@@ -1,36 +1,120 @@
-From: Marek Behun <marek.behun@nic.cz>
-Subject: Re: [PATCH RFC] ARM64: dts: marvell: Add DTS file for Turris Mox
-Date: Thu, 13 Dec 2018 05:08:29 +0100
-Message-ID: <20181213050829.6d942510@nic.cz>
-References: <20181113134408.5681-1-marek.behun@nic.cz>
-        <20181204203706.GA25038@bogus>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH v7 00/10] Add power domain driver for corners on
+ msm8996/sdm845
+Date: Thu, 13 Dec 2018 09:46:08 +0530
+Message-ID: <e6b30187-b982-f26c-a0da-c5532108a332@codeaurora.org>
+References: <20181212092131.13046-1-rnayak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181204203706.GA25038@bogus>
+In-Reply-To: <20181212092131.13046-1-rnayak@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, linux-arm-kernel@lists.infradead.org, Andrew Lunn <andrew@lunn.ch>
+To: andy.gross@linaro.org, robh@kernel.org, viresh.kumar@linaro.org, sboyd@kernel.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob
+> Changes in v7:
+> * Rebased on Andy's for-next, and used the updated cmd_db_read_aux_data()
+[]..
 
-On Tue, 4 Dec 2018 14:37:06 -0600
-Rob Herring <robh@kernel.org> wrote:
+Hey Andy, just wanted to let you know that this series (v7) is now
+well reviewed/ack'ed and ready to land (except for the last 3 patches)
+Patch 08/10 will need to go via Ulf/Rafael and Patch 09/10 depends on it
+for compilation, also Patch 10/10 has other dependencies which need to
+land via the power tree.
 
-> > +
-> > +	switch1@2 {  
+So Patch 01/10 to 07/10 from this series are good to be pulled in,
+whenever you think is the right time, I am guessing its probably
+too late for 4.21?
+
+Thanks,
+Rajendra
+
 > 
-> Ideally, we shouldn't have this switch0, switch1, etc.
-
-I can rename peridot switches (switch0@10, switch1@11, switch2@12 to
-swtich@10, switch@11, switch@12), but I cannot rename Topaz to
-switch@2. Topaz always has MDIO address 2, because there can be only
-one, but it can be connected either directly or after the first or
-second peridot. Therefore I have three different nodes, each describing
-different connection to the previous switch/cpu.
-
-How should I rename it?
-
-Marek
+> Changes in v6:
+> * OPP binding updates for qcom,level reviewed by Rob
+> * DT bindings for rpmpd and rpmhpd updated to specify the
+> OPP tables as child nodes of the power-controller itself
+> * Removed some module specific remains from the drivers,
+> now that they can only be built-in
+> * Added a simple_opp_to_performance_state() helper
+> 
+> Changes in v5:
+> * First 6 patches are unchanged
+> * Patch 7/8 adds the DT node for rpmh power-controller on sdm845 and the
+> corresponding OPP tables for it to describe the performance states
+> * Patch 8/8 adds a parent/child relationship across mx/cx and mx_ao/cx_ao
+> as needed on sdm845 platform. This patch is dependent on the series from
+> Viresh [1] which adds support to propogate performance states across the
+> power domain hierarchy which is still being reviewed
+> 
+> Changes in v4:
+> * Included the patch to add qcom-opp bindings (dropped accidentally in v3)
+> * merged the patches to add bindings for rpm and rpmh, added consumer binding example
+> * Made the drivers built in, removed .remove
+> * Added better description in changelog for PATCH 6/6
+> * Updated rpmhpd_aggregate_corner() based on Davids feedback
+> * rpmhpd_set_performance_state() returns max corner, in cases where its called
+> with an INT_MAX
+> * Dropped the patch to max vote on all corners at init, the patch did not
+> work anyway, and it shouldn't be needed now
+> 
+> Changes in v3:
+> * Bindings split into seperate patches
+> * Bindings updated to remove duplicate OPP table phandles
+> * DT headers defining macros for Power domain indexes and OPP levels
+> * Optimisations to use rpmh_write_async() whereever applicable
+> * Fixed up handling of ACTIVE_ONLY/WAKE_ONLY/SLEEP voting for RPMh
+> * Fixed the vlvl to hlvl conversions in set_performance
+> * Other minor fixes based on review of v2
+> * TODO: This series does not handle the case where all VDD_MX votes
+> should be higher than VDD_CX from APPs, as pointed out
+> by David Collins in v2. This needs support at genpd to propogate performance
+> state up the parents, if we model these as Parent/Child to handle the
+> interdependency.
+> 
+> Changes in v2:
+> * added a power domain driver for sdm845 which supports communicating to RPMh
+> * dropped the changes to sdhc driver to move over to using OPP
+> as there is active discussion on using OPP as the interface vs
+> handling all of it in clock drivers
+> * Other minor binding updates based on review of v1
+> 
+> With performance state support for genpd/OPP merged, this is an effort
+> to model a power domain driver to communicate corner/level
+> values for qualcomm platforms to RPM (Remote Power Manager) and RPMh.
+> 
+> [1] https://lkml.org/lkml/2018/11/26/333
+> 
+> Rajendra Nayak (10):
+>    dt-bindings: opp: Introduce qcom-opp bindings
+>    dt-bindings: power: Add qcom rpm power domain driver bindings
+>    soc: qcom: rpmpd: Add a Power domain driver to model corners
+>    soc: qcom: rpmpd: Add support for get/set performance state
+>    arm64: dts: msm8996: Add rpmpd device node
+>    soc: qcom: rpmhpd: Add RPMh power domain driver
+>    arm64: dts: sdm845: Add rpmh powercontroller node
+>    PM / Domains: Add a simple_opp_to_performance_state() helper
+>    soc: qcom: rpmpd: Use simple_opp_to_performance_state() helper
+>    soc: qcom: rpmhpd: Mark mx as a parent for cx
+> 
+>   .../devicetree/bindings/opp/qcom-opp.txt      |  25 ++
+>   .../devicetree/bindings/power/qcom,rpmpd.txt  | 146 +++++++
+>   arch/arm64/boot/dts/qcom/msm8996.dtsi         |  34 ++
+>   arch/arm64/boot/dts/qcom/sdm845.dtsi          |  51 +++
+>   drivers/base/power/domain.c                   |  17 +
+>   drivers/soc/qcom/Kconfig                      |  18 +
+>   drivers/soc/qcom/Makefile                     |   2 +
+>   drivers/soc/qcom/rpmhpd.c                     | 402 ++++++++++++++++++
+>   drivers/soc/qcom/rpmpd.c                      | 317 ++++++++++++++
+>   include/dt-bindings/power/qcom-rpmpd.h        |  39 ++
+>   include/linux/pm_domain.h                     |   9 +
+>   11 files changed, 1060 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/opp/qcom-opp.txt
+>   create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+>   create mode 100644 drivers/soc/qcom/rpmhpd.c
+>   create mode 100644 drivers/soc/qcom/rpmpd.c
+>   create mode 100644 include/dt-bindings/power/qcom-rpmpd.h
+> 
