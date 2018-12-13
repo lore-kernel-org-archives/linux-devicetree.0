@@ -1,68 +1,44 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v3 4/5] drivers: power: suspend: call devfreq
- suspend/resume
-Date: Thu, 13 Dec 2018 15:35:25 +0100
-Message-ID: <ce1d415d-2a00-ef0e-6b58-23d16cffee4a@partner.samsung.com>
-References: <1544007956-28889-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20181205110623eucas1p120f9d8b38822bf856a5b7d427d00e49f@eucas1p1.samsung.com>
-        <1544007956-28889-5-git-send-email-l.luba@partner.samsung.com>
+From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 10/12] ARM64: dts: marvell: armada-3720-espressobin:
+ declare PCIe reset GPIO
+Date: Thu, 13 Dec 2018 15:36:19 +0100
+Message-ID: <20181213153619.499aab66@windsurf>
+References: <20181212102142.16053-1-miquel.raynal@bootlin.com>
+        <20181212102142.16053-11-miquel.raynal@bootlin.com>
+        <20181213153306.4fc3b511@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544007956-28889-5-git-send-email-l.luba@partner.samsung.com>
-Content-Language: en-US
+In-Reply-To: <20181213153306.4fc3b511@xps13>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: tjakobi@math.uni-bielefeld.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, cw00.choi@samsung.com, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafael,
+Hello,
 
-I see that you have pulled 3 patches.
-Please take also this patch, which is actually enabling the feature.
+On Thu, 13 Dec 2018 15:33:06 +0100, Miquel Raynal wrote:
 
-Regards,
-Lukasz
+> I will re-send a series without this patch. I think it does not hurt to
+> keep the previous patch adding the pinmux setting in the
+> Armada-37xx.dtsi file even without using it, so I will drop only this
+> patch.
 
-On 12/5/18 12:05 PM, Lukasz Luba wrote:
-> Devfreq framework supports suspend of its devices.
-> Call the the devfreq interface and allow devfreq devices preserve/restore
-> their states during suspend/resume.
-> 
-> Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->   drivers/base/power/main.c | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-> index a690fd4..0992e67 100644
-> --- a/drivers/base/power/main.c
-> +++ b/drivers/base/power/main.c
-> @@ -32,6 +32,7 @@
->   #include <trace/events/power.h>
->   #include <linux/cpufreq.h>
->   #include <linux/cpuidle.h>
-> +#include <linux/devfreq.h>
->   #include <linux/timer.h>
->   
->   #include "../base.h"
-> @@ -1078,6 +1079,7 @@ void dpm_resume(pm_message_t state)
->   	dpm_show_time(starttime, state, 0, NULL);
->   
->   	cpufreq_resume();
-> +	devfreq_resume();
->   	trace_suspend_resume(TPS("dpm_resume"), state.event, false);
->   }
->   
-> @@ -1852,6 +1854,7 @@ int dpm_suspend(pm_message_t state)
->   	trace_suspend_resume(TPS("dpm_suspend"), state.event, true);
->   	might_sleep();
->   
-> +	devfreq_suspend();
->   	cpufreq_suspend();
->   
->   	mutex_lock(&dpm_list_mtx);
-> 
+I tend to disagree here (but perhaps you'll have other arguments to
+convince me otherwise): the GPIO used for PCIe reset is a completely
+board-specific thing. You can chose whatever GPIO you want, and each
+board can be different. Therefore, there is no reason to have such a
+pinmux configuration at the SoC level (.dtsi), it should be within the
+particular board that uses that pinmux configuration.
+
+This is a rule that we have applied to mvebu platforms in general, and
+which I believe is fairly common in many DTs.
+
+Best regards,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
