@@ -1,64 +1,57 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH] ARM: dts: omap4-sdp: Make ethernet working even if
- booted with latest u-boot
-Date: Thu, 13 Dec 2018 15:50:54 +0000
-Message-ID: <20181213155054.GK9507@n2100.armlinux.org.uk>
-References: <20181213135845.3965-1-peter.ujfalusi@ti.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v6 10/10] soc: qcom: rpmhpd: Mark mx as a parent for cx
+Date: Thu, 13 Dec 2018 17:02:43 +0100
+Message-ID: <CAPDyKFrY_9qHq_3NGHpOxCLRDV-D4RiaKm_Wckqxa5ukHcEt+Q@mail.gmail.com>
+References: <20181211094938.25086-1-rnayak@codeaurora.org> <20181211094938.25086-11-rnayak@codeaurora.org>
+ <CAPDyKFof-rkzmzibWOrAhDFysU=y+C8Bp0cK=_iht4=vmv-0vw@mail.gmail.com>
+ <00d91f90-ccf1-3486-0d42-0c4105058e61@codeaurora.org> <154456502486.17204.11345601448030201032@swboyd.mtv.corp.google.com>
+ <1c493bce-af67-2a4b-f903-8d39c39f7367@codeaurora.org> <154463956571.17204.13154447854211552369@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20181213135845.3965-1-peter.ujfalusi@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcousson@baylibre.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <154463956571.17204.13154447854211552369@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: swboyd@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, David Collins <collinsd@codeaurora.org>, Matthias Kaehlcke <mka@chromium.org>, DTML <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 13, 2018 at 03:58:45PM +0200, Peter Ujfalusi wrote:
-> The ethernet works in kernel only if we use some binary u-boot from the
-> past which have support for KS8851.
-> 
-> The u-boot sources are not available for this mysterious u-boot image
-> people tends to hold on... Mainline u-bott does not have ethernet support
-> for sdp4430 and if we use that the ethernet is not working.
-> 
-> After some debugging I have managed to get the ethernet working with
-> mainline u-boot while not breaking the networking with the case when we
-> boot with the mysterious binary u-boot.
-> 
-> Basically we were missing bunch of pinmux settings and the 'magic'
-> gpio_138 handling in kernel.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+On Wed, 12 Dec 2018 at 19:32, Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Rajendra Nayak (2018-12-11 20:13:13)
+> >
+> > >>> Just to make sure there are no conflicting hierarchical constraints
+> > >>> between idle management and performance state management!?
+> > >>>
+> > >
+> > > I'm not sure what idle states mean to the CX and MX domains. Would it be
+> > > some sort of idle state governor attached at genpd creation time that
+> > > would adjust the main SoC power rails when all devices attached are
+> > > idle? Maybe I don't understand how idle states are different from
+> > > performance states.
+> > > My understanding is that devices using these domains would almost always
+> > > expect their clk frequency and clk on/off state to decide what the
+> > > performance state is, unless they need to ignore clk state because they
+> > > aren't managing clks and bump up the voltage directly when the device is
+> > > active. Either way, devices are actively managing the voltage they need
+> > > these voltage domains to operate at by using the genpd performance
+> > > states APIs.
+> >
+> > I am not quite sure whats the point that you are trying to make here,
+> > but this is what I would expect the users of these genpds to do,
+> > regardless of if they have a clk dependency or not.
+> > When the device is active, vote for a performance state they need
+> > then request for the genpd to be on. When they are idle, request for the
+> > genpd to be turned off.
+> >
+>
+> I believe Ulf is asking because he's proposing to make genpd idle states
+> and genpd performance states orthogonal to each other. And to also make
+> performance states unaffected by the on/off state of the genpd.
 
-Hi Peter,
+Yes, that's one of the reasons.
 
-Digging up where my u-boot came from, I found:
+Anyway, I appreciate both of yours descriptive feedback, no further
+worries from my side!
 
-  https://plus.google.com/103895730806848715870/posts/cCq2CxDogW9
-
-Unfortunately, gitorious no longer exists, but I do still have a clone
-of that tree locally, containing:
-
-9f384308319e OMAP4SDP: Add Micrel KS8851 net chip support
-ae631b095a87 NET: Add driver for Micrel KS8851
-78e43f2a8987 ARMV7: OMAP: Add spi driver for OMAP3/OMAP4
-e576c6a9cbc9 omap4_common: config: remove I2C for SPL mode
-19d5934c4b3b ARM: OMAP4: Move TEXT_BASE down to non-HS limit
-
-plus some of my own modifications to fix the problems stated in that
-post.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Kind regards
+Uffe
