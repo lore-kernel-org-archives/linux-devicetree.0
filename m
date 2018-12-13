@@ -1,57 +1,76 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v6 10/10] soc: qcom: rpmhpd: Mark mx as a parent for cx
-Date: Thu, 13 Dec 2018 17:02:43 +0100
-Message-ID: <CAPDyKFrY_9qHq_3NGHpOxCLRDV-D4RiaKm_Wckqxa5ukHcEt+Q@mail.gmail.com>
-References: <20181211094938.25086-1-rnayak@codeaurora.org> <20181211094938.25086-11-rnayak@codeaurora.org>
- <CAPDyKFof-rkzmzibWOrAhDFysU=y+C8Bp0cK=_iht4=vmv-0vw@mail.gmail.com>
- <00d91f90-ccf1-3486-0d42-0c4105058e61@codeaurora.org> <154456502486.17204.11345601448030201032@swboyd.mtv.corp.google.com>
- <1c493bce-af67-2a4b-f903-8d39c39f7367@codeaurora.org> <154463956571.17204.13154447854211552369@swboyd.mtv.corp.google.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v8 15/26] pwm: jz4740: Add support for the JZ4725B
+Date: Thu, 13 Dec 2018 17:18:31 +0100
+Message-ID: <20181213161831.GC13531@ulmo>
+References: <20181212220922.18759-1-paul@crapouillou.net>
+ <20181212220922.18759-16-paul@crapouillou.net>
+ <20181213092409.ml4wpnzow2nnszkd@pengutronix.de>
+ <1544709795.18952.1@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="8NvZYKFJsRX2Djef"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154463956571.17204.13154447854211552369@swboyd.mtv.corp.google.com>
+Content-Disposition: inline
+In-Reply-To: <1544709795.18952.1@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: swboyd@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, David Collins <collinsd@codeaurora.org>, Matthias Kaehlcke <mka@chromium.org>, DTML <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mathieu Malaterre <malat@debian.org>, Ezequiel Garcia <ezequiel@collabora.co.uk>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Dec 2018 at 19:32, Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Rajendra Nayak (2018-12-11 20:13:13)
-> >
-> > >>> Just to make sure there are no conflicting hierarchical constraints
-> > >>> between idle management and performance state management!?
-> > >>>
-> > >
-> > > I'm not sure what idle states mean to the CX and MX domains. Would it be
-> > > some sort of idle state governor attached at genpd creation time that
-> > > would adjust the main SoC power rails when all devices attached are
-> > > idle? Maybe I don't understand how idle states are different from
-> > > performance states.
-> > > My understanding is that devices using these domains would almost always
-> > > expect their clk frequency and clk on/off state to decide what the
-> > > performance state is, unless they need to ignore clk state because they
-> > > aren't managing clks and bump up the voltage directly when the device is
-> > > active. Either way, devices are actively managing the voltage they need
-> > > these voltage domains to operate at by using the genpd performance
-> > > states APIs.
-> >
-> > I am not quite sure whats the point that you are trying to make here,
-> > but this is what I would expect the users of these genpds to do,
-> > regardless of if they have a clk dependency or not.
-> > When the device is active, vote for a performance state they need
-> > then request for the genpd to be on. When they are idle, request for the
-> > genpd to be turned off.
-> >
->
-> I believe Ulf is asking because he's proposing to make genpd idle states
-> and genpd performance states orthogonal to each other. And to also make
-> performance states unaffected by the on/off state of the genpd.
 
-Yes, that's one of the reasons.
+--8NvZYKFJsRX2Djef
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Anyway, I appreciate both of yours descriptive feedback, no further
-worries from my side!
+On Thu, Dec 13, 2018 at 03:03:15PM +0100, Paul Cercueil wrote:
+> Hi,
+>=20
+> Le jeu. 13 d=C3=A9c. 2018 =C3=A0 10:24, Uwe Kleine-K=C3=B6nig
+> <u.kleine-koenig@pengutronix.de> a =C3=A9crit :
+> > Hello,
+> >=20
+> > On Wed, Dec 12, 2018 at 11:09:10PM +0100, Paul Cercueil wrote:
+> > >  The PWM in the JZ4725B works the same as in the JZ4740, except that
+> > > it
+> > >  only has 6 channels available instead of 8.
+> >=20
+> > this driver is probed only from device tree? If yes, it might be
+> > sensible to specify the number of PWMs there and get it from there.
+> > There doesn't seem to be a generic binding for that, but there are
+> > several drivers that could benefit from it. (This is a bigger project
+> > though and shouldn't stop your patch. Still more as it already got
+> > Thierry's ack.)
+>=20
+> I think there needs to be a proper guideline, as there doesn't seem to be
+> a consensus about this. I learned from emails with Rob and Linus (Walleij)
+> that I should not have in devicetree what I can deduce from the compatible
+> string.
 
-Kind regards
-Uffe
+Correct. If the compatible string already defines the number of PWMs
+that the hardware exposes, there's no need to explicitly say so again in
+DT.
+
+Thierry
+
+--8NvZYKFJsRX2Djef
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlwShlcACgkQ3SOs138+
+s6FpGBAAnSdBj1VfdT/8QgKaKbqU4xM6IIM84lPPIcpnwOx61r4Q9wKVlcWX7I9h
+uYpGNc+ObutBYqeqCt73aJZ6AW9EQyvD47/D2dMHt6SexpCAse2Rg7OfwPxV3qN7
+NlfVdBSqtBGcrVZZLtZ3+JPkLzIUhl4UooMQo6j73FCRiww7k1B5YfdrGeN38kDA
+o8nMXKNuSRSXSF3KUNeDHx2mIB1BjRJJjW5pOwfIbQbO4EdhxHzkgS54UlZU/bUr
+z0gqwFMOGsRPrhSmvDv5CR5GKbbxC/YR3uPcAFOSgEuXr+1LEaEtzhTea5h1yokw
+POmWLezWZ6Y8RlhawFhnBWGg44E/HO1x5H3UVUQjmM16I++lovIyZh8PwwAhyO5q
+6mEWlcLjBnPoOXh7t8RRmZUJ5s6za2l2oBm6Ot/mjDjrPmabwNCMVDTz5GyHDtK3
+uflj6xxSlSt8eQV66yFA62wdoXPz5MFSGumz+kOQQOs2rqzSGh3C7rp3nU5xmE/K
+DfsNs92AvWte+ad0nbvZ3IrPYkZH/FdJErx6QMEBUvbwcmwxPh0m4VfKaa8DUZ7Z
+s9dKdJYLkT6RtGpBK9qK3Anrh7Cp6+zImtyf7pyh89KN2P4oIQroq51Ape6gpFnt
+RZVc3NqUTOk2/RXelfCPC23ShWn1dxzOSOhXrtQ6FQOAKwQ7bkY=
+=qfF6
+-----END PGP SIGNATURE-----
+
+--8NvZYKFJsRX2Djef--
