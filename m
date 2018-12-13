@@ -1,47 +1,122 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v03] powerpc/mobility: Fix node detach/rename problem
-Date: Thu, 13 Dec 2018 13:57:16 +1100
-Message-ID: <877egew2ur.fsf@concordia.ellerman.id.au>
-References: <a2d46622-a957-dffe-04d1-8087bbf0f8b5@linux.vnet.ibm.com> <871s6oxkdf.fsf@concordia.ellerman.id.au> <CAL_Jsq+t--486MiSsHnKcVy=q2wVvJgUmtAV6Vy2WwSNKymELA@mail.gmail.com> <48aa028d-b786-7704-70ff-75a6d2321474@gmail.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH 2/2] PCI: mediatek: Add controller support for MT7629
+Date: Thu, 13 Dec 2018 11:39:16 +0800
+Message-ID: <1544672356.26338.4.camel@mtkswgap22>
+References: <1544058553-10936-1-git-send-email-jianjun.wang@mediatek.com>
+         <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <48aa028d-b786-7704-70ff-75a6d2321474@gmail.com>
+In-Reply-To: <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: mwb@linux.vnet.ibm.com, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, tlfalcon@linux.vnet.ibm.com, minkim@us.ibm.com, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Jianjun Wang <jianjun.wang@mediatek.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, mark.rutland@arm.com, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, honghui.zhang@mediatek.com, youlin.pei@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Frank Rowand <frowand.list@gmail.com> writes:
-> On 12/11/18 8:07 AM, Rob Herring wrote:
->> On Tue, Dec 11, 2018 at 7:29 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
-...
->>> diff --git a/drivers/of/base.c b/drivers/of/base.c
->>> index 09692c9b32a7..d8e4534c0686 100644
->>> --- a/drivers/of/base.c
->>> +++ b/drivers/of/base.c
->>> @@ -1190,6 +1190,10 @@ struct device_node *of_find_node_by_phandle(phandle handle)
->>>                 if (phandle_cache[masked_handle] &&
->>>                     handle == phandle_cache[masked_handle]->phandle)
->>>                         np = phandle_cache[masked_handle];
->>> +
->>> +               /* If we find a detached node, remove it */
->>> +               if (of_node_check_flag(np, OF_DETACHED))
->>> +                       np = phandle_cache[masked_handle] = NULL;
->
-> The bug you found exposes a couple of different issues, a little bit
-> deeper than the proposed fix.  I'll work on a fuller fix tonight or
-> tomorrow.
+Hi,
 
-OK thanks.
+On Thu, 2018-12-06 at 09:09 +0800, Jianjun Wang wrote:
+> MT7629 is an arm platform SoC which has the same PCIe IP with MT7622.
+> 
+> The read value of BAR0 is 0xffff_ffff, it's size will be calculated as 4GB
+> in arm64 but bogus alignment values at arm32, the pcie device and devices
+> behind this bridge will not be enabled. Fix it's BAR0 resource size to
+> guarantee the pcie devices will be enabled correctly.
+> 
+> The HW default value of its device id is invalid, fix it's device id to
+> match the hardware implementation.
+> 
+> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> ---
+>  drivers/pci/controller/pcie-mediatek.c | 26 ++++++++++++++++++++++++++
+>  include/linux/pci_ids.h                |  1 +
+>  2 files changed, 27 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index d20cf461ba00..f8937cc3c87c 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -73,6 +73,7 @@
+>  #define PCIE_MSI_VECTOR		0x0c0
+>  
+>  #define PCIE_CONF_VEND_ID	0x100
+> +#define PCIE_CONF_DEVICE_ID	0x102
+>  #define PCIE_CONF_CLASS_ID	0x106
+>  
+>  #define PCIE_INT_MASK		0x420
+> @@ -135,12 +136,14 @@ struct mtk_pcie_port;
+>  /**
+>   * struct mtk_pcie_soc - differentiate between host generations
+>   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
+> + * @need_fix_device_id: whether this host's device ID needed to be fixed or not
+>   * @ops: pointer to configuration access functions
+>   * @startup: pointer to controller setting functions
+>   * @setup_irq: pointer to initialize IRQ functions
+>   */
+>  struct mtk_pcie_soc {
+>  	bool need_fix_class_id;
+> +	bool need_fix_device_id;
+>  	struct pci_ops *ops;
+>  	int (*startup)(struct mtk_pcie_port *port);
+>  	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
+> @@ -692,6 +695,11 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+>  		writew(val, port->base + PCIE_CONF_CLASS_ID);
+>  	}
+>  
+> +	if (soc->need_fix_device_id) {
+> +		val = PCI_DEVICE_ID_MEDIATEK_7629;
 
->> I'm wondering if we should explicitly remove the node from the cache
->> when we set OF_DETACHED. Otherwise, it could be possible that the node
->> pointer has been freed already. Or maybe we need both?
->
-> Yes, it should be explicitly removed.  I may also add in a paranoia check in
-> of_find_node_by_phandle().
+<just_checking>
+  Could we have a generic way to fix it? It's better not to add SoC
+specific settings in shared function.
+</just_checking>
 
-That seems best to me.
-
-cheers
+> +		writew(val, port->base + PCIE_CONF_DEVICE_ID);
+> +	}
+> +
+>  	/* 100ms timeout value should be enough for Gen1/2 training */
+>  	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
+>  				 !!(val & PCIE_PORT_LINKUP_V2), 20,
+> @@ -1238,11 +1246,29 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
+>  	.setup_irq = mtk_pcie_setup_irq,
+>  };
+>  
+> +static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
+> +	.need_fix_class_id = true,
+> +	.need_fix_device_id = true,
+> +	.ops = &mtk_pcie_ops_v2,
+> +	.startup = mtk_pcie_startup_port_v2,
+> +	.setup_irq = mtk_pcie_setup_irq,
+> +};
+> +
+> +static void mtk_fixup_bar_size(struct pci_dev *dev)
+> +{
+> +	struct resource *dev_res = &dev->resource[0];
+> +	/* 32bit resource length will calculate size to 0, set it smaller */
+> +	dev_res->end = 0xfffffffe;
+> +}
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MEDIATEK, PCI_DEVICE_ID_MEDIATEK_7629,
+> +			 mtk_fixup_bar_size);
+> +
+>  static const struct of_device_id mtk_pcie_ids[] = {
+>  	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
+>  	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
+>  	{ .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
+>  	{ .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_mt7622 },
+> +	{ .compatible = "mediatek,mt7629-pcie", .data = &mtk_pcie_soc_mt7629 },
+>  	{},
+>  };
+>  
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 69f0abe1ba1a..77b278bac3a8 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2126,6 +2126,7 @@
+>  #define PCI_VENDOR_ID_MYRICOM		0x14c1
+>  
+>  #define PCI_VENDOR_ID_MEDIATEK		0x14c3
+> +#define PCI_DEVICE_ID_MEDIATEK_7629	0x7629
+>  
+>  #define PCI_VENDOR_ID_TITAN		0x14D2
+>  #define PCI_DEVICE_ID_TITAN_010L	0x8001
