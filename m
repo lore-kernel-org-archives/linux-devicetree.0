@@ -1,52 +1,107 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/8] mfd: axp20x: name voltage ramping
- define properly
-Date: Thu, 13 Dec 2018 13:28:02 +0000
-Message-ID: <20181213132802.GQ4497@dell>
-References: <cover.4110554ae84987dedb8b58888a8a63d6b7f98c72.1544466940.git-series.plaes@plaes.org>
- <01367c4f4f1e174fefbef9aac645f6792bda07e5.1544466940.git-series.plaes@plaes.org>
- <20181213115506.GD10669@sirena.org.uk>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH] ARM: dts: omap4-sdp: Make ethernet working even if booted
+ with latest u-boot
+Date: Thu, 13 Dec 2018 15:58:45 +0200
+Message-ID: <20181213135845.3965-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBZN4ZHQAKGQEQEARP4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20181213115506.GD10669-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: tony@atomide.com, linux@armlinux.org.uk
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 13 Dec 2018, Mark Brown wrote:
+The ethernet works in kernel only if we use some binary u-boot from the
+past which have support for KS8851.
 
-> On Mon, Dec 10, 2018 at 08:42:12PM +0200, Priit Laes wrote:
->=20
-> > Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-> > Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-> > Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->=20
-> What's going on with this patch?  Will you be applying it or is this an
-> ack for it to be applied with the rest of the series?
+The u-boot sources are not available for this mysterious u-boot image
+people tends to hold on... Mainline u-bott does not have ethernet support
+for sdp4430 and if we use that the ethernet is not working.
 
-I don't have anything else queued for include/linux/mfd/axp20x.h, so
-you can take it if you want.  Just make sure you 's/-for-MFD//'.=20
+After some debugging I have managed to get the ethernet working with
+mainline u-boot while not breaking the networking with the case when we
+boot with the mysterious binary u-boot.
 
---=20
-Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-Linaro Services Technical Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Basically we were missing bunch of pinmux settings and the 'magic'
+gpio_138 handling in kernel.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ arch/arm/boot/dts/omap4-sdp.dts | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
+index 9dc7ec7655cb..c88817bdcc56 100644
+--- a/arch/arm/boot/dts/omap4-sdp.dts
++++ b/arch/arm/boot/dts/omap4-sdp.dts
+@@ -26,6 +26,9 @@
+ 	};
+ 
+ 	vdd_eth: fixedregulator-vdd-eth {
++		pinctrl-names = "default";
++		pinctrl-0 = <&enet_enable_gpio>;
++
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "VDD_ETH";
+ 		regulator-min-microvolt = <3300000>;
+@@ -352,6 +355,29 @@
+ 			OMAP4_IOPAD(0x152, PIN_INPUT_PULLUP | MUX_MODE0)	/* sdmmc5_dat3.sdmmc5_dat3 */
+ 		>;
+ 	};
++
++	/* gpio_48 for ENET_ENABLE */
++	enet_enable_gpio: pinmux_enet_enable_gpio {
++		pinctrl-single,pins = <
++			OMAP4_IOPAD(0x070, PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* gpmc_a24.gpio_48 */
++		>;
++	};
++
++	ks8851_pins: pinmux_ks8851_pins {
++		pinctrl-single,pins = <
++			/* ENET_INT */
++			OMAP4_IOPAD(0x054, PIN_INPUT_PULLUP | MUX_MODE3)	/* gpmc_ad10.gpio_34 */
++			/*
++			 * Misterious pin which makes the ethernet working
++			 * The legacy board file requested this pin on boot
++			 * (ETH_KS8851_QUART) and set it to high, similarly to
++			 * the ENET_ENABLE pin.
++			 * We could use gpio-hog to keep it high, but let's use
++			 * it as a reset GPIO for ks8851.
++			 */
++			OMAP4_IOPAD(0x13a, PIN_OUTPUT_PULLUP | MUX_MODE3)	/* mcspi1_cs1.gpio_138 */
++		>;
++	};
+ };
+ 
+ &i2c1 {
+@@ -452,12 +478,16 @@
+ 	pinctrl-0 = <&mcspi1_pins>;
+ 
+ 	eth@0 {
++		pinctrl-names = "default";
++		pinctrl-0 = <&ks8851_pins>;
++
+ 		compatible = "ks8851";
+ 		spi-max-frequency = <24000000>;
+ 		reg = <0>;
+ 		interrupt-parent = <&gpio2>;
+ 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>; /* gpio line 34 */
+ 		vdd-supply = <&vdd_eth>;
++		reset-gpios = <&gpio5 10 GPIO_ACTIVE_HIGH>;
+ 	};
+ };
+ 
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
