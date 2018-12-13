@@ -1,68 +1,90 @@
-From: Schrempf Frieder <frieder.schrempf@kontron.de>
-Subject: Re: [PATCH 0/5] Prepare devicetrees for the new FSL QSPI driver
-Date: Thu, 13 Dec 2018 09:45:04 +0000
-Message-ID: <1ad93cdf-7ba1-ff49-f330-6bbd0f6c6972@kontron.de>
-References: <1544459182-23655-1-git-send-email-frieder.schrempf@kontron.de>
- <ce1442f3-357b-d647-958e-cc4a89282b79@kontron.de>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v2] MAINTAINERS: add maintainers for ChromeOS EC
+ sub-drivers
+Date: Thu, 13 Dec 2018 10:50:50 +0100
+Message-ID: <20181213095050.GM19816@piout.net>
+References: <20181211190953.13626-1-enric.balletbo@collabora.com>
+ <20181212222937.GL19816@piout.net>
+ <6f688bfe-2ebe-1934-0375-016ae859dcfb@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ce1442f3-357b-d647-958e-cc4a89282b79@kontron.de>
-Content-Language: en-US
-Content-ID: <C1B04C5ECA6D974FBFDB5AE84BF4749D@snt-world.com>
+Content-Disposition: inline
+In-Reply-To: <6f688bfe-2ebe-1934-0375-016ae859dcfb@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>
-Cc: "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: linux-kernel@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, linux-i2c@vger.kernel.org, groeck@chromium.org, kernel@collabora.com, linux-rtc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Benson Leung <bleung@chromium.org>, Sebastian Reichel <sre@kernel.org>, linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, Lee Jones <lee.jones@linaro.org>, Hartmut Knaack <knaack.h@gmx.de>, Rob Herring <robh+dt@kernel.org>, Lars-Peter Clausen <lars@>
 List-Id: devicetree@vger.kernel.org
 
-KyBTaGF3biwgU2FzY2hhDQoNCk9uIDEwLjEyLjE4IDE3OjMxLCBTY2hyZW1wZiBGcmllZGVyIHdy
-b3RlOg0KPiBIaSBGU0wvQVJNIG1haW50YWluZXJzLA0KPiANCj4gT24gMTAuMTIuMTggMTc6MjYs
-IFNjaHJlbXBmIEZyaWVkZXIgd3JvdGU6DQo+PiBGcm9tOiBGcmllZGVyIFNjaHJlbXBmIDxmcmll
-ZGVyLnNjaHJlbXBmQGtvbnRyb24uZGU+DQo+Pg0KPj4gV2UgaGF2ZSBwcmVwYXJlZCBhIG5ldyBk
-cml2ZXIgZm9yIHRoZSBGU0wgUVNQSSBjb250cm9sbGVyIHRoYXQgd29ya3MgdW5kZXINCj4+IHRo
-ZSBTUEkgZnJhbWV3b3JrLiBUaGUgY3VycmVudCBkZXZpY2V0cmVlcyBhcmUgYnJva2VuIGJlY2F1
-c2UgdGhleSB1c2UgYW4NCj4+IGluY29uc2lzdGVudCBzY2hlbWUgZm9yIGFzc2lnbmluZyB0aGUg
-cmVnIHByb3BlcnRpZXMuDQo+Pg0KPj4gQXMsIGluIGNvbnRyYXN0IHRvIHRoZSBjdXJyZW50IGRy
-aXZlciwgdGhlIG5ldyBkcml2ZXIgd2lsbCB1c2UgdGhlIHJlZw0KPj4gcHJvcGVydGllcyB0byBz
-ZWxlY3QgdGhlIGNvcnJlY3QgY2hpcCwgd2UgbmVlZCB0byBmaXggdGhlbS4NCj4+DQo+PiBXZSBh
-bHNvIGFkZCBzcGktW3R4L3J4XS1idXMtd2lkdGggdG8gbWFrZSBzdXJlIHRoZSBmdWxsIGJ1c3dp
-ZHRoIHdpbGwgYmUgdXNlZA0KPj4gYW5kIHdoaWxlIGF0IGl0IGNsZWFuIHVwIGFuZCByZW1vdmUg
-c29tZSB1bnVzZWQgcHJvcGVydGllcy4NCj4gDQo+IGNvdWxkIHlvdSBwbGVhc2UgY29uc2lkZXIg
-dGhlc2UgZGV2aWNldHJlZSBwYXRjaGVzIGZvciB2NC4yMT8NCg0KQW55IGNoYW5jZSB0byBnZXQg
-dGhpcyBtZXJnZWQ/IE90aGVyd2lzZSB3ZSB3b3VsZCBuZWVkIHRvIHBvc3Rwb25lIHRoZSANCm5l
-dyBkcml2ZXIgZXZlbiBmdXJ0aGVyLg0KDQpBbGwgdGhlIGNoYW5nZXMgdG8gdGhlIGRldmljZXRy
-ZWVzIGluIHRoaXMgc2VyaWVzIGFyZSBub24taW50cnVzaXZlIGFuZCANCnVuY3JpdGljYWwsIGFu
-eXdheS4NCg0KVGhhbmtzLA0KRnJpZWRlcg0KDQo+IA0KPiBXZSBoYXZlIHRoZSBuZXcgRlNMIFFT
-UEkgZHJpdmVyIHVuZGVyIHRoZSBTUEkgZnJhbWV3b3JrIChbMV0pIHJlYWR5LCBidXQNCj4gd2Ug
-bmVlZCBzb21lIHNtYWxsIGZpeGVzIHRvIHRoZSBkZXZpY2V0cmVlcyB0aGF0IGFyZSBjdXJyZW50
-bHkgYnJva2VuLg0KPiANCj4gQXMgdGhlIG5ldyBkcml2ZXIgZGVwZW5kcyBvbiB0aGVzZSBjaGFu
-Z2VzIChtYWlubHkgdGhlIGNoYW5nZSB0byB0aGUgcmVnDQo+IHByb3BlcnRpZXMpIGFuZCBpdCBp
-cyBub3QgcG9zc2libGUgdG8gYWRkIGNvbXBhdGliaWxpdHkgZm9yIHRoZSBvbGQNCj4gYmluZGlu
-Z3MsIGl0IHdvdWxkIGJlIHJlYWxseSBuaWNlIHRvIGhhdmUgdGhlbSBpbiB2NC4yMSwgc28gd2Ug
-Y2FuIHF1ZXVlDQo+IHRoZSBkcml2ZXIgZm9yIHY0LjIyIG9yIHdoYXRldmVyIHRoZSBuZXh0IHJl
-bGVhc2Ugd2lsbCBiZSBjYWxsZWQuDQo+IA0KPiBQbGVhc2UgYWxzbyBzZWUgWzJdIGZvciBzb21l
-IG1vcmUgZXhwbGFuYXRpb24uDQo+IA0KPiBUaGFua3MsDQo+IEZyaWVkZXINCj4gDQo+IFsxXSBo
-dHRwczovL3BhdGNod29yay5vemxhYnMub3JnL2NvdmVyLzEwMDc2NDEvDQo+IFsyXSBodHRwczov
-L3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzkyMjgxNy8jMTkyNTQ0NQ0KPiANCj4+DQo+PiBG
-cmllZGVyIFNjaHJlbXBmICg1KToNCj4+ICAgICBhcm02NDogZHRzOiBSZW1vdmUgdW51c2VkIHBy
-b3BlcnRpZXMgZnJvbSBGU0wgUVNQSSBkcml2ZXIgbm9kZXMNCj4+ICAgICBBUk06IGR0czogUmVt
-b3ZlIHVudXNlZCBwcm9wZXJ0aWVzIGZyb20gRlNMIFFTUEkgZHJpdmVyIG5vZGVzDQo+PiAgICAg
-QVJNOiBkdHM6IGlteDZzeC1zZGI6IEZpeCB0aGUgcmVnIHByb3BlcnRpZXMgZm9yIHRoZSBGU0wg
-UVNQSSBub2Rlcw0KPj4gICAgIGFybTY0OiBkdHM6IEFkZCBzcGktW3R4L3J4XS1idXMtd2lkdGgg
-Zm9yIHRoZSBGU0wgUVNQSSBjb250cm9sbGVyDQo+PiAgICAgQVJNOiBkdHM6IEFkZCBzcGktW3R4
-L3J4XS1idXMtd2lkdGggZm9yIHRoZSBGU0wgUVNQSSBjb250cm9sbGVyDQo+Pg0KPj4gICAgYXJj
-aC9hcm0vYm9vdC9kdHMvaW14NnN4LXNkYi1yZXZhLmR0cyAgICAgICAgICAgICAgfCA4ICsrKysr
-Ky0tDQo+PiAgICBhcmNoL2FybS9ib290L2R0cy9pbXg2c3gtc2RiLmR0cyAgICAgICAgICAgICAg
-ICAgICB8IDggKysrKysrLS0NCj4+ICAgIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC0xNHgxNC1l
-dmsuZHRzaSAgICAgICAgICAgIHwgMiArKw0KPj4gICAgYXJjaC9hcm0vYm9vdC9kdHMvbHMxMDIx
-YS1tb3hhLXVjLTg0MTBhLmR0cyAgICAgICAgfCA1ICsrLS0tDQo+PiAgICBhcmNoL2FybTY0L2Jv
-b3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDQzYS1xZHMuZHRzICB8IDMgKystDQo+PiAgICBhcmNo
-L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDQ2YS1xZHMuZHRzICB8IDQgKystLQ0K
-Pj4gICAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0NmEtcmRiLmR0cyAg
-fCA2ICsrKystLQ0KPj4gICAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMjA4
-eGEtcWRzLmR0c2kgfCA0ICsrKysNCj4+ICAgIDggZmlsZXMgY2hhbmdlZCwgMjggaW5zZXJ0aW9u
-cygrKSwgMTIgZGVsZXRpb25zKC0pDQo+Pg0KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18NCj4gTGludXggTVREIGRpc2N1c3Npb24gbWFpbGlu
-ZyBsaXN0DQo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtbXRkLw0KPiA=
+On 13/12/2018 10:30:16+0100, Enric Balletbo i Serra wrote:
+> > However, you should probably indicate which tree do you expect that to
+> > go through ;)
+> > 
+> 
+> Well, these are sub-drivers for different subsystems but are related to the main
+> ChromeOS EC. I expect all go through their specific subsystem and their
+> maintainer. I.e the rtc driver go through your tree, the mfd go through Lee's
+> tree, iio drivers through Jonathan's tree, etc. This is the reason I did not add
+> the tree. Main purpose here as that Benson and I are aware when someone sends a
+> change on one of the sub-drivers and we can review these patches.
+> 
+
+Sure, sorry I was not clear but I was asking about this particular
+patch because as it is, you will get acks from all the maintainers but I
+think they all think someone else will apply it ;)
+
+> Thanks,
+>  Enric
+> 
+> >> ---
+> >>
+> >> Changes in v2:
+> >> - Fix typo in Benson email address.
+> >>
+> >>  MAINTAINERS | 24 ++++++++++++++++++++++++
+> >>  1 file changed, 24 insertions(+)
+> >>
+> >> diff --git a/MAINTAINERS b/MAINTAINERS
+> >> index a24129b0b043..bbe7180e2851 100644
+> >> --- a/MAINTAINERS
+> >> +++ b/MAINTAINERS
+> >> @@ -3625,6 +3625,30 @@ S:	Maintained
+> >>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/bleung/chrome-platform.git
+> >>  F:	drivers/platform/chrome/
+> >>  
+> >> +CHROMEOS EC SUBDRIVERS
+> >> +M:	Benson Leung <bleung@chromium.org>
+> >> +M:	Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> >> +S:	Maintained
+> >> +F:	Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+> >> +F:	Documentation/devicetree/bindings/input/cros-ec-keyb.txt
+> >> +F:	Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.txt
+> >> +F:	Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
+> >> +F:	Documentation/devicetree/bindings/mfd/cros-ec.txt
+> >> +F:	Documentation/ABI/testing/sysfs-bus-iio-cros-ec
+> >> +F:	drivers/extcon/extcon-usbc-cros-ec.c
+> >> +F:	drivers/i2c/busses/i2c-cros-ec-tunnel.c
+> >> +F:	drivers/iio/accel/cros_ec*
+> >> +F:	drivers/iio/common/cros_ec_sensors/
+> >> +F:	drivers/iio/light/cros_ec*
+> >> +F:	drivers/iio/pressure/cros_ec*
+> >> +F:	drivers/input/keyboard/cros_ec*
+> >> +F:	drivers/mfd/cros_ec*
+> >> +F:	drivers/power/supply/cros_usbpd-charger.c
+> >> +F:	drivers/pwm/pwm-cros-ec.c
+> >> +F:	drivers/rtc/rtc-cros-ec.c
+> >> +F:	include/linux/iio/common/cros_ec_sensors_core.h
+> >> +F:	include/linux/mfd/cros_ec*
+> >> +
+> >>  CIRRUS LOGIC AUDIO CODEC DRIVERS
+> >>  M:	Brian Austin <brian.austin@cirrus.com>
+> >>  M:	Paul Handrigan <Paul.Handrigan@cirrus.com>
+> >> -- 
+> >> 2.19.2
+> >>
+> > 
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
