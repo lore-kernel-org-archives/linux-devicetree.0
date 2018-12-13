@@ -1,60 +1,42 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] dt-bindings: display: renesas: du: Document r8a774c0
- bindings
-Date: Thu, 13 Dec 2018 23:38:07 +0200
-Message-ID: <2853413.TK89vclHxN@avalon>
-References: <1544732445-6588-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 05/12] PCI: aardvark: add suspend to RAM support
+Date: Thu, 13 Dec 2018 22:50:51 +0100
+Message-ID: <61805564.abKDZ2rVK7@aspire.rjw.lan>
+References: <20181123141831.8214-1-miquel.raynal@bootlin.com> <20181213105302.GA5330@e107981-ln.cambridge.arm.com> <20181213153000.245d7d5f@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1544732445-6588-1-git-send-email-fabrizio.castro@bp.renesas.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, David Airlie <airlied@linux.ie>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181213153000.245d7d5f@xps13>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stephen Boyd <sboyd@kernel.org>, sudeep.holla@arm.com, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRmFicml6aW8sCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIFRodXJzZGF5LCAxMyBE
-ZWNlbWJlciAyMDE4IDIyOjIwOjQ1IEVFVCBGYWJyaXppbyBDYXN0cm8gd3JvdGU6Cj4gRG9jdW1l
-bnQgdGhlIFJaL0cyRSAoYS5rLmEuIHI4YTc3NGMwKSBTb0MgaW4gdGhlIFItQ2FyIERVIGJpbmRp
-bmdzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJv
-QGJwLnJlbmVzYXMuY29tPgoKUmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQu
-cGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4KCmFuZCBhcHBsaWVkIHRvIG15IHRyZWUuCgo+IC0t
-LQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1
-LnR4dCB8IDIgKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2Fz
-LGR1LnR4dAo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVu
-ZXNhcyxkdS50eHQgaW5kZXgKPiAzYzg1NWQ5Li5hZWRiMjJiIDEwMDY0NAo+IC0tLSBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JlbmVzYXMsZHUudHh0Cj4gKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50
-eHQKPiBAQCAtNyw2ICs3LDcgQEAgUmVxdWlyZWQgUHJvcGVydGllczoKPiAgICAgIC0gInJlbmVz
-YXMsZHUtcjhhNzc0NCIgZm9yIFI4QTc3NDQgKFJaL0cxTikgY29tcGF0aWJsZSBEVQo+ICAgICAg
-LSAicmVuZXNhcyxkdS1yOGE3NzQ1IiBmb3IgUjhBNzc0NSAoUlovRzFFKSBjb21wYXRpYmxlIERV
-Cj4gICAgICAtICJyZW5lc2FzLGR1LXI4YTc3NDcwIiBmb3IgUjhBNzc0NzAgKFJaL0cxQykgY29t
-cGF0aWJsZSBEVQo+ICsgICAgLSAicmVuZXNhcyxkdS1yOGE3NzRjMCIgZm9yIFI4QTc3NEMwIChS
-Wi9HMkUpIGNvbXBhdGlibGUgRFUKPiAgICAgIC0gInJlbmVzYXMsZHUtcjhhNzc3OSIgZm9yIFI4
-QTc3NzkgKFItQ2FyIEgxKSBjb21wYXRpYmxlIERVCj4gICAgICAtICJyZW5lc2FzLGR1LXI4YTc3
-OTAiIGZvciBSOEE3NzkwIChSLUNhciBIMikgY29tcGF0aWJsZSBEVQo+ICAgICAgLSAicmVuZXNh
-cyxkdS1yOGE3NzkxIiBmb3IgUjhBNzc5MSAoUi1DYXIgTTItVykgY29tcGF0aWJsZSBEVQo+IEBA
-IC01Nyw2ICs1OCw3IEBAIGNvcnJlc3BvbmRpbmcgdG8gZWFjaCBEVSBvdXRwdXQuCj4gICBSOEE3
-NzQ0IChSWi9HMU4pICAgICAgIERQQUQgMCAgICAgICAgIExWRFMgMCAgICAgICAgIC0gICAgICAg
-ICAgICAgIC0KPiAgIFI4QTc3NDUgKFJaL0cxRSkgICAgICAgRFBBRCAwICAgICAgICAgRFBBRCAx
-ICAgICAgICAgLSAgICAgICAgICAgICAgLQo+ICAgUjhBNzc0NzAgKFJaL0cxQykgICAgICBEUEFE
-IDAgICAgICAgICBEUEFEIDEgICAgICAgICBMVkRTIDAgICAgICAgICAtCj4gKyBSOEE3NzRDMCAo
-UlovRzJFKSAgICAgIERQQUQgMCAgICAgICAgIExWRFMgMCAgICAgICAgIExWRFMgMSAgICAgICAg
-IC0KPiAgIFI4QTc3NzkgKFItQ2FyIEgxKSAgICAgRFBBRCAwICAgICAgICAgRFBBRCAxICAgICAg
-ICAgLSAgICAgICAgICAgICAgLQo+ICAgUjhBNzc5MCAoUi1DYXIgSDIpICAgICBEUEFEIDAgICAg
-ICAgICBMVkRTIDAgICAgICAgICBMVkRTIDEgICAgICAgICAtCj4gICBSOEE3NzkxIChSLUNhciBN
-Mi1XKSAgIERQQUQgMCAgICAgICAgIExWRFMgMCAgICAgICAgIC0gICAgICAgICAgICAgIC0KCgot
-LSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCgoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Thursday, December 13, 2018 3:30:00 PM CET Miquel Raynal wrote:
+> Hi Lorenzo,
+> 
+> > > If that's really the case, then I can see how one device and it's
+> > > children are suspended and the irq for it is disabled but the providing
+> > > devices (clk, regulator, bus controller, etc.) are still fully active
+> > > and not suspended but in fact completely usable and able to service
+> > > interrupts. If that all makes sense, then I would answer the question
+> > > with a definitive "yes it's all fine" because the clk consumer could be
+> > > in the NOIRQ phase of its suspend but the clk provider wouldn't have
+> > > even started suspending yet when clk_disable_unprepare() is called.  
+> > 
+> > That's a very good summary and address my concern, I still question this
+> > patch correctness (and many others that carry out clk operations in S2R
+> > NOIRQ phase), they may work but do not tell me they are rock solid given
+> > your accurate summary above.
+> 
+> I understand your concern but I don't see any alternative right now
+> and a deep rework of the PM core to respect such dependency is not
+> something that can be done in a reasonable amount of time.
+
+Maybe you don't need to rework anything. :-)
+
+Have you considered using device links?
+
+Thanks,
+Rafael
