@@ -1,90 +1,67 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v8 11/26] pwm: jz4740: Use regmap and clocks from TCU
- driver
-Date: Thu, 13 Dec 2018 10:30:49 +0100
-Message-ID: <20181213093049.rxdvf6tip7iqdj3c@pengutronix.de>
-References: <20181212220922.18759-1-paul@crapouillou.net>
- <20181212220922.18759-12-paul@crapouillou.net>
+From: Qii Wang <qii.wang@mediatek.com>
+Subject: Re: [PATCH 4/5] dt-bindings: i2c: Add Mediatek MT8183 i2c binding
+Date: Thu, 13 Dec 2018 17:32:27 +0800
+Message-ID: <1544693547.11699.40.camel@mhfsdcap03>
+References: <1543843974-4054-1-git-send-email-qii.wang@mediatek.com>
+ <1543843974-4054-5-git-send-email-qii.wang@mediatek.com>
+ <20181211202931.xav4gzi7rzh2scgx@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181212220922.18759-12-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mathieu Malaterre <malat@debian.org>, Ezequiel Garcia <ezequiel@collabora.co.uk>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181211202931.xav4gzi7rzh2scgx@ninjato>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: devicetree@vger.kernel.org, ryder.lee@mediatek.com, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Tue, 2018-12-11 at 21:29 +0100, Wolfram Sang wrote:
+> > +  - ch-offset: base reg offset for multi-user.
+> 
+> What is "multi-user"? Why can't you add this offset to the reg-property
+> directly?
+> 
 
-On Wed, Dec 12, 2018 at 11:09:06PM +0100, Paul Cercueil wrote:
-> [...]
->  static int jz4740_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
->  {
-> -	uint32_t ctrl = jz4740_timer_get_ctrl(pwm->pwm);
-> +	struct jz4740_pwm_chip *jz = to_jz4740(chip);
->  
-> -	ctrl |= JZ_TIMER_CTRL_PWM_ENABLE;
-> -	jz4740_timer_set_ctrl(pwm->hwpwm, ctrl);
-> -	jz4740_timer_enable(pwm->hwpwm);
-> +	/* Enable PWM output */
-> +	regmap_update_bits(jz->map, TCU_REG_TCSRc(pwm->hwpwm),
-> +				TCU_TCSR_PWM_EN, TCU_TCSR_PWM_EN);
+Thanks for your comment.
+There are 3 channel in one MT8183 I3C controller, and every channel can
+be used as an I2C controller.
+Take the following diagram as example:
+If use I3C channels as I2C bus,
+1. CH-A/B/C offset are different;
+2. If use CH-B or CH-A as I2C, they must config registers which's
+address are in CH-A.
+ ____________________________________
+|     ________                       |
+|    |        |<--- offset:0x00      |
+|    |  CH-A  |                      |
+|    |________|                      |
+|    |        |<--- offset:0x100     |
+|    |  CH-B  |                      |
+|    |________|                      |
+|    |        |<--- offset:0x200     |
+|    |  CH-C  |                      |
+|    |________|                      |
+|____________________________________|
+        one I3C controller               
 
-Usually follow-up lines are indented to the matching parenthesis.
+Because of CH-B/CH-C depend on CH-A's register, it can't add offset to
+reg-property directly.
 
-> [...]
->  static int jz4740_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
->  			     int duty_ns, int period_ns)
->  {
->  	struct jz4740_pwm_chip *jz4740 = to_jz4740(pwm->chip);
-> +	struct clk *clk = jz4740->clks[pwm->hwpwm];
-> +	unsigned long rate, new_rate, period, duty;
->  	unsigned long long tmp;
-> -	unsigned long period, duty;
-> -	unsigned int prescaler = 0;
-> -	uint16_t ctrl;
-> +	unsigned int tcsr;
->  	bool is_enabled;
->  
-> -	tmp = (unsigned long long)clk_get_rate(jz4740->clk) * period_ns;
-> -	do_div(tmp, 1000000000);
-> -	period = tmp;
-> +	rate = clk_get_rate(clk);
-> +
-> +	for (;;) {
-> +		tmp = (unsigned long long) rate * period_ns;
-> +		do_div(tmp, 1000000000);
->  
-> -	while (period > 0xffff && prescaler < 6) {
-> -		period >>= 2;
-> -		++prescaler;
-> +		if (tmp <= 0xffff)
-> +			break;
-> +
-> +		new_rate = clk_round_rate(clk, rate / 2);
-> +
-> +		if (new_rate < rate)
-> +			rate = new_rate;
-> +		else
-> +			return -EINVAL;
->  	}
->  
-> -	if (prescaler == 6)
-> -		return -EINVAL;
-> +	clk_set_rate(clk, rate);
+MT8183 doesn't need to support muti-user according to the latest project
+information, and I'll remove this feature from patches.
 
-Maybe this could better live in a separate patch. If you split still
-further to have the conversion to regmap in a single patch, then the
-conversion to the clk_* functions and then improve the algorithm for the
-clk settings each of the patches is easier to review than this one patch
-that does all three things at once.
+> > +  - mediatek,share-i3c: i3c controller can share i2c function.
+> 
+> Please explain in more detail? Is this an I3C controller?
+> 
 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Yes, it is a i3c controller, and it is compatible with i2c. I only use
+the feature of i2c, so I need a flag to do some extra settings.
