@@ -1,63 +1,80 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 2/2] ARM: dts: Cosmetic fix for omap5 USB node names
-Date: Wed, 12 Dec 2018 18:18:01 -0800
-Message-ID: <20181213021801.49938-2-tony@atomide.com>
-References: <20181213021801.49938-1-tony@atomide.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH v1] pinctrl: mediatek: improve Kconfig dependencies
+Date: Thu, 13 Dec 2018 10:27:50 +0800
+Message-ID: <e4eb66dec2901016e01767932461c5d560762f66.1544666839.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181213021801.49938-1-tony@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-omap@vger.kernel.org
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Sean Wang <sean.wang@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Weijie Gao <weijie.gao@mediatek.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-These should be now using offset from the module base and not the
-full physical address.
+Remove prompts to make all pinctrl cores to non-visible symbols and
+make sure the target SoCs would be coupled with the corresponding
+cores.
 
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 ---
- arch/arm/boot/dts/omap5-l4.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Changes since v1:
+- Revise commit message
+- Change all pinctrl cores to non-visible symbols
+- Drop EINT_MTK in PINCTRL_MTK_MOORE
+---
+ drivers/pinctrl/mediatek/Kconfig | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap5-l4.dtsi b/arch/arm/boot/dts/omap5-l4.dtsi
---- a/arch/arm/boot/dts/omap5-l4.dtsi
-+++ b/arch/arm/boot/dts/omap5-l4.dtsi
-@@ -195,7 +195,7 @@
- 				#size-cells = <1>;
- 				utmi-mode = <2>;
- 				ranges = <0 0 0x20000>;
--				dwc3: dwc3@4a030000 {
-+				dwc3: dwc3@10000 {
- 					compatible = "snps,dwc3";
- 					reg = <0x10000 0x10000>;
- 					interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>,
-@@ -332,14 +332,14 @@
- 					      "refclk_60m_ext_p1",
- 					      "refclk_60m_ext_p2";
+diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
+index d8cb584..1817786 100644
+--- a/drivers/pinctrl/mediatek/Kconfig
++++ b/drivers/pinctrl/mediatek/Kconfig
+@@ -17,7 +17,7 @@ config PINCTRL_MTK
+ 	select OF_GPIO
  
--				usbhsohci: ohci@4a064800 {
-+				usbhsohci: ohci@800 {
- 					compatible = "ti,ohci-omap3";
- 					reg = <0x800 0x400>;
- 					interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
- 					remote-wakeup-connected;
- 				};
+ config PINCTRL_MTK_MOORE
+-	bool "MediaTek Moore Core that implements generic binding"
++	bool
+ 	depends on OF
+ 	select GENERIC_PINCONF
+ 	select GENERIC_PINCTRL_GROUPS
+@@ -26,7 +26,7 @@ config PINCTRL_MTK_MOORE
+ 	select OF_GPIO
  
--				usbhsehci: ehci@4a064c00 {
-+				usbhsehci: ehci@c00 {
- 					compatible = "ti,ehci-omap";
- 					reg = <0xc00 0x400>;
- 					interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+ config PINCTRL_MTK_PARIS
+-	bool "MediaTek Paris Core that implements vendor binding"
++	bool
+ 	depends on OF
+ 	select PINMUX
+ 	select GENERIC_PINCONF
+@@ -45,14 +45,14 @@ config PINCTRL_MT2701
+ config PINCTRL_MT7623
+ 	bool "Mediatek MT7623 pin control with generic binding"
+ 	depends on MACH_MT7623 || COMPILE_TEST
+-	depends on PINCTRL_MTK_MOORE
+-	default y
++	default MACH_MT7623
++	select PINCTRL_MTK_MOORE
+ 
+ config PINCTRL_MT7629
+ 	bool "Mediatek MT7629 pin control"
+ 	depends on MACH_MT7629 || COMPILE_TEST
+-	depends on PINCTRL_MTK_MOORE
+-	default y
++	default MACH_MT7629
++	select PINCTRL_MTK_MOORE
+ 
+ config PINCTRL_MT8135
+ 	bool "Mediatek MT8135 pin control"
+@@ -93,8 +93,8 @@ config PINCTRL_MT6797
+ config PINCTRL_MT7622
+ 	bool "MediaTek MT7622 pin control"
+ 	depends on ARM64 || COMPILE_TEST
+-	depends on PINCTRL_MTK_MOORE
+-	default y
++	default ARM64 && ARCH_MEDIATEK
++	select PINCTRL_MTK_MOORE
+ 
+ config PINCTRL_MT8173
+ 	bool "Mediatek MT8173 pin control"
 -- 
-2.19.2
+1.9.1
