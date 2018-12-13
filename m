@@ -1,37 +1,66 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v8 15/26] pwm: jz4740: Add support for the JZ4725B
-Date: Thu, 13 Dec 2018 10:24:09 +0100
-Message-ID: <20181213092409.ml4wpnzow2nnszkd@pengutronix.de>
-References: <20181212220922.18759-1-paul@crapouillou.net>
- <20181212220922.18759-16-paul@crapouillou.net>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [PATCH v1 1/2] dt-bindings: add binding for USBSS-DRD controller.
+Date: Thu, 13 Dec 2018 09:25:57 +0000
+Message-ID: <BYAPR07MB470969E4433BEB820007F988DDA00@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1544445555-17325-1-git-send-email-pawell@cadence.com>
+ <1544445555-17325-2-git-send-email-pawell@cadence.com>
+ <5C0F8E7B.3030601@ti.com>
+ <CAL411-qP3TAt1kz5Q1WcUejSbt4Agpmqry7JVE_6W+2MpCag4Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181212220922.18759-16-paul@crapouillou.net>
+In-Reply-To: <CAL411-qP3TAt1kz5Q1WcUejSbt4Agpmqry7JVE_6W+2MpCag4Q@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mathieu Malaterre <malat@debian.org>, Ezequiel Garcia <ezequiel@collabora.co.uk>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
+To: Peter Chen <hzpeterchen@gmail.com>, "rogerq@ti.com" <rogerq@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "balbi@kernel.org" <balbi@kernel.org>, lkml <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Wed, Dec 12, 2018 at 11:09:10PM +0100, Paul Cercueil wrote:
-> The PWM in the JZ4725B works the same as in the JZ4740, except that it
-> only has 6 channels available instead of 8.
-
-this driver is probed only from device tree? If yes, it might be
-sensible to specify the number of PWMs there and get it from there.
-There doesn't seem to be a generic binding for that, but there are
-several drivers that could benefit from it. (This is a bigger project
-though and shouldn't stop your patch. Still more as it already got
-Thierry's ack.)
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+SGksIA0KDQo+T24gVHVlLCBEZWMgMTEsIDIwMTggYXQgNjoxOSBQTSBSb2dlciBRdWFkcm9zIDxy
+b2dlcnFAdGkuY29tPiB3cm90ZToNCj4+DQo+PiBQYXdlbCwNCj4+DQo+PiBPbiAxMC8xMi8xOCAx
+NDozOSwgUGF3ZWwgTGFzemN6YWsgd3JvdGU6DQo+PiA+IFRoaXMgcGF0Y2ggYWltIGF0IGRvY3Vt
+ZW50aW5nIFVTQiByZWxhdGVkIGR0LWJpbmRpbmdzIGZvciB0aGUNCj4+ID4gQ2FkZW5jZSBVU0JT
+Uy1EUkQgY29udHJvbGxlci4NCj4+ID4NCj4+ID4gU2lnbmVkLW9mZi1ieTogUGF3ZWwgTGFzemN6
+YWsgPHBhd2VsbEBjYWRlbmNlLmNvbT4NCj4+ID4gLS0tDQo+PiA+ICAuLi4vZGV2aWNldHJlZS9i
+aW5kaW5ncy91c2IvY2RuczMtdXNiLnR4dCAgICAgfCAzMSArKysrKysrKysrKysrKysrKysrDQo+
+PiA+ICAxIGZpbGUgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKQ0KPj4gPiAgY3JlYXRlIG1vZGUg
+MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvY2RuczMtdXNiLnR4
+dA0KPj4gPg0KPj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3VzYi9jZG5zMy11c2IudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3VzYi9jZG5zMy11c2IudHh0DQo+PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+PiA+IGluZGV4
+IDAwMDAwMDAwMDAwMC4uYWU0YTI1NWYwYjEwDQo+PiA+IC0tLSAvZGV2L251bGwNCj4+ID4gKysr
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9jZG5zMy11c2IudHh0DQo+
+PiA+IEBAIC0wLDAgKzEsMzEgQEANCj4+ID4gK0JpbmRpbmcgZm9yIHRoZSBDYWRlbmNlIFVTQlNT
+LURSRCBjb250cm9sbGVyDQo+PiA+ICsNCj4+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+PiA+
+ICsgIC0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIHNpemUgb2YgdGhlIGNvbnRyb2xs
+ZXIncyByZWdpc3RlciBhcmVhcy4NCj4+ID4gKyAgICAgIENvbnRyb2xsZXIgaGFzIDMgZGlmZmVy
+ZW50IHJlZ2lvbnM6DQo+PiA+ICsgICAgICByZWdpb24gMSAtIEhPU1QgcmVnaXN0ZXJzIGFyZWEN
+Cj4+ID4gKyAgICAgIHJlZ2lvbiAyIC0gREVWSUNFIHJlZ2lzdGVycyBhcmVhDQo+PiA+ICsgICAg
+ICByZWdpb24gMyAtIE9URy9EUkQgcmVnaXN0ZXJzIGFyZWENCj4+ID4gKyAgLSBjb21wYXRpYmxl
+OiBTaG91bGQgY29udGFpbjogImNkbnMsdXNiMyINCj4+ID4gKyAgLSBpbnRlcnJ1cHRzOiBJbnRl
+cnJ1cHQgc3BlY2lmaWVyLiBSZWZlciB0byBpbnRlcnJ1cHQgYmluZGluZ3MuDQo+PiA+ICsgICAg
+ICAgICAgICAgRHJpdmVyIHN1cHBvcnRzIG9ubHkgc2luZ2xlIGludGVycnVwdCBsaW5lLg0KPj4g
+PiArICAgICAgICAgICAgICAgIFRoaXMgc2luZ2xlIGludGVycnVwdCBpcyBzaGFyZWQgYmV0d2Vl
+biBEZXZpY2UsDQo+PiA+ICsgICAgICAgICAgICAgaG9zdCBhbmQgT1RHL0RSRCBwYXJ0IG9mIGRy
+aXZlci4NCj4+ID4gKw0KPj4gPiArT3B0aW9uYWwgcHJvcGVydGllc2k6DQo+Pg0KPj4gcy9wcm9w
+ZXJ0aWVzaS9wcm9wZXJ0aWVzDQo+Pg0KPj4gPiArIC0gbWF4aW11bS1zcGVlZCA6IHZhbGlkIGFy
+Z3VtZW50cyBhcmUgInN1cGVyLXNwZWVkIiwgImhpZ2gtc3BlZWQiIGFuZA0KPj4gPiArICAgICAg
+ICAgICAgICAgICAgICJmdWxsLXNwZWVkIjsgcmVmZXIgdG8gdXNiL2dlbmVyaWMudHh0DQo+PiA+
+ICsgLSBkcl9tb2RlOiBTaG91bGQgYmUgb25lIG9mICJob3N0IiwgInBlcmlwaGVyYWwiIG9yICJv
+dGciLg0KPj4gPiArIC0gcGh5czogcmVmZXJlbmNlIHRvIHRoZSBVU0IgUEhZDQo+PiA+ICsgLSBw
+aHktbmFtZXM6IG5hbWUgb2YgdGhlIFVTQiBQSFksIHNob3VsZCBiZSAiY2RuczMsdXNicGh5Ig0K
+Pj4gPiArDQo+PiA+ICsNCj4+ID4gK0V4YW1wbGU6DQo+PiA+ICsgICAgIHVzYkBmMzAwMDAwMCB7
+DQo+PiA+ICsgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJjZG5zLHVzYjMiOw0KPj4gPiArICAg
+ICAgICAgICAgIGludGVycnVwdHMgPSA8VVNCX0lSUSAgNyBJUlFfVFlQRV9MRVZFTF9ISUdIPjsN
+Cj4+ID4gKyAgICAgICAgICAgICByZWcgPSA8MHhmMzAwMDAwMCAweDEwMDAwICAgICAgIC8vbWVt
+b3J5IGFyZWEgZm9yIEhPU1QgcmVnaXN0ZXJzDQo+PiA+ICsgICAgICAgICAgICAgICAgICAgICAw
+eGYzMDEwMDAwIDB4MTAwMDAgICAgICAvL21lbW9yeSBhcmVhIGZvciBERVZJQ0UgcmVnaXN0ZXJz
+DQo+PiA+ICsgICAgICAgICAgICAgICAgICAgICAweGYzMDIwMDAwIDB4MTAwMDA+OyAgICAvL21l
+bW9yeSBhcmVhIGZvciBPVEcvRFJEIHJlZ2lzdGVycw0KPj4NCj4+IFVzZSAiLyogPGNvbW1lbnQ+
+ICovIiBpbnN0ZWFkLg0KPj4NCj4+ID4gKyAgICAgfTsNCj4+ID4gKw0KPj4gPg0KPg0KPldoZW4g
+cnVubmluZyBnaXQgYW0gdG8gYXBwbHkgcGF0Y2gsIGl0IGhhcyBiZWxvdyB3YXJuaW5nLCBwbGVh
+c2UgZml4IHRoZW0uDQo+DQo+QXBwbHlpbmc6IGR0LWJpbmRpbmdzOiBhZGQgYmluZGluZyBmb3Ig
+VVNCU1MtRFJEIGNvbnRyb2xsZXIuDQo+LmdpdC9yZWJhc2UtYXBwbHkvcGF0Y2g6NDI6IG5ldyBi
+bGFuayBsaW5lIGF0IEVPRi4NCj4rDQo+d2FybmluZzogMSBsaW5lIGFkZHMgd2hpdGVzcGFjZSBl
+cnJvcnMuDQoNCk9rLCB0aGFua3MNCkNoZWVycyANClBhd2VsDQo=
