@@ -1,71 +1,50 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/3] ASoC: xlnx: Add i2s driver
-Date: Thu, 13 Dec 2018 15:31:27 +0000
-Message-ID: <20181213153127.GN10669@sirena.org.uk>
-References: <1544207558-72508-1-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
- <1544207558-72508-3-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] ASoC: meson: fix do_div warning in spdifin
+Date: Thu, 13 Dec 2018 16:44:28 +0100
+Message-ID: <20181213154428.6070-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5318335275096821029=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1544207558-72508-3-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Michal Simek <michal.simek@xilinx.com>, Vishal Sagar <vsagar@xilinx.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Even if this spdif input driver is only supposed to be used on 64bits
+platform, there is possible problem with 32bits and do_div, as reported
+by the kbuild robot. Just fix it.
 
---===============5318335275096821029==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="o+ZCuNqY+dEAKBWl"
-Content-Disposition: inline
+Fixes: 5ce5658375e6 ("ASoC: meson: add axg spdif input")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
 
+ Hi Mark,
 
---o+ZCuNqY+dEAKBWl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ This fixes the problem reported by kbuild robot [0].
+ Sorry for not catching this earlier.
 
-On Sat, Dec 08, 2018 at 12:02:37AM +0530, Maruthi Srinivas Bayyavarapu wrote:
+ Regards
+ Jerome
 
-> @@ -0,0 +1,185 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Xilinx ASoC I2S audio support
-> + *
+ [0]: https://lkml.kernel.org/r/201812132245.lBYydcs3%fengguang.wu@intel.com
 
-This looks otherwise good so I've applied it but please send a followup
-patch converting the entire comment block to C++ style so this looks
-more consistent.
+ sound/soc/meson/axg-spdifin.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---o+ZCuNqY+dEAKBWl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwSe04ACgkQJNaLcl1U
-h9AApQf/ZYZreo/i4fqhX4ZisqCS87wTmjedquBnDbFr4A908f5mKat+VrZEor9g
-qfdXB6YMTRb1BPFQrFqv93f/OxjbZeM7Gztv8B7n7shGQ9Oh1Xg0pPLYSsvZLZEm
-ZTt2TwTyXgm2A0xiiLbTuXlin/tilgBcNUK2GvMPaD0vEftBJJplV+WkxTe71U4F
-T5Umnu41+7kcm0EGdNyIu2q1/NZAVkvvyZGKeJtRIHNdT6XKbczxHsN/tDp8Xalv
-LqTlJiSNDOsG+G5zKuTZc3Ae1M8sx3NNWs3Tybe0dyC3tbuGiny6pNkkOYNs2OoV
-rxwnrk5IqefawbCi6uDMdfNRXwMvxQ==
-=36PQ
------END PGP SIGNATURE-----
-
---o+ZCuNqY+dEAKBWl--
-
---===============5318335275096821029==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============5318335275096821029==--
+diff --git a/sound/soc/meson/axg-spdifin.c b/sound/soc/meson/axg-spdifin.c
+index 09f385a2bbba..01b2035fa841 100644
+--- a/sound/soc/meson/axg-spdifin.c
++++ b/sound/soc/meson/axg-spdifin.c
+@@ -146,8 +146,8 @@ static void axg_spdifin_write_mode_param(struct regmap *map, int mode,
+ 					 unsigned int base_reg,
+ 					 unsigned int width)
+ {
+-	unsigned int offset = mode, rem;
+-	unsigned int reg, shift;
++	uint64_t offset = mode;
++	unsigned int reg, shift, rem;
+ 
+ 	rem = do_div(offset, num_per_reg);
+ 
+-- 
+2.19.2
