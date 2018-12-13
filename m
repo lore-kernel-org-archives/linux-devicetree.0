@@ -1,44 +1,48 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v12 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ Firmware bindings
-Date: Thu, 13 Dec 2018 00:28:06 -0800
-Message-ID: <154468968610.19322.9386616050590076502@swboyd.mtv.corp.google.com>
-References: <1544687394-331-1-git-send-email-tdas@codeaurora.org> <1544687394-331-2-git-send-email-tdas@codeaurora.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH V11 3/7] dt-bindings: clock: imx8qxp: add SCU clock IDs
+Date: Thu, 13 Dec 2018 16:31:39 +0800
+Message-ID: <20181213083137.GC12458@dragon>
+References: <1544662938-5020-1-git-send-email-aisheng.dong@nxp.com>
+ <1544662938-5020-4-git-send-email-aisheng.dong@nxp.com>
+ <154468796011.19322.4309575824691854273@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544687394-331-2-git-send-email-tdas@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, evgreen@google.com, Matthias Kaehlcke <mka@chromium.org>, Taniya Das <tdas@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <154468796011.19322.4309575824691854273@swboyd.mtv.corp.google.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Taniya Das (2018-12-12 23:49:53)
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.tx=
-t b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
-> new file mode 100644
-> index 0000000..2b82965
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
-> @@ -0,0 +1,172 @@
-[...]
-> +- reg-names
-> +       Usage:          Optional
-> +       Value type:     <string>
-> +       Definition:     Frequency domain name i.e.
-> +                       "freq-domain0", "freq-domain1".
-> +
-> +- freq-domain-cells:
+On Wed, Dec 12, 2018 at 11:59:20PM -0800, Stephen Boyd wrote:
+> Quoting Aisheng Dong (2018-12-12 17:07:59)
+> > Add IMX8QXP SCU clock IDs.
+> > 
+> > Cc: Stephen Boyd <sboyd@kernel.org>
+> > Cc: Shawn Guo <shawnguo@kernel.org>
+> > Cc: Sascha Hauer <kernel@pengutronix.de>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-clk@vger.kernel.org
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> > ---
+> 
+> Applied to clk-next
+> 
+> Please send these at the start of the series in the future. That way
+> platform maintainers can merge the first few binding patches into their
+> tree and not drag in the driver code to their arm-soc pulls.
 
-Should be #freq-domain-cells? Or maybe #qcom,freq-domain-cells?
+Right, sensible suggestion for me :)
 
-> +       Usage:          required.
-> +       Definition:     Number of cells in a freqency domain specifier.
-> +
-> +* Property qcom,freq-domain
-> +Devices supporting freq-domain must set their "qcom,freq-domain" propert=
-y with
-> +phandle to a cpufreq_hw followed by the Domain ID(0/1) in the CPU DT nod=
-e.
-> +
-> +
+Shawn
