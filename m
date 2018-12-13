@@ -1,52 +1,141 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [PATCH 1/3] dt-bindings: interrupt-controller: stm32: Document
- hwlock properties
-Date: Thu, 13 Dec 2018 15:55:06 +0100
-Message-ID: <CA+M3ks5LtxZpwvx5+p9qLTWed6yb-Vo0dZ3VHFKsGcJZROEqtQ@mail.gmail.com>
-References: <20181113144805.1054-1-benjamin.gaignard@st.com>
- <20181113144805.1054-2-benjamin.gaignard@st.com> <20181204204733.GA14508@bogus>
- <64704359-d4ec-4a63-72cc-4d0a036bce8a@arm.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 2/2] PCI: mediatek: Add controller support for MT7629
+Date: Thu, 13 Dec 2018 08:55:17 -0600
+Message-ID: <20181213145517.GB4701@google.com>
+References: <1544058553-10936-1-git-send-email-jianjun.wang@mediatek.com>
+ <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <64704359-d4ec-4a63-72cc-4d0a036bce8a@arm.com>
+Content-Disposition: inline
+In-Reply-To: <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-stm32@st-md-mailman.stormreply.com, Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To: Jianjun Wang <jianjun.wang@mediatek.com>
+Cc: ryder.lee@mediatek.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, youlin.pei@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Le jeu. 13 d=C3=A9c. 2018 =C3=A0 15:23, Marc Zyngier <marc.zyngier@arm.com>=
- a =C3=A9crit :
->
-> On 04/12/2018 20:47, Rob Herring wrote:
-> > On Tue, Nov 13, 2018 at 03:48:03PM +0100, Benjamin Gaignard wrote:
-> >> Add hwlocks as optional property
-> >>
-> >> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> >
-> > Should be linaro.org S-o-b?
->
-> What is the status on this? I'm not going to queue it if there is a
-> doubt on the SoB...
+On Thu, Dec 06, 2018 at 09:09:13AM +0800, Jianjun Wang wrote:
+> MT7629 is an arm platform SoC which has the same PCIe IP with MT7622.
 
-I will fix that in version 2 (even if I don't really understand the issue)
+s/arm/ARM/
 
-Benjamin
->
-> Thanks,
->
->         M.
-> --
-> Jazz is not dead. It just smells funny...
+> The read value of BAR0 is 0xffff_ffff, it's size will be calculated as 4GB
+> in arm64 but bogus alignment values at arm32, the pcie device and devices
+> behind this bridge will not be enabled. Fix it's BAR0 resource size to
+> guarantee the pcie devices will be enabled correctly.
 
+So this is a hardware erratum?  Per spec, a memory BAR has bit 0 hardwired
+to 0, and an IO BAR has bit 1 hardwired to 0.
 
+> The HW default value of its device id is invalid, fix it's device id to
+> match the hardware implementation.
 
---=20
-Benjamin Gaignard
+s/pcie/PCIe/ (all places above)
+s/it's/its/ (all places above)
+s/device id/Device ID/
 
-Graphic Study Group
+> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> ---
+>  drivers/pci/controller/pcie-mediatek.c | 26 ++++++++++++++++++++++++++
+>  include/linux/pci_ids.h                |  1 +
+>  2 files changed, 27 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index d20cf461ba00..f8937cc3c87c 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -73,6 +73,7 @@
+>  #define PCIE_MSI_VECTOR		0x0c0
+>  
+>  #define PCIE_CONF_VEND_ID	0x100
+> +#define PCIE_CONF_DEVICE_ID	0x102
+>  #define PCIE_CONF_CLASS_ID	0x106
+>  
+>  #define PCIE_INT_MASK		0x420
+> @@ -135,12 +136,14 @@ struct mtk_pcie_port;
+>  /**
+>   * struct mtk_pcie_soc - differentiate between host generations
+>   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
+> + * @need_fix_device_id: whether this host's device ID needed to be fixed or not
+>   * @ops: pointer to configuration access functions
+>   * @startup: pointer to controller setting functions
+>   * @setup_irq: pointer to initialize IRQ functions
+>   */
+>  struct mtk_pcie_soc {
+>  	bool need_fix_class_id;
+> +	bool need_fix_device_id;
+>  	struct pci_ops *ops;
+>  	int (*startup)(struct mtk_pcie_port *port);
+>  	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
+> @@ -692,6 +695,11 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+>  		writew(val, port->base + PCIE_CONF_CLASS_ID);
+>  	}
+>  
+> +	if (soc->need_fix_device_id) {
+> +		val = PCI_DEVICE_ID_MEDIATEK_7629;
+> +		writew(val, port->base + PCIE_CONF_DEVICE_ID);
+> +	}
+> +
+>  	/* 100ms timeout value should be enough for Gen1/2 training */
+>  	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
+>  				 !!(val & PCIE_PORT_LINKUP_V2), 20,
+> @@ -1238,11 +1246,29 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
+>  	.setup_irq = mtk_pcie_setup_irq,
+>  };
+>  
+> +static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
+> +	.need_fix_class_id = true,
+> +	.need_fix_device_id = true,
+> +	.ops = &mtk_pcie_ops_v2,
+> +	.startup = mtk_pcie_startup_port_v2,
+> +	.setup_irq = mtk_pcie_setup_irq,
+> +};
+> +
+> +static void mtk_fixup_bar_size(struct pci_dev *dev)
+> +{
+> +	struct resource *dev_res = &dev->resource[0];
 
-Linaro.org =E2=94=82 Open source software for ARM SoCs
+Add a blank line here.
 
-Follow Linaro: Facebook | Twitter | Blog
+> +	/* 32bit resource length will calculate size to 0, set it smaller */
+> +	dev_res->end = 0xfffffffe;
+
+Presumably you know the size of the BAR because that's fixed by the
+hardware and documented in the spec.  You should do something like
+this so you don't depend on what the BAR contains, e.g.,
+
+  res->end = res->start + size - 1;
+
+> +}
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MEDIATEK, PCI_DEVICE_ID_MEDIATEK_7629,
+> +			 mtk_fixup_bar_size);
+> +
+>  static const struct of_device_id mtk_pcie_ids[] = {
+>  	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
+>  	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
+>  	{ .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
+>  	{ .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_mt7622 },
+> +	{ .compatible = "mediatek,mt7629-pcie", .data = &mtk_pcie_soc_mt7629 },
+>  	{},
+>  };
+>  
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 69f0abe1ba1a..77b278bac3a8 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2126,6 +2126,7 @@
+>  #define PCI_VENDOR_ID_MYRICOM		0x14c1
+>  
+>  #define PCI_VENDOR_ID_MEDIATEK		0x14c3
+> +#define PCI_DEVICE_ID_MEDIATEK_7629	0x7629
+>  
+>  #define PCI_VENDOR_ID_TITAN		0x14D2
+>  #define PCI_DEVICE_ID_TITAN_010L	0x8001
+> -- 
+> 2.19.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
