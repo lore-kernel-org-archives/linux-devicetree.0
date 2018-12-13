@@ -1,72 +1,84 @@
-From: Qii Wang <qii.wang@mediatek.com>
-Subject: Re: [PATCH 2/5] i2c: mediatek: remove useless code and replace
- definitions
-Date: Thu, 13 Dec 2018 17:13:49 +0800
-Message-ID: <1544692429.11699.31.camel@mhfsdcap03>
-References: <1543843974-4054-1-git-send-email-qii.wang@mediatek.com>
-         <1543843974-4054-3-git-send-email-qii.wang@mediatek.com>
-         <20181211202058.cd4wyz4so66iqspt@ninjato>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v8 12/26] pwm: jz4740: Allow selection of PWM channels 0
+ and 1
+Date: Thu, 13 Dec 2018 10:18:22 +0100
+Message-ID: <20181213091822.r5ilpsllfhzaiqw4@pengutronix.de>
+References: <20181212220922.18759-1-paul@crapouillou.net>
+ <20181212220922.18759-13-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181211202058.cd4wyz4so66iqspt@ninjato>
+Content-Disposition: inline
+In-Reply-To: <20181212220922.18759-13-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, ryder.lee@mediatek.com
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mathieu Malaterre <malat@debian.org>, Ezequiel Garcia <ezequiel@collabora.co.uk>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-12-11 at 21:20 +0100, Wolfram Sang wrote:
-> On Mon, Dec 03, 2018 at 09:32:51PM +0800, qii.wang@mediatek.com wrote:
-> > From: qii wang <qii.wang@mediatek.com>
-> > 
-> > Completion_done is useless when we don't use its return value,
-> > so we remove it. Different speeds have been defined by macros,
-> > so we use macros definitions.
+On Wed, Dec 12, 2018 at 11:09:07PM +0100, Paul Cercueil wrote:
+> The TCU channels 0 and 1 were previously reserved for system tasks, and
+> thus unavailable for PWM.
 > 
-> Those are two seperate patches, or?
+> The driver will now only allow a PWM channel to be requested if memory
+> resources corresponding to the register area of the channel were
+> supplied to the driver. This allows the TCU channels to be reserved for
+> system tasks from within the devicetree.
 > 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 
-These two changes are relatively small, but it seems better to be
-divided into two seperate patches.
+While there is someone caring for this driver I'd like to complete (a
+bit) my picture about the different capabilities and specialities of the
+supported PWMs. So I have a few questions:
 
-> > 
-> > Signed-off-by: qii wang <qii.wang@mediatek.com>
-> > ---
-> >  drivers/i2c/busses/i2c-mt65xx.c |    6 ++----
-> >  1 file changed, 2 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-> > index a74ef76..660de1e 100644
-> > --- a/drivers/i2c/busses/i2c-mt65xx.c
-> > +++ b/drivers/i2c/busses/i2c-mt65xx.c
-> > @@ -456,7 +456,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
-> >  
-> >  	control_reg = readw(i2c->base + OFFSET_CONTROL) &
-> >  			~(I2C_CONTROL_DIR_CHANGE | I2C_CONTROL_RS);
-> > -	if ((i2c->speed_hz > 400000) || (left_num >= 1))
-> > +	if ((i2c->speed_hz > MAX_FS_MODE_SPEED) || (left_num >= 1))
-> >  		control_reg |= I2C_CONTROL_RS;
-> >  
-> >  	if (i2c->op == I2C_MASTER_WRRD)
-> > @@ -465,7 +465,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
-> >  	writew(control_reg, i2c->base + OFFSET_CONTROL);
-> >  
-> >  	/* set start condition */
-> > -	if (i2c->speed_hz <= 100000)
-> > +	if (i2c->speed_hz <= I2C_DEFAULT_SPEED)
-> >  		writew(I2C_ST_START_CON, i2c->base + OFFSET_EXT_CONF);
-> >  	else
-> >  		writew(I2C_FS_START_CON, i2c->base + OFFSET_EXT_CONF);
-> > @@ -642,8 +642,6 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
-> >  		return -ETIMEDOUT;
-> >  	}
-> >  
-> > -	completion_done(&i2c->msg_complete);
-> > -
-> >  	if (i2c->irq_stat & (I2C_HS_NACKERR | I2C_ACKERR)) {
-> >  		dev_dbg(i2c->dev, "addr: %x, transfer ACK error\n", msgs->addr);
-> >  		mtk_i2c_init_hw(i2c);
-> > -- 
-> > 1.7.9.5
-> > 
+Is there a publicly available reference manual for this device? (If
+yes, adding a link to the driver would be great.)
+
+jz4740_pwm_config looks as if the currently running period isn't
+completed before the new config is in effect. Is that correct? If yes,
+can this be fixed? A similar question for set_polarity: Does setting the
+JZ_TIMER_CTRL_PWM_ACTIVE_LOW bit in the control register take effect
+immediately or is this shadowed until the next period starts?
+
+How does the device's output behave after the PWM is disabled?
+Does it complete the currently running period? How does the output
+behave then? (active/inactive/high/low/high-z?)
+
+> @@ -42,11 +68,7 @@ static int jz4740_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+>  	char clk_name[16];
+>  	int ret;
+>  
+> -	/*
+> -	 * Timers 0 and 1 are used for system tasks, so they are unavailable
+> -	 * for use as PWMs.
+> -	 */
+> -	if (pwm->hwpwm < 2)
+> +	if (!jz4740_pwm_can_use_chn(jz, pwm->hwpwm))
+>  		return -EBUSY;
+
+Maybe EBUSY isn't the best choice here. If the needed register space for
+the requested pwm is not included in the memory resources provided to
+the device I'd prefer ENXIO or ENODEV.
+
+>  	snprintf(clk_name, sizeof(clk_name), "timer%u", pwm->hwpwm);
+> @@ -208,6 +230,12 @@ static int jz4740_pwm_probe(struct platform_device *pdev)
+>  		return -EINVAL;
+>  	}
+>  
+> +	jz4740->parent_res = platform_get_resource(
+> +				to_platform_device(dev->parent),
+> +				IORESOURCE_MEM, 0);
+> +	if (!jz4740->parent_res)
+> +		return -EINVAL;
+> +
+>  	jz4740->chip.dev = dev;
+>  	jz4740->chip.ops = &jz4740_pwm_ops;
+>  	jz4740->chip.npwm = NUM_PWM;
+
+Thanks
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
