@@ -1,42 +1,53 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 05/12] PCI: aardvark: add suspend to RAM support
-Date: Thu, 13 Dec 2018 22:50:51 +0100
-Message-ID: <61805564.abKDZ2rVK7@aspire.rjw.lan>
-References: <20181123141831.8214-1-miquel.raynal@bootlin.com> <20181213105302.GA5330@e107981-ln.cambridge.arm.com> <20181213153000.245d7d5f@xps13>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [PATCH] arch: arm: socfpga: arria10: Add stmmac ptp_ref clock to
+ socdk devicetree
+Date: Thu, 13 Dec 2018 15:56:50 -0600
+Message-ID: <c703c4d4-4442-19b1-8645-aa906b08f7e6@kernel.org>
+References: <20181213205910.26359-1-dalon.westergreen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181213153000.245d7d5f@xps13>
+In-Reply-To: <20181213205910.26359-1-dalon.westergreen@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stephen Boyd <sboyd@kernel.org>, sudeep.holla@arm.com, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
+To: dwesterg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thor.thayer@intel.com
+Cc: Dalon Westergreen <dalon.westergreen@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, December 13, 2018 3:30:00 PM CET Miquel Raynal wrote:
-> Hi Lorenzo,
+
+
+On 12/13/18 2:59 PM, dwesterg@gmail.com wrote:
+> From: Dalon Westergreen <dalon.westergreen@linux.intel.com>
 > 
-> > > If that's really the case, then I can see how one device and it's
-> > > children are suspended and the irq for it is disabled but the providing
-> > > devices (clk, regulator, bus controller, etc.) are still fully active
-> > > and not suspended but in fact completely usable and able to service
-> > > interrupts. If that all makes sense, then I would answer the question
-> > > with a definitive "yes it's all fine" because the clk consumer could be
-> > > in the NOIRQ phase of its suspend but the clk provider wouldn't have
-> > > even started suspending yet when clk_disable_unprepare() is called.  
-> > 
-> > That's a very good summary and address my concern, I still question this
-> > patch correctness (and many others that carry out clk operations in S2R
-> > NOIRQ phase), they may work but do not tell me they are rock solid given
-> > your accurate summary above.
+> Add the stmmac ptp_ref clock as it is configured in the arria10 socdk.
+> The stmmac driver defaults the ptp_ref clock to the main stmmac clock
+> if the ptp_ref clock is not set in the devicetree.  This is inapprotiate
+
+s/inapprotiate/inappropriate
+
+> for the arria10 socdk.
 > 
-> I understand your concern but I don't see any alternative right now
-> and a deep rework of the PM core to respect such dependency is not
-> something that can be done in a reasonable amount of time.
+> Signed-off-by: Dalon Westergreen <dalon.westergreen@linux.intel.com>
+> ---
+>  arch/arm/boot/dts/socfpga_arria10_socdk.dtsi | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
+> index 2a7466891d0e..58bfa84dcdb3 100644
+> --- a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
+> +++ b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
+> @@ -74,7 +74,8 @@
+>  &gmac0 {
+>  	phy-mode = "rgmii";
+>  	phy-addr = <0xffffffff>; /* probe for phy addr */
+> -
+> +	clocks = <&l4_mp_clk>, <&peri_emac_ptp_clk>;
+> +	clock-names = "stmmaceth", "ptp_ref";
+>  	
+These should go into the base arria10 dtsi at socfpga_arria10.dtsi?
+Should the other gmacs get the same updates?
 
-Maybe you don't need to rework anything. :-)
+Also the patch header should be "ARM: dts: arria10:"
 
-Have you considered using device links?
-
-Thanks,
-Rafael
+Dinh
