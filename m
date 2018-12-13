@@ -1,78 +1,45 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v4 0/7] Add Armada 3700 COMPHY support
-Date: Thu, 13 Dec 2018 09:39:01 +0100
-Message-ID: <20181213083908.14180-1-miquel.raynal@bootlin.com>
+Subject: [PATCH v4 1/7] phy: mvebu-cp110-comphy: fix port check in ->xlate()
+Date: Thu, 13 Dec 2018 09:39:02 +0100
+Message-ID: <20181213083908.14180-2-miquel.raynal@bootlin.com>
+References: <20181213083908.14180-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181213083908.14180-1-miquel.raynal@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+So far the PHY ->xlate() callback was checking if the port was
+"invalid" before continuing, meaning that the port has not been used
+yet. This check is not correct as there is no opposite call to
+->xlate() once the PHY is released by the user and the port will
+remain "valid" after the first phy_get()/phy_put() calls. Hence, if
+this driver is built as a module, inserted, removed and inserted
+again, the PHY will appear busy and the second probe will fail.
 
-This series adds a new driver to support Armada 3700 COMPHY IP.
-The series has been tested on an ESPRESSObin with SATA, PCIe
-and USB3 host. For this purpose, patch 1 enumerates the SATA PHY
-mode. The SGMII PHY mode that is supported by the IP has been written
-(uses SMC calls anyway) but could not be tested on this platform.
+To fix this, just drop the faulty check and instead verify that the
+port number is valid (ie. in the possible range).
 
-Three series will follow to add PHY support (or at least a PHY nodes
-in the A3700/ESPRESSObin device trees) to the MVEBU AHCI driver, the
-Aardvark PCI controller driver and the MVEBU xHCI driver. All this is
-needed in order to achieve suspend to RAM on this platform.
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Thanks,
-Miquèl
-
-
-Changes since v3:
-=================
-* Added Rob's Reviewed-by tag on bindings.
-* Rebased on top of phy -next as of the 12th of December, 2018.
-* Adapted the driver to support SGMII/1000BASEX and
-  HS_SGMII/2500BASEX.
-
-Changes since v2:
-=================
-* Remove redundant check on lane->port/args->arg[0] at the end of the
-  ->xlate() callback. Do it on both armada-cp110 and armada-a3700
-  COMPHY drivers.
-* Put my SoB as author of the patch first when a patch is co-developed.
-
-Changes since v1:
-=================
-* Fix wrong check in ->xlate().
-* Apply the same fix to the cp110 comphy driver from which the a3700
-  driver is based.
-* Added credit to Gregorz Jaszczyk for his work.
-* Added Suggested-by tag to the patch adding the COMPHY DT node.
-
-
-Grzegorz Jaszczyk (1):
-  phy: enumerate SATA PHY mode
-
-Miquel Raynal (6):
-  phy: mvebu-cp110-comphy: fix port check in ->xlate()
-  phy: add A3700 COMPHY support
-  dt-bindings: phy: mvebu-comphy: extend the file to describe a3700
-    bindings
-  MAINTAINERS: phy: add entry for Armada 3700 COMPHY driver
-  ARM64: dts: marvell: armada-37xx: fix SATA node scope
-  ARM64: dts: marvell: armada-37xx: declare the COMPHY node
-
- .../bindings/phy/phy-mvebu-comphy.txt         |  65 +++-
- MAINTAINERS                                   |   6 +
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |  31 +-
- drivers/phy/marvell/Kconfig                   |  10 +
- drivers/phy/marvell/Makefile                  |   1 +
- drivers/phy/marvell/phy-mvebu-a3700-comphy.c  | 318 ++++++++++++++++++
- drivers/phy/marvell/phy-mvebu-cp110-comphy.c  |   2 -
- include/linux/phy/phy.h                       |   1 +
- 8 files changed, 419 insertions(+), 15 deletions(-)
- create mode 100644 drivers/phy/marvell/phy-mvebu-a3700-comphy.c
-
+diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+index 187cccde53b5..d98e0451f6a1 100644
+--- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
++++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+@@ -580,8 +580,6 @@ static struct phy *mvebu_comphy_xlate(struct device *dev,
+ 		return phy;
+ 
+ 	lane = phy_get_drvdata(phy);
+-	if (lane->port >= 0)
+-		return ERR_PTR(-EBUSY);
+ 	lane->port = args->args[0];
+ 
+ 	return phy;
 -- 
 2.19.1
