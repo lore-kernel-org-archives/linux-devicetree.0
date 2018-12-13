@@ -1,91 +1,84 @@
 From: Vijay Khemka <vijaykhemka@fb.com>
-Subject: [PATCH 1/4] ARM: dts: aspeed: Add sensors devices for Facebook
-Date: Thu, 13 Dec 2018 11:53:16 -0800
-Message-ID: <20181213195319.1333402-1-vijaykhemka@fb.com>
+Subject: [PATCH 2/4] ARM: dts: aspeed: Add KCS support for LPC BMC
+Date: Thu, 13 Dec 2018 11:53:17 -0800
+Message-ID: <20181213195319.1333402-2-vijaykhemka@fb.com>
+References: <20181213195319.1333402-1-vijaykhemka@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181213195319.1333402-1-vijaykhemka@fb.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc: vijaykhemka@fb.com, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
+Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, vijaykhemka@fb.com
 List-Id: devicetree@vger.kernel.org
 
-Added ADC and other sensor devices in Facebook Tiogapass device tree.
+Added kcs device support for lpc BMC.
 
 Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
 ---
- .../dts/aspeed-bmc-facebook-tiogapass.dts     | 33 +++++++++++++++++--
- 1 file changed, 31 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/aspeed-g5.dtsi | 33 +++++++++++++++++++++++++++++++-
+ 1 file changed, 32 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-index f8e7b71af7e6..58bbe08d3ba7 100644
---- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-@@ -21,6 +21,25 @@
- 	memory@80000000 {
- 		reg = <0x80000000 0x20000000>;
- 	};
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index d107459fc0f8..2743f400aa29 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -330,8 +330,32 @@
+ 				ranges = <0x0 0x1e789000 0x1000>;
+ 
+ 				lpc_bmc: lpc-bmc@0 {
+-					compatible = "aspeed,ast2500-lpc-bmc";
++					compatible = "aspeed,ast2500-lpc-bmc", "simple-mfd", "syscon";
+ 					reg = <0x0 0x80>;
++					reg-io-width = <4>;
 +
-+	iio-hwmon {
-+		compatible = "iio-hwmon";
-+		oemname0 = "MB_P3V3";
-+		oemname1 = "MB_P5V";
-+		oemname2 = "MB_P12V";
-+		oemname3 = "MB_P1V05";
-+		oemname4 = "MB_PVNN_PCH_STBY";
-+		oemname5 = "MB_P3V3_STBY";
-+		oemname6 = "MB_P5V_STBY";
-+		io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>,
-+					<&adc 4>, <&adc 5>, <&adc 6>;
-+	};
++					#address-cells = <1>;
++					#size-cells = <1>;
++					ranges = <0x0 0x0 0x80>;
 +
-+	iio-hwmon-battery {
-+		oemname0 = "MB_P3V_BAT";
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 7>;
-+	};
- };
++					kcs1: kcs1@0 {
++						compatible = "aspeed,ast2500-kcs-bmc";
++						interrupts = <8>;
++						kcs_chan = <1>;
++						status = "disabled";
++					};
++					kcs2: kcs2@0 {
++						compatible = "aspeed,ast2500-kcs-bmc";
++						interrupts = <8>;
++						kcs_chan = <2>;
++						status = "disabled";
++					};
++					kcs3: kcs3@0 {
++						compatible = "aspeed,ast2500-kcs-bmc";
++						interrupts = <8>;
++						kcs_chan = <3>;
++						status = "disabled";
++					};
+ 				};
  
- &fmc {
-@@ -64,6 +83,10 @@
- 	use-ncsi;
- };
+ 				lpc_host: lpc-host@80 {
+@@ -343,6 +367,13 @@
+ 					#size-cells = <1>;
+ 					ranges = <0x0 0x80 0x1e0>;
  
-+&adc {
-+	status = "okay";
-+};
++					kcs4: kcs4@0 {
++						compatible = "aspeed,ast2500-kcs-bmc";
++						interrupts = <8>;
++						kcs_chan = <4>;
++						status = "disabled";
++					};
 +
- &i2c0 {
- 	status = "okay";
- 	//Airmax Conn B, CPU0 PIROM, CPU1 PIROM
-@@ -122,6 +145,10 @@
- 
- &i2c8 {
- 	status = "okay";
-+	tmp421@1f {
-+		compatible = "ti,tmp421";
-+		reg = <0x1f>;
-+	};
- 	//Mezz Sensor SMBus
- };
- 
-@@ -134,13 +161,15 @@
- 	status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-+	oemname0 = "System_Fan_Connector_1";
-+	oemname1 = "System_Fan_Connector_3";
- 	fan@0 {
- 		reg = <0x00>;
- 		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
- 	};
- 
- 	fan@1 {
--		reg = <0x00>;
--		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
-+		reg = <0x01>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
- 	};
- };
+ 					lpc_ctrl: lpc-ctrl@0 {
+ 						compatible = "aspeed,ast2500-lpc-ctrl";
+ 						reg = <0x0 0x80>;
 -- 
 2.17.1
