@@ -1,80 +1,42 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH v1] pinctrl: mediatek: improve Kconfig dependencies
-Date: Thu, 13 Dec 2018 10:27:50 +0800
-Message-ID: <e4eb66dec2901016e01767932461c5d560762f66.1544666839.git.ryder.lee@mediatek.com>
+From: Biao Huang <biao.huang@mediatek.com>
+Subject: [PATCH] net-next: stmmac: dwmac-mediatek: add module license info
+Date: Thu, 13 Dec 2018 10:41:37 +0800
+Message-ID: <1544668897-6947-1-git-send-email-biao.huang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Sean Wang <sean.wang@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Weijie Gao <weijie.gao@mediatek.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>
+To: davem@davemloft.net, robh+dt@kernel.org
+Cc: honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, biao.huang@mediatek.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, joabreu@synopsys.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-Remove prompts to make all pinctrl cores to non-visible symbols and
-make sure the target SoCs would be coupled with the corresponding
-cores.
+Add MODULE_LICENSE info to fix this:
+WARNING: modpost: missing MODULE_LICENSE() in drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.o
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: Biao Huang <biao.huang@mediatek.com>
 ---
-Changes since v1:
-- Revise commit message
-- Change all pinctrl cores to non-visible symbols
-- Drop EINT_MTK in PINCTRL_MTK_MOORE
----
- drivers/pinctrl/mediatek/Kconfig | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ .../net/ethernet/stmicro/stmmac/dwmac-mediatek.c   |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
-index d8cb584..1817786 100644
---- a/drivers/pinctrl/mediatek/Kconfig
-+++ b/drivers/pinctrl/mediatek/Kconfig
-@@ -17,7 +17,7 @@ config PINCTRL_MTK
- 	select OF_GPIO
- 
- config PINCTRL_MTK_MOORE
--	bool "MediaTek Moore Core that implements generic binding"
-+	bool
- 	depends on OF
- 	select GENERIC_PINCONF
- 	select GENERIC_PINCTRL_GROUPS
-@@ -26,7 +26,7 @@ config PINCTRL_MTK_MOORE
- 	select OF_GPIO
- 
- config PINCTRL_MTK_PARIS
--	bool "MediaTek Paris Core that implements vendor binding"
-+	bool
- 	depends on OF
- 	select PINMUX
- 	select GENERIC_PINCONF
-@@ -45,14 +45,14 @@ config PINCTRL_MT2701
- config PINCTRL_MT7623
- 	bool "Mediatek MT7623 pin control with generic binding"
- 	depends on MACH_MT7623 || COMPILE_TEST
--	depends on PINCTRL_MTK_MOORE
--	default y
-+	default MACH_MT7623
-+	select PINCTRL_MTK_MOORE
- 
- config PINCTRL_MT7629
- 	bool "Mediatek MT7629 pin control"
- 	depends on MACH_MT7629 || COMPILE_TEST
--	depends on PINCTRL_MTK_MOORE
--	default y
-+	default MACH_MT7629
-+	select PINCTRL_MTK_MOORE
- 
- config PINCTRL_MT8135
- 	bool "Mediatek MT8135 pin control"
-@@ -93,8 +93,8 @@ config PINCTRL_MT6797
- config PINCTRL_MT7622
- 	bool "MediaTek MT7622 pin control"
- 	depends on ARM64 || COMPILE_TEST
--	depends on PINCTRL_MTK_MOORE
--	default y
-+	default ARM64 && ARCH_MEDIATEK
-+	select PINCTRL_MTK_MOORE
- 
- config PINCTRL_MT8173
- 	bool "Mediatek MT8173 pin control"
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
+index b5db85d..e400cbd 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
+@@ -5,6 +5,7 @@
+ #include <linux/bitfield.h>
+ #include <linux/io.h>
+ #include <linux/mfd/syscon.h>
++#include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+ #include <linux/of_net.h>
+@@ -406,3 +407,7 @@ static int mediatek_dwmac_probe(struct platform_device *pdev)
+ 	},
+ };
+ module_platform_driver(mediatek_dwmac_driver);
++
++MODULE_AUTHOR("Biao Huang <biao.huang@mediatek.com>");
++MODULE_DESCRIPTION("MediaTek DWMAC specific glue layer");
++MODULE_LICENSE("GPL v2");
 -- 
-1.9.1
+1.7.9.5
