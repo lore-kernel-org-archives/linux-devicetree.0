@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 3/3] arm64: dts: meson-axg: s400: add spdifin to the sound card
-Date: Thu, 13 Dec 2018 15:36:31 +0100
-Message-ID: <20181213143631.19218-4-jbrunet@baylibre.com>
+Subject: [PATCH 1/3] arm64: dts: meson-axg: add spdifin
+Date: Thu, 13 Dec 2018 15:36:29 +0100
+Message-ID: <20181213143631.19218-2-jbrunet@baylibre.com>
 References: <20181213143631.19218-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,54 +12,35 @@ To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable spdif input device on the S400 and add it to the card
+Add the SPDIF input device of the axg audio subsystem
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-index 2f622a0b599a..c8b531ce5c63 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-@@ -256,6 +256,9 @@
- 				"TODDR_A IN 2", "TDMIN_C OUT",
- 				"TODDR_B IN 2", "TDMIN_C OUT",
- 				"TODDR_C IN 2", "TDMIN_C OUT",
-+				"TODDR_A IN 3", "SPDIFIN Capture",
-+				"TODDR_B IN 3", "SPDIFIN Capture",
-+				"TODDR_C IN 3", "SPDIFIN Capture",
- 				"TODDR_A IN 4", "PDM Capture",
- 				"TODDR_B IN 4", "PDM Capture",
- 				"TODDR_C IN 4", "PDM Capture",
-@@ -333,6 +336,14 @@
- 		};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index fffd55787981..781632bd60ed 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -1260,6 +1260,18 @@
+ 				status = "disabled";
+ 			};
  
- 		dai-link-8 {
-+			sound-dai = <&spdifin>;
-+
-+			codec {
-+				sound-dai = <&spdif_dir>;
++			spdifin: audio-controller@400 {
++				compatible = "amlogic,axg-spdifin";
++				reg = <0x0 0x400 0x0 0x30>;
++				#sound-dai-cells = <0>;
++				sound-name-prefix = "SPDIFIN";
++				interrupts = <GIC_SPI 87 IRQ_TYPE_EDGE_RISING>;
++				clocks = <&clkc_audio AUD_CLKID_SPDIFIN>,
++					 <&clkc_audio AUD_CLKID_SPDIFIN_CLK>;
++				clock-names = "pclk", "refclk";
++				status = "disabled";
 +			};
-+		};
 +
-+		dai-link-9 {
- 			sound-dai = <&pdm>;
- 
- 			codec {
-@@ -489,6 +500,12 @@
- 	vqmmc-supply = <&vddio_boot>;
- };
- 
-+&spdifin {
-+	pinctrl-0 = <&spdif_in_a19_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
- &spdifout {
- 	pinctrl-0 = <&spdif_out_a20_pins>;
- 	pinctrl-names = "default";
+ 			spdifout: audio-controller@480 {
+ 				compatible = "amlogic,axg-spdifout";
+ 				reg = <0x0 0x480 0x0 0x50>;
 -- 
 2.19.2
