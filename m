@@ -1,93 +1,135 @@
-Return-Path: <SRS0=IqaF=OU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr00088.outbound.protection.outlook.com ([40.107.0.88]:11072
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729474AbeLKCI6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Dec 2018 21:08:58 -0500
-From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH v5 1/4] usb: chipidea: add flag for imx hsic implementation
-Date: Tue, 11 Dec 2018 02:08:54 +0000
-Message-ID: <20181211020624.9433-2-peter.chen@nxp.com>
-References: <20181211020624.9433-1-peter.chen@nxp.com>
-In-Reply-To: <20181211020624.9433-1-peter.chen@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=W32e=OW=gmail.com=dwesterg@kernel.org>
+From: dwesterg@gmail.com
+Subject: [PATCH v2 net-next 07/10] net: eth: altera: change tx functions to type netdev_tx_t
+Date: Thu, 13 Dec 2018 09:52:49 -0800
+Message-Id: <20181213175252.21143-8-dalon.westergreen@linux.intel.com>
+In-Reply-To: <20181213175252.21143-1-dalon.westergreen@linux.intel.com>
+References: <20181213175252.21143-1-dalon.westergreen@linux.intel.com>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>, Peter Chen <peter.chen@nxp.com>
+Content-Transfer-Encoding: 8bit
+To: netdev@vger.kernel.org, dinguyen@kernel.org, thor.thayer@linux.intel.com, richardcochran@gmail.com, davem@davemloft.net, vbridger@opensource.altera.com, robh+dt@kernel.org, mark.rutland@arm.commark.rutland@arm.com, devicetree@vger.kernel.org, hean.loong.ong@intel.com
+Cc: Dalon Westergreen <dalon.westergreen@linux.intel.com>
 List-ID: <devicetree@vger.kernel.org>
 
-NXP (Freecale) imx HSIC design has some special requirements, add
-some flags at host code to handle them.
+From: Dalon Westergreen <dalon.westergreen@linux.intel.com>
 
-Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Tested-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Modify all msgdma and sgdma tx_buffer functions to be of type
+netdev_tx_t, and also modify main tx function to be of
+netdev_tx_t type.
+
+Signed-off-by: Dalon Westergreen <dalon.westergreen@linux.intel.com>
 ---
- drivers/usb/chipidea/host.c  | 17 +++++++++++++++++
- include/linux/usb/chipidea.h |  3 +++
- 2 files changed, 20 insertions(+)
+ drivers/net/ethernet/altera/altera_msgdma.c   | 5 +++--
+ drivers/net/ethernet/altera/altera_msgdma.h   | 4 ++--
+ drivers/net/ethernet/altera/altera_sgdma.c    | 5 +++--
+ drivers/net/ethernet/altera/altera_sgdma.h    | 4 ++--
+ drivers/net/ethernet/altera/altera_tse.h      | 4 ++--
+ drivers/net/ethernet/altera/altera_tse_main.c | 2 +-
+ 6 files changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
-index d858a82c4f44..028a3574266a 100644
---- a/drivers/usb/chipidea/host.c
-+++ b/drivers/usb/chipidea/host.c
-@@ -170,6 +170,11 @@ static int host_start(struct ci_hdrc *ci)
- 			otg->host =3D &hcd->self;
- 			hcd->self.otg_port =3D 1;
- 		}
-+
-+		if (ci->platdata->notify_event &&
-+			(ci->platdata->flags & CI_HDRC_IMX_IS_HSIC))
-+			ci->platdata->notify_event
-+				(ci, CI_HDRC_IMX_HSIC_ACTIVE_EVENT);
- 	}
-=20
- 	return ret;
-@@ -218,6 +223,8 @@ void ci_hdrc_host_destroy(struct ci_hdrc *ci)
- static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
+diff --git a/drivers/net/ethernet/altera/altera_msgdma.c b/drivers/net/ethernet/altera/altera_msgdma.c
+index 0fb986ba3290..95f016731cc2 100644
+--- a/drivers/net/ethernet/altera/altera_msgdma.c
++++ b/drivers/net/ethernet/altera/altera_msgdma.c
+@@ -117,7 +117,8 @@ void msgdma_clear_txirq(struct altera_tse_private *priv)
+ }
+ 
+ /* return 0 to indicate transmit is pending */
+-int msgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
++netdev_tx_t
++msgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
  {
- 	struct ehci_hcd *ehci =3D hcd_to_ehci(hcd);
-+	struct device *dev =3D hcd->self.controller;
-+	struct ci_hdrc *ci =3D dev_get_drvdata(dev);
- 	int port;
- 	u32 tmp;
-=20
-@@ -249,6 +256,16 @@ static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
- 			 * It needs a short delay between set RS bit and PHCD.
- 			 */
- 			usleep_range(150, 200);
-+			/*
-+			 * Need to clear WKCN and WKOC for imx HSIC,
-+			 * otherwise, there will be wakeup event.
-+			 */
-+			if (ci->platdata->flags & CI_HDRC_IMX_IS_HSIC) {
-+				tmp =3D ehci_readl(ehci, reg);
-+				tmp &=3D ~(PORT_WKDISC_E | PORT_WKCONN_E);
-+				ehci_writel(ehci, tmp, reg);
-+			}
-+
- 			break;
- 		}
- 	}
-diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-index 63758c399e4e..911e05af671e 100644
---- a/include/linux/usb/chipidea.h
-+++ b/include/linux/usb/chipidea.h
-@@ -60,9 +60,12 @@ struct ci_hdrc_platform_data {
- #define CI_HDRC_OVERRIDE_RX_BURST	BIT(11)
- #define CI_HDRC_OVERRIDE_PHY_CONTROL	BIT(12) /* Glue layer manages phy */
- #define CI_HDRC_REQUIRES_ALIGNED_DMA	BIT(13)
-+#define CI_HDRC_IMX_IS_HSIC		BIT(14)
- 	enum usb_dr_mode	dr_mode;
- #define CI_HDRC_CONTROLLER_RESET_EVENT		0
- #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
-+#define CI_HDRC_IMX_HSIC_ACTIVE_EVENT		2
-+#define CI_HDRC_IMX_HSIC_SUSPEND_EVENT		3
- 	int	(*notify_event) (struct ci_hdrc *ci, unsigned event);
- 	struct regulator	*reg_vbus;
- 	struct usb_otg_caps	ci_otg_caps;
---=20
-2.14.1
+ 	csrwr32(lower_32_bits(buffer->dma_addr), priv->tx_dma_desc,
+ 		msgdma_descroffs(read_addr_lo));
+@@ -131,7 +132,7 @@ int msgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
+ 		msgdma_descroffs(stride));
+ 	csrwr32(MSGDMA_DESC_CTL_TX_SINGLE, priv->tx_dma_desc,
+ 		msgdma_descroffs(control));
+-	return 0;
++	return NETDEV_TX_OK;
+ }
+ 
+ u32 msgdma_tx_completions(struct altera_tse_private *priv)
+diff --git a/drivers/net/ethernet/altera/altera_msgdma.h b/drivers/net/ethernet/altera/altera_msgdma.h
+index e18be91a48a7..e9008e3761b9 100644
+--- a/drivers/net/ethernet/altera/altera_msgdma.h
++++ b/drivers/net/ethernet/altera/altera_msgdma.h
+@@ -27,8 +27,8 @@ void msgdma_clear_txirq(struct altera_tse_private *priv);
+ u32 msgdma_tx_completions(struct altera_tse_private *priv);
+ void msgdma_add_rx_desc(struct altera_tse_private *priv,
+ 			struct tse_buffer *buffer);
+-int msgdma_tx_buffer(struct altera_tse_private *priv,
+-		     struct tse_buffer *buffer);
++netdev_tx_t msgdma_tx_buffer(struct altera_tse_private *priv,
++			     struct tse_buffer *buffer);
+ u32 msgdma_rx_status(struct altera_tse_private *priv);
+ int msgdma_initialize(struct altera_tse_private *priv);
+ void msgdma_uninitialize(struct altera_tse_private *priv);
+diff --git a/drivers/net/ethernet/altera/altera_sgdma.c b/drivers/net/ethernet/altera/altera_sgdma.c
+index eb47b9b820bb..93f66af338de 100644
+--- a/drivers/net/ethernet/altera/altera_sgdma.c
++++ b/drivers/net/ethernet/altera/altera_sgdma.c
+@@ -177,7 +177,8 @@ void sgdma_clear_txirq(struct altera_tse_private *priv)
+  *   will now actually look at the code, so from now, 0 is good and return
+  *   NETDEV_TX_BUSY when busy.
+  */
+-int sgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
++netdev_tx_t
++sgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
+ {
+ 	struct sgdma_descrip __iomem *descbase =
+ 		(struct sgdma_descrip __iomem *)priv->tx_dma_desc;
+@@ -204,7 +205,7 @@ int sgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
+ 	/* enqueue the request to the pending transmit queue */
+ 	queue_tx(priv, buffer);
+ 
+-	return 0;
++	return NETDEV_TX_OK;
+ }
+ 
+ 
+diff --git a/drivers/net/ethernet/altera/altera_sgdma.h b/drivers/net/ethernet/altera/altera_sgdma.h
+index 769e720a2043..984c00d81596 100644
+--- a/drivers/net/ethernet/altera/altera_sgdma.h
++++ b/drivers/net/ethernet/altera/altera_sgdma.h
+@@ -24,8 +24,8 @@ void sgdma_disable_rxirq(struct altera_tse_private *priv);
+ void sgdma_disable_txirq(struct altera_tse_private *priv);
+ void sgdma_clear_rxirq(struct altera_tse_private *priv);
+ void sgdma_clear_txirq(struct altera_tse_private *priv);
+-int sgdma_tx_buffer(struct altera_tse_private *priv,
+-		    struct tse_buffer *buffer);
++netdev_tx_t sgdma_tx_buffer(struct altera_tse_private *priv,
++			    struct tse_buffer *buffer);
+ u32 sgdma_tx_completions(struct altera_tse_private *priv);
+ void sgdma_add_rx_desc(struct altera_tse_private *priv,
+ 		       struct tse_buffer *buffer);
+diff --git a/drivers/net/ethernet/altera/altera_tse.h b/drivers/net/ethernet/altera/altera_tse.h
+index f435fb0eca90..6e7f92ebf3cf 100644
+--- a/drivers/net/ethernet/altera/altera_tse.h
++++ b/drivers/net/ethernet/altera/altera_tse.h
+@@ -403,8 +403,8 @@ struct altera_dmaops {
+ 	void (*disable_rxirq)(struct altera_tse_private *priv);
+ 	void (*clear_txirq)(struct altera_tse_private *priv);
+ 	void (*clear_rxirq)(struct altera_tse_private *priv);
+-	int (*tx_buffer)(struct altera_tse_private *priv,
+-			 struct tse_buffer *buffer);
++	netdev_tx_t (*tx_buffer)(struct altera_tse_private *priv,
++				 struct tse_buffer *buffer);
+ 	u32 (*tx_completions)(struct altera_tse_private *priv);
+ 	void (*add_rx_desc)(struct altera_tse_private *priv,
+ 			    struct tse_buffer *buffer);
+diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
+index b25d03506470..24915f72e965 100644
+--- a/drivers/net/ethernet/altera/altera_tse_main.c
++++ b/drivers/net/ethernet/altera/altera_tse_main.c
+@@ -564,7 +564,7 @@ static irqreturn_t altera_isr(int irq, void *dev_id)
+  * physically contiguous fragment starting at
+  * skb->data, for length of skb_headlen(skb).
+  */
+-static int tse_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t tse_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct altera_tse_private *priv = netdev_priv(dev);
+ 	unsigned int txsize = priv->tx_ring_size;
+-- 
+2.19.2
