@@ -1,68 +1,42 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [RESEND PATCH v4 1/1] dt-bindings: arm-smmu: Add binding doc for
- Qcom smmu-500
-Date: Thu, 13 Dec 2018 10:45:24 +0000
-Message-ID: <20181213104524.GA31177@edgewater-inn.cambridge.arm.com>
-References: <20181213090507.6269-1-vivek.gautam@codeaurora.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [ v3 2/3] mtd: rawnand: stm32_fmc2: add STM32 FMC2 NAND flash
+ controller driver
+Date: Thu, 13 Dec 2018 11:45:35 +0100
+Message-ID: <CACRpkdbiX=9tDnE+tR7Jj-QEY_=_MvS9v8Jg8X7MzQcX7aPp-Q@mail.gmail.com>
+References: <1543509663-26128-1-git-send-email-christophe.kerello@st.com>
+ <1543509663-26128-3-git-send-email-christophe.kerello@st.com>
+ <CACRpkdb83-kEwrip+t8g2VVFiREXspfWKQa2=Zd1ah1sSLNHjQ@mail.gmail.com> <7c295246-8756-9363-a891-856ddf7af92b@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181213090507.6269-1-vivek.gautam@codeaurora.org>
+In-Reply-To: <7c295246-8756-9363-a891-856ddf7af92b@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: joro@8bytes.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: christophe.kerello@st.com
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Mark Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mtd@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 13, 2018 at 02:35:07PM +0530, Vivek Gautam wrote:
-> Qcom's implementation of arm,mmu-500 works well with current
-> arm-smmu driver implementation. Adding a soc specific compatible
-> along with arm,mmu-500 makes the bindings future safe.
-> 
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Cc: Will Deacon <will.deacon@arm.com>
-> ---
-> 
-> Hi Joerg,
-> I am picking this out separately from the sdm845 smmu support
-> series [1], so that this can go through iommu tree.
-> The dt patch from the series [1] can be taken through arm-soc tree.
-> 
-> Hi Will,
-> As asked [2], here's the resend version of dt binding patch for sdm845.
-> Kindly ack this so that Joerg can pull this in.
+On Fri, Dec 7, 2018 at 5:53 PM Christophe Kerello
+<christophe.kerello@st.com> wrote:
+> On 12/7/18 10:06 AM, Linus Walleij wrote:
 
-Acked-by: Will Deacon <will.deacon@arm.com>
+> Based on FMC2 datasheet,
+> The FMC2 controller includes 2 memory controllers:
+>   - the NOR/PSRAM memory controller
+>   - the NAND memory controller
+>
+> The NOR/PSRAM controller mapping is starting at 0.
+> The NAND controller mapping is starting at 0x80.
+>
+> We have only planned to develop a driver for the NAND memory controller.
+> There is currently no customer request to develop the NOR/PSRAM memory
+> controller.
 
-Joerg -- please can you take this on top of the pull request I sent already?
-Vivek included it as part of a separate series which I thought was going
-via arm-soc, but actually it needs to go with the other arm-smmu patches
-in order to avoid conflicts.
+OK I get it, so there is no FSMC (v1), but a NOR controller, thanks!
 
-Cheers,
+If people need to access the NOR controller I think they can just patch
+your driver to handle both or have a second driver on the side
+(I suspect the pins are anyways set up such that you can just
+use either NOR or NAND.)
 
-Will
-
->  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> index a6504b37cc21..3133f3ba7567 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> @@ -27,6 +27,10 @@ conditions.
->                    "qcom,msm8996-smmu-v2", "qcom,smmu-v2",
->                    "qcom,sdm845-smmu-v2", "qcom,smmu-v2".
->  
-> +                  Qcom SoCs implementing "arm,mmu-500" must also include,
-> +                  as below, SoC-specific compatibles:
-> +                  "qcom,sdm845-smmu-500", "arm,mmu-500"
-> +
->  - reg           : Base address and size of the SMMU.
->  
->  - #global-interrupts : The number of global interrupts exposed by the
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+Yours,
+Linus Walleij
