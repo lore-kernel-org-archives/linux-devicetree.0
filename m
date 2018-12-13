@@ -1,14 +1,13 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "dt-bindings: ASoC: xlnx,
- i2s: Document i2s bindings" to the asoc tree
-Date: Thu, 13 Dec 2018 18:11:17 +0000 (GMT)
-Message-ID: <20181213181117.D38D311254D1@debutante.sirena.org.uk>
-References: <1544207558-72508-2-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
+Subject: Applied "ASoC: xlnx: enable i2s driver build" to the asoc tree
+Date: Thu, 13 Dec 2018 18:11:14 +0000 (GMT)
+Message-ID: <20181213181114.1210211254D1@debutante.sirena.org.uk>
+References: <1544207558-72508-4-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1544207558-72508-2-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
+In-Reply-To: <1544207558-72508-4-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,7 +23,7 @@ List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   dt-bindings: ASoC: xlnx, i2s: Document i2s bindings
+   ASoC: xlnx: enable i2s driver build
 
 has been applied to the asoc tree at
 
@@ -49,53 +48,68 @@ to this mail.
 Thanks,
 Mark
 
->From 644c2dcf2f2ea113602aa24170d3203942d3d140 Mon Sep 17 00:00:00 2001
+>From 33f8db9a89200c18ff65d494a3dbd325d129e15e Mon Sep 17 00:00:00 2001
 From: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
-Date: Sat, 8 Dec 2018 00:02:36 +0530
-Subject: [PATCH] dt-bindings: ASoC: xlnx, i2s: Document i2s bindings
+Date: Sat, 8 Dec 2018 00:02:38 +0530
+Subject: [PATCH] ASoC: xlnx: enable i2s driver build
 
-Added documentation for I2S IP core DT bindings.
+Enabled i2s driver build option.
 
 Signed-off-by: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../devicetree/bindings/sound/xlnx,i2s.txt    | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/xlnx,i2s.txt
+ sound/soc/Kconfig         | 1 +
+ sound/soc/Makefile        | 1 +
+ sound/soc/xilinx/Kconfig  | 8 ++++++++
+ sound/soc/xilinx/Makefile | 2 ++
+ 4 files changed, 12 insertions(+)
+ create mode 100644 sound/soc/xilinx/Kconfig
+ create mode 100644 sound/soc/xilinx/Makefile
 
-diff --git a/Documentation/devicetree/bindings/sound/xlnx,i2s.txt b/Documentation/devicetree/bindings/sound/xlnx,i2s.txt
+diff --git a/sound/soc/Kconfig b/sound/soc/Kconfig
+index 1cf11cf51e1d..d21659f5a7e2 100644
+--- a/sound/soc/Kconfig
++++ b/sound/soc/Kconfig
+@@ -73,6 +73,7 @@ source "sound/soc/tegra/Kconfig"
+ source "sound/soc/txx9/Kconfig"
+ source "sound/soc/uniphier/Kconfig"
+ source "sound/soc/ux500/Kconfig"
++source "sound/soc/xilinx/Kconfig"
+ source "sound/soc/xtensa/Kconfig"
+ source "sound/soc/zte/Kconfig"
+ 
+diff --git a/sound/soc/Makefile b/sound/soc/Makefile
+index 62a5f87c3cfc..aff7b1989436 100644
+--- a/sound/soc/Makefile
++++ b/sound/soc/Makefile
+@@ -57,5 +57,6 @@ obj-$(CONFIG_SND_SOC)	+= tegra/
+ obj-$(CONFIG_SND_SOC)	+= txx9/
+ obj-$(CONFIG_SND_SOC)	+= uniphier/
+ obj-$(CONFIG_SND_SOC)	+= ux500/
++obj-$(CONFIG_SND_SOC)	+= xilinx/
+ obj-$(CONFIG_SND_SOC)	+= xtensa/
+ obj-$(CONFIG_SND_SOC)	+= zte/
+diff --git a/sound/soc/xilinx/Kconfig b/sound/soc/xilinx/Kconfig
 new file mode 100644
-index 000000000000..5e7c7d5bb60a
+index 000000000000..25e287feb58c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/xlnx,i2s.txt
-@@ -0,0 +1,28 @@
-+Device-Tree bindings for Xilinx I2S PL block
-+
-+The IP supports I2S based playback/capture audio
-+
-+Required property:
-+ - compatible: "xlnx,i2s-transmitter-1.0" for playback and
-+	       "xlnx,i2s-receiver-1.0" for capture
-+
-+Required property common to both I2S playback and capture:
-+ - reg: Base address and size of the IP core instance.
-+ - xlnx,dwidth: sample data width. Can be any of 16, 24.
-+ - xlnx,num-channels: Number of I2S streams. Can be any of 1, 2, 3, 4.
-+		      supported channels = 2 * xlnx,num-channels
-+
-+Example:
-+
-+	i2s_receiver@a0080000 {
-+		compatible = "xlnx,i2s-receiver-1.0";
-+		reg = <0x0 0xa0080000 0x0 0x10000>;
-+		xlnx,dwidth = <0x18>;
-+		xlnx,num-channels = <1>;
-+	};
-+	i2s_transmitter@a0090000 {
-+		compatible = "xlnx,i2s-transmitter-1.0";
-+		reg = <0x0 0xa0090000 0x0 0x10000>;
-+		xlnx,dwidth = <0x18>;
-+		xlnx,num-channels = <1>;
-+	};
++++ b/sound/soc/xilinx/Kconfig
+@@ -0,0 +1,8 @@
++config SND_SOC_XILINX_I2S
++	tristate "Audio support for the the Xilinx I2S"
++	help
++	  Select this option to enable Xilinx I2S Audio. This enables
++	  I2S playback and capture using xilinx soft IP. In transmitter
++	  mode, IP receives audio in AES format, extracts PCM and sends
++	  PCM data. In receiver mode, IP receives PCM audio and
++	  encapsulates PCM in AES format and sends AES data.
+diff --git a/sound/soc/xilinx/Makefile b/sound/soc/xilinx/Makefile
+new file mode 100644
+index 000000000000..6c1209b9ee75
+--- /dev/null
++++ b/sound/soc/xilinx/Makefile
+@@ -0,0 +1,2 @@
++snd-soc-xlnx-i2s-objs      := xlnx_i2s.o
++obj-$(CONFIG_SND_SOC_XILINX_I2S) += snd-soc-xlnx-i2s.o
 -- 
 2.19.0.rc2
