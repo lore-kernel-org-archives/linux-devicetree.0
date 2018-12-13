@@ -1,11 +1,13 @@
 From: <Claudiu.Beznea@microchip.com>
-Subject: [PATCH v4 0/5] add PM functionality for act8945a PMIC
-Date: Thu, 13 Dec 2018 12:49:44 +0000
-Message-ID: <1544703110-27161-1-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH v4 1/6] regulator: act8945a-regulator: unlock expert registers
+Date: Thu, 13 Dec 2018 12:49:48 +0000
+Message-ID: <1544703110-27161-2-git-send-email-claudiu.beznea@microchip.com>
+References: <1544703110-27161-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1544703110-27161-1-git-send-email-claudiu.beznea@microchip.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com
@@ -14,59 +16,66 @@ List-Id: devicetree@vger.kernel.org
 
 From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-This series implements PM functionality for act8945a PMIC and use that supp=
-ort
-on SAMA5D2 Xplained board.
+Unlock expert registers for act8945a.
+This is based on orginal work of Boris Brezillon at [1].
 
-Changes in v4:
-- move dt-bindings/regulator/active-semi,8945a-regulator.h in documentation
-  patch; driver uses macros included in this file; due to this documentatio=
-n
-  patch and drivers patches should go through the same tree
-- make documentation patch, patch 2 of this series
+[1] https://www.spinics.net/lists/kernel/msg2942960.html
 
-Changes in v3:
-- add patch "unlock expert registers"; it was wrongly missed in previous ve=
-rsion
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
+ drivers/regulator/act8945a-regulator.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-Changes in v2:
-- split patch 1/1 from previous series in 3 patches: one adding regmap,
-  one adding pm functionality, one adding shutdown functionality
-- use dev_pm_ops suspend function to set register specific to PWRHLD line: =
-this
-  is specific to PMIC itself and not to regulators
-- add mode support for LDOs
-- add constants for mode in dt-bindings/regulator/active-semi,8945a-regulat=
-or.h
-- document modes and regulator suspend states
-- remove rdevs from struct act8945a_pmic since were not used anywhere
-- add op_mode field in struct act8945a_pmic, update it when setting mode an=
-d
-  return it when reading mode (avoiding one extra register read while
-  reading mode)
-- add a patch to fix a checkpatch.pl warning
-- in shutdown function use directly act8945a->regmap instead of an intermed=
-iary
-  struct regmap variable
-
-Boris Brezillon (2):
-  regulator: act8945a-regulator: Implement PM functionalities
-  ARM: dts: at91: sama5d2_xplained: Add proper regulator states for
-    suspend-to-mem
-
-Claudiu Beznea (3):
-  regulator: act8945a-regulator: fix line over 80 chars warning
-  regulator: act8945a-regulator: add shutdown function
-  regulator: add documentation for regulator modes and suspend states
-
- .../bindings/regulator/act8945a-regulator.txt      |  34 ++++
- arch/arm/boot/dts/at91-sama5d2_xplained.dts        |  54 ++++++
- drivers/regulator/act8945a-regulator.c             | 200 +++++++++++++++++=
-+++-
- .../regulator/active-semi,8945a-regulator.h        |  30 ++++
- 4 files changed, 312 insertions(+), 6 deletions(-)
- create mode 100644 include/dt-bindings/regulator/active-semi,8945a-regulat=
-or.h
-
+diff --git a/drivers/regulator/act8945a-regulator.c b/drivers/regulator/act=
+8945a-regulator.c
+index 43fda8b4455a..8d71d9893d0d 100644
+--- a/drivers/regulator/act8945a-regulator.c
++++ b/drivers/regulator/act8945a-regulator.c
+@@ -15,6 +15,7 @@
+ #include <linux/module.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
++#include <linux/regmap.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
+=20
+@@ -23,6 +24,7 @@
+  */
+ #define ACT8945A_SYS_MODE	0x00
+ #define ACT8945A_SYS_CTRL	0x01
++#define ACT8945A_SYS_UNLK_REGS	0x0b
+ #define ACT8945A_DCDC1_VSET1	0x20
+ #define ACT8945A_DCDC1_VSET2	0x21
+ #define ACT8945A_DCDC1_CTRL	0x22
+@@ -123,9 +125,17 @@ static int act8945a_pmic_probe(struct platform_device =
+*pdev)
+ 	struct regulator_config config =3D { };
+ 	const struct regulator_desc *regulators;
+ 	struct regulator_dev *rdev;
++	struct regmap *regmap;
+ 	int i, num_regulators;
+ 	bool voltage_select;
+=20
++	regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
++	if (!regmap) {
++		dev_err(&pdev->dev,
++			"could not retrieve regmap from parent device\n");
++		return -EINVAL;
++	}
++
+ 	voltage_select =3D of_property_read_bool(pdev->dev.parent->of_node,
+ 					       "active-semi,vsel-high");
+=20
+@@ -149,7 +159,8 @@ static int act8945a_pmic_probe(struct platform_device *=
+pdev)
+ 		}
+ 	}
+=20
+-	return 0;
++	/* Unlock expert registers. */
++	return regmap_write(regmap, ACT8945A_SYS_UNLK_REGS, 0xef);
+ }
+=20
+ static struct platform_driver act8945a_pmic_driver =3D {
 --=20
 2.7.4
