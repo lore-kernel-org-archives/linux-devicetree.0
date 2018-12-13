@@ -1,28 +1,34 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v1] pinctrl: mediatek: improve Kconfig dependencies
-Date: Thu, 13 Dec 2018 08:49:46 -0800
-Message-ID: <7hlg4ts76d.fsf@baylibre.com>
-References: <e4eb66dec2901016e01767932461c5d560762f66.1544666839.git.ryder.lee@mediatek.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/2] ARM: dts: Fix wrong address for omap5 sata phy
+Date: Thu, 13 Dec 2018 09:08:38 -0800
+Message-ID: <20181213170838.GQ6707@atomide.com>
+References: <20181213021801.49938-1-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e4eb66dec2901016e01767932461c5d560762f66.1544666839.git.ryder.lee@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Sean Wang <sean.wang@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Weijie Gao <weijie.gao@mediatek.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20181213021801.49938-1-tony@atomide.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-omap@vger.kernel.org
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Ryder Lee <ryder.lee@mediatek.com> writes:
+* Tony Lindgren <tony@atomide.com> [181213 02:18]:
+> While at it, we can also more it to be a direct parent of the interconnect
+> target module, it is not really a child of the ocp2scp control device.
 
-> Remove prompts to make all pinctrl cores to non-visible symbols and
-> make sure the target SoCs would be coupled with the corresponding
-> cores.
->
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+This should say "direct child of the interconnect target module",
+not direct parent.. Will fix and push out.
 
-Tested-by: Kevin Hilman <khilman@baylibre.com>
+Regards,
 
-Tested on the mt7623-rfb1 board which has been failing in kernelCI, and
-this patch gets things booting again.
-
-Kevin
+Tony
