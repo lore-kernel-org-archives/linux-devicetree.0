@@ -1,40 +1,37 @@
-From: dwesterg@gmail.com
-Subject: [PATCH] arch: arm: socfpga: arria10: Add stmmac ptp_ref clock to socdk devicetree
-Date: Thu, 13 Dec 2018 12:59:10 -0800
-Message-ID: <20181213205910.26359-1-dalon.westergreen@linux.intel.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: [PATCH V1] arm64: tegra: SDMMC Clock change
+Date: Thu, 13 Dec 2018 13:14:30 -0800
+Message-ID: <1544735670-14246-1-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thor.thayer@intel.com
-Cc: Dalon Westergreen <dalon.westergreen@linux.intel.com>
+To: robh+dt@kernel.org, mperttunen@nvidia.com, thierry.reding@gmail.com, jonathanh@nvidia.com
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Sowjanya Komatineni <skomatineni@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Dalon Westergreen <dalon.westergreen@linux.intel.com>
+SDMMC Clock source change for supporting max frequency of
+200Mhz for Tegra194
 
-Add the stmmac ptp_ref clock as it is configured in the arria10 socdk.
-The stmmac driver defaults the ptp_ref clock to the main stmmac clock
-if the ptp_ref clock is not set in the devicetree.  This is inapprotiate
-for the arria10 socdk.
-
-Signed-off-by: Dalon Westergreen <dalon.westergreen@linux.intel.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- arch/arm/boot/dts/socfpga_arria10_socdk.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-index 2a7466891d0e..58bfa84dcdb3 100644
---- a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-@@ -74,7 +74,8 @@
- &gmac0 {
- 	phy-mode = "rgmii";
- 	phy-addr = <0xffffffff>; /* probe for phy addr */
--
-+	clocks = <&l4_mp_clk>, <&peri_emac_ptp_clk>;
-+	clock-names = "stmmaceth", "ptp_ref";
- 	/*
- 	 * These skews assume the user's FPGA design is adding 600ps of delay
- 	 * for TX_CLK on Arria 10.
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index c2091bb16546..e61f86366cb1 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -321,6 +321,10 @@
+ 			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&bpmp TEGRA194_CLK_SDMMC4>;
+ 			clock-names = "sdhci";
++			assigned-clocks = <&bpmp TEGRA194_CLK_SDMMC4>,
++					<&bpmp TEGRA194_CLK_PLLC4>;
++			assigned-clock-parents =
++					  <&bpmp TEGRA194_CLK_PLLC4>;
+ 			resets = <&bpmp TEGRA194_RESET_SDMMC4>;
+ 			reset-names = "sdhci";
+ 			status = "disabled";
 -- 
-2.19.2
+2.7.4
