@@ -1,63 +1,52 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH v4 0/5] add PM functionality for act8945a PMIC
-Date: Thu, 13 Dec 2018 12:59:00 +0000
-Message-ID: <0291f79e-b8df-f7ae-1ded-cacd404bc5fc@microchip.com>
-References: <1544703110-27161-1-git-send-email-claudiu.beznea@microchip.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/8] mfd: axp20x: name voltage ramping
+ define properly
+Date: Thu, 13 Dec 2018 13:28:02 +0000
+Message-ID: <20181213132802.GQ4497@dell>
+References: <cover.4110554ae84987dedb8b58888a8a63d6b7f98c72.1544466940.git-series.plaes@plaes.org>
+ <01367c4f4f1e174fefbef9aac645f6792bda07e5.1544466940.git-series.plaes@plaes.org>
+ <20181213115506.GD10669@sirena.org.uk>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544703110-27161-1-git-send-email-claudiu.beznea@microchip.com>
-Content-Language: en-US
-Content-ID: <C412264179B89043BB78573E38543AB7@namprd11.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBZN4ZHQAKGQEQEARP4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20181213115506.GD10669-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyaywNCg0KSSBzYXcgdGhhdCBwcmV2aW91cyB2ZXJzaW9uIG9mIHRoaXMgc2VyaWVzIHdh
-cyBhcHBsaWVkIHRvIHlvdXIgdHJlZSBqdXN0DQphZnRlciBJJ3ZlIHNlbmQgdGhpcyBuZXcgb25l
-LiBUaGUgb25seSBkaWZmZXJlbmNlIGIvdyB0aGVtIGlzIGluIHRoZQ0KZG9jdW1lbnRhdGlvbiBw
-YXRjaCB3aGVyZSBJIG1vdmVkIHRoZSBuZXcgaGVhZGVyLiBObyBmdW5jdGlvbmFsaXR5IGNoYW5n
-ZS4NCg0KU29ycnkgZm9yIHRoZSBub2lzZSwNCkNsYXVkaXUgQmV6bmVhDQoNCk9uIDEzLjEyLjIw
-MTggMTQ6NDksIENsYXVkaXUgQmV6bmVhIC0gTTE4MDYzIHdyb3RlOg0KPiBGcm9tOiBDbGF1ZGl1
-IEJlem5lYSA8Y2xhdWRpdS5iZXpuZWFAbWljcm9jaGlwLmNvbT4NCj4gDQo+IFRoaXMgc2VyaWVz
-IGltcGxlbWVudHMgUE0gZnVuY3Rpb25hbGl0eSBmb3IgYWN0ODk0NWEgUE1JQyBhbmQgdXNlIHRo
-YXQgc3VwcG9ydA0KPiBvbiBTQU1BNUQyIFhwbGFpbmVkIGJvYXJkLg0KPiANCj4gQ2hhbmdlcyBp
-biB2NDoNCj4gLSBtb3ZlIGR0LWJpbmRpbmdzL3JlZ3VsYXRvci9hY3RpdmUtc2VtaSw4OTQ1YS1y
-ZWd1bGF0b3IuaCBpbiBkb2N1bWVudGF0aW9uDQo+ICAgcGF0Y2g7IGRyaXZlciB1c2VzIG1hY3Jv
-cyBpbmNsdWRlZCBpbiB0aGlzIGZpbGU7IGR1ZSB0byB0aGlzIGRvY3VtZW50YXRpb24NCj4gICBw
-YXRjaCBhbmQgZHJpdmVycyBwYXRjaGVzIHNob3VsZCBnbyB0aHJvdWdoIHRoZSBzYW1lIHRyZWUN
-Cj4gLSBtYWtlIGRvY3VtZW50YXRpb24gcGF0Y2gsIHBhdGNoIDIgb2YgdGhpcyBzZXJpZXMNCj4g
-DQo+IENoYW5nZXMgaW4gdjM6DQo+IC0gYWRkIHBhdGNoICJ1bmxvY2sgZXhwZXJ0IHJlZ2lzdGVy
-cyI7IGl0IHdhcyB3cm9uZ2x5IG1pc3NlZCBpbiBwcmV2aW91cyB2ZXJzaW9uDQo+IA0KPiBDaGFu
-Z2VzIGluIHYyOg0KPiAtIHNwbGl0IHBhdGNoIDEvMSBmcm9tIHByZXZpb3VzIHNlcmllcyBpbiAz
-IHBhdGNoZXM6IG9uZSBhZGRpbmcgcmVnbWFwLA0KPiAgIG9uZSBhZGRpbmcgcG0gZnVuY3Rpb25h
-bGl0eSwgb25lIGFkZGluZyBzaHV0ZG93biBmdW5jdGlvbmFsaXR5DQo+IC0gdXNlIGRldl9wbV9v
-cHMgc3VzcGVuZCBmdW5jdGlvbiB0byBzZXQgcmVnaXN0ZXIgc3BlY2lmaWMgdG8gUFdSSExEIGxp
-bmU6IHRoaXMNCj4gICBpcyBzcGVjaWZpYyB0byBQTUlDIGl0c2VsZiBhbmQgbm90IHRvIHJlZ3Vs
-YXRvcnMNCj4gLSBhZGQgbW9kZSBzdXBwb3J0IGZvciBMRE9zDQo+IC0gYWRkIGNvbnN0YW50cyBm
-b3IgbW9kZSBpbiBkdC1iaW5kaW5ncy9yZWd1bGF0b3IvYWN0aXZlLXNlbWksODk0NWEtcmVndWxh
-dG9yLmgNCj4gLSBkb2N1bWVudCBtb2RlcyBhbmQgcmVndWxhdG9yIHN1c3BlbmQgc3RhdGVzDQo+
-IC0gcmVtb3ZlIHJkZXZzIGZyb20gc3RydWN0IGFjdDg5NDVhX3BtaWMgc2luY2Ugd2VyZSBub3Qg
-dXNlZCBhbnl3aGVyZQ0KPiAtIGFkZCBvcF9tb2RlIGZpZWxkIGluIHN0cnVjdCBhY3Q4OTQ1YV9w
-bWljLCB1cGRhdGUgaXQgd2hlbiBzZXR0aW5nIG1vZGUgYW5kDQo+ICAgcmV0dXJuIGl0IHdoZW4g
-cmVhZGluZyBtb2RlIChhdm9pZGluZyBvbmUgZXh0cmEgcmVnaXN0ZXIgcmVhZCB3aGlsZQ0KPiAg
-IHJlYWRpbmcgbW9kZSkNCj4gLSBhZGQgYSBwYXRjaCB0byBmaXggYSBjaGVja3BhdGNoLnBsIHdh
-cm5pbmcNCj4gLSBpbiBzaHV0ZG93biBmdW5jdGlvbiB1c2UgZGlyZWN0bHkgYWN0ODk0NWEtPnJl
-Z21hcCBpbnN0ZWFkIG9mIGFuIGludGVybWVkaWFyeQ0KPiAgIHN0cnVjdCByZWdtYXAgdmFyaWFi
-bGUNCj4gDQo+IEJvcmlzIEJyZXppbGxvbiAoMik6DQo+ICAgcmVndWxhdG9yOiBhY3Q4OTQ1YS1y
-ZWd1bGF0b3I6IEltcGxlbWVudCBQTSBmdW5jdGlvbmFsaXRpZXMNCj4gICBBUk06IGR0czogYXQ5
-MTogc2FtYTVkMl94cGxhaW5lZDogQWRkIHByb3BlciByZWd1bGF0b3Igc3RhdGVzIGZvcg0KPiAg
-ICAgc3VzcGVuZC10by1tZW0NCj4gDQo+IENsYXVkaXUgQmV6bmVhICgzKToNCj4gICByZWd1bGF0
-b3I6IGFjdDg5NDVhLXJlZ3VsYXRvcjogZml4IGxpbmUgb3ZlciA4MCBjaGFycyB3YXJuaW5nDQo+
-ICAgcmVndWxhdG9yOiBhY3Q4OTQ1YS1yZWd1bGF0b3I6IGFkZCBzaHV0ZG93biBmdW5jdGlvbg0K
-PiAgIHJlZ3VsYXRvcjogYWRkIGRvY3VtZW50YXRpb24gZm9yIHJlZ3VsYXRvciBtb2RlcyBhbmQg
-c3VzcGVuZCBzdGF0ZXMNCj4gDQo+ICAuLi4vYmluZGluZ3MvcmVndWxhdG9yL2FjdDg5NDVhLXJl
-Z3VsYXRvci50eHQgICAgICB8ICAzNCArKysrDQo+ICBhcmNoL2FybS9ib290L2R0cy9hdDkxLXNh
-bWE1ZDJfeHBsYWluZWQuZHRzICAgICAgICB8ICA1NCArKysrKysNCj4gIGRyaXZlcnMvcmVndWxh
-dG9yL2FjdDg5NDVhLXJlZ3VsYXRvci5jICAgICAgICAgICAgIHwgMjAwICsrKysrKysrKysrKysr
-KysrKysrLQ0KPiAgLi4uL3JlZ3VsYXRvci9hY3RpdmUtc2VtaSw4OTQ1YS1yZWd1bGF0b3IuaCAg
-ICAgICAgfCAgMzAgKysrKw0KPiAgNCBmaWxlcyBjaGFuZ2VkLCAzMTIgaW5zZXJ0aW9ucygrKSwg
-NiBkZWxldGlvbnMoLSkNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2R0LWJpbmRpbmdz
-L3JlZ3VsYXRvci9hY3RpdmUtc2VtaSw4OTQ1YS1yZWd1bGF0b3IuaA0KPiANCg==
+On Thu, 13 Dec 2018, Mark Brown wrote:
+
+> On Mon, Dec 10, 2018 at 08:42:12PM +0200, Priit Laes wrote:
+>=20
+> > Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+> > Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+> > Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>=20
+> What's going on with this patch?  Will you be applying it or is this an
+> ack for it to be applied with the rest of the series?
+
+I don't have anything else queued for include/linux/mfd/axp20x.h, so
+you can take it if you want.  Just make sure you 's/-for-MFD//'.=20
+
+--=20
+Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+Linaro Services Technical Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
