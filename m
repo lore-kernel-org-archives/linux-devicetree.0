@@ -1,45 +1,51 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH] dt-bindings: i2c: sh_mobile: Add r8a774c0 support
-Date: Thu, 13 Dec 2018 21:57:59 +0000
-Message-ID: <c987f09c-689f-7e89-d496-f53b0ab6c2c1@axentia.se>
-References: <1544732352-6178-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] dt-bindings: remoteproc: qcom: Add power-domain bindings
+ for Q6V5
+Date: Thu, 13 Dec 2018 14:05:18 -0800
+Message-ID: <CAD=FV=WC7UQnNsbqwevhxML2Xmq3z4c7uiJ8ddn4tE2H3zAHZg@mail.gmail.com>
+References: <20181120210828.12590-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544732352-6178-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Content-Language: en-US
-Content-ID: <C00546CA5CA0A845865B43034AF88AF6@eurprd02.prod.outlook.com>
+In-Reply-To: <20181120210828.12590-1-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa@the-dreams.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Biju Das <biju.das@bp.renesas.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+To: sibis@codeaurora.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, Ohad Ben Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0xMi0xMyAyMToxOSwgRmFicml6aW8gQ2FzdHJvIHdyb3RlOg0KPiBEb2N1bWVudCBS
-Wi9HMkUgKFI4QTc3NEMwKSBTb0MgYmluZGluZ3MuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBGYWJy
-aXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gLS0tDQo+ICBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1zaF9tb2JpbGUudHh0IHwg
-MyArKy0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkN
-Cj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJj
-L2kyYy1zaF9tb2JpbGUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ky
-Yy9pMmMtc2hfbW9iaWxlLnR4dA0KPiBpbmRleCBiYzg3NmI3Li4zZGZmODlmIDEwMDY0NA0KPiAt
-LS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1zaF9tb2JpbGUu
-dHh0DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLXNo
-X21vYmlsZS50eHQNCj4gQEAgLTgsNiArOCw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ICAJ
-CQktICJyZW5lc2FzLGlpYy1yOGE3NzQ0IiAoUlovRzFOKQ0KPiAgCQkJLSAicmVuZXNhcyxpaWMt
-cjhhNzc0NSIgKFJaL0cxRSkNCj4gIAkJCS0gInJlbmVzYXMsaWljLXI4YTc3NGExIiAoUlovRzJN
-KQ0KPiArCQkJLSAicmVuZXNhcyxpaWMtcjhhNzc0YzAiIChSWi9HMkUpDQo+ICAJCQktICJyZW5l
-c2FzLGlpYy1yOGE3NzkwIiAoUi1DYXIgSDIpDQo+ICAJCQktICJyZW5lc2FzLGlpYy1yOGE3Nzkx
-IiAoUi1DYXIgTTItVykNCj4gIAkJCS0gInJlbmVzYXMsaWljLXI4YTc3OTIiIChSLUNhciBWMkgp
-DQo+IEBAIC0zMiw3ICszMyw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ICAJCQlXaGVuIGNv
-bXBhdGlibGUgd2l0aCAicmVuZXNhcyxybW9iaWxlLWlpYyIgaXQgc2hvdWxkDQo+ICAJCQliZSB0
-aGUgbGFzdCBjb21wYXRpYmlsaXR5IHN0cmluZyBsaXN0ZWQuDQo+ICANCj4gLQkJCVRoZSByOGE3
-Nzk5MCAoUi1DYXIgRTMpIGNvbnRyb2xsZXIgaXMgbm90DQo+ICsJCQlUaGUgcjhhNzc5OTAgKFIt
-Q2FyIEUzKSBhbmQgUlovRzJFIGNvbnRyb2xsZXJzIGFyZSBub3QNCg0KVGhlIHJlZmVyZW5jZXMg
-dG8gdGhlc2UgdHdvIGNvbnRyb2xsZXJzIGRvIG5vdCBmb2xsb3cgdGhlIHNhbWUgc3R5bGUuDQpJ
-J2QgZWl0aGVyIGRlbGV0ZSByOGE3Nzk5MCBhbmQgZ2V0ICJSLUNhciBFMyBhbmQgUlovRzJFIiBv
-ciBhZGQNCnI4YTc3NGMwIGluIGZyb250IG9mIFJaL0cyRSAoYnJhY2tldGVkKSwgd2l0aCBhIHNs
-aWdodCBwcmVmZXJlbmNlDQpmb3IgdGhlIGxhdHRlci4NCg0KQ2hlZXJzLA0KUGV0ZXINCg0KPiAg
-CQkJY29uc2lkZXJlZCBjb21wYXRpYmxlIHdpdGggInJlbmVzYXMscmNhci1nZW4zLWlpYyINCj4g
-IAkJCW9yICJyZW5lc2FzLHJtb2JpbGUtaWljIiBkdWUgdG8gdGhlIGFic2VuY2Ugb2YNCj4gIAkJ
-CWF1dG9tYXRpYyB0cmFuc21pc3Npb24gcmVnaXN0ZXJzLg0KPiANCg==
+Hi,
+
+On Tue, Nov 20, 2018 at 1:08 PM Sibi Sankar <sibis@codeaurora.org> wrote:
+> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+> index 14947562bc67..bd9f4882fcf0 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+> @@ -75,6 +75,17 @@ on the Qualcomm Hexagon core.
+>         Definition: reference to the regulators to be held on behalf of the
+>                     booting of the Hexagon core
+>
+> +- power-domains:
+> +       Usage: required
+
+Assuming I understand correctly, presumably you want to say that it's
+required to list _either_ power-domains or supplies.  Right now you
+have the bindings saying that you need both regulators and
+power-domains on all boards.
+
+
+> +       Value type: <phandle>
+> +       Definition: reference to the cx, mx and mss power-domains to be held on
+> +                   behalf of the booting the Hexagon core
+> +
+> +- power-domain-names:
+> +       Usage: required
+> +       Value type: <stringlist>
+> +       Definition: must be "cx", "mx", "mss"
+
+Comparing to the patch you posted at
+<https://lkml.kernel.org/r/20181127085828.17908-1-sibis@codeaurora.org>,
+it seems like maybe you also need "aop" listed here?
+
+
+
+-Doug
