@@ -1,78 +1,104 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC 2/2] ASoC: Add MICFIL SoC Digital Audio
-	Interface driver.
-Date: Thu, 13 Dec 2018 14:33:51 +0000
-Message-ID: <20181213143351.GI10669@sirena.org.uk>
-References: <1544433661-32496-1-git-send-email-cosmin.samoila@nxp.com>
- <1544433661-32496-3-git-send-email-cosmin.samoila@nxp.com>
- <20181212181414.GE6920@sirena.org.uk>
- <1544696446.7700.31.camel@nxp.com>
- <1544709475.7700.35.camel@nxp.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v8 11/26] pwm: jz4740: Use regmap and clocks from TCU
+ driver
+Date: Thu, 13 Dec 2018 15:34:48 +0100
+Message-ID: <1544711688.18952.2@crapouillou.net>
+References: <20181212220922.18759-1-paul@crapouillou.net>
+        <20181212220922.18759-12-paul@crapouillou.net>
+        <20181213093049.rxdvf6tip7iqdj3c@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0431022702123899463=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1544709475.7700.35.camel@nxp.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Cosmin Samoila <cosmin.samoila@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "robh@kernel.org" <robh@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "gabrielcsmo@gmail.com" <gabrielcsmo@gmail.com>
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181213093049.rxdvf6tip7iqdj3c@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mathieu Malaterre <malat@debian.org>, Ezequiel Garcia <ezequiel@collabora.co.uk>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---===============0431022702123899463==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rCb8EA+9TsBVtA92"
-Content-Disposition: inline
+Le jeu. 13 d=E9c. 2018 =E0 10:30, Uwe Kleine-K=F6nig=20
+<u.kleine-koenig@pengutronix.de> a =E9crit :
+> Hello,
+>=20
+> On Wed, Dec 12, 2018 at 11:09:06PM +0100, Paul Cercueil wrote:
+>>  [...]
+>>   static int jz4740_pwm_enable(struct pwm_chip *chip, struct=20
+>> pwm_device *pwm)
+>>   {
+>>  -	uint32_t ctrl =3D jz4740_timer_get_ctrl(pwm->pwm);
+>>  +	struct jz4740_pwm_chip *jz =3D to_jz4740(chip);
+>>=20
+>>  -	ctrl |=3D JZ_TIMER_CTRL_PWM_ENABLE;
+>>  -	jz4740_timer_set_ctrl(pwm->hwpwm, ctrl);
+>>  -	jz4740_timer_enable(pwm->hwpwm);
+>>  +	/* Enable PWM output */
+>>  +	regmap_update_bits(jz->map, TCU_REG_TCSRc(pwm->hwpwm),
+>>  +				TCU_TCSR_PWM_EN, TCU_TCSR_PWM_EN);
+>=20
+> Usually follow-up lines are indented to the matching parenthesis.
 
+OK.
 
---rCb8EA+9TsBVtA92
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>>  [...]
+>>   static int jz4740_pwm_config(struct pwm_chip *chip, struct=20
+>> pwm_device *pwm,
+>>   			     int duty_ns, int period_ns)
+>>   {
+>>   	struct jz4740_pwm_chip *jz4740 =3D to_jz4740(pwm->chip);
+>>  +	struct clk *clk =3D jz4740->clks[pwm->hwpwm];
+>>  +	unsigned long rate, new_rate, period, duty;
+>>   	unsigned long long tmp;
+>>  -	unsigned long period, duty;
+>>  -	unsigned int prescaler =3D 0;
+>>  -	uint16_t ctrl;
+>>  +	unsigned int tcsr;
+>>   	bool is_enabled;
+>>=20
+>>  -	tmp =3D (unsigned long long)clk_get_rate(jz4740->clk) * period_ns;
+>>  -	do_div(tmp, 1000000000);
+>>  -	period =3D tmp;
+>>  +	rate =3D clk_get_rate(clk);
+>>  +
+>>  +	for (;;) {
+>>  +		tmp =3D (unsigned long long) rate * period_ns;
+>>  +		do_div(tmp, 1000000000);
+>>=20
+>>  -	while (period > 0xffff && prescaler < 6) {
+>>  -		period >>=3D 2;
+>>  -		++prescaler;
+>>  +		if (tmp <=3D 0xffff)
+>>  +			break;
+>>  +
+>>  +		new_rate =3D clk_round_rate(clk, rate / 2);
+>>  +
+>>  +		if (new_rate < rate)
+>>  +			rate =3D new_rate;
+>>  +		else
+>>  +			return -EINVAL;
+>>   	}
+>>=20
+>>  -	if (prescaler =3D=3D 6)
+>>  -		return -EINVAL;
+>>  +	clk_set_rate(clk, rate);
+>=20
+> Maybe this could better live in a separate patch. If you split still
+> further to have the conversion to regmap in a single patch, then the
+> conversion to the clk_* functions and then improve the algorithm for=20
+> the
+> clk settings each of the patches is easier to review than this one=20
+> patch
+> that does all three things at once.
 
-On Thu, Dec 13, 2018 at 01:57:56PM +0000, Cosmin Samoila wrote:
+I can try.
 
-> > > > +	"Disabled", "Enabled",
-> > > > +};
-> > > Same here.
-
-> > Will fix it.
-
-> What do you mean by "regular controls" with "Switch"?
-> I can add switch in the naming but we need to save the user
-> configuration when doing the initialization (i.e. having custom put &
-> get).
-
-Not an enum, a normal number based control.
-
---rCb8EA+9TsBVtA92
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwSbc4ACgkQJNaLcl1U
-h9CZMgf+I0sDmvYGq8Ax7gEVK/RJYoedNVctPkrQPK+JqVaGdgWhCorrtEvWrxZs
-pO4jVONeb3Z9o1j1+EZLUJf35LkzurrrIUmJIgsvd/jqsL7McG/5c6Lwf8mmD0Yr
-WKpaWCgcHjAGkvYgoEIakP8wUWc5qlPD9BudWibGGpItRDlHwpZKtdxnFVlYmyxy
-shLGSXQ/8gySMbY14NUF23ZZgKhQ6I3nlvXiUxM0qKDUFFIXDU/2owQ9+fWSvfHb
-iClxvLnGqTkUzjFMoNzGV5raGCDaLBvsQ3aFVXdVlnScBhWbrwBYyWptFR56kThp
-saxCbUJnCcFRMB8eCPy9OS9m+kAfcA==
-=ET93
------END PGP SIGNATURE-----
-
---rCb8EA+9TsBVtA92--
-
---===============0431022702123899463==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============0431022702123899463==--
+> Best regards
+> Uwe
+>=20
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=F6nig       =20
+>     |
+> Industrial Linux Solutions                 |=20
+> http://www.pengutronix.de/  |
+=
