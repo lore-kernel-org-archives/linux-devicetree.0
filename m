@@ -1,60 +1,65 @@
 From: Atish Patra <atish.patra@wdc.com>
-Subject: [PATCH v2 1/4] dt-bindings: Correct RISC-V's timebase-frequency
-Date: Thu, 13 Dec 2018 15:14:26 -0800
-Message-ID: <1544742869-19980-2-git-send-email-atish.patra@wdc.com>
+Subject: [PATCH v2 4/4] RISC-V: Fix non-smp kernel boot on SMP systems
+Date: Thu, 13 Dec 2018 15:14:29 -0800
+Message-ID: <1544742869-19980-5-git-send-email-atish.patra@wdc.com>
 References: <1544742869-19980-1-git-send-email-atish.patra@wdc.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1544742869-19980-1-git-send-email-atish.patra@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Palmer Dabbelt <palmer@sifive.com>, Christoph Hellwig <hch@lst.de>, Atish Patra <atish.patra@wdc.com>, Albert Ou <aou@eecs.berkeley.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, Dmitriy Cherkasov <dmitriy@oss-tech.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Anup Patel <anup@brainfault.org>, Damien Le Moal <Damien.LeMoal@wdc.com>, Christoph Hellwig <hch@infradead.org>
+Cc: Atish Patra <atish.patra@wdc.com>, Albert Ou <aou@eecs.berkeley.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, Dmitriy Cherkasov <dmitriy@oss-tech.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Anup Patel <anup@brainfault.org>, Damien Le Moal <Damien.LeMoal@wdc.com>, Christoph Hellwig <hch@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Palmer Dabbelt <palmer@sifive.com>
+Currently, clocksource registration happens for an invalid cpu
+for non-smp kernels. This lead to kernel panic as cpu hotplug
+registration will fail for those cpus.
 
-In RISC-V systems, timebase-frequency is per cpu instead of one
-instance for entire SOC as there is a individual timer per each CPU.
-Fix the DT binding accordingly.
+Do not proceed if hartid is invalid. Take this opprtunity to
+print appropriate error strings for different failure cases.
 
-Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-[Atish: Update the commit text]
 Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/riscv/cpus.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clocksource/riscv_timer.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/riscv/cpus.txt b/Documentation/devicetree/bindings/riscv/cpus.txt
-index adf7b7af..b0b038d6 100644
---- a/Documentation/devicetree/bindings/riscv/cpus.txt
-+++ b/Documentation/devicetree/bindings/riscv/cpus.txt
-@@ -93,9 +93,9 @@ Linux is allowed to run on.
-         cpus {
-                 #address-cells = <1>;
-                 #size-cells = <0>;
--                timebase-frequency = <1000000>;
-                 cpu@0 {
-                         clock-frequency = <1600000000>;
-+                        timebase-frequency = <1000000>;
-                         compatible = "sifive,rocket0", "riscv";
-                         device_type = "cpu";
-                         i-cache-block-size = <64>;
-@@ -113,6 +113,7 @@ Linux is allowed to run on.
-                 };
-                 cpu@1 {
-                         clock-frequency = <1600000000>;
-+                        timebase-frequency = <1000000>;
-                         compatible = "sifive,rocket0", "riscv";
-                         d-cache-block-size = <64>;
-                         d-cache-sets = <64>;
-@@ -145,6 +146,7 @@ Example: Spike ISA Simulator with 1 Hart
- This device tree matches the Spike ISA golden model as run with `spike -p1`.
+diff --git a/drivers/clocksource/riscv_timer.c b/drivers/clocksource/riscv_timer.c
+index c9e65086..c1e1260e 100644
+--- a/drivers/clocksource/riscv_timer.c
++++ b/drivers/clocksource/riscv_timer.c
+@@ -117,6 +117,11 @@ static int __init riscv_timer_init_dt(struct device_node *n)
+ 	int cpuid, hartid, error;
  
-         cpus {
-+                timebase-frequency = <1000000>;
-                 cpu@0 {
-                         device_type = "cpu";
-                         reg = <0x00000000>;
+ 	hartid = riscv_of_processor_hartid(n);
++	if (hartid < 0) {
++		pr_warn("Not valid hartid for node [%pOF] error = [%d]\n",
++			n, hartid);
++		return hartid;
++	}
+ 	cpuid = riscv_hartid_to_cpuid(hartid);
+ 	riscv_timebase_frequency(n, hartid);
+ 
+@@ -124,14 +129,19 @@ static int __init riscv_timer_init_dt(struct device_node *n)
+ 		return 0;
+ 
+ 	/* This should be called only for boot cpu */
+-	clocksource_register_hz(&riscv_clocksource, riscv_timebase);
++	error = clocksource_register_hz(&riscv_clocksource, riscv_timebase);
+ 
++	if (error) {
++		pr_err("RISCV timer register failed [%d] for cpu = [%d]\n",
++		       error, cpuid);
++		return error;
++	}
+ 	error = cpuhp_setup_state(CPUHP_AP_RISCV_TIMER_STARTING,
+ 			 "clockevents/riscv/timer:starting",
+ 			 riscv_timer_starting_cpu, riscv_timer_dying_cpu);
+ 	if (error)
+-		pr_err("RISCV timer register failed [%d] for cpu = [%d]\n",
+-		       error, cpuid);
++		pr_err("cpu hp setup state failed for RISCV timer [%d]\n",
++		       error);
+ 	return error;
+ }
+ 
 -- 
 2.7.4
