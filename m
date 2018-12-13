@@ -1,18 +1,30 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: meson: fix do_div warning in spdifin" to the asoc tree
-Date: Thu, 13 Dec 2018 18:11:01 +0000 (GMT)
-Message-ID: <20181213181101.3188611254D1@debutante.sirena.org.uk>
-References: <20181213154428.6070-1-jbrunet@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181213154428.6070-1-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.orgalsa-devel@alsa-project.org
+Subject: Applied "dt-bindings: ASoC: xlnx,
+ i2s: Document i2s bindings" to the asoc tree
+Date: Thu, 13 Dec 2018 18:11:17 +0000 (GMT)
+Message-ID: <20181213181117.D38D311254D1@debutante.sirena.org.uk>
+References: <1544207558-72508-2-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1544207558-72508-2-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, Jaroslav Kysela <perex@perex.cz>, Michal Simek <michal.simek@xilinx.com>, Vishal Sagar <vsagar@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: meson: fix do_div warning in spdifin
+   dt-bindings: ASoC: xlnx, i2s: Document i2s bindings
 
 has been applied to the asoc tree at
 
@@ -37,36 +49,53 @@ to this mail.
 Thanks,
 Mark
 
->From 165be3c260f88a5f8c55d89458ad1f1d9efd701f Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Thu, 13 Dec 2018 16:44:28 +0100
-Subject: [PATCH] ASoC: meson: fix do_div warning in spdifin
+>From 644c2dcf2f2ea113602aa24170d3203942d3d140 Mon Sep 17 00:00:00 2001
+From: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
+Date: Sat, 8 Dec 2018 00:02:36 +0530
+Subject: [PATCH] dt-bindings: ASoC: xlnx, i2s: Document i2s bindings
 
-Even if this spdif input driver is only supposed to be used on 64bits
-platform, there is possible problem with 32bits and do_div, as reported
-by the kbuild robot. Just fix it.
+Added documentation for I2S IP core DT bindings.
 
-Fixes: 5ce5658375e6 ("ASoC: meson: add axg spdif input")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/meson/axg-spdifin.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/sound/xlnx,i2s.txt    | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/xlnx,i2s.txt
 
-diff --git a/sound/soc/meson/axg-spdifin.c b/sound/soc/meson/axg-spdifin.c
-index 09f385a2bbba..01b2035fa841 100644
---- a/sound/soc/meson/axg-spdifin.c
-+++ b/sound/soc/meson/axg-spdifin.c
-@@ -146,8 +146,8 @@ static void axg_spdifin_write_mode_param(struct regmap *map, int mode,
- 					 unsigned int base_reg,
- 					 unsigned int width)
- {
--	unsigned int offset = mode, rem;
--	unsigned int reg, shift;
-+	uint64_t offset = mode;
-+	unsigned int reg, shift, rem;
- 
- 	rem = do_div(offset, num_per_reg);
- 
+diff --git a/Documentation/devicetree/bindings/sound/xlnx,i2s.txt b/Documentation/devicetree/bindings/sound/xlnx,i2s.txt
+new file mode 100644
+index 000000000000..5e7c7d5bb60a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/xlnx,i2s.txt
+@@ -0,0 +1,28 @@
++Device-Tree bindings for Xilinx I2S PL block
++
++The IP supports I2S based playback/capture audio
++
++Required property:
++ - compatible: "xlnx,i2s-transmitter-1.0" for playback and
++	       "xlnx,i2s-receiver-1.0" for capture
++
++Required property common to both I2S playback and capture:
++ - reg: Base address and size of the IP core instance.
++ - xlnx,dwidth: sample data width. Can be any of 16, 24.
++ - xlnx,num-channels: Number of I2S streams. Can be any of 1, 2, 3, 4.
++		      supported channels = 2 * xlnx,num-channels
++
++Example:
++
++	i2s_receiver@a0080000 {
++		compatible = "xlnx,i2s-receiver-1.0";
++		reg = <0x0 0xa0080000 0x0 0x10000>;
++		xlnx,dwidth = <0x18>;
++		xlnx,num-channels = <1>;
++	};
++	i2s_transmitter@a0090000 {
++		compatible = "xlnx,i2s-transmitter-1.0";
++		reg = <0x0 0xa0090000 0x0 0x10000>;
++		xlnx,dwidth = <0x18>;
++		xlnx,num-channels = <1>;
++	};
 -- 
 2.19.0.rc2
