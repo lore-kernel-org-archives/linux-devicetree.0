@@ -1,84 +1,46 @@
 From: Vijay Khemka <vijaykhemka@fb.com>
-Subject: [PATCH 2/4] ARM: dts: aspeed: Add KCS support for LPC BMC
-Date: Thu, 13 Dec 2018 11:53:17 -0800
-Message-ID: <20181213195319.1333402-2-vijaykhemka@fb.com>
+Subject: [PATCH 3/4] ARM: dts: aspeed: Add KCS for Facebook
+Date: Thu, 13 Dec 2018 11:53:18 -0800
+Message-ID: <20181213195319.1333402-3-vijaykhemka@fb.com>
 References: <20181213195319.1333402-1-vijaykhemka@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181213195319.1333402-1-vijaykhemka@fb.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>, vijaykhemka@fb.com
+Cc: vijaykhemka@fb.com, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Added kcs device support for lpc BMC.
+Added kcs device in Facebook Tiogapass device tree.
 
 Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
 ---
- arch/arm/boot/dts/aspeed-g5.dtsi | 33 +++++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index d107459fc0f8..2743f400aa29 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -330,8 +330,32 @@
- 				ranges = <0x0 0x1e789000 0x1000>;
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+index 58bbe08d3ba7..b99751b3e080 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+@@ -75,6 +75,18 @@
+ 	status = "okay";
+ };
  
- 				lpc_bmc: lpc-bmc@0 {
--					compatible = "aspeed,ast2500-lpc-bmc";
-+					compatible = "aspeed,ast2500-lpc-bmc", "simple-mfd", "syscon";
- 					reg = <0x0 0x80>;
-+					reg-io-width = <4>;
++&kcs2 {
++	// BMC KCS channel 2
++	status = "okay";
++	kcs_addr = <0xca8>;
++};
 +
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+					ranges = <0x0 0x0 0x80>;
++&kcs3 {
++	// BMC KCS channel 3
++	status = "okay";
++	kcs_addr = <0xca2>;
++};
 +
-+					kcs1: kcs1@0 {
-+						compatible = "aspeed,ast2500-kcs-bmc";
-+						interrupts = <8>;
-+						kcs_chan = <1>;
-+						status = "disabled";
-+					};
-+					kcs2: kcs2@0 {
-+						compatible = "aspeed,ast2500-kcs-bmc";
-+						interrupts = <8>;
-+						kcs_chan = <2>;
-+						status = "disabled";
-+					};
-+					kcs3: kcs3@0 {
-+						compatible = "aspeed,ast2500-kcs-bmc";
-+						interrupts = <8>;
-+						kcs_chan = <3>;
-+						status = "disabled";
-+					};
- 				};
+ &mac0 {
+ 	status = "okay";
  
- 				lpc_host: lpc-host@80 {
-@@ -343,6 +367,13 @@
- 					#size-cells = <1>;
- 					ranges = <0x0 0x80 0x1e0>;
- 
-+					kcs4: kcs4@0 {
-+						compatible = "aspeed,ast2500-kcs-bmc";
-+						interrupts = <8>;
-+						kcs_chan = <4>;
-+						status = "disabled";
-+					};
-+
- 					lpc_ctrl: lpc-ctrl@0 {
- 						compatible = "aspeed,ast2500-lpc-ctrl";
- 						reg = <0x0 0x80>;
 -- 
 2.17.1
