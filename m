@@ -1,102 +1,52 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH 1/4] ARM: dts: aspeed: Add sensors devices for Facebook
-Date: Fri, 14 Dec 2018 09:26:05 +1030
-Message-ID: <CACPK8XfAXDHqWcD=OKm4UhCh-+-7GBxL02Fi9_jgdmo2ZQZSjg@mail.gmail.com>
-References: <20181213195319.1333402-1-vijaykhemka@fb.com>
+From: dwesterg@gmail.com
+Subject: [PATCH 1/3] ARM: dts: cyclone5: Add stmmac ptp_ref clock
+Date: Thu, 13 Dec 2018 15:03:00 -0800
+Message-ID: <20181213230302.11034-1-dalon.westergreen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181213195319.1333402-1-vijaykhemka@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vijaykhemka@fb.com, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
+To: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thor.thayer@intel.com
+Cc: Dalon Westergreen <dalon.westergreen@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 14 Dec 2018 at 06:23, Vijay Khemka <vijaykhemka@fb.com> wrote:
->
-> Added ADC and other sensor devices in Facebook Tiogapass device tree.
->
-> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
-> ---
->  .../dts/aspeed-bmc-facebook-tiogapass.dts     | 33 +++++++++++++++++--
->  1 file changed, 31 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-> index f8e7b71af7e6..58bbe08d3ba7 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-> @@ -21,6 +21,25 @@
->         memory@80000000 {
->                 reg = <0x80000000 0x20000000>;
->         };
-> +
-> +       iio-hwmon {
-> +               compatible = "iio-hwmon";
-> +               oemname0 = "MB_P3V3";
-> +               oemname1 = "MB_P5V";
-> +               oemname2 = "MB_P12V";
-> +               oemname3 = "MB_P1V05";
-> +               oemname4 = "MB_PVNN_PCH_STBY";
-> +               oemname5 = "MB_P3V3_STBY";
-> +               oemname6 = "MB_P5V_STBY";
+From: Dalon Westergreen <dalon.westergreen@linux.intel.com>
 
-"oemname" isn't part of the upstream bindings. Is this something you
-have patches for?
+Add the ptp_ref clock to gmac0 / gmac1 specifying the default clk
+of osc1.  The stmmac driver defaults the ptp_ref clock to the main
+stmmac clock if ptp_ref is not provided.  This is inappropriate for
+the Cyclone5 or Arria5 devices.
 
-The other parts of the patch lgtm.
+Signed-off-by: Dalon Westergreen <dalon.westergreen@linux.intel.com>
+---
+ arch/arm/boot/dts/socfpga.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-> +               io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>,
-> +                                       <&adc 4>, <&adc 5>, <&adc 6>;
-> +       };
-> +
-> +       iio-hwmon-battery {
-> +               oemname0 = "MB_P3V_BAT";
-> +               compatible = "iio-hwmon";
-> +               io-channels = <&adc 7>;
-> +       };
->  };
->
->  &fmc {
-> @@ -64,6 +83,10 @@
->         use-ncsi;
->  };
->
-> +&adc {
-> +       status = "okay";
-> +};
-> +
->  &i2c0 {
->         status = "okay";
->         //Airmax Conn B, CPU0 PIROM, CPU1 PIROM
-> @@ -122,6 +145,10 @@
->
->  &i2c8 {
->         status = "okay";
-> +       tmp421@1f {
-> +               compatible = "ti,tmp421";
-> +               reg = <0x1f>;
-> +       };
->         //Mezz Sensor SMBus
->  };
->
-> @@ -134,13 +161,15 @@
->         status = "okay";
->         pinctrl-names = "default";
->         pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-> +       oemname0 = "System_Fan_Connector_1";
-> +       oemname1 = "System_Fan_Connector_3";
->         fan@0 {
->                 reg = <0x00>;
->                 aspeed,fan-tach-ch = /bits/ 8 <0x00>;
->         };
->
->         fan@1 {
-> -               reg = <0x00>;
-> -               aspeed,fan-tach-ch = /bits/ 8 <0x01>;
-> +               reg = <0x01>;
-> +               aspeed,fan-tach-ch = /bits/ 8 <0x02>;
->         };
->  };
-> --
-> 2.17.1
->
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 28ecb4bdf5aa..c1c9d6a2bb91 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -557,8 +557,8 @@
+ 			interrupts = <0 115 4>;
+ 			interrupt-names = "macirq";
+ 			mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
+-			clocks = <&emac_0_clk>;
+-			clock-names = "stmmaceth";
++			clocks = <&emac_0_clk>, <&osc1>;
++			clock-names = "stmmaceth", "ptp_ref";
+ 			resets = <&rst EMAC0_RESET>;
+ 			reset-names = "stmmaceth";
+ 			snps,multicast-filter-bins = <256>;
+@@ -575,8 +575,8 @@
+ 			interrupts = <0 120 4>;
+ 			interrupt-names = "macirq";
+ 			mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
+-			clocks = <&emac_1_clk>;
+-			clock-names = "stmmaceth";
++			clocks = <&emac_1_clk>, <&osc1>;
++			clock-names = "stmmaceth", "ptp_ref";
+ 			resets = <&rst EMAC1_RESET>;
+ 			reset-names = "stmmaceth";
+ 			snps,multicast-filter-bins = <256>;
+-- 
+2.19.2
