@@ -1,96 +1,188 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH v4 1/2] ARM: dts: aspeed: Add KCS & lpc ctrl for Facebook
-Date: Thu, 13 Dec 2018 11:33:44 +1030
-Message-ID: <CACPK8Xea5Q1c9ygvT+WtbwJN9p2Nn-bLo8Ea6U4KuFvFZXvkNg@mail.gmail.com>
-References: <20181212210352.1717617-1-vijaykhemka@fb.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: [PATCH V11 3/7] dt-bindings: clock: imx8qxp: add SCU clock IDs
+Date: Thu, 13 Dec 2018 01:07:59 +0000
+Message-ID: <1544662938-5020-4-git-send-email-aisheng.dong@nxp.com>
+References: <1544662938-5020-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181212210352.1717617-1-vijaykhemka@fb.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vijaykhemka@fb.com, Andrew Jeffery <andrew@aj.id.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1544662938-5020-1-git-send-email-aisheng.dong@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 13 Dec 2018 at 07:34, Vijay Khemka <vijaykhemka@fb.com> wrote:
->
-> Added kcs device and lpc ctrl device to enable LPC clock in Facebook
-> Tiogapass device tree.
+Add IMX8QXP SCU clock IDs.
 
-As we're going to re-spin, it's a good idea to have the KCS and LPC
-changes in separate patches. I will take the KCS one straight away,
-but the LPC one might need more work (see my comments below).
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>
+Cc: devicetree@vger.kernel.org
+Cc: linux-clk@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+v6->v10:
+ * no changes
+v6: new patch, separate from driver changes to avoid a checkpatch warning
+    IDs are changed a lot due to SCU divider/gate/mux are merged into
+    one general SCU clock and LPCG clocks are moved out.
+---
+ include/dt-bindings/clock/imx8qxp-clock.h | 136 ++++++++++++++++++++++++++++++
+ 1 file changed, 136 insertions(+)
+ create mode 100644 include/dt-bindings/clock/imx8qxp-clock.h
 
->
-> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
-> ---
->  .../dts/aspeed-bmc-facebook-tiogapass.dts     | 30 +++++++++++++++++++
->  1 file changed, 30 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-> index d9d7f208788a..9544fa2c1822 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-> @@ -21,6 +21,18 @@
->         memory@80000000 {
->                 reg = <0x80000000 0x20000000>;
->         };
-> +
-> +       reserved-memory {
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               ranges;
-> +
-> +               flash_memory: region@98000000 {
-> +                       no-map;
-> +                       reg = <0x98000000 0x04000000>; /* 64M */
-> +               };
-
-Are you using this to expose some RAM over LPC? If not, we don't want this here.
-
-It is a flaw in the design of the driver that the reserved memory
-region is required. We should change the driver to make it optional.
-
-As a workaround, we could add this patch to the tiogapass device tree
-but make it smaller so you're not losing 64MB of RAM.
-
-> +       };
-> +
->         iio-hwmon {
->                 compatible = "iio-hwmon";
->                 oemname0 = "MB_P3V3";
-> @@ -62,6 +74,12 @@
->         };
->  };
->
-> +&lpc_ctrl {
-> +       status = "okay";
-> +       memory-region = <&flash_memory>;
-> +       flash = <&spi1>;
-> +};
-> +
->  &uart1 {
->         // Host Console
->         status = "okay";
-> @@ -75,6 +93,18 @@
->         status = "okay";
->  };
->
-> +&kcs2 {
-> +       // BMC KCS channel 2
-> +       status = "okay";
-> +       kcs_addr = <0xca8>;
-> +};
-> +
-> +&kcs3 {
-> +       // BMC KCS channel 3
-> +       status = "okay";
-> +       kcs_addr = <0xca2>;
-> +};
-> +
->  &mac0 {
->         status = "okay";
->
-> --
-> 2.17.1
->
+diff --git a/include/dt-bindings/clock/imx8qxp-clock.h b/include/dt-bindings/clock/imx8qxp-clock.h
+new file mode 100644
+index 0000000..d72a39c
+--- /dev/null
++++ b/include/dt-bindings/clock/imx8qxp-clock.h
+@@ -0,0 +1,136 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * Copyright 2018 NXP
++ *   Dong Aisheng <aisheng.dong@nxp.com>
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_IMX8QXP_H
++#define __DT_BINDINGS_CLOCK_IMX8QXP_H
++
++/* SCU Clocks */
++
++#define IMX8QXP_CLK_DUMMY				0
++
++/* CPU */
++#define IMX8QXP_A35_CLK					1
++
++/* LSIO SS */
++#define IMX8QXP_LSIO_MEM_CLK				2
++#define IMX8QXP_LSIO_BUS_CLK				3
++#define IMX8QXP_LSIO_PWM0_CLK				10
++#define IMX8QXP_LSIO_PWM1_CLK				11
++#define IMX8QXP_LSIO_PWM2_CLK				12
++#define IMX8QXP_LSIO_PWM3_CLK				13
++#define IMX8QXP_LSIO_PWM4_CLK				14
++#define IMX8QXP_LSIO_PWM5_CLK				15
++#define IMX8QXP_LSIO_PWM6_CLK				16
++#define IMX8QXP_LSIO_PWM7_CLK				17
++#define IMX8QXP_LSIO_GPT0_CLK				18
++#define IMX8QXP_LSIO_GPT1_CLK				19
++#define IMX8QXP_LSIO_GPT2_CLK				20
++#define IMX8QXP_LSIO_GPT3_CLK				21
++#define IMX8QXP_LSIO_GPT4_CLK				22
++#define IMX8QXP_LSIO_FSPI0_CLK				23
++#define IMX8QXP_LSIO_FSPI1_CLK				24
++
++/* Connectivity SS */
++#define IMX8QXP_CONN_AXI_CLK_ROOT			30
++#define IMX8QXP_CONN_AHB_CLK_ROOT			31
++#define IMX8QXP_CONN_IPG_CLK_ROOT			32
++#define IMX8QXP_CONN_SDHC0_CLK				40
++#define IMX8QXP_CONN_SDHC1_CLK				41
++#define IMX8QXP_CONN_SDHC2_CLK				42
++#define IMX8QXP_CONN_ENET0_ROOT_CLK			43
++#define IMX8QXP_CONN_ENET0_BYPASS_CLK			44
++#define IMX8QXP_CONN_ENET0_RGMII_CLK			45
++#define IMX8QXP_CONN_ENET1_ROOT_CLK			46
++#define IMX8QXP_CONN_ENET1_BYPASS_CLK			47
++#define IMX8QXP_CONN_ENET1_RGMII_CLK			48
++#define IMX8QXP_CONN_GPMI_BCH_IO_CLK			49
++#define IMX8QXP_CONN_GPMI_BCH_CLK			50
++#define IMX8QXP_CONN_USB2_ACLK				51
++#define IMX8QXP_CONN_USB2_BUS_CLK			52
++#define IMX8QXP_CONN_USB2_LPM_CLK			53
++
++/* HSIO SS */
++#define IMX8QXP_HSIO_AXI_CLK				60
++#define IMX8QXP_HSIO_PER_CLK				61
++
++/* Display controller SS */
++#define IMX8QXP_DC_AXI_EXT_CLK				70
++#define IMX8QXP_DC_AXI_INT_CLK				71
++#define IMX8QXP_DC_CFG_CLK				72
++#define IMX8QXP_DC0_PLL0_CLK				80
++#define IMX8QXP_DC0_PLL1_CLK				81
++#define IMX8QXP_DC0_DISP0_CLK				82
++#define IMX8QXP_DC0_DISP1_CLK				83
++
++/* MIPI-LVDS SS */
++#define IMX8QXP_MIPI_IPG_CLK				90
++#define IMX8QXP_MIPI0_PIXEL_CLK				100
++#define IMX8QXP_MIPI0_BYPASS_CLK			101
++#define IMX8QXP_MIPI0_LVDS_PIXEL_CLK			102
++#define IMX8QXP_MIPI0_LVDS_BYPASS_CLK			103
++#define IMX8QXP_MIPI0_LVDS_PHY_CLK			104
++#define IMX8QXP_MIPI0_I2C0_CLK				105
++#define IMX8QXP_MIPI0_I2C1_CLK				106
++#define IMX8QXP_MIPI0_PWM0_CLK				107
++#define IMX8QXP_MIPI1_PIXEL_CLK				108
++#define IMX8QXP_MIPI1_BYPASS_CLK			109
++#define IMX8QXP_MIPI1_LVDS_PIXEL_CLK			110
++#define IMX8QXP_MIPI1_LVDS_BYPASS_CLK			111
++#define IMX8QXP_MIPI1_LVDS_PHY_CLK			112
++#define IMX8QXP_MIPI1_I2C0_CLK				113
++#define IMX8QXP_MIPI1_I2C1_CLK				114
++#define IMX8QXP_MIPI1_PWM0_CLK				115
++
++/* IMG SS */
++#define IMX8QXP_IMG_AXI_CLK				120
++#define IMX8QXP_IMG_IPG_CLK				121
++#define IMX8QXP_IMG_PXL_CLK				122
++
++/* MIPI-CSI SS */
++#define IMX8QXP_CSI0_CORE_CLK				130
++#define IMX8QXP_CSI0_ESC_CLK				131
++#define IMX8QXP_CSI0_PWM0_CLK				132
++#define IMX8QXP_CSI0_I2C0_CLK				133
++
++/* PARALLER CSI SS */
++#define IMX8QXP_PARALLEL_CSI_DPLL_CLK			140
++#define IMX8QXP_PARALLEL_CSI_PIXEL_CLK			141
++#define IMX8QXP_PARALLEL_CSI_MCLK_CLK			142
++
++/* VPU SS */
++#define IMX8QXP_VPU_ENC_CLK				150
++#define IMX8QXP_VPU_DEC_CLK				151
++
++/* GPU SS */
++#define IMX8QXP_GPU0_CORE_CLK				160
++#define IMX8QXP_GPU0_SHADER_CLK				161
++
++/* ADMA SS */
++#define IMX8QXP_ADMA_IPG_CLK_ROOT			165
++#define IMX8QXP_ADMA_UART0_CLK				170
++#define IMX8QXP_ADMA_UART1_CLK				171
++#define IMX8QXP_ADMA_UART2_CLK				172
++#define IMX8QXP_ADMA_UART3_CLK				173
++#define IMX8QXP_ADMA_SPI0_CLK				174
++#define IMX8QXP_ADMA_SPI1_CLK				175
++#define IMX8QXP_ADMA_SPI2_CLK				176
++#define IMX8QXP_ADMA_SPI3_CLK				177
++#define IMX8QXP_ADMA_CAN0_CLK				178
++#define IMX8QXP_ADMA_CAN1_CLK				179
++#define IMX8QXP_ADMA_CAN2_CLK				180
++#define IMX8QXP_ADMA_I2C0_CLK				181
++#define IMX8QXP_ADMA_I2C1_CLK				182
++#define IMX8QXP_ADMA_I2C2_CLK				183
++#define IMX8QXP_ADMA_I2C3_CLK				184
++#define IMX8QXP_ADMA_FTM0_CLK				185
++#define IMX8QXP_ADMA_FTM1_CLK				186
++#define IMX8QXP_ADMA_ADC0_CLK				187
++#define IMX8QXP_ADMA_PWM_CLK				188
++#define IMX8QXP_ADMA_LCD_CLK				189
++
++#define IMX8QXP_SCU_CLK_END				190
++
++#endif /* __DT_BINDINGS_CLOCK_IMX8QXP_H */
+-- 
+2.7.4
