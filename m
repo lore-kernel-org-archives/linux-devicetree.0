@@ -1,44 +1,38 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: [PATCH v4 4/6] regulator: act8945a-regulator: fix line over 80 chars
- warning
-Date: Thu, 13 Dec 2018 12:49:58 +0000
-Message-ID: <1544703110-27161-5-git-send-email-claudiu.beznea@microchip.com>
-References: <1544703110-27161-1-git-send-email-claudiu.beznea@microchip.com>
+From: Jan Kotas <jank@cadence.com>
+Subject: [PATCH v2 0/2] clk: Add driver and bindings for Fixed MMIO clock
+Date: Thu, 13 Dec 2018 12:49:27 +0000
+Message-ID: <20181213124929.32736-1-jank@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544703110-27161-1-git-send-email-claudiu.beznea@microchip.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Claudiu.Beznea@microchip.com
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jan Kotas <jank@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+This patchset adds a driver support for Fixed Memory Mapped IO clock.
 
-Fix line over 80 chars checkpatch.pl warning.
+The driver reads a clock frequency value from a single 32-bit memory
+mapped register and registers it as a fixed rate clock.
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- drivers/regulator/act8945a-regulator.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+It can be useful for prototyping Linux on various hardware platforms.
+It is not intended to be used on finished, complete SoCs.
 
-diff --git a/drivers/regulator/act8945a-regulator.c b/drivers/regulator/act=
-8945a-regulator.c
-index f37d1a860407..f4d60743efb3 100644
---- a/drivers/regulator/act8945a-regulator.c
-+++ b/drivers/regulator/act8945a-regulator.c
-@@ -310,7 +310,8 @@ static int act8945a_pmic_probe(struct platform_device *=
-pdev)
- 	config.dev->of_node =3D pdev->dev.parent->of_node;
- 	config.driver_data =3D act8945a;
- 	for (i =3D 0; i < num_regulators; i++) {
--		rdev =3D devm_regulator_register(&pdev->dev, &regulators[i], &config);
-+		rdev =3D devm_regulator_register(&pdev->dev, &regulators[i],
-+					       &config);
- 		if (IS_ERR(rdev)) {
- 			dev_err(&pdev->dev,
- 				"failed to register %s regulator\n",
---=20
-2.7.4
+Changes since V1:
+	Added platform driver support.
+	Removed unnecessary messages.
+
+Jan Kotas (2):
+  dt-bindings: clk: Add bindings for Fixed MMIO clock
+  clk: Add Fixed MMIO clock driver
+
+ .../devicetree/bindings/clock/fixed-mmio-clock.txt |  24 +++++
+ drivers/clk/Kconfig                                |   6 ++
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-fixed-mmio.c                       | 109 +++++++++++++++++++++
+ 4 files changed, 140 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/fixed-mmio-clock.txt
+ create mode 100644 drivers/clk/clk-fixed-mmio.c
+
+-- 
+2.15.0
