@@ -1,59 +1,52 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 05/12] PCI: aardvark: add suspend to RAM support
-Date: Thu, 13 Dec 2018 14:52:25 +0000
-Message-ID: <20181213145225.GA28015@red-moon>
-References: <20181123141831.8214-1-miquel.raynal@bootlin.com>
- <1999610.6DN9RK2Tt3@aspire.rjw.lan>
- <20181204094558.GA24588@e107981-ln.cambridge.arm.com>
- <1966692.fVZYlVgWHv@aspire.rjw.lan>
- <20181211141627.GA526@e107981-ln.cambridge.arm.com>
- <154469162632.19322.13092710881803732022@swboyd.mtv.corp.google.com>
- <20181213105302.GA5330@e107981-ln.cambridge.arm.com>
- <20181213153000.245d7d5f@xps13>
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: Re: [PATCH 1/3] dt-bindings: interrupt-controller: stm32: Document
+ hwlock properties
+Date: Thu, 13 Dec 2018 15:55:06 +0100
+Message-ID: <CA+M3ks5LtxZpwvx5+p9qLTWed6yb-Vo0dZ3VHFKsGcJZROEqtQ@mail.gmail.com>
+References: <20181113144805.1054-1-benjamin.gaignard@st.com>
+ <20181113144805.1054-2-benjamin.gaignard@st.com> <20181204204733.GA14508@bogus>
+ <64704359-d4ec-4a63-72cc-4d0a036bce8a@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181213153000.245d7d5f@xps13>
+In-Reply-To: <64704359-d4ec-4a63-72cc-4d0a036bce8a@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, sudeep.holla@arm.com, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-stm32@st-md-mailman.stormreply.com, Benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 13, 2018 at 03:30:00PM +0100, Miquel Raynal wrote:
-> Hi Lorenzo,
-> 
-> > > If that's really the case, then I can see how one device and it's
-> > > children are suspended and the irq for it is disabled but the providing
-> > > devices (clk, regulator, bus controller, etc.) are still fully active
-> > > and not suspended but in fact completely usable and able to service
-> > > interrupts. If that all makes sense, then I would answer the question
-> > > with a definitive "yes it's all fine" because the clk consumer could be
-> > > in the NOIRQ phase of its suspend but the clk provider wouldn't have
-> > > even started suspending yet when clk_disable_unprepare() is called.  
-> > 
-> > That's a very good summary and address my concern, I still question this
-> > patch correctness (and many others that carry out clk operations in S2R
-> > NOIRQ phase), they may work but do not tell me they are rock solid given
-> > your accurate summary above.
-> 
-> I understand your concern but I don't see any alternative right now
-> and a deep rework of the PM core to respect such dependency is not
-> something that can be done in a reasonable amount of time. With
-> regard to this constraint, do you think it is worth blocking the
-> series?
+Le jeu. 13 d=C3=A9c. 2018 =C3=A0 15:23, Marc Zyngier <marc.zyngier@arm.com>=
+ a =C3=A9crit :
+>
+> On 04/12/2018 20:47, Rob Herring wrote:
+> > On Tue, Nov 13, 2018 at 03:48:03PM +0100, Benjamin Gaignard wrote:
+> >> Add hwlocks as optional property
+> >>
+> >> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> >
+> > Should be linaro.org S-o-b?
+>
+> What is the status on this? I'm not going to queue it if there is a
+> doubt on the SoB...
 
-I think we agree that, depending on what HW/SW driver manage
-this PCI controller clocks, this driver may well become broken,
-the driver itself has no idea what's behind the clock API and
-can end up waiting for an event forever.
+I will fix that in version 2 (even if I don't really understand the issue)
 
-This does not leave me in a comfortable position to merge code that I
-know has flaws.
+Benjamin
+>
+> Thanks,
+>
+>         M.
+> --
+> Jazz is not dead. It just smells funny...
 
-I won't merge it for v4.21, I need more time (and feedback) to
-understand what can be done to make this driver (and many others)
-more robust.
 
-Thanks,
-Lorenzo
+
+--=20
+Benjamin Gaignard
+
+Graphic Study Group
+
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+
+Follow Linaro: Facebook | Twitter | Blog
