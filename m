@@ -1,71 +1,56 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: qcs404: Fix regulator supply names
-Date: Thu, 13 Dec 2018 10:32:00 -0800
-Message-ID: <20181213183200.3204-1-bjorn.andersson@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nicolas Dechesne <nicolas.dechesne@linaro.org>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6 1/2] dt-bindings: drm/msm/a6xx: Document
+ GMU and update GPU bindings
+Date: Thu, 13 Dec 2018 10:39:27 -0800
+Message-ID: <CAD=FV=Vju=d4954gbXThhY7YemeBLKLcuDNwapd6tPgNPUHafw@mail.gmail.com>
+References: <20181212211848.26768-1-jcrouse@codeaurora.org>
+ <20181212211848.26768-2-jcrouse@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20181212211848.26768-2-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The regulator definition got their supply names cleaned up during
-upstreaming, so they no longer match the driver defined names. Update
-the supply names.
-
-Also fill out the missing voltage of SMPS 5.
-
-Fixes: 0b363f5b871c ("arm64: dts: qcom: qcs404: Add PMS405 RPM regulators")
-Reported-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 28 ++++++++++++------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index a39924efebe4..d6cc3a96530e 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -37,18 +37,18 @@
- 	pms405-regulators {
- 		compatible = "qcom,rpm-pms405-regulators";
- 
--		vdd-s1-supply = <&vph_pwr>;
--		vdd-s2-supply = <&vph_pwr>;
--		vdd-s3-supply = <&vph_pwr>;
--		vdd-s4-supply = <&vph_pwr>;
--		vdd-s5-supply = <&vph_pwr>;
--		vdd-l1-l2-supply = <&vreg_s5_1p35>;
--		vdd-l3-l8-supply = <&vreg_s5_1p35>;
--		vdd-l4-supply = <&vreg_s5_1p35>;
--		vdd-l5-l6-supply = <&vreg_s4_1p8>;
--		vdd-l7-supply = <&vph_pwr>;
--		vdd-l9-supply = <&vreg_s5_1p35>;
--		vdd-l10-l11-l12-l13-supply = <&vph_pwr>;
-+		vdd_s1-supply = <&vph_pwr>;
-+		vdd_s2-supply = <&vph_pwr>;
-+		vdd_s3-supply = <&vph_pwr>;
-+		vdd_s4-supply = <&vph_pwr>;
-+		vdd_s5-supply = <&vph_pwr>;
-+		vdd_l1_l2-supply = <&vreg_s5_1p35>;
-+		vdd_l3_l8-supply = <&vreg_s5_1p35>;
-+		vdd_l4-supply = <&vreg_s5_1p35>;
-+		vdd_l5_l6-supply = <&vreg_s4_1p8>;
-+		vdd_l7-supply = <&vph_pwr>;
-+		vdd_l9-supply = <&vreg_s5_1p35>;
-+		vdd_l10_l11_l12_l13-supply = <&vph_pwr>;
- 
- 		vreg_s4_1p8: s4 {
- 			regulator-min-microvolt = <1728000>;
-@@ -56,8 +56,8 @@
- 		};
- 
- 		vreg_s5_1p35: s5 {
--			regulator-min-microvolt = <>;
--			regulator-max-microvolt = <>;
-+			regulator-min-microvolt = <1352000>;
-+			regulator-max-microvolt = <1352000>;
- 		};
- 
- 		vreg_l1_1p3: l1 {
--- 
-2.18.0
+SGksCgpPbiBXZWQsIERlYyAxMiwgMjAxOCBhdCAxOjE4IFBNIEpvcmRhbiBDcm91c2UgPGpjcm91
+c2VAY29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9ncHUudHh0Cj4gaW5kZXggNDNmYWMwZmUwOWJi
+Li44ZDk0MTUxODBjMjIgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvbXNtL2dwdS50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dAo+IEBAIC04LDE0ICs4LDIxIEBAIFJlcXVp
+cmVkIHByb3BlcnRpZXM6Cj4gICAgd2l0aCB0aGUgY2hpcC1pZC4KPiAgLSByZWc6IFBoeXNpY2Fs
+IGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBjb250cm9sbGVyJ3MgcmVnaXN0ZXJzLgo+
+ICAtIGludGVycnVwdHM6IFRoZSBpbnRlcnJ1cHQgc2lnbmFsIGZyb20gdGhlIGdwdS4KPiAtLSBj
+bG9ja3M6IGRldmljZSBjbG9ja3MKPiArLSBpbnRlcnJ1cHQtbmFtZXM6IExpc3Qgb2YgbmFtZXMg
+Zm9yIHRoZSBpbnRlcnJ1cHQgc2lnbmFscy4gVGhlIGZvbGxvd2luZyBjYW4gYmUKPiArICBwcm92
+aWRlZDoKPiArICAqICJrZ3NsXzNkMF9pcnEiCj4gKy0gY2xvY2tzOiBkZXZpY2UgY2xvY2tzIChp
+ZiBhcHBsaWNhYmxlKQo+ICAgIFNlZSAuLi9jbG9ja3MvY2xvY2stYmluZGluZ3MudHh0IGZvciBk
+ZXRhaWxzLgo+IC0tIGNsb2NrLW5hbWVzOiB0aGUgZm9sbG93aW5nIGNsb2NrcyBhcmUgcmVxdWly
+ZWQ6Cj4gKy0gY2xvY2stbmFtZXM6IHRoZSBmb2xsb3dpbmcgY2xvY2tzIGNhbiBiZSBwcm92aWRl
+ZDoKPiAgICAqICJjb3JlIgo+ICAgICogImlmYWNlIgo+ICAgICogIm1lbV9pZmFjZSIKPiArLSBp
+b21tdXM6IG9wdGlvbmFsIHBoYW5kbGUgdG8gYW4gYWRyZW5vIGlvbW11IGluc3RhbmNlCj4gKy0g
+b3BlcmF0aW5nLXBvaW50cy12Mjogb3B0aW9uYWwgcGhhbmRsZSB0byB0aGUgT1BQIG9wZXJhdGlu
+ZyBwb2ludHMKPiArLSBxY29tLGdtdTogRm9yIGE2eHggYW5kIG5ld2VyIHRhcmdldHMgYSBwaGFu
+ZGxlIHRvIHRoZSBHTVUgZGV2aWNlIHRoYXQgd2lsbAo+ICsgIGNvbnRyb2wgdGhlIHBvd2VyIGZv
+ciB0aGUgR1BVCgpTZWVtcyBmaW5lIHRvIG1lLiAgSWYgeW91IGhhcHBlbiB0byBzcGluIGl0IGFn
+YWluIGZvciBzb21lIG90aGVyCnJlYXNvbiBpdCBtaWdodCBiZSBuaWNlIHRvIGJlIG1vcmUgZXhw
+bGljaXQgYWJvdXQgZXhhY3RseSB3aGVuIGNsb2NrcwphcmUgcmVxdWlyZWQgYW5kIHdoZW4gdGhl
+eSBhcmVuJ3QuICAgSUlVQyB0aGV5IGFyZSBhbHdheXMgcmVxdWlyZWQgb24Kc3lzdGVtcyB3aXRo
+b3V0IGEgR01VIGFuZCB0aGV5IGFyZSBuZXZlciBwcmVzZW50IG9uIHN5c3RlbXMgd2l0aCBhCkdN
+VS4gIC4uLmJ1dCBJIHdvdWxkbid0IHNwaW4gaXQganVzdCBmb3IgdGhhdC4KClJldmlld2VkLWJ5
+OiBEb3VnbGFzIEFuZGVyc29uIDxkaWFuZGVyc0BjaHJvbWl1bS5vcmc+Cl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QK
+RnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
