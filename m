@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v4 6/7] ARM64: dts: marvell: armada-37xx: fix SATA node scope
-Date: Thu, 13 Dec 2018 09:39:07 +0100
-Message-ID: <20181213083908.14180-7-miquel.raynal@bootlin.com>
+Subject: [PATCH v4 5/7] MAINTAINERS: phy: add entry for Armada 3700 COMPHY driver
+Date: Thu, 13 Dec 2018 09:39:06 +0100
+Message-ID: <20181213083908.14180-6-miquel.raynal@bootlin.com>
 References: <20181213083908.14180-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,28 +12,29 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Fix the SATA IP memory area which is only 0x178 bytes long (from
-Marvell A3700 specification). Actually, starting from the offset
-0xe0178, there is an area dedicated to the COMPHY driver.
+Add myself as Armada 3700 COMPHY driver/bindings maintainer.
 
-Suggested-by: Grzegorz Jaszczyk <jaz@semihalf.com>
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index 4472bcd8f9fb..e7405931f381 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -358,7 +358,7 @@
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 72e930c51fd4..2ef7a60ab24b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8865,6 +8865,12 @@ F:	drivers/gpu/drm/armada/
+ F:	include/uapi/drm/armada_drm.h
+ F:	Documentation/devicetree/bindings/display/armada/
  
- 			sata: sata@e0000 {
- 				compatible = "marvell,armada-3700-ahci";
--				reg = <0xe0000 0x2000>;
-+				reg = <0xe0000 0x178>;
- 				interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
++MARVELL ARMADA 3700 COMPHY DRIVER
++M:	Miquel Raynal <miquel.raynal@bootlin.com>
++S:	Maintained
++F:	drivers/phy/marvell/phy-mvebu-a3700-comphy.c
++F:	Documentation/devicetree/bindings/phy/phy-mvebu-comphy.txt
++
+ MARVELL CRYPTO DRIVER
+ M:	Boris Brezillon <boris.brezillon@bootlin.com>
+ M:	Arnaud Ebalard <arno@natisbad.org>
 -- 
 2.19.1
