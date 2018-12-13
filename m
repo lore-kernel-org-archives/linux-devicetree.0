@@ -1,120 +1,89 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v7 00/10] Add power domain driver for corners on
- msm8996/sdm845
-Date: Thu, 13 Dec 2018 09:46:08 +0530
-Message-ID: <e6b30187-b982-f26c-a0da-c5532108a332@codeaurora.org>
-References: <20181212092131.13046-1-rnayak@codeaurora.org>
+From: Sean Wang <sean.wang@kernel.org>
+Subject: Re: [PATCH v1] pinctrl: mediatek: improve Kconfig dependencies
+Date: Wed, 12 Dec 2018 20:21:04 -0800
+Message-ID: <CAGp9LzrQoLNonZDHqCJqV8iihxhB1u4vu23HORO0GbN4fz7xzQ@mail.gmail.com>
+References: <e4eb66dec2901016e01767932461c5d560762f66.1544666839.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181212092131.13046-1-rnayak@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <e4eb66dec2901016e01767932461c5d560762f66.1544666839.git.ryder.lee@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, robh@kernel.org, viresh.kumar@linaro.org, sboyd@kernel.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?UTF-8?B?UnlkZXIgTGVlICjmnY7luproq7op?= <ryder.lee@mediatek.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, weijie.gao@mediatek.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> Changes in v7:
-> * Rebased on Andy's for-next, and used the updated cmd_db_read_aux_data()
-[]..
+It looks good to me. Thanks for bringing the improved version soon.
 
-Hey Andy, just wanted to let you know that this series (v7) is now
-well reviewed/ack'ed and ready to land (except for the last 3 patches)
-Patch 08/10 will need to go via Ulf/Rafael and Patch 09/10 depends on it
-for compilation, also Patch 10/10 has other dependencies which need to
-land via the power tree.
+Acked-by: Sean Wang <sean.wang@kernel.org>
 
-So Patch 01/10 to 07/10 from this series are good to be pulled in,
-whenever you think is the right time, I am guessing its probably
-too late for 4.21?
-
-Thanks,
-Rajendra
-
-> 
-> Changes in v6:
-> * OPP binding updates for qcom,level reviewed by Rob
-> * DT bindings for rpmpd and rpmhpd updated to specify the
-> OPP tables as child nodes of the power-controller itself
-> * Removed some module specific remains from the drivers,
-> now that they can only be built-in
-> * Added a simple_opp_to_performance_state() helper
-> 
-> Changes in v5:
-> * First 6 patches are unchanged
-> * Patch 7/8 adds the DT node for rpmh power-controller on sdm845 and the
-> corresponding OPP tables for it to describe the performance states
-> * Patch 8/8 adds a parent/child relationship across mx/cx and mx_ao/cx_ao
-> as needed on sdm845 platform. This patch is dependent on the series from
-> Viresh [1] which adds support to propogate performance states across the
-> power domain hierarchy which is still being reviewed
-> 
-> Changes in v4:
-> * Included the patch to add qcom-opp bindings (dropped accidentally in v3)
-> * merged the patches to add bindings for rpm and rpmh, added consumer binding example
-> * Made the drivers built in, removed .remove
-> * Added better description in changelog for PATCH 6/6
-> * Updated rpmhpd_aggregate_corner() based on Davids feedback
-> * rpmhpd_set_performance_state() returns max corner, in cases where its called
-> with an INT_MAX
-> * Dropped the patch to max vote on all corners at init, the patch did not
-> work anyway, and it shouldn't be needed now
-> 
-> Changes in v3:
-> * Bindings split into seperate patches
-> * Bindings updated to remove duplicate OPP table phandles
-> * DT headers defining macros for Power domain indexes and OPP levels
-> * Optimisations to use rpmh_write_async() whereever applicable
-> * Fixed up handling of ACTIVE_ONLY/WAKE_ONLY/SLEEP voting for RPMh
-> * Fixed the vlvl to hlvl conversions in set_performance
-> * Other minor fixes based on review of v2
-> * TODO: This series does not handle the case where all VDD_MX votes
-> should be higher than VDD_CX from APPs, as pointed out
-> by David Collins in v2. This needs support at genpd to propogate performance
-> state up the parents, if we model these as Parent/Child to handle the
-> interdependency.
-> 
-> Changes in v2:
-> * added a power domain driver for sdm845 which supports communicating to RPMh
-> * dropped the changes to sdhc driver to move over to using OPP
-> as there is active discussion on using OPP as the interface vs
-> handling all of it in clock drivers
-> * Other minor binding updates based on review of v1
-> 
-> With performance state support for genpd/OPP merged, this is an effort
-> to model a power domain driver to communicate corner/level
-> values for qualcomm platforms to RPM (Remote Power Manager) and RPMh.
-> 
-> [1] https://lkml.org/lkml/2018/11/26/333
-> 
-> Rajendra Nayak (10):
->    dt-bindings: opp: Introduce qcom-opp bindings
->    dt-bindings: power: Add qcom rpm power domain driver bindings
->    soc: qcom: rpmpd: Add a Power domain driver to model corners
->    soc: qcom: rpmpd: Add support for get/set performance state
->    arm64: dts: msm8996: Add rpmpd device node
->    soc: qcom: rpmhpd: Add RPMh power domain driver
->    arm64: dts: sdm845: Add rpmh powercontroller node
->    PM / Domains: Add a simple_opp_to_performance_state() helper
->    soc: qcom: rpmpd: Use simple_opp_to_performance_state() helper
->    soc: qcom: rpmhpd: Mark mx as a parent for cx
-> 
->   .../devicetree/bindings/opp/qcom-opp.txt      |  25 ++
->   .../devicetree/bindings/power/qcom,rpmpd.txt  | 146 +++++++
->   arch/arm64/boot/dts/qcom/msm8996.dtsi         |  34 ++
->   arch/arm64/boot/dts/qcom/sdm845.dtsi          |  51 +++
->   drivers/base/power/domain.c                   |  17 +
->   drivers/soc/qcom/Kconfig                      |  18 +
->   drivers/soc/qcom/Makefile                     |   2 +
->   drivers/soc/qcom/rpmhpd.c                     | 402 ++++++++++++++++++
->   drivers/soc/qcom/rpmpd.c                      | 317 ++++++++++++++
->   include/dt-bindings/power/qcom-rpmpd.h        |  39 ++
->   include/linux/pm_domain.h                     |   9 +
->   11 files changed, 1060 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/opp/qcom-opp.txt
->   create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
->   create mode 100644 drivers/soc/qcom/rpmhpd.c
->   create mode 100644 drivers/soc/qcom/rpmpd.c
->   create mode 100644 include/dt-bindings/power/qcom-rpmpd.h
-> 
+On Wed, Dec 12, 2018 at 6:28 PM Ryder Lee <ryder.lee@mediatek.com> wrote:
+>
+> Remove prompts to make all pinctrl cores to non-visible symbols and
+> make sure the target SoCs would be coupled with the corresponding
+> cores.
+>
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+> Changes since v1:
+> - Revise commit message
+> - Change all pinctrl cores to non-visible symbols
+> - Drop EINT_MTK in PINCTRL_MTK_MOORE
+> ---
+>  drivers/pinctrl/mediatek/Kconfig | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
+> index d8cb584..1817786 100644
+> --- a/drivers/pinctrl/mediatek/Kconfig
+> +++ b/drivers/pinctrl/mediatek/Kconfig
+> @@ -17,7 +17,7 @@ config PINCTRL_MTK
+>         select OF_GPIO
+>
+>  config PINCTRL_MTK_MOORE
+> -       bool "MediaTek Moore Core that implements generic binding"
+> +       bool
+>         depends on OF
+>         select GENERIC_PINCONF
+>         select GENERIC_PINCTRL_GROUPS
+> @@ -26,7 +26,7 @@ config PINCTRL_MTK_MOORE
+>         select OF_GPIO
+>
+>  config PINCTRL_MTK_PARIS
+> -       bool "MediaTek Paris Core that implements vendor binding"
+> +       bool
+>         depends on OF
+>         select PINMUX
+>         select GENERIC_PINCONF
+> @@ -45,14 +45,14 @@ config PINCTRL_MT2701
+>  config PINCTRL_MT7623
+>         bool "Mediatek MT7623 pin control with generic binding"
+>         depends on MACH_MT7623 || COMPILE_TEST
+> -       depends on PINCTRL_MTK_MOORE
+> -       default y
+> +       default MACH_MT7623
+> +       select PINCTRL_MTK_MOORE
+>
+>  config PINCTRL_MT7629
+>         bool "Mediatek MT7629 pin control"
+>         depends on MACH_MT7629 || COMPILE_TEST
+> -       depends on PINCTRL_MTK_MOORE
+> -       default y
+> +       default MACH_MT7629
+> +       select PINCTRL_MTK_MOORE
+>
+>  config PINCTRL_MT8135
+>         bool "Mediatek MT8135 pin control"
+> @@ -93,8 +93,8 @@ config PINCTRL_MT6797
+>  config PINCTRL_MT7622
+>         bool "MediaTek MT7622 pin control"
+>         depends on ARM64 || COMPILE_TEST
+> -       depends on PINCTRL_MTK_MOORE
+> -       default y
+> +       default ARM64 && ARCH_MEDIATEK
+> +       select PINCTRL_MTK_MOORE
+>
+>  config PINCTRL_MT8173
+>         bool "Mediatek MT8173 pin control"
+> --
+> 1.9.1
+>
