@@ -1,65 +1,53 @@
-From: dwesterg@gmail.com
-Subject: [PATCH 2/3] ARM: dts: arria10: Add stmmac ptp_ref clock
-Date: Thu, 13 Dec 2018 15:03:01 -0800
-Message-ID: <20181213230302.11034-2-dalon.westergreen@linux.intel.com>
-References: <20181213230302.11034-1-dalon.westergreen@linux.intel.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 2/3] ARM: dts: Configure wlcore wakeirq for pandaboard
+Date: Thu, 13 Dec 2018 15:04:10 -0800
+Message-ID: <20181213230411.5009-2-tony@atomide.com>
+References: <20181213230411.5009-1-tony@atomide.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181213230302.11034-1-dalon.westergreen@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thor.thayer@intel.com
-Cc: Dalon Westergreen <dalon.westergreen@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181213230411.5009-1-tony@atomide.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-omap@vger.kernel.org
+Cc: devicetree@vger.kernel.org, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dalon Westergreen <dalon.westergreen@linux.intel.com>
+With wlcore supporting optional wakeirqs, we can configure it
+for pandaboard. This makes ssh connection usable with the SoC
+entering deeper idle states.
 
-Add the default stmmac ptp_ref clock for arria10.  The stmmac
-driver defaults the ptp_ref clock to the main stmmac clock
-if the ptp_ref clock is not set in the devicetree.  This is inappropriate
-for the arria10 device.  The default ptp_ref clock is peri_emac_ptp_clk.
+Note that pandaboard already has a wakeirq configured for SDIO
+dat1 pin although that is not currently used by wlcore.
 
-Signed-off-by: Dalon Westergreen <dalon.westergreen@linux.intel.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- arch/arm/boot/dts/socfpga_arria10.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/omap4-panda-common.dtsi | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-index 0017bac7f96c..6591def7b225 100644
---- a/arch/arm/boot/dts/socfpga_arria10.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-@@ -426,8 +426,8 @@
- 			snps,perfect-filter-entries = <128>;
- 			tx-fifo-depth = <4096>;
- 			rx-fifo-depth = <16384>;
--			clocks = <&l4_mp_clk>;
--			clock-names = "stmmaceth";
-+			clocks = <&l4_mp_clk>, <&peri_emac_ptp_clk>;
-+			clock-names = "stmmaceth", "ptp_ref";
- 			resets = <&rst EMAC0_RESET>;
- 			reset-names = "stmmaceth";
- 			snps,axi-config = <&socfpga_axi_setup>;
-@@ -446,8 +446,8 @@
- 			snps,perfect-filter-entries = <128>;
- 			tx-fifo-depth = <4096>;
- 			rx-fifo-depth = <16384>;
--			clocks = <&l4_mp_clk>;
--			clock-names = "stmmaceth";
-+			clocks = <&l4_mp_clk>, <&peri_emac_ptp_clk>;
-+			clock-names = "stmmaceth", "ptp_ref";
- 			resets = <&rst EMAC1_RESET>;
- 			reset-names = "stmmaceth";
- 			snps,axi-config = <&socfpga_axi_setup>;
-@@ -466,8 +466,8 @@
- 			snps,perfect-filter-entries = <128>;
- 			tx-fifo-depth = <4096>;
- 			rx-fifo-depth = <16384>;
--			clocks = <&l4_mp_clk>;
--			clock-names = "stmmaceth";
-+			clocks = <&l4_mp_clk>, <&peri_emac_ptp_clk>;
-+			clock-names = "stmmaceth", "ptp_ref";
- 			snps,axi-config = <&socfpga_axi_setup>;
- 			status = "disabled";
- 		};
+diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+--- a/arch/arm/boot/dts/omap4-panda-common.dtsi
++++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+@@ -485,8 +485,10 @@
+ 	wlcore: wlcore@2 {
+ 		compatible = "ti,wl1271";
+ 		reg = <2>;
+-		interrupt-parent = <&gpio2>;
+-		interrupts = <21 IRQ_TYPE_EDGE_RISING>; /* gpio 53 */
++		/* gpio_53 with gpmc_ncs3 pad as wakeup */
++		interrupts-extended = <&gpio2 21 IRQ_TYPE_EDGE_RISING>,
++				      <&omap4_pmx_core 0x3a>;
++		interrupt-names = "irq", "wakeup";
+ 		ref-clock-frequency = <38400000>;
+ 	};
+ };
 -- 
 2.19.2
