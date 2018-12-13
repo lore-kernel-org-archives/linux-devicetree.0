@@ -1,58 +1,50 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v8 15/26] pwm: jz4740: Add support for the JZ4725B
-Date: Thu, 13 Dec 2018 21:42:19 +0100
-Message-ID: <20181213204219.onem3q6dcmakusl2@pengutronix.de>
-References: <20181212220922.18759-1-paul@crapouillou.net>
- <20181212220922.18759-16-paul@crapouillou.net>
- <20181213092409.ml4wpnzow2nnszkd@pengutronix.de>
- <1544709795.18952.1@crapouillou.net>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] ARM: dts: exynos: Specify I2S assigned clocks in proper
+ node
+Date: Thu, 13 Dec 2018 21:56:56 +0100
+Message-ID: <20181213205656.GA799@kozik-lap>
+References: <CGME20181212175813epcas2p26f7ec0e0e5e90d1e9cb7aeccd273e0ab@epcas2p2.samsung.com>
+ <20181212175744.8287-1-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1544709795.18952.1@crapouillou.net>
+In-Reply-To: <20181212175744.8287-1-s.nawrocki@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mathieu Malaterre <malat@debian.org>, Ezequiel Garcia <ezequiel@collabora.co.uk>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me, Linus Walleij <linus.walleij@linaro.org>
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[Adding Linus Walleij to Cc:]
-
-Hello,
-
-On Thu, Dec 13, 2018 at 03:03:15PM +0100, Paul Cercueil wrote:
-> Le jeu. 13 déc. 2018 à 10:24, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> a écrit :
-> > On Wed, Dec 12, 2018 at 11:09:10PM +0100, Paul Cercueil wrote:
-> > >  The PWM in the JZ4725B works the same as in the JZ4740, except that
-> > > it
-> > >  only has 6 channels available instead of 8.
-> > 
-> > this driver is probed only from device tree? If yes, it might be
-> > sensible to specify the number of PWMs there and get it from there.
-> > There doesn't seem to be a generic binding for that, but there are
-> > several drivers that could benefit from it. (This is a bigger project
-> > though and shouldn't stop your patch. Still more as it already got
-> > Thierry's ack.)
+On Wed, Dec 12, 2018 at 06:57:44PM +0100, Sylwester Nawrocki wrote:
+> The assigned parent clocks should be normally specified in the consumer
+> device's DT node, this ensures respective driver always sees correct clock
+> settings when required.
 > 
-> I think there needs to be a proper guideline, as there doesn't seem to be
-> a consensus about this. I learned from emails with Rob and Linus (Walleij)
-> that I should not have in devicetree what I can deduce from the compatible
-> string.
+> This patch fixes regression in audio subsystem on Odroid XU3/XU4 boards
+> that appeared after commits:
+> 
+> 'commit 647d04f8e07a ("ASoC: samsung: i2s: Ensure the RCLK rate is properly determined")'
+> 'commit 995e73e55f46 ("ASoC: samsung: i2s: Fix rclk_srcrate handling")'
+> 'commit 48279c53fd1d ("ASoC: samsung: i2s: Prevent external abort on exynos5433 I2S1 access")'
+> 
+> Without this patch the driver gets wrong clock as the I2S function (op_clk)
+> clock in probe() and effectively the clock which is finally assigned from DT
+> is not being enabled/disabled in the runtime resume/suspend ops.
+> 
+> Without the above listed commits the EXYNOS_I2S_BUS clock was always set
+> as parent of CLK_I2S_RCLK_SRC regardless of DT settings so there was no issue
+> with not enabled EXYNOS_SCLK_I2S.
+> 
+> Cc: stable@vger.kernel.org # v4.17+
 
-I understood them a bit differently. It is ok to deduce things from the
-compatible string. But if you define a generic property (say) "num-pwms"
-that is used uniformly in most bindings this is ok, too. (And then the
-two different devices could use the same compatible.)
+I gues your format would work (got recognized by stable scripts) but
+strictly speaking format is different:
 
-An upside of the generic "num-pwms" property is that the pwm core could
-sanity check pwm phandles before passing them to the hardware drivers.
+	Cc: <stable@vger.kernel.org> # 4.17.x
 
-Best regards
-Uwe
+https://elixir.bootlin.com/linux/latest/source/Documentation/process/stable-kernel-rules.rst#L127
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Thanks, fixed and applied.
+
+Best regards,
+Krzysztof
