@@ -1,36 +1,68 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v12 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq
- HW driver
-Date: Thu, 13 Dec 2018 16:06:08 +0530
-Message-ID: <20181213103608.vs255cq46fu4w2cc@vireshk-i7>
-References: <1544687394-331-1-git-send-email-tdas@codeaurora.org>
- <1544687394-331-3-git-send-email-tdas@codeaurora.org>
- <154469510700.19322.7762676027024031719@swboyd.mtv.corp.google.com>
- <20181213100506.sy3haqjbxtmkthvt@vireshk-i7>
- <154469596755.19322.16319349046735344084@swboyd.mtv.corp.google.com>
- <20181213101417.dcz66dpbqzbbxkdz@vireshk-i7>
- <154469713309.19322.12951478077195078609@swboyd.mtv.corp.google.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [RESEND PATCH v4 1/1] dt-bindings: arm-smmu: Add binding doc for
+ Qcom smmu-500
+Date: Thu, 13 Dec 2018 10:45:24 +0000
+Message-ID: <20181213104524.GA31177@edgewater-inn.cambridge.arm.com>
+References: <20181213090507.6269-1-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <154469713309.19322.12951478077195078609@swboyd.mtv.corp.google.com>
+In-Reply-To: <20181213090507.6269-1-vivek.gautam@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Taniya Das <tdas@codeaurora.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, evgreen@google.com, Matthias Kaehlcke <mka@chromium.org>
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: joro@8bytes.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 13-12-18, 02:32, Stephen Boyd wrote:
-> I have one policy for four CPUs. So take down all four of those CPUs by
-> writing a 0 to the online file for each CPU, and then bring them back
-> online. That should make cpufreq_driver->init() be called twice, once
-> during boot when the CPUs are bound to the cpufreq devices, and second
-> from the sysfs write when the user brings the first CPU in that policy
-> online again by writing a 1 to the online file. If that second time it
-> fails I suspect we hit the lockdep warning.
+On Thu, Dec 13, 2018 at 02:35:07PM +0530, Vivek Gautam wrote:
+> Qcom's implementation of arm,mmu-500 works well with current
+> arm-smmu driver implementation. Adding a soc specific compatible
+> along with arm,mmu-500 makes the bindings future safe.
+> 
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Cc: Will Deacon <will.deacon@arm.com>
+> ---
+> 
+> Hi Joerg,
+> I am picking this out separately from the sdm845 smmu support
+> series [1], so that this can go through iommu tree.
+> The dt patch from the series [1] can be taken through arm-soc tree.
+> 
+> Hi Will,
+> As asked [2], here's the resend version of dt binding patch for sdm845.
+> Kindly ack this so that Joerg can pull this in.
 
-Okay, that is a special sequence. I will try to reproduce that
-locally. Thanks.
+Acked-by: Will Deacon <will.deacon@arm.com>
 
--- 
-viresh
+Joerg -- please can you take this on top of the pull request I sent already?
+Vivek included it as part of a separate series which I thought was going
+via arm-soc, but actually it needs to go with the other arm-smmu patches
+in order to avoid conflicts.
+
+Cheers,
+
+Will
+
+>  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> index a6504b37cc21..3133f3ba7567 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> @@ -27,6 +27,10 @@ conditions.
+>                    "qcom,msm8996-smmu-v2", "qcom,smmu-v2",
+>                    "qcom,sdm845-smmu-v2", "qcom,smmu-v2".
+>  
+> +                  Qcom SoCs implementing "arm,mmu-500" must also include,
+> +                  as below, SoC-specific compatibles:
+> +                  "qcom,sdm845-smmu-500", "arm,mmu-500"
+> +
+>  - reg           : Base address and size of the SMMU.
+>  
+>  - #global-interrupts : The number of global interrupts exposed by the
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
