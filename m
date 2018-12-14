@@ -1,108 +1,59 @@
-From: Felipe Balbi <balbi@kernel.org>
-Subject: Re: [RFC PATCH v2 08/15] usb:cdns3: Implements device operations part of the API
-Date: Fri, 14 Dec 2018 12:47:50 +0200
-Message-ID: <87bm5ol6zt.fsf@linux.intel.com>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com> <1542535751-16079-9-git-send-email-pawell@cadence.com> <5BFE8883.7090802@ti.com> <CAL411-oKvu3EADStit=JtbcxVzM_fFGF2uPn67-wmXxPzUK6GQ@mail.gmail.com> <6b19b55c-66d7-439e-df8f-7b311b45af5e@ti.com> <BYAPR07MB470972A525D85B03C3037D3BDDA60@BYAPR07MB4709.namprd07.prod.outlook.com> <CAL411-oc-_0H88egpHsc06ptL12UsaE63rWwjN7novuFFx_qbA@mail.gmail.com> <5a41de27-cd1f-0cfd-ccdc-dccbf0854fcb@ti.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH] dt-bindings: PCI: rcar: Add device tree support for
+ r8a774c0
+Date: Fri, 14 Dec 2018 10:49:16 +0000
+Message-ID: <TY1PR01MB1770FAF7F451A3B8F4903ED9C0A10@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1544732500-6866-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdUqNR5jKQXvC5gy5r44Jp+cbo8iorfCFpwBHNCu16RH0w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5a41de27-cd1f-0cfd-ccdc-dccbf0854fcb@ti.com>
+In-Reply-To: <CAMuHMdUqNR5jKQXvC5gy5r44Jp+cbo8iorfCFpwBHNCu16RH0w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Peter Chen <hzpeterchen@gmail.com>, pawell@cadence.com
-Cc: rogerq@ti.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, adouglas@cadence.com, jbergsagel@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci <linux-pci@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-
-Hi,
-
-Sekhar Nori <nsekhar@ti.com> writes:
-
-<snip>
-
->>>> All this should be part of comments in code along with information abo=
-ut
->>>> controller versions which suffer from the errata.
->>>>
->>>> Is there a version of controller available which does not have the
->>>> defect? Is there a future plan to fix this?
->>>>
->>>> If any of that is yes, you probably want to handle this with runtime
->>>> detection of version (like done with DWC3_REVISION_XXX macros).
->>>> Sometimes the hardware-read versions themselves are incorrect, so its
->>>> better to introduce a version specific compatible too like
->>>> "cdns,usb-1.0.0" (as hinted to by Rob Herring as well).
->>>>
->>>
->>> custom match_ep is used and works with all versions of the gen1
->>> controller. Future (gen2) releases of the controller won=E2=80=99t have=
- such
->>> limitation but there is no plan to change current (gen1) functionality
->>> of the controller.
->>>
->>> I will add comment before cdns3_gadget_match_ep function.
->>> Also I will change cdns,usb3 to cdns,usb3-1.0.0 and add additional
->>> cdns,usb3-1.0.1 compatible.
->>>
->>> cdns,usb3-1.0.1 will be for current version of controller which I use.
->>> cdns,usb3-1.0.0 will be for older version - Peter Chan platform.
->>> I now that I have some changes in controller, and one of them require
->>> some changes in DRD driver. It will be safer to add two separate
->>> version in compatibles.
->>>
->>=20
->> Pawel, could we have correct register to show controller version? It is
->> better we could version judgement at runtime instead of static compatibl=
-e.
->
-> Agree with detecting IP version at runtime.
->
-> But please have some indication of version in compatible string too,
-
-why? Runtime detection by revision register should be the way to go if
-the HW provides it. Why duplicate the information in compatible string?
-
-> especially since you already know there is going to be another revision
-> of hardware. It has the advantage that one can easily grep to see which
-> hardware is running current version of controller without having access
-> to the hardware itself. Becomes useful later on when its time to
-> clean-up unused code when boards become obsolete or for requesting
-> testing help.
-
-This doesn't sound like a very strong argument, actually. Specially when
-you consider that, since driver will do revision checking based on
-revision register, you already have strings to grep. Moreover, we don't
-usually drop support just like that.
-
-Personally, I wouldn't bother. Just like dwc3 never bothered and nothing
-bad came about because of it. Well, there are quirks which are
-undetectable and for those we have quirk flags. I much prefer that
-arrangement.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlwTilYACgkQzL64meEa
-mQZF2BAAyWZdJ40EfnIL5X/zVA6cIKPa6jNWl/omllvQBuo1YyaAhsqkRJshUKhH
-hQspft8wlfMByo/F7+B86DAi6XHefxhcboCbaAnafuR/9DybU2RByvwG5WBWcUBH
-27Fqb4n1VFQgSfZI+EmIbJI3qL/rfd9MzwToXhl7lpJlhnIChQY/JZCRIYTlbCvi
-YOcRhGEJPNE874EQcV4LpK5LxuXZX12qjh3WAGZoQ7//s7xIPKMtgKQSIWWa5QKz
-WyqXu1eQSwKXXAhVrDxJUbPa/N2f8DI3Ompld0flze3vUX8izLgmJF+KmQY5RoVk
-Du24TWIey5B+z9y5YGPAFQ8HN7VmjTIKk69j5z6FLJMp/3YdRnEeachmk76WL9LM
-awNlVafiE4w+ExTwBXHkkShuYKVV5WMSiA/Snwe45cyB+fQH432dF6TfyMuXVgRD
-bwOPw9spZSNlS1xlGWot7dPLhH4SCvgaH9GeTFISA78KQD83hPr0S1y1RwVbLyK4
-HEGfEm4pKPqati0yppoXhl7o+MvhQMLMzVJsLsUol/2Rx34iLvpDLXc6Z+3IhCzy
-7gd2YzW386U1lZYFQsqdohiWKmiRV953neOkruBkCwxGqq15rgqr5Qpbgdj12L0C
-esA8hjDYiQGT8t5KRbEcWCKvmy7Q9zdKiOQTxXK/ey66p1ZsviU=
-=+VII
------END PGP SIGNATURE-----
---=-=-=--
+SGVsbG8gR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjayENCg0KPiBGcm9tOiBH
+ZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4LW02OGsub3JnPg0KPiBTZW50OiAxNCBEZWNl
+bWJlciAyMDE4IDEwOjI5DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIGR0LWJpbmRpbmdzOiBQQ0k6
+IHJjYXI6IEFkZCBkZXZpY2UgdHJlZSBzdXBwb3J0IGZvciByOGE3NzRjMA0KPg0KPiBIaSBGYWJy
+aXppbywNCj4NCj4gT24gVGh1LCBEZWMgMTMsIDIwMTggYXQgOToyMSBQTSBGYWJyaXppbyBDYXN0
+cm8NCj4gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gQWRkIFBD
+SWUgc3VwcG9ydCBmb3IgdGhlIFJaL0cyRSAoYS5rLmEuIFI4QTc3NEMwKS4NCj4gPg0KPiA+IFNp
+Z25lZC1vZmYtYnk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMu
+Y29tPg0KPg0KPiBSZXZpZXdlZC1ieTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2Fz
+QGdsaWRlci5iZT4NCj4NCj4gT25lIHF1ZXN0aW9uIGJlbG93Lg0KPg0KPiA+IC0tLSBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvcmNhci1wY2kudHh0DQo+ID4gKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9yY2FyLXBjaS50eHQNCj4NCj4g
+PiBAQCAtMzcsNyArMzksOCBAQCBjb21wYXRpYmxlOiAicmVuZXNhcyxwY2llLXI4YTc3NDMiIGZv
+ciB0aGUgUjhBNzc0MyBTb0M7DQo+ID4NCj4gPiAgT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiAg
+LSBwaHlzOiBmcm9tIGNvbW1vbiBQSFkgYmluZGluZzogUEhZIHBoYW5kbGUgYW5kIHNwZWNpZmll
+ciAob25seSBtYWtlIHNlbnNlDQo+ID4gLSAgICAgICBmb3IgUi1DYXIgZ2VuMyBTb0NzIHdoZXJl
+IHRoZSBQQ0llIFBIWXMgaGF2ZSB0aGVpciBvd24gcmVnaXN0ZXIgYmxvY2tzKS4NCj4gPiArICAg
+ICAgIGZvciBSLUNhciBnZW4zIGFuZCBSWi9HMiBTb0NzIHdoZXJlIHRoZSBQQ0llIFBIWXMgaGF2
+ZSB0aGVpciBvd24NCj4NCj4gR2VuMywgd2hpbGUgYXQgaXQ/DQoNCkNhbiBkbw0KDQo+DQo+ID4g
+KyAgICAgICByZWdpc3RlciBibG9ja3MpLg0KPg0KPiBUaGUgUlovRzIgSGFyZHdhcmUgVXNlciBN
+YW51YWwgSSBoYXZlIGxhY2tzIHRoZSB0YWJsZSBzcGVjaWZ5aW5nIHdoaWNoIFNvQ3MNCj4gaGF2
+ZSB3aGljaCBQSFkgcmVnaXN0ZXJzLiAgU28gSSBjYW5ub3QgdmVyaWZ5IGlmIHRoZSBhYm92ZSBw
+YXJhZ3JhcGggYXBwbGllcyB0bw0KPiBSWi9HMihFKS4NCg0KSSdsbCByZXBseSB0byB0aGlzIG9u
+IHlvdXIgZm9sbG93LXVwICBlbWFpbC4NCg0KVGhhbmtzLA0KRmFiDQoNCj4NCj4gR3J7b2V0amUs
+ZWV0aW5nfXMsDQo+DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0DQo+DQo+IC0tDQo+
+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIg
+LS0gZ2VlcnRAbGludXgtbTY4ay5vcmcNCj4NCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3
+aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVu
+IEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNv
+bWV0aGluZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0g
+TGludXMgVG9ydmFsZHMNCg0KDQpbaHR0cHM6Ly93d3cyLnJlbmVzYXMuZXUvbWVkaWEvZW1haWwv
+dW5pY2VmLmpwZ10NCg0KVGhpcyBDaHJpc3RtYXMsIGluc3RlYWQgb2Ygc2VuZGluZyBvdXQgY2Fy
+ZHMsIFJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIGhhdmUgZGVjaWRlZCB0byBzdXBwb3J0IFVu
+aWNlZiB3aXRoIGEgZG9uYXRpb24uIEZvciBmdXJ0aGVyIGRldGFpbHMgY2xpY2sgaGVyZTxodHRw
+czovL3d3dy51bmljZWYub3JnLz4gdG8gZmluZCBvdXQgYWJvdXQgdGhlIHZhbHVhYmxlIHdvcmsg
+dGhleSBkbywgaGVscGluZyBjaGlsZHJlbiBhbGwgb3ZlciB0aGUgd29ybGQuDQpXZSB3b3VsZCBs
+aWtlIHRvIHRha2UgdGhpcyBvcHBvcnR1bml0eSB0byB3aXNoIHlvdSBhIE1lcnJ5IENocmlzdG1h
+cyBhbmQgYSBwcm9zcGVyb3VzIE5ldyBZZWFyLg0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBF
+dXJvcGUgTHRkLCBEdWtlcyBNZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNr
+aW5naGFtc2hpcmUsIFNMOCA1RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1
+bmRlciBSZWdpc3RlcmVkIE5vLiAwNDU4NjcwOS4NCg==
