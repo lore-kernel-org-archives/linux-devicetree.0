@@ -1,295 +1,110 @@
-From: Yash Shah <yash.shah@sifive.com>
-Subject: [RFC v2 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
-Date: Fri, 14 Dec 2018 11:50:42 +0530
-Message-ID: <1544768442-12530-3-git-send-email-yash.shah@sifive.com>
-References: <1544768442-12530-1-git-send-email-yash.shah@sifive.com>
+From: biao huang <biao.huang@mediatek.com>
+Subject: Re: [v7, PATCH 1/2] net:stmmac: dwmac-mediatek: add support for
+ mt2712
+Date: Fri, 14 Dec 2018 14:32:16 +0800
+Message-ID: <1544769136.24219.175.camel@mhfsdcap03>
+References: <1544666173-5121-1-git-send-email-biao.huang@mediatek.com>
+         <1544666173-5121-2-git-send-email-biao.huang@mediatek.com>
+         <20181213123346.GF1605@lunn.ch> <1544756477.24219.164.camel@mhfsdcap03>
+         <f3427cac-88b2-1464-8f92-4692a7125674@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544768442-12530-1-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <f3427cac-88b2-1464-8f92-4692a7125674@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: palmer@sifive.com, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org
-Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, paul.walmsley@sifive.com, Yash Shah <yash.shah@sifive.com>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, mark.rutland@arm.com, devicetree@vger.kernel.org, nelson.chang@mediatek.com, netdev@vger.kernel.org, liguo.zhang@mediatek.com, joabreu@synopsys.com, linux-kernel@vger.kernel.org, matthias.bgg@gmail.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Adds a PWM driver for PWM chip present in SiFive's HiFive Unleashed SoC.
+Dear Florian,
+	Thanks for your comments.
 
-Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
-[Atish: Various fixes and code cleanup]
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
----
- drivers/pwm/Kconfig      |  10 +++
- drivers/pwm/Makefile     |   1 +
- drivers/pwm/pwm-sifive.c | 229 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 240 insertions(+)
- create mode 100644 drivers/pwm/pwm-sifive.c
+On Thu, 2018-12-13 at 21:11 -0800, Florian Fainelli wrote:
+> Le 12/13/18 à 7:01 PM, biao huang a écrit :
+> > Dear Andrew,
+> > 	Thanks for your comments.
+> > 
+> > On Thu, 2018-12-13 at 13:33 +0100, Andrew Lunn wrote:
+> >> Hi Biao
+> >>
+> >>> +	case PHY_INTERFACE_MODE_RGMII:
+> >>> +		/* the PHY is not responsible for inserting any internal
+> >>> +		 * delay by itself in PHY_INTERFACE_MODE_RGMII case,
+> >>> +		 * so Ethernet MAC will insert delays for both transmit
+> >>> +		 * and receive path here.
+> >>> +		 */
+> >>
+> >> What if the PCB designed has decided to do a kink in the clock to add
+> >> the delays? I don't think any of these delays should depend on the PHY
+> >> interface mode. It is up to the device tree writer to set both the PHY
+> >> delay and the MAC delay, based on knowledge of the board, including
+> >> any kicks in the tracks. The driver should then do what it is told.
+> >>
+> > Originally, we recommend equal trace length on PCB, which means that
+> > RGMII delay by PCB traces is not recommended. so only PHY/MAC delay is
+> > taken into account in the transmit/receive path.
+> > 
+> > as you described above, maybe the equal PCB trace length assumption is
+> > not reasonable, and we'll only handle MAC delay-ps in our driver based
+> > on the device tree information no matter which rgmii is selected.
+> 
+> Expecting identical PCB traces is something that is hard to enforce with
+> external customers, for internal reference boards, absolutely they
+> should have those traces of equal length.
+> 
+yes, we'll set the corresponding register based on the
+tx-delay-ps/rx-delay-ps in device tree for rgmii interface.
+the PHY_INTERFACE_MODE_RGMII/-RXID/-TXID/-ID share the same flow in
+Ethernet driver.
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 27e5dd4..da85557 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -378,6 +378,16 @@ config PWM_SAMSUNG
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-samsung.
- 
-+config PWM_SIFIVE
-+	tristate "SiFive PWM support"
-+	depends on OF
-+	depends on COMMON_CLK
-+	help
-+	  Generic PWM framework driver for SiFive SoCs.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-sifive.
-+
- config PWM_SPEAR
- 	tristate "STMicroelectronics SPEAr PWM support"
- 	depends on PLAT_SPEAR
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 9c676a0..30089ca 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -37,6 +37,7 @@ obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
- obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
- obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
- obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
-+obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
- obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
- obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
- obj-$(CONFIG_PWM_STM32)		+= pwm-stm32.o
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-new file mode 100644
-index 0000000..26913b6
---- /dev/null
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -0,0 +1,229 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017-2018 SiFive
-+ */
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/slab.h>
-+
-+/* Register offsets */
-+#define REG_PWMCFG		0x0
-+#define REG_PWMCOUNT		0x8
-+#define REG_PWMS		0x10
-+#define REG_PWMCMP0		0x20
-+
-+/* PWMCFG fields */
-+#define BIT_PWM_SCALE		0
-+#define BIT_PWM_STICKY		8
-+#define BIT_PWM_ZERO_ZMP	9
-+#define BIT_PWM_DEGLITCH	10
-+#define BIT_PWM_EN_ALWAYS	12
-+#define BIT_PWM_EN_ONCE		13
-+#define BIT_PWM0_CENTER		16
-+#define BIT_PWM0_GANG		24
-+#define BIT_PWM0_IP		28
-+
-+#define SIZE_PWMCMP		4
-+#define MASK_PWM_SCALE		0xf
-+
-+struct sifive_pwm_device {
-+	struct pwm_chip	chip;
-+	struct notifier_block notifier;
-+	struct clk *clk;
-+	void __iomem *regs;
-+	unsigned int approx_period;
-+	unsigned int real_period;
-+};
-+
-+static inline struct sifive_pwm_device *to_sifive_pwm_chip(struct pwm_chip *c)
-+{
-+	return container_of(c, struct sifive_pwm_device, chip);
-+}
-+
-+static int sifive_pwm_apply(struct pwm_chip *chip, struct pwm_device *dev,
-+			    struct pwm_state *state)
-+{
-+	struct sifive_pwm_device *pwm = to_sifive_pwm_chip(chip);
-+	unsigned int duty_cycle;
-+	u32 frac;
-+
-+	duty_cycle = state->duty_cycle;
-+	if (!state->enabled)
-+		duty_cycle = 0;
-+
-+	frac = ((u64)duty_cycle << 16) / state->period;
-+	frac = min(frac, 0xFFFFU);
-+
-+	writel(frac, pwm->regs + REG_PWMCMP0 + dev->hwpwm * SIZE_PWMCMP);
-+
-+	if (state->enabled) {
-+		state->period = pwm->real_period;
-+		state->duty_cycle = ((u64)frac * pwm->real_period) >> 16;
-+	}
-+
-+	return 0;
-+}
-+
-+static void sifive_pwm_get_state(struct pwm_chip *chip, struct pwm_device *dev,
-+				 struct pwm_state *state)
-+{
-+	struct sifive_pwm_device *pwm = to_sifive_pwm_chip(chip);
-+	u32 duty;
-+
-+	duty = readl(pwm->regs + REG_PWMCMP0 + dev->hwpwm * SIZE_PWMCMP);
-+
-+	state->period = pwm->real_period;
-+	state->duty_cycle = ((u64)duty * pwm->real_period) >> 16;
-+	state->polarity = PWM_POLARITY_INVERSED;
-+	state->enabled = duty > 0;
-+}
-+
-+static const struct pwm_ops sifive_pwm_ops = {
-+	.get_state = sifive_pwm_get_state,
-+	.apply = sifive_pwm_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static struct pwm_device *sifive_pwm_xlate(struct pwm_chip *chip,
-+					   const struct of_phandle_args *args)
-+{
-+	struct sifive_pwm_device *pwm = to_sifive_pwm_chip(chip);
-+	struct pwm_device *dev;
-+
-+	if (args->args[0] >= chip->npwm)
-+		return ERR_PTR(-EINVAL);
-+
-+	dev = pwm_request_from_chip(chip, args->args[0], NULL);
-+	if (IS_ERR(dev))
-+		return dev;
-+
-+	/* The period cannot be changed on a per-PWM basis */
-+	dev->args.period   = pwm->real_period;
-+	dev->args.polarity = PWM_POLARITY_NORMAL;
-+	if (args->args[1] & PWM_POLARITY_INVERSED)
-+		dev->args.polarity = PWM_POLARITY_INVERSED;
-+
-+	return dev;
-+}
-+
-+static void sifive_pwm_update_clock(struct sifive_pwm_device *pwm,
-+				    unsigned long rate)
-+{
-+	/* (1 << (16+scale)) * 10^9/rate = real_period */
-+	unsigned long scale_pow = (pwm->approx_period * (u64)rate) / 1000000000;
-+	int scale = clamp(ilog2(scale_pow) - 16, 0, 0xf);
-+
-+	writel((1 << BIT_PWM_EN_ALWAYS) | (scale << BIT_PWM_SCALE),
-+	       pwm->regs + REG_PWMCFG);
-+
-+	pwm->real_period = (1000000000ULL << (16 + scale)) / rate;
-+}
-+
-+static int sifive_pwm_clock_notifier(struct notifier_block *nb,
-+				     unsigned long event, void *data)
-+{
-+	struct clk_notifier_data *ndata = data;
-+	struct sifive_pwm_device *pwm =
-+		container_of(nb, struct sifive_pwm_device, notifier);
-+
-+	if (event == POST_RATE_CHANGE)
-+		sifive_pwm_update_clock(pwm, ndata->new_rate);
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int sifive_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *node = pdev->dev.of_node;
-+	struct sifive_pwm_device *pwm;
-+	struct pwm_chip *chip;
-+	struct resource *res;
-+	int ret;
-+
-+	pwm = devm_kzalloc(dev, sizeof(*pwm), GFP_KERNEL);
-+	if (!pwm)
-+		return -ENOMEM;
-+
-+	chip = &pwm->chip;
-+	chip->dev = dev;
-+	chip->ops = &sifive_pwm_ops;
-+	chip->of_xlate = sifive_pwm_xlate;
-+	chip->of_pwm_n_cells = 2;
-+	chip->base = -1;
-+	chip->npwm = 4;
-+
-+	ret = of_property_read_u32(node, "sifive,approx-period",
-+				   &pwm->approx_period);
-+	if (ret < 0) {
-+		dev_err(dev, "Unable to read sifive,approx-period from DTS\n");
-+		return ret;
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	pwm->regs = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(pwm->regs)) {
-+		dev_err(dev, "Unable to map IO resources\n");
-+		return PTR_ERR(pwm->regs);
-+	}
-+
-+	pwm->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(pwm->clk)) {
-+		dev_err(dev, "Unable to find controller clock\n");
-+		return PTR_ERR(pwm->clk);
-+	}
-+
-+	/* Watch for changes to underlying clock frequency */
-+	pwm->notifier.notifier_call = sifive_pwm_clock_notifier;
-+	ret = clk_notifier_register(pwm->clk, &pwm->notifier);
-+	if (ret) {
-+		dev_err(dev, "failed to register clock notifier: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Initialize PWM config */
-+	sifive_pwm_update_clock(pwm, clk_get_rate(pwm->clk));
-+
-+	ret = pwmchip_add(chip);
-+	if (ret < 0) {
-+		dev_err(dev, "cannot register PWM: %d\n", ret);
-+		clk_notifier_unregister(pwm->clk, &pwm->notifier);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, pwm);
-+	dev_dbg(dev, "SiFive PWM chip registered %d PWMs\n", chip->npwm);
-+
-+	return 0;
-+}
-+
-+static int sifive_pwm_remove(struct platform_device *dev)
-+{
-+	struct sifive_pwm_device *pwm = platform_get_drvdata(dev);
-+
-+	clk_notifier_unregister(pwm->clk, &pwm->notifier);
-+	return pwmchip_remove(&pwm->chip);
-+}
-+
-+static const struct of_device_id sifive_pwm_of_match[] = {
-+	{ .compatible = "sifive,pwm0" },
-+	{ .compatible = "sifive,fu540-c000-pwm" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, sifive_pwm_of_match);
-+
-+static struct platform_driver sifive_pwm_driver = {
-+	.probe = sifive_pwm_probe,
-+	.remove = sifive_pwm_remove,
-+	.driver = {
-+		.name = "pwm-sifive",
-+		.of_match_table = sifive_pwm_of_match,
-+	},
-+};
-+module_platform_driver(sifive_pwm_driver);
-+
-+MODULE_DESCRIPTION("SiFive PWM driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+A new patch will be sent to fix this issue.
+> > 
+> > Since David already applied this patch, I'll send another patch to fix
+> > this issue.
+> >>> +	if (!of_property_read_u32(plat->np, "mediatek,tx-delay-ps", &tx_delay_ps)) {
+> >>> +		if (tx_delay_ps < plat->variant->tx_delay_max) {
+> >>> +			mac_delay->tx_delay = tx_delay_ps;
+> >>> +		} else {
+> >>> +			dev_err(plat->dev, "Invalid TX clock delay: %dps\n", tx_delay_ps);
+> >>> +			return -EINVAL;
+> >>> +		}
+> >>> +	}
+> >>> +
+> >>> +	if (!of_property_read_u32(plat->np, "mediatek,rx-delay-ps", &rx_delay_ps)) {
+> >>> +		if (rx_delay_ps < plat->variant->rx_delay_max) {
+> >>> +			mac_delay->rx_delay = rx_delay_ps;
+> >>> +		} else {
+> >>> +			dev_err(plat->dev, "Invalid RX clock delay: %dps\n", rx_delay_ps);
+> >>> +			return -EINVAL;
+> >>> +		}
+> >>> +	}
+> >>> +
+> >>> +	mac_delay->tx_inv = of_property_read_bool(plat->np, "mediatek,txc-inverse");
+> >>> +	mac_delay->rx_inv = of_property_read_bool(plat->np, "mediatek,rxc-inverse");
+> >>> +	mac_delay->fine_tune = of_property_read_bool(plat->np, "mediatek,fine-tune");
+> >>
+> >> Why is fine tune needed? If the requested delay can be done using fine
+> >> tune, it should use fine tune. If not, it should use rough tune. The
+> >> driver can work this out itself.
+> > 
+> > find tune here represents a more accurate delay circuit than coarse
+> > tune, and it's a parallel circuit of coarse tune.
+> > For most delay, both fine and coarse tune can meet the requirement.
+> > It's up to the user to select which one.
+> > 
+> > But only one of them can work at the same time, so we need a switch
+> > flag(fine_tune here) to indicate which one is valid.
+> > Driver can hardly work out which one is working according to delay-ps.
+> > 
+> > Please correct me if any misunderstanding.
+> 
+> You are giving a lot of options for users of this Ethernet controller to
+> shoot themselves in the feet and spend a good amount of time debugging
+> why their RGMII connection is not reliable or have timing violations.
+yes, since fine tune is more accurate, and can meet customer's
+requirement, we'll remove the 'fine-tune' property in device tree,
+enable fine-tune circuit by default in Ethernet driver, and abandon the
+coarse delay mechanism. so customer will not be confused by the options.
+
+I'll send a new patch to fix this issue.
