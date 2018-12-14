@@ -1,75 +1,67 @@
-From: Felipe Balbi <balbi@kernel.org>
-Subject: Re: [RFC PATCH v2 08/15] usb:cdns3: Implements device operations part of the API
-Date: Fri, 14 Dec 2018 14:30:18 +0200
-Message-ID: <87va3wz3xh.fsf@linux.intel.com>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com> <1542535751-16079-9-git-send-email-pawell@cadence.com> <5BFE8883.7090802@ti.com> <CAL411-oKvu3EADStit=JtbcxVzM_fFGF2uPn67-wmXxPzUK6GQ@mail.gmail.com> <6b19b55c-66d7-439e-df8f-7b311b45af5e@ti.com> <BYAPR07MB470972A525D85B03C3037D3BDDA60@BYAPR07MB4709.namprd07.prod.outlook.com> <CAL411-oc-_0H88egpHsc06ptL12UsaE63rWwjN7novuFFx_qbA@mail.gmail.com> <5a41de27-cd1f-0cfd-ccdc-dccbf0854fcb@ti.com> <87bm5ol6zt.fsf@linux.intel.com> <d5623e70-7971-d729-f395-7259ab0efdb0@ti.com> <875zvwl585.fsf@linux.intel.com> <7e6ac47e-61e4-ecd3-73d3-9b1be2d81479@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: rsnd: Add r8a774c0 support" to the asoc tree
+Date: Fri, 14 Dec 2018 12:37:24 +0000 (GMT)
+Message-ID: <20181214123724.938B911258A1@debutante.sirena.org.uk>
+References: <1544732406-6408-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7e6ac47e-61e4-ecd3-73d3-9b1be2d81479@ti.com>
+In-Reply-To: <1544732406-6408-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Peter Chen <hzpeterchen@gmail.com>, pawell@cadence.com
-Cc: rogerq@ti.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, adouglas@cadence.com, jbergsagel@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.orgMark Brown <broonie@kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+The patch
 
+   ASoC: rsnd: Add r8a774c0 support
 
-Hi,
+has been applied to the asoc tree at
 
-Sekhar Nori <nsekhar@ti.com> writes:
->>>>> especially since you already know there is going to be another revisi=
-on
->>>>> of hardware. It has the advantage that one can easily grep to see whi=
-ch
->>>>> hardware is running current version of controller without having acce=
-ss
->>>>> to the hardware itself. Becomes useful later on when its time to
->>>>> clean-up unused code when boards become obsolete or for requesting
->>>>> testing help.
->>>>
->>>> This doesn't sound like a very strong argument, actually. Specially wh=
-en
->>>> you consider that, since driver will do revision checking based on
->>>> revision register, you already have strings to grep. Moreover, we don't
->>>> usually drop support just like that.
->>>
->>> AFAICS, it is impossible to know just by grep'ing if there is any
->>> hardware still supported in kernel and using DWC3_REVISION_194A, for
->>> example.
->>=20
->> but why do you even care?
->
-> When, for example, its coming in the way of some clean-up I am
-> attempting to do.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-can you share one example when a revision check got in the way of a
-cleanup? I fail to see a situation when we need to drop support to older
-platforms just to clean some code up.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-=2D-=20
-balbi
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
------BEGIN PGP SIGNATURE-----
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlwToloACgkQzL64meEa
-mQam5Q//WQEWQZi6uiQOByEzaPDKl0Cj9Z/kHQj6uN4gEPoGEX4v5LJqDYBgjRfu
-RKzL9W1tTzzCZhxJ42jG8VdF12YkWMl4OHkNsdij+9k30wUxRHPciMNYjXoWq/Mi
-7mXROG6BenWB/qqJjLIlKctHNjBrPypvTyfXNUNVvT8nWJPEZeZJB0EV4jDc9Ox4
-5/PPJQTy6dOOG2R5IABDXtZGag9+US9a/ny7SSdpROcJgyjHYW+UvIZ5B2T/+KA0
-TC/WyKWS1mb4BDcJKItaZPze+yESDu8O1N4RSo8ygF7NwExkXBl3aRiUrY3lpDnA
-Qxk5ym454V7hd6NNyV4k1lfnRd9PZek/KbquO1Fv4ihAVd8n4Mzor6TtbsKguEzE
-dI5P1WtT+1fopjC0FoNvHxiGB/E0onOzgv0+4tvyLcBlEUNvJe4SQWbWgpeH+2+N
-XeyK+zV151AlPFNwKm8DNNCuJqVDcGNEsQ+gkB0y7MESasTsZkm+N9mijC5K8WKB
-g/mcHwR6W3UjC2bnWO7IXA8XFzGE79cXXwFVwnYAjxzNBLn6mbKjS//vvlu41WxB
-URMBMhKlKHIgUJHo7aOx/Py1C/arSDcFsf7Gs5V3WOWysxUnJr9Rv9/5crDFE1C7
-WGNdwbXkzpT4Ex/yKtvg4S4BgvV66FW3BCRnuzjgoipjxZN51/8=
-=eVG+
------END PGP SIGNATURE-----
---=-=-=--
+Thanks,
+Mark
+
+>From ae38d267417291db40de7439f2b0b690ab615f0e Mon Sep 17 00:00:00 2001
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Date: Thu, 13 Dec 2018 20:20:06 +0000
+Subject: [PATCH] ASoC: rsnd: Add r8a774c0 support
+
+Document RZ/G2E (R8A774C0) SoC bindings.
+
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
+index 4d19d2bd6286..648d43e1b1e9 100644
+--- a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
++++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
+@@ -267,6 +267,7 @@ Required properties:
+ 				    - "renesas,rcar_sound-r8a7744" (RZ/G1N)
+ 				    - "renesas,rcar_sound-r8a7745" (RZ/G1E)
+ 				    - "renesas,rcar_sound-r8a774a1" (RZ/G2M)
++				    - "renesas,rcar_sound-r8a774c0" (RZ/G2E)
+ 				    - "renesas,rcar_sound-r8a7778" (R-Car M1A)
+ 				    - "renesas,rcar_sound-r8a7779" (R-Car H1)
+ 				    - "renesas,rcar_sound-r8a7790" (R-Car H2)
+-- 
+2.19.0.rc2
