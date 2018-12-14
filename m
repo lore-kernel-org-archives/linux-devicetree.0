@@ -1,114 +1,57 @@
-From: Felipe Balbi <balbi@kernel.org>
-Subject: Re: [RFC PATCH v2 08/15] usb:cdns3: Implements device operations part of the API
-Date: Fri, 14 Dec 2018 13:26:02 +0200
-Message-ID: <875zvwl585.fsf@linux.intel.com>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com> <1542535751-16079-9-git-send-email-pawell@cadence.com> <5BFE8883.7090802@ti.com> <CAL411-oKvu3EADStit=JtbcxVzM_fFGF2uPn67-wmXxPzUK6GQ@mail.gmail.com> <6b19b55c-66d7-439e-df8f-7b311b45af5e@ti.com> <BYAPR07MB470972A525D85B03C3037D3BDDA60@BYAPR07MB4709.namprd07.prod.outlook.com> <CAL411-oc-_0H88egpHsc06ptL12UsaE63rWwjN7novuFFx_qbA@mail.gmail.com> <5a41de27-cd1f-0cfd-ccdc-dccbf0854fcb@ti.com> <87bm5ol6zt.fsf@linux.intel.com> <d5623e70-7971-d729-f395-7259ab0efdb0@ti.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH v3] MAINTAINERS: add maintainers for ChromeOS EC sub-drivers
+Date: Fri, 14 Dec 2018 12:48:58 +0100
+Message-ID: <20181214114858.21231-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d5623e70-7971-d729-f395-7259ab0efdb0@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Peter Chen <hzpeterchen@gmail.com>, pawell@cadence.com
-Cc: rogerq@ti.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, adouglas@cadence.com, jbergsagel@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
+To: linux-kernel@vger.kernel.org
+Cc: Alessandro Zummo <a.zummo@towertech.it>, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-i2c@vger.kernel.org, groeck@chromium.org, kernel@collabora.com, linux-rtc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Benson Leung <bleung@chromium.org>, Sebastian Reichel <sre@kernel.org>, linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, Lee Jones <lee.jones@linaro.org>, Hartmut Knaack <knaack.h@gmx.de>, Rob Herring <robh+dt@kernel.org>, Lars
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+There are multiple ChromeOS EC sub-drivers spread in different
+subsystems, as all of them are related to the Chrome stuff add
+Benson and myself as a maintainers for all these sub-drivers.
 
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Benson Leung <bleung@chromium.org>
+Acked-by: Wolfram Sang <wsa@the-dreams.de>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> for iio parts.
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+---
 
-Hi,
+Changes in v3:
+- Add collected acks
+- Use a cros[-_]ec pattern instead of list all the files.
+- Add Guenter as a reviewer.
 
-Sekhar Nori <nsekhar@ti.com> writes:
->>>>>> All this should be part of comments in code along with information a=
-bout
->>>>>> controller versions which suffer from the errata.
->>>>>>
->>>>>> Is there a version of controller available which does not have the
->>>>>> defect? Is there a future plan to fix this?
->>>>>>
->>>>>> If any of that is yes, you probably want to handle this with runtime
->>>>>> detection of version (like done with DWC3_REVISION_XXX macros).
->>>>>> Sometimes the hardware-read versions themselves are incorrect, so its
->>>>>> better to introduce a version specific compatible too like
->>>>>> "cdns,usb-1.0.0" (as hinted to by Rob Herring as well).
->>>>>>
->>>>>
->>>>> custom match_ep is used and works with all versions of the gen1
->>>>> controller. Future (gen2) releases of the controller won=E2=80=99t ha=
-ve such
->>>>> limitation but there is no plan to change current (gen1) functionality
->>>>> of the controller.
->>>>>
->>>>> I will add comment before cdns3_gadget_match_ep function.
->>>>> Also I will change cdns,usb3 to cdns,usb3-1.0.0 and add additional
->>>>> cdns,usb3-1.0.1 compatible.
->>>>>
->>>>> cdns,usb3-1.0.1 will be for current version of controller which I use.
->>>>> cdns,usb3-1.0.0 will be for older version - Peter Chan platform.
->>>>> I now that I have some changes in controller, and one of them require
->>>>> some changes in DRD driver. It will be safer to add two separate
->>>>> version in compatibles.
->>>>>
->>>>
->>>> Pawel, could we have correct register to show controller version? It is
->>>> better we could version judgement at runtime instead of static compati=
-ble.
->>>
->>> Agree with detecting IP version at runtime.
->>>
->>> But please have some indication of version in compatible string too,
->>=20
->> why? Runtime detection by revision register should be the way to go if
->> the HW provides it. Why duplicate the information in compatible string?
->>=20
->>> especially since you already know there is going to be another revision
->>> of hardware. It has the advantage that one can easily grep to see which
->>> hardware is running current version of controller without having access
->>> to the hardware itself. Becomes useful later on when its time to
->>> clean-up unused code when boards become obsolete or for requesting
->>> testing help.
->>=20
->> This doesn't sound like a very strong argument, actually. Specially when
->> you consider that, since driver will do revision checking based on
->> revision register, you already have strings to grep. Moreover, we don't
->> usually drop support just like that.
->
-> AFAICS, it is impossible to know just by grep'ing if there is any
-> hardware still supported in kernel and using DWC3_REVISION_194A, for
-> example.
+Changes in v2:
+- Fix typo in Benson email address.
 
-but why do you even care?=20
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> If we are never going to drop support for any revision, this does not
-> matter much.
->
-> Also, once you have the controller supported behind PCI, then I guess
-> you are pretty much tied to having to read hardware revision at runtime.
-
-that's another argument *for* using runtime detection, not against it.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlwTk0oACgkQzL64meEa
-mQYA5w/9FY3dE8D+YHmrb3tnHyR6vwaTBRUsHcVyJ1J0yspewdcd/07/VcXfnD28
-ebvRVP4Idebgch5S9J/CRMYE1LAn/SMDYyZshye/iuOv1SMReVaPo9YW5/hFPKGX
-r8BfKhE/4qHMVWeTN1euiYr8iTtPldBcZ+1R3+JxDyYqFL8XD0c6bgeVrHfSBBBn
-CrqqAn6boJCurIAQ7DpRhrN84hz4zI5dbRM5vAvEWerqjxl2LU3ADvX6KQzSM81J
-BqdIo6ucOok3FAlhg9OVeA+IceRMjdvHFisN1Tlcqu2ZmacneGZuNvQ1/0l7B6Th
-ciDraD8jWbIYxCl/m9tmLPC8qx6Od5o4s19ZYCBwVtgJTTypzIC1c3MHcD6a3rcG
-WOlT7kPB7xr2H8UUXmd3l6ZzOFrJpLPfQPihvQNt6Uy3aQjt4WXvYiIyS8XciXkn
-8TduIbwJ0mAuivKrTBOUGWE6oCMnJs8x2oz+Ytoli9FkhxgXsfWhYBgZlLcZB6nT
-h5Obm7VtLAaskRpSe4vIV/Wg4Qac7OcjYL4WytDuL79A6py05DZ5kigxLUfToPyF
-OPcwGHAOjri82WZIDzksQY9hB7yBuxAWGL6tERnamRtxCN1qIczzxlTttQq5dF4q
-4hV2JhbROuNDETAUzAS6c8ypj0+d/ngF75m/vhsqr23J8SEkYjk=
-=hfQv
------END PGP SIGNATURE-----
---=-=-=--
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e7260191301b..437e036435d5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3629,6 +3629,14 @@ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/bleung/chrome-platform.git
+ F:	drivers/platform/chrome/
+ 
++CHROMEOS EC SUBDRIVERS
++M:	Benson Leung <bleung@chromium.org>
++M:	Enric Balletbo i Serra <enric.balletbo@collabora.com>
++R:	Guenter Roeck <groeck@chromium.org>
++S:	Maintained
++N:	cros[-_]ec
++F:	drivers/power/supply/cros_usbpd-charger.c
++
+ CIRRUS LOGIC AUDIO CODEC DRIVERS
+ M:	Brian Austin <brian.austin@cirrus.com>
+ M:	Paul Handrigan <Paul.Handrigan@cirrus.com>
+-- 
+2.19.2
