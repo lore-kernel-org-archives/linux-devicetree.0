@@ -1,54 +1,87 @@
-From: Tom Burkart <tom@aussec.com>
-Subject: [PATCH v13 2/3] dt-bindings: pps: pps-gpio PPS ECHO implementation
-Date: Fri, 14 Dec 2018 13:30:18 +1100
-Message-ID: <20181214023019.18805-3-tom@aussec.com>
-References: <20181214023019.18805-1-tom@aussec.com>
- <20181214023019.18805-2-tom@aussec.com>
+From: biao huang <biao.huang@mediatek.com>
+Subject: Re: [v7, PATCH 1/2] net:stmmac: dwmac-mediatek: add support for
+ mt2712
+Date: Fri, 14 Dec 2018 11:01:17 +0800
+Message-ID: <1544756477.24219.164.camel@mhfsdcap03>
+References: <1544666173-5121-1-git-send-email-biao.huang@mediatek.com>
+         <1544666173-5121-2-git-send-email-biao.huang@mediatek.com>
+         <20181213123346.GF1605@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181214023019.18805-2-tom@aussec.com>
+In-Reply-To: <20181213123346.GF1605@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Cc: Tom Burkart <tom@aussec.com>, devicetree@vger.kernel.org, Rodolfo Giometti <giometti@enneenne.com>, Ricardo Martins <rasm@fe.up.pt>, James Nuss <jamesnuss@nanometrics.ca>, Lukas Senger <lukas@fridolin.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: davem@davemloft.net, robh+dt@kernel.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, joabreu@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-This patch implements the device tree binding changes required for the
-pps echo functionality for pps-gpio, that sysfs claims is available
-already.
+Dear Andrew,
+	Thanks for your comments.
 
-This patch was originally written by Lukas Senger as part of a masters
-thesis project and modified for inclusion into the linux kernel by Tom
-Burkart.
+On Thu, 2018-12-13 at 13:33 +0100, Andrew Lunn wrote:
+> Hi Biao
+> 
+> > +	case PHY_INTERFACE_MODE_RGMII:
+> > +		/* the PHY is not responsible for inserting any internal
+> > +		 * delay by itself in PHY_INTERFACE_MODE_RGMII case,
+> > +		 * so Ethernet MAC will insert delays for both transmit
+> > +		 * and receive path here.
+> > +		 */
+> 
+> What if the PCB designed has decided to do a kink in the clock to add
+> the delays? I don't think any of these delays should depend on the PHY
+> interface mode. It is up to the device tree writer to set both the PHY
+> delay and the MAC delay, based on knowledge of the board, including
+> any kicks in the tracks. The driver should then do what it is told.
+> 
+Originally, we recommend equal trace length on PCB, which means that
+RGMII delay by PCB traces is not recommended. so only PHY/MAC delay is
+taken into account in the transmit/receive path.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Lukas Senger <lukas@fridolin.com>
-Signed-off-by: Tom Burkart <tom@aussec.com>
----
- Documentation/devicetree/bindings/pps/pps-gpio.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+as you described above, maybe the equal PCB trace length assumption is
+not reasonable, and we'll only handle MAC delay-ps in our driver based
+on the device tree information no matter which rgmii is selected.
 
-diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt b/Documentation/devicetree/bindings/pps/pps-gpio.txt
-index 3683874832ae..9012a2a02e14 100644
---- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
-+++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
-@@ -7,6 +7,10 @@ Required properties:
- - compatible: should be "pps-gpio"
- - gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
- 
-+Additional required properties for the PPS ECHO functionality:
-+- echo-gpios: one PPS ECHO GPIO in the format described by ../gpio/gpio.txt
-+- echo-active-ms: duration in ms of the active portion of the echo pulse
-+
- Optional properties:
- - assert-falling-edge: when present, assert is indicated by a falling edge
-                        (instead of by a rising edge)
-@@ -19,5 +23,8 @@ Example:
- 		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
- 		assert-falling-edge;
- 
-+		echo-gpios = <&gpio1 27 GPIO_ACTIVE_HIGH>;
-+		echo-active-ms = <100>;
-+
- 		compatible = "pps-gpio";
- 	};
--- 
-2.12.3
+Since David already applied this patch, I'll send another patch to fix
+this issue.
+> > +	if (!of_property_read_u32(plat->np, "mediatek,tx-delay-ps", &tx_delay_ps)) {
+> > +		if (tx_delay_ps < plat->variant->tx_delay_max) {
+> > +			mac_delay->tx_delay = tx_delay_ps;
+> > +		} else {
+> > +			dev_err(plat->dev, "Invalid TX clock delay: %dps\n", tx_delay_ps);
+> > +			return -EINVAL;
+> > +		}
+> > +	}
+> > +
+> > +	if (!of_property_read_u32(plat->np, "mediatek,rx-delay-ps", &rx_delay_ps)) {
+> > +		if (rx_delay_ps < plat->variant->rx_delay_max) {
+> > +			mac_delay->rx_delay = rx_delay_ps;
+> > +		} else {
+> > +			dev_err(plat->dev, "Invalid RX clock delay: %dps\n", rx_delay_ps);
+> > +			return -EINVAL;
+> > +		}
+> > +	}
+> > +
+> > +	mac_delay->tx_inv = of_property_read_bool(plat->np, "mediatek,txc-inverse");
+> > +	mac_delay->rx_inv = of_property_read_bool(plat->np, "mediatek,rxc-inverse");
+> > +	mac_delay->fine_tune = of_property_read_bool(plat->np, "mediatek,fine-tune");
+> 
+> Why is fine tune needed? If the requested delay can be done using fine
+> tune, it should use fine tune. If not, it should use rough tune. The
+> driver can work this out itself.
+
+find tune here represents a more accurate delay circuit than coarse
+tune, and it's a parallel circuit of coarse tune.
+For most delay, both fine and coarse tune can meet the requirement.
+It's up to the user to select which one.
+
+But only one of them can work at the same time, so we need a switch
+flag(fine_tune here) to indicate which one is valid.
+Driver can hardly work out which one is working according to delay-ps.
+
+Please correct me if any misunderstanding.
+
+> 
+>        Thanks
+> 	Andrew
