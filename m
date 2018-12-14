@@ -1,16 +1,17 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH] ARM: dts: omap4-sdp: Make ethernet working even if booted
- with latest u-boot
-Date: Fri, 14 Dec 2018 15:08:09 +0200
-Message-ID: <f4961633-a151-145f-4337-dedbcafa64bd@ti.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH] ARM: dts: omap4-sdp: Make ethernet working even if
+ booted with latest u-boot
+Date: Fri, 14 Dec 2018 13:16:16 +0000
+Message-ID: <20181214131616.GM9507@n2100.armlinux.org.uk>
 References: <20181213135845.3965-1-peter.ujfalusi@ti.com>
  <20181213155054.GK9507@n2100.armlinux.org.uk>
+ <f4961633-a151-145f-4337-dedbcafa64bd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181213155054.GK9507@n2100.armlinux.org.uk>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <f4961633-a151-145f-4337-dedbcafa64bd@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,40 +21,111 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
 Cc: tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAxMy8xMi8yMDE4IDE3LjUwLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXggd3JvdGU6Cj4g
-T24gVGh1LCBEZWMgMTMsIDIwMTggYXQgMDM6NTg6NDVQTSArMDIwMCwgUGV0ZXIgVWpmYWx1c2kg
-d3JvdGU6Cj4+IFRoZSBldGhlcm5ldCB3b3JrcyBpbiBrZXJuZWwgb25seSBpZiB3ZSB1c2Ugc29t
-ZSBiaW5hcnkgdS1ib290IGZyb20gdGhlCj4+IHBhc3Qgd2hpY2ggaGF2ZSBzdXBwb3J0IGZvciBL
-Uzg4NTEuCj4+Cj4+IFRoZSB1LWJvb3Qgc291cmNlcyBhcmUgbm90IGF2YWlsYWJsZSBmb3IgdGhp
-cyBteXN0ZXJpb3VzIHUtYm9vdCBpbWFnZQo+PiBwZW9wbGUgdGVuZHMgdG8gaG9sZCBvbi4uLiBN
-YWlubGluZSB1LWJvdHQgZG9lcyBub3QgaGF2ZSBldGhlcm5ldCBzdXBwb3J0Cj4+IGZvciBzZHA0
-NDMwIGFuZCBpZiB3ZSB1c2UgdGhhdCB0aGUgZXRoZXJuZXQgaXMgbm90IHdvcmtpbmcuCj4+Cj4+
-IEFmdGVyIHNvbWUgZGVidWdnaW5nIEkgaGF2ZSBtYW5hZ2VkIHRvIGdldCB0aGUgZXRoZXJuZXQg
-d29ya2luZyB3aXRoCj4+IG1haW5saW5lIHUtYm9vdCB3aGlsZSBub3QgYnJlYWtpbmcgdGhlIG5l
-dHdvcmtpbmcgd2l0aCB0aGUgY2FzZSB3aGVuIHdlCj4+IGJvb3Qgd2l0aCB0aGUgbXlzdGVyaW91
-cyBiaW5hcnkgdS1ib290Lgo+Pgo+PiBCYXNpY2FsbHkgd2Ugd2VyZSBtaXNzaW5nIGJ1bmNoIG9m
-IHBpbm11eCBzZXR0aW5ncyBhbmQgdGhlICdtYWdpYycKPj4gZ3Bpb18xMzggaGFuZGxpbmcgaW4g
-a2VybmVsLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBVamZhbHVzaSA8cGV0ZXIudWpmYWx1
-c2lAdGkuY29tPgo+IAo+IEhpIFBldGVyLAo+IAo+IERpZ2dpbmcgdXAgd2hlcmUgbXkgdS1ib290
-IGNhbWUgZnJvbSwgSSBmb3VuZDoKPiAKPiAgIGh0dHBzOi8vcGx1cy5nb29nbGUuY29tLzEwMzg5
-NTczMDgwNjg0ODcxNTg3MC9wb3N0cy9jQ3EyQ3hEb2dXOQo+IAo+IFVuZm9ydHVuYXRlbHksIGdp
-dG9yaW91cyBubyBsb25nZXIgZXhpc3RzLCBidXQgSSBkbyBzdGlsbCBoYXZlIGEgY2xvbmUKPiBv
-ZiB0aGF0IHRyZWUgbG9jYWxseSwgY29udGFpbmluZzoKPiAKPiA5ZjM4NDMwODMxOWUgT01BUDRT
-RFA6IEFkZCBNaWNyZWwgS1M4ODUxIG5ldCBjaGlwIHN1cHBvcnQKPiBhZTYzMWIwOTVhODcgTkVU
-OiBBZGQgZHJpdmVyIGZvciBNaWNyZWwgS1M4ODUxCj4gNzhlNDNmMmE4OTg3IEFSTVY3OiBPTUFQ
-OiBBZGQgc3BpIGRyaXZlciBmb3IgT01BUDMvT01BUDQKPiBlNTc2YzZhOWNiYzkgb21hcDRfY29t
-bW9uOiBjb25maWc6IHJlbW92ZSBJMkMgZm9yIFNQTCBtb2RlCj4gMTlkNTkzNGM0YjNiIEFSTTog
-T01BUDQ6IE1vdmUgVEVYVF9CQVNFIGRvd24gdG8gbm9uLUhTIGxpbWl0Cj4gCj4gcGx1cyBzb21l
-IG9mIG15IG93biBtb2RpZmljYXRpb25zIHRvIGZpeCB0aGUgcHJvYmxlbXMgc3RhdGVkIGluIHRo
-YXQKPiBwb3N0LgoKSSBjZXJ0YWlubHkgaGF2ZSB0aGUgdmVyc2lvbiBvZiB1LWJvb3Qgd2hpY2gg
-Y2FuIGRvIG9ubHkgb25lIHRmdHAgbG9hZAoob3IgZGhjcCByZXF1ZXN0KS4KCi0gUMOpdGVyCgpU
-ZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxz
-aW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2ls
-ZTogSGVsc2lua2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LWFybS1rZXJuZWwK
+On Fri, Dec 14, 2018 at 03:08:09PM +0200, Peter Ujfalusi wrote:
+> I certainly have the version of u-boot which can do only one tftp load
+> (or dhcp request).
+
+That'll be because of the buggy KS8851 driver.  This is the patch I
+have on top of my 2014 version of Nishanth's tree.
+
+diff --git a/drivers/net/ks8851.c b/drivers/net/ks8851.c
+index 6467dde7ebf6..f888f43ad937 100644
+--- a/drivers/net/ks8851.c
++++ b/drivers/net/ks8851.c
+@@ -27,6 +27,27 @@
+ 
+ #include "ks8851.h"
+ #define KS8851_SNL		1
++#undef DEBUG
++
++static void dump_mem(const char *str, const void *base, unsigned orig, unsigned len)
++{
++#ifdef DEBUG
++	const unsigned char *p = base;
++	unsigned i, j;
++
++	printf("%s:", str);
++	
++	for (j = 0; j < len; j += 32) {
++		printf("\n%04x:", j);
++		for (i = j; i < j + 32 && i < len; i++)
++			printf("%s%s%02x",
++				(i == j + 16) ? " " : "",
++				i == orig ? "|" : " ",
++				p[i]);
++	}
++	printf("\n");
++#endif
++}
+ 
+ /*
+  * GET_KS8851SNL_RWWORD_CMD
+@@ -324,6 +345,7 @@ void KS8851SNL_READ_BUFFER(void *pHardware,
+ 		pdw++;
+ 		*puReadLen = (u16)((*pdw) >> 16);
+ 		*ppOut = pIn + 8;
++dump_mem("RX", pMove, spiBurstLen + 8, spiBurstLen + 8);
+ 	}
+ 
+ 	if (spiBurstFlag != SPI_READ_BURST_ALL) {
+@@ -626,6 +648,7 @@ static int ks8851_eth_recv(struct eth_device *dev)
+ 			printf("frame count = %d\n", rxFrameCount);
+ #endif
+ 
++			pHardware->m_uCurFrameIndex = 0;
+ 			pHardware->m_uFramesRemained = rxFrameCount;
+ 
+ 			if (rxFrameCount == 0)
+@@ -697,7 +720,7 @@ static int ks8851_eth_send(struct eth_device *dev,
+ 	uiPacketLength = length;
+ 	GET_DATA_ALIGNMENT(length, &uiPacketLength);
+ 	HW_WRITE_START(pHardware);
+-
++dump_mem("TX", packet, length, uiPacketLength);
+ #ifdef KS8851_SNL
+ 	KS8851SNL_DATA_WRITE((u8 *)packet, length, uiPacketLength, &fReturn);
+ #else
+@@ -722,12 +745,19 @@ static int ks8851_eth_send(struct eth_device *dev,
+ 	return 1;
+ }
+ 
++static int ks8851_eth_init2(struct eth_device *dev, bd_t *bd)
++{
++	return 0;
++}
++
+ static int ks8851_eth_init(struct eth_device *dev, bd_t *bd)
+ {
+ 
+ 	u16 txCntl, rxCntl, w, intMask;
+ 	PHARDWARE pHardware = &gHardware;
+ 
++	dev->init = ks8851_eth_init2;
++
+ 	pHardware->m_uCurFrameIndex = 0;
+ 	pHardware->m_uFramesRemained = 0;
+ 	pHardware->m_uCurRecvFrams = MAX_RECV_FRAMES;
+diff --git a/include/configs/omap4_sdp4430.h b/include/configs/omap4_sdp4430.h
+index 0d9c16ea9f04..ae94dd852f3d 100644
+--- a/include/configs/omap4_sdp4430.h
++++ b/include/configs/omap4_sdp4430.h
+@@ -21,6 +21,9 @@
+ 
+ #include <configs/omap4_common.h>
+ 
++#undef CONFIG_SYS_PROMPT
++#define CONFIG_SYS_PROMPT             "OMAP44XX SDP # "
++
+ #ifndef CONFIG_SPL_BUILD
+ /* Battery Charger */
+ #define CONFIG_CMD_BAT			1
+
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
