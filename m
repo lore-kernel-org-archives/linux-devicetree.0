@@ -1,7 +1,7 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 1/9] arm64: dts: renesas: Initial device tree for r8a774c0
-Date: Fri, 14 Dec 2018 09:10:05 +0000
-Message-ID: <1544778613-24279-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 2/9] arm64: dts: renesas: r8a774c0: Add SYS-DMAC controller nodes
+Date: Fri, 14 Dec 2018 09:10:06 +0000
+Message-ID: <1544778613-24279-3-git-send-email-fabrizio.castro@bp.renesas.com>
 References: <1544778613-24279-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1544778613-24279-1-git-send-email-fabrizio.castro@bp.renesas.com>
@@ -10,205 +10,125 @@ To: Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Geert U
 Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Basic support for the RZ/G2E SoC (a.k.a. r8a774c0).
+Add sys-dmac[012] device nodes for the RZ/G2E SoC (a.k.a. r8a774c0).
 
 Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 ---
- arch/arm64/boot/dts/renesas/r8a774c0.dtsi | 186 ++++++++++++++++++++++++++++++
- 1 file changed, 186 insertions(+)
- create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0.dtsi
+ arch/arm64/boot/dts/renesas/r8a774c0.dtsi | 102 ++++++++++++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-new file mode 100644
-index 0000000..f425d0b
---- /dev/null
+index f425d0b..7b3d247 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
 +++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-@@ -0,0 +1,186 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the RZ/G2E (R8A774C0) SoC
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corp.
-+ */
-+
-+#include <dt-bindings/clock/r8a774c0-cpg-mssr.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/power/r8a774c0-sysc.h>
-+
-+/ {
-+	compatible = "renesas,r8a774c0";
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	/*
-+	 * The external audio clocks are configured as 0 Hz fixed frequency
-+	 * clocks by default.
-+	 * Boards that provide audio clocks should override them.
-+	 */
-+	audio_clk_a: audio_clk_a {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
-+	audio_clk_b: audio_clk_b {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
-+	audio_clk_c: audio_clk_c {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
-+	/* External CAN clock - to be overridden by boards that provide it */
-+	can_clk: can {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		/* 1 core only at this point */
-+		a53_0: cpu@0 {
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0>;
-+			device_type = "cpu";
-+			power-domains = <&sysc R8A774C0_PD_CA53_CPU0>;
-+			next-level-cache = <&L2_CA53>;
-+			enable-method = "psci";
-+		};
-+
-+		L2_CA53: cache-controller-0 {
-+			compatible = "cache";
-+			power-domains = <&sysc R8A774C0_PD_CA53_SCU>;
-+			cache-unified;
-+			cache-level = <2>;
-+		};
-+	};
-+
-+	extal_clk: extal {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* This value must be overridden by the board */
-+		clock-frequency = <0>;
-+	};
-+
-+	/* External PCIe clock - can be overridden by the board */
-+	pcie_bus_clk: pcie_bus {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
-+	pmu_a53 {
-+		compatible = "arm,cortex-a53-pmu";
-+		interrupts-extended = <&gic GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&a53_0>;
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-1.0", "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	/* External SCIF clock - to be overridden by boards that provide it */
-+	scif_clk: scif {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
-+	soc: soc {
-+		compatible = "simple-bus";
-+		interrupt-parent = <&gic>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		cpg: clock-controller@e6150000 {
-+			compatible = "renesas,r8a774c0-cpg-mssr";
-+			reg = <0 0xe6150000 0 0x1000>;
-+			clocks = <&extal_clk>;
-+			clock-names = "extal";
-+			#clock-cells = <2>;
-+			#power-domain-cells = <0>;
-+			#reset-cells = <1>;
-+		};
-+
-+		rst: reset-controller@e6160000 {
-+			compatible = "renesas,r8a774c0-rst";
-+			reg = <0 0xe6160000 0 0x0200>;
-+		};
-+
-+		sysc: system-controller@e6180000 {
-+			compatible = "renesas,r8a774c0-sysc";
-+			reg = <0 0xe6180000 0 0x0400>;
-+			#power-domain-cells = <1>;
-+		};
-+
-+		scif2: serial@e6e88000 {
-+			compatible = "renesas,scif-r8a774c0",
-+				     "renesas,rcar-gen3-scif", "renesas,scif";
-+			reg = <0 0xe6e88000 0 64>;
-+			interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 310>,
-+				 <&cpg CPG_CORE R8A774C0_CLK_S3D1C>,
-+				 <&scif_clk>;
-+			clock-names = "fck", "brg_int", "scif_clk";
+@@ -126,6 +126,108 @@
+ 			#power-domain-cells = <1>;
+ 		};
+ 
++		dmac0: dma-controller@e6700000 {
++			compatible = "renesas,dmac-r8a774c0",
++				     "renesas,rcar-dmac";
++			reg = <0 0xe6700000 0 0x10000>;
++			interrupts = <GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 201 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 202 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 203 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 214 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "error",
++					"ch0", "ch1", "ch2", "ch3",
++					"ch4", "ch5", "ch6", "ch7",
++					"ch8", "ch9", "ch10", "ch11",
++					"ch12", "ch13", "ch14", "ch15";
++			clocks = <&cpg CPG_MOD 219>;
++			clock-names = "fck";
 +			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			resets = <&cpg 310>;
-+			status = "disabled";
++			resets = <&cpg 219>;
++			#dma-cells = <1>;
++			dma-channels = <16>;
 +		};
 +
-+		gic: interrupt-controller@f1010000 {
-+			compatible = "arm,gic-400";
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+			interrupt-controller;
-+			reg = <0x0 0xf1010000 0 0x1000>,
-+			      <0x0 0xf1020000 0 0x20000>,
-+			      <0x0 0xf1040000 0 0x20000>,
-+			      <0x0 0xf1060000 0 0x20000>;
-+			interrupts = <GIC_PPI 9
-+					(GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_HIGH)>;
-+			clocks = <&cpg CPG_MOD 408>;
-+			clock-names = "clk";
++		dmac1: dma-controller@e7300000 {
++			compatible = "renesas,dmac-r8a774c0",
++				     "renesas,rcar-dmac";
++			reg = <0 0xe7300000 0 0x10000>;
++			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 319 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "error",
++					"ch0", "ch1", "ch2", "ch3",
++					"ch4", "ch5", "ch6", "ch7",
++					"ch8", "ch9", "ch10", "ch11",
++					"ch12", "ch13", "ch14", "ch15";
++			clocks = <&cpg CPG_MOD 218>;
++			clock-names = "fck";
 +			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			resets = <&cpg 408>;
++			resets = <&cpg 218>;
++			#dma-cells = <1>;
++			dma-channels = <16>;
 +		};
 +
-+		prr: chipid@fff00044 {
-+			compatible = "renesas,prr";
-+			reg = <0 0xfff00044 0 4>;
++		dmac2: dma-controller@e7310000 {
++			compatible = "renesas,dmac-r8a774c0",
++				     "renesas,rcar-dmac";
++			reg = <0 0xe7310000 0 0x10000>;
++			interrupts = <GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 426 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 427 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 428 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 429 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 430 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 431 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 397 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "error",
++					"ch0", "ch1", "ch2", "ch3",
++					"ch4", "ch5", "ch6", "ch7",
++					"ch8", "ch9", "ch10", "ch11",
++					"ch12", "ch13", "ch14", "ch15";
++			clocks = <&cpg CPG_MOD 217>;
++			clock-names = "fck";
++			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
++			resets = <&cpg 217>;
++			#dma-cells = <1>;
++			dma-channels = <16>;
 +		};
-+	};
 +
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
-+				      <&gic GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
-+				      <&gic GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
-+				      <&gic GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	/* External USB clocks - can be overridden by the board */
-+	usb3s0_clk: usb3s0 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
-+	usb_extal_clk: usb_extal {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+};
+ 		scif2: serial@e6e88000 {
+ 			compatible = "renesas,scif-r8a774c0",
+ 				     "renesas,rcar-gen3-scif", "renesas,scif";
 -- 
 2.7.4
