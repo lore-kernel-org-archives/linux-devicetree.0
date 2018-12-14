@@ -1,70 +1,36 @@
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH v2 3/3] PCI: imx: Add support for i.MX8MQ
-Date: Fri, 14 Dec 2018 14:55:49 -0600
-Message-ID: <aacb613f-ad8b-8db9-1c63-a346ac62c772@embeddedor.com>
-References: <20181206073545.10967-1-andrew.smirnov@gmail.com>
- <20181206073545.10967-4-andrew.smirnov@gmail.com>
- <20181214203042.GC20725@google.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] clk: Use of_node_name_eq for node name comparisons
+Date: Fri, 14 Dec 2018 13:53:20 -0800
+Message-ID: <154482440058.19322.10903668758246014018@swboyd.mtv.corp.google.com>
+References: <20181205195050.4759-5-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181214203042.GC20725@google.com>
-Content-Language: en-US
+In-Reply-To: <20181205195050.4759-5-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: linux-pci@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, cphealy@gmail.com, l.stach@pengutronix.de, Leonard Crestez <leonard.crestez@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Tero Kristo <t-kristo@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Quoting Rob Herring (2018-12-05 11:50:21)
+> Convert string compares of DT node names to use of_node_name_eq helper
+> instead. This removes direct access to the node name pointer.
+>=20
+> For instances using of_node_cmp, this has the side effect of now using
+> case sensitive comparisons. This should not matter for any FDT based
+> system which all of these are.
+>=20
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Tero Kristo <t-kristo@ti.com>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: linux-renesas-soc@vger.kernel.org
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-omap@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
 
-On 12/14/18 2:30 PM, Bjorn Helgaas wrote:
-> [+cc Gustavo for fallthrough annotation]
-
-> 
->> @@ -301,6 +312,7 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
->>   
->>   	switch (imx6_pcie->variant) {
->>   	case IMX7D:
->> +	case IMX8MQ: /* FALLTHROUGH */
->>   		reset_control_assert(imx6_pcie->pciephy_reset);
->>   		reset_control_assert(imx6_pcie->apps_reset);
->>   		break;
-> 
-> I'm not an expert on fallthrough annotation (Gustavo, cc'd, is), but
-> this looks wrong.  It's the IMX7D case that falls through, not the
-> IMX8MQ case.
-> 
-
-Correct.
-
-> The recent annotations added by Gustavo are at the point where the
-> "break" would normally be, e.g.,
-> 
->    case IMX7D:
->      /* fall through */                    <--- annotation
->    case IMX8MQ:
->      <code>
->      break;
-> 
-> But in this case there's actually no IMX7D-specific *code* there, so I
-> suspect the annotation is unnecessary.  It's obvious that IMX7D and
-> IMX8MQ are handled the same, so there's really no opportunity for the
-> "forgotten break" mistake -Wimplicit-fallthrough is trying to find.
-> 
-
-Yep. That's correct. There is no need for those annotations in this patch.
-
-> If we *do* want this annotation, we should spell it the same as
-> Gustavo has been, i.e., "fall through".
-> 
-
-This is a matter of style. For -Wimplicit-fallthrough, "FALLTHROUGH" is 
-as valid a "fall through".
-
-Although, currently, there are 1997 instances of "fall through" vs 235 
-of "FALLTHROUGH" in linux-next.
-
-Thanks
---
-Gustavo
+Applied to clk-next
