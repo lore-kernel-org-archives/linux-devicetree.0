@@ -1,50 +1,106 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH v2] dt-bindings: i2c: sh_mobile: Add r8a774c0 support
-Date: Fri, 14 Dec 2018 08:41:47 +0000
-Message-ID: <1544776907-17845-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Peter Rosin <peda@axentia.se>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa@the-dreams.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Biju Das <biju.das@bp.renesas.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, linux-renesas-soc@vger.kernel.org
+From: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [DPU PATCH] drm/msm/dpu: Clean up dpu hw interrupts
+Date: Fri, 14 Dec 2018 14:19:12 +0530
+Message-ID: <1544777352-11455-1-git-send-email-jshekhar@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Document RZ/G2E (R8A774C0) SoC bindings.
-
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-
----
-v1->v2:
-* Improved the style according to Peter's comment
-
- Documentation/devicetree/bindings/i2c/i2c-sh_mobile.txt | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-sh_mobile.txt b/Documentation/devicetree/bindings/i2c/i2c-sh_mobile.txt
-index bc876b7..202602e 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-sh_mobile.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-sh_mobile.txt
-@@ -8,6 +8,7 @@ Required properties:
- 			- "renesas,iic-r8a7744" (RZ/G1N)
- 			- "renesas,iic-r8a7745" (RZ/G1E)
- 			- "renesas,iic-r8a774a1" (RZ/G2M)
-+			- "renesas,iic-r8a774c0" (RZ/G2E)
- 			- "renesas,iic-r8a7790" (R-Car H2)
- 			- "renesas,iic-r8a7791" (R-Car M2-W)
- 			- "renesas,iic-r8a7792" (R-Car V2H)
-@@ -32,10 +33,10 @@ Required properties:
- 			When compatible with "renesas,rmobile-iic" it should
- 			be the last compatibility string listed.
- 
--			The r8a77990 (R-Car E3) controller is not
--			considered compatible with "renesas,rcar-gen3-iic"
--			or "renesas,rmobile-iic" due to the absence of
--			automatic transmission registers.
-+			The r8a77990 (R-Car E3) and r8a774c0 (RZ/G2E)
-+			controllers are not considered compatible with
-+			"renesas,rcar-gen3-iic" or "renesas,rmobile-iic"
-+			due to the absence of automatic transmission registers.
- 
- - reg             : address start and address range size of device
- - interrupts      : interrupt of device
--- 
-2.7.4
+UmVtb3ZlIHVudXNlZCBmdW5jdGlvbnMgYW5kIG1hY3JvcyBmcm9tIGRwdSBodyBpbnRlcnJ1cHRz
+CmZpbGUuCgpTaWduZWQtb2ZmLWJ5OiBKYXlhbnQgU2hla2hhciA8anNoZWtoYXJAY29kZWF1cm9y
+YS5vcmc+Ci0tLQogZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2h3X2ludGVycnVw
+dHMuYyB8IDMwIC0tLS0tLS0tLS0tLS0tLS0tLS0tCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3Av
+ZHB1MS9kcHVfaHdfaW50ZXJydXB0cy5oIHwgMzQgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIDIg
+ZmlsZXMgY2hhbmdlZCwgNjQgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
+ZHJtL21zbS9kaXNwL2RwdTEvZHB1X2h3X2ludGVycnVwdHMuYyBiL2RyaXZlcnMvZ3B1L2RybS9t
+c20vZGlzcC9kcHUxL2RwdV9od19pbnRlcnJ1cHRzLmMKaW5kZXggYzBiN2YwMC4uMGY3MGNlZSAx
+MDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2h3X2ludGVycnVw
+dHMuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfaHdfaW50ZXJydXB0
+cy5jCkBAIC0xNzAsMTAgKzE3MCw2IEBACiAvKioKICAqIEFENCBpbnRlcnJ1cHQgc3RhdHVzIGJp
+dCBkZWZpbml0aW9ucwogICovCi0jZGVmaW5lIERQVV9JTlRSX0JSSUdIVFBSX1VQREFURUQgQklU
+KDQpCi0jZGVmaW5lIERQVV9JTlRSX0RBUktFTkhfVVBEQVRFRCBCSVQoMykKLSNkZWZpbmUgRFBV
+X0lOVFJfU1RSRU5fT1VUUk9JX1VQREFURUQgQklUKDIpCi0jZGVmaW5lIERQVV9JTlRSX1NUUkVO
+X0lOUk9JX1VQREFURUQgQklUKDEpCiAjZGVmaW5lIERQVV9JTlRSX0JBQ0tMSUdIVF9VUERBVEVE
+IEJJVCgwKQogLyoqCiAgKiBzdHJ1Y3QgZHB1X2ludHJfcmVnIC0gYXJyYXkgb2YgRFBVIHJlZ2lz
+dGVyIHNldHMKQEAgLTc4MiwxOCArNzc4LDYgQEAgc3RhdGljIGludCBkcHVfaHdfaW50cl9pcnFp
+ZHhfbG9va3VwKGVudW0gZHB1X2ludHJfdHlwZSBpbnRyX3R5cGUsCiAJcmV0dXJuIC1FSU5WQUw7
+CiB9CiAKLXN0YXRpYyB2b2lkIGRwdV9od19pbnRyX3NldF9tYXNrKHN0cnVjdCBkcHVfaHdfaW50
+ciAqaW50ciwgdWludDMyX3QgcmVnX29mZiwKLQkJdWludDMyX3QgbWFzaykKLXsKLQlpZiAoIWlu
+dHIpCi0JCXJldHVybjsKLQotCURQVV9SRUdfV1JJVEUoJmludHItPmh3LCByZWdfb2ZmLCBtYXNr
+KTsKLQotCS8qIGVuc3VyZSByZWdpc3RlciB3cml0ZXMgZ28gdGhyb3VnaCAqLwotCXdtYigpOwot
+fQotCiBzdGF0aWMgdm9pZCBkcHVfaHdfaW50cl9kaXNwYXRjaF9pcnEoc3RydWN0IGRwdV9od19p
+bnRyICppbnRyLAogCQl2b2lkICgqY2JmdW5jKSh2b2lkICosIGludCksCiAJCXZvaWQgKmFyZykK
+QEAgLTEwMDQsMTggKzk4OCw2IEBAIHN0YXRpYyBpbnQgZHB1X2h3X2ludHJfZGlzYWJsZV9pcnFz
+KHN0cnVjdCBkcHVfaHdfaW50ciAqaW50cikKIAlyZXR1cm4gMDsKIH0KIAotc3RhdGljIGludCBk
+cHVfaHdfaW50cl9nZXRfdmFsaWRfaW50ZXJydXB0cyhzdHJ1Y3QgZHB1X2h3X2ludHIgKmludHIs
+Ci0JCXVpbnQzMl90ICptYXNrKQotewotCWlmICghaW50ciB8fCAhbWFzaykKLQkJcmV0dXJuIC1F
+SU5WQUw7Ci0KLQkqbWFzayA9IElSUV9TT1VSQ0VfTURQIHwgSVJRX1NPVVJDRV9EU0kwIHwgSVJR
+X1NPVVJDRV9EU0kxCi0JCXwgSVJRX1NPVVJDRV9IRE1JIHwgSVJRX1NPVVJDRV9FRFA7Ci0KLQly
+ZXR1cm4gMDsKLX0KLQogc3RhdGljIHZvaWQgZHB1X2h3X2ludHJfZ2V0X2ludGVycnVwdF9zdGF0
+dXNlcyhzdHJ1Y3QgZHB1X2h3X2ludHIgKmludHIpCiB7CiAJaW50IGk7CkBAIC0xMTEzLDE0ICsx
+MDg1LDEyIEBAIHN0YXRpYyB1MzIgZHB1X2h3X2ludHJfZ2V0X2ludGVycnVwdF9zdGF0dXMoc3Ry
+dWN0IGRwdV9od19pbnRyICppbnRyLAogCiBzdGF0aWMgdm9pZCBfX3NldHVwX2ludHJfb3BzKHN0
+cnVjdCBkcHVfaHdfaW50cl9vcHMgKm9wcykKIHsKLQlvcHMtPnNldF9tYXNrID0gZHB1X2h3X2lu
+dHJfc2V0X21hc2s7CiAJb3BzLT5pcnFfaWR4X2xvb2t1cCA9IGRwdV9od19pbnRyX2lycWlkeF9s
+b29rdXA7CiAJb3BzLT5lbmFibGVfaXJxID0gZHB1X2h3X2ludHJfZW5hYmxlX2lycTsKIAlvcHMt
+PmRpc2FibGVfaXJxID0gZHB1X2h3X2ludHJfZGlzYWJsZV9pcnE7CiAJb3BzLT5kaXNwYXRjaF9p
+cnFzID0gZHB1X2h3X2ludHJfZGlzcGF0Y2hfaXJxOwogCW9wcy0+Y2xlYXJfYWxsX2lycXMgPSBk
+cHVfaHdfaW50cl9jbGVhcl9pcnFzOwogCW9wcy0+ZGlzYWJsZV9hbGxfaXJxcyA9IGRwdV9od19p
+bnRyX2Rpc2FibGVfaXJxczsKLQlvcHMtPmdldF92YWxpZF9pbnRlcnJ1cHRzID0gZHB1X2h3X2lu
+dHJfZ2V0X3ZhbGlkX2ludGVycnVwdHM7CiAJb3BzLT5nZXRfaW50ZXJydXB0X3N0YXR1c2VzID0g
+ZHB1X2h3X2ludHJfZ2V0X2ludGVycnVwdF9zdGF0dXNlczsKIAlvcHMtPmNsZWFyX2ludGVycnVw
+dF9zdGF0dXMgPSBkcHVfaHdfaW50cl9jbGVhcl9pbnRlcnJ1cHRfc3RhdHVzOwogCW9wcy0+Y2xl
+YXJfaW50cl9zdGF0dXNfbm9sb2NrID0gZHB1X2h3X2ludHJfY2xlYXJfaW50cl9zdGF0dXNfbm9s
+b2NrOwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2h3X2lu
+dGVycnVwdHMuaCBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19pbnRlcnJ1
+cHRzLmgKaW5kZXggNjFlNGNiYS4uOTg1Zjg3MyAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJt
+L21zbS9kaXNwL2RwdTEvZHB1X2h3X2ludGVycnVwdHMuaAorKysgYi9kcml2ZXJzL2dwdS9kcm0v
+bXNtL2Rpc3AvZHB1MS9kcHVfaHdfaW50ZXJydXB0cy5oCkBAIC0yMCwxMyArMjAsNiBAQAogI2lu
+Y2x1ZGUgImRwdV9od191dGlsLmgiCiAjaW5jbHVkZSAiZHB1X2h3X21kc3MuaCIKIAotI2RlZmlu
+ZSBJUlFfU09VUkNFX01EUAkJQklUKDApCi0jZGVmaW5lIElSUV9TT1VSQ0VfRFNJMAkJQklUKDQp
+Ci0jZGVmaW5lIElSUV9TT1VSQ0VfRFNJMQkJQklUKDUpCi0jZGVmaW5lIElSUV9TT1VSQ0VfSERN
+SQkJQklUKDgpCi0jZGVmaW5lIElSUV9TT1VSQ0VfRURQCQlCSVQoMTIpCi0jZGVmaW5lIElSUV9T
+T1VSQ0VfTUhMCQlCSVQoMTYpCi0KIC8qKgogICogZHB1X2ludHJfdHlwZSAtIEhXIEludGVycnVw
+dCBUeXBlCiAgKiBARFBVX0lSUV9UWVBFX1dCX1JPVF9DT01QOgkJV0Igcm90YXRvciBkb25lCkBA
+IC05NiwxOCArODksNiBAQCBlbnVtIGRwdV9pbnRyX3R5cGUgewogICovCiBzdHJ1Y3QgZHB1X2h3
+X2ludHJfb3BzIHsKIAkvKioKLQkgKiBzZXRfbWFzayAtIFByb2dyYW1zIHRoZSBnaXZlbiBpbnRl
+cnJ1cHQgcmVnaXN0ZXIgd2l0aCB0aGUKLQkgKiAgICAgICAgICAgIGdpdmVuIGludGVycnVwdCBt
+YXNrLiBSZWdpc3RlciB2YWx1ZSB3aWxsIGdldCBvdmVyd3JpdHRlbi4KLQkgKiBAaW50cjoJSFcg
+aW50ZXJydXB0IGhhbmRsZQotCSAqIEByZWdfb2ZmOglNRFNTIEhXIHJlZ2lzdGVyIG9mZnNldAot
+CSAqIEBpcnFtYXNrOglJUlEgbWFzayB2YWx1ZQotCSAqLwotCXZvaWQgKCpzZXRfbWFzaykoCi0J
+CQlzdHJ1Y3QgZHB1X2h3X2ludHIgKmludHIsCi0JCQl1aW50MzJfdCByZWcsCi0JCQl1aW50MzJf
+dCBpcnFtYXNrKTsKLQotCS8qKgogCSAqIGlycV9pZHhfbG9va3VwIC0gTG9va3VwIElSUSBpbmRl
+eCBvbiB0aGUgSFcgaW50ZXJydXB0IHR5cGUKIAkgKiAgICAgICAgICAgICAgICAgVXNlZCBmb3Ig
+YWxsIGlycSByZWxhdGVkIG9wcwogCSAqIEBpbnRyX3R5cGU6CQlJbnRlcnJ1cHQgdHlwZSBkZWZp
+bmVkIGluIGRwdV9pbnRyX3R5cGUKQEAgLTIwNiwyMSArMTg3LDYgQEAgc3RydWN0IGRwdV9od19p
+bnRyX29wcyB7CiAJCQlzdHJ1Y3QgZHB1X2h3X2ludHIgKmludHIsCiAJCQlpbnQgaXJxX2lkeCwK
+IAkJCWJvb2wgY2xlYXIpOwotCi0JLyoqCi0JICogZ2V0X3ZhbGlkX2ludGVycnVwdHMgLSBHZXRz
+IGEgbWFzayBvZiBhbGwgdmFsaWQgaW50ZXJydXB0IHNvdXJjZXMKLQkgKiAgICAgICAgICAgICAg
+ICAgICAgICAgIHdpdGhpbiBEUFUuIFRoZXNlIGFyZSBhY3R1YWxseSBzdGF0dXMgYml0cwotCSAq
+ICAgICAgICAgICAgICAgICAgICAgICAgd2l0aGluIGludGVycnVwdCByZWdpc3RlcnMgdGhhdCBz
+cGVjaWZ5IHRoZQotCSAqICAgICAgICAgICAgICAgICAgICAgICAgc291cmNlIG9mIHRoZSBpbnRl
+cnJ1cHQgaW4gSVJRcy4gRm9yIGV4YW1wbGUsCi0JICogICAgICAgICAgICAgICAgICAgICAgICB2
+YWxpZCBpbnRlcnJ1cHQgc291cmNlcyBjYW4gYmUgTURQLCBEU0ksCi0JICogICAgICAgICAgICAg
+ICAgICAgICAgICBIRE1JIGV0Yy4KLQkgKiBAaW50cjoJSFcgaW50ZXJydXB0IGhhbmRsZQotCSAq
+IEBtYXNrOglSZXR1cm5pbmcgdGhlIGludGVycnVwdCBzb3VyY2UgTUFTSwotCSAqIEByZXR1cm46
+CTAgZm9yIHN1Y2Nlc3MsIG90aGVyd2lzZSBmYWlsdXJlCi0JICovCi0JaW50ICgqZ2V0X3ZhbGlk
+X2ludGVycnVwdHMpKAotCQkJc3RydWN0IGRwdV9od19pbnRyICppbnRyLAotCQkJdWludDMyX3Qg
+Km1hc2spOwogfTsKIAogLyoqCi0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIElu
+Yy4gaXMgYSBtZW1iZXIgb2YgdGhlIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRp
+b24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9mcmVlZHJlbm8K
