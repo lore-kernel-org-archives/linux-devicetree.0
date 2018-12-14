@@ -1,117 +1,61 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v2 2/4] RISC-V: Support per-hart timebase-frequency
-Date: Fri, 14 Dec 2018 10:24:21 +0100
-Message-ID: <b11115c8-b194-0f73-b4ab-5d1d643790ad@linaro.org>
-References: <1544742869-19980-1-git-send-email-atish.patra@wdc.com>
- <1544742869-19980-3-git-send-email-atish.patra@wdc.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v6 3/3] of/property: Add of_fwnode_name()
+Date: Fri, 14 Dec 2018 10:36:15 +0100
+Message-ID: <CAJZ5v0hvGL8DnxFAtp3NiuT7ubTBuoKbTzbD9UaZYNpgZLiWaQ@mail.gmail.com>
+References: <20181211131451.52832-1-heikki.krogerus@linux.intel.com> <20181211131451.52832-4-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544742869-19980-3-git-send-email-atish.patra@wdc.com>
-Content-Language: en-US
+In-Reply-To: <20181211131451.52832-4-heikki.krogerus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org
-Cc: Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org, Dmitriy Cherkasov <dmitriy@oss-tech.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Anup Patel <anup@brainfault.org>, Damien Le Moal <Damien.LeMoal@wdc.com>, Christoph Hellwig <hch@infradead.org>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Rob Herring <robh@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Frank Rowand <frowand.list@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14/12/2018 00:14, Atish Patra wrote:
-> Follow the updated DT specs and read the timebase-frequency
-> from the boot cpu. Keep the old DT reading as well for backward
-> compatibility. This patch is rework of old patch from Palmer.
-> 
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+On Tue, Dec 11, 2018 at 2:15 PM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
+>
+> This implements get_name fwnode op for DT.
+>
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+
+Rob, any objections here?
+
 > ---
->  arch/riscv/kernel/time.c          |  9 +--------
->  drivers/clocksource/riscv_timer.c | 31 +++++++++++++++++++++++++++++++
->  2 files changed, 32 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/riscv/kernel/time.c b/arch/riscv/kernel/time.c
-> index 1911c8f6..225fe743 100644
-> --- a/arch/riscv/kernel/time.c
-> +++ b/arch/riscv/kernel/time.c
-> @@ -20,14 +20,7 @@ unsigned long riscv_timebase;
->  
->  void __init time_init(void)
->  {
-> -	struct device_node *cpu;
-> -	u32 prop;
-> -
-> -	cpu = of_find_node_by_path("/cpus");
-> -	if (!cpu || of_property_read_u32(cpu, "timebase-frequency", &prop))
-> -		panic(KERN_WARNING "RISC-V system with no 'timebase-frequency' in DTS\n");
-> -	riscv_timebase = prop;
-> +	timer_probe();
->  
->  	lpj_fine = riscv_timebase / HZ;
-> -	timer_probe();
+>  drivers/of/property.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index 08430031bd28..5c10fdded473 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -823,6 +823,18 @@ static void of_fwnode_put(struct fwnode_handle *fwnode)
+>         of_node_put(to_of_node(fwnode));
 >  }
-> diff --git a/drivers/clocksource/riscv_timer.c b/drivers/clocksource/riscv_timer.c
-> index 084e97dc..75262409 100644
-> --- a/drivers/clocksource/riscv_timer.c
-> +++ b/drivers/clocksource/riscv_timer.c
-> @@ -83,6 +83,35 @@ void riscv_timer_interrupt(void)
->  	evdev->event_handler(evdev);
->  }
->  
-> +static void __init riscv_timebase_frequency(struct device_node *node,
-> +					    int hartid)
+>
+> +static int of_fwnode_get_name(const struct fwnode_handle *fwnode, char *buf,
+> +                             size_t len)
 > +{
-> +	u32 timebase;
+> +       const struct device_node *node = to_of_node(fwnode);
 > +
-> +	if (!of_property_read_u32(node, "timebase-frequency", &timebase))
-> +		goto check;
+> +       if (len < snprintf(NULL, 0, "%pOFn", node) + 1)
+> +               return -EOVERFLOW;
 > +
-> +	/*
-> +	 * As per the DT specification, timebase-frequency should be present
-> +	 * under individual cpu node. Unfortunately, there are already available
-> +	 * HiFive Unleashed devices where the timebase-frequency entry is under
-> +	 * CPUs. check under parent "cpus" node to cover those devices.
-> +	 */
-> +	if (!of_property_read_u32(node->parent, "timebase-frequency",
-> +				  &timebase))
-> +		goto check;
-> +
-> +	panic("RISC-V system with no timebase-frequency in DTS for hart [%d]\n",
-> +	      hartid);
-
-no panic in the driver code please. Alternatively use pr_err and let the
-timer-probe function spit the critical error on the console.
-
-It would be nicer to add a fixed-clock and get the rate from it.
-
-> +check:
-> +	/* RISC-V ISA specification mandates that every cpu has a timer */
-> +	if (!riscv_timebase)
-> +		riscv_timebase = timebase;
-> +	else if (riscv_timebase && riscv_timebase != timebase)
-> +		pr_warn("RISC-V system with different timebase-frequency\n");
+> +       sprintf(buf, "%pOFn", node);
+> +       return 0;
 > +}
 > +
->  static int __init riscv_timer_init_dt(struct device_node *n)
+>  static bool of_fwnode_device_is_available(const struct fwnode_handle *fwnode)
 >  {
->  	int cpuid, hartid, error;
-> @@ -90,10 +119,12 @@ static int __init riscv_timer_init_dt(struct device_node *n)
->  
->  	hartid = riscv_of_processor_hartid(n);
->  	cpuid = riscv_hartid_to_cpuid(hartid);
-> +	riscv_timebase_frequency(n, hartid);
->  
->  	if (cpuid != smp_processor_id())
->  		return 0;
-
-Somehow related to this change. Are you sure the test above makes sense?
-
-> +	/* This should be called only for boot cpu */
->  	cs = per_cpu_ptr(&riscv_clocksource, cpuid);
->  	clocksource_register_hz(cs, riscv_timebase);
->  
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+>         return of_device_is_available(to_of_node(fwnode));
+> @@ -987,6 +999,7 @@ of_fwnode_device_get_match_data(const struct fwnode_handle *fwnode,
+>  const struct fwnode_operations of_fwnode_ops = {
+>         .get = of_fwnode_get,
+>         .put = of_fwnode_put,
+> +       .get_name = of_fwnode_get_name,
+>         .device_is_available = of_fwnode_device_is_available,
+>         .device_get_match_data = of_fwnode_device_get_match_data,
+>         .property_present = of_fwnode_property_present,
+> --
+> 2.19.2
+>
