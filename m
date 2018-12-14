@@ -1,21 +1,24 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] dt-bindings: watchdog: renesas-wdt: Document r8a774c0 support
-Date: Fri, 14 Dec 2018 11:06:49 +0100
-Message-ID: <CAMuHMdXTZTxaKwJ3R+1FqHZDxgC-WPQGMHOBxh3MLCNJxu7ZBA@mail.gmail.com>
-References: <1544732333-6086-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: Re: [PATCH] dt-bindings: i2c: rcar: Add r8a774c0 support
+Date: Fri, 14 Dec 2018 11:07:34 +0100
+Message-ID: <CAMuHMdUFbkowC9a-2wst_GufizEY2CtWjr2R0yerzS1d5EmB-w@mail.gmail.com>
+References: <1544732342-6131-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544732333-6086-1-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1544732342-6131-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Biju Das <biju.das@bp.renesas.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Hiromitsu Yamasaki <hiromitsu.yamasaki.ym@renesas.com>, Linux I2C <linux-i2c@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 On Thu, Dec 13, 2018 at 9:19 PM Fabrizio Castro
 <fabrizio.castro@bp.renesas.com> wrote:
-> RZ/G2E (R8A774C0) watchdog implementation is compatible with R-Car
-> Gen3, therefore add relevant documentation.
+> Document RZ/G2E (R8A774C0) I2C compatibility with the relevant driver
+
+device
+
+> dt-bindings.
 >
 > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
