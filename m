@@ -1,95 +1,51 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH 01/10] dt-bindings: usb: add support for dwc3 controller
- on HiSilicon SoCs
-Date: Fri, 14 Dec 2018 16:05:03 +0800
-Message-ID: <8bd2e47a-5766-3236-2c89-a4eaf343991c@huawei.com>
-References: <20181027095820.40056-1-chenyu56@huawei.com>
- <20181027095820.40056-2-chenyu56@huawei.com> <20181112160241.GA14074@bogus>
- <9fce6a58-d986-25e4-1791-ba375e4f075e@huawei.com>
- <CAL_JsqKObFGdf5tPdv=Ss2ZWCPBgimbEUn72rkR2+L7uRbAirg@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] drm: rcar-du: Convert live DT patches to sugar syntax
+Date: Fri, 14 Dec 2018 10:06:42 +0200
+Message-ID: <2994853.jny44fDVje@avalon>
+References: <20181129105850.10953-1-geert+renesas@glider.be>
+ <1754701.jL1l6Xu3AY@avalon>
+ <a11c8c6f-533d-df5f-85df-694c7441f579@ideasonboard.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKObFGdf5tPdv=Ss2ZWCPBgimbEUn72rkR2+L7uRbAirg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: liuyu712@hisilicon.com, Wangbinghui <wangbinghui@hisilicon.com>, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <a11c8c6f-533d-df5f-85df-694c7441f579@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: kieran.bingham+renesas@ideasonboard.com
+Cc: David Airlie <airlied@linux.ie>, linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 2018/12/4 0:01, Rob Herring wrote:
-> On Fri, Nov 16, 2018 at 8:29 PM Chen Yu <chenyu56@huawei.com> wrote:
->>
->> Hi,
->>
->> On 2018/11/13 0:02, Rob Herring wrote:
->>> On Sat, Oct 27, 2018 at 05:58:11PM +0800, Yu Chen wrote:
->>>> This patch adds binding descriptions to support the dwc3 controller
->>>> on HiSilicon SoCs and boards like the HiKey960.
->>>>
->>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>> Cc: Rob Herring <robh+dt@kernel.org>
->>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>> Cc: John Stultz <john.stultz@linaro.org>
->>>> Signed-off-by: Yu Chen <chenyu56@huawei.com>
->>>> ---
->>>>  .../devicetree/bindings/usb/dwc3-hisi.txt          | 53 ++++++++++++++++++++++
->>>>  1 file changed, 53 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/usb/dwc3-hisi.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3-hisi.txt b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
->>>> new file mode 100644
->>>> index 000000000000..e715e7b1c324
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
->>>> @@ -0,0 +1,53 @@
->>>> +HiSilicon DWC3 USB SoC controller
->>>> +
->>>> +This file documents the parameters for the dwc3-hisi driver.
->>>> +
->>>> +Required properties:
->>>> +- compatible:       should be "hisilicon,hi3660-dwc3"
->>>> +- clocks:   A list of phandle + clock-specifier pairs for the
->>>> +            clocks listed in clock-names
->>>> +- clock-names:      Specify clock names
->>>> +- resets:   list of phandle and reset specifier pairs.
->>>> +
->>>> +Sub-nodes:
->>>> +The dwc3 core should be added as subnode to HiSilicon DWC3 as shown in the
->>>> +example below. The DT binding details of dwc3 can be found in:
->>>> +Documentation/devicetree/bindings/usb/dwc3.txt
->>>
->>> If you only have clocks and resets and no glue registers, then you
->>> don't need a sub-node. Just make the controller one node.
->>>
->>
->> In dwc3 glue driver，the controller driver usually probed by call of_platform_populate
->> which will search the child node of glue driver.
->> The code of function of_platform_populate is as below:
->>
->>         for_each_child_of_node(root, child) {
->>                  rc = of_platform_bus_create(child, matches, lookup, parent, true);
->>                  if (rc) {
->>                          of_node_put(child);
->>                          break;
->>                  }
->>          }
->>
->> So I think the controller node should be a sub-node.
-> 
-> It was done that way, but has changed. See commit fe8abf332b8f ("usb:
-> dwc3: support clocks and resets for DWC3 core").
-> 
-I have read the commit and there is a question. If I make the controller one node,
-how can the pm suspend of the glue driver be guaranteed to be called after the pm suspend
-of dwc3 controller? And also the order of pm resume.
-There are some reset registers that should be configured before the initialization
-of dwc3 controller on Hi3660 platform.
-
-> Rob
-> 
-> .
-> 
+SGkgS2llcmFuLAoKT24gRnJpZGF5LCAxNCBEZWNlbWJlciAyMDE4IDA5OjM5OjU1IEVFVCBLaWVy
+YW4gQmluZ2hhbSB3cm90ZToKPiBPbiAyOS8xMS8yMDE4IDEyOjQzLCBMYXVyZW50IFBpbmNoYXJ0
+IHdyb3RlOgo+ID4gT24gVGh1cnNkYXksIDI5IE5vdmVtYmVyIDIwMTggMTI6NTg6NTAgRUVUIEdl
+ZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToKPiA+PiBVc2luZyBvdmVybGF5IHN1Z2FyIHN5bnRheCBt
+YWtlcyB0aGUgRFRTIGZpbGVzIGVhc2llciB0byByZWFkIChhbmQKPiA+PiB3cml0ZSkuCj4gPj4g
+Cj4gPj4gT3ZlcmxheSBzeW50YWN0aWMgc3VnYXIgZm9yIGdlbmVyYXRpbmcgdGFyZ2V0LXBhdGgg
+ZnJhZ21lbnRzIGlzCj4gPj4gc3VwcG9ydGVkIGJ5IHRoZSB2ZXJzaW9uIG9mIGR0YyBzdXBwbGll
+ZCB3aXRoIHRoZSBrZXJuZWwgc2luY2UgY29tbWl0Cj4gPj4gNTBhYWZkNjA4OThhOGIzZSAoInNj
+cmlwdHMvZHRjOiBVcGRhdGUgdG8gdXBzdHJlYW0gdmVyc2lvbgo+ID4+IHYxLjQuNi0yMS1nODRl
+NDE0YjBiNWJjIikuCj4gPj4gCj4gPj4gU2lnbmVkLW9mZi1ieTogR2VlcnQgVXl0dGVyaG9ldmVu
+IDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4KPiA+PiAtLS0KPiA+PiBUaGUgZ2VuZXJhdGVkIGR0
+YnMgYmVmb3JlL2FmdGVyIGFyZSBpZGVudGljYWwuCj4gPiAKPiA+IEkgd2FzIGdvaW5nIHRvIGFz
+ayB3aGV0aGVyIHlvdSBoYWQgdGVzdGVkIHRoZSBwYXRjaCwgYnV0IHRoaXMgc2hvdWxkIGJlCj4g
+PiBnb29kIGVub3VnaCA6LSkKPiA+IAo+ID4gVGhlIHJlc3VsdCBpcyBuaWNlciB0byByZWFkLCB0
+aGFua3MuCj4gCj4gSSBhZ3JlZSEKPiAKPiBGV0lXOgo+IAo+IFJldmlld2VkLWJ5OiBLaWVyYW4g
+QmluZ2hhbSA8a2llcmFuLmJpbmdoYW0rcmVuZXNhc0BpZGVhc29uYm9hcmQuY29tPgo+IAo+ID4g
+UmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJv
+YXJkLmNvbT4KPiA+IAo+ID4gYW5kIHRha2VuIGluIG15IHRyZWUuCj4gCj4gSSB3YXMgaG9waW5n
+IHRvIHJlZmVyZW5jZSB0aGlzIHBhdGNoIC0gYnV0IEkgY2FuJ3Qgc2VlIGl0IGluIGEgdHJlZQo+
+IGFueXdoZXJlLgo+IAo+IElzIHRoZXJlIGEgYnJhbmNoL3JlcG8gdGhhdCB0aGlzIGlzIGF2YWls
+YWJsZSBpbiBub3c/CgpJJ3ZlIHB1c2hlZCB0aGUgcGVuZGluZyBEUk0gcGF0Y2hlcyB0bwoKCWdp
+dDovL2xpbnV4dHYub3JnL3BpbmNoYXJ0bC9tZWRpYS5naXQgZHJtL2R1L25leHQKCi0tIApSZWdh
+cmRzLAoKTGF1cmVudCBQaW5jaGFydAoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
