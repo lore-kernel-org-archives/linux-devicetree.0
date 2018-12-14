@@ -1,57 +1,32 @@
-From: Peng Ma <peng.ma@nxp.com>
-Subject: RE: [PATCH 3/3] arm64: dts: ls1046a: add qdma device tree nodes
-Date: Fri, 14 Dec 2018 10:30:15 +0000
-Message-ID: <VI1PR04MB44313466C33A7BAD7167D4EEEDA10@VI1PR04MB4431.eurprd04.prod.outlook.com>
-References: <20181206111823.45985-1-peng.ma@nxp.com>
- <20181206111823.45985-3-peng.ma@nxp.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] dt-bindings: mmc: renesas_sdhi: Add r8a774c0 support
+Date: Fri, 14 Dec 2018 11:35:40 +0100
+Message-ID: <CAMuHMdU_Kf11jGJB8wUfwdb6MEo=9Hp21GJp4197+BxymxbP1Q@mail.gmail.com>
+References: <1544732529-7003-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181206111823.45985-3-peng.ma@nxp.com>
-Content-Language: en-US
+In-Reply-To: <1544732529-7003-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Ma <peng.ma@nxp.com>, "vkoul@kernel.org" <vkoul@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Wen He <wen.he_1@nxp.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux MMC List <linux-mmc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgc2hhd25ndW8sDQoNCkkgc2VuZCB0aGlzIHNlcmllcyBwYXRjaCB0byBodHRwOi8vcGF0Y2h3
-b3JrLm96bGFicy5vcmcvcHJvamVjdC9kZXZpY2V0cmVlLWJpbmRpbmdzL2xpc3QvDQpCdXQgSSBk
-aWQgbm90IGZpbmQgcGF0Y2hzIG9uIGRldmljZXRyZWUgcGF0Y2h3b3JrLCBjb3VsZCBJIHNlbmQg
-cGF0Y2hzIGFnYWluLg0KVGhhbmtzLg0KDQpCZXN0IFJlZ2FyZHMsIA0KUGVuZw0KPi0tLS0tT3Jp
-Z2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogUGVuZyBNYSA8cGVuZy5tYUBueHAuY29tPg0KPlNl
-bnQ6IDIwMTjE6jEy1MI2yNUgMTk6MTgNCj5UbzogdmtvdWxAa2VybmVsLm9yZzsgc2hhd25ndW9A
-a2VybmVsLm9yZw0KPkNjOiBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IHJvYmgrZHRAa2Vy
-bmVsLm9yZzsNCj5tYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
-bmZyYWRlYWQub3JnOw0KPmRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxA
-dmdlci5rZXJuZWwub3JnOyBQZW5nIE1hDQo+PHBlbmcubWFAbnhwLmNvbT47IFdlbiBIZSA8d2Vu
-LmhlXzFAbnhwLmNvbT4NCj5TdWJqZWN0OiBbUEFUQ0ggMy8zXSBhcm02NDogZHRzOiBsczEwNDZh
-OiBhZGQgcWRtYSBkZXZpY2UgdHJlZSBub2Rlcw0KPg0KPmFkZCB0aGUgcURNQSBkZXZpY2UgdHJl
-ZSBub2RlcyBmb3IgTFMxMDQ2QSBkZXZpY2VzLg0KPg0KPlNpZ25lZC1vZmYtYnk6IFdlbiBIZSA8
-d2VuLmhlXzFAbnhwLmNvbT4NCj5TaWduZWQtb2ZmLWJ5OiBQZW5nIE1hIDxwZW5nLm1hQG54cC5j
-b20+DQo+LS0tDQo+Y2hhbmdlIGluIHYxMjoNCj4JLSB1c2VkIEdJQ19TUEkgYW5kIElSUV9UWVBF
-X0xFVkVMX0hJR0ggdG8gaW5zdGVhZCBpbW1lZGlhdGUNCj4JbnVtYmVyDQo+DQo+IGFyY2gvYXJt
-NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLmR0c2kgfCAgIDIxDQo+KysrKysrKysr
-KysrKysrKysrKysrDQo+IDEgZmlsZXMgY2hhbmdlZCwgMjEgaW5zZXJ0aW9ucygrKSwgMCBkZWxl
-dGlvbnMoLSkNCj4NCj5kaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
-ZnNsLWxzMTA0NmEuZHRzaQ0KPmIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxz
-MTA0NmEuZHRzaQ0KPmluZGV4IDUxY2JkNTAuLjhmY2NlNzkgMTAwNjQ0DQo+LS0tIGEvYXJjaC9h
-cm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0NmEuZHRzaQ0KPisrKyBiL2FyY2gvYXJt
-NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLmR0c2kNCj5AQCAtNzA0LDYgKzcwNCwy
-NyBAQA0KPiAJCQkJCTwwMDAwIDAgMCA0ICZnaWMgR0lDX1NQSSAxNTQNCj5JUlFfVFlQRV9MRVZF
-TF9ISUdIPjsNCj4gCQl9Ow0KPg0KPisJCXFkbWE6IGRtYS1jb250cm9sbGVyQDgzODAwMDAgew0K
-PisJCQljb21wYXRpYmxlID0gImZzbCxsczEwNDZhLXFkbWEiLCAiZnNsLGxzMTAyMWEtcWRtYSI7
-DQo+KwkJCXJlZyA9IDwweDAgMHg4MzgwMDAwIDB4MCAweDEwMDA+LCAvKiBDb250cm9sbGVyIHJl
-Z3MgKi8NCj4rCQkJICAgICAgPDB4MCAweDgzOTAwMDAgMHgwIDB4MTAwMDA+LCAvKiBTdGF0dXMg
-cmVncyAqLw0KPisJCQkgICAgICA8MHgwIDB4ODNhMDAwMCAweDAgMHg0MDAwMD47IC8qIEJsb2Nr
-IHJlZ3MgKi8NCj4rCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE1MyBJUlFfVFlQRV9MRVZFTF9I
-SUdIPiwNCj4rCQkJCSAgICAgPEdJQ19TUEkgMzkgSVJRX1RZUEVfTEVWRUxfSElHSD4sDQo+KwkJ
-CQkgICAgIDxHSUNfU1BJIDQwIElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KPisJCQkJICAgICA8R0lD
-X1NQSSA0MSBJUlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4rCQkJCSAgICAgPEdJQ19TUEkgNDIgSVJR
-X1RZUEVfTEVWRUxfSElHSD47DQo+KwkJCWludGVycnVwdC1uYW1lcyA9ICJxZG1hLWVycm9yIiwg
-InFkbWEtcXVldWUwIiwNCj4rCQkJCSJxZG1hLXF1ZXVlMSIsICJxZG1hLXF1ZXVlMiIsICJxZG1h
-LXF1ZXVlMyI7DQo+KwkJCWRtYS1jaGFubmVscyA9IDw4PjsNCj4rCQkJYmxvY2stbnVtYmVyID0g
-PDE+Ow0KPisJCQlibG9jay1vZmZzZXQgPSA8MHgxMDAwMD47DQo+KwkJCWZzbCxkbWEtcXVldWVz
-ID0gPDI+Ow0KPisJCQlzdGF0dXMtc2l6ZXMgPSA8NjQ+Ow0KPisJCQlxdWV1ZS1zaXplcyA9IDw2
-NCA2ND47DQo+KwkJCWJpZy1lbmRpYW47DQo+KwkJfTsNCj4rDQo+IAl9Ow0KPg0KPiAJcmVzZXJ2
-ZWQtbWVtb3J5IHsNCj4tLQ0KPjEuNy4xDQoNCg==
+On Thu, Dec 13, 2018 at 9:22 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> Document RZ/G2E (R8A774C0) SoC bindings.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
