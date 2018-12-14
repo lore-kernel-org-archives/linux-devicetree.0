@@ -1,39 +1,54 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH 2/2] dt-bindings: nvmem: imx-ocotp: add compatible string for
- i.MX7ULP
-Date: Fri, 14 Dec 2018 08:51:37 +0000
-Message-ID: <1544777136-9195-2-git-send-email-Anson.Huang@nxp.com>
-References: <1544777136-9195-1-git-send-email-Anson.Huang@nxp.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH] dt-bindings: rcar-gen3-phy-usb2: Add r8a774c0 support
+Date: Fri, 14 Dec 2018 08:57:43 +0000
+Message-ID: <TY2PR01MB22970FDA6CFA1EED3209E51DD8A10@TY2PR01MB2297.jpnprd01.prod.outlook.com>
+References: <1544732481-6775-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544777136-9195-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
+In-Reply-To: <1544732481-6775-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Content-Language: ja-JP
 Sender: linux-kernel-owner@vger.kernel.org
-To: "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Kishon Vijay Abraham I <kishon@ti.com>, Simon Horman <horms+renesas@verge.net.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add new compatible string for i.MX7ULP SOC.
+Hi Fabrizio,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 1 +
- 1 file changed, 1 insertion(+)
+> From: Fabrizio Castro, Sent: Friday, December 14, 2018 5:21 AM
+>=20
+> Document RZ/G2E (R8A774C0) SoC bindings.
+>=20
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt b/Docume=
-ntation/devicetree/bindings/nvmem/imx-ocotp.txt
-index 792bc5f..ff389cf 100644
---- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-+++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-@@ -11,6 +11,7 @@ Required properties:
- 	"fsl,imx6ul-ocotp" (i.MX6UL),
- 	"fsl,imx7d-ocotp" (i.MX7D/S),
- 	"fsl,imx6sll-ocotp" (i.MX6SLL),
-+	"fsl,imx7ulp-ocotp" (i.MX7ULP),
- 	followed by "syscon".
- - #address-cells : Should be 1
- - #size-cells : Should be 1
---=20
-2.7.4
+Thank you for the patch!
+
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Best regards,
+Yoshihiro Shimoda
+
+> ---
+>  Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> index de7b539..ad9c290 100644
+> --- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> @@ -6,6 +6,8 @@ This file provides information on what the device node fo=
+r the R-Car generation
+>  Required properties:
+>  - compatible: "renesas,usb2-phy-r8a774a1" if the device is a part of an =
+R8A774A1
+>  	      SoC.
+> +	      "renesas,usb2-phy-r8a774c0" if the device is a part of an R8A774C=
+0
+> +	      SoC.
+>  	      "renesas,usb2-phy-r8a7795" if the device is a part of an R8A7795
+>  	      SoC.
+>  	      "renesas,usb2-phy-r8a7796" if the device is a part of an R8A7796
+> --
+> 2.7.4
