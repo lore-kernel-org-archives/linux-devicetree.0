@@ -1,39 +1,112 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v2 2/2] arm64: dts: sdm845: Add interconnect for
- GPU
-Date: Fri, 14 Dec 2018 15:16:40 -0700
-Message-ID: <20181214221640.25354-3-jcrouse@codeaurora.org>
-References: <20181214221640.25354-1-jcrouse@codeaurora.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 2/2] of: __of_detach_node() - remove node from phandle
+ cache
+Date: Fri, 14 Dec 2018 14:38:20 -0800
+Message-ID: <878c5024-c184-12f3-2868-df6c79d568ce@gmail.com>
+References: <1544769771-5468-1-git-send-email-frowand.list@gmail.com>
+ <1544769771-5468-3-git-send-email-frowand.list@gmail.com>
+ <CAL_JsqJN69kbLX=Fn-hYh1FwWoU-S+sB7wHjG-9H5=ihbo3hcg@mail.gmail.com>
+ <68a9e834-b11d-8b9f-1669-466709257f37@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181214221640.25354-1-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <68a9e834-b11d-8b9f-1669-466709257f37@linux.vnet.ibm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Bringmann <mwb@linux.vnet.ibm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Michael Ellerman <mpe@ellerman.id.au>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, tlfalcon@linux.vnet.ibm.com, minkim@us.ibm.com, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-RGVmaW5lIGFuIGludGVyY29ubmVjdCBwb3J0IGZvciB0aGUgR1BVIHRvIHNldCBidXMKY2FwYWJp
-bGl0aWVzLgoKU2lnbmVkLW9mZi1ieTogSm9yZGFuIENyb3VzZSA8amNyb3VzZUBjb2RlYXVyb3Jh
-Lm9yZz4KLS0tCiBhcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kgfCAzICsrKwog
-MSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQv
-Ym9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04
-NDUuZHRzaQppbmRleCAwYTVkZGZjNGM1OWIuLjJhY2ZlYTg3NzE2YyAxMDA2NDQKLS0tIGEvYXJj
-aC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9k
-dHMvcWNvbS9zZG04NDUuZHRzaQpAQCAtMTM3MCw2ICsxMzcwLDkgQEAKIAogCQkJb3BlcmF0aW5n
-LXBvaW50cy12MiA9IDwmZ3B1X29wcF90YWJsZT47CiAKKwkJCWludGVyY29ubmVjdHMgPSA8JnJz
-Y19obG9zIE1BU1RFUl9HRlgzRCAmcnNjX2hsb3MgU0xBVkVfRUJJMT47CisJCQlpbnRlcmNvbm5l
-Y3QtbmFtZXMgPSAiZ2Z4LW1lbSI7CisKIAkJCXFjb20sZ211ID0gPCZnbXU+OwogCiAJCQlncHVf
-b3BwX3RhYmxlOiBvcHAtdGFibGUgewotLSAKMi4xOC4wCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVu
-b0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+On 12/14/18 1:56 PM, Michael Bringmann wrote:
+> On 12/14/2018 11:20 AM, Rob Herring wrote:
+>> On Fri, Dec 14, 2018 at 12:43 AM <frowand.list@gmail.com> wrote:
+>>>
+>>> From: Frank Rowand <frank.rowand@sony.com>
+>>>
+>>> Non-overlay dynamic devicetree node removal may leave the node in
+>>> the phandle cache.  Subsequent calls to of_find_node_by_phandle()
+>>> will incorrectly find the stale entry.  Remove the node from the
+>>> cache.
+>>>
+>>> Add paranoia checks in of_find_node_by_phandle() as a second level
+>>> of defense (do not return cached node if detached, do not add node
+>>> to cache if detached).
+>>>
+>>> Reported-by: Michael Bringmann <mwb@linux.vnet.ibm.com>
+>>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+>>> ---
+>>>  drivers/of/base.c       | 29 ++++++++++++++++++++++++++++-
+>>>  drivers/of/dynamic.c    |  3 +++
+>>>  drivers/of/of_private.h |  4 ++++
+>>>  3 files changed, 35 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>>> index d599367cb92a..34a5125713c8 100644
+>>> --- a/drivers/of/base.c
+>>> +++ b/drivers/of/base.c
+>>> @@ -162,6 +162,27 @@ int of_free_phandle_cache(void)
+>>>  late_initcall_sync(of_free_phandle_cache);
+>>>  #endif
+>>>
+>>> +/*
+>>> + * Caller must hold devtree_lock.
+>>> + */
+>>> +void __of_free_phandle_cache_entry(phandle handle)
+>>> +{
+>>> +       phandle masked_handle;
+>>> +
+>>> +       if (!handle)
+>>> +               return;
+>>> +
+>>> +       masked_handle = handle & phandle_cache_mask;
+>>> +
+>>> +       if (phandle_cache) {
+>>> +               if (phandle_cache[masked_handle] &&
+>>> +                   handle == phandle_cache[masked_handle]->phandle) {
+>>> +                       of_node_put(phandle_cache[masked_handle]);
+>>> +                       phandle_cache[masked_handle] = NULL;
+>>> +               }
+>>> +       }
+>>> +}
+>>> +
+>>>  void of_populate_phandle_cache(void)
+>>>  {
+>>>         unsigned long flags;
+>>> @@ -1209,11 +1230,17 @@ struct device_node *of_find_node_by_phandle(phandle handle)
+>>>                 if (phandle_cache[masked_handle] &&
+>>>                     handle == phandle_cache[masked_handle]->phandle)
+>>>                         np = phandle_cache[masked_handle];
+>>> +               if (np && of_node_check_flag(np, OF_DETACHED)) {
+>>> +                       of_node_put(np);
+>>> +                       phandle_cache[masked_handle] = NULL;
+>>
+>> This should never happen, right? Any time we set OF_DETACHED, the
+>> entry should get removed from the cache. I think we want a WARN here
+>> in case we're in an unexpected state.
+
+Correct, this should never happen.  I will add the WARN.
+
+
+> We don't actually remove the pointer from the phandle cache when we set
+> OF_DETACHED in drivers/of/dynamic.c:__of_detach_node.  The phandle cache
+> is currently static within drivers/of/base.c.  There are a couple of
+> calls to of_populate_phandle_cache / of_free_phandle_cache within
+> drivers/of/overlay.c, but these are not involved in the device tree
+> updates that occur during LPAR migration.  A WARN here would only make
+> sense, if we also arrange to clear the handle.
+
+Rob's reply did not include the full patch 2/2.  The full patch 2/2 also
+adds a call to __of_free_phandle_cache_entry() in __of_detach_node().
+
+-Frank
+
+> 
+>>
+>> Rob
+> 
+> Michael
+> 
+>>
+>>
+> 
