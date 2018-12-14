@@ -1,59 +1,117 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH] dt-bindings: PCI: rcar: Add device tree support for
- r8a774c0
-Date: Fri, 14 Dec 2018 10:49:16 +0000
-Message-ID: <TY1PR01MB1770FAF7F451A3B8F4903ED9C0A10@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1544732500-6866-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAMuHMdUqNR5jKQXvC5gy5r44Jp+cbo8iorfCFpwBHNCu16RH0w@mail.gmail.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 2/2] arm64: dts: imx8mq: add GPC power domains
+Date: Fri, 14 Dec 2018 11:55:10 +0100
+Message-ID: <20181214105510.1174-2-l.stach@pengutronix.de>
+References: <20181214105510.1174-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUqNR5jKQXvC5gy5r44Jp+cbo8iorfCFpwBHNCu16RH0w@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci <linux-pci@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181214105510.1174-1-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjayENCg0KPiBGcm9tOiBH
-ZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4LW02OGsub3JnPg0KPiBTZW50OiAxNCBEZWNl
-bWJlciAyMDE4IDEwOjI5DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIGR0LWJpbmRpbmdzOiBQQ0k6
-IHJjYXI6IEFkZCBkZXZpY2UgdHJlZSBzdXBwb3J0IGZvciByOGE3NzRjMA0KPg0KPiBIaSBGYWJy
-aXppbywNCj4NCj4gT24gVGh1LCBEZWMgMTMsIDIwMTggYXQgOToyMSBQTSBGYWJyaXppbyBDYXN0
-cm8NCj4gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gQWRkIFBD
-SWUgc3VwcG9ydCBmb3IgdGhlIFJaL0cyRSAoYS5rLmEuIFI4QTc3NEMwKS4NCj4gPg0KPiA+IFNp
-Z25lZC1vZmYtYnk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMu
-Y29tPg0KPg0KPiBSZXZpZXdlZC1ieTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2Fz
-QGdsaWRlci5iZT4NCj4NCj4gT25lIHF1ZXN0aW9uIGJlbG93Lg0KPg0KPiA+IC0tLSBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvcmNhci1wY2kudHh0DQo+ID4gKysrIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9yY2FyLXBjaS50eHQNCj4NCj4g
-PiBAQCAtMzcsNyArMzksOCBAQCBjb21wYXRpYmxlOiAicmVuZXNhcyxwY2llLXI4YTc3NDMiIGZv
-ciB0aGUgUjhBNzc0MyBTb0M7DQo+ID4NCj4gPiAgT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiAg
-LSBwaHlzOiBmcm9tIGNvbW1vbiBQSFkgYmluZGluZzogUEhZIHBoYW5kbGUgYW5kIHNwZWNpZmll
-ciAob25seSBtYWtlIHNlbnNlDQo+ID4gLSAgICAgICBmb3IgUi1DYXIgZ2VuMyBTb0NzIHdoZXJl
-IHRoZSBQQ0llIFBIWXMgaGF2ZSB0aGVpciBvd24gcmVnaXN0ZXIgYmxvY2tzKS4NCj4gPiArICAg
-ICAgIGZvciBSLUNhciBnZW4zIGFuZCBSWi9HMiBTb0NzIHdoZXJlIHRoZSBQQ0llIFBIWXMgaGF2
-ZSB0aGVpciBvd24NCj4NCj4gR2VuMywgd2hpbGUgYXQgaXQ/DQoNCkNhbiBkbw0KDQo+DQo+ID4g
-KyAgICAgICByZWdpc3RlciBibG9ja3MpLg0KPg0KPiBUaGUgUlovRzIgSGFyZHdhcmUgVXNlciBN
-YW51YWwgSSBoYXZlIGxhY2tzIHRoZSB0YWJsZSBzcGVjaWZ5aW5nIHdoaWNoIFNvQ3MNCj4gaGF2
-ZSB3aGljaCBQSFkgcmVnaXN0ZXJzLiAgU28gSSBjYW5ub3QgdmVyaWZ5IGlmIHRoZSBhYm92ZSBw
-YXJhZ3JhcGggYXBwbGllcyB0bw0KPiBSWi9HMihFKS4NCg0KSSdsbCByZXBseSB0byB0aGlzIG9u
-IHlvdXIgZm9sbG93LXVwICBlbWFpbC4NCg0KVGhhbmtzLA0KRmFiDQoNCj4NCj4gR3J7b2V0amUs
-ZWV0aW5nfXMsDQo+DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0DQo+DQo+IC0tDQo+
-IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIg
-LS0gZ2VlcnRAbGludXgtbTY4ay5vcmcNCj4NCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3
-aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVu
-IEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNv
-bWV0aGluZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0g
-TGludXMgVG9ydmFsZHMNCg0KDQpbaHR0cHM6Ly93d3cyLnJlbmVzYXMuZXUvbWVkaWEvZW1haWwv
-dW5pY2VmLmpwZ10NCg0KVGhpcyBDaHJpc3RtYXMsIGluc3RlYWQgb2Ygc2VuZGluZyBvdXQgY2Fy
-ZHMsIFJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIGhhdmUgZGVjaWRlZCB0byBzdXBwb3J0IFVu
-aWNlZiB3aXRoIGEgZG9uYXRpb24uIEZvciBmdXJ0aGVyIGRldGFpbHMgY2xpY2sgaGVyZTxodHRw
-czovL3d3dy51bmljZWYub3JnLz4gdG8gZmluZCBvdXQgYWJvdXQgdGhlIHZhbHVhYmxlIHdvcmsg
-dGhleSBkbywgaGVscGluZyBjaGlsZHJlbiBhbGwgb3ZlciB0aGUgd29ybGQuDQpXZSB3b3VsZCBs
-aWtlIHRvIHRha2UgdGhpcyBvcHBvcnR1bml0eSB0byB3aXNoIHlvdSBhIE1lcnJ5IENocmlzdG1h
-cyBhbmQgYSBwcm9zcGVyb3VzIE5ldyBZZWFyLg0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBF
-dXJvcGUgTHRkLCBEdWtlcyBNZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNr
-aW5naGFtc2hpcmUsIFNMOCA1RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1
-bmRlciBSZWdpc3RlcmVkIE5vLiAwNDU4NjcwOS4NCg==
+This adds support for the power domain controller found on the
+i.MX8MQ SoC.
+
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 66 +++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index a55b9329376b..c521cd1b6820 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <dt-bindings/clock/imx8mq-clock.h>
++#include <dt-bindings/power/imx8mq-power.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include "imx8mq-pinfunc.h"
+@@ -252,6 +253,71 @@
+ 				              "clk_ext1", "clk_ext2",
+ 				              "clk_ext3", "clk_ext4";
+ 			};
++
++			gpc: gpc@303a0000 {
++				compatible = "fsl,imx8mq-gpc";
++				reg = <0x303a0000 0x10000>;
++
++				pgc {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					pgc_mipi: pgc-power-domain@0 {
++						#power-domain-cells = <0>;
++						reg = <IMX8M_POWER_DOMAIN_MIPI>;
++					};
++
++					pgc_pcie1: pgc-power-domain@1 {
++						#power-domain-cells = <0>;
++						reg = <IMX8M_POWER_DOMAIN_PCIE1>;
++					};
++
++					pgc_otg1: pgc-power-domain@2 {
++						#power-domain-cells = <0>;
++						reg = <IMX8M_POWER_DOMAIN_USB_OTG1>;
++					};
++
++					pgc_otg2: pgc-power-domain@3 {
++						#power-domain-cells = <0>;
++						reg = <IMX8M_POWER_DOMAIN_USB_OTG2>;
++					};
++
++					pgc_ddr1: pgc-power-domain@4 {
++						#power-domain-cells = <0>;
++						reg = <IMX8M_POWER_DOMAIN_DDR1>;
++					};
++
++					pgc_gpu: pgc-power-domain@5 {
++						#power-domain-cells = <0>;
++						reg = <IMX8M_POWER_DOMAIN_GPU>;
++					};
++
++					pgc_vpu: pgc-power-domain@6 {
++						#power-domain-cells = <0>;
++						reg = <IMX8M_POWER_DOMAIN_VPU>;
++					};
++
++					pgc_disp: pgc-power-domain@7 {
++						#power-domain-cells = <0>;
++						reg = <IMX8M_POWER_DOMAIN_DISP>;
++					};
++
++					pgc_mipi_csi1: pgc-power-domain@8 {
++						#power-domain-cells = <0>;
++						reg = <IMX8M_POWER_DOMAIN_MIPI_CSI1>;
++					};
++
++					pgc_mipi_csi2: pgc-power-domain@9 {
++						#power-domain-cells = <0>;
++						reg = <IMX8M_POWER_DOMAIN_MIPI_CSI2>;
++					};
++
++					pgc_pcie2: pgc-power-domain@10 {
++						#power-domain-cells = <0>;
++						reg = <IMX8M_POWER_DOMAIN_PCIE2>;
++					};
++				};
++			};
+ 		};
+ 
+ 		bus@30400000 { /* AIPS2 */
+-- 
+2.19.1
