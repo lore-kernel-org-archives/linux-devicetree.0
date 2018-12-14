@@ -1,48 +1,65 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH 1/4] ARM: dts: aspeed: Add sensors devices for Facebook
-Date: Fri, 14 Dec 2018 11:18:02 -0800
-Message-ID: <c1e35845-cb07-048f-bcf7-d7239a387027@linux.intel.com>
-References: <20181213195319.1333402-1-vijaykhemka@fb.com>
- <CACPK8XfAXDHqWcD=OKm4UhCh-+-7GBxL02Fi9_jgdmo2ZQZSjg@mail.gmail.com>
- <B6C3C92D-1F9E-4425-ABF5-718D1A6755EB@fb.com>
+From: Andreas Klinger <ak@it-klinger.de>
+Subject: [PATCH] gpio-omap.txt: add reg and interrupts properties
+Date: Fri, 14 Dec 2018 20:48:25 +0100
+Message-ID: <20181214194822.lvavgczxq4cy7v64@arbad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <B6C3C92D-1F9E-4425-ABF5-718D1A6755EB@fb.com>
-Content-Language: en-US
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vijay Khemka <vijaykhemka@fb.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "james.feist@linux.intel.com" <james.feist@linux.intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: grygorii.strashko@ti.com, ssantosh@kernel.org, khilman@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vijay,
+Document properties reg and interrupts for OMAP GPIO controller bindings
 
-On 12/14/2018 10:11 AM, Vijay Khemka wrote:
-> On 12/13/18, 2:56 PM, "Joel Stanley" <joel@jms.id.au> wrote:
+Also add unit address in node name of the example
 
-<snip>
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+---
+ Documentation/devicetree/bindings/gpio/gpio-omap.txt | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
->      > +               oemname0 = "MB_P3V3";
->      > +               oemname1 = "MB_P5V";
->      > +               oemname2 = "MB_P12V";
->      > +               oemname3 = "MB_P1V05";
->      > +               oemname4 = "MB_PVNN_PCH_STBY";
->      > +               oemname5 = "MB_P3V3_STBY";
->      > +               oemname6 = "MB_P5V_STBY";
->      
->      "oemname" isn't part of the upstream bindings. Is this something you
->      have patches for?
-> This is a workaround field used by dbus-sensors application to avoid overlay for dynamic detection of devices based on json file definition.
-> 
-> Can you please also review other 3 patches in this series.
->      
-> 
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-omap.txt b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
+index 8d950522e7fa..e57b2cb28f6c 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-omap.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
+@@ -5,6 +5,8 @@ Required properties:
+   - "ti,omap2-gpio" for OMAP2 controllers
+   - "ti,omap3-gpio" for OMAP3 controllers
+   - "ti,omap4-gpio" for OMAP4 controllers
++- reg : Physical base address of the controller and length of memory mapped
++  region.
+ - gpio-controller : Marks the device node as a GPIO controller.
+ - #gpio-cells : Should be two.
+   - first cell is the pin number
+@@ -18,6 +20,8 @@ Required properties:
+       2 = high-to-low edge triggered.
+       4 = active high level-sensitive.
+       8 = active low level-sensitive.
++- interrupts : The interrupt the controller is rising as output when an
++  interrupt occures
+ 
+ OMAP specific properties:
+ - ti,hwmods:		Name of the hwmod associated to the GPIO:
+@@ -29,11 +33,13 @@ OMAP specific properties:
+ 
+ Example:
+ 
+-gpio4: gpio4 {
++gpio0: gpio@44e07000 {
+     compatible = "ti,omap4-gpio";
+-    ti,hwmods = "gpio4";
++    reg = <0x44e07000 0x1000>;
++    ti,hwmods = "gpio1";
+     gpio-controller;
+     #gpio-cells = <2>;
+     interrupt-controller;
+     #interrupt-cells = <2>;
++    interrupts = <96>;
+ };
+-- 
+2.11.0
 
-These oemname settings should not be added into here. You can add these
-information into configuration of entity manager which uses overlay
-templates for dbus-sensors. Also, as Joel said, "oemname" isn't part of
-the upstream bindings.
 
-Cheers,
-Jae
+-- 
