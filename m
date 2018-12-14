@@ -1,95 +1,89 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] power: reset: msm: Add support for download-mode control
-Date: Thu, 13 Dec 2018 21:30:35 -0800
-Message-ID: <20181214053035.GK1578@tuxbook-pro>
-References: <1531977529-23304-1-git-send-email-rnayak@codeaurora.org>
- <20180719054200.GB30024@minitux>
- <ca74b7f4-3e60-2f3b-3d66-ac167c913c0e@codeaurora.org>
- <153210869376.48062.15842782379577271631@swboyd.mtv.corp.google.com>
- <154282479571.88331.5041132574563990889@swboyd.mtv.corp.google.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v13 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ Firmware bindings
+Date: Thu, 13 Dec 2018 21:32:59 -0800
+Message-ID: <154476557998.19322.11977618193120872801@swboyd.mtv.corp.google.com>
+References: <1544760624-12874-1-git-send-email-tdas@codeaurora.org> <1544760624-12874-2-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <154282479571.88331.5041132574563990889@swboyd.mtv.corp.google.com>
+In-Reply-To: <1544760624-12874-2-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, sre@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, evgreen@google.com, Matthias Kaehlcke <mka@chromium.org>, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 21 Nov 10:26 PST 2018, Stephen Boyd wrote:
+Quoting Taniya Das (2018-12-13 20:10:23)
+> Add QCOM cpufreq firmware device bindings for Qualcomm Technology Inc's
+> SoCs. This is required for managing the cpu frequency transitions which a=
+re
+> controlled by the hardware engine.
+>=20
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
 
-> Quoting Stephen Boyd (2018-07-20 10:44:53)
-> > Quoting Rajendra Nayak (2018-07-18 23:59:20)
-> > > On 7/19/2018 11:12 AM, Bjorn Andersson wrote:
-> > > > On Wed 18 Jul 22:18 PDT 2018, Rajendra Nayak wrote:
-> > > >> diff --git a/Documentation/devicetree/bindings/power/reset/msm-poweroff.txt b/Documentation/devicetree/bindings/power/reset/msm-poweroff.txt
-> > > >> index ce44ad3..9dd489f 100644
-> > > >> --- a/Documentation/devicetree/bindings/power/reset/msm-poweroff.txt
-> > > >> +++ b/Documentation/devicetree/bindings/power/reset/msm-poweroff.txt
-> > > >> @@ -8,6 +8,9 @@ settings.
-> > > >>   Required Properties:
-> > > >>   -compatible: "qcom,pshold"
-> > > >>   -reg: Specifies the physical address of the ps-hold register
-> > > >> +Optional Properties:
-> > > >> +-qcom,dload-mode: phandle to the TCSR hardware block and offset of the
-> > > >> +             download mode control register
-> > > >>   
-> > > >>   Example:
-> > > >>   
-> > > >> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-> > > >> index df58fc8..0c97e34 100644
-> > > >> --- a/drivers/power/reset/Kconfig
-> > > >> +++ b/drivers/power/reset/Kconfig
-> > > >> @@ -104,6 +104,17 @@ config POWER_RESET_MSM
-> > > >>      help
-> > > >>        Power off and restart support for Qualcomm boards.
-> > > >>   
-> > > >> +config POWER_RESET_MSM_DOWNLOAD_MODE
-> > > > 
-> > > > How about moving QCOM_SCM_DOWNLOAD_MODE_DEFAULT to
-> > > > drivers/soc/qcom/Kconfig (and removing "SCM") and referencing this in
-> > > > both drivers?
-> > > 
-> > > yes, thats possible, but I am not sure how to make the command line
-> > > option common for both. One other option I thought was if we could handle it
-> > > within the scm driver itself with an additional
-> > > binding to specify the non-secure download mode address.
-> > > something like qcom,dload-mode-ns?
-> > 
-> > Is the SCM device and driver always going to be present though? It may
-> > be better to make a TCSR platform device driver on designs that would
-> > configure the cookie with direct read/writes from Linux to break the
-> > relationship with scm entirely. Then the different configurations could
-> > flow from the DTS file either describing scm that has scm call, a
-> > special scm_writel address for TCSR, or a specific TCSR node with the
-> > address of the download mode cookie that triggers a TCSR driver to probe
-> > and register a reboot handler.
-> > 
-> 
-> Does my proposal work? I haven't seen anything new on the list since
-> this email.
-> 
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-Afaiu the SCM device is still there, even though we don't use all the
-usual functionality.
+except one question below for Rob.
 
-I tested on qcs404 and sdm845-mtp (LA boot chain), and they both return
-positive on:
+> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.tx=
+t b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+> new file mode 100644
+> index 0000000..33856947
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+> @@ -0,0 +1,172 @@
+> +Qualcomm Technologies, Inc. CPUFREQ Bindings
+> +
+> +CPUFREQ HW is a hardware engine used by some Qualcomm Technologies, Inc.=
+ (QTI)
+> +SoCs to manage frequency in hardware. It is capable of controlling frequ=
+ency
+> +for multiple clusters.
+> +
+> +Properties:
+> +- compatible
+> +       Usage:          required
+> +       Value type:     <string>
+> +       Definition:     must be "qcom,cpufreq-hw".
+> +
+> +- clocks
+> +       Usage:          required
+> +       Value type:     <phandle> From common clock binding.
+> +       Definition:     clock handle for XO clock and GPLL0 clock.
+> +
+> +- clock-names
+> +       Usage:          required
+> +       Value type:     <string> From common clock binding.
+> +       Definition:     must be "xo", "alternate".
+> +
+> +- reg
+> +       Usage:          required
+> +       Value type:     <prop-encoded-array>
+> +       Definition:     Addresses and sizes for the memory of the HW base=
+s in
+> +                       each frequency domain.
+> +- reg-names
+> +       Usage:          Optional
+> +       Value type:     <string>
+> +       Definition:     Frequency domain name i.e.
+> +                       "freq-domain0", "freq-domain1".
+> +
+> +- #freq-domain-cells:
 
-  __qcom_scm_is_call_available(dev, QCOM_SCM_SVC_IO, QCOM_SCM_IO_WRITE)
+I still wonder if this should be #qcom,freq-domain-cells, but if Rob is
+OK I won't complain.
 
-So how about we change qcom_scm_set_download_mode() to do:
+> +       Usage:          required.
 
-  if (scm_call_avail(QCOM_SCM_SVC_BOOT, QCOM_SCM_SET_DLOAD_MODE))
-  	__qcom_scm_set_dload_mode()
-  else if (scm_call_avail(QCOM_SCM_SVC_IO, QCOM_SCM_IO_WRITE) && dload_mode_addr)
-  	__qcom_scm_io_writel();
-  else if (dload_mode_addr)
-  	writel()
+Nitpick: Weird full-stop here     ^
 
-This would also mean that we can put the dload addr in the sdm845.dtsi
-and share that between LA and ATF.
-
-Regards,
-Bjorn
+> +       Definition:     Number of cells in a freqency domain specifier.
+> +
+> +* Property qcom,freq-domain
+> +Devices supporting freq-domain must set their "qcom,freq-domain" propert=
+y with
+> +phandle to a cpufreq_hw followed by the Domain ID(0/1) in the CPU DT nod=
+e.
+> +
+> +
