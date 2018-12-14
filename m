@@ -1,96 +1,95 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [v7, PATCH 1/2] net:stmmac: dwmac-mediatek: add support for
- mt2712
-Date: Thu, 13 Dec 2018 21:11:54 -0800
-Message-ID: <f3427cac-88b2-1464-8f92-4692a7125674@gmail.com>
-References: <1544666173-5121-1-git-send-email-biao.huang@mediatek.com>
- <1544666173-5121-2-git-send-email-biao.huang@mediatek.com>
- <20181213123346.GF1605@lunn.ch> <1544756477.24219.164.camel@mhfsdcap03>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH] power: reset: msm: Add support for download-mode control
+Date: Thu, 13 Dec 2018 21:30:35 -0800
+Message-ID: <20181214053035.GK1578@tuxbook-pro>
+References: <1531977529-23304-1-git-send-email-rnayak@codeaurora.org>
+ <20180719054200.GB30024@minitux>
+ <ca74b7f4-3e60-2f3b-3d66-ac167c913c0e@codeaurora.org>
+ <153210869376.48062.15842782379577271631@swboyd.mtv.corp.google.com>
+ <154282479571.88331.5041132574563990889@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544756477.24219.164.camel@mhfsdcap03>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <154282479571.88331.5041132574563990889@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: biao huang <biao.huang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, nelson.chang@mediatek.com, netdev@vger.kernel.org, liguo.zhang@mediatek.com, joabreu@synopsys.com, linux-kernel@vger.kernel.org, matthias.bgg@gmail.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, sre@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Le 12/13/18 à 7:01 PM, biao huang a écrit :
-> Dear Andrew,
-> 	Thanks for your comments.
-> 
-> On Thu, 2018-12-13 at 13:33 +0100, Andrew Lunn wrote:
->> Hi Biao
->>
->>> +	case PHY_INTERFACE_MODE_RGMII:
->>> +		/* the PHY is not responsible for inserting any internal
->>> +		 * delay by itself in PHY_INTERFACE_MODE_RGMII case,
->>> +		 * so Ethernet MAC will insert delays for both transmit
->>> +		 * and receive path here.
->>> +		 */
->>
->> What if the PCB designed has decided to do a kink in the clock to add
->> the delays? I don't think any of these delays should depend on the PHY
->> interface mode. It is up to the device tree writer to set both the PHY
->> delay and the MAC delay, based on knowledge of the board, including
->> any kicks in the tracks. The driver should then do what it is told.
->>
-> Originally, we recommend equal trace length on PCB, which means that
-> RGMII delay by PCB traces is not recommended. so only PHY/MAC delay is
-> taken into account in the transmit/receive path.
-> 
-> as you described above, maybe the equal PCB trace length assumption is
-> not reasonable, and we'll only handle MAC delay-ps in our driver based
-> on the device tree information no matter which rgmii is selected.
+On Wed 21 Nov 10:26 PST 2018, Stephen Boyd wrote:
 
-Expecting identical PCB traces is something that is hard to enforce with
-external customers, for internal reference boards, absolutely they
-should have those traces of equal length.
+> Quoting Stephen Boyd (2018-07-20 10:44:53)
+> > Quoting Rajendra Nayak (2018-07-18 23:59:20)
+> > > On 7/19/2018 11:12 AM, Bjorn Andersson wrote:
+> > > > On Wed 18 Jul 22:18 PDT 2018, Rajendra Nayak wrote:
+> > > >> diff --git a/Documentation/devicetree/bindings/power/reset/msm-poweroff.txt b/Documentation/devicetree/bindings/power/reset/msm-poweroff.txt
+> > > >> index ce44ad3..9dd489f 100644
+> > > >> --- a/Documentation/devicetree/bindings/power/reset/msm-poweroff.txt
+> > > >> +++ b/Documentation/devicetree/bindings/power/reset/msm-poweroff.txt
+> > > >> @@ -8,6 +8,9 @@ settings.
+> > > >>   Required Properties:
+> > > >>   -compatible: "qcom,pshold"
+> > > >>   -reg: Specifies the physical address of the ps-hold register
+> > > >> +Optional Properties:
+> > > >> +-qcom,dload-mode: phandle to the TCSR hardware block and offset of the
+> > > >> +             download mode control register
+> > > >>   
+> > > >>   Example:
+> > > >>   
+> > > >> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+> > > >> index df58fc8..0c97e34 100644
+> > > >> --- a/drivers/power/reset/Kconfig
+> > > >> +++ b/drivers/power/reset/Kconfig
+> > > >> @@ -104,6 +104,17 @@ config POWER_RESET_MSM
+> > > >>      help
+> > > >>        Power off and restart support for Qualcomm boards.
+> > > >>   
+> > > >> +config POWER_RESET_MSM_DOWNLOAD_MODE
+> > > > 
+> > > > How about moving QCOM_SCM_DOWNLOAD_MODE_DEFAULT to
+> > > > drivers/soc/qcom/Kconfig (and removing "SCM") and referencing this in
+> > > > both drivers?
+> > > 
+> > > yes, thats possible, but I am not sure how to make the command line
+> > > option common for both. One other option I thought was if we could handle it
+> > > within the scm driver itself with an additional
+> > > binding to specify the non-secure download mode address.
+> > > something like qcom,dload-mode-ns?
+> > 
+> > Is the SCM device and driver always going to be present though? It may
+> > be better to make a TCSR platform device driver on designs that would
+> > configure the cookie with direct read/writes from Linux to break the
+> > relationship with scm entirely. Then the different configurations could
+> > flow from the DTS file either describing scm that has scm call, a
+> > special scm_writel address for TCSR, or a specific TCSR node with the
+> > address of the download mode cookie that triggers a TCSR driver to probe
+> > and register a reboot handler.
+> > 
+> 
+> Does my proposal work? I haven't seen anything new on the list since
+> this email.
+> 
 
-> 
-> Since David already applied this patch, I'll send another patch to fix
-> this issue.
->>> +	if (!of_property_read_u32(plat->np, "mediatek,tx-delay-ps", &tx_delay_ps)) {
->>> +		if (tx_delay_ps < plat->variant->tx_delay_max) {
->>> +			mac_delay->tx_delay = tx_delay_ps;
->>> +		} else {
->>> +			dev_err(plat->dev, "Invalid TX clock delay: %dps\n", tx_delay_ps);
->>> +			return -EINVAL;
->>> +		}
->>> +	}
->>> +
->>> +	if (!of_property_read_u32(plat->np, "mediatek,rx-delay-ps", &rx_delay_ps)) {
->>> +		if (rx_delay_ps < plat->variant->rx_delay_max) {
->>> +			mac_delay->rx_delay = rx_delay_ps;
->>> +		} else {
->>> +			dev_err(plat->dev, "Invalid RX clock delay: %dps\n", rx_delay_ps);
->>> +			return -EINVAL;
->>> +		}
->>> +	}
->>> +
->>> +	mac_delay->tx_inv = of_property_read_bool(plat->np, "mediatek,txc-inverse");
->>> +	mac_delay->rx_inv = of_property_read_bool(plat->np, "mediatek,rxc-inverse");
->>> +	mac_delay->fine_tune = of_property_read_bool(plat->np, "mediatek,fine-tune");
->>
->> Why is fine tune needed? If the requested delay can be done using fine
->> tune, it should use fine tune. If not, it should use rough tune. The
->> driver can work this out itself.
-> 
-> find tune here represents a more accurate delay circuit than coarse
-> tune, and it's a parallel circuit of coarse tune.
-> For most delay, both fine and coarse tune can meet the requirement.
-> It's up to the user to select which one.
-> 
-> But only one of them can work at the same time, so we need a switch
-> flag(fine_tune here) to indicate which one is valid.
-> Driver can hardly work out which one is working according to delay-ps.
-> 
-> Please correct me if any misunderstanding.
+Afaiu the SCM device is still there, even though we don't use all the
+usual functionality.
 
-You are giving a lot of options for users of this Ethernet controller to
-shoot themselves in the feet and spend a good amount of time debugging
-why their RGMII connection is not reliable or have timing violations.
--- 
-Florian
+I tested on qcs404 and sdm845-mtp (LA boot chain), and they both return
+positive on:
+
+  __qcom_scm_is_call_available(dev, QCOM_SCM_SVC_IO, QCOM_SCM_IO_WRITE)
+
+So how about we change qcom_scm_set_download_mode() to do:
+
+  if (scm_call_avail(QCOM_SCM_SVC_BOOT, QCOM_SCM_SET_DLOAD_MODE))
+  	__qcom_scm_set_dload_mode()
+  else if (scm_call_avail(QCOM_SCM_SVC_IO, QCOM_SCM_IO_WRITE) && dload_mode_addr)
+  	__qcom_scm_io_writel();
+  else if (dload_mode_addr)
+  	writel()
+
+This would also mean that we can put the dload addr in the sdm845.dtsi
+and share that between LA and ATF.
+
+Regards,
+Bjorn
