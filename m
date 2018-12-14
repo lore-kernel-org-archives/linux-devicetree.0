@@ -1,129 +1,31 @@
 From: Marek Behun <marek.behun@nic.cz>
 Subject: Re: [PATCH v2 03/12] PCI: aardvark: Add PHY support
-Date: Fri, 14 Dec 2018 01:47:01 +0100
-Message-ID: <20181214014701.373b220b@nic.cz>
+Date: Fri, 14 Dec 2018 01:57:12 +0100
+Message-ID: <20181214015712.31f749ea@nic.cz>
 References: <20181212102142.16053-1-miquel.raynal@bootlin.com>
         <20181212102142.16053-4-miquel.raynal@bootlin.com>
+        <20181214014701.373b220b@nic.cz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181212102142.16053-4-miquel.raynal@bootlin.com>
+In-Reply-To: <20181214014701.373b220b@nic.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Miquel Raynal <miquel.raynal@bootlin.com>
 Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
-are there already patches for the A37xx comphy driver?
+On Fri, 14 Dec 2018 01:47:01 +0100
+Marek Behun <marek.behun@nic.cz> wrote:
 
-On Wed, 12 Dec 2018 11:21:33 +0100
-Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> Hi Miquel,
+> are there already patches for the A37xx comphy driver?
 
-> The IP needs its PHY to be properly configured to work. While the PHY
-> is usually already configured by the bootloader, we will need this
-> feature when adding S2RAM support. Take care of registering and
-> configuring the PHY from the driver itself.
-> 
-> Suggested-by: Grzegorz Jaszczyk <jaz@semihalf.com>
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  drivers/pci/controller/pci-aardvark.c | 62
-> +++++++++++++++++++++++++++ 1 file changed, 62 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pci-aardvark.c
-> b/drivers/pci/controller/pci-aardvark.c index
-> 1d31d74ddab7..da695572a2ed 100644 ---
-> a/drivers/pci/controller/pci-aardvark.c +++
-> b/drivers/pci/controller/pci-aardvark.c @@ -17,6 +17,7 @@
->  #include <linux/pci.h>
->  #include <linux/init.h>
->  #include <linux/platform_device.h>
-> +#include <linux/phy/phy.h>
->  #include <linux/of_address.h>
->  #include <linux/of_gpio.h>
->  #include <linux/of_pci.h>
-> @@ -204,6 +205,7 @@ struct advk_pcie {
->  	int root_bus_nr;
->  	struct pci_bridge_emul bridge;
->  	struct gpio_desc *reset_gpio;
-> +	struct phy *phy;
->  };
->  
->  static inline void advk_writel(struct advk_pcie *pcie, u32 val, u64
-> reg) @@ -1025,6 +1027,62 @@ static int
-> advk_pcie_setup_reset_gpio(struct advk_pcie *pcie) return 0;
->  }
->  
-> +static void advk_pcie_disable_phy(struct advk_pcie *pcie)
-> +{
-> +	phy_power_off(pcie->phy);
-> +	phy_exit(pcie->phy);
-> +}
-> +
-> +static int advk_pcie_enable_phy(struct advk_pcie *pcie)
-> +{
-> +	int ret;
-> +
-> +	if (!pcie->phy)
-> +		return 0;
-> +
-> +	ret = phy_init(pcie->phy);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = phy_set_mode(pcie->phy, PHY_MODE_PCIE);
-> +	if (ret) {
-> +		phy_exit(pcie->phy);
-> +		return ret;
-> +	}
-> +
-> +	ret = phy_power_on(pcie->phy);
-> +	if (ret) {
-> +		phy_exit(pcie->phy);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int advk_pcie_setup_phy(struct advk_pcie *pcie)
-> +{
-> +	struct device *dev = &pcie->pdev->dev;
-> +	struct device_node *node = dev->of_node;
-> +	int ret = 0;
-> +
-> +	pcie->phy = devm_of_phy_get(dev, node, NULL);
-> +	if (IS_ERR(pcie->phy) && (PTR_ERR(pcie->phy) ==
-> -EPROBE_DEFER))
-> +		return PTR_ERR(pcie->phy);
-> +
-> +	/* Old bindings miss the PHY handle */
-> +	if (IS_ERR(pcie->phy)) {
-> +		dev_warn(dev, "PHY unavailable (%ld)\n",
-> PTR_ERR(pcie->phy));
-> +		pcie->phy = NULL;
-> +		return 0;
-> +	}
-> +
-> +	ret = advk_pcie_enable_phy(pcie);
-> +	if (ret)
-> +		dev_err(dev, "Failed to initialize PHY (%d)\n", ret);
-> +
-> +	return ret;
-> +}
-> +
->  static int advk_pcie_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -1060,6 +1118,10 @@ static int advk_pcie_probe(struct
-> platform_device *pdev) return ret;
->  	}
->  
-> +	ret = advk_pcie_setup_phy(pcie);
-> +	if (ret)
-> +		return ret;
-> +
->  	ret = advk_pcie_setup_reset_gpio(pcie);
->  	if (ret)
->  		return ret;
+Never mind, I found them. I shall test this on Turris Mox.
+Is the comphy driver supposed to be able to change eth mode from
+1000BASE-X to 2500BASE-X and back without reboot?
+
+This would be cool for our SFP cage module of Turris Mox, just to add
+support for comphy into mvneta.
+
+Marek
