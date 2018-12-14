@@ -1,35 +1,42 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: [PATCH v2 2/2] ARM: dts: stm32: Add hwlock for irqchip on stm32mp157
-Date: Fri, 14 Dec 2018 16:11:28 +0100
-Message-ID: <20181214151128.10005-3-benjamin.gaignard@linaro.org>
-References: <20181214151128.10005-1-benjamin.gaignard@linaro.org>
+From: Felix Brack <fb@ltec.ch>
+Subject: Re: [PATCH] ARM: dts: am33xx: Remove unnecessary properties
+Date: Fri, 14 Dec 2018 16:11:46 +0100
+Message-ID: <89710fa1-38a9-1628-0651-003332780483@ltec.ch>
+References: <20181210132448.7865-1-fb@ltec.ch>
+ <20181211163618.GU6707@atomide.com> <20181211164336.GV6707@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181214151128.10005-1-benjamin.gaignard@linaro.org>
+In-Reply-To: <20181211164336.GV6707@atomide.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, mpfj@newflow.co.uk, mark.rutland@arm.com, robh+dt@kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Benjamin Gaignard <benjamin.gaignard@st.com>
+Hi Tony,
 
-Define a hwspinlock to be used by irq controller
+On 11.12.2018 17:43, Tony Lindgren wrote:
+> * Tony Lindgren <tony@atomide.com> [181211 16:36]:
+>> * Felix Brack <fb@ltec.ch> [181210 05:25]:
+>>> Remove the unnecessary properties #address-cells and #size-cells
+>>> of node pinmux as there are no child-nodes with property reg.
+>>
+>> Applying into omap-for-v4.21/dt thanks.
+> 
+> Actually this currently conflicts with the pending
+> am33xx l4 ti-sysc changes, so let's wait on this
+> one to avoid causing merge conflicts between
+> branches.
+>
+Okay, I see. The changes introduced by my patch would then affect the
+new file am33xx-l4.dtsi instead of am33xx.dtsi
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- arch/arm/boot/dts/stm32mp157c.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+> So dropping for now.
+>
+Will you "apply" my patch once the am33xx l4 ti-sysc changes are applied
+or do you expect me to send V2 patch (to be applied to the new
+am33xx-l4.dtsi) ?
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 8bf1c17f8cef..cac0af371082 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -815,6 +815,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
- 			reg = <0x5000d000 0x400>;
-+			hwlocks = <&hsem 1>;
- 		};
- 
- 		syscfg: syscon@50020000 {
--- 
-2.15.0
+regards, Felix
