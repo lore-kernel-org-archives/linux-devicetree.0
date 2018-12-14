@@ -1,20 +1,20 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] dt-bindings: usb-xhci: Add r8a774c0 support
-Date: Fri, 14 Dec 2018 11:20:15 +0100
-Message-ID: <CAMuHMdVtr5upiNK-B8T3kKqZPH4PQ_-ZpNB5Ut93rNOpXoZaug@mail.gmail.com>
-References: <1544732471-6730-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: Re: [PATCH] dt-bindings: dmaengine: usb-dmac: Add binding for r8a774c0
+Date: Fri, 14 Dec 2018 11:20:57 +0100
+Message-ID: <CAMuHMdUXVL01HC+PYCQc+Gkr6XVFCTV1=gf4apyjnpzTiPFCoQ@mail.gmail.com>
+References: <1544732491-6821-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544732471-6730-1-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1544732491-6821-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <gregkh@linuxfoundation.org>, USB list <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Cc: Vinod <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 On Thu, Dec 13, 2018 at 9:21 PM Fabrizio Castro
 <fabrizio.castro@bp.renesas.com> wrote:
-> Document RZ/G2E (R8A774C0) SoC bindings.
+> This patch adds bindings for the r8a774c0 (RZ/G2E).
 >
 > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
