@@ -1,41 +1,96 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845: Add Q6V5 MSS node
-Date: Thu, 13 Dec 2018 20:52:18 -0800
-Message-ID: <20181214045218.GJ1578@tuxbook-pro>
-References: <20181127085828.17908-1-sibis@codeaurora.org>
- <CAD=FV=U+LHa0QpPuZhd04=WkMrrM1kBUYhkS9RqSSR6uLijbBA@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [v7, PATCH 1/2] net:stmmac: dwmac-mediatek: add support for
+ mt2712
+Date: Thu, 13 Dec 2018 21:11:54 -0800
+Message-ID: <f3427cac-88b2-1464-8f92-4692a7125674@gmail.com>
+References: <1544666173-5121-1-git-send-email-biao.huang@mediatek.com>
+ <1544666173-5121-2-git-send-email-biao.huang@mediatek.com>
+ <20181213123346.GF1605@lunn.ch> <1544756477.24219.164.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=U+LHa0QpPuZhd04=WkMrrM1kBUYhkS9RqSSR6uLijbBA@mail.gmail.com>
+In-Reply-To: <1544756477.24219.164.camel@mhfsdcap03>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: sibis@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, Evan Green <evgreen@chromium.org>, Brian Norris <briannorris@chromium.org>
+To: biao huang <biao.huang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, nelson.chang@mediatek.com, netdev@vger.kernel.org, liguo.zhang@mediatek.com, joabreu@synopsys.com, linux-kernel@vger.kernel.org, matthias.bgg@gmail.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 13 Dec 14:17 PST 2018, Doug Anderson wrote:
-> On Tue, Nov 27, 2018 at 12:58 AM Sibi Sankar <sibis@codeaurora.org> wrote:
-[..]
-> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > index 58870273dbc9..df16ee464872 100644
-> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > @@ -1095,6 +1095,69 @@
-> >                         };
-> >                 };
-> >
-> > +               remoteproc@4080000 {
-> > +                       compatible = "qcom,sdm845-mss-pil";
-> > +                       reg = <0x04080000 0x408>, <0x04180000 0x48>;
+Le 12/13/18 à 7:01 PM, biao huang a écrit :
+> Dear Andrew,
+> 	Thanks for your comments.
 > 
-> s/0x04080000/0x4080000 to appease the DT folks.
+> On Thu, 2018-12-13 at 13:33 +0100, Andrew Lunn wrote:
+>> Hi Biao
+>>
+>>> +	case PHY_INTERFACE_MODE_RGMII:
+>>> +		/* the PHY is not responsible for inserting any internal
+>>> +		 * delay by itself in PHY_INTERFACE_MODE_RGMII case,
+>>> +		 * so Ethernet MAC will insert delays for both transmit
+>>> +		 * and receive path here.
+>>> +		 */
+>>
+>> What if the PCB designed has decided to do a kink in the clock to add
+>> the delays? I don't think any of these delays should depend on the PHY
+>> interface mode. It is up to the device tree writer to set both the PHY
+>> delay and the MAC delay, based on knowledge of the board, including
+>> any kicks in the tracks. The driver should then do what it is told.
+>>
+> Originally, we recommend equal trace length on PCB, which means that
+> RGMII delay by PCB traces is not recommended. so only PHY/MAC delay is
+> taken into account in the transmit/receive path.
 > 
+> as you described above, maybe the equal PCB trace length assumption is
+> not reasonable, and we'll only handle MAC delay-ps in our driver based
+> on the device tree information no matter which rgmii is selected.
 
-Andy requests this to be padded to 8 digits, and I've come to really
-appreciate this as it makes sorting much easier.
+Expecting identical PCB traces is something that is hard to enforce with
+external customers, for internal reference boards, absolutely they
+should have those traces of equal length.
 
-But perhaps there's a verdict on this?
+> 
+> Since David already applied this patch, I'll send another patch to fix
+> this issue.
+>>> +	if (!of_property_read_u32(plat->np, "mediatek,tx-delay-ps", &tx_delay_ps)) {
+>>> +		if (tx_delay_ps < plat->variant->tx_delay_max) {
+>>> +			mac_delay->tx_delay = tx_delay_ps;
+>>> +		} else {
+>>> +			dev_err(plat->dev, "Invalid TX clock delay: %dps\n", tx_delay_ps);
+>>> +			return -EINVAL;
+>>> +		}
+>>> +	}
+>>> +
+>>> +	if (!of_property_read_u32(plat->np, "mediatek,rx-delay-ps", &rx_delay_ps)) {
+>>> +		if (rx_delay_ps < plat->variant->rx_delay_max) {
+>>> +			mac_delay->rx_delay = rx_delay_ps;
+>>> +		} else {
+>>> +			dev_err(plat->dev, "Invalid RX clock delay: %dps\n", rx_delay_ps);
+>>> +			return -EINVAL;
+>>> +		}
+>>> +	}
+>>> +
+>>> +	mac_delay->tx_inv = of_property_read_bool(plat->np, "mediatek,txc-inverse");
+>>> +	mac_delay->rx_inv = of_property_read_bool(plat->np, "mediatek,rxc-inverse");
+>>> +	mac_delay->fine_tune = of_property_read_bool(plat->np, "mediatek,fine-tune");
+>>
+>> Why is fine tune needed? If the requested delay can be done using fine
+>> tune, it should use fine tune. If not, it should use rough tune. The
+>> driver can work this out itself.
+> 
+> find tune here represents a more accurate delay circuit than coarse
+> tune, and it's a parallel circuit of coarse tune.
+> For most delay, both fine and coarse tune can meet the requirement.
+> It's up to the user to select which one.
+> 
+> But only one of them can work at the same time, so we need a switch
+> flag(fine_tune here) to indicate which one is valid.
+> Driver can hardly work out which one is working according to delay-ps.
+> 
+> Please correct me if any misunderstanding.
 
-Regards,
-Bjorn
+You are giving a lot of options for users of this Ethernet controller to
+shoot themselves in the feet and spend a good amount of time debugging
+why their RGMII connection is not reliable or have timing violations.
+-- 
+Florian
