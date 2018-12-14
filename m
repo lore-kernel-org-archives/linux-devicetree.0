@@ -1,113 +1,48 @@
-From: frowand.list@gmail.com
-Subject: [PATCH 2/2] of: __of_detach_node() - remove node from phandle cache
-Date: Thu, 13 Dec 2018 22:42:51 -0800
-Message-ID: <1544769771-5468-3-git-send-email-frowand.list@gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 0/2] of: phandle_cache, fix refcounts, remove stale entry
+Date: Thu, 13 Dec 2018 22:46:32 -0800
+Message-ID: <84933c5e-04b1-df82-daec-cbae1017a830@gmail.com>
 References: <1544769771-5468-1-git-send-email-frowand.list@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1544769771-5468-1-git-send-email-frowand.list@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, Michael Bringmann <mwb@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
 Cc: Michael Ellerman <mpe@ellerman.id.au>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, Thomas Falcon <tlfalcon@linux.vnet.ibm.com>, Juliet Kim <minkim@us.ibm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+Hi Michael Bringmann,
 
-Non-overlay dynamic devicetree node removal may leave the node in
-the phandle cache.  Subsequent calls to of_find_node_by_phandle()
-will incorrectly find the stale entry.  Remove the node from the
-cache.
+On 12/13/18 10:42 PM, frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
+> 
+> Non-overlay dynamic devicetree node removal may leave the node in
+> the phandle cache.  Subsequent calls to of_find_node_by_phandle()
+> will incorrectly find the stale entry.  This bug exposed the foloowing
+> phandle cache refcount bug.
+> 
+> The refcount of phandle_cache entries is not incremented while in
+> the cache, allowing use after free error after kfree() of the
+> cached entry.
+> 
+> Frank Rowand (2):
+>   of: of_node_get()/of_node_put() nodes held in phandle cache
+>   of: __of_detach_node() - remove node from phandle cache
+> 
+>  drivers/of/base.c       | 99 ++++++++++++++++++++++++++++++++++++-------------
+>  drivers/of/dynamic.c    |  3 ++
+>  drivers/of/of_private.h |  4 ++
+>  3 files changed, 81 insertions(+), 25 deletions(-)
+> 
 
-Add paranoia checks in of_find_node_by_phandle() as a second level
-of defense (do not return cached node if detached, do not add node
-to cache if detached).
+Can you please test that these patches fix the problem that you
+reported in:
 
-Reported-by: Michael Bringmann <mwb@linux.vnet.ibm.com>
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
----
- drivers/of/base.c       | 29 ++++++++++++++++++++++++++++-
- drivers/of/dynamic.c    |  3 +++
- drivers/of/of_private.h |  4 ++++
- 3 files changed, 35 insertions(+), 1 deletion(-)
+    [PATCH v03] powerpc/mobility: Fix node detach/rename problem
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index d599367cb92a..34a5125713c8 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -162,6 +162,27 @@ int of_free_phandle_cache(void)
- late_initcall_sync(of_free_phandle_cache);
- #endif
- 
-+/*
-+ * Caller must hold devtree_lock.
-+ */
-+void __of_free_phandle_cache_entry(phandle handle)
-+{
-+	phandle masked_handle;
-+
-+	if (!handle)
-+		return;
-+
-+	masked_handle = handle & phandle_cache_mask;
-+
-+	if (phandle_cache) {
-+		if (phandle_cache[masked_handle] &&
-+		    handle == phandle_cache[masked_handle]->phandle) {
-+			of_node_put(phandle_cache[masked_handle]);
-+			phandle_cache[masked_handle] = NULL;
-+		}
-+	}
-+}
-+
- void of_populate_phandle_cache(void)
- {
- 	unsigned long flags;
-@@ -1209,11 +1230,17 @@ struct device_node *of_find_node_by_phandle(phandle handle)
- 		if (phandle_cache[masked_handle] &&
- 		    handle == phandle_cache[masked_handle]->phandle)
- 			np = phandle_cache[masked_handle];
-+		if (np && of_node_check_flag(np, OF_DETACHED)) {
-+			of_node_put(np);
-+			phandle_cache[masked_handle] = NULL;
-+			np = NULL;
-+		}
- 	}
- 
- 	if (!np) {
- 		for_each_of_allnodes(np)
--			if (np->phandle == handle) {
-+			if (np->phandle == handle &&
-+			    !of_node_check_flag(np, OF_DETACHED)) {
- 				if (phandle_cache) {
- 					/* will put when removed from cache */
- 					of_node_get(np);
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index f4f8ed9b5454..ecea92f68c87 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -268,6 +268,9 @@ void __of_detach_node(struct device_node *np)
- 	}
- 
- 	of_node_set_flag(np, OF_DETACHED);
-+
-+	/* race with of_find_node_by_phandle() prevented by devtree_lock */
-+	__of_free_phandle_cache_entry(np->phandle);
- }
- 
- /**
-diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index 5d1567025358..24786818e32e 100644
---- a/drivers/of/of_private.h
-+++ b/drivers/of/of_private.h
-@@ -84,6 +84,10 @@ static inline void __of_detach_node_sysfs(struct device_node *np) {}
- int of_resolve_phandles(struct device_node *tree);
- #endif
- 
-+#if defined(CONFIG_OF_DYNAMIC)
-+void __of_free_phandle_cache_entry(phandle handle);
-+#endif
-+
- #if defined(CONFIG_OF_OVERLAY)
- void of_overlay_mutex_lock(void);
- void of_overlay_mutex_unlock(void);
--- 
-Frank Rowand <frank.rowand@sony.com>
+Thanks,
+
+Frank
