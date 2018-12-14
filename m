@@ -1,7 +1,7 @@
 From: <honghui.zhang@mediatek.com>
-Subject: [PATCH 4/4] arm64: dts: mt7622: Remove un-used property for PCIe
-Date: Fri, 14 Dec 2018 09:25:42 +0800
-Message-ID: <1544750742-31419-5-git-send-email-honghui.zhang@mediatek.com>
+Subject: [PATCH 3/4] arm: dts: mt7623: Remove un-used property for PCIe
+Date: Fri, 14 Dec 2018 09:25:41 +0800
+Message-ID: <1544750742-31419-4-git-send-email-honghui.zhang@mediatek.com>
 References: <1544750742-31419-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -18,28 +18,36 @@ The "num-lanes" property for PCIe is not used, remove it.
 
 Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
 ---
- arch/arm64/boot/dts/mediatek/mt7622.dtsi | 2 --
- 1 file changed, 2 deletions(-)
+ arch/arm/boot/dts/mt7623.dtsi | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index de2c47bd..f619eb5 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -750,7 +750,6 @@
+diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+index 1cdc346..4ca56d8 100644
+--- a/arch/arm/boot/dts/mt7623.dtsi
++++ b/arch/arm/boot/dts/mt7623.dtsi
+@@ -734,7 +734,6 @@
+ 			interrupt-map-mask = <0 0 0 0>;
+ 			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 193 IRQ_TYPE_LEVEL_LOW>;
  			ranges;
- 			status = "disabled";
- 
 -			num-lanes = <1>;
- 			interrupt-map-mask = <0 0 0 7>;
- 			interrupt-map = <0 0 0 1 &pcie_intc0 0>,
- 					<0 0 0 2 &pcie_intc0 1>,
-@@ -771,7 +770,6 @@
+ 			status = "disabled";
+ 		};
+ 
+@@ -746,7 +745,6 @@
+ 			interrupt-map-mask = <0 0 0 0>;
+ 			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
  			ranges;
- 			status = "disabled";
- 
 -			num-lanes = <1>;
- 			interrupt-map-mask = <0 0 0 7>;
- 			interrupt-map = <0 0 0 1 &pcie_intc1 0>,
- 					<0 0 0 2 &pcie_intc1 1>,
+ 			status = "disabled";
+ 		};
+ 
+@@ -758,7 +756,6 @@
+ 			interrupt-map-mask = <0 0 0 0>;
+ 			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 195 IRQ_TYPE_LEVEL_LOW>;
+ 			ranges;
+-			num-lanes = <1>;
+ 			status = "disabled";
+ 		};
+ 	};
 -- 
 2.6.4
