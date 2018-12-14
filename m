@@ -1,73 +1,92 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v8 15/26] pwm: jz4740: Add support for the JZ4725B
-Date: Fri, 14 Dec 2018 14:50:20 +0100
-Message-ID: <CACRpkdbABtDgwKai=8Pfji7qVb-XHsX8pDsuDdS5hhg7qEN0Bw@mail.gmail.com>
-References: <20181212220922.18759-1-paul@crapouillou.net> <20181212220922.18759-16-paul@crapouillou.net>
- <20181213092409.ml4wpnzow2nnszkd@pengutronix.de> <1544709795.18952.1@crapouillou.net>
- <20181213204219.onem3q6dcmakusl2@pengutronix.de>
+From: Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH v2 11/12] drm/panel: Add Feiyang FY07024DI26A30-D
+ MIPI-DSI LCD panel
+Date: Fri, 14 Dec 2018 09:15:39 -0500
+Message-ID: <20181214141539.GN154160@art_vandelay>
+References: <20181116163916.29621-1-jagan@amarulasolutions.com>
+ <20181116163916.29621-12-jagan@amarulasolutions.com>
+ <20181213150736.GL154160@art_vandelay>
+ <CAMty3ZAv1dHCRCShXYbxqMm4wV9WGDpAKPji+3G21eWq34ODaA@mail.gmail.com>
+ <20181213194804.GM154160@art_vandelay>
+ <CAMty3ZCkGudTL9NLnWjTPD8+xqEzY2d0oLN9x=64Hk8MzKTM5g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181213204219.onem3q6dcmakusl2@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Paul Cercueil <paul@crapouillou.net>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, paul.burton@mips.com, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mathieu Malaterre <malat@debian.org>, ezequiel@collabora.co.uk, prasannatsmkumar@gmail.com, linux-pwm@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk <linux-clk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZCkGudTL9NLnWjTPD8+xqEzY2d0oLN9x=64Hk8MzKTM5g@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-amarula@amarulasolutions.com, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vasily Khoruzhick <anarsoul@gmail.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, TL Lim <tllim@pine64.org>, Michael Trimarchi <michael@amarulasolutions.com>, Sean Paul <sean@poorly.run>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 13, 2018 at 9:42 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
-> [Adding Linus Walleij to Cc:]
->
-> Hello,
->
-> On Thu, Dec 13, 2018 at 03:03:15PM +0100, Paul Cercueil wrote:
-> > Le jeu. 13 d=C3=A9c. 2018 =C3=A0 10:24, Uwe Kleine-K=C3=B6nig
-> > <u.kleine-koenig@pengutronix.de> a =C3=A9crit :
-> > > On Wed, Dec 12, 2018 at 11:09:10PM +0100, Paul Cercueil wrote:
-> > > >  The PWM in the JZ4725B works the same as in the JZ4740, except tha=
-t
-> > > > it
-> > > >  only has 6 channels available instead of 8.
-> > >
-> > > this driver is probed only from device tree? If yes, it might be
-> > > sensible to specify the number of PWMs there and get it from there.
-> > > There doesn't seem to be a generic binding for that, but there are
-> > > several drivers that could benefit from it. (This is a bigger project
-> > > though and shouldn't stop your patch. Still more as it already got
-> > > Thierry's ack.)
-> >
-> > I think there needs to be a proper guideline, as there doesn't seem to =
-be
-> > a consensus about this. I learned from emails with Rob and Linus (Walle=
-ij)
-> > that I should not have in devicetree what I can deduce from the compati=
-ble
-> > string.
->
-> I understood them a bit differently. It is ok to deduce things from the
-> compatible string. But if you define a generic property (say) "num-pwms"
-> that is used uniformly in most bindings this is ok, too. (And then the
-> two different devices could use the same compatible.)
->
-> An upside of the generic "num-pwms" property is that the pwm core could
-> sanity check pwm phandles before passing them to the hardware drivers.
-
-I don't know if this helps, but in GPIO we have "ngpios" which is
-used to augment an existing block as to the number of lines actually
-used with it.
-
-The typical case is that an ASIC engineer synthesize a block for
-32 GPIOs but only 12 of them are routed to external pads. So
-we augment the behaviour of that driver to only use 12 of the
-32 lines.
-
-I guess using the remaining 20 lines "works" in a sense but they
-have no practical use and will just bias electrons in the silicon
-for no use.
-
-So if the PWM case is something similar, then by all means add
-num-pwms.
-
-Yours,
-Linus Walleij
+T24gRnJpLCBEZWMgMTQsIDIwMTggYXQgMDQ6MzU6MTFQTSArMDUzMCwgSmFnYW4gVGVraSB3cm90
+ZToKPiBPbiBGcmksIERlYyAxNCwgMjAxOCBhdCAxOjI1IEFNIFNlYW4gUGF1bCA8c2VhbkBwb29y
+bHkucnVuPiB3cm90ZToKPiA+Cj4gPiBPbiBGcmksIERlYyAxNCwgMjAxOCBhdCAxMjo1NjowM0FN
+ICswNTMwLCBKYWdhbiBUZWtpIHdyb3RlOgo+ID4gPiBPbiBUaHUsIERlYyAxMywgMjAxOCBhdCA4
+OjM3IFBNIFNlYW4gUGF1bCA8c2VhbkBwb29ybHkucnVuPiB3cm90ZToKPiA+ID4gPgo+ID4gPiA+
+IE9uIEZyaSwgTm92IDE2LCAyMDE4IGF0IDEwOjA5OjE1UE0gKzA1MzAsIEphZ2FuIFRla2kgd3Jv
+dGU6Cj4gPiA+ID4gPiBGZWl5YW5nIEZZMDcwMjRESTI2QTMwLUQgaXMgMTAyNHg2MDAsIDQtbGFu
+ZSBNSVBJLURTSSBMQ0QgcGFuZWwuCj4gPiA+ID4gPgo+ID4gPiA+ID4gQWRkIHBhbmVsIGRyaXZl
+ciBmb3IgaXQuCj4gPiA+ID4gPgo+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogSmFnYW4gVGVraSA8
+amFnYW5AYW1hcnVsYXNvbHV0aW9ucy5jb20+Cj4gPiA+ID4gPiAtLS0KPiA+ID4gPiA+ICBNQUlO
+VEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDYgKwo+ID4gPiA+
+ID4gIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnICAgICAgICAgICAgICAgICB8ICAgOSAr
+Cj4gPiA+ID4gPiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL01ha2VmaWxlICAgICAgICAgICAgICAg
+IHwgICAxICsKPiA+ID4gPiA+ICAuLi4vZHJtL3BhbmVsL3BhbmVsLWZlaXlhbmctZnkwNzAyNGRp
+MjZhMzBkLmMgfCAyODYgKysrKysrKysrKysrKysrKysrCj4gPiA+ID4gPiAgNCBmaWxlcyBjaGFu
+Z2VkLCAzMDIgaW5zZXJ0aW9ucygrKQo+ID4gPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
+ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtZmVpeWFuZy1meTA3MDI0ZGkyNmEzMGQuYwo+ID4gPiA+
+ID4KPiA+Cj4gPiAvc25pcAo+ID4KPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
+cm0vcGFuZWwvcGFuZWwtZmVpeWFuZy1meTA3MDI0ZGkyNmEzMGQuYyBiL2RyaXZlcnMvZ3B1L2Ry
+bS9wYW5lbC9wYW5lbC1mZWl5YW5nLWZ5MDcwMjRkaTI2YTMwZC5jCj4gPiA+ID4gPiBuZXcgZmls
+ZSBtb2RlIDEwMDY0NAo+ID4gPiA+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5hNGI0NmJkOGZkYmUK
+PiA+ID4gPiA+IC0tLSAvZGV2L251bGwKPiA+ID4gPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9w
+YW5lbC9wYW5lbC1mZWl5YW5nLWZ5MDcwMjRkaTI2YTMwZC5jCj4gPgo+ID4gL3NuaXAKPiA+Cj4g
+PiA+ID4gPiArc3RhdGljIGludCBmZWl5YW5nX3ByZXBhcmUoc3RydWN0IGRybV9wYW5lbCAqcGFu
+ZWwpCj4gPiA+ID4gPiArewo+ID4gPiA+ID4gKyAgICAgc3RydWN0IGZlaXlhbmcgKmN0eCA9IHBh
+bmVsX3RvX2ZlaXlhbmcocGFuZWwpOwo+ID4gPiA+ID4gKyAgICAgc3RydWN0IG1pcGlfZHNpX2Rl
+dmljZSAqZHNpID0gY3R4LT5kc2k7Cj4gPiA+ID4gPiArICAgICB1bnNpZ25lZCBpbnQgaTsKPiA+
+ID4gPiA+ICsgICAgIGludCByZXQ7Cj4gPiA+ID4gPiArCj4gPiA+ID4gPiArICAgICByZXQgPSBy
+ZWd1bGF0b3JfZW5hYmxlKGN0eC0+ZHZkZCk7Cj4gPiA+ID4gPiArICAgICBpZiAocmV0KQo+ID4g
+PiA+ID4gKyAgICAgICAgICAgICByZXR1cm4gcmV0Owo+ID4gPiA+ID4gKwo+ID4gPiA+ID4gKyAg
+ICAgbXNsZWVwKDEwMCk7Cj4gPiA+ID4KPiA+ID4gPiBuaXQ6IFlvdSBzaG91bGQgZG8geW91ciBi
+ZXN0IHRvIGNvcnJlbGF0ZSB0aGUgc2xlZXBzIHdpdGggdGhlIHRpbWluZyBwYXJhbWV0ZXJzCj4g
+PiA+ID4gZnJvbSB0aGUgZGF0YXNoZWV0IHdpdGggYSBjb21tZW50Lgo+ID4gPiA+Cj4gPiA+ID4g
+aWU6Cj4gPiA+ID4gICAgICAgICAvKiBUMTogPiAxMDBtcyAqLwo+ID4gPiA+ICAgICAgICAgbXNs
+ZWVwKDEwMCk7Cj4gPiA+Cj4gPiA+IFNvcnJ5LCB3aGF0IGRvZXMgdGhpcyBtZWFuPwo+ID4KPiA+
+IE9uIHBhZ2UgOSBvZiB0aGUgZGF0YXNoZWV0IHlvdSBzZW50IG1lIFsxXSwgaXQgaGFzIHRoZSBk
+ZWxheXMgcmVxdWlyZWQgdG8gc2FmZWx5Cj4gPiBwb3dlciB1cCB0aGUgcGFuZWwuIFRoaXMgZGVs
+YXkgaXMgdGhlIHRpbWUgYmV0d2VlbiBkdmRkIGdvaW5nIGhpZ2ggYW5kIGF2ZGQKPiA+IGdvaW5n
+IGhpZ2guIE9uIHRoZSBmaWd1cmUgaW4gdGhlIGRhdGFzaGVldCwgdGhpcyB3b3VsZCBiZSBUMiAo
+VDEgaXMgZHZkZCByaXNlCj4gCj4gdGltZSBiZXR3ZWVuIGR2ZGQgZ29pbmcgaGlnaCBhbmQgYXZk
+ZCBnb2luZyBoaWdoIGlzIFQxICsgVDMgcmlnaHQ/Cj4gCj4gVDIgPiAwbXMKPiBUMyA+IDIwbXMK
+PiAKPiBJbiB0aGlzIGNhc2UgdGhlIGRlbGF5IGNhbiBiZSBtc2xlZXAoMjApID8KCkhtbSwgeWVh
+aCwgSSBkaWRuJ3Qgbm90aWNlIHRoYXQgVDMgd2FzID4gMjBtcywgdGhhdCdzIGtpbmQgb2YgY29u
+ZnVzaW5nLiBTbyBJCnRoaW5rIHlvdSdyZSByaWdodCwgdGhpcyBzaG91bGQgYmUgVDIgKyBUMyA+
+IDIwbXMgKFQxIGlzIGNvdmVyZWQgaW4gdGhlCnJlZ3VsYXRvcl9lbmFibGUgb2YgZHZkZCkuCgo+
+IAo+ID4gdGltZSBhbmQgc2hvdWxkIGJlIGhhbmRsZWQgaW4gdGhlIHJlZ3VsYXRvciBzdWJzeXN0
+ZW0gKGlpcmMpKS4gQWxzbyBhY2NvcmRpbmcgdG8KPiA+IHRoZSBkYXRhc2hlZXQsIFQyIGp1c3Qg
+bmVlZHMgdG8gYmUgPiAwLCBzbyB5b3UgZG9uJ3QgZXZlbiBuZWVkIHRoaXMgZGVsYXkuIFlvdQo+
+ID4gY291bGQgcmVwbGFjZSB0aGlzIHdpdGggYSBjb21tZW50IGxpa2U6Cj4gPgo+ID4gICAgICAg
+ICAvKiBUMSAoZHZkZCByaXNlIHRpbWUpICsgVDIgKGR2ZGQtPmF2ZGQpID4gMCAqLwo+ID4KPiA+
+IFNvIGZvciBhbGwgb2YgdGhlIG1zbGVlcHMgYmVsb3cgeW91IHNob3VsZCBnZXQgdGhlIGRlbGF5
+cyBmcm9tIHRoZSBkYXRhc2hlZXQgYW5kCj4gPiBhZGQgYSBjb21tZW50IHJlZmVyZW5jaW5nIHRo
+ZW0uCj4gCj4gVDUgYW5kIFQ2IGFyZSBkZWxheSBiZXR3ZWVuIGF2ZGQgdG8gcmVzZXQgZW5hYmxl
+IGl0IGNhbiBiZSAxMCArIDEwCj4gPSZndDsgMjBtcyBhbmQgZmluYWxseSBUMTIgd2hpY2ggaXMg
+MjAwIGFmdGVyIHJlc2V0Lgo+IAo+IFdoYXQgYWJvdXQgdGhlIGRlbGF5IGJldHdlZW4gcmVzZXRz
+LCBJIG5lZWQgdG8gdW5kZXJzdGFuZCBpdCBhIGJpdC4KClRoZXNlIGFyZSB1c3VhbGx5IGFjY291
+bnRlZCBmb3IgYXQgdGhlIGVuZCBvZiBkaXNhYmxlLiBUYWtlIGEgbG9vayBhdCB0aGUgc2xlZXAK
+cGFyYW1ldGVycyBpbiBwYW5lbC1zaW1wbGUgZm9yIGFuIGV4YW1wbGUuCgpTZWFuCgotLSAKU2Vh
+biBQYXVsLCBTb2Z0d2FyZSBFbmdpbmVlciwgR29vZ2xlIC8gQ2hyb21pdW0gT1MKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
