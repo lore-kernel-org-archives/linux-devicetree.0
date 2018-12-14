@@ -1,159 +1,62 @@
-From: Matt Ranostay <matt.ranostay@konsulko.com>
-Subject: Re: [PATCH v3 1/3] iio: add IIO_MASSCONCENTRATION channel type
-Date: Fri, 14 Dec 2018 10:10:32 -0800
-Message-ID: <CAJCx=gng3h-W21FpuTmwqhet7s4mj+Wss5Mrq0MF+o+vg2zyvA@mail.gmail.com>
-References: <20181212183011.16567-1-tduszyns@gmail.com> <20181212183011.16567-2-tduszyns@gmail.com>
+From: Vijay Khemka <vijaykhemka@fb.com>
+Subject: Re: [PATCH 1/4] ARM: dts: aspeed: Add sensors devices for Facebook
+Date: Fri, 14 Dec 2018 18:11:21 +0000
+Message-ID: <B6C3C92D-1F9E-4425-ABF5-718D1A6755EB@fb.com>
+References: <20181213195319.1333402-1-vijaykhemka@fb.com>
+ <CACPK8XfAXDHqWcD=OKm4UhCh-+-7GBxL02Fi9_jgdmo2ZQZSjg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181212183011.16567-2-tduszyns@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Duszynski <tduszyns@gmail.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, jic23@jic23.retrosnub.co.uk, Andreas Brauchli <a.brauchli@elementarea.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACPK8XfAXDHqWcD=OKm4UhCh-+-7GBxL02Fi9_jgdmo2ZQZSjg@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <4CA366D04D0E184A82A8F707A9625F7F@namprd15.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Rob
+ Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "james.feist@linux.intel.com" <james.feist@linux.intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 12, 2018 at 10:31 AM Tomasz Duszynski <tduszyns@gmail.com> wrote:
->
-> Measuring particulate matter in ug / m3 (micro-grams per cubic meter)
-> is de facto standard. Existing air quality sensors usually follow
-> this convention and are capable of returning measurements using
-> this unit.
->
-> IIO currently does not offer suitable channel type for this
-> type of measurements hence this patch adds this.
->
-> In addition, extra modifiers are introduced used for distinguishing
-> between fine pm1, pm2p5 and coarse pm4, pm10 particle measurements, i.e
-> IIO_MOD_PM1, IIO_MOD_PM25 and IIO_MOD_PM4, IIO_MOD_PM10.
->
-> pmX consists of particles with aerodynamic diameter less or equal to
-> X micrometers.
->
+On 12/13/18, 2:56 PM, "Joel Stanley" <joel@jms.id.au> wrote:
 
-Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
+    On Fri, 14 Dec 2018 at 06:23, Vijay Khemka <vijaykhemka@fb.com> wrote:
+    >
+    > Added ADC and other sensor devices in Facebook Tiogapass device tree.
+    >
+    > Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+    > ---
+    >  .../dts/aspeed-bmc-facebook-tiogapass.dts     | 33 +++++++++++++++++--
+    >  1 file changed, 31 insertions(+), 2 deletions(-)
+    >
+    > diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+    > index f8e7b71af7e6..58bbe08d3ba7 100644
+    > --- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+    > +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+    > @@ -21,6 +21,25 @@
+    >         memory@80000000 {
+    >                 reg = <0x80000000 0x20000000>;
+    >         };
+    > +
+    > +       iio-hwmon {
+    > +               compatible = "iio-hwmon";
+    > +               oemname0 = "MB_P3V3";
+    > +               oemname1 = "MB_P5V";
+    > +               oemname2 = "MB_P12V";
+    > +               oemname3 = "MB_P1V05";
+    > +               oemname4 = "MB_PVNN_PCH_STBY";
+    > +               oemname5 = "MB_P3V3_STBY";
+    > +               oemname6 = "MB_P5V_STBY";
+    
+    "oemname" isn't part of the upstream bindings. Is this something you
+    have patches for?
+This is a workaround field used by dbus-sensors application to avoid overlay for dynamic detection of devices based on json file definition.
 
-> Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-iio | 17 ++++++++++++++++-
->  drivers/iio/industrialio-core.c         |  5 +++++
->  include/uapi/linux/iio/types.h          |  5 +++++
->  tools/iio/iio_event_monitor.c           | 10 ++++++++++
->  4 files changed, 36 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> index 8127a08e366d..ad9579a9385f 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-iio
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> @@ -1684,4 +1684,19 @@ KernelVersion:   4.18
->  Contact:       linux-iio@vger.kernel.org
->  Description:
->                 Raw (unscaled) phase difference reading from channel Y
-> -               that can be processed to radians.
-> \ No newline at end of file
-> +               that can be processed to radians.
-> +
-> +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentration_pm1_input
-> +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentrationY_pm1_input
-> +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentration_pm2p5_input
-> +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentrationY_pm2p5_input
-> +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentration_pm4_input
-> +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentrationY_pm4_input
-> +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentration_pm10_input
-> +What:          /sys/bus/iio/devices/iio:deviceX/in_massconcentrationY_pm10_input
-> +KernelVersion: 4.21
-> +Contact:       linux-iio@vger.kernel.org
-> +Description:
-> +               Mass concentration reading of particulate matter in ug / m3.
-> +               pmX consists of particles with aerodynamic diameter less or
-> +               equal to X micrometers.
-> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> index 4f5cd9f60870..4700fd5d8c90 100644
-> --- a/drivers/iio/industrialio-core.c
-> +++ b/drivers/iio/industrialio-core.c
-> @@ -87,6 +87,7 @@ static const char * const iio_chan_type_name_spec[] = {
->         [IIO_GRAVITY]  = "gravity",
->         [IIO_POSITIONRELATIVE]  = "positionrelative",
->         [IIO_PHASE] = "phase",
-> +       [IIO_MASSCONCENTRATION] = "massconcentration",
->  };
->
->  static const char * const iio_modifier_names[] = {
-> @@ -127,6 +128,10 @@ static const char * const iio_modifier_names[] = {
->         [IIO_MOD_Q] = "q",
->         [IIO_MOD_CO2] = "co2",
->         [IIO_MOD_VOC] = "voc",
-> +       [IIO_MOD_PM1] = "pm1",
-> +       [IIO_MOD_PM2P5] = "pm2p5",
-> +       [IIO_MOD_PM4] = "pm4",
-> +       [IIO_MOD_PM10] = "pm10",
->  };
->
->  /* relies on pairs of these shared then separate */
-> diff --git a/include/uapi/linux/iio/types.h b/include/uapi/linux/iio/types.h
-> index 92baabc103ac..c59adac24b1c 100644
-> --- a/include/uapi/linux/iio/types.h
-> +++ b/include/uapi/linux/iio/types.h
-> @@ -46,6 +46,7 @@ enum iio_chan_type {
->         IIO_GRAVITY,
->         IIO_POSITIONRELATIVE,
->         IIO_PHASE,
-> +       IIO_MASSCONCENTRATION,
->  };
->
->  enum iio_modifier {
-> @@ -87,6 +88,10 @@ enum iio_modifier {
->         IIO_MOD_VOC,
->         IIO_MOD_LIGHT_UV,
->         IIO_MOD_LIGHT_DUV,
-> +       IIO_MOD_PM1,
-> +       IIO_MOD_PM2P5,
-> +       IIO_MOD_PM4,
-> +       IIO_MOD_PM10,
->  };
->
->  enum iio_event_type {
-> diff --git a/tools/iio/iio_event_monitor.c b/tools/iio/iio_event_monitor.c
-> index ac2de6b7e89f..f6b8003fbe3c 100644
-> --- a/tools/iio/iio_event_monitor.c
-> +++ b/tools/iio/iio_event_monitor.c
-> @@ -60,6 +60,7 @@ static const char * const iio_chan_type_name_spec[] = {
->         [IIO_GRAVITY] = "gravity",
->         [IIO_POSITIONRELATIVE] = "positionrelative",
->         [IIO_PHASE] = "phase",
-> +       [IIO_MASSCONCENTRATION] = "massconcentration",
->  };
->
->  static const char * const iio_ev_type_text[] = {
-> @@ -115,6 +116,10 @@ static const char * const iio_modifier_names[] = {
->         [IIO_MOD_Q] = "q",
->         [IIO_MOD_CO2] = "co2",
->         [IIO_MOD_VOC] = "voc",
-> +       [IIO_MOD_PM1] = "pm1",
-> +       [IIO_MOD_PM2P5] = "pm2p5",
-> +       [IIO_MOD_PM4] = "pm4",
-> +       [IIO_MOD_PM10] = "pm10",
->  };
->
->  static bool event_is_known(struct iio_event_data *event)
-> @@ -156,6 +161,7 @@ static bool event_is_known(struct iio_event_data *event)
->         case IIO_GRAVITY:
->         case IIO_POSITIONRELATIVE:
->         case IIO_PHASE:
-> +       case IIO_MASSCONCENTRATION:
->                 break;
->         default:
->                 return false;
-> @@ -200,6 +206,10 @@ static bool event_is_known(struct iio_event_data *event)
->         case IIO_MOD_Q:
->         case IIO_MOD_CO2:
->         case IIO_MOD_VOC:
-> +       case IIO_MOD_PM1:
-> +       case IIO_MOD_PM2P5:
-> +       case IIO_MOD_PM4:
-> +       case IIO_MOD_PM10:
->                 break;
->         default:
->                 return false;
-> --
-> 2.19.2
->
+Can you please also review other 3 patches in this series.
