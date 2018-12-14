@@ -1,82 +1,59 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: [PATCH V1] arm64: dtsi: Fix SDMMC address range
-Date: Fri, 14 Dec 2018 15:04:55 -0800
-Message-ID: <1544828695-1462-1-git-send-email-skomatineni@nvidia.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 1/2] of: of_node_get()/of_node_put() nodes held in phandle
+ cache
+Date: Fri, 14 Dec 2018 15:04:58 -0800
+Message-ID: <cb7caa9a-abcb-93c2-a3e9-185133f1241a@gmail.com>
+References: <1544769771-5468-1-git-send-email-frowand.list@gmail.com>
+ <1544769771-5468-2-git-send-email-frowand.list@gmail.com>
+ <CAL_JsqKn8RpRmk7OQB9nEM6nZMfdyjgomqMqLU=u+q2qUzQQCg@mail.gmail.com>
+ <35cab334-0856-44e1-b18e-22668011b429@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <35cab334-0856-44e1-b18e-22668011b429@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, mperttunen@nvidia.com, avienamo@nvidia.com, thierry.reding@gmail.com, jonathanh@nvidia.com
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Sowjanya Komatineni <skomatineni@nvidia.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: mwb@linux.vnet.ibm.com, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Michael Ellerman <mpe@ellerman.id.au>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, tlfalcon@linux.vnet.ibm.com, minkim@us.ibm.com, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes the SDMMC Controllers address space to be exact
-defined register address range as per the design.
+On 12/14/18 2:47 PM, Frank Rowand wrote:
+> On 12/14/18 9:15 AM, Rob Herring wrote:
+>> On Fri, Dec 14, 2018 at 12:43 AM <frowand.list@gmail.com> wrote:
+>>>
+>>> From: Frank Rowand <frank.rowand@sony.com>
+>>>
+>>> The phandle cache contains struct device_node pointers.  The refcount
+>>> of the pointers was not incremented while in the cache, allowing use
+>>> after free error after kfree() of the node.  Add the proper increment
+>>> and decrement of the use count.
+>>
+>> Since we pre-populate the cache at boot, all the nodes will have a ref
+>> count and will never be freed unless we happen to repopulate the whole
 
-SDMMC Controller supporting Command Queue has CQHCI registers at
-offset 0xF000.
+>> cache. That doesn't seem ideal. The node pointer is not "in use" just
+>> because it is in the cache.
 
-This fix helps to identify the Tegra SDMMC Controllers supporting
-Command Queue based on the size of address space.
+I forgot to reply to this sentence.
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra186.dtsi | 6 +++---
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 4 ++--
- 2 files changed, 5 insertions(+), 5 deletions(-)
+The node pointers are "in use" because of_find_node_by_phandle() will
+use the pointers to access the phandle field.  This is a use after
+free bug if the node has been kfree()'ed.
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-index 2f3c8e29520d..6fda3d6a7f3d 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-@@ -231,7 +231,7 @@
- 
- 	sdmmc1: sdhci@3400000 {
- 		compatible = "nvidia,tegra186-sdhci";
--		reg = <0x0 0x03400000 0x0 0x10000>;
-+		reg = <0x0 0x03400000 0x0 0x220>;
- 		interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&bpmp TEGRA186_CLK_SDMMC1>;
- 		clock-names = "sdhci";
-@@ -256,7 +256,7 @@
- 
- 	sdmmc2: sdhci@3420000 {
- 		compatible = "nvidia,tegra186-sdhci";
--		reg = <0x0 0x03420000 0x0 0x10000>;
-+		reg = <0x0 0x03420000 0x0 0x220>;
- 		interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&bpmp TEGRA186_CLK_SDMMC2>;
- 		clock-names = "sdhci";
-@@ -276,7 +276,7 @@
- 
- 	sdmmc3: sdhci@3440000 {
- 		compatible = "nvidia,tegra186-sdhci";
--		reg = <0x0 0x03440000 0x0 0x10000>;
-+		reg = <0x0 0x03440000 0x0 0x220>;
- 		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&bpmp TEGRA186_CLK_SDMMC3>;
- 		clock-names = "sdhci";
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index c2091bb16546..6510ef6492b1 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -295,7 +295,7 @@
- 
- 		sdmmc1: sdhci@3400000 {
- 			compatible = "nvidia,tegra194-sdhci", "nvidia,tegra186-sdhci";
--			reg = <0x03400000 0x10000>;
-+			reg = <0x03400000 0x220>;
- 			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&bpmp TEGRA194_CLK_SDMMC1>;
- 			clock-names = "sdhci";
-@@ -306,7 +306,7 @@
- 
- 		sdmmc3: sdhci@3440000 {
- 			compatible = "nvidia,tegra194-sdhci", "nvidia,tegra186-sdhci";
--			reg = <0x03440000 0x10000>;
-+			reg = <0x03440000 0x220>;
- 			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&bpmp TEGRA194_CLK_SDMMC3>;
- 			clock-names = "sdhci";
--- 
-2.7.4
+
+>>
+>> Rob
+>>
+> 
+> This patch also adds of_node_put() so that the refcount will go to zero
+> when the node is removed as part of an overlay remove, if the node was
+> added by an overlay.
+> 
+> Patch 2/2 adds the free cache entry call to __of_detach_node(), so the
+> refcount will go to zero when the node is removed for dynamic use cases
+> other than overlays.  (For overlays, all nodes are instead removed from
+> the cache before __of_detach_node() is called.)
+> 
+> -Frank
+> 
