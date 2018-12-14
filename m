@@ -1,37 +1,54 @@
-From: biao huang <biao.huang@mediatek.com>
-Subject: Re: [v7, PATCH 2/2] dt-binding: mediatek-dwmac: add binding
- document for MediaTek MT2712 DWMAC
-Date: Fri, 14 Dec 2018 10:24:04 +0800
-Message-ID: <1544754244.24219.135.camel@mhfsdcap03>
-References: <1544666173-5121-1-git-send-email-biao.huang@mediatek.com>
-         <1544666173-5121-3-git-send-email-biao.huang@mediatek.com>
-         <20181213123658.GG1605@lunn.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Tom Burkart <tom@aussec.com>
+Subject: [PATCH v13 2/3] dt-bindings: pps: pps-gpio PPS ECHO implementation
+Date: Fri, 14 Dec 2018 13:30:18 +1100
+Message-ID: <20181214023019.18805-3-tom@aussec.com>
+References: <20181214023019.18805-1-tom@aussec.com>
+ <20181214023019.18805-2-tom@aussec.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181213123658.GG1605@lunn.ch>
+In-Reply-To: <20181214023019.18805-2-tom@aussec.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: davem@davemloft.net, robh+dt@kernel.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, joabreu@synopsys.com
+To: Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Cc: Tom Burkart <tom@aussec.com>, devicetree@vger.kernel.org, Rodolfo Giometti <giometti@enneenne.com>, Ricardo Martins <rasm@fe.up.pt>, James Nuss <jamesnuss@nanometrics.ca>, Lukas Senger <lukas@fridolin.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Andrew,
+This patch implements the device tree binding changes required for the
+pps echo functionality for pps-gpio, that sysfs claims is available
+already.
 
-	Thanks for your comments.
-On Thu, 2018-12-13 at 13:36 +0100, Andrew Lunn wrote:
-> > +- mediatek,rx-delay-ps: RX clock delay macro value. Default is 0.
-> > +	It should be defined for rgmii/rgmii-txid/mii/rmii interface.
-> > +Both delay properties need to be a multiple of 170 for fine-tune rgmii,
-> > +range 0~31*170.
-> > +Both delay properties need to be a multiple of 550 for coarse-tune rgmii,
-> > +range 0~31*550.
-> > +Both delay properties need to be a multiple of 550 for mii/rmii,
-> > +range 0~31*550.
-> 
-> You see "need to be" here, but the driver does not care. It will round
-> down. Please either make the driver check, or change the text to
-> rather say it will round down.
-OK, will mark "round down" in the binding file.
-> 
->        Andrew
+This patch was originally written by Lukas Senger as part of a masters
+thesis project and modified for inclusion into the linux kernel by Tom
+Burkart.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Lukas Senger <lukas@fridolin.com>
+Signed-off-by: Tom Burkart <tom@aussec.com>
+---
+ Documentation/devicetree/bindings/pps/pps-gpio.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+index 3683874832ae..9012a2a02e14 100644
+--- a/Documentation/devicetree/bindings/pps/pps-gpio.txt
++++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+@@ -7,6 +7,10 @@ Required properties:
+ - compatible: should be "pps-gpio"
+ - gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
+ 
++Additional required properties for the PPS ECHO functionality:
++- echo-gpios: one PPS ECHO GPIO in the format described by ../gpio/gpio.txt
++- echo-active-ms: duration in ms of the active portion of the echo pulse
++
+ Optional properties:
+ - assert-falling-edge: when present, assert is indicated by a falling edge
+                        (instead of by a rising edge)
+@@ -19,5 +23,8 @@ Example:
+ 		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
+ 		assert-falling-edge;
+ 
++		echo-gpios = <&gpio1 27 GPIO_ACTIVE_HIGH>;
++		echo-active-ms = <100>;
++
+ 		compatible = "pps-gpio";
+ 	};
+-- 
+2.12.3
