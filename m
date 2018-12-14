@@ -1,91 +1,64 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 04/16] remoteproc/pru: Add PRU remoteproc driver
-Date: Fri, 14 Dec 2018 11:53:56 +0200
-Message-ID: <5C137DB4.9070602@ti.com>
-References: <1543218769-5507-1-git-send-email-rogerq@ti.com>
- <1543218769-5507-5-git-send-email-rogerq@ti.com> <308735274.C9ZyqtqOL8@tpdeb>
+From: Christophe Kerello <christophe.kerello@st.com>
+Subject: [PATCH v4 0/3] mtd: rawnand: add STM32 FMC2 NAND flash controller driver
+Date: Fri, 14 Dec 2018 10:58:05 +0100
+Message-ID: <1544781488-18723-1-git-send-email-christophe.kerello@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <308735274.C9ZyqtqOL8@tpdeb>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dimitar Dimitrov <dinuxbg@gmail.com>
-Cc: ohad@wizery.com, bjorn.andersson@linaro.org, tony@atomide.com, robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, David Lechner <david@lechnology.com>
+To: boris.brezillon@bootlin.com, miquel.raynal@bootlin.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Christophe Kerello <christophe.kerello@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dimitar,
+This patchset adds the support for the STMicroelectronics FMC2 NAND flash
+controller found on STM32MP SOCs.
 
-On 30/11/18 23:39, Dimitar Dimitrov wrote:
-> On Monday, 12/26/2018, 9:52:37 EET Roger Quadros wrote:
->> +/*
->> + * Convert PRU device address (instruction space) to kernel virtual address
->> + *
->> + * A PRU does not have an unified address space. Each PRU has its very own
->> + * private Instruction RAM, and its device address is identical to that of
->> + * its primary Data RAM device address.
->> + */
->> +static void *pru_i_da_to_va(struct pru_rproc *pru, u32 da, int len)
->> +{
->> +       u32 offset;
->> +       void *va = NULL;
->> +
->> +       if (len <= 0)
->> +               return NULL;
-> 
-> Could you please clear the upper 4 bits the of IRAM device address, in order 
-> to support binutils ELF images? Here is an example line to add here:
-> 
-> +       /* GNU binutils do not support multiple address spaces. The 
-> +        * default linker script from the official GNU pru-ld places 
-> +        * IRAM at an arbitrary high offset, in order to differentiate it 
-> +        * from DRAM. Hence we need to strip the artificial offset 
-> +        * from the IRAM address. 
-> +        */ 
-> +       da &= ~0xf0000000u; 
-> +
-> 
+This patchset supports:
+  - the command sequencer feature, a hardware accelerator for read/write
+    within a page
+  - the manual mode feature, useful for debug purpose
+  - a maximum 8k page size
+  - following ECC strength and step size
+	- nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8)
+	- nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
+	- nand-ecc-strength = <1>, nand-ecc-step-size = <512> (Extended
+	  ecc based on HAMMING)
+    
+This patchset has been tested on Micron MT29F8G08ABACAH4 (8-bit SLC NAND)
+and MT29F8G16ABACAH4 (16-bit SLC NAND)
 
-After some more thought I'm not very sure how to proceed.
+Changes v4:
+ - rebase on nand/next
+ - replace "manual mode" by "polling mode"
 
-I'll be using the below 2 patches in the next patch spin in place of
-patch 1 in the current series.
-https://lore.kernel.org/lkml/20180623210810.21232-2-david@lechnology.com/
-https://lore.kernel.org/lkml/20180623210810.21232-3-david@lechnology.com/
+Changes v3:
+ - modify clocks property description
+ - add NAND reg property description
+ - stm32_fmc2_nfc inherits from nand_controller structure
+ - rewrite stm32_fmc2_read_data/stm32_fmc2_write_data functions
+   to handle aligned and not aligned buffers
+ - replace uint8_t by u8
+ - use of NAND_ROW_ADDR_3 option
 
-They figure out the PAGE (IRAM vs DRAM) by looking at TI specific section
-attributes.
+Changes v2:
+ - separate the controller structure and the NAND chip structure
+ - remove timings description from the device tree
+ - fix typo issues
+ - fix kbuildrobot issues
 
-e.g.
-[18] .TI.phattrs LOPROC+f000004 00000000 000e08 000010 00 0 0 4
-[19] .TI.section.flags LOPROC+f000005 00000000 000e68 00002a 00 0 0 0
-[20] .TI.section.page LOPROC+f000007 00000000 000e92 00002a 00 0 0 0
+Christophe Kerello (3):
+  dt-bindings: mtd: stm32_fmc2: add STM32 FMC2 NAND controller
+    documentation
+  mtd: rawnand: stm32_fmc2: add STM32 FMC2 NAND flash controller driver
+  mtd: rawnand: stm32_fmc2: add polling mode
 
-AFAIK the ELF by GNU pru-ld won't contain these sections.
+ .../devicetree/bindings/mtd/stm32-fmc2-nand.txt    |   61 +
+ drivers/mtd/nand/raw/Kconfig                       |    9 +
+ drivers/mtd/nand/raw/Makefile                      |    1 +
+ drivers/mtd/nand/raw/stm32_fmc2_nand.c             | 2073 ++++++++++++++++++++
+ 4 files changed, 2144 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
+ create mode 100644 drivers/mtd/nand/raw/stm32_fmc2_nand.c
 
-We need to support ELF generated by both tools (TI clpru and GNU pru-ld).
-Is it safe to assume that if the ELF doesn't have the TI specific sections
-then it was generated by gnupru?
-
-Is there a more straight forward way of differentiating the two. e.g. by looking
-at something in the ELF header?
-
-> 
->> +
->> +       if (da >= pru->iram_da &&
->> +           da + len <= pru->iram_da + pru->mem_regions[PRU_MEM_IRAM].size { 
->> +               offset = da - pru->iram_da;
->> +               va = (__force void *)(pru->mem_regions[PRU_MEM_IRAM].va +
->> +                                     offset);
->> +       }
->> +
->> +       return va;
->> +}
-> 
-> 
-
-cheers,
--roger
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+1.9.1
