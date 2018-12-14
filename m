@@ -1,53 +1,125 @@
-From: <honghui.zhang@mediatek.com>
-Subject: [PATCH 3/4] arm: dts: mt7623: Remove un-used property for PCIe
-Date: Fri, 14 Dec 2018 09:25:41 +0800
-Message-ID: <1544750742-31419-4-git-send-email-honghui.zhang@mediatek.com>
-References: <1544750742-31419-1-git-send-email-honghui.zhang@mediatek.com>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [RFC PATCH v2 08/15] usb:cdns3: Implements device operations part
+ of the API
+Date: Fri, 14 Dec 2018 09:34:21 +0800
+Message-ID: <CAL411-oc-_0H88egpHsc06ptL12UsaE63rWwjN7novuFFx_qbA@mail.gmail.com>
+References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
+ <1542535751-16079-9-git-send-email-pawell@cadence.com> <5BFE8883.7090802@ti.com>
+ <CAL411-oKvu3EADStit=JtbcxVzM_fFGF2uPn67-wmXxPzUK6GQ@mail.gmail.com>
+ <6b19b55c-66d7-439e-df8f-7b311b45af5e@ti.com> <BYAPR07MB470972A525D85B03C3037D3BDDA60@BYAPR07MB4709.namprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544750742-31419-1-git-send-email-honghui.zhang@mediatek.com>
+In-Reply-To: <BYAPR07MB470972A525D85B03C3037D3BDDA60@BYAPR07MB4709.namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com, matthias.bgg@gmail.com, robh+dt@kernel.org, robh@kernel.org
-Cc: devicetree@vger.kernel.org, youlin.pei@mediatek.com, jianjun.wang@mediatek.com, Honghui Zhang <honghui.zhang@mediatek.com>
+To: pawell@cadence.com
+Cc: nsekhar@ti.com, rogerq@ti.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, adouglas@cadence.com, jbergsagel@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com, balbi@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Honghui Zhang <honghui.zhang@mediatek.com>
+On Wed, Dec 12, 2018 at 3:49 AM Pawel Laszczak <pawell@cadence.com> wrote:
+>
+> Hi,
+>
+> >On 10/12/18 7:42 AM, Peter Chen wrote:
+> >>>> +static struct usb_ep *cdns3_gadget_match_ep(struct usb_gadget *gadg=
+et,
+> >>>> +                                         struct usb_endpoint_descri=
+ptor *desc,
+> >>>> +                                         struct usb_ss_ep_comp_desc=
+riptor *comp_desc)
+> >>>> +{
+> >>>> +     struct cdns3_device *priv_dev =3D gadget_to_cdns3_device(gadge=
+t);
+> >>>> +     struct cdns3_endpoint *priv_ep;
+> >>>> +     unsigned long flags;
+> >>>> +
+> >>>> +     priv_ep =3D cdns3_find_available_ss_ep(priv_dev, desc);
+> >>>> +     if (IS_ERR(priv_ep)) {
+> >>>> +             dev_err(&priv_dev->dev, "no available ep\n");
+> >>>> +             return NULL;
+> >>>> +     }
+> >>>> +
+> >>>> +     dev_dbg(&priv_dev->dev, "match endpoint: %s\n", priv_ep->name)=
+;
+> >>>> +
+> >>>> +     spin_lock_irqsave(&priv_dev->lock, flags);
+> >>>> +     priv_ep->endpoint.desc =3D desc;
+> >>>> +     priv_ep->dir  =3D usb_endpoint_dir_in(desc) ? USB_DIR_IN : USB=
+_DIR_OUT;
+> >>>> +     priv_ep->type =3D usb_endpoint_type(desc);
+> >>>> +
+> >>>> +     list_add_tail(&priv_ep->ep_match_pending_list,
+> >>>> +                   &priv_dev->ep_match_list);
+> >>>> +     spin_unlock_irqrestore(&priv_dev->lock, flags);
+> >>>> +     return &priv_ep->endpoint;
+> >>>> +}
+> >>> Why do you need a custom match_ep?
+> >>> doesn't usb_ep_autoconfig suffice?
+> >>>
+> >>> You can check if EP is claimed or not by checking the ep->claimed fla=
+g.
+> >>>
+> >> It is a special requirement for this IP, the EP type and MaxPacketSize
+> >> changing can't be done at runtime, eg, at ep->enable. See below commit
+> >> for detail.
+> >>
+> >>     usb: cdns3: gadget: configure all endpoints before set configurati=
+on
+> >>
+> >>     Cadence IP has one limitation that all endpoints must be configure=
+d
+> >>     (Type & MaxPacketSize) before setting configuration through hardwa=
+re
+> >>     register, it means we can't change endpoints configuration after
+> >>     set_configuration.
+> >>
+> >>     In this patch, we add non-control endpoint through usb_ss->ep_matc=
+h_list,
+> >>     which is added when the gadget driver uses usb_ep_autoconfig to co=
+nfigure
+> >>     specific endpoint; When the udc driver receives set_configurion re=
+quest,
+> >>     it goes through usb_ss->ep_match_list, and configure all endpoints
+> >>     accordingly.
+> >>
+> >>     At usb_ep_ops.enable/disable, we only enable and disable endpoint =
+through
+> >>     ep_cfg register which can be changed after set_configuration, and =
+do
+> >>     some software operation accordingly.
+> >
+> >All this should be part of comments in code along with information about
+> >controller versions which suffer from the errata.
+> >
+> >Is there a version of controller available which does not have the
+> >defect? Is there a future plan to fix this?
+> >
+> >If any of that is yes, you probably want to handle this with runtime
+> >detection of version (like done with DWC3_REVISION_XXX macros).
+> >Sometimes the hardware-read versions themselves are incorrect, so its
+> >better to introduce a version specific compatible too like
+> >"cdns,usb-1.0.0" (as hinted to by Rob Herring as well).
+> >
+>
+> custom match_ep is used and works with all versions of the gen1
+> controller. Future (gen2) releases of the controller won=E2=80=99t have s=
+uch
+> limitation but there is no plan to change current (gen1) functionality
+> of the controller.
+>
+> I will add comment before cdns3_gadget_match_ep function.
+> Also I will change cdns,usb3 to cdns,usb3-1.0.0 and add additional
+> cdns,usb3-1.0.1 compatible.
+>
+> cdns,usb3-1.0.1 will be for current version of controller which I use.
+> cdns,usb3-1.0.0 will be for older version - Peter Chan platform.
+> I now that I have some changes in controller, and one of them require
+> some changes in DRD driver. It will be safer to add two separate
+> version in compatibles.
+>
 
-The "num-lanes" property for PCIe is not used, remove it.
+Pawel, could we have correct register to show controller version? It is
+better we could version judgement at runtime instead of static compatible.
 
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
----
- arch/arm/boot/dts/mt7623.dtsi | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index 1cdc346..4ca56d8 100644
---- a/arch/arm/boot/dts/mt7623.dtsi
-+++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -734,7 +734,6 @@
- 			interrupt-map-mask = <0 0 0 0>;
- 			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 193 IRQ_TYPE_LEVEL_LOW>;
- 			ranges;
--			num-lanes = <1>;
- 			status = "disabled";
- 		};
- 
-@@ -746,7 +745,6 @@
- 			interrupt-map-mask = <0 0 0 0>;
- 			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
- 			ranges;
--			num-lanes = <1>;
- 			status = "disabled";
- 		};
- 
-@@ -758,7 +756,6 @@
- 			interrupt-map-mask = <0 0 0 0>;
- 			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 195 IRQ_TYPE_LEVEL_LOW>;
- 			ranges;
--			num-lanes = <1>;
- 			status = "disabled";
- 		};
- 	};
--- 
-2.6.4
+Peter
