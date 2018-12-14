@@ -1,20 +1,21 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] dt-bindings: irqchip: renesas-irqc: Document r8a774c0 support
-Date: Fri, 14 Dec 2018 11:05:37 +0100
-Message-ID: <CAMuHMdXq4fjyYy8RE_+oYedoUri_-=CvsdVn_gNbVsDpaOgK8w@mail.gmail.com>
-References: <1544732284-5951-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: Re: [PATCH] dt-bindings: gpio: rcar: Add r8a774c0 (RZ/G2E) support
+Date: Fri, 14 Dec 2018 11:06:21 +0100
+Message-ID: <CAMuHMdUiSXfkHOzNzNCZdaOg4O4FYs6JZT-EH_ZuwbAfr6P_xA@mail.gmail.com>
+References: <1544732294-5996-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544732284-5951-1-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1544732294-5996-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 On Thu, Dec 13, 2018 at 9:18 PM Fabrizio Castro
 <fabrizio.castro@bp.renesas.com> wrote:
-> Document RZ/G2E (R8A774C0) SoC bindings.
+> Document Renesas' RZ/G2E (R8A774C0) GPIO blocks compatibility within the
+> relevant dt-bindings.
 >
 > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
