@@ -1,21 +1,34 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] dt-bindings: pwm: rcar: Add r8a774c0 support
-Date: Fri, 14 Dec 2018 17:57:31 +0100
-Message-ID: <20181214165731.5ygiye5nuhr2a35z@verge.net.au>
-References: <1544732415-6453-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: jakob.wuhrer@gmail.com
+Subject: [PATCH 1/2] arm64: dts: qcom: Correct "gpiio" typo in msm8996-pins
+Date: Fri, 14 Dec 2018 18:01:30 +0100
+Message-ID: <1544806891-12516-1-git-send-email-jakob.wuhrer@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1544732415-6453-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org
+Cc: Jakob Wuhrer <jakobwuhrer@airmail.cc>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 13, 2018 at 08:20:15PM +0000, Fabrizio Castro wrote:
-> Document RZ/G2E (R8A774C0) SoC bindings.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+From: Jakob Wuhrer <jakobwuhrer@airmail.cc>
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+gpiio5 is missspelt in msm8996-pins.dtsi, fix that.
+
+Signed-off-by: Jakob Wuhrer <jakobwuhrer@airmail.cc>
+---
+ arch/arm64/boot/dts/qcom/msm8996-pins.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
+index c5c42e9..1d1f7f9 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
+@@ -139,7 +139,7 @@
+ 		};
+ 
+ 		pinconf {
+-			pins = "gpio4", "gpiio5", "gpio6", "gpio7";
++			pins = "gpio4", "gpio5", "gpio6", "gpio7";
+ 			drive-strength = <2>;
+ 			bias-disable;
+ 		};
+-- 
+1.8.3.1
