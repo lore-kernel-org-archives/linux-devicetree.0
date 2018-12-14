@@ -1,67 +1,66 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: sh-msiof: Add r8a774c0 support" to the spi tree
-Date: Fri, 14 Dec 2018 12:37:58 +0000 (GMT)
-Message-ID: <20181214123758.576FF11258A1@debutante.sirena.org.uk>
-References: <1544732397-6361-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+Subject: Re: [PATCH v2 00/15] ARM: sunxi: Enable Broadcom-based Bluetooth
+ controllers
+Date: Fri, 14 Dec 2018 13:42:08 +0100
+Message-ID: <20181214124208.e72glckgcgbfyc4f@core.my.home>
+References: <20181115093603.26729-1-wens@csie.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544732397-6361-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Content-Disposition: inline
+In-Reply-To: <20181115093603.26729-1-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.orglinux-spi@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Thu, Nov 15, 2018 at 05:35:48PM +0800, Chen-Yu Tsai wrote:
+> Hi everyone,
+> 
+> This is v2 of my Broadcom-based Bluetooth controllers on Allwinner SoC-
+> based SBCs series.
+> 
+> Changes since v1:
+> 
+>   - Collected tags
+>   - Re-organize dt binding clocks and clock-names properties
+>   - Simplify check for deferred probe when getting clocks
+>   - Add explanation of Cubietruck's clk_out_a pinmux setting placement
+>     to commit message.
+>   - Add missing "uart-has-rtscts" property to Cubietruck device tree
+>
+> [snip]
 
-   spi: sh-msiof: Add r8a774c0 support
+Hello,
 
-has been applied to the spi tree at
+I've tested your patch series on TBS A711 / BCM20702A1 with the following DTS:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+ /* There's the BT part of the AP6210 connected to that UART */
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
++	uart-has-rtscts;
+ 	status = "okay";
++
++	bluetooth {
++		compatible = "brcm,bcm20702a1";
++		clocks = <&ac100_rtc 1>;
++		clock-names = "lpo";
++		vbat-supply = <&reg_vbat>;
++		vddio-supply = <&reg_dldo1>;
++		device-wakeup-gpios = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
++		host-wakeup-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
++		shutdown-gpios = <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 */
++		max-speed = <1500000>;
++	};
+ };
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+And it works. :)
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Tested-by: Ondrej Jirman <megous@megous.com>
 
-Thanks,
-Mark
 
->From 079e7f8709bb41cd0dc13efaffb24a0f17841955 Mon Sep 17 00:00:00 2001
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Date: Thu, 13 Dec 2018 20:19:57 +0000
-Subject: [PATCH] spi: sh-msiof: Add r8a774c0 support
-
-Document RZ/G2E (R8A774C0) SoC bindings.
-
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/spi/sh-msiof.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-index 4b836ad17b19..37cf69586d10 100644
---- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
-+++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-@@ -5,6 +5,7 @@ Required properties:
- 			 "renesas,msiof-r8a7744" (RZ/G1N)
- 			 "renesas,msiof-r8a7745" (RZ/G1E)
- 			 "renesas,msiof-r8a774a1" (RZ/G2M)
-+			 "renesas,msiof-r8a774c0" (RZ/G2E)
- 			 "renesas,msiof-r8a7790" (R-Car H2)
- 			 "renesas,msiof-r8a7791" (R-Car M2-W)
- 			 "renesas,msiof-r8a7792" (R-Car V2H)
--- 
-2.19.0.rc2
+Thank you and regards,
+  o.
