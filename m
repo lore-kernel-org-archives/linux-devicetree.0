@@ -1,127 +1,118 @@
-From: Jayant Shekhar <jshekhar@codeaurora.org>
-Subject: [DPU PATCH v2] drm/msm/dpu: Clean up dpu hw interrupts
-Date: Fri, 14 Dec 2018 23:34:28 +0530
-Message-ID: <1544810668-23199-1-git-send-email-jshekhar@codeaurora.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC 2/2] ASoC: Add MICFIL SoC Digital Audio
+ Interface driver.
+Date: Fri, 14 Dec 2018 18:04:45 +0000
+Message-ID: <20181214180445.GD6467@sirena.org.uk>
+References: <1544433661-32496-1-git-send-email-cosmin.samoila@nxp.com>
+ <1544433661-32496-3-git-send-email-cosmin.samoila@nxp.com>
+ <20181212181414.GE6920@sirena.org.uk>
+ <1544696446.7700.31.camel@nxp.com>
+ <20181213143144.GH10669@sirena.org.uk>
+ <CAEnQRZBnzqMVv86wAqXB9kRtKpkC=R7fLbpE1Avyw6364Cwgfg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, abhinavk@codeaurora.org, Jayant Shekhar <jshekhar@codeaurora.org>, seanpaul@chromium.org, hoegsberg@chromium.org, chandanu@codeaurora.org
+Content-Type: multipart/mixed; boundary="===============7746020695186599780=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAEnQRZBnzqMVv86wAqXB9kRtKpkC=R7fLbpE1Avyw6364Cwgfg@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Daniel Baluta <daniel.baluta@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "robh@kernel.org" <robh@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "gabrielcsmo@gmail.com" <gabrielcsmo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-UmVtb3ZlIHVudXNlZCBmdW5jdGlvbnMgYW5kIG1hY3JvcyBmcm9tIGRwdSBodyBpbnRlcnJ1cHRz
-CmZpbGUuCgpjaGFuZ2VzIGluIHYyOgogIFJlbW92ZWQgY2xlYXJfaW50ZXJydXB0X3N0YXR1cyAo
-Sm9yZGFuIENyb3VzZSkKClNpZ25lZC1vZmYtYnk6IEpheWFudCBTaGVraGFyIDxqc2hla2hhckBj
-b2RlYXVyb3JhLm9yZz4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfaHdf
-aW50ZXJydXB0cy5jIHwgNDQgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIGRyaXZlcnMvZ3B1L2Ry
-bS9tc20vZGlzcC9kcHUxL2RwdV9od19pbnRlcnJ1cHRzLmggfCA0NCAtLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLQogMiBmaWxlcyBjaGFuZ2VkLCA4OCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfaHdfaW50ZXJydXB0cy5jIGIvZHJpdmVy
-cy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2h3X2ludGVycnVwdHMuYwppbmRleCBjMGI3ZjAw
-Li44YTI4YTAzIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVf
-aHdfaW50ZXJydXB0cy5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9o
-d19pbnRlcnJ1cHRzLmMKQEAgLTE3MCwxMCArMTcwLDYgQEAKIC8qKgogICogQUQ0IGludGVycnVw
-dCBzdGF0dXMgYml0IGRlZmluaXRpb25zCiAgKi8KLSNkZWZpbmUgRFBVX0lOVFJfQlJJR0hUUFJf
-VVBEQVRFRCBCSVQoNCkKLSNkZWZpbmUgRFBVX0lOVFJfREFSS0VOSF9VUERBVEVEIEJJVCgzKQot
-I2RlZmluZSBEUFVfSU5UUl9TVFJFTl9PVVRST0lfVVBEQVRFRCBCSVQoMikKLSNkZWZpbmUgRFBV
-X0lOVFJfU1RSRU5fSU5ST0lfVVBEQVRFRCBCSVQoMSkKICNkZWZpbmUgRFBVX0lOVFJfQkFDS0xJ
-R0hUX1VQREFURUQgQklUKDApCiAvKioKICAqIHN0cnVjdCBkcHVfaW50cl9yZWcgLSBhcnJheSBv
-ZiBEUFUgcmVnaXN0ZXIgc2V0cwpAQCAtNzgyLDE4ICs3NzgsNiBAQCBzdGF0aWMgaW50IGRwdV9o
-d19pbnRyX2lycWlkeF9sb29rdXAoZW51bSBkcHVfaW50cl90eXBlIGludHJfdHlwZSwKIAlyZXR1
-cm4gLUVJTlZBTDsKIH0KIAotc3RhdGljIHZvaWQgZHB1X2h3X2ludHJfc2V0X21hc2soc3RydWN0
-IGRwdV9od19pbnRyICppbnRyLCB1aW50MzJfdCByZWdfb2ZmLAotCQl1aW50MzJfdCBtYXNrKQot
-ewotCWlmICghaW50cikKLQkJcmV0dXJuOwotCi0JRFBVX1JFR19XUklURSgmaW50ci0+aHcsIHJl
-Z19vZmYsIG1hc2spOwotCi0JLyogZW5zdXJlIHJlZ2lzdGVyIHdyaXRlcyBnbyB0aHJvdWdoICov
-Ci0Jd21iKCk7Ci19Ci0KIHN0YXRpYyB2b2lkIGRwdV9od19pbnRyX2Rpc3BhdGNoX2lycShzdHJ1
-Y3QgZHB1X2h3X2ludHIgKmludHIsCiAJCXZvaWQgKCpjYmZ1bmMpKHZvaWQgKiwgaW50KSwKIAkJ
-dm9pZCAqYXJnKQpAQCAtMTAwNCwxOCArOTg4LDYgQEAgc3RhdGljIGludCBkcHVfaHdfaW50cl9k
-aXNhYmxlX2lycXMoc3RydWN0IGRwdV9od19pbnRyICppbnRyKQogCXJldHVybiAwOwogfQogCi1z
-dGF0aWMgaW50IGRwdV9od19pbnRyX2dldF92YWxpZF9pbnRlcnJ1cHRzKHN0cnVjdCBkcHVfaHdf
-aW50ciAqaW50ciwKLQkJdWludDMyX3QgKm1hc2spCi17Ci0JaWYgKCFpbnRyIHx8ICFtYXNrKQot
-CQlyZXR1cm4gLUVJTlZBTDsKLQotCSptYXNrID0gSVJRX1NPVVJDRV9NRFAgfCBJUlFfU09VUkNF
-X0RTSTAgfCBJUlFfU09VUkNFX0RTSTEKLQkJfCBJUlFfU09VUkNFX0hETUkgfCBJUlFfU09VUkNF
-X0VEUDsKLQotCXJldHVybiAwOwotfQotCiBzdGF0aWMgdm9pZCBkcHVfaHdfaW50cl9nZXRfaW50
-ZXJydXB0X3N0YXR1c2VzKHN0cnVjdCBkcHVfaHdfaW50ciAqaW50cikKIHsKIAlpbnQgaTsKQEAg
-LTEwNjUsMTkgKzEwMzcsNiBAQCBzdGF0aWMgdm9pZCBkcHVfaHdfaW50cl9jbGVhcl9pbnRyX3N0
-YXR1c19ub2xvY2soc3RydWN0IGRwdV9od19pbnRyICppbnRyLAogCXdtYigpOwogfQogCi1zdGF0
-aWMgdm9pZCBkcHVfaHdfaW50cl9jbGVhcl9pbnRlcnJ1cHRfc3RhdHVzKHN0cnVjdCBkcHVfaHdf
-aW50ciAqaW50ciwKLQkJaW50IGlycV9pZHgpCi17Ci0JdW5zaWduZWQgbG9uZyBpcnFfZmxhZ3M7
-Ci0KLQlpZiAoIWludHIpCi0JCXJldHVybjsKLQotCXNwaW5fbG9ja19pcnFzYXZlKCZpbnRyLT5p
-cnFfbG9jaywgaXJxX2ZsYWdzKTsKLQlkcHVfaHdfaW50cl9jbGVhcl9pbnRyX3N0YXR1c19ub2xv
-Y2soaW50ciwgaXJxX2lkeCk7Ci0Jc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmaW50ci0+aXJxX2xv
-Y2ssIGlycV9mbGFncyk7Ci19Ci0KIHN0YXRpYyB1MzIgZHB1X2h3X2ludHJfZ2V0X2ludGVycnVw
-dF9zdGF0dXMoc3RydWN0IGRwdV9od19pbnRyICppbnRyLAogCQlpbnQgaXJxX2lkeCwgYm9vbCBj
-bGVhcikKIHsKQEAgLTExMTMsMTYgKzEwNzIsMTMgQEAgc3RhdGljIHUzMiBkcHVfaHdfaW50cl9n
-ZXRfaW50ZXJydXB0X3N0YXR1cyhzdHJ1Y3QgZHB1X2h3X2ludHIgKmludHIsCiAKIHN0YXRpYyB2
-b2lkIF9fc2V0dXBfaW50cl9vcHMoc3RydWN0IGRwdV9od19pbnRyX29wcyAqb3BzKQogewotCW9w
-cy0+c2V0X21hc2sgPSBkcHVfaHdfaW50cl9zZXRfbWFzazsKIAlvcHMtPmlycV9pZHhfbG9va3Vw
-ID0gZHB1X2h3X2ludHJfaXJxaWR4X2xvb2t1cDsKIAlvcHMtPmVuYWJsZV9pcnEgPSBkcHVfaHdf
-aW50cl9lbmFibGVfaXJxOwogCW9wcy0+ZGlzYWJsZV9pcnEgPSBkcHVfaHdfaW50cl9kaXNhYmxl
-X2lycTsKIAlvcHMtPmRpc3BhdGNoX2lycXMgPSBkcHVfaHdfaW50cl9kaXNwYXRjaF9pcnE7CiAJ
-b3BzLT5jbGVhcl9hbGxfaXJxcyA9IGRwdV9od19pbnRyX2NsZWFyX2lycXM7CiAJb3BzLT5kaXNh
-YmxlX2FsbF9pcnFzID0gZHB1X2h3X2ludHJfZGlzYWJsZV9pcnFzOwotCW9wcy0+Z2V0X3ZhbGlk
-X2ludGVycnVwdHMgPSBkcHVfaHdfaW50cl9nZXRfdmFsaWRfaW50ZXJydXB0czsKIAlvcHMtPmdl
-dF9pbnRlcnJ1cHRfc3RhdHVzZXMgPSBkcHVfaHdfaW50cl9nZXRfaW50ZXJydXB0X3N0YXR1c2Vz
-OwotCW9wcy0+Y2xlYXJfaW50ZXJydXB0X3N0YXR1cyA9IGRwdV9od19pbnRyX2NsZWFyX2ludGVy
-cnVwdF9zdGF0dXM7CiAJb3BzLT5jbGVhcl9pbnRyX3N0YXR1c19ub2xvY2sgPSBkcHVfaHdfaW50
-cl9jbGVhcl9pbnRyX3N0YXR1c19ub2xvY2s7CiAJb3BzLT5nZXRfaW50ZXJydXB0X3N0YXR1cyA9
-IGRwdV9od19pbnRyX2dldF9pbnRlcnJ1cHRfc3RhdHVzOwogfQpkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2h3X2ludGVycnVwdHMuaCBiL2RyaXZlcnMvZ3B1
-L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19pbnRlcnJ1cHRzLmgKaW5kZXggNjFlNGNiYS4uNGQ3
-YTFjNyAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2h3X2lu
-dGVycnVwdHMuaAorKysgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfaHdfaW50
-ZXJydXB0cy5oCkBAIC0yMCwxMyArMjAsNiBAQAogI2luY2x1ZGUgImRwdV9od191dGlsLmgiCiAj
-aW5jbHVkZSAiZHB1X2h3X21kc3MuaCIKIAotI2RlZmluZSBJUlFfU09VUkNFX01EUAkJQklUKDAp
-Ci0jZGVmaW5lIElSUV9TT1VSQ0VfRFNJMAkJQklUKDQpCi0jZGVmaW5lIElSUV9TT1VSQ0VfRFNJ
-MQkJQklUKDUpCi0jZGVmaW5lIElSUV9TT1VSQ0VfSERNSQkJQklUKDgpCi0jZGVmaW5lIElSUV9T
-T1VSQ0VfRURQCQlCSVQoMTIpCi0jZGVmaW5lIElSUV9TT1VSQ0VfTUhMCQlCSVQoMTYpCi0KIC8q
-KgogICogZHB1X2ludHJfdHlwZSAtIEhXIEludGVycnVwdCBUeXBlCiAgKiBARFBVX0lSUV9UWVBF
-X1dCX1JPVF9DT01QOgkJV0Igcm90YXRvciBkb25lCkBAIC05NiwxOCArODksNiBAQCBlbnVtIGRw
-dV9pbnRyX3R5cGUgewogICovCiBzdHJ1Y3QgZHB1X2h3X2ludHJfb3BzIHsKIAkvKioKLQkgKiBz
-ZXRfbWFzayAtIFByb2dyYW1zIHRoZSBnaXZlbiBpbnRlcnJ1cHQgcmVnaXN0ZXIgd2l0aCB0aGUK
-LQkgKiAgICAgICAgICAgIGdpdmVuIGludGVycnVwdCBtYXNrLiBSZWdpc3RlciB2YWx1ZSB3aWxs
-IGdldCBvdmVyd3JpdHRlbi4KLQkgKiBAaW50cjoJSFcgaW50ZXJydXB0IGhhbmRsZQotCSAqIEBy
-ZWdfb2ZmOglNRFNTIEhXIHJlZ2lzdGVyIG9mZnNldAotCSAqIEBpcnFtYXNrOglJUlEgbWFzayB2
-YWx1ZQotCSAqLwotCXZvaWQgKCpzZXRfbWFzaykoCi0JCQlzdHJ1Y3QgZHB1X2h3X2ludHIgKmlu
-dHIsCi0JCQl1aW50MzJfdCByZWcsCi0JCQl1aW50MzJfdCBpcnFtYXNrKTsKLQotCS8qKgogCSAq
-IGlycV9pZHhfbG9va3VwIC0gTG9va3VwIElSUSBpbmRleCBvbiB0aGUgSFcgaW50ZXJydXB0IHR5
-cGUKIAkgKiAgICAgICAgICAgICAgICAgVXNlZCBmb3IgYWxsIGlycSByZWxhdGVkIG9wcwogCSAq
-IEBpbnRyX3R5cGU6CQlJbnRlcnJ1cHQgdHlwZSBkZWZpbmVkIGluIGRwdV9pbnRyX3R5cGUKQEAg
-LTE3NywxNiArMTU4LDYgQEAgc3RydWN0IGRwdV9od19pbnRyX29wcyB7CiAJCQlzdHJ1Y3QgZHB1
-X2h3X2ludHIgKmludHIpOwogCiAJLyoqCi0JICogY2xlYXJfaW50ZXJydXB0X3N0YXR1cyAtIENs
-ZWFycyBIVyBpbnRlcnJ1cHQgc3RhdHVzIGJhc2VkIG9uIGdpdmVuCi0JICogICAgICAgICAgICAg
-ICAgICAgICAgICAgIGxvb2t1cCBJUlEgaW5kZXguCi0JICogQGludHI6CUhXIGludGVycnVwdCBo
-YW5kbGUKLQkgKiBAaXJxX2lkeDoJTG9va3VwIGlycSBpbmRleCByZXR1cm4gZnJvbSBpcnFfaWR4
-X2xvb2t1cAotCSAqLwotCXZvaWQgKCpjbGVhcl9pbnRlcnJ1cHRfc3RhdHVzKSgKLQkJCXN0cnVj
-dCBkcHVfaHdfaW50ciAqaW50ciwKLQkJCWludCBpcnFfaWR4KTsKLQotCS8qKgogCSAqIGNsZWFy
-X2ludHJfc3RhdHVzX25vbG9jaygpIC0gY2xlYXJzIHRoZSBIVyBpbnRlcnJ1cHRzIHdpdGhvdXQg
-bG9jawogCSAqIEBpbnRyOglIVyBpbnRlcnJ1cHQgaGFuZGxlCiAJICogQGlycV9pZHg6CUxvb2t1
-cCBpcnEgaW5kZXggcmV0dXJuIGZyb20gaXJxX2lkeF9sb29rdXAKQEAgLTIwNiwyMSArMTc3LDYg
-QEAgc3RydWN0IGRwdV9od19pbnRyX29wcyB7CiAJCQlzdHJ1Y3QgZHB1X2h3X2ludHIgKmludHIs
-CiAJCQlpbnQgaXJxX2lkeCwKIAkJCWJvb2wgY2xlYXIpOwotCi0JLyoqCi0JICogZ2V0X3ZhbGlk
-X2ludGVycnVwdHMgLSBHZXRzIGEgbWFzayBvZiBhbGwgdmFsaWQgaW50ZXJydXB0IHNvdXJjZXMK
-LQkgKiAgICAgICAgICAgICAgICAgICAgICAgIHdpdGhpbiBEUFUuIFRoZXNlIGFyZSBhY3R1YWxs
-eSBzdGF0dXMgYml0cwotCSAqICAgICAgICAgICAgICAgICAgICAgICAgd2l0aGluIGludGVycnVw
-dCByZWdpc3RlcnMgdGhhdCBzcGVjaWZ5IHRoZQotCSAqICAgICAgICAgICAgICAgICAgICAgICAg
-c291cmNlIG9mIHRoZSBpbnRlcnJ1cHQgaW4gSVJRcy4gRm9yIGV4YW1wbGUsCi0JICogICAgICAg
-ICAgICAgICAgICAgICAgICB2YWxpZCBpbnRlcnJ1cHQgc291cmNlcyBjYW4gYmUgTURQLCBEU0ks
-Ci0JICogICAgICAgICAgICAgICAgICAgICAgICBIRE1JIGV0Yy4KLQkgKiBAaW50cjoJSFcgaW50
-ZXJydXB0IGhhbmRsZQotCSAqIEBtYXNrOglSZXR1cm5pbmcgdGhlIGludGVycnVwdCBzb3VyY2Ug
-TUFTSwotCSAqIEByZXR1cm46CTAgZm9yIHN1Y2Nlc3MsIG90aGVyd2lzZSBmYWlsdXJlCi0JICov
-Ci0JaW50ICgqZ2V0X3ZhbGlkX2ludGVycnVwdHMpKAotCQkJc3RydWN0IGRwdV9od19pbnRyICpp
-bnRyLAotCQkJdWludDMyX3QgKm1hc2spOwogfTsKIAogLyoqCi0tIApUaGUgUXVhbGNvbW0gSW5u
-b3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgdGhlIENvZGUgQXVyb3JhIEZvcnVt
-LAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0CgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--===============7746020695186599780==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="PHCdUe6m4AxPMzOu"
+Content-Disposition: inline
+
+
+--PHCdUe6m4AxPMzOu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Dec 14, 2018 at 04:54:13PM +0200, Daniel Baluta wrote:
+> On Thu, Dec 13, 2018 at 4:31 PM Mark Brown <broonie@kernel.org> wrote:
+
+> > No, you're missing the point - why not set the sample rate based on the
+> > sample rate the interface is running at?
+
+> Hmm, definitely we somehow miss the point here. So what happens
+> if we only do Voice Activity Detection (VAD) ?
+
+> This means that there is no sample rate yet configured, so for this reason
+> we get the sampling rate as above via ALSA kcontrol interface.
+
+> My feeling is that somehow we will need to create maybe another type
+> of stream (VAD?).
+
+> This is a thing that we need to think. Suggestions are welcomed!
+
+This is really easy if you do what other people have done and provide
+the detected voice as a compressed stream.  On the other hand if there's
+no stream and people just pick the audio out of the normal record path
+is there any great reason why people would configure this at all.
+
+> > > > Is this something that should be user selectable or is it going to =
+be
+> > > > controlled by the board design?
+> >
+> > > User should be able to select the clock source since, in theory,
+> > > hardware could support any custom rate as long as you can provide the
+> > > clock on extclk.
+> >
+> > What I'm saying is that this should not be selectable by the user at
+> > runtime.  It's not like the user is going to open their system and start
+> > soldering links onto the board or anything.
+>=20
+> Of course, so would this be a better option to select it from dts?
+
+Yes, or the machine driver.
+
+> > > > Are you *sure* you need to and want to use atomic_set() here and th=
+at
+> > > > there's no race conditions resulting from trying to use an atomic
+> > > > variable?  It's much simpler and clearer to use mutexes, if for some
+> > > > reason atomic variables make sense then the reasoning needs to be
+> > > > clearly documented as they're quite tricky and easy to break or
+> > > > misunderstand.
+
+> We can go back to mutexes no problem, but we thought that atomic vars
+> are lighter.
+
+They do less than you might think unfortunately and are more complicated
+to reason about so unless you're getting a useful performance gain from
+them they're rarely worth the effort.
+
+--PHCdUe6m4AxPMzOu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwT8L0ACgkQJNaLcl1U
+h9AfSgf+PPTqA6AceAO6GPfLtsXnFiYVfA84J3DtkZIayJPymYkDwtAE0SgXLhsI
+i7vqbL+fUmYjbHbJb2ejZ+I8VaktSJaa1XXaKcXG2axLFj5F4av+8hQSUm2/eMM6
+LAXR0LpjO0iu13hKmKvKs/rVt6Jzc40ITjro8Z4863+PS+1LWfEpNOpHnXnnsRWY
+ubD4aWsWFot9/eg15azPMzFQxbXOg3wKIY+25JcMSLKkyJUhN7A3kWabKxrPVE8g
+Sm9A2wPgEa8ydvuN5oS4V8q9SaEE2GYbNPu1qHLSJDUnnIze1AVV2xF0/HPdk+mT
+390EAutN8dEdUM3oyxtY5mvaH150lA==
+=H+5w
+-----END PGP SIGNATURE-----
+
+--PHCdUe6m4AxPMzOu--
+
+--===============7746020695186599780==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7746020695186599780==--
