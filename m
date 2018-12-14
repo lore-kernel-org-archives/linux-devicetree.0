@@ -1,32 +1,122 @@
-From: Pascal PAILLET-LME <p.paillet@st.com>
-Subject: Re: [PATCH v7 0/7] Introduce STPMIC1 PMIC Driver
-Date: Fri, 14 Dec 2018 14:36:52 +0000
-Message-ID: <5C13C004.9060504@st.com>
-References: <1543571742-17995-1-git-send-email-p.paillet@st.com>
- <20181214124701.GZ4497@dell>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [RFC 2/2] ASoC: Add MICFIL SoC Digital Audio
+ Interface driver.
+Date: Fri, 14 Dec 2018 16:54:13 +0200
+Message-ID: <CAEnQRZBnzqMVv86wAqXB9kRtKpkC=R7fLbpE1Avyw6364Cwgfg@mail.gmail.com>
+References: <1544433661-32496-1-git-send-email-cosmin.samoila@nxp.com>
+ <1544433661-32496-3-git-send-email-cosmin.samoila@nxp.com>
+ <20181212181414.GE6920@sirena.org.uk> <1544696446.7700.31.camel@nxp.com>
+ <20181213143144.GH10669@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181214124701.GZ4497@dell>
-Content-Language: en-US
-Content-ID: <D6BF6915D0936E40BD5E128ADF17C378@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20181213143144.GH10669@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "robh@kernel.org" <robh@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "gabrielcsmo@gmail.com" <gabrielcsmo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gTGVlLA0KDQpMZSAxMi8xNC8yMDE4IDAxOjQ3IFBNLCBMZWUgSm9uZXMgYSDDqWNyaXQg
-Og0KPiBjaGFuZ2VzIGluIHY3Og0KPiAqIHJlYmFzZSBvbiByZWd1bC9mb3ItbmV4dA0KPg0KPiAg
-ICBkdC1iaW5kaW5nczogbWZkOiBkb2N1bWVudCBzdHBtaWMxDQo+ICAgIG1mZDogc3RwbWljMTog
-YWRkIHN0cG1pYzEgZHJpdmVyDQo+ICAgIGR0LWJpbmRpbmdzOiBpbnB1dDogZG9jdW1lbnQgc3Rw
-bWljMSBwbWljIG9ua2V5DQo+ICAgIGlucHV0OiBzdHBtaWMxOiBhZGQgc3RwbWljMSBvbmtleSBk
-cml2ZXINCj4gICAgZHQtYmluZGluZ3M6IHdhdGNoZG9nOiBkb2N1bWVudCBzdHBtaWMxIHBtaWMg
-d2F0Y2hkb2cNCj4gICAgd2F0Y2hkb2c6IHN0cG1pYzE6IGFkZCBzdHBtaWMxIHdhdGNoZG9nIGRy
-aXZlcg0KPiAgICByZWd1bGF0b3I6IHN0cG1pYzE6IGZpeCByZWd1bGF0b3JfbG9jayB1c2FnZQ0K
-PiBDb3VsZCB5b3UgcGxlYXNlIHJlbW92ZSBhbnkgcGF0Y2hlcyB3aGljaCBoYXZlIGJlZW4gYXBw
-bGllZCBhbmQNCj4gW1JFU0VORF0/DQpET05FLCBJIGhhdmUgcmVzZW50IGEgVjggd2l0aG91dCAg
-dGhlIHJlZ3VsYXRvciBwYXRjaC4NCg0KPiBBbHNvLCBpcyBEbWl0cnkgcGxhbm5pbmcgb24gQWNr
-aW5nOg0KPg0KPiAgICBkdC1iaW5kaW5nczogaW5wdXQ6IGRvY3VtZW50IHN0cG1pYzEgcG1pYyBv
-bmtleQ0KPg0KPiAuLi4gb3IgaXMgUm9iJ3MgQWNrIGVub3VnaD8NCj4NCg0KDQp0aGFuayB5b3Us
-DQpwYXNjYWwNCg==
+On Thu, Dec 13, 2018 at 4:31 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Thu, Dec 13, 2018 at 10:20:47AM +0000, Cosmin Samoila wrote:
+> > On Mi, 2018-12-12 at 18:14 +0000, Mark Brown wrote:
+>
+> > > > +static const char * const micfil_hwvad_rate[] = {
+> > > > + "48KHz", "44.1KHz",
+> > > > +};
+>
+> > > > +static const int micfil_hwvad_rate_ints[] = {
+> > > > + 48000, 44100,
+> > > > +};
+> > > Can the driver not determine this automatically from sample rates?
+>
+> > I think I could add "48000", "44100" instead of "48KHz", "44.1KHz" and
+> > use kstrtol()
+>
+> No, you're missing the point - why not set the sample rate based on the
+> sample rate the interface is running at?
+
+Hmm, definitely we somehow miss the point here. So what happens
+if we only do Voice Activity Detection (VAD) ?
+
+This means that there is no sample rate yet configured, so for this reason
+we get the sampling rate as above via ALSA kcontrol interface.
+
+My feeling is that somehow we will need to create maybe another type
+of stream (VAD?).
+
+This is a thing that we need to think. Suggestions are welcomed!
+
+>
+> > > > +static const char * const micfil_clk_src_texts[] = {
+> > > > + "Auto", "AudioPLL1", "AudioPLL2", "ExtClk3",
+> > > > +};
+>
+> > > Is this something that should be user selectable or is it going to be
+> > > controlled by the board design?
+>
+> > User should be able to select the clock source since, in theory,
+> > hardware could support any custom rate as long as you can provide the
+> > clock on extclk.
+>
+> What I'm saying is that this should not be selectable by the user at
+> runtime.  It's not like the user is going to open their system and start
+> soldering links onto the board or anything.
+
+Of course, so would this be a better option to select it from dts?
+
+>
+> > > What happens if this gets changed while a stream is active - the user
+> > > will think they changed the configuration but it won't take effect
+> > > until
+> > > the next stream is started AFAICT?
+>
+> > If the stream is active, the configuration will indeed take efect on
+> > the next stream but this is the desired behavior. If we would want to
+> > do the config on the fly, we should use sync functions that also resets
+> > the pdm module which is not what we intend.
+> > User must first configure the module then start the recording since
+> > this seems to be the natural flow.
+>
+> If the user can't reconfigure the stream while it's running the user
+> shouldn't be able to reconfigure the stream while it's running - we
+> should block the change if it can't be implemented.  Then the user can
+> make the change while the interface is idle and and
+>
+> > > Are you *sure* you need to and want to use atomic_set() here and that
+> > > there's no race conditions resulting from trying to use an atomic
+> > > variable?  It's much simpler and clearer to use mutexes, if for some
+> > > reason atomic variables make sense then the reasoning needs to be
+> > > clearly documented as they're quite tricky and easy to break or
+> > > misunderstand.
+
+We can go back to mutexes no problem, but we thought that atomic vars
+are lighter.
+
+>
+> > We want to keep track of the recording state and the hwvad state since
+> > recording and voice detection can work in parallel. The main reason why
+> > we want to keep track is because the recording and hwvad share the same
+> > clock and we should not touch the clock when one or another is on.
+> > Another restriction is that we want to make sure we use the same rate
+> > for recording and voice detection when doing it in parallel.
+> > This was the only solution we found viable at that time and it worked
+> > in any supported scenarios but we are open for suggestions if the
+> > functionality is kept and code will have a better quality.
+>
+> This explains what the data is but not why you have chosen to use
+> atomics to do this; what other concurrency primitives were considered,
+> why were they rejected and what's the analysis that shows how the use of
+> atomics is safe?
+
+We first used mutexes but I suggested switching to atomic vars because
+AFAIK they are lighter than mutexes.
