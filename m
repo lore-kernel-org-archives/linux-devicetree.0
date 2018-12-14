@@ -1,99 +1,38 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [RFC PATCH v2 08/15] usb:cdns3: Implements device operations part
- of the API
-Date: Fri, 14 Dec 2018 06:49:52 +0000
-Message-ID: <BYAPR07MB4709A69213098DDCD618D973DDA10@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
- <1542535751-16079-9-git-send-email-pawell@cadence.com>
- <5BFE8883.7090802@ti.com>
- <CAL411-oKvu3EADStit=JtbcxVzM_fFGF2uPn67-wmXxPzUK6GQ@mail.gmail.com>
- <6b19b55c-66d7-439e-df8f-7b311b45af5e@ti.com>
- <BYAPR07MB470972A525D85B03C3037D3BDDA60@BYAPR07MB4709.namprd07.prod.outlook.com>
- <CAL411-oc-_0H88egpHsc06ptL12UsaE63rWwjN7novuFFx_qbA@mail.gmail.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH 2/3] ASoC: xlnx: Add i2s driver
+Date: Fri, 14 Dec 2018 07:50:43 +0100
+Message-ID: <19c273d9-c52d-48be-a1e1-88e2b1f14cce@xilinx.com>
+References: <1544207558-72508-1-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
+ <1544207558-72508-3-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
+ <20181213153127.GN10669@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL411-oc-_0H88egpHsc06ptL12UsaE63rWwjN7novuFFx_qbA@mail.gmail.com>
+In-Reply-To: <20181213153127.GN10669@sirena.org.uk>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Chen <hzpeterchen@gmail.com>
-Cc: "nsekhar@ti.com" <nsekhar@ti.com>, "rogerq@ti.com" <rogerq@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>, "balbi@kernel.org" <balbi@kernel.org>
+To: Mark Brown <broonie@kernel.org>, Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vishal Sagar <vsagar@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksDQo+DQo+T24gV2VkLCBEZWMgMTIsIDIwMTggYXQgMzo0OSBBTSBQYXdlbCBMYXN6Y3phayA8
-cGF3ZWxsQGNhZGVuY2UuY29tPiB3cm90ZToNCj4+DQo+PiBIaSwNCj4+DQo+PiA+T24gMTAvMTIv
-MTggNzo0MiBBTSwgUGV0ZXIgQ2hlbiB3cm90ZToNCj4+ID4+Pj4gK3N0YXRpYyBzdHJ1Y3QgdXNi
-X2VwICpjZG5zM19nYWRnZXRfbWF0Y2hfZXAoc3RydWN0IHVzYl9nYWRnZXQgKmdhZGdldCwNCj4+
-ID4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IHVz
-Yl9lbmRwb2ludF9kZXNjcmlwdG9yICpkZXNjLA0KPj4gPj4+PiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgdXNiX3NzX2VwX2NvbXBfZGVzY3JpcHRvciAq
-Y29tcF9kZXNjKQ0KPj4gPj4+PiArew0KPj4gPj4+PiArICAgICBzdHJ1Y3QgY2RuczNfZGV2aWNl
-ICpwcml2X2RldiA9IGdhZGdldF90b19jZG5zM19kZXZpY2UoZ2FkZ2V0KTsNCj4+ID4+Pj4gKyAg
-ICAgc3RydWN0IGNkbnMzX2VuZHBvaW50ICpwcml2X2VwOw0KPj4gPj4+PiArICAgICB1bnNpZ25l
-ZCBsb25nIGZsYWdzOw0KPj4gPj4+PiArDQo+PiA+Pj4+ICsgICAgIHByaXZfZXAgPSBjZG5zM19m
-aW5kX2F2YWlsYWJsZV9zc19lcChwcml2X2RldiwgZGVzYyk7DQo+PiA+Pj4+ICsgICAgIGlmIChJ
-U19FUlIocHJpdl9lcCkpIHsNCj4+ID4+Pj4gKyAgICAgICAgICAgICBkZXZfZXJyKCZwcml2X2Rl
-di0+ZGV2LCAibm8gYXZhaWxhYmxlIGVwXG4iKTsNCj4+ID4+Pj4gKyAgICAgICAgICAgICByZXR1
-cm4gTlVMTDsNCj4+ID4+Pj4gKyAgICAgfQ0KPj4gPj4+PiArDQo+PiA+Pj4+ICsgICAgIGRldl9k
-YmcoJnByaXZfZGV2LT5kZXYsICJtYXRjaCBlbmRwb2ludDogJXNcbiIsIHByaXZfZXAtPm5hbWUp
-Ow0KPj4gPj4+PiArDQo+PiA+Pj4+ICsgICAgIHNwaW5fbG9ja19pcnFzYXZlKCZwcml2X2Rldi0+
-bG9jaywgZmxhZ3MpOw0KPj4gPj4+PiArICAgICBwcml2X2VwLT5lbmRwb2ludC5kZXNjID0gZGVz
-YzsNCj4+ID4+Pj4gKyAgICAgcHJpdl9lcC0+ZGlyICA9IHVzYl9lbmRwb2ludF9kaXJfaW4oZGVz
-YykgPyBVU0JfRElSX0lOIDogVVNCX0RJUl9PVVQ7DQo+PiA+Pj4+ICsgICAgIHByaXZfZXAtPnR5
-cGUgPSB1c2JfZW5kcG9pbnRfdHlwZShkZXNjKTsNCj4+ID4+Pj4gKw0KPj4gPj4+PiArICAgICBs
-aXN0X2FkZF90YWlsKCZwcml2X2VwLT5lcF9tYXRjaF9wZW5kaW5nX2xpc3QsDQo+PiA+Pj4+ICsg
-ICAgICAgICAgICAgICAgICAgJnByaXZfZGV2LT5lcF9tYXRjaF9saXN0KTsNCj4+ID4+Pj4gKyAg
-ICAgc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmcHJpdl9kZXYtPmxvY2ssIGZsYWdzKTsNCj4+ID4+
-Pj4gKyAgICAgcmV0dXJuICZwcml2X2VwLT5lbmRwb2ludDsNCj4+ID4+Pj4gK30NCj4+ID4+PiBX
-aHkgZG8geW91IG5lZWQgYSBjdXN0b20gbWF0Y2hfZXA/DQo+PiA+Pj4gZG9lc24ndCB1c2JfZXBf
-YXV0b2NvbmZpZyBzdWZmaWNlPw0KPj4gPj4+DQo+PiA+Pj4gWW91IGNhbiBjaGVjayBpZiBFUCBp
-cyBjbGFpbWVkIG9yIG5vdCBieSBjaGVja2luZyB0aGUgZXAtPmNsYWltZWQgZmxhZy4NCj4+ID4+
-Pg0KPj4gPj4gSXQgaXMgYSBzcGVjaWFsIHJlcXVpcmVtZW50IGZvciB0aGlzIElQLCB0aGUgRVAg
-dHlwZSBhbmQgTWF4UGFja2V0U2l6ZQ0KPj4gPj4gY2hhbmdpbmcgY2FuJ3QgYmUgZG9uZSBhdCBy
-dW50aW1lLCBlZywgYXQgZXAtPmVuYWJsZS4gU2VlIGJlbG93IGNvbW1pdA0KPj4gPj4gZm9yIGRl
-dGFpbC4NCj4+ID4+DQo+PiA+PiAgICAgdXNiOiBjZG5zMzogZ2FkZ2V0OiBjb25maWd1cmUgYWxs
-IGVuZHBvaW50cyBiZWZvcmUgc2V0IGNvbmZpZ3VyYXRpb24NCj4+ID4+DQo+PiA+PiAgICAgQ2Fk
-ZW5jZSBJUCBoYXMgb25lIGxpbWl0YXRpb24gdGhhdCBhbGwgZW5kcG9pbnRzIG11c3QgYmUgY29u
-ZmlndXJlZA0KPj4gPj4gICAgIChUeXBlICYgTWF4UGFja2V0U2l6ZSkgYmVmb3JlIHNldHRpbmcg
-Y29uZmlndXJhdGlvbiB0aHJvdWdoIGhhcmR3YXJlDQo+PiA+PiAgICAgcmVnaXN0ZXIsIGl0IG1l
-YW5zIHdlIGNhbid0IGNoYW5nZSBlbmRwb2ludHMgY29uZmlndXJhdGlvbiBhZnRlcg0KPj4gPj4g
-ICAgIHNldF9jb25maWd1cmF0aW9uLg0KPj4gPj4NCj4+ID4+ICAgICBJbiB0aGlzIHBhdGNoLCB3
-ZSBhZGQgbm9uLWNvbnRyb2wgZW5kcG9pbnQgdGhyb3VnaCB1c2Jfc3MtPmVwX21hdGNoX2xpc3Qs
-DQo+PiA+PiAgICAgd2hpY2ggaXMgYWRkZWQgd2hlbiB0aGUgZ2FkZ2V0IGRyaXZlciB1c2VzIHVz
-Yl9lcF9hdXRvY29uZmlnIHRvIGNvbmZpZ3VyZQ0KPj4gPj4gICAgIHNwZWNpZmljIGVuZHBvaW50
-OyBXaGVuIHRoZSB1ZGMgZHJpdmVyIHJlY2VpdmVzIHNldF9jb25maWd1cmlvbiByZXF1ZXN0LA0K
-Pj4gPj4gICAgIGl0IGdvZXMgdGhyb3VnaCB1c2Jfc3MtPmVwX21hdGNoX2xpc3QsIGFuZCBjb25m
-aWd1cmUgYWxsIGVuZHBvaW50cw0KPj4gPj4gICAgIGFjY29yZGluZ2x5Lg0KPj4gPj4NCj4+ID4+
-ICAgICBBdCB1c2JfZXBfb3BzLmVuYWJsZS9kaXNhYmxlLCB3ZSBvbmx5IGVuYWJsZSBhbmQgZGlz
-YWJsZSBlbmRwb2ludCB0aHJvdWdoDQo+PiA+PiAgICAgZXBfY2ZnIHJlZ2lzdGVyIHdoaWNoIGNh
-biBiZSBjaGFuZ2VkIGFmdGVyIHNldF9jb25maWd1cmF0aW9uLCBhbmQgZG8NCj4+ID4+ICAgICBz
-b21lIHNvZnR3YXJlIG9wZXJhdGlvbiBhY2NvcmRpbmdseS4NCj4+ID4NCj4+ID5BbGwgdGhpcyBz
-aG91bGQgYmUgcGFydCBvZiBjb21tZW50cyBpbiBjb2RlIGFsb25nIHdpdGggaW5mb3JtYXRpb24g
-YWJvdXQNCj4+ID5jb250cm9sbGVyIHZlcnNpb25zIHdoaWNoIHN1ZmZlciBmcm9tIHRoZSBlcnJh
-dGEuDQo+PiA+DQo+PiA+SXMgdGhlcmUgYSB2ZXJzaW9uIG9mIGNvbnRyb2xsZXIgYXZhaWxhYmxl
-IHdoaWNoIGRvZXMgbm90IGhhdmUgdGhlDQo+PiA+ZGVmZWN0PyBJcyB0aGVyZSBhIGZ1dHVyZSBw
-bGFuIHRvIGZpeCB0aGlzPw0KPj4gPg0KPj4gPklmIGFueSBvZiB0aGF0IGlzIHllcywgeW91IHBy
-b2JhYmx5IHdhbnQgdG8gaGFuZGxlIHRoaXMgd2l0aCBydW50aW1lDQo+PiA+ZGV0ZWN0aW9uIG9m
-IHZlcnNpb24gKGxpa2UgZG9uZSB3aXRoIERXQzNfUkVWSVNJT05fWFhYIG1hY3JvcykuDQo+PiA+
-U29tZXRpbWVzIHRoZSBoYXJkd2FyZS1yZWFkIHZlcnNpb25zIHRoZW1zZWx2ZXMgYXJlIGluY29y
-cmVjdCwgc28gaXRzDQo+PiA+YmV0dGVyIHRvIGludHJvZHVjZSBhIHZlcnNpb24gc3BlY2lmaWMg
-Y29tcGF0aWJsZSB0b28gbGlrZQ0KPj4gPiJjZG5zLHVzYi0xLjAuMCIgKGFzIGhpbnRlZCB0byBi
-eSBSb2IgSGVycmluZyBhcyB3ZWxsKS4NCj4+ID4NCj4+DQo+PiBjdXN0b20gbWF0Y2hfZXAgaXMg
-dXNlZCBhbmQgd29ya3Mgd2l0aCBhbGwgdmVyc2lvbnMgb2YgdGhlIGdlbjENCj4+IGNvbnRyb2xs
-ZXIuIEZ1dHVyZSAoZ2VuMikgcmVsZWFzZXMgb2YgdGhlIGNvbnRyb2xsZXIgd29u4oCZdCBoYXZl
-IHN1Y2gNCj4+IGxpbWl0YXRpb24gYnV0IHRoZXJlIGlzIG5vIHBsYW4gdG8gY2hhbmdlIGN1cnJl
-bnQgKGdlbjEpIGZ1bmN0aW9uYWxpdHkNCj4+IG9mIHRoZSBjb250cm9sbGVyLg0KPj4NCj4+IEkg
-d2lsbCBhZGQgY29tbWVudCBiZWZvcmUgY2RuczNfZ2FkZ2V0X21hdGNoX2VwIGZ1bmN0aW9uLg0K
-Pj4gQWxzbyBJIHdpbGwgY2hhbmdlIGNkbnMsdXNiMyB0byBjZG5zLHVzYjMtMS4wLjAgYW5kIGFk
-ZCBhZGRpdGlvbmFsDQo+PiBjZG5zLHVzYjMtMS4wLjEgY29tcGF0aWJsZS4NCj4+DQo+PiBjZG5z
-LHVzYjMtMS4wLjEgd2lsbCBiZSBmb3IgY3VycmVudCB2ZXJzaW9uIG9mIGNvbnRyb2xsZXIgd2hp
-Y2ggSSB1c2UuDQo+PiBjZG5zLHVzYjMtMS4wLjAgd2lsbCBiZSBmb3Igb2xkZXIgdmVyc2lvbiAt
-IFBldGVyIENoYW4gcGxhdGZvcm0uDQo+PiBJIG5vdyB0aGF0IEkgaGF2ZSBzb21lIGNoYW5nZXMg
-aW4gY29udHJvbGxlciwgYW5kIG9uZSBvZiB0aGVtIHJlcXVpcmUNCj4+IHNvbWUgY2hhbmdlcyBp
-biBEUkQgZHJpdmVyLiBJdCB3aWxsIGJlIHNhZmVyIHRvIGFkZCB0d28gc2VwYXJhdGUNCj4+IHZl
-cnNpb24gaW4gY29tcGF0aWJsZXMuDQo+Pg0KPg0KPlBhd2VsLCBjb3VsZCB3ZSBoYXZlIGNvcnJl
-Y3QgcmVnaXN0ZXIgdG8gc2hvdyBjb250cm9sbGVyIHZlcnNpb24/IEl0IGlzDQo+YmV0dGVyIHdl
-IGNvdWxkIHZlcnNpb24ganVkZ2VtZW50IGF0IHJ1bnRpbWUgaW5zdGVhZCBvZiBzdGF0aWMgY29t
-cGF0aWJsZS4NCj4NCg0KT2ssIEkgd2lsbCB0cmF5IGRvIHRoaXMgaW4gdGhpcyB3YXkuDQoNClBh
-d2VsIA0K
+Hi Mark,
+
+On 13. 12. 18 16:31, Mark Brown wrote:
+> On Sat, Dec 08, 2018 at 12:02:37AM +0530, Maruthi Srinivas Bayyavarapu wrote:
+> 
+>> @@ -0,0 +1,185 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Xilinx ASoC I2S audio support
+>> + *
+> 
+> This looks otherwise good so I've applied it but please send a followup
+> patch converting the entire comment block to C++ style so this looks
+> more consistent.
+
+Is it the rule for your subsystems? Or did it come from any generic
+agreement how this should be handled in .c files?
+
+Thanks,
+Michal
