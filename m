@@ -1,46 +1,50 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 6/7] [stable-4.19] ARM: dts: qcom-apq8064-arrow-sd-600eval fix graph_endpoint warning
-Date: Fri, 14 Dec 2018 23:10:11 +0100
-Message-ID: <20181214221023.3878670-7-arnd@arndb.de>
-References: <20181214221023.3878670-1-arnd@arndb.de>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v2 1/2] dt-bindings: drm/msm/a6xx: Document
+ interconnect properties for GPU
+Date: Fri, 14 Dec 2018 15:16:39 -0700
+Message-ID: <20181214221640.25354-2-jcrouse@codeaurora.org>
+References: <20181214221640.25354-1-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20181214221023.3878670-1-arnd@arndb.de>
-Sender: stable-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20181214221640.25354-1-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Upstream commit 972910948fb6 ("ARM: dts: qcom: Remove Arrow SD600
-eval board") removed this file because there are no known users,
-but in linux-4.19.y, we still get a compile-time warnign for it:
-
-arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dtb: Warning (graph_endpoint): /soc/mdp@5100000/ports/port@3/endpoint: graph connection to node '/soc/hdmi-tx@4a00000/ports/port@0/endpoint' is not bidirectional
-
-Address the warning by adding the remote endpoint that makes the link
-bidirectional. This is the same property that other boards use.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts b/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts
-index 76b56eafaab9..f714a20649d7 100644
---- a/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts
-@@ -387,6 +387,11 @@
- 			hpd-gpio = <&tlmm_pinmux 72 GPIO_ACTIVE_HIGH>;
- 
- 			ports {
-+				port@0 {
-+					endpoint {
-+						remote-endpoint = <&mdp_dtv_out>;
-+					};
-+				};
- 				port@1 {
- 					endpoint {
- 						remote-endpoint = <&hdmi_con>;
--- 
-2.20.0
+QWRkIGRvY3VtZW50YXRpb24gZm9yIHRoZSBpbnRlcmNvbm5lY3QgYW5kIGludGVyY29ubmVjdC1u
+YW1lcyBiaW5kaW5ncwpmb3IgdGhlIEdQVSBub2RlIGFzIGRldGFpbGVkIGJ5IGJpbmRpbmdzL2lu
+dGVyY29ubmVjdC9pbnRlcmNvbm5lY3QudHh0LgoKU2lnbmVkLW9mZi1ieTogSm9yZGFuIENyb3Vz
+ZSA8amNyb3VzZUBjb2RlYXVyb3JhLm9yZz4KLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dCB8IDYgKysrKysrCiAxIGZpbGUgY2hhbmdlZCwg
+NiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvbXNtL2dwdS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dAppbmRleCA4ZDk0MTUxODBjMjIuLjE5YjVhZTQ1OWZk
+YiAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+bXNtL2dwdS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvbXNtL2dwdS50eHQKQEAgLTE5LDYgKzE5LDkgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKICAg
+KiAibWVtX2lmYWNlIgogLSBpb21tdXM6IG9wdGlvbmFsIHBoYW5kbGUgdG8gYW4gYWRyZW5vIGlv
+bW11IGluc3RhbmNlCiAtIG9wZXJhdGluZy1wb2ludHMtdjI6IG9wdGlvbmFsIHBoYW5kbGUgdG8g
+dGhlIE9QUCBvcGVyYXRpbmcgcG9pbnRzCistIGludGVyY29ubmVjdDogb3B0aW9uYWwgcGhhbmRs
+ZSB0byBhIGludGVyY29ubmVjdCBwcm92aWRlci4gIFNlZQorICAuLi9pbnRlcmNvbm5lY3QvaW50
+ZXJjb25uZWN0LnR4dCBmb3IgZGV0YWlscy4KKy0gaW50ZXJjb25uZWN0LW5hbWVzOiBOYW1lIHN0
+cmluZyBmb3IgdGhlIGludGVyY29ubmVjdHMuCiAtIHFjb20sZ211OiBGb3IgYTZ4eCBhbmQgbmV3
+ZXIgdGFyZ2V0cyBhIHBoYW5kbGUgdG8gdGhlIEdNVSBkZXZpY2UgdGhhdCB3aWxsCiAgIGNvbnRy
+b2wgdGhlIHBvd2VyIGZvciB0aGUgR1BVCiAKQEAgLTY4LDYgKzcxLDkgQEAgRXhhbXBsZSBhNnh4
+ICh3aXRoIEdNVSk6CiAKIAkJb3BlcmF0aW5nLXBvaW50cy12MiA9IDwmZ3B1X29wcF90YWJsZT47
+CiAKKwkJaW50ZXJjb25uZWN0cyA9IDwmcnNjX2hsb3MgTUFTVEVSX0dGWDNEICZyc2NfaGxvcyBT
+TEFWRV9FQkkxPjsKKwkJaW50ZXJjb25uZWN0LW5hbWVzID0gImdmeC1tZW0iOworCiAJCXFjb20s
+Z211ID0gPCZnbXU+OwogCX07CiB9OwotLSAKMi4xOC4wCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVu
+b0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
