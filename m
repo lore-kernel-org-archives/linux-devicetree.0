@@ -1,161 +1,159 @@
-From: Jordan Crouse <jcrouse@codeaurora.org>
-Subject: Re: [Freedreno] [DPU PATCH] drm/msm/dpu: Clean up dpu hw interrupts
-Date: Fri, 14 Dec 2018 08:32:17 -0700
-Message-ID: <20181214153217.GC29770@jcrouse-lnx.qualcomm.com>
-References: <1544777352-11455-1-git-send-email-jshekhar@codeaurora.org>
+From: Eddie James <eajames@linux.ibm.com>
+Subject: Re: [PATCH v8 2/2] media: platform: Add Aspeed Video Engine driver
+Date: Fri, 14 Dec 2018 09:41:47 -0600
+Message-ID: <34bb2594-b0ab-f3a0-4d46-ba9a870c958b@linux.ibm.com>
+References: <1544547421-25724-1-git-send-email-eajames@linux.ibm.com>
+ <1544547421-25724-3-git-send-email-eajames@linux.ibm.com>
+ <CACPK8XdQbq-9MbP7uMemyp0=Q+t1qnWNREdZRiyEcrART9vRig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1544777352-11455-1-git-send-email-jshekhar@codeaurora.org>
+In-Reply-To: <CACPK8XdQbq-9MbP7uMemyp0=Q+t1qnWNREdZRiyEcrART9vRig@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jayant Shekhar <jshekhar@codeaurora.org>
-Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, abhinavk@codeaurora.org, robdclark@gmail.com, nganji@codeaurora.org, seanpaul@chromium.org, hoegsberg@chromium.org, jsanka@codeaurora.org, chandanu@codeaurora.org
+To: Joel Stanley <joel@jms.id.au>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-aspeed@lists.ozlabs.org, hverkuil@xs4all.nl, Rob Herring <robh+dt@kernel.org>, mchehab@kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 14, 2018 at 02:19:12PM +0530, Jayant Shekhar wrote:
-> Remove unused functions and macros from dpu hw interrupts
-> file.
-> 
-> Signed-off-by: Jayant Shekhar <jshekhar@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c | 30 --------------------
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h | 34 -----------------------
->  2 files changed, 64 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c
-> index c0b7f00..0f70cee 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c
-> @@ -170,10 +170,6 @@
->  /**
->   * AD4 interrupt status bit definitions
->   */
-> -#define DPU_INTR_BRIGHTPR_UPDATED BIT(4)
-> -#define DPU_INTR_DARKENH_UPDATED BIT(3)
-> -#define DPU_INTR_STREN_OUTROI_UPDATED BIT(2)
-> -#define DPU_INTR_STREN_INROI_UPDATED BIT(1)
->  #define DPU_INTR_BACKLIGHT_UPDATED BIT(0)
->  /**
->   * struct dpu_intr_reg - array of DPU register sets
-> @@ -782,18 +778,6 @@ static int dpu_hw_intr_irqidx_lookup(enum dpu_intr_type intr_type,
->  	return -EINVAL;
->  }
->  
-> -static void dpu_hw_intr_set_mask(struct dpu_hw_intr *intr, uint32_t reg_off,
-> -		uint32_t mask)
-> -{
-> -	if (!intr)
-> -		return;
-> -
-> -	DPU_REG_WRITE(&intr->hw, reg_off, mask);
-> -
-> -	/* ensure register writes go through */
-> -	wmb();
-> -}
-> -
->  static void dpu_hw_intr_dispatch_irq(struct dpu_hw_intr *intr,
->  		void (*cbfunc)(void *, int),
->  		void *arg)
-> @@ -1004,18 +988,6 @@ static int dpu_hw_intr_disable_irqs(struct dpu_hw_intr *intr)
->  	return 0;
->  }
->  
-> -static int dpu_hw_intr_get_valid_interrupts(struct dpu_hw_intr *intr,
-> -		uint32_t *mask)
-> -{
-> -	if (!intr || !mask)
-> -		return -EINVAL;
-> -
-> -	*mask = IRQ_SOURCE_MDP | IRQ_SOURCE_DSI0 | IRQ_SOURCE_DSI1
-> -		| IRQ_SOURCE_HDMI | IRQ_SOURCE_EDP;
-> -
-> -	return 0;
-> -}
-> -
->  static void dpu_hw_intr_get_interrupt_statuses(struct dpu_hw_intr *intr)
->  {
->  	int i;
-> @@ -1113,14 +1085,12 @@ static u32 dpu_hw_intr_get_interrupt_status(struct dpu_hw_intr *intr,
->  
->  static void __setup_intr_ops(struct dpu_hw_intr_ops *ops)
->  {
-> -	ops->set_mask = dpu_hw_intr_set_mask;
->  	ops->irq_idx_lookup = dpu_hw_intr_irqidx_lookup;
->  	ops->enable_irq = dpu_hw_intr_enable_irq;
->  	ops->disable_irq = dpu_hw_intr_disable_irq;
->  	ops->dispatch_irqs = dpu_hw_intr_dispatch_irq;
->  	ops->clear_all_irqs = dpu_hw_intr_clear_irqs;
->  	ops->disable_all_irqs = dpu_hw_intr_disable_irqs;
-> -	ops->get_valid_interrupts = dpu_hw_intr_get_valid_interrupts;
->  	ops->get_interrupt_statuses = dpu_hw_intr_get_interrupt_statuses;
->  	ops->clear_interrupt_status = dpu_hw_intr_clear_interrupt_status;
-
-I think you can zap clear_interrupt_status too.  Other than that, this looks
-real good. Lots of nice negative lines.
 
 
->  	ops->clear_intr_status_nolock = dpu_hw_intr_clear_intr_status_nolock;
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h
-> index 61e4cba..985f873 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h
-> @@ -20,13 +20,6 @@
->  #include "dpu_hw_util.h"
->  #include "dpu_hw_mdss.h"
->  
-> -#define IRQ_SOURCE_MDP		BIT(0)
-> -#define IRQ_SOURCE_DSI0		BIT(4)
-> -#define IRQ_SOURCE_DSI1		BIT(5)
-> -#define IRQ_SOURCE_HDMI		BIT(8)
-> -#define IRQ_SOURCE_EDP		BIT(12)
-> -#define IRQ_SOURCE_MHL		BIT(16)
-> -
->  /**
->   * dpu_intr_type - HW Interrupt Type
->   * @DPU_IRQ_TYPE_WB_ROT_COMP:		WB rotator done
-> @@ -96,18 +89,6 @@ enum dpu_intr_type {
->   */
->  struct dpu_hw_intr_ops {
->  	/**
-> -	 * set_mask - Programs the given interrupt register with the
-> -	 *            given interrupt mask. Register value will get overwritten.
-> -	 * @intr:	HW interrupt handle
-> -	 * @reg_off:	MDSS HW register offset
-> -	 * @irqmask:	IRQ mask value
-> -	 */
-> -	void (*set_mask)(
-> -			struct dpu_hw_intr *intr,
-> -			uint32_t reg,
-> -			uint32_t irqmask);
-> -
-> -	/**
->  	 * irq_idx_lookup - Lookup IRQ index on the HW interrupt type
->  	 *                 Used for all irq related ops
->  	 * @intr_type:		Interrupt type defined in dpu_intr_type
-> @@ -206,21 +187,6 @@ struct dpu_hw_intr_ops {
->  			struct dpu_hw_intr *intr,
->  			int irq_idx,
->  			bool clear);
-> -
-> -	/**
-> -	 * get_valid_interrupts - Gets a mask of all valid interrupt sources
-> -	 *                        within DPU. These are actually status bits
-> -	 *                        within interrupt registers that specify the
-> -	 *                        source of the interrupt in IRQs. For example,
-> -	 *                        valid interrupt sources can be MDP, DSI,
-> -	 *                        HDMI etc.
-> -	 * @intr:	HW interrupt handle
-> -	 * @mask:	Returning the interrupt source MASK
-> -	 * @return:	0 for success, otherwise failure
-> -	 */
-> -	int (*get_valid_interrupts)(
-> -			struct dpu_hw_intr *intr,
-> -			uint32_t *mask);
->  };
->  
->  /**
+On 12/13/2018 07:09 PM, Joel Stanley wrote:
+> On Wed, 12 Dec 2018 at 04:09, Eddie James <eajames@linux.ibm.com> wrote:
+>> The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
+>> can capture and compress video data from digital or analog sources. With
+>> the Aspeed chip acting a service processor, the Video Engine can capture
+>> the host processor graphics output.
+>> +ASPEED VIDEO ENGINE DRIVER
+>> +M:     Eddie James <eajames@linux.ibm.com>
+>> +L:     linux-media@vger.kernel.org
+>> +L:     openbmc@lists.ozlabs.org (moderated for non-subscribers)
+> We tend to use the linux-aspeed list for upstream kernel discussions.
+> Up to you if you want to use the openbmc list though.
+>
+>>   source "drivers/media/platform/omap/Kconfig"
+>>
+>> +config VIDEO_ASPEED
+>> +       tristate "Aspeed AST2400 and AST2500 Video Engine driver"
+>> +       depends on VIDEO_V4L2
+>> +       select VIDEOBUF2_DMA_CONTIG
+>> +       help
+>> +         Support for the Aspeed Video Engine (VE) embedded in the Aspeed
+>> +         AST2400 and AST2500 SOCs. The VE can capture and compress video data
+>> +         from digital or analog sources.
+> This might need updating in response to my questions below about
+> ast2400 testing.
+>
+>> +++ b/drivers/media/platform/aspeed-video.c
+>> @@ -0,0 +1,1729 @@
+>> +// SPDX-License-Identifier: GPL-2.0+
+> You need to put this there as well:
+>
+> // Copyright 2018 IBM Corp
+>
+>
+>> +static int aspeed_video_init(struct aspeed_video *video)
+>> +{
+>> +       int irq;
+>> +       int rc;
+>> +       struct device *dev = video->dev;
+>> +
+>> +       irq = irq_of_parse_and_map(dev->of_node, 0);
+>> +       if (!irq) {
+>> +               dev_err(dev, "Unable to find IRQ\n");
+>> +               return -ENODEV;
+>> +       }
+>> +
+>> +       rc = devm_request_irq(dev, irq, aspeed_video_irq, IRQF_SHARED,
+> The datasheet indicates this IRQ is for the video engline only, so I
+> don't think you want IRQF_SHARED.
+>
+>> +                             DEVICE_NAME, video);
+>> +       if (rc < 0) {
+>> +               dev_err(dev, "Unable to request IRQ %d\n", irq);
+>> +               return rc;
+>> +       }
+>> +
+>> +       video->eclk = devm_clk_get(dev, "eclk");
+>> +       if (IS_ERR(video->eclk)) {
+>> +               dev_err(dev, "Unable to get ECLK\n");
+>> +               return PTR_ERR(video->eclk);
+>> +       }
+>> +
+>> +       video->vclk = devm_clk_get(dev, "vclk");
+>> +       if (IS_ERR(video->vclk)) {
+>> +               dev_err(dev, "Unable to get VCLK\n");
+>> +               return PTR_ERR(video->vclk);
+>> +       }
+>> +
+>> +       video->rst = devm_reset_control_get_exclusive(dev, NULL);
+>> +       if (IS_ERR(video->rst)) {
+>> +               dev_err(dev, "Unable to get VE reset\n");
+>> +               return PTR_ERR(video->rst);
+>> +       }
+> As discussed in the clock driver, this can go as you've already
+> released the reset when enabling the eclk.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I use the reset control by itself during a resolution change, so I would 
+like to have it available.
+
+>
+> However, you're requesting the clock without enabling it. You need to
+> do a clk_prepare_enable().
+
+That's because the clock is only enabled when the device is opened. No 
+reason to turn it on at boot time.
+
+>
+>> +
+>> +       rc = of_reserved_mem_device_init(dev);
+>> +       if (rc) {
+>> +               dev_err(dev, "Unable to reserve memory\n");
+>> +               return rc;
+>> +       }
+>> +
+>> +       rc = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+>> +       if (rc) {
+>> +               dev_err(dev, "Failed to set DMA mask\n");
+>> +               of_reserved_mem_device_release(dev);
+>> +               return rc;
+>> +       }
+>> +
+>> +       if (!aspeed_video_alloc_buf(video, &video->jpeg,
+>> +                                   VE_JPEG_HEADER_SIZE)) {
+>> +               dev_err(dev, "Failed to allocate DMA for JPEG header\n");
+>> +               of_reserved_mem_device_release(dev);
+>> +               return rc;
+>> +       }
+>> +
+>> +       aspeed_video_init_jpeg_table(video->jpeg.virt, video->yuv420);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static const struct of_device_id aspeed_video_of_match[] = {
+>> +       { .compatible = "aspeed,ast2400-video-engine" },
+> I noticed the clock driver did not have the changed required for the
+> 2400. Have you tested this on the ast2400?
+
+The clocking setup is different on the ast2400. Xiuzhi on the openbmc 
+list has been testing on the ast2400 successfully.
+
+Thanks,
+Eddie
+
+>
+>
+>> +       { .compatible = "aspeed,ast2500-video-engine" },
+>> +       {}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, aspeed_video_of_match);
+>> +
+>> +static struct platform_driver aspeed_video_driver = {
+>> +       .driver = {
+>> +               .name = DEVICE_NAME,
+>> +               .of_match_table = aspeed_video_of_match,
+>> +       },
+>> +       .probe = aspeed_video_probe,
+>> +       .remove = aspeed_video_remove,
+>> +};
