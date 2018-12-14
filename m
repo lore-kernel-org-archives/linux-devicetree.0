@@ -1,100 +1,104 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v2 11/12] drm/panel: Add Feiyang
- FY07024DI26A30-D MIPI-DSI LCD panel
-Date: Fri, 14 Dec 2018 16:35:11 +0530
-Message-ID: <CAMty3ZCkGudTL9NLnWjTPD8+xqEzY2d0oLN9x=64Hk8MzKTM5g@mail.gmail.com>
-References: <20181116163916.29621-1-jagan@amarulasolutions.com>
- <20181116163916.29621-12-jagan@amarulasolutions.com> <20181213150736.GL154160@art_vandelay>
- <CAMty3ZAv1dHCRCShXYbxqMm4wV9WGDpAKPji+3G21eWq34ODaA@mail.gmail.com> <20181213194804.GM154160@art_vandelay>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [RFC PATCH v2 08/15] usb:cdns3: Implements device operations part
+ of the API
+Date: Fri, 14 Dec 2018 16:43:24 +0530
+Message-ID: <d5623e70-7971-d729-f395-7259ab0efdb0@ti.com>
+References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
+ <1542535751-16079-9-git-send-email-pawell@cadence.com>
+ <5BFE8883.7090802@ti.com>
+ <CAL411-oKvu3EADStit=JtbcxVzM_fFGF2uPn67-wmXxPzUK6GQ@mail.gmail.com>
+ <6b19b55c-66d7-439e-df8f-7b311b45af5e@ti.com>
+ <BYAPR07MB470972A525D85B03C3037D3BDDA60@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <CAL411-oc-_0H88egpHsc06ptL12UsaE63rWwjN7novuFFx_qbA@mail.gmail.com>
+ <5a41de27-cd1f-0cfd-ccdc-dccbf0854fcb@ti.com>
+ <87bm5ol6zt.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB444Z3QAKGQELBR3SOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181213194804.GM154160@art_vandelay>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>
-Cc: Maarten Lankhorst <maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, TL Lim <tllim-F7SikzrIcFYdnm+yROfE0A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87bm5ol6zt.fsf@linux.intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@kernel.org>, Peter Chen <hzpeterchen@gmail.com>, pawell@cadence.com
+Cc: rogerq@ti.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, adouglas@cadence.com, jbergsagel@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 14, 2018 at 1:25 AM Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org> wrote:
->
-> On Fri, Dec 14, 2018 at 12:56:03AM +0530, Jagan Teki wrote:
-> > On Thu, Dec 13, 2018 at 8:37 PM Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org> wrote:
-> > >
-> > > On Fri, Nov 16, 2018 at 10:09:15PM +0530, Jagan Teki wrote:
-> > > > Feiyang FY07024DI26A30-D is 1024x600, 4-lane MIPI-DSI LCD panel.
-> > > >
-> > > > Add panel driver for it.
-> > > >
-> > > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > > > ---
-> > > >  MAINTAINERS                                   |   6 +
-> > > >  drivers/gpu/drm/panel/Kconfig                 |   9 +
-> > > >  drivers/gpu/drm/panel/Makefile                |   1 +
-> > > >  .../drm/panel/panel-feiyang-fy07024di26a30d.c | 286 ++++++++++++++++++
-> > > >  4 files changed, 302 insertions(+)
-> > > >  create mode 100644 drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
-> > > >
->
-> /snip
->
-> > > > diff --git a/drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c b/drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
-> > > > new file mode 100644
-> > > > index 000000000000..a4b46bd8fdbe
-> > > > --- /dev/null
-> > > > +++ b/drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
->
-> /snip
->
-> > > > +static int feiyang_prepare(struct drm_panel *panel)
-> > > > +{
-> > > > +     struct feiyang *ctx = panel_to_feiyang(panel);
-> > > > +     struct mipi_dsi_device *dsi = ctx->dsi;
-> > > > +     unsigned int i;
-> > > > +     int ret;
-> > > > +
-> > > > +     ret = regulator_enable(ctx->dvdd);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > > > +
-> > > > +     msleep(100);
-> > >
-> > > nit: You should do your best to correlate the sleeps with the timing parameters
-> > > from the datasheet with a comment.
-> > >
-> > > ie:
-> > >         /* T1: > 100ms */
-> > >         msleep(100);
-> >
-> > Sorry, what does this mean?
->
-> On page 9 of the datasheet you sent me [1], it has the delays required to safely
-> power up the panel. This delay is the time between dvdd going high and avdd
-> going high. On the figure in the datasheet, this would be T2 (T1 is dvdd rise
+Hi Felipe,
 
-time between dvdd going high and avdd going high is T1 + T3 right?
+On 14/12/18 4:17 PM, Felipe Balbi wrote:
+> Hi,
+> 
+> Sekhar Nori <nsekhar@ti.com> writes:
+> 
+> <snip>
+> 
+>>>>> All this should be part of comments in code along with information about
+>>>>> controller versions which suffer from the errata.
+>>>>>
+>>>>> Is there a version of controller available which does not have the
+>>>>> defect? Is there a future plan to fix this?
+>>>>>
+>>>>> If any of that is yes, you probably want to handle this with runtime
+>>>>> detection of version (like done with DWC3_REVISION_XXX macros).
+>>>>> Sometimes the hardware-read versions themselves are incorrect, so its
+>>>>> better to introduce a version specific compatible too like
+>>>>> "cdns,usb-1.0.0" (as hinted to by Rob Herring as well).
+>>>>>
+>>>>
+>>>> custom match_ep is used and works with all versions of the gen1
+>>>> controller. Future (gen2) releases of the controller won’t have such
+>>>> limitation but there is no plan to change current (gen1) functionality
+>>>> of the controller.
+>>>>
+>>>> I will add comment before cdns3_gadget_match_ep function.
+>>>> Also I will change cdns,usb3 to cdns,usb3-1.0.0 and add additional
+>>>> cdns,usb3-1.0.1 compatible.
+>>>>
+>>>> cdns,usb3-1.0.1 will be for current version of controller which I use.
+>>>> cdns,usb3-1.0.0 will be for older version - Peter Chan platform.
+>>>> I now that I have some changes in controller, and one of them require
+>>>> some changes in DRD driver. It will be safer to add two separate
+>>>> version in compatibles.
+>>>>
+>>>
+>>> Pawel, could we have correct register to show controller version? It is
+>>> better we could version judgement at runtime instead of static compatible.
+>>
+>> Agree with detecting IP version at runtime.
+>>
+>> But please have some indication of version in compatible string too,
+> 
+> why? Runtime detection by revision register should be the way to go if
+> the HW provides it. Why duplicate the information in compatible string?
+> 
+>> especially since you already know there is going to be another revision
+>> of hardware. It has the advantage that one can easily grep to see which
+>> hardware is running current version of controller without having access
+>> to the hardware itself. Becomes useful later on when its time to
+>> clean-up unused code when boards become obsolete or for requesting
+>> testing help.
+> 
+> This doesn't sound like a very strong argument, actually. Specially when
+> you consider that, since driver will do revision checking based on
+> revision register, you already have strings to grep. Moreover, we don't
+> usually drop support just like that.
 
-T2 > 0ms
-T3 > 20ms
+AFAICS, it is impossible to know just by grep'ing if there is any
+hardware still supported in kernel and using DWC3_REVISION_194A, for
+example.
 
-In this case the delay can be msleep(20) ?
+If we are never going to drop support for any revision, this does not
+matter much.
 
-> time and should be handled in the regulator subsystem (iirc)). Also according to
-> the datasheet, T2 just needs to be > 0, so you don't even need this delay. You
-> could replace this with a comment like:
->
->         /* T1 (dvdd rise time) + T2 (dvdd->avdd) > 0 */
->
-> So for all of the msleeps below you should get the delays from the datasheet and
-> add a comment referencing them.
+Also, once you have the controller supported behind PCI, then I guess
+you are pretty much tied to having to read hardware revision at runtime.
 
-T5 and T6 are delay between avdd to reset enable it can be 10 + 10
-=&gt; 20ms and finally T12 which is 200 after reset.
+> Personally, I wouldn't bother. Just like dwc3 never bothered and nothing
+> bad came about because of it. Well, there are quirks which are
+> undetectable and for those we have quirk flags. I much prefer that
+> arrangement.
 
-What about the delay between resets, I need to understand it a bit.
+Yes, quirk flags will work too for undetectable quirks.
+
+Thanks,
+Sekhar
