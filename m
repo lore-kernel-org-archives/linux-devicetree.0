@@ -1,81 +1,194 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH] dt-bindings: usb: renesas_usbhs: Add r8a774c0 support
-Date: Fri, 14 Dec 2018 09:37:32 +0000
-Message-ID: <TY1PR01MB1770B22A29EB0FB0402676A2C0A10@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1544732463-6685-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <TY2PR01MB2297D670A9D3B8D4B5BC0389D8A10@TY2PR01MB2297.jpnprd01.prod.outlook.com>
- <TYXPR01MB1775F0716AF9A20220FF961CC0A10@TYXPR01MB1775.jpnprd01.prod.outlook.com>
- <TY2PR01MB22970241F86719C84841D929D8A10@TY2PR01MB2297.jpnprd01.prod.outlook.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 1/4] phy: ti: usb2: Fix logic on -EPROBE_DEFER
+Date: Fri, 14 Dec 2018 11:41:54 +0200
+Message-ID: <5C137AE2.4080803@ti.com>
+References: <1544022206-2300-1-git-send-email-rogerq@ti.com>
+ <1544022206-2300-2-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <TY2PR01MB22970241F86719C84841D929D8A10@TY2PR01MB2297.jpnprd01.prod.outlook.com>
-Content-Language: en-US
+In-Reply-To: <1544022206-2300-2-git-send-email-rogerq@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+To: kishon@ti.com, Tony Lindgren <tony@atomide.com>
+Cc: robh+dt@kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thank you Yoshihiro-san
+Kishon,
 
-> From: Yoshihiro Shimoda
-> Sent: 14 December 2018 09:15
-> Subject: RE: [PATCH] dt-bindings: usb: renesas_usbhs: Add r8a774c0 suppor=
-t
->
-> Hello Fabrizio-san,
->
-> > From: Fabrizio Castro, Sent: Friday, December 14, 2018 5:16 PM
-> >
-> > Hello Yoshihiro-san,
-> >
-> > Thank you for your feedback!
-> >
-> > > From: Yoshihiro Shimoda
-> > > Sent: 14 December 2018 06:01
-> > > Subject: RE: [PATCH] dt-bindings: usb: renesas_usbhs: Add r8a774c0 su=
-pport
-> > >
-> > > Hi Fabrizio,
-> > >
-> > > > From: Fabrizio Castro, Sent: Friday, December 14, 2018 5:21 AM
-> > > >
-> > > > Document RZ/G2E (R8A774C0) SoC bindings.
-> > > >
-> > > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > >
-> > > Thank you for the patch!
-> > >
-> > > Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > >
-> > > By the way, I'm not sure, but I'm wondering that we need to add
-> > > .compatible renesas,usbhs-r8a774c0 with .data USBHS_TYPE_RCAR_GEN3_WI=
-TH_PLL
-> > > like r8a77990 to the drivers/usb/renesas_usbhs/common.c.
-> > > What do you think?
-> >
-> > Yeah, you are right, I am going to send a patch for that shortly.
->
-> Thank you for submitting a patch!
-> I have reviewed you patch and submitted my Acked-by.
->
-> Best regards,
-> Yoshihiro Shimoda
+On 05/12/18 17:03, Roger Quadros wrote:
+> If clk_get() returns -EPROBE_DEFER then we should just
+> return instead of falling back to old clock name.
+> 
+> Use clk_prepare_enable() and clk_disable_unprepare() instead
+> of splitting up prepare/unprepare from enable/disable.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+
+I think you should pick this one for -next independently of the rest
+of the series as Tony's ti-sysc patches might cause this issue to trigger
+due to re-ordering of devices.
 
 
+cheers,
+-roger
 
-[https://www2.renesas.eu/media/email/unicef.jpg]
+> ---
+>  drivers/phy/ti/phy-omap-usb2.c | 88 ++++++++++++++++++++++--------------------
+>  1 file changed, 47 insertions(+), 41 deletions(-)
+> 
+> diff --git a/drivers/phy/ti/phy-omap-usb2.c b/drivers/phy/ti/phy-omap-usb2.c
+> index fe909fd..418e7f1 100644
+> --- a/drivers/phy/ti/phy-omap-usb2.c
+> +++ b/drivers/phy/ti/phy-omap-usb2.c
+> @@ -135,9 +135,9 @@ static int omap_usb_power_on(struct phy *x)
+>  
+>  static int omap_usb2_disable_clocks(struct omap_usb *phy)
+>  {
+> -	clk_disable(phy->wkupclk);
+> +	clk_disable_unprepare(phy->wkupclk);
+>  	if (!IS_ERR(phy->optclk))
+> -		clk_disable(phy->optclk);
+> +		clk_disable_unprepare(phy->optclk);
+>  
+>  	return 0;
+>  }
+> @@ -146,14 +146,14 @@ static int omap_usb2_enable_clocks(struct omap_usb *phy)
+>  {
+>  	int ret;
+>  
+> -	ret = clk_enable(phy->wkupclk);
+> +	ret = clk_prepare_enable(phy->wkupclk);
+>  	if (ret < 0) {
+>  		dev_err(phy->dev, "Failed to enable wkupclk %d\n", ret);
+>  		goto err0;
+>  	}
+>  
+>  	if (!IS_ERR(phy->optclk)) {
+> -		ret = clk_enable(phy->optclk);
+> +		ret = clk_prepare_enable(phy->optclk);
+>  		if (ret < 0) {
+>  			dev_err(phy->dev, "Failed to enable optclk %d\n", ret);
+>  			goto err1;
+> @@ -346,63 +346,72 @@ static int omap_usb2_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> -	otg->set_host		= omap_usb_set_host;
+> -	otg->set_peripheral	= omap_usb_set_peripheral;
+> -	if (phy_data->flags & OMAP_USB2_HAS_SET_VBUS)
+> -		otg->set_vbus		= omap_usb_set_vbus;
+> -	if (phy_data->flags & OMAP_USB2_HAS_START_SRP)
+> -		otg->start_srp		= omap_usb_start_srp;
+> -	otg->usb_phy		= &phy->phy;
+> -
+> -	platform_set_drvdata(pdev, phy);
+> -	pm_runtime_enable(phy->dev);
+> -
+> -	generic_phy = devm_phy_create(phy->dev, NULL, &ops);
+> -	if (IS_ERR(generic_phy)) {
+> -		pm_runtime_disable(phy->dev);
+> -		return PTR_ERR(generic_phy);
+> -	}
+> -
+> -	phy_set_drvdata(generic_phy, phy);
+> -	omap_usb_power_off(generic_phy);
+> -
+> -	phy_provider = devm_of_phy_provider_register(phy->dev,
+> -			of_phy_simple_xlate);
+> -	if (IS_ERR(phy_provider)) {
+> -		pm_runtime_disable(phy->dev);
+> -		return PTR_ERR(phy_provider);
+> -	}
+>  
+>  	phy->wkupclk = devm_clk_get(phy->dev, "wkupclk");
+>  	if (IS_ERR(phy->wkupclk)) {
+> -		dev_warn(&pdev->dev, "unable to get wkupclk, trying old name\n");
+> +		if (PTR_ERR(phy->wkupclk) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +
+> +		dev_warn(&pdev->dev, "unable to get wkupclk %ld, trying old name\n",
+> +			 PTR_ERR(phy->wkupclk));
+>  		phy->wkupclk = devm_clk_get(phy->dev, "usb_phy_cm_clk32k");
+> +
+>  		if (IS_ERR(phy->wkupclk)) {
+> -			dev_err(&pdev->dev, "unable to get usb_phy_cm_clk32k\n");
+> -			pm_runtime_disable(phy->dev);
+> +			if (PTR_ERR(phy->wkupclk) != -EPROBE_DEFER)
+> +				dev_err(&pdev->dev, "unable to get usb_phy_cm_clk32k\n");
+>  			return PTR_ERR(phy->wkupclk);
+>  		} else {
+>  			dev_warn(&pdev->dev,
+>  				 "found usb_phy_cm_clk32k, please fix DTS\n");
+>  		}
+>  	}
+> -	clk_prepare(phy->wkupclk);
+>  
+>  	phy->optclk = devm_clk_get(phy->dev, "refclk");
+>  	if (IS_ERR(phy->optclk)) {
+> +		if (PTR_ERR(phy->optclk) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +
+>  		dev_dbg(&pdev->dev, "unable to get refclk, trying old name\n");
+>  		phy->optclk = devm_clk_get(phy->dev, "usb_otg_ss_refclk960m");
+> +
+>  		if (IS_ERR(phy->optclk)) {
+> -			dev_dbg(&pdev->dev,
+> -				"unable to get usb_otg_ss_refclk960m\n");
+> +			if (PTR_ERR(phy->optclk) != -EPROBE_DEFER) {
+> +				dev_dbg(&pdev->dev,
+> +					"unable to get usb_otg_ss_refclk960m\n");
+> +			}
+>  		} else {
+>  			dev_warn(&pdev->dev,
+>  				 "found usb_otg_ss_refclk960m, please fix DTS\n");
+>  		}
+>  	}
+>  
+> -	if (!IS_ERR(phy->optclk))
+> -		clk_prepare(phy->optclk);
+> +	otg->set_host = omap_usb_set_host;
+> +	otg->set_peripheral = omap_usb_set_peripheral;
+> +	if (phy_data->flags & OMAP_USB2_HAS_SET_VBUS)
+> +		otg->set_vbus = omap_usb_set_vbus;
+> +	if (phy_data->flags & OMAP_USB2_HAS_START_SRP)
+> +		otg->start_srp = omap_usb_start_srp;
+> +	otg->usb_phy = &phy->phy;
+> +
+> +	platform_set_drvdata(pdev, phy);
+> +	pm_runtime_enable(phy->dev);
+> +
+> +	generic_phy = devm_phy_create(phy->dev, NULL, &ops);
+> +	if (IS_ERR(generic_phy)) {
+> +		pm_runtime_disable(phy->dev);
+> +		return PTR_ERR(generic_phy);
+> +	}
+> +
+> +	phy_set_drvdata(generic_phy, phy);
+> +	omap_usb_power_off(generic_phy);
+> +
+> +	phy_provider = devm_of_phy_provider_register(phy->dev,
+> +						     of_phy_simple_xlate);
+> +	if (IS_ERR(phy_provider)) {
+> +		pm_runtime_disable(phy->dev);
+> +		return PTR_ERR(phy_provider);
+> +	}
+> +
+>  
+>  	usb_add_phy_dev(&phy->phy);
+>  
+> @@ -413,9 +422,6 @@ static int omap_usb2_remove(struct platform_device *pdev)
+>  {
+>  	struct omap_usb	*phy = platform_get_drvdata(pdev);
+>  
+> -	clk_unprepare(phy->wkupclk);
+> -	if (!IS_ERR(phy->optclk))
+> -		clk_unprepare(phy->optclk);
+>  	usb_remove_phy(&phy->phy);
+>  	pm_runtime_disable(phy->dev);
+>  
+> 
 
-This Christmas, instead of sending out cards, Renesas Electronics Europe ha=
-ve decided to support Unicef with a donation. For further details click her=
-e<https://www.unicef.org/> to find out about the valuable work they do, hel=
-ping children all over the world.
-We would like to take this opportunity to wish you a Merry Christmas and a =
-prosperous New Year.
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
