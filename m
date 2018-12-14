@@ -1,61 +1,39 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/3] clk: imx: imx7ulp: add arm hsrun mode clocks support
-Date: Fri, 14 Dec 2018 14:04:43 -0800
-Message-ID: <154482508301.19322.1653003805163251008@swboyd.mtv.corp.google.com>
-References: <1544176659-32022-1-git-send-email-Anson.Huang@nxp.com> <1544176659-32022-2-git-send-email-Anson.Huang@nxp.com>
+Subject: Re: [PATCH v2 0/5] Add CPU clock support for Armada 7K/8K
+Date: Fri, 14 Dec 2018 14:09:22 -0800
+Message-ID: <154482536298.19322.16460657058404864070@swboyd.mtv.corp.google.com>
+References: <20181206171516.15891-1-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544176659-32022-2-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181206171516.15891-1-gregory.clement@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Anson Huang (2018-12-07 02:03:34)
-> i.MX7ULP has a Cortex-A7 CPU which can run in RUN mode
-> or HSRUN mode, it is controlled in SMC1 module. The RUN
-> mode and HSRUN mode will use different clock source for
-> ARM, "divcore" for RUN mode and "hsrun_divcore" for HSRUN
-> mode, so the control bits in SMC1 module can be abstracted
-> as a HW clock mux, this patch adds HSRUN mode related
-> clocks in SCG1 module and adds "arm" clock in SMC1 module
-> to support RUN mode and HSRUN mode switch.
->=20
-> Latest clock tree in RUN mode as below:
->=20
->  firc                                 0        0        0    48000000    =
-      0     0  50000
->     firc_bus_clk                      0        0        0    48000000    =
-      0     0  50000
->     hsrun_scs_sel                     0        0        0    48000000    =
-      0     0  50000
->        hsrun_divcore                  0        0        0    48000000    =
-      0     0  50000
->=20
->  sosc                                 3        3        3    24000000    =
-      0     0  50000
->     spll_pre_sel                      1        1        1    24000000    =
-      0     0  50000
->        spll_pre_div                   1        1        2    24000000    =
-      0     0  50000
->           spll                        1        1        2   528000000    =
-      0     0  50000
->              spll_pfd0                1        1        1   500210526    =
-      0     0  50000
->                 spll_pfd_sel          1        1        0   500210526    =
-      0     0  50000
->                    spll_sel           1        1        0   500210526    =
-      0     0  50000
->                       scs_sel         1        1        0   500210526    =
-      0     0  50000
->                          divcore      1        1        0   500210526    =
-      0     0  50000
->                             arm       1        1        0   500210526    =
-      0     0  50000
->=20
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-
-Applied to clk-next
+Quoting Gregory CLEMENT (2018-12-06 09:15:11)
+> Hello,
+> 
+> This is the second version of a series allowing to manage the cpu
+> clock for Armada 7K/8K. For these SoCs, the CPUs share the same clock
+> by cluster, so actually the clock management is done at cluster level.
+> 
+> As for the other Armada 7K/8K clocks it is possible to have multiple
+> AP so here again we need to have unique name: the purpose of the second
+> patch is to share a common code which will be used in 3 drivers.
+> 
+> The last 2 patch enable the driver at dt and platform level and will
+> be applied through the mvebu subsystem.
+ 
+The binding "marvell,ap806-cpu-clock" is not documented. It was in the
+previous series but then got dropped from this one? Why?
