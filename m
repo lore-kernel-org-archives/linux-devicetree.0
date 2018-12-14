@@ -1,57 +1,56 @@
-From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH v5 2/3] Input: atmel_mxt_ts: Wait for device be ready for communication
-Date: Fri, 14 Dec 2018 16:12:13 +0100
-Message-ID: <20181214151214.5391-3-pawel.mikolaj.chmiel@gmail.com>
-References: <20181214151214.5391-1-pawel.mikolaj.chmiel@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: am33xx: Remove unnecessary properties
+Date: Fri, 14 Dec 2018 07:18:25 -0800
+Message-ID: <20181214151825.GU6707@atomide.com>
+References: <20181210132448.7865-1-fb@ltec.ch>
+ <20181211163618.GU6707@atomide.com>
+ <20181211164336.GV6707@atomide.com>
+ <89710fa1-38a9-1628-0651-003332780483@ltec.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181214151214.5391-1-pawel.mikolaj.chmiel@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <89710fa1-38a9-1628-0651-003332780483@ltec.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: nick@shmanahar.org
-Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+To: Felix Brack <fb@ltec.ch>
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, mpfj@newflow.co.uk, mark.rutland@arm.com, robh+dt@kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-According to documentation, device isn't ready for communication,
-until firmware asserts the CHG line. Add missing wait for this.
+* Felix Brack <fb@ltec.ch> [181214 15:12]:
+> Hi Tony,
+> 
+> On 11.12.2018 17:43, Tony Lindgren wrote:
+> > * Tony Lindgren <tony@atomide.com> [181211 16:36]:
+> >> * Felix Brack <fb@ltec.ch> [181210 05:25]:
+> >>> Remove the unnecessary properties #address-cells and #size-cells
+> >>> of node pinmux as there are no child-nodes with property reg.
+> >>
+> >> Applying into omap-for-v4.21/dt thanks.
+> > 
+> > Actually this currently conflicts with the pending
+> > am33xx l4 ti-sysc changes, so let's wait on this
+> > one to avoid causing merge conflicts between
+> > branches.
+> >
+> Okay, I see. The changes introduced by my patch would then affect the
+> new file am33xx-l4.dtsi instead of am33xx.dtsi
 
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
----
-Changes from v1:
-  - Fix checkpatch issues
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Yup, and I wanted to keep the am33xx-l4.dtsi in a separate
+branch from the rest of the dts changes.
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 55a107fc1b73..e8949c6ceafa 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -202,6 +202,7 @@ enum t100_type {
- #define MXT_CRC_TIMEOUT		1000	/* msec */
- #define MXT_FW_RESET_TIME	3000	/* msec */
- #define MXT_FW_CHG_TIMEOUT	300	/* msec */
-+#define MXT_POWERON_DELAY	150	/* msec */
- 
- /* Command to unlock bootloader */
- #define MXT_UNLOCK_CMD_MSB	0xaa
-@@ -3070,6 +3071,16 @@ static int mxt_regulator_enable(struct mxt_data *data)
- 		msleep(MXT_REGULATOR_DELAY);
- 		gpiod_set_value(data->reset_gpio, 1);
- 		msleep(MXT_RESET_INVALID_CHG);
-+
-+retry_wait:
-+		reinit_completion(&data->bl_completion);
-+		data->in_bootloader = true;
-+		error = mxt_wait_for_completion(data, &data->bl_completion,
-+						MXT_POWERON_DELAY);
-+		if (error == -EINTR)
-+			goto retry_wait;
-+
-+		data->in_bootloader = false;
- 	}
- 
- 	return 0;
--- 
-2.17.1
+> > So dropping for now.
+> >
+> Will you "apply" my patch once the am33xx l4 ti-sysc changes are applied
+> or do you expect me to send V2 patch (to be applied to the new
+> am33xx-l4.dtsi) ?
+
+I'd prefer you to send an updated version against
+Linux next as the am33xx-l4.dtsi changes have been
+in next for a while now. It is unlikely at this point
+that they would not get merged, but I'd rather wait
+a bit before applying to avoid mixing the two otherwise
+independent branches :)
+
+Regards,
+
+Tony
