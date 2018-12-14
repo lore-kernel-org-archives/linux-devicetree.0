@@ -1,43 +1,48 @@
-From: Tomasz Duszynski <tduszyns@gmail.com>
-Subject: [PATCH v4 3/3] iio: chemical: sps30: add device tree support
-Date: Fri, 14 Dec 2018 19:28:03 +0100
-Message-ID: <20181214182803.9006-4-tduszyns@gmail.com>
-References: <20181214182803.9006-1-tduszyns@gmail.com>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH 1/4] ARM: dts: aspeed: Add sensors devices for Facebook
+Date: Fri, 14 Dec 2018 11:18:02 -0800
+Message-ID: <c1e35845-cb07-048f-bcf7-d7239a387027@linux.intel.com>
+References: <20181213195319.1333402-1-vijaykhemka@fb.com>
+ <CACPK8XfAXDHqWcD=OKm4UhCh-+-7GBxL02Fi9_jgdmo2ZQZSjg@mail.gmail.com>
+ <B6C3C92D-1F9E-4425-ABF5-718D1A6755EB@fb.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181214182803.9006-1-tduszyns@gmail.com>
+In-Reply-To: <B6C3C92D-1F9E-4425-ABF5-718D1A6755EB@fb.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-iio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, jic23@jic23.retrosnub.co.uk, a.brauchli@elementarea.net, Tomasz Duszynski <tduszyns@gmail.com>
+To: Vijay Khemka <vijaykhemka@fb.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "james.feist@linux.intel.com" <james.feist@linux.intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support for Sensirion SPS30 particulate
-matter sensor.
+Hi Vijay,
 
-Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
----
- .../bindings/iio/chemical/sensirion,sps30.txt        | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
+On 12/14/2018 10:11 AM, Vijay Khemka wrote:
+> On 12/13/18, 2:56 PM, "Joel Stanley" <joel@jms.id.au> wrote:
 
-diff --git a/Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt b/Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
-new file mode 100644
-index 000000000000..6eee2709b5b6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/chemical/sensirion,sps30.txt
-@@ -0,0 +1,12 @@
-+* Sensirion SPS30 particulate matter sensor
-+
-+Required properties:
-+- compatible: must be "sensirion,sps30"
-+- reg: the I2C address of the sensor
-+
-+Example:
-+
-+sps30@69 {
-+	compatible = "sensirion,sps30";
-+	reg = <0x69>;
-+};
--- 
-2.20.0
+<snip>
+
+>      > +               oemname0 = "MB_P3V3";
+>      > +               oemname1 = "MB_P5V";
+>      > +               oemname2 = "MB_P12V";
+>      > +               oemname3 = "MB_P1V05";
+>      > +               oemname4 = "MB_PVNN_PCH_STBY";
+>      > +               oemname5 = "MB_P3V3_STBY";
+>      > +               oemname6 = "MB_P5V_STBY";
+>      
+>      "oemname" isn't part of the upstream bindings. Is this something you
+>      have patches for?
+> This is a workaround field used by dbus-sensors application to avoid overlay for dynamic detection of devices based on json file definition.
+> 
+> Can you please also review other 3 patches in this series.
+>      
+> 
+
+These oemname settings should not be added into here. You can add these
+information into configuration of entity manager which uses overlay
+templates for dbus-sensors. Also, as Joel said, "oemname" isn't part of
+the upstream bindings.
+
+Cheers,
+Jae
