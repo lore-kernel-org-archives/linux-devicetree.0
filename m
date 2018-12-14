@@ -1,111 +1,46 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 0/7] v4.19-stable randconfig fixes
-Date: Fri, 14 Dec 2018 23:10:05 +0100
-Message-ID: <20181214221023.3878670-1-arnd@arndb.de>
+Subject: [PATCH 6/7] [stable-4.19] ARM: dts: qcom-apq8064-arrow-sd-600eval fix graph_endpoint warning
+Date: Fri, 14 Dec 2018 23:10:11 +0100
+Message-ID: <20181214221023.3878670-7-arnd@arndb.de>
+References: <20181214221023.3878670-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20181214221023.3878670-1-arnd@arndb.de>
+Sender: stable-owner@vger.kernel.org
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-aspeed@lists.ozlabs.org, Peter Zijlstra <peterz@infradead.org>, David Brown <david.brown@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-i2c@vger.kernel.org, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, Daniel Drake <dsd@laptop.org>, linux-scsi@vger.kernel.org, Jens Frederich <jfrederich@gmail.com>, openbmc@lists.ozlabs.org, Ingo Molnar <mingo@redhat.com>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, dou_liyang@163.com, Rob Herring <robh+dt@kernel.org>, bp@alien8.de, Vincent Guittot <vincent.guittot@linaro.org>, linux-arm-kernel@lists.infradead.org, "Martin K. Petersen" <martin.petersen@oracle.com>, Andrew Jeffery <andrew@aj.id.au>, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg,
+Upstream commit 972910948fb6 ("ARM: dts: qcom: Remove Arrow SD600
+eval board") removed this file because there are no known users,
+but in linux-4.19.y, we still get a compile-time warnign for it:
 
-I did some randconfig testing on linux-4.19 arm/arm64/x86. So far I needed
-27 patches, most of which are also still needed in mainline Linux. I
-had submitted some before, and others were not submitted previously
-for some reason. I'll try to get those fixed in mainline and then
-make sure we get them into 4.19 as well.
+arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dtb: Warning (graph_endpoint): /soc/mdp@5100000/ports/port@3/endpoint: graph connection to node '/soc/hdmi-tx@4a00000/ports/port@0/endpoint' is not bidirectional
 
-This series for now contains four patches that did make it into mainline:
+Address the warning by adding the remote endpoint that makes the link
+bidirectional. This is the same property that other boards use.
 
-2e6ae11dd0d1 ("slimbus: ngd: mark PM functions as __maybe_unused")
-33f49571d750 ("staging: olpc_dcon: add a missing dependency")
-0eeec01488da ("scsi: raid_attrs: fix unused variable warning")
-11d4afd4ff66 ("sched/pelt: Fix warning and clean up IRQ PELT config")
-
-Feel free to either cherry-pick those from mainline or apply the
-patch from this series, whichever works best for you.
-
-The other three patches are for warnings in code that got removed in
-mainline kernels:
-
-3e9efc3299dd ("i2c: aspeed: Handle master/slave combined irq events properly")
-972910948fb6 ("ARM: dts: qcom: Remove Arrow SD600 eval board")
-effec874792f ("drm/msm/dpu: Remove dpu_dbg")
-
-My feeling was that it's safer to just address the warning by fixing
-the code correctly in each of these cases, but if you disagree,
-applying the mainline change should work equally well, so decide
-for yourself.
-
-      Arnd
-
-Arnd Bergmann (5):
-  scsi: raid_attrs: fix unused variable warning
-  slimbus: ngd: mark PM functions as __maybe_unused
-  [stable-4.19] i2c: aspeed: fix build warning
-  [stable-4.19] ARM: dts: qcom-apq8064-arrow-sd-600eval fix
-    graph_endpoint warning
-  [stable-4.19] drm/msm:  fix address space warning
-
-Lubomir Rintel (1):
-  staging: olpc_dcon: add a missing dependency
-
-Vincent Guittot (1):
-  sched/pelt: Fix warning and clean up IRQ PELT config
-
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
  arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts | 5 +++++
- drivers/gpu/drm/msm/disp/dpu1/dpu_dbg.c             | 8 ++++----
- drivers/i2c/busses/i2c-aspeed.c                     | 4 +++-
- drivers/scsi/raid_class.c                           | 4 +---
- drivers/slimbus/qcom-ngd-ctrl.c                     | 6 ++----
- drivers/staging/olpc_dcon/Kconfig                   | 1 +
- init/Kconfig                                        | 5 +++++
- kernel/sched/core.c                                 | 7 +++----
- kernel/sched/fair.c                                 | 2 +-
- kernel/sched/pelt.c                                 | 2 +-
- kernel/sched/pelt.h                                 | 2 +-
- kernel/sched/sched.h                                | 5 ++---
- 12 files changed, 29 insertions(+), 22 deletions(-)
+ 1 file changed, 5 insertions(+)
 
-Cc: Andrew Jeffery <andrew@aj.id.au>
-Cc: Andy Gross <andy.gross@linaro.org>
-Cc: bp@alien8.de
-Cc: Daniel Drake <dsd@laptop.org>
-Cc: David Brown <david.brown@linaro.org>
-Cc: dou_liyang@163.com
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>
-Cc: Jens Frederich <jfrederich@gmail.com>
-Cc: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rob Clark <robdclark@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: freedreno@lists.freedesktop.org
-Cc: linux-i2c@vger.kernel.org
-Cc: openbmc@lists.ozlabs.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-aspeed@lists.ozlabs.org
-Cc: linux-scsi@vger.kernel.org
-
-
+diff --git a/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts b/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts
+index 76b56eafaab9..f714a20649d7 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dts
+@@ -387,6 +387,11 @@
+ 			hpd-gpio = <&tlmm_pinmux 72 GPIO_ACTIVE_HIGH>;
+ 
+ 			ports {
++				port@0 {
++					endpoint {
++						remote-endpoint = <&mdp_dtv_out>;
++					};
++				};
+ 				port@1 {
+ 					endpoint {
+ 						remote-endpoint = <&hdmi_con>;
 -- 
 2.20.0
