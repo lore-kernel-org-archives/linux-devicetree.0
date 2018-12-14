@@ -1,50 +1,29 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] arm64: dts: sdm845: Add gpu and gmu
- device nodes
-Date: Fri, 14 Dec 2018 09:04:07 -0800
-Message-ID: <CAD=FV=VQEtQtnPJyo6vLm7ndPjowZ35FY-cibJyN_imZMoVU3w@mail.gmail.com>
-References: <20181212211848.26768-1-jcrouse@codeaurora.org>
- <20181212211848.26768-3-jcrouse@codeaurora.org>
- <20181214044057.wybv6wqg75qdnmic@vireshk-i7>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/2] of: of_node_get()/of_node_put() nodes held in phandle cache
+Date: Fri, 14 Dec 2018 11:15:36 -0600
+Message-ID: <CAL_JsqKn8RpRmk7OQB9nEM6nZMfdyjgomqMqLU=u+q2qUzQQCg@mail.gmail.com>
+References: <1544769771-5468-1-git-send-email-frowand.list@gmail.com> <1544769771-5468-2-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181214044057.wybv6wqg75qdnmic@vireshk-i7>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1544769771-5468-2-git-send-email-frowand.list@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: mwb@linux.vnet.ibm.com, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Michael Ellerman <mpe@ellerman.id.au>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, tlfalcon@linux.vnet.ibm.com, minkim@us.ibm.com, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBUaHUsIERlYyAxMywgMjAxOCBhdCA4OjQxIFBNIFZpcmVzaCBLdW1hciA8dmlyZXNo
-Lmt1bWFyQGxpbmFyby5vcmc+IHdyb3RlOgo+Cj4gT24gMTItMTItMTgsIDE0OjE4LCBKb3JkYW4g
-Q3JvdXNlIHdyb3RlOgo+ID4gKyAgICAgICAgICAgICAgICAgICAgIGdwdV9vcHBfdGFibGU6IG9w
-cC10YWJsZSB7Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0g
-Im9wZXJhdGluZy1wb2ludHMtdjItcWNvbS1sZXZlbCI7Cj4KPiBJIHRoaW5rIHlvdSBuZWVkIHRv
-IG1lbnRpb24gIm9wZXJhdGluZy1wb2ludHMtdjIiIGFzIHdlbGwgaGVyZS4KCkFyZSB5b3Ugc2F5
-aW5nIHRoZSBhYm92ZSBzaG91bGQgYmU6CiAgY29tcGF0aWJsZSA9ICJvcGVyYXRpbmctcG9pbnRz
-LXYyLXFjb20tbGV2ZWwiLCAib3BlcmF0aW5nLXBvaW50cy12MiI7CgpJZiBzbyBJJ20gbm90IHN1
-cmUgSSBhZ3JlZS4gIEl0J3MgX25vdF8gcmVhbGx5IGNvbXBhdGlibGUgd2l0aCB0aGUKIm9wZXJh
-dGluZy1wb2ludHMtdjIiIGJpbmRpbmcuICBJZiB5b3UgaGFkIGEgZHJpdmVyIHRoYXQgaGFkIG5l
-dmVyCmhlYXJkIG9mICJvcGVyYXRpbmctcG9pbnRzLXYyLXFjb20tbGV2ZWwiIGFuZCBoYWQgb25s
-eSBoZWFyZCBvZgoib3BlcmF0aW5nLXBvaW50cy12MiIgYW5kIGl0IHRvb2sgYSBsb29rIGF0IHRo
-aXMgbm9kZSBpdCB3b3VsZCBoYXZlIG5vCmlkZWEgd2hhdCB0byBkbyB3aXRoIGl0LgoKSSdsbCBh
-bHNvIG5vdGUgdGhhdCBvdGhlciBpbnN0YW5jZXMgcG9zdGVkIHRvIHRoZSBsaXN0IGRvbid0IGxp
-c3QgYm90aDoKCmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA3MjU4MDEvIC0g
-UlBNIC8gUlBNSCBQRCBiaW5kaW5ncwpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNo
-LzEwNzI1NzkzLyAtIFJQTUggUEQgZGV2aWNlIHRyZWUgZm9yIHNkbTg0NQoKVGhlIGJpbmRpbmdz
-IHBhdGNoIGFsc28gbWFrZXMgbm8gbWVudGlvbiBvZiBuZWVkaW5nCiJvcGVyYXRpbmctcG9pbnRz
-LXYyIi4gIEkgdGhpbmsgdGhlIGNvbW1vbiBjYXNlIHdoZW4gYSBmYWxsYmFjayBpcwpyZXF1aXJl
-ZCBpdCBpcyBleHBsaWNpdGx5IGNhbGxlZCBvdXQgaW4gdGhlIGJpbmRpbmdzOgoKaHR0cHM6Ly9w
-YXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDcyNTgwMy8gLSBxY29tLW9wcCBiaW5kaW5ncwoK
-Ci1Eb3VnCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZy
-ZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+On Fri, Dec 14, 2018 at 12:43 AM <frowand.list@gmail.com> wrote:
+>
+> From: Frank Rowand <frank.rowand@sony.com>
+>
+> The phandle cache contains struct device_node pointers.  The refcount
+> of the pointers was not incremented while in the cache, allowing use
+> after free error after kfree() of the node.  Add the proper increment
+> and decrement of the use count.
+
+Since we pre-populate the cache at boot, all the nodes will have a ref
+count and will never be freed unless we happen to repopulate the whole
+cache. That doesn't seem ideal. The node pointer is not "in use" just
+because it is in the cache.
+
+Rob
