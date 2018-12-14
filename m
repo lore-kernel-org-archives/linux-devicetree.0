@@ -1,29 +1,57 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 0/4] ASoC: qdsp6: Add support for audio over DP
-Date: Fri, 14 Dec 2018 12:44:37 +0000
-Message-ID: <83118861-b0ca-4ea7-b68f-a4db46774618@linaro.org>
-References: <1544790569-10608-1-git-send-email-rohitkr@codeaurora.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 0/7] Introduce STPMIC1 PMIC Driver
+Date: Fri, 14 Dec 2018 12:47:01 +0000
+Message-ID: <20181214124701.GZ4497@dell>
+References: <1543571742-17995-1-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544790569-10608-1-git-send-email-rohitkr@codeaurora.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1543571742-17995-1-git-send-email-p.paillet@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rohit kumar <rohitkr@codeaurora.org>, plai@codeaurora.org, bgoswami@codeaurora.org, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rohkumar@qti.qualcomm.com, asishb@codeaurora.org
+To: Pascal PAILLET-LME <p.paillet@st.com>
+Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 30 Nov 2018, Pascal PAILLET-LME wrote:
 
-
-On 14/12/2018 12:29, Rohit kumar wrote:
-> Add support for Audio over display port AFE port
+> The goal of this patch-set is to propose a driver for the STPMIC1 PMIC from 
+> STMicroelectronics. 
+> The STPMIC1 regulators supply power to an application processor as well as 
+> to external system peripherals such as DDR, Flash memories and system
+> devices. It also features onkey button input and an hardware watchdog.
+> The STPMIC1 is controlled via I2C. 
 > 
-> Rohit kumar (4):
->    ASoC: qdsp6: dt-bindings: Add q6afe display_port dt binding
->    ASoC: qdsp6: qdafe: add support for display_port_rx
->    ASoC: qdsp6: q6afe-dai: add support to Display port RX dais
->    ASoC: qdsp6: q6routing: add display_port_rx port routing
+> Main driver is drivers/mfd/stpmic1 that handle I2C regmap configuration and
+> irqchip. stpmic1_regulator, stpmic1_onkey and stpmic1_wdt need stpmic1 mfd
+> as parent.
 > 
-Nice work Rohit, All the patches look good to me!
+> STPMIC1 MFD and regulator drivers maybe mandatory at boot time.
+> 
+> Pascal Paillet (7):
+> changes in v7:
+> * rebase on regul/for-next
+> 
+>   dt-bindings: mfd: document stpmic1
+>   mfd: stpmic1: add stpmic1 driver
+>   dt-bindings: input: document stpmic1 pmic onkey
+>   input: stpmic1: add stpmic1 onkey driver
+>   dt-bindings: watchdog: document stpmic1 pmic watchdog
+>   watchdog: stpmic1: add stpmic1 watchdog driver
+>   regulator: stpmic1: fix regulator_lock usage
 
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Could you please remove any patches which have been applied and
+[RESEND]?
+
+Also, is Dmitry planning on Acking:
+
+  dt-bindings: input: document stpmic1 pmic onkey
+
+... or is Rob's Ack enough?
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
