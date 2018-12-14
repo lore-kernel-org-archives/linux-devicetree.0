@@ -1,7 +1,7 @@
 From: <honghui.zhang@mediatek.com>
-Subject: [PATCH 1/4] PCI: mediatek: Remove un-used variant in struct mtk_pcie_port
-Date: Fri, 14 Dec 2018 09:25:39 +0800
-Message-ID: <1544750742-31419-2-git-send-email-honghui.zhang@mediatek.com>
+Subject: [PATCH 2/4] dt-bindings: PCI: MediaTek: Remove un-used property
+Date: Fri, 14 Dec 2018 09:25:40 +0800
+Message-ID: <1544750742-31419-3-git-send-email-honghui.zhang@mediatek.com>
 References: <1544750742-31419-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,45 +14,80 @@ List-Id: devicetree@vger.kernel.org
 
 From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-The "lane" variant in struct mtk_pcie_port is not used, remove it.
+The "num-lanes" property is not used, remove it.
 
 Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
 ---
- drivers/pci/controller/pcie-mediatek.c | 8 --------
+ Documentation/devicetree/bindings/pci/mediatek-pcie.txt | 8 --------
  1 file changed, 8 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 6917aec..e307166 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -161,7 +161,6 @@ struct mtk_pcie_soc {
-  * @obff_ck: pointer to OBFF functional block operating clock
-  * @pipe_ck: pointer to LTSSM and PHY/MAC layer operating clock
-  * @phy: pointer to PHY control block
-- * @lane: lane count
-  * @slot: port slot
-  * @irq: GIC irq
-  * @irq_domain: legacy INTx IRQ domain
-@@ -182,7 +181,6 @@ struct mtk_pcie_port {
- 	struct clk *obff_ck;
- 	struct clk *pipe_ck;
- 	struct phy *phy;
--	u32 lane;
- 	u32 slot;
- 	int irq;
- 	struct irq_domain *irq_domain;
-@@ -895,12 +893,6 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
- 	if (!port)
- 		return -ENOMEM;
+diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie.txt b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
+index 20227a8..92437a3 100644
+--- a/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
+@@ -65,7 +65,6 @@ Required properties:
+   explanation.
+ - ranges: Sub-ranges distributed from the PCIe controller node. An empty
+   property is sufficient.
+-- num-lanes: Number of lanes to use for this port.
  
--	err = of_property_read_u32(node, "num-lanes", &port->lane);
--	if (err) {
--		dev_err(dev, "missing num-lanes property\n");
--		return err;
--	}
--
- 	snprintf(name, sizeof(name), "port%d", slot);
- 	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
- 	port->base = devm_ioremap_resource(dev, regs);
+ Examples for MT7623:
+ 
+@@ -118,7 +117,6 @@ Examples for MT7623:
+ 			interrupt-map-mask = <0 0 0 0>;
+ 			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 193 IRQ_TYPE_LEVEL_LOW>;
+ 			ranges;
+-			num-lanes = <1>;
+ 		};
+ 
+ 		pcie@1,0 {
+@@ -129,7 +127,6 @@ Examples for MT7623:
+ 			interrupt-map-mask = <0 0 0 0>;
+ 			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
+ 			ranges;
+-			num-lanes = <1>;
+ 		};
+ 
+ 		pcie@2,0 {
+@@ -140,7 +137,6 @@ Examples for MT7623:
+ 			interrupt-map-mask = <0 0 0 0>;
+ 			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 195 IRQ_TYPE_LEVEL_LOW>;
+ 			ranges;
+-			num-lanes = <1>;
+ 		};
+ 	};
+ 
+@@ -172,7 +168,6 @@ Examples for MT2712:
+ 			#size-cells = <2>;
+ 			#interrupt-cells = <1>;
+ 			ranges;
+-			num-lanes = <1>;
+ 			interrupt-map-mask = <0 0 0 7>;
+ 			interrupt-map = <0 0 0 1 &pcie_intc0 0>,
+ 					<0 0 0 2 &pcie_intc0 1>,
+@@ -191,7 +186,6 @@ Examples for MT2712:
+ 			#size-cells = <2>;
+ 			#interrupt-cells = <1>;
+ 			ranges;
+-			num-lanes = <1>;
+ 			interrupt-map-mask = <0 0 0 7>;
+ 			interrupt-map = <0 0 0 1 &pcie_intc1 0>,
+ 					<0 0 0 2 &pcie_intc1 1>,
+@@ -245,7 +239,6 @@ Examples for MT7622:
+ 			#size-cells = <2>;
+ 			#interrupt-cells = <1>;
+ 			ranges;
+-			num-lanes = <1>;
+ 			interrupt-map-mask = <0 0 0 7>;
+ 			interrupt-map = <0 0 0 1 &pcie_intc0 0>,
+ 					<0 0 0 2 &pcie_intc0 1>,
+@@ -264,7 +257,6 @@ Examples for MT7622:
+ 			#size-cells = <2>;
+ 			#interrupt-cells = <1>;
+ 			ranges;
+-			num-lanes = <1>;
+ 			interrupt-map-mask = <0 0 0 7>;
+ 			interrupt-map = <0 0 0 1 &pcie_intc1 0>,
+ 					<0 0 0 2 &pcie_intc1 1>,
 -- 
 2.6.4
