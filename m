@@ -1,68 +1,49 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: qdsp6: dt-bindings: Add q6afe display_port dt binding" to the asoc tree
-Date: Fri, 14 Dec 2018 12:49:22 +0000 (GMT)
-Message-ID: <20181214124922.9B3BE11258A2@debutante.sirena.org.uk>
-References: <1544790569-10608-2-git-send-email-rohitkr@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544790569-10608-2-git-send-email-rohitkr@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rohit kumar <rohitkr@codeaurora.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Mark Brown <broonie@kernel.org>, plai@codeaurora.org, bgoswami@codeaurora.org, lgirdwood@gmail.combroonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rohkumar@qti.qualcomm.comsrinivas.kandagatla@linaro.org, asishb@codeaurora.orgalsa-devel@alsa-project.org
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH] ARM: dts: omap4-sdp: Make ethernet working even if booted
+ with latest u-boot
+Date: Fri, 14 Dec 2018 15:06:27 +0200
+Message-ID: <0c53704e-2edd-8fe8-6fb4-f5865d62770b@ti.com>
+References: <20181213135845.3965-1-peter.ujfalusi@ti.com>
+ <20181213151703.GN6707@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181213151703.GN6707@atomide.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, linux@armlinux.org.uk, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
-
-   ASoC: qdsp6: dt-bindings: Add q6afe display_port dt binding
-
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 76119509d23cdd9fbc71585042b27b6511b44b4d Mon Sep 17 00:00:00 2001
-From: Rohit kumar <rohitkr@codeaurora.org>
-Date: Fri, 14 Dec 2018 17:59:26 +0530
-Subject: [PATCH] ASoC: qdsp6: dt-bindings: Add q6afe display_port dt binding
-
-This patch adds bindings required for DISPLAY_PORT_RX
-port on AFE.
-
-Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- include/dt-bindings/sound/qcom,q6afe.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/include/dt-bindings/sound/qcom,q6afe.h b/include/dt-bindings/sound/qcom,q6afe.h
-index e2d3892240b8..1df06f8ad5c3 100644
---- a/include/dt-bindings/sound/qcom,q6afe.h
-+++ b/include/dt-bindings/sound/qcom,q6afe.h
-@@ -106,6 +106,7 @@
- #define QUINARY_TDM_TX_6	101
- #define QUINARY_TDM_RX_7	102
- #define QUINARY_TDM_TX_7	103
-+#define DISPLAY_PORT_RX		104
- 
- #endif /* __DT_BINDINGS_Q6_AFE_H__ */
- 
--- 
-2.19.0.rc2
+CgpPbiAxMy8xMi8yMDE4IDE3LjE3LCBUb255IExpbmRncmVuIHdyb3RlOgo+ICogUGV0ZXIgVWpm
+YWx1c2kgPHBldGVyLnVqZmFsdXNpQHRpLmNvbT4gWzE4MTIxMyAxMzo1N106Cj4+IEFmdGVyIHNv
+bWUgZGVidWdnaW5nIEkgaGF2ZSBtYW5hZ2VkIHRvIGdldCB0aGUgZXRoZXJuZXQgd29ya2luZyB3
+aXRoCj4+IG1haW5saW5lIHUtYm9vdCB3aGlsZSBub3QgYnJlYWtpbmcgdGhlIG5ldHdvcmtpbmcg
+d2l0aCB0aGUgY2FzZSB3aGVuIHdlCj4+IGJvb3Qgd2l0aCB0aGUgbXlzdGVyaW91cyBiaW5hcnkg
+dS1ib290Lgo+IAo+IEknbSBwcmV0dHkgc3VyZSB0aGlzIGlzIHRoZSBtb3N0IHJlY2VudCB2ZXJz
+aW9uIG9mCj4gV0lQIHUtYm9vdCBTUEkgc3VwcG9ydCBmcm9tIE5pc2hhbnRoOgo+IAo+IGh0dHBz
+Oi8vZ2l0aHViLmNvbS9ubWVub24vdS1ib290L3RyZWUvdjIwMTQuMDQtbW9kL3NkcDQ0MzAtZXRo
+ZXJuZXQKCkNvb2wsIHRoYW5rcyEKCkl0IGZhaWxzIHRvIGNvbXBpbGUgc28gZmFyIHdpdGggYW55
+IG9mIHRoZSB0b29sY2hhaW5zIEkgaGF2ZSB0cmllZCBzbyBmYXIgOigKCj4gRnJvbSB3aGF0IEkg
+cmVjYWxsLCB0aGF0IGRpZCBub3Qgd29yayBmb3IgQmxhemUgdGhvdWdoCj4gZm9yIGVuYWJsaW5n
+IEV0aGVybmV0IGZvciB0ZnRwIGJvb3RpbmcgYnV0IHdvcmtlZCBvbgo+IDQ0MzAtc2RwLiBNYXli
+ZSBiZWNhdXNlIG9mIHRoZSBzYW1lIGlzc3VlcyBhcyB0aGVzZQo+IGtlcm5lbCBwYXRjaGVzIHRo
+b3VnaC4KCk15IEJsYXplIGlzIHRoZSAnYmlnIHBob25lIHcvIHR3byBkaXNwbGF5JyBhbmQgbm90
+IHRoZSB0YWJsZXQuIEFmYWlrIGl0CmlzIGEgc2hyaW5rIGRvd24gdmVyc2lvbiBvZiBzZHAuCgpB
+bmQgdGhlIHUtYm9vdCBjb2RlIHN0aWxsIGxlYXZlcyBvcGVuIHRoZSBxdWVzdGlvbnMgcmVnYXJk
+aW5nIHRvIHBpbm1peAphbmQgZ3Bpb18xMzguCgotIFDDqXRlcgoKVGV4YXMgSW5zdHJ1bWVudHMg
+RmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuClktdHVubnVzL0J1
+c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2Vy
+bmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
+Cg==
