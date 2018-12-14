@@ -1,55 +1,39 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH] dt-bindings: usb: renesas_usbhs: Add r8a774c0 support
-Date: Fri, 14 Dec 2018 06:01:01 +0000
-Message-ID: <TY2PR01MB2297D670A9D3B8D4B5BC0389D8A10@TY2PR01MB2297.jpnprd01.prod.outlook.com>
-References: <1544732463-6685-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+From: Yash Shah <yash.shah@sifive.com>
+Subject: [RFC v2 0/2] PWM support for HiFive Unleashed
+Date: Fri, 14 Dec 2018 11:50:40 +0530
+Message-ID: <1544768442-12530-1-git-send-email-yash.shah@sifive.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544732463-6685-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Content-Language: ja-JP
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+To: palmer@sifive.com, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, paul.walmsley@sifive.com, Yash Shah <yash.shah@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio,
+This patch series adds PWM drivers and DT documentation for 
+HiFive Unleashed board. The patches are mostly based on Wesley's patch.
+V2 of this patchset incorporates below items pointed out in v1.
 
-> From: Fabrizio Castro, Sent: Friday, December 14, 2018 5:21 AM
->=20
-> Document RZ/G2E (R8A774C0) SoC bindings.
->=20
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+V2 changed from V1:
+  1. Remove inclusion of dt-bindings/pwm/pwm.h
+  2. Remove artificial alignments
+  3. Replace ioread32/iowrite32 with readl/writel
+  4. Remove camelcase
+  5. Change dev_info to dev_dbg for unnecessary log
+  6. Correct typo in driver name
+  7. Remove use of of_match_ptr macro
+  8. Update the DT compatible strings and Add reference to a common
+     versioning document
 
-Thank you for the patch!
+Yash Shah (2):
+  pwm: sifive: Add DT documentation for SiFive PWM Controller
+  pwm: sifive: Add a driver for SiFive SoC PWM
 
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+ .../devicetree/bindings/pwm/pwm-sifive.txt         |  44 ++++
+ drivers/pwm/Kconfig                                |  10 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-sifive.c                           | 229 +++++++++++++++++++++
+ 4 files changed, 284 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+ create mode 100644 drivers/pwm/pwm-sifive.c
 
-By the way, I'm not sure, but I'm wondering that we need to add
-.compatible renesas,usbhs-r8a774c0 with .data USBHS_TYPE_RCAR_GEN3_WITH_PLL
-like r8a77990 to the drivers/usb/renesas_usbhs/common.c.
-What do you think?
-
-Best regards,
-Yoshihiro Shimoda
-
-> ---
->  Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> index 90719f5..d93b6a1 100644
-> --- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> +++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> @@ -7,6 +7,7 @@ Required properties:
->  	- "renesas,usbhs-r8a7744" for r8a7744 (RZ/G1N) compatible device
->  	- "renesas,usbhs-r8a7745" for r8a7745 (RZ/G1E) compatible device
->  	- "renesas,usbhs-r8a774a1" for r8a774a1 (RZ/G2M) compatible device
-> +	- "renesas,usbhs-r8a774c0" for r8a774c0 (RZ/G2E) compatible device
->  	- "renesas,usbhs-r8a7790" for r8a7790 (R-Car H2) compatible device
->  	- "renesas,usbhs-r8a7791" for r8a7791 (R-Car M2-W) compatible device
->  	- "renesas,usbhs-r8a7792" for r8a7792 (R-Car V2H) compatible device
-> --
-> 2.7.4
+-- 
+1.9.1
