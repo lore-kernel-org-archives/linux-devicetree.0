@@ -1,52 +1,77 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: [PATCH 6/7] dt-binding: riscv: sifive: add documentation for FU540-based boards
-Date: Fri, 14 Dec 2018 21:21:53 -0800
-Message-ID: <20181215052154.24347-7-paul.walmsley@sifive.com>
-References: <20181215052154.24347-1-paul.walmsley@sifive.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH v2 3/3] PCI: imx: Add support for i.MX8MQ
+Date: Fri, 14 Dec 2018 21:22:46 -0800
+Message-ID: <CAHQ1cqFFm_YJne91yKVHWhMZY0KhpDfN0mbWL3YECnMo14JH4A@mail.gmail.com>
+References: <20181206073545.10967-1-andrew.smirnov@gmail.com>
+ <20181206073545.10967-4-andrew.smirnov@gmail.com> <20181214203042.GC20725@google.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181215052154.24347-1-paul.walmsley@sifive.com>
+In-Reply-To: <20181214203042.GC20725@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
+To: helgaas@kernel.org
+Cc: linux-pci@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, gustavo@embeddedor.com
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding documentation for boards based on the SiFive FU540 SoC.
-The first board, the HiFive Unleashed A00 (FU540), is described here:
+On Fri, Dec 14, 2018 at 12:30 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Gustavo for fallthrough annotation]
+>
+> On Wed, Dec 05, 2018 at 11:35:45PM -0800, Andrey Smirnov wrote:
+> > Add code needed to support i.MX8MQ variant.
+>
+> > @@ -245,7 +253,8 @@ static void imx6_pcie_reset_phy(struct imx6_pcie *imx6_pcie)
+> >  {
+> >       u32 tmp;
+> >
+> > -     if (imx6_pcie->variant == IMX7D)
+> > +     if (imx6_pcie->variant == IMX7D ||
+> > +         imx6_pcie->variant == IMX8MQ)
+>
+> This style looks like a maintenance problem: the code below is probably
+> IMX6-specific, and you should test for *that* instead of adding to this
+> list of things that are *not* IMX6, because that list is likely to
+> continue growing.  There are more occurrences below.
+>
 
-https://static.dev.sifive.com/HiFive-Unleashed-Getting-Started-Guide-v1p1.pdf
+Makes sense, I'll update that patches and send a v3 out.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: devicetree@vger.kernel.org
-Cc: linux-riscv@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Signed-off-by: Paul Walmsley <paul@pwsan.com>
----
- .../devicetree/bindings/riscv/sifive/fu540.txt         | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+> > @@ -301,6 +312,7 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+> >
+> >       switch (imx6_pcie->variant) {
+> >       case IMX7D:
+> > +     case IMX8MQ: /* FALLTHROUGH */
+> >               reset_control_assert(imx6_pcie->pciephy_reset);
+> >               reset_control_assert(imx6_pcie->apps_reset);
+> >               break;
+>
+> I'm not an expert on fallthrough annotation (Gustavo, cc'd, is), but
+> this looks wrong.  It's the IMX7D case that falls through, not the
+> IMX8MQ case.
+>
+> The recent annotations added by Gustavo are at the point where the
+> "break" would normally be, e.g.,
+>
+>   case IMX7D:
+>     /* fall through */                    <--- annotation
+>   case IMX8MQ:
+>     <code>
+>     break;
+>
+> But in this case there's actually no IMX7D-specific *code* there, so I
+> suspect the annotation is unnecessary.  It's obvious that IMX7D and
+> IMX8MQ are handled the same, so there's really no opportunity for the
+> "forgotten break" mistake -Wimplicit-fallthrough is trying to find.
+>
+> If we *do* want this annotation, we should spell it the same as
+> Gustavo has been, i.e., "fall through".
+>
+> Again, more occurrences below.
 
-diff --git a/Documentation/devicetree/bindings/riscv/sifive/fu540.txt b/Documentation/devicetree/bindings/riscv/sifive/fu540.txt
-index b5cf2b9f9a75..20119cc54964 100644
---- a/Documentation/devicetree/bindings/riscv/sifive/fu540.txt
-+++ b/Documentation/devicetree/bindings/riscv/sifive/fu540.txt
-@@ -12,3 +12,13 @@ compatible-string values:
- 
- - Freedom Unleashed 540 rev. C000, or "FU540"
-   compatible = "sifive,fu540-c000", "sifive,fu540"
-+
-+Boards
-+------
-+
-+Boards based on the FU540 SoC should specify the following
-+compatible-string values:
-+
-+- HiFive-Unleashed rev. A00 board
-+  compatible = "sifive,hifive-unleashed-a00-fu540",
-+	       "sifive,hifive-unleashed-fu540"
--- 
-2.20.0
+Yes, definitely, same mistake of mine was already caught elsewhere in
+the tree https://lore.kernel.org/lkml/20181214144406.0dbffbc8@canb.auug.org.au/
+
+I'll fix it in v3.
+
+Thanks,
+Andrey Smirnov
