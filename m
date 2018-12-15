@@ -1,56 +1,51 @@
-Return-Path: <SRS0=5Lel=OY=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:45886 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729671AbeLOKgm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Dec 2018 05:36:42 -0500
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH v3 7/7] remoteproc: qcom: wcss: explicitly request exclusive reset control
-Date: Sat, 15 Dec 2018 16:05:57 +0530
-Message-Id: <20181215103557.2748-8-govinds@codeaurora.org>
-In-Reply-To: <20181215103557.2748-1-govinds@codeaurora.org>
-References: <20181215103557.2748-1-govinds@codeaurora.org>
+Return-Path: <SRS0=X4ub=OY=gmail.com=groeck7@kernel.org>
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Sat, 15 Dec 2018 08:27:16 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [v3,3/3] arm64: dts: qcom: pm8916: Add PON watchdog node
+Message-ID: <20181215162716.GA18695@roeck-us.net>
+References: <1542962678-13697-3-git-send-email-loic.poulain@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sboyd@kernel.org
-Cc: linux-clk@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1542962678-13697-3-git-send-email-loic.poulain@linaro.org>
+To: Loic Poulain <loic.poulain@linaro.org>
+Cc: wim@linux-watchdog.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, andy.gross@linaro.org
 List-ID: <devicetree@vger.kernel.org>
 
-Use request exclusive reset control for wcss reset controls.
+On Fri, Nov 23, 2018 at 09:44:38AM +0100, Loic Poulain wrote:
+> Add watchdog child node to the PM8916 PON device.
+> 
+> Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
 
-Signed-off-by: Govind Singh <govinds@codeaurora.org>
----
- drivers/remoteproc/qcom_q6v5_wcss.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 
-diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-index 3f66bd8fa407..b382e5eba26d 100644
---- a/drivers/remoteproc/qcom_q6v5_wcss.c
-+++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-@@ -756,20 +756,20 @@ static int q6v5_wcss_init_reset(struct q6v5_wcss *wcss,
- 	struct device *dev = wcss->dev;
- 
- 	if (aon_reset_required) {
--		wcss->wcss_aon_reset = devm_reset_control_get(dev, "wcss_aon_reset");
-+		wcss->wcss_aon_reset = devm_reset_control_get_exclusive(dev, "wcss_aon_reset");
- 		if (IS_ERR(wcss->wcss_aon_reset)) {
- 			dev_err(wcss->dev, "fail to acquire wcss_aon_reset\n");
- 			return PTR_ERR(wcss->wcss_aon_reset);
- 		}
- 	}
- 
--	wcss->wcss_reset = devm_reset_control_get(dev, "wcss_reset");
-+	wcss->wcss_reset = devm_reset_control_get_exclusive(dev, "wcss_reset");
- 	if (IS_ERR(wcss->wcss_reset)) {
- 		dev_err(wcss->dev, "unable to acquire wcss_reset\n");
- 		return PTR_ERR(wcss->wcss_reset);
- 	}
- 
--	wcss->wcss_q6_reset = devm_reset_control_get(dev, "wcss_q6_reset");
-+	wcss->wcss_q6_reset = devm_reset_control_get_exclusive(dev, "wcss_q6_reset");
- 	if (IS_ERR(wcss->wcss_q6_reset)) {
- 		dev_err(wcss->dev, "unable to acquire wcss_q6_reset\n");
- 		return PTR_ERR(wcss->wcss_q6_reset);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+... with the assumption that this patch will be pushed through
+an arm tree.
+
+Guenter
+
+> ---
+>  v2: Add interrupts and timeout-sec props
+>  v3: no change
+> 
+>  arch/arm64/boot/dts/qcom/pm8916.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/pm8916.dtsi b/arch/arm64/boot/dts/qcom/pm8916.dtsi
+> index a05ebaf..3230b88 100644
+> --- a/arch/arm64/boot/dts/qcom/pm8916.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/pm8916.dtsi
+> @@ -32,6 +32,12 @@
+>  				bias-pull-up;
+>  				linux,code = <KEY_POWER>;
+>  			};
+> +
+> +			watchdog {
+> +				compatible = "qcom,pm8916-wdt";
+> +				interrupts = <0x0 0x8 6 IRQ_TYPE_EDGE_RISING>;
+> +				timeout-sec = <60>;
+> +			};
+>  		};
+>  
+>  		pm8916_gpios: gpios@c000 {
