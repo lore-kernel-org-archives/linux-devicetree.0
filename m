@@ -1,7 +1,7 @@
 From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: [PATCH 7/7] riscv: dts: add initial board data for the SiFive HiFive Unleashed
-Date: Fri, 14 Dec 2018 21:21:54 -0800
-Message-ID: <20181215052154.24347-8-paul.walmsley@sifive.com>
+Subject: [PATCH 6/7] dt-binding: riscv: sifive: add documentation for FU540-based boards
+Date: Fri, 14 Dec 2018 21:21:53 -0800
+Message-ID: <20181215052154.24347-7-paul.walmsley@sifive.com>
 References: <20181215052154.24347-1-paul.walmsley@sifive.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,11 +12,10 @@ To: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
 Cc: Paul Walmsley <paul.walmsley@sifive.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-Add initial board data for the SiFive HiFive Unleashed A00.
+Add DT binding documentation for boards based on the SiFive FU540 SoC.
+The first board, the HiFive Unleashed A00 (FU540), is described here:
 
-Currently the data populated in this DT file describes the board
-DRAM configuration and the external clock sources that supply the
-PRCI.
+https://static.dev.sifive.com/HiFive-Unleashed-Getting-Started-Guide-v1p1.pdf
 
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
@@ -28,76 +27,26 @@ Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 Signed-off-by: Paul Walmsley <paul@pwsan.com>
 ---
- arch/riscv/boot/dts/Makefile                  |  2 +
- arch/riscv/boot/dts/sifive/Makefile           |  4 ++
- .../dts/sifive/hifive-unleashed-a00-fu540.dts | 39 +++++++++++++++++++
- 3 files changed, 45 insertions(+)
- create mode 100644 arch/riscv/boot/dts/Makefile
- create mode 100644 arch/riscv/boot/dts/sifive/Makefile
- create mode 100644 arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
+ .../devicetree/bindings/riscv/sifive/fu540.txt         | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/riscv/boot/dts/Makefile b/arch/riscv/boot/dts/Makefile
-new file mode 100644
-index 000000000000..dcc3ada78455
---- /dev/null
-+++ b/arch/riscv/boot/dts/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+subdir-y += sifive
-diff --git a/arch/riscv/boot/dts/sifive/Makefile b/arch/riscv/boot/dts/sifive/Makefile
-new file mode 100644
-index 000000000000..e120ccf5649c
---- /dev/null
-+++ b/arch/riscv/boot/dts/sifive/Makefile
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0
-+dtb-$(CONFIG_ARCH_SIFIVE) += hifive-unleashed-a00-fu540.dtb
+diff --git a/Documentation/devicetree/bindings/riscv/sifive/fu540.txt b/Documentation/devicetree/bindings/riscv/sifive/fu540.txt
+index b5cf2b9f9a75..20119cc54964 100644
+--- a/Documentation/devicetree/bindings/riscv/sifive/fu540.txt
++++ b/Documentation/devicetree/bindings/riscv/sifive/fu540.txt
+@@ -12,3 +12,13 @@ compatible-string values:
+ 
+ - Freedom Unleashed 540 rev. C000, or "FU540"
+   compatible = "sifive,fu540-c000", "sifive,fu540"
 +
++Boards
++------
 +
-diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
-new file mode 100644
-index 000000000000..0c6afabe69e3
---- /dev/null
-+++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
-@@ -0,0 +1,39 @@
-+// SPDX-License-Identifier: Apache-2.0
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/* Copyright (c) 2018 SiFive, Inc */
-+/* See the file LICENSE for further information */
++Boards based on the FU540 SoC should specify the following
++compatible-string values:
 +
-+/dts-v1/;
-+
-+#include "fu540-c000.dtsi"
-+
-+/ {
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	model = "SiFive HiFive Unleashed A00 (FU540-C000)"
-+	compatible = "sifive,hifive-unleashed-a00-fu540",
-+		"sifive,hifive-unleashed-fu540";
-+
-+	chosen {
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x1f 0x80000000>;
-+	};
-+
-+	soc {
-+		hfclk: hfclk {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <33333333>;
-+			clock-output-names = "hfclk";
-+		};
-+		rtcclk: rtcclk {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <1000000>;
-+			clock-output-names = "rtcclk";
-+		};
-+	};
-+};
++- HiFive-Unleashed rev. A00 board
++  compatible = "sifive,hifive-unleashed-a00-fu540",
++	       "sifive,hifive-unleashed-fu540"
 -- 
 2.20.0
