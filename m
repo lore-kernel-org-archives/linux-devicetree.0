@@ -1,310 +1,56 @@
-Return-Path: <SRS0=dIfH=OV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:14757 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbeLLTbh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Dec 2018 14:31:37 -0500
-From: Timo Alho <talho@nvidia.com>
-Subject: [PATCH 1/4] firmware: tegra: reword messaging terminology
-Date: Wed, 12 Dec 2018 21:31:25 +0200
-Message-ID: <1544643088-17678-2-git-send-email-talho@nvidia.com>
-In-Reply-To: <1544643088-17678-1-git-send-email-talho@nvidia.com>
-References: <1544643088-17678-1-git-send-email-talho@nvidia.com>
+Return-Path: <SRS0=5Lel=OY=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp.codeaurora.org ([198.145.29.96]:45886 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729671AbeLOKgm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Dec 2018 05:36:42 -0500
+From: Govind Singh <govinds@codeaurora.org>
+Subject: [PATCH v3 7/7] remoteproc: qcom: wcss: explicitly request exclusive reset control
+Date: Sat, 15 Dec 2018 16:05:57 +0530
+Message-Id: <20181215103557.2748-8-govinds@codeaurora.org>
+In-Reply-To: <20181215103557.2748-1-govinds@codeaurora.org>
+References: <20181215103557.2748-1-govinds@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: treding@nvidia.com, sivaramn@nvidia.com
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Timo Alho <talho@nvidia.com>
+To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sboyd@kernel.org
+Cc: linux-clk@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-As a preparatory change to refactor bpmp driver to support other than
-t186/t194 chip generations, reword and slightly refactor some of the
-functions to better match with what is actually happening in the
-wire-level protocol.
+Use request exclusive reset control for wcss reset controls.
 
-The communication with bpmp is essentially a Remote Procedure Call
-consisting of "request" and "response". Either side (BPMP or CPU) can
-initiate the communication. The state machine for communication
-consists of following steps (from Linux point of view):
-
-Linux initiating the call:
- 1) check that channel is free to transmit a request (is_req_channel_free)
- 2) copy request message payload to shared location
- 3) post the request in channel (post_req)
- 4) notify BPMP that channel state has been update (ring_doorbell)
- 5) wait for response (is_resp_ready)
- 6) copy response message payload from shared location
- 7) acknowledge the response in channel (ack_resp)
-
-BPMP initiating the call:
- 1) wait for request (is_req_ready)
- 2) copy request message payload from shared location
- 3) acknowledge the request in channel (ack_req)
- 4) check that channel is free to transmit response (is_resp_channel_free)
- 5) copy response message payload to shared location
- 6) post the response message to channel (post_resp)
- 7) notify BPMP that channel state has been updated (ring_doorbell)
-
-Signed-off-by: Timo Alho <talho@nvidia.com>
+Signed-off-by: Govind Singh <govinds@codeaurora.org>
 ---
- drivers/firmware/tegra/bpmp.c | 106 +++++++++++++++++++++++++++---------------
- 1 file changed, 68 insertions(+), 38 deletions(-)
+ drivers/remoteproc/qcom_q6v5_wcss.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/firmware/tegra/bpmp.c b/drivers/firmware/tegra/bpmp.c
-index 689478b..af123de 100644
---- a/drivers/firmware/tegra/bpmp.c
-+++ b/drivers/firmware/tegra/bpmp.c
-@@ -96,7 +96,7 @@ static bool tegra_bpmp_message_valid(const struct tegra_bpmp_message *msg)
- 	       (msg->rx.size == 0 || msg->rx.data);
- }
+diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
+index 3f66bd8fa407..b382e5eba26d 100644
+--- a/drivers/remoteproc/qcom_q6v5_wcss.c
++++ b/drivers/remoteproc/qcom_q6v5_wcss.c
+@@ -756,20 +756,20 @@ static int q6v5_wcss_init_reset(struct q6v5_wcss *wcss,
+ 	struct device *dev = wcss->dev;
  
--static bool tegra_bpmp_master_acked(struct tegra_bpmp_channel *channel)
-+static bool tegra_bpmp_is_resp_ready(struct tegra_bpmp_channel *channel)
- {
- 	void *frame;
- 
-@@ -111,7 +111,12 @@ static bool tegra_bpmp_master_acked(struct tegra_bpmp_channel *channel)
- 	return true;
- }
- 
--static int tegra_bpmp_wait_ack(struct tegra_bpmp_channel *channel)
-+static bool tegra_bpmp_is_req_ready(struct tegra_bpmp_channel *channel)
-+{
-+	return tegra_bpmp_is_resp_ready(channel);
-+}
-+
-+static int tegra_bpmp_wait_resp(struct tegra_bpmp_channel *channel)
- {
- 	unsigned long timeout = channel->bpmp->soc->channels.cpu_tx.timeout;
- 	ktime_t end;
-@@ -119,14 +124,24 @@ static int tegra_bpmp_wait_ack(struct tegra_bpmp_channel *channel)
- 	end = ktime_add_us(ktime_get(), timeout);
- 
- 	do {
--		if (tegra_bpmp_master_acked(channel))
-+		if (tegra_bpmp_is_resp_ready(channel))
- 			return 0;
- 	} while (ktime_before(ktime_get(), end));
- 
- 	return -ETIMEDOUT;
- }
- 
--static bool tegra_bpmp_master_free(struct tegra_bpmp_channel *channel)
-+static int tegra_bpmp_ack_resp(struct tegra_bpmp_channel *channel)
-+{
-+	return tegra_ivc_read_advance(channel->ivc);
-+}
-+
-+static int tegra_bpmp_ack_req(struct tegra_bpmp_channel *channel)
-+{
-+	return tegra_ivc_read_advance(channel->ivc);
-+}
-+
-+static bool tegra_bpmp_is_req_channel_free(struct tegra_bpmp_channel *channel)
- {
- 	void *frame;
- 
-@@ -141,7 +156,12 @@ static bool tegra_bpmp_master_free(struct tegra_bpmp_channel *channel)
- 	return true;
- }
- 
--static int tegra_bpmp_wait_master_free(struct tegra_bpmp_channel *channel)
-+static bool tegra_bpmp_is_resp_channel_free(struct tegra_bpmp_channel *channel)
-+{
-+	return tegra_bpmp_is_req_channel_free(channel);
-+}
-+
-+static int tegra_bpmp_wait_req_channel_free(struct tegra_bpmp_channel *channel)
- {
- 	unsigned long timeout = channel->bpmp->soc->channels.cpu_tx.timeout;
- 	ktime_t start, now;
-@@ -149,7 +169,7 @@ static int tegra_bpmp_wait_master_free(struct tegra_bpmp_channel *channel)
- 	start = ns_to_ktime(local_clock());
- 
- 	do {
--		if (tegra_bpmp_master_free(channel))
-+		if (tegra_bpmp_is_req_channel_free(channel))
- 			return 0;
- 
- 		now = ns_to_ktime(local_clock());
-@@ -158,6 +178,32 @@ static int tegra_bpmp_wait_master_free(struct tegra_bpmp_channel *channel)
- 	return -ETIMEDOUT;
- }
- 
-+static int tegra_bpmp_post_req(struct tegra_bpmp_channel *channel)
-+{
-+	return tegra_ivc_write_advance(channel->ivc);
-+}
-+
-+static int tegra_bpmp_post_resp(struct tegra_bpmp_channel *channel)
-+{
-+	return tegra_ivc_write_advance(channel->ivc);
-+}
-+
-+static int tegra_bpmp_ring_doorbell(struct tegra_bpmp *bpmp)
-+{
-+	int err;
-+
-+	if (WARN_ON(bpmp->mbox.channel == NULL))
-+		return -EINVAL;
-+
-+	err = mbox_send_message(bpmp->mbox.channel, NULL);
-+	if (err < 0)
-+		return err;
-+
-+	mbox_client_txdone(bpmp->mbox.channel, 0);
-+
-+	return 0;
-+}
-+
- static ssize_t __tegra_bpmp_channel_read(struct tegra_bpmp_channel *channel,
- 					 void *data, size_t size, int *ret)
- {
-@@ -166,7 +212,7 @@ static ssize_t __tegra_bpmp_channel_read(struct tegra_bpmp_channel *channel,
- 	if (data && size > 0)
- 		memcpy(data, channel->ib->data, size);
- 
--	err = tegra_ivc_read_advance(channel->ivc);
-+	err = tegra_bpmp_ack_resp(channel);
- 	if (err < 0)
- 		return err;
- 
-@@ -210,7 +256,7 @@ static ssize_t __tegra_bpmp_channel_write(struct tegra_bpmp_channel *channel,
- 	if (data && size > 0)
- 		memcpy(channel->ob->data, data, size);
- 
--	return tegra_ivc_write_advance(channel->ivc);
-+	return tegra_bpmp_post_req(channel);
- }
- 
- static struct tegra_bpmp_channel *
-@@ -238,7 +284,7 @@ tegra_bpmp_write_threaded(struct tegra_bpmp *bpmp, unsigned int mrq,
- 
- 	channel = &bpmp->threaded_channels[index];
- 
--	if (!tegra_bpmp_master_free(channel)) {
-+	if (!tegra_bpmp_is_req_channel_free(channel)) {
- 		err = -EBUSY;
- 		goto unlock;
- 	}
-@@ -270,7 +316,7 @@ static ssize_t tegra_bpmp_channel_write(struct tegra_bpmp_channel *channel,
- {
- 	int err;
- 
--	err = tegra_bpmp_wait_master_free(channel);
-+	err = tegra_bpmp_wait_req_channel_free(channel);
- 	if (err < 0)
- 		return err;
- 
-@@ -302,13 +348,11 @@ int tegra_bpmp_transfer_atomic(struct tegra_bpmp *bpmp,
- 
- 	spin_unlock(&bpmp->atomic_tx_lock);
- 
--	err = mbox_send_message(bpmp->mbox.channel, NULL);
-+	err = tegra_bpmp_ring_doorbell(bpmp);
- 	if (err < 0)
- 		return err;
- 
--	mbox_client_txdone(bpmp->mbox.channel, 0);
--
--	err = tegra_bpmp_wait_ack(channel);
-+	err = tegra_bpmp_wait_resp(channel);
- 	if (err < 0)
- 		return err;
- 
-@@ -335,12 +379,10 @@ int tegra_bpmp_transfer(struct tegra_bpmp *bpmp,
- 	if (IS_ERR(channel))
- 		return PTR_ERR(channel);
- 
--	err = mbox_send_message(bpmp->mbox.channel, NULL);
-+	err = tegra_bpmp_ring_doorbell(bpmp);
- 	if (err < 0)
- 		return err;
- 
--	mbox_client_txdone(bpmp->mbox.channel, 0);
--
- 	timeout = usecs_to_jiffies(bpmp->soc->channels.thread.timeout);
- 
- 	err = wait_for_completion_timeout(&channel->completion, timeout);
-@@ -369,38 +411,34 @@ void tegra_bpmp_mrq_return(struct tegra_bpmp_channel *channel, int code,
- {
- 	unsigned long flags = channel->ib->flags;
- 	struct tegra_bpmp *bpmp = channel->bpmp;
--	struct tegra_bpmp_mb_data *frame;
- 	int err;
- 
- 	if (WARN_ON(size > MSG_DATA_MIN_SZ))
- 		return;
- 
--	err = tegra_ivc_read_advance(channel->ivc);
-+	err = tegra_bpmp_ack_req(channel);
- 	if (WARN_ON(err < 0))
- 		return;
- 
- 	if ((flags & MSG_ACK) == 0)
- 		return;
- 
--	frame = tegra_ivc_write_get_next_frame(channel->ivc);
--	if (WARN_ON(IS_ERR(frame)))
-+	if (WARN_ON(!tegra_bpmp_is_resp_channel_free(channel)))
- 		return;
- 
--	frame->code = code;
-+	channel->ob->code = code;
- 
- 	if (data && size > 0)
--		memcpy(frame->data, data, size);
-+		memcpy(channel->ob->data, data, size);
- 
--	err = tegra_ivc_write_advance(channel->ivc);
-+	err = tegra_bpmp_post_resp(channel);
- 	if (WARN_ON(err < 0))
- 		return;
- 
- 	if (flags & MSG_RING) {
--		err = mbox_send_message(bpmp->mbox.channel, NULL);
-+		err = tegra_bpmp_ring_doorbell(bpmp);
- 		if (WARN_ON(err < 0))
- 			return;
--
--		mbox_client_txdone(bpmp->mbox.channel, 0);
- 	}
- }
- EXPORT_SYMBOL_GPL(tegra_bpmp_mrq_return);
-@@ -638,7 +676,7 @@ static void tegra_bpmp_handle_rx(struct mbox_client *client, void *data)
- 	count = bpmp->soc->channels.thread.count;
- 	busy = bpmp->threaded.busy;
- 
--	if (tegra_bpmp_master_acked(channel))
-+	if (tegra_bpmp_is_req_ready(channel))
- 		tegra_bpmp_handle_mrq(bpmp, channel->ib->code, channel);
- 
- 	spin_lock(&bpmp->lock);
-@@ -648,7 +686,7 @@ static void tegra_bpmp_handle_rx(struct mbox_client *client, void *data)
- 
- 		channel = &bpmp->threaded_channels[i];
- 
--		if (tegra_bpmp_master_acked(channel)) {
-+		if (tegra_bpmp_is_resp_ready(channel)) {
- 			tegra_bpmp_channel_signal(channel);
- 			clear_bit(i, busy);
+ 	if (aon_reset_required) {
+-		wcss->wcss_aon_reset = devm_reset_control_get(dev, "wcss_aon_reset");
++		wcss->wcss_aon_reset = devm_reset_control_get_exclusive(dev, "wcss_aon_reset");
+ 		if (IS_ERR(wcss->wcss_aon_reset)) {
+ 			dev_err(wcss->dev, "fail to acquire wcss_aon_reset\n");
+ 			return PTR_ERR(wcss->wcss_aon_reset);
  		}
-@@ -660,16 +698,8 @@ static void tegra_bpmp_handle_rx(struct mbox_client *client, void *data)
- static void tegra_bpmp_ivc_notify(struct tegra_ivc *ivc, void *data)
- {
- 	struct tegra_bpmp *bpmp = data;
--	int err;
+ 	}
  
--	if (WARN_ON(bpmp->mbox.channel == NULL))
--		return;
--
--	err = mbox_send_message(bpmp->mbox.channel, NULL);
--	if (err < 0)
--		return;
--
--	mbox_client_txdone(bpmp->mbox.channel, 0);
-+	WARN_ON(tegra_bpmp_ring_doorbell(bpmp));
- }
+-	wcss->wcss_reset = devm_reset_control_get(dev, "wcss_reset");
++	wcss->wcss_reset = devm_reset_control_get_exclusive(dev, "wcss_reset");
+ 	if (IS_ERR(wcss->wcss_reset)) {
+ 		dev_err(wcss->dev, "unable to acquire wcss_reset\n");
+ 		return PTR_ERR(wcss->wcss_reset);
+ 	}
  
- static int tegra_bpmp_channel_init(struct tegra_bpmp_channel *channel,
+-	wcss->wcss_q6_reset = devm_reset_control_get(dev, "wcss_q6_reset");
++	wcss->wcss_q6_reset = devm_reset_control_get_exclusive(dev, "wcss_q6_reset");
+ 	if (IS_ERR(wcss->wcss_q6_reset)) {
+ 		dev_err(wcss->dev, "unable to acquire wcss_q6_reset\n");
+ 		return PTR_ERR(wcss->wcss_q6_reset);
 -- 
-2.7.4
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
