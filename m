@@ -1,105 +1,93 @@
-From: Schrempf Frieder <frieder.schrempf@kontron.de>
-Subject: AW: [PATCH 0/5] Prepare devicetrees for the new FSL QSPI driver
-Date: Sat, 15 Dec 2018 10:04:55 +0000
-Message-ID: <937b0f34e3eb485aaae45cd649cdeb4f@kontron.de>
-References: <1544459182-23655-1-git-send-email-frieder.schrempf@kontron.de>
- <ce1442f3-357b-d647-958e-cc4a89282b79@kontron.de>
- <1ad93cdf-7ba1-ff49-f330-6bbd0f6c6972@kontron.de>,<20181214004251.GA15775@dragon>
+From: Dimitar Dimitrov <dinuxbg@gmail.com>
+Subject: Re: [PATCH 04/16] remoteproc/pru: Add PRU remoteproc driver
+Date: Sat, 15 Dec 2018 15:43:41 +0200
+Message-ID: <6339524.5sMj8qDFZB@tpdeb>
+References: <1543218769-5507-1-git-send-email-rogerq@ti.com> <308735274.C9ZyqtqOL8@tpdeb> <5C137DB4.9070602@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181214004251.GA15775@dragon>
-Content-Language: de-DE
+In-Reply-To: <5C137DB4.9070602@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+To: Roger Quadros <rogerq@ti.com>
+Cc: ohad@wizery.com, bjorn.andersson@linaro.org, tony@atomide.com, robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
->On Thu, Dec 13, 2018 at 09:45:04AM +0000, Schrempf Frieder wrote:
->> + Shawn, Sascha
->>
->> On 10.12.18 17:31, Schrempf Frieder wrote:
->> > Hi FSL/ARM maintainers,
->> >
->> > On 10.12.18 17:26, Schrempf Frieder wrote:
->> >> From: Frieder Schrempf <frieder.schrempf@kontron.de>
->> >>
->> >> We have prepared a new driver for the FSL QSPI controller that works under
->> >> the SPI framework. The current devicetrees are broken because they use an
->> >> inconsistent scheme for assigning the reg properties.
->> >>
->> >> As, in contrast to the current driver, the new driver will use the reg
->> >> properties to select the correct chip, we need to fix them.
->> >>
->> >> We also add spi-[tx/rx]-bus-width to make sure the full buswidth will be used
->> >> and while at it clean up and remove some unused properties.
->> >
->> > could you please consider these devicetree patches for v4.21?
->>
->> Any chance to get this merged? Otherwise we would need to postpone the
->> new driver even further.
->
->As it came up a little bit late (the same day I sent pull request for
->4.21), I was considering it as 4.22 material.  But as you mentioned that
->the series is non-intrusive, I can try to send it to arm-soc folk for
->4.21 merge window, and then that will be their call.  But before I do
->it, I need you to double confirm that the series will not break anything
->that is already working.
+On Fri, 12/14 2018 11:53:56 EET Roger Quadros wrote:
+> Hi Dimitar,
+> 
+> On 30/11/18 23:39, Dimitar Dimitrov wrote:
+> > On Monday, 12/26/2018, 9:52:37 EET Roger Quadros wrote:
+> >> +/*
+> >> + * Convert PRU device address (instruction space) to kernel virtual
+> >> address + *
+> >> + * A PRU does not have an unified address space. Each PRU has its very
+> >> own
+> >> + * private Instruction RAM, and its device address is identical to that
+> >> of
+> >> + * its primary Data RAM device address.
+> >> + */
+> >> +static void *pru_i_da_to_va(struct pru_rproc *pru, u32 da, int len)
+> >> +{
+> >> +       u32 offset;
+> >> +       void *va = NULL;
+> >> +
+> >> +       if (len <= 0)
+> >> +               return NULL;
+> > 
+> > Could you please clear the upper 4 bits the of IRAM device address, in
+> > order to support binutils ELF images? Here is an example line to add
+> > here:
+> > 
+> > +       /* GNU binutils do not support multiple address spaces. The
+> > +        * default linker script from the official GNU pru-ld places
+> > +        * IRAM at an arbitrary high offset, in order to differentiate it
+> > +        * from DRAM. Hence we need to strip the artificial offset
+> > +        * from the IRAM address.
+> > +        */
+> > +       da &= ~0xf0000000u;
+> > +
+> 
+> After some more thought I'm not very sure how to proceed.
+> 
+> I'll be using the below 2 patches in the next patch spin in place of
+> patch 1 in the current series.
+> https://lore.kernel.org/lkml/20180623210810.21232-2-david@lechnology.com/
+> https://lore.kernel.org/lkml/20180623210810.21232-3-david@lechnology.com/
+> 
+> They figure out the PAGE (IRAM vs DRAM) by looking at TI specific section
+> attributes.
+> 
+> e.g.
+> [18] .TI.phattrs LOPROC+f000004 00000000 000e08 000010 00 0 0 4
+> [19] .TI.section.flags LOPROC+f000005 00000000 000e68 00002a 00 0 0 0
+> [20] .TI.section.page LOPROC+f000007 00000000 000e92 00002a 00 0 0 0
+> 
+> AFAIK the ELF by GNU pru-ld won't contain these sections.
+These sections are not documented, so pru-ld does not generate them.
 
-I can confirm, that the series does only remove or add properties to the
-devicetree, that are currently not used by the driver. Therefore it won't break
-anything.
+> 
+> We need to support ELF generated by both tools (TI clpru and GNU pru-ld).
+> Is it safe to assume that if the ELF doesn't have the TI specific sections
+> then it was generated by gnupru?
+Right now this is correct. My concern is that in the future TI may decide to 
+document these sections, and pru-ld default linker script may get updated. On 
+the other hand, if TI considers these specific to their toolchain and not 
+applicable to GNU, then go ahead and use this indicator.
 
-Thanks,
-Frieder
+Slightly more robust might be to check if MSB byte of the entry address is 
+non-zero:
+  Entry point address:               0x20000000
+                                       ^^
+> 
+> Is there a more straight forward way of differentiating the two. e.g. by
+> looking at something in the ELF header?
 
->
->Shawn
->
->>
->> All the changes to the devicetrees in this series are non-intrusive and
->> uncritical, anyway.
->>
->> Thanks,
->> Frieder
->>
->> >
->> > We have the new FSL QSPI driver under the SPI framework ([1]) ready, but
->> > we need some small fixes to the devicetrees that are currently broken.
->> >
->> > As the new driver depends on these changes (mainly the change to the reg
->> > properties) and it is not possible to add compatibility for the old
->> > bindings, it would be really nice to have them in v4.21, so we can queue
->> > the driver for v4.22 or whatever the next release will be called.
->> >
->> > Please also see [2] for some more explanation.
->> >
->> > Thanks,
->> > Frieder
->> >
->> > [1] https://patchwork.ozlabs.org/cover/1007641/
->> > [2] https://patchwork.ozlabs.org/patch/922817/#1925445
->> >
->> >>
->> >> Frieder Schrempf (5):
->> >>     arm64: dts: Remove unused properties from FSL QSPI driver nodes
->> >>     ARM: dts: Remove unused properties from FSL QSPI driver nodes
->> >>     ARM: dts: imx6sx-sdb: Fix the reg properties for the FSL QSPI nodes
->> >>     arm64: dts: Add spi-[tx/rx]-bus-width for the FSL QSPI controller
->> >>     ARM: dts: Add spi-[tx/rx]-bus-width for the FSL QSPI controller
->> >>
->> >>    arch/arm/boot/dts/imx6sx-sdb-reva.dts              | 8 ++++++--
->> >>    arch/arm/boot/dts/imx6sx-sdb.dts                   | 8 ++++++--
->> >>    arch/arm/boot/dts/imx6ul-14x14-evk.dtsi            | 2 ++
->> >>    arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts        | 5 ++---
->> >>    arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts  | 3 ++-
->> >>    arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts  | 4 ++--
->> >>    arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts  | 6 ++++--
->> >>    arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi | 4 ++++
->> >>    8 files changed, 28 insertions(+), 12 deletions(-)
->> >>
->> > ______________________________________________________
->> > Linux MTD discussion mailing list
->> > http://lists.infradead.org/mailman/listinfo/linux-mtd/
->> >
+Is there a reason to differentiate? As long as you zero the MSB byte of IRAM 
+device addresses, there should be no conflict. Very large IRAM addresses are 
+unlikely to ever be valid, so it should be safe to zero the MSB for any PRU 
+ELF image.
+
+
+Regards,
+Dimitar
