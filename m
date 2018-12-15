@@ -1,77 +1,87 @@
 From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH v2 3/3] PCI: imx: Add support for i.MX8MQ
-Date: Fri, 14 Dec 2018 21:22:46 -0800
-Message-ID: <CAHQ1cqFFm_YJne91yKVHWhMZY0KhpDfN0mbWL3YECnMo14JH4A@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] PCIE support for i.MX8MQ
+Date: Fri, 14 Dec 2018 21:25:04 -0800
+Message-ID: <CAHQ1cqG3s4J42V3oUPOGssUPw6dypZqYrtpkRphHPdiYFs9j1g@mail.gmail.com>
 References: <20181206073545.10967-1-andrew.smirnov@gmail.com>
- <20181206073545.10967-4-andrew.smirnov@gmail.com> <20181214203042.GC20725@google.com>
+ <20181206121550.GA2725@e107981-ln.cambridge.arm.com> <20181214203828.GD20725@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181214203042.GC20725@google.com>
+In-Reply-To: <20181214203828.GD20725@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: helgaas@kernel.org
-Cc: linux-pci@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, gustavo@embeddedor.com
+Cc: lorenzo.pieralisi@arm.com, Dong Aisheng <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Richard Zhu <hongxing.zhu@nxp.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-imx@nxp.com, Leonard Crestez <leonard.crestez@nxp.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Trent Piepho <tpiepho@impinj.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 14, 2018 at 12:30 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Fri, Dec 14, 2018 at 12:38 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> [+cc Gustavo for fallthrough annotation]
+> [+cc Trent]
 >
-> On Wed, Dec 05, 2018 at 11:35:45PM -0800, Andrey Smirnov wrote:
-> > Add code needed to support i.MX8MQ variant.
->
-> > @@ -245,7 +253,8 @@ static void imx6_pcie_reset_phy(struct imx6_pcie *imx6_pcie)
-> >  {
-> >       u32 tmp;
+> On Thu, Dec 06, 2018 at 12:15:50PM +0000, Lorenzo Pieralisi wrote:
+> > On Wed, Dec 05, 2018 at 11:35:42PM -0800, Andrey Smirnov wrote:
+> > > Everyone:
+> > >
+> > > This series contains changes I made in order to enable support of PCIE
+> > > IP block on i.MX8MQ SoCs (full tree can be found at [github-v2]).
+> > >
+> > > NOTE: The last patch have a Kconfig symbol depenency on [imx8mq-kconfig].
+> > >
+> > > Changes since [v1]:
+> > >
+> > >  - Driver changed to use single "fsl,controller-id" property to
+> > >    distinguish between two intances of PCIE IP block
+> > >
+> > >  - All code pertaining to L1SS was dropped to simplify the patch
+> > >
+> > >  - Documented additions to DT bindings
+> > >
+> > > Feedback is welcome!
+> > >
+> > > Thanks,
+> > > Andrey Smirnov
 > >
-> > -     if (imx6_pcie->variant == IMX7D)
-> > +     if (imx6_pcie->variant == IMX7D ||
-> > +         imx6_pcie->variant == IMX8MQ)
->
-> This style looks like a maintenance problem: the code below is probably
-> IMX6-specific, and you should test for *that* instead of adding to this
-> list of things that are *not* IMX6, because that list is likely to
-> continue growing.  There are more occurrences below.
->
-
-Makes sense, I'll update that patches and send a v3 out.
-
-> > @@ -301,6 +312,7 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+> > Andrey,
 > >
-> >       switch (imx6_pcie->variant) {
-> >       case IMX7D:
-> > +     case IMX8MQ: /* FALLTHROUGH */
-> >               reset_control_assert(imx6_pcie->pciephy_reset);
-> >               reset_control_assert(imx6_pcie->apps_reset);
-> >               break;
+> > I have applied the patches, ...
 >
-> I'm not an expert on fallthrough annotation (Gustavo, cc'd, is), but
-> this looks wrong.  It's the IMX7D case that falls through, not the
-> IMX8MQ case.
+> When I merged your pci/dwc branch, I noticed what looks like a merge
+> conflict between these commits:
 >
-> The recent annotations added by Gustavo are at the point where the
-> "break" would normally be, e.g.,
+>   d123765b58ee ("PCI: dwc: Adjust Kconfig to allow IMX6 PCIe host on IMX7")
+>   1a059d994189 ("PCI: imx: Add support for i.MX8MQ")
 >
->   case IMX7D:
->     /* fall through */                    <--- annotation
->   case IMX8MQ:
->     <code>
->     break;
+> d123765b58ee added SOC_IMX7D:
 >
-> But in this case there's actually no IMX7D-specific *code* there, so I
-> suspect the annotation is unnecessary.  It's obvious that IMX7D and
-> IMX8MQ are handled the same, so there's really no opportunity for the
-> "forgotten break" mistake -Wimplicit-fallthrough is trying to find.
+>   -       depends on SOC_IMX6Q || (ARM && COMPILE_TEST)
+>   +       depends on SOC_IMX6Q || SOC_IMX7D || (ARM && COMPILE_TEST)
 >
-> If we *do* want this annotation, we should spell it the same as
-> Gustavo has been, i.e., "fall through".
+> and 1a059d994189 added SOC_IMX8MQ but dropped SOC_IMX7D again, which looks
+> like a mistake:
 >
-> Again, more occurrences below.
+>   -       depends on SOC_IMX6Q || SOC_IMX7D || (ARM && COMPILE_TEST)
+>   +       depends on SOC_IMX8MQ || SOC_IMX6Q || (ARM && COMPILE_TEST)
+>
+> So my "next" branch[1] (current head 7053eeb009e0) is:
+>
+>   config PCI_IMX6
+>         bool "Freescale i.MX6/7 PCIe controller"
+>         depends on SOC_IMX8MQ || SOC_IMX6Q || (ARM && COMPILE_TEST)
+>         depends on PCI_MSI_IRQ_DOMAIN
+>         select PCIE_DW_HOST
+>
+> which I think is wrong.
 
-Yes, definitely, same mistake of mine was already caught elsewhere in
-the tree https://lore.kernel.org/lkml/20181214144406.0dbffbc8@canb.auug.org.au/
+Yeah, this is definitely wrong, should be SOC_IMX8MQ || SOC_IMX6Q ||
+SOC_IMX7D || (ARM && COMPILE_TEST)
 
-I'll fix it in v3.
+> Lorenzo, if you update your pci/dwc branch,  I'll rebuild my "next" branch.
+>
+> If you want to tweak the switch statements and/or IMX8 checks, you
+> could do that at the same time.
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=next
+
+OK, I'll use the branch above for v3 of the patches.
 
 Thanks,
 Andrey Smirnov
