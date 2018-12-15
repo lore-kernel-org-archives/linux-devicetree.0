@@ -1,61 +1,43 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH] thermal: stm32: read factory settings inside
- stm_thermal_prepare
-Date: Fri, 14 Dec 2018 17:47:34 -0800
-Message-ID: <20181215014732.GA24528@localhost.localdomain>
-References: <1544102603-14899-1-git-send-email-david.hernandezsanchez@st.com>
- <1544102603-14899-2-git-send-email-david.hernandezsanchez@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/2] Add board support for Chameleon96 Board
+Date: Sat, 15 Dec 2018 08:31:50 +0530
+Message-ID: <20181215030152.4386-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1544102603-14899-2-git-send-email-david.hernandezsanchez@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David HERNANDEZ SANCHEZ <david.hernandezsanchez@st.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
+To: dinguyen@kernel.org, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, amit.kucheria@linaro.org, yossi@novtech.com, nazik@novtech.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
-On Thu, Dec 06, 2018 at 01:23:32PM +0000, David HERNANDEZ SANCHEZ wrote:
-> Calling stm_thermal_read_factory_settings before clocking
-> internal peripheral causes bad register values and makes
-> temperature computation wrong.
-> 
-> Calling stm_thermal_read_factory_settings inside
-> stm_thermal_prepare fixes this problem as internal
-> peripheral is well clocked at this stage.
-> 
-> Signed-off-by: David Hernandez Sanchez <david.hernandezsanchez@st.com>
-> Fixes: 1d693155 ("thermal: add stm32 thermal driver")
+This patchset adds board support for Chameleon96 board from Novetech
+based on Intel Cyclone V SoC FPGA. This board is one of the Consumer
+Edition boards of the 96Boards family and has the following key features:
+    
+* SoC - Intel Cyclone V SoC FPGA
+* GPU - Graphics based on Intel Video Suite for FPGA
+* RAM - 512MB DDR3L
+* USB - 2x USB2.0 Host, 1x USB2.0 OTG
+* Wireless - Wifi, BT
+    
+More information about this board can be found in 96Boards product
+page: https://www.96boards.org/product/chameleon96/
 
-Please append patch version in the title next time to help tracking it.
+This patchset has been tested on Chameleon96 board and the board boots
+into a distro on SD card with USB ports working.
 
-> 
-> diff --git a/drivers/thermal/st/stm_thermal.c b/drivers/thermal/st/stm_thermal.c
-> index 47623da..daa1257 100644
-> --- a/drivers/thermal/st/stm_thermal.c
-> +++ b/drivers/thermal/st/stm_thermal.c
-> @@ -532,6 +532,10 @@ static int stm_thermal_prepare(struct stm_thermal_sensor *sensor)
->  	if (ret)
->  		return ret;
->  
-> +	ret = stm_thermal_read_factory_settings(sensor);
-> +	if (ret)
-> +		goto thermal_unprepare;
-> +
->  	ret = stm_thermal_calibration(sensor);
->  	if (ret)
->  		goto thermal_unprepare;
-> @@ -636,10 +640,6 @@ static int stm_thermal_probe(struct platform_device *pdev)
->  	/* Populate sensor */
->  	sensor->base = base;
->  
-> -	ret = stm_thermal_read_factory_settings(sensor);
-> -	if (ret)
-> -		return ret;
-> -
->  	sensor->clk = devm_clk_get(&pdev->dev, "pclk");
->  	if (IS_ERR(sensor->clk)) {
->  		dev_err(&pdev->dev, "%s: failed to fetch PCLK clock\n",
-> -- 
-> 2.7.4
+Thanks,
+Mani
+
+Manivannan Sadhasivam (2):
+  dt-bindings: vendor-prefixes: Add Novtech Vendor Prefix
+  ARM: dts: Add support for 96Boards Chameleon96 board
+
+ .../devicetree/bindings/vendor-prefixes.txt   |   1 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ .../boot/dts/socfpga_cyclone5_chameleon96.dts | 130 ++++++++++++++++++
+ 3 files changed, 132 insertions(+)
+ create mode 100644 arch/arm/boot/dts/socfpga_cyclone5_chameleon96.dts
+
+-- 
+2.17.1
