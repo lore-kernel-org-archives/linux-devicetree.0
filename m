@@ -1,136 +1,23 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH 3/3] arm64: tegra: p2972: Enable the CPU, GPU and AUX
- thermal zones
-Date: Sat, 15 Dec 2018 09:28:54 -0800
-Message-ID: <20181215172853.GA10838@localhost.localdomain>
-References: <20181123121839.18573-1-thierry.reding@gmail.com>
- <20181123121839.18573-3-thierry.reding@gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] dt-bindings: net: ravb: Add support for r8a774c0 SoC
+Date: Sat, 15 Dec 2018 13:05:09 -0800 (PST)
+Message-ID: <20181215.130509.170699144609598328.davem@davemloft.net>
+References: <1544732314-6041-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181123121839.18573-3-thierry.reding@gmail.com>
+In-Reply-To: <1544732314-6041-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jon Hunter <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>, Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: fabrizio.castro@bp.renesas.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, sergei.shtylyov@cogentembedded.com, horms+renesas@verge.net.au, biju.das@bp.renesas.com, geert+renesas@glider.be, jacopo+renesas@jmondi.org, yoshihiro.shimoda.uh@renesas.com, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, horms@verge.net.au, Chris.Paterson2@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 23, 2018 at 01:18:39PM +0100, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> Enable these thermal zones to be able to monitor their temperatures and
-> control the fan to cool down the system if necessary.
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Date: Thu, 13 Dec 2018 20:18:34 +0000
 
-Acked-by: Eduardo Valentin <edubezval@gmail.com>
-
-As mentioned, I already added patch 1.
-
-> ---
->  .../boot/dts/nvidia/tegra194-p2972-0000.dts   | 91 ++++++++++++++++++-
->  1 file changed, 90 insertions(+), 1 deletion(-)
+> Document RZ/G2E (R8A774C0) SoC bindings.
 > 
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> index cbae8e8b1281..e29f8f6117c8 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> @@ -43,8 +43,97 @@
->  		};
->  	};
->  
-> -	fan {
-> +	fan: fan {
->  		compatible = "pwm-fan";
->  		pwms = <&pwm4 0 45334>;
-> +
-> +		cooling-levels = <0 64 128 255>;
-> +		cooling-min-state = <0>;
-> +		cooling-max-state = <3>;
-> +		#cooling-cells = <2>;
-> +	};
-> +
-> +	thermal-zones {
-> +		cpu {
-> +			polling-delay = <0>;
-> +			polling-delay-passive = <500>;
-> +			status = "okay";
-> +
-> +			trips {
-> +				cpu_trip_critical: critical {
-> +					temperature = <96500>;
-> +					hysteresis = <0>;
-> +					type = "critical";
-> +				};
-> +
-> +				cpu_trip_hot: hot {
-> +					temperature = <70000>;
-> +					hysteresis = <2000>;
-> +					type = "hot";
-> +				};
-> +
-> +				cpu_trip_active: active {
-> +					temperature = <50000>;
-> +					hysteresis = <2000>;
-> +					type = "active";
-> +				};
-> +
-> +				cpu_trip_passive: passive {
-> +					temperature = <30000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +			};
-> +
-> +			cooling-maps {
-> +				cpu-critical {
-> +					cooling-device = <&fan 3 3>;
-> +					trip = <&cpu_trip_critical>;
-> +				};
-> +
-> +				cpu-hot {
-> +					cooling-device = <&fan 2 2>;
-> +					trip = <&cpu_trip_hot>;
-> +				};
-> +
-> +				cpu-active {
-> +					cooling-device = <&fan 1 1>;
-> +					trip = <&cpu_trip_active>;
-> +				};
-> +
-> +				cpu-passive {
-> +					cooling-device = <&fan 0 0>;
-> +					trip = <&cpu_trip_passive>;
-> +				};
-> +			};
-> +		};
-> +
-> +		gpu {
-> +			polling-delay = <0>;
-> +			polling-delay-passive = <500>;
-> +			status = "okay";
-> +
-> +			trips {
-> +				gpu_alert0: critical {
-> +					temperature = <99000>;
-> +					hysteresis = <0>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +
-> +		aux {
-> +			polling-delay = <0>;
-> +			polling-delay-passive = <500>;
-> +			status = "okay";
-> +
-> +			trips {
-> +				aux_alert0: critical {
-> +					temperature = <90000>;
-> +					hysteresis = <0>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
->  	};
->  };
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+
+Applied to net-next.
