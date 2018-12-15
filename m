@@ -1,182 +1,79 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 2/2] ARM: dts: Add support for 96Boards Chameleon96 board
-Date: Sat, 15 Dec 2018 08:31:52 +0530
-Message-ID: <20181215030152.4386-3-manivannan.sadhasivam@linaro.org>
-References: <20181215030152.4386-1-manivannan.sadhasivam@linaro.org>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: [PATCH 2/7] dt-bindings: riscv: sifive: add documentation for the SiFive FU540
+Date: Fri, 14 Dec 2018 21:21:49 -0800
+Message-ID: <20181215052154.24347-3-paul.walmsley@sifive.com>
+References: <20181215052154.24347-1-paul.walmsley@sifive.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181215030152.4386-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20181215052154.24347-1-paul.walmsley@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dinguyen@kernel.org, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, amit.kucheria@linaro.org, yossi@novtech.com, nazik@novtech.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree support for 96Boards Chameleon96 board from Novtech, Inc.
-based on Altera CycloneV SoC FPGA. This board is one of the Consumer
-Edition boards of the 96Boards family and has the following key features:
+Add DT binding documentation for the SiFive FU540 SoC.  This
+SoC is documented at:
 
-* SoC - Intel Cyclone V SoC FPGA
-* GPU - Graphics based on Intel Video Suite for FPGA
-* RAM - 512MB DDR3L
-* USB - 2x USB2.0 Host, 1x USB2.0 OTG
-* Wireless - Wifi, BT
+https://static.dev.sifive.com/FU540-C000-v1.0.pdf
 
-More information about this board can be found in 96Boards product
-page: https://www.96boards.org/product/chameleon96/
+This file is originally based on
+Documentation/devicetree/bindings/arm/ti/k3.txt.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Palmer Dabbelt <palmer@sifive.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: devicetree@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Signed-off-by: Paul Walmsley <paul@pwsan.com>
 ---
- arch/arm/boot/dts/Makefile                    |   1 +
- .../boot/dts/socfpga_cyclone5_chameleon96.dts | 130 ++++++++++++++++++
- 2 files changed, 131 insertions(+)
- create mode 100644 arch/arm/boot/dts/socfpga_cyclone5_chameleon96.dts
+ .../devicetree/bindings/riscv/sifive/fu540.txt     | 14 ++++++++++++++
+ MAINTAINERS                                        |  9 +++++++++
+ 2 files changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/riscv/sifive/fu540.txt
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b0e966d625b9..d6cf081ec325 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -897,6 +897,7 @@ dtb-$(CONFIG_ARCH_SOCFPGA) += \
- 	socfpga_arria10_socdk_nand.dtb \
- 	socfpga_arria10_socdk_qspi.dtb \
- 	socfpga_arria10_socdk_sdmmc.dtb \
-+	socfpga_cyclone5_chameleon96.dtb \
- 	socfpga_cyclone5_mcvevk.dtb \
- 	socfpga_cyclone5_socdk.dtb \
- 	socfpga_cyclone5_de0_nano_soc.dtb \
-diff --git a/arch/arm/boot/dts/socfpga_cyclone5_chameleon96.dts b/arch/arm/boot/dts/socfpga_cyclone5_chameleon96.dts
+diff --git a/Documentation/devicetree/bindings/riscv/sifive/fu540.txt b/Documentation/devicetree/bindings/riscv/sifive/fu540.txt
 new file mode 100644
-index 000000000000..f6561766d83f
+index 000000000000..b5cf2b9f9a75
 --- /dev/null
-+++ b/arch/arm/boot/dts/socfpga_cyclone5_chameleon96.dts
-@@ -0,0 +1,130 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Device Tree file for the Chameleon96
-+ *
-+ * Copyright (c) 2018 Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+ */
++++ b/Documentation/devicetree/bindings/riscv/sifive/fu540.txt
+@@ -0,0 +1,14 @@
++SiFive FU540 SoC architecture device tree bindings
++--------------------------------------------------
 +
-+#include <dt-bindings/gpio/gpio.h>
++Platforms based on the SiFive FU540 RISC-V SoC should follow the
++scheme described below:
 +
-+#include "socfpga_cyclone5.dtsi"
++SoCs
++----
 +
-+/ {
-+	model = "Novetech Chameleon96";
-+	compatible = "novtech,chameleon96", "altr,socfpga-cyclone5", "altr,socfpga";
++Each device tree root node must specify one of the following
++compatible-string values:
 +
-+	chosen {
-+		bootargs = "earlyprintk";
-+		stdout-path = "serial0:115200n8";
-+	};
++- Freedom Unleashed 540 rev. C000, or "FU540"
++  compatible = "sifive,fu540-c000", "sifive,fu540"
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8119141a926f..dee555ceb175 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13626,6 +13626,15 @@ S:	Supported
+ K:	sifive
+ N:	sifive
+ 
++SIFIVE FU540 SYSTEM-ON-CHIP
++M:	Paul Walmsley <paul.walmsley@sifive.com>
++M:	Palmer Dabbelt <palmer@sifive.com>
++L:	linux-riscv@lists.infradead.org
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pjw/sifive.git
++S:	Supported
++K:	fu540
++N:	fu540
 +
-+	memory@0 {
-+		name = "memory";
-+		device_type = "memory";
-+		reg = <0x0 0x20000000>; /* 512MB */
-+	};
-+
-+	regulator_3_3v: 3-3-v-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3.3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		user_led1 {
-+			label = "green:user1";
-+			gpios = <&porta 14 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		user_led2 {
-+			label = "green:user2";
-+			gpios = <&porta 22 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "mmc0";
-+		};
-+
-+		user_led3 {
-+			label = "green:user3";
-+			gpios = <&porta 25 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "none";
-+		};
-+
-+		user_led4 {
-+			label = "green:user4";
-+			gpios = <&portb 3 GPIO_ACTIVE_LOW>;
-+			panic-indicator;
-+			linux,default-trigger = "none";
-+		};
-+	};
-+};
-+
-+&gpio0 {
-+	status = "okay";
-+};
-+
-+&gpio1 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	/* On Low speed expansion */
-+	label = "LS-I2C0";
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	/* On Low speed expansion */
-+	label = "LS-I2C1";
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	/* On High speed expansion */
-+	label = "HS-I2C2";
-+	status = "okay";
-+};
-+
-+&mmc0 {
-+	vmmc-supply = <&regulator_3_3v>;
-+	vqmmc-supply = <&regulator_3_3v>;
-+	status = "okay";
-+};
-+
-+&spi0 {
-+	/* On High speed expansion */
-+	label = "HS-SPI1";
-+	status = "okay";
-+};
-+
-+&spi1 {
-+	/* On Low speed expansion */
-+	label = "LS-SPI0";
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	/* On Low speed expansion */
-+	label = "LS-UART1";
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	/* On Low speed expansion */
-+	label = "LS-UART0";
-+	status = "okay";
-+};
-+
-+&usbphy0 {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+};
+ SILEAD TOUCHSCREEN DRIVER
+ M:	Hans de Goede <hdegoede@redhat.com>
+ L:	linux-input@vger.kernel.org
 -- 
-2.17.1
+2.20.0
