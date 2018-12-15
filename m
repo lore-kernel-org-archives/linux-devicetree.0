@@ -1,87 +1,68 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH v2 0/3] PCIE support for i.MX8MQ
-Date: Fri, 14 Dec 2018 21:25:04 -0800
-Message-ID: <CAHQ1cqG3s4J42V3oUPOGssUPw6dypZqYrtpkRphHPdiYFs9j1g@mail.gmail.com>
-References: <20181206073545.10967-1-andrew.smirnov@gmail.com>
- <20181206121550.GA2725@e107981-ln.cambridge.arm.com> <20181214203828.GD20725@google.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v4 11/15] clocksource: Add clock driver for RDA8810PL SoC
+Date: Sat, 15 Dec 2018 11:28:04 +0530
+Message-ID: <20181215055804.GA9723@Mani-XPS-13-9360>
+References: <20181210173550.29643-1-manivannan.sadhasivam@linaro.org>
+ <20181210173550.29643-12-manivannan.sadhasivam@linaro.org>
+ <0b90a179-aa4b-57f7-0874-996d5c535ea9@linaro.org>
+ <20181212154748.GA28130@Mani-XPS-13-9360>
+ <affe5ffd-66de-526a-f568-52ad5f0c0083@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181214203828.GD20725@google.com>
+Content-Disposition: inline
+In-Reply-To: <affe5ffd-66de-526a-f568-52ad5f0c0083@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: helgaas@kernel.org
-Cc: lorenzo.pieralisi@arm.com, Dong Aisheng <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Richard Zhu <hongxing.zhu@nxp.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-imx@nxp.com, Leonard Crestez <leonard.crestez@nxp.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Trent Piepho <tpiepho@impinj.com>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, gregkh@linuxfoundation.org, jslaby@suse.com, linux-unisoc@lists.infradead.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 14, 2018 at 12:38 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Wed, Dec 12, 2018 at 04:52:58PM +0100, Daniel Lezcano wrote:
+> On 12/12/2018 16:47, Manivannan Sadhasivam wrote:
+> > Hi Daniel,
+> > 
+> > On Wed, Dec 12, 2018 at 04:07:53PM +0100, Daniel Lezcano wrote:
+> >> On 10/12/2018 18:35, Manivannan Sadhasivam wrote:
+> >>> Add clock driver for RDA Micro RDA8810PL SoC supporting OSTIMER
+> >>> and HWTIMER.
+> >>>
+> >>> RDA8810PL has two independent timers: OSTIMER (56 bit) and HWTIMER
+> >>> (64 bit). Each timer provides optional interrupt support. In this
+> >>> driver, OSTIMER is used for clockevents and HWTIMER is used for
+> >>> clocksource.
+> >>>
+> >>> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> >>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >>
+> >> The driver looks good to me. Do you want me to pick it up via my tree?
+> >>
+> > 
+> > Yes, please do. Marc is going to pick up the irqchip driver but I'm not
+> > sure about the serial driver. The rest of the patches can be picked up
+> > by the ARM maintainers (I need to send another version for dropping
+> > Andreas from MAINTAINERS).
+> 
+> Ok, applied.
 >
-> [+cc Trent]
->
-> On Thu, Dec 06, 2018 at 12:15:50PM +0000, Lorenzo Pieralisi wrote:
-> > On Wed, Dec 05, 2018 at 11:35:42PM -0800, Andrey Smirnov wrote:
-> > > Everyone:
-> > >
-> > > This series contains changes I made in order to enable support of PCIE
-> > > IP block on i.MX8MQ SoCs (full tree can be found at [github-v2]).
-> > >
-> > > NOTE: The last patch have a Kconfig symbol depenency on [imx8mq-kconfig].
-> > >
-> > > Changes since [v1]:
-> > >
-> > >  - Driver changed to use single "fsl,controller-id" property to
-> > >    distinguish between two intances of PCIE IP block
-> > >
-> > >  - All code pertaining to L1SS was dropped to simplify the patch
-> > >
-> > >  - Documented additions to DT bindings
-> > >
-> > > Feedback is welcome!
-> > >
-> > > Thanks,
-> > > Andrey Smirnov
-> >
-> > Andrey,
-> >
-> > I have applied the patches, ...
->
-> When I merged your pci/dwc branch, I noticed what looks like a merge
-> conflict between these commits:
->
->   d123765b58ee ("PCI: dwc: Adjust Kconfig to allow IMX6 PCIe host on IMX7")
->   1a059d994189 ("PCI: imx: Add support for i.MX8MQ")
->
-> d123765b58ee added SOC_IMX7D:
->
->   -       depends on SOC_IMX6Q || (ARM && COMPILE_TEST)
->   +       depends on SOC_IMX6Q || SOC_IMX7D || (ARM && COMPILE_TEST)
->
-> and 1a059d994189 added SOC_IMX8MQ but dropped SOC_IMX7D again, which looks
-> like a mistake:
->
->   -       depends on SOC_IMX6Q || SOC_IMX7D || (ARM && COMPILE_TEST)
->   +       depends on SOC_IMX8MQ || SOC_IMX6Q || (ARM && COMPILE_TEST)
->
-> So my "next" branch[1] (current head 7053eeb009e0) is:
->
->   config PCI_IMX6
->         bool "Freescale i.MX6/7 PCIe controller"
->         depends on SOC_IMX8MQ || SOC_IMX6Q || (ARM && COMPILE_TEST)
->         depends on PCI_MSI_IRQ_DOMAIN
->         select PCIE_DW_HOST
->
-> which I think is wrong.
 
-Yeah, this is definitely wrong, should be SOC_IMX8MQ || SOC_IMX6Q ||
-SOC_IMX7D || (ARM && COMPILE_TEST)
+Just to be sure before spinning next version, have you also picked up the
+bindings patch? I can't find the commit(s) in your tree!
 
-> Lorenzo, if you update your pci/dwc branch,  I'll rebuild my "next" branch.
->
-> If you want to tweak the switch statements and/or IMX8 checks, you
-> could do that at the same time.
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=next
-
-OK, I'll use the branch above for v3 of the patches.
+https://git.linaro.org/people/daniel.lezcano/linux.git/
 
 Thanks,
-Andrey Smirnov
+Mani
+
+> Thanks
+> 
+>   -- Daniel
+> 
+> 
+> -- 
+>  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> 
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+> 
