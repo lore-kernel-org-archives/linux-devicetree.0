@@ -1,49 +1,64 @@
 From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH v2 0/5] Add CPU clock support for Armada 7K/8K
-Date: Sun, 16 Dec 2018 10:36:46 +0100
-Message-ID: <87h8fdke35.fsf@bootlin.com>
-References: <20181206171516.15891-1-gregory.clement@bootlin.com>
-        <154482536298.19322.16460657058404864070@swboyd.mtv.corp.google.com>
+Subject: [PATCH v3 0/6] Add CPU clock support for Armada 7K/8K
+Date: Sun, 16 Dec 2018 10:41:41 +0100
+Message-ID: <20181216094147.6468-1-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154482536298.19322.16460657058404864070@swboyd.mtv.corp.google.com>
-        (Stephen Boyd's message of "Fri, 14 Dec 2018 14:09:22 -0800")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
- 
- On ven., déc. 14 2018, Stephen Boyd <sboyd@kernel.org> wrote:
+Hello,
 
-> Quoting Gregory CLEMENT (2018-12-06 09:15:11)
->> Hello,
->> 
->> This is the second version of a series allowing to manage the cpu
->> clock for Armada 7K/8K. For these SoCs, the CPUs share the same clock
->> by cluster, so actually the clock management is done at cluster level.
->> 
->> As for the other Armada 7K/8K clocks it is possible to have multiple
->> AP so here again we need to have unique name: the purpose of the second
->> patch is to share a common code which will be used in 3 drivers.
->> 
->> The last 2 patch enable the driver at dt and platform level and will
->> be applied through the mvebu subsystem.
->  
-> The binding "marvell,ap806-cpu-clock" is not documented. It was in the
-> previous series but then got dropped from this one? Why?
+This is the third version of a series allowing to manage the cpu
+clock for Armada 7K/8K. For these SoCs, the CPUs share the same clock
+by cluster, so actually the clock management is done at cluster level.
 
-I made a mistake and start my git-format on the wrong commit, I am
-sending a new series right now with this missing patch.
+As for the other Armada 7K/8K clocks it is possible to have multiple
+AP so here again we need to have unique name: the purpose of the second
+patch is to share a common code which will be used in 3 drivers.
 
-Gregory
+The last 2 patch enable the driver at dt and platform level and will
+be applied through the mvebu subsystem.
 
->
+Changelog v2->v3:
+ - Add back the first patch documenting the binding
+
+Changelog v1->v2:
+ - Header cleanup
+ - Use unsigned int instead of it for cluster member of the ap_cpu_clk struct
+ - Use clk_hw instead of clk
+ - Use regmap_read_poll_timeout
+ - Use for_each_of_cpu_node
+ - Remove unnecessary WARN_ON()
+ - Remove headers from armada_ap_cp_helper.h
+ - Few other minor cleanup
+
+Gregory CLEMENT (6):
+  dt-bindings: ap806: add the cluster clock node in the syscon file
+  clk: mvebu: add helper file for Armada AP and CP clocks
+  clk: mvebu: add CPU clock driver for Armada 7K/8K
+  clk: mvebu: ap806: Fix clock name for the cluster
+  arm64: marvell: enable the  Armada 7K/8K CPU clk driver
+  arm64: dts: marvell: Add cpu clock node on Armada 7K/8K
+
+ .../arm/marvell/ap806-system-controller.txt   |  22 ++
+ arch/arm64/Kconfig.platforms                  |   1 +
+ .../boot/dts/marvell/armada-ap806-quad.dtsi   |   4 +
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi |   6 +
+ drivers/clk/mvebu/Kconfig                     |   8 +
+ drivers/clk/mvebu/Makefile                    |   2 +
+ drivers/clk/mvebu/ap-cpu-clk.c                | 259 ++++++++++++++++++
+ drivers/clk/mvebu/ap806-system-controller.c   |  24 +-
+ drivers/clk/mvebu/armada_ap_cp_helper.c       |  30 ++
+ drivers/clk/mvebu/armada_ap_cp_helper.h       |  11 +
+ drivers/clk/mvebu/cp110-system-controller.c   |  32 +--
+ 11 files changed, 357 insertions(+), 42 deletions(-)
+ create mode 100644 drivers/clk/mvebu/ap-cpu-clk.c
+ create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.c
+ create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.h
 
 -- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+2.19.2
