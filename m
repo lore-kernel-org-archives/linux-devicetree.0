@@ -1,42 +1,52 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH] dt-bindings: watchdog: update bindings for MT7629 SoC
-Date: Sun, 16 Dec 2018 11:31:04 +0100
-Message-ID: <4152fe87-0e72-f9aa-6874-9f40dc15f278@gmail.com>
-References: <55d108719233b3c30c747e75a010b9e64681af09.1541573395.git.ryder.lee@mediatek.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH V4 1/2] dt-bindings: iio: accel: mma8452: add optional
+ power supply property
+Date: Sun, 16 Dec 2018 10:46:00 +0000
+Message-ID: <20181216104600.32d90291@archlinux>
+References: <1544504839-10958-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55d108719233b3c30c747e75a010b9e64681af09.1541573395.git.ryder.lee@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <1544504839-10958-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-watchdog@vger.kernel.org, Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "martink@posteo.de" <martink@posteo.de>, Leonard Crestez <leonard.crestez@nxp.com>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "preid@electromag.com.au" <preid@electromag.com.au>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 11 Dec 2018 05:13:14 +0000
+Anson Huang <anson.huang@nxp.com> wrote:
 
-
-On 07/11/2018 08:10, Ryder Lee wrote:
-> This updates dt-binding documentation for MT7629 SoC
+> The accelerometer's power supply could be controlled by regulator
+> on some platforms, add optional property "vdd/vddio" power supply
+> to let device tree to pass phandles to the regulators to driver.
 > 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
 
-Acked-by: Matthias Brugger <matthias.bgg@gmail.com>
+I'll not be pushing this out as non rebasing for a week or so
+hence plenty of time to add additional reviews.
 
+Thanks,
+
+Jonathan
 > ---
->  Documentation/devicetree/bindings/watchdog/mtk-wdt.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/iio/accel/mma8452.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> index 859dee1..8682d6a 100644
-> --- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> @@ -8,6 +8,7 @@ Required properties:
->  	"mediatek,mt6797-wdt", "mediatek,mt6589-wdt": for MT6797
->  	"mediatek,mt7622-wdt", "mediatek,mt6589-wdt": for MT7622
->  	"mediatek,mt7623-wdt", "mediatek,mt6589-wdt": for MT7623
-> +	"mediatek,mt7629-wdt", "mediatek,mt6589-wdt": for MT7629
+> diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> index 2100e9a..e132394 100644
+> --- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> +++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+> @@ -20,6 +20,10 @@ Optional properties:
+>    - interrupt-names: should contain "INT1" and/or "INT2", the accelerometer's
+>  		     interrupt line in use.
 >  
->  - reg : Specifies base physical address and size of the registers.
+> +  - vdd-supply: phandle to the regulator that provides vdd power to the accelerometer.
+> +
+> +  - vddio-supply: phandle to the regulator that provides vddio power to the accelerometer.
+> +
+>  Example:
 >  
-> 
+>  	mma8453fc@1d {
