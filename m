@@ -1,50 +1,49 @@
-From: Harald Geyer <harald@ccbib.org>
-Subject: [PATCH] ARM: dts: sun4i-a10: Add PMU node
-Date: Sun, 16 Dec 2018 09:25:24 +0000
-Message-ID: <20181216092524.20337-1-harald@ccbib.org>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH v2 0/5] Add CPU clock support for Armada 7K/8K
+Date: Sun, 16 Dec 2018 10:36:46 +0100
+Message-ID: <87h8fdke35.fsf@bootlin.com>
+References: <20181206171516.15891-1-gregory.clement@bootlin.com>
+        <154482536298.19322.16460657058404864070@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Harald Geyer <harald@ccbib.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <154482536298.19322.16460657058404864070@swboyd.mtv.corp.google.com>
+        (Stephen Boyd's message of "Fri, 14 Dec 2018 14:09:22 -0800")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-This is necessary to use 'perf' for cache profiling etc.
-Tested on cubieboard with 'perf stat echo foo'.
-
-Signed-off-by: Harald Geyer <harald@ccbib.org>
----
- arch/arm/boot/dts/sun4i-a10.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
-
-While looking into this, I noticed that the dtsi files for the allwinner
-SoCs have no information about caches in them. Is this on purpose?
-
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index 5d46bb0139fa..a2fb473cbb9d 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -184,6 +184,11 @@
- 		status = "disabled";
- 	};
+Hi Stephen,
  
-+	pmu {
-+		compatible = "arm,cortex-a8-pmu";
-+		interrupts = <3>;
-+	};
-+
- 	soc {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
+ On ven., déc. 14 2018, Stephen Boyd <sboyd@kernel.org> wrote:
+
+> Quoting Gregory CLEMENT (2018-12-06 09:15:11)
+>> Hello,
+>> 
+>> This is the second version of a series allowing to manage the cpu
+>> clock for Armada 7K/8K. For these SoCs, the CPUs share the same clock
+>> by cluster, so actually the clock management is done at cluster level.
+>> 
+>> As for the other Armada 7K/8K clocks it is possible to have multiple
+>> AP so here again we need to have unique name: the purpose of the second
+>> patch is to share a common code which will be used in 3 drivers.
+>> 
+>> The last 2 patch enable the driver at dt and platform level and will
+>> be applied through the mvebu subsystem.
+>  
+> The binding "marvell,ap806-cpu-clock" is not documented. It was in the
+> previous series but then got dropped from this one? Why?
+
+I made a mistake and start my git-format on the wrong commit, I am
+sending a new series right now with this missing patch.
+
+Gregory
+
+>
+
 -- 
-2.11.0
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
