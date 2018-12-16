@@ -1,96 +1,55 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [RFC PATCH v2 08/15] usb:cdns3: Implements device operations part
- of the API
-Date: Sun, 16 Dec 2018 13:31:47 +0000
-Message-ID: <BYAPR07MB4709122D890CEA548523752FDDA30@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1542535751-16079-1-git-send-email-pawell@cadence.com>
- <1542535751-16079-9-git-send-email-pawell@cadence.com>
- <5BFE8883.7090802@ti.com>
- <CAL411-oKvu3EADStit=JtbcxVzM_fFGF2uPn67-wmXxPzUK6GQ@mail.gmail.com>
- <6b19b55c-66d7-439e-df8f-7b311b45af5e@ti.com>
- <BYAPR07MB470972A525D85B03C3037D3BDDA60@BYAPR07MB4709.namprd07.prod.outlook.com>
- <CAL411-oc-_0H88egpHsc06ptL12UsaE63rWwjN7novuFFx_qbA@mail.gmail.com>
- <5a41de27-cd1f-0cfd-ccdc-dccbf0854fcb@ti.com>
- <87bm5ol6zt.fsf@linux.intel.com>
- <d5623e70-7971-d729-f395-7259ab0efdb0@ti.com>
- <875zvwl585.fsf@linux.intel.com>
- <7e6ac47e-61e4-ecd3-73d3-9b1be2d81479@ti.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 3/3] iio: chemical: sgp30: add device tree support
+Date: Sun, 16 Dec 2018 13:35:43 +0000
+Message-ID: <20181216133543.5c560f71@archlinux>
+References: <20181213144418.24965-1-andreas.brauchli@sensirion.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7e6ac47e-61e4-ecd3-73d3-9b1be2d81479@ti.com>
-Content-Language: en-US
+In-Reply-To: <20181213144418.24965-1-andreas.brauchli@sensirion.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Felipe Balbi <balbi@kernel.org>, Peter Chen <hzpeterchen@gmail.com>
-Cc: "rogerq@ti.com" <rogerq@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: Andreas Brauchli <a.brauchli@elementarea.net>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andreas Brauchli <andreas.brauchli@sensirion.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkNCg0KPg0KPk9uIDE0LzEyLzE4IDQ6NTYgUE0sIEZlbGlwZSBCYWxiaSB3cm90ZToNCj4+IEhp
-LA0KPj4NCj4+IFNla2hhciBOb3JpIDxuc2VraGFyQHRpLmNvbT4gd3JpdGVzOg0KPj4+Pj4+Pj4g
-QWxsIHRoaXMgc2hvdWxkIGJlIHBhcnQgb2YgY29tbWVudHMgaW4gY29kZSBhbG9uZyB3aXRoIGlu
-Zm9ybWF0aW9uIGFib3V0DQo+Pj4+Pj4+PiBjb250cm9sbGVyIHZlcnNpb25zIHdoaWNoIHN1ZmZl
-ciBmcm9tIHRoZSBlcnJhdGEuDQo+Pj4+Pj4+Pg0KPj4+Pj4+Pj4gSXMgdGhlcmUgYSB2ZXJzaW9u
-IG9mIGNvbnRyb2xsZXIgYXZhaWxhYmxlIHdoaWNoIGRvZXMgbm90IGhhdmUgdGhlDQo+Pj4+Pj4+
-PiBkZWZlY3Q/IElzIHRoZXJlIGEgZnV0dXJlIHBsYW4gdG8gZml4IHRoaXM/DQo+Pj4+Pj4+Pg0K
-Pj4+Pj4+Pj4gSWYgYW55IG9mIHRoYXQgaXMgeWVzLCB5b3UgcHJvYmFibHkgd2FudCB0byBoYW5k
-bGUgdGhpcyB3aXRoIHJ1bnRpbWUNCj4+Pj4+Pj4+IGRldGVjdGlvbiBvZiB2ZXJzaW9uIChsaWtl
-IGRvbmUgd2l0aCBEV0MzX1JFVklTSU9OX1hYWCBtYWNyb3MpLg0KPj4+Pj4+Pj4gU29tZXRpbWVz
-IHRoZSBoYXJkd2FyZS1yZWFkIHZlcnNpb25zIHRoZW1zZWx2ZXMgYXJlIGluY29ycmVjdCwgc28g
-aXRzDQo+Pj4+Pj4+PiBiZXR0ZXIgdG8gaW50cm9kdWNlIGEgdmVyc2lvbiBzcGVjaWZpYyBjb21w
-YXRpYmxlIHRvbyBsaWtlDQo+Pj4+Pj4+PiAiY2Rucyx1c2ItMS4wLjAiIChhcyBoaW50ZWQgdG8g
-YnkgUm9iIEhlcnJpbmcgYXMgd2VsbCkuDQo+Pj4+Pj4+Pg0KPj4+Pj4+Pg0KPj4+Pj4+PiBjdXN0
-b20gbWF0Y2hfZXAgaXMgdXNlZCBhbmQgd29ya3Mgd2l0aCBhbGwgdmVyc2lvbnMgb2YgdGhlIGdl
-bjENCj4+Pj4+Pj4gY29udHJvbGxlci4gRnV0dXJlIChnZW4yKSByZWxlYXNlcyBvZiB0aGUgY29u
-dHJvbGxlciB3b27igJl0IGhhdmUgc3VjaA0KPj4+Pj4+PiBsaW1pdGF0aW9uIGJ1dCB0aGVyZSBp
-cyBubyBwbGFuIHRvIGNoYW5nZSBjdXJyZW50IChnZW4xKSBmdW5jdGlvbmFsaXR5DQo+Pj4+Pj4+
-IG9mIHRoZSBjb250cm9sbGVyLg0KPj4+Pj4+Pg0KPj4+Pj4+PiBJIHdpbGwgYWRkIGNvbW1lbnQg
-YmVmb3JlIGNkbnMzX2dhZGdldF9tYXRjaF9lcCBmdW5jdGlvbi4NCj4+Pj4+Pj4gQWxzbyBJIHdp
-bGwgY2hhbmdlIGNkbnMsdXNiMyB0byBjZG5zLHVzYjMtMS4wLjAgYW5kIGFkZCBhZGRpdGlvbmFs
-DQo+Pj4+Pj4+IGNkbnMsdXNiMy0xLjAuMSBjb21wYXRpYmxlLg0KPj4+Pj4+Pg0KPj4+Pj4+PiBj
-ZG5zLHVzYjMtMS4wLjEgd2lsbCBiZSBmb3IgY3VycmVudCB2ZXJzaW9uIG9mIGNvbnRyb2xsZXIg
-d2hpY2ggSSB1c2UuDQo+Pj4+Pj4+IGNkbnMsdXNiMy0xLjAuMCB3aWxsIGJlIGZvciBvbGRlciB2
-ZXJzaW9uIC0gUGV0ZXIgQ2hhbiBwbGF0Zm9ybS4NCj4+Pj4+Pj4gSSBub3cgdGhhdCBJIGhhdmUg
-c29tZSBjaGFuZ2VzIGluIGNvbnRyb2xsZXIsIGFuZCBvbmUgb2YgdGhlbSByZXF1aXJlDQo+Pj4+
-Pj4+IHNvbWUgY2hhbmdlcyBpbiBEUkQgZHJpdmVyLiBJdCB3aWxsIGJlIHNhZmVyIHRvIGFkZCB0
-d28gc2VwYXJhdGUNCj4+Pj4+Pj4gdmVyc2lvbiBpbiBjb21wYXRpYmxlcy4NCj4+Pj4+Pj4NCj4+
-Pj4+Pg0KPj4+Pj4+IFBhd2VsLCBjb3VsZCB3ZSBoYXZlIGNvcnJlY3QgcmVnaXN0ZXIgdG8gc2hv
-dyBjb250cm9sbGVyIHZlcnNpb24/IEl0IGlzDQo+Pj4+Pj4gYmV0dGVyIHdlIGNvdWxkIHZlcnNp
-b24ganVkZ2VtZW50IGF0IHJ1bnRpbWUgaW5zdGVhZCBvZiBzdGF0aWMgY29tcGF0aWJsZS4NCj4+
-Pj4+DQo+Pj4+PiBBZ3JlZSB3aXRoIGRldGVjdGluZyBJUCB2ZXJzaW9uIGF0IHJ1bnRpbWUuDQo+
-Pj4+Pg0KPj4+Pj4gQnV0IHBsZWFzZSBoYXZlIHNvbWUgaW5kaWNhdGlvbiBvZiB2ZXJzaW9uIGlu
-IGNvbXBhdGlibGUgc3RyaW5nIHRvbywNCj4+Pj4NCj4+Pj4gd2h5PyBSdW50aW1lIGRldGVjdGlv
-biBieSByZXZpc2lvbiByZWdpc3RlciBzaG91bGQgYmUgdGhlIHdheSB0byBnbyBpZg0KPj4+PiB0
-aGUgSFcgcHJvdmlkZXMgaXQuIFdoeSBkdXBsaWNhdGUgdGhlIGluZm9ybWF0aW9uIGluIGNvbXBh
-dGlibGUgc3RyaW5nPw0KPj4+Pg0KPj4+Pj4gZXNwZWNpYWxseSBzaW5jZSB5b3UgYWxyZWFkeSBr
-bm93IHRoZXJlIGlzIGdvaW5nIHRvIGJlIGFub3RoZXIgcmV2aXNpb24NCj4+Pj4+IG9mIGhhcmR3
-YXJlLiBJdCBoYXMgdGhlIGFkdmFudGFnZSB0aGF0IG9uZSBjYW4gZWFzaWx5IGdyZXAgdG8gc2Vl
-IHdoaWNoDQo+Pj4+PiBoYXJkd2FyZSBpcyBydW5uaW5nIGN1cnJlbnQgdmVyc2lvbiBvZiBjb250
-cm9sbGVyIHdpdGhvdXQgaGF2aW5nIGFjY2Vzcw0KPj4+Pj4gdG8gdGhlIGhhcmR3YXJlIGl0c2Vs
-Zi4gQmVjb21lcyB1c2VmdWwgbGF0ZXIgb24gd2hlbiBpdHMgdGltZSB0bw0KPj4+Pj4gY2xlYW4t
-dXAgdW51c2VkIGNvZGUgd2hlbiBib2FyZHMgYmVjb21lIG9ic29sZXRlIG9yIGZvciByZXF1ZXN0
-aW5nDQo+Pj4+PiB0ZXN0aW5nIGhlbHAuDQo+Pj4+DQo+Pj4+IFRoaXMgZG9lc24ndCBzb3VuZCBs
-aWtlIGEgdmVyeSBzdHJvbmcgYXJndW1lbnQsIGFjdHVhbGx5LiBTcGVjaWFsbHkgd2hlbg0KPj4+
-PiB5b3UgY29uc2lkZXIgdGhhdCwgc2luY2UgZHJpdmVyIHdpbGwgZG8gcmV2aXNpb24gY2hlY2tp
-bmcgYmFzZWQgb24NCj4+Pj4gcmV2aXNpb24gcmVnaXN0ZXIsIHlvdSBhbHJlYWR5IGhhdmUgc3Ry
-aW5ncyB0byBncmVwLiBNb3Jlb3Zlciwgd2UgZG9uJ3QNCj4+Pj4gdXN1YWxseSBkcm9wIHN1cHBv
-cnQganVzdCBsaWtlIHRoYXQuDQo+Pj4NCj4+PiBBRkFJQ1MsIGl0IGlzIGltcG9zc2libGUgdG8g
-a25vdyBqdXN0IGJ5IGdyZXAnaW5nIGlmIHRoZXJlIGlzIGFueQ0KPj4+IGhhcmR3YXJlIHN0aWxs
-IHN1cHBvcnRlZCBpbiBrZXJuZWwgYW5kIHVzaW5nIERXQzNfUkVWSVNJT05fMTk0QSwgZm9yDQo+
-Pj4gZXhhbXBsZS4NCj4+DQo+PiBidXQgd2h5IGRvIHlvdSBldmVuIGNhcmU/DQo+DQo+V2hlbiwg
-Zm9yIGV4YW1wbGUsIGl0cyBjb21pbmcgaW4gdGhlIHdheSBvZiBzb21lIGNsZWFuLXVwIEkgYW0N
-Cj5hdHRlbXB0aW5nIHRvIGRvLg0KPg0KPj4NCj4+PiBJZiB3ZSBhcmUgbmV2ZXIgZ29pbmcgdG8g
-ZHJvcCBzdXBwb3J0IGZvciBhbnkgcmV2aXNpb24sIHRoaXMgZG9lcyBub3QNCj4+PiBtYXR0ZXIg
-bXVjaC4NCj4+Pg0KPj4+IEFsc28sIG9uY2UgeW91IGhhdmUgdGhlIGNvbnRyb2xsZXIgc3VwcG9y
-dGVkIGJlaGluZCBQQ0ksIHRoZW4gSSBndWVzcw0KPj4+IHlvdSBhcmUgcHJldHR5IG11Y2ggdGll
-ZCB0byBoYXZpbmcgdG8gcmVhZCBoYXJkd2FyZSByZXZpc2lvbiBhdCBydW50aW1lLg0KPj4NCj4+
-IHRoYXQncyBhbm90aGVyIGFyZ3VtZW50ICpmb3IqIHVzaW5nIHJ1bnRpbWUgZGV0ZWN0aW9uLCBu
-b3QgYWdhaW5zdCBpdC4NCj4NCj5JIGtub3cgOikuIEkgc2hvdWxkIGhhdmUgc3RhdGVkIHRoYXQg
-aW4gbGFzdCBlLW1haWwgaXRzZWxmLCBJIGFtIG9rYXkNCj53aXRoIGp1c3QgcnVudGltZSBkZXRl
-Y3Rpb24uDQoNCkkgYWdyZWUgd2l0aCB5b3UuIENvbnRyb2xsZXIgaGFzIHVzYl9jYXA2IHJlZ2lz
-dGVyIHRoYXQga2VlcCANCmRldmljZSBjb250cm9sbGVyIHZlcnNpb24uIEl0J3Mgbm90IGEgcHJv
-YmxlbSBkb2luZyBzdWNoIGRldGVjdGlvbg0KYXQgcnVudGltZS4gSSB3aWxsIGRvIGl0IGluIHRo
-aXMgd2F5Lg0KDQpCdXQgYWxzbyBJIHdpbGwgYWRkIGV4dHJhIGNvbXBhdGlibGUgIHRvIGR0LWJp
-bmRpbmcuIEV2ZW4gaWYgdGhpcyB3aWxsIG5vdCBiZSB1c2VkIA0KaW4gZHJpdmVyLCBpdCBpbmZv
-cm1zIHRoYXQgdGhlcmUgYXJlIHNldmVyYWwgdmVyc2lvbnMgb2YgY29udHJvbGxlci4gDQoNClRo
-YW5rcywNClBhd2VsDQo=
+On Thu, 13 Dec 2018 15:44:18 +0100
+Andreas Brauchli <a.brauchli@elementarea.net> wrote:
+
+> Add device tree support for Sensirion SGP30/SGPC3 gas sensors.
+> 
+> Signed-off-by: Andreas Brauchli <andreas.brauchli@sensirion.com>
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
+
+Note this missed (by about a week) the cut off for the current
+cycle, so this will be in the second one of the new year.
+
+Jonathan
+
+> ---
+>  .../bindings/iio/chemical/sensirion,sgp30.txt     | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,sgp30.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/chemical/sensirion,sgp30.txt b/Documentation/devicetree/bindings/iio/chemical/sensirion,sgp30.txt
+> new file mode 100644
+> index 000000000000..5844ed58173c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/chemical/sensirion,sgp30.txt
+> @@ -0,0 +1,15 @@
+> +* Sensirion SGP30/SGPC3 multi-pixel Gas Sensor
+> +
+> +Required properties:
+> +
+> +  - compatible: must be one of
+> +    "sensirion,sgp30"
+> +    "sensirion,sgpc3"
+> +  - reg: the I2C address of the sensor
+> +
+> +Example:
+> +
+> +gas@58 {
+> +	compatible = "sensirion,sgp30";
+> +	reg = <0x58>;
+> +};
