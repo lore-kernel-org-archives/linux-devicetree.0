@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH v3 5/6] arm64: marvell: enable the  Armada 7K/8K CPU clk driver
-Date: Sun, 16 Dec 2018 10:41:46 +0100
-Message-ID: <20181216094147.6468-6-gregory.clement@bootlin.com>
+Subject: [PATCH v3 6/6] arm64: dts: marvell: Add cpu clock node on Armada 7K/8K
+Date: Sun, 16 Dec 2018 10:41:47 +0100
+Message-ID: <20181216094147.6468-7-gregory.clement@bootlin.com>
 References: <20181216094147.6468-1-gregory.clement@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,25 +12,63 @@ To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com
 Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit makes sure the driver for the Armada 7K/8K CPU clock is
-enabled.
+Add cpu clock node on AP
 
 Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 ---
- arch/arm64/Kconfig.platforms | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi | 4 ++++
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi      | 6 ++++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 51bc479334a4..8a05870b1ba8 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -121,6 +121,7 @@ config ARCH_MESON
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
+index 01ea662afba8..c2c81d4e2d38 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
+@@ -20,24 +20,28 @@
+ 			compatible = "arm,cortex-a72", "arm,armv8";
+ 			reg = <0x000>;
+ 			enable-method = "psci";
++			clocks = <&cpu_clk 0>;
+ 		};
+ 		cpu1: cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72", "arm,armv8";
+ 			reg = <0x001>;
+ 			enable-method = "psci";
++			clocks = <&cpu_clk 0>;
+ 		};
+ 		cpu2: cpu@100 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72", "arm,armv8";
+ 			reg = <0x100>;
+ 			enable-method = "psci";
++			clocks = <&cpu_clk 1>;
+ 		};
+ 		cpu3: cpu@101 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72", "arm,armv8";
+ 			reg = <0x101>;
+ 			enable-method = "psci";
++			clocks = <&cpu_clk 1>;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+index 7d94c1fa592a..a430e884b1a3 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+@@ -263,6 +263,12 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
  
- config ARCH_MVEBU
- 	bool "Marvell EBU SoC Family"
-+	select ARMADA_AP_CPU_CLK
- 	select ARMADA_AP806_SYSCON
- 	select ARMADA_CP110_SYSCON
- 	select ARMADA_37XX_CLK
++				cpu_clk: clock-cpu {
++					compatible = "marvell,ap806-cpu-clock";
++					clocks = <&ap_clk 0>, <&ap_clk 1>;
++					#clock-cells = <1>;
++				};
++
+ 				ap_thermal: thermal-sensor@80 {
+ 					compatible = "marvell,armada-ap806-thermal";
+ 					reg = <0x80 0x10>;
 -- 
 2.19.2
