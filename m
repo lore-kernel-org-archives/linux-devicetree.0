@@ -1,322 +1,336 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH v3 3/6] clk: mvebu: add CPU clock driver for Armada 7K/8K
-Date: Sun, 16 Dec 2018 10:41:44 +0100
-Message-ID: <20181216094147.6468-4-gregory.clement@bootlin.com>
-References: <20181216094147.6468-1-gregory.clement@bootlin.com>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Subject: [PATCH v2 1/2] net: dsa: ksz9477: add I2C managed mode support
+Date: Sun, 16 Dec 2018 10:49:52 +0100
+Message-ID: <20181216094953.13984-1-sergio.paracuellos@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181216094147.6468-1-gregory.clement@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Woojung.Huh@microchip.com
+Cc: andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com, netdev@vger.kernel.org, driverdev-devel@linuxdriverproject.org, UNGLinuxDriver@microchip.com, devicetree@vger.kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-The CPU frequency is managed at the AP level for the Armada 7K/8K. The
-CPU frequency is modified by cluster: the CPUs of the same cluster have
-the same frequency.
+In this mode the switch device and the internal phys will be managed via
+I2C interface.
 
-This patch adds the clock driver that will be used by CPUFreq, it is
-based on the work of Omri Itach <omrii@marvell.com>.
-
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 ---
- drivers/clk/mvebu/Kconfig      |   3 +
- drivers/clk/mvebu/Makefile     |   1 +
- drivers/clk/mvebu/ap-cpu-clk.c | 259 +++++++++++++++++++++++++++++++++
- 3 files changed, 263 insertions(+)
- create mode 100644 drivers/clk/mvebu/ap-cpu-clk.c
+Changes v2:
+    - Use dev->txbuf as transmition buffer which is allocated using
+      kernel allocators avoiding some possible DMA issues using the
+      stack.
+ drivers/net/dsa/microchip/Kconfig       |   6 +
+ drivers/net/dsa/microchip/Makefile      |   1 +
+ drivers/net/dsa/microchip/ksz9477_i2c.c | 269 ++++++++++++++++++++++++
+ 3 files changed, 276 insertions(+)
+ create mode 100644 drivers/net/dsa/microchip/ksz9477_i2c.c
 
-diff --git a/drivers/clk/mvebu/Kconfig b/drivers/clk/mvebu/Kconfig
-index 5492fae3f0ab..9d0b2f7cee21 100644
---- a/drivers/clk/mvebu/Kconfig
-+++ b/drivers/clk/mvebu/Kconfig
-@@ -39,6 +39,9 @@ config ARMADA_AP806_SYSCON
- 	bool
- 	select ARMADA_AP_CP_HELPER
- 
-+config ARMADA_AP_CPU_CLK
-+	bool
+diff --git a/drivers/net/dsa/microchip/Kconfig b/drivers/net/dsa/microchip/Kconfig
+index a8caf9249d50..162fec43d204 100644
+--- a/drivers/net/dsa/microchip/Kconfig
++++ b/drivers/net/dsa/microchip/Kconfig
+@@ -14,3 +14,9 @@ config NET_DSA_MICROCHIP_KSZ9477_SPI
+ 	depends on NET_DSA_MICROCHIP_KSZ9477 && SPI
+ 	help
+ 	  Select to enable support for registering switches configured through SPI.
 +
- config ARMADA_CP110_SYSCON
- 	bool
- 	select ARMADA_AP_CP_HELPER
-diff --git a/drivers/clk/mvebu/Makefile b/drivers/clk/mvebu/Makefile
-index 6638ad962ec1..04464cef0f06 100644
---- a/drivers/clk/mvebu/Makefile
-+++ b/drivers/clk/mvebu/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_ARMADA_37XX_CLK)	+= armada-37xx-tbg.o
- obj-$(CONFIG_ARMADA_37XX_CLK)	+= armada-37xx-periph.o
- obj-$(CONFIG_ARMADA_XP_CLK)	+= armada-xp.o mv98dx3236.o
- obj-$(CONFIG_ARMADA_AP806_SYSCON) += ap806-system-controller.o
-+obj-$(CONFIG_ARMADA_AP_CPU_CLK) += ap-cpu-clk.o
- obj-$(CONFIG_ARMADA_CP110_SYSCON) += cp110-system-controller.o
- obj-$(CONFIG_DOVE_CLK)		+= dove.o dove-divider.o
- obj-$(CONFIG_KIRKWOOD_CLK)	+= kirkwood.o
-diff --git a/drivers/clk/mvebu/ap-cpu-clk.c b/drivers/clk/mvebu/ap-cpu-clk.c
++config NET_DSA_MICROCHIP_KSZ9477_I2C
++	tristate "KSZ series I2C connected switch driver"
++	depends on NET_DSA_MICROCHIP_KSZ9477 && I2C
++	help
++	  Select to enable support for registering switches configured through I2C.
+diff --git a/drivers/net/dsa/microchip/Makefile b/drivers/net/dsa/microchip/Makefile
+index 3142c18b8f57..eb9b768face2 100644
+--- a/drivers/net/dsa/microchip/Makefile
++++ b/drivers/net/dsa/microchip/Makefile
+@@ -1,3 +1,4 @@
+ obj-$(CONFIG_NET_DSA_MICROCHIP_KSZ_COMMON)	+= ksz_common.o
+ obj-$(CONFIG_NET_DSA_MICROCHIP_KSZ9477)		+= ksz9477.o
+ obj-$(CONFIG_NET_DSA_MICROCHIP_KSZ9477_SPI)	+= ksz9477_spi.o
++obj-$(CONFIG_NET_DSA_MICROCHIP_KSZ9477_I2C)	+= ksz9477_i2c.o
+diff --git a/drivers/net/dsa/microchip/ksz9477_i2c.c b/drivers/net/dsa/microchip/ksz9477_i2c.c
 new file mode 100644
-index 000000000000..e4cecb456884
+index 000000000000..3c9cba6e254b
 --- /dev/null
-+++ b/drivers/clk/mvebu/ap-cpu-clk.c
-@@ -0,0 +1,259 @@
-+// SPDX-License-Identifier: GPL-2.0+
++++ b/drivers/net/dsa/microchip/ksz9477_i2c.c
+@@ -0,0 +1,269 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Marvell Armada AP CPU Clock Controller
++ * Microchip KSZ series register access through I2C
 + *
-+ * Copyright (C) 2018 Marvell
-+ *
-+ * Omri Itach <omrii@marvell.com>
-+ * Gregory Clement <gregory.clement@bootlin.com>
++ * Author: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 + */
 +
-+#define pr_fmt(fmt) "ap-cpu-clk: " fmt
++#include <linux/i2c.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
 +
-+#include <linux/clk-provider.h>
-+#include <linux/clk.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include "armada_ap_cp_helper.h"
++#include "ksz_priv.h"
 +
-+#define AP806_CPU_CLUSTER0		0
-+#define AP806_CPU_CLUSTER1		1
-+#define AP806_CPUS_PER_CLUSTER		2
-+#define APN806_CPU1_MASK		0x1
++/* Enough to read all switch port registers. */
++#define I2C_TX_BUF_LEN                  0x100
 +
-+#define APN806_CLUSTER_NUM_OFFSET	8
-+#define APN806_CLUSTER_NUM_MASK		BIT(APN806_CLUSTER_NUM_OFFSET)
-+
-+#define APN806_MAX_DIVIDER		32
-+
-+/* AP806 CPU DFS register mapping*/
-+#define AP806_CA72MP2_0_PLL_CR_0_REG_OFFSET		0x278
-+#define AP806_CA72MP2_0_PLL_CR_1_REG_OFFSET		0x280
-+#define AP806_CA72MP2_0_PLL_CR_2_REG_OFFSET		0x284
-+#define AP806_CA72MP2_0_PLL_SR_REG_OFFSET		0xC94
-+
-+#define AP806_CA72MP2_0_PLL_CR_CLUSTER_OFFSET		0x14
-+#define AP806_PLL_CR_0_CPU_CLK_DIV_RATIO_OFFSET		0
-+#define AP806_PLL_CR_0_CPU_CLK_DIV_RATIO_MASK \
-+			(0x3f << AP806_PLL_CR_0_CPU_CLK_DIV_RATIO_OFFSET)
-+#define AP806_PLL_CR_0_CPU_CLK_RELOAD_FORCE_OFFSET	24
-+#define AP806_PLL_CR_0_CPU_CLK_RELOAD_FORCE_MASK \
-+			(0x1 << AP806_PLL_CR_0_CPU_CLK_RELOAD_FORCE_OFFSET)
-+#define AP806_PLL_CR_0_CPU_CLK_RELOAD_RATIO_OFFSET	16
-+#define AP806_CA72MP2_0_PLL_RATIO_STATE			11
-+
-+#define STATUS_POLL_PERIOD_US		1
-+#define STATUS_POLL_TIMEOUT_US		1000000
-+
-+#define to_ap_cpu_clk(_hw) container_of(_hw, struct ap_cpu_clk, hw)
-+
-+/*
-+ * struct ap806_clk: CPU cluster clock controller instance
-+ * @cluster: Cluster clock controller index
-+ * @clk_name: Cluster clock controller name
-+ * @dev : Cluster clock device
-+ * @hw: HW specific structure of Cluster clock controller
-+ * @pll_cr_base: CA72MP2 Register base (Device Sample at Reset register)
++/**
++ * ksz_i2c_read_reg - issue read register command
++ * @client: i2c client structure
++ * @reg: The register address.
++ * @val: The buffer to return the result into.
++ * @len: The length of data expected.
++ *
++ * This is the low level read call that issues the necessary i2c message(s)
++ * to read data from the register specified in @reg.
 + */
-+struct ap_cpu_clk {
-+	unsigned int cluster;
-+	const char *clk_name;
-+	struct device *dev;
-+	struct clk_hw hw;
-+	struct regmap *pll_cr_base;
-+};
-+
-+static unsigned long ap_cpu_clk_recalc_rate(struct clk_hw *hw,
-+					    unsigned long parent_rate)
++static int ksz_i2c_read_reg(struct i2c_client *client, u32 reg, u8 *val,
++			    unsigned int len)
 +{
-+	struct ap_cpu_clk *clk = to_ap_cpu_clk(hw);
-+	unsigned int cpu_clkdiv_reg;
-+	int cpu_clkdiv_ratio;
++	struct i2c_adapter *adapter = client->adapter;
++	struct i2c_msg msg[2];
++	int ret;
 +
-+	cpu_clkdiv_reg = AP806_CA72MP2_0_PLL_CR_0_REG_OFFSET +
-+		(clk->cluster * AP806_CA72MP2_0_PLL_CR_CLUSTER_OFFSET);
-+	regmap_read(clk->pll_cr_base, cpu_clkdiv_reg, &cpu_clkdiv_ratio);
-+	cpu_clkdiv_ratio &= AP806_PLL_CR_0_CPU_CLK_DIV_RATIO_MASK;
-+	cpu_clkdiv_ratio >>= AP806_PLL_CR_0_CPU_CLK_DIV_RATIO_OFFSET;
++	msg[0].addr = client->addr;
++	msg[0].flags = 0;
++	msg[0].len = 2;
++	msg[0].buf = val;
 +
-+	return parent_rate / cpu_clkdiv_ratio;
++	msg[1].addr = client->addr;
++	msg[1].flags = I2C_M_RD;
++	msg[1].len = len;
++	msg[1].buf = val;
++
++	ret = i2c_transfer(adapter, msg, 2);
++	return (ret != 2) ? -EREMOTEIO : 0;
 +}
 +
-+static int ap_cpu_clk_set_rate(struct clk_hw *hw, unsigned long rate,
-+			       unsigned long parent_rate)
++static int ksz_i2c_read(struct ksz_device *dev, u32 reg, u8 *data,
++			unsigned int len)
 +{
-+	struct ap_cpu_clk *clk = to_ap_cpu_clk(hw);
-+	int ret, reg, divider = parent_rate / rate;
-+	unsigned int cpu_clkdiv_reg, cpu_force_reg, cpu_ratio_reg, stable_bit;
++	struct i2c_client *client = dev->priv;
++	int ret;
 +
-+	cpu_clkdiv_reg = AP806_CA72MP2_0_PLL_CR_0_REG_OFFSET +
-+		(clk->cluster * AP806_CA72MP2_0_PLL_CR_CLUSTER_OFFSET);
-+	cpu_force_reg = AP806_CA72MP2_0_PLL_CR_1_REG_OFFSET +
-+		(clk->cluster * AP806_CA72MP2_0_PLL_CR_CLUSTER_OFFSET);
-+	cpu_ratio_reg = AP806_CA72MP2_0_PLL_CR_2_REG_OFFSET +
-+		(clk->cluster * AP806_CA72MP2_0_PLL_CR_CLUSTER_OFFSET);
++	len = (len > I2C_TX_BUF_LEN) ? I2C_TX_BUF_LEN : len;
++	dev->txbuf[0] = (u8)(reg >> 8);
++	dev->txbuf[1] = (u8)reg;
 +
-+	regmap_update_bits(clk->pll_cr_base, cpu_clkdiv_reg,
-+			   AP806_PLL_CR_0_CPU_CLK_DIV_RATIO_MASK, divider);
-+
-+	regmap_update_bits(clk->pll_cr_base, cpu_force_reg,
-+			   AP806_PLL_CR_0_CPU_CLK_RELOAD_FORCE_MASK,
-+			   AP806_PLL_CR_0_CPU_CLK_RELOAD_FORCE_MASK);
-+
-+	regmap_update_bits(clk->pll_cr_base, cpu_ratio_reg,
-+			   BIT(AP806_PLL_CR_0_CPU_CLK_RELOAD_RATIO_OFFSET),
-+			   BIT(AP806_PLL_CR_0_CPU_CLK_RELOAD_RATIO_OFFSET));
-+
-+	stable_bit = BIT(clk->cluster * AP806_CA72MP2_0_PLL_RATIO_STATE),
-+
-+	ret = regmap_read_poll_timeout(clk->pll_cr_base,
-+				       AP806_CA72MP2_0_PLL_SR_REG_OFFSET, reg,
-+				       reg & stable_bit, STATUS_POLL_PERIOD_US,
-+				       STATUS_POLL_TIMEOUT_US);
-+	if (ret)
-+		return ret;
-+
-+	regmap_update_bits(clk->pll_cr_base, cpu_ratio_reg,
-+			   BIT(AP806_PLL_CR_0_CPU_CLK_RELOAD_RATIO_OFFSET), 0);
-+
-+	return 0;
-+}
-+
-+static long ap_cpu_clk_round_rate(struct clk_hw *hw, unsigned long rate,
-+				  unsigned long *parent_rate)
-+{
-+	int divider = *parent_rate / rate;
-+
-+	divider = min(divider, APN806_MAX_DIVIDER);
-+
-+	return *parent_rate / divider;
-+}
-+
-+static const struct clk_ops ap_cpu_clk_ops = {
-+	.recalc_rate	= ap_cpu_clk_recalc_rate,
-+	.round_rate	= ap_cpu_clk_round_rate,
-+	.set_rate	= ap_cpu_clk_set_rate,
-+};
-+
-+static int ap_cpu_clock_probe(struct platform_device *pdev)
-+{
-+	int ret, nclusters = 0, cluster_index = 0;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *dn, *np = dev->of_node;
-+	struct clk_hw_onecell_data *ap_cpu_data;
-+	struct ap_cpu_clk *ap_cpu_clk;
-+	struct regmap *regmap;
-+
-+	regmap = syscon_node_to_regmap(np->parent);
-+	if (IS_ERR(regmap)) {
-+		pr_err("cannot get pll_cr_base regmap\n");
-+		return PTR_ERR(regmap);
-+	}
-+
-+	/*
-+	 * AP806 has 4 cpus and DFS for AP806 is controlled per
-+	 * cluster (2 CPUs per cluster), cpu0 and cpu1 are fixed to
-+	 * cluster0 while cpu2 and cpu3 are fixed to cluster1 whether
-+	 * they are enabled or not.  Since cpu0 is the boot cpu, then
-+	 * cluster0 must exist.  If cpu2 or cpu3 is enabled, cluster1
-+	 * will exist and the cluster number is 2; otherwise the
-+	 * cluster number is 1.
-+	 */
-+	nclusters = 1;
-+	for_each_of_cpu_node(dn) {
-+		int cpu, err;
-+
-+		err = of_property_read_u32(dn, "reg", &cpu);
-+		if (WARN_ON(err))
-+			return err;
-+
-+		/* If cpu2 or cpu3 is enabled */
-+		if (cpu & APN806_CLUSTER_NUM_MASK) {
-+			nclusters = 2;
-+			break;
-+		}
-+	}
-+	/*
-+	 * DFS for AP806 is controlled per cluster (2 CPUs per cluster),
-+	 * so allocate structs per cluster
-+	 */
-+	ap_cpu_clk = devm_kcalloc(dev, nclusters, sizeof(*ap_cpu_clk),
-+				  GFP_KERNEL);
-+	if (!ap_cpu_clk)
-+		return -ENOMEM;
-+
-+	ap_cpu_data = devm_kzalloc(dev, sizeof(*ap_cpu_data) +
-+				sizeof(struct clk_hw *) * nclusters,
-+				GFP_KERNEL);
-+	if (!ap_cpu_data)
-+		return -ENOMEM;
-+
-+	for_each_of_cpu_node(dn) {
-+		char *clk_name = "cpu-cluster-0";
-+		struct clk_init_data init;
-+		const char *parent_name;
-+		struct clk *parent;
-+		int cpu, err;
-+
-+		err = of_property_read_u32(dn, "reg", &cpu);
-+		if (WARN_ON(err))
-+			return err;
-+
-+		cluster_index = cpu & APN806_CLUSTER_NUM_MASK;
-+		cluster_index >>= APN806_CLUSTER_NUM_OFFSET;
-+
-+		/* Initialize once for one cluster */
-+		if (ap_cpu_data->hws[cluster_index])
-+			continue;
-+
-+		parent = of_clk_get(np, cluster_index);
-+		if (IS_ERR(parent)) {
-+			dev_err(dev, "Could not get the clock parent\n");
-+			return -EINVAL;
-+		}
-+		parent_name =  __clk_get_name(parent);
-+		clk_name[12] += cluster_index;
-+		ap_cpu_clk[cluster_index].clk_name =
-+			ap_cp_unique_name(dev, np->parent, clk_name);
-+		ap_cpu_clk[cluster_index].cluster = cluster_index;
-+		ap_cpu_clk[cluster_index].pll_cr_base = regmap;
-+		ap_cpu_clk[cluster_index].hw.init = &init;
-+		ap_cpu_clk[cluster_index].dev = dev;
-+
-+		init.name = ap_cpu_clk[cluster_index].clk_name;
-+		init.ops = &ap_cpu_clk_ops;
-+		init.num_parents = 1;
-+		init.parent_names = &parent_name;
-+
-+		ret = devm_clk_hw_register(dev, &ap_cpu_clk[cluster_index].hw);
-+		if (ret)
-+			return ret;
-+		ap_cpu_data->hws[cluster_index] = &ap_cpu_clk[cluster_index].hw;
-+	}
-+
-+	ap_cpu_data->num = cluster_index + 1;
-+
-+	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, ap_cpu_data);
-+	if (ret)
-+		dev_err(dev, "failed to register OF clock provider\n");
++	ret = ksz_i2c_read_reg(client, reg, dev->txbuf, len);
++	if (!ret)
++		memcpy(data, dev->txbuf, len);
 +
 +	return ret;
 +}
 +
-+static const struct of_device_id ap_cpu_clock_of_match[] = {
-+	{ .compatible = "marvell,ap806-cpu-clock", },
-+	{ }
++static int ksz_i2c_read8(struct ksz_device *dev, u32 reg, u8 *val)
++{
++	return ksz_i2c_read(dev, reg, val, 1);
++}
++
++static int ksz_i2c_read16(struct ksz_device *dev, u32 reg, u16 *val)
++{
++	int ret = ksz_i2c_read(dev, reg, (u8 *)val, 2);
++
++	if (!ret)
++		*val = be16_to_cpu(*val);
++
++	return ret;
++}
++
++static int ksz_i2c_read24(struct ksz_device *dev, u32 reg, u32 *val)
++{
++	int ret;
++
++	*val = 0;
++	ret = ksz_i2c_read(dev, reg, (u8 *)val, 3);
++
++	if (!ret) {
++		*val = be32_to_cpu(*val);
++		/* convert to 24 bit */
++		*val >>= 8;
++	}
++
++	return ret;
++}
++
++static int ksz_i2c_read32(struct ksz_device *dev, u32 reg, u32 *val)
++{
++	int ret = ksz_i2c_read(dev, reg, (u8 *)val, 4);
++
++	if (!ret)
++		*val = be32_to_cpu(*val);
++
++	return ret;
++}
++
++/**
++ * ksz_i2c_write_reg - issue write register command
++ * @client: i2c client structure
++ * @reg: The register address.
++ * @val: value to write
++ * @len: The length of data
++ *
++ * This is the low level write call that issues the necessary i2c message(s)
++ * to write data to the register specified in @reg.
++ */
++static int ksz_i2c_write_reg(struct i2c_client *client, u32 reg, u8 *val,
++			     unsigned int len)
++{
++	struct i2c_adapter *adapter = client->adapter;
++	struct i2c_msg msg;
++	int ret;
++
++	msg.addr = client->addr;
++	msg.flags = 0;
++	msg.len = 2 + len;
++	msg.buf = val;
++
++	ret = i2c_transfer(adapter, &msg, 1);
++	return (ret != 1) ? -EREMOTEIO : 0;
++}
++
++static int ksz_i2c_write(struct ksz_device *dev, u32 reg, u8 *val,
++			 unsigned int len)
++{
++	struct i2c_client *client = dev->priv;
++	unsigned int cnt = len;
++	int i;
++
++	len = (len > I2C_TX_BUF_LEN) ? I2C_TX_BUF_LEN : len;
++	dev->txbuf[0] = (u8)(reg >> 8);
++	dev->txbuf[1] = (u8)reg;
++	i = 2;
++
++	do {
++		dev->txbuf[i++] = (u8)(*val >> (8 * (cnt - 1)));
++		cnt--;
++	} while (cnt);
++
++	return ksz_i2c_write_reg(client, reg, dev->txbuf, len);
++}
++
++static int ksz_i2c_write8(struct ksz_device *dev, u32 reg, u8 value)
++{
++	return ksz_i2c_write(dev, reg, &value, 1);
++}
++
++static int ksz_i2c_write16(struct ksz_device *dev, u32 reg, u16 value)
++{
++	value = cpu_to_be16(value);
++	return ksz_i2c_write(dev, reg, (u8 *)&value, 2);
++}
++
++static int ksz_i2c_write24(struct ksz_device *dev, u32 reg, u32 value)
++{
++	/* make it to big endian 24bit from MSB */
++	value <<= 8;
++	value = cpu_to_be32(value);
++
++	return ksz_i2c_write(dev, reg, (u8 *)&value, 3);
++}
++
++static int ksz_i2c_write32(struct ksz_device *dev, u32 reg, u32 value)
++{
++	value = cpu_to_be32(value);
++	return ksz_i2c_write(dev, reg, (u8 *)&value, 4);
++}
++
++static int ksz_i2c_get(struct ksz_device *dev, u32 reg, void *data, size_t len)
++{
++	return ksz_i2c_read(dev, reg, data, len);
++}
++
++static int ksz_i2c_set(struct ksz_device *dev, u32 reg, void *data, size_t len)
++{
++	return ksz_i2c_write(dev, reg, data, len);
++}
++
++static const struct ksz_io_ops ksz_i2c_ops = {
++	.read8 = ksz_i2c_read8,
++	.read16 = ksz_i2c_read16,
++	.read24 = ksz_i2c_read24,
++	.read32 = ksz_i2c_read32,
++	.write8 = ksz_i2c_write8,
++	.write16 = ksz_i2c_write16,
++	.write24 = ksz_i2c_write24,
++	.write32 = ksz_i2c_write32,
++	.get = ksz_i2c_get,
++	.set = ksz_i2c_set,
 +};
 +
-+static struct platform_driver ap_cpu_clock_driver = {
-+	.probe = ap_cpu_clock_probe,
-+	.driver		= {
-+		.name	= "marvell-ap-cpu-clock",
-+		.of_match_table = ap_cpu_clock_of_match,
-+		.suppress_bind_attrs = true,
-+	},
++static int ksz_i2c_probe(struct i2c_client *client,
++			 const struct i2c_device_id *id)
++{
++	struct ksz_device *dev;
++	int ret;
++
++	dev = ksz_switch_alloc(&client->dev, &ksz_i2c_ops, client);
++	if (!dev)
++		return -ENOMEM;
++
++	if (client->dev.platform_data)
++		dev->pdata = client->dev.platform_data;
++
++	dev->txbuf = devm_kzalloc(dev->dev, 2 + I2C_TX_BUF_LEN, GFP_KERNEL);
++	if (!dev->txbuf)
++		return -ENOMEM;
++
++	i2c_set_clientdata(client, dev);
++
++	ret = ksz9477_switch_register(dev);
++	if (ret) {
++		dev_err(&client->dev, "registering switch (ret: %d)\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int ksz_i2c_remove(struct i2c_client *client)
++{
++	struct ksz_device *dev = i2c_get_clientdata(client);
++
++	if (dev)
++		ksz_switch_remove(dev);
++
++	return 0;
++}
++
++static const struct i2c_device_id ksz_i2c_id[] = {
++	{ "ksz9477-switch", 0 },
++	{},
 +};
-+builtin_platform_driver(ap_cpu_clock_driver);
++
++MODULE_DEVICE_TABLE(i2c, ksz_i2c_id);
++
++static const struct of_device_id ksz_dt_match[] = {
++	{ .compatible = "microchip,ksz9477" },
++	{ .compatible = "microchip,ksz9897" },
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, ksz_dt_match);
++
++static struct i2c_driver ksz_i2c_driver = {
++	.driver = {
++		.name   = "ksz9477-switch",
++		.owner  = THIS_MODULE,
++		.of_match_table = ksz_dt_match,
++	},
++	.probe  = ksz_i2c_probe,
++	.remove = ksz_i2c_remove,
++	.id_table = ksz_i2c_id,
++};
++
++module_i2c_driver(ksz_i2c_driver);
++
++MODULE_AUTHOR("Sergio Paracuellos <sergio.paracuellos@gmail.com>");
++MODULE_DESCRIPTION("Microchip KSZ Series Switch I2C access Driver");
++MODULE_LICENSE("GPL");
 -- 
-2.19.2
+2.19.1
