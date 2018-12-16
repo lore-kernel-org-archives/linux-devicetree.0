@@ -1,366 +1,105 @@
-From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Subject: Re: [PATCH V4 2/2] iio: accell: mma8452: add optional vdd/vddio
- regulator operation support
-Date: Sun, 16 Dec 2018 14:08:17 +0000
-Message-ID: <20181216140817.63b4ca58@archlinux>
-References: <1544504839-10958-1-git-send-email-Anson.Huang@nxp.com>
-        <1544504839-10958-2-git-send-email-Anson.Huang@nxp.com>
-        <20181216104639.00bb90b6@archlinux>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v8 15/26] pwm: jz4740: Add support for the JZ4725B
+Date: Sun, 16 Dec 2018 15:18:52 +0100
+Message-ID: <1544969932.1649.1@crapouillou.net>
+References: <20181212220922.18759-1-paul@crapouillou.net>
+        <20181212220922.18759-16-paul@crapouillou.net>
+        <20181213092409.ml4wpnzow2nnszkd@pengutronix.de>
+        <1544709795.18952.1@crapouillou.net>
+        <20181213204219.onem3q6dcmakusl2@pengutronix.de>
+        <CACRpkdbABtDgwKai=8Pfji7qVb-XHsX8pDsuDdS5hhg7qEN0Bw@mail.gmail.com>
+        <20181214142628.zwi4hadrju53z6f3@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181216104639.00bb90b6@archlinux>
+In-Reply-To: <20181214142628.zwi4hadrju53z6f3@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "martink@posteo.de" <martink@posteo.de>, Leonard Crestez <leonard.crestez@nxp.com>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "preid@electromag.com.au" <preid@electromag.com.au>, dl-linux-imx <linux-imx@nxp.com>
+To: Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, paul.burton@mips.com, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mathieu Malaterre <malat@debian.org>, ezequiel@collabora.co.uk, prasannatsmkumar@gmail.com, linux-pwm@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, linux-mips@vger.kernel.org, linux-doc@vger.kernel.orglinux-clk <linux>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 16 Dec 2018 10:46:39 +0000
-Jonathan Cameron <jic23@kernel.org> wrote:
+Hi,
 
-> On Tue, 11 Dec 2018 05:13:20 +0000
-> Anson Huang <anson.huang@nxp.com> wrote:
-> 
-> > The accelerometer's power supply could be controlled by regulator
-> > on some platforms, such as i.MX6Q-SABRESD board, the mma8451's
-> > power supply is controlled by a GPIO fixed regulator, need to make
-> > sure the regulator is enabled before any communication with mma8451,
-> > this patch adds optional vdd/vddio regulator operation support.
-> > 
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > Acked-by: Martin Kepplinger <martink@posteo.de>  
-> Applied to the togreg branch of iio.git and pushed out as testing
-> for the autobuilders to play with it.
-Sorry again for this.  I was half asleep.  This one isn't
-optional either, it just may not be controllable / queryable.
+Le ven. 14 d=E9c. 2018 =E0 15:26, Uwe Kleine-K=F6nig=20
+<u.kleine-koenig@pengutronix.de> a =E9crit :
+> Hello,
+>=20
+> On Fri, Dec 14, 2018 at 02:50:20PM +0100, Linus Walleij wrote:
+>>  On Thu, Dec 13, 2018 at 9:42 PM Uwe Kleine-K=F6nig
+>>  <u.kleine-koenig@pengutronix.de> wrote:
+>>  > [Adding Linus Walleij to Cc:]
+>>  > On Thu, Dec 13, 2018 at 03:03:15PM +0100, Paul Cercueil wrote:
+>>  > > Le jeu. 13 d=E9c. 2018 =E0 10:24, Uwe Kleine-K=F6nig
+>>  > > <u.kleine-koenig@pengutronix.de> a =E9crit :
+>>  > > > On Wed, Dec 12, 2018 at 11:09:10PM +0100, Paul Cercueil wrote:
+>>  > > > >  The PWM in the JZ4725B works the same as in the JZ4740,=20
+>> except that
+>>  > > > > it
+>>  > > > >  only has 6 channels available instead of 8.
+>>  > > >
+>>  > > > this driver is probed only from device tree? If yes, it might=20
+>> be
+>>  > > > sensible to specify the number of PWMs there and get it from=20
+>> there.
+>>  > > > There doesn't seem to be a generic binding for that, but=20
+>> there are
+>>  > > > several drivers that could benefit from it. (This is a bigger=20
+>> project
+>>  > > > though and shouldn't stop your patch. Still more as it=20
+>> already got
+>>  > > > Thierry's ack.)
+>>  > >
+>>  > > I think there needs to be a proper guideline, as there doesn't=20
+>> seem to be
+>>  > > a consensus about this. I learned from emails with Rob and=20
+>> Linus (Walleij)
+>>  > > that I should not have in devicetree what I can deduce from the=20
+>> compatible
+>>  > > string.
+>>  >
+>>  > I understood them a bit differently. It is ok to deduce things=20
+>> from the
+>>  > compatible string. But if you define a generic property (say)=20
+>> "num-pwms"
+>>  > that is used uniformly in most bindings this is ok, too. (And=20
+>> then the
+>>  > two different devices could use the same compatible.)
+>>  >
+>>  > An upside of the generic "num-pwms" property is that the pwm core=20
+>> could
+>>  > sanity check pwm phandles before passing them to the hardware=20
+>> drivers.
+>>=20
+>>  I don't know if this helps, but in GPIO we have "ngpios" which is
+>>  used to augment an existing block as to the number of lines actually
+>>  used with it.
+>>=20
+>>  The typical case is that an ASIC engineer synthesize a block for
+>>  32 GPIOs but only 12 of them are routed to external pads. So
+>>  we augment the behaviour of that driver to only use 12 of the
+>>  32 lines.
+>>=20
+>>  I guess using the remaining 20 lines "works" in a sense but they
+>>  have no practical use and will just bias electrons in the silicon
+>>  for no use.
+>=20
+> This looks very similar to the case under discussion.
+>=20
+>>  So if the PWM case is something similar, then by all means add
+>>  num-pwms.
+>=20
+> .. or "npwms" to use the same nomenclature as the gpio binding?
 
-So please use the non optional regulator request.
-If there is one specified it will wait for it to be available by
-deferring. If not then it'll just provide a stub regulator so that
-the rest of the code doesn't need to care.
+If we're going to do something like this, should it be the drivers or
+the core (within pwmchip_add) that checks for this "npwms" property?
 
-Patches dropped for now.
-
-Thanks,
-
-Jonathan
-
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-> > ---
-> > ChangeLog since V3:
-> > 	- add disabling vdd regulator in vddio error path;
-> > 	- improve regulator enable/disable sequence.
-> > ---
-> >  drivers/iio/accel/mma8452.c | 186 +++++++++++++++++++++++++++++++++++++++++---
-> >  1 file changed, 176 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-> > index 421a0a8..590a95d 100644
-> > --- a/drivers/iio/accel/mma8452.c
-> > +++ b/drivers/iio/accel/mma8452.c
-> > @@ -31,6 +31,7 @@
-> >  #include <linux/of_device.h>
-> >  #include <linux/of_irq.h>
-> >  #include <linux/pm_runtime.h>
-> > +#include <linux/regulator/consumer.h>
-> >  
-> >  #define MMA8452_STATUS				0x00
-> >  #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
-> > @@ -107,6 +108,8 @@ struct mma8452_data {
-> >  	u8 data_cfg;
-> >  	const struct mma_chip_info *chip_info;
-> >  	int sleep_val;
-> > +	struct regulator *vdd_reg;
-> > +	struct regulator *vddio_reg;
-> >  };
-> >  
-> >   /**
-> > @@ -1533,10 +1536,35 @@ static int mma8452_probe(struct i2c_client *client,
-> >  	data->client = client;
-> >  	mutex_init(&data->lock);
-> >  	data->chip_info = match->data;
-> > +	data->vdd_reg = devm_regulator_get_optional(&client->dev, "vdd");
-> > +	if (!IS_ERR(data->vdd_reg)) {
-> > +		ret = regulator_enable(data->vdd_reg);
-> > +		if (ret) {
-> > +			dev_err(&client->dev, "failed to enable VDD regulator\n");
-> > +			return ret;
-> > +		}
-> > +	} else {
-> > +		ret = PTR_ERR(data->vdd_reg);
-> > +		if (ret != -ENODEV)
-> > +			return ret;
-> > +	}
-> > +
-> > +	data->vddio_reg = devm_regulator_get_optional(&client->dev, "vddio");
-> > +	if (!IS_ERR(data->vddio_reg)) {
-> > +		ret = regulator_enable(data->vddio_reg);
-> > +		if (ret) {
-> > +			dev_err(&client->dev, "failed to enable VDDIO regulator\n");
-> > +			goto disable_regulator_vdd;
-> > +		}
-> > +	} else {
-> > +		ret = PTR_ERR(data->vddio_reg);
-> > +		if (ret != -ENODEV)
-> > +			goto disable_regulator_vdd;
-> > +	}
-> >  
-> >  	ret = i2c_smbus_read_byte_data(client, MMA8452_WHO_AM_I);
-> >  	if (ret < 0)
-> > -		return ret;
-> > +		goto disable_regulators;
-> >  
-> >  	switch (ret) {
-> >  	case MMA8451_DEVICE_ID:
-> > @@ -1549,7 +1577,8 @@ static int mma8452_probe(struct i2c_client *client,
-> >  			break;
-> >  		/* else: fall through */
-> >  	default:
-> > -		return -ENODEV;
-> > +		ret = -ENODEV;
-> > +		goto disable_regulators;
-> >  	}
-> >  
-> >  	dev_info(&client->dev, "registering %s accelerometer; ID 0x%x\n",
-> > @@ -1566,13 +1595,13 @@ static int mma8452_probe(struct i2c_client *client,
-> >  
-> >  	ret = mma8452_reset(client);
-> >  	if (ret < 0)
-> > -		return ret;
-> > +		goto disable_regulators;
-> >  
-> >  	data->data_cfg = MMA8452_DATA_CFG_FS_2G;
-> >  	ret = i2c_smbus_write_byte_data(client, MMA8452_DATA_CFG,
-> >  					data->data_cfg);
-> >  	if (ret < 0)
-> > -		return ret;
-> > +		goto disable_regulators;
-> >  
-> >  	/*
-> >  	 * By default set transient threshold to max to avoid events if
-> > @@ -1581,7 +1610,7 @@ static int mma8452_probe(struct i2c_client *client,
-> >  	ret = i2c_smbus_write_byte_data(client, MMA8452_TRANSIENT_THS,
-> >  					MMA8452_TRANSIENT_THS_MASK);
-> >  	if (ret < 0)
-> > -		return ret;
-> > +		goto disable_regulators;
-> >  
-> >  	if (client->irq) {
-> >  		int irq2;
-> > @@ -1595,7 +1624,7 @@ static int mma8452_probe(struct i2c_client *client,
-> >  						MMA8452_CTRL_REG5,
-> >  						data->chip_info->all_events);
-> >  			if (ret < 0)
-> > -				return ret;
-> > +				goto disable_regulators;
-> >  
-> >  			dev_dbg(&client->dev, "using interrupt line INT1\n");
-> >  		}
-> > @@ -1604,11 +1633,11 @@ static int mma8452_probe(struct i2c_client *client,
-> >  					MMA8452_CTRL_REG4,
-> >  					data->chip_info->enabled_events);
-> >  		if (ret < 0)
-> > -			return ret;
-> > +			goto disable_regulators;
-> >  
-> >  		ret = mma8452_trigger_setup(indio_dev);
-> >  		if (ret < 0)
-> > -			return ret;
-> > +			goto disable_regulators;
-> >  	}
-> >  
-> >  	data->ctrl_reg1 = MMA8452_CTRL_ACTIVE |
-> > @@ -1661,12 +1690,22 @@ static int mma8452_probe(struct i2c_client *client,
-> >  trigger_cleanup:
-> >  	mma8452_trigger_cleanup(indio_dev);
-> >  
-> > +disable_regulators:
-> > +	if (!IS_ERR(data->vddio_reg))
-> > +		regulator_disable(data->vddio_reg);
-> > +
-> > +disable_regulator_vdd:
-> > +	if (!IS_ERR(data->vdd_reg))
-> > +		regulator_disable(data->vdd_reg);
-> > +
-> >  	return ret;
-> >  }
-> >  
-> >  static int mma8452_remove(struct i2c_client *client)
-> >  {
-> >  	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-> > +	struct mma8452_data *data = iio_priv(indio_dev);
-> > +	int ret;
-> >  
-> >  	iio_device_unregister(indio_dev);
-> >  
-> > @@ -1678,6 +1717,21 @@ static int mma8452_remove(struct i2c_client *client)
-> >  	mma8452_trigger_cleanup(indio_dev);
-> >  	mma8452_standby(iio_priv(indio_dev));
-> >  
-> > +	if (!IS_ERR(data->vddio_reg)) {
-> > +		ret = regulator_disable(data->vddio_reg);
-> > +		if (ret) {
-> > +			dev_err(&client->dev, "failed to disable VDDIO regulator\n");
-> > +			return ret;
-> > +		}
-> > +	}
-> > +	if (!IS_ERR(data->vdd_reg)) {
-> > +		ret = regulator_disable(data->vdd_reg);
-> > +		if (ret) {
-> > +			dev_err(&client->dev, "failed to disable VDD regulator\n");
-> > +			return ret;
-> > +		}
-> > +	}
-> > +
-> >  	return 0;
-> >  }
-> >  
-> > @@ -1696,6 +1750,21 @@ static int mma8452_runtime_suspend(struct device *dev)
-> >  		return -EAGAIN;
-> >  	}
-> >  
-> > +	if (!IS_ERR(data->vddio_reg)) {
-> > +		ret = regulator_disable(data->vddio_reg);
-> > +		if (ret) {
-> > +			dev_err(dev, "failed to disable VDDIO regulator\n");
-> > +			return ret;
-> > +		}
-> > +	}
-> > +	if (!IS_ERR(data->vdd_reg)) {
-> > +		ret = regulator_disable(data->vdd_reg);
-> > +		if (ret) {
-> > +			dev_err(dev, "failed to disable VDD regulator\n");
-> > +			return ret;
-> > +		}
-> > +	}
-> > +
-> >  	return 0;
-> >  }
-> >  
-> > @@ -1705,6 +1774,23 @@ static int mma8452_runtime_resume(struct device *dev)
-> >  	struct mma8452_data *data = iio_priv(indio_dev);
-> >  	int ret, sleep_val;
-> >  
-> > +	if (!IS_ERR(data->vdd_reg)) {
-> > +		ret = regulator_enable(data->vdd_reg);
-> > +		if (ret) {
-> > +			dev_err(dev, "failed to enable VDD regulator\n");
-> > +			return ret;
-> > +		}
-> > +	}
-> > +	if (!IS_ERR(data->vddio_reg)) {
-> > +		ret = regulator_enable(data->vddio_reg);
-> > +		if (ret) {
-> > +			dev_err(dev, "failed to enable VDDIO regulator\n");
-> > +			if (!IS_ERR(data->vdd_reg))
-> > +				regulator_disable(data->vdd_reg);
-> > +			return ret;
-> > +		}
-> > +	}
-> > +
-> >  	ret = mma8452_active(data);
-> >  	if (ret < 0)
-> >  		return ret;
-> > @@ -1723,14 +1809,94 @@ static int mma8452_runtime_resume(struct device *dev)
-> >  #ifdef CONFIG_PM_SLEEP
-> >  static int mma8452_suspend(struct device *dev)
-> >  {
-> > -	return mma8452_standby(iio_priv(i2c_get_clientdata(
-> > +	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
-> > +	struct mma8452_data *data = iio_priv(indio_dev);
-> > +	int ret;
-> > +
-> > +	if (!IS_ERR(data->vdd_reg)) {
-> > +		ret = regulator_enable(data->vdd_reg);
-> > +		if (ret) {
-> > +			dev_err(dev, "failed to enable VDD regulator\n");
-> > +			return ret;
-> > +		}
-> > +	}
-> > +	if (!IS_ERR(data->vddio_reg)) {
-> > +		ret = regulator_enable(data->vddio_reg);
-> > +		if (ret) {
-> > +			dev_err(dev, "failed to enable VDDIO regulator\n");
-> > +			if (!IS_ERR(data->vdd_reg))
-> > +				regulator_disable(data->vdd_reg);
-> > +			return ret;
-> > +		}
-> > +	}
-> > +
-> > +	ret = mma8452_standby(iio_priv(i2c_get_clientdata(
-> >  		to_i2c_client(dev))));
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	if (!IS_ERR(data->vddio_reg)) {
-> > +		ret = regulator_disable(data->vddio_reg);
-> > +		if (ret) {
-> > +			dev_err(dev, "failed to disable VDDIO regulator\n");
-> > +			return ret;
-> > +		}
-> > +	}
-> > +	if (!IS_ERR(data->vdd_reg)) {
-> > +		ret = regulator_disable(data->vdd_reg);
-> > +		if (ret) {
-> > +			dev_err(dev, "failed to disable VDD regulator\n");
-> > +			return ret;
-> > +		}
-> > +	}
-> > +
-> > +	return 0;
-> >  }
-> >  
-> >  static int mma8452_resume(struct device *dev)
-> >  {
-> > -	return mma8452_active(iio_priv(i2c_get_clientdata(
-> > +	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
-> > +	struct mma8452_data *data = iio_priv(indio_dev);
-> > +	int ret;
-> > +
-> > +	if (!IS_ERR(data->vdd_reg)) {
-> > +		ret = regulator_enable(data->vdd_reg);
-> > +		if (ret) {
-> > +			dev_err(dev, "failed to enable VDD regulator\n");
-> > +			return ret;
-> > +		}
-> > +	}
-> > +	if (!IS_ERR(data->vddio_reg)) {
-> > +		ret = regulator_enable(data->vddio_reg);
-> > +		if (ret) {
-> > +			dev_err(dev, "failed to enable VDDIO regulator\n");
-> > +			if (!IS_ERR(data->vdd_reg))
-> > +				regulator_disable(data->vdd_reg);
-> > +			return ret;
-> > +		}
-> > +	}
-> > +
-> > +	ret = mma8452_active(iio_priv(i2c_get_clientdata(
-> >  		to_i2c_client(dev))));
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	if (!IS_ERR(data->vddio_reg)) {
-> > +		ret = regulator_disable(data->vddio_reg);
-> > +		if (ret) {
-> > +			dev_err(dev, "failed to disable VDDIO regulator\n");
-> > +			return ret;
-> > +		}
-> > +	}
-> > +	if (!IS_ERR(data->vdd_reg)) {
-> > +		ret = regulator_disable(data->vdd_reg);
-> > +		if (ret) {
-> > +			dev_err(dev, "failed to disable VDD regulator\n");
-> > +			return ret;
-> > +		}
-> > +	}
-> > +
-> > +	return 0;
-> >  }
-> >  #endif
-> >    
-> 
+> Best regards
+> Uwe
+>=20
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=F6nig       =20
+>     |
+> Industrial Linux Solutions                 |=20
+> http://www.pengutronix.de/  |
+=
