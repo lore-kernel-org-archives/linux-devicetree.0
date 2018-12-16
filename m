@@ -1,171 +1,366 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v8 12/26] pwm: jz4740: Allow selection of PWM channels 0
- and 1
-Date: Sun, 16 Dec 2018 14:36:03 +0100
-Message-ID: <1544967364.1649.0@crapouillou.net>
-References: <20181212220922.18759-1-paul@crapouillou.net>
-        <20181212220922.18759-13-paul@crapouillou.net>
-        <20181213091822.r5ilpsllfhzaiqw4@pengutronix.de>
-        <1544709511.18952.0@crapouillou.net>
-        <20181213203243.ucjwqtkyp6aboxp4@pengutronix.de>
+From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Subject: Re: [PATCH V4 2/2] iio: accell: mma8452: add optional vdd/vddio
+ regulator operation support
+Date: Sun, 16 Dec 2018 14:08:17 +0000
+Message-ID: <20181216140817.63b4ca58@archlinux>
+References: <1544504839-10958-1-git-send-email-Anson.Huang@nxp.com>
+        <1544504839-10958-2-git-send-email-Anson.Huang@nxp.com>
+        <20181216104639.00bb90b6@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181213203243.ucjwqtkyp6aboxp4@pengutronix.de>
+In-Reply-To: <20181216104639.00bb90b6@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mathieu Malaterre <malat@debian.org>, Ezequiel Garcia <ezequiel@collabora.co.uk>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "martink@posteo.de" <martink@posteo.de>, Leonard Crestez <leonard.crestez@nxp.com>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "preid@electromag.com.au" <preid@electromag.com.au>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sun, 16 Dec 2018 10:46:39 +0000
+Jonathan Cameron <jic23@kernel.org> wrote:
 
-Le jeu. 13 d=E9c. 2018 =E0 21:32, Uwe Kleine-K=F6nig=20
-<u.kleine-koenig@pengutronix.de> a =E9crit :
-> On Thu, Dec 13, 2018 at 02:58:31PM +0100, Paul Cercueil wrote:
->>  Hi,
->>=20
->>  Le jeu. 13 d=E9c. 2018 =E0 10:18, Uwe Kleine-K=F6nig
->>  <u.kleine-koenig@pengutronix.de> a =E9crit :
->>  > On Wed, Dec 12, 2018 at 11:09:07PM +0100, Paul Cercueil wrote:
->>  > >  The TCU channels 0 and 1 were previously reserved for system=20
->> tasks,
->>  > > and
->>  > >  thus unavailable for PWM.
->>  > >
->>  > >  The driver will now only allow a PWM channel to be requested if
->>  > > memory
->>  > >  resources corresponding to the register area of the channel=20
->> were
->>  > >  supplied to the driver. This allows the TCU channels to be=20
->> reserved
->>  > > for
->>  > >  system tasks from within the devicetree.
->>  > >
->>  > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  >
->>  > While there is someone caring for this driver I'd like to=20
->> complete (a
->>  > bit) my picture about the different capabilities and specialities=20
->> of the
->>  > supported PWMs. So I have a few questions:
->>  >
->>  > Is there a publicly available reference manual for this device?=20
->> (If
->>  > yes, adding a link to the driver would be great.)
->>=20
->>  I have them here: https://zcrc.me/~paul/jz_docs/
->=20
-> Is this link good enough to add it to the driver? From a quick view=20
-> I'd
-> say this is another pwm implementation that gets active on=20
-> pwm_disable().
-> Can you confirm this?
+> On Tue, 11 Dec 2018 05:13:20 +0000
+> Anson Huang <anson.huang@nxp.com> wrote:
+> 
+> > The accelerometer's power supply could be controlled by regulator
+> > on some platforms, such as i.MX6Q-SABRESD board, the mma8451's
+> > power supply is controlled by a GPIO fixed regulator, need to make
+> > sure the regulator is enabled before any communication with mma8451,
+> > this patch adds optional vdd/vddio regulator operation support.
+> > 
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > Acked-by: Martin Kepplinger <martink@posteo.de>  
+> Applied to the togreg branch of iio.git and pushed out as testing
+> for the autobuilders to play with it.
+Sorry again for this.  I was half asleep.  This one isn't
+optional either, it just may not be controllable / queryable.
 
-It's my website, so if these get moved, I can update the link.
+So please use the non optional regulator request.
+If there is one specified it will wait for it to be available by
+deferring. If not then it'll just provide a stub regulator so that
+the rest of the code doesn't need to care.
 
-What do you mean it gets active on pwm_disable()? If pwm_disable() gets=20
-called
-the PWM line goes back to inactive state, which is what it should do.
+Patches dropped for now.
 
->>  > jz4740_pwm_config looks as if the currently running period isn't
->>  > completed before the new config is in effect. Is that correct? If=20
->> yes,
->>  > can this be fixed? A similar question for set_polarity: Does=20
->> setting the
->>  > JZ_TIMER_CTRL_PWM_ACTIVE_LOW bit in the control register take=20
->> effect
->>  > immediately or is this shadowed until the next period starts?
->>=20
->>  I don't really know. We only use this driver for a rumble motor and
->>  backlight.
->>  Somebody would have to check with a logic analyzer.
->=20
-> depending on the possible timings you might also be able to test this
-> e.g. by setting:
->=20
-> 	duty_cycle=3D1ms, period=3D5s
->=20
-> and then
->=20
-> 	duty_cycle=3D5s, period=3D5s
->=20
-> . If the implementation is right your display should be dark for=20
-> nearly
-> 5 seconds. (And the second call to pwm_apply should also block until=20
-> the
-> display is on.)
+Thanks,
 
-So it switches to full ON as soon as I set the duty cycle to 5s. Same=20
-for
-the polarity, it is updated as soon as the register is written. So the
-registers are not shadowed.
+Jonathan
 
->>  > How does the device's output behave after the PWM is disabled?
->>  > Does it complete the currently running period? How does the output
->>  > behave then? (active/inactive/high/low/high-z?)
->>=20
->>  There's a bit to toggle between "graceful" shutdown (bit clear) and=20
->> "abrupt"
->>  shutdown (bit set). TCSR bit 9. I think that graceful shutdown will=20
->> complete
->>  the running period, then keep the level active. Abrupt shutdown=20
->> will keep
->>  the
->>  current level of the line.
->=20
-> Can you confirm the things you think above? I'd like to have them
-> eventually documented in the driver.
-
- From what I can see, with "abrupt" shutdown the line will always=20
-return to
-its inactive state (be it low or high, depending on the polarity).=20
-Setting
-this bit to "graceful" shutdown, the only difference is that the=20
-hardware
-will keep its current state, active or inactive. That's why we use the
-"abrupt" shutdown in the PWM driver.
-
->>  > >  @@ -42,11 +68,7 @@ static int jz4740_pwm_request(struct=20
->> pwm_chip
->>  > > *chip, struct pwm_device *pwm)
->>  > >   	char clk_name[16];
->>  > >   	int ret;
->>  > >
->>  > >  -	/*
->>  > >  -	 * Timers 0 and 1 are used for system tasks, so they are
->>  > > unavailable
->>  > >  -	 * for use as PWMs.
->>  > >  -	 */
->>  > >  -	if (pwm->hwpwm < 2)
->>  > >  +	if (!jz4740_pwm_can_use_chn(jz, pwm->hwpwm))
->>  > >   		return -EBUSY;
->>  >
->>  > Maybe EBUSY isn't the best choice here. If the needed register=20
->> space for
->>  > the requested pwm is not included in the memory resources=20
->> provided to
->>  > the device I'd prefer ENXIO or ENODEV.
->>=20
->>  The idea was that if we don't get the register space we need, that=20
->> means
->>  the channel is used for something else, hence the EBUSY. Should I=20
->> switch
->>  it to ENXIO?
->=20
-> I understand your reasoning, but I think it's misleading. If I get
-> -EBUSY from a PWM driver I'd start searching for another user of said
-> resource. With ENXIO or ENODEV it's more obvious that the driver isn't
-> responsible for the resource that was requested.
-
-OK.
-
-> Best regards
-> Uwe
->=20
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=F6nig       =20
->     |
-> Industrial Linux Solutions                 |=20
-> http://www.pengutronix.de/  |
-=
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+> > ---
+> > ChangeLog since V3:
+> > 	- add disabling vdd regulator in vddio error path;
+> > 	- improve regulator enable/disable sequence.
+> > ---
+> >  drivers/iio/accel/mma8452.c | 186 +++++++++++++++++++++++++++++++++++++++++---
+> >  1 file changed, 176 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+> > index 421a0a8..590a95d 100644
+> > --- a/drivers/iio/accel/mma8452.c
+> > +++ b/drivers/iio/accel/mma8452.c
+> > @@ -31,6 +31,7 @@
+> >  #include <linux/of_device.h>
+> >  #include <linux/of_irq.h>
+> >  #include <linux/pm_runtime.h>
+> > +#include <linux/regulator/consumer.h>
+> >  
+> >  #define MMA8452_STATUS				0x00
+> >  #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
+> > @@ -107,6 +108,8 @@ struct mma8452_data {
+> >  	u8 data_cfg;
+> >  	const struct mma_chip_info *chip_info;
+> >  	int sleep_val;
+> > +	struct regulator *vdd_reg;
+> > +	struct regulator *vddio_reg;
+> >  };
+> >  
+> >   /**
+> > @@ -1533,10 +1536,35 @@ static int mma8452_probe(struct i2c_client *client,
+> >  	data->client = client;
+> >  	mutex_init(&data->lock);
+> >  	data->chip_info = match->data;
+> > +	data->vdd_reg = devm_regulator_get_optional(&client->dev, "vdd");
+> > +	if (!IS_ERR(data->vdd_reg)) {
+> > +		ret = regulator_enable(data->vdd_reg);
+> > +		if (ret) {
+> > +			dev_err(&client->dev, "failed to enable VDD regulator\n");
+> > +			return ret;
+> > +		}
+> > +	} else {
+> > +		ret = PTR_ERR(data->vdd_reg);
+> > +		if (ret != -ENODEV)
+> > +			return ret;
+> > +	}
+> > +
+> > +	data->vddio_reg = devm_regulator_get_optional(&client->dev, "vddio");
+> > +	if (!IS_ERR(data->vddio_reg)) {
+> > +		ret = regulator_enable(data->vddio_reg);
+> > +		if (ret) {
+> > +			dev_err(&client->dev, "failed to enable VDDIO regulator\n");
+> > +			goto disable_regulator_vdd;
+> > +		}
+> > +	} else {
+> > +		ret = PTR_ERR(data->vddio_reg);
+> > +		if (ret != -ENODEV)
+> > +			goto disable_regulator_vdd;
+> > +	}
+> >  
+> >  	ret = i2c_smbus_read_byte_data(client, MMA8452_WHO_AM_I);
+> >  	if (ret < 0)
+> > -		return ret;
+> > +		goto disable_regulators;
+> >  
+> >  	switch (ret) {
+> >  	case MMA8451_DEVICE_ID:
+> > @@ -1549,7 +1577,8 @@ static int mma8452_probe(struct i2c_client *client,
+> >  			break;
+> >  		/* else: fall through */
+> >  	default:
+> > -		return -ENODEV;
+> > +		ret = -ENODEV;
+> > +		goto disable_regulators;
+> >  	}
+> >  
+> >  	dev_info(&client->dev, "registering %s accelerometer; ID 0x%x\n",
+> > @@ -1566,13 +1595,13 @@ static int mma8452_probe(struct i2c_client *client,
+> >  
+> >  	ret = mma8452_reset(client);
+> >  	if (ret < 0)
+> > -		return ret;
+> > +		goto disable_regulators;
+> >  
+> >  	data->data_cfg = MMA8452_DATA_CFG_FS_2G;
+> >  	ret = i2c_smbus_write_byte_data(client, MMA8452_DATA_CFG,
+> >  					data->data_cfg);
+> >  	if (ret < 0)
+> > -		return ret;
+> > +		goto disable_regulators;
+> >  
+> >  	/*
+> >  	 * By default set transient threshold to max to avoid events if
+> > @@ -1581,7 +1610,7 @@ static int mma8452_probe(struct i2c_client *client,
+> >  	ret = i2c_smbus_write_byte_data(client, MMA8452_TRANSIENT_THS,
+> >  					MMA8452_TRANSIENT_THS_MASK);
+> >  	if (ret < 0)
+> > -		return ret;
+> > +		goto disable_regulators;
+> >  
+> >  	if (client->irq) {
+> >  		int irq2;
+> > @@ -1595,7 +1624,7 @@ static int mma8452_probe(struct i2c_client *client,
+> >  						MMA8452_CTRL_REG5,
+> >  						data->chip_info->all_events);
+> >  			if (ret < 0)
+> > -				return ret;
+> > +				goto disable_regulators;
+> >  
+> >  			dev_dbg(&client->dev, "using interrupt line INT1\n");
+> >  		}
+> > @@ -1604,11 +1633,11 @@ static int mma8452_probe(struct i2c_client *client,
+> >  					MMA8452_CTRL_REG4,
+> >  					data->chip_info->enabled_events);
+> >  		if (ret < 0)
+> > -			return ret;
+> > +			goto disable_regulators;
+> >  
+> >  		ret = mma8452_trigger_setup(indio_dev);
+> >  		if (ret < 0)
+> > -			return ret;
+> > +			goto disable_regulators;
+> >  	}
+> >  
+> >  	data->ctrl_reg1 = MMA8452_CTRL_ACTIVE |
+> > @@ -1661,12 +1690,22 @@ static int mma8452_probe(struct i2c_client *client,
+> >  trigger_cleanup:
+> >  	mma8452_trigger_cleanup(indio_dev);
+> >  
+> > +disable_regulators:
+> > +	if (!IS_ERR(data->vddio_reg))
+> > +		regulator_disable(data->vddio_reg);
+> > +
+> > +disable_regulator_vdd:
+> > +	if (!IS_ERR(data->vdd_reg))
+> > +		regulator_disable(data->vdd_reg);
+> > +
+> >  	return ret;
+> >  }
+> >  
+> >  static int mma8452_remove(struct i2c_client *client)
+> >  {
+> >  	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+> > +	struct mma8452_data *data = iio_priv(indio_dev);
+> > +	int ret;
+> >  
+> >  	iio_device_unregister(indio_dev);
+> >  
+> > @@ -1678,6 +1717,21 @@ static int mma8452_remove(struct i2c_client *client)
+> >  	mma8452_trigger_cleanup(indio_dev);
+> >  	mma8452_standby(iio_priv(indio_dev));
+> >  
+> > +	if (!IS_ERR(data->vddio_reg)) {
+> > +		ret = regulator_disable(data->vddio_reg);
+> > +		if (ret) {
+> > +			dev_err(&client->dev, "failed to disable VDDIO regulator\n");
+> > +			return ret;
+> > +		}
+> > +	}
+> > +	if (!IS_ERR(data->vdd_reg)) {
+> > +		ret = regulator_disable(data->vdd_reg);
+> > +		if (ret) {
+> > +			dev_err(&client->dev, "failed to disable VDD regulator\n");
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> >  	return 0;
+> >  }
+> >  
+> > @@ -1696,6 +1750,21 @@ static int mma8452_runtime_suspend(struct device *dev)
+> >  		return -EAGAIN;
+> >  	}
+> >  
+> > +	if (!IS_ERR(data->vddio_reg)) {
+> > +		ret = regulator_disable(data->vddio_reg);
+> > +		if (ret) {
+> > +			dev_err(dev, "failed to disable VDDIO regulator\n");
+> > +			return ret;
+> > +		}
+> > +	}
+> > +	if (!IS_ERR(data->vdd_reg)) {
+> > +		ret = regulator_disable(data->vdd_reg);
+> > +		if (ret) {
+> > +			dev_err(dev, "failed to disable VDD regulator\n");
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> >  	return 0;
+> >  }
+> >  
+> > @@ -1705,6 +1774,23 @@ static int mma8452_runtime_resume(struct device *dev)
+> >  	struct mma8452_data *data = iio_priv(indio_dev);
+> >  	int ret, sleep_val;
+> >  
+> > +	if (!IS_ERR(data->vdd_reg)) {
+> > +		ret = regulator_enable(data->vdd_reg);
+> > +		if (ret) {
+> > +			dev_err(dev, "failed to enable VDD regulator\n");
+> > +			return ret;
+> > +		}
+> > +	}
+> > +	if (!IS_ERR(data->vddio_reg)) {
+> > +		ret = regulator_enable(data->vddio_reg);
+> > +		if (ret) {
+> > +			dev_err(dev, "failed to enable VDDIO regulator\n");
+> > +			if (!IS_ERR(data->vdd_reg))
+> > +				regulator_disable(data->vdd_reg);
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> >  	ret = mma8452_active(data);
+> >  	if (ret < 0)
+> >  		return ret;
+> > @@ -1723,14 +1809,94 @@ static int mma8452_runtime_resume(struct device *dev)
+> >  #ifdef CONFIG_PM_SLEEP
+> >  static int mma8452_suspend(struct device *dev)
+> >  {
+> > -	return mma8452_standby(iio_priv(i2c_get_clientdata(
+> > +	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
+> > +	struct mma8452_data *data = iio_priv(indio_dev);
+> > +	int ret;
+> > +
+> > +	if (!IS_ERR(data->vdd_reg)) {
+> > +		ret = regulator_enable(data->vdd_reg);
+> > +		if (ret) {
+> > +			dev_err(dev, "failed to enable VDD regulator\n");
+> > +			return ret;
+> > +		}
+> > +	}
+> > +	if (!IS_ERR(data->vddio_reg)) {
+> > +		ret = regulator_enable(data->vddio_reg);
+> > +		if (ret) {
+> > +			dev_err(dev, "failed to enable VDDIO regulator\n");
+> > +			if (!IS_ERR(data->vdd_reg))
+> > +				regulator_disable(data->vdd_reg);
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> > +	ret = mma8452_standby(iio_priv(i2c_get_clientdata(
+> >  		to_i2c_client(dev))));
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (!IS_ERR(data->vddio_reg)) {
+> > +		ret = regulator_disable(data->vddio_reg);
+> > +		if (ret) {
+> > +			dev_err(dev, "failed to disable VDDIO regulator\n");
+> > +			return ret;
+> > +		}
+> > +	}
+> > +	if (!IS_ERR(data->vdd_reg)) {
+> > +		ret = regulator_disable(data->vdd_reg);
+> > +		if (ret) {
+> > +			dev_err(dev, "failed to disable VDD regulator\n");
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> > +	return 0;
+> >  }
+> >  
+> >  static int mma8452_resume(struct device *dev)
+> >  {
+> > -	return mma8452_active(iio_priv(i2c_get_clientdata(
+> > +	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
+> > +	struct mma8452_data *data = iio_priv(indio_dev);
+> > +	int ret;
+> > +
+> > +	if (!IS_ERR(data->vdd_reg)) {
+> > +		ret = regulator_enable(data->vdd_reg);
+> > +		if (ret) {
+> > +			dev_err(dev, "failed to enable VDD regulator\n");
+> > +			return ret;
+> > +		}
+> > +	}
+> > +	if (!IS_ERR(data->vddio_reg)) {
+> > +		ret = regulator_enable(data->vddio_reg);
+> > +		if (ret) {
+> > +			dev_err(dev, "failed to enable VDDIO regulator\n");
+> > +			if (!IS_ERR(data->vdd_reg))
+> > +				regulator_disable(data->vdd_reg);
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> > +	ret = mma8452_active(iio_priv(i2c_get_clientdata(
+> >  		to_i2c_client(dev))));
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (!IS_ERR(data->vddio_reg)) {
+> > +		ret = regulator_disable(data->vddio_reg);
+> > +		if (ret) {
+> > +			dev_err(dev, "failed to disable VDDIO regulator\n");
+> > +			return ret;
+> > +		}
+> > +	}
+> > +	if (!IS_ERR(data->vdd_reg)) {
+> > +		ret = regulator_disable(data->vdd_reg);
+> > +		if (ret) {
+> > +			dev_err(dev, "failed to disable VDD regulator\n");
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> > +	return 0;
+> >  }
+> >  #endif
+> >    
+> 
