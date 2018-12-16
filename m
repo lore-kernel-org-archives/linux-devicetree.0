@@ -1,27 +1,27 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 3/3] arm64: dts: ls1046a: add qdma device tree nodes
-Date: Sun, 16 Dec 2018 15:43:57 +0800
-Message-ID: <20181216074354.GG13243@dragon>
-References: <20181206111823.45985-1-peng.ma@nxp.com>
- <20181206111823.45985-3-peng.ma@nxp.com>
- <VI1PR04MB44313466C33A7BAD7167D4EEEDA10@VI1PR04MB4431.eurprd04.prod.outlook.com>
+Subject: Re: [PATCH 0/5] Prepare devicetrees for the new FSL QSPI driver
+Date: Sun, 16 Dec 2018 15:51:23 +0800
+Message-ID: <20181216075121.GH13243@dragon>
+References: <1544459182-23655-1-git-send-email-frieder.schrempf@kontron.de>
+ <ce1442f3-357b-d647-958e-cc4a89282b79@kontron.de>
+ <1ad93cdf-7ba1-ff49-f330-6bbd0f6c6972@kontron.de>
+ <20181214004251.GA15775@dragon>
+ <937b0f34e3eb485aaae45cd649cdeb4f@kontron.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <VI1PR04MB44313466C33A7BAD7167D4EEEDA10@VI1PR04MB4431.eurprd04.prod.outlook.com>
+In-Reply-To: <937b0f34e3eb485aaae45cd649cdeb4f@kontron.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Ma <peng.ma@nxp.com>
-Cc: "vkoul@kernel.org" <vkoul@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Wen He <wen.he_1@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 14, 2018 at 10:30:15AM +0000, Peng Ma wrote:
-> Hi shawnguo,
-> 
-> I send this series patch to http://patchwork.ozlabs.org/project/devicetree-bindings/list/
-> But I did not find patchs on devicetree patchwork, could I send patchs again.
+On Sat, Dec 15, 2018 at 10:04:55AM +0000, Schrempf Frieder wrote:
+> I can confirm, that the series does only remove or add properties to the
+> devicetree, that are currently not used by the driver. Therefore it won't break
+> anything.
 
-You do not need to.  I have sent the series for 4.21 inclusion.  I
-forgot to reply and let you know.  Sorry.
+Okay, applied the series.
 
 Shawn
