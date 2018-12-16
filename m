@@ -1,105 +1,108 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v8 15/26] pwm: jz4740: Add support for the JZ4725B
-Date: Sun, 16 Dec 2018 15:18:52 +0100
-Message-ID: <1544969932.1649.1@crapouillou.net>
-References: <20181212220922.18759-1-paul@crapouillou.net>
-        <20181212220922.18759-16-paul@crapouillou.net>
-        <20181213092409.ml4wpnzow2nnszkd@pengutronix.de>
-        <1544709795.18952.1@crapouillou.net>
-        <20181213204219.onem3q6dcmakusl2@pengutronix.de>
-        <CACRpkdbABtDgwKai=8Pfji7qVb-XHsX8pDsuDdS5hhg7qEN0Bw@mail.gmail.com>
-        <20181214142628.zwi4hadrju53z6f3@pengutronix.de>
+From: Jianxin Pan <jianxin.pan@amlogic.com>
+Subject: [PATCH v8 0/2] mtd: rawnand: meson: add Amlogic NAND driver support
+Date: Sun, 16 Dec 2018 23:17:41 +0800
+Message-ID: <1544973463-59523-1-git-send-email-jianxin.pan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181214142628.zwi4hadrju53z6f3@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, paul.burton@mips.com, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mathieu Malaterre <malat@debian.org>, ezequiel@collabora.co.uk, prasannatsmkumar@gmail.com, linux-pwm@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, linux-mips@vger.kernel.org, linux-doc@vger.kernel.orglinux-clk <linux>
+To: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org
+Cc: Jianxin Pan <jianxin.pan@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+These two patches try to add initial NAND driver support for Amlogic Meson
+SoCs, current it has been tested on GXL(p212) and AXG(s400) platform.
 
-Le ven. 14 d=E9c. 2018 =E0 15:26, Uwe Kleine-K=F6nig=20
-<u.kleine-koenig@pengutronix.de> a =E9crit :
-> Hello,
->=20
-> On Fri, Dec 14, 2018 at 02:50:20PM +0100, Linus Walleij wrote:
->>  On Thu, Dec 13, 2018 at 9:42 PM Uwe Kleine-K=F6nig
->>  <u.kleine-koenig@pengutronix.de> wrote:
->>  > [Adding Linus Walleij to Cc:]
->>  > On Thu, Dec 13, 2018 at 03:03:15PM +0100, Paul Cercueil wrote:
->>  > > Le jeu. 13 d=E9c. 2018 =E0 10:24, Uwe Kleine-K=F6nig
->>  > > <u.kleine-koenig@pengutronix.de> a =E9crit :
->>  > > > On Wed, Dec 12, 2018 at 11:09:10PM +0100, Paul Cercueil wrote:
->>  > > > >  The PWM in the JZ4725B works the same as in the JZ4740,=20
->> except that
->>  > > > > it
->>  > > > >  only has 6 channels available instead of 8.
->>  > > >
->>  > > > this driver is probed only from device tree? If yes, it might=20
->> be
->>  > > > sensible to specify the number of PWMs there and get it from=20
->> there.
->>  > > > There doesn't seem to be a generic binding for that, but=20
->> there are
->>  > > > several drivers that could benefit from it. (This is a bigger=20
->> project
->>  > > > though and shouldn't stop your patch. Still more as it=20
->> already got
->>  > > > Thierry's ack.)
->>  > >
->>  > > I think there needs to be a proper guideline, as there doesn't=20
->> seem to be
->>  > > a consensus about this. I learned from emails with Rob and=20
->> Linus (Walleij)
->>  > > that I should not have in devicetree what I can deduce from the=20
->> compatible
->>  > > string.
->>  >
->>  > I understood them a bit differently. It is ok to deduce things=20
->> from the
->>  > compatible string. But if you define a generic property (say)=20
->> "num-pwms"
->>  > that is used uniformly in most bindings this is ok, too. (And=20
->> then the
->>  > two different devices could use the same compatible.)
->>  >
->>  > An upside of the generic "num-pwms" property is that the pwm core=20
->> could
->>  > sanity check pwm phandles before passing them to the hardware=20
->> drivers.
->>=20
->>  I don't know if this helps, but in GPIO we have "ngpios" which is
->>  used to augment an existing block as to the number of lines actually
->>  used with it.
->>=20
->>  The typical case is that an ASIC engineer synthesize a block for
->>  32 GPIOs but only 12 of them are routed to external pads. So
->>  we augment the behaviour of that driver to only use 12 of the
->>  32 lines.
->>=20
->>  I guess using the remaining 20 lines "works" in a sense but they
->>  have no practical use and will just bias electrons in the silicon
->>  for no use.
->=20
-> This looks very similar to the case under discussion.
->=20
->>  So if the PWM case is something similar, then by all means add
->>  num-pwms.
->=20
-> .. or "npwms" to use the same nomenclature as the gpio binding?
+Changes since V6 at [8]
+ - fix bitflips checking for blank pages
+ - trace the latest commit with nand/next branch
+ - checking the return of meson_nand_op_get_dma_safe_*input/output*_buf
+ - add .detach_chip for free meson_nand.data_buf/info_buf
 
-If we're going to do something like this, should it be the drivers or
-the core (within pwmchip_add) that checks for this "npwms" property?
+Changes since V6 at [7]
+ - use timings->tBERS_max as the maximum time out, delete NFC_CMD_RB_TIMEOUT
+ - fix nand_rw_cmd and support small block flash and which row address less than 3
+ - fix coding style
+ - replace readl/writel_* with readl/writel_relaxed*
+ - delete ECC_SET_PROTECTED_OOB_BYTE and ECC_GET_PROTECTED_OOB_BYTE
+ - implement dma access for read_buf and write_buf, more efficient.
+ - delete waiting dma finish in write process and let NAND_CMD_PAGEPROG and
+RB command go on queuing
+ - add waiting the completed flag of last ecc page be set, for more strict
 
-> Best regards
-> Uwe
->=20
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=F6nig       =20
->     |
-> Industrial Linux Solutions                 |=20
-> http://www.pengutronix.de/  |
-=
+Changes since v5 at [6]:
+ - use instr->delay_ns in exec_op() to caculate the delay cycle
+ - delete struct meson_nfc_info_format and use macros instead
+ - delete "is_scramble" in struct meson_nfc_nand_chip
+ - add WARN_ON_ONCE() for chip > MAX_CE_NUM
+ - drop param *mtd* or struct *nfc* if param *nand exist
+ - substitute set_data_oob and get_data_oob for prase_data_oob and format_data_oob
+ - split timings caculating and setting timings
+ - move info_buf and data_buf to struct meson_nfc_nand_chip
+
+Changes since v4 at [5]:
+ - remove the initial default divider(CLK_DIV_MASK) in meson_nfc_clk_init()
+ - dt-bindings: remove staus, add "rx" and "tx" clock, and node rename
+
+Changes since v3 at [4]:
+ - remove partition table and some used props from dt-bindings 
+
+Changes since v2 at [3]:
+ - remove some hardcode time value, like twb
+ - use dev wait R/B instead of nand_soft_waitrdy
+ - implement nfc ecc init by ecc helper
+ - rework nfc buffer init to register the maximun buffer when several chips
+ - free nfc buffer when error and cleanup
+ - add variable to teack all the already assigned CS lines
+ - fix mtd->name use the first cs line only
+ - remove dt "nand-enable-scrambler" and use NAND_NEED_SCRAMBLING instead.
+ - move setuping ECC fileds after the identification phase
+ - use nand_scan() and attach_chip()
+ - check one event to return IRQ_NONE
+ - delete cast when of_device_get_match_data
+ - use nand_controller_init() helper
+ - remove nfc driver complains when calling devm_ioremap_resource
+ - clear irqs before setting up irq handler
+
+Changes since v1 at [1]:
+ - adopt property amlogic,nand-enable-scrambler - thanks Martin
+ - drop nand pins in DT
+ - convert clk access to emmc clkc model 
+ - fix regiser field definition alignment
+ - drop nand-user-mode 
+ - parse cs id from DT
+ - rework n2m, m2n function
+ - explain why insert two "IDLE" command
+ - implement exec_op()
+ - drop meson_nfc_get_nand_chip_dts()
+ - release resource once error occur in meson_nfc_nand_chips_init(), 
+ - call nand_cleanup(nand) once mtd_device_register fail
+
+Items not addressed ( or confirmed ) in this version:
+ - convert to ECC conf helper() 
+ - convert to dma coherent API
+ - how to construct mtd->name
+
+[1] https://lkml.kernel.org/r/20180613161314.14894-1-yixun.lan@amlogic.com
+[2] https://lkml.kernel.org/r/20180712211244.11428-1-yixun.lan@amlogic.com
+[3] https://lkml.kernel.org/r/20180719094612.5833-1-yixun.lan@amlogic.com
+[4] https://lkml.kernel.org/r/1536317831-58056-1-git-send-email-jianxin.pan@amlogic.com/
+[5] https://lore.kernel.org/r/1537433449-65213-2-git-send-email-jianxin.pan@amlogic.com/
+[6] https://lore.kernel.org/r/1539839345-14021-1-git-send-email-jianxin.pan@amlogic.com
+[7] https://lore.kernel.org/r/1541090542-19618-1-git-send-email-jianxin.pan@amlogic.com
+[8] http://lkml.kernel.org/r/1542386439-30166-1-git-send-email-jianxin.pan@amlogic.com
+
+Liang Yang (2):
+  dt-bindings: nand: meson: add Amlogic NAND controller driver
+  mtd: rawnand: meson: add support for Amlogic NAND flash controller
+
+ .../devicetree/bindings/mtd/amlogic,meson-nand.txt |   60 +
+ drivers/mtd/nand/raw/Kconfig                       |   10 +
+ drivers/mtd/nand/raw/Makefile                      |    1 +
+ drivers/mtd/nand/raw/meson_nand.c                  | 1467 ++++++++++++++++++++
+ 4 files changed, 1538 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+ create mode 100644 drivers/mtd/nand/raw/meson_nand.c
+
+-- 
+1.9.1
