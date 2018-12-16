@@ -1,25 +1,40 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 1/2] net: dsa: ksz9477: add I2C managed mode support
-Date: Sun, 16 Dec 2018 09:44:00 +0100
-Message-ID: <20181216084400.GE18287@lunn.ch>
-References: <20181216075741.13827-1-sergio.paracuellos@gmail.com>
- <20181216081542.GB18287@lunn.ch>
- <CAMhs-H_5=+AKtnMZ-89pV04WZ46kEkhOX8bmuC-uD5YRY+xW3g@mail.gmail.com>
+From: MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: Re: [PATCH] devfreq: Use of_node_name_eq for node name comparisons
+Date: Sun, 16 Dec 2018 18:12:11 +0900
+Message-ID: <CAJ0PZbQRNGoKsMZjpwaemzpK677v0T5n6h9OtZMdd5UTvq-drA@mail.gmail.com>
+References: <20181205195050.4759-6-robh@kernel.org>
+Reply-To: myungjoo.ham@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMhs-H_5=+AKtnMZ-89pV04WZ46kEkhOX8bmuC-uD5YRY+xW3g@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc: Woojung.Huh@microchip.com, UNGLinuxDriver@microchip.com, vivien.didelot@savoirfairelinux.com, f.fainelli@gmail.com, driverdev-devel@linuxdriverproject.org, davem@davemloft.net, netdev@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181205195050.4759-6-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> I'll change these two to to get memory from kernel allocators instead
-> of using the stack. Thanks for let me know this.
+On Thu, Dec 6, 2018 at 4:54 AM Rob Herring <robh@kernel.org> wrote:
+>
+> Convert string compares of DT node names to use of_node_name_eq helper
+> instead. This removes direct access to the node name pointer.
+>
+> For instances using of_node_cmp, this has the side effect of now using
+> case sensitive comparisons. This should not matter for any FDT based
+> system which all of these are.
+>
+> Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+> Cc: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Kukjin Kim <kgene@kernel.org>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-samsung-soc@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-There appear to be other cases as well. Please review the whole
-driver.
+Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 
-	Thanks
-		Andrew
+> ---
+>  drivers/devfreq/devfreq-event.c     | 2 +-
+>  drivers/devfreq/event/exynos-ppmu.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
