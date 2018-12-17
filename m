@@ -1,28 +1,31 @@
-Return-Path: <SRS0=NQmY=O2=verge.net.au=horms@kernel.org>
-Date: Mon, 17 Dec 2018 20:56:42 +0100
-From: Simon Horman <horms@verge.net.au>
+Return-Path: <SRS0=Jkdf=O2=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <1545058221-22529-1-git-send-email-ykaneko0929@gmail.com> <1545058221-22529-2-git-send-email-ykaneko0929@gmail.com>
+In-Reply-To: <1545058221-22529-2-git-send-email-ykaneko0929@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 17 Dec 2018 17:22:43 +0100
+Message-ID: <CAMuHMdW9DXx81gZG+UK-+R67iL8EYe9gZnEhsjM=3kmexC_5gg@mail.gmail.com>
 Subject: Re: [PATCH/RFT v2 1/2] dt-bindings: thermal: rcar-thermal: add
  R8A77990 support
-Message-ID: <20181217195641.yy57kzq6bjpb47qy@verge.net.au>
-References: <1545058221-22529-1-git-send-email-ykaneko0929@gmail.com>
- <1545058221-22529-2-git-send-email-ykaneko0929@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1545058221-22529-2-git-send-email-ykaneko0929@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Cc: Linux PM list <linux-pm@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Dec 17, 2018 at 11:50:20PM +0900, Yoshihiro Kaneko wrote:
+On Mon, Dec 17, 2018 at 3:51 PM Yoshihiro Kaneko <ykaneko0929@gmail.com> wrote:
 > Document the R-Car E3 (R8A77990) SoC bindings.
-> 
+>
 > Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-> ---
->  Documentation/devicetree/bindings/thermal/rcar-thermal.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
 
-As per v1:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Tested-by: Simon Horman <horms+renesas@verge.net.au>
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
