@@ -1,7 +1,7 @@
 From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH 04/13] dt-bindings: mailbox: qcom: Add clock-name optional property
-Date: Mon, 17 Dec 2018 10:46:21 +0100
-Message-ID: <1545039990-19984-5-git-send-email-jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH 03/13] mbox: qcom: replace integer with valid macro
+Date: Mon, 17 Dec 2018 10:46:20 +0100
+Message-ID: <1545039990-19984-4-git-send-email-jorge.ramirez-ortiz@linaro.org>
 References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
@@ -10,62 +10,27 @@ To: jorge.ramirez-ortiz@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, an
 Cc: bjorn.andersson@linaro.org, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When the APCS clock is registered (platform dependent), it retrieves
-its parent names from hardcoded values in the driver.
-
-The following commit allows the DT node to provide such clock names to
-the platform data based clock driver therefore avoiding having to
-explicitly embed those names in the clock driver source code.
+Use the correct macro when registering the platform device.
 
 Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 ---
- .../bindings/mailbox/qcom,apcs-kpss-global.txt      | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-index 1232fc9..f252439 100644
---- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-+++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-@@ -23,6 +23,10 @@ platforms.
- 	Value type: <phandle>
- 	Definition: phandle to the input PLL, which feeds the APCS mux/divider
+diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+index dc8fdab1..b782173 100644
+--- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
++++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+@@ -108,7 +108,7 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+ register_clk:
+ 	apcs->clk = platform_device_register_data(&pdev->dev,
+ 						  "qcom-apcs-msm8916-clk",
+-						  -1, NULL, 0);
++						  PLATFORM_DEVID_NONE, NULL, 0);
+ 	if (IS_ERR(apcs->clk))
+ 		dev_err(&pdev->dev, "failed to register APCS clk\n");
  
-+       Usage: required if #clock-names property is present
-+       Value type: <phandle array>
-+	Definition: phandles to the two parent clocks of the clock driver.
-+
- - #mbox-cells:
- 	Usage: required
- 	Value type: <u32>
-@@ -33,6 +37,12 @@ platforms.
- 	Value type: <u32>
- 	Definition: as described in clock.txt, must be 0
- 
-+- clock-names:
-+	Usage: required if the platform data based clock driver needs to
-+	retrieve the parent clock names from device tree.
-+	This will requires two mandatory clocks to be defined.
-+	Value type: <string-array>
-+	Definition: must be "aux" and "pll"
- 
- = EXAMPLE
- The following example describes the APCS HMSS found in MSM8996 and part of the
-@@ -65,3 +75,14 @@ Below is another example of the APCS binding on MSM8916 platforms:
- 		clocks = <&a53pll>;
- 		#clock-cells = <0>;
- 	};
-+
-+Below is another example of the APCS binding on QCS404 platforms:
-+
-+	apcs_glb: mailbox@b011000 {
-+		compatible = "qcom,qcs404-apcs-apps-global", "syscon";
-+		reg = <0x0b011000 0x1000>;
-+		#mbox-cells = <1>;
-+		clocks = <&gcc GCC_GPLL0_AO_OUT_MAIN>, <&apcs_hfpll>;
-+		clock-names = "aux", "pll";
-+		#clock-cells = <0>;
-+	};
 -- 
 2.7.4
