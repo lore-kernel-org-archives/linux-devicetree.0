@@ -1,86 +1,38 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [RESEND PATCH v4 1/1] dt-bindings: arm-smmu: Add binding doc for
- Qcom smmu-500
-Date: Mon, 17 Dec 2018 11:03:46 +0530
-Message-ID: <CAFp+6iHGANAkp+uKRsYHHsaY204SL0_Y5dbRu+D2SdzD69GOSQ@mail.gmail.com>
-References: <20181213090507.6269-1-vivek.gautam@codeaurora.org> <20181213104524.GA31177@edgewater-inn.cambridge.arm.com>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [PATCH v1 2/2] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Mon, 17 Dec 2018 05:46:43 +0000
+Message-ID: <BYAPR07MB47093D9B4AFA4BFAF11C43AFDDBC0@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1544445555-17325-1-git-send-email-pawell@cadence.com>
+ <1544445555-17325-3-git-send-email-pawell@cadence.com>
+ <87h8fkmfar.fsf@linux.intel.com>
+ <BYAPR07MB47095110AF28CC11B4C9E144DDA60@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <87a7lbme3m.fsf@linux.intel.com>
+ <d77b4083-6641-4a60-1629-b8edacc36c26@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181213104524.GA31177@edgewater-inn.cambridge.arm.com>
+In-Reply-To: <d77b4083-6641-4a60-1629-b8edacc36c26@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, robh+dt <robh+dt@kernel.org>
+To: Kishon Vijay Abraham I <kishon@ti.com>, Felipe Balbi <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 13, 2018 at 4:16 PM Will Deacon <will.deacon@arm.com> wrote:
->
-> On Thu, Dec 13, 2018 at 02:35:07PM +0530, Vivek Gautam wrote:
-> > Qcom's implementation of arm,mmu-500 works well with current
-> > arm-smmu driver implementation. Adding a soc specific compatible
-> > along with arm,mmu-500 makes the bindings future safe.
-> >
-> > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Cc: Will Deacon <will.deacon@arm.com>
-> > ---
-> >
-> > Hi Joerg,
-> > I am picking this out separately from the sdm845 smmu support
-> > series [1], so that this can go through iommu tree.
-> > The dt patch from the series [1] can be taken through arm-soc tree.
-> >
-> > Hi Will,
-> > As asked [2], here's the resend version of dt binding patch for sdm845.
-> > Kindly ack this so that Joerg can pull this in.
->
-> Acked-by: Will Deacon <will.deacon@arm.com>
-
-Thanks a lot Will for the Ack.
-
-Regards
-Vivek
-
->
-> Joerg -- please can you take this on top of the pull request I sent already?
-> Vivek included it as part of a separate series which I thought was going
-> via arm-soc, but actually it needs to go with the other arm-smmu patches
-> in order to avoid conflicts.
->
-> Cheers,
->
-> Will
->
-> >  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> > index a6504b37cc21..3133f3ba7567 100644
-> > --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> > @@ -27,6 +27,10 @@ conditions.
-> >                    "qcom,msm8996-smmu-v2", "qcom,smmu-v2",
-> >                    "qcom,sdm845-smmu-v2", "qcom,smmu-v2".
-> >
-> > +                  Qcom SoCs implementing "arm,mmu-500" must also include,
-> > +                  as below, SoC-specific compatibles:
-> > +                  "qcom,sdm845-smmu-500", "arm,mmu-500"
-> > +
-> >  - reg           : Base address and size of the SMMU.
-> >
-> >  - #global-interrupts : The number of global interrupts exposed by the
-> > --
-> > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> > of Code Aurora Forum, hosted by The Linux Foundation
-> >
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
-
-
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+SGksDQoNCj4NCj5PbiAxMi8xMi8xOCAxMjoyMiBQTSwgRmVsaXBlIEJhbGJpIHdyb3RlOg0KPj4N
+Cj4+IEhpDQo+Pg0KPj4gUGF3ZWwgTGFzemN6YWsgPHBhd2VsbEBjYWRlbmNlLmNvbT4gd3JpdGVz
+Og0KPj4+Pj4gKwljZG5zLT5waHkgPSBkZXZtX3BoeV9nZXQoZGV2LCAiY2RuczMsdXNicGh5Iik7
+DQo+Pj4+PiArCWlmIChJU19FUlIoY2Rucy0+cGh5KSkgew0KPj4+Pj4gKwkJcmV0ID0gUFRSX0VS
+UihjZG5zLT5waHkpOw0KPj4+Pj4gKwkJaWYgKHJldCA9PSAtRU5PU1lTIHx8IHJldCA9PSAtRU5P
+REVWKSB7DQo+Pj4+DQo+Pj4+IEFyZSB5b3Ugc3VyZSB5b3UgY2FuIGdldCBFTk9TWVMgaGVyZT8g
+SGF2ZSB5b3UgY2hlY2tlZCBvdXRwdXQgb2YNCj4+Pj4gY2hlY2twYXRjaCAtLXN0cmljdD8NCj4+
+Pj4gLTo4NTI6IFdBUk5JTkc6IEVOT1NZUyBtZWFucyAnaW52YWxpZCBzeXNjYWxsIG5yJyBhbmQg
+bm90aGluZyBlbHNlDQo+Pj4NCj4+PiBZZXMgdGhpcyBlcnJvciBjb2RlIGNhbiBiZSByZXR1cm5l
+ZCBieSByZWxhdGVkIHRvIHBoeSBmdW5jdGlvbiBpZg0KPj4+IENPTkZJR19HRU5FUklDX1BIWSBp
+cyBkaXNhYmxlZC4NCj4+Pg0KPj4+IEkgaGF2ZSBzZWVuIHRoaXMgd2FybmluZyBpbiBvdXRwdXQg
+b2YgY2hlY2twYXRjaCAtLXN0cmljdCAuDQo+Pg0KPj4gS2lzaG9uLCBzZWVtcyBsaWtlIHlvdSBz
+aG91bGRuJ3QgYmUgdXNpbmcgdGhhdCBlcnJvciB2YWx1ZS4NCj4NCj5obW0sIHllYWggc2hvdWxk
+IGNoYW5nZSB0aGUgcmV0dXJuIHZhbHVlIHRvIC1FTk9ERVYgd2hlbiBHRU5FUklDX1BIWSBpcyBk
+aXNhYmxlZC4NCj4NCg0KU28gSSB3aWxsIHJlbW92ZSB0aGlzIEVOT1NZUyBmcm9tIG5leHQgcGF0
+Y2guIEkgYXNzdW1lIHRoYXQgaXQgd2lsbCBiZSByZW1vdmVkIGFsc28gZnJvbSBnZW5lcmljIHBo
+eSBkcml2ZXIuIA0KDQpUaGFua3MsDQpQYXdlbA0K
