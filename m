@@ -1,31 +1,27 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/2] gpio: Add Cadence GPIO driver
-Date: Mon, 17 Dec 2018 23:21:47 +0100
-Message-ID: <CACRpkdYq5Eg2DrwdED-yTZ4kMoCxew+0rdU-b4zuinOf7BEr6Q@mail.gmail.com>
-References: <20181217153652.20056-1-jank@cadence.com> <20181217153652.20056-3-jank@cadence.com>
- <CAMpxmJXrjyK3m4JwgkxwkHjSj-ugb7UzwNrYcBwYjWwj+JBNxw@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v3 2/2] dt-bindings: net: dsa: ksz9477: add sample of
+ switch bindings managed in i2c mode
+Date: Mon, 17 Dec 2018 14:22:23 -0800
+Message-ID: <c1922554-48e4-8158-00a5-e1cba4660d85@gmail.com>
+References: <20181217204423.14271-1-sergio.paracuellos@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMpxmJXrjyK3m4JwgkxwkHjSj-ugb7UzwNrYcBwYjWwj+JBNxw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Jan Kotas <jank@cadence.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio <linux-gpio@vger.kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20181217204423.14271-1-sergio.paracuellos@gmail.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Sergio Paracuellos <sergio.paracuellos@gmail.com>, Woojung.Huh@microchip.com
+Cc: UNGLinuxDriver@microchip.com, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, driverdev-devel@linuxdriverproject.org, davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 17, 2018 at 4:51 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
+On 12/17/18 12:44 PM, Sergio Paracuellos wrote:
+> Add device-tree binding example of the ksz9477 switch managed in i2c mode.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 
-> The driver looks good but is there any particular reason not to use
-> regmap for register IO?
-
-I thought we only use regmap for MMIO when the register range is
-shared (as in a system controller) so that some registers are for this,
-some register or even bits in a register for some other driver, so they
-need the spinlock in the regmap to protect the register range.
-
-It is also nice for shadowing/caching of register contents I guess,
-wat does this driver get from regmap MMIO?
-
-Yours,
-Linus Walleij
+This looks good, although it looks like you have 2x the amount of tabs
+necessary.
+-- 
+Florian
