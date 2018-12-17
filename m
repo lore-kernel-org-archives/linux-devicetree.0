@@ -1,38 +1,48 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [PATCH v1 2/2] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Mon, 17 Dec 2018 05:46:43 +0000
-Message-ID: <BYAPR07MB47093D9B4AFA4BFAF11C43AFDDBC0@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1544445555-17325-1-git-send-email-pawell@cadence.com>
- <1544445555-17325-3-git-send-email-pawell@cadence.com>
- <87h8fkmfar.fsf@linux.intel.com>
- <BYAPR07MB47095110AF28CC11B4C9E144DDA60@BYAPR07MB4709.namprd07.prod.outlook.com>
- <87a7lbme3m.fsf@linux.intel.com>
- <d77b4083-6641-4a60-1629-b8edacc36c26@ti.com>
+From: Stefan Schaeckeler <schaecsn@gmx.net>
+Subject: [PATCH 0/2] Add support for the Aspeed AST2500 SoC EDAC driver.
+Date: Sun, 16 Dec 2018 22:01:55 -0800
+Message-ID: <1545026517-64069-1-git-send-email-schaecsn@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d77b4083-6641-4a60-1629-b8edacc36c26@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Felipe Balbi <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Borislav Petkov <bp@alien8.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-edac@vger.kernel.org
+Cc: Stefan M Schaeckeler <schaecsn@gmx.net>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCj4NCj5PbiAxMi8xMi8xOCAxMjoyMiBQTSwgRmVsaXBlIEJhbGJpIHdyb3RlOg0KPj4N
-Cj4+IEhpDQo+Pg0KPj4gUGF3ZWwgTGFzemN6YWsgPHBhd2VsbEBjYWRlbmNlLmNvbT4gd3JpdGVz
-Og0KPj4+Pj4gKwljZG5zLT5waHkgPSBkZXZtX3BoeV9nZXQoZGV2LCAiY2RuczMsdXNicGh5Iik7
-DQo+Pj4+PiArCWlmIChJU19FUlIoY2Rucy0+cGh5KSkgew0KPj4+Pj4gKwkJcmV0ID0gUFRSX0VS
-UihjZG5zLT5waHkpOw0KPj4+Pj4gKwkJaWYgKHJldCA9PSAtRU5PU1lTIHx8IHJldCA9PSAtRU5P
-REVWKSB7DQo+Pj4+DQo+Pj4+IEFyZSB5b3Ugc3VyZSB5b3UgY2FuIGdldCBFTk9TWVMgaGVyZT8g
-SGF2ZSB5b3UgY2hlY2tlZCBvdXRwdXQgb2YNCj4+Pj4gY2hlY2twYXRjaCAtLXN0cmljdD8NCj4+
-Pj4gLTo4NTI6IFdBUk5JTkc6IEVOT1NZUyBtZWFucyAnaW52YWxpZCBzeXNjYWxsIG5yJyBhbmQg
-bm90aGluZyBlbHNlDQo+Pj4NCj4+PiBZZXMgdGhpcyBlcnJvciBjb2RlIGNhbiBiZSByZXR1cm5l
-ZCBieSByZWxhdGVkIHRvIHBoeSBmdW5jdGlvbiBpZg0KPj4+IENPTkZJR19HRU5FUklDX1BIWSBp
-cyBkaXNhYmxlZC4NCj4+Pg0KPj4+IEkgaGF2ZSBzZWVuIHRoaXMgd2FybmluZyBpbiBvdXRwdXQg
-b2YgY2hlY2twYXRjaCAtLXN0cmljdCAuDQo+Pg0KPj4gS2lzaG9uLCBzZWVtcyBsaWtlIHlvdSBz
-aG91bGRuJ3QgYmUgdXNpbmcgdGhhdCBlcnJvciB2YWx1ZS4NCj4NCj5obW0sIHllYWggc2hvdWxk
-IGNoYW5nZSB0aGUgcmV0dXJuIHZhbHVlIHRvIC1FTk9ERVYgd2hlbiBHRU5FUklDX1BIWSBpcyBk
-aXNhYmxlZC4NCj4NCg0KU28gSSB3aWxsIHJlbW92ZSB0aGlzIEVOT1NZUyBmcm9tIG5leHQgcGF0
-Y2guIEkgYXNzdW1lIHRoYXQgaXQgd2lsbCBiZSByZW1vdmVkIGFsc28gZnJvbSBnZW5lcmljIHBo
-eSBkcml2ZXIuIA0KDQpUaGFua3MsDQpQYXdlbA0K
+From: Stefan M Schaeckeler <schaecsn@gmx.net>
+
+Add support for the Aspeed AST2500 SoC EDAC driver.
+
+Note, I only have access to AST2500 hardware and documentation. The AST2500
+documentation explicitly states that the sdram controller is not backward
+compatible with AST2400 and hence this driver is not supporting it.
+
+Best, Stefan
+
+
+Stefan M Schaeckeler (2):
+  EDAC: Add Aspeed AST2500 EDAC driver
+  dt-bindings: edac: Aspeed AST2500
+
+ .../bindings/edac/aspeed-sdram-edac.txt       |  34 ++
+ MAINTAINERS                                   |   6 +
+ arch/arm/boot/dts/aspeed-g5.dtsi              |   7 +
+ drivers/edac/Kconfig                          |   7 +
+ drivers/edac/Makefile                         |   1 +
+ drivers/edac/aspeed_edac.c                    | 457 ++++++++++++++++++
+ 6 files changed, 512 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/aspeed-sdram-edac.txt
+ create mode 100644 drivers/edac/aspeed_edac.c
+
+-- 
+2.19.1
