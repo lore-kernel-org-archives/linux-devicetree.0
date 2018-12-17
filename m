@@ -1,57 +1,49 @@
-Return-Path: <SRS0=5Lel=OY=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:44934 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729671AbeLOKgH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Dec 2018 05:36:07 -0500
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH v3 0/7] Add non PAS wcss Q6 support for QCS404
-Date: Sat, 15 Dec 2018 16:05:50 +0530
-Message-Id: <20181215103557.2748-1-govinds@codeaurora.org>
+Return-Path: <SRS0=pUvx=O2=cogentembedded.com=sergei.shtylyov@kernel.org>
+Subject: Re: [PATCH 06/17] arm64: dts: renesas: r8a774c0: Add MSIOF nodes
+References: <1544780260-27590-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1544780260-27590-7-git-send-email-fabrizio.castro@bp.renesas.com>
+ <f6834dd2-7a2d-5ca9-0961-2c992ce22002@cogentembedded.com>
+ <TY1PR01MB17700E941C41403A2EEF3DE6C0BC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <ae733707-ebab-b85f-c1ab-71bc87339a9f@cogentembedded.com>
+Date: Mon, 17 Dec 2018 19:46:03 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sboyd@kernel.org
-Cc: linux-clk@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
+In-Reply-To: <TY1PR01MB17700E941C41403A2EEF3DE6C0BC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add non PAS(Peripheral Authentication System) WCSS remoteproc
-driver support and wcss clock/reset controls for QCS404 SOC.
-Add WCSS q6 bootup and shutdown sequence handled from
-Application Processor SubSystem(APSS).
+On 12/17/2018 07:36 PM, Fabrizio Castro wrote:
 
-Changes since v2:
- Removed unused properties.
- Refactored code to have common logic b/w ipq8074 and QCS404, wherever possible.
- Added compatible example.
- Removed wcss-protected bool.
+[...]
+>>> Add the device nodes for all MSIOF SPI controllers on RZ/G2E SoC.
+>>>
+>>> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+>>> ---
+>>>  arch/arm64/boot/dts/renesas/r8a774c0.dtsi | 62 +++++++++++++++++++++++++++++++
+>>>  1 file changed, 62 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
+>>> index 9532d29..9bd66b1 100644
+>>> --- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
+>>> +++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
+>>> @@ -855,6 +855,68 @@
+>>>  status = "disabled";
+>>>  };
+>>>
+>>> +msiof0: spi@e6e90000 {
+>>> +compatible = "renesas,msiof-r8a774c0",
+>>> +     "renesas,rcar-gen3-msiof";
+>>> +reg = <0 0xe6e90000 0 0x0064>;
+>>
+>>    Do we really need the leading zeros in the size cells?
+> 
+> We don't, I just kept it consistent with the same definitions for the other platforms.
+> Do you want me to send a v2 for this?
 
-Changes since v1:
-  Corrected clock names as per comments in v1 patch.
+   Ah, consistency is good. Keep it then. :-)
 
-
-Govind Singh (7):
-  dt-bindings: clock: qcom: Introduce QCOM WCSS Q6DSP clock bindings
-  clk: qcom: Add WCSS Q6DSP clock controller for QCS404
-  dt-bindings: clock: qcom: Add QCOM WCSS GCC clock bindings
-  clk: qcom: Add WCSS gcc clock control for QCS404
-  remoteproc: qcom: wcss: populate hardcoded param using driver data
-  remoteproc: qcom: wcss: Add non pas wcss Q6 support for QCS404
-  remoteproc: qcom: wcss: explicitly request exclusive reset control
-
- .../devicetree/bindings/clock/qcom,wcsscc.txt |  26 +
- .../bindings/remoteproc/qcom,q6v5.txt         |  61 ++
- drivers/clk/qcom/Kconfig                      |   9 +
- drivers/clk/qcom/Makefile                     |   1 +
- drivers/clk/qcom/gcc-qcs404.c                 |  51 +-
- drivers/clk/qcom/wcsscc-qcs404.c              | 297 +++++++++
- drivers/remoteproc/qcom_q6v5_wcss.c           | 574 +++++++++++++++++-
- include/dt-bindings/clock/qcom,gcc-qcs404.h   |   3 +
- include/dt-bindings/clock/qcom,wcss-qcs404.h  |  24 +
- 9 files changed, 1016 insertions(+), 30 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,wcsscc.txt
- create mode 100644 drivers/clk/qcom/wcsscc-qcs404.c
- create mode 100644 include/dt-bindings/clock/qcom,wcss-qcs404.h
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+MBR, Sergei
