@@ -1,68 +1,32 @@
-Return-Path: <SRS0=W32e=OW=gmail.com=dwesterg@kernel.org>
-From: dwesterg@gmail.com
-Subject: [PATCH v2 net-next 04/10] net: eth: altera: add optional function to start tx dma
-Date: Thu, 13 Dec 2018 09:52:46 -0800
-Message-Id: <20181213175252.21143-5-dalon.westergreen@linux.intel.com>
-In-Reply-To: <20181213175252.21143-1-dalon.westergreen@linux.intel.com>
-References: <20181213175252.21143-1-dalon.westergreen@linux.intel.com>
+Return-Path: <SRS0=Jkdf=O2=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: netdev@vger.kernel.org, dinguyen@kernel.org, thor.thayer@linux.intel.com, richardcochran@gmail.com, davem@davemloft.net, vbridger@opensource.altera.com, robh+dt@kernel.org, mark.rutland@arm.commark.rutland@arm.com, devicetree@vger.kernel.org, hean.loong.ong@intel.com
-Cc: Dalon Westergreen <dalon.westergreen@intel.com>
+References: <1544780260-27590-1-git-send-email-fabrizio.castro@bp.renesas.com> <1544780260-27590-12-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1544780260-27590-12-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 17 Dec 2018 17:17:26 +0100
+Message-ID: <CAMuHMdVDgp6en5EKC76YFtiono9EyHdF_CKY+C_mZ6SabG7awA@mail.gmail.com>
+Subject: Re: [PATCH 11/17] arm64: dts: renesas: r8a774c0: Add USB-DMAC and
+ HSUSB device nodes
+Content-Type: text/plain; charset="UTF-8"
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Dalon Westergreen <dalon.westergreen@intel.com>
+On Fri, Dec 14, 2018 at 10:38 AM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> Add usb dmac and hsusb device nodes on RZ/G2E SoC dtsi.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Allow for optional start up of tx dma if the start_txdma
-function is defined in altera_dmaops.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
----
- drivers/net/ethernet/altera/altera_tse.h      | 1 +
- drivers/net/ethernet/altera/altera_tse_main.c | 5 +++++
- 2 files changed, 6 insertions(+)
+Gr{oetje,eeting}s,
 
-diff --git a/drivers/net/ethernet/altera/altera_tse.h b/drivers/net/ethernet/altera/altera_tse.h
-index d5b97e02e6d6..7f246040135d 100644
---- a/drivers/net/ethernet/altera/altera_tse.h
-+++ b/drivers/net/ethernet/altera/altera_tse.h
-@@ -412,6 +412,7 @@ struct altera_dmaops {
- 	int (*init_dma)(struct altera_tse_private *priv);
- 	void (*uninit_dma)(struct altera_tse_private *priv);
- 	void (*start_rxdma)(struct altera_tse_private *priv);
-+	void (*start_txdma)(struct altera_tse_private *priv);
- };
- 
- /* This structure is private to each device.
-diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
-index 0c0e8f9bba9b..f6b6a14b1ce9 100644
---- a/drivers/net/ethernet/altera/altera_tse_main.c
-+++ b/drivers/net/ethernet/altera/altera_tse_main.c
-@@ -1256,6 +1256,9 @@ static int tse_open(struct net_device *dev)
- 
- 	priv->dmaops->start_rxdma(priv);
- 
-+	if (priv->dmaops->start_txdma)
-+		priv->dmaops->start_txdma(priv);
-+
- 	/* Start MAC Rx/Tx */
- 	spin_lock(&priv->mac_cfg_lock);
- 	tse_set_mac(priv, true);
-@@ -1658,6 +1661,7 @@ static const struct altera_dmaops altera_dtype_sgdma = {
- 	.init_dma = sgdma_initialize,
- 	.uninit_dma = sgdma_uninitialize,
- 	.start_rxdma = sgdma_start_rxdma,
-+	.start_txdma = NULL,
- };
- 
- static const struct altera_dmaops altera_dtype_msgdma = {
-@@ -1677,6 +1681,7 @@ static const struct altera_dmaops altera_dtype_msgdma = {
- 	.init_dma = msgdma_initialize,
- 	.uninit_dma = msgdma_uninitialize,
- 	.start_rxdma = msgdma_start_rxdma,
-+	.start_txdma = NULL,
- };
- 
- static const struct of_device_id altera_tse_ids[] = {
+                        Geert
+
 -- 
-2.19.2
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
