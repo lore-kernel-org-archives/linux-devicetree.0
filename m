@@ -1,28 +1,29 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V5 1/2] dt-bindings: iio: accel: mma8452: add power
- supplies  property
-Date: Mon, 17 Dec 2018 15:42:15 -0600
-Message-ID: <20181217214215.GA16536@bogus>
-References: <1545023805-31250-1-git-send-email-Anson.Huang@nxp.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] dt-bindings: net: ath10k: fix node name and
+ device type in qcom ath10k example
+Date: Mon, 17 Dec 2018 15:44:57 -0600
+Message-ID: <20181217214457.GA21038@bogus>
+References: <1544544804-4039-1-git-send-email-bperumal@codeaurora.org>
+ <1544544804-4039-2-git-send-email-bperumal@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1545023805-31250-1-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "martink@posteo.de" <martink@posteo.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, Leonard Crestez <leonard.crestez@nxp.com>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "preid@electromag.com.au" <preid@electromag.com.au>
+In-Reply-To: <1544544804-4039-2-git-send-email-bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Dec 2018 05:22:49 +0000, Anson Huang wrote:
-> The accelerometer's power supplies could be controllable on some
-> platforms, add property "vdd/vddio" power supply to let device tree
-> to pass phandles to the regulators to driver.
+On Tue, 11 Dec 2018 21:43:22 +0530, Bhagavathi Perumal S wrote:
+> In qcom,ath10k documentation, ath10k is used as node name in the example of
+> pci based device. Normally, node name should be class of device and not the
+> model name, so fix it to node name "wifi". And remove the property device_type
+> pci since only pci bridges should have this property.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/iio/accel/mma8452.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+>  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
