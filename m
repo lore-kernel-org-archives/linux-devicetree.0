@@ -1,50 +1,51 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 10/13] arm64: dts: qcom: qcs404: Add HFPLL node
-Date: Mon, 17 Dec 2018 11:39:11 -0800
-Message-ID: <154507555157.19322.2712807405425817338@swboyd.mtv.corp.google.com>
-References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org> <1545039990-19984-11-git-send-email-jorge.ramirez-ortiz@linaro.org>
+From: Vijay Khemka <vijaykhemka@fb.com>
+Subject: Re: [Potential Spoof] Re: [PATCH 1/4] ARM: dts: aspeed: Add sensors
+ devices for Facebook
+Date: Mon, 17 Dec 2018 19:39:38 +0000
+Message-ID: <E3F1FFD7-1C5A-43DE-BCA6-5B50EEEF577F@fb.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545039990-19984-11-git-send-email-jorge.ramirez-ortiz@linaro.org>
+Content-Language: en-US
+Content-ID: <D97B750DD6988141A49B7AB571ABA425@namprd15.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, jassisinghbrar@gmail.com, jorge.ramirez-ortiz@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, will.deacon@arm.com
-Cc: bjorn.andersson@linaro.org, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, "james.feist@linux.intel.com" <james.feist@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jorge Ramirez-Ortiz (2018-12-17 01:46:27)
-> The high frequency pll functionality is required to enable CPU
-> frequency scaling operation.
->=20
-> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/qcs404.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/q=
-com/qcs404.dtsi
-> index 4594fea7..ec3f6c7 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> @@ -375,6 +375,15 @@
->                         #mbox-cells =3D <1>;
->                 };
-> =20
-> +               apcs_hfpll: clock-controller@0b016000 {
-
-Drop leading 0 on unit address please.
-
-> +                       compatible =3D "qcom,hfpll";
-> +                       reg =3D <0x0b016000 0x30>;
-
-Wow that is small!
-
-> +                       #clock-cells =3D <0>;
-> +                       clock-output-names =3D "apcs_hfpll";
-> +                       clocks =3D <&xo_board>;
-> +                       clock-names =3D "xo";
-> +               };
-> +
+DQoNCu+7v09uIDEyLzE0LzE4LCAxMjo0MiBQTSwgIkxpbnV4LWFzcGVlZCBvbiBiZWhhbGYgb2Yg
+VmlqYXkgS2hlbWthIiA8bGludXgtYXNwZWVkLWJvdW5jZXMrdmlqYXlraGVta2E9ZmIuY29tQGxp
+c3RzLm96bGFicy5vcmcgb24gYmVoYWxmIG9mIHZpamF5a2hlbWthQGZiLmNvbT4gd3JvdGU6DQoN
+CiAgICANCiAgICANCiAgICBPbiAxMi8xNC8xOCwgMTE6MjIgQU0sICJvcGVuYm1jIG9uIGJlaGFs
+ZiBvZiBKYWUgSHl1biBZb28iIDxvcGVuYm1jLWJvdW5jZXMrdmlqYXlraGVta2E9ZmIuY29tQGxp
+c3RzLm96bGFicy5vcmcgb24gYmVoYWxmIG9mIGphZS5oeXVuLnlvb0BsaW51eC5pbnRlbC5jb20+
+IHdyb3RlOg0KICAgIA0KICAgICAgICBIaSBWaWpheSwNCiAgICAgICAgDQogICAgICAgIE9uIDEy
+LzE0LzIwMTggMTA6MTEgQU0sIFZpamF5IEtoZW1rYSB3cm90ZToNCiAgICAgICAgPiBPbiAxMi8x
+My8xOCwgMjo1NiBQTSwgIkpvZWwgU3RhbmxleSIgPGpvZWxAam1zLmlkLmF1PiB3cm90ZToNCiAg
+ICAgICAgDQogICAgICAgIDxzbmlwPg0KICAgICAgICANCiAgICAgICAgPiAgICAgID4gKyAgICAg
+ICAgICAgICAgIG9lbW5hbWUwID0gIk1CX1AzVjMiOw0KICAgICAgICA+ICAgICAgPiArICAgICAg
+ICAgICAgICAgb2VtbmFtZTEgPSAiTUJfUDVWIjsNCiAgICAgICAgPiAgICAgID4gKyAgICAgICAg
+ICAgICAgIG9lbW5hbWUyID0gIk1CX1AxMlYiOw0KICAgICAgICA+ICAgICAgPiArICAgICAgICAg
+ICAgICAgb2VtbmFtZTMgPSAiTUJfUDFWMDUiOw0KICAgICAgICA+ICAgICAgPiArICAgICAgICAg
+ICAgICAgb2VtbmFtZTQgPSAiTUJfUFZOTl9QQ0hfU1RCWSI7DQogICAgICAgID4gICAgICA+ICsg
+ICAgICAgICAgICAgICBvZW1uYW1lNSA9ICJNQl9QM1YzX1NUQlkiOw0KICAgICAgICA+ICAgICAg
+PiArICAgICAgICAgICAgICAgb2VtbmFtZTYgPSAiTUJfUDVWX1NUQlkiOw0KICAgICAgICA+ICAg
+ICAgDQogICAgICAgID4gICAgICAib2VtbmFtZSIgaXNuJ3QgcGFydCBvZiB0aGUgdXBzdHJlYW0g
+YmluZGluZ3MuIElzIHRoaXMgc29tZXRoaW5nIHlvdQ0KICAgICAgICA+ICAgICAgaGF2ZSBwYXRj
+aGVzIGZvcj8NCiAgICAgICAgPiBUaGlzIGlzIGEgd29ya2Fyb3VuZCBmaWVsZCB1c2VkIGJ5IGRi
+dXMtc2Vuc29ycyBhcHBsaWNhdGlvbiB0byBhdm9pZCBvdmVybGF5IGZvciBkeW5hbWljIGRldGVj
+dGlvbiBvZiBkZXZpY2VzIGJhc2VkIG9uIGpzb24gZmlsZSBkZWZpbml0aW9uLg0KICAgICAgICA+
+IA0KICAgICAgICA+IENhbiB5b3UgcGxlYXNlIGFsc28gcmV2aWV3IG90aGVyIDMgcGF0Y2hlcyBp
+biB0aGlzIHNlcmllcy4NCiAgICAgICAgPiAgICAgIA0KICAgICAgICA+IA0KICAgICAgICANCiAg
+ICAgICAgVGhlc2Ugb2VtbmFtZSBzZXR0aW5ncyBzaG91bGQgbm90IGJlIGFkZGVkIGludG8gaGVy
+ZS4gWW91IGNhbiBhZGQgdGhlc2UNCiAgICAgICAgaW5mb3JtYXRpb24gaW50byBjb25maWd1cmF0
+aW9uIG9mIGVudGl0eSBtYW5hZ2VyIHdoaWNoIHVzZXMgb3ZlcmxheQ0KICAgICAgICB0ZW1wbGF0
+ZXMgZm9yIGRidXMtc2Vuc29ycy4gQWxzbywgYXMgSm9lbCBzYWlkLCAib2VtbmFtZSIgaXNuJ3Qg
+cGFydCBvZg0KICAgICAgICB0aGUgdXBzdHJlYW0gYmluZGluZ3MuDQogICAgDQogICAgT3Zlcmxh
+eSB0ZW1wbGF0ZXMgZnJvbSBlbnRpdHkgbWFuYWdlciBpcyBub3Qgd29ya2luZyBmb3IgZmFuIGFu
+ZCBhZGMgc2Vuc29ycyB0aGF0J3Mgd2h5IGl0IGlzIGEgd29ya2Fyb3VuZCBzdWdnZXN0ZWQgYnkg
+SmFtZXMgRmVpc3QgKEF1dGhvciBvZiBkYnVzLXNlbnNvcnMpLg0KDQpAamFtZXMuZmVpc3RAbGlu
+dXguaW50ZWwuY29tLA0KUGxlYXNlIGNvbW1lbnQgb24gYWJvdmUgcGF0Y2gsIHBsZWFzZSBhZHZp
+c2UgaWYgSSBuZWVkIHRvIGZpeCB0aGlzLg0KICAgICAgICANCiAgICAgICAgQ2hlZXJzLA0KICAg
+ICAgICBKYWUNCiAgICAgICAgDQogICAgDQogICAgDQoNCg==
