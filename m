@@ -1,33 +1,28 @@
-Return-Path: <SRS0=Jkdf=O2=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <1544780260-27590-1-git-send-email-fabrizio.castro@bp.renesas.com> <1544780260-27590-11-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1544780260-27590-11-git-send-email-fabrizio.castro@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 17 Dec 2018 17:15:29 +0100
-Message-ID: <CAMuHMdWvbKGqYhsJ0nDeeVE6PXQO2iAHcLkkDfcw+B_zEiK=Wg@mail.gmail.com>
+Return-Path: <SRS0=NQmY=O2=verge.net.au=horms@kernel.org>
+Date: Mon, 17 Dec 2018 11:48:02 +0100
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH 10/17] arm64: dts: renesas: r8a774c0: Add USB2.0 phy and
  host device nodes
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <20181217104802.csbtrwz2wkyqqw3d@verge.net.au>
+References: <1544780260-27590-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1544780260-27590-11-git-send-email-fabrizio.castro@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1544780260-27590-11-git-send-email-fabrizio.castro@bp.renesas.com>
 To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Dec 14, 2018 at 10:38 AM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
+On Fri, Dec 14, 2018 at 09:37:33AM +0000, Fabrizio Castro wrote:
 > Add USB2.0 phy and host (EHCI/OHCI) device tree nodes to the RZ/G2E
 > SoC dtsi.
->
+> 
 > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Thanks,
 
-Gr{oetje,eeting}s,
+This looks fine to me but I will wait to see if there are other reviews
+before applying.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
