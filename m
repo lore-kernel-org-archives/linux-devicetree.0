@@ -1,81 +1,50 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH 1/2] net: dsa: ksz9477: add I2C managed mode support
-Date: Mon, 17 Dec 2018 22:11:14 +0300
-Message-ID: <20181217191114.GF19692@kadam>
-References: <20181216075741.13827-1-sergio.paracuellos@gmail.com>
- <20181217065455.GB15451@kadam>
- <CAMhs-H-MjMnS+S9v9-O2=Cz+e-6xp3ZYmDvy-VVif+fKNRaSnw@mail.gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 10/13] arm64: dts: qcom: qcs404: Add HFPLL node
+Date: Mon, 17 Dec 2018 11:39:11 -0800
+Message-ID: <154507555157.19322.2712807405425817338@swboyd.mtv.corp.google.com>
+References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org> <1545039990-19984-11-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <CAMhs-H-MjMnS+S9v9-O2=Cz+e-6xp3ZYmDvy-VVif+fKNRaSnw@mail.gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc: Woojung.Huh@microchip.com, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, vivien.didelot@savoirfairelinux.com, netdev@vger.kernel.org, driverdev-devel@linuxdriverproject.org, UNGLinuxDriver@microchip.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, davem@davemloft.net
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1545039990-19984-11-git-send-email-jorge.ramirez-ortiz@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org, jassisinghbrar@gmail.com, jorge.ramirez-ortiz@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, will.deacon@arm.com
+Cc: bjorn.andersson@linaro.org, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 17, 2018 at 07:22:51PM +0100, Sergio Paracuellos wrote:
-> > > +static int ksz_i2c_write(struct ksz_device *dev, u32 reg, u8 *val,
-> > > +                      unsigned int len)
-> > > +{
-> > > +     struct i2c_client *client = dev->priv;
-> > > +     unsigned int cnt = len;
-> > > +     int i = 0;
-> > > +     u8 txb[4];
-> > > +
-> > > +     do {
-> > > +             txb[i++] = (u8)(*val >> (8 * (cnt - 1)));
-> >                                               ^^^^^^^
-> >
-> > Can "cnt" be zero from ksz_i2c_set()?  If so this loop will corrupt
-> > memory.
-> 
-> This get and set interface seems to be introduced recently but it is
-> not being used yet, so
-> in this moment the answer is not. For me, there is no sense in call
-> 'set' with no len. Should
-> I add a check for zero len and return EINVAL just in case?
-> 
+Quoting Jorge Ramirez-Ortiz (2018-12-17 01:46:27)
+> The high frequency pll functionality is required to enable CPU
+> frequency scaling operation.
+>=20
+> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs404.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/q=
+com/qcs404.dtsi
+> index 4594fea7..ec3f6c7 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> @@ -375,6 +375,15 @@
+>                         #mbox-cells =3D <1>;
+>                 };
+> =20
+> +               apcs_hfpll: clock-controller@0b016000 {
 
-Yes, please.
+Drop leading 0 on unit address please.
 
-> > > +static int ksz_i2c_probe(struct i2c_client *client,
-> > > +                      const struct i2c_device_id *id)
-> > > +{
-> > > +     struct ksz_device *dev;
-> > > +     int ret;
-> > > +
-> > > +     dev = ksz_switch_alloc(&client->dev, &ksz_i2c_ops, client);
-> > > +     if (!dev)
-> > > +             return -ENOMEM;
-> > > +
-> > > +     if (client->dev.platform_data)
-> > > +             dev->pdata = client->dev.platform_data;
-> > > +
-> > > +     i2c_set_clientdata(client, dev);
-> > > +
-> > > +     ret = ksz9477_switch_register(dev);
-> > > +     if (ret) {
-> > > +             dev_err(&client->dev, "registering switch (ret: %d)\n", ret);
-> >
-> >
-> > free dev on this error path?
-> 
-> Internally all of this are using devm_* funcions, so I think is there
-> is no need to free anything. Also, the
-> spi managed driver for this does nothing also about this.
+> +                       compatible =3D "qcom,hfpll";
+> +                       reg =3D <0x0b016000 0x30>;
 
-You're right.  My bad.  I should have looked at this.
+Wow that is small!
 
-regards,
-dan carpenter
+> +                       #clock-cells =3D <0>;
+> +                       clock-output-names =3D "apcs_hfpll";
+> +                       clocks =3D <&xo_board>;
+> +                       clock-names =3D "xo";
+> +               };
+> +
