@@ -1,36 +1,32 @@
-Return-Path: <SRS0=Q85b=OR=synopsys.com=thinh.nguyen@kernel.org>
-Date: Fri, 7 Dec 2018 18:27:23 -0800
-Message-ID: <cover.1544235317.git.thinhn@synopsys.com>
-From: Thinh Nguyen <thinh.nguyen@synopsys.com>
-Subject: [PATCH v2 0/4] usb: dwc3: Introduce refclk lpm
+Return-Path: <SRS0=Jkdf=O2=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: John Youn <john.youn@synopsys.com>
+References: <1544780260-27590-1-git-send-email-fabrizio.castro@bp.renesas.com> <1544780260-27590-9-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1544780260-27590-9-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 17 Dec 2018 17:14:29 +0100
+Message-ID: <CAMuHMdWvjaewmkVq0kBJXGjg68xL5y-nm-+T==+n905YyrxZMA@mail.gmail.com>
+Subject: Re: [PATCH 08/17] arm64: dts: renesas: r8a774c0: Add PWM support
+Content-Type: text/plain; charset="UTF-8"
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch series introduce a new feature in DWC_usb31 with more
-aggressive low power management using reference clock.
+On Fri, Dec 14, 2018 at 10:38 AM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> Add PWM support to the RZ/G2E (a.k.a. R8A774C0) SoC specific
+> device tree.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Changes in v2:
-- Revise commit messages to correctly describe the feature
-- Split previous patch "usb: dwc3: Add reference clock properties" to 2
-  separate patches
-- Remove reference clock period validation in since DWC_usb3
-  can support more periods than DWC_usb31
-- Rename property snps,enable-refclk-lpm to snps,enable-refclk-sof
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+Gr{oetje,eeting}s,
 
-Thinh Nguyen (4):
-  usb: dwc3: Add property snps,refclk-period-ns
-  usb: dwc3: Set the reference clock period
-  usb: dwc3: Add property snps,enable-refclk-sof
-  usb: dwc3: Enable frame number tracking based on reference clock
-
- Documentation/devicetree/bindings/usb/dwc3.txt |  5 +++
- drivers/usb/dwc3/core.c                        | 60 ++++++++++++++++++++++++++
- drivers/usb/dwc3/core.h                        | 16 +++++++
- 3 files changed, 81 insertions(+)
+                        Geert
 
 -- 
-2.11.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
