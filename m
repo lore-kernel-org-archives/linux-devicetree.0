@@ -1,25 +1,27 @@
-Return-Path: <robherring2@gmail.com>
-Date: Tue, 11 Dec 2018 15:35:49 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] dt-bindings: clk: armada3700: fix typo in SoC name
-Message-ID: <20181211213549.GA14039@bogus>
-References: <20181123094444.27956-1-miquel.raynal@bootlin.com>
- <20181123094444.27956-4-miquel.raynal@bootlin.com>
+Return-Path: <SRS0=NQmY=O2=verge.net.au=horms@kernel.org>
+Date: Mon, 17 Dec 2018 12:12:21 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 16/17] arm64: dts: renesas: r8a774c0: Add PCIe device node
+Message-ID: <20181217111220.pojeu4rvtjbtemgz@verge.net.au>
+References: <1544780260-27590-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1544780260-27590-17-git-send-email-fabrizio.castro@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20181123094444.27956-4-miquel.raynal@bootlin.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
+In-Reply-To: <1544780260-27590-17-git-send-email-fabrizio.castro@bp.renesas.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, 23 Nov 2018 10:44:42 +0100, Miquel Raynal wrote:
-> This documentation is about Armada 3700 SoCs.
+On Fri, Dec 14, 2018 at 09:37:39AM +0000, Fabrizio Castro wrote:
+> This patch adds PCI express channel 0 device tree node to the
+> RZ/G2E (a.k.a. R8A774C0) SoC dtsi.
 > 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  .../devicetree/bindings/clock/armada3700-periph-clock.txt     | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thanks,
+
+This looks fine to me but I will wait to see if there are other reviews
+before applying.
+
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
