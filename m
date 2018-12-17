@@ -1,43 +1,35 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v5 2/2] phy: qualcomm: Add Synopsys High-Speed USB PHY
- driver
-Date: Mon, 17 Dec 2018 08:34:40 +0800
-Message-ID: <20181217003434.GA7208@dragon>
-References: <20181127100722.9993-1-shawn.guo@linaro.org>
- <20181127100722.9993-3-shawn.guo@linaro.org>
- <b0d02b1c-cc44-69fe-0765-84caf76eaea1@ti.com>
- <20181204060104.GA11391@dragon>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 3/3] drm/panel: simple: Add support for VXT
+ VL050-8048NT-C01 panel
+Date: Sun, 16 Dec 2018 22:39:46 -0200
+Message-ID: <CAOMZO5DijiTF-=vMYY-VQez00W9ZEndWuguEbrLSRKQ66vNjAA@mail.gmail.com>
+References: <1543942655-5942-1-git-send-email-festevam@gmail.com>
+ <1543942655-5942-3-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181204060104.GA11391@dragon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1543942655-5942-3-git-send-email-festevam@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Otavio Salvador <otavio@ossystems.com.br>, DRI mailing list <dri-devel@lists.freedesktop.org>, John Weber <john.weber@technexion.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 04, 2018 at 02:01:07PM +0800, Shawn Guo wrote:
-> Hi Kishon,
-> 
-> On Tue, Dec 04, 2018 at 10:38:19AM +0530, Kishon Vijay Abraham I wrote:
-> > Hi,
-> > 
-> > On 27/11/18 3:37 PM, Shawn Guo wrote:
-> > > It adds Synopsys 28nm Femto High-Speed USB PHY driver support, which
-> > > is usually paired with Synopsys DWC3 USB controllers on Qualcomm SoCs.
-> > 
-> > Is this Synopsys PHY specific to Qualcomm or could it be used by other vendors
-> > (with just changing tuning parameters)? If it could be used by other vendors
-> > then it would make sense to add this PHY driver in synopsys directory.
-> 
-> My knowledge is that this Synopsys PHY is specific to Qualcomm SoCs.
-> @Sriharsha, correct me if I'm wrong.
-
-Kishon,
-
-Do you have any further comments on the patches?  We are close the 4.21
-merge window, and I really hope they can hit mainline with 4.21 release.
-Thanks.
-
-Shawn
+SGkgVGhpZXJyeSwKCk9uIFR1ZSwgRGVjIDQsIDIwMTggYXQgMjo1NyBQTSBGYWJpbyBFc3RldmFt
+IDxmZXN0ZXZhbUBnbWFpbC5jb20+IHdyb3RlOgo+Cj4gQWRkIHN1cHBvcnQgZm9yIHRoZSBWWFQg
+VkwwNTAtODA0OE5ULUMwMSA4MDB4NDgwIHBhbmVsIHRvIHRoZQo+IHBhbmVsLXNpbXBsZSBkcml2
+ZXIuCj4KPiBUaGlzIHBhbmVsIGlzIHVzZWQgb24gc29tZSBib2FyZHMgbWFudWZhY3R1cmVkIGJ5
+IFRlY2hOZXhpb24sIHN1Y2ggYXMKPiBpbXg3ZC1waWNvLgo+Cj4gU2lnbmVkLW9mZi1ieTogRmFi
+aW8gRXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPgoKRG8geW91IHRoaW5rIGl0IGlzIHBvc3Np
+YmxlIHRvIGdldCB0aGlzIHNlcmllcyBhcHBsaWVkIGZvciA0LjIxPwoKVGhhbmtzCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
