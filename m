@@ -1,54 +1,44 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] dt-bindings: watchdog: update bindings for MT7629 SoC
-Date: Sun, 16 Dec 2018 19:53:23 -0800
-Message-ID: <9fb38853-6202-c124-d254-f8d20b4d469b@roeck-us.net>
-References: <55d108719233b3c30c747e75a010b9e64681af09.1541573395.git.ryder.lee@mediatek.com>
- <4152fe87-0e72-f9aa-6874-9f40dc15f278@gmail.com>
- <1545017947.7782.1.camel@mtkswgap22>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH v3 05/15] Bluetooth: hci_bcm: Handle deferred probing for the clock supply
+Date: Mon, 17 Dec 2018 12:04:39 +0800
+Message-ID: <20181217040449.31437-6-wens@csie.org>
+References: <20181217040449.31437-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545017947.7782.1.camel@mtkswgap22>
-Content-Language: en-US
+In-Reply-To: <20181217040449.31437-1-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-watchdog@vger.kernel.org, Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Loic Poulain <loic.poulain@gmail.com>, linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ondrej Jirman <megous@megous.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/16/18 7:39 PM, Ryder Lee wrote:
-> Hi Matthias,
-> 
-> On Sun, 2018-12-16 at 11:31 +0100, Matthias Brugger wrote:
->>
->> On 07/11/2018 08:10, Ryder Lee wrote:
->>> This updates dt-binding documentation for MT7629 SoC
->>>
->>> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
->>
->> Acked-by: Matthias Brugger <matthias.bgg@gmail.com>
->>
->>> ---
->>>   Documentation/devicetree/bindings/watchdog/mtk-wdt.txt | 1 +
->>>   1 file changed, 1 insertion(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
->>> index 859dee1..8682d6a 100644
->>> --- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
->>> +++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
->>> @@ -8,6 +8,7 @@ Required properties:
->>>   	"mediatek,mt6797-wdt", "mediatek,mt6589-wdt": for MT6797
->>>   	"mediatek,mt7622-wdt", "mediatek,mt6589-wdt": for MT7622
->>>   	"mediatek,mt7623-wdt", "mediatek,mt6589-wdt": for MT7623
->>> +	"mediatek,mt7629-wdt", "mediatek,mt6589-wdt": for MT7629
->>>   
->>>   - reg : Specifies base physical address and size of the registers.
->>>   
->>>
-> 
-> Could you take this through your tree?
-> 
+On some systems that actually have the bluetooth controller wired up
+with an extra clock signal, it's possible the bluetooth controller
+probes before the clock provider. clk_get would return a defer probe
+error, which was not handled by this driver.
 
-Why ? We usually take watchdog binding updates through the watchdog tree.
+Handle this properly, so that these systems can work reliably.
 
-Guenter
+Tested-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ drivers/bluetooth/hci_bcm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
+index ddbd8c6a0ceb..800132369134 100644
+--- a/drivers/bluetooth/hci_bcm.c
++++ b/drivers/bluetooth/hci_bcm.c
+@@ -907,6 +907,10 @@ static int bcm_get_resources(struct bcm_device *dev)
+ 
+ 	dev->clk = devm_clk_get(dev->dev, NULL);
+ 
++	/* Handle deferred probing */
++	if (dev->clk == ERR_PTR(-EPROBE_DEFER))
++		return PTR_ERR(dev->clk);
++
+ 	dev->device_wakeup = devm_gpiod_get_optional(dev->dev, "device-wakeup",
+ 						     GPIOD_OUT_LOW);
+ 	if (IS_ERR(dev->device_wakeup))
+-- 
+2.20.0
