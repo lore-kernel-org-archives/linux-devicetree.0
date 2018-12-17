@@ -1,32 +1,25 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 3/9] arm64: dts: renesas: r8a774c0: Add SCIF and HSCIF nodes
-Date: Mon, 17 Dec 2018 17:05:45 +0100
-Message-ID: <CAMuHMdXp3AD+t3yuF4RXKN2dX7wHc7de-B=k4T8KAmDdng1ZCQ@mail.gmail.com>
-References: <1544778613-24279-1-git-send-email-fabrizio.castro@bp.renesas.com> <1544778613-24279-4-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: Re: [PATCH 4/9] arm64: dts: renesas: r8a774c0: Add INTC-EX device node
+Date: Mon, 17 Dec 2018 17:06:06 +0100
+Message-ID: <CAMuHMdWZm1ArZij+QPgG5qLk3AfRgegO-rD=H8YLW9jTZ6qR0Q@mail.gmail.com>
+References: <1544778613-24279-1-git-send-email-fabrizio.castro@bp.renesas.com> <1544778613-24279-5-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544778613-24279-4-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1544778613-24279-5-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio,
-
 On Fri, Dec 14, 2018 at 10:10 AM Fabrizio Castro
 <fabrizio.castro@bp.renesas.com> wrote:
-> Add the device nodes for all RZ/G2E SCIF and HSCIF serial ports,
-> including clocks, power domains and DMAs.
-> According to the HW user manual, SCIF[015] and HSCIF[012] are
-> connected to both SYS-DMAC1 and SYS-DMAC2, while SCIF[34] and
-> HSCIF[34] are connected to SYS-DMAC0.
+> Add support for the Interrupt Controller for External Devices
+> (INTC-EX) on RZ/G2E.
 >
 > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Let's hope SCIF2 DMA will be documented soon, too ;-)
 
 Gr{oetje,eeting}s,
 
