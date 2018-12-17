@@ -1,84 +1,37 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 07/15] drm/rockchip: dw-mipi-dsi: add support for
- rk3368-variant
-Date: Mon, 17 Dec 2018 13:36:42 +0100
-Message-ID: <20181217123650.6773-8-heiko@sntech.de>
+Subject: [PATCH 01/15] clk: rockchip: add clock ids for dphy rx and tx channels on rk3368
+Date: Mon, 17 Dec 2018 13:36:36 +0100
+Message-ID: <20181217123650.6773-2-heiko@sntech.de>
 References: <20181217123650.6773-1-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181217123650.6773-1-heiko@sntech.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-rockchip@lists.infradead.org, hjc@rock-chips.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, Laurent.pinchart@ideasonboard.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, mark.rutland@arm.com, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, linux-clk@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHRoZSBjb21wYXRpYmxlIGFuZCBncmYgdmFsdWVzIGFuZCBhbGxvdyB0aGUgZHJpdmVyIHRv
-IGFsc28Kbm90IHNlbGVjdCBhIHNwZWNpZmljIGNydGMgaW5wdXQgb24gc3lzdGVtcyB3aXRoIG9u
-bHkgb25lIHZvcC4KClNpZ25lZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2gu
-ZGU+Ci0tLQogLi4uL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0IHwg
-IDEgKwogLi4uL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2ktcm9ja2NoaXAuYyAgIHwgMjUg
-KysrKysrKysrKysrKysrKystLQogMiBmaWxlcyBjaGFuZ2VkLCAyNCBpbnNlcnRpb25zKCspLCAy
-IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4dCBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3Jv
-Y2tjaGlwLnR4dAppbmRleCA2YmI1OWFiMzlmMmYuLjg2OWZiYzI1NmQ1MSAxMDA2NDQKLS0tIGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlw
-aV9kc2lfcm9ja2NoaXAudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4dApAQCAtNSw2ICs1LDcg
-QEAgUmVxdWlyZWQgcHJvcGVydGllczoKIC0gI2FkZHJlc3MtY2VsbHM6IFNob3VsZCBiZSA8MT4u
-CiAtICNzaXplLWNlbGxzOiBTaG91bGQgYmUgPDA+LgogLSBjb21wYXRpYmxlOiAicm9ja2NoaXAs
-cmszMjg4LW1pcGktZHNpIiwgInNucHMsZHctbWlwaS1kc2kiLgorCSAgICAgICJyb2NrY2hpcCxy
-azMzNjgtbWlwaS1kc2kiLCAic25wcyxkdy1taXBpLWRzaSIuCiAJICAgICAgInJvY2tjaGlwLHJr
-MzM5OS1taXBpLWRzaSIsICJzbnBzLGR3LW1pcGktZHNpIi4KIC0gcmVnOiBSZXByZXNlbnQgdGhl
-IHBoeXNpY2FsIGFkZHJlc3MgcmFuZ2Ugb2YgdGhlIGNvbnRyb2xsZXIuCiAtIGludGVycnVwdHM6
-IFJlcHJlc2VudCB0aGUgY29udHJvbGxlcidzIGludGVycnVwdCB0byB0aGUgQ1BVKHMpLgpkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLXJvY2tjaGlwLmMg
-Yi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2ktcm9ja2NoaXAuYwppbmRleCA3
-ZWUzNTliY2VlNjIuLjA0MTY0N2JmY2U3MSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3Jv
-Y2tjaGlwL2R3LW1pcGktZHNpLXJvY2tjaGlwLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tj
-aGlwL2R3LW1pcGktZHNpLXJvY2tjaGlwLmMKQEAgLTE0Miw2ICsxNDIsMTEgQEAKICNkZWZpbmUg
-UkszMjg4X0RTSTBfTENEQ19TRUwJCUJJVCg2KQogI2RlZmluZSBSSzMyODhfRFNJMV9MQ0RDX1NF
-TAkJQklUKDkpCiAKKyNkZWZpbmUgUkszMzY4X0dSRl9TT0NfQ09ONwkJMHg0MWMKKyNkZWZpbmUg
-UkszMzY4X0RTSV9UVVJORElTQUJMRQkJQklUKDUpCisjZGVmaW5lIFJLMzM2OF9EU0lfRk9SQ0VS
-WE1PREUJCUJJVCg2KQorI2RlZmluZSBSSzMzNjhfRFNJX0ZPUkNFVFhTVE9QTU9ERQkoMHhmIDw8
-IDcpCisKICNkZWZpbmUgUkszMzk5X0dSRl9TT0NfQ09OMjAJCTB4NjI1MAogI2RlZmluZSBSSzMz
-OTlfRFNJMF9MQ0RDX1NFTAkJQklUKDApCiAjZGVmaW5lIFJLMzM5OV9EU0kxX0xDRENfU0VMCQlC
-SVQoNCkKQEAgLTE5Miw3ICsxOTcsNyBAQCBlbnVtIHsKIHN0cnVjdCByb2NrY2hpcF9kd19kc2lf
-Y2hpcF9kYXRhIHsKIAl1MzIgcmVnOwogCi0JdTMyIGxjZHNlbF9ncmZfcmVnOworCWludCBsY2Rz
-ZWxfZ3JmX3JlZzsKIAl1MzIgbGNkc2VsX2JpZzsKIAl1MzIgbGNkc2VsX2xpdDsKIApAQCAtNTY2
-LDcgKzU3MSw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGh5X29wcyBkd19t
-aXBpX2RzaV9yb2NrY2hpcF9waHlfb3BzID0gewogc3RhdGljIHZvaWQgZHdfbWlwaV9kc2lfcm9j
-a2NoaXBfY29uZmlnKHN0cnVjdCBkd19taXBpX2RzaV9yb2NrY2hpcCAqZHNpLAogCQkJCQlpbnQg
-bXV4KQogewotCWlmIChkc2ktPmNkYXRhLT5sY2RzZWxfZ3JmX3JlZykKKwlpZiAoZHNpLT5jZGF0
-YS0+bGNkc2VsX2dyZl9yZWcgPj0gMCkKIAkJcmVnbWFwX3dyaXRlKGRzaS0+Z3JmX3JlZ21hcCwg
-ZHNpLT5jZGF0YS0+bGNkc2VsX2dyZl9yZWcsCiAJCQltdXggPyBkc2ktPmNkYXRhLT5sY2RzZWxf
-bGl0IDogZHNpLT5jZGF0YS0+bGNkc2VsX2JpZyk7CiAKQEAgLTEwMDgsNiArMTAxMywxOSBAQCBz
-dGF0aWMgY29uc3Qgc3RydWN0IHJvY2tjaGlwX2R3X2RzaV9jaGlwX2RhdGEgcmszMjg4X2NoaXBf
-ZGF0YVtdID0gewogCXsgLyogc2VudGluZWwgKi8gfQogfTsKIAorc3RhdGljIGNvbnN0IHN0cnVj
-dCByb2NrY2hpcF9kd19kc2lfY2hpcF9kYXRhIHJrMzM2OF9jaGlwX2RhdGFbXSA9IHsKKwl7CisJ
-CS5yZWcgPSAweGZmOTYwMDAwLAorCQkubGNkc2VsX2dyZl9yZWcgPSAtMSwKKwkJLmxhbmVjZmcx
-X2dyZl9yZWcgPSBSSzMzNjhfR1JGX1NPQ19DT043LAorCQkubGFuZWNmZzEgPSBISVdPUkRfVVBE
-QVRFKDAsIFJLMzM2OF9EU0lfVFVSTkRJU0FCTEUgfAorCQkJCQkgICAgIFJLMzM2OF9EU0lfRk9S
-Q0VSWE1PREUgfAorCQkJCQkgICAgIFJLMzM2OF9EU0lfRk9SQ0VUWFNUT1BNT0RFKSwKKwkJLm1h
-eF9kYXRhX2xhbmVzID0gNCwKKwl9LAorCXsgLyogc2VudGluZWwgKi8gfQorfTsKKwogc3RhdGlj
-IGNvbnN0IHN0cnVjdCByb2NrY2hpcF9kd19kc2lfY2hpcF9kYXRhIHJrMzM5OV9jaGlwX2RhdGFb
-XSA9IHsKIAl7CiAJCS5yZWcgPSAweGZmOTYwMDAwLApAQCAtMTA1OCw2ICsxMDc2LDkgQEAgc3Rh
-dGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgZHdfbWlwaV9kc2lfcm9ja2NoaXBfZHRfaWRz
-W10gPSB7CiAJewogCSAuY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazMyODgtbWlwaS1kc2kiLAog
-CSAuZGF0YSA9ICZyazMyODhfY2hpcF9kYXRhLAorCX0sIHsKKwkgLmNvbXBhdGlibGUgPSAicm9j
-a2NoaXAscmszMzY4LW1pcGktZHNpIiwKKwkgLmRhdGEgPSAmcmszMzY4X2NoaXBfZGF0YSwKIAl9
-LCB7CiAJIC5jb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzM5OS1taXBpLWRzaSIsCiAJIC5kYXRh
-ID0gJnJrMzM5OV9jaGlwX2RhdGEsCi0tIAoyLjE5LjIKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Add the clock ids so that they can be exported from the clock driver
+and referenced in the rk3368 devicetree.
+
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ include/dt-bindings/clock/rk3368-cru.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/dt-bindings/clock/rk3368-cru.h b/include/dt-bindings/clock/rk3368-cru.h
+index a0063ed7284a..a4ed1f094da8 100644
+--- a/include/dt-bindings/clock/rk3368-cru.h
++++ b/include/dt-bindings/clock/rk3368-cru.h
+@@ -157,6 +157,8 @@
+ #define PCLK_VIP		367
+ #define PCLK_WDT		368
+ #define PCLK_EFUSE256		369
++#define PCLK_DPHYRX		370
++#define PCLK_DPHYTX		371
+ 
+ /* hclk gates */
+ #define HCLK_SFC		448
+-- 
+2.19.2
