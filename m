@@ -1,100 +1,212 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v8 15/26] pwm: jz4740: Add support for the JZ4725B
-Date: Mon, 17 Dec 2018 08:53:21 +0100
-Message-ID: <20181217075321.k45vhgnszeqs3tea@pengutronix.de>
-References: <20181212220922.18759-1-paul@crapouillou.net>
- <20181212220922.18759-16-paul@crapouillou.net>
- <20181213092409.ml4wpnzow2nnszkd@pengutronix.de>
- <1544709795.18952.1@crapouillou.net>
- <20181213204219.onem3q6dcmakusl2@pengutronix.de>
- <CACRpkdbABtDgwKai=8Pfji7qVb-XHsX8pDsuDdS5hhg7qEN0Bw@mail.gmail.com>
- <20181214142628.zwi4hadrju53z6f3@pengutronix.de>
- <1544969932.1649.1@crapouillou.net>
+From: Amit Kucheria <amit.kucheria@verdurent.com>
+Subject: Re: [PATCH v13 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ
+ Firmware bindings
+Date: Mon, 17 Dec 2018 13:26:04 +0530
+Message-ID: <CAHLCerNZawU4Qexi5gdYLHDY90HNO5Tox0EVPWyy2L2QtUOX0g@mail.gmail.com>
+References: <1544760624-12874-1-git-send-email-tdas@codeaurora.org> <1544760624-12874-2-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1544969932.1649.1@crapouillou.net>
+In-Reply-To: <1544760624-12874-2-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, paul.burton@mips.com, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mathieu Malaterre <malat@debian.org>, ezequiel@collabora.co.uk, prasannatsmkumar@gmail.com, linux-pwm@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, linux-mips@vger.kernel.org, linux-doc@vger.kernel.orglinux-clk <linux>
+To: Taniya Das <tdas@codeaurora.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Saravana Kannan <skannan@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, evgreen@google.com, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 16, 2018 at 03:18:52PM +0100, Paul Cercueil wrote:
-> Hi,
-> 
-> Le ven. 14 déc. 2018 à 15:26, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> a écrit :
-> > Hello,
-> > 
-> > On Fri, Dec 14, 2018 at 02:50:20PM +0100, Linus Walleij wrote:
-> > > On Thu, Dec 13, 2018 at 9:42 PM Uwe Kleine-König
-> > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > [Adding Linus Walleij to Cc:]
-> > > > On Thu, Dec 13, 2018 at 03:03:15PM +0100, Paul Cercueil wrote:
-> > > > > Le jeu. 13 déc. 2018 à 10:24, Uwe Kleine-König
-> > > > > <u.kleine-koenig@pengutronix.de> a écrit :
-> > > > > > On Wed, Dec 12, 2018 at 11:09:10PM +0100, Paul Cercueil wrote:
-> > > > > > >  The PWM in the JZ4725B works the same as in the JZ4740,
-> > > > > > >  except that it only has 6 channels available instead of
-> > > > > > >  8.
-> > > > > >
-> > > > > > this driver is probed only from device tree? If yes, it
-> > > > > > might be sensible to specify the number of PWMs there and
-> > > > > > get it from there.
-> > > > > > There doesn't seem to be a generic binding for that, but there are
-> > > > > > several drivers that could benefit from it. (This is a bigger project
-> > > > > > though and shouldn't stop your patch. Still more as it already got
-> > > > > > Thierry's ack.)
-> > > > >
-> > > > > I think there needs to be a proper guideline, as there doesn't seem to be
-> > > > > a consensus about this. I learned from emails with Rob and  Linus (Walleij)
-> > > > > that I should not have in devicetree what I can deduce from the compatible
-> > > > > string.
-> > > >
-> > > > I understood them a bit differently. It is ok to deduce things from the
-> > > > compatible string. But if you define a generic property (say) "num-pwms"
-> > > > that is used uniformly in most bindings this is ok, too. (And then the
-> > > > two different devices could use the same compatible.)
-> > > >
-> > > > An upside of the generic "num-pwms" property is that the pwm core could
-> > > > sanity check pwm phandles before passing them to the hardware drivers.
-> > > 
-> > >  I don't know if this helps, but in GPIO we have "ngpios" which is
-> > >  used to augment an existing block as to the number of lines actually
-> > >  used with it.
-> > > 
-> > >  The typical case is that an ASIC engineer synthesize a block for
-> > >  32 GPIOs but only 12 of them are routed to external pads. So
-> > >  we augment the behaviour of that driver to only use 12 of the
-> > >  32 lines.
-> > > 
-> > >  I guess using the remaining 20 lines "works" in a sense but they
-> > >  have no practical use and will just bias electrons in the silicon
-> > >  for no use.
-> > 
-> > This looks very similar to the case under discussion.
-> > 
-> > >  So if the PWM case is something similar, then by all means add
-> > >  num-pwms.
-> > 
-> > .. or "npwms" to use the same nomenclature as the gpio binding?
-> 
-> If we're going to do something like this, should it be the drivers or
-> the core (within pwmchip_add) that checks for this "npwms" property?
+On Fri, Dec 14, 2018 at 9:40 AM Taniya Das <tdas@codeaurora.org> wrote:
+>
+> Add QCOM cpufreq firmware device bindings for Qualcomm Technology Inc's
+> SoCs. This is required for managing the cpu frequency transitions which are
+> controlled by the hardware engine.
+>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
 
-Of course this should be done in the core. The driver than can rely on
-the validity of the index. But as I wrote before, this shouldn't stop
-your patch from going in.
+Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-But if Thierry agrees that this npmws (or num-pwms) is a good idea, it
-would be great to start early to convert drivers.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> ---
+>  .../bindings/cpufreq/cpufreq-qcom-hw.txt           | 172 +++++++++++++++++++++
+>  1 file changed, 172 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+>
+> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+> new file mode 100644
+> index 0000000..33856947
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+> @@ -0,0 +1,172 @@
+> +Qualcomm Technologies, Inc. CPUFREQ Bindings
+> +
+> +CPUFREQ HW is a hardware engine used by some Qualcomm Technologies, Inc. (QTI)
+> +SoCs to manage frequency in hardware. It is capable of controlling frequency
+> +for multiple clusters.
+> +
+> +Properties:
+> +- compatible
+> +       Usage:          required
+> +       Value type:     <string>
+> +       Definition:     must be "qcom,cpufreq-hw".
+> +
+> +- clocks
+> +       Usage:          required
+> +       Value type:     <phandle> From common clock binding.
+> +       Definition:     clock handle for XO clock and GPLL0 clock.
+> +
+> +- clock-names
+> +       Usage:          required
+> +       Value type:     <string> From common clock binding.
+> +       Definition:     must be "xo", "alternate".
+> +
+> +- reg
+> +       Usage:          required
+> +       Value type:     <prop-encoded-array>
+> +       Definition:     Addresses and sizes for the memory of the HW bases in
+> +                       each frequency domain.
+> +- reg-names
+> +       Usage:          Optional
+> +       Value type:     <string>
+> +       Definition:     Frequency domain name i.e.
+> +                       "freq-domain0", "freq-domain1".
+> +
+> +- #freq-domain-cells:
+> +       Usage:          required.
+> +       Definition:     Number of cells in a freqency domain specifier.
+> +
+> +* Property qcom,freq-domain
+> +Devices supporting freq-domain must set their "qcom,freq-domain" property with
+> +phandle to a cpufreq_hw followed by the Domain ID(0/1) in the CPU DT node.
+> +
+> +
+> +Example:
+> +
+> +Example 1: Dual-cluster, Quad-core per cluster. CPUs within a cluster switch
+> +DCVS state together.
+> +
+> +/ {
+> +       cpus {
+> +               #address-cells = <2>;
+> +               #size-cells = <0>;
+> +
+> +               CPU0: cpu@0 {
+> +                       device_type = "cpu";
+> +                       compatible = "qcom,kryo385";
+> +                       reg = <0x0 0x0>;
+> +                       enable-method = "psci";
+> +                       next-level-cache = <&L2_0>;
+> +                       qcom,freq-domain = <&cpufreq_hw 0>;
+> +                       L2_0: l2-cache {
+> +                               compatible = "cache";
+> +                               next-level-cache = <&L3_0>;
+> +                               L3_0: l3-cache {
+> +                                     compatible = "cache";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               CPU1: cpu@100 {
+> +                       device_type = "cpu";
+> +                       compatible = "qcom,kryo385";
+> +                       reg = <0x0 0x100>;
+> +                       enable-method = "psci";
+> +                       next-level-cache = <&L2_100>;
+> +                       qcom,freq-domain = <&cpufreq_hw 0>;
+> +                       L2_100: l2-cache {
+> +                               compatible = "cache";
+> +                               next-level-cache = <&L3_0>;
+> +                       };
+> +               };
+> +
+> +               CPU2: cpu@200 {
+> +                       device_type = "cpu";
+> +                       compatible = "qcom,kryo385";
+> +                       reg = <0x0 0x200>;
+> +                       enable-method = "psci";
+> +                       next-level-cache = <&L2_200>;
+> +                       qcom,freq-domain = <&cpufreq_hw 0>;
+> +                       L2_200: l2-cache {
+> +                               compatible = "cache";
+> +                               next-level-cache = <&L3_0>;
+> +                       };
+> +               };
+> +
+> +               CPU3: cpu@300 {
+> +                       device_type = "cpu";
+> +                       compatible = "qcom,kryo385";
+> +                       reg = <0x0 0x300>;
+> +                       enable-method = "psci";
+> +                       next-level-cache = <&L2_300>;
+> +                       qcom,freq-domain = <&cpufreq_hw 0>;
+> +                       L2_300: l2-cache {
+> +                               compatible = "cache";
+> +                               next-level-cache = <&L3_0>;
+> +                       };
+> +               };
+> +
+> +               CPU4: cpu@400 {
+> +                       device_type = "cpu";
+> +                       compatible = "qcom,kryo385";
+> +                       reg = <0x0 0x400>;
+> +                       enable-method = "psci";
+> +                       next-level-cache = <&L2_400>;
+> +                       qcom,freq-domain = <&cpufreq_hw 1>;
+> +                       L2_400: l2-cache {
+> +                               compatible = "cache";
+> +                               next-level-cache = <&L3_0>;
+> +                       };
+> +               };
+> +
+> +               CPU5: cpu@500 {
+> +                       device_type = "cpu";
+> +                       compatible = "qcom,kryo385";
+> +                       reg = <0x0 0x500>;
+> +                       enable-method = "psci";
+> +                       next-level-cache = <&L2_500>;
+> +                       qcom,freq-domain = <&cpufreq_hw 1>;
+> +                       L2_500: l2-cache {
+> +                               compatible = "cache";
+> +                               next-level-cache = <&L3_0>;
+> +                       };
+> +               };
+> +
+> +               CPU6: cpu@600 {
+> +                       device_type = "cpu";
+> +                       compatible = "qcom,kryo385";
+> +                       reg = <0x0 0x600>;
+> +                       enable-method = "psci";
+> +                       next-level-cache = <&L2_600>;
+> +                       qcom,freq-domain = <&cpufreq_hw 1>;
+> +                       L2_600: l2-cache {
+> +                               compatible = "cache";
+> +                               next-level-cache = <&L3_0>;
+> +                       };
+> +               };
+> +
+> +               CPU7: cpu@700 {
+> +                       device_type = "cpu";
+> +                       compatible = "qcom,kryo385";
+> +                       reg = <0x0 0x700>;
+> +                       enable-method = "psci";
+> +                       next-level-cache = <&L2_700>;
+> +                       qcom,freq-domain = <&cpufreq_hw 1>;
+> +                       L2_700: l2-cache {
+> +                               compatible = "cache";
+> +                               next-level-cache = <&L3_0>;
+> +                       };
+> +               };
+> +       };
+> +
+> + soc {
+> +       cpufreq_hw: cpufreq@17d43000 {
+> +               compatible = "qcom,cpufreq-hw";
+> +               reg = <0x17d43000 0x1400>, <0x17d45800 0x1400>;
+> +               reg-names = "freq-domain0", "freq-domain1";
+> +
+> +               clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
+> +               clock-names = "xo", "alternate";
+> +
+> +               #freq-domain-cells = <1>;
+> +       };
+> +}
+> --
+> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+> of the Code Aurora Forum, hosted by the  Linux Foundation.
+>
