@@ -1,45 +1,81 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH v2 03/12] PCI: aardvark: Add PHY support
-Date: Mon, 17 Dec 2018 20:27:42 +0200
-Message-ID: <87zht480v5.fsf@tkos.co.il>
-References: <20181212102142.16053-1-miquel.raynal@bootlin.com> <20181212102142.16053-4-miquel.raynal@bootlin.com> <20181214014701.373b220b@nic.cz> <20181214015712.31f749ea@nic.cz> <20181217170724.58421a29@xps13>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH 1/2] net: dsa: ksz9477: add I2C managed mode support
+Date: Mon, 17 Dec 2018 22:11:14 +0300
+Message-ID: <20181217191114.GF19692@kadam>
+References: <20181216075741.13827-1-sergio.paracuellos@gmail.com>
+ <20181217065455.GB15451@kadam>
+ <CAMhs-H-MjMnS+S9v9-O2=Cz+e-6xp3ZYmDvy-VVif+fKNRaSnw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20181217170724.58421a29@xps13>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Marek Behun <marek.behun@nic.cz>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, linux-pci@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>, linux-kernel@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <CAMhs-H-MjMnS+S9v9-O2=Cz+e-6xp3ZYmDvy-VVif+fKNRaSnw@mail.gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc: Woojung.Huh@microchip.com, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, vivien.didelot@savoirfairelinux.com, netdev@vger.kernel.org, driverdev-devel@linuxdriverproject.org, UNGLinuxDriver@microchip.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
+On Mon, Dec 17, 2018 at 07:22:51PM +0100, Sergio Paracuellos wrote:
+> > > +static int ksz_i2c_write(struct ksz_device *dev, u32 reg, u8 *val,
+> > > +                      unsigned int len)
+> > > +{
+> > > +     struct i2c_client *client = dev->priv;
+> > > +     unsigned int cnt = len;
+> > > +     int i = 0;
+> > > +     u8 txb[4];
+> > > +
+> > > +     do {
+> > > +             txb[i++] = (u8)(*val >> (8 * (cnt - 1)));
+> >                                               ^^^^^^^
+> >
+> > Can "cnt" be zero from ksz_i2c_set()?  If so this loop will corrupt
+> > memory.
+> 
+> This get and set interface seems to be introduced recently but it is
+> not being used yet, so
+> in this moment the answer is not. For me, there is no sense in call
+> 'set' with no len. Should
+> I add a check for zero len and return EINVAL just in case?
+> 
 
-Miquel Raynal writes:
-> Marek Behun <marek.behun@nic.cz> wrote on Fri, 14 Dec 2018 01:57:12
-> +0100:
->
->> On Fri, 14 Dec 2018 01:47:01 +0100
->> Marek Behun <marek.behun@nic.cz> wrote:
->> 
->> > are there already patches for the A37xx comphy driver?  
->
-> Please try the latest patches on top of phy -next (with PHY interface
-> mode), available there [1]. You can pick only the COMPHY patches, but
-> keep them over the phy -next branch.
->
-> Please note that for the SMC calls to succeed you must use a recent
-> ATF. Personally I used to work with the 'atf-v1.5-devel' branch of
-> Marvell's misl-atf repository but it is not available anymore. If you
-> already have a clone, then you are good to go, otherwise it might be
-> great if someone from Marvell could share a public Github link?
+Yes, please.
 
-The latest ATF from Marvell is at the 'atf-v1.5-armada-18.09' branch at
+> > > +static int ksz_i2c_probe(struct i2c_client *client,
+> > > +                      const struct i2c_device_id *id)
+> > > +{
+> > > +     struct ksz_device *dev;
+> > > +     int ret;
+> > > +
+> > > +     dev = ksz_switch_alloc(&client->dev, &ksz_i2c_ops, client);
+> > > +     if (!dev)
+> > > +             return -ENOMEM;
+> > > +
+> > > +     if (client->dev.platform_data)
+> > > +             dev->pdata = client->dev.platform_data;
+> > > +
+> > > +     i2c_set_clientdata(client, dev);
+> > > +
+> > > +     ret = ksz9477_switch_register(dev);
+> > > +     if (ret) {
+> > > +             dev_err(&client->dev, "registering switch (ret: %d)\n", ret);
+> >
+> >
+> > free dev on this error path?
+> 
+> Internally all of this are using devm_* funcions, so I think is there
+> is no need to free anything. Also, the
+> spi managed driver for this does nothing also about this.
 
-  https://github.com/MarvellEmbeddedProcessors/atf-marvell
+You're right.  My bad.  I should have looked at this.
 
-baruch
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+regards,
+dan carpenter
