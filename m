@@ -1,56 +1,83 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v6 3/3] of/property: Add of_fwnode_name()
-Date: Mon, 17 Dec 2018 14:15:18 +0200
-Message-ID: <20181217121518.GB14121@kuha.fi.intel.com>
-References: <20181211131451.52832-1-heikki.krogerus@linux.intel.com>
- <20181211131451.52832-4-heikki.krogerus@linux.intel.com>
- <CAJZ5v0hvGL8DnxFAtp3NiuT7ubTBuoKbTzbD9UaZYNpgZLiWaQ@mail.gmail.com>
- <CAL_JsqLn3dbt-8Hjoja5AJip7FxLoWLAh0Cuk1eqE3Z8RiaO1A@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC 2/2] ASoC: Add MICFIL SoC Digital Audio
+ Interface driver.
+Date: Mon, 17 Dec 2018 12:18:58 +0000
+Message-ID: <20181217121858.GB13868@sirena.org.uk>
+References: <1544433661-32496-1-git-send-email-cosmin.samoila@nxp.com>
+ <1544433661-32496-3-git-send-email-cosmin.samoila@nxp.com>
+ <20181212181414.GE6920@sirena.org.uk>
+ <f3a0f305-dc96-f8b9-3c57-e45256326e2f@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLn3dbt-8Hjoja5AJip7FxLoWLAh0Cuk1eqE3Z8RiaO1A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0190393745984609847=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <f3a0f305-dc96-f8b9-3c57-e45256326e2f@linux.intel.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "robh@kernel.org" <robh@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "gabrielcsmo@gmail.com" <gabrielcsmo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 14, 2018 at 11:46:02AM -0600, Rob Herring wrote:
-> On Fri, Dec 14, 2018 at 3:36 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Tue, Dec 11, 2018 at 2:15 PM Heikki Krogerus
-> > <heikki.krogerus@linux.intel.com> wrote:
-> > >
-> > > This implements get_name fwnode op for DT.
-> > >
-> > > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> >
-> > Rob, any objections here?
-> 
-> Yes, what I said in v5.
 
-I did address your comment in v5? The helper no longer tries to read
-"name" property if the callback fails.
-
-> At one point this series had a user which was finding a matching node
-> by name. Now there is no user, so I can't really say whether this API
-> makes sense or not.
-
-That is a fair point. I choose to not to convert
-fwnode_get_named_child_node() to use this helper because it would mean
-we would have to allocate the buffer there, and I don't know if it's
-worth it.
-
-Let's forget about this for now. I was planning to use this helper for
-matching a requested remote-endpoint (graph) device, but I'm not sure
-if the node name is usable there.
-
-I'll resend these as part of a real user for the API, if I ever have
-one.
+--===============0190393745984609847==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="KFztAG8eRSV9hGtP"
+Content-Disposition: inline
 
 
-thanks,
+--KFztAG8eRSV9hGtP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-heikki
+On Fri, Dec 14, 2018 at 02:09:00PM -0600, Pierre-Louis Bossart wrote:
+
+> There's no mention of any buffer so it's likely plain vanilla VAD here.
+> We've seen two choices to warn userspace of a acoustic event, either use a
+> uevent or a kcontrol. I believe we ended-up chosing the latter on the Intel
+> side in the past and that was also the plan for SOF.
+
+It sounded like there were some separate audio streams somewhere along
+the line, it wasn't super clear if that just went into a DSP that did
+the VAD and wasn't visible to the rest of the system or if it's
+something the system can see.  Generally we have gone for kcontrols for
+event signalling.
+
+> In terms of configurations for the PDM we have completely different settings
+> since we pass explicit coefficients while this solution passes qualifiers
+> (cut-off, quality, etc), not sure if there is any point in trying to unify
+> those parameters.
+
+Yes, I don't think the specific parameters are going to be joined up any
+time soon - it's more the overall shape of the solution.
+
+--KFztAG8eRSV9hGtP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwXlDIACgkQJNaLcl1U
+h9ClJgf+OLM4U6BF/ObfLIVklTQIFe3fnUCsAjOD91k7AY2TiZoQxvLazrtoOE+i
+dRjGs0PQwqS652wDuHAz8g3sB0IPsNekYqAk/dA5sy1vTSXGjOqljs5Gp6xnGZnv
+634cmVPiM3tKVqBsSb9QPLoy58Q7XTlzNnAp1bRvDdQXw1OPHs0M1NFY1KXEDshI
+HKwEmnw8R1G+661GVA2nnOcmsHDBYyY0Pf1oOjOGsekU8eCx+SfTL+5sHZxDaSto
+AlHuok6Qd8z5qm+DOdoFo2l5BV2Wa9ikc901Vouvy7Z+0Xp/inULSYBuFuIZknui
+/8a2LFoYBkHelcGJJwJorSFUzlCBLw==
+=WGuC
+-----END PGP SIGNATURE-----
+
+--KFztAG8eRSV9hGtP--
+
+--===============0190393745984609847==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0190393745984609847==--
