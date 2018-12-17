@@ -1,132 +1,345 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/8] dt-bindings: stmpe: reformatting parameter list
- and use tabs only
-Date: Mon, 17 Dec 2018 16:06:43 -0600
-Message-ID: <20181217220643.GA26243@bogus>
-References: <20181212130649.15146-1-dev@pschenker.ch>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [RFC v2 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
+Date: Mon, 17 Dec 2018 23:11:51 +0100
+Message-ID: <20181217221151.h63swo4xpi2zj3q5@pengutronix.de>
+References: <1544768442-12530-1-git-send-email-yash.shah@sifive.com>
+ <1544768442-12530-3-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181212130649.15146-1-dev@pschenker.ch>
+In-Reply-To: <1544768442-12530-3-git-send-email-yash.shah@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Schenker <dev@pschenker.ch>
-Cc: jic23@kernel.org, marcel.ziswiler@toradex.com, stefan@agner.ch, thierry.reding@gmail.com, Philippe Schenker <philippe.schenker@toradex.com>, devicetree@vger.kernel.org, Max Krummenacher <max.krummenacher@toradex.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+To: Yash Shah <yash.shah@sifive.com>
+Cc: palmer@sifive.com, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, paul.walmsley@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 12, 2018 at 02:06:42PM +0100, Philippe Schenker wrote:
-> This patch reformats the parameter list for stmpe device in a
-> table-style so it is more clear to read.
+On Fri, Dec 14, 2018 at 11:50:42AM +0530, Yash Shah wrote:
+> Adds a PWM driver for PWM chip present in SiFive's HiFive Unleashed SoC.
 > 
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-
-Need to fix the author and S-o-b emails to match.
-
+> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> [Atish: Various fixes and code cleanup]
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
 > ---
+>  drivers/pwm/Kconfig      |  10 +++
+>  drivers/pwm/Makefile     |   1 +
+>  drivers/pwm/pwm-sifive.c | 229 +++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 240 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-sifive.c
 > 
-> Changes in v4:
->  - New separate precursor patch for holding reformatting
-> 
-> Changes in v3: None
-> Changes in v2: None
-> 
->  .../bindings/input/touchscreen/stmpe.txt      | 52 ++++++++++++-------
->  .../devicetree/bindings/mfd/stmpe.txt         | 14 ++---
->  2 files changed, 41 insertions(+), 25 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-> index 127baa31a77a..1d3f84308142 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-> @@ -5,24 +5,40 @@ Required properties:
->   - compatible: "st,stmpe-ts"
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 27e5dd4..da85557 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -378,6 +378,16 @@ config PWM_SAMSUNG
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-samsung.
 >  
->  Optional properties:
-> -- st,sample-time: ADC converstion time in number of clock.  (0 -> 36 clocks, 1 ->
-> -  44 clocks, 2 -> 56 clocks, 3 -> 64 clocks, 4 -> 80 clocks, 5 -> 96 clocks, 6
-> -  -> 144 clocks), recommended is 4.
-> -- st,mod-12b: ADC Bit mode (0 -> 10bit ADC, 1 -> 12bit ADC)
-> -- st,ref-sel: ADC reference source (0 -> internal reference, 1 -> external
-> -  reference)
-> -- st,adc-freq: ADC Clock speed (0 -> 1.625 MHz, 1 -> 3.25 MHz, 2 || 3 -> 6.5 MHz)
-> -- st,ave-ctrl: Sample average control (0 -> 1 sample, 1 -> 2 samples, 2 -> 4
-> -  samples, 3 -> 8 samples)
-> -- st,touch-det-delay: Touch detect interrupt delay (0 -> 10 us, 1 -> 50 us, 2 ->
-> -  100 us, 3 -> 500 us, 4-> 1 ms, 5 -> 5 ms, 6 -> 10 ms, 7 -> 50 ms) recommended
-> -  is 3
-> -- st,settling: Panel driver settling time (0 -> 10 us, 1 -> 100 us, 2 -> 500 us, 3
-> -  -> 1 ms, 4 -> 5 ms, 5 -> 10 ms, 6 for 50 ms, 7 -> 100 ms) recommended is 2
-> -- st,fraction-z: Length of the fractional part in z (fraction-z ([0..7]) = Count of
-> -  the fractional part) recommended is 7
-> -- st,i-drive: current limit value of the touchscreen drivers (0 -> 20 mA typical 35
-> -  mA max, 1 -> 50 mA typical 80 mA max)
-> +- st,sample-time	: ADC conversion time in number of clock.
-> +				0 -> 36 clocks		4 -> 80 clocks (recommended)
-> +				1 -> 44 clocks		5 -> 96 clocks
-> +				2 -> 56 clocks		6 -> 144 clocks
-> +				3 -> 64 clocks
+> +config PWM_SIFIVE
+> +	tristate "SiFive PWM support"
+> +	depends on OF
+> +	depends on COMMON_CLK
+> +	help
+> +	  Generic PWM framework driver for SiFive SoCs.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-sifive.
+> +
+>  config PWM_SPEAR
+>  	tristate "STMicroelectronics SPEAr PWM support"
+>  	depends on PLAT_SPEAR
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 9c676a0..30089ca 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -37,6 +37,7 @@ obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
+>  obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
+>  obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
+>  obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
+> +obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
+>  obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
+>  obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
+>  obj-$(CONFIG_PWM_STM32)		+= pwm-stm32.o
+> diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+> new file mode 100644
+> index 0000000..26913b6
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-sifive.c
+> @@ -0,0 +1,229 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2017-2018 SiFive
 
-Just make this a 1 column list
+If there is a publically available reference manual, please add a link
+to it here.
 
-> +- st,mod-12b		: ADC Bit mode
-> +				0 -> 10bit ADC		1 -> 12bit ADC
-> +- st,ref-sel		: ADC reference source
-> +				0 -> internal		1 -> external
-> +- st,adc-freq		: ADC Clock speed
-> +				0 -> 1.625 MHz		2 || 3 -> 6.5 MHz
-> +				1 -> 3.25 MHz
-> +- st,ave-ctrl		: Sample average control
-> +				0 -> 1 sample
-> +				1 -> 2 samples
-> +				2 -> 4 samples
-> +				3 -> 8 samples
-> +- st,touch-det-delay	: Touch detect interrupt delay (recommended is 3)
-> +				0 -> 10 us		5 -> 5 ms
-> +				1 -> 50 us		6 -> 10 ms
-> +				2 -> 100 us		7 -> 50 ms
-> +				3 -> 500 us
-> +				4 -> 1 ms
-> +- st,settling		: Panel driver settling time (recommended is 2)
-> +				0 -> 10 us		5 -> 10 ms
-> +				1 -> 100 us		6 for 50 ms
-> +				2 -> 500 us		7 -> 100 ms
-> +				3 -> 1 ms
-> +				4 -> 5 ms
-> +- st,fraction-z		: Length of the fractional part in z (recommended is 7)
-> +			  (fraction-z ([0..7]) = Count of the fractional part)
-> +- st,i-drive		: current limit value of the touchscreen drivers
-> +				0 -> 20 mA (typical 35mA max)
-> +				1 -> 50 mA (typical 80 mA max)
->  
->  Node name must be stmpe_touchscreen and should be child node of stmpe node to
->  which it belongs.
-> diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Documentation/devicetree/bindings/mfd/stmpe.txt
-> index c797c05cd3c2..a46e7177195d 100644
-> --- a/Documentation/devicetree/bindings/mfd/stmpe.txt
-> +++ b/Documentation/devicetree/bindings/mfd/stmpe.txt
-> @@ -4,15 +4,15 @@ STMPE is an MFD device which may expose the following inbuilt devices: gpio,
->  keypad, touchscreen, adc, pwm, rotator.
->  
->  Required properties:
-> - - compatible                   : "st,stmpe[610|801|811|1600|1601|2401|2403]"
-> - - reg                          : I2C/SPI address of the device
-> + - compatible			: "st,stmpe[610|801|811|1600|1601|2401|2403]"
-> + - reg				: I2C/SPI address of the device
->  
->  Optional properties:
-> - - interrupts                   : The interrupt outputs from the controller
-> - - interrupt-controller         : Marks the device node as an interrupt controller
-> - - wakeup-source                : Marks the input device as wakable
-> - - st,autosleep-timeout         : Valid entries (ms); 4, 16, 32, 64, 128, 256, 512 and 1024
-> - - irq-gpio                     : If present, which GPIO to use for event IRQ
-> + - interrupts			: The interrupt outputs from the controller
-> + - interrupt-controller		: Marks the device node as an interrupt controller
-> + - wakeup-source		: Marks the input device as wakable
-> + - st,autosleep-timeout		: Valid entries (ms); 4, 16, 32, 64, 128, 256, 512 and 1024
-> + - irq-gpio			: If present, which GPIO to use for event IRQ
->  
->  Example:
->  
-> -- 
-> 2.19.2
-> 
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/slab.h>
+> +
+> +/* Register offsets */
+> +#define REG_PWMCFG		0x0
+> +#define REG_PWMCOUNT		0x8
+> +#define REG_PWMS		0x10
+> +#define REG_PWMCMP0		0x20
+> +
+> +/* PWMCFG fields */
+> +#define BIT_PWM_SCALE		0
+> +#define BIT_PWM_STICKY		8
+> +#define BIT_PWM_ZERO_ZMP	9
+> +#define BIT_PWM_DEGLITCH	10
+> +#define BIT_PWM_EN_ALWAYS	12
+> +#define BIT_PWM_EN_ONCE		13
+> +#define BIT_PWM0_CENTER		16
+> +#define BIT_PWM0_GANG		24
+> +#define BIT_PWM0_IP		28
+> +
+> +#define SIZE_PWMCMP		4
+> +#define MASK_PWM_SCALE		0xf
+> +
+> +struct sifive_pwm_device {
+> +	struct pwm_chip	chip;
+> +	struct notifier_block notifier;
+> +	struct clk *clk;
+> +	void __iomem *regs;
+> +	unsigned int approx_period;
+> +	unsigned int real_period;
+> +};
+> +
+> +static inline struct sifive_pwm_device *to_sifive_pwm_chip(struct pwm_chip *c)
+> +{
+> +	return container_of(c, struct sifive_pwm_device, chip);
+> +}
+> +
+> +static int sifive_pwm_apply(struct pwm_chip *chip, struct pwm_device *dev,
+> +			    struct pwm_state *state)
+> +{
+> +	struct sifive_pwm_device *pwm = to_sifive_pwm_chip(chip);
+> +	unsigned int duty_cycle;
+> +	u32 frac;
+> +
+> +	duty_cycle = state->duty_cycle;
+> +	if (!state->enabled)
+> +		duty_cycle = 0;
+
+@Thierry: You see, this driver is cheating in the same way that I
+suggested to implement for imx.
+
+> +
+> +	frac = ((u64)duty_cycle << 16) / state->period;
+
+You must not use / to divide an u64 (unless you're on a 64 bit arch).
+
+> +	frac = min(frac, 0xFFFFU);
+
+Also if real_period is for example 10 ms and the consumer requests
+duty=12 ms + period=100 ms, the hardware is configured for duty=1.2 ms +
+period=10 ms, right?
+
+You should also check polarity (and fail if it's !=
+PWM_POLARITY_INVERSED?).
+
+If state->duty_cycle == state->period, we end up with frac = 0xffff.
+Does that mean the chip cannot output 100%?
+
+> +	writel(frac, pwm->regs + REG_PWMCMP0 + dev->hwpwm * SIZE_PWMCMP);
+> +
+> +	if (state->enabled) {
+> +		state->period = pwm->real_period;
+> +		state->duty_cycle = ((u64)frac * pwm->real_period) >> 16;
+> +	}
+
+Is this the expected behaviour of .apply to update *state? (I think it's
+a good idea, but I think it misses official blessing.)
+
+> +	return 0;
+> +}
+
+How does a period start with this PWM hardware. The expected behaviour
+would be to start with low level for duty_cycle and then high for the
+rest of the period (given that the polarity is always inversed). Is this
+what the hardware actually does?
+
+If the duty cycle changes, is the currently running period completed
+before the new setting gets active? If yes, .apply is supposed to block
+until the new setting is active.
+
+> +static void sifive_pwm_get_state(struct pwm_chip *chip, struct pwm_device *dev,
+> +				 struct pwm_state *state)
+> +{
+> +	struct sifive_pwm_device *pwm = to_sifive_pwm_chip(chip);
+> +	u32 duty;
+> +
+> +	duty = readl(pwm->regs + REG_PWMCMP0 + dev->hwpwm * SIZE_PWMCMP);
+> +
+> +	state->period = pwm->real_period;
+> +	state->duty_cycle = ((u64)duty * pwm->real_period) >> 16;
+> +	state->polarity = PWM_POLARITY_INVERSED;
+> +	state->enabled = duty > 0;
+> +}
+> +
+> +static const struct pwm_ops sifive_pwm_ops = {
+> +	.get_state = sifive_pwm_get_state,
+> +	.apply = sifive_pwm_apply,
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +static struct pwm_device *sifive_pwm_xlate(struct pwm_chip *chip,
+> +					   const struct of_phandle_args *args)
+> +{
+> +	struct sifive_pwm_device *pwm = to_sifive_pwm_chip(chip);
+> +	struct pwm_device *dev;
+> +
+> +	if (args->args[0] >= chip->npwm)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	dev = pwm_request_from_chip(chip, args->args[0], NULL);
+> +	if (IS_ERR(dev))
+> +		return dev;
+> +
+> +	/* The period cannot be changed on a per-PWM basis */
+> +	dev->args.period   = pwm->real_period;
+
+A single space before the = please.
+
+> +	dev->args.polarity = PWM_POLARITY_NORMAL;
+> +	if (args->args[1] & PWM_POLARITY_INVERSED)
+> +		dev->args.polarity = PWM_POLARITY_INVERSED;
+> +
+> +	return dev;
+> +}
+> +
+> +static void sifive_pwm_update_clock(struct sifive_pwm_device *pwm,
+> +				    unsigned long rate)
+> +{
+> +	/* (1 << (16+scale)) * 10^9/rate = real_period */
+> +	unsigned long scale_pow = (pwm->approx_period * (u64)rate) / 1000000000;
+> +	int scale = clamp(ilog2(scale_pow) - 16, 0, 0xf);
+> +
+> +	writel((1 << BIT_PWM_EN_ALWAYS) | (scale << BIT_PWM_SCALE),
+> +	       pwm->regs + REG_PWMCFG);
+
+What happens with the output if you don't set the BIT_PWM_EN_ALWAYS bit?
+
+> +	pwm->real_period = (1000000000ULL << (16 + scale)) / rate;
+
+I suggest commenting this assignment with something like: "As scale <=
+15 the shift operation cannot overflow." You must use div64_ul for
+dividing an unsigned long long variable. Can it happen that the result
+is too big to be hold by read_period (which is an unsigned int only)?
+
+Maybe add a dev_dbg with the new real_period here.
+
+> +}
+> +
+> +static int sifive_pwm_clock_notifier(struct notifier_block *nb,
+> +				     unsigned long event, void *data)
+> +{
+> +	struct clk_notifier_data *ndata = data;
+> +	struct sifive_pwm_device *pwm =
+> +		container_of(nb, struct sifive_pwm_device, notifier);
+> +
+> +	if (event == POST_RATE_CHANGE)
+> +		sifive_pwm_update_clock(pwm, ndata->new_rate);
+> +
+> +	return NOTIFY_OK;
+> +}
+> +
+> +static int sifive_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct sifive_pwm_device *pwm;
+> +	struct pwm_chip *chip;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	pwm = devm_kzalloc(dev, sizeof(*pwm), GFP_KERNEL);
+> +	if (!pwm)
+> +		return -ENOMEM;
+> +
+> +	chip = &pwm->chip;
+> +	chip->dev = dev;
+> +	chip->ops = &sifive_pwm_ops;
+> +	chip->of_xlate = sifive_pwm_xlate;
+> +	chip->of_pwm_n_cells = 2;
+> +	chip->base = -1;
+> +	chip->npwm = 4;
+> +
+> +	ret = of_property_read_u32(node, "sifive,approx-period",
+> +				   &pwm->approx_period);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Unable to read sifive,approx-period from DTS\n");
+> +		return ret;
+> +	}
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	pwm->regs = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(pwm->regs)) {
+> +		dev_err(dev, "Unable to map IO resources\n");
+> +		return PTR_ERR(pwm->regs);
+> +	}
+> +
+> +	pwm->clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(pwm->clk)) {
+> +		dev_err(dev, "Unable to find controller clock\n");
+
+Please don't emit an error message if PTR_ERR(pwm->clk) is
+-EPROBE_DEFER.
+
+> +		return PTR_ERR(pwm->clk);
+> +	}
+> +
+> +	/* Watch for changes to underlying clock frequency */
+> +	pwm->notifier.notifier_call = sifive_pwm_clock_notifier;
+> +	ret = clk_notifier_register(pwm->clk, &pwm->notifier);
+> +	if (ret) {
+> +		dev_err(dev, "failed to register clock notifier: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Initialize PWM config */
+> +	sifive_pwm_update_clock(pwm, clk_get_rate(pwm->clk));
+
+You're supposed to call clk_get_rate only after you enabled the clk.
+
+> +	ret = pwmchip_add(chip);
+> +	if (ret < 0) {
+> +		dev_err(dev, "cannot register PWM: %d\n", ret);
+> +		clk_notifier_unregister(pwm->clk, &pwm->notifier);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, pwm);
+> +	dev_dbg(dev, "SiFive PWM chip registered %d PWMs\n", chip->npwm);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sifive_pwm_remove(struct platform_device *dev)
+> +{
+> +	struct sifive_pwm_device *pwm = platform_get_drvdata(dev);
+> +
+> +	clk_notifier_unregister(pwm->clk, &pwm->notifier);
+> +	return pwmchip_remove(&pwm->chip);
+
+In probe you setup the clk notifier before calling pwmchip_add. So it's
+a good habit to do it the other way round in .remove.
+
+> +}
+
+You're not using the irq that according to the dt binding is required?!
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
