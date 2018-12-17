@@ -1,26 +1,51 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 05/13] clk: qcom: apcs-msm8916: get parent clock names from DT
-Date: Mon, 17 Dec 2018 15:37:43 -0800
-Message-ID: <154508986359.19322.1555129141976726505@swboyd.mtv.corp.google.com>
-References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org> <1545039990-19984-6-git-send-email-jorge.ramirez-ortiz@linaro.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 1/7] dt-bindings: soc: qcom: Add remote-pid binding for
+ GLINK SMEM
+Date: Mon, 17 Dec 2018 15:59:13 -0800
+Message-ID: <CAD=FV=WJPEzXahN3HRdNPTfcPs+OPCiQ_3f1zQh1-poekPgGRg@mail.gmail.com>
+References: <20181217100724.4593-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545039990-19984-6-git-send-email-jorge.ramirez-ortiz@linaro.org>
+In-Reply-To: <20181217100724.4593-1-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, jassisinghbrar@gmail.com, jorge.ramirez-ortiz@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, will.deacon@arm.com
-Cc: bjorn.andersson@linaro.org, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+To: sibis@codeaurora.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, Evan Green <evgreen@chromium.org>, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jorge Ramirez-Ortiz (2018-12-17 01:46:22)
-> Allow accessing the parent clock names required for the driver
-> operation by using the device tree node.
->=20
-> This permits extending the driver to other platforms without having to
-> modify its source code.
->=20
-> For backwards compatibility leave previous values as default.
+Hi,
 
-Why do we need to maintain backwards compatibility? Isn't is required
-that the nodes have clocks properties?
+On Mon, Dec 17, 2018 at 2:07 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+>
+> Add missing qcom,remote-pid dt binding required for GLINK SMEM
+> which specifies the remote endpoint of the GLINK edge.
+>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+
+Fixes: 2b41d6c8e696 ("dt-bindings: soc: qcom: Extend GLINK to cover SMEM")
+
+
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+> index 0b8cc533ca83..59ae603ba520 100644
+> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+> @@ -21,6 +21,11 @@ edge.
+>         Definition: should specify the IRQ used by the remote processor to
+>                     signal this processor about communication related events
+>
+> +- qcom,remote-pid:
+> +       Usage: required for glink-smem
+> +       Value type: <u32>
+> +       Definition: specifies the identfier of the remote endpoint of this edge
+
+s/identfier/identifier/
+
+
+Other than the typo this seems right to me.  Feel free to add my
+Reviewed-by tag when that's fixed.
+
+
+-Doug
