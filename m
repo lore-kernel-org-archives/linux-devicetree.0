@@ -1,35 +1,31 @@
-Return-Path: <SRS0=oElv=O2=gmail.com=ykaneko0929@kernel.org>
-From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Subject: [PATCH/RFT v2 2/2] thermal: rcar_thermal: add R8A77990 support
-Date: Mon, 17 Dec 2018 23:50:21 +0900
-Message-Id: <1545058221-22529-3-git-send-email-ykaneko0929@gmail.com>
-In-Reply-To: <1545058221-22529-1-git-send-email-ykaneko0929@gmail.com>
-References: <1545058221-22529-1-git-send-email-ykaneko0929@gmail.com>
-To: linux-pm@vger.kernel.org
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=Jkdf=O2=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <1544780260-27590-1-git-send-email-fabrizio.castro@bp.renesas.com> <1544780260-27590-4-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1544780260-27590-4-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 17 Dec 2018 17:12:50 +0100
+Message-ID: <CAMuHMdWWV9-LzsW36O9OR3zjG7Hj8jaKrTieGeAwJsaDf7sMUg@mail.gmail.com>
+Subject: Re: [PATCH 03/17] arm64: dts: renesas: r8a774c0: Add IPMMU device nodes
+Content-Type: text/plain; charset="UTF-8"
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for R-Car E3 (R8A77990) thermal support.
+On Fri, Dec 14, 2018 at 10:37 AM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> Add r8a774c0 IPMMU nodes.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
----
- drivers/thermal/rcar_thermal.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/drivers/thermal/rcar_thermal.c b/drivers/thermal/rcar_thermal.c
-index 8014a20..30a12b8 100644
---- a/drivers/thermal/rcar_thermal.c
-+++ b/drivers/thermal/rcar_thermal.c
-@@ -117,6 +117,10 @@ struct rcar_thermal_priv {
- 		.data = &rcar_gen3_thermal,
- 	},
- 	{
-+		.compatible = "renesas,thermal-r8a77990",
-+		.data = &rcar_gen3_thermal,
-+	},
-+	{
- 		.compatible = "renesas,thermal-r8a77995",
- 		.data = &rcar_gen3_thermal,
- 	},
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-1.9.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
