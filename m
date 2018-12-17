@@ -1,50 +1,80 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v7 00/24] Tegra GART driver clean up and optimization
-Date: Mon, 17 Dec 2018 15:22:55 +0300
-Message-ID: <75ffa70b-b0f3-0feb-c1ea-94a805a7bd0c@gmail.com>
-References: <20181212203907.23461-1-digetx@gmail.com>
- <20181217091455.kkxpyojp4r4fyhrw@8bytes.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/3] ASoC: xlnx: Add i2s driver
+Date: Mon, 17 Dec 2018 12:24:41 +0000
+Message-ID: <20181217122441.GC13868@sirena.org.uk>
+References: <1544207558-72508-1-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
+ <1544207558-72508-3-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
+ <20181213153127.GN10669@sirena.org.uk>
+ <19c273d9-c52d-48be-a1e1-88e2b1f14cce@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181217091455.kkxpyojp4r4fyhrw@8bytes.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joerg Roedel <joro@8bytes.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============7631773382730171322=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <19c273d9-c52d-48be-a1e1-88e2b1f14cce@xilinx.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Vishal Sagar <vsagar@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 17.12.2018 12:14, Joerg Roedel wrote:
-> On Wed, Dec 12, 2018 at 11:38:43PM +0300, Dmitry Osipenko wrote:
->> Dmitry Osipenko (24):
->>   iommu/tegra: gart: Remove pr_fmt and clean up includes
->>   iommu/tegra: gart: Clean up driver probe errors handling
->>   iommu/tegra: gart: Ignore devices without IOMMU phandle in DT
->>   iommu: Introduce iotlb_sync_map callback
->>   iommu/tegra: gart: Optimize mapping / unmapping performance
->>   dt-bindings: memory: tegra: Squash tegra20-gart into tegra20-mc
->>   ARM: dts: tegra20: Update Memory Controller node to the new binding
->>   memory: tegra: Don't invoke Tegra30+ specific memory timing setup on
->>     Tegra20
->>   memory: tegra: Adapt to Tegra20 device-tree binding changes
->>   memory: tegra: Read client ID on GART page fault
->>   memory: tegra: Use of_device_get_match_data()
->>   memory: tegra: Use relaxed versions of readl/writel
->>   iommu/tegra: gart: Integrate with Memory Controller driver
->>   memory: tegra: Do not try to probe SMMU on Tegra20
->>   memory: tegra: Do not ask for IRQ sharing
->>   memory: tegra: Clean up error messages
->>   iommu/tegra: gart: Fix spinlock recursion
->>   iommu/tegra: gart: Fix NULL pointer dereference
->>   iommu/tegra: gart: Allow only one active domain at a time
->>   iommu/tegra: gart: Don't use managed resources
->>   iommu/tegra: gart: Prepend error/debug messages with "gart:"
->>   iommu/tegra: gart: Don't detach devices from inactive domains
->>   iommu/tegra: gart: Simplify clients-tracking code
->>   iommu/tegra: gart: Perform code refactoring
-> 
-> Applied, thanks.
-> 
 
-Awesome, thanks!
+--===============7631773382730171322==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="iFRdW5/EC4oqxDHL"
+Content-Disposition: inline
+
+
+--iFRdW5/EC4oqxDHL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Dec 14, 2018 at 07:50:43AM +0100, Michal Simek wrote:
+> On 13. 12. 18 16:31, Mark Brown wrote:
+> > On Sat, Dec 08, 2018 at 12:02:37AM +0530, Maruthi Srinivas Bayyavarapu wrote:
+
+> >> @@ -0,0 +1,185 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +/*
+> >> + * Xilinx ASoC I2S audio support
+> >> + *
+
+> > This looks otherwise good so I've applied it but please send a followup
+> > patch converting the entire comment block to C++ style so this looks
+> > more consistent.
+
+> Is it the rule for your subsystems? Or did it come from any generic
+> agreement how this should be handled in .c files?
+
+It's mainly me, it's certainly not a consistent policy.
+
+--iFRdW5/EC4oqxDHL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwXlYgACgkQJNaLcl1U
+h9CieQf/d4qfEmhEQY7q0EE8eRo+Jy7falVp81WeY6WS40+3+HHpLtlu9i3ful/U
+lP+grha3OB7ugQyuBBZQxlotb69r3pVHLPaUu/WDoumwB2OZ2Mkfgt5+dBPXcxCt
+tKJ2IpRmCJcsYyQVed2i/XzmqRjc6EcONyO8FjA77w1YbkncAbjfko5CeTT+xUf1
+TubG6H5dZdTsaYfdkoHoAqLhQkE7dEOYopnFLB0wm9n0NRhDtGy7TebU+/HSDkhE
+kP5lSbtRP0/f1sdnvlBFddTn13EZtk5HLQAzp1dUOeYdl4Ml1jMvvCXz91hDhMRu
+ZDlaox91zIow+PhuGCM0d8YDMzEGEA==
+=ux+Q
+-----END PGP SIGNATURE-----
+
+--iFRdW5/EC4oqxDHL--
+
+--===============7631773382730171322==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7631773382730171322==--
