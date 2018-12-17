@@ -1,91 +1,191 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v2 0/3] PCIE support for i.MX8MQ
-Date: Mon, 17 Dec 2018 10:26:36 +0000
-Message-ID: <20181217102636.GA13465@red-moon>
-References: <20181206073545.10967-1-andrew.smirnov@gmail.com>
- <20181206121550.GA2725@e107981-ln.cambridge.arm.com>
- <20181214203828.GD20725@google.com>
- <CAHQ1cqG3s4J42V3oUPOGssUPw6dypZqYrtpkRphHPdiYFs9j1g@mail.gmail.com>
- <1545041578.5874.3.camel@pengutronix.de>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v2 2/2] irqchip: add driver for imx-irqsteer controller
+Date: Mon, 17 Dec 2018 10:32:06 +0000
+Message-ID: <98217822-208a-9a92-e80b-b0b73111e527@arm.com>
+References: <20181214102244.21509-1-l.stach@pengutronix.de>
+ <20181214102244.21509-3-l.stach@pengutronix.de>
+ <86r2ejaztt.wl-marc.zyngier@arm.com> <1545041393.5874.1.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1545041578.5874.3.camel@pengutronix.de>
+In-Reply-To: <1545041393.5874.1.camel@pengutronix.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, helgaas@kernel.org, Dong Aisheng <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Richard Zhu <hongxing.zhu@nxp.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-imx@nxp.com, Leonard Crestez <leonard.crestez@nxp.com>, Chris Healy <cphealy@gmail.com>, Trent Piepho <tpiepho@impinj.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, linux-kernel@vger.kernel.org, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 17, 2018 at 11:12:58AM +0100, Lucas Stach wrote:
-> Am Freitag, den 14.12.2018, 21:25 -0800 schrieb Andrey Smirnov:
-> > > On Fri, Dec 14, 2018 at 12:38 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > 
-> > > [+cc Trent]
-> > > 
-> > > On Thu, Dec 06, 2018 at 12:15:50PM +0000, Lorenzo Pieralisi wrote:
-> > > > On Wed, Dec 05, 2018 at 11:35:42PM -0800, Andrey Smirnov wrote:
-> > > > > Everyone:
-> > > > > 
-> > > > > This series contains changes I made in order to enable support of PCIE
-> > > > > IP block on i.MX8MQ SoCs (full tree can be found at [github-v2]).
-> > > > > 
-> > > > > NOTE: The last patch have a Kconfig symbol depenency on [imx8mq-kconfig].
-> > > > > 
-> > > > > Changes since [v1]:
-> > > > > 
-> > > > >  - Driver changed to use single "fsl,controller-id" property to
-> > > > >    distinguish between two intances of PCIE IP block
-> > > > > 
-> > > > >  - All code pertaining to L1SS was dropped to simplify the patch
-> > > > > 
-> > > > >  - Documented additions to DT bindings
-> > > > > 
-> > > > > Feedback is welcome!
-> > > > > 
-> > > > > Thanks,
-> > > > > Andrey Smirnov
-> > > > 
-> > > > Andrey,
-> > > > 
-> > > > I have applied the patches, ...
-> > > 
-> > > When I merged your pci/dwc branch, I noticed what looks like a merge
-> > > conflict between these commits:
-> > > 
-> > >   d123765b58ee ("PCI: dwc: Adjust Kconfig to allow IMX6 PCIe host on IMX7")
-> > >   1a059d994189 ("PCI: imx: Add support for i.MX8MQ")
-> > > 
-> > > d123765b58ee added SOC_IMX7D:
-> > > 
-> > >   -       depends on SOC_IMX6Q || (ARM && COMPILE_TEST)
-> > >   +       depends on SOC_IMX6Q || SOC_IMX7D || (ARM && COMPILE_TEST)
-> > > 
-> > > and 1a059d994189 added SOC_IMX8MQ but dropped SOC_IMX7D again, which looks
-> > > like a mistake:
-> > > 
-> > >   -       depends on SOC_IMX6Q || SOC_IMX7D || (ARM && COMPILE_TEST)
-> > >   +       depends on SOC_IMX8MQ || SOC_IMX6Q || (ARM && COMPILE_TEST)
-> > > 
-> > > So my "next" branch[1] (current head 7053eeb009e0) is:
-> > > 
-> > >   config PCI_IMX6
-> > >         bool "Freescale i.MX6/7 PCIe controller"
-> > >         depends on SOC_IMX8MQ || SOC_IMX6Q || (ARM && COMPILE_TEST)
-> > >         depends on PCI_MSI_IRQ_DOMAIN
-> > >         select PCIE_DW_HOST
-> > > 
-> > > which I think is wrong.
-> > 
-> > Yeah, this is definitely wrong, should be SOC_IMX8MQ || SOC_IMX6Q ||
-> > SOC_IMX7D || (ARM && COMPILE_TEST)
+Hi Lucas,
+
+On 17/12/2018 10:09, Lucas Stach wrote:
+> Hi Marc,
 > 
-> arm-soc would like to see the SOC_IMX8MQ option removed, so let's try
-> to not add any more things that depend on this. Please use (ARM64 &&
-> MACH_MXC) or something to that tune instead.
+> Am Samstag, den 15.12.2018, 09:45 +0000 schrieb Marc Zyngier:
+>> Hi Lucas,
+>>
+>> On Fri, 14 Dec 2018 10:22:44 +0000,
+>>> Lucas Stach <l.stach@pengutronix.de> wrote:
+>>>
+>>> The irqsteer block is a interrupt multiplexer/remapper found on the
+>>> i.MX8 line of SoCs.
+>>>
+>>>>> Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+>>>>> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+>>> ---
+>>> v2:
+>>> Â - use raw_spinlock
+>>> Â - add proper clk error handling
+>>> Â - align register offset calculation with reality
+>>> Â - use correct SPDX identifier
+>>> Â - simplify DT configuration
+>>> ---
+> 
+> [...]
+> 
+>>> +static const struct irq_domain_ops imx_irqsteer_domain_ops = {
+>>>>>>> +	.map		= imx_irqsteer_irq_map,
+>>> +	.xlate		= irq_domain_xlate_twocell,
+>>
+>> I've tried to understand why you are using two cells, but couldn't
+>> find an explanation from the DT binding. As far as I can see, you only
+>> support LEVEL_HIGH signalling, meaning that you could perfectly
+>> encode this in a single cell. What am I missing?
+> 
+> Nothing. At this point I'm sure that the controller only support level-
+> high IRQs. Will switch to a single cell in the next spin.
 
-Patch series dropped from the PCI queue, waiting for the discussion
-and related follow-up patches to settle.
+OK, good.
 
-Lorenzo
+> 
+> [...]
+> 
+>>> +static int imx_irqsteer_probe(struct platform_device *pdev)
+>>> +{
+>>>>> +	struct device_node *np = pdev->dev.of_node;
+>>>>> +	struct irqsteer_data *data;
+>>>>> +	struct resource *res;
+>>>>> +	int ret;
+>>> +
+>>>>> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+>>>>> +	if (!data)
+>>>>> +		return -ENOMEM;
+>>> +
+>>>>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>>> +	data->regs = devm_ioremap_resource(&pdev->dev, res);
+>>>>> +	if (IS_ERR(data->regs)) {
+>>>>> +		dev_err(&pdev->dev, "failed to initialize reg\n");
+>>>>> +		return PTR_ERR(data->regs);
+>>>>> +	}
+>>> +
+>>>>> +	data->irq = platform_get_irq(pdev, 0);
+>>>>> +	if (data->irq <= 0) {
+>>>>> +		dev_err(&pdev->dev, "failed to get irq\n");
+>>>>> +		return -ENODEV;
+>>>>> +	}
+>>> +
+>>>>> +	data->ipg_clk = devm_clk_get(&pdev->dev, "ipg");
+>>>>> +	if (IS_ERR(data->ipg_clk)) {
+>>>>> +		ret = PTR_ERR(data->ipg_clk);
+>>>>> +		if (ret != -EPROBE_DEFER)
+>>>>> +			dev_err(&pdev->dev, "failed to get ipg clk: %d\n", ret);
+>>>>> +		return ret;
+>>>>> +	}
+>>> +
+>>>>> +	raw_spin_lock_init(&data->lock);
+>>> +
+>>>>> +	of_property_read_u32(np, "fsl,irq-groups", &data->irq_groups);
+>>>>> +	of_property_read_u32(np, "fsl,channel", &data->channel);
+>>> +
+>>>>> +	if (IS_ENABLED(CONFIG_PM_SLEEP)) {
+>>>>> +		data->saved_reg = devm_kzalloc(&pdev->dev,
+>>>>> +					sizeof(u32) * data->irq_groups * 2,
+>>>>> +					GFP_KERNEL);
+>>>>> +		if (!data->saved_reg)
+>>>>> +			return -ENOMEM;
+>>>>> +	}
+>>> +
+>>>>> +	ret = clk_prepare_enable(data->ipg_clk);
+>>>>> +	if (ret) {
+>>>>> +		dev_err(&pdev->dev, "failed to enable ipg clk: %d\n", ret);
+>>>>> +		return ret;
+>>>>> +	}
+>>> +
+>>>>> +	/* steer all IRQs into configured channel */
+>>> +	writel_relaxed(BIT(data->channel), data->regs + CHANCTRL);
+>>
+>> Could you explain what this channel is exactly?
+> 
+> I've tired in the cover letter, but seems I still failed, so let me try
+> again. ;)
+> 
+> Each irqsteer instance can be connected to multiple upstream IRQ lines,
+> but only one of them can be used at runtime. This register controls
+> which output IRQ line will be used by this controller instance. With
+> multiple controller instances in the system it's a way to offload the
+> decision of the IRQ routing from the hardware to the software guys.
+> 
+> Let's try to add an example: Suppose there are 2 instances of the
+> irqsteer controller. Both are connected to upstream GIC IRQs 20 and 21.
+> The channel controls which of those IRQs are used by each instance, so
+> there are 2 valid DT configurations in this scenario:
+> 
+> This is valid:
+> 
+> irqsteer@0 {
+> 	interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>
+> 	fsl,channel = <0>;
+> };
+> 
+> irqsteer@1 {
+> 	interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>
+> 	fsl,channel = <1>;
+> };
+> 
+> As well as this:
+> 
+> irqsteer@0 {
+> 	interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>
+> 	fsl,channel = <1>;
+> };
+> 
+> irqsteer@1 {
+> 	interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>
+> 	fsl,channel = <0>;
+> };
+
+OK, this is now making sense, thanks for that. I'm wondering if it'd
+make sense to expose both IRQs in the DT for each irqsteer, and use
+fsl,channel as the selector? It doesn't change much in the driver, but
+seems to describe the HW in a more complete way.
+
+I don't care much either way, and I'll leave it for you and the DT folks
+to decide.
+
+> 	
+> [...]
+>>> +#ifdef CONFIG_PM_SLEEP
+>>> +static void imx_irqsteer_save_regs(struct irqsteer_data *data)
+>>> +{
+>>>>> +	int num;
+>>> +
+>>>>> +	for (num = 0; num < data->irq_groups; num++)
+>>>>> +		data->saved_reg[num + 1] = readl_relaxed(data->regs +
+>>> +						CHANMASK(num, data->irq_groups));
+>>
+>> You seem to only use one u32 per IRQ group. Yet, you've allocated
+>> twice as much memory to that effect. Why? Also, you're avoiding to use
+>> index 0, which I find rather odd.
+>>
+>> Given that the DT binding states that each group manages 64
+>> interrupts, I have the feeling that you're missing some interrupt
+>> enable state.
+> 
+> And you are right with this observation. I failed to properly rework
+> this part of the code when switching to the irq-group indexing.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
