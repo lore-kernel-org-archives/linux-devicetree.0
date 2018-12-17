@@ -1,7 +1,7 @@
 From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH 10/13] arm64: dts: qcom: qcs404: Add HFPLL node
-Date: Mon, 17 Dec 2018 10:46:27 +0100
-Message-ID: <1545039990-19984-11-git-send-email-jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH 08/13] clk: qcom: hfpll: CLK_IGNORE_UNUSED
+Date: Mon, 17 Dec 2018 10:46:25 +0100
+Message-ID: <1545039990-19984-9-git-send-email-jorge.ramirez-ortiz@linaro.org>
 References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
@@ -10,35 +10,46 @@ To: jorge.ramirez-ortiz@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, an
 Cc: bjorn.andersson@linaro.org, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The high frequency pll functionality is required to enable CPU
-frequency scaling operation.
+When COMMON_CLK_DISABLED_UNUSED is set, in an effort to save power and
+to keep the software model of the clock in line with reality, the
+framework transverses the clock tree and disables those clocks that
+were enabled by the firmware but have not been enabled by any device
+driver.
+
+If CPUFREQ is enabled, early during the system boot, it might attempt
+to change the CPU frequency ("set_rate"). If the HFPLL is selected as
+a provider, it will then change the rate for this clock.
+
+As boot continues, clk_disable_unused_subtree will run. Since it wont
+find a valid counter (enable_count) for a clock that is actually
+enabled it will attempt to disable it which will cause the CPU to
+stop. Notice that in this driver, calls to check whether the clock is
+enabled are routed via the is_enabled callback which queries the
+hardware.
+
+The following commit, rather than marking the clock critical and
+forcing the clock to be always enabled, addresses the above scenario
+making sure the clock is not disabled but it continues to rely on the
+firmware to enable the clock.
 
 Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/clk/qcom/hfpll.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index 4594fea7..ec3f6c7 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -375,6 +375,15 @@
- 			#mbox-cells = <1>;
- 		};
+diff --git a/drivers/clk/qcom/hfpll.c b/drivers/clk/qcom/hfpll.c
+index 0ffed0d..9d92f5d 100644
+--- a/drivers/clk/qcom/hfpll.c
++++ b/drivers/clk/qcom/hfpll.c
+@@ -58,6 +58,7 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
+ 		.parent_names = (const char *[]){ "xo" },
+ 		.num_parents = 1,
+ 		.ops = &clk_ops_hfpll,
++		.flags = CLK_IGNORE_UNUSED,
+ 	};
  
-+		apcs_hfpll: clock-controller@0b016000 {
-+			compatible = "qcom,hfpll";
-+			reg = <0x0b016000 0x30>;
-+			#clock-cells = <0>;
-+			clock-output-names = "apcs_hfpll";
-+			clocks = <&xo_board>;
-+			clock-names = "xo";
-+		};
-+
- 		timer@b120000 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
+ 	h = devm_kzalloc(dev, sizeof(*h), GFP_KERNEL);
 -- 
 2.7.4
