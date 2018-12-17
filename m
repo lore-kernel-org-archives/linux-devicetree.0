@@ -1,14 +1,13 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: [PATCH V5 3/4] arm64: dts: imx: add imx8qxp mek support
-Date: Mon, 17 Dec 2018 15:01:00 +0000
-Message-ID: <1545058517-18643-4-git-send-email-aisheng.dong@nxp.com>
-References: <1545058517-18643-1-git-send-email-aisheng.dong@nxp.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 2/2] soc: imx: gpcv2: handle reset clocks
+Date: Mon, 17 Dec 2018 16:31:52 +0100
+Message-ID: <20181217153152.21135-2-l.stach@pengutronix.de>
+References: <20181217153152.21135-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1545058517-18643-1-git-send-email-aisheng.dong@nxp.com>
-Content-Language: en-US
+In-Reply-To: <20181217153152.21135-1-l.stach@pengutronix.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,203 +17,167 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-i.MX 8QuadXPlus is a quad (4x) Cortex-A35 proccessor with powerful
-graphic and multimedia features. This patch adds imx8qxp mek board
-support.
+Some power domains handled by the GPCv2 driver need to enable the clocks
+for devies inside the domain, so that the reset propagation and proper
+power-up sequencing happens. Handle them in the same way as on GPCv1.
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 ---
-v4->v5:
- * change the dts compiling to depend on ARCH_MXC instead of SOC_IMX8QXP
-v3->v4:
- * remove un-documented enet phy properties
-v2->v3:
- * Pad names update
- * move memory node to here
- * add no-sd and no-sdio under emmc node
----
- Documentation/devicetree/bindings/arm/fsl.txt |   4 +
- arch/arm64/boot/dts/freescale/Makefile        |   1 +
- arch/arm64/boot/dts/freescale/imx8qxp-mek.dts | 137 ++++++++++++++++++++++++++
- 3 files changed, 142 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+ .../bindings/power/fsl,imx-gpcv2.txt          |  3 +
+ drivers/soc/imx/gpcv2.c                       | 60 ++++++++++++++++++-
+ 2 files changed, 62 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-index 9b5be3e..8e64985 100644
---- a/Documentation/devicetree/bindings/arm/fsl.txt
-+++ b/Documentation/devicetree/bindings/arm/fsl.txt
-@@ -105,6 +105,10 @@ i.MX7ULP Evaluation Kit
- Required root node properties:
-     - compatible = "fsl,imx7ulp-evk", "fsl,imx7ulp";
+diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+index 7c947a996df1..7c7e972aaa42 100644
+--- a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
++++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+@@ -32,6 +32,9 @@ Required properties:
+ Optional properties:
  
-+i.MX8QXP MEK Board
-+Required root node properties:
-+    - compatible = "fsl,imx8qxp-mek", "fsl,imx8qxp";
-+
- Generic i.MX boards
- -------------------
+ - power-supply: Power supply used to power the domain
++- clocks: a number of phandles to clocks that need to be enabled during
++  domain power-up sequencing to ensure reset propagation into devices
++  located inside this power domain
  
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index f9be242..0db6e37 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -20,3 +20,4 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-qds.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
+ Example:
  
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
-+dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-new file mode 100644
-index 0000000..03aad66
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-@@ -0,0 +1,137 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2017~2018 NXP
-+ */
+diff --git a/drivers/soc/imx/gpcv2.c b/drivers/soc/imx/gpcv2.c
+index a8dd0cddb3d2..176f473127b6 100644
+--- a/drivers/soc/imx/gpcv2.c
++++ b/drivers/soc/imx/gpcv2.c
+@@ -8,6 +8,7 @@
+  * Copyright 2015-2017 Pengutronix, Lucas Stach <kernel@pengutronix.de>
+  */
+ 
++#include <linux/clk.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_domain.h>
+@@ -98,10 +99,14 @@
+ 
+ #define GPC_PGC_CTRL_PCR		BIT(0)
+ 
++#define GPC_CLK_MAX		6
 +
-+/dts-v1/;
+ struct imx_pgc_domain {
+ 	struct generic_pm_domain genpd;
+ 	struct regmap *regmap;
+ 	struct regulator *regulator;
++	struct clk *clk[GPC_CLK_MAX];
++	int num_clks;
+ 
+ 	unsigned int pgc;
+ 
+@@ -132,7 +137,7 @@ static int imx_gpc_pu_pgc_sw_pxx_req(struct generic_pm_domain *genpd,
+ 	const bool enable_power_control = !on;
+ 	const bool has_regulator = !IS_ERR(domain->regulator);
+ 	unsigned long deadline;
+-	int ret = 0;
++	int i, ret = 0;
+ 
+ 	regmap_update_bits(domain->regmap, GPC_PGC_CPU_MAPPING,
+ 			   domain->bits.map, domain->bits.map);
+@@ -145,6 +150,10 @@ static int imx_gpc_pu_pgc_sw_pxx_req(struct generic_pm_domain *genpd,
+ 		}
+ 	}
+ 
++	/* Enable reset clocks for all devices in the domain */
++	for (i = 0; i < domain->num_clks; i++)
++		clk_prepare_enable(domain->clk[i]);
 +
-+#include "imx8qxp.dtsi"
+ 	if (enable_power_control)
+ 		regmap_update_bits(domain->regmap, GPC_PGC_CTRL(domain->pgc),
+ 				   GPC_PGC_CTRL_PCR, GPC_PGC_CTRL_PCR);
+@@ -190,6 +199,10 @@ static int imx_gpc_pu_pgc_sw_pxx_req(struct generic_pm_domain *genpd,
+ 		regmap_update_bits(domain->regmap, GPC_PGC_CTRL(domain->pgc),
+ 				   GPC_PGC_CTRL_PCR, 0);
+ 
++	/* Disable reset clocks for all devices in the domain */
++	for (i = 0; i < domain->num_clks; i++)
++		clk_disable_unprepare(domain->clk[i]);
 +
-+/ {
-+	model = "Freescale i.MX8QXP MEK";
-+	compatible = "fsl,imx8qxp-mek", "fsl,imx8qxp";
+ 	if (has_regulator && !on) {
+ 		int err;
+ 
+@@ -440,6 +453,41 @@ static const struct imx_pgc_domain_data imx8m_pgc_domain_data = {
+ 	.reg_access_table = &imx8m_access_table,
+ };
+ 
++static int imx_pgc_get_clocks(struct imx_pgc_domain *domain)
++{
++	int i, ret;
 +
-+	chosen {
-+		stdout-path = &adma_lpuart0;
-+	};
++	for (i = 0; ; i++) {
++		struct clk *clk = of_clk_get(domain->dev->of_node, i);
++		if (IS_ERR(clk))
++			break;
++		if (i >= GPC_CLK_MAX) {
++			dev_err(domain->dev, "more than %d clocks\n",
++				GPC_CLK_MAX);
++			ret = -EINVAL;
++			goto clk_err;
++		}
++		domain->clk[i] = clk;
++	}
++	domain->num_clks = i;
 +
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x00000000 0x80000000 0 0x40000000>;
-+	};
++	return 0;
 +
-+	reg_usdhc2_vmmc: usdhc2-vmmc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "SD1_SPWR";
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3000000>;
-+		gpio = <&lsio_gpio4 19 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+};
++clk_err:
++	while (i--)
++		clk_put(domain->clk[i]);
 +
-+&adma_lpuart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart0>;
-+	status = "okay";
-+};
++	return ret;
++}
 +
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1>;
-+	phy-mode = "rgmii-id";
-+	phy-handle = <&ethphy0>;
-+	fsl,magic-packet;
-+	status = "okay";
++static void imx_pgc_put_clocks(struct imx_pgc_domain *domain)
++{
++	int i;
 +
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++	for (i = domain->num_clks - 1; i >= 0; i--)
++		clk_put(domain->clk[i]);
++}
 +
-+		ethphy0: ethernet-phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <0>;
-+		};
+ static int imx_pgc_domain_probe(struct platform_device *pdev)
+ {
+ 	struct imx_pgc_domain *domain = pdev->dev.platform_data;
+@@ -459,9 +507,17 @@ static int imx_pgc_domain_probe(struct platform_device *pdev)
+ 				      domain->voltage, domain->voltage);
+ 	}
+ 
++	ret = imx_pgc_get_clocks(domain);
++	if (ret) {
++		if (ret != -EPROBE_DEFER)
++			dev_err(domain->dev, "Failed to get domain's clocks\n");
++		return ret;
++	}
 +
-+		ethphy1: ethernet-phy@1 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <1>;
-+		};
-+	};
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	bus-width = <8>;
-+	no-sd;
-+	no-sdio;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	bus-width = <4>;
-+	vmmc-supply = <&reg_usdhc2_vmmc>;
-+	cd-gpios = <&lsio_gpio4 22 GPIO_ACTIVE_LOW>;
-+	wp-gpios = <&lsio_gpio4 21 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_fec1: fec1grp {
-+		fsl,pins = <
-+			IMX8QXP_ENET0_MDC_CONN_ENET0_MDC			0x06000020
-+			IMX8QXP_ENET0_MDIO_CONN_ENET0_MDIO			0x06000020
-+			IMX8QXP_ENET0_RGMII_TX_CTL_CONN_ENET0_RGMII_TX_CTL	0x06000020
-+			IMX8QXP_ENET0_RGMII_TXC_CONN_ENET0_RGMII_TXC		0x06000020
-+			IMX8QXP_ENET0_RGMII_TXD0_CONN_ENET0_RGMII_TXD0		0x06000020
-+			IMX8QXP_ENET0_RGMII_TXD1_CONN_ENET0_RGMII_TXD1		0x06000020
-+			IMX8QXP_ENET0_RGMII_TXD2_CONN_ENET0_RGMII_TXD2		0x06000020
-+			IMX8QXP_ENET0_RGMII_TXD3_CONN_ENET0_RGMII_TXD3		0x06000020
-+			IMX8QXP_ENET0_RGMII_RXC_CONN_ENET0_RGMII_RXC		0x06000020
-+			IMX8QXP_ENET0_RGMII_RX_CTL_CONN_ENET0_RGMII_RX_CTL	0x06000020
-+			IMX8QXP_ENET0_RGMII_RXD0_CONN_ENET0_RGMII_RXD0		0x06000020
-+			IMX8QXP_ENET0_RGMII_RXD1_CONN_ENET0_RGMII_RXD1		0x06000020
-+			IMX8QXP_ENET0_RGMII_RXD2_CONN_ENET0_RGMII_RXD2		0x06000020
-+			IMX8QXP_ENET0_RGMII_RXD3_CONN_ENET0_RGMII_RXD3		0x06000020
-+		>;
-+	};
-+
-+	pinctrl_lpuart0: lpuart0grp {
-+		fsl,pins = <
-+			IMX8QXP_UART0_RX_ADMA_UART0_RX				0x06000020
-+			IMX8QXP_UART0_TX_ADMA_UART0_TX				0x06000020
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			IMX8QXP_EMMC0_CLK_CONN_EMMC0_CLK			0x06000041
-+			IMX8QXP_EMMC0_CMD_CONN_EMMC0_CMD			0x00000021
-+			IMX8QXP_EMMC0_DATA0_CONN_EMMC0_DATA0			0x00000021
-+			IMX8QXP_EMMC0_DATA1_CONN_EMMC0_DATA1			0x00000021
-+			IMX8QXP_EMMC0_DATA2_CONN_EMMC0_DATA2			0x00000021
-+			IMX8QXP_EMMC0_DATA3_CONN_EMMC0_DATA3			0x00000021
-+			IMX8QXP_EMMC0_DATA4_CONN_EMMC0_DATA4			0x00000021
-+			IMX8QXP_EMMC0_DATA5_CONN_EMMC0_DATA5			0x00000021
-+			IMX8QXP_EMMC0_DATA6_CONN_EMMC0_DATA6			0x00000021
-+			IMX8QXP_EMMC0_DATA7_CONN_EMMC0_DATA7			0x00000021
-+			IMX8QXP_EMMC0_STROBE_CONN_EMMC0_STROBE			0x00000041
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			IMX8QXP_USDHC1_CLK_CONN_USDHC1_CLK			0x06000041
-+			IMX8QXP_USDHC1_CMD_CONN_USDHC1_CMD			0x00000021
-+			IMX8QXP_USDHC1_DATA0_CONN_USDHC1_DATA0			0x00000021
-+			IMX8QXP_USDHC1_DATA1_CONN_USDHC1_DATA1			0x00000021
-+			IMX8QXP_USDHC1_DATA2_CONN_USDHC1_DATA2			0x00000021
-+			IMX8QXP_USDHC1_DATA3_CONN_USDHC1_DATA3			0x00000021
-+			IMX8QXP_USDHC1_VSELECT_CONN_USDHC1_VSELECT		0x00000021
-+		>;
-+	};
-+};
+ 	ret = pm_genpd_init(&domain->genpd, NULL, true);
+ 	if (ret) {
+ 		dev_err(domain->dev, "Failed to init power domain\n");
++		imx_pgc_put_clocks(domain);
+ 		return ret;
+ 	}
+ 
+@@ -470,6 +526,7 @@ static int imx_pgc_domain_probe(struct platform_device *pdev)
+ 	if (ret) {
+ 		dev_err(domain->dev, "Failed to add genpd provider\n");
+ 		pm_genpd_remove(&domain->genpd);
++		imx_pgc_put_clocks(domain);
+ 	}
+ 
+ 	return ret;
+@@ -481,6 +538,7 @@ static int imx_pgc_domain_remove(struct platform_device *pdev)
+ 
+ 	of_genpd_del_provider(domain->dev->of_node);
+ 	pm_genpd_remove(&domain->genpd);
++	imx_pgc_put_clocks(domain);
+ 
+ 	return 0;
+ }
 -- 
-2.7.4
+2.19.1
