@@ -1,78 +1,80 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v13 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ
- Firmware bindings
-Date: Mon, 17 Dec 2018 14:45:47 -0600
-Message-ID: <20181217204547.GA11590@bogus>
-References: <1544760624-12874-1-git-send-email-tdas@codeaurora.org>
- <1544760624-12874-2-git-send-email-tdas@codeaurora.org>
- <154476557998.19322.11977618193120872801@swboyd.mtv.corp.google.com>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Subject: Re: [PATCH 1/2] net: dsa: ksz9477: add I2C managed mode support
+Date: Mon, 17 Dec 2018 21:46:15 +0100
+Message-ID: <CAMhs-H8zB9vkPxhVwjGDTqazYoUMc1UKzN4=p54kB2YyEBjZRA@mail.gmail.com>
+References: <20181216075741.13827-1-sergio.paracuellos@gmail.com>
+ <20181217065455.GB15451@kadam> <CAMhs-H-MjMnS+S9v9-O2=Cz+e-6xp3ZYmDvy-VVif+fKNRaSnw@mail.gmail.com>
+ <20181217191114.GF19692@kadam>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <154476557998.19322.11977618193120872801@swboyd.mtv.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Taniya Das <tdas@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, evgreen@google.com, Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20181217191114.GF19692@kadam>
+Sender: netdev-owner@vger.kernel.org
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Woojung.Huh@microchip.com, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, vivien.didelot@savoirfairelinux.com, netdev@vger.kernel.org, driverdev-devel@linuxdriverproject.org, UNGLinuxDriver@microchip.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 13, 2018 at 09:32:59PM -0800, Stephen Boyd wrote:
-> Quoting Taniya Das (2018-12-13 20:10:23)
-> > Add QCOM cpufreq firmware device bindings for Qualcomm Technology Inc's
-> > SoCs. This is required for managing the cpu frequency transitions which are
-> > controlled by the hardware engine.
-> > 
-> > Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> > ---
-> 
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> 
-> except one question below for Rob.
-> 
-> > diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
-> > new file mode 100644
-> > index 0000000..33856947
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
-> > @@ -0,0 +1,172 @@
-> > +Qualcomm Technologies, Inc. CPUFREQ Bindings
-> > +
-> > +CPUFREQ HW is a hardware engine used by some Qualcomm Technologies, Inc. (QTI)
-> > +SoCs to manage frequency in hardware. It is capable of controlling frequency
-> > +for multiple clusters.
-> > +
-> > +Properties:
-> > +- compatible
-> > +       Usage:          required
-> > +       Value type:     <string>
-> > +       Definition:     must be "qcom,cpufreq-hw".
-> > +
-> > +- clocks
-> > +       Usage:          required
-> > +       Value type:     <phandle> From common clock binding.
-> > +       Definition:     clock handle for XO clock and GPLL0 clock.
-> > +
-> > +- clock-names
-> > +       Usage:          required
-> > +       Value type:     <string> From common clock binding.
-> > +       Definition:     must be "xo", "alternate".
-> > +
-> > +- reg
-> > +       Usage:          required
-> > +       Value type:     <prop-encoded-array>
-> > +       Definition:     Addresses and sizes for the memory of the HW bases in
-> > +                       each frequency domain.
-> > +- reg-names
-> > +       Usage:          Optional
-> > +       Value type:     <string>
-> > +       Definition:     Frequency domain name i.e.
-> > +                       "freq-domain0", "freq-domain1".
-> > +
-> > +- #freq-domain-cells:
-> 
-> I still wonder if this should be #qcom,freq-domain-cells, but if Rob is
-> OK I won't complain.
+On Mon, Dec 17, 2018 at 8:11 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+>
+> On Mon, Dec 17, 2018 at 07:22:51PM +0100, Sergio Paracuellos wrote:
+> > > > +static int ksz_i2c_write(struct ksz_device *dev, u32 reg, u8 *val,
+> > > > +                      unsigned int len)
+> > > > +{
+> > > > +     struct i2c_client *client = dev->priv;
+> > > > +     unsigned int cnt = len;
+> > > > +     int i = 0;
+> > > > +     u8 txb[4];
+> > > > +
+> > > > +     do {
+> > > > +             txb[i++] = (u8)(*val >> (8 * (cnt - 1)));
+> > >                                               ^^^^^^^
+> > >
+> > > Can "cnt" be zero from ksz_i2c_set()?  If so this loop will corrupt
+> > > memory.
+> >
+> > This get and set interface seems to be introduced recently but it is
+> > not being used yet, so
+> > in this moment the answer is not. For me, there is no sense in call
+> > 'set' with no len. Should
+> > I add a check for zero len and return EINVAL just in case?
+> >
+>
+> Yes, please.
 
-Probably should be. Though I did give my R-by without.
+Done. v3 with this change already sent.
 
-Rob
+>
+> > > > +static int ksz_i2c_probe(struct i2c_client *client,
+> > > > +                      const struct i2c_device_id *id)
+> > > > +{
+> > > > +     struct ksz_device *dev;
+> > > > +     int ret;
+> > > > +
+> > > > +     dev = ksz_switch_alloc(&client->dev, &ksz_i2c_ops, client);
+> > > > +     if (!dev)
+> > > > +             return -ENOMEM;
+> > > > +
+> > > > +     if (client->dev.platform_data)
+> > > > +             dev->pdata = client->dev.platform_data;
+> > > > +
+> > > > +     i2c_set_clientdata(client, dev);
+> > > > +
+> > > > +     ret = ksz9477_switch_register(dev);
+> > > > +     if (ret) {
+> > > > +             dev_err(&client->dev, "registering switch (ret: %d)\n", ret);
+> > >
+> > >
+> > > free dev on this error path?
+> >
+> > Internally all of this are using devm_* funcions, so I think is there
+> > is no need to free anything. Also, the
+> > spi managed driver for this does nothing also about this.
+>
+> You're right.  My bad.  I should have looked at this.
+>
+> regards,
+> dan carpenter
+>
+
+Best regards,
+    Sergio Paracuellos
