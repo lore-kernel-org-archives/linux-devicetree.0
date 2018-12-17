@@ -1,57 +1,35 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [RFC 2/2] ASoC: Add MICFIL SoC Digital Audio
- Interface driver.
-Date: Mon, 17 Dec 2018 16:13:44 +0200
-Message-ID: <CAEnQRZA+RQDdvdtsA-ZkC1Tnr=8sP7ognNqmrnE4y+wbB2XAFA@mail.gmail.com>
-References: <1544433661-32496-1-git-send-email-cosmin.samoila@nxp.com>
- <1544433661-32496-3-git-send-email-cosmin.samoila@nxp.com>
- <20181212181414.GE6920@sirena.org.uk>
- <f3a0f305-dc96-f8b9-3c57-e45256326e2f@linux.intel.com>
- <20181217121858.GB13868@sirena.org.uk>
+From: Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v3 3/3] ARM: dts: stm32: Add hwlock for irqchip on stm32mp157
+Date: Mon, 17 Dec 2018 15:22:15 +0100
+Message-ID: <20181217142215.17493-4-benjamin.gaignard@st.com>
+References: <20181217142215.17493-1-benjamin.gaignard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181217121858.GB13868@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "robh@kernel.org" <robh@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, dl-linux-imx <linux-imx@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "gabrielcsmo@gmail.com" <gabrielcsmo@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181217142215.17493-1-benjamin.gaignard@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 17, 2018 at 2:19 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Fri, Dec 14, 2018 at 02:09:00PM -0600, Pierre-Louis Bossart wrote:
->
-> > There's no mention of any buffer so it's likely plain vanilla VAD here.
-> > We've seen two choices to warn userspace of a acoustic event, either use a
-> > uevent or a kcontrol. I believe we ended-up chosing the latter on the Intel
-> > side in the past and that was also the plan for SOF.
->
-> It sounded like there were some separate audio streams somewhere along
-> the line, it wasn't super clear if that just went into a DSP that did
-> the VAD and wasn't visible to the rest of the system or if it's
-> something the system can see.  Generally we have gone for kcontrols for
-> event signalling.
+Define a hwspinlock to be used by irq controller
 
-Yes, it is plain vanilla VAD here. The MICFIL hardware IP sends an interrupt
-when voice is detected.
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ arch/arm/boot/dts/stm32mp157c.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-Can you point us to some code that uses kcontrol interface to signal an event?
-This might sound silly because I know there are a lot of places where kcontrol
-interface is used but I  just want make sure that we are on the same page.
->
-> > In terms of configurations for the PDM we have completely different settings
-> > since we pass explicit coefficients while this solution passes qualifiers
-> > (cut-off, quality, etc), not sure if there is any point in trying to unify
-> > those parameters.
->
-> Yes, I don't think the specific parameters are going to be joined up any
-> time soon - it's more the overall shape of the solution.
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index 8bf1c17f8cef..452d252a4856 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -815,6 +815,7 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+ 			reg = <0x5000d000 0x400>;
++			hwlocks = <&hsem 1>;
+ 		};
+ 
+ 		syscfg: syscon@50020000 {
+-- 
+2.15.0
